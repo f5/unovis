@@ -1,0 +1,26 @@
+{
+  "name": "@volterra-vis/charts",
+  "version": "0.0.0",
+  "main": "lib/charts.js",
+  "module": "lib/charts.esm.js",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "prebuild": "rimraf lib",
+    "build": "yarn prebuild && rollup -c",
+    "dev:parallel": "rollup -c -w",
+    "test": "jest --colors"
+  },
+  "devDependencies": {
+    "rimraf": "^3.0.0",
+    "rollup": "^1.26.0",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-typescript2": "^0.24.3"
+  },
+  "dependencies": {
+    "d3": "^5.14.2",
+    "lodash": "^4.17.15"
+  }
+}

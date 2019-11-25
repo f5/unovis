@@ -1,0 +1,39 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+      "baseUrl": "",
+      "paths": {
+        "@volterra-vis/charts": ["packages/charts/src"],
+
+        "examples/*": ["web/src/examples/*"]
+      },
+      "downlevelIteration": true,
+      "outDir": "./dist/out-tsc",
+      "allowSyntheticDefaultImports": true,
+      "sourceMap": true,
+      "declaration": false,
+      "module": "esnext",
+      "moduleResolution": "node",
+      "emitDecoratorMetadata": true,
+      "experimentalDecorators": true,
+      "target": "es2015",
+      "noUnusedLocals": true,
+      "typeRoots": [
+          "node_modules/@types"
+      ],
+      "lib": [
+          "es2017",
+          "es2016",
+          "es2015",
+          "dom"
+      ]
+  },
+  "exclude": [
+      "node_modules",
+      "*/node_modules/*"
+  ],
+  "angularCompilerOptions": {
+      "fullTemplateTypeCheck": true,
+      "strictInjectionParameters": true
+  }
+}

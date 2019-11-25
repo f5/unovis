@@ -1,0 +1,34 @@
+{
+  "name": "volterra-vis",
+  "version": "0.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "web/"
+  ],
+  "scripts": {
+    "build": "lerna run build",
+    "dev": "lerna run dev --stream",
+    "dev:parallel": "lerna run dev:parallel --stream --parallel",
+    "test": "lerna run test --stream",
+    "lint": "eslint \"src/**/*.ts\" --ignore-path .gitignore",
+    "lint:fix": "eslint \"src/**/*.ts\" --fix --ignore-path .gitignore",
+    "lint:staged": "for file in $(git diff --cached --name-only | grep -E 'src\\/.+\\.(ts)$'); do git show \":$file\" | npx eslint \"$file\" --fix; git add \"$file\"; done"
+  },
+  "devDependencies": {
+    "@types/jest": "^24.0.23",
+    "@typescript-eslint/eslint-plugin": "^2.4.0",
+    "@typescript-eslint/parser": "^2.4.0",
+    "eslint": "^6.5.1",
+    "eslint-config-standard": "^14.1.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-node": "^10.0.0",
+    "eslint-plugin-notice": "^0.8.9",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "jest": "^24.9.0",
+    "lerna": "^3.18.3",
+    "typescript": "~3.4.5"
+  },
+  "precommit": "lint:staged"
+}
