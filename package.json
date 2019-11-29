@@ -7,9 +7,9 @@
     "web/"
   ],
   "scripts": {
-    "build": "lerna run build",
     "dev": "lerna run dev --stream",
-    "dev:parallel": "lerna run dev:parallel --stream --parallel",
+    "build": "lerna run build",
+    "build:watch": "lerna run dev:parallel --stream --parallel",
     "test": "lerna run test --stream",
     "lint": "eslint \"web/**/*.ts\" \"packages/**/*.ts\" --ignore-path .gitignore",
     "lint:fix": "eslint \"web/**/*.ts\" \"packages/**/*.ts\" --fix --ignore-path .gitignore",
