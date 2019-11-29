@@ -1,11 +1,2 @@
-# `@volterra-vis/charts`
+# `@volterra/vis`
 
-> TODO: description
-
-## Usage
-
-```
-const charts = require('@volterra-vis/charts');
-
-// TODO: DEMONSTRATE API
-```

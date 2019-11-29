@@ -11,7 +11,7 @@ import commonjs from 'rollup-plugin-commonjs'
 // import requireContext from 'rollup-plugin-require-context'
 // import yaml from 'rollup-plugin-yaml'
 
-const libraryName = '@volterra-vis/charts'
+const libraryName = '@volterra/vis'
 const externals = [
   ...Object.keys(pkg.dependencies || {}),
   ...Object.keys(pkg.peerDependencies || {})

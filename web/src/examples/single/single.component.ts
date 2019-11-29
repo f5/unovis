@@ -1,7 +1,7 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 
 import { Component, ViewChild, ElementRef, OnInit, AfterViewInit } from '@angular/core'
-import { Single } from '@volterra-vis/charts'
+import { Single } from '@volterra/vis'
 
 @Component({
   selector: 'single',

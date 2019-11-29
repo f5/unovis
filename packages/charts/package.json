@@ -1,5 +1,5 @@
 {
-  "name": "@volterra-vis/charts",
+  "name": "@volterra/vis",
   "version": "0.0.0",
   "main": "lib/charts.js",
   "module": "lib/charts.esm.js",

@@ -1,7 +1,7 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 
 import { Component, ViewChild, ElementRef, OnInit, AfterViewInit } from '@angular/core'
-import { Composite } from '@volterra-vis/charts'
+import { Composite } from '@volterra/vis'
 
 @Component({
   selector: 'composite',

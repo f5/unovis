@@ -1,5 +1,5 @@
 {
-  "name": "@volterra-vis/demo",
+  "name": "@volterra/vis-demo",
   "version": "0.0.0",
   "main": "lib/demo.js",
   "files": [
@@ -21,7 +21,7 @@
     "@angular/platform-browser": "^8.2.14",
     "@angular/platform-browser-dynamic": "^8.2.14",
     "@angular/router": "^8.2.14",
-    "@volterra-vis/charts": "0.0.0",
+    "@volterra/vis": "0.0.0",
     "rxjs": "^6.5.3",
     "tslib": "^1.10.0",
     "zone.js": "^0.10.2"

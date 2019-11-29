@@ -3,7 +3,7 @@
   "compilerOptions": {
       "baseUrl": ".",
       "paths": {
-        "@volterra-vis/charts": ["packages/charts/src"],
+        "@volterra/vis": ["packages/charts/src"],
 
         "examples/*": ["web/src/examples/*"],
         "enums/*": ["packages/charts/src/enums/*"]
