@@ -29,6 +29,7 @@
     "eslint-plugin-standard": "^4.0.1",
     "jest": "^24.9.0",
     "lerna": "^3.18.3",
+    "rollup-plugin-terser": "^5.1.2",
     "typescript": "~3.4.5"
   },
   "precommit": "lint:staged"
