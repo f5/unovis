@@ -3,10 +3,10 @@
   "compilerOptions": {
       "baseUrl": ".",
       "paths": {
-        "@volterra/vis": ["packages/charts/src"],
+        "@volterra/vis": ["packages/vis/src"],
 
         "examples/*": ["web/src/examples/*"],
-        "enums/*": ["packages/charts/src/enums/*"]
+        "enums/*": ["packages/vis/src/enums/*"]
       },
       "downlevelIteration": true,
       "outDir": "./dist/out-tsc",
