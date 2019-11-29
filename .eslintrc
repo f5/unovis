@@ -13,10 +13,7 @@
   ],
   "settings": {
     "import/resolver": {
-      "node": {
-        "paths": [ "./src/", "./" ],
-        "extensions": [".js", ".ts"]
-      }
+      "typescript": {}
     }
   }, 
   "rules": {

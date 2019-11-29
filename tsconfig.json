@@ -1,11 +1,12 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-      "baseUrl": "",
+      "baseUrl": ".",
       "paths": {
         "@volterra-vis/charts": ["packages/charts/src"],
 
-        "examples/*": ["web/src/examples/*"]
+        "examples/*": ["web/src/examples/*"],
+        "enums/*": ["packages/charts/src/enums/*"]
       },
       "downlevelIteration": true,
       "outDir": "./dist/out-tsc",
