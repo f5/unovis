@@ -1,0 +1,17 @@
+dist
+demo/dist
+node_modules/
+docs/jsdoc/
+.sass-cache
+npm-debug.log
+lerna-debug.log
+packages/*/lib
+web/lib
+/nbproject/private/
+\.idea/
+nbproject/
+*bundle*
+yarn-error.log
+docs-html/
+.git-pack-cache
+.DS_Store

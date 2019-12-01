@@ -1,0 +1,37 @@
+{
+  "extends": [
+    "plugin:@typescript-eslint/recommended",
+    "standard"
+  ],
+  "env": {
+    "browser": true,
+    "jasmine": true
+  },
+  "plugins": [
+    "notice",
+    "import"
+  ],
+  "settings": {
+    "import/resolver": {
+      "typescript": {}
+    }
+  }, 
+  "rules": {
+    "import/extensions": 0,
+    "import/no-unresolved": [2, {"commonjs": true, "amd": true}],
+    "import/no-extraneous-dependencies": 0,
+    "import/prefer-default-export": 0,
+    "comma-dangle": 1,
+    "no-console": ["error", { "allow": ["warn", "error"] }],
+    "notice/notice":[ "error",
+      {
+        "mustMatch": "Copyright \\(c\\) (Volterra), Inc. All rights reserved.",
+        "template": "// Copyright (c) Volterra, Inc. All rights reserved.",
+        "onNonMatchingHeader": "replace"
+      }
+    ],
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/explicit-member-accessibility": "off",
+    "@typescript-eslint/indent": "off"
+  }
+}
