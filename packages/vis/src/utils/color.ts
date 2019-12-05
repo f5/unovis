@@ -1,5 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 
-export const environment = {
-  production: true,
+export enum ColorType {
+  Dynamic,
+  Static
 }

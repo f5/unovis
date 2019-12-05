@@ -16,6 +16,7 @@
     "lint:staged": "for file in $(git diff --cached --name-only | grep -E 'src\\/.+\\.(ts)$'); do git show \":$file\" | npx eslint \"$file\" --fix; git add \"$file\"; done"
   },
   "devDependencies": {
+    "@types/d3": "^5.7.2",
     "@types/jest": "^24.0.23",
     "@typescript-eslint/eslint-plugin": "^2.4.0",
     "@typescript-eslint/parser": "^2.4.0",

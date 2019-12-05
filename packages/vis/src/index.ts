@@ -1,6 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 
-import { Single, Composite } from './charts'
-import { Network } from './components'
+import * as containers from './containers'
+import * as components from './components'
 
-export { Single, Composite, Network }
+export { containers, components }

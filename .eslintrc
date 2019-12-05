@@ -17,11 +17,14 @@
     }
   }, 
   "rules": {
+    "no-useless-constructor": "off",
     "import/extensions": 0,
     "import/no-unresolved": [2, {"commonjs": true, "amd": true}],
     "import/no-extraneous-dependencies": 0,
     "import/prefer-default-export": 0,
-    "comma-dangle": 1,
+    "import/first": ["error", "absolute-first"],
+    "comma-dangle": ["error", "always-multiline"],
+    "indent": ["error", 2],
     "no-console": ["error", { "allow": ["warn", "error"] }],
     "notice/notice":[ "error",
       {
