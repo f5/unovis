@@ -1,12 +1,23 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 
 import { Component, ViewChild, ElementRef, OnInit, AfterViewInit } from '@angular/core'
-import { Single } from '@volterra/vis'
+import _times from 'lodash/times'
+import { components, containers } from '@volterra/vis'
+
+const { SingleChart } = containers
+const { Line } = components
+
+function generateData (): object[] {
+  return _times(20).map((i) => ({
+    x: i,
+    y: Math.random(),
+  }))
+}
 
 @Component({
   selector: 'single',
   templateUrl: './single.component.html',
-  styleUrls: ['./single.component.css']
+  styleUrls: ['./single.component.css'],
 })
 
 export class SingleComponent implements OnInit, AfterViewInit {
@@ -18,11 +29,44 @@ export class SingleComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit (): void {
     const chartElement = this.chartView.nativeElement
-    this.chart = new Single(chartElement, this.config, this.data)
+
+    const lineComponentConfig = {
+      color: '#f00',
+      x: d => d.x,
+      y: d => d.y,
+    }
+    const component = new Line(lineComponentConfig)
+
+    const singleChartConfig = {
+      component,
+      x: {
+        scaleType: 'linear',
+        domain: [0, 100],
+      },
+      y: {
+        scaleType: 'linear',
+        domain: [0, 100],
+      },
+      actions: {
+        'mousemove node': d => {},
+      },
+    }
+
+    const singleChart = new SingleChart(chartElement, singleChartConfig, this.data)
+    // singleChart.render()
+
+    setInterval(() => {
+      lineComponentConfig.color = '#00f'
+      singleChart.setData(generateData(), true)
+      singleChart.updateComponent(lineComponentConfig)
+    }, 1000)
+    // const tooltip = new Tooltip(singleChart, config)
+
+    // singleChart.setData(data)
+    // singleChart.setConfig(config)
   }
 
   ngOnInit (): void {
-    this.data = []
-    this.config = {}
+    this.data = generateData()
   }
 }

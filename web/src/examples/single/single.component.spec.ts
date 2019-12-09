@@ -9,7 +9,7 @@ describe('SingleComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [SingleComponent]
+      declarations: [SingleComponent],
     })
       .compileComponents()
   })

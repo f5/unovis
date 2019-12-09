@@ -13,15 +13,15 @@
     "test": "jest --colors"
   },
   "devDependencies": {
+    "@types/d3": "^5.7.2",
+    "d3": "^5.14.2",
+    "emotion": "^10.0.23",
+    "lodash": "^4.17.15",
     "rimraf": "^3.0.0",
     "rollup": "^1.26.0",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-typescript2": "^0.24.3"
   },
-  "dependencies": {
-    "d3": "^5.14.2",
-    "emotion": "^10.0.23",
-    "lodash": "^4.17.15"
-  }
+  "dependencies": {}
 }

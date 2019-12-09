@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 
-import { Network } from './components/Network'
+import { Line } from './components/line'
 
-export { Network }
+export { Line }

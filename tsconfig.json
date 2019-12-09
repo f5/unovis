@@ -6,7 +6,10 @@
         "@volterra/vis": ["packages/vis/src"],
 
         "examples/*": ["web/src/examples/*"],
-        "enums/*": ["packages/vis/src/enums/*"]
+        "enums/*": ["packages/vis/src/enums/*"],
+        "utils/*": ["packages/vis/src/utils/*"],
+        "core/*": ["packages/vis/src/core/*"],
+        "data-models/*": ["packages/vis/src/data-models/*"]
       },
       "downlevelIteration": true,
       "outDir": "./dist/out-tsc",

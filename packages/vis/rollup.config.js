@@ -3,25 +3,25 @@ import pkg from './package.json'
 import typescript from 'rollup-plugin-typescript2'
 import resolve from 'rollup-plugin-node-resolve'
 import commonjs from 'rollup-plugin-commonjs'
-import { terser } from "rollup-plugin-terser"
+import { terser } from 'rollup-plugin-terser'
 
 const externals = [
   ...Object.keys(pkg.dependencies || {}),
-  ...Object.keys(pkg.peerDependencies || {})
+  ...Object.keys(pkg.peerDependencies || {}),
 ]
 
 const config = {
   input: 'src/index.ts',
   external: externals,
   output: {
-    sourcemap: true
+    sourcemap: true,
   },
   plugins: [
     commonjs(),
     resolve(),
     typescript(),
   ],
-};
+}
 
 export default [
   {
@@ -35,7 +35,7 @@ export default [
     },
     plugins: [
       ...config.plugins,
-    ]
+    ],
   },
   {
     ...config,
@@ -48,8 +48,8 @@ export default [
     },
     plugins: [
       ...config.plugins,
-      terser()
-    ]
+      terser(),
+    ],
   },
   {
     ...config,
@@ -61,6 +61,6 @@ export default [
     },
     plugins: [
       ...config.plugins,
-    ]
+    ],
   },
 ]
