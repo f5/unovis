@@ -2,8 +2,11 @@
 import { isPlainObject, merge} from 'utils/data'
 
 export interface ComponentConfigInterface {
+  /** Animation duration */
   duration?: number;
+  /** Component width in pixels */
   width?: number;
+  /** Component height in pixels */
   height?: number;
 }
 

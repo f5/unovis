@@ -6,13 +6,19 @@ import { ScaleType } from 'enums/scales'
 import { ComponentConfigInterface, ComponentConfig } from '../component/config'
 
 export interface XYConfigInterface extends ComponentConfigInterface {
+  //** X accessor or number value */
   x: ((d: any, i?: number, ...any) => number) | number;
+  //** Y accessor or value */
   y: ((d: any, i?: number, ...any) => number) | number;
-  /** component color */
+  /** Сomponent color (string or color object) */
   color?: string | object;
+  /** Coloring tyle */
   colorType?: ColorType;
+  /** X scale Type */
   xScaleType?: ScaleType;
+  /** Y scale type */
   yScaleType?: ScaleType;
+  /** Chart padding */
   padding?: {
     top?: number;
     bottom?: number;

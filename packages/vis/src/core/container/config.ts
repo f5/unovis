@@ -2,6 +2,7 @@
 import { isPlainObject, merge} from 'utils/data'
 
 export interface ContainerConfigInterface {
+  /** Container margins */
   margin?: {
     top?: number;
     bottom?: number;
