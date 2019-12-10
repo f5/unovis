@@ -1,6 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import _merge from 'lodash/merge'
-import _isPlainObject from 'lodash/isPlainObject'
+import { isPlainObject, merge} from 'utils/data'
 
 export interface ComponentConfigInterface {
   duration?: number;
@@ -15,7 +14,7 @@ export class ComponentConfig implements ComponentConfigInterface {
 
   init (config: ComponentConfigInterface = {}): ComponentConfig {
     Object.keys(config).forEach(key => {
-      if (_isPlainObject(this[key])) this[key] = _merge(this[key], config[key])
+      if (isPlainObject(this[key])) this[key] = merge(this[key], config[key])
       else this[key] = config[key]
     })
 

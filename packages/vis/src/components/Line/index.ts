@@ -1,5 +1,4 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import _isNumber from 'lodash/isNumber'
 import { line, Line as LineInterface, CurveFactory } from 'd3-shape'
 import { Selection } from 'd3-selection'
 
@@ -7,7 +6,7 @@ import { Selection } from 'd3-selection'
 import { XYCore } from 'core/xy-component'
 
 // Utils
-import { getValue } from 'utils/data'
+import { getValue, isNumber } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 
 // Enums
@@ -40,7 +39,7 @@ export class Line extends XYCore {
 
   _render (customDuration?: number): void {
     const { config, datamodel: { data } } = this
-    const duration = _isNumber(customDuration) ? customDuration : config.duration
+    const duration = isNumber(customDuration) ? customDuration : config.duration
     this.updateScales()
 
     this.lineGen = line()

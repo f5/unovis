@@ -24,7 +24,7 @@ export interface XYConfigInterface extends ComponentConfigInterface {
 export class XYConfig extends ComponentConfig implements XYConfigInterface {
   x = d => d.x
   y = d => d.y
-  color = '#000'
+  color = null
   colorType = ColorType.Static
   xScaleType = ScaleType.Linear
   yScaleType = ScaleType.Linear
