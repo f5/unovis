@@ -9,6 +9,7 @@
         "enums/*": ["packages/vis/src/enums/*"],
         "utils/*": ["packages/vis/src/utils/*"],
         "core/*": ["packages/vis/src/core/*"],
+        "styles/*": ["packages/vis/src/styles/*"],
         "data-models/*": ["packages/vis/src/data-models/*"]
       },
       "downlevelIteration": true,

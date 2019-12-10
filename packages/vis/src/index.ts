@@ -2,5 +2,6 @@
 
 import * as containers from './containers'
 import * as components from './components'
+import './styles/css-variables'
 
 export { containers, components }
