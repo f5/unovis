@@ -4,5 +4,5 @@ import { css } from 'emotion'
 export const line = css`
   label: line;
   fill: none;
-  stroke: #000;
+  stroke: var(--vis-color-main);
 `
