@@ -59,5 +59,6 @@ export class Line extends XYCore {
     smartTransition(this.linePath, duration)
       .attr('d', this.lineGen(data))
       .style('stroke', d => this.getColor(d, config.color))
+      .attr('stroke-width', config.lineWidth)
   }
 }
