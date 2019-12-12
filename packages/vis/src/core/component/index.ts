@@ -13,6 +13,7 @@ export class ComponentCore {
   config: ComponentConfig
   prevConfig: ComponentConfig
   datamodel: CoreDataModel = new CoreDataModel()
+  events = {}
 
   constructor (config?: ComponentConfigInterface) {
     this.element = document.createElementNS('http://www.w3.org/2000/svg', 'g')
@@ -31,7 +32,29 @@ export class ComponentCore {
   //   this.datamodel.data = data
   // }
 
+  render (customDuration?: number): void {
+    this._render(customDuration)
+    
+    // Set up default events
+    this._setUpEvents(this.events)
+
+    // Set up user-defined events
+    this._setUpEvents(this.config.events)
+  }
+
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   _render (customDuration?: number): void {
+  }
+
+  _onEvent (d: any, i: number, elements: []) {
+  }
+
+  _setUpEvents (events) {
+    Object.keys(events).forEach(className => {
+      Object.keys(events[className]).forEach(eventType => {
+        this.g.selectAll(`.${className}`)
+          .on(eventType, events[className][eventType])
+      })
+    })
   }
 }

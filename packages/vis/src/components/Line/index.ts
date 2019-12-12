@@ -19,10 +19,18 @@ import { LineConfig, LineConfigInterface } from './config'
 import * as s from './style'
 
 export class Line extends XYCore {
+  static selectors = s
   config: LineConfig = new LineConfig()
   lineGen: LineInterface<any[]>
   linePath: Selection<SVGGElement, object[], SVGGElement, object[]>
   curve: CurveFactory = Curve[CurveType.MonotoneX]
+  events = {
+    [Line.selectors.line]: {
+      'mousemove': this._onEvent,
+      'mouseover': this._onEvent,
+      'mouseleave': this._onEvent,
+    },
+  }
 
   constructor (config?: LineConfigInterface) {
     super()
