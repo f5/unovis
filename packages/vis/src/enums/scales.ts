@@ -1,5 +1,7 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { scaleLinear, scalePow, scaleSqrt, scaleLog, scaleIdentity, scaleTime, scaleUtc, scaleSequential, scaleDiverging, scaleQuantize, scaleQuantile, scaleThreshold, scaleOrdinal, scaleImplicit, scaleBand, scalePoint } from 'd3-scale'
+import { scaleLinear, scalePow, scaleSqrt, scaleLog, scaleIdentity, scaleTime, scaleUtc,
+  scaleSequential, scaleDiverging, scaleQuantize, scaleQuantile, scaleThreshold, scaleOrdinal, 
+  scaleBand, scalePoint } from 'd3-scale'
 
 export enum ScaleType {
   Linear,
@@ -34,7 +36,6 @@ export const Scale = {
   [ScaleType.Quantile]: scaleQuantile,
   [ScaleType.Threshold]: scaleThreshold,
   [ScaleType.Ordinal]: scaleOrdinal,
-  [ScaleType.Implicit]: scaleImplicit,
   [ScaleType.Band]: scaleBand,
   [ScaleType.Point]: scalePoint,
 }
