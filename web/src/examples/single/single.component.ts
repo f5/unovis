@@ -5,7 +5,7 @@ import _times from 'lodash/times'
 import { components, containers } from '@volterra/vis'
 
 const { SingleChart } = containers
-const { Line } = components
+const { Line, Tooltip } = components
 
 function generateData (): object[] {
   return _times(20).map((i) => ({
@@ -34,6 +34,11 @@ export class SingleComponent implements OnInit, AfterViewInit {
       color: '#f00',
       x: d => d.x,
       y: d => d.y,
+      events: {
+        [Line.selectors.line]: {
+          'click' : d => { console.log('event', d)},
+        }
+      },
     }
     const component = new Line(lineComponentConfig)
 
@@ -47,9 +52,11 @@ export class SingleComponent implements OnInit, AfterViewInit {
         scaleType: 'linear',
         domain: [0, 100],
       },
-      actions: {
-        'mousemove node': d => {},
-      },
+      tooltip: new Tooltip({
+        elements: {
+          [Line.selectors.line]: (d) => `<span>Line Chart</span>`
+        }
+      })
     }
 
     const singleChart = new SingleChart(chartElement, singleChartConfig, this.data)
@@ -59,7 +66,7 @@ export class SingleComponent implements OnInit, AfterViewInit {
       lineComponentConfig.color = '#00f'
       singleChart.setData(generateData(), true)
       singleChart.updateComponent(lineComponentConfig)
-    }, 1000)
+    }, 3000)
     // const tooltip = new Tooltip(singleChart, config)
 
     // singleChart.setData(data)

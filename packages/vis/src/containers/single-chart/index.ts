@@ -34,11 +34,17 @@ export class SingleChart extends ContainerCore {
 
   updateContainer (containerConfig: SingleChartConfigInterface, preventRender?: boolean): void {
     super.updateContainer(containerConfig)
+    this.removeAllChildren()
+
 
     this.component = containerConfig.component
-
-    this.removeAllChildren()
     this.element.appendChild(this.component.element)
+
+    if (containerConfig.tooltip) {
+      containerConfig.tooltip.setContainer(this._container)
+      containerConfig.tooltip.setComponent(this.component)
+    }
+
     if (!preventRender) this.render()
   }
 
@@ -56,6 +62,7 @@ export class SingleChart extends ContainerCore {
     this.render()
   }
 
+
   _render (customDuration?: number): void {
     const { config, component } = this
     super._render()
@@ -65,6 +72,8 @@ export class SingleChart extends ContainerCore {
     component.g
       .attr('transform', `translate(${config.margin.left},${config.margin.top})`)
 
-    component._render(customDuration)
+    component.render(customDuration)
+
+    config.tooltip?.update()
   }
 }

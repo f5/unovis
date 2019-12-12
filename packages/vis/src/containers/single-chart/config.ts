@@ -2,6 +2,7 @@
 
 // Core
 import { ContainerConfig, ContainerConfigInterface } from 'core/container/config'
+import { Tooltip } from 'core/tooltip'
 
 export interface SingleChartConfigInterface extends ContainerConfigInterface {
   /** Visualization Component */
@@ -12,7 +13,10 @@ export interface SingleChartConfigInterface extends ContainerConfigInterface {
   y?: any;
   /** Callback actions */
   action?: object;
+  /** Tooltip component */
+  tooltip?: Tooltip
 }
 
 export class SingleChartConfig extends ContainerConfig implements SingleChartConfigInterface {
+  tooltip: undefined
 }
