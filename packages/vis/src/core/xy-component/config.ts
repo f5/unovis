@@ -1,6 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { ColorType } from 'utils/color'
-import { ScaleType } from 'enums/scales'
+// import { ScaleType } from 'enums/scales'
 
 // Config
 import { ComponentConfigInterface, ComponentConfig } from '../component/config'
@@ -14,17 +14,10 @@ export interface XYConfigInterface extends ComponentConfigInterface {
   color?: string | object;
   /** Coloring tyle */
   colorType?: ColorType;
-  /** X scale Type */
-  xScaleType?: ScaleType;
-  /** Y scale type */
-  yScaleType?: ScaleType;
-  /** Chart padding */
-  padding?: {
-    top?: number;
-    bottom?: number;
-    left?: number;
-    right?: number;
-  };
+  // /** X scale Type */
+  // xScaleType?: ScaleType;
+  // /** Y scale type */
+  // yScaleType?: ScaleType;
 }
 
 export class XYConfig extends ComponentConfig implements XYConfigInterface {
@@ -32,12 +25,6 @@ export class XYConfig extends ComponentConfig implements XYConfigInterface {
   y = d => d.y
   color = null
   colorType = ColorType.Static
-  xScaleType = ScaleType.Linear
-  yScaleType = ScaleType.Linear
-  padding = {
-    top: 5,
-    bottom: 5,
-    left: 5,
-    right: 5,
-  }
+  // xScaleType = ScaleType.Linear
+  // yScaleType = ScaleType.Linear
 }

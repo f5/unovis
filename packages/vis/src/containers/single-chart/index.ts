@@ -1,15 +1,23 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
+import { extent } from 'd3-array'
 
 // Core
 import { ContainerCore } from 'core/container'
-import { ComponentCore } from 'core/component'
+// import { ComponentCore } from 'core/component'
+import { XYCore } from 'core/xy-component'
+
 import { ComponentConfig } from 'core/component/config'
+import { XYConfig } from 'core/xy-component/config'
+
+
+// Utils
+import { getValue } from 'utils/data'
 
 // Config
 import { SingleChartConfig, SingleChartConfigInterface } from './config'
 
 export class SingleChart extends ContainerCore {
-  component: ComponentCore
+  component: XYCore
   config: SingleChartConfig = new SingleChartConfig()
   data: any
 
@@ -49,7 +57,7 @@ export class SingleChart extends ContainerCore {
   }
 
   updateComponent (componentConfig: object = {}, preventRender?: boolean): void {
-    const ConfigModel = (this.component.config.constructor as typeof ComponentConfig)
+    const ConfigModel = (this.component.config.constructor as typeof XYConfig)
     this.component.prevConfig = this.component.config
     this.component.config = new ConfigModel().init(componentConfig)
     if (!preventRender) this.render()
@@ -66,14 +74,29 @@ export class SingleChart extends ContainerCore {
   _render (customDuration?: number): void {
     const { config, component } = this
     super._render()
+    this.updateScales()
 
-    component.config.width = this.width
-    component.config.height = this.height
     component.g
       .attr('transform', `translate(${config.margin.left},${config.margin.top})`)
 
+  // component.config.width = this.width
+  // component.config.height = this.height
+    component.xScale = config.x.scale
+    component.yScale = config.y.scale
     component.render(customDuration)
 
-    config.tooltip?.update()
+    if (config.tooltip) config.tooltip.update()
+  }
+
+  updateScales () {
+    const { component, config: { x, y, padding }, data } = this
+    
+    x.scale
+      .domain(x.domain ?? extent(data, d => getValue(d, component.config.x)))
+      .range([padding.left, this.width - padding.right])
+
+    y.scale
+      .domain(y.domain ?? extent(data, d => getValue(d, component.config.y)))
+      .range([this.height - padding.bottom, padding.top])
   }
 }

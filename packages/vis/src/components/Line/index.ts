@@ -48,7 +48,6 @@ export class Line extends XYCore {
   _render (customDuration?: number): void {
     const { config, datamodel: { data } } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
-    this.updateScales()
 
     this.lineGen = line()
       .x(d => this.xScale(getValue(d, config.x)))

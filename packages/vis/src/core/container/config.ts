@@ -9,6 +9,13 @@ export interface ContainerConfigInterface {
     left?: number;
     right?: number;
   };
+  /** Chart padding */
+  padding?: {
+    top?: number;
+    bottom?: number;
+    left?: number;
+    right?: number;
+  };
 }
 
 export class ContainerConfig implements ContainerConfigInterface {
@@ -17,6 +24,12 @@ export class ContainerConfig implements ContainerConfigInterface {
     bottom: 0,
     left: 0,
     right: 0,
+  }
+  padding = {
+    top: 5,
+    bottom: 5,
+    left: 5,
+    right: 5,
   }
 
   init (config: ContainerConfigInterface = {}): ContainerConfig {

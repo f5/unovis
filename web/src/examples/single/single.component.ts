@@ -2,7 +2,7 @@
 
 import { Component, ViewChild, ElementRef, OnInit, AfterViewInit } from '@angular/core'
 import _times from 'lodash/times'
-import { components, containers } from '@volterra/vis'
+import { components, containers, Scale } from '@volterra/vis'
 
 const { SingleChart } = containers
 const { Line, Tooltip } = components
@@ -45,12 +45,12 @@ export class SingleComponent implements OnInit, AfterViewInit {
     const singleChartConfig = {
       component,
       x: {
-        scaleType: 'linear',
-        domain: [0, 100],
+        scale: Scale.scaleLinear(),
+        // domain: [0, 100],
       },
       y: {
-        scaleType: 'linear',
-        domain: [0, 100],
+        scale: Scale.scaleLinear(),
+        // domain: [0, 100],
       },
       tooltip: new Tooltip({
         elements: {
