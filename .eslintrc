@@ -1,13 +1,18 @@
 {
   "extends": [
-    "plugin:@typescript-eslint/recommended",
     "standard"
   ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json",
+    "sourceType": "module"
+  },
   "env": {
     "browser": true,
     "jasmine": true
   },
   "plugins": [
+    "@typescript-eslint",
     "notice",
     "import"
   ],
