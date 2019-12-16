@@ -33,6 +33,8 @@
         "onNonMatchingHeader": "replace"
       }
     ],
+    "no-unused-expressions": "off",
+    "@typescript-eslint/no-unused-expressions": ["error"],
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/explicit-member-accessibility": "off",
     "@typescript-eslint/indent": "off"
