@@ -44,11 +44,11 @@ export class Tooltip {
     Object.keys(this.config.elements).forEach(className => {
       const template = this.config.elements[className]
       this.component.g.selectAll(`.${className}`)
-        .on('mousemove', (d, i, elements) => {
+        .on('mousemove.tooltip', (d, i, elements) => {
           const [x, y] = mouse(this._container)
           this.show(template(d, i, elements), {x, y})
         })
-        .on('mouseleave', (d, i, elements) => this.hide())
+        .on('mouseleave.tooltip', (d, i, elements) => this.hide())
     })
   }
 
