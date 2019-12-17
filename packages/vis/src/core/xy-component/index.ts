@@ -3,6 +3,7 @@
 
 // Core
 import { ComponentCore } from 'core/component'
+import { SeriesDataModel } from 'data-models/series'
 
 // Utils
 import { getValue } from 'utils/data'
@@ -16,13 +17,16 @@ import { XYConfig } from './config'
 
 export class XYCore extends ComponentCore {
   config: XYConfig
+  datamodel: SeriesDataModel = new SeriesDataModel()
   xScale = Scale.scaleLinear()
   yScale = Scale.scaleLinear()
+  width: number
+  height: number
   colorScale: any
 
   // updateScales () {
   //   const { config, datamodel: { data } } = this
-    
+
   //   this.xScale = Scale[config.xScaleType]()
   //   this.yScale = Scale[config.yScaleType]()
 
@@ -40,5 +44,10 @@ export class XYCore extends ComponentCore {
     const value = getValue(d, accessor)
     if (config.colorType === ColorType.Dynamic) return this.colorScale(value)
     else return value
+  }
+
+  getYDataExtent (): number[] {
+    const { config, datamodel } = this
+    return datamodel.getExtent(config.y)
   }
 }
