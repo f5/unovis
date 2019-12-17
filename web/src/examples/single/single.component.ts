@@ -5,12 +5,16 @@ import _times from 'lodash/times'
 import { components, containers, Scale } from '@volterra/vis'
 
 const { SingleChart } = containers
-const { Line, Tooltip } = components
+const { Line, StackedBar, Tooltip } = components
 
 function generateData (): object[] {
-  return _times(20).map((i) => ({
+  return _times(100).map((i) => ({
     x: i,
     y: Math.random(),
+    y1: Math.random(),
+    y2: Math.random(),
+    y3: Math.random(),
+    y4: Math.random(),
   }))
 }
 
@@ -31,16 +35,22 @@ export class SingleComponent implements OnInit, AfterViewInit {
     const chartElement = this.chartView.nativeElement
 
     const lineComponentConfig = {
-      color: '#f00',
+      // color: '#f00',
       x: d => d.x,
-      y: d => d.y,
+      y: [
+        d => d.y,
+        d => d.y1,
+        d => d.y2,
+        d => d.y3,
+        d => d.y4,
+      ],
       events: {
-        [Line.selectors.line]: {
-          'click' : d => { console.log('event', d)},
-        }
+        [StackedBar.selectors.bar]: {
+          click: d => { console.log('event', d) },
+        },
       },
     }
-    const component = new Line(lineComponentConfig)
+    const component = new StackedBar(lineComponentConfig)
 
     const singleChartConfig = {
       component,
@@ -54,16 +64,16 @@ export class SingleComponent implements OnInit, AfterViewInit {
       },
       tooltip: new Tooltip({
         elements: {
-          [Line.selectors.line]: (d) => `<span>Line Chart</span>`
-        }
-      })
+          [StackedBar.selectors.bar]: (d) => '<span>Line Chart</span>',
+        },
+      }),
     }
 
     const singleChart = new SingleChart(chartElement, singleChartConfig, this.data)
     // singleChart.render()
 
     setInterval(() => {
-      lineComponentConfig.color = '#00f'
+      // lineComponentConfig.color = '#00f'
       singleChart.setData(generateData(), true)
       singleChart.updateComponent(lineComponentConfig)
     }, 3000)
