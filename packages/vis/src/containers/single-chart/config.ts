@@ -13,18 +13,18 @@ export interface SingleChartConfigInterface extends ContainerConfigInterface {
   component?: any;
   /** X scale configuration object */
   x?: {
-    scale?: any,
-    domain?: number[]
+    scale?: any;
+    domain?: number[];
   };
   /** Y scale configuration object */
   y?: {
-    scale?: any,
-    domain?: number[]
+    scale?: any;
+    domain?: number[];
   };
   /** Callback actions */
   action?: object;
   /** Tooltip component */
-  tooltip?: Tooltip
+  tooltip?: Tooltip;
 }
 
 export class SingleChartConfig extends ContainerConfig implements SingleChartConfigInterface {
@@ -33,6 +33,7 @@ export class SingleChartConfig extends ContainerConfig implements SingleChartCon
     scale: Scale.scaleLinear(),
     domain: undefined,
   }
+
   y = {
     scale: Scale.scaleLinear(),
     domain: undefined,

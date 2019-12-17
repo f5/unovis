@@ -1,11 +1,13 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { isNumber, isUndefined, cloneDeep,
-  each, filter, get, without, find, isString, isObject } from 'utils/data'
+import {
+  isNumber, isUndefined, cloneDeep,
+  each, filter, get, without, find, isString, isObject,
+} from 'utils/data'
 
 // Core
 import { CoreDataModel } from './core'
 
-export default class GraphDataModel extends CoreDataModel {
+export class GraphDataModel extends CoreDataModel {
   private _nonConnectedNodes: object[]
   private _connectedNodes: object[]
 
@@ -37,7 +39,7 @@ export default class GraphDataModel extends CoreDataModel {
 
       const linksFiltered = filter(links, l =>
         ((link.source === l.source) && (link.target === l.target)) ||
-        ((link.source === l.target) && (link.target === l.source)),
+        ((link.source === l.target) && (link.target === l.source))
       )
 
       each(linksFiltered, (l, i) => {

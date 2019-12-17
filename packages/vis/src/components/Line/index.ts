@@ -26,9 +26,9 @@ export class Line extends XYCore {
   curve: CurveFactory = Curve[CurveType.MonotoneX]
   events = {
     [Line.selectors.line]: {
-      'mousemove': this._onEvent,
-      'mouseover': this._onEvent,
-      'mouseleave': this._onEvent,
+      mousemove: this._onEvent,
+      mouseover: this._onEvent,
+      mouseleave: this._onEvent,
     },
   }
 

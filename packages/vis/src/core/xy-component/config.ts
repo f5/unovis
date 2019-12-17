@@ -2,19 +2,22 @@
 import { ColorType } from 'utils/color'
 // import { ScaleType } from 'enums/scales'
 
+// Utils
+import { numericAccessor } from 'utils/types'
+
 // Config
 import { ComponentConfigInterface, ComponentConfig } from '../component/config'
 
 export interface XYConfigInterface extends ComponentConfigInterface {
-  //** X accessor or number value */
-  x: ((d: any, i?: number, ...any) => number) | number;
-  //** Y accessor or value */
-  y: ((d: any, i?: number, ...any) => number) | number;
-  /** Сomponent color (string or color object) */
+  /** X accessor or number value */
+  x: numericAccessor;
+  /** Y accessor or value */
+  y: numericAccessor | numericAccessor[];
+  /** Component color (string or color object) */
   color?: string | object;
-  /** Coloring tyle */
+  /** Coloring type */
   colorType?: ColorType;
-  // /** X scale Type */
+  // /** X scale type */
   // xScaleType?: ScaleType;
   // /** Y scale type */
   // yScaleType?: ScaleType;
