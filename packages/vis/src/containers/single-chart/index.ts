@@ -6,9 +6,8 @@ import { ContainerCore } from 'core/container'
 // import { ComponentCore } from 'core/component'
 import { XYCore } from 'core/xy-component'
 
-import { ComponentConfig } from 'core/component/config'
+// import { ComponentConfig } from 'core/component/config'
 import { XYConfig } from 'core/xy-component/config'
-
 
 // Utils
 import { getValue } from 'utils/data'
@@ -44,7 +43,6 @@ export class SingleChart extends ContainerCore {
     super.updateContainer(containerConfig)
     this.removeAllChildren()
 
-
     this.component = containerConfig.component
     this.element.appendChild(this.component.element)
 
@@ -70,7 +68,6 @@ export class SingleChart extends ContainerCore {
     this.render()
   }
 
-
   _render (customDuration?: number): void {
     const { config, component } = this
     super._render()
@@ -79,24 +76,23 @@ export class SingleChart extends ContainerCore {
     component.g
       .attr('transform', `translate(${config.margin.left},${config.margin.top})`)
 
-  // component.config.width = this.width
-  // component.config.height = this.height
-    component.xScale = config.x.scale
-    component.yScale = config.y.scale
     component.render(customDuration)
 
     if (config.tooltip) config.tooltip.update()
   }
 
-  updateScales () {
+  updateScales (): void {
     const { component, config: { x, y, padding }, data } = this
-    
-    x.scale
-      .domain(x.domain ?? extent(data, d => getValue(d, component.config.x)))
-      .range([padding.left, this.width - padding.right])
+    x.scale.domain(x.domain ?? extent(data, d => getValue(d, component.config.x)))
+    y.scale.domain(y.domain ?? component.getYDataExtent())
 
-    y.scale
-      .domain(y.domain ?? extent(data, d => getValue(d, component.config.y)))
-      .range([this.height - padding.bottom, padding.top])
+    component.xScale = x.scale
+    component.yScale = y.scale
+    component.config.width = this.width
+    component.config.height = this.height
+
+    const bleed = this.component.bleed
+    x.scale.range([padding.left + bleed.left, this.width - padding.right - bleed.right])
+    y.scale.range([this.height - padding.bottom - bleed.bottom, padding.top + bleed.top])
   }
 }

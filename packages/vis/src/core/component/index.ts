@@ -34,12 +34,16 @@ export class ComponentCore {
 
   render (customDuration?: number): void {
     this._render(customDuration)
-    
+
     // Set up default events
     this._setUpEvents(this.events)
 
     // Set up user-defined events
     this._setUpEvents(this.config.events)
+  }
+
+  get bleed (): { top: number; bottom: number; left: number; right: number } {
+    return { top: 0, bottom: 0, left: 0, right: 0 }
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function

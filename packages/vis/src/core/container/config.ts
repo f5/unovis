@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { isPlainObject, merge} from 'utils/data'
+import { isPlainObject, merge } from 'utils/data'
 
 export interface ContainerConfigInterface {
   /** Container margins */
@@ -25,11 +25,12 @@ export class ContainerConfig implements ContainerConfigInterface {
     left: 0,
     right: 0,
   }
+
   padding = {
-    top: 5,
-    bottom: 5,
-    left: 5,
-    right: 5,
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
   }
 
   init (config: ContainerConfigInterface = {}): ContainerConfig {
