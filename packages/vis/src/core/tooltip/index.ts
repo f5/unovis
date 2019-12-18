@@ -46,7 +46,7 @@ export class Tooltip {
       this.component.g.selectAll(`.${className}`)
         .on('mousemove.tooltip', (d, i, elements) => {
           const [x, y] = mouse(this._container)
-          this.show(template(d, i, elements), {x, y})
+          this.show(template(d, i, elements), { x, y })
         })
         .on('mouseleave.tooltip', (d, i, elements) => this.hide())
     })
@@ -58,7 +58,7 @@ export class Tooltip {
 
     this.place(pos)
   }
-  
+
   hide (): void {
     this.div.classed('show', false)
   }
@@ -72,7 +72,7 @@ export class Tooltip {
       .style('bottom', `${containerHeight - pos.y}px`)
       .style('left', `${pos.x - width / 2}px`)
   }
-  
+
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   render (customDuration?: number): void {
   }
