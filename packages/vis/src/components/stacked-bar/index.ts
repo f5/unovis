@@ -5,10 +5,12 @@ import { interpolatePath } from 'd3-interpolate-path'
 
 // Core
 import { XYCore } from 'core/xy-component'
+import { getCSSVarName } from 'styles/colors'
 
 // Utils
 import { getValue, isNumber, isArray, isEmpty } from 'utils/data'
 import { roundedRectPath } from 'utils/path'
+import { numericAccessor } from 'utils/types'
 
 // Enums
 
@@ -16,7 +18,6 @@ import { roundedRectPath } from 'utils/path'
 import { StackedBarConfig, StackedBarConfigInterface } from './config'
 
 // Styles
-import { getCSSVarName } from 'styles/colors'
 import * as s from './style'
 
 export class StackedBar extends XYCore {
@@ -46,10 +47,10 @@ export class StackedBar extends XYCore {
   }
 
   _render (customDuration?: number): void {
-    const { config, datamodel: { data } } = this
+    const { config } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
 
-    const start = this.yScale.range()[0]
+    const start = config.yScale.range()[0]
 
     const barGroups = this.g
       .selectAll(`.${s.bar}`)
@@ -88,7 +89,7 @@ export class StackedBar extends XYCore {
     const barWidth = this._getBarWidth()
     const halfBarWidth = data.length < 2 ? 0 : barWidth / 2
 
-    const yAccessors = isArray(config.y) ? config.y : [config.y]
+    const yAccessors = <numericAccessor[]>(isArray(config.y) ? config.y : [config.y])
 
     data?.forEach(d => {
       const x = getValue(d, config.x)
@@ -99,28 +100,28 @@ export class StackedBar extends XYCore {
         const y = getValue(d, accessor) || 0
         const isLastValue = i === yAccessors.length - 1
         const lastBars = yAccessors.slice(i + 1, yAccessors.length)
-        const lastBarsValue = lastBars.reduce((sum, acs) => {
-          return sum + (getValue(d, acs) ?? 0)
-        }, 0)
+        const lastBarsValue = lastBars
+          .map(a => getValue(d, a) ?? 0)
+          .reduce((sum, value) => sum + value, 0)
 
         let size
         if (isVertical) {
-          const h = this.yScale(start) - this.yScale(y + (stackedValue === start ? 0 : start))
+          const h = config.yScale(start) - config.yScale(y + (stackedValue === start ? 0 : start))
           let deltaY = 0
           if (h === 0) deltaY = lastBarsValue === 0 && i !== 0 ? 0 : 1
           size = {
-            x: this.xScale(x) - halfBarWidth,
-            y: this.yScale(y - start + stackedValue) - deltaY,
+            x: config.xScale(x) - halfBarWidth,
+            y: config.yScale(y - start + stackedValue) - deltaY,
             w: barWidth,
             h: h + deltaY,
           }
         } else {
-          const w = this.yScale(start) + this.yScale(y + (stackedValue === start ? 0 : start))
+          const w = config.yScale(start) + config.yScale(y + (stackedValue === start ? 0 : start))
           let deltaX = 0
           if (w === 0) deltaX = lastBarsValue === 0 && i !== 0 ? 0 : 1
           size = {
-            x: this.yScale(stackedValue - (stackedValue === start ? 0 : start)),
-            y: this.xScale(x) - halfBarWidth,
+            x: config.yScale(stackedValue - (stackedValue === start ? 0 : start)),
+            y: config.xScale(x) - halfBarWidth,
             w: w + deltaX,
             h: barWidth,
           }
@@ -157,12 +158,12 @@ export class StackedBar extends XYCore {
   }
 
   _getBarWidth (): number {
-    const { config: { barWidth, barMaxWidth, expectedDataStep, isVertical, barPadding, x, width, height }, datamodel: { data } } = this
+    const { config: { xScale, barWidth, barMaxWidth, expectedDataStep, isVertical, barPadding, x, width, height }, datamodel: { data } } = this
     if (isEmpty(data)) return 0
     if (barWidth) return min([barWidth, barMaxWidth])
 
-    const isOrdinal = this.xScale.bandwidth
-    const xDomain = this.xScale.domain ? this.xScale.domain() : []
+    const isOrdinal = xScale.bandwidth
+    const xDomain = xScale.domain ? xScale.domain() : []
     const xDomainLength = isOrdinal ? xDomain.length : xDomain[1] - xDomain[0]
 
     const dataSize = xDomainLength / expectedDataStep ||

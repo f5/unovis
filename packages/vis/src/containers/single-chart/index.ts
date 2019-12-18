@@ -7,7 +7,7 @@ import { ContainerCore } from 'core/container'
 import { XYCore } from 'core/xy-component'
 
 // import { ComponentConfig } from 'core/component/config'
-import { XYConfig } from 'core/xy-component/config'
+import { XYConfigInterface } from 'core/xy-component/config'
 
 // Utils
 import { getValue } from 'utils/data'
@@ -35,7 +35,7 @@ export class SingleChart extends ContainerCore {
 
   setData (data: any, preventRender?: boolean): void {
     this.data = data
-    if (this.component) this.component.datamodel.data = data
+    if (this.component) this.component.setData(data)
     if (!preventRender) this.render()
   }
 
@@ -54,10 +54,9 @@ export class SingleChart extends ContainerCore {
     if (!preventRender) this.render()
   }
 
-  updateComponent (componentConfig: object = {}, preventRender?: boolean): void {
-    const ConfigModel = (this.component.config.constructor as typeof XYConfig)
+  updateComponent (componentConfig: XYConfigInterface, preventRender?: boolean): void {
     this.component.prevConfig = this.component.config
-    this.component.config = new ConfigModel().init(componentConfig)
+    this.component.setConfig(componentConfig)
     if (!preventRender) this.render()
   }
 
@@ -86,8 +85,8 @@ export class SingleChart extends ContainerCore {
     x.scale.domain(x.domain ?? extent(data, d => getValue(d, component.config.x)))
     y.scale.domain(y.domain ?? component.getYDataExtent())
 
-    component.xScale = x.scale
-    component.yScale = y.scale
+    component.config.xScale = x.scale
+    component.config.yScale = y.scale
     component.config.width = this.width
     component.config.height = this.height
 

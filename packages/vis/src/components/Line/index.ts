@@ -50,8 +50,8 @@ export class Line extends XYCore {
     const duration = isNumber(customDuration) ? customDuration : config.duration
 
     this.lineGen = line()
-      .x(d => this.xScale(getValue(d, config.x)))
-      .y(d => this.yScale(getValue(d, config.y)))
+      .x(d => config.xScale(getValue(d, config.x)))
+      .y(d => config.yScale(getValue(d, config.y)))
       .curve(this.curve)
 
     this.linePath.datum(data)

@@ -2,7 +2,7 @@
 
 import { Component, ViewChild, ElementRef, OnInit, AfterViewInit } from '@angular/core'
 import _times from 'lodash/times'
-import { components, containers, Scale } from '@volterra/vis'
+import { components, containers, Scales } from '@volterra/vis'
 
 const { SingleChart } = containers
 const { Line, StackedBar, Tooltip } = components
@@ -36,8 +36,8 @@ export class SingleComponent implements OnInit, AfterViewInit {
     const barConfig = getBarConfig()
     const barChartConfig = {
       component: new StackedBar(barConfig),
-      x: { scale: Scale.scaleLinear() },
-      y: { scale: Scale.scaleLinear() },
+      x: { scale: Scales.scaleLinear() },
+      y: { scale: Scales.scaleLinear() },
       tooltip: new Tooltip({
         elements: {
           [StackedBar.selectors.bar]: (d) => '<span>Bar Chart</span>',
@@ -49,8 +49,8 @@ export class SingleComponent implements OnInit, AfterViewInit {
     const lineConfig = getLineConfig()
     const lineChartConfig = {
       component: new Line(lineConfig),
-      x: { scale: Scale.scaleLinear() },
-      y: { scale: Scale.scaleLinear() },
+      x: { scale: Scales.scaleLinear() },
+      y: { scale: Scales.scaleLinear() },
       tooltip: new Tooltip({
         elements: {
           [Line.selectors.line]: (d) => '<span>Line Chart</span>',

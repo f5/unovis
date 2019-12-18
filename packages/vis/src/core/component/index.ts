@@ -22,15 +22,15 @@ export class ComponentCore {
     // if (config) this.setConfig(config)
   }
 
-  // setConfig (config?: any): void {
-  //   const ConfigModel = (this.config.constructor as typeof ComponentConfig)
-  //   this.prevConfig = this.config
-  //   this.config = new ConfigModel().init(config)
-  // }
+  setConfig<T extends ComponentConfigInterface> (config?: T): void {
+    const ConfigModel = (this.config.constructor as typeof ComponentConfig)
+    this.prevConfig = this.config
+    this.config = new ConfigModel().init(config)
+  }
 
-  // setData (data: any): void {
-  //   this.datamodel.data = data
-  // }
+  setData<T> (data: T): void {
+    this.datamodel.data = data
+  }
 
   render (customDuration?: number): void {
     this._render(customDuration)

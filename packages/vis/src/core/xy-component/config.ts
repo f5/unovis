@@ -1,6 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { ColorType } from 'utils/color'
-// import { ScaleType } from 'enums/scales'
+import { Scales, Scale } from 'enums/scales'
 
 // Utils
 import { numericAccessor } from 'utils/types'
@@ -17,6 +17,8 @@ export interface XYConfigInterface extends ComponentConfigInterface {
   color?: string | object;
   /** Coloring type */
   colorType?: ColorType;
+  xScale?: Scale;
+  yScale?: Scale;
   // /** X scale type */
   // xScaleType?: ScaleType;
   // /** Y scale type */
@@ -30,4 +32,6 @@ export class XYConfig extends ComponentConfig implements XYConfigInterface {
   colorType = ColorType.Static
   // xScaleType = ScaleType.Linear
   // yScaleType = ScaleType.Linear
+  xScale = Scales.scaleLinear()
+  yScale = Scales.scaleLinear()
 }

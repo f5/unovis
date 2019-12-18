@@ -1,10 +1,17 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { scaleLinear, scalePow, scaleSqrt, scaleLog, scaleIdentity, scaleTime, scaleUtc,
-  scaleSequential, scaleDiverging, scaleQuantize, scaleQuantile, scaleThreshold, scaleOrdinal, 
-  scaleBand, scalePoint } from 'd3-scale'
-// ScaleLinear, ScalePower, ScaleLogarithmic, ScaleIdentity, ScaleTime, ScaleSequential, ScaleDiverging, ScaleQuantize, ScaleQuantile, ScaleThreshold, ScaleOrdinal,  ScaleBand, ScalePoint
+import {
+  scaleLinear, scalePow, scaleSqrt, scaleLog, scaleIdentity, scaleTime, scaleUtc,
+  scaleSequential, scaleDiverging, scaleQuantize, scaleQuantile, scaleThreshold, scaleOrdinal,
+  scaleBand, scalePoint,
+  ScaleLinear, ScalePower, ScaleLogarithmic, ScaleTime, ScaleSequential, ScaleDiverging, ScaleQuantize,
+  ScaleQuantile, ScaleThreshold, ScaleOrdinal, ScaleBand, ScalePoint,
+} from 'd3-scale'
 
-export const Scale = {
+export type Scale = ScaleLinear<number, any> | ScalePower<any, any> | ScaleLogarithmic<any, any>
+   | ScaleTime<any, any> | ScaleSequential<any> | ScaleDiverging<any> | ScaleQuantize<any> | ScaleQuantile<any>
+   | ScaleThreshold<any, any> | ScaleOrdinal<any, any> | ScaleBand<any> | ScalePoint<any>
+
+export const Scales = {
   scaleLinear,
   scalePow,
   scaleSqrt,

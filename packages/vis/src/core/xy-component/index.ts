@@ -10,7 +10,7 @@ import { getValue } from 'utils/data'
 import { ColorType } from 'utils/color'
 
 // Enums
-import { Scale } from 'enums/scales'
+// import { Scale } from 'enums/scales'
 
 // Config
 import { XYConfig } from './config'
@@ -18,8 +18,6 @@ import { XYConfig } from './config'
 export class XYCore extends ComponentCore {
   config: XYConfig
   datamodel: SeriesDataModel = new SeriesDataModel()
-  xScale = Scale.scaleLinear()
-  yScale = Scale.scaleLinear()
   width: number
   height: number
   colorScale: any
