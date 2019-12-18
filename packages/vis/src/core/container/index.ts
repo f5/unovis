@@ -13,11 +13,11 @@ export class ContainerCore {
   prevConfig: ContainerConfig
   config: ContainerConfig
 
-  private _container: HTMLElement
+  protected _container: HTMLElement
   private _requestedAnimationFrame: number
   private _animationFramePromise: Promise<number>
 
-  constructor (element, config?: ContainerConfigInterface, data?) {
+  constructor (element: HTMLElement, config?: ContainerConfigInterface, data?) {
     this._requestedAnimationFrame = null
     this._container = element
     this.svg = select(this._container).append('svg')

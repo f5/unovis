@@ -19,10 +19,18 @@ import { LineConfig, LineConfigInterface } from './config'
 import * as s from './style'
 
 export class Line extends XYCore {
+  static selectors = s
   config: LineConfig = new LineConfig()
   lineGen: LineInterface<any[]>
   linePath: Selection<SVGGElement, object[], SVGGElement, object[]>
   curve: CurveFactory = Curve[CurveType.MonotoneX]
+  events = {
+    [Line.selectors.line]: {
+      mousemove: this._onEvent,
+      mouseover: this._onEvent,
+      mouseleave: this._onEvent,
+    },
+  }
 
   constructor (config?: LineConfigInterface) {
     super()
@@ -40,16 +48,16 @@ export class Line extends XYCore {
   _render (customDuration?: number): void {
     const { config, datamodel: { data } } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
-    this.updateScales()
 
     this.lineGen = line()
-      .x(d => this.xScale(getValue(d, config.x)))
-      .y(d => this.yScale(getValue(d, config.y)))
+      .x(d => config.xScale(getValue(d, config.x)))
+      .y(d => config.yScale(getValue(d, config.y)))
       .curve(this.curve)
 
     this.linePath.datum(data)
     smartTransition(this.linePath, duration)
       .attr('d', this.lineGen(data))
       .style('stroke', d => this.getColor(d, config.color))
+      .attr('stroke-width', config.lineWidth)
   }
 }

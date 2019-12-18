@@ -20,7 +20,7 @@
     "import/resolver": {
       "typescript": {}
     }
-  }, 
+  },
   "rules": {
     "no-useless-constructor": "off",
     "import/extensions": 0,
@@ -28,9 +28,17 @@
     "import/no-extraneous-dependencies": 0,
     "import/prefer-default-export": 0,
     "import/first": ["error", "absolute-first"],
-    "comma-dangle": ["error", "always-multiline"],
+    "comma-dangle": ["error", {
+        "arrays": "always-multiline",
+        "objects": "always-multiline",
+        "imports": "always-multiline",
+        "exports": "always-multiline",
+        "functions": "never"
+    }],
     "indent": ["error", 2],
     "no-console": ["error", { "allow": ["warn", "error"] }],
+    "no-undef": 0,
+    "no-unused-vars": 0,
     "notice/notice":[ "error",
       {
         "mustMatch": "Copyright \\(c\\) (Volterra), Inc. All rights reserved.",

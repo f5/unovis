@@ -1,5 +1,7 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import _isUndefined from 'lodash/isUndefined'
+import _isArray from 'lodash/isArray'
+import _isEmpty from 'lodash/isEmpty'
 import _cloneDeep from 'lodash/cloneDeep'
 import _each from 'lodash/each'
 import _filter from 'lodash/filter'
@@ -18,6 +20,8 @@ export const isFunction = _isFunction
 export const merge = _merge
 export const isPlainObject = _isPlainObject
 export const isUndefined = _isUndefined
+export const isArray = _isArray
+export const isEmpty = _isEmpty
 export const cloneDeep = _cloneDeep
 export const each = _each
 export const filter = _filter

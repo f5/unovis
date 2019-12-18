@@ -1,30 +1,28 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { ColorType } from 'utils/color'
-import { ScaleType } from 'enums/scales'
+import { Scales, Scale } from 'enums/scales'
+
+// Utils
+import { numericAccessor } from 'utils/types'
 
 // Config
 import { ComponentConfigInterface, ComponentConfig } from '../component/config'
 
 export interface XYConfigInterface extends ComponentConfigInterface {
-  //** X accessor or number value */
-  x: ((d: any, i?: number, ...any) => number) | number;
-  //** Y accessor or value */
-  y: ((d: any, i?: number, ...any) => number) | number;
-  /** Сomponent color (string or color object) */
+  /** X accessor or number value */
+  x: numericAccessor;
+  /** Y accessor or value */
+  y: numericAccessor | numericAccessor[];
+  /** Component color (string or color object) */
   color?: string | object;
-  /** Coloring tyle */
+  /** Coloring type */
   colorType?: ColorType;
-  /** X scale Type */
-  xScaleType?: ScaleType;
-  /** Y scale type */
-  yScaleType?: ScaleType;
-  /** Chart padding */
-  padding?: {
-    top?: number;
-    bottom?: number;
-    left?: number;
-    right?: number;
-  };
+  xScale?: Scale;
+  yScale?: Scale;
+  // /** X scale type */
+  // xScaleType?: ScaleType;
+  // /** Y scale type */
+  // yScaleType?: ScaleType;
 }
 
 export class XYConfig extends ComponentConfig implements XYConfigInterface {
@@ -32,12 +30,8 @@ export class XYConfig extends ComponentConfig implements XYConfigInterface {
   y = d => d.y
   color = null
   colorType = ColorType.Static
-  xScaleType = ScaleType.Linear
-  yScaleType = ScaleType.Linear
-  padding = {
-    top: 5,
-    bottom: 5,
-    left: 5,
-    right: 5,
-  }
+  // xScaleType = ScaleType.Linear
+  // yScaleType = ScaleType.Linear
+  xScale = Scales.scaleLinear()
+  yScale = Scales.scaleLinear()
 }

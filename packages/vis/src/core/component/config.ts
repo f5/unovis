@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { isPlainObject, merge} from 'utils/data'
+import { isPlainObject, merge } from 'utils/data'
 
 export interface ComponentConfigInterface {
   /** Animation duration */
@@ -8,12 +8,15 @@ export interface ComponentConfigInterface {
   width?: number;
   /** Component height in pixels */
   height?: number;
+  /** Events */
+  events?: object;
 }
 
 export class ComponentConfig implements ComponentConfigInterface {
   duration = 600
   width = 400
   height = 200
+  events = {}
 
   init (config: ComponentConfigInterface = {}): ComponentConfig {
     Object.keys(config).forEach(key => {

@@ -15,6 +15,7 @@
   "devDependencies": {
     "@types/d3": "^5.7.2",
     "d3": "^5.14.2",
+    "d3-interpolate-path": "^2.1.1",
     "emotion": "^10.0.23",
     "lodash": "^4.17.15",
     "rimraf": "^3.0.0",

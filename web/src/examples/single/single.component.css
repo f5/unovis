@@ -1,5 +1,6 @@
 .chart {
-  width: 500px;
-  height: 300px;
-  background-color: #efefef;
+  width: 100%;
+  height: 400px;
+  /*background-color: #efefef;*/
+  position: relative;
 }

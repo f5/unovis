@@ -2,15 +2,19 @@
 
 import { Component, ViewChild, ElementRef, OnInit, AfterViewInit } from '@angular/core'
 import _times from 'lodash/times'
-import { components, containers } from '@volterra/vis'
+import { components, containers, Scales } from '@volterra/vis'
 
 const { SingleChart } = containers
-const { Line } = components
+const { Line, StackedBar, Tooltip } = components
 
 function generateData (): object[] {
-  return _times(20).map((i) => ({
+  return _times(30).map((i) => ({
     x: i,
     y: Math.random(),
+    y1: Math.random(),
+    y2: Math.random(),
+    y3: Math.random(),
+    y4: Math.random(),
   }))
 }
 
@@ -25,48 +29,75 @@ export class SingleComponent implements OnInit, AfterViewInit {
   chart: any
   data: any
   config: any
-  @ViewChild('chart', { static: false }) chartView: ElementRef
+  @ViewChild('linechart', { static: false }) lineChart: ElementRef
+  @ViewChild('barchart', { static: false }) barChart: ElementRef
 
   ngAfterViewInit (): void {
-    const chartElement = this.chartView.nativeElement
-
-    const lineComponentConfig = {
-      color: '#f00',
-      x: d => d.x,
-      y: d => d.y,
+    const barConfig = getBarConfig()
+    const barChartConfig = {
+      component: new StackedBar(barConfig),
+      x: { scale: Scales.scaleLinear() },
+      y: { scale: Scales.scaleLinear() },
+      tooltip: new Tooltip({
+        elements: {
+          [StackedBar.selectors.bar]: (d) => '<span>Bar Chart</span>',
+        },
+      }),
     }
-    const component = new Line(lineComponentConfig)
+    const barChart = new SingleChart(this.barChart.nativeElement, barChartConfig, this.data)
 
-    const singleChartConfig = {
-      component,
-      x: {
-        scaleType: 'linear',
-        domain: [0, 100],
-      },
-      y: {
-        scaleType: 'linear',
-        domain: [0, 100],
-      },
-      actions: {
-        'mousemove node': d => {},
-      },
+    const lineConfig = getLineConfig()
+    const lineChartConfig = {
+      component: new Line(lineConfig),
+      x: { scale: Scales.scaleLinear() },
+      y: { scale: Scales.scaleLinear() },
+      tooltip: new Tooltip({
+        elements: {
+          [Line.selectors.line]: (d) => '<span>Line Chart</span>',
+        },
+      }),
     }
-
-    const singleChart = new SingleChart(chartElement, singleChartConfig, this.data)
-    // singleChart.render()
+    const lineChart = new SingleChart(this.lineChart.nativeElement, lineChartConfig, this.data)
 
     setInterval(() => {
-      lineComponentConfig.color = '#00f'
-      singleChart.setData(generateData(), true)
-      singleChart.updateComponent(lineComponentConfig)
-    }, 1000)
-    // const tooltip = new Tooltip(singleChart, config)
-
-    // singleChart.setData(data)
-    // singleChart.setConfig(config)
+      // lineComponentConfig.color = '#00f'
+      barChart.setData(generateData(), true)
+      barChart.updateComponent(barConfig)
+      lineChart.setData(generateData())
+    }, 10000)
   }
 
   ngOnInit (): void {
     this.data = generateData()
+  }
+}
+
+function getBarConfig () {
+  return {
+    x: d => d.x,
+    y: [
+      d => d.y,
+      d => d.y1,
+      d => d.y2,
+      d => d.y3,
+      d => d.y4,
+    ],
+    events: {
+      [StackedBar.selectors.bar]: {
+        click: d => { },
+      },
+    },
+  }
+}
+
+function getLineConfig () {
+  return {
+    x: d => d.x,
+    y: d => d.y,
+    events: {
+      [Line.selectors.line]: {
+        click: d => { },
+      },
+    },
   }
 }

@@ -1,15 +1,22 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
+import { extent } from 'd3-array'
 
 // Core
 import { ContainerCore } from 'core/container'
-import { ComponentCore } from 'core/component'
-import { ComponentConfig } from 'core/component/config'
+// import { ComponentCore } from 'core/component'
+import { XYCore } from 'core/xy-component'
+
+// import { ComponentConfig } from 'core/component/config'
+import { XYConfigInterface } from 'core/xy-component/config'
+
+// Utils
+import { getValue } from 'utils/data'
 
 // Config
 import { SingleChartConfig, SingleChartConfigInterface } from './config'
 
 export class SingleChart extends ContainerCore {
-  component: ComponentCore
+  component: XYCore
   config: SingleChartConfig = new SingleChartConfig()
   data: any
 
@@ -28,24 +35,28 @@ export class SingleChart extends ContainerCore {
 
   setData (data: any, preventRender?: boolean): void {
     this.data = data
-    if (this.component) this.component.datamodel.data = data
+    if (this.component) this.component.setData(data)
     if (!preventRender) this.render()
   }
 
   updateContainer (containerConfig: SingleChartConfigInterface, preventRender?: boolean): void {
     super.updateContainer(containerConfig)
+    this.removeAllChildren()
 
     this.component = containerConfig.component
-
-    this.removeAllChildren()
     this.element.appendChild(this.component.element)
+
+    if (containerConfig.tooltip) {
+      containerConfig.tooltip.setContainer(this._container)
+      containerConfig.tooltip.setComponent(this.component)
+    }
+
     if (!preventRender) this.render()
   }
 
-  updateComponent (componentConfig: object = {}, preventRender?: boolean): void {
-    const ConfigModel = (this.component.config.constructor as typeof ComponentConfig)
+  updateComponent (componentConfig: XYConfigInterface, preventRender?: boolean): void {
     this.component.prevConfig = this.component.config
-    this.component.config = new ConfigModel().init(componentConfig)
+    this.component.setConfig(componentConfig)
     if (!preventRender) this.render()
   }
 
@@ -59,12 +70,28 @@ export class SingleChart extends ContainerCore {
   _render (customDuration?: number): void {
     const { config, component } = this
     super._render()
+    this.updateScales()
 
-    component.config.width = this.width
-    component.config.height = this.height
     component.g
       .attr('transform', `translate(${config.margin.left},${config.margin.top})`)
 
-    component._render(customDuration)
+    component.render(customDuration)
+
+    if (config.tooltip) config.tooltip.update()
+  }
+
+  updateScales (): void {
+    const { component, config: { x, y, padding }, data } = this
+    x.scale.domain(x.domain ?? extent(data, d => getValue(d, component.config.x)))
+    y.scale.domain(y.domain ?? component.getYDataExtent())
+
+    component.config.xScale = x.scale
+    component.config.yScale = y.scale
+    component.config.width = this.width
+    component.config.height = this.height
+
+    const bleed = this.component.bleed
+    x.scale.range([padding.left + bleed.left, this.width - padding.right - bleed.right])
+    y.scale.range([this.height - padding.bottom - bleed.bottom, padding.top + bleed.top])
   }
 }
