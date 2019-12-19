@@ -10,7 +10,7 @@ import { getCSSVarName } from 'styles/colors'
 // Utils
 import { getValue, isNumber, isArray, isEmpty } from 'utils/data'
 import { roundedRectPath } from 'utils/path'
-import { numericAccessor } from 'utils/types'
+import { NumericAccessor } from 'utils/types'
 
 // Enums
 
@@ -89,7 +89,7 @@ export class StackedBar extends XYCore {
     const barWidth = this._getBarWidth()
     const halfBarWidth = data.length < 2 ? 0 : barWidth / 2
 
-    const yAccessors = <numericAccessor[]>(isArray(config.y) ? config.y : [config.y])
+    const yAccessors = <NumericAccessor[]>(isArray(config.y) ? config.y : [config.y])
 
     data?.forEach(d => {
       const x = getValue(d, config.x)

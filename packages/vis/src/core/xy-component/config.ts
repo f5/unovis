@@ -3,16 +3,16 @@ import { ColorType } from 'utils/color'
 import { Scales, Scale } from 'enums/scales'
 
 // Utils
-import { numericAccessor } from 'utils/types'
+import { NumericAccessor } from 'utils/types'
 
 // Config
 import { ComponentConfigInterface, ComponentConfig } from '../component/config'
 
 export interface XYConfigInterface extends ComponentConfigInterface {
   /** X accessor or number value */
-  x: numericAccessor;
+  x: NumericAccessor;
   /** Y accessor or value */
-  y: numericAccessor | numericAccessor[];
+  y: NumericAccessor | NumericAccessor[];
   /** Component color (string or color object) */
   color?: string | object;
   /** Coloring type */

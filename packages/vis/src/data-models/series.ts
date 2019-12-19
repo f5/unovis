@@ -2,7 +2,7 @@
 import { extent, max, min } from 'd3-array'
 
 // Utils
-import { numericAccessor } from 'utils/types'
+import { NumericAccessor } from 'utils/types'
 import { isArray, getValue } from 'utils/data'
 
 // Core
@@ -15,7 +15,7 @@ export class SeriesDataModel extends CoreDataModel {
     super(data)
   }
 
-  getStackedExtent (acs: numericAccessor | numericAccessor[]): number[] {
+  getStackedExtent (acs: NumericAccessor | NumericAccessor[]): number[] {
     const { data } = this
 
     if (isArray(acs)) {
@@ -24,7 +24,7 @@ export class SeriesDataModel extends CoreDataModel {
       for (const d of data) {
         let positiveStack = 0
         let negativeStack = 0
-        for (const a of <numericAccessor[]>acs) {
+        for (const a of <NumericAccessor[]>acs) {
           const value = getValue(d, a) || 0
           if (value >= 0) positiveStack += value
           else negativeStack += value
@@ -37,12 +37,12 @@ export class SeriesDataModel extends CoreDataModel {
     } else return extent(data, d => getValue(d, acs))
   }
 
-  getExtent (acs: numericAccessor | numericAccessor[]): number[] {
+  getExtent (acs: NumericAccessor | NumericAccessor[]): number[] {
     const { data } = this
 
     if (isArray(acs)) {
-      const maxValue = max(data, d => max(<numericAccessor[]>acs, a => getValue(d, a)))
-      const minValue = min(data, d => min(<numericAccessor[]>acs, a => getValue(d, a)))
+      const maxValue = max(data, d => max(<NumericAccessor[]>acs, a => getValue(d, a)))
+      const minValue = min(data, d => min(<NumericAccessor[]>acs, a => getValue(d, a)))
       return [minValue, maxValue]
     } else return extent(data, d => getValue(d, acs))
   }
