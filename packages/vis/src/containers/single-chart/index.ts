@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { extent } from 'd3-array'
+// import { extent } from 'd3-array'
 
 // Core
 import { ContainerCore } from 'core/container'
@@ -10,7 +10,7 @@ import { XYCore } from 'core/xy-component'
 import { XYConfigInterface } from 'core/xy-component/config'
 
 // Utils
-import { getValue } from 'utils/data'
+// import { getValue, merge } from 'utils/data'
 
 // Config
 import { SingleChartConfig, SingleChartConfigInterface } from './config'
@@ -81,13 +81,13 @@ export class SingleChart extends ContainerCore {
   }
 
   updateScales (): void {
-    const { component, config: { dimensions, padding }, data } = this
+    const { component, config: { dimensions, padding } } = this
 
     component.config.width = this.width
     component.config.height = this.height
 
-    Object.keys(dimensions).forEach(key => {
-      component.updateScale(key, dimensions[key], padding)
+    Object.keys(component.config.scales).forEach(key => {
+      component.updateScale(key, dimensions[key] ?? {}, padding)
     })
   }
 }

@@ -17,12 +17,14 @@ export interface XYConfigInterface extends ComponentConfigInterface {
   color?: string | object;
   /** Coloring type */
   colorType?: ColorType;
-  xScale?: Scale;
-  yScale?: Scale;
+  scales?: {
+    x?: Scale;
+    y?: Scale;
+  };
   // /** X scale type */
-  // xScaleType?: ScaleType;
+  // scales.xType?: ScaleType;
   // /** Y scale type */
-  // yScaleType?: ScaleType;
+  // scales.yType?: ScaleType;
 }
 
 export class XYConfig extends ComponentConfig implements XYConfigInterface {
@@ -30,8 +32,10 @@ export class XYConfig extends ComponentConfig implements XYConfigInterface {
   y = d => d.y
   color = null
   colorType = ColorType.Static
-  // xScaleType = ScaleType.Linear
-  // yScaleType = ScaleType.Linear
-  xScale = Scales.scaleLinear()
-  yScale = Scales.scaleLinear()
+  // scales.xType = ScaleType.Linear
+  // scales.yType = ScaleType.Linear
+  scales = {
+    x: Scales.scaleLinear(),
+    y: Scales.scaleLinear(),
+  }
 }

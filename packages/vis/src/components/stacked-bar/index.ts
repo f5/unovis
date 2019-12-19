@@ -50,7 +50,7 @@ export class StackedBar extends XYCore {
     const { config } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
 
-    const start = config.yScale.range()[0]
+    const start = config.scales.y.range()[0]
 
     const barGroups = this.g
       .selectAll(`.${s.bar}`)
@@ -106,22 +106,22 @@ export class StackedBar extends XYCore {
 
         let size
         if (isVertical) {
-          const h = config.yScale(start) - config.yScale(y + (stackedValue === start ? 0 : start))
+          const h = config.scales.y(start) - config.scales.y(y + (stackedValue === start ? 0 : start))
           let deltaY = 0
           if (h === 0) deltaY = lastBarsValue === 0 && i !== 0 ? 0 : 1
           size = {
-            x: config.xScale(x) - halfBarWidth,
-            y: config.yScale(y - start + stackedValue) - deltaY,
+            x: config.scales.x(x) - halfBarWidth,
+            y: config.scales.y(y - start + stackedValue) - deltaY,
             w: barWidth,
             h: h + deltaY,
           }
         } else {
-          const w = config.yScale(start) + config.yScale(y + (stackedValue === start ? 0 : start))
+          const w = config.scales.y(start) + config.scales.y(y + (stackedValue === start ? 0 : start))
           let deltaX = 0
           if (w === 0) deltaX = lastBarsValue === 0 && i !== 0 ? 0 : 1
           size = {
-            x: config.yScale(stackedValue - (stackedValue === start ? 0 : start)),
-            y: config.xScale(x) - halfBarWidth,
+            x: config.scales.y(stackedValue - (stackedValue === start ? 0 : start)),
+            y: config.scales.x(x) - halfBarWidth,
             w: w + deltaX,
             h: barWidth,
           }
@@ -158,12 +158,12 @@ export class StackedBar extends XYCore {
   }
 
   _getBarWidth (): number {
-    const { config: { xScale, barWidth, barMaxWidth, expectedDataStep, isVertical, barPadding, x, width, height }, datamodel: { data } } = this
+    const { config: { scales, barWidth, barMaxWidth, expectedDataStep, isVertical, barPadding, x, width, height }, datamodel: { data } } = this
     if (isEmpty(data)) return 0
     if (barWidth) return min([barWidth, barMaxWidth])
 
-    const isOrdinal = xScale.bandwidth
-    const xDomain = xScale.domain ? xScale.domain() : []
+    const isOrdinal = scales.x.bandwidth
+    const xDomain = scales.x.domain ? scales.x.domain() : []
     const xDomainLength = isOrdinal ? xDomain.length : xDomain[1] - xDomain[0]
 
     const dataSize = xDomainLength / expectedDataStep ||

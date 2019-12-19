@@ -6,3 +6,10 @@ export type Dimension = {
   domain?: number[];
   range?: number[];
 }
+
+export type Margin = {
+  left?: number;
+  right?: number;
+  top?: number;
+  bottom?: number;
+}

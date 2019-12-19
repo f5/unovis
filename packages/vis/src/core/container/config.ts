@@ -1,21 +1,12 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { Config } from 'core/config'
+import { Margin } from 'utils/types'
 
 export interface ContainerConfigInterface {
   /** Container margins */
-  margin?: {
-    top?: number;
-    bottom?: number;
-    left?: number;
-    right?: number;
-  };
+  margin?: Margin;
   /** Chart padding */
-  padding?: {
-    top?: number;
-    bottom?: number;
-    left?: number;
-    right?: number;
-  };
+  padding?: Margin;
 }
 
 export class ContainerConfig extends Config implements ContainerConfigInterface {

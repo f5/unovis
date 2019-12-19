@@ -10,7 +10,7 @@ import { getValue } from 'utils/data'
 import { ColorType } from 'utils/color'
 
 // Enums
-import { Dimension } from 'utils/types'
+import { Dimension, Margin } from 'utils/types'
 
 // Config
 import { XYConfig } from './config'
@@ -22,31 +22,30 @@ export class XYCore extends ComponentCore {
   height: number
   colorScale: any
 
-  updateScale (prefix: string, dim: Dimension, padding) {
-    if (!prefix) return
-    const { config, datamodel: { data } } = this
+  updateScale (key: string, dim: Dimension = {}, padding: Margin = {}) {
+    if (!key) return
+    const { config, config: { scales, width, height }, datamodel: { data } } = this
 
-    switch (prefix) {
+    switch (key) {
     case 'x': {
-      if (dim.scale) config.xScale = dim.scale
-      config.xScale.domain(dim.domain ?? extent(data, d => getValue(d, config.x)))
+      if (dim.scale) scales.x = dim.scale
+      scales.x.domain(dim.domain ?? extent(data, d => getValue(d, config.x)))
       const bleed = this.bleed // Bleed depends on the domain settings ☝️
-      config.xScale.range(dim.range ?? [padding.left + bleed.left, config.width - padding.right - bleed.right])
+      scales.x.range(dim.range ?? [padding.left + bleed.left, width - padding.right - bleed.right])
       break
     }
     case 'y': {
-      if (dim.scale) config.yScale = dim.scale
-      config.yScale.domain(dim.domain ?? this.getYDataExtent())
+      if (dim.scale) scales.y = dim.scale
+      scales.y.domain(dim.domain ?? this.getYDataExtent())
       const bleed = this.bleed // Bleed depends on the domain settings ☝️
-      config.yScale.range(dim.range ?? [config.height - padding.bottom - bleed.bottom, padding.top + bleed.top])
+      scales.y.range(dim.range ?? [height - padding.bottom - bleed.bottom, padding.top + bleed.top])
       break
     }
     default: {
-      const scaleName = `${prefix}Scale`
-      if (!config[scaleName]) break
-      if (dim.scale) config[scaleName] = dim.scale
-      config[scaleName].domain(dim.domain ?? extent(data, d => getValue(d, config[prefix])))
-      if (dim.range) config[scaleName].range(dim.range)
+      if (!scales[key]) break
+      if (dim.scale) scales[key] = dim.scale
+      scales[key].domain(dim.domain ?? extent(data, d => getValue(d, config[key])))
+      if (dim.range) scales[key].range(dim.range)
     }
     }
   }
