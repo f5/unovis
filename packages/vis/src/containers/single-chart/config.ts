@@ -8,32 +8,21 @@ import { Tooltip } from 'core/tooltip'
 // Enums
 import { Scales } from 'enums/scales'
 
+// Types
+import { Dimension } from 'utils/types'
+
 export interface SingleChartConfigInterface extends ContainerConfigInterface {
   /** Visualization Component */
   component?: any;
-  /** X scale configuration object */
-  x?: {
-    scale?: any;
-    domain?: number[];
-  };
-  /** Y scale configuration object */
-  y?: {
-    scale?: any;
-    domain?: number[];
-  };
+  /** Dimension configuration */
+  dimensions: {
+    [key: string]: Dimension
+  }
   /** Tooltip component */
   tooltip?: Tooltip;
 }
 
 export class SingleChartConfig extends ContainerConfig implements SingleChartConfigInterface {
   tooltip = undefined
-  x = {
-    scale: Scales.scaleLinear(),
-    domain: undefined,
-  }
-
-  y = {
-    scale: Scales.scaleLinear(),
-    domain: undefined,
-  }
+  dimensions = {}
 }

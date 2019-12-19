@@ -81,17 +81,13 @@ export class SingleChart extends ContainerCore {
   }
 
   updateScales (): void {
-    const { component, config: { x, y, padding }, data } = this
-    x.scale.domain(x.domain ?? extent(data, d => getValue(d, component.config.x)))
-    y.scale.domain(y.domain ?? component.getYDataExtent())
+    const { component, config: { dimensions, padding }, data } = this
 
-    component.config.xScale = x.scale
-    component.config.yScale = y.scale
     component.config.width = this.width
     component.config.height = this.height
 
-    const bleed = this.component.bleed
-    x.scale.range([padding.left + bleed.left, this.width - padding.right - bleed.right])
-    y.scale.range([this.height - padding.bottom - bleed.bottom, padding.top + bleed.top])
+    Object.keys(dimensions).forEach(key => {
+      component.updateScale(key, dimensions[key], padding)
+    })
   }
 }
