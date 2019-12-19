@@ -21,8 +21,6 @@ export interface SingleChartConfigInterface extends ContainerConfigInterface {
     scale?: any;
     domain?: number[];
   };
-  /** Callback actions */
-  action?: object;
   /** Tooltip component */
   tooltip?: Tooltip;
 }

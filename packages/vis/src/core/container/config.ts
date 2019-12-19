@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { isPlainObject, merge } from 'utils/data'
+import { Config } from 'core/config'
 
 export interface ContainerConfigInterface {
   /** Container margins */
@@ -18,7 +18,7 @@ export interface ContainerConfigInterface {
   };
 }
 
-export class ContainerConfig implements ContainerConfigInterface {
+export class ContainerConfig extends Config implements ContainerConfigInterface {
   margin = {
     top: 0,
     bottom: 0,
@@ -31,14 +31,5 @@ export class ContainerConfig implements ContainerConfigInterface {
     bottom: 0,
     left: 0,
     right: 0,
-  }
-
-  init (config: ContainerConfigInterface = {}): ContainerConfig {
-    Object.keys(config).forEach(key => {
-      if (isPlainObject(this[key])) this[key] = merge(this[key], config[key])
-      else this[key] = config[key]
-    })
-
-    return this
   }
 }
