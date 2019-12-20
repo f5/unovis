@@ -8,6 +8,7 @@ import { SeriesDataModel } from 'data-models/series'
 // Utils
 import { getValue } from 'utils/data'
 import { ColorType } from 'utils/color'
+import { defaultRange } from 'utils/scale'
 
 // Enums
 import { Dimension, Margin } from 'utils/types'
@@ -22,6 +23,18 @@ export class XYCore extends ComponentCore {
   height: number
   colorScale: any
 
+  setScaleDomain (key: string, domain: number[]): void {
+    const { config: { scales } } = this
+    if (!key || !scales[key]) return
+    scales[key].domain(domain)
+  }
+
+  setScaleRange (key: string, range: number[]): void {
+    const { config: { scales } } = this
+    if (!key || !scales[key]) return
+    scales[key].range(range)
+  }
+
   updateScale (key: string, dim: Dimension = {}, padding: Margin = {}) {
     if (!key) return
     const { config, config: { scales, width, height }, datamodel: { data } } = this
@@ -29,7 +42,7 @@ export class XYCore extends ComponentCore {
     switch (key) {
     case 'x': {
       if (dim.scale) scales.x = dim.scale
-      scales.x.domain(dim.domain ?? extent(data, d => getValue(d, config.x)))
+      scales.x.domain(dim.domain ?? this.getXDataExtent())
       const bleed = this.bleed // Bleed depends on the domain settings ☝️
       scales.x.range(dim.range ?? [padding.left + bleed.left, width - padding.right - bleed.right])
       break
@@ -57,8 +70,42 @@ export class XYCore extends ComponentCore {
     else return value
   }
 
+  getDataExtent (accessorKey: string): number[] {
+    const { config, datamodel } = this
+
+    switch (accessorKey) {
+    case 'x': return this.getXDataExtent()
+    case 'y': return this.getYDataExtent()
+    default: return datamodel.getExtent(config[accessorKey])
+    }
+  }
+
+  getScreenRange (accessorKey: string, padding: Margin = {}): number[] {
+    switch (accessorKey) {
+    case 'x': return this.getXScreenRange(padding)
+    case 'y': return this.getYScreenRange(padding)
+    default: return defaultRange
+    }
+  }
+
+  getXDataExtent (): number[] {
+    const { config, datamodel } = this
+    return datamodel.getExtent(config.x)
+  }
+
   getYDataExtent (): number[] {
     const { config, datamodel } = this
     return datamodel.getExtent(config.y)
   }
+
+  getXScreenRange (padding: Margin = {}): number[] {
+    const bleed = this.bleed // Bleed depends on the domain. You should set it first in order to get correct results
+    return [padding.left + bleed.left, this.config.width - padding.right - bleed.right]
+  }
+
+  getYScreenRange (padding: Margin = {}): number[] {
+    const bleed = this.bleed // Bleed depends on the domain. You should set it first in order to get correct results
+    return [padding.top + bleed.top, this.config.height - padding.bottom - bleed.bottom]
+  }
+
 }
