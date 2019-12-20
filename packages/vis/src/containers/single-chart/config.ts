@@ -15,7 +15,7 @@ export interface SingleChartConfigInterface extends ContainerConfigInterface {
   /** Visualization Component */
   component?: any;
   /** Dimension configuration */
-  dimensions: {
+  dimensions?: {
     [key: string]: Dimension
   }
   /** Tooltip component */

@@ -1,5 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { XYConfigInterface, XYConfig } from 'core/xy-component/config'
+// import { Scales, Scale } from 'enums/scales'
 // import { CurveType } from 'enums/curves'
 
 export interface StackedBarConfigInterface extends XYConfigInterface {

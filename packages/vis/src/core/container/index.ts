@@ -25,7 +25,7 @@ export class ContainerCore {
     this.element = this.svg.node()
   }
 
-  updateContainer<T extends ContainerConfigInterface> (config: T) {
+  updateContainer<T extends ContainerConfigInterface> (config: T): void {
     const ConfigModel = (this.config.constructor as typeof ContainerConfig)
     this.prevConfig = this.config
     this.config = new ConfigModel().init(config)
