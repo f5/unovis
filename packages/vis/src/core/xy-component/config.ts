@@ -3,26 +3,28 @@ import { ColorType } from 'utils/color'
 import { Scales, Scale } from 'enums/scales'
 
 // Utils
-import { numericAccessor } from 'utils/types'
+import { NumericAccessor } from 'utils/types'
 
 // Config
 import { ComponentConfigInterface, ComponentConfig } from '../component/config'
 
 export interface XYConfigInterface extends ComponentConfigInterface {
   /** X accessor or number value */
-  x: numericAccessor;
+  x: NumericAccessor;
   /** Y accessor or value */
-  y: numericAccessor | numericAccessor[];
+  y: NumericAccessor | NumericAccessor[];
   /** Component color (string or color object) */
   color?: string | object;
   /** Coloring type */
   colorType?: ColorType;
-  xScale?: Scale;
-  yScale?: Scale;
+  scales?: {
+    x?: Scale;
+    y?: Scale;
+  };
   // /** X scale type */
-  // xScaleType?: ScaleType;
+  // scales.xType?: ScaleType;
   // /** Y scale type */
-  // yScaleType?: ScaleType;
+  // scales.yType?: ScaleType;
 }
 
 export class XYConfig extends ComponentConfig implements XYConfigInterface {
@@ -30,8 +32,10 @@ export class XYConfig extends ComponentConfig implements XYConfigInterface {
   y = d => d.y
   color = null
   colorType = ColorType.Static
-  // xScaleType = ScaleType.Linear
-  // yScaleType = ScaleType.Linear
-  xScale = Scales.scaleLinear()
-  yScale = Scales.scaleLinear()
+  // scales.xType = ScaleType.Linear
+  // scales.yType = ScaleType.Linear
+  scales = {
+    x: Scales.scaleLinear(),
+    y: Scales.scaleLinear(),
+  }
 }

@@ -17,7 +17,7 @@ export class ContainerCore {
   private _requestedAnimationFrame: number
   private _animationFramePromise: Promise<number>
 
-  constructor (element: HTMLElement, config?: ContainerConfigInterface, data?) {
+  constructor (element: HTMLElement) {
     this._requestedAnimationFrame = null
     this._container = element
     this.svg = select(this._container).append('svg')
@@ -25,9 +25,10 @@ export class ContainerCore {
     this.element = this.svg.node()
   }
 
-  updateContainer (config: ContainerConfigInterface) {
+  updateContainer<T extends ContainerConfigInterface> (config: T) {
+    const ConfigModel = (this.config.constructor as typeof ContainerConfig)
     this.prevConfig = this.config
-    this.config = new ContainerConfig().init(config)
+    this.config = new ConfigModel().init(config)
   }
 
   // setData (...data) {
@@ -38,7 +39,7 @@ export class ContainerCore {
   //   }
   // }
 
-  _render (duration?) {
+  _render (duration?): void {
     this.svg
       .attr('width', this.containerWidth)
       .attr('height', this.containerHeight)

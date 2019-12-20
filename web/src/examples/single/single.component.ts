@@ -36,8 +36,11 @@ export class SingleComponent implements OnInit, AfterViewInit {
     const barConfig = getBarConfig()
     const barChartConfig = {
       component: new StackedBar(barConfig),
-      x: { scale: Scales.scaleLinear() },
-      y: { scale: Scales.scaleLinear() },
+      dimensions: {
+        x: { scale: Scales.scaleLinear() },
+        y: { scale: Scales.scaleLinear() },
+        size: { scale: Scales.scaleLinear() },
+      },
       tooltip: new Tooltip({
         elements: {
           [StackedBar.selectors.bar]: (d) => '<span>Bar Chart</span>',
@@ -49,8 +52,11 @@ export class SingleComponent implements OnInit, AfterViewInit {
     const lineConfig = getLineConfig()
     const lineChartConfig = {
       component: new Line(lineConfig),
-      x: { scale: Scales.scaleLinear() },
-      y: { scale: Scales.scaleLinear() },
+      // dimensions: {
+      //   x: { scale: Scales.scaleLinear() },
+      //   y: { scale: Scales.scaleLinear() },
+      //   size: { scale: Scales.scaleLinear() },
+      // },
       tooltip: new Tooltip({
         elements: {
           [Line.selectors.line]: (d) => '<span>Line Chart</span>',
