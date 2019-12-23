@@ -2,10 +2,11 @@
 
 import { Component, ViewChild, ElementRef, OnInit, AfterViewInit } from '@angular/core'
 import _times from 'lodash/times'
+import _sample from 'lodash/sample'
 import { components, containers, Scales } from '@volterra/vis'
 
 const { SingleChart } = containers
-const { Line, StackedBar, Tooltip } = components
+const { Line, StackedBar, Scatter, Tooltip } = components
 
 function generateData (): object[] {
   return _times(30).map((i) => ({
@@ -15,6 +16,9 @@ function generateData (): object[] {
     y2: Math.random(),
     y3: Math.random(),
     y4: Math.random(),
+    size: Math.random() * (500 - 300) + 300,
+    shape: Math.random() > 0.8 ? 'circle' : _sample(['cross', 'diamond', 'square', 'star', 'triangle', 'wye']),
+    icon: Math.random() > 0.8 ? '☁' : undefined,
   }))
 }
 
@@ -31,6 +35,7 @@ export class SingleComponent implements OnInit, AfterViewInit {
   config: any
   @ViewChild('linechart', { static: false }) lineChart: ElementRef
   @ViewChild('barchart', { static: false }) barChart: ElementRef
+  @ViewChild('scatterchart', { static: false }) scatterChart: ElementRef
 
   ngAfterViewInit (): void {
     const barConfig = getBarConfig()
@@ -65,16 +70,44 @@ export class SingleComponent implements OnInit, AfterViewInit {
     }
     const lineChart = new SingleChart(this.lineChart.nativeElement, lineChartConfig, this.data)
 
+    const scatterConfig = getScatterConfig()
+    const scatterChartConfig = {
+      component: new Scatter(scatterConfig),
+      dimensions: {
+        x: { scale: Scales.scaleLinear() },
+        y: { scale: Scales.scaleLinear() },
+        size: { scale: Scales.scaleLinear() },
+      },
+      tooltip: new Tooltip({
+        elements: {
+          [Scatter.selectors.point]: (d) => '<span>Scatter Chart</span>',
+        },
+      }),
+    }
+
+    const scatterChart = new SingleChart(this.scatterChart.nativeElement, scatterChartConfig, this.data)
+
     setInterval(() => {
-      // lineComponentConfig.color = '#00f'
+    // lineComponentConfig.color = '#00f'
       barChart.setData(generateData(), true)
       barChart.updateComponent(barConfig)
       lineChart.setData(generateData())
+      scatterChart.setData(generateData())
     }, 10000)
   }
 
   ngOnInit (): void {
     this.data = generateData()
+  }
+}
+
+function getScatterConfig () {
+  return {
+    x: d => d.x,
+    y: d => d.y,
+    size: d => d.size,
+    shape: d => d.shape,
+    icon: d => d.icon,
   }
 }
 
