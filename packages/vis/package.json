@@ -18,6 +18,7 @@
     "d3-interpolate-path": "^2.1.1",
     "emotion": "^10.0.23",
     "lodash": "^4.17.15",
+    "resize-observer-polyfill": "^1.5.1",
     "rimraf": "^3.0.0",
     "rollup": "^1.26.0",
     "rollup-plugin-commonjs": "^10.1.0",
