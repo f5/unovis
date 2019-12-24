@@ -1,11 +1,13 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { select } from 'd3-selection'
+import ResizeObserver from 'resize-observer-polyfill'
 
 // Config
 import { ContainerConfig, ContainerConfigInterface } from './config'
 
 // Utils
-// import { getScale } from 'utils/scale'
+import { isEqual } from 'utils/data'
+import { getBoundingClientRectObject } from 'utils/misc'
 
 export class ContainerCore {
   svg: any
@@ -16,6 +18,8 @@ export class ContainerCore {
   protected _container: HTMLElement
   private _requestedAnimationFrame: number
   private _animationFramePromise: Promise<number>
+  private _containerRect
+  private _resizeObserver
 
   constructor (element: HTMLElement) {
     this._requestedAnimationFrame = null
@@ -23,9 +27,23 @@ export class ContainerCore {
     this.svg = select(this._container).append('svg')
       .attr('xmlns', 'http://www.w3.org/2000/svg')
     this.element = this.svg.node()
+
+    // ResizeObserver: Re-render on container resize
+    this._containerRect = getBoundingClientRectObject(this._container)
+    this._resizeObserver = new ResizeObserver((entries, observer) => {
+      const resizedContainerRect = getBoundingClientRectObject(this._container)
+      const isSizeChanged = !isEqual(this._containerRect, resizedContainerRect)
+      // do resize only if element is attached to the DOM
+      // will come in useful when some ancestor of container becomes detached
+      if (isSizeChanged) {
+        this._containerRect = resizedContainerRect
+        this._onResize()
+      }
+    })
+    this._resizeObserver.observe(this._container)
   }
 
-  updateContainer<T extends ContainerConfigInterface> (config: T) {
+  updateContainer<T extends ContainerConfigInterface> (config: T): void {
     const ConfigModel = (this.config.constructor as typeof ContainerConfig)
     this.prevConfig = this.config
     this.config = new ConfigModel().init(config)
@@ -81,6 +99,10 @@ export class ContainerCore {
   }
 
   _onResize (): void {
-    this.render()
+    this.render(0)
+  }
+
+  destroy (): void {
+    this._resizeObserver.disconnect()
   }
 }

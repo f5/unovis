@@ -2,6 +2,7 @@
 import _isUndefined from 'lodash/isUndefined'
 import _isArray from 'lodash/isArray'
 import _isEmpty from 'lodash/isEmpty'
+import _isEqual from 'lodash/isEqual'
 import _cloneDeep from 'lodash/cloneDeep'
 import _each from 'lodash/each'
 import _filter from 'lodash/filter'
@@ -16,6 +17,7 @@ import _merge from 'lodash/merge'
 import _isPlainObject from 'lodash/isPlainObject'
 
 export const isNumber = _isNumber
+export const isEqual = _isEqual
 export const isFunction = _isFunction
 export const merge = _merge
 export const isPlainObject = _isPlainObject

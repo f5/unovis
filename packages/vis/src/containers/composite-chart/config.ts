@@ -2,6 +2,7 @@
 // import { scale } from 'd3-scale'
 
 // Core
+import { XYCore } from 'core/xy-component'
 import { ContainerConfig, ContainerConfigInterface } from 'core/container/config'
 import { Tooltip } from 'core/tooltip'
 
@@ -11,9 +12,9 @@ import { Tooltip } from 'core/tooltip'
 // Types
 import { Dimension } from 'utils/types'
 
-export interface SingleChartConfigInterface extends ContainerConfigInterface {
+export interface CompositeChartConfigInterface extends ContainerConfigInterface {
   /** Visualization Component */
-  component?: any;
+  components?: XYCore[]
   /** Dimension configuration */
   dimensions?: {
     [key: string]: Dimension
@@ -22,7 +23,11 @@ export interface SingleChartConfigInterface extends ContainerConfigInterface {
   tooltip?: Tooltip;
 }
 
-export class SingleChartConfig extends ContainerConfig implements SingleChartConfigInterface {
+export class CompositeChartConfig extends ContainerConfig implements CompositeChartConfigInterface {
+  components? = []
   tooltip = undefined
-  dimensions = {}
+  dimensions = {
+    x: {},
+    y: {},
+  }
 }

@@ -21,7 +21,7 @@ export class SingleChart extends ContainerCore {
   data: any
 
   constructor (element, config?: SingleChartConfigInterface, data?) {
-    super(element, config, data)
+    super(element)
 
     if (config) {
       this.updateContainer(config)

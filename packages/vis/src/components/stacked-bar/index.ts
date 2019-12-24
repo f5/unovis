@@ -162,6 +162,7 @@ export class StackedBar extends XYCore {
     if (isEmpty(data)) return 0
     if (barWidth) return min([barWidth, barMaxWidth])
 
+    // @ts-ignore
     const isOrdinal = scales.x.bandwidth
     const xDomain = scales.x.domain ? scales.x.domain() : []
     const xDomainLength = isOrdinal ? xDomain.length : xDomain[1] - xDomain[0]
