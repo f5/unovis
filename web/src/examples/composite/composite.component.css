@@ -4,3 +4,11 @@
   background-color: #efefef;
   position: relative;
 }
+
+.navigation {
+  width: 100%;
+  height: 100px;
+  background-color: #ededed;
+  position: relative;
+}
+
