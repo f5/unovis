@@ -11,7 +11,7 @@ import { XYCore } from 'core/xy-component'
 import { XYConfigInterface } from 'core/xy-component/config'
 
 // Utils
-import { isArray} from 'utils/data'
+import { isArray } from 'utils/data'
 
 // Config
 import { CompositeChartConfig, CompositeChartConfigInterface } from './config'
@@ -97,7 +97,7 @@ export class CompositeChart extends ContainerCore {
     }
 
     Object.keys(dimensions).forEach(key => {
-      const domain = extent(<number[]>mergeArrays(components.map(c => c.getDataExtent(key))))
+      const domain = extent(mergeArrays(components.map(c => c.getDataExtent(key))) as number[])
       components.forEach(c => c.setScaleDomain(key, dimensions[key].domain ?? domain))
 
       const range = components.map(c => c.getScreenRange(key, padding)).reduce((res, r) => {

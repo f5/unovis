@@ -5,7 +5,7 @@ import { select } from 'd3-selection'
 import { CoreDataModel } from 'data-models/core'
 
 // Utils
-import { throttle } from "utils/data"
+import { throttle } from 'utils/data'
 
 // Config
 import { ComponentConfig, ComponentConfigInterface } from './config'
@@ -54,6 +54,7 @@ export class ComponentCore {
   _render (customDuration?: number): void {
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   _onEvent (d: any, i: number, elements: []) {
   }
 

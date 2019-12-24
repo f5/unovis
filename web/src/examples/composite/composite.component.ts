@@ -74,8 +74,6 @@ export class CompositeComponent implements OnInit, AfterViewInit {
     }
 
     const nav = new CompositeChart(this.navigation.nativeElement, navConfig, data)
-
-
   }
 
   ngOnInit (): void {
