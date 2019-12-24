@@ -1,0 +1,55 @@
+{
+  "extends": [
+    "standard"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json",
+    "sourceType": "module"
+  },
+  "env": {
+    "browser": true,
+    "jasmine": true
+  },
+  "plugins": [
+    "@typescript-eslint",
+    "notice",
+    "import"
+  ],
+  "settings": {
+    "import/resolver": {
+      "typescript": {}
+    }
+  },
+  "rules": {
+    "no-useless-constructor": "off",
+    "import/extensions": 0,
+    "import/no-unresolved": [2, {"commonjs": true, "amd": true}],
+    "import/no-extraneous-dependencies": 0,
+    "import/prefer-default-export": 0,
+    "import/first": ["error", "absolute-first"],
+    "comma-dangle": ["error", {
+        "arrays": "always-multiline",
+        "objects": "always-multiline",
+        "imports": "always-multiline",
+        "exports": "always-multiline",
+        "functions": "never"
+    }],
+    "indent": ["error", 2],
+    "no-console": ["error", { "allow": ["warn", "error"] }],
+    "no-undef": 0,
+    "no-unused-vars": 0,
+    "notice/notice":[ "error",
+      {
+        "mustMatch": "Copyright \\(c\\) (Volterra), Inc. All rights reserved.",
+        "template": "// Copyright (c) Volterra, Inc. All rights reserved.",
+        "onNonMatchingHeader": "replace"
+      }
+    ],
+    "no-unused-expressions": "off",
+    "@typescript-eslint/no-unused-expressions": ["error"],
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/explicit-member-accessibility": "off",
+    "@typescript-eslint/indent": "off"
+  }
+}
