@@ -89,9 +89,16 @@ export class StackedBar extends XYCore {
     const barWidth = this._getBarWidth()
     const halfBarWidth = data.length < 2 ? 0 : barWidth / 2
 
-    const yAccessors = <NumericAccessor[]>(isArray(config.y) ? config.y : [config.y])
+    const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor[]
+    const xScale = config.scales.x
+    const xHalfBarWidth = Math.abs(xScale.invert(halfBarWidth) - xScale.invert(0))
+    const filtered = data?.filter(d => {
+      const v = getValue(d, config.x)
+      const xDomain = xScale.domain()
+      return (v >= (xDomain[0] - xHalfBarWidth)) && (v <= (xDomain[1] + xHalfBarWidth))
+    })
 
-    data?.forEach(d => {
+    filtered?.forEach(d => {
       const x = getValue(d, config.x)
       let stackedValue = start
 
@@ -162,6 +169,7 @@ export class StackedBar extends XYCore {
     if (isEmpty(data)) return 0
     if (barWidth) return min([barWidth, barMaxWidth])
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
     // @ts-ignore
     const isOrdinal = scales.x.bandwidth
     const xDomain = scales.x.domain ? scales.x.domain() : []
@@ -173,7 +181,6 @@ export class StackedBar extends XYCore {
           return (value >= xDomain[0]) && (value <= xDomain[1])
         }).length) ||
         data.length
-
     const dimension = isVertical ? width : height
     const c = dataSize < 2 ? 1 : 1 - barPadding
 
