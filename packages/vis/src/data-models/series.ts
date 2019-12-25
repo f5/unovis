@@ -38,12 +38,24 @@ export class SeriesDataModel extends CoreDataModel {
   }
 
   getExtent (acs: NumericAccessor | NumericAccessor[]): number[] {
+    return [this.getMin(acs), this.getMax(acs)]
+  }
+
+  getMin (acs: NumericAccessor | NumericAccessor[]): number {
+    const { data } = this
+
+    if (isArray(acs)) {
+      const minValue = min(data, d => min(<NumericAccessor[]>acs, a => getValue(d, a)))
+      return minValue
+    } else return min(data, d => getValue(d, acs))
+  }
+
+  getMax (acs: NumericAccessor | NumericAccessor[]): number {
     const { data } = this
 
     if (isArray(acs)) {
       const maxValue = max(data, d => max(<NumericAccessor[]>acs, a => getValue(d, a)))
-      const minValue = min(data, d => min(<NumericAccessor[]>acs, a => getValue(d, a)))
-      return [minValue, maxValue]
-    } else return extent(data, d => getValue(d, acs))
+      return maxValue
+    } else return max(data, d => getValue(d, acs))
   }
 }
