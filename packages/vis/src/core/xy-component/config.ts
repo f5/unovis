@@ -10,9 +10,9 @@ import { ComponentConfigInterface, ComponentConfig } from '../component/config'
 
 export interface XYConfigInterface extends ComponentConfigInterface {
   /** X accessor or number value */
-  x: NumericAccessor;
+  x?: NumericAccessor;
   /** Y accessor or value */
-  y: NumericAccessor | NumericAccessor[];
+  y?: NumericAccessor | NumericAccessor[];
   /** Component color (string or color object) */
   color?: string | object;
   /** Coloring type */
@@ -35,7 +35,7 @@ export class XYConfig extends ComponentConfig implements XYConfigInterface {
   // scales.xType = ScaleType.Linear
   // scales.yType = ScaleType.Linear
   scales = {
-    x: Scales.scaleLinear(),
-    y: Scales.scaleLinear(),
+    x: Scales.scaleLinear() as Scale,
+    y: Scales.scaleLinear() as Scale,
   }
 }

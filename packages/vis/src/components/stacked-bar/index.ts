@@ -91,10 +91,10 @@ export class StackedBar extends XYCore {
 
     const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor[]
     const xScale = config.scales.x
-    const xHalfBarWidth = Math.abs(xScale.invert(halfBarWidth) - xScale.invert(0))
+    const xHalfBarWidth = Math.abs((xScale.invert(halfBarWidth) as number) - (xScale.invert(0) as number))
     const filtered = data?.filter(d => {
       const v = getValue(d, config.x)
-      const xDomain = xScale.domain()
+      const xDomain = xScale.domain() as number[]
       return (v >= (xDomain[0] - xHalfBarWidth)) && (v <= (xDomain[1] + xHalfBarWidth))
     })
 
@@ -172,7 +172,7 @@ export class StackedBar extends XYCore {
     // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
     // @ts-ignore
     const isOrdinal = scales.x.bandwidth
-    const xDomain = scales.x.domain ? scales.x.domain() : []
+    const xDomain = (scales.x.domain ? scales.x.domain() : []) as number[]
     const xDomainLength = isOrdinal ? xDomain.length : xDomain[1] - xDomain[0]
 
     const dataSize = xDomainLength / expectedDataStep ||

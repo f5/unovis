@@ -6,11 +6,10 @@ import { Selection, event } from 'd3-selection'
 import { XYCore } from 'core/xy-component'
 
 // Utils
-import { getValue, isNumber } from 'utils/data'
+import { isNumber } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 
 // Enums
-import { Curve, CurveType } from 'enums/curves'
 
 // Config
 import { BrushConfig, BrushConfigInterface } from './config'

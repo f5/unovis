@@ -11,7 +11,7 @@ import { XYCore } from 'core/xy-component'
 import { XYConfigInterface } from 'core/xy-component/config'
 
 // Utils
-import { isArray } from 'utils/data'
+// import { isArray } from 'utils/data'
 
 // Config
 import { CompositeChartConfig, CompositeChartConfigInterface } from './config'
