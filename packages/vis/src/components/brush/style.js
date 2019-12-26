@@ -8,6 +8,27 @@ export const brush = css`
   
   .selection {
     fill: none;
-    stroke: var(--vis-color-main);
+    stroke: #acb2b9;
+    stroke-width: 1;
+    stroke-opacity: 1;
   }
+  
+  .handle {
+    fill: #acb2b9;
+  }
+`
+
+export const unselected = css`
+  label: unselected;
+  fill: #262933;
+  opacity: 0.35;
+  pointer-events: none;
+`
+
+export const handleLine = css`
+  label: handle-line;
+  stroke: #dddddd;
+  stroke-width: 1.5;
+  fill: none;
+  pointer-events: none;
 `
