@@ -33,7 +33,7 @@ export interface CompositeChartConfigInterface extends ContainerConfigInterface 
 export class CompositeChartConfig extends ContainerConfig implements CompositeChartConfigInterface {
   components? = []
   tooltip = undefined
-  axes = undefined
+  axes = {} as Axis
   dimensions = {
     x: {} as Dimension,
     y: {} as Dimension,

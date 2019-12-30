@@ -24,5 +24,5 @@ export type WrapTextOptions = {
   verticalAlign?: string;
   wordBreak?: boolean;
   trimOnly?: boolean;
-  dy?: number
+  dy?: number;
 }

@@ -114,7 +114,7 @@ export class CompositeChart extends ContainerCore {
   _updateScalesDomain (XYComponents: XYCore | XYCore[]): void {
     const { config: { dimensions } } = this
     if (!XYComponents) return
-    const components = <XYCore[]>(isArray(XYComponents) ? XYComponents : [XYComponents])
+    const components = (isArray(XYComponents) ? XYComponents : [XYComponents]) as XYCore[]
     Object.keys(dimensions).forEach(key => {
       const domain = extent(mergeArrays(components.map(c => c.getDataExtent(key))) as number[])
       components.forEach(c => c.setScaleDomain(key, dimensions[key].domain ?? domain))
@@ -124,7 +124,7 @@ export class CompositeChart extends ContainerCore {
   _updateScalesRange (XYComponents: XYCore | XYCore[]): void {
     const { config: { dimensions, padding } } = this
     if (!XYComponents) return
-    const components = <XYCore[]>(isArray(XYComponents) ? XYComponents : [XYComponents])
+    const components = (isArray(XYComponents) ? XYComponents : [XYComponents]) as XYCore[]
     for (const c of components) {
       c.config.width = this.width
       c.config.height = this.height

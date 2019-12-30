@@ -7,32 +7,32 @@ export interface AxisConfigInterface extends XYConfigInterface {
     /** Axis position: top, bottom, right or left */
     position?: string;
     /** Axis type: x or y */
-    type?: string
+    type?: string;
     /** Axis label */
-    label?: string
+    label?: string;
     /** Draw or not axis grid line */
-    gridLine?: boolean
+    gridLine?: boolean;
     /** Draw or not axis tick lines */
-    tickLine?: boolean
+    tickLine?: boolean;
     /** Draw minimum and maximum axis ticks only */
-    minMaxTicksOnly?: boolean
+    minMaxTicksOnly?: boolean;
     /** Always draw all axis ticks */
-    showAllTicks?: boolean
+    showAllTicks?: boolean;
     /**  */
-    tickTextLength?: number
+    tickTextLength?: number;
     /**  */
-    tickTextWidth?: number
+    tickTextWidth?: number;
     /**  */
-    tickTextSeparator?: string
+    tickTextSeparator?: string;
     /**  */
-    tickTextForceWordBreak?: boolean
+    tickTextForceWordBreak?: boolean;
     /**  */
-    tickTextExpandOnHover?: boolean
+    tickTextExpandOnHover?: boolean;
     /**  */
-    tickTextTrimType?: string
+    tickTextTrimType?: string;
     /**  */
-    tickTextFitMode?: string
-    padding?: Margin
+    tickTextFitMode?: string;
+    padding?: Margin;
 }
 
 export class AxisConfig extends XYConfig implements AxisConfigInterface {
