@@ -4,7 +4,7 @@ import { XYConfigInterface, XYConfig } from 'core/xy-component/config'
 
 export interface BrushConfigInterface extends XYConfigInterface {
   onBrush?: ((selection?: number[], event?: BaseEvent) => any);
-  handleWidth: number;
+  handleWidth?: number;
   selection?: number[] | null;
 }
 
