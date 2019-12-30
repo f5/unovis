@@ -11,7 +11,7 @@ import { throttle } from 'utils/data'
 import { ComponentConfig, ComponentConfigInterface } from './config'
 
 export class ComponentCore {
-  element: SVGElement
+  element: SVGGraphicsElement
   g: any
   config: ComponentConfig
   prevConfig: ComponentConfig

@@ -3,6 +3,7 @@ import _isUndefined from 'lodash/isUndefined'
 import _isArray from 'lodash/isArray'
 import _isEmpty from 'lodash/isEmpty'
 import _isEqual from 'lodash/isEqual'
+import _isNil from 'lodash/isNil'
 import _cloneDeep from 'lodash/cloneDeep'
 import _throttle from 'lodash/throttle'
 import _each from 'lodash/each'
@@ -16,6 +17,7 @@ import _isFunction from 'lodash/isFunction'
 import _isNumber from 'lodash/isNumber'
 import _merge from 'lodash/merge'
 import _isPlainObject from 'lodash/isPlainObject'
+import _flatten from 'lodash/flatten'
 
 export const isNumber = _isNumber
 export const isEqual = _isEqual
@@ -25,6 +27,7 @@ export const isPlainObject = _isPlainObject
 export const isUndefined = _isUndefined
 export const isArray = _isArray
 export const isEmpty = _isEmpty
+export const isNil = _isNil
 export const cloneDeep = _cloneDeep
 export const each = _each
 export const filter = _filter
@@ -34,6 +37,7 @@ export const find = _find
 export const isString = _isString
 export const isObject = _isObject
 export const throttle = _throttle
+export const flatten = _flatten
 
 export function getValue (d, accessor): number {
   if (isFunction(accessor)) return accessor(d)

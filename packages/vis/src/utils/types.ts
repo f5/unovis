@@ -15,3 +15,14 @@ export type Margin = {
   top?: number;
   bottom?: number;
 }
+
+export type WrapTextOptions = {
+  length?: number;
+  width?: number;
+  separator?: string | string[];
+  trimType?: string;
+  verticalAlign?: string;
+  wordBreak?: boolean;
+  trimOnly?: boolean;
+  dy?: number
+}

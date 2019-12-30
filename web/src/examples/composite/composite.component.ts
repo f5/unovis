@@ -5,7 +5,7 @@ import _times from 'lodash/times'
 import { components, containers, Scales } from '@volterra/vis'
 
 const { CompositeChart } = containers
-const { Line, StackedBar, Tooltip, Brush } = components
+const { Line, StackedBar, Tooltip, Brush, Axis } = components
 
 function generateData (): object[] {
   return _times(300).map((i) => ({
@@ -49,6 +49,16 @@ export class CompositeComponent implements OnInit, AfterViewInit {
         },
         y: { scale: Scales.scaleLinear() },
         size: { scale: Scales.scaleLinear() },
+      },
+      axes: {
+        x: new Axis({
+          // position: 'top',
+          label: 'x axis',
+        }),
+        y: new Axis({
+          // position: 'right',
+          label: 'y axis',
+        }),
       },
       tooltip: new Tooltip({
         triggers: {
