@@ -8,26 +8,26 @@ export const brush = css`
   
   .selection {
     fill: none;
-    stroke: #acb2b9;
+    stroke: var(--vis-brush-selection-stroke);
     stroke-width: 1;
     stroke-opacity: 1;
   }
   
   .handle {
-    fill: #acb2b9;
+    fill: var(--vis-brush-handle-fill);
   }
 `
 
 export const unselected = css`
   label: unselected;
-  fill: #262933;
+  fill: var(--vis-brush-selection-fill);
   opacity: 0.35;
   pointer-events: none;
 `
 
 export const handleLine = css`
   label: handle-line;
-  stroke: #dddddd;
+  stroke: var(--vis-brush-handle-stroke);
   stroke-width: 1.5;
   fill: none;
   pointer-events: none;

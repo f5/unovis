@@ -8,5 +8,10 @@ export const variables = injectGlobal`
     --vis-font: Open Sans, Arial, Helvetica Neue, Helvetica, sans-serif;
     --vis-color-main: #34daa6;
     ${colors.map((c, i) => `${getCSSVarName(i)}: ${c};`)}
+
+    --vis-brush-selection-fill: #262933;
+    --vis-brush-selection-stroke: #acb2b9;
+    --vis-brush-handle-fill: #acb2b9;
+    --vis-brush-handle-stroke: #dddddd;
   }
 `
