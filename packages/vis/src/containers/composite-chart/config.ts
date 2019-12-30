@@ -14,20 +14,20 @@ import { Dimension } from 'utils/types'
 
 export interface CompositeChartConfigInterface extends ContainerConfigInterface {
   /** Visualization Component */
-  components?: XYCore[]
+  components?: XYCore[];
   /** Dimension configuration */
   dimensions?: {
-    [key: string]: Dimension
-  }
+    [key: string]: Dimension;
+  };
   /** Tooltip component */
-  tooltip?: Tooltip;
+  tooltip?: Tooltip<any> | undefined;
 }
 
 export class CompositeChartConfig extends ContainerConfig implements CompositeChartConfigInterface {
   components? = []
   tooltip = undefined
   dimensions = {
-    x: {},
-    y: {},
+    x: {} as Dimension,
+    y: {} as Dimension,
   }
 }

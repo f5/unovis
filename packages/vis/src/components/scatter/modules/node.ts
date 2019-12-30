@@ -21,7 +21,7 @@ export function updateNodes (selection, duration) {
       path.style('display', 'none')
       text
         .html(d.icon)
-        .style('font-size', Math.sqrt(d.size / 2))
+        .style('font-size', d.size)
       smartTransition(text, duration)
         .attr('fill', d.color)
     } else {
@@ -29,8 +29,8 @@ export function updateNodes (selection, duration) {
       path.style('display', null)
       path.attr('d', () => {
         symbolGenerator
-          .size(d.size)
-          .type(Symbol[SymbolType[d.shape]])
+          .size(d.size * d.size)
+          .type(Symbol[d.shape])
         return symbolGenerator()
       })
       smartTransition(path, duration)

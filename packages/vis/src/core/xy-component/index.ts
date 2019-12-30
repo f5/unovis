@@ -107,5 +107,4 @@ export class XYCore extends ComponentCore {
     const bleed = this.bleed // Bleed depends on the domain. You should set it first in order to get correct results
     return [padding.top + bleed.top, this.config.height - padding.bottom - bleed.bottom]
   }
-
 }

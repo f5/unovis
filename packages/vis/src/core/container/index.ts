@@ -2,12 +2,12 @@
 import { select } from 'd3-selection'
 import ResizeObserver from 'resize-observer-polyfill'
 
-// Config
-import { ContainerConfig, ContainerConfigInterface } from './config'
-
 // Utils
 import { isEqual } from 'utils/data'
 import { getBoundingClientRectObject } from 'utils/misc'
+
+// Config
+import { ContainerConfig, ContainerConfigInterface } from './config'
 
 export class ContainerCore {
   svg: any

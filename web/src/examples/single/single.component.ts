@@ -1,9 +1,9 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-
+/* eslint-disable */
 import { Component, ViewChild, ElementRef, OnInit, AfterViewInit } from '@angular/core'
 import _times from 'lodash/times'
 import _sample from 'lodash/sample'
-import { components, containers, Scales } from '@volterra/vis'
+import { components, containers, Scales, SymbolType } from '@volterra/vis'
 
 const { SingleChart } = containers
 const { Line, StackedBar, Scatter, Tooltip } = components
@@ -16,9 +16,9 @@ function generateData (): object[] {
     y2: Math.random(),
     y3: Math.random(),
     y4: Math.random(),
-    size: Math.random() * (500 - 300) + 300,
-    shape: Math.random() > 0.8 ? 'circle' : _sample(['cross', 'diamond', 'square', 'star', 'triangle', 'wye']),
-    icon: Math.random() > 0.8 ? '☁' : undefined,
+    size: 50,// Math.random() * (30) + 10,
+    shape: Math.random() > 0.8 ? SymbolType.CIRCLE : _sample([SymbolType.CROSS, SymbolType.DIAMOND, SymbolType.SQUARE, SymbolType.STAR, SymbolType.TRIANGLE, SymbolType.WYE]),
+    icon: Math.random() > 0.8 ? '☁️' : undefined,
   }))
 }
 
@@ -47,7 +47,7 @@ export class SingleComponent implements OnInit, AfterViewInit {
         size: { scale: Scales.scaleLinear() },
       },
       tooltip: new Tooltip({
-        elements: {
+        triggers: {
           [StackedBar.selectors.bar]: (d) => '<span>Bar Chart</span>',
         },
       }),
@@ -63,7 +63,7 @@ export class SingleComponent implements OnInit, AfterViewInit {
       //   size: { scale: Scales.scaleLinear() },
       // },
       tooltip: new Tooltip({
-        elements: {
+        triggers: {
           [Line.selectors.line]: (d) => '<span>Line Chart</span>',
         },
       }),
@@ -79,7 +79,7 @@ export class SingleComponent implements OnInit, AfterViewInit {
         size: { scale: Scales.scaleLinear() },
       },
       tooltip: new Tooltip({
-        elements: {
+        triggers: {
           [Scatter.selectors.point]: (d) => '<span>Scatter Chart</span>',
         },
       }),

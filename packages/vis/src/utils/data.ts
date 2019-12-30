@@ -4,6 +4,7 @@ import _isArray from 'lodash/isArray'
 import _isEmpty from 'lodash/isEmpty'
 import _isEqual from 'lodash/isEqual'
 import _cloneDeep from 'lodash/cloneDeep'
+import _throttle from 'lodash/throttle'
 import _each from 'lodash/each'
 import _filter from 'lodash/filter'
 import _get from 'lodash/get'
@@ -32,6 +33,7 @@ export const without = _without
 export const find = _find
 export const isString = _isString
 export const isObject = _isObject
+export const throttle = _throttle
 
 export function getValue (d, accessor): number {
   if (isFunction(accessor)) return accessor(d)

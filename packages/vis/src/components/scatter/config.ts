@@ -1,17 +1,19 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { XYConfigInterface, XYConfig } from 'core/xy-component/config'
+import { SymbolType } from 'enums/symbols'
+import { NumericAccessor } from 'utils/types'
 
 export interface ScatterConfigInterface extends XYConfigInterface {
   /** Size accessor function or value in pixels */
-  size?: number | Function
+  size?: NumericAccessor;
   /** Shape of scatter point: circle, cross, diamond, square, star, triangle and wye */
-  shape?: string | Function
+  shape?: ((d: any, i?: number, ...any) => SymbolType) | SymbolType;
   /** Icon */
-  icon?: string | Function
+  icon?: ((d: any, i?: number, ...any) => string) | string;
 }
 
 export class ScatterConfig extends XYConfig implements ScatterConfigInterface {
   size = 10
-  shape = 'circle'
+  shape = SymbolType.CIRCLE
   icon = undefined
 }

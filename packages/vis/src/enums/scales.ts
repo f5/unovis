@@ -3,13 +3,10 @@ import {
   scaleLinear, scalePow, scaleSqrt, scaleLog, scaleIdentity, scaleTime, scaleUtc,
   scaleSequential, scaleDiverging, scaleQuantize, scaleQuantile, scaleThreshold, scaleOrdinal,
   scaleBand, scalePoint,
-  ScaleLinear, ScalePower, ScaleLogarithmic, ScaleTime, ScaleSequential, ScaleDiverging, ScaleQuantize,
-  ScaleQuantile, ScaleThreshold, ScaleOrdinal, ScaleBand, ScalePoint,
+  ScaleLinear, ScalePower, ScaleLogarithmic, ScaleTime, /* ScaleOrdinal, ScaleBand, ScalePoint, ScaleThreshold, ScaleQuantile, ScaleQuantize, ScaleDiverging, ScaleSequential */
 } from 'd3-scale'
 
-export type Scale = ScaleLinear<number, any> | ScalePower<any, any> | ScaleLogarithmic<any, any>
-   | ScaleTime<any, any> | ScaleSequential<any> | ScaleDiverging<any> | ScaleQuantize<any> | ScaleQuantile<any>
-   | ScaleThreshold<any, any> | ScaleOrdinal<any, any> | ScaleBand<any> | ScalePoint<any>
+export type Scale = ScaleLinear<number, any> | ScalePower<any, any> | ScaleLogarithmic<any, any> | ScaleTime<any, any>
 
 export const Scales = {
   scaleLinear,

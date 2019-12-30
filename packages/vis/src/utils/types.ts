@@ -1,8 +1,10 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
+import { Scale } from 'enums/scales'
+
 export type NumericAccessor = ((d: any, i?: number, ...any) => number) | number
 
 export type Dimension = {
-  scale?: any;
+  scale?: Scale;
   domain?: number[];
   range?: number[];
 }

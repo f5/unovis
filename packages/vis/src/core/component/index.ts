@@ -4,6 +4,9 @@ import { select } from 'd3-selection'
 // Core
 import { CoreDataModel } from 'data-models/core'
 
+// Utils
+import { throttle } from 'utils/data'
+
 // Config
 import { ComponentConfig, ComponentConfigInterface } from './config'
 
@@ -14,6 +17,7 @@ export class ComponentCore {
   prevConfig: ComponentConfig
   datamodel: CoreDataModel = new CoreDataModel()
   events = {}
+  _setUpEventsThrottled = throttle(this._setUpEvents, 1000)
 
   constructor (config?: ComponentConfigInterface) {
     this.element = document.createElementNS('http://www.w3.org/2000/svg', 'g')
@@ -36,10 +40,10 @@ export class ComponentCore {
     this._render(customDuration)
 
     // Set up default events
-    this._setUpEvents(this.events)
+    this._setUpEventsThrottled(this.events)
 
     // Set up user-defined events
-    this._setUpEvents(this.config.events)
+    this._setUpEventsThrottled(this.config.events)
   }
 
   get bleed (): { top: number; bottom: number; left: number; right: number } {
@@ -50,6 +54,7 @@ export class ComponentCore {
   _render (customDuration?: number): void {
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   _onEvent (d: any, i: number, elements: []) {
   }
 

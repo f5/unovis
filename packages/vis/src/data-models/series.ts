@@ -24,7 +24,7 @@ export class SeriesDataModel extends CoreDataModel {
       for (const d of data) {
         let positiveStack = 0
         let negativeStack = 0
-        for (const a of <NumericAccessor[]>acs) {
+        for (const a of acs as NumericAccessor[]) {
           const value = getValue(d, a) || 0
           if (value >= 0) positiveStack += value
           else negativeStack += value
@@ -45,7 +45,7 @@ export class SeriesDataModel extends CoreDataModel {
     const { data } = this
 
     if (isArray(acs)) {
-      const minValue = min(data, d => min(<NumericAccessor[]>acs, a => getValue(d, a)))
+      const minValue = min(data, d => min(acs as NumericAccessor[], a => getValue(d, a)))
       return minValue
     } else return min(data, d => getValue(d, acs))
   }
@@ -54,7 +54,7 @@ export class SeriesDataModel extends CoreDataModel {
     const { data } = this
 
     if (isArray(acs)) {
-      const maxValue = max(data, d => max(<NumericAccessor[]>acs, a => getValue(d, a)))
+      const maxValue = max(data, d => max(acs as NumericAccessor[], a => getValue(d, a)))
       return maxValue
     } else return max(data, d => getValue(d, acs))
   }

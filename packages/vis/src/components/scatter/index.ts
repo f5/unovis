@@ -31,15 +31,11 @@ export class Scatter extends XYCore {
 
   constructor (config?: ScatterConfigInterface) {
     super()
-    if (config) this.config.init(config)
+    if (config) this.setConfig(config)
   }
 
-  // setData (data: any): void {
-  //   super.setData(data)
-  // }
-
   get bleed (): { top: number; bottom: number; left: number; right: number } {
-    const maxR = this._getMaxPointRadius()
+    const maxR = 2 * this._getMaxPointRadius() // We increase the max radius because the D3 Symbol size is not strictly set
     return { top: maxR, bottom: maxR, left: maxR, right: maxR }
   }
 
@@ -61,40 +57,35 @@ export class Scatter extends XYCore {
     pointGroupsMerged.call(updateNodes, duration)
   }
 
-  _prepareData () {
+  _prepareData (): object[] {
     const { config: { size, x, y, scales, shape, icon, color }, datamodel: { data } } = this
-    const scatterPoints = []
     const maxR = this._getMaxPointRadius()
+    const xRange = scales.x.range()
 
-    data?.forEach((d, i) => {
-      const pointX = scales.x(getValue(d, x))
-      const pointY = scales.y(getValue(d, y))
-      const xRange = scales.x.range()
+    return data?.reduce((acc, d, i) => {
+      const posX = scales.x(getValue(d, x))
+      const posY = scales.y(getValue(d, y))
       const pointSize = getValue(d, size)
-      if (pointX + pointSize >= (xRange[0] - maxR) && pointX - pointSize <= (xRange[1] + maxR)) {
-        const obj = {
-          x: pointX,
-          y: pointY,
+
+      if ((posX + pointSize >= (xRange[0] - maxR)) && (posX - pointSize <= (xRange[1] + maxR))) {
+        acc.push({
+          x: posX,
+          y: posY,
           size: pointSize,
           color: this.getColor(d, color) || `var(${getCSSVarName(i)})`,
           shape: getValue(d, shape),
           icon: getValue(d, icon),
-        }
-        scatterPoints.push(obj)
+        })
       }
-    })
 
-    return scatterPoints
+      return acc
+    }, []) ?? []
   }
 
   _getMaxPointRadius (): number {
-    const { datamodel: { data } } = this
+    const { config, datamodel, datamodel: { data } } = this
     if (isEmpty(data)) return 0
-    return Math.sqrt(this.getSizeDataMax() / 2)
-  }
 
-  getSizeDataMax (): number {
-    const { config, datamodel } = this
-    return datamodel.getMax(config.size)
+    return datamodel.getMax(config.size) / 2
   }
 }
