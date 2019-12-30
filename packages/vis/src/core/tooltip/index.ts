@@ -1,55 +1,55 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { select, Selection, mouse } from 'd3-selection'
 
+// Core
+// import { ContainerCore } from 'core/container'
+import { ComponentCore } from 'core/component'
+
+// Utils
+import { throttle } from 'utils/data'
+
 // Config
 import { TooltipConfig, TooltipConfigInterface } from './config'
 
 // Style
 import * as s from './style'
 
-export class Tooltip {
+export class Tooltip<T extends ComponentCore> {
   element: HTMLElement
   div: Selection<HTMLElement, any, any, any>
-  config: TooltipConfig
-  prevConfig: TooltipConfig
-  component: any
+  config: TooltipConfig<T>
+  prevConfig: TooltipConfig<T>
+  components: T[]
+  _setUpEventsThrottled = throttle(this._setUpEvents, 1000)
 
   private _container: HTMLElement
 
-  constructor (config?: TooltipConfigInterface, containerElement?: HTMLElement) {
+  constructor (config?: TooltipConfigInterface<T>, containerElement?: HTMLElement) {
     this._container = containerElement
-    this.config = new TooltipConfig().init(config)
+    this.config = new TooltipConfig<T>().init(config)
 
-    this.component = this.config.component
+    this.components = this.config.components
 
     this.element = document.createElement('div')
     this.div = select(this.element)
       .attr('class', s.tooltip)
   }
 
-  setContainer (container) {
+  setContainer (container: HTMLElement): void {
     this._container?.removeChild(this.element)
 
     this._container = container
     this._container.appendChild(this.element)
   }
 
-  setComponent (component) {
-    this.component = component
+  setComponents (components: T[]): void {
+    this.components = components
   }
 
-  update () {
+  update (): void {
     if (!this._container) return
 
-    Object.keys(this.config.elements).forEach(className => {
-      const template = this.config.elements[className]
-      this.component.g.selectAll(`.${className}`)
-        .on('mousemove.tooltip', (d, i, elements) => {
-          const [x, y] = mouse(this._container)
-          this.show(template(d, i, elements), { x, y })
-        })
-        .on('mouseleave.tooltip', (d, i, elements) => this.hide())
-    })
+    this._setUpEventsThrottled()
   }
 
   show (html: string, pos: { x: number; y: number}): void {
@@ -71,6 +71,22 @@ export class Tooltip {
     this.div
       .style('bottom', `${containerHeight - pos.y}px`)
       .style('left', `${pos.x - width / 2}px`)
+  }
+
+  _setUpEvents (): void {
+    const { config: { triggers } } = this
+
+    Object.keys(triggers).forEach(className => {
+      const template = triggers[className]
+      this.components.forEach(component => {
+        component.g.selectAll(`.${className}`)
+          .on('mousemove.tooltip', (d, i, elements) => {
+            const [x, y] = mouse(this._container)
+            this.show(template(d, i, elements), { x, y })
+          })
+          .on('mouseleave.tooltip', (d, i, elements) => this.hide())
+      })
+    })
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function

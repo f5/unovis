@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-
+/* eslint-disable */
 import { Component, ViewChild, ElementRef, OnInit, AfterViewInit } from '@angular/core'
 import _times from 'lodash/times'
 import { components, containers, Scales } from '@volterra/vis'
@@ -43,15 +43,18 @@ export class CompositeComponent implements OnInit, AfterViewInit {
         new Line(lineConfig),
       ],
       dimensions: {
-        x: { scale: Scales.scaleLinear() },
+        x: {
+          scale: Scales.scaleLinear(),
+          domain: undefined,
+        },
         y: { scale: Scales.scaleLinear() },
         size: { scale: Scales.scaleLinear() },
       },
-      // tooltip: new Tooltip({
-      //   elements: {
-      //     [StackedBar.selectors.bar]: (d) => '<span>Bar Chart</span>',
-      //   },
-      // }),
+      tooltip: new Tooltip({
+        triggers: {
+          [StackedBar.selectors.bar]: (d) => '<span>Bar Chart</span>',
+        },
+      }),
     }
     const data = generateData()
     const composite = new CompositeChart(this.chart.nativeElement, chartConfig, data)
@@ -73,6 +76,7 @@ export class CompositeComponent implements OnInit, AfterViewInit {
       },
     }
 
+    // @ts-ignore
     const nav = new CompositeChart(this.navigation.nativeElement, navConfig, data)
   }
 

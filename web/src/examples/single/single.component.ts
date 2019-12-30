@@ -47,7 +47,7 @@ export class SingleComponent implements OnInit, AfterViewInit {
         size: { scale: Scales.scaleLinear() },
       },
       tooltip: new Tooltip({
-        elements: {
+        triggers: {
           [StackedBar.selectors.bar]: (d) => '<span>Bar Chart</span>',
         },
       }),
@@ -63,7 +63,7 @@ export class SingleComponent implements OnInit, AfterViewInit {
       //   size: { scale: Scales.scaleLinear() },
       // },
       tooltip: new Tooltip({
-        elements: {
+        triggers: {
           [Line.selectors.line]: (d) => '<span>Line Chart</span>',
         },
       }),
@@ -79,7 +79,7 @@ export class SingleComponent implements OnInit, AfterViewInit {
         size: { scale: Scales.scaleLinear() },
       },
       tooltip: new Tooltip({
-        elements: {
+        triggers: {
           [Scatter.selectors.point]: (d) => '<span>Scatter Chart</span>',
         },
       }),

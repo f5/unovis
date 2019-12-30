@@ -19,7 +19,7 @@ export interface SingleChartConfigInterface extends ContainerConfigInterface {
     [key: string]: Dimension;
   };
   /** Tooltip component */
-  tooltip?: Tooltip;
+  tooltip?: Tooltip<any>;
 }
 
 export class SingleChartConfig extends ContainerConfig implements SingleChartConfigInterface {

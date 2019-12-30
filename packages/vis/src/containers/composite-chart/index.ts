@@ -52,10 +52,10 @@ export class CompositeChart extends ContainerCore {
       this.element.appendChild(c.element)
     }
 
-    // if (containerConfig.tooltip) {
-    //   containerConfig.tooltip.setContainer(this._container)
-    //   containerConfig.tooltip.setComponent(this.component)
-    // }
+    if (containerConfig.tooltip) {
+      containerConfig.tooltip.setContainer(this._container)
+      containerConfig.tooltip.setComponents(this.components)
+    }
 
     if (!preventRender) this.render()
   }

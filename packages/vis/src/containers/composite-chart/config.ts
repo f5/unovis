@@ -20,7 +20,7 @@ export interface CompositeChartConfigInterface extends ContainerConfigInterface 
     [key: string]: Dimension;
   };
   /** Tooltip component */
-  tooltip?: Tooltip | undefined;
+  tooltip?: Tooltip<any> | undefined;
 }
 
 export class CompositeChartConfig extends ContainerConfig implements CompositeChartConfigInterface {

@@ -48,7 +48,7 @@ export class SingleChart extends ContainerCore {
 
     if (containerConfig.tooltip) {
       containerConfig.tooltip.setContainer(this._container)
-      containerConfig.tooltip.setComponent(this.component)
+      containerConfig.tooltip.setComponents([this.component])
     }
 
     if (!preventRender) this.render()
