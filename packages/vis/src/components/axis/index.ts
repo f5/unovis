@@ -1,19 +1,26 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 
-import { select } from 'd3-selection'
-import { axisLeft, axisTop, axisRight, axisBottom } from 'd3-axis'
+import { select, Selection } from 'd3-selection'
+import { axisLeft, axisTop, axisRight, axisBottom, Axis as D3Axis } from 'd3-axis'
 
 // Core
 import { XYCore } from 'core/xy-component'
 
 // Utils
 import { Margin } from 'utils/types'
-import { wrapTickText } from './modules/tick'
 
 // Enums
+import { AxisType } from 'enums/axis'
+import { Position } from 'enums/position'
+
+// Utils
+import { clean } from 'utils/data'
 
 // Config
 import { AxisConfig, AxisConfigInterface } from './config'
+
+// Modules
+import { wrapTickText, getWrapOptions } from './modules/tick'
 
 // Styles
 import * as s from './style'
@@ -21,9 +28,9 @@ import * as s from './style'
 export class Axis extends XYCore {
   static selectors = s
   config: AxisConfig = new AxisConfig()
-  axisGroup: any
-  labelGroup: any
-  compositeContainerMargin: Margin
+  axisGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
+  axisLabGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
+  labelGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
   events = {
     [Axis.selectors.tick]: {
       mouseover: this._onTickMouseOver.bind(this),
@@ -34,115 +41,107 @@ export class Axis extends XYCore {
   constructor (config?: AxisConfigInterface) {
     super()
     if (config) this.config.init(config)
+
     this.axisGroup = this.g.append('g')
     this.labelGroup = this.g.append('g')
-    this.compositeContainerMargin = {
-      top: 0,
-      bottom: 0,
-      left: 0,
-      right: 0,
-    }
   }
 
-  setCompositeContainerMargin (margin) {
-    this.compositeContainerMargin = margin
-  }
-
-  getSize () {
-    const { type, position, padding } = this.config
-    const { width, height } = this.element.getBBox()
-    switch (type) {
-    case 'x': {
-      switch (position) {
-      case 'top': {
-        return { top: height + padding.top + padding.bottom, left: padding.left, right: padding.right }
-      }
-      case 'bottom':
-      default: {
-        return { bottom: height + padding.top + padding.bottom, left: padding.left, right: padding.right }
-      }
-      }
-    }
-    case 'y': {
-      switch (position) {
-      case 'right': {
-        return { right: width + padding.left + padding.right, top: padding.top, bottom: padding.bottom }
-      }
-      case 'left':
-      default: {
-        return { left: width + padding.left + padding.right, top: padding.top, bottom: padding.bottom }
-      }
-      }
-    }
-    }
-  }
-
-  prerender () {
+  preRender (): void {
     this._render(0, true)
+  }
+
+  getPosition (): Position {
+    const { config: { type, position } } = this
+    return (position ?? ((type === AxisType.X) ? Position.BOTTOM : Position.LEFT)) as Position
+  }
+
+  getSize (): { width: number; height: number } {
+    const { padding } = this.config
+    const { width, height } = this.element.getBBox()
+
+    return {
+      width: width + padding.left + padding.right,
+      height: height + padding.top + padding.bottom,
+    }
+  }
+
+  calculateMargin (): Margin {
+    const { config: { type, position, padding } } = this
+    const size = this.getSize()
+
+    switch (type) {
+    case AxisType.X:
+      switch (position) {
+      case Position.TOP: return { top: size.height, left: padding.left, right: padding.right }
+      case Position.BOTTOM: default: return { bottom: size.height, left: padding.left, right: padding.right }
+      }
+    case AxisType.Y:
+      switch (position) {
+      case Position.RIGHT: return { right: size.width, top: padding.top, bottom: padding.bottom }
+      case Position.LEFT: default: return { left: size.width, top: padding.top, bottom: padding.bottom }
+      }
+    }
+  }
+
+  getOffset (containerMargin: Margin): {left: number; top: number} {
+    const { config: { type, position, padding, width, height } } = this
+
+    switch (type) {
+    case AxisType.X:
+      switch (position) {
+      case Position.TOP: return { top: containerMargin.top - padding.top, left: padding.left }
+      case Position.BOTTOM: default: return { top: containerMargin.top + height + padding.top, left: containerMargin.left }
+      }
+    case AxisType.Y:
+      switch (position) {
+      case Position.RIGHT: return { top: containerMargin.top, left: containerMargin.left + width + padding.left }
+      case Position.LEFT: default: return { top: padding.top, left: containerMargin.left - padding.right }
+      }
+    }
   }
 
   _render (customDuration?: number, forceWrap?: boolean): void {
     const { config } = this
     // const duration = isNumber(customDuration) ? customDuration : config.duration
-    this.axisGroup.call(this._getAxis())
-    this.axisGroup.selectAll('g.tick')
+
+    this.axisGroup.call(this._buildAxis())
+    const ticks = this.axisGroup.selectAll('g.tick')
+
+    ticks
       .classed(s.tick, true)
-      .call(wrapTickText, this._getWrapLabelOption(forceWrap), () => {
-        this._renderLabel()
-      })
+      .call(wrapTickText, getWrapOptions(ticks, config, forceWrap))
+
     this.axisGroup
       .classed(s.axis, true)
       .classed('hide-grid-line', !config.gridLine)
       .classed('hide-tick-line', !config.tickLine)
 
-    this._updateTicksNumber()
+    this._updateTicks()
+    this._renderAxisLabel()
   }
 
-  _getAxis () {
-    const { type, position, padding, scales, height, width } = this.config
-    const margin = this.compositeContainerMargin
+  _buildAxis (): D3Axis<any> {
+    const { config: { type, scales, position } } = this
+
     switch (type) {
-    case 'x': {
+    case AxisType.X:
       switch (position) {
-      case 'top': {
-        this.g.attr('transform', `translate(${margin.left}, ${margin.top - padding.top})`)
-        return axisTop(scales.x)
+      case Position.TOP: return axisTop(scales.x)
+      case Position.BOTTOM: default: return axisBottom(scales.x)
       }
-      case 'bottom':
-      default: {
-        this.g.attr('transform', `translate(${margin.left}, ${height + margin.top + padding.top})`)
-        return axisBottom(scales.x)
-      }
-      }
-    }
-    case 'y': {
+    case AxisType.Y:
       switch (position) {
-      case 'right': {
-        this.g.attr('transform', `translate(${width + margin.left + padding.left}, ${margin.top})`)
-        return axisRight(scales.y)
+      case Position.RIGHT: return axisRight(scales.y)
+      case Position.LEFT: default: return axisLeft(scales.y)
       }
-      case 'left':
-      default: {
-        this.g.attr('transform', `translate(${margin.left - padding.left}, ${margin.top})`)
-        return axisLeft(scales.y)
-      }
-      }
-    }
     }
   }
 
-  /**
-   * Dynamically updates the number of axis ticks to avoid text overlapping.
-   */
-  _updateTicksNumber () {
+  _updateTicks (): void {
     const { config } = this
     const ticks = this.axisGroup.selectAll('g.tick')
-    let renderOnlyFirstAndLast = false
-    if (config.minMaxTicksOnly) {
-      renderOnlyFirstAndLast = true
-    } else if (!config.showAllTicks) {
 
-    }
+    const renderOnlyFirstAndLast = config.minMaxTicksOnly && !config.showAllTicks
 
     if (renderOnlyFirstAndLast) {
       ticks.each((d, i, elements) => {
@@ -151,91 +150,31 @@ export class Axis extends XYCore {
     }
   }
 
-  _renderLabel () {
-    const { position, type, label } = this.config
-    if (!label) return
+  _renderAxisLabel (): void {
+    const { type, label } = this.config
+
+    const axisPosition = this.getPosition()
     const { width, height } = this.axisGroup.node().getBBox()
-    const labels = this.labelGroup.selectAll(`.${s.label}`).data([label])
+
+    const labels = this.labelGroup.selectAll(`.${s.label}`).data(clean([label])) as Selection<SVGTextElement, any, SVGGElement, object[]>
+    labels.exit().remove()
+
     const labelsEnter = labels.enter()
       .append('text')
-      .attr('class', s.label)
+      .attr('class', `${s.label} ${axisPosition}`)
+
     const labelMerged = labelsEnter.merge(labels)
-    labels.exit().remove()
-    labelMerged
-      .text(d => d)
 
-    switch (type) {
-    case 'x': {
-      switch (position) {
-      case 'top': {
-        labelMerged.attr('transform', `translate(${width / 2}, ${-height})rotate(${type === 'y' ? 90 : 0})`)
-        break
-      }
-      case 'bottom':
-      default: {
-        labelMerged
-          .classed('bottom', true)
-          .attr('transform', `translate(${width / 2}, ${height})rotate(${type === 'y' ? 90 : 0})`)
-        break
-      }
-      }
-      break
-    }
-    case 'y': {
-      switch (position) {
-      case 'right': {
-        labelMerged
-          .classed('right', true)
-          .attr('transform', `translate(${width}, ${height / 2})rotate(${type === 'y' ? 90 : 0})`)
-        break
-      }
-      case 'left':
-      default: {
-        labelMerged
-          .classed('left', true)
-          .attr('transform', `translate(${-width}, ${height / 2})rotate(${type === 'y' ? 90 : 0})`)
-        break
-      }
-      }
-      break
-    }
-    }
+    const offsetX = type === AxisType.X ? width / 2 : (-1) ** (+(axisPosition === Position.LEFT)) * width
+    const offsetY = type === AxisType.X ? (-1) ** (+(axisPosition === Position.TOP)) * height : height / 2
+    const rotation = type === AxisType.Y ? 90 : 0
+
+    labelMerged.text(d => d)
+      .classed(axisPosition, true)
+      .attr('transform', `translate(${offsetX},${offsetY}) rotate(${rotation})`)
   }
 
-  _getWrapLabelOption (forceWrap?: boolean) {
-    const { compositeContainerMargin } = this
-    const { type, position, tickTextLength, tickTextWidth, tickTextSeparator, tickTextForceWordBreak, tickTextTrimType, tickTextFitMode, width, padding } = this.config
-
-    const ticksElements = this.axisGroup.selectAll('g.tick')
-    let wrapWidth = tickTextWidth
-    if (!wrapWidth) {
-      if (type === 'x') {
-        wrapWidth = width / ticksElements.size()
-      } else {
-        wrapWidth = position === 'right' ? compositeContainerMargin.right - padding.left - padding.right : compositeContainerMargin.left
-      }
-    }
-
-    let verticalAlign = 'middle'
-    if (type === 'x') {
-      verticalAlign = position === 'top' ? 'top' : 'bottom'
-    }
-
-    return {
-      width: wrapWidth,
-      separator: tickTextSeparator,
-      wordBreak: tickTextForceWordBreak,
-      length: tickTextLength,
-      trimType: tickTextTrimType,
-      trimOnly: tickTextFitMode === 'trim',
-      dy: type === 'x' ? 0.71 : 0.32,
-      verticalAlign,
-      forceWrap,
-      tickTextFitMode,
-    }
-  }
-
-  _toggleText (tickElement, fullIsActive) {
+  _toggleTickFullText (tickElement, fullIsActive: boolean): void {
     const tickText = tickElement.select(`.${s.tickText}`)
     const fullTickText = tickElement.select(`.${s.fullTickText}`)
 
@@ -244,13 +183,13 @@ export class Axis extends XYCore {
     fullTickText.classed('active', fullIsActive)
   }
 
-  _onTickMouseOver (d, i, elements) {
+  _onTickMouseOver (d: any, i: number, elements: []): void {
     if (!this.config.tickTextExpandOnHover) return
-    this._toggleText(select(elements[i]), true)
+    this._toggleTickFullText(select(elements[i]), true)
   }
 
-  _onTickMouseOut (d, i, elements) {
+  _onTickMouseOut (d: any, i: number, elements: []): void {
     if (!this.config.tickTextExpandOnHover) return
-    this._toggleText(select(elements[i]), false)
+    this._toggleTickFullText(select(elements[i]), false)
   }
 }

@@ -43,3 +43,7 @@ export function getValue (d, accessor): number {
   if (isFunction(accessor)) return accessor(d)
   else return accessor
 }
+
+export function clean (data: any[]): any[] {
+  return data.filter(d => d && !isNumber(d))
+}

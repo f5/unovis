@@ -1,6 +1,9 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { Scale } from 'enums/scales'
 
+// Enums
+import { TrimType, VerticalAlign } from 'enums/text'
+
 export type NumericAccessor = ((d: any, i?: number, ...any) => number) | number
 
 export type Dimension = {
@@ -20,9 +23,10 @@ export type WrapTextOptions = {
   length?: number;
   width?: number;
   separator?: string | string[];
-  trimType?: string;
-  verticalAlign?: string;
+  trimType?: TrimType;
+  verticalAlign?: VerticalAlign;
   wordBreak?: boolean;
   trimOnly?: boolean;
+  forceWrap?: boolean;
   dy?: number;
 }

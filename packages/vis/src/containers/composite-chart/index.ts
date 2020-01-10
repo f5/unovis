@@ -5,10 +5,16 @@ import { extent, merge as mergeArrays } from 'd3-array'
 import { ContainerCore } from 'core/container'
 import { XYCore } from 'core/xy-component'
 
+// Components
+import { Axis } from 'components/axis'
+
 // import { ComponentCore } from 'core/component'
 
 // import { ComponentConfig } from 'core/component/config'
 import { XYConfigInterface } from 'core/xy-component/config'
+
+// Enums
+import { AxisType } from 'enums/axis'
 
 // Utils
 import { isArray } from 'utils/data'
@@ -43,8 +49,9 @@ export class CompositeChart extends ContainerCore {
     components.forEach((c, i) => {
       c.setData(data)
     })
-    config.axes?.x?.setData(data)
-    config.axes?.y?.setData(data)
+
+    config.axes.x?.setData(data)
+    config.axes.y?.setData(data)
     if (!preventRender) this.render()
   }
 
@@ -60,6 +67,10 @@ export class CompositeChart extends ContainerCore {
       containerConfig.tooltip.setContainer(this._container)
       containerConfig.tooltip.setComponents(this.components)
     }
+
+    Object.keys(containerConfig.axes ?? {}).forEach(key => {
+      this.config.axes[key].config.type = key as AxisType
+    })
 
     if (containerConfig.axes?.x) this.element.appendChild(containerConfig.axes.x.element)
     if (containerConfig.axes?.y) this.element.appendChild(containerConfig.axes.y.element)
@@ -87,44 +98,52 @@ export class CompositeChart extends ContainerCore {
     const { config } = this
     super._render()
 
-    this._prerenderAxis(this.config.axes?.x, 'x')
-    this._prerenderAxis(this.config.axes?.y, 'y')
+    if (config.autoMargin) {
+      Object.keys(config.axes).forEach(key => {
+        this._setAutoMargin(this.config.axes[key])
+      })
+    }
 
-    this.updateScales([
-      ...this.components,
-      ...[this.config.axes?.x, this.config.axes?.y].filter(d => d),
-    ])
-
+    // Render components
+    this.updateScales(...this.components)
     for (const c of this.components) {
       c.g.attr('transform', `translate(${config.margin.left},${config.margin.top})`)
       c.render(customDuration)
     }
 
+    // Render axes
+    Object.keys(config.axes).forEach(key => {
+      const axis = config.axes[key]
+
+      this.updateScales(axis)
+      const offset = axis.getOffset(config.margin)
+      axis.g.attr('transform', `translate(${offset.left},${offset.top})`)
+      axis.render(customDuration)
+    })
+
+    // Tooltip
     config.tooltip?.update()
-
-    config.axes.x?.render(customDuration)
-    config.axes.y?.render(customDuration)
   }
 
-  updateScales (XYComponents?: XYCore[]): void {
-    this._updateScalesDomain(this.components)
-    this._updateScalesRange(XYComponents || this.components)
+  updateScales<T extends XYCore> (...components: T[]): void {
+    this._updateScalesDomain(...(components || this.components))
+    this._updateScalesRange(...(components || this.components))
   }
 
-  _updateScalesDomain (XYComponents: XYCore | XYCore[]): void {
+  _updateScalesDomain<T extends XYCore> (...components: T[]): void {
     const { config: { dimensions } } = this
-    if (!XYComponents) return
-    const components = (isArray(XYComponents) ? XYComponents : [XYComponents]) as XYCore[]
+    if (!components) return
+
     Object.keys(dimensions).forEach(key => {
       const domain = extent(mergeArrays(components.map(c => c.getDataExtent(key))) as number[])
       components.forEach(c => c.setScaleDomain(key, dimensions[key].domain ?? domain))
     })
   }
 
-  _updateScalesRange (XYComponents: XYCore | XYCore[]): void {
+  _updateScalesRange<T extends XYCore> (...components: T[]): void {
     const { config: { dimensions, padding } } = this
-    if (!XYComponents) return
-    const components = (isArray(XYComponents) ? XYComponents : [XYComponents]) as XYCore[]
+    if (!components) return
+
     for (const c of components) {
       c.config.width = this.width
       c.config.height = this.height
@@ -141,19 +160,17 @@ export class CompositeChart extends ContainerCore {
     })
   }
 
-  _prerenderAxis (axis, type) {
-    const { config } = this
-    if (!axis) return
-    axis.config.type = type
-    this._updateScalesDomain(axis)
-    axis.prerender()
-    const size = axis.getSize()
-    // update container margin to fit axes
-    if (config.margin.top < size.top) config.margin.top = size.top
-    if (config.margin.bottom < size.bottom) config.margin.bottom = size.bottom
-    if (config.margin.left < size.left) config.margin.left = size.left
-    if (config.margin.right < size.right) config.margin.right = size.right
+  _setAutoMargin (axis: Axis): void {
+    const { config: { margin } } = this
 
-    axis.setCompositeContainerMargin(config.margin)
+    this._updateScalesDomain(axis)
+    axis.preRender()
+
+    // Update container margin to fit axes
+    const m = axis.calculateMargin()
+    if (margin.top < m.top) margin.top = m.top
+    if (margin.bottom < m.bottom) margin.bottom = m.bottom
+    if (margin.left < m.left) margin.left = m.left
+    if (margin.right < m.right) margin.right = m.right
   }
 }

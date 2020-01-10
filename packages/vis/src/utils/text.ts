@@ -1,42 +1,48 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
+import { Selection } from 'd3-selection'
+
+// Enums
+import { TrimType, VerticalAlign } from 'enums/text'
+
+// Utils
 import { isArray, flatten } from 'utils/data'
 import { WrapTextOptions } from 'utils/types'
 
-export function trimTextStart (str = '', maxLength = 15) {
+export function trimTextStart (str = '', maxLength = 15): string {
   return str.length > maxLength ? `...${str.substr(0, maxLength)}` : str
 }
 
-export function trimTextMiddle (str = '', maxLength = 15) {
+export function trimTextMiddle (str = '', maxLength = 15): string {
   const dist = Math.floor((maxLength - 3) / 2)
   return str.length > maxLength ? `${str.substr(0, dist)}...${str.substr(-dist, dist)}` : str
 }
 
-export function trimTextEnd (str = '', maxLength = 15) {
+export function trimTextEnd (str = '', maxLength = 15): string {
   return str.length > maxLength ? `${str.substr(0, maxLength)}...` : str
 }
 
-export function trimText (str = '', length = 15, type = 'middle') {
+export function trimText (str = '', length = 15, type = 'middle'): string {
   let result = trimTextEnd(str, length)
   if (type === 'start') result = trimTextStart(str, length)
   else if (type === 'middle') result = trimTextMiddle(str, length)
   return result
 }
 
-export function trimToPixel (svgTextElement: any, minWidth = 50, trimType = 'middle') {
+export function trimSVGTextToPixel (svgTextSelection: Selection<SVGTextElement, any, SVGElement, any>, minWidth = 50, trimType = TrimType.MIDDLE): void {
   let i = 0
-  let textBBox = svgTextElement.node().getBBox()
-  let text = svgTextElement.text()
+  let textBBox = svgTextSelection.node().getBBox()
+  let text = svgTextSelection.text()
   let textLength = text.length
   while (textBBox.width > minWidth && textLength > 0) {
-    text = svgTextElement.text()
+    text = svgTextSelection.text()
     textLength -= 1
-    svgTextElement.text(trimText(text, text.length - i, trimType))
+    svgTextSelection.text(trimText(text, text.length - i, trimType))
     i = i + 1
-    textBBox = svgTextElement.node().getBBox()
+    textBBox = svgTextSelection.node().getBBox()
   }
 }
 
-export function breakTspan (tspan: any, width: number, word = '') {
+export function breakTspan (tspan: Selection<SVGTSpanElement, any, SVGElement, any>, width: number, word = ''): string {
   const tspanText = tspan.text()
   const coeff = width / tspan.node().getComputedTextLength()
   if (coeff < 1) {
@@ -50,13 +56,14 @@ export function breakTspan (tspan: any, width: number, word = '') {
   }
 }
 
-export function splitTextByMultipleSeparators (text, separators = [' ']) {
+export function splitString (text: string, separators = [' ']): string[] {
   let result = [text]
   for (let i = 0; i < separators.length; i++) {
     const separator = separators[i]
     result.forEach((d, i) => {
       const separated = d.split(separator)
-      result[i] = separated.map((word, i) => `${word}${i === separated.length - 1 ? '' : separator}`)
+      const words = separated.map((word, i) => `${word}${i === separated.length - 1 ? '' : separator}`)
+      result = result.splice(0, 0, ...words)
     })
     result = flatten(result)
   }
@@ -64,15 +71,27 @@ export function splitTextByMultipleSeparators (text, separators = [' ']) {
   return result
 }
 
-export function wrap (element: any, { length, width = 200, separator = '', trimType = 'end', verticalAlign = 'middle', wordBreak = false, trimOnly = false, dy = 0.32 }: WrapTextOptions = {}): void {
+export function wrap (
+  element: Selection<SVGTextElement, any, SVGElement, any>,
+  {
+    length,
+    width = 200,
+    separator = '',
+    trimType = TrimType.END,
+    verticalAlign = VerticalAlign.MIDDLE,
+    wordBreak = false,
+    trimOnly = false,
+    dy = 0.32,
+    forceWrap = false,
+  }: WrapTextOptions = {}): void {
   let text = element.text()
   if (length) text = trimText(text, length, trimType)
   if (!length && trimOnly) {
-    trimToPixel(element, width, trimType)
+    trimSVGTextToPixel(element, width, trimType)
     return
   }
   const separators = (isArray(separator) ? separator : [separator]) as string[]
-  const words = splitTextByMultipleSeparators(text, separators)
+  const words = splitString(text, separators)
   const x = parseFloat(element.attr('x')) || 0
   element.text('')
   let tspan = element.append('tspan').attr('x', x)
@@ -109,8 +128,8 @@ export function wrap (element: any, { length, width = 200, separator = '', trimT
   }
 
   let addY = -(tspanCount - 1) * 0.5 + dy
-  if (verticalAlign === 'bottom') addY = dy
-  else if (verticalAlign === 'top') addY = -(tspanCount - 1) - (1 - dy)
+  if (verticalAlign === VerticalAlign.BOTTOM) addY = dy
+  else if (verticalAlign === VerticalAlign.TOP) addY = -(tspanCount - 1) - (1 - dy)
   element.attr('dy', `${addY}em`)
 }
 

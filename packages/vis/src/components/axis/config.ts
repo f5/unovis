@@ -1,13 +1,19 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 
 import { XYConfigInterface, XYConfig } from 'core/xy-component/config'
+
+// Enums
+import { AxisType } from 'enums/axis'
+import { Position } from 'enums/position'
+
+// Utils
 import { Margin } from 'utils/types'
 
 export interface AxisConfigInterface extends XYConfigInterface {
     /** Axis position: top, bottom, right or left */
-    position?: string;
+    position?: Position;
     /** Axis type: x or y */
-    type?: string;
+    type?: AxisType;
     /** Axis label */
     label?: string;
     /** Draw or not axis grid line */
@@ -33,6 +39,7 @@ export interface AxisConfigInterface extends XYConfigInterface {
     /**  */
     tickTextFitMode?: string;
     padding?: Margin;
+    offset?: Margin;
 }
 
 export class AxisConfig extends XYConfig implements AxisConfigInterface {
@@ -55,5 +62,12 @@ export class AxisConfig extends XYConfig implements AxisConfigInterface {
     bottom: 5,
     left: 5,
     right: 5,
+  }
+
+  offset = {
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
   }
 }
