@@ -2,7 +2,7 @@
 import { Scale } from 'enums/scales'
 
 // Enums
-import { TrimType, VerticalAlign } from 'enums/text'
+import { TrimType, VerticalAlign, FitMode } from 'enums/text'
 
 export type NumericAccessor = ((d: any, i?: number, ...any) => number) | number
 
@@ -29,4 +29,5 @@ export type WrapTextOptions = {
   trimOnly?: boolean;
   forceWrap?: boolean;
   dy?: number;
+  fitMode?: FitMode;
 }

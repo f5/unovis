@@ -9,6 +9,7 @@ import { WrapTextOptions } from 'utils/types'
 // Enums
 import { AxisType } from 'enums/axis'
 import { Position } from 'enums/position'
+import { VerticalAlign, FitMode } from 'enums/text'
 
 import * as s from '../style'
 
@@ -30,7 +31,7 @@ export function wrapTickText (selection, wrapOptions, callback): void {
 
     textElement.call(wrapTextElement, wrapOptions, callback)
 
-    if (wrapOptions.tickTextFitMode === 'wrap' && (isNil(wrapOptions.length) || text.length < wrapOptions.length)) return
+    if (wrapOptions.fitMode === FitMode.WRAP && (isNil(wrapOptions.length) || text.length < wrapOptions.length)) return
     tickElement.select(`.${s.fullTickText}`).remove()
     const fullTextElement = tickElement.append('text').attr('class', s.fullTickText)
     fullTextElement.text(text)
@@ -56,9 +57,9 @@ export function getWrapOptions (ticks, config, forceWrap?: boolean): WrapTextOpt
     }
   }
 
-  let verticalAlign = 'middle'
+  let verticalAlign = VerticalAlign.MIDDLE
   if (type === AxisType.X) {
-    verticalAlign = position === Position.TOP ? 'top' : 'bottom'
+    verticalAlign = position === Position.TOP ? VerticalAlign.TOP : VerticalAlign.BOTTOM
   }
 
   return {
@@ -67,10 +68,10 @@ export function getWrapOptions (ticks, config, forceWrap?: boolean): WrapTextOpt
     wordBreak: tickTextForceWordBreak,
     length: tickTextLength,
     trimType: tickTextTrimType,
-    trimOnly: tickTextFitMode === 'trim',
+    trimOnly: tickTextFitMode === FitMode.TRIM,
     dy: type === AxisType.X ? 0.71 : 0.32,
     verticalAlign,
     forceWrap,
-    tickTextFitMode,
+    fitMode: tickTextFitMode,
   }
 }

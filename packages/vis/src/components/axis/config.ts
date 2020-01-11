@@ -5,6 +5,7 @@ import { XYConfigInterface, XYConfig } from 'core/xy-component/config'
 // Enums
 import { AxisType } from 'enums/axis'
 import { Position } from 'enums/position'
+import { FitMode, TrimType } from 'enums/text'
 
 // Utils
 import { Margin } from 'utils/types'
@@ -35,9 +36,9 @@ export interface AxisConfigInterface extends XYConfigInterface {
     /**  */
     tickTextExpandOnHover?: boolean;
     /**  */
-    tickTextTrimType?: string;
+    tickTextTrimType?: TrimType;
     /**  */
-    tickTextFitMode?: string;
+    tickTextFitMode?: FitMode;
     padding?: Margin;
     offset?: Margin;
 }
@@ -55,8 +56,8 @@ export class AxisConfig extends XYConfig implements AxisConfigInterface {
   tickTextSeparator = ' '
   tickTextForceWordBreak = false
   tickTextExpandOnHover = true
-  tickTextTrimType = 'middle'
-  tickTextFitMode = 'wrap'
+  tickTextTrimType = TrimType.MIDDLE
+  tickTextFitMode = FitMode.WRAP
   padding = {
     top: 5,
     bottom: 5,

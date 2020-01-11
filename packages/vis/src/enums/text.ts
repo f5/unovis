@@ -11,3 +11,8 @@ export enum VerticalAlign {
   MIDDLE = 'middle',
   BOTTOM = 'bottom',
 }
+
+export enum FitMode {
+  WRAP = 'wrap',
+  TRIM = 'trim',
+}
