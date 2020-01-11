@@ -56,14 +56,15 @@ export function breakTspan (tspan: Selection<SVGTSpanElement, any, SVGElement, a
   }
 }
 
-export function splitString (text: string, separators = [' ']): string[] {
-  let result = [text]
+export function splitString (text: string, separators = [' ']) {
+  let result = [text] as any[]
   for (let i = 0; i < separators.length; i++) {
-    const separator = separators[i]
-    result.forEach((d, i) => {
-      const separated = d.split(separator)
-      const words = separated.map((word, i) => `${word}${i === separated.length - 1 ? '' : separator}`)
-      result = result.splice(0, 0, ...words)
+    const sep = separators[i]
+    result.forEach(d => {
+      const separated = d.split(sep)
+      const words = separated.map((word, i) => `${word}${i === separated.length - 1 ? '' : sep}`)
+      // result.splice(i, 0, ...words)
+      result[i] = words
     })
     result = flatten(result)
   }
