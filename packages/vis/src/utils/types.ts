@@ -20,14 +20,14 @@ export type Margin = {
 }
 
 export type WrapTextOptions = {
-  length?: number;
-  width?: number;
-  separator?: string | string[];
-  trimType?: TrimType;
-  verticalAlign?: VerticalAlign;
-  wordBreak?: boolean;
-  trimOnly?: boolean;
-  forceWrap?: boolean;
-  dy?: number;
-  fitMode?: FitMode;
+  readonly length?: number;
+  readonly width?: number;
+  readonly separator?: string | string[];
+  readonly trimType?: TrimType;
+  readonly verticalAlign?: VerticalAlign;
+  readonly wordBreak?: boolean;
+  readonly trimOnly?: boolean;
+  readonly forceWrap?: boolean;
+  readonly dy?: number;
+  readonly fitMode?: FitMode;
 }

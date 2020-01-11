@@ -134,7 +134,7 @@ export function wrap (
   element.attr('dy', `${addY}em`)
 }
 
-export function wrapTextElement (element, options, callback) {
+export function wrapTextElement (element, options: WrapTextOptions, callback): void {
   if (!element.text()) return
   if (options.forceWrap) {
     wrap(element, options)
