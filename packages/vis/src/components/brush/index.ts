@@ -62,7 +62,9 @@ export class Brush extends XYCore {
 
     brushBehaviour
       .extent([[0, 0], [config.width, config.height]])
-      .on('start brush end', () => { this._onBrush() })
+      .on('start', () => { this._onBrushStart() })
+      .on('brush', () => { this._onBrushMove() })
+      .on('end', () => { this._onBrushEnd() })
 
     this.brush
       .call(brushBehaviour)
@@ -106,7 +108,13 @@ export class Brush extends XYCore {
       .attr('width', config.handleWidth)
   }
 
-  _onBrush (): void {
+  _onBrushStart (): void {
+    const { config } = this
+
+    config.onBrushStart(config.selection, event)
+  }
+
+  _onBrushMove (): void {
     const { config } = this
     const xScale = config.scales.x
     const s = event?.selection || xScale.range()
@@ -114,6 +122,12 @@ export class Brush extends XYCore {
 
     this._updateSelection(s)
     config.selection = selectedDomain
-    config.onBrush(selectedDomain, event)
+    config.onBrushMove(selectedDomain, event)
+  }
+
+  _onBrushEnd (): void {
+    const { config } = this
+
+    config.onBrushEnd(config.selection, event)
   }
 }

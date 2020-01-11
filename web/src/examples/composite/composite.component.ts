@@ -73,7 +73,7 @@ export class CompositeComponent implements OnInit, AfterViewInit {
       components: [
         new StackedBar(lineConfig),
         new Brush({
-          onBrush: (s) => {
+          onBrushMove: (s) => {
             chartConfig.dimensions.x.domain = s
             composite.updateContainer(chartConfig, true)
             composite.render(0)
