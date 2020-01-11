@@ -17,7 +17,6 @@ import { XYConfigInterface } from 'core/xy-component/config'
 import { AxisType } from 'enums/axis'
 
 // Utils
-import { isArray } from 'utils/data'
 
 // Config
 import { CompositeChartConfig, CompositeChartConfigInterface } from './config'
