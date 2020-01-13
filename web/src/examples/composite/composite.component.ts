@@ -8,7 +8,7 @@ const { CompositeChart } = containers
 const { Line, StackedBar, Tooltip, Brush, Axis } = components
 
 function generateData (): object[] {
-  return _times(300).map((i) => ({
+  return _times(30).map((i) => ({
     x: i,
     y: Math.random(),
     y1: Math.random(),
@@ -38,6 +38,8 @@ export class CompositeComponent implements OnInit, AfterViewInit {
     const barConfig = getBarConfig()
     const lineConfig = getLineConfig()
     const chartConfig = {
+      margin: { top: 10, bottom: 10, left: 10, right: 10 },
+      // padding: { left: 10, right: 10 },
       components: [
         new StackedBar(barConfig),
         new Line(lineConfig),
@@ -70,10 +72,11 @@ export class CompositeComponent implements OnInit, AfterViewInit {
     const composite = new CompositeChart(this.chart.nativeElement, chartConfig, data)
 
     const navConfig = {
+      margin: { left: 9, right: 9 },
       components: [
         new StackedBar(lineConfig),
         new Brush({
-          onBrushMove: (s) => {
+          onBrush: (s) => {
             chartConfig.dimensions.x.domain = s
             composite.updateContainer(chartConfig, true)
             composite.render(0)
@@ -84,6 +87,9 @@ export class CompositeComponent implements OnInit, AfterViewInit {
         x: { scale: Scales.scaleLinear() },
         y: { scale: Scales.scaleLinear() },
       },
+      axes: {
+        x: new Axis(),
+      }
     }
 
     // @ts-ignore
@@ -118,6 +124,7 @@ function getBarConfig () {
 
 function getLineConfig () {
   return {
+    barMaxWidth: 15,
     x: d => d.x,
     y: d => d.y,
     events: {
