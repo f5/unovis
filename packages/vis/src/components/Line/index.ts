@@ -41,9 +41,10 @@ export class Line extends XYCore {
       .style('stroke', d => this.getColor(d, config.color))
   }
 
-  // setData (data: any): void {
-  //   super.setData(data)
-  // }
+  get bleed (): { top: number; bottom: number; left: number; right: number } {
+    const { config: { lineWidth } } = this
+    return { top: lineWidth, bottom: lineWidth, left: lineWidth, right: lineWidth }
+  }
 
   _render (customDuration?: number): void {
     const { config, datamodel: { data } } = this

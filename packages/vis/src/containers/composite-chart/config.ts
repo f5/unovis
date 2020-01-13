@@ -6,6 +6,9 @@ import { XYCore } from 'core/xy-component'
 import { ContainerConfig, ContainerConfigInterface } from 'core/container/config'
 import { Tooltip } from 'core/tooltip'
 
+// Components
+import { Axis } from 'components/axis'
+
 // Enums
 // import { Scales } from 'enums/scales'
 
@@ -19,6 +22,12 @@ export interface CompositeChartConfigInterface extends ContainerConfigInterface 
   dimensions?: {
     [key: string]: Dimension;
   };
+  /** Axis configuration */
+  axes?: {
+    [key: string]: Axis;
+  };
+  /** Enables automatic calculation of margins based on axes size */
+  autoMargin?: boolean;
   /** Tooltip component */
   tooltip?: Tooltip<any> | undefined;
 }
@@ -26,6 +35,8 @@ export interface CompositeChartConfigInterface extends ContainerConfigInterface 
 export class CompositeChartConfig extends ContainerConfig implements CompositeChartConfigInterface {
   components? = []
   tooltip = undefined
+  axes: { [key: string]: Axis } = {}
+  autoMargin = true
   dimensions = {
     x: {} as Dimension,
     y: {} as Dimension,

@@ -11,6 +11,7 @@ import { smartTransition } from 'utils/d3'
 
 // Enums
 import { Direction } from 'enums/direction'
+import { AxisType } from 'enums/axis'
 
 // Config
 import { BrushConfig, BrushConfigInterface } from './config'
@@ -29,6 +30,8 @@ export class Brush extends XYCore {
     [Brush.selectors.brush]: {
     },
   }
+
+  _firstRender = true
 
   constructor (config?: BrushConfigInterface) {
     super()
@@ -54,6 +57,14 @@ export class Brush extends XYCore {
   //   super.setData(data)
   // }
 
+  setScaleRange (key: string): void {
+    const { config: { scales, width, height } } = this
+    if (!key || !scales[key]) return
+
+    const range = key === AxisType.Y ? [height, 0] : [0, width]
+    scales[key]?.range(range)
+  }
+
   _render (customDuration?: number): void {
     const { brushBehaviour, config } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
@@ -62,13 +73,19 @@ export class Brush extends XYCore {
 
     brushBehaviour
       .extent([[0, 0], [config.width, config.height]])
-      .on('start brush end', () => { this._onBrush() })
+      .on('start', () => { this._onBrushStart() })
+      .on('brush', () => { this._onBrushMove() })
+      .on('end', () => { this._onBrushEnd() })
 
     this.brush
       .call(brushBehaviour)
 
     const yRange = yScale.range()
     const h = yRange[0] - yRange[1]
+
+    this.g.selectAll('.handle')
+      .attr('y', yRange[1])
+      .attr('height', h)
 
     this.unselectedRange
       .attr('y', yRange[1])
@@ -78,14 +95,17 @@ export class Brush extends XYCore {
       .attr('y1', yRange[1] + h / 2 - 10)
       .attr('y2', yRange[1] + h / 2 + 10)
 
-    const brushRange = config.selection ? [xScale(config.selection[0]), xScale(config.selection[1])] : null // xScale.range()
+    const brushRange = config.selection ? [xScale(config.selection[0]), xScale(config.selection[1])] : xScale.range()
     smartTransition(this.brush, duration)
-      .call(brushBehaviour.move, brushRange)
+      .call(brushBehaviour.move, brushRange) // Sets up the brush and calls brush events
+      .on('end interrupt', () => { this._firstRender = false })
+      // We track the first render to not trigger user events on component initialization
   }
 
   _updateSelection (s: number[]): void {
     const { config } = this
     const xScale = config.scales.x
+    const yScale = config.scales.y
     const xRange = xScale.range()
     this.unselectedRange
       .attr('x', d => d.type === Direction.WEST ? xRange[0] : s[1])
@@ -104,16 +124,49 @@ export class Brush extends XYCore {
     this.brush.selectAll('.handle')
       .attr('x', d => (d as any).type === Direction.WEST ? s[0] - config.handleWidth : s[1])
       .attr('width', config.handleWidth)
+
+    // D3 sets brush handle height to be too long, so we need to update it
+    const yRange = yScale.range()
+    const h = yRange[0] - yRange[1]
+    this.g.selectAll('.handle')
+      .attr('y', yRange[1])
+      .attr('height', h)
   }
 
   _onBrush (): void {
     const { config } = this
     const xScale = config.scales.x
     const s = event?.selection || xScale.range()
-    const selectedDomain = s.map(xScale.invert, xScale)
 
-    this._updateSelection(s)
-    config.selection = selectedDomain
-    config.onBrush(selectedDomain, event)
+    // When you reset selection by clicking on a non-selected brush area, D3 triggers the brush event twice.
+    // The first call will have equal selection coordinates (e.g. [441, 441]), the second call will have the full range (e.g. [0, 700]).
+    // To avoid unnecessary render from the first call we skip it
+    if (s[0] !== s[1]) {
+      const selectedDomain = s.map(xScale.invert, xScale)
+      config.selection = selectedDomain
+      this._updateSelection(s)
+      if (!this._firstRender) config.onBrush(config.selection, event)
+    }
+  }
+
+  _onBrushStart (): void {
+    const { config } = this
+
+    this._onBrush()
+    if (!this._firstRender) config.onBrushStart(config.selection, event)
+  }
+
+  _onBrushMove (): void {
+    const { config } = this
+
+    this._onBrush()
+    if (!this._firstRender) config.onBrushMove(config.selection, event)
+  }
+
+  _onBrushEnd (): void {
+    const { config } = this
+
+    this._onBrush()
+    if (!this._firstRender) config.onBrushEnd(config.selection, event)
   }
 }
