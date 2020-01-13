@@ -17,6 +17,7 @@ import { XYConfigInterface } from 'core/xy-component/config'
 import { AxisType } from 'enums/axis'
 
 // Utils
+import { clean } from 'utils/data'
 
 // Config
 import { CompositeChartConfig, CompositeChartConfigInterface } from './config'
@@ -103,8 +104,10 @@ export class CompositeChart extends ContainerCore {
       })
     }
 
+    // Update Scales of all the components at once to calculate required paddings and sync them
+    this.updateScales(...this.components, config.axes.x, config.axes.y)
+
     // Render components
-    this.updateScales(...this.components)
     for (const c of this.components) {
       c.g.attr('transform', `translate(${config.margin.left},${config.margin.top})`)
       c.render(customDuration)
@@ -113,8 +116,6 @@ export class CompositeChart extends ContainerCore {
     // Render axes
     Object.keys(config.axes).forEach(key => {
       const axis = config.axes[key]
-
-      this.updateScales(axis)
       const offset = axis.getOffset(config.margin)
       axis.g.attr('transform', `translate(${offset.left},${offset.top})`)
       axis.render(customDuration)
@@ -125,8 +126,9 @@ export class CompositeChart extends ContainerCore {
   }
 
   updateScales<T extends XYCore> (...components: T[]): void {
-    this._updateScalesDomain(...(components || this.components))
-    this._updateScalesRange(...(components || this.components))
+    const c = clean(components || this.components)
+    this._updateScalesDomain(...c)
+    this._updateScalesRange(...c)
   }
 
   _updateScalesDomain<T extends XYCore> (...components: T[]): void {
@@ -154,7 +156,7 @@ export class CompositeChart extends ContainerCore {
         if (r[1] < res[1]) res[1] = r[1]
         return res
       }, [Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY])
-      const scaleRange = key === 'y' ? [range[1], range[0]] : range
+      const scaleRange = key === AxisType.Y ? [range[1], range[0]] : range
       components.forEach(c => c.setScaleRange(key, dimensions[key].range ?? scaleRange))
     })
   }
