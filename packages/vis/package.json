@@ -1,8 +1,9 @@
 {
   "name": "@volterra/vis",
   "version": "0.0.0",
-  "main": "lib/charts.js",
-  "module": "lib/charts.esm.js",
+  "main": "lib/volterra-vis.js",
+	"module": "lib/volterra-vis.es.js",
+	"browser": "lib/volterra-vis.bundle.js",
   "files": [
     "lib"
   ],
@@ -14,16 +15,17 @@
   },
   "devDependencies": {
     "@types/d3": "^5.7.2",
+    "resize-observer-polyfill": "^1.5.1",
+    "rimraf": "^3.0.0",
+    "rollup": "^1.29.0",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-typescript2": "^0.25.3"
+  },
+  "dependencies": {
     "d3": "^5.14.2",
     "d3-interpolate-path": "^2.1.1",
     "emotion": "^10.0.23",
-    "lodash": "^4.17.15",
-    "resize-observer-polyfill": "^1.5.1",
-    "rimraf": "^3.0.0",
-    "rollup": "^1.26.0",
-    "rollup-plugin-commonjs": "^10.1.0",
-    "rollup-plugin-node-resolve": "^5.2.0",
-    "rollup-plugin-typescript2": "^0.24.3"
-  },
-  "dependencies": {}
+    "lodash": "^4.17.15"
+  }
 }
