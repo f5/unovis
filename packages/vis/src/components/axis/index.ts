@@ -95,7 +95,7 @@ export class Axis extends XYCore {
     case AxisType.Y:
       switch (position) {
       case Position.RIGHT: return { top: containerMargin.top, left: containerMargin.left + width + padding.left }
-      case Position.LEFT: default: return { top: padding.top, left: containerMargin.left - padding.right }
+      case Position.LEFT: default: return { top: containerMargin.top, left: containerMargin.left - padding.right }
       }
     }
   }
