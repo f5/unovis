@@ -9,8 +9,8 @@ export const brush = css`
   .selection {
     fill: none;
     stroke: var(--vis-brush-selection-stroke);
-    stroke-width: 1;
-    stroke-opacity: 1;
+    stroke-width: 0;
+    stroke-opacity: 0;
   }
   
   .handle {
