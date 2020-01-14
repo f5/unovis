@@ -1,14 +1,14 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { ColorType } from 'utils/color'
-import { Scales, Scale } from 'enums/scales'
+import { ColorType } from 'types/color'
+import { Scale, ScaleType } from 'types/scales'
 
-// Utils
-import { NumericAccessor } from 'utils/types'
+// Types
+import { NumericAccessor } from 'types/misc'
 
 // Config
 import { ComponentConfigInterface, ComponentConfig } from '../component/config'
 
-export interface XYConfigInterface extends ComponentConfigInterface {
+export interface XYComponentConfigInterface extends ComponentConfigInterface {
   /** X accessor or number value */
   x?: NumericAccessor;
   /** Y accessor or value */
@@ -18,8 +18,8 @@ export interface XYConfigInterface extends ComponentConfigInterface {
   /** Coloring type */
   colorType?: ColorType;
   scales?: {
-    x?: Scale;
-    y?: Scale;
+    x?: ScaleType;
+    y?: ScaleType;
   };
   // /** X scale type */
   // scales.xType?: ScaleType;
@@ -27,7 +27,7 @@ export interface XYConfigInterface extends ComponentConfigInterface {
   // scales.yType?: ScaleType;
 }
 
-export class XYConfig extends ComponentConfig implements XYConfigInterface {
+export class XYComponentConfig extends ComponentConfig implements XYComponentConfigInterface {
   x = d => d.x
   y = d => d.y
   color = null
@@ -35,7 +35,7 @@ export class XYConfig extends ComponentConfig implements XYConfigInterface {
   // scales.xType = ScaleType.Linear
   // scales.yType = ScaleType.Linear
   scales = {
-    x: Scales.scaleLinear() as Scale,
-    y: Scales.scaleLinear() as Scale,
+    x: Scale.scaleLinear() as ScaleType,
+    y: Scale.scaleLinear() as ScaleType,
   }
 }

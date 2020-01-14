@@ -1,8 +1,10 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { extent, max, min } from 'd3-array'
 
+// Types
+import { NumericAccessor } from 'types/misc'
+
 // Utils
-import { NumericAccessor } from 'utils/types'
 import { isArray, getValue } from 'utils/data'
 
 // Core

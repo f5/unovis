@@ -3,15 +3,15 @@ import { BrushBehavior, brushX } from 'd3-brush'
 import { Selection, event } from 'd3-selection'
 
 // Core
-import { XYCore } from 'core/xy-component'
+import { XYComponentCore } from 'core/xy-component'
 
 // Utils
 import { isNumber } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 
-// Enums
-import { Direction } from 'enums/direction'
-import { AxisType } from 'enums/axis'
+// Types
+import { Direction } from 'types/direction'
+import { AxisType } from 'types/axis'
 
 // Config
 import { BrushConfig, BrushConfigInterface } from './config'
@@ -19,7 +19,7 @@ import { BrushConfig, BrushConfigInterface } from './config'
 // Styles
 import * as s from './style'
 
-export class Brush extends XYCore {
+export class Brush extends XYComponentCore {
   static selectors = s
   config: BrushConfig = new BrushConfig()
   brush: Selection<SVGGElement, any, SVGGElement, any>

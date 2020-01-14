@@ -1,11 +1,13 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 /* eslint-disable */
 import { Component, ViewChild, ElementRef, OnInit, AfterViewInit } from '@angular/core'
-import _times from 'lodash/times'
-import { components, containers, Scales } from '@volterra/vis'
 
-const { CompositeChart } = containers
-const { Line, StackedBar, Tooltip, Brush, Axis } = components
+// Vis
+import { XYContainer } from '@volterra/vis/containers'
+import { Line, StackedBar, Tooltip, Brush, Axis } from '@volterra/vis/components'
+
+// Helpers
+import _times from 'lodash/times'
 
 function generateData (): object[] {
   return _times(30).map((i) => ({
@@ -33,7 +35,7 @@ export class CompositeComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit (): void {
     // const chartElement = this.chartRef.nativeElement
-    // this.chart = new CompositeChart(chartElement, this.config, this.data)
+    // this.chart = new XYContainer(chartElement, this.config, this.data)
 
     const barConfig = getBarConfig()
     const lineConfig = getLineConfig()
@@ -46,11 +48,8 @@ export class CompositeComponent implements OnInit, AfterViewInit {
       ],
       dimensions: {
         x: {
-          scale: Scales.scaleLinear(),
-          domain: undefined,
-        },
-        y: { scale: Scales.scaleLinear() },
-        size: { scale: Scales.scaleLinear() },
+          domain: undefined
+        }
       },
       axes: {
         x: new Axis({
@@ -69,7 +68,7 @@ export class CompositeComponent implements OnInit, AfterViewInit {
       }),
     }
     const data = generateData()
-    const composite = new CompositeChart(this.chart.nativeElement, chartConfig, data)
+    const composite = new XYContainer(this.chart.nativeElement, chartConfig, data)
 
     const navConfig = {
       margin: { left: 9, right: 9 },
@@ -84,8 +83,6 @@ export class CompositeComponent implements OnInit, AfterViewInit {
         }),
       ],
       dimensions: {
-        x: { scale: Scales.scaleLinear() },
-        y: { scale: Scales.scaleLinear() },
       },
       axes: {
         x: new Axis(),
@@ -93,7 +90,7 @@ export class CompositeComponent implements OnInit, AfterViewInit {
     }
 
     // @ts-ignore
-    const nav = new CompositeChart(this.navigation.nativeElement, navConfig, data)
+    const nav = new XYContainer(this.navigation.nativeElement, navConfig, data)
   }
 
   ngOnInit (): void {

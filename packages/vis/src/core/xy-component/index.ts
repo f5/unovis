@@ -7,17 +7,17 @@ import { SeriesDataModel } from 'data-models/series'
 
 // Utils
 import { getValue } from 'utils/data'
-import { ColorType } from 'utils/color'
 import { defaultRange } from 'utils/scale'
 
-// Enums
-import { Dimension, Margin } from 'utils/types'
+// Types
+import { Dimension, Margin } from 'types/misc'
+import { ColorType } from 'types/color'
 
 // Config
-import { XYConfig } from './config'
+import { XYComponentConfig } from './config'
 
-export class XYCore extends ComponentCore {
-  config: XYConfig
+export class XYComponentCore extends ComponentCore {
+  config: XYComponentConfig
   datamodel: SeriesDataModel = new SeriesDataModel()
   width: number
   height: number

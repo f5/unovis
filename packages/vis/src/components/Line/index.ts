@@ -3,14 +3,14 @@ import { line, Line as LineInterface, CurveFactory } from 'd3-shape'
 import { Selection } from 'd3-selection'
 
 // Core
-import { XYCore } from 'core/xy-component'
+import { XYComponentCore } from 'core/xy-component'
 
 // Utils
 import { getValue, isNumber } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 
-// Enums
-import { Curve, CurveType } from 'enums/curves'
+// Types
+import { Curve, CurveType } from 'types/curves'
 
 // Config
 import { LineConfig, LineConfigInterface } from './config'
@@ -18,7 +18,7 @@ import { LineConfig, LineConfigInterface } from './config'
 // Styles
 import * as s from './style'
 
-export class Line extends XYCore {
+export class Line extends XYComponentCore {
   static selectors = s
   config: LineConfig = new LineConfig()
   lineGen: LineInterface<any[]>

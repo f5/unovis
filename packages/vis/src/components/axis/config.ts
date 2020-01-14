@@ -1,16 +1,14 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 
-import { XYConfigInterface, XYConfig } from 'core/xy-component/config'
+import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component/config'
 
-// Enums
-import { AxisType } from 'enums/axis'
-import { Position } from 'enums/position'
-import { FitMode, TrimType } from 'enums/text'
+// Types
+import { AxisType } from 'types/axis'
+import { Position } from 'types/position'
+import { FitMode, TrimMode } from 'types/text'
+import { Margin } from 'types/misc'
 
-// Utils
-import { Margin } from 'utils/types'
-
-export interface AxisConfigInterface extends XYConfigInterface {
+export interface AxisConfigInterface extends XYComponentConfigInterface {
     /** Axis position: top, bottom, right or left */
     position?: Position;
     /** Axis type: x or y */
@@ -36,14 +34,14 @@ export interface AxisConfigInterface extends XYConfigInterface {
     /**  */
     tickTextExpandOnHover?: boolean;
     /**  */
-    tickTextTrimType?: TrimType;
+    tickTextTrimType?: TrimMode;
     /**  */
     tickTextFitMode?: FitMode;
     padding?: Margin;
     offset?: Margin;
 }
 
-export class AxisConfig extends XYConfig implements AxisConfigInterface {
+export class AxisConfig extends XYComponentConfig implements AxisConfigInterface {
   position = undefined
   type = undefined
   label = undefined
@@ -56,7 +54,7 @@ export class AxisConfig extends XYConfig implements AxisConfigInterface {
   tickTextSeparator = ' '
   tickTextForceWordBreak = false
   tickTextExpandOnHover = true
-  tickTextTrimType = TrimType.MIDDLE
+  tickTextTrimType = TrimMode.MIDDLE
   tickTextFitMode = FitMode.WRAP
   padding = {
     top: 0,

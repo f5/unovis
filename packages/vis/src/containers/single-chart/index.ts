@@ -4,10 +4,10 @@
 // Core
 import { ContainerCore } from 'core/container'
 // import { ComponentCore } from 'core/component'
-import { XYCore } from 'core/xy-component'
+import { XYComponentCore } from 'core/xy-component'
 
 // import { ComponentConfig } from 'core/component/config'
-import { XYConfigInterface } from 'core/xy-component/config'
+import { XYComponentConfigInterface } from 'core/xy-component/config'
 
 // Utils
 // import { getValue, merge } from 'utils/data'
@@ -16,7 +16,7 @@ import { XYConfigInterface } from 'core/xy-component/config'
 import { SingleChartConfig, SingleChartConfigInterface } from './config'
 
 export class SingleChart extends ContainerCore {
-  component: XYCore
+  component: XYComponentCore
   config: SingleChartConfig = new SingleChartConfig()
   data: any
 
@@ -54,7 +54,7 @@ export class SingleChart extends ContainerCore {
     if (!preventRender) this.render()
   }
 
-  updateComponent (componentConfig: XYConfigInterface, preventRender?: boolean): void {
+  updateComponent (componentConfig: XYComponentConfigInterface, preventRender?: boolean): void {
     this.component.prevConfig = this.component.config
     this.component.setConfig(componentConfig)
     if (!preventRender) this.render()

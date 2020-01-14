@@ -2,7 +2,7 @@
 import { select } from 'd3-selection'
 import { symbol } from 'd3-shape'
 import { smartTransition } from 'utils/d3'
-import { Symbol } from 'enums/symbols'
+import { Symbol } from 'types/symbols'
 
 export function createNodes (selection) {
   selection.attr('transform', d => `translate(${d.x},${d.y})`)

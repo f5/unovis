@@ -1,6 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { Config } from 'core/config'
-import { Margin } from 'utils/types'
+import { Margin } from 'types/misc'
 
 export interface ContainerConfigInterface {
   /** Container margins */

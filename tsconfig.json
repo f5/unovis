@@ -4,9 +4,10 @@
       "baseUrl": ".",
       "paths": {
         "@volterra/vis": ["packages/vis/src"],
+        "@volterra/vis/*": ["packages/vis/src/*"],
 
         "examples/*": ["web/src/examples/*"],
-        "enums/*": ["packages/vis/src/enums/*"],
+        "types/*": ["packages/vis/src/types/*"],
         "utils/*": ["packages/vis/src/utils/*"],
         "core/*": ["packages/vis/src/core/*"],
         "components/*": ["packages/vis/src/components/*"],

@@ -1,9 +1,7 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { XYConfigInterface, XYConfig } from 'core/xy-component/config'
-// import { Scales, Scale } from 'enums/scales'
-// import { CurveType } from 'enums/curves'
+import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component/config'
 
-export interface StackedBarConfigInterface extends XYConfigInterface {
+export interface StackedBarConfigInterface extends XYComponentConfigInterface {
     /** Bar width in pixels */
     barWidth?: number;
     /** Maximum bar width for dynamic sizing. Limits the barWidth property on the top */
@@ -18,7 +16,7 @@ export interface StackedBarConfigInterface extends XYConfigInterface {
     roundedCorners?: number | boolean;
 }
 
-export class StackedBarConfig extends XYConfig implements StackedBarConfigInterface {
+export class StackedBarConfig extends XYComponentConfig implements StackedBarConfigInterface {
     barMaxWidth = undefined
     barWidth = undefined
     expectedDataStep = undefined

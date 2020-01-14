@@ -35,7 +35,7 @@ export class ContainerCore {
       const isSizeChanged = !isEqual(this._containerRect, resizedContainerRect)
       // do resize only if element is attached to the DOM
       // will come in useful when some ancestor of container becomes detached
-      if (isSizeChanged) {
+      if (isSizeChanged && resizedContainerRect.width && resizedContainerRect.height) {
         this._containerRect = resizedContainerRect
         this._onResize()
       }

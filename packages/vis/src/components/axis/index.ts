@@ -4,14 +4,12 @@ import { select, Selection } from 'd3-selection'
 import { axisLeft, axisTop, axisRight, axisBottom, Axis as D3Axis } from 'd3-axis'
 
 // Core
-import { XYCore } from 'core/xy-component'
+import { XYComponentCore } from 'core/xy-component'
 
-// Utils
-import { Margin } from 'utils/types'
-
-// Enums
-import { AxisType } from 'enums/axis'
-import { Position } from 'enums/position'
+// Types
+import { AxisType } from 'types/axis'
+import { Position } from 'types/position'
+import { Margin } from 'types/misc'
 
 // Utils
 import { clean } from 'utils/data'
@@ -25,7 +23,7 @@ import { wrapTickText, getWrapOptions } from './modules/tick'
 // Styles
 import * as s from './style'
 
-export class Axis extends XYCore {
+export class Axis extends XYComponentCore {
   static selectors = s
   config: AxisConfig = new AxisConfig()
   axisGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
