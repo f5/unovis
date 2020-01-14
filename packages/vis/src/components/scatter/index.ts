@@ -2,7 +2,6 @@
 
 // Core
 import { XYComponentCore } from 'core/xy-component'
-import { getCSSVarName } from 'styles/colors'
 
 // Utils
 import { getValue, isNumber, isEmpty } from 'utils/data'
@@ -72,7 +71,7 @@ export class Scatter extends XYComponentCore {
           x: posX,
           y: posY,
           size: pointSize,
-          color: this.getColor(d, color) || `var(${getCSSVarName(i)})`,
+          color: this.getColor(d, color, i),
           shape: getValue(d, shape),
           icon: getValue(d, icon),
         })

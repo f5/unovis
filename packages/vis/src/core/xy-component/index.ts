@@ -1,9 +1,11 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { extent } from 'd3-array'
+import { Color } from 'd3-color'
 
 // Core
 import { ComponentCore } from 'core/component'
 import { SeriesDataModel } from 'data-models/series'
+import { getCSSVarName } from 'styles/colors'
 
 // Utils
 import { getValue } from 'utils/data'
@@ -22,6 +24,7 @@ export class XYComponentCore extends ComponentCore {
   width: number
   height: number
   colorScale: any
+  clippable = true
 
   setScaleDomain (key: string, domain: number[]): void {
     const { config: { scales } } = this
@@ -63,11 +66,11 @@ export class XYComponentCore extends ComponentCore {
     }
   }
 
-  getColor (d, accessor) {
+  getColor (d: any, accessor: any, index = 0): string | Color {
     const { config } = this
     const value = getValue(d, accessor)
-    if (config.colorType === ColorType.Dynamic) return this.colorScale(value)
-    else return value
+    if (config.colorType === ColorType.Dynamic) return this.colorScale(value) as Color
+    else return (value || `var(${getCSSVarName(index)})`) as string
   }
 
   getDataExtent (accessorKey: string): number[] {

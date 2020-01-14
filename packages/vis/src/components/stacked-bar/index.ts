@@ -5,7 +5,6 @@ import { interpolatePath } from 'd3-interpolate-path'
 
 // Core
 import { XYComponentCore } from 'core/xy-component'
-import { getCSSVarName } from 'styles/colors'
 
 // Utils
 import { getValue, isNumber, isArray, isEmpty } from 'utils/data'
@@ -80,7 +79,7 @@ export class StackedBar extends XYComponentCore {
     barGroups.exit().remove()
   }
 
-  _prepareData () {
+  _prepareData (): any[] {
     const { config, datamodel: { data } } = this
     const isVertical = config.isVertical
 
@@ -137,7 +136,7 @@ export class StackedBar extends XYComponentCore {
         const obj = {
           ...size,
           ...{
-            color: this.getColor(d, config.color) || `var(${getCSSVarName(i)})`,
+            color: this.getColor(d, config.color, i),
             data: d,
           },
         }

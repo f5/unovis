@@ -1,16 +1,16 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { line, Line as LineInterface, CurveFactory } from 'd3-shape'
-import { Selection } from 'd3-selection'
 
 // Core
 import { XYComponentCore } from 'core/xy-component'
 
 // Utils
-import { getValue, isNumber } from 'utils/data'
+import { getValue, isNumber, isArray } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 
 // Types
 import { Curve, CurveType } from 'types/curves'
+import { NumericAccessor } from 'types/misc'
 
 // Config
 import { LineConfig, LineConfigInterface } from './config'
@@ -22,7 +22,6 @@ export class Line extends XYComponentCore {
   static selectors = s
   config: LineConfig = new LineConfig()
   lineGen: LineInterface<any[]>
-  linePath: Selection<SVGGElement, object[], SVGGElement, object[]>
   curve: CurveFactory = Curve[CurveType.MonotoneX]
   events = {
     [Line.selectors.line]: {
@@ -35,10 +34,6 @@ export class Line extends XYComponentCore {
   constructor (config?: LineConfigInterface) {
     super()
     if (config) this.config.init(config)
-
-    this.linePath = this.g.append('path')
-      .attr('class', s.line)
-      .style('stroke', d => this.getColor(d, config.color))
   }
 
   get bleed (): { top: number; bottom: number; left: number; right: number } {
@@ -47,18 +42,37 @@ export class Line extends XYComponentCore {
   }
 
   _render (customDuration?: number): void {
+    super._render(customDuration)
     const { config, datamodel: { data } } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
 
     this.lineGen = line()
-      .x(d => config.scales.x(getValue(d, config.x)))
-      .y(d => config.scales.y(getValue(d, config.y)))
+      .x(d => d[0])
+      .y(d => d[1])
       .curve(this.curve)
 
-    this.linePath.datum(data)
-    smartTransition(this.linePath, duration)
-      .attr('d', this.lineGen(data))
-      .style('stroke', d => this.getColor(d, config.color))
+    const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor[]
+    const lineDataX = data.map(d => config.scales.x(getValue(d, config.x)))
+    const lineData = yAccessors.map(a =>
+      data.map((d, i) => ([
+        lineDataX[i],
+        config.scales.y(getValue(d, a)),
+      ]))
+    )
+
+    const lines = this.g
+      .selectAll(`.${s.line}`)
+      .data(lineData)
+
+    const linesEnter = lines.enter().append('path')
+      .attr('class', s.line)
+      .style('stroke', (d, i) => this.getColor(d, config.color, i))
+
+    smartTransition(linesEnter.merge(lines), duration)
+      .attr('d', d => this.lineGen(d))
+      .style('stroke', (d, i) => this.getColor(d, config.color, i))
       .attr('stroke-width', config.lineWidth)
+
+    lines.exit().remove()
   }
 }
