@@ -21,6 +21,7 @@ import * as s from './style'
 
 export class Brush extends XYComponentCore {
   static selectors = s
+  clippable = false // Don't apply clipping path to this component. See XYContainer
   config: BrushConfig = new BrushConfig()
   brush: Selection<SVGGElement, any, SVGGElement, any>
   unselectedRange: Selection<SVGGElement, any, SVGGElement, any>

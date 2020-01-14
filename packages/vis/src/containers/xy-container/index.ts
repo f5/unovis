@@ -1,5 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { extent, merge as mergeArrays } from 'd3-array'
+import { Selection } from 'd3-selection'
 
 // Core
 import { ContainerCore } from 'core/container'
@@ -18,6 +19,7 @@ import { AxisType } from 'types/axis'
 
 // Utils
 import { clean } from 'utils/data'
+import { guid } from 'utils/misc'
 
 // Config
 import { XYContainerConfig, XYContainerConfigInterface } from './config'
@@ -25,9 +27,15 @@ import { XYContainerConfig, XYContainerConfigInterface } from './config'
 export class XYContainer extends ContainerCore {
   config: XYContainerConfig = new XYContainerConfig()
   data: any
+  private _clipPath: Selection<SVGGElement, object[], SVGGElement, object[]>
+  private _clipPathId = guid()
 
   constructor (element, config?: XYContainerConfigInterface, data?) {
     super(element)
+
+    this._clipPath = this.svg.append('clipPath')
+      .attr('id', this._clipPathId)
+    this._clipPath.append('rect')
 
     if (config) {
       this.updateContainer(config)
@@ -75,6 +83,7 @@ export class XYContainer extends ContainerCore {
     if (containerConfig.axes?.x) this.element.appendChild(containerConfig.axes.x.element)
     if (containerConfig.axes?.y) this.element.appendChild(containerConfig.axes.y.element)
 
+    this.element.appendChild(this._clipPath.node())
     if (!preventRender) this.render()
   }
 
@@ -110,6 +119,8 @@ export class XYContainer extends ContainerCore {
     // Render components
     for (const c of this.components) {
       c.g.attr('transform', `translate(${config.margin.left},${config.margin.top})`)
+        .attr('clip-path', c.clippable ? `url(#${this._clipPathId})` : null)
+
       c.render(customDuration)
     }
 
@@ -120,6 +131,11 @@ export class XYContainer extends ContainerCore {
       axis.g.attr('transform', `translate(${offset.left},${offset.top})`)
       axis.render(customDuration)
     })
+
+    // Clip Rect
+    this._clipPath.select('rect')
+      .attr('width', this.width)
+      .attr('height', this.height)
 
     // Tooltip
     config.tooltip?.update()
