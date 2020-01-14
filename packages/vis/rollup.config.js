@@ -4,13 +4,22 @@ import resolve from 'rollup-plugin-node-resolve'
 import commonjs from 'rollup-plugin-commonjs'
 import { terser } from 'rollup-plugin-terser'
 import pkg from './package.json'
+import modules from './rollup.modules.json'
 
 const externals = [
   ...Object.keys(pkg.dependencies || {}),
   ...Object.keys(pkg.peerDependencies || {}),
 ]
 
-export default {
+const plugins = [
+  commonjs(),
+  resolve(),
+  typescript({
+    typescript: require('typescript'),
+  }),
+]
+
+export default [{
   input: 'src/index.ts',
   external: externals,
   output: [{
@@ -29,11 +38,16 @@ export default {
     name: 'vv',
     plugins: [terser()],
   }],
-  plugins: [
-    commonjs(),
-    resolve(),
-    typescript({
-      typescript: require('typescript'),
-    }),
-  ],
-}
+  plugins,
+},
+...modules.map(d => ({
+  input: d.input,
+  external: externals,
+  output: {
+    file: d.output,
+    sourcemap: true,
+    format: 'esm',
+  },
+  plugins,
+})),
+]

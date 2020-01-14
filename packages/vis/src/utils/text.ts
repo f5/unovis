@@ -1,12 +1,11 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { Selection } from 'd3-selection'
 
-// Enums
-import { TrimType, VerticalAlign } from 'enums/text'
+// Types
+import { TrimMode, VerticalAlign, WrapTextOptions } from 'types/text'
 
 // Utils
 import { isArray, flatten } from 'utils/data'
-import { WrapTextOptions } from 'utils/types'
 
 export function trimTextStart (str = '', maxLength = 15): string {
   return str.length > maxLength ? `...${str.substr(0, maxLength)}` : str
@@ -21,14 +20,14 @@ export function trimTextEnd (str = '', maxLength = 15): string {
   return str.length > maxLength ? `${str.substr(0, maxLength)}...` : str
 }
 
-export function trimText (str = '', length = 15, type = 'middle'): string {
+export function trimText (str = '', length = 15, type = TrimMode.MIDDLE): string {
   let result = trimTextEnd(str, length)
-  if (type === 'start') result = trimTextStart(str, length)
-  else if (type === 'middle') result = trimTextMiddle(str, length)
+  if (type === TrimMode.START) result = trimTextStart(str, length)
+  else if (type === TrimMode.MIDDLE) result = trimTextMiddle(str, length)
   return result
 }
 
-export function trimSVGTextToPixel (svgTextSelection: Selection<SVGTextElement, any, SVGElement, any>, minWidth = 50, trimType = TrimType.MIDDLE): void {
+export function trimSVGTextToPixel (svgTextSelection: Selection<SVGTextElement, any, SVGElement, any>, minWidth = 50, trimType = TrimMode.MIDDLE): void {
   let i = 0
   let textBBox = svgTextSelection.node().getBBox()
   let text = svgTextSelection.text()
@@ -78,7 +77,7 @@ export function wrap (
     length,
     width = 200,
     separator = '',
-    trimType = TrimType.END,
+    trimType = TrimMode.END,
     verticalAlign = VerticalAlign.MIDDLE,
     wordBreak = false,
     trimOnly = false,

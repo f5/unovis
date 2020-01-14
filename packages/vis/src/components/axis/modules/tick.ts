@@ -4,12 +4,11 @@ import { select } from 'd3-selection'
 // Utils
 import { wrapTextElement } from 'utils/text'
 import { isNil } from 'utils/data'
-import { WrapTextOptions } from 'utils/types'
 
-// Enums
-import { AxisType } from 'enums/axis'
-import { Position } from 'enums/position'
-import { VerticalAlign, FitMode } from 'enums/text'
+// Types
+import { AxisType } from 'types/axis'
+import { Position } from 'types/position'
+import { VerticalAlign, FitMode, WrapTextOptions } from 'types/text'
 
 import * as s from '../style'
 

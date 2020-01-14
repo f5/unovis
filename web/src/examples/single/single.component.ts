@@ -1,12 +1,16 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 /* eslint-disable */
 import { Component, ViewChild, ElementRef, OnInit, AfterViewInit } from '@angular/core'
+
+// Vis
+import { SymbolType } from '@volterra/vis/types'
+import { SingleChart } from '@volterra/vis/containers'
+import { Line, StackedBar, Scatter, Tooltip } from '@volterra/vis/components'
+import { Scale } from '@volterra/vis/types'
+
+// Helpers
 import _times from 'lodash/times'
 import _sample from 'lodash/sample'
-import { components, containers, Scales, SymbolType } from '@volterra/vis'
-
-const { SingleChart } = containers
-const { Line, StackedBar, Scatter, Tooltip } = components
 
 function generateData (): object[] {
   return _times(30).map((i) => ({
@@ -42,9 +46,9 @@ export class SingleComponent implements OnInit, AfterViewInit {
     const barChartConfig = {
       component: new StackedBar(barConfig),
       dimensions: {
-        x: { scale: Scales.scaleLinear() },
-        y: { scale: Scales.scaleLinear() },
-        size: { scale: Scales.scaleLinear() },
+        x: { scale: Scale.scaleLinear() },
+        y: { scale: Scale.scaleLinear() },
+        size: { scale: Scale.scaleLinear() },
       },
       tooltip: new Tooltip({
         triggers: {
@@ -58,9 +62,9 @@ export class SingleComponent implements OnInit, AfterViewInit {
     const lineChartConfig = {
       component: new Line(lineConfig),
       // dimensions: {
-      //   x: { scale: Scales.scaleLinear() },
-      //   y: { scale: Scales.scaleLinear() },
-      //   size: { scale: Scales.scaleLinear() },
+      //   x: { scale: Scale.scaleLinear() },
+      //   y: { scale: Scale.scaleLinear() },
+      //   size: { scale: Scale.scaleLinear() },
       // },
       tooltip: new Tooltip({
         triggers: {
@@ -74,9 +78,9 @@ export class SingleComponent implements OnInit, AfterViewInit {
     const scatterChartConfig = {
       component: new Scatter(scatterConfig),
       dimensions: {
-        x: { scale: Scales.scaleLinear() },
-        y: { scale: Scales.scaleLinear() },
-        size: { scale: Scales.scaleLinear() },
+        x: { scale: Scale.scaleLinear() },
+        y: { scale: Scale.scaleLinear() },
+        size: { scale: Scale.scaleLinear() },
       },
       tooltip: new Tooltip({
         triggers: {

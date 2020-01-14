@@ -1,13 +1,13 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 
 // Core
-import { XYCore } from 'core/xy-component'
+import { XYComponentCore } from 'core/xy-component'
 import { getCSSVarName } from 'styles/colors'
 
 // Utils
 import { getValue, isNumber, isEmpty } from 'utils/data'
 
-// Enums
+// Types
 
 // Config
 import { ScatterConfig, ScatterConfigInterface } from './config'
@@ -18,7 +18,7 @@ import { createNodes, updateNodes, removeNodes } from './modules/node'
 // Styles
 import * as s from './style'
 
-export class Scatter extends XYCore {
+export class Scatter extends XYComponentCore {
   static selectors = s
   config: ScatterConfig = new ScatterConfig()
   events = {

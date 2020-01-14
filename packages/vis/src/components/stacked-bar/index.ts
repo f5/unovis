@@ -4,15 +4,15 @@ import { min } from 'd3-array'
 import { interpolatePath } from 'd3-interpolate-path'
 
 // Core
-import { XYCore } from 'core/xy-component'
+import { XYComponentCore } from 'core/xy-component'
 import { getCSSVarName } from 'styles/colors'
 
 // Utils
 import { getValue, isNumber, isArray, isEmpty } from 'utils/data'
 import { roundedRectPath } from 'utils/path'
-import { NumericAccessor } from 'utils/types'
 
-// Enums
+// Types
+import { NumericAccessor } from 'types/misc'
 
 // Config
 import { StackedBarConfig, StackedBarConfigInterface } from './config'
@@ -20,7 +20,7 @@ import { StackedBarConfig, StackedBarConfigInterface } from './config'
 // Styles
 import * as s from './style'
 
-export class StackedBar extends XYCore {
+export class StackedBar extends XYComponentCore {
   static selectors = s
   config: StackedBarConfig = new StackedBarConfig()
   // linePath: Selection<SVGGElement, object[], SVGGElement, object[]>

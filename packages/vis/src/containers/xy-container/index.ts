@@ -3,7 +3,7 @@ import { extent, merge as mergeArrays } from 'd3-array'
 
 // Core
 import { ContainerCore } from 'core/container'
-import { XYCore } from 'core/xy-component'
+import { XYComponentCore } from 'core/xy-component'
 
 // Components
 import { Axis } from 'components/axis'
@@ -11,22 +11,22 @@ import { Axis } from 'components/axis'
 // import { ComponentCore } from 'core/component'
 
 // import { ComponentConfig } from 'core/component/config'
-import { XYConfigInterface } from 'core/xy-component/config'
+import { XYComponentConfigInterface } from 'core/xy-component/config'
 
-// Enums
-import { AxisType } from 'enums/axis'
+// Types
+import { AxisType } from 'types/axis'
 
 // Utils
 import { clean } from 'utils/data'
 
 // Config
-import { CompositeChartConfig, CompositeChartConfigInterface } from './config'
+import { XYContainerConfig, XYContainerConfigInterface } from './config'
 
-export class CompositeChart extends ContainerCore {
-  config: CompositeChartConfig = new CompositeChartConfig()
+export class XYContainer extends ContainerCore {
+  config: XYContainerConfig = new XYContainerConfig()
   data: any
 
-  constructor (element, config?: CompositeChartConfigInterface, data?) {
+  constructor (element, config?: XYContainerConfigInterface, data?) {
     super(element)
 
     if (config) {
@@ -38,7 +38,7 @@ export class CompositeChart extends ContainerCore {
     }
   }
 
-  get components (): XYCore[] {
+  get components (): XYComponentCore[] {
     return this.config.components
   }
 
@@ -55,7 +55,7 @@ export class CompositeChart extends ContainerCore {
     if (!preventRender) this.render()
   }
 
-  updateContainer (containerConfig: CompositeChartConfigInterface, preventRender?: boolean): void {
+  updateContainer (containerConfig: XYContainerConfigInterface, preventRender?: boolean): void {
     super.updateContainer(containerConfig)
     this.removeAllChildren()
 
@@ -78,7 +78,7 @@ export class CompositeChart extends ContainerCore {
     if (!preventRender) this.render()
   }
 
-  updateComponents (componentConfigs: XYConfigInterface[], preventRender?: boolean): void {
+  updateComponents (componentConfigs: XYComponentConfigInterface[], preventRender?: boolean): void {
     this.components.forEach((c, i) => {
       c.prevConfig = c.config
       c.setConfig(componentConfigs[i])
@@ -87,7 +87,7 @@ export class CompositeChart extends ContainerCore {
     if (!preventRender) this.render()
   }
 
-  update (containerConfig: CompositeChartConfigInterface, componentConfigs?: XYConfigInterface[], data?: any): void {
+  update (containerConfig: XYContainerConfigInterface, componentConfigs?: XYComponentConfigInterface[], data?: any): void {
     if (containerConfig) this.updateContainer(containerConfig, true)
     if (componentConfigs) this.updateComponents(componentConfigs, true)
     if (data) this.setData(data, true)
@@ -125,13 +125,13 @@ export class CompositeChart extends ContainerCore {
     config.tooltip?.update()
   }
 
-  updateScales<T extends XYCore> (...components: T[]): void {
+  updateScales<T extends XYComponentCore> (...components: T[]): void {
     const c = clean(components || this.components)
     this._updateScalesDomain(...c)
     this._updateScalesRange(...c)
   }
 
-  _updateScalesDomain<T extends XYCore> (...components: T[]): void {
+  _updateScalesDomain<T extends XYComponentCore> (...components: T[]): void {
     const { config: { dimensions } } = this
     if (!components) return
 
@@ -141,7 +141,7 @@ export class CompositeChart extends ContainerCore {
     })
   }
 
-  _updateScalesRange<T extends XYCore> (...components: T[]): void {
+  _updateScalesRange<T extends XYComponentCore> (...components: T[]): void {
     const { config: { dimensions, padding } } = this
     if (!components) return
 

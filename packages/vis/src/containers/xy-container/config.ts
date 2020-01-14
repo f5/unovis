@@ -2,22 +2,19 @@
 // import { scale } from 'd3-scale'
 
 // Core
-import { XYCore } from 'core/xy-component'
+import { XYComponentCore } from 'core/xy-component'
 import { ContainerConfig, ContainerConfigInterface } from 'core/container/config'
 import { Tooltip } from 'core/tooltip'
 
 // Components
 import { Axis } from 'components/axis'
 
-// Enums
-// import { Scales } from 'enums/scales'
-
 // Types
-import { Dimension } from 'utils/types'
+import { Dimension } from 'types/misc'
 
-export interface CompositeChartConfigInterface extends ContainerConfigInterface {
+export interface XYContainerConfigInterface extends ContainerConfigInterface {
   /** Visualization Component */
-  components?: XYCore[];
+  components?: XYComponentCore[];
   /** Dimension configuration */
   dimensions?: {
     [key: string]: Dimension;
@@ -32,7 +29,7 @@ export interface CompositeChartConfigInterface extends ContainerConfigInterface 
   tooltip?: Tooltip<any> | undefined;
 }
 
-export class CompositeChartConfig extends ContainerConfig implements CompositeChartConfigInterface {
+export class XYContainerConfig extends ContainerConfig implements XYContainerConfigInterface {
   components? = []
   tooltip = undefined
   axes: { [key: string]: Axis } = {}

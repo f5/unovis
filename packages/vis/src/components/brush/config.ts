@@ -4,9 +4,9 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 
 import { BaseEvent } from 'd3-selection'
-import { XYConfigInterface, XYConfig } from 'core/xy-component/config'
+import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component/config'
 
-export interface BrushConfigInterface extends XYConfigInterface {
+export interface BrushConfigInterface extends XYComponentConfigInterface {
   onBrush?: ((selection?: number[], event?: BaseEvent) => any);
   onBrushStart?: ((selection?: number[], event?: BaseEvent) => any);
   onBrushMove?: ((selection?: number[], event?: BaseEvent) => any);
@@ -15,7 +15,7 @@ export interface BrushConfigInterface extends XYConfigInterface {
   selection?: number[] | null;
 }
 
-export class BrushConfig extends XYConfig implements BrushConfigInterface {
+export class BrushConfig extends XYComponentConfig implements BrushConfigInterface {
   onBrush = (s: number[], e: BaseEvent) => {}
   onBrushStart = (s: number[], e: BaseEvent) => {}
   onBrushMove = (s: number[], e: BaseEvent) => {}

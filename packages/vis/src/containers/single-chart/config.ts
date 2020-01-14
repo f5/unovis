@@ -5,11 +5,8 @@
 import { ContainerConfig, ContainerConfigInterface } from 'core/container/config'
 import { Tooltip } from 'core/tooltip'
 
-// Enums
-// import { Scales } from 'enums/scales'
-
 // Types
-import { Dimension } from 'utils/types'
+import { Dimension } from 'types/misc'
 
 export interface SingleChartConfigInterface extends ContainerConfigInterface {
   /** Visualization Component */
