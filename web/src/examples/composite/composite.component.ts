@@ -123,7 +123,13 @@ function getLineConfig () {
   return {
     barMaxWidth: 15,
     x: d => d.x,
-    y: d => d.y,
+    y: [
+      d => d.y,
+      d => d.y1,
+      d => d.y2,
+      d => d.y3,
+      d => d.y4,
+    ],
     events: {
       [Line.selectors.line]: {
         click: d => { },
