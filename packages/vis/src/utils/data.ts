@@ -39,7 +39,7 @@ export const isObject = _isObject
 export const throttle = _throttle
 export const flatten = _flatten
 
-export function getValue (d, accessor): number {
+export function getValue (d, accessor): any {
   if (isFunction(accessor)) return accessor(d)
   else return accessor
 }
