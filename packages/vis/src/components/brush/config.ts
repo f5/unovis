@@ -6,7 +6,7 @@
 import { BaseEvent } from 'd3-selection'
 import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component/config'
 
-export interface BrushConfigInterface extends XYComponentConfigInterface {
+export interface BrushConfigInterface<Data> extends XYComponentConfigInterface<Data> {
   onBrush?: ((selection?: number[], event?: BaseEvent) => any);
   onBrushStart?: ((selection?: number[], event?: BaseEvent) => any);
   onBrushMove?: ((selection?: number[], event?: BaseEvent) => any);
@@ -15,7 +15,7 @@ export interface BrushConfigInterface extends XYComponentConfigInterface {
   selection?: number[] | null;
 }
 
-export class BrushConfig extends XYComponentConfig implements BrushConfigInterface {
+export class BrushConfig<Data> extends XYComponentConfig<Data> implements BrushConfigInterface<Data> {
   onBrush = (s: number[], e: BaseEvent) => {}
   onBrushStart = (s: number[], e: BaseEvent) => {}
   onBrushMove = (s: number[], e: BaseEvent) => {}

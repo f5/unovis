@@ -15,12 +15,12 @@ import { XYComponentConfigInterface } from 'core/xy-component/config'
 // Config
 import { SingleChartConfig, SingleChartConfigInterface } from './config'
 
-export class SingleChart extends ContainerCore {
-  component: XYComponentCore
-  config: SingleChartConfig = new SingleChartConfig()
-  data: any
+export class SingleChart<Data> extends ContainerCore {
+  component: XYComponentCore<Data>
+  config: SingleChartConfig<Data> = new SingleChartConfig()
+  data: Data[]
 
-  constructor (element, config?: SingleChartConfigInterface, data?) {
+  constructor (element, config?: SingleChartConfigInterface<Data>, data?: Data[]) {
     super(element)
 
     if (config) {
@@ -33,13 +33,13 @@ export class SingleChart extends ContainerCore {
     }
   }
 
-  setData (data: any, preventRender?: boolean): void {
+  setData (data: Data[], preventRender?: boolean): void {
     this.data = data
     if (this.component) this.component.setData(data)
     if (!preventRender) this.render()
   }
 
-  updateContainer (containerConfig: SingleChartConfigInterface, preventRender?: boolean): void {
+  updateContainer (containerConfig: SingleChartConfigInterface<Data>, preventRender?: boolean): void {
     super.updateContainer(containerConfig)
     this.removeAllChildren()
 
@@ -54,13 +54,13 @@ export class SingleChart extends ContainerCore {
     if (!preventRender) this.render()
   }
 
-  updateComponent (componentConfig: XYComponentConfigInterface, preventRender?: boolean): void {
+  updateComponent (componentConfig: XYComponentConfigInterface<Data>, preventRender?: boolean): void {
     this.component.prevConfig = this.component.config
     this.component.setConfig(componentConfig)
     if (!preventRender) this.render()
   }
 
-  update (containerConfig: SingleChartConfigInterface, componentConfig?, data?: any): void {
+  update (containerConfig: SingleChartConfigInterface<Data>, componentConfig?, data?: Data[]): void {
     if (containerConfig) this.updateContainer(containerConfig, true)
     if (componentConfig) this.updateComponent(componentConfig, true)
     if (data) this.setData(data, true)

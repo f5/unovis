@@ -4,15 +4,26 @@ import { Component, ViewChild, ElementRef, OnInit, AfterViewInit } from '@angula
 
 // Vis
 import { SymbolType } from '@volterra/vis/types'
-import { SingleChart } from '@volterra/vis/containers'
-import { Line, StackedBar, Scatter, Tooltip } from '@volterra/vis/components'
+import {SingleChart, SingleChartConfigInterface} from '@volterra/vis/containers'
+import {Line, StackedBar, Scatter, Tooltip, StackedBarConfigInterface} from '@volterra/vis/components'
 import { Scale } from '@volterra/vis/types'
 
 // Helpers
 import _times from 'lodash/times'
 import _sample from 'lodash/sample'
 
-function generateData (): object[] {
+interface SampleData {
+  x: number,
+  y: number,
+  y1: number,
+  y2: number,
+  y3: number,
+  y4: number,
+  size: number,
+  shape: SymbolType,
+  icon: any
+}
+function generateData (): SampleData[] {
   return _times(30).map((i) => ({
     x: i,
     y: Math.random(),
@@ -35,7 +46,7 @@ function generateData (): object[] {
 export class SingleComponent implements OnInit, AfterViewInit {
   title = 'single'
   chart: any
-  data: any
+  data: SampleData[]
   config: any
   @ViewChild('linechart', { static: false }) lineChart: ElementRef
   @ViewChild('barchart', { static: false }) barChart: ElementRef
@@ -43,7 +54,7 @@ export class SingleComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit (): void {
     const barConfig = getBarConfig()
-    const barChartConfig = {
+    const barChartConfig: SingleChartConfigInterface<SampleData> = {
       component: new StackedBar(barConfig),
       dimensions: {
         x: { scale: Scale.scaleLinear() },
@@ -59,7 +70,7 @@ export class SingleComponent implements OnInit, AfterViewInit {
     const barChart = new SingleChart(this.barChart.nativeElement, barChartConfig, this.data)
 
     const lineConfig = getLineConfig()
-    const lineChartConfig = {
+    const lineChartConfig: SingleChartConfigInterface<SampleData> = {
       component: new Line(lineConfig),
       // dimensions: {
       //   x: { scale: Scale.scaleLinear() },
@@ -75,7 +86,7 @@ export class SingleComponent implements OnInit, AfterViewInit {
     const lineChart = new SingleChart(this.lineChart.nativeElement, lineChartConfig, this.data)
 
     const scatterConfig = getScatterConfig()
-    const scatterChartConfig = {
+    const scatterChartConfig: SingleChartConfigInterface<SampleData> = {
       component: new Scatter(scatterConfig),
       dimensions: {
         x: { scale: Scale.scaleLinear() },
@@ -115,7 +126,7 @@ function getScatterConfig () {
   }
 }
 
-function getBarConfig () {
+function getBarConfig (): StackedBarConfigInterface<SampleData> {
   return {
     x: d => d.x,
     y: [

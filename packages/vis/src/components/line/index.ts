@@ -18,9 +18,9 @@ import { LineConfig, LineConfigInterface } from './config'
 // Styles
 import * as s from './style'
 
-export class Line extends XYComponentCore {
+export class Line<Data> extends XYComponentCore<Data> {
   static selectors = s
-  config: LineConfig = new LineConfig()
+  config: LineConfig<Data> = new LineConfig()
   lineGen: LineInterface<any[]>
   curve: CurveFactory = Curve[CurveType.MonotoneX]
   events = {
@@ -31,7 +31,7 @@ export class Line extends XYComponentCore {
     },
   }
 
-  constructor (config?: LineConfigInterface) {
+  constructor (config?: LineConfigInterface<Data>) {
     super()
     if (config) this.config.init(config)
   }
@@ -51,7 +51,7 @@ export class Line extends XYComponentCore {
       .y(d => d[1])
       .curve(this.curve)
 
-    const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor[]
+    const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Data>[]
     const lineDataX = data.map(d => config.scales.x(getValue(d, config.x)))
     const lineData = yAccessors.map(a =>
       data.map((d, i) => ([

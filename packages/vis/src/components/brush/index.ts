@@ -19,10 +19,10 @@ import { BrushConfig, BrushConfigInterface } from './config'
 // Styles
 import * as s from './style'
 
-export class Brush extends XYComponentCore {
+export class Brush<Data> extends XYComponentCore<Data> {
   static selectors = s
   clippable = false // Don't apply clipping path to this component. See XYContainer
-  config: BrushConfig = new BrushConfig()
+  config: BrushConfig<Data> = new BrushConfig()
   brush: Selection<SVGGElement, any, SVGGElement, any>
   unselectedRange: Selection<SVGGElement, any, SVGGElement, any>
   handleLines: Selection<SVGGElement, any, SVGGElement, any>
@@ -34,7 +34,7 @@ export class Brush extends XYComponentCore {
 
   _firstRender = true
 
-  constructor (config?: BrushConfigInterface) {
+  constructor (config?: BrushConfigInterface<Data>) {
     super()
     if (config) this.config.init(config)
 

@@ -1,9 +1,9 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 
-export class CoreDataModel {
-  data: any
+export class CoreDataModel<CoreData> {
+  data?: CoreData
 
-  constructor (data?: any) {
+  constructor (data?: CoreData) {
     this.data = data
   }
 }

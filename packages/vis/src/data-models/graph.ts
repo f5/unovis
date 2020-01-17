@@ -7,7 +7,7 @@ import {
 // Core
 import { CoreDataModel } from './core'
 
-export class GraphDataModel extends CoreDataModel {
+export class GraphDataModel<NodeData, LinkData> extends CoreDataModel<{nodes: NodeData[]; links: LinkData[]}> {
   private _nonConnectedNodes: object[]
   private _connectedNodes: object[]
 

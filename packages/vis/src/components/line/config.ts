@@ -2,13 +2,13 @@
 import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component/config'
 import { CurveType } from 'types/curves'
 
-export interface LineConfigInterface extends XYComponentConfigInterface {
+export interface LineConfigInterface<Data> extends XYComponentConfigInterface<Data> {
   /** Curve type from the CurveType enum */
   curveType?: CurveType;
   lineWidth?: number;
 }
 
-export class LineConfig extends XYComponentConfig implements LineConfigInterface {
+export class LineConfig<Data> extends XYComponentConfig<Data> implements LineConfigInterface<Data> {
   curveType = CurveType.MonotoneX
   lineWidth = 2
 }

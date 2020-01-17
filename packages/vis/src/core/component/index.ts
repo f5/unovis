@@ -10,12 +10,12 @@ import { throttle } from 'utils/data'
 // Config
 import { ComponentConfig, ComponentConfigInterface } from './config'
 
-export class ComponentCore {
+export class ComponentCore<CoreData> {
   element: SVGGraphicsElement
   g: any
   config: ComponentConfig
   prevConfig: ComponentConfig
-  datamodel: CoreDataModel = new CoreDataModel()
+  datamodel: CoreDataModel<CoreData> = new CoreDataModel()
   events = {}
   _setUpEventsThrottled = throttle(this._setUpEvents, 1000)
 
@@ -32,7 +32,7 @@ export class ComponentCore {
     this.config = new ConfigModel().init(config)
   }
 
-  setData<T> (data: T): void {
+  setData (data: CoreData): void {
     this.datamodel.data = data
   }
 

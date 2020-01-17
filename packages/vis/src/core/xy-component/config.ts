@@ -8,11 +8,11 @@ import { NumericAccessor } from 'types/misc'
 // Config
 import { ComponentConfigInterface, ComponentConfig } from '../component/config'
 
-export interface XYComponentConfigInterface extends ComponentConfigInterface {
+export interface XYComponentConfigInterface<Data> extends ComponentConfigInterface {
   /** X accessor or number value */
-  x?: NumericAccessor;
+  x?: NumericAccessor<Data>;
   /** Y accessor or value */
-  y?: NumericAccessor | NumericAccessor[];
+  y?: NumericAccessor<Data> | NumericAccessor<Data>[];
   /** Component color (string or color object) */
   color?: string | object;
   /** Coloring type */
@@ -21,13 +21,18 @@ export interface XYComponentConfigInterface extends ComponentConfigInterface {
     x?: ScaleType;
     y?: ScaleType;
   };
+  events?: {
+    [selector: string]: {
+      [eventName: string]: (data: Data) => void;
+    };
+  };
   // /** X scale type */
   // scales.xType?: ScaleType;
   // /** Y scale type */
   // scales.yType?: ScaleType;
 }
 
-export class XYComponentConfig extends ComponentConfig implements XYComponentConfigInterface {
+export class XYComponentConfig<Data> extends ComponentConfig implements XYComponentConfigInterface<Data> {
   x = d => d.x
   y = d => d.y
   color = null
