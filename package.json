@@ -28,6 +28,7 @@
     "eslint-plugin-notice": "^0.8.9",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
+    "git-pack": "git+ssh://git@gitlab.com:volterra/ves-ui-packages/git-pack.git#v0.0.13",
     "jest": "^24.9.0",
     "lerna": "^3.18.3",
     "rollup-plugin-terser": "^5.1.2",

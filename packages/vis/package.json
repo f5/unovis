@@ -2,8 +2,8 @@
   "name": "@volterra/vis",
   "version": "0.0.0",
   "main": "lib/volterra-vis.js",
-	"module": "lib/volterra-vis.es.js",
-	"browser": "lib/volterra-vis.bundle.js",
+  "module": "lib/volterra-vis.es.js",
+  "browser": "lib/volterra-vis.bundle.js",
   "files": [
     "lib"
   ],
