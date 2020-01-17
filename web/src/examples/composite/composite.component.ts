@@ -3,11 +3,12 @@
 import { Component, ViewChild, ElementRef, OnInit, AfterViewInit } from '@angular/core'
 
 // Vis
-import { XYContainer } from '@volterra/vis/containers'
-import { Line, StackedBar, Tooltip, Brush, Axis } from '@volterra/vis/components'
+import { XYContainer, XYContainerConfigInterface } from '@volterra/vis/containers'
+import {Line, StackedBar, Tooltip, Brush, Axis, StackedBarConfigInterface} from '@volterra/vis/components'
 
 // Helpers
 import _times from 'lodash/times'
+import {LineConfigInterface} from "components/Line/config";
 
 function generateData (): object[] {
   return _times(30).map((i) => ({
@@ -39,7 +40,7 @@ export class CompositeComponent implements OnInit, AfterViewInit {
 
     const barConfig = getBarConfig()
     const lineConfig = getLineConfig()
-    const chartConfig = {
+    const chartConfig: XYContainerConfigInterface = {
       margin: { top: 10, bottom: 10, left: 10, right: 10 },
       // padding: { left: 10, right: 10 },
       components: [
@@ -99,7 +100,7 @@ export class CompositeComponent implements OnInit, AfterViewInit {
   }
 }
 
-function getBarConfig () {
+function getBarConfig (): StackedBarConfigInterface {
   return {
     x: d => d.x,
     y: [
@@ -119,7 +120,7 @@ function getBarConfig () {
   }
 }
 
-function getLineConfig () {
+function getLineConfig (): LineConfigInterface {
   return {
     barMaxWidth: 15,
     x: d => d.x,
