@@ -1,14 +1,11 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 /* eslint-disable */
-import { Component, ViewChild, ElementRef, OnInit, AfterViewInit } from '@angular/core'
-
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core'
 // Vis
-import { XYContainer, XYContainerConfigInterface } from '@volterra/vis/containers'
-import {Line, StackedBar, Tooltip, Brush, Axis, StackedBarConfigInterface} from '@volterra/vis/components'
-
+import {XYContainer, XYContainerConfigInterface} from '@volterra/vis/containers'
+import {Axis, Brush, Line, StackedBar, StackedBarConfigInterface, Tooltip} from '@volterra/vis/components'
 // Helpers
 import _times from 'lodash/times'
-import {LineConfigInterface} from "components/Line/config";
 
 function generateData (): object[] {
   return _times(30).map((i) => ({
@@ -120,7 +117,7 @@ function getBarConfig (): StackedBarConfigInterface {
   }
 }
 
-function getLineConfig (): LineConfigInterface {
+function getLineConfig () {
   return {
     barMaxWidth: 15,
     x: d => d.x,
