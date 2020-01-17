@@ -5,13 +5,17 @@ import { StackedBar } from './components/stacked-bar'
 import { Axis } from './components/axis'
 import { Scatter } from './components/scatter'
 import { Brush } from './components/brush'
-import './styles/css-variables'
+import { BulletLegend } from './components/bullet-legend'
+
 import { LineConfigInterface } from './components/line/config'
 import { StackedBarConfigInterface } from './components/stacked-bar/config'
 import { ScatterConfigInterface } from './components/scatter/config'
 import { TooltipConfigInterface } from './core/tooltip/config'
 import { BrushConfigInterface } from './components/brush/config'
 import { AxisConfigInterface } from './components/axis/config'
+import { BulletLegendConfigInterface } from './components/bullet-legend/config'
+
+import './styles/css-variables'
 
 export {
   Line,
@@ -26,4 +30,6 @@ export {
   BrushConfigInterface,
   Axis,
   AxisConfigInterface,
+  BulletLegend,
+  BulletLegendConfigInterface,
 }
