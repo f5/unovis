@@ -25,21 +25,28 @@ export class Tooltip<T extends ComponentCore> {
   private _container: HTMLElement
 
   constructor (config?: TooltipConfigInterface<T>, containerElement?: HTMLElement) {
-    this._container = containerElement
     this.config = new TooltipConfig<T>().init(config)
-
     this.components = this.config.components
 
     this.element = document.createElement('div')
     this.div = select(this.element)
       .attr('class', s.tooltip)
+
+    this.setContainer(containerElement)
   }
 
   setContainer (container: HTMLElement): void {
+    if (!container) return
     this._container?.removeChild(this.element)
 
     this._container = container
     this._container.appendChild(this.element)
+
+    // Tooltip position calculation relies on the parent position
+    // If it's not set, we set it to `relative` (not a good practice tbh)
+    if (!this._container.style.position) {
+      this._container.style.position = 'relative'
+    }
   }
 
   setComponents (components: T[]): void {
