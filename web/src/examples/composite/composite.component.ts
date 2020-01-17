@@ -58,10 +58,16 @@ export class CompositeComponent implements AfterViewInit {
       },
       axes: {
         x: new Axis({
-          label: 'x axis',
+          // position: 'top',
+          label: 'Index',
+          tickValues: [0, 5, 10, 15, 20, 25]
         }),
         y: new Axis({
-          label: 'y axis',
+          // position: 'right',
+          label: 'Latency',
+          tickFormat: d => {
+            return `${d} ms`
+          }
         }),
       },
       tooltip: new Tooltip({

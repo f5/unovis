@@ -101,8 +101,12 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
   _render (customDuration?: number, forceWrap?: boolean): void {
     const { config } = this
     // const duration = isNumber(customDuration) ? customDuration : config.duration
+    const axisGen = this._buildAxis()
+    if (config.tickFormat) axisGen.tickFormat(config.tickFormat)
+    if (config.tickValues) axisGen.tickValues(config.tickValues)
 
-    this.axisGroup.call(this._buildAxis())
+    this.axisGroup.call(axisGen)
+
     const ticks = this.axisGroup.selectAll('g.tick')
 
     ticks
