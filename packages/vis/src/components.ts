@@ -14,16 +14,16 @@ import { BrushConfigInterface } from './components/brush/config'
 import { AxisConfigInterface } from './components/axis/config'
 
 export {
-    Line,
-    LineConfigInterface,
-    StackedBar,
-    StackedBarConfigInterface,
-    Scatter,
-    ScatterConfigInterface,
-    Tooltip,
-    TooltipConfigInterface,
-    Brush,
-    BrushConfigInterface,
-    Axis,
-    AxisConfigInterface
+  Line,
+  LineConfigInterface,
+  StackedBar,
+  StackedBarConfigInterface,
+  Scatter,
+  ScatterConfigInterface,
+  Tooltip,
+  TooltipConfigInterface,
+  Brush,
+  BrushConfigInterface,
+  Axis,
+  AxisConfigInterface,
 }
