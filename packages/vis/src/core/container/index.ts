@@ -24,6 +24,8 @@ export class ContainerCore {
   constructor (element: HTMLElement) {
     this._requestedAnimationFrame = null
     this._container = element
+
+    // Create SVG element for visualizations
     this.svg = select(this._container).append('svg')
       .attr('xmlns', 'http://www.w3.org/2000/svg')
     this.element = this.svg.node()
