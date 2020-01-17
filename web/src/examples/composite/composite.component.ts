@@ -1,11 +1,9 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 /* eslint-disable */
-import { Component, ViewChild, ElementRef, OnInit, AfterViewInit } from '@angular/core'
-
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core'
 // Vis
-import { XYContainer } from '@volterra/vis/containers'
-import { Line, StackedBar, Tooltip, Brush, Axis } from '@volterra/vis/components'
-
+import {XYContainer, XYContainerConfigInterface} from '@volterra/vis/containers'
+import {Axis, Brush, Line, StackedBar, StackedBarConfigInterface, Tooltip} from '@volterra/vis/components'
 // Helpers
 import _times from 'lodash/times'
 
@@ -39,7 +37,7 @@ export class CompositeComponent implements OnInit, AfterViewInit {
 
     const barConfig = getBarConfig()
     const lineConfig = getLineConfig()
-    const chartConfig = {
+    const chartConfig: XYContainerConfigInterface = {
       margin: { top: 10, bottom: 10, left: 10, right: 10 },
       // padding: { left: 10, right: 10 },
       components: [
@@ -99,7 +97,7 @@ export class CompositeComponent implements OnInit, AfterViewInit {
   }
 }
 
-function getBarConfig () {
+function getBarConfig (): StackedBarConfigInterface {
   return {
     x: d => d.x,
     y: [
