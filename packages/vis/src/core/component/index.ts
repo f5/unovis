@@ -62,7 +62,7 @@ export class ComponentCore {
     Object.keys(events).forEach(className => {
       Object.keys(events[className]).forEach(eventType => {
         this.g.selectAll(`.${className}`)
-          .on(eventType, events[className][eventType])
+          .on(eventType, (d, i, els) => events[className][eventType](d, i, els))
       })
     })
   }
