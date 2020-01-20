@@ -29,6 +29,7 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
   axisGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
   axisLabGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
   labelGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
+  _autoMargin = false
   events = {
     [Axis.selectors.tick]: {
       mouseover: this._onTickMouseOver.bind(this),
@@ -45,7 +46,7 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
   }
 
   preRender (): void {
-    this._render(0, true)
+    this._render(0)
   }
 
   getPosition (): Position {
@@ -98,7 +99,7 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
     }
   }
 
-  _render (customDuration?: number, forceWrap?: boolean): void {
+  _render (customDuration?: number): void {
     const { config } = this
     // const duration = isNumber(customDuration) ? customDuration : config.duration
     const axisGen = this._buildAxis()
@@ -111,7 +112,7 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
 
     ticks
       .classed(s.tick, true)
-      .call(wrapTickText, getWrapOptions(ticks, config, forceWrap))
+      .call(wrapTickText, getWrapOptions(ticks, config, this._autoMargin))
 
     this.axisGroup
       .classed(s.axis, true)

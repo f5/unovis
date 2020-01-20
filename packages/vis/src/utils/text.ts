@@ -76,17 +76,16 @@ export function wrapTextElement (element, options: WrapTextOptions): void {
   if (!text) return
   const {
     length,
-    width = 200,
+    width,
     separator = '',
     trimType = TrimMode.END,
     verticalAlign = VerticalAlign.MIDDLE,
     wordBreak = false,
     trimOnly = false,
     dy = 0.32,
-    forceWrap = false,
   } = options
   if (length) text = trimText(text, length, trimType)
-  if (!length && trimOnly) {
+  if (!length && trimOnly && width) {
     trimSVGTextToPixel(element, width, trimType)
     return
   }
@@ -114,9 +113,9 @@ export function wrapTextElement (element, options: WrapTextOptions): void {
   })
 
   if (wordBreak) {
-    const numTspan = Math.ceil(tspan.node().getComputedTextLength() / width)
+    const numTspan = Math.ceil(tspan.node().getComputedTextLength() / (width || 1))
     for (let i = 0; i < numTspan; i++) {
-      const word = breakTspan(tspan, width)
+      const word = breakTspan(tspan, width || 1)
       if (word) {
         tspan = element.append('tspan')
           .attr('x', x)

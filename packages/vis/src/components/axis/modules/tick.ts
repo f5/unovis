@@ -41,17 +41,16 @@ export function wrapTickText (selection, wrapOptions, callback): void {
   })
 }
 
-export function getWrapOptions (ticks, config, forceWrap?: boolean): WrapTextOptions {
+export function getWrapOptions (ticks, config, autoMargin: boolean): WrapTextOptions {
   const {
     type, position, tickTextLength, tickTextWidth, tickTextSeparator, tickTextForceWordBreak,
     tickTextTrimType, tickTextFitMode, width, padding, offset,
   } = config
-
   let wrapWidth = tickTextWidth
   if (!wrapWidth) {
     if (type === AxisType.X) {
       wrapWidth = width / ticks.size()
-    } else {
+    } else if (!autoMargin) {
       wrapWidth = position === Position.RIGHT ? offset.right - padding.left - padding.right : offset.left
     }
   }
@@ -70,7 +69,6 @@ export function getWrapOptions (ticks, config, forceWrap?: boolean): WrapTextOpt
     trimOnly: tickTextFitMode === FitMode.TRIM,
     dy: type === AxisType.X ? 0.71 : 0.32,
     verticalAlign,
-    forceWrap,
     fitMode: tickTextFitMode,
   }
 }

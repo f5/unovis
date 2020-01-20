@@ -197,7 +197,7 @@ export class XYContainer<Datum> extends ContainerCore {
 
   _setAutoMargin (axis: Axis<Datum>): void {
     const { config: { margin } } = this
-
+    axis._autoMargin = true
     this._updateScalesDomain(axis)
     axis.preRender()
 
