@@ -96,7 +96,7 @@ export class Brush extends XYComponentCore {
       .attr('y1', yRange[1] + h / 2 - 10)
       .attr('y2', yRange[1] + h / 2 + 10)
 
-    const brushRange = config.selection ? [xScale(config.selection[0]), xScale(config.selection[1])] : xScale.range()
+    const brushRange = (config.selection && isFinite(config.selection?.[0])) ? [xScale(config.selection[0]), xScale(config.selection[1])] : xScale.range()
     smartTransition(this.brush, duration)
       .call(brushBehaviour.move, brushRange) // Sets up the brush and calls brush events
       .on('end interrupt', () => { this._firstRender = false })
