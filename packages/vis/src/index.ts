@@ -5,3 +5,6 @@ import * as components from './components'
 import * as types from './types'
 
 export { containers, components, types }
+
+export * from './components'
+export * from './containers'
