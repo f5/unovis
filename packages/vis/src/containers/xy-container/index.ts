@@ -44,6 +44,10 @@ export class XYContainer<Datum> extends ContainerCore {
     if (data) {
       this.setData(data)
     }
+
+    (document as any).fonts.ready.then(() => {
+      this._renderAxes(0)
+    })
   }
 
   get components (): XYComponentCore<Datum>[] {
@@ -134,13 +138,7 @@ export class XYContainer<Datum> extends ContainerCore {
       c.render(customDuration)
     }
 
-    // Render axes
-    Object.keys(config.axes).forEach(key => {
-      const axis = config.axes[key]
-      const offset = axis.getOffset(config.margin)
-      axis.g.attr('transform', `translate(${offset.left},${offset.top})`)
-      axis.render(customDuration)
-    })
+    this._renderAxes(customDuration)
 
     // Clip Rect
     this._clipPath.select('rect')
@@ -184,6 +182,16 @@ export class XYContainer<Datum> extends ContainerCore {
       }, [Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY])
       const scaleRange = key === AxisType.Y ? [range[1], range[0]] : range
       components.forEach(c => c.setScaleRange(key, dimensions[key].range ?? scaleRange))
+    })
+  }
+
+  _renderAxes (duration: number): void {
+    const { config: { axes, margin } } = this
+    Object.keys(axes).forEach(key => {
+      const axis = axes[key]
+      const offset = axis.getOffset(margin)
+      axis.g.attr('transform', `translate(${offset.left},${offset.top})`)
+      axis.render(duration)
     })
   }
 

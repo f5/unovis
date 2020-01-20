@@ -71,9 +71,10 @@ export function splitString (text: string, separators = [' ']) {
   return result
 }
 
-export function wrap (
-  element: Selection<SVGTextElement, any, SVGElement, any>,
-  {
+export function wrapTextElement (element, options: WrapTextOptions): void {
+  let text = element.text()
+  if (!text) return
+  const {
     length,
     width = 200,
     separator = '',
@@ -83,8 +84,7 @@ export function wrap (
     trimOnly = false,
     dy = 0.32,
     forceWrap = false,
-  }: WrapTextOptions = {}): void {
-  let text = element.text()
+  } = options
   if (length) text = trimText(text, length, trimType)
   if (!length && trimOnly) {
     trimSVGTextToPixel(element, width, trimType)
@@ -131,16 +131,4 @@ export function wrap (
   if (verticalAlign === VerticalAlign.BOTTOM) addY = dy
   else if (verticalAlign === VerticalAlign.TOP) addY = -(tspanCount - 1) - (1 - dy)
   element.attr('dy', `${addY}em`)
-}
-
-export function wrapTextElement (element, options: WrapTextOptions, callback): void {
-  if (!element.text()) return
-  if (options.forceWrap) {
-    wrap(element, options)
-    callback?.()
-  }
-  (document as any).fonts.ready.then(() => {
-    wrap(element, options)
-    callback?.()
-  })
 }
