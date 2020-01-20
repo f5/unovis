@@ -9,6 +9,7 @@ import { XYComponentCore } from 'core/xy-component'
 // Utils
 import { getValue, isNumber, isArray, isEmpty } from 'utils/data'
 import { roundedRectPath } from 'utils/path'
+import { smartTransition } from 'utils/d3'
 
 // Types
 import { NumericAccessor } from 'types/misc'
@@ -53,7 +54,7 @@ export class StackedBar extends XYComponentCore {
 
     const barGroups = this.g
       .selectAll(`.${s.bar}`)
-      .data(this._prepareData())
+      .data(this._prepareData(), d => d.id)
 
     const barGroupsEnter = barGroups.enter().append('path')
       .attr('class', s.bar)
@@ -76,7 +77,9 @@ export class StackedBar extends XYComponentCore {
       barGroupsMerged = barGroupsMerged.attr('d', roundedRectPath)
     }
 
-    barGroups.exit().remove()
+    smartTransition(barGroups.exit().style('opacity', 1), duration)
+      .style('opacity', 0)
+      .remove()
   }
 
   _prepareData (): any[] {
@@ -97,7 +100,7 @@ export class StackedBar extends XYComponentCore {
       return (v >= (xDomain[0] - xHalfBarWidth)) && (v <= (xDomain[1] + xHalfBarWidth))
     })
 
-    filtered?.forEach(d => {
+    filtered?.forEach((d, index) => {
       const x = getValue(d, config.x)
       let stackedValue = start
 
@@ -134,6 +137,7 @@ export class StackedBar extends XYComponentCore {
         }
 
         const obj = {
+          id: `${accessor?.toString()} ${index}`,
           ...size,
           ...{
             color: this.getColor(d, config.color, i),
