@@ -8,6 +8,7 @@ import { SingleComponent } from 'examples/single/single.component'
 import { CompositeComponent } from 'examples/composite/composite.component'
 
 import { AppComponent } from './app.component'
+import { BulletLegendComponent } from './components/bullet-legend/bullet-legend.component'
 
 const appRoutes: Routes = [
   { path: 'single', component: SingleComponent },
@@ -19,6 +20,7 @@ const appRoutes: Routes = [
     AppComponent,
     SingleComponent,
     CompositeComponent,
+    BulletLegendComponent,
   ],
 
   imports: [
