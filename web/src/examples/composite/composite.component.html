@@ -1,2 +1,7 @@
-<div #chart class="chart"></div>
-<div #navigation class="navigation"></div>
+
+<div class="visContainer">
+    <vis-bullet-legend #legendRef [items]="legendItems" (itemClick)="onLegendItemClick($event)"></vis-bullet-legend>
+    <!-- <div #legend class="chartLegend"></div> -->
+    <div #chart class="chartMain"></div>
+    <div #navigation class="chartNavigation"></div>
+</div>

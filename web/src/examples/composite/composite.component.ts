@@ -1,14 +1,14 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 /* eslint-disable */
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core'
+import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core'
 // Vis
 import {XYContainer, XYContainerConfigInterface} from '@volterra/vis/containers'
-import {Axis, Brush, Line, StackedBar, StackedBarConfigInterface, Tooltip} from '@volterra/vis/components'
+import {Axis, Brush, Line, LineConfigInterface, StackedBar, StackedBarConfigInterface, Tooltip } from '@volterra/vis/components'
 // Helpers
 import _times from 'lodash/times'
 
 function generateData (): object[] {
-  return _times(30).map((i) => ({
+  return _times(200).map((i) => ({
     x: i,
     y: Math.random(),
     y1: Math.random(),
@@ -24,25 +24,34 @@ function generateData (): object[] {
   styleUrls: ['./composite.component.css'],
 })
 
-export class CompositeComponent implements OnInit, AfterViewInit {
+export class CompositeComponent implements AfterViewInit {
   title = 'composite'
-  data: any
-  config: any
+  yAccessors = [
+    d => d.y,
+    d => d.y1,
+    d => d.y2,
+    d => d.y3,
+    d => d.y4,
+  ]
+  legendItems: { name: string, inactive?: boolean }[] = this.yAccessors.map((d, i) => ({ name: `Stream ${i + 1}` }))
+  chartConfig: XYContainerConfigInterface
+  barConfig: StackedBarConfigInterface
+  lineConfig: LineConfigInterface
+  composite: XYContainer
   @ViewChild('chart', { static: false }) chart: ElementRef
   @ViewChild('navigation', { static: false }) navigation: ElementRef
+  @ViewChild('legendRef', { static: false }) legendRef: ElementRef
+
 
   ngAfterViewInit (): void {
-    // const chartElement = this.chartRef.nativeElement
-    // this.chart = new XYContainer(chartElement, this.config, this.data)
-
-    const barConfig = getBarConfig()
-    const lineConfig = getLineConfig()
-    const chartConfig: XYContainerConfigInterface = {
+    const data = generateData()
+    this.barConfig = getBarConfig(this.yAccessors)
+    this.lineConfig = getLineConfig(this.yAccessors)
+    
+    this.chartConfig = {
       margin: { top: 10, bottom: 10, left: 10, right: 10 },
-      // padding: { left: 10, right: 10 },
       components: [
-        new StackedBar(barConfig),
-        new Line(lineConfig),
+        new StackedBar(this.barConfig),
       ],
       dimensions: {
         x: {
@@ -51,11 +60,9 @@ export class CompositeComponent implements OnInit, AfterViewInit {
       },
       axes: {
         x: new Axis({
-          // position: 'top',
           label: 'x axis',
         }),
         y: new Axis({
-          // position: 'right',
           label: 'y axis',
         }),
       },
@@ -65,18 +72,18 @@ export class CompositeComponent implements OnInit, AfterViewInit {
         },
       }),
     }
-    const data = generateData()
-    const composite = new XYContainer(this.chart.nativeElement, chartConfig, data)
+
+    this.composite = new XYContainer(this.chart.nativeElement, this.chartConfig, data)
 
     const navConfig = {
       margin: { left: 9, right: 9 },
       components: [
-        new StackedBar(lineConfig),
+        new StackedBar(this.lineConfig),
         new Brush({
           onBrush: (s) => {
-            chartConfig.dimensions.x.domain = s
-            composite.updateContainer(chartConfig, true)
-            composite.render(0)
+            this.chartConfig.dimensions.x.domain = s
+            this.composite.updateContainer(this.chartConfig, true)
+            this.composite.render(0)
           },
         }),
       ],
@@ -91,22 +98,20 @@ export class CompositeComponent implements OnInit, AfterViewInit {
     const nav = new XYContainer(this.navigation.nativeElement, navConfig, data)
   }
 
-  ngOnInit (): void {
-    this.data = []
-    this.config = {}
+  onLegendItemClick (event): void {
+    const { d } = event
+    d.inactive = !d.inactive
+    this.legendItems = [ ...this.legendItems ]
+    const accessors = this.yAccessors.map((acc, i) => !this.legendItems[i].inactive ? acc : null)
+    this.barConfig.y = accessors
+    this.composite.updateComponents([this.barConfig])
   }
 }
 
-function getBarConfig (): StackedBarConfigInterface {
+function getBarConfig (y): StackedBarConfigInterface {
   return {
     x: d => d.x,
-    y: [
-      d => d.y,
-      d => d.y1,
-      d => d.y2,
-      d => d.y3,
-      d => d.y4,
-    ],
+    y,
     barMaxWidth: 15,
     roundedCorners: false,
     events: {
@@ -117,17 +122,11 @@ function getBarConfig (): StackedBarConfigInterface {
   }
 }
 
-function getLineConfig () {
+function getLineConfig (y) {
   return {
     barMaxWidth: 15,
     x: d => d.x,
-    y: [
-      d => d.y,
-      d => d.y1,
-      d => d.y2,
-      d => d.y3,
-      d => d.y4,
-    ],
+    y,
     events: {
       [Line.selectors.line]: {
         click: d => { },
