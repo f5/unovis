@@ -33,8 +33,10 @@ export interface XYComponentConfigInterface<Data> extends ComponentConfigInterfa
 }
 
 export class XYComponentConfig<Data> extends ComponentConfig implements XYComponentConfigInterface<Data> {
-  x = d => d.x
-  y = d => d.y
+  // eslint-disable-next-line dot-notation
+  x: NumericAccessor<Data> = d => d['x'];
+  // eslint-disable-next-line dot-notation
+  y: NumericAccessor<Data> = d => d['y'];
   color = null
   colorType = ColorType.Static
   // scales.xType = ScaleType.Linear
