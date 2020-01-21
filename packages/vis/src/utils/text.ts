@@ -44,6 +44,7 @@ export function trimSVGTextToPixel (svgTextSelection: Selection<SVGTextElement, 
 export function breakTspan (tspan: Selection<SVGTSpanElement, any, SVGElement, any>, width: number, word = ''): string {
   const tspanText = tspan.text()
   const coeff = width / tspan.node().getComputedTextLength()
+
   if (coeff < 1) {
     const cutIndex = Math.floor(coeff * tspanText.length) || 1
     const head = tspanText.substr(0, cutIndex)
@@ -55,7 +56,7 @@ export function breakTspan (tspan: Selection<SVGTSpanElement, any, SVGElement, a
   }
 }
 
-export function splitString (text: string, separators = [' ']) {
+export function splitString (text: string, separators = [' ']): string[] {
   let result = [text] as any[]
   for (let i = 0; i < separators.length; i++) {
     const sep = separators[i]
@@ -71,9 +72,10 @@ export function splitString (text: string, separators = [' ']) {
   return result
 }
 
-export function wrapTextElement (element, options: WrapTextOptions): void {
+export function wrapTextElement (element: Selection<SVGTextElement, any, SVGElement, any>, options: WrapTextOptions): void {
   let text = element.text()
   if (!text) return
+
   const {
     length,
     width,
@@ -84,19 +86,25 @@ export function wrapTextElement (element, options: WrapTextOptions): void {
     trimOnly = false,
     dy = 0.32,
   } = options
-  if (length) text = trimText(text, length, trimType)
-  if (!length && trimOnly && width) {
+
+  // Trim text first
+  if (length) text = trimText(text, length, trimType) // By the number of characters
+  if (!length && trimOnly && width) { // By provided width if `trimOnly` is set
     trimSVGTextToPixel(element, width, trimType)
     return
   }
+
+  // Wrap
   const separators = (isArray(separator) ? separator : [separator]) as string[]
   const words = splitString(text, separators)
   const x = parseFloat(element.attr('x')) || 0
+
   element.text('')
   let tspan = element.append('tspan').attr('x', x)
   let tspanText = `${words[0]}`
-  let tspanCount = 1
   tspan.text(tspanText)
+  let tspanCount = 1
+
   words.forEach((word, i) => {
     if (i === 0) return
     tspan.text(`${tspanText}${word}`)
@@ -126,6 +134,7 @@ export function wrapTextElement (element, options: WrapTextOptions): void {
     }
   }
 
+  // Vertical Align
   let addY = -(tspanCount - 1) * 0.5 + dy
   if (verticalAlign === VerticalAlign.BOTTOM) addY = dy
   else if (verticalAlign === VerticalAlign.TOP) addY = -(tspanCount - 1) - (1 - dy)

@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { select } from 'd3-selection'
+import { select, Selection } from 'd3-selection'
 
 // Utils
 import { wrapTextElement } from 'utils/text'
@@ -22,7 +22,7 @@ export function wrapTickText (selection, wrapOptions, callback): void {
     const tickElement = select(elements[i])
     const textElement = tickElement.select('text')
       .classed('active', true)
-      .classed(s.tickText, true)
+      .classed(s.tickText, true) as Selection<SVGTextElement, any, SVGElement, any>
 
     const text = textElement.text()
     const x = textElement.attr('x') ? parseFloat(textElement.attr('x')) : null
@@ -41,18 +41,19 @@ export function wrapTickText (selection, wrapOptions, callback): void {
   })
 }
 
-export function getWrapOptions (ticks, config, autoMargin: boolean): WrapTextOptions {
+export function getWrapOptions (ticks, config, autoWrap: boolean): WrapTextOptions {
   const {
     type, position, tickTextLength, tickTextWidth, tickTextSeparator, tickTextForceWordBreak,
     tickTextTrimType, tickTextFitMode, width, padding, offset,
   } = config
-  let wrapWidth = tickTextWidth
-  if (!wrapWidth) {
-    if (type === AxisType.X) {
-      wrapWidth = width / ticks.size()
-    } else if (!autoMargin) {
-      wrapWidth = position === Position.RIGHT ? offset.right - padding.left - padding.right : offset.left
-    }
+
+  let wrapWidth
+  if (tickTextWidth) {
+    wrapWidth = tickTextWidth
+  } else if (type === AxisType.X) {
+    wrapWidth = width / ticks.size()
+  } else if (autoWrap) {
+    wrapWidth = position === Position.RIGHT ? offset.right - padding.left - padding.right : offset.left
   }
 
   let verticalAlign = VerticalAlign.MIDDLE

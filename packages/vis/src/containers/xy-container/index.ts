@@ -45,9 +45,8 @@ export class XYContainer<Datum> extends ContainerCore {
       this.setData(data)
     }
 
-    (document as any).fonts.ready.then(() => {
-      this._renderAxes(0)
-    })
+    // Force re-render axes when fonts are loaded
+    (document as any).fonts?.ready.then(this._renderAxes.bind(this, 0))
   }
 
   get components (): XYComponentCore<Datum>[] {
@@ -197,7 +196,7 @@ export class XYContainer<Datum> extends ContainerCore {
 
   _setAutoMargin (axis: Axis<Datum>): void {
     const { config: { margin } } = this
-    axis._autoMargin = true
+    axis.autoWrapTickLabels = false
     this._updateScalesDomain(axis)
     axis.preRender()
 

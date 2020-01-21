@@ -12,7 +12,8 @@ import { Position } from 'types/position'
 import { Margin } from 'types/misc'
 
 // Utils
-import { clean } from 'utils/data'
+import { clean, isNumber } from 'utils/data'
+import { smartTransition } from 'utils/d3'
 
 // Config
 import { AxisConfig, AxisConfigInterface } from './config'
@@ -25,11 +26,12 @@ import * as s from './style'
 
 export class Axis<Datum> extends XYComponentCore<Datum> {
   static selectors = s
-  config: AxisConfig<Datum> = new AxisConfig()
+  config: AxisConfig<Datum> = new AxisConfig<Datum>()
   axisGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
   axisLabGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
   labelGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
-  _autoMargin = false
+  autoWrapTickLabels = true
+
   events = {
     [Axis.selectors.tick]: {
       mouseover: this._onTickMouseOver.bind(this),
@@ -101,18 +103,19 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
 
   _render (customDuration?: number): void {
     const { config } = this
-    // const duration = isNumber(customDuration) ? customDuration : config.duration
+    const duration = isNumber(customDuration) ? customDuration : config.duration
+
     const axisGen = this._buildAxis()
     if (config.tickFormat) axisGen.tickFormat(config.tickFormat)
     if (config.tickValues) axisGen.tickValues(config.tickValues)
 
-    this.axisGroup.call(axisGen)
+    smartTransition(this.axisGroup.call(axisGen), duration)
 
     const ticks = this.axisGroup.selectAll('g.tick')
 
     ticks
       .classed(s.tick, true)
-      .call(wrapTickText, getWrapOptions(ticks, config, this._autoMargin))
+      .call(wrapTickText, getWrapOptions(ticks, config, this.autoWrapTickLabels))
 
     this.axisGroup
       .classed(s.axis, true)
