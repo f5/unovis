@@ -19,13 +19,12 @@ export enum FitMode {
 
 export type WrapTextOptions = {
   readonly length?: number;
-  readonly width?: number;
+  readonly width?: number | undefined;
   readonly separator?: string | string[];
   readonly trimType?: TrimMode;
   readonly verticalAlign?: VerticalAlign;
   readonly wordBreak?: boolean;
   readonly trimOnly?: boolean;
-  readonly forceWrap?: boolean;
   readonly dy?: number;
   readonly fitMode?: FitMode;
 }

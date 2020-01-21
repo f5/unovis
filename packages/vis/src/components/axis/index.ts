@@ -12,7 +12,8 @@ import { Position } from 'types/position'
 import { Margin } from 'types/misc'
 
 // Utils
-import { clean } from 'utils/data'
+import { clean, isNumber } from 'utils/data'
+import { smartTransition } from 'utils/d3'
 
 // Config
 import { AxisConfig, AxisConfigInterface } from './config'
@@ -25,10 +26,12 @@ import * as s from './style'
 
 export class Axis<Datum> extends XYComponentCore<Datum> {
   static selectors = s
-  config: AxisConfig<Datum> = new AxisConfig()
+  config: AxisConfig<Datum> = new AxisConfig<Datum>()
   axisGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
   axisLabGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
   labelGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
+  autoWrapTickLabels = true
+
   events = {
     [Axis.selectors.tick]: {
       mouseover: this._onTickMouseOver.bind(this),
@@ -45,7 +48,7 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
   }
 
   preRender (): void {
-    this._render(0, true)
+    this._render(0)
   }
 
   getPosition (): Position {
@@ -87,7 +90,7 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
     switch (type) {
     case AxisType.X:
       switch (position) {
-      case Position.TOP: return { top: containerMargin.top - padding.top, left: padding.left }
+      case Position.TOP: return { top: containerMargin.top - padding.top, left: containerMargin.left }
       case Position.BOTTOM: default: return { top: containerMargin.top + height + padding.top, left: containerMargin.left }
       }
     case AxisType.Y:
@@ -98,16 +101,21 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
     }
   }
 
-  _render (customDuration?: number, forceWrap?: boolean): void {
+  _render (customDuration?: number): void {
     const { config } = this
-    // const duration = isNumber(customDuration) ? customDuration : config.duration
+    const duration = isNumber(customDuration) ? customDuration : config.duration
 
-    this.axisGroup.call(this._buildAxis())
+    const axisGen = this._buildAxis()
+    if (config.tickFormat) axisGen.tickFormat(config.tickFormat)
+    if (config.tickValues) axisGen.tickValues(this._getTickValues())
+
+    smartTransition(this.axisGroup.call(axisGen), duration)
+
     const ticks = this.axisGroup.selectAll('g.tick')
 
     ticks
       .classed(s.tick, true)
-      .call(wrapTickText, getWrapOptions(ticks, config, forceWrap))
+      .call(wrapTickText, getWrapOptions(ticks, config, this.autoWrapTickLabels))
 
     this.axisGroup
       .classed(s.axis, true)
@@ -148,11 +156,18 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
     }
   }
 
+  _getTickValues (): number[] {
+    const { config: { scales, tickValues, type } } = this
+    const scaleDomain = type === AxisType.X ? scales.x?.domain() : scales.y?.domain()
+
+    return tickValues.filter(v => (v >= scaleDomain[0]) && (v <= scaleDomain[1]))
+  }
+
   _renderAxisLabel (): void {
-    const { type, label } = this.config
+    const { type, label, width, height } = this.config
 
     const axisPosition = this.getPosition()
-    const { width, height } = this.axisGroup.node().getBBox()
+    const { width: axisWidth, height: axisHeight } = this.axisGroup.node().getBBox()
 
     const labels = this.labelGroup.selectAll(`.${s.label}`).data(clean([label])) as Selection<SVGTextElement, any, SVGGElement, object[]>
     labels.exit().remove()
@@ -163,8 +178,8 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
 
     const labelMerged = labelsEnter.merge(labels)
 
-    const offsetX = type === AxisType.X ? width / 2 : (-1) ** (+(axisPosition === Position.LEFT)) * width
-    const offsetY = type === AxisType.X ? (-1) ** (+(axisPosition === Position.TOP)) * height : height / 2
+    const offsetX = type === AxisType.X ? width / 2 : (-1) ** (+(axisPosition === Position.LEFT)) * axisWidth
+    const offsetY = type === AxisType.X ? (-1) ** (+(axisPosition === Position.TOP)) * axisHeight : height / 2
     const rotation = type === AxisType.Y ? 90 : 0
 
     labelMerged.text(d => d)

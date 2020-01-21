@@ -44,6 +44,9 @@ export class XYContainer<Datum> extends ContainerCore {
     if (data) {
       this.setData(data)
     }
+
+    // Force re-render axes when fonts are loaded
+    (document as any).fonts?.ready.then(this._renderAxes.bind(this, 0))
   }
 
   get components (): XYComponentCore<Datum>[] {
@@ -134,13 +137,7 @@ export class XYContainer<Datum> extends ContainerCore {
       c.render(customDuration)
     }
 
-    // Render axes
-    Object.keys(config.axes).forEach(key => {
-      const axis = config.axes[key]
-      const offset = axis.getOffset(config.margin)
-      axis.g.attr('transform', `translate(${offset.left},${offset.top})`)
-      axis.render(customDuration)
-    })
+    this._renderAxes(customDuration)
 
     // Clip Rect
     this._clipPath.select('rect')
@@ -187,9 +184,19 @@ export class XYContainer<Datum> extends ContainerCore {
     })
   }
 
+  _renderAxes (duration: number): void {
+    const { config: { axes, margin } } = this
+    Object.keys(axes).forEach(key => {
+      const axis = axes[key]
+      const offset = axis.getOffset(margin)
+      axis.g.attr('transform', `translate(${offset.left},${offset.top})`)
+      axis.render(duration)
+    })
+  }
+
   _setAutoMargin (axis: Axis<Datum>): void {
     const { config: { margin } } = this
-
+    axis.autoWrapTickLabels = false
     this._updateScalesDomain(axis)
     axis.preRender()
 

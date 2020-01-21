@@ -21,6 +21,10 @@ export interface AxisConfigInterface<Datum> extends XYComponentConfigInterface<D
     tickLine?: boolean;
     /** Draw minimum and maximum axis ticks only */
     minMaxTicksOnly?: boolean;
+    /** Tick label formatter */
+    tickFormat?: (d: number) => string;
+    /** Explicitly set tick values */
+    tickValues?: number[];
     /** Always draw all axis ticks */
     showAllTicks?: boolean;
     /**  */
@@ -69,4 +73,7 @@ export class AxisConfig<Datum> extends XYComponentConfig<Datum> implements AxisC
     left: 0,
     right: 0,
   }
+
+  tickFormat = null
+  tickValues = null
 }
