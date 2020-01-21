@@ -43,8 +43,8 @@ export class Tooltip<T extends ComponentCore<any>, TooltipDatum> {
     this._container.appendChild(this.element)
 
     // Tooltip position calculation relies on the parent position
-    // If it's not set, we set it to `relative` (not a good practice tbh)
-    if (!this._container.style.position) {
+    // If it's not set (static), we set it to `relative` (not a good practice)
+    if (getComputedStyle(this._container)?.position === 'static') {
       this._container.style.position = 'relative'
     }
   }
