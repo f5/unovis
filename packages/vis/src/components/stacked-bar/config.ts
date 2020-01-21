@@ -1,7 +1,7 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component/config'
 
-export interface StackedBarConfigInterface<Data> extends XYComponentConfigInterface<Data> {
+export interface StackedBarConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
     /** Bar width in pixels */
     barWidth?: number;
     /** Maximum bar width for dynamic sizing. Limits the barWidth property on the top */
@@ -16,7 +16,7 @@ export interface StackedBarConfigInterface<Data> extends XYComponentConfigInterf
     roundedCorners?: number | boolean;
 }
 
-export class StackedBarConfig<Data> extends XYComponentConfig<Data> implements StackedBarConfigInterface<Data> {
+export class StackedBarConfig<Datum> extends XYComponentConfig<Datum> implements StackedBarConfigInterface<Datum> {
     barMaxWidth = undefined
     barWidth = undefined
     expectedDataStep = undefined

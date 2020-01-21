@@ -20,9 +20,9 @@ import { StackedBarConfig, StackedBarConfigInterface } from './config'
 // Styles
 import * as s from './style'
 
-export class StackedBar<Data> extends XYComponentCore<Data> {
+export class StackedBar<Datum> extends XYComponentCore<Datum> {
   static selectors = s
-  config: StackedBarConfig<Data> = new StackedBarConfig()
+  config: StackedBarConfig<Datum> = new StackedBarConfig()
   // linePath: Selection<SVGGElement, object[], SVGGElement, object[]>
   events = {
     [StackedBar.selectors.bar]: {
@@ -32,7 +32,7 @@ export class StackedBar<Data> extends XYComponentCore<Data> {
     },
   }
 
-  constructor (config?: StackedBarConfigInterface<Data>) {
+  constructor (config?: StackedBarConfigInterface<Datum>) {
     super()
     if (config) this.config.init(config)
   }
@@ -91,7 +91,7 @@ export class StackedBar<Data> extends XYComponentCore<Data> {
     const barWidth = this._getBarWidth()
     const halfBarWidth = data.length < 2 ? 0 : barWidth / 2
 
-    const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Data>[]
+    const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
     const xScale = config.scales.x
     const xHalfBarWidth = Math.abs((xScale.invert(halfBarWidth) as number) - (xScale.invert(0) as number))
     const filtered = data?.filter(d => {

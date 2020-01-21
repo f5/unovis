@@ -8,11 +8,11 @@ import { NumericAccessor } from 'types/misc'
 // Config
 import { ComponentConfigInterface, ComponentConfig } from '../component/config'
 
-export interface XYComponentConfigInterface<Data> extends ComponentConfigInterface {
+export interface XYComponentConfigInterface<Datum> extends ComponentConfigInterface {
   /** X accessor or number value */
-  x?: NumericAccessor<Data>;
+  x?: NumericAccessor<Datum>;
   /** Y accessor or value */
-  y?: NumericAccessor<Data> | NumericAccessor<Data>[];
+  y?: NumericAccessor<Datum> | NumericAccessor<Datum>[];
   /** Component color (string or color object) */
   color?: string | object;
   /** Coloring type */
@@ -23,7 +23,7 @@ export interface XYComponentConfigInterface<Data> extends ComponentConfigInterfa
   };
   events?: {
     [selector: string]: {
-      [eventName: string]: (data: Data) => void;
+      [eventName: string]: (data: Datum) => void;
     };
   };
   // /** X scale type */
@@ -32,11 +32,11 @@ export interface XYComponentConfigInterface<Data> extends ComponentConfigInterfa
   // scales.yType?: ScaleType;
 }
 
-export class XYComponentConfig<Data> extends ComponentConfig implements XYComponentConfigInterface<Data> {
+export class XYComponentConfig<Datum> extends ComponentConfig implements XYComponentConfigInterface<Datum> {
   // eslint-disable-next-line dot-notation
-  x: NumericAccessor<Data> = d => d['x'];
+  x: NumericAccessor<Datum> = d => d['x'];
   // eslint-disable-next-line dot-notation
-  y: NumericAccessor<Data> = d => d['y'];
+  y: NumericAccessor<Datum> = d => d['y'];
   color = null
   colorType = ColorType.Static
   // scales.xType = ScaleType.Linear

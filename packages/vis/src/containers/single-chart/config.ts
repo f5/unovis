@@ -9,18 +9,18 @@ import { Tooltip } from 'core/tooltip'
 import { Dimension } from 'types/misc'
 import { XYComponentCore } from 'core/xy-component'
 
-export interface SingleChartConfigInterface<Data> extends ContainerConfigInterface {
+export interface SingleChartConfigInterface<Datum> extends ContainerConfigInterface {
   /** Visualization Component */
-  component?: XYComponentCore<Data>;
+  component?: XYComponentCore<Datum>;
   /** Dimension configuration */
   dimensions?: {
     [key: string]: Dimension;
   };
   /** Tooltip component */
-  tooltip?: Tooltip<XYComponentCore<Data>, Data>;
+  tooltip?: Tooltip<XYComponentCore<Datum>, Datum>;
 }
 
-export class SingleChartConfig<Data> extends ContainerConfig implements SingleChartConfigInterface<Data> {
+export class SingleChartConfig<Datum> extends ContainerConfig implements SingleChartConfigInterface<Datum> {
   tooltip = undefined
   dimensions = {}
 }

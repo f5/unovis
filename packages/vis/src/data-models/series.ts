@@ -10,14 +10,14 @@ import { isArray, getValue } from 'utils/data'
 // Core
 import { CoreDataModel } from './core'
 
-export class SeriesDataModel<Data> extends CoreDataModel<Data[]> {
-  data: Data[] = [];
+export class SeriesDataModel<Datum> extends CoreDataModel<Datum[]> {
+  data: Datum[] = [];
 
-  constructor (data: Data[] = []) {
+  constructor (data: Datum[] = []) {
     super(data)
   }
 
-  getStackedExtent (acs: NumericAccessor<Data> | NumericAccessor<Data>[]): number[] {
+  getStackedExtent (acs: NumericAccessor<Datum> | NumericAccessor<Datum>[]): number[] {
     const { data } = this
 
     if (isArray(acs)) {
@@ -26,7 +26,7 @@ export class SeriesDataModel<Data> extends CoreDataModel<Data[]> {
       for (const d of data) {
         let positiveStack = 0
         let negativeStack = 0
-        for (const a of acs as NumericAccessor<Data>[]) {
+        for (const a of acs as NumericAccessor<Datum>[]) {
           const value = getValue(d, a) || 0
           if (value >= 0) positiveStack += value
           else negativeStack += value
@@ -39,24 +39,24 @@ export class SeriesDataModel<Data> extends CoreDataModel<Data[]> {
     } else return extent(data, d => getValue(d, acs))
   }
 
-  getExtent (acs: NumericAccessor<Data> | NumericAccessor<Data>[]): number[] {
+  getExtent (acs: NumericAccessor<Datum> | NumericAccessor<Datum>[]): number[] {
     return [this.getMin(acs), this.getMax(acs)]
   }
 
-  getMin (acs: NumericAccessor<Data> | NumericAccessor<Data>[]): number {
+  getMin (acs: NumericAccessor<Datum> | NumericAccessor<Datum>[]): number {
     const { data } = this
 
     if (isArray(acs)) {
-      const minValue = min(data, d => min(acs as NumericAccessor<Data>[], a => getValue(d, a)))
+      const minValue = min(data, d => min(acs as NumericAccessor<Datum>[], a => getValue(d, a)))
       return minValue
     } else return min(data, d => getValue(d, acs))
   }
 
-  getMax (acs: NumericAccessor<Data> | NumericAccessor<Data>[]): number {
+  getMax (acs: NumericAccessor<Datum> | NumericAccessor<Datum>[]): number {
     const { data } = this
 
     if (isArray(acs)) {
-      const maxValue = max(data, d => max(acs as NumericAccessor<Data>[], a => getValue(d, a)))
+      const maxValue = max(data, d => max(acs as NumericAccessor<Datum>[], a => getValue(d, a)))
       return maxValue
     } else return max(data, d => getValue(d, acs))
   }

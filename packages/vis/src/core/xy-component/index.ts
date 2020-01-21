@@ -18,9 +18,9 @@ import { ColorType } from 'types/color'
 // Config
 import { XYComponentConfig } from './config'
 
-export class XYComponentCore<Data> extends ComponentCore<Data[]> {
-  config: XYComponentConfig<Data>
-  datamodel: SeriesDataModel<Data> = new SeriesDataModel()
+export class XYComponentCore<Datum> extends ComponentCore<Datum[]> {
+  config: XYComponentConfig<Datum>
+  datamodel: SeriesDataModel<Datum> = new SeriesDataModel()
   width: number
   height: number
   colorScale: any
@@ -66,7 +66,7 @@ export class XYComponentCore<Data> extends ComponentCore<Data[]> {
     }
   }
 
-  getColor (d: Data, accessor: any, index = 0): string | Color {
+  getColor (d: Datum, accessor: any, index = 0): string | Color {
     const { config } = this
     const value = getValue(d, accessor)
     if (config.colorType === ColorType.Dynamic) return this.colorScale(value) as Color

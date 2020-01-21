@@ -12,27 +12,27 @@ import { Axis } from 'components/axis'
 // Types
 import { Dimension } from 'types/misc'
 
-export interface XYContainerConfigInterface<Data> extends ContainerConfigInterface {
+export interface XYContainerConfigInterface<Datum> extends ContainerConfigInterface {
   /** Visualization Component */
-  components?: XYComponentCore<Data>[];
+  components?: XYComponentCore<Datum>[];
   /** Dimension configuration */
   dimensions?: {
     [key: string]: Dimension;
   };
   /** Axis configuration */
   axes?: {
-    [key: string]: Axis<Data>;
+    [key: string]: Axis<Datum>;
   };
   /** Enables automatic calculation of margins based on axes size */
   autoMargin?: boolean;
   /** Tooltip component */
-  tooltip?: Tooltip<XYComponentCore<Data>, Data> | undefined;
+  tooltip?: Tooltip<XYComponentCore<Datum>, Datum> | undefined;
 }
 
-export class XYContainerConfig<Data> extends ContainerConfig implements XYContainerConfigInterface<Data> {
+export class XYContainerConfig<Datum> extends ContainerConfig implements XYContainerConfigInterface<Datum> {
   components? = []
   tooltip = undefined
-  axes: { [key: string]: Axis<Data> } = {}
+  axes: { [key: string]: Axis<Datum> } = {}
   autoMargin = true
   dimensions = {
     x: {} as Dimension,

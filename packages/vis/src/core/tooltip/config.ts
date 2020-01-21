@@ -2,17 +2,17 @@
 import { Config } from 'core/config'
 import { ComponentCore } from 'core/component'
 
-export interface TooltipConfigInterface<T extends ComponentCore<any>, TooltipData = any> {
+export interface TooltipConfigInterface<T extends ComponentCore<any>, TooltipDatum = any> {
     /** Visualization Components */
     components?: T[];
     triggers?: {
-      [selector: string]: (data: TooltipData, i: number, elements: any) => any;
+      [selector: string]: (data: TooltipDatum, i: number, elements: any) => any;
     };
 }
 
-export class TooltipConfig<T extends ComponentCore<any>, TooltipData = any> extends Config implements TooltipConfigInterface<T, TooltipData> {
+export class TooltipConfig<T extends ComponentCore<any>, TooltipDatum = any> extends Config implements TooltipConfigInterface<T, TooltipDatum> {
   components: T[] = []
   triggers: {
-    [selector: string]: (data: TooltipData, i: number, elements: any) => any;
+    [selector: string]: (data: TooltipDatum, i: number, elements: any) => any;
   } = {}
 }

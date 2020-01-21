@@ -3,16 +3,16 @@ import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component
 import { SymbolType } from 'types/symbols'
 import { NumericAccessor } from 'types/misc'
 
-export interface ScatterConfigInterface<Data> extends XYComponentConfigInterface<Data> {
+export interface ScatterConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
   /** Size accessor function or value in pixels */
-  size?: NumericAccessor<Data>;
+  size?: NumericAccessor<Datum>;
   /** Shape of scatter point: circle, cross, diamond, square, star, triangle and wye */
-  shape?: ((d: Data, i?: number, ...any) => SymbolType) | SymbolType;
+  shape?: ((d: Datum, i?: number, ...any) => SymbolType) | SymbolType;
   /** Icon */
-  icon?: ((d: Data, i?: number, ...any) => string) | string;
+  icon?: ((d: Datum, i?: number, ...any) => string) | string;
 }
 
-export class ScatterConfig<Data> extends XYComponentConfig<Data> implements ScatterConfigInterface<Data> {
+export class ScatterConfig<Datum> extends XYComponentConfig<Datum> implements ScatterConfigInterface<Datum> {
   size = 10
   shape = SymbolType.CIRCLE
   icon = undefined

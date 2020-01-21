@@ -23,9 +23,9 @@ import { wrapTickText, getWrapOptions } from './modules/tick'
 // Styles
 import * as s from './style'
 
-export class Axis<Data> extends XYComponentCore<Data> {
+export class Axis<Datum> extends XYComponentCore<Datum> {
   static selectors = s
-  config: AxisConfig<Data> = new AxisConfig()
+  config: AxisConfig<Datum> = new AxisConfig()
   axisGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
   axisLabGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
   labelGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
@@ -36,7 +36,7 @@ export class Axis<Data> extends XYComponentCore<Data> {
     },
   }
 
-  constructor (config?: AxisConfigInterface<Data>) {
+  constructor (config?: AxisConfigInterface<Datum>) {
     super()
     if (config) this.config.init(config)
 

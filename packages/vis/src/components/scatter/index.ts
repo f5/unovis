@@ -17,9 +17,9 @@ import { createNodes, updateNodes, removeNodes } from './modules/node'
 // Styles
 import * as s from './style'
 
-export class Scatter<Data> extends XYComponentCore<Data> {
+export class Scatter<Datum> extends XYComponentCore<Datum> {
   static selectors = s
-  config: ScatterConfig<Data> = new ScatterConfig()
+  config: ScatterConfig<Datum> = new ScatterConfig()
   events = {
     [Scatter.selectors.point]: {
       mousemove: this._onEvent,
@@ -28,7 +28,7 @@ export class Scatter<Data> extends XYComponentCore<Data> {
     },
   }
 
-  constructor (config?: ScatterConfigInterface<Data>) {
+  constructor (config?: ScatterConfigInterface<Datum>) {
     super()
     if (config) this.setConfig(config)
   }
