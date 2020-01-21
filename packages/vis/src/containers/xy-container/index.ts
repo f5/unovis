@@ -52,6 +52,7 @@ export class XYContainer<Datum> extends ContainerCore {
 
   setData (data: any, preventRender?: boolean): void {
     const { components, config } = this
+    if (!data) return
     this.data = data
 
     components.forEach((c, i) => {
@@ -67,15 +68,21 @@ export class XYContainer<Datum> extends ContainerCore {
     super.updateContainer(containerConfig)
     this.removeAllChildren()
 
+    // If there were any new comonents added we need to pass them data
+    this.setData(this.data, false)
+
+    // Re-insert elements to the DOM
     for (const c of this.components) {
       this.element.appendChild(c.element)
     }
 
+    // Set up the tooltip
     if (containerConfig.tooltip) {
       containerConfig.tooltip.setContainer(this._container)
       containerConfig.tooltip.setComponents(this.components)
     }
 
+    // Set up the axes
     Object.keys(containerConfig.axes ?? {}).forEach(key => {
       this.config.axes[key].config.type = key as AxisType
     })
@@ -83,7 +90,10 @@ export class XYContainer<Datum> extends ContainerCore {
     if (containerConfig.axes?.x) this.element.appendChild(containerConfig.axes.x.element)
     if (containerConfig.axes?.y) this.element.appendChild(containerConfig.axes.y.element)
 
+    // Clipping path
     this.element.appendChild(this._clipPath.node())
+
+    // Rendering
     if (!preventRender) this.render()
   }
 
