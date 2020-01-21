@@ -62,22 +62,24 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
         config.isVertical ? { ...d, y: start, h: 0 } : { ...d, x: start, w: 0 }
       ))
 
-    let barGroupsMerged = barGroupsEnter.merge(barGroups)
+    const barGroupsMerged = barGroupsEnter.merge(barGroups)
       .style('fill', d => d.color)
+
     if (duration) {
-      barGroupsMerged = barGroupsMerged
+      barGroupsMerged
         .transition()
         .duration(duration)
+        .style('opacity', 1)
         .attrTween('d', (d, i, el) => {
           const previous = select(el[i]).attr('d')
           const next = roundedRectPath(d)
           return interpolatePath(previous, next)
         })
     } else {
-      barGroupsMerged = barGroupsMerged.attr('d', roundedRectPath)
+      barGroupsMerged.attr('d', roundedRectPath).style('opacity', 1)
     }
 
-    smartTransition(barGroups.exit().style('opacity', 1), duration)
+    smartTransition(barGroups.exit(), duration)
       .style('opacity', 0)
       .remove()
   }
