@@ -14,18 +14,18 @@ import { TooltipConfig, TooltipConfigInterface } from './config'
 // Style
 import * as s from './style'
 
-export class Tooltip<T extends ComponentCore> {
+export class Tooltip<T extends ComponentCore<any>, TooltipDatum> {
   element: HTMLElement
   div: Selection<HTMLElement, any, any, any>
-  config: TooltipConfig<T>
-  prevConfig: TooltipConfig<T>
+  config: TooltipConfig<T, TooltipDatum>
+  prevConfig: TooltipConfig<T, TooltipDatum>
   components: T[]
   _setUpEventsThrottled = throttle(this._setUpEvents, 1000)
 
   private _container: HTMLElement
 
-  constructor (config?: TooltipConfigInterface<T>, containerElement?: HTMLElement) {
-    this.config = new TooltipConfig<T>().init(config)
+  constructor (config?: TooltipConfigInterface<T, TooltipDatum>, containerElement?: HTMLElement) {
+    this.config = new TooltipConfig<T, TooltipDatum>().init(config)
     this.components = this.config.components
 
     this.element = document.createElement('div')

@@ -8,7 +8,7 @@ import { Position } from 'types/position'
 import { FitMode, TrimMode } from 'types/text'
 import { Margin } from 'types/misc'
 
-export interface AxisConfigInterface extends XYComponentConfigInterface {
+export interface AxisConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
     /** Axis position: top, bottom, right or left */
     position?: Position;
     /** Axis type: x or y */
@@ -41,7 +41,7 @@ export interface AxisConfigInterface extends XYComponentConfigInterface {
     offset?: Margin;
 }
 
-export class AxisConfig extends XYComponentConfig implements AxisConfigInterface {
+export class AxisConfig<Datum> extends XYComponentConfig<Datum> implements AxisConfigInterface<Datum> {
   position = undefined
   type = undefined
   label = undefined

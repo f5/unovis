@@ -3,11 +3,27 @@
 import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core'
 // Vis
 import {XYContainer, XYContainerConfigInterface} from '@volterra/vis/containers'
-import {Axis, Brush, Line, LineConfigInterface, StackedBar, StackedBarConfigInterface, Tooltip } from '@volterra/vis/components'
+import {
+  Axis,
+  Brush,
+  Line,
+  LineConfigInterface,
+  StackedBar,
+  StackedBarConfigInterface,
+  Tooltip
+} from '@volterra/vis/components'
 // Helpers
 import _times from 'lodash/times'
 
-function generateData (): object[] {
+interface SampleData {
+  x: number,
+  y: number,
+  y1: number,
+  y2: number,
+  y3: number,
+  y4: number
+}
+function generateData (): SampleData[] {
   return _times(200).map((i) => ({
     x: i,
     y: Math.random(),
@@ -34,10 +50,10 @@ export class CompositeComponent implements AfterViewInit {
     d => d.y4,
   ]
   legendItems: { name: string, inactive?: boolean }[] = this.yAccessors.map((d, i) => ({ name: `Stream ${i + 1}` }))
-  chartConfig: XYContainerConfigInterface
-  barConfig: StackedBarConfigInterface
-  lineConfig: LineConfigInterface
-  composite: XYContainer
+  chartConfig: XYContainerConfigInterface<SampleData>
+  barConfig: StackedBarConfigInterface<SampleData>
+  lineConfig: LineConfigInterface<SampleData>
+  composite: XYContainer<SampleData>
   @ViewChild('chart', { static: false }) chart: ElementRef
   @ViewChild('navigation', { static: false }) navigation: ElementRef
   @ViewChild('legendRef', { static: false }) legendRef: ElementRef
@@ -47,7 +63,7 @@ export class CompositeComponent implements AfterViewInit {
     const data = generateData()
     this.barConfig = getBarConfig(this.yAccessors)
     this.lineConfig = getLineConfig(this.yAccessors)
-    
+
     this.chartConfig = {
       margin: { top: 10, bottom: 10, left: 10, right: 10 },
       components: [
@@ -108,7 +124,7 @@ export class CompositeComponent implements AfterViewInit {
   }
 }
 
-function getBarConfig (y): StackedBarConfigInterface {
+function getBarConfig (y): StackedBarConfigInterface<SampleData> {
   return {
     x: d => d.x,
     y,
@@ -122,9 +138,9 @@ function getBarConfig (y): StackedBarConfigInterface {
   }
 }
 
-function getLineConfig (y) {
+function getLineConfig (y): LineConfigInterface<SampleData> {
   return {
-    barMaxWidth: 15,
+    // barMaxWidth: 15,
     x: d => d.x,
     y,
     events: {

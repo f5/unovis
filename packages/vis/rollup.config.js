@@ -1,10 +1,13 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import typescript from 'rollup-plugin-typescript2'
+import transformPaths from '@zerollup/ts-transform-paths'
 import resolve from 'rollup-plugin-node-resolve'
 import commonjs from 'rollup-plugin-commonjs'
 import { terser } from 'rollup-plugin-terser'
 import pkg from './package.json'
 import modules from './rollup.modules.json'
+
+import { tsFix } from './ts-fix'
 
 const externals = [
   ...Object.keys(pkg.dependencies || {}),
@@ -16,7 +19,14 @@ const plugins = [
   resolve(),
   typescript({
     typescript: require('typescript'),
+    transformers: [service => transformPaths(service.getProgram())],
   }),
+  {
+    name: 'ts3.7-fix',
+    writeBundle: () => {
+      tsFix()
+    },
+  },
 ]
 
 export default [{

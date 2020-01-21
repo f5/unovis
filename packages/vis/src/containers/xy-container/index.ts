@@ -24,13 +24,13 @@ import { guid } from 'utils/misc'
 // Config
 import { XYContainerConfig, XYContainerConfigInterface } from './config'
 
-export class XYContainer extends ContainerCore {
-  config: XYContainerConfig = new XYContainerConfig()
+export class XYContainer<Datum> extends ContainerCore {
+  config: XYContainerConfig<Datum> = new XYContainerConfig()
   data: any
   private _clipPath: Selection<SVGGElement, object[], SVGGElement, object[]>
   private _clipPathId = guid()
 
-  constructor (element, config?: XYContainerConfigInterface, data?) {
+  constructor (element, config?: XYContainerConfigInterface<Datum>, data?) {
     super(element)
 
     this._clipPath = this.svg.append('clipPath')
@@ -46,7 +46,7 @@ export class XYContainer extends ContainerCore {
     }
   }
 
-  get components (): XYComponentCore[] {
+  get components (): XYComponentCore<Datum>[] {
     return this.config.components
   }
 
@@ -63,7 +63,7 @@ export class XYContainer extends ContainerCore {
     if (!preventRender) this.render()
   }
 
-  updateContainer (containerConfig: XYContainerConfigInterface, preventRender?: boolean): void {
+  updateContainer (containerConfig: XYContainerConfigInterface<Datum>, preventRender?: boolean): void {
     super.updateContainer(containerConfig)
     this.removeAllChildren()
 
@@ -87,7 +87,7 @@ export class XYContainer extends ContainerCore {
     if (!preventRender) this.render()
   }
 
-  updateComponents (componentConfigs: XYComponentConfigInterface[], preventRender?: boolean): void {
+  updateComponents (componentConfigs: XYComponentConfigInterface<Datum>[], preventRender?: boolean): void {
     this.components.forEach((c, i) => {
       c.prevConfig = c.config
       c.setConfig(componentConfigs[i])
@@ -96,7 +96,7 @@ export class XYContainer extends ContainerCore {
     if (!preventRender) this.render()
   }
 
-  update (containerConfig: XYContainerConfigInterface, componentConfigs?: XYComponentConfigInterface[], data?: any): void {
+  update (containerConfig: XYContainerConfigInterface<Datum>, componentConfigs?: XYComponentConfigInterface<Datum>[], data?: any): void {
     if (containerConfig) this.updateContainer(containerConfig, true)
     if (componentConfigs) this.updateComponents(componentConfigs, true)
     if (data) this.setData(data, true)
@@ -141,13 +141,13 @@ export class XYContainer extends ContainerCore {
     config.tooltip?.update()
   }
 
-  updateScales<T extends XYComponentCore> (...components: T[]): void {
+  updateScales<T extends XYComponentCore<Datum>> (...components: T[]): void {
     const c = clean(components || this.components)
     this._updateScalesDomain(...c)
     this._updateScalesRange(...c)
   }
 
-  _updateScalesDomain<T extends XYComponentCore> (...components: T[]): void {
+  _updateScalesDomain<T extends XYComponentCore<Datum>> (...components: T[]): void {
     const { config: { dimensions } } = this
     if (!components) return
 
@@ -157,7 +157,7 @@ export class XYContainer extends ContainerCore {
     })
   }
 
-  _updateScalesRange<T extends XYComponentCore> (...components: T[]): void {
+  _updateScalesRange<T extends XYComponentCore<Datum>> (...components: T[]): void {
     const { config: { dimensions, padding } } = this
     if (!components) return
 
@@ -177,7 +177,7 @@ export class XYContainer extends ContainerCore {
     })
   }
 
-  _setAutoMargin (axis: Axis): void {
+  _setAutoMargin (axis: Axis<Datum>): void {
     const { config: { margin } } = this
 
     this._updateScalesDomain(axis)

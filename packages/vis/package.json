@@ -4,6 +4,7 @@
   "main": "lib/volterra-vis.js",
   "module": "lib/volterra-vis.es.js",
   "browser": "lib/volterra-vis.bundle.js",
+  "typings": "lib/index.d.ts",
   "files": [
     "lib"
   ],
@@ -15,6 +16,8 @@
   },
   "devDependencies": {
     "@types/d3": "^5.7.2",
+    "@typescript-eslint/parser": "^2.16.0",
+    "@zerollup/ts-transform-paths": "^1.7.11",
     "resize-observer-polyfill": "^1.5.1",
     "rimraf": "^3.0.0",
     "rollup": "^1.29.0",
