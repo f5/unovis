@@ -8,8 +8,8 @@ import {
 import { CoreDataModel } from './core'
 
 export class GraphDataModel<NodeData, LinkData> extends CoreDataModel<{nodes: NodeData[]; links: LinkData[]}> {
-  private _nonConnectedNodes: object[]
-  private _connectedNodes: object[]
+  private _nonConnectedNodes: NodeData[]
+  private _connectedNodes: NodeData[]
 
   set data (inputData) {
     const prevData = this.data
@@ -60,24 +60,24 @@ export class GraphDataModel<NodeData, LinkData> extends CoreDataModel<{nodes: No
     this._connectedNodes = without(nodes, ...this._nonConnectedNodes)
   }
 
-  get nodes () {
+  get nodes (): NodeData[] {
     return this.data.nodes
   }
 
-  get links () {
+  get links (): LinkData[] {
     return this.data.links
   }
 
-  get connectedNodes () {
+  get connectedNodes (): NodeData[] {
     return this._connectedNodes
   }
 
-  get nonConnectedNodes () {
+  get nonConnectedNodes (): NodeData[] {
     return this._nonConnectedNodes
   }
 
-  findNode (n) {
-    if (isNumber(n)) return this.nodes[n]
+  findNode (n: number | string | object): NodeData {
+    if (isNumber(n)) return this.nodes[n as number]
     else if (isString(n)) return find(this.nodes, node => node.id === n)
     else if (isObject(n)) return find(this.nodes, node => node === n)
     else {
