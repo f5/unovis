@@ -60,10 +60,10 @@ export class CompositeComponent implements AfterViewInit {
         x: new Axis({
           // position: 'top',
           label: 'Index',
-          tickValues: [0, 5, 10, 15, 20, 25]
+          // tickValues: [0, 5, 10, 15, 20, 25]
         }),
         y: new Axis({
-          // position: 'right',
+          // position: 'left',
           label: 'Latency',
           tickFormat: d => {
             return `${d} ms`

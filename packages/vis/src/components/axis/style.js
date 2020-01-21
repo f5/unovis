@@ -33,6 +33,7 @@ export const tick = css`
 export const label = css`
   label: label;
   fill: var(--vis-color-gray);
+  text-anchor: middle;
 
   &.right {
     dominant-baseline: text-after-edge;
