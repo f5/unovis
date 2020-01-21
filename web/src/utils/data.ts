@@ -1,7 +1,16 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import _times from 'lodash/times'
 
-export function sampleSeriesData (n: number): object[] {
+export interface SampleDatum {
+  x: number;
+  y: number;
+  y1: number;
+  y2: number;
+  y3: number;
+  y4: number;
+}
+
+export function sampleSeriesData (n: number): SampleDatum[] {
   return _times(n).map((i) => ({
     x: i,
     y: Math.random(),

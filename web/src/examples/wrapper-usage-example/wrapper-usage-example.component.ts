@@ -6,7 +6,7 @@ import { AfterViewInit, Component } from '@angular/core'
 import { Axis, StackedBar, Tooltip } from '@volterra/vis/components'
 
 // Helpers
-import { sampleSeriesData } from '../../utils/data'
+import { sampleSeriesData, SampleDatum } from '../../utils/data'
 
 @Component({
   selector: 'wrapper-usage-example',
@@ -18,10 +18,10 @@ export class WrapperUsageExampleComponent implements AfterViewInit {
   title = 'wrapper-usage-example'
 
   // Data
-  data = sampleSeriesData(100)
+  data: SampleDatum[] = sampleSeriesData(100)
 
   // Chart configuration
-  stackedBar = new StackedBar({
+  stackedBar = new StackedBar<SampleDatum>({
     x: d => d.x,
     y: [
       d => d.y,

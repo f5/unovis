@@ -9,21 +9,17 @@ import {Line, StackedBar, Scatter, Tooltip, StackedBarConfigInterface} from '@vo
 import { Scale } from '@volterra/vis/types'
 
 // Helpers
+import { SampleDatum } from '../../utils/data'
+
 import _times from 'lodash/times'
 import _sample from 'lodash/sample'
 
-interface SampleData {
-  x: number,
-  y: number,
-  y1: number,
-  y2: number,
-  y3: number,
-  y4: number,
+interface SampleScatterDatum extends SampleDatum {
   size: number,
   shape: SymbolType,
   icon: any
 }
-function generateData (): SampleData[] {
+function generateData (): SampleScatterDatum[] {
   return _times(30).map((i) => ({
     x: i,
     y: Math.random(),
@@ -46,7 +42,7 @@ function generateData (): SampleData[] {
 export class SingleComponent implements OnInit, AfterViewInit {
   title = 'single'
   chart: any
-  data: SampleData[]
+  data: SampleScatterDatum[]
   config: any
   @ViewChild('linechart', { static: false }) lineChart: ElementRef
   @ViewChild('barchart', { static: false }) barChart: ElementRef
@@ -54,7 +50,7 @@ export class SingleComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit (): void {
     const barConfig = getBarConfig()
-    const barChartConfig: SingleChartConfigInterface<SampleData> = {
+    const barChartConfig: SingleChartConfigInterface<SampleScatterDatum> = {
       component: new StackedBar(barConfig),
       dimensions: {
         x: { scale: Scale.scaleLinear() },
@@ -70,7 +66,7 @@ export class SingleComponent implements OnInit, AfterViewInit {
     const barChart = new SingleChart(this.barChart.nativeElement, barChartConfig, this.data)
 
     const lineConfig = getLineConfig()
-    const lineChartConfig: SingleChartConfigInterface<SampleData> = {
+    const lineChartConfig: SingleChartConfigInterface<SampleScatterDatum> = {
       component: new Line(lineConfig),
       // dimensions: {
       //   x: { scale: Scale.scaleLinear() },
@@ -86,7 +82,7 @@ export class SingleComponent implements OnInit, AfterViewInit {
     const lineChart = new SingleChart(this.lineChart.nativeElement, lineChartConfig, this.data)
 
     const scatterConfig = getScatterConfig()
-    const scatterChartConfig: SingleChartConfigInterface<SampleData> = {
+    const scatterChartConfig: SingleChartConfigInterface<SampleScatterDatum> = {
       component: new Scatter(scatterConfig),
       dimensions: {
         x: { scale: Scale.scaleLinear() },
@@ -126,7 +122,7 @@ function getScatterConfig () {
   }
 }
 
-function getBarConfig (): StackedBarConfigInterface<SampleData> {
+function getBarConfig (): StackedBarConfigInterface<SampleScatterDatum> {
   return {
     x: d => d.x,
     y: [

@@ -12,27 +12,9 @@ import {
   StackedBarConfigInterface,
   Tooltip
 } from '@volterra/vis/components'
-// Helpers
-import _times from 'lodash/times'
 
-interface SampleData {
-  x: number,
-  y: number,
-  y1: number,
-  y2: number,
-  y3: number,
-  y4: number
-}
-function generateData (): SampleData[] {
-  return _times(200).map((i) => ({
-    x: i,
-    y: Math.random(),
-    y1: Math.random(),
-    y2: Math.random(),
-    y3: Math.random(),
-    y4: Math.random(),
-  }))
-}
+// Helpers
+import { sampleSeriesData, SampleDatum } from '../../utils/data'
 
 @Component({
   selector: 'composite',
@@ -50,17 +32,17 @@ export class CompositeComponent implements AfterViewInit {
     d => d.y4,
   ]
   legendItems: { name: string, inactive?: boolean }[] = this.yAccessors.map((d, i) => ({ name: `Stream ${i + 1}` }))
-  chartConfig: XYContainerConfigInterface<SampleData>
-  barConfig: StackedBarConfigInterface<SampleData>
-  lineConfig: LineConfigInterface<SampleData>
-  composite: XYContainer<SampleData>
+  chartConfig: XYContainerConfigInterface<SampleDatum>
+  barConfig: StackedBarConfigInterface<SampleDatum>
+  lineConfig: LineConfigInterface<SampleDatum>
+  composite: XYContainer<SampleDatum>
   @ViewChild('chart', { static: false }) chart: ElementRef
   @ViewChild('navigation', { static: false }) navigation: ElementRef
   @ViewChild('legendRef', { static: false }) legendRef: ElementRef
 
 
   ngAfterViewInit (): void {
-    const data = generateData()
+    const data: SampleDatum[] = sampleSeriesData(100)
     this.barConfig = getBarConfig(this.yAccessors)
     this.lineConfig = getLineConfig(this.yAccessors)
 
@@ -124,7 +106,7 @@ export class CompositeComponent implements AfterViewInit {
   }
 }
 
-function getBarConfig (y): StackedBarConfigInterface<SampleData> {
+function getBarConfig (y): StackedBarConfigInterface<SampleDatum> {
   return {
     x: d => d.x,
     y,
@@ -138,7 +120,7 @@ function getBarConfig (y): StackedBarConfigInterface<SampleData> {
   }
 }
 
-function getLineConfig (y): LineConfigInterface<SampleData> {
+function getLineConfig (y): LineConfigInterface<SampleDatum> {
   return {
     // barMaxWidth: 15,
     x: d => d.x,
