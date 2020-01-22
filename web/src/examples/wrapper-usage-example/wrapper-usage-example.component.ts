@@ -55,10 +55,10 @@ export class WrapperUsageExampleComponent implements AfterViewInit {
 
   ngAfterViewInit (): void {
 
-    setTimeout(() => {
+    setInterval(() => {
       // this.margin = { ...this.margin, top: 50 }
-      this.data = sampleSeriesData(200)
-    }, 3000)
+      this.data = sampleSeriesData(Math.floor(10 + 150*Math.random()))
+    }, 5000)
   }
 
 }
