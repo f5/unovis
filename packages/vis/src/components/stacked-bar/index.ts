@@ -81,6 +81,7 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
 
     smartTransition(barGroups.exit(), duration)
       .style('opacity', 0)
+      .attr('transform', `translate(0,${config.height / 3})`)
       .remove()
   }
 
@@ -138,8 +139,9 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
           }
         }
 
+        const id = getValue(d, config.id)
         const obj = {
-          id: `${accessor?.toString()} ${index}`,
+          id: `${accessor?.toString()} ${id || index}`,
           ...size,
           ...{
             color: this.getColor(d, config.color, i),
