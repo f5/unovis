@@ -21,7 +21,7 @@ export class WrapperUsageExampleComponent implements AfterViewInit {
   data: SampleDatum[] = sampleSeriesData(100)
 
   // Chart configuration
-  stackedBar = new StackedBar<SampleDatum>({
+  stackedBarConfig = {
     x: d => d.x,
     y: [
       d => d.y,
@@ -34,7 +34,8 @@ export class WrapperUsageExampleComponent implements AfterViewInit {
         click: d => { },
       },
     },
-  })
+  }
+  stackedBar = new StackedBar<SampleDatum>(this.stackedBarConfig)
 
   components = [this.stackedBar]
 
@@ -58,6 +59,8 @@ export class WrapperUsageExampleComponent implements AfterViewInit {
     setInterval(() => {
       // this.margin = { ...this.margin, top: 50 }
       this.data = sampleSeriesData(Math.floor(10 + 150*Math.random()))
+      this.stackedBarConfig.barMaxWidth = Math.random() * 20
+      this.stackedBarConfig = { ...this.stackedBarConfig } // Updating the object to trigger change detection
     }, 5000)
   }
 

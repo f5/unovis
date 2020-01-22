@@ -14,11 +14,11 @@ export class XYChartComponent implements AfterViewInit {
   @Input() margin = { top: 10, bottom: 10, left: 10, right: 10 }
   @Input() padding = {}
   @Input() components = []
+  @Input() componentConfigs = []
   @Input() dimensions = { x: {}, y: {} }
   @Input() axes = {}
   @Input() tooltip
   @Input() data = []
-  @Input() class
   chart: XYContainer<object>
   config = {}
 
@@ -27,18 +27,25 @@ export class XYChartComponent implements AfterViewInit {
   }
 
   ngOnChanges (changes): void {
-    // Set new data without re-render if passed
+    const preventRender = true
+
+    // Set new Data without re-render
     if (changes.data) {
-      this.chart?.setData(this.data, false)
+      this.chart?.setData(this.data, preventRender)
       delete changes.data
     }
 
-    // Update properties
+    // Update Component configs without re-render
+    if (changes.componentConfigs) {
+      this.chart?.updateComponents(this.componentConfigs, preventRender)
+    }
+
+    // Update Container properties
     Object.keys(changes).forEach(key => {
       this[key] = changes[key].currentValue
     })
 
-    // Update Chart
+    // Update Container and render
     this.chart?.updateContainer(this.getConfig())
   }
 
