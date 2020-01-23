@@ -1,12 +1,10 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { ColorType } from 'types/color'
 import { Scale, ScaleType } from 'types/scales'
-
 // Types
 import { NumericAccessor } from 'types/misc'
-
 // Config
-import { ComponentConfigInterface, ComponentConfig } from '../component/config'
+import { ComponentConfig, ComponentConfigInterface } from '../component/config'
 
 export interface XYComponentConfigInterface<Datum> extends ComponentConfigInterface {
   /** X accessor or number value */
@@ -25,7 +23,7 @@ export interface XYComponentConfigInterface<Datum> extends ComponentConfigInterf
   };
   events?: {
     [selector: string]: {
-      [eventName: string]: (data: Datum) => void;
+      [eventName: string]: (data: {data: Datum}) => void;
     };
   };
   // /** X scale type */
