@@ -23,6 +23,12 @@ import { guid } from 'utils/misc'
 
 // Config
 import { XYContainerConfig, XYContainerConfigInterface } from './config'
+import {
+  BrushConfigInterface,
+  LineConfigInterface,
+  ScatterConfigInterface,
+  StackedBarConfigInterface
+} from '../../components'
 
 export class XYContainer<Datum> extends ContainerCore {
   config: XYContainerConfig<Datum> = new XYContainerConfig()
@@ -100,7 +106,13 @@ export class XYContainer<Datum> extends ContainerCore {
     if (!preventRender) this.render()
   }
 
-  updateComponents (componentConfigs: XYComponentConfigInterface<Datum>[], preventRender?: boolean): void {
+  updateComponents (componentConfigs: (
+    XYComponentConfigInterface<Datum>
+    | StackedBarConfigInterface<Datum>
+    | LineConfigInterface<Datum>
+    | ScatterConfigInterface<Datum>
+    | BrushConfigInterface<Datum>
+    | ScatterConfigInterface<Datum>)[], preventRender?: boolean): void {
     this.components.forEach((c, i) => {
       c.prevConfig = c.config
       c.setConfig(componentConfigs[i])
