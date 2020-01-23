@@ -27,11 +27,11 @@ spec:
           image: {{ if .vis_image }}{{ .vis_image }}{{ else }}volterra.azurecr.io/ves.io/volterra-vis:{{ if .vis_version }}{{ .vis_version }}{{ else }}master{{ end }}{{ end }}
           imagePullPolicy: Always
           ports:
-            - containerPort: 80
+            - containerPort: 9001
           readinessProbe:
             httpGet:
               path: /
-              port: 80
+              port: 9001
             periodSeconds: 10
             timeoutSeconds: 5
             successThreshold: 2

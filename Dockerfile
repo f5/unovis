@@ -35,4 +35,8 @@ RUN rm -rf /usr/share/nginx/html/*
 # Copy static files from previous step
 COPY --from=builder /app/web/lib/volterra-vis-examples/* /usr/share/nginx/html/
 
-EXPOSE 80
+# RUN NGINX ON A CUSTOM PORT
+EXPOSE 9001
+RUN sed -E -i "s,listen       80;.*,listen       9001;,g" /etc/nginx/conf.d/default.conf
+CMD ["nginx", "-g", "daemon off;"]
+
