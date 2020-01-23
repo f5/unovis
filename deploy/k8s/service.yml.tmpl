@@ -1,0 +1,15 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ default "vis" .vis_app_name }}
+  namespace: {{ if .vis_namespace }}{{ .vis_namespace }}{{ else }}{{ if .namespace }}{{ .namespace }}{{ else }}vis{{ end }}{{ end }}
+spec:
+  type: NodePort
+  selector:
+    app: vis
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+
+# vim: syntax=yaml

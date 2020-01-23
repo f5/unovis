@@ -1,0 +1,36 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ default "vis" .vis_app_name }}
+  namespace: {{ if .vis_namespace }}{{ .vis_namespace }}{{ else }}{{ if .namespace }}{{ .namespace }}{{ else }}vis{{ end }}{{ end }}
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/from-to-www-redirect: "true"
+    {{- if .vis_path }}
+    nginx.ingress.kubernetes.io/rewrite-target: "/"
+    nginx.ingress.kubernetes.io/add-base-url: "true"
+    {{- end }}
+    {{- if .oauth2_proxy_hosts }}
+    nginx.ingress.kubernetes.io/auth-url: "https://$host/oauth2/auth"
+    nginx.ingress.kubernetes.io/auth-signin: "https://$host/oauth2/sign_in"
+    {{- end }}
+  labels:
+    name: vis
+    app: vis
+spec:
+  {{- if not .vis_notls }}
+  tls:
+    - hosts:
+        - {{ .vis_host }}
+      secretName: {{ .vis_host }}-tls
+  {{- end }}
+  rules:
+    - host: {{ .vis_host }}
+      http:
+        paths:
+          - path: {{ if .vis_path }}{{ .vis_path }}{{ else }}/{{ end }}
+            backend:
+              serviceName: vis
+              servicePort: 80
+
+# vim: syntax=yaml

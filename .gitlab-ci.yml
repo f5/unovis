@@ -1,0 +1,74 @@
+# Required variables:
+#   - REGISTRY_USERNAME
+#   - REGISTRY_PASSWORD
+variables:
+  REGISTRY_IMAGE: volterra.azurecr.io/ves.io/${CI_PROJECT_NAME}
+  REGISTRY_SERVER: volterra.azurecr.io
+  JENKINS_URL: https://jenkins-dev.volterra.us
+#  JENKINS_TOKENS: eeph1eitohZaeMew
+
+stages:
+  - build
+  - docker
+#  - trigger
+
+build:
+  image: volterrasystem/angular-e2e-testing-java:node10
+  stage: build
+  before_script:
+    - set -e
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$SSH_PRIVATE_KEY")
+    - mkdir -p ~/.ssh
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+  script:
+    - yarn install
+    - yarn build
+  cache:
+    key: '$CI_COMMIT_REF_SLUG'
+    paths:
+      - node_modules
+
+docker:
+  tags: [docker]
+  stage: docker
+  image: tomkukral/buildah:0.18
+  before_script:
+    - podman version
+    - buildah version
+    - podman login --username "${REGISTRY_USERNAME}" --password "${REGISTRY_PASSWORD}" "${REGISTRY_SERVER}"
+  script:
+    - IMAGE_TAG_SHA=${REGISTRY_IMAGE}:${CI_COMMIT_SHA}
+    - IMAGE_TAG_BRANCH=${REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}
+    - IMAGE_TAG_LATEST=${REGISTRY_IMAGE}:latest
+    # Build an image
+    - echo "${SSH_PRIVATE_KEY}" > deploy.key
+    - podman build --no-cache --pull-always --format docker -t ${IMAGE_TAG_SHA} .
+    # Push the image
+    - echo "Pushing image ${IMAGE_TAG_BRANCH}"
+    - podman push ${IMAGE_TAG_SHA} docker://${IMAGE_TAG_BRANCH}
+    - echo "Created image digest:" && podman image inspect ${IMAGE_TAG_SHA} | grep '"Digest":'
+    - |
+      if [ ${CI_COMMIT_REF_SLUG} == "master" ]; then
+        echo "Pushing image ${IMAGE_TAG_LATEST}"
+        podman push ${IMAGE_TAG_SHA} docker://${IMAGE_TAG_LATEST}
+      fi
+  after_script:
+    - podman logout "${REGISTRY_SERVER}"
+  only:
+    - master
+    - develop
+
+#jenkins_develop:
+#  stage: trigger
+#  image: byrnedo/alpine-curl
+#  tags: [docker]
+#  script:
+#    - set ${JENKINS_TOKENS}
+#    - |
+#      for token do
+#        curl -k ${JENKINS_URL}/generic-webhook-trigger/invoke?token=${token}
+#      done
+#  only:
+#    - develop
+#    - master
