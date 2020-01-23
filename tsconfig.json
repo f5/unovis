@@ -21,6 +21,7 @@
       "declaration": false,
       "module": "esnext",
       "moduleResolution": "node",
+      "resolveJsonModule": true,
       "emitDecoratorMetadata": true,
       "experimentalDecorators": true,
       "target": "es2015",
