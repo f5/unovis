@@ -6,13 +6,13 @@ export interface TooltipConfigInterface<T extends ComponentCore<any>, TooltipDat
     /** Visualization Components */
     components?: T[];
     triggers?: {
-      [selector: string]: (data: TooltipDatum, i: number, elements: any) => any;
+      [selector: string]: (data: {data: TooltipDatum}, i: number, elements: any) => any;
     };
 }
 
 export class TooltipConfig<T extends ComponentCore<any>, TooltipDatum = any> extends Config implements TooltipConfigInterface<T, TooltipDatum> {
   components: T[] = []
   triggers: {
-    [selector: string]: (data: TooltipDatum, i: number, elements: any) => any;
+    [selector: string]: (data: {data: TooltipDatum}, i: number, elements: any) => any;
   } = {}
 }
