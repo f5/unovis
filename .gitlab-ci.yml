@@ -5,12 +5,12 @@ variables:
   REGISTRY_IMAGE: volterra.azurecr.io/ves.io/${CI_PROJECT_NAME}
   REGISTRY_SERVER: volterra.azurecr.io
   JENKINS_URL: https://jenkins-dev.volterra.us
-#  JENKINS_TOKENS: eeph1eitohZaeMew
+  JENKINS_TOKENS: eeph1eitohZaeMew
 
 stages:
   - build
   - docker
-#  - trigger
+  - trigger
 
 build:
   image: volterrasystem/angular-e2e-testing-java:node10
@@ -59,16 +59,16 @@ docker:
     - master
     - develop
 
-#jenkins_develop:
-#  stage: trigger
-#  image: byrnedo/alpine-curl
-#  tags: [docker]
-#  script:
-#    - set ${JENKINS_TOKENS}
-#    - |
-#      for token do
-#        curl -k ${JENKINS_URL}/generic-webhook-trigger/invoke?token=${token}
-#      done
-#  only:
-#    - develop
-#    - master
+jenkins_develop:
+  stage: trigger
+  image: byrnedo/alpine-curl
+  tags: [docker]
+  script:
+    - set ${JENKINS_TOKENS}
+    - |
+      for token do
+        curl -k ${JENKINS_URL}/generic-webhook-trigger/invoke?token=${token}
+      done
+  only:
+    - develop
+    - master
