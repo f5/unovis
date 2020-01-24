@@ -7,6 +7,7 @@ import { XYComponentCore } from 'core/xy-component'
 // Utils
 import { getValue, isNumber, isArray } from 'utils/data'
 import { smartTransition } from 'utils/d3'
+import { getColor } from 'utils/color'
 
 // Types
 import { Curve, CurveType } from 'types/curves'
@@ -66,11 +67,11 @@ export class Line<Datum> extends XYComponentCore<Datum> {
 
     const linesEnter = lines.enter().append('path')
       .attr('class', s.line)
-      .style('stroke', (d, i) => this.getColor(d, config.color, i))
+      .style('stroke', (d, i) => getColor(d, config.color, i))
 
     smartTransition(linesEnter.merge(lines), duration)
       .attr('d', d => this.lineGen(d))
-      .style('stroke', (d, i) => this.getColor(d, config.color, i))
+      .style('stroke', (d, i) => getColor(d, config.color, i))
       .attr('stroke-width', config.lineWidth)
 
     lines.exit().remove()

@@ -51,14 +51,6 @@ export class ContainerCore {
     this.config = new ConfigModel().init(config)
   }
 
-  // setData (...data) {
-  //   if (data.length === 1) {
-  //     for (const c of this._components) {
-  //       c.setData(data[0])
-  //     }
-  //   }
-  // }
-
   _render (duration?): void {
     this.svg
       .attr('width', this.containerWidth)

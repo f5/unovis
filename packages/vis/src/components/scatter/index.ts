@@ -5,6 +5,7 @@ import { XYComponentCore } from 'core/xy-component'
 
 // Utils
 import { getValue, isNumber, isEmpty } from 'utils/data'
+import { getColor } from 'utils/color'
 
 // Types
 
@@ -71,7 +72,7 @@ export class Scatter<Datum> extends XYComponentCore<Datum> {
           x: posX,
           y: posY,
           size: pointSize,
-          color: this.getColor(d, color, i),
+          color: getColor(d, color, i),
           shape: getValue(d, shape),
           icon: getValue(d, icon),
         })
