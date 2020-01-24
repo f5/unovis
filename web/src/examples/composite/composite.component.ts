@@ -10,7 +10,8 @@ import {
   LineConfigInterface,
   StackedBar,
   StackedBarConfigInterface,
-  Tooltip
+  Tooltip,
+  Crosshair,
 } from '@volterra/vis/components'
 
 // Helpers
@@ -74,6 +75,9 @@ export class CompositeComponent implements AfterViewInit {
         triggers: {
           [StackedBar.selectors.bar]: (d) => '<span>Bar Chart</span>',
         },
+      }),
+      crosshair: new Crosshair({
+        template: (d) => '<span>Crosshair</span>',
       }),
     }
 

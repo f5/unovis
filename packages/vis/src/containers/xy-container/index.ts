@@ -6,6 +6,9 @@ import { Selection } from 'd3-selection'
 import { ContainerCore } from 'core/container'
 import { XYComponentCore } from 'core/xy-component'
 
+// Data Model
+import { SeriesDataModel } from 'data-models/series'
+
 // Components
 import { Axis } from 'components/axis'
 
@@ -18,7 +21,7 @@ import { XYComponentConfigInterface } from 'core/xy-component/config'
 import { AxisType } from 'types/axis'
 
 // Utils
-import { clean } from 'utils/data'
+import { clean, flatten } from 'utils/data'
 import { guid } from 'utils/misc'
 
 // Config
@@ -27,12 +30,19 @@ import {
   BrushConfigInterface,
   LineConfigInterface,
   ScatterConfigInterface,
-  StackedBarConfigInterface
+  StackedBarConfigInterface,
 } from '../../components'
+
+type XYConfigInterface<Datum> = XYComponentConfigInterface<Datum>
+  | StackedBarConfigInterface<Datum>
+  | LineConfigInterface<Datum>
+  | ScatterConfigInterface<Datum>
+  | BrushConfigInterface<Datum>
+  | ScatterConfigInterface<Datum>
 
 export class XYContainer<Datum> extends ContainerCore {
   config: XYContainerConfig<Datum> = new XYContainerConfig()
-  data: any
+  datamodel: SeriesDataModel<Datum> = new SeriesDataModel()
   private _clipPath: Selection<SVGGElement, object[], SVGGElement, object[]>
   private _clipPathId = guid()
 
@@ -62,12 +72,13 @@ export class XYContainer<Datum> extends ContainerCore {
   setData (data: any, preventRender?: boolean): void {
     const { components, config } = this
     if (!data) return
-    this.data = data
+    this.datamodel.data = data
 
     components.forEach((c, i) => {
       c.setData(data)
     })
 
+    config.crosshair?.setData(data)
     config.axes.x?.setData(data)
     config.axes.y?.setData(data)
     if (!preventRender) this.render()
@@ -78,7 +89,7 @@ export class XYContainer<Datum> extends ContainerCore {
     this.removeAllChildren()
 
     // If there were any new comonents added we need to pass them data
-    this.setData(this.data, false)
+    this.setData(this.datamodel.data, false)
 
     // Re-insert elements to the DOM
     for (const c of this.components) {
@@ -86,9 +97,20 @@ export class XYContainer<Datum> extends ContainerCore {
     }
 
     // Set up the tooltip
-    if (containerConfig.tooltip) {
-      containerConfig.tooltip.setContainer(this._container)
-      containerConfig.tooltip.setComponents(this.components)
+    const tooltip = containerConfig.tooltip
+    if (tooltip) {
+      tooltip.setContainer(this._container)
+      tooltip.setComponents(this.components)
+    }
+
+    // Set up crosshair
+    const crosshair = containerConfig.crosshair
+    if (crosshair) {
+      crosshair.setContainer(this.svg)
+      // Pass tooltip
+      if (tooltip) crosshair.config.tooltip = tooltip
+
+      this.element.appendChild(crosshair.element)
     }
 
     // Set up the axes
@@ -106,13 +128,7 @@ export class XYContainer<Datum> extends ContainerCore {
     if (!preventRender) this.render()
   }
 
-  updateComponents (componentConfigs: (
-    XYComponentConfigInterface<Datum>
-    | StackedBarConfigInterface<Datum>
-    | LineConfigInterface<Datum>
-    | ScatterConfigInterface<Datum>
-    | BrushConfigInterface<Datum>
-    | ScatterConfigInterface<Datum>)[], preventRender?: boolean): void {
+  updateComponents (componentConfigs: XYConfigInterface<Datum>[], preventRender?: boolean): void {
     this.components.forEach((c, i) => {
       c.prevConfig = c.config
       c.setConfig(componentConfigs[i])
@@ -139,7 +155,7 @@ export class XYContainer<Datum> extends ContainerCore {
     }
 
     // Update Scales of all the components at once to calculate required paddings and sync them
-    this.updateScales(...this.components, config.axes.x, config.axes.y)
+    this.updateScales(...this.components, config.axes.x, config.axes.y, config.crosshair)
 
     // Render components
     for (const c of this.components) {
@@ -158,6 +174,17 @@ export class XYContainer<Datum> extends ContainerCore {
 
     // Tooltip
     config.tooltip?.update()
+
+    // Crosshair
+    const crosshair = config.crosshair
+    if (crosshair) {
+      // Pass accessors
+      const yAccessors = this.components.filter(c => !c.stacked).map(c => c.config.y)
+      const yStackedAccessors = this.components.filter(c => c.stacked).map(c => c.config.y)
+      crosshair.config.y = flatten(yAccessors)
+      crosshair.config.yStacked = flatten(yStackedAccessors)
+      crosshair.g.attr('transform', `translate(${config.margin.left},${config.margin.top})`)
+    }
   }
 
   updateScales<T extends XYComponentCore<Datum>> (...components: T[]): void {

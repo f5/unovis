@@ -54,10 +54,6 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
       .attr('class', s.handleLine)
   }
 
-  // setData (data: any): void {
-  //   super.setData(data)
-  // }
-
   setScaleRange (key: string): void {
     const { config: { scales, width, height } } = this
     if (!key || !scales[key]) return

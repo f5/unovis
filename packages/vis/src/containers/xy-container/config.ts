@@ -8,6 +8,7 @@ import { Tooltip } from 'core/tooltip'
 
 // Components
 import { Axis } from 'components/axis'
+import { Crosshair } from 'components/crosshair'
 
 // Types
 import { Dimension } from 'types/misc'
@@ -27,11 +28,14 @@ export interface XYContainerConfigInterface<Datum> extends ContainerConfigInterf
   autoMargin?: boolean;
   /** Tooltip component */
   tooltip?: Tooltip<XYComponentCore<Datum>, Datum> | undefined;
+  /** Crosshair component */
+  crosshair?: Crosshair<Datum> | undefined;
 }
 
 export class XYContainerConfig<Datum> extends ContainerConfig implements XYContainerConfigInterface<Datum> {
   components? = []
   tooltip = undefined
+  crosshair = undefined
   axes: { [key: string]: Axis<Datum> } = {}
   autoMargin = true
   dimensions = {

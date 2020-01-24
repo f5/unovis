@@ -1,11 +1,9 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { extent } from 'd3-array'
-import { Color } from 'd3-color'
 
 // Core
 import { ComponentCore } from 'core/component'
 import { SeriesDataModel } from 'data-models/series'
-import { getCSSVarName } from 'styles/colors'
 
 // Utils
 import { getValue } from 'utils/data'
@@ -13,7 +11,6 @@ import { defaultRange } from 'utils/scale'
 
 // Types
 import { Dimension, Margin } from 'types/misc'
-import { ColorType } from 'types/color'
 
 // Config
 import { XYComponentConfig } from './config'
@@ -21,10 +18,10 @@ import { XYComponentConfig } from './config'
 export class XYComponentCore<Datum> extends ComponentCore<Datum[]> {
   config: XYComponentConfig<Datum>
   datamodel: SeriesDataModel<Datum> = new SeriesDataModel()
-  width: number
-  height: number
-  colorScale: any
+  /** Clippable components can be affected by a clipping path (set up in the container) */
   clippable = true
+  /** Identifies whether the component displayed stacked data (eg StackedBar, Area) */
+  stacked = false
 
   setScaleDomain (key: string, domain: number[]): void {
     const { config: { scales } } = this
@@ -64,13 +61,6 @@ export class XYComponentCore<Datum> extends ComponentCore<Datum[]> {
       if (dim.range) scales[key].range(dim.range)
     }
     }
-  }
-
-  getColor (d: Datum, accessor: any, index = 0): string | Color {
-    const { config } = this
-    const value = getValue(d, accessor)
-    if (config.colorType === ColorType.Dynamic) return this.colorScale(value) as Color
-    else return (value || `var(${getCSSVarName(index)})`) as string
   }
 
   getDataExtent (accessorKey: string): number[] {

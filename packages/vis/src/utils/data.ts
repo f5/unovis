@@ -47,3 +47,7 @@ export function getValue (d, accessor): any {
 export function clean (data: any[]): any[] {
   return data.filter(d => d && !isNumber(d))
 }
+
+export function clamp (d: number, min: number, max: number): number {
+  return Math.min(Math.max(d, min), max)
+};

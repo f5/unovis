@@ -5,6 +5,9 @@ import { select, Selection, mouse } from 'd3-selection'
 // import { ContainerCore } from 'core/container'
 import { ComponentCore } from 'core/component'
 
+// Types
+import { Position } from 'types/position'
+
 // Utils
 import { throttle } from 'utils/data'
 
@@ -24,7 +27,7 @@ export class Tooltip<T extends ComponentCore<any>, TooltipDatum> {
 
   private _container: HTMLElement
 
-  constructor (config?: TooltipConfigInterface<T, TooltipDatum>, containerElement?: HTMLElement) {
+  constructor (config: TooltipConfigInterface<T, TooltipDatum> = {}, containerElement?: HTMLElement) {
     this.config = new TooltipConfig<T, TooltipDatum>().init(config)
     this.components = this.config.components
 
@@ -71,13 +74,36 @@ export class Tooltip<T extends ComponentCore<any>, TooltipDatum> {
   }
 
   place (pos): void {
+    const { config } = this
     const width = this.element.offsetWidth
-    // const height = this.element.offsetHeight
+    const height = this.element.offsetHeight
     const containerHeight = this._container.offsetHeight
+    const containerWidth = this._container.offsetWidth
 
+    // dx and dy variables shift the tooltip from the default position (above the cursor, centred horizontally)
+    const margin = 5
+    const dx = config.horizontalPlacement === Position.LEFT ? -width - margin
+      : config.horizontalPlacement === Position.CENTER ? -width / 2
+        : margin
+    const dy = config.verticalPlacement === Position.BOTTOM ? height + margin
+      : config.verticalPlacement === Position.CENTER ? height / 2
+        : -margin
+
+    // Constraint to container
+    const paddingX = 2
+    const constraintX = pos.x > (containerWidth - width - dx) ? (containerWidth - width - dx) - pos.x - paddingX
+      : pos.x < -dx ? -dx - pos.x + paddingX : 0
+
+    const paddingY = 10
+    const constraintY = pos.y > (containerHeight - dy - paddingY) ? containerHeight - dy - pos.y - paddingY
+      : pos.y < (height - dy + paddingY) ? height - dy - pos.y + paddingY : 0
+
+    // Place
+    const x = pos.x + constraintX + dx
+    const y = pos.y + constraintY + dy
     this.div
-      .style('bottom', `${containerHeight - pos.y}px`)
-      .style('left', `${pos.x - width / 2}px`)
+      .style('bottom', `${containerHeight - y}px`)
+      .style('left', `${x}px`)
   }
 
   _setUpEvents (): void {
