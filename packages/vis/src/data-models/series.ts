@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { extent, max, min } from 'd3-array'
+import { extent, max, min, bisector } from 'd3-array'
 
 // Types
 import { NumericAccessor } from 'types/misc'
@@ -39,6 +39,24 @@ export class SeriesDataModel<Datum> extends CoreDataModel<Datum[]> {
     } else return extent(data, d => getValue(d, acs))
   }
 
+  getStackedValues (d: Datum, ...acs: NumericAccessor<Datum>[]): number[] {
+    const values = []
+    let positiveStack = 0
+    let negativeStack = 0
+    for (const a of acs as NumericAccessor<Datum>[]) {
+      const value = getValue(d, a) || 0
+      if (value >= 0) {
+        positiveStack += value
+        values.push(positiveStack)
+      } else {
+        negativeStack += value
+        values.push(negativeStack)
+      }
+    }
+
+    return values
+  }
+
   getExtent (acs: NumericAccessor<Datum> | NumericAccessor<Datum>[]): number[] {
     return [this.getMin(acs), this.getMax(acs)]
   }
@@ -59,5 +77,14 @@ export class SeriesDataModel<Datum> extends CoreDataModel<Datum[]> {
       const maxValue = max(data, d => max(acs as NumericAccessor<Datum>[], a => getValue(d, a)))
       return maxValue
     } else return max(data, d => getValue(d, acs))
+  }
+
+  getNearest (value: number, accessor: NumericAccessor<Datum>): Datum {
+    const { data } = this
+    if (data.length <= 1) return data[0]
+
+    const xBisector = bisector(d => getValue(d, accessor)).left
+    const index = xBisector(data, value, 1, data.length - 1)
+    return value - getValue(data[index - 1], accessor) > getValue(data[index], accessor) - value ? data[index] : data[index - 1]
   }
 }

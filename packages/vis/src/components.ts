@@ -6,6 +6,7 @@ import { Axis } from './components/axis'
 import { Scatter } from './components/scatter'
 import { Brush } from './components/brush'
 import { BulletLegend } from './components/bullet-legend'
+import { Crosshair } from './components/crosshair'
 
 import { LineConfigInterface } from './components/line/config'
 import { StackedBarConfigInterface } from './components/stacked-bar/config'
@@ -14,6 +15,7 @@ import { TooltipConfigInterface } from './core/tooltip/config'
 import { BrushConfigInterface } from './components/brush/config'
 import { AxisConfigInterface } from './components/axis/config'
 import { BulletLegendConfigInterface } from './components/bullet-legend/config'
+import { CrosshairConfigInterface } from './components/crosshair/config'
 
 import './styles/css-variables'
 
@@ -32,4 +34,6 @@ export {
   AxisConfigInterface,
   BulletLegend,
   BulletLegendConfigInterface,
+  Crosshair,
+  CrosshairConfigInterface,
 }
