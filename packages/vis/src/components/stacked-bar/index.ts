@@ -10,6 +10,7 @@ import { XYComponentCore } from 'core/xy-component'
 import { getValue, isNumber, isArray, isEmpty } from 'utils/data'
 import { roundedRectPath } from 'utils/path'
 import { smartTransition } from 'utils/d3'
+import { getColor } from 'utils/color'
 
 // Types
 import { NumericAccessor } from 'types/misc'
@@ -23,6 +24,7 @@ import * as s from './style'
 export class StackedBar<Datum> extends XYComponentCore<Datum> {
   static selectors = s
   config: StackedBarConfig<Datum> = new StackedBarConfig()
+  stacked = true
   // linePath: Selection<SVGGElement, object[], SVGGElement, object[]>
   events = {
     [StackedBar.selectors.bar]: {
@@ -144,7 +146,7 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
           id: `${accessor?.toString()} ${id || index}`,
           ...size,
           ...{
-            color: this.getColor(d, config.color, i),
+            color: getColor(d, config.color, i),
             data: d,
           },
         }
