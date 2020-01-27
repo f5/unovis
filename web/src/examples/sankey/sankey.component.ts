@@ -8,6 +8,7 @@ import { Sankey, SankeyConfigInterface } from '@volterra/vis/components'
 
 import sankeyData from './data/test.json'
 
+
 @Component({
   selector: 'sankey',
   templateUrl: './sankey.component.html',
@@ -24,16 +25,16 @@ export class SankeyComponent implements OnInit, AfterViewInit {
     left: 40,
     right: 40,
   }
-  sankeyChartConfig: SankeyConfigInterface
+  singleChartConfig: any
   @ViewChild('sankeychart', { static: false }) sankeyChart: ElementRef
 
   ngAfterViewInit (): void {
-    const sankeyConfig = getSankeyConfig()
-    this.sankeyChartConfig = {
+    const sankeyConfig: SankeyConfigInterface = getSankeyConfig()
+    this.singleChartConfig = {
       margin: this.margin,
       component: new Sankey(sankeyConfig),
     }
-    const sankeyChart = new SingleChart(this.sankeyChart.nativeElement, this.sankeyChartConfig, this.data)
+    new SingleChart(this.sankeyChart.nativeElement, this.singleChartConfig, this.data)
   }
 
   ngOnInit (): void {
@@ -43,9 +44,7 @@ export class SankeyComponent implements OnInit, AfterViewInit {
 
 function getSankeyConfig () {
   return {
-    accessor: {
-      nodeLabel: 'label',
-      linkWidth: 'width',
-    },
+    nodeLabel: d => d.label,
+    linkWidth: d => d.width,
   }
 }

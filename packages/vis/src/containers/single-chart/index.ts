@@ -86,7 +86,7 @@ export class SingleChart<Datum> extends ContainerCore {
     component.config.width = this.width
     component.config.height = this.height
 
-    Object.keys(component.config.scales || []).forEach(key => {
+    Object.keys(component.config.scales || {}).forEach(key => {
       component.updateScale?.(key, dimensions[key] ?? {}, padding)
     })
   }

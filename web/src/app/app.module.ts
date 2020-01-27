@@ -12,7 +12,7 @@ import { TimelineComponent } from 'examples/timeline/timeline.component'
 
 import { AppComponent } from './app.component'
 import { BulletLegendComponent } from './components/bullet-legend/bullet-legend.component'
-import { SankeyLegendComponent } from './components/sankey-legend/sankey-legend.component'
+import { FlowLegendComponent } from './components/flow-legend/flow-legend.component'
 import { XYChartComponent } from './components/xychart/xychart.component'
 
 const appRoutes: Routes = [
@@ -29,8 +29,8 @@ const appRoutes: Routes = [
     SingleComponent,
     CompositeComponent,
     BulletLegendComponent,
+    FlowLegendComponent,
     SankeyComponent,
-    SankeyLegendComponent,
     XYChartComponent,
     WrapperUsageExampleComponent,
     TimelineComponent,

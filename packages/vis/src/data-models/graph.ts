@@ -17,7 +17,7 @@ export class GraphDataModel<NodeDatum, LinkDatum> extends CoreDataModel<{nodes: 
     if (!inputData) return
     const prevData = this.data
 
-    const { nodes, links } = cloneDeep(inputData)
+    const { nodes, links }: {nodes: NodeDatum[]; links: LinkDatum[]} = cloneDeep(inputData)
 
     // Every node or link can have a private state used for rendering needs
     // On data update we transfer state between objects with same ids

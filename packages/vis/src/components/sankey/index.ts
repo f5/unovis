@@ -6,25 +6,24 @@ import { sankey } from 'd3-sankey'
 import { ComponentCore } from 'core/component'
 import { GraphDataModel } from 'data-models/graph'
 
-// Types
-
 // Utils
 import { getValue } from 'utils/data'
 
 // Config
 import { SankeyConfig, SankeyConfigInterface } from './config'
 
-// Modules
-
 // Styles
 import * as s from './style'
+
+// Modules
 import { removeLinks, createLinks, updateLinks } from './modules/link'
 import { removeNodes, createNodes, updateNodes, onNodeMouseOver, onNodeMouseOut } from './modules/node'
+import { SankeyNodeDatumInterface, SankeyLinkDatumInterface } from './modules/types'
 
-export class Sankey<Datum> extends ComponentCore<Datum> {
+export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> extends ComponentCore<{nodes: N[]; links: L[]}> {
   static selectors = s
   config: SankeyConfig = new SankeyConfig()
-  datamodel: GraphDataModel<[], []> = new GraphDataModel()
+  datamodel: GraphDataModel<N, L> = new GraphDataModel()
   private _linksGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
   private _nodesGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
   private _sankey = sankey()
@@ -68,7 +67,7 @@ export class Sankey<Datum> extends ComponentCore<Datum> {
     const links = this.datamodel.links
     links.forEach(link => {
       // For d3 sankey function each link must be an object with the `value` propertie
-      link.value = getValue(link, d => d[config.accessor.linkFlow])
+      link.value = getValue(link, d => getValue(d, config.linkFlow))
     })
 
     this._sankey

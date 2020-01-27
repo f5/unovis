@@ -25,7 +25,7 @@ export function getWrapOption (config, trimText = true): WrapTextOptions {
 }
 
 export function createNodes (sel, config): void {
-  sel.append('rect').style('fill', node => getColor(node, d => d[config.accessor.nodeColor], '-sankey-node'))
+  sel.append('rect').style('fill', node => getColor(node, config.nodeColor, '-sankey-node'))
   sel.append('text').attr('class', s.nodeLabel)
   sel.append('text').attr('class', s.nodeIcon)
     .attr('text-anchor', 'middle')
@@ -39,12 +39,12 @@ export function updateNodes (sel, config, sankey): void {
     .attr('height', d => d.y1 - d.y0)
 
   sel.select(`.${s.nodeLabel}`)
+    .classed('visible', d => d.y1 - d.y0 > 10 || config.showLabels)
     .attr('x', -5)
     .attr('y', d => (d.y1 - d.y0) / 2)
     .attr('dy', '0.32em')
     .attr('text-anchor', 'end')
-    .text(d => d[config.accessor.nodeLabel])
-    .classed('visible', d => d.y1 - d.y0 > 10 || config.showLabels)
+    .text(config.nodeLabel)
     .filter(d => d.x0 > config.width / 2)
     .attr('x', 5 + sankey.nodeWidth())
     .attr('text-anchor', 'start')
@@ -56,8 +56,8 @@ export function updateNodes (sel, config, sankey): void {
     .attr('x', sankey.nodeWidth() / 2)
     .attr('y', d => (d.y1 - d.y0) / 2)
     .attr('text-anchor', 'middle')
-    .style('stroke', node => getColor(node, d => d[config.accessor.iconColor], '-sankey-icon'))
-    .html(d => d[config.accessor.nodeIcon])
+    .style('stroke', node => getColor(node, config.iconColor, '-sankey-icon'))
+    .html(config.nodeIcon)
 }
 
 export function removeNodes (sel): void {
@@ -67,22 +67,22 @@ export function removeNodes (sel): void {
 export function onNodeMouseOver (sel, config): void {
   sel.select('rect')
     .style('fill', node => {
-      const c = getColor(node, d => d[config.accessor.nodeColor], '-sankey-node-hover')
+      const c = getColor(node, config.nodeColor, '-sankey-node-hover')
       const fillColor = color(c)
       if (fillColor) return fillColor.darker(0.5)
       return c
     })
   sel.select(`.${s.nodeLabel}`)
     .classed('visible', true)
-    .text(d => d[config.accessor.nodeLabel])
+    .text(config.nodeLabel)
     .call(wrapTextElement, getWrapOption(config, false))
 }
 
 export function onNodeMouseOut (sel, config): void {
   sel.select('rect')
-    .style('fill', node => getColor(node, d => d[config.accessor.nodeColor], '-sankey-node'))
+    .style('fill', node => getColor(node, config.nodeColor, '-sankey-node'))
   sel.select(`.${s.nodeLabel}`)
     .classed('visible', d => d.y1 - d.y0 > 10 || config.showLabels)
-    .text(d => d[config.accessor.nodeLabel])
+    .text(config.nodeLabel)
     .call(wrapTextElement, getWrapOption(config))
 }

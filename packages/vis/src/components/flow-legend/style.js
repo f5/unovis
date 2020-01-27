@@ -1,26 +1,31 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { css } from 'emotion'
-import 'styles/component-css-variables/sankey'
+import { css, injectGlobal } from 'emotion'
 
+export const global = injectGlobal`
+  :root {
+    --flow-label-color: #2a2a2a;
+    --flow-link-color: #E5E9F7;
+  }
+`
 export const container = css`
-  label: sankey-label;
+  label: flow-label;
 
   position: relative;
   user-select: none;
 `
 
-export const line = css`
+export const line = ({ lineColor }) => css`
   label: line;
 
   height: 2px;
   width: 100%;
-  background-color: var(--sankey-link-color);
+  background-color: ${lineColor || 'var(--flow-link-color)'};
   position: absolute;
   top: 50%;
 `
 
-export const items = css`
-  label: items;
+export const labels = css`
+  label: labels;
 
   position: relative;
   width: 100%;
@@ -45,17 +50,20 @@ export const item = css`
   }
 `
 
-export const label = css`
+export const label = ({ labelFontSize, labelColor }) => css`
   label: label;
 
+  font-size: ${labelFontSize}px;
+  color: ${labelColor || 'var(--flow-label-color)'};
   display: inline-table;
   max-width: 50px;
   text-align: center;
 `
 
-export const arrow = css`
+export const arrow = ({ lineColor }) => css`
   label: arrow;
 
-  font-size: 12px;
-  color: var(--sankey-link-color);
+  font-size: 10px;
+  vertical-align: middle;
+  color: ${lineColor || 'var(--flow-link-color)'};
 `
