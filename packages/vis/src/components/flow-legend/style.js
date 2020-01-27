@@ -37,26 +37,22 @@ export const labels = css`
 export const item = css`
   label: item;
 
-  display: inline;
-  background-color: white;
+  position: relative;
+  max-width: 50px;
 
   padding: 10px;
-  &:first-child {
-    padding-left: 0px;
-  }
-
-  &:last-child {
-    padding-right: 0px;
-  }
 `
 
 export const label = ({ labelFontSize, labelColor }) => css`
   label: label;
 
+  position: absolute;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 5px;
   font-size: ${labelFontSize}px;
   color: ${labelColor || 'var(--flow-label-color)'};
   display: inline-table;
-  max-width: 50px;
   text-align: center;
 `
 
