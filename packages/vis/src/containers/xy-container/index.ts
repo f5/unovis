@@ -27,6 +27,7 @@ import { guid } from 'utils/misc'
 // Config
 import { XYContainerConfig, XYContainerConfigInterface } from './config'
 import {
+  AxisConfigInterface,
   BrushConfigInterface,
   LineConfigInterface,
   ScatterConfigInterface,
@@ -38,7 +39,6 @@ type XYConfigInterface<Datum> = XYComponentConfigInterface<Datum>
   | LineConfigInterface<Datum>
   | ScatterConfigInterface<Datum>
   | BrushConfigInterface<Datum>
-  | ScatterConfigInterface<Datum>
 
 export class XYContainer<Datum> extends ContainerCore {
   config: XYContainerConfig<Datum> = new XYContainerConfig()
@@ -135,6 +135,15 @@ export class XYContainer<Datum> extends ContainerCore {
     })
 
     if (!preventRender) this.render()
+  }
+
+  updateAxis (axisConfig: {[k: string]: AxisConfigInterface<Datum>}) {
+    Object.keys(this.config.axes).forEach((key) => {
+      const axis: Axis<Datum> = this.config.axes[key]
+      if (axisConfig[key]) {
+        axis.setConfig({ ...axisConfig[key], type: key })
+      }
+    })
   }
 
   update (containerConfig: XYContainerConfigInterface<Datum>, componentConfigs?: XYComponentConfigInterface<Datum>[], data?: any): void {
