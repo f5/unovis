@@ -22,7 +22,7 @@ import { SankeyNodeDatumInterface, SankeyLinkDatumInterface } from './modules/ty
 
 export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> extends ComponentCore<{nodes: N[]; links: L[]}> {
   static selectors = s
-  config: SankeyConfig = new SankeyConfig()
+  config: SankeyConfig<N, L> = new SankeyConfig()
   datamodel: GraphDataModel<N, L> = new GraphDataModel()
   private _linksGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
   private _nodesGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
@@ -34,7 +34,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
     },
   }
 
-  constructor (config?: SankeyConfigInterface) {
+  constructor (config?: SankeyConfigInterface<N, L>) {
     super()
     if (config) this.config.init(config)
     this._linksGroup = this.g.append('g').attr('class', s.links)
@@ -46,6 +46,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
     const nodes = this.datamodel.nodes
     const links = this.datamodel.links
     if (!((links.length > 0 && nodes.length > 1) || (links.length > 0 && nodes.length > 0 && this.config.showSingleNode))) return
+
     // Links
     const svgLinks = this._linksGroup.selectAll(`.${s.link}`).data(links)
     svgLinks.call(removeLinks)
@@ -66,7 +67,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
     const nodes = this.datamodel.nodes
     const links = this.datamodel.links
     links.forEach(link => {
-      // For d3 sankey function each link must be an object with the `value` propertie
+      // For d3 sankey function each link must be an object with the `value` property
       link.value = getValue(link, d => getValue(d, config.linkFlow))
     })
 

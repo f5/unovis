@@ -5,6 +5,6 @@ export type NodeDatumCore = {
 }
 
 export type LinkDatumCore = {
-  source: number | NodeDatumCore;
-  target: number | NodeDatumCore;
+  source: number | string | NodeDatumCore;
+  target: number | string | NodeDatumCore;
 }

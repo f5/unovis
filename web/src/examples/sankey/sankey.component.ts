@@ -9,6 +9,20 @@ import { Sankey, SankeyConfigInterface } from '@volterra/vis/components'
 import sankeyData from './data/test.json'
 
 
+interface SankeyNodeDatum {
+  id: string,
+  type: string,
+  label: string,
+  labelLength: number,
+  labelTrim: string,
+}
+
+interface SankeyLinkDatum {
+  source: string,
+  target: string,
+  flow: number,
+}
+
 @Component({
   selector: 'sankey',
   templateUrl: './sankey.component.html',
@@ -29,7 +43,7 @@ export class SankeyComponent implements OnInit, AfterViewInit {
   @ViewChild('sankeychart', { static: false }) sankeyChart: ElementRef
 
   ngAfterViewInit (): void {
-    const sankeyConfig: SankeyConfigInterface = getSankeyConfig()
+    const sankeyConfig: SankeyConfigInterface<SankeyNodeDatum, SankeyLinkDatum> = getSankeyConfig()
     this.singleChartConfig = {
       margin: this.margin,
       component: new Sankey(sankeyConfig),

@@ -1,6 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { select } from 'd3-selection'
-import { color } from 'd3-color'
 
 // Utils
 import { wrapTextElement } from 'utils/text'
@@ -8,6 +7,10 @@ import { getColor } from 'utils/color'
 
 // Types
 import { WrapTextOptions } from 'types/text'
+import { SankeyNodeDatumInterface, SankeyLinkDatumInterface } from './types'
+
+// Config
+import { SankeyConfig } from '../config'
 
 // Styles
 import * as s from '../style'
@@ -24,16 +27,18 @@ export function getWrapOption (config, trimText = true): WrapTextOptions {
   }
 }
 
-export function createNodes (sel, config): void {
-  sel.append('rect').style('fill', node => getColor(node, config.nodeColor, '-sankey-node'))
+export function createNodes<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> (sel, config: SankeyConfig<N, L>): void {
+  sel.append('rect')
+    .style('fill', node => getColor(node, config.nodeColor))
+
   sel.append('text').attr('class', s.nodeLabel)
   sel.append('text').attr('class', s.nodeIcon)
     .attr('text-anchor', 'middle')
     .attr('dy', '2px')
 }
 
-export function updateNodes (sel, config, sankey): void {
-  sel.attr('transform', d => 'translate(' + d.x0 + ',' + d.y0 + ')')
+export function updateNodes<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> (sel, config: SankeyConfig<N, L>, sankey): void {
+  sel.attr('transform', d => `translate(${d.x0},${d.y0})`)
   sel.select('rect')
     .attr('width', sankey.nodeWidth())
     .attr('height', d => d.y1 - d.y0)
@@ -56,7 +61,8 @@ export function updateNodes (sel, config, sankey): void {
     .attr('x', sankey.nodeWidth() / 2)
     .attr('y', d => (d.y1 - d.y0) / 2)
     .attr('text-anchor', 'middle')
-    .style('stroke', node => getColor(node, config.iconColor, '-sankey-icon'))
+    .attr('alignment-baseline', 'middle')
+    .style('stroke', node => getColor(node, config.iconColor))
     .html(config.nodeIcon)
 }
 
@@ -64,23 +70,14 @@ export function removeNodes (sel): void {
   sel.exit().remove()
 }
 
-export function onNodeMouseOver (sel, config): void {
-  sel.select('rect')
-    .style('fill', node => {
-      const c = getColor(node, config.nodeColor, '-sankey-node-hover')
-      const fillColor = color(c)
-      if (fillColor) return fillColor.darker(0.5)
-      return c
-    })
+export function onNodeMouseOver<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> (sel, config: SankeyConfig<N, L>): void {
   sel.select(`.${s.nodeLabel}`)
     .classed('visible', true)
     .text(config.nodeLabel)
     .call(wrapTextElement, getWrapOption(config, false))
 }
 
-export function onNodeMouseOut (sel, config): void {
-  sel.select('rect')
-    .style('fill', node => getColor(node, config.nodeColor, '-sankey-node'))
+export function onNodeMouseOut<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> (sel, config: SankeyConfig<N, L>): void {
   sel.select(`.${s.nodeLabel}`)
     .classed('visible', d => d.y1 - d.y0 > 10 || config.showLabels)
     .text(config.nodeLabel)

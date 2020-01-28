@@ -3,19 +3,15 @@ import { css, injectGlobal } from 'emotion'
 
 export const variables = injectGlobal`
   :root {
-    --sankey-link-color: #d0e0ea;
-    --sankey-link-opacity: 0.9;
-    --sankey-link-hover-color: #76a1ba;
-    --vis-color-sankey-node: #2196f3;
-    --sankey-node-border-color: rgba(0, 0, 0, 0);
-    --sankey-node-border-width: 10px;
-    --vis-color-sankey-node-hover: rgba(0, 0, 0, 0.45);
-    --sankey-node-border-hover-color: rgba(0, 0 ,0, 0);
-    --sankey-node-label-size: 12px;
-    --sankey-node-label-color: #000000;
-    --sankey-node-icon-size: 22px;
-    --vis-color-sankey-icon: #ffffff;
-    --sankey-node-icon-font-family: FontAwesome;
+    --vis-sankey-link-color: #cad5f6;
+
+    --vis-sankey-node-color: #4e4dd1;
+    --vis-sankey-node-label-size: 12px;
+    --vis-sankey-node-label-color: #272c35;
+
+    --vis-sankey-icon-size: 22px;
+    --vis-sankey-icon-color: #ffffff;
+    --vis-sankey-icon-font-family: FontAwesome;
   }
 `
 
@@ -32,14 +28,14 @@ export const link = css`
 
   path {
     fill: none;
-    stroke: var(--sankey-link-color);
-    stroke-opacity: var(--sankey-link-opacity);
+    stroke: var(--vis-sankey-link-color);
+    stroke-opacity: 0.5;
     transition: .1s stroke;
   }
 
   &:hover {
     path {
-      stroke: var(--sankey-link-hover-color);
+      stroke-opacity: 1;
     }
   }
 `
@@ -61,13 +57,13 @@ export const node = css`
   label: node;
 
   rect {
-    stroke: var(--sankey-node-border-color);
-    stroke-width: var(--sankey-node-border-width);
+    fill: var(--vis-sankey-node-color);
+    opacity: 0.9;
   }
-
+  
   &:hover {
     rect {
-      stroke: var(--sankey-node-border-hover-color);
+      opacity: 1;
     }
   }
 `
@@ -75,8 +71,8 @@ export const node = css`
 export const nodeLabel = css`
   label: label;
 
-  font-size: var(--sankey-node-label-size);
-  fill: var(--sankey-node-label-color);
+  font-size: var(--vis-sankey-node-label-size);
+  fill: var(--vis-sankey-node-label-color);
   pointer-events: none;
   visibility: hidden;
 
@@ -88,11 +84,10 @@ export const nodeLabel = css`
 export const nodeIcon = css`
   label: icon;
 
-  font-family: var(--sankey-node-icon-font-family);
-  alignment-baseline: middle;
+  font-family: var(--vis-sankey-icon-font-family);
   text-anchor: middle;
-  font-size: var(--sankey-node-icon-size);
-  fill: var(--sankey-node-icon-color);
-  stroke: var(--sankey-node-color);
+  font-size: var(--vis-sankey-icon-size);
+  fill: var(--vis-sankey-node-icon-color);
+  stroke: var(--vis-sankey-node-color);
   stroke-opacity: 0.6;
 `
