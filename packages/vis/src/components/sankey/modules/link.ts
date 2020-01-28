@@ -2,7 +2,6 @@
 import { sankeyLinkHorizontal } from 'd3-sankey'
 
 // Utils
-import { getValue } from 'utils/data'
 import { getColor } from 'utils/color'
 
 // Types
@@ -22,12 +21,12 @@ export function createLinks (sel): void {
 export function updateLinks<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> (sel, config: SankeyConfig<N, L>): void {
   sel.select(`.${s.visibleLink}`)
     .attr('d', sankeyLinkHorizontal())
-    .style('stroke-width', link => Math.max(1, getValue(link, config.linkWidth)))
+    .style('stroke-width', link => Math.max(1, link.width))
     .style('stroke', node => getColor(node, config.linkColor))
 
   sel.select(`.${s.transparentLink}`)
     .attr('d', sankeyLinkHorizontal())
-    .style('stroke-width', link => Math.max(10, getValue(link, config.linkWidth)))
+    .style('stroke-width', link => Math.max(10, link.width))
 }
 
 export function removeLinks (sel): void {

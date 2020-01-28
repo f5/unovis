@@ -44,7 +44,7 @@ export function updateNodes<N extends SankeyNodeDatumInterface, L extends Sankey
     .attr('height', d => d.y1 - d.y0)
 
   sel.select(`.${s.nodeLabel}`)
-    .classed('visible', d => d.y1 - d.y0 > 10 || config.showLabels)
+    .classed('visible', d => d.y1 - d.y0 > 10 || config.forceShowLabels)
     .attr('x', -5)
     .attr('y', d => (d.y1 - d.y0) / 2)
     .attr('dy', '0.32em')
@@ -57,13 +57,20 @@ export function updateNodes<N extends SankeyNodeDatumInterface, L extends Sankey
     select(elements[i]).call(wrapTextElement, getWrapOption(config))
   })
 
-  sel.select(`.${s.nodeIcon}`)
-    .attr('x', sankey.nodeWidth() / 2)
-    .attr('y', d => (d.y1 - d.y0) / 2)
-    .attr('text-anchor', 'middle')
-    .attr('alignment-baseline', 'middle')
-    .style('stroke', node => getColor(node, config.iconColor))
-    .html(config.nodeIcon)
+  const nodeIcon = sel.select(`.${s.nodeIcon}`)
+  if (config.nodeIcon) {
+    nodeIcon
+      .attr('visibility', null)
+      .attr('x', sankey.nodeWidth() / 2)
+      .attr('y', d => (d.y1 - d.y0) / 2)
+      .attr('text-anchor', 'middle')
+      .attr('alignment-baseline', 'middle')
+      .style('stroke', node => getColor(node, config.iconColor))
+      .html(config.nodeIcon)
+  } else {
+    nodeIcon
+      .attr('visibility', 'hidden')
+  }
 }
 
 export function removeNodes (sel): void {
@@ -79,7 +86,7 @@ export function onNodeMouseOver<N extends SankeyNodeDatumInterface, L extends Sa
 
 export function onNodeMouseOut<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> (sel, config: SankeyConfig<N, L>): void {
   sel.select(`.${s.nodeLabel}`)
-    .classed('visible', d => d.y1 - d.y0 > 10 || config.showLabels)
+    .classed('visible', d => d.y1 - d.y0 > 10 || config.forceShowLabels)
     .text(config.nodeLabel)
     .call(wrapTextElement, getWrapOption(config))
 }

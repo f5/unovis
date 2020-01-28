@@ -14,49 +14,46 @@ export interface SankeyConfigInterface<N extends SankeyNodeDatumInterface, L ext
     nodeWidth?: number;
     /** Sankey vertical separation between nodes in pixels */
     nodePadding?: number;
-    /** Show or hide a single node */
+    /** Display the graph when data has just one element */
     showSingleNode?: boolean;
     /** Node color accessor function or value */
     linkColor?: StringAccessor<L>;
     /** Link flow accessor function or value */
-    linkFlow?: NumericAccessor<N>;
-    /** Link width accessor function or value */
-    linkWidth?: NumericAccessor<N>;
+    linkValue?: NumericAccessor<N>;
     /** Node label accessor function or value */
     nodeLabel?: StringAccessor<N>;
     /** Node icon accessor function or value */
     nodeIcon?: StringAccessor<N>;
     /** Node color accessor function or value */
-    nodeColor?: ColorAccessor<L>;
+    nodeColor?: ColorAccessor<N>;
     /** Icon color accessor function or value */
     iconColor?: ColorAccessor<N>;
-    /** Show or hide node labels */
-    showLabels?: boolean;
+    /** Display node labels even when there's not enough vertical space */
+    forceShowLabels?: boolean;
     /** Possible width to wrap label in pixels */
     labelWidth?: number;
-    /** Possible length to wrap label in characters */
+    /** Maximum label length (in number characters) for wrapping */
     labelLength?: number;
-    /** Type of trim label */
+    /** Label trimming mode */
     labelTrim?: TrimMode;
-    /** Label text separators */
+    /** Label text separators for wrapping. Default: [' ', '-'] */
     labelTextSeparator?: string[];
-    /** Force break words */
+    /** Force break words to fit long labels */
     labelForceWordBreak?: boolean;
 }
 
 export class SankeyConfig<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> extends ComponentConfig implements SankeyConfigInterface<N, L> {
-  nodeWidth = 15
+  nodeWidth = 25
   nodePadding = 2
-  showSingleNode = false
-  showLabels = false
+  showSingleNode = true
+  forceShowLabels = false
   labelTextSeparator = [' ', '-']
   labelTrim = TrimMode.END
   labelForceWordBreak = false
-  linkFlow = (d: N): number => d['flow']
-  linkColor = null
-  linkWidth = null
+  linkValue = (d: N): number => d['value']
+  linkColor = (d: L): string => d['color']
+  nodeColor = (d: N): string => d['color']
   nodeLabel = null
   nodeIcon = null
-  nodeColor = null
   iconColor = null
 }

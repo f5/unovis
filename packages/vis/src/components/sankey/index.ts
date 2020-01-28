@@ -68,7 +68,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
     const links = this.datamodel.links
     links.forEach(link => {
       // For d3 sankey function each link must be an object with the `value` property
-      link.value = getValue(link, d => getValue(d, config.linkFlow))
+      link.value = getValue(link, d => getValue(d, config.linkValue))
     })
 
     this._sankey

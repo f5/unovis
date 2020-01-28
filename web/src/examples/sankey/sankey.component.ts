@@ -59,6 +59,6 @@ export class SankeyComponent implements OnInit, AfterViewInit {
 function getSankeyConfig () {
   return {
     nodeLabel: d => d.label,
-    linkWidth: d => d.width,
+    linkValue: d => d.flow,
   }
 }
