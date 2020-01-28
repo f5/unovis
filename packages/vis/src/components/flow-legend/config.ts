@@ -17,7 +17,7 @@ export interface FlowLegendConfigInterface {
 
 export class FlowLegendConfig extends Config implements FlowLegendConfigInterface {
   items = []
-  labelFontSize = 14
+  labelFontSize = 12
   arrowSymbol = '▶'
   lineColor = undefined
   labelColor = undefined

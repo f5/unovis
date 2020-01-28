@@ -38,14 +38,14 @@ export class FlowLegend {
     const { config: { items, lineColor, labelFontSize, labelColor, arrowSymbol } } = this
     if (!items.length) return
 
-    this.line.attr('class', s.line({ lineColor }))
-
+    // Prepare Data
     const legendData = items.reduce((acc, curr) => {
       acc.push(curr)
       if (arrowSymbol && acc.length !== items.length * 2 - 1) acc.push(arrowSymbol)
       return acc
     }, [])
 
+    // Draw
     const legendItems = this.labels.selectAll(`.${s.item}`)
       .data(legendData) as Selection<HTMLDivElement, any, HTMLDivElement, any>
 
@@ -57,9 +57,10 @@ export class FlowLegend {
       .attr('class', (d, i) => arrowSymbol && i % 2 ? s.arrow({ lineColor }) : s.label({ labelFontSize, labelColor }))
 
     const legendItemsMerged = legendItemsEnter.merge(legendItems)
-
     legendItemsMerged.select('span').text(d => d)
 
     legendItems.exit().remove()
+
+    this.line.attr('class', s.line({ lineColor }))
   }
 }

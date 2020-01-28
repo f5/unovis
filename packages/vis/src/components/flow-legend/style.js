@@ -3,8 +3,8 @@ import { css, injectGlobal } from 'emotion'
 
 export const global = injectGlobal`
   :root {
-    --flow-label-color: #2a2a2a;
-    --flow-link-color: #E5E9F7;
+    --vis-flow-legend-label-color: #71788a;
+    --vis-flow-legend-link-color: #E5E9F7;
   }
 `
 export const container = css`
@@ -19,7 +19,7 @@ export const line = ({ lineColor }) => css`
 
   height: 2px;
   width: 100%;
-  background-color: ${lineColor || 'var(--flow-link-color)'};
+  background-color: ${lineColor || 'var(--vis-flow-legend-link-color)'};
   position: absolute;
   top: 50%;
 `
@@ -49,9 +49,9 @@ export const label = ({ labelFontSize, labelColor }) => css`
   position: absolute;
   transform: translate(-50%, -50%);
   background-color: white;
-  padding: 5px;
+  padding: 5px 15px;
   font-size: ${labelFontSize}px;
-  color: ${labelColor || 'var(--flow-label-color)'};
+  color: ${labelColor || 'var(--vis-flow-legend-label-color)'};
   display: inline-table;
   text-align: center;
 `
@@ -59,7 +59,7 @@ export const label = ({ labelFontSize, labelColor }) => css`
 export const arrow = ({ lineColor }) => css`
   label: arrow;
 
-  font-size: 10px;
+  font-size: 9px;
   vertical-align: middle;
-  color: ${lineColor || 'var(--flow-link-color)'};
+  color: ${lineColor || 'var(--vis-flow-legend-link-color)'};
 `
