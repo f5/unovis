@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { Component, ViewChild, ElementRef, OnInit, AfterViewInit, Input } from '@angular/core'
+import { Component, ViewChild, ElementRef, AfterViewInit, Input } from '@angular/core'
 
 // Vis
 import { FlowLegend } from '@volterra/vis/components'
@@ -9,19 +9,13 @@ import { FlowLegend } from '@volterra/vis/components'
   templateUrl: './flow-legend.component.html',
   styleUrls: ['./flow-legend.component.css'],
 })
-export class FlowLegendComponent implements OnInit, AfterViewInit {
+export class FlowLegendComponent implements AfterViewInit {
   @ViewChild('legend', { static: false }) legendRef: ElementRef
   @Input() items: any[] = [];
   @Input() margin: { left?: number; right?: number } = { };
 
   legend = null
   config: { items?: any[] } = {}
-
-  constructor () {
-  }
-
-  ngOnInit () {
-  }
 
   ngAfterViewInit (): void {
     this.config = {

@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { Component, ViewChild, EventEmitter, ElementRef, OnInit, AfterViewInit, Input, Output } from '@angular/core'
+import { Component, ViewChild, EventEmitter, ElementRef, AfterViewInit, Input, Output } from '@angular/core'
 
 // Vis
 import { BulletLegend } from '@volterra/vis/components'
@@ -9,19 +9,13 @@ import { BulletLegend } from '@volterra/vis/components'
   templateUrl: './bullet-legend.component.html',
   styleUrls: ['./bullet-legend.component.css'],
 })
-export class BulletLegendComponent implements OnInit, AfterViewInit {
+export class BulletLegendComponent implements AfterViewInit {
   @ViewChild('legend', { static: false }) legendRef: ElementRef
   @Input() items: any[] = [];
   @Output() itemClick = new EventEmitter()
 
   legend = null
   config: { items?: any[]; onLegendItemClick?: any } = {}
-
-  constructor () {
-  }
-
-  ngOnInit () {
-  }
 
   ngAfterViewInit (): void {
     this.config = {
