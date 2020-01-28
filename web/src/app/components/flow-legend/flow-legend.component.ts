@@ -30,7 +30,7 @@ export class FlowLegendComponent implements AfterViewInit {
     this.legend?.update(this.config)
   }
 
-  getMargin () {
+  getMargin (): string {
     const { margin: { left, right } } = this
     return `0px ${right}px 0px ${left}px`
   }

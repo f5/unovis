@@ -13,7 +13,7 @@ import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
 
 // Types
-import { NumericAccessor } from 'types/misc'
+import { NumericAccessor, Margin } from 'types/misc'
 
 // Config
 import { StackedBarConfig, StackedBarConfigInterface } from './config'
@@ -43,7 +43,7 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
   //   super.setData(data)
   // }
 
-  get bleed (): { top: number; bottom: number; left: number; right: number } {
+  get bleed (): Margin {
     const barWidth = this._getBarWidth()
     return { top: 0, bottom: 0, left: barWidth / 2, right: barWidth / 2 }
   }

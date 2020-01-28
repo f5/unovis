@@ -8,6 +8,7 @@ import { getValue, isNumber, isEmpty } from 'utils/data'
 import { getColor } from 'utils/color'
 
 // Types
+import { Margin } from 'types/misc'
 
 // Config
 import { ScatterConfig, ScatterConfigInterface } from './config'
@@ -34,7 +35,7 @@ export class Scatter<Datum> extends XYComponentCore<Datum> {
     if (config) this.setConfig(config)
   }
 
-  get bleed (): { top: number; bottom: number; left: number; right: number } {
+  get bleed (): Margin {
     const maxR = 2 * this._getMaxPointRadius() // We increase the max radius because the D3 Symbol size is not strictly set
     return { top: maxR, bottom: maxR, left: maxR, right: maxR }
   }

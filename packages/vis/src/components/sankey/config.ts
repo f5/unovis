@@ -56,4 +56,5 @@ export class SankeyConfig<N extends SankeyNodeDatumInterface, L extends SankeyLi
   nodeLabel = null
   nodeIcon = null
   iconColor = null
+  labelWidth = null
 }

@@ -50,7 +50,7 @@ export function updateNodes<N extends SankeyNodeDatumInterface, L extends Sankey
     .attr('dy', '0.32em')
     .attr('text-anchor', 'end')
     .text(config.nodeLabel)
-    .filter(d => d.x0 > config.width / 2)
+    .filter(d => d.x0 > sankey.size()[0] / 2)
     .attr('x', 5 + sankey.nodeWidth())
     .attr('text-anchor', 'start')
   sel.select(`.${s.nodeLabel}`).each((d, i, elements) => {

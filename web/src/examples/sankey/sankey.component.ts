@@ -35,17 +35,12 @@ export class SankeyComponent implements OnInit, AfterViewInit {
   data: any
   config: any
   legendItems: string[] = ['port', 'ip', 'vn', 'vn', 'ip', 'port']
-  margin: {} = {
-    left: 40,
-    right: 40,
-  }
   singleChartConfig: any
   @ViewChild('sankeychart', { static: false }) sankeyChart: ElementRef
 
   ngAfterViewInit (): void {
     const sankeyConfig: SankeyConfigInterface<SankeyNodeDatum, SankeyLinkDatum> = getSankeyConfig()
     this.singleChartConfig = {
-      margin: this.margin,
       component: new Sankey(sankeyConfig),
     }
     new SingleChart(this.sankeyChart.nativeElement, this.singleChartConfig, this.data)
@@ -53,6 +48,14 @@ export class SankeyComponent implements OnInit, AfterViewInit {
 
   ngOnInit (): void {
     this.data = sankeyData
+  }
+
+  getFlowMargin () : {} {
+    const sankeyBleed = this.singleChartConfig?.component.bleed    
+    return {
+      left: sankeyBleed?.left || 0,
+      right: sankeyBleed?.right || 0,
+    }
   }
 }
 

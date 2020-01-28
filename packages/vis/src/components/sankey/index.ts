@@ -6,8 +6,11 @@ import { sankey } from 'd3-sankey'
 import { ComponentCore } from 'core/component'
 import { GraphDataModel } from 'data-models/graph'
 
+// Types
+import { Margin } from 'types/misc'
+
 // Utils
-import { getValue } from 'utils/data'
+import { getValue, isNumber } from 'utils/data'
 
 // Config
 import { SankeyConfig, SankeyConfigInterface } from './config'
@@ -41,6 +44,14 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
     this._nodesGroup = this.g.append('g').attr('class', s.nodes)
   }
 
+  get bleed (): Margin {
+    const { config: { labelWidth } } = this
+    const sideBleed = isNumber(labelWidth) ? labelWidth : 70
+    const fontSizeCss = getComputedStyle(document.documentElement).getPropertyValue('--vis-sankey-node-label-size')
+    const fontSizePixel = +fontSizeCss.substr(0, fontSizeCss.length - 2)
+    return { top: fontSizePixel / 2, bottom: fontSizePixel / 2, left: sideBleed, right: sideBleed }
+  }
+
   _render (customDuration?: number): void {
     this._prepareLayout()
     const nodes = this.datamodel.nodes
@@ -48,6 +59,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
     if (!((links.length > 0 && nodes.length > 1) || (links.length > 0 && nodes.length > 0 && this.config.showSingleNode))) return
 
     // Links
+    this._linksGroup.attr('transform', `translate(${this.bleed.left},${this.bleed.top})`)
     const svgLinks = this._linksGroup.selectAll(`.${s.link}`).data(links)
     svgLinks.call(removeLinks)
     const linkGrpoupEnter = svgLinks.enter().append('g').attr('class', s.link)
@@ -55,6 +67,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
     svgLinks.merge(linkGrpoupEnter).call(updateLinks, this.config)
 
     // Nodes
+    this._nodesGroup.attr('transform', `translate(${this.bleed.left},${this.bleed.top})`)
     const svgNodes = this._nodesGroup.selectAll(`.${s.node}`).data(nodes)
     svgNodes.call(removeNodes)
     const svgNodesEnter = svgNodes.enter().append('g').attr('class', s.node)
@@ -63,7 +76,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
   }
 
   _prepareLayout (): void {
-    const { config } = this
+    const { config, bleed } = this
     const nodes = this.datamodel.nodes
     const links = this.datamodel.links
     links.forEach(link => {
@@ -90,7 +103,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
       })
       .nodeWidth(config.nodeWidth)
       .nodePadding(config.nodePadding)
-      .size([config.width, config.height])
+      .size([config.width - bleed.left - bleed.right, config.height - bleed.top - bleed.bottom])
       .nodeId(d => d.id)
       .iterations(32)
 
