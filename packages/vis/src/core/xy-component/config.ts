@@ -38,8 +38,9 @@ export class XYComponentConfig<Datum> extends ComponentConfig implements XYCompo
   // eslint-disable-next-line dot-notation
   y: NumericAccessor<Datum> = d => d['y'];
   // eslint-disable-next-line dot-notation
-  id = (d: Datum): string => d['id']
-  color = null
+  id = (d: Datum, i: number): string => d['id'] ?? i
+  // eslint-disable-next-line dot-notation
+  color = (d: Datum): string => d['color']
   colorType = ColorType.Static
   // scales.xType = ScaleType.Linear
   // scales.yType = ScaleType.Linear

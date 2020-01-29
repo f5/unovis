@@ -1,9 +1,20 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 
-import { css } from 'emotion'
+import { css, injectGlobal } from 'emotion'
+
+export const global = injectGlobal`
+  :root {
+    --vis-axis-tick-color: #767d89;
+    --vis-axis-label-color: #575c65;
+  }
+`
 
 export const axis = css`
   user-select: none;
+
+  .domain {
+    stroke: var(--vis-axis-tick-color);
+  }
 
   &.hide-grid-line {
     .domain {
@@ -21,10 +32,16 @@ export const axis = css`
 export const tick = css`
   label: tick;
   stroke: none;
-  fill: var(--vis-color-gray);
+  font-size: 11px;
+
+  line {
+    stroke: var(--vis-axis-tick-color);
+  }
 
   text {
     visibility: hidden;
+    fill: var(--vis-axis-tick-color);
+    stroke: none;
 
     &.active {
       visibility: visible;
@@ -34,7 +51,7 @@ export const tick = css`
 
 export const label = css`
   label: label;
-  fill: var(--vis-color-gray);
+  fill: var(--vis-axis-label-color);
   text-anchor: middle;
 
   &.right {
