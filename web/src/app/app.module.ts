@@ -7,6 +7,7 @@ import { RouterModule, Routes } from '@angular/router'
 import { SingleComponent } from 'examples/single/single.component'
 import { CompositeComponent } from 'examples/composite/composite.component'
 import { WrapperUsageExampleComponent } from 'examples/wrapper-usage-example/wrapper-usage-example.component'
+import { TimelineComponent } from 'examples/timeline/timeline.component'
 
 import { AppComponent } from './app.component'
 import { BulletLegendComponent } from './components/bullet-legend/bullet-legend.component'
@@ -16,6 +17,7 @@ const appRoutes: Routes = [
   { path: 'single', component: SingleComponent },
   { path: 'composite', component: CompositeComponent },
   { path: 'wrapper-usage-example', component: WrapperUsageExampleComponent },
+  { path: 'timeline', component: TimelineComponent },
 ]
 
 @NgModule({
@@ -26,6 +28,7 @@ const appRoutes: Routes = [
     BulletLegendComponent,
     XYChartComponent,
     WrapperUsageExampleComponent,
+    TimelineComponent,
   ],
 
   imports: [

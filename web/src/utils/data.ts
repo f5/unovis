@@ -1,6 +1,7 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import _times from 'lodash/times'
 import _uniqueId from 'lodash/uniqueId'
+import _sample from 'lodash/sample'
 
 export interface SampleDatum {
   id: string;
@@ -21,5 +22,22 @@ export function sampleSeriesData (n: number): SampleDatum[] {
     y2: Math.random(),
     y3: Math.random(),
     y4: Math.random(),
+  }))
+}
+
+export interface SampleTimelineDatum {
+  id?: string;
+  time: number;
+  duration: number;
+  color: string;
+}
+
+export function sampleTimelineData (n: number): SampleTimelineDatum[] {
+  const colors = ['#e65239', '#f7c44e', '#8bb2f7']
+  return _times(n).map((i) => ({
+    // id: _uniqueId(),
+    time: Date.now() - Math.round((1000 * 60 * 60 * 24) * Math.random()),
+    duration: Math.round((1000 * 60 * 60 * 4) * Math.random()),
+    color: _sample(colors),
   }))
 }
