@@ -27,7 +27,7 @@ RUN rm -rf ~/.ssh
 ##################
 # Stage 2 - host #
 ##################
-FROM nginx:1.17.8-alpine as webserver
+FROM nginx:1.17.8-alpine
 
 # Clean default static site
 RUN rm -rf /usr/share/nginx/html/*

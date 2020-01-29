@@ -4,7 +4,7 @@ metadata:
   name: {{ default "vis" .vis_app_name }}
   namespace: {{ if .vis_namespace }}{{ .vis_namespace }}{{ else }}{{ if .namespace }}{{ .namespace }}{{ else }}vis{{ end }}{{ end }}
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: vis
   ports:
