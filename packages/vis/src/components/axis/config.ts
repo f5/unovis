@@ -25,6 +25,8 @@ export interface AxisConfigInterface<Datum> extends XYComponentConfigInterface<D
     tickFormat?: (d: number) => string;
     /** Explicitly set tick values */
     tickValues?: number[];
+    /** Approximate number of axis ticks */
+    numTicks?: number;
     /** Always draw all axis ticks */
     showAllTicks?: boolean;
     /**  */
@@ -51,6 +53,7 @@ export class AxisConfig<Datum> extends XYComponentConfig<Datum> implements AxisC
   label = undefined
   gridLine = true
   tickLine = true
+  numTicks = undefined;
   minMaxTicksOnly = false
   showAllTicks = false
   tickTextLength = undefined
