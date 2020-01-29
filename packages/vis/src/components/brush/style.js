@@ -16,6 +16,12 @@ export const brush = css`
   .handle {
     fill: var(--vis-brush-handle-fill);
   }
+
+  &.non-draggable {
+    .selection, .overlay {
+      pointer-events: none;
+    }
+  }
 `
 
 export const unselected = css`
