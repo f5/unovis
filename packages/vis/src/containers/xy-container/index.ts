@@ -137,11 +137,11 @@ export class XYContainer<Datum> extends ContainerCore {
     if (!preventRender) this.render()
   }
 
-  updateAxis (axisConfig: {[k: string]: AxisConfigInterface<Datum>}) {
+  updateAxes (axesConfig: {[k: string]: AxisConfigInterface<Datum>}): void {
     Object.keys(this.config.axes).forEach((key) => {
       const axis: Axis<Datum> = this.config.axes[key]
-      if (axisConfig[key]) {
-        axis.setConfig({ ...axisConfig[key], type: key })
+      if (axesConfig[key]) {
+        axis.setConfig({ ...axesConfig[key], type: key })
       }
     })
   }
