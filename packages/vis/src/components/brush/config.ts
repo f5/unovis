@@ -11,8 +11,12 @@ export interface BrushConfigInterface<Datum> extends XYComponentConfigInterface<
   onBrushStart?: ((selection?: number[], event?: BaseEvent) => any);
   onBrushMove?: ((selection?: number[], event?: BaseEvent) => any);
   onBrushEnd?: ((selection?: number[], event?: BaseEvent) => any);
+  /** Width of the brush handle */
   handleWidth?: number;
+  /** Selection is the actual value units: [start, end] */
   selection?: number[] | null;
+  /** Allow dragging the selected area in order to change the selected range */
+  draggable?: boolean;
 }
 
 export class BrushConfig<Datum> extends XYComponentConfig<Datum> implements BrushConfigInterface<Datum> {
@@ -22,4 +26,5 @@ export class BrushConfig<Datum> extends XYComponentConfig<Datum> implements Brus
   onBrushEnd = (s: number[], e: BaseEvent) => {}
   handleWidth = 9
   selection = null
+  draggable = false
 }

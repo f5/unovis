@@ -76,6 +76,7 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
 
     this.brush
       .call(brushBehaviour)
+      .classed('non-draggable', !config.draggable)
 
     const yRange = yScale.range()
     const h = yRange[0] - yRange[1]

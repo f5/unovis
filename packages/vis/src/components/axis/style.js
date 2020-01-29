@@ -3,6 +3,8 @@
 import { css } from 'emotion'
 
 export const axis = css`
+  user-select: none;
+
   &.hide-grid-line {
     .domain {
       display: none;
