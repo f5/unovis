@@ -16,7 +16,7 @@ export interface BrushConfigInterface<Datum> extends XYComponentConfigInterface<
   /** Selection is the actual value units: [start, end] */
   selection?: number[] | null;
   /** Allow dragging the selected area in order to change the selected range */
-  draggable: boolean;
+  draggable?: boolean;
 }
 
 export class BrushConfig<Datum> extends XYComponentConfig<Datum> implements BrushConfigInterface<Datum> {
