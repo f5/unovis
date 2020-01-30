@@ -34,7 +34,7 @@ import {
   StackedBarConfigInterface,
 } from '../../components'
 
-type XYConfigInterface<Datum> = XYComponentConfigInterface<Datum>
+export type XYConfigInterface<Datum> = XYComponentConfigInterface<Datum>
   | StackedBarConfigInterface<Datum>
   | LineConfigInterface<Datum>
   | ScatterConfigInterface<Datum>
@@ -130,8 +130,11 @@ export class XYContainer<Datum> extends ContainerCore {
 
   updateComponents (componentConfigs: XYConfigInterface<Datum>[], preventRender?: boolean): void {
     this.components.forEach((c, i) => {
-      c.prevConfig = c.config
-      c.setConfig(componentConfigs[i])
+      const componentConfig = componentConfigs[i]
+      if (componentConfig) {
+        c.prevConfig = c.config
+        c.setConfig(componentConfigs[i])
+      }
     })
 
     if (!preventRender) this.render()
