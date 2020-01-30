@@ -12,7 +12,7 @@ import { FlowLegend } from '@volterra/vis/components'
 export class FlowLegendComponent implements AfterViewInit {
   @ViewChild('legend', { static: false }) legendRef: ElementRef
   @Input() items: any[] = [];
-  @Input() margin: { left?: number; right?: number } = { };
+  @Input() margin: { left?: number; right?: number } = {};
 
   legend = null
   config: { items?: any[] } = {}
