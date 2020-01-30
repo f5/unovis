@@ -6,8 +6,10 @@ import { Axis } from './components/axis'
 import { Scatter } from './components/scatter'
 import { Brush } from './components/brush'
 import { BulletLegend } from './components/bullet-legend'
+import { FlowLegend } from './components/flow-legend'
 import { Crosshair } from './components/crosshair'
 import { Timeline } from './components/timeline'
+import { Sankey } from './components/sankey'
 
 import { LineConfigInterface } from './components/line/config'
 import { StackedBarConfigInterface } from './components/stacked-bar/config'
@@ -16,8 +18,10 @@ import { TooltipConfigInterface } from './core/tooltip/config'
 import { BrushConfigInterface } from './components/brush/config'
 import { AxisConfigInterface } from './components/axis/config'
 import { BulletLegendConfigInterface } from './components/bullet-legend/config'
+import { FlowLegendConfigInterface } from './components/flow-legend/config'
 import { CrosshairConfigInterface } from './components/crosshair/config'
 import { TimelineConfigInterface } from './components/timeline/config'
+import { SankeyConfigInterface } from './components/sankey/config'
 
 import './styles/css-variables'
 
@@ -36,8 +40,12 @@ export {
   AxisConfigInterface,
   BulletLegend,
   BulletLegendConfigInterface,
+  FlowLegend,
+  FlowLegendConfigInterface,
   Crosshair,
   CrosshairConfigInterface,
   Timeline,
   TimelineConfigInterface,
+  Sankey,
+  SankeyConfigInterface,
 }

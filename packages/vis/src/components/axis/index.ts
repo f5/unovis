@@ -9,7 +9,7 @@ import { XYComponentCore } from 'core/xy-component'
 // Types
 import { AxisType } from 'types/axis'
 import { Position } from 'types/position'
-import { Margin } from 'types/misc'
+import { Spacing } from 'types/misc'
 
 // Utils
 import { clean, isNumber } from 'utils/data'
@@ -66,7 +66,7 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
     }
   }
 
-  calculateMargin (): Margin {
+  calculateMargin (): Spacing {
     const { config: { type, position, padding } } = this
     const size = this.getSize()
 
@@ -84,7 +84,7 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
     }
   }
 
-  getOffset (containerMargin: Margin): {left: number; top: number} {
+  getOffset (containerMargin: Spacing): {left: number; top: number} {
     const { config: { type, position, padding, width, height } } = this
 
     switch (type) {

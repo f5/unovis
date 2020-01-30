@@ -10,16 +10,19 @@ import { CoreDataModel } from './core'
 export class GraphDataModel<NodeDatum, LinkDatum> extends CoreDataModel<{nodes: NodeDatum[]; links: LinkDatum[]}> {
   private _nonConnectedNodes: NodeDatum[]
   private _connectedNodes: NodeDatum[]
+  private _nodes: NodeDatum[]
+  private _links: LinkDatum[]
 
   set data (inputData) {
+    if (!inputData) return
     const prevData = this.data
 
-    const { nodes, links } = cloneDeep(inputData)
+    const { nodes, links }: {nodes: NodeDatum[]; links: LinkDatum[]} = cloneDeep(inputData)
 
     // Every node or link can have a private state used for rendering needs
     // On data update we transfer state between objects with same ids
-    this.transferState(nodes, prevData.nodes)
-    this.transferState(links, prevData.links)
+    this.transferState(nodes, prevData?.nodes)
+    this.transferState(links, prevData?.links)
 
     // Set node index
     each(nodes, (node, i) => {
@@ -29,8 +32,8 @@ export class GraphDataModel<NodeDatum, LinkDatum> extends CoreDataModel<{nodes: 
 
     // Fill link source and target
     each(links, (link, i) => {
-      link.source = this.findNode(link.source)
-      link.target = this.findNode(link.target)
+      link.source = this.findNode(nodes, link.source)
+      link.target = this.findNode(nodes, link.target)
     })
 
     // Set link index for multiple link rendering
@@ -58,14 +61,17 @@ export class GraphDataModel<NodeDatum, LinkDatum> extends CoreDataModel<{nodes: 
 
     this._nonConnectedNodes = filter(nodes, d => !d._isConnected)
     this._connectedNodes = without(nodes, ...this._nonConnectedNodes)
+
+    this._nodes = nodes
+    this._links = links
   }
 
   get nodes (): NodeDatum[] {
-    return this.data.nodes
+    return this._nodes
   }
 
   get links (): LinkDatum[] {
-    return this.data.links
+    return this._links
   }
 
   get connectedNodes (): NodeDatum[] {
@@ -76,10 +82,10 @@ export class GraphDataModel<NodeDatum, LinkDatum> extends CoreDataModel<{nodes: 
     return this._nonConnectedNodes
   }
 
-  findNode (n: number | string | object): NodeDatum {
-    if (isNumber(n)) return this.nodes[n as number]
-    else if (isString(n)) return find(this.nodes, node => node.id === n)
-    else if (isObject(n)) return find(this.nodes, node => node === n)
+  findNode (nodes: NodeDatum[], n: number | string | object): NodeDatum {
+    if (isNumber(n)) return nodes[n as number]
+    else if (isString(n)) return find(nodes, node => node.id === n)
+    else if (isObject(n)) return find(nodes, node => node === n)
     else {
       console.warn(`Node ${n} is missing from the nodes list`)
     }

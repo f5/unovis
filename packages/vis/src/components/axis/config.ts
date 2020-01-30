@@ -6,7 +6,7 @@ import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component
 import { AxisType } from 'types/axis'
 import { Position } from 'types/position'
 import { FitMode, TrimMode } from 'types/text'
-import { Margin } from 'types/misc'
+import { Spacing } from 'types/misc'
 
 export interface AxisConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
     /** Axis position: top, bottom, right or left */
@@ -43,8 +43,8 @@ export interface AxisConfigInterface<Datum> extends XYComponentConfigInterface<D
     tickTextTrimType?: TrimMode;
     /**  */
     tickTextFitMode?: FitMode;
-    padding?: Margin;
-    offset?: Margin;
+    padding?: Spacing;
+    offset?: Spacing;
 }
 
 export class AxisConfig<Datum> extends XYComponentConfig<Datum> implements AxisConfigInterface<Datum> {

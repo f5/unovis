@@ -60,11 +60,11 @@ export function splitString (text: string, separators = [' ']): string[] {
   let result = [text] as any[]
   for (let i = 0; i < separators.length; i++) {
     const sep = separators[i]
-    result.forEach(d => {
+    result.forEach((d, id) => {
       const separated = d.split(sep)
-      const words = separated.map((word, i) => `${word}${i === separated.length - 1 ? '' : sep}`)
+      const words = separated.map((word, j) => `${word}${j === separated.length - 1 ? '' : sep}`)
       // result.splice(i, 0, ...words)
-      result[i] = words
+      result[id] = words
     })
     result = flatten(result)
   }

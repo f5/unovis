@@ -17,6 +17,7 @@
     }
   },
   "rules": {
+    "prefer-template": "error",
     "no-useless-constructor": "off",
     "import/extensions": 0,
     "import/no-unresolved": [2, {"commonjs": true, "amd": true}],

@@ -2,6 +2,8 @@
 import { ScaleType } from 'types/scales'
 
 export type NumericAccessor<Datum> = ((d: Datum, i?: number, ...any) => number) | number
+export type StringAccessor<Datum> = ((d: Datum, i?: number, ...any) => string) | string
+export type ColorAccessor<Datum> = ((d: Datum, i?: number, ...any) => string) | string
 
 export type Dimension = {
   scale?: ScaleType;
@@ -9,7 +11,7 @@ export type Dimension = {
   range?: number[];
 }
 
-export type Margin = {
+export type Spacing = {
   left?: number;
   right?: number;
   top?: number;
