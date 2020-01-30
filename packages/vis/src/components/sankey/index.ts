@@ -7,7 +7,7 @@ import { ComponentCore } from 'core/component'
 import { GraphDataModel } from 'data-models/graph'
 
 // Types
-import { Margin } from 'types/misc'
+import { Spacing } from 'types/misc'
 
 // Utils
 import { getValue, isNumber } from 'utils/data'
@@ -44,7 +44,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
     this._nodesGroup = this.g.append('g').attr('class', s.nodes)
   }
 
-  get bleed (): Margin {
+  get bleed (): Spacing {
     const { config: { labelWidth } } = this
     const sideBleed = isNumber(labelWidth) ? labelWidth : 70
     const fontSizeCss = getComputedStyle(document.documentElement).getPropertyValue('--vis-sankey-node-label-size')

@@ -5,7 +5,7 @@ import { select } from 'd3-selection'
 import { CoreDataModel } from 'data-models/core'
 
 // Types
-import { Margin } from 'types/misc'
+import { Spacing } from 'types/misc'
 
 // Utils
 import { throttle } from 'utils/data'
@@ -49,7 +49,7 @@ export class ComponentCore<CoreDatum> {
     this._setUpEventsThrottled(this.config.events)
   }
 
-  get bleed (): Margin {
+  get bleed (): Spacing {
     return { top: 0, bottom: 0, left: 0, right: 0 }
   }
 

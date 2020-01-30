@@ -11,7 +11,7 @@ import { getColor } from 'utils/color'
 
 // Types
 import { Curve, CurveType } from 'types/curves'
-import { NumericAccessor, Margin } from 'types/misc'
+import { NumericAccessor, Spacing } from 'types/misc'
 
 // Config
 import { LineConfig, LineConfigInterface } from './config'
@@ -37,7 +37,7 @@ export class Line<Datum> extends XYComponentCore<Datum> {
     if (config) this.config.init(config)
   }
 
-  get bleed (): Margin {
+  get bleed (): Spacing {
     const { config: { lineWidth } } = this
     return { top: lineWidth, bottom: lineWidth, left: lineWidth, right: lineWidth }
   }

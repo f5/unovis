@@ -11,7 +11,7 @@ export type Dimension = {
   range?: number[];
 }
 
-export type Margin = {
+export type Spacing = {
   left?: number;
   right?: number;
   top?: number;

@@ -10,7 +10,7 @@ import { getValue } from 'utils/data'
 import { defaultRange } from 'utils/scale'
 
 // Types
-import { Dimension, Margin } from 'types/misc'
+import { Dimension, Spacing } from 'types/misc'
 
 // Config
 import { XYComponentConfig } from './config'
@@ -35,7 +35,7 @@ export class XYComponentCore<Datum> extends ComponentCore<Datum[]> {
     scales[key].range(range)
   }
 
-  updateScale (key: string, dim: Dimension = {}, padding: Margin = {}) {
+  updateScale (key: string, dim: Dimension = {}, padding: Spacing = {}) {
     if (!key) return
     const { config, config: { scales, width, height }, datamodel: { data } } = this
 
@@ -73,7 +73,7 @@ export class XYComponentCore<Datum> extends ComponentCore<Datum[]> {
     }
   }
 
-  getScreenRange (accessorKey: string, padding: Margin = {}): number[] {
+  getScreenRange (accessorKey: string, padding: Spacing = {}): number[] {
     switch (accessorKey) {
     case 'x': return this.getXScreenRange(padding)
     case 'y': return this.getYScreenRange(padding)
@@ -91,12 +91,12 @@ export class XYComponentCore<Datum> extends ComponentCore<Datum[]> {
     return datamodel.getExtent(config.y)
   }
 
-  getXScreenRange (padding: Margin = {}): number[] {
+  getXScreenRange (padding: Spacing = {}): number[] {
     const bleed = this.bleed // Bleed depends on the domain. You should set it first in order to get correct results
     return [padding.left + bleed.left, this.config.width - padding.right - bleed.right]
   }
 
-  getYScreenRange (padding: Margin = {}): number[] {
+  getYScreenRange (padding: Spacing = {}): number[] {
     const bleed = this.bleed // Bleed depends on the domain. You should set it first in order to get correct results
     return [padding.top + bleed.top, this.config.height - padding.bottom - bleed.bottom]
   }
