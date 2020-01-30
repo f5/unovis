@@ -10,7 +10,7 @@ import { GraphDataModel } from 'data-models/graph'
 import { Spacing } from 'types/misc'
 
 // Utils
-import { getValue, isNumber } from 'utils/data'
+import { getValue } from 'utils/data'
 
 // Config
 import { SankeyConfig, SankeyConfigInterface } from './config'
@@ -45,21 +45,19 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
   }
 
   get bleed (): Spacing {
-    const { config: { labelWidth } } = this
-    const sideBleed = isNumber(labelWidth) ? labelWidth : 70
-    const fontSizeCss = getComputedStyle(document.documentElement).getPropertyValue('--vis-sankey-node-label-size')
-    const fontSizePixel = +fontSizeCss.substr(0, fontSizeCss.length - 2)
-    return { top: fontSizePixel / 2, bottom: fontSizePixel / 2, left: sideBleed, right: sideBleed }
+    const { config: { labelWidth, labelFontSize } } = this
+    return { top: labelFontSize / 2, bottom: labelFontSize / 2, left: labelWidth, right: labelWidth }
   }
 
   _render (customDuration?: number): void {
+    const { bleed } = this
     this._prepareLayout()
     const nodes = this.datamodel.nodes
     const links = this.datamodel.links
     if (!((links.length > 0 && nodes.length > 1) || (links.length > 0 && nodes.length > 0 && this.config.showSingleNode))) return
 
     // Links
-    this._linksGroup.attr('transform', `translate(${this.bleed.left},${this.bleed.top})`)
+    this._linksGroup.attr('transform', `translate(${bleed.left},${bleed.top})`)
     const svgLinks = this._linksGroup.selectAll(`.${s.link}`).data(links)
     svgLinks.call(removeLinks)
     const linkGrpoupEnter = svgLinks.enter().append('g').attr('class', s.link)
@@ -67,7 +65,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
     svgLinks.merge(linkGrpoupEnter).call(updateLinks, this.config)
 
     // Nodes
-    this._nodesGroup.attr('transform', `translate(${this.bleed.left},${this.bleed.top})`)
+    this._nodesGroup.attr('transform', `translate(${bleed.left},${bleed.top})`)
     const svgNodes = this._nodesGroup.selectAll(`.${s.node}`).data(nodes)
     svgNodes.call(removeNodes)
     const svgNodesEnter = svgNodes.enter().append('g').attr('class', s.node)

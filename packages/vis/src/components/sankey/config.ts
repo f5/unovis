@@ -30,12 +30,14 @@ export interface SankeyConfigInterface<N extends SankeyNodeDatumInterface, L ext
     iconColor?: ColorAccessor<N>;
     /** Display node labels even when there's not enough vertical space */
     forceShowLabels?: boolean;
-    /** Possible width to wrap label in pixels */
+    /** Maximum label with in pixels, default is 70 */
     labelWidth?: number;
     /** Maximum label length (in number characters) for wrapping */
     labelLength?: number;
     /** Label trimming mode */
     labelTrim?: TrimMode;
+    /** Label font size in pixel, default is 13 */
+    labelFontSize?: number;
     /** Label text separators for wrapping. Default: [' ', '-'] */
     labelTextSeparator?: string[];
     /** Force break words to fit long labels */
@@ -50,11 +52,12 @@ export class SankeyConfig<N extends SankeyNodeDatumInterface, L extends SankeyLi
   labelTextSeparator = [' ', '-']
   labelTrim = TrimMode.END
   labelForceWordBreak = false
+  labelFontSize = 13
   linkValue = (d: N): number => d['value']
   linkColor = (d: L): string => d['color']
   nodeColor = (d: N): string => d['color']
   nodeLabel = null
   nodeIcon = null
   iconColor = null
-  labelWidth = null
+  labelWidth = 70
 }

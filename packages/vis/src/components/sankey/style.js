@@ -6,8 +6,7 @@ export const variables = injectGlobal`
     --vis-sankey-link-color: #cad5f6;
 
     --vis-sankey-node-color: #4e4dd1;
-    --vis-sankey-node-label-size: 12px;
-    --vis-sankey-node-label-color: #272c35;
+    --vis-sankey-node-label-color: #575c65;
 
     --vis-sankey-icon-size: 22px;
     --vis-sankey-icon-color: #ffffff;
@@ -71,10 +70,10 @@ export const node = css`
 export const nodeLabel = css`
   label: label;
 
-  font-size: var(--vis-sankey-node-label-size);
   fill: var(--vis-sankey-node-label-color);
   pointer-events: none;
   visibility: hidden;
+  user-select: none;
 
   &.visible {
     visibility: visible;

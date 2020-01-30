@@ -49,6 +49,7 @@ export function updateNodes<N extends SankeyNodeDatumInterface, L extends Sankey
     .attr('y', d => (d.y1 - d.y0) / 2)
     .attr('dy', '0.32em')
     .attr('text-anchor', 'end')
+    .style('font-size', config.labelFontSize)
     .text(config.nodeLabel)
     .filter(d => d.x0 > sankey.size()[0] / 2)
     .attr('x', 5 + sankey.nodeWidth())
