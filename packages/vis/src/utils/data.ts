@@ -51,3 +51,11 @@ export function clean (data: any[]): any[] {
 export function clamp (d: number, min: number, max: number): number {
   return Math.min(Math.max(d, min), max)
 };
+
+export function countUnique (array, accessor = d => d): number {
+  return new Set(array.map(d => accessor(d))).size
+}
+
+export function indexArray (n: number): number[] {
+  return [...Array(n).keys()]
+}

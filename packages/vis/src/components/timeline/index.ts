@@ -1,5 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { Selection, event } from 'd3-selection'
+import { scaleOrdinal, ScaleOrdinal } from 'd3-scale'
 import { drag } from 'd3-drag'
 import { max } from 'd3-array'
 
@@ -7,7 +8,7 @@ import { max } from 'd3-array'
 import { XYComponentCore } from 'core/xy-component'
 
 // Utils
-import { getValue, isNumber } from 'utils/data'
+import { getValue, isNumber, countUnique, indexArray } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
 
@@ -76,6 +77,12 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
     const yHeight = Math.abs(yRange[1] - yRange[0])
     const maxLineWidth = this._getMaxLineWidth()
 
+    // Ordinal scale to handle records on the same type
+    const ordinal: ScaleOrdinal<string, number> = scaleOrdinal()
+    const recordTypes = data.map((d, i) => getValue(d, config.type) || i)
+    const numUniqueRecords = countUnique(recordTypes)
+    ordinal.range(indexArray(numUniqueRecords))
+
     // Invisible Background rect to track events
     this._background
       .attr('width', config.width)
@@ -83,7 +90,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
       .attr('opacity', 0)
 
     // Line background rects
-    const numRows = Math.max(Math.floor(yHeight / config.rowHeight), data.length)
+    const numRows = Math.max(Math.floor(yHeight / config.rowHeight), numUniqueRecords)
     const rects = this._rectsGroup.selectAll(`.${s.rect}`)
       .data(Array(numRows).fill(0)) as Selection<SVGRectElement, Datum, SVGGElement, any>
 
@@ -106,14 +113,14 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
     const linesEnter = lines.enter().append('line')
       .attr('class', s.line)
       .style('stroke', (d, i) => getColor(d, config.color, i))
-      .call(this._positionLines, config)
+      .call(this._positionLines, config, ordinal)
       .attr('transform', 'translate(0, 10)')
       .style('opacity', 0)
 
     smartTransition(linesEnter.merge(lines), duration)
       .style('stroke', (d, i) => getColor(d, config.color, i))
       .attr('stroke-width', d => getValue(d, config.lineWidth))
-      .call(this._positionLines, config)
+      .call(this._positionLines, config, ordinal)
       .attr('transform', 'translate(0, 0)')
       .style('opacity', 1)
 
@@ -138,15 +145,15 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
     this._updateScrollPosition(0)
   }
 
-  _positionLines (selection, config): void {
+  _positionLines (selection, config, ordinal): void {
     const xScale = config.scales.x
     const yRange = config.scales.y.range()
 
     return selection
       .attr('x1', d => xScale(getValue(d, config.x)))
       .attr('x2', d => xScale(getValue(d, config.x) + getValue(d, config.length)))
-      .attr('y1', (d, i) => yRange[1] + (i + 0.5) * config.rowHeight)
-      .attr('y2', (d, i) => yRange[1] + (i + 0.5) * config.rowHeight)
+      .attr('y1', (d, i) => yRange[1] + (ordinal(d.type || i) + 0.5) * config.rowHeight)
+      .attr('y2', (d, i) => yRange[1] + (ordinal(d.type || i) + 0.5) * config.rowHeight)
       .style('opacity', 1)
   }
 
