@@ -18,7 +18,7 @@ export class TimelineComponent implements AfterViewInit {
   title = 'timeline'
 
   // Data
-  data: SampleTimelineDatum[] = sampleTimelineData(10)
+  data: SampleTimelineDatum[] = sampleTimelineData(100)
 
   // Chart configuration
   timelineConfig = {
@@ -30,6 +30,7 @@ export class TimelineComponent implements AfterViewInit {
   components = [this.timeline]
 
   margin = { top: 10, bottom: 10, left: 10, right: 10 }
+  padding = { top: 0, left: 0, right: 0, bottom: 5 }
 
   dimensions: {}
 
@@ -50,7 +51,7 @@ export class TimelineComponent implements AfterViewInit {
   ngAfterViewInit (): void {
     setInterval(() => {
       // this.margin = { ...this.margin, top: 50 }
-      this.data = sampleTimelineData(Math.floor(2 + 50*Math.random()))
+      this.data = sampleTimelineData(Math.floor(10 + 100*Math.random()))
       this.timelineConfig = { ...this.timelineConfig } // Updating the object to trigger change detection
     }, 5000)
   }
