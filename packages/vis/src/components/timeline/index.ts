@@ -70,6 +70,9 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
     super._render(customDuration)
     const { config, datamodel: { data } } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
+    const xRange = config.scales.x.range()
+    const yRange = config.scales.y.range()
+    const yHeight = Math.abs(yRange[1] - yRange[0])
 
     // Invisible Background rect to track events
     this._background
@@ -78,17 +81,18 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
       .attr('opacity', 0)
 
     // Line background rects
+    const numRows = Math.max(Math.floor(yHeight / config.rowHeight), data.length)
     const rects = this._rectsGroup.selectAll(`.${s.rect}`)
-      .data(data) as Selection<SVGRectElement, Datum, SVGGElement, any>
+      .data(Array(numRows).fill(0)) as Selection<SVGRectElement, Datum, SVGGElement, any>
 
     const rectsEnter = rects.enter().append('rect')
       .attr('class', s.rect)
 
     rectsEnter.merge(rects)
       .classed('even', (d, i) => !(i % 2))
-      .attr('x', 0)
-      .attr('width', config.width - this._scrollBarWidth * 1.5)
-      .attr('y', (d, i) => i * config.rowHeight)
+      .attr('x', xRange[0] - config.lineWidth / 2)
+      .attr('width', xRange[1] - xRange[0] + config.lineWidth)
+      .attr('y', (d, i) => yRange[1] + i * config.rowHeight)
       .attr('height', config.rowHeight)
 
     rects.exit().remove()
@@ -117,16 +121,16 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
 
     // Scroll Bar
     const contentBBox = this._rectsGroup.node().getBBox() // We determine content size using the rects group because lines are animated
-    const absoluteContentHeight = contentBBox.y + contentBBox.height
-    this._scrollbarHeight = config.height * config.height / absoluteContentHeight
+    const absoluteContentHeight = contentBBox.height
+    this._scrollbarHeight = yHeight * yHeight / absoluteContentHeight
     this._scrollBar.attr('height', this._scrollbarHeight)
-    this._maxScroll = Math.max(absoluteContentHeight - config.height, 0)
+    this._maxScroll = Math.max(absoluteContentHeight - yHeight, 0)
 
     this._scrollBar
       .attr('width', this._scrollBarWidth)
       .attr('rx', this._scrollBarWidth / 2)
       .attr('ry', this._scrollBarWidth / 2)
-      .attr('transform', `translate(${config.width - this._scrollBarWidth}, ${0})`)
+      .attr('transform', `translate(${config.width - this._scrollBarWidth}, ${yRange[1]})`)
       .attr('opacity', this._maxScroll ? 1 : 0)
 
     this._updateScrollPosition(0)
@@ -134,18 +138,21 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
 
   _positionLines (selection, config): void {
     const xScale = config.scales.x
+    const yRange = config.scales.y.range()
 
     return selection
       .attr('x1', d => xScale(getValue(d, config.x)))
       .attr('x2', d => xScale(getValue(d, config.x) + getValue(d, config.length)))
-      .attr('y1', (d, i) => (i + 0.5) * config.rowHeight)
-      .attr('y2', (d, i) => (i + 0.5) * config.rowHeight)
+      .attr('y1', (d, i) => yRange[1] + (i + 0.5) * config.rowHeight)
+      .attr('y2', (d, i) => yRange[1] + (i + 0.5) * config.rowHeight)
       .style('opacity', 1)
   }
 
   _onScrollbarDrag (): void {
     const { config } = this
-    this._updateScrollPosition(event.dy * this._maxScroll / (config.height - this._scrollbarHeight))
+    const yRange = config.scales.y.range()
+    const yHeight = Math.abs(yRange[1] - yRange[0])
+    this._updateScrollPosition(event.dy * this._maxScroll / (yHeight - this._scrollbarHeight))
   }
 
   _onMouseWheel (): void {
@@ -162,13 +169,16 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
 
   _updateScrollPosition (diff): void {
     const { config } = this
+    const yRange = config.scales.y.range()
+    const yHeight = Math.abs(yRange[1] - yRange[0])
+
     this._scrollDistance += diff
     this._scrollDistance = Math.max(0, this._scrollDistance)
     this._scrollDistance = Math.min(this._maxScroll, this._scrollDistance)
 
     this._linesGroup.attr('transform', `translate(0,${-this._scrollDistance})`)
     this._rectsGroup.attr('transform', `translate(0,${-this._scrollDistance})`)
-    const scrollBarPosition = (this._scrollDistance / this._maxScroll * (config.height - this._scrollbarHeight)) || 0
+    const scrollBarPosition = (this._scrollDistance / this._maxScroll * (yHeight - this._scrollbarHeight)) || 0
     this._scrollBar.attr('y', scrollBarPosition)
   }
 
