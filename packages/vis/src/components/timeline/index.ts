@@ -1,6 +1,7 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { Selection, event } from 'd3-selection'
 import { drag } from 'd3-drag'
+import { max } from 'd3-array'
 
 // Core
 import { XYComponentCore } from 'core/xy-component'
@@ -62,8 +63,8 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
   }
 
   get bleed (): { top: number; bottom: number; left: number; right: number } {
-    const { config: { lineWidth } } = this
-    return { top: 0, bottom: 0, left: lineWidth / 2, right: lineWidth / 2 + this._scrollBarWidth * 1.5 }
+    const maxLineWidth = this._getMaxLineWidth()
+    return { top: 0, bottom: 0, left: maxLineWidth / 2, right: maxLineWidth / 2 + this._scrollBarWidth * 1.5 }
   }
 
   _render (customDuration?: number): void {
@@ -73,6 +74,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
     const xRange = config.scales.x.range()
     const yRange = config.scales.y.range()
     const yHeight = Math.abs(yRange[1] - yRange[0])
+    const maxLineWidth = this._getMaxLineWidth()
 
     // Invisible Background rect to track events
     this._background
@@ -90,8 +92,8 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
 
     rectsEnter.merge(rects)
       .classed('even', (d, i) => !(i % 2))
-      .attr('x', xRange[0] - config.lineWidth / 2)
-      .attr('width', xRange[1] - xRange[0] + config.lineWidth)
+      .attr('x', xRange[0] - maxLineWidth / 2)
+      .attr('width', xRange[1] - xRange[0] + maxLineWidth)
       .attr('y', (d, i) => yRange[1] + i * config.rowHeight)
       .attr('height', config.rowHeight)
 
@@ -110,7 +112,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
 
     smartTransition(linesEnter.merge(lines), duration)
       .style('stroke', (d, i) => getColor(d, config.color, i))
-      .attr('stroke-width', config.lineWidth)
+      .attr('stroke-width', d => getValue(d, config.lineWidth))
       .call(this._positionLines, config)
       .attr('transform', 'translate(0, 0)')
       .style('opacity', 1)
@@ -180,6 +182,12 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
     this._rectsGroup.attr('transform', `translate(0,${-this._scrollDistance})`)
     const scrollBarPosition = (this._scrollDistance / this._maxScroll * (yHeight - this._scrollbarHeight)) || 0
     this._scrollBar.attr('y', scrollBarPosition)
+  }
+
+  _getMaxLineWidth (): number {
+    const { config, datamodel: { data } } = this
+
+    return max(data, d => getValue(d, config.lineWidth))
   }
 
   // Override the default XYComponent getXDataExtent method to take into account line lengths

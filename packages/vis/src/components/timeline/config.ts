@@ -6,7 +6,7 @@ import { NumericAccessor } from 'types/misc'
 
 export interface TimelineConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
   /** Width of the lines */
-  lineWidth?: number;
+  lineWidth?: NumericAccessor<Datum>;
   /** Line length accessor function or a value */
   length?: NumericAccessor<Datum>;
   /** Timeline row height */
@@ -14,7 +14,7 @@ export interface TimelineConfigInterface<Datum> extends XYComponentConfigInterfa
 }
 
 export class TimelineConfig<Datum> extends XYComponentConfig<Datum> implements TimelineConfigInterface<Datum> {
-  lineWidth = 6
+  lineWidth = 8
   // eslint-disable-next-line dot-notation
   length: NumericAccessor<Datum> = d => d['length'];
   rowHeight = 22;
