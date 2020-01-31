@@ -28,6 +28,7 @@ export class TimelineComponent implements AfterViewInit {
   timelineConfig = {
     x: d => d.time,
     length: d => d.duration,
+    lineWidth: d => d.width,
   }
   timeline = new Timeline<SampleTimelineDatum>(this.timelineConfig)
 
