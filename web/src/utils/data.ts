@@ -26,10 +26,11 @@ export function sampleSeriesData (n: number): SampleDatum[] {
 }
 
 export interface SampleTimelineDatum {
-  id?: string;
   time: number;
   duration: number;
-  color: string;
+  id?: string;
+  type?: string;
+  color?: string;
 }
 
 export function sampleTimelineData (n: number): SampleTimelineDatum[] {

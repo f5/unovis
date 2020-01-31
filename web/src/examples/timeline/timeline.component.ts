@@ -18,7 +18,11 @@ export class TimelineComponent implements AfterViewInit {
   title = 'timeline'
 
   // Data
-  data: SampleTimelineDatum[] = sampleTimelineData(100)
+  data: SampleTimelineDatum[] = sampleTimelineData(50)
+    .map((d, i) => ({
+      type: `${i % 25}`, // Records of the same type are plotted in one row
+      ...d,
+    }))
 
   // Chart configuration
   timelineConfig = {
