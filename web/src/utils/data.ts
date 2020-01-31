@@ -26,10 +26,12 @@ export function sampleSeriesData (n: number): SampleDatum[] {
 }
 
 export interface SampleTimelineDatum {
-  id?: string;
   time: number;
   duration: number;
-  color: string;
+  id?: string;
+  type?: string;
+  color?: string;
+  width?: number;
 }
 
 export function sampleTimelineData (n: number): SampleTimelineDatum[] {
@@ -39,5 +41,6 @@ export function sampleTimelineData (n: number): SampleTimelineDatum[] {
     time: Date.now() - Math.round((1000 * 60 * 60 * 24) * Math.random()),
     duration: Math.round((1000 * 60 * 60 * 4) * Math.random()),
     color: _sample(colors),
+    width: 5 + Math.round(5 * Math.random()),
   }))
 }
