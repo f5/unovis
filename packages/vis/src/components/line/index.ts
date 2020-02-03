@@ -1,5 +1,7 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
+import { select } from 'd3-selection'
 import { line, Line as LineInterface, CurveFactory } from 'd3-shape'
+import { interpolatePath } from 'd3-interpolate-path'
 
 // Core
 import { XYComponentCore } from 'core/xy-component'
@@ -57,7 +59,7 @@ export class Line<Datum> extends XYComponentCore<Datum> {
     const lineData = yAccessors.map(a =>
       data.map((d, i) => ([
         lineDataX[i],
-        config.scales.y(getValue(d, a)),
+        config.scales.y(getValue(d, a) ?? null),
       ]))
     )
 
@@ -67,12 +69,24 @@ export class Line<Datum> extends XYComponentCore<Datum> {
 
     const linesEnter = lines.enter().append('path')
       .attr('class', s.line)
-      .style('stroke', (d, i) => getColor(d, config.color, i))
-
-    smartTransition(linesEnter.merge(lines), duration)
       .attr('d', d => this.lineGen(d))
       .style('stroke', (d, i) => getColor(d, config.color, i))
+
+    const linesMerged = smartTransition(linesEnter.merge(lines), duration)
+      .style('stroke', (d, i) => getColor(d, config.color, i))
       .attr('stroke-width', config.lineWidth)
+      .style('stroke-opacity', (d, i) => yAccessors[i] ? 1 : 0)
+
+    if (duration) {
+      linesMerged
+        .attrTween('d', (d, i, el) => {
+          const previous = select(el[i]).attr('d')
+          const next = this.lineGen(d)
+          return interpolatePath(previous, next)
+        })
+    } else {
+      linesMerged.attr('d', d => this.lineGen(d))
+    }
 
     lines.exit().remove()
   }
