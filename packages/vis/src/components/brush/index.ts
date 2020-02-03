@@ -93,7 +93,10 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
       .attr('y1', yRange[1] + h / 2 - 10)
       .attr('y2', yRange[1] + h / 2 + 10)
 
+    const xRange = xScale.range()
     const brushRange = (config.selection && isFinite(config.selection?.[0])) ? [xScale(config.selection[0]), xScale(config.selection[1])] : xScale.range()
+    if (brushRange[0] < xRange[0]) brushRange[0] = xRange[0]
+    if (brushRange[1] < xRange[1]) brushRange[1] = xRange[1]
     smartTransition(this.brush, duration)
       .call(brushBehaviour.move, brushRange) // Sets up the brush and calls brush events
       .on('end interrupt', () => { this._firstRender = false })
@@ -140,10 +143,11 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
     // The first call will have equal selection coordinates (e.g. [441, 441]), the second call will have the full range (e.g. [0, 700]).
     // To avoid unnecessary render from the first call we skip it
     if (s[0] !== s[1]) {
+      const userDriven = !!event?.sourceEvent
       const selectedDomain = s.map(xScale.invert, xScale)
-      config.selection = selectedDomain
+      if (userDriven) config.selection = selectedDomain
       this._updateSelection(s)
-      if (!this._firstRender) config.onBrush(config.selection, event)
+      if (!this._firstRender) config.onBrush(selectedDomain, event, userDriven)
     }
   }
 
@@ -151,20 +155,20 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
     const { config } = this
 
     this._onBrush()
-    if (!this._firstRender) config.onBrushStart(config.selection, event)
+    if (!this._firstRender) config.onBrushStart(config.selection, event, !!event?.sourceEvent)
   }
 
   _onBrushMove (): void {
     const { config } = this
 
     this._onBrush()
-    if (!this._firstRender) config.onBrushMove(config.selection, event)
+    if (!this._firstRender) config.onBrushMove(config.selection, event, !!event?.sourceEvent)
   }
 
   _onBrushEnd (): void {
     const { config } = this
 
     this._onBrush()
-    if (!this._firstRender) config.onBrushEnd(config.selection, event)
+    if (!this._firstRender) config.onBrushEnd(config.selection, event, !!event?.sourceEvent)
   }
 }
