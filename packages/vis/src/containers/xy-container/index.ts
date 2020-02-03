@@ -129,6 +129,8 @@ export class XYContainer<Datum> extends ContainerCore {
   }
 
   updateComponents (componentConfigs: XYConfigInterface<Datum>[], preventRender?: boolean): void {
+    const { config } = this
+
     this.components.forEach((c, i) => {
       const componentConfig = componentConfigs[i]
       if (componentConfig) {
@@ -137,6 +139,7 @@ export class XYContainer<Datum> extends ContainerCore {
       }
     })
 
+    this.updateScales(...this.components, config.axes.x, config.axes.y, config.crosshair)
     if (!preventRender) this.render()
   }
 
