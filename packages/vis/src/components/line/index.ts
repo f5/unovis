@@ -63,13 +63,16 @@ export class Line<Datum> extends XYComponentCore<Datum> {
       ]))
     )
 
+    const xRange = config.scales.x.range()
+    const yRange = config.scales.y.range()
+
     const lines = this.g
       .selectAll(`.${s.line}`)
       .data(lineData)
 
     const linesEnter = lines.enter().append('path')
       .attr('class', s.line)
-      .attr('d', d => this.lineGen(d))
+      .attr('d', `M${xRange[0]},${yRange[1]} L${xRange[1]},${yRange[1]}`)
       .style('stroke', (d, i) => getColor(d, config.color, i))
 
     const linesMerged = smartTransition(linesEnter.merge(lines), duration)
