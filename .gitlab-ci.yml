@@ -32,7 +32,7 @@ build:
 docker:
   tags: [docker]
   stage: docker
-  image: tomkukral/buildah:0.18
+  image: tomkukral/buildah
   before_script:
     - podman version
     - buildah version
@@ -44,14 +44,21 @@ docker:
     # Build an image
     - echo "${SSH_PRIVATE_KEY}" > deploy.key
     - podman build --no-cache --pull-always --format docker -t ${IMAGE_TAG_SHA} .
-    # Push the image
+    # Push the image (tag sha)
+    - echo "Pushing image ${IMAGE_TAG_SHA}"
+    - podman push ${IMAGE_TAG_SHA} docker://${IMAGE_TAG_SHA}
+    # Push the image (tag branch)
     - echo "Pushing image ${IMAGE_TAG_BRANCH}"
     - podman push ${IMAGE_TAG_SHA} docker://${IMAGE_TAG_BRANCH}
-    - echo "Created image digest:" && podman image inspect ${IMAGE_TAG_SHA} | grep '"Digest":'
+    # Only for master branch
     - |
       if [ ${CI_COMMIT_REF_SLUG} == "master" ]; then
         echo "Pushing image ${IMAGE_TAG_LATEST}"
         podman push ${IMAGE_TAG_SHA} docker://${IMAGE_TAG_LATEST}
+        skopeo inspect docker://${IMAGE_TAG_LATEST} | grep Digest | awk '{print $2}'| sed 's/[\",]//g' > last
+        echo "Created image digest:" && cat last
+      else
+        echo "Created image digest:" && skopeo inspect docker://${IMAGE_TAG_SHA} | grep Digest
       fi
   after_script:
     - podman logout "${REGISTRY_SERVER}"
