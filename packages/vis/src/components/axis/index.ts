@@ -28,8 +28,9 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
   static selectors = s
   config: AxisConfig<Datum> = new AxisConfig<Datum>()
   axisGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
-  axisLabGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
+  axisLabelGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
   labelGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
+  gridGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
   autoWrapTickLabels = true
 
   events = {
@@ -43,8 +44,12 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
     super()
     if (config) this.config.init(config)
 
-    this.axisGroup = this.g.append('g')
-    this.labelGroup = this.g.append('g')
+    this.axisLabelGroup = this.g.append('g')
+    this.axisGroup = this.axisLabelGroup.append('g')
+    this.labelGroup = this.axisLabelGroup.append('g')
+
+    this.gridGroup = this.g.append('g')
+      .attr('class', s.grid)
   }
 
   preRender (): void {
@@ -58,7 +63,7 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
 
   getSize (): { width: number; height: number } {
     const { padding } = this.config
-    const { width, height } = this.element.getBBox()
+    const { width, height } = this.axisLabelGroup.node().getBBox()
 
     return {
       width: width + padding.left + padding.right,
@@ -119,11 +124,17 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
 
     this.axisGroup
       .classed(s.axis, true)
-      .classed('hide-grid-line', !config.gridLine)
       .classed('hide-tick-line', !config.tickLine)
 
     this._updateTicks()
     this._renderAxisLabel()
+
+    if (config.gridLine) {
+      const gridGen = this._buildGrid().tickFormat(() => '')
+      smartTransition(this.gridGroup.call(gridGen), duration).style('opacity', 1)
+    } else {
+      smartTransition(this.gridGroup, duration).style('opacity', 0)
+    }
   }
 
   _buildAxis (): D3Axis<any> {
@@ -140,6 +151,24 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
       switch (position) {
       case Position.RIGHT: return axisRight(scales.y).ticks(ticks)
       case Position.LEFT: default: return axisLeft(scales.y).ticks(ticks)
+      }
+    }
+  }
+
+  _buildGrid (): D3Axis<any> {
+    const { config: { type, scales, position, numTicks, width, height } } = this
+
+    const ticks = numTicks ?? Math.floor(width / 175)
+    switch (type) {
+    case AxisType.X:
+      switch (position) {
+      case Position.TOP: return axisTop(scales.x).ticks(ticks * 2).tickSize(height).tickSizeOuter(0)
+      case Position.BOTTOM: default: return axisBottom(scales.x).ticks(ticks * 2).tickSize(-height).tickSizeOuter(0)
+      }
+    case AxisType.Y:
+      switch (position) {
+      case Position.RIGHT: return axisRight(scales.y).ticks(ticks * 2).tickSize(width).tickSizeOuter(0)
+      case Position.LEFT: default: return axisLeft(scales.y).ticks(ticks * 2).tickSize(-width).tickSizeOuter(0)
       }
     }
   }
