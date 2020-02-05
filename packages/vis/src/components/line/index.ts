@@ -63,28 +63,26 @@ export class Line<Datum> extends XYComponentCore<Datum> {
       ]))
     )
 
-    const xRange = config.scales.x.range()
-    const yRange = config.scales.y.range()
-
     const lines = this.g
       .selectAll(`.${s.line}`)
       .data(lineData)
 
     const linesEnter = lines.enter().append('path')
       .attr('class', s.line)
-      .attr('d', `M${xRange[0]},${yRange[1]} L${xRange[1]},${yRange[1]}`)
+      .attr('d', this._emptyPath())
       .style('stroke', (d, i) => getColor(d, config.color, i))
+      .style('stroke-opacity', 0)
 
     const linesMerged = smartTransition(linesEnter.merge(lines), duration)
       .style('stroke', (d, i) => getColor(d, config.color, i))
       .attr('stroke-width', config.lineWidth)
-      .style('stroke-opacity', (d, i) => yAccessors[i] ? 1 : 0)
+      .style('stroke-opacity', (d, i) => (yAccessors[i] && d?.length) ? 1 : 0)
 
     if (duration) {
       linesMerged
         .attrTween('d', (d, i, el) => {
           const previous = select(el[i]).attr('d')
-          const next = this.lineGen(d)
+          const next = this.lineGen(d) || this._emptyPath()
           return interpolatePath(previous, next)
         })
     } else {
@@ -92,5 +90,13 @@ export class Line<Datum> extends XYComponentCore<Datum> {
     }
 
     lines.exit().remove()
+  }
+
+  _emptyPath (): string {
+    const { config: { scales: { x, y } } } = this
+
+    const xRange = x.range()
+    const yRange = y.range()
+    return `M${xRange[0]},${yRange[0]} L${xRange[1]},${yRange[0]}`
   }
 }
