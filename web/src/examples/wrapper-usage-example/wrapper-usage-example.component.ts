@@ -3,7 +3,7 @@
 import { AfterViewInit, Component } from '@angular/core'
 
 // Vis
-import { Axis, StackedBar, Tooltip } from '@volterra/vis/components'
+import { Axis, StackedBar, Tooltip, Crosshair } from '@volterra/vis/components'
 
 // Helpers
 import { sampleSeriesData, SampleDatum } from '../../utils/data'
@@ -52,6 +52,10 @@ export class WrapperUsageExampleComponent implements AfterViewInit {
     triggers: {
       [StackedBar.selectors.bar]: (d) => `<span>Bar Chart</span>`,
     },
+  })
+
+  crosshair = new Crosshair({
+    template: (d) => '<span>Crosshair</span>',
   })
 
   ngAfterViewInit (): void {

@@ -18,6 +18,7 @@ export class XYChartComponent implements AfterViewInit {
   @Input() dimensions = { x: {}, y: {} }
   @Input() axes = {}
   @Input() tooltip
+  @Input() crosshair
   @Input() data = []
   chart: XYContainer<object>
   config = {}
@@ -50,9 +51,9 @@ export class XYChartComponent implements AfterViewInit {
   }
 
   getConfig (): XYContainerConfigInterface<object> {
-    const { margin, padding, components, dimensions, axes, tooltip } = this
+    const { margin, padding, components, dimensions, axes, tooltip, crosshair } = this
     return {
-      margin, padding, components, dimensions, axes, tooltip,
+      margin, padding, components, dimensions, axes, tooltip, crosshair,
     }
   }
 }
