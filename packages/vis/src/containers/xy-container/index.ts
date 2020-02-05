@@ -91,6 +91,14 @@ export class XYContainer<Datum> extends ContainerCore {
     // If there were any new comonents added we need to pass them data
     this.setData(this.datamodel.data, false)
 
+    // Set up the axes
+    Object.keys(containerConfig.axes ?? {}).forEach(key => {
+      this.config.axes[key].config.type = key as AxisType
+    })
+
+    if (containerConfig.axes?.x) this.element.appendChild(containerConfig.axes.x.element)
+    if (containerConfig.axes?.y) this.element.appendChild(containerConfig.axes.y.element)
+
     // Re-insert elements to the DOM
     for (const c of this.components) {
       this.element.appendChild(c.element)
@@ -112,14 +120,6 @@ export class XYContainer<Datum> extends ContainerCore {
 
       this.element.appendChild(crosshair.element)
     }
-
-    // Set up the axes
-    Object.keys(containerConfig.axes ?? {}).forEach(key => {
-      this.config.axes[key].config.type = key as AxisType
-    })
-
-    if (containerConfig.axes?.x) this.element.appendChild(containerConfig.axes.x.element)
-    if (containerConfig.axes?.y) this.element.appendChild(containerConfig.axes.y.element)
 
     // Clipping path
     this.element.appendChild(this._clipPath.node())
