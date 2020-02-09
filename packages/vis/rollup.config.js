@@ -4,6 +4,7 @@ import typescript from 'rollup-plugin-typescript2'
 import transformPaths from '@zerollup/ts-transform-paths'
 import resolve from 'rollup-plugin-node-resolve'
 import commonjs from 'rollup-plugin-commonjs'
+import json from '@rollup/plugin-json'
 import pkg from './package.json'
 import modules from './rollup.modules.json'
 
@@ -38,6 +39,7 @@ const plugins = [
   json(),
   commonjs(),
   resolve(),
+  json(),
   typescript({
     typescript: require('typescript'),
     transformers: [service => transformPaths(service.getProgram())],

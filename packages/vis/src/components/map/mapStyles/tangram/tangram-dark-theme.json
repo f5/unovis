@@ -1,0 +1,2338 @@
+{
+    "layers": {
+        "earth": {
+            "draw": {
+                "polygons": {
+                    "order": 1,
+                    "color": "#474c5e"
+                }
+            },
+            "island": {
+                "draw": {
+                    "text-blend-order": {
+                        "font": {
+                            "stroke": {
+                                "color": "#474c5e",
+                                "width": "4px"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "water": {
+            "data": {
+                "layer": "water",
+                "source": "mapzen"
+            },
+            "draw": {
+                "polygons": {
+                    "color": "#252832",
+                    "order": "global.feature_order",
+                    "style": null,
+                    "visible": true
+                }
+            },
+            "lakes": {
+                "draw": {
+                    "polygons": {
+                        "color": "#252832",
+                        "style": null,
+                        "visible": true
+                    }
+                },
+                "filter": {
+                    "all": [
+                        {
+                            "kind": [
+                                "ocean",
+                                "lake",
+                                "water",
+                                "riverbank",
+                                "reservoir",
+                                "swimming_pool"
+                            ]
+                        }
+                    ],
+                    "any": [
+                        {
+                            "$zoom": [
+                                1
+                            ],
+                            "area": {
+                                "min": 10000000000
+                            }
+                        },
+                        {
+                            "$zoom": [
+                                2
+                            ],
+                            "area": {
+                                "min": 7000000000
+                            }
+                        },
+                        {
+                            "$zoom": [
+                                3
+                            ],
+                            "area": {
+                                "min": 5000000000
+                            }
+                        },
+                        {
+                            "$zoom": [
+                                4
+                            ],
+                            "area": {
+                                "min": 300000000
+                            }
+                        },
+                        {
+                            "$zoom": [
+                                5
+                            ],
+                            "area": {
+                                "min": 50000000
+                            }
+                        },
+                        {
+                            "$zoom": [
+                                6
+                            ],
+                            "area": {
+                                "min": 50000000
+                            }
+                        },
+                        {
+                            "$zoom": [
+                                7
+                            ],
+                            "area": {
+                                "min": 50000000
+                            }
+                        },
+                        {
+                            "$zoom": [
+                                8
+                            ],
+                            "area": {
+                                "min": 50000000
+                            }
+                        },
+                        {
+                            "$zoom": [
+                                9
+                            ],
+                            "area": {
+                                "min": 15000000
+                            }
+                        },
+                        {
+                            "$zoom": [
+                                10
+                            ],
+                            "area": {
+                                "min": 4000000
+                            }
+                        },
+                        {
+                            "$zoom": [
+                                11
+                            ],
+                            "area": {
+                                "min": 1000000
+                            }
+                        },
+                        {
+                            "$zoom": [
+                                12
+                            ],
+                            "area": {
+                                "min": 250000
+                            }
+                        },
+                        {
+                            "$zoom": [
+                                13
+                            ],
+                            "area": {
+                                "min": 150000
+                            }
+                        },
+                        {
+                            "$zoom": [
+                                14
+                            ],
+                            "area": {
+                                "min": 40000
+                            }
+                        },
+                        {
+                            "$zoom": {
+                                "min": 15
+                            }
+                        }
+                    ]
+                }
+            },
+            "other-water-areas": {
+                "draw": {
+                    "polygons": {
+                        "color": "global.lighter_color",
+                        "style": "waves",
+                        "visible": false
+                    }
+                },
+                "filter": {
+                    "$zoom": {
+                        "min": 11
+                    },
+                    "area": {
+                        "min": 100
+                    },
+                    "not": {
+                        "kind": [
+                            "ocean",
+                            "lake",
+                            "water",
+                            "reservoir"
+                        ]
+                    }
+                }
+            },
+            "playas": {
+                "draw": {
+                    "polygons": {
+                        "color": "global.playas_color",
+                        "order": "global.feature_order",
+                        "style": "polygons",
+                        "visible": false
+                    }
+                },
+                "filter": {
+                    "kind": "playa"
+                }
+            },
+            "river": {
+                "draw": {
+                    "lines": {
+                        "cap": "round",
+                        "color": "global.extralight_color",
+                        "order": "global.feature_order_down_1",
+                        "style": "riverlines",
+                        "visible": false,
+                        "width": [
+                            [
+                                11,
+                                "0.5px"
+                            ],
+                            [
+                                14,
+                                "2px"
+                            ],
+                            [
+                                18,
+                                "8px"
+                            ]
+                        ]
+                    }
+                },
+                "filter": {
+                    "$zoom": {
+                        "min": 11
+                    },
+                    "kind": [
+                        "river",
+                        "canal",
+                        "stream",
+                        "dam",
+                        "ditch",
+                        "drain"
+                    ],
+                    "not": {
+                        "is_tunnel": true
+                    }
+                },
+                "intermittent": {
+                    "draw": {
+                        "lines": {
+                            "color": "global.extralight_color",
+                            "style": "coast"
+                        }
+                    },
+                    "filter": {
+                        "any": [
+                            {
+                                "intermittent": [
+                                    true
+                                ]
+                            },
+                            {
+                                "kind": "drain"
+                            }
+                        ]
+                    }
+                }
+            },
+            "water-area-labels": {
+                "draw": {
+                    "text-blend-order": {
+                        "font": {
+                            "family": "global.text_font_family",
+                            "fill": "#B3BABE",
+                            "weight": "normal"
+                        },
+                        "text_source": "global.ux_language_text_source",
+                        "visible": false
+                    }
+                },
+                "filter": {
+                    "all": [
+                        {
+                            "name": true
+                        },
+                        "function() { return global.text_visible_water_labels; }"
+                    ]
+                },
+                "mostly-lakes": {
+                    "draw": {
+                        "text-blend-order": {
+                            "font": {
+                                "size": [
+                                    [
+                                        5,
+                                        "9px"
+                                    ],
+                                    [
+                                        14,
+                                        "12px"
+                                    ]
+                                ],
+                                "style": "italic"
+                            },
+                            "text_wrap": 8,
+                            "visible": "global.text_visible_water_labels"
+                        }
+                    },
+                    "filter": {
+                        "all": [
+                            {
+                                "$zoom": {
+                                    "min": 3
+                                }
+                            },
+                            {
+                                "$geometry": "point"
+                            },
+                            {
+                                "not": {
+                                    "kind": [
+                                        "riverbank",
+                                        "dock",
+                                        "playa"
+                                    ]
+                                }
+                            },
+                            {
+                                "area": true
+                            }
+                        ],
+                        "any": [
+                            {
+                                "$zoom": [
+                                    3
+                                ],
+                                "area": {
+                                    "min": 100000000000
+                                }
+                            },
+                            {
+                                "$zoom": [
+                                    4
+                                ],
+                                "area": {
+                                    "min": 50000000000
+                                }
+                            },
+                            {
+                                "$zoom": [
+                                    5
+                                ],
+                                "area": {
+                                    "min": 10000000000
+                                }
+                            },
+                            {
+                                "$zoom": [
+                                    6
+                                ],
+                                "area": {
+                                    "min": 1700000000
+                                }
+                            },
+                            {
+                                "$zoom": [
+                                    7
+                                ],
+                                "area": {
+                                    "min": 425000000
+                                }
+                            },
+                            {
+                                "$zoom": [
+                                    8
+                                ],
+                                "area": {
+                                    "min": 40000000
+                                }
+                            },
+                            {
+                                "$zoom": [
+                                    9
+                                ],
+                                "area": {
+                                    "min": 40000000
+                                }
+                            },
+                            {
+                                "$zoom": [
+                                    10
+                                ],
+                                "area": {
+                                    "min": 10000000
+                                }
+                            },
+                            {
+                                "$zoom": [
+                                    11
+                                ],
+                                "area": {
+                                    "min": 1500000
+                                }
+                            },
+                            {
+                                "$zoom": [
+                                    12
+                                ],
+                                "area": {
+                                    "min": 700000
+                                }
+                            },
+                            {
+                                "$zoom": [
+                                    13
+                                ],
+                                "area": {
+                                    "min": 100000
+                                }
+                            },
+                            {
+                                "$zoom": [
+                                    14
+                                ],
+                                "area": {
+                                    "min": 50000
+                                }
+                            },
+                            {
+                                "$zoom": [
+                                    15
+                                ],
+                                "area": {
+                                    "min": 50000
+                                }
+                            },
+                            {
+                                "$zoom": [
+                                    15
+                                ],
+                                "area": {
+                                    "min": 25000
+                                }
+                            },
+                            {
+                                "$zoom": [
+                                    16
+                                ],
+                                "area": {
+                                    "min": 1000
+                                }
+                            },
+                            {
+                                "$zoom": {
+                                    "min": 17
+                                }
+                            }
+                        ]
+                    }
+                },
+                "ocean-labels": {
+                    "draw": {
+                        "text-blend-order": {
+                            "font": {
+                                "size": [
+                                    [
+                                        1,
+                                        "7px"
+                                    ],
+                                    [
+                                        2,
+                                        "9px"
+                                    ],
+                                    [
+                                        4,
+                                        "11px"
+                                    ]
+                                ],
+                                "transform": "uppercase"
+                            },
+                            "priority": 1,
+                            "text_source": "global.ux_language_text_source_ocean",
+                            "text_wrap": false,
+                            "visible": "global.text_visible_water_labels"
+                        }
+                    },
+                    "filter": {
+                        "all": [
+                            {
+                                "$zoom": {
+                                    "min": 1
+                                }
+                            },
+                            {
+                                "kind": [
+                                    "ocean"
+                                ]
+                            }
+                        ]
+                    }
+                },
+                "playa-labels": {
+                    "draw": {
+                        "text-blend-order": {
+                            "font": {
+                                "fill": "global.mid_color",
+                                "size": "9px",
+                                "stroke": {
+                                    "color": "global.text_stroke",
+                                    "width": "3px"
+                                },
+                                "style": "italic"
+                            },
+                            "visible": "global.text_visible_water_labels"
+                        }
+                    },
+                    "filter": {
+                        "all": [
+                            {
+                                "$geometry": "point"
+                            },
+                            {
+                                "kind": "playa"
+                            },
+                            {
+                                "area": true
+                            }
+                        ],
+                        "any": [
+                            {
+                                "$zoom": {
+                                    "min": 7
+                                },
+                                "area": {
+                                    "min": 1500000000
+                                }
+                            },
+                            {
+                                "$zoom": {
+                                    "min": 8
+                                },
+                                "area": {
+                                    "min": 200000000
+                                }
+                            },
+                            {
+                                "$zoom": {
+                                    "min": 9
+                                },
+                                "area": {
+                                    "min": 100000000
+                                }
+                            },
+                            {
+                                "$zoom": {
+                                    "min": 10
+                                },
+                                "area": {
+                                    "min": 100000000
+                                }
+                            },
+                            {
+                                "$zoom": {
+                                    "min": 11
+                                },
+                                "area": {
+                                    "min": 10000000
+                                }
+                            },
+                            {
+                                "$zoom": {
+                                    "min": 12
+                                },
+                                "area": {
+                                    "min": 2000000
+                                }
+                            },
+                            {
+                                "$zoom": {
+                                    "min": 13
+                                },
+                                "area": {
+                                    "min": 1000000
+                                }
+                            },
+                            {
+                                "$zoom": {
+                                    "min": 14
+                                },
+                                "area": {
+                                    "min": 500000
+                                }
+                            },
+                            {
+                                "$zoom": {
+                                    "min": 15
+                                },
+                                "area": {
+                                    "min": 100000
+                                }
+                            },
+                            {
+                                "$zoom": {
+                                    "min": 15
+                                },
+                                "area": {
+                                    "min": 50000
+                                }
+                            },
+                            {
+                                "$zoom": {
+                                    "min": 16
+                                },
+                                "area": {
+                                    "min": 20000
+                                }
+                            },
+                            {
+                                "$zoom": {
+                                    "min": 17
+                                }
+                            }
+                        ]
+                    }
+                },
+                "sea-labels": {
+                    "draw": {
+                        "text-blend-order": {
+                            "font": {
+                                "fill": "#939B9F",
+                                "size": [
+                                    [
+                                        4,
+                                        "8px"
+                                    ],
+                                    [
+                                        6,
+                                        "10px"
+                                    ],
+                                    [
+                                        18,
+                                        "16px"
+                                    ]
+                                ],
+                                "transform": "uppercase"
+                            },
+                            "priority": 2,
+                            "text_source": "global.ux_language_text_source_sea",
+                            "text_wrap": false,
+                            "visible": "global.text_visible_water_labels"
+                        }
+                    },
+                    "filter": {
+                        "all": [
+                            {
+                                "$zoom": {
+                                    "min": 4
+                                }
+                            },
+                            {
+                                "kind": [
+                                    "sea"
+                                ]
+                            }
+                        ]
+                    }
+                },
+                "water-line-labels": {
+                    "draw": {
+                        "text-blend-order": {
+                            "font": {
+                                "size": [
+                                    [
+                                        14,
+                                        "12px"
+                                    ],
+                                    [
+                                        17,
+                                        "14px"
+                                    ]
+                                ],
+                                "style": "italic"
+                            },
+                            "visible": "global.text_visible_water_labels"
+                        }
+                    },
+                    "filter": {
+                        "all": [
+                            {
+                                "$geometry": "line"
+                            },
+                            {
+                                "kind": [
+                                    "river",
+                                    "canal",
+                                    "stream",
+                                    "dam",
+                                    "ditch",
+                                    "drain"
+                                ]
+                            },
+                            {
+                                "$zoom": {
+                                    "min": 14
+                                }
+                            }
+                        ]
+                    },
+                    "not-river-not-stream": {
+                        "draw": {
+                            "text-blend-order": {
+                                "visible": false
+                            }
+                        },
+                        "filter": {
+                            "$zoom": {
+                                "max": 16
+                            },
+                            "kind": [
+                                "canal",
+                                "dam",
+                                "ditch",
+                                "drain"
+                            ]
+                        }
+                    },
+                    "stream": {
+                        "draw": {
+                            "text-blend-order": {
+                                "visible": false
+                            }
+                        },
+                        "filter": {
+                            "$zoom": {
+                                "max": 17
+                            },
+                            "kind": [
+                                "stream"
+                            ]
+                        }
+                    }
+                }
+            },
+            "water-boundary-ocean": {
+                "draw": {
+                    "lines": {
+                        "color": [
+                            [
+                                1,
+                                "global.light_color"
+                            ],
+                            [
+                                6,
+                                "global.mid_color"
+                            ]
+                        ],
+                        "join": "round",
+                        "order": "global.feature_order",
+                        "style": "coast",
+                        "visible": false,
+                        "width": [
+                            [
+                                1,
+                                "1px"
+                            ],
+                            [
+                                20,
+                                "10px"
+                            ]
+                        ]
+                    }
+                },
+                "enabled": "global.sdk_coastline",
+                "filter": {
+                    "$zoom": {
+                        "min": 1
+                    },
+                    "boundary": true,
+                    "kind": "ocean"
+                }
+            }
+        },
+        "places": {
+            "populated-places": {
+                "draw": {
+                    "text-blend-order": {
+                        "buffer": "10px",
+                        "font": {
+                            "fill": "#a8b1b9",
+                            "size": [
+                                [
+                                    5,
+                                    "9px"
+                                ],
+                                [
+                                    8,
+                                    "10px"
+                                ],
+                                [
+                                    12,
+                                    "11px"
+                                ]
+                            ],
+                            "stroke": {
+                                "color": "#474c5e",
+                                "width": "4px"
+                            }
+                        },
+                        "visible": "global.text_visible_populated_places"
+                    }
+                }
+            }
+        },
+        "boundaries": {
+            "country": {
+                "draw": {
+                    "lines": {
+                        "color": "#21242c",
+                        "width": [
+                            [
+                                0,
+                                "0px"
+                            ],
+                            [
+                                5,
+                                "1px"
+                            ],
+                            [
+                                10,
+                                "3px"
+                            ],
+                            [
+                                14,
+                                "4px"
+                            ]
+                        ]
+                    }
+                }
+            },
+            "other_country_boundary_disputed_etc": {
+                "disputed": {
+                    "draw": {
+                        "lines": {
+                            "color": "#21242c",
+                            "dash": [
+                                2,
+                                1
+                            ],
+                            "width": [
+                                [
+                                    1,
+                                    "0.5px"
+                                ],
+                                [
+                                    9,
+                                    "2.5px"
+                                ],
+                                [
+                                    17,
+                                    "14m"
+                                ]
+                            ]
+                        }
+                    },
+                    "filter": {
+                        "kind": [
+                            "disputed",
+                            "line_of_control"
+                        ]
+                    }
+                },
+                "draw": {
+                    "lines": {
+                        "color": "#21242c",
+                        "dash": [
+                            1.25,
+                            1.25
+                        ],
+                        "order": "global.feature_order",
+                        "width": [
+                            [
+                                1,
+                                "0.2px"
+                            ],
+                            [
+                                9,
+                                "1.5px"
+                            ],
+                            [
+                                17,
+                                "10m"
+                            ]
+                        ]
+                    }
+                },
+                "filter": {
+                    "kind": [
+                        "disputed",
+                        "indefinite",
+                        "indeterminate",
+                        "lease_limit",
+                        "line_of_control",
+                        "overlay_limit"
+                    ]
+                }
+            },
+            "region": {
+                "dash-borders": {
+                    "draw": {
+                        "lines": {
+                            "color": "#21242c",
+                            "width": "1px"
+                        }
+                    },
+                    "filter": {
+                        "$zoom": {
+                            "min": 5
+                        }
+                    }
+                },
+                "draw": {
+                    "lines": {
+                        "color": "#21242c",
+                        "width": "1px"
+                    },
+                    "filter": {
+                        "$zoom": {
+                            "min": 5
+                        }
+                    }
+                },
+                "early": {
+                    "draw": {
+                        "lines": {
+                            "visible": true
+                        }
+                    }
+                },
+                "filter": {
+                    "any": [
+                        {
+                            "kind": [
+                                "region",
+                                "macroregion"
+                            ]
+                        },
+                        {
+                            "kind_detail": [
+                                3,
+                                4
+                            ]
+                        }
+                    ],
+                    "$zoom": {
+                        "min": 6
+                    }
+                }
+            }
+        },
+        "roads": {
+            "early": {
+                "draw": {
+                    "lines": {
+                        "color": "#756F7C"
+                    }
+                }
+            },
+            "highway": {
+                "draw": {
+                    "lines": {
+                        "color": "#756F7C"
+                    }
+                }
+            },
+            "minor_road": {
+                "draw": {
+                    "lines": {
+                        "color": "#62606F",
+                        "outline": {
+                            "color": "#62606F"
+                        }
+                    }
+                }
+            },
+            "major_road": {
+                "draw": {
+                    "lines": {
+                        "color": [
+                            [
+                                8,
+                                "#756F7C"
+                            ],
+                            [
+                                13,
+                                "#756F7C"
+                            ],
+                            [
+                                17,
+                                "#756F7C"
+                            ]
+                        ],
+                        "outline": {
+                            "width": [
+                                [
+                                    12,
+                                    "0px"
+                                ],
+                                [
+                                    13,
+                                    "0.5px"
+                                ],
+                                [
+                                    15,
+                                    "1px"
+                                ],
+                                [
+                                    17,
+                                    "2px"
+                                ]
+                            ]
+                        },
+                        "width": [
+                            [
+                                13,
+                                "1px"
+                            ],
+                            [
+                                14,
+                                "1px"
+                            ],
+                            [
+                                16,
+                                "2.5px"
+                            ],
+                            [
+                                17,
+                                "3px"
+                            ]
+                        ]
+                    }
+                },
+                "filter": {
+                    "$zoom": {
+                        "min": 8
+                    },
+                    "kind": "major_road"
+                },
+                "link": {
+                    "draw": {
+                        "lines": {
+                            "color": [
+                                [
+                                    10,
+                                    "#756F7C"
+                                ],
+                                [
+                                    15,
+                                    "#756F7C"
+                                ],
+                                [
+                                    16,
+                                    "#756F7C"
+                                ]
+                            ],
+                            "outline": {
+                                "color": [
+                                    [
+                                        10,
+                                        "#756F7C"
+                                    ],
+                                    [
+                                        15,
+                                        "#756F7C"
+                                    ],
+                                    [
+                                        16,
+                                        "#756F7C"
+                                    ]
+                                ],
+                                "width": [
+                                    [
+                                        10,
+                                        "0px"
+                                    ],
+                                    [
+                                        15,
+                                        "0px"
+                                    ],
+                                    [
+                                        16,
+                                        "1px"
+                                    ],
+                                    [
+                                        18,
+                                        "2px"
+                                    ]
+                                ]
+                            },
+                            "width": [
+                                [
+                                    10,
+                                    "0.5px"
+                                ],
+                                [
+                                    12,
+                                    "0.5px"
+                                ],
+                                [
+                                    15,
+                                    "1px"
+                                ],
+                                [
+                                    16,
+                                    "1.75px"
+                                ],
+                                [
+                                    17,
+                                    "3px"
+                                ],
+                                [
+                                    18,
+                                    "5m"
+                                ]
+                            ]
+                        }
+                    },
+                    "filter": {
+                        "is_link": true
+                    }
+                },
+                "secondary": {
+                    "draw": {
+                        "lines": {
+                            "color": [
+                                [
+                                    10,
+                                    "#756F7C"
+                                ],
+                                [
+                                    13,
+                                    "#756F7C"
+                                ],
+                                [
+                                    15,
+                                    "#756F7C"
+                                ],
+                                [
+                                    16,
+                                    "#756F7C"
+                                ]
+                            ],
+                            "outline": {
+                                "color": [
+                                    [
+                                        10,
+                                        "#756F7C"
+                                    ],
+                                    [
+                                        14,
+                                        "#756F7C"
+                                    ],
+                                    [
+                                        15,
+                                        "#756F7C"
+                                    ]
+                                ],
+                                "width": [
+                                    [
+                                        10,
+                                        "0px"
+                                    ],
+                                    [
+                                        15,
+                                        "0px"
+                                    ],
+                                    [
+                                        16,
+                                        "1.1px"
+                                    ],
+                                    [
+                                        17,
+                                        "2px"
+                                    ]
+                                ]
+                            },
+                            "width": [
+                                [
+                                    10,
+                                    "0.5px"
+                                ],
+                                [
+                                    12,
+                                    "0.5px"
+                                ],
+                                [
+                                    14,
+                                    "1px"
+                                ],
+                                [
+                                    15,
+                                    "1.5px"
+                                ],
+                                [
+                                    16,
+                                    "0.1px"
+                                ],
+                                [
+                                    17,
+                                    "7.5px"
+                                ],
+                                [
+                                    18,
+                                    "9m"
+                                ]
+                            ]
+                        }
+                    },
+                    "early": {
+                        "draw": {
+                            "lines": {
+                                "order": 352,
+                                "outline": {
+                                    "order": 353
+                                }
+                            }
+                        },
+                        "filter": {
+                            "$zoom": {
+                                "max": 16
+                            }
+                        }
+                    },
+                    "filter": {
+                        "kind_detail": "secondary"
+                    },
+                    "labels-secondary": {
+                        "draw": {
+                            "text-blend-order": {
+                                "font": {
+                                    "fill": [
+                                        [
+                                            13,
+                                            "global.dark_color"
+                                        ],
+                                        [
+                                            17,
+                                            "global.black_color"
+                                        ]
+                                    ],
+                                    "size": [
+                                        [
+                                            13,
+                                            "10px"
+                                        ],
+                                        [
+                                            17,
+                                            "13px"
+                                        ]
+                                    ],
+                                    "stroke": {
+                                        "color": "global.text_stroke",
+                                        "width": "4px"
+                                    }
+                                },
+                                "priority": 56,
+                                "text_source": "global.ux_language_text_source_road_ref_and_name_short",
+                                "visible": "global.text_visible_secondary"
+                            }
+                        },
+                        "filter": {
+                            "$zoom": {
+                                "min": 13
+                            }
+                        }
+                    },
+                    "routes": {
+                        "draw": {
+                            "lines": {
+                                "color": [
+                                    [
+                                        10,
+                                        "#756F7C"
+                                    ],
+                                    [
+                                        13,
+                                        "#756F7C"
+                                    ],
+                                    [
+                                        15,
+                                        "#756F7C"
+                                    ],
+                                    [
+                                        16,
+                                        "#756F7C"
+                                    ]
+                                ],
+                                "outline": {
+                                    "color": [
+                                        [
+                                            10,
+                                            "#756F7C"
+                                        ],
+                                        [
+                                            14,
+                                            "#756F7C"
+                                        ],
+                                        [
+                                            15,
+                                            "#756F7C"
+                                        ]
+                                    ],
+                                    "width": [
+                                        [
+                                            10,
+                                            "0px"
+                                        ],
+                                        [
+                                            15,
+                                            "0px"
+                                        ],
+                                        [
+                                            16,
+                                            "1.5px"
+                                        ],
+                                        [
+                                            17,
+                                            "2px"
+                                        ]
+                                    ]
+                                },
+                                "width": [
+                                    [
+                                        10,
+                                        "0.5px"
+                                    ],
+                                    [
+                                        13,
+                                        "1px"
+                                    ],
+                                    [
+                                        15,
+                                        "1.5px"
+                                    ],
+                                    [
+                                        16,
+                                        "0.1px"
+                                    ],
+                                    [
+                                        17,
+                                        "7.5px"
+                                    ],
+                                    [
+                                        18,
+                                        "9m"
+                                    ]
+                                ]
+                            }
+                        },
+                        "early": {
+                            "draw": {
+                                "lines": {
+                                    "order": "function() { return feature.sort_rank + 2; }",
+                                    "outline": {
+                                        "order": 353
+                                    }
+                                }
+                            },
+                            "filter": {
+                                "$zoom": {
+                                    "max": 15
+                                }
+                            }
+                        },
+                        "filter": {
+                            "$zoom": {
+                                "min": 12
+                            },
+                            "ref": true
+                        },
+                        "labels-secondary-routes-z13-z14": {
+                            "draw": {
+                                "text-blend-order": {
+                                    "font": {
+                                        "fill": "global.black_color",
+                                        "size": "11px",
+                                        "stroke": {
+                                            "color": "global.text_stroke",
+                                            "width": "4px"
+                                        }
+                                    },
+                                    "priority": 56,
+                                    "text_source": "global.ux_language_text_source_road_ref_and_name_short",
+                                    "visible": "global.text_visible_secondary"
+                                }
+                            },
+                            "filter": {
+                                "$zoom": [
+                                    13,
+                                    14
+                                ]
+                            }
+                        },
+                        "labels-secondary-routes-z15-up": {
+                            "draw": {
+                                "text-blend-order": {
+                                    "font": {
+                                        "fill": "global.black_color",
+                                        "size": [
+                                            [
+                                                15,
+                                                "11px"
+                                            ],
+                                            [
+                                                17,
+                                                "13px"
+                                            ]
+                                        ],
+                                        "stroke": {
+                                            "color": "global.text_stroke",
+                                            "width": "4px"
+                                        },
+                                        "weight": 600
+                                    },
+                                    "priority": 56,
+                                    "text_source": "global.ux_language_text_source_road_ref_and_name_short",
+                                    "visible": "global.text_visible_secondary"
+                                }
+                            },
+                            "filter": {
+                                "$zoom": {
+                                    "min": 15
+                                }
+                            }
+                        },
+                        "tunnel": {
+                            "draw": {
+                                "lines": {
+                                    "color": [
+                                        [
+                                            13,
+                                            "#756F7C"
+                                        ],
+                                        [
+                                            15,
+                                            "#756F7C"
+                                        ],
+                                        [
+                                            16,
+                                            "#756F7C"
+                                        ]
+                                    ],
+                                    "outline": {
+                                        "color": [
+                                            [
+                                                13,
+                                                "#756F7C"
+                                            ],
+                                            [
+                                                14,
+                                                "#756F7C"
+                                            ],
+                                            [
+                                                15,
+                                                "#756F7C"
+                                            ]
+                                        ]
+                                    }
+                                }
+                            },
+                            "filter": {
+                                "$zoom": {
+                                    "min": 13
+                                },
+                                "is_tunnel": true
+                            }
+                        }
+                    }
+                },
+                "tertiary": {
+                    "draw": {
+                        "lines": {
+                            "color": [
+                                [
+                                    11,
+                                    "#756F7C"
+                                ],
+                                [
+                                    15,
+                                    "#756F7C"
+                                ],
+                                [
+                                    16,
+                                    "#756F7C"
+                                ]
+                            ],
+                            "outline": {
+                                "color": [
+                                    [
+                                        11,
+                                        "#756F7C"
+                                    ],
+                                    [
+                                        14,
+                                        "#756F7C"
+                                    ],
+                                    [
+                                        15,
+                                        "#756F7C"
+                                    ]
+                                ],
+                                "width": [
+                                    [
+                                        11,
+                                        "0px"
+                                    ],
+                                    [
+                                        15,
+                                        "0px"
+                                    ],
+                                    [
+                                        16,
+                                        "1px"
+                                    ],
+                                    [
+                                        17,
+                                        "2px"
+                                    ],
+                                    [
+                                        18,
+                                        "2px"
+                                    ]
+                                ]
+                            },
+                            "width": [
+                                [
+                                    11,
+                                    "0.5px"
+                                ],
+                                [
+                                    15,
+                                    "1.25px"
+                                ],
+                                [
+                                    16,
+                                    "0.1px"
+                                ],
+                                [
+                                    17,
+                                    "6px"
+                                ],
+                                [
+                                    18,
+                                    "9m"
+                                ]
+                            ]
+                        }
+                    },
+                    "early": {
+                        "draw": {
+                            "lines": {
+                                "order": 352,
+                                "outline": {
+                                    "order": "function() { return feature.sort_rank + 3; }"
+                                }
+                            }
+                        },
+                        "filter": {
+                            "$zoom": {
+                                "max": 15
+                            }
+                        }
+                    },
+                    "filter": {
+                        "kind_detail": [
+                            "tertiary",
+                            "tertiary_link"
+                        ]
+                    },
+                    "labels-tertiary": {
+                        "draw": {
+                            "text-blend-order": {
+                                "font": {
+                                    "fill": [
+                                        [
+                                            13,
+                                            "global.dark_color"
+                                        ],
+                                        [
+                                            18,
+                                            "global.black_color"
+                                        ]
+                                    ],
+                                    "size": [
+                                        [
+                                            13,
+                                            "10px"
+                                        ],
+                                        [
+                                            17,
+                                            "13px"
+                                        ]
+                                    ],
+                                    "stroke": {
+                                        "color": "global.text_stroke",
+                                        "width": "5px"
+                                    }
+                                },
+                                "priority": 57,
+                                "text_source": "global.ux_language_text_source_road_ref_and_name_short",
+                                "visible": "global.text_visible_tertiary"
+                            }
+                        },
+                        "filter": {
+                            "$zoom": {
+                                "min": 13
+                            }
+                        }
+                    },
+                    "link": {
+                        "draw": {
+                            "lines": {
+                                "color": [
+                                    [
+                                        14,
+                                        "global.light_color"
+                                    ],
+                                    [
+                                        15,
+                                        "global.dark_color"
+                                    ],
+                                    [
+                                        16,
+                                        "global.white_color"
+                                    ]
+                                ],
+                                "outline": {
+                                    "color": [
+                                        [
+                                            11,
+                                            "global.white_color"
+                                        ],
+                                        [
+                                            14,
+                                            "global.white_color"
+                                        ],
+                                        [
+                                            15,
+                                            "global.black_color"
+                                        ]
+                                    ],
+                                    "width": [
+                                        [
+                                            11,
+                                            "0px"
+                                        ],
+                                        [
+                                            14,
+                                            "0px"
+                                        ],
+                                        [
+                                            16,
+                                            "0.25px"
+                                        ],
+                                        [
+                                            18,
+                                            "2px"
+                                        ]
+                                    ]
+                                },
+                                "width": [
+                                    [
+                                        11,
+                                        "0.0px"
+                                    ],
+                                    [
+                                        15,
+                                        "0.5px"
+                                    ],
+                                    [
+                                        16,
+                                        "0.1px"
+                                    ],
+                                    [
+                                        18,
+                                        "4.5m"
+                                    ]
+                                ]
+                            }
+                        },
+                        "filter": {
+                            "is_link": true
+                        }
+                    },
+                    "routes": {
+                        "draw": {
+                            "lines": {
+                                "color": [
+                                    [
+                                        11,
+                                        "#756F7C"
+                                    ],
+                                    [
+                                        15,
+                                        "#756F7C"
+                                    ],
+                                    [
+                                        16,
+                                        "#756F7C"
+                                    ]
+                                ],
+                                "outline": {
+                                    "color": [
+                                        [
+                                            11,
+                                            "#756F7C"
+                                        ],
+                                        [
+                                            14,
+                                            "#756F7C"
+                                        ],
+                                        [
+                                            15,
+                                            "#756F7C"
+                                        ]
+                                    ],
+                                    "width": [
+                                        [
+                                            11,
+                                            "0px"
+                                        ],
+                                        [
+                                            15,
+                                            "0px"
+                                        ],
+                                        [
+                                            16,
+                                            "1px"
+                                        ],
+                                        [
+                                            17,
+                                            "2px"
+                                        ],
+                                        [
+                                            18,
+                                            "2px"
+                                        ]
+                                    ]
+                                },
+                                "width": [
+                                    [
+                                        11,
+                                        "0.5px"
+                                    ],
+                                    [
+                                        15,
+                                        "1.25px"
+                                    ],
+                                    [
+                                        16,
+                                        "0.1px"
+                                    ],
+                                    [
+                                        17,
+                                        "6px"
+                                    ],
+                                    [
+                                        18,
+                                        "9m"
+                                    ]
+                                ]
+                            }
+                        },
+                        "early": {
+                            "draw": {
+                                "lines": {
+                                    "order": "function() { return feature.sort_rank + 3; }",
+                                    "outline": {
+                                        "order": 353
+                                    }
+                                }
+                            },
+                            "filter": {
+                                "$zoom": {
+                                    "max": 15
+                                }
+                            }
+                        },
+                        "filter": {
+                            "$zoom": {
+                                "min": 12
+                            },
+                            "ref": true
+                        },
+                        "tunnel": {
+                            "draw": {
+                                "lines": {
+                                    "color": [
+                                        [
+                                            13,
+                                            "#756F7C"
+                                        ],
+                                        [
+                                            15,
+                                            "#756F7C"
+                                        ],
+                                        [
+                                            16,
+                                            "#756F7C"
+                                        ]
+                                    ],
+                                    "outline": {
+                                        "color": [
+                                            [
+                                                13,
+                                                "#756F7C"
+                                            ],
+                                            [
+                                                14,
+                                                "#756F7C"
+                                            ],
+                                            [
+                                                15,
+                                                "#756F7C"
+                                            ]
+                                        ]
+                                    }
+                                }
+                            },
+                            "filter": {
+                                "$zoom": {
+                                    "min": 13
+                                },
+                                "is_tunnel": true
+                            }
+                        }
+                    }
+                },
+                "trunk_primary": {
+                    "draw": {
+                        "lines": {
+                            "color": [
+                                [
+                                    8,
+                                    "#756F7C"
+                                ],
+                                [
+                                    12,
+                                    "#756F7C"
+                                ],
+                                [
+                                    13,
+                                    "#756F7C"
+                                ],
+                                [
+                                    14,
+                                    "#756F7C"
+                                ]
+                            ],
+                            "outline": {
+                                "color": [
+                                    [
+                                        8,
+                                        "#756F7C"
+                                    ],
+                                    [
+                                        12,
+                                        "#756F7C"
+                                    ],
+                                    [
+                                        13,
+                                        "#756F7C"
+                                    ]
+                                ],
+                                "width": [
+                                    [
+                                        8,
+                                        "0px"
+                                    ],
+                                    [
+                                        13,
+                                        "0px"
+                                    ],
+                                    [
+                                        14,
+                                        "0.75px"
+                                    ],
+                                    [
+                                        16,
+                                        "1.5px"
+                                    ],
+                                    [
+                                        18,
+                                        "4px"
+                                    ]
+                                ]
+                            },
+                            "width": [
+                                [
+                                    8,
+                                    "0.5px"
+                                ],
+                                [
+                                    11,
+                                    "0.5px"
+                                ],
+                                [
+                                    13,
+                                    "1px"
+                                ],
+                                [
+                                    14,
+                                    "0.1px"
+                                ],
+                                [
+                                    16,
+                                    "2px"
+                                ],
+                                [
+                                    17,
+                                    "8px"
+                                ],
+                                [
+                                    18,
+                                    "10m"
+                                ]
+                            ]
+                        }
+                    },
+                    "early": {
+                        "draw": {
+                            "lines": {
+                                "order": 352,
+                                "outline": {
+                                    "order": "function() { return feature.sort_rank + 2; }"
+                                }
+                            }
+                        },
+                        "filter": {
+                            "$zoom": {
+                                "max": 16
+                            }
+                        },
+                        "primary": {
+                            "draw": {
+                                "lines": {
+                                    "outline": {
+                                        "order": "function() { return feature.sort_rank + 1; }"
+                                    }
+                                }
+                            },
+                            "filter": {
+                                "kind": [
+                                    "primary"
+                                ]
+                            }
+                        }
+                    },
+                    "filter": {
+                        "kind_detail": [
+                            "trunk",
+                            "primary"
+                        ]
+                    },
+                    "labels-trunk_primary-z11-z15": {
+                        "draw": {
+                            "text-blend-order": {
+                                "font": {
+                                    "fill": "global.dark_color",
+                                    "size": [
+                                        [
+                                            11,
+                                            "10px"
+                                        ],
+                                        [
+                                            15,
+                                            "12px"
+                                        ]
+                                    ],
+                                    "stroke": {
+                                        "color": "global.text_stroke",
+                                        "width": "4px"
+                                    }
+                                },
+                                "priority": 51,
+                                "text_source": "global.ux_language_text_source_road_ref_and_name_short",
+                                "visible": "global.text_visible_trunk_primary"
+                            }
+                        },
+                        "filter": {
+                            "$zoom": [
+                                11,
+                                12,
+                                13,
+                                14,
+                                15
+                            ]
+                        }
+                    },
+                    "labels-trunk_primary-z16-up": {
+                        "draw": {
+                            "text-blend-order": {
+                                "font": {
+                                    "fill": [
+                                        [
+                                            16,
+                                            "global.dark_color"
+                                        ],
+                                        [
+                                            18,
+                                            "global.black_color"
+                                        ]
+                                    ],
+                                    "size": [
+                                        [
+                                            16,
+                                            "13px"
+                                        ],
+                                        [
+                                            18,
+                                            "13px"
+                                        ],
+                                        [
+                                            19,
+                                            "16px"
+                                        ]
+                                    ],
+                                    "stroke": {
+                                        "color": "global.text_stroke",
+                                        "width": [
+                                            [
+                                                16,
+                                                "4px"
+                                            ],
+                                            [
+                                                17,
+                                                "6px"
+                                            ]
+                                        ]
+                                    },
+                                    "weight": 600
+                                },
+                                "priority": 51,
+                                "text_source": "global.ux_language_text_source_road_ref_and_name",
+                                "visible": "global.text_visible_trunk_primary"
+                            }
+                        },
+                        "filter": {
+                            "$zoom": {
+                                "min": 16
+                            }
+                        }
+                    },
+                    "routes": {
+                        "draw": {
+                            "lines": {
+                                "color": [
+                                    [
+                                        8,
+                                        "#756F7C"
+                                    ],
+                                    [
+                                        12,
+                                        "#756F7C"
+                                    ],
+                                    [
+                                        13,
+                                        "#756F7C"
+                                    ],
+                                    [
+                                        14,
+                                        "#756F7C"
+                                    ]
+                                ],
+                                "outline": {
+                                    "color": [
+                                        [
+                                            8,
+                                            "#756F7C"
+                                        ],
+                                        [
+                                            12,
+                                            "#756F7C"
+                                        ],
+                                        [
+                                            13,
+                                            "#756F7C"
+                                        ]
+                                    ],
+                                    "width": [
+                                        [
+                                            8,
+                                            "0px"
+                                        ],
+                                        [
+                                            13,
+                                            "0px"
+                                        ],
+                                        [
+                                            14,
+                                            "0.75px"
+                                        ],
+                                        [
+                                            15,
+                                            "1.5px"
+                                        ],
+                                        [
+                                            17,
+                                            "3px"
+                                        ],
+                                        [
+                                            18,
+                                            "4px"
+                                        ]
+                                    ]
+                                },
+                                "width": [
+                                    [
+                                        9,
+                                        "0.5px"
+                                    ],
+                                    [
+                                        13,
+                                        "1px"
+                                    ],
+                                    [
+                                        14,
+                                        "0.1px"
+                                    ],
+                                    [
+                                        15,
+                                        "1.25px"
+                                    ],
+                                    [
+                                        16,
+                                        "2px"
+                                    ],
+                                    [
+                                        17,
+                                        "8px"
+                                    ],
+                                    [
+                                        18,
+                                        "10m"
+                                    ]
+                                ]
+                            }
+                        },
+                        "early": {
+                            "draw": {
+                                "lines": {
+                                    "order": "function() { return feature.sort_rank + 2; }",
+                                    "outline": {
+                                        "order": 353
+                                    }
+                                }
+                            },
+                            "filter": {
+                                "$zoom": {
+                                    "max": 16
+                                }
+                            }
+                        },
+                        "filter": {
+                            "ref": true
+                        },
+                        "labels-trunk_primary-route-z13-z14": {
+                            "draw": {
+                                "text-blend-order": {
+                                    "font": {
+                                        "fill": "global.dark_color",
+                                        "size": "11px",
+                                        "stroke": {
+                                            "color": "global.text_stroke",
+                                            "width": "3px"
+                                        }
+                                    },
+                                    "priority": 51,
+                                    "text_source": "global.ux_language_text_source_road_ref_and_name",
+                                    "visible": "global.text_visible_trunk_primary"
+                                }
+                            },
+                            "filter": {
+                                "$zoom": [
+                                    13,
+                                    14
+                                ]
+                            }
+                        },
+                        "labels-trunk_primary-route-z15-up": {
+                            "draw": {
+                                "text-blend-order": {
+                                    "font": {
+                                        "fill": "global.black_color",
+                                        "size": [
+                                            [
+                                                15,
+                                                "12px"
+                                            ],
+                                            [
+                                                16,
+                                                "13px"
+                                            ],
+                                            [
+                                                19,
+                                                "16px"
+                                            ]
+                                        ],
+                                        "stroke": {
+                                            "color": "global.text_stroke",
+                                            "width": [
+                                                [
+                                                    15,
+                                                    "4px"
+                                                ],
+                                                [
+                                                    17,
+                                                    "6px"
+                                                ]
+                                            ]
+                                        },
+                                        "weight": 600
+                                    },
+                                    "priority": 51,
+                                    "text_source": "global.ux_language_text_source_road_ref_and_name",
+                                    "visible": "global.text_visible_trunk_primary"
+                                }
+                            },
+                            "filter": {
+                                "$zoom": {
+                                    "min": 15
+                                }
+                            }
+                        },
+                        "tunnel": {
+                            "draw": {
+                                "lines": {
+                                    "color": [
+                                        [
+                                            13,
+                                            "#756F7C"
+                                        ],
+                                        [
+                                            14,
+                                            "#756F7C"
+                                        ]
+                                    ],
+                                    "outline": {
+                                        "color": [
+                                            [
+                                                12,
+                                                "#756F7C"
+                                            ],
+                                            [
+                                                13,
+                                                "#756F7C"
+                                            ]
+                                        ]
+                                    }
+                                }
+                            },
+                            "filter": {
+                                "$zoom": {
+                                    "min": 13
+                                },
+                                "is_tunnel": true
+                            }
+                        }
+                    }
+                },
+                "tunnel": {
+                    "draw": {
+                        "lines": {
+                            "color": [
+                                [
+                                    13,
+                                    "#756F7C"
+                                ],
+                                [
+                                    14,
+                                    "#756F7C"
+                                ]
+                            ],
+                            "outline": {
+                                "color": [
+                                    [
+                                        12,
+                                        "#756F7C"
+                                    ],
+                                    [
+                                        13,
+                                        "#756F7C"
+                                    ]
+                                ]
+                            }
+                        }
+                    },
+                    "filter": {
+                        "$zoom": {
+                            "min": 13
+                        },
+                        "is_tunnel": true
+                    }
+                }
+            }
+        },
+        "buildings": {
+            "draw": {
+                "lines": {
+                    "color": [
+                        [
+                            14,
+                            "#252A3A"
+                        ],
+                        [
+                            16,
+                            "#252A3A"
+                        ],
+                        [
+                            19,
+                            "#252A3A"
+                        ]
+                    ]
+                },
+                "polygons": {
+                    "color": "#303649"
+                }
+            }
+        }
+    }
+}

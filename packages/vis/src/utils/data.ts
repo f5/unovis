@@ -11,6 +11,7 @@ import _filter from 'lodash/filter'
 import _get from 'lodash/get'
 import _without from 'lodash/without'
 import _find from 'lodash/find'
+import _findIndex from 'lodash/findIndex'
 import _isString from 'lodash/isString'
 import _isObject from 'lodash/isObject'
 import _isFunction from 'lodash/isFunction'
@@ -37,6 +38,7 @@ export const filter = _filter
 export const get = _get
 export const without = _without
 export const find = _find
+export const findIndex = _findIndex
 export const isString = _isString
 export const isObject = _isObject
 export const throttle = _throttle

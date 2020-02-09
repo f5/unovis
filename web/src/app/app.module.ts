@@ -10,6 +10,7 @@ import { WrapperUsageExampleComponent } from 'examples/wrapper-usage-example/wra
 import { TimelineComponent } from 'examples/timeline/timeline.component'
 import { AreaCompositeComponent } from 'examples/area-composite/area-composite.component'
 import { SimpleMapComponent } from 'examples/simple-map/simple-map.component'
+import { MapComponent } from 'examples/map/map.component'
 
 import { AppComponent } from './app.component'
 import { BulletLegendComponent } from './components/bullet-legend/bullet-legend.component'
@@ -23,6 +24,7 @@ const appRoutes: Routes = [
   { path: 'timeline', component: TimelineComponent },
   { path: 'area-composite', component: AreaCompositeComponent },
   { path: 'simplemap', component: SimpleMapComponent },
+  { path: 'map', component: MapComponent },
 ]
 
 @NgModule({
@@ -37,6 +39,7 @@ const appRoutes: Routes = [
     TimelineComponent,
     AreaCompositeComponent,
     SimpleMapComponent,
+    MapComponent,
   ],
 
   imports: [
