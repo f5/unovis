@@ -175,7 +175,8 @@ export class XYContainer<Datum> extends ContainerCore {
     // Render components
     for (const c of this.components) {
       c.g.attr('transform', `translate(${config.margin.left},${config.margin.top})`)
-        .attr('clip-path', c.clippable ? `url(#${this._clipPathId})` : null)
+        .style('clip-path', c.clippable ? `url(#${this._clipPathId})` : null)
+        .style('-webkit-clip-path', c.clippable ? `url(#${this._clipPathId})` : null)
 
       c.render(customDuration)
     }
