@@ -10,6 +10,7 @@ import { FlowLegend } from './components/flow-legend'
 import { Crosshair } from './components/crosshair'
 import { Timeline } from './components/timeline'
 import { Sankey } from './components/sankey'
+import { Area } from './components/area'
 
 import { LineConfigInterface } from './components/line/config'
 import { StackedBarConfigInterface } from './components/stacked-bar/config'
@@ -22,6 +23,7 @@ import { FlowLegendConfigInterface } from './components/flow-legend/config'
 import { CrosshairConfigInterface } from './components/crosshair/config'
 import { TimelineConfigInterface } from './components/timeline/config'
 import { SankeyConfigInterface } from './components/sankey/config'
+import { AreaConfigInterface } from './components/area/config'
 
 import './styles/css-variables'
 
@@ -48,4 +50,6 @@ export {
   TimelineConfigInterface,
   Sankey,
   SankeyConfigInterface,
+  Area,
+  AreaConfigInterface,
 }

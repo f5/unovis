@@ -39,6 +39,41 @@ export class SeriesDataModel<Datum> extends CoreDataModel<Datum[]> {
     } else return extent(data, d => getValue(d, acs))
   }
 
+  getAreaStackedExtent (acs: NumericAccessor<Datum> | NumericAccessor<Datum>[]): number[] {
+    const { data } = this
+
+    if (isArray(acs)) {
+      let minValue: number
+      let maxValue: number
+      for (const d of data) {
+        let positiveStack: number
+        let negativeStack: number
+        for (const a of acs as NumericAccessor<Datum>[]) {
+          const value = getValue(d, a) || 0
+          if (value >= 0) {
+            if (!positiveStack) positiveStack = 0
+            positiveStack += value
+          } else {
+            if (!negativeStack) negativeStack = 0
+            negativeStack += value
+          }
+        }
+
+        if (positiveStack) {
+          if (!maxValue) maxValue = 0
+          if (positiveStack > maxValue) maxValue = positiveStack
+        }
+        if (negativeStack) {
+          if (!minValue) minValue = 0
+          if (negativeStack < minValue) minValue = negativeStack
+        }
+      }
+      if (!minValue) minValue = this.getMin(acs)
+      if (!maxValue) maxValue = this.getMax(acs)
+      return [minValue, maxValue]
+    } else return extent(data, d => getValue(d, acs))
+  }
+
   getStackedValues (d: Datum, ...acs: NumericAccessor<Datum>[]): number[] {
     const values = []
     let positiveStack = 0
