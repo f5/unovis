@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { extent, max, min, bisector } from 'd3-array'
+import { max, min, bisector } from 'd3-array'
 
 // Types
 import { NumericAccessor } from 'types/misc'
