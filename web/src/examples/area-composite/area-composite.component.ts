@@ -25,10 +25,10 @@ interface AreaSampleDatum extends SampleDatum {
 function generateData (): AreaSampleDatum[] {
   return _times(30).map((i) => ({
     x: i,
-    y: _random(-10, -100),
-    y1: -5 + i * -7,
-    y2: -4 + i * -8,
-    y3: -1 + i * -1,
+    y: _random(0, 100),
+    y1: _random(0, 100),
+    y2: _random(0, 100),
+    y3: _random(0, 100),
     baseline: _random(30, 80),
   }))
 }
