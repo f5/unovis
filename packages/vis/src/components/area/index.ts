@@ -14,6 +14,7 @@ import { getColor } from 'utils/color'
 // Types
 import { Curve } from 'types/curves'
 import { NumericAccessor } from 'types/misc'
+import { AreaDatum } from 'types/area'
 
 // Config
 import { AreaConfig, AreaConfigInterface } from './config'
@@ -24,13 +25,9 @@ import * as s from './style'
 export class Area<Datum> extends XYComponentCore<Datum> {
   static selectors = s
   config: AreaConfig<Datum> = new AreaConfig()
-  areaGen: AreaInterface<any[]>
+  areaGen: AreaInterface<AreaDatum>
   events = {
-    [Area.selectors.area]: {
-      mousemove: this._onEvent,
-      mouseover: this._onEvent,
-      mouseleave: this._onEvent,
-    },
+    [Area.selectors.area]: {},
   }
 
   constructor (config?: AreaConfigInterface<Datum>) {
@@ -40,45 +37,54 @@ export class Area<Datum> extends XYComponentCore<Datum> {
 
   _render (customDuration?: number): void {
     super._render(customDuration)
-    const { config, datamodel } = this
+    const { config, datamodel: { data } } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
-    this.areaGen = area()
-      .x(d => config.scales.x(d.data.x))
+
+    const curveGen = Curve[config.curveType]
+    this.areaGen = area<AreaDatum>()
+      .x(d => config.scales.x(d[2]))
       .y0(d => config.scales.y(d[0]))
       .y1(d => config.scales.y(d[1]))
-      .curve(Curve[config.curveType])
+      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+      // @ts-ignore
+      .curve(curveGen)
 
     const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
-    const stackGen = stack()
+    const stackGen = stack<any, Datum, NumericAccessor<Datum>>()
       .offset((series, order) => {
         for (let i = 0; i < order.length; i += 1) {
-          const dataPrev = series[i - 1]
-          const data = series[i]
-          for (let j = 0; j < data.length; j += 1) {
-            const dPrev = dataPrev ? dataPrev[j] : [0, 0]
-            const d = data[j]
-            const baselineValue = (config.baseline && i === 0) ? getValue(d.data, config.baseline) : 0
-            const value = d[1]
-            d[0] = dPrev[1] + baselineValue
-            d[1] = dPrev[1] + baselineValue + value
+          const prevSeries = series[i - 1]
+          const currentSeries = series[i]
+          for (let j = 0; j < currentSeries.length; j += 1) {
+            const dPrev = prevSeries ? prevSeries[j] : [0, 0]
+            // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+            // @ts-ignore
+            const d = currentSeries[j].data
+            const baselineValue = (config.baseline && i === 0) ? getValue(d, config.baseline) : 0
+            const value = currentSeries[j][1]
+            currentSeries[j][0] = dPrev[1] + baselineValue
+            currentSeries[j][1] = dPrev[1] + baselineValue + value
+            currentSeries[j][2] = getValue(d, config.x)
           }
         }
       })
       .keys(yAccessors)
-      .value((d, key) => {
-        return getValue(d, key)
+      .value((d, acs) => {
+        return getValue(d, acs)
       })
 
-    const stackedData = stackGen(datamodel.data)
+    const stackedData: AreaDatum[] = stackGen(data) as any
+
     const areas = this.g
       .selectAll(`.${s.area}`)
       .data(stackedData)
 
     const areasEnter = areas.enter().append('path')
       .attr('class', s.area)
-      .attr('d', this._emptyPath())
+      .attr('d', d => this.areaGen(d) || this._emptyPath())
       .style('opacity', 0)
       .style('fill', (d, i) => getColor(d, config.color, i))
+
     const areasMerged = smartTransition(areasEnter.merge(areas), duration)
       .style('opacity', 1)
       .style('fill', (d, i) => getColor(d, config.color, i))
@@ -105,10 +111,15 @@ export class Area<Datum> extends XYComponentCore<Datum> {
 
   _emptyPath (): string {
     const { config: { scales: { x, y } } } = this
-    const xRange = x.range()
-    const yRange = y.range()
-    const middleX = (xRange[1] + xRange[0]) * 0.5
-    const middleY = (yRange[1] + yRange[0]) * 0.5
-    return `M${middleX},${middleY} L${middleX},${middleY}`
+    const xDomain = x.domain() as number[]
+    const yDomain = y.domain() as number[]
+
+    const y0 = (yDomain[0] + yDomain[1]) / 2
+    const y1 = y0
+
+    return this.areaGen([
+      [y0, y1, xDomain[0]],
+      [y0, y1, xDomain[1]],
+    ])
   }
 }

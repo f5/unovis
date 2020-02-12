@@ -10,7 +10,7 @@ import { NumericAccessor } from 'types/misc'
 export interface AreaConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
   /** Curve type from the CurveType enum */
   curveType?: CurveType;
-  /** Baseline accessor */
+  /** Baseline accessor function */
   baseline?: NumericAccessor<Datum>;
 }
 
