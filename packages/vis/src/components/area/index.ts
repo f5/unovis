@@ -106,7 +106,8 @@ export class Area<Datum> extends XYComponentCore<Datum> {
   getYDataExtent (): number[] {
     const { config, datamodel } = this
     const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
-    return datamodel.getAreaStackedExtent(config.baseline ? [config.baseline, ...yAccessors] : yAccessors)
+
+    return datamodel.getStackedExtent(config.baseline, ...yAccessors)
   }
 
   _emptyPath (): string {

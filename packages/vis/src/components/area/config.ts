@@ -16,5 +16,5 @@ export interface AreaConfigInterface<Datum> extends XYComponentConfigInterface<D
 
 export class AreaConfig<Datum> extends XYComponentConfig<Datum> implements AreaConfigInterface<Datum> {
   curveType = CurveType.MonotoneX
-  baseline = undefined
+  baseline = () => 0
 }
