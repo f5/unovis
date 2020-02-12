@@ -9,6 +9,7 @@ import { CompositeComponent } from 'examples/composite/composite.component'
 import { SankeyComponent } from 'examples/sankey/sankey.component'
 import { WrapperUsageExampleComponent } from 'examples/wrapper-usage-example/wrapper-usage-example.component'
 import { TimelineComponent } from 'examples/timeline/timeline.component'
+import { AreaCompositeComponent } from 'examples/area-composite/area-composite.component'
 
 import { AppComponent } from './app.component'
 import { BulletLegendComponent } from './components/bullet-legend/bullet-legend.component'
@@ -21,6 +22,7 @@ const appRoutes: Routes = [
   { path: 'sankey', component: SankeyComponent },
   { path: 'wrapper-usage-example', component: WrapperUsageExampleComponent },
   { path: 'timeline', component: TimelineComponent },
+  { path: 'area-composite', component: AreaCompositeComponent },
 ]
 
 @NgModule({
@@ -34,6 +36,7 @@ const appRoutes: Routes = [
     XYChartComponent,
     WrapperUsageExampleComponent,
     TimelineComponent,
+    AreaCompositeComponent,
   ],
 
   imports: [
