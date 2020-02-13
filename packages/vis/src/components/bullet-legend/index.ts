@@ -5,7 +5,7 @@ import { select, Selection } from 'd3-selection'
 import { getColor } from 'utils/color'
 
 // Config
-import { BulletLegendConfig, BulletLegendConfigInterface } from './config'
+import { BulletLegendConfig, BulletLegendConfigInterface, BulletLegendItemInterface } from './config'
 
 // Styles
 import * as s from './style'
@@ -17,7 +17,7 @@ export class BulletLegend {
   config: BulletLegendConfig
   protected _container: HTMLElement
 
-  private _colorAccessor = d => d.color
+  private _colorAccessor = (d: BulletLegendItemInterface) => d.color
 
   constructor (element: HTMLElement, config?: BulletLegendConfigInterface) {
     this._container = element
@@ -57,16 +57,16 @@ export class BulletLegend {
     const legendItemsMerged = legendItemsEnter.merge(legendItems)
 
     legendItemsMerged.select(`.${s.bullet}`)
-      .style('background-color', (d, i) => d.inactive ? null : getColor(d, this._colorAccessor, i))
-      .style('border-color', (d, i) => getColor(d, this._colorAccessor, i))
+      .style('background-color', (d: BulletLegendItemInterface, i) => d.inactive ? null : getColor(d, this._colorAccessor, i))
+      .style('border-color', (d: BulletLegendItemInterface, i) => getColor(d, this._colorAccessor, i))
 
     legendItemsMerged.select(`.${s.label}`)
-      .text(d => d.name)
+      .text((d: BulletLegendItemInterface) => d.name)
 
     legendItems.exit().remove()
   }
 
-  _onItemClick (d: any, i: number): void {
+  _onItemClick (d: BulletLegendItemInterface, i: number): void {
     const { config: { onLegendItemClick } } = this
 
     if (onLegendItemClick) onLegendItemClick(d, i)
