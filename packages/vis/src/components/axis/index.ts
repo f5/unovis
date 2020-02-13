@@ -162,12 +162,12 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
     switch (type) {
     case AxisType.X:
       switch (position) {
-      case Position.TOP: return axisTop(scales.x).ticks(ticks * 2).tickSize(height).tickSizeOuter(0)
+      case Position.TOP: return axisTop(scales.x).ticks(ticks * 2).tickSize(-height).tickSizeOuter(0)
       case Position.BOTTOM: default: return axisBottom(scales.x).ticks(ticks * 2).tickSize(-height).tickSizeOuter(0)
       }
     case AxisType.Y:
       switch (position) {
-      case Position.RIGHT: return axisRight(scales.y).ticks(ticks * 2).tickSize(width).tickSizeOuter(0)
+      case Position.RIGHT: return axisRight(scales.y).ticks(ticks * 2).tickSize(-width).tickSizeOuter(0)
       case Position.LEFT: default: return axisLeft(scales.y).ticks(ticks * 2).tickSize(-width).tickSizeOuter(0)
       }
     }
@@ -210,7 +210,7 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
 
     const offsetX = type === AxisType.X ? width / 2 : (-1) ** (+(axisPosition === Position.LEFT)) * axisWidth
     const offsetY = type === AxisType.X ? (-1) ** (+(axisPosition === Position.TOP)) * axisHeight : height / 2
-    const rotation = type === AxisType.Y ? 90 : 0
+    const rotation = type === AxisType.Y ? -90 : 0
 
     labelMerged.text(d => d)
       .classed(axisPosition, true)

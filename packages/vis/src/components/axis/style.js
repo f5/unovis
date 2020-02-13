@@ -58,10 +58,14 @@ export const label = css`
   text-anchor: middle;
 
   &.right {
+    dominant-baseline: text-before-edge;
+  }
+
+  &.left {
     dominant-baseline: text-after-edge;
   }
 
-  &.left, &.bottom {
+  &.bottom {
     dominant-baseline: text-before-edge;
   }
 `
