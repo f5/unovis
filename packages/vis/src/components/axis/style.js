@@ -4,8 +4,8 @@ import { css, injectGlobal } from 'emotion'
 
 export const global = injectGlobal`
   :root {
-    --vis-axis-tick-color: #767d89;
-    --vis-axis-grid-color: #767d89;
+    --vis-axis-tick-color: #a1a8c0;
+    --vis-axis-grid-color: #a1a8c0;
     --vis-axis-label-color: #575c65;
   }
 `
@@ -26,6 +26,10 @@ export const axis = css`
 export const grid = css`
   label: grid;
   
+  .domain {
+    display: none;
+  }
+
   line {
     stroke: var(--vis-axis-grid-color);
     stroke-opacity: 0.25;
