@@ -6,3 +6,8 @@ export enum Position {
   RIGHT = 'right',
   CENTER = 'center',
 }
+
+export enum Arrangement {
+  INSIDE = 'inside',
+  OUTSIDE = 'outside',
+}

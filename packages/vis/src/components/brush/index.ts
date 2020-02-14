@@ -12,6 +12,7 @@ import { smartTransition } from 'utils/d3'
 // Types
 import { Direction } from 'types/direction'
 import { AxisType } from 'types/axis'
+import { Arrangement } from 'types/position'
 
 // Config
 import { BrushConfig, BrushConfigInterface } from './config'
@@ -93,6 +94,8 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
       .attr('y1', yRange[1] + h / 2 - 10)
       .attr('y2', yRange[1] + h / 2 + 10)
 
+    this._positionHandles(config.selection)
+
     const xRange = xScale.range()
     const brushRange = (config.selection && isFinite(config.selection?.[0])) ? [xScale(config.selection[0]), xScale(config.selection[1])] : xScale.range()
     if (brushRange[0] < xRange[0]) brushRange[0] = xRange[0]
@@ -115,16 +118,7 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
         return length > 0 ? length : 0
       })
 
-    this.handleLines
-      .attr('transform', d =>
-        `translate(${(d as any).type === Direction.WEST
-          ? s[0] - config.handleWidth / 2
-          : s[1] + config.handleWidth / 2},0)`
-      )
-
-    this.brush.selectAll('.handle')
-      .attr('x', d => (d as any).type === Direction.WEST ? s[0] - config.handleWidth : s[1])
-      .attr('width', config.handleWidth)
+    this._positionHandles(s)
 
     // D3 sets brush handle height to be too long, so we need to update it
     const yRange = yScale.range()
@@ -132,6 +126,31 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
     this.g.selectAll('.handle')
       .attr('y', yRange[1])
       .attr('height', h)
+  }
+
+  private _positionHandles (s): void {
+    const { config } = this
+
+    this.brush.selectAll('.handle')
+      .attr('width', config.handleWidth)
+      .attr('x', d => {
+        if (!s) return 0
+        const west = (d as any).type === Direction.WEST
+        const inside = config.handlePosition === Arrangement.INSIDE
+
+        if (west) return s[0] + (inside ? 0 : -config.handleWidth)
+        else return s[1] + (inside ? -config.handleWidth : 0)
+      })
+
+    this.handleLines
+      .attr('transform', d => {
+        if (!s) return 0
+        const west = (d as any).type === Direction.WEST
+        const inside = config.handlePosition === Arrangement.INSIDE
+        return `translate(${west
+          ? s[0] - (-1) ** Number(inside) * config.handleWidth / 2
+          : s[1] + (-1) ** Number(inside) * config.handleWidth / 2},0)`
+      })
   }
 
   _onBrush (): void {

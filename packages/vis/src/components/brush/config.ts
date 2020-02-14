@@ -6,6 +6,9 @@
 import { BaseEvent } from 'd3-selection'
 import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component/config'
 
+// Types
+import { Arrangement } from 'types/position'
+
 export interface BrushConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
   onBrush?: ((selection?: number[], event?: BaseEvent, userDriven?: boolean) => any);
   onBrushStart?: ((selection?: number[], event?: BaseEvent, userDriven?: boolean) => any);
@@ -17,6 +20,8 @@ export interface BrushConfigInterface<Datum> extends XYComponentConfigInterface<
   selection?: number[] | null;
   /** Allow dragging the selected area in order to change the selected range */
   draggable?: boolean;
+  /** Position of the handle: 'inside' or 'outside' */
+  handlePosition?: Arrangement;
 }
 
 export class BrushConfig<Datum> extends XYComponentConfig<Datum> implements BrushConfigInterface<Datum> {
@@ -27,4 +32,5 @@ export class BrushConfig<Datum> extends XYComponentConfig<Datum> implements Brus
   handleWidth = 9
   selection = null
   draggable = false
+  handlePosition = Arrangement.INSIDE
 }
