@@ -5,17 +5,23 @@
 
 import { Config } from 'core/config'
 
+export interface BulletLegendItemInterface {
+  name: string | number;
+  color?: string;
+  inactive?: boolean;
+}
+
 export interface BulletLegendConfigInterface {
   /** Legend items array { name, color }[] */
-  items?: { name: string; color?: string; inactive?: boolean }[];
+  items?: BulletLegendItemInterface[];
   /** Additional label class */
   labelClassName?: string;
   /** Callback function for a legend item click */
-  onLegendItemClick?: ((d?: any, i?: number) => any) | null;
+  onLegendItemClick?: ((d?: BulletLegendItemInterface, i?: number) => any);
 }
 
 export class BulletLegendConfig extends Config implements BulletLegendConfigInterface {
-  items = []
+  items: BulletLegendItemInterface[] = []
   labelClassName = ''
-  onLegendItemClick = null
+  onLegendItemClick = undefined;
 }
