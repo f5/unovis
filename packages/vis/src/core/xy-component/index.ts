@@ -6,11 +6,11 @@ import { ComponentCore } from 'core/component'
 import { SeriesDataModel } from 'data-models/series'
 
 // Utils
-import { getValue } from 'utils/data'
+import { getValue, isArray } from 'utils/data'
 import { defaultRange } from 'utils/scale'
 
 // Types
-import { Dimension, Spacing } from 'types/misc'
+import { NumericAccessor, Dimension, Spacing } from 'types/misc'
 
 // Config
 import { XYComponentConfig } from './config'
@@ -88,7 +88,8 @@ export class XYComponentCore<Datum> extends ComponentCore<Datum[]> {
 
   getYDataExtent (): number[] {
     const { config, datamodel } = this
-    return datamodel.getExtent(config.y)
+    const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
+    return datamodel.getExtent(...yAccessors)
   }
 
   getXScreenRange (padding: Spacing = {}): number[] {
