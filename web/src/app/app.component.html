@@ -1,4 +1,5 @@
-<nav>
+<nav class="sidebar">
+  <a routerLink="single">Single</a>
   <a routerLink="composite">Composite</a>
   <a routerLink="sankey">Sankey</a>
   <a routerLink="wrapper-usage-example">Wrapper Usage Example</a>
@@ -7,4 +8,6 @@
   <a routerLink="simplemap">Simple Map</a>
   <a routerLink="map">Map</a>
 </nav>
-<router-outlet></router-outlet>
+<div class="vis-container">
+  <router-outlet></router-outlet>
+</div>
