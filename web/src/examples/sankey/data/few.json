@@ -1,0 +1,620 @@
+{
+    "nodes": [
+        {
+            "id": "frontend--10.0.0.1--7204",
+            "type": "port",
+            "label": "7204",
+            "labelLength": 10,
+            "labelTrim": "end"
+        },
+        {
+            "id": "frontend--10.0.0.1",
+            "type": "ip",
+            "label": "10.0.0.1",
+            "labelTrim": "end"
+        },
+        {
+            "id": "frontend",
+            "type": "vn",
+            "label": "frontend",
+            "labelLength": 10,
+            "labelTrim": "start"
+        },
+        {
+            "id": "backend",
+            "type": "vn",
+            "label": "backend",
+            "labelTrim": "end"
+        },
+        {
+            "id": "backend--10.0.0.1",
+            "type": "ip",
+            "label": "10.0.0.1",
+            "labelLength": 10,
+            "labelTrim": "end"
+        },
+        {
+            "id": "backend--10.0.0.1--11207",
+            "type": "port",
+            "label": "11207",
+            "labelLength": 10,
+            "labelTrim": "middle"
+        },
+        {
+            "id": "frontend--10.0.0.3--8080",
+            "type": "port",
+            "label": "8080",
+            "labelTrim": "middle"
+        },
+        {
+            "id": "frontend--10.0.0.3",
+            "type": "ip",
+            "label": "10.0.0.3",
+            "labelLength": 5,
+            "labelTrim": "end"
+        },
+        {
+            "id": "backend--10.0.0.1--23389",
+            "type": "port",
+            "label": "23389",
+            "labelLength": 10,
+            "labelTrim": "end"
+        },
+        {
+            "id": "frontend--10.0.0.1--8080",
+            "type": "port",
+            "label": "8080",
+            "labelLength": 5,
+            "labelTrim": "middle"
+        },
+        {
+            "id": "backend--10.0.0.1--20975",
+            "type": "port",
+            "label": "20975",
+            "labelLength": 10,
+            "labelTrim": "middle"
+        },
+        {
+            "id": "frontend--10.0.0.2--8080",
+            "type": "port",
+            "label": "8080",
+            "labelLength": 5,
+            "labelTrim": "end"
+        },
+        {
+            "id": "frontend--10.0.0.2",
+            "type": "ip",
+            "label": "10.0.0.2",
+            "labelLength": 10,
+            "labelTrim": "start"
+        },
+        {
+            "id": "backend--10.0.0.2",
+            "type": "ip",
+            "label": "10.0.0.2",
+            "labelLength": 5,
+            "labelTrim": "start"
+        },
+        {
+            "id": "backend--10.0.0.2--17353",
+            "type": "port",
+            "label": "17353",
+            "labelTrim": "end"
+        },
+        {
+            "id": "frontend--10.0.0.1--48199",
+            "type": "port",
+            "label": "48199",
+            "labelLength": 10,
+            "labelTrim": "middle"
+        },
+        {
+            "id": "ip-fabric",
+            "type": "vn",
+            "label": "ip-fabric",
+            "labelLength": 10,
+            "labelTrim": "start"
+        },
+        {
+            "id": "ip-fabric--10.0.0.1",
+            "type": "ip",
+            "label": "10.0.0.1",
+            "labelTrim": "start"
+        },
+        {
+            "id": "ip-fabric--10.0.0.1--40795",
+            "type": "port",
+            "label": "40795",
+            "labelTrim": "end"
+        },
+        {
+            "id": "frontend--10.0.0.2--39663",
+            "type": "port",
+            "label": "39663",
+            "labelLength": 5,
+            "labelTrim": "end"
+        },
+        {
+            "id": "backend--10.0.0.2--23675",
+            "type": "port",
+            "label": "23675",
+            "labelLength": 5,
+            "labelTrim": "start"
+        },
+        {
+            "id": "frontend--10.0.0.1--4648",
+            "type": "port",
+            "label": "4648",
+            "labelLength": 10,
+            "labelTrim": "middle"
+        },
+        {
+            "id": "ip-fabric--10.0.0.2",
+            "type": "ip",
+            "label": "10.0.0.2",
+            "labelTrim": "middle"
+        },
+        {
+            "id": "ip-fabric--10.0.0.2--37357",
+            "type": "port",
+            "label": "37357",
+            "labelLength": 10,
+            "labelTrim": "start"
+        },
+        {
+            "id": "frontend--10.0.0.2--7454",
+            "type": "port",
+            "label": "7454",
+            "labelTrim": "end"
+        },
+        {
+            "id": "ip-fabric--10.0.0.2--32097",
+            "type": "port",
+            "label": "32097",
+            "labelTrim": "middle"
+        },
+        {
+            "id": "frontend--10.0.0.1--23705",
+            "type": "port",
+            "label": "23705",
+            "labelTrim": "start"
+        },
+        {
+            "id": "ip-fabric--10.0.0.3",
+            "type": "ip",
+            "label": "10.0.0.3",
+            "labelLength": 5,
+            "labelTrim": "middle"
+        },
+        {
+            "id": "ip-fabric--10.0.0.3--4021",
+            "type": "port",
+            "label": "4021",
+            "labelLength": 5,
+            "labelTrim": "middle"
+        },
+        {
+            "id": "frontend--10.0.0.3--59419",
+            "type": "port",
+            "label": "59419",
+            "labelTrim": "middle"
+        },
+        {
+            "id": "ip-fabric--10.0.0.1--5244",
+            "type": "port",
+            "label": "5244",
+            "labelLength": 10,
+            "labelTrim": "end"
+        },
+        {
+            "id": "frontend--10.0.0.3--52177",
+            "type": "port",
+            "label": "52177",
+            "labelLength": 10,
+            "labelTrim": "end"
+        },
+        {
+            "id": "backend--10.0.0.2--11687",
+            "type": "port",
+            "label": "11687",
+            "labelTrim": "end"
+        },
+        {
+            "id": "backend--10.0.0.2--46365",
+            "type": "port",
+            "label": "46365",
+            "labelLength": 10,
+            "labelTrim": "start"
+        },
+        {
+            "id": "backend--10.0.0.1--54095",
+            "type": "port",
+            "label": "54095",
+            "labelLength": 5,
+            "labelTrim": "middle"
+        },
+        {
+            "id": "backend--10.0.0.1--20475",
+            "type": "port",
+            "label": "20475",
+            "labelLength": 5,
+            "labelTrim": "middle"
+        },
+        {
+            "id": "backend--10.0.0.2--29295",
+            "type": "port",
+            "label": "29295",
+            "labelLength": 10,
+            "labelTrim": "start"
+        },
+        {
+            "id": "frontend--10.0.0.1--23481",
+            "type": "port",
+            "label": "23481",
+            "labelLength": 10,
+            "labelTrim": "start"
+        },
+        {
+            "id": "backend--10.0.0.1--15307",
+            "type": "port",
+            "label": "15307",
+            "labelLength": 10,
+            "labelTrim": "start"
+        },
+        {
+            "id": "backend--10.0.0.1--12041",
+            "type": "port",
+            "label": "12041",
+            "labelLength": 5,
+            "labelTrim": "middle"
+        },
+        {
+            "id": "backend--10.0.0.1--41491",
+            "type": "port",
+            "label": "41491",
+            "labelLength": 10,
+            "labelTrim": "start"
+        },
+        {
+            "id": "backend--10.0.0.3",
+            "type": "ip",
+            "label": "10.0.0.3",
+            "labelTrim": "end"
+        },
+        {
+            "id": "backend--10.0.0.3--42655",
+            "type": "port",
+            "label": "42655",
+            "labelLength": 10,
+            "labelTrim": "middle"
+        },
+        {
+            "id": "frontend--10.0.0.3--30250",
+            "type": "port",
+            "label": "30250",
+            "labelLength": 5,
+            "labelTrim": "start"
+        },
+        {
+            "id": "ip-fabric--10.0.0.1--51668",
+            "type": "port",
+            "label": "51668",
+            "labelTrim": "middle"
+        },
+        {
+            "id": "frontend--10.0.0.1--12253",
+            "type": "port",
+            "label": "12253",
+            "labelTrim": "middle"
+        },
+        {
+            "id": "ip-fabric--10.0.0.1--60163",
+            "type": "port",
+            "label": "60163",
+            "labelLength": 5,
+            "labelTrim": "start"
+        },
+        {
+            "id": "backend--10.0.0.1--61594",
+            "type": "port",
+            "label": "61594",
+            "labelLength": 10,
+            "labelTrim": "middle"
+        },
+        {
+            "id": "backend--10.0.0.2--5308",
+            "type": "port",
+            "label": "5308",
+            "labelLength": 5,
+            "labelTrim": "middle"
+        },
+        {
+            "id": "frontend--10.0.0.2--27248",
+            "type": "port",
+            "label": "27248",
+            "labelTrim": "start"
+        },
+        {
+            "id": "ip-fabric--10.0.0.2--41218",
+            "type": "port",
+            "label": "41218",
+            "labelLength": 10,
+            "labelTrim": "start"
+        },
+        {
+            "id": "frontend--10.0.0.3--18882",
+            "type": "port",
+            "label": "18882",
+            "labelLength": 10,
+            "labelTrim": "start"
+        },
+        {
+            "id": "ip-fabric--10.0.0.2--57130",
+            "type": "port",
+            "label": "57130",
+            "labelTrim": "start"
+        }
+    ],
+    "links": [
+        {
+            "source": "frontend--10.0.0.1--7204",
+            "target": "frontend--10.0.0.1",
+            "flow": 82442
+        },
+        {
+            "source": "frontend--10.0.0.1",
+            "target": "frontend",
+            "flow": 600517
+        },
+        {
+            "source": "frontend",
+            "target": "backend",
+            "flow": 970779
+        },
+        {
+            "source": "frontend",
+            "target": "ip-fabric",
+            "flow": 498219
+        },
+        {
+            "source": "backend",
+            "target": "backend--10.0.0.1",
+            "flow": 495402
+        },
+        {
+            "source": "backend",
+            "target": "backend--10.0.0.2",
+            "flow": 388961
+        },
+        {
+            "source": "backend",
+            "target": "backend--10.0.0.3",
+            "flow": 86416
+        },
+        {
+            "source": "backend--10.0.0.1",
+            "target": "backend--10.0.0.1--11207",
+            "flow": 82442
+        },
+        {
+            "source": "backend--10.0.0.1",
+            "target": "backend--10.0.0.1--23389",
+            "flow": 26817
+        },
+        {
+            "source": "backend--10.0.0.1",
+            "target": "backend--10.0.0.1--20975",
+            "flow": 87878
+        },
+        {
+            "source": "backend--10.0.0.1",
+            "target": "backend--10.0.0.1--54095",
+            "flow": 17201
+        },
+        {
+            "source": "backend--10.0.0.1",
+            "target": "backend--10.0.0.1--20475",
+            "flow": 89135
+        },
+        {
+            "source": "backend--10.0.0.1",
+            "target": "backend--10.0.0.1--15307",
+            "flow": 90470
+        },
+        {
+            "source": "backend--10.0.0.1",
+            "target": "backend--10.0.0.1--12041",
+            "flow": 2617
+        },
+        {
+            "source": "backend--10.0.0.1",
+            "target": "backend--10.0.0.1--41491",
+            "flow": 64655
+        },
+        {
+            "source": "backend--10.0.0.1",
+            "target": "backend--10.0.0.1--61594",
+            "flow": 34187
+        },
+        {
+            "source": "frontend--10.0.0.3--8080",
+            "target": "frontend--10.0.0.3",
+            "flow": 202368
+        },
+        {
+            "source": "frontend--10.0.0.3",
+            "target": "frontend",
+            "flow": 403350
+        },
+        {
+            "source": "frontend--10.0.0.1--8080",
+            "target": "frontend--10.0.0.1",
+            "flow": 216489
+        },
+        {
+            "source": "frontend--10.0.0.2--8080",
+            "target": "frontend--10.0.0.2",
+            "flow": 248445
+        },
+        {
+            "source": "frontend--10.0.0.2",
+            "target": "frontend",
+            "flow": 465131
+        },
+        {
+            "source": "backend--10.0.0.2",
+            "target": "backend--10.0.0.2--17353",
+            "flow": 96941
+        },
+        {
+            "source": "backend--10.0.0.2",
+            "target": "backend--10.0.0.2--23675",
+            "flow": 80856
+        },
+        {
+            "source": "backend--10.0.0.2",
+            "target": "backend--10.0.0.2--11687",
+            "flow": 49709
+        },
+        {
+            "source": "backend--10.0.0.2",
+            "target": "backend--10.0.0.2--46365",
+            "flow": 58871
+        },
+        {
+            "source": "backend--10.0.0.2",
+            "target": "backend--10.0.0.2--29295",
+            "flow": 72815
+        },
+        {
+            "source": "backend--10.0.0.2",
+            "target": "backend--10.0.0.2--5308",
+            "flow": 29769
+        },
+        {
+            "source": "frontend--10.0.0.1--48199",
+            "target": "frontend--10.0.0.1",
+            "flow": 53053
+        },
+        {
+            "source": "ip-fabric",
+            "target": "ip-fabric--10.0.0.1",
+            "flow": 219884
+        },
+        {
+            "source": "ip-fabric",
+            "target": "ip-fabric--10.0.0.2",
+            "flow": 216366
+        },
+        {
+            "source": "ip-fabric",
+            "target": "ip-fabric--10.0.0.3",
+            "flow": 61969
+        },
+        {
+            "source": "ip-fabric--10.0.0.1",
+            "target": "ip-fabric--10.0.0.1--40795",
+            "flow": 53053
+        },
+        {
+            "source": "ip-fabric--10.0.0.1",
+            "target": "ip-fabric--10.0.0.1--5244",
+            "flow": 87798
+        },
+        {
+            "source": "ip-fabric--10.0.0.1",
+            "target": "ip-fabric--10.0.0.1--51668",
+            "flow": 59133
+        },
+        {
+            "source": "ip-fabric--10.0.0.1",
+            "target": "ip-fabric--10.0.0.1--60163",
+            "flow": 19900
+        },
+        {
+            "source": "frontend--10.0.0.2--39663",
+            "target": "frontend--10.0.0.2",
+            "flow": 80856
+        },
+        {
+            "source": "frontend--10.0.0.1--4648",
+            "target": "frontend--10.0.0.1",
+            "flow": 76194
+        },
+        {
+            "source": "ip-fabric--10.0.0.2",
+            "target": "ip-fabric--10.0.0.2--37357",
+            "flow": 76194
+        },
+        {
+            "source": "ip-fabric--10.0.0.2",
+            "target": "ip-fabric--10.0.0.2--32097",
+            "flow": 69539
+        },
+        {
+            "source": "ip-fabric--10.0.0.2",
+            "target": "ip-fabric--10.0.0.2--41218",
+            "flow": 66291
+        },
+        {
+            "source": "ip-fabric--10.0.0.2",
+            "target": "ip-fabric--10.0.0.2--57130",
+            "flow": 4342
+        },
+        {
+            "source": "frontend--10.0.0.2--7454",
+            "target": "frontend--10.0.0.2",
+            "flow": 69539
+        },
+        {
+            "source": "frontend--10.0.0.1--23705",
+            "target": "frontend--10.0.0.1",
+            "flow": 61969
+        },
+        {
+            "source": "ip-fabric--10.0.0.3",
+            "target": "ip-fabric--10.0.0.3--4021",
+            "flow": 61969
+        },
+        {
+            "source": "frontend--10.0.0.3--59419",
+            "target": "frontend--10.0.0.3",
+            "flow": 87798
+        },
+        {
+            "source": "frontend--10.0.0.3--52177",
+            "target": "frontend--10.0.0.3",
+            "flow": 49709
+        },
+        {
+            "source": "frontend--10.0.0.1--23481",
+            "target": "frontend--10.0.0.1",
+            "flow": 90470
+        },
+        {
+            "source": "backend--10.0.0.3",
+            "target": "backend--10.0.0.3--42655",
+            "flow": 86416
+        },
+        {
+            "source": "frontend--10.0.0.3--30250",
+            "target": "frontend--10.0.0.3",
+            "flow": 59133
+        },
+        {
+            "source": "frontend--10.0.0.1--12253",
+            "target": "frontend--10.0.0.1",
+            "flow": 19900
+        },
+        {
+            "source": "frontend--10.0.0.2--27248",
+            "target": "frontend--10.0.0.2",
+            "flow": 66291
+        },
+        {
+            "source": "frontend--10.0.0.3--18882",
+            "target": "frontend--10.0.0.3",
+            "flow": 4342
+        }
+    ]
+}

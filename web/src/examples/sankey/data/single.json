@@ -1,0 +1,12 @@
+{
+    "nodes": [
+        {
+            "id": "frontend--10.0.0.2--31581",
+            "type": "port",
+            "label": "31581",
+            "labelLength": 5,
+            "labelTrim": "start"
+        }
+    ],
+    "links": []
+}

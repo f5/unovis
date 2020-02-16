@@ -6,7 +6,10 @@ import { Component, ViewChild, ElementRef, OnInit, AfterViewInit } from '@angula
 import { SingleChart, Sankey, SankeyConfigInterface } from '@volterra/vis'
 
 import sankeyData from './data/test.json'
-
+import sankeyManyData from './data/many.json'
+import sankeySingleData from './data/single.json'
+import sankeyZeroData from './data/zero.json'
+import sankeyFewData from './data/few.json'
 
 interface SankeyNodeDatum {
   id: string,
@@ -36,19 +39,32 @@ export class SankeyComponent implements OnInit, AfterViewInit {
   legendItems: string[] = ['port', 'ip', 'vn', 'vn', 'ip', 'port']
   legendMargin: { left?: number; right?: number } = {}
   singleChartConfig: any
-  @ViewChild('sankeychart', { static: false }) sankeyChart: ElementRef
+  @ViewChild('sankeymany', { static: false }) sankeyManyChart: ElementRef
+  @ViewChild('sankeyfew', { static: false }) sankeyFewChart: ElementRef
+  @ViewChild('sankeydynamic', { static: false }) sankeyDynamicChart: ElementRef
+  @ViewChild('sankeysingle', { static: false }) sankeySingleChart: ElementRef
+  @ViewChild('sankeyzero', { static: false }) sankeyZeroChart: ElementRef
 
   ngAfterViewInit (): void {
     const sankeyConfig: SankeyConfigInterface<SankeyNodeDatum, SankeyLinkDatum> = getSankeyConfig()
     this.singleChartConfig = {
       component: new Sankey(sankeyConfig),
     }
-    new SingleChart(this.sankeyChart.nativeElement, this.singleChartConfig, this.data)
+    new SingleChart(this.sankeyManyChart.nativeElement, this.singleChartConfig, sankeyManyData)
+    new SingleChart(this.sankeyFewChart.nativeElement, { component: new Sankey(sankeyConfig) }, sankeyFewData)
+    const dynamicChart = new SingleChart(this.sankeyDynamicChart.nativeElement, { component: new Sankey(sankeyConfig) }, sankeyFewData)
+    new SingleChart(this.sankeySingleChart.nativeElement, { component: new Sankey(sankeyConfig) }, sankeySingleData)
+    new SingleChart(this.sankeyZeroChart.nativeElement, { component: new Sankey(sankeyConfig) }, sankeyZeroData)
     this.legendMargin = this.getLegendMargin()
+
+    setInterval(() => {
+      this.data = this.data.nodes.length ? sankeyZeroData : sankeyFewData      
+      dynamicChart.setData(this.data)
+    }, 2000)
   }
 
   ngOnInit (): void {
-    this.data = sankeyData
+    this.data = sankeyFewData
   }
 
   getLegendMargin () : { left: number; right: number } {
