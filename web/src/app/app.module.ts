@@ -6,6 +6,7 @@ import { RouterModule, Routes } from '@angular/router'
 
 import { ScatterComponent } from 'examples/scatter/scatter.component'
 import { LineComponent } from 'examples/line/line.component'
+import { StackedBarComponent } from 'examples/stacked-bar/stacked-bar.component'
 import { SingleComponent } from 'examples/single/single.component'
 import { CompositeComponent } from 'examples/composite/composite.component'
 import { SankeyComponent } from 'examples/sankey/sankey.component'
@@ -24,6 +25,7 @@ import { MapLeafletComponent } from './components/map-leaflet/map-leaflet.compon
 const appRoutes: Routes = [
   { path: 'scatter', component: ScatterComponent },
   { path: 'line', component: LineComponent },
+  { path: 'stacked-bar', component: StackedBarComponent },
   { path: 'single', component: SingleComponent },
   { path: 'composite', component: CompositeComponent },
   { path: 'sankey', component: SankeyComponent },
@@ -39,6 +41,7 @@ const appRoutes: Routes = [
     AppComponent,
     ScatterComponent,
     LineComponent,
+    StackedBarComponent,
     SingleComponent,
     CompositeComponent,
     BulletLegendComponent,
