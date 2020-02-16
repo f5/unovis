@@ -50,12 +50,10 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
   }
 
   _render (customDuration?: number): void {
-    const { bleed } = this
+    const { bleed, config: { showSingleNode }, datamodel } = this
     this._prepareLayout()
-    const nodes = this.datamodel.nodes
+    const nodes = datamodel.nodes.length === 1 && !showSingleNode ? [] : datamodel.nodes
     const links = this.datamodel.links
-    if (!((links.length > 0 && nodes.length > 1) || (links.length > 0 && nodes.length > 0 && this.config.showSingleNode))) return
-
     // Links
     this._linksGroup.attr('transform', `translate(${bleed.left},${bleed.top})`)
     const svgLinks = this._linksGroup.selectAll(`.${s.link}`).data(links)
