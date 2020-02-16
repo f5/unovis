@@ -4,6 +4,8 @@ import { BrowserModule } from '@angular/platform-browser'
 import { NgModule } from '@angular/core'
 import { RouterModule, Routes } from '@angular/router'
 
+import { ScatterComponent } from 'examples/scatter/scatter.component'
+import { SingleComponent } from 'examples/single/single.component'
 import { CompositeComponent } from 'examples/composite/composite.component'
 import { SankeyComponent } from 'examples/sankey/sankey.component'
 import { WrapperUsageExampleComponent } from 'examples/wrapper-usage-example/wrapper-usage-example.component'
@@ -19,6 +21,8 @@ import { XYChartComponent } from './components/xychart/xychart.component'
 import { MapLeafletComponent } from './components/map-leaflet/map-leaflet.component'
 
 const appRoutes: Routes = [
+  { path: 'scatter', component: ScatterComponent },
+  { path: 'single', component: SingleComponent },
   { path: 'composite', component: CompositeComponent },
   { path: 'sankey', component: SankeyComponent },
   { path: 'wrapper-usage-example', component: WrapperUsageExampleComponent },
@@ -31,6 +35,8 @@ const appRoutes: Routes = [
 @NgModule({
   declarations: [
     AppComponent,
+    ScatterComponent,
+    SingleComponent,
     CompositeComponent,
     BulletLegendComponent,
     FlowLegendComponent,
