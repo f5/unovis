@@ -3,8 +3,7 @@
 import { Component, ViewChild, ElementRef, OnInit, AfterViewInit } from '@angular/core'
 
 // Vis
-import { SingleChart } from '@volterra/vis/containers'
-import { Sankey, SankeyConfigInterface } from '@volterra/vis/components'
+import { SingleChart, Sankey, SankeyConfigInterface } from '@volterra/vis'
 
 import sankeyData from './data/test.json'
 

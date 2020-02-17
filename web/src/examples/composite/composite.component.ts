@@ -2,8 +2,9 @@
 /* eslint-disable */
 import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core'
 // Vis
-import {XYContainer, XYContainerConfigInterface} from '@volterra/vis/containers'
 import {
+  XYContainer,
+  XYContainerConfigInterface,
   Axis,
   Brush,
   Line,
@@ -12,7 +13,7 @@ import {
   StackedBarConfigInterface,
   Tooltip,
   Crosshair,
-} from '@volterra/vis/components'
+} from '@volterra/vis'
 
 // Helpers
 import { sampleSeriesData, SampleDatum } from '../../utils/data'

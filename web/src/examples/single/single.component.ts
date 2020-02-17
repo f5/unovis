@@ -3,10 +3,7 @@
 import { Component, ViewChild, ElementRef, OnInit, AfterViewInit } from '@angular/core'
 
 // Vis
-import { SymbolType } from '@volterra/vis/types'
-import {SingleChart, SingleChartConfigInterface} from '@volterra/vis/containers'
-import {Line, StackedBar, Scatter, Tooltip, StackedBarConfigInterface} from '@volterra/vis/components'
-import { Scale } from '@volterra/vis/types'
+import {SingleChart, SingleChartConfigInterface, Line, StackedBar, Scatter, Tooltip, StackedBarConfigInterface, Scale, SymbolType} from '@volterra/vis'
 
 // Helpers
 import { SampleDatum } from '../../utils/data'

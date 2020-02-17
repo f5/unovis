@@ -18,6 +18,7 @@ import _isNumber from 'lodash/isNumber'
 import _merge from 'lodash/merge'
 import _isPlainObject from 'lodash/isPlainObject'
 import _flatten from 'lodash/flatten'
+// If you add a new lodash import here, please specify it in rollup.config.js as well
 
 export const isNumber = _isNumber
 export const isEqual = _isEqual
