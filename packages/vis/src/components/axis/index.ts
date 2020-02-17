@@ -135,6 +135,11 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
     } else {
       smartTransition(this.gridGroup, duration).style('opacity', 0)
     }
+
+    if (config.fullSize) {
+      const path = this._getFullDomainPath(axisGen.tickSizeOuter())
+      this.axisGroup.select('.domain').attr('d', path)
+    }
   }
 
   _buildAxis (): D3Axis<any> {
@@ -191,6 +196,14 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
     const scaleDomain = type === AxisType.X ? scales.x?.domain() : scales.y?.domain()
 
     return tickValues.filter(v => (v >= scaleDomain[0]) && (v <= scaleDomain[1]))
+  }
+
+  _getFullDomainPath (tickSize = 0): string {
+    const { config: { type, width, height } } = this
+    switch (type) {
+    case AxisType.X: return `M0.5, ${tickSize} V0.5 H${width + 0.5} V${tickSize}`
+    case AxisType.Y: return `M${-tickSize}, ${height + 0.5} H0.5 V0.5 H${-tickSize}`
+    }
   }
 
   _renderAxisLabel (): void {

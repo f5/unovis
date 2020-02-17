@@ -45,6 +45,7 @@ export interface AxisConfigInterface<Datum> extends XYComponentConfigInterface<D
     tickTextFitMode?: FitMode;
     padding?: Spacing;
     offset?: Spacing;
+    fullSize?: boolean;
 }
 
 export class AxisConfig<Datum> extends XYComponentConfig<Datum> implements AxisConfigInterface<Datum> {
@@ -79,4 +80,5 @@ export class AxisConfig<Datum> extends XYComponentConfig<Datum> implements AxisC
 
   tickFormat = null
   tickValues = null
+  fullSize = true
 }

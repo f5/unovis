@@ -49,6 +49,7 @@ export class CompositeComponent implements AfterViewInit {
 
     this.chartConfig = {
       margin: { top: 10, bottom: 10, left: 10, right: 10 },
+      padding: { left: 20, right: 20 },
       components: [
         new StackedBar(this.barConfig),
       ],
@@ -61,14 +62,15 @@ export class CompositeComponent implements AfterViewInit {
         x: new Axis({
           // position: 'top',
           label: 'Index',
-          // tickValues: [0, 5, 10, 15, 20, 25]
+          // tickValues: [0, 5, 10, 15, 20, 25],
+          fullSize: true
         }),
         y: new Axis({
           // position: 'left',
           label: 'Latency',
           tickFormat: d => {
             return `${d} ms`
-          }
+          },
         }),
       },
       tooltip: new Tooltip({
