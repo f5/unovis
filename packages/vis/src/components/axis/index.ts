@@ -201,8 +201,8 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
   _getFullDomainPath (tickSize = 0): string {
     const { config: { type, width, height } } = this
     switch (type) {
-    case AxisType.X: return `M0, ${tickSize} V0.5 H${width} V${tickSize}`
-    case AxisType.Y: return `M${-tickSize}, ${height} H0.5 V0.5 H${-tickSize}`
+    case AxisType.X: return `M0.5, ${tickSize} V0.5 H${width + 0.5} V${tickSize}`
+    case AxisType.Y: return `M${-tickSize}, ${height + 0.5} H0.5 V0.5 H${-tickSize}`
     }
   }
 
