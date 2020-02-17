@@ -80,5 +80,5 @@ export class AxisConfig<Datum> extends XYComponentConfig<Datum> implements AxisC
 
   tickFormat = null
   tickValues = null
-  fullSize = false
+  fullSize = true
 }
