@@ -2,7 +2,7 @@
 import { Component, ViewChild, EventEmitter, ElementRef, AfterViewInit, Input, Output } from '@angular/core'
 
 // Vis
-import { BulletLegend } from '@volterra/vis/components'
+import { BulletLegend } from '@volterra/vis'
 
 @Component({
   selector: 'vis-bullet-legend',

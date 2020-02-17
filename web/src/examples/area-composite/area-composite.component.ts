@@ -2,15 +2,15 @@
 /* eslint-disable */
 import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core'
 // Vis
-import {XYContainer, XYContainerConfigInterface} from '@volterra/vis/containers'
 import {
+  XYContainer,
+  XYContainerConfigInterface,
   Axis,
   Area,
   AreaConfigInterface,
   Tooltip,
-} from '@volterra/vis/components'
-
-import { CurveType } from '@volterra/vis/types'
+  CurveType,
+} from '@volterra/vis'
 
 // Helpers
 import { SampleDatum } from '../../utils/data'

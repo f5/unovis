@@ -3,7 +3,7 @@
 import { AfterViewInit, Component } from '@angular/core'
 
 // Vis
-import { Axis, StackedBar, Tooltip, Crosshair } from '@volterra/vis/components'
+import { Axis, StackedBar, Tooltip, Crosshair } from '@volterra/vis'
 
 // Helpers
 import { sampleSeriesData, SampleDatum } from '../../utils/data'

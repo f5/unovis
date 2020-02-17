@@ -2,7 +2,7 @@
 import { Component, ViewChild, ElementRef, AfterViewInit, Input } from '@angular/core'
 
 // Vis
-import { FlowLegend } from '@volterra/vis/components'
+import { FlowLegend } from '@volterra/vis'
 
 @Component({
   selector: 'vis-flow-legend',

@@ -3,7 +3,7 @@
 import { AfterViewInit, Component } from '@angular/core'
 
 // Vis
-import { Axis, Timeline, Tooltip } from '@volterra/vis/components'
+import { Axis, Timeline, Tooltip } from '@volterra/vis'
 
 // Helpers
 import { sampleTimelineData, SampleTimelineDatum } from '../../utils/data'
