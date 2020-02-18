@@ -144,7 +144,7 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
 
     this.handleLines
       .attr('transform', d => {
-        if (!s) return 0
+        if (!s) return null
         const west = (d as any).type === Direction.WEST
         const inside = config.handlePosition === Arrangement.INSIDE
         return `translate(${west
