@@ -10,7 +10,7 @@ function generateData (): object[] {
       id: d.id,
       longitude: d.geometry.coordinates[0],
       latitude: d.geometry.coordinates[1],
-      status: Math.random() < 0.03 ? _.sample(['healthy', 'warning', 'alert', 'inactive', 'pending', 're', 'approving']) : 'healthy',
+      status: Math.random() < 0.4 ? _.sample(['healthy', 'warning', 'alert', 'inactive', 'pending', 're', 'approving']) : 'healthy',
       shape: Math.random() < 0.07 ? _.sample(['square', 'triangle']) : 'circle',
   }))
 }
@@ -34,7 +34,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.map = new Map(this.mapRef.nativeElement, this.config, this.data)
   }
 
-  ngOnInit (): void {    
+  ngOnInit (): void {
     this.data = generateData()
   }
 }
@@ -43,5 +43,14 @@ function getTangramMapConfig () {
   return {
     renderer: 'tangram',
     nextzenApiKey: 'q-wBnCItTPC8Vdj8GA6g8Q',
+    statusStyle: {
+      healthy: { fill: '#47e845' },
+      warning: { fill: '#ffc226' },
+      alert: { fill: '#f8442d' },
+      inactive: { fill: '#acb2b9' },
+      pending: { fill: '#82affd' },
+      re: { fill: '#4c7afc' },
+      approving: { fill: '#82affd' },
+    }
   }
 }

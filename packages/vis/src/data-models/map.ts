@@ -15,7 +15,7 @@ import { getHTMLTransform } from 'utils/html'
 
 // Types
 import { NumericAccessor, StringAccessor, ColorAccessor } from 'types/misc'
-import { Point, PointStatus, PointShape, pieDataValue } from 'types/map'
+import { Point, PointShape, pieDataValue, StatusStyle } from 'types/map'
 
 export class MapDataModel<PointDatum> extends CoreDataModel<PointDatum[]> {
   longitude: NumericAccessor<PointDatum>;
@@ -26,6 +26,8 @@ export class MapDataModel<PointDatum> extends CoreDataModel<PointDatum[]> {
   color: ColorAccessor<PointDatum>;
   pointRadius: NumericAccessor<PointDatum>;
   pointStrokeWidth: NumericAccessor<PointDatum>;
+  statusStyle: { [key: string]: StatusStyle } = {};
+
   private MAX_CLUSTER_ZOOM_LEVEL = 20
   private _data: []
   private _leafletMap: L.Map
@@ -150,7 +152,7 @@ export class MapDataModel<PointDatum> extends CoreDataModel<PointDatum[]> {
   }
 
   getDonutData (d: Point): pieDataValue[] {
-    return Object.values(PointStatus).map(status => ({
+    return Object.keys(this.statusStyle).map(status => ({
       value: d.properties.sum[status],
       status,
     }))
@@ -235,18 +237,10 @@ export class MapDataModel<PointDatum> extends CoreDataModel<PointDatum[]> {
     }
   }
 
-  _getPointDisplayOrder (d) {
+  _getPointDisplayOrder (d): number {
     const status = getValue(d.properties, this.status)
-    switch (status) {
-    case PointStatus.ALERT: return 7
-    case PointStatus.PENDING: return 6
-    case PointStatus.APPROVING: return 5
-    case PointStatus.WARNING: return 4
-    case PointStatus.INACTIVE: return 3
-    case PointStatus.HEALTHY: return 2
-    case PointStatus.RE: return 1
-    default: return 0
-    }
+    const statusList = Object.keys(this.statusStyle)
+    return statusList.indexOf(status)
   }
 
   _projectPoint (geoJSONPoint) {
@@ -257,14 +251,13 @@ export class MapDataModel<PointDatum> extends CoreDataModel<PointDatum[]> {
     return projected
   }
 
-  _getNodeRadius (d) {
+  _getNodeRadius (d): number {
     const { _leafletMap } = this
     const zoomLevel = _leafletMap.getZoom()
     const isCluster = d.properties.cluster
     const isDynamic = isNil(this.pointRadius)
 
-    const radiusFactor = d.status === PointStatus.HEALTHY ? 1 : 1.5
-    const radius = isDynamic ? radiusFactor * (1 + Math.pow(zoomLevel, 0.80)) : getValue(d, this.pointRadius)
+    const radius = isDynamic ? 1 + 2 * Math.pow(zoomLevel, 0.80) : getValue(d, this.pointRadius)
 
     return isCluster
       ? clamp(Math.pow(d.properties.point_count, 0.35) * radius, radius * 1.1, radius * 3)
@@ -280,14 +273,14 @@ export class MapDataModel<PointDatum> extends CoreDataModel<PointDatum[]> {
         const status = getValue(d, this.status)
         const shape = getValue(d, this.shape)
         const result = { shape, sum: {} }
-        Object.values(PointStatus).forEach(d => {
+        Object.keys(this.statusStyle).forEach(d => {
           result.sum[d] = status === d ? 1 : 0
         })
         return result
       },
       reduce: (accumulated, props): void => {
         accumulated.shape = accumulated.shape === props.shape ? accumulated.shape : PointShape.CIRCLE
-        Object.values(PointStatus).forEach(status => {
+        Object.keys(this.statusStyle).forEach(status => {
           accumulated.sum[status] += props.sum[status]
         })
       },

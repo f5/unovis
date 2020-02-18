@@ -5,16 +5,6 @@ export enum MapRenderer {
   MAPBOXGL = 'mapboxgl',
 }
 
-export enum PointStatus {
-  HEALTHY = 'healthy',
-  INACTIVE = 'inactive',
-  PENDING = 'pending',
-  APPROVING = 'approving',
-  WARNING = 'warning',
-  ALERT = 'alert',
-  RE = 're',
-}
-
 export enum PointShape {
   SQUARE = 'square',
   CIRCLE = 'circle',
@@ -49,7 +39,7 @@ export type Point = {
     point_count: number;
     cluster_id: string | number;
     sum: {
-      [key in PointStatus]: number;
+      [key: string]: number;
     };
   };
   cluster: any;
@@ -58,7 +48,7 @@ export type Point = {
 
 export type pieDataValue = {
   value: number;
-  status: PointStatus;
+  status: string;
 }
 
 export type Bounds = {
