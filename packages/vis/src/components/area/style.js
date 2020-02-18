@@ -6,6 +6,7 @@ export const area = css`
 
   fill: var(--vis-color-main);
   fill-opacity: 0.9;
+  transition: fill-opacity 200ms;
 
   &:hover {
     fill-opacity: 1.0;
