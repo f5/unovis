@@ -137,7 +137,7 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
     }
 
     if (config.fullSize) {
-      const path = this._getFullDomainPath(axisGen.tickSizeOuter())
+      const path = this._getFullDomainPath(0)
       this.axisGroup.select('.domain').attr('d', path)
     }
   }
