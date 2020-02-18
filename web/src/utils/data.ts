@@ -57,10 +57,6 @@ export function sampleScatterData (n: number, minR?: number, maxR?: number): Sam
   return _times(n).map((i) => ({
     x: i,
     y: Math.random(),
-    y1: Math.random(),
-    y2: Math.random(),
-    y3: Math.random(),
-    y4: Math.random(),
     size: minR && maxR ? _random(minR, maxR) : 50,
     shape: Math.random() > 0.8 ? SymbolType.CIRCLE : _sample([SymbolType.CROSS, SymbolType.DIAMOND, SymbolType.SQUARE, SymbolType.STAR, SymbolType.TRIANGLE, SymbolType.WYE]),
     icon: Math.random() > 0.8 ? '☁️' : undefined,

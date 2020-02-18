@@ -5,7 +5,6 @@ import { Component, ViewChild, ElementRef, OnInit, AfterViewInit } from '@angula
 // Vis
 import { SingleChart, Sankey, SankeyConfigInterface } from '@volterra/vis'
 
-import sankeyData from './data/test.json'
 import sankeyManyData from './data/many.json'
 import sankeySingleData from './data/single.json'
 import sankeyZeroData from './data/zero.json'

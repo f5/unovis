@@ -1,0 +1,12 @@
+<div *ngFor="let item of getItems()">
+  <h3>{{ item.type }}</h3>
+  <div class="chart">
+    <vis-xychart 
+      [margin]="margin"
+      [components]="item.components"
+      [componentConfigs]="item.config"
+      [axes]="item.axes"
+      [data]="item.data"
+    ></vis-xychart>
+  </div>
+</div>

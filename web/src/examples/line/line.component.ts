@@ -3,35 +3,12 @@
 import { AfterViewInit, Component } from '@angular/core'
 
 // Vis
-import { Axis, Tooltip, Line, LineConfigInterface } from '@volterra/vis/components'
+import { Line } from '@volterra/vis/components'
 
 // Helpers
-import { SampleDatum, sampleSeriesData } from '../../utils/data'
+import { SampleDatum } from '../../utils/data'
 
-function getLineConfig (n): LineConfigInterface<SampleDatum> {
-  return {
-    x: d => d.x,
-    y: new Array(n).fill(0).map((d, i) => {
-      return d => d[`y${i || ''}`]
-    }),
-    events: {
-      [Line.selectors.line]: {
-        click: d => { },
-      },
-    },
-  }
-}
-
-function sampleManyLineData(n) {
-  const data = sampleSeriesData(30)
-  data.forEach(d => {
-    for (let i = 5; i < n - 5; i++) {
-      d[`y${i}`] = Math.random()
-    }
-  })
-  
-  return data
-}
+import { Collection } from '../../utils/collection'
 
 @Component({
   selector: 'line',
@@ -43,58 +20,34 @@ export class LineComponent implements AfterViewInit {
   title = 'line'
   margin = { top: 10, bottom: 10, left: 10, right: 10 }
   dimensions: {}
-  data: SampleDatum[] = sampleManyLineData(150)
+  collection = new Collection(Line)
 
-  zeroLineConfig = getLineConfig(0)
-  zeroLine = new Line(this.zeroLineConfig)
-  zeroLineComponents = [this.zeroLine]
-  zeroLineAxes = {
-    x: new Axis({ label: 'x axis' }),
-    y: new Axis({ label: 'y axis' }),
-  }
+  zeroLineConfig = this.collection.getConfig(0)
+  zeroLineComponents = this.collection.getComponents(0)
+  zeroLineData: SampleDatum[] = this.collection.getData(0)
 
-  singleLineConfig = getLineConfig(1)
-  singleLine = new Line(this.singleLineConfig)
-  singleLineComponents = [this.singleLine]
-  singleLineAxes = {
-    x: new Axis({ label: 'x axis' }),
-    y: new Axis({ label: 'y axis' }),
-  }
+  singleLineConfig = this.collection.getConfig(1)
+  singleLineComponents = this.collection.getComponents(1)
+  singleLineData: SampleDatum[] = this.collection.getData(1)
 
-  dynamicLineConfig = getLineConfig(5)
-  dynamicLine = new Line(this.dynamicLineConfig)
-  dynamicLineComponents = [this.dynamicLine]
-  dynamicLineAxes = {
-    x: new Axis({ label: 'x axis' }),
-    y: new Axis({ label: 'y axis' }),
-  }
+  dynamicLineConfig = this.collection.getConfig(5)
+  dynamicLineComponents = this.collection.getComponents(5)
+  dynamicLineData: SampleDatum[] = this.collection.getData(5)
 
-  manyLineConfig = getLineConfig(150)
-  manyLine = new Line(this.manyLineConfig)
-  manyLineComponents = [this.manyLine]
-  manyLineAxes = {
-    x: new Axis({ label: 'x axis' }),
-    y: new Axis({ label: 'y axis' }),
-  }
+  manyLineConfig = this.collection.getConfig(150)
+  manyLineComponents = this.collection.getComponents(150)
+  manyLineData: SampleDatum[] = this.collection.getData(150)
 
-  fewLineConfig = getLineConfig(15)
-  fewLine = new Line(this.fewLineConfig)
-  fewLineComponents = [this.fewLine]
-  fewLineAxes = {
-    x: new Axis({ label: 'x axis' }),
-    y: new Axis({ label: 'y axis' }),
-  }
-
-  tooltip = new Tooltip({
-    triggers: {
-      [Line.selectors.line]: (): string => '<span>Line</span>',
-    },
-  })
+  fewLineConfig = this.collection.getConfig(15)
+  fewLineComponents = this.collection.getComponents(15)
+  fewLineData: SampleDatum[] = this.collection.getData(15)
 
   ngAfterViewInit (): void {
+    console.log(this);
+    
     let count = 0
     setInterval(() => {
-      this.dynamicLineConfig = getLineConfig(count%2 ? 5 : 0)
+      this.dynamicLineConfig = this.collection.getConfig(count%2 ? 5 : 0)
       count += 1
     }, 2000)
   }
