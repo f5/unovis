@@ -17,7 +17,8 @@ import { MapConfig } from './config'
 import * as s from './style'
 
 // Modules
-import { setupMap, bBoxMerge, clampZoomLevel } from './modules/map'
+import { setupMap } from './modules/map'
+import { bBoxMerge, clampZoomLevel } from './modules/utils'
 import { createNodes, updateNodes, removeNodes } from './modules/node'
 import { createNodeSelectionRing, updateNodeSelectionRing } from './modules/selectionRing'
 import { createBackgroundNode, updateBackgroundNode } from './modules/clusterBackground'
@@ -55,20 +56,49 @@ export class Map<Datum> {
     },
   }
 
-  get hasBeenZoomed (): boolean {
-    return this._hasBeenZoomed
-  }
-
-  get hasBeenMoved (): boolean {
-    return this._hasBeenMoved
-  }
-
   constructor (element: HTMLElement, config?: MapConfig<Datum>, data?: Datum[]) {
     this._container = element
+
     this.div = select(this._container).append('div').attr('class', s.mapContainer)
     this.element = this.div.node()
+
     if (config) this.setConfig(config)
-    this._initMap()
+
+    this._leaflet = setupMap(this.element, this.config)
+    this._leaflet.map.on('drag', this._onMapDragLeaflet.bind(this))
+    this._leaflet.map.on('move', this._onMapMove.bind(this))
+    this._leaflet.map.on('moveend', this._onMapMoveEnd.bind(this))
+    this._leaflet.map.on('zoom', this._onMapZoom.bind(this))
+
+    // We need to handle background click in a special way to deal
+    //   with d3 svg overlay that might have smaller size than the map itself
+    //   (see this._onMousedownNode() and this this._onMousedownNode())
+    this._leaflet.map.on('mousedown', () => {
+      if (!this._cancelBackgroundClick) this._triggerBackroundClick = true
+    })
+
+    this._leaflet.map.on('mouseup', (e) => {
+      if (this._triggerBackroundClick) {
+        this._triggerBackroundClick = false
+        this._onBackgroundClick(null, e.originalEvent.target, e.originalEvent)
+      }
+    })
+
+    this._leaflet.svgOverlay
+      .attr('class', s.svgOverlay)
+      .insert('rect', ':first-child')
+      .attr('class', s.backgroundRect)
+      .attr('width', '100%')
+      .attr('height', '100%')
+
+    this._nodesGroup = this._leaflet.svgGroup.append('g').attr('class', s.nodes)
+    this._nodeSelectionRing = this._nodesGroup.append('g')
+      .attr('class', s.nodeSelectionRing)
+      .call(createNodeSelectionRing)
+    this._clusterBackground = this._nodesGroup.append('g')
+      .attr('class', s.clusterBackground)
+      .call(createBackgroundNode)
+
     this.datamodel.leafletMap = this._leaflet.map
 
     if (data) this.setData(data)
@@ -84,6 +114,7 @@ export class Map<Datum> {
     this.datamodel.color = this.config.pointColor
     this.datamodel.pointRadius = this.config.pointRadius
     this.datamodel.pointStrokeWidth = this.config.pointStrokeWidth
+    this.datamodel.statusStyle = this.config.statusStyle
   }
 
   setData (data): void {
@@ -141,7 +172,15 @@ export class Map<Datum> {
     return this.datamodel.getNodeRelativePosition(node)
   }
 
-  _flyToBounds (bounds, duration, padding?) {
+  get hasBeenZoomed (): boolean {
+    return this._hasBeenZoomed
+  }
+
+  get hasBeenMoved (): boolean {
+    return this._hasBeenMoved
+  }
+
+  _flyToBounds (bounds, duration, padding?): void {
     if (duration) {
       this._leaflet.map.flyToBounds(bounds, {
         duration: duration / 1000,
@@ -152,50 +191,9 @@ export class Map<Datum> {
     }
   }
 
-  _initMap (): void {
-    this._leaflet = setupMap(this.element, this.config)
-    this._leaflet.map.on('drag', this._onMapDragLeaflet.bind(this))
-    this._leaflet.map.on('move', this._onMapMove.bind(this))
-    this._leaflet.map.on('moveend', this._onMapMoveEnd.bind(this))
-    this._leaflet.map.on('zoom', this._onMapZoom.bind(this))
-
-    // We need to handle background click in a special way to deal
-    //   with d3 svg overlay that might have smaller size than the map itself
-    //   (see this._onMousedownNode() and this this._onMousedownNode())
-    this._leaflet.map.on('mousedown', () => {
-      if (!this._cancelBackgroundClick) this._triggerBackroundClick = true
-    })
-
-    this._leaflet.map.on('mouseup', (e) => {
-      if (this._triggerBackroundClick) {
-        this._triggerBackroundClick = false
-        this._onBackgroundClick(null, e.originalEvent.target, e.originalEvent)
-      }
-    })
-
-    this._leaflet.svgOverlay
-      .attr('class', s.svgOverlay)
-      .insert('rect', ':first-child')
-      .attr('class', s.backgroundRect)
-      .attr('width', '100%')
-      .attr('height', '100%')
-
-    this._nodesGroup = this._leaflet.svgGroup.append('g').attr('class', s.nodes)
-    this._nodeSelectionRing = this._nodesGroup.append('g')
-      .attr('class', s.nodeSelectionRing)
-      .call(createNodeSelectionRing)
-    this._clusterBackground = this._nodesGroup.append('g')
-      .attr('class', s.clusterBackground)
-      .call(createBackgroundNode)
-  }
-
   _renderData (): void {
-    const {
-      datamodel,
-      config: { clusterBackground },
-      _selectedNode,
-      _clusterBackgroundRadius,
-    } = this
+    const { datamodel, config } = this
+
     const pointData = datamodel.points
     const contentBBox = pointData.length ? bBoxMerge(pointData.map(d => d.bbox)) : { x: 0, y: 0, width: 0, height: 0 }
 
@@ -221,12 +219,12 @@ export class Map<Datum> {
       .call(createNodes)
 
     const nodesMerged = nodes.merge(nodesEnter)
-    nodesMerged.call(updateNodes, datamodel, this.config)
+    nodesMerged.call(updateNodes, datamodel, config)
 
     nodesMerged.on('click', this._onNodeClick.bind(this))
 
-    this._clusterBackground.call(updateBackgroundNode, datamodel, this.config, _clusterBackgroundRadius)
-    if (datamodel.expandedCluster && clusterBackground) {
+    this._clusterBackground.call(updateBackgroundNode, datamodel, config, this._clusterBackgroundRadius)
+    if (datamodel.expandedCluster && config.clusterBackground) {
       const id = findIndex(pointData, d => d.cluster)
       pointData.forEach((d, i) => (d._sortId = i < id ? 0 : 2))
       this._nodesGroup
@@ -236,7 +234,7 @@ export class Map<Datum> {
 
     // Show selection border and hide it when the node
     // is out of visible box
-    this._nodeSelectionRing.call(updateNodeSelectionRing, datamodel, this.config, _selectedNode)
+    this._nodeSelectionRing.call(updateNodeSelectionRing, datamodel, config, this._selectedNode)
   }
 
   _zoomToExternallySelectedNode (): void {

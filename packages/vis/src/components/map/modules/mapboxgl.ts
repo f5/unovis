@@ -40,7 +40,7 @@ export function mapboxglWheelEvent (map, layer, event): void {
   const { wheelDelta, deltaY } = event
   if (!layer) return
   const mapboxmap = layer.getMapboxMap()
-  const delta = wheelDelta || deltaY * -1
+  const delta = wheelDelta || deltaY * -1 // We use deltaY for Firefox because wheelDelta is not implemented there
   const zoom = mapboxmap.getZoom() + delta * 0.001
   const xy = map.mouseEventToLayerPoint(event)
   map.setZoomAround(xy, zoom + 1, { animate: false, duration: 0 })
