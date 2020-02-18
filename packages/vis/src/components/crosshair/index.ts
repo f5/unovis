@@ -28,6 +28,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
   x = 0
   datum: Datum
   show = false
+  private _animFrameId: number = null
 
   constructor (config?: CrosshairConfigInterface<Datum>) {
     super()
@@ -86,7 +87,6 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
 
   _onMouseMove (): void {
     const { config, datamodel, element } = this
-
     const [x] = mouse(element)
     const scale = config.scales.x
     const value = scale.invert(x) as number
@@ -98,7 +98,11 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
 
     // Show the crosshair only if it's in the chart range
     this.show = (this.x > 0) && (this.x < config.width)
-    this._render()
+
+    window.cancelAnimationFrame(this._animFrameId)
+    this._animFrameId = window.requestAnimationFrame(() => {
+      this._render()
+    })
 
     if (this.show) this._showTooltip()
     else this._hideTooltip()
@@ -106,7 +110,11 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
 
   _onMouseOut (): void {
     this.show = false
-    this._render()
+
+    window.cancelAnimationFrame(this._animFrameId)
+    this._animFrameId = window.requestAnimationFrame(() => {
+      this._render()
+    })
     this._hideTooltip()
   }
 
