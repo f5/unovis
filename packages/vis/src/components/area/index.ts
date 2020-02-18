@@ -24,6 +24,7 @@ import * as s from './style'
 
 export class Area<Datum> extends XYComponentCore<Datum> {
   static selectors = s
+  stacked = true
   config: AreaConfig<Datum> = new AreaConfig()
   areaGen: AreaInterface<AreaDatum>
   events = {
