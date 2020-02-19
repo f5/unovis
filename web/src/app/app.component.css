@@ -19,6 +19,7 @@
   display: flex;
   flex-direction: column;
   box-shadow: 3px 0px 20px -10px #e4e4e4;
+  padding: 10px;
 }
 
 a {
