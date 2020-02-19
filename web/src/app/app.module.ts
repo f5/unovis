@@ -39,6 +39,8 @@ const appRoutes: Routes = [
   { path: 'map', component: MapComponent },
 ]
 
+appRoutes.push({ path: '', redirectTo: `/${appRoutes[0].path}`, pathMatch: 'full' })
+
 @NgModule({
   declarations: [
     AppComponent,
