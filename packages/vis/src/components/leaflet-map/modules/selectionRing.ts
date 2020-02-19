@@ -9,7 +9,7 @@ import { find } from 'utils/data'
 import { getPointPos } from './utils'
 
 // Config
-import { MapConfigInterface } from '../config'
+import { LeafletMapConfigInterface } from '../config'
 
 import * as s from '../style'
 
@@ -18,7 +18,7 @@ export function createNodeSelectionRing (selection): void {
   selection.append('path').attr('class', s.nodeSelection)
 }
 
-export function updateNodeSelectionRing<T> (selection, selectedNode: Point, pointData: Point[], config: MapConfigInterface<T>, leafletMap: L.Map): void {
+export function updateNodeSelectionRing<T> (selection, selectedNode: Point, pointData: Point[], config: LeafletMapConfigInterface<T>, leafletMap: L.Map): void {
   selection.attr('class', s.nodeSelectionRing)
   const nodeSelection = selection.select(`.${s.nodeSelection}`)
   if (selectedNode) {

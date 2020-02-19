@@ -1,6 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 
-export enum MapRenderer {
+export enum LeafletMapRenderer {
   TANGRAM = 'tangram',
   MAPBOXGL = 'mapboxgl',
 }

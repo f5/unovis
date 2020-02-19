@@ -3,20 +3,20 @@ import { select, Selection, event } from 'd3-selection'
 import L from 'leaflet'
 
 // Types
-import { MapRenderer } from 'types/map'
+import { LeafletMapRenderer } from 'types/map'
 
 // Config
-import { MapConfigInterface } from '../config'
+import { LeafletMapConfigInterface } from '../config'
 
 // Layers
 import { getTangramLayer } from '../renderer/tangram-layer'
 import { getMapboxglLayer, mapboxglWheelEventThrottled } from '../renderer/mapboxgl-layer'
 
-export function setupMap<T> (mapContainer: HTMLElement, config: MapConfigInterface<T>): { leaflet: L.Map; layer: L.Layer; svgOverlay: Selection<SVGElement, any, HTMLElement, any>; svgGroup: Selection<SVGGElement, any, SVGElement, any> } {
+export function setupMap<T> (mapContainer: HTMLElement, config: LeafletMapConfigInterface<T>): { leaflet: L.Map; layer: L.Layer; svgOverlay: Selection<SVGElement, any, HTMLElement, any>; svgGroup: Selection<SVGGElement, any, SVGElement, any> } {
   const { renderer } = config
 
   const leaflet = L.map(mapContainer, {
-    scrollWheelZoom: renderer === MapRenderer.TANGRAM, // We define custom scroll event for MapboxGL to enabling smooth zooming
+    scrollWheelZoom: renderer === LeafletMapRenderer.TANGRAM, // We define custom scroll event for MapboxGL to enabling smooth zooming
     zoomControl: false,
     zoomDelta: 0.5,
     zoomSnap: 0,
@@ -34,11 +34,11 @@ export function setupMap<T> (mapContainer: HTMLElement, config: MapConfigInterfa
 
   let layer
   switch (renderer) {
-  case MapRenderer.TANGRAM : {
+  case LeafletMapRenderer.TANGRAM : {
     layer = getTangramLayer(config)
     break
   }
-  case MapRenderer.MAPBOXGL :
+  case LeafletMapRenderer.MAPBOXGL :
   default: {
     layer = getMapboxglLayer(leaflet, config)
     select(mapContainer)

@@ -9,14 +9,14 @@ import { cloneDeep } from 'utils/data'
 import { getPointPos, getNodePathData } from './utils'
 
 // Config Interface
-import { MapConfigInterface } from '../config'
+import { LeafletMapConfigInterface } from '../config'
 
 export function createBackgroundNode (selection): void {
   selection.datum({ _sortId: 1 })
   selection.append('path')
 }
 
-export function updateBackgroundNode<T> (selection, expandedCluster, config: MapConfigInterface<T>, leafletMap: L.Map, clusterBackgroundRadius): void {
+export function updateBackgroundNode<T> (selection, expandedCluster, config: LeafletMapConfigInterface<T>, leafletMap: L.Map, clusterBackgroundRadius): void {
   const { clusterBackground } = config
   if (expandedCluster && clusterBackground) {
     const node = cloneDeep(expandedCluster.cluster)

@@ -13,7 +13,7 @@ import { Point, PointShape, PieDatum, StatusMap } from 'types/map'
 import { NumericAccessor, StringAccessor, ColorAccessor } from 'types/misc'
 
 // Config
-import { MapConfigInterface } from '../config'
+import { LeafletMapConfigInterface } from '../config'
 
 export function bBoxMerge (bBoxArray) {
   let box
@@ -93,7 +93,7 @@ export function toGeoJSONPoint<T> (point: Point, pointLatitude: NumericAccessor<
   }
 }
 
-export function calulateClusterIndex<T> (data, config: MapConfigInterface<T>, maxClusterZoomLevel = 20): Supercluster {
+export function calulateClusterIndex<T> (data, config: LeafletMapConfigInterface<T>, maxClusterZoomLevel = 20): Supercluster {
   const { statusMap, pointShape, pointStatus, pointLatitude, pointLongitude } = config
   return new Supercluster({
     radius: 45,

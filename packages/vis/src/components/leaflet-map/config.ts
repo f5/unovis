@@ -6,10 +6,10 @@ import { Config } from 'core/config'
 
 // Types
 import { NumericAccessor, StringAccessor, ColorAccessor } from 'types/misc'
-import { MapRenderer, ClusterOutlineType, Bounds, StatusMap } from 'types/map'
+import { LeafletMapRenderer, ClusterOutlineType, Bounds, StatusMap } from 'types/map'
 
-export interface MapConfigInterface<T> {
-  renderer?: MapRenderer | string;
+export interface LeafletMapConfigInterface<T> {
+  renderer?: LeafletMapRenderer | string;
   /**  */
   tamgramRenderer?: any;
   /** Mapboxgl Access Token or Nextzen API key */
@@ -52,8 +52,8 @@ export interface MapConfigInterface<T> {
   statusMap?: StatusMap;
 }
 
-export class MapConfig<T> extends Config implements MapConfigInterface<T> {
-  renderer = MapRenderer.TANGRAM
+export class LeafletMapConfig<T> extends Config implements LeafletMapConfigInterface<T> {
+  renderer = LeafletMapRenderer.TANGRAM
   accessToken = ''
   onMapMoveZoom = undefined
   pointLongitude = (d: T): number => d['longitude']

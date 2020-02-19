@@ -13,7 +13,7 @@ import { getPointPos, getDonutData } from './utils'
 import { updateDonut } from './donut'
 
 // Types
-import { MapConfigInterface } from '../config'
+import { LeafletMapConfigInterface } from '../config'
 
 import * as s from '../style'
 
@@ -32,7 +32,7 @@ export function createNodes (selection): void {
     .attr('class', s.donutCluster)
 }
 
-export function updateNodes<T> (selection, config: MapConfigInterface<T>, leafetMap: L.Map): void {
+export function updateNodes<T> (selection, config: LeafletMapConfigInterface<T>, leafetMap: L.Map): void {
   const { clusterOutlineType, clusterOutlineWidth, statusMap } = config
   selection
     .attr('transform', d => {

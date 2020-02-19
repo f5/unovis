@@ -2,7 +2,7 @@
 /* eslint-disable */
 import _ from 'lodash'
 import { Component, ViewChild, ElementRef, OnInit, AfterViewInit, ViewEncapsulation } from '@angular/core'
-import { Map, MapConfigInterface } from '@volterra/vis/components'
+import { LeafletMap, LeafletMapConfigInterface } from '@volterra/vis/components'
 import earthquakes from './data/earthquakes100.geo.json'
 
 type MapPoint = {
@@ -39,8 +39,12 @@ export class MapComponent implements OnInit, AfterViewInit {
   @ViewChild('map', { static: false }) mapRef: ElementRef
 
   ngAfterViewInit (): void {
-    this.config = getTangramMapConfig()
-    this.map = new Map(this.mapRef.nativeElement, this.config, this.data)
+    this.config = getMapConfig()
+    this.map = new LeafletMap(this.mapRef.nativeElement, this.config, this.data)
+
+    // setBounds
+    // selectNode
+    // zoomToNode
   }
 
   ngOnInit (): void {
@@ -48,7 +52,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 }
 
-function getTangramMapConfig (): MapConfigInterface<MapPoint> {
+function getMapConfig (): LeafletMapConfigInterface<MapPoint> {
   return {
     renderer: 'mapboxgl',
     mapboxglGlyphs: 'https://maps.volterra.io/fonts/{fontstack}/{range}.pbf',

@@ -8,13 +8,13 @@ import Supercluster from 'supercluster'
 import { MapDataModel } from 'data-models/map'
 
 // Types
-import { MapRenderer, Point, Bounds } from 'types/map'
+import { LeafletMapRenderer, Point, Bounds } from 'types/map'
 
 // Utils
 import { isNil, findIndex, find } from 'utils/data'
 
 // Config
-import { MapConfig } from './config'
+import { LeafletMapConfig } from './config'
 
 // Styles
 import * as s from './style'
@@ -29,11 +29,11 @@ import {
   shouldClusterExpand, findNodeAndClusterInPointsById, getNodeRelativePosition, getClusterRadius, getClusterPoints,
 } from './modules/utils'
 
-export class Map<Datum> {
+export class LeafletMap<Datum> {
   static selectors = s
   div: Selection<HTMLElement, any, HTMLElement, any>
   element: HTMLElement
-  config: MapConfig<Datum> = new MapConfig()
+  config: LeafletMapConfig<Datum> = new LeafletMapConfig()
   datamodel: MapDataModel<Datum> = new MapDataModel()
   protected _container: HTMLElement
   private _map: { leaflet: L.Map; layer: L.Layer; svgOverlay: Selection<SVGElement, any, HTMLElement, any>; svgGroup: Selection<SVGGElement, any, SVGElement, any> }
@@ -54,7 +54,7 @@ export class Map<Datum> {
   private _currentZoomLevel = null
 
   events = {
-    [Map.selectors.node]: {
+    [LeafletMap.selectors.node]: {
       // mousemove: this._onMousemoveNode,
       // mouseover: this._onMouseoverNode,
       // mouseout: this._onMouseoutNode,
@@ -64,7 +64,7 @@ export class Map<Datum> {
     },
   }
 
-  constructor (element: HTMLElement, config?: MapConfig<Datum>, data?: Datum[]) {
+  constructor (element: HTMLElement, config?: LeafletMapConfig<Datum>, data?: Datum[]) {
     this._container = element
 
     this.div = select(this._container).append('div').attr('class', s.mapContainer)
@@ -111,7 +111,7 @@ export class Map<Datum> {
     if (data) this.setData(data)
   }
 
-  setConfig (config: MapConfig<Datum>): void {
+  setConfig (config: LeafletMapConfig<Datum>): void {
     this.config.init(config)
   }
 
@@ -332,7 +332,7 @@ export class Map<Datum> {
 
   _onMapMoveEnd (): void {
     const { config: { renderer } } = this
-    if (renderer === MapRenderer.MAPBOXGL) {
+    if (renderer === LeafletMapRenderer.MAPBOXGL) {
       const events = this._map.layer.getEvents()
       const zoomedEvent = events.zoomend.bind(this._map.layer)
       zoomedEvent()
