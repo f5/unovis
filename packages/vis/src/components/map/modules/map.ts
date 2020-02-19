@@ -6,16 +6,16 @@ import L from 'leaflet'
 import { MapRenderer } from 'types/map'
 
 // Config
-// import { MapConfig } from '../config'
+import { MapConfigInterface } from '../config'
 
-import { getTangramLayer } from './tangram'
-import { getMapboxglLayer, mapboxglWheelEventThrottled } from './mapboxgl'
+// Layers
+import { getTangramLayer } from '../renderer/tangram-layer'
+import { getMapboxglLayer, mapboxglWheelEventThrottled } from '../renderer/mapboxgl-layer'
 
-export function setupMap (mapContainer, config): { map: L.Map; layer: L.Layer; svgOverlay: Selection<SVGElement, any, HTMLElement, any>; svgGroup: Selection<SVGGElement, any, SVGElement, any> } {
-  const { nextzenApiKey, renderer } = config
-  if (renderer === MapRenderer.TANGRAM && !nextzenApiKey) console.warn('To show map provide Nextzen Api Key')
+export function setupMap<T> (mapContainer: HTMLElement, config: MapConfigInterface<T>): { leaflet: L.Map; layer: L.Layer; svgOverlay: Selection<SVGElement, any, HTMLElement, any>; svgGroup: Selection<SVGGElement, any, SVGElement, any> } {
+  const { renderer } = config
 
-  const map = L.map(mapContainer, {
+  const leaflet = L.map(mapContainer, {
     scrollWheelZoom: renderer === MapRenderer.TANGRAM, // We define custom scroll event for MapboxGL to enabling smooth zooming
     zoomControl: false,
     zoomDelta: 0.5,
@@ -34,29 +34,29 @@ export function setupMap (mapContainer, config): { map: L.Map; layer: L.Layer; s
 
   let layer
   switch (renderer) {
-  case 'tangram': {
+  case MapRenderer.TANGRAM : {
     layer = getTangramLayer(config)
     break
   }
-  case 'mapboxgl':
+  case MapRenderer.MAPBOXGL :
   default: {
-    layer = getMapboxglLayer(map, config)
+    layer = getMapboxglLayer(leaflet, config)
     select(mapContainer)
       .on('wheel', () => {
         event.preventDefault()
-        mapboxglWheelEventThrottled(map, layer, event)
+        mapboxglWheelEventThrottled(leaflet, layer, event)
       })
     break
   }
   }
 
-  if (layer) layer.addTo(map)
+  if (layer) layer.addTo(leaflet)
 
-  const svgOverlay = select(map.getPanes().overlayPane).append('svg')
+  const svgOverlay = select(leaflet.getPanes().overlayPane).append('svg')
   const svgGroup = svgOverlay.append('g')
 
   return {
-    map,
+    leaflet,
     layer,
     svgOverlay,
     svgGroup,

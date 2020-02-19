@@ -1,4 +1,24 @@
 {
+    "sources": {
+        "mapzen": {
+            "max_zoom": 16,
+            "tile_size": 256,
+            "type": "MVT",
+            "url": "https://tile.nextzen.org/tilezen/vector/v1/256/all/{z}/{x}/{y}.mvt",
+            "url_params": {
+                "api_key": "global.sdk_api_key"
+            }
+        },
+        "normals": {
+            "max_zoom": 14,
+            "tile_size": 256,
+            "type": "Raster",
+            "url": "https://tile.nextzen.org/tilezen/terrain/v1/256/normal/{z}/{x}/{y}.png",
+            "url_params": {
+                "api_key": "global.sdk_api_key"
+            }
+        }
+    },
     "cameras": {
         "isometric": {
             "type": "isometric"
@@ -164,7 +184,7 @@
             0.5,
             1
         ],
-        "sdk_api_key": "q-wBnCItTPC8Vdj8GA6g8Q",
+        "sdk_api_key": "",
         "sdk_bathymetry": false,
         "sdk_building_extrude": true,
         "sdk_coastline": true,
@@ -7409,26 +7429,6 @@
                         "kind": "swimming_pool"
                     }
                 }
-            }
-        }
-    },
-    "sources": {
-        "mapzen": {
-            "max_zoom": 16,
-            "tile_size": 256,
-            "type": "MVT",
-            "url": "https://tile.nextzen.org/tilezen/vector/v1/256/all/{z}/{x}/{y}.mvt",
-            "url_params": {
-                "api_key": "global.sdk_api_key"
-            }
-        },
-        "normals": {
-            "max_zoom": 14,
-            "tile_size": 256,
-            "type": "Raster",
-            "url": "https://tile.nextzen.org/tilezen/terrain/v1/256/normal/{z}/{x}/{y}.png",
-            "url_params": {
-                "api_key": "global.sdk_api_key"
             }
         }
     },

@@ -7,30 +7,28 @@ import 'mapbox-gl-leaflet'
 // Utils
 import { throttle } from 'utils/data'
 
-import { getRendererSettings } from '../mapStyles/settings'
+import { getRendererSettings } from './settings'
 
 // Setting mapbox-gl baseApiUrl to null to avoid sending events to events.mapbox.com
 mapboxGl.baseApiUrl = null
 
 export function getMapboxglLayer (map, config): any {
-  const { mapboxglAccessToken, mapboxglGlyphs, mapboxglSources } = config
-  const styleSettings = getRendererSettings(config)
-  if (!mapboxglGlyphs && !styleSettings.glyphs) {
-    console.warn('Glyphs url is requires in style settings to show map. Set URL to `mapboxglGlyphs` config')
+  const { accessToken } = config
+  const rendererSettings = getRendererSettings(config)
+
+  if (!rendererSettings.glyphs) {
+    console.warn('Glyphs URL is required in order to show the map. Set `mapboxglGlyphs` URL in the map config')
     return
-  } else if (mapboxglGlyphs) {
-    styleSettings.glyphs = mapboxglGlyphs
   }
-  if (!mapboxglSources && !styleSettings.sources) {
-    console.warn('Sources url is requires in style settings to show map. Set URL to `mapboxglGlyphs` config')
+
+  if (!rendererSettings.sources) {
+    console.warn('Sources settings are required in order to show map. Set the `sources` property in the map config')
     return
-  } else if (mapboxglSources) {
-    styleSettings.sources = mapboxglSources
   }
 
   const glLayer = L.mapboxGL({
-    style: styleSettings,
-    accessToken: mapboxglAccessToken,
+    style: rendererSettings,
+    accessToken: accessToken,
   })
 
   return glLayer

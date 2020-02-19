@@ -43,7 +43,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 function getTangramMapConfig () {
   return {
     renderer: 'tangram',
-    nextzenApiKey: 'q-wBnCItTPC8Vdj8GA6g8Q',
+    accessToken: 'q-wBnCItTPC8Vdj8GA6g8Q',
     statusMap: {
       healthy: { color: '#47e845' },
       warning: { color: '#ffc226' },

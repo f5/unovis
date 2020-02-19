@@ -11,16 +11,12 @@ import { MapRenderer, ClusterOutlineType, Bounds, StatusMap } from 'types/map'
 export interface MapConfigInterface<T> {
   renderer?: MapRenderer;
   /**  */
-  nextzenApiKey?: string;
-  /** Tangram renderer */
   tamgramRenderer?: any;
-  /** Mapboxgl Access Token */
-  mapboxglAccessToken?: string;
-  /** Mapbox style glyphs HTTP link */
+  /** Mapboxgl Access Token or Nextzen API key */
+  accessToken?: string;
+  /** Mapbox style glyphs URL */
   mapboxglGlyphs?: string;
-  /** */
-  mapboxglSources?: object;
-  /** Tangram or Mapbox style source settings */
+  /** Tangram or Mapbox sources settings */
   sources?: {};
   /** Tangram or Mapbox style renderer settings */
   rendererSettings?: {};
@@ -58,7 +54,7 @@ export interface MapConfigInterface<T> {
 
 export class MapConfig<T> extends Config implements MapConfigInterface<T> {
   renderer = MapRenderer.TANGRAM
-  mapboxglAccessToken = 'not-needed'
+  accessToken = ''
   onMapMoveZoom = undefined
   pointLongitude = (d: T): number => d['longitude']
   pointLatitude = (d: T): number => d['latitude']

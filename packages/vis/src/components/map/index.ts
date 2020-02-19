@@ -36,7 +36,7 @@ export class Map<Datum> {
   config: MapConfig<Datum> = new MapConfig()
   datamodel: MapDataModel<Datum> = new MapDataModel()
   protected _container: HTMLElement
-  private _leaflet: { map: L.Map; layer: L.Layer; svgOverlay: Selection<SVGElement, any, HTMLElement, any>; svgGroup: Selection<SVGGElement, any, SVGElement, any> }
+  private _map: { leaflet: L.Map; layer: L.Layer; svgOverlay: Selection<SVGElement, any, HTMLElement, any>; svgGroup: Selection<SVGGElement, any, SVGElement, any> }
   private _clusterIndex: Supercluster
   private _expandedCluster = null
   private _cancelBackgroundClick = false
@@ -72,20 +72,20 @@ export class Map<Datum> {
 
     if (config) this.setConfig(config)
 
-    this._leaflet = setupMap(this.element, this.config)
-    this._leaflet.map.on('drag', this._onMapDragLeaflet.bind(this))
-    this._leaflet.map.on('move', this._onMapMove.bind(this))
-    this._leaflet.map.on('moveend', this._onMapMoveEnd.bind(this))
-    this._leaflet.map.on('zoom', this._onMapZoom.bind(this))
+    this._map = setupMap(this.element, this.config)
+    this._map.leaflet.on('drag', this._onMapDragLeaflet.bind(this))
+    this._map.leaflet.on('move', this._onMapMove.bind(this))
+    this._map.leaflet.on('moveend', this._onMapMoveEnd.bind(this))
+    this._map.leaflet.on('zoom', this._onMapZoom.bind(this))
 
     // We need to handle background click in a special way to deal
     //   with d3 svg overlay that might have smaller size than the map itself
     //   (see this._onMousedownNode() and this this._onMousedownNode())
-    this._leaflet.map.on('mousedown', () => {
+    this._map.leaflet.on('mousedown', () => {
       if (!this._cancelBackgroundClick) this._triggerBackroundClick = true
     })
 
-    this._leaflet.map.on('mouseup', (e) => {
+    this._map.leaflet.on('mouseup', (e) => {
       if (this._triggerBackroundClick) {
         this._triggerBackroundClick = false
         const originalEvent = (e as any).originalEvent
@@ -93,14 +93,14 @@ export class Map<Datum> {
       }
     })
 
-    this._leaflet.svgOverlay
+    this._map.svgOverlay
       .attr('class', s.svgOverlay)
       .insert('rect', ':first-child')
       .attr('class', s.backgroundRect)
       .attr('width', '100%')
       .attr('height', '100%')
 
-    this._nodesGroup = this._leaflet.svgGroup.append('g').attr('class', s.nodes)
+    this._nodesGroup = this._map.svgGroup.append('g').attr('class', s.nodes)
     this._nodeSelectionRing = this._nodesGroup.append('g')
       .attr('class', s.nodeSelectionRing)
       .call(createNodeSelectionRing)
@@ -122,14 +122,14 @@ export class Map<Datum> {
   }
 
   render (): void {
-    if (!this._leaflet) return
+    if (!this._map) return
     this._renderData()
   }
 
   fitToPoints (duration = this.config.flyToDuration, padding = [40, 40]): void {
     const { config, datamodel, datamodel: { data } } = this
 
-    if (!this._leaflet || !this._leaflet.map) return
+    if (!this._map || !this._map.leaflet) return
     if (!data.length) return
     const bounds = datamodel.getDataLatLngBounds(config.pointLatitude, config.pointLongitude)
     this._flyToBounds(bounds, duration, padding)
@@ -140,7 +140,7 @@ export class Map<Datum> {
     if (isNil(northEast) || isNil(southWest)) return
     if (isNil(northEast.lat) || isNil(northEast.lng)) return
     if (isNil(southWest.lat) || isNil(southWest.lng)) return
-    if (!this._leaflet || !this._leaflet.map) return
+    if (!this._map || !this._map.leaflet) return
     this._flyToBounds([
       [northEast.lat, southWest.lng],
       [southWest.lat, northEast.lng],
@@ -165,16 +165,16 @@ export class Map<Datum> {
       this._zoomingToExternallySelectedNode = true
       if (selectNode) this._selectedNode = foundNode
       this._forceExpandCluster = !isNil(customZoomLevel)
-      const zoomLevel = isNil(customZoomLevel) ? this._leaflet.map.getZoom() : customZoomLevel
+      const zoomLevel = isNil(customZoomLevel) ? this._map.leaflet.getZoom() : customZoomLevel
       const coordinates = { lng: foundNode.properties.longitude, lat: foundNode.properties.latitude }
-      this._leaflet.map.flyTo(coordinates, zoomLevel, { duration: 0 })
+      this._map.leaflet.flyTo(coordinates, zoomLevel, { duration: 0 })
     } else {
       console.warn(`Node with index ${id} can not be found`)
     }
   }
 
   getNodeRelativePosition (node): { x: number; y: number } {
-    return getNodeRelativePosition(node, this._leaflet.map)
+    return getNodeRelativePosition(node, this._map.leaflet)
   }
 
   get hasBeenZoomed (): boolean {
@@ -187,12 +187,12 @@ export class Map<Datum> {
 
   _flyToBounds (bounds, duration, padding?): void {
     if (duration) {
-      this._leaflet.map.flyToBounds(bounds, {
+      this._map.leaflet.flyToBounds(bounds, {
         duration: duration / 1000,
         padding,
       })
     } else {
-      this._leaflet.map.fitBounds(bounds, { padding })
+      this._map.leaflet.fitBounds(bounds, { padding })
     }
   }
 
@@ -206,13 +206,13 @@ export class Map<Datum> {
     const svgExtraPadding = 25 + this._clusterBackgroundRadius
     const dx = contentBBox.x - svgExtraPadding
     const dy = contentBBox.y - svgExtraPadding
-    this._leaflet.svgOverlay
+    this._map.svgOverlay
       .attr('width', contentBBox.width + 2 * svgExtraPadding)
       .attr('height', contentBBox.height + 2 * svgExtraPadding)
       .style('left', `${dx}px`)
       .style('top', `${dy}px`)
 
-    this._leaflet.svgGroup
+    this._map.svgGroup
       .attr('transform', `translate(${-dx},${-dy})`)
 
     // Render content
@@ -224,11 +224,11 @@ export class Map<Datum> {
       .call(createNodes)
 
     const nodesMerged = nodes.merge(nodesEnter)
-    nodesMerged.call(updateNodes, config, this._leaflet.map)
+    nodesMerged.call(updateNodes, config, this._map.leaflet)
 
     nodesMerged.on('click', this._onNodeClick.bind(this))
 
-    this._clusterBackground.call(updateBackgroundNode, this._expandedCluster, config, this._leaflet.map, this._clusterBackgroundRadius)
+    this._clusterBackground.call(updateBackgroundNode, this._expandedCluster, config, this._map.leaflet, this._clusterBackgroundRadius)
     if (this._expandedCluster && config.clusterBackground) {
       const id = findIndex(pointData, d => d.cluster)
       pointData.forEach((d, i) => (d._sortId = i < id ? 0 : 2))
@@ -239,7 +239,7 @@ export class Map<Datum> {
 
     // Show selection border and hide it when the node
     // is out of visible box
-    this._nodeSelectionRing.call(updateNodeSelectionRing, this._selectedNode, pointData, config, this._leaflet.map)
+    this._nodeSelectionRing.call(updateNodeSelectionRing, this._selectedNode, pointData, config, this._map.leaflet)
   }
 
   _zoomToExternallySelectedNode (): void {
@@ -250,7 +250,7 @@ export class Map<Datum> {
       this._currentZoomLevel = null
     } else {
       const { cluster } = findNodeAndClusterInPointsById(pointData, this._externallySelectedNode.properties.id)
-      const zoomLevel = this._leaflet.map.getZoom()
+      const zoomLevel = this._map.leaflet.getZoom()
       // Expand cluster or fly further
       if (this._forceExpandCluster || shouldClusterExpand(cluster, zoomLevel, 8, 13)) this._expandCluster(cluster)
       else {
@@ -258,7 +258,7 @@ export class Map<Datum> {
         const coordinates = { lng: this._externallySelectedNode.properties.longitude, lat: this._externallySelectedNode.properties.latitude }
         if (this._currentZoomLevel !== newZoomLevel) {
           this._currentZoomLevel = newZoomLevel
-          this._leaflet.map.flyTo(coordinates, newZoomLevel, { duration: 0 })
+          this._map.leaflet.flyTo(coordinates, newZoomLevel, { duration: 0 })
         }
       }
     }
@@ -272,7 +272,7 @@ export class Map<Datum> {
     this._forceExpandCluster = false
     if (cluster) {
       points.forEach(p => {
-        p.r = getNodeRadius(p, config.pointRadius, this._leaflet.map.getZoom()) + padding
+        p.r = getNodeRadius(p, config.pointRadius, this._map.leaflet.getZoom()) + padding
         p.cluster = cluster
       })
 
@@ -302,7 +302,7 @@ export class Map<Datum> {
     const { config, datamodel: { data } } = this
     if (!data || !this._clusterIndex) return []
 
-    let clusters = getClusterPoints(this._clusterIndex, this._leaflet.map, config.pointId, customBounds)
+    let clusters = getClusterPoints(this._clusterIndex, this._map.leaflet, config.pointId, customBounds)
     if (this._expandedCluster) {
       // Remove expanded cluster from the data
       clusters = clusters.filter(c => c.properties.cluster_id !== this._expandedCluster.cluster.properties.cluster_id)
@@ -310,7 +310,7 @@ export class Map<Datum> {
       clusters = clusters.concat(this._expandedCluster.points)
     }
     const pointData = clusters
-      .map((d: Point) => geoJSONPointToScreenPoint(d, this._leaflet.map, config.pointRadius, config.pointStrokeWidth, config.pointColor, config.pointShape, config.pointId))
+      .map((d: Point) => geoJSONPointToScreenPoint(d, this._map.leaflet, config.pointRadius, config.pointStrokeWidth, config.pointColor, config.pointShape, config.pointId))
       .sort((a, b) => getPointDisplayOrder(a, config.pointStatus, config.statusMap) - getPointDisplayOrder(b, config.pointStatus, config.statusMap))
 
     return pointData
@@ -325,16 +325,16 @@ export class Map<Datum> {
     this._hasBeenMoved = true
     this.render()
     onMapMoveZoom?.({
-      mapCenter: this._leaflet.map.getCenter(),
-      zoomLevel: this._leaflet.map.getZoom(),
+      mapCenter: this._map.leaflet.getCenter(),
+      zoomLevel: this._map.leaflet.getZoom(),
     })
   }
 
   _onMapMoveEnd (): void {
     const { config: { renderer } } = this
     if (renderer === MapRenderer.MAPBOXGL) {
-      const events = this._leaflet.layer.getEvents()
-      const zoomedEvent = events.zoomend.bind(this._leaflet.layer)
+      const events = this._map.layer.getEvents()
+      const zoomedEvent = events.zoomend.bind(this._map.layer)
       zoomedEvent()
     }
     if (!this._externallySelectedNode || !this._zoomingToExternallySelectedNode) return
@@ -350,8 +350,8 @@ export class Map<Datum> {
     }
 
     onMapMoveZoom?.({
-      mapCenter: this._leaflet.map.getCenter(),
-      zoomLevel: this._leaflet.map.getZoom(),
+      mapCenter: this._map.leaflet.getCenter(),
+      zoomLevel: this._map.leaflet.getZoom(),
     })
   }
 
@@ -372,13 +372,13 @@ export class Map<Datum> {
 
     this._externallySelectedNode = null
     event.stopPropagation()
-    const zoomLevel = this._leaflet.map.getZoom()
+    const zoomLevel = this._map.leaflet.getZoom()
     const coordinates = { lng: d.geometry.coordinates[0], lat: d.geometry.coordinates[1] }
     if (d.properties.cluster) {
       if (shouldClusterExpand(d, zoomLevel)) this._expandCluster(d)
       else {
         const newZoomLevel = clampZoomLevel(zoomLevel)
-        this._leaflet.map.flyTo(coordinates, newZoomLevel, { duration: flyToDuration / 1000 })
+        this._map.leaflet.flyTo(coordinates, newZoomLevel, { duration: flyToDuration / 1000 })
       }
     } else {
       this._selectedNode = d
