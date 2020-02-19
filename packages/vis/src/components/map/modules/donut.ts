@@ -2,23 +2,16 @@
 
 import { pie, arc } from 'd3-shape'
 
-// Utils
-import { isNil } from 'utils/data'
-
 // Types
-import { pieDataValue } from 'types/map'
+import { PieDatum } from 'types/map'
 
-const pieConstructor = pie<pieDataValue>()
+const pieConstructor = pie<PieDatum>()
   .sort(null)
-  .value((d: pieDataValue): number => d.value)
+  .value((d: PieDatum): number => d.value)
 
-export function updateDonut (selection, data, options): void {
-  const { radius, statusStyle } = options
-  const arcWidth = isNil(options.arcWidth) ? 2 : options.arcWidth
-  const padAngle = isNil(options.padAngle) ? 0.05 : options.padAngle
-
+export function updateDonut (selection, data, { radius, statusMap, arcWidth = 2, padAngle = 0.05 }): void {
   pieConstructor.padAngle(padAngle)
-  const arcs = pieConstructor(data.filter((d: pieDataValue) => d.value))
+  const arcs = pieConstructor(data.filter((d: PieDatum) => d.value))
 
   const donuts = selection.selectAll('path')
     .data(arcs)
@@ -28,10 +21,11 @@ export function updateDonut (selection, data, options): void {
   donuts.enter()
     .append('path')
     .merge(donuts)
+    .attr('class', d => statusMap?.[d.data.status]?.className ?? null)
     .attr('d', arc()
       .innerRadius(radius - arcWidth * 0.5)
-      .outerRadius(radius + arcWidth * 0.5))
-    .style('fill', d => {
-      return statusStyle?.[d.data.status]?.fill
-    })
+      .outerRadius(radius + arcWidth * 0.5)
+    )
+    .style('fill', d => statusMap?.[d.data.status]?.color ?? null)
+    .style('stroke', d => statusMap?.[d.data.status]?.color ?? null)
 }

@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { select, event } from 'd3-selection'
+import { select, Selection, event } from 'd3-selection'
 import L from 'leaflet'
 
 // Types
@@ -11,7 +11,7 @@ import { MapRenderer } from 'types/map'
 import { getTangramLayer } from './tangram'
 import { getMapboxglLayer, mapboxglWheelEventThrottled } from './mapboxgl'
 
-export function setupMap (mapContainer, config): {} {
+export function setupMap (mapContainer, config): { map: L.Map; layer: L.Layer; svgOverlay: Selection<SVGElement, any, HTMLElement, any>; svgGroup: Selection<SVGGElement, any, SVGElement, any> } {
   const { nextzenApiKey, renderer } = config
   if (renderer === MapRenderer.TANGRAM && !nextzenApiKey) console.warn('To show map provide Nextzen Api Key')
 

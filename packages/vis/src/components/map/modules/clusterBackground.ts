@@ -1,22 +1,27 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-
-// Utils
-import { cloneDeep } from 'utils/data'
+import L from 'leaflet'
 
 // Types
 import { PointShape } from 'types/map'
+
+// Utils
+import { cloneDeep } from 'utils/data'
+import { getPointPos, getNodePathData } from './utils'
+
+// Config Interface
+import { MapConfigInterface } from '../config'
 
 export function createBackgroundNode (selection): void {
   selection.datum({ _sortId: 1 })
   selection.append('path')
 }
 
-export function updateBackgroundNode (selection, datamodel, config, clusterBackgroundRadius): void {
+export function updateBackgroundNode<T> (selection, expandedCluster, config: MapConfigInterface<T>, leafletMap: L.Map, clusterBackgroundRadius): void {
   const { clusterBackground } = config
-  if (datamodel.expandedCluster && clusterBackground) {
-    const node = cloneDeep(datamodel.expandedCluster.cluster)
-    const { x, y } = datamodel.getPointPos(node)
-    const path = datamodel.getNodePathData({ x: 0, y: 0 }, clusterBackgroundRadius, PointShape.CIRCLE)
+  if (expandedCluster && clusterBackground) {
+    const node = cloneDeep(expandedCluster.cluster)
+    const { x, y } = getPointPos(node, leafletMap)
+    const path = getNodePathData({ x: 0, y: 0 }, clusterBackgroundRadius, PointShape.CIRCLE)
     selection.select('path').attr('d', d => path)
     selection
       .classed('active', true)

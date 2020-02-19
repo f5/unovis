@@ -1,5 +1,8 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { select, Selection, event } from 'd3-selection'
+import { packSiblings } from 'd3-hierarchy'
+import L from 'leaflet'
+import Supercluster from 'supercluster'
 
 // Model
 import { MapDataModel } from 'data-models/map'
@@ -18,10 +21,13 @@ import * as s from './style'
 
 // Modules
 import { setupMap } from './modules/map'
-import { bBoxMerge, clampZoomLevel } from './modules/utils'
 import { createNodes, updateNodes, removeNodes } from './modules/node'
 import { createNodeSelectionRing, updateNodeSelectionRing } from './modules/selectionRing'
 import { createBackgroundNode, updateBackgroundNode } from './modules/clusterBackground'
+import {
+  bBoxMerge, clampZoomLevel, getNodeRadius, getPointDisplayOrder, calulateClusterIndex, geoJSONPointToScreenPoint,
+  shouldClusterExpand, findNodeAndClusterInPointsById, getNodeRelativePosition, getClusterRadius, getClusterPoints,
+} from './modules/utils'
 
 export class Map<Datum> {
   static selectors = s
@@ -30,7 +36,9 @@ export class Map<Datum> {
   config: MapConfig<Datum> = new MapConfig()
   datamodel: MapDataModel<Datum> = new MapDataModel()
   protected _container: HTMLElement
-  private _leaflet: any
+  private _leaflet: { map: L.Map; layer: L.Layer; svgOverlay: Selection<SVGElement, any, HTMLElement, any>; svgGroup: Selection<SVGGElement, any, SVGElement, any> }
+  private _clusterIndex: Supercluster
+  private _expandedCluster = null
   private _cancelBackgroundClick = false
   private _hasBeenMoved = false
   private _hasBeenZoomed = false
@@ -38,18 +46,18 @@ export class Map<Datum> {
   private _externallySelectedNode = null
   private _zoomingToExternallySelectedNode = false
   private _forceExpandCluster = false
-  private _nodesGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
-  private _nodeSelectionRing: Selection<SVGGElement, object[], SVGGElement, object[]>
-  private _clusterBackground: Selection<SVGGElement, object[], SVGGElement, object[]>
+  private _nodesGroup: Selection<SVGGElement, object[], SVGElement, object[]>
+  private _nodeSelectionRing: Selection<SVGGElement, object[], SVGElement, object[]>
+  private _clusterBackground: Selection<SVGGElement, object[], SVGElement, object[]>
   private _clusterBackgroundRadius = 0
   private _selectedNode = null
   private _currentZoomLevel = null
 
   events = {
     [Map.selectors.node]: {
-      mousemove: this._onMousemoveNode,
-      mouseover: this._onMouseoverNode,
-      mouseout: this._onMouseoutNode,
+      // mousemove: this._onMousemoveNode,
+      // mouseover: this._onMouseoverNode,
+      // mouseout: this._onMouseoutNode,
       mouseup: this._onMouseupNode,
       mousedown: this._onMousedownNode,
       click: this._onNodeClick,
@@ -80,7 +88,8 @@ export class Map<Datum> {
     this._leaflet.map.on('mouseup', (e) => {
       if (this._triggerBackroundClick) {
         this._triggerBackroundClick = false
-        this._onBackgroundClick(null, e.originalEvent.target, e.originalEvent)
+        const originalEvent = (e as any).originalEvent
+        this._onBackgroundClick(null, originalEvent.target, originalEvent)
       }
     })
 
@@ -99,26 +108,16 @@ export class Map<Datum> {
       .attr('class', s.clusterBackground)
       .call(createBackgroundNode)
 
-    this.datamodel.leafletMap = this._leaflet.map
-
     if (data) this.setData(data)
   }
 
   setConfig (config: MapConfig<Datum>): void {
     this.config.init(config)
-    this.datamodel.longitude = this.config.pointLongitude
-    this.datamodel.latitude = this.config.pointLatitude
-    this.datamodel.id = this.config.pointId
-    this.datamodel.status = this.config.pointStatus
-    this.datamodel.shape = this.config.pointShape
-    this.datamodel.color = this.config.pointColor
-    this.datamodel.pointRadius = this.config.pointRadius
-    this.datamodel.pointStrokeWidth = this.config.pointStrokeWidth
-    this.datamodel.statusStyle = this.config.statusStyle
   }
 
   setData (data): void {
     this.datamodel.data = data
+    this._clusterIndex = calulateClusterIndex(data, this.config)
     this.render()
   }
 
@@ -128,9 +127,11 @@ export class Map<Datum> {
   }
 
   fitToPoints (duration = this.config.flyToDuration, padding = [40, 40]): void {
+    const { config, datamodel, datamodel: { data } } = this
+
     if (!this._leaflet || !this._leaflet.map) return
-    if (!this.datamodel.data.length) return
-    const bounds = this.datamodel.getDataLatLngBounds()
+    if (!data.length) return
+    const bounds = datamodel.getDataLatLngBounds(config.pointLatitude, config.pointLongitude)
     this._flyToBounds(bounds, duration, padding)
   }
 
@@ -147,12 +148,16 @@ export class Map<Datum> {
   }
 
   zoomToNodeById (id: number | string, selectNode = false, customZoomLevel: number): void {
-    const { datamodel } = this
-    datamodel.resetExpandedCluster()
-    const allPoints = datamodel.getPointsInCurrentBounds()
-    let foundNode = find(allPoints, (d: Point) => d.properties.id === id)
+    const { config, datamodel } = this
+    this._resetExpandedCluster()
+
+    const dataBoundsAll = datamodel.getDataLatLngBounds(config.pointLatitude, config.pointLongitude)
+    const bounds = [dataBoundsAll[0][1], dataBoundsAll[1][0], dataBoundsAll[1][1], dataBoundsAll[0][0]]
+    const pointDataAll = this._getScreenPointData(bounds)
+
+    let foundNode = find(pointDataAll, (d: Point) => d.properties.id === id)
     if (!foundNode) {
-      const { node } = datamodel.findNodeAndClusterInPointsById(allPoints, id)
+      const { node } = findNodeAndClusterInPointsById(pointDataAll, id)
       foundNode = node
     }
     if (foundNode) {
@@ -161,7 +166,7 @@ export class Map<Datum> {
       if (selectNode) this._selectedNode = foundNode
       this._forceExpandCluster = !isNil(customZoomLevel)
       const zoomLevel = isNil(customZoomLevel) ? this._leaflet.map.getZoom() : customZoomLevel
-      const coordinates = { lon: foundNode.properties.longitude, lat: foundNode.properties.latitude }
+      const coordinates = { lng: foundNode.properties.longitude, lat: foundNode.properties.latitude }
       this._leaflet.map.flyTo(coordinates, zoomLevel, { duration: 0 })
     } else {
       console.warn(`Node with index ${id} can not be found`)
@@ -169,7 +174,7 @@ export class Map<Datum> {
   }
 
   getNodeRelativePosition (node): { x: number; y: number } {
-    return this.datamodel.getNodeRelativePosition(node)
+    return getNodeRelativePosition(node, this._leaflet.map)
   }
 
   get hasBeenZoomed (): boolean {
@@ -192,9 +197,9 @@ export class Map<Datum> {
   }
 
   _renderData (): void {
-    const { datamodel, config } = this
+    const { config } = this
 
-    const pointData = datamodel.points
+    const pointData = this._getScreenPointData()
     const contentBBox = pointData.length ? bBoxMerge(pointData.map(d => d.bbox)) : { x: 0, y: 0, width: 0, height: 0 }
 
     // Set SVG size to match Leaflet transform
@@ -219,12 +224,12 @@ export class Map<Datum> {
       .call(createNodes)
 
     const nodesMerged = nodes.merge(nodesEnter)
-    nodesMerged.call(updateNodes, datamodel, config)
+    nodesMerged.call(updateNodes, config, this._leaflet.map)
 
     nodesMerged.on('click', this._onNodeClick.bind(this))
 
-    this._clusterBackground.call(updateBackgroundNode, datamodel, config, this._clusterBackgroundRadius)
-    if (datamodel.expandedCluster && config.clusterBackground) {
+    this._clusterBackground.call(updateBackgroundNode, this._expandedCluster, config, this._leaflet.map, this._clusterBackgroundRadius)
+    if (this._expandedCluster && config.clusterBackground) {
       const id = findIndex(pointData, d => d.cluster)
       pointData.forEach((d, i) => (d._sortId = i < id ? 0 : 2))
       this._nodesGroup
@@ -234,23 +239,23 @@ export class Map<Datum> {
 
     // Show selection border and hide it when the node
     // is out of visible box
-    this._nodeSelectionRing.call(updateNodeSelectionRing, datamodel, config, this._selectedNode)
+    this._nodeSelectionRing.call(updateNodeSelectionRing, this._selectedNode, pointData, config, this._leaflet.map)
   }
 
   _zoomToExternallySelectedNode (): void {
-    const { datamodel } = this
-    const foundNode = find(datamodel.points, d => d.properties.id === this._externallySelectedNode.properties.id)
+    const pointData = this._getScreenPointData()
+    const foundNode = find(pointData, d => d.properties.id === this._externallySelectedNode.properties.id)
     if (foundNode) {
       this._zoomingToExternallySelectedNode = false
       this._currentZoomLevel = null
     } else {
-      const { cluster } = datamodel.findNodeAndClusterInPointsById(datamodel.points, this._externallySelectedNode.properties.id)
+      const { cluster } = findNodeAndClusterInPointsById(pointData, this._externallySelectedNode.properties.id)
       const zoomLevel = this._leaflet.map.getZoom()
       // Expand cluster or fly further
-      if (this._forceExpandCluster || datamodel.shouldClusterExpand(cluster, zoomLevel, 8, 13)) this._expandCluster(cluster)
+      if (this._forceExpandCluster || shouldClusterExpand(cluster, zoomLevel, 8, 13)) this._expandCluster(cluster)
       else {
         const newZoomLevel = clampZoomLevel(zoomLevel)
-        const coordinates = { lon: this._externallySelectedNode.properties.longitude, lat: this._externallySelectedNode.properties.latitude }
+        const coordinates = { lng: this._externallySelectedNode.properties.longitude, lat: this._externallySelectedNode.properties.latitude }
         if (this._currentZoomLevel !== newZoomLevel) {
           this._currentZoomLevel = newZoomLevel
           this._leaflet.map.flyTo(coordinates, newZoomLevel, { duration: 0 })
@@ -260,15 +265,55 @@ export class Map<Datum> {
   }
 
   _expandCluster (cluster): void {
-    const { datamodel, config: { clusterBackground } } = this
+    const { config, config: { clusterBackground } } = this
+    const padding = 1
+    const points = cluster.index.getLeaves(cluster.properties.cluster_id, Infinity)
+
     this._forceExpandCluster = false
     if (cluster) {
-      datamodel.expandCluster(cluster)
-      if (clusterBackground) this._clusterBackgroundRadius = datamodel.getClusterRadius()
+      points.forEach(p => {
+        p.r = getNodeRadius(p, config.pointRadius, this._leaflet.map.getZoom()) + padding
+        p.cluster = cluster
+      })
+
+      packSiblings(points)
+      this._resetExpandedCluster()
+      this._expandedCluster = {
+        cluster,
+        points,
+      }
+
+      if (clusterBackground) this._clusterBackgroundRadius = getClusterRadius(this._expandedCluster)
 
       this.render()
     }
+
     this._zoomingToExternallySelectedNode = false
+  }
+
+  _resetExpandedCluster (): void {
+    if (this._expandedCluster && this._expandedCluster.points) {
+      this._expandedCluster.points.forEach(d => { delete d.cluster })
+    }
+    this._expandedCluster = null
+  }
+
+  _getScreenPointData (customBounds?): Point[] {
+    const { config, datamodel: { data } } = this
+    if (!data || !this._clusterIndex) return []
+
+    let clusters = getClusterPoints(this._clusterIndex, this._leaflet.map, config.pointId, customBounds)
+    if (this._expandedCluster) {
+      // Remove expanded cluster from the data
+      clusters = clusters.filter(c => c.properties.cluster_id !== this._expandedCluster.cluster.properties.cluster_id)
+      // Add Points from expanded cluster
+      clusters = clusters.concat(this._expandedCluster.points)
+    }
+    const pointData = clusters
+      .map((d: Point) => geoJSONPointToScreenPoint(d, this._leaflet.map, config.pointRadius, config.pointStrokeWidth, config.pointColor, config.pointShape, config.pointId))
+      .sort((a, b) => getPointDisplayOrder(a, config.pointStatus, config.statusMap) - getPointDisplayOrder(b, config.pointStatus, config.statusMap))
+
+    return pointData
   }
 
   _onMapDragLeaflet (): void {
@@ -297,9 +342,9 @@ export class Map<Datum> {
   }
 
   _onMapZoom (): void {
-    const { datamodel, config: { onMapMoveZoom } } = this
+    const { config: { onMapMoveZoom } } = this
     this._hasBeenZoomed = true
-    if (!this._externallySelectedNode) datamodel.resetExpandedCluster()
+    if (!this._externallySelectedNode) this._resetExpandedCluster()
     else if (!this._zoomingToExternallySelectedNode) {
       this._externallySelectedNode = null
     }
@@ -318,18 +363,19 @@ export class Map<Datum> {
 
     this._selectedNode = null
     this._externallySelectedNode = null
-    this.datamodel.resetExpandedCluster()
+    this._resetExpandedCluster()
     this.render()
   }
 
   _onNodeClick (d, i, elements): void {
-    const { datamodel, config: { flyToDuration } } = this
+    const { config: { flyToDuration } } = this
+
     this._externallySelectedNode = null
     event.stopPropagation()
     const zoomLevel = this._leaflet.map.getZoom()
-    const coordinates = { lon: d.geometry.coordinates[0], lat: d.geometry.coordinates[1] }
+    const coordinates = { lng: d.geometry.coordinates[0], lat: d.geometry.coordinates[1] }
     if (d.properties.cluster) {
-      if (datamodel.shouldClusterExpand(d, zoomLevel)) this._expandCluster(d)
+      if (shouldClusterExpand(d, zoomLevel)) this._expandCluster(d)
       else {
         const newZoomLevel = clampZoomLevel(zoomLevel)
         this._leaflet.map.flyTo(coordinates, newZoomLevel, { duration: flyToDuration / 1000 })
@@ -340,16 +386,16 @@ export class Map<Datum> {
     }
   }
 
-  _onMouseoverNode (d, el, event): void {
+  // _onMouseoverNode (d, el, event): void {
 
-  }
+  // }
 
-  _onMouseoutNode (d, el, event): void {
+  // _onMouseoutNode (d, el, event): void {
 
-  }
+  // }
 
-  _onMousemoveNode (d, el, event): void {
-  }
+  // _onMousemoveNode (d, el, event): void {
+  // }
 
   _onMousedownNode (d, el, event): void {
     this._cancelBackgroundClick = true

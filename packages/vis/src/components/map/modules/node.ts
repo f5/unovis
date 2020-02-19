@@ -1,14 +1,19 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { select, Selection } from 'd3-selection'
+import L from 'leaflet'
 
 // Types
 import { ClusterOutlineType, Point } from 'types/map'
 
 // Utils
 import { clamp } from 'utils/data'
+import { getPointPos, getDonutData } from './utils'
 
 // Modules
 import { updateDonut } from './donut'
+
+// Types
+import { MapConfigInterface } from '../config'
 
 import * as s from '../style'
 
@@ -27,11 +32,11 @@ export function createNodes (selection): void {
     .attr('class', s.donutCluster)
 }
 
-export function updateNodes (selection, datamodel, config): void {
-  const { clusterOutlineType, clusterOutlineWidth, statusStyle } = config
+export function updateNodes<T> (selection, config: MapConfigInterface<T>, leafetMap: L.Map): void {
+  const { clusterOutlineType, clusterOutlineWidth, statusMap } = config
   selection
     .attr('transform', d => {
-      const { x, y } = datamodel.getPointPos(d)
+      const { x, y } = getPointPos(d, leafetMap)
       return `translate(${x},${y})`
     })
 
@@ -42,25 +47,23 @@ export function updateNodes (selection, datamodel, config): void {
 
     if (clusterOutlineType === ClusterOutlineType.DONUT && d.properties.cluster) {
       group.select(`.${s.donutCluster}`)
-        .call(updateDonut, datamodel.getDonutData(d), { radius: d.radius, arcWidth: clusterOutlineWidth, statusStyle })
+        .call(updateDonut, getDonutData(d, config.statusMap), { radius: d.radius, arcWidth: clusterOutlineWidth, statusMap })
     }
 
+    const statusStyle = statusMap?.[d.properties.status]
     node
-      .classed('cluster', (d: Point) => d.properties.cluster)
-      .classed('withStroke', (d: Point) => d.properties.cluster && clusterOutlineType === ClusterOutlineType.LINE)
-      .classed('fromCluster', (d: Point) => d.cluster)
-      .attr('d', (d: Point) => d.path)
-      .style('fill', (d: Point) => {
-        return d.fill || statusStyle?.[d.properties.status]?.fill
-      })
-      .style('stroke', (d: Point) => {
-        return d.stroke || statusStyle?.[d.properties.status]?.stroke
-      })
-      .style('stroke-width', (d: Point) => d.strokeWidth)
+      .classed('cluster', d.properties.cluster)
+      .classed('withStroke', d.properties.cluster && clusterOutlineType === ClusterOutlineType.LINE)
+      .classed('fromCluster', d.cluster)
+      .classed(statusStyle?.className, !!statusStyle?.className)
+      .attr('d', d.path)
+      .style('fill', d.fill || statusMap?.[d.properties.status]?.color)
+      .style('stroke', d.stroke || statusMap?.[d.properties.status]?.color)
+      .style('stroke-width', d.strokeWidth)
       .style('opacity', 1)
 
     innerLabel
-      .text((d: Point) => d.properties.cluster ? d.properties.point_count : null)
+      .text(d.properties.cluster ? d.properties.point_count : null)
       .attr('font-size', (d: Point) => {
         if (!d.properties.point_count) return null
         const nodeWidth = node.node().getBBox().width
@@ -68,7 +71,7 @@ export function updateNodes (selection, datamodel, config): void {
         const fontSize = 0.6 * nodeWidth / Math.pow(textLength, 0.35)
         return clamp(fontSize, fontSize, 16)
       })
-      .attr('visibility', (d: Point) => d.properties.cluster ? null : 'hidden')
+      .attr('visibility', d.properties.cluster ? null : 'hidden')
   })
 }
 

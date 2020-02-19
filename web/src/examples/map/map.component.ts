@@ -1,7 +1,7 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 /* eslint-disable */
 import _ from 'lodash'
-import { Component, ViewChild, ElementRef, OnInit, AfterViewInit } from '@angular/core'
+import { Component, ViewChild, ElementRef, OnInit, AfterViewInit, ViewEncapsulation } from '@angular/core'
 import { Map } from '@volterra/vis/components'
 import earthquakes from './data/earthquakes100.geo.json'
 
@@ -18,7 +18,8 @@ function generateData (): object[] {
 @Component({
   selector: 'map',
   templateUrl: './map.component.html',
-  styleUrls: ['./map.component.css'],
+  styleUrls: ['./map.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 
 export class MapComponent implements OnInit, AfterViewInit {
@@ -43,14 +44,14 @@ function getTangramMapConfig () {
   return {
     renderer: 'tangram',
     nextzenApiKey: 'q-wBnCItTPC8Vdj8GA6g8Q',
-    statusStyle: {
-      healthy: { fill: '#47e845' },
-      warning: { fill: '#ffc226' },
-      alert: { fill: '#f8442d' },
-      inactive: { fill: '#acb2b9' },
-      pending: { fill: '#82affd' },
-      re: { fill: '#4c7afc' },
-      approving: { fill: '#82affd' },
+    statusMap: {
+      healthy: { color: '#47e845' },
+      warning: { color: '#ffc226' },
+      alert: { color: '#f8442d' },
+      inactive: { color: '#acb2b9' },
+      pending: { color: '#82affd', className: 'pointPending' },
+      re: { color: '#4c7afc' },
+      approving: { color: '#82affd' },
     }
   }
 }

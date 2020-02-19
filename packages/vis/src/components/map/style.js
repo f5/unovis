@@ -100,6 +100,7 @@ export const donutCluster = css`
   transition: .3s transform;
   path {
     fill: var(--vis-map-cluster-donut-fill-color);
+    stroke-width: 0.25;
   }
 
   &:hover {

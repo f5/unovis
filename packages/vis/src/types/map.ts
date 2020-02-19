@@ -19,9 +19,11 @@ export enum ClusterOutlineType {
 }
 
 export interface StatusStyle {
-  fill?: string;
-  stroke?: string;
+  color?: string;
+  className?: string;
 }
+
+export type StatusMap = { [key: string]: StatusStyle }
 
 export type Point = {
   bbox: {};
@@ -36,7 +38,9 @@ export type Point = {
     cluster: any;
     status: string;
     id: string | number;
+    // eslint-disable-next-line camelcase
     point_count: number;
+    // eslint-disable-next-line camelcase
     cluster_id: string | number;
     sum: {
       [key: string]: number;
@@ -46,7 +50,7 @@ export type Point = {
   _sortId: number;
 }
 
-export type pieDataValue = {
+export type PieDatum = {
   value: number;
   status: string;
 }

@@ -6,7 +6,7 @@ import { Config } from 'core/config'
 
 // Types
 import { NumericAccessor, StringAccessor, ColorAccessor } from 'types/misc'
-import { MapRenderer, ClusterOutlineType, StatusStyle, Bounds } from 'types/map'
+import { MapRenderer, ClusterOutlineType, Bounds, StatusMap } from 'types/map'
 
 export interface MapConfigInterface<T> {
   renderer?: MapRenderer;
@@ -53,9 +53,7 @@ export interface MapConfigInterface<T> {
   /** Default bounds */
   bounds?: Bounds;
   /** Status styles */
-  statusStyle?: {
-    [key: string]: StatusStyle;
-  };
+  statusMap?: StatusMap;
 }
 
 export class MapConfig<T> extends Config implements MapConfigInterface<T> {
@@ -75,5 +73,5 @@ export class MapConfig<T> extends Config implements MapConfigInterface<T> {
   clusterBackground = true
   flyToDuration = 2000
   bounds = { northEast: { lat: 77, lng: -172 }, southWest: { lat: -50, lng: 172 } }
-  statusStyle = {}
+  statusMap = {}
 }
