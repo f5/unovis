@@ -52,6 +52,7 @@ export class LeafletMap<Datum> {
   private _clusterBackgroundRadius = 0
   private _selectedNode: Point = null
   private _currentZoomLevel = null
+  private _firstRender = true
 
   events = {
     [LeafletMap.selectors.node]: {
@@ -122,8 +123,17 @@ export class LeafletMap<Datum> {
   }
 
   render (): void {
+    const { config } = this
     if (!this._map) return
+
     this._renderData()
+    if (this._firstRender) {
+      if (config.initialBounds && !config.bounds) this.fitToBounds(config.initialBounds)
+    }
+
+    if (config.bounds) this.fitToBounds(config.bounds)
+
+    this._firstRender = false
   }
 
   fitToPoints (duration = this.config.flyToDuration, padding = [40, 40]): void {
@@ -136,7 +146,7 @@ export class LeafletMap<Datum> {
   }
 
   fitToBounds (bounds: Bounds, duration = this.config.flyToDuration): void {
-    const { northEast, southWest } = bounds || this.config.bounds
+    const { northEast, southWest } = bounds
     if (isNil(northEast) || isNil(southWest)) return
     if (isNil(northEast.lat) || isNil(northEast.lng)) return
     if (isNil(southWest.lat) || isNil(southWest.lng)) return
@@ -285,7 +295,7 @@ export class LeafletMap<Datum> {
 
       if (clusterBackground) this._clusterBackgroundRadius = getClusterRadius(this._expandedCluster)
 
-      this.render()
+      this._renderData()
     }
 
     this._zoomingToExternallySelectedNode = false
@@ -323,10 +333,15 @@ export class LeafletMap<Datum> {
   _onMapMove (): void {
     const { config: { onMapMoveZoom } } = this
     this._hasBeenMoved = true
-    this.render()
+    this._renderData()
+
+    const leafletBounds = this._map.leaflet.getBounds()
+    const southWest = leafletBounds.getSouthWest()
+    const northEast = leafletBounds.getNorthEast()
     onMapMoveZoom?.({
       mapCenter: this._map.leaflet.getCenter(),
       zoomLevel: this._map.leaflet.getZoom(),
+      bounds: { southWest, northEast },
     })
   }
 
@@ -349,9 +364,13 @@ export class LeafletMap<Datum> {
       this._externallySelectedNode = null
     }
 
+    const leafletBounds = this._map.leaflet.getBounds()
+    const southWest = leafletBounds.getSouthWest()
+    const northEast = leafletBounds.getNorthEast()
     onMapMoveZoom?.({
       mapCenter: this._map.leaflet.getCenter(),
       zoomLevel: this._map.leaflet.getZoom(),
+      bounds: { southWest, northEast },
     })
   }
 
@@ -364,7 +383,7 @@ export class LeafletMap<Datum> {
     this._selectedNode = null
     this._externallySelectedNode = null
     this._resetExpandedCluster()
-    this.render()
+    this._renderData()
   }
 
   _onNodeClick (d, i, elements): void {
@@ -382,7 +401,7 @@ export class LeafletMap<Datum> {
       }
     } else {
       this._selectedNode = d
-      this.render()
+      this._renderData()
     }
   }
 

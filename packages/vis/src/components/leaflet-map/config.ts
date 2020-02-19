@@ -21,7 +21,7 @@ export interface LeafletMapConfigInterface<T> {
   /** Tangram or Mapbox style renderer settings */
   rendererSettings?: {};
   /** Function */
-  onMapMoveZoom?: (({ mapCenter, zoomLevel }: { mapCenter: LatLng; zoomLevel: number }) => any);
+  onMapMoveZoom?: (({ mapCenter, zoomLevel, bounds }: { mapCenter: LatLng; zoomLevel: number; bounds: Bounds }) => any);
   /** Point longitude accessor function or value */
   pointLongitude?: NumericAccessor<T>;
   /** Point latitude accessor function or value */
@@ -46,8 +46,10 @@ export interface LeafletMapConfigInterface<T> {
   clusterBackground?: boolean;
   /** FlyTo Duration */
   flyToDuration?: number;
-  /** Default bounds */
-  bounds?: Bounds;
+  /** Default bounds that will be applid on the first map render if the bounds property is not set */
+  initialBounds?: Bounds;
+  /** Force set map bounds */
+  bound?: Bounds;
   /** Status styles */
   statusMap?: StatusMap;
 }
@@ -68,6 +70,7 @@ export class LeafletMapConfig<T> extends Config implements LeafletMapConfigInter
   clusterOutlineWidth = 1.25
   clusterBackground = true
   flyToDuration = 2000
-  bounds = { northEast: { lat: 77, lng: -172 }, southWest: { lat: -50, lng: 172 } }
+  initialBounds = undefined
+  bounds = undefined
   statusMap = {}
 }
