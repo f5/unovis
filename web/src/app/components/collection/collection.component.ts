@@ -13,7 +13,7 @@ import { Axis } from '@volterra/vis/components'
 export class Collection implements OnInit {
   @Input() component
   @Input() dataGenerator
-  @Input() config
+  @Input() configGenerator
   title = 'collection'
   margin = { top: 10, bottom: 10, left: 10, right: 10 }
   dimensions: {}
@@ -31,12 +31,13 @@ export class Collection implements OnInit {
     const ComponentConstructor = this.component
     this.items = Object.keys(this.options).reduce((items, key) => {
       const n = this.options[key]
-      const component = new ComponentConstructor(this.config)
+      const config = this.configGenerator(n)
+      const component = new ComponentConstructor(config)
 
       items[key] = {
         margin: this.margin,
         components: [component],
-        componentConfigs: [this.config],
+        config: [config],
         data: this.dataGenerator(n),
         type: key,
         numDataElements: n,
@@ -49,9 +50,13 @@ export class Collection implements OnInit {
       return items
     }, {})
 
+    let interval = 0
     setInterval(() => {
       const item = this.items['No Data ↔︎ Data']
-      item.data = this.dataGenerator(item.data.length ? 0 : item.numDataElements)
+      const n = interval % 2 ? item.numDataElements : 0
+      item.config = [this.configGenerator(n)]
+      item.data = this.dataGenerator(n)
+      interval += 1
     }, 4000)
 
     setInterval(() => {

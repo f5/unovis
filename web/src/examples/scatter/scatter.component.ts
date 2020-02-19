@@ -27,6 +27,16 @@ function sampleScatterData (n: number): ScatterDatum[] {
   }))
 }
 
+function getScatterConfig () {
+  return {
+    x: (d): number => d.x,
+    y: (d): number => d.y,
+    size: (d): number => d.size,
+    shape: (d): SymbolType => d.shape,
+    icon: (d): any => d.icon,
+  }
+}
+
 @Component({
   selector: 'scatter',
   templateUrl: './scatter.component.html',
@@ -36,14 +46,8 @@ function sampleScatterData (n: number): ScatterDatum[] {
 export class ScatterComponent implements AfterViewInit {
   title = 'scatter'
   component = Scatter
-  config = {
-    x: (d): number => d.x,
-    y: (d): number => d.y,
-    size: (d): number => d.size,
-    shape: (d): SymbolType => d.shape,
-    icon: (d): any => d.icon,
-  }
 
+  configGenerator = getScatterConfig
   dataGenerator = sampleScatterData
 
   ngAfterViewInit (): void {

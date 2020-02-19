@@ -1,51 +1,5 @@
-<h3>Many Data Area Chart</h3>
-<div #many class="chart">
-  <vis-xychart 
-  [margin]="margin"
-  [components]="manyDataComponents"
-  [componentConfigs]="[manyDataConfig]"
-  [axes]="manyDataAxes"
-  [data]="data"
- ></vis-xychart>
-</div>
-<h3>Few Data Area Chart</h3>
-<div #few class="chart">
-  <vis-xychart 
-  [margin]="margin"
-  [components]="fewDataComponents"
-  [componentConfigs]="[fewDataConfig]"
-  [axes]="fewDataAxes"
-  [data]="data"
- ></vis-xychart>
-</div>
-<h3>Dynamic Data Area Chart</h3>
-<div #dynamic class="chart">
-  <vis-xychart 
-  [margin]="margin"
-  [components]="dynamicDataComponents"
-  [componentConfigs]="[dynamicDataConfig]"
-  [axes]="dynamicDataAxes"
-  [tooltip]="tooltip"
-  [data]="data"
- ></vis-xychart>
-</div>
-<h3>Area Chart with a single data item</h3>
-<div #single class="chart">
-  <vis-xychart 
-  [margin]="margin"
-  [components]="singleDataComponents"
-  [componentConfigs]="[singleDataConfig]"
-  [axes]="singleDataAxes"
-  [data]="data"
- ></vis-xychart>
-</div>
-<h3>Area Chart with a zero data items</h3>
-<div #zero class="chart">
-  <vis-xychart 
-  [margin]="margin"
-  [components]="zeroDataComponents"
-  [componentConfigs]="[zeroDataConfig]"
-  [axes]="zeroDataAxes"
-  [data]="data"
- ></vis-xychart>
-</div>
+<collection
+  [component]="component"
+  [configGenerator]="configGenerator"
+  [dataGenerator]="dataGenerator"
+></collection>

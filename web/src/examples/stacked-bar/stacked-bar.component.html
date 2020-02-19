@@ -1,51 +1,5 @@
-<h3>Many Data Stacked Bar Chart</h3>
-<div #many class="chart">
-  <vis-xychart 
-  [margin]="margin"
-  [components]="manyDataComponents"
-  [componentConfigs]="[config]"
-  [axes]="manyDataAxes"
-  [data]="manyData"
- ></vis-xychart>
-</div>
-<h3>Few Data Stacked Bar Chart</h3>
-<div #few class="chart">
-  <vis-xychart 
-  [margin]="margin"
-  [components]="fewDataComponents"
-  [componentConfigs]="[config]"
-  [axes]="fewDataAxes"
-  [data]="fewData"
- ></vis-xychart>
-</div>
-<h3>Dynamic Data Stacked Bar Chart</h3>
-<div #dynamic class="chart">
-  <vis-xychart 
-  [margin]="margin"
-  [components]="dynamicDataComponents"
-  [componentConfigs]="[config]"
-  [axes]="dynamicDataAxes"
-  [tooltip]="tooltip"
-  [data]="dynamicData"
- ></vis-xychart>
-</div>
-<h3>Stacked Bar Chart with a single data item</h3>
-<div #single class="chart">
-  <vis-xychart 
-  [margin]="margin"
-  [components]="singleDataComponents"
-  [componentConfigs]="[config]"
-  [axes]="singleDataAxes"
-  [data]="singleData"
- ></vis-xychart>
-</div>
-<h3>Stacked Bar Chart with a zero data items</h3>
-<div #zero class="chart">
-  <vis-xychart 
-  [margin]="margin"
-  [components]="zeroDataComponents"
-  [componentConfigs]="[config]"
-  [axes]="zeroDataAxes"
-  [data]="zeroData"
- ></vis-xychart>
-</div>
+<collection
+  [component]="component"
+  [configGenerator]="configGenerator"
+  [dataGenerator]="dataGenerator"
+></collection>

@@ -1,29 +1,32 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { AfterViewInit, Component } from '@angular/core'
+import _times from 'lodash/times'
 
 // Vis
-import { Axis, Tooltip, Area, AreaConfigInterface } from '@volterra/vis/components'
+import { Area, AreaConfigInterface } from '@volterra/vis/components'
 
 // Helpers
-import { SampleDatum, sampleSeriesData } from '../../utils/data'
+import { SampleDatum } from '../../utils/data'
 
-function getAreaConfig (n): AreaConfigInterface<SampleDatum> {
-  return {
-    x: d => d.x,
-    y: new Array(n).fill(0).map((d, i) => {
-      return d => d[`y${i || ''}`]
-    }),
-  }
-}
-
-function sampleManyAreaData (n) {
-  const data = sampleSeriesData(30)
+function sampleAreaData (n: number): SampleDatum[] {
+  const data = _times(30).map((i) => ({
+    x: i,
+  }))
   data.forEach(d => {
-    for (let i = 5; i < n - 5; i++) {
+    for (let i = 0; i < n; i++) {
       d[`y${i}`] = Math.random()
     }
   })
   return data
+}
+
+function getAreaConfig (n: number): AreaConfigInterface<SampleDatum> {
+  return {
+    x: d => d.x,
+    y: _times(n).map((d, i) => {
+      return d => d[`y${i}`]
+    }),
+  }
 }
 
 @Component({
@@ -34,61 +37,10 @@ function sampleManyAreaData (n) {
 
 export class AreaComponent implements AfterViewInit {
   title = 'area'
-  margin = { top: 10, bottom: 10, left: 10, right: 10 }
-  dimensions: {}
-  data: SampleDatum[] = sampleManyAreaData(50)
+  component = Area
 
-  zeroDataConfig = getAreaConfig(0)
-  zeroDataStacked = new Area(this.zeroDataConfig)
-  zeroDataComponents = [this.zeroDataStacked]
-  zeroDataAxes = {
-    x: new Axis({ label: 'x axis' }),
-    y: new Axis({ label: 'y axis' }),
-  }
+  configGenerator = getAreaConfig
+  dataGenerator = sampleAreaData
 
-  singleDataConfig = getAreaConfig(1)
-  singleDataStacked = new Area(this.singleDataConfig)
-  singleDataComponents = [this.singleDataStacked]
-  singleDataAxes = {
-    x: new Axis({ label: 'x axis' }),
-    y: new Axis({ label: 'y axis' }),
-  }
-
-  dynamicDataConfig = getAreaConfig(10)
-  dynamicDataStacked = new Area(this.dynamicDataConfig)
-  dynamicDataComponents = [this.dynamicDataStacked]
-  dynamicDataAxes = {
-    x: new Axis({ label: 'x axis' }),
-    y: new Axis({ label: 'y axis' }),
-  }
-
-  manyDataConfig = getAreaConfig(40)
-  manyDataStacked = new Area(this.manyDataConfig)
-  manyDataComponents = [this.manyDataStacked]
-  manyDataAxes = {
-    x: new Axis({ label: 'x axis' }),
-    y: new Axis({ label: 'y axis' }),
-  }
-
-  fewDataConfig = getAreaConfig(10)
-  fewDataStacked = new Area(this.fewDataConfig)
-  fewDataComponents = [this.fewDataStacked]
-  fewDataAxes = {
-    x: new Axis({ label: 'x axis' }),
-    y: new Axis({ label: 'y axis' }),
-  }
-
-  tooltip = new Tooltip({
-    triggers: {
-      [Area.selectors.area]: (): string => '<span>Area</span>',
-    },
-  })
-
-  ngAfterViewInit (): void {
-    let count = 0
-    setInterval(() => {
-      this.dynamicDataConfig = getAreaConfig(count % 2 ? 10 : 0)
-      count += 1
-    }, 2000)
-  }
+  ngAfterViewInit (): void {}
 }

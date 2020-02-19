@@ -2,9 +2,6 @@
 import _times from 'lodash/times'
 import _uniqueId from 'lodash/uniqueId'
 import _sample from 'lodash/sample'
-import _random from 'lodash/random'
-
-import { SymbolType } from '@volterra/vis/types'
 
 export interface SampleDatum {
   id?: string;
