@@ -7,13 +7,13 @@ import _random from 'lodash/random'
 import { SymbolType } from '@volterra/vis/types'
 
 export interface SampleDatum {
-  id: string;
+  id?: string;
   x: number;
   y: number;
-  y1: number;
-  y2: number;
-  y3: number;
-  y4: number;
+  y1?: number;
+  y2?: number;
+  y3?: number;
+  y4?: number;
 }
 
 export function sampleSeriesData (n: number): SampleDatum[] {
@@ -45,20 +45,5 @@ export function sampleTimelineData (n: number): SampleTimelineDatum[] {
     duration: Math.round((1000 * 60 * 60 * 4) * Math.random()),
     color: _sample(colors),
     width: 5 + Math.round(5 * Math.random()),
-  }))
-}
-
-export interface SampleScatterDatum extends SampleDatum {
-  size: number;
-  shape: SymbolType;
-  icon: any;
-}
-export function sampleScatterData (n: number, minR?: number, maxR?: number): SampleScatterDatum[] {
-  return _times(n).map((i) => ({
-    x: i,
-    y: Math.random(),
-    size: minR && maxR ? _random(minR, maxR) : 50,
-    shape: Math.random() > 0.8 ? SymbolType.CIRCLE : _sample([SymbolType.CROSS, SymbolType.DIAMOND, SymbolType.SQUARE, SymbolType.STAR, SymbolType.TRIANGLE, SymbolType.WYE]),
-    icon: Math.random() > 0.8 ? '☁️' : undefined,
   }))
 }
