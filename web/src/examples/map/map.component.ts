@@ -5,6 +5,14 @@ import { Component, ViewChild, ElementRef, OnInit, AfterViewInit, ViewEncapsulat
 import { Map, MapConfigInterface } from '@volterra/vis/components'
 import earthquakes from './data/earthquakes100.geo.json'
 
+type MapPoint = {
+  id: string;
+  longitude: number;
+  latitude: number;
+  status: string;
+  shape: string;
+}
+
 function generateData (): object[] {  
   return earthquakes.features.map(d => ({
       id: d.id,
@@ -40,7 +48,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 }
 
-function getTangramMapConfig (): MapConfigInterface {
+function getTangramMapConfig (): MapConfigInterface<MapPoint> {
   return {
     renderer: 'mapboxgl',
     mapboxglGlyphs: 'https://maps.volterra.io/fonts/{fontstack}/{range}.pbf',

@@ -50,7 +50,7 @@ export class Map<Datum> {
   private _nodeSelectionRing: Selection<SVGGElement, object[], SVGElement, object[]>
   private _clusterBackground: Selection<SVGGElement, object[], SVGElement, object[]>
   private _clusterBackgroundRadius = 0
-  private _selectedNode = null
+  private _selectedNode: Point = null
   private _currentZoomLevel = null
 
   events = {

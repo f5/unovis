@@ -9,7 +9,7 @@ import { NumericAccessor, StringAccessor, ColorAccessor } from 'types/misc'
 import { MapRenderer, ClusterOutlineType, Bounds, StatusMap } from 'types/map'
 
 export interface MapConfigInterface<T> {
-  renderer?: MapRenderer;
+  renderer?: MapRenderer | string;
   /**  */
   tamgramRenderer?: any;
   /** Mapboxgl Access Token or Nextzen API key */

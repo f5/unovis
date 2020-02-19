@@ -37,6 +37,7 @@ export type Point = {
   properties: {
     cluster: any;
     status: string;
+    shape: PointShape;
     id: string | number;
     // eslint-disable-next-line camelcase
     point_count: number;
