@@ -2,12 +2,18 @@
 import L from 'leaflet'
 import mapboxGl from 'mapbox-gl'
 import 'mapbox-gl-leaflet'
-// import 'mapbox-gl/src/css/mapbox-gl.css'
+
+import { injectGlobal } from 'emotion'
 
 // Utils
 import { throttle } from 'utils/data'
 
 import { getRendererSettings } from './settings'
+
+// Inject Mapboxgl global style
+// eslint-disable-next-line
+const mapboxglCSS = require('mapbox-gl/dist/mapbox-gl.css') // Using require and rollup-plugin-string to overpass ts build errors
+injectGlobal(mapboxglCSS)
 
 // Setting mapbox-gl baseApiUrl to null to avoid sending events to events.mapbox.com
 mapboxGl.baseApiUrl = null
@@ -28,7 +34,7 @@ export function getMapboxglLayer (map, config): any {
 
   const glLayer = L.mapboxGL({
     style: rendererSettings,
-    accessToken: accessToken,
+    accessToken: accessToken || 'not-needed',
   })
 
   return glLayer

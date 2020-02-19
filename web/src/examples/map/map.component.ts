@@ -2,7 +2,7 @@
 /* eslint-disable */
 import _ from 'lodash'
 import { Component, ViewChild, ElementRef, OnInit, AfterViewInit, ViewEncapsulation } from '@angular/core'
-import { Map } from '@volterra/vis/components'
+import { Map, MapConfigInterface } from '@volterra/vis/components'
 import earthquakes from './data/earthquakes100.geo.json'
 
 function generateData (): object[] {  
@@ -40,10 +40,17 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 }
 
-function getTangramMapConfig () {
+function getTangramMapConfig (): MapConfigInterface {
   return {
-    renderer: 'tangram',
-    accessToken: 'q-wBnCItTPC8Vdj8GA6g8Q',
+    renderer: 'mapboxgl',
+    mapboxglGlyphs: 'https://maps.volterra.io/fonts/{fontstack}/{range}.pbf',
+    sources: {
+      openmaptiles: {
+        type: "vector",
+        url: "https://maps.volterra.io/data/v3.json"
+      }
+    },
+    // accessToken: 'q-wBnCItTPC8Vdj8GA6g8Q',
     statusMap: {
       healthy: { color: '#47e845' },
       warning: { color: '#ffc226' },
