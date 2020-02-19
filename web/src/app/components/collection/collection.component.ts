@@ -2,7 +2,7 @@
 import { OnInit, Component, Input } from '@angular/core'
 
 // Vis
-import { Axis } from '@volterra/vis/components'
+import { Axis, Sankey } from '@volterra/vis'
 
 @Component({
   selector: 'collection',
@@ -36,8 +36,8 @@ export class Collection implements OnInit {
 
       items[key] = {
         margin: this.margin,
-        components: [component],
-        config: [config],
+        component: component,
+        config: config,
         data: this.dataGenerator(n),
         type: key,
         numDataElements: n,
@@ -54,7 +54,7 @@ export class Collection implements OnInit {
     setInterval(() => {
       const item = this.items['No Data ↔︎ Data']
       const n = interval % 2 ? item.numDataElements : 0
-      item.config = [this.configGenerator(n)]
+      item.config = this.configGenerator(n)
       item.data = this.dataGenerator(n)
       interval += 1
     }, 4000)
@@ -67,5 +67,9 @@ export class Collection implements OnInit {
 
   getItems (): any[] {
     return Object.values(this.items)
+  }
+
+  isSingle (): boolean {
+    return this.component === Sankey
   }
 }

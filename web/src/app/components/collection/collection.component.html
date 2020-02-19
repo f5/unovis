@@ -2,11 +2,19 @@
   <h3>{{ item.type }}</h3>
   <div class="chart">
     <vis-xychart 
+      *ngIf="!isSingle()"
       [margin]="margin"
-      [components]="item.components"
-      [componentConfigs]="item.config"
+      [components]="[item.component]"
+      [componentConfigs]="[item.config]"
       [axes]="item.axes"
       [data]="item.data"
     ></vis-xychart>
+    <vis-singlechart
+      *ngIf="isSingle()"
+      [margin]="margin"
+      [component]="item.component"
+      [config]="item.config"
+      [data]="item.data"
+  ></vis-singlechart>
   </div>
 </div>

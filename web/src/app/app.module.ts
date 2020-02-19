@@ -22,6 +22,7 @@ import { BulletLegendComponent } from './components/bullet-legend/bullet-legend.
 import { FlowLegendComponent } from './components/flow-legend/flow-legend.component'
 import { XYChartComponent } from './components/xychart/xychart.component'
 import { MapLeafletComponent } from './components/map-leaflet/map-leaflet.component'
+import { SingleChartComponent } from './components/singlechart/singlechart.component'
 import { Collection } from './components/collection/collection.component'
 
 const appRoutes: Routes = [
@@ -54,6 +55,7 @@ appRoutes.push({ path: '', redirectTo: `/${appRoutes[0].path}`, pathMatch: 'full
     FlowLegendComponent,
     SankeyComponent,
     XYChartComponent,
+    SingleChartComponent,
     WrapperUsageExampleComponent,
     TimelineComponent,
     AreaCompositeComponent,

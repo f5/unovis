@@ -1,8 +1,5 @@
-<div class="visContainer">
-  <vis-flow-legend #legendRef [items]="legendItems" [margin]="legendMargin"></vis-flow-legend>
-  <div #sankeymany class="chart"></div>
-  <div #sankeyfew class="chart"></div>
-  <div #sankeydynamic class="chart"></div>
-  <div #sankeysingle class="chart"></div>
-  <div #sankeyzero class="chart"></div>
-</div>
+ <collection
+  [component]="component"
+  [configGenerator]="configGenerator"
+  [dataGenerator]="dataGenerator"
+></collection>
