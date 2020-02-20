@@ -27,11 +27,12 @@ import { guid } from 'utils/misc'
 // Config
 import { XYContainerConfig, XYContainerConfigInterface } from './config'
 import {
+  AreaConfigInterface,
   AxisConfigInterface,
   BrushConfigInterface,
   LineConfigInterface,
   ScatterConfigInterface,
-  StackedBarConfigInterface,
+  StackedBarConfigInterface, TimelineConfigInterface,
 } from '../../components'
 
 export type XYConfigInterface<Datum> = XYComponentConfigInterface<Datum>
@@ -39,6 +40,8 @@ export type XYConfigInterface<Datum> = XYComponentConfigInterface<Datum>
   | LineConfigInterface<Datum>
   | ScatterConfigInterface<Datum>
   | BrushConfigInterface<Datum>
+  | TimelineConfigInterface<Datum>
+  | AreaConfigInterface<Datum>
 
 export class XYContainer<Datum> extends ContainerCore {
   config: XYContainerConfig<Datum> = new XYContainerConfig()
