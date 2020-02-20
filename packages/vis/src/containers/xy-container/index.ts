@@ -32,7 +32,8 @@ import {
   BrushConfigInterface,
   LineConfigInterface,
   ScatterConfigInterface,
-  StackedBarConfigInterface, TimelineConfigInterface,
+  StackedBarConfigInterface,
+  TimelineConfigInterface,
 } from '../../components'
 
 export type XYConfigInterface<Datum> = XYComponentConfigInterface<Datum>
