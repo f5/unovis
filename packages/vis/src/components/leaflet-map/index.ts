@@ -131,7 +131,8 @@ export class LeafletMap<Datum> {
       if (config.initialBounds && !config.bounds) this.fitToBounds(config.initialBounds)
     }
 
-    if (config.bounds) this.fitToBounds(config.bounds)
+    if (config.selectedNodeId) this.zoomToNodeById(config.selectedNodeId, true)
+    else if (config.bounds) this.fitToBounds(config.bounds)
 
     this._firstRender = false
   }
@@ -157,7 +158,7 @@ export class LeafletMap<Datum> {
     ], duration)
   }
 
-  zoomToNodeById (id: number | string, selectNode = false, customZoomLevel: number): void {
+  zoomToNodeById (id: number | string, selectNode = false, customZoomLevel?: number): void {
     const { config, datamodel } = this
     this._resetExpandedCluster()
 

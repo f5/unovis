@@ -52,6 +52,8 @@ export interface LeafletMapConfigInterface<T> {
   bound?: Bounds;
   /** Status styles */
   statusMap?: StatusMap;
+  /** If selectedNodeId is provided the map will zoom in and select that node on update */
+  selectedNodeId?: string;
 }
 
 export class LeafletMapConfig<T> extends Config implements LeafletMapConfigInterface<T> {
@@ -73,4 +75,5 @@ export class LeafletMapConfig<T> extends Config implements LeafletMapConfigInter
   initialBounds = undefined
   bounds = undefined
   statusMap = {}
+  selectedNodeId = undefined
 }

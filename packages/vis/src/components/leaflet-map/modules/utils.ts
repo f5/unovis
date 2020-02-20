@@ -99,11 +99,11 @@ export function calulateClusterIndex<T> (data, config: LeafletMapConfigInterface
     radius: 45,
     maxZoom: maxClusterZoomLevel,
     map: (d): {} => {
-      const status = getValue(d, pointStatus)
+      const pStatus = getValue(d, pointStatus)
       const shape = getValue(d, pointShape)
       const result = { shape, sum: {} }
-      Object.keys(statusMap).forEach(d => {
-        result.sum[d] = status === d ? 1 : 0
+      Object.keys(statusMap).forEach(status => {
+        result.sum[status] = pStatus === status ? 1 : 0
       })
       return result
     },
@@ -161,12 +161,12 @@ export function shouldClusterExpand (cluster, zoomLevel: number, midLevel = 4, m
     (zoomLevel >= midLevel && cluster && cluster.properties.point_count < 20)
 }
 
-export function findNodeAndClusterInPointsById (points: Point[], id): { node: null | Point; cluster: null | Point } {
+export function findNodeAndClusterInPointsById (points: Point[], id: string): { node: null | Point; cluster: null | Point } {
   let node = null
   let cluster = null
   points.forEach(point => {
     if (point.properties.cluster) {
-      const leaves = point.index.getLeaves(point.id, Infinity)
+      const leaves = point.index.getLeaves(point.properties.cluster_id, Infinity)
       const foundNode = find(leaves, d => d.properties.id === id)
       if (foundNode) {
         node = foundNode
@@ -208,15 +208,12 @@ export function getClusterPoints<T> (clusterIndex: Supercluster, leafletMap: L.M
   const points = clusterIndex.getClusters(bounds, zoom)
 
   // Some of the points are clusters, some are not
-  return points.map(d => {
-    const p: any = {
-      ...d,
-    }
-    if (p.properties.cluster) {
-      p.index = clusterIndex
-      p.properties.id = `cluster--${getValue(d, pointId)}`
-    }
-
-    return p
-  })
+  return points.map(d => ({
+    ...d,
+    index: d.properties.cluster ? clusterIndex : null,
+    properties: {
+      ...d.properties,
+      id: d.properties.cluster ? `cluster-${d.id}` : d.properties.id,
+    },
+  }))
 }
