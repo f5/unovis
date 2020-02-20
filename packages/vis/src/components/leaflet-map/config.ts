@@ -8,7 +8,7 @@ import { Config } from 'core/config'
 import { NumericAccessor, StringAccessor, ColorAccessor } from 'types/misc'
 import { LeafletMapRenderer, ClusterOutlineType, Bounds, StatusMap } from 'types/map'
 
-export interface LeafletMapConfigInterface<T> {
+export interface LeafletMapConfigInterface<Datum> {
   renderer?: LeafletMapRenderer | string;
   /**  */
   tamgramRenderer?: any;
@@ -23,21 +23,21 @@ export interface LeafletMapConfigInterface<T> {
   /** Function */
   onMapMoveZoom?: (({ mapCenter, zoomLevel, bounds }: { mapCenter: LatLng; zoomLevel: number; bounds: Bounds }) => any);
   /** Point longitude accessor function or value */
-  pointLongitude?: NumericAccessor<T>;
+  pointLongitude?: NumericAccessor<Datum>;
   /** Point latitude accessor function or value */
-  pointLatitude?: NumericAccessor<T>;
+  pointLatitude?: NumericAccessor<Datum>;
   /** Point id accessor function or value */
-  pointId?: StringAccessor<T>;
+  pointId?: StringAccessor<Datum>;
   /** Point status accessor function or value */
-  pointStatus?: StringAccessor<T>;
+  pointStatus?: StringAccessor<Datum>;
   /** Point shape accessor function or value */
-  pointShape?: StringAccessor<T>;
+  pointShape?: StringAccessor<Datum>;
   /** Point color accessor function or value */
-  pointColor?: ColorAccessor<T>;
+  pointColor?: ColorAccessor<Datum>;
   /** Point radius accessor function or value */
-  pointRadius?: NumericAccessor<T>;
+  pointRadius?: NumericAccessor<Datum>;
   /** Point stroke width accessor function or value */
-  pointStrokeWidth?: NumericAccessor<T>;
+  pointStrokeWidth?: NumericAccessor<Datum>;
   /** Cluster point outline type */
   clusterOutlineType?: ClusterOutlineType;
   /** Cluster point outline width */
@@ -56,16 +56,16 @@ export interface LeafletMapConfigInterface<T> {
   selectedNodeId?: string;
 }
 
-export class LeafletMapConfig<T> extends Config implements LeafletMapConfigInterface<T> {
+export class LeafletMapConfig<Datum> extends Config implements LeafletMapConfigInterface<Datum> {
   renderer = LeafletMapRenderer.TANGRAM
   accessToken = ''
   onMapMoveZoom = undefined
-  pointLongitude = (d: T): number => d['longitude']
-  pointLatitude = (d: T): number => d['latitude']
-  pointId = (d: T): string => d['id']
-  pointStatus = (d: T): string => d['status']
-  pointShape = (d: T): string => d['shape']
-  pointColor = (d: T): string => d['color']
+  pointLongitude = (d: Datum): number => d['longitude']
+  pointLatitude = (d: Datum): number => d['latitude']
+  pointId = (d: Datum): string => d['id']
+  pointStatus = (d: Datum): string => d['status']
+  pointShape = (d: Datum): string => d['shape']
+  pointColor = (d: Datum): string => d['color']
   pointRadius = undefined
   pointStrokeWidth = 1
   clusterOutlineType = ClusterOutlineType.DONUT

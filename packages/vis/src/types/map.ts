@@ -26,6 +26,7 @@ export interface StatusStyle {
 export type StatusMap = { [key: string]: StatusStyle }
 
 export type Point = {
+  geometry: GeoJSON.Geometry;
   bbox: {};
   radius: number;
   path: string;
@@ -46,8 +47,8 @@ export type Point = {
     sum: {
       [key: string]: number;
     };
+    expandedClusterPoint?: Point;
   };
-  cluster: any;
   _sortId: number;
 }
 

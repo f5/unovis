@@ -2,7 +2,7 @@
 import { select, Selection, event } from 'd3-selection'
 import { packSiblings } from 'd3-hierarchy'
 import L from 'leaflet'
-import Supercluster from 'supercluster'
+import Supercluster, { PointFeature } from 'supercluster'
 
 // Model
 import { MapDataModel } from 'data-models/map'
@@ -26,7 +26,7 @@ import { createNodeSelectionRing, updateNodeSelectionRing } from './modules/sele
 import { createBackgroundNode, updateBackgroundNode } from './modules/clusterBackground'
 import {
   bBoxMerge, clampZoomLevel, getNodeRadius, getPointDisplayOrder, calulateClusterIndex, geoJSONPointToScreenPoint,
-  shouldClusterExpand, findNodeAndClusterInPointsById, getNodeRelativePosition, getClusterRadius, getClusterPoints,
+  shouldClusterExpand, findNodeAndClusterInPointsById, getNodeRelativePosition, getClusterRadius, getClustersAndPoints,
 } from './modules/utils'
 
 export class LeafletMap<Datum> {
@@ -38,7 +38,7 @@ export class LeafletMap<Datum> {
   protected _container: HTMLElement
   private _map: { leaflet: L.Map; layer: L.Layer; svgOverlay: Selection<SVGElement, any, HTMLElement, any>; svgGroup: Selection<SVGGElement, any, SVGElement, any> }
   private _clusterIndex: Supercluster
-  private _expandedCluster = null
+  private _expandedCluster: { points: PointFeature<any>[]; cluster: Point } = null
   private _cancelBackgroundClick = false
   private _hasBeenMoved = false
   private _hasBeenZoomed = false
@@ -118,7 +118,9 @@ export class LeafletMap<Datum> {
 
   setData (data): void {
     this.datamodel.data = data
-    this._clusterIndex = calulateClusterIndex(data, this.config)
+
+    // We use Supercluster for real-time node clustering
+    this._clusterIndex = calulateClusterIndex<Datum>(data, this.config)
     this.render()
   }
 
@@ -158,13 +160,13 @@ export class LeafletMap<Datum> {
     ], duration)
   }
 
-  zoomToNodeById (id: number | string, selectNode = false, customZoomLevel?: number): void {
+  zoomToNodeById (id: string, selectNode = false, customZoomLevel?: number): void {
     const { config, datamodel } = this
     this._resetExpandedCluster()
 
     const dataBoundsAll = datamodel.getDataLatLngBounds(config.pointLatitude, config.pointLongitude)
     const bounds = [dataBoundsAll[0][1], dataBoundsAll[1][0], dataBoundsAll[1][1], dataBoundsAll[0][0]]
-    const pointDataAll = this._getScreenPointData(bounds)
+    const pointDataAll = this._getPointData(bounds)
 
     let foundNode = find(pointDataAll, (d: Point) => d.properties.id === id)
     if (!foundNode) {
@@ -210,7 +212,7 @@ export class LeafletMap<Datum> {
   _renderData (): void {
     const { config } = this
 
-    const pointData = this._getScreenPointData()
+    const pointData = this._getPointData()
     const contentBBox = pointData.length ? bBoxMerge(pointData.map(d => d.bbox)) : { x: 0, y: 0, width: 0, height: 0 }
 
     // Set SVG size to match Leaflet transform
@@ -228,7 +230,7 @@ export class LeafletMap<Datum> {
 
     // Render content
     const nodes = this._nodesGroup.selectAll(`.${s.gNode}:not(.exit)`)
-      .data(pointData, (d: Point) => d.properties.id.toString())
+      .data(pointData, (d: Point) => d.id.toString())
 
     nodes.exit().classed('exit', true).call(removeNodes)
     const nodesEnter = nodes.enter().append('g').attr('class', s.gNode)
@@ -254,7 +256,7 @@ export class LeafletMap<Datum> {
   }
 
   _zoomToExternallySelectedNode (): void {
-    const pointData = this._getScreenPointData()
+    const pointData = this._getPointData()
     const foundNode = find(pointData, d => d.properties.id === this._externallySelectedNode.properties.id)
     if (foundNode) {
       this._zoomingToExternallySelectedNode = false
@@ -275,22 +277,26 @@ export class LeafletMap<Datum> {
     }
   }
 
-  _expandCluster (cluster): void {
+  _expandCluster (clusterPoint): void {
     const { config, config: { clusterBackground } } = this
     const padding = 1
-    const points = cluster.index.getLeaves(cluster.properties.cluster_id, Infinity)
 
     this._forceExpandCluster = false
-    if (cluster) {
-      points.forEach(p => {
-        p.r = getNodeRadius(p, config.pointRadius, this._map.leaflet.getZoom()) + padding
-        p.cluster = cluster
+    if (clusterPoint) {
+      const points: PointFeature<any>[] = clusterPoint.index.getLeaves(clusterPoint.properties.cluster_id, Infinity)
+      const packPoints = points.map(p => ({ x: null, y: null, r: getNodeRadius(p, config.pointRadius, this._map.leaflet.getZoom()) + padding }))
+      packSiblings(packPoints)
+
+      points.forEach((p, i) => {
+        p.properties.expandedClusterPoint = clusterPoint
+        p.properties.r = packPoints[i].r
+        p.properties.x = packPoints[i].x
+        p.properties.y = packPoints[i].y
       })
 
-      packSiblings(points)
       this._resetExpandedCluster()
       this._expandedCluster = {
-        cluster,
+        cluster: clusterPoint,
         points,
       }
 
@@ -303,25 +309,25 @@ export class LeafletMap<Datum> {
   }
 
   _resetExpandedCluster (): void {
-    if (this._expandedCluster && this._expandedCluster.points) {
-      this._expandedCluster.points.forEach(d => { delete d.cluster })
-    }
+    this._expandedCluster?.points?.forEach(d => { delete d.properties.expandedClusterPoint })
     this._expandedCluster = null
   }
 
-  _getScreenPointData (customBounds?): Point[] {
+  _getPointData (customBounds?): Point[] {
     const { config, datamodel: { data } } = this
     if (!data || !this._clusterIndex) return []
 
-    let clusters = getClusterPoints(this._clusterIndex, this._map.leaflet, config.pointId, customBounds)
+    let geoJSONPoints = getClustersAndPoints<Datum>(this._clusterIndex, this._map.leaflet, customBounds)
+
     if (this._expandedCluster) {
       // Remove expanded cluster from the data
-      clusters = clusters.filter(c => c.properties.cluster_id !== this._expandedCluster.cluster.properties.cluster_id)
-      // Add Points from expanded cluster
-      clusters = clusters.concat(this._expandedCluster.points)
+      geoJSONPoints = geoJSONPoints.filter(c => c.properties.cluster_id !== this._expandedCluster.cluster.properties.cluster_id)
+      // Add points from the expanded cluster
+      geoJSONPoints = geoJSONPoints.concat(this._expandedCluster.points)
     }
-    const pointData = clusters
-      .map((d: Point) => geoJSONPointToScreenPoint(d, this._map.leaflet, config.pointRadius, config.pointStrokeWidth, config.pointColor, config.pointShape, config.pointId))
+
+    const pointData = geoJSONPoints
+      .map((d: PointFeature<any>) => geoJSONPointToScreenPoint(d, this._map.leaflet, config.pointRadius, config.pointStrokeWidth, config.pointColor, config.pointShape, config.pointId))
       .sort((a, b) => getPointDisplayOrder(a, config.pointStatus, config.statusMap) - getPointDisplayOrder(b, config.pointStatus, config.statusMap))
 
     return pointData

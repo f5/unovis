@@ -54,7 +54,7 @@ export function updateNodes<T> (selection, config: LeafletMapConfigInterface<T>,
     node
       .classed('cluster', d.properties.cluster)
       .classed('withStroke', d.properties.cluster && clusterOutlineType === ClusterOutlineType.LINE)
-      .classed('fromCluster', d.cluster)
+      .classed('fromCluster', !!d.properties.expandedClusterPoint)
       .classed(statusStyle?.className, !!statusStyle?.className)
       .attr('d', d.path)
       .style('fill', d.fill || statusMap?.[d.properties.status]?.color)
