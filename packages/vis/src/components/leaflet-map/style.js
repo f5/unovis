@@ -42,7 +42,7 @@ export const node = css`
   stroke-opacity: 1;
   fill-opacity: 0.85;
   fill: var(--vis-map-node-default-fill-color);
-  pointer-events: fill;
+  pointer-events: fill !important;
   transition: .2s stroke-width, .3s transform;
 
   &.fromCluster {
