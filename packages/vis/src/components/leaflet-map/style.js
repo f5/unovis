@@ -1,6 +1,11 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { css, injectGlobal, keyframes } from 'emotion'
 
+// Inject Leaflet global style
+// eslint-disable-next-line
+const leafletCSS = require('./leaflet.css') // Using require and rollup-plugin-string to overpass ts build errors
+injectGlobal(leafletCSS)
+
 export const variables = injectGlobal`
   :root {
     --vis-map-background-color: #dfe5eb;
