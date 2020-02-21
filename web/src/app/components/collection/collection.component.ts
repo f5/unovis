@@ -14,6 +14,7 @@ export class Collection implements OnInit {
   @Input() component
   @Input() dataGenerator
   @Input() configGenerator
+  @Input() axesGenerator
   title = 'collection'
   margin = { top: 10, bottom: 10, left: 10, right: 10 }
   dimensions: {}
@@ -41,7 +42,7 @@ export class Collection implements OnInit {
         data: this.dataGenerator(n),
         type: key,
         numDataElements: n,
-        axes: {
+        axes: this.axesGenerator ? this.axesGenerator() : {
           x: new Axis({ label: 'x axis' }),
           y: new Axis({ label: 'y axis' }),
         },
