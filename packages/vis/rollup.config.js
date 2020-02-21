@@ -1,4 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
+import json from '@rollup/plugin-json'
 import typescript from 'rollup-plugin-typescript2'
 import transformPaths from '@zerollup/ts-transform-paths'
 import resolve from 'rollup-plugin-node-resolve'
@@ -34,6 +35,7 @@ const externals = [
 ]
 
 const plugins = [
+  json(),
   commonjs(),
   resolve(),
   typescript({

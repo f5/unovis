@@ -14,6 +14,7 @@
     "test": "jest --colors"
   },
   "devDependencies": {
+    "@rollup/plugin-json": "^4.0.2",
     "@types/d3": "^5.7.2",
     "@typescript-eslint/parser": "^2.16.0",
     "@zerollup/ts-transform-paths": "^1.7.11",
@@ -27,9 +28,9 @@
     "d3": "^5.14.2",
     "d3-interpolate-path": "^2.1.1",
     "d3-sankey": "^0.12.3",
-    "resize-observer-polyfill": "^1.5.1",
     "emotion": "^10.0.23",
     "lodash": "^4.17.15",
+    "resize-observer-polyfill": "^1.5.1",
     "topojson": "^3.0.2"
   }
 }

@@ -1992,6 +1992,20 @@
   dependencies:
     "@types/node" "^12.11.1"
 
+"@rollup/plugin-json@^4.0.2":
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/@rollup/plugin-json/-/plugin-json-4.0.2.tgz#482185ee36ac7dd21c346e2dbcc22ffed0c6f2d6"
+  integrity sha512-t4zJMc98BdH42mBuzjhQA7dKh0t4vMJlUka6Fz0c+iO5IVnWaEMiYBy1uBj9ruHZzXBW23IPDGL9oCzBkQ9Udg==
+  dependencies:
+    "@rollup/pluginutils" "^3.0.4"
+
+"@rollup/pluginutils@^3.0.4":
+  version "3.0.8"
+  resolved "https://registry.yarnpkg.com/@rollup/pluginutils/-/pluginutils-3.0.8.tgz#4e94d128d94b90699e517ef045422960d18c8fde"
+  integrity sha512-rYGeAc4sxcZ+kPG/Tw4/fwJODC3IXHYDH4qusdN/b6aLw5LPUbzpecYbEJh4sVQGPFJxd2dBU4kc1H3oy9/bnw==
+  dependencies:
+    estree-walker "^1.0.1"
+
 "@schematics/angular@8.3.19":
   version "8.3.19"
   resolved "https://registry.yarnpkg.com/@schematics/angular/-/angular-8.3.19.tgz#0584ecb2e59bb5b1cdade9bf788bb7b483c066bc"
@@ -5430,6 +5444,11 @@ estree-walker@^0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/estree-walker/-/estree-walker-0.6.1.tgz#53049143f40c6eb918b23671d1fe3219f3a1b362"
   integrity sha512-SqmZANLWS0mnatqbSfRP5g8OXZC12Fgg1IwNtLsyHDzJizORW4khDfjPqJZsemPWBB2uqykUah5YpQ6epsqC/w==
+
+estree-walker@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/estree-walker/-/estree-walker-1.0.1.tgz#31bc5d612c96b704106b477e6dd5d8aa138cb700"
+  integrity sha512-1fMXF3YP4pZZVozF8j/ZLfvnR8NSIljt56UhbZ5PeeDmmGHpgpdwQt7ITlGvYaQukCvuBRMLEiKiYC+oeIg4cg==
 
 esutils@^2.0.2:
   version "2.0.3"
