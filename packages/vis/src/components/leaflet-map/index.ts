@@ -239,6 +239,8 @@ export class LeafletMap<Datum> {
     const nodesMerged = nodes.merge(nodesEnter)
     nodesMerged.call(updateNodes, config, this._map.leaflet)
 
+    nodesMerged.on('mouseup', this._onMouseupNode.bind(this))
+    nodesMerged.on('mousedown', this._onMousedownNode.bind(this))
     nodesMerged.on('click', this._onNodeClick.bind(this))
 
     this._clusterBackground.call(updateBackgroundNode, this._expandedCluster, config, this._map.leaflet, this._clusterBackgroundRadius)
