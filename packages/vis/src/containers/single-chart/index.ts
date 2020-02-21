@@ -3,8 +3,7 @@
 
 // Core
 import { ContainerCore } from 'core/container'
-// import { ComponentCore } from 'core/component'
-import { XYComponentCore } from 'core/xy-component'
+import { ComponentCore } from 'core/component'
 
 // import { ComponentConfig } from 'core/component/config'
 import { XYComponentConfigInterface } from 'core/xy-component/config'
@@ -16,11 +15,10 @@ import { XYComponentConfigInterface } from 'core/xy-component/config'
 import { SingleChartConfig, SingleChartConfigInterface } from './config'
 
 export class SingleChart<Datum> extends ContainerCore {
-  component: XYComponentCore<Datum>
+  component: ComponentCore<Datum>
   config: SingleChartConfig<Datum> = new SingleChartConfig()
-  data: Datum[]
 
-  constructor (element, config?: SingleChartConfigInterface<Datum>, data?: Datum[]) {
+  constructor (element, config?: SingleChartConfigInterface<Datum>, data?: Datum) {
     super(element)
 
     if (config) {
@@ -33,8 +31,7 @@ export class SingleChart<Datum> extends ContainerCore {
     }
   }
 
-  setData (data: Datum[], preventRender?: boolean): void {
-    this.data = data
+  setData (data: Datum, preventRender?: boolean): void {
     if (this.component) this.component.setData(data)
     if (!preventRender) this.render()
   }
@@ -60,7 +57,7 @@ export class SingleChart<Datum> extends ContainerCore {
     if (!preventRender) this.render()
   }
 
-  update (containerConfig: SingleChartConfigInterface<Datum>, componentConfig?, data?: Datum[]): void {
+  update (containerConfig: SingleChartConfigInterface<Datum>, componentConfig?, data?: Datum): void {
     if (containerConfig) this.updateContainer(containerConfig, true)
     if (componentConfig) this.updateComponent(componentConfig, true)
     if (data) this.setData(data, true)
@@ -70,7 +67,8 @@ export class SingleChart<Datum> extends ContainerCore {
   _render (customDuration?: number): void {
     const { config, component } = this
     super._render()
-    this.updateScales()
+    component.config.width = this.width
+    component.config.height = this.height
 
     component.g
       .attr('transform', `translate(${config.margin.left},${config.margin.top})`)
@@ -78,16 +76,5 @@ export class SingleChart<Datum> extends ContainerCore {
     component.render(customDuration)
 
     if (config.tooltip) config.tooltip.update()
-  }
-
-  updateScales (): void {
-    const { component, config: { dimensions, padding } } = this
-
-    component.config.width = this.width
-    component.config.height = this.height
-
-    Object.keys(component.config.scales || {}).forEach(key => {
-      component.updateScale?.(key, dimensions[key] ?? {}, padding)
-    })
   }
 }
