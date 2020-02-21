@@ -1,23 +1,24 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import {
   isNumber, isUndefined, cloneDeep,
-  each, filter, get, without, find, isString, isObject,
+  each, filter, without, find, isString, isObject,
 } from 'utils/data'
 
 // Core
 import { CoreDataModel } from './core'
 
-export class GraphDataModel<NodeDatum, LinkDatum> extends CoreDataModel<{nodes: NodeDatum[]; links: LinkDatum[]}> {
+export class GraphDataModel<NodeDatum, LinkDatum> extends CoreDataModel<{nodes: NodeDatum[]; links?: LinkDatum[]}> {
   private _nonConnectedNodes: NodeDatum[]
   private _connectedNodes: NodeDatum[]
-  private _nodes: NodeDatum[]
-  private _links: LinkDatum[]
+  private _nodes: NodeDatum[] = []
+  private _links: LinkDatum[] = []
 
-  set data (inputData) {
+  set data (inputData: { nodes: NodeDatum[]; links?: LinkDatum[]}) {
     if (!inputData) return
     const prevData = this.data
 
-    const { nodes, links }: {nodes: NodeDatum[]; links: LinkDatum[]} = cloneDeep(inputData)
+    const nodes: NodeDatum[] = cloneDeep(inputData?.nodes ?? [])
+    const links: LinkDatum[] = cloneDeep(inputData?.links ?? [])
 
     // Every node or link can have a private state used for rendering needs
     // On data update we transfer state between objects with same ids
@@ -47,7 +48,7 @@ export class GraphDataModel<NodeDatum, LinkDatum> extends CoreDataModel<{nodes: 
 
       each(linksFiltered, (l, i) => {
         l._index = i
-        l._id = l.id || `${get(l, 'source._id')}-${get(l, 'target._id')}-${i}`
+        l._id = l.id || `${l.source?._id}-${l.target?._id}-${i}`
         l._neighbours = linksFiltered.length
         l._direction = ((link.source === l.source) && (link.target === l.target)) ? 1 : -1
       })
