@@ -13,7 +13,7 @@ import { SingleComponent } from 'examples/single/single.component'
 import { CompositeComponent } from 'examples/composite/composite.component'
 import { WrapperUsageExampleComponent } from 'examples/wrapper-usage-example/wrapper-usage-example.component'
 import { TimelineComponent } from 'examples/timeline/timeline.component'
-import { AreaCompositeComponent } from 'examples/area-composite/area-composite.component'
+import { BulletLegendExampleComponent } from 'examples/bullet-legend/bullet-legend.component'
 import { SimpleMapComponent } from 'examples/simple-map/simple-map.component'
 import { MapComponent } from 'examples/map/map.component'
 
@@ -35,7 +35,7 @@ const appRoutes: Routes = [
   { path: 'composite', component: CompositeComponent },
   { path: 'wrapper-usage-example', component: WrapperUsageExampleComponent },
   { path: 'timeline', component: TimelineComponent },
-  { path: 'area-composite', component: AreaCompositeComponent },
+  { path: 'bullet-legend', component: BulletLegendExampleComponent },
   { path: 'simplemap', component: SimpleMapComponent },
   { path: 'map', component: MapComponent },
 ]
@@ -58,7 +58,7 @@ appRoutes.push({ path: '', redirectTo: `/${appRoutes[0].path}`, pathMatch: 'full
     SingleChartComponent,
     WrapperUsageExampleComponent,
     TimelineComponent,
-    AreaCompositeComponent,
+    BulletLegendExampleComponent,
     SimpleMapComponent,
     MapComponent,
     MapLeafletComponent,
