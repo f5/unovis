@@ -16,7 +16,8 @@ const d3Libs = ['d3-array', 'd3-axis', 'd3-brush', 'd3-chord', 'd3-collection', 
 const lodashLibs = ['lodash/isUndefined', 'lodash/isArray', 'lodash/isEmpty', 'lodash/isEqual',
   'lodash/isNil', 'lodash/cloneDeep', 'lodash/throttle', 'lodash/each', 'lodash/filter',
   'lodash/get', 'lodash/without', 'lodash/find', 'lodash/isString', 'lodash/isObject',
-  'lodash/isFunction', 'lodash/isNumber', 'lodash/merge', 'lodash/isPlainObject', 'lodash/flatten']
+  'lodash/isFunction', 'lodash/isNumber', 'lodash/merge', 'lodash/isPlainObject', 'lodash/flatten',
+  'lodash/omit', 'lodash/extend']
 
 const globals = {}
 d3Libs.reduce((acc, name) => { acc[name] = 'd3'; return acc }, globals)
