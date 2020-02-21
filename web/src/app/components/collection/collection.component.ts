@@ -2,7 +2,7 @@
 import { OnInit, Component, Input } from '@angular/core'
 
 // Vis
-import { Axis, Sankey } from '@volterra/vis'
+import { Sankey } from '@volterra/vis'
 
 @Component({
   selector: 'collection',
@@ -21,11 +21,11 @@ export class Collection implements OnInit {
   items = {}
 
   options = {
-    'Many Data Elements': 500,
     'Few Data Elements': 50,
     'No Data ↔︎ Data': 30,
     'Single Data Element': 1,
     'No Data': 0,
+    'Many Data Elements': 165,
   }
 
   ngOnInit (): void {
@@ -42,10 +42,7 @@ export class Collection implements OnInit {
         data: this.dataGenerator(n),
         type: key,
         numDataElements: n,
-        axes: this.axesGenerator ? this.axesGenerator() : {
-          x: new Axis({ label: 'x axis' }),
-          y: new Axis({ label: 'y axis' }),
-        },
+        axes: this.axesGenerator?.(),
       }
 
       return items

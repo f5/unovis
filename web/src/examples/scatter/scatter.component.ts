@@ -3,7 +3,7 @@ import { AfterViewInit, Component } from '@angular/core'
 import _random from 'lodash/random'
 import _sample from 'lodash/sample'
 
-import { Scatter } from '@volterra/vis'
+import { Scatter, Axis } from '@volterra/vis'
 import { SymbolType } from '@volterra/vis/types'
 
 // Helpers
@@ -16,8 +16,8 @@ interface ScatterDatum extends SampleDatum {
 }
 
 function sampleScatterData (n: number): ScatterDatum[] {
-  const minR = n >= 500 ? 5 : null
-  const maxR = n >= 500 ? 10 : null
+  const minR = n >= 160 ? 5 : null
+  const maxR = n >= 160 ? 10 : null
   return Array(n).fill(0).map((d, i) => ({
     x: i,
     y: Math.random(),
@@ -49,6 +49,10 @@ export class ScatterComponent implements AfterViewInit {
 
   configGenerator = getScatterConfig
   dataGenerator = sampleScatterData
+  axesGenerator = () => ({
+    x: new Axis({ label: 'x axis' }),
+    y: new Axis({ label: 'y axis' }),
+  })
 
   ngAfterViewInit (): void {
   }

@@ -2,7 +2,7 @@
 import { AfterViewInit, Component } from '@angular/core'
 
 // Vis
-import { StackedBar, StackedBarConfigInterface } from '@volterra/vis/components'
+import { StackedBar, StackedBarConfigInterface, Axis } from '@volterra/vis/components'
 
 // Helpers
 import { SampleDatum, sampleSeriesData } from '../../utils/data'
@@ -31,6 +31,10 @@ export class StackedBarComponent implements AfterViewInit {
 
   configGenerator = getStackedBarConfig
   dataGenerator = sampleSeriesData
+  axesGenerator = () => ({
+    x: new Axis({ label: 'x axis' }),
+    y: new Axis({ label: 'y axis' }),
+  })
 
   ngAfterViewInit (): void { }
 }

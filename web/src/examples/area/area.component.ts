@@ -3,7 +3,7 @@ import { AfterViewInit, Component } from '@angular/core'
 import _times from 'lodash/times'
 
 // Vis
-import { Area, AreaConfigInterface } from '@volterra/vis/components'
+import { Area, AreaConfigInterface, Axis } from '@volterra/vis/components'
 
 // Helpers
 import { SampleDatum } from '../../utils/data'
@@ -41,6 +41,10 @@ export class AreaComponent implements AfterViewInit {
 
   configGenerator = getAreaConfig
   dataGenerator = sampleAreaData
+  axesGenerator = () => ({
+    x: new Axis({ label: 'x axis' }),
+    y: new Axis({ label: 'y axis' }),
+  })
 
   ngAfterViewInit (): void {}
 }

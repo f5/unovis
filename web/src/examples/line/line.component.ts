@@ -3,7 +3,7 @@
 import { AfterViewInit, Component } from '@angular/core'
 
 // Vis
-import { Line } from '@volterra/vis/components'
+import { Line, Axis } from '@volterra/vis/components'
 
 import _times from 'lodash/times'
 
@@ -40,6 +40,10 @@ export class LineComponent implements AfterViewInit {
 
   configGenerator = getLineConfig
   dataGenerator = sampleLineData
+  axesGenerator = () => ({
+    x: new Axis({ label: 'x axis' }),
+    y: new Axis({ label: 'y axis' }),
+  })
 
   ngAfterViewInit (): void {}
 }
