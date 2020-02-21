@@ -5,6 +5,7 @@ export type NodeDatumCore = {
 }
 
 export type LinkDatumCore = {
+  id?: number | string;
   source: number | string | NodeDatumCore;
   target: number | string | NodeDatumCore;
 }

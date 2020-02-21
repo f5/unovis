@@ -11,6 +11,7 @@ import { Crosshair } from './components/crosshair'
 import { Timeline } from './components/timeline'
 import { Sankey } from './components/sankey'
 import { Area } from './components/area'
+import { TopoJSONMap } from './components/topojson-map'
 
 import { LineConfigInterface } from './components/line/config'
 import { StackedBarConfigInterface } from './components/stacked-bar/config'
@@ -24,6 +25,7 @@ import { CrosshairConfigInterface } from './components/crosshair/config'
 import { TimelineConfigInterface } from './components/timeline/config'
 import { SankeyConfigInterface } from './components/sankey/config'
 import { AreaConfigInterface } from './components/area/config'
+import { TopoJSONMapConfigInterface } from './components/topojson-map/config'
 
 import './styles/css-variables'
 
@@ -52,4 +54,6 @@ export {
   SankeyConfigInterface,
   Area,
   AreaConfigInterface,
+  TopoJSONMap,
+  TopoJSONMapConfigInterface,
 }
