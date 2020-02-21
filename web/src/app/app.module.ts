@@ -16,6 +16,7 @@ import { AppComponent } from './app.component'
 import { BulletLegendComponent } from './components/bullet-legend/bullet-legend.component'
 import { FlowLegendComponent } from './components/flow-legend/flow-legend.component'
 import { XYChartComponent } from './components/xychart/xychart.component'
+import { MapLeafletComponent } from './components/map-leaflet/map-leaflet.component'
 
 const appRoutes: Routes = [
   { path: 'composite', component: CompositeComponent },
@@ -40,6 +41,7 @@ const appRoutes: Routes = [
     AreaCompositeComponent,
     SimpleMapComponent,
     MapComponent,
+    MapLeafletComponent,
   ],
 
   imports: [

@@ -1,8 +1,8 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 /* eslint-disable */
 import _ from 'lodash'
-import { Component, ViewChild, ElementRef, OnInit, AfterViewInit, ViewEncapsulation } from '@angular/core'
-import { LeafletMap, LeafletMapConfigInterface } from '@volterra/vis/components'
+import { Component, AfterViewInit, ViewEncapsulation } from '@angular/core'
+import { LeafletMapConfigInterface } from '@volterra/vis/components'
 import earthquakes from './data/earthquakes100.geo.json'
 
 type MapPoint = {
@@ -13,7 +13,7 @@ type MapPoint = {
   shape: string;
 }
 
-function generateData (): object[] {  
+function mapSampleData (): object[] {  
   return earthquakes.features.map(d => ({
       id: d.id,
       longitude: d.geometry.coordinates[0],
@@ -21,35 +21,6 @@ function generateData (): object[] {
       status: Math.random() < 0.4 ? _.sample(['healthy', 'warning', 'alert', 'inactive', 'pending', 're', 'approving']) : 'healthy',
       shape: Math.random() < 0.07 ? _.sample(['square', 'triangle']) : 'circle',
   }))
-}
-
-@Component({
-  selector: 'map',
-  templateUrl: './map.component.html',
-  styleUrls: ['./map.component.scss'],
-  encapsulation: ViewEncapsulation.None
-})
-
-export class MapComponent implements OnInit, AfterViewInit {
-  title = 'map'
-  map = null
-  data: any
-  config: any
-  mapChartConfig: any
-  @ViewChild('map', { static: false }) mapRef: ElementRef
-
-  ngAfterViewInit (): void {
-    this.config = getMapConfig()
-    this.map = new LeafletMap(this.mapRef.nativeElement, this.config, this.data)
-
-    // setBounds
-    // selectNode
-    // zoomToNode
-  }
-
-  ngOnInit (): void {
-    this.data = generateData()
-  }
 }
 
 function getMapConfig (): LeafletMapConfigInterface<MapPoint> {
@@ -75,5 +46,24 @@ function getMapConfig (): LeafletMapConfigInterface<MapPoint> {
     selectedNodeId: 'nc72965236',
     initialBounds: { northEast: { lat: 77, lng: -172 }, southWest: { lat: -50, lng: 72 } },
     onMapMoveZoom: ({ mapCenter, zoomLevel, bounds }) => { /* console.log(mapCenter, zoomLevel, bounds) */ }
+  }
+}
+
+@Component({
+  selector: 'map',
+  templateUrl: './map.component.html',
+  styleUrls: ['./map.component.scss'],
+  encapsulation: ViewEncapsulation.None
+})
+
+export class MapComponent implements AfterViewInit {
+  title = 'map'
+  data = mapSampleData()
+  config = getMapConfig()
+
+  ngAfterViewInit (): void {
+    // setBounds
+    // selectNode
+    // zoomToNode
   }
 }
