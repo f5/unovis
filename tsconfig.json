@@ -12,7 +12,8 @@
         "core/*": ["packages/vis/src/core/*"],
         "components/*": ["packages/vis/src/components/*"],
         "styles/*": ["packages/vis/src/styles/*"],
-        "data-models/*": ["packages/vis/src/data-models/*"]
+        "data-models/*": ["packages/vis/src/data-models/*"],
+        "data/*": ["packages/vis/src/data/*"]
       },
       "downlevelIteration": true,
       "outDir": "./dist/out-tsc",

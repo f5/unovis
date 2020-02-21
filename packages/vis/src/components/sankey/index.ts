@@ -23,7 +23,7 @@ import { removeLinks, createLinks, updateLinks } from './modules/link'
 import { removeNodes, createNodes, updateNodes, onNodeMouseOver, onNodeMouseOut } from './modules/node'
 import { SankeyNodeDatumInterface, SankeyLinkDatumInterface } from './modules/types'
 
-export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> extends ComponentCore<{nodes: N[]; links: L[]}> {
+export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> extends ComponentCore<{nodes: N[]; links?: L[]}> {
   static selectors = s
   config: SankeyConfig<N, L> = new SankeyConfig()
   datamodel: GraphDataModel<N, L> = new GraphDataModel()

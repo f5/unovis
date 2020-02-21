@@ -3,21 +3,21 @@
 
 // Core
 import { ContainerConfig, ContainerConfigInterface } from 'core/container/config'
+import { ComponentCore } from 'core/component'
 import { Tooltip } from 'core/tooltip'
 
 // Types
 import { Dimension } from 'types/misc'
-import { XYComponentCore } from 'core/xy-component'
 
 export interface SingleChartConfigInterface<Datum> extends ContainerConfigInterface {
   /** Visualization Component */
-  component?: XYComponentCore<Datum>;
+  component?: ComponentCore<Datum>;
   /** Dimension configuration */
   dimensions?: {
     [key: string]: Dimension;
   };
   /** Tooltip component */
-  tooltip?: Tooltip<XYComponentCore<Datum>, Datum>;
+  tooltip?: Tooltip<ComponentCore<Datum>, Datum>;
 }
 
 export class SingleChartConfig<Datum> extends ContainerConfig implements SingleChartConfigInterface<Datum> {

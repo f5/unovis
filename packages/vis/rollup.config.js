@@ -1,4 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
+import json from '@rollup/plugin-json'
 import typescript from 'rollup-plugin-typescript2'
 import transformPaths from '@zerollup/ts-transform-paths'
 import resolve from 'rollup-plugin-node-resolve'
@@ -16,7 +17,8 @@ const d3Libs = ['d3-array', 'd3-axis', 'd3-brush', 'd3-chord', 'd3-collection', 
 const lodashLibs = ['lodash/isUndefined', 'lodash/isArray', 'lodash/isEmpty', 'lodash/isEqual',
   'lodash/isNil', 'lodash/cloneDeep', 'lodash/throttle', 'lodash/each', 'lodash/filter',
   'lodash/get', 'lodash/without', 'lodash/find', 'lodash/isString', 'lodash/isObject',
-  'lodash/isFunction', 'lodash/isNumber', 'lodash/merge', 'lodash/isPlainObject', 'lodash/flatten']
+  'lodash/isFunction', 'lodash/isNumber', 'lodash/merge', 'lodash/isPlainObject', 'lodash/flatten',
+  'lodash/omit', 'lodash/extend']
 
 const globals = {}
 d3Libs.reduce((acc, name) => { acc[name] = 'd3'; return acc }, globals)
@@ -33,6 +35,7 @@ const externals = [
 ]
 
 const plugins = [
+  json(),
   commonjs(),
   resolve(),
   typescript({
