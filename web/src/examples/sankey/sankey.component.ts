@@ -1,23 +1,19 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 /* eslint-disable */
 import { Component, AfterViewInit } from '@angular/core'
+import _times from 'lodash/times'
 
 // Vis
 import { Sankey } from '@volterra/vis'
 
-import sankeyManyData from './data/many.json'
-import sankeySingleData from './data/single.json'
-import sankeyZeroData from './data/zero.json'
-import sankeyFewData from './data/few.json'
+import { sankeySampleData } from './data/datagen'
 
 function sampleSankeyData (n: number) {
-  switch(n) {
-    case 0: return sankeyZeroData
-    case 1: return sankeySingleData
-    case 30: return sankeyFewData
-    case 50: return sankeyFewData
-    case 500: return sankeyManyData
-  }
+  const sources = _times(n).map((d) => `RE${d+1}`)
+  const targets = ['Site', 'VN selector', 'Endpoint 1', 'Endpoint 2', 'Endpoint 3']
+  const vhost = ['Balancer']
+
+  return sankeySampleData (n, sources, vhost, targets)
 }
 
 function getSankeyConfig () {
