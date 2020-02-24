@@ -26,9 +26,7 @@
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-string": "^3.0.0",
     "rollup-plugin-terser": "^5.1.2",
-    "rollup-plugin-typescript2": "^0.25.3",
-    "supercluster": "^7.0.0",
-    "tangram": "^0.20.0"
+    "rollup-plugin-typescript2": "^0.25.3"
   },
   "dependencies": {
     "d3": "^5.14.2",
@@ -40,6 +38,8 @@
     "mapbox-gl": "^1.7.0",
     "mapbox-gl-leaflet": "^0.0.11",
     "resize-observer-polyfill": "^1.5.1",
-    "topojson": "^3.0.2"
+    "topojson": "^3.0.2",
+    "supercluster": "^7.0.0",
+    "tangram": "^0.20.0"
   }
 }

@@ -5,7 +5,6 @@ import transformPaths from '@zerollup/ts-transform-paths'
 import resolve from 'rollup-plugin-node-resolve'
 import commonjs from 'rollup-plugin-commonjs'
 import { string } from 'rollup-plugin-string'
-import json from '@rollup/plugin-json'
 import pkg from './package.json'
 import modules from './rollup.modules.json'
 
@@ -37,7 +36,6 @@ const externals = [
 ]
 
 const plugins = [
-  json(),
   string({
     include: '*.css',
   }),
