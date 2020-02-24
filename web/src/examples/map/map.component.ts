@@ -43,7 +43,7 @@ function getMapConfig (): LeafletMapConfigInterface<MapPoint> {
       re: { color: '#4c7afc' },
       approving: { color: '#82affd' },
     },
-    selectedNodeId: 'nc72965236',
+    // selectedNodeId: 'nc72965236',
     initialBounds: { northEast: { lat: 77, lng: -172 }, southWest: { lat: -50, lng: 72 } },
     onMapMoveZoom: ({ mapCenter, zoomLevel, bounds }) => { /* console.log(mapCenter, zoomLevel, bounds) */ }
   }
