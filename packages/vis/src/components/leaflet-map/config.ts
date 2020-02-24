@@ -2,13 +2,13 @@
 /* eslint-disable dot-notation */
 import { LatLng } from 'leaflet'
 // Core
-import { Config } from 'core/config'
+import { ComponentConfig, ComponentConfigInterface } from 'core/component/config'
 
 // Types
 import { NumericAccessor, StringAccessor, ColorAccessor } from 'types/misc'
 import { LeafletMapRenderer, ClusterOutlineType, Bounds, StatusMap } from 'types/map'
 
-export interface LeafletMapConfigInterface<Datum> {
+export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterface {
   renderer?: LeafletMapRenderer | string;
   /**  */
   tamgramRenderer?: any;
@@ -49,14 +49,14 @@ export interface LeafletMapConfigInterface<Datum> {
   /** Default bounds that will be applid on the first map render if the bounds property is not set */
   initialBounds?: Bounds;
   /** Force set map bounds */
-  bound?: Bounds;
+  bounds?: Bounds;
   /** Status styles */
   statusMap?: StatusMap;
   /** If selectedNodeId is provided the map will zoom in and select that node on update */
   selectedNodeId?: string;
 }
 
-export class LeafletMapConfig<Datum> extends Config implements LeafletMapConfigInterface<Datum> {
+export class LeafletMapConfig<Datum> extends ComponentConfig implements LeafletMapConfigInterface<Datum> {
   renderer = LeafletMapRenderer.TANGRAM
   accessToken = ''
   onMapMoveZoom = undefined

@@ -14,7 +14,7 @@ import { LeafletMapRenderer, Point, Bounds } from 'types/map'
 import { isNil, findIndex, find } from 'utils/data'
 
 // Config
-import { LeafletMapConfig } from './config'
+import { LeafletMapConfig, LeafletMapConfigInterface } from './config'
 
 // Styles
 import * as s from './style'
@@ -112,7 +112,7 @@ export class LeafletMap<Datum> {
     if (data) this.setData(data)
   }
 
-  setConfig (config: LeafletMapConfig<Datum>): void {
+  setConfig (config: LeafletMapConfigInterface<Datum>): void {
     this.config.init(config)
   }
 
