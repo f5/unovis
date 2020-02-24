@@ -1,13 +1,17 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { select, Selection, event } from 'd3-selection'
+import { Selection, event } from 'd3-selection'
 import { packSiblings } from 'd3-hierarchy'
 import L from 'leaflet'
 import Supercluster, { PointFeature } from 'supercluster'
+
+// Core
+import { ComponentCore } from 'core/component'
 
 // Model
 import { MapDataModel } from 'data-models/map'
 
 // Types
+import { ComponentType } from 'types/component'
 import { LeafletMapRenderer, Point, Bounds } from 'types/map'
 
 // Utils
@@ -29,8 +33,9 @@ import {
   shouldClusterExpand, findNodeAndClusterInPointsById, getNodeRelativePosition, getClusterRadius, getClustersAndPoints,
 } from './modules/utils'
 
-export class LeafletMap<Datum> {
+export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
   static selectors = s
+  type = ComponentType.HTML
   div: Selection<HTMLElement, any, HTMLElement, any>
   element: HTMLElement
   config: LeafletMapConfig<Datum> = new LeafletMapConfig()
@@ -55,21 +60,18 @@ export class LeafletMap<Datum> {
   private _firstRender = true
 
   events = {
-    [LeafletMap.selectors.node]: {
-      // mousemove: this._onMousemoveNode,
-      // mouseover: this._onMouseoverNode,
-      // mouseout: this._onMouseoutNode,
-      mouseup: this._onMouseupNode,
-      mousedown: this._onMousedownNode,
-      click: this._onNodeClick,
+    [LeafletMap.selectors.gNode]: {
+      mouseup: this._onNodeMouseUp.bind(this),
+      mousedown: this._onNodeMouseDown.bind(this),
+      click: this._onNodeClick.bind(this),
     },
   }
 
-  constructor (element: HTMLElement, config?: LeafletMapConfig<Datum>, data?: Datum[]) {
-    this._container = element
-
-    this.div = select(this._container).append('div').attr('class', s.mapContainer)
-    this.element = this.div.node()
+  constructor (container: HTMLElement, config?: LeafletMapConfigInterface<Datum>, data?: Datum[]) {
+    super(ComponentType.HTML)
+    this._container = container
+    this._container.appendChild(this.element)
+    this.g.attr('class', s.mapContainer)
 
     if (config) this.setConfig(config)
 
@@ -81,7 +83,7 @@ export class LeafletMap<Datum> {
 
     // We need to handle background click in a special way to deal
     //   with d3 svg overlay that might have smaller size than the map itself
-    //   (see this._onMousedownNode() and this this._onMousedownNode())
+    //   (see this._onNodeMouseDown() and this this._onNodeMouseDown())
     this._map.leaflet.on('mousedown', () => {
       if (!this._cancelBackgroundClick) this._triggerBackroundClick = true
     })
@@ -124,6 +126,8 @@ export class LeafletMap<Datum> {
     this.render()
   }
 
+  // We redefine the ComponentCore render function to bind event to newly created elements in this._renderData(),
+  // which is being called after almost every map interaction
   render (): void {
     const { config } = this
     if (!this._map) return
@@ -239,10 +243,6 @@ export class LeafletMap<Datum> {
     const nodesMerged = nodes.merge(nodesEnter)
     nodesMerged.call(updateNodes, config, this._map.leaflet)
 
-    nodesMerged.on('mouseup', this._onMouseupNode.bind(this))
-    nodesMerged.on('mousedown', this._onMousedownNode.bind(this))
-    nodesMerged.on('click', this._onNodeClick.bind(this))
-
     this._clusterBackground.call(updateBackgroundNode, this._expandedCluster, config, this._map.leaflet, this._clusterBackgroundRadius)
     if (this._expandedCluster && config.clusterBackground) {
       const id = findIndex(pointData, d => d.cluster)
@@ -255,6 +255,12 @@ export class LeafletMap<Datum> {
     // Show selection border and hide it when the node
     // is out of visible box
     this._nodeSelectionRing.call(updateNodeSelectionRing, this._selectedNode, pointData, config, this._map.leaflet)
+
+    // Set up default events
+    this._setUpEvents(this.events)
+
+    // Set up user-defined events
+    this._setUpEvents(this.config.events)
   }
 
   _zoomToExternallySelectedNode (): void {
@@ -414,22 +420,11 @@ export class LeafletMap<Datum> {
     }
   }
 
-  // _onMouseoverNode (d, el, event): void {
-
-  // }
-
-  // _onMouseoutNode (d, el, event): void {
-
-  // }
-
-  // _onMousemoveNode (d, el, event): void {
-  // }
-
-  _onMousedownNode (d, el, event): void {
+  _onNodeMouseDown (d, el, event): void {
     this._cancelBackgroundClick = true
   }
 
-  _onMouseupNode (d, el, event): void {
+  _onNodeMouseUp (d, el, event): void {
     this._cancelBackgroundClick = false
   }
 }

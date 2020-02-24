@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { css, injectGlobal, keyframes } from 'emotion'
+import { css, injectGlobal } from 'emotion'
 
 // Inject Leaflet global style
 // eslint-disable-next-line
