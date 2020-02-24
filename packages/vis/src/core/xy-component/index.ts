@@ -16,6 +16,7 @@ import { NumericAccessor, Dimension, Spacing } from 'types/misc'
 import { XYComponentConfig } from './config'
 
 export class XYComponentCore<Datum> extends ComponentCore<Datum[]> {
+  element: SVGGraphicsElement
   config: XYComponentConfig<Datum>
   datamodel: SeriesDataModel<Datum> = new SeriesDataModel()
   /** Clippable components can be affected by a clipping path (set up in the container) */
@@ -35,7 +36,7 @@ export class XYComponentCore<Datum> extends ComponentCore<Datum[]> {
     scales[key].range(range)
   }
 
-  updateScale (key: string, dim: Dimension = {}, padding: Spacing = {}) {
+  updateScale (key: string, dim: Dimension = {}, padding: Spacing = {}): void {
     if (!key) return
     const { config, config: { scales, width, height }, datamodel: { data } } = this
 

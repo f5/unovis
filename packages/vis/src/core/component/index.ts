@@ -5,6 +5,7 @@ import { select } from 'd3-selection'
 import { CoreDataModel } from 'data-models/core'
 
 // Types
+import { ComponentType } from 'types/component'
 import { Spacing } from 'types/misc'
 
 // Utils
@@ -14,7 +15,8 @@ import { throttle } from 'utils/data'
 import { ComponentConfig, ComponentConfigInterface } from './config'
 
 export class ComponentCore<CoreDatum> {
-  element: SVGGraphicsElement
+  element: HTMLElement | SVGGElement
+  type: ComponentType = ComponentType.SVG
   g: any
   config: ComponentConfig
   prevConfig: ComponentConfig
@@ -22,11 +24,13 @@ export class ComponentCore<CoreDatum> {
   events = {}
   _setUpEventsThrottled = throttle(this._setUpEvents, 1000)
 
-  constructor (config?: ComponentConfigInterface) {
-    this.element = document.createElementNS('http://www.w3.org/2000/svg', 'g')
+  constructor (type = ComponentType.SVG) {
+    if (type === ComponentType.SVG) {
+      this.element = document.createElementNS('http://www.w3.org/2000/svg', 'g')
+    } else {
+      this.element = document.createElement('div')
+    }
     this.g = select(this.element)
-
-    // if (config) this.setConfig(config)
   }
 
   setConfig<T extends ComponentConfigInterface> (config?: T): void {

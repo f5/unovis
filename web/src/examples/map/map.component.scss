@@ -1,0 +1,36 @@
+.map {
+  width: 100%;
+  height: 80vh;
+  position: relative;
+
+  .pointPending {
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    stroke-width: 0;
+    stroke-opacity: 1;
+  }
+  100% {
+    stroke-width: 12;
+    stroke-opacity: 0;
+  }
+}
+
+
+@keyframes pulseCluster {
+  0% {
+    stroke-width: calc(var(--clusterStrokeWidth) - 0.25px);
+    stroke-opacity: 1;
+  }
+  70% {
+    stroke-width: calc(var(--clusterStrokeWidth) + 1.75px);
+    stroke-opacity: 1;
+  }
+  100% {
+    stroke-width: calc(var(--clusterStrokeWidth) - 0.25px);
+    stroke-opacity: 1;
+  }
+}
