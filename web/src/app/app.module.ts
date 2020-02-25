@@ -9,7 +9,6 @@ import { LineComponent } from 'examples/line/line.component'
 import { StackedBarComponent } from 'examples/stacked-bar/stacked-bar.component'
 import { AreaComponent } from 'examples/area/area.component'
 import { SankeyComponent } from 'examples/sankey/sankey.component'
-import { SingleComponent } from 'examples/single/single.component'
 import { CompositeComponent } from 'examples/composite/composite.component'
 import { WrapperUsageExampleComponent } from 'examples/wrapper-usage-example/wrapper-usage-example.component'
 import { TimelineComponent } from 'examples/timeline/timeline.component'
@@ -31,7 +30,6 @@ const appRoutes: Routes = [
   { path: 'stacked-bar', component: StackedBarComponent },
   { path: 'area', component: AreaComponent },
   { path: 'sankey', component: SankeyComponent },
-  { path: 'single', component: SingleComponent },
   { path: 'composite', component: CompositeComponent },
   { path: 'wrapper-usage-example', component: WrapperUsageExampleComponent },
   { path: 'timeline', component: TimelineComponent },
@@ -49,7 +47,6 @@ appRoutes.push({ path: '', redirectTo: `/${appRoutes[0].path}`, pathMatch: 'full
     LineComponent,
     StackedBarComponent,
     AreaComponent,
-    SingleComponent,
     CompositeComponent,
     BulletLegendComponent,
     FlowLegendComponent,
