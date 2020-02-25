@@ -1,10 +1,16 @@
-<nav>
-  <a routerLink="composite">Composite</a>
+<nav class="sidebar">
+  <a routerLink="scatter">Scatter</a>
+  <a routerLink="line">Line</a>
+  <a routerLink="stacked-bar">Stacked Bar</a>
+  <a routerLink="area">Area</a>
   <a routerLink="sankey">Sankey</a>
-  <a routerLink="wrapper-usage-example">Wrapper Usage Example</a>
   <a routerLink="timeline">Timeline</a>
-  <a routerLink="area-composite">Area Composite</a>
+  <a routerLink="composite">Composite</a>
+  <a routerLink="wrapper-usage-example">Wrapper Usage Example</a>
+  <a routerLink="bullet-legend">Bullet Legend</a>
   <a routerLink="simplemap">Simple Map</a>
   <a routerLink="map">Map</a>
 </nav>
-<router-outlet></router-outlet>
+<div class="vis-container">
+  <router-outlet></router-outlet>
+</div>

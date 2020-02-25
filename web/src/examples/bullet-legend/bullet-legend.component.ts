@@ -34,13 +34,13 @@ function generateData (): AreaSampleDatum[] {
 }
 
 @Component({
-  selector: 'area-composite',
-  templateUrl: './area-composite.component.html',
-  styleUrls: ['./area-composite.component.css'],
+  selector: 'bullet-legend',
+  templateUrl: './bullet-legend.component.html',
+  styleUrls: ['./bullet-legend.component.css'],
 })
 
-export class AreaCompositeComponent implements AfterViewInit {
-  title = 'area-composite'
+export class BulletLegendExampleComponent implements AfterViewInit {
+  title = 'bullet-legend'
   yAccessors = [
     d => d.y,
     d => d.y1,

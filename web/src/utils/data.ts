@@ -4,13 +4,13 @@ import _uniqueId from 'lodash/uniqueId'
 import _sample from 'lodash/sample'
 
 export interface SampleDatum {
-  id: string;
+  id?: string;
   x: number;
   y: number;
-  y1: number;
-  y2: number;
-  y3: number;
-  y4: number;
+  y1?: number;
+  y2?: number;
+  y3?: number;
+  y4?: number;
 }
 
 export function sampleSeriesData (n: number): SampleDatum[] {
