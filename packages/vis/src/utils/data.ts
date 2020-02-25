@@ -46,8 +46,8 @@ export const flatten = _flatten
 export const omit = _omit
 export const extend = _extend
 
-export function getValue (d, accessor): any {
-  if (isFunction(accessor)) return accessor(d)
+export function getValue (d, accessor, index?: number): any {
+  if (isFunction(accessor)) return accessor(d, index)
   else return accessor
 }
 
