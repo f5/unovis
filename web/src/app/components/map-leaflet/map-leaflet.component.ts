@@ -23,8 +23,18 @@ export class MapLeafletComponent<Datum> implements AfterViewInit {
   }
 
   ngOnChanges (changes): void {
-    // setBounds
-    // selectNode
-    // zoomToNode
+    // Set new Data without re-render
+    if (changes.data) {
+      this.map?.setData(this.data)
+      delete changes.data
+    }
+
+    // Set new Config without re-render
+    if (changes.config) {
+      this.map?.setConfig(this.config)
+    }
+
+    // Render map
+    this.map?.render()
   }
 }
