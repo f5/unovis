@@ -3,7 +3,7 @@ import { select } from 'd3-selection'
 import ResizeObserver from 'resize-observer-polyfill'
 
 // Utils
-import { isEqual } from 'utils/data'
+import { isEqual, clamp } from 'utils/data'
 import { getBoundingClientRectObject } from 'utils/misc'
 
 // Config
@@ -71,19 +71,19 @@ export class ContainerCore {
   }
 
   get containerWidth (): number {
-    return this._container.clientWidth || this._container.getBoundingClientRect().width
+    return clamp(this._container.clientWidth || this._container.getBoundingClientRect().width, 0, Number.POSITIVE_INFINITY)
   }
 
   get containerHeight (): number {
-    return this._container.clientHeight || this._container.getBoundingClientRect().height
+    return clamp(this._container.clientHeight || this._container.getBoundingClientRect().height, 0, Number.POSITIVE_INFINITY)
   }
 
   get width (): number {
-    return this.containerWidth - this.config.margin.left - this.config.margin.right
+    return clamp(this.containerWidth - this.config.margin.left - this.config.margin.right, 0, Number.POSITIVE_INFINITY)
   }
 
   get height (): number {
-    return this.containerHeight - this.config.margin.top - this.config.margin.bottom
+    return clamp(this.containerHeight - this.config.margin.top - this.config.margin.bottom, 0, Number.POSITIVE_INFINITY)
   }
 
   removeAllChildren (): void {
