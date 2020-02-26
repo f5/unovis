@@ -143,9 +143,9 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
   }
 
   _buildAxis (): D3Axis<any> {
-    const { config: { type, scales, position, numTicks, width } } = this
+    const { config: { type, scales, position } } = this
 
-    const ticks = numTicks ?? Math.floor(width / 175)
+    const ticks = this._getNumTicks()
     switch (type) {
     case AxisType.X:
       switch (position) {
@@ -161,9 +161,9 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
   }
 
   _buildGrid (): D3Axis<any> {
-    const { config: { type, scales, position, numTicks, width, height } } = this
+    const { config: { type, scales, position, width, height } } = this
 
-    const ticks = numTicks ?? Math.floor(width / 175)
+    const ticks = this._getNumTicks()
     switch (type) {
     case AxisType.X:
       switch (position) {
@@ -189,6 +189,11 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
         if (i > 0 && i < elements.length - 1) select(elements[i]).remove()
       })
     }
+  }
+
+  _getNumTicks (): number {
+    const { config: { type, numTicks, width, height } } = this
+    return numTicks ?? Math.floor((type === AxisType.X ? width : height) / 175)
   }
 
   _getTickValues (): number[] {
