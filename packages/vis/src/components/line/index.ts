@@ -1,6 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { select } from 'd3-selection'
-import { line, Line as LineInterface, CurveFactory } from 'd3-shape'
+import { line, Line as LineGenInterface, CurveFactory } from 'd3-shape'
 import { interpolatePath } from 'd3-interpolate-path'
 
 // Core
@@ -24,7 +24,7 @@ import * as s from './style'
 export class Line<Datum> extends XYComponentCore<Datum> {
   static selectors = s
   config: LineConfig<Datum> = new LineConfig()
-  lineGen: LineInterface<any[]>
+  lineGen: LineGenInterface<{ x: number; y: number; defined: boolean }>
   curve: CurveFactory = Curve[CurveType.MonotoneX]
   events = {
     [Line.selectors.line]: {
@@ -49,19 +49,29 @@ export class Line<Datum> extends XYComponentCore<Datum> {
     const { config, datamodel: { data } } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
 
-    this.lineGen = line()
-      .x(d => d[0])
-      .y(d => d[1])
+    this.lineGen = line<{ x: number; y: number; defined: boolean }>()
+      .x(d => d.x)
+      .y(d => d.y)
+      .defined(d => d.defined)
       .curve(this.curve)
 
     const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
     const lineDataX = data.map(d => config.scales.x(getValue(d, config.x)))
-    const lineData = yAccessors.map(a =>
-      data.map((d, i) => ([
-        lineDataX[i],
-        config.scales.y(getValue(d, a) ?? null),
-      ]))
-    )
+    const lineData = yAccessors.map(a => {
+      const ld = data.map((d, i) => {
+        const value = getValue(d, a) ?? config.noDataValue
+        return {
+          x: lineDataX[i],
+          y: config.scales.y(value),
+          defined: isNumber(value),
+        }
+      })
+
+      return {
+        values: ld,
+        defined: ld.reduce((def, d) => (d.defined || def), false),
+      }
+    })
 
     const lines = this.g
       .selectAll(`.${s.line}`)
@@ -76,17 +86,18 @@ export class Line<Datum> extends XYComponentCore<Datum> {
     const linesMerged = smartTransition(linesEnter.merge(lines), duration)
       .style('stroke', (d, i) => getColor(d, config.color, i))
       .attr('stroke-width', config.lineWidth)
-      .style('stroke-opacity', (d, i) => (yAccessors[i] && d?.length) ? 1 : 0)
+      .style('stroke-opacity', (d, i) => (yAccessors[i] && d.defined) ? 1 : 0)
 
     if (duration) {
       linesMerged
         .attrTween('d', (d, i, el) => {
           const previous = select(el[i]).attr('d')
-          const next = this.lineGen(d) || this._emptyPath()
+          const path = this.lineGen(d.values)
+          const next = path || this._emptyPath()
           return interpolatePath(previous, next)
         })
     } else {
-      linesMerged.attr('d', d => this.lineGen(d))
+      linesMerged.attr('d', d => this.lineGen(d.values) || this._emptyPath())
     }
 
     lines.exit().remove()
