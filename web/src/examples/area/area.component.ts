@@ -30,7 +30,7 @@ function getAreaConfig (n: number): AreaConfigInterface<SampleDatum> {
 }
 
 @Component({
-  selector: 'area',
+  selector: 'areachart',
   templateUrl: './area.component.html',
   styleUrls: ['./area.component.css'],
 })
