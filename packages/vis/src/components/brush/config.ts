@@ -21,7 +21,7 @@ export interface BrushConfigInterface<Datum> extends XYComponentConfigInterface<
   /** Allow dragging the selected area in order to change the selected range */
   draggable?: boolean;
   /** Position of the handle: 'inside' or 'outside' */
-  handlePosition?: Arrangement;
+  handlePosition?: Arrangement | string;
 }
 
 export class BrushConfig<Datum> extends XYComponentConfig<Datum> implements BrushConfigInterface<Datum> {
@@ -32,5 +32,5 @@ export class BrushConfig<Datum> extends XYComponentConfig<Datum> implements Brus
   handleWidth = 9
   selection = null
   draggable = false
-  handlePosition = Arrangement.INSIDE
+  handlePosition: Arrangement | string = Arrangement.INSIDE
 }
