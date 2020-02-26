@@ -201,8 +201,12 @@ export class XYContainer<Datum> extends ContainerCore {
       // Pass accessors
       const yAccessors = this.components.filter(c => !c.stacked).map(c => c.config.y)
       const yStackedAccessors = this.components.filter(c => c.stacked).map(c => c.config.y)
+      // eslint-disable-next-line dot-notation
+      const baselineAccessor = this.components.find(c => c.config['baseline'])?.config['baseline']
+      crosshair.config.x = crosshair.config.x || this.components[0]?.config.x
       crosshair.config.y = flatten(yAccessors)
       crosshair.config.yStacked = flatten(yStackedAccessors)
+      crosshair.config.baseline = crosshair.config.baseline || baselineAccessor || null
       crosshair.g.attr('transform', `translate(${config.margin.left},${config.margin.top})`)
     }
   }
