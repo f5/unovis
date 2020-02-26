@@ -218,7 +218,8 @@ export class XYContainer<Datum> extends ContainerCore {
     if (!components) return
 
     Object.keys(dimensions).forEach(key => {
-      const domain = extent(mergeArrays(components.map(c => c.getDataExtent(key))) as number[])
+      const [min, max] = extent(mergeArrays(components.map(c => c.getDataExtent(key))) as number[]) // Components with undefined dimenstion accessors will return [undefined, undefined] but d3.extent will take care of that
+      const domain = [min || 0, max || 1] // Setting to D3 defaults when undefined
       components.forEach(c => c.setScaleDomain(key, dimensions[key].domain ?? domain))
     })
   }
