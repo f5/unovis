@@ -10,6 +10,8 @@ import { NumericAccessor } from 'types/misc'
 export interface CrosshairConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
   /** Separate array of accessors for stacked components (eg StackedBar, Area) */
   yStacked?: NumericAccessor<Datum>[];
+  /** Baseline accessor function for stacked values, useful with stacked areas */
+  baseline?: NumericAccessor<Datum>;
   /** Tooltip component */
   tooltip?: Tooltip<XYComponentCore<Datum>, Datum> | undefined;
   /** Tooltip template */
@@ -18,6 +20,7 @@ export interface CrosshairConfigInterface<Datum> extends XYComponentConfigInterf
 
 export class CrosshairConfig<Datum> extends XYComponentConfig<Datum> implements CrosshairConfigInterface<Datum> {
   yStacked = []
+  baseline = null
   duration = 100
   tooltip: Tooltip<XYComponentCore<Datum>, Datum> = undefined
   template = (d: Datum): string => ''

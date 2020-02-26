@@ -62,8 +62,9 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
       .attr('x1', this.x)
       .attr('x2', this.x)
 
+    const baselineValue = getValue(this.datum, config.baseline) || 0
     const stackedValues = this.datamodel.getStackedValues(this.datum, ...config.yStacked)
-      .map((value, index, arr) => ({ index, value, visible: !!(value - (arr[index - 1] ?? 0)) }))
+      .map((value, index, arr) => ({ index, value: value + baselineValue, visible: !!(value - (arr[index - 1] ?? 0)) }))
     const regularValues = yAccessors
       .map((acs, index) => ({ index, value: getValue(this.datum, acs), visible: true }))
     const circleData = stackedValues.concat(regularValues)
