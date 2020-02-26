@@ -3,7 +3,7 @@ import { css, injectGlobal } from 'emotion'
 
 // Inject Leaflet global style
 // eslint-disable-next-line
-const leafletCSS = require('./leaflet.css') // Using require and rollup-plugin-string to overpass ts build errors
+import leafletCSS from './leaflet.css'
 injectGlobal(leafletCSS)
 
 export const variables = injectGlobal`

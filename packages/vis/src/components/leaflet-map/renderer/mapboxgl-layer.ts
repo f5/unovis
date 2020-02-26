@@ -12,7 +12,7 @@ import { getRendererSettings } from './settings'
 
 // Inject Mapboxgl global style
 // eslint-disable-next-line
-const mapboxglCSS = require('mapbox-gl/dist/mapbox-gl.css') // Using require and rollup-plugin-string to overpass ts build errors
+import mapboxglCSS from 'mapbox-gl/dist/mapbox-gl.css'
 injectGlobal(mapboxglCSS)
 
 // Setting mapbox-gl baseApiUrl to null to avoid sending events to events.mapbox.com

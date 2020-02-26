@@ -4,7 +4,7 @@ import typescript from 'rollup-plugin-typescript2'
 import transformPaths from '@zerollup/ts-transform-paths'
 import resolve from 'rollup-plugin-node-resolve'
 import commonjs from 'rollup-plugin-commonjs'
-import { string } from 'rollup-plugin-string'
+import postcss from 'rollup-plugin-postcss'
 import pkg from './package.json'
 import modules from './rollup.modules.json'
 
@@ -36,8 +36,10 @@ const externals = [
 ]
 
 const plugins = [
-  string({
-    include: '*.css',
+  postcss({
+    plugins: [],
+    inject: false,
+    minimize: true,
   }),
   commonjs(),
   resolve(),
