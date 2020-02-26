@@ -194,7 +194,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
   _getMaxLineWidth (): number {
     const { config, datamodel: { data } } = this
 
-    return max(data, d => getValue(d, config.lineWidth))
+    return max(data, d => getValue(d, config.lineWidth)) ?? 0
   }
 
   // Override the default XYComponent getXDataExtent method to take into account line lengths
