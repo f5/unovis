@@ -34,9 +34,9 @@ export interface XYComponentConfigInterface<Datum> extends ComponentConfigInterf
 
 export class XYComponentConfig<Datum> extends ComponentConfig implements XYComponentConfigInterface<Datum> {
   // eslint-disable-next-line dot-notation
-  x: NumericAccessor<Datum> = d => d['x'];
+  x: undefined; // NumericAccessor<Datum> = d => d['x'];
   // eslint-disable-next-line dot-notation
-  y: NumericAccessor<Datum> = d => d['y'];
+  y: undefined; // NumericAccessor<Datum> = d => d['y'];
   // eslint-disable-next-line dot-notation
   id = (d: Datum, i: number): string => d['id'] ?? i
   // eslint-disable-next-line dot-notation
