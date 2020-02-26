@@ -9,7 +9,6 @@ import {
   Area,
   AreaConfigInterface,
   Tooltip,
-  CurveType,
   Crosshair,
 } from '@volterra/vis'
 
