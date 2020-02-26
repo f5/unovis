@@ -1,6 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { select } from 'd3-selection'
-import { area, Area as AreaInterface, stack } from 'd3-shape'
+import { area, Area as AreaInterface } from 'd3-shape'
 import { interpolatePath } from 'd3-interpolate-path'
 
 // Core
@@ -38,43 +38,31 @@ export class Area<Datum> extends XYComponentCore<Datum> {
 
   _render (customDuration?: number): void {
     super._render(customDuration)
-    const { config, datamodel: { data } } = this
+    const { config, datamodel, datamodel: { data } } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
 
     const curveGen = Curve[config.curveType]
     this.areaGen = area<AreaDatum>()
-      .x(d => config.scales.x(d[2]))
-      .y0(d => config.scales.y(d[0]))
-      .y1(d => config.scales.y(d[1]))
+      .x(d => d.x)
+      .y0(d => d.y0)
+      .y1(d => d.y1)
       // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
       // @ts-ignore
       .curve(curveGen)
 
     const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
-    const stackGen = stack<any, Datum, NumericAccessor<Datum>>()
-      .offset((series, order) => {
-        for (let i = 0; i < order.length; i += 1) {
-          const prevSeries = series[i - 1]
-          const currentSeries = series[i]
-          for (let j = 0; j < currentSeries.length; j += 1) {
-            const dPrev = prevSeries ? prevSeries[j] : [0, 0]
-            // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-            // @ts-ignore
-            const d = currentSeries[j].data
-            const baselineValue = (config.baseline && i === 0) ? getValue(d, config.baseline) : 0
-            const value = currentSeries[j][1]
-            currentSeries[j][0] = dPrev[1] + baselineValue
-            currentSeries[j][1] = dPrev[1] + baselineValue + value
-            currentSeries[j][2] = getValue(d, config.x)
-          }
-        }
-      })
-      .keys(yAccessors)
-      .value((d, acs) => {
-        return getValue(d, acs)
-      })
-
-    const stackedData: AreaDatum[] = stackGen(data) as any
+    const stackedValues = data.map(d => datamodel.getStackedValues(d, ...yAccessors))
+    const baselineValues = data.map(d => getValue(d, config.baseline) || 0)
+    const areaDataX = data.map(d => config.scales.x(getValue(d, config.x)))
+    const stackedData: AreaDatum[][] = yAccessors.map(
+      (acs, i) => stackedValues.map(
+        (d, j) => ({
+          y0: config.scales.y(baselineValues[j] + (d[i - 1] ?? 0)),
+          y1: config.scales.y(d[i] + baselineValues[j]),
+          x: areaDataX[j],
+        })
+      )
+    )
 
     const areas = this.g
       .selectAll(`.${s.area}`)
@@ -120,8 +108,8 @@ export class Area<Datum> extends XYComponentCore<Datum> {
     const y1 = y0
 
     return this.areaGen([
-      [y0, y1, xDomain[0]],
-      [y0, y1, xDomain[1]],
+      { y0, y1, x: xDomain[0] },
+      { y0, y1, x: xDomain[1] },
     ])
   }
 }
