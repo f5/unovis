@@ -10,6 +10,7 @@ import {
   AreaConfigInterface,
   Tooltip,
   CurveType,
+  Crosshair,
 } from '@volterra/vis'
 
 // Helpers
@@ -81,6 +82,9 @@ export class BulletLegendExampleComponent implements AfterViewInit {
           [Area.selectors.area]: (d) => '<span>Area</span>',
         },
       }),
+      crosshair: new Crosshair({
+        template: (d) => `<span>Index: ${d.x}</span>`,
+      }),
     }
 
     this.composite = new XYContainer(this.chart.nativeElement, this.chartConfig, data)
@@ -105,7 +109,6 @@ function getAreaConfig (y): AreaConfigInterface<AreaSampleDatum> {
     x: d => d.x,
     y,
     baseline: d => d.baseline,
-    curveType: CurveType.Basis,
   }
 }
 
