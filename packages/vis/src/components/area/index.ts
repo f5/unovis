@@ -101,15 +101,15 @@ export class Area<Datum> extends XYComponentCore<Datum> {
 
   _emptyPath (): string {
     const { config: { scales: { x, y } } } = this
-    const xDomain = x.domain() as number[]
+    const xRange = x.range()
     const yDomain = y.domain() as number[]
 
-    const y0 = (yDomain[0] + yDomain[1]) / 2
+    const y0 = y((yDomain[0] + yDomain[1]) / 2)
     const y1 = y0
 
     return this.areaGen([
-      { y0, y1, x: xDomain[0] },
-      { y0, y1, x: xDomain[1] },
+      { y0, y1, x: xRange[0] },
+      { y0, y1, x: xRange[1] },
     ])
   }
 }
