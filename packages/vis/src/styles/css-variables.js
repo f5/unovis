@@ -12,7 +12,7 @@ export const variables = injectGlobal`
 
     --vis-brush-selection-fill: #262933;
     --vis-brush-selection-stroke: #acb2b9;
-    --vis-brush-handle-fill: #acb2b9;
+    --vis-brush-handle-fill: #a0a7c2;
     --vis-brush-handle-stroke: #dddddd;
 
     --vis-legend-label-color: #333;
