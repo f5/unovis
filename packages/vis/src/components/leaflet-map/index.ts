@@ -24,7 +24,7 @@ import { LeafletMapConfig, LeafletMapConfigInterface } from './config'
 import * as s from './style'
 
 // Modules
-import { setupMap } from './modules/map'
+import { setupMap, initialMapCenter, initialMapZoom } from './modules/map'
 import { createNodes, updateNodes, removeNodes } from './modules/node'
 import { createNodeSelectionRing, updateNodeSelectionRing } from './modules/selectionRing'
 import { createBackgroundNode, updateBackgroundNode } from './modules/clusterBackground'
@@ -111,6 +111,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
       .attr('class', s.clusterBackground)
       .call(createBackgroundNode)
 
+    this._map.leaflet.setView(initialMapCenter, initialMapZoom)
     if (data) this.setData(data)
   }
 
