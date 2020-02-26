@@ -6,7 +6,7 @@ import { Selection, event } from 'd3-selection'
 import { XYComponentCore } from 'core/xy-component'
 
 // Utils
-import { isNumber } from 'utils/data'
+import { isNumber, clamp } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 
 // Types
@@ -115,7 +115,8 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
       .attr('x', d => d.type === Direction.WEST ? xRange[0] : s[1])
       .attr('width', d => {
         const length = d.type === Direction.WEST ? s[0] - xRange[0] : xRange[1] - s[1]
-        return length > 0 ? length : 0
+        const lengthClamped = clamp(length, 0, xRange[1] - xRange[0])
+        return lengthClamped
       })
 
     this._positionHandles(s)
@@ -161,7 +162,8 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
     // When you reset selection by clicking on a non-selected brush area, D3 triggers the brush event twice.
     // The first call will have equal selection coordinates (e.g. [441, 441]), the second call will have the full range (e.g. [0, 700]).
     // To avoid unnecessary render from the first call we skip it
-    if (s[0] !== s[1]) {
+    if (s[0] !== s[1] && isNumber(s[0]) && isNumber(s[1])) {
+      // console.log(s)
       const userDriven = !!event?.sourceEvent
       const selectedDomain = s.map(xScale.invert, xScale)
       if (userDriven) config.selection = selectedDomain
