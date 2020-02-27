@@ -33,7 +33,7 @@ export class ComponentCore<CoreDatum> {
     this.g = select(this.element)
   }
 
-  setConfig<T extends ComponentConfigInterface> (config?: T): void {
+  setConfig<T extends ComponentConfigInterface> (config: T): void {
     const ConfigModel = (this.config.constructor as typeof ComponentConfig)
     this.prevConfig = this.config
     this.config = new ConfigModel().init(config)
