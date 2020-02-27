@@ -114,8 +114,8 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     if (data) this.setData(data)
   }
 
-  setConfig (config?: LeafletMapConfigInterface<Datum>): void {
-    if (config) this.config.init(config)
+  setConfig (config: LeafletMapConfigInterface<Datum>): void {
+    this.config.init(config)
   }
 
   setData (data): void {
