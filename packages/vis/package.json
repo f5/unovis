@@ -18,7 +18,6 @@
     "@types/d3": "^5.7.2",
     "@types/mapbox-gl-leaflet": "^0.0.1",
     "@types/supercluster": "^5.0.1",
-    "@types/topojson": "^3.2.2",
     "@typescript-eslint/parser": "^2.16.0",
     "@zerollup/ts-transform-paths": "^1.7.11",
     "rimraf": "^3.0.0",
@@ -30,6 +29,8 @@
     "rollup-plugin-typescript2": "^0.25.3"
   },
   "dependencies": {
+    "@types/geojson": "^7946.0.7",
+    "@types/topojson": "^3.2.2",
     "d3": "^5.14.2",
     "d3-interpolate-path": "^2.1.1",
     "d3-sankey": "^0.12.3",
