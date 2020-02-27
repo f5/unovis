@@ -3,7 +3,7 @@
 import { AfterViewInit, Component } from '@angular/core'
 
 // Vis
-import { Line, Axis } from '@volterra/vis/components'
+import { Line, Axis } from '@volterra/vis'
 
 import _times from 'lodash/times'
 

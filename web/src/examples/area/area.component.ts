@@ -3,7 +3,7 @@ import { AfterViewInit, Component } from '@angular/core'
 import _times from 'lodash/times'
 
 // Vis
-import { Area, AreaConfigInterface, Axis } from '@volterra/vis/components'
+import { Area, AreaConfigInterface, Axis } from '@volterra/vis'
 
 // Helpers
 import { SampleDatum } from '../../utils/data'

@@ -2,7 +2,7 @@
 /* eslint-disable */
 import _ from 'lodash'
 import { Component, AfterViewInit, ViewEncapsulation } from '@angular/core'
-import { LeafletMapConfigInterface } from '@volterra/vis/components'
+import { LeafletMapConfigInterface } from '@volterra/vis'
 import earthquakes from './data/earthquakes100.geo.json'
 
 type MapPoint = {

@@ -2,7 +2,7 @@
 import { AfterViewInit, Component } from '@angular/core'
 
 // Vis
-import { StackedBar, StackedBarConfigInterface, Axis } from '@volterra/vis/components'
+import { StackedBar, StackedBarConfigInterface, Axis } from '@volterra/vis'
 
 // Helpers
 import { SampleDatum, sampleSeriesData } from '../../utils/data'
