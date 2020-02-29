@@ -42,11 +42,15 @@ export interface SankeyConfigInterface<N extends SankeyNodeDatumInterface, L ext
     labelTextSeparator?: string[];
     /** Force break words to fit long labels */
     labelForceWordBreak?: boolean;
+    /** Coefficient to scale the height of the diagram when the amount of links is low: C * links.length, clamped to [height / 2, height]  */
+    heightNormalizationCoeff?: number;
+    /** Id accessor for better visual data updates */
+    id?: ((d: SankeyNodeDatumInterface | SankeyLinkDatumInterface, i?: number, ...any) => string);
 }
 
 export class SankeyConfig<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> extends ComponentConfig implements SankeyConfigInterface<N, L> {
   nodeWidth = 25
-  nodePadding = 2
+  nodePadding = 25
   showSingleNode = true
   forceShowLabels = false
   labelTextSeparator = [' ', '-']
@@ -60,4 +64,7 @@ export class SankeyConfig<N extends SankeyNodeDatumInterface, L extends SankeyLi
   nodeIcon = null
   iconColor = null
   labelWidth = 70
+  heightNormalizationCoeff = 1 / 16
+  // eslint-disable-next-line dot-notation
+  id = (d: SankeyNodeDatumInterface | SankeyLinkDatumInterface, i: number): string => (d['id'] ?? i).toString()
 }

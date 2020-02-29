@@ -10,7 +10,7 @@ import { GraphDataModel } from 'data-models/graph'
 import { Spacing } from 'types/misc'
 
 // Utils
-import { getValue } from 'utils/data'
+import { getValue, clamp, isNumber } from 'utils/data'
 
 // Config
 import { SankeyConfig, SankeyConfigInterface } from './config'
@@ -50,36 +50,43 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
   }
 
   _render (customDuration?: number): void {
-    const { bleed, config: { showSingleNode }, datamodel } = this
+    const { config, bleed, datamodel: { nodes, links } } = this
+    const duration = isNumber(customDuration) ? customDuration : config.duration
+    if (nodes.length === 0) return
+    if (nodes.length === 1 && links.length > 0) return
+    if (nodes.length === 1 && !config.showSingleNode) return
+    if (nodes.length > 1 && links.length === 0) return
+
     this._prepareLayout()
-    const nodes = datamodel.nodes.length === 1 && !showSingleNode ? [] : datamodel.nodes
-    const links = this.datamodel.links
+
+    const sankeyHeight = this._getSankeyHeight()
+    const translateY = (config.height - sankeyHeight) / 2
+
     // Links
-    this._linksGroup.attr('transform', `translate(${bleed.left},${bleed.top})`)
-    const svgLinks = this._linksGroup.selectAll(`.${s.link}`).data(links)
-    svgLinks.call(removeLinks)
-    const linkGrpoupEnter = svgLinks.enter().append('g').attr('class', s.link)
-    linkGrpoupEnter.call(createLinks)
-    svgLinks.merge(linkGrpoupEnter).call(updateLinks, this.config)
+    this._linksGroup.attr('transform', `translate(${bleed.left},${bleed.top + translateY})`)
+    const linkSelection = this._linksGroup.selectAll(`.${s.link}`).data(links, config.id)
+    const linkSelectionEnter = linkSelection.enter().append('g').attr('class', s.link)
+    linkSelectionEnter.call(createLinks)
+    linkSelection.merge(linkSelectionEnter).call(updateLinks, config, duration)
+    linkSelection.exit().call(removeLinks, duration)
 
     // Nodes
-    this._nodesGroup.attr('transform', `translate(${bleed.left},${bleed.top})`)
-    const svgNodes = this._nodesGroup.selectAll(`.${s.node}`).data(nodes)
-    svgNodes.call(removeNodes)
-    const svgNodesEnter = svgNodes.enter().append('g').attr('class', s.node)
-    svgNodesEnter.call(createNodes, this.config)
-    svgNodes.merge(svgNodesEnter).call(updateNodes, this.config, this._sankey)
+    this._nodesGroup.attr('transform', `translate(${bleed.left},${bleed.top + translateY})`)
+    const nodeSelection = this._nodesGroup.selectAll(`.${s.node}`).data(nodes, config.id)
+    const nodeSelectionEnter = nodeSelection.enter().append('g').attr('class', s.node)
+    nodeSelectionEnter.call(createNodes, this.config, bleed)
+    nodeSelection.merge(nodeSelectionEnter).call(updateNodes, config, bleed, duration)
+    nodeSelection.exit().call(removeNodes, duration)
   }
 
-  _prepareLayout (): void {
-    const { config, bleed } = this
-    const nodes = this.datamodel.nodes
-    const links = this.datamodel.links
+  private _prepareLayout (): void {
+    const { config, bleed, datamodel: { nodes, links } } = this
     links.forEach(link => {
       // For d3 sankey function each link must be an object with the `value` property
       link.value = getValue(link, d => getValue(d, config.linkValue))
     })
 
+    const sankeyHeight = this._getSankeyHeight()
     this._sankey
       .nodeSort((node2, node1) => {
         if (node1.targetLinks.length === 1 && node2.targetLinks.length === 1 && node1.sourceLinks.length === 0 && node2.sourceLinks.length === 0) {
@@ -99,7 +106,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
       })
       .nodeWidth(config.nodeWidth)
       .nodePadding(config.nodePadding)
-      .size([config.width - bleed.left - bleed.right, config.height - bleed.top - bleed.bottom])
+      .size([config.width - bleed.left - bleed.right, sankeyHeight - bleed.top - bleed.bottom])
       .nodeId(d => d.id)
       .iterations(32)
 
@@ -110,7 +117,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
       node.x0 = 0
       node.x1 = 0
       node.y0 = 0
-      node.y1 = config.height
+      node.y1 = sankeyHeight
     }
 
     // Fix node dimmensions if they are too small.
@@ -121,6 +128,12 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
         node.y1 = node.y0 + 1
       }
     })
+  }
+
+  private _getSankeyHeight (): number {
+    const { config, datamodel: { links } } = this
+
+    return clamp(config.height * links.length * config.heightNormalizationCoeff, config.height / 2, config.height)
   }
 
   _onNodeMouseOver (d, i, els): void {
