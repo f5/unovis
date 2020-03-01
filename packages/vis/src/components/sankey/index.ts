@@ -52,10 +52,15 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
   _render (customDuration?: number): void {
     const { config, bleed, datamodel: { nodes, links } } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
-    if (nodes.length === 0) return
-    if (nodes.length === 1 && links.length > 0) return
-    if (nodes.length === 1 && !config.showSingleNode) return
-    if (nodes.length > 1 && links.length === 0) return
+    if (
+      (nodes.length === 0) ||
+      (nodes.length === 1 && links.length > 0) ||
+      (nodes.length === 1 && !config.showSingleNode) ||
+      (nodes.length > 1 && links.length === 0)
+    ) {
+      this._linksGroup.selectAll(`.${s.link}`).call(removeLinks, duration)
+      this._nodesGroup.selectAll(`.${s.node}`).call(removeNodes, duration)
+    }
 
     this._prepareLayout()
 
