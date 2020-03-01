@@ -101,16 +101,16 @@ export function calulateClusterIndex<Datum> (data: Datum[], config: LeafletMapCo
     map: (d): {} => {
       const pStatus = getValue(d, pointStatus)
       const shape = getValue(d, pointShape)
-      const result = { shape, sum: {} }
+      const result = { shape }
       Object.keys(statusMap).forEach(status => {
-        result.sum[status] = pStatus === status ? 1 : 0
+        result[`sum${status}`] = pStatus === status ? 1 : 0
       })
       return result
     },
     reduce: (accumulated, props): void => {
       accumulated.shape = accumulated.shape === props.shape ? accumulated.shape : PointShape.CIRCLE
       Object.keys(statusMap).forEach(status => {
-        accumulated.sum[status] += props.sum[status]
+        accumulated[`sum${status}`] += props[`sum${status}`]
       })
     },
   }).load(data.map(d => toGeoJSONPoint(d, pointLatitude, pointLongitude)))
@@ -184,7 +184,7 @@ export function findNodeAndClusterInPointsById (points: Point[], id: string): { 
 
 export function getDonutData (d: Point, statusMap: StatusMap): PieDatum[] {
   return Object.keys(statusMap).map(status => ({
-    value: d.properties.sum[status],
+    value: d.properties[`sum${status}`],
     status,
   }))
 }
