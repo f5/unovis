@@ -19,6 +19,7 @@ export class Collection implements OnInit {
   margin = { top: 10, bottom: 10, left: 10, right: 10 }
   dimensions: {}
   items = {}
+  itemValues: any[]
 
   options = {
     'Few Data Elements': 50,
@@ -48,6 +49,8 @@ export class Collection implements OnInit {
       return items
     }, {})
 
+    this.itemValues = Object.values(this.items)
+
     let interval = 0
     setInterval(() => {
       const item = this.items['No Data ↔︎ Data']
@@ -64,7 +67,7 @@ export class Collection implements OnInit {
   }
 
   getItems (): any[] {
-    return Object.values(this.items)
+    return this.itemValues
   }
 
   isSingle (): boolean {
