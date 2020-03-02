@@ -24,7 +24,7 @@ import { LeafletMapConfig, LeafletMapConfigInterface } from './config'
 import * as s from './style'
 
 // Modules
-import { setupMap } from './modules/map'
+import { setupMap, initialMapCenter, initialMapZoom } from './modules/map'
 import { createNodes, updateNodes, removeNodes } from './modules/node'
 import { createNodeSelectionRing, updateNodeSelectionRing } from './modules/selectionRing'
 import { createBackgroundNode, updateBackgroundNode } from './modules/clusterBackground'
@@ -111,6 +111,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
       .attr('class', s.clusterBackground)
       .call(createBackgroundNode)
 
+    this._map.leaflet.setView(initialMapCenter, initialMapZoom)
     if (data) this.setData(data)
   }
 
@@ -246,9 +247,9 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     this._clusterBackground.call(updateBackgroundNode, this._expandedCluster, config, this._map.leaflet, this._clusterBackgroundRadius)
     if (this._expandedCluster && config.clusterBackground) {
       const id = findIndex(pointData, d => d.cluster)
-      pointData.forEach((d, i) => (d._sortId = i < id ? 0 : 2))
+      pointData.forEach((d, i) => { d._sortId = i < id ? 0 : 2 })
       this._nodesGroup
-        .selectAll(`${s.gNode},${s.clusterBackground},${s.nodeSelectionRing}`)
+        .selectAll(`.${s.gNode}, .${s.clusterBackground}, .${s.nodeSelectionRing}`)
         .sort((a: Point, b: Point) => a._sortId - b._sortId)
     }
 

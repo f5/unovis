@@ -12,6 +12,9 @@ import { LeafletMapConfigInterface } from '../config'
 import { getTangramLayer } from '../renderer/tangram-layer'
 import { getMapboxglLayer, mapboxglWheelEventThrottled } from '../renderer/mapboxgl-layer'
 
+export const initialMapCenter: L.LatLngExpression = [36, 14]
+export const initialMapZoom = 1.9
+
 export function setupMap<T> (mapContainer: HTMLElement, config: LeafletMapConfigInterface<T>): { leaflet: L.Map; layer: L.Layer; svgOverlay: Selection<SVGElement, any, HTMLElement, any>; svgGroup: Selection<SVGGElement, any, SVGElement, any> } {
   const { renderer } = config
 
@@ -21,8 +24,8 @@ export function setupMap<T> (mapContainer: HTMLElement, config: LeafletMapConfig
     zoomDelta: 0.5,
     zoomSnap: 0,
     attributionControl: false,
-    center: [36, 14],
-    zoom: 1.9,
+    center: initialMapCenter,
+    zoom: initialMapZoom,
     minZoom: Math.sqrt(mapContainer.offsetWidth) / 17,
     maxZoom: 18,
     maxBounds: L.latLngBounds(
