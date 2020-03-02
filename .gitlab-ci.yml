@@ -6,10 +6,14 @@ variables:
   REGISTRY_SERVER: volterra.azurecr.io
   JENKINS_URL: https://jenkins-dev.volterra.us
   JENKINS_TOKENS: eeph1eitohZaeMew
+  AZURE_STORAGE_ACCOUNT: volterrasites
+  AZURE_STORAGE_IMAGE_TOKEN: '?sp=racwdl&st=2019-12-06T13:49:28Z&se=2030-12-07T13:49:00Z&sv=2019-02-02&sr=c&sig=Ol%2FYJ9k3OJDwWMrBIgJqmIrMyDZLN8pbwF%2F%2FX%2Fiw5a8%3D'
+  AZURE_STORAGE_TOKEN: '?sp=w&st=2019-05-06T10:33:00Z&se=2029-05-08T10:33:00Z&sv=2018-03-28&sig=mBVIJob9m8HfYyvCCr%2FJc7J6JfdUqPDJKC%2F%2Bq2QUB6Q%3D&sr=c'
 
 stages:
   - build
   - docker
+  - upload-templates
   - trigger
 
 build:
@@ -65,6 +69,30 @@ docker:
   only:
     - master
     - develop
+
+upload-templates:
+  tags: [kubernetes]
+  stage: upload-templates
+  only:
+    - develop
+    - master
+  image: tomkukral/buildah:0.6
+  before_script:
+    - podman login --username "${REGISTRY_USERNAME}" --password "${REGISTRY_PASSWORD}" "${REGISTRY_SERVER}"
+  script:
+    - cd deploy
+    - export IMAGE_DIGEST=$(skopeo inspect docker://${REGISTRY_IMAGE}:${CI_COMMIT_SHA} | grep Digest | awk '{print $2}'| sed 's/[\",]//g')
+    - |
+      if [ ! -z IMAGE_DIGEST ]; then
+        for manifest in k8s/*.y*ml*; do
+          echo "---" >> ${IMAGE_DIGEST}.yml.tmpl;
+          cat $manifest >> ${IMAGE_DIGEST}.yml.tmpl;
+        done
+        curl -f -v -X PUT -H "Content-Type: application/octet-stream" -H "x-ms-date: $(date -Ru | sed -e 's/\\+0000/GMT/' -e 's/UTC/GMT/')" -H "x-ms-version: 2018-03-28" -H "x-ms-blob-type: BlockBlob" --data-binary @${IMAGE_DIGEST}.yml.tmpl "https://${AZURE_STORAGE_ACCOUNT}.blob.core.windows.net/templates/volterra-vis/${IMAGE_DIGEST}.yml.tmpl${AZURE_STORAGE_TOKEN}"
+      else
+        echo "Image digest for ${REGISTRY_IMAGE}:${CI_COMMIT_SHA} cannot be obtained!"
+        exit 1
+      fi
 
 jenkins_develop:
   stage: trigger

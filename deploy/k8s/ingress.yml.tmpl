@@ -1,3 +1,4 @@
+{{- if not .vk8s }}
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
@@ -34,3 +35,4 @@ spec:
               servicePort: 80
 
 # vim: syntax=yaml
+{{- end }}

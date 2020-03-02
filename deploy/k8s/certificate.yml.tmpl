@@ -1,3 +1,4 @@
+{{- if not .vk8s }}
 {{- if .vis_ssl_static }}
 {{- else }}
 {{- if and .vis_host .vis_ssl }}
@@ -19,5 +20,6 @@ spec:
       - http01:
           ingressClass: nginx
         domains: *names
+{{- end }}
 {{- end }}
 {{- end }}
