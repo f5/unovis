@@ -1,6 +1,8 @@
+{{- if not .vk8s }}
 apiVersion: v1
 kind: Namespace
 metadata:
   name: {{ if .vis_namespace }}{{ .vis_namespace }}{{ else }}{{ if .namespace }}{{ .namespace }}{{ else }}vis{{ end }}{{ end }}
 
 # vim: syntax=yaml
+{{- end }}

@@ -3,6 +3,8 @@ kind: Deployment
 metadata:
   name: {{ default "vis" .vis_app_name }}
   namespace: {{ if .vis_namespace }}{{ .vis_namespace }}{{ else }}{{ if .namespace }}{{ .namespace }}{{ else }}vis{{ end }}{{ end }}
+  annotations:
+    ves.io/workload-flavor: {{ default "medium" .vis_workload_flavor }}
 spec:
   replicas: {{ if .vis_replicas }}{{ .vis_replicas }}{{ else }}1{{ end }}
   selector:
