@@ -50,7 +50,7 @@ export interface SankeyConfigInterface<N extends SankeyNodeDatumInterface, L ext
 
 export class SankeyConfig<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> extends ComponentConfig implements SankeyConfigInterface<N, L> {
   nodeWidth = 25
-  nodePadding = 25
+  nodePadding = 2
   showSingleNode = true
   forceShowLabels = false
   labelTextSeparator = [' ', '-']
