@@ -66,5 +66,5 @@ export class SankeyConfig<N extends SankeyNodeDatumInterface, L extends SankeyLi
   labelWidth = 70
   heightNormalizationCoeff = 1 / 16
   // eslint-disable-next-line dot-notation
-  id = (d: SankeyNodeDatumInterface | SankeyLinkDatumInterface, i: number): string => (d['id'] ?? i).toString()
+  id = (d: SankeyNodeDatumInterface | SankeyLinkDatumInterface, i: number): string => (d['_id'] ?? i).toString()
 }
