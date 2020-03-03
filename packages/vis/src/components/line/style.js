@@ -5,4 +5,8 @@ export const line = css`
   label: line;
   fill: none;
   stroke: var(--vis-color-main);
+
+  &:hover {
+    filter: var(--highlight-filter-id);
+  }
 `

@@ -17,5 +17,6 @@ export const variables = injectGlobal`
 
     --vis-legend-label-color: #333;
     --vis-legend-bullet-inactive-color: #eee;
+    --highlight-filter-id: url(#saturate);
   }
 `

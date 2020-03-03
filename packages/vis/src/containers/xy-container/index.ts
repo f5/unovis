@@ -47,6 +47,7 @@ export type XYConfigInterface<Datum> = XYComponentConfigInterface<Datum>
 export class XYContainer<Datum> extends ContainerCore {
   config: XYContainerConfig<Datum> = new XYContainerConfig()
   datamodel: SeriesDataModel<Datum> = new SeriesDataModel()
+  private _svgDefs: Selection<SVGDefsElement, object[], SVGGElement, object[]>
   private _clipPath: Selection<SVGGElement, object[], SVGGElement, object[]>
   private _clipPathId = guid()
 
@@ -56,6 +57,12 @@ export class XYContainer<Datum> extends ContainerCore {
     this._clipPath = this.svg.append('clipPath')
       .attr('id', this._clipPathId)
     this._clipPath.append('rect')
+
+    this._svgDefs = this.svg.append('defs')
+    this._svgDefs.append('filter')
+      .attr('id', 'saturate')
+      .attr('filterUnits', 'objectBoundingBox')
+      .html('<feColorMatrix type="saturate" in="SourceGraphic" values="1.35"/>')
 
     if (config) {
       this.updateContainer(config)
@@ -127,6 +134,9 @@ export class XYContainer<Datum> extends ContainerCore {
 
     // Clipping path
     this.element.appendChild(this._clipPath.node())
+
+    // Defs
+    this.element.appendChild(this._svgDefs.node())
 
     // Rendering
     if (!preventRender) this.render()
