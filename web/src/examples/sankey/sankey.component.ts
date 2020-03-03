@@ -12,8 +12,8 @@ function sampleSankeyData (n: number) {
   const sources = _times(n).map((d) => `RE${d+1}`)
   const targets = ['Site', 'VN selector', 'Endpoint 1', 'Endpoint 2', 'Endpoint 3']
   const vhost = ['Balancer']
-
-  return sankeySampleData (n, sources, vhost, targets)
+  const result = sankeySampleData (n, sources, vhost, targets)
+  return n === 1 ? { nodes: [result.nodes[0]], links: [] } : result
 }
 
 function getSankeyConfig () {

@@ -41,8 +41,6 @@ export const link = css`
 
 export const visibleLink = css`
   label: visible;
-
-  stroke-width: 1;
 `
 
 export const transparentLink = css`
