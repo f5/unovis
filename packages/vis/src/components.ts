@@ -2,6 +2,7 @@
 import { Tooltip } from 'core/tooltip'
 import { Line } from './components/line'
 import { StackedBar } from './components/stacked-bar'
+import { GroupedBar } from './components/grouped-bar'
 import { Axis } from './components/axis'
 import { Scatter } from './components/scatter'
 import { Brush } from './components/brush'
@@ -16,6 +17,7 @@ import { LeafletMap } from './components/leaflet-map'
 
 import { LineConfigInterface } from './components/line/config'
 import { StackedBarConfigInterface } from './components/stacked-bar/config'
+import { GroupedBarConfigInterface } from './components/grouped-bar/config'
 import { ScatterConfigInterface } from './components/scatter/config'
 import { TooltipConfigInterface } from './core/tooltip/config'
 import { BrushConfigInterface } from './components/brush/config'
@@ -36,6 +38,8 @@ export {
   LineConfigInterface,
   StackedBar,
   StackedBarConfigInterface,
+  GroupedBar,
+  GroupedBarConfigInterface,
   Scatter,
   ScatterConfigInterface,
   Tooltip,

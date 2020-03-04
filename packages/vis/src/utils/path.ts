@@ -10,14 +10,14 @@ import { line, curveCardinal, curveCardinalClosed } from 'd3-shape'
  * @param {Number} props.y - Rect top left Y coordinate
  * @param {Number} props.w - Rect width
  * @param {Number} props.h - Rect height
- * @param {Bool} [props.tl=undefined] - Round top left corner
- * @param {Bool} [props.tr=undefined] - Round top right corner
- * @param {Bool} [props.bl=undefined] - Round bottom left corner
- * @param {Bool} [props.br=undefined] - Round bottom right corner
+ * @param {Bool} [props.tl=false] - Round top left corner
+ * @param {Bool} [props.tr=false] - Round top right corner
+ * @param {Bool} [props.bl=false] - Round bottom left corner
+ * @param {Bool} [props.br=false] - Round bottom right corner
  * @param {Number} [props.r=0] - Corner Radius
  * @return {String} Path string for the `d` attribute
  */
-export function roundedRectPath ({ x, y, w, h, tl, tr, bl, br, r = 0 }) {
+export function roundedRectPath ({ x, y, w, h, tl = false, tr = false, bl = false, br = false, r = 0 }) {
   let path
   path = `M${x + r},${y}h${w - 2 * r}`
 
