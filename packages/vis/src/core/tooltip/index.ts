@@ -90,9 +90,9 @@ export class Tooltip<T extends ComponentCore<any>, TooltipDatum> {
         : -margin
 
     // Constraint to container
-    const paddingX = 2
-    const constraintX = pos.x > (containerWidth - width - dx) ? (containerWidth - width - dx) - pos.x - paddingX
-      : pos.x < -dx ? -dx - pos.x + paddingX : 0
+    const paddingX = 10
+    const constraintX = pos.x > (containerWidth - width - dx - paddingX) ? (containerWidth - width - dx) - pos.x - paddingX
+      : pos.x < -dx + paddingX ? -dx - pos.x + paddingX : 0
 
     const paddingY = 10
     const constraintY = pos.y > (containerHeight - dy - paddingY) ? containerHeight - dy - pos.y - paddingY
