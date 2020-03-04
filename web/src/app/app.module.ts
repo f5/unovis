@@ -7,6 +7,7 @@ import { RouterModule, Routes } from '@angular/router'
 import { ScatterComponent } from 'examples/scatter/scatter.component'
 import { LineComponent } from 'examples/line/line.component'
 import { StackedBarComponent } from 'examples/stacked-bar/stacked-bar.component'
+import { GroupedBarComponent } from 'examples/grouped-bar/grouped-bar.component'
 import { AreaComponent } from 'examples/area/area.component'
 import { SankeyComponent } from 'examples/sankey/sankey.component'
 import { CompositeComponent } from 'examples/composite/composite.component'
@@ -28,6 +29,7 @@ const appRoutes: Routes = [
   { path: 'scatter', component: ScatterComponent },
   { path: 'line', component: LineComponent },
   { path: 'stacked-bar', component: StackedBarComponent },
+  { path: 'grouped-bar', component: GroupedBarComponent },
   { path: 'area', component: AreaComponent },
   { path: 'sankey', component: SankeyComponent },
   { path: 'composite', component: CompositeComponent },
@@ -46,6 +48,7 @@ appRoutes.push({ path: '', redirectTo: `/${appRoutes[0].path}`, pathMatch: 'full
     ScatterComponent,
     LineComponent,
     StackedBarComponent,
+    GroupedBarComponent,
     AreaComponent,
     CompositeComponent,
     BulletLegendComponent,
