@@ -39,12 +39,12 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum> {
   }
 
   _render (customDuration?: number): void {
-    const { config, datamodel: { data } } = this
+    const { config } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
     const groupWidth = this._getGroupWidth()
 
     const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
-    const innerBandScaleRange = (data.length < 2 ? [0, groupWidth] : [-groupWidth / 2, groupWidth / 2]) as [number, number]
+    const innerBandScaleRange = [-groupWidth / 2, groupWidth / 2] as [number, number]
     const innerBandScale = scaleBand<number>()
       .domain(range(yAccessors.length))
       .range(innerBandScaleRange)
