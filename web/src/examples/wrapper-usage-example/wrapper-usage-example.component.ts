@@ -3,7 +3,7 @@
 import { AfterViewInit, Component } from '@angular/core'
 
 // Vis
-import { Axis, StackedBar, Tooltip, Crosshair } from '@volterra/vis'
+import { Axis, GroupedBar, Tooltip, Crosshair } from '@volterra/vis'
 
 // Helpers
 import { sampleSeriesData, SampleDatum } from '../../utils/data'
@@ -18,26 +18,27 @@ export class WrapperUsageExampleComponent implements AfterViewInit {
   title = 'wrapper-usage-example'
 
   // Data
-  data: SampleDatum[] = sampleSeriesData(100)
+  data: SampleDatum[] = sampleSeriesData(25)
 
   // Chart configuration
-  stackedBarConfig = {
+  groupedBarConfig = {
     x: d => d.x,
     y: [
       d => d.y,
       d => d.y1,
     ],
+    id: d => d.index,
     barMaxWidth: 8,
-    roundedCorners: true,
+    roundedCorners: 2,
     events: {
-      [StackedBar.selectors.bar]: {
+      [GroupedBar.selectors.bar]: {
         click: d => { },
       },
     },
   }
-  stackedBar = new StackedBar<SampleDatum>(this.stackedBarConfig)
+  groupedBar = new GroupedBar<SampleDatum>(this.groupedBarConfig)
 
-  components = [this.stackedBar]
+  components = [this.groupedBar]
 
   margin = { top: 10, bottom: 10, left: 10, right: 10 }
 
@@ -50,12 +51,16 @@ export class WrapperUsageExampleComponent implements AfterViewInit {
 
   tooltip = new Tooltip({
     triggers: {
-      [StackedBar.selectors.bar]: (d) => `<span>Bar Chart</span>`,
+      [GroupedBar.selectors.bar]: (d) => {console.log(d)},
     },
   })
 
-  crosshair = new Crosshair({
-    template: (d) => '<span>Crosshair</span>',
+  crosshair = new Crosshair<SampleDatum>({
+    template: (d) => `
+      <div>X: ${d.x}</div>
+      <div>Value 1: ${d.y.toFixed(2)}</div>
+      <div>Value 2: ${d.y1.toFixed(2)}</div>
+    `,
   })
 
   ngAfterViewInit (): void {
@@ -63,8 +68,8 @@ export class WrapperUsageExampleComponent implements AfterViewInit {
     setInterval(() => {
       // this.margin = { ...this.margin, top: 50 }
       this.data = sampleSeriesData(Math.floor(10 + 150*Math.random()))
-      this.stackedBarConfig.barMaxWidth = Math.random() * 20
-      this.stackedBarConfig = { ...this.stackedBarConfig } // Updating the object to trigger change detection
+      this.groupedBarConfig.barMaxWidth = Math.random() * 20
+      this.groupedBarConfig = { ...this.groupedBarConfig } // Updating the object to trigger change detection
     }, 5000)
   }
 
