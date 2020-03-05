@@ -68,6 +68,9 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum> {
     smartTransition(barGroups.exit(), duration)
       .style('opacity', 0)
       .remove()
+    // Animate exiting bars going down
+    smartTransition(barGroups.exit().selectAll(`.${s.bar}`), duration)
+      .attr('transform', `translate(0,${config.height / 3})`)
 
     const barWidth = innerBandScale.bandwidth()
     const bars = barGroupsMerged.selectAll(`.${s.bar}`)
