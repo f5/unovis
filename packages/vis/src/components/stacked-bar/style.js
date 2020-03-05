@@ -11,3 +11,7 @@ export const bar = css`
     fill-opacity: 1;
   }
 `
+
+export const barGroup = css`
+  label: barGroup;
+`

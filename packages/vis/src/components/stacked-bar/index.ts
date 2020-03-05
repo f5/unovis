@@ -1,13 +1,11 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { select } from 'd3-selection'
 import { min } from 'd3-array'
-import { interpolatePath } from 'd3-interpolate-path'
 
 // Core
 import { XYComponentCore } from 'core/xy-component'
 
 // Utils
-import { getValue, isNumber, isArray, isEmpty } from 'utils/data'
+import { getValue, isNumber, isArray, isEmpty, clamp } from 'utils/data'
 import { roundedRectPath } from 'utils/path'
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
@@ -39,7 +37,7 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
     if (config) this.config.init(config)
   }
 
-  // setData (data: any): void {
+  // setData (data): void {
   //   super.setData(data)
   // }
 
@@ -49,151 +47,127 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
   }
 
   _render (customDuration?: number): void {
-    const { config } = this
+    const { config, datamodel } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
+    const barWidth = this._getBarWidth()
+    const visibleData = this._getVisibleData()
 
-    const start = config.scales.y.range()[0]
+    const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
+    const stackedValues = visibleData.map(d => datamodel.getStackedValues(d, ...yAccessors))
 
     const barGroups = this.g
-      .selectAll(`.${s.bar}`)
-      .data(this._prepareData(), d => d.id)
+      .selectAll(`.${s.barGroup}`)
+      .data(visibleData, (d, i) => `${getValue(d, config.id) ?? i}`)
 
-    const barGroupsEnter = barGroups.enter().append('path')
-      .attr('class', s.bar)
-      .attr('d', d => roundedRectPath(
-        config.isVertical ? { ...d, y: start, h: 0 } : { ...d, x: start, w: 0 }
-      ))
+    const barGroupsEnter = barGroups.enter().append('g')
+      .attr('class', s.barGroup)
+      .attr('transform', d => `translate(${config.scales.x(getValue(d, config.x))}, 0)`)
+      .style('opacity', 1)
 
     const barGroupsMerged = barGroupsEnter.merge(barGroups)
-      .style('fill', d => d.color)
-
-    if (duration) {
-      barGroupsMerged
-        .transition()
-        .duration(duration)
-        .style('opacity', 1)
-        .attrTween('d', (d, i, el) => {
-          const previous = select(el[i]).attr('d')
-          const next = roundedRectPath(d)
-          return interpolatePath(previous, next)
-        })
-    } else {
-      barGroupsMerged.attr('d', roundedRectPath).style('opacity', 1)
-    }
+    smartTransition(barGroupsMerged, duration)
+      .attr('transform', d => `translate(${config.scales.x(getValue(d, config.x))}, 0)`)
 
     smartTransition(barGroups.exit(), duration)
       .style('opacity', 0)
+      .remove()
+    // Animate exiting bars going down
+    smartTransition(barGroups.exit().selectAll(`.${s.bar}`), duration)
       .attr('transform', `translate(0,${config.height / 3})`)
+
+    const bars = barGroupsMerged.selectAll(`.${s.bar}`)
+      .data((d, i) => yAccessors.map(() => ({ ...d, _stacked: stackedValues[i] })))
+
+    const barsEnter = bars.enter().append('path')
+      .attr('class', s.bar)
+      .attr('d', (d, i) => {
+        const x = -barWidth / 2
+        const y = config.scales.y(0)
+        const width = barWidth
+        const height = 0
+        const rounded = i === d._stacked.length - 1
+        return this._getBarPath(x, y, width, height, rounded)
+      })
+      .style('fill', (d, i) => getColor(d, config.color, i))
+
+    const barsMerged = barsEnter.merge(bars)
+
+    smartTransition(barsMerged, duration)
+      .attr('d', (d, i) => {
+        const x = -barWidth / 2
+        const y = config.scales.y(d._stacked[i])
+        const width = barWidth
+        const height = config.height - config.scales.y(d._stacked[i] - (d._stacked[i - 1] ?? 0))
+        const rounded = i === d._stacked.length - 1
+        return this._getBarPath(x, y, width, height, rounded)
+      })
+      .style('fill', (d, i) => getColor(d, config.color, i))
+
+    smartTransition(bars.exit(), duration)
       .remove()
   }
 
-  _prepareData (): any[] {
-    const { config, datamodel: { data } } = this
-    const isVertical = config.isVertical
-
-    const start = 0
-    const flatData = []
-    const barWidth = this._getBarWidth()
-    const halfBarWidth = data.length < 2 ? 0 : barWidth / 2
-
-    const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
-    const xScale = config.scales.x
-    const xHalfBarWidth = Math.abs((xScale.invert(halfBarWidth) as number) - (xScale.invert(0) as number))
-    const filtered = data?.filter(d => {
-      const v = getValue(d, config.x)
-      const xDomain = xScale.domain() as number[]
-      return (v >= (xDomain[0] - xHalfBarWidth)) && (v <= (xDomain[1] + xHalfBarWidth))
-    })
-
-    filtered?.forEach((d, index) => {
-      const x = getValue(d, config.x)
-      let stackedValue = start
-
-      // Y coordinate to stack next bar to
-      yAccessors?.forEach((accessor, i) => {
-        const y = getValue(d, accessor) || 0
-        const isLastValue = i === yAccessors.length - 1
-        const lastBars = yAccessors.slice(i + 1, yAccessors.length)
-        const lastBarsValue = lastBars
-          .map(a => getValue(d, a) ?? 0)
-          .reduce((sum, value) => sum + value, 0)
-
-        let size
-        if (isVertical) {
-          const h = config.scales.y(start) - config.scales.y(y + (stackedValue === start ? 0 : start))
-          let deltaY = 0
-          if (h === 0) deltaY = lastBarsValue === 0 && i !== 0 ? 0 : 1
-          size = {
-            x: config.scales.x(x) - halfBarWidth,
-            y: config.scales.y(y - start + stackedValue) - deltaY,
-            w: barWidth,
-            h: h + deltaY,
-          }
-        } else {
-          const w = config.scales.y(start) + config.scales.y(y + (stackedValue === start ? 0 : start))
-          let deltaX = 0
-          if (w === 0) deltaX = lastBarsValue === 0 && i !== 0 ? 0 : 1
-          size = {
-            x: config.scales.y(stackedValue - (stackedValue === start ? 0 : start)),
-            y: config.scales.x(x) - halfBarWidth,
-            w: w + deltaX,
-            h: barWidth,
-          }
-        }
-
-        const id = getValue(d, config.id)
-        const obj = {
-          id: `${accessor?.toString()} ${id || index}`,
-          ...size,
-          ...{
-            color: getColor(d, config.color, i),
-            data: d,
-          },
-        }
-
-        const roundedCorners = config.roundedCorners
-        if (roundedCorners && (isLastValue || lastBarsValue === 0)) {
-          const r = isNumber(roundedCorners) ? roundedCorners : halfBarWidth
-          const minRectDimHalf = Math.min(obj.h, obj.w) / 2
-          if (this.config.isVertical) {
-            obj.tl = true
-            obj.tr = true
-          } else {
-            obj.br = true
-            obj.tr = true
-          }
-          obj.r = r > minRectDimHalf ? minRectDimHalf : r
-        }
-
-        stackedValue += y
-        flatData.push(obj)
-      })
-    })
-
-    return flatData
-  }
-
   _getBarWidth (): number {
-    const { config: { scales, barWidth, barMaxWidth, expectedDataStep, isVertical, barPadding, x, width, height }, datamodel: { data } } = this
+    const { config, datamodel: { data } } = this
     if (isEmpty(data)) return 0
-    if (barWidth) return min([barWidth, barMaxWidth])
+    if (config.barWidth) return min([config.barWidth, config.barMaxWidth])
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
     // @ts-ignore
-    const isOrdinal = scales.x.bandwidth
-    const xDomain = (scales.x.domain ? scales.x.domain() : []) as number[]
+    const isOrdinal = config.scales.x.bandwidth
+    const xDomain = (config.scales.x.domain ? config.scales.x.domain() : []) as number[]
     const xDomainLength = isOrdinal ? xDomain.length : xDomain[1] - xDomain[0]
 
-    const dataSize = xDomainLength / expectedDataStep ||
+    // If the dataStep property is provided the amount of data elements is calculates as domainLength / dataStep
+    //   othwerise we get the number of data elements within the domain range
+    // Or if the scale is ordinal we use data.length
+    const dataSize = xDomainLength / config.expectedDataStep ||
         (!isOrdinal && data.filter(d => {
-          const value = getValue(d, x)
+          const value = getValue(d, config.x)
           return (value >= xDomain[0]) && (value <= xDomain[1])
         }).length) ||
         data.length
-    const dimension = isVertical ? width : height
-    const c = dataSize < 2 ? 1 : 1 - barPadding
 
-    return min([c * dimension / dataSize, barMaxWidth])
+    const c = dataSize < 2 ? 1 : 1 - config.barPadding
+    const barWidth = c * (config.isVertical ? config.width : config.height) / dataSize
+
+    return min([barWidth, config.barMaxWidth])
+  }
+
+  _getVisibleData (): Datum[] {
+    const { config, datamodel: { data } } = this
+
+    const groupWidth = this._getBarWidth()
+    const halfGroupWidth = data.length < 2 ? 0 : groupWidth / 2
+
+    const xScale = config.scales.x
+    const xHalfGroupWidth = Math.abs((xScale.invert(halfGroupWidth) as number) - (xScale.invert(0) as number))
+    const filtered = data?.filter(d => {
+      const v = getValue(d, config.x)
+      const xDomain = xScale.domain() as number[]
+      return (v >= (xDomain[0] - xHalfGroupWidth)) && (v <= (xDomain[1] + xHalfGroupWidth))
+    })
+
+    return filtered
+  }
+
+  _getBarPath (x, y, width, height, rounded): string {
+    const { config } = this
+
+    const cornerRadius = config.roundedCorners
+      ? isNumber(config.roundedCorners) ? +config.roundedCorners : width / 2
+      : 0
+    const cornerRadiusClamped = clamp(cornerRadius, 0, Math.min(height, width) / 2)
+
+    return roundedRectPath({
+      x,
+      y,
+      w: width,
+      h: height,
+      tl: rounded,
+      tr: rounded,
+      r: cornerRadiusClamped,
+    })
   }
 
   getYDataExtent (): number[] {
