@@ -121,7 +121,7 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
     // If the dataStep property is provided the amount of data elements is calculates as domainLength / dataStep
     //   othwerise we get the number of data elements within the domain range
     // Or if the scale is ordinal we use data.length
-    const dataSize = xDomainLength / config.expectedDataStep ||
+    const dataSize = xDomainLength / config.dataStep ||
         (!isOrdinal && data.filter(d => {
           const value = getValue(d, config.x)
           return (value >= xDomain[0]) && (value <= xDomain[1])
