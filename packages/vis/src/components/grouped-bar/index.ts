@@ -1,5 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { min } from 'd3-array'
+import { scaleBand } from 'd3-scale'
+import { min, range } from 'd3-array'
 
 // Core
 import { XYComponentCore } from 'core/xy-component'
@@ -14,47 +15,43 @@ import { getColor } from 'utils/color'
 import { NumericAccessor, Spacing } from 'types/misc'
 
 // Config
-import { StackedBarConfig, StackedBarConfigInterface } from './config'
+import { GroupedBarConfig, GroupedBarConfigInterface } from './config'
 
 // Styles
 import * as s from './style'
 
-export class StackedBar<Datum> extends XYComponentCore<Datum> {
+export class GroupedBar<Datum> extends XYComponentCore<Datum> {
   static selectors = s
-  config: StackedBarConfig<Datum> = new StackedBarConfig()
-  stacked = true
-  // linePath: Selection<SVGGElement, object[], SVGGElement, object[]>
+  config: GroupedBarConfig<Datum> = new GroupedBarConfig()
   events = {
-    [StackedBar.selectors.bar]: {
-      mousemove: this._onEvent,
-      mouseover: this._onEvent,
-      mouseleave: this._onEvent,
+    [GroupedBar.selectors.bar]: {
     },
   }
 
-  constructor (config?: StackedBarConfigInterface<Datum>) {
+  constructor (config?: GroupedBarConfigInterface<Datum>) {
     super()
     if (config) this.config.init(config)
   }
 
-  // setData (data): void {
-  //   super.setData(data)
-  // }
-
   get bleed (): Spacing {
-    const barWidth = this._getBarWidth()
+    const barWidth = this._getGroupWidth()
     return { top: 0, bottom: 0, left: barWidth / 2, right: barWidth / 2 }
   }
 
   _render (customDuration?: number): void {
-    const { config, datamodel } = this
+    const { config } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
-    const barWidth = this._getBarWidth()
-    const visibleData = this._getVisibleData()
+    const groupWidth = this._getGroupWidth()
 
     const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
-    const stackedValues = visibleData.map(d => datamodel.getStackedValues(d, ...yAccessors))
+    const innerBandScaleRange = [-groupWidth / 2, groupWidth / 2] as [number, number]
+    const innerBandScale = scaleBand<number>()
+      .domain(range(yAccessors.length))
+      .range(innerBandScaleRange)
+      .paddingInner(config.barPadding)
+      .paddingOuter(config.barPadding)
 
+    const visibleData = this._getVisibleData()
     const barGroups = this.g
       .selectAll(`.${s.barGroup}`)
       .data(visibleData, (d, i) => `${getValue(d, config.id) ?? i}`)
@@ -75,18 +72,18 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
     smartTransition(barGroups.exit().selectAll(`.${s.bar}`), duration)
       .attr('transform', `translate(0,${config.height / 3})`)
 
+    const barWidth = innerBandScale.bandwidth()
     const bars = barGroupsMerged.selectAll(`.${s.bar}`)
-      .data((d, i) => yAccessors.map(() => ({ ...d, _stacked: stackedValues[i] })))
+      .data(d => yAccessors.map(() => d))
 
     const barsEnter = bars.enter().append('path')
       .attr('class', s.bar)
       .attr('d', (d, i) => {
-        const x = -barWidth / 2
+        const x = innerBandScale(i)
         const y = config.scales.y(0)
         const width = barWidth
         const height = 0
-        const rounded = i === d._stacked.length - 1
-        return this._getBarPath(x, y, width, height, rounded)
+        return this._getBarPath(x, y, width, height)
       })
       .style('fill', (d, i) => getColor(d, config.color, i))
 
@@ -94,12 +91,11 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
 
     smartTransition(barsMerged, duration)
       .attr('d', (d, i) => {
-        const x = -barWidth / 2
-        const y = config.scales.y(d._stacked[i])
+        const x = innerBandScale(i)
+        const y = config.scales.y(getValue(d, yAccessors[i]))
         const width = barWidth
-        const height = config.height - config.scales.y(d._stacked[i] - (d._stacked[i - 1] ?? 0))
-        const rounded = i === d._stacked.length - 1
-        return this._getBarPath(x, y, width, height, rounded)
+        const height = config.height - config.scales.y(getValue(d, yAccessors[i]))
+        return this._getBarPath(x, y, width, height)
       })
       .style('fill', (d, i) => getColor(d, config.color, i))
 
@@ -107,10 +103,46 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
       .remove()
   }
 
-  _getBarWidth (): number {
+  _getVisibleData (): Datum[] {
+    const { config, datamodel: { data } } = this
+
+    const groupWidth = this._getGroupWidth()
+    const halfGroupWidth = data.length < 2 ? 0 : groupWidth / 2
+
+    const xScale = config.scales.x
+    const xHalfGroupWidth = Math.abs((xScale.invert(halfGroupWidth) as number) - (xScale.invert(0) as number))
+    const filtered = data?.filter(d => {
+      const v = getValue(d, config.x)
+      const xDomain = xScale.domain() as number[]
+      return (v >= (xDomain[0] - xHalfGroupWidth)) && (v <= (xDomain[1] + xHalfGroupWidth))
+    })
+
+    return filtered
+  }
+
+  _getBarPath (x, y, width, height): string {
+    const { config } = this
+
+    const cornerRadius = config.roundedCorners
+      ? isNumber(config.roundedCorners) ? +config.roundedCorners : width / 2
+      : 0
+    const cornerRadiusClamped = clamp(cornerRadius, 0, Math.min(height, width) / 2)
+
+    return roundedRectPath({
+      x,
+      y,
+      w: width,
+      h: height,
+      tl: true,
+      tr: true,
+      r: cornerRadiusClamped,
+    })
+  }
+
+  _getGroupWidth (): number {
     const { config, datamodel: { data } } = this
     if (isEmpty(data)) return 0
-    if (config.barWidth) return min([config.barWidth, config.barMaxWidth])
+    if (config.groupWidth) return min([config.groupWidth, config.groupMaxWidth])
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
     // @ts-ignore
@@ -128,51 +160,17 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
         }).length) ||
         data.length
 
-    const c = dataSize < 2 ? 1 : 1 - config.barPadding
-    const barWidth = c * (config.isVertical ? config.width : config.height) / dataSize
+    const c = dataSize < 2 ? 1 : 1 - config.groupPadding
+    const groupWidth = c * (config.isVertical ? config.width : config.height) / dataSize
 
-    return min([barWidth, config.barMaxWidth])
-  }
-
-  _getVisibleData (): Datum[] {
-    const { config, datamodel: { data } } = this
-
-    const groupWidth = this._getBarWidth()
-    const halfGroupWidth = data.length < 2 ? 0 : groupWidth / 2
-
-    const xScale = config.scales.x
-    const xHalfGroupWidth = Math.abs((xScale.invert(halfGroupWidth) as number) - (xScale.invert(0) as number))
-    const filtered = data?.filter(d => {
-      const v = getValue(d, config.x)
-      const xDomain = xScale.domain() as number[]
-      return (v >= (xDomain[0] - xHalfGroupWidth)) && (v <= (xDomain[1] + xHalfGroupWidth))
-    })
-
-    return filtered
-  }
-
-  _getBarPath (x, y, width, height, rounded): string {
-    const { config } = this
-
-    const cornerRadius = config.roundedCorners
-      ? isNumber(config.roundedCorners) ? +config.roundedCorners : width / 2
-      : 0
-    const cornerRadiusClamped = clamp(cornerRadius, 0, Math.min(height, width) / 2)
-
-    return roundedRectPath({
-      x,
-      y,
-      w: width,
-      h: height,
-      tl: rounded,
-      tr: rounded,
-      r: cornerRadiusClamped,
-    })
+    return min([groupWidth, config.groupMaxWidth])
   }
 
   getYDataExtent (): number[] {
     const { config, datamodel } = this
     const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
-    return datamodel.getStackedExtent(...yAccessors)
+    const min = datamodel.getMin(...yAccessors)
+    const max = datamodel.getMax(...yAccessors)
+    return [min > 0 ? 0 : min, max < 0 ? 0 : max]
   }
 }
