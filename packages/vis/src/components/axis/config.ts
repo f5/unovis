@@ -10,7 +10,7 @@ import { Spacing } from 'types/misc'
 
 export interface AxisConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
     /** Axis position: top, bottom, right or left */
-    position?: Position;
+    position?: Position | string;
     /** Axis type: x or y */
     type?: AxisType;
     /** Axis label */
@@ -45,6 +45,7 @@ export interface AxisConfigInterface<Datum> extends XYComponentConfigInterface<D
     tickTextTrimType?: TrimMode;
     /**  */
     tickTextFitMode?: FitMode;
+    labelMargin?: number;
     padding?: Spacing;
     offset?: Spacing;
     fullSize?: boolean;
@@ -81,6 +82,7 @@ export class AxisConfig<Datum> extends XYComponentConfig<Datum> implements AxisC
     right: 0,
   }
 
+  labelMargin = 8
   tickFormat = null
   tickValues = null
   fullSize = true

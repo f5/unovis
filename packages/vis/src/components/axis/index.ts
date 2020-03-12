@@ -213,7 +213,7 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
   }
 
   _renderAxisLabel (): void {
-    const { type, label, width, height } = this.config
+    const { type, label, width, height, labelMargin } = this.config
 
     const axisPosition = this.getPosition()
     const { width: axisWidth, height: axisHeight } = this.axisGroup.node().getBBox()
@@ -229,11 +229,15 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
 
     const offsetX = type === AxisType.X ? width / 2 : (-1) ** (+(axisPosition === Position.LEFT)) * axisWidth
     const offsetY = type === AxisType.X ? (-1) ** (+(axisPosition === Position.TOP)) * axisHeight : height / 2
+
+    const marginX = type === AxisType.X ? 0 : (-1) ** (+(axisPosition === Position.LEFT)) * labelMargin
+    const marginY = type === AxisType.X ? (-1) ** (+(axisPosition === Position.TOP)) * labelMargin : 0
+
     const rotation = type === AxisType.Y ? -90 : 0
 
     labelMerged.text(d => d)
       .classed(axisPosition, true)
-      .attr('transform', `translate(${offsetX},${offsetY}) rotate(${rotation})`)
+      .attr('transform', `translate(${offsetX + marginX},${offsetY + marginY}) rotate(${rotation})`)
   }
 
   _toggleTickFullText (tickElement, fullIsActive: boolean): void {
