@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "lerna run dev --stream",
     "build": "lerna run build",
+    "build:lib": "cd packages/vis && yarn build",
     "build:watch": "lerna run dev:parallel --stream --parallel",
     "test": "lerna run test --stream",
     "lint": "eslint \"web/**/*.ts\" \"packages/**/*.ts\" --ignore-path .gitignore",
