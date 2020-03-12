@@ -1,5 +1,15 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { css } from 'emotion'
+import { css, injectGlobal } from 'emotion'
+
+export const variables = injectGlobal`
+  :root {
+    --vis-legend-label-color: #333;
+    --vis-legend-label-max-width: 300px;
+    --vis-legend-label-font-size: 12pt;
+    --vis-legend-bullet-size: 10px;
+    --vis-legend-bullet-inactive-color: #eee;
+  }
+`
 
 export const item = css`
   label: legendItem;
@@ -16,11 +26,11 @@ export const item = css`
 
 export const label = css`
   label: legendItemLabel;
-  font-size: 12pt;
+  font-size: var(--vis-legend-label-font-size);
   display: inline-block;
   vertical-align: middle;
   color: var(--vis-legend-label-color);
-  max-width: 300px;
+  max-width: var(--vis-legend-label-max-width);
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
@@ -33,8 +43,8 @@ export const bullet = css`
   border: 1px solid;
   display: inline-block;
   margin-right: 10px;
-  width: 10px;
-  height: 10px;
+  width: var(--vis-legend-bullet-size);
+  height: var(--vis-legend-bullet-size);
   vertical-align: middle;
 
   .inactive {

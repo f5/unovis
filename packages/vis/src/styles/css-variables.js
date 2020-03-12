@@ -14,9 +14,7 @@ export const variables = injectGlobal`
     --vis-brush-selection-stroke: #acb2b9;
     --vis-brush-handle-fill: #a0a7c2;
     --vis-brush-handle-stroke: #dddddd;
-
-    --vis-legend-label-color: #333;
-    --vis-legend-bullet-inactive-color: #eee;
+  
     --highlight-filter-id: url(#saturate);
   }
 `

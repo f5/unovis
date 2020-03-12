@@ -36,23 +36,27 @@ export class BulletLegend {
   }
 
   render (): void {
-    const { config: { items, labelClassName, onLegendItemClick } } = this
+    const { config } = this
 
     const legendItems = this.div.selectAll(`.${s.item}`)
-      .data(items) as Selection<HTMLDivElement, any, HTMLDivElement, any>
+      .data(config.items) as Selection<HTMLDivElement, any, HTMLDivElement, any>
 
     const legendItemsEnter = legendItems.enter()
       .append('div')
       .attr('class', s.item)
-      .classed('clickable', !!onLegendItemClick)
+      .classed('clickable', !!config.onLegendItemClick)
       .on('click', this._onItemClick.bind(this))
 
     legendItemsEnter.append('span')
       .attr('class', s.bullet)
+      .style('width', config.bulletSize)
+      .style('height', config.bulletSize)
 
     legendItemsEnter.append('span')
       .attr('class', s.label)
-      .classed(labelClassName, true)
+      .classed(config.labelClassName, true)
+      .style('max-width', config.labelMaxWidth)
+      .style('font-size', config.labelFontSize)
 
     const legendItemsMerged = legendItemsEnter.merge(legendItems)
 

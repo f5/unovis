@@ -18,10 +18,19 @@ export interface BulletLegendConfigInterface {
   labelClassName?: string;
   /** Callback function for a legend item click */
   onLegendItemClick?: ((d?: BulletLegendItemInterface, i?: number) => any);
+  /**  Label font size */
+  labelFontSize?: string;
+  /** Label text max width */
+  labelMaxWidth?: string;
+  /** Bullet circle size */
+  bulletSize?: string;
 }
 
 export class BulletLegendConfig extends Config implements BulletLegendConfigInterface {
   items: BulletLegendItemInterface[] = []
   labelClassName = ''
   onLegendItemClick = undefined;
+  labelFontSize = null;
+  labelMaxWidth = null;
+  bulletSize = null;
 }
