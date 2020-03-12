@@ -15,10 +15,12 @@ export interface AxisConfigInterface<Datum> extends XYComponentConfigInterface<D
     type?: AxisType;
     /** Axis label */
     label?: string;
-    /** Draw or not axis grid line */
+    /** Whether to draw the grid lines or not, default: true */
     gridLine?: boolean;
-    /** Draw or not axis tick lines */
+    /** Whether to draw the tick lines or not, default: true */
     tickLine?: boolean;
+    /** Whether to draw the domain line or not, default: true */
+    domainLine?: boolean;
     /** Draw minimum and maximum axis ticks only */
     minMaxTicksOnly?: boolean;
     /** Tick label formatter */
@@ -54,6 +56,7 @@ export class AxisConfig<Datum> extends XYComponentConfig<Datum> implements AxisC
   label = undefined
   gridLine = true
   tickLine = true
+  domainLine = true
   numTicks = undefined;
   minMaxTicksOnly = false
   showAllTicks = false

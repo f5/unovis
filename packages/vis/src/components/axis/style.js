@@ -22,7 +22,14 @@ export const axis = css`
       display: none;
     }
   }
+
+  &.hide-domain {
+    .domain {
+      display: none;
+    }
+  }
 `
+
 export const grid = css`
   label: grid;
   

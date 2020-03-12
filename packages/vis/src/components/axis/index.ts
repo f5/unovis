@@ -125,6 +125,7 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
     this.axisGroup
       .classed(s.axis, true)
       .classed('hide-tick-line', !config.tickLine)
+      .classed('hide-domain', !config.domainLine)
 
     this._updateTicks()
     this._renderAxisLabel()
