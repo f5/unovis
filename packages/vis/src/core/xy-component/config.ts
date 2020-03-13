@@ -23,7 +23,7 @@ export interface XYComponentConfigInterface<Datum> extends ComponentConfigInterf
   };
   events?: {
     [selector: string]: {
-      [eventName: string]: (data: {data: Datum}) => void;
+      [eventName: string]: (data: Datum) => void;
     };
   };
   // /** X scale type */
