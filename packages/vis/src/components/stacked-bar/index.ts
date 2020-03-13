@@ -97,7 +97,7 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
         const x = -barWidth / 2
         const y = config.scales.y(d._stacked[i])
         const width = barWidth
-        const height = config.height - config.scales.y(d._stacked[i] - (d._stacked[i - 1] ?? 0))
+        const height = config.scales.y(d._stacked[i - 1] ?? 0) - config.scales.y(d._stacked[i])
         const rounded = i === d._stacked.length - 1
         return this._getBarPath(x, y, width, height, rounded)
       })
