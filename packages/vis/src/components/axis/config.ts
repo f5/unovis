@@ -15,6 +15,8 @@ export interface AxisConfigInterface<Datum> extends XYComponentConfigInterface<D
     type?: AxisType;
     /** Axis label */
     label?: string;
+    /** Font size of the axis label */
+    labelFontSize?: string;
     /** Whether to draw the grid lines or not, default: true */
     gridLine?: boolean;
     /** Whether to draw the tick lines or not, default: true */
@@ -57,6 +59,7 @@ export class AxisConfig<Datum> extends XYComponentConfig<Datum> implements AxisC
   position = undefined
   type = undefined
   label = undefined
+  labelFontSize = null
   gridLine = true
   tickLine = true
   domainLine = true

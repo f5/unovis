@@ -7,7 +7,8 @@ export const global = injectGlobal`
     --vis-axis-tick-color: #a1a8c0;
     --vis-axis-grid-color: #a1a8c0;
     --vis-axis-label-color: #575c65;
-    --vis-axis-tick-label-font-size: 11px;
+    --vis-axis-tick-label-font-size: 9pt;
+    --vis-axis-label-font-size: 12pt;
   }
 `
 
@@ -67,6 +68,7 @@ export const tick = css`
 export const label = css`
   label: label;
   fill: var(--vis-axis-label-color);
+  font-size: var(--vis-axis-label-font-size);
   text-anchor: middle;
 
   &.right {

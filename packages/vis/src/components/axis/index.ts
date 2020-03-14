@@ -214,7 +214,7 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
   }
 
   _renderAxisLabel (): void {
-    const { type, label, width, height, labelMargin } = this.config
+    const { type, label, width, height, labelMargin, labelFontSize } = this.config
 
     const axisPosition = this.getPosition()
     const { width: axisWidth, height: axisHeight } = this.axisGroup.node().getBBox()
@@ -238,6 +238,7 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
 
     labelMerged.text(d => d)
       .classed(axisPosition, true)
+      .style('font-size', labelFontSize)
       .attr('transform', `translate(${offsetX + marginX},${offsetY + marginY}) rotate(${rotation})`)
   }
 
