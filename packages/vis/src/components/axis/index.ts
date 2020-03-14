@@ -120,6 +120,7 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
 
     ticks
       .classed(s.tick, true)
+      .style('font-size', config.tickLabelFontSize)
       .call(wrapTickText, getWrapOptions(ticks, config, this.autoWrapTickLabels))
 
     this.axisGroup

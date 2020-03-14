@@ -7,6 +7,7 @@ export const global = injectGlobal`
     --vis-axis-tick-color: #a1a8c0;
     --vis-axis-grid-color: #a1a8c0;
     --vis-axis-label-color: #575c65;
+    --vis-axis-tick-label-font-size: 11px;
   }
 `
 
@@ -46,7 +47,7 @@ export const grid = css`
 export const tick = css`
   label: tick;
   stroke: none;
-  font-size: 11px;
+  font-size: var(--vis-axis-tick-label-font-size);
 
   line {
     stroke: var(--vis-axis-tick-color);
