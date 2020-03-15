@@ -19,9 +19,10 @@ import { XYComponentConfigInterface } from 'core/xy-component/config'
 
 // Types
 import { AxisType } from 'types/axis'
+import { Spacing } from 'types/misc'
 
 // Utils
-import { clean, flatten } from 'utils/data'
+import { clean, flatten, clamp } from 'utils/data'
 import { guid } from 'utils/misc'
 
 // Config
@@ -50,6 +51,8 @@ export class XYContainer<Datum> extends ContainerCore {
   private _svgDefs: Selection<SVGDefsElement, object[], SVGGElement, object[]>
   private _clipPath: Selection<SVGGElement, object[], SVGGElement, object[]>
   private _clipPathId = guid()
+  private _axisMargin: Spacing = { top: 0, bottom: 0, left: 0, right: 0 }
+  private _firstRender = true
 
   constructor (element, config?: XYContainerConfigInterface<Datum>, data?) {
     super(element)
@@ -73,11 +76,26 @@ export class XYContainer<Datum> extends ContainerCore {
     }
 
     // Force re-render axes when fonts are loaded
-    (document as any).fonts?.ready.then(this._renderAxes.bind(this, 0))
+    (document as any).fonts?.ready.then(() => {
+      if (!this._firstRender) this._renderAxes(0)
+    })
   }
 
   get components (): XYComponentCore<Datum>[] {
     return this.config.components
+  }
+
+  // Overriding ContainerCore default get width method to work with axis auto margin
+  get width (): number {
+    const margin = this._getMargin()
+    return clamp(this.containerWidth - margin.left - margin.right, 0, Number.POSITIVE_INFINITY)
+  }
+
+  // Overriding ContainerCore default get height method to work with axis auto margin
+  get height (): number {
+    const margin = this._getMargin()
+
+    return clamp(this.containerHeight - margin.top - margin.bottom, 0, Number.POSITIVE_INFINITY)
   }
 
   setData (data: any, preventRender?: boolean): void {
@@ -177,18 +195,20 @@ export class XYContainer<Datum> extends ContainerCore {
     const { config } = this
     super._render()
 
+    // Calculate extra margin required to fit the axes
     if (config.autoMargin) {
-      Object.keys(config.axes).forEach(key => {
-        this._setAutoMargin(this.config.axes[key])
-      })
+      this._setAutoMargin()
     }
+
+    // Get chart total margin after auto margin calculations
+    const margin = this._getMargin()
 
     // Update Scales of all the components at once to calculate required paddings and sync them
     this.updateScales(...this.components, config.axes.x, config.axes.y, config.crosshair)
 
     // Render components
     for (const c of this.components) {
-      c.g.attr('transform', `translate(${config.margin.left},${config.margin.top})`)
+      c.g.attr('transform', `translate(${margin.left},${margin.top})`)
         .style('clip-path', c.clippable ? `url(#${this._clipPathId})` : null)
         .style('-webkit-clip-path', c.clippable ? `url(#${this._clipPathId})` : null)
 
@@ -217,8 +237,10 @@ export class XYContainer<Datum> extends ContainerCore {
       crosshair.config.y = flatten(yAccessors)
       crosshair.config.yStacked = flatten(yStackedAccessors)
       crosshair.config.baseline = crosshair.config.baseline || baselineAccessor || null
-      crosshair.g.attr('transform', `translate(${config.margin.left},${config.margin.top})`)
+      crosshair.g.attr('transform', `translate(${margin.left},${margin.top})`)
     }
+
+    this._firstRender = false
   }
 
   updateScales<T extends XYComponentCore<Datum>> (...components: T[]): void {
@@ -259,7 +281,9 @@ export class XYContainer<Datum> extends ContainerCore {
   }
 
   _renderAxes (duration: number): void {
-    const { config: { axes, margin } } = this
+    const { config: { axes } } = this
+    const margin = this._getMargin()
+
     Object.keys(axes).forEach(key => {
       const axis = axes[key]
       const offset = axis.getOffset(margin)
@@ -268,17 +292,38 @@ export class XYContainer<Datum> extends ContainerCore {
     })
   }
 
-  _setAutoMargin (axis: Axis<Datum>): void {
-    const { config: { margin } } = this
-    axis.autoWrapTickLabels = false
-    this._updateScalesDomain(axis)
-    axis.preRender()
+  _setAutoMargin (): void {
+    const { config: { axes } } = this
 
-    // Update container margin to fit axes
-    const m = axis.calculateMargin()
-    if (margin.top < m.top) margin.top = m.top
-    if (margin.bottom < m.bottom) margin.bottom = m.bottom
-    if (margin.left < m.left) margin.left = m.left
-    if (margin.right < m.right) margin.right = m.right
+    // At first we need to set the domain to the scales
+    const components = clean([...this.components, axes.x, axes.y])
+    this._updateScalesDomain(...components)
+
+    // Calculate margin required by the axes
+    const axisMargin: Spacing = { top: 0, bottom: 0, left: 0, right: 0 }
+    Object.keys(axes).forEach(key => {
+      const axis = axes[key]
+      axis.autoWrapTickLabels = false
+      axis.preRender()
+
+      const m = axis.calculateMargin()
+      if (axisMargin.top < m.top) axisMargin.top = m.top
+      if (axisMargin.bottom < m.bottom) axisMargin.bottom = m.bottom
+      if (axisMargin.left < m.left) axisMargin.left = m.left
+      if (axisMargin.right < m.right) axisMargin.right = m.right
+    })
+
+    this._axisMargin = axisMargin
+  }
+
+  _getMargin (): Spacing {
+    const { config: { margin } } = this
+
+    return {
+      top: margin.top + this._axisMargin.top,
+      bottom: margin.bottom + this._axisMargin.bottom,
+      left: margin.left + this._axisMargin.left,
+      right: margin.right + this._axisMargin.right,
+    }
   }
 }
