@@ -72,19 +72,22 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
   }
 
   calculateMargin (): Spacing {
-    const { config: { type, position, padding } } = this
+    const { config: { type, position, padding, width, height } } = this
     const size = this.getSize()
+
+    const bleedX = size.width > width ? (size.width - width) / 2 : 0
+    const bleedY = size.height > height ? (size.height - height) / 2 : 0
 
     switch (type) {
     case AxisType.X:
       switch (position) {
-      case Position.TOP: return { top: size.height, left: padding.left, right: padding.right }
-      case Position.BOTTOM: default: return { bottom: size.height, left: padding.left, right: padding.right }
+      case Position.TOP: return { top: size.height, left: padding.left + bleedX, right: padding.right + bleedX }
+      case Position.BOTTOM: default: return { bottom: size.height, left: padding.left + bleedX, right: padding.right + bleedX }
       }
     case AxisType.Y:
       switch (position) {
-      case Position.RIGHT: return { right: size.width, top: padding.top, bottom: padding.bottom }
-      case Position.LEFT: default: return { left: size.width, top: padding.top, bottom: padding.bottom }
+      case Position.RIGHT: return { right: size.width, top: padding.top + bleedY, bottom: padding.bottom + bleedY }
+      case Position.LEFT: default: return { left: size.width, top: padding.top + bleedY, bottom: padding.bottom + bleedY }
       }
     }
   }

@@ -87,7 +87,7 @@ export class AxisConfig<Datum> extends XYComponentConfig<Datum> implements AxisC
     right: 0,
   }
 
-  labelMargin = 8
+  labelMargin = 4
   tickLabelFontSize = null
   tickFormat = null
   tickValues = null
