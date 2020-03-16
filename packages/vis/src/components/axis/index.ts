@@ -12,7 +12,7 @@ import { Position } from 'types/position'
 import { Spacing } from 'types/misc'
 
 // Utils
-import { clean, isNumber } from 'utils/data'
+import { isNumber } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 
 // Config
@@ -28,8 +28,6 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
   static selectors = s
   config: AxisConfig<Datum> = new AxisConfig<Datum>()
   axisGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
-  axisLabelGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
-  labelGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
   gridGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
   autoWrapTickLabels = true
 
@@ -44,9 +42,7 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
     super()
     if (config) this.config.init(config)
 
-    this.axisLabelGroup = this.g.append('g')
-    this.axisGroup = this.axisLabelGroup.append('g')
-    this.labelGroup = this.axisLabelGroup.append('g')
+    this.axisGroup = this.g.append('g')
 
     this.gridGroup = this.g.append('g')
       .attr('class', s.grid)
@@ -63,7 +59,7 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
 
   getSize (): { width: number; height: number } {
     const { padding } = this.config
-    const { width, height } = this.axisLabelGroup.node().getBBox()
+    const { width, height } = this.axisGroup.node().getBBox()
 
     return {
       width: width + padding.left + padding.right,
@@ -219,17 +215,12 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
   _renderAxisLabel (): void {
     const { type, label, width, height, labelMargin, labelFontSize } = this.config
 
+    // Remove the old label first to calculate the axis size properly
+    this.axisGroup.selectAll(`.${s.label}`).remove()
+
+    // Lalculate label position and rotation
     const axisPosition = this.getPosition()
     const { width: axisWidth, height: axisHeight } = this.axisGroup.node().getBBox()
-
-    const labels = this.labelGroup.selectAll(`.${s.label}`).data(clean([label])) as Selection<SVGTextElement, any, SVGGElement, object[]>
-    labels.exit().remove()
-
-    const labelsEnter = labels.enter()
-      .append('text')
-      .attr('class', `${s.label} ${axisPosition}`)
-
-    const labelMerged = labelsEnter.merge(labels)
 
     const offsetX = type === AxisType.X ? width / 2 : (-1) ** (+(axisPosition === Position.LEFT)) * axisWidth
     const offsetY = type === AxisType.X ? (-1) ** (+(axisPosition === Position.TOP)) * axisHeight : height / 2
@@ -239,8 +230,11 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
 
     const rotation = type === AxisType.Y ? -90 : 0
 
-    labelMerged.text(d => d)
-      .classed(axisPosition, true)
+    // Apped new label
+    this.axisGroup
+      .append('text')
+      .attr('class', `${s.label} ${axisPosition}`)
+      .text(label)
       .style('font-size', labelFontSize)
       .attr('transform', `translate(${offsetX + marginX},${offsetY + marginY}) rotate(${rotation})`)
   }
