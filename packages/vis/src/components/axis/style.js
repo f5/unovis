@@ -55,13 +55,8 @@ export const tick = css`
   }
 
   text {
-    visibility: hidden;
     fill: var(--vis-axis-tick-color);
     stroke: none;
-
-    &.active {
-      visibility: visible;
-    }
   }
 `
 

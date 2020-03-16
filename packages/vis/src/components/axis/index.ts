@@ -1,6 +1,7 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 
 import { select, Selection } from 'd3-selection'
+import { interrupt } from 'd3-transition'
 import { axisLeft, axisTop, axisRight, axisBottom, Axis as D3Axis } from 'd3-axis'
 
 // Core
@@ -12,7 +13,6 @@ import { Position } from 'types/position'
 import { Spacing } from 'types/misc'
 
 // Utils
-import { isNumber } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 
 // Config
@@ -29,7 +29,10 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
   config: AxisConfig<Datum> = new AxisConfig<Datum>()
   axisGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
   gridGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
-  autoWrapTickLabels = true
+
+  private _axisRawBBox: DOMRect
+  private _axisSize: { width: number; height: number }
+  private _requiredMargin: Spacing
 
   events = {
     [Axis.selectors.tick]: {
@@ -43,13 +46,26 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
     if (config) this.config.init(config)
 
     this.axisGroup = this.g.append('g')
-
     this.gridGroup = this.g.append('g')
       .attr('class', s.grid)
   }
 
+  /** Renders axis to an invisible groupd to calculate automatic chart margins */
   preRender (): void {
-    this._render(0)
+    const axisRenderHelperGroup = this.g.append('g').attr('opacity', 0)
+
+    this._renderAxis(axisRenderHelperGroup, 0)
+    this._updateTicks(axisRenderHelperGroup)
+
+    // Store axis raw BBox (without the label) for further label positioning (see _renderAxisLabel)
+    this._axisRawBBox = axisRenderHelperGroup.node().getBBox()
+
+    // Render label and store total axis size and reqired margins
+    this._renderAxisLabel(axisRenderHelperGroup)
+    this._axisSize = this._getSize(axisRenderHelperGroup)
+    this._requiredMargin = this._getRequiredMargin(this._axisSize)
+
+    axisRenderHelperGroup.remove()
   }
 
   getPosition (): Position {
@@ -57,9 +73,9 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
     return (position ?? ((type === AxisType.X) ? Position.BOTTOM : Position.LEFT)) as Position
   }
 
-  getSize (): { width: number; height: number } {
+  _getSize (selection): { width: number; height: number } {
     const { padding } = this.config
-    const { width, height } = this.axisGroup.node().getBBox()
+    const { width, height } = selection.node().getBBox()
 
     return {
       width: width + padding.left + padding.right,
@@ -67,27 +83,31 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
     }
   }
 
-  calculateMargin (): Spacing {
+  _getRequiredMargin (axisSize = this._axisSize): Spacing {
     const { config: { type, position, padding, width, height } } = this
-    const size = this.getSize()
 
-    const bleedX = size.width > width ? (size.width - width) / 2 : 0
-    const bleedY = size.height > height ? (size.height - height) / 2 : 0
+    const bleedX = axisSize.width > width ? (axisSize.width - width) / 2 : 0
+    const bleedY = axisSize.height > height ? (axisSize.height - height) / 2 : 0
 
     switch (type) {
     case AxisType.X:
       switch (position) {
-      case Position.TOP: return { top: size.height, left: padding.left + bleedX, right: padding.right + bleedX }
-      case Position.BOTTOM: default: return { bottom: size.height, left: padding.left + bleedX, right: padding.right + bleedX }
+      case Position.TOP: return { top: axisSize.height, left: padding.left + bleedX, right: padding.right + bleedX }
+      case Position.BOTTOM: default: return { bottom: axisSize.height, left: padding.left + bleedX, right: padding.right + bleedX }
       }
     case AxisType.Y:
       switch (position) {
-      case Position.RIGHT: return { right: size.width, top: padding.top + bleedY, bottom: padding.bottom + bleedY }
-      case Position.LEFT: default: return { left: size.width, top: padding.top + bleedY, bottom: padding.bottom + bleedY }
+      case Position.RIGHT: return { right: axisSize.width, top: padding.top + bleedY, bottom: padding.bottom + bleedY }
+      case Position.LEFT: default: return { left: axisSize.width, top: padding.top + bleedY, bottom: padding.bottom + bleedY }
       }
     }
   }
 
+  getRequiredMargin (): Spacing {
+    return this._requiredMargin
+  }
+
+  /** Calculates axis transform:translate offset based on passed container margins */
   getOffset (containerMargin: Spacing): {left: number; top: number} {
     const { config: { type, position, padding, width, height } } = this
 
@@ -105,41 +125,18 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
     }
   }
 
-  _render (customDuration?: number): void {
+  _render (duration = this.config.duration, selection = this.axisGroup): void {
     const { config } = this
-    const duration = isNumber(customDuration) ? customDuration : config.duration
 
-    const axisGen = this._buildAxis()
-    if (config.tickFormat) axisGen.tickFormat(config.tickFormat)
-    if (config.tickValues) axisGen.tickValues(this._getTickValues())
-
-    smartTransition(this.axisGroup.call(axisGen), duration)
-
-    const ticks = this.axisGroup.selectAll('g.tick')
-
-    ticks
-      .classed(s.tick, true)
-      .style('font-size', config.tickLabelFontSize)
-      .call(wrapTickText, getWrapOptions(ticks, config, this.autoWrapTickLabels))
-
-    this.axisGroup
-      .classed(s.axis, true)
-      .classed('hide-tick-line', !config.tickLine)
-      .classed('hide-domain', !config.domainLine)
-
-    this._updateTicks()
-    this._renderAxisLabel()
+    this._renderAxis(selection, duration)
+    this._updateTicks(selection)
+    this._renderAxisLabel(selection)
 
     if (config.gridLine) {
       const gridGen = this._buildGrid().tickFormat(() => '')
-      smartTransition(this.gridGroup.call(gridGen), duration).style('opacity', 1)
+      smartTransition(this.gridGroup, duration).call(gridGen).style('opacity', 1)
     } else {
       smartTransition(this.gridGroup, duration).style('opacity', 0)
-    }
-
-    if (config.fullSize) {
-      const path = this._getFullDomainPath(0)
-      this.axisGroup.select('.domain').attr('d', path)
     }
   }
 
@@ -179,9 +176,42 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
     }
   }
 
-  _updateTicks (): void {
+  _renderAxis (selection = this.axisGroup, duration = this.config.duration): void {
     const { config } = this
-    const ticks = this.axisGroup.selectAll('g.tick')
+
+    const axisGen = this._buildAxis()
+    if (config.tickFormat) axisGen.tickFormat(config.tickFormat)
+    if (config.tickValues) axisGen.tickValues(this._getTickValues())
+
+    smartTransition(selection, duration).call(axisGen)
+
+    const ticks = selection.selectAll('g.tick')
+
+    ticks
+      .classed(s.tick, true)
+      .style('font-size', config.tickLabelFontSize)
+
+    // We interrupt transition on tick Text to make it 'wrappable'
+    const tickText = ticks.selectAll('text')
+    tickText.nodes().forEach(node => interrupt(node))
+    tickText.text(d => config.tickFormat?.(d) ?? d)
+    tickText
+      .call(wrapTickText, getWrapOptions(ticks, config))
+
+    selection
+      .classed(s.axis, true)
+      .classed('hide-tick-line', !config.tickLine)
+      .classed('hide-domain', !config.domainLine)
+
+    if (config.fullSize) {
+      const path = this._getFullDomainPath(0)
+      smartTransition(selection.select('.domain'), duration).attr('d', path)
+    }
+  }
+
+  _updateTicks (selection = this.axisGroup): void {
+    const { config } = this
+    const ticks = selection.selectAll('g.tick')
 
     const renderOnlyFirstAndLast = config.minMaxTicksOnly && !config.showAllTicks
 
@@ -212,15 +242,17 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
     }
   }
 
-  _renderAxisLabel (): void {
+  _renderAxisLabel (selection = this.axisGroup): void {
     const { type, label, width, height, labelMargin, labelFontSize } = this.config
 
     // Remove the old label first to calculate the axis size properly
-    this.axisGroup.selectAll(`.${s.label}`).remove()
+    selection.selectAll(`.${s.label}`).remove()
 
     // Lalculate label position and rotation
     const axisPosition = this.getPosition()
-    const { width: axisWidth, height: axisHeight } = this.axisGroup.node().getBBox()
+    // We always use this.axisRenderHelperGroup to calculate the size of the axis because
+    //    this.gaxisGroup will give us incorrrect values due to animation
+    const { width: axisWidth, height: axisHeight } = this._axisRawBBox ?? selection.node().getBBox()
 
     const offsetX = type === AxisType.X ? width / 2 : (-1) ** (+(axisPosition === Position.LEFT)) * axisWidth
     const offsetY = type === AxisType.X ? (-1) ** (+(axisPosition === Position.TOP)) * axisHeight : height / 2
@@ -231,7 +263,7 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
     const rotation = type === AxisType.Y ? -90 : 0
 
     // Apped new label
-    this.axisGroup
+    selection
       .append('text')
       .attr('class', s.label)
       .text(label)

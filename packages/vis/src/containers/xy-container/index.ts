@@ -215,7 +215,7 @@ export class XYContainer<Datum> extends ContainerCore {
       c.render(customDuration)
     }
 
-    this._renderAxes(customDuration)
+    this._renderAxes(this._firstRender ? 0 : customDuration)
 
     // Clip Rect
     this._clipPath.select('rect')
@@ -300,20 +300,27 @@ export class XYContainer<Datum> extends ContainerCore {
     this._updateScalesDomain(...components)
 
     // Calculate margin required by the axes
-    const axisMargin: Spacing = { top: 0, bottom: 0, left: 0, right: 0 }
-    Object.keys(axes).forEach(key => {
-      const axis = axes[key]
-      axis.autoWrapTickLabels = false
-      axis.preRender()
+    // We do two iterations on the first render, because the amount and size of ticks can change
+    //    after new margin are calculated and applied (axies dimentions will change).
+    //    That's needed for correct label placement.
+    const numIterations = this._firstRender ? 2 : 1
+    for (let i = 0; i < numIterations; i += 1) {
+      const axisMargin: Spacing = { top: 0, bottom: 0, left: 0, right: 0 }
+      this._updateScalesRange(...components)
+      Object.keys(axes).forEach(key => {
+        const axis = axes[key]
+        // axis.autoWrapTickLabels = false
+        axis.preRender()
 
-      const m = axis.calculateMargin()
-      if (axisMargin.top < m.top) axisMargin.top = m.top
-      if (axisMargin.bottom < m.bottom) axisMargin.bottom = m.bottom
-      if (axisMargin.left < m.left) axisMargin.left = m.left
-      if (axisMargin.right < m.right) axisMargin.right = m.right
-    })
+        const m = axis.getRequiredMargin()
+        if (axisMargin.top < m.top) axisMargin.top = m.top
+        if (axisMargin.bottom < m.bottom) axisMargin.bottom = m.bottom
+        if (axisMargin.left < m.left) axisMargin.left = m.left
+        if (axisMargin.right < m.right) axisMargin.right = m.right
+      })
 
-    this._axisMargin = axisMargin
+      this._axisMargin = axisMargin
+    }
   }
 
   _getMargin (): Spacing {
