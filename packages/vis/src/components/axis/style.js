@@ -70,18 +70,6 @@ export const label = css`
   fill: var(--vis-axis-label-color);
   font-size: var(--vis-axis-label-font-size);
   text-anchor: middle;
-
-  &.right {
-    dominant-baseline: text-before-edge;
-  }
-
-  &.left {
-    dominant-baseline: text-after-edge;
-  }
-
-  &.bottom {
-    dominant-baseline: text-before-edge;
-  }
 `
 
 export const tickText = css`

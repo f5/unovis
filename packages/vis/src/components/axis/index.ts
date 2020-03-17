@@ -233,10 +233,27 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
     // Apped new label
     this.axisGroup
       .append('text')
-      .attr('class', `${s.label} ${axisPosition}`)
+      .attr('class', s.label)
       .text(label)
       .style('font-size', labelFontSize)
+      .attr('dy', `${this._getLabelHangingTextValue()}em`)
       .attr('transform', `translate(${offsetX + marginX},${offsetY + marginY}) rotate(${rotation})`)
+  }
+
+  _getLabelHangingTextValue () {
+    const { type, position } = this.config
+    switch (type) {
+    case AxisType.X:
+      switch (position) {
+      case Position.TOP: return 0
+      case Position.BOTTOM: default: return 0.75
+      }
+    case AxisType.Y:
+      switch (position) {
+      case Position.RIGHT: return 0.75
+      case Position.LEFT: default: return -0.25
+      }
+    }
   }
 
   _toggleTickFullText (tickElement, fullIsActive: boolean): void {
