@@ -12,20 +12,30 @@ export const global = injectGlobal`
   }
 `
 
+export const hideTickLine = css`
+  label: hide-tick-line;
+`
+
+export const hideDomain = css`
+  label: hide-domain;
+`
+
 export const axis = css`
+  label: axis;
+
   user-select: none;
 
   .domain {
     stroke: var(--vis-axis-tick-color);
   }
 
-  &.hide-tick-line {
+  &${`.${hideTickLine}`} {
     .tick > line {
       opacity: 0;
     }
   }
 
-  &.hide-domain {
+  &${`.${hideDomain}`} {
     .domain {
       opacity: 0;
     }
@@ -47,6 +57,7 @@ export const grid = css`
 
 export const tick = css`
   label: tick;
+
   stroke: none;
   font-size: var(--vis-axis-tick-label-font-size);
 
@@ -69,8 +80,4 @@ export const label = css`
 
 export const tickText = css`
   label: tick-text;
-`
-
-export const fullTickText = css`
-  label: full-text;
 `

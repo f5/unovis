@@ -199,8 +199,8 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
 
     selection
       .classed(s.axis, true)
-      .classed('hide-tick-line', !config.tickLine)
-      .classed('hide-domain', !config.domainLine)
+      .classed(s.hideTickLine, !config.tickLine)
+      .classed(s.hideDomain, !config.domainLine)
 
     if (config.fullSize) {
       const path = this._getFullDomainPath(0)
