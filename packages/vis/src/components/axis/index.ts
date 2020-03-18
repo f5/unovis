@@ -55,7 +55,6 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
     const axisRenderHelperGroup = this.g.append('g').attr('opacity', 0)
 
     this._renderAxis(axisRenderHelperGroup, 0)
-    this._updateTicks(axisRenderHelperGroup)
 
     // Store axis raw BBox (without the label) for further label positioning (see _renderAxisLabel)
     this._axisRawBBox = axisRenderHelperGroup.node().getBBox()
@@ -129,11 +128,11 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
     const { config } = this
 
     this._renderAxis(selection, duration)
-    this._updateTicks(selection)
     this._renderAxisLabel(selection)
 
     if (config.gridLine) {
       const gridGen = this._buildGrid().tickFormat(() => '')
+      if (config.tickValues) gridGen.tickValues(this._getTickValues())
       smartTransition(this.gridGroup, duration).call(gridGen).style('opacity', 1)
     } else {
       smartTransition(this.gridGroup, duration).style('opacity', 0)
@@ -207,15 +206,8 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
       const path = this._getFullDomainPath(0)
       smartTransition(selection.select('.domain'), duration).attr('d', path)
     }
-  }
 
-  _updateTicks (selection = this.axisGroup): void {
-    const { config } = this
-    const ticks = selection.selectAll('g.tick')
-
-    const renderOnlyFirstAndLast = config.minMaxTicksOnly && !config.showAllTicks
-
-    if (renderOnlyFirstAndLast) {
+    if (config.minMaxTicksOnly) {
       ticks.each((d, i, elements) => {
         if (i > 0 && i < elements.length - 1) select(elements[i]).remove()
       })
