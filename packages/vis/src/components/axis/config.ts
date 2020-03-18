@@ -13,10 +13,16 @@ export interface AxisConfigInterface<Datum> extends XYComponentConfigInterface<D
     position?: Position | string;
     /** Axis type: x or y */
     type?: AxisType;
+    /** Inner axis padding. Adds space between chart and axis */
+    padding?: Spacing;
+    /** Extend domain line to be full size dimension */
+    fullSize?: boolean;
     /** Axis label */
     label?: string;
     /** Font size of the axis label */
     labelFontSize?: string;
+    /** Distance between axis and label in pixels */
+    labelMargin?: number;
     /** Whether to draw the grid lines or not, default: true */
     gridLine?: boolean;
     /** Whether to draw the tick lines or not, default: true */
@@ -29,30 +35,22 @@ export interface AxisConfigInterface<Datum> extends XYComponentConfigInterface<D
     tickFormat?: (d: number) => string;
     /** Explicitly set tick values */
     tickValues?: number[];
-    /** Approximate number of axis ticks */
+    /** Approximate number of axis ticks (passed to d3 axis constructor) */
     numTicks?: number;
-    /** Always draw all axis ticks */
-    showAllTicks?: boolean;
-    /**  */
+    /** Tick text fit mode: 'wrap' or 'trim' */
+    tickTextFitMode?: FitMode | string;
+    /** Maximum number of characters for tick text wrapping */
     tickTextLength?: number;
-    /**  */
+    /** Maximum width of tick text for wrapping */
     tickTextWidth?: number;
-    /**  */
-    tickTextSeparator?: string;
-    /**  */
+    /** Tick text wrapping separator */
+    tickTextSeparator?: string | string[];
+    /** Tick text force word break if it doesn't fit */
     tickTextForceWordBreak?: boolean;
-    /**  */
-    tickTextExpandOnHover?: boolean;
-    /**  */
-    tickTextTrimType?: TrimMode;
-    /**  */
-    tickTextFitMode?: FitMode;
-    labelMargin?: number;
-    /** Font size of tick labels */
-    tickLabelFontSize?: string;
-    padding?: Spacing;
-    offset?: Spacing;
-    fullSize?: boolean;
+    /** Tick text trim mode: 'start , 'middle' or 'end' */
+    tickTextTrimType?: TrimMode | string;
+    /** Font size of tick text */
+    tickTextFontSize?: string;
 }
 
 export class AxisConfig<Datum> extends XYComponentConfig<Datum> implements AxisConfigInterface<Datum> {
@@ -65,12 +63,10 @@ export class AxisConfig<Datum> extends XYComponentConfig<Datum> implements AxisC
   domainLine = true
   numTicks = undefined;
   minMaxTicksOnly = false
-  showAllTicks = false
   tickTextLength = undefined
   tickTextWidth = undefined
   tickTextSeparator = ' '
   tickTextForceWordBreak = false
-  tickTextExpandOnHover = true
   tickTextTrimType = TrimMode.MIDDLE
   tickTextFitMode = FitMode.WRAP
   padding = {
@@ -80,15 +76,8 @@ export class AxisConfig<Datum> extends XYComponentConfig<Datum> implements AxisC
     right: 0,
   }
 
-  offset = {
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-  }
-
-  labelMargin = 4
-  tickLabelFontSize = null
+  labelMargin = 8
+  tickTextFontSize = null
   tickFormat = null
   tickValues = null
   fullSize = true

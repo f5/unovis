@@ -43,8 +43,8 @@ export class ComponentCore<CoreDatum> {
     this.datamodel.data = data
   }
 
-  render (customDuration?: number): void {
-    this._render(customDuration)
+  render (duration = this.config.duration): void {
+    this._render(duration)
 
     // Set up default events
     this._setUpEventsThrottled(this.events)
@@ -58,7 +58,7 @@ export class ComponentCore<CoreDatum> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  _render (customDuration?: number): void {
+  _render (duration = this.config.duration): void {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
