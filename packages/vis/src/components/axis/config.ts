@@ -31,14 +31,12 @@ export interface AxisConfigInterface<Datum> extends XYComponentConfigInterface<D
     tickValues?: number[];
     /** Approximate number of axis ticks */
     numTicks?: number;
-    /** Always draw all axis ticks */
-    showAllTicks?: boolean;
     /**  */
     tickTextLength?: number;
     /**  */
     tickTextWidth?: number;
     /**  */
-    tickTextSeparator?: string;
+    tickTextSeparator?: string | string[];
     /**  */
     tickTextForceWordBreak?: boolean;
     /**  */
@@ -47,11 +45,11 @@ export interface AxisConfigInterface<Datum> extends XYComponentConfigInterface<D
     tickTextTrimType?: TrimMode;
     /**  */
     tickTextFitMode?: FitMode;
+    /**  */
     labelMargin?: number;
     /** Font size of tick labels */
     tickLabelFontSize?: string;
     padding?: Spacing;
-    offset?: Spacing;
     fullSize?: boolean;
 }
 
@@ -65,7 +63,6 @@ export class AxisConfig<Datum> extends XYComponentConfig<Datum> implements AxisC
   domainLine = true
   numTicks = undefined;
   minMaxTicksOnly = false
-  showAllTicks = false
   tickTextLength = undefined
   tickTextWidth = undefined
   tickTextSeparator = ' '
@@ -74,13 +71,6 @@ export class AxisConfig<Datum> extends XYComponentConfig<Datum> implements AxisC
   tickTextTrimType = TrimMode.MIDDLE
   tickTextFitMode = FitMode.WRAP
   padding = {
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-  }
-
-  offset = {
     top: 0,
     bottom: 0,
     left: 0,
