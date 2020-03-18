@@ -309,7 +309,6 @@ export class XYContainer<Datum> extends ContainerCore {
       this._updateScalesRange(...components)
       Object.keys(axes).forEach(key => {
         const axis = axes[key]
-        // axis.autoWrapTickLabels = false
         axis.preRender()
 
         const m = axis.getRequiredMargin()
