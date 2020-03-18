@@ -21,13 +21,13 @@ export const axis = css`
 
   &.hide-tick-line {
     .tick > line {
-      display: none;
+      opacity: 0;
     }
   }
 
   &.hide-domain {
     .domain {
-      display: none;
+      opacity: 0;
     }
   }
 `
@@ -36,7 +36,7 @@ export const grid = css`
   label: grid;
   
   .domain {
-    display: none;
+    opacity: 0;
   }
 
   line {
