@@ -188,7 +188,7 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
 
     ticks
       .classed(s.tick, true)
-      .style('font-size', config.tickLabelFontSize)
+      .style('font-size', config.tickTextFontSize)
 
     // We interrupt transition on tick Text to make it 'wrappable'
     const tickText = ticks.selectAll('text')
@@ -260,11 +260,11 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
       .attr('class', s.label)
       .text(label)
       .style('font-size', labelFontSize)
-      .attr('dy', `${this._getLabelHangingTextValue()}em`)
+      .attr('dy', `${this._getLabelDY()}em`)
       .attr('transform', `translate(${offsetX + marginX},${offsetY + marginY}) rotate(${rotation})`)
   }
 
-  _getLabelHangingTextValue () {
+  _getLabelDY (): number {
     const { type, position } = this.config
     switch (type) {
     case AxisType.X:
@@ -280,22 +280,11 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
     }
   }
 
-  _toggleTickFullText (tickElement, fullIsActive: boolean): void {
-    const tickText = tickElement.select(`.${s.tickText}`)
-    const fullTickText = tickElement.select(`.${s.fullTickText}`)
-
-    if (!fullTickText.node()) return
-    tickText.classed('active', !fullIsActive)
-    fullTickText.classed('active', fullIsActive)
-  }
-
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   _onTickMouseOver (d: any, i: number, elements: []): void {
-    if (!this.config.tickTextExpandOnHover) return
-    this._toggleTickFullText(select(elements[i]), true)
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   _onTickMouseOut (d: any, i: number, elements: []): void {
-    if (!this.config.tickTextExpandOnHover) return
-    this._toggleTickFullText(select(elements[i]), false)
   }
 }
