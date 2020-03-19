@@ -12,9 +12,12 @@ export interface AreaConfigInterface<Datum> extends XYComponentConfigInterface<D
   curveType?: CurveType;
   /** Baseline accessor function */
   baseline?: NumericAccessor<Datum>;
+  /** Opacity accessor function */
+  opacity?: NumericAccessor<Datum>;
 }
 
 export class AreaConfig<Datum> extends XYComponentConfig<Datum> implements AreaConfigInterface<Datum> {
   curveType = CurveType.MonotoneX
-  baseline = () => 0
+  baseline = (): number => 0
+  opacity = 1
 }

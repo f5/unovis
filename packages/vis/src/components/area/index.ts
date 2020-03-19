@@ -75,7 +75,7 @@ export class Area<Datum> extends XYComponentCore<Datum> {
       .style('fill', (d, i) => getColor(d, config.color, i))
 
     const areasMerged = smartTransition(areasEnter.merge(areas), duration)
-      .style('opacity', 1)
+      .style('opacity', d => getValue(d, config.opacity))
       .style('fill', (d, i) => getColor(d, config.color, i))
 
     if (duration) {
