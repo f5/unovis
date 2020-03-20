@@ -106,7 +106,7 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
       // We track the first render to not trigger user events on component initialization
   }
 
-  _updateSelection (s: number[]): void {
+  _updateSelection (s: [number, number]): void {
     const { config } = this
     const xScale = config.scales.x
     const yScale = config.scales.y
@@ -129,7 +129,7 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
       .attr('height', h)
   }
 
-  private _positionHandles (s): void {
+  private _positionHandles (s: [number, number]): void {
     const { config } = this
 
     this.brush.selectAll('.handle')
@@ -165,7 +165,7 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
     if (s[0] !== s[1] && isNumber(s[0]) && isNumber(s[1])) {
       // console.log(s)
       const userDriven = !!event?.sourceEvent
-      const selectedDomain = s.map(xScale.invert, xScale)
+      const selectedDomain = s.map(xScale.invert, xScale) as [number, number]
       if (userDriven) config.selection = selectedDomain
       this._updateSelection(s)
       if (!this._firstRender) config.onBrush(selectedDomain, event, userDriven)

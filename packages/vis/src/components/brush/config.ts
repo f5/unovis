@@ -17,7 +17,7 @@ export interface BrushConfigInterface<Datum> extends XYComponentConfigInterface<
   /** Width of the brush handle */
   handleWidth?: number;
   /** Selection is the actual value units: [start, end] */
-  selection?: number[] | null;
+  selection?: [number, number] | null;
   /** Allow dragging the selected area in order to change the selected range */
   draggable?: boolean;
   /** Position of the handle: 'inside' or 'outside' */
