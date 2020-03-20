@@ -94,7 +94,7 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum> {
         const x = innerBandScale(i)
         const y = config.scales.y(getValue(d, yAccessors[i]))
         const width = barWidth
-        const height = config.height - config.scales.y(getValue(d, yAccessors[i]))
+        const height = config.scales.y(0) - config.scales.y(getValue(d, yAccessors[i]))
         return this._getBarPath(x, y, width, height)
       })
       .style('fill', (d, i) => getColor(d, config.color, i))
