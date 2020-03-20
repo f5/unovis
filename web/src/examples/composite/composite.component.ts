@@ -91,7 +91,7 @@ export class CompositeComponent implements AfterViewInit {
       components: [
         new StackedBar(this.lineConfig),
         new Brush({
-          onBrush: (s) => {
+          onBrush: (s: [number, number]) => {
             this.chartConfig.dimensions.x.domain = s
             this.composite.updateContainer(this.chartConfig, true)
             this.composite.render(0)
