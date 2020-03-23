@@ -3,6 +3,8 @@ import { Config } from 'core/config'
 import { Spacing } from 'types/misc'
 
 export interface ContainerConfigInterface {
+  /** Animation duration of all the components within the container */
+  duration?: number;
   /** Container margins */
   margin?: Spacing;
   /** Chart padding */
@@ -10,6 +12,7 @@ export interface ContainerConfigInterface {
 }
 
 export class ContainerConfig extends Config implements ContainerConfigInterface {
+  duration = undefined
   margin = {
     top: 0,
     bottom: 0,

@@ -57,7 +57,7 @@ export class ContainerCore {
       .attr('height', this.containerHeight)
   }
 
-  render (duration?): Promise<number> {
+  render (duration = this.config.duration): Promise<number> {
     window.cancelAnimationFrame(this._requestedAnimationFrame)
 
     this._animationFramePromise = new Promise((resolve, reject) => {

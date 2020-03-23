@@ -33,7 +33,7 @@ export interface XYContainerConfigInterface<Datum> extends ContainerConfigInterf
 }
 
 export class XYContainerConfig<Datum> extends ContainerConfig implements XYContainerConfigInterface<Datum> {
-  components? = []
+  components = []
   tooltip = undefined
   crosshair = undefined
   axes: { [key: string]: Axis<Datum> } = {}
