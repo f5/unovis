@@ -98,8 +98,8 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
 
     const xRange = xScale.range()
     const brushRange = (config.selection && isFinite(config.selection?.[0])) ? [xScale(config.selection[0]), xScale(config.selection[1])] : xScale.range()
-    if (brushRange[0] < xRange[0]) brushRange[0] = xRange[0]
-    if (brushRange[1] < xRange[1]) brushRange[1] = xRange[1]
+    brushRange[0] = clamp(brushRange[0], xRange[0], xRange[1])
+    brushRange[1] = clamp(brushRange[1], xRange[0], xRange[1])
     smartTransition(this.brush, duration)
       .call(brushBehaviour.move, brushRange) // Sets up the brush and calls brush events
       .on('end interrupt', () => { this._firstRender = false })
@@ -163,9 +163,16 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
     // The first call will have equal selection coordinates (e.g. [441, 441]), the second call will have the full range (e.g. [0, 700]).
     // To avoid unnecessary render from the first call we skip it
     if (s[0] !== s[1] && isNumber(s[0]) && isNumber(s[1])) {
-      // console.log(s)
       const userDriven = !!event?.sourceEvent
       const selectedDomain = s.map(xScale.invert, xScale) as [number, number]
+
+      // Constaint the selection if configured
+      const selectionLength = Math.abs(selectedDomain[1] - selectedDomain[0])
+      if (selectionLength < config.selectionMinLength) {
+        this._render(0) // Re-render to update handles
+        return
+      }
+
       if (userDriven) config.selection = selectedDomain
       this._updateSelection(s)
       if (!this._firstRender) config.onBrush(selectedDomain, event, userDriven)
