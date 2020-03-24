@@ -11,6 +11,7 @@ import { XYContainer, XYContainerConfigInterface } from '@volterra/vis'
 })
 export class XYChartComponent implements AfterViewInit {
   @ViewChild('container', { static: false }) containerRef: ElementRef
+  @Input() duration = undefined
   @Input() margin = { top: 10, bottom: 10, left: 10, right: 10 }
   @Input() padding = {}
   @Input() components = []
@@ -51,9 +52,9 @@ export class XYChartComponent implements AfterViewInit {
   }
 
   getConfig (): XYContainerConfigInterface<object> {
-    const { margin, padding, components, dimensions, axes, tooltip, crosshair } = this
+    const { duration, margin, padding, components, dimensions, axes, tooltip, crosshair } = this
     return {
-      margin, padding, components, dimensions, axes, tooltip, crosshair,
+      duration, margin, padding, components, dimensions, axes, tooltip, crosshair,
     }
   }
 }

@@ -1,6 +1,7 @@
 
 <div #chart class="chart">
  <vis-xychart 
+  [duration]="duration"
   [margin]="margin"
   [padding]="padding"
   [components]="components"
@@ -12,5 +13,17 @@
   [data]="data"
  ></vis-xychart>
 </div>
+
+<div #nav class="navigation">
+<vis-xychart 
+    [margin]="margin"
+    [padding]="padding"
+    [components]="navComponents"
+    [componentConfigs]="[stackedBarConfig]"
+    [axes]="navAxes"
+    [data]="data"
+></vis-xychart>
+</div>
+
 
 

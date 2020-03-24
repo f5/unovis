@@ -3,7 +3,7 @@
 import { AfterViewInit, Component } from '@angular/core'
 
 // Vis
-import { Axis, GroupedBar, Tooltip, Crosshair } from '@volterra/vis'
+import { Axis, Brush, GroupedBar, Tooltip, Crosshair } from '@volterra/vis'
 
 // Helpers
 import { sampleSeriesData, SampleDatum } from '../../utils/data'
@@ -18,9 +18,10 @@ export class WrapperUsageExampleComponent implements AfterViewInit {
   title = 'wrapper-usage-example'
 
   // Data
-  data: SampleDatum[] = sampleSeriesData(25)
+  data: SampleDatum[] = sampleSeriesData(100)
 
   // Chart configuration
+  duration = undefined
   groupedBarConfig = {
     x: d => d.x,
     y: [
@@ -42,7 +43,11 @@ export class WrapperUsageExampleComponent implements AfterViewInit {
 
   margin = { top: 10, bottom: 10, left: 10, right: 10 }
 
-  dimensions: {}
+  dimensions = {
+    x: {
+      domain: undefined,
+    }
+  }
 
   axes = {
     x: new Axis({ label: 'x axis' }),
@@ -63,14 +68,33 @@ export class WrapperUsageExampleComponent implements AfterViewInit {
     `,
   })
 
+  // Navigation
+  navComponents = [
+    new GroupedBar<SampleDatum>(this.groupedBarConfig),
+    new Brush({
+      onBrush: (s: [number, number]) => {
+        this.duration = 0
+        this.dimensions.x.domain = s
+        this.dimensions = { ...this.dimensions }
+        // this.composite.updateContainer(this.chartConfig, true)
+        // this.composite.render(0)
+      },
+    }),
+  ]
+
+  navAxes = {
+    x: new Axis({ label: 'x axis' }),
+    y: new Axis({ label: 'y axis' }),
+  }
+
   ngAfterViewInit (): void {
 
     setInterval(() => {
-      // this.margin = { ...this.margin, top: 50 }
-      this.data = sampleSeriesData(Math.floor(10 + 150*Math.random()))
+      this.duration = undefined
+      this.data = sampleSeriesData(Math.floor(10 + 50*Math.random()))
       this.groupedBarConfig.barMaxWidth = Math.random() * 20
       this.groupedBarConfig = { ...this.groupedBarConfig } // Updating the object to trigger change detection
-    }, 5000)
+    }, 15000)
   }
 
 }
