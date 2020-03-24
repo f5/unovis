@@ -1,6 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 
-import { select, Selection } from 'd3-selection'
+import { Selection } from 'd3-selection'
 import { interrupt } from 'd3-transition'
 import { axisLeft, axisTop, axisRight, axisBottom, Axis as D3Axis } from 'd3-axis'
 
@@ -132,7 +132,7 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
 
     if (config.gridLine) {
       const gridGen = this._buildGrid().tickFormat(() => '')
-      if (config.tickValues) gridGen.tickValues(this._getTickValues())
+      gridGen.tickValues(this._getTickValues())
       smartTransition(this.gridGroup, duration).call(gridGen).style('opacity', 1)
     } else {
       smartTransition(this.gridGroup, duration).style('opacity', 0)
@@ -180,7 +180,7 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
 
     const axisGen = this._buildAxis()
     if (config.tickFormat) axisGen.tickFormat(config.tickFormat)
-    if (config.tickValues) axisGen.tickValues(this._getTickValues())
+    axisGen.tickValues(this._getTickValues())
 
     smartTransition(selection, duration).call(axisGen)
 
@@ -206,12 +206,6 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
       const path = this._getFullDomainPath(0)
       smartTransition(selection.select('.domain'), duration).attr('d', path)
     }
-
-    if (config.minMaxTicksOnly) {
-      ticks.each((d, i, elements) => {
-        if (i > 0 && i < elements.length - 1) select(elements[i]).remove()
-      })
-    }
   }
 
   _getNumTicks (): number {
@@ -220,10 +214,15 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
   }
 
   _getTickValues (): number[] {
-    const { config: { scales, tickValues, type } } = this
+    const { config: { scales, tickValues, type, minMaxTicksOnly } } = this
     const scaleDomain = type === AxisType.X ? scales.x?.domain() : scales.y?.domain()
-
-    return tickValues.filter(v => (v >= scaleDomain[0]) && (v <= scaleDomain[1]))
+    if (minMaxTicksOnly) {
+      return scaleDomain as number[]
+    }
+    if (tickValues) {
+      return tickValues.filter(v => (v >= scaleDomain[0]) && (v <= scaleDomain[1]))
+    }
+    return null
   }
 
   _getFullDomainPath (tickSize = 0): string {
