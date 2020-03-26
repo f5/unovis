@@ -22,7 +22,7 @@ export class GroupedBarConfig<Datum> extends XYComponentConfig<Datum> implements
     groupMaxWidth = undefined
     groupWidth = undefined
     dataStep = undefined
-    groupPadding = 0.2
+    groupPadding = 0.05
     barPadding = 0.0
     isVertical = true
     roundedCorners = true

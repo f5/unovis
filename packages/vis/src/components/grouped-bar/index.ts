@@ -153,15 +153,18 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum> {
     // If the dataStep property is provided the amount of data elements is calculates as domainLength / dataStep
     //   othwerise we get the number of data elements within the domain range
     // Or if the scale is ordinal we use data.length
-    const dataSize = xDomainLength / config.dataStep ||
+    let dataSize = (1 + xDomainLength / config.dataStep) ||
         (!isOrdinal && data.filter(d => {
           const value = getValue(d, config.x)
           return (value >= xDomain[0]) && (value <= xDomain[1])
         }).length) ||
         data.length
 
+    // We increase the dataSize by 1 to take into account possible additional domain space
+    if (!isOrdinal && dataSize >= 2) dataSize += 1
+
     const c = dataSize < 2 ? 1 : 1 - config.groupPadding
-    const groupWidth = c * (config.isVertical ? config.width : config.height) / dataSize
+    const groupWidth = c * (config.isVertical ? config.width : config.height) / (dataSize)
 
     return min([groupWidth, config.groupMaxWidth])
   }
