@@ -70,12 +70,15 @@ export class Scatter<Datum> extends XYComponentCore<Datum> {
 
       if ((posX + pointSize >= (xRange[0] - maxR)) && (posX - pointSize <= (xRange[1] + maxR))) {
         acc.push({
-          x: posX,
-          y: posY,
-          size: pointSize,
-          color: getColor(d, color, i),
-          shape: getValue(d, shape),
-          icon: getValue(d, icon),
+          ...d,
+          _screen: {
+            x: posX,
+            y: posY,
+            size: pointSize,
+            color: getColor(d, color, i),
+            shape: getValue(d, shape),
+            icon: getValue(d, icon),
+          },
         })
       }
 
