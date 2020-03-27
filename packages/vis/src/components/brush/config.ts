@@ -22,8 +22,6 @@ export interface BrushConfigInterface<Datum> extends XYComponentConfigInterface<
   draggable?: boolean;
   /** Position of the handle: 'inside' or 'outside' */
   handlePosition?: Arrangement | string;
-  /** Constraint selection by some minimum size */
-  selectionMinLength?: number;
 }
 
 export class BrushConfig<Datum> extends XYComponentConfig<Datum> implements BrushConfigInterface<Datum> {
@@ -35,5 +33,4 @@ export class BrushConfig<Datum> extends XYComponentConfig<Datum> implements Brus
   selection = null
   draggable = false
   handlePosition: Arrangement | string = Arrangement.INSIDE
-  selectionMinLength = undefined
 }

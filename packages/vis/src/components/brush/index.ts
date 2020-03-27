@@ -94,16 +94,19 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
       .attr('y1', yRange[1] + h / 2 - 10)
       .attr('y2', yRange[1] + h / 2 + 10)
 
-    this._positionHandles(config.selection)
-
     const xRange = xScale.range()
-    const brushRange = (config.selection && isFinite(config.selection?.[0])) ? [xScale(config.selection[0]), xScale(config.selection[1])] : xScale.range()
-    brushRange[0] = clamp(brushRange[0], xRange[0], xRange[1])
-    brushRange[1] = clamp(brushRange[1], xRange[0], xRange[1])
+    const selectionMin = clamp(xScale(config.selection?.[0]) ?? 0, xRange[0], xRange[1])
+    const selectionMax = clamp(xScale(config.selection?.[1]) ?? 0, xRange[0], xRange[1])
+    const selectionLength = selectionMax - selectionMin
+    const brushRange = (selectionLength ? [selectionMin, selectionMax] : xScale.range()) as [number, number]
+
+    this._positionHandles(brushRange)
+
     smartTransition(this.brush, duration)
       .call(brushBehaviour.move, brushRange) // Sets up the brush and calls brush events
       .on('end interrupt', () => { this._firstRender = false })
       // We track the first render to not trigger user events on component initialization
+    if (!duration) this._firstRender = false
   }
 
   _updateSelection (s: [number, number]): void {
@@ -164,14 +167,7 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
     // To avoid unnecessary render from the first call we skip it
     if (s[0] !== s[1] && isNumber(s[0]) && isNumber(s[1])) {
       const userDriven = !!event?.sourceEvent
-      const selectedDomain = s.map(xScale.invert, xScale) as [number, number]
-
-      // Constaint the selection if configured
-      const selectionLength = Math.abs(selectedDomain[1] - selectedDomain[0])
-      if (selectionLength < config.selectionMinLength) {
-        this._render(0) // Re-render to update handles
-        return
-      }
+      const selectedDomain = s.map(xScale.invert) as [number, number]
 
       if (userDriven) config.selection = selectedDomain
       this._updateSelection(s)
