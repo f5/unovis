@@ -72,6 +72,8 @@ export class WrapperUsageExampleComponent implements AfterViewInit {
   navComponents = [
     new GroupedBar<SampleDatum>(this.groupedBarConfig),
     new Brush({
+      selectionMinLength: 5,
+      draggable: true,
       onBrush: (s: [number, number]) => {
         this.duration = 0
         this.dimensions.x.domain = s
