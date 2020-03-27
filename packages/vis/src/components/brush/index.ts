@@ -160,16 +160,51 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
   _onBrush (): void {
     const { config } = this
     const xScale = config.scales.x
-    const s = event?.selection || xScale.range()
+    const xRange = xScale.range()
+    const s = event?.selection || xRange
+    const userDriven = !!event?.sourceEvent
+
+    // Handle edge cases:
+    // (event?.selection === null) happens when user clicks to reset the selection
+    // (s?.[0] === s?.[1]) happens when user drags the selection out of range
+    if (userDriven && (
+      (event?.selection === null) || // happens when user clicks to reset the selection
+      (s?.[0] === s?.[1]) || // happens when user drags the selection out of range
+      (s?.[0] < xRange[0]) || //
+      (s?.[0] > xRange[1]) || // happens when you drag the brush and the domain updates
+      (s?.[1] < xRange[0]) || // to a smaller one and brush goes out of range
+      (s?.[1] > xRange[1]) //
+    )) {
+      this.brush.call(this.brushBehaviour.move, xRange) // Will trigger the 'brush end' callback with `range`
+      return
+    }
 
     // When you reset selection by clicking on a non-selected brush area, D3 triggers the brush event twice.
     // The first call will have equal selection coordinates (e.g. [441, 441]), the second call will have the full range (e.g. [0, 700]).
     // To avoid unnecessary render from the first call we skip it
     if (s[0] !== s[1] && isNumber(s[0]) && isNumber(s[1])) {
-      const userDriven = !!event?.sourceEvent
       const selectedDomain = s.map(xScale.invert) as [number, number]
 
-      if (userDriven) config.selection = selectedDomain
+      if (userDriven) {
+        // Constaint the selection if configured
+        const xDomain = xScale.domain() as [number, number]
+        const xDomainLength = Math.abs(xDomain[1] - xDomain[0])
+        const selectionLength = Math.abs(selectedDomain[1] - selectedDomain[0])
+
+        if (config.selectionMinLength >= xDomainLength) {
+          console.warn('Configured `selectionMinLength` is bigger than the brush domain')
+        }
+
+        if ((selectionLength < config.selectionMinLength) && (config.selectionMinLength < xDomainLength)) {
+          const range = [xScale(config.selection[0]), xScale(config.selection[1])] as [number, number]
+          this.brush.call(this.brushBehaviour.move, range) // Will trigger the 'brush end' callback with `range`
+          return
+        } else {
+          config.selection = selectedDomain
+        }
+      }
+
+      // if (userDriven) config.selection = selectedDomain
       this._updateSelection(s)
       if (!this._firstRender) config.onBrush(selectedDomain, event, userDriven)
     }
