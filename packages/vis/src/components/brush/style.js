@@ -1,5 +1,14 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { css } from 'emotion'
+import { css, injectGlobal } from 'emotion'
+
+export const variables = injectGlobal`
+  :root {
+    --vis-brush-selection-fill: #262933;
+    --vis-brush-selection-stroke: #acb2b9;
+    --vis-brush-handle-fill: #a0a7c2;
+    --vis-brush-handle-stroke: #dddddd;
+  }
+`
 
 export const brush = css`
   label: brush;

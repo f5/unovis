@@ -9,11 +9,6 @@ export const variables = injectGlobal`
     --vis-color-main: #34daa6;
     --vis-color-gray: #2a2a2a;
     ${colors.map((c, i) => `${getCSSVarName(i)}: ${c};`)}
-
-    --vis-brush-selection-fill: #262933;
-    --vis-brush-selection-stroke: #acb2b9;
-    --vis-brush-handle-fill: #a0a7c2;
-    --vis-brush-handle-stroke: #dddddd;
   
     --highlight-filter-id: url(#saturate);
   }
