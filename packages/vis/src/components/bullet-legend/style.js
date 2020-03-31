@@ -3,18 +3,19 @@ import { css, injectGlobal } from 'emotion'
 
 export const variables = injectGlobal`
   :root {
-    --vis-legend-label-color: #333;
+    --vis-legend-label-color: #6c778c;
     --vis-legend-label-max-width: 300px;
-    --vis-legend-label-font-size: 12pt;
-    --vis-legend-bullet-size: 10px;
+    --vis-legend-label-font-size: 12px;
+    --vis-legend-bullet-size: 9px;
     --vis-legend-bullet-inactive-color: #eee;
+    --vis-legend-item-spacing: 30px;
   }
 `
 
 export const item = css`
   label: legendItem;
   display: inline;
-  margin-right: 20px;
+  margin-right: var(--vis-legend-item-spacing);
   white-space: nowrap;
   cursor: default;
   user-select: none;
