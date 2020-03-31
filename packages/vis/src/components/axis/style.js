@@ -8,7 +8,7 @@ export const global = injectGlobal`
     --vis-axis-grid-color: #a1a8c0;
     --vis-axis-label-color: #6c778c;
     --vis-axis-tick-label-font-size: 12px;
-    --vis-axis-label-font-size: 12pt;
+    --vis-axis-label-font-size: 14px;
   }
 `
 
