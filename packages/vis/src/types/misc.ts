@@ -13,7 +13,7 @@ export type Dimension = {
   /** Constraint the minimum value of the scale domain */
   domainMinConstraint?: [number, number];
   /** Constraint the maximum value of the scale domain */
-  domainMaxConstraints?: [number, number];
+  domainMaxConstraint?: [number, number];
   /** Force set the domain range (screen space) */
   range?: [number, number];
 }
