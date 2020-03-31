@@ -3,19 +3,22 @@ import { css } from 'emotion'
 
 export const tooltip = css`
   label: tooltip;
+  width: max-content;
   position: absolute;
   pointer-events: none;
   opacity: 0;
   transition: opacity;
   transition-duration: 300ms;
-  background-color: white;
   user-select: none;
   z-index: 999999;
-  padding: 10px;
+  padding: 15px 20px;
   transform: translate(0, -5px);
-  border-radius: 3px;
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
 
+  object-fit: contain;
+  border-radius: 5px;
+  box-shadow: 0 13px 25px 0 rgba(172, 179, 184, 0.35);
+  border: solid 1px #e5e9f7;
+  background-color: #ffffff;
 
   &.show {
     opacity: 1;
