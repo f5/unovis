@@ -6,8 +6,8 @@ export const global = injectGlobal`
   :root {
     --vis-axis-tick-color: #a1a8c0;
     --vis-axis-grid-color: #a1a8c0;
-    --vis-axis-label-color: #575c65;
-    --vis-axis-tick-label-font-size: 9pt;
+    --vis-axis-label-color: #6c778c;
+    --vis-axis-tick-label-font-size: 12px;
     --vis-axis-label-font-size: 12pt;
   }
 `
