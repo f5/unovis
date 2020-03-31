@@ -1,4 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
+import { css } from 'emotion'
 import { extent, merge as mergeArrays } from 'd3-array'
 import { Selection } from 'd3-selection'
 
@@ -61,9 +62,18 @@ export class XYContainer<Datum> extends ContainerCore {
       .attr('id', this._clipPathId)
     this._clipPath.append('rect')
 
+    // When the base tag is specified on the HTML head,
+    //  Safari fails to find the corresponding filter URL.
+    //  We have to provide tull url in order to fix that
+    const highlightFilterId = 'saturate'
+    const baseUrl = window.location.href.replace(window.location.hash, '')
+    this.svg.attr('class', css`
+      --highlight-filter-id: url(${baseUrl}#${highlightFilterId}); // defining a css variable
+    `)
+
     this._svgDefs = this.svg.append('defs')
     this._svgDefs.append('filter')
-      .attr('id', 'saturate')
+      .attr('id', highlightFilterId)
       .attr('filterUnits', 'objectBoundingBox')
       .html('<feColorMatrix type="saturate" in="SourceGraphic" values="1.35"/>')
 
