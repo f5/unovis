@@ -2,7 +2,8 @@
 import _times from 'lodash/times'
 import _uniqueId from 'lodash/uniqueId'
 import _sample from 'lodash/sample'
-
+import { nest as d3Nest } from 'd3-collection'
+import { sum } from 'd3-array'
 export interface SampleDatum {
   id?: string;
   x: number;
@@ -43,4 +44,38 @@ export function sampleTimelineData (n: number): SampleTimelineDatum[] {
     color: _sample(colors),
     width: 5 + Math.round(5 * Math.random()),
   }))
+}
+
+export interface Hierarchy {
+  key?: string;
+  values: Hierarchy[];
+}
+
+export function getHierarchyData (n, structure: {[key: string]: string[]}): Hierarchy {
+  const keys = Object.keys(structure)
+  const numericValueKey = 'value'
+  const idKey = 'id'
+
+  const data = Array(n).fill(0).map((_, i) => {
+    const record = {}
+    for (const key of keys) record[key] = _sample(structure[key])
+    record[numericValueKey] = Math.random()
+    record[idKey] = i
+
+    return record
+  })
+
+  const nest = d3Nest<any, any>()
+  for (const key of keys) nest.key(d => d[key])
+  nest.rollup(arr => sum(arr, d => d[numericValueKey]))
+
+  const tree = { values: nest.entries(Object.values(data)) }
+
+  return tree
+}
+
+export function forAllChildren (tree, f, prop = 'values'): void {
+  if (tree[prop]) {
+    tree[prop].forEach((child) => { forAllChildren(child, f) })
+  } else f(tree)
 }
