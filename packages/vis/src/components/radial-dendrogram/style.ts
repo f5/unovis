@@ -1,5 +1,11 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { css } from 'emotion'
+import { css, injectGlobal } from 'emotion'
+
+export const variables = injectGlobal`
+  :root {
+    --vis-radial-dendrogram-link-color: #cad5f6;
+  }
+`
 
 export const node = css`
   label: node;
@@ -21,4 +27,16 @@ export const label = css`
   
   dominant-baseline: middle;
   user-select: none;
+`
+
+export const link = css`
+  label: link;
+
+  fill: var(--vis-radial-dendrogram-link-color);
+  fill-opacity: 0.5;
+  transition: .1s fill-opacity;
+
+  &:hover {
+    fill-opacity: 1;
+  }
 `

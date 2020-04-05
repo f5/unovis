@@ -10,7 +10,7 @@ import { getValue, isNumber } from 'utils/data'
 
 // Types
 import { Spacing } from 'types/misc'
-import { Hierarchy } from 'types/radial-dendrogram'
+import { Hierarchy, Link } from 'types/radial-dendrogram'
 
 // Config
 import { RadialDendrogramConfig, RadialDendrogramConfigInterface } from './config'
@@ -18,6 +18,7 @@ import { RadialDendrogramConfig, RadialDendrogramConfigInterface } from './confi
 // Modules
 import { createNode, updateNode, removeNode } from './modules/node'
 import { createLabel, updateLabel, removeLabel } from './modules/label'
+import { createLink, updateLink, removeLink } from './modules/link'
 
 // Styles
 import * as s from './style'
@@ -26,6 +27,7 @@ export class RadialDendrogram<H extends Hierarchy> extends ComponentCore<H> {
   static selectors = s
   config: RadialDendrogramConfig<H> = new RadialDendrogramConfig()
   arcGen = arc<HierarchyRectangularNode<H>>()
+  linkArcGen = arc<Link<H>>()
 
   events = {
     [RadialDendrogram.selectors.node]: {},
@@ -53,14 +55,43 @@ export class RadialDendrogram<H extends Hierarchy> extends ComponentCore<H> {
       .innerRadius(d => d.y1 - getValue(d, config.nodeWidth))
       .outerRadius(d => d.y1)
 
+    this.linkArcGen
+      .startAngle(d => config.angleRange[0] + d.target.x0)
+      .endAngle(d => config.angleRange[0] + d.target.x1)
+      .padAngle(d => Math.min((d.target.x1 - d.target.x0) / 2, getValue(d, config.padAngle)))
+      .cornerRadius(d => getValue(d, config.cornerRadius))
+      .innerRadius(d => d.source.y1)
+      .outerRadius(d => d.target.y1 - getValue(d, config.nodeWidth))
+
     const hierarchyData = hierarchy(data, d => config.children(d))
     hierarchyData.sum(d => getValue(d, config.value))
 
-    const radius = Math.min(config.width, config.height) / 2 - config.nodeWidth
+    let radius = Math.min(config.width, config.height) / 2
+    const ladelWidth = radius / (hierarchyData.height + 1) - config.nodeWidth
+    radius = radius - ladelWidth
     const dendogram = partition<H>().size([config.angleRange[1], radius])
-    const dendogramData = dendogram(hierarchyData).descendants().filter(d => d.depth !== 0)
+    const dendogramDataWithRoot = dendogram(hierarchyData).descendants()
+    // Filter from the root node
+    const dendogramData = dendogramDataWithRoot.filter(d => d.depth !== 0)
+
+    const linksData = dendogramDataWithRoot[0].links().filter(l => l.source.parent)
 
     this.g.attr('transform', `translate(${config.width / 2},${config.height / 2})`)
+
+    // Links
+    const links = this.g
+      .selectAll(`.${s.link}`)
+      .data(linksData)
+
+    const linkEnter = links.enter().append('path')
+      .attr('class', s.link)
+      .call(createLink)
+
+    const linksMerged = linkEnter.merge(links)
+    linksMerged.call(updateLink, this.linkArcGen, duration)
+
+    links.exit()
+      .call(removeLink, duration)
 
     // Nodes
     const nodes = this.g
@@ -78,7 +109,6 @@ export class RadialDendrogram<H extends Hierarchy> extends ComponentCore<H> {
       .call(removeNode, duration)
 
     // Labels
-    const ladelWidth = radius / (hierarchyData.height + 1) - config.nodeWidth
     const labels = this.g
       .selectAll(`.${s.gLabel}`)
       .data(dendogramData)
