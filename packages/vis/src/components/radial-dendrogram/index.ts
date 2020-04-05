@@ -1,35 +1,37 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { hierarchy, partition, HierarchyRectangularNode } from 'd3-hierarchy'
 import { arc } from 'd3-shape'
-import { interpolate } from 'd3-interpolate'
 
 // Core
 import { ComponentCore } from 'core/component'
 
 // Utils
 import { getValue, isNumber } from 'utils/data'
-import { smartTransition } from 'utils/d3'
-import { getColor } from 'utils/color'
 
 // Types
 import { Spacing } from 'types/misc'
+import { Hierarchy } from 'types/radial-dendrogram'
 
 // Config
 import { RadialDendrogramConfig, RadialDendrogramConfigInterface } from './config'
 
+// Modules
+import { createNode, updateNode, removeNode } from './modules/node'
+import { createLabel, updateLabel, removeLabel } from './modules/label'
+
 // Styles
 import * as s from './style'
 
-export class RadialDendrogram<HirerarchyData> extends ComponentCore<HirerarchyData> {
+export class RadialDendrogram<H extends Hierarchy> extends ComponentCore<H> {
   static selectors = s
-  config: RadialDendrogramConfig<HirerarchyData> = new RadialDendrogramConfig()
-  arcGen = arc<HierarchyRectangularNode<HirerarchyData>>()
+  config: RadialDendrogramConfig<H> = new RadialDendrogramConfig()
+  arcGen = arc<HierarchyRectangularNode<H>>()
 
   events = {
     [RadialDendrogram.selectors.node]: {},
   }
 
-  constructor (config?: RadialDendrogramConfigInterface<HirerarchyData>) {
+  constructor (config?: RadialDendrogramConfigInterface<H>) {
     super()
     if (config) this.config.init(config)
   }
@@ -54,56 +56,41 @@ export class RadialDendrogram<HirerarchyData> extends ComponentCore<HirerarchyDa
     const hierarchyData = hierarchy(data, d => config.children(d))
     hierarchyData.sum(d => getValue(d, config.value))
 
-    const radius = Math.min(config.width, config.height) / 2
-    const dendogram = partition<HirerarchyData>().size([config.angleRange[1], radius])
+    const radius = Math.min(config.width, config.height) / 2 - config.nodeWidth
+    const dendogram = partition<H>().size([config.angleRange[1], radius])
     const dendogramData = dendogram(hierarchyData).descendants().filter(d => d.depth !== 0)
 
     this.g.attr('transform', `translate(${config.width / 2},${config.height / 2})`)
+
+    // Nodes
     const nodes = this.g
       .selectAll(`.${s.node}`)
       .data(dendogramData)
 
     const nodesEnter = nodes.enter().append('path')
       .attr('class', s.node)
-      .style('fill', d => getColor(d.data, config.nodeColor, d.depth))
-      .style('stroke', d => getColor(d.data, config.nodeColor, d.depth))
-      .style('opacity', 0)
-      .each((d, i, els) => {
-        const arcNode = els[i]
-        const angleCenter = (d.x0 + d.x1) / 2
-        const angleHalfWidth = (d.x1 - d.x0) / 2
-        arcNode._animState = {
-          x0: angleCenter - angleHalfWidth * 0.8,
-          x1: angleCenter + angleHalfWidth * 0.8,
-          y0: d.y0,
-          y1: d.y1,
-        }
-      })
+      .call(createNode, config)
 
     const nodesMerged = nodesEnter.merge(nodes)
-      .style('transition', `fill ${duration}ms`) // Animate color with CSS because we're using CSS-variables
-      .style('fill', d => getColor(d.data, config.nodeColor, d.depth))
-      .style('stroke', d => getColor(d.data, config.nodeColor, d.depth))
+    nodesMerged.call(updateNode, config, this.arcGen, duration)
 
-    if (duration) {
-      smartTransition(nodesMerged, duration)
-        .style('opacity', 1)
-        .attrTween('d', (d, i, els) => {
-          const arcNode = els[i]
-          const nextAnimState = { x0: d.x0, x1: d.x1, y0: d.y0, y1: d.y1 }
-          const datum = interpolate(arcNode._animState, nextAnimState)
+    nodes.exit()
+      .call(removeNode, duration)
 
-          return (t: number): string => {
-            arcNode._animState = datum(t)
-            return this.arcGen(arcNode._animState)
-          }
-        })
-    } else {
-      nodesMerged.attr('d', d => this.arcGen(d))
-    }
+    // Labels
+    const ladelWidth = radius / (hierarchyData.height + 1) - config.nodeWidth
+    const labels = this.g
+      .selectAll(`.${s.gLabel}`)
+      .data(dendogramData)
 
-    smartTransition(nodes.exit(), duration)
-      .style('opacity', 0)
-      .remove()
+    const labelEnter = labels.enter().append('g')
+      .attr('class', s.gLabel)
+      .call(createLabel)
+
+    const labelsMerged = labelEnter.merge(labels)
+    labelsMerged.call(updateLabel, ladelWidth, duration)
+
+    labels.exit()
+      .call(removeLabel, duration)
   }
 }

@@ -3,7 +3,7 @@
 import { AfterViewInit, Component } from '@angular/core'
 
 // Vis
-import { RadialDendrogram } from '@volterra/vis'
+import { RadialDendrogram, RadialDendrogramConfigInterface, Hierarchy } from '@volterra/vis'
 
 // Helpers
 import { getHierarchyData } from '../../utils/data'
@@ -14,7 +14,7 @@ import { getHierarchyData } from '../../utils/data'
   styleUrls: ['./radial-dendrogram.component.css'],
 })
 
-export class RadialDendrogramComponent implements AfterViewInit {
+export class RadialDendrogramComponent<H extends Hierarchy> implements AfterViewInit {
   title = 'radial-dendrogram'
 
   data = getHierarchyData(100, {
@@ -24,7 +24,7 @@ export class RadialDendrogramComponent implements AfterViewInit {
   })
 
   margin = {}
-  config = {
+  config: RadialDendrogramConfigInterface<H> = {
     nodeWidth: 40,
   }
   

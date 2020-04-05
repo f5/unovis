@@ -11,3 +11,14 @@ export const node = css`
     stroke-width: 2;
   }
 `
+
+export const gLabel = css`
+  label: group-label;
+`
+
+export const label = css`
+  label: label;
+  
+  dominant-baseline: middle;
+  user-select: none;
+`

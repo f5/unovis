@@ -4,6 +4,8 @@ import _uniqueId from 'lodash/uniqueId'
 import _sample from 'lodash/sample'
 import { nest as d3Nest } from 'd3-collection'
 import { sum } from 'd3-array'
+import { Hierarchy } from '@volterra/vis'
+
 export interface SampleDatum {
   id?: string;
   x: number;
@@ -46,12 +48,7 @@ export function sampleTimelineData (n: number): SampleTimelineDatum[] {
   }))
 }
 
-export interface Hierarchy {
-  key?: string;
-  values: Hierarchy[];
-}
-
-export function getHierarchyData (n, structure: {[key: string]: string[]}): Hierarchy {
+export function getHierarchyData (n: number, structure: {[key: string]: string[]}): Hierarchy {
   const keys = Object.keys(structure)
   const numericValueKey = 'value'
   const idKey = 'id'
