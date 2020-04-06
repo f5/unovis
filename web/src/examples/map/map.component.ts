@@ -25,15 +25,24 @@ function mapSampleData (): object[] {
 
 function getMapConfig (): LeafletMapConfigInterface<MapPoint> {
   return {
-    renderer: 'mapboxgl',
-    mapboxglGlyphs: 'https://maps.volterra.io/fonts/{fontstack}/{range}.pbf',
+    renderer: 'tangram',
+    // mapboxglGlyphs: 'https://maps.volterra.io/fonts/{fontstack}/{range}.pbf',
     sources: {
-      openmaptiles: {
-        type: "vector",
-        url: "https://maps.volterra.io/data/v3.json"
+      // openmaptiles: {
+      //   type: "vector",
+      //   url: "https://maps.volterra.io/data/v3.json"
+      // },
+      mapzen: {
+        max_zoom: 16,
+        tile_size: 256,
+        type: 'MVT',
+        url: 'https://tile.nextzen.org/tilezen/vector/v1/256/all/{z}/{x}/{y}.mvt',
+        url_params: {
+          api_key: 'q-wBnCItTPC8Vdj8GA6g8Q'
+        }
       }
     },
-    // accessToken: 'q-wBnCItTPC8Vdj8GA6g8Q',
+    accessToken: 'q-wBnCItTPC8Vdj8GA6g8Q',
     statusMap: {
       healthy: { color: '#47e845' },
       warning: { color: '#ffc226' },
