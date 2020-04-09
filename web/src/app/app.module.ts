@@ -16,6 +16,7 @@ import { TimelineComponent } from 'examples/timeline/timeline.component'
 import { BulletLegendExampleComponent } from 'examples/bullet-legend/bullet-legend.component'
 import { SimpleMapComponent } from 'examples/simple-map/simple-map.component'
 import { MapComponent } from 'examples/map/map.component'
+import { RadialDendrogramComponent } from 'examples/radial-dendrogram/radial-dendrogram.component'
 
 import { AppComponent } from './app.component'
 import { BulletLegendComponent } from './components/bullet-legend/bullet-legend.component'
@@ -38,6 +39,7 @@ const appRoutes: Routes = [
   { path: 'bullet-legend', component: BulletLegendExampleComponent },
   { path: 'simplemap', component: SimpleMapComponent },
   { path: 'map', component: MapComponent },
+  { path: 'radial-dendrogram', component: RadialDendrogramComponent },
 ]
 
 appRoutes.push({ path: '', redirectTo: `/${appRoutes[0].path}`, pathMatch: 'full' })
@@ -63,6 +65,7 @@ appRoutes.push({ path: '', redirectTo: `/${appRoutes[0].path}`, pathMatch: 'full
     MapComponent,
     MapLeafletComponent,
     Collection,
+    RadialDendrogramComponent,
   ],
 
   imports: [

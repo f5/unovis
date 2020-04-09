@@ -30,10 +30,10 @@ export function trimText (str = '', length = 15, type = TrimMode.MIDDLE): string
 export function trimSVGTextToPixel (svgTextSelection: Selection<SVGTextElement, any, SVGElement, any>, minWidth = 50, trimType = TrimMode.MIDDLE): void {
   let i = 0
   let textBBox = svgTextSelection.node().getBBox()
-  let text = svgTextSelection.text()
+  const text = svgTextSelection.text()
   let textLength = text.length
+
   while (textBBox.width > minWidth && textLength > 0) {
-    text = svgTextSelection.text()
     textLength -= 1
     svgTextSelection.text(trimText(text, text.length - i, trimType))
     i = i + 1
