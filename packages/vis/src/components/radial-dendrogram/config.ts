@@ -11,8 +11,8 @@ export interface RadialDendrogramConfigInterface<H extends Hierarchy> extends Co
   children?: (d: H) => H[];
   /** Value accessor function */
   value?: NumericAccessor<H>;
-  /** Node width value or accessor function */
-  nodeWidth?: NumericAccessor<H>;
+  /** Node width value in pixels */
+  nodeWidth?: number;
   /** Node color value or accessor function */
   nodeColor?: ColorAccessor<H>;
   /** Node label value or accessor function */

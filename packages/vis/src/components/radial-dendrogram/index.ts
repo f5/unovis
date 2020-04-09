@@ -1,4 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
+import { Selection, BaseType } from 'd3-selection'
 import { hierarchy, partition, HierarchyRectangularNode } from 'd3-hierarchy'
 import { arc } from 'd3-shape'
 
@@ -26,6 +27,9 @@ import * as s from './style'
 export class RadialDendrogram<H extends Hierarchy> extends ComponentCore<H> {
   static selectors = s
   config: RadialDendrogramConfig<H> = new RadialDendrogramConfig()
+  nodeGroup: Selection<SVGGElement, HierarchyRectangularNode<H>[], SVGGElement, HierarchyRectangularNode<H>[]>
+  linkGroup: Selection<SVGGElement, Link<H>[], SVGGElement, Link<H>[]>
+  labelGroup: Selection<SVGGElement, HierarchyRectangularNode<H>[], SVGGElement, HierarchyRectangularNode<H>[]>
   arcGen = arc<HierarchyRectangularNode<H>>()
   linkArcGen = arc<Link<H>>()
 
@@ -36,6 +40,9 @@ export class RadialDendrogram<H extends Hierarchy> extends ComponentCore<H> {
   constructor (config?: RadialDendrogramConfigInterface<H>) {
     super()
     if (config) this.config.init(config)
+    this.linkGroup = this.g.append('g')
+    this.nodeGroup = this.g.append('g')
+    this.labelGroup = this.g.append('g')
   }
 
   get bleed (): Spacing {
@@ -67,8 +74,9 @@ export class RadialDendrogram<H extends Hierarchy> extends ComponentCore<H> {
     hierarchyData.sum(d => getValue(d, config.value))
 
     let radius = Math.min(config.width, config.height) / 2
-    const ladelWidth = radius / (hierarchyData.height + 1) - config.nodeWidth
+    let ladelWidth = radius / (hierarchyData.height + 1) - config.nodeWidth
     radius = radius - ladelWidth
+    ladelWidth -= ladelWidth / (hierarchyData.height + 1)
     const dendogram = partition<H>().size([config.angleRange[1], radius])
     const dendogramDataWithRoot = dendogram(hierarchyData).descendants()
     // Filter from the root node
@@ -79,7 +87,7 @@ export class RadialDendrogram<H extends Hierarchy> extends ComponentCore<H> {
     this.g.attr('transform', `translate(${config.width / 2},${config.height / 2})`)
 
     // Links
-    const links = this.g
+    const links = this.linkGroup
       .selectAll(`.${s.link}`)
       .data(linksData)
 
@@ -87,14 +95,14 @@ export class RadialDendrogram<H extends Hierarchy> extends ComponentCore<H> {
       .attr('class', s.link)
       .call(createLink)
 
-    const linksMerged = linkEnter.merge(links)
+    const linksMerged = links.merge(linkEnter)
     linksMerged.call(updateLink, this.linkArcGen, duration)
 
-    links.exit()
-      .call(removeLink, duration)
+    const linksRemove: Selection<BaseType, Link<H>, SVGGElement, Link<H>[]> = links.exit()
+    linksRemove.call(removeLink, duration)
 
     // Nodes
-    const nodes = this.g
+    const nodes = this.nodeGroup
       .selectAll(`.${s.node}`)
       .data(dendogramData)
 
@@ -102,23 +110,23 @@ export class RadialDendrogram<H extends Hierarchy> extends ComponentCore<H> {
       .attr('class', s.node)
       .call(createNode, config)
 
-    const nodesMerged = nodesEnter.merge(nodes)
+    const nodesMerged = nodes.merge(nodesEnter)
     nodesMerged.call(updateNode, config, this.arcGen, duration)
 
     nodes.exit()
       .call(removeNode, duration)
 
     // Labels
-    const labels = this.g
+    const labels = this.labelGroup
       .selectAll(`.${s.gLabel}`)
       .data(dendogramData)
 
     const labelEnter = labels.enter().append('g')
       .attr('class', s.gLabel)
-      .call(createLabel)
+      .call(createLabel, config)
 
-    const labelsMerged = labelEnter.merge(labels)
-    labelsMerged.call(updateLabel, ladelWidth, duration)
+    const labelsMerged = labels.merge(labelEnter)
+    labelsMerged.call(updateLabel, config, ladelWidth, duration)
 
     labels.exit()
       .call(removeLabel, duration)

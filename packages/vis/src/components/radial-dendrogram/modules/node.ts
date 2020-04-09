@@ -18,7 +18,7 @@ export interface ArcNode extends SVGElement {
   _animState?: { x0: number; x1: number; y0: number; y1: number };
 }
 
-export function createNode<H extends Hierarchy> (selection: Selection<SVGElement, HierarchyRectangularNode<H>, SVGGElement, HierarchyRectangularNode<H>[]>, config: RadialDendrogramConfig<H>): void {
+export function createNode<H extends Hierarchy> (selection: Selection<SVGPathElement, HierarchyRectangularNode<H>, SVGGElement, HierarchyRectangularNode<H>[]>, config: RadialDendrogramConfig<H>): void {
   selection
     .style('fill', d => getColor(d.data, config.nodeColor, d.depth))
     .style('stroke', d => getColor(d.data, config.nodeColor, d.depth))
