@@ -15,3 +15,7 @@ export const bar = css`
 export const barGroup = css`
   label: barGroup;
 `
+
+export const barGroupExit = css`
+  label: barGroupExit;
+`

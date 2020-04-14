@@ -64,12 +64,16 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum> {
     const barGroupsMerged = barGroupsEnter.merge(barGroups)
     smartTransition(barGroupsMerged, duration)
       .attr('transform', d => `translate(${config.scales.x(getValue(d, config.x))}, 0)`)
+      .style('opacity', 1)
 
-    smartTransition(barGroups.exit(), duration)
+    const barGroupExit = barGroups.exit()
+      .attr('class', s.barGroupExit)
+    smartTransition(barGroupExit, duration)
       .style('opacity', 0)
       .remove()
+
     // Animate exiting bars going down
-    smartTransition(barGroups.exit().selectAll(`.${s.bar}`), duration)
+    smartTransition(barGroupExit.selectAll(`.${s.bar}`), duration)
       .attr('transform', `translate(0,${config.height / 3})`)
 
     const barWidth = innerBandScale.bandwidth()
