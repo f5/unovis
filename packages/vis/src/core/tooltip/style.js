@@ -3,7 +3,8 @@ import { css } from 'emotion'
 
 export const tooltip = css`
   label: tooltip;
-  width: max-content;
+  display: none;
+  min-width: max-content;
   position: absolute;
   pointer-events: none;
   opacity: 0;
@@ -14,7 +15,7 @@ export const tooltip = css`
   padding: 15px 20px;
   transform: translate(0, -5px);
 
-  object-fit: contain;
+  /* object-fit: contain; */
   border-radius: 5px;
   box-shadow: 0 13px 25px 0 rgba(172, 179, 184, 0.35);
   border: solid 1px #e5e9f7;
@@ -22,5 +23,7 @@ export const tooltip = css`
 
   &.show {
     opacity: 1;
+    /* display: block; */
+    display: inline-block
   }
 `
