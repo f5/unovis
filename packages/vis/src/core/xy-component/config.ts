@@ -12,7 +12,7 @@ export interface XYComponentConfigInterface<Datum> extends ComponentConfigInterf
   /** Y accessor or value */
   y?: NumericAccessor<Datum> | NumericAccessor<Datum>[];
   /** Id accessor for better visual data updates */
-  id?: ((d: Datum, i?: number, ...any) => string);
+  id?: ((d: Datum, i?: number, ...any) => string | number);
   /** Component color (string or color object) */
   color?: string | object;
   /** Coloring type */
@@ -38,7 +38,7 @@ export class XYComponentConfig<Datum> extends ComponentConfig implements XYCompo
   // eslint-disable-next-line dot-notation
   y: undefined; // NumericAccessor<Datum> = d => d['y'];
   // eslint-disable-next-line dot-notation
-  id = (d: Datum, i: number): string => d['id'] ?? i
+  id = (d: Datum, i: number): string | number => d['id'] ?? i
   // eslint-disable-next-line dot-notation
   color = (d: Datum): string => d['color']
   colorType = ColorType.Static

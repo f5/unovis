@@ -108,7 +108,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
 
     // Lines
     const lines = this._linesGroup.selectAll(`.${s.line}`)
-      .data(data, config.id) as Selection<SVGLineElement, Datum, SVGGElement, any>
+      .data(data, (d, i) => `${getValue(d, config.id) ?? i}`) as Selection<SVGLineElement, Datum, SVGGElement, any>
 
     const linesEnter = lines.enter().append('line')
       .attr('class', s.line)
