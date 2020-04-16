@@ -1,0 +1,513 @@
+{
+  "nodes": [
+    {
+      "id": "test",
+      "status": "healthy",
+      "group": "",
+      "groupLabel": "",
+      "label": "test",
+      "site": "test",
+      "score": null,
+      "icon": "T",
+      "borderWidth": 4,
+      "nodeSize": 15,
+      "shape": "circle"
+    },
+    {
+      "id": "N:ce01-site-local-vn-ce01-bookinfo",
+      "status": "healthy",
+      "group": "N:ce01-site-local-vn",
+      "groupLabel": "ce01-site-local-vn",
+      "label": "ce01",
+      "site": "ce01",
+      "score": null,
+      "icon": "AZ",
+      "borderWidth": 4,
+      "iconSize": 45,
+      "nodeSize": 47,
+      "shape": "circle",
+      "dataField": {
+        "overallHealth": 0,
+        "connectivityHealth": 0,
+        "reliabilityHealth": 0,
+        "performanceHealth": 0,
+        "securityHealth": 0,
+        "noHealthData": true,
+        "request": 0.153,
+        "error": 0.002,
+        "throughput": 43,
+        "latency": 0.035
+      },
+      "links": [
+        {
+          "target": "S:details-ce02-bookinfo",
+          "targetId": "ce02",
+          "service": "S:details",
+          "status": "healthy",
+          "dataField": {
+            "overallHealth": 0,
+            "connectivityHealth": 0,
+            "reliabilityHealth": 0,
+            "performanceHealth": 0,
+            "securityHealth": 0,
+            "noHealthData": true,
+            "request": 0.076,
+            "error": 0,
+            "throughput": 13,
+            "latency": 0.047
+          },
+          "apiData": {
+            "srcId": {
+              "namespace": "",
+              "site": "ce01",
+              "app_type": "bookinfo",
+              "service": "N:ce01-site-local-vn",
+              "vhost": ""
+            },
+            "dstId": {
+              "namespace": "",
+              "site": "ce02",
+              "app_type": "bookinfo",
+              "service": "S:details",
+              "vhost": ""
+            }
+          },
+          "score": null
+        },
+        {
+          "target": "S:reviews-ce02-bookinfo",
+          "targetId": "ce02",
+          "service": "S:reviews",
+          "status": "healthy",
+          "dataField": {
+            "overallHealth": 0,
+            "connectivityHealth": 0,
+            "reliabilityHealth": 0,
+            "performanceHealth": 0,
+            "securityHealth": 0,
+            "noHealthData": true,
+            "request": 0.077,
+            "error": 0,
+            "throughput": 30,
+            "latency": 0.023
+          },
+          "apiData": {
+            "srcId": {
+              "namespace": "",
+              "site": "ce01",
+              "app_type": "bookinfo",
+              "service": "N:ce01-site-local-vn",
+              "vhost": ""
+            },
+            "dstId": {
+              "namespace": "",
+              "site": "ce02",
+              "app_type": "bookinfo",
+              "service": "S:reviews",
+              "vhost": ""
+            }
+          },
+          "score": null
+        },
+        {
+          "target": "S:details-UNKNOWN-bookinfo",
+          "targetId": "UNKNOWN",
+          "service": "S:details",
+          "status": "healthy",
+          "dataField": {
+            "overallHealth": 0,
+            "connectivityHealth": 0,
+            "reliabilityHealth": 0,
+            "performanceHealth": 0,
+            "securityHealth": 0,
+            "noHealthData": true,
+            "request": 0,
+            "error": 0,
+            "throughput": 0,
+            "latency": 0
+          },
+          "apiData": {
+            "srcId": {
+              "namespace": "",
+              "site": "ce01",
+              "app_type": "bookinfo",
+              "service": "N:ce01-site-local-vn",
+              "vhost": ""
+            },
+            "dstId": {
+              "namespace": "",
+              "site": "UNKNOWN",
+              "app_type": "bookinfo",
+              "service": "S:details",
+              "vhost": ""
+            }
+          },
+          "score": null
+        },
+        {
+          "target": "S:reviews-UNKNOWN-bookinfo",
+          "targetId": "UNKNOWN",
+          "service": "S:reviews",
+          "status": "healthy",
+          "dataField": {
+            "overallHealth": 0,
+            "connectivityHealth": 0,
+            "reliabilityHealth": 0,
+            "performanceHealth": 0,
+            "securityHealth": 0,
+            "noHealthData": true,
+            "request": 0,
+            "error": 0,
+            "throughput": 0,
+            "latency": 0
+          },
+          "apiData": {
+            "srcId": {
+              "namespace": "",
+              "site": "ce01",
+              "app_type": "bookinfo",
+              "service": "N:ce01-site-local-vn",
+              "vhost": ""
+            },
+            "dstId": {
+              "namespace": "",
+              "site": "UNKNOWN",
+              "app_type": "bookinfo",
+              "service": "S:reviews",
+              "vhost": ""
+            }
+          },
+          "score": null
+        }
+      ],
+      "apiId": {
+        "namespace": "",
+        "site": "ce01",
+        "app_type": "bookinfo",
+        "service": "N:ce01-site-local-vn",
+        "vhost": ""
+      },
+      "labels": {
+        "app": "product_and_ratings",
+        "ce-name": "CE01",
+        "ce-set": "test1",
+        "hw-type": "cloud",
+        "opc-type": "client",
+        "server/type": "CloudCE-EU",
+        "test-label": "test-key",
+        "test-scenario": "opc-ua",
+        "ves.io/name": "CE01",
+        "ves.io/type": "CE",
+        "vgw-name": "vgw-azr-01"
+      }
+    },
+    {
+      "id": "S:details-ce02-bookinfo",
+      "status": "healthy",
+      "group": "column1",
+      "groupLabel": "details",
+      "label": "ce02",
+      "site": "ce02",
+      "score": null,
+      "icon": "AZ",
+      "borderWidth": 4,
+      "iconSize": 45,
+      "nodeSize": 47,
+      "shape": "circle",
+      "dataField": {
+        "overallHealth": 0,
+        "connectivityHealth": 0,
+        "reliabilityHealth": 0,
+        "performanceHealth": 0,
+        "securityHealth": 0,
+        "request": 0,
+        "error": 0,
+        "throughput": 0,
+        "latency": 0,
+        "noData": true,
+        "noHealthData": true
+      },
+      "links": [],
+      "apiId": {
+        "namespace": "",
+        "site": "ce02",
+        "app_type": "bookinfo",
+        "service": "S:details",
+        "vhost": ""
+      },
+      "labels": {
+        "app": "details_and_reviews",
+        "ce-name": "CE02",
+        "hw-type": "cloud",
+        "key1": "value1",
+        "opc-type": "server",
+        "server/type": "CloudCE-US",
+        "test-scenario": "opc-ua",
+        "ves.io/name": "CE02",
+        "ves.io/type": "CE"
+      }
+    },
+    {
+      "id": "S:details-UNKNOWN-bookinfo",
+      "status": "healthy",
+      "group": "column1",
+      "groupLabel": "details",
+      "label": "UNKNOWN",
+      "site": "UNKNOWN",
+      "score": null,
+      "icon": "AZ",
+      "borderWidth": 4,
+      "iconSize": 45,
+      "nodeSize": 47,
+      "shape": "circle",
+      "dataField": {
+        "overallHealth": 0,
+        "connectivityHealth": 0,
+        "reliabilityHealth": 0,
+        "performanceHealth": 0,
+        "securityHealth": 0,
+        "request": 0,
+        "error": 0,
+        "throughput": 0,
+        "latency": 0,
+        "noData": true,
+        "noHealthData": true
+      },
+      "links": [],
+      "apiId": {
+        "namespace": "",
+        "site": "UNKNOWN",
+        "app_type": "bookinfo",
+        "service": "S:details",
+        "vhost": ""
+      }
+    },
+    {
+      "id": "S:reviews-ce02-bookinfo",
+      "status": "healthy",
+      "group": "column3",
+      "groupLabel": "reviews",
+      "label": "ce02",
+      "site": "ce02",
+      "score": null,
+      "icon": "AZ",
+      "borderWidth": 4,
+      "iconSize": 45,
+      "nodeSize": 47,
+      "shape": "circle",
+      "dataField": {
+        "overallHealth": 0,
+        "connectivityHealth": 0,
+        "reliabilityHealth": 0,
+        "performanceHealth": 0,
+        "securityHealth": 0,
+        "request": 0,
+        "error": 0,
+        "throughput": 0,
+        "latency": 0,
+        "noData": true,
+        "noHealthData": true
+      },
+      "links": [],
+      "apiId": {
+        "namespace": "",
+        "site": "ce02",
+        "app_type": "bookinfo",
+        "service": "S:reviews",
+        "vhost": ""
+      },
+      "labels": {
+        "app": "details_and_reviews",
+        "ce-name": "CE02",
+        "hw-type": "cloud",
+        "key1": "value1",
+        "opc-type": "server",
+        "server/type": "CloudCE-US",
+        "test-scenario": "opc-ua",
+        "ves.io/name": "CE02",
+        "ves.io/type": "CE"
+      }
+    },
+    {
+      "id": "S:reviews-UNKNOWN-bookinfo",
+      "status": "healthy",
+      "group": "column3",
+      "groupLabel": "reviews",
+      "label": "UNKNOWN",
+      "site": "UNKNOWN",
+      "score": null,
+      "icon": "AZ",
+      "borderWidth": 4,
+      "iconSize": 45,
+      "nodeSize": 47,
+      "shape": "circle",
+      "dataField": {
+        "overallHealth": 0,
+        "connectivityHealth": 0,
+        "reliabilityHealth": 0,
+        "performanceHealth": 0,
+        "securityHealth": 0,
+        "request": 0,
+        "error": 0,
+        "throughput": 0,
+        "latency": 0,
+        "noData": true,
+        "noHealthData": true
+      },
+      "links": [],
+      "apiId": {
+        "namespace": "",
+        "site": "UNKNOWN",
+        "app_type": "bookinfo",
+        "service": "S:reviews",
+        "vhost": ""
+      }
+    }
+  ],
+  "links": [
+    {
+      "target": "S:details-ce02-bookinfo",
+      "targetId": "ce02",
+      "service": "S:details",
+      "status": "healthy",
+      "dataField": {
+        "overallHealth": 0,
+        "connectivityHealth": 0,
+        "reliabilityHealth": 0,
+        "performanceHealth": 0,
+        "securityHealth": 0,
+        "noHealthData": true,
+        "request": 0.076,
+        "error": 0,
+        "throughput": 13,
+        "latency": 0.047
+      },
+      "apiData": {
+        "srcId": {
+          "namespace": "",
+          "site": "ce01",
+          "app_type": "bookinfo",
+          "service": "N:ce01-site-local-vn",
+          "vhost": ""
+        },
+        "dstId": {
+          "namespace": "",
+          "site": "ce02",
+          "app_type": "bookinfo",
+          "service": "S:details",
+          "vhost": ""
+        }
+      },
+      "score": null,
+      "source": "N:ce01-site-local-vn-ce01-bookinfo"
+    },
+    {
+      "target": "S:reviews-ce02-bookinfo",
+      "targetId": "ce02",
+      "service": "S:reviews",
+      "status": "healthy",
+      "dataField": {
+        "overallHealth": 0,
+        "connectivityHealth": 0,
+        "reliabilityHealth": 0,
+        "performanceHealth": 0,
+        "securityHealth": 0,
+        "noHealthData": true,
+        "request": 0.077,
+        "error": 0,
+        "throughput": 30,
+        "latency": 0.023
+      },
+      "apiData": {
+        "srcId": {
+          "namespace": "",
+          "site": "ce01",
+          "app_type": "bookinfo",
+          "service": "N:ce01-site-local-vn",
+          "vhost": ""
+        },
+        "dstId": {
+          "namespace": "",
+          "site": "ce02",
+          "app_type": "bookinfo",
+          "service": "S:reviews",
+          "vhost": ""
+        }
+      },
+      "score": null,
+      "source": "N:ce01-site-local-vn-ce01-bookinfo"
+    },
+    {
+      "target": "S:details-UNKNOWN-bookinfo",
+      "targetId": "UNKNOWN",
+      "service": "S:details",
+      "status": "healthy",
+      "dataField": {
+        "overallHealth": 0,
+        "connectivityHealth": 0,
+        "reliabilityHealth": 0,
+        "performanceHealth": 0,
+        "securityHealth": 0,
+        "noHealthData": true,
+        "request": 0,
+        "error": 0,
+        "throughput": 0,
+        "latency": 0
+      },
+      "apiData": {
+        "srcId": {
+          "namespace": "",
+          "site": "ce01",
+          "app_type": "bookinfo",
+          "service": "N:ce01-site-local-vn",
+          "vhost": ""
+        },
+        "dstId": {
+          "namespace": "",
+          "site": "UNKNOWN",
+          "app_type": "bookinfo",
+          "service": "S:details",
+          "vhost": ""
+        }
+      },
+      "score": null,
+      "source": "N:ce01-site-local-vn-ce01-bookinfo"
+    },
+    {
+      "target": "S:reviews-UNKNOWN-bookinfo",
+      "targetId": "UNKNOWN",
+      "service": "S:reviews",
+      "status": "healthy",
+      "dataField": {
+        "overallHealth": 0,
+        "connectivityHealth": 0,
+        "reliabilityHealth": 0,
+        "performanceHealth": 0,
+        "securityHealth": 0,
+        "noHealthData": true,
+        "request": 0,
+        "error": 0,
+        "throughput": 0,
+        "latency": 0
+      },
+      "apiData": {
+        "srcId": {
+          "namespace": "",
+          "site": "ce01",
+          "app_type": "bookinfo",
+          "service": "N:ce01-site-local-vn",
+          "vhost": ""
+        },
+        "dstId": {
+          "namespace": "",
+          "site": "UNKNOWN",
+          "app_type": "bookinfo",
+          "service": "S:reviews",
+          "vhost": ""
+        }
+      },
+      "score": null,
+      "source": "N:ce01-site-local-vn-ce01-bookinfo"
+    }
+  ]
+}
