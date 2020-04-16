@@ -4,6 +4,7 @@ import { ScaleType } from 'types/scales'
 export type NumericAccessor<Datum> = ((d: Datum, i?: number, ...any) => number | null) | number | null
 export type StringAccessor<Datum> = ((d: Datum, i?: number, ...any) => string) | string
 export type ColorAccessor<Datum> = ((d: Datum, i?: number, ...any) => string) | string
+export type BooleanAccessor<Datum> = ((d: Datum, i?: number, ...any) => boolean) | boolean
 
 export type Dimension = {
   /** D3 scale, e.g. Scale.ScaleLinear */

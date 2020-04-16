@@ -19,7 +19,7 @@ const lodashLibs = ['lodash/isUndefined', 'lodash/isArray', 'lodash/isEmpty', 'l
   'lodash/isNil', 'lodash/cloneDeep', 'lodash/throttle', 'lodash/each', 'lodash/filter',
   'lodash/get', 'lodash/without', 'lodash/find', 'lodash/isString', 'lodash/isObject',
   'lodash/isFunction', 'lodash/isNumber', 'lodash/merge', 'lodash/isPlainObject', 'lodash/flatten',
-  'lodash/omit', 'lodash/extend']
+  'lodash/omit', 'lodash/extend', 'lodash/groupBy', 'lodash/uniq', 'lodash/sortBy', 'lodash/range']
 
 const globals = {}
 d3Libs.reduce((acc, name) => { acc[name] = 'd3'; return acc }, globals)

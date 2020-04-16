@@ -34,6 +34,7 @@
     "d3": "^5.14.2",
     "d3-interpolate-path": "^2.1.1",
     "d3-sankey": "^0.12.3",
+    "dagre-layout": "^0.8.8",
     "emotion": "^10.0.23",
     "leaflet": "^1.6.0",
     "lodash": "^4.17.15",

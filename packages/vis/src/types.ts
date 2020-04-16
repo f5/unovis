@@ -4,5 +4,7 @@ import { SymbolType } from './types/symbols'
 import { Scale } from './types/scales'
 import { Projection } from './types/map-projections'
 import { Hierarchy } from './types/radial-dendrogram'
+import { LayoutType, LinkStyle, LinkArrow, NodeDatumCore, LinkDatumCore, SideLabel } from './types/graph'
+import { SHAPE } from './types/shape'
 
-export { CurveType, SymbolType, Scale, Projection, Hierarchy }
+export { CurveType, SymbolType, Scale, Projection, LayoutType, LinkStyle, LinkArrow, NodeDatumCore, LinkDatumCore, SHAPE, SideLabel, Hierarchy }
