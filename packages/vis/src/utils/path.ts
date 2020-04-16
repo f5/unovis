@@ -1,7 +1,9 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { range } from 'd3-array'
+import { range, min, max } from 'd3-array'
 import { line, curveCardinal, curveCardinalClosed } from 'd3-shape'
 
+// Utils
+import { clamp } from 'utils/data'
 /*
  * Generate SVG path for rectangle with rounded corners
  *
@@ -48,7 +50,7 @@ export function roundedRectPath ({ x, y, w, h, tl = false, tr = false, bl = fals
   return path
 }
 
-export function polygon (size, n = 6, endAngle = 2 * Math.PI, open = false): string {
+export function polygon (size: number, n = 6, endAngle = 2 * Math.PI, open = false): string {
   const r = n === 4 ? Math.sqrt(0.5) * size : size / 3.6 * 2
   const deltaAngle = n === 4 ? Math.PI / 4 : 0 // rotate to 45 grads if shape is a rectangle
   const shiftedEndAngle = endAngle - deltaAngle
@@ -108,4 +110,56 @@ export function circlePath (cx: number, cy: number, r: number): string {
     m ${-r}, 0
     a ${r},${r} 0 1,1 ${r * 2},0
     a ${r},${r} 0 1,1 ${-r * 2},0`
+}
+
+export function scoreRectPath ({ x, y, w, h, r = 0, score = 1 }): string {
+  let path
+  const side = 1 / 4
+  const halfSide = side / 2
+  let part = score
+
+  //    8 1
+  //    - -
+  // 7 |   | 2
+  // 6 |   | 3
+  //    - -
+  //    5 4
+
+  // 1
+  const hLength = min([w * 0.5 * (part / halfSide) + r, w * 0.5 - r])
+  path = `M${x + w * 0.5},${y}h${hLength}`
+
+  // 2, 3
+  part = score - 1 / 8
+  if (part > 0) {
+    path += `a${r},${r} 0 0 1 ${r},${r}`
+    const vLength = clamp(h * (part / side) - r, 0, h - 2 * r)
+    path += `v${vLength}`
+  }
+
+  // 4, 5
+  part = score - 3 / 8
+  if (part > 0) {
+    path += `a${r},${r} 0 0 1 ${-r},${r}`
+    const hLength = clamp(r - w * (part / side), 2 * r - w, 0)
+    path += `h${hLength}`
+  }
+
+  // 6, 7
+  part = score - 5 / 8
+  if (part > 0) {
+    path += `a${r},${r} 0 0 1 ${-r},${-r}`
+    const vLength = clamp(r - h * (part / side), 2 * r - h, 0)
+    path += `v${vLength}`
+  }
+
+  // 8
+  part = score - 7 / 8
+  if (part > 0) {
+    path += `a${r},${r} 0 0 1 ${r},${-r}`
+    const hLength = max([w * 0.5 * (part / halfSide) - r, 0])
+    path += `h${hLength}`
+  }
+
+  return path
 }

@@ -21,6 +21,10 @@ import _isPlainObject from 'lodash/isPlainObject'
 import _flatten from 'lodash/flatten'
 import _omit from 'lodash/omit'
 import _extend from 'lodash/extend'
+import _groupBy from 'lodash/groupBy'
+import _uniq from 'lodash/uniq'
+import _sortBy from 'lodash/sortBy'
+import _range from 'lodash/range'
 // If you add a new lodash import here, please specify it in rollup.config.js as well
 
 export const isNumber = _isNumber
@@ -45,6 +49,10 @@ export const throttle = _throttle
 export const flatten = _flatten
 export const omit = _omit
 export const extend = _extend
+export const groupBy = _groupBy
+export const uniq = _uniq
+export const sortBy = _sortBy
+export const range = _range
 
 export function getValue (d, accessor, index?: number): any {
   if (isFunction(accessor)) return accessor(d, index)
