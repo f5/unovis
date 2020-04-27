@@ -449,27 +449,22 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
 
   _onBackgroundClick (d, i, elements): void {
     this._resetSelection()
-    this._onEvent(d, i, elements)
   }
 
   _onNodeClick (d, i, elements): void {
-    // this._selectNode(d)
-    this._onEvent(d, i, elements)
+    this._selectNode(d)
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   _onNodeMouseOut (d, i, elements): void {
-    if (this._isDragging) return
-    this._onEvent(d, i, elements)
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   _onNodeMouseOver (d, i, elements): void {
-    if (this._isDragging) return
-    this._onEvent(d, i, elements)
   }
 
   _onLinkClick (d, i, elements): void {
-    // this._selectLink(d)
-    this._onEvent(d, i, elements)
+    this._selectLink(d)
   }
 
   _onLinkMouseOver (d, i, elements): void {
@@ -477,7 +472,6 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
 
     d._state.hovered = true
     this._updateSelectedElements()
-    this._onEvent(d, i, elements)
   }
 
   _onLinkMouseOut (d, i, elements): void {
@@ -485,7 +479,6 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
 
     delete d._state.hovered
     this._updateSelectedElements()
-    this._onEvent(d, i, elements)
   }
 
   _onLinkFlowTimerFrame (elapsed = 0): void {
