@@ -8,6 +8,7 @@ export const variables = injectGlobal`
     --vis-graph-panel-label-color: #7d8892;
     --vis-graph-panel-label-background: #ffffff;
     --vis-graph-panel-side-label-fill: #ffffff;
+    --vis-graph-panel-selection-outline-color: #b7b7b7;
   }
 `
 
@@ -67,7 +68,7 @@ export const panelSelection = css`
   stroke-dasharray: 3 3;
   fill: var(--vis-graph-node-selection-color);
   fill-opacity: 0.1;
-  stroke: var(--vis-graph-node-stroke-color);
+  stroke: var(--vis-graph-panel-selection-outline-color);
   stroke-opacity: 0.75;
 
   &${`.${panelSelectionActive}`} {
