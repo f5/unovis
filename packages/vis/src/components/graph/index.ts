@@ -132,10 +132,10 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
     this._recalculateLayout = true
     this._findPanels = true
 
-    const selectedNode = find(nodes, node => node.id === this.config.selectedNodeId)
+    const selectedNode = this.config.selectedNodeId && find(nodes, node => node.id === this.config.selectedNodeId)
     this._selectNode(selectedNode)
 
-    const selectedLink = find(links, link => link.id === this.config.selectedLinkId)
+    const selectedLink = this.config.selectedLinkId && find(links, link => link.id === this.config.selectedLinkId)
     this._selectLink(selectedLink)
   }
 
@@ -351,6 +351,7 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
     const { datamodel: { nodes, links } } = this
     if (!node) return
     this._selectedNode = node
+
     // Apply Greyout
     // Grayout all nodes
     nodes.forEach(n => {
