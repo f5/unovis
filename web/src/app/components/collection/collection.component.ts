@@ -22,8 +22,8 @@ export class Collection implements OnInit {
   itemValues: any[]
 
   options = {
-    'Few Data Elements': 50,
-    'No Data ↔︎ Data': 30,
+    'Few Data Elements': 10,
+    'Transition: Data ↔︎ No Data': 30,
     'Single Data Element': 1,
     'No Data': 0,
     'Many Data Elements': 165,

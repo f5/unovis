@@ -1,6 +1,7 @@
 .map {
-  width: 100%;
-  height: 80vh;
+  width: calc(100% + 200px);
+  margin-left: -200px;
+  height: 100%;
   position: relative;
 
   .pointPending {

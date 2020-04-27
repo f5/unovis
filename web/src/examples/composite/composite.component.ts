@@ -55,6 +55,9 @@ export class CompositeComponent implements AfterViewInit {
         new StackedBar(this.barConfig),
       ],
       dimensions: {
+        y: {
+          domainMaxConstraint: [1, undefined]
+        },
         x: {
           domain: undefined
         }

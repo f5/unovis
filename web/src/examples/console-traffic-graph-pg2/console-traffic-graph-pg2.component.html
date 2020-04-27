@@ -1,0 +1,7 @@
+<div class="button-group">
+  <button mat-button [color]="layoutType === 'parallel' ? 'accent' : null" (click)="onClick('parallel')">Block Layout</button>
+  <button mat-button [color]="layoutType === 'force' ? 'accent' : null" (click)="onClick('force')">Force Layout</button>    
+</div>
+
+<div #graph class="chart">
+</div>
