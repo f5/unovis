@@ -32,7 +32,7 @@ export function arcTween<N extends NodeDatumCore, L extends LinkDatumCore> (d: N
   const { nodeBorderWidth, nodeSize, nodeStrokeSegmentValue } = config
   if (!el._animState) _setInitialAnimState(el)
   const i = interpolate(el._animState, {
-    endAngle: 2 * Math.PI * getValue(d, nodeStrokeSegmentValue) / 100,
+    endAngle: 2 * Math.PI * (getValue(d, nodeStrokeSegmentValue) ?? 0) / 100,
     nodeSize: getValue(d, nodeSize),
     borderWidth: getValue(d, nodeBorderWidth),
   })
@@ -62,7 +62,7 @@ export function polyTween<N extends NodeDatumCore, L extends LinkDatumCore> (d: 
 
   if (!el._animState) _setInitialAnimState(el)
   const i = interpolate(el._animState, {
-    endAngle: 2 * Math.PI * getValue(d, nodeStrokeSegmentValue) / 100,
+    endAngle: 2 * Math.PI * (getValue(d, nodeStrokeSegmentValue) ?? 0) / 100,
   })
   el._animState = i(0)
 
@@ -119,7 +119,7 @@ export function getNodeColor<T> (d: T, colorAccessor): string {
   return getValue(d, colorAccessor) ?? null
 }
 
-export function getNodeInnerLabelColor<T> (d: T, colorAccessor): string {
+export function getNodeIconColor<T> (d: T, colorAccessor): string {
   const nodeColor = getNodeColor(d, colorAccessor)
   if (!nodeColor) return null
 

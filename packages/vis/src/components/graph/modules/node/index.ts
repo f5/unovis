@@ -17,7 +17,7 @@ import { getValue, isFunction, throttle } from 'utils/data'
 import { GraphConfigInterface } from '../../config'
 
 // Helpers
-import { arcTween, polyTween, setLabelRect, getX, getY, getSideTexLabelColor, getNodeColor, getNodeInnerLabelColor } from './helper'
+import { arcTween, polyTween, setLabelRect, getX, getY, getSideTexLabelColor, getNodeColor, getNodeIconColor } from './helper'
 import { appendShape, updateShape, isCustomXml } from '../shape'
 import ZOOM_LEVEL from '../zoom-levels'
 
@@ -75,7 +75,7 @@ export function updateSelectedNodes<N extends NodeDatumCore, L extends LinkDatum
 }
 
 export function updateNodes<N extends NodeDatumCore, L extends LinkDatumCore> (selection: Selection<SVGGElement, N, SVGGElement, N[]>, config: GraphConfigInterface<N, L>, duration: number, scale = 1, callback?: () => {}): void {
-  const { scoreAnimDuration, nodeBorderWidth, nodeShape, nodeSize, nodeStrokeSegmentValue, nodeIcon, nodeIconSize, nodeLabel, nodeSubLabel, nodeSideLabels, nodeStroke, nodeFill } = config
+  const { scoreAnimDuration, nodeBorderWidth, nodeShape, nodeSize, nodeStrokeSegmentValue, nodeStrokeSegmentFill, nodeIcon, nodeIconSize, nodeLabel, nodeSubLabel, nodeSideLabels, nodeStroke, nodeFill } = config
 
   selection.each((d, i, elements) => {
     const group: Selection<SVGGElement, N, SVGGElement, N> = select(elements[i])
@@ -116,7 +116,9 @@ export function updateNodes<N extends NodeDatumCore, L extends LinkDatumCore> (s
     nodeArc
       .attr('stroke-width', d => getValue(d, nodeBorderWidth))
       .style('display', d => !getValue(d, nodeStrokeSegmentValue) ? 'none' : null)
-      .style('fill', d => getNodeColor(d, nodeFill))
+      .style('fill', getNodeColor(d, nodeStrokeSegmentFill))
+      .style('stroke', getNodeColor(d, nodeStrokeSegmentFill))
+      .style('stroke-opacity', d => getValue(d, nodeShape) === SHAPE.CIRCLE ? 0 : null)
 
     nodeArc
       .transition()
@@ -140,7 +142,7 @@ export function updateNodes<N extends NodeDatumCore, L extends LinkDatumCore> (s
     icon
       .style('font-size', d => getValue(d, nodeIconSize) ?? 2.5 * Math.sqrt(getValue(d, nodeSize)))
       .attr('dy', 1)
-      .style('fill', d => getNodeInnerLabelColor(d, nodeFill))
+      .style('fill', d => getNodeIconColor(d, nodeFill))
       .html(d => getValue(d, nodeIcon))
 
     // Side Labels
