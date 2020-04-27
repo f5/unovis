@@ -19,12 +19,12 @@ import * as nodeSelectors from '../node/style'
 
 const DEFAULT_PADDING = 25
 
-export function findPanelForNodes<N extends NodeDatumCore, L extends LinkDatumCore> (panels: PanelConfigInterface[], nodes: N[], config: GraphConfigInterface<N, L>): void {
+export function setPanelForNodes<N extends NodeDatumCore, L extends LinkDatumCore> (panels: PanelConfigInterface[], nodes: N[], config: GraphConfigInterface<N, L>): void {
   const { layoutNonConnectedAside } = config
   if (!panels) return
 
-  // For each Nodes create Panels to which node is belong
-  // Than for each Panels collect an array of neighbour Nodes
+  // For each Node create Panels to which node belongs
+  // Then for each Panel create an array of neighbouring Nodes
   nodes.forEach(node => {
     // Find all panels to which node is belong
     const nodePanels = panels.filter(panel => panel.nodes && panel.nodes.includes(node._id))

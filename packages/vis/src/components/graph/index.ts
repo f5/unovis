@@ -33,7 +33,7 @@ import { getMaxNodeSize, getX, getY } from './modules/node/helper'
 import { createLinks, updateLinks, removeLinks, zoomLinksThrottled, zoomLinks, animateLinkFlow, updateSelectedLink } from './modules/link'
 import { LINK_MARKER_WIDTH, LINK_MARKER_HEIGHT, getDoubleArrowPath, getArrowPath, getLinkColor } from './modules/link/helper'
 import { createPanels, updatePanels, removePanels } from './modules/panel'
-import { findPanelForNodes, updatePanelData, getMaxPanlePadding } from './modules/panel/helper'
+import { setPanelForNodes, updatePanelData, getMaxPanlePadding } from './modules/panel/helper'
 import { applyLayoutCircular, applyLayoutParallel, applyLayoutDagre, applyLayoutConcentric, applyLayoutForce } from './modules/layout'
 
 export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends PanelConfigInterface> extends ComponentCore<{nodes: N[]; links?: L[]}> {
@@ -60,7 +60,7 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
   private _recalculateLayout = false
 
   private _fitLayout
-  private _findPanels = false
+  private _setPanels = false
   private _panels: P[]
 
   // private _panelsGroup
@@ -120,7 +120,7 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
     this.datamodel.data = data
     this._recalculateLayout = true
     if (config.layoutAutofit) this._fitLayout = true
-    this._findPanels = true
+    this._setPanels = true
 
     this._addSVGDefs()
   }
@@ -130,7 +130,7 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
     super.setConfig(config)
 
     this._recalculateLayout = true
-    this._findPanels = true
+    this._setPanels = true
 
     const selectedNode = this.config.selectedNodeId && find(nodes, node => node.id === this.config.selectedNodeId)
     this._selectNode(selectedNode)
@@ -179,10 +179,13 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
       this._fitLayout = false
     }
 
-    if (this._findPanels) {
+    if (this._setPanels) {
+      smartTransition(this._panelsGroup, duration)
+        .style('opacity', panels?.length ? 1 : 0)
+
       this._panels = cloneDeep(panels)
-      findPanelForNodes(this._panels, datamodel.nodes, this.config)
-      this._findPanels = false
+      setPanelForNodes(this._panels, datamodel.nodes, this.config)
+      this._setPanels = false
     }
 
     // Draw
