@@ -90,5 +90,5 @@ export function updatePanelData<N extends NodeDatumCore, L extends LinkDatumCore
 }
 
 export function getMaxPanlePadding<P extends PanelConfigInterface> (panels: P[]): number {
-  return panels ? DEFAULT_PADDING + max(panels.map(d => d.padding)) : 0
+  return panels?.length ? DEFAULT_PADDING + max(panels.map(d => d.padding)) : 0
 }

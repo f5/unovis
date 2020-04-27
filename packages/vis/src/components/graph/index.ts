@@ -127,6 +127,8 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
 
   setConfig (config: GraphConfigInterface<N, L>): void {
     const { datamodel: { links, nodes } } = this
+    this._fitLayout = this.config.layoutType !== config.layoutType
+
     super.setConfig(config)
 
     this._recalculateLayout = true
@@ -174,11 +176,6 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
       this._recalculateLayout = false
     }
 
-    if (this._fitLayout && !this._disableAutoFit) {
-      this._fit()
-      this._fitLayout = false
-    }
-
     if (this._setPanels) {
       smartTransition(this._panelsGroup, duration)
         .style('opacity', panels?.length ? 1 : 0)
@@ -186,6 +183,14 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
       this._panels = cloneDeep(panels)
       setPanelForNodes(this._panels, datamodel.nodes, this.config)
       this._setPanels = false
+    }
+
+    if (this._firstRender) {
+      this._fit()
+      this._fitLayout = false
+    } else if (this._fitLayout && !this._disableAutoFit) {
+      this._fit(duration)
+      this._fitLayout = false
     }
 
     // Draw
@@ -205,10 +210,6 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
     if (!this._firstRender && !disableZoom) {
       const transform = zoomTransform(this.g.node())
       this._onZoom(transform)
-    }
-
-    if (this._firstRender) {
-      this._fit()
     }
 
     // Reset pointer-events

@@ -106,6 +106,7 @@ export interface GraphConfigInterface<N extends NodeDatumCore, L extends LinkDat
 }
 
 export class GraphConfig<N extends NodeDatumCore, L extends LinkDatumCore> extends ComponentConfig implements GraphConfigInterface<N, L> {
+  duration = 1000
   zoomScaleExtent: [number, number] = [0.35, 1.25]
   disableZoom = false
   disableDrag = true
