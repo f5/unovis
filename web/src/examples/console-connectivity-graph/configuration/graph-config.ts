@@ -2,12 +2,12 @@
 import _sample from 'lodash/sample'
 import { Graph, LayoutType, GraphConfigInterface } from '@volterra/vis'
 
-const StatusMap = {
-  healthy: { color: '#47e845' },
-  warning: { color: '#ffc226' },
-  inactive: { color: '#dddddd' },
-  alert: { color: '#f88080' },
-}
+// const StatusMap = {
+//   healthy: { color: '#47e845' },
+//   warning: { color: '#ffc226' },
+//   inactive: { color: '#dddddd' },
+//   alert: { color: '#f88080' },
+// }
 
 export const accessors: GraphConfigInterface<any, any> = {
   nodeSize: d => d.nodeSize,

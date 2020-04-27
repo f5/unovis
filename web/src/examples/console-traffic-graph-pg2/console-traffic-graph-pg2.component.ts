@@ -9,7 +9,6 @@ import { Graph, SingleChart, GraphConfigInterface } from '@volterra/vis'
 
 import { overviewConfig } from './configuration/graph-config'
 import consoleData from './data/traffic.json'
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast'
 
 @Component({
   selector: 'console-traffic-graph-pg2',

@@ -4,6 +4,8 @@ import { Component, ViewChild, ElementRef, OnInit, AfterViewInit } from '@angula
 import _times from 'lodash/times'
 import _sample from 'lodash/sample'
 import _random from 'lodash/random'
+import _flatten from 'lodash/flatten'
+
 
 import { Graph, SingleChart, GraphConfigInterface } from '@volterra/vis'
 
@@ -44,14 +46,15 @@ export class ConnectivityGraphComponent implements OnInit, AfterViewInit {
       ((n.id === l.source) || (n.id === l.target)) && (n.id !== d.id)
     ))
     const nodes = d.nodes
-    const drilldownLinks = connectedNodes.map(node1 =>
-      nodes.map(node2 => ({
-        source: node1.id,
-        target: node2.id,
-        id: `${node1.id}~${node2.id}`
-      })
-    )).flat()
-    console.log({links, connectedNodes, drilldownLinks})
+    const drilldownLinks = _flatten(
+      connectedNodes.map(node1 =>
+        nodes.map(node2 => ({
+          source: node1.id,
+          target: node2.id,
+          id: `${node1.id}~${node2.id}`
+        })
+      ))
+    )
 
     this.drilldownData = { nodes: nodes.concat(connectedNodes), links: drilldownLinks }
     this.config = drilldownConfig(() => {})
