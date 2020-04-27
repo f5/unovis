@@ -21,7 +21,7 @@ export interface GraphConfigInterface<N extends NodeDatumCore, L extends LinkDat
 
   // Layout
   /** Type of graph layout */
-  layoutType?: LayoutType;
+  layoutType?: LayoutType | string;
   /** Refit the layout on data or configuration update */
   layoutAutofit?: boolean;
   /** Place non-connected nodes to the bottom of the graph */
