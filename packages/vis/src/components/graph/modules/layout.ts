@@ -57,7 +57,10 @@ export function applyLayoutCircular<N extends NodeDatumCore, L extends LinkDatum
 
 export function applyLayoutParallel<N extends NodeDatumCore, L extends LinkDatumCore> (datamodel: GraphDataModel<N, L>, config: GraphConfigInterface<N, L>, orientation?: string): void {
   const { nonConnectedNodes, connectedNodes, nodes } = datamodel
-  const { layoutNonConnectedAside, layoutGroupOrder, layoutSortConnectionsByGroup, nodeSize, nodeGroup, width, height } = config
+  const {
+    layoutNonConnectedAside, layoutGroupOrder, layoutSortConnectionsByGroup,
+    layoutSubgroupMaxNodes, nodeSize, nodeGroup, width, height,
+  } = config
 
   const activeWidth = width - getNodeSize(nodeSize)
   const activeHeight = height - getNodeSize(nodeSize) - (nonConnectedNodes.length ? getNodeSize(nodeSize) * 5 : 0)
@@ -120,23 +123,41 @@ export function applyLayoutParallel<N extends NodeDatumCore, L extends LinkDatum
     const maxVerticalStep = maxNodeSize * 4 + labelApprxHeight
     const minVerticalStep = maxNodeSize * 1.5 + labelApprxHeight
     const verticalStep = clamp(activeHeight / (groups.length - 1), minVerticalStep, maxVerticalStep)
+    const subgroupNodeStep = maxNodeSize + labelApprxHeight + labelMargin
 
-    let y = (groups.length < 2) ? height / 2 : 0
+    let y0 = (groups.length < 2) ? height / 2 : 0
     groups.forEach(group => {
-      const singleNodeGroup = group.nodes.length < 2
-      const x0 = singleNodeGroup ? 0 : (maxN - group.nodes.length) * horizontalStep / 2
-      let xPrev = x0 - horizontalStep - subgroupMargin
+      const maxSubgroupNodes = Math.max(...group.subgroups.map(subgroup => subgroup.nodes.length))
+      const maxSubroupRows = Math.ceil(maxSubgroupNodes / layoutSubgroupMaxNodes) - 1
+      const groupSize = group.nodes.length
+      const singleNodeGroup = groupSize < 2
+      const rowWidth = group.subgroups.reduce((acc, subgroup) => {
+        return acc + Math.min(subgroup.nodes.length, layoutSubgroupMaxNodes) * horizontalStep + subgroupMargin
+      }, 0)
 
+      let x0 = (singleNodeGroup ? 0 : -rowWidth / 2) - horizontalStep
       group.subgroups.forEach((subgroup, k) => {
-        xPrev += subgroupMargin
+        const subgroupRows = Math.ceil(subgroup.nodes.length / layoutSubgroupMaxNodes) - 1
+        let n = 0
+        let x = x0
+        let y = y0 + (maxSubroupRows - subgroupRows) / 2 * subgroupNodeStep
         subgroup.nodes.forEach(d => {
+          x = x + horizontalStep
+          d.x = x
           d.y = y
-          d.x = xPrev + horizontalStep
-          xPrev = d.x
+
+          n = n + 1
+          if (n >= layoutSubgroupMaxNodes) {
+            n = 0
+            y += subgroupNodeStep
+            x = x0
+          }
         })
+
+        x0 += Math.min(subgroup.nodes.length, layoutSubgroupMaxNodes) * horizontalStep + subgroupMargin
       })
 
-      y = y + verticalStep
+      y0 += verticalStep + (Math.ceil(maxSubgroupNodes / layoutSubgroupMaxNodes) - 1) * subgroupNodeStep
     })
   } else {
     const minHorizontalStep = 6 * maxNodeSize + labelMargin
@@ -146,23 +167,39 @@ export function applyLayoutParallel<N extends NodeDatumCore, L extends LinkDatum
     const maxVerticalStep = maxNodeSize * 2.0 + labelApprxHeight
     const minVerticalStep = maxNodeSize * 1.5 + labelApprxHeight
     const verticalStep = clamp(activeHeight / (groups.length - 1), minVerticalStep, maxVerticalStep)
+    const subgroupNodeStep = maxNodeSize * 2.0
 
-    let x = (groups.length < 2) ? width / 2 : 0
+    let x0 = (groups.length < 2) ? width / 2 : 0
     groups.forEach((group, i) => {
-      const singleNodeGroup = group.nodes.length < 2
-      const y0 = singleNodeGroup ? 0 : (maxN - group.nodes.length) * verticalStep / 2
-      let yPrev = y0 - verticalStep - subgroupMargin
+      const maxSubgroupNodes = Math.max(...group.subgroups.map(subgroup => subgroup.nodes.length))
+      const maxSubroupColumns = Math.ceil(maxSubgroupNodes / layoutSubgroupMaxNodes) - 1
+      const columnHeight = group.subgroups.reduce((acc, subgroup) => {
+        return acc + Math.min(subgroup.nodes.length, layoutSubgroupMaxNodes) * verticalStep + subgroupMargin
+      }, 0)
 
+      let y0 = -columnHeight / 2
       group.subgroups.forEach((subgroup, k) => {
-        yPrev += subgroupMargin
+        const subgroupColumns = Math.ceil(subgroup.nodes.length / layoutSubgroupMaxNodes) - 1
+        let n = 0
+        let y = y0
+        let x = x0 + (maxSubroupColumns - subgroupColumns) / 2 * subgroupNodeStep
         subgroup.nodes.forEach(d => {
+          y = y + verticalStep
           d.x = x
-          d.y = yPrev + verticalStep
-          yPrev = d.y
+          d.y = y
+
+          n = n + 1
+          if (n >= layoutSubgroupMaxNodes) {
+            n = 0
+            x += subgroupNodeStep
+            y = y0
+          }
         })
+
+        y0 += Math.min(subgroup.nodes.length, layoutSubgroupMaxNodes) * verticalStep + subgroupMargin
       })
 
-      x = x + horizontalStep
+      x0 += horizontalStep + (Math.ceil(maxSubgroupNodes / layoutSubgroupMaxNodes) - 1) * subgroupNodeStep
     })
   }
 
@@ -296,6 +333,14 @@ export function applyLayoutForce<N extends NodeDatumCore, L extends LinkDatumCor
   for (let i = 0, n = Math.ceil(Math.log(simulation.alphaMin()) / Math.log(1 - simulation.alphaDecay())); i < n; ++i) {
     simulation.tick()
   }
+
+  // Translate coordinates to values > 0 for better animated transition between layout
+  const yMin = min<number>(connectedNodes.map(d => d.y)) ?? 0
+  const xMin = min<number>(connectedNodes.map(d => d.x)) ?? 0
+  nodes.forEach(d => {
+    d.x -= xMin
+    d.y -= yMin
+  })
 
   // Handle non-connected nodes
   if (layoutNonConnectedAside) {

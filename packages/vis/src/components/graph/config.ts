@@ -29,6 +29,8 @@ export interface GraphConfigInterface<N extends NodeDatumCore, L extends LinkDat
   /** Order of the layput groups, for paralllel and concentric layouts */
   layoutGroupOrder?: any[];
   /** */
+  layoutSubgroupMaxNodes?: number;
+  /** */
   layoutSortConnectionsByGroup?: string;
 
   /** Force Layout settings, see d3.force */
@@ -115,6 +117,7 @@ export class GraphConfig<N extends NodeDatumCore, L extends LinkDatumCore> exten
   layoutAutofit = true
   layoutNonConnectedAside = true
   layoutGroupOrder = []
+  layoutSubgroupMaxNodes = 6
   layoutSortConnectionsByGroup = ''
   forceLayoutSettings = {
     linkDistance: 75,
