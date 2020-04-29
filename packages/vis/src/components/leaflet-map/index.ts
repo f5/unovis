@@ -24,7 +24,7 @@ import { LeafletMapConfig, LeafletMapConfigInterface } from './config'
 import * as s from './style'
 
 // Modules
-import { setupMap, initialMapCenter, initialMapZoom } from './modules/map'
+import { setupMap, updateTopoJson, initialMapCenter, initialMapZoom } from './modules/map'
 import { createNodes, updateNodes, removeNodes } from './modules/node'
 import { createNodeSelectionRing, updateNodeSelectionRing } from './modules/selectionRing'
 import { createBackgroundNode, updateBackgroundNode } from './modules/clusterBackground'
@@ -117,6 +117,10 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
 
   setConfig (config: LeafletMapConfigInterface<Datum>): void {
     this.config.init(config)
+    if (this._map && this.config.renderer === LeafletMapRenderer.MAPBOXGL) {
+      const mapboxmap = (this._map.layer as any).getMapboxMap()
+      updateTopoJson(mapboxmap, this.config)
+    }
   }
 
   setData (data): void {

@@ -117,7 +117,9 @@ export const donutCluster = css`
 `
 
 export const svgOverlay = css`
+  label: svg-overlay;
   position: absolute;
+  pointer-events: none;
 `
 
 export const backgroundRect = css`

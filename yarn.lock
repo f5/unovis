@@ -3501,6 +3501,11 @@ before-after-hook@^2.0.0:
   resolved "https://registry.yarnpkg.com/before-after-hook/-/before-after-hook-2.1.0.tgz#b6c03487f44e24200dd30ca5e6a1979c5d2fb635"
   integrity sha512-IWIbu7pMqyw3EAJHzzHbWa85b6oud/yfKYg5rqB5hNE8CeMi3nX+2C2sj0HswfblST86hpVEOAb9x34NZd6P7A==
 
+bezier-js@^2.6.1:
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/bezier-js/-/bezier-js-2.6.1.tgz#ed9c6ebfcb3214794ff213cf90ee8aac644ecf7f"
+  integrity sha512-jelZM33eNzcZ9snJ/5HqJLw3IzXvA8RFcBjkdOB8SDYyOvW8Y2tTosojAiBTnD1MhbHoWUYNbxUXxBl61TxbRg==
+
 big.js@^5.2.2:
   version "5.2.2"
   resolved "https://registry.yarnpkg.com/big.js/-/big.js-5.2.2.tgz#65f0af382f578bcdc742bd9c281e9cb2d7768328"
