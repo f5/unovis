@@ -193,7 +193,7 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
     // We interrupt transition on tick Text to make it 'wrappable'
     const tickText = ticks.selectAll('text')
     tickText.nodes().forEach(node => interrupt(node))
-    tickText.text(d => config.tickFormat?.(d) ?? d)
+    tickText.text((d, i) => config.tickFormat?.(d, i) ?? d)
     tickText
       .call(wrapTickText, getWrapOptions(ticks, config))
 
