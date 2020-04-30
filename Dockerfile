@@ -27,7 +27,9 @@ RUN rm -rf ~/.ssh
 ##################
 # Stage 2 - host #
 ##################
-FROM nginx:1.17.8-alpine
+FROM nginxinc/nginx-unprivileged:1.18.0
+
+USER root
 
 # Clean default static site
 RUN rm -rf /usr/share/nginx/html/*
@@ -37,6 +39,7 @@ COPY --from=builder /app/web/lib/volterra-vis-examples/* /usr/share/nginx/html/
 
 # RUN NGINX ON A CUSTOM PORT
 EXPOSE 9001
-RUN sed -E -i "s,listen       80;.*,listen       9001;,g" /etc/nginx/conf.d/default.conf
+RUN sed -i -e '/listen/!b' -e '/8080;/!b' -e 's/8080;/9001;/' /etc/nginx/conf.d/default.conf
+USER 101
 CMD ["nginx", "-g", "daemon off;"]
 
