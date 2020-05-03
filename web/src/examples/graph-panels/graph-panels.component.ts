@@ -5,8 +5,7 @@ import _times from 'lodash/times'
 import _sample from 'lodash/sample'
 import _random from 'lodash/random'
 
-import { Graph, GraphConfigInterface, SingleChart, LayoutType, NodeDatumCore, LinkDatumCore } from '@volterra/vis'
-import { SHAPE } from '@volterra/vis/types'
+import { SHAPE, Graph, GraphConfigInterface, SingleChart, LayoutType, NodeDatumCore, LinkDatumCore } from '@volterra/vis'
 
 import graphData from './data/graph.json'
 
