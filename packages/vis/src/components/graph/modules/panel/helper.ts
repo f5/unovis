@@ -74,10 +74,13 @@ export function setPanelBBox<N extends NodeDatumCore> (panelConfig: PanelConfigI
   panelConfig._width = box.x2 - box.x1
   panelConfig._height = box.y2 - box.y1
   panelConfig._data = selection.data()
+}
+
+export function setPanelNumNodes<N extends NodeDatumCore> (panelConfig: PanelConfigInterface, panelNodes: Selection<BaseType, N, SVGGElement, N[]>): void {
   panelConfig._numNodes = panelNodes.size()
 }
 
-export function updatePanelData<N extends NodeDatumCore, L extends LinkDatumCore> (nodesSelection: Selection<BaseType, N, SVGGElement, N[]>, panels: PanelConfigInterface[], config: GraphConfigInterface<N, L>): void {
+export function updatePanelBBoxSize<N extends NodeDatumCore, L extends LinkDatumCore> (nodesSelection: Selection<BaseType, N, SVGGElement, N[]>, panels: PanelConfigInterface[], config: GraphConfigInterface<N, L>): void {
   const { layoutNonConnectedAside } = config
   if (!panels) return
 
@@ -86,6 +89,18 @@ export function updatePanelData<N extends NodeDatumCore, L extends LinkDatumCore
       return (!layoutNonConnectedAside || node._isConnected) && panelConfig.nodes.includes(node._id)
     })
     setPanelBBox(panelConfig, panelNodes)
+  })
+}
+
+export function updatePanelNumNodes<N extends NodeDatumCore, L extends LinkDatumCore> (nodesSelection: Selection<BaseType, N, SVGGElement, N[]>, panels: PanelConfigInterface[], config: GraphConfigInterface<N, L>): void {
+  const { layoutNonConnectedAside } = config
+  if (!panels) return
+
+  panels.forEach(panelConfig => {
+    const panelNodes = nodesSelection.filter(node => {
+      return (!layoutNonConnectedAside || node._isConnected) && panelConfig.nodes.includes(node._id)
+    })
+    setPanelNumNodes(panelConfig, panelNodes)
   })
 }
 

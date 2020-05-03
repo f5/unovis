@@ -22,7 +22,7 @@ import { appendShape, updateShape } from '../shape'
 const OUTLINE_SELECTION_PADDING = 5
 
 export function createPanels<N extends NodeDatumCore, P extends PanelConfigInterface> (selection: Selection<SVGGElement, P, SVGGElement, P[]>, nodesSelection: Selection<SVGGElement, N, SVGGElement, N[]>): void {
-  selection.attr('opacity', 0)
+  selection.style('opacity', 0)
 
   selection.append('rect').attr('class', panelSelectors.panelSelection)
     .attr('rx', 9)
@@ -79,10 +79,10 @@ export function updatePanels<N extends NodeDatumCore, L extends LinkDatumCore, P
     .attr('height', d => d._height + (d.padding || groupPadding) * 2 + OUTLINE_SELECTION_PADDING * 2)
 
   smartTransition(selection, duration / 2)
-    .attr('opacity', duration === 0 ? null : 1)
+    .style('opacity', duration === 0 ? null : 1)
     .style('stroke', (d: P) => d.color)
 
-  const sideLabelSize = 22
+  const sideLabelSize = 25
   const sideLabels = selection.selectAll(`.${panelSelectors.sideLabelGroup}`)
     .data(d => [d])
 
@@ -91,7 +91,7 @@ export function updatePanels<N extends NodeDatumCore, L extends LinkDatumCore, P
     .style('stroke', d => d.sideLabelColor)
 
   sideLabels.select(`.${panelSelectors.sideLabelIcon}`)
-    .text(d => d.sideLabelIcon)
+    .html(d => d.sideLabelIcon)
     .attr('dy', 1)
 
   sideLabels
@@ -126,7 +126,7 @@ export function updatePanels<N extends NodeDatumCore, L extends LinkDatumCore, P
 }
 
 export function removePanels<N extends NodeDatumCore, L extends LinkDatumCore, P extends PanelConfigInterface> (selection: Selection<SVGGElement, P, SVGGElement, P[]>, config: GraphConfigInterface<N, L>, duration: number): void {
-  smartTransition(selection, duration)
-    .attr('opacity', 0)
+  smartTransition(selection, duration / 2)
+    .style('opacity', 0)
     .remove()
 }

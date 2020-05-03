@@ -20,7 +20,7 @@ import ZOOM_LEVEL from '../zoom-levels'
 import * as generalSelectors from '../../style'
 import * as linkSelectors from './style'
 
-export function createLinks<L extends LinkDatumCore> (selection: Selection<SVGGElement, L, SVGGElement, L[]>): void {
+export function createLinks<N extends NodeDatumCore, L extends LinkDatumCore> (selection: Selection<SVGGElement, L, SVGGElement, L[]>): void {
   selection.attr('opacity', 0)
 
   selection.append('line')
@@ -31,6 +31,10 @@ export function createLinks<L extends LinkDatumCore> (selection: Selection<SVGGE
 
   selection.append('line')
     .attr('class', linkSelectors.linkBand)
+    .attr('x1', d => getX(d.source as N))
+    .attr('y1', d => getY(d.source as N))
+    .attr('x2', d => getX(d.target as N))
+    .attr('y2', d => getY(d.target as N))
 
   selection.append('g')
     .attr('class', linkSelectors.flowGroup)
@@ -70,6 +74,7 @@ export function updateSelectedLink<N extends NodeDatumCore, L extends LinkDatumC
 
 export function updateLinks<N extends NodeDatumCore, L extends LinkDatumCore> (selection: Selection<SVGGElement, L, SVGGElement, L[]>, config: GraphConfigInterface<N, L>, duration: number, scale = 1): void {
   const { flowCircleSize, linkStyle, linkFlow, linkArrow, linkLabel, linkLabelShiftFromCenter } = config
+  if (!selection.size()) return
 
   selection
     .classed(linkSelectors.linkDashed, d => getValue(d, linkStyle) === LinkStyle.DASHED)
@@ -90,14 +95,13 @@ export function updateLinks<N extends NodeDatumCore, L extends LinkDatumCore> (s
     })
 
   const linkBand = selection.select(`.${linkSelectors.linkBand}`)
-  const firstRender = linkBand.attr('x1') === null
   linkBand
     .attr('class', linkSelectors.linkBand)
     .attr('transform', getLinkShiftTransform)
     .style('stroke-width', d => getLinkBandWidth(d, scale, config))
     .style('stroke', d => getLinkColor(d, config))
 
-  smartTransition(linkBand, firstRender ? 0 : duration)
+  smartTransition(linkBand, duration)
     .attr('x1', d => getX(d.source as N))
     .attr('y1', d => getY(d.source as N))
     .attr('x2', d => getX(d.target as N))

@@ -19,8 +19,8 @@ export const panels = css`
 export const gPanel = css`
   label: g-panel;
 
-  transition: .25s opacity;
-  opacity: 1;
+  // transition: .25s opacity;
+  // opacity: 1;
 `
 
 export const panel = css`
@@ -99,10 +99,11 @@ export const customSideLabel = css`
 
 export const sideLabelIcon = css`
   label: side-label-icon-text;
-
+  font-family: var(--vis-graph-node-icon-font);
+  fill: var(--vis-graph-node-icon-color);
   stroke: none;
   dominant-baseline: middle;
   text-anchor: middle;
   pointer-events: none;
-  font-size: 10pt;
+  font-size: 8pt;
 `

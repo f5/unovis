@@ -1,6 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { select, Selection } from 'd3-selection'
-import { transition } from 'd3-transition'
+import { Transition } from 'd3-transition'
 import { arc } from 'd3-shape'
 
 // Type
@@ -11,7 +11,7 @@ import { NodeDatumCore, LinkDatumCore, SideLabel } from 'types/graph'
 import { trimText } from 'utils/text'
 import { polygon } from 'utils/path'
 import { smartTransition } from 'utils/d3'
-import { getValue, isFunction, throttle } from 'utils/data'
+import { getValue, throttle } from 'utils/data'
 
 // Config
 import { GraphConfigInterface } from '../../config'
@@ -74,7 +74,7 @@ export function updateSelectedNodes<N extends NodeDatumCore, L extends LinkDatum
   })
 }
 
-export function updateNodes<N extends NodeDatumCore, L extends LinkDatumCore> (selection: Selection<SVGGElement, N, SVGGElement, N[]>, config: GraphConfigInterface<N, L>, duration: number, scale = 1, callback?: () => {}): void {
+export function updateNodes<N extends NodeDatumCore, L extends LinkDatumCore> (selection: Selection<SVGGElement, N, SVGGElement, N[]>, config: GraphConfigInterface<N, L>, duration: number, scale = 1): Selection<SVGGElement, N, SVGGElement, N[]> | Transition<SVGGElement, N, SVGGElement, N[]> {
   const { scoreAnimDuration, nodeBorderWidth, nodeShape, nodeSize, nodeStrokeSegmentValue, nodeStrokeSegmentFill, nodeIcon, nodeIconSize, nodeLabel, nodeSubLabel, nodeSideLabels, nodeStroke, nodeFill } = config
 
   selection.each((d, i, elements) => {
@@ -205,19 +205,15 @@ export function updateNodes<N extends NodeDatumCore, L extends LinkDatumCore> (s
 
   updateSelectedNodes(selection, config)
 
-  const sel = duration ? selection.transition().duration(duration / 2).delay((d, i) => duration === 0 ? 0 : duration / 2 * i / selection.size()) : selection
-  sel.attr('transform', d => `rotate(0) translate(${getX(d)}, ${getY(d)}) scale(1)`)
-
-  if (isFunction(callback)) {
-    if (sel instanceof transition) sel.on('end', callback)
-    else sel.call(callback)
-  }
+  return smartTransition(selection, duration)
+    .attr('transform', d => `rotate(0) translate(${getX(d)}, ${getY(d)}) scale(1)`)
+    .attr('opacity', 1)
 }
 
 export function removeNodes<N extends NodeDatumCore, L extends LinkDatumCore> (selection: Selection<SVGGElement, N, SVGGElement, N[]>, config: GraphConfigInterface<N, L>, duration: number): void {
-  smartTransition(selection, duration)
+  smartTransition(selection, duration / 2)
     .attr('opacity', 0)
-    .attr('transform', d => `rotate(-25) translate(${getX(d)}, ${getY(d)}) scale(0)`)
+    // .attr('transform', d => 'scale(0)')
     .remove()
 }
 
