@@ -17,7 +17,6 @@ export function appendShape<T> (selection, shapeAccessor: StringAccessor<T>, sha
   selection.each((d, i, elements) => {
     const element = select(elements[i])
     const shape = getValue(d, shapeAccessor)
-    if (!shape) return
 
     let shapeElement
     const isCustomXmlShape = isCustomXml(shape)
