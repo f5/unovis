@@ -135,6 +135,11 @@ export const gNode = css`
 
 `
 
+export const gNodeExit = css`
+  label: g-node-exit;
+  pointer-events: none;
+`
+
 export const nodeSelectionActive = css`
   label: active;
 `
@@ -185,7 +190,7 @@ export const customNode = css`
 export const greyoutNode = css`
   label: greyout;
   
-  .${node} {
+  ${`.${node}`} {
     fill: var(--vis-graph-node-greyout-color) !important;
     stroke: var(--vis-graph-node-greyout-color) !important;
   }
@@ -194,21 +199,21 @@ export const greyoutNode = css`
      fill: var(--vis-graph-node-icon-greyout-color) !important;
   }
 
-  .${nodeArc} {
+  ${`.${nodeArc}`} {
     fill: var(--vis-graph-node-greyout-color) !important;
     stroke: var(--vis-graph-node-greyout-color) !important;
   }
 
-  .${label} {
+  ${`.${label}`} {
     opacity: 0.5;
   }
 
-  .${sideLabelBackground} {
+  ${`.${sideLabelBackground}`} {
      fill: var(--vis-graph-node-side-label-background-greyout-color) !important;
      stroke-opacity: 0.5;
    }
 
-  .${sideLabel} {
+   ${`.${sideLabel}`} {
     fill: var(--vis-graph-node-side-label-fill-color-bright) !important;
     opacity: 0.25;
   }
