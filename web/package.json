@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "ng serve --port 9900",
     "dev:parallel": "ng serve --port 9900",
-    "build": "ng build",
+    "build": "node --max_old_space_size=4096 ../node_modules/@angular/cli/bin/ng build",
     "test": "jest --colors",
     "lint": "eslint \"src/**/*.ts\""
   },
