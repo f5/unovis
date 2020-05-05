@@ -43,11 +43,11 @@ export class BulletLegendExampleComponent implements AfterViewInit {
   title = 'bullet-legend'
   yAccessors = [
     d => d.y,
-    d => d.y1,
+    undefined,
     d => d.y2,
     d => d.y3,
   ]
-  legendItems: { name: string, inactive?: boolean }[] = this.yAccessors.map((d, i) => ({ name: `Stream ${i + 1}` }))
+  legendItems: { name: string, inactive?: boolean }[] = this.yAccessors.map((d, i) => ({ name: `Stream ${i + 1}`, hidden: !d }))
   chartConfig: XYContainerConfigInterface<AreaSampleDatum>
   areaConfig: AreaConfigInterface<AreaSampleDatum>
   composite: XYContainer<AreaSampleDatum>
