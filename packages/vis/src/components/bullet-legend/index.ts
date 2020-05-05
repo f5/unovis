@@ -59,7 +59,7 @@ export class BulletLegend {
       .style('font-size', config.labelFontSize)
 
     const legendItemsMerged = legendItemsEnter.merge(legendItems)
-
+    legendItemsMerged.style('display', (d: BulletLegendItemInterface) => d.hidden ? 'none' : null)
     legendItemsMerged.select(`.${s.bullet}`)
       .style('background-color', (d: BulletLegendItemInterface, i) => d.inactive ? null : getColor(d, this._colorAccessor, i))
       .style('border-color', (d: BulletLegendItemInterface, i) => getColor(d, this._colorAccessor, i))
