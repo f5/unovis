@@ -195,7 +195,7 @@ export const greyoutNode = css`
     stroke: var(--vis-graph-node-greyout-color) !important;
   }
 
-  .${nodeIcon} {
+  ${`.${nodeIcon}`} {
      fill: var(--vis-graph-node-icon-greyout-color) !important;
   }
 
