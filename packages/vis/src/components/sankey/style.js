@@ -3,9 +3,11 @@ import { css, injectGlobal } from 'emotion'
 
 export const variables = injectGlobal`
   :root {
+    --vis-sankey-link-cursor: default;
     --vis-sankey-link-color: #cad5f6;
 
-    --vis-sankey-node-color: #4e4dd1;
+    --vis-sankey-node-cursor: default;
+    --vis-sankey-node-fill: #4e4dd1;
     --vis-sankey-node-label-color: #575c65;
 
     --vis-sankey-icon-size: 22px;
@@ -27,6 +29,7 @@ export const link = css`
 
   path {
     fill: none;
+    cursor: var(--vis-sankey-link-cursor);
     stroke: var(--vis-sankey-link-color);
     stroke-opacity: 0.5;
     transition: .1s stroke;
@@ -54,7 +57,8 @@ export const node = css`
   label: node;
 
   rect {
-    fill: var(--vis-sankey-node-color);
+    cursor: var(--vis-sankey-node-cursor);
+    fill: var(--vis-sankey-node-fill);
     opacity: 0.9;
   }
   
@@ -85,6 +89,6 @@ export const nodeIcon = css`
   text-anchor: middle;
   font-size: var(--vis-sankey-icon-size);
   fill: var(--vis-sankey-node-icon-color);
-  stroke: var(--vis-sankey-node-color);
+  stroke: var(--vis-sankey-node-fill);
   stroke-opacity: 0.6;
 `

@@ -1,6 +1,7 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { scaleBand } from 'd3-scale'
 import { min, range } from 'd3-array'
+import { select } from 'd3'
 
 // Core
 import { XYComponentCore } from 'core/xy-component'
@@ -24,7 +25,11 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum> {
   static selectors = s
   config: GroupedBarConfig<Datum> = new GroupedBarConfig()
   events = {
+    [GroupedBar.selectors.barGroup]: {
+      mouseover: this._raiseSelection,
+    },
     [GroupedBar.selectors.bar]: {
+      mouseover: this._raiseSelection,
     },
   }
 
@@ -179,5 +184,9 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum> {
     const min = datamodel.getMin(...yAccessors)
     const max = datamodel.getMax(...yAccessors)
     return [min > 0 ? 0 : min, max < 0 ? 0 : max]
+  }
+
+  _raiseSelection (d, i, els): void {
+    select(els[i]).raise()
   }
 }

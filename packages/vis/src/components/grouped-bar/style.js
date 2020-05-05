@@ -1,14 +1,27 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { css } from 'emotion'
+import { css, injectGlobal } from 'emotion'
+
+export const global = injectGlobal`
+  :root {
+    --vis-grouped-bar-cursor: default;
+    --vis-grouped-bar-fill: var(--vis-color-main);
+    --vis-grouped-bar-stroke: none;
+    --vis-grouped-bar-stroke-width: 0px;
+    --vis-grouped-bar-hover-stroke-width: 1px;
+    --vis-grouped-bar-hover-stroke: none;
+  }
+`
 
 export const bar = css`
   label: bar;
-  stroke: none;
-  fill: var(--vis-color-main);
-  fill-opacity: 0.9;
+  fill: var(--vis-grouped-bar-fill);
+  stroke: var(--vis-grouped-bar-stroke);
+  stroke-width: var(--vis-grouped-bar-stroke-width);
+  cursor: var(--vis-grouped-bar-cursor);
 
   &:hover {
-    fill-opacity: 1;
+    stroke-width: var(--vis-grouped-bar-hover-stroke-width);
+    stroke: var(--vis-grouped-bar-hover-stroke);
   }
 `
 

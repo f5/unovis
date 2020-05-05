@@ -4,18 +4,22 @@ import { symbol } from 'd3-shape'
 import { smartTransition } from 'utils/d3'
 import { Symbol } from 'types/symbols'
 
-export function createNodes (selection) {
+export function createNodes (selection): void {
   selection.attr('transform', d => `translate(${d._screen.x},${d._screen.y})`)
-  selection.append('text')
-  selection.append('path')
+  selection.append('text').style('fill', d => d._screen.color)
+  selection.append('path').style('fill', d => d._screen.color)
+
+  selection.attr('transform', d => `translate(${d._screen.x},${d._screen.y}) scale(0)`)
 }
 
-export function updateNodes (selection, duration) {
+export function updateNodes (selection, duration): void {
   const symbolGenerator = symbol()
+
   selection.each((d, i, elements) => {
     const group = select(elements[i])
     const text = group.select('text')
     const path = group.select('path')
+
     if (d._screen.icon) {
       text.style('display', null)
       path.style('display', 'none')
@@ -23,7 +27,7 @@ export function updateNodes (selection, duration) {
         .html(d._screen.icon)
         .style('font-size', d._screen.size)
       smartTransition(text, duration)
-        .attr('fill', d._screen.color)
+        .style('fill', d._screen.color)
     } else {
       text.style('display', 'none')
       path.style('display', null)
@@ -34,14 +38,16 @@ export function updateNodes (selection, duration) {
         return symbolGenerator()
       })
       smartTransition(path, duration)
-        .attr('fill', d._screen.color)
+        .style('fill', d._screen.color)
     }
   })
 
   smartTransition(selection, duration)
-    .attr('transform', d => `translate(${d._screen.x},${d._screen.y})`)
+    .attr('transform', d => `translate(${d._screen.x},${d._screen.y}) scale(1)`)
 }
 
-export function removeNodes (selection) {
-  selection.remove()
+export function removeNodes (selection, duration): void {
+  smartTransition(selection, duration)
+    .attr('transform', d => `translate(${d._screen.x},${d._screen.y}) scale(0)`)
+    .remove()
 }

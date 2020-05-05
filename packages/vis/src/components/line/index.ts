@@ -28,9 +28,7 @@ export class Line<Datum> extends XYComponentCore<Datum> {
   curve: CurveFactory = Curve[CurveType.MonotoneX]
   events = {
     [Line.selectors.line]: {
-      mousemove: this._onEvent,
-      mouseover: this._onEvent,
-      mouseleave: this._onEvent,
+      mouseover: this._raiseSelection,
     },
   }
 
@@ -109,5 +107,9 @@ export class Line<Datum> extends XYComponentCore<Datum> {
     const xRange = x.range()
     const yRange = y.range()
     return `M${xRange[0]},${yRange[0]} L${xRange[1]},${yRange[0]}`
+  }
+
+  _raiseSelection (d, i, els): void {
+    select(els[i]).raise()
   }
 }
