@@ -15,6 +15,7 @@ import { Area } from './components/area'
 import { TopoJSONMap } from './components/topojson-map'
 import { LeafletMap } from './components/leaflet-map'
 import { RadialDendrogram } from './components/radial-dendrogram'
+import { ChordDiagram } from './components/chord-diagram'
 import { Graph } from './components/graph'
 
 import { LineConfigInterface } from './components/line/config'
@@ -33,6 +34,7 @@ import { AreaConfigInterface } from './components/area/config'
 import { TopoJSONMapConfigInterface } from './components/topojson-map/config'
 import { LeafletMapConfigInterface } from './components/leaflet-map/config'
 import { RadialDendrogramConfigInterface } from './components/radial-dendrogram/config'
+import { ChordDiagramConfigInterface } from './components/chord-diagram/config'
 import { GraphConfigInterface } from './components/graph/config'
 
 import './styles/css-variables'
@@ -72,4 +74,6 @@ export {
   RadialDendrogramConfigInterface,
   Graph,
   GraphConfigInterface,
+  ChordDiagram,
+  ChordDiagramConfigInterface,
 }
