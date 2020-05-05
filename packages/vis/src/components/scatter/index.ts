@@ -48,7 +48,7 @@ export class Scatter<Datum> extends XYComponentCore<Datum> {
       .selectAll(`.${s.point}`)
       .data(this._prepareData())
 
-    pointGroups.exit().call(removeNodes)
+    pointGroups.exit().call(removeNodes, duration)
 
     const pointGroupsEnter = pointGroups.enter().append('g')
       .attr('class', s.point)
