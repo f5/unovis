@@ -1,5 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { min, extent } from 'd3-array'
+import { transition, Transition } from 'd3-transition'
 import { select, Selection, mouse, event, BaseType } from 'd3-selection'
 import { zoom, zoomTransform, zoomIdentity, ZoomTransform } from 'd3-zoom'
 import { drag } from 'd3-drag'
@@ -33,7 +34,7 @@ import { getMaxNodeSize, getX, getY } from './modules/node/helper'
 import { createLinks, updateLinks, removeLinks, zoomLinksThrottled, zoomLinks, animateLinkFlow, updateSelectedLink } from './modules/link'
 import { LINK_MARKER_WIDTH, LINK_MARKER_HEIGHT, getDoubleArrowPath, getArrowPath, getLinkColor } from './modules/link/helper'
 import { createPanels, updatePanels, removePanels } from './modules/panel'
-import { findPanelForNodes, updatePanelData, getMaxPanlePadding } from './modules/panel/helper'
+import { setPanelForNodes, updatePanelBBoxSize, updatePanelNumNodes, getMaxPanlePadding } from './modules/panel/helper'
 import { applyLayoutCircular, applyLayoutParallel, applyLayoutDagre, applyLayoutConcentric, applyLayoutForce } from './modules/layout'
 
 export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends PanelConfigInterface> extends ComponentCore<{nodes: N[]; links?: L[]}> {
@@ -60,7 +61,7 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
   private _recalculateLayout = false
 
   private _fitLayout
-  private _findPanels = false
+  private _setPanels = false
   private _panels: P[]
 
   // private _panelsGroup
@@ -120,22 +121,24 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
     this.datamodel.data = data
     this._recalculateLayout = true
     if (config.layoutAutofit) this._fitLayout = true
-    this._findPanels = true
+    this._setPanels = true
 
     this._addSVGDefs()
   }
 
   setConfig (config: GraphConfigInterface<N, L>): void {
     const { datamodel: { links, nodes } } = this
+    this._fitLayout = this.config.layoutType !== config.layoutType
+
     super.setConfig(config)
 
     this._recalculateLayout = true
-    this._findPanels = true
+    this._setPanels = true
 
-    const selectedNode = find(nodes, node => node.id === this.config.selectedNodeId)
+    const selectedNode = this.config.selectedNodeId && find(nodes, node => node.id === this.config.selectedNodeId)
     this._selectNode(selectedNode)
 
-    const selectedLink = find(links, link => link.id === this.config.selectedLinkId)
+    const selectedLink = this.config.selectedLinkId && find(links, link => link.id === this.config.selectedLinkId)
     this._selectLink(selectedLink)
   }
 
@@ -174,15 +177,21 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
       this._recalculateLayout = false
     }
 
-    if (this._fitLayout && !this._disableAutoFit) {
-      this._fit()
-      this._fitLayout = false
+    if (this._setPanels) {
+      smartTransition(this._panelsGroup, duration / 2)
+        .style('opacity', panels?.length ? 1 : 0)
+
+      this._panels = cloneDeep(panels)
+      setPanelForNodes(this._panels, datamodel.nodes, this.config)
+      this._setPanels = false
     }
 
-    if (this._findPanels) {
-      this._panels = cloneDeep(panels)
-      findPanelForNodes(this._panels, datamodel.nodes, this.config)
-      this._findPanels = false
+    if (this._firstRender) {
+      this._fit()
+      this._fitLayout = false
+    } else if (this._fitLayout && !this._disableAutoFit) {
+      this._fit(duration)
+      this._fitLayout = false
     }
 
     // Draw
@@ -204,14 +213,10 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
       this._onZoom(transform)
     }
 
-    if (this._firstRender) {
-      this._fit()
-    }
-
     // Reset pointer-events
-    this._graphContainer.attr('pointer-events', 'none')
+    if (animDuration) this._graphContainer.attr('pointer-events', 'none')
     smartTransition(this._graphContainer, animDuration)
-      .on('end', () => this._graphContainer.attr('pointer-events', null))
+      .on('end interrupt', () => this._graphContainer.attr('pointer-events', null))
 
     this._firstRender = false
   }
@@ -227,11 +232,14 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
       .attr('class', nodeSelectors.gNode)
       .call(createNodes, config, duration)
 
-    const nodeGroupsMerged = nodeGroups.merge(nodeGroupsEnter)
-    nodeGroupsMerged.call(updateNodes, config, duration, this._scale, () => this._drawPanels(nodeGroupsMerged, duration))
+    const nodeGroupsMerged = nodeGroups.merge(nodeGroupsEnter) as Selection<SVGGElement, N, SVGGElement, N[]>
+    const nodeUpdateSelection = updateNodes(nodeGroupsMerged, config, duration, this._scale)
+    this._drawPanels(nodeUpdateSelection, duration)
 
     const nodesGroupExit: Selection<BaseType, N, SVGGElement, N[]> = nodeGroups.exit()
-    nodesGroupExit.call(removeNodes, config, duration)
+    nodesGroupExit
+      .attr('class', nodeSelectors.gNodeExit)
+      .call(removeNodes, config, duration)
 
     if (config.disableDrag) {
       const dragBehaviour = drag<SVGElement, N>()
@@ -262,26 +270,41 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
     linkGroupsExit.call(removeLinks, config, duration)
   }
 
-  _drawPanels (nodesMerged: Selection<BaseType, N, SVGGElement, N[]>, duration: number): void {
+  _drawPanels (nodeUpdateSelection: Selection<BaseType, N, SVGGElement, N[]> | Transition<BaseType, N, SVGGElement, N[]>, duration: number): void {
     const { config } = this
     if (!this._panels) return
 
-    updatePanelData(nodesMerged, this._panels, config)
-    const panelData = this._panels.filter(p => p._numNodes)
+    const selection = nodeUpdateSelection instanceof transition
+      ? (nodeUpdateSelection as Transition<BaseType, N, SVGGElement, N[]>).selection()
+      : nodeUpdateSelection as Selection<BaseType, N, SVGGElement, N[]>
 
+    updatePanelNumNodes(selection, this._panels, config)
+    const panelData = this._panels.filter(p => p._numNodes)
     const panelGroup = this._panelsGroup
       .selectAll(`.${panelSelectors.gPanel}`)
       .data(panelData, (d: P) => d.label)
 
-    const panelGroupEnter = panelGroup.enter().append('g')
-      .attr('class', panelSelectors.gPanel)
-      .call(createPanels, nodesMerged)
-
-    const panleGroupMerged = panelGroup.merge(panelGroupEnter)
-    panleGroupMerged.call(updatePanels, config, duration)
-
     const panelGroupExit: Selection<BaseType, P, SVGGElement, P[]> = panelGroup.exit()
     panelGroupExit.call(removePanels, config, duration)
+
+    const panelGroupEnter = panelGroup.enter().append('g')
+      .attr('class', panelSelectors.gPanel)
+      .call(createPanels, selection)
+
+    const panleGroupMerged = panelGroup.merge(panelGroupEnter)
+
+    if (nodeUpdateSelection instanceof transition) {
+      nodeUpdateSelection.on('end', () => this._updatePanels(selection, panleGroupMerged, duration))
+    } else {
+      this._updatePanels(selection, panleGroupMerged, duration)
+    }
+  }
+
+  _updatePanels (nodesMerged: Selection<BaseType, N, SVGGElement, N[]>, panelToUpdate, duration: number): void {
+    const { config } = this
+    if (!this._panels) return
+    updatePanelBBoxSize(nodesMerged, this._panels, config)
+    panelToUpdate.call(updatePanels, config, duration)
   }
 
   _calculateLayout (): void {
@@ -351,6 +374,7 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
     const { datamodel: { nodes, links } } = this
     if (!node) return
     this._selectedNode = node
+
     // Apply Greyout
     // Grayout all nodes
     nodes.forEach(n => {
@@ -448,27 +472,22 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
 
   _onBackgroundClick (d, i, elements): void {
     this._resetSelection()
-    this._onEvent(d, i, elements)
   }
 
   _onNodeClick (d, i, elements): void {
     // this._selectNode(d)
-    this._onEvent(d, i, elements)
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   _onNodeMouseOut (d, i, elements): void {
-    if (this._isDragging) return
-    this._onEvent(d, i, elements)
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   _onNodeMouseOver (d, i, elements): void {
-    if (this._isDragging) return
-    this._onEvent(d, i, elements)
   }
 
   _onLinkClick (d, i, elements): void {
     // this._selectLink(d)
-    this._onEvent(d, i, elements)
   }
 
   _onLinkMouseOver (d, i, elements): void {
@@ -476,7 +495,6 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
 
     d._state.hovered = true
     this._updateSelectedElements()
-    this._onEvent(d, i, elements)
   }
 
   _onLinkMouseOut (d, i, elements): void {
@@ -484,7 +502,6 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
 
     delete d._state.hovered
     this._updateSelectedElements()
-    this._onEvent(d, i, elements)
   }
 
   _onLinkFlowTimerFrame (elapsed = 0): void {
@@ -582,12 +599,11 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
     })
 
     panelNodesToUpdate
-      .call(updateNodes, config, 0, scale, () => {
-        updatePanelData(panelNodesToUpdate, this._panels, config)
-        const panelToUpdate: Selection<SVGGElement, P, SVGGElement, P[]> = this._panelsGroup.selectAll(`.${panelSelectors.gPanel}`)
-        panelToUpdate.call(updatePanels, config, 0)
-      })
+      .call(updateNodes, config, 0, scale)
       .call(zoomNodes, config, scale)
+    const panelToUpdate: Selection<SVGGElement, P, SVGGElement, P[]> = this._panelsGroup.selectAll(`.${panelSelectors.gPanel}`)
+    this._updatePanels(panelNodesToUpdate, panelToUpdate, 0)
+
     const nodeElements: Selection<SVGGElement, N, SVGGElement, N[]> = this._nodesGroup.selectAll(`.${nodeSelectors.gNode}`)
     const nodesToUpdate = nodeElements.filter((n: N) => {
       return n._id === d._id

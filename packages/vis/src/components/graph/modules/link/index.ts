@@ -20,7 +20,7 @@ import ZOOM_LEVEL from '../zoom-levels'
 import * as generalSelectors from '../../style'
 import * as linkSelectors from './style'
 
-export function createLinks<L extends LinkDatumCore> (selection: Selection<SVGGElement, L, SVGGElement, L[]>): void {
+export function createLinks<N extends NodeDatumCore, L extends LinkDatumCore> (selection: Selection<SVGGElement, L, SVGGElement, L[]>): void {
   selection.attr('opacity', 0)
 
   selection.append('line')
@@ -31,6 +31,10 @@ export function createLinks<L extends LinkDatumCore> (selection: Selection<SVGGE
 
   selection.append('line')
     .attr('class', linkSelectors.linkBand)
+    .attr('x1', d => getX(d.source as N))
+    .attr('y1', d => getY(d.source as N))
+    .attr('x2', d => getX(d.target as N))
+    .attr('y2', d => getY(d.target as N))
 
   selection.append('g')
     .attr('class', linkSelectors.flowGroup)
@@ -46,14 +50,9 @@ export function createLinks<L extends LinkDatumCore> (selection: Selection<SVGGE
 export function updateSelectedLink<N extends NodeDatumCore, L extends LinkDatumCore> (selection: Selection<SVGGElement, L, SVGGElement, L[]>, config: GraphConfigInterface<N, L>, duration: number, scale: number): void {
   const { nodeDisabled } = config
 
-  selection.selectAll(`.${linkSelectors.link}`)
-    .data(d => [d])
-
-  selection.selectAll(`.${linkSelectors.linkBand}`)
-    .data(d => [d])
-
-  selection.selectAll(`.${linkSelectors.linkSupport}`)
-    .data(d => [d])
+  selection.select(`.${linkSelectors.link}`)
+  selection.select(`.${linkSelectors.linkBand}`)
+  selection.select(`.${linkSelectors.linkSupport}`)
     .style('stroke-opacity', d => (d._state.hovered || d._state.selected) ? 0.2 : 0)
     .style('stroke-width', d => {
       return d._state.selected ? getLinkBandWidth(d, scale, config) + 5
@@ -75,12 +74,12 @@ export function updateSelectedLink<N extends NodeDatumCore, L extends LinkDatumC
 
 export function updateLinks<N extends NodeDatumCore, L extends LinkDatumCore> (selection: Selection<SVGGElement, L, SVGGElement, L[]>, config: GraphConfigInterface<N, L>, duration: number, scale = 1): void {
   const { flowCircleSize, linkStyle, linkFlow, linkArrow, linkLabel, linkLabelShiftFromCenter } = config
+  if (!selection.size()) return
 
   selection
     .classed(linkSelectors.linkDashed, d => getValue(d, linkStyle) === LinkStyle.DASHED)
 
-  selection.selectAll(`.${linkSelectors.link}`)
-    .data(d => [d])
+  selection.select(`.${linkSelectors.link}`)
     .attr('class', linkSelectors.link)
     .attr('marker-mid', d => getMarker(d, scale, config))
     .style('stroke-width', d => getLinkStrokeWidth(d, scale, config))
@@ -92,22 +91,23 @@ export function updateLinks<N extends NodeDatumCore, L extends LinkDatumCore> (s
       const y1 = getY(d.source as N)
       const x2 = getX(d.target as N)
       const y2 = getY(d.target as N)
-      el.attr('points', getPolylineData({ x1, y1, x2, y2 }))
+      smartTransition(el, duration).attr('points', getPolylineData({ x1, y1, x2, y2 }))
     })
 
-  selection.selectAll(`.${linkSelectors.linkBand}`)
-    .data(d => [d])
+  const linkBand = selection.select(`.${linkSelectors.linkBand}`)
+  linkBand
     .attr('class', linkSelectors.linkBand)
     .attr('transform', getLinkShiftTransform)
-    .attr('x1', d => getX(d.source as N))
-    .attr('y1', d => getY(d.source as N))
-    .attr('x2', d => getX(d.target as N))
-    .attr('y2', d => getY(d.target as N))
     .style('stroke-width', d => getLinkBandWidth(d, scale, config))
     .style('stroke', d => getLinkColor(d, config))
 
-  selection.selectAll(`.${linkSelectors.linkSupport}`)
-    .data(d => [d])
+  smartTransition(linkBand, duration)
+    .attr('x1', d => getX(d.source as N))
+    .attr('y1', d => getY(d.source as N))
+    .attr('x2', d => getX(d.target as N))
+    .attr('y2', d => getY(d.target as N))
+
+  selection.select(`.${linkSelectors.linkSupport}`)
     .attr('transform', getLinkShiftTransform)
     .attr('x1', d => getX(d.source as N))
     .attr('y1', d => getY(d.source as N))
@@ -115,8 +115,7 @@ export function updateLinks<N extends NodeDatumCore, L extends LinkDatumCore> (s
     .attr('y2', d => getY(d.target as N))
     .style('stroke', d => getLinkColor(d, config))
 
-  selection.selectAll(`.${linkSelectors.flowGroup}`)
-    .data(d => [d])
+  selection.select(`.${linkSelectors.flowGroup}`)
     .attr('class', linkSelectors.flowGroup)
     .attr('transform', getLinkShiftTransform)
     .style('display', d => getValue(d, linkFlow) ? null : 'none')
@@ -125,6 +124,9 @@ export function updateLinks<N extends NodeDatumCore, L extends LinkDatumCore> (s
         .attr('r', flowCircleSize / scale)
         .style('fill', getLinkColor(d, config))
     })
+    .style('opacity', 0)
+  smartTransition(selection.selectAll(`.${linkSelectors.flowGroup}`), duration)
+    .style('opacity', 1)
 
   selection.each((l, i, elements) => {
     const linkGroup = select(elements[i])

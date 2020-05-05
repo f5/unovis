@@ -1,6 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { select, Selection } from 'd3-selection'
-import { transition } from 'd3-transition'
+import { Transition } from 'd3-transition'
 import { arc } from 'd3-shape'
 
 // Type
@@ -11,13 +11,13 @@ import { NodeDatumCore, LinkDatumCore, SideLabel } from 'types/graph'
 import { trimText } from 'utils/text'
 import { polygon } from 'utils/path'
 import { smartTransition } from 'utils/d3'
-import { getValue, isFunction, throttle } from 'utils/data'
+import { getValue, throttle } from 'utils/data'
 
 // Config
 import { GraphConfigInterface } from '../../config'
 
 // Helpers
-import { arcTween, polyTween, setLabelRect, getX, getY, getSideTexLabelColor, getNodeColor, getNodeInnerLabelColor } from './helper'
+import { arcTween, polyTween, setLabelRect, getX, getY, getSideTexLabelColor, getNodeColor, getNodeIconColor } from './helper'
 import { appendShape, updateShape, isCustomXml } from '../shape'
 import ZOOM_LEVEL from '../zoom-levels'
 
@@ -74,8 +74,8 @@ export function updateSelectedNodes<N extends NodeDatumCore, L extends LinkDatum
   })
 }
 
-export function updateNodes<N extends NodeDatumCore, L extends LinkDatumCore> (selection: Selection<SVGGElement, N, SVGGElement, N[]>, config: GraphConfigInterface<N, L>, duration: number, scale = 1, callback?: () => {}): void {
-  const { scoreAnimDuration, nodeBorderWidth, nodeShape, nodeSize, nodeStrokeSegmentValue, nodeIcon, nodeIconSize, nodeLabel, nodeSubLabel, nodeSideLabels, nodeStroke, nodeFill } = config
+export function updateNodes<N extends NodeDatumCore, L extends LinkDatumCore> (selection: Selection<SVGGElement, N, SVGGElement, N[]>, config: GraphConfigInterface<N, L>, duration: number, scale = 1): Selection<SVGGElement, N, SVGGElement, N[]> | Transition<SVGGElement, N, SVGGElement, N[]> {
+  const { scoreAnimDuration, nodeBorderWidth, nodeShape, nodeSize, nodeStrokeSegmentValue, nodeStrokeSegmentFill, nodeIcon, nodeIconSize, nodeLabel, nodeSubLabel, nodeSideLabels, nodeStroke, nodeFill } = config
 
   selection.each((d, i, elements) => {
     const group: Selection<SVGGElement, N, SVGGElement, N> = select(elements[i])
@@ -116,7 +116,9 @@ export function updateNodes<N extends NodeDatumCore, L extends LinkDatumCore> (s
     nodeArc
       .attr('stroke-width', d => getValue(d, nodeBorderWidth))
       .style('display', d => !getValue(d, nodeStrokeSegmentValue) ? 'none' : null)
-      .style('fill', d => getNodeColor(d, nodeFill))
+      .style('fill', getNodeColor(d, nodeStrokeSegmentFill))
+      .style('stroke', getNodeColor(d, nodeStrokeSegmentFill))
+      .style('stroke-opacity', d => getValue(d, nodeShape) === SHAPE.CIRCLE ? 0 : null)
 
     nodeArc
       .transition()
@@ -140,7 +142,7 @@ export function updateNodes<N extends NodeDatumCore, L extends LinkDatumCore> (s
     icon
       .style('font-size', d => getValue(d, nodeIconSize) ?? 2.5 * Math.sqrt(getValue(d, nodeSize)))
       .attr('dy', 1)
-      .style('fill', d => getNodeInnerLabelColor(d, nodeFill))
+      .style('fill', d => getNodeIconColor(d, nodeFill))
       .html(d => getValue(d, nodeIcon))
 
     // Side Labels
@@ -203,19 +205,15 @@ export function updateNodes<N extends NodeDatumCore, L extends LinkDatumCore> (s
 
   updateSelectedNodes(selection, config)
 
-  const sel = duration ? selection.transition().duration(duration / 2).delay((d, i) => duration === 0 ? 0 : duration / 2 * i / selection.size()) : selection
-  sel.attr('transform', d => `rotate(0) translate(${getX(d)}, ${getY(d)}) scale(1)`)
-
-  if (isFunction(callback)) {
-    if (sel instanceof transition) sel.on('end', callback)
-    else sel.call(callback)
-  }
+  return smartTransition(selection, duration)
+    .attr('transform', d => `rotate(0) translate(${getX(d)}, ${getY(d)}) scale(1)`)
+    .attr('opacity', 1)
 }
 
 export function removeNodes<N extends NodeDatumCore, L extends LinkDatumCore> (selection: Selection<SVGGElement, N, SVGGElement, N[]>, config: GraphConfigInterface<N, L>, duration: number): void {
-  smartTransition(selection, duration)
+  smartTransition(selection, duration / 2)
     .attr('opacity', 0)
-    .attr('transform', d => `rotate(-25) translate(${getX(d)}, ${getY(d)}) scale(0)`)
+    // .attr('transform', d => 'scale(0)')
     .remove()
 }
 

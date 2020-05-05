@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { OnInit, Component, Input } from '@angular/core'
+import { OnInit, OnDestroy, Component, Input } from '@angular/core'
 
 // Vis
 import { Sankey } from '@volterra/vis'
@@ -10,7 +10,7 @@ import { Sankey } from '@volterra/vis'
   styleUrls: ['./collection.component.css'],
 })
 
-export class Collection implements OnInit {
+export class Collection implements OnInit, OnDestroy {
   @Input() component
   @Input() dataGenerator
   @Input() configGenerator
@@ -20,10 +20,11 @@ export class Collection implements OnInit {
   dimensions: {}
   items = {}
   itemValues: any[]
+  intervalIds: NodeJS.Timeout[] = []
 
   options = {
-    'Few Data Elements': 50,
-    'No Data ↔︎ Data': 30,
+    'Few Data Elements': 10,
+    'Transition: Data ↔︎ No Data': 30,
     'Single Data Element': 1,
     'No Data': 0,
     'Many Data Elements': 165,
@@ -52,18 +53,26 @@ export class Collection implements OnInit {
     this.itemValues = Object.values(this.items)
 
     let interval = 0
-    setInterval(() => {
-      const item = this.items['No Data ↔︎ Data']
+    let intervalId = setInterval(() => {
+      const item = this.items['Transition: Data ↔︎ No Data']
       const n = interval % 2 ? item.numDataElements : 0
       item.config = this.configGenerator(n)
       item.data = this.dataGenerator(n)
       interval += 1
     }, 4000)
+    this.intervalIds.push(intervalId)
 
-    setInterval(() => {
+    intervalId = setInterval(() => {
       const item = this.items['Few Data Elements']
       item.data = this.dataGenerator(item.numDataElements)
     }, 3000)
+    this.intervalIds.push(intervalId)
+  }
+
+  ngOnDestroy (): void {
+    this.intervalIds.forEach(intervalId => {
+      clearInterval(intervalId)
+    })
   }
 
   getItems (): any[] {

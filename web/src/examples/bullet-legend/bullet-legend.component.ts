@@ -1,6 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 /* eslint-disable */
-import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core'
+import {AfterViewInit, OnDestroy, Component, ElementRef, ViewChild} from '@angular/core'
 // Vis
 import {
   XYContainer,
@@ -39,7 +39,7 @@ function generateData (): AreaSampleDatum[] {
   styleUrls: ['./bullet-legend.component.css'],
 })
 
-export class BulletLegendExampleComponent implements AfterViewInit {
+export class BulletLegendExampleComponent implements AfterViewInit, OnDestroy {
   title = 'bullet-legend'
   yAccessors = [
     d => d.y,
@@ -51,6 +51,7 @@ export class BulletLegendExampleComponent implements AfterViewInit {
   chartConfig: XYContainerConfigInterface<AreaSampleDatum>
   areaConfig: AreaConfigInterface<AreaSampleDatum>
   composite: XYContainer<AreaSampleDatum>
+  intervalId: NodeJS.Timeout
   @ViewChild('chart', { static: false }) chart: ElementRef
   @ViewChild('legendRef', { static: false }) legendRef: ElementRef
 
@@ -88,9 +89,13 @@ export class BulletLegendExampleComponent implements AfterViewInit {
 
     this.composite = new XYContainer(this.chart.nativeElement, this.chartConfig, data)
 
-    setInterval(() => {
+    this.intervalId = setInterval(() => {
       this.composite.setData(generateData())
     }, 5000)
+  }
+
+  ngOnDestroy () : void {
+    clearInterval(this.intervalId)
   }
 
   onLegendItemClick (event): void {

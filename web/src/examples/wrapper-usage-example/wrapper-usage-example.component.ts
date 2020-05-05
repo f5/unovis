@@ -1,6 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 /* eslint-disable */
-import { AfterViewInit, Component } from '@angular/core'
+import { AfterViewInit, OnDestroy, Component } from '@angular/core'
 
 // Vis
 import { Axis, Brush, GroupedBar, Tooltip, Crosshair } from '@volterra/vis'
@@ -14,7 +14,7 @@ import { sampleSeriesData, SampleDatum } from '../../utils/data'
   styleUrls: ['./wrapper-usage-example.component.css'],
 })
 
-export class WrapperUsageExampleComponent implements AfterViewInit {
+export class WrapperUsageExampleComponent implements AfterViewInit, OnDestroy {
   title = 'wrapper-usage-example'
 
   // Data
@@ -89,9 +89,11 @@ export class WrapperUsageExampleComponent implements AfterViewInit {
     y: new Axis({ label: 'y axis' }),
   }
 
+  intervalId: NodeJS.Timeout
+
   ngAfterViewInit (): void {
 
-    setInterval(() => {
+    this.intervalId = setInterval(() => {
       this.duration = undefined
       this.data = sampleSeriesData(Math.floor(10 + 50*Math.random()))
       this.groupedBarConfig.barMaxWidth = Math.random() * 20
@@ -99,6 +101,9 @@ export class WrapperUsageExampleComponent implements AfterViewInit {
     }, 15000)
   }
 
+  ngOnDestroy () : void {
+    clearInterval(this.intervalId)
+  }
 }
 
 

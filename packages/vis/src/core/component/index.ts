@@ -50,7 +50,7 @@ export class ComponentCore<CoreDatum> {
     this._setUpEventsThrottled(this.events)
 
     // Set up user-defined events
-    this._setUpEventsThrottled(this.config.events)
+    this._setUpEventsThrottled(this.config.events, '.user')
   }
 
   get bleed (): Spacing {
@@ -65,11 +65,11 @@ export class ComponentCore<CoreDatum> {
   _onEvent (d: any, i: number, elements: []) {
   }
 
-  _setUpEvents (events) {
+  _setUpEvents (events, suffix = ''): void {
     Object.keys(events).forEach(className => {
       Object.keys(events[className]).forEach(eventType => {
         this.g.selectAll(`.${className}`)
-          .on(eventType, (d, i, els) => events[className][eventType](d, i, els))
+          .on(eventType + suffix, (d, i, els) => events[className][eventType](d, i, els))
       })
     })
   }

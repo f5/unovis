@@ -13,7 +13,7 @@ export const variables = injectGlobal`
     --vis-graph-node-icon-color: #a0a6ad;
     --vis-graph-node-icon-font: FontAwesome;
     --vis-graph-node-icon-fill-color-bright: #ffffff;
-    --vis-graph-node-icon-fill-color-dark: #494b56;
+    --vis-graph-node-icon-fill-color-dark: #a5abb2;
 
     /* Node Label */
     --vis-graph-node-label-background: #ffffff;
@@ -135,21 +135,11 @@ export const gNode = css`
 
 `
 
-// &${`.${greyoutNode}`} {
-//   ${`.${nodeIcon}`} {
-//     fill: var(--vis-graph-node-greyout-icon-color) !important;
-//   }
+export const gNodeExit = css`
+  label: g-node-exit;
+  pointer-events: none;
+`
 
-//   ${`.${sideLabelBackground}`} {
-//     fill: var(--vis-graph-node-greyout-side-label-background-fill-color) !important;
-//     stroke-opacity: 0.5;
-//   }
-
-//   ${`.${sideLabel}`} {
-//     fill: var(--vis-graph-node-side-label-fill-color-bright) !important;
-//     opacity: 0.25;
-//   }
-// }
 export const nodeSelectionActive = css`
   label: active;
 `
@@ -200,29 +190,30 @@ export const customNode = css`
 export const greyoutNode = css`
   label: greyout;
   
-  .${node} {
+  ${`.${node}`} {
     fill: var(--vis-graph-node-greyout-color) !important;
     stroke: var(--vis-graph-node-greyout-color) !important;
   }
 
-  .${nodeIcon} {
+  ${`.${nodeIcon}`} {
      fill: var(--vis-graph-node-icon-greyout-color) !important;
   }
 
-  .${nodeArc} {
+  ${`.${nodeArc}`} {
     fill: var(--vis-graph-node-greyout-color) !important;
+    stroke: var(--vis-graph-node-greyout-color) !important;
   }
 
-  .${label} {
+  ${`.${label}`} {
     opacity: 0.5;
   }
 
-  .${sideLabelBackground} {
+  ${`.${sideLabelBackground}`} {
      fill: var(--vis-graph-node-side-label-background-greyout-color) !important;
      stroke-opacity: 0.5;
    }
 
-  .${sideLabel} {
+   ${`.${sideLabel}`} {
     fill: var(--vis-graph-node-side-label-fill-color-bright) !important;
     opacity: 0.25;
   }

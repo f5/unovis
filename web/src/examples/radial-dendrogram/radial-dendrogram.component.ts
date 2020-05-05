@@ -1,6 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 /* eslint-disable */
-import { AfterViewInit, Component } from '@angular/core'
+import { AfterViewInit, OnDestroy, Component } from '@angular/core'
 
 // Vis
 import { RadialDendrogram, RadialDendrogramConfigInterface, Hierarchy } from '@volterra/vis'
@@ -14,7 +14,7 @@ import { getHierarchyData } from '../../utils/data'
   styleUrls: ['./radial-dendrogram.component.css'],
 })
 
-export class RadialDendrogramComponent<H extends Hierarchy> implements AfterViewInit {
+export class RadialDendrogramComponent<H extends Hierarchy> implements AfterViewInit, OnDestroy {
   title = 'radial-dendrogram'
 
   data = getHierarchyData(100, {
@@ -29,17 +29,21 @@ export class RadialDendrogramComponent<H extends Hierarchy> implements AfterView
   }
   
   component = new RadialDendrogram(this.config)
-
+  intervalId: NodeJS.Timeout
 
   ngAfterViewInit (): void {
 
-    setInterval(() => {
+    this.intervalId = setInterval(() => {
       this.data = getHierarchyData(100, {
         source: ['re01', 're02', 're03', 're04'],
         middle: ['vhost'],
         target: ['site1', 'site2', 'site3', 'site4', 'site5', 'site6', 'site7', 'site8', 'site9', 'site10'],
       })
     }, 3000)
+  }
+
+  ngOnDestroy () : void {
+    clearInterval(this.intervalId)
   }
 
 }

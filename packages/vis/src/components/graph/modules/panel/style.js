@@ -8,6 +8,7 @@ export const variables = injectGlobal`
     --vis-graph-panel-label-color: #7d8892;
     --vis-graph-panel-label-background: #ffffff;
     --vis-graph-panel-side-label-fill: #ffffff;
+    --vis-graph-panel-selection-outline-color: #b7b7b7;
   }
 `
 
@@ -18,8 +19,8 @@ export const panels = css`
 export const gPanel = css`
   label: g-panel;
 
-  transition: .25s opacity;
-  opacity: 1;
+  // transition: .25s opacity;
+  // opacity: 1;
 `
 
 export const panel = css`
@@ -52,6 +53,7 @@ export const labelText = css`
   text-anchor: middle;
   font-size: 10pt;
   font-weight: 300;
+  cursor: default;
   stroke: none;
 `
 
@@ -67,7 +69,7 @@ export const panelSelection = css`
   stroke-dasharray: 3 3;
   fill: var(--vis-graph-node-selection-color);
   fill-opacity: 0.1;
-  stroke: var(--vis-graph-node-stroke-color);
+  stroke: var(--vis-graph-panel-selection-outline-color);
   stroke-opacity: 0.75;
 
   &${`.${panelSelectionActive}`} {
@@ -98,10 +100,12 @@ export const customSideLabel = css`
 
 export const sideLabelIcon = css`
   label: side-label-icon-text;
-
+  font-family: var(--vis-graph-node-icon-font);
+  fill: var(--vis-graph-node-icon-color);
   stroke: none;
   dominant-baseline: middle;
   text-anchor: middle;
   pointer-events: none;
-  font-size: 10pt;
+  cursor: default;
+  font-size: 8pt;
 `

@@ -72,20 +72,20 @@ export class MapComponent implements AfterViewInit {
 
   ngAfterViewInit (): void {
     // select node by id
-    setTimeout(() => {
-      this.config.selectedNodeId = _.sample(this.data).id
-      this.config = { ...this.config } // Updating the object to trigger change detection
-    }, 4000)
+    // setTimeout(() => {
+    //   this.config.selectedNodeId = _.sample(this.data).id
+    //   this.config = { ...this.config } // Updating the object to trigger change detection
+    // }, 4000)
 
-    // set new bounds
-    setTimeout(() => {      
-      this.config.bounds = { northEast: { lat: 77, lng: -172 }, southWest: { lat: -50, lng: 72 } }
-      this.config = { ...this.config } // Updating the object to trigger change detection
-    }, 8000)
+    // // set new bounds
+    // setTimeout(() => {      
+    //   this.config.bounds = { northEast: { lat: 77, lng: -172 }, southWest: { lat: -50, lng: 72 } }
+    //   this.config = { ...this.config } // Updating the object to trigger change detection
+    // }, 8000)
 
-    // update data
-    setTimeout(() => {      
-      this.data = mapSampleData()
-    }, 12000)
+    // // update data
+    // setTimeout(() => {      
+    //   this.data = mapSampleData()
+    // }, 12000)
   }
 }

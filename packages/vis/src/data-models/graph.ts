@@ -64,7 +64,8 @@ export class GraphDataModel<NodeDatum, LinkDatum> extends CoreDataModel<{nodes: 
     this._connectedNodes = without(nodes, ...this._nonConnectedNodes)
 
     this._nodes = nodes
-    this._links = links
+    // eslint-disable-next-line dot-notation
+    this._links = links.filter(l => l['source'] && l['target'])
   }
 
   get nodes (): NodeDatum[] {
@@ -84,12 +85,16 @@ export class GraphDataModel<NodeDatum, LinkDatum> extends CoreDataModel<{nodes: 
   }
 
   findNode (nodes: NodeDatum[], n: number | string | object): NodeDatum {
-    if (isNumber(n)) return nodes[n as number]
-    else if (isString(n)) return find(nodes, node => node.id === n)
-    else if (isObject(n)) return find(nodes, node => node === n)
-    else {
+    let foundNode
+    if (isNumber(n)) foundNode = nodes[n as number]
+    else if (isString(n)) foundNode = find(nodes, node => node.id === n)
+    else if (isObject(n)) foundNode = find(nodes, node => node === n)
+
+    if (!foundNode) {
       console.warn(`Node ${n} is missing from the nodes list`)
     }
+
+    return foundNode
   }
 
   transferState (arr, arrPrev): void {

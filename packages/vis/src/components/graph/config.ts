@@ -21,13 +21,15 @@ export interface GraphConfigInterface<N extends NodeDatumCore, L extends LinkDat
 
   // Layout
   /** Type of graph layout */
-  layoutType?: LayoutType;
+  layoutType?: LayoutType | string;
   /** Refit the layout on data or configuration update */
   layoutAutofit?: boolean;
   /** Place non-connected nodes to the bottom of the graph */
   layoutNonConnectedAside?: boolean;
   /** Order of the layput groups, for paralllel and concentric layouts */
   layoutGroupOrder?: any[];
+  /** */
+  layoutSubgroupMaxNodes?: number;
   /** */
   layoutSortConnectionsByGroup?: string;
 
@@ -106,6 +108,7 @@ export interface GraphConfigInterface<N extends NodeDatumCore, L extends LinkDat
 }
 
 export class GraphConfig<N extends NodeDatumCore, L extends LinkDatumCore> extends ComponentConfig implements GraphConfigInterface<N, L> {
+  duration = 1000
   zoomScaleExtent: [number, number] = [0.35, 1.25]
   disableZoom = false
   disableDrag = true
@@ -114,6 +117,7 @@ export class GraphConfig<N extends NodeDatumCore, L extends LinkDatumCore> exten
   layoutAutofit = true
   layoutNonConnectedAside = true
   layoutGroupOrder = []
+  layoutSubgroupMaxNodes = 6
   layoutSortConnectionsByGroup = ''
   forceLayoutSettings = {
     linkDistance: 75,
