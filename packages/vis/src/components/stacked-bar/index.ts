@@ -1,5 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { min } from 'd3-array'
+import { select } from 'd3'
 
 // Core
 import { XYComponentCore } from 'core/xy-component'
@@ -25,10 +26,11 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
   stacked = true
   // linePath: Selection<SVGGElement, object[], SVGGElement, object[]>
   events = {
+    [StackedBar.selectors.barGroup]: {
+      mouseover: this._raiseSelection,
+    },
     [StackedBar.selectors.bar]: {
-      mousemove: this._onEvent,
-      mouseover: this._onEvent,
-      mouseleave: this._onEvent,
+      mouseover: this._raiseSelection,
     },
   }
 
@@ -182,5 +184,9 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
     const { config, datamodel } = this
     const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
     return datamodel.getStackedExtent(...yAccessors)
+  }
+
+  _raiseSelection (d, i, els): void {
+    select(els[i]).raise()
   }
 }
