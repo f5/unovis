@@ -1,7 +1,7 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { ScaleType } from 'types/scales'
 
-export type NumericAccessor<Datum> = ((d: Datum, i?: number, ...any) => number | null) | number | null
+export type NumericAccessor<Datum> = ((d: Datum, i?: number, ...any) => number | null) | number | null | undefined
 export type StringAccessor<Datum> = ((d: Datum, i?: number, ...any) => string) | string
 export type ColorAccessor<Datum> = ((d: Datum, i?: number, ...any) => string) | string
 export type BooleanAccessor<Datum> = ((d: Datum, i?: number, ...any) => boolean) | boolean

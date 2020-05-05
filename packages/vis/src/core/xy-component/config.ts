@@ -10,7 +10,7 @@ export interface XYComponentConfigInterface<Datum> extends ComponentConfigInterf
   /** X accessor or number value */
   x?: NumericAccessor<Datum>;
   /** Y accessor or value */
-  y?: NumericAccessor<Datum> | NumericAccessor<Datum>[] | undefined | null;
+  y?: NumericAccessor<Datum> | NumericAccessor<Datum>[];
   /** Id accessor for better visual data updates */
   id?: ((d: Datum, i?: number, ...any) => string | number);
   /** Component color (string or color object) */
