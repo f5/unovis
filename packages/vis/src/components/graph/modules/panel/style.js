@@ -53,6 +53,7 @@ export const labelText = css`
   text-anchor: middle;
   font-size: 10pt;
   font-weight: 300;
+  cursor: default;
   stroke: none;
 `
 
@@ -105,5 +106,6 @@ export const sideLabelIcon = css`
   dominant-baseline: middle;
   text-anchor: middle;
   pointer-events: none;
+  cursor: default;
   font-size: 8pt;
 `
