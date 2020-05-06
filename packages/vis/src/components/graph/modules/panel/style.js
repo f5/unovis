@@ -7,8 +7,10 @@ export const variables = injectGlobal`
     --vis-graph-panel-fill-color: #ffffff;
     --vis-graph-panel-label-color: #7d8892;
     --vis-graph-panel-label-background: #ffffff;
+    --vis-graph-panel-label-font-family: var(--vis-font-family);
     --vis-graph-panel-side-label-fill: #ffffff;
     --vis-graph-panel-selection-outline-color: #b7b7b7;
+
   }
 `
 
@@ -55,6 +57,7 @@ export const labelText = css`
   font-weight: 300;
   cursor: default;
   stroke: none;
+  font-family: var(--vis-graph-panel-label-font-family);
 `
 
 export const panelSelectionActive = css`
@@ -100,7 +103,7 @@ export const customSideLabel = css`
 
 export const sideLabelIcon = css`
   label: side-label-icon-text;
-  font-family: var(--vis-graph-node-icon-font);
+  font-family: var(--vis-graph-node-icon-font), var(--vis-graph-panel-label-font-family);
   fill: var(--vis-graph-node-icon-color);
   stroke: none;
   dominant-baseline: middle;

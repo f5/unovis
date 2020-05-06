@@ -19,12 +19,14 @@ export const variables = injectGlobal`
     --vis-graph-node-label-background: #ffffff;
     --vis-graph-node-label-text-color: #5b5f6d;
     --vis-graph-node-sublabel-text-color: #989aa3;
+    --vis-graph-node-label-font-family: var(--vis-font-family);
 
     /* Node Side Labels (circular labels)*/
     --vis-graph-node-side-label-background-fill-color: #a0a9af;
     --vis-graph-node-side-label-background-stroke-color: #ffffff;
     --vis-graph-node-side-label-fill-color-bright: #ffffff;
     --vis-graph-node-side-label-fill-color-dark: #494b56;
+    --vis-graph-node-side-label-font-family: var(--vis-font-family);
 
     /* Greyout */
     --vis-graph-node-greyout-color: #ebeff7;
@@ -85,12 +87,14 @@ export const labelTextContent = css`
   label: label-text-content;
 
   fill: var(--vis-graph-node-label-text-color);
+  font-family: var(--vis-graph-node-label-font-family);
 `
 
 export const subLabelTextContent = css`
   label: sublabel-text-content;
 
   fill: var(--vis-graph-node-sublabel-text-color);
+  font-family: var(--vis-graph-node-label-font-family);
   font-size: 8pt;
 `
 
@@ -109,7 +113,7 @@ export const sideLabelBackground = css`
 export const sideLabel = css`
   label: side-label;
 
-  font-family: Open Sans, Helvetica Neue, Helvetica, var(--vis-graph-node-icon-font);
+  font-family: var(--vis-graph-node-side-label-font-family), var(--vis-graph-node-icon-font);
   alignment-baseline: middle;
   text-anchor: middle;
   font-size: 16px;
