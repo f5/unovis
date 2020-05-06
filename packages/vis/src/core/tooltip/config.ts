@@ -8,8 +8,8 @@ import { Position } from 'types/position'
 export interface TooltipConfigInterface<T extends ComponentCore<any>, Datum = any> {
     /** Visualization Components */
     components?: T[];
-    horizontalPlacement?: Position | undefined;
-    verticalPlacement?: Position | undefined;
+    horizontalPlacement?: Position | string | undefined;
+    verticalPlacement?: Position | string | undefined;
     triggers?: {
       [selector: string]: (data: Datum, i: number, elements: any) => any;
     };
