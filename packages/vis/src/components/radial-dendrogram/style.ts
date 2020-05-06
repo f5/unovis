@@ -4,6 +4,8 @@ import { css, injectGlobal } from 'emotion'
 export const variables = injectGlobal`
   :root {
     --vis-radial-dendrogram-link-color: #cad5f6;
+
+    --vis-radial-dendrogram-label-font-family: var(--vis-font-family);
   }
 `
 
@@ -25,6 +27,10 @@ export const gLabel = css`
 export const label = css`
   label: label;
   
+  &, tspan {
+    font-family: var(--vis-radial-dendrogram-label-font-family);
+  }
+
   dominant-baseline: middle;
   user-select: none;
 `

@@ -13,9 +13,11 @@ export const variables = injectGlobal`
     --vis-map-node-default-fill-color: #3aea38;
     --vis-map-node-from-cluster-stroke-color: #fff;
     --vis-map-node-cluster-fill-color: #fff;
+    --vis-map-inner-label-font-family: var(--vis-font-family);
     --vis-map-inner-label-color: #7e8992;
     --vis-map-node-with-stroke-color: #fff;
     --vis-map-cluser-expanded-color-fill: #fff;
+
   }
 `
 
@@ -94,6 +96,7 @@ export const innerLabel = css`
 
   text-anchor: middle;
   fill: var(--vis-map-inner-label-color);
+  font-family: var(--vis-map-inner-label-font-family);
   pointer-events: none;
   font-weight: 600;
 `

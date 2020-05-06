@@ -13,6 +13,8 @@ export const variables = injectGlobal`
     --vis-sankey-icon-size: 22px;
     --vis-sankey-icon-color: #ffffff;
     --vis-sankey-icon-font-family: FontAwesome;
+
+    --vis-sankey-label-font-family: var(--vis-font-family);
   }
 `
 
@@ -76,6 +78,10 @@ export const nodeLabel = css`
   pointer-events: none;
   visibility: hidden;
   user-select: none;
+
+  &, tspan {
+    font-family: var(--vis-sankey-label-font-family);
+  }
 
   &.visible {
     visibility: visible;
