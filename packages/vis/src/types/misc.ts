@@ -12,9 +12,9 @@ export type Dimension = {
   /** Force set scale domain (data extent) */
   domain?: [number | undefined, number | undefined];
   /** Constraint the minimum value of the scale domain */
-  domainMinConstraint?: [number, number];
+  domainMinConstraint?: [number | undefined, number | undefined];
   /** Constraint the maximum value of the scale domain */
-  domainMaxConstraint?: [number, number];
+  domainMaxConstraint?: [number | undefined, number | undefined];
   /** Force set the domain range (screen space) */
   range?: [number, number];
 }
