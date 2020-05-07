@@ -47,7 +47,7 @@ export class RadialDendrogramComponent<H extends Hierarchy> implements AfterView
 
   margin = {}
   config: ChordDiagramConfigInterface<H> = {
-    // nodeWidth: 40,
+    nodeWidth: 20,
     nodeLabelType: 'along'
   }
   

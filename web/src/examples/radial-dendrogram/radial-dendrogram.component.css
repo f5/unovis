@@ -1,6 +1,7 @@
 .chart {
   position: relative;
   display: block;
-  height: 70vh;
+  height: 90vh;
+  margin-top: 3%;
   width: 100%;
 }
