@@ -27,6 +27,14 @@ import { createLink, updateLink, removeLink } from './modules/link'
 // Styles
 import * as s from './style'
 
+interface HNode<T> extends HierarchyRectangularNode<T> {
+  _state?: { hovered?: boolean };
+}
+
+interface HLink<T> extends Link<T> {
+  _state?: { hovered?: boolean };
+}
+
 export class ChordDiagram<H extends Hierarchy, L extends Link<H>> extends ComponentCore<{ nodes: H; links: L[]}> {
   static selectors = s
   config: ChordDiagramConfig<H> = new ChordDiagramConfig()
@@ -36,9 +44,19 @@ export class ChordDiagram<H extends Hierarchy, L extends Link<H>> extends Compon
   arcGen = arc<HierarchyRectangularNode<H>>()
   radiusScale = scalePow()
   linkAreaGen = area<HierarchyRectangularNode<H>>()
+  private _nodes: HNode<H>[] = []
+  private _links: L[] = []
+  private _rootNode: HNode<H>
 
   events = {
-    [ChordDiagram.selectors.node]: {},
+    [ChordDiagram.selectors.node]: {
+      mouseover: this._onNodeMouseOver.bind(this),
+      mouseout: this._onNodeMouseOut.bind(this),
+    },
+    [ChordDiagram.selectors.link]: {
+      mouseover: this._onLinkMouseOver.bind(this),
+      mouseout: this._onLinkMouseOut.bind(this),
+    },
   }
 
   constructor (config?: ChordDiagramConfigInterface<H>) {
@@ -91,18 +109,20 @@ export class ChordDiagram<H extends Hierarchy, L extends Link<H>> extends Compon
     this._calculateRadialPosition(dendogram)
 
     const dendogramDataWithRoot = dendogram.descendants()
-
+    this._rootNode = dendogramDataWithRoot.find(d => d.depth === 0)
     // Filter from the root node
     const dendogramData = dendogramDataWithRoot.filter(d => d.depth !== 0)
-
-    const linksData = this._getRibbons(dendogram)
+    this._nodes = dendogramData
+    this._links = this._getRibbons(dendogram)
+    this._nodes.forEach((node: HNode<H>) => { node._state = {} })
+    this._links.forEach((link: HLink<H>) => { link._state = {} })
 
     this.g.attr('transform', `translate(${config.width / 2},${config.height / 2})`)
 
     // Links
     const linksSelection = this.linkGroup
       .selectAll(`.${s.link}`)
-      .data(linksData)
+      .data(this._links)
 
     const linksEnter = linksSelection.enter().append('path')
       .attr('class', s.link)
@@ -117,7 +137,7 @@ export class ChordDiagram<H extends Hierarchy, L extends Link<H>> extends Compon
     // Nodes
     const nodesSelection = this.nodeGroup
       .selectAll(`.${s.node}`)
-      .data(dendogramData)
+      .data(this._nodes)
 
     const nodesEnter = nodesSelection.enter().append('path')
       .attr('class', s.node)
@@ -132,7 +152,7 @@ export class ChordDiagram<H extends Hierarchy, L extends Link<H>> extends Compon
     // Labels
     const labels = this.labelGroup
       .selectAll(`.${s.gLabel}`)
-      .data(dendogramData)
+      .data(this._nodes)
 
     const labelEnter = labels.enter().append('g')
       .attr('class', s.gLabel)
@@ -287,5 +307,44 @@ export class ChordDiagram<H extends Hierarchy, L extends Link<H>> extends Compon
     for (const node of hierarchyNode.children) {
       this._calculateRadialPosition(node, scalingCoeff, nodePadding)
     }
+  }
+
+  _onNodeMouseOver (d): void {
+    let links = this._links.filter(l => l.source.data.id === d.data.id || l.target.data.id === d.data.id)
+    if (!links.length) {
+      const childrens = d.descendants()
+      links = this._links.filter(l => childrens.find(d => l.source.data.id === d.data.id || l.target.data.id === d.data.id))
+    }
+    this._highlightOnHover(links)
+  }
+
+  _onNodeMouseOut (): void {
+    this._highlightOnHover()
+  }
+
+  _onLinkMouseOver (d): void {
+    this._highlightOnHover([d])
+  }
+
+  _onLinkMouseOut (): void {
+    this._highlightOnHover()
+  }
+
+  _highlightOnHover (links?: L[]): void {
+    if (links) {
+      links.forEach((l: HLink<H>) => {
+        l._state.hovered = true
+        const sourcePath = l.source.path(this._rootNode)
+        const targetPath = l.target.path(this._rootNode)
+        sourcePath.forEach((n: HNode<H>) => { if (n.depth) n._state.hovered = true })
+        targetPath.forEach((n: HNode<H>) => { if (n.depth) n._state.hovered = true })
+      })
+    } else {
+      this._nodes.forEach((n: HNode<H>) => { delete n._state.hovered })
+      this._links.forEach((l: HLink<H>) => { delete l._state.hovered })
+    }
+
+    this.nodeGroup.selectAll(`.${s.node}`).classed(s.hoveredNode, (d: HNode<H>) => d._state.hovered)
+    this.linkGroup.selectAll(`.${s.link}`).classed(s.hoveredLink, (d: HLink<H>) => d._state.hovered)
   }
 }

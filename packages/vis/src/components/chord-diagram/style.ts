@@ -22,6 +22,11 @@ export const node = css`
   }
 `
 
+export const hoveredNode = css`
+  label: hovered;
+  stroke-width: 2;
+`
+
 export const gLabel = css`
   label: group-label;
 `
@@ -44,4 +49,9 @@ export const link = css`
   &:hover {
     fill-opacity: 1;
   }
+`
+
+export const hoveredLink = css`
+  label: hovered;
+  fill-opacity: 1;
 `
