@@ -3,7 +3,7 @@ import { Selection, BaseType } from 'd3-selection'
 import { hierarchy, HierarchyRectangularNode, partition } from 'd3-hierarchy'
 import { arc, area, CurveCatmullRomFactory, CurveFactory } from 'd3-shape'
 import { scalePow } from 'd3-scale'
-import { sum, max } from 'd3-array'
+import { max } from 'd3-array'
 
 // Core
 import { ComponentCore } from 'core/component'
@@ -29,10 +29,12 @@ import * as s from './style'
 
 interface HNode<T> extends HierarchyRectangularNode<T> {
   _state?: { hovered?: boolean };
+  _prevX1?: number;
 }
 
 interface HLink<T> extends Link<T> {
   _state?: { hovered?: boolean };
+  _points?: [];
 }
 
 export class ChordDiagram<H extends Hierarchy, L extends Link<H>> extends ComponentCore<{ nodes: H; links: L[]}> {
@@ -169,102 +171,47 @@ export class ChordDiagram<H extends Hierarchy, L extends Link<H>> extends Compon
     const { config, datamodel: { data } } = this
     const findNode = (nodes, id): HierarchyRectangularNode<H> => nodes.find(n => n.data.id === id)
     const leafNodes = dendogram.leaves()
-
-    const getParentCoord = (parentNode, node, fromCoef, toCoef) => {
-      const parentLength = parentNode.x1 - parentNode.x0
-      const parentValue = parentNode.value
-      let startValue = 0
-      let endValue = parentValue
-      for (let i = 0; i < parentNode.children.length; i += 1) {
-        const child = parentNode.children[i]
-        const childValue = child.value
-        const nextChild = parentNode.children[i + 1]
-
-        if (child.data.id === node.data.id) {
-          if (nextChild) {
-            endValue = startValue + childValue
-          }
-          break
-        }
-        startValue += childValue
-      }
-      const x0 = parentNode.x0 + (startValue / parentValue) * parentLength
-      const x1 = parentNode.x0 + (endValue / parentValue) * parentLength
-      const delta = x1 - x0
-
-      const convertedCoord = this._convertRadialToCartesian(
-        x0 + delta * fromCoef,
-        x0 + delta * toCoef,
-        parentNode.y1,
-        getValue(parentNode, config.nodeWidth)
-      )
-      return convertedCoord
-    }
-
-    const getLeafCoord = (links, l, node, type = 'source') => {
-      const totalValue = sum(links, (d: any) => d.value)
-      const len = node.x1 - node.x0
-      let x0 = node.x0
-      let x1 = node.x1
-      let fromCoef = 0
-      let toCoef = 0
-      for (let i = 0; i < links.length; i += 1) {
-        const link = links[i]
-        const value = link.value
-        const nextLink = links[i + 1]
-        if (link[type === 'source' ? 'target' : 'source'] === l[type === 'source' ? 'target' : 'source']) {
-          if (nextLink) {
-            toCoef = fromCoef + value
-            x1 = x0 + (value / totalValue) * len
-          } else {
-            toCoef = fromCoef + value
-          }
-          break
-        }
-        fromCoef += value
-        x0 += (value / totalValue) * len
-      }
-      const convertedCoord = this._convertRadialToCartesian(
-        type === 'source' ? x0 : x1,
-        type === 'source' ? x1 : x0,
-        node.y1,
-        getValue(node, config.nodeWidth)
-      )
-
-      return { convertedCoord, childCoef: toCoef / totalValue, parentCoef: fromCoef / totalValue }
-    }
-
     const groupedBySource = groupBy(data.links, d => d.source)
     const groupedByTarget = groupBy(data.links, d => d.target)
 
-    const ribbons = data.links.map(l => {
+    const calculatePoints = (links, type, depth) => {
+      links.forEach(link => {
+        if (!link._points) link._points = []
+        const sourceNode = findNode(leafNodes, link.source)
+        const targetNode = findNode(leafNodes, link.target)
+        const nodesInLink = type === 'source' ? sourceNode.path(targetNode) : targetNode.path(sourceNode)
+        const currNode: HNode<H> = nodesInLink[depth]
+        const len = currNode.x1 - currNode.x0
+        const x0 = currNode._prevX1 ?? currNode.x0
+        const x1 = x0 + len * link.value / currNode.value
+        currNode._prevX1 = x1
+
+        const converted = this._convertRadialToCartesian(
+          type === 'source' ? x0 : x1,
+          type === 'source' ? x1 : x0,
+          currNode.y1, getValue(currNode, config.nodeWidth))
+        const pointIdx = type === 'source' ? depth : dendogram.height * 2 - 1 - depth
+        link._points[pointIdx] = { x0: converted.x0, x1: converted.x1, y0: converted.y0, y1: converted.y1 }
+      })
+    }
+
+    leafNodes.forEach(leafNode => {
+      const sourceLinks = groupedBySource[leafNode.data.id] || []
+      const targetLinks = groupedByTarget[leafNode.data.id] || []
+      for (let depth = 0; depth < dendogram.height; depth += 1) {
+        calculatePoints(sourceLinks, 'source', depth)
+        calculatePoints(targetLinks, 'target', depth)
+      }
+    })
+
+    const ribbons = data.links.map((l: HLink<H>) => {
       const sourceNode = findNode(leafNodes, l.source)
       const targetNode = findNode(leafNodes, l.target)
 
-      const allSourceLinks = [...groupedBySource[l.source], ...(groupedByTarget[l.source] ?? [])]
-      const allTargetLinks = [...(groupedBySource[l.target] ?? []), ...groupedByTarget[l.target]]
-
-      const sourceInfo = getLeafCoord(allSourceLinks, l, sourceNode, 'source')
-      const sourceCoord = sourceInfo.convertedCoord
-      const sourceParentCoord = getParentCoord(sourceNode.parent, sourceNode, sourceInfo.parentCoef, sourceInfo.childCoef)
-
-      const targetInfo = getLeafCoord(allTargetLinks, l, targetNode, 'target')
-      const targetCoord = targetInfo.convertedCoord
-      const targetParentCoord = getParentCoord(targetNode.parent, targetNode, targetInfo.childCoef, targetInfo.parentCoef)
-
-      // sourceNode._xPrev += l.value / sourceNode.value
-      const points = [
-        // { x0: sourceNode._xPrev, x1: sourceNode.sourceNode._xPrev * l.value / sourceNode.value, y0: sourceNode.y0, y1: sourceNode.y1 },
-
-        { x0: sourceCoord.x0, x1: sourceCoord.x1, y0: sourceCoord.y0, y1: sourceCoord.y1 },
-        { x0: sourceParentCoord.x0, x1: sourceParentCoord.x1, y0: sourceParentCoord.y0, y1: sourceParentCoord.y1 },
-        { x0: targetParentCoord.x0, x1: targetParentCoord.x1, y0: targetParentCoord.y0, y1: targetParentCoord.y1 },
-        { x0: targetCoord.x0, x1: targetCoord.x1, y0: targetCoord.y0, y1: targetCoord.y1 },
-      ]
       return {
         source: sourceNode,
         target: targetNode,
-        points,
+        points: l._points,
       } as L
     })
 
