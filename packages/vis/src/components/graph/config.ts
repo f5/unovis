@@ -111,7 +111,7 @@ export class GraphConfig<N extends NodeDatumCore, L extends LinkDatumCore> exten
   duration = 1000
   zoomScaleExtent: [number, number] = [0.35, 1.25]
   disableZoom = false
-  disableDrag = true
+  disableDrag = false
   zoomThrottledUpdateNodeThreshold = 100
   layoutType = LayoutType.FORCE
   layoutAutofit = true
@@ -132,7 +132,7 @@ export class GraphConfig<N extends NodeDatumCore, L extends LinkDatumCore> exten
   flowCircleSize = 2
   linkWidth = 1
   linkStyle = LinkStyle.SOLID
-  linkBandWidth = 8
+  linkBandWidth = 0
   linkArrow = undefined
   linkStroke = undefined
   linkFlow = false

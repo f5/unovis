@@ -2,7 +2,7 @@
 import { Selection, BaseType } from 'd3-selection'
 import { interpolate } from 'd3-interpolate'
 import { max } from 'd3-array'
-import { Arc, DefaultArcObject } from 'd3-shape'
+import { Arc } from 'd3-shape'
 import { color } from 'd3-color'
 
 // Types
@@ -20,6 +20,10 @@ import { GraphConfigInterface } from '../../config'
 
 export const NODE_SIZE = 30
 
+export function getNodeSize<T> (d: T, nodeSizeAccessor: NumericAccessor<T>): number {
+  return getValue(d, nodeSizeAccessor) || NODE_SIZE
+}
+
 function _setInitialAnimState (el): void {
   el._animState = {
     endAngle: 0,
@@ -28,12 +32,13 @@ function _setInitialAnimState (el): void {
 
 // Animate the arc around node with keeping
 // the current anim state info
-export function arcTween<N extends NodeDatumCore, L extends LinkDatumCore> (d: N, config: GraphConfigInterface<N, L>, arcConstructor: Arc<any, DefaultArcObject>, el): (t: number) => string {
+export function arcTween<N extends NodeDatumCore, L extends LinkDatumCore> (d: N, config: GraphConfigInterface<N, L>, arcConstructor: Arc<any, N>, el): (t: number) => string {
   const { nodeBorderWidth, nodeSize, nodeStrokeSegmentValue } = config
   if (!el._animState) _setInitialAnimState(el)
+
   const i = interpolate(el._animState, {
     endAngle: 2 * Math.PI * (getValue(d, nodeStrokeSegmentValue) ?? 0) / 100,
-    nodeSize: getValue(d, nodeSize),
+    nodeSize: getNodeSize(d, nodeSize),
     borderWidth: getValue(d, nodeBorderWidth),
   })
   el._animState = i(0)
@@ -46,7 +51,7 @@ export function arcTween<N extends NodeDatumCore, L extends LinkDatumCore> (d: N
 
 export function polyTween<N extends NodeDatumCore, L extends LinkDatumCore> (d: N, config: GraphConfigInterface<N, L>, polygonConstructor, el): (t: number) => string {
   const { nodeShape, nodeStrokeSegmentValue } = config
-  const nodeSize = getValue(d, config.nodeSize)
+  const nodeSize = getNodeSize(d, config.nodeSize)
   let n: number
   switch (getValue(d, nodeShape)) {
   case SHAPE.SQUARE:
@@ -99,12 +104,12 @@ export function getY (node: NodeDatumCore): number {
   return node._state && !isNil(node._state.fy) ? node._state.fy : node.y
 }
 
-export function getNodeSize<T> (nodeSizeAccessor: NumericAccessor<T>): number {
+export function configuredNodeSize<T> (nodeSizeAccessor: NumericAccessor<T>): number {
   return typeof nodeSizeAccessor === 'number' ? nodeSizeAccessor : NODE_SIZE
 }
 
 export function getMaxNodeSize<T> (data: T[], nodeSize: NumericAccessor<T>): number {
-  return data.length ? max(data, d => getValue(d, nodeSize)) : getNodeSize(nodeSize)
+  return max(data || [], d => getNodeSize(d, nodeSize)) || NODE_SIZE
 }
 
 export function getSideTexLabelColor (label: SideLabel): string {

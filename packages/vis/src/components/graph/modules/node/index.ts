@@ -17,7 +17,7 @@ import { getValue, throttle } from 'utils/data'
 import { GraphConfigInterface } from '../../config'
 
 // Helpers
-import { arcTween, polyTween, setLabelRect, getX, getY, getSideTexLabelColor, getNodeColor, getNodeIconColor } from './helper'
+import { arcTween, polyTween, setLabelRect, getX, getY, getSideTexLabelColor, getNodeColor, getNodeIconColor, getNodeSize } from './helper'
 import { appendShape, updateShape, isCustomXml } from '../shape'
 import ZOOM_LEVEL from '../zoom-levels'
 
@@ -107,11 +107,12 @@ export function updateNodes<N extends NodeDatumCore, L extends LinkDatumCore> (s
 
     const nodeBBox = (node.node() as SVGGraphicsElement).getBBox()
 
-    const arcGenerator = arc()
-      .innerRadius(d => getValue(d, nodeSize) / 2 - (getValue(d, nodeBorderWidth) / 2))
-      .outerRadius(d => getValue(d, nodeSize) / 2 + (getValue(d, nodeBorderWidth) / 2))
+    const arcGenerator = arc<N>()
+      .innerRadius(d => getNodeSize(d, nodeSize) / 2 - (getValue(d, nodeBorderWidth) / 2))
+      .outerRadius(d => getNodeSize(d, nodeSize) / 2 + (getValue(d, nodeBorderWidth) / 2))
       .startAngle(0 * (Math.PI / 180))
-      .endAngle(a => a.endAngle)
+      // eslint-disable-next-line dot-notation
+      .endAngle(a => a['endAngle'])
 
     nodeArc
       .attr('stroke-width', d => getValue(d, nodeBorderWidth))
@@ -136,11 +137,11 @@ export function updateNodes<N extends NodeDatumCore, L extends LinkDatumCore> (s
     // Set Node Selection
     const selectionPadding = 12
     nodeSelection
-      .attr('r', getValue(d, nodeSize) / 2 + selectionPadding)
+      .attr('r', getNodeSize(d, nodeSize) / 2 + selectionPadding)
 
     // Update Node Icon
     icon
-      .style('font-size', d => getValue(d, nodeIconSize) ?? 2.5 * Math.sqrt(getValue(d, nodeSize)))
+      .style('font-size', d => getValue(d, nodeIconSize) ?? 2.5 * Math.sqrt(getNodeSize(d, nodeSize)))
       .attr('dy', 1)
       .style('fill', d => getNodeIconColor(d, nodeFill))
       .html(d => getValue(d, nodeIcon))
@@ -167,8 +168,8 @@ export function updateNodes<N extends NodeDatumCore, L extends LinkDatumCore> (s
       .style('fill', d => d.color)
 
     sideLabelsUpdate.attr('transform', (l, i) => {
-      if (sideLabelsData.length === 1) return `translate(${getValue(d, nodeSize) / 2.5}, ${-getValue(d, nodeSize) / 2.5})`
-      const r = 1.05 * getValue(d, nodeSize) / 2
+      if (sideLabelsData.length === 1) return `translate(${getNodeSize(d, nodeSize) / 2.5}, ${-getNodeSize(d, nodeSize) / 2.5})`
+      const r = 1.05 * getNodeSize(d, nodeSize) / 2
       // const angle = i * Math.PI / 4 - Math.PI / 2
       const angle = i * 1.15 * 2 * Math.atan2(SIDE_LABLE_SIZE, r) - Math.PI / 3
       return `translate(${r * Math.cos(angle)}, ${r * Math.sin(angle)})`
@@ -198,7 +199,7 @@ export function updateNodes<N extends NodeDatumCore, L extends LinkDatumCore> (s
 
     // Position label
     const labelMargin = 18
-    const nodeHeight = isCustomXml(getValue(d, nodeShape)) ? nodeBBox.height : getValue(d, nodeSize)
+    const nodeHeight = isCustomXml(getValue(d, nodeShape)) ? nodeBBox.height : getNodeSize(d, nodeSize)
     label.attr('transform', `translate(0, ${nodeHeight / 2 + labelMargin})`)
     if (scale >= ZOOM_LEVEL.LEVEL2) setLabelRect(label, getValue(d, nodeLabel), nodeSelectors.labelText)
   })

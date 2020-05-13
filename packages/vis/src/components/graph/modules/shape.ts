@@ -9,6 +9,9 @@ import { NumericAccessor, StringAccessor } from 'types/misc'
 import { polygon } from 'utils/path'
 import { getValue } from 'utils/data'
 
+// Helpers
+import { getNodeSize } from './node/helper'
+
 export function isCustomXml (shape: SHAPE): boolean {
   return /<[a-z][\s\S]*>/i.test(shape)
 }
@@ -47,13 +50,13 @@ export function appendShape<T> (selection, shapeAccessor: StringAccessor<T>, sha
 
 export function updateShape<T> (selection, shape: StringAccessor<T>, size: NumericAccessor<T>): void {
   selection.filter('circle')
-    .attr('r', (d: T) => getValue(d, size) / 2)
+    .attr('r', (d: T) => getNodeSize(d, size) / 2)
 
   selection.filter('rect')
-    .attr('width', (d: T) => getValue(d, size))
-    .attr('height', (d: T) => getValue(d, size))
-    .attr('x', (d: T) => -getValue(d, size) / 2)
-    .attr('y', (d: T) => -getValue(d, size) / 2)
+    .attr('width', (d: T) => getNodeSize(d, size))
+    .attr('height', (d: T) => getNodeSize(d, size))
+    .attr('x', (d: T) => -getNodeSize(d, size) / 2)
+    .attr('y', (d: T) => -getNodeSize(d, size) / 2)
 
   selection.filter('path')
     .attr('d', (d: T) => {
@@ -70,7 +73,7 @@ export function updateShape<T> (selection, shape: StringAccessor<T>, size: Numer
         n = 6
       }
 
-      return polygon(getValue(d, size), n)
+      return polygon(getNodeSize(d, size), n)
     })
 
   selection.filter('g')

@@ -17,7 +17,7 @@ import { without, clamp, groupBy, uniq, sortBy, getValue } from 'utils/data'
 import { GraphConfigInterface } from '../config'
 
 // Heleprs
-import { getMaxNodeSize, getNodeSize } from './node/helper'
+import { getMaxNodeSize, configuredNodeSize, getNodeSize } from './node/helper'
 import { positionNonConnectedNodes } from './layout-helpers'
 
 export function applyLayoutCircular<N extends NodeDatumCore, L extends LinkDatumCore> (datamodel: GraphDataModel<N, L>, config: GraphConfigInterface<N, L>): void {
@@ -62,8 +62,8 @@ export function applyLayoutParallel<N extends NodeDatumCore, L extends LinkDatum
     layoutSubgroupMaxNodes, nodeSize, nodeGroup, width, height,
   } = config
 
-  const activeWidth = width - getNodeSize(nodeSize)
-  const activeHeight = height - getNodeSize(nodeSize) - (nonConnectedNodes.length ? getNodeSize(nodeSize) * 5 : 0)
+  const activeWidth = width - configuredNodeSize(nodeSize)
+  const activeHeight = height - configuredNodeSize(nodeSize) - (nonConnectedNodes.length ? configuredNodeSize(nodeSize) * 5 : 0)
 
   // Handle connected nodes
   const layoutNodes = layoutNonConnectedAside ? connectedNodes : nodes
@@ -283,7 +283,7 @@ export function applyLayoutConcentric<N extends NodeDatumCore, L extends LinkDat
 
   // Handle connected nodes
   let r = 0
-  const groupSpacing = getNodeSize(nodeSize) * 5
+  const groupSpacing = configuredNodeSize(nodeSize) * 5
   groups.forEach((group, i) => {
     const maxNodeSize = getMaxNodeSize(group.nodes, nodeSize)
     r = r + groupSpacing
@@ -326,7 +326,7 @@ export function applyLayoutForce<N extends NodeDatumCore, L extends LinkDatumCor
     }))
     .force('x', forceX().strength(forceXStrength))
     .force('y', forceY().strength(forceYStrength))
-    .force('collide', forceCollide().radius(d => getValue(d, nodeSize)).iterations(1))
+    .force('collide', forceCollide().radius(d => getNodeSize(d, nodeSize)).iterations(1))
     .stop()
 
   // See https://bl.ocks.org/mbostock/1667139, https://github.com/d3/d3-force/blob/master/README.md#simulation_tick

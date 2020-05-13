@@ -41,7 +41,7 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
   static selectors = {
     background: generalSelectors.background,
     node: nodeSelectors.node,
-    linkSupport: linkSelectors.linkSupport,
+    link: linkSelectors.linkSupport,
   }
 
   static nodeSelectors = nodeSelectors
@@ -82,7 +82,7 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
       mouseover: this._onNodeMouseOver.bind(this),
       mouseout: this._onNodeMouseOut.bind(this),
     },
-    [Graph.selectors.linkSupport]: {
+    [Graph.selectors.link]: {
       click: this._onLinkClick.bind(this),
       mouseover: this._onLinkMouseOver.bind(this),
       mouseout: this._onLinkMouseOut.bind(this),
@@ -241,7 +241,7 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
       .attr('class', nodeSelectors.gNodeExit)
       .call(removeNodes, config, duration)
 
-    if (config.disableDrag) {
+    if (!config.disableDrag) {
       const dragBehaviour = drag<SVGElement, N>()
         .on('start', this._onDragStarted.bind(this))
         .on('drag', d => this._onDragged(d, nodeGroupsMerged))
@@ -334,7 +334,7 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
 
   _fit (duration = 0): void {
     const { datamodel: { nodes } } = this
-    if (nodes) {
+    if (nodes?.length) {
       const transform = this._getTransform(nodes)
       smartTransition(this.g, duration)
         .call(this._zoomBehavior.transform, transform)

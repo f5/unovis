@@ -89,6 +89,7 @@ export function updatePanels<N extends NodeDatumCore, L extends LinkDatumCore, P
   sideLabels.select(`.${panelSelectors.sideLabel}`)
     .call(updateShape, (d: P) => d.sideLabelShape, sideLabelSize)
     .style('stroke', d => d.sideLabelColor)
+    .style('opacity', d => d.sideLabelShape ? 1 : 0)
 
   sideLabels.select(`.${panelSelectors.sideLabelIcon}`)
     .html(d => d.sideLabelIcon)
@@ -107,7 +108,6 @@ export function updatePanels<N extends NodeDatumCore, L extends LinkDatumCore, P
 
   labels.select(`.${panelSelectors.labelText}`)
     .text(d => trimText(d.label))
-    .style('fill', d => d.color)
 
   labels.attr('transform', d => `translate(${d._width / 2}, ${-(d.padding || groupPadding) - labelMargin - (d.selectionOutline ? OUTLINE_SELECTION_PADDING : 0)})`)
   labels
