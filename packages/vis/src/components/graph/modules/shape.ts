@@ -16,7 +16,7 @@ export function isCustomXml (shape: SHAPE): boolean {
   return /<[a-z][\s\S]*>/i.test(shape)
 }
 
-export function appendShape<T> (selection, shapeAccessor: StringAccessor<T>, shapeSelector: string, customShapeSelector: string): void {
+export function appendShape<T> (selection, shapeAccessor: StringAccessor<T>, shapeSelector: string, customShapeSelector: string, insertSelector = ':last-child'): void {
   selection.each((d, i, elements) => {
     const element = select(elements[i])
     const shape = getValue(d, shapeAccessor)
@@ -24,39 +24,41 @@ export function appendShape<T> (selection, shapeAccessor: StringAccessor<T>, sha
     let shapeElement
     const isCustomXmlShape = isCustomXml(shape)
     if (isCustomXmlShape) {
-      shapeElement = element.append('g')
+      shapeElement = element.insert('g', insertSelector)
         .html(shape)
     } else {
       switch (shape) {
       case SHAPE.SQUARE:
-        shapeElement = element.append('rect')
+        shapeElement = element.insert('rect', insertSelector)
           .attr('rx', 5)
           .attr('ry', 5)
         break
       case SHAPE.HEXAGON:
       case SHAPE.TRIANGLE:
-        shapeElement = element.append('path')
+        shapeElement = element.insert('path', insertSelector)
         break
       case SHAPE.CIRCLE:
       default:
-        shapeElement = element.append('circle')
+        shapeElement = element.insert('circle', insertSelector)
       }
     }
 
-    shapeElement.attr('class', shapeSelector)
+    return shapeElement.attr('class', shapeSelector)
       .classed(customShapeSelector, isCustomXmlShape)
   })
 }
 
 export function updateShape<T> (selection, shape: StringAccessor<T>, size: NumericAccessor<T>): void {
+  const d: T = selection.datum()
+  const nodeSize = getNodeSize(d, size)
   selection.filter('circle')
-    .attr('r', (d: T) => getNodeSize(d, size) / 2)
+    .attr('r', (d: T) => nodeSize / 2)
 
   selection.filter('rect')
-    .attr('width', (d: T) => getNodeSize(d, size))
-    .attr('height', (d: T) => getNodeSize(d, size))
-    .attr('x', (d: T) => -getNodeSize(d, size) / 2)
-    .attr('y', (d: T) => -getNodeSize(d, size) / 2)
+    .attr('width', (d: T) => nodeSize)
+    .attr('height', (d: T) => nodeSize)
+    .attr('x', (d: T) => -nodeSize / 2)
+    .attr('y', (d: T) => -nodeSize / 2)
 
   selection.filter('path')
     .attr('d', (d: T) => {
@@ -73,7 +75,7 @@ export function updateShape<T> (selection, shape: StringAccessor<T>, size: Numer
         n = 6
       }
 
-      return polygon(getNodeSize(d, size), n)
+      return polygon(nodeSize, n)
     })
 
   selection.filter('g')

@@ -4,6 +4,7 @@ import { max } from 'd3-array'
 
 // Type
 import { NodeDatumCore, LinkDatumCore, PanelConfigInterface } from 'types/graph'
+import { NumericAccessor } from 'types/misc'
 
 // Utils
 import { find } from 'utils/data'
@@ -12,12 +13,12 @@ import { find } from 'utils/data'
 import { GraphConfigInterface } from '../../config'
 
 // Helpers
-import { getX, getY } from '../node/helper'
+import { getX, getY, getNodeSize } from '../node/helper'
 
 // Styles
 import * as nodeSelectors from '../node/style'
 
-const DEFAULT_PADDING = 25
+const DEFAULT_PADDING = 10
 
 export function setPanelForNodes<N extends NodeDatumCore, L extends LinkDatumCore> (panels: PanelConfigInterface[], nodes: N[], config: GraphConfigInterface<N, L>): void {
   const { layoutNonConnectedAside } = config
@@ -38,23 +39,26 @@ export function setPanelForNodes<N extends NodeDatumCore, L extends LinkDatumCor
   })
 }
 
-export function setPanelBBox<N extends NodeDatumCore> (panelConfig: PanelConfigInterface, panelNodes: Selection<BaseType, N, SVGGElement, N[]>): void {
+export function setPanelBBox<N extends NodeDatumCore> (panelConfig: PanelConfigInterface, panelNodes: Selection<BaseType, N, SVGGElement, N[]>, nodeSizeAccessor: NumericAccessor<N>): void {
   const selection = panelNodes.select(`.${nodeSelectors.node}`)
   if (selection.empty()) return
 
+  const labelApprxHeight = 40
+  const labelApprxWidth = 110
+  const labelMargin = 10
   let box
-  selection.each((d, i, elements) => {
-    const g = elements[i]
-    // const node = g.querySelector('.node')
-    const gBBox = (g as SVGSVGElement).getBBox()
+  selection.each(d => {
+    const nodeSize = getNodeSize(d, nodeSizeAccessor)
+    const w = Math.max(nodeSize, labelApprxWidth)
+    const h = nodeSize + labelMargin + labelApprxHeight
     // const nodeBBox = node.getBBox()
     const yShift = 10 // This is hard to calculate so we just using an approximation
 
     const coords = {
-      x1: getX(d) - gBBox.width / 2 - DEFAULT_PADDING, // We use d.x and d.y instead of bBox values here becasue gBBox contains initial ...
-      y1: getY(d) - gBBox.height / 2 + yShift - DEFAULT_PADDING, // ... coordinates (before transition starts), not target coordinates
-      x2: getX(d) + gBBox.width / 2 + DEFAULT_PADDING,
-      y2: getY(d) + gBBox.height / 2 + yShift + DEFAULT_PADDING,
+      x1: getX(d) - w / 2 - DEFAULT_PADDING, // We use d.x and d.y instead of bBox values here becasue gBBox contains initial ...
+      y1: getY(d) - h / 2 + yShift - DEFAULT_PADDING, // ... coordinates (before transition starts), not target coordinates
+      x2: getX(d) + w / 2 + DEFAULT_PADDING,
+      y2: getY(d) + h / 2 + yShift + DEFAULT_PADDING,
     }
 
     if (!box) {
@@ -88,7 +92,7 @@ export function updatePanelBBoxSize<N extends NodeDatumCore, L extends LinkDatum
     const panelNodes = nodesSelection.filter(node => {
       return (!layoutNonConnectedAside || node._isConnected) && panelConfig.nodes.includes(node._id)
     })
-    setPanelBBox(panelConfig, panelNodes)
+    setPanelBBox(panelConfig, panelNodes, config.nodeSize)
   })
 }
 
