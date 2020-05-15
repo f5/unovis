@@ -40,7 +40,7 @@ import { applyLayoutCircular, applyLayoutParallel, applyLayoutDagre, applyLayout
 export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends PanelConfigInterface> extends ComponentCore<{nodes: N[]; links?: L[]}> {
   static selectors = {
     background: generalSelectors.background,
-    node: nodeSelectors.node,
+    node: nodeSelectors.gNode,
     link: linkSelectors.linkSupport,
   }
 
@@ -279,6 +279,7 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
       : nodeUpdateSelection as Selection<BaseType, N, SVGGElement, N[]>
 
     updatePanelNumNodes(selection, this._panels, config)
+    updatePanelBBoxSize(selection, this._panels, config)
     const panelData = this._panels.filter(p => p._numNodes)
     const panelGroup = this._panelsGroup
       .selectAll(`.${panelSelectors.gPanel}`)
@@ -290,20 +291,15 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
     const panelGroupEnter = panelGroup.enter().append('g')
       .attr('class', panelSelectors.gPanel)
       .call(createPanels, selection)
-
     const panleGroupMerged = panelGroup.merge(panelGroupEnter)
 
-    if (nodeUpdateSelection instanceof transition) {
-      nodeUpdateSelection.on('end', () => this._updatePanels(selection, panleGroupMerged, duration))
-    } else {
-      this._updatePanels(selection, panleGroupMerged, duration)
-    }
+    this._updatePanels(panleGroupMerged, duration)
   }
 
-  _updatePanels (nodesMerged: Selection<BaseType, N, SVGGElement, N[]>, panelToUpdate, duration: number): void {
+  _updatePanels (panelToUpdate, duration: number): void {
     const { config } = this
     if (!this._panels) return
-    updatePanelBBoxSize(nodesMerged, this._panels, config)
+
     panelToUpdate.call(updatePanels, config, duration)
   }
 
@@ -467,7 +463,7 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
     const nodeElements: Selection<SVGGElement, N, SVGGElement, N[]> = this._nodesGroup.selectAll(`.${nodeSelectors.gNode}`)
     nodeElements.call(updateSelectedNodes, config)
 
-    this._drawPanels(nodeElements, 0)
+    // this._drawPanels(nodeElements, 0)
   }
 
   _onBackgroundClick (d, i, elements): void {
@@ -602,7 +598,8 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
       .call(updateNodes, config, 0, scale)
       .call(zoomNodes, config, scale)
     const panelToUpdate: Selection<SVGGElement, P, SVGGElement, P[]> = this._panelsGroup.selectAll(`.${panelSelectors.gPanel}`)
-    this._updatePanels(panelNodesToUpdate, panelToUpdate, 0)
+    updatePanelBBoxSize(panelNodesToUpdate, this._panels, config)
+    this._updatePanels(panelToUpdate, 0)
 
     const nodeElements: Selection<SVGGElement, N, SVGGElement, N[]> = this._nodesGroup.selectAll(`.${nodeSelectors.gNode}`)
     const nodesToUpdate = nodeElements.filter((n: N) => {

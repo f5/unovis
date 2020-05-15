@@ -22,7 +22,10 @@ import { appendShape, updateShape } from '../shape'
 const OUTLINE_SELECTION_PADDING = 5
 
 export function createPanels<N extends NodeDatumCore, P extends PanelConfigInterface> (selection: Selection<SVGGElement, P, SVGGElement, P[]>, nodesSelection: Selection<SVGGElement, N, SVGGElement, N[]>): void {
-  selection.style('opacity', 0)
+  const groupPadding = 15
+  selection
+    .attr('transform', d => `translate(${d._x}, ${d._y})`)
+    .style('opacity', 0)
 
   selection.append('rect').attr('class', panelSelectors.panelSelection)
     .attr('rx', 9)
@@ -31,6 +34,10 @@ export function createPanels<N extends NodeDatumCore, P extends PanelConfigInter
   selection.append('rect').attr('class', panelSelectors.panel)
     .attr('rx', 7)
     .attr('ry', 7)
+    .attr('x', d => -(d.padding || groupPadding))
+    .attr('y', d => -(d.padding || groupPadding))
+    .attr('width', d => d._width + (d.padding || groupPadding) * 2)
+    .attr('height', d => d._height + (d.padding || groupPadding) * 2)
 
   const label = selection.append('g').attr('class', panelSelectors.label)
   label.append('rect').attr('class', panelSelectors.background)
@@ -58,29 +65,30 @@ export function createPanels<N extends NodeDatumCore, P extends PanelConfigInter
 export function updatePanels<N extends NodeDatumCore, L extends LinkDatumCore, P extends PanelConfigInterface> (selection: Selection<SVGGElement, P, SVGGElement, P[]>, config: GraphConfigInterface<N, L>, duration: number): void {
   const { nodeDisabled } = config
   const groupPadding = 15
-
-  selection.attr('transform', d => `translate(${d._x}, ${d._y})`)
   selection.classed(panelSelectors.greyout, d => d._data.map(node => getValue(node, nodeDisabled) || node._state.greyout).every(d => d))
 
-  selection.selectAll(`.${panelSelectors.panel}`)
-    .data(d => [d])
+  smartTransition(selection, duration)
+    .attr('transform', d => `translate(${d._x}, ${d._y})`)
+    .style('opacity', duration === 0 ? null : 1)
+    .style('stroke', (d: P) => d.color)
+
+  const panels = selection.selectAll(`.${panelSelectors.panel}`).data(d => [d])
+  smartTransition(panels, duration)
     .attr('x', d => -(d.padding || groupPadding))
     .attr('y', d => -(d.padding || groupPadding))
     .attr('width', d => d._width + (d.padding || groupPadding) * 2)
     .attr('height', d => d._height + (d.padding || groupPadding) * 2)
     .style('stroke-width', d => d.borderWidth)
 
-  selection.selectAll(`.${panelSelectors.panelSelection}`)
+  const panelSelectionOutlines = selection.selectAll(`.${panelSelectors.panelSelection}`)
     .data(d => [d])
     .classed(panelSelectors.panelSelectionActive, d => d.selectionOutline)
+
+  smartTransition(panelSelectionOutlines, duration)
     .attr('x', d => -(d.padding || groupPadding) - OUTLINE_SELECTION_PADDING)
     .attr('y', d => -(d.padding || groupPadding) - OUTLINE_SELECTION_PADDING)
     .attr('width', d => d._width + (d.padding || groupPadding) * 2 + OUTLINE_SELECTION_PADDING * 2)
     .attr('height', d => d._height + (d.padding || groupPadding) * 2 + OUTLINE_SELECTION_PADDING * 2)
-
-  smartTransition(selection, duration / 2)
-    .style('opacity', duration === 0 ? null : 1)
-    .style('stroke', (d: P) => d.color)
 
   const sideLabelSize = 25
   const sideLabels = selection.selectAll(`.${panelSelectors.sideLabelGroup}`)
