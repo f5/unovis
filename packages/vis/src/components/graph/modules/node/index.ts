@@ -30,28 +30,37 @@ const SIDE_LABLE_SIZE = 10
 export function createNodes<N extends NodeDatumCore, L extends LinkDatumCore> (selection: Selection<SVGGElement, N, SVGGElement, N[]>, config: GraphConfigInterface<N, L>): void {
   const { nodeShape } = config
 
-  selection
-    .attr('transform', d => `rotate(0) translate(${getX(d)}, ${getY(d)}) scale(0)`)
+  selection.each((d, i, elements) => {
+    const element = elements[i]
+    const group = select(element)
+    group
+      .attr('transform', d => `rotate(0) translate(${getX(d)}, ${getY(d)}) scale(0)`)
 
-  selection.append('circle').attr('class', nodeSelectors.nodeSelection)
-  selection.call(appendShape, nodeShape, nodeSelectors.node, nodeSelectors.customNode)
-  selection.append('path').attr('class', nodeSelectors.nodeArc)
-  selection.append('text').attr('class', nodeSelectors.nodeIcon)
+    group.append('circle').attr('class', nodeSelectors.nodeSelection)
 
-  const label = selection.append('g').attr('class', nodeSelectors.label)
-  label.append('rect').attr('class', nodeSelectors.labelBackground)
+    const shape = getValue(d, nodeShape)
+    /** Todo: The 'nodeShape' storing logic below it a temporary fix, needs a cleaner implementation */
+    // eslint-disable-next-line dot-notation
+    element['nodeShape'] = shape
+    group.call(appendShape, shape, nodeSelectors.node, nodeSelectors.customNode)
+    group.append('path').attr('class', nodeSelectors.nodeArc)
+    group.append('text').attr('class', nodeSelectors.nodeIcon)
 
-  const labelText = label.append('text')
-    .attr('class', nodeSelectors.labelText)
-    .attr('dy', '0.32em')
-  labelText.append('tspan').attr('class', nodeSelectors.labelTextContent)
-  labelText.append('tspan')
-    .attr('class', nodeSelectors.subLabelTextContent)
-    .attr('dy', '1.1em')
-    .attr('x', '0')
+    const label = group.append('g').attr('class', nodeSelectors.label)
+    label.append('rect').attr('class', nodeSelectors.labelBackground)
 
-  selection.append('g')
-    .attr('class', nodeSelectors.sideLabelsGroup)
+    const labelText = label.append('text')
+      .attr('class', nodeSelectors.labelText)
+      .attr('dy', '0.32em')
+    labelText.append('tspan').attr('class', nodeSelectors.labelTextContent)
+    labelText.append('tspan')
+      .attr('class', nodeSelectors.subLabelTextContent)
+      .attr('dy', '1.1em')
+      .attr('x', '0')
+
+    group.append('g')
+      .attr('class', nodeSelectors.sideLabelsGroup)
+  })
 }
 
 export function updateSelectedNodes<N extends NodeDatumCore, L extends LinkDatumCore> (selection: Selection<SVGGElement, N, SVGGElement, N[]>, config: GraphConfigInterface<N, L>): void {
@@ -77,6 +86,22 @@ export function updateSelectedNodes<N extends NodeDatumCore, L extends LinkDatum
 export function updateNodes<N extends NodeDatumCore, L extends LinkDatumCore> (selection: Selection<SVGGElement, N, SVGGElement, N[]>, config: GraphConfigInterface<N, L>, duration: number, scale = 1): Selection<SVGGElement, N, SVGGElement, N[]> | Transition<SVGGElement, N, SVGGElement, N[]> {
   const { scoreAnimDuration, nodeBorderWidth, nodeShape, nodeSize, nodeStrokeSegmentValue, nodeStrokeSegmentFill, nodeIcon, nodeIconSize, nodeLabel, nodeSubLabel, nodeSideLabels, nodeStroke, nodeFill } = config
 
+  // Re-create node to update shapes if they were changes
+  selection.each((d, i, elements) => {
+    const element = elements[i]
+    const group = select(element)
+    const shape = getValue(d, nodeShape)
+
+    // eslint-disable-next-line dot-notation
+    if (element['nodeShape'] !== shape) {
+      group.select(`.${nodeSelectors.node}`).remove()
+      group.call(appendShape, nodeShape, nodeSelectors.node, nodeSelectors.customNode, `.${nodeSelectors.nodeSelection}`)
+      // eslint-disable-next-line dot-notation
+      element['nodeShape'] = shape
+    }
+  })
+
+  // Update nodes themselves
   selection.each((d, i, elements) => {
     const group: Selection<SVGGElement, N, SVGGElement, N> = select(elements[i])
     const node: Selection<SVGGElement, N, SVGGElement, N> = group.select(`.${nodeSelectors.node}`)
@@ -98,7 +123,8 @@ export function updateNodes<N extends NodeDatumCore, L extends LinkDatumCore> (s
         const shape = getValue(d, nodeShape)
         return shape === SHAPE.TRIANGLE || shape === SHAPE.HEXAGON || shape === SHAPE.SQUARE
       })
-      // Update Node
+
+    // Update Node
     node
       .call(updateShape, nodeShape, nodeSize)
       .attr('stroke-width', d => getValue(d, nodeBorderWidth) ?? 0)
@@ -201,7 +227,7 @@ export function updateNodes<N extends NodeDatumCore, L extends LinkDatumCore> (s
     const labelMargin = 18
     const nodeHeight = isCustomXml(getValue(d, nodeShape)) ? nodeBBox.height : getNodeSize(d, nodeSize)
     label.attr('transform', `translate(0, ${nodeHeight / 2 + labelMargin})`)
-    if (scale >= ZOOM_LEVEL.LEVEL2) setLabelRect(label, getValue(d, nodeLabel), nodeSelectors.labelText)
+    if (scale >= ZOOM_LEVEL.LEVEL3) setLabelRect(label, getValue(d, nodeLabel), nodeSelectors.labelText)
   })
 
   updateSelectedNodes(selection, config)
@@ -239,7 +265,7 @@ export function zoomNodes<N extends NodeDatumCore, L extends LinkDatumCore> (sel
   selection.selectAll(`.${nodeSelectors.sideLabel}`)
     .attr('transform', `scale(${1 / Math.pow(scale, 0.45)})`)
 
-  if (scale >= ZOOM_LEVEL.LEVEL2) selection.call(setLabelBackgroundRectThrottled, config)
+  if (scale >= ZOOM_LEVEL.LEVEL3) selection.call(setLabelBackgroundRectThrottled, config)
 }
 
 export const zoomNodesThrottled = throttle(zoomNodes, 500)
