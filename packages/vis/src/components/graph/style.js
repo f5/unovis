@@ -30,11 +30,11 @@ export const zoomOutLevel2 = css`
   label: zoom-out-level-2;
 
   ${`.${nodeSelectors.label}`} {
-    visibility: hidden;
+    visibility: visible;
   }
 
   ${`.${nodeSelectors.nodeArc}`} {
-    visibility: hidden;
+    visibility: visible;
   }
 
   ${`.${nodeSelectors.node}`} {
