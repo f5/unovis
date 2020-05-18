@@ -24,7 +24,8 @@ export const node = css`
 
 export const hoveredNode = css`
   label: hovered;
-  stroke-width: 2;
+  fill-opacity: 1;
+  stroke-width: 1.5;
 `
 
 export const gLabel = css`
@@ -43,7 +44,6 @@ export const link = css`
   label: link;
 
   fill: var(--vis-radial-dendrogram-link-color);
-  fill-opacity: 0.5;
   transition: .1s fill-opacity;
 
   &:hover {
@@ -53,5 +53,13 @@ export const link = css`
 
 export const hoveredLink = css`
   label: hovered;
-  fill-opacity: 1;
+  fill-opacity: 0.9;
+`
+
+export const transparent = css`
+  fill-opacity: 0.25;
+
+  text {
+    fill-opacity: 1;
+  }
 `

@@ -27,7 +27,7 @@ export function createLink<L extends Link<Hierarchy>> (selection: Selection<SVGP
 
 export function updateLink<L extends Link<Hierarchy>> (selection: Selection<SVGElement, L, SVGGElement, L[]>, areaGen, duration: number): void {
   const selTransition = smartTransition(selection, duration)
-    .style('opacity', 1)
+    .style('opacity', 0.7)
   if (duration) {
     selTransition.attrTween('d', (d, i, el) => {
       const previous = select(el[i]).attr('d')

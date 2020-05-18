@@ -168,7 +168,7 @@ export class ChordDiagram<H extends Hierarchy, L extends Link<H>> extends Compon
   }
 
   _getRibbons (dendogram: HierarchyRectangularNode<H>): L[] {
-    const { config, datamodel: { data } } = this
+    const { datamodel: { data } } = this
     const findNode = (nodes, id): HierarchyRectangularNode<H> => nodes.find(n => n.data.id === id)
     const leafNodes = dendogram.leaves()
     const groupedBySource = groupBy(data.links, d => d.source)
@@ -189,7 +189,7 @@ export class ChordDiagram<H extends Hierarchy, L extends Link<H>> extends Compon
         const converted = this._convertRadialToCartesian(
           type === 'source' ? x0 : x1,
           type === 'source' ? x1 : x0,
-          currNode.y1, getValue(currNode, config.nodeWidth))
+          currNode.y1, 0)
         const pointIdx = type === 'source' ? depth : dendogram.height * 2 - 1 - depth
         link._points[pointIdx] = { x0: converted.x0, x1: converted.x1, y0: converted.y0, y1: converted.y1 }
       })
@@ -259,8 +259,8 @@ export class ChordDiagram<H extends Hierarchy, L extends Link<H>> extends Compon
   _onNodeMouseOver (d): void {
     let links = this._links.filter(l => l.source.data.id === d.data.id || l.target.data.id === d.data.id)
     if (!links.length) {
-      const childrens = d.descendants()
-      links = this._links.filter(l => childrens.find(d => l.source.data.id === d.data.id || l.target.data.id === d.data.id))
+      const children = d.descendants()
+      links = this._links.filter(l => children.find(d => l.source.data.id === d.data.id || l.target.data.id === d.data.id))
     }
     this._highlightOnHover(links)
   }
@@ -293,5 +293,6 @@ export class ChordDiagram<H extends Hierarchy, L extends Link<H>> extends Compon
 
     this.nodeGroup.selectAll(`.${s.node}`).classed(s.hoveredNode, (d: HNode<H>) => d._state.hovered)
     this.linkGroup.selectAll(`.${s.link}`).classed(s.hoveredLink, (d: HLink<H>) => d._state.hovered)
+    this.g.classed(s.transparent, !!links)
   }
 }
