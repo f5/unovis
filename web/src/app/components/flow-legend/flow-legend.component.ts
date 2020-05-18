@@ -13,13 +13,15 @@ export class FlowLegendComponent implements AfterViewInit {
   @ViewChild('legend', { static: false }) legendRef: ElementRef
   @Input() items: any[] = [];
   @Input() margin: { left?: number; right?: number } = {};
+  @Input() width: number;
 
   legend = null
-  config: { items?: any[] } = {}
+  config: { items?: any[]; customWidth?: number } = {}
 
   ngAfterViewInit (): void {
     this.config = {
       items: this.items,
+      customWidth: this.width,
     }
 
     this.legend = new FlowLegend(this.legendRef.nativeElement, this.config)
@@ -27,11 +29,12 @@ export class FlowLegendComponent implements AfterViewInit {
 
   ngOnChanges (): void {
     this.config.items = this.items
+    this.config.customWidth = this.width
     this.legend?.update(this.config)
   }
 
   getMargin (): string {
     const { margin: { left, right } } = this
-    return `0px ${right}px 0px ${left}px`
+    return `0px ${right || 0}px 0px ${left || 0}px`
   }
 }

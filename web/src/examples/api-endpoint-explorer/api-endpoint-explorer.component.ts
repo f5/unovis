@@ -9,6 +9,9 @@ import { SingleChart, Sankey, SankeyConfigInterface, Sizing, LabelPosition } fro
 
 import data from './data/apieplist_ves.json'
 
+const NODE_WIDTH = 30
+const NODE_HORIZONTAL_SPACE = 250
+
 @Component({
   selector: 'api-endpoint-explorer',
   templateUrl: './api-endpoint-explorer.component.html',
@@ -20,12 +23,12 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
   title = 'api-endpoint-explorer'
   sankey: any
   data = {}
-  margin = {}
+  margin = { left: 15 }
   config: SankeyConfigInterface<any, any> = {
     sankeyType: 'api-endpoint-explorer',
     labelPosition: LabelPosition.RIGHT,
-    nodeHorizontalSpacing: 250,
-    nodeWidth: 30,
+    nodeHorizontalSpacing: NODE_HORIZONTAL_SPACE,
+    nodeWidth: NODE_WIDTH,
     nodeSubLabel: d => d.value,
     events: {
       [Sankey.selectors.node]: {
@@ -35,13 +38,18 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
   }
   
   component = new Sankey(this.config)
+  flowlegendItems = ['Segment 1', 'Segment 2', 'Segment 3', 'Segment 4', 'Segment 5', 'Segment 6']
+  flowlegendWidth: number = 0;
   
   ngAfterViewInit (): void {
     const apiData = data.api_ep_list
     const sankeyData = this.process(apiData)
     console.log({ apiData, sankeyData });
 
-    this.sankey = new SingleChart(this.chart.nativeElement, { component: this.component, componentSizing: Sizing.CONTAIN }, sankeyData)
+    this.sankey = new SingleChart(this.chart.nativeElement, { component: this.component, componentSizing: Sizing.CONTAIN, margin: this.margin }, sankeyData)
+    setTimeout(() => {      
+      this.flowlegendWidth = this.sankey.component.componentWidth - NODE_HORIZONTAL_SPACE
+    }, 500)
   }
 
   process (apiData) {

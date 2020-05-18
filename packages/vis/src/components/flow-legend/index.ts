@@ -1,6 +1,9 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { select, Selection } from 'd3-selection'
 
+// Utils
+import { smartTransition } from 'utils/d3'
+
 // Config
 import { FlowLegendConfig, FlowLegendConfigInterface } from './config'
 
@@ -35,8 +38,10 @@ export class FlowLegend {
   }
 
   render (): void {
-    const { config: { items, lineColor, labelFontSize, labelColor, arrowSymbol } } = this
+    const { config: { items, lineColor, labelFontSize, labelColor, arrowSymbol, customWidth } } = this
     if (!items.length) return
+
+    if (customWidth) this.div.style('width', `${customWidth}px`)
 
     // Prepare Data
     const legendData = items.reduce((acc, curr) => {
@@ -52,11 +57,14 @@ export class FlowLegend {
     const legendItemsEnter = legendItems.enter()
       .append('div')
       .attr('class', s.item)
+      .attr('opacity', 0)
 
     legendItemsEnter.append('span')
       .attr('class', (d, i) => arrowSymbol && i % 2 ? s.arrow({ lineColor }) : s.label({ labelFontSize, labelColor }))
 
     const legendItemsMerged = legendItemsEnter.merge(legendItems)
+    smartTransition(legendItemsMerged, 500)
+      .attr('opacity', 1)
     legendItemsMerged.select('span').text(d => d)
 
     legendItems.exit().remove()

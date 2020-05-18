@@ -3,6 +3,8 @@
 import { Config } from 'core/config'
 
 export interface FlowLegendConfigInterface {
+  /** Custom width */
+  customWidth?: number;
   /** Legend items array [] */
   items?: string[];
   /** Color of flow line */
@@ -16,6 +18,7 @@ export interface FlowLegendConfigInterface {
 }
 
 export class FlowLegendConfig extends Config implements FlowLegendConfigInterface {
+  customWidth = undefined
   items = []
   labelFontSize = 12
   arrowSymbol = '▶'
