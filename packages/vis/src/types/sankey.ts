@@ -5,6 +5,7 @@ import { NodeDatumCore, LinkDatumCore } from 'types/graph'
 
 export interface SankeyNodeDatumInterface extends NodeDatumCore {
   width?: number;
+  value?: number;
   x0?: number;
   x1?: number;
   y0?: number;
@@ -13,4 +14,9 @@ export interface SankeyNodeDatumInterface extends NodeDatumCore {
 
 export interface SankeyLinkDatumInterface extends LinkDatumCore {
   value?: number;
+}
+
+export enum LabelPosition {
+  AUTO = 'auto',
+  RIGHT = 'right'
 }

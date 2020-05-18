@@ -1,6 +1,8 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { select, Selection } from 'd3-selection'
-import { sankey } from 'd3-sankey'
+import { sankey, sankeyLeft } from 'd3-sankey'
+import { sum, max, extent } from 'd3-array'
+import { scaleLinear } from 'd3-scale'
 
 // Core
 import { ComponentCore } from 'core/component'
@@ -10,7 +12,8 @@ import { GraphDataModel } from 'data-models/graph'
 import { Spacing } from 'types/misc'
 
 // Utils
-import { getValue, clamp, isNumber } from 'utils/data'
+import { getValue, clamp, isNumber, groupBy } from 'utils/data'
+import { SankeyNodeDatumInterface, SankeyLinkDatumInterface, LabelPosition } from 'types/sankey'
 
 // Config
 import { SankeyConfig, SankeyConfigInterface } from './config'
@@ -21,7 +24,6 @@ import * as s from './style'
 // Modules
 import { removeLinks, createLinks, updateLinks } from './modules/link'
 import { removeNodes, createNodes, updateNodes, onNodeMouseOver, onNodeMouseOut } from './modules/node'
-import { SankeyNodeDatumInterface, SankeyLinkDatumInterface } from './modules/types'
 
 export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> extends ComponentCore<{nodes: N[]; links?: L[]}> {
   static selectors = s
@@ -30,6 +32,8 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
   private _linksGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
   private _nodesGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
   private _sankey = sankey()
+  componentWidth: number
+  componentHeight: number
   events = {
     [Sankey.selectors.node]: {
       mouseover: this._onNodeMouseOver.bind(this),
@@ -45,8 +49,12 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
   }
 
   get bleed (): Spacing {
-    const { config: { labelWidth, labelFontSize } } = this
-    return { top: labelFontSize / 2, bottom: labelFontSize / 2, left: labelWidth, right: labelWidth }
+    const { config: { labelWidth, labelFontSize, labelPosition, nodeHorizontalSpacing } } = this
+    if (labelPosition === LabelPosition.AUTO) {
+      return { top: labelFontSize / 2, bottom: labelFontSize / 2, left: labelWidth, right: labelWidth }
+    } else {
+      return { top: labelFontSize / 2, bottom: labelFontSize / 2, left: 0, right: nodeHorizontalSpacing }
+    }
   }
 
   _render (customDuration?: number): void {
@@ -62,6 +70,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
       this._nodesGroup.selectAll(`.${s.node}`).call(removeNodes, duration)
     }
 
+    if (config.sankeyType === 'api-endpoint-explorer') this._preCalculateComponentSize()
     this._prepareLayout()
 
     const sankeyHeight = this._getSankeyHeight()
@@ -84,36 +93,61 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
     nodeSelection.exit().call(removeNodes, duration)
   }
 
+  private _preCalculateComponentSize (): void {
+    const { config, config: { nodeMinHeight, nodeMaxHeight, nodeHorizontalSpacing }, datamodel: { nodes, links } } = this
+    this._sankey
+      .nodeId(d => d.id)
+      .iterations(32)
+      .nodeAlign(sankeyLeft)
+    this._sankey({ nodes, links })
+    const extentValue = extent(nodes, d => d.value || undefined)
+    const scale = scaleLinear().domain(extentValue).range([nodeMinHeight, nodeMaxHeight]).clamp(true)
+    const groupedByLayer = groupBy(nodes, d => d.layer)
+    const values = Object.values(groupedByLayer).map((d: any[]) => sum(d.map(n => scale(n.value) + config.nodePadding)))
+    const height = max(values)
+    this.componentHeight = height
+    this.componentWidth = (config.nodeWidth + nodeHorizontalSpacing * Object.keys(groupedByLayer).length)
+  }
+
   private _prepareLayout (): void {
-    const { config, bleed, datamodel: { nodes, links } } = this
+    const { config, bleed, datamodel: { nodes, links }, componentHeight, componentWidth } = this
     links.forEach(link => {
       // For d3 sankey function each link must be an object with the `value` property
       link.value = getValue(link, d => getValue(d, config.linkValue))
     })
 
     const sankeyHeight = this._getSankeyHeight()
-    this._sankey
-      .nodeSort((node2, node1) => {
-        if (node1.targetLinks.length === 1 && node2.targetLinks.length === 1 && node1.sourceLinks.length === 0 && node2.sourceLinks.length === 0) {
-          const targetLinkSourceId1 = node1.targetLinks[0].source.index
-          const targetLinkSourceId2 = node2.targetLinks[0].source.index
-          if (targetLinkSourceId1 > targetLinkSourceId2) return -1
-        }
+    if (config.sankeyType === 'api-endpoint-explorer') {
+      this._sankey.linkSort((link2, link1) => {
+        if (link2.value > link1.value) return -1
+      })
+    } else {
+      this._sankey
+        .nodeSort((node2, node1) => {
+          if (node1.targetLinks.length === 1 && node2.targetLinks.length === 1 && node1.sourceLinks.length === 0 && node2.sourceLinks.length === 0) {
+            const targetLinkSourceId1 = node1.targetLinks[0].source.index
+            const targetLinkSourceId2 = node2.targetLinks[0].source.index
+            if (targetLinkSourceId1 > targetLinkSourceId2) return -1
+          }
 
-        if (node1.targetLinks.length === 0 && node2.targetLinks.length === 0 && node1.sourceLinks.length === 1 && node2.sourceLinks.length === 1) {
-          const sourceLinkTargetId1 = node1.sourceLinks[0].target.index
-          const sourceLinkTargetId2 = node2.sourceLinks[0].target.index
-          if (sourceLinkTargetId1 > sourceLinkTargetId2) return -1
-        }
-      })
-      .linkSort((link2, link1) => {
-        if (link2.index < link1.index) return -1
-      })
+          if (node1.targetLinks.length === 0 && node2.targetLinks.length === 0 && node1.sourceLinks.length === 1 && node2.sourceLinks.length === 1) {
+            const sourceLinkTargetId1 = node1.sourceLinks[0].target.index
+            const sourceLinkTargetId2 = node2.sourceLinks[0].target.index
+            if (sourceLinkTargetId1 > sourceLinkTargetId2) return -1
+          }
+        })
+        .linkSort((link2, link1) => {
+          if (link2.index < link1.index) return -1
+        })
+    }
+
+    this._sankey
       .nodeWidth(config.nodeWidth)
       .nodePadding(config.nodePadding)
-      .size([config.width - bleed.left - bleed.right, sankeyHeight - bleed.top - bleed.bottom])
+      .size([(componentWidth ?? config.width) - bleed.left - bleed.right, (componentHeight ?? sankeyHeight) - bleed.top - bleed.bottom])
       .nodeId(d => d.id)
       .iterations(32)
+      .nodeAlign(sankeyLeft)
 
     if (links.length > 0 && links.length > 1) this._sankey({ nodes, links })
     if (links.length === 0 && nodes.length === 1) {

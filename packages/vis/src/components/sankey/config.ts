@@ -7,11 +7,19 @@ import { ComponentConfigInterface, ComponentConfig } from 'core/component/config
 // Types
 import { NumericAccessor, ColorAccessor, StringAccessor } from 'types/misc'
 import { TrimMode } from 'types/text'
-import { SankeyNodeDatumInterface, SankeyLinkDatumInterface } from './modules/types'
+import { SankeyNodeDatumInterface, SankeyLinkDatumInterface, LabelPosition } from 'types/sankey'
 
 export interface SankeyConfigInterface<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> extends ComponentConfigInterface {
+    /** */
+    sankeyType?: string;
     /** Sankey node width in pixels */
     nodeWidth?: number;
+    /** */
+    nodeHorizontalSpacing?: number;
+    /** */
+    nodeMinHeight?: number;
+    /** */
+    nodeMasHeight?: number;
     /** Sankey vertical separation between nodes in pixels */
     nodePadding?: number;
     /** Display the graph when data has just one element */
@@ -22,6 +30,8 @@ export interface SankeyConfigInterface<N extends SankeyNodeDatumInterface, L ext
     linkValue?: NumericAccessor<N>;
     /** Node label accessor function or value */
     nodeLabel?: StringAccessor<N>;
+    /** Node label accessor function or value */
+    nodeSubLabel?: StringAccessor<N>;
     /** Node icon accessor function or value */
     nodeIcon?: StringAccessor<N>;
     /** Node color accessor function or value */
@@ -30,6 +40,8 @@ export interface SankeyConfigInterface<N extends SankeyNodeDatumInterface, L ext
     iconColor?: ColorAccessor<N>;
     /** Display node labels even when there's not enough vertical space */
     forceShowLabels?: boolean;
+    /** Label position relative to the Node */
+    labelPosition?: LabelPosition;
     /** Maximum label with in pixels, default is 70 */
     labelWidth?: number;
     /** Maximum label length (in number characters) for wrapping */
@@ -49,10 +61,15 @@ export interface SankeyConfigInterface<N extends SankeyNodeDatumInterface, L ext
 }
 
 export class SankeyConfig<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> extends ComponentConfig implements SankeyConfigInterface<N, L> {
+  sankeyType = ''
   nodeWidth = 25
+  nodeHorizontalSpacing = 150
+  nodeMinHeight = 30
+  nodeMaxHeight = 100
   nodePadding = 2
   showSingleNode = true
   forceShowLabels = false
+  labelPosition = LabelPosition.AUTO
   labelTextSeparator = [' ', '-']
   labelTrim = TrimMode.END
   labelForceWordBreak = false
@@ -60,7 +77,8 @@ export class SankeyConfig<N extends SankeyNodeDatumInterface, L extends SankeyLi
   linkValue = (d: N): number => d['value']
   linkColor = (d: L): string => d['color']
   nodeColor = (d: N): string => d['color']
-  nodeLabel = null
+  nodeLabel = (d: N): string => d['label']
+  nodeSubLabel = undefined
   nodeIcon = null
   iconColor = null
   labelWidth = 70

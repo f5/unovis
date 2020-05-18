@@ -23,6 +23,8 @@ export class ComponentCore<CoreDatum> {
   datamodel: CoreDataModel<CoreDatum> = new CoreDataModel()
   events = {}
   _setUpEventsThrottled = throttle(this._setUpEvents, 1000)
+  componentWidth?: number
+  componentHeight?: number
 
   constructor (type = ComponentType.SVG) {
     if (type === ComponentType.SVG) {

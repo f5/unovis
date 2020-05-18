@@ -11,6 +11,9 @@ import { XYComponentConfigInterface } from 'core/xy-component/config'
 // Utils
 // import { getValue, merge } from 'utils/data'
 
+// Types
+import { Sizing } from 'types/component'
+
 // Config
 import { SingleChartConfig, SingleChartConfigInterface } from './config'
 
@@ -74,7 +77,11 @@ export class SingleChart<Datum> extends ContainerCore {
       .attr('transform', `translate(${config.margin.left},${config.margin.top})`)
 
     component.render(customDuration)
-
+    if (config.componentSizing === Sizing.CONTAIN) {
+      this.svg
+        .attr('width', this.component.componentWidth)
+        .attr('height', this.component.componentHeight)
+    }
     if (config.tooltip) config.tooltip.update()
   }
 }

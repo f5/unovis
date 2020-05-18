@@ -1,0 +1,729 @@
+{
+  "api_ep_list": [
+    {
+      "uid": "3c6f250e-98fb-491a-8535-742980778568",
+      "url": "ves.io.vega.cfg.logical_intf.crudapi.API/List",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "2f3c6249-d621-4a99-b285-0073c6ff3b75",
+      "url": "ves.io.maurice.site/prague-skull-testing.customer1.tenant.int.ves.io/workload",
+      "method": "POST",
+      "dyn_examples": []
+    },
+    {
+      "uid": "eba6c519-4c45-423b-81d0-9599a81824ff",
+      "url": "public/namespaces/ns188/graph/site",
+      "method": "POST",
+      "dyn_examples": []
+    },
+    {
+      "uid": "1aab4ffd-7d41-4e0a-b3d6-07bc02a456ff",
+      "url": "ves.io.vega.cfg.vrf.crudapi.API/Get",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "dcb40cf8-532b-483b-bd4c-336af89820bc",
+      "url": "ves.io.rakar.virtual_k8s.crudapi.API/Get",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "e31f6fe9-a27c-49a8-892d-3024aa9d9ddd",
+      "url": "ves.io.vega.cfg.adc.discovered_endpoint.crudapi.API/List",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "9e05f90e-48c8-4001-98be-2b481b2f350f",
+      "url": "cni/DYN",
+      "method": "DELETE",
+      "dyn_examples": [
+        {
+          "component_identifier": "cni/DYN",
+          "component_examples": [
+            "e4e5c76361b964bb5258041938518a2032fa308217651cc7a95d2da5f9653e3c",
+            "7f6318906a9a897f71428b506e343f4b5031e6ac3fc4eea2fa98f2859fe51c71",
+            "ca457324ab698cfae084caf33677922f9cfeb2ff8f7e451de9c587f8c8409077",
+            "243c830819acefb1a741423d1576e4d3282b1e293417bbf100da84fb50427740",
+            "128620e8b563af822f7dfdd598c744f74d29f6f5db8c91bdb4df381db828aa1e"
+          ]
+        }
+      ]
+    },
+    {
+      "uid": "17808c40-4a6f-457e-a583-c9061d52ff4e",
+      "url": "apieplist/read",
+      "method": "POST",
+      "dyn_examples": []
+    },
+    {
+      "uid": "fd051196-411f-4c7a-bdf7-85df697e5218",
+      "url": "ves.io.rakar.site.crudapi.API/Get",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "21eb930b-bd55-43a5-bb94-dd0bd15bd4c4",
+      "url": "ves.io.vega.cfg.adc.listener.crudapi.API/Replace",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "7de1027b-927d-40ab-b20b-ba3b25fa8e5d",
+      "url": "ves.io.vega.cfg.vrf.crudapi.API/Replace",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "52faa52b-f5c5-4ac2-9ec9-6549b65a5a63",
+      "url": "ves.io.stdlib.server.introspect.API/DumpTable",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "bd9ce8a8-cb8f-49bc-bf2f-8dd6d04feed0",
+      "url": "ves.io.charmander.version.CustomAPI/GetCeManifests",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "229910c9-f575-443c-bca7-7beb2cd4d431",
+      "url": "ves.io.rakar.virtual_network.crudapi.StatusAPI/Get",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "5cea65b3-b434-4f7d-8d4b-4ab7f882268c",
+      "url": "public/namespaces/TestDemoBookInfo_namespace-jebuyvwt/graph/service",
+      "method": "POST",
+      "dyn_examples": []
+    },
+    {
+      "uid": "fdd4896d-578f-450f-b0f1-de8c39fd0400",
+      "url": "public/namespaces/system/graph/connectivity",
+      "method": "POST",
+      "dyn_examples": []
+    },
+    {
+      "uid": "b4a3696f-b7a2-4165-bbb2-5bca893363b3",
+      "url": "public/namespaces/shared/graph/site",
+      "method": "POST",
+      "dyn_examples": []
+    },
+    {
+      "uid": "68325952-f06b-4fac-90c4-4eb9daa5a291",
+      "url": "ves.io.rakar.vk8s_deployment.crudapi.API/List",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "fa25118d-eda2-42f4-aee2-096ca4f82e52",
+      "url": "ves.io.vega.cfg.adc.route.crudapi.API/List",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "41e467ad-f8ce-4f26-96f9-2a588a1aeae7",
+      "url": "ves.io.vega.cfg.ver_cluster_cfg.crudapi.API/Get",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "fe7dfd14-ee1d-4cf7-ba2b-a19e4d2fa58e",
+      "url": "ves.io.rakar.site.crudapi.API/Delete",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "0e237ad4-e1a3-4095-b1fd-ff3659b21f5a",
+      "url": "ves.io.vega.cfg.adc.discovered_endpoint.crudapi.API/Delete",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "236bfc0b-f0c8-41a5-83d5-6d05af76be6d",
+      "url": "ves.io.rakar.virtual_host.crudapi.API/Get",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "32f3afc9-4288-463d-bbe8-c46b863630cf",
+      "url": "ves.io.vega.oper.rt.crudapi.API/List",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "ce0dbb18-b1e3-4f90-b90a-8c626aa16155",
+      "url": "ves.io.vega.cfg.adc.virtual_ip.crudapi.API/Create",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "c9be2763-18bd-4287-acc2-5faef22a16d1",
+      "url": "public/namespaces/ns351/graph/site/node",
+      "method": "POST",
+      "dyn_examples": []
+    },
+    {
+      "uid": "55a85bcd-c006-4277-9502-3c5c241dc6ca",
+      "url": "ves.io.vega.cfg.adc.endpoint.crudapi.API/Delete",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "5107f9e4-ba15-46f5-91d9-1fdb9da44bfb",
+      "url": "public/namespaces/ui-testing/graph/site",
+      "method": "POST",
+      "dyn_examples": []
+    },
+    {
+      "uid": "c6d881a4-8954-4e4c-9918-032c402aae22",
+      "url": "ves.io.vega.cfg.adc.k8s.crudapi.API/List",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "a49ebfc8-5c0d-49bf-bf02-ce2a9b32a457",
+      "url": "ves.io.vega.cfg.adc.virtual_host.crudapi.API/Create",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "3cc99d02-c22c-4c11-a3a2-cbdb158623ec",
+      "url": "private/apiep/read",
+      "method": "POST",
+      "dyn_examples": []
+    },
+    {
+      "uid": "689e43c6-5d93-44cd-b6f9-d3f6211b4cc1",
+      "url": "ves.io.vega.cfg.nat.crudapi.API/Get",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "f5d3ba33-4c3b-4ae1-a63e-282920fdf7c2",
+      "url": "ves.io.rakar.route.crudapi.API/Get",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "d431f12f-6268-4de2-b537-4b2c9fa357d0",
+      "url": "ves.io.asterix.oper.apiepmarkup.smg",
+      "method": "POST",
+      "dyn_examples": []
+    },
+    {
+      "uid": "f6e99dfd-75f4-4730-8922-a2a8dc1c4489",
+      "url": "ves.io.rakar.cluster.crudapi.API/Get",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "e385a3bb-0ba1-4687-b95d-81cd1d8404e8",
+      "url": "maintree/read",
+      "method": "POST",
+      "dyn_examples": []
+    },
+    {
+      "uid": "04c4bf65-f8b3-43cc-9f74-23ef8f31edc1",
+      "url": "ves.io.vega.cfg.adc.virtual_ip.crudapi.API/Delete",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "b63743e6-28ec-48a5-8e2c-20fe8c7ec4da",
+      "url": "ves.io.rakar.namespace.crudapi.API/Delete",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "5883d38c-11bb-443c-916e-8c5ce5fbe11d",
+      "url": "smg/read",
+      "method": "POST",
+      "dyn_examples": []
+    },
+    {
+      "uid": "4e62c382-e5f2-4148-9018-18fd41003632",
+      "url": "ves.io.vega.cfg.adc.endpoint.crudapi.API/Create",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "7152e6ba-e490-4f0f-9aca-46ab4d83918f",
+      "url": "public/namespaces/ns352/graph/site",
+      "method": "POST",
+      "dyn_examples": []
+    },
+    {
+      "uid": "39647858-c79e-481a-b005-958d4e2166e8",
+      "url": "public/namespaces/system/graph/service",
+      "method": "POST",
+      "dyn_examples": []
+    },
+    {
+      "uid": "ea30d823-5639-429e-a0b4-a18c9c1be0b6",
+      "url": "ves.io.rakar.vk8s_deployment.crudapi.StatusAPI/Get",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "587f08c9-395e-4efe-91bf-ddfeb06e9c21",
+      "url": "ves.io.vega.cfg.site.RemoteSiteAPI/Update",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "9bf691c1-6786-4a74-872a-65b0f16e64c0",
+      "url": "public/registerBootstrap",
+      "method": "POST",
+      "dyn_examples": []
+    },
+    {
+      "uid": "aea72bdb-793c-4176-8569-bb3d81bb740c",
+      "url": "ves.io.rakar.vk8s_deployment.crudapi.API/Get",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "baae3adf-6daf-442b-b6e5-9ffa26e3a0ae",
+      "url": "apieplist/update",
+      "method": "POST",
+      "dyn_examples": []
+    },
+    {
+      "uid": "3940df1e-bf4b-4cfd-b631-525a58a82c99",
+      "url": "ves.io.vega.cfg.adc.virtual_ip.crudapi.API/List",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "a8981cca-a91c-453e-800a-3be2fad0612e",
+      "url": "ves.io.vega.cfg.adc.virtual_host.crudapi.API/List",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "dfb07655-78b7-4c56-95f0-d1213c6d17ad",
+      "url": "ves.io.asterix.oper.apptype/Objects",
+      "method": "POST",
+      "dyn_examples": []
+    },
+    {
+      "uid": "0135d4a8-d542-42b1-9d72-0c4a2dc4b186",
+      "url": "ves.io.asterix.cfg.app_type.crudapi.API/Get",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "5d67a69e-19b9-4e06-bc27-9ab0d7d1e472",
+      "url": "ves.io.maurice.site.CustomAPI/GetAppParamsRaw",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "0f003794-492a-4453-abbe-a16f131b8763",
+      "url": "ves.io.maurice.site/prague-skull-testing-1.customer1.tenant.int.ves.io/workload",
+      "method": "POST",
+      "dyn_examples": []
+    },
+    {
+      "uid": "cff0115d-315a-46e0-8d9e-deb4d851b9f0",
+      "url": "ves.io.vega.cfg.adc.route.crudapi.API/Replace",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "ad0bc878-3e2c-425f-b5e2-0e403500d1bc",
+      "url": "ves.io.vega.cfg.logical_intf.crudapi.API/Get",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "71bc212f-b3fe-4283-908b-3fad2b1a7ed9",
+      "url": "ves.io.rakar.namespace.crudapi.StatusAPI/Get",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "c65394cb-25f7-40ed-948d-2a85a2ad9378",
+      "url": "ves.io.vega.cfg.adc.route.crudapi.API/Create",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "ceeb2599-d591-4672-9845-99f3cea017bb",
+      "url": "ves.io.vega.cfg.adc.endpoint.crudapi.API/List",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "b8e3234e-e9f4-4066-8cae-fc9bd6904343",
+      "url": "ves.io.vega.cfg.adc.cluster.crudapi.API/Delete",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "464eaf73-1961-4801-9b8a-2bde781802c8",
+      "url": "ves.io.vega.cfg.vrf.crudapi.API/List",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "95c7fce6-529c-4539-a704-d8bbe58d1434",
+      "url": "prunedtree/update",
+      "method": "POST",
+      "dyn_examples": []
+    },
+    {
+      "uid": "0982f44c-3ddb-4310-ba83-3149d4114da3",
+      "url": "prunedtree/read",
+      "method": "POST",
+      "dyn_examples": []
+    },
+    {
+      "uid": "8377f21b-8249-4212-94c0-6a7069e73f88",
+      "url": "ves.io.vega.cfg.site.crudapi.API/Create",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "7b63fea2-143a-4a05-96b7-9f289dcbd361",
+      "url": "ves.io.vega.cfg.adc.listener.crudapi.API/Create",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "05ba2f9d-1ed7-4252-9cf0-23574fc0e4e5",
+      "url": "ves.io.vega.cfg.adc.cluster.crudapi.API/List",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "df01beea-49bd-41f5-9885-df1065ea4252",
+      "url": "public/namespaces/default/graph/site/node",
+      "method": "POST",
+      "dyn_examples": []
+    },
+    {
+      "uid": "7e43722c-d697-4b7d-8308-870d708253fc",
+      "url": "overrides/read",
+      "method": "POST",
+      "dyn_examples": []
+    },
+    {
+      "uid": "5ce8dc24-53a1-4952-b025-4d3c46253de8",
+      "url": "ves.io.vega.cfg.virtual_network.crudapi.API/List",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "adf8f81b-64c4-4869-9c89-2b23497123c7",
+      "url": "ves.io.rakar.endpoint.crudapi.API/Get",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "e3d7b581-02a2-4fd4-83e7-0242b5918087",
+      "url": "ves.io.rakar.namespace.crudapi.API/Get",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "83cb7fde-1261-4676-86c9-b4cd0f1fa210",
+      "url": "public/namespaces/vk8s-test-01/graph/site",
+      "method": "POST",
+      "dyn_examples": []
+    },
+    {
+      "uid": "55c38825-83b9-40c9-8ba0-a7c420514093",
+      "url": "ves.io.vega.cfg.virtual_network.crudapi.API/Replace",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "8ae91aed-4ed2-4e8b-a9e1-39b549af8821",
+      "url": "ves.io.rakar.endpoint.crudapi.API/List",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "95266358-ad39-476b-9685-582a7e3ba1f5",
+      "url": "ves.io.vega.cfg.ver_instance.crudapi.API/Replace",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "f99692c0-ed0d-4758-8abd-e8a905296137",
+      "url": "public/namespaces/TestDemoBookInfo_namespace-jebuyvwt/graph/site/edge",
+      "method": "POST",
+      "dyn_examples": []
+    },
+    {
+      "uid": "78a78e21-0abc-4bc2-ac3e-93d60fb65a61",
+      "url": "public/namespaces/ns351/graph/site",
+      "method": "POST",
+      "dyn_examples": []
+    },
+    {
+      "uid": "8f9104fb-8cc2-414d-8e9c-88ada81d2439",
+      "url": "ves.io.rakar.vk8s_service.crudapi.API/Get",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "6bd7b8be-4c6b-4bff-b1c5-eaab3cb8d578",
+      "url": "ves.io.vega.cfg.site.crudapi.API/Delete",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "a944c001-334d-4b93-b80b-0842f3b73f6f",
+      "url": "ves.io.rakar.virtual_k8s.crudapi.API/Delete",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "df687325-4052-47bc-9f77-f7695876bc85",
+      "url": "public/namespaces/system/graph/site/node",
+      "method": "POST",
+      "dyn_examples": []
+    },
+    {
+      "uid": "6a0cb06f-5163-42e6-a0bd-3966bbbae7f5",
+      "url": "ves.io.vega.cfg.nat.crudapi.API/Replace",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "9817320e-9c86-4614-bd37-2fe72dbecef8",
+      "url": "ves.io.rakar.advertise_policy.crudapi.API/Get",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "d8557033-c5b5-429f-8e07-9125e06528f6",
+      "url": "ves.io.rakar.virtual_host.crudapi.API/Delete",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "bb7c38d1-0683-45e7-a700-5cf8b8b88934",
+      "url": "public/namespaces/system/registration/r-a16ccc93-0342-461c-9261-7d7c3a9e9e5e/approve",
+      "method": "POST",
+      "dyn_examples": []
+    },
+    {
+      "uid": "294f629a-0e59-47c1-9b98-e62a4aa549be",
+      "url": "ves.io.rakar.route.crudapi.API/Delete",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "01e969a8-51ef-47dc-af1f-fbd23eb26f51",
+      "url": "maintree/update",
+      "method": "POST",
+      "dyn_examples": []
+    },
+    {
+      "uid": "a6aad3c0-13c2-440d-8879-01dd1c5ff8ae",
+      "url": "ves.io.stdlib.server.introspect.API/GetObject",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "9c8557ca-ffa6-4e9e-91e4-fc95cb3a6c19",
+      "url": "public/namespaces/vk8s-test-raj-2/graph/site",
+      "method": "POST",
+      "dyn_examples": []
+    },
+    {
+      "uid": "3200281f-5125-491a-8f98-740fcf21d68e",
+      "url": "ves.io.vega.cfg.adc.listener.crudapi.API/Delete",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "a2a04675-4ba4-4c2d-ad8e-401bc4d0cea7",
+      "url": "ves.io.rakar.virtual_network.crudapi.API/Get",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "999e2323-8b3e-4577-ab11-caaf721c7b85",
+      "url": "public/namespaces/default/graph/service",
+      "method": "POST",
+      "dyn_examples": []
+    },
+    {
+      "uid": "81b93d11-6913-4b53-8f44-ed9820e86b8c",
+      "url": "ves.io.vega.cfg.adc.endpoint.crudapi.API/Replace",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "3078e0ea-ec4d-4da9-8fe6-305162db4b3b",
+      "url": "ves.io.vega.oper.discovered_endpoint.crudapi.API/List",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "207b8dd1-ad03-4b93-ad59-f35f6d428a6f",
+      "url": "ves.io.vega.cfg.adc.virtual_host.crudapi.API/Replace",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "7f992405-dd55-455e-a4d2-2e5ad9ac5df6",
+      "url": "public/namespaces/system/graph/service/node",
+      "method": "POST",
+      "dyn_examples": []
+    },
+    {
+      "uid": "9bdf4f4b-472b-49e2-89ab-dce76866a689",
+      "url": "public/namespaces/vk8s-test-raj/graph/site",
+      "method": "POST",
+      "dyn_examples": []
+    },
+    {
+      "uid": "1f8f66d7-72d1-42d0-b32f-0f6412730b60",
+      "url": "public/namespaces/ui-testing-1/graph/site",
+      "method": "POST",
+      "dyn_examples": []
+    },
+    {
+      "uid": "3ede2f76-fe29-421c-9589-eb317a198047",
+      "url": "ves.io.stdlib.server.introspect.API/ListObjects",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "802c6db9-0c0f-46b4-af8a-3175b4465696",
+      "url": "ves.io.vega.cfg.adc.cluster.crudapi.API/Replace",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "d2266a27-a8d0-4e5a-b3d7-3e652873be4f",
+      "url": "ves.io.maurice.site.CustomAPI/GetFabricIPs",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "f889473e-87ed-40c1-9594-6a14dbb4810e",
+      "url": "public/namespaces/test-namespace/graph/site",
+      "method": "POST",
+      "dyn_examples": []
+    },
+    {
+      "uid": "2fc6d8fd-2a9f-4b96-9810-9cec11163bfd",
+      "url": "public/namespaces/TestDemoBookInfo_namespace-jebuyvwt/graph/site",
+      "method": "POST",
+      "dyn_examples": []
+    },
+    {
+      "uid": "7b4d81a6-c651-4e8b-921d-c7e69daeac69",
+      "url": "ves.io.vega.cfg.ver_cluster_cfg.crudapi.API/List",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "b1c7fe15-e1c0-48b0-ba94-d8de66dc4048",
+      "url": "ves.io.identityauthority.API/GetInstanceCert",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "2613ae14-887d-4165-b170-df4eef06555b",
+      "url": "ves.io.vega.cfg.adc.listener.crudapi.API/List",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "5b00dbd0-bc75-4e61-b39e-f1b9f44d45e2",
+      "url": "public/namespaces/TestDemoBookInfo_namespace-jebuyvwt/graph/site/node",
+      "method": "POST",
+      "dyn_examples": []
+    },
+    {
+      "uid": "d124c7c4-ec97-4902-850b-8db7269010bf",
+      "url": "ves.io.rakar.vk8s_service.crudapi.StatusAPI/Get",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "03e3eff8-b09e-4167-90a2-5d66f4b127ba",
+      "url": "ves.io.vega.cfg.ver_instance.crudapi.API/List",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "840d81a8-d676-4faa-9419-b151d989ac9c",
+      "url": "ves.io.vega.cfg.adc.virtual_ip.crudapi.API/Replace",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "324ca165-fa32-4148-bd82-b3920e216fef",
+      "url": "ves.io.vega.cfg.ver_instance.crudapi.API/Get",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "04f03c4c-e936-4f9b-814c-6df7371ffb70",
+      "url": "ves.io.identityauthority.API/GetPassportCerts",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "f972d7ba-acb2-432c-8269-833009b31f47",
+      "url": "public/namespaces/system/graph/site",
+      "method": "POST",
+      "dyn_examples": []
+    },
+    {
+      "uid": "d76333c2-b339-4bfd-8019-1fdea234edac",
+      "url": "cni",
+      "method": "POST",
+      "dyn_examples": []
+    },
+    {
+      "uid": "c15ab526-84aa-4a37-8979-b5fcd104c240",
+      "url": "ves.io.vega.cfg.adc.cluster.crudapi.API/Get",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "04985fbe-23d5-4e0b-9241-d0011d133cd3",
+      "url": "ves.io.vega.cfg.adc.virtual_host.crudapi.API/Delete",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "fe9b03ff-1056-48be-92a6-262c809c716e",
+      "url": "ves.io.vega.cfg.vrf.crudapi.API/Delete",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "26a6f290-dd27-40c8-a567-02c0cd8ae43a",
+      "url": "ves.io.rakar.k8s_resource.crudapi.API/Get",
+      "method": "unary",
+      "dyn_examples": []
+    },
+    {
+      "uid": "fa2785d6-7efc-4744-b693-8beaea93dd71",
+      "url": "public/namespaces/default/graph/site",
+      "method": "POST",
+      "dyn_examples": []
+    },
+    {
+      "uid": "dc7632cc-3fa2-47c9-a76d-15657f51b2ce",
+      "url": "public/requestConfig",
+      "method": "POST",
+      "dyn_examples": []
+    }
+  ]
+}

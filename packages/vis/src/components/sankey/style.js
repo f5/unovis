@@ -10,6 +10,9 @@ export const variables = injectGlobal`
     --vis-sankey-node-fill: #4e4dd1;
     --vis-sankey-node-label-color: #575c65;
 
+    --vis-sankey-node-label-background-fill-color: #ffffff;
+    --vis-sankey-node-label-background-stroke-color: #dadada;
+
     --vis-sankey-icon-size: 22px;
     --vis-sankey-icon-color: #ffffff;
     --vis-sankey-icon-font-family: FontAwesome;
@@ -55,6 +58,43 @@ export const transparentLink = css`
   opacity: 0;
 `
 
+export const nodeLabel = css`
+  label: label;
+
+  fill: var(--vis-sankey-node-label-color);
+  font-weight: 600;
+  pointer-events: none;
+  visibility: hidden;
+  user-select: none;
+
+  &, tspan {
+    font-family: var(--vis-sankey-label-font-family);
+  }
+
+`
+
+export const nodeSubLabel = css`
+  label: sub-label;
+
+  fill: var(--vis-sankey-node-label-color);
+  pointer-events: none;
+  visibility: hidden;
+  user-select: none;
+
+  &, tspan {
+    font-family: var(--vis-sankey-label-font-family);
+  }
+
+`
+
+export const labelBackground = css`
+  label: label-background;
+  stroke: var(--vis-sankey-node-label-background-stroke-color);
+  fill: var(--vis-sankey-node-label-background-fill-color);
+  opacity: 0.8;
+  visibility: hidden;
+`
+
 export const node = css`
   label: node;
 
@@ -69,22 +109,17 @@ export const node = css`
       opacity: 1;
     }
   }
-`
 
-export const nodeLabel = css`
-  label: label;
-
-  fill: var(--vis-sankey-node-label-color);
-  pointer-events: none;
-  visibility: hidden;
-  user-select: none;
-
-  &, tspan {
-    font-family: var(--vis-sankey-label-font-family);
-  }
-
-  &.visible {
-    visibility: visible;
+  &.visible-label {
+    ${`.${nodeLabel}`} {
+      visibility: visible;
+    }
+    ${`.${nodeSubLabel}`} {
+      visibility: visible;
+    }
+    ${`.${labelBackground}`} {
+      visibility: visible;
+    }
   }
 `
 
