@@ -4,6 +4,7 @@ import { BrowserModule } from '@angular/platform-browser'
 import { NgModule } from '@angular/core'
 import { RouterModule, Routes } from '@angular/router'
 import { MatButtonModule } from '@angular/material/button'
+import { NoopAnimationsModule } from '@angular/platform-browser/animations'
 
 import { ScatterComponent } from 'examples/scatter/scatter.component'
 import { LineComponent } from 'examples/line/line.component'
@@ -22,6 +23,7 @@ import { GraphComponent } from 'examples/graph/graph.component'
 import { GraphPanelsComponent } from 'examples/graph-panels/graph-panels.component'
 import { ConnectivityGraphComponent } from 'examples/console-connectivity-graph/console-connectivity-graph.component'
 import { TrafficGraphComponent } from 'examples/console-traffic-graph-pg2/console-traffic-graph-pg2.component'
+import { ChordDiagramComponent } from 'examples/chord-diagram/chord-diagram.component'
 
 import { AppComponent } from './app.component'
 import { BulletLegendComponent } from './components/bullet-legend/bullet-legend.component'
@@ -30,7 +32,6 @@ import { XYChartComponent } from './components/xychart/xychart.component'
 import { MapLeafletComponent } from './components/map-leaflet/map-leaflet.component'
 import { SingleChartComponent } from './components/singlechart/singlechart.component'
 import { Collection } from './components/collection/collection.component'
-import { NoopAnimationsModule } from '@angular/platform-browser/animations'
 
 const appRoutes: Routes = [
   { path: 'map', component: MapComponent },
@@ -50,6 +51,7 @@ const appRoutes: Routes = [
   { path: 'graph-panels', component: GraphPanelsComponent },
   { path: 'connectivity-graph', component: ConnectivityGraphComponent },
   { path: 'traffic-graph', component: TrafficGraphComponent },
+  { path: 'chord-diagram', component: ChordDiagramComponent },
 ]
 
 appRoutes.push({ path: '', redirectTo: `/${appRoutes[0].path}`, pathMatch: 'full' })
@@ -80,6 +82,7 @@ appRoutes.push({ path: '', redirectTo: `/${appRoutes[0].path}`, pathMatch: 'full
     GraphPanelsComponent,
     ConnectivityGraphComponent,
     TrafficGraphComponent,
+    ChordDiagramComponent,
   ],
 
   imports: [

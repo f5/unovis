@@ -1,5 +1,4 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-/* eslint-disable */
 import { AfterViewInit, OnDestroy, Component } from '@angular/core'
 
 // Vis
@@ -18,34 +17,30 @@ export class RadialDendrogramComponent<H extends Hierarchy> implements AfterView
   title = 'radial-dendrogram'
 
   data = getHierarchyData(100, {
-    source: ['re01',], // 're02', 're03', 're04'],
-    middle: ['vhost'],
-    target: ['site1', 'site2']//, 'site3', 'site4', 'site5', 'site6', 'site7', 'site8', 'site9', 'site10'],
+    source: ['re01', 're02', 're03', 're04', 're05', 're06', 're07', 're08'],
+    middle: ['vhost 1', 'vhost 2', 'vhost 3'],
+    target: ['site1', 'site2', 'site3', 'site4', 'site5', 'site6', 'site7', 'site8', 'site9', 'site10'],
   })
 
   margin = {}
   config: RadialDendrogramConfigInterface<H> = {
-    nodeWidth: 40,
+    nodeWidth: 20,
   }
-  
+
   component = new RadialDendrogram(this.config)
   intervalId: NodeJS.Timeout
 
   ngAfterViewInit (): void {
-
     this.intervalId = setInterval(() => {
       this.data = getHierarchyData(100, {
-        source: ['re01', 're02', 're03', 're04'],
-        middle: ['vhost'],
+        source: ['re01', 're02', 're03', 're04', 're05', 're06', 're07', 're08'],
+        middle: ['vhost', 'vhost 2', 'vhost 3'],
         target: ['site1', 'site2', 'site3', 'site4', 'site5', 'site6', 'site7', 'site8', 'site9', 'site10'],
       })
     }, 3000)
   }
 
-  ngOnDestroy () : void {
+  ngOnDestroy (): void {
     clearInterval(this.intervalId)
   }
-
 }
-
-
