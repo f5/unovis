@@ -20,7 +20,6 @@
     "@types/supercluster": "^5.0.1",
     "@typescript-eslint/parser": "^2.16.0",
     "@zerollup/ts-transform-paths": "^1.7.11",
-    "bezier-js": "^2.6.1",
     "rimraf": "^3.0.0",
     "rollup": "^1.29.0",
     "rollup-plugin-commonjs": "^10.1.0",
