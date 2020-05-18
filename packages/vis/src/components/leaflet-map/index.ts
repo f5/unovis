@@ -117,9 +117,13 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
 
   setConfig (config: LeafletMapConfigInterface<Datum>): void {
     this.config.init(config)
-    if (this._map && this.config.renderer === LeafletMapRenderer.MAPBOXGL) {
-      const mapboxmap = (this._map.layer as any).getMapboxMap()
-      updateTopoJson(mapboxmap, this.config)
+    if (this._map) {
+      if (this.config.topoJSONLayer?.sources && this.config.renderer === LeafletMapRenderer.TANGRAM) {
+        console.warn('TopoJSON layer render does not supported with Tangram renderer')
+      } else {
+        const mapboxmap = (this._map.layer as any).getMapboxMap()
+        updateTopoJson(mapboxmap, this.config)
+      }
     }
   }
 

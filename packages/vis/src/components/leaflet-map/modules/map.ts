@@ -13,73 +13,80 @@ import { LeafletMapConfigInterface } from '../config'
 import { getTangramLayer } from '../renderer/tangram-layer'
 import { getMapboxglLayer, mapboxglWheelEventThrottled } from '../renderer/mapboxgl-layer'
 
+// Styles
+import * as s from '../style'
+
 export const initialMapCenter: L.LatLngExpression = [36, 14]
 export const initialMapZoom = 1.9
 
 export function updateTopoJson<T> (map, config: LeafletMapConfigInterface<T>): void {
-  const { topoJson } = config
+  const { topoJSONLayer } = config
 
-  if (topoJson.sources) {
-    const featureObject = topoJson.sources?.objects?.[topoJson.featureName]
+  if (topoJSONLayer.sources) {
+    const featureObject = topoJSONLayer.sources?.objects?.[topoJSONLayer.featureName]
     if (featureObject) {
-      const mapSource = map.getSource(topoJson.featureName)
-      const featureCollection = feature(topoJson.sources, featureObject)
+      const mapSource = map.getSource(topoJSONLayer.featureName)
+      const featureCollection = feature(topoJSONLayer.sources, featureObject)
       if (mapSource) {
         mapSource.setData(featureCollection)
       } else {
-        map.addSource(topoJson.featureName, { type: 'geojson', data: featureCollection })
+        map.addSource(topoJSONLayer.featureName, { type: 'geojson', data: featureCollection })
       }
     }
   }
 
-  const fillLayer = map.getLayer(`${topoJson.featureName}-area`)
-  if (topoJson.fillProperty) {
+  const fillLayer = map.getLayer(`${topoJSONLayer.featureName}-area`)
+  if (topoJSONLayer.fillProperty) {
     if (!fillLayer) {
       map.addLayer({
-        id: `${topoJson.featureName}-area`,
+        id: `${topoJSONLayer.featureName}-area`,
         type: 'fill',
-        source: topoJson.featureName,
+        source: topoJSONLayer.featureName,
         paint: {
           'fill-antialias': false,
-          'fill-opacity': 0.6,
+          'fill-opacity': topoJSONLayer.fillOpacity,
         },
       })
     }
-    map.setPaintProperty(`${topoJson.featureName}-area`, 'fill-color', [
+    map.setPaintProperty(`${topoJSONLayer.featureName}-area`, 'fill-color', [
       'case',
-      ['!', ['has', topoJson.fillProperty]],
+      ['!', ['has', topoJSONLayer.fillProperty]],
       'rgba(255, 255, 255, 0)',
-      ['get', topoJson.fillProperty],
+      ['get', topoJSONLayer.fillProperty],
     ])
-  } else if (fillLayer) map.removeLayer(`${topoJson.featureName}-area`)
-  map.on('click', `${topoJson.featureName}-area`, e => {
-    console.log(e.features)
-  })
+  } else if (fillLayer) map.removeLayer(`${topoJSONLayer.featureName}-area`)
+  const canvas = map.getCanvas()
+  select(canvas).classed(s.mapboxglCanvas, true)
 
-  const strokeLayer = map.getLayer(`${topoJson.featureName}-stroke`)
-  if (topoJson.strokeProperty) {
+  // map.on('mousemove', (event) => {
+  //   const feature = map.queryRenderedFeatures(event.point)
+  //   select(canvas).datum(feature)
+  // })
+
+  const strokeLayer = map.getLayer(`${topoJSONLayer.featureName}-stroke`)
+  if (topoJSONLayer.strokeProperty) {
     if (!strokeLayer) {
       map.addLayer({
-        id: `${topoJson.featureName}-stroke`,
+        id: `${topoJSONLayer.featureName}-stroke`,
         type: 'line',
-        source: topoJson.featureName,
+        source: topoJSONLayer.featureName,
         paint: {
-          'line-opacity': 0.8,
-          'line-width': 1,
+          'line-opacity': topoJSONLayer.strokeOpacity,
+          'line-width': topoJSONLayer.strokeWidth,
         },
       })
     }
-    map.setPaintProperty(`${topoJson.featureName}-stroke`, 'line-color', [
+    map.setPaintProperty(`${topoJSONLayer.featureName}-stroke`, 'line-color', [
       'case',
-      ['!', ['has', topoJson.strokeProperty]],
+      ['!', ['has', topoJSONLayer.strokeProperty]],
       'rgba(255, 255, 255, 0)',
-      ['get', topoJson.strokeProperty],
+      ['get', topoJSONLayer.strokeProperty],
     ])
-  } else if (strokeLayer) map.removeLayer(`${topoJson.featureName}-stroke`)
+  } else if (strokeLayer) map.removeLayer(`${topoJSONLayer.featureName}-stroke`)
 }
 
 export function setupMap<T> (mapContainer: HTMLElement, config: LeafletMapConfigInterface<T>): { leaflet: L.Map; layer: L.Layer; svgOverlay: Selection<SVGElement, any, HTMLElement, any>; svgGroup: Selection<SVGGElement, any, SVGElement, any> } {
-  const { renderer, topoJson } = config
+  const { renderer, topoJSONLayer } = config
 
   const leaflet = L.map(mapContainer, {
     scrollWheelZoom: renderer === LeafletMapRenderer.TANGRAM, // We define custom scroll event for MapboxGL to enabling smooth zooming
@@ -118,7 +125,7 @@ export function setupMap<T> (mapContainer: HTMLElement, config: LeafletMapConfig
 
   if (layer) layer.addTo(leaflet)
 
-  if (topoJson && renderer === LeafletMapRenderer.MAPBOXGL) {
+  if (topoJSONLayer?.sources && renderer === LeafletMapRenderer.MAPBOXGL) {
     const mapboxmap = layer.getMapboxMap()
     mapboxmap.on('load', () => {
       updateTopoJson(mapboxmap, config)

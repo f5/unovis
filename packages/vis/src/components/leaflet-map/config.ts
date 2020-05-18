@@ -54,12 +54,15 @@ export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterfa
   statusMap?: StatusMap;
   /** If selectedNodeId is provided the map will zoom in and select that node on update */
   selectedNodeId?: string;
-  /** */
-  topoJson?: {
+  /** A TopoJSON Geometry layer to be displayed on top of the map. Supports fill and stroke */
+  topoJSONLayer?: {
     sources?: TopoJSON.Topology;
     featureName?: string;
     fillProperty?: string;
     strokeProperty?: string;
+    fillOpacity?: number;
+    strokeOpacity?: number;
+    strokeWidth?: number;
   };
 }
 
@@ -83,5 +86,10 @@ export class LeafletMapConfig<Datum> extends ComponentConfig implements LeafletM
   bounds = undefined
   statusMap = {}
   selectedNodeId = undefined
-  topoJson = undefined
+  topoJSONLayer = {
+    sources: undefined,
+    fillOpacity: 0.6,
+    strokeOpacity: 0.8,
+    strokeWidth: 1,
+  }
 }

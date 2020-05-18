@@ -139,3 +139,7 @@ export const clusterBackground = css`
     visibility: visible;
   }
 `
+
+export const mapboxglCanvas = css`
+  pointer-events: all;
+`

@@ -13,9 +13,11 @@ type MapPoint = {
   shape: string;
 }
 
+const FILL_PROPERTY = 'color-area'
+const STROKE_PROPERTY = 'color-stroke'
+
 function getCountries () {
   const countries: any[] = [
-    { name: 'Russian Federation' },
     { name: 'Canada' },
     { name: 'Sudan' },
     { name: 'India' },
@@ -37,8 +39,8 @@ function getTopo () {
   const newGeometries = []
   countries.forEach((country, id) => {
     const geometry = _.find(geometries, g => g.properties.name === country.name)
-    geometry.properties['color-stroke'] = '#3E5FFF'
-    geometry.properties['color-area'] = colorScale(country.value)
+    geometry.properties[STROKE_PROPERTY] = '#3E5FFF'
+    geometry.properties[FILL_PROPERTY] = colorScale(country.value)
     newGeometries.push(geometry)
   })
   topo.objects.countries.geometries = newGeometries  
@@ -56,14 +58,13 @@ function getMapConfig (): LeafletMapConfigInterface<MapPoint> {
         url: "https://maps.volterra.io/data/v3.json"
       },
     },
-    accessToken: 'q-wBnCItTPC8Vdj8GA6g8Q',
     initialBounds: { northEast: { lat: 77, lng: -172 }, southWest: { lat: -50, lng: 72 } },
-    topoJson: {
+    topoJSONLayer: {
       sources: getTopo(),
       featureName: 'countries',
-      fillProperty: 'color-area',
-      strokeProperty: 'color-stroke',
-    },
+      fillProperty: FILL_PROPERTY,
+      strokeProperty: STROKE_PROPERTY,
+    }
   }
 }
 
@@ -80,22 +81,22 @@ export class MapHeatmapComponent {
   config = getMapConfig()
 
   onRequestsClick () {
-    this.config.topoJson.sources = getTopo()
+    this.config.topoJSONLayer.sources = getTopo()
     this.config = { ...this.config }
   }
 
   onThroughputClick () {
-    this.config.topoJson.sources = getTopo()
+    this.config.topoJSONLayer.sources = getTopo()
     this.config = { ...this.config }
   }
 
   onBandwidthClick () {
-    this.config.topoJson.sources = getTopo()
+    this.config.topoJSONLayer.sources = getTopo()
     this.config = { ...this.config }
   }
 
   onSecurityClick () {
-    this.config.topoJson.sources = getTopo()
+    this.config.topoJSONLayer.sources = getTopo()
     this.config = { ...this.config }
   }
 }
