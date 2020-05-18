@@ -49,6 +49,8 @@ export function appendShape<T> (selection, shapeAccessor: StringAccessor<T>, sha
 }
 
 export function updateShape<T> (selection, shape: StringAccessor<T>, size: NumericAccessor<T>): void {
+  if (selection.size() === 0) return
+
   const d: T = selection.datum()
   const nodeSize = getNodeSize(d, size)
   selection.filter('circle')
