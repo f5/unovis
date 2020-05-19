@@ -62,9 +62,9 @@ export class Tooltip<T extends ComponentCore<any>, TooltipDatum> {
     this._setUpEventsThrottled()
   }
 
-  show (html: string, pos: { x: number; y: number}): void {
+  show (html: string | HTMLElement, pos: { x: number; y: number}): void {
     this.div.classed('show', true)
-      .html(html)
+      .html(html instanceof HTMLElement ? html.innerHTML : html)
 
     this.place(pos)
   }
