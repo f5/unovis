@@ -10,7 +10,7 @@ import { GraphDataModel } from 'data-models/graph'
 
 // Types
 import { Spacing } from 'types/misc'
-import { CustomSizedComponent, Sizing } from 'types/component'
+import { ExtendedSizeComponent, Sizing } from 'types/component'
 
 // Utils
 import { getValue, clamp, isNumber, groupBy } from 'utils/data'
@@ -26,15 +26,15 @@ import * as s from './style'
 import { removeLinks, createLinks, updateLinks } from './modules/link'
 import { removeNodes, createNodes, updateNodes, onNodeMouseOver, onNodeMouseOut } from './modules/node'
 
-export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> extends ComponentCore<{nodes: N[]; links?: L[]}> implements CustomSizedComponent {
+export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> extends ComponentCore<{nodes: N[]; links?: L[]}> implements ExtendedSizeComponent {
   static selectors = s
   config: SankeyConfig<N, L> = new SankeyConfig()
   datamodel: GraphDataModel<N, L> = new GraphDataModel()
+  private _extendedWidth = undefined
+  private _extendedHeight = undefined
   private _linksGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
   private _nodesGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
   private _sankey = sankey()
-  customWidth = undefined
-  customHeight = undefined
   events = {
     [Sankey.selectors.node]: {
       mouseover: this._onNodeMouseOver.bind(this),
@@ -59,7 +59,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
   }
 
   _render (customDuration?: number): void {
-    const { config, config: { componentSizing }, bleed, datamodel: { nodes, links } } = this
+    const { config, config: { sizing }, bleed, datamodel: { nodes, links } } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
     if (
       (nodes.length === 0) ||
@@ -71,7 +71,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
       this._nodesGroup.selectAll(`.${s.node}`).call(removeNodes, duration)
     }
 
-    if (componentSizing === Sizing.CONTAIN) this._preCalculateComponentSize()
+    if (sizing === Sizing.EXTEND) this._preCalculateComponentSize()
     this._prepareLayout()
 
     const sankeyHeight = this._getSankeyHeight()
@@ -106,19 +106,19 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
     const groupedByLayer = groupBy(nodes, d => d.layer)
     const values = Object.values(groupedByLayer).map((d: any[]) => sum(d.map(n => scale(n.value) + nodePadding)))
     const height = max(values)
-    this.customHeight = height
-    this.customWidth = (nodeWidth + nodeHorizontalSpacing * Object.keys(groupedByLayer).length)
+    this._extendedHeight = height
+    this._extendedWidth = (nodeWidth + nodeHorizontalSpacing * Object.keys(groupedByLayer).length)
   }
 
   private _prepareLayout (): void {
-    const { config, bleed, datamodel: { nodes, links }, customHeight, customWidth } = this
+    const { config, bleed, datamodel: { nodes, links }, _extendedHeight, _extendedWidth } = this
     links.forEach(link => {
       // For d3 sankey function each link must be an object with the `value` property
       link.value = getValue(link, d => getValue(d, config.linkValue))
     })
 
     const sankeyHeight = this._getSankeyHeight()
-    if (config.componentSizing === Sizing.CONTAIN) {
+    if (config.sizing === Sizing.EXTEND) {
       this._sankey.linkSort((link2, link1) => {
         if (link2.value > link1.value) return -1
       })
@@ -145,7 +145,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
     this._sankey
       .nodeWidth(config.nodeWidth)
       .nodePadding(config.nodePadding)
-      .size([(customWidth ?? config.width) - bleed.left - bleed.right, (customHeight ?? sankeyHeight) - bleed.top - bleed.bottom])
+      .size([(_extendedWidth ?? config.width) - bleed.left - bleed.right, (_extendedHeight ?? sankeyHeight) - bleed.top - bleed.bottom])
       .nodeId(d => d.id)
       .iterations(32)
       .nodeAlign(config.nodeAlign)
@@ -174,6 +174,14 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
     const { config, datamodel: { links } } = this
 
     return clamp(config.height * links.length * config.heightNormalizationCoeff, config.height / 2, config.height)
+  }
+
+  getWidth (): number {
+    return this._extendedWidth ?? this.config.width
+  }
+
+  getHeight (): number {
+    return this._extendedHeight ?? this.config.height
   }
 
   _onNodeMouseOver (d, i, els): void {

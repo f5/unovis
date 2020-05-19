@@ -60,7 +60,7 @@ export interface SankeyConfigInterface<N extends SankeyNodeDatumInterface, L ext
     /** Id accessor for better visual data updates */
     id?: ((d: SankeyNodeDatumInterface | SankeyLinkDatumInterface, i?: number, ...any) => string);
     /** */
-    componentSizing?: Sizing;
+    sizing?: Sizing;
 }
 
 export class SankeyConfig<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> extends ComponentConfig implements SankeyConfigInterface<N, L> {
@@ -88,5 +88,5 @@ export class SankeyConfig<N extends SankeyNodeDatumInterface, L extends SankeyLi
   heightNormalizationCoeff = 1 / 16
   // eslint-disable-next-line dot-notation
   id = (d: SankeyNodeDatumInterface | SankeyLinkDatumInterface, i: number): string => (d['_id'] ?? i).toString()
-  componentSizing = Sizing.FIT
+  sizing = Sizing.FIT
 }

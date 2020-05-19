@@ -6,10 +6,10 @@ export enum ComponentType {
 
 export enum Sizing {
   FIT = 'fit',
-  CONTAIN = 'contain',
+  EXTEND = 'extend',
 }
 
-export interface CustomSizedComponent {
-  customWidth?: number;
-  customHeight?: number;
+export interface ExtendedSizeComponent {
+  getWidth?(): number;
+  getHeight?(): number;
 }
