@@ -8,3 +8,8 @@ export enum Sizing {
   FIT = 'fit',
   CONTAIN = 'contain',
 }
+
+export interface CustomSizedComponent {
+  customWidth?: number;
+  customHeight?: number;
+}

@@ -30,6 +30,7 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
     nodeHorizontalSpacing: NODE_HORIZONTAL_SPACE,
     nodeWidth: NODE_WIDTH,
     nodeSubLabel: d => d.value,
+    componentSizing: Sizing.CONTAIN,
     events: {
       [Sankey.selectors.node]: {
         'click': d => console.log(d)
@@ -46,7 +47,7 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
     const sankeyData = this.process(apiData)
     console.log({ apiData, sankeyData });
 
-    this.sankey = new SingleChart(this.chart.nativeElement, { component: this.component, componentSizing: Sizing.CONTAIN, margin: this.margin }, sankeyData)
+    this.sankey = new SingleChart(this.chart.nativeElement, { component: this.component, margin: this.margin }, sankeyData)
     setTimeout(() => {      
       this.flowlegendWidth = this.sankey.component.componentWidth - NODE_HORIZONTAL_SPACE
     }, 500)

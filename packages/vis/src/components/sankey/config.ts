@@ -8,10 +8,9 @@ import { ComponentConfigInterface, ComponentConfig } from 'core/component/config
 import { NumericAccessor, ColorAccessor, StringAccessor } from 'types/misc'
 import { TrimMode } from 'types/text'
 import { SankeyNodeDatumInterface, SankeyLinkDatumInterface, LabelPosition } from 'types/sankey'
+import { Sizing } from 'types/component'
 
 export interface SankeyConfigInterface<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> extends ComponentConfigInterface {
-    /** */
-    sankeyType?: string;
     /** Sankey node width in pixels */
     nodeWidth?: number;
     /** */
@@ -58,10 +57,11 @@ export interface SankeyConfigInterface<N extends SankeyNodeDatumInterface, L ext
     heightNormalizationCoeff?: number;
     /** Id accessor for better visual data updates */
     id?: ((d: SankeyNodeDatumInterface | SankeyLinkDatumInterface, i?: number, ...any) => string);
+    /** */
+    componentSizing?: Sizing;
 }
 
 export class SankeyConfig<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> extends ComponentConfig implements SankeyConfigInterface<N, L> {
-  sankeyType = ''
   nodeWidth = 25
   nodeHorizontalSpacing = 150
   nodeMinHeight = 30
@@ -85,4 +85,5 @@ export class SankeyConfig<N extends SankeyNodeDatumInterface, L extends SankeyLi
   heightNormalizationCoeff = 1 / 16
   // eslint-disable-next-line dot-notation
   id = (d: SankeyNodeDatumInterface | SankeyLinkDatumInterface, i: number): string => (d['_id'] ?? i).toString()
+  componentSizing = Sizing.FIT
 }

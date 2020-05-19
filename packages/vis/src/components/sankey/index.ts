@@ -10,6 +10,7 @@ import { GraphDataModel } from 'data-models/graph'
 
 // Types
 import { Spacing } from 'types/misc'
+import { CustomSizedComponent, Sizing } from 'types/component'
 
 // Utils
 import { getValue, clamp, isNumber, groupBy } from 'utils/data'
@@ -25,15 +26,15 @@ import * as s from './style'
 import { removeLinks, createLinks, updateLinks } from './modules/link'
 import { removeNodes, createNodes, updateNodes, onNodeMouseOver, onNodeMouseOut } from './modules/node'
 
-export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> extends ComponentCore<{nodes: N[]; links?: L[]}> {
+export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> extends ComponentCore<{nodes: N[]; links?: L[]}> implements CustomSizedComponent {
   static selectors = s
   config: SankeyConfig<N, L> = new SankeyConfig()
   datamodel: GraphDataModel<N, L> = new GraphDataModel()
   private _linksGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
   private _nodesGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
   private _sankey = sankey()
-  componentWidth: number
-  componentHeight: number
+  customWidth = undefined
+  customHeight = undefined
   events = {
     [Sankey.selectors.node]: {
       mouseover: this._onNodeMouseOver.bind(this),
@@ -58,7 +59,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
   }
 
   _render (customDuration?: number): void {
-    const { config, bleed, datamodel: { nodes, links } } = this
+    const { config, config: { componentSizing }, bleed, datamodel: { nodes, links } } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
     if (
       (nodes.length === 0) ||
@@ -70,7 +71,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
       this._nodesGroup.selectAll(`.${s.node}`).call(removeNodes, duration)
     }
 
-    if (config.sankeyType === 'api-endpoint-explorer') this._preCalculateComponentSize()
+    if (componentSizing === Sizing.CONTAIN) this._preCalculateComponentSize()
     this._prepareLayout()
 
     const sankeyHeight = this._getSankeyHeight()
@@ -94,7 +95,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
   }
 
   private _preCalculateComponentSize (): void {
-    const { config, config: { nodeMinHeight, nodeMaxHeight, nodeHorizontalSpacing }, datamodel: { nodes, links } } = this
+    const { config: { nodePadding, nodeWidth, nodeMinHeight, nodeMaxHeight, nodeHorizontalSpacing }, datamodel: { nodes, links } } = this
     this._sankey
       .nodeId(d => d.id)
       .iterations(32)
@@ -103,21 +104,21 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
     const extentValue = extent(nodes, d => d.value || undefined)
     const scale = scaleLinear().domain(extentValue).range([nodeMinHeight, nodeMaxHeight]).clamp(true)
     const groupedByLayer = groupBy(nodes, d => d.layer)
-    const values = Object.values(groupedByLayer).map((d: any[]) => sum(d.map(n => scale(n.value) + config.nodePadding)))
+    const values = Object.values(groupedByLayer).map((d: any[]) => sum(d.map(n => scale(n.value) + nodePadding)))
     const height = max(values)
-    this.componentHeight = height
-    this.componentWidth = (config.nodeWidth + nodeHorizontalSpacing * Object.keys(groupedByLayer).length)
+    this.customHeight = height
+    this.customWidth = (nodeWidth + nodeHorizontalSpacing * Object.keys(groupedByLayer).length)
   }
 
   private _prepareLayout (): void {
-    const { config, bleed, datamodel: { nodes, links }, componentHeight, componentWidth } = this
+    const { config, bleed, datamodel: { nodes, links }, customHeight, customWidth } = this
     links.forEach(link => {
       // For d3 sankey function each link must be an object with the `value` property
       link.value = getValue(link, d => getValue(d, config.linkValue))
     })
 
     const sankeyHeight = this._getSankeyHeight()
-    if (config.sankeyType === 'api-endpoint-explorer') {
+    if (config.componentSizing === Sizing.CONTAIN) {
       this._sankey.linkSort((link2, link1) => {
         if (link2.value > link1.value) return -1
       })
@@ -144,7 +145,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
     this._sankey
       .nodeWidth(config.nodeWidth)
       .nodePadding(config.nodePadding)
-      .size([(componentWidth ?? config.width) - bleed.left - bleed.right, (componentHeight ?? sankeyHeight) - bleed.top - bleed.bottom])
+      .size([(customWidth ?? config.width) - bleed.left - bleed.right, (customHeight ?? sankeyHeight) - bleed.top - bleed.bottom])
       .nodeId(d => d.id)
       .iterations(32)
       .nodeAlign(sankeyLeft)

@@ -8,7 +8,6 @@ import { Tooltip } from 'core/tooltip'
 
 // Types
 import { Dimension } from 'types/misc'
-import { Sizing } from 'types/component'
 
 export interface SingleChartConfigInterface<Datum> extends ContainerConfigInterface {
   /** Visualization Component */
@@ -19,12 +18,9 @@ export interface SingleChartConfigInterface<Datum> extends ContainerConfigInterf
   };
   /** Tooltip component */
   tooltip?: Tooltip<ComponentCore<Datum>, Datum>;
-  /** */
-  componentSizing?: Sizing;
 }
 
 export class SingleChartConfig<Datum> extends ContainerConfig implements SingleChartConfigInterface<Datum> {
   tooltip = undefined
   dimensions = {}
-  componentSizing = Sizing.FIT
 }
