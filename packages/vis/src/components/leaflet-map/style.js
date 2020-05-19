@@ -140,6 +140,13 @@ export const clusterBackground = css`
   }
 `
 
+export const onFeatureHover = css``
+
 export const mapboxglCanvas = css`
   pointer-events: all;
+  cursor: grab;
+
+  &${`.${onFeatureHover}`} {
+    cursor: default;
+  }
 `

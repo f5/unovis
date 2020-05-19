@@ -125,6 +125,7 @@ export function setupMap<T> (mapContainer: HTMLElement, config: LeafletMapConfig
     mapboxmap.on('mousemove', (event) => {
       const feature = mapboxmap.queryRenderedFeatures(event.point)
       select(canvas).datum(feature)
+      select(canvas).classed(s.onFeatureHover, Boolean(feature?.length))
     })
     mapboxmap.on('load', () => {
       updateTopoJson(mapboxmap, config)
