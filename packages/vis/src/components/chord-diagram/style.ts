@@ -3,7 +3,9 @@ import { css, injectGlobal } from 'emotion'
 
 export const variables = injectGlobal`
   :root {
-    --vis-radial-dendrogram-link-color: #cad5f6;
+    --vis-radial-dendrogram-link-fill-color: #cad5f6;
+    --vis-radial-dendrogram-link-stroke-color: #777777;
+    --vis-radial-dendrogram-link-stroke-opacity: 0.15;
 
     /* */
     --vis-chord-diagram-label-text-fill-color-bright: #ffffff;
@@ -43,7 +45,9 @@ export const label = css`
 export const link = css`
   label: link;
 
-  fill: var(--vis-radial-dendrogram-link-color);
+  fill: var(--vis-radial-dendrogram-link-fill-color);
+  stroke:  var(--vis-radial-dendrogram-link-stroke-color);
+  stroke-opacity:  var(--vis-radial-dendrogram-link-stroke-opacity);
   transition: .1s fill-opacity;
 
   &:hover {
