@@ -1,4 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
+import { sankeyLeft, sankeyRight, sankeyCenter, sankeyJustify } from 'd3-sankey'
 
 // Types
 import { NodeDatumCore, LinkDatumCore } from 'types/graph'
@@ -19,4 +20,11 @@ export interface SankeyLinkDatumInterface extends LinkDatumCore {
 export enum LabelPosition {
   AUTO = 'auto',
   RIGHT = 'right'
+}
+
+export enum NodeAlignType {
+  LEFT = sankeyLeft,
+  RIGHT = sankeyRight,
+  CENTER = sankeyCenter,
+  JUSTIFY = sankeyJustify,
 }

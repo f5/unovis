@@ -1,6 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { select, Selection } from 'd3-selection'
-import { sankey, sankeyLeft } from 'd3-sankey'
+import { sankey } from 'd3-sankey'
 import { sum, max, extent } from 'd3-array'
 import { scaleLinear } from 'd3-scale'
 
@@ -95,11 +95,11 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
   }
 
   private _preCalculateComponentSize (): void {
-    const { config: { nodePadding, nodeWidth, nodeMinHeight, nodeMaxHeight, nodeHorizontalSpacing }, datamodel: { nodes, links } } = this
+    const { config: { nodePadding, nodeWidth, nodeAlign, nodeMinHeight, nodeMaxHeight, nodeHorizontalSpacing }, datamodel: { nodes, links } } = this
     this._sankey
       .nodeId(d => d.id)
       .iterations(32)
-      .nodeAlign(sankeyLeft)
+      .nodeAlign(nodeAlign)
     this._sankey({ nodes, links })
     const extentValue = extent(nodes, d => d.value || undefined)
     const scale = scaleLinear().domain(extentValue).range([nodeMinHeight, nodeMaxHeight]).clamp(true)
@@ -148,7 +148,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
       .size([(customWidth ?? config.width) - bleed.left - bleed.right, (customHeight ?? sankeyHeight) - bleed.top - bleed.bottom])
       .nodeId(d => d.id)
       .iterations(32)
-      .nodeAlign(sankeyLeft)
+      .nodeAlign(config.nodeAlign)
 
     if (links.length > 0 && links.length > 1) this._sankey({ nodes, links })
     if (links.length === 0 && nodes.length === 1) {

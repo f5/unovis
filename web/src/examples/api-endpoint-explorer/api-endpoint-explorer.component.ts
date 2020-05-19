@@ -5,7 +5,7 @@ import { sum } from 'd3-array'
 import _groupBy from 'lodash/groupBy'
 
 // Vis
-import { SingleChart, Sankey, SankeyConfigInterface, Sizing, LabelPosition } from '@volterra/vis'
+import { SingleChart, Sankey, SankeyConfigInterface, Sizing, LabelPosition, NodeAlignType } from '@volterra/vis'
 
 import data from './data/apieplist_ves.json'
 
@@ -25,10 +25,10 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
   data = {}
   margin = { left: 15 }
   config: SankeyConfigInterface<any, any> = {
-    sankeyType: 'api-endpoint-explorer',
     labelPosition: LabelPosition.RIGHT,
     nodeHorizontalSpacing: NODE_HORIZONTAL_SPACE,
     nodeWidth: NODE_WIDTH,
+    nodeAlign: NodeAlignType.LEFT,
     nodeSubLabel: d => d.value,
     componentSizing: Sizing.CONTAIN,
     events: {
@@ -49,7 +49,7 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
 
     this.sankey = new SingleChart(this.chart.nativeElement, { component: this.component, margin: this.margin }, sankeyData)
     setTimeout(() => {      
-      this.flowlegendWidth = this.sankey.component.componentWidth - NODE_HORIZONTAL_SPACE
+      this.flowlegendWidth = this.sankey.component.customWidth - NODE_HORIZONTAL_SPACE
     }, 500)
   }
 

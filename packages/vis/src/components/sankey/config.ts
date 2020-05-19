@@ -7,12 +7,14 @@ import { ComponentConfigInterface, ComponentConfig } from 'core/component/config
 // Types
 import { NumericAccessor, ColorAccessor, StringAccessor } from 'types/misc'
 import { TrimMode } from 'types/text'
-import { SankeyNodeDatumInterface, SankeyLinkDatumInterface, LabelPosition } from 'types/sankey'
+import { SankeyNodeDatumInterface, SankeyLinkDatumInterface, LabelPosition, NodeAlignType } from 'types/sankey'
 import { Sizing } from 'types/component'
 
 export interface SankeyConfigInterface<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> extends ComponentConfigInterface {
     /** Sankey node width in pixels */
     nodeWidth?: number;
+    /** Sankey node alignment method */
+    nodeAlign?: NodeAlignType;
     /** */
     nodeHorizontalSpacing?: number;
     /** */
@@ -63,6 +65,7 @@ export interface SankeyConfigInterface<N extends SankeyNodeDatumInterface, L ext
 
 export class SankeyConfig<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> extends ComponentConfig implements SankeyConfigInterface<N, L> {
   nodeWidth = 25
+  nodeAlign = NodeAlignType.JUSTIFY
   nodeHorizontalSpacing = 150
   nodeMinHeight = 30
   nodeMaxHeight = 100
