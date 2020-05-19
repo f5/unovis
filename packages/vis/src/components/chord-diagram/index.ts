@@ -174,33 +174,43 @@ export class ChordDiagram<H extends Hierarchy, L extends Link<H>> extends Compon
     const groupedBySource = groupBy(data.links, d => d.source)
     const groupedByTarget = groupBy(data.links, d => d.target)
 
+    const getNodesInRibbon = (source, target, dendrogramHeight, nodes = []) => {
+      nodes[source.height] = source
+      nodes[dendrogramHeight * 2 - target.height] = target
+      if (source.parent && target.parent) getNodesInRibbon(source.parent, target.parent, dendrogramHeight, nodes)
+      return nodes
+    }
+
     const calculatePoints = (links, type, depth) => {
       links.forEach(link => {
         if (!link._points) link._points = []
-        const sourceNode = findNode(leafNodes, link.source)
-        const targetNode = findNode(leafNodes, link.target)
-        const nodesInLink = type === 'source' ? sourceNode.path(targetNode) : targetNode.path(sourceNode)
-        const currNode: HNode<H> = nodesInLink[depth]
+        const sourceLeaf = findNode(leafNodes, link.source)
+        const targetLeaf = findNode(leafNodes, link.target)
+        const nodesInRibbon = getNodesInRibbon(
+          type === 'out' ? sourceLeaf : targetLeaf,
+          type === 'out' ? targetLeaf : sourceLeaf,
+          dendogram.height)
+        const currNode: HNode<H> = nodesInRibbon[depth]
         const len = currNode.x1 - currNode.x0
         const x0 = currNode._prevX1 ?? currNode.x0
         const x1 = x0 + len * link.value / currNode.value
         currNode._prevX1 = x1
 
         const converted = this._convertRadialToCartesian(
-          type === 'source' ? x0 : x1,
-          type === 'source' ? x1 : x0,
+          type === 'out' ? x0 : x1,
+          type === 'out' ? x1 : x0,
           currNode.y1, 0)
-        const pointIdx = type === 'source' ? depth : dendogram.height * 2 - 1 - depth
+        const pointIdx = type === 'out' ? depth : dendogram.height * 2 - 1 - depth
         link._points[pointIdx] = { x0: converted.x0, x1: converted.x1, y0: converted.y0, y1: converted.y1 }
       })
     }
 
     leafNodes.forEach(leafNode => {
-      const sourceLinks = groupedBySource[leafNode.data.id] || []
-      const targetLinks = groupedByTarget[leafNode.data.id] || []
+      const outlinks = groupedBySource[leafNode.data.id] || []
+      const inlinks = groupedByTarget[leafNode.data.id] || []
       for (let depth = 0; depth < dendogram.height; depth += 1) {
-        calculatePoints(sourceLinks, 'source', depth)
-        calculatePoints(targetLinks, 'target', depth)
+        calculatePoints(outlinks, 'out', depth)
+        calculatePoints(inlinks, 'in', depth)
       }
     })
 
