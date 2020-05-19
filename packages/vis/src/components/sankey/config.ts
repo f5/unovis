@@ -20,7 +20,7 @@ export interface SankeyConfigInterface<N extends SankeyNodeDatumInterface, L ext
     /** */
     nodeMinHeight?: number;
     /** */
-    nodeMasHeight?: number;
+    nodeMaxHeight?: number;
     /** Sankey vertical separation between nodes in pixels */
     nodePadding?: number;
     /** Display the graph when data has just one element */
