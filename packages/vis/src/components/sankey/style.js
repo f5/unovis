@@ -95,6 +95,10 @@ export const labelBackground = css`
   visibility: hidden;
 `
 
+export const visibleLabel = css`
+  label: visible-label;
+`
+
 export const node = css`
   label: node;
 
@@ -110,7 +114,7 @@ export const node = css`
     }
   }
 
-  &.visible-label {
+  &${`.${visibleLabel}`} {
     ${`.${nodeLabel}`} {
       visibility: visible;
     }

@@ -92,7 +92,7 @@ export function createNodes<N extends SankeyNodeDatumInterface, L extends Sankey
 export function updateNodes<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> (sel, config: SankeyConfig<N, L>, bleed: Spacing, duration: number): void {
   const { labelPosition } = config
 
-  sel.classed('visible-label', d => d.y1 - d.y0 > (labelPosition === LabelPosition.AUTO ? config.labelFontSize : backgroundLabelHeight(config.labelFontSize) + BACKGROUND_LABEL_PADDING * 2) || config.forceShowLabels)
+  sel.classed(s.visibleLabel, d => d.y1 - d.y0 > (labelPosition === LabelPosition.AUTO ? config.labelFontSize : backgroundLabelHeight(config.labelFontSize) + BACKGROUND_LABEL_PADDING * 2) || config.forceShowLabels)
 
   smartTransition(sel, duration)
     .attr('transform', d => `translate(${sel.size() === 1 ? config.width * 0.5 - bleed.left : d.x0},${d.y0})`)
@@ -108,9 +108,9 @@ export function updateNodes<N extends SankeyNodeDatumInterface, L extends Sankey
   labelSelection
     .text(config.nodeLabel)
     .attr('dy', labelPosition === LabelPosition.AUTO ? '0.32em' : '1em')
-    .style('font-size', config.labelFontSize)
     .attr('x', config.nodeWidth + NODE_LABEL_SPACING + (labelPosition === LabelPosition.RIGHT ? ARROW_WIDTH + BACKGROUND_LABEL_PADDING : 0))
     .attr('text-anchor', 'start')
+    .style('font-size', config.labelFontSize)
 
   if (labelPosition === LabelPosition.AUTO) {
     labelSelection
@@ -137,15 +137,15 @@ export function updateNodes<N extends SankeyNodeDatumInterface, L extends Sankey
         return text
       })
       .attr('dy', `${2.32 * 1.2}em`)
-      .style('font-size', config.labelFontSize * 0.8)
       .attr('x', config.nodeWidth + ARROW_WIDTH + NODE_LABEL_SPACING + BACKGROUND_LABEL_PADDING)
       .attr('text-anchor', 'start')
+      .style('font-size', config.labelFontSize * 0.8)
   }
 
   const labelBackground = sel.select(`.${s.labelBackground}`)
   if (labelPosition === LabelPosition.RIGHT) {
     labelBackground
-      .attr('d', d => {
+      .attr('d', () => {
         const w = backgroundLabelWidth(config.nodeWidth, config.nodeHorizontalSpacing) + BACKGROUND_LABEL_PADDING * 2
         const h = backgroundLabelHeight(config.labelFontSize) + BACKGROUND_LABEL_PADDING * 2
         return getLabelBackground(w, h)
@@ -174,16 +174,15 @@ export function removeNodes (sel): void {
 }
 
 export function onNodeMouseOver<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> (sel, config: SankeyConfig<N, L>): void {
-  sel.classed('visible-label', true)
+  sel.classed(s.visibleLabel, true)
   sel.select(`.${s.nodeLabel}`)
-
     .text(config.nodeLabel)
     .call(wrapTextElement, getWrapOption(config, false))
 }
 
 export function onNodeMouseOut<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> (sel, config: SankeyConfig<N, L>): void {
   const { labelPosition } = config
-  sel.classed('visible-label', d => d.y1 - d.y0 > (labelPosition === LabelPosition.AUTO ? config.labelFontSize : backgroundLabelHeight(config.labelFontSize) + BACKGROUND_LABEL_PADDING * 2) || config.forceShowLabels)
+  sel.classed(s.visibleLabel, d => d.y1 - d.y0 > (labelPosition === LabelPosition.AUTO ? config.labelFontSize : backgroundLabelHeight(config.labelFontSize) + BACKGROUND_LABEL_PADDING * 2) || config.forceShowLabels)
   sel.select(`.${s.nodeLabel}`)
     .text(config.nodeLabel)
     .call(wrapTextElement, getWrapOption(config))
