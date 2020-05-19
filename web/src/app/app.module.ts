@@ -12,6 +12,7 @@ import { StackedBarComponent } from 'examples/stacked-bar/stacked-bar.component'
 import { GroupedBarComponent } from 'examples/grouped-bar/grouped-bar.component'
 import { AreaComponent } from 'examples/area/area.component'
 import { SankeyComponent } from 'examples/sankey/sankey.component'
+import { ApiEndpointExplorerComponent } from 'examples/api-endpoint-explorer/api-endpoint-explorer.component'
 import { CompositeComponent } from 'examples/composite/composite.component'
 import { WrapperUsageExampleComponent } from 'examples/wrapper-usage-example/wrapper-usage-example.component'
 import { TimelineComponent } from 'examples/timeline/timeline.component'
@@ -41,6 +42,7 @@ const appRoutes: Routes = [
   { path: 'grouped-bar', component: GroupedBarComponent },
   { path: 'area', component: AreaComponent },
   { path: 'sankey', component: SankeyComponent },
+  { path: 'api-endpoint-explorer', component: ApiEndpointExplorerComponent },
   { path: 'composite', component: CompositeComponent },
   { path: 'wrapper-usage-example', component: WrapperUsageExampleComponent },
   { path: 'timeline', component: TimelineComponent },
@@ -68,6 +70,7 @@ appRoutes.push({ path: '', redirectTo: `/${appRoutes[0].path}`, pathMatch: 'full
     BulletLegendComponent,
     FlowLegendComponent,
     SankeyComponent,
+    ApiEndpointExplorerComponent,
     XYChartComponent,
     SingleChartComponent,
     WrapperUsageExampleComponent,

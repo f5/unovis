@@ -8,7 +8,7 @@ import { getColor } from 'utils/color'
 import { smartTransition } from 'utils/d3'
 
 // Types
-import { SankeyNodeDatumInterface, SankeyLinkDatumInterface } from './types'
+import { SankeyNodeDatumInterface, SankeyLinkDatumInterface } from 'types/sankey'
 
 // Config
 import { SankeyConfig } from '../config'
