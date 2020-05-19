@@ -1,5 +1,4 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-/* eslint-disable */
 import { AfterViewInit, Component, ViewChild, ElementRef } from '@angular/core'
 import { sum } from 'd3-array'
 import _groupBy from 'lodash/groupBy'
@@ -10,7 +9,7 @@ import { SingleChart, Sankey, SankeyConfigInterface, Sizing, LabelPosition, Node
 import data from './data/apieplist_ves.json'
 
 const NODE_WIDTH = 30
-const NODE_HORIZONTAL_SPACE = 250
+const NODE_HORIZONTAL_SPACE = 300
 
 @Component({
   selector: 'api-endpoint-explorer',
@@ -29,34 +28,35 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
     nodeHorizontalSpacing: NODE_HORIZONTAL_SPACE,
     nodeWidth: NODE_WIDTH,
     nodeAlign: NodeAlignType.LEFT,
-    nodeSubLabel: d => d.value,
-    componentSizing: Sizing.CONTAIN,
+    sizing: Sizing.EXTEND,
+    nodePadding: 10,
+    nodeSubLabel: d => `${d.value.toFixed(1)} KB`,
     events: {
       [Sankey.selectors.node]: {
-        'click': d => console.log(d)
-      }
-    }
+        click: d => console.log(d),
+      },
+    },
   }
-  
+
   component = new Sankey(this.config)
-  flowlegendItems = ['Segment 1', 'Segment 2', 'Segment 3', 'Segment 4', 'Segment 5', 'Segment 6']
-  flowlegendWidth: number = 0;
-  
+  flowlegendItems = ['Segment 1', 'Segment 2', 'Segment 3', 'Segment 4', 'Segment 5', 'Segment 6']
+  flowlegendWidth = 0;
+
   ngAfterViewInit (): void {
     const apiData = data.api_ep_list
     const sankeyData = this.process(apiData)
-    console.log({ apiData, sankeyData });
+    console.log({ apiData, sankeyData })
 
     this.sankey = new SingleChart(this.chart.nativeElement, { component: this.component, margin: this.margin }, sankeyData)
-    setTimeout(() => {      
-      this.flowlegendWidth = this.sankey.component.customWidth - NODE_HORIZONTAL_SPACE
-    }, 500)
+    setTimeout(() => {
+      this.flowlegendWidth = this.sankey.component.getWidth() - NODE_HORIZONTAL_SPACE
+    }, 50)
   }
 
   process (apiData) {
     const nodes = []
     const links = []
-    
+
     const nodeId = (path, depth) => `${depth}:${path}`
     for (const rec of apiData) {
       const value = Math.random()
@@ -66,8 +66,8 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
       // Add new nodes { id, path, url, label, depth }
       let path = ''
       for (let i = 0; i < splitted.length; i += 1) {
-        const label = splitted[i]
-        path += `/${label}`
+        const label = `/${splitted[i]}`
+        path += label
 
         const depth = i
         const id = nodeId(path, depth)
@@ -100,5 +100,3 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
     }
   }
 }
-
-
