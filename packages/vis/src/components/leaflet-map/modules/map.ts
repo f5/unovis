@@ -55,13 +55,6 @@ export function updateTopoJson<T> (map, config: LeafletMapConfigInterface<T>): v
       ['get', topoJSONLayer.fillProperty],
     ])
   } else if (fillLayer) map.removeLayer(`${topoJSONLayer.featureName}-area`)
-  const canvas = map.getCanvas()
-  select(canvas).classed(s.mapboxglCanvas, true)
-
-  // map.on('mousemove', (event) => {
-  //   const feature = map.queryRenderedFeatures(event.point)
-  //   select(canvas).datum(feature)
-  // })
 
   const strokeLayer = map.getLayer(`${topoJSONLayer.featureName}-stroke`)
   if (topoJSONLayer.strokeProperty) {
@@ -127,6 +120,12 @@ export function setupMap<T> (mapContainer: HTMLElement, config: LeafletMapConfig
 
   if (topoJSONLayer?.sources && renderer === LeafletMapRenderer.MAPBOXGL) {
     const mapboxmap = layer.getMapboxMap()
+    const canvas = mapboxmap.getCanvas()
+    select(canvas).classed(s.mapboxglCanvas, true)
+    mapboxmap.on('mousemove', (event) => {
+      const feature = mapboxmap.queryRenderedFeatures(event.point)
+      select(canvas).datum(feature)
+    })
     mapboxmap.on('load', () => {
       updateTopoJson(mapboxmap, config)
     })

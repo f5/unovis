@@ -3,10 +3,12 @@
 import { LatLng } from 'leaflet'
 // Core
 import { ComponentConfig, ComponentConfigInterface } from 'core/component/config'
+import { Tooltip } from 'core/tooltip'
 
 // Types
 import { NumericAccessor, StringAccessor, ColorAccessor } from 'types/misc'
 import { LeafletMapRenderer, ClusterOutlineType, Bounds, StatusMap } from 'types/map'
+import { LeafletMap } from './index'
 
 export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterface {
   renderer?: LeafletMapRenderer | string;
@@ -64,6 +66,8 @@ export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterfa
     strokeOpacity?: number;
     strokeWidth?: number;
   };
+  /** Tooltip component */
+  tooltip?: Tooltip<LeafletMap<Datum>, Datum>;
 }
 
 export class LeafletMapConfig<Datum> extends ComponentConfig implements LeafletMapConfigInterface<Datum> {
@@ -92,4 +96,6 @@ export class LeafletMapConfig<Datum> extends ComponentConfig implements LeafletM
     strokeOpacity: 0.8,
     strokeWidth: 1,
   }
+
+  tooltip = undefined
 }

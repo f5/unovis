@@ -2,8 +2,8 @@
 /* eslint-disable */
 import _ from 'lodash'
 import { scaleLinear, max } from 'd3'
-import { Component, ViewEncapsulation } from '@angular/core'
-import { LeafletMapConfigInterface, WorldMap110mAlphaTopoJSON } from '@volterra/vis'
+import { Component, ViewEncapsulation, AfterViewInit } from '@angular/core'
+import { LeafletMap, LeafletMapConfigInterface, WorldMap110mAlphaTopoJSON, Tooltip } from '@volterra/vis'
 
 type MapPoint = {
   id: string;
@@ -64,7 +64,7 @@ function getMapConfig (): LeafletMapConfigInterface<MapPoint> {
       featureName: 'countries',
       fillProperty: FILL_PROPERTY,
       strokeProperty: STROKE_PROPERTY,
-    }
+    },
   }
 }
 
@@ -75,10 +75,26 @@ function getMapConfig (): LeafletMapConfigInterface<MapPoint> {
   encapsulation: ViewEncapsulation.None
 })
 
-export class MapHeatmapComponent {
+export class MapHeatmapComponent implements AfterViewInit {
   title = 'map'
   data = []
   config = getMapConfig()
+
+  ngAfterViewInit (): void {
+    this.config.tooltip = new Tooltip<any, any>({
+      triggers: {
+        [LeafletMap.selectors.mapboxglCanvas]: features => {
+          let name
+          if (features?.length) {
+            name = features[0].properties.name
+          }
+          
+          return name &&  `<span>${name}</span>`
+        },
+      },
+    })
+    this.config = { ...this.config }
+  }
 
   onRequestsClick () {
     this.config.topoJSONLayer.sources = getTopo()

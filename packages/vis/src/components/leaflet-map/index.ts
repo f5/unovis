@@ -122,8 +122,13 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
         console.warn('TopoJSON layer render does not supported with Tangram renderer')
       } else {
         const mapboxmap = (this._map.layer as any).getMapboxMap()
-        updateTopoJson(mapboxmap, this.config)
+        if (mapboxmap.isStyleLoaded()) updateTopoJson(mapboxmap, this.config)
       }
+    }
+
+    if (this.config.tooltip) {
+      this.config.tooltip.setContainer(this._container)
+      this.config.tooltip.setComponents([this])
     }
   }
 
@@ -150,6 +155,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     else if (config.bounds) this.fitToBounds(config.bounds)
 
     this._firstRender = false
+    if (config.tooltip) config.tooltip.update()
   }
 
   fitToPoints (duration = this.config.flyToDuration, padding = [40, 40]): void {
