@@ -63,22 +63,18 @@ export class Tooltip<T extends ComponentCore<any>, TooltipDatum> {
   }
 
   show (html: string | HTMLElement, pos: { x: number; y: number}): void {
-    let tooltipElement
     if (html instanceof HTMLElement) {
-      tooltipElement = html
+      this.div.html('').append(() => html)
     } else {
-      tooltipElement = document.createElement('div');
-      tooltipElement.innerHTML = html;
+      this.div.html(html)
     }
-    this.div.html('')
-    this.div.classed('show', true).node()
-      .appendChild(tooltipElement)
 
+    this.div.classed(s.show, true)
     this.place(pos)
   }
 
   hide (): void {
-    this.div.classed('show', false)
+    this.div.classed(s.show, false)
   }
 
   place (pos): void {
