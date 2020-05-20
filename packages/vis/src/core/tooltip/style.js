@@ -22,8 +22,8 @@ export const tooltip = css`
   box-shadow: 0 13px 25px 0 rgba(172, 179, 184, 0.35);
   border: solid 1px #e5e9f7;
   background-color: #ffffff;
+`
 
-  &.show {
-    opacity: 1;
-  }
+export const show = css`
+  opacity: 1;
 `
