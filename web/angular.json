@@ -85,7 +85,9 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "volterra-vis-examples:build"
+            "browserTarget": "volterra-vis-examples:build",
+            "sourceMap": false,
+            "optimization": false
           },
           "configurations": {
             "production": {
