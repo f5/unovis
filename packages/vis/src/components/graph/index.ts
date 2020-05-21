@@ -274,7 +274,7 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
     const { config } = this
     if (!this._panels) return
 
-    const selection = nodeUpdateSelection instanceof transition
+    const selection = ((nodeUpdateSelection as Transition<BaseType, N, SVGGElement, N[]>).duration)
       ? (nodeUpdateSelection as Transition<BaseType, N, SVGGElement, N[]>).selection()
       : nodeUpdateSelection as Selection<BaseType, N, SVGGElement, N[]>
 
