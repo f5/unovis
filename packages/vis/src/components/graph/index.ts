@@ -1,6 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { min, extent } from 'd3-array'
-import { transition, Transition } from 'd3-transition'
+import { Transition } from 'd3-transition'
 import { select, Selection, mouse, event, BaseType } from 'd3-selection'
 import { zoom, zoomTransform, zoomIdentity, ZoomTransform } from 'd3-zoom'
 import { drag } from 'd3-drag'
