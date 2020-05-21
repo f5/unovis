@@ -1,5 +1,13 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { css } from 'emotion'
+import { css, injectGlobal } from 'emotion'
+
+export const variables = injectGlobal`
+  :root {
+    --vis-tooltip-background-color: rgba(255, 255, 255, 0.95);
+    --vis-tooltip-backdrop-filter: blur(3px);
+
+  }
+`
 
 export const tooltip = css`
   label: tooltip;
@@ -21,7 +29,8 @@ export const tooltip = css`
   border-radius: 5px;
   box-shadow: 0 13px 25px 0 rgba(172, 179, 184, 0.35);
   border: solid 1px #e5e9f7;
-  background-color: #ffffff;
+  background-color: var(--vis-tooltip-background-color);
+  backdrop-filter: var(--vis-tooltip-backdrop-filter);
 `
 
 export const show = css`
