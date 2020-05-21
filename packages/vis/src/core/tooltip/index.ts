@@ -64,7 +64,8 @@ export class Tooltip<T extends ComponentCore<any>, TooltipDatum> {
 
   show (html: string | HTMLElement, pos: { x: number; y: number}): void {
     if (html instanceof HTMLElement) {
-      this.div.html('').append(() => html)
+      const node = this.div.select(':first-child').node()
+      if (node !== html) this.div.html('').append(() => html)
     } else {
       this.div.html(html)
     }
