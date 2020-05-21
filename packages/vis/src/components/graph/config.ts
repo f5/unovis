@@ -120,11 +120,11 @@ export class GraphConfig<N extends NodeDatumCore, L extends LinkDatumCore> exten
   layoutSubgroupMaxNodes = 6
   layoutSortConnectionsByGroup = ''
   forceLayoutSettings = {
-    linkDistance: 75,
-    linkStrength: 0.15,
+    linkDistance: 60,
+    linkStrength: 0.45,
     charge: -350,
-    forceXStrength: 0.07,
-    forceYStrength: 0.1,
+    forceXStrength: 0.15,
+    forceYStrength: 0.25,
   }
 
   dagreSettings = { rankdir: 'BT', ranker: 'longest-path' }

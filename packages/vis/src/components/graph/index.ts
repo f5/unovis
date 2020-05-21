@@ -1,6 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { min, extent } from 'd3-array'
-import { transition, Transition } from 'd3-transition'
+import { Transition } from 'd3-transition'
 import { select, Selection, mouse, event, BaseType } from 'd3-selection'
 import { zoom, zoomTransform, zoomIdentity, ZoomTransform } from 'd3-zoom'
 import { drag } from 'd3-drag'
@@ -128,7 +128,7 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
 
   setConfig (config: GraphConfigInterface<N, L>): void {
     const { datamodel: { links, nodes } } = this
-    this._fitLayout = this.config.layoutType !== config.layoutType
+    this._fitLayout = this._fitLayout || this.config.layoutType !== config.layoutType
 
     super.setConfig(config)
 
@@ -274,7 +274,7 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
     const { config } = this
     if (!this._panels) return
 
-    const selection = nodeUpdateSelection instanceof transition
+    const selection = ((nodeUpdateSelection as Transition<BaseType, N, SVGGElement, N[]>).duration)
       ? (nodeUpdateSelection as Transition<BaseType, N, SVGGElement, N[]>).selection()
       : nodeUpdateSelection as Selection<BaseType, N, SVGGElement, N[]>
 
