@@ -17,7 +17,7 @@ export interface TooltipConfigInterface<T extends ComponentCore<any>, Datum = an
 
 export class TooltipConfig<T extends ComponentCore<any>, Datum = any> extends Config implements TooltipConfigInterface<T, Datum> {
   components: T[] = []
-  horizontalPlacement = Position.CENTER
+  horizontalPlacement = Position.AUTO
   verticalPlacement = Position.TOP
   triggers: {
     [selector: string]: (data: Datum, i: number, elements: any) => any;

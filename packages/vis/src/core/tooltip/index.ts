@@ -27,7 +27,7 @@ export class Tooltip<T extends ComponentCore<any>, TooltipDatum> {
 
   private _container: HTMLElement
 
-  constructor (config: TooltipConfigInterface<T, TooltipDatum> = {}, containerElement?: HTMLElement) {
+  constructor (config: TooltipConfigInterface<T, TooltipDatum> = {}, containerElement?: HTMLElement | null) {
     this.config = new TooltipConfig<T, TooltipDatum>().init(config)
     this.components = this.config.components
 
@@ -38,7 +38,7 @@ export class Tooltip<T extends ComponentCore<any>, TooltipDatum> {
     this.setContainer(containerElement)
   }
 
-  setContainer (container: HTMLElement): void {
+  setContainer (container: HTMLElement | null): void {
     if (!container) return
     this._container?.removeChild(this.element)
 
@@ -84,19 +84,29 @@ export class Tooltip<T extends ComponentCore<any>, TooltipDatum> {
     const containerHeight = this._container.offsetHeight
     const containerWidth = this._container.offsetWidth
 
+    const horizontalPlacement = config.horizontalPlacement === Position.AUTO
+      ? (pos.x > containerWidth / 2 ? Position.LEFT : Position.RIGHT)
+      : config.horizontalPlacement
+
+    const verticalPlacement = config.verticalPlacement === Position.AUTO
+      ? (pos.y > containerHeight / 2 ? Position.TOP : Position.BOTTOM)
+      : config.verticalPlacement
+
     // dx and dy variables shift the tooltip from the default position (above the cursor, centred horizontally)
     const margin = 5
-    const dx = config.horizontalPlacement === Position.LEFT ? -width - margin
-      : config.horizontalPlacement === Position.CENTER ? -width / 2
+    const dx = horizontalPlacement === Position.LEFT ? -width - margin
+      : horizontalPlacement === Position.CENTER ? -width / 2
         : margin
-    const dy = config.verticalPlacement === Position.BOTTOM ? height + margin
-      : config.verticalPlacement === Position.CENTER ? height / 2
+    const dy = verticalPlacement === Position.BOTTOM ? height + margin
+      : verticalPlacement === Position.CENTER ? height / 2
         : -margin
 
     // Constraint to container
     const paddingX = 10
-    const constraintX = pos.x > (containerWidth - width - dx - paddingX) ? (containerWidth - width - dx) - pos.x - paddingX
-      : pos.x < -dx + paddingX ? -dx - pos.x + paddingX : 0
+    const hitRight = pos.x > (containerWidth - width - dx - paddingX)
+    const hitLeft = pos.x < -dx + paddingX
+    const constraintX = hitRight ? (containerWidth - width - dx) - pos.x - paddingX
+      : hitLeft ? -dx - pos.x + paddingX : 0
 
     const paddingY = 10
     const constraintY = pos.y > (containerHeight - dy - paddingY) ? containerHeight - dy - pos.y - paddingY
