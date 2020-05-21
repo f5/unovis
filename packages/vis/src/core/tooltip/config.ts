@@ -9,7 +9,9 @@ export interface TooltipConfigInterface<T extends ComponentCore<any>, Datum = an
     /** Visualization Components */
     components?: T[];
     horizontalPlacement?: Position | string | undefined;
+    horizontalShift?: number;
     verticalPlacement?: Position | string | undefined;
+    verticalShift?: number;
     triggers?: {
       [selector: string]: (data: Datum, i: number, elements: any) => any;
     };
@@ -18,7 +20,9 @@ export interface TooltipConfigInterface<T extends ComponentCore<any>, Datum = an
 export class TooltipConfig<T extends ComponentCore<any>, Datum = any> extends Config implements TooltipConfigInterface<T, Datum> {
   components: T[] = []
   horizontalPlacement = Position.AUTO
+  horizontalShift = 0
   verticalPlacement = Position.TOP
+  verticalShift = 0
   triggers: {
     [selector: string]: (data: Datum, i: number, elements: any) => any;
   } = {}

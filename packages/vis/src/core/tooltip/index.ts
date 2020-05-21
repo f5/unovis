@@ -94,12 +94,12 @@ export class Tooltip<T extends ComponentCore<any>, TooltipDatum> {
 
     // dx and dy variables shift the tooltip from the default position (above the cursor, centred horizontally)
     const margin = 5
-    const dx = horizontalPlacement === Position.LEFT ? -width - margin
+    const dx = horizontalPlacement === Position.LEFT ? -width - margin - config.horizontalShift
       : horizontalPlacement === Position.CENTER ? -width / 2
-        : margin
-    const dy = verticalPlacement === Position.BOTTOM ? height + margin
+        : margin + config.horizontalShift
+    const dy = verticalPlacement === Position.BOTTOM ? height + margin + config.verticalShift
       : verticalPlacement === Position.CENTER ? height / 2
-        : -margin
+        : -margin - config.verticalShift
 
     // Constraint to container
     const paddingX = 10
