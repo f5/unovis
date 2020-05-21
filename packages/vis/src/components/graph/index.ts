@@ -128,7 +128,7 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
 
   setConfig (config: GraphConfigInterface<N, L>): void {
     const { datamodel: { links, nodes } } = this
-    this._fitLayout = this.config.layoutType !== config.layoutType
+    this._fitLayout = this._fitLayout || this.config.layoutType !== config.layoutType
 
     super.setConfig(config)
 
