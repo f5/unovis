@@ -1,0 +1,111 @@
+.map {
+  width: calc(100% + 200px);
+  margin-left: -200px;
+  height: 100%;
+  position: relative;
+}
+
+.ui {
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: white;
+  margin: 20px;
+  border-radius: 5px;
+  border: solid 1px #DFE5EB;
+}
+
+.radio-box {
+  margin: 20px;
+}
+
+.radio{
+  position: relative;
+  display: block;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+label {
+  padding-left: 25px;
+  font-size: 10pt;
+  max-width: 100%;
+}
+
+input {
+  position: relative;
+  margin-top: 6px;
+  margin-right: 10px;
+  margin-left: -25px;
+  vertical-align: top;
+  line-height: normal;
+  border: none;
+  background-color: transparent;
+  appearance: none;
+  cursor: pointer;
+}
+
+input[type="radio"]:before, input[type="radio"]:after {
+  content: "";
+  display: block;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  transition: 240ms;
+}
+
+*:before, *:after {
+  box-sizing: border-box;
+}
+
+input[type="radio"]:checked:before{
+  transform: scale(.5);
+}
+
+input[type="radio"]:before {
+  position: absolute;
+  left: 0;
+  top: -3px;
+  background-color: #3C5DFF;
+  transform: scale(0);
+}
+
+input[type="radio"]:checked:after {
+  border-color: #3C5DFF;
+}
+
+input[type="radio"]:after {
+  position: relative;
+  top: -3px;
+  border: 1px solid #DFE5EB;
+}
+
+.color-legend {
+  margin: 20px;
+}
+
+.gradient {
+  height: 10px;
+  width: 195px;
+  border-radius: 5px;
+  border: solid 1px #3E5FFF;
+  background-image:
+  linear-gradient(
+    to right, 
+    #FFFFFF, #3E5FFF
+  );
+}
+
+.legend-min-value {
+  margin-top: 5px;
+  margin-bottom: 20px;
+  font-size: 10pt;
+  float: left;
+}
+
+.legend-max-value {
+  margin-top: 5px;
+  margin-bottom: 20px;
+  font-size: 10pt;
+  float: right;
+}

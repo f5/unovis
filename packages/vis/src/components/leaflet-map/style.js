@@ -117,7 +117,9 @@ export const donutCluster = css`
 `
 
 export const svgOverlay = css`
+  label: svg-overlay;
   position: absolute;
+  pointer-events: none;
 `
 
 export const backgroundRect = css`
@@ -135,5 +137,16 @@ export const clusterBackground = css`
 
   &.active {
     visibility: visible;
+  }
+`
+
+export const onFeatureHover = css``
+
+export const mapboxglCanvas = css`
+  pointer-events: all;
+  cursor: grab;
+
+  &${`.${onFeatureHover}`} {
+    cursor: default;
   }
 `

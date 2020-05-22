@@ -1,0 +1,28 @@
+<div class="map">
+  <vis-map-leaflet
+    [data]="data"
+    [config]="config"
+  ></vis-map-leaflet>
+</div>
+<div class="ui">
+  <div class="radio-box">
+    <div class="radio">
+      <label><input type="radio" value="requests" name="traffic" (click)="onRequestsClick()" checked/>Requests</label>
+    </div>
+    <div class="radio">
+      <label><input type="radio" value="throughput" name="traffic" (click)="onThroughputClick()"/>Throughput</label>
+    </div>
+    <div class="radio">
+      <label><input type="radio" value="bandwidth" name="traffic" (click)="onBandwidthClick()"/>Bandwidth</label>
+    </div>
+    <div class="radio">
+      <label><input type="radio" value="security" name="traffic" (click)="onSecurityClick()"/>Security Events</label>
+    </div>
+  </div>
+
+  <div class="color-legend">
+    <div class="gradient"></div>
+    <div class="legend-min-value">12Mb</div>
+    <div class="legend-max-value">65.5Gb</div>
+  </div>
+</div>

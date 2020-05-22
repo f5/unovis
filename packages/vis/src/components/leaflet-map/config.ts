@@ -3,10 +3,12 @@
 import { LatLng } from 'leaflet'
 // Core
 import { ComponentConfig, ComponentConfigInterface } from 'core/component/config'
+import { Tooltip } from 'core/tooltip'
 
 // Types
 import { NumericAccessor, StringAccessor, ColorAccessor } from 'types/misc'
 import { LeafletMapRenderer, ClusterOutlineType, Bounds, StatusMap } from 'types/map'
+import { LeafletMap } from './index'
 
 export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterface {
   renderer?: LeafletMapRenderer | string;
@@ -54,6 +56,18 @@ export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterfa
   statusMap?: StatusMap;
   /** If selectedNodeId is provided the map will zoom in and select that node on update */
   selectedNodeId?: string;
+  /** A TopoJSON Geometry layer to be displayed on top of the map. Supports fill and stroke */
+  topoJSONLayer?: {
+    sources?: TopoJSON.Topology;
+    featureName?: string;
+    fillProperty?: string;
+    strokeProperty?: string;
+    fillOpacity?: number;
+    strokeOpacity?: number;
+    strokeWidth?: number;
+  };
+  /** Tooltip component */
+  tooltip?: Tooltip<LeafletMap<Datum>, Datum>;
 }
 
 export class LeafletMapConfig<Datum> extends ComponentConfig implements LeafletMapConfigInterface<Datum> {
@@ -76,4 +90,12 @@ export class LeafletMapConfig<Datum> extends ComponentConfig implements LeafletM
   bounds = undefined
   statusMap = {}
   selectedNodeId = undefined
+  topoJSONLayer = {
+    sources: undefined,
+    fillOpacity: 0.6,
+    strokeOpacity: 0.8,
+    strokeWidth: 1,
+  }
+
+  tooltip = undefined
 }

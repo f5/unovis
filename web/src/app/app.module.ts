@@ -19,6 +19,7 @@ import { TimelineComponent } from 'examples/timeline/timeline.component'
 import { BulletLegendExampleComponent } from 'examples/bullet-legend/bullet-legend.component'
 import { SimpleMapComponent } from 'examples/simple-map/simple-map.component'
 import { MapComponent } from 'examples/map/map.component'
+import { MapHeatmapComponent } from 'examples/map-heatmap/map-heatmap.component'
 import { RadialDendrogramComponent } from 'examples/radial-dendrogram/radial-dendrogram.component'
 import { GraphComponent } from 'examples/graph/graph.component'
 import { GraphPanelsComponent } from 'examples/graph-panels/graph-panels.component'
@@ -36,6 +37,7 @@ import { Collection } from './components/collection/collection.component'
 
 const appRoutes: Routes = [
   { path: 'map', component: MapComponent },
+  { path: 'heatmap-map', component: MapHeatmapComponent },
   { path: 'scatter', component: ScatterComponent },
   { path: 'line', component: LineComponent },
   { path: 'stacked-bar', component: StackedBarComponent },
@@ -79,6 +81,7 @@ appRoutes.push({ path: '', redirectTo: `/${appRoutes[0].path}`, pathMatch: 'full
     SimpleMapComponent,
     MapComponent,
     MapLeafletComponent,
+    MapHeatmapComponent,
     Collection,
     RadialDendrogramComponent,
     GraphComponent,
