@@ -33,7 +33,11 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
     nodeSubLabel: d => `${d.value.toFixed(1)} KB`,
     events: {
       [Sankey.selectors.node]: {
-        click: d => console.log(d),
+        click: d => {
+          console.log(d)
+          const sankeyData = this.process(data.api_ep_list)
+          this.sankey.setData(sankeyData)
+        },
       },
     },
   }
