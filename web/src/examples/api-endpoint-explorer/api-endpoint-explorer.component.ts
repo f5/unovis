@@ -8,6 +8,11 @@ import { SingleChart, Sankey, SankeyConfigInterface, Sizing, LabelPosition, Node
 
 import data from './data/apieplist_ves.json'
 
+const apiEpList = data.api_ep_list
+apiEpList.forEach(d => {
+  d.value = Math.random()
+  d.initialUrl = d.url
+})
 const NODE_WIDTH = 30
 const NODE_HORIZONTAL_SPACE = 300
 
@@ -35,7 +40,20 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
       [Sankey.selectors.node]: {
         click: d => {
           console.log(d)
-          const sankeyData = this.process(data.api_ep_list)
+
+          const path = d.path.substr(1)
+          const found = apiEpList.find(item => item.initialUrl === d.initialUrl)
+          found.collapse = !found.collapse
+          const apiList = [...apiEpList]
+
+          apiEpList.forEach(item => {
+            const incl = item.initialUrl.includes(path)
+            if (incl) {
+              item.url = found.collapse ? path : item.initialUrl
+            }
+          })
+
+          const sankeyData = this.process(apiList)
           this.sankey.setData(sankeyData)
         },
       },
@@ -47,7 +65,7 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
   flowlegendWidth = 0;
 
   ngAfterViewInit (): void {
-    const apiData = data.api_ep_list
+    const apiData = apiEpList
     const sankeyData = this.process(apiData)
     console.log({ apiData, sankeyData })
 
@@ -63,7 +81,7 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
 
     const nodeId = (path, depth) => `${depth}:${path}`
     for (const rec of apiData) {
-      const value = Math.random()
+      const value = rec.value // Math.random()
       const url = rec.url
       const splitted = url.split('/')
 
@@ -75,7 +93,7 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
 
         const depth = i
         const id = nodeId(path, depth)
-        nodes.push({ id, path, url, label, depth })
+        nodes.push({ id, path, url, label, depth, initialUrl: rec.initialUrl })
       }
 
       // Add new links { id, source, target, value }

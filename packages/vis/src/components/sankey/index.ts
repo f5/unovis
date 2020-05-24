@@ -13,7 +13,7 @@ import { Spacing } from 'types/misc'
 import { ExtendedSizeComponent, Sizing } from 'types/component'
 
 // Utils
-import { getValue, clamp, isNumber, groupBy } from 'utils/data'
+import { getValue, clamp, isNumber, groupBy, sortBy } from 'utils/data'
 import { SankeyNodeDatumInterface, SankeyLinkDatumInterface, LabelPosition } from 'types/sankey'
 
 // Config
@@ -111,7 +111,20 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
   }
 
   private _prepareLayout (): void {
-    const { config, bleed, datamodel: { nodes, links }, _extendedHeight, _extendedWidth } = this
+    const { config, bleed, datamodel, datamodel: { links }, _extendedHeight, _extendedWidth } = this
+
+    let nodes = datamodel.nodes
+    nodes = sortBy(nodes, [
+      d => d.layer,
+      d => {
+        if (d.targetLinks[0]) return -d.targetLinks[0].source.value
+        else return -d.value
+      },
+      d => {
+        return -d.value
+      },
+    ])
+
     links.forEach(link => {
       // For d3 sankey function each link must be an object with the `value` property
       link.value = getValue(link, d => getValue(d, config.linkValue))
@@ -122,6 +135,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
       this._sankey.linkSort((link2, link1) => {
         if (link2.value > link1.value) return -1
       })
+      this._sankey.nodeSort(null)
     } else {
       this._sankey
         .nodeSort((node2, node1) => {
