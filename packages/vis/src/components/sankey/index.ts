@@ -113,17 +113,35 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
   private _prepareLayout (): void {
     const { config, bleed, datamodel, datamodel: { links }, _extendedHeight, _extendedWidth } = this
 
-    let nodes = datamodel.nodes
-    nodes = sortBy(nodes, [
-      d => d.layer,
-      d => {
-        if (d.targetLinks[0]) return -d.targetLinks[0].source.value
-        else return -d.value
-      },
-      d => {
-        return -d.value
-      },
-    ])
+    // let nodes = datamodel.nodes
+    // nodes = sortBy(nodes, [
+    //   d => d.layer,
+    //   d => {
+    //     if (d.targetLinks[0]) return -d.targetLinks[0].source.value
+    //     else return -d.value
+    //   },
+    //   d => {
+    //     return -d.value
+    //   },
+    // ])
+    const groupByColumn = groupBy(datamodel.nodes, 'layer')
+    Object.keys(groupByColumn).forEach(key => {
+      const column = groupByColumn[key]
+      let sortedColumn
+      if (Number(key) === 0) {
+        sortedColumn = sortBy(column, [d => -d.value])
+      } else {
+        sortedColumn = sortBy(column, [
+          d => {
+            return d.targetLinks[0].source._order
+          },
+          d => -d.value,
+        ])
+      }
+      sortedColumn.forEach((c, i) => c._order = i)
+      groupByColumn[key] = sortedColumn
+    })
+    const nodes = Object.values(groupByColumn).flat()
 
     links.forEach(link => {
       // For d3 sankey function each link must be an object with the `value` property
