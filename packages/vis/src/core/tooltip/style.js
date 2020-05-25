@@ -4,8 +4,7 @@ import { css, injectGlobal } from 'emotion'
 export const variables = injectGlobal`
   :root {
     --vis-tooltip-background-color: rgba(255, 255, 255, 0.95);
-    --vis-tooltip-backdrop-filter: blur(3px);
-
+    --vis-tooltip-backdrop-filter: none;
   }
 `
 
