@@ -159,7 +159,7 @@ export const nodeSelection = css`
   transform: scale(.5);
   fill: var(--vis-graph-node-selection-color);
   fill-opacity: 0.1;
-  stroke: var(--vis-graph-node-stroke-color);
+  stroke: var(--vis-graph-node-selection-color);
   stroke-opacity: 0.75;
 
   &${`.${nodeSelectionActive}`} {
