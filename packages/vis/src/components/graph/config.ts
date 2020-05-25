@@ -26,12 +26,18 @@ export interface GraphConfigInterface<N extends NodeDatumCore, L extends LinkDat
   layoutAutofit?: boolean;
   /** Place non-connected nodes to the bottom of the graph */
   layoutNonConnectedAside?: boolean;
+
+  // Settings for Parallel and Concentric Layouts
   /** Order of the layput groups, for paralllel and concentric layouts */
   layoutGroupOrder?: any[];
   /** */
   layoutSubgroupMaxNodes?: number;
   /** */
   layoutSortConnectionsByGroup?: string;
+  /** Node Group accessor function or value */
+  nodeGroup?: StringAccessor<N>;
+  /** Node Sub Group accessor function or value */
+  nodeSubGroup?: StringAccessor<N>;
 
   /** Force Layout settings, see d3.force */
   forceLayoutSettings?: {
@@ -43,7 +49,10 @@ export interface GraphConfigInterface<N extends NodeDatumCore, L extends LinkDat
   };
 
   /** Darge Layout settings, see dagrejs */
-  dagreSettings?: { rankdir: string; ranker: string };
+  dagreLayoutSettings?: {
+    rankdir: string;
+    ranker: string;
+  };
 
   // Links
   /** Animation duration of the flow (traffic) circles */
@@ -88,8 +97,6 @@ export interface GraphConfigInterface<N extends NodeDatumCore, L extends LinkDat
   nodeLabel?: StringAccessor<N>;
   /** Node Sublabel accessor function or value */
   nodeSubLabel?: StringAccessor<N>;
-  /** Node Group accessor function or value */
-  nodeGroup?: StringAccessor<N>;
   /** Node Side Label accessor function or undefined */
   nodeSideLabels?: ((d: N, i?: number, ...any) => SideLabel) | undefined;
   /** Node disabled accessor function or value */
@@ -115,10 +122,14 @@ export class GraphConfig<N extends NodeDatumCore, L extends LinkDatumCore> exten
   zoomThrottledUpdateNodeThreshold = 100
   layoutType = LayoutType.FORCE
   layoutAutofit = true
-  layoutNonConnectedAside = true
+  layoutNonConnectedAside: true
+
   layoutGroupOrder = []
   layoutSubgroupMaxNodes = 6
   layoutSortConnectionsByGroup = ''
+  nodeGroup = (n: N): string => n['group']
+  nodeSubGroup = (n: N): string => n['subgroup']
+
   forceLayoutSettings = {
     linkDistance: 60,
     linkStrength: 0.45,
@@ -127,7 +138,11 @@ export class GraphConfig<N extends NodeDatumCore, L extends LinkDatumCore> exten
     forceYStrength: 0.25,
   }
 
-  dagreSettings = { rankdir: 'BT', ranker: 'longest-path' }
+  dagreLayoutSettings = {
+    rankdir: 'BT',
+    ranker: 'longest-path',
+  }
+
   flowAnimDuration = 20000
   flowCircleSize = 2
   linkWidth = 1
@@ -144,16 +159,16 @@ export class GraphConfig<N extends NodeDatumCore, L extends LinkDatumCore> exten
   nodeBorderWidth = 3
   nodeShape = SHAPE.CIRCLE
   nodeStrokeSegmentValue = 0
-  nodeIcon = ''
+  nodeIcon = (n: N): string => n['icon']
   nodeIconSize = undefined
-  nodeLabel = ''
+  nodeLabel = (n: N): string => n['label']
   nodeSubLabel = ''
-  nodeGroup = ''
   nodeSideLabels = undefined
   nodeDisabled = false
-  nodeFill = undefined
+  nodeFill = (n: N): string => n['fill']
   nodeStrokeSegmentFill = undefined
-  nodeStroke = undefined
+  nodeStroke = (n: N): string => n['stroke']
+
   selectedNodeId = undefined
   panels = undefined
 }

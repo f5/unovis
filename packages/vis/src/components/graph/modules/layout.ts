@@ -59,7 +59,7 @@ export function applyLayoutParallel<N extends NodeDatumCore, L extends LinkDatum
   const { nonConnectedNodes, connectedNodes, nodes } = datamodel
   const {
     layoutNonConnectedAside, layoutGroupOrder, layoutSortConnectionsByGroup,
-    layoutSubgroupMaxNodes, nodeSize, nodeGroup, width, height,
+    layoutSubgroupMaxNodes, nodeSize, nodeGroup, nodeSubGroup, width, height,
   } = config
 
   const activeWidth = width - configuredNodeSize(nodeSize)
@@ -72,7 +72,7 @@ export function applyLayoutParallel<N extends NodeDatumCore, L extends LinkDatum
 
   const groups = groupNamesSorted.map(groupName => {
     const groupNodes = layoutNodes.filter(d => getValue(d, nodeGroup) === groupName)
-    const groupedBySubgroup = groupBy(groupNodes, 'subgroup')
+    const groupedBySubgroup = groupBy(groupNodes, d => getValue(d, nodeSubGroup))
     const subgroups = Object.keys(groupedBySubgroup).map(name => ({
       nodes: groupedBySubgroup[name],
       name,
@@ -216,13 +216,13 @@ export function applyLayoutParallel<N extends NodeDatumCore, L extends LinkDatum
 
 export function applyLayoutDagre<N extends NodeDatumCore, L extends LinkDatumCore> (datamodel: GraphDataModel<N, L>, config: GraphConfigInterface<N, L>): void {
   const { nonConnectedNodes, connectedNodes, nodes, links } = datamodel
-  const { nodeSize, layoutNonConnectedAside, width, dagreSettings, nodeBorderWidth, nodeLabel } = config
+  const { nodeSize, layoutNonConnectedAside, width, dagreLayoutSettings, nodeBorderWidth, nodeLabel } = config
 
   // https://github.com/dagrejs/dagre/wiki
   const dagreGraph = new Graph()
 
   // Set an object for the graph label
-  dagreGraph.setGraph(dagreSettings)
+  dagreGraph.setGraph(dagreLayoutSettings)
 
   // Default to assigning a new object as a label for each new edge.
   dagreGraph.setDefaultEdgeLabel(() => ({}))

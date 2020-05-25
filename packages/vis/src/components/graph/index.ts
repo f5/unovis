@@ -15,7 +15,7 @@ import { Spacing } from 'types/misc'
 import { NodeDatumCore, LinkDatumCore, LayoutType, LinkArrow, PanelConfigInterface } from 'types/graph'
 
 // Utils
-import { isNumber, clamp, getValue, find, cloneDeep, flatten, findIndex, clean, uniq } from 'utils/data'
+import { isNumber, clamp, getValue, find, cloneDeep, flatten, findIndex, clean, uniq, shallowDiff } from 'utils/data'
 import { stringToHtmlId } from 'utils/misc'
 import { smartTransition } from 'utils/d3'
 
@@ -129,10 +129,10 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
   setConfig (config: GraphConfigInterface<N, L>): void {
     const { datamodel: { links, nodes } } = this
     this._fitLayout = this._fitLayout || this.config.layoutType !== config.layoutType
+    this._recalculateLayout = this._shouldLayoutRecalculate(config)
 
     super.setConfig(config)
 
-    this._recalculateLayout = true
     this._setPanels = true
 
     const selectedNode = this.config.selectedNodeId && find(nodes, node => node.id === this.config.selectedNodeId)
@@ -628,6 +628,30 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
     d._state.isDragged = false
     const node = select(elements[i])
     node.call(updateNodes, config, 0, this._scale)
+  }
+
+  _shouldLayoutRecalculate (nextConfig: GraphConfigInterface<N, L>): boolean {
+    const { config } = this
+    if (config.layoutType !== nextConfig.layoutType) return true
+    if (config.layoutNonConnectedAside !== nextConfig.layoutNonConnectedAside) return true
+
+    if (config.layoutType === LayoutType.FORCE) {
+      const forceSettingsDiff = shallowDiff(config.forceLayoutSettings, nextConfig.forceLayoutSettings)
+      if (Object.keys(forceSettingsDiff).length) return true
+    }
+
+    if (config.layoutType === LayoutType.DAGRE) {
+      const dagreSettingsDiff = shallowDiff(config.dagreLayoutSettings, nextConfig.dagreLayoutSettings)
+      if (Object.keys(dagreSettingsDiff).length) return true
+    }
+
+    if (config.layoutType === LayoutType.PARALLEL || config.layoutType === LayoutType.PARALLEL_HORIZONTAL || config.layoutType === LayoutType.CONCENTRIC) {
+      if (config.layoutGroupOrder !== nextConfig.layoutGroupOrder) return true
+      if (config.layoutSubgroupMaxNodes !== nextConfig.layoutSubgroupMaxNodes) return true
+      if (config.layoutSortConnectionsByGroup !== nextConfig.layoutSortConnectionsByGroup) return true
+    }
+
+    return false
   }
 
   _addSVGDefs (): void {
