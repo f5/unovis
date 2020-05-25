@@ -74,3 +74,13 @@ export function countUnique (array, accessor = d => d): number {
 export function indexArray (n: number): number[] {
   return [...Array(n).keys()]
 }
+
+export function shallowDiff (o1: object = {}, o2: object = {}): object {
+  return Object.keys(o2).reduce((diff, key) => {
+    if (o1[key] === o2[key]) return diff
+    return {
+      ...diff,
+      [key]: o2[key],
+    }
+  }, {})
+}
