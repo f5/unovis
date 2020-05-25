@@ -1,6 +1,7 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 /* eslint-disable dot-notation */
 import { LatLng } from 'leaflet'
+
 // Core
 import { ComponentConfig, ComponentConfigInterface } from 'core/component/config'
 import { Tooltip } from 'core/tooltip'
@@ -58,7 +59,8 @@ export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterfa
   selectedNodeId?: string;
   /** A TopoJSON Geometry layer to be displayed on top of the map. Supports fill and stroke */
   topoJSONLayer?: {
-    sources?: TopoJSON.Topology;
+    /** TopoJSON.Topology */
+    sources?: any;
     featureName?: string;
     fillProperty?: string;
     strokeProperty?: string;
