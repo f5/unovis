@@ -8,11 +8,15 @@ import { SingleChart, Sankey, SankeyConfigInterface, Sizing, LabelPosition, Node
 
 import data from './data/apieplist_ves.json'
 
-const apiEpList = data.api_ep_list
-apiEpList.forEach(d => {
-  d.value = Math.random()
-  d.initialUrl = d.url
+const apiEpList = data.api_ep_list.map(d => {
+  return {
+    ...d,
+    value: Math.random(),
+    initialUrl: d.url,
+    collapsed: false,
+  }
 })
+
 const NODE_WIDTH = 30
 const NODE_HORIZONTAL_SPACE = 300
 
@@ -36,20 +40,21 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
     sizing: Sizing.EXTEND,
     nodePadding: 10,
     nodeSubLabel: d => `${d.value.toFixed(1)} KB`,
+    nodeIcon: d => (d.sourceLinks[0] || (!d.sourceLinks[0] && d.collapsed)) ? (d.collapsed ? '-' : '+') : null,
+    iconColor: 'white',
     events: {
-      [Sankey.selectors.node]: {
+      [Sankey.selectors.gNode]: {
         click: d => {
           console.log(d)
 
           const path = d.path.substr(1)
           const found = apiEpList.find(item => item.initialUrl === d.initialUrl)
-          found.collapse = !found.collapse
-          const apiList = [...apiEpList]
-
-          apiEpList.forEach(item => {
+          found.collapsed = !found.collapsed
+          const apiList = apiEpList.map(item => {
             const incl = item.initialUrl.includes(path)
-            if (incl) {
-              item.url = found.collapse ? path : item.initialUrl
+            return {
+              ...item,
+              url: (incl && found.collapsed) ? path : item.initialUrl,
             }
           })
 
@@ -93,7 +98,7 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
 
         const depth = i
         const id = nodeId(path, depth)
-        nodes.push({ id, path, url, label, depth, initialUrl: rec.initialUrl })
+        nodes.push({ id, path, url, label, depth, initialUrl: rec.initialUrl, collapsed: rec.collapsed })
       }
 
       // Add new links { id, source, target, value }

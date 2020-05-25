@@ -59,6 +59,7 @@ export function createNodes<N extends SankeyNodeDatumInterface, L extends Sankey
 
   // Node
   sel.append('rect')
+    .attr('class', s.node)
     .attr('width', config.nodeWidth)
     .attr('height', d => d.y1 - d.y0)
     .style('fill', node => getColor(node, config.nodeColor))
@@ -85,7 +86,10 @@ export function createNodes<N extends SankeyNodeDatumInterface, L extends Sankey
     .attr('dy', '2px')
 
   sel
-    .attr('transform', d => `translate(${sel.size() === 1 ? config.width * 0.5 - bleed.left : d.x0},${d.y0})`)
+    .attr('transform', d => {
+      const x = d.targetLinks[0] ? d.targetLinks[0].source.x0 : d.x0
+      return `translate(${sel.size() === 1 ? config.width * 0.5 - bleed.left : x}, ${d.y0})`
+    })
     .style('opacity', 0)
 }
 
@@ -94,12 +98,12 @@ export function updateNodes<N extends SankeyNodeDatumInterface, L extends Sankey
 
   sel.classed(s.visibleLabel, d => d.y1 - d.y0 > (labelPosition === LabelPosition.AUTO ? config.labelFontSize : backgroundLabelHeight(config.labelFontSize) + BACKGROUND_LABEL_PADDING * 2) || config.forceShowLabels)
 
-  smartTransition(sel, duration)
+  smartTransition(sel, duration / 2)
     .attr('transform', d => `translate(${sel.size() === 1 ? config.width * 0.5 - bleed.left : d.x0},${d.y0})`)
     .style('opacity', 1)
 
   // Node
-  smartTransition(sel.select('rect'), duration)
+  smartTransition(sel.select(`.${s.node}`), duration)
     .attr('width', config.nodeWidth)
     .attr('height', d => d.y1 - d.y0)
 
@@ -162,6 +166,7 @@ export function updateNodes<N extends SankeyNodeDatumInterface, L extends Sankey
       .attr('text-anchor', 'middle')
       .attr('alignment-baseline', 'middle')
       .style('stroke', node => getColor(node, config.iconColor))
+      .style('fill', node => getColor(node, config.iconColor))
       .html(config.nodeIcon)
   } else {
     nodeIcon
@@ -169,8 +174,15 @@ export function updateNodes<N extends SankeyNodeDatumInterface, L extends Sankey
   }
 }
 
-export function removeNodes (sel): void {
-  sel.remove()
+export function removeNodes (selection, duration): void {
+  smartTransition(selection, duration / 2)
+    .attr('transform', d => {
+      if (d.targetLinks[0]) {
+        return `translate(${d.targetLinks[0].source.x0},${d.y0})`
+      } else return null
+    })
+    .style('opacity', 0)
+    .remove()
 }
 
 export function onNodeMouseOver<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> (sel, config: SankeyConfig<N, L>): void {
