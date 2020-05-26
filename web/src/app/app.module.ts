@@ -22,7 +22,7 @@ import { MapComponent } from 'examples/map/map.component'
 import { MapHeatmapComponent } from 'examples/map-heatmap/map-heatmap.component'
 import { RadialDendrogramComponent } from 'examples/radial-dendrogram/radial-dendrogram.component'
 import { GraphComponent } from 'examples/graph/graph.component'
-import { GraphPanelsComponent } from 'examples/graph-panels/graph-panels.component'
+import { ServiceGraphComponent } from 'examples/service-graph/service-graph.component'
 import { ConnectivityGraphComponent } from 'examples/console-connectivity-graph/console-connectivity-graph.component'
 import { TrafficGraphComponent } from 'examples/console-traffic-graph-pg2/console-traffic-graph-pg2.component'
 import { ChordDiagramComponent } from 'examples/chord-diagram/chord-diagram.component'
@@ -52,7 +52,7 @@ const appRoutes: Routes = [
   { path: 'simplemap', component: SimpleMapComponent },
   { path: 'radial-dendrogram', component: RadialDendrogramComponent },
   { path: 'graph', component: GraphComponent },
-  { path: 'graph-panels', component: GraphPanelsComponent },
+  { path: 'force-graph', component: ServiceGraphComponent },
   { path: 'connectivity-graph', component: ConnectivityGraphComponent },
   { path: 'traffic-graph', component: TrafficGraphComponent },
   { path: 'chord-diagram', component: ChordDiagramComponent },
@@ -85,7 +85,7 @@ appRoutes.push({ path: '', redirectTo: `/${appRoutes[0].path}`, pathMatch: 'full
     Collection,
     RadialDendrogramComponent,
     GraphComponent,
-    GraphPanelsComponent,
+    ServiceGraphComponent,
     ConnectivityGraphComponent,
     TrafficGraphComponent,
     ChordDiagramComponent,
