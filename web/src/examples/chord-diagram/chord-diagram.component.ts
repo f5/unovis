@@ -54,9 +54,9 @@ export class ChordDiagramComponent<H extends Hierarchy> implements OnInit {
   component = new ChordDiagram(this.config)
 
   legendItems = [
+    { name: 'Service', inactive: false },
     { name: 'Site', inactive: false, key: 'site' },
     { name: 'Namespace', inactive: true, key: 'sublabel' },
-    { name: 'Service', inactive: false },
   ]
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
