@@ -148,8 +148,9 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
     const maxNodeSize = getMaxNodeSize(nodes, nodeSize)
     const extra = 20 // Extra padding to take into account labels
     const padding = maxNodeSize * 0.5 + maxPanelPadding + extra
+    const panelLabelHeight = this._panels?.length ? 50 : 0
 
-    return { top: padding, bottom: padding, left: padding, right: padding }
+    return { top: padding + panelLabelHeight, bottom: padding, left: padding, right: padding }
   }
 
   _render (customDuration?: number): void {
