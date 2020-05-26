@@ -9,7 +9,7 @@ import { ChordDiagram, ChordDiagramConfigInterface, Hierarchy } from '@volterra/
 import trafficData from './data/traffic.json'
 
 const findNode = (nodes, id) => nodes.find(n => n.id === id)
-const getData = (data, level = 1) => {
+const getData = (data, levels = ['site']) => {
   const trafficDataCopy = _cloneDeep(data)
   trafficDataCopy.links.forEach((l: any) => {
     const sourceNode = findNode(trafficDataCopy.nodes, l.source)
@@ -21,9 +21,9 @@ const getData = (data, level = 1) => {
   })
 
   const nestGen = d3Nest<any, any>()
-  for (let i = 0; i < level; i += 1) {
-    nestGen.key(d => d.site)
-  }
+  levels.forEach(levelAccessor => {
+    nestGen.key(d => d[levelAccessor])
+  })
   const hierarchy = {
     values: nestGen.entries(trafficDataCopy.nodes),
   }
@@ -34,9 +34,6 @@ const getData = (data, level = 1) => {
   }
 }
 
-const chordDataLevel1 = getData(trafficData)
-const chordDataLevel2 = getData(trafficData, 2)
-
 @Component({
   selector: 'chord-diagram',
   templateUrl: './chord-diagram.component.html',
@@ -46,7 +43,7 @@ const chordDataLevel2 = getData(trafficData, 2)
 export class ChordDiagramComponent<H extends Hierarchy> implements OnInit {
   title = 'chord-diagram'
 
-  data = chordDataLevel1
+  data = getData(trafficData)
 
   margin = {}
   config: ChordDiagramConfigInterface<H> = {
@@ -57,8 +54,9 @@ export class ChordDiagramComponent<H extends Hierarchy> implements OnInit {
   component = new ChordDiagram(this.config)
 
   legendItems = [
-    { name: 'Level 1', inactive: false },
-    { name: 'Level 2', inactive: true },
+    { name: 'Site', inactive: false, key: 'site' },
+    { name: 'Namespace', inactive: true, key: 'sublabel' },
+    { name: 'Service', inactive: false },
   ]
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -67,18 +65,10 @@ export class ChordDiagramComponent<H extends Hierarchy> implements OnInit {
 
   onLegendItemClick (event): void {
     const { d } = event
-    if (d.name === 'Level 1') {
-      this.data = chordDataLevel1
-      this.legendItems = [
-        { name: 'Level 1', inactive: false },
-        { name: 'Level 2', inactive: true },
-      ]
-    } else {
-      this.data = chordDataLevel2
-      this.legendItems = [
-        { name: 'Level 1', inactive: true },
-        { name: 'Level 2', inactive: false },
-      ]
-    }
+    if (d.name === 'Service') return
+    d.inactive = !d.inactive
+    this.legendItems = [...this.legendItems]
+    const nestKeys = this.legendItems.filter(item => !item.inactive && item.name !== 'Service').map(item => item.key)
+    this.data = getData(trafficData, nestKeys)
   }
 }
