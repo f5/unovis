@@ -42,6 +42,10 @@ export const label = css`
   pointer-events: none;
 `
 
+export const labelExit = css`
+  label: label-exit;
+`
+
 export const link = css`
   label: link;
 

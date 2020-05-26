@@ -164,6 +164,7 @@ export class ChordDiagram<H extends Hierarchy, L extends Link<H>> extends Compon
     labelsMerged.call(updateLabel, config, ladelWidth, radiusScale, duration)
 
     labels.exit()
+      .attr('class', s.labelExit)
       .call(removeLabel, duration)
   }
 

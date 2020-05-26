@@ -90,6 +90,7 @@ export function updateLabel<H extends Hierarchy> (selection: Selection<SVGElemen
   }
 
   const label: Selection<SVGTextElement, any, SVGElement, any> = selection.select(`.${s.label}`)
+  label.select('textPath').remove()
   label
     .text(d => getValue(d.data, nodeLabel))
     .style('display', d => {
@@ -121,7 +122,7 @@ export function updateLabel<H extends Hierarchy> (selection: Selection<SVGElemen
           .attr('dx', LABEL_PADDING)
           .attr('dy', getValue(d, nodeWidth) / 2)
           .text('')
-        select(elements[i]).select('textPath').remove()
+
         select(elements[i]).append('textPath')
           .attr('xlink:href', `#${d.data.id ?? d.data.key}`)
           .text(labelText)
