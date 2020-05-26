@@ -2,12 +2,12 @@
 import { select } from 'd3-selection'
 import ResizeObserver from 'resize-observer-polyfill'
 
+// Utils
+import { isEqual, clamp } from 'utils/data'
+import { getBoundingClientRectObject } from 'utils/misc'
+
 // Config
 import { ContainerConfig, ContainerConfigInterface } from './config'
-
-// Utils
-import { isEqual } from 'utils/data'
-import { getBoundingClientRectObject } from 'utils/misc'
 
 export class ContainerCore {
   svg: any
@@ -24,6 +24,8 @@ export class ContainerCore {
   constructor (element: HTMLElement) {
     this._requestedAnimationFrame = null
     this._container = element
+
+    // Create SVG element for visualizations
     this.svg = select(this._container).append('svg')
       .attr('xmlns', 'http://www.w3.org/2000/svg')
     this.element = this.svg.node()
@@ -35,7 +37,7 @@ export class ContainerCore {
       const isSizeChanged = !isEqual(this._containerRect, resizedContainerRect)
       // do resize only if element is attached to the DOM
       // will come in useful when some ancestor of container becomes detached
-      if (isSizeChanged) {
+      if (isSizeChanged && resizedContainerRect.width && resizedContainerRect.height) {
         this._containerRect = resizedContainerRect
         this._onResize()
       }
@@ -49,21 +51,13 @@ export class ContainerCore {
     this.config = new ConfigModel().init(config)
   }
 
-  // setData (...data) {
-  //   if (data.length === 1) {
-  //     for (const c of this._components) {
-  //       c.setData(data[0])
-  //     }
-  //   }
-  // }
-
   _render (duration?): void {
     this.svg
       .attr('width', this.containerWidth)
       .attr('height', this.containerHeight)
   }
 
-  render (duration?): Promise<number> {
+  render (duration = this.config.duration): Promise<number> {
     window.cancelAnimationFrame(this._requestedAnimationFrame)
 
     this._animationFramePromise = new Promise((resolve, reject) => {
@@ -77,19 +71,19 @@ export class ContainerCore {
   }
 
   get containerWidth (): number {
-    return this._container.clientWidth || this._container.getBoundingClientRect().width
+    return clamp(this._container.clientWidth || this._container.getBoundingClientRect().width, 0, Number.POSITIVE_INFINITY)
   }
 
   get containerHeight (): number {
-    return this._container.clientHeight || this._container.getBoundingClientRect().height
+    return clamp(this._container.clientHeight || this._container.getBoundingClientRect().height, 0, Number.POSITIVE_INFINITY)
   }
 
   get width (): number {
-    return this.containerWidth - this.config.margin.left - this.config.margin.right
+    return clamp(this.containerWidth - this.config.margin.left - this.config.margin.right, 0, Number.POSITIVE_INFINITY)
   }
 
   get height (): number {
-    return this.containerHeight - this.config.margin.top - this.config.margin.bottom
+    return clamp(this.containerHeight - this.config.margin.top - this.config.margin.bottom, 0, Number.POSITIVE_INFINITY)
   }
 
   removeAllChildren (): void {

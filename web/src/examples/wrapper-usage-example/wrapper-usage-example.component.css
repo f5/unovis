@@ -1,0 +1,14 @@
+.chart {
+  position: relative;
+  display: block;
+  height: 400px;
+  width: 100%;
+}
+
+.navigation {
+  position: relative;
+  display: block;
+  height: 150px;
+  width: 100%;
+}
+

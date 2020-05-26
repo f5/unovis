@@ -4,13 +4,16 @@
       "baseUrl": ".",
       "paths": {
         "@volterra/vis": ["packages/vis/src"],
+        "@volterra/vis/*": ["packages/vis/src/*"],
 
         "examples/*": ["web/src/examples/*"],
-        "enums/*": ["packages/vis/src/enums/*"],
+        "types/*": ["packages/vis/src/types/*"],
         "utils/*": ["packages/vis/src/utils/*"],
         "core/*": ["packages/vis/src/core/*"],
+        "components/*": ["packages/vis/src/components/*"],
         "styles/*": ["packages/vis/src/styles/*"],
-        "data-models/*": ["packages/vis/src/data-models/*"]
+        "data-models/*": ["packages/vis/src/data-models/*"],
+        "data/*": ["packages/vis/src/data/*"]
       },
       "downlevelIteration": true,
       "outDir": "./dist/out-tsc",
@@ -19,6 +22,7 @@
       "declaration": false,
       "module": "esnext",
       "moduleResolution": "node",
+      "resolveJsonModule": true,
       "emitDecoratorMetadata": true,
       "experimentalDecorators": true,
       "target": "es2015",

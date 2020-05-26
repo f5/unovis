@@ -1,0 +1,291 @@
+// Copyright (c) Volterra, Inc. All rights reserved.
+import { event } from 'd3-selection'
+import { ZoomBehavior, zoom, zoomIdentity, ZoomTransform } from 'd3-zoom'
+import { timeout } from 'd3-timer'
+import { geoPath, GeoProjection } from 'd3-geo'
+import { feature, mesh } from 'topojson'
+
+// Core
+import { ComponentCore } from 'core/component'
+import { MapGraphDataModel } from 'data-models/map-graph'
+
+// Utils
+import { getValue, isNumber } from 'utils/data'
+import { smartTransition } from 'utils/d3'
+import { getColor } from 'utils/color'
+
+// Types
+import { NodeDatumCore, LinkDatumCore } from 'types/graph'
+import { Projection } from 'types/map-projections'
+import { MapAreaCore } from './modules/types'
+
+// Config
+import { TopoJSONMapConfig, TopoJSONMapConfigInterface } from './config'
+
+// Modules
+import { getLonLat, arc } from './modules/utils'
+
+// Styles
+import * as s from './style'
+
+export class TopoJSONMap<NodeDatum extends NodeDatumCore, LinkDatum extends LinkDatumCore, AreaDatum extends MapAreaCore> extends ComponentCore<{nodes: NodeDatum[]; links: LinkDatum[]; areas: AreaDatum[]}> {
+  static selectors = s
+  config: TopoJSONMapConfig<NodeDatum, LinkDatum, AreaDatum> = new TopoJSONMapConfig()
+  datamodel: MapGraphDataModel<NodeDatum, LinkDatum, AreaDatum> = new MapGraphDataModel()
+  private _firstRender = true
+  private _initialScale = undefined
+  private _path = geoPath()
+  private _projection: GeoProjection
+  private _prevWidth: number
+  private _prevHeight: number
+  private _animFrameId: number
+
+  private _zoomBehavior: ZoomBehavior<SVGRectElement, any> = zoom()
+  private _backgroundRect = this.g.append('rect').attr('class', s.background)
+  private _featuresGroup = this.g.append('g').attr('class', s.features)
+  private _boundariesGroup = this.g.append('g').attr('class', s.boundaries)
+  private _linksGroup = this.g.append('g').attr('class', s.links)
+  private _nodesGroup = this.g.append('g').attr('class', s.nodes)
+
+  events = {
+    [TopoJSONMap.selectors.node]: {},
+    [TopoJSONMap.selectors.feature]: {},
+  }
+
+  constructor (config?: TopoJSONMapConfigInterface<NodeDatum, LinkDatum, AreaDatum>, data?: {nodes: NodeDatum[]; links: LinkDatum[]; areas: AreaDatum[]}) {
+    super()
+    this.g.attr('class', s.map)
+    this._zoomBehavior.on('zoom', this._onZoom.bind(this))
+
+    if (config) this.setConfig(config)
+    if (data) this.setData(data)
+  }
+
+  setConfig (config?: TopoJSONMapConfigInterface<NodeDatum, LinkDatum, AreaDatum>): void {
+    super.setConfig(config)
+
+    const newProjection = Projection[this.config.projection]()
+    if (this._projection) {
+      newProjection.scale(this._projection.scale()).translate(this._projection.translate())
+    }
+    this._projection = newProjection
+  }
+
+  _render (customDuration?: number): void {
+    const { config } = this
+    const duration = isNumber(customDuration) ? customDuration : config.duration
+
+    this._renderBackground()
+    this._renderMap(duration)
+    this._colorizeMapFeatures()
+    this._renderLinks(duration)
+    this._renderPoints(duration)
+
+    // When animation is running we need to temporary disable zoom behaviour
+    if (duration && !config.disableZoom) {
+      this.g.on('.zoom', null)
+      timeout(() => {
+        this.g.call(this._zoomBehavior)
+      }, duration)
+    }
+
+    // When zoom behaviour is active we assign the `draggable` class to show the grabbing cursor
+    this.g.classed('draggable', !config.disableZoom)
+    this._firstRender = false
+  }
+
+  _renderBackground (): void {
+    this._backgroundRect
+      .attr('width', '100%')
+      .attr('height', '100%')
+      .attr('transform', `translate(${-this.bleed.left}, ${-this.bleed.top})`)
+  }
+
+  _renderMap (duration: number): void {
+    const { bleed, config } = this
+
+    this.g.attr('transform', `translate(${bleed.left}, ${bleed.top})`)
+    const mapData: TopoJSON.Topology = config.topojson
+    const featureName = config.mapFeatureName
+    const featureObject = mapData?.objects?.[featureName]
+    if (!featureObject) return
+
+    const featureCollection = feature(mapData, featureObject) as GeoJSON.FeatureCollection
+    const featureData = featureCollection?.features
+    const boundariesData = [mesh(mapData, featureObject, (a, b) => a !== b)]
+
+    if (this._firstRender) {
+      // Rendering the map for the first time.
+      this._projection.fitExtent([[0, 0], [config.width, config.height]], featureCollection)
+      this._initialScale = this._projection.scale()
+
+      const zoomFactor = config.zoomFactor
+      if (zoomFactor) {
+        this._projection
+          .scale(zoomFactor)
+          .translate([config.width / 2, config.height / 2])
+      } else {
+        if (config.mapFitToPoints) {
+          this._fitToPoints()
+        } else {
+          this._projection.fitExtent([[0, 0], [config.width, config.height]], featureCollection)
+        }
+      }
+
+      const zoomExtent = config.zoomExtent
+      this._zoomBehavior.scaleExtent([zoomExtent[0] * this._initialScale, zoomExtent[1] * this._initialScale])
+
+      if (!config.disableZoom) {
+        this.g.call(this._zoomBehavior)
+        this._applyZoom()
+      }
+
+      this._prevWidth = config.width
+      this._prevHeight = config.height
+    }
+
+    if (this._prevWidth !== config.width || this._prevHeight !== config.height) {
+      this._onResize()
+    }
+
+    this._path.projection(this._projection)
+
+    const features = this._featuresGroup.selectAll(`.${s.feature}`).data(featureData)
+    const featuresEnter = features.enter().append('path').attr('class', s.feature)
+    smartTransition(featuresEnter.merge(features), duration)
+      .attr('d', this._path)
+    features.exit().remove()
+
+    const boundaries = this._boundariesGroup.selectAll(`.${s.boundary}`).data(boundariesData)
+    const boundariesEnter = boundaries.enter().append('path').attr('class', s.boundary)
+    smartTransition(boundariesEnter.merge(boundaries), duration)
+      .attr('d', this._path)
+    boundaries.exit().remove()
+  }
+
+  _colorizeMapFeatures (): void {
+    const { datamodel, config } = this
+
+    const areaData = datamodel.areas
+    const features = this._featuresGroup.selectAll(`.${s.feature}`)
+
+    areaData.forEach((a, i) => {
+      const path = features.filter(d => d.id.toString() === getValue(a, config.areaId).toString())
+      if (!path.empty()) path.style('fill', getColor(a, config.areaColor, i))
+      else if (this._firstRender) console.warn(`Can't find feature by area code ${a.id}`)
+    })
+  }
+
+  _renderLinks (duration: number): void {
+    const { config, datamodel } = this
+    const links = datamodel.links
+
+    const edges = this._linksGroup.selectAll(`.${s.link}`).data(links)
+    const edgesEnter = edges.enter().append('path').attr('class', s.link)
+      .style('stroke-width', 0)
+    smartTransition(edgesEnter.merge(edges), duration)
+      .attr('d', link => {
+        const source = this._projection(getLonLat(link.source, config.longitude, config.latitude))
+        const target = this._projection(getLonLat(link.target, config.longitude, config.latitude))
+        return arc(source, target)
+      })
+      .style('stroke-width', link => getValue(link, config.linkWidth))
+      .style('stroke', (link, i) => getColor(link, config.linkColor, i))
+    edges.exit().remove()
+  }
+
+  _renderPoints (duration: number): void {
+    const { config, datamodel } = this
+    const pointData = datamodel.nodes
+
+    const nodes = this._nodesGroup.selectAll(`.${s.node}`).data(pointData, d => d.id)
+    const nodesEnter = nodes.enter().append('circle')
+      .attr('id', (data) => `${data.id}-circle`)
+      .attr('class', s.node)
+      .attr('r', 0)
+      .attr('cx', d => this._projection(getLonLat(d, config.longitude, config.latitude))[0])
+      .attr('cy', d => this._projection(getLonLat(d, config.longitude, config.latitude))[1])
+      .style('fill', (node, i) => getColor(node, config.pointColor, i))
+      .style('stroke-width', node => getValue(node, d => getValue(d, config.pointStrokeWidth)))
+    smartTransition(nodesEnter.merge(nodes), duration)
+      .attr('cx', d => this._projection(getLonLat(d, config.longitude, config.latitude))[0])
+      .attr('cy', d => this._projection(getLonLat(d, config.longitude, config.latitude))[1])
+      .attr('r', node => getValue(node, d => getValue(d, config.pointRadius)))
+      .style('fill', (node, i) => getColor(node, config.pointColor, i))
+      .style('stroke', (node, i) => getColor(node, config.pointColor, i))
+      .style('stroke-width', node => getValue(node, d => getValue(d, config.pointStrokeWidth)))
+      // .style('opacity', node => getValue(node, d => getValue(d, config.pointDisabled)) ? 0.2 : 1)
+    nodes.exit().remove()
+  }
+
+  _fitToPoints (points?, pad = 0.1): void {
+    const { config, datamodel } = this
+    const pointData = points || datamodel.nodes
+    if (pointData.length === 0) return
+
+    const featureCollection = {
+      type: 'FeatureCollection',
+      features: [{
+        type: 'Feature',
+        properties: {},
+        geometry: {
+          type: 'MultiPoint',
+          coordinates: pointData.map(p => {
+            return [
+              getValue(p, d => getValue(d, config.longitude)),
+              getValue(p, d => getValue(d, config.latitude)),
+            ]
+          }),
+        },
+      }],
+      geometries: [],
+    }
+
+    this._projection.fitExtent([
+      [config.width * pad, config.height * pad],
+      [config.width * (1 - pad), config.height * (1 - pad)],
+    ], featureCollection)
+
+    const maxScale = config.zoomExtent[1] * this._initialScale
+    if (this._projection.scale() > maxScale) this._projection.scale(maxScale)
+
+    this._applyZoom()
+  }
+
+  _applyZoom (): void {
+    const translate = this._projection.translate()
+    const scale = this._projection.scale()
+    this.g.call(this._zoomBehavior.transform, zoomIdentity.translate(translate[0], translate[1]).scale(scale))
+  }
+
+  _onResize (): void {
+    const { config, _prevWidth, _prevHeight, _projection } = this
+    const translatePrev = _projection.translate()
+    _projection.translate([
+      translatePrev[0] * (1 + (config.width - _prevWidth) / _prevWidth),
+      translatePrev[1] * (1 + (config.height - _prevHeight) / _prevHeight),
+    ])
+    this._applyZoom()
+    this._prevWidth = config.width
+    this._prevHeight = config.height
+  }
+
+  _onZoom (): void {
+    if (this._firstRender) return // To prevent double render because of binding zoom behaviour
+    const isMouseEvent = event.sourceEvent instanceof WheelEvent || event.sourceEvent instanceof MouseEvent
+
+    window.cancelAnimationFrame(this._animFrameId)
+    this._animFrameId = window.requestAnimationFrame(this._onZoomHandler.bind(this, event.transform, isMouseEvent))
+  }
+
+  _onZoomHandler (transform: ZoomTransform, isMouseEvent: boolean): void {
+    this._projection
+      .scale(transform.k)
+      .translate([transform.x, transform.y])
+    this._render(isMouseEvent ? 0 : null)
+  }
+
+  destroy (): void {
+    window.cancelAnimationFrame(this._animFrameId)
+  }
+}

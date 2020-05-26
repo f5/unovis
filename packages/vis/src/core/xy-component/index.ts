@@ -6,22 +6,23 @@ import { ComponentCore } from 'core/component'
 import { SeriesDataModel } from 'data-models/series'
 
 // Utils
-import { getValue } from 'utils/data'
-import { ColorType } from 'utils/color'
+import { getValue, isArray } from 'utils/data'
 import { defaultRange } from 'utils/scale'
 
-// Enums
-import { Dimension, Margin } from 'utils/types'
+// Types
+import { NumericAccessor, Dimension, Spacing } from 'types/misc'
 
 // Config
-import { XYConfig } from './config'
+import { XYComponentConfig } from './config'
 
-export class XYCore extends ComponentCore {
-  config: XYConfig
-  datamodel: SeriesDataModel = new SeriesDataModel()
-  width: number
-  height: number
-  colorScale: any
+export class XYComponentCore<Datum> extends ComponentCore<Datum[]> {
+  element: SVGGraphicsElement
+  config: XYComponentConfig<Datum>
+  datamodel: SeriesDataModel<Datum> = new SeriesDataModel()
+  /** Clippable components can be affected by a clipping path (set up in the container) */
+  clippable = true
+  /** Identifies whether the component displayed stacked data (eg StackedBar, Area) */
+  stacked = false
 
   setScaleDomain (key: string, domain: number[]): void {
     const { config: { scales } } = this
@@ -35,7 +36,7 @@ export class XYCore extends ComponentCore {
     scales[key].range(range)
   }
 
-  updateScale (key: string, dim: Dimension = {}, padding: Margin = {}) {
+  updateScale (key: string, dim: Dimension = {}, padding: Spacing = {}): void {
     if (!key) return
     const { config, config: { scales, width, height }, datamodel: { data } } = this
 
@@ -63,13 +64,6 @@ export class XYCore extends ComponentCore {
     }
   }
 
-  getColor (d, accessor) {
-    const { config } = this
-    const value = getValue(d, accessor)
-    if (config.colorType === ColorType.Dynamic) return this.colorScale(value)
-    else return value
-  }
-
   getDataExtent (accessorKey: string): number[] {
     const { config, datamodel } = this
 
@@ -80,7 +74,7 @@ export class XYCore extends ComponentCore {
     }
   }
 
-  getScreenRange (accessorKey: string, padding: Margin = {}): number[] {
+  getScreenRange (accessorKey: string, padding: Spacing = {}): number[] {
     switch (accessorKey) {
     case 'x': return this.getXScreenRange(padding)
     case 'y': return this.getYScreenRange(padding)
@@ -95,17 +89,17 @@ export class XYCore extends ComponentCore {
 
   getYDataExtent (): number[] {
     const { config, datamodel } = this
-    return datamodel.getExtent(config.y)
+    const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
+    return datamodel.getExtent(...yAccessors)
   }
 
-  getXScreenRange (padding: Margin = {}): number[] {
+  getXScreenRange (padding: Spacing = {}): number[] {
     const bleed = this.bleed // Bleed depends on the domain. You should set it first in order to get correct results
     return [padding.left + bleed.left, this.config.width - padding.right - bleed.right]
   }
 
-  getYScreenRange (padding: Margin = {}): number[] {
+  getYScreenRange (padding: Spacing = {}): number[] {
     const bleed = this.bleed // Bleed depends on the domain. You should set it first in order to get correct results
     return [padding.top + bleed.top, this.config.height - padding.bottom - bleed.bottom]
   }
-
 }

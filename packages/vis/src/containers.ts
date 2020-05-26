@@ -1,7 +1,8 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 
 import { SingleChart } from './containers/single-chart'
-import { CompositeChart } from './containers/composite-chart'
+import { XYContainer } from './containers/xy-container'
+import { XYContainerConfigInterface } from './containers/xy-container/config'
+import { SingleChartConfigInterface } from './containers/single-chart/config'
 
-export { SingleChart, CompositeChart }
-// export { SingleChartConfig } from './containers/SingleChart/config.interface'
+export { SingleChart, SingleChartConfigInterface, XYContainer, XYContainerConfigInterface }

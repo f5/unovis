@@ -3,26 +3,24 @@
 
 // Core
 import { ContainerConfig, ContainerConfigInterface } from 'core/container/config'
+import { ComponentCore } from 'core/component'
 import { Tooltip } from 'core/tooltip'
 
-// Enums
-// import { Scales } from 'enums/scales'
-
 // Types
-import { Dimension } from 'utils/types'
+import { Dimension } from 'types/misc'
 
-export interface SingleChartConfigInterface extends ContainerConfigInterface {
+export interface SingleChartConfigInterface<Datum> extends ContainerConfigInterface {
   /** Visualization Component */
-  component?: any;
+  component?: ComponentCore<Datum>;
   /** Dimension configuration */
   dimensions?: {
-    [key: string]: Dimension
-  }
+    [key: string]: Dimension;
+  };
   /** Tooltip component */
-  tooltip?: Tooltip;
+  tooltip?: Tooltip<ComponentCore<Datum>, Datum>;
 }
 
-export class SingleChartConfig extends ContainerConfig implements SingleChartConfigInterface {
+export class SingleChartConfig<Datum> extends ContainerConfig implements SingleChartConfigInterface<Datum> {
   tooltip = undefined
   dimensions = {}
 }

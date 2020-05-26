@@ -42,10 +42,11 @@
             "tsConfig": "tsconfig.app.json",
             "aot": false,
             "assets": [
-              "src/favicon.ico",
+              "src/favicon.png",
               "src/assets"
             ],
             "styles": [
+              "../node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.css"
             ]
           },
@@ -84,7 +85,9 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "volterra-vis-examples:build"
+            "browserTarget": "volterra-vis-examples:build",
+            "sourceMap": false,
+            "optimization": false
           },
           "configurations": {
             "production": {
@@ -106,10 +109,11 @@
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
             "assets": [
-              "src/favicon.ico",
+              "src/favicon.png",
               "src/assets"
             ],
             "styles": [
+              "../node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.css"
             ],
             "scripts": []
@@ -141,6 +145,7 @@
           }
         }
       }
-    }},
+    }
+  },
   "defaultProject": "volterra-vis-examples"
 }

@@ -1,0 +1,47 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ default "vis" .vis_app_name }}
+  namespace: {{ if .vis_namespace }}{{ .vis_namespace }}{{ else }}{{ if .namespace }}{{ .namespace }}{{ else }}vis{{ end }}{{ end }}
+  annotations:
+    ves.io/workload-flavor: {{ default "medium" .vis_workload_flavor }}
+spec:
+  replicas: {{ if .vis_replicas }}{{ .vis_replicas }}{{ else }}1{{ end }}
+  selector:
+    matchLabels:
+      name: vis
+  template:
+    metadata:
+      labels:
+        name: vis
+        app: vis
+      annotations:
+        fluentbit.io/parser: ui-node-static
+      {{- if .sha256_configmap }}
+      annotations:
+        checksum/config: {{ .sha256_configmap }}
+      {{- end }}
+    spec:
+      imagePullSecrets:
+        - name: {{ if .vis_pull_secret }}{{ .vis_pull_secret }}{{ else }}volterra.azurecr.io{{ end }}
+      containers:
+        - name: vis
+          image: {{ if .vis_image }}{{ .vis_image }}{{ else }}volterra.azurecr.io/ves.io/volterra-vis:{{ if .vis_version }}{{ .vis_version }}{{ else }}master{{ end }}{{ end }}
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9001
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 9001
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 2
+            failureThreshold: 5
+          resources:
+            requests:
+              memory: "128Mi"
+            limits:
+              memory: "256Mi"
+
+# vim: syntax=yaml

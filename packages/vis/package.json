@@ -1,8 +1,9 @@
 {
   "name": "@volterra/vis",
-  "version": "0.0.0",
-  "main": "lib/charts.js",
-  "module": "lib/charts.esm.js",
+  "version": "0.0.1-beta.36",
+  "main": "lib/volterra-vis.js",
+  "module": "lib/volterra-vis.esm.js",
+  "typings": "lib/index.d.ts",
   "files": [
     "lib"
   ],
@@ -13,17 +14,35 @@
     "test": "jest --colors"
   },
   "devDependencies": {
+    "@rollup/plugin-json": "^4.0.2",
     "@types/d3": "^5.7.2",
-    "d3": "^5.14.2",
-    "d3-interpolate-path": "^2.1.1",
-    "emotion": "^10.0.23",
-    "lodash": "^4.17.15",
-    "resize-observer-polyfill": "^1.5.1",
+    "@types/mapbox-gl-leaflet": "^0.0.1",
+    "@types/supercluster": "^5.0.1",
+    "@typescript-eslint/parser": "^2.16.0",
+    "@zerollup/ts-transform-paths": "^1.7.11",
     "rimraf": "^3.0.0",
-    "rollup": "^1.26.0",
+    "rollup": "^1.29.0",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
-    "rollup-plugin-typescript2": "^0.24.3"
+    "rollup-plugin-postcss": "^2.1.1",
+    "rollup-plugin-terser": "^5.1.2",
+    "rollup-plugin-typescript2": "^0.25.3"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@types/geojson": "^7946.0.7",
+    "@types/topojson": "^3.2.2",
+    "d3": "^5.14.2",
+    "d3-interpolate-path": "^2.1.1",
+    "d3-sankey": "^0.12.3",
+    "dagre-layout": "^0.8.8",
+    "emotion": "^10.0.23",
+    "leaflet": "^1.6.0",
+    "lodash": "^4.17.15",
+    "mapbox-gl": "^1.7.0",
+    "mapbox-gl-leaflet": "^0.0.11",
+    "resize-observer-polyfill": "^1.5.1",
+    "supercluster": "^7.0.0",
+    "tangram": "^0.20.0",
+    "topojson": "^3.0.2"
+  }
 }

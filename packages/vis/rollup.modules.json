@@ -1,0 +1,15 @@
+[{
+  "input": "src/containers.ts",
+  "output": "lib/containers.js"
+}, {
+  "input": "src/components.ts",
+  "output": "lib/components.js"
+},
+{
+  "input": "src/types.ts",
+  "output": "lib/types.js"
+},
+{
+  "input": "src/data.ts",
+  "output": "lib/data.js"
+}]

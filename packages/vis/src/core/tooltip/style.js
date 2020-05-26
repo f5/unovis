@@ -1,23 +1,37 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { css } from 'emotion'
+import { css, injectGlobal } from 'emotion'
+
+export const variables = injectGlobal`
+  :root {
+    --vis-tooltip-background-color: rgba(255, 255, 255, 0.95);
+    --vis-tooltip-backdrop-filter: none;
+  }
+`
 
 export const tooltip = css`
   label: tooltip;
+  display: inline-block;
+  left: 0;
+  bottom: 0;
+  min-width: max-content;
   position: absolute;
   pointer-events: none;
   opacity: 0;
   transition: opacity;
   transition-duration: 300ms;
-  background-color: white;
   user-select: none;
   z-index: 999999;
-  padding: 10px;
+  padding: 15px 20px;
   transform: translate(0, -5px);
-  border-radius: 3px;
-  box-shadow: 0px 0px 4px rgba(0,0,0,0.1);
+  
+  /* object-fit: contain; */
+  border-radius: 5px;
+  box-shadow: 0 13px 25px 0 rgba(172, 179, 184, 0.35);
+  border: solid 1px #e5e9f7;
+  background-color: var(--vis-tooltip-background-color);
+  backdrop-filter: var(--vis-tooltip-backdrop-filter);
+`
 
-
-  &.show {
-    opacity: 1;
-  }
+export const show = css`
+  opacity: 1;
 `

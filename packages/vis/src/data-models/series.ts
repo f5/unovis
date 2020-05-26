@@ -1,21 +1,23 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { extent, max, min } from 'd3-array'
+import { max, min, bisector } from 'd3-array'
+
+// Types
+import { NumericAccessor } from 'types/misc'
 
 // Utils
-import { NumericAccessor } from 'utils/types'
 import { isArray, getValue } from 'utils/data'
 
 // Core
 import { CoreDataModel } from './core'
 
-export class SeriesDataModel extends CoreDataModel {
-  data: any[]
+export class SeriesDataModel<Datum> extends CoreDataModel<Datum[]> {
+  data: Datum[] = [];
 
-  constructor (data?: any) {
+  constructor (data: Datum[] = []) {
     super(data)
   }
 
-  getStackedExtent (acs: NumericAccessor | NumericAccessor[]): number[] {
+  getStackedExtent (...acs: NumericAccessor<Datum>[]): number[] {
     const { data } = this
 
     if (isArray(acs)) {
@@ -24,7 +26,7 @@ export class SeriesDataModel extends CoreDataModel {
       for (const d of data) {
         let positiveStack = 0
         let negativeStack = 0
-        for (const a of <NumericAccessor[]>acs) {
+        for (const a of acs as NumericAccessor<Datum>[]) {
           const value = getValue(d, a) || 0
           if (value >= 0) positiveStack += value
           else negativeStack += value
@@ -34,16 +36,51 @@ export class SeriesDataModel extends CoreDataModel {
         if (negativeStack < minValue) minValue = negativeStack
       }
       return [minValue, maxValue]
-    } else return extent(data, d => getValue(d, acs))
+    }
   }
 
-  getExtent (acs: NumericAccessor | NumericAccessor[]): number[] {
+  getStackedValues (d: Datum, ...acs: NumericAccessor<Datum>[]): number[] {
+    const values = []
+    let positiveStack = 0
+    let negativeStack = 0
+    for (const a of acs as NumericAccessor<Datum>[]) {
+      const value = getValue(d, a) || 0
+      if (value >= 0) {
+        positiveStack += value
+        values.push(positiveStack)
+      } else {
+        negativeStack += value
+        values.push(negativeStack)
+      }
+    }
+
+    return values
+  }
+
+  getExtent (...acs: NumericAccessor<Datum>[]): number[] {
+    return [this.getMin(...acs), this.getMax(...acs)]
+  }
+
+  getMin (...acs: NumericAccessor<Datum>[]): number {
     const { data } = this
 
-    if (isArray(acs)) {
-      const maxValue = max(data, d => max(<NumericAccessor[]>acs, a => getValue(d, a)))
-      const minValue = min(data, d => min(<NumericAccessor[]>acs, a => getValue(d, a)))
-      return [minValue, maxValue]
-    } else return extent(data, d => getValue(d, acs))
+    const minValue = min(data, d => min(acs as NumericAccessor<Datum>[], a => getValue(d, a)))
+    return minValue
+  }
+
+  getMax (...acs: NumericAccessor<Datum>[]): number {
+    const { data } = this
+
+    const maxValue = max(data, d => max(acs as NumericAccessor<Datum>[], a => getValue(d, a)))
+    return maxValue
+  }
+
+  getNearest (value: number, accessor: NumericAccessor<Datum>): Datum {
+    const { data } = this
+    if (data.length <= 1) return data[0]
+
+    const xBisector = bisector(d => getValue(d, accessor)).left
+    const index = xBisector(data, value, 1, data.length - 1)
+    return value - getValue(data[index - 1], accessor) > getValue(data[index], accessor) - value ? data[index] : data[index - 1]
   }
 }

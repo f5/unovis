@@ -1,0 +1,109 @@
+# Required variables:
+#   - REGISTRY_USERNAME
+#   - REGISTRY_PASSWORD
+variables:
+  REGISTRY_IMAGE: volterra.azurecr.io/ves.io/${CI_PROJECT_NAME}
+  REGISTRY_SERVER: volterra.azurecr.io
+  JENKINS_URL: https://jenkins-dev.volterra.us
+  JENKINS_TOKENS: eeph1eitohZaeMew
+  AZURE_STORAGE_ACCOUNT: volterrasites
+  AZURE_STORAGE_IMAGE_TOKEN: '?sp=racwdl&st=2019-12-06T13:49:28Z&se=2030-12-07T13:49:00Z&sv=2019-02-02&sr=c&sig=Ol%2FYJ9k3OJDwWMrBIgJqmIrMyDZLN8pbwF%2F%2FX%2Fiw5a8%3D'
+  AZURE_STORAGE_TOKEN: '?sp=w&st=2019-05-06T10:33:00Z&se=2029-05-08T10:33:00Z&sv=2018-03-28&sig=mBVIJob9m8HfYyvCCr%2FJc7J6JfdUqPDJKC%2F%2Bq2QUB6Q%3D&sr=c'
+
+stages:
+  - build
+  - docker
+  - upload-templates
+  - trigger
+
+build:
+  image: volterrasystem/angular-e2e-testing-java:node10
+  stage: build
+  before_script:
+    - set -e
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$SSH_PRIVATE_KEY")
+    - mkdir -p ~/.ssh
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+  script:
+    - yarn install
+    - yarn build
+  cache:
+    key: '$CI_COMMIT_REF_SLUG'
+    paths:
+      - node_modules
+
+docker:
+  tags: [docker]
+  stage: docker
+  image: tomkukral/buildah
+  before_script:
+    - podman version
+    - buildah version
+    - podman login --username "${REGISTRY_USERNAME}" --password "${REGISTRY_PASSWORD}" "${REGISTRY_SERVER}"
+  script:
+    - IMAGE_TAG_SHA=${REGISTRY_IMAGE}:${CI_COMMIT_SHA}
+    - IMAGE_TAG_BRANCH=${REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}
+    - IMAGE_TAG_LATEST=${REGISTRY_IMAGE}:latest
+    # Build an image
+    - echo "${SSH_PRIVATE_KEY}" > deploy.key
+    - podman build --no-cache --pull-always --format docker -t ${IMAGE_TAG_SHA} .
+    # Push the image (tag sha)
+    - echo "Pushing image ${IMAGE_TAG_SHA}"
+    - podman push ${IMAGE_TAG_SHA} docker://${IMAGE_TAG_SHA}
+    # Push the image (tag branch)
+    - echo "Pushing image ${IMAGE_TAG_BRANCH}"
+    - podman push ${IMAGE_TAG_SHA} docker://${IMAGE_TAG_BRANCH}
+    # Only for master branch
+    - |
+      if [ ${CI_COMMIT_REF_SLUG} == "master" ]; then
+        echo "Pushing image ${IMAGE_TAG_LATEST}"
+        podman push ${IMAGE_TAG_SHA} docker://${IMAGE_TAG_LATEST}
+        skopeo inspect docker://${IMAGE_TAG_LATEST} | grep Digest | awk '{print $2}'| sed 's/[\",]//g' > last
+        echo "Created image digest:" && cat last
+      else
+        echo "Created image digest:" && skopeo inspect docker://${IMAGE_TAG_SHA} | grep Digest
+      fi
+  after_script:
+    - podman logout "${REGISTRY_SERVER}"
+  only:
+    - master
+    - develop
+
+upload-templates:
+  tags: [kubernetes]
+  stage: upload-templates
+  only:
+    - develop
+    - master
+  image: tomkukral/buildah:0.6
+  before_script:
+    - podman login --username "${REGISTRY_USERNAME}" --password "${REGISTRY_PASSWORD}" "${REGISTRY_SERVER}"
+  script:
+    - cd deploy
+    - export IMAGE_DIGEST=$(skopeo inspect docker://${REGISTRY_IMAGE}:${CI_COMMIT_SHA} | grep Digest | awk '{print $2}'| sed 's/[\",]//g')
+    - |
+      if [ ! -z IMAGE_DIGEST ]; then
+        for manifest in k8s/*.y*ml*; do
+          echo "---" >> ${IMAGE_DIGEST}.yml.tmpl;
+          cat $manifest >> ${IMAGE_DIGEST}.yml.tmpl;
+        done
+        curl -f -v -X PUT -H "Content-Type: application/octet-stream" -H "x-ms-date: $(date -Ru | sed -e 's/\\+0000/GMT/' -e 's/UTC/GMT/')" -H "x-ms-version: 2018-03-28" -H "x-ms-blob-type: BlockBlob" --data-binary @${IMAGE_DIGEST}.yml.tmpl "https://${AZURE_STORAGE_ACCOUNT}.blob.core.windows.net/templates/volterra-vis/${IMAGE_DIGEST}.yml.tmpl${AZURE_STORAGE_TOKEN}"
+      else
+        echo "Image digest for ${REGISTRY_IMAGE}:${CI_COMMIT_SHA} cannot be obtained!"
+        exit 1
+      fi
+
+jenkins_develop:
+  stage: trigger
+  image: byrnedo/alpine-curl
+  tags: [docker]
+  script:
+    - set ${JENKINS_TOKENS}
+    - |
+      for token do
+        curl -k ${JENKINS_URL}/generic-webhook-trigger/invoke?token=${token}
+      done
+  only:
+    - develop
+    - master

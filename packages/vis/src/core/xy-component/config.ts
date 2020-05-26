@@ -1,25 +1,30 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { ColorType } from 'utils/color'
-import { Scales, Scale } from 'enums/scales'
-
-// Utils
-import { NumericAccessor } from 'utils/types'
-
+import { ColorType } from 'types/color'
+import { Scale, ScaleType } from 'types/scales'
+// Types
+import { NumericAccessor } from 'types/misc'
 // Config
-import { ComponentConfigInterface, ComponentConfig } from '../component/config'
+import { ComponentConfig, ComponentConfigInterface } from '../component/config'
 
-export interface XYConfigInterface extends ComponentConfigInterface {
+export interface XYComponentConfigInterface<Datum> extends ComponentConfigInterface {
   /** X accessor or number value */
-  x: NumericAccessor;
+  x?: NumericAccessor<Datum>;
   /** Y accessor or value */
-  y: NumericAccessor | NumericAccessor[];
+  y?: NumericAccessor<Datum> | NumericAccessor<Datum>[];
+  /** Id accessor for better visual data updates */
+  id?: ((d: Datum, i?: number, ...any) => string | number);
   /** Component color (string or color object) */
   color?: string | object;
   /** Coloring type */
   colorType?: ColorType;
   scales?: {
-    x?: Scale;
-    y?: Scale;
+    x?: ScaleType;
+    y?: ScaleType;
+  };
+  events?: {
+    [selector: string]: {
+      [eventName: string]: (data: Datum) => void;
+    };
   };
   // /** X scale type */
   // scales.xType?: ScaleType;
@@ -27,15 +32,20 @@ export interface XYConfigInterface extends ComponentConfigInterface {
   // scales.yType?: ScaleType;
 }
 
-export class XYConfig extends ComponentConfig implements XYConfigInterface {
-  x = d => d.x
-  y = d => d.y
-  color = null
+export class XYComponentConfig<Datum> extends ComponentConfig implements XYComponentConfigInterface<Datum> {
+  // eslint-disable-next-line dot-notation
+  x: undefined; // NumericAccessor<Datum> = d => d['x'];
+  // eslint-disable-next-line dot-notation
+  y: undefined; // NumericAccessor<Datum> = d => d['y'];
+  // eslint-disable-next-line dot-notation
+  id = (d: Datum, i: number): string | number => d['id'] ?? i
+  // eslint-disable-next-line dot-notation
+  color = (d: Datum): string => d['color']
   colorType = ColorType.Static
   // scales.xType = ScaleType.Linear
   // scales.yType = ScaleType.Linear
   scales = {
-    x: Scales.scaleLinear(),
-    y: Scales.scaleLinear(),
+    x: Scale.scaleLinear() as ScaleType,
+    y: Scale.scaleLinear() as ScaleType,
   }
 }

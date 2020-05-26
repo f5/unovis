@@ -1,0 +1,14 @@
+{
+  "layers": [
+    {
+      "id": "background",
+      "layout": {
+        "visibility": "visible"
+      },
+      "paint": {
+        "background-color": "#474c5e"
+      },
+      "type": "background"
+    }
+  ]
+}

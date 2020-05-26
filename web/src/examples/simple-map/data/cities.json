@@ -1,0 +1,41 @@
+[{
+  "id": "FRPAR",
+  "latitude": 48.86,
+  "longitude": 2.3444,
+  "city": "Paris"
+  }, {
+  "id": "USNYC",
+  "latitude": 40.667,
+  "longitude": -73.833,
+  "city": "New york"
+  }, {
+  "id": "USSAN",
+  "latitude": 37.792032,
+  "longitude": -122.394613,
+  "city": "San Francisco"
+  }, {
+  "id": "BRBSB",
+  "latitude": -15.781682,
+  "longitude": -47.924195,
+  "city": "Brasilia"
+  }, {
+  "id": "ITROM",
+  "latitude": 41.827637,
+  "longitude": 12.462732,
+  "city": "Roma"
+  }, {
+  "id": "USMIA",
+  "latitude": 25.789125,
+  "longitude": -80.205674,
+  "city": "Miami"
+  }, {
+  "id": "JPTYO",
+  "latitude": 35.687418,
+  "longitude": 139.692306,
+  "city": "Tokyo"
+  }, {
+  "id": "AUSYD",
+  "latitude": -33.917,
+  "longitude": 151.167,
+  "city": "Sydney"
+}]

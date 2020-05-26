@@ -1,5 +1,32 @@
-<nav>
-  <a routerLink="single">Single</a>
+<nav class="sidebar">
+  <div class="logo">
+    <img class="logo-image" src="assets/images/volterra-vis.png" />
+    <span class="alpha">alpha</span>
+  </div>
+  <div class="block-header">Maps</div>
+  <a routerLink="map">Detailed Map</a>
+  <a routerLink="simplemap">TopoJSON Map</a>
+  <a routerLink="heatmap-map">Traffic Heatmap</a>
+  <div class="block-header">Networks and Flows</div>
+  <a routerLink="sankey">Sankey</a>
+  <a routerLink="chord-diagram">Chord Diagram</a>
+  <a routerLink="api-endpoint-explorer">API Endpoint Explorer</a>
+  <a routerLink="radial-dendrogram">Radial Dendrogram</a>
+  <a routerLink="graph">Graph</a>
+  <a routerLink="graph-panels">Graph Panels</a>
+  <a routerLink="connectivity-graph">Connectivity Graph</a>
+  <a routerLink="traffic-graph">Traffic Graph Drilldown</a>
+  <div class="block-header">Traditional Charts</div>
+  <a routerLink="scatter">Scatter</a>
+  <a routerLink="line">Line</a>
+  <a routerLink="stacked-bar">Stacked Bar</a>
+  <a routerLink="grouped-bar">Grouped Bar</a>
+  <a routerLink="area">Area</a>
+  <a routerLink="timeline">Timeline</a>
   <a routerLink="composite">Composite</a>
+  <a routerLink="wrapper-usage-example">Angular Wrapper</a>
+  <a routerLink="bullet-legend">Bullet Legend</a>
 </nav>
-<router-outlet></router-outlet>
+<div class="vis-container">
+  <router-outlet></router-outlet>
+</div>

@@ -1,25 +1,29 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import {
   isNumber, isUndefined, cloneDeep,
-  each, filter, get, without, find, isString, isObject,
+  each, filter, without, find, isString, isObject,
 } from 'utils/data'
 
 // Core
 import { CoreDataModel } from './core'
 
-export class GraphDataModel extends CoreDataModel {
-  private _nonConnectedNodes: object[]
-  private _connectedNodes: object[]
+export class GraphDataModel<NodeDatum, LinkDatum> extends CoreDataModel<{nodes: NodeDatum[]; links?: LinkDatum[]}> {
+  private _nonConnectedNodes: NodeDatum[]
+  private _connectedNodes: NodeDatum[]
+  private _nodes: NodeDatum[] = []
+  private _links: LinkDatum[] = []
 
-  set data (inputData) {
+  set data (inputData: { nodes: NodeDatum[]; links?: LinkDatum[]}) {
+    if (!inputData) return
     const prevData = this.data
 
-    const { nodes, links } = cloneDeep(inputData)
+    const nodes: NodeDatum[] = cloneDeep(inputData?.nodes ?? [])
+    const links: LinkDatum[] = cloneDeep(inputData?.links ?? [])
 
     // Every node or link can have a private state used for rendering needs
     // On data update we transfer state between objects with same ids
-    this.transferState(nodes, prevData.nodes)
-    this.transferState(links, prevData.links)
+    this.transferState(nodes, prevData?.nodes)
+    this.transferState(links, prevData?.links)
 
     // Set node index
     each(nodes, (node, i) => {
@@ -29,8 +33,8 @@ export class GraphDataModel extends CoreDataModel {
 
     // Fill link source and target
     each(links, (link, i) => {
-      link.source = this.findNode(link.source)
-      link.target = this.findNode(link.target)
+      link.source = this.findNode(nodes, link.source)
+      link.target = this.findNode(nodes, link.target)
     })
 
     // Set link index for multiple link rendering
@@ -44,7 +48,7 @@ export class GraphDataModel extends CoreDataModel {
 
       each(linksFiltered, (l, i) => {
         l._index = i
-        l._id = l.id || `${get(l, 'source._id')}-${get(l, 'target._id')}-${i}`
+        l._id = l.id || `${l.source?._id}-${l.target?._id}-${i}`
         l._neighbours = linksFiltered.length
         l._direction = ((link.source === l.source) && (link.target === l.target)) ? 1 : -1
       })
@@ -58,31 +62,39 @@ export class GraphDataModel extends CoreDataModel {
 
     this._nonConnectedNodes = filter(nodes, d => !d._isConnected)
     this._connectedNodes = without(nodes, ...this._nonConnectedNodes)
+
+    this._nodes = nodes
+    // eslint-disable-next-line dot-notation
+    this._links = links.filter(l => l['source'] && l['target'])
   }
 
-  get nodes () {
-    return this.data.nodes
+  get nodes (): NodeDatum[] {
+    return this._nodes
   }
 
-  get links () {
-    return this.data.links
+  get links (): LinkDatum[] {
+    return this._links
   }
 
-  get connectedNodes () {
+  get connectedNodes (): NodeDatum[] {
     return this._connectedNodes
   }
 
-  get nonConnectedNodes () {
+  get nonConnectedNodes (): NodeDatum[] {
     return this._nonConnectedNodes
   }
 
-  findNode (n) {
-    if (isNumber(n)) return this.nodes[n]
-    else if (isString(n)) return find(this.nodes, node => node.id === n)
-    else if (isObject(n)) return find(this.nodes, node => node === n)
-    else {
+  findNode (nodes: NodeDatum[], n: number | string | object): NodeDatum {
+    let foundNode
+    if (isNumber(n)) foundNode = nodes[n as number]
+    else if (isString(n)) foundNode = find(nodes, node => node.id === n)
+    else if (isObject(n)) foundNode = find(nodes, node => node === n)
+
+    if (!foundNode) {
       console.warn(`Node ${n} is missing from the nodes list`)
     }
+
+    return foundNode
   }
 
   transferState (arr, arrPrev): void {

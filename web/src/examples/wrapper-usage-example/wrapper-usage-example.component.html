@@ -1,0 +1,29 @@
+
+<div #chart class="chart">
+ <vis-xychart 
+  [duration]="duration"
+  [margin]="margin"
+  [padding]="padding"
+  [components]="components"
+  [componentConfigs]="[stackedBarConfig]"
+  [dimensions]="dimensions"
+  [axes]="axes"
+  [tooltip]="tooltip"
+  [crosshair]="crosshair"
+  [data]="data"
+ ></vis-xychart>
+</div>
+
+<div #nav class="navigation">
+<vis-xychart 
+    [margin]="margin"
+    [padding]="padding"
+    [components]="navComponents"
+    [componentConfigs]="[stackedBarConfig]"
+    [axes]="navAxes"
+    [data]="data"
+></vis-xychart>
+</div>
+
+
+

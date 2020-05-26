@@ -3,24 +3,25 @@
 
 // Core
 import { ContainerCore } from 'core/container'
-// import { ComponentCore } from 'core/component'
-import { XYCore } from 'core/xy-component'
+import { ComponentCore } from 'core/component'
 
 // import { ComponentConfig } from 'core/component/config'
-import { XYConfigInterface } from 'core/xy-component/config'
+import { XYComponentConfigInterface } from 'core/xy-component/config'
 
 // Utils
 // import { getValue, merge } from 'utils/data'
 
+// Types
+import { ExtendedSizeComponent } from 'types/component'
+
 // Config
 import { SingleChartConfig, SingleChartConfigInterface } from './config'
 
-export class SingleChart extends ContainerCore {
-  component: XYCore
-  config: SingleChartConfig = new SingleChartConfig()
-  data: any
+export class SingleChart<Datum> extends ContainerCore {
+  component: ComponentCore<Datum>
+  config: SingleChartConfig<Datum> = new SingleChartConfig()
 
-  constructor (element, config?: SingleChartConfigInterface, data?) {
+  constructor (element, config?: SingleChartConfigInterface<Datum>, data?: Datum) {
     super(element)
 
     if (config) {
@@ -33,13 +34,12 @@ export class SingleChart extends ContainerCore {
     }
   }
 
-  setData (data: any, preventRender?: boolean): void {
-    this.data = data
+  setData (data: Datum, preventRender?: boolean): void {
     if (this.component) this.component.setData(data)
     if (!preventRender) this.render()
   }
 
-  updateContainer (containerConfig: SingleChartConfigInterface, preventRender?: boolean): void {
+  updateContainer (containerConfig: SingleChartConfigInterface<Datum>, preventRender?: boolean): void {
     super.updateContainer(containerConfig)
     this.removeAllChildren()
 
@@ -48,19 +48,19 @@ export class SingleChart extends ContainerCore {
 
     if (containerConfig.tooltip) {
       containerConfig.tooltip.setContainer(this._container)
-      containerConfig.tooltip.setComponent(this.component)
+      containerConfig.tooltip.setComponents([this.component])
     }
 
     if (!preventRender) this.render()
   }
 
-  updateComponent (componentConfig: XYConfigInterface, preventRender?: boolean): void {
+  updateComponent (componentConfig: XYComponentConfigInterface<Datum>, preventRender?: boolean): void {
     this.component.prevConfig = this.component.config
     this.component.setConfig(componentConfig)
     if (!preventRender) this.render()
   }
 
-  update (containerConfig: SingleChartConfigInterface, componentConfig?, data?: any): void {
+  update (containerConfig: SingleChartConfigInterface<Datum>, componentConfig?, data?: Datum): void {
     if (containerConfig) this.updateContainer(containerConfig, true)
     if (componentConfig) this.updateComponent(componentConfig, true)
     if (data) this.setData(data, true)
@@ -70,24 +70,19 @@ export class SingleChart extends ContainerCore {
   _render (customDuration?: number): void {
     const { config, component } = this
     super._render()
-    this.updateScales()
+    component.config.width = this.width
+    component.config.height = this.height
 
     component.g
       .attr('transform', `translate(${config.margin.left},${config.margin.top})`)
 
     component.render(customDuration)
-
+    const extendedSizeComponent = component as ExtendedSizeComponent
+    if (extendedSizeComponent.getWidth && extendedSizeComponent.getHeight) {
+      this.svg
+        .attr('width', extendedSizeComponent.getWidth())
+        .attr('height', extendedSizeComponent.getHeight())
+    }
     if (config.tooltip) config.tooltip.update()
-  }
-
-  updateScales (): void {
-    const { component, config: { dimensions, padding } } = this
-
-    component.config.width = this.width
-    component.config.height = this.height
-
-    Object.keys(component.config.scales).forEach(key => {
-      component.updateScale(key, dimensions[key] ?? {}, padding)
-    })
   }
 }
