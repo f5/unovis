@@ -31,7 +31,7 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
   title = 'api-endpoint-explorer'
   sankey: any
   data = {}
-  margin = { left: 15 }
+  margin = { left: 20 }
   config: SankeyConfigInterface<any, any> = {
     labelPosition: LabelPosition.RIGHT,
     nodeHorizontalSpacing: NODE_HORIZONTAL_SPACE,
@@ -40,7 +40,7 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
     sizing: Sizing.EXTEND,
     nodePadding: 10,
     nodeSubLabel: d => `${d.value.toFixed(1)} KB`,
-    // nodeIcon: d => (d.sourceLinks[0] || (!d.sourceLinks[0] && d.collapsed)) ? (d.collapsed ? '+' : '-') : null,
+    nodeIcon: d => (d.sourceLinks[0] || (!d.sourceLinks[0] && d.collapsed)) ? (d.collapsed ? '+' : '') : null,
     // iconColor: 'white',
     events: {
       [Sankey.selectors.gNode]: {
