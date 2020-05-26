@@ -40,8 +40,8 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
     sizing: Sizing.EXTEND,
     nodePadding: 10,
     nodeSubLabel: d => `${d.value.toFixed(1)} KB`,
-    nodeIcon: d => (d.sourceLinks[0] || (!d.sourceLinks[0] && d.collapsed)) ? (d.collapsed ? '-' : '+') : null,
-    iconColor: 'white',
+    // nodeIcon: d => (d.sourceLinks[0] || (!d.sourceLinks[0] && d.collapsed)) ? (d.collapsed ? '+' : '-') : null,
+    // iconColor: 'white',
     events: {
       [Sankey.selectors.gNode]: {
         click: d => {

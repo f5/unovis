@@ -87,7 +87,7 @@ export function createNodes<N extends SankeyNodeDatumInterface, L extends Sankey
 
   sel
     .attr('transform', d => {
-      const x = d.targetLinks[0] ? d.targetLinks[0].source.x0 : d.x0
+      const x = d.targetLinks?.[0] ? d.targetLinks[0].source.x0 : d.x0
       return `translate(${sel.size() === 1 ? config.width * 0.5 - bleed.left : x}, ${d.y0})`
     })
     .style('opacity', 0)
@@ -177,7 +177,7 @@ export function updateNodes<N extends SankeyNodeDatumInterface, L extends Sankey
 export function removeNodes (selection, duration): void {
   smartTransition(selection, duration / 2)
     .attr('transform', d => {
-      if (d.targetLinks[0]) {
+      if (d.targetLinks?.[0]) {
         return `translate(${d.targetLinks[0].source.x0},${d.y0})`
       } else return null
     })
