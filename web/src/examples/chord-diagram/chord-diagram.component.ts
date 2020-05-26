@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { Component } from '@angular/core'
+import { Component, OnInit } from '@angular/core'
 import { nest as d3Nest } from 'd3-collection'
 
 // Vis
@@ -18,7 +18,9 @@ trafficData.links.forEach((l: any) => {
 })
 
 const hierarchy = {
-  values: d3Nest<any, any>().key(d => d.site)
+  values: d3Nest<any, any>()
+    .key(d => d.site)
+    .key(d => d.sublabel)
     .entries(trafficData.nodes),
 }
 
@@ -28,7 +30,7 @@ const hierarchy = {
   styleUrls: ['./chord-diagram.component.css'],
 })
 
-export class ChordDiagramComponent<H extends Hierarchy> {
+export class ChordDiagramComponent<H extends Hierarchy> implements OnInit {
   title = 'chord-diagram'
 
   data = {
@@ -43,4 +45,8 @@ export class ChordDiagramComponent<H extends Hierarchy> {
   }
 
   component = new ChordDiagram(this.config)
+
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  ngOnInit (): void {
+  }
 }
