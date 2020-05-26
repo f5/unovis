@@ -12,10 +12,10 @@ const apiEpList = data.api_ep_list.map(d => {
   return {
     ...d,
     value: Math.random(),
-    initialUrl: d.url,
-    collapsed: false,
   }
 })
+
+const collasedItems = {}
 
 const NODE_WIDTH = 30
 const NODE_HORIZONTAL_SPACE = 300
@@ -46,19 +46,8 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
       [Sankey.selectors.gNode]: {
         click: d => {
           console.log(d)
-
-          const path = d.path.substr(1)
-          const found = apiEpList.find(item => item.initialUrl === d.initialUrl)
-          found.collapsed = !found.collapsed
-          const apiList = apiEpList.map(item => {
-            const incl = item.initialUrl.includes(path)
-            return {
-              ...item,
-              url: (incl && found.collapsed) ? path : item.initialUrl,
-            }
-          })
-
-          const sankeyData = this.process(apiList)
+          collasedItems[d.id] = !collasedItems[d.id]
+          const sankeyData = this.process(apiEpList)
           this.sankey.setData(sankeyData)
         },
       },
@@ -98,7 +87,9 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
 
         const depth = i
         const id = nodeId(path, depth)
-        nodes.push({ id, path, url, label, depth, initialUrl: rec.initialUrl, collapsed: rec.collapsed })
+        const collapsed = collasedItems[id]
+        nodes.push({ id, path, url, label, depth, collapsed })
+        if (collapsed) break
       }
 
       // Add new links { id, source, target, value }
