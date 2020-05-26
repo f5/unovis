@@ -23,6 +23,8 @@ const OUTLINE_SELECTION_PADDING = 5
 
 export function createPanels<N extends NodeDatumCore, P extends PanelConfigInterface> (selection: Selection<SVGGElement, P, SVGGElement, P[]>, nodesSelection: Selection<SVGGElement, N, SVGGElement, N[]>): void {
   const groupPadding = 15
+  const labelMargin = 16
+
   selection
     .attr('transform', d => `translate(${d._x}, ${d._y})`)
     .style('opacity', 0)
@@ -40,12 +42,18 @@ export function createPanels<N extends NodeDatumCore, P extends PanelConfigInter
     .attr('height', d => d._height + (d.padding || groupPadding) * 2)
 
   const label = selection.append('g').attr('class', panelSelectors.label)
+    .attr('transform', d => `translate(${d._width / 2}, ${-(d.padding || groupPadding) - labelMargin - (d.selectionOutline ? OUTLINE_SELECTION_PADDING : 0)})`)
   label.append('rect').attr('class', panelSelectors.background)
   label.append('text').attr('class', panelSelectors.labelText)
     .attr('dy', '0.32em')
 
   const sideLabel = selection.append('g')
     .attr('class', panelSelectors.sideLabelGroup)
+    .attr('transform', (d, i, elements) => {
+      const dx = (d.padding || groupPadding) - OUTLINE_SELECTION_PADDING
+      const dy = (d.padding || groupPadding) - OUTLINE_SELECTION_PADDING
+      return `translate(${d._width + dx}, ${-dy})`
+    })
   sideLabel.call(appendShape, (d: P) => d.sideLabelShape, panelSelectors.sideLabel, panelSelectors.customSideLabel)
   sideLabel.append('text').attr('class', panelSelectors.sideLabelIcon)
 
@@ -103,7 +111,7 @@ export function updatePanels<N extends NodeDatumCore, L extends LinkDatumCore, P
     .html(d => d.sideLabelIcon)
     .attr('dy', 1)
 
-  sideLabels
+  smartTransition(sideLabels, duration)
     .attr('transform', (d, i, elements) => {
       const dx = (d.padding || groupPadding) - OUTLINE_SELECTION_PADDING
       const dy = (d.padding || groupPadding) - OUTLINE_SELECTION_PADDING
@@ -117,7 +125,9 @@ export function updatePanels<N extends NodeDatumCore, L extends LinkDatumCore, P
   labels.select(`.${panelSelectors.labelText}`)
     .text(d => trimText(d.label))
 
-  labels.attr('transform', d => `translate(${d._width / 2}, ${-(d.padding || groupPadding) - labelMargin - (d.selectionOutline ? OUTLINE_SELECTION_PADDING : 0)})`)
+  smartTransition(labels, duration)
+    .attr('transform', d => `translate(${d._width / 2}, ${-(d.padding || groupPadding) - labelMargin - (d.selectionOutline ? OUTLINE_SELECTION_PADDING : 0)})`)
+
   labels
     .on('mouseover', (d, i, els) => {
       const label = select(els[i])
