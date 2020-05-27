@@ -41,10 +41,15 @@ export interface GraphConfigInterface<N extends NodeDatumCore, L extends LinkDat
 
   /** Force Layout settings, see d3.force */
   forceLayoutSettings?: {
+    /** Preferred Link Distance, default 60 */
     linkDistance?: number;
+    /** Link Strength [0:1], default 0.45 */
     linkStrength?: number;
+    /** Charge Force (<0 repulsion, >0 attraction), default -350 */
     charge?: number;
+    /** X-centring force, default 0.15 */
     forceXStrength?: number;
+    /** Y-centring force, default 0.25 */
     forceYStrength?: number;
   };
 
