@@ -11,7 +11,7 @@ import { LeafletMapConfigInterface } from '../config'
 
 // Layers
 import { getTangramLayer } from '../renderer/tangram-layer'
-import { getMapboxglLayer, mapboxglWheelEventThrottled } from '../renderer/mapboxgl-layer'
+import { getMapboxglLayer, constraintMapView, mapboxglWheelEventThrottled } from '../renderer/mapboxgl-layer'
 
 // Styles
 import * as s from '../style'
@@ -90,23 +90,28 @@ export function setupMap<T> (mapContainer: HTMLElement, config: LeafletMapConfig
     center: initialMapCenter,
     zoom: initialMapZoom,
     minZoom: Math.sqrt(mapContainer.offsetWidth) / 17,
-    maxZoom: 18,
     maxBounds: L.latLngBounds(
-      L.latLng(-89.98155760646617, -290),
-      L.latLng(89.99346179538875, 290)
+      L.latLng(-75, -290),
+      L.latLng(85, 290)
     ),
-    maxBoundsViscosity: 0.5,
+    maxBoundsViscosity: 1,
   })
 
   let layer
   switch (renderer) {
   case LeafletMapRenderer.TANGRAM: {
     layer = getTangramLayer(config)
+    layer.addTo(leaflet)
     break
   }
   case LeafletMapRenderer.MAPBOXGL:
   default: {
     layer = getMapboxglLayer(leaflet, config)
+    layer.addTo(leaflet)
+
+    // leaflet-mapbox-gl has a layer positioning issue on far zoom levels which leads to having wrong
+    //   map points projection. We're constraing the view to prevent that.
+    constraintMapView(leaflet)
     select(mapContainer)
       .on('wheel', () => {
         event.preventDefault()
@@ -115,8 +120,6 @@ export function setupMap<T> (mapContainer: HTMLElement, config: LeafletMapConfig
     break
   }
   }
-
-  if (layer) layer.addTo(leaflet)
 
   if (topoJSONLayer?.sources && renderer === LeafletMapRenderer.MAPBOXGL) {
     const mapboxmap = layer.getMapboxMap()
