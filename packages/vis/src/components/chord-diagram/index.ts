@@ -1,6 +1,7 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { Selection, BaseType } from 'd3-selection'
-import { hierarchy, HierarchyRectangularNode, partition } from 'd3-hierarchy'
+import { nest } from 'd3-collection'
+import { hierarchy, HierarchyRectangularNode, partition, HierarchyNode } from 'd3-hierarchy'
 import { arc, area, CurveCatmullRomFactory, CurveFactory } from 'd3-shape'
 import { scalePow } from 'd3-scale'
 import { max } from 'd3-array'
@@ -9,7 +10,7 @@ import { max } from 'd3-array'
 import { ComponentCore } from 'core/component'
 
 // Utils
-import { getValue, isNumber, groupBy } from 'utils/data'
+import { getValue, isNumber, groupBy, cloneDeep } from 'utils/data'
 
 // Types
 import { Spacing } from 'types/misc'
@@ -75,8 +76,8 @@ export class ChordDiagram<H extends Hierarchy, L extends Link<H>> extends Compon
 
   _render (customDuration?: number): void {
     super._render(customDuration)
-    const { config, config: { nodeLabelType, radiusScaleExponent }, radiusScale, datamodel: { data } } = this
-    const { nodes } = data
+    const { config, config: { nodeLabelType, radiusScaleExponent }, radiusScale } = this
+    const { nodes, links } = this._getHierarchyData()
     const duration = isNumber(customDuration) ? customDuration : config.duration
 
     this.arcGen
@@ -107,7 +108,7 @@ export class ChordDiagram<H extends Hierarchy, L extends Link<H>> extends Compon
       .range([0, radius])
     ladelWidth -= ladelWidth / (hierarchyData.height + 1)
 
-    const dendogram = partition<H>().size([config.angleRange[1], 1])(hierarchyData)
+    const dendogram = partition<HierarchyNode<N>>().size([config.angleRange[1], 1])(hierarchyData)
     this._calculateRadialPosition(dendogram)
 
     const dendogramDataWithRoot = dendogram.descendants()
@@ -115,7 +116,7 @@ export class ChordDiagram<H extends Hierarchy, L extends Link<H>> extends Compon
     // Filter from the root node
     const dendogramData = dendogramDataWithRoot.filter(d => d.depth !== 0)
     this._nodes = dendogramData
-    this._links = this._getRibbons(dendogram)
+    this._links = this._getRibbons(links, dendogram)
     this._nodes.forEach((node: HNode<H>) => { node._state = {} })
     this._links.forEach((link: HLink<H>) => { link._state = {} })
 
@@ -168,12 +169,36 @@ export class ChordDiagram<H extends Hierarchy, L extends Link<H>> extends Compon
       .call(removeLabel, duration)
   }
 
-  _getRibbons (dendogram: HierarchyRectangularNode<H>): L[] {
-    const { datamodel: { data } } = this
+  _getHierarchyData () {
+    const { config: { nodeLevels }, datamodel } = this
+    const data = cloneDeep(datamodel.data)
+    const { nodes, links } = data
+    const findNode = (arr, id) => arr.find(n => n.id === id)
+    links.forEach((l: any) => {
+      const sourceNode = findNode(nodes, l.source)
+      const targetNode = findNode(nodes, l.target)
+      const value = 1 + Math.random()
+      l.value = value
+      sourceNode.value = (sourceNode.value || 0) + value
+      targetNode.value = (targetNode.value || 0) + value
+    })
+
+    const nestGen = nest<any, any>()
+    nodeLevels.forEach(levelAccessor => {
+      nestGen.key(d => d[levelAccessor])
+    })
+
+    return {
+      links,
+      nodes: { values: nestGen.entries(nodes) },
+    }
+  }
+
+  _getRibbons (links, dendogram: HierarchyRectangularNode<H>): L[] {
     const findNode = (nodes, id): HierarchyRectangularNode<H> => nodes.find(n => n.data.id === id)
     const leafNodes = dendogram.leaves()
-    const groupedBySource = groupBy(data.links, d => d.source)
-    const groupedByTarget = groupBy(data.links, d => d.target)
+    const groupedBySource = groupBy(links, d => d.source)
+    const groupedByTarget = groupBy(links, d => d.target)
 
     const getNodesInRibbon = (source, target, dendrogramHeight, nodes = []) => {
       nodes[source.height] = source
@@ -215,7 +240,7 @@ export class ChordDiagram<H extends Hierarchy, L extends Link<H>> extends Compon
       }
     })
 
-    const ribbons = data.links.map((l: HLink<H>) => {
+    const ribbons = links.map((l: HLink<H>) => {
       const sourceNode = findNode(leafNodes, l.source)
       const targetNode = findNode(leafNodes, l.target)
 

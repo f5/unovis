@@ -39,14 +39,14 @@ export function createLabel<H extends Hierarchy> (selection: Selection<SVGGEleme
 
   selection.append('text')
     .attr('class', s.label)
-    .style('fill', d => getColor(d.data, config.nodeColor, d.depth))
+    .style('fill', d => getColor(d, config.nodeColor, d.data.depth))
 }
 
 function getLabelFillColor (d, config) {
   const { nodeLabelType, nodeColor } = config
   switch (nodeLabelType) {
   case LabelType.PERPENDICULAR: {
-    return getColor(d.data, nodeColor, d.depth)
+    return getColor(d, nodeColor, d.data.depth)
   }
   case LabelType.ALONG: {
     const c = getValue(d.data, nodeColor) || window.getComputedStyle(document.documentElement).getPropertyValue(getCSSVarName(d.depth))

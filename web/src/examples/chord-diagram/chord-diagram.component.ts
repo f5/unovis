@@ -1,38 +1,10 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { Component, OnInit } from '@angular/core'
-import { nest as d3Nest } from 'd3-collection'
-import _cloneDeep from 'lodash/cloneDeep'
 
 // Vis
 import { ChordDiagram, ChordDiagramConfigInterface, Hierarchy } from '@volterra/vis'
 
 import trafficData from './data/traffic.json'
-
-const findNode = (nodes, id) => nodes.find(n => n.id === id)
-const getData = (data, levels = ['site']) => {
-  const trafficDataCopy = _cloneDeep(data)
-  trafficDataCopy.links.forEach((l: any) => {
-    const sourceNode = findNode(trafficDataCopy.nodes, l.source)
-    const targetNode = findNode(trafficDataCopy.nodes, l.target)
-    const value = 1 + Math.random()
-    l.value = value
-    sourceNode.value = (sourceNode.value || 0) + value
-    targetNode.value = (targetNode.value || 0) + value
-  })
-
-  const nestGen = d3Nest<any, any>()
-  levels.forEach(levelAccessor => {
-    nestGen.key(d => d[levelAccessor])
-  })
-  const hierarchy = {
-    values: nestGen.entries(trafficDataCopy.nodes),
-  }
-
-  return {
-    nodes: hierarchy,
-    links: trafficDataCopy.links,
-  }
-}
 
 @Component({
   selector: 'chord-diagram',
@@ -43,20 +15,25 @@ const getData = (data, levels = ['site']) => {
 export class ChordDiagramComponent<H extends Hierarchy> implements OnInit {
   title = 'chord-diagram'
 
-  data = getData(trafficData)
+  data = trafficData
 
   margin = {}
   config: ChordDiagramConfigInterface<H> = {
     nodeWidth: 20,
     nodeLabelType: 'along',
+    nodeColor: d => {
+      const colors = this.legendItems.filter(item => !item.inactive).map(d => d.color)
+      return colors[d.height]
+    },
+    nodeLevels: ['site'],
   }
 
   component = new ChordDiagram(this.config)
 
   legendItems = [
-    { name: 'Service', inactive: false },
-    { name: 'Site', inactive: false, key: 'site' },
-    { name: 'Namespace', inactive: true, key: 'sublabel' },
+    { name: 'Service', inactive: false, color: 'var(--vis-color0)' },
+    { name: 'Site', inactive: false, key: 'site', color: 'var(--vis-color1)' },
+    { name: 'Namespace', inactive: true, key: 'sublabel', color: 'var(--vis-color2)' },
   ]
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -69,6 +46,7 @@ export class ChordDiagramComponent<H extends Hierarchy> implements OnInit {
     d.inactive = !d.inactive
     this.legendItems = [...this.legendItems]
     const nestKeys = this.legendItems.filter(item => !item.inactive && item.name !== 'Service').map(item => item.key)
-    this.data = getData(trafficData, nestKeys)
+    const config = { ...this.config, nodeLevels: nestKeys }
+    this.config = config
   }
 }

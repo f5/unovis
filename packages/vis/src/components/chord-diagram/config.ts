@@ -12,6 +12,8 @@ export interface ChordDiagramConfigInterface<H extends Hierarchy> extends Compon
   children?: (d: H) => H[];
   /** Value accessor function */
   value?: NumericAccessor<H>;
+  /** Node hierarchy levels */
+  nodeLevels?: string[];
   /** Node width value in pixels */
   nodeWidth?: number;
   /** Node color value or accessor function */
@@ -36,6 +38,7 @@ export class ChordDiagramConfig<H extends Hierarchy> extends ComponentConfig imp
   duration = 800
   children = (d: H): H[] => d['children'] || d['values']
   value = (d: H): number => d['value']
+  nodeLevels = []
   nodeWidth = 15
   nodeColor = (d: H): string => d['color']
   nodeLabel = (d: H): string => d['label'] ?? d['key']
