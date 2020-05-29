@@ -32,6 +32,7 @@ import {
   bBoxMerge, clampZoomLevel, getNodeRadius, getPointDisplayOrder, calulateClusterIndex, geoJSONPointToScreenPoint,
   shouldClusterExpand, findNodeAndClusterInPointsById, getNodeRelativePosition, getClusterRadius, getClustersAndPoints,
 } from './modules/utils'
+import { constraintMapViewThrottled } from './renderer/mapboxgl-layer'
 
 export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
   static selectors = s
@@ -378,6 +379,8 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
   _onMapMoveEnd (): void {
     const { config: { renderer } } = this
     if (renderer === LeafletMapRenderer.MAPBOXGL) {
+      constraintMapViewThrottled(this._map.leaflet)
+
       const events = this._map.layer.getEvents()
       const zoomedEvent = events.zoomend.bind(this._map.layer)
       zoomedEvent()
