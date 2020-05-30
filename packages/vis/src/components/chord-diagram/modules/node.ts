@@ -20,8 +20,8 @@ export interface ArcNode extends SVGElement {
 
 export function createNode<H extends Hierarchy> (selection: Selection<SVGPathElement, HierarchyRectangularNode<H>, SVGGElement, HierarchyRectangularNode<H>[]>, config: ChordDiagramConfig<H>): void {
   selection
-    .style('fill', d => getColor(d, config.nodeColor, d.data.height))
-    .style('stroke', d => getColor(d, config.nodeColor, d.data.height))
+    .style('fill', d => getColor(d, config.nodeColor, d.height))
+    .style('stroke', d => getColor(d, config.nodeColor, d.height))
     .style('opacity', 0)
     .each((d, i, els) => {
       const arcNode: ArcNode = els[i]
@@ -40,8 +40,8 @@ export function updateNode<H extends Hierarchy> (selection: Selection<SVGElement
   selection
     .attr('id', d => d.data.id ?? d.data.key)
     .style('transition', `fill ${duration}ms`) // Animate color with CSS because we're using CSS-variables
-    .style('fill', d => getColor(d, config.nodeColor, d.data.height))
-    .style('stroke', d => getColor(d, config.nodeColor, d.data.height))
+    .style('fill', d => getColor(d, config.nodeColor, d.height))
+    .style('stroke', d => getColor(d, config.nodeColor, d.height))
 
   if (duration) {
     smartTransition(selection, duration)

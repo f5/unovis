@@ -39,7 +39,7 @@ export function createLabel<H extends Hierarchy> (selection: Selection<SVGGEleme
 
   selection.append('text')
     .attr('class', s.label)
-    .style('fill', d => getColor(d, config.nodeColor, d.data.depth))
+    .style('fill', d => getColor(d, config.nodeColor, d.depth))
 }
 
 function getLabelFillColor (d, config) {

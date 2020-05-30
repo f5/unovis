@@ -6,19 +6,24 @@ import { ChordDiagram, ChordDiagramConfigInterface, Hierarchy } from '@volterra/
 
 import trafficData from './data/traffic.json'
 
+trafficData.links.forEach((l: any) => {
+  const value = 1 + Math.random()
+  l.value = value
+})
+
 @Component({
   selector: 'chord-diagram',
   templateUrl: './chord-diagram.component.html',
   styleUrls: ['./chord-diagram.component.css'],
 })
 
-export class ChordDiagramComponent<H extends Hierarchy> implements OnInit {
+export class ChordDiagramComponent<N extends Hierarchy> implements OnInit {
   title = 'chord-diagram'
 
   data = trafficData
 
   margin = {}
-  config: ChordDiagramConfigInterface<H> = {
+  config: ChordDiagramConfigInterface<N> = {
     nodeWidth: 20,
     nodeLabelType: 'along',
     nodeColor: d => {
