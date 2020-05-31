@@ -13,7 +13,7 @@ import { Spacing } from 'types/misc'
 import { ExtendedSizeComponent, Sizing } from 'types/component'
 
 // Utils
-import { getValue, clamp, isNumber, groupBy, sortBy } from 'utils/data'
+import { getValue, clamp, isNumber, groupBy, sortBy, flatten } from 'utils/data'
 import { SankeyNodeDatumInterface, SankeyLinkDatumInterface, LabelPosition } from 'types/sankey'
 
 // Config
@@ -68,7 +68,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
       (nodes.length > 1 && links.length === 0)
     ) {
       this._linksGroup.selectAll(`.${s.link}`).call(removeLinks, duration)
-      this._nodesGroup.selectAll(`.${s.gNode}`).call(removeNodes, duration)
+      this._nodesGroup.selectAll(`.${s.gNode}`).call(removeNodes, config, duration)
     }
 
     if (sizing === Sizing.EXTEND) this._preCalculateComponentSize()
@@ -93,7 +93,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
     nodeSelection.merge(nodeSelectionEnter).call(updateNodes, config, bleed, duration)
     nodeSelection.exit()
       .attr('class', s.nodeExit)
-      .call(removeNodes, duration)
+      .call(removeNodes, config, duration)
   }
 
   private _preCalculateComponentSize (): void {
@@ -198,10 +198,10 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
           d => -d.value,
         ])
       }
-      sortedColumn.forEach((c, i) => c._order = i)
+      sortedColumn.forEach((c, i) => { c._order = i })
       groupByColumn[key] = sortedColumn
     })
-    return Object.values(groupByColumn).flat()
+    return flatten(Object.values(groupByColumn))
   }
 
   getWidth (): number {

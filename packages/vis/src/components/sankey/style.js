@@ -1,6 +1,8 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { css, injectGlobal } from 'emotion'
 
+export const SANKEY_ICON_SIZE = 22
+
 export const variables = injectGlobal`
   :root {
     --vis-sankey-link-cursor: default;
@@ -13,7 +15,7 @@ export const variables = injectGlobal`
     --vis-sankey-node-label-background-fill-color: #ffffff;
     --vis-sankey-node-label-background-stroke-color: #dadada;
 
-    --vis-sankey-icon-size: 22px;
+    --vis-sankey-icon-size: ${SANKEY_ICON_SIZE}px;
     --vis-sankey-icon-color: #ffffff;
     --vis-sankey-icon-font-family: FontAwesome;
 

@@ -4,7 +4,7 @@ import { sum } from 'd3-array'
 import _groupBy from 'lodash/groupBy'
 
 // Vis
-import { SingleChart, Sankey, SankeyConfigInterface, Sizing, LabelPosition, NodeAlignType } from '@volterra/vis'
+import { SingleChart, Sankey, SankeyConfigInterface, Sizing, LabelPosition, NodeAlignType, ExitTransitionType, EnterTransitionType } from '@volterra/vis'
 
 import data from './data/apieplist_ves.json'
 
@@ -42,10 +42,12 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
     nodeSubLabel: d => `${d.value.toFixed(1)} KB`,
     nodeIcon: d => (d.sourceLinks[0] || (!d.sourceLinks[0] && d.collapsed)) ? (d.collapsed ? '+' : '') : null,
     // iconColor: 'white',
+    exitTransitionType: ExitTransitionType.TO_ANCESTOR,
+    enterTransitionType: EnterTransitionType.FROM_ANCESTOR,
     events: {
       [Sankey.selectors.gNode]: {
         click: d => {
-          console.log(d)
+          if (!d.targetLinks[0] || (!collasedItems[d.id] && !d.sourceLinks[0])) return
           collasedItems[d.id] = !collasedItems[d.id]
           const sankeyData = this.process(apiEpList)
           this.sankey.setData(sankeyData)
