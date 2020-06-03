@@ -4,9 +4,18 @@ import { sum } from 'd3-array'
 import _groupBy from 'lodash/groupBy'
 
 // Vis
-import { SingleChart, Sankey, SankeyConfigInterface, Sizing, LabelPosition, NodeAlignType } from '@volterra/vis'
+import { SingleChart, Sankey, SankeyConfigInterface, Sizing, LabelPosition, NodeAlignType, ExitTransitionType, EnterTransitionType } from '@volterra/vis'
 
 import data from './data/apieplist_ves.json'
+
+const apiEpList = data.api_ep_list.map(d => {
+  return {
+    ...d,
+    value: Math.random(),
+  }
+})
+
+const collasedItems = {}
 
 const NODE_WIDTH = 30
 const NODE_HORIZONTAL_SPACE = 300
@@ -22,7 +31,7 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
   title = 'api-endpoint-explorer'
   sankey: any
   data = {}
-  margin = { left: 15 }
+  margin = { left: 20 }
   config: SankeyConfigInterface<any, any> = {
     labelPosition: LabelPosition.RIGHT,
     nodeHorizontalSpacing: NODE_HORIZONTAL_SPACE,
@@ -31,9 +40,18 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
     sizing: Sizing.EXTEND,
     nodePadding: 10,
     nodeSubLabel: d => `${d.value.toFixed(1)} KB`,
+    nodeIcon: d => (d.sourceLinks[0] || (!d.sourceLinks[0] && d.collapsed)) ? (d.collapsed ? '+' : '') : null,
+    // iconColor: 'white',
+    exitTransitionType: ExitTransitionType.TO_ANCESTOR,
+    enterTransitionType: EnterTransitionType.FROM_ANCESTOR,
     events: {
-      [Sankey.selectors.node]: {
-        click: d => console.log(d),
+      [Sankey.selectors.gNode]: {
+        click: d => {
+          if (!d.targetLinks[0] || (!collasedItems[d.id] && !d.sourceLinks[0])) return
+          collasedItems[d.id] = !collasedItems[d.id]
+          const sankeyData = this.process(apiEpList)
+          this.sankey.setData(sankeyData)
+        },
       },
     },
   }
@@ -43,7 +61,7 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
   flowlegendWidth = 0;
 
   ngAfterViewInit (): void {
-    const apiData = data.api_ep_list
+    const apiData = apiEpList
     const sankeyData = this.process(apiData)
     console.log({ apiData, sankeyData })
 
@@ -59,7 +77,7 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
 
     const nodeId = (path, depth) => `${depth}:${path}`
     for (const rec of apiData) {
-      const value = Math.random()
+      const value = rec.value // Math.random()
       const url = rec.url
       const splitted = url.split('/')
 
@@ -71,7 +89,9 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
 
         const depth = i
         const id = nodeId(path, depth)
-        nodes.push({ id, path, url, label, depth })
+        const collapsed = collasedItems[id]
+        nodes.push({ id, path, url, label, depth, collapsed })
+        if (collapsed) break
       }
 
       // Add new links { id, source, target, value }

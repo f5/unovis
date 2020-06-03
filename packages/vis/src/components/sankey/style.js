@@ -1,6 +1,8 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { css, injectGlobal } from 'emotion'
 
+export const SANKEY_ICON_SIZE = 22
+
 export const variables = injectGlobal`
   :root {
     --vis-sankey-link-cursor: default;
@@ -13,7 +15,7 @@ export const variables = injectGlobal`
     --vis-sankey-node-label-background-fill-color: #ffffff;
     --vis-sankey-node-label-background-stroke-color: #dadada;
 
-    --vis-sankey-icon-size: 22px;
+    --vis-sankey-icon-size: ${SANKEY_ICON_SIZE}px;
     --vis-sankey-icon-color: #ffffff;
     --vis-sankey-icon-font-family: FontAwesome;
 
@@ -99,20 +101,8 @@ export const visibleLabel = css`
   label: visible-label;
 `
 
-export const node = css`
-  label: node;
-
-  rect {
-    cursor: var(--vis-sankey-node-cursor);
-    fill: var(--vis-sankey-node-fill);
-    opacity: 0.9;
-  }
-  
-  &:hover {
-    rect {
-      opacity: 1;
-    }
-  }
+export const gNode = css`
+  label: g-node;
 
   &${`.${visibleLabel}`} {
     ${`.${nodeLabel}`} {
@@ -127,6 +117,18 @@ export const node = css`
   }
 `
 
+export const node = css`
+  label: node;
+
+  cursor: var(--vis-sankey-node-cursor);
+  fill: var(--vis-sankey-node-fill);
+  opacity: 0.9;
+
+  &:hover {
+    opacity: 1;
+  }
+`
+
 export const nodeIcon = css`
   label: icon;
 
@@ -136,4 +138,8 @@ export const nodeIcon = css`
   fill: var(--vis-sankey-node-icon-color);
   stroke: var(--vis-sankey-node-fill);
   stroke-opacity: 0.6;
+`
+
+export const nodeExit = css`
+  label: node-exit;
 `

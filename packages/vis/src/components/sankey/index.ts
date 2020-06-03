@@ -13,7 +13,7 @@ import { Spacing } from 'types/misc'
 import { ExtendedSizeComponent, Sizing } from 'types/component'
 
 // Utils
-import { getValue, clamp, isNumber, groupBy } from 'utils/data'
+import { getValue, clamp, isNumber, groupBy, sortBy, flatten } from 'utils/data'
 import { SankeyNodeDatumInterface, SankeyLinkDatumInterface, LabelPosition } from 'types/sankey'
 
 // Config
@@ -36,7 +36,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
   private _nodesGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
   private _sankey = sankey()
   events = {
-    [Sankey.selectors.node]: {
+    [Sankey.selectors.gNode]: {
       mouseover: this._onNodeMouseOver.bind(this),
       mouseout: this._onNodeMouseOut.bind(this),
     },
@@ -68,7 +68,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
       (nodes.length > 1 && links.length === 0)
     ) {
       this._linksGroup.selectAll(`.${s.link}`).call(removeLinks, duration)
-      this._nodesGroup.selectAll(`.${s.node}`).call(removeNodes, duration)
+      this._nodesGroup.selectAll(`.${s.gNode}`).call(removeNodes, config, duration)
     }
 
     if (sizing === Sizing.EXTEND) this._preCalculateComponentSize()
@@ -87,11 +87,13 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
 
     // Nodes
     this._nodesGroup.attr('transform', `translate(${bleed.left},${bleed.top + translateY})`)
-    const nodeSelection = this._nodesGroup.selectAll(`.${s.node}`).data(nodes, config.id)
-    const nodeSelectionEnter = nodeSelection.enter().append('g').attr('class', s.node)
+    const nodeSelection = this._nodesGroup.selectAll(`.${s.gNode}`).data(nodes, config.id)
+    const nodeSelectionEnter = nodeSelection.enter().append('g').attr('class', s.gNode)
     nodeSelectionEnter.call(createNodes, this.config, bleed)
     nodeSelection.merge(nodeSelectionEnter).call(updateNodes, config, bleed, duration)
-    nodeSelection.exit().call(removeNodes, duration)
+    nodeSelection.exit()
+      .attr('class', s.nodeExit)
+      .call(removeNodes, config, duration)
   }
 
   private _preCalculateComponentSize (): void {
@@ -111,7 +113,10 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
   }
 
   private _prepareLayout (): void {
-    const { config, bleed, datamodel: { nodes, links }, _extendedHeight, _extendedWidth } = this
+    const { config, bleed, datamodel, datamodel: { links }, _extendedHeight, _extendedWidth } = this
+
+    const nodes = config.sizing === Sizing.EXTEND ? this._sortNodes() : datamodel.nodes
+
     links.forEach(link => {
       // For d3 sankey function each link must be an object with the `value` property
       link.value = getValue(link, d => getValue(d, config.linkValue))
@@ -122,6 +127,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
       this._sankey.linkSort((link2, link1) => {
         if (link2.value > link1.value) return -1
       })
+      this._sankey.nodeSort(null)
     } else {
       this._sankey
         .nodeSort((node2, node1) => {
@@ -174,6 +180,28 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
     const { config, datamodel: { links } } = this
 
     return clamp(config.height * links.length * config.heightNormalizationCoeff, config.height / 2, config.height)
+  }
+
+  private _sortNodes (): [] {
+    const { datamodel } = this
+    const groupByColumn = groupBy(datamodel.nodes, 'layer')
+    Object.keys(groupByColumn).forEach(key => {
+      const column = groupByColumn[key]
+      let sortedColumn
+      if (Number(key) === 0) {
+        sortedColumn = sortBy(column, [d => -d.value])
+      } else {
+        sortedColumn = sortBy(column, [
+          d => {
+            return d.targetLinks[0].source._order
+          },
+          d => -d.value,
+        ])
+      }
+      sortedColumn.forEach((c, i) => { c._order = i })
+      groupByColumn[key] = sortedColumn
+    })
+    return flatten(Object.values(groupByColumn))
   }
 
   getWidth (): number {

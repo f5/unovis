@@ -11,6 +11,7 @@ import { getValue } from 'utils/data'
 import { WrapTextOptions } from 'types/text'
 import { Spacing } from 'types/misc'
 import { SankeyNodeDatumInterface, SankeyLinkDatumInterface, LabelPosition } from 'types/sankey'
+import { ExitTransitionType, EnterTransitionType } from 'types/animation'
 
 // Config
 import { SankeyConfig } from '../config'
@@ -55,10 +56,11 @@ export function getWrapOption (config, trimText = true): WrapTextOptions {
 }
 
 export function createNodes<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> (sel, config: SankeyConfig<N, L>, bleed: Spacing): void {
-  const { labelPosition } = config
+  const { labelPosition, enterTransitionType } = config
 
   // Node
   sel.append('rect')
+    .attr('class', s.node)
     .attr('width', config.nodeWidth)
     .attr('height', d => d.y1 - d.y0)
     .style('fill', node => getColor(node, config.nodeColor))
@@ -82,10 +84,13 @@ export function createNodes<N extends SankeyNodeDatumInterface, L extends Sankey
   // Node icon
   sel.append('text').attr('class', s.nodeIcon)
     .attr('text-anchor', 'middle')
-    .attr('dy', '2px')
+    .attr('dy', '0.5px')
 
   sel
-    .attr('transform', d => `translate(${sel.size() === 1 ? config.width * 0.5 - bleed.left : d.x0},${d.y0})`)
+    .attr('transform', d => {
+      const x = (enterTransitionType === EnterTransitionType.FROM_ANCESTOR && d.targetLinks?.[0]) ? d.targetLinks[0].source.x0 : d.x0
+      return `translate(${sel.size() === 1 ? config.width * 0.5 - bleed.left : x}, ${d.y0})`
+    })
     .style('opacity', 0)
 }
 
@@ -94,12 +99,12 @@ export function updateNodes<N extends SankeyNodeDatumInterface, L extends Sankey
 
   sel.classed(s.visibleLabel, d => d.y1 - d.y0 > (labelPosition === LabelPosition.AUTO ? config.labelFontSize : backgroundLabelHeight(config.labelFontSize) + BACKGROUND_LABEL_PADDING * 2) || config.forceShowLabels)
 
-  smartTransition(sel, duration)
+  smartTransition(sel, duration / 2)
     .attr('transform', d => `translate(${sel.size() === 1 ? config.width * 0.5 - bleed.left : d.x0},${d.y0})`)
     .style('opacity', 1)
 
   // Node
-  smartTransition(sel.select('rect'), duration)
+  smartTransition(sel.select(`.${s.node}`), duration)
     .attr('width', config.nodeWidth)
     .attr('height', d => d.y1 - d.y0)
 
@@ -162,6 +167,11 @@ export function updateNodes<N extends SankeyNodeDatumInterface, L extends Sankey
       .attr('text-anchor', 'middle')
       .attr('alignment-baseline', 'middle')
       .style('stroke', node => getColor(node, config.iconColor))
+      .style('fill', node => getColor(node, config.iconColor))
+      .style('font-size', node => {
+        const nodeHeight = node.y1 - node.y0
+        return nodeHeight < s.SANKEY_ICON_SIZE ? `${nodeHeight}px` : null
+      })
       .html(config.nodeIcon)
   } else {
     nodeIcon
@@ -169,8 +179,19 @@ export function updateNodes<N extends SankeyNodeDatumInterface, L extends Sankey
   }
 }
 
-export function removeNodes (sel): void {
-  sel.remove()
+export function removeNodes (selection, config, duration): void {
+  const { exitTransitionType } = config
+  const transitionSelection = smartTransition(selection, duration / 2)
+  if (exitTransitionType === ExitTransitionType.TO_ANCESTOR) {
+    transitionSelection.attr('transform', d => {
+      if (d.targetLinks?.[0]) {
+        return `translate(${d.targetLinks[0].source.x0},${d.y0})`
+      } else return null
+    })
+  }
+  transitionSelection
+    .style('opacity', 0)
+    .remove()
 }
 
 export function onNodeMouseOver<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> (sel, config: SankeyConfig<N, L>): void {
