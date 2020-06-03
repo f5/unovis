@@ -39,14 +39,14 @@ export function createLabel<H extends Hierarchy> (selection: Selection<SVGGEleme
 
   selection.append('text')
     .attr('class', s.label)
-    .style('fill', d => getColor(d.data, config.nodeColor, d.depth))
+    .style('fill', d => getColor(d, config.nodeColor, d.depth))
 }
 
 function getLabelFillColor (d, config) {
   const { nodeLabelType, nodeColor } = config
   switch (nodeLabelType) {
   case LabelType.PERPENDICULAR: {
-    return getColor(d.data, nodeColor, d.depth)
+    return getColor(d, nodeColor, d.data.depth)
   }
   case LabelType.ALONG: {
     const c = getValue(d.data, nodeColor) || window.getComputedStyle(document.documentElement).getPropertyValue(getCSSVarName(d.depth))
@@ -90,6 +90,7 @@ export function updateLabel<H extends Hierarchy> (selection: Selection<SVGElemen
   }
 
   const label: Selection<SVGTextElement, any, SVGElement, any> = selection.select(`.${s.label}`)
+  label.select('textPath').remove()
   label
     .text(d => getValue(d.data, nodeLabel))
     .style('display', d => {
@@ -121,7 +122,7 @@ export function updateLabel<H extends Hierarchy> (selection: Selection<SVGElemen
           .attr('dx', LABEL_PADDING)
           .attr('dy', getValue(d, nodeWidth) / 2)
           .text('')
-        select(elements[i]).select('textPath').remove()
+
         select(elements[i]).append('textPath')
           .attr('xlink:href', `#${d.data.id ?? d.data.key}`)
           .text(labelText)
