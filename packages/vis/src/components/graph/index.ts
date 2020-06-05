@@ -135,6 +135,7 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
 
     this._setPanels = true
 
+    this._resetSelection()
     const selectedNode = this.config.selectedNodeId && find(nodes, node => node.id === this.config.selectedNodeId)
     this._selectNode(selectedNode)
 
