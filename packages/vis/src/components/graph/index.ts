@@ -135,6 +135,7 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
 
     this._setPanels = true
 
+    this._resetSelection()
     const selectedNode = this.config.selectedNodeId && find(nodes, node => node.id === this.config.selectedNodeId)
     this._selectNode(selectedNode)
 
@@ -163,13 +164,11 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
       .attr('height', height)
       .attr('opacity', 0)
 
-    if (this._firstRender) {
-      this._prevWidth = width
-      this._prevHeight = height
-    }
     if ((this._prevWidth !== width || this._prevHeight !== height) && layoutAutofit) {
       // Fit layout on resize
       this._fitLayout = true
+      this._prevWidth = width
+      this._prevHeight = height
     }
 
     // Apply layout
