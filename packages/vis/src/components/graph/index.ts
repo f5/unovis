@@ -163,13 +163,11 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
       .attr('height', height)
       .attr('opacity', 0)
 
-    if (this._firstRender) {
-      this._prevWidth = width
-      this._prevHeight = height
-    }
     if ((this._prevWidth !== width || this._prevHeight !== height) && layoutAutofit) {
       // Fit layout on resize
       this._fitLayout = true
+      this._prevWidth = width
+      this._prevHeight = height
     }
 
     // Apply layout
