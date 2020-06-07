@@ -10,6 +10,7 @@ export interface BulletLegendItemInterface {
   color?: string;
   inactive?: boolean;
   hidden? : boolean;
+  pointer?: boolean;
 }
 
 export interface BulletLegendConfigInterface {

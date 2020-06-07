@@ -44,7 +44,7 @@ export class BulletLegend {
     const legendItemsEnter = legendItems.enter()
       .append('div')
       .attr('class', s.item)
-      .classed('clickable', !!config.onLegendItemClick)
+      .classed('clickable', d => !!config.onLegendItemClick && this._isItemClickable(d))
       .on('click', this._onItemClick.bind(this))
 
     legendItemsEnter.append('span')
@@ -68,6 +68,10 @@ export class BulletLegend {
       .text((d: BulletLegendItemInterface) => d.name)
 
     legendItems.exit().remove()
+  }
+
+  _isItemClickable (item: BulletLegendItemInterface): boolean {
+    return item.pointer === undefined ? true : item.pointer
   }
 
   _onItemClick (d: BulletLegendItemInterface, i: number): void {
