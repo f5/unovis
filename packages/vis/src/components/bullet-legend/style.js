@@ -8,7 +8,8 @@ export const variables = injectGlobal`
     --vis-legend-label-font-size: 12px;
     --vis-legend-bullet-size: 9px;
     --vis-legend-bullet-inactive-color: #eee;
-    --vis-legend-item-spacing: 30px;
+    --vis-legend-item-spacing: 20px;
+    --vis-legend-bullet-label-spacing: 8px;
   }
 `
 
@@ -43,7 +44,7 @@ export const bullet = css`
   background-color: var(--vis-legend-bullet-inactive-color);
   border: 1px solid;
   display: inline-block;
-  margin-right: 10px;
+  margin-right: var(--vis-legend-bullet-label-spacing);
   width: var(--vis-legend-bullet-size);
   height: var(--vis-legend-bullet-size);
   vertical-align: middle;

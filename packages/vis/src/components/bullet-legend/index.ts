@@ -1,5 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { select, Selection } from 'd3-selection'
+import { color } from 'd3-color'
 
 // Utils
 import { getColor } from 'utils/color'
@@ -60,9 +61,18 @@ export class BulletLegend {
 
     const legendItemsMerged = legendItemsEnter.merge(legendItems)
     legendItemsMerged.style('display', (d: BulletLegendItemInterface) => d.hidden ? 'none' : null)
-    legendItemsMerged.select(`.${s.bullet}`)
-      .style('background-color', (d: BulletLegendItemInterface, i) => d.inactive ? null : getColor(d, this._colorAccessor, i))
+    const legendBulletsToUpdate = legendItemsMerged.select(`.${s.bullet}`)
+    legendBulletsToUpdate.style('background-color', (d: BulletLegendItemInterface, i) => getColor(d, this._colorAccessor, i))
       .style('border-color', (d: BulletLegendItemInterface, i) => getColor(d, this._colorAccessor, i))
+    legendBulletsToUpdate.each((d, i, elements) => {
+      if (d.inactive) {
+        const bulletColor = window.getComputedStyle(elements[i] as Element).getPropertyValue('background-color')
+        const transparentColor = color(bulletColor)
+        transparentColor.opacity = 0.4
+        select(elements[i])
+          .style('background-color', transparentColor.toString())
+      }
+    })
 
     legendItemsMerged.select(`.${s.label}`)
       .text((d: BulletLegendItemInterface) => d.name)
