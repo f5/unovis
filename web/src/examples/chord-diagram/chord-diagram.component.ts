@@ -36,7 +36,7 @@ export class ChordDiagramComponent<N extends Hierarchy> implements OnInit {
   component = new ChordDiagram(this.config)
 
   legendItems = [
-    { name: 'Service', inactive: false, color: 'var(--vis-color0)' },
+    { name: 'Service', inactive: false, color: 'var(--vis-color0)', pointer: false },
     { name: 'Site', inactive: false, key: 'site', color: 'var(--vis-color1)' },
     { name: 'Namespace', inactive: true, key: 'sublabel', color: 'var(--vis-color2)' },
   ]
