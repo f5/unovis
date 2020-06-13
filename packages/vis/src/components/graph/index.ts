@@ -687,4 +687,25 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
         `
       })
   }
+
+  public zoomIn (increment = 0.3): void {
+    const scaleBy = 1 + increment
+    smartTransition(this.g, this.config.duration / 2)
+      .call(this._zoomBehavior.scaleBy, scaleBy)
+  }
+
+  public zoomOut (increment = 0.3): void {
+    const scaleBy = 1 - increment
+    smartTransition(this.g, this.config.duration / 2)
+      .call(this._zoomBehavior.scaleBy, scaleBy)
+  }
+
+  public setZoom (zoomLevel: number): void {
+    smartTransition(this.g, this.config.duration / 2)
+      .call(this._zoomBehavior.scaleTo, zoomLevel)
+  }
+
+  public fitView (): void {
+    this._fit(this.config.duration / 2)
+  }
 }
