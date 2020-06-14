@@ -42,3 +42,25 @@ export const itemButton = css`
   color: var(--vis-controls-button-color);
   background-color: inherit;
 `
+
+export const borderLeft = css`
+  border-left: 1px solid var(--vis-controls-buttons-border-color);
+`
+
+export const borderTop = css`
+  border-top: 1px solid var(--vis-controls-buttons-border-color);
+`
+
+export const borderRight = css`
+  border-right: 1px solid var(--vis-controls-buttons-border-color);
+`
+
+export const borderBottom = css`
+  border-bottom: 1px solid var(--vis-controls-buttons-border-color);
+`
+
+export const disabled = css`
+  label: disabled;
+  opacity: 0.4;
+  pointer-events: none;
+`

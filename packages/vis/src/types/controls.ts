@@ -3,7 +3,11 @@
 export interface VisControlItemInterface {
   icon: string;
   callback?: () => any;
-  hidden?: boolean;
+  disabled?: boolean;
+  borderLeft?: boolean;
+  borderTop?: boolean;
+  borderRight?: boolean;
+  borderBottom?: boolean;
 }
 
 export enum VisControlsOrientation {

@@ -48,6 +48,7 @@ export class GraphComponent implements OnInit, AfterViewInit {
     {
       icon: '&#xe986',
       callback: () => { this.component.fitView() },
+      borderBottom: true,
     },
     {
       icon: '&#xe936',
