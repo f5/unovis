@@ -10,5 +10,6 @@ import { SHAPE } from 'types/shape'
 import { Sizing } from 'types/component'
 import { LabelPosition, NodeAlignType } from 'types/sankey'
 import { EnterTransitionType, ExitTransitionType } from 'types/animation'
+import { VisControlItemInterface, VisControlsOrientation } from 'types/controls'
 
-export { CurveType, SymbolType, Scale, Projection, LayoutType, LinkStyle, LinkArrow, NodeDatumCore, LinkDatumCore, SHAPE, SideLabel, Hierarchy, Position, Arrangement, Sizing, LabelPosition, NodeAlignType, EnterTransitionType, ExitTransitionType }
+export { CurveType, SymbolType, Scale, Projection, LayoutType, LinkStyle, LinkArrow, NodeDatumCore, LinkDatumCore, SHAPE, SideLabel, Hierarchy, Position, Arrangement, Sizing, LabelPosition, NodeAlignType, EnterTransitionType, ExitTransitionType, VisControlItemInterface, VisControlsOrientation }

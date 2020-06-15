@@ -34,6 +34,7 @@ import { XYChartComponent } from './components/xychart/xychart.component'
 import { MapLeafletComponent } from './components/map-leaflet/map-leaflet.component'
 import { SingleChartComponent } from './components/singlechart/singlechart.component'
 import { Collection } from './components/collection/collection.component'
+import { VisControlsComponent } from './components/vis-controls/vis-controls.component'
 
 const appRoutes: Routes = [
   { path: 'map', component: MapComponent },
@@ -89,6 +90,7 @@ appRoutes.push({ path: '', redirectTo: `/${appRoutes[0].path}`, pathMatch: 'full
     ConnectivityGraphComponent,
     TrafficGraphComponent,
     ChordDiagramComponent,
+    VisControlsComponent,
   ],
 
   imports: [

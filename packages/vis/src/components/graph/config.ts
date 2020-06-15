@@ -18,6 +18,8 @@ export interface GraphConfigInterface<N extends NodeDatumCore, L extends LinkDat
   disableDrag?: boolean;
   /** Interval to re-render the graph when zooming */
   zoomThrottledUpdateNodeThreshold?: number;
+  /** On zoom callback */
+  onZoom?: (zoomScale: number, zoomScaleExtent: number) => any;
 
   // Layout
   /** Type of graph layout */
@@ -125,6 +127,7 @@ export class GraphConfig<N extends NodeDatumCore, L extends LinkDatumCore> exten
   disableZoom = false
   disableDrag = false
   zoomThrottledUpdateNodeThreshold = 100
+  onZoom = undefined
   layoutType = LayoutType.FORCE
   layoutAutofit = true
   layoutNonConnectedAside: true
