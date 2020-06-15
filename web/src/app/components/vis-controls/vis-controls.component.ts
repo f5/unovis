@@ -25,4 +25,9 @@ export class VisControlsComponent implements AfterViewInit {
 
     this.controls = new VisControls(this.controlsRef.nativeElement, this.config)
   }
+
+  ngOnChanges (): void {
+    this.config.items = this.items
+    this.controls?.update(this.config)
+  }
 }

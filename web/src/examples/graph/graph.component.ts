@@ -68,6 +68,15 @@ export class GraphComponent implements OnInit, AfterViewInit {
 
     this.chart = new SingleChart(this.graph.nativeElement, { component: this.component }, data)
 
+    this.component.disableZoomIn.subscribe((disabled: boolean) => {
+      this.controlItems[1].disabled = disabled
+      this.controlItems = [...this.controlItems]
+    })
+    this.component.disableZoomOut.subscribe((disabled: boolean) => {
+      this.controlItems[2].disabled = disabled
+      this.controlItems = [...this.controlItems]
+    })
+
     // setInterval(() => {
     //   chart.setData(generator.next().value)
     // }, 3000)

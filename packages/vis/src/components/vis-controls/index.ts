@@ -43,17 +43,18 @@ export class VisControls {
     const controlItemsEnter = controlItems.enter()
       .append('div')
       .attr('class', s.item)
-      .classed(s.borderLeft, d => d.borderLeft)
-      .classed(s.borderTop, d => d.borderTop)
-      .classed(s.borderRight, d => d.borderRight)
-      .classed(s.borderBottom, d => d.borderBottom)
-      .classed(s.disabled, d => d.disabled)
       .on('click', this._onItemClick.bind(this))
 
     controlItemsEnter.append('button')
       .attr('class', s.itemButton)
 
     const controlItemsMerged = controlItemsEnter.merge(controlItems)
+    controlItemsMerged
+      .classed(s.borderLeft, d => d.borderLeft)
+      .classed(s.borderTop, d => d.borderTop)
+      .classed(s.borderRight, d => d.borderRight)
+      .classed(s.borderBottom, d => d.borderBottom)
+      .classed(s.disabled, d => d.disabled)
     controlItemsMerged.select(`.${s.itemButton}`)
       .html(item => item.icon)
 

@@ -1,4 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
+import { Observable } from 'rxjs'
 import { min, extent } from 'd3-array'
 import { Transition } from 'd3-transition'
 import { select, Selection, mouse, event, BaseType } from 'd3-selection'
@@ -73,6 +74,12 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
   private _scale: number
   private _initialTransform
   private _isDragging = false
+
+  private _disableZoomIn
+  private _disableZoomOut
+  public disableZoomIn = new Observable(subscriber => { this._disableZoomIn = subscriber })
+  public disableZoomOut = new Observable(subscriber => { this._disableZoomOut = subscriber })
+
   events = {
     [Graph.selectors.background]: {
       click: this._onBackgroundClick.bind(this),
@@ -518,6 +525,8 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
     const transform = t || event.transform
     this._scale = transform.k
     this._graphContainer.attr('transform', transform)
+    this._disableZoomOut.next(this._scale <= config.zoomScaleExtent[0])
+    this._disableZoomIn.next(this._scale >= config.zoomScaleExtent[1])
 
     if (!this._initialTransform) this._initialTransform = transform
 

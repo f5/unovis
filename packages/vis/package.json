@@ -41,6 +41,7 @@
     "mapbox-gl": "^1.7.0",
     "mapbox-gl-leaflet": "^0.0.11",
     "resize-observer-polyfill": "^1.5.1",
+    "rxjs": "^6.5.5",
     "supercluster": "^7.0.0",
     "tangram": "^0.20.0",
     "topojson": "^3.0.2"
