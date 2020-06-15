@@ -35,6 +35,11 @@ export class GraphComponent implements OnInit, AfterViewInit {
     linkArrow: d => d.linkArrow,
     linkFlow: d => d.linkFlow,
     linkLabel: d => d.linkLabel,
+    onZoom: (scale, scaleExtent) => {
+      this.controlItems[1].disabled = scale >= scaleExtent[1]
+      this.controlItems[2].disabled = scale <= scaleExtent[0]
+      this.controlItems = [...this.controlItems]
+    },
 
     events: {
       [Graph.selectors.node]: {
@@ -67,15 +72,6 @@ export class GraphComponent implements OnInit, AfterViewInit {
     console.log('data', data);
 
     this.chart = new SingleChart(this.graph.nativeElement, { component: this.component }, data)
-
-    this.component.disableZoomIn.subscribe((disabled: boolean) => {
-      this.controlItems[1].disabled = disabled
-      this.controlItems = [...this.controlItems]
-    })
-    this.component.disableZoomOut.subscribe((disabled: boolean) => {
-      this.controlItems[2].disabled = disabled
-      this.controlItems = [...this.controlItems]
-    })
 
     // setInterval(() => {
     //   chart.setData(generator.next().value)
