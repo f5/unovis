@@ -13,7 +13,7 @@ const apiEpList = data.api_ep_list.map(d => {
     ...d,
     value: Math.random(),
   }
-})
+}).slice(0, 4)
 
 const collasedItems = {}
 
