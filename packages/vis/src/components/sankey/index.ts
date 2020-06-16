@@ -74,11 +74,8 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
     if (sizing === Sizing.EXTEND) this._preCalculateComponentSize()
     this._prepareLayout()
 
-    const sankeyHeight = this._getSankeyHeight()
-    const translateY = (config.height - sankeyHeight) / 2
-
     // Links
-    this._linksGroup.attr('transform', `translate(${bleed.left},${bleed.top + translateY})`)
+    this._linksGroup.attr('transform', `translate(${bleed.left},${bleed.top})`)
     const linkSelection = this._linksGroup.selectAll(`.${s.link}`).data(links, config.id)
     const linkSelectionEnter = linkSelection.enter().append('g').attr('class', s.link)
     linkSelectionEnter.call(createLinks)
@@ -86,7 +83,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
     linkSelection.exit().call(removeLinks, duration)
 
     // Nodes
-    this._nodesGroup.attr('transform', `translate(${bleed.left},${bleed.top + translateY})`)
+    this._nodesGroup.attr('transform', `translate(${bleed.left},${bleed.top})`)
     const nodeSelection = this._nodesGroup.selectAll(`.${s.gNode}`).data(nodes, config.id)
     const nodeSelectionEnter = nodeSelection.enter().append('g').attr('class', s.gNode)
     nodeSelectionEnter.call(createNodes, this.config, bleed)
