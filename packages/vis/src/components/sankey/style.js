@@ -60,6 +60,8 @@ export const transparentLink = css`
   opacity: 0;
 `
 
+export const labelGroup = css``
+
 export const nodeLabel = css`
   label: label;
 

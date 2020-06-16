@@ -38,8 +38,8 @@ function getLabelBackground (width: number, height: number): string {
     L 0 0 `
 }
 
-const backgroundLabelWidth = (nodeWidth, nodeHorizontalSpacing) => nodeHorizontalSpacing - nodeWidth - ARROW_WIDTH - NODE_LABEL_SPACING * 2
-const backgroundLabelHeight = (labelFontSize) => labelFontSize * 2.8
+const backgroundLabelWidth = (nodeWidth: number, nodeHorizontalSpacing: number): number => nodeHorizontalSpacing - nodeWidth - ARROW_WIDTH - NODE_LABEL_SPACING * 2
+const backgroundLabelHeight = (labelFontSize: number): number => labelFontSize * 2.8
 
 export function getWrapOption (config, trimText = true): WrapTextOptions {
   const { labelWidth, labelTextSeparator, labelForceWordBreak, labelLength, labelTrim, labelPosition, nodeHorizontalSpacing, nodeWidth } = config
@@ -66,20 +66,19 @@ export function createNodes<N extends SankeyNodeDatumInterface, L extends Sankey
     .style('fill', node => getColor(node, config.nodeColor))
 
   // Label background
-  if (labelPosition === LabelPosition.RIGHT) {
-    sel.append('path').attr('class', s.labelBackground)
-  }
+  const labelGroup = sel.append('g')
+    .attr('class', s.labelGroup)
+
+  labelGroup.append('path').attr('class', s.labelBackground)
 
   // Label
-  sel.append('text').attr('class', s.nodeLabel)
+  labelGroup.append('text').attr('class', s.nodeLabel)
     .attr('x', labelPosition === LabelPosition.AUTO ? -NODE_LABEL_SPACING : ARROW_WIDTH + BACKGROUND_LABEL_PADDING)
-    .attr('y', d => labelPosition === LabelPosition.AUTO ? (d.y1 - d.y0) / 2 : BACKGROUND_LABEL_PADDING + LABEL_TOP_MARGIN)
+    // .attr('y', d => labelPosition === LabelPosition.AUTO ? (d.y1 - d.y0) / 2 : BACKGROUND_LABEL_PADDING + LABEL_TOP_MARGIN)
 
   // Sub label
-  if (labelPosition === LabelPosition.RIGHT) {
-    sel.append('text').attr('class', s.nodeSubLabel)
-      .attr('y', BACKGROUND_LABEL_PADDING + LABEL_TOP_MARGIN)
-  }
+  labelGroup.append('text').attr('class', s.nodeSubLabel)
+    .attr('y', BACKGROUND_LABEL_PADDING + LABEL_TOP_MARGIN)
 
   // Node icon
   sel.append('text').attr('class', s.nodeIcon)
@@ -109,32 +108,30 @@ export function updateNodes<N extends SankeyNodeDatumInterface, L extends Sankey
     .attr('height', d => d.y1 - d.y0)
 
   // Label
-  const labelSelection = sel.select(`.${s.nodeLabel}`)
+  const labelGroupSelection = sel.select(`.${s.labelGroup}`)
+
+  const labelSelection = labelGroupSelection.select(`.${s.nodeLabel}`)
   labelSelection
     .text(config.nodeLabel)
-    .attr('dy', labelPosition === LabelPosition.AUTO ? '0.32em' : '1em')
-    .attr('x', config.nodeWidth + NODE_LABEL_SPACING + (labelPosition === LabelPosition.RIGHT ? ARROW_WIDTH + BACKGROUND_LABEL_PADDING : 0))
-    .attr('text-anchor', 'start')
     .style('font-size', config.labelFontSize)
 
-  if (labelPosition === LabelPosition.AUTO) {
+  switch (labelPosition) {
+  case LabelPosition.AUTO: {
     labelSelection
-      .filter(d => d.x0 < config.width / 2)
-      .attr('x', -NODE_LABEL_SPACING)
-      .attr('text-anchor', 'end')
+      .attr('x', d => d.x0 < config.width / 2 ? -NODE_LABEL_SPACING : config.nodeWidth + NODE_LABEL_SPACING)
+      .attr('text-anchor', d => d.x0 < config.width / 2 ? 'end' : 'start')
+
+    smartTransition(labelGroupSelection, duration)
+      .attr('transform', d => `translate(0, ${(d.y1 - d.y0) / 2})`)
+
+    break
   }
+  case LabelPosition.RIGHT: {
+    labelSelection
+      .attr('dy', '1.2em')
+      .attr('x', ARROW_WIDTH + BACKGROUND_LABEL_PADDING)
 
-  if (labelPosition === LabelPosition.AUTO) {
-    smartTransition(labelSelection, duration)
-      .attr('y', d => (d.y1 - d.y0) / 2)
-  }
-
-  labelSelection.each((d, i, elements) => {
-    select(elements[i]).call(wrapTextElement, getWrapOption(config))
-  })
-
-  if (labelPosition === LabelPosition.RIGHT) {
-    const subLabelSelection = sel.select(`.${s.nodeSubLabel}`)
+    const subLabelSelection = labelGroupSelection.select(`.${s.nodeSubLabel}`)
     subLabelSelection
       .text(d => {
         let text = getValue(d, config.nodeSubLabel)
@@ -142,21 +139,31 @@ export function updateNodes<N extends SankeyNodeDatumInterface, L extends Sankey
         return text
       })
       .attr('dy', `${2.32 * 1.2}em`)
-      .attr('x', config.nodeWidth + ARROW_WIDTH + NODE_LABEL_SPACING + BACKGROUND_LABEL_PADDING)
+      .attr('x', ARROW_WIDTH + BACKGROUND_LABEL_PADDING)
       .attr('text-anchor', 'start')
       .style('font-size', config.labelFontSize * 0.8)
-  }
 
-  const labelBackground = sel.select(`.${s.labelBackground}`)
-  if (labelPosition === LabelPosition.RIGHT) {
+    const labelBackground = labelGroupSelection.select(`.${s.labelBackground}`)
     labelBackground
       .attr('d', () => {
         const w = backgroundLabelWidth(config.nodeWidth, config.nodeHorizontalSpacing) + BACKGROUND_LABEL_PADDING * 2
         const h = backgroundLabelHeight(config.labelFontSize) + BACKGROUND_LABEL_PADDING * 2
         return getLabelBackground(w, h)
       })
-      .attr('transform', `translate(${config.nodeWidth + NODE_LABEL_SPACING}, ${LABEL_TOP_MARGIN})`)
+
+    smartTransition(labelGroupSelection, duration)
+      .attr('transform', d => {
+        const nodeHeight = d.y1 - d.y0
+        const h = backgroundLabelHeight(config.labelFontSize) + BACKGROUND_LABEL_PADDING * 2
+        const dy = nodeHeight > h ? 0 : (nodeHeight - h) / 2
+        return `translate(${config.nodeWidth + NODE_LABEL_SPACING}, ${dy})`
+      })
   }
+  }
+
+  labelSelection.each((d, i, elements) => {
+    select(elements[i]).call(wrapTextElement, getWrapOption(config))
+  })
 
   const nodeIcon = sel.select(`.${s.nodeIcon}`)
   if (config.nodeIcon) {
