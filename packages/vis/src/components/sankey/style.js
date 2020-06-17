@@ -37,14 +37,14 @@ export const link = css`
   path {
     fill: none;
     cursor: var(--vis-sankey-link-cursor);
-    stroke: var(--vis-sankey-link-color);
-    stroke-opacity: 0.5;
+    fill: var(--vis-sankey-link-color);
+    fill-opacity: 0.5;
     transition: .1s stroke;
   }
 
   &:hover {
     path {
-      stroke-opacity: 1;
+      fill-opacity: 1;
     }
   }
 `
@@ -56,7 +56,6 @@ export const visibleLink = css`
 export const transparentLink = css`
   label: transparent;
 
-  stroke-width: 10;
   opacity: 0;
 `
 
