@@ -153,7 +153,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
       .iterations(32)
       .nodeAlign(config.nodeAlign)
 
-    if (links.length > 0 && links.length > 1) this._sankey({ nodes, links })
+    if (links.length > 0 && nodes.length > 1) this._sankey({ nodes, links })
     if (links.length === 0 && nodes.length === 1) {
       const node = nodes[0]
       node.width = Math.max(10, config.nodeWidth)
