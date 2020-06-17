@@ -6,14 +6,14 @@ import _groupBy from 'lodash/groupBy'
 // Vis
 import { SingleChart, Sankey, SankeyConfigInterface, Sizing, LabelPosition, NodeAlignType, ExitTransitionType, EnterTransitionType } from '@volterra/vis'
 
-import data from './data/apieplist_ves.json'
+import data from './data/apieplist_ves-prod.json'
 
-const apiEpList = data.api_ep_list.map(d => {
+const apiEpList = data.apiep_list.map(d => {
   return {
     ...d,
     value: Math.random(),
   }
-}).slice(0, 4)
+})
 
 const collasedItems = {}
 
@@ -57,7 +57,7 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
   }
 
   component = new Sankey(this.config)
-  flowlegendItems = ['Segment 1', 'Segment 2', 'Segment 3', 'Segment 4', 'Segment 5', 'Segment 6']
+  flowlegendItems = ['Segment 1', 'Segment 2', 'Segment 3', 'Segment 4', 'Segment 5', 'Segment 6', 'Segment 7']
   flowlegendWidth = 0;
 
   ngAfterViewInit (): void {
@@ -78,7 +78,7 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
     const nodeId = (path, depth) => `${depth}:${path}`
     for (const rec of apiData) {
       const value = rec.value // Math.random()
-      const url = rec.url
+      const url = rec.collapsed_url
       const splitted = url.split('/')
 
       // Add new nodes { id, path, url, label, depth }
