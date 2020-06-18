@@ -4,10 +4,7 @@ import { sum } from 'd3-array'
 import _groupBy from 'lodash/groupBy'
 
 // Vis
-import {
-  SingleChart, Sankey, SankeyConfigInterface, Sizing, LabelPosition,
-  NodeAlignType, ExitTransitionType, EnterTransitionType,
-} from '@volterra/vis'
+import { SingleChart, Sankey, SankeyConfigInterface, Sizing, LabelPosition, NodeAlignType, ExitTransitionType, EnterTransitionType, VisControlItemInterface, VisControlsOrientation } from '@volterra/vis'
 
 import data from './data/apieplist_ves-prod.json'
 
@@ -63,12 +60,33 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
   flowlegendItems = ['Segment 1', 'Segment 2', 'Segment 3', 'Segment 4', 'Segment 5', 'Segment 6', 'Segment 7']
   flowlegendWidth = 0;
 
+  singleChartConfig = { component: this.component, margin: this.margin, fitToWidth: false }
+  controlItems: VisControlItemInterface[] = [
+    {
+      icon: '&#xe986',
+      callback: () => {
+        this.singleChartConfig.fitToWidth = !this.singleChartConfig.fitToWidth
+        this.sankey.update(this.singleChartConfig)
+
+        this.controlItems[0].icon = this.singleChartConfig.fitToWidth ? '&#xe926' : '&#xe986'
+        this.controlItems = [...this.controlItems]
+        if (this.singleChartConfig.fitToWidth) {
+          this.flowlegendWidth = this.sankey.containerWidth - NODE_HORIZONTAL_SPACE * this.sankey.fitScaleX
+        } else {
+          this.flowlegendWidth = this.sankey.component.getWidth() - NODE_HORIZONTAL_SPACE
+        }
+      },
+    },
+  ]
+
+  controlsOrientation = VisControlsOrientation.VERTICAL
+
   ngAfterViewInit (): void {
     const apiData = apiEpList
     const sankeyData = this.process(apiData)
     console.log({ apiData, sankeyData })
 
-    this.sankey = new SingleChart(this.chart.nativeElement, { component: this.component, margin: this.margin }, sankeyData)
+    this.sankey = new SingleChart(this.chart.nativeElement, this.singleChartConfig, sankeyData)
     setTimeout(() => {
       this.flowlegendWidth = this.sankey.component.getWidth() - NODE_HORIZONTAL_SPACE
     }, 50)
