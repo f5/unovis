@@ -15,7 +15,7 @@ import { Spacing } from 'types/misc'
 import { NodeDatumCore, LinkDatumCore, LayoutType, LinkArrow, PanelConfigInterface } from 'types/graph'
 
 // Utils
-import { isNumber, clamp, getValue, find, cloneDeep, flatten, findIndex, clean, uniq, shallowDiff } from 'utils/data'
+import { isNumber, clamp, getValue, find, cloneDeep, flatten, findIndex, clean, uniq, shallowDiff, isFunction } from 'utils/data'
 import { stringToHtmlId } from 'utils/misc'
 import { smartTransition } from 'utils/d3'
 
@@ -73,6 +73,7 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
   private _scale: number
   private _initialTransform
   private _isDragging = false
+
   events = {
     [Graph.selectors.background]: {
       click: this._onBackgroundClick.bind(this),
@@ -129,12 +130,13 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
   setConfig (config: GraphConfigInterface<N, L>): void {
     const { datamodel: { links, nodes } } = this
     this._fitLayout = this._fitLayout || this.config.layoutType !== config.layoutType
-    this._recalculateLayout = this._shouldLayoutRecalculate(config)
+    this._recalculateLayout = this._recalculateLayout || this._shouldLayoutRecalculate(config)
 
     super.setConfig(config)
 
     this._setPanels = true
 
+    this._resetSelection()
     const selectedNode = this.config.selectedNodeId && find(nodes, node => node.id === this.config.selectedNodeId)
     this._selectNode(selectedNode)
 
@@ -163,13 +165,11 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
       .attr('height', height)
       .attr('opacity', 0)
 
-    if (this._firstRender) {
-      this._prevWidth = width
-      this._prevHeight = height
-    }
     if ((this._prevWidth !== width || this._prevHeight !== height) && layoutAutofit) {
       // Fit layout on resize
       this._fitLayout = true
+      this._prevWidth = width
+      this._prevHeight = height
     }
 
     // Apply layout
@@ -519,6 +519,7 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
     const transform = t || event.transform
     this._scale = transform.k
     this._graphContainer.attr('transform', transform)
+    if (isFunction(config.onZoom)) config.onZoom(this._scale, config.zoomScaleExtent)
 
     if (!this._initialTransform) this._initialTransform = transform
 
@@ -687,5 +688,26 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
           />
         `
       })
+  }
+
+  public zoomIn (increment = 0.3): void {
+    const scaleBy = 1 + increment
+    smartTransition(this.g, this.config.duration / 2)
+      .call(this._zoomBehavior.scaleBy, scaleBy)
+  }
+
+  public zoomOut (increment = 0.3): void {
+    const scaleBy = 1 - increment
+    smartTransition(this.g, this.config.duration / 2)
+      .call(this._zoomBehavior.scaleBy, scaleBy)
+  }
+
+  public setZoom (zoomLevel: number): void {
+    smartTransition(this.g, this.config.duration / 2)
+      .call(this._zoomBehavior.scaleTo, zoomLevel)
+  }
+
+  public fitView (): void {
+    this._fit(this.config.duration / 2)
   }
 }

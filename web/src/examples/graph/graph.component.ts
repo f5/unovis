@@ -5,7 +5,7 @@ import _times from 'lodash/times'
 import _sample from 'lodash/sample'
 import _random from 'lodash/random'
 
-import { Graph, SingleChart, LayoutType, GraphConfigInterface } from '@volterra/vis'
+import { Graph, SingleChart, LayoutType, GraphConfigInterface, VisControlItemInterface, VisControlsOrientation } from '@volterra/vis'
 
 import { dataGenerator } from './data/datagen'
 
@@ -35,6 +35,11 @@ export class GraphComponent implements OnInit, AfterViewInit {
     linkArrow: d => d.linkArrow,
     linkFlow: d => d.linkFlow,
     linkLabel: d => d.linkLabel,
+    onZoom: (scale, scaleExtent) => {
+      this.controlItems[1].disabled = scale >= scaleExtent[1]
+      this.controlItems[2].disabled = scale <= scaleExtent[0]
+      this.controlItems = [...this.controlItems]
+    },
 
     events: {
       [Graph.selectors.node]: {
@@ -44,6 +49,22 @@ export class GraphComponent implements OnInit, AfterViewInit {
   }
 
   component = new Graph(this.config)
+  controlItems: VisControlItemInterface[] = [
+    {
+      icon: '&#xe986',
+      callback: () => { this.component.fitView() },
+      borderBottom: true,
+    },
+    {
+      icon: '&#xe936',
+      callback: () => { this.component.zoomIn() },
+    },
+    {
+      icon: '&#xe934',
+      callback: () => { this.component.zoomOut() },
+    },
+  ]
+  controlsOrientation = VisControlsOrientation.VERTICAL
   
   ngAfterViewInit (): void {
     const generator = dataGenerator()

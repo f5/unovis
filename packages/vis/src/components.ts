@@ -17,6 +17,7 @@ import { LeafletMap } from './components/leaflet-map'
 import { RadialDendrogram } from './components/radial-dendrogram'
 import { ChordDiagram } from './components/chord-diagram'
 import { Graph } from './components/graph'
+import { VisControls } from './components/vis-controls'
 
 import { LineConfigInterface } from './components/line/config'
 import { StackedBarConfigInterface } from './components/stacked-bar/config'
@@ -36,6 +37,7 @@ import { LeafletMapConfigInterface } from './components/leaflet-map/config'
 import { RadialDendrogramConfigInterface } from './components/radial-dendrogram/config'
 import { ChordDiagramConfigInterface } from './components/chord-diagram/config'
 import { GraphConfigInterface } from './components/graph/config'
+import { VisControlsConfigInterface } from './components/vis-controls/config'
 
 import './styles/css-variables'
 
@@ -76,4 +78,6 @@ export {
   GraphConfigInterface,
   ChordDiagram,
   ChordDiagramConfigInterface,
+  VisControls,
+  VisControlsConfigInterface,
 }

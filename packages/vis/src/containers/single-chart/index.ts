@@ -20,6 +20,7 @@ import { SingleChartConfig, SingleChartConfigInterface } from './config'
 export class SingleChart<Datum> extends ContainerCore {
   component: ComponentCore<Datum>
   config: SingleChartConfig<Datum> = new SingleChartConfig()
+  public fitScaleX: number = undefined
 
   constructor (element, config?: SingleChartConfigInterface<Datum>, data?: Datum) {
     super(element)
@@ -79,9 +80,18 @@ export class SingleChart<Datum> extends ContainerCore {
     component.render(customDuration)
     const extendedSizeComponent = component as ExtendedSizeComponent
     if (extendedSizeComponent.getWidth && extendedSizeComponent.getHeight) {
+      const componentWidth = extendedSizeComponent.getWidth() + config.margin.left + config.margin.right
+      const componentHeight = extendedSizeComponent.getHeight() + config.margin.top + config.margin.bottom
+
+      this.fitScaleX = config.fitToWidth ? this.width / componentWidth : 1
+
       this.svg
-        .attr('width', extendedSizeComponent.getWidth())
-        .attr('height', extendedSizeComponent.getHeight())
+        .attr('width', componentWidth * this.fitScaleX)
+        .attr('height', componentHeight * this.fitScaleX)
+
+      this.svg
+        .attr('viewBox', config.fitToWidth ? `${0} ${0} ${componentWidth} ${componentHeight * this.fitScaleX}` : null)
+        .attr('preserveAspectRatio', config.fitToWidth ? 'xMinYMin' : null)
     }
     if (config.tooltip) config.tooltip.update()
   }

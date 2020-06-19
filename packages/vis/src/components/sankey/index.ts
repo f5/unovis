@@ -13,7 +13,7 @@ import { Spacing } from 'types/misc'
 import { ExtendedSizeComponent, Sizing } from 'types/component'
 
 // Utils
-import { getValue, clamp, isNumber, groupBy } from 'utils/data'
+import { getValue, clamp, isNumber, groupBy, sortBy, flatten } from 'utils/data'
 import { SankeyNodeDatumInterface, SankeyLinkDatumInterface, LabelPosition } from 'types/sankey'
 
 // Config
@@ -25,6 +25,7 @@ import * as s from './style'
 // Modules
 import { removeLinks, createLinks, updateLinks } from './modules/link'
 import { removeNodes, createNodes, updateNodes, onNodeMouseOver, onNodeMouseOut } from './modules/node'
+import { requiredLabelSpace } from './modules/label'
 
 export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> extends ComponentCore<{nodes: N[]; links?: L[]}> implements ExtendedSizeComponent {
   static selectors = s
@@ -36,7 +37,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
   private _nodesGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
   private _sankey = sankey()
   events = {
-    [Sankey.selectors.node]: {
+    [Sankey.selectors.gNode]: {
       mouseover: this._onNodeMouseOver.bind(this),
       mouseout: this._onNodeMouseOut.bind(this),
     },
@@ -50,11 +51,16 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
   }
 
   get bleed (): Spacing {
-    const { config: { labelWidth, labelFontSize, labelPosition, nodeHorizontalSpacing } } = this
-    if (labelPosition === LabelPosition.AUTO) {
+    const { config: { labelWidth, labelFontSize, labelPosition, nodeHorizontalSpacing, nodeWidth } } = this
+
+    switch (labelPosition) {
+    case (LabelPosition.AUTO): {
       return { top: labelFontSize / 2, bottom: labelFontSize / 2, left: labelWidth, right: labelWidth }
-    } else {
-      return { top: labelFontSize / 2, bottom: labelFontSize / 2, left: 0, right: nodeHorizontalSpacing }
+    }
+    case (LabelPosition.RIGHT): {
+      const requiredSpace = requiredLabelSpace(nodeWidth, nodeHorizontalSpacing, labelFontSize)
+      return { top: requiredSpace.y / 2, bottom: requiredSpace.y / 2, left: 0, right: requiredSpace.x }
+    }
     }
   }
 
@@ -68,17 +74,14 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
       (nodes.length > 1 && links.length === 0)
     ) {
       this._linksGroup.selectAll(`.${s.link}`).call(removeLinks, duration)
-      this._nodesGroup.selectAll(`.${s.node}`).call(removeNodes, duration)
+      this._nodesGroup.selectAll(`.${s.gNode}`).call(removeNodes, config, duration)
     }
 
     if (sizing === Sizing.EXTEND) this._preCalculateComponentSize()
     this._prepareLayout()
 
-    const sankeyHeight = this._getSankeyHeight()
-    const translateY = (config.height - sankeyHeight) / 2
-
     // Links
-    this._linksGroup.attr('transform', `translate(${bleed.left},${bleed.top + translateY})`)
+    this._linksGroup.attr('transform', `translate(${bleed.left},${bleed.top})`)
     const linkSelection = this._linksGroup.selectAll(`.${s.link}`).data(links, config.id)
     const linkSelectionEnter = linkSelection.enter().append('g').attr('class', s.link)
     linkSelectionEnter.call(createLinks)
@@ -86,12 +89,16 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
     linkSelection.exit().call(removeLinks, duration)
 
     // Nodes
-    this._nodesGroup.attr('transform', `translate(${bleed.left},${bleed.top + translateY})`)
-    const nodeSelection = this._nodesGroup.selectAll(`.${s.node}`).data(nodes, config.id)
-    const nodeSelectionEnter = nodeSelection.enter().append('g').attr('class', s.node)
+    this._nodesGroup.attr('transform', `translate(${bleed.left},${bleed.top})`)
+
+    const nodeSelection = this._nodesGroup.selectAll(`.${s.gNode}`).data(nodes, config.id)
+    const nodeSelectionEnter = nodeSelection.enter().append('g').attr('class', s.gNode)
+
     nodeSelectionEnter.call(createNodes, this.config, bleed)
     nodeSelection.merge(nodeSelectionEnter).call(updateNodes, config, bleed, duration)
-    nodeSelection.exit().call(removeNodes, duration)
+    nodeSelection.exit()
+      .attr('class', s.nodeExit)
+      .call(removeNodes, config, duration)
   }
 
   private _preCalculateComponentSize (): void {
@@ -100,7 +107,8 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
       .nodeId(d => d.id)
       .iterations(32)
       .nodeAlign(nodeAlign)
-    this._sankey({ nodes, links })
+
+    if (nodes.length && links.length) this._sankey({ nodes, links })
     const extentValue = extent(nodes, d => d.value || undefined)
     const scale = scaleLinear().domain(extentValue).range([nodeMinHeight, nodeMaxHeight]).clamp(true)
     const groupedByLayer = groupBy(nodes, d => d.layer)
@@ -111,7 +119,10 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
   }
 
   private _prepareLayout (): void {
-    const { config, bleed, datamodel: { nodes, links }, _extendedHeight, _extendedWidth } = this
+    const { config, bleed, datamodel, datamodel: { links }, _extendedHeight, _extendedWidth } = this
+
+    const nodes = config.sizing === Sizing.EXTEND ? this._sortNodes() : datamodel.nodes
+
     links.forEach(link => {
       // For d3 sankey function each link must be an object with the `value` property
       link.value = getValue(link, d => getValue(d, config.linkValue))
@@ -122,6 +133,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
       this._sankey.linkSort((link2, link1) => {
         if (link2.value > link1.value) return -1
       })
+      this._sankey.nodeSort(null)
     } else {
       this._sankey
         .nodeSort((node2, node1) => {
@@ -150,7 +162,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
       .iterations(32)
       .nodeAlign(config.nodeAlign)
 
-    if (links.length > 0 && links.length > 1) this._sankey({ nodes, links })
+    if (links.length > 0 && nodes.length > 1) this._sankey({ nodes, links })
     if (links.length === 0 && nodes.length === 1) {
       const node = nodes[0]
       node.width = Math.max(10, config.nodeWidth)
@@ -174,6 +186,28 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
     const { config, datamodel: { links } } = this
 
     return clamp(config.height * links.length * config.heightNormalizationCoeff, config.height / 2, config.height)
+  }
+
+  private _sortNodes (): [] {
+    const { datamodel } = this
+    const groupByColumn = groupBy(datamodel.nodes, 'layer')
+    Object.keys(groupByColumn).forEach(key => {
+      const column = groupByColumn[key]
+      let sortedColumn
+      if (Number(key) === 0) {
+        sortedColumn = sortBy(column, [d => -d.value])
+      } else {
+        sortedColumn = sortBy(column, [
+          d => {
+            return d.targetLinks[0].source._order
+          },
+          d => -d.value,
+        ])
+      }
+      sortedColumn.forEach((c, i) => { c._order = i })
+      groupByColumn[key] = sortedColumn
+    })
+    return flatten(Object.values(groupByColumn))
   }
 
   getWidth (): number {

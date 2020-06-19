@@ -1,6 +1,8 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { css, injectGlobal } from 'emotion'
 
+export const SANKEY_ICON_SIZE = 22
+
 export const variables = injectGlobal`
   :root {
     --vis-sankey-link-cursor: default;
@@ -13,7 +15,7 @@ export const variables = injectGlobal`
     --vis-sankey-node-label-background-fill-color: #ffffff;
     --vis-sankey-node-label-background-stroke-color: #dadada;
 
-    --vis-sankey-icon-size: 22px;
+    --vis-sankey-icon-size: ${SANKEY_ICON_SIZE}px;
     --vis-sankey-icon-color: #ffffff;
     --vis-sankey-icon-font-family: FontAwesome;
 
@@ -35,14 +37,14 @@ export const link = css`
   path {
     fill: none;
     cursor: var(--vis-sankey-link-cursor);
-    stroke: var(--vis-sankey-link-color);
-    stroke-opacity: 0.5;
+    fill: var(--vis-sankey-link-color);
+    fill-opacity: 0.5;
     transition: .1s stroke;
   }
 
   &:hover {
     path {
-      stroke-opacity: 1;
+      fill-opacity: 1;
     }
   }
 `
@@ -54,8 +56,12 @@ export const visibleLink = css`
 export const transparentLink = css`
   label: transparent;
 
-  stroke-width: 10;
   opacity: 0;
+`
+
+export const labelGroup = css`
+  label: label-group;
+  visibility: hidden;
 `
 
 export const nodeLabel = css`
@@ -64,7 +70,6 @@ export const nodeLabel = css`
   fill: var(--vis-sankey-node-label-color);
   font-weight: 600;
   pointer-events: none;
-  visibility: hidden;
   user-select: none;
 
   &, tspan {
@@ -78,7 +83,6 @@ export const nodeSubLabel = css`
 
   fill: var(--vis-sankey-node-label-color);
   pointer-events: none;
-  visibility: hidden;
   user-select: none;
 
   &, tspan {
@@ -92,27 +96,15 @@ export const labelBackground = css`
   stroke: var(--vis-sankey-node-label-background-stroke-color);
   fill: var(--vis-sankey-node-label-background-fill-color);
   opacity: 0.8;
-  visibility: hidden;
 `
 
 export const visibleLabel = css`
   label: visible-label;
+  visibility: visible;
 `
 
-export const node = css`
-  label: node;
-
-  rect {
-    cursor: var(--vis-sankey-node-cursor);
-    fill: var(--vis-sankey-node-fill);
-    opacity: 0.9;
-  }
-  
-  &:hover {
-    rect {
-      opacity: 1;
-    }
-  }
+export const gNode = css`
+  label: g-node;
 
   &${`.${visibleLabel}`} {
     ${`.${nodeLabel}`} {
@@ -127,6 +119,18 @@ export const node = css`
   }
 `
 
+export const node = css`
+  label: node;
+
+  cursor: var(--vis-sankey-node-cursor);
+  fill: var(--vis-sankey-node-fill);
+  opacity: 0.9;
+
+  &:hover {
+    opacity: 1;
+  }
+`
+
 export const nodeIcon = css`
   label: icon;
 
@@ -136,4 +140,8 @@ export const nodeIcon = css`
   fill: var(--vis-sankey-node-icon-color);
   stroke: var(--vis-sankey-node-fill);
   stroke-opacity: 0.6;
+`
+
+export const nodeExit = css`
+  label: node-exit;
 `

@@ -1,5 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { Selection, BaseType } from 'd3-selection'
+import { Selection } from 'd3-selection'
+import { nest } from 'd3-collection'
 import { hierarchy, HierarchyRectangularNode, partition } from 'd3-hierarchy'
 import { arc, area, CurveCatmullRomFactory, CurveFactory } from 'd3-shape'
 import { scalePow } from 'd3-scale'
@@ -7,13 +8,15 @@ import { max } from 'd3-array'
 
 // Core
 import { ComponentCore } from 'core/component'
+import { GraphDataModel } from 'data-models/graph'
 
 // Utils
 import { getValue, isNumber, groupBy } from 'utils/data'
 
 // Types
 import { Spacing } from 'types/misc'
-import { Hierarchy, Link, LabelType } from 'types/radial-dendrogram'
+import { Hierarchy, LabelType, HNode, HLink, Ribbon } from 'types/radial-dendrogram'
+import { NodeDatumCore, LinkDatumCore } from 'types/graph'
 import { Curve } from 'types/curves'
 
 // Config
@@ -27,28 +30,21 @@ import { createLink, updateLink, removeLink } from './modules/link'
 // Styles
 import * as s from './style'
 
-interface HNode<T> extends HierarchyRectangularNode<T> {
-  _state?: { hovered?: boolean };
-  _prevX1?: number;
-}
-
-interface HLink<T> extends Link<T> {
-  _state?: { hovered?: boolean };
-  _points?: [];
-}
-
-export class ChordDiagram<H extends Hierarchy, L extends Link<H>> extends ComponentCore<{ nodes: H; links: L[]}> {
+export class ChordDiagram<H extends Hierarchy, N extends NodeDatumCore, L extends LinkDatumCore> extends ComponentCore<{ nodes: N[]; links?: L[] }> {
   static selectors = s
   config: ChordDiagramConfig<H> = new ChordDiagramConfig()
+  datamodel: GraphDataModel<N, L> = new GraphDataModel()
+
   nodeGroup: Selection<SVGGElement, HierarchyRectangularNode<H>[], SVGGElement, HierarchyRectangularNode<H>[]>
-  linkGroup: Selection<SVGGElement, Link<H>[], SVGGElement, Link<H>[]>
+  linkGroup: Selection<SVGGElement, Ribbon<H>[], SVGGElement, Ribbon<H>[]>
   labelGroup: Selection<SVGGElement, HierarchyRectangularNode<H>[], SVGGElement, HierarchyRectangularNode<H>[]>
   arcGen = arc<HierarchyRectangularNode<H>>()
   radiusScale = scalePow()
   linkAreaGen = area<HierarchyRectangularNode<H>>()
   private _nodes: HNode<H>[] = []
-  private _links: L[] = []
+  private _links: Ribbon<H>[] = []
   private _rootNode: HNode<H>
+  private _hierarchyNodes
 
   events = {
     [ChordDiagram.selectors.node]: {
@@ -69,14 +65,24 @@ export class ChordDiagram<H extends Hierarchy, L extends Link<H>> extends Compon
     this.labelGroup = this.g.append('g')
   }
 
+  setData (data: GraphDataModel<N, L>): void {
+    this.datamodel.data = data
+    this._hierarchyNodes = this._getHierarchyNodes()
+  }
+
+  setConfig (config?: ChordDiagramConfigInterface<H>): void {
+    super.setConfig(config)
+    this._hierarchyNodes = this._getHierarchyNodes()
+  }
+
   get bleed (): Spacing {
     return { top: 4, bottom: 4, left: 4, right: 4 }
   }
 
   _render (customDuration?: number): void {
     super._render(customDuration)
-    const { config, config: { nodeLabelType, radiusScaleExponent }, radiusScale, datamodel: { data } } = this
-    const { nodes } = data
+    const { config, config: { nodeLabelType, radiusScaleExponent }, radiusScale } = this
+    const nodes = this._hierarchyNodes
     const duration = isNumber(customDuration) ? customDuration : config.duration
 
     this.arcGen
@@ -97,7 +103,7 @@ export class ChordDiagram<H extends Hierarchy, L extends Link<H>> extends Compon
 
     const hierarchyData = hierarchy(nodes, d => config.children(d))
 
-    hierarchyData.sum(d => getValue(d, config.value))
+    hierarchyData.sum(d => d._state?.value)
 
     let radius = Math.min(config.width, config.height) / 2 - max([this.bleed.top, this.bleed.bottom, this.bleed.left, this.bleed.right])
     let ladelWidth = nodeLabelType === LabelType.PERPENDICULAR ? radius / (hierarchyData.height + 1) - config.nodeWidth : 0
@@ -130,11 +136,11 @@ export class ChordDiagram<H extends Hierarchy, L extends Link<H>> extends Compon
       .attr('class', s.link)
       .call(createLink, this.linkAreaGen)
 
-    const linksMerged: Selection<BaseType, Link<H>, SVGGElement, Link<H>[]> = linksSelection.merge(linksEnter)
+    const linksMerged = linksSelection.merge(linksEnter)
     linksMerged.call(updateLink, this.linkAreaGen, duration)
 
-    const linksRemove: Selection<BaseType, Link<H>, SVGGElement, Link<H>[]> = linksSelection.exit()
-    linksRemove.call(removeLink, duration)
+    linksSelection.exit()
+      .call(removeLink, duration)
 
     // Nodes
     const nodesSelection = this.nodeGroup
@@ -164,15 +170,34 @@ export class ChordDiagram<H extends Hierarchy, L extends Link<H>> extends Compon
     labelsMerged.call(updateLabel, config, ladelWidth, radiusScale, duration)
 
     labels.exit()
+      .attr('class', s.labelExit)
       .call(removeLabel, duration)
   }
 
-  _getRibbons (dendogram: HierarchyRectangularNode<H>): L[] {
-    const { datamodel: { data } } = this
+  _getHierarchyNodes () {
+    const { config: { nodeLevels, value }, datamodel: { nodes, links } } = this
+    nodes.forEach((n: any) => { delete n._state.value })
+    links.forEach((l: any) => {
+      delete l._state.points
+      l.source._state.value = (l.source._state.value || 0) + getValue(l, value)
+      l.target._state.value = (l.target._state.value || 0) + getValue(l, value)
+    })
+
+    const nestGen = nest<any, any>()
+    nodeLevels.forEach(levelAccessor => {
+      nestGen.key(d => d[levelAccessor])
+    })
+
+    return { values: nestGen.entries(nodes) }
+  }
+
+  _getRibbons (dendogram: HierarchyRectangularNode<H>): Ribbon<H>[] {
+    const { datamodel: { links } } = this
     const findNode = (nodes, id): HierarchyRectangularNode<H> => nodes.find(n => n.data.id === id)
     const leafNodes = dendogram.leaves()
-    const groupedBySource = groupBy(data.links, d => d.source)
-    const groupedByTarget = groupBy(data.links, d => d.target)
+
+    const groupedBySource = groupBy(links, d => d.source.id)
+    const groupedByTarget = groupBy(links, d => d.target.id)
 
     const getNodesInRibbon = (source, target, dendrogramHeight, nodes = []) => {
       nodes[source.height] = source
@@ -183,9 +208,9 @@ export class ChordDiagram<H extends Hierarchy, L extends Link<H>> extends Compon
 
     const calculatePoints = (links, type, depth) => {
       links.forEach(link => {
-        if (!link._points) link._points = []
-        const sourceLeaf = findNode(leafNodes, link.source)
-        const targetLeaf = findNode(leafNodes, link.target)
+        if (!link._state.points) link._state.points = []
+        const sourceLeaf = findNode(leafNodes, link.source.id)
+        const targetLeaf = findNode(leafNodes, link.target.id)
         const nodesInRibbon = getNodesInRibbon(
           type === 'out' ? sourceLeaf : targetLeaf,
           type === 'out' ? targetLeaf : sourceLeaf,
@@ -201,7 +226,7 @@ export class ChordDiagram<H extends Hierarchy, L extends Link<H>> extends Compon
           type === 'out' ? x1 : x0,
           currNode.y1, 0)
         const pointIdx = type === 'out' ? depth : dendogram.height * 2 - 1 - depth
-        link._points[pointIdx] = { x0: converted.x0, x1: converted.x1, y0: converted.y0, y1: converted.y1 }
+        link._state.points[pointIdx] = { x0: converted.x0, x1: converted.x1, y0: converted.y0, y1: converted.y1 }
       })
     }
 
@@ -214,15 +239,15 @@ export class ChordDiagram<H extends Hierarchy, L extends Link<H>> extends Compon
       }
     })
 
-    const ribbons = data.links.map((l: HLink<H>) => {
-      const sourceNode = findNode(leafNodes, l.source)
-      const targetNode = findNode(leafNodes, l.target)
+    const ribbons = links.map((l: any) => {
+      const sourceNode = findNode(leafNodes, l.source.id)
+      const targetNode = findNode(leafNodes, l.target.id)
 
       return {
         source: sourceNode,
         target: targetNode,
-        points: l._points,
-      } as L
+        points: l._state.points,
+      }
     })
 
     return ribbons
@@ -287,9 +312,9 @@ export class ChordDiagram<H extends Hierarchy, L extends Link<H>> extends Compon
     this._highlightOnHover()
   }
 
-  _highlightOnHover (links?: L[]): void {
+  _highlightOnHover (links?: HLink<H>[]): void {
     if (links) {
-      links.forEach((l: HLink<H>) => {
+      links.forEach(l => {
         l._state.hovered = true
         const sourcePath = l.source.path(this._rootNode)
         const targetPath = l.target.path(this._rootNode)
