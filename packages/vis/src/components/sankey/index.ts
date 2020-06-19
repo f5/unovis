@@ -107,7 +107,8 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
       .nodeId(d => d.id)
       .iterations(32)
       .nodeAlign(nodeAlign)
-    this._sankey({ nodes, links })
+
+    if (nodes.length && links.length) this._sankey({ nodes, links })
     const extentValue = extent(nodes, d => d.value || undefined)
     const scale = scaleLinear().domain(extentValue).range([nodeMinHeight, nodeMaxHeight]).clamp(true)
     const groupedByLayer = groupBy(nodes, d => d.layer)
