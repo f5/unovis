@@ -81,7 +81,7 @@ export class SankeyConfig<N extends SankeyNodeDatumInterface, L extends SankeyLi
   labelTextSeparator = [' ', '-']
   labelTrim = TrimMode.END
   labelForceWordBreak = false
-  labelFontSize = 13
+  labelFontSize = 12
   linkValue = (d: N): number => d['value']
   linkColor = (d: L): string => d['color']
   nodeColor = (d: N): string => d['color']

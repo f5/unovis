@@ -25,6 +25,7 @@ import * as s from './style'
 // Modules
 import { removeLinks, createLinks, updateLinks } from './modules/link'
 import { removeNodes, createNodes, updateNodes, onNodeMouseOver, onNodeMouseOut } from './modules/node'
+import { requiredLabelSpace } from './modules/label'
 
 export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> extends ComponentCore<{nodes: N[]; links?: L[]}> implements ExtendedSizeComponent {
   static selectors = s
@@ -50,11 +51,16 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
   }
 
   get bleed (): Spacing {
-    const { config: { labelWidth, labelFontSize, labelPosition, nodeHorizontalSpacing } } = this
-    if (labelPosition === LabelPosition.AUTO) {
+    const { config: { labelWidth, labelFontSize, labelPosition, nodeHorizontalSpacing, nodeWidth } } = this
+
+    switch (labelPosition) {
+    case (LabelPosition.AUTO): {
       return { top: labelFontSize / 2, bottom: labelFontSize / 2, left: labelWidth, right: labelWidth }
-    } else {
-      return { top: labelFontSize / 2, bottom: labelFontSize / 2, left: 0, right: nodeHorizontalSpacing }
+    }
+    case (LabelPosition.RIGHT): {
+      const requiredSpace = requiredLabelSpace(nodeWidth, nodeHorizontalSpacing, labelFontSize)
+      return { top: requiredSpace.y / 2, bottom: requiredSpace.y / 2, left: 0, right: requiredSpace.x }
+    }
     }
   }
 
@@ -84,8 +90,10 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
 
     // Nodes
     this._nodesGroup.attr('transform', `translate(${bleed.left},${bleed.top})`)
+
     const nodeSelection = this._nodesGroup.selectAll(`.${s.gNode}`).data(nodes, config.id)
     const nodeSelectionEnter = nodeSelection.enter().append('g').attr('class', s.gNode)
+
     nodeSelectionEnter.call(createNodes, this.config, bleed)
     nodeSelection.merge(nodeSelectionEnter).call(updateNodes, config, bleed, duration)
     nodeSelection.exit()

@@ -59,7 +59,10 @@ export const transparentLink = css`
   opacity: 0;
 `
 
-export const labelGroup = css``
+export const labelGroup = css`
+  label: label-group;
+  visibility: hidden;
+`
 
 export const nodeLabel = css`
   label: label;
@@ -67,7 +70,6 @@ export const nodeLabel = css`
   fill: var(--vis-sankey-node-label-color);
   font-weight: 600;
   pointer-events: none;
-  visibility: hidden;
   user-select: none;
 
   &, tspan {
@@ -81,7 +83,6 @@ export const nodeSubLabel = css`
 
   fill: var(--vis-sankey-node-label-color);
   pointer-events: none;
-  visibility: hidden;
   user-select: none;
 
   &, tspan {
@@ -95,11 +96,11 @@ export const labelBackground = css`
   stroke: var(--vis-sankey-node-label-background-stroke-color);
   fill: var(--vis-sankey-node-label-background-fill-color);
   opacity: 0.8;
-  visibility: hidden;
 `
 
 export const visibleLabel = css`
   label: visible-label;
+  visibility: visible;
 `
 
 export const gNode = css`
