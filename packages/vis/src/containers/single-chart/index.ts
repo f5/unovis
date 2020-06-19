@@ -80,8 +80,8 @@ export class SingleChart<Datum> extends ContainerCore {
     const extendedSizeComponent = component as ExtendedSizeComponent
     if (extendedSizeComponent.getWidth && extendedSizeComponent.getHeight) {
       this.svg
-        .attr('width', extendedSizeComponent.getWidth())
-        .attr('height', extendedSizeComponent.getHeight())
+        .attr('width', extendedSizeComponent.getWidth() + config.margin.left + config.margin.right)
+        .attr('height', extendedSizeComponent.getHeight() + config.margin.top + config.margin.bottom)
     }
     if (config.tooltip) config.tooltip.update()
   }
