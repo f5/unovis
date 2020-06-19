@@ -4,14 +4,17 @@ import { sum } from 'd3-array'
 import _groupBy from 'lodash/groupBy'
 
 // Vis
-import { SingleChart, Sankey, SankeyConfigInterface, Sizing, LabelPosition, NodeAlignType, ExitTransitionType, EnterTransitionType } from '@volterra/vis'
+import {
+  SingleChart, Sankey, SankeyConfigInterface, Sizing, LabelPosition,
+  NodeAlignType, ExitTransitionType, EnterTransitionType,
+} from '@volterra/vis'
 
 import data from './data/apieplist_ves-prod.json'
 
 const apiEpList = data.apiep_list.map(d => {
   return {
     ...d,
-    value: Math.random(),
+    value: 1, // Math.random(),
   }
 })
 
@@ -31,15 +34,15 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
   title = 'api-endpoint-explorer'
   sankey: any
   data = {}
-  margin = { left: 20 }
+  margin = { top: 0, bottom: 0, left: 20, right: 0 }
   config: SankeyConfigInterface<any, any> = {
     labelPosition: LabelPosition.RIGHT,
     nodeHorizontalSpacing: NODE_HORIZONTAL_SPACE,
     nodeWidth: NODE_WIDTH,
     nodeAlign: NodeAlignType.LEFT,
     sizing: Sizing.EXTEND,
-    nodePadding: 10,
-    nodeSubLabel: d => `${d.value.toFixed(1)} KB`,
+    nodePadding: 28,
+    nodeSubLabel: d => d.isLeafNode ? d.method : `${d.leafs} leaf${d.leafs === 1 ? '' : 's'}`,
     nodeIcon: d => (d.sourceLinks[0] || (!d.sourceLinks[0] && d.collapsed)) ? (d.collapsed ? '+' : '') : null,
     // iconColor: 'white',
     exitTransitionType: ExitTransitionType.TO_ANCESTOR,
@@ -90,7 +93,8 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
         const depth = i
         const id = nodeId(path, depth)
         const collapsed = collasedItems[id]
-        nodes.push({ id, path, url, label, depth, collapsed })
+        const isLeafNode = i === splitted.length - 1
+        nodes.push({ id, path, url, label, depth, collapsed, isLeafNode, method: isLeafNode ? rec.method : '' })
         if (collapsed) break
       }
 
@@ -112,7 +116,7 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
     const groupedLinks = Object.values(_groupBy(links, 'id')) as any[]
 
     return {
-      nodes: groupedNodes.map(nodeArr => ({ ...nodeArr[0] })),
+      nodes: groupedNodes.map(nodeArr => ({ ...nodeArr[0], leafs: nodeArr.length })),
       links: groupedLinks.map(linkArr => ({
         ...linkArr[0],
         value: sum(linkArr.map(l => l.value)), // Sum up link values
