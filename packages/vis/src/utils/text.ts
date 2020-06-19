@@ -8,16 +8,16 @@ import { TrimMode, VerticalAlign, WrapTextOptions } from 'types/text'
 import { isArray, flatten } from 'utils/data'
 
 export function trimTextStart (str = '', maxLength = 15): string {
-  return str.length > maxLength ? `...${str.substr(0, maxLength)}` : str
+  return str.length > maxLength ? `…${str.substr(0, maxLength)}` : str
 }
 
 export function trimTextMiddle (str = '', maxLength = 15): string {
   const dist = Math.floor((maxLength - 3) / 2)
-  return str.length > maxLength ? `${str.substr(0, dist)}...${str.substr(-dist, dist)}` : str
+  return str.length > maxLength ? `${str.substr(0, dist)}…${str.substr(-dist, dist)}` : str
 }
 
 export function trimTextEnd (str = '', maxLength = 15): string {
-  return str.length > maxLength ? `${str.substr(0, maxLength)}...` : str
+  return str.length > maxLength ? `${str.substr(0, maxLength)}…` : str
 }
 
 export function trimText (str = '', length = 15, type = TrimMode.MIDDLE): string {
