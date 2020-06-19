@@ -15,7 +15,7 @@ import { Spacing } from 'types/misc'
 import { NodeDatumCore, LinkDatumCore, LayoutType, LinkArrow, PanelConfigInterface } from 'types/graph'
 
 // Utils
-import { isNumber, clamp, getValue, find, cloneDeep, flatten, findIndex, clean, uniq, shallowDiff } from 'utils/data'
+import { isNumber, clamp, getValue, find, cloneDeep, flatten, findIndex, clean, uniq, shallowDiff, isFunction } from 'utils/data'
 import { stringToHtmlId } from 'utils/misc'
 import { smartTransition } from 'utils/d3'
 
@@ -519,7 +519,7 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
     const transform = t || event.transform
     this._scale = transform.k
     this._graphContainer.attr('transform', transform)
-    config?.onZoom(this._scale, config.zoomScaleExtent)
+    if (isFunction(config.onZoom)) config.onZoom(this._scale, config.zoomScaleExtent)
 
     if (!this._initialTransform) this._initialTransform = transform
 
