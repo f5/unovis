@@ -1,2 +1,10 @@
-<vis-flow-legend [margin]="margin" [items]="flowlegendItems" [width]="flowlegendWidth"></vis-flow-legend>
+<div>
+<!-- <vis-flow-legend [margin]="margin" [items]="flowlegendItems" [width]="flowlegendWidth"></vis-flow-legend> -->
 <div #chart class="chart"></div>
+</div>
+<vis-controls
+  class="vis-controls"
+  #controlsRef
+  [orientation]="controlsOrientation"
+  [items]="controlItems"
+></vis-controls>

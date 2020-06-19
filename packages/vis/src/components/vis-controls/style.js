@@ -4,6 +4,7 @@ import { css, injectGlobal } from 'emotion'
 export const variables = injectGlobal`
   :root {
     --vis-controls-buttons-border-color: rgba(108, 119, 140, 0.15);
+    --vis-controls-buttons-background-color: rgba(255, 255, 255, 1);
     --vis-controls-button-color: #6c778c;
     --vis-controls-button-icon-font: FontAwesome;
   }
@@ -11,6 +12,7 @@ export const variables = injectGlobal`
 
 export const items = css`
   label: items;
+  background-color: var(--vis-controls-buttons-background-color);
   border: 1px solid var(--vis-controls-buttons-border-color);
   border-radius: 4px;
   opacity: 1;
