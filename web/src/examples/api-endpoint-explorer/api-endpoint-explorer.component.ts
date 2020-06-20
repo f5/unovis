@@ -99,7 +99,9 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
     const nodeId = (path, depth) => `${depth}:${path}`
     for (const rec of apiData) {
       const value = rec.value // Math.random()
-      const url = rec.collapsed_url
+      let url = rec.collapsed_url
+      const isPartOfOtherUrl = apiData.find(r => (r.collapsed_url !== url) && (r.collapsed_url.includes(url)))
+      if (isPartOfOtherUrl) url += '/'
       const splitted = url.split('/')
 
       // Add new nodes { id, path, url, label, depth }
