@@ -36,6 +36,7 @@ RUN rm -rf /usr/share/nginx/html/*
 
 # Copy static files from previous step
 COPY --from=builder /app/web/lib/volterra-vis-examples/* /usr/share/nginx/html/
+COPY ./web/lib/volterra-vis-examples /usr/share/nginx/html/
 
 # RUN NGINX ON A CUSTOM PORT
 EXPOSE 9001
