@@ -1,0 +1,38 @@
+@font-face {
+  font-family: 'voltuiicons';
+  src:
+    url('../../fonts-icons/voltuiicons.ttf?d2c4w5') format('truetype'),
+    url('../../fonts-icons/voltuiicons.woff?d2c4w5') format('woff'),
+    url('../../fonts-icons/voltuiicons.svg?d2c4w5#voltuiicons') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.chart {
+  position: relative;
+  width: 100%;
+  // width: max-content;
+}
+
+.vis-controls {
+  position: fixed;
+  right: 0px;
+  bottom: 0px;
+  --vis-controls-button-icon-font: voltuiicons;
+}
+
+.item {
+  font-family: Open Sans;
+  font-size: 10pt;
+  color: #7a858e;
+  margin-bottom: 2px;
+  margin-top: 2px;
+
+  td {
+    padding: 2px 3px;
+  }
+
+  .content {
+    font-weight: 600;
+  }
+}
