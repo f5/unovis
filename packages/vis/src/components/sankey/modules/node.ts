@@ -9,6 +9,7 @@ import { smartTransition } from 'utils/d3'
 import { Spacing } from 'types/misc'
 import { SankeyNodeDatumInterface, SankeyLinkDatumInterface } from 'types/sankey'
 import { ExitTransitionType, EnterTransitionType } from 'types/animation'
+import { Position } from 'types/position'
 
 // Config
 import { SankeyConfig } from '../config'
@@ -50,7 +51,9 @@ export function createNodes<N extends SankeyNodeDatumInterface, L extends Sankey
 
 export function updateNodes<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> (sel, config: SankeyConfig<N, L>, bleed: Spacing, duration: number): void {
   smartTransition(sel, duration)
-    .attr('transform', d => `translate(${sel.size() === 1 ? config.width * 0.5 - bleed.left : d.x0},${d.y0})`)
+    .attr('transform', d => `translate(${
+      (sel.size() === 1 && config.singleNodePosition === Position.CENTER) ? config.width * 0.5 - bleed.left : d.x0
+    },${d.y0})`)
     .style('opacity', 1)
 
   // Node
