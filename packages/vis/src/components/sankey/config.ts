@@ -10,6 +10,7 @@ import { TrimMode } from 'types/text'
 import { SankeyNodeDatumInterface, SankeyLinkDatumInterface, LabelPosition, NodeAlignType } from 'types/sankey'
 import { Sizing } from 'types/component'
 import { ExitTransitionType, EnterTransitionType } from 'types/animation'
+import { Position } from 'types/position'
 
 export interface SankeyConfigInterface<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> extends ComponentConfigInterface {
     /** Sankey node width in pixels */
@@ -66,6 +67,8 @@ export interface SankeyConfigInterface<N extends SankeyNodeDatumInterface, L ext
     exitTransitionType?: ExitTransitionType;
     /** Type of animation on creating nodes  */
     enterTransitionType?: EnterTransitionType;
+    /** Single node position */
+    singleNodePosition?: Position.CENTER | Position.LEFT | string;
 }
 
 export class SankeyConfig<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> extends ComponentConfig implements SankeyConfigInterface<N, L> {
@@ -96,4 +99,5 @@ export class SankeyConfig<N extends SankeyNodeDatumInterface, L extends SankeyLi
   sizing = Sizing.FIT
   exitTransitionType = ExitTransitionType.DEFAULT
   enterTransitionType = EnterTransitionType.DEFAULT
+  singleNodePosition = Position.CENTER
 }
