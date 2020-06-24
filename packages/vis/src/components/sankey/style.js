@@ -140,6 +140,7 @@ export const nodeIcon = css`
   fill: var(--vis-sankey-node-icon-color);
   stroke: var(--vis-sankey-node-fill);
   stroke-opacity: 0.6;
+  user-select: none;
 `
 
 export const nodeExit = css`
