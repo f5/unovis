@@ -82,8 +82,8 @@ export class Tooltip<T extends ComponentCore<any>, TooltipDatum> {
     const { config } = this
     const width = this.element.offsetWidth
     const height = this.element.offsetHeight
-    const containerHeight = this._container.offsetHeight
-    const containerWidth = this._container.offsetWidth
+    const containerHeight = this._container.scrollHeight
+    const containerWidth = this._container.scrollWidth
 
     const horizontalPlacement = config.horizontalPlacement === Position.AUTO
       ? (pos.x > containerWidth / 2 ? Position.LEFT : Position.RIGHT)
