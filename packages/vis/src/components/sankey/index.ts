@@ -33,6 +33,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
   datamodel: GraphDataModel<N, L> = new GraphDataModel()
   private _extendedWidth = undefined
   private _extendedHeight = undefined
+  private _extendedSizeMinHeight = 100
   private _linksGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
   private _nodesGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
   private _sankey = sankey()
@@ -108,13 +109,13 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
       .iterations(32)
       .nodeAlign(nodeAlign)
 
-    if (nodes.length && links.length) this._sankey({ nodes, links })
+    if (nodes.length) this._sankey({ nodes, links })
     const extentValue = extent(nodes, d => d.value || undefined)
     const scale = scaleLinear().domain(extentValue).range([nodeMinHeight, nodeMaxHeight]).clamp(true)
     const groupedByLayer = groupBy(nodes, d => d.layer)
     const values = Object.values(groupedByLayer).map((d: any[]) => sum(d.map(n => scale(n.value) + nodePadding)))
     const height = max(values)
-    this._extendedHeight = height
+    this._extendedHeight = height || this._extendedSizeMinHeight
     this._extendedWidth = (nodeWidth + nodeHorizontalSpacing * Object.keys(groupedByLayer).length)
   }
 
@@ -198,9 +199,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
         sortedColumn = sortBy(column, [d => -d.value])
       } else {
         sortedColumn = sortBy(column, [
-          d => {
-            return d.targetLinks[0].source._order
-          },
+          d => d.targetLinks?.[0].source._order,
           d => -d.value,
         ])
       }
