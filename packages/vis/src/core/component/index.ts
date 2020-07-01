@@ -5,7 +5,8 @@ import { select } from 'd3-selection'
 import { CoreDataModel } from 'data-models/core'
 
 // Types
-import { ComponentType } from 'types/component'
+import { ComponentType, Sizing } from 'types/component'
+
 import { Spacing } from 'types/misc'
 
 // Utils
@@ -21,6 +22,8 @@ export class ComponentCore<CoreDatum> {
   config: ComponentConfig
   prevConfig: ComponentConfig
   datamodel: CoreDataModel<CoreDatum> = new CoreDataModel()
+  sizing: Sizing = Sizing.FIT
+
   events = {}
   _setUpEventsThrottled = throttle(this._setUpEvents, 1000)
 
@@ -62,7 +65,7 @@ export class ComponentCore<CoreDatum> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  _onEvent (d: any, i: number, elements: []) {
+  _onEvent (d: any, i: number, elements: []): void {
   }
 
   _setUpEvents (events, suffix = ''): void {

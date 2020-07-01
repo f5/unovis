@@ -33,13 +33,13 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
   sankey: any
   data = {}
   margin = { top: 0, bottom: 0, left: 0, right: 0 }
+  fitToWidth = false
 
   config: SankeyConfigInterface<any, any> = {
     labelPosition: LabelPosition.RIGHT,
     nodeHorizontalSpacing: NODE_HORIZONTAL_SPACE,
     nodeWidth: NODE_WIDTH,
     nodeAlign: NodeAlignType.LEFT,
-    sizing: Sizing.EXTEND,
     nodePadding: 28,
     subLabelColor: this.getSubLabelColor,
     subLabel: d => d.isLeafNode ? d.method : `${d.leafs} leaf${d.leafs === 1 ? '' : 's'}`,
@@ -65,8 +65,8 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
 
   containerConfig = {
     component: this.component,
+    sizing: Sizing.EXTEND,
     margin: this.margin,
-    fitToWidth: false,
     tooltip: new Tooltip({
       horizontalPlacement: Position.RIGHT,
       verticalPlacement: Position.CENTER,
@@ -81,14 +81,16 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
     {
       icon: '&#xe986',
       callback: () => {
-        this.containerConfig.fitToWidth = !this.containerConfig.fitToWidth
+        this.fitToWidth = !this.fitToWidth
+        this.containerConfig.sizing = this.fitToWidth ? Sizing.FIT_WIDTH : Sizing.EXTEND
+
         this.sankey.update(this.containerConfig)
 
-        this.controlItems[0].icon = this.containerConfig.fitToWidth ? '&#xe926' : '&#xe986'
+        this.controlItems[0].icon = this.fitToWidth ? '&#xe926' : '&#xe986'
         this.controlItems = [...this.controlItems]
 
         const legendFullWidth = this.sankey.component.getWidth() - NODE_HORIZONTAL_SPACE + NODE_WIDTH / 2
-        this.flowlegendWidth = legendFullWidth * (this.containerConfig.fitToWidth ? this.sankey.getFitWidthScale() : 1)
+        this.flowlegendWidth = legendFullWidth * (this.fitToWidth ? this.sankey.getFitWidthScale() : 1)
       },
     },
   ]
