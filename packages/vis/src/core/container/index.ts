@@ -2,6 +2,9 @@
 import { select } from 'd3-selection'
 import ResizeObserver from 'resize-observer-polyfill'
 
+// Types
+import { Sizing } from 'types/component'
+
 // Utils
 import { isEqual, clamp } from 'utils/data'
 import { getBoundingClientRectObject } from 'utils/misc'
@@ -93,7 +96,10 @@ export class ContainerCore {
   }
 
   _onResize (): void {
-    this.render(0)
+    const { config } = this
+    const redrawOnResize = config.sizing === Sizing.FIT || config.sizing === Sizing.FIT_WIDTH
+
+    if (redrawOnResize) this.render(0)
   }
 
   destroy (): void {
