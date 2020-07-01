@@ -69,14 +69,14 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
     super.setData(data)
 
     // Pre-calculate component size for Sizing.EXTEND
-    if (this.config.sizing === Sizing.EXTEND) this._preCalculateComponentSize()
+    if (this.sizing !== Sizing.FIT) this._preCalculateComponentSize()
   }
 
   setConfig (config: SankeyConfigInterface<N, L>): void {
     super.setConfig(config)
 
     // Pre-calculate component size for Sizing.EXTEND
-    if (config.sizing === Sizing.EXTEND) this._preCalculateComponentSize()
+    if (this.sizing !== Sizing.FIT) this._preCalculateComponentSize()
   }
 
   _render (customDuration?: number): void {
@@ -108,7 +108,6 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
 
     const nodeSelection = this._nodesGroup.selectAll(`.${s.gNode}`).data(nodes, config.id)
     const nodeSelectionEnter = nodeSelection.enter().append('g').attr('class', s.gNode)
-
     nodeSelectionEnter.call(createNodes, this.config, bleed)
     nodeSelection.merge(nodeSelectionEnter).call(updateNodes, config, bleed, duration)
     nodeSelection.exit()
@@ -136,7 +135,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
   private _prepareLayout (): void {
     const { config, bleed, datamodel, datamodel: { links }, _extendedHeight, _extendedWidth } = this
 
-    const nodes = config.sizing === Sizing.EXTEND ? this._sortNodes() : datamodel.nodes
+    const nodes = this.sizing !== Sizing.FIT ? this._sortNodes() : datamodel.nodes
 
     links.forEach(link => {
       // For d3 sankey function each link must be an object with the `value` property
@@ -144,7 +143,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
     })
 
     const sankeyHeight = this._getSankeyHeight()
-    if (config.sizing === Sizing.EXTEND) {
+    if (this.sizing !== Sizing.FIT) {
       this._sankey.linkSort((link2, link1) => {
         if (link2.value > link1.value) return -1
       })

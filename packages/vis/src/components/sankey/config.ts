@@ -8,7 +8,6 @@ import { ComponentConfigInterface, ComponentConfig } from 'core/component/config
 import { NumericAccessor, ColorAccessor, StringAccessor } from 'types/misc'
 import { TrimMode } from 'types/text'
 import { SankeyNodeDatumInterface, SankeyLinkDatumInterface, LabelPosition, NodeAlignType } from 'types/sankey'
-import { Sizing } from 'types/component'
 import { ExitTransitionType, EnterTransitionType } from 'types/animation'
 import { Position } from 'types/position'
 
@@ -16,8 +15,6 @@ export interface SankeyConfigInterface<N extends SankeyNodeDatumInterface, L ext
   // General
   /** Id accessor for better visual data updates */
   id?: ((d: SankeyNodeDatumInterface | SankeyLinkDatumInterface, i?: number, ...any) => string);
-  /** Component Sizing */
-  sizing?: Sizing;
   /** Coefficient to scale the height of the diagram when the amount of links is low: C * links.length, clamped to [height / 2, height]  */
   heightNormalizationCoeff?: number;
   /** Type of animation on removing nodes  */
@@ -85,7 +82,6 @@ export interface SankeyConfigInterface<N extends SankeyNodeDatumInterface, L ext
 
 export class SankeyConfig<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> extends ComponentConfig implements SankeyConfigInterface<N, L> {
   // General
-  sizing = Sizing.FIT
   heightNormalizationCoeff = 1 / 16
   exitTransitionType = ExitTransitionType.DEFAULT
   enterTransitionType = EnterTransitionType.DEFAULT
