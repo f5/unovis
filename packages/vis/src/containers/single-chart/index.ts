@@ -20,7 +20,6 @@ import { SingleChartConfig, SingleChartConfigInterface } from './config'
 export class SingleChart<Datum> extends ContainerCore {
   component: ComponentCore<Datum>
   config: SingleChartConfig<Datum> = new SingleChartConfig()
-  public fitScaleX: number = undefined
 
   constructor (element, config?: SingleChartConfigInterface<Datum>, data?: Datum) {
     super(element)
@@ -35,12 +34,12 @@ export class SingleChart<Datum> extends ContainerCore {
     }
   }
 
-  setData (data: Datum, preventRender?: boolean): void {
+  public setData (data: Datum, preventRender?: boolean): void {
     if (this.component) this.component.setData(data)
     if (!preventRender) this.render()
   }
 
-  updateContainer (containerConfig: SingleChartConfigInterface<Datum>, preventRender?: boolean): void {
+  public updateContainer (containerConfig: SingleChartConfigInterface<Datum>, preventRender?: boolean): void {
     super.updateContainer(containerConfig)
     this.removeAllChildren()
 
@@ -55,17 +54,27 @@ export class SingleChart<Datum> extends ContainerCore {
     if (!preventRender) this.render()
   }
 
-  updateComponent (componentConfig: XYComponentConfigInterface<Datum>, preventRender?: boolean): void {
+  public updateComponent (componentConfig: XYComponentConfigInterface<Datum>, preventRender?: boolean): void {
     this.component.prevConfig = this.component.config
     this.component.setConfig(componentConfig)
     if (!preventRender) this.render()
   }
 
-  update (containerConfig: SingleChartConfigInterface<Datum>, componentConfig?, data?: Datum): void {
+  public update (containerConfig: SingleChartConfigInterface<Datum>, componentConfig?, data?: Datum): void {
     if (containerConfig) this.updateContainer(containerConfig, true)
     if (componentConfig) this.updateComponent(componentConfig, true)
     if (data) this.setData(data, true)
     this.render()
+  }
+
+  public getFitWidthScale (): number {
+    const { config, component } = this
+
+    const extendedSizeComponent = component as ExtendedSizeComponent
+    if (!extendedSizeComponent.getWidth) return 1
+
+    const componentWidth = extendedSizeComponent.getWidth() + config.margin.left + config.margin.right
+    return this.width / componentWidth
   }
 
   _render (customDuration?: number): void {
@@ -83,14 +92,14 @@ export class SingleChart<Datum> extends ContainerCore {
       const componentWidth = extendedSizeComponent.getWidth() + config.margin.left + config.margin.right
       const componentHeight = extendedSizeComponent.getHeight() + config.margin.top + config.margin.bottom
 
-      this.fitScaleX = config.fitToWidth ? this.width / componentWidth : 1
+      const scale = config.fitToWidth ? this.getFitWidthScale() : 1
 
       this.svg
-        .attr('width', componentWidth * this.fitScaleX)
-        .attr('height', componentHeight * this.fitScaleX)
+        .attr('width', componentWidth * scale)
+        .attr('height', componentHeight * scale)
 
       this.svg
-        .attr('viewBox', config.fitToWidth ? `${0} ${0} ${componentWidth} ${componentHeight * this.fitScaleX}` : null)
+        .attr('viewBox', config.fitToWidth ? `${0} ${0} ${componentWidth} ${componentHeight * scale}` : null)
         .attr('preserveAspectRatio', config.fitToWidth ? 'xMinYMin' : null)
     }
     if (config.tooltip) config.tooltip.update()

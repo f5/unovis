@@ -83,6 +83,7 @@ export const nodeSubLabel = css`
 
   fill: var(--vis-sankey-node-label-color);
   pointer-events: none;
+  font-weight: 600;
   user-select: none;
 
   &, tspan {

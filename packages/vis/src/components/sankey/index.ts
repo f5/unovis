@@ -65,8 +65,22 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
     }
   }
 
+  setData (data: GraphDataModel<N, L>): void {
+    super.setData(data)
+
+    // Pre-calculate component size for Sizing.EXTEND
+    if (this.config.sizing === Sizing.EXTEND) this._preCalculateComponentSize()
+  }
+
+  setConfig (config: SankeyConfigInterface<N, L>): void {
+    super.setConfig(config)
+
+    // Pre-calculate component size for Sizing.EXTEND
+    if (config.sizing === Sizing.EXTEND) this._preCalculateComponentSize()
+  }
+
   _render (customDuration?: number): void {
-    const { config, config: { sizing }, bleed, datamodel: { nodes, links } } = this
+    const { config, bleed, datamodel: { nodes, links } } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
     if (
       (nodes.length === 0) ||
@@ -78,7 +92,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
       this._nodesGroup.selectAll(`.${s.gNode}`).call(removeNodes, config, duration)
     }
 
-    if (sizing === Sizing.EXTEND) this._preCalculateComponentSize()
+    // Prepare Layout
     this._prepareLayout()
 
     // Links

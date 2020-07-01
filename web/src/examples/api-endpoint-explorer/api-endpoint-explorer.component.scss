@@ -11,7 +11,6 @@
 .chart {
   position: relative;
   width: 100%;
-  // width: max-content;
 }
 
 .vis-controls {
@@ -21,18 +20,23 @@
   --vis-controls-button-icon-font: voltuiicons;
 }
 
-.item {
-  font-family: Open Sans;
-  font-size: 10pt;
-  color: #7a858e;
-  margin-bottom: 2px;
-  margin-top: 2px;
+::ng-deep {
+  .item {
+    font-family: Open Sans;
+    font-size: 10pt;
+    color: #7a858e;
+    margin-bottom: 2px;
+    margin-top: 2px;
 
-  td {
-    padding: 2px 3px;
-  }
+    td {
+      padding: 2px 4px;
 
-  .content {
-    font-weight: 600;
+      &.label {
+        font-weight: 600;
+      }
+
+      &.content {
+      }
+    }
   }
 }
