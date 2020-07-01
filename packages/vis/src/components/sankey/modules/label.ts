@@ -74,8 +74,9 @@ export function renderLabel<N extends SankeyNodeDatumInterface, L extends Sankey
 
   const labelText = group.select(`.${s.nodeLabel}`)
   labelText
-    .text(trimTextMiddle(getValue(d, config.nodeLabel), 25))
+    .text(trimTextMiddle(getValue(d, config.label), 25))
     .attr('font-size', config.labelFontSize)
+    .style('fill', getValue(d, config.labelColor))
 
   switch (config.labelPosition) {
   case LabelPosition.AUTO: {
@@ -97,10 +98,10 @@ export function renderLabel<N extends SankeyNodeDatumInterface, L extends Sankey
       .attr('y', LABEL_BLOCK_PADDING)
       .attr('x', ARROW_WIDTH + LABEL_BLOCK_PADDING)
 
-    const subLabelText = group.select(`.${s.nodeSubLabel}`)
-    subLabelText
+    const sublabelText = group.select(`.${s.nodeSubLabel}`)
+    sublabelText
       .text(d => {
-        let text = getValue(d, config.nodeSubLabel)
+        let text = getValue(d, config.subLabel)
         if (typeof text === 'number') text = text.toFixed(2)
         return text
       })
@@ -109,6 +110,7 @@ export function renderLabel<N extends SankeyNodeDatumInterface, L extends Sankey
       .attr('x', LabelBlockWidth - LABEL_BLOCK_PADDING * 2)
       .attr('text-anchor', 'end')
       .attr('font-size', config.labelFontSize * 0.8)
+      .style('fill', getValue(d, config.subLabelColor))
 
     const labelBackground = group.select(`.${s.labelBackground}`)
     labelBackground
