@@ -9,10 +9,11 @@ import { ComponentCore } from 'core/component'
 import { XYComponentConfigInterface } from 'core/xy-component/config'
 
 // Utils
+import { smartTransition } from 'utils/d3'
 // import { getValue, merge } from 'utils/data'
 
 // Types
-import { ExtendedSizeComponent } from 'types/component'
+import { Sizing, ExtendedSizeComponent } from 'types/component'
 
 // Config
 import { SingleChartConfig, SingleChartConfigInterface } from './config'
@@ -44,6 +45,7 @@ export class SingleChart<Datum> extends ContainerCore {
     this.removeAllChildren()
 
     this.component = containerConfig.component
+    this.component.sizing = containerConfig.sizing
     this.element.appendChild(this.component.element)
 
     if (containerConfig.tooltip) {
@@ -79,7 +81,6 @@ export class SingleChart<Datum> extends ContainerCore {
 
   _render (customDuration?: number): void {
     const { config, component } = this
-    super._render()
     component.config.width = this.width
     component.config.height = this.height
 
@@ -87,21 +88,27 @@ export class SingleChart<Datum> extends ContainerCore {
       .attr('transform', `translate(${config.margin.left},${config.margin.top})`)
 
     component.render(customDuration)
-    const extendedSizeComponent = component as ExtendedSizeComponent
-    if (extendedSizeComponent.getWidth && extendedSizeComponent.getHeight) {
+
+    if (config.sizing === Sizing.EXTEND || config.sizing === Sizing.FIT_WIDTH) {
+      const fitToWidth = config.sizing === Sizing.FIT_WIDTH
+      const extendedSizeComponent = component as ExtendedSizeComponent
+
       const componentWidth = extendedSizeComponent.getWidth() + config.margin.left + config.margin.right
       const componentHeight = extendedSizeComponent.getHeight() + config.margin.top + config.margin.bottom
 
-      const scale = config.fitToWidth ? this.getFitWidthScale() : 1
+      const scale = fitToWidth ? this.getFitWidthScale() : 1
 
-      this.svg
+      smartTransition(this.svg, customDuration ?? component.config.duration)
         .attr('width', componentWidth * scale)
         .attr('height', componentHeight * scale)
-
+        .attr('viewBox', fitToWidth ? `${0} ${0} ${componentWidth} ${componentHeight * scale}` : null)
+        .attr('preserveAspectRatio', fitToWidth ? 'xMinYMin' : null)
+    } else {
       this.svg
-        .attr('viewBox', config.fitToWidth ? `${0} ${0} ${componentWidth} ${componentHeight * scale}` : null)
-        .attr('preserveAspectRatio', config.fitToWidth ? 'xMinYMin' : null)
+        .attr('width', this.containerWidth)
+        .attr('height', this.containerHeight)
     }
+
     if (config.tooltip) config.tooltip.update()
   }
 }
