@@ -49,14 +49,14 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
   private _hasBeenMoved = false
   private _hasBeenZoomed = false
   private _triggerBackroundClick = false
-  private _externallySelectedNode = null
+  private _externallySelectedPoint = null
   private _zoomingToExternallySelectedNode = false
   private _forceExpandCluster = false
   private _nodesGroup: Selection<SVGGElement, object[], SVGElement, object[]>
   private _nodeSelectionRing: Selection<SVGGElement, object[], SVGElement, object[]>
   private _clusterBackground: Selection<SVGGElement, object[], SVGElement, object[]>
   private _clusterBackgroundRadius = 0
-  private _selectedNode: Point = null
+  private _selectedPoint: Point = null
   private _currentZoomLevel = null
   private _firstRender = true
 
@@ -185,7 +185,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     const foundNode = pointData.find(d => d.properties.id === id)
 
     if (foundNode) {
-      this._selectedNode = foundNode
+      this._selectedPoint = foundNode
 
       const coordinates = {
         lng: getValue(foundNode.properties, config.pointLatitude),
@@ -199,8 +199,8 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
   }
 
   public unselectPoint (): void {
-    this._selectedNode = null
-    this._externallySelectedNode = null
+    this._selectedPoint = null
+    this._externallySelectedPoint = null
     this.render()
   }
 
@@ -294,7 +294,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
 
     // Show selection border and hide it when the node
     // is out of visible box
-    this._nodeSelectionRing.call(updateNodeSelectionRing, this._selectedNode, pointData, config, this._map.leaflet)
+    this._nodeSelectionRing.call(updateNodeSelectionRing, this._selectedPoint, pointData, config, this._map.leaflet)
 
     // Set up default events
     this._setUpEvents(this.events)
@@ -308,18 +308,18 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
 
   _zoomToExternallySelectedNode (): void {
     const pointData = this._getPointData()
-    const foundNode = find(pointData, d => d.properties.id === this._externallySelectedNode.properties.id)
+    const foundNode = find(pointData, d => d.properties.id === this._externallySelectedPoint.properties.id)
     if (foundNode) {
       this._zoomingToExternallySelectedNode = false
       this._currentZoomLevel = null
     } else {
-      const { cluster } = findNodeAndClusterInPointsById(pointData, this._externallySelectedNode.properties.id)
+      const { cluster } = findNodeAndClusterInPointsById(pointData, this._externallySelectedPoint.properties.id)
       const zoomLevel = this._map.leaflet.getZoom()
       // Expand cluster or fly further
       if (this._forceExpandCluster || shouldClusterExpand(cluster, zoomLevel, 8, 13)) this._expandCluster(cluster)
       else {
         const newZoomLevel = clampZoomLevel(zoomLevel)
-        const coordinates = { lng: this._externallySelectedNode.properties.longitude, lat: this._externallySelectedNode.properties.latitude }
+        const coordinates = { lng: this._externallySelectedPoint.properties.longitude, lat: this._externallySelectedPoint.properties.latitude }
         if (this._currentZoomLevel !== newZoomLevel) {
           this._currentZoomLevel = newZoomLevel
           this._map.leaflet.flyTo(coordinates, newZoomLevel, { duration: 0 })
@@ -414,16 +414,16 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
       const zoomedEvent = events.zoomend.bind(this._map.layer)
       zoomedEvent()
     }
-    if (!this._externallySelectedNode || !this._zoomingToExternallySelectedNode) return
+    if (!this._externallySelectedPoint || !this._zoomingToExternallySelectedNode) return
     this._zoomToExternallySelectedNode()
   }
 
   _onMapZoom (): void {
     const { config } = this
     this._hasBeenZoomed = true
-    if (!this._externallySelectedNode) this._resetExpandedCluster()
+    if (!this._externallySelectedPoint) this._resetExpandedCluster()
     else if (!this._zoomingToExternallySelectedNode) {
-      this._externallySelectedNode = null
+      this._externallySelectedPoint = null
     }
 
     config.tooltip?.hide()
@@ -444,8 +444,8 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
       return
     }
 
-    this._selectedNode = null
-    this._externallySelectedNode = null
+    this._selectedPoint = null
+    this._externallySelectedPoint = null
     this._resetExpandedCluster()
     this._renderData()
   }
@@ -453,7 +453,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
   _onNodeClick (d, i, elements): void {
     const { config: { flyToDuration } } = this
 
-    this._externallySelectedNode = null
+    this._externallySelectedPoint = null
     event.stopPropagation()
     const zoomLevel = this._map.leaflet.getZoom()
     const coordinates = { lng: d.geometry.coordinates[0], lat: d.geometry.coordinates[1] }
@@ -464,7 +464,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
         this._map.leaflet.flyTo(coordinates, newZoomLevel, { duration: flyToDuration / 1000 })
       }
     } else {
-      this._selectedNode = d
+      this._selectedPoint = d
       this._renderData()
     }
   }
