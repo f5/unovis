@@ -49,14 +49,14 @@ export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterfa
   clusterBackground?: boolean;
   /** FlyTo Duration */
   flyToDuration?: number;
+  /** Zoom Duration */
+  zoomDuration?: number;
   /** Default bounds that will be applid on the first map render if the bounds property is not set */
   initialBounds?: Bounds;
   /** Force set map bounds */
   bounds?: Bounds;
   /** Status styles */
   statusMap?: StatusMap;
-  /** If selectedNodeId is provided the map will zoom in and select that node on update */
-  selectedNodeId?: string;
   /** A TopoJSON Geometry layer to be displayed on top of the map. Supports fill and stroke */
   topoJSONLayer?: {
     /** TopoJSON.Topology */
@@ -87,7 +87,8 @@ export class LeafletMapConfig<Datum> extends ComponentConfig implements LeafletM
   clusterOutlineType = ClusterOutlineType.DONUT
   clusterOutlineWidth = 1.25
   clusterBackground = true
-  flyToDuration = 2000
+  flyToDuration = 1500
+  zoomDuration = 800
   initialBounds = undefined
   bounds = undefined
   statusMap = {}
