@@ -2,7 +2,7 @@
 /* eslint-disable */
 import _ from 'lodash'
 import { Component, AfterViewInit, ViewEncapsulation } from '@angular/core'
-import { LeafletMapConfigInterface } from '@volterra/vis'
+import { LeafletMap, LeafletMapConfigInterface, TooltipConfigInterface, Tooltip, Position } from '@volterra/vis'
 import earthquakes from './data/earthquakes100.geo.json'
 
 type MapPoint = {
@@ -22,6 +22,16 @@ function mapSampleData (): object[] {
       shape: Math.random() < 0.07 ? _.sample(['square', 'triangle']) : 'circle',
   }))
 }
+
+function getTooltipConfig (): TooltipConfigInterface<LeafletMap<MapPoint>, MapPoint> {
+  return {
+    verticalPlacement: Position.CENTER,
+    horizontalShift: 10,
+    triggers: {
+      [LeafletMap.selectors.node]: d => `<div>${d.id}</div>`
+    }
+  }
+};
 
 function getMapConfig (): LeafletMapConfigInterface<MapPoint> {
   return {
@@ -54,7 +64,8 @@ function getMapConfig (): LeafletMapConfigInterface<MapPoint> {
     },
     // selectedNodeId: 'nc72965236',
     initialBounds: { northEast: { lat: 77, lng: -172 }, southWest: { lat: -50, lng: 72 } },
-    onMapMoveZoom: ({ mapCenter, zoomLevel, bounds }) => { /* console.log(mapCenter, zoomLevel, bounds) */ }
+    onMapMoveZoom: ({ mapCenter, zoomLevel, bounds }) => { /* console.log(mapCenter, zoomLevel, bounds) */ },
+    tooltip: new Tooltip<LeafletMap<MapPoint>, MapPoint>(getTooltipConfig())
   }
 }
 
