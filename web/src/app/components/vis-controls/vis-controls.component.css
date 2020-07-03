@@ -1,6 +1,18 @@
+@font-face {
+  font-family: 'voltuiicons';
+  src:
+    url('../../../fonts-icons/voltuiicons.ttf?d2c4w5') format('truetype'),
+    url('../../../fonts-icons/voltuiicons.woff?d2c4w5') format('woff'),
+    url('../../../fonts-icons/voltuiicons.svg?d2c4w5#voltuiicons') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
 .controls {
   position: absolute;
   right: 0px;
   bottom: 0pc;
   margin: 20px;
+
+  --vis-controls-button-icon-font: voltuiicons;
 }

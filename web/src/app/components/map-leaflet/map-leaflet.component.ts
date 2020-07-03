@@ -2,7 +2,7 @@
 import { Component, ViewChild, ElementRef, AfterViewInit, Input } from '@angular/core'
 
 // Viz
-import { LeafletMap, LeafletMapConfigInterface } from '@volterra/vis'
+import { LeafletMap, LeafletMapConfigInterface, VisControlItemInterface, VisControlsOrientation } from '@volterra/vis'
 
 @Component({
   selector: 'vis-map-leaflet',
@@ -17,6 +17,25 @@ export class MapLeafletComponent<Datum> implements AfterViewInit {
   @Input() config: LeafletMapConfigInterface<Datum>
 
   map: LeafletMap<Datum>
+
+  // Zoom Controls
+  controlItems: VisControlItemInterface[] = [
+    {
+      icon: '&#xe986',
+      callback: (): void => { this.map?.fitView() },
+      borderBottom: true,
+    },
+    {
+      icon: '&#xe936',
+      callback: (): void => { this.map?.zoomIn() },
+    },
+    {
+      icon: '&#xe934',
+      callback: (): void => { this.map?.zoomOut() },
+    },
+  ];
+
+  controlsOrientation = VisControlsOrientation.VERTICAL;
 
   ngAfterViewInit (): void {
     this.map = new LeafletMap(this.mapRef.nativeElement, this.config, this.data)
