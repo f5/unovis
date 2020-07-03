@@ -156,7 +156,6 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     else if (config.bounds) this.fitToBounds(config.bounds)
 
     this._firstRender = false
-    if (config.tooltip) config.tooltip.update()
   }
 
   fitToPoints (duration = this.config.flyToDuration, padding = [40, 40]): void {
@@ -277,6 +276,9 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
 
     // Set up user-defined events
     this._setUpEvents(this.config.events)
+
+    // Tooltip
+    config.tooltip?.update()
   }
 
   _zoomToExternallySelectedNode (): void {
@@ -304,6 +306,8 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
   _expandCluster (clusterPoint): void {
     const { config, config: { clusterBackground } } = this
     const padding = 1
+
+    config.tooltip?.hide()
 
     this._forceExpandCluster = false
     if (clusterPoint) {
@@ -390,17 +394,19 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
   }
 
   _onMapZoom (): void {
-    const { config: { onMapMoveZoom } } = this
+    const { config } = this
     this._hasBeenZoomed = true
     if (!this._externallySelectedNode) this._resetExpandedCluster()
     else if (!this._zoomingToExternallySelectedNode) {
       this._externallySelectedNode = null
     }
 
+    config.tooltip?.hide()
+
     const leafletBounds = this._map.leaflet.getBounds()
     const southWest = leafletBounds.getSouthWest()
     const northEast = leafletBounds.getNorthEast()
-    onMapMoveZoom?.({
+    config.onMapMoveZoom?.({
       mapCenter: this._map.leaflet.getCenter(),
       zoomLevel: this._map.leaflet.getZoom(),
       bounds: { southWest, northEast },
