@@ -23,7 +23,7 @@ export class Tooltip<T extends ComponentCore<any>, TooltipDatum> {
   config: TooltipConfig<T, TooltipDatum>
   prevConfig: TooltipConfig<T, TooltipDatum>
   components: T[]
-  _setUpEventsThrottled = throttle(this._setUpEvents, 1000)
+  private _setUpEventsThrottled = throttle(this._setUpEvents, 500)
 
   private _container: HTMLElement
 
@@ -38,7 +38,7 @@ export class Tooltip<T extends ComponentCore<any>, TooltipDatum> {
     this.setContainer(containerElement)
   }
 
-  setContainer (container: HTMLElement | null): void {
+  public setContainer (container: HTMLElement | null): void {
     if (!container) return
     this._container?.removeChild(this.element)
 
@@ -52,17 +52,17 @@ export class Tooltip<T extends ComponentCore<any>, TooltipDatum> {
     }
   }
 
-  setComponents (components: T[]): void {
+  public setComponents (components: T[]): void {
     this.components = components
   }
 
-  update (): void {
+  public update (): void {
     if (!this._container) return
 
     this._setUpEventsThrottled()
   }
 
-  show (html: string | HTMLElement, pos: { x: number; y: number}): void {
+  public show (html: string | HTMLElement, pos: { x: number; y: number}): void {
     if (html instanceof HTMLElement) {
       const node = this.div.select(':first-child').node()
       if (node !== html) this.div.html('').append(() => html)
@@ -74,11 +74,11 @@ export class Tooltip<T extends ComponentCore<any>, TooltipDatum> {
     this.place(pos)
   }
 
-  hide (): void {
+  public hide (): void {
     this.div.classed(s.show, false)
   }
 
-  place (pos): void {
+  public place (pos): void {
     const { config } = this
     const width = this.element.offsetWidth
     const height = this.element.offsetHeight
@@ -121,7 +121,7 @@ export class Tooltip<T extends ComponentCore<any>, TooltipDatum> {
       .style('left', `${x}px`)
   }
 
-  _setUpEvents (): void {
+  private _setUpEvents (): void {
     const { config: { triggers } } = this
 
     Object.keys(triggers).forEach(className => {
@@ -137,9 +137,5 @@ export class Tooltip<T extends ComponentCore<any>, TooltipDatum> {
           .on('mouseleave.tooltip', (d, i, elements) => this.hide())
       })
     })
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  render (customDuration?: number): void {
   }
 }
