@@ -153,7 +153,7 @@ export function geoJSONPointToScreenPoint<Datum> (geoPoint: PointFeature<any>, l
     stroke: color || null,
     strokeWidth: getValue(geoPoint.properties, pointStrokeWidth),
     index: geoPoint.properties.clusterIndex,
-    _sortId: 2,
+    _zIndex: 0,
   }
 
   return screenPoint
