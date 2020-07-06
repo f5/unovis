@@ -49,7 +49,7 @@ export type Point = {
     };
     expandedClusterPoint?: Point;
   };
-  _sortId: number;
+  _zIndex: number;
 }
 
 export type PieDatum = {

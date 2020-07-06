@@ -19,7 +19,7 @@ import * as s from '../style'
 
 export function createNodes (selection): void {
   selection.append('path')
-    .attr('class', s.node)
+    .attr('class', s.pointPath)
     .attr('id', d => `point-${d.properties.id}`)
     .style('opacity', 0)
 
@@ -42,7 +42,7 @@ export function updateNodes<T> (selection, config: LeafletMapConfigInterface<T>,
 
   selection.each((d: Point, i: number, elements: Selection<SVGGElement, object[], SVGGElement, object[]>) => {
     const group = select(elements[i])
-    const node: Selection<SVGPathElement, any, SVGGElement, any> = group.select(`.${s.node}`)
+    const node: Selection<SVGPathElement, any, SVGGElement, any> = group.select(`.${s.pointPath}`)
     const innerLabel = group.select(`.${s.innerLabel}`)
 
     if (clusterOutlineType === ClusterOutlineType.DONUT && d.properties.cluster) {

@@ -14,13 +14,13 @@ import { LeafletMapConfigInterface } from '../config'
 import * as s from '../style'
 
 export function createNodeSelectionRing (selection): void {
-  selection.datum({ _sortId: 3 })
-  selection.append('path').attr('class', s.nodeSelection)
+  selection.datum({ _zIndex: 3 })
+  selection.append('path').attr('class', s.pointSelection)
 }
 
 export function updateNodeSelectionRing<T> (selection, selectedNode: Point, pointData: Point[], config: LeafletMapConfigInterface<T>, leafletMap: L.Map): void {
-  selection.attr('class', s.nodeSelectionRing)
-  const nodeSelection = selection.select(`.${s.nodeSelection}`)
+  selection.attr('class', s.pointSelectionRing)
+  const pointSelection = selection.select(`.${s.pointSelection}`)
   if (selectedNode) {
     const foundNode = find(pointData, d => d.properties.id === selectedNode.properties.id)
     selection
@@ -30,7 +30,7 @@ export function updateNodeSelectionRing<T> (selection, selectedNode: Point, poin
       })
       .classed(`${selectedNode.properties.shape}`, true)
 
-    nodeSelection
+    pointSelection
       .classed('active', Boolean(foundNode))
       .attr('d', foundNode ? foundNode.path : null)
       .style('fill', 'transparent')
@@ -40,6 +40,6 @@ export function updateNodeSelectionRing<T> (selection, selectedNode: Point, poin
         return node?.stroke || config.statusMap?.[node.properties.status]?.color
       })
   } else {
-    nodeSelection.classed('active', false)
+    pointSelection.classed('active', false)
   }
 }
