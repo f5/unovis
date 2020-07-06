@@ -1,8 +1,11 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 /* eslint-disable */
 import _ from 'lodash'
-import { Component, AfterViewInit, ViewEncapsulation } from '@angular/core'
+import { Component, AfterViewInit, ViewEncapsulation, ViewChild } from '@angular/core'
 import { LeafletMap, LeafletMapConfigInterface, TooltipConfigInterface, Tooltip, Position } from '@volterra/vis'
+import { MapLeafletComponent } from '../../app/components/map-leaflet/map-leaflet.component'
+
+// Data
 import earthquakes from './data/earthquakes100.geo.json'
 
 type MapPoint = {
@@ -28,13 +31,24 @@ function getTooltipConfig (): TooltipConfigInterface<LeafletMap<MapPoint>, MapPo
     verticalPlacement: Position.CENTER,
     horizontalShift: 10,
     triggers: {
-      [LeafletMap.selectors.node]: d => `<div>${d.id}</div>`
+      [LeafletMap.selectors.point]: d => `<div>${d.id}</div>`
     }
   }
 };
 
-function getMapConfig (): LeafletMapConfigInterface<MapPoint> {
-  return {
+@Component({
+  selector: 'map',
+  templateUrl: './map.component.html',
+  styleUrls: ['./map.component.scss'],
+  encapsulation: ViewEncapsulation.None
+})
+
+export class MapComponent implements AfterViewInit {
+  @ViewChild('mapContainer', { static: false }) mapContainer: MapLeafletComponent<MapPoint>
+
+  title = 'map'
+  data = mapSampleData()
+  config: LeafletMapConfigInterface<MapPoint> = {
     renderer: 'mapboxgl',
     mapboxglGlyphs: 'https://maps.volterra.io/fonts/{fontstack}/{range}.pbf',
     sources: {
@@ -65,21 +79,16 @@ function getMapConfig (): LeafletMapConfigInterface<MapPoint> {
     // selectedNodeId: 'nc72965236',
     initialBounds: { northEast: { lat: 77, lng: -172 }, southWest: { lat: -50, lng: 72 } },
     onMapMoveZoom: ({ mapCenter, zoomLevel, bounds }) => { /* console.log(mapCenter, zoomLevel, bounds) */ },
-    tooltip: new Tooltip<LeafletMap<MapPoint>, MapPoint>(getTooltipConfig())
+    tooltip: new Tooltip<LeafletMap<MapPoint>, MapPoint>(getTooltipConfig()),
+    events: {
+      [LeafletMap.selectors.point]: {
+        click: d => { !d.properties?.cluster && this.mapContainer?.map.zoomToPointById(d.id, true) },
+      },
+      [LeafletMap.selectors.background]: {
+        click: () => { this.mapContainer?.map.unselectPoint() },
+      }
+    }
   }
-}
-
-@Component({
-  selector: 'map',
-  templateUrl: './map.component.html',
-  styleUrls: ['./map.component.scss'],
-  encapsulation: ViewEncapsulation.None
-})
-
-export class MapComponent implements AfterViewInit {
-  title = 'map'
-  data = mapSampleData()
-  config = getMapConfig()
 
   ngAfterViewInit (): void {
     // select node by id
