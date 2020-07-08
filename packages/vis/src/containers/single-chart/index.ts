@@ -45,7 +45,7 @@ export class SingleChart<Datum> extends ContainerCore {
     this.removeAllChildren()
 
     this.component = containerConfig.component
-    this.component.sizing = containerConfig.sizing
+    if (containerConfig.sizing) this.component.sizing = containerConfig.sizing
     this.element.appendChild(this.component.element)
 
     if (containerConfig.tooltip) {
