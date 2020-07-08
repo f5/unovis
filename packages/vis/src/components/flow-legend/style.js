@@ -43,6 +43,14 @@ export const item = css`
   padding: 10px;
 `
 
+export const clickable = css`
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+`
+
 export const label = ({ labelFontSize, labelColor }) => css`
   label: label;
 
