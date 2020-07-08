@@ -7,6 +7,11 @@
         },
         {
             "collapsed_url": "/productpage",
+            "method": "POST",
+            "dyn_examples": []
+        },
+        {
+            "collapsed_url": "/productpage",
             "method": "GET",
             "dyn_examples": []
         },
