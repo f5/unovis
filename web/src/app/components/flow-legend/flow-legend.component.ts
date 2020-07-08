@@ -1,8 +1,8 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { Component, ViewChild, ElementRef, AfterViewInit, Input } from '@angular/core'
+import { Component, ViewChild, ElementRef, AfterViewInit, Input, EventEmitter, Output } from '@angular/core'
 
 // Vis
-import { FlowLegend } from '@volterra/vis'
+import { FlowLegend, FlowLegendConfigInterface } from '@volterra/vis'
 
 @Component({
   selector: 'vis-flow-legend',
@@ -13,15 +13,19 @@ export class FlowLegendComponent implements AfterViewInit {
   @ViewChild('legend', { static: false }) legendRef: ElementRef
   @Input() items: any[] = [];
   @Input() margin: { left?: number; right?: number } = {};
+  @Output() itemClick = new EventEmitter()
   @Input() width: number;
 
   legend = null
-  config: { items?: any[]; customWidth?: number } = {}
+  config: FlowLegendConfigInterface = {}
 
   ngAfterViewInit (): void {
     this.config = {
       items: this.items,
       customWidth: this.width,
+      onLegendItemClick: (label, i): void => {
+        this.itemClick.emit({ label, i })
+      },
     }
 
     this.legend = new FlowLegend(this.legendRef.nativeElement, this.config)
