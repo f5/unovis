@@ -72,8 +72,6 @@ export function updateNodes<N extends SankeyNodeDatumInterface, L extends Sankey
   if (config.nodeIcon) {
     nodeIcon
       .attr('visibility', null)
-      .attr('x', config.nodeWidth / 2)
-      .attr('y', d => (d.y1 - d.y0) / 2)
       .attr('text-anchor', 'middle')
       .attr('alignment-baseline', 'middle')
       .style('stroke', node => getColor(node, config.iconColor))
@@ -83,6 +81,10 @@ export function updateNodes<N extends SankeyNodeDatumInterface, L extends Sankey
         return nodeHeight < s.SANKEY_ICON_SIZE ? `${nodeHeight}px` : null
       })
       .html(config.nodeIcon)
+
+    smartTransition(nodeIcon, duration)
+      .attr('x', config.nodeWidth / 2)
+      .attr('y', d => (d.y1 - d.y0) / 2)
   } else {
     nodeIcon
       .attr('visibility', 'hidden')
