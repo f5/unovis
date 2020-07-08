@@ -1,5 +1,10 @@
 <div>
-<vis-flow-legend [margin]="margin" [items]="flowlegendItems" [width]="flowlegendWidth"></vis-flow-legend>
+<vis-flow-legend
+  [margin]="{left: margin.left * fitToWidthScale}"
+  [items]="flowlegendItems"
+  [width]="flowlegendWidth"
+  (itemClick)="onLegendItemClick($event)"
+></vis-flow-legend>
 <div #chart class="chart"></div>
 </div>
 <vis-controls

@@ -1,7 +1,8 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { AfterViewInit, Component, ViewChild, ElementRef } from '@angular/core'
-import { sum } from 'd3-array'
+import { sum, max } from 'd3-array'
 import _groupBy from 'lodash/groupBy'
+import _times from 'lodash/times'
 
 // Vis
 import {
@@ -11,7 +12,7 @@ import {
 
 import data from './data/apieplist_ves-prod.json'
 
-const apiEpList = data.apiep_list.map(d => {
+const apiData = data.apiep_list.map(d => {
   return {
     ...d,
     value: 1, // Math.random(),
@@ -32,15 +33,18 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
   title = 'api-endpoint-explorer'
   sankey: any
   data = {}
-  margin = { top: 0, bottom: 0, left: 0, right: 0 }
+  margin = { top: 0, bottom: 0, left: 30, right: 0 }
   fitToWidth = false
+  fitToWidthScale = 1
 
   config: SankeyConfigInterface<any, any> = {
     labelPosition: LabelPosition.RIGHT,
     nodeHorizontalSpacing: NODE_HORIZONTAL_SPACE,
     nodeWidth: NODE_WIDTH,
     nodeAlign: NodeAlignType.LEFT,
+    iconColor: '#e9edfe',
     nodePadding: 28,
+    labelColor: d => d.dynExamples.length ? '#4c52ca' : null,
     subLabelColor: this.getSubLabelColor,
     subLabel: d => d.isLeafNode ? d.method : `${d.leafs} leaf${d.leafs === 1 ? '' : 's'}`,
     nodeIcon: d => (d.sourceLinks[0] || (!d.sourceLinks[0] && d.collapsed)) ? (d.collapsed ? '+' : '') : null,
@@ -52,7 +56,7 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
         click: (d: any) => {
           if (!d.targetLinks?.[0] || (!this.collapsedItems[d.id] && !d.sourceLinks?.[0])) return
           this.collapsedItems[d.id] = !this.collapsedItems[d.id]
-          this.data = this.process(apiEpList)
+          this.data = this.process(apiData)
           this.sankey.setData(this.data)
         },
       },
@@ -60,8 +64,6 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
   }
 
   component = new Sankey(this.config)
-  flowlegendItems = ['Segment 1', 'Segment 2', 'Segment 3', 'Segment 4', 'Segment 5', 'Segment 6', 'Segment 7']
-  flowlegendWidth = 0;
 
   containerConfig = {
     component: this.component,
@@ -89,24 +91,30 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
         this.controlItems[0].icon = this.fitToWidth ? '&#xe926' : '&#xe986'
         this.controlItems = [...this.controlItems]
 
-        const legendFullWidth = this.sankey.component.getWidth() - NODE_HORIZONTAL_SPACE + NODE_WIDTH / 2
-        this.flowlegendWidth = legendFullWidth * (this.fitToWidth ? this.sankey.getFitWidthScale() : 1)
+        this.fitToWidthScale = this.fitToWidth ? Math.min(this.sankey.getFitWidthScale(), 1) : 1
+        const legendFullWidth = this.sankeyFullWidth - NODE_HORIZONTAL_SPACE + NODE_WIDTH / 2
+        this.flowlegendWidth = legendFullWidth * this.fitToWidthScale
       },
     },
   ]
 
   controlsOrientation = VisControlsOrientation.VERTICAL
 
-  collapsedItems: { [key: string]: boolean } = {};
+  collapsedItems: { [key: string]: boolean } = {}
+  sankeyData: { nodes: any[]; links: any[] } = this.process(apiData)
+  sankeyFullWidth: number
+  maxDepth = max(this.sankeyData.nodes, n => n.depth) + 1
+  // eslint-disable-next-line no-irregular-whitespace
+  flowlegendItems = _times(this.maxDepth, i => `Segment ${i + 1}`)
+  flowlegendWidth = 0;
 
   ngAfterViewInit (): void {
-    const apiData = apiEpList
-    const sankeyData = this.process(apiData)
-    console.log({ apiData, sankeyData })
+    console.log({ apiData, sankeyData: this.sankeyData })
 
-    this.sankey = new SingleChart(this.chart.nativeElement, this.containerConfig, sankeyData)
+    this.sankey = new SingleChart(this.chart.nativeElement, this.containerConfig, this.sankeyData)
     setTimeout(() => {
-      this.flowlegendWidth = this.sankey.component.getWidth() - NODE_HORIZONTAL_SPACE + NODE_WIDTH / 2
+      this.sankeyFullWidth = this.sankey.component.getWidth()
+      this.flowlegendWidth = this.sankeyFullWidth - NODE_HORIZONTAL_SPACE + NODE_WIDTH / 2
     }, 50)
   }
 
@@ -114,7 +122,7 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
     const nodes = []
     const links = []
 
-    const getNodeId = (path, depth): string => `${depth}:${path}`
+    const getNodeId = (path, depth, method): string => `${depth}:${path}:${method}`
     for (const rec of apiData) {
       const value = 1
       let url = rec.collapsed_url
@@ -143,10 +151,11 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
         path += pathSegment
         const label = pathSegment.replace('$DYN$', '<dynamic component>')
 
-        const depth = i
-        const id = getNodeId(path, depth)
-        const collapsed = this.collapsedItems[id]
         const isLeafNode = i === splitted.length - 1
+        const method = isLeafNode ? rec.method : ''
+        const depth = i
+        const id = getNodeId(path, depth, method)
+        const collapsed = this.collapsedItems[id]
 
         const dyn = rec.dyn_examples?.find(ex => ex.component_identifier === path.slice(1))
         // eslint-disable-next-line camelcase
@@ -160,7 +169,7 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
           depth,
           collapsed,
           isLeafNode,
-          method: isLeafNode ? rec.method : '',
+          method,
           dynExamples,
         })
         if (collapsed) break
@@ -171,8 +180,9 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
       for (let i = 1; i < splitted.length; i += 1) {
         const sourcePath = path
         const targetPath = `${path}/${splitted[i]}`
-        const source = getNodeId(sourcePath, i - 1)
-        const target = getNodeId(targetPath, i)
+        const isTargetALeaf = i === splitted.length - 1
+        const source = getNodeId(sourcePath, i - 1, '')
+        const target = getNodeId(targetPath, i, isTargetALeaf ? rec.method : '')
         const id = `${source}~${target}`
         links.push({ id, source, target, value })
         path = targetPath
@@ -236,5 +246,17 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
     case 'DELETE': return '#e64f48'
     default: return null
     }
+  }
+
+  onLegendItemClick ({ label, i }): void {
+    const nodes = this.sankeyData.nodes.filter(node => !node.isLeafNode && node.depth === i)
+    const hasExpanded = nodes.some(node => !this.collapsedItems[node.id])
+
+    for (const node of nodes) {
+      this.collapsedItems[node.id] = hasExpanded
+    }
+
+    this.data = this.process(apiData)
+    this.sankey.setData(this.data)
   }
 }
