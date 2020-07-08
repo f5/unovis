@@ -9,10 +9,13 @@ export interface LineConfigInterface<Datum> extends XYComponentConfigInterface<D
   lineWidth?: number;
   /** Value to be used in case of no data */
   noDataValue?: number | null;
+  /** Highlight line on hover */
+  highlightOnHover?: boolean;
 }
 
 export class LineConfig<Datum> extends XYComponentConfig<Datum> implements LineConfigInterface<Datum> {
   curveType = CurveType.MonotoneX
   lineWidth = 2
   noDataValue = null
+  highlightOnHover = true
 }
