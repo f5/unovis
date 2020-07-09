@@ -5,6 +5,7 @@ export const variables = injectGlobal`
   :root {
     --vis-tooltip-background-color: rgba(255, 255, 255, 0.95);
     --vis-tooltip-backdrop-filter: none;
+    --vis-tooltip-padding: 10px 15px;
   }
 `
 
@@ -21,7 +22,7 @@ export const tooltip = css`
   transition-duration: 300ms;
   user-select: none;
   z-index: 999999;
-  padding: 15px 20px;
+  padding: var(--vis-tooltip-padding);
   transform: translate(0, -5px);
   
   /* object-fit: contain; */

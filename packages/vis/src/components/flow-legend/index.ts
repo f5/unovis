@@ -10,6 +10,11 @@ import { FlowLegendConfig, FlowLegendConfigInterface } from './config'
 // Styles
 import * as s from './style'
 
+enum LegendItemType {
+  LABEL = 'label',
+  SYMBOL = 'symbol',
+}
+
 export class FlowLegend {
   div: Selection<HTMLElement, any, HTMLElement, any>
   element: HTMLElement
@@ -38,15 +43,26 @@ export class FlowLegend {
   }
 
   render (): void {
-    const { config: { items, lineColor, labelFontSize, labelColor, arrowSymbol, customWidth } } = this
+    const { config: { items, lineColor, labelFontSize, labelColor, arrowSymbol, customWidth, onLegendItemClick } } = this
     if (!items.length) return
 
     if (customWidth) this.div.style('width', `${customWidth}px`)
 
     // Prepare Data
-    const legendData = items.reduce((acc, curr) => {
-      acc.push(curr)
-      if (arrowSymbol && acc.length !== items.length * 2 - 1) acc.push(arrowSymbol)
+    const legendData = items.reduce((acc, label, i) => {
+      acc.push({
+        text: label,
+        index: i,
+        type: LegendItemType.LABEL,
+      })
+
+      if (arrowSymbol && acc.length !== items.length * 2 - 1) {
+        acc.push({
+          text: arrowSymbol,
+          index: i,
+          type: LegendItemType.SYMBOL,
+        })
+      }
       return acc
     }, [])
 
@@ -59,16 +75,26 @@ export class FlowLegend {
       .attr('class', s.item)
       .attr('opacity', 0)
 
+    legendItemsEnter.filter(d => d.type === LegendItemType.LABEL)
+      .on('click', this._onItemClick.bind(this))
+
     legendItemsEnter.append('span')
-      .attr('class', (d, i) => arrowSymbol && i % 2 ? s.arrow({ lineColor }) : s.label({ labelFontSize, labelColor }))
+      .attr('class', d => d.type === LegendItemType.SYMBOL ? s.arrow({ lineColor }) : s.label({ labelFontSize, labelColor }))
+      .classed(s.clickable, d => d.type === LegendItemType.LABEL && !!onLegendItemClick)
 
     const legendItemsMerged = legendItemsEnter.merge(legendItems)
     smartTransition(legendItemsMerged, 500)
       .attr('opacity', 1)
-    legendItemsMerged.select('span').text(d => d)
+    legendItemsMerged.select('span').text(d => d.text)
 
     legendItems.exit().remove()
 
     this.line.attr('class', s.line({ lineColor }))
+  }
+
+  _onItemClick (d): void {
+    const { config: { onLegendItemClick } } = this
+
+    if (onLegendItemClick) onLegendItemClick(d.text, d.index)
   }
 }
