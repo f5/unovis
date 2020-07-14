@@ -47,6 +47,8 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
     labelColor: d => d.dynExamples.length ? '#4c52ca' : null,
     subLabelColor: this.getSubLabelColor,
     subLabel: d => d.isLeafNode ? d.method : `${d.leafs} leaf${d.leafs === 1 ? '' : 's'}`,
+    nodeCursor: 'pointer',
+    linkCursor: 'pointer',
     nodeIcon: d => (d.sourceLinks[0] || (!d.sourceLinks[0] && d.collapsed)) ? (d.collapsed ? '+' : '') : null,
     // iconColor: 'white',
     exitTransitionType: ExitTransitionType.TO_ANCESTOR,
