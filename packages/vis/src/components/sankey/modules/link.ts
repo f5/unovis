@@ -3,6 +3,7 @@ import { interpolateNumber } from 'd3-interpolate'
 
 // Utils
 import { getColor } from 'utils/color'
+import { getValue } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 
 // Types
@@ -56,12 +57,15 @@ export function createLinks (sel): void {
 export function updateLinks<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> (sel, config: SankeyConfig<N, L>, duration): void {
   smartTransition(sel, duration)
     .style('opacity', 1)
+
   const linkSelection = sel.select(`.${s.visibleLink}`)
-  const linkSelectionChanged = smartTransition(linkSelection, duration)
+    .style('cursor', d => getValue(d, config.linkCursor))
+
+  const selectionTransition = smartTransition(linkSelection, duration)
     .style('fill', link => getColor(link, config.linkColor))
 
   if (duration) {
-    linkSelectionChanged
+    selectionTransition
       .attrTween('d', (d, i, el) => {
         const previous = el[i]._animState
         const next = {
@@ -109,6 +113,7 @@ export function updateLinks<N extends SankeyNodeDatumInterface, L extends Sankey
       y1: d.y1,
       width: Math.max(10, d.width),
     }))
+    .style('cursor', d => getValue(d, config.linkCursor))
 }
 
 export function removeLinks (sel): void {

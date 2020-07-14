@@ -19,6 +19,7 @@ import { renderLabel } from './label'
 
 // Styles
 import * as s from '../style'
+import { getValue } from 'utils/data'
 
 export function createNodes<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> (sel, config: SankeyConfig<N, L>, bleed: Spacing): void {
   const { enterTransitionType } = config
@@ -60,6 +61,7 @@ export function updateNodes<N extends SankeyNodeDatumInterface, L extends Sankey
   smartTransition(sel.select(`.${s.node}`), duration)
     .attr('width', config.nodeWidth)
     .attr('height', d => d.y1 - d.y0)
+    .style('cursor', d => getValue(d, config.nodeCursor))
 
   // Label
   const labelGroupSelection = sel.select(`.${s.labelGroup}`)

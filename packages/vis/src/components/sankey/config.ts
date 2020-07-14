@@ -39,6 +39,8 @@ export interface SankeyConfigInterface<N extends SankeyNodeDatumInterface, L ext
   showSingleNode?: boolean;
   /** Single node position */
   singleNodePosition?: Position.CENTER | Position.LEFT | string;
+  /** Node cursor on hover */
+  nodeCursor?: StringAccessor<L>;
   /** Node icon accessor function or value */
   nodeIcon?: StringAccessor<N>;
   /** Node color accessor function or value */
@@ -51,6 +53,9 @@ export interface SankeyConfigInterface<N extends SankeyNodeDatumInterface, L ext
   linkColor?: StringAccessor<L>;
   /** Link flow accessor function or value */
   linkValue?: NumericAccessor<N>;
+  /** Node cursor on hover */
+  linkCursor?: StringAccessor<L>;
+
   /** Node label accessor function or value */
   label?: StringAccessor<N>;
   /** Node sub-label accessor function or value */
@@ -98,6 +103,7 @@ export class SankeyConfig<N extends SankeyNodeDatumInterface, L extends SankeyLi
   nodeColor = (d: N): string => d['color']
   showSingleNode = true
   singleNodePosition = Position.CENTER
+  nodeCursor = null
   nodeIcon = null
   iconColor = null
 
@@ -117,4 +123,5 @@ export class SankeyConfig<N extends SankeyNodeDatumInterface, L extends SankeyLi
   // Links
   linkValue = (d: N): number => d['value']
   linkColor = (d: L): string => d['color']
+  linkCursor = null
 }
