@@ -20,7 +20,7 @@ const apiData = data.apiep_list.map(d => {
 })
 
 const NODE_WIDTH = 30
-const NODE_HORIZONTAL_SPACE = 300
+const NODE_HORIZONTAL_SPACE = 260
 
 @Component({
   selector: 'api-endpoint-explorer',
@@ -51,6 +51,7 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
     // iconColor: 'white',
     exitTransitionType: ExitTransitionType.TO_ANCESTOR,
     enterTransitionType: EnterTransitionType.FROM_ANCESTOR,
+    singleNodePosition: Position.LEFT,
     events: {
       [Sankey.selectors.gNode]: {
         click: (d: any) => {
