@@ -33,7 +33,7 @@ function getLabelBackground (width: number, height: number): string {
     L 0 0 `
 }
 
-export const labelBackgroundWidth = (nodeWidth: number, nodeHorizontalSpacing: number): number => nodeHorizontalSpacing - nodeWidth - ARROW_WIDTH - NODE_LABEL_SPACING * 2
+export const labelBackgroundWidth = (nodeWidth: number, nodeHorizontalSpacing: number): number => nodeHorizontalSpacing - ARROW_WIDTH - NODE_LABEL_SPACING * 2
 export const labelBackgroundHeight = (labelFontSize: number): number => labelFontSize + 2 * LABEL_BLOCK_PADDING
 
 export const requiredLabelSpace = (nodeWidth: number, nodeHorizontalSpacing: number, labelFontSize: number): { x: number; y: number } => {

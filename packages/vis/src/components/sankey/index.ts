@@ -13,7 +13,7 @@ import { Spacing } from 'types/misc'
 import { ExtendedSizeComponent, Sizing } from 'types/component'
 
 // Utils
-import { getValue, clamp, isNumber, groupBy, sortBy, flatten } from 'utils/data'
+import { getValue, isNumber, groupBy, sortBy, flatten } from 'utils/data'
 import { SankeyNodeDatumInterface, SankeyLinkDatumInterface, LabelPosition } from 'types/sankey'
 
 // Config
@@ -116,7 +116,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
   }
 
   private _preCalculateComponentSize (): void {
-    const { config: { nodePadding, nodeWidth, nodeAlign, nodeMinHeight, nodeMaxHeight, nodeHorizontalSpacing }, datamodel: { nodes, links } } = this
+    const { bleed, config: { nodePadding, nodeWidth, nodeAlign, nodeMinHeight, nodeMaxHeight, nodeHorizontalSpacing }, datamodel: { nodes, links } } = this
     this._sankey
       .nodeId(d => d.id)
       .iterations(32)
@@ -125,11 +125,11 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
     if (nodes.length) this._sankey({ nodes, links })
     const extentValue = extent(nodes, d => d.value || undefined)
     const scale = scaleLinear().domain(extentValue).range([nodeMinHeight, nodeMaxHeight]).clamp(true)
-    const groupedByLayer = groupBy(nodes, d => d.layer)
-    const values = Object.values(groupedByLayer).map((d: any[]) => sum(d.map(n => scale(n.value) + nodePadding)))
+    const groupByColumn = groupBy(nodes, d => d.layer)
+    const values = Object.values(groupByColumn).map((d: any[]) => sum(d.map(n => scale(n.value) + nodePadding)))
     const height = max(values)
     this._extendedHeight = height || this._extendedSizeMinHeight
-    this._extendedWidth = (nodeWidth + nodeHorizontalSpacing * Object.keys(groupedByLayer).length)
+    this._extendedWidth = (nodeWidth + nodeHorizontalSpacing) * Object.keys(groupByColumn).length - nodeHorizontalSpacing + bleed.left + bleed.right
   }
 
   private _prepareLayout (): void {
@@ -184,9 +184,10 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
       node.x1 = 0
       node.y0 = 0
       node.y1 = sankeyHeight
+      node.layer = 0
     }
 
-    // Fix node dimmensions if they are too small.
+    // Minimum node height
     nodes.forEach(node => {
       const dy = node.y1 - node.y0
       if (dy < 1) {
@@ -197,14 +198,15 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
   }
 
   private _getSankeyHeight (): number {
-    const { config, datamodel: { links } } = this
+    const { config } = this
 
-    return clamp(config.height * links.length * config.heightNormalizationCoeff, config.height / 2, config.height)
+    const height = this.sizing === Sizing.FIT ? config.height : this._extendedHeight
+    return height // clamp(height * links.length * config.heightNormalizationCoeff, height / 2, height)
   }
 
   private _sortNodes (): [] {
     const { datamodel } = this
-    const groupByColumn = groupBy(datamodel.nodes, 'layer')
+    const groupByColumn = groupBy(datamodel.nodes, d => d.layer)
     Object.keys(groupByColumn).forEach(key => {
       const column = groupByColumn[key]
       let sortedColumn
@@ -228,6 +230,20 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
 
   getHeight (): number {
     return this._extendedHeight ?? this.config.height
+  }
+
+  getColumnCenters (): number[] {
+    const { datamodel } = this
+
+    const centers = datamodel.nodes.reduce((pos, node) => {
+      const idx = node.layer
+      if (!isFinite(pos[idx])) {
+        pos[idx] = (node.x0 + node.x1) / 2
+      }
+      return pos
+    }, [])
+
+    return centers
   }
 
   _onNodeMouseOver (d, i, els): void {
