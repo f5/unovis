@@ -39,7 +39,7 @@ export function linkPath ({ x0, x1, y0, y1, width }): string {
 }
 
 export function createLinks (sel): void {
-  sel.append('path').attr('class', s.visibleLink)
+  sel.append('path').attr('class', s.linkPath)
     .attr('d', (d, i, el) => {
       el[i]._animState = {
         x0: d.source.x1,
@@ -50,7 +50,7 @@ export function createLinks (sel): void {
       }
       return linkPath(el[i]._animState)
     })
-  sel.append('path').attr('class', s.transparentLink)
+  sel.append('path').attr('class', s.linkSelectionHelper)
   sel.style('opacity', 0)
 }
 
@@ -58,7 +58,7 @@ export function updateLinks<N extends SankeyNodeDatumInterface, L extends Sankey
   smartTransition(sel, duration)
     .style('opacity', 1)
 
-  const linkSelection = sel.select(`.${s.visibleLink}`)
+  const linkSelection = sel.select(`.${s.linkPath}`)
     .style('cursor', d => getValue(d, config.linkCursor))
 
   const selectionTransition = smartTransition(linkSelection, duration)
@@ -105,7 +105,7 @@ export function updateLinks<N extends SankeyNodeDatumInterface, L extends Sankey
     }))
   }
 
-  sel.select(`.${s.transparentLink}`)
+  sel.select(`.${s.linkSelectionHelper}`)
     .attr('d', d => linkPath({
       x0: d.source.x1,
       x1: d.target.x0,
