@@ -3,6 +3,7 @@ import { interpolateNumber } from 'd3-interpolate'
 
 // Utils
 import { getColor } from 'utils/color'
+import { getValue } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 
 // Types
@@ -38,7 +39,7 @@ export function linkPath ({ x0, x1, y0, y1, width }): string {
 }
 
 export function createLinks (sel): void {
-  sel.append('path').attr('class', s.visibleLink)
+  sel.append('path').attr('class', s.linkPath)
     .attr('d', (d, i, el) => {
       el[i]._animState = {
         x0: d.source.x1,
@@ -49,19 +50,22 @@ export function createLinks (sel): void {
       }
       return linkPath(el[i]._animState)
     })
-  sel.append('path').attr('class', s.transparentLink)
+  sel.append('path').attr('class', s.linkSelectionHelper)
   sel.style('opacity', 0)
 }
 
 export function updateLinks<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> (sel, config: SankeyConfig<N, L>, duration): void {
   smartTransition(sel, duration)
     .style('opacity', 1)
-  const linkSelection = sel.select(`.${s.visibleLink}`)
-  const linkSelectionChanged = smartTransition(linkSelection, duration)
+
+  const linkSelection = sel.select(`.${s.linkPath}`)
+    .style('cursor', d => getValue(d, config.linkCursor))
+
+  const selectionTransition = smartTransition(linkSelection, duration)
     .style('fill', link => getColor(link, config.linkColor))
 
   if (duration) {
-    linkSelectionChanged
+    selectionTransition
       .attrTween('d', (d, i, el) => {
         const previous = el[i]._animState
         const next = {
@@ -101,7 +105,7 @@ export function updateLinks<N extends SankeyNodeDatumInterface, L extends Sankey
     }))
   }
 
-  sel.select(`.${s.transparentLink}`)
+  sel.select(`.${s.linkSelectionHelper}`)
     .attr('d', d => linkPath({
       x0: d.source.x1,
       x1: d.target.x0,
@@ -109,6 +113,7 @@ export function updateLinks<N extends SankeyNodeDatumInterface, L extends Sankey
       y1: d.y1,
       width: Math.max(10, d.width),
     }))
+    .style('cursor', d => getValue(d, config.linkCursor))
 }
 
 export function removeLinks (sel): void {

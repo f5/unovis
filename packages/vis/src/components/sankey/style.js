@@ -49,11 +49,11 @@ export const link = css`
   }
 `
 
-export const visibleLink = css`
+export const linkPath = css`
   label: visible;
 `
 
-export const transparentLink = css`
+export const linkSelectionHelper = css`
   label: transparent;
 
   opacity: 0;

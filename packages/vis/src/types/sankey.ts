@@ -5,6 +5,7 @@ import { sankeyLeft, sankeyRight, sankeyCenter, sankeyJustify } from 'd3-sankey'
 import { NodeDatumCore, LinkDatumCore } from 'types/graph'
 
 export interface SankeyNodeDatumInterface extends NodeDatumCore {
+  layer?: number;
   width?: number;
   value?: number;
   x0?: number;
