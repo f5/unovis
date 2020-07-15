@@ -33,7 +33,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
   datamodel: GraphDataModel<N, L> = new GraphDataModel()
   private _extendedWidth = undefined
   private _extendedHeight = undefined
-  private _extendedSizeMinHeight = 100
+  private _extendedSizeMinHeight = 200
   private _linksGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
   private _nodesGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
   private _sankey = sankey()
@@ -176,25 +176,42 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
       .iterations(32)
       .nodeAlign(config.nodeAlign)
 
-    if (links.length > 0 && nodes.length > 1) this._sankey({ nodes, links })
-    if (links.length === 0 && nodes.length === 1) {
-      const node = nodes[0]
-      node.width = Math.max(10, config.nodeWidth)
-      node.x0 = 0
-      node.x1 = 0
-      node.y0 = 0
-      node.y1 = sankeyHeight
-      node.layer = 0
-    }
+    if (links.length > 0 && nodes.length > 1) {
+      this._sankey({ nodes, links })
 
-    // Minimum node height
-    nodes.forEach(node => {
-      const dy = node.y1 - node.y0
-      if (dy < 1) {
-        node.y0 = node.y0 - (0.5 - dy * 0.5)
-        node.y1 = node.y0 + 1
+      if (this.sizing !== Sizing.FIT) {
+        const maxDepth = max(nodes, d => d.layer)
+        for (let depth = 0; depth <= maxDepth; depth += 1) {
+          const layerNodes = nodes.filter(d => d.layer === depth)
+
+          // Assuming the layer has been previously sorted
+          let y = layerNodes[0]?.y0
+          for (const node of layerNodes) {
+            const h = node.y1 - node.y0
+            node.y0 = y
+            node.y1 = y + Math.max(config.nodeMinHeight, h)
+
+            y = node.y1 + config.nodePadding
+          }
+        }
+
+        const height = max(nodes, d => d.y1)
+        this._extendedHeight = height + bleed.top + bleed.bottom
       }
-    })
+    } else {
+      const nodeHeight = sankeyHeight / nodes.length - config.nodePadding * (nodes.length - 1)
+      let y = 0
+      for (const node of nodes) {
+        node.width = Math.max(10, config.nodeWidth)
+        node.x0 = 0
+        node.x1 = node.width
+        node.y0 = y
+        node.y1 = y + nodeHeight
+        node.layer = 0
+
+        y = node.y1 + config.nodePadding
+      }
+    }
   }
 
   private _getSankeyHeight (): number {
