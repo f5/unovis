@@ -3,6 +3,7 @@ import { select } from 'd3-selection'
 
 // Utils
 import { getColor } from 'utils/color'
+import { getValue } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 
 // Types
@@ -19,7 +20,6 @@ import { renderLabel } from './label'
 
 // Styles
 import * as s from '../style'
-import { getValue } from 'utils/data'
 
 export function createNodes<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> (sel, config: SankeyConfig<N, L>, bleed: Spacing): void {
   const { enterTransitionType } = config
