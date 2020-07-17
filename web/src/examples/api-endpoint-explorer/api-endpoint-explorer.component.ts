@@ -54,6 +54,7 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
     exitTransitionType: ExitTransitionType.TO_ANCESTOR,
     enterTransitionType: EnterTransitionType.FROM_ANCESTOR,
     singleNodePosition: Position.LEFT,
+    highlightSubtreeOnHover: true,
     events: {
       [Sankey.selectors.gNode]: {
         click: (d: any) => {

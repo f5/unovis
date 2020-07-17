@@ -56,7 +56,7 @@ export function createLinks (sel): void {
 
 export function updateLinks<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> (sel, config: SankeyConfig<N, L>, duration): void {
   smartTransition(sel, duration)
-    .style('opacity', 1)
+    .style('opacity', (d: L) => d._state.greyout ? 0.2 : 1)
 
   const linkSelection = sel.select(`.${s.linkPath}`)
     .style('cursor', d => getValue(d, config.linkCursor))
