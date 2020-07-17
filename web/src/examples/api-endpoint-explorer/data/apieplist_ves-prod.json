@@ -1,6 +1,13 @@
 {
     "apiep_list": [
       {
+        "collapsed_url": "$$DYNAMIC$$",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
         "collapsed_url": "/",
         "method": "GET",
         "dyn_examples": [
@@ -728,6 +735,13 @@
         }
       },
       {
+        "collapsed_url": "$$STATIC$$",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
         "collapsed_url": "/a1795b6917dd4e3645932882a7568b255b81fd83-d1df335c1f5f2be6177e.js",
         "method": "GET",
         "dyn_examples": [
@@ -1008,7 +1022,7 @@
         "pdf_info": null
       },
       {
-        "collapsed_url": "/img/main/customers/franceix.svg",
+        "collapsed_url": "img/main/customers/franceix.svg",
         "method": "GET",
         "dyn_examples": [
         ],
@@ -1340,7 +1354,7 @@
             ]
           },
           {
-            "component_identifier": "/page-data/$DYN$/$DYN$/$DYN$",
+            "component_identifier": "page-data/$DYN$/$DYN$/$DYN$",
             "component_examples": [
               "address-allocator",
               "advertise-policy",

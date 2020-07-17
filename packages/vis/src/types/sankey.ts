@@ -6,6 +6,8 @@ import { NodeDatumCore, LinkDatumCore } from 'types/graph'
 
 export interface SankeyNodeDatumInterface extends NodeDatumCore {
   layer?: number;
+  sourceLinks?: SankeyLinkDatumInterface[];
+  targetLinks?: SankeyLinkDatumInterface[];
   width?: number;
   value?: number;
   x0?: number;
