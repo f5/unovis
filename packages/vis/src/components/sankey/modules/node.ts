@@ -55,7 +55,7 @@ export function updateNodes<N extends SankeyNodeDatumInterface, L extends Sankey
     .attr('transform', d => `translate(${
       (sel.size() === 1 && config.singleNodePosition === Position.CENTER) ? config.width * 0.5 - bleed.left : d.x0
     },${d.y0})`)
-    .style('opacity', 1)
+    .style('opacity', (d: N) => d._state.greyout ? 0.2 : 1)
 
   // Node
   smartTransition(sel.select(`.${s.node}`), duration)
@@ -108,7 +108,7 @@ export function removeNodes (selection, config, duration): void {
     .remove()
 }
 
-export function onNodeMouseOver<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> (sel, config: SankeyConfig<N, L>): void {
+export function onNodeMouseOver<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> (d: N, sel, config: SankeyConfig<N, L>): void {
   // sel.classed(s.visibleLabel, true)
 
   // sel.select(`.${s.nodeLabel}`)
@@ -116,7 +116,7 @@ export function onNodeMouseOver<N extends SankeyNodeDatumInterface, L extends Sa
   //   .call(wrapTextElement, getWrapOption(config, false))
 }
 
-export function onNodeMouseOut<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> (sel, config: SankeyConfig<N, L>): void {
+export function onNodeMouseOut<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> (d: N, sel, config: SankeyConfig<N, L>): void {
   // sel.classed(s.visibleLabel, d => shouldLabelBeVisible(d, config))
 
   // sel.select(`.${s.nodeLabel}`)

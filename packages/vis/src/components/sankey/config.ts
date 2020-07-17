@@ -17,10 +17,16 @@ export interface SankeyConfigInterface<N extends SankeyNodeDatumInterface, L ext
   id?: ((d: SankeyNodeDatumInterface | SankeyLinkDatumInterface, i?: number, ...any) => string);
   /** Coefficient to scale the height of the diagram when the amount of links is low: C * links.length, clamped to [height / 2, height]  */
   heightNormalizationCoeff?: number;
-  /** Type of animation on removing nodes  */
+  /** Type of animation on removing nodes */
   exitTransitionType?: ExitTransitionType;
-  /** Type of animation on creating nodes  */
+  /** Type of animation on creating nodes */
   enterTransitionType?: EnterTransitionType;
+  /** Highight the corresponding subtree on node / link hover. Default: false */
+  highlightSubtreeOnHover?: boolean;
+  /** Highlight animation duration, ms. Default: 400 */
+  highlightDuration?: number;
+  /** Highlight delay, ms. Default: 1000 */
+  highlightDelay?: number;
 
   // Nodes
   /** Sankey node width in pixels */
@@ -92,6 +98,9 @@ export class SankeyConfig<N extends SankeyNodeDatumInterface, L extends SankeyLi
   enterTransitionType = EnterTransitionType.DEFAULT
   // eslint-disable-next-line dot-notation
   id = (d: SankeyNodeDatumInterface | SankeyLinkDatumInterface, i: number): string => (d['_id'] ?? i).toString()
+  highlightSubtreeOnHover = false
+  highlightDuration = 400
+  highlightDelay = 1000
 
   // Nodes
   nodeWidth = 25

@@ -11,10 +11,10 @@ import { GraphDataModel } from 'data-models/graph'
 // Types
 import { Spacing } from 'types/misc'
 import { ExtendedSizeComponent, Sizing } from 'types/component'
+import { SankeyNodeDatumInterface, SankeyLinkDatumInterface, LabelPosition } from 'types/sankey'
 
 // Utils
 import { getValue, isNumber, groupBy, sortBy, flatten } from 'utils/data'
-import { SankeyNodeDatumInterface, SankeyLinkDatumInterface, LabelPosition } from 'types/sankey'
 
 // Config
 import { SankeyConfig, SankeyConfigInterface } from './config'
@@ -37,10 +37,15 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
   private _linksGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
   private _nodesGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
   private _sankey = sankey()
+  private _highlightTimeoutId = null
   events = {
     [Sankey.selectors.gNode]: {
       mouseover: this._onNodeMouseOver.bind(this),
       mouseout: this._onNodeMouseOut.bind(this),
+    },
+    [Sankey.selectors.link]: {
+      mouseover: this._onLinkMouseOver.bind(this),
+      mouseout: this._onLinkMouseOut.bind(this),
     },
   }
 
@@ -260,13 +265,61 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
     return centers
   }
 
-  _onNodeMouseOver (d, i, els): void {
-    onNodeMouseOver(select(els[i]), this.config)
-    this._onEvent(d, i, els)
+  highlightSubtree (node: SankeyNodeDatumInterface): void {
+    const { config, datamodel } = this
+
+    clearTimeout(this._highlightTimeoutId)
+    this._highlightTimeoutId = setTimeout(() => {
+      for (const n of datamodel.nodes) n._state.greyout = true
+      for (const l of datamodel.links) l._state.greyout = true
+
+      this.recursiveSetSubtreeState(node, 'sourceLinks', 'target', 'greyout', false)
+      this.recursiveSetSubtreeState(node, 'targetLinks', 'source', 'greyout', false)
+      this._render(config.highlightDuration)
+    }, config.highlightDelay)
   }
 
-  _onNodeMouseOut (d, i, els): void {
-    onNodeMouseOut(select(els[i]), this.config)
-    this._onEvent(d, i, els)
+  recursiveSetSubtreeState (node: SankeyNodeDatumInterface, linksKey: 'sourceLinks' | 'targetLinks', nodeKey: 'source' | 'target', key: string, value: any): void {
+    node._state[key] = value
+
+    for (const l of node[linksKey]) {
+      l._state[key] = value
+      this.recursiveSetSubtreeState(l[nodeKey] as SankeyNodeDatumInterface, linksKey, nodeKey, key, value)
+    }
+  }
+
+  disableHighlight (): void {
+    const { config, datamodel } = this
+
+    clearTimeout(this._highlightTimeoutId)
+    for (const n of datamodel.nodes) n._state.greyout = false
+    for (const l of datamodel.links) l._state.greyout = false
+    this._render(config.highlightDuration)
+  }
+
+  private _onNodeMouseOver (d: SankeyNodeDatumInterface, i, els): void {
+    const { config } = this
+
+    if (config.highlightSubtreeOnHover) this.highlightSubtree(d)
+    onNodeMouseOver(d, select(els[i]), this.config)
+  }
+
+  private _onNodeMouseOut (d: SankeyNodeDatumInterface, i, els): void {
+    const { config } = this
+
+    if (config.highlightSubtreeOnHover) this.disableHighlight()
+    onNodeMouseOut(d, select(els[i]), this.config)
+  }
+
+  private _onLinkMouseOver (d: SankeyLinkDatumInterface, i, els): void {
+    const { config } = this
+
+    if (config.highlightSubtreeOnHover) this.highlightSubtree(d.target as SankeyNodeDatumInterface)
+  }
+
+  private _onLinkMouseOut (d: SankeyLinkDatumInterface, i, els): void {
+    const { config } = this
+
+    if (config.highlightSubtreeOnHover) this.disableHighlight()
   }
 }
