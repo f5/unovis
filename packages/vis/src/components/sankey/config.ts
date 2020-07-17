@@ -97,7 +97,7 @@ export class SankeyConfig<N extends SankeyNodeDatumInterface, L extends SankeyLi
   nodeWidth = 25
   nodeAlign = NodeAlignType.JUSTIFY
   nodeHorizontalSpacing = 150
-  nodeMinHeight = 30
+  nodeMinHeight = 20
   nodeMaxHeight = 100
   nodePadding = 2
   nodeColor = (d: N): string => d['color']

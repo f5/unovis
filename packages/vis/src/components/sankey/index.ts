@@ -176,23 +176,20 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
       .iterations(32)
       .nodeAlign(config.nodeAlign)
 
-    if (links.length > 0 && nodes.length > 1) {
+    const hasNodesAndLinks = links.length > 0 && nodes.length > 1
+    if (hasNodesAndLinks) {
       this._sankey({ nodes, links })
 
+      // Apply node min height to nodes without links
       if (this.sizing !== Sizing.FIT) {
-        const maxDepth = max(nodes, d => d.layer)
-        for (let depth = 0; depth <= maxDepth; depth += 1) {
-          const layerNodes = nodes.filter(d => d.layer === depth)
+        const singleNodes = nodes
+          .filter(d => !d.sourceLinks?.length && !d.targetLinks?.length)
 
-          // Assuming the layer has been previously sorted
-          let y = layerNodes[0]?.y0
-          for (const node of layerNodes) {
-            const h = node.y1 - node.y0
-            node.y0 = y
-            node.y1 = y + Math.max(config.nodeMinHeight, h)
-
-            y = node.y1 + config.nodePadding
-          }
+        for (const node of singleNodes) {
+          const h = Math.max(config.nodeMinHeight, node.y1 - node.y0)
+          const y = (node.y0 + node.y1) / 2
+          node.y0 = y - h / 2
+          node.y1 = y + h / 2
         }
 
         const height = max(nodes, d => d.y1)
