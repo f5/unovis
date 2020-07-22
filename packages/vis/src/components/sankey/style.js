@@ -20,6 +20,8 @@ export const variables = injectGlobal`
     --vis-sankey-icon-font-family: FontAwesome;
 
     --vis-sankey-label-font-family: var(--vis-font-family);
+    --vis-sankey-node-label-text-decoration: none;
+    --vis-sankey-node-label-font-weight: 600;
   }
 `
 
@@ -68,8 +70,8 @@ export const nodeLabel = css`
   label: label;
 
   fill: var(--vis-sankey-node-label-color);
-  font-weight: 600;
-  pointer-events: none;
+  text-decoration: var(--vis-sankey-node-label-text-decoration);
+  font-weight: var(--vis-sankey-node-label-font-weight);
   user-select: none;
 
   &, tspan {
