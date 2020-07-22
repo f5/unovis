@@ -28,5 +28,5 @@ export const lineSelectionHelper = css`
 `
 
 export const dim = css`
-  opacity: 0.1;
+  opacity: 0.2;
 `
