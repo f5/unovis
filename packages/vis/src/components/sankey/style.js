@@ -14,14 +14,15 @@ export const variables = injectGlobal`
 
     --vis-sankey-node-label-background-fill-color: #ffffff;
     --vis-sankey-node-label-background-stroke-color: #dadada;
+    --vis-sankey-node-label-text-decoration: none;
+    --vis-sankey-node-label-font-weight: 600;
+    --vis-sankey-node-label-cursor: default;
 
     --vis-sankey-icon-size: ${SANKEY_ICON_SIZE}px;
     --vis-sankey-icon-color: #ffffff;
     --vis-sankey-icon-font-family: FontAwesome;
 
     --vis-sankey-label-font-family: var(--vis-font-family);
-    --vis-sankey-node-label-text-decoration: none;
-    --vis-sankey-node-label-font-weight: 600;
   }
 `
 
@@ -72,6 +73,7 @@ export const label = css`
   fill: var(--vis-sankey-node-label-color);
   text-decoration: var(--vis-sankey-node-label-text-decoration);
   font-weight: var(--vis-sankey-node-label-font-weight);
+  cursor: var(--vis-sankey-node-label-cursor);
   user-select: none;
 
   &, tspan {
