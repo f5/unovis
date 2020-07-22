@@ -66,7 +66,7 @@ export const labelGroup = css`
   visibility: hidden;
 `
 
-export const nodeLabel = css`
+export const label = css`
   label: label;
 
   fill: var(--vis-sankey-node-label-color);
@@ -80,7 +80,7 @@ export const nodeLabel = css`
 
 `
 
-export const nodeSubLabel = css`
+export const sublabel = css`
   label: sub-label;
 
   fill: var(--vis-sankey-node-label-color);
@@ -110,10 +110,10 @@ export const gNode = css`
   label: g-node;
 
   &${`.${visibleLabel}`} {
-    ${`.${nodeLabel}`} {
+    ${`.${label}`} {
       visibility: visible;
     }
-    ${`.${nodeSubLabel}`} {
+    ${`.${sublabel}`} {
       visibility: visible;
     }
     ${`.${labelBackground}`} {

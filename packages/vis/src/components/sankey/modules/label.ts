@@ -75,7 +75,7 @@ export function renderLabel<N extends SankeyNodeDatumInterface, L extends Sankey
   group.classed(s.visibleLabel, isVisible)
   if (!isVisible) return
 
-  const labelText = group.select(`.${s.nodeLabel}`)
+  const labelText = group.select(`.${s.label}`)
   labelText
     .attr('font-size', config.labelFontSize)
     .style('fill', getValue(d, config.labelColor))
@@ -106,7 +106,7 @@ export function renderLabel<N extends SankeyNodeDatumInterface, L extends Sankey
       .attr('y', LABEL_BLOCK_PADDING)
       .attr('x', ARROW_WIDTH + LABEL_BLOCK_PADDING)
 
-    const sublabelText = group.select(`.${s.nodeSubLabel}`)
+    const sublabelText = group.select(`.${s.sublabel}`)
     sublabelText
       .text(d => {
         let text = getValue(d, config.subLabel)
