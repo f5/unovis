@@ -121,8 +121,8 @@ export class SankeyConfig<N extends SankeyNodeDatumInterface, L extends SankeyLi
   subLabel = undefined
   labelPosition = LabelPosition.AUTO
   labelTextSeparator = [' ', '-']
-  labelTrim = TrimMode.END
-  labelForceWordBreak = false
+  labelTrim = TrimMode.MIDDLE
+  labelForceWordBreak = true
   labelFontSize = 12
   labelColor = null
   labelWidth = 70
