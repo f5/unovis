@@ -34,8 +34,8 @@ export function createNodes<N extends SankeyNodeDatumInterface, L extends Sankey
   // Labels
   const labelGroup = sel.append('g').attr('class', s.labelGroup)
   labelGroup.append('path').attr('class', s.labelBackground)
-  labelGroup.append('text').attr('class', s.nodeLabel)
-  labelGroup.append('text').attr('class', s.nodeSubLabel)
+  labelGroup.append('text').attr('class', s.label)
+  labelGroup.append('text').attr('class', s.sublabel)
 
   // Node icon
   sel.append('text').attr('class', s.nodeIcon)
@@ -111,15 +111,15 @@ export function removeNodes (selection, config, duration): void {
 export function onNodeMouseOver<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> (d: N, sel, config: SankeyConfig<N, L>): void {
   // sel.classed(s.visibleLabel, true)
 
-  // sel.select(`.${s.nodeLabel}`)
-  //   .text(config.nodeLabel)
+  // sel.select(`.${s.label}`)
+  //   .text(config.label)
   //   .call(wrapTextElement, getWrapOption(config, false))
 }
 
 export function onNodeMouseOut<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> (d: N, sel, config: SankeyConfig<N, L>): void {
   // sel.classed(s.visibleLabel, d => shouldLabelBeVisible(d, config))
 
-  // sel.select(`.${s.nodeLabel}`)
-  //   .text(config.nodeLabel)
+  // sel.select(`.${s.label}`)
+  //   .text(config.label)
   //   .call(wrapTextElement, getWrapOption(config))
 }

@@ -25,7 +25,7 @@ import * as s from './style'
 // Modules
 import { removeLinks, createLinks, updateLinks } from './modules/link'
 import { removeNodes, createNodes, updateNodes, onNodeMouseOver, onNodeMouseOut } from './modules/node'
-import { requiredLabelSpace } from './modules/label'
+import { requiredLabelSpace, NODE_LABEL_SPACING } from './modules/label'
 
 export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> extends ComponentCore<{nodes: N[]; links?: L[]}> implements ExtendedSizeComponent {
   static selectors = s
@@ -61,7 +61,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
 
     switch (labelPosition) {
     case (LabelPosition.AUTO): {
-      return { top: labelFontSize / 2, bottom: labelFontSize / 2, left: labelWidth, right: labelWidth }
+      return { top: labelFontSize / 2, bottom: labelFontSize / 2, left: labelWidth + 2 * NODE_LABEL_SPACING, right: labelWidth + 2 * NODE_LABEL_SPACING }
     }
     case (LabelPosition.RIGHT): {
       const requiredSpace = requiredLabelSpace(nodeWidth, nodeHorizontalSpacing, labelFontSize)
