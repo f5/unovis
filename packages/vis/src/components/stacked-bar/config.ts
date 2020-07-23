@@ -1,6 +1,9 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component/config'
 
+// Types
+import { StringAccessor } from 'types/misc'
+
 export interface StackedBarConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
     /** Bar width in pixels */
     barWidth?: number;
@@ -14,6 +17,8 @@ export interface StackedBarConfigInterface<Datum> extends XYComponentConfigInter
     isVertical?: boolean;
     /** Rounded corners for bars. Boolean or number (to set the radius in pixels) */
     roundedCorners?: number | boolean;
+    /** Optional bar cursor. Default: `null` */
+    cursor?: StringAccessor<Datum>;
 }
 
 export class StackedBarConfig<Datum> extends XYComponentConfig<Datum> implements StackedBarConfigInterface<Datum> {
@@ -23,4 +28,5 @@ export class StackedBarConfig<Datum> extends XYComponentConfig<Datum> implements
     barPadding = 0.0
     isVertical = true
     roundedCorners = true
+    cursor = null
 }
