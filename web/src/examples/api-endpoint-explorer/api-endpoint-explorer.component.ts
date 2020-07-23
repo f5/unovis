@@ -55,6 +55,21 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
     enterTransitionType: EnterTransitionType.FROM_ANCESTOR,
     singleNodePosition: Position.LEFT,
     highlightSubtreeOnHover: true,
+    nodeSort: (a, b) => {
+      const aParent = a.targetLinks[0]?.source
+      const bParent = b.targetLinks[0]?.source
+      const aGrandparent = a.targetLinks[0]?.source?.targetLinks[0]?.source
+      const bGrapdparent = b.targetLinks[0]?.source?.targetLinks[0]?.source
+
+      if ((aParent === bParent)) { // Same parent nodes are sorted by: value + alphabetically
+        return (b.value - a.value) || this.compareStrings(a?.path, b?.path)
+      } else { // Different parent nodes are sorted by: 1st grandparent value + 1st parent value + alphabetically
+        return (bGrapdparent?.value - aGrandparent?.value) || (bParent?.value - aParent?.value) || -this.compareStrings(aParent?.path, bParent?.path)
+      }
+    },
+    linkSort: (a, b) => {
+      return b.value - a.value || this.compareStrings(a.target?.path, b.target?.path) // Links sorted by: value + alphabetically
+    },
     events: {
       [Sankey.selectors.gNode]: {
         click: (d: any) => {
@@ -262,5 +277,14 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
 
     this.data = this.process(apiData)
     this.sankey.setData(this.data)
+  }
+
+  compareStrings (a = '', b = ''): number {
+    const strA = a.toUpperCase()
+    const strB = b.toUpperCase()
+
+    if (strA < strB) return -1
+    if (strA > strB) return 1
+    return 0
   }
 }
