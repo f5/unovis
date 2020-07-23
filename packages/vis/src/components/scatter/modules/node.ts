@@ -40,6 +40,8 @@ export function updateNodes (selection, duration): void {
       smartTransition(path, duration)
         .style('fill', d._screen.color)
     }
+
+    path.style('cursor', d._screen.cursor)
   })
 
   smartTransition(selection, duration)

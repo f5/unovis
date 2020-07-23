@@ -59,7 +59,7 @@ export class Scatter<Datum> extends XYComponentCore<Datum> {
   }
 
   _prepareData (): object[] {
-    const { config: { size, x, y, scales, shape, icon, color }, datamodel: { data } } = this
+    const { config: { size, x, y, scales, shape, icon, color, cursor }, datamodel: { data } } = this
     const maxR = this._getMaxPointRadius()
     const xRange = scales.x.range()
 
@@ -78,6 +78,7 @@ export class Scatter<Datum> extends XYComponentCore<Datum> {
             color: getColor(d, color, i),
             shape: getValue(d, shape),
             icon: getValue(d, icon),
+            cursor: getValue(d, cursor),
           },
         })
       }
