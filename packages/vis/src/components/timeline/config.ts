@@ -13,6 +13,8 @@ export interface TimelineConfigInterface<Datum> extends XYComponentConfigInterfa
   length?: NumericAccessor<Datum>;
   /** Type accessor function, records of one type are plotted in one row */
   type?: StringAccessor<Datum>;
+  /** Optional line cursor */
+  cursor?: StringAccessor<Datum>;
 }
 
 export class TimelineConfig<Datum> extends XYComponentConfig<Datum> implements TimelineConfigInterface<Datum> {
@@ -22,4 +24,5 @@ export class TimelineConfig<Datum> extends XYComponentConfig<Datum> implements T
   length: NumericAccessor<Datum> = d => d['length'];
   // eslint-disable-next-line dot-notation
   type: StringAccessor<Datum> = d => d['type']
+  cursor = null
 }
