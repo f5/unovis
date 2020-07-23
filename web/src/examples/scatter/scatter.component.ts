@@ -33,6 +33,7 @@ function getScatterConfig () {
     size: (d): number => d.size,
     shape: (d): SymbolType => d.shape,
     icon: (d): any => d.icon,
+    cursor: (d, i) => 'pointer',
   }
 }
 
