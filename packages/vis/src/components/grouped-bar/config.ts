@@ -1,6 +1,9 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component/config'
 
+// Types
+import { StringAccessor } from 'types/misc'
+
 export interface GroupedBarConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
     /** Optionaly set the group width in pixels (distributed evenly among the group bars) */
     groupWidth?: number;
@@ -18,6 +21,8 @@ export interface GroupedBarConfigInterface<Datum> extends XYComponentConfigInter
     roundedCorners?: number | boolean;
     /** Sets the minimum bar height for better visibility of small values. Default: 1 */
     minBarHeight?: number;
+    /** Optional bar cursor. Default: `null` */
+    cursor?: StringAccessor<Datum>;
 }
 
 export class GroupedBarConfig<Datum> extends XYComponentConfig<Datum> implements GroupedBarConfigInterface<Datum> {
@@ -29,4 +34,5 @@ export class GroupedBarConfig<Datum> extends XYComponentConfig<Datum> implements
     isVertical = true
     roundedCorners = true
     minBarHeight = 2
+    cursor = null
 }

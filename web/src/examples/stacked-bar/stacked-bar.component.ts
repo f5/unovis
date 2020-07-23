@@ -16,6 +16,8 @@ function getStackedBarConfig (): StackedBarConfigInterface<SampleDatum> {
       d => d.y2,
     ],
     roundedCorners: true,
+    cursor: (d, i) => i % 2 ? 'pointer' : null,
+
   }
 }
 

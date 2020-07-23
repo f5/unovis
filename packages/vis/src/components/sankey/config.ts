@@ -71,11 +71,11 @@ export interface SankeyConfigInterface<N extends SankeyNodeDatumInterface, L ext
   iconColor?: ColorAccessor<N>;
 
   // Links
-  /** Node color accessor function or value. Default: `l => l.color` */
+  /** Link color accessor function or value. Default: `l => l.color` */
   linkColor?: StringAccessor<L>;
   /** Link flow accessor function or value. Default: `l => l.value` */
   linkValue?: NumericAccessor<N>;
-  /** Node cursor on hover. Default: `null` */
+  /** Link cursor on hover. Default: `null` */
   linkCursor?: StringAccessor<L>;
 
   // Labels
