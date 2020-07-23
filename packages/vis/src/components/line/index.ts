@@ -92,6 +92,7 @@ export class Line<Datum> extends XYComponentCore<Datum> {
       .attr('d', this._emptyPath())
 
     const linesMerged = linesEnter.merge(lines)
+    linesMerged.style('cursor', (d, i) => getValue(d, config.cursor, i))
     linesMerged.each((d, i, elements) => {
       const group = select(elements[i])
       const linePath = group.select(`.${s.linePath}`)
