@@ -14,7 +14,7 @@ import { ExtendedSizeComponent, Sizing } from 'types/component'
 import { SankeyNodeDatumInterface, SankeyLinkDatumInterface, LabelPosition } from 'types/sankey'
 
 // Utils
-import { getValue, isNumber, groupBy, sortBy, flatten } from 'utils/data'
+import { getValue, isNumber, groupBy } from 'utils/data'
 
 // Config
 import { SankeyConfig, SankeyConfigInterface } from './config'
@@ -138,69 +138,16 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
   }
 
   private _prepareLayout (): void {
-    const { config, bleed, datamodel, datamodel: { links }, _extendedHeight, _extendedWidth } = this
-
-    const nodes = this.sizing !== Sizing.FIT ? this._sortNodes() : datamodel.nodes
-
-    links.forEach(link => {
-      // For d3 sankey function each link must be an object with the `value` property
-      link.value = getValue(link, d => getValue(d, config.linkValue))
-    })
-
+    const { config, bleed, datamodel, _extendedHeight, _extendedWidth } = this
     const sankeyHeight = this._getSankeyHeight()
-    if (this.sizing !== Sizing.FIT) {
-      this._sankey.linkSort((link2, link1) => {
-        if (link2.value > link1.value) return -1
-      })
-      this._sankey.nodeSort(null)
-    } else {
-      this._sankey
-        .nodeSort((node2, node1) => {
-          if (node1.targetLinks.length === 1 && node2.targetLinks.length === 1 && node1.sourceLinks.length === 0 && node2.sourceLinks.length === 0) {
-            const targetLinkSourceId1 = node1.targetLinks[0].source.index
-            const targetLinkSourceId2 = node2.targetLinks[0].source.index
-            if (targetLinkSourceId1 > targetLinkSourceId2) return -1
-          }
 
-          if (node1.targetLinks.length === 0 && node2.targetLinks.length === 0 && node1.sourceLinks.length === 1 && node2.sourceLinks.length === 1) {
-            const sourceLinkTargetId1 = node1.sourceLinks[0].target.index
-            const sourceLinkTargetId2 = node2.sourceLinks[0].target.index
-            if (sourceLinkTargetId1 > sourceLinkTargetId2) return -1
-          }
-        })
-        .linkSort((link2, link1) => {
-          if (link2.index < link1.index) return -1
-        })
-    }
+    const nodes = datamodel.nodes// this._sortNodes()
+    const links = datamodel.links
 
-    this._sankey
-      .nodeWidth(config.nodeWidth)
-      .nodePadding(config.nodePadding)
-      .size([(_extendedWidth ?? config.width) - bleed.left - bleed.right, (_extendedHeight ?? sankeyHeight) - bleed.top - bleed.bottom])
-      .nodeId(d => d.id)
-      .iterations(32)
-      .nodeAlign(config.nodeAlign)
+    const hasLinks = links.length > 0
 
-    const hasNodesAndLinks = links.length > 0 && nodes.length > 1
-    if (hasNodesAndLinks) {
-      this._sankey({ nodes, links })
-
-      // Apply node min height to nodes without links
-      if (this.sizing !== Sizing.FIT) {
-        const singleNodes = nodes
-          .filter(d => !d.sourceLinks?.length && !d.targetLinks?.length)
-
-        for (const node of singleNodes) {
-          const h = Math.max(config.nodeMinHeight, node.y1 - node.y0)
-          const y = (node.y0 + node.y1) / 2
-          node.y0 = y - h / 2
-          node.y1 = y + h / 2
-        }
-
-        const height = max(nodes, d => d.y1)
-        this._extendedHeight = height + bleed.top + bleed.bottom
-      }
-    } else {
+    // If there're no links we manually calculate the visualization layout
+    if (!hasLinks) {
       const nodeHeight = sankeyHeight / nodes.length - config.nodePadding * (nodes.length - 1)
       let y = 0
       for (const node of nodes) {
@@ -213,6 +160,41 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
 
         y = node.y1 + config.nodePadding
       }
+
+      return
+    }
+
+    // For d3 sankey function each link must be an object with the `value` property
+    links.forEach(link => {
+      link.value = getValue(link, d => getValue(d, config.linkValue))
+    })
+
+    this._sankey
+      .nodeWidth(config.nodeWidth)
+      .nodePadding(config.nodePadding)
+      .size([(_extendedWidth ?? config.width) - bleed.left - bleed.right, (_extendedHeight ?? sankeyHeight) - bleed.top - bleed.bottom])
+      .nodeId(d => d.id)
+      .iterations(32)
+      .nodeAlign(config.nodeAlign)
+      .nodeSort(config.nodeSort)
+      .linkSort(config.linkSort)
+
+    this._sankey({ nodes, links })
+
+    // Setting minimum node height
+    //   Default: 1px
+    //   Extended size nodes that have no links: config.nodeMinHeight
+    for (const node of nodes) {
+      const singleExtendedSize = this.sizing === Sizing.EXTEND && !node.sourceLinks?.length && !node.targetLinks?.length
+      const h = Math.max(singleExtendedSize ? config.nodeMinHeight : 1, node.y1 - node.y0)
+      const y = (node.y0 + node.y1) / 2
+      node.y0 = y - h / 2
+      node.y1 = y + h / 2
+    }
+
+    if (this.sizing === Sizing.EXTEND) {
+      const height = max(nodes, d => d.y1)
+      this._extendedHeight = height + bleed.top + bleed.bottom
     }
   }
 
@@ -221,26 +203,6 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
 
     const height = this.sizing === Sizing.FIT ? config.height : this._extendedHeight
     return height // clamp(height * links.length * config.heightNormalizationCoeff, height / 2, height)
-  }
-
-  private _sortNodes (): [] {
-    const { datamodel } = this
-    const groupByColumn = groupBy(datamodel.nodes, d => d.layer)
-    Object.keys(groupByColumn).forEach(key => {
-      const column = groupByColumn[key]
-      let sortedColumn
-      if (Number(key) === 0) {
-        sortedColumn = sortBy(column, [d => -d.value])
-      } else {
-        sortedColumn = sortBy(column, [
-          d => d.targetLinks?.[0].source._order,
-          d => -d.value,
-        ])
-      }
-      sortedColumn.forEach((c, i) => { c._order = i })
-      groupByColumn[key] = sortedColumn
-    })
-    return flatten(Object.values(groupByColumn))
   }
 
   getWidth (): number {

@@ -13,80 +13,95 @@ import { Position } from 'types/position'
 
 export interface SankeyConfigInterface<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> extends ComponentConfigInterface {
   // General
-  /** Id accessor for better visual data updates */
-  id?: ((d: SankeyNodeDatumInterface | SankeyLinkDatumInterface, i?: number, ...any) => string);
-  /** Coefficient to scale the height of the diagram when the amount of links is low: C * links.length, clamped to [height / 2, height]  */
+  /** Node / Link id accessor function. Used for mapping of data updates to corresponding SVG objects. Default: `(d, i) => (d._id ?? i).toString()` */
+  id?: (d: SankeyNodeDatumInterface | SankeyLinkDatumInterface, i?: number, ...any) => string;
+  /** Coefficient to scale the height of the diagram when the amount of links is low: `C * links.length`, clamped to `[height / 2, height]`. Default: `1/16` */
   heightNormalizationCoeff?: number;
-  /** Type of animation on removing nodes */
+  /** Type of animation on removing nodes. Default: `ExitTransitionType.DEFAULT` */
   exitTransitionType?: ExitTransitionType;
-  /** Type of animation on creating nodes */
+  /** Type of animation on creating nodes. Default: `EnterTransitionType.DEFAULT` */
   enterTransitionType?: EnterTransitionType;
-  /** Highight the corresponding subtree on node / link hover. Default: false */
+  /** Highight the corresponding subtree on node / link hover. Default: `false` */
   highlightSubtreeOnHover?: boolean;
-  /** Highlight animation duration, ms. Default: 400 */
+  /** Highlight animation duration, ms. Default: `400` */
   highlightDuration?: number;
-  /** Highlight delay, ms. Default: 1000 */
+  /** Highlight delay, ms. Default: `1000` */
   highlightDelay?: number;
+
+  // Sorting
+  /** Sankey node sorting function. Default: `undefined`.
+   *  Node sorting is applied to nodes in one layer (column). Layer by layer.
+   *  Options: `undefined` - the order is determined by the layout;
+   *           `null` - the order is fixed by the input;
+   *           sort function - the order is determined by the function.
+  */
+  nodeSort?: ((node1: N, node2: N) => number) | null | undefined;
+  /** Sankey link sorting function. Default: `(link2, link1) => link1.value - link2.value`.
+   *  Link sorting is applied to the source (exiting) links within one node.
+   *  Options: `undefined` - the order is determined by the layout;
+   *           `null` - the order is fixed by the input;
+   *           sort function - the order is determined by the function.
+  */
+  linkSort?: ((link1: L, link2: L) => number) | null | undefined;
 
   // Nodes
   /** Sankey node width in pixels */
   nodeWidth?: number;
   /** Sankey node alignment method */
   nodeAlign?: NodeAlignType;
-  /** */
+  /** Horizontal space between the nodes. Extended Sizing property only. Default: `150` */
   nodeHorizontalSpacing?: number;
-  /** */
+  /** Minimum node height. Extended Sizing property only. Default: `20` */
   nodeMinHeight?: number;
-  /** */
+  /** Maximum node height. Extended Sizing property only. Default: `100` */
   nodeMaxHeight?: number;
-  /** Sankey vertical separation between nodes in pixels */
+  /** Sankey vertical separation between nodes in pixels. Default: `2` */
   nodePadding?: number;
   /** Display the graph when data has just one element */
   showSingleNode?: boolean;
-  /** Single node position */
+  /** Single node position. Default: `Position.CENTER` */
   singleNodePosition?: Position.CENTER | Position.LEFT | string;
-  /** Node cursor on hover */
+  /** Node cursor on hover. Default: `null` */
   nodeCursor?: StringAccessor<L>;
-  /** Node icon accessor function or value */
+  /** Node icon accessor function or value. Default: `null` */
   nodeIcon?: StringAccessor<N>;
-  /** Node color accessor function or value */
+  /** Node color accessor function or value. Default: `null` */
   nodeColor?: ColorAccessor<N>;
-  /** Icon color accessor function or value */
+  /** Icon color accessor function or value. Default: `null` */
   iconColor?: ColorAccessor<N>;
 
   // Links
-  /** Node color accessor function or value */
+  /** Node color accessor function or value. Default: `l => l.color` */
   linkColor?: StringAccessor<L>;
-  /** Link flow accessor function or value */
+  /** Link flow accessor function or value. Default: `l => l.value` */
   linkValue?: NumericAccessor<N>;
-  /** Node cursor on hover */
+  /** Node cursor on hover. Default: `null` */
   linkCursor?: StringAccessor<L>;
 
-  /** Node label accessor function or value */
-  label?: StringAccessor<N>;
-  /** Node sub-label accessor function or value */
-  subLabel?: StringAccessor<N>;
-
   // Labels
-  /** Display node labels even when there's not enough vertical space */
+  /** Node label accessor function or value. Default: `n => n.label` */
+  label?: StringAccessor<N>;
+  /** Node sub-label accessor function or value. Default: `undefined` */
+  subLabel?: StringAccessor<N>;
+  /** Display node labels even when there's not enough vertical space. Default: `false` */
   forceShowLabels?: boolean;
-  /** Label position relative to the Node */
+  /** Label position relative to the Node. Default: `LabelPosition.AUTO` */
   labelPosition?: LabelPosition;
-  /** Maximum label with in pixels, default is 70 */
+  /** Maximum label with in pixels. Default: `70` */
   labelWidth?: number;
-  /** Maximum label length (in number characters) for wrapping */
+  /** Maximum label length (in characters number) for wrapping. Default: `undefined` */
   labelLength?: number;
-  /** Label trimming mode */
+  /** Label trimming mode. Default: `TrimMode.MIDDLE` */
   labelTrim?: TrimMode;
-  /** Label font size in pixel, default is 13 */
+  /** Label font size in pixel. Default: `12` */
   labelFontSize?: number;
-  /** Label text separators for wrapping. Default: [' ', '-'] */
+  /** Label text separators for wrapping. Default: `[' ', '-']` */
   labelTextSeparator?: string[];
-  /** Force break words to fit long labels */
+  /** Force break words to fit long labels. Default: `false` */
   labelForceWordBreak?: boolean;
-  /** Label color */
+  /** Label color.. Default: `null` */
   labelColor?: ColorAccessor<N>;
-  /** Sub-label color */
+  /** Sub-label color. Default: `null` */
   subLabelColor?: ColorAccessor<N>;
 
 }
@@ -101,6 +116,10 @@ export class SankeyConfig<N extends SankeyNodeDatumInterface, L extends SankeyLi
   highlightSubtreeOnHover = false
   highlightDuration = 400
   highlightDelay = 1000
+
+  // Sorting
+  linkSort = (link2: L, link1: L): number => link1.value - link2.value
+  nodeSort = undefined
 
   // Nodes
   nodeWidth = 25
@@ -126,6 +145,7 @@ export class SankeyConfig<N extends SankeyNodeDatumInterface, L extends SankeyLi
   labelFontSize = 12
   labelColor = null
   labelWidth = 70
+  labelLength = undefined
   subLabelColor = null
   forceShowLabels = false
 
