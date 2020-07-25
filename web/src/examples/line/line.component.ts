@@ -25,6 +25,7 @@ function getLineConfig (n: number) {
     y: _times(n).map((d, i) => {
       return d => d[`y${i}`]
     }),
+    cursor: (d, i) => i % 2 ? 'pointer' : null,
   }
 }
 

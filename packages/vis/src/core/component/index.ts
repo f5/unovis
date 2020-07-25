@@ -5,7 +5,8 @@ import { select } from 'd3-selection'
 import { CoreDataModel } from 'data-models/core'
 
 // Types
-import { ComponentType } from 'types/component'
+import { ComponentType, Sizing } from 'types/component'
+
 import { Spacing } from 'types/misc'
 
 // Utils
@@ -21,8 +22,10 @@ export class ComponentCore<CoreDatum> {
   config: ComponentConfig
   prevConfig: ComponentConfig
   datamodel: CoreDataModel<CoreDatum> = new CoreDataModel()
+  sizing: Sizing = Sizing.FIT
+
   events = {}
-  _setUpEventsThrottled = throttle(this._setUpEvents, 1000)
+  _setUpComponentEventsThrottled = throttle(this._setUpComponentEvents, 500)
 
   constructor (type = ComponentType.SVG) {
     if (type === ComponentType.SVG) {
@@ -46,11 +49,7 @@ export class ComponentCore<CoreDatum> {
   render (duration = this.config.duration): void {
     this._render(duration)
 
-    // Set up default events
-    this._setUpEventsThrottled(this.events)
-
-    // Set up user-defined events
-    this._setUpEventsThrottled(this.config.events, '.user')
+    this._setUpComponentEventsThrottled()
   }
 
   get bleed (): Spacing {
@@ -62,10 +61,18 @@ export class ComponentCore<CoreDatum> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  _onEvent (d: any, i: number, elements: []) {
+  _onEvent (d: any, i: number, elements: []): void {
   }
 
-  _setUpEvents (events, suffix = ''): void {
+  _setUpComponentEvents (): void {
+    // Set up default events
+    this._bindEvents(this.events)
+
+    // Set up user-defined events
+    this._bindEvents(this.config.events, '.user')
+  }
+
+  _bindEvents (events, suffix = ''): void {
     Object.keys(events).forEach(className => {
       Object.keys(events[className]).forEach(eventType => {
         this.g.selectAll(`.${className}`)

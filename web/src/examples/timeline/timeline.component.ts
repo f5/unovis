@@ -13,6 +13,7 @@ function getTimelineConfig () {
     x: d => d.time,
     length: d => d.duration,
     lineWidth: d => d.width,
+    cursor: (d, i) => i % 2 ? 'pointer' : null,
   }
 }
 function getSampleTimelineData (n: number): SampleTimelineDatum[] {

@@ -1,6 +1,10 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
+// Core
 import { Config } from 'core/config'
+
+// Types
 import { Spacing } from 'types/misc'
+import { Sizing } from 'types/component'
 
 export interface ContainerConfigInterface {
   /** Animation duration of all the components within the container */
@@ -9,6 +13,8 @@ export interface ContainerConfigInterface {
   margin?: Spacing;
   /** Chart padding */
   padding?: Spacing;
+  /** Defines whether components should fit into the container or the container should expand to fit to the component's size. Default: Sizing.FIT or "fit" */
+  sizing?: Sizing;
 }
 
 export class ContainerConfig extends Config implements ContainerConfigInterface {
@@ -26,4 +32,6 @@ export class ContainerConfig extends Config implements ContainerConfigInterface 
     left: 0,
     right: 0,
   }
+
+  sizing = Sizing.FIT
 }

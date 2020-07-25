@@ -18,12 +18,9 @@ export interface SingleChartConfigInterface<Datum> extends ContainerConfigInterf
   };
   /** Tooltip component */
   tooltip?: Tooltip<ComponentCore<Datum>, Datum>;
-  /** Fit to width extended size component */
-  fitToWidth?: boolean;
 }
 
 export class SingleChartConfig<Datum> extends ContainerConfig implements SingleChartConfigInterface<Datum> {
   tooltip = undefined
   dimensions = {}
-  fitToWidth = false
 }

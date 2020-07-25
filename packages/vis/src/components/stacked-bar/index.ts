@@ -109,6 +109,7 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
         return this._getBarPath(x, y, width, height, rounded)
       })
       .style('fill', (d, i) => getColor(d, config.color, i))
+      .style('cursor', (d, i) => getValue(d, config.cursor, i))
 
     smartTransition(bars.exit(), duration)
       .remove()

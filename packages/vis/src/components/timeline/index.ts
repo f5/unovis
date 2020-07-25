@@ -122,6 +122,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
       .attr('stroke-width', d => getValue(d, config.lineWidth))
       .call(this._positionLines, config, ordinal)
       .attr('transform', 'translate(0, 0)')
+      .style('cursor', d => getValue(d, config.cursor))
       .style('opacity', 1)
 
     smartTransition(lines.exit(), duration)

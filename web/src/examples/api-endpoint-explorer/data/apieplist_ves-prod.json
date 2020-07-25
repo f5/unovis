@@ -1,2621 +1,1468 @@
 {
     "apiep_list": [
-        {
-            "collapsed_url": "/0abf01d3-bbeffbf455dffea376c2.js.map",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/0abf01d3-bbeffbf455dffea376c2.js",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/29107295-7450f9a00a8c1b95cbb4.js",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/3951f4abe46b48daa3c7d92c3f64bd5fab74a6fa-cbac30b283286dfcb298.js",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/399e2bff98064d53838704251318dc5ba5689c42-74ad1bfca1646960df29.js.map",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/399e2bff98064d53838704251318dc5ba5689c42-74ad1bfca1646960df29.js",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/8313d723-f1e3f2f1275a5d69d028.js.map",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/8313d723-f1e3f2f1275a5d69d028.js",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/9f96d65d-fdf376a59f4f27d48936.js.map",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/9f96d65d-fdf376a59f4f27d48936.js",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/",
-            "method": "HEAD",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/a1795b6917dd4e3645932882a7568b255b81fd83-e57ffceb07384be7af79.js",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/a49f1efaa0e43d3b7839afd97bf6f9f04c42ab59-012c75d520a77dfc6c4e.js",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/app-7b750012537d0fb544bc.js.map",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/app-7b750012537d0fb544bc.js",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/company/about",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/company/careers/11",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/company/careers/14",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/company/careers/16",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/company/careers/20",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/company/careers/21",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/company/careers/23",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/company/careers/24",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/company/careers/25",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/company/careers/26",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/company/careers/28",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/company/careers/29",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/company/careers/2",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/company/careers/4",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/company/careers/data-engineer",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/company/careers/data-scientist-cybersecurity",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/company/careers/data-visualization-engineer",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/company/careers/platform-engineering-intern",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/company/careers/software-engineer-automation",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/company/careers/software-engineer-platform",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/company/careers/software-engineer-security",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/company/careers/software-engineer-web-apps",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/company/careers/solutions-engineer",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/company/careers/ui-architect",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/company/careers/ui-engineering-intern",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/company/careers/ux-design-intern",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/company/careers/visual-design-lead",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/company/careers",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/company/contact-us",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/company/news/distributed-clouds-with-a-centralized-mission-the-volterra-story",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/company/news/infrastructure-security-challenges-threaten-multi-cloud-edge-deployments",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/company/news/itochu-technosolutions-corporation-partners-with-volterra-for-its-distributed-cloud-platform",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/company/news/volterra-emerges-from-stealth-with-over-50-million-in-toptier-funding-30-customers-and-a",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/company/news/volterra-radically-simplifies-e2e-encryption",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/company/news",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/company",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/component---src-pages-404-js-9ebbbea59b0afb521b67.js",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/component---src-pages-company-about-js-ffc8ce4206704c4f0d0e.js",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/component---src-pages-company-careers-js-2f384be52517618ad1a5.js",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/component---src-pages-company-contact-us-js-aceff28f0a8b4ccc74c6.js",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/component---src-pages-company-news-index-js-1dbcc1cf97bcd37d5e3b.js",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/component---src-pages-demo-js-ef32333747f9020c470b.js",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/component---src-pages-index-js-ea9cbb30bc9bb99e2567.js",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/component---src-pages-invitation-code-js-bad388143c77ac4a5905.js",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/component---src-pages-pricing-js-991d69d25ac459a4d4b2.js",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/component---src-pages-privacy-js-f76c2c884ced4f543abe.js",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/component---src-pages-products-voltconsole-js-4af9b77f0ce3e6709ed9.js",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/component---src-pages-products-volterra-global-network-js-37d5c0b2f06344ca84fd.js",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/component---src-pages-products-voltmesh-js-d46c5532c9242563bd50.js",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/component---src-pages-products-voltshare-js-d647a7f77370668c6123.js",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/component---src-pages-products-voltstack-js-a5148104fb27d9314ff7.js",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/component---src-pages-resources-blog-js-e776ca40fe79161e5351.js",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/component---src-pages-resources-center-js-4305031165af05de0b3e.js",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/component---src-pages-solutions-edge-edge-infrastructure-and-app-management-js-3aeefb19919f46e312c2.js",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/component---src-pages-solutions-edge-edge-to-cloud-networking-and-security-js-2932d9aa03455e7f5715.js",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/component---src-pages-solutions-multi-cloud-multi-cloud-networking-and-security-js-4c149dfa35e196c89e63.js",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/component---src-pages-solutions-multi-cloud-secure-kubernetes-gateway-js-e5d9c0715c584a9dfe91.js",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/component---src-pages-solutions-network-ddos-mitigation-and-network-services-js-002c23a3c0165486e648.js",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/component---src-pages-solutions-network-network-edge-apps-js-b46e7b48a8a1d4c9e88f.js",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/component---src-pages-solutions-network-web-app-security-and-performance-js-465aa1e10095f5f36062.js",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/component---src-pages-terms-js-fd243b7b275d6d528e9d.js",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/component---src-templates-api-docs-template-js-f42222f8e34a3ce92eb9.js.map",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/component---src-templates-api-docs-template-js-f42222f8e34a3ce92eb9.js",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/component---src-templates-article-template-js-515e05cd1683e94555d5.js",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/component---src-templates-blog-redirect-template-js-02337bdd5b0760448078.js",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/component---src-templates-career-redirect-template-js-9e2cc67119e0ec5fc9ba.js",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/component---src-templates-career-template-js-11bb1d394fa68eefd7c5.js",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/component---src-templates-docs-menu-template-js-b1c17f43bf93a703714b.js",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/component---src-templates-docs-template-js-5a460126c26c4973c331.js",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/consult",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/demo",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/about-volt/overview",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/about-volt/volt-mesh",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/about-volt/volt-share",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/about-volt/volt-stack",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/about-volt",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/api/DYN",
-            "method": "GET",
-            "dyn_examples": [
-                {
-                    "component_identifier": "/docs/api/DYN",
-                    "component_examples": [
-                        "address-allocator",
-                        "advertise-policy",
-                        "alert",
-                        "alert-policy-set",
-                        "alert-receiver"
-                    ]
-                }
-            ]
-        },
-        {
-            "collapsed_url": "/docs/api",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/api",
-            "method": "HEAD",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/app-prot",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/drafts/ce-k8s",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/drafts/fast-acl",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/drafts/monitor-your-site",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/drafts/secgw-test",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/drafts/vhost",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/drafts/volt-share/vs-faq",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/drafts/volt-share/vs-how-to",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/drafts/volt-share/vs-overview",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/drafts/volt-share",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/drafts",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/faqs/generic-faq",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/faqs/vs-faq",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/faqs",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/glossary",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to/create/create-a-fleet",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to/create/create-and-advertise-a-virtualhost",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to/create/create-bgp",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to/create/create-labels-and-virtual-sites",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to/create/create-site",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to/create/get-creds",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to/create/replace-multi-master",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to/create/replace-node",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to/create",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to/deploy/create-pvc",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to/deploy/create-sts",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to/deploy/deploy-applications-on-volterras-network-cloud",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to/deploy/deploy-applications-on-your-edge-cloud",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to/deploy",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to/discover/discover-existing-service-endpoints",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to/discover/discover-services-with-consul",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to/discover/discover-services-with-dns",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to/discover/discover-services-with-ip-address",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to/discover/discover-services-with-kubernetes",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to/discover/discover-services-with-vk8s",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to/discover",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to/observe/configure-alerts",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to/observe/get-access-logs",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to/observe/monitor-your-application-firewall",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to/observe/monitor-your-fleet-of-applications",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to/observe/monitor-your-site-deployment",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to/observe",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to/secure/add-a-network-firewall-policy",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to/secure/add-an-application-policy",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to/secure/blindfold-your-application-secrets",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to/secure/blindfold-your-tls-certificates",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to/secure/config-app-firewall",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to/secure/configure-bgp-asn",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to/secure/configure-http-2",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to/secure/configure-ip-prefix",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to/secure/configure-ocsp",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to/secure/configure-websocket",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to/secure/create-egress-filter",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to/secure/fast-acl",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to/secure/js-challenge",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to/secure/manage-rbac",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to/secure/nw-fw",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to/secure/secure-your-application",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to/secure/user-rate-limit",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to/secure",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to/share/enterprise-sharing-and-governance",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to/share/secure-data",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to/share",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/how-to",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/installation/installing-volterra-node/aws",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/installation/installing-volterra-node/azure",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/installation/installing-volterra-node/ce-k8s",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/installation/installing-volterra-node/hardware",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/installation/installing-volterra-node/kubernetes/minikube",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/installation/installing-volterra-node/kubernetes",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/installation/installing-volterra-node/kvm",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/installation/installing-volterra-node/non-ova-vmware",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/installation/installing-volterra-node/vmware",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/installation/installing-volterra-node",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/installation/integrations/alerts-opsgenie",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/installation/integrations/alerts-pagerduty",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/installation/integrations/alerts-slack",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/installation/integrations/apm-datadog",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/installation/integrations/apm-elastic-search",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/installation/integrations/apm-prometheus",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/installation/integrations/ci-cd-azure-devops",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/installation/integrations/ci-cd-harness-io",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/installation/integrations/ci-cd-spinnikar",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/installation/integrations/discover-consul",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/installation/integrations/secrets-vault",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/installation/integrations/service-discovery-aks",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/installation/integrations/service-discovery-consul",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/installation/integrations/service-discovery-eks",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/installation/integrations/sso-azure",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/installation/integrations/sso-custom-(oidc)",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/installation/integrations/sso-google",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/installation/integrations/sso-okta",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/installation/integrations",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/installation",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/quick-start/cloud-hello",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/quick-start/cloud-networking-and-security",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/quick-start/edge-hello",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/quick-start/hello-clouds",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/quick-start/hello-web",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/quick-start/network-edge-apps",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/quick-start/on-board",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/quick-start/quick-start-tf",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/quick-start/secure-kubernetes-gateway",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/quick-start/use-cases",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/quick-start/volt-share",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/quick-start/web-app-security-performance",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/quick-start",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/reference/alert-ref",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/reference/api-ref/DYN",
-            "method": "GET",
-            "dyn_examples": [
-                {
-                    "component_identifier": "/docs/reference/api-ref/DYN",
-                    "component_examples": [
-                        "ves-io-schema-advertise_policy-api-create",
-                        "ves-io-schema-advertise_policy-api-get",
-                        "ves-io-schema-advertise_policy-api-list",
-                        "ves-io-schema-advertise_policy-api-replace",
-                        "ves-io-schema-api_credential-customapi-create"
-                    ]
-                }
-            ]
-        },
-        {
-            "collapsed_url": "/docs/reference/api-ref",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/reference/fault-mgmt",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/reference/interface",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/reference/metrics",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/reference/network-cloud-ref",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/reference/vks-api-comp",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/reference/wingman-api-ref",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/reference",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/releases/volt-rel-notes",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/releases/voltconsole",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/releases/voltmesh",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/releases/voltnode",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/releases/voltshare",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/releases/voltshare_credits",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/releases/voltstack",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/releases",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/services/volt-mesh/application-security",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/services/volt-mesh/load-balancing",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/services/volt-mesh/secure-backbone",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/services/volt-mesh/secure-networking",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/services/volt-mesh/service-mesh",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/services/volt-mesh",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/services/volt-stack/application-identity",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/services/volt-stack/clustering",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/services/volt-stack/container-security",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/services/volt-stack/continuous-delivery-&-verification",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/services/volt-stack/distributed-application-management",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/services/volt-stack/distributed-infrastructure-management",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/services/volt-stack/distributed-storage",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/services/volt-stack/key-management-service",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/services/volt-stack/managed-kubernetes",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/services/volt-stack/observability",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/services/volt-stack/optimized-operating-system",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/services/volt-stack/secrets-management",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/services/volt-stack",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/services",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/solutions/edge-cloud/distributed-application-and-fleet-management",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/solutions/edge-cloud/secure-gateway-of-distributed-edge",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/solutions/edge-cloud",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/solutions/multi-cloud/consolidate-application-and-network-services",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/solutions/multi-cloud/multi-cluster-service-mesh-or-global-multi-mesh",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/solutions/multi-cloud/secure-kubernetes-ingress-egress-gateway",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/solutions/multi-cloud/secure-saas-proxy",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/solutions/multi-cloud",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/solutions/network-cloud/application-acceleration",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/solutions/network-cloud/application-security-&-reliability",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/solutions/network-cloud/immersive-apps-at-network-edge",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/solutions/network-cloud/software-defined-cloud-interconnect",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/solutions/network-cloud",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/solutions",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/troubleshooting/support",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/troubleshooting/ts-ce",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/troubleshooting",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/ves-concepts/core-concepts",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/ves-concepts/dist-app-mgmt",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/ves-concepts/load-balancing-and-proxy",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/ves-concepts/monitoring",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/ves-concepts/networking",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/ves-concepts/ocsp-staple",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/ves-concepts/security",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/ves-concepts/system-overview",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/ves-concepts/user-acc",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/ves-concepts/volterra-site",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/ves-concepts",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/volt-tools/quick-start-tf",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/volt-tools/tf-provider",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/volt-tools/ves-crds",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/volt-tools/ves-ctl",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs/volt-tools",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/docs",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/ee61c8d2df46a2af64d6e3c5921327734587d90c-cbfd546223d25d94a380.js.map",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/ee61c8d2df46a2af64d6e3c5921327734587d90c-cbfd546223d25d94a380.js",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/favicon-32x32.png",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/favicon.ico",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/favicon.ico",
-            "method": "HEAD",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/fonts/DYN",
-            "method": "GET",
-            "dyn_examples": [
-                {
-                    "component_identifier": "/fonts/DYN",
-                    "component_examples": [
-                        "AvenirLTStd-Book.otf",
-                        "AvenirLTStd-Medium.otf"
-                    ]
-                }
-            ]
-        },
-        {
-            "collapsed_url": "/framework-84fe2caf98c384056426.js.map",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/framework-84fe2caf98c384056426.js",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/icons/DYN",
-            "method": "GET",
-            "dyn_examples": [
-                {
-                    "component_identifier": "/icons/DYN",
-                    "component_examples": [
-                        "icon-144x144.png",
-                        "icon-192x192.png",
-                        "icon-256x256.png",
-                        "icon-384x384.png",
-                        "icon-48x48.png"
-                    ]
-                }
-            ]
-        },
-        {
-            "collapsed_url": "/img/common/DYN",
-            "method": "GET",
-            "dyn_examples": [
-                {
-                    "component_identifier": "/img/common/DYN",
-                    "component_examples": [
-                        "bg-top-2.svg",
-                        "bg-top.svg",
-                        "blue-li-dark.svg",
-                        "blue-li-inverted.svg",
-                        "blue-li.svg"
-                    ]
-                }
-            ]
-        },
-        {
-            "collapsed_url": "/img/company/flags/fr-flag.png",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/img/company/flags/jp-flag.png",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/img/company/flags/sp-flag.png",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/img/company/flags/uk-flag.png",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/img/company/flags/us-flag.png",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/img/company/investors/itochu_ventures.png",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/img/company/investors/khosla.png",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/img/company/investors/m12.png",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/img/company/investors/mayfield.png",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/img/company/investors/samsung.png",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/img/company/mission-bg-grid.svg",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/img/company/team/ankur-singla.png",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/img/company/team/benjamin-schilz.png",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/img/company/team/daniel-hua.png",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/img/company/team/harshad-nakil.png",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/img/company/team/jun-shi.png",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/img/company/team/marco-rodrigues.png",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/img/company/team/mark-weiner.png",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/img/company/team/nuno-ferreira.png",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/img/company/team/raphael-maunier.png",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/img/docs-logo.svg",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/img/docs/clippy.svg",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/img/main/DYN/betclic-c.svg",
-            "method": "GET",
-            "dyn_examples": [
-                {
-                    "component_identifier": "/img/main/DYN",
-                    "component_examples": [
-                        "apps.png",
-                        "bg-2.svg",
-                        "bg-3.svg",
-                        "bg-4.svg",
-                        "bg-gn-main.svg"
-                    ]
-                }
-            ]
-        },
-        {
-            "collapsed_url": "/img/main/DYN/betclic.svg",
-            "method": "GET",
-            "dyn_examples": [
-                {
-                    "component_identifier": "/img/main/DYN",
-                    "component_examples": [
-                        "apps.png",
-                        "bg-2.svg",
-                        "bg-3.svg",
-                        "bg-4.svg",
-                        "bg-gn-main.svg"
-                    ]
-                }
-            ]
-        },
-        {
-            "collapsed_url": "/img/main/DYN/cdiscount-c.svg",
-            "method": "GET",
-            "dyn_examples": [
-                {
-                    "component_identifier": "/img/main/DYN",
-                    "component_examples": [
-                        "apps.png",
-                        "bg-2.svg",
-                        "bg-3.svg",
-                        "bg-4.svg",
-                        "bg-gn-main.svg"
-                    ]
-                }
-            ]
-        },
-        {
-            "collapsed_url": "/img/main/DYN/cdiscount.svg",
-            "method": "GET",
-            "dyn_examples": [
-                {
-                    "component_identifier": "/img/main/DYN",
-                    "component_examples": [
-                        "apps.png",
-                        "bg-2.svg",
-                        "bg-3.svg",
-                        "bg-4.svg",
-                        "bg-gn-main.svg"
-                    ]
-                }
-            ]
-        },
-        {
-            "collapsed_url": "/img/main/DYN/cybertest.svg",
-            "method": "GET",
-            "dyn_examples": [
-                {
-                    "component_identifier": "/img/main/DYN",
-                    "component_examples": [
-                        "apps.png",
-                        "bg-2.svg",
-                        "bg-3.svg",
-                        "bg-4.svg",
-                        "bg-gn-main.svg"
-                    ]
-                }
-            ]
-        },
-        {
-            "collapsed_url": "/img/main/DYN/digital-virgo-c.svg",
-            "method": "GET",
-            "dyn_examples": [
-                {
-                    "component_identifier": "/img/main/DYN",
-                    "component_examples": [
-                        "apps.png",
-                        "bg-2.svg",
-                        "bg-3.svg",
-                        "bg-4.svg",
-                        "bg-gn-main.svg"
-                    ]
-                }
-            ]
-        },
-        {
-            "collapsed_url": "/img/main/DYN/digitalvirgo.svg",
-            "method": "GET",
-            "dyn_examples": [
-                {
-                    "component_identifier": "/img/main/DYN",
-                    "component_examples": [
-                        "apps.png",
-                        "bg-2.svg",
-                        "bg-3.svg",
-                        "bg-4.svg",
-                        "bg-gn-main.svg"
-                    ]
-                }
-            ]
-        },
-        {
-            "collapsed_url": "/img/main/DYN/franceix.svg",
-            "method": "GET",
-            "dyn_examples": [
-                {
-                    "component_identifier": "/img/main/DYN",
-                    "component_examples": [
-                        "apps.png",
-                        "bg-2.svg",
-                        "bg-3.svg",
-                        "bg-4.svg",
-                        "bg-gn-main.svg"
-                    ]
-                }
-            ]
-        },
-        {
-            "collapsed_url": "/img/main/DYN/itochu.svg",
-            "method": "GET",
-            "dyn_examples": [
-                {
-                    "component_identifier": "/img/main/DYN",
-                    "component_examples": [
-                        "apps.png",
-                        "bg-2.svg",
-                        "bg-3.svg",
-                        "bg-4.svg",
-                        "bg-gn-main.svg"
-                    ]
-                }
-            ]
-        },
-        {
-            "collapsed_url": "/img/main/DYN/keyyo-communications.svg",
-            "method": "GET",
-            "dyn_examples": [
-                {
-                    "component_identifier": "/img/main/DYN",
-                    "component_examples": [
-                        "apps.png",
-                        "bg-2.svg",
-                        "bg-3.svg",
-                        "bg-4.svg",
-                        "bg-gn-main.svg"
-                    ]
-                }
-            ]
-        },
-        {
-            "collapsed_url": "/img/main/DYN/kindred.svg",
-            "method": "GET",
-            "dyn_examples": [
-                {
-                    "component_identifier": "/img/main/DYN",
-                    "component_examples": [
-                        "apps.png",
-                        "bg-2.svg",
-                        "bg-3.svg",
-                        "bg-4.svg",
-                        "bg-gn-main.svg"
-                    ]
-                }
-            ]
-        },
-        {
-            "collapsed_url": "/img/main/DYN/mediapart.svg",
-            "method": "GET",
-            "dyn_examples": [
-                {
-                    "component_identifier": "/img/main/DYN",
-                    "component_examples": [
-                        "apps.png",
-                        "bg-2.svg",
-                        "bg-3.svg",
-                        "bg-4.svg",
-                        "bg-gn-main.svg"
-                    ]
-                }
-            ]
-        },
-        {
-            "collapsed_url": "/img/main/DYN/netone-c.svg",
-            "method": "GET",
-            "dyn_examples": [
-                {
-                    "component_identifier": "/img/main/DYN",
-                    "component_examples": [
-                        "apps.png",
-                        "bg-2.svg",
-                        "bg-3.svg",
-                        "bg-4.svg",
-                        "bg-gn-main.svg"
-                    ]
-                }
-            ]
-        },
-        {
-            "collapsed_url": "/img/main/DYN/netone.svg",
-            "method": "GET",
-            "dyn_examples": [
-                {
-                    "component_identifier": "/img/main/DYN",
-                    "component_examples": [
-                        "apps.png",
-                        "bg-2.svg",
-                        "bg-3.svg",
-                        "bg-4.svg",
-                        "bg-gn-main.svg"
-                    ]
-                }
-            ]
-        },
-        {
-            "collapsed_url": "/img/main/DYN/relaxgaming.svg",
-            "method": "GET",
-            "dyn_examples": [
-                {
-                    "component_identifier": "/img/main/DYN",
-                    "component_examples": [
-                        "apps.png",
-                        "bg-2.svg",
-                        "bg-3.svg",
-                        "bg-4.svg",
-                        "bg-gn-main.svg"
-                    ]
-                }
-            ]
-        },
-        {
-            "collapsed_url": "/img/main/DYN/scoopit.svg",
-            "method": "GET",
-            "dyn_examples": [
-                {
-                    "component_identifier": "/img/main/DYN",
-                    "component_examples": [
-                        "apps.png",
-                        "bg-2.svg",
-                        "bg-3.svg",
-                        "bg-4.svg",
-                        "bg-gn-main.svg"
-                    ]
-                }
-            ]
-        },
-        {
-            "collapsed_url": "/img/main/DYN/sigfox.svg",
-            "method": "GET",
-            "dyn_examples": [
-                {
-                    "component_identifier": "/img/main/DYN",
-                    "component_examples": [
-                        "apps.png",
-                        "bg-2.svg",
-                        "bg-3.svg",
-                        "bg-4.svg",
-                        "bg-gn-main.svg"
-                    ]
-                }
-            ]
-        },
-        {
-            "collapsed_url": "/img/main/DYN/softbank-c.svg",
-            "method": "GET",
-            "dyn_examples": [
-                {
-                    "component_identifier": "/img/main/DYN",
-                    "component_examples": [
-                        "apps.png",
-                        "bg-2.svg",
-                        "bg-3.svg",
-                        "bg-4.svg",
-                        "bg-gn-main.svg"
-                    ]
-                }
-            ]
-        },
-        {
-            "collapsed_url": "/img/main/DYN/softbank.svg",
-            "method": "GET",
-            "dyn_examples": [
-                {
-                    "component_identifier": "/img/main/DYN",
-                    "component_examples": [
-                        "apps.png",
-                        "bg-2.svg",
-                        "bg-3.svg",
-                        "bg-4.svg",
-                        "bg-gn-main.svg"
-                    ]
-                }
-            ]
-        },
-        {
-            "collapsed_url": "/img/main/DYN/veepee.svg",
-            "method": "GET",
-            "dyn_examples": [
-                {
-                    "component_identifier": "/img/main/DYN",
-                    "component_examples": [
-                        "apps.png",
-                        "bg-2.svg",
-                        "bg-3.svg",
-                        "bg-4.svg",
-                        "bg-gn-main.svg"
-                    ]
-                }
-            ]
-        },
-        {
-            "collapsed_url": "/img/main/DYN/webedia.svg",
-            "method": "GET",
-            "dyn_examples": [
-                {
-                    "component_identifier": "/img/main/DYN",
-                    "component_examples": [
-                        "apps.png",
-                        "bg-2.svg",
-                        "bg-3.svg",
-                        "bg-4.svg",
-                        "bg-gn-main.svg"
-                    ]
-                }
-            ]
-        },
-        {
-            "collapsed_url": "/img/main/DYN",
-            "method": "GET",
-            "dyn_examples": [
-                {
-                    "component_identifier": "/img/main/DYN",
-                    "component_examples": [
-                        "apps.png",
-                        "bg-2.svg",
-                        "bg-3.svg",
-                        "bg-4.svg",
-                        "bg-gn-main.svg"
-                    ]
-                }
-            ]
-        },
-        {
-            "collapsed_url": "/img/menu/about.svg",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/img/menu/api.svg",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/img/menu/blog.svg",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/img/menu/careers.svg",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/img/menu/center.svg",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/img/menu/contact.svg",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/img/menu/docs.svg",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/img/menu/edge.svg",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/img/menu/feature-reqs.svg",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/img/menu/menu_icon.svg",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/img/menu/multi-cloud.svg",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/img/menu/network.svg",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/img/menu/newsroom.svg",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/img/menu/start.svg",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/img/menu/status.svg",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/img/menu/vc.svg",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/img/menu/vgn.svg",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/img/menu/vm.svg",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/img/menu/vs.svg",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/img/menu/vsh.svg",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/img/products/DYN",
-            "method": "GET",
-            "dyn_examples": [
-                {
-                    "component_identifier": "/img/products/DYN",
-                    "component_examples": [
-                        "betclic.png",
-                        "biometrics-icon.svg",
-                        "bomb-icon.svg",
-                        "caret-icon.svg",
-                        "cloud-icon.svg"
-                    ]
-                }
-            ]
-        },
-        {
-            "collapsed_url": "/img/solutions/DYN",
-            "method": "GET",
-            "dyn_examples": [
-                {
-                    "component_identifier": "/img/solutions/DYN",
-                    "component_examples": [
-                        "apps-icon.svg",
-                        "cost-icon.svg",
-                        "cs-bg-grid.svg",
-                        "ddos-network-services-diagram-md.png",
-                        "ddos-network-services-diagram-sm.png"
-                    ]
-                }
-            ]
-        },
-        {
-            "collapsed_url": "/invitation-code",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/manifest.webmanifest",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/page-data/DYN/DYN/DYN/DYN/page-data.json",
-            "method": "GET",
-            "dyn_examples": [
-                {
-                    "component_identifier": "/page-data/DYN",
-                    "component_examples": [
-                        "404.html",
-                        "app-data.json",
-                        "company",
-                        "consult",
-                        "demo"
-                    ]
-                },
-                {
-                    "component_identifier": "/page-data/DYN/DYN",
-                    "component_examples": [
-                        "about",
-                        "about-volt",
-                        "accessing-public-cloud-applications-aka-saas-privately",
-                        "api",
-                        "app-prot"
-                    ]
-                },
-                {
-                    "component_identifier": "/page-data/DYN/DYN/DYN",
-                    "component_examples": [
-                        "11",
-                        "14",
-                        "16",
-                        "2",
-                        "20"
-                    ]
-                },
-                {
-                    "component_identifier": "/page-data/DYN/DYN/DYN/DYN",
-                    "component_examples": [
-                        "add-a-network-firewall-policy",
-                        "add-an-application-policy",
-                        "alerts-opsgenie",
-                        "alerts-pagerduty",
-                        "alerts-slack"
-                    ]
-                }
-            ]
-        },
-        {
-            "collapsed_url": "/page-data/DYN/DYN/DYN/DYN",
-            "method": "GET",
-            "dyn_examples": [
-                {
-                    "component_identifier": "/page-data/DYN",
-                    "component_examples": [
-                        "404.html",
-                        "app-data.json",
-                        "company",
-                        "consult",
-                        "demo"
-                    ]
-                },
-                {
-                    "component_identifier": "/page-data/DYN/DYN",
-                    "component_examples": [
-                        "about",
-                        "about-volt",
-                        "accessing-public-cloud-applications-aka-saas-privately",
-                        "api",
-                        "app-prot"
-                    ]
-                },
-                {
-                    "component_identifier": "/page-data/DYN/DYN/DYN",
-                    "component_examples": [
-                        "11",
-                        "14",
-                        "16",
-                        "2",
-                        "20"
-                    ]
-                },
-                {
-                    "component_identifier": "/page-data/DYN/DYN/DYN/DYN",
-                    "component_examples": [
-                        "add-a-network-firewall-policy",
-                        "add-an-application-policy",
-                        "alerts-opsgenie",
-                        "alerts-pagerduty",
-                        "alerts-slack"
-                    ]
-                }
-            ]
-        },
-        {
-            "collapsed_url": "/page-data/DYN/DYN/DYN",
-            "method": "GET",
-            "dyn_examples": [
-                {
-                    "component_identifier": "/page-data/DYN",
-                    "component_examples": [
-                        "404.html",
-                        "app-data.json",
-                        "company",
-                        "consult",
-                        "demo"
-                    ]
-                },
-                {
-                    "component_identifier": "/page-data/DYN/DYN",
-                    "component_examples": [
-                        "about",
-                        "about-volt",
-                        "accessing-public-cloud-applications-aka-saas-privately",
-                        "api",
-                        "app-prot"
-                    ]
-                },
-                {
-                    "component_identifier": "/page-data/DYN/DYN/DYN",
-                    "component_examples": [
-                        "11",
-                        "14",
-                        "16",
-                        "2",
-                        "20"
-                    ]
-                }
-            ]
-        },
-        {
-            "collapsed_url": "/page-data/DYN/DYN",
-            "method": "GET",
-            "dyn_examples": [
-                {
-                    "component_identifier": "/page-data/DYN",
-                    "component_examples": [
-                        "404.html",
-                        "app-data.json",
-                        "company",
-                        "consult",
-                        "demo"
-                    ]
-                },
-                {
-                    "component_identifier": "/page-data/DYN/DYN",
-                    "component_examples": [
-                        "about",
-                        "about-volt",
-                        "accessing-public-cloud-applications-aka-saas-privately",
-                        "api",
-                        "app-prot"
-                    ]
-                }
-            ]
-        },
-        {
-            "collapsed_url": "/page-data/DYN",
-            "method": "GET",
-            "dyn_examples": [
-                {
-                    "component_identifier": "/page-data/DYN",
-                    "component_examples": [
-                        "404.html",
-                        "app-data.json",
-                        "company",
-                        "consult",
-                        "demo"
-                    ]
-                }
-            ]
-        },
-        {
-            "collapsed_url": "/previews/network-edge-apps.png",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/previews/overview.png",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/previews/tw/overview.png",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/previews/voltshare.png",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/pricing",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/privacy",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/products/voltconsole",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/products/volterra-global-network",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/products/voltmesh",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/products/voltshare",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/products/voltstack",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/products",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/resources/accessing-public-cloud-applications-aka-saas-privately",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/resources/applications-driving-the-need-for-distributed-cloud-services",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/resources/blog/accessing-public-cloud-applications-aka-saas-privately",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/resources/blog/applications-driving-the-need-for-distributed-cloud-services",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/resources/blog/control-plane-for-distributed-kubernetes-paas",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/resources/blog/distributed-clouds-with-a-centralized-mission-the-volterra-story",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/resources/blog/dont-just-move-the-problem-solve-it",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/resources/blog/feed.xml",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/resources/blog/global-service-mesh-for-distributed-applications",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/resources/blog/how-we-deployed-a-network-pop",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/resources/blog/managing-thousands-of-edge-kubernetes-clusters-with-gitops",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/resources/blog/overcoming-limitations-of-service-mesh",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/resources/blog/picking-the-right-control-plane-to-operate-a-large-number-of-kubernetes-clusters",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/resources/blog/securing-a-distributed-platform-identity-secrets-and-key-management",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/resources/blog/time-to-effect",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/resources/blog",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/resources/center",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/resources/control-plane-for-distributed-kubernetes-paas",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/resources/distributed-clouds-with-a-centralized-mission-the-volterra-story",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/resources/doc/cloud-ddos-solution.pdf",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/resources/doc/edge.pdf",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/resources/doc/gateway.pdf",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/resources/doc/multi-layer-ddos-web-protection.pdf",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/resources/doc/multicloud.pdf",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/resources/doc/network.pdf",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/resources/doc/voltmesh.pdf",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/resources/doc/voltstack.pdf",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/resources/dont-just-move-the-problem-solve-it",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/resources/global-service-mesh-for-distributed-applications",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/resources/how-we-deployed-a-network-pop",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/resources/managing-thousands-of-edge-kubernetes-clusters-with-gitops",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/resources/overcoming-limitations-of-service-mesh",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/resources/picking-the-right-control-plane-to-operate-a-large-number-of-kubernetes-clusters",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/resources/securing-a-distributed-platform-identity-secrets-and-key-management",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/resources/time-to-effect",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/resources",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/robots.txt",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/sitemap.xml",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/solutions/edge/edge-infrastructure-and-app-management",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/solutions/edge/edge-to-cloud-networking-and-security",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/solutions/edge",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/solutions/multi-cloud/multi-cloud-networking-and-security",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/solutions/multi-cloud/secure-kubernetes-gateway",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/solutions/multi-cloud",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/solutions/network/ddos-mitigation-and-network-services",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/solutions/network/hybrid-ddos-and-network-services",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/solutions/network/network-edge-apps",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/solutions/network/web-app-security-and-performance",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/solutions/network",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/solutions",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/static/DYN/DYN/DYN",
-            "method": "GET",
-            "dyn_examples": [
-                {
-                    "component_identifier": "/static/DYN",
-                    "component_examples": [
-                        "028b1c5dfead5c9a7d8e23145f34330f",
-                        "072d08bb0acb431b9287bb6b951b3621",
-                        "084faea3c835274134776295d167fefe",
-                        "0968f9419b506c5ed7d1a14e3362bd41",
-                        "0e8dfbd2a9dd0dec760b32341e15e082"
-                    ]
-                },
-                {
-                    "component_identifier": "/static/DYN/DYN",
-                    "component_examples": [
-                        "02506",
-                        "038cb",
-                        "076ca",
-                        "07d7d",
-                        "0940f"
-                    ]
-                },
-                {
-                    "component_identifier": "/static/DYN/DYN/DYN",
-                    "component_examples": [
-                        "ap-basic.png",
-                        "ap-basic.webp",
-                        "ap-routes.png",
-                        "ap-routes.webp",
-                        "application-secret-workflow.png"
-                    ]
-                }
-            ]
-        },
-        {
-            "collapsed_url": "/styles-9b6f388623a2ec93d35f.js.map",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/styles-9b6f388623a2ec93d35f.js",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/terms",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/webpack-runtime-bf2ca0c9960a9746e2ec.js.map",
-            "method": "GET",
-            "dyn_examples": []
-        },
-        {
-            "collapsed_url": "/webpack-runtime-bf2ca0c9960a9746e2ec.js",
-            "method": "GET",
-            "dyn_examples": []
+      {
+        "collapsed_url": "$$DYNAMIC$$",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": {
+          "request_size": [
+            {
+              "x": 387.98825,
+              "probability": 1.7530291e-34
+            },
+            {
+              "x": 388.511,
+              "probability": 0.0045045046
+            },
+            {
+              "x": 389.03372,
+              "probability": 0
+            },
+            {
+              "x": 389.55646,
+              "probability": 0
+            },
+            {
+              "x": 481.0353,
+              "probability": 0
+            },
+            {
+              "x": 481.55804,
+              "probability": 0
+            },
+            {
+              "x": 482.08078,
+              "probability": 0.027027028
+            },
+            {
+              "x": 482.60352,
+              "probability": 0
+            },
+            {
+              "x": 483.12625,
+              "probability": 0
+            },
+            {
+              "x": 483.649,
+              "probability": 0
+            },
+            {
+              "x": 484.17172,
+              "probability": 0.03153153
+            },
+            {
+              "x": 484.69446,
+              "probability": 0
+            },
+            {
+              "x": 485.2172,
+              "probability": 0
+            },
+            {
+              "x": 485.73993,
+              "probability": 0
+            },
+            {
+              "x": 486.26266,
+              "probability": 0.26126125
+            },
+            {
+              "x": 486.7854,
+              "probability": 0
+            },
+            {
+              "x": 487.30814,
+              "probability": 0
+            },
+            {
+              "x": 487.83087,
+              "probability": 0
+            },
+            {
+              "x": 488.3536,
+              "probability": 0.25225225
+            },
+            {
+              "x": 488.87634,
+              "probability": 0
+            },
+            {
+              "x": 489.39908,
+              "probability": 0
+            },
+            {
+              "x": 489.9218,
+              "probability": 0
+            },
+            {
+              "x": 490.44455,
+              "probability": 0.2837838
+            },
+            {
+              "x": 490.9673,
+              "probability": 0
+            },
+            {
+              "x": 491.49002,
+              "probability": 0
+            },
+            {
+              "x": 492.01276,
+              "probability": 0.13963965
+            }
+          ],
+          "response_size": [
+            {
+              "x": 82.98678,
+              "probability": 1.84582e-40
+            },
+            {
+              "x": 82.991936,
+              "probability": 2.0790007e-16
+            },
+            {
+              "x": 82.99709,
+              "probability": 0.0010342607
+            },
+            {
+              "x": 83.00225,
+              "probability": 0.5595982
+            },
+            {
+              "x": 83.00741,
+              "probability": 0.006935123
+            },
+            {
+              "x": 83.012566,
+              "probability": 3.6484328e-14
+            },
+            {
+              "x": 83.01772,
+              "probability": 0
+            },
+            {
+              "x": 83.02288,
+              "probability": 0
+            },
+            {
+              "x": 83.02804,
+              "probability": 0
+            },
+            {
+              "x": 83.033195,
+              "probability": 0
+            },
+            {
+              "x": 83.03835,
+              "probability": 0
+            },
+            {
+              "x": 83.96671,
+              "probability": 0
+            },
+            {
+              "x": 83.97187,
+              "probability": 0
+            },
+            {
+              "x": 83.97703,
+              "probability": 0
+            },
+            {
+              "x": 83.982185,
+              "probability": 0
+            },
+            {
+              "x": 83.98734,
+              "probability": 2.2759804e-37
+            },
+            {
+              "x": 83.9925,
+              "probability": 1.40943e-14
+            },
+            {
+              "x": 83.99766,
+              "probability": 0.004173332
+            },
+            {
+              "x": 84.002815,
+              "probability": 0.42721397
+            },
+            {
+              "x": 84.00797,
+              "probability": 0.0010451237
+            },
+            {
+              "x": 84.01313,
+              "probability": 3.3606752e-16
+            }
+          ],
+          "latency_with_data": [
+            {
+              "x": 0.000021479296,
+              "probability": 0.026278734
+            },
+            {
+              "x": 0.00028502833,
+              "probability": 0.025458861
+            },
+            {
+              "x": 0.0005485774,
+              "probability": 0.023010133
+            },
+            {
+              "x": 0.0008121264,
+              "probability": 0.01940193
+            },
+            {
+              "x": 0.0010756755,
+              "probability": 0.015262174
+            },
+            {
+              "x": 0.0013392245,
+              "probability": 0.011200399
+            },
+            {
+              "x": 0.0016027736,
+              "probability": 0.00766825
+            },
+            {
+              "x": 0.0018663226,
+              "probability": 0.0048978403
+            },
+            {
+              "x": 0.0021298716,
+              "probability": 0.0029184928
+            },
+            {
+              "x": 0.0023934206,
+              "probability": 0.0016224013
+            },
+            {
+              "x": 0.0026569697,
+              "probability": 0.00084140204
+            },
+            {
+              "x": 0.0029205186,
+              "probability": 0.0004070938
+            },
+            {
+              "x": 0.0031840678,
+              "probability": 0.00018375154
+            },
+            {
+              "x": 0.0034476167,
+              "probability": 0.00007737722
+            },
+            {
+              "x": 0.0037111659,
+              "probability": 0.000030397712
+            },
+            {
+              "x": 0.003974715,
+              "probability": 0.000011140746
+            },
+            {
+              "x": 0.013133044,
+              "probability": 0
+            }
+          ],
+          "latency_no_data": [
+            {
+              "x": 0.000021479296,
+              "probability": 0.026278734
+            },
+            {
+              "x": 0.00028502833,
+              "probability": 0.025458861
+            },
+            {
+              "x": 0.0005485774,
+              "probability": 0.023010133
+            },
+            {
+              "x": 0.0008121264,
+              "probability": 0.01940193
+            },
+            {
+              "x": 0.0010756755,
+              "probability": 0.015262174
+            },
+            {
+              "x": 0.0013392245,
+              "probability": 0.011200399
+            },
+            {
+              "x": 0.0016027736,
+              "probability": 0.00766825
+            },
+            {
+              "x": 0.0018663226,
+              "probability": 0.0048978403
+            },
+            {
+              "x": 0.0021298716,
+              "probability": 0.0029184928
+            },
+            {
+              "x": 0.0023934206,
+              "probability": 0.0016224013
+            },
+            {
+              "x": 0.0026569697,
+              "probability": 0.00084140204
+            },
+            {
+              "x": 0.0029205186,
+              "probability": 0.0004070938
+            },
+            {
+              "x": 0.0031840678,
+              "probability": 0.00018375154
+            },
+            {
+              "x": 0.0034476167,
+              "probability": 0.00007737722
+            },
+            {
+              "x": 0.0037111659,
+              "probability": 0.000030397712
+            },
+            {
+              "x": 0.003974715,
+              "probability": 0.000011140746
+            },
+            {
+              "x": 0.013133044,
+              "probability": 0
+            }
+          ],
+          "request_rate": [
+            {
+              "x": 0.00042145562,
+              "probability": 6.3910905e-37
+            },
+            {
+              "x": 0.009238119,
+              "probability": 0.0000055186283
+            },
+            {
+              "x": 0.009825897,
+              "probability": 0.000047422993
+            },
+            {
+              "x": 0.010413675,
+              "probability": 0.0002945256
+            },
+            {
+              "x": 0.011001453,
+              "probability": 0.0013220134
+            },
+            {
+              "x": 0.01158923,
+              "probability": 0.004288812
+            },
+            {
+              "x": 0.012177007,
+              "probability": 0.010057333
+            },
+            {
+              "x": 0.012617841,
+              "probability": 0.015408603
+            },
+            {
+              "x": 0.012764785,
+              "probability": 0.0170615
+            },
+            {
+              "x": 0.013205619,
+              "probability": 0.02055677
+            },
+            {
+              "x": 0.013352563,
+              "probability": 0.02104024
+            },
+            {
+              "x": 0.013793396,
+              "probability": 0.020269455
+            },
+            {
+              "x": 0.013940341,
+              "probability": 0.019417532
+            },
+            {
+              "x": 0.014381174,
+              "probability": 0.0163581
+            },
+            {
+              "x": 0.014528118,
+              "probability": 0.015560314
+            },
+            {
+              "x": 0.014968951,
+              "probability": 0.015310867
+            },
+            {
+              "x": 0.015115895,
+              "probability": 0.016157584
+            },
+            {
+              "x": 0.015556729,
+              "probability": 0.021460373
+            },
+            {
+              "x": 0.015703673,
+              "probability": 0.02389881
+            },
+            {
+              "x": 0.016144507,
+              "probability": 0.0313627
+            },
+            {
+              "x": 0.01629145,
+              "probability": 0.033366777
+            },
+            {
+              "x": 0.016732285,
+              "probability": 0.036034897
+            },
+            {
+              "x": 0.016879229,
+              "probability": 0.03557311
+            },
+            {
+              "x": 0.017320061,
+              "probability": 0.030363832
+            },
+            {
+              "x": 0.017467007,
+              "probability": 0.027666377
+            },
+            {
+              "x": 0.01790784,
+              "probability": 0.018535538
+            },
+            {
+              "x": 0.018495617,
+              "probability": 0.008180834
+            },
+            {
+              "x": 0.019083394,
+              "probability": 0.0026097088
+            },
+            {
+              "x": 0.019671172,
+              "probability": 0.00060167926
+            },
+            {
+              "x": 0.02025895,
+              "probability": 0.00010025642
+            },
+            {
+              "x": 0.020846728,
+              "probability": 0.000012073468
+            },
+            {
+              "x": 0.029663391,
+              "probability": 0
+            }
+          ],
+          "error_rate": [
+            {
+              "x": 0.00042145562,
+              "probability": 6.3910905e-37
+            },
+            {
+              "x": 0.009238119,
+              "probability": 0.0000055186283
+            },
+            {
+              "x": 0.009825897,
+              "probability": 0.000047422993
+            },
+            {
+              "x": 0.010413675,
+              "probability": 0.0002945256
+            },
+            {
+              "x": 0.011001453,
+              "probability": 0.0013220134
+            },
+            {
+              "x": 0.01158923,
+              "probability": 0.004288812
+            },
+            {
+              "x": 0.012177007,
+              "probability": 0.010057333
+            },
+            {
+              "x": 0.012617841,
+              "probability": 0.015408603
+            },
+            {
+              "x": 0.012764785,
+              "probability": 0.0170615
+            },
+            {
+              "x": 0.013205619,
+              "probability": 0.02055677
+            },
+            {
+              "x": 0.013352563,
+              "probability": 0.02104024
+            },
+            {
+              "x": 0.013793396,
+              "probability": 0.020269455
+            },
+            {
+              "x": 0.013940341,
+              "probability": 0.019417532
+            },
+            {
+              "x": 0.014381174,
+              "probability": 0.0163581
+            },
+            {
+              "x": 0.014528118,
+              "probability": 0.015560314
+            },
+            {
+              "x": 0.014968951,
+              "probability": 0.015310867
+            },
+            {
+              "x": 0.015115895,
+              "probability": 0.016157584
+            },
+            {
+              "x": 0.015556729,
+              "probability": 0.021460373
+            },
+            {
+              "x": 0.015703673,
+              "probability": 0.02389881
+            },
+            {
+              "x": 0.016144507,
+              "probability": 0.0313627
+            },
+            {
+              "x": 0.01629145,
+              "probability": 0.033366777
+            },
+            {
+              "x": 0.016732285,
+              "probability": 0.036034897
+            },
+            {
+              "x": 0.016879229,
+              "probability": 0.03557311
+            },
+            {
+              "x": 0.017320061,
+              "probability": 0.030363832
+            },
+            {
+              "x": 0.017467007,
+              "probability": 0.027666377
+            },
+            {
+              "x": 0.01790784,
+              "probability": 0.018535538
+            },
+            {
+              "x": 0.018495617,
+              "probability": 0.008180834
+            },
+            {
+              "x": 0.019083394,
+              "probability": 0.0026097088
+            },
+            {
+              "x": 0.019671172,
+              "probability": 0.00060167926
+            },
+            {
+              "x": 0.02025895,
+              "probability": 0.00010025642
+            },
+            {
+              "x": 0.020846728,
+              "probability": 0.000012073468
+            },
+            {
+              "x": 0.029663391,
+              "probability": 0
+            }
+          ],
+          "response_throughput": [
+            {
+              "x": 1.0938793,
+              "probability": 2.0310897e-11
+            },
+            {
+              "x": 1.1018685,
+              "probability": 0.00006000287
+            },
+            {
+              "x": 1.1034663,
+              "probability": 0.0004449621
+            },
+            {
+              "x": 1.1050642,
+              "probability": 0.0023857448
+            },
+            {
+              "x": 1.1066619,
+              "probability": 0.009252328
+            },
+            {
+              "x": 1.1082598,
+              "probability": 0.02596316
+            },
+            {
+              "x": 1.1098576,
+              "probability": 0.052731186
+            },
+            {
+              "x": 1.1114554,
+              "probability": 0.07753007
+            },
+            {
+              "x": 1.1130533,
+              "probability": 0.08253067
+            },
+            {
+              "x": 1.1146511,
+              "probability": 0.06360794
+            },
+            {
+              "x": 1.116249,
+              "probability": 0.035491474
+            },
+            {
+              "x": 1.1178467,
+              "probability": 0.014334389
+            },
+            {
+              "x": 1.1194446,
+              "probability": 0.0041895327
+            },
+            {
+              "x": 1.1210424,
+              "probability": 0.0008858099
+            },
+            {
+              "x": 1.1226403,
+              "probability": 0.00013543655
+            },
+            {
+              "x": 1.124238,
+              "probability": 0.000014968041
+            },
+            {
+              "x": 1.3687055,
+              "probability": 7.9782214e-10
+            },
+            {
+              "x": 1.3719012,
+              "probability": 1.0077023e-7
+            },
+            {
+              "x": 1.3750969,
+              "probability": 0.000006174136
+            },
+            {
+              "x": 1.3782926,
+              "probability": 0.00018361153
+            },
+            {
+              "x": 1.3814882,
+              "probability": 0.0026518072
+            },
+            {
+              "x": 1.3846838,
+              "probability": 0.018608281
+            },
+            {
+              "x": 1.3878795,
+              "probability": 0.06346755
+            },
+            {
+              "x": 1.3910751,
+              "probability": 0.10524051
+            },
+            {
+              "x": 1.3942708,
+              "probability": 0.084848486
+            },
+            {
+              "x": 1.3974664,
+              "probability": 0.03325955
+            },
+            {
+              "x": 1.4006621,
+              "probability": 0.006337512
+            },
+            {
+              "x": 1.4038577,
+              "probability": 0.0005868316
+            },
+            {
+              "x": 1.4070534,
+              "probability": 0.000026394495
+            },
+            {
+              "x": 1.410249,
+              "probability": 5.763582e-7
+            },
+            {
+              "x": 1.4118469,
+              "probability": 6.494126e-8
+            }
+          ],
+          "creation_timestamp": "2020-06-29T16:08:58Z"
         }
+      },
+      {
+        "collapsed_url": "$$STATIC$$",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/a1795b6917dd4e3645932882a7568b255b81fd83-d1df335c1f5f2be6177e.js",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/app-bf5677ec0b2251afdcf4.js",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/component---src-pages-company-about-js-af0f17661b8cb5eca1d1.js",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/component---src-pages-company-careers-js-910c3adaf43fd4a7c79d.js",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/component---src-pages-company-contact-us-js-09518b09129393c1b181.js",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/component---src-pages-demo-js-7285d32423fcd1c3965c.js",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/component---src-pages-index-js-817cd9c1d1d2a4b40b6a.js",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/component---src-pages-pricing-js-279b89882384cf07c096.js",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/component---src-pages-products-voltconsole-js-72c01f42585024e80a07.js",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/component---src-pages-products-voltmesh-js-4975a45aaf9c48e747f8.js",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/component---src-pages-products-voltshare-js-45f1e967af137a18a5b5.js",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/component---src-pages-products-voltstack-js-959dd6d1f1b2eb39d832.js",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/component---src-pages-resources-blog-js-97f141b0f5f31affb361.js",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/component---src-pages-resources-center-js-8ca5e272d012b75dc376.js",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/component---src-pages-solutions-edge-edge-infrastructure-and-app-management-js-cb814f781670144852fa.js",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/component---src-pages-solutions-edge-edge-to-cloud-networking-and-security-js-138d54ab2ccd4ddb9ded.js",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/component---src-pages-solutions-multi-cloud-multi-cloud-networking-and-security-js-37341f99dd3e555733a7.js",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/component---src-pages-solutions-multi-cloud-secure-kubernetes-gateway-js-83ec589b5209c49958a2.js",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/component---src-pages-solutions-network-ddos-mitigation-and-network-services-js-3726750c11b3fd9bb798.js",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/component---src-pages-solutions-network-network-edge-apps-js-68c205a843611ae1bb27.js",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/component---src-pages-solutions-network-web-app-security-and-performance-js-ed7bcd33afc310205500.js",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/dc9b6228137fa572927388f32543ff5ff572f9a8-f5a382828fac79ae425b.js",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/e37a1bb177ab1d802bc6bdf9a446dec8f303e8ee-3e53dd31fa8b7ed2780b.js",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/favicon-32x32.png",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/framework-2185f1186375ae7519a4.js",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/common/blue-li.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/common/start-bubble1.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/common/start-bubble2.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/common/start-bubble3.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/common/vc-logo.png",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/common/vgn-logo.png",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/common/vm-logo.png",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/common/vs-logo.png",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/main/bg-gn-quotes.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/main/customers-bg-grid-2.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/main/customers-bg-grid.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/main/customers/betclic.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/main/customers/cdiscount.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/main/customers/cybertest.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/main/customers/digitalvirgo.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "img/main/customers/franceix.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/main/customers/itochu.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/main/customers/keyyo-communications.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/main/customers/kindred.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/main/customers/mediapart.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/main/customers/netone.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/main/customers/relaxgaming.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/main/customers/scoopit.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/main/customers/sigfox.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/main/customers/softbank.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/main/customers/veepee.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/main/customers/webedia.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/main/globe.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/main/logo.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/main/multi-img.png",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/main/quotes/softbank-c.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/main/vc-img.png",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/main/vgn-img.png",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/main/vm-img.png",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/main/vs-img.png",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/menu/about.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/menu/api.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/menu/blog.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/menu/careers.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/menu/center.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/menu/contact.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/menu/docs.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/menu/edge.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/menu/feature-reqs.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/menu/menu_icon.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/menu/multi-cloud.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/menu/network.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/menu/newsroom.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/menu/start.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/menu/status.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/menu/vc.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/menu/vgn.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/menu/vm.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/menu/vs.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/menu/vsh.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/solutions/apps-icon.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/solutions/flexibility-icon.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/solutions/speed-icon.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/img/solutions/sphere-icon.svg",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/page-data/$DYN$/$DYN$/$DYN$/$DYN$",
+        "method": "GET",
+        "dyn_examples": [
+          {
+            "component_identifier": "/page-data/$DYN$",
+            "component_examples": [
+              "404.html",
+              "app-data.json",
+              "company",
+              "consult",
+              "demo"
+            ]
+          },
+          {
+            "component_identifier": "/page-data/$DYN$/$DYN$",
+            "component_examples": [
+              "about",
+              "about-volt",
+              "api",
+              "blog",
+              "careers"
+            ]
+          },
+          {
+            "component_identifier": "page-data/$DYN$/$DYN$/$DYN$",
+            "component_examples": [
+              "address-allocator",
+              "advertise-policy",
+              "alert",
+              "alert-policy",
+              "alert-policy-set"
+            ]
+          },
+          {
+            "component_identifier": "/page-data/$DYN$/$DYN$/$DYN$/$DYN$",
+            "component_examples": [
+              "add-a-network-firewall-policy",
+              "add-an-application-policy",
+              "alerts-opsgenie",
+              "alerts-pagerduty",
+              "alerts-slack"
+            ]
+          }
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/page-data/$DYN$/$DYN$/$DYN$",
+        "method": "GET",
+        "dyn_examples": [
+          {
+            "component_identifier": "/page-data/$DYN$",
+            "component_examples": [
+              "404.html",
+              "app-data.json",
+              "company",
+              "consult",
+              "demo"
+            ]
+          },
+          {
+            "component_identifier": "/page-data/$DYN$/$DYN$",
+            "component_examples": [
+              "about",
+              "about-volt",
+              "api",
+              "blog",
+              "careers"
+            ]
+          },
+          {
+            "component_identifier": "/page-data/$DYN$/$DYN$/$DYN$",
+            "component_examples": [
+              "address-allocator",
+              "advertise-policy",
+              "alert",
+              "alert-policy",
+              "alert-policy-set"
+            ]
+          }
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/page-data/$DYN$/$DYN$",
+        "method": "GET",
+        "dyn_examples": [
+          {
+            "component_identifier": "/page-data/$DYN$",
+            "component_examples": [
+              "404.html",
+              "app-data.json",
+              "company",
+              "consult",
+              "demo"
+            ]
+          },
+          {
+            "component_identifier": "/page-data/$DYN$/$DYN$",
+            "component_examples": [
+              "about",
+              "about-volt",
+              "api",
+              "blog",
+              "careers"
+            ]
+          }
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/page-data/$DYN$",
+        "method": "GET",
+        "dyn_examples": [
+          {
+            "component_identifier": "/page-data/$DYN$",
+            "component_examples": [
+              "404.html",
+              "app-data.json",
+              "company",
+              "consult",
+              "demo"
+            ]
+          }
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "/styles-89fd2ae28bdf06750a71.js",
+        "method": "GET",
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      }
     ]
-}
+  }

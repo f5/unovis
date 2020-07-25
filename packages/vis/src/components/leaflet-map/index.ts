@@ -15,7 +15,7 @@ import { ComponentType } from 'types/component'
 import { LeafletMapRenderer, Point, Bounds } from 'types/map'
 
 // Utils
-import { isNil, findIndex, find } from 'utils/data'
+import { getValue, clamp, isNil, find } from 'utils/data'
 
 // Config
 import { LeafletMapConfig, LeafletMapConfigInterface } from './config'
@@ -49,22 +49,22 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
   private _hasBeenMoved = false
   private _hasBeenZoomed = false
   private _triggerBackroundClick = false
-  private _externallySelectedNode = null
-  private _zoomingToExternallySelectedNode = false
+  private _externallySelectedPoint = null
+  private _zoomingToExternallySelectedPoint = false
   private _forceExpandCluster = false
-  private _nodesGroup: Selection<SVGGElement, object[], SVGElement, object[]>
-  private _nodeSelectionRing: Selection<SVGGElement, object[], SVGElement, object[]>
+  private _pointGroup: Selection<SVGGElement, object[], SVGElement, object[]>
+  private _pointSelectionRing: Selection<SVGGElement, object[], SVGElement, object[]>
   private _clusterBackground: Selection<SVGGElement, object[], SVGElement, object[]>
   private _clusterBackgroundRadius = 0
-  private _selectedNode: Point = null
+  private _selectedPoint: Point = null
   private _currentZoomLevel = null
   private _firstRender = true
 
   events = {
-    [LeafletMap.selectors.gNode]: {
-      mouseup: this._onNodeMouseUp.bind(this),
-      mousedown: this._onNodeMouseDown.bind(this),
-      click: this._onNodeClick.bind(this),
+    [LeafletMap.selectors.point]: {
+      mouseup: this._onPointMouseUp.bind(this),
+      mousedown: this._onPointMouseDown.bind(this),
+      click: this._onPointClick.bind(this),
     },
   }
 
@@ -104,13 +104,13 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
       .attr('width', '100%')
       .attr('height', '100%')
 
-    this._nodesGroup = this._map.svgGroup.append('g').attr('class', s.nodes)
-    this._nodeSelectionRing = this._nodesGroup.append('g')
-      .attr('class', s.nodeSelectionRing)
-      .call(createNodeSelectionRing)
-    this._clusterBackground = this._nodesGroup.append('g')
+    this._pointGroup = this._map.svgGroup.append('g').attr('class', s.points)
+    this._clusterBackground = this._pointGroup.append('g')
       .attr('class', s.clusterBackground)
       .call(createBackgroundNode)
+    this._pointSelectionRing = this._pointGroup.append('g')
+      .attr('class', s.pointSelectionRing)
+      .call(createNodeSelectionRing)
 
     this._map.leaflet.setView(initialMapCenter, initialMapZoom)
     if (data) this.setData(data)
@@ -152,11 +152,9 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
       if (config.initialBounds && !config.bounds) this.fitToBounds(config.initialBounds)
     }
 
-    if (config.selectedNodeId) this.zoomToNodeById(config.selectedNodeId, true)
-    else if (config.bounds) this.fitToBounds(config.bounds)
+    if (config.bounds) this.fitToBounds(config.bounds)
 
     this._firstRender = false
-    if (config.tooltip) config.tooltip.update()
   }
 
   fitToPoints (duration = this.config.flyToDuration, padding = [40, 40]): void {
@@ -180,29 +178,90 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     ], duration)
   }
 
-  zoomToNodeById (id: string, selectNode = false, customZoomLevel?: number): void {
+  public selectPointById (id: string, centerPoint = false): void {
+    const { config } = this
+    const pointData = this._getPointData()
+    const foundPoint = pointData.find(d => d.properties.id === id)
+
+    if (!foundPoint) {
+      console.warn(`Node with id ${id} can not be found`)
+      return
+    }
+
+    if (foundPoint.properties?.cluster) {
+      console.warn('Cluster can\'t be selected')
+      return
+    }
+
+    this._selectedPoint = foundPoint
+
+    const isPointInsideExpandedCluster = this._expandedCluster?.points?.find(d => d.properties.id === id)
+    if (!isPointInsideExpandedCluster) this._resetExpandedCluster()
+
+    if (centerPoint) {
+      const coordinates = {
+        lng: getValue(foundPoint.properties, config.pointLongitude),
+        lat: getValue(foundPoint.properties, config.pointLatitude),
+      }
+
+      const zoomLevel = this._map.leaflet.getZoom()
+      this._map.leaflet.flyTo(coordinates, zoomLevel, { duration: 0 })
+    } else {
+      this._renderData()
+    }
+  }
+
+  public unselectPoint (): void {
+    this._selectedPoint = null
+    this._externallySelectedPoint = null
+    this.render()
+  }
+
+  public zoomToPointById (id: string, selectNode = false, customZoomLevel?: number): void {
     const { config, datamodel } = this
-    this._resetExpandedCluster()
+    // this._resetExpandedCluster()
 
     const dataBoundsAll = datamodel.getDataLatLngBounds(config.pointLatitude, config.pointLongitude)
     const bounds = [dataBoundsAll[0][1], dataBoundsAll[1][0], dataBoundsAll[1][1], dataBoundsAll[0][0]]
     const pointDataAll = this._getPointData(bounds)
 
-    let foundNode = find(pointDataAll, (d: Point) => d.properties.id === id)
-    if (!foundNode) {
-      const { node } = findNodeAndClusterInPointsById(pointDataAll, id)
-      foundNode = node
+    let foundPoint = pointDataAll.find((d: Point) => d.properties.id === id)
+
+    // If point was found and it's a cluster -> do nothing
+    if (foundPoint?.properties?.cluster) {
+      console.warn('Cluster can\'t be zoomed in')
+      return
     }
-    if (foundNode) {
-      this._externallySelectedNode = foundNode
-      this._zoomingToExternallySelectedNode = true
-      if (selectNode) this._selectedNode = foundNode
+
+    // If point was not found -> search for it in all collapsed clusters
+    if (!foundPoint) {
+      const { node } = findNodeAndClusterInPointsById(pointDataAll, id)
+      foundPoint = node
+    }
+
+    if (foundPoint) {
+      // If point was found and it's insiade an expanded cluster -> simply select it
+      const isPointInsideExpandedCluster = this._expandedCluster?.points?.find(d => d.properties.id === id)
+      if (isPointInsideExpandedCluster && selectNode) {
+        this._selectedPoint = foundPoint
+        this._renderData()
+        return
+      }
+
+      this._externallySelectedPoint = foundPoint
+      this._zoomingToExternallySelectedPoint = true
+
       this._forceExpandCluster = !isNil(customZoomLevel)
+      if (selectNode) this._selectedPoint = foundPoint
+
       const zoomLevel = isNil(customZoomLevel) ? this._map.leaflet.getZoom() : customZoomLevel
-      const coordinates = { lng: foundNode.properties.longitude, lat: foundNode.properties.latitude }
+      const coordinates = {
+        lng: getValue(foundPoint.properties, config.pointLongitude),
+        lat: getValue(foundPoint.properties, config.pointLatitude),
+      }
       this._map.leaflet.flyTo(coordinates, zoomLevel, { duration: 0 })
     } else {
-      console.warn(`Node with index ${id} can not be found`)
+      console.warn(`Node with id ${id} can not be found`)
     }
   }
 
@@ -249,50 +308,50 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
       .attr('transform', `translate(${-dx},${-dy})`)
 
     // Render content
-    const nodes = this._nodesGroup.selectAll(`.${s.gNode}:not(.exit)`)
+    const points = this._pointGroup.selectAll(`.${s.point}:not(.exit)`)
       .data(pointData, (d: Point) => d.id.toString())
 
-    nodes.exit().classed('exit', true).call(removeNodes)
-    const nodesEnter = nodes.enter().append('g').attr('class', s.gNode)
+    points.exit().classed('exit', true).call(removeNodes)
+    const pointsEnter = points.enter().append('g').attr('class', s.point)
       .call(createNodes)
 
-    const nodesMerged = nodes.merge(nodesEnter)
-    nodesMerged.call(updateNodes, config, this._map.leaflet)
+    const pointsMerged = points.merge(pointsEnter)
+    pointsMerged.call(updateNodes, config, this._map.leaflet)
 
     this._clusterBackground.call(updateBackgroundNode, this._expandedCluster, config, this._map.leaflet, this._clusterBackgroundRadius)
     if (this._expandedCluster && config.clusterBackground) {
-      const id = findIndex(pointData, d => d.cluster)
-      pointData.forEach((d, i) => { d._sortId = i < id ? 0 : 2 })
-      this._nodesGroup
-        .selectAll(`.${s.gNode}, .${s.clusterBackground}, .${s.nodeSelectionRing}`)
-        .sort((a: Point, b: Point) => a._sortId - b._sortId)
+      pointData.forEach((d, i) => { d._zIndex = d.properties?.expandedClusterPoint ? 2 : 0 })
+      this._pointGroup
+        .selectAll(`.${s.point}, .${s.clusterBackground}, .${s.pointSelectionRing}`)
+        .sort((a: Point, b: Point) => a._zIndex - b._zIndex)
     }
 
     // Show selection border and hide it when the node
     // is out of visible box
-    this._nodeSelectionRing.call(updateNodeSelectionRing, this._selectedNode, pointData, config, this._map.leaflet)
+    this._pointSelectionRing.call(updateNodeSelectionRing, this._selectedPoint, pointData, config, this._map.leaflet)
 
-    // Set up default events
-    this._setUpEvents(this.events)
+    // Set up events
+    // this.setUpEvents()
+    this._setUpComponentEventsThrottled()
 
-    // Set up user-defined events
-    this._setUpEvents(this.config.events)
+    // Tooltip
+    config.tooltip?.update()
   }
 
-  _zoomToExternallySelectedNode (): void {
+  _zoomToExternallySelectedPoint (): void {
     const pointData = this._getPointData()
-    const foundNode = find(pointData, d => d.properties.id === this._externallySelectedNode.properties.id)
+    const foundNode = find(pointData, d => d.properties.id === this._externallySelectedPoint.properties.id)
     if (foundNode) {
-      this._zoomingToExternallySelectedNode = false
+      this._zoomingToExternallySelectedPoint = false
       this._currentZoomLevel = null
     } else {
-      const { cluster } = findNodeAndClusterInPointsById(pointData, this._externallySelectedNode.properties.id)
+      const { cluster } = findNodeAndClusterInPointsById(pointData, this._externallySelectedPoint.properties.id)
       const zoomLevel = this._map.leaflet.getZoom()
       // Expand cluster or fly further
       if (this._forceExpandCluster || shouldClusterExpand(cluster, zoomLevel, 8, 13)) this._expandCluster(cluster)
       else {
         const newZoomLevel = clampZoomLevel(zoomLevel)
-        const coordinates = { lng: this._externallySelectedNode.properties.longitude, lat: this._externallySelectedNode.properties.latitude }
+        const coordinates = { lng: this._externallySelectedPoint.properties.longitude, lat: this._externallySelectedPoint.properties.latitude }
         if (this._currentZoomLevel !== newZoomLevel) {
           this._currentZoomLevel = newZoomLevel
           this._map.leaflet.flyTo(coordinates, newZoomLevel, { duration: 0 })
@@ -304,6 +363,8 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
   _expandCluster (clusterPoint): void {
     const { config, config: { clusterBackground } } = this
     const padding = 1
+
+    config.tooltip?.hide()
 
     this._forceExpandCluster = false
     if (clusterPoint) {
@@ -329,7 +390,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
       this._renderData()
     }
 
-    this._zoomingToExternallySelectedNode = false
+    this._zoomingToExternallySelectedPoint = false
   }
 
   _resetExpandedCluster (): void {
@@ -385,22 +446,25 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
       const zoomedEvent = events.zoomend.bind(this._map.layer)
       zoomedEvent()
     }
-    if (!this._externallySelectedNode || !this._zoomingToExternallySelectedNode) return
-    this._zoomToExternallySelectedNode()
+    if (!this._externallySelectedPoint || !this._zoomingToExternallySelectedPoint) return
+    this._zoomToExternallySelectedPoint()
   }
 
   _onMapZoom (): void {
-    const { config: { onMapMoveZoom } } = this
+    const { config } = this
     this._hasBeenZoomed = true
-    if (!this._externallySelectedNode) this._resetExpandedCluster()
-    else if (!this._zoomingToExternallySelectedNode) {
-      this._externallySelectedNode = null
+
+    if (!this._externallySelectedPoint) this._resetExpandedCluster()
+    else if (!this._zoomingToExternallySelectedPoint) {
+      this._externallySelectedPoint = null
     }
+
+    config.tooltip?.hide()
 
     const leafletBounds = this._map.leaflet.getBounds()
     const southWest = leafletBounds.getSouthWest()
     const northEast = leafletBounds.getNorthEast()
-    onMapMoveZoom?.({
+    config.onMapMoveZoom?.({
       mapCenter: this._map.leaflet.getCenter(),
       zoomLevel: this._map.leaflet.getZoom(),
       bounds: { southWest, northEast },
@@ -413,36 +477,56 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
       return
     }
 
-    this._selectedNode = null
-    this._externallySelectedNode = null
+    this._externallySelectedPoint = null
     this._resetExpandedCluster()
     this._renderData()
   }
 
-  _onNodeClick (d, i, elements): void {
+  _onPointClick (d, i, elements): void {
     const { config: { flyToDuration } } = this
 
-    this._externallySelectedNode = null
+    this._externallySelectedPoint = null
     event.stopPropagation()
-    const zoomLevel = this._map.leaflet.getZoom()
-    const coordinates = { lng: d.geometry.coordinates[0], lat: d.geometry.coordinates[1] }
+
     if (d.properties.cluster) {
+      const zoomLevel = this._map.leaflet.getZoom()
+      const coordinates = { lng: d.geometry.coordinates[0], lat: d.geometry.coordinates[1] }
+
       if (shouldClusterExpand(d, zoomLevel)) this._expandCluster(d)
       else {
         const newZoomLevel = clampZoomLevel(zoomLevel)
         this._map.leaflet.flyTo(coordinates, newZoomLevel, { duration: flyToDuration / 1000 })
       }
-    } else {
-      this._selectedNode = d
-      this._renderData()
     }
   }
 
-  _onNodeMouseDown (d, el, event): void {
+  _onPointMouseDown (d, el, event): void {
     this._cancelBackgroundClick = true
   }
 
-  _onNodeMouseUp (d, el, event): void {
+  _onPointMouseUp (d, el, event): void {
     this._cancelBackgroundClick = false
+  }
+
+  public zoomIn (increment = 1): void {
+    this.setZoom(this._map.leaflet.getZoom() + increment)
+  }
+
+  public zoomOut (increment = 1): void {
+    this.setZoom(this._map.leaflet.getZoom() - increment)
+  }
+
+  public setZoom (zoomLevel: number): void {
+    const leaflet = this._map.leaflet
+
+    leaflet.flyTo(
+      leaflet.getCenter(),
+      clamp(zoomLevel, leaflet.getMinZoom(), leaflet.getMaxZoom()),
+      { duration: this.config.zoomDuration / 1000 }
+    )
+  }
+
+  public fitView (): void {
+    this.fitToPoints()
   }
 }

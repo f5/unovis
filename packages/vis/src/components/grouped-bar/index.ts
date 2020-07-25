@@ -101,12 +101,21 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum> {
     smartTransition(barsMerged, duration)
       .attr('d', (d, i) => {
         const x = innerBandScale(i)
-        const y = config.scales.y(getValue(d, yAccessors[i]))
         const width = barWidth
-        const height = config.scales.y(0) - config.scales.y(getValue(d, yAccessors[i]))
+
+        let y = config.scales.y(getValue(d, yAccessors[i]))
+        let height = config.scales.y(0) - config.scales.y(getValue(d, yAccessors[i]))
+
+        // Optionally set minumum bar height
+        if (height < config.minBarHeight) {
+          y = config.scales.y(0) - config.minBarHeight
+          height = config.minBarHeight
+        }
+
         return this._getBarPath(x, y, width, height)
       })
       .style('fill', (d, i) => getColor(d, config.color, i))
+      .style('cursor', (d, i) => getValue(d, config.cursor, i))
 
     smartTransition(bars.exit(), duration)
       .remove()

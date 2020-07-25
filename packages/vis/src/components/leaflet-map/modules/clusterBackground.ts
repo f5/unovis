@@ -12,7 +12,7 @@ import { getPointPos, getNodePathData } from './utils'
 import { LeafletMapConfigInterface } from '../config'
 
 export function createBackgroundNode (selection): void {
-  selection.datum({ _sortId: 1 })
+  selection.datum({ _zIndex: 1 })
   selection.append('path')
 }
 

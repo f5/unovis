@@ -11,10 +11,10 @@ import { GraphDataModel } from 'data-models/graph'
 // Types
 import { Spacing } from 'types/misc'
 import { ExtendedSizeComponent, Sizing } from 'types/component'
+import { SankeyNodeDatumInterface, SankeyLinkDatumInterface, LabelPosition } from 'types/sankey'
 
 // Utils
-import { getValue, clamp, isNumber, groupBy, sortBy, flatten } from 'utils/data'
-import { SankeyNodeDatumInterface, SankeyLinkDatumInterface, LabelPosition } from 'types/sankey'
+import { getValue, isNumber, groupBy } from 'utils/data'
 
 // Config
 import { SankeyConfig, SankeyConfigInterface } from './config'
@@ -25,7 +25,7 @@ import * as s from './style'
 // Modules
 import { removeLinks, createLinks, updateLinks } from './modules/link'
 import { removeNodes, createNodes, updateNodes, onNodeMouseOver, onNodeMouseOut } from './modules/node'
-import { requiredLabelSpace } from './modules/label'
+import { requiredLabelSpace, NODE_LABEL_SPACING } from './modules/label'
 
 export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> extends ComponentCore<{nodes: N[]; links?: L[]}> implements ExtendedSizeComponent {
   static selectors = s
@@ -33,13 +33,19 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
   datamodel: GraphDataModel<N, L> = new GraphDataModel()
   private _extendedWidth = undefined
   private _extendedHeight = undefined
+  private _extendedSizeMinHeight = 200
   private _linksGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
   private _nodesGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
   private _sankey = sankey()
+  private _highlightTimeoutId = null
   events = {
     [Sankey.selectors.gNode]: {
       mouseover: this._onNodeMouseOver.bind(this),
       mouseout: this._onNodeMouseOut.bind(this),
+    },
+    [Sankey.selectors.link]: {
+      mouseover: this._onLinkMouseOver.bind(this),
+      mouseout: this._onLinkMouseOut.bind(this),
     },
   }
 
@@ -55,7 +61,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
 
     switch (labelPosition) {
     case (LabelPosition.AUTO): {
-      return { top: labelFontSize / 2, bottom: labelFontSize / 2, left: labelWidth, right: labelWidth }
+      return { top: labelFontSize / 2, bottom: labelFontSize / 2, left: labelWidth + 2 * NODE_LABEL_SPACING, right: labelWidth + 2 * NODE_LABEL_SPACING }
     }
     case (LabelPosition.RIGHT): {
       const requiredSpace = requiredLabelSpace(nodeWidth, nodeHorizontalSpacing, labelFontSize)
@@ -64,8 +70,22 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
     }
   }
 
+  setData (data: GraphDataModel<N, L>): void {
+    super.setData(data)
+
+    // Pre-calculate component size for Sizing.EXTEND
+    if (this.sizing !== Sizing.FIT) this._preCalculateComponentSize()
+  }
+
+  setConfig (config: SankeyConfigInterface<N, L>): void {
+    super.setConfig(config)
+
+    // Pre-calculate component size for Sizing.EXTEND
+    if (this.sizing !== Sizing.FIT) this._preCalculateComponentSize()
+  }
+
   _render (customDuration?: number): void {
-    const { config, config: { sizing }, bleed, datamodel: { nodes, links } } = this
+    const { config, bleed, datamodel: { nodes, links } } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
     if (
       (nodes.length === 0) ||
@@ -77,7 +97,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
       this._nodesGroup.selectAll(`.${s.gNode}`).call(removeNodes, config, duration)
     }
 
-    if (sizing === Sizing.EXTEND) this._preCalculateComponentSize()
+    // Prepare Layout
     this._prepareLayout()
 
     // Links
@@ -93,7 +113,6 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
 
     const nodeSelection = this._nodesGroup.selectAll(`.${s.gNode}`).data(nodes, config.id)
     const nodeSelectionEnter = nodeSelection.enter().append('g').attr('class', s.gNode)
-
     nodeSelectionEnter.call(createNodes, this.config, bleed)
     nodeSelection.merge(nodeSelectionEnter).call(updateNodes, config, bleed, duration)
     nodeSelection.exit()
@@ -102,57 +121,53 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
   }
 
   private _preCalculateComponentSize (): void {
-    const { config: { nodePadding, nodeWidth, nodeAlign, nodeMinHeight, nodeMaxHeight, nodeHorizontalSpacing }, datamodel: { nodes, links } } = this
+    const { bleed, config: { nodePadding, nodeWidth, nodeAlign, nodeMinHeight, nodeMaxHeight, nodeHorizontalSpacing }, datamodel: { nodes, links } } = this
     this._sankey
       .nodeId(d => d.id)
       .iterations(32)
       .nodeAlign(nodeAlign)
 
-    if (nodes.length && links.length) this._sankey({ nodes, links })
+    if (nodes.length) this._sankey({ nodes, links })
     const extentValue = extent(nodes, d => d.value || undefined)
     const scale = scaleLinear().domain(extentValue).range([nodeMinHeight, nodeMaxHeight]).clamp(true)
-    const groupedByLayer = groupBy(nodes, d => d.layer)
-    const values = Object.values(groupedByLayer).map((d: any[]) => sum(d.map(n => scale(n.value) + nodePadding)))
+    const groupByColumn = groupBy(nodes, d => d.layer)
+    const values = Object.values(groupByColumn).map((d: any[]) => sum(d.map(n => scale(n.value) + nodePadding)))
     const height = max(values)
-    this._extendedHeight = height
-    this._extendedWidth = (nodeWidth + nodeHorizontalSpacing * Object.keys(groupedByLayer).length)
+    this._extendedHeight = height || this._extendedSizeMinHeight
+    this._extendedWidth = (nodeWidth + nodeHorizontalSpacing) * Object.keys(groupByColumn).length - nodeHorizontalSpacing + bleed.left + bleed.right
   }
 
   private _prepareLayout (): void {
-    const { config, bleed, datamodel, datamodel: { links }, _extendedHeight, _extendedWidth } = this
+    const { config, bleed, datamodel, _extendedHeight, _extendedWidth } = this
+    const sankeyHeight = this._getSankeyHeight()
 
-    const nodes = config.sizing === Sizing.EXTEND ? this._sortNodes() : datamodel.nodes
+    const nodes = datamodel.nodes// this._sortNodes()
+    const links = datamodel.links
 
+    const hasLinks = links.length > 0
+
+    // If there're no links we manually calculate the visualization layout
+    if (!hasLinks) {
+      const nodeHeight = sankeyHeight / nodes.length - config.nodePadding * (nodes.length - 1)
+      let y = 0
+      for (const node of nodes) {
+        node.width = Math.max(10, config.nodeWidth)
+        node.x0 = 0
+        node.x1 = node.width
+        node.y0 = y
+        node.y1 = y + nodeHeight
+        node.layer = 0
+
+        y = node.y1 + config.nodePadding
+      }
+
+      return
+    }
+
+    // For d3 sankey function each link must be an object with the `value` property
     links.forEach(link => {
-      // For d3 sankey function each link must be an object with the `value` property
       link.value = getValue(link, d => getValue(d, config.linkValue))
     })
-
-    const sankeyHeight = this._getSankeyHeight()
-    if (config.sizing === Sizing.EXTEND) {
-      this._sankey.linkSort((link2, link1) => {
-        if (link2.value > link1.value) return -1
-      })
-      this._sankey.nodeSort(null)
-    } else {
-      this._sankey
-        .nodeSort((node2, node1) => {
-          if (node1.targetLinks.length === 1 && node2.targetLinks.length === 1 && node1.sourceLinks.length === 0 && node2.sourceLinks.length === 0) {
-            const targetLinkSourceId1 = node1.targetLinks[0].source.index
-            const targetLinkSourceId2 = node2.targetLinks[0].source.index
-            if (targetLinkSourceId1 > targetLinkSourceId2) return -1
-          }
-
-          if (node1.targetLinks.length === 0 && node2.targetLinks.length === 0 && node1.sourceLinks.length === 1 && node2.sourceLinks.length === 1) {
-            const sourceLinkTargetId1 = node1.sourceLinks[0].target.index
-            const sourceLinkTargetId2 = node2.sourceLinks[0].target.index
-            if (sourceLinkTargetId1 > sourceLinkTargetId2) return -1
-          }
-        })
-        .linkSort((link2, link1) => {
-          if (link2.index < link1.index) return -1
-        })
-    }
 
     this._sankey
       .nodeWidth(config.nodeWidth)
@@ -161,53 +176,33 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
       .nodeId(d => d.id)
       .iterations(32)
       .nodeAlign(config.nodeAlign)
+      .nodeSort(config.nodeSort)
+      .linkSort(config.linkSort)
 
-    if (links.length > 0 && nodes.length > 1) this._sankey({ nodes, links })
-    if (links.length === 0 && nodes.length === 1) {
-      const node = nodes[0]
-      node.width = Math.max(10, config.nodeWidth)
-      node.x0 = 0
-      node.x1 = 0
-      node.y0 = 0
-      node.y1 = sankeyHeight
+    this._sankey({ nodes, links })
+
+    // Setting minimum node height
+    //   Default: 1px
+    //   Extended size nodes that have no links: config.nodeMinHeight
+    for (const node of nodes) {
+      const singleExtendedSize = this.sizing === Sizing.EXTEND && !node.sourceLinks?.length && !node.targetLinks?.length
+      const h = Math.max(singleExtendedSize ? config.nodeMinHeight : 1, node.y1 - node.y0)
+      const y = (node.y0 + node.y1) / 2
+      node.y0 = y - h / 2
+      node.y1 = y + h / 2
     }
 
-    // Fix node dimmensions if they are too small.
-    nodes.forEach(node => {
-      const dy = node.y1 - node.y0
-      if (dy < 1) {
-        node.y0 = node.y0 - (0.5 - dy * 0.5)
-        node.y1 = node.y0 + 1
-      }
-    })
+    if (this.sizing === Sizing.EXTEND) {
+      const height = max(nodes, d => d.y1)
+      this._extendedHeight = height + bleed.top + bleed.bottom
+    }
   }
 
   private _getSankeyHeight (): number {
-    const { config, datamodel: { links } } = this
+    const { config } = this
 
-    return clamp(config.height * links.length * config.heightNormalizationCoeff, config.height / 2, config.height)
-  }
-
-  private _sortNodes (): [] {
-    const { datamodel } = this
-    const groupByColumn = groupBy(datamodel.nodes, 'layer')
-    Object.keys(groupByColumn).forEach(key => {
-      const column = groupByColumn[key]
-      let sortedColumn
-      if (Number(key) === 0) {
-        sortedColumn = sortBy(column, [d => -d.value])
-      } else {
-        sortedColumn = sortBy(column, [
-          d => {
-            return d.targetLinks[0].source._order
-          },
-          d => -d.value,
-        ])
-      }
-      sortedColumn.forEach((c, i) => { c._order = i })
-      groupByColumn[key] = sortedColumn
-    })
-    return flatten(Object.values(groupByColumn))
+    const height = this.sizing === Sizing.FIT ? config.height : this._extendedHeight
+    return height // clamp(height * links.length * config.heightNormalizationCoeff, height / 2, height)
   }
 
   getWidth (): number {
@@ -218,13 +213,75 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
     return this._extendedHeight ?? this.config.height
   }
 
-  _onNodeMouseOver (d, i, els): void {
-    onNodeMouseOver(select(els[i]), this.config)
-    this._onEvent(d, i, els)
+  getColumnCenters (): number[] {
+    const { datamodel } = this
+
+    const centers = datamodel.nodes.reduce((pos, node) => {
+      const idx = node.layer
+      if (!isFinite(pos[idx])) {
+        pos[idx] = (node.x0 + node.x1) / 2
+      }
+      return pos
+    }, [])
+
+    return centers
   }
 
-  _onNodeMouseOut (d, i, els): void {
-    onNodeMouseOut(select(els[i]), this.config)
-    this._onEvent(d, i, els)
+  highlightSubtree (node: SankeyNodeDatumInterface): void {
+    const { config, datamodel } = this
+
+    clearTimeout(this._highlightTimeoutId)
+    this._highlightTimeoutId = setTimeout(() => {
+      for (const n of datamodel.nodes) n._state.greyout = true
+      for (const l of datamodel.links) l._state.greyout = true
+
+      this.recursiveSetSubtreeState(node, 'sourceLinks', 'target', 'greyout', false)
+      this.recursiveSetSubtreeState(node, 'targetLinks', 'source', 'greyout', false)
+      this._render(config.highlightDuration)
+    }, config.highlightDelay)
+  }
+
+  recursiveSetSubtreeState (node: SankeyNodeDatumInterface, linksKey: 'sourceLinks' | 'targetLinks', nodeKey: 'source' | 'target', key: string, value: any): void {
+    node._state[key] = value
+
+    for (const l of node[linksKey]) {
+      l._state[key] = value
+      this.recursiveSetSubtreeState(l[nodeKey] as SankeyNodeDatumInterface, linksKey, nodeKey, key, value)
+    }
+  }
+
+  disableHighlight (): void {
+    const { config, datamodel } = this
+
+    clearTimeout(this._highlightTimeoutId)
+    for (const n of datamodel.nodes) n._state.greyout = false
+    for (const l of datamodel.links) l._state.greyout = false
+    this._render(config.highlightDuration)
+  }
+
+  private _onNodeMouseOver (d: SankeyNodeDatumInterface, i, els): void {
+    const { config } = this
+
+    if (config.highlightSubtreeOnHover) this.highlightSubtree(d)
+    onNodeMouseOver(d, select(els[i]), this.config)
+  }
+
+  private _onNodeMouseOut (d: SankeyNodeDatumInterface, i, els): void {
+    const { config } = this
+
+    if (config.highlightSubtreeOnHover) this.disableHighlight()
+    onNodeMouseOut(d, select(els[i]), this.config)
+  }
+
+  private _onLinkMouseOver (d: SankeyLinkDatumInterface, i, els): void {
+    const { config } = this
+
+    if (config.highlightSubtreeOnHover) this.highlightSubtree(d.target as SankeyNodeDatumInterface)
+  }
+
+  private _onLinkMouseOut (d: SankeyLinkDatumInterface, i, els): void {
+    const { config } = this
+
+    if (config.highlightSubtreeOnHover) this.disableHighlight()
   }
 }

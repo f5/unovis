@@ -15,6 +15,8 @@ export interface FlowLegendConfigInterface {
   labelFontSize?: number;
   /** Arrow symbol */
   arrowSymbol?: string;
+  /** Callback function for a legend item click */
+  onLegendItemClick?: ((label?: string, i?: number) => any);
 }
 
 export class FlowLegendConfig extends Config implements FlowLegendConfigInterface {
@@ -24,4 +26,5 @@ export class FlowLegendConfig extends Config implements FlowLegendConfigInterfac
   arrowSymbol = '▶'
   lineColor = undefined
   labelColor = undefined
+  onLegendItemClick = undefined;
 }

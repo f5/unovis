@@ -9,9 +9,10 @@
 }
 
 .chart {
-  width: 100%;
-  height: 100px;
   position: relative;
+  width: 100%;
+
+  --vis-sankey-icon-size: 16px;
 }
 
 .vis-controls {
@@ -19,4 +20,25 @@
   right: 0px;
   bottom: 0px;
   --vis-controls-button-icon-font: voltuiicons;
+}
+
+::ng-deep {
+  .item {
+    font-family: Open Sans;
+    font-size: 10pt;
+    color: #7a858e;
+    margin-bottom: 2px;
+    margin-top: 2px;
+
+    td {
+      padding: 2px 4px;
+
+      &.label {
+        font-weight: 600;
+      }
+
+      &.content {
+      }
+    }
+  }
 }

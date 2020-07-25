@@ -28,7 +28,8 @@ export class Line<Datum> extends XYComponentCore<Datum> {
   curve: CurveFactory = Curve[CurveType.MonotoneX]
   events = {
     [Line.selectors.line]: {
-      mouseover: this._raiseSelection,
+      mouseover: this._highlight.bind(this),
+      mouseleave: this._resetHighlight.bind(this),
     },
   }
 
@@ -75,33 +76,52 @@ export class Line<Datum> extends XYComponentCore<Datum> {
       .selectAll(`.${s.line}`)
       .data(lineData)
 
-    const linesEnter = lines.enter().append('path')
+    const linesEnter = lines.enter().append('g')
       .attr('class', s.line)
+
+    linesEnter
+      .append('path')
+      .attr('class', s.linePath)
       .attr('d', this._emptyPath())
       .style('stroke', (d, i) => getColor(d, config.color, i))
       .style('stroke-opacity', 0)
 
-    const linesMerged = smartTransition(linesEnter.merge(lines), duration)
-      .style('stroke', (d, i) => getColor(d, config.color, i))
-      .attr('stroke-width', config.lineWidth)
-      .style('stroke-opacity', (d, i) => (yAccessors[i] && d.defined) ? 1 : 0)
+    linesEnter
+      .append('path')
+      .attr('class', s.lineSelectionHelper)
+      .attr('d', this._emptyPath())
 
-    if (duration) {
-      linesMerged
-        .attrTween('d', (d, i, el) => {
-          const previous = select(el[i]).attr('d')
-          const path = this.lineGen(d.values)
-          const next = path || this._emptyPath()
-          return interpolatePath(previous, next)
-        })
-    } else {
-      linesMerged.attr('d', d => this.lineGen(d.values) || this._emptyPath())
-    }
+    const linesMerged = linesEnter.merge(lines)
+    linesMerged.style('cursor', (d, i) => getValue(d, config.cursor, i))
+    linesMerged.each((d, i, elements) => {
+      const group = select(elements[i])
+      const linePath = group.select(`.${s.linePath}`)
+      const lineSelectionHelper = group.select(`.${s.lineSelectionHelper}`)
+
+      const isLineVisible = yAccessors[i] && d.defined
+      const transition = smartTransition(linePath, duration)
+        .style('stroke', getColor(d, config.color, i))
+        .attr('stroke-width', config.lineWidth)
+        .style('stroke-opacity', isLineVisible ? 1 : 0)
+
+      const svgPathD = this.lineGen(d.values) || this._emptyPath()
+      if (duration) {
+        const previous = linePath.attr('d')
+        const next = svgPathD
+        transition.attrTween('d', () => interpolatePath(previous, next))
+      } else {
+        transition.attr('d', svgPathD)
+      }
+
+      lineSelectionHelper
+        .attr('d', svgPathD)
+        .attr('visibility', isLineVisible ? null : 'hidden')
+    })
 
     lines.exit().remove()
   }
 
-  _emptyPath (): string {
+  private _emptyPath (): string {
     const { config: { scales: { x, y } } } = this
 
     const xRange = x.range()
@@ -109,7 +129,28 @@ export class Line<Datum> extends XYComponentCore<Datum> {
     return `M${xRange[0]},${yRange[0]} L${xRange[1]},${yRange[0]}`
   }
 
-  _raiseSelection (d, i, els): void {
+  private _raiseSelection (d, i, els): void {
     select(els[i]).raise()
+  }
+
+  private _highlight (datum, i, els): void {
+    const { config } = this
+    this._raiseSelection(datum, i, els)
+
+    if (config.highlightOnHover) {
+      this.g
+        .selectAll(`.${s.line}`)
+        .classed(s.dim, d => d !== datum)
+    }
+  }
+
+  private _resetHighlight (d, i, els): void {
+    const { config } = this
+
+    if (config.highlightOnHover) {
+      this.g
+        .selectAll(`.${s.line}`)
+        .classed(s.dim, false)
+    }
   }
 }

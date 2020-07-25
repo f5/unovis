@@ -1,6 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 // Utils
-import { trimTextMiddle } from 'utils/text'
+import { wrapTextElement, trimTextMiddle } from 'utils/text'
 import { smartTransition } from 'utils/d3'
 import { getValue } from 'utils/data'
 
@@ -14,7 +14,7 @@ import { SankeyConfig } from '../config'
 // Styles
 import * as s from '../style'
 
-const NODE_LABEL_SPACING = 10
+export const NODE_LABEL_SPACING = 10
 const ARROW_HEIGHT = 8
 const ARROW_WIDTH = 5
 const LABEL_BLOCK_PADDING = 3
@@ -33,7 +33,7 @@ function getLabelBackground (width: number, height: number): string {
     L 0 0 `
 }
 
-export const labelBackgroundWidth = (nodeWidth: number, nodeHorizontalSpacing: number): number => nodeHorizontalSpacing - nodeWidth - ARROW_WIDTH - NODE_LABEL_SPACING * 2
+export const labelBackgroundWidth = (nodeWidth: number, nodeHorizontalSpacing: number): number => nodeHorizontalSpacing - ARROW_WIDTH - NODE_LABEL_SPACING * 2
 export const labelBackgroundHeight = (labelFontSize: number): number => labelFontSize + 2 * LABEL_BLOCK_PADDING
 
 export const requiredLabelSpace = (nodeWidth: number, nodeHorizontalSpacing: number, labelFontSize: number): { x: number; y: number } => {
@@ -54,7 +54,10 @@ export function shouldLabelBeVisible<N extends SankeyNodeDatumInterface> (d: N, 
 }
 
 export function getWrapOption (config, trimText = true): WrapTextOptions {
-  const { labelWidth, labelTextSeparator, labelForceWordBreak, labelLength, labelTrim, labelPosition, nodeHorizontalSpacing, nodeWidth } = config
+  const {
+    labelWidth, labelTextSeparator, labelForceWordBreak, labelLength, labelTrim,
+    labelPosition, nodeHorizontalSpacing, nodeWidth,
+  } = config
   return {
     width: labelPosition === LabelPosition.AUTO ? labelWidth : labelBackgroundWidth(nodeWidth, nodeHorizontalSpacing) - LABEL_BLOCK_PADDING * 2,
     separator: labelTextSeparator,
@@ -63,7 +66,7 @@ export function getWrapOption (config, trimText = true): WrapTextOptions {
     length: trimText && labelLength,
     trimType: trimText && labelTrim,
     dy: labelPosition === LabelPosition.AUTO ? 0.32 : 1,
-    trimOnly: labelPosition === LabelPosition.RIGHT,
+    trimOnly: true, // labelPosition === LabelPosition.RIGHT,
   }
 }
 
@@ -72,16 +75,21 @@ export function renderLabel<N extends SankeyNodeDatumInterface, L extends Sankey
   group.classed(s.visibleLabel, isVisible)
   if (!isVisible) return
 
-  const labelText = group.select(`.${s.nodeLabel}`)
+  const labelText = group.select(`.${s.label}`)
   labelText
-    .text(trimTextMiddle(getValue(d, config.nodeLabel), 25))
     .attr('font-size', config.labelFontSize)
+    .style('fill', getValue(d, config.labelColor))
 
   switch (config.labelPosition) {
   case LabelPosition.AUTO: {
     labelText
+      .attr('dy', '0.32em')
       .attr('x', d.x0 < config.width / 2 ? -NODE_LABEL_SPACING : config.nodeWidth + NODE_LABEL_SPACING)
       .attr('text-anchor', d.x0 < config.width / 2 ? 'end' : 'start')
+
+    labelText
+      .text(config.label)
+      .call(wrapTextElement, getWrapOption(config))
 
     smartTransition(group, duration)
       .attr('transform', `translate(0, ${(d.y1 - d.y0) / 2})`)
@@ -93,14 +101,15 @@ export function renderLabel<N extends SankeyNodeDatumInterface, L extends Sankey
     const labelBlockHeight = labelBackgroundHeight(config.labelFontSize) + LABEL_BLOCK_PADDING * 2
 
     labelText
+      .text(trimTextMiddle(getValue(d, config.label), 25))
       .attr('dy', '1em')
       .attr('y', LABEL_BLOCK_PADDING)
       .attr('x', ARROW_WIDTH + LABEL_BLOCK_PADDING)
 
-    const subLabelText = group.select(`.${s.nodeSubLabel}`)
-    subLabelText
+    const sublabelText = group.select(`.${s.sublabel}`)
+    sublabelText
       .text(d => {
-        let text = getValue(d, config.nodeSubLabel)
+        let text = getValue(d, config.subLabel)
         if (typeof text === 'number') text = text.toFixed(2)
         return text
       })
@@ -109,6 +118,7 @@ export function renderLabel<N extends SankeyNodeDatumInterface, L extends Sankey
       .attr('x', LabelBlockWidth - LABEL_BLOCK_PADDING * 2)
       .attr('text-anchor', 'end')
       .attr('font-size', config.labelFontSize * 0.8)
+      .style('fill', getValue(d, config.subLabelColor))
 
     const labelBackground = group.select(`.${s.labelBackground}`)
     labelBackground

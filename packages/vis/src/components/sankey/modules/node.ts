@@ -3,12 +3,14 @@ import { select } from 'd3-selection'
 
 // Utils
 import { getColor } from 'utils/color'
+import { getValue } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 
 // Types
 import { Spacing } from 'types/misc'
 import { SankeyNodeDatumInterface, SankeyLinkDatumInterface } from 'types/sankey'
 import { ExitTransitionType, EnterTransitionType } from 'types/animation'
+import { Position } from 'types/position'
 
 // Config
 import { SankeyConfig } from '../config'
@@ -32,8 +34,8 @@ export function createNodes<N extends SankeyNodeDatumInterface, L extends Sankey
   // Labels
   const labelGroup = sel.append('g').attr('class', s.labelGroup)
   labelGroup.append('path').attr('class', s.labelBackground)
-  labelGroup.append('text').attr('class', s.nodeLabel)
-  labelGroup.append('text').attr('class', s.nodeSubLabel)
+  labelGroup.append('text').attr('class', s.label)
+  labelGroup.append('text').attr('class', s.sublabel)
 
   // Node icon
   sel.append('text').attr('class', s.nodeIcon)
@@ -50,13 +52,16 @@ export function createNodes<N extends SankeyNodeDatumInterface, L extends Sankey
 
 export function updateNodes<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> (sel, config: SankeyConfig<N, L>, bleed: Spacing, duration: number): void {
   smartTransition(sel, duration)
-    .attr('transform', d => `translate(${sel.size() === 1 ? config.width * 0.5 - bleed.left : d.x0},${d.y0})`)
-    .style('opacity', 1)
+    .attr('transform', d => `translate(${
+      (sel.size() === 1 && config.singleNodePosition === Position.CENTER) ? config.width * 0.5 - bleed.left : d.x0
+    },${d.y0})`)
+    .style('opacity', (d: N) => d._state.greyout ? 0.2 : 1)
 
   // Node
   smartTransition(sel.select(`.${s.node}`), duration)
     .attr('width', config.nodeWidth)
     .attr('height', d => d.y1 - d.y0)
+    .style('cursor', d => getValue(d, config.nodeCursor))
 
   // Label
   const labelGroupSelection = sel.select(`.${s.labelGroup}`)
@@ -69,8 +74,6 @@ export function updateNodes<N extends SankeyNodeDatumInterface, L extends Sankey
   if (config.nodeIcon) {
     nodeIcon
       .attr('visibility', null)
-      .attr('x', config.nodeWidth / 2)
-      .attr('y', d => (d.y1 - d.y0) / 2)
       .attr('text-anchor', 'middle')
       .attr('alignment-baseline', 'middle')
       .style('stroke', node => getColor(node, config.iconColor))
@@ -80,6 +83,10 @@ export function updateNodes<N extends SankeyNodeDatumInterface, L extends Sankey
         return nodeHeight < s.SANKEY_ICON_SIZE ? `${nodeHeight}px` : null
       })
       .html(config.nodeIcon)
+
+    smartTransition(nodeIcon, duration)
+      .attr('x', config.nodeWidth / 2)
+      .attr('y', d => (d.y1 - d.y0) / 2)
   } else {
     nodeIcon
       .attr('visibility', 'hidden')
@@ -101,18 +108,18 @@ export function removeNodes (selection, config, duration): void {
     .remove()
 }
 
-export function onNodeMouseOver<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> (sel, config: SankeyConfig<N, L>): void {
+export function onNodeMouseOver<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> (d: N, sel, config: SankeyConfig<N, L>): void {
   // sel.classed(s.visibleLabel, true)
 
-  // sel.select(`.${s.nodeLabel}`)
-  //   .text(config.nodeLabel)
+  // sel.select(`.${s.label}`)
+  //   .text(config.label)
   //   .call(wrapTextElement, getWrapOption(config, false))
 }
 
-export function onNodeMouseOut<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> (sel, config: SankeyConfig<N, L>): void {
+export function onNodeMouseOut<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> (d: N, sel, config: SankeyConfig<N, L>): void {
   // sel.classed(s.visibleLabel, d => shouldLabelBeVisible(d, config))
 
-  // sel.select(`.${s.nodeLabel}`)
-  //   .text(config.nodeLabel)
+  // sel.select(`.${s.label}`)
+  //   .text(config.label)
   //   .call(wrapTextElement, getWrapOption(config))
 }
