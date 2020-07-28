@@ -21,7 +21,7 @@ function getSankeyConfig (): SankeyConfigInterface<any, any> {
     label: d => d.label,
     linkValue: d => d.flow,
     labelMaxWidth: 110,
-    subLabel: d => Math.random() > 0.8 ? 'sablabel' : '',
+    subLabel: d => d.sublabel,
     labelVisibility: (d, bbox) => { return (d.y1 - d.y0) > 0.8 * bbox.height }
   }
 }
