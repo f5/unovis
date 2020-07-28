@@ -11,7 +11,8 @@ import { GraphDataModel } from 'data-models/graph'
 // Types
 import { Spacing } from 'types/misc'
 import { ExtendedSizeComponent, Sizing } from 'types/component'
-import { SankeyNodeDatumInterface, SankeyLinkDatumInterface, LabelPosition } from 'types/sankey'
+import { SankeyNodeDatumInterface, SankeyLinkDatumInterface } from 'types/sankey'
+import { Position } from 'types/position'
 
 // Utils
 import { getValue, isNumber, groupBy } from 'utils/data'
@@ -25,7 +26,7 @@ import * as s from './style'
 // Modules
 import { removeLinks, createLinks, updateLinks } from './modules/link'
 import { removeNodes, createNodes, updateNodes, onNodeMouseOver, onNodeMouseOut } from './modules/node'
-import { requiredLabelSpace, NODE_LABEL_SPACING } from './modules/label'
+import { requiredLabelSpace } from './modules/label'
 
 export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> extends ComponentCore<{nodes: N[]; links?: L[]}> implements ExtendedSizeComponent {
   static selectors = s
@@ -39,6 +40,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
   private _nodesGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
   private _sankey = sankey()
   private _highlightTimeoutId = null
+  private _highlightActive = false
   events = {
     [Sankey.selectors.gNode]: {
       mouseover: this._onNodeMouseOver.bind(this),
@@ -58,17 +60,10 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
   }
 
   get bleed (): Spacing {
-    const { config: { labelWidth, labelFontSize, labelPosition, nodeHorizontalSpacing, nodeWidth } } = this
+    const { config: { labelMaxWidth, labelFontSize, labelPosition, labelBackground } } = this
 
-    switch (labelPosition) {
-    case (LabelPosition.AUTO): {
-      return { top: labelFontSize / 2, bottom: labelFontSize / 2, left: labelWidth + 2 * NODE_LABEL_SPACING, right: labelWidth + 2 * NODE_LABEL_SPACING }
-    }
-    case (LabelPosition.RIGHT): {
-      const requiredSpace = requiredLabelSpace(nodeWidth, nodeHorizontalSpacing, labelFontSize)
-      return { top: requiredSpace.y / 2, bottom: requiredSpace.y / 2, left: 0, right: requiredSpace.x }
-    }
-    }
+    const labelSize = requiredLabelSpace(labelMaxWidth, labelFontSize, labelBackground)
+    return { top: labelSize.height / 2, bottom: labelSize.height / 2, left: labelPosition === Position.AUTO ? labelSize.width : 0, right: labelSize.width }
   }
 
   setData (data: GraphDataModel<N, L>): void {
@@ -233,6 +228,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
       this.recursiveSetSubtreeState(node, 'sourceLinks', 'target', 'greyout', false)
       this.recursiveSetSubtreeState(node, 'targetLinks', 'source', 'greyout', false)
       this._render(config.highlightDuration)
+      this._highlightActive = true
     }, config.highlightDelay)
   }
 
@@ -262,9 +258,10 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
   }
 
   private _onNodeMouseOut (d: SankeyNodeDatumInterface, i, els): void {
-    const { config } = this
-
-    if (config.highlightSubtreeOnHover) this.disableHighlight()
+    if (this._highlightActive) {
+      this._highlightActive = false
+      this.disableHighlight()
+    }
     onNodeMouseOut(d, select(els[i]), this.config)
   }
 
@@ -275,8 +272,9 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
   }
 
   private _onLinkMouseOut (d: SankeyLinkDatumInterface, i, els): void {
-    const { config } = this
-
-    if (config.highlightSubtreeOnHover) this.disableHighlight()
+    if (this._highlightActive) {
+      this._highlightActive = false
+      this.disableHighlight()
+    }
   }
 }

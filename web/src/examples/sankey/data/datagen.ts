@@ -43,7 +43,7 @@ export const recordsToNodes = (data) => {
           links: [],
           type,
           label: nodeName,
-
+          sublabel: Math.random() > 0.8 ? 'sublabel' : '',
         }
       }
     })

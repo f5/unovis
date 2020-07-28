@@ -20,9 +20,9 @@ export interface SankeyLinkDatumInterface extends LinkDatumCore {
   value?: number;
 }
 
-export enum LabelPosition {
-  AUTO = 'auto',
-  RIGHT = 'right'
+export enum SubLabelPlacement {
+  INLINE = 'inline',
+  BELOW = 'below',
 }
 
 export enum NodeAlignType {

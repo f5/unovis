@@ -8,8 +8,33 @@ import { Hierarchy } from 'types/radial-dendrogram'
 import { LayoutType, LinkStyle, LinkArrow, NodeDatumCore, LinkDatumCore, SideLabel } from 'types/graph'
 import { SHAPE } from 'types/shape'
 import { Sizing } from 'types/component'
-import { LabelPosition, NodeAlignType } from 'types/sankey'
+import { NodeAlignType, SubLabelPlacement } from 'types/sankey'
 import { EnterTransitionType, ExitTransitionType } from 'types/animation'
 import { VisControlItemInterface, VisControlsOrientation } from 'types/controls'
+import { TrimMode, VerticalAlign } from 'types/text'
 
-export { CurveType, SymbolType, Scale, Projection, LayoutType, LinkStyle, LinkArrow, NodeDatumCore, LinkDatumCore, SHAPE, SideLabel, Hierarchy, Position, Arrangement, Sizing, LabelPosition, NodeAlignType, EnterTransitionType, ExitTransitionType, VisControlItemInterface, VisControlsOrientation }
+export {
+  CurveType,
+  SymbolType,
+  Scale,
+  Projection,
+  LayoutType,
+  LinkStyle,
+  LinkArrow,
+  NodeDatumCore,
+  LinkDatumCore,
+  SHAPE,
+  SideLabel,
+  Hierarchy,
+  Position,
+  Arrangement,
+  Sizing,
+  NodeAlignType,
+  EnterTransitionType,
+  ExitTransitionType,
+  VisControlItemInterface,
+  VisControlsOrientation,
+  SubLabelPlacement,
+  TrimMode,
+  VerticalAlign,
+}

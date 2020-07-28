@@ -19,7 +19,7 @@ import { clamp } from 'utils/data'
  * @param {Number} [props.r=0] - Corner Radius
  * @return {String} Path string for the `d` attribute
  */
-export function roundedRectPath ({ x, y, w, h, tl = false, tr = false, bl = false, br = false, r = 0 }) {
+export function roundedRectPath ({ x, y, w, h, tl = false, tr = false, bl = false, br = false, r = 0 }): string {
   let path
   path = `M${x + r},${y}h${w - 2 * r}`
 

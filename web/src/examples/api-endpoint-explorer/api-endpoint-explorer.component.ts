@@ -6,8 +6,9 @@ import _times from 'lodash/times'
 
 // Vis
 import {
-  SingleChart, Sankey, SankeyConfigInterface, Sizing, LabelPosition, NodeAlignType, ExitTransitionType,
+  SingleChart, Sankey, SankeyConfigInterface, Sizing, NodeAlignType, ExitTransitionType,
   EnterTransitionType, VisControlItemInterface, VisControlsOrientation, Tooltip, Position,
+  VerticalAlign, SubLabelPlacement,
 } from '@volterra/vis'
 
 import data from './data/apieplist_ves-prod.json'
@@ -38,7 +39,9 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
   fitToWidthScale = 1
 
   config: SankeyConfigInterface<any, any> = {
-    labelPosition: LabelPosition.RIGHT,
+    labelPosition: Position.RIGHT,
+    labelVerticalAlign: VerticalAlign.TOP,
+    labelBackground: true,
     nodeHorizontalSpacing: NODE_HORIZONTAL_SPACE,
     nodeWidth: NODE_WIDTH,
     nodeAlign: NodeAlignType.LEFT,
@@ -47,6 +50,8 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
     labelColor: d => d.dynExamples.length ? '#4c52ca' : null,
     subLabelColor: this.getSubLabelColor,
     subLabel: d => d.isLeafNode ? d.method : `${d.leafs} leaf${d.leafs === 1 ? '' : 's'}`,
+    labelMaxWidth: NODE_HORIZONTAL_SPACE - 40,
+    subLabelPlacement: SubLabelPlacement.INLINE,
     nodeCursor: 'pointer',
     linkCursor: 'pointer',
     nodeIcon: d => (d.sourceLinks[0] || (!d.sourceLinks[0] && d.collapsed)) ? (d.collapsed ? '+' : '') : null,
