@@ -190,21 +190,16 @@ export function wrapSVGText (textElement: Selection<SVGTextElement, any, SVGElem
   })
 }
 
-export function trimSVGText (svgTextSelection: Selection<SVGTextElement, any, SVGElement, any>, maxWidth = 50, trimType = TrimMode.MIDDLE): void {
-  let i = 0
-  let textWidth = svgTextSelection.node().getComputedTextLength()
+export function trimSVGText (svgTextSelection: Selection<SVGTextElement, any, SVGElement, any>, maxWidth = 50, trimType = TrimMode.MIDDLE, fastMode?: boolean, fontSize?: number, widthToHeightRatio?: number): void {
   const text = svgTextSelection.text()
-  let textLength = text.length
+  const textLength = text.length
 
-  while (textWidth > maxWidth && textLength > 0) {
-    textLength -= 1
-    svgTextSelection.text(trimText(text, text.length - i, trimType))
-    i = i + 1
-    textWidth = svgTextSelection.node().getComputedTextLength()
-  }
+  const textWidth = fastMode ? fontSize * textLength * widthToHeightRatio : svgTextSelection.node().getComputedTextLength()
+  const maxCharaters = Math.ceil(textLength * maxWidth / textWidth)
+  svgTextSelection.text(trimText(text, maxCharaters, trimType))
 }
 
-export function estimateTextSize (svgTextSelection: Selection<SVGTextElement, any, SVGElement, any>, fontSize: number, dy = 0.32): { width: number; height: number } {
+export function estimateTextSize (svgTextSelection: Selection<SVGTextElement, any, SVGElement, any>, fontSize: number, dy = 0.32, fastMode?: boolean, widthToHeightRatio?: number): { width: number; height: number } {
   const tspanSelection = svgTextSelection.selectAll('tspan')
 
   const lines = tspanSelection.size() || 1
@@ -212,10 +207,12 @@ export function estimateTextSize (svgTextSelection: Selection<SVGTextElement, an
 
   let width = 0
   if (tspanSelection.empty()) {
-    width = svgTextSelection.node().getComputedTextLength()
+    const textLength = svgTextSelection.text().length
+    width = fastMode ? fontSize * textLength * widthToHeightRatio : svgTextSelection.node().getComputedTextLength()
   } else {
     for (const tspan of tspanSelection.nodes()) {
-      const w = (tspan as SVGTSpanElement).getComputedTextLength()
+      const tspanTextLength = (tspan as SVGTSpanElement).textContent.length
+      const w = fastMode ? fontSize * tspanTextLength * widthToHeightRatio : (tspan as SVGTSpanElement).getComputedTextLength()
       if (w > width) width = w
     }
   }
