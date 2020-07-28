@@ -33,6 +33,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
   datamodel: GraphDataModel<N, L> = new GraphDataModel()
   private _extendedWidth = undefined
   private _extendedHeight = undefined
+  private _extendedHeightIncreased = undefined
   private _extendedSizeMinHeight = 200
   private _linksGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
   private _nodesGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
@@ -138,8 +139,9 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
   }
 
   private _prepareLayout (): void {
-    const { config, bleed, datamodel, _extendedHeight, _extendedWidth } = this
-    const sankeyHeight = this._getSankeyHeight()
+    const { config, bleed, datamodel } = this
+    const sankeyHeight = this.sizing === Sizing.FIT ? config.height : this._extendedHeight
+    const sankeyWidth = this.sizing === Sizing.FIT ? config.width : this._extendedWidth
 
     const nodes = datamodel.nodes// this._sortNodes()
     const links = datamodel.links
@@ -172,7 +174,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
     this._sankey
       .nodeWidth(config.nodeWidth)
       .nodePadding(config.nodePadding)
-      .size([(_extendedWidth ?? config.width) - bleed.left - bleed.right, (_extendedHeight ?? sankeyHeight) - bleed.top - bleed.bottom])
+      .size([sankeyWidth - bleed.left - bleed.right, sankeyHeight - bleed.top - bleed.bottom])
       .nodeId(d => d.id)
       .iterations(32)
       .nodeAlign(config.nodeAlign)
@@ -194,15 +196,8 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
 
     if (this.sizing === Sizing.EXTEND) {
       const height = max(nodes, d => d.y1)
-      this._extendedHeight = height + bleed.top + bleed.bottom
+      this._extendedHeightIncreased = height + bleed.top + bleed.bottom
     }
-  }
-
-  private _getSankeyHeight (): number {
-    const { config } = this
-
-    const height = this.sizing === Sizing.FIT ? config.height : this._extendedHeight
-    return height // clamp(height * links.length * config.heightNormalizationCoeff, height / 2, height)
   }
 
   getWidth (): number {
@@ -210,7 +205,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
   }
 
   getHeight (): number {
-    return this._extendedHeight ?? this.config.height
+    return this._extendedHeightIncreased ?? this._extendedHeight ?? this.config.height
   }
 
   getColumnCenters (): number[] {
