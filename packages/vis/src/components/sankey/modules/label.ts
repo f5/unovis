@@ -84,6 +84,9 @@ export function renderLabel<N extends SankeyNodeDatumInterface, L extends Sankey
   const labelPadding = config.labelBackground ? LABEL_BLOCK_PADDING : 0
   const isSublabelInline = config.subLabelPlacement === SubLabelPlacement.INLINE
   const separator = config.labelForceWordBreak ? '' : config.labelTextSeparator
+  const fastEstimatesMode = true // Fast but inaccurate
+  const fontWidthToHeightRatio = 0.5
+  const dy = 0.32
 
   // Render the main label, wrap / trim it and estimate its size
   labelText
@@ -93,11 +96,11 @@ export function renderLabel<N extends SankeyNodeDatumInterface, L extends Sankey
     .attr('transform', `translate(${labelPadding},${labelPadding})`)
 
   if (isSublabelInline) {
-    trimSVGText(labelText, config.labelMaxWidth * 2 / 3, config.labelTrimMode)
+    trimSVGText(labelText, config.labelMaxWidth * 2 / 3, config.labelTrimMode, fastEstimatesMode, config.labelFontSize, fontWidthToHeightRatio)
   } else {
     wrapSVGText(labelText, { width: config.labelMaxWidth, separator, verticalAlign: VerticalAlign.TOP })
   }
-  const labelSize = estimateTextSize(labelText, config.labelFontSize)
+  const labelSize = estimateTextSize(labelText, config.labelFontSize, dy, fastEstimatesMode, fontWidthToHeightRatio)
 
   // Render the sublabel, wrap / trim it and estimate its size
   const sublabelFontSize = getSublabelFontSize(config.labelFontSize)
@@ -110,12 +113,12 @@ export function renderLabel<N extends SankeyNodeDatumInterface, L extends Sankey
     .attr('transform', `translate(${sublabelTranslateX},${sublabelTranslateY})`)
 
   if (isSublabelInline) {
-    trimSVGText(sublabelText, config.labelMaxWidth * 1 / 3, config.labelTrimMode)
+    trimSVGText(sublabelText, config.labelMaxWidth * 1 / 3, config.labelTrimMode, fastEstimatesMode, config.labelFontSize, fontWidthToHeightRatio)
   } else {
     wrapSVGText(sublabelText, { width: config.labelMaxWidth, separator, verticalAlign: VerticalAlign.TOP })
   }
 
-  const sublabelSize = estimateTextSize(sublabelText, sublabelFontSize)
+  const sublabelSize = estimateTextSize(sublabelText, sublabelFontSize, dy, fastEstimatesMode, fontWidthToHeightRatio)
 
   // Draw the background if needed
   const labelGroupHeight = labelSize.height + (isSublabelInline ? 0 : sublabelSize.height) + 2 * labelPadding
