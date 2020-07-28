@@ -1,6 +1,6 @@
 {
   "name": "@volterra/vis",
-  "version": "0.0.1-beta.54",
+  "version": "0.0.1-beta.55",
   "main": "lib/volterra-vis.js",
   "module": "lib/volterra-vis.esm.js",
   "typings": "lib/index.d.ts",
