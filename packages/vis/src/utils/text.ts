@@ -140,3 +140,85 @@ export function wrapTextElement (element: Selection<SVGTextElement, any, SVGElem
   else if (verticalAlign === VerticalAlign.TOP) addY = -(tspanCount - 1) - (1 - dy)
   element.attr('dy', `${addY}em`)
 }
+
+export function cutString (str: string, renderedWidth: number, maxWidth: number): [string, string] {
+  const coeff = maxWidth / renderedWidth
+  if (coeff >= 1) return [str, '']
+
+  const cutIndex = Math.floor(coeff * str.length) || 1
+  const head = str.substr(0, cutIndex)
+  const tail = str.substr(cutIndex, str.length)
+
+  return [head, tail]
+}
+
+export function wrapSVGText (textElement: Selection<SVGTextElement, any, SVGElement, any>, options: WrapTextOptions): void {
+  const text = textElement.text()
+  if (!text) return
+
+  const {
+    width,
+    separator = [' ', '-', '.', ','],
+  } = options
+
+  // Wrap
+  const separators = (isArray(separator) ? separator : [separator]) as string[]
+  const words = splitString(text, separators)
+  const x = parseFloat(textElement.attr('x')) || 0
+
+  textElement.text('')
+  let tspan = textElement.append('tspan').attr('x', x)
+  let tspanContent = `${words[0]}`
+  tspan.text(tspanContent)
+
+  words.forEach((word, i) => {
+    if (i === 0) return
+
+    const tspanText = `${tspanContent}${word}`
+    tspan.text(tspanText)
+    const tspanWidth = tspan.node().getComputedTextLength()
+    if (tspanWidth > width) {
+      tspan.text(tspanContent)
+
+      tspan = textElement.append('tspan')
+        .attr('x', x)
+        .attr('dy', '1.2em')
+        .text(word)
+
+      tspanContent = word
+    } else tspanContent += word
+  })
+}
+
+export function trimSVGText (svgTextSelection: Selection<SVGTextElement, any, SVGElement, any>, maxWidth = 50, trimType = TrimMode.MIDDLE): void {
+  let i = 0
+  let textWidth = svgTextSelection.node().getComputedTextLength()
+  const text = svgTextSelection.text()
+  let textLength = text.length
+
+  while (textWidth > maxWidth && textLength > 0) {
+    textLength -= 1
+    svgTextSelection.text(trimText(text, text.length - i, trimType))
+    i = i + 1
+    textWidth = svgTextSelection.node().getComputedTextLength()
+  }
+}
+
+export function estimateTextSize (svgTextSelection: Selection<SVGTextElement, any, SVGElement, any>, fontSize: number, dy = 0.32): { width: number; height: number } {
+  const tspanSelection = svgTextSelection.selectAll('tspan')
+
+  const lines = tspanSelection.size() || 1
+  const height = svgTextSelection.text() ? 0.9 * fontSize * lines * (1 + dy) - dy : 0
+
+  let width = 0
+  if (tspanSelection.empty()) {
+    width = svgTextSelection.node().getComputedTextLength()
+  } else {
+    for (const tspan of tspanSelection.nodes()) {
+      const w = (tspan as SVGTSpanElement).getComputedTextLength()
+      if (w > width) width = w
+    }
+  }
+
+  return { width, height }
+}
