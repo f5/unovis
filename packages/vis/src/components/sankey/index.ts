@@ -245,9 +245,13 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
     const { config, datamodel } = this
 
     clearTimeout(this._highlightTimeoutId)
-    for (const n of datamodel.nodes) n._state.greyout = false
-    for (const l of datamodel.links) l._state.greyout = false
-    this._render(config.highlightDuration)
+    if (this._highlightActive) {
+      this._highlightActive = false
+
+      for (const n of datamodel.nodes) n._state.greyout = false
+      for (const l of datamodel.links) l._state.greyout = false
+      this._render(config.highlightDuration)
+    }
   }
 
   private _onNodeMouseOver (d: SankeyNodeDatumInterface, i, els): void {
@@ -258,10 +262,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
   }
 
   private _onNodeMouseOut (d: SankeyNodeDatumInterface, i, els): void {
-    if (this._highlightActive) {
-      this._highlightActive = false
-      this.disableHighlight()
-    }
+    this.disableHighlight()
     onNodeMouseOut(d, select(els[i]), this.config)
   }
 
@@ -272,9 +273,6 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
   }
 
   private _onLinkMouseOut (d: SankeyLinkDatumInterface, i, els): void {
-    if (this._highlightActive) {
-      this._highlightActive = false
-      this.disableHighlight()
-    }
+    this.disableHighlight()
   }
 }
