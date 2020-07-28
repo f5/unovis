@@ -129,7 +129,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
     const groupByColumn = groupBy(nodes, d => d.layer)
     const values = Object.values(groupByColumn).map((d: any[]) => sum(d.map(n => scale(n.value) + nodePadding)))
     const height = max(values)
-    this._extendedHeight = height || this._extendedSizeMinHeight
+    this._extendedHeight = (height || this._extendedSizeMinHeight) + bleed.top + bleed.bottom
     this._extendedWidth = (nodeWidth + nodeHorizontalSpacing) * Object.keys(groupByColumn).length - nodeHorizontalSpacing + bleed.left + bleed.right
   }
 
@@ -142,10 +142,9 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
     const links = datamodel.links
 
     const hasLinks = links.length > 0
-
     // If there're no links we manually calculate the visualization layout
     if (!hasLinks) {
-      const nodeHeight = sankeyHeight / nodes.length - config.nodePadding * (nodes.length - 1)
+      const nodeHeight = (sankeyHeight - bleed.top - bleed.bottom) / nodes.length - config.nodePadding * (nodes.length - 1)
       let y = 0
       for (const node of nodes) {
         node.width = Math.max(10, config.nodeWidth)
@@ -158,6 +157,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
         y = node.y1 + config.nodePadding
       }
 
+      this._extendedHeightIncreased = undefined
       return
     }
 

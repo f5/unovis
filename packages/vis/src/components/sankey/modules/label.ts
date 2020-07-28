@@ -33,7 +33,7 @@ function getLabelBackground (width: number, height: number, arrowWidth = 5, arro
 
 export const requiredLabelSpace = (labelWidth: number, labelFontSize: number, labelBackground: boolean): { width: number; height: number } => {
   return {
-    height: labelFontSize * 4 + (labelBackground ? 2 * LABEL_BLOCK_PADDING : 0), // Assuming max 3 lines per label
+    height: labelFontSize * 2 + (labelBackground ? 2 * LABEL_BLOCK_PADDING : 0), // Assuming 2 lines per label
     width: labelWidth + 2 * NODE_LABEL_SPACING + (labelBackground ? 2 * LABEL_BLOCK_PADDING : 0),
   }
 }
