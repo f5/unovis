@@ -63,11 +63,46 @@ export function updateNodes<N extends SankeyNodeDatumInterface, L extends Sankey
     .attr('height', d => d.y1 - d.y0)
     .style('cursor', d => getValue(d, config.nodeCursor))
 
-  // Label
+  // Label Rendering
   const labelGroupSelection = sel.select(`.${s.labelGroup}`)
-  labelGroupSelection.each((d, i, els) => {
-    renderLabel(select(els[i]), d, config, duration)
+  const labelGroupEls = labelGroupSelection.nodes() || []
+
+  // After rendering Label return a BBox so we can do intersectio detection and hide some of tem
+  const labelGroupBBoxes = labelGroupEls.map(g => {
+    const gSelection = select(g)
+    return renderLabel(gSelection, gSelection.datum(), config, duration)
   })
+
+  if (config.labelVisibility) {
+    for (const b of labelGroupBBoxes) {
+      const datum = b.selection.datum()
+      const box = { x: b.x, y: b.y, width: b.width, height: b.height }
+      b.hidden = !config.labelVisibility(datum, box)
+    }
+  } else {
+    // Detect intersecting labels
+    const maxLayer = Math.max(...labelGroupBBoxes.map(b => b.layer))
+    const numIteration = 3
+    for (let iteration = 0; iteration < numIteration; iteration += 1) {
+      for (let layer = 0; layer <= maxLayer; layer += 1) {
+        const boxes = labelGroupBBoxes.filter(b => (b.layer === layer) && !b.hidden)
+        boxes.sort((a, b) => a.y - b.y)
+
+        for (let i = 1; i < boxes.length; i += 1) {
+          const b0 = boxes[i - 1]
+          const b1 = boxes[i]
+          if (b0.hidden) continue
+
+          b1.hidden = b1.y < (b0.y + b0.height)
+        }
+      }
+    }
+  }
+
+  // Hide intersecting labels
+  for (const b of labelGroupBBoxes) {
+    b.selection.classed(s.hidden, b.hidden)
+  }
 
   // Node Icon
   const nodeIcon = sel.select(`.${s.nodeIcon}`)
@@ -103,23 +138,20 @@ export function removeNodes (selection, config, duration): void {
       } else return null
     })
   }
+
   transitionSelection
     .style('opacity', 0)
     .remove()
 }
 
 export function onNodeMouseOver<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> (d: N, sel, config: SankeyConfig<N, L>): void {
-  // sel.classed(s.visibleLabel, true)
-
-  // sel.select(`.${s.label}`)
-  //   .text(config.label)
-  //   .call(wrapTextElement, getWrapOption(config, false))
+  sel.raise()
+    .select(`.${s.labelGroup}`)
+    .classed(s.forceShow, true)
 }
 
 export function onNodeMouseOut<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> (d: N, sel, config: SankeyConfig<N, L>): void {
-  // sel.classed(s.visibleLabel, d => shouldLabelBeVisible(d, config))
-
-  // sel.select(`.${s.label}`)
-  //   .text(config.label)
-  //   .call(wrapTextElement, getWrapOption(config))
+  sel
+    .select(`.${s.labelGroup}`)
+    .classed(s.forceShow, false)
 }

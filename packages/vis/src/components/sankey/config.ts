@@ -6,8 +6,8 @@ import { ComponentConfigInterface, ComponentConfig } from 'core/component/config
 
 // Types
 import { NumericAccessor, ColorAccessor, StringAccessor } from 'types/misc'
-import { TrimMode } from 'types/text'
-import { SankeyNodeDatumInterface, SankeyLinkDatumInterface, LabelPosition, NodeAlignType } from 'types/sankey'
+import { TrimMode, VerticalAlign } from 'types/text'
+import { SankeyNodeDatumInterface, SankeyLinkDatumInterface, NodeAlignType, SubLabelPlacement } from 'types/sankey'
 import { ExitTransitionType, EnterTransitionType } from 'types/animation'
 import { Position } from 'types/position'
 
@@ -85,14 +85,18 @@ export interface SankeyConfigInterface<N extends SankeyNodeDatumInterface, L ext
   subLabel?: StringAccessor<N>;
   /** Display node labels even when there's not enough vertical space. Default: `false` */
   forceShowLabels?: boolean;
-  /** Label position relative to the Node. Default: `LabelPosition.AUTO` */
-  labelPosition?: LabelPosition;
+  /** Label position relative to the Node. Default: `Position.AUTO` */
+  labelPosition?: Position.AUTO | Position.RIGHT | string;
+  /** Label vertical alignment */
+  labelVerticalAlign?: VerticalAlign | string;
+  /** Label background */
+  labelBackground?: boolean;
   /** Maximum label with in pixels. Default: `70` */
-  labelWidth?: number;
+  labelMaxWidth?: number;
   /** Maximum label length (in characters number) for wrapping. Default: `undefined` */
-  labelLength?: number;
+  // labelLength?: number;
   /** Label trimming mode. Default: `TrimMode.MIDDLE` */
-  labelTrim?: TrimMode;
+  labelTrimMode?: TrimMode;
   /** Label font size in pixel. Default: `12` */
   labelFontSize?: number;
   /** Label text separators for wrapping. Default: `[' ', '-']` */
@@ -101,8 +105,12 @@ export interface SankeyConfigInterface<N extends SankeyNodeDatumInterface, L ext
   labelForceWordBreak?: boolean;
   /** Label color.. Default: `null` */
   labelColor?: ColorAccessor<N>;
+  /** Custom function to set the label visibility. Default: `undefined` */
+  labelVisibility?: ((d: N, bbox: { x: number; y: number; width: number; height: number }) => boolean) | undefined;
   /** Sub-label color. Default: `null` */
   subLabelColor?: ColorAccessor<N>;
+  /** Sub-label position. Default: `SubLabelPlacement.INLINE` */
+  subLabelPlacement?: SubLabelPlacement | string;
 
 }
 
@@ -137,16 +145,20 @@ export class SankeyConfig<N extends SankeyNodeDatumInterface, L extends SankeyLi
 
   // Labels
   label = (d: N): string => d['label']
-  subLabel = undefined
-  labelPosition = LabelPosition.AUTO
+  labelPosition = Position.AUTO
+  labelVerticalAlign = VerticalAlign.MIDDLE
+  labelBackground = false
   labelTextSeparator = [' ', '-']
-  labelTrim = TrimMode.MIDDLE
+  labelTrimMode = TrimMode.MIDDLE
   labelForceWordBreak = true
   labelFontSize = 12
   labelColor = null
-  labelWidth = 70
+  labelMaxWidth = 70
   labelLength = undefined
+  labelVisibility = undefined
+  subLabel = undefined
   subLabelColor = null
+  subLabelPlacement = SubLabelPlacement.BELOW
   forceShowLabels = false
 
   // Links

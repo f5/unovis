@@ -64,11 +64,11 @@ export const linkSelectionHelper = css`
 
 export const labelGroup = css`
   label: label-group;
-  visibility: hidden;
 `
 
 export const label = css`
   label: label;
+  dominant-baseline: hanging;
 
   fill: var(--vis-sankey-node-label-color);
   text-decoration: var(--vis-sankey-node-label-text-decoration);
@@ -84,6 +84,7 @@ export const label = css`
 
 export const sublabel = css`
   label: sub-label;
+  dominant-baseline: hanging;
 
   fill: var(--vis-sankey-node-label-color);
   pointer-events: none;
@@ -100,28 +101,21 @@ export const labelBackground = css`
   label: label-background;
   stroke: var(--vis-sankey-node-label-background-stroke-color);
   fill: var(--vis-sankey-node-label-background-fill-color);
-  opacity: 0.8;
+  opacity: 0.9;
 `
 
-export const visibleLabel = css`
-  label: visible-label;
+export const hidden = css`
+  label: hidden;
+  visibility: hidden;
+`
+
+export const forceShow = css`
+  label: forceShow;
   visibility: visible;
 `
 
 export const gNode = css`
   label: g-node;
-
-  &${`.${visibleLabel}`} {
-    ${`.${label}`} {
-      visibility: visible;
-    }
-    ${`.${sublabel}`} {
-      visibility: visible;
-    }
-    ${`.${labelBackground}`} {
-      visibility: visible;
-    }
-  }
 `
 
 export const node = css`
