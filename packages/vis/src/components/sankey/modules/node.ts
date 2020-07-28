@@ -115,7 +115,7 @@ export function updateNodes<N extends SankeyNodeDatumInterface, L extends Sankey
       .style('fill', node => getColor(node, config.iconColor))
       .style('font-size', node => {
         const nodeHeight = node.y1 - node.y0
-        return nodeHeight < s.SANKEY_ICON_SIZE ? `${nodeHeight}px` : null
+        return nodeHeight < s.SANKEY_ICON_SIZE ? `${nodeHeight * 0.65}px` : null
       })
       .html(config.nodeIcon)
 
