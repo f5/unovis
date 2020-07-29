@@ -14,19 +14,17 @@
   },
   "dependencies": {
     "@angular/animations": "^8.2.14",
-    "@angular/cdk": "~8.2.3",
     "@angular/common": "^8.2.14",
     "@angular/compiler": "^8.2.14",
     "@angular/core": "^8.2.14",
     "@angular/forms": "^8.2.14",
-    "@angular/material": "8.2.3",
     "@angular/platform-browser": "^8.2.14",
     "@angular/platform-browser-dynamic": "^8.2.14",
     "@angular/router": "^8.2.14",
     "lodash": "^4.17.19",
-    "rxjs": "^6.5.3",
-    "tslib": "^1.10.0",
-    "zone.js": "^0.10.2"
+    "rxjs": "^6.6.0",
+    "tslib": "^2.0.0",
+    "zone.js": "^0.10.3"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^0.803.19",
