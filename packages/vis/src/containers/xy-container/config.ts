@@ -14,22 +14,27 @@ import { Crosshair } from 'components/crosshair'
 import { Dimension } from 'types/misc'
 
 export interface XYContainerConfigInterface<Datum> extends ContainerConfigInterface {
-  /** Visualization Component */
+  /** Visualization Component. Default: `[]` */
   components?: XYComponentCore<Datum>[];
-  /** Dimension configuration */
+  /** Dimension configuration. Default: `{x: {}, y: {}}` */
   dimensions?: {
     [key: string]: Dimension;
   };
-  /** Axis configuration */
+  /** Axis configuration. Default: `{}` */
   axes?: {
     [key: string]: Axis<Datum>;
   };
-  /** Enables automatic calculation of margins based on axes size */
+  /** Enables automatic calculation of chart margins based on the size of the axes. Default: `true` */
   autoMargin?: boolean;
-  /** Tooltip component */
+  /** Tooltip component. Default: `undefined` */
   tooltip?: Tooltip<XYComponentCore<Datum>, Datum> | undefined;
-  /** Crosshair component */
+  /** Crosshair component. Default: `undefined` */
   crosshair?: Crosshair<Datum> | undefined;
+  /** Prevents the chart domain from being empty (when domain's min and max values are equal).
+   *  That usually happens when all the data values are the same.
+   *  Setting to `true` will automatically extend the domain by `+1` when needed. Defaul: `true`
+  */
+  preventEmptyDomain?: boolean;
 }
 
 export class XYContainerConfig<Datum> extends ContainerConfig implements XYContainerConfigInterface<Datum> {
@@ -42,4 +47,6 @@ export class XYContainerConfig<Datum> extends ContainerConfig implements XYConta
     x: {} as Dimension,
     y: {} as Dimension,
   }
+
+  preventEmptyDomain = true
 }

@@ -260,12 +260,14 @@ export class XYContainer<Datum> extends ContainerCore {
   }
 
   _updateScalesDomain<T extends XYComponentCore<Datum>> (...components: T[]): void {
-    const { config: { dimensions } } = this
+    const { config: { dimensions, preventEmptyDomain } } = this
     if (!components) return
 
     Object.keys(dimensions).forEach(key => {
       const dim: Dimension = dimensions[key]
-      const [min, max] = extent(mergeArrays(components.map(c => c.getDataExtent(key))) as number[]) // Components with undefined dimenstion accessors will return [undefined, undefined] but d3.extent will take care of that
+      let [min, max] = extent(mergeArrays(components.map(c => c.getDataExtent(key))) as number[]) // Components with undefined dimenstion accessors will return [undefined, undefined] but d3.extent will take care of that
+      if (preventEmptyDomain && (min === max) && isFinite(min)) max = min + 1
+
       const domainMin = dim.domain?.[0] ?? min ?? 0
       const domainMax = dim.domain?.[1] ?? max ?? 1
       const domain = [
