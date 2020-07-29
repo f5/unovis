@@ -10,7 +10,6 @@ export function getTangramLayer (config): any {
   }
 
   const tangramScene = getRendererSettings(config)
-  // eslint-disable-next-line @typescript-eslint/camelcase
   tangramScene.global.sdk_api_key = accessToken
 
   const tangramLayer = (tamgramRenderer || Tangram).leafletLayer({

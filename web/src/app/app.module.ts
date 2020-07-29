@@ -3,8 +3,6 @@
 import { BrowserModule } from '@angular/platform-browser'
 import { NgModule } from '@angular/core'
 import { RouterModule, Routes } from '@angular/router'
-import { MatButtonModule } from '@angular/material/button'
-import { NoopAnimationsModule } from '@angular/platform-browser/animations'
 
 import { ScatterComponent } from 'examples/scatter/scatter.component'
 import { LineComponent } from 'examples/line/line.component'
@@ -98,8 +96,6 @@ appRoutes.push({ path: '', redirectTo: `/${appRoutes[0].path}`, pathMatch: 'full
       appRoutes
     ),
     BrowserModule,
-    NoopAnimationsModule,
-    MatButtonModule,
   ],
 
   providers: [],

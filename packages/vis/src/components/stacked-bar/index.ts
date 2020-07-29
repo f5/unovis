@@ -120,7 +120,7 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
     if (isEmpty(data)) return 0
     if (config.barWidth) return min([config.barWidth, config.barMaxWidth])
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const isOrdinal = config.scales.x.bandwidth
     const xDomain = (config.scales.x.domain ? config.scales.x.domain() : []) as number[]

@@ -58,7 +58,7 @@ export class Scatter<Datum> extends XYComponentCore<Datum> {
     pointGroupsMerged.call(updateNodes, duration)
   }
 
-  _prepareData (): object[] {
+  _prepareData (): Record<string, unknown>[] {
     const { config: { size, x, y, scales, shape, icon, color, cursor }, datamodel: { data } } = this
     const maxR = this._getMaxPointRadius()
     const xRange = scales.x.range()

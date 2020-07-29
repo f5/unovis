@@ -15,6 +15,17 @@
   width: 100%;
   text-align: center;
   backdrop-filter: blur(5px);
+
+  a {
+    margin-right: 10px;
+    font-size: 10pt;
+    cursor: pointer;
+    color: #9F9F9F;
+
+    &.active {
+      color: #5243AA;
+    }
+  }
 }
 
 .chart {

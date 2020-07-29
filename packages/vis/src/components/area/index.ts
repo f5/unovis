@@ -48,7 +48,7 @@ export class Area<Datum> extends XYComponentCore<Datum> {
       .x(d => d.x)
       .y0(d => d.y0)
       .y1(d => d.y1)
-      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       .curve(curveGen)
 

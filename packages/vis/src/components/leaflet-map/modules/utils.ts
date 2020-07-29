@@ -98,7 +98,7 @@ export function calulateClusterIndex<Datum> (data: Datum[], config: LeafletMapCo
   return new Supercluster({
     radius: 45,
     maxZoom: maxClusterZoomLevel,
-    map: (d): {} => {
+    map: (d): Record<string, unknown> => {
       const pStatus = getValue(d, pointStatus)
       const shape = getValue(d, pointShape)
       const result = { shape }

@@ -40,7 +40,7 @@ export function updateNodes<T> (selection, config: LeafletMapConfigInterface<T>,
       return `translate(${x},${y})`
     })
 
-  selection.each((d: Point, i: number, elements: Selection<SVGGElement, object[], SVGGElement, object[]>) => {
+  selection.each((d: Point, i: number, elements: Selection<SVGGElement, Record<string, unknown>[], SVGGElement, Record<string, unknown>[]>) => {
     const group = select(elements[i])
     const node: Selection<SVGPathElement, any, SVGGElement, any> = group.select(`.${s.pointPath}`)
     const innerLabel = group.select(`.${s.innerLabel}`)

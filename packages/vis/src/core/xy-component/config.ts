@@ -14,7 +14,7 @@ export interface XYComponentConfigInterface<Datum> extends ComponentConfigInterf
   /** Id accessor for better visual data updates */
   id?: ((d: Datum, i?: number, ...any) => string | number);
   /** Component color (string or color object) */
-  color?: string | object;
+  color?: string | any;
   /** Coloring type */
   colorType?: ColorType;
   scales?: {

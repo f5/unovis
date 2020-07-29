@@ -13,6 +13,7 @@ export class GraphDataModel<NodeDatum, LinkDatum> extends CoreDataModel<{nodes: 
   private _nodes: NodeDatum[] = []
   private _links: LinkDatum[] = []
 
+  // eslint-disable-next-line accessor-pairs
   set data (inputData: { nodes: NodeDatum[]; links?: LinkDatum[]}) {
     if (!inputData) return
     const prevData = this.data
@@ -84,7 +85,7 @@ export class GraphDataModel<NodeDatum, LinkDatum> extends CoreDataModel<{nodes: 
     return this._nonConnectedNodes
   }
 
-  findNode (nodes: NodeDatum[], n: number | string | object): NodeDatum {
+  findNode (nodes: NodeDatum[], n: number | string | Record<string, unknown>): NodeDatum {
     let foundNode
     if (isNumber(n)) foundNode = nodes[n as number]
     else if (isString(n)) foundNode = find(nodes, node => node.id === n)

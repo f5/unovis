@@ -55,5 +55,6 @@ export class ScatterComponent implements AfterViewInit {
   })
 
   ngAfterViewInit (): void {
+    //
   }
 }

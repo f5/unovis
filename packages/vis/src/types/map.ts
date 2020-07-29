@@ -27,7 +27,7 @@ export type StatusMap = { [key: string]: StatusStyle }
 
 export type Point = {
   geometry: GeoJSON.Geometry;
-  bbox: {};
+  bbox: Record<string, unknown>;
   radius: number;
   path: string;
   fill: string;

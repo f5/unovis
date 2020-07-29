@@ -9,7 +9,7 @@ export interface ComponentConfigInterface {
   /** Component height in pixels */
   height?: number;
   /** Events */
-  events?: object;
+  events?: Record<string, unknown>;
 }
 
 export class ComponentConfig extends Config implements ComponentConfigInterface {
