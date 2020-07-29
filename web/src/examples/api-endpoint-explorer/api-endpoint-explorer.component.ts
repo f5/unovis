@@ -133,6 +133,7 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
   flowlegendWidth = 0;
 
   ngAfterViewInit (): void {
+    // eslint-disable-next-line no-console
     console.log({ apiData, sankeyData: this.sankeyData })
 
     this.sankey = new SingleChart(this.chart.nativeElement, this.containerConfig, this.sankeyData)

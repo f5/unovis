@@ -17,7 +17,6 @@ export class Collection implements OnInit, OnDestroy {
   @Input() axesGenerator
   title = 'collection'
   margin = { top: 10, bottom: 10, left: 10, right: 10 }
-  dimensions: {}
   items = {}
   itemValues: any[]
   intervalIds: NodeJS.Timeout[] = []

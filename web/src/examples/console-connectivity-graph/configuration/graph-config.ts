@@ -44,7 +44,7 @@ export const overviewConfig = (onNodeClick): GraphConfigInterface<any, any> => (
   },
 })
 
-export const drilldownConfig = (onNodeClick): GraphConfigInterface<any, any> => ({
+export const drilldownConfig = (onNodeClick?): GraphConfigInterface<any, any> => ({
   ...accessors,
 
   // Layout
@@ -53,7 +53,7 @@ export const drilldownConfig = (onNodeClick): GraphConfigInterface<any, any> => 
   // Events
   events: {
     [Graph.selectors.node]: {
-      click: (d) => { onNodeClick(d) },
+      click: (d) => { onNodeClick?.(d) },
     },
   },
 })

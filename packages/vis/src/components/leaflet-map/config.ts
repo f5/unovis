@@ -20,9 +20,9 @@ export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterfa
   /** Mapbox style glyphs URL */
   mapboxglGlyphs?: string;
   /** Tangram or Mapbox sources settings */
-  sources?: {};
+  sources?: Record<string, unknown>;
   /** Tangram or Mapbox style renderer settings */
-  rendererSettings?: {};
+  rendererSettings?: Record<string, unknown>;
   /** Function */
   onMapMoveZoom?: (({ mapCenter, zoomLevel, bounds }: { mapCenter: LatLng; zoomLevel: number; bounds: Bounds }) => any);
   /** Point longitude accessor function or value */

@@ -36,8 +36,8 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
   private _extendedHeight = undefined
   private _extendedHeightIncreased = undefined
   private _extendedSizeMinHeight = 200
-  private _linksGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
-  private _nodesGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
+  private _linksGroup: Selection<SVGGElement, Record<string, unknown>[], SVGGElement, Record<string, unknown>[]>
+  private _nodesGroup: Selection<SVGGElement, Record<string, unknown>[], SVGGElement, Record<string, unknown>[]>
   private _sankey = sankey()
   private _highlightTimeoutId = null
   private _highlightActive = false

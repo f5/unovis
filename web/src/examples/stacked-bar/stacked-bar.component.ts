@@ -38,5 +38,7 @@ export class StackedBarComponent implements AfterViewInit {
     y: new Axis({ label: 'y axis' }),
   })
 
-  ngAfterViewInit (): void { }
+  ngAfterViewInit (): void {
+    //
+  }
 }

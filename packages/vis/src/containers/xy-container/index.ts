@@ -49,8 +49,8 @@ export type XYConfigInterface<Datum> = XYComponentConfigInterface<Datum>
 export class XYContainer<Datum> extends ContainerCore {
   config: XYContainerConfig<Datum> = new XYContainerConfig()
   datamodel: SeriesDataModel<Datum> = new SeriesDataModel()
-  private _svgDefs: Selection<SVGDefsElement, object[], SVGGElement, object[]>
-  private _clipPath: Selection<SVGGElement, object[], SVGGElement, object[]>
+  private _svgDefs: Selection<SVGDefsElement, Record<string, unknown>[], SVGGElement, Record<string, unknown>[]>
+  private _clipPath: Selection<SVGGElement, Record<string, unknown>[], SVGGElement, Record<string, unknown>[]>
   private _clipPathId = guid()
   private _axisMargin: Spacing = { top: 0, bottom: 0, left: 0, right: 0 }
   private _firstRender = true

@@ -52,9 +52,9 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
   private _externallySelectedPoint = null
   private _zoomingToExternallySelectedPoint = false
   private _forceExpandCluster = false
-  private _pointGroup: Selection<SVGGElement, object[], SVGElement, object[]>
-  private _pointSelectionRing: Selection<SVGGElement, object[], SVGElement, object[]>
-  private _clusterBackground: Selection<SVGGElement, object[], SVGElement, object[]>
+  private _pointGroup: Selection<SVGGElement, Record<string, unknown>[], SVGElement, Record<string, unknown>[]>
+  private _pointSelectionRing: Selection<SVGGElement, Record<string, unknown>[], SVGElement, Record<string, unknown>[]>
+  private _clusterBackground: Selection<SVGGElement, Record<string, unknown>[], SVGElement, Record<string, unknown>[]>
   private _clusterBackgroundRadius = 0
   private _selectedPoint: Point = null
   private _currentZoomLevel = null

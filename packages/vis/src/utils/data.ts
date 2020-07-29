@@ -65,7 +65,7 @@ export function clean (data: any[]): any[] {
 
 export function clamp (d: number, min: number, max: number): number {
   return Math.min(Math.max(d, min), max)
-};
+}
 
 export function countUnique (array, accessor = d => d): number {
   return new Set(array.map(d => accessor(d))).size
@@ -75,7 +75,7 @@ export function indexArray (n: number): number[] {
   return [...Array(n).keys()]
 }
 
-export function shallowDiff (o1: object = {}, o2: object = {}): object {
+export function shallowDiff (o1: Record<string, unknown> = {}, o2: Record<string, unknown> = {}): Record<string, unknown> {
   return Object.keys(o2).reduce((diff, key) => {
     if (o1[key] === o2[key]) return diff
     return {

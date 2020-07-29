@@ -21,11 +21,11 @@ export class XYChartComponent implements AfterViewInit {
   @Input() tooltip
   @Input() crosshair
   @Input() data = []
-  chart: XYContainer<object>
+  chart: XYContainer<Record<string, unknown>>
   config = {}
 
   ngAfterViewInit (): void {
-    this.chart = new XYContainer<object>(this.containerRef.nativeElement, this.getConfig(), this.data)
+    this.chart = new XYContainer<Record<string, unknown>>(this.containerRef.nativeElement, this.getConfig(), this.data)
   }
 
   ngOnChanges (changes): void {
@@ -51,7 +51,7 @@ export class XYChartComponent implements AfterViewInit {
     this.chart?.updateContainer(this.getConfig())
   }
 
-  getConfig (): XYContainerConfigInterface<object> {
+  getConfig (): XYContainerConfigInterface<Record<string, unknown>> {
     const { duration, margin, padding, components, dimensions, axes, tooltip, crosshair } = this
     return {
       duration, margin, padding, components, dimensions, axes, tooltip, crosshair,

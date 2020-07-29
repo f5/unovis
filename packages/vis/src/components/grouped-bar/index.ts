@@ -162,7 +162,7 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum> {
     if (isEmpty(data)) return 0
     if (config.groupWidth) return min([config.groupWidth, config.groupMaxWidth])
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const isOrdinal = config.scales.x.bandwidth
     const xDomain = (config.scales.x.domain ? config.scales.x.domain() : []) as number[]

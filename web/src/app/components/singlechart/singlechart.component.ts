@@ -15,10 +15,10 @@ export class SingleChartComponent implements AfterViewInit {
   @Input() component
   @Input() config = {}
   @Input() data = []
-  chart: SingleChart<object>
+  chart: SingleChart<unknown>
 
   ngAfterViewInit (): void {
-    this.chart = new SingleChart<object>(this.containerRef.nativeElement, { component: this.component }, this.data)
+    this.chart = new SingleChart<unknown>(this.containerRef.nativeElement, { component: this.component }, this.data)
   }
 
   ngOnChanges (changes): void {
@@ -44,7 +44,7 @@ export class SingleChartComponent implements AfterViewInit {
     this.chart?.updateContainer(this.getConfig())
   }
 
-  getConfig (): SingleChartConfigInterface<object> {
+  getConfig (): SingleChartConfigInterface<unknown> {
     const { margin, component } = this
     return { margin, component }
   }

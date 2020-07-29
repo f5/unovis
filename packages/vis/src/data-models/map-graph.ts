@@ -5,6 +5,7 @@ import { GraphDataModel } from './graph'
 export class MapGraphDataModel<NodeDatum, LinkDatum, AreaDatum> extends GraphDataModel<NodeDatum, LinkDatum> {
   private _areas: AreaDatum[] = []
 
+  // eslint-disable-next-line accessor-pairs
   set data (inputData) {
     const data = inputData ?? {}
     super.data = data
