@@ -16,7 +16,7 @@ consoleData.links.forEach((l, i) => l['id'] = i+1)
 @Component({
   selector: 'console-traffic-graph-pg2',
   templateUrl: './console-traffic-graph-pg2.component.html',
-  styleUrls: ['./console-traffic-graph-pg2.component.css'],
+  styleUrls: ['./console-traffic-graph-pg2.component.scss'],
 })
 
 export class TrafficGraphComponent implements OnInit, AfterViewInit {
