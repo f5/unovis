@@ -1,6 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { min } from 'd3-array'
-import { select } from 'd3'
 
 // Core
 import { XYComponentCore } from 'core/xy-component'
@@ -24,24 +23,13 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
   static selectors = s
   config: StackedBarConfig<Datum> = new StackedBarConfig()
   stacked = true
-  // linePath: Selection<SVGGElement, object[], SVGGElement, object[]>
   events = {
-    [StackedBar.selectors.barGroup]: {
-      mouseover: this._raiseSelection,
-    },
-    [StackedBar.selectors.bar]: {
-      mouseover: this._raiseSelection,
-    },
   }
 
   constructor (config?: StackedBarConfigInterface<Datum>) {
     super()
     if (config) this.config.init(config)
   }
-
-  // setData (data): void {
-  //   super.setData(data)
-  // }
 
   get bleed (): Spacing {
     const barWidth = this._getBarWidth()
@@ -78,10 +66,11 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
       .style('opacity', 0)
       .remove()
 
-    // Animate exiting bars going down
+    // Animate bars from exiting groups going down
     smartTransition(barGroupExit.selectAll(`.${s.bar}`), duration)
       .attr('transform', `translate(0,${config.height / 3})`)
 
+    // Render Bars
     const bars = barGroupsMerged.selectAll(`.${s.bar}`)
       .data((d, i) => yAccessors.map(() => ({ ...d, _stacked: stackedValues[i] })))
 
@@ -112,6 +101,7 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
       .style('cursor', (d, i) => getValue(d, config.cursor, i))
 
     smartTransition(bars.exit(), duration)
+      .style('opacity', 0)
       .remove()
   }
 
@@ -185,9 +175,5 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
     const { config, datamodel } = this
     const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
     return datamodel.getStackedExtent(...yAccessors)
-  }
-
-  _raiseSelection (d, i, els): void {
-    select(els[i]).raise()
   }
 }
