@@ -94,8 +94,10 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
         const y = config.scales.y(d._stacked[i])
         const width = barWidth
         const height = config.scales.y(d._stacked[i - 1] ?? 0) - config.scales.y(d._stacked[i])
+        const value = getValue(d, yAccessors[i])
+        const h = config.minBarHeight && (height === 0) && isFinite(value) && (value !== null) ? 1 : height
         const rounded = i === d._stacked.length - 1
-        return this._getBarPath(x, y, width, height, rounded)
+        return this._getBarPath(x, y, width, h, rounded)
       })
       .style('fill', (d, i) => getColor(d, config.color, i))
       .style('cursor', (d, i) => getValue(d, config.cursor, i))

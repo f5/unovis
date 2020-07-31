@@ -19,6 +19,8 @@ export interface StackedBarConfigInterface<Datum> extends XYComponentConfigInter
     roundedCorners?: number | boolean;
     /** Optional bar cursor. Default: `null` */
     cursor?: StringAccessor<Datum>;
+    /** Sets the minimum bar height to 1 for better visibility of small values. Default: `true` */
+    minBarHeight?: boolean;
 }
 
 export class StackedBarConfig<Datum> extends XYComponentConfig<Datum> implements StackedBarConfigInterface<Datum> {
@@ -29,4 +31,5 @@ export class StackedBarConfig<Datum> extends XYComponentConfig<Datum> implements
     isVertical = true
     roundedCorners = true
     cursor = null
+    minBarHeight = true
 }
