@@ -24,6 +24,7 @@ export class Tooltip<T extends ComponentCore<any>, TooltipDatum> {
   prevConfig: TooltipConfig<T, TooltipDatum>
   components: T[]
   private _setUpEventsThrottled = throttle(this._setUpEvents, 500)
+  private _setContainerPositionThrottled = throttle(this._setContainerPosition, 500)
 
   private _container: HTMLElement
 
@@ -45,11 +46,7 @@ export class Tooltip<T extends ComponentCore<any>, TooltipDatum> {
     this._container = container
     this._container.appendChild(this.element)
 
-    // Tooltip position calculation relies on the parent position
-    // If it's not set (static), we set it to `relative` (not a good practice)
-    if (getComputedStyle(this._container)?.position === 'static') {
-      this._container.style.position = 'relative'
-    }
+    this._setContainerPositionThrottled()
   }
 
   public setComponents (components: T[]): void {
@@ -119,6 +116,14 @@ export class Tooltip<T extends ComponentCore<any>, TooltipDatum> {
     this.div
       .style('bottom', `${containerHeight - y}px`)
       .style('left', `${x}px`)
+  }
+
+  private _setContainerPosition (): void {
+    // Tooltip position calculation relies on the parent position
+    // If it's not set (static), we set it to `relative` (not a good practice)
+    if (getComputedStyle(this._container)?.position === 'static') {
+      this._container.style.position = 'relative'
+    }
   }
 
   private _setUpEvents (): void {

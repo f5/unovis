@@ -22,6 +22,7 @@ import * as s from './style'
 export class StackedBar<Datum> extends XYComponentCore<Datum> {
   static selectors = s
   config: StackedBarConfig<Datum> = new StackedBarConfig()
+  getAccessors = (): NumericAccessor<Datum>[] => (isArray(this.config.y) ? this.config.y : [this.config.y])
   stacked = true
   events = {
   }
@@ -39,10 +40,9 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
   _render (customDuration?: number): void {
     const { config, datamodel } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
-    const barWidth = this._getBarWidth()
     const visibleData = this._getVisibleData()
 
-    const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
+    const yAccessors = this.getAccessors() // (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
     const stackedValues = visibleData.map(d => datamodel.getStackedValues(d, ...yAccessors))
 
     const barGroups = this.g
@@ -76,27 +76,13 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
 
     const barsEnter = bars.enter().append('path')
       .attr('class', s.bar)
-      .attr('d', (d, i) => {
-        const x = -barWidth / 2
-        const y = config.scales.y(0)
-        const width = barWidth
-        const height = 0
-        const rounded = i === d._stacked.length - 1
-        return this._getBarPath(x, y, width, height, rounded)
-      })
+      .attr('d', (d, i) => this._getBarPath(d, i, true))
       .style('fill', (d, i) => getColor(d, config.color, i))
 
     const barsMerged = barsEnter.merge(bars)
 
     smartTransition(barsMerged, duration)
-      .attr('d', (d, i) => {
-        const x = -barWidth / 2
-        const y = config.scales.y(d._stacked[i])
-        const width = barWidth
-        const height = config.scales.y(d._stacked[i - 1] ?? 0) - config.scales.y(d._stacked[i])
-        const rounded = i === d._stacked.length - 1
-        return this._getBarPath(x, y, width, height, rounded)
-      })
+      .attr('d', (d, i) => this._getBarPath(d, i))
       .style('fill', (d, i) => getColor(d, config.color, i))
       .style('cursor', (d, i) => getValue(d, config.cursor, i))
 
@@ -152,9 +138,22 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
     return filtered
   }
 
-  _getBarPath (x, y, width, height, rounded): string {
+  _getBarPath (d, i: number, isEntering = false): string {
     const { config } = this
+    const yAccessors = this.getAccessors()
+    const barWidth = this._getBarWidth()
 
+    const stackedValue = d._stacked[i]
+    const value = getValue(d, yAccessors[i])
+
+    const y = isEntering ? config.scales.y(0) : config.scales.y(stackedValue)
+    const height = isEntering ? 0 : config.scales.y(d._stacked[i - 1] ?? 0) - config.scales.y(stackedValue)
+    const h = !isEntering && config.barMinHeight && (height === 0) && isFinite(value) && (value !== null) ? 1 : height
+
+    const x = -barWidth / 2
+    const width = barWidth
+
+    const rounded = (i === d._stacked.length - 1) || (!config.barMinHeight && stackedValue === d._stacked[d._stacked.length - 1])
     const cornerRadius = config.roundedCorners
       ? isNumber(config.roundedCorners) ? +config.roundedCorners : width / 2
       : 0
@@ -164,7 +163,7 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
       x,
       y,
       w: width,
-      h: height,
+      h,
       tl: rounded,
       tr: rounded,
       r: cornerRadiusClamped,
@@ -172,8 +171,8 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
   }
 
   getYDataExtent (): number[] {
-    const { config, datamodel } = this
-    const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
+    const { datamodel } = this
+    const yAccessors = this.getAccessors()
     return datamodel.getStackedExtent(...yAccessors)
   }
 }

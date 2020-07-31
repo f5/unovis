@@ -20,7 +20,7 @@ export interface GroupedBarConfigInterface<Datum> extends XYComponentConfigInter
     /** Rounded corners for bars. Boolean or number (to set the radius in pixels). Default: true */
     roundedCorners?: number | boolean;
     /** Sets the minimum bar height for better visibility of small values. Default: 1 */
-    minBarHeight?: number;
+    barMinHeight?: number;
     /** Optional bar cursor. Default: `null` */
     cursor?: StringAccessor<Datum>;
 }
@@ -33,6 +33,6 @@ export class GroupedBarConfig<Datum> extends XYComponentConfig<Datum> implements
     barPadding = 0.0
     isVertical = true
     roundedCorners = true
-    minBarHeight = 2
+    barMinHeight = 2
     cursor = null
 }

@@ -15,10 +15,12 @@ export interface StackedBarConfigInterface<Datum> extends XYComponentConfigInter
     barPadding?: number;
     /** Orientation of the chart */
     isVertical?: boolean;
-    /** Rounded corners for bars. Boolean or number (to set the radius in pixels) */
+    /** Rounded corners for top bars. Boolean or number (to set the radius in pixels). Default: `true` */
     roundedCorners?: number | boolean;
     /** Optional bar cursor. Default: `null` */
     cursor?: StringAccessor<Datum>;
+    /** Sets the minimum bar height to 1 for better visibility of small values. Default: `false` */
+    barMinHeight?: boolean;
 }
 
 export class StackedBarConfig<Datum> extends XYComponentConfig<Datum> implements StackedBarConfigInterface<Datum> {
@@ -29,4 +31,5 @@ export class StackedBarConfig<Datum> extends XYComponentConfig<Datum> implements
     isVertical = true
     roundedCorners = true
     cursor = null
+    barMinHeight = false
 }
