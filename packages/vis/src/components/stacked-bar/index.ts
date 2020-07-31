@@ -40,7 +40,6 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
   _render (customDuration?: number): void {
     const { config, datamodel } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
-    const barWidth = this._getBarWidth()
     const visibleData = this._getVisibleData()
 
     const yAccessors = this.getAccessors() // (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
@@ -149,12 +148,12 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
 
     const y = isEntering ? config.scales.y(0) : config.scales.y(stackedValue)
     const height = isEntering ? 0 : config.scales.y(d._stacked[i - 1] ?? 0) - config.scales.y(stackedValue)
-    const h = !isEntering && config.minBarHeight && (height === 0) && isFinite(value) && (value !== null) ? 1 : height
+    const h = !isEntering && config.barMinHeight && (height === 0) && isFinite(value) && (value !== null) ? 1 : height
 
     const x = -barWidth / 2
     const width = barWidth
 
-    const rounded = (i === d._stacked.length - 1) || (!config.minBarHeight && stackedValue === d._stacked[d._stacked.length - 1])
+    const rounded = (i === d._stacked.length - 1) || (!config.barMinHeight && stackedValue === d._stacked[d._stacked.length - 1])
     const cornerRadius = config.roundedCorners
       ? isNumber(config.roundedCorners) ? +config.roundedCorners : width / 2
       : 0
