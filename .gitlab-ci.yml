@@ -86,7 +86,7 @@ test-trivy-fs:
   stage: secscan
   image: volterra.azurecr.io/ves.io/secscan
   script:
-    - trivy-report --scan-tag depcheck.scan.${CI_PROJECT_NAME} --vuln-tag depcheck.vuln.${CI_PROJECT_NAME} --sqs-url ${REPORTS_SQS_URL} --sqs-access-key ${REPORTS_SQS_ACCESS_KEY} --sqs-secret-key ${REPORTS_SQS_SECRET_KEY} -p "https://${AZURE_SECURITY_STORAGE_ACCOUNT}.blob.core.windows.net/security/profiles/${CI_PROJECT_NAME}.yml${AZURE_SECURITY_STORAGE_TOKEN}" "https://${AZURE_SECURITY_STORAGE_ACCOUNT}.blob.core.windows.net/security/profiles/common.yml${AZURE_SECURITY_STORAGE_TOKEN}" --fs .
+    - trivy-report --scan-tag trivy.scan.${CI_PROJECT_NAME} --vuln-tag trivy.vuln.${CI_PROJECT_NAME} --sqs-url ${REPORTS_SQS_URL} --sqs-access-key ${REPORTS_SQS_ACCESS_KEY} --sqs-secret-key ${REPORTS_SQS_SECRET_KEY} -p "https://${AZURE_SECURITY_STORAGE_ACCOUNT}.blob.core.windows.net/security/profiles/${CI_PROJECT_NAME}.yml${AZURE_SECURITY_STORAGE_TOKEN}" "https://${AZURE_SECURITY_STORAGE_ACCOUNT}.blob.core.windows.net/security/profiles/common.yml${AZURE_SECURITY_STORAGE_TOKEN}" --fs .
 
 upload-templates:
   tags: [kubernetes]
