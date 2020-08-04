@@ -1,4 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
+import { LatLng } from 'leaflet'
 
 export enum LeafletMapRenderer {
   TANGRAM = 'tangram',
@@ -60,4 +61,11 @@ export type PieDatum = {
 export type Bounds = {
   northEast: { lat: number; lng: number };
   southWest: { lat: number; lng: number };
+}
+
+export type MapZoomState = {
+  mapCenter: LatLng;
+  zoomLevel: number;
+  bounds: Bounds;
+  userDriven: boolean;
 }

@@ -1,6 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 /* eslint-disable dot-notation */
-import { LatLng } from 'leaflet'
 
 // Core
 import { ComponentConfig, ComponentConfigInterface } from 'core/component/config'
@@ -8,7 +7,7 @@ import { Tooltip } from 'core/tooltip'
 
 // Types
 import { NumericAccessor, StringAccessor, ColorAccessor } from 'types/misc'
-import { LeafletMapRenderer, ClusterOutlineType, Bounds, StatusMap } from 'types/map'
+import { LeafletMapRenderer, ClusterOutlineType, Bounds, StatusMap, MapZoomState } from 'types/map'
 import { LeafletMap } from './index'
 
 export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterface {
@@ -23,8 +22,16 @@ export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterfa
   sources?: Record<string, unknown>;
   /** Tangram or Mapbox style renderer settings */
   rendererSettings?: Record<string, unknown>;
-  /** Function */
-  onMapMoveZoom?: (({ mapCenter, zoomLevel, bounds }: { mapCenter: LatLng; zoomLevel: number; bounds: Bounds }) => any);
+  /** Map Move / Zoom joint callback function. Default: `undefined` */
+  onMapMoveZoom?: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => any);
+  /** Move Move Start callback function. Default: `undefined` */
+  onMapMoveStart?: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => any);
+  /** Move Move End callback function. Default: `undefined` */
+  onMapMoveEnd?: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => any);
+  /** Move Zoom Start callback function. Default: `undefined` */
+  onMapZoomStart?: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => any);
+  /** Move Zoom End callback function. Default: `undefined` */
+  onMapZoomEnd?: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => any);
   /** Point longitude accessor function or value */
   pointLongitude?: NumericAccessor<Datum>;
   /** Point latitude accessor function or value */
@@ -76,6 +83,10 @@ export class LeafletMapConfig<Datum> extends ComponentConfig implements LeafletM
   renderer = LeafletMapRenderer.TANGRAM
   accessToken = ''
   onMapMoveZoom = undefined
+  onMapMoveStart = undefined
+  onMapMoveEnd = undefined
+  onMapZoomStart = undefined
+  onMapZoomEnd = undefined
   pointLongitude = (d: Datum): number => d['longitude']
   pointLatitude = (d: Datum): number => d['latitude']
   pointId = (d: Datum): string => d['id']
