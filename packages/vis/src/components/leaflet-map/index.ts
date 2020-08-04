@@ -12,7 +12,7 @@ import { MapDataModel } from 'data-models/map'
 
 // Types
 import { ComponentType } from 'types/component'
-import { LeafletMapRenderer, Point, Bounds } from 'types/map'
+import { LeafletMapRenderer, Point, Bounds, MapZoomState } from 'types/map'
 
 // Utils
 import { getValue, clamp, isNil, find } from 'utils/data'
@@ -48,6 +48,9 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
   private _cancelBackgroundClick = false
   private _hasBeenMoved = false
   private _hasBeenZoomed = false
+  private _isMoving = false
+  private _isZooming = false
+  private _eventInitiatedByComponent = false
   private _triggerBackroundClick = false
   private _externallySelectedPoint = null
   private _zoomingToExternallySelectedPoint = false
@@ -79,8 +82,11 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     this._map = setupMap(this.element, this.config)
     this._map.leaflet.on('drag', this._onMapDragLeaflet.bind(this))
     this._map.leaflet.on('move', this._onMapMove.bind(this))
+    this._map.leaflet.on('movestart', this._onMapMoveStart.bind(this))
     this._map.leaflet.on('moveend', this._onMapMoveEnd.bind(this))
     this._map.leaflet.on('zoom', this._onMapZoom.bind(this))
+    this._map.leaflet.on('zoomstart', this._onMapZoomStart.bind(this))
+    this._map.leaflet.on('zoomend', this._onMapZoomEnd.bind(this))
 
     // We need to handle background click in a special way to deal
     //   with d3 svg overlay that might have smaller size than the map itself
@@ -157,7 +163,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     this._firstRender = false
   }
 
-  fitToPoints (duration = this.config.flyToDuration, padding = [40, 40]): void {
+  public fitToPoints (duration = this.config.flyToDuration, padding = [40, 40]): void {
     const { config, datamodel, datamodel: { data } } = this
 
     if (!this._map || !this._map.leaflet) return
@@ -166,7 +172,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     this._flyToBounds(bounds, duration, padding)
   }
 
-  fitToBounds (bounds: Bounds, duration = this.config.flyToDuration): void {
+  public fitToBounds (bounds: Bounds, duration = this.config.flyToDuration): void {
     const { northEast, southWest } = bounds
     if (isNil(northEast) || isNil(southWest)) return
     if (isNil(northEast.lat) || isNil(northEast.lng)) return
@@ -205,10 +211,15 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
       }
 
       const zoomLevel = this._map.leaflet.getZoom()
+      this._eventInitiatedByComponent = true
       this._map.leaflet.flyTo(coordinates, zoomLevel, { duration: 0 })
     } else {
       this._renderData()
     }
+  }
+
+  public getSelectedPointId (): string | number | undefined {
+    return this._selectedPoint?.id
   }
 
   public unselectPoint (): void {
@@ -259,25 +270,35 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
         lng: getValue(foundPoint.properties, config.pointLongitude),
         lat: getValue(foundPoint.properties, config.pointLatitude),
       }
+      this._eventInitiatedByComponent = true
       this._map.leaflet.flyTo(coordinates, zoomLevel, { duration: 0 })
     } else {
       console.warn(`Node with id ${id} can not be found`)
     }
   }
 
-  getNodeRelativePosition (node): { x: number; y: number } {
+  public getNodeRelativePosition (node): { x: number; y: number } {
     return getNodeRelativePosition(node, this._map.leaflet)
   }
 
-  get hasBeenZoomed (): boolean {
+  public hasBeenZoomed (): boolean {
     return this._hasBeenZoomed
   }
 
-  get hasBeenMoved (): boolean {
+  public hasBeenMoved (): boolean {
     return this._hasBeenMoved
   }
 
-  _flyToBounds (bounds, duration, padding?): void {
+  public isZooming (): boolean {
+    return this._isZooming
+  }
+
+  public isMoving (): boolean {
+    return this._isMoving
+  }
+
+  private _flyToBounds (bounds, duration, padding?): void {
+    this._eventInitiatedByComponent = true
     if (duration) {
       this._map.leaflet.flyToBounds(bounds, {
         duration: duration / 1000,
@@ -288,7 +309,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     }
   }
 
-  _renderData (): void {
+  private _renderData (): void {
     const { config } = this
 
     const pointData = this._getPointData()
@@ -338,7 +359,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     config.tooltip?.update()
   }
 
-  _zoomToExternallySelectedPoint (): void {
+  private _zoomToExternallySelectedPoint (): void {
     const pointData = this._getPointData()
     const foundNode = find(pointData, d => d.properties.id === this._externallySelectedPoint.properties.id)
     if (foundNode) {
@@ -354,13 +375,14 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
         const coordinates = { lng: this._externallySelectedPoint.properties.longitude, lat: this._externallySelectedPoint.properties.latitude }
         if (this._currentZoomLevel !== newZoomLevel) {
           this._currentZoomLevel = newZoomLevel
+          this._eventInitiatedByComponent = true
           this._map.leaflet.flyTo(coordinates, newZoomLevel, { duration: 0 })
         }
       }
     }
   }
 
-  _expandCluster (clusterPoint): void {
+  private _expandCluster (clusterPoint): void {
     const { config, config: { clusterBackground } } = this
     const padding = 1
 
@@ -393,12 +415,12 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     this._zoomingToExternallySelectedPoint = false
   }
 
-  _resetExpandedCluster (): void {
+  private _resetExpandedCluster (): void {
     this._expandedCluster?.points?.forEach(d => { delete d.properties.expandedClusterPoint })
     this._expandedCluster = null
   }
 
-  _getPointData (customBounds?): Point[] {
+  private _getPointData (customBounds?): Point[] {
     const { config, datamodel: { data } } = this
     if (!data || !this._clusterIndex) return []
 
@@ -418,39 +440,71 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     return pointData
   }
 
-  _onMapDragLeaflet (): void {
-    this._cancelBackgroundClick = true
-  }
-
-  _onMapMove (): void {
-    const { config: { onMapMoveZoom } } = this
-    this._hasBeenMoved = true
-    this._renderData()
-
+  private _getMapZoomState (): MapZoomState {
     const leafletBounds = this._map.leaflet.getBounds()
     const southWest = leafletBounds.getSouthWest()
     const northEast = leafletBounds.getNorthEast()
-    onMapMoveZoom?.({
+
+    return {
       mapCenter: this._map.leaflet.getCenter(),
       zoomLevel: this._map.leaflet.getZoom(),
       bounds: { southWest, northEast },
-    })
+      userDriven: !this._eventInitiatedByComponent,
+    }
   }
 
-  _onMapMoveEnd (): void {
-    const { config: { renderer } } = this
-    if (renderer === LeafletMapRenderer.MAPBOXGL) {
+  private _onMapDragLeaflet (): void {
+    this._cancelBackgroundClick = true
+  }
+
+  private _onMapMove (): void {
+    const { config } = this
+    this._hasBeenMoved = true
+    this._renderData()
+
+    config.onMapMoveZoom?.(this._getMapZoomState())
+  }
+
+  private _onMapMoveStart (): void {
+    const { config } = this
+    this._isMoving = true
+    config.onMapMoveStart?.(this._getMapZoomState())
+  }
+
+  private _onMapMoveEnd (): void {
+    const { config } = this
+    config.onMapMoveEnd?.(this._getMapZoomState())
+
+    if (config.renderer === LeafletMapRenderer.MAPBOXGL) {
       constraintMapViewThrottled(this._map.leaflet)
 
       const events = this._map.layer.getEvents()
-      const zoomedEvent = events.zoomend.bind(this._map.layer)
-      zoomedEvent()
+      const zoomEndEvent = events.zoomend.bind(this._map.layer)
+      zoomEndEvent()
     }
-    if (!this._externallySelectedPoint || !this._zoomingToExternallySelectedPoint) return
-    this._zoomToExternallySelectedPoint()
+
+    if (this._externallySelectedPoint || this._zoomingToExternallySelectedPoint) {
+      this._zoomToExternallySelectedPoint()
+    }
+
+    this._isMoving = false
+    this._eventInitiatedByComponent = false
   }
 
-  _onMapZoom (): void {
+  private _onMapZoomStart (): void {
+    const { config } = this
+    this._isZooming = true
+    config.onMapZoomStart?.(this._getMapZoomState())
+  }
+
+  private _onMapZoomEnd (): void {
+    const { config } = this
+    config.onMapZoomEnd?.(this._getMapZoomState())
+    this._isZooming = false
+    if (!this._isMoving) this._eventInitiatedByComponent = false
+  }
+
+  private _onMapZoom (): void {
     const { config } = this
     this._hasBeenZoomed = true
 
@@ -460,18 +514,10 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     }
 
     config.tooltip?.hide()
-
-    const leafletBounds = this._map.leaflet.getBounds()
-    const southWest = leafletBounds.getSouthWest()
-    const northEast = leafletBounds.getNorthEast()
-    config.onMapMoveZoom?.({
-      mapCenter: this._map.leaflet.getCenter(),
-      zoomLevel: this._map.leaflet.getZoom(),
-      bounds: { southWest, northEast },
-    })
+    config.onMapMoveZoom?.(this._getMapZoomState())
   }
 
-  _onBackgroundClick (d, el, event): void {
+  private _onBackgroundClick (d, el, event): void {
     if (this._cancelBackgroundClick) {
       this._cancelBackgroundClick = false
       return
@@ -482,7 +528,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     this._renderData()
   }
 
-  _onPointClick (d, i, elements): void {
+  private _onPointClick (d, i, elements): void {
     const { config: { flyToDuration } } = this
 
     this._externallySelectedPoint = null
@@ -495,16 +541,17 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
       if (shouldClusterExpand(d, zoomLevel)) this._expandCluster(d)
       else {
         const newZoomLevel = clampZoomLevel(zoomLevel)
+        this._eventInitiatedByComponent = true
         this._map.leaflet.flyTo(coordinates, newZoomLevel, { duration: flyToDuration / 1000 })
       }
     }
   }
 
-  _onPointMouseDown (d, el, event): void {
+  private _onPointMouseDown (d, el, event): void {
     this._cancelBackgroundClick = true
   }
 
-  _onPointMouseUp (d, el, event): void {
+  private _onPointMouseUp (d, el, event): void {
     this._cancelBackgroundClick = false
   }
 
@@ -519,6 +566,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
   public setZoom (zoomLevel: number): void {
     const leaflet = this._map.leaflet
 
+    this._eventInitiatedByComponent = true
     leaflet.flyTo(
       leaflet.getCenter(),
       clamp(zoomLevel, leaflet.getMinZoom(), leaflet.getMaxZoom()),
@@ -528,5 +576,9 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
 
   public fitView (): void {
     this.fitToPoints()
+  }
+
+  public destroy (): void {
+    this._map?.leaflet?.remove()
   }
 }
