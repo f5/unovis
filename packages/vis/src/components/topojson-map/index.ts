@@ -77,7 +77,6 @@ export class TopoJSONMap<NodeDatum extends NodeDatumCore, LinkDatum extends Link
 
     this._renderBackground()
     this._renderMap(duration)
-    this._colorizeMapFeatures()
     this._renderLinks(duration)
     this._renderPoints(duration)
 
@@ -102,7 +101,7 @@ export class TopoJSONMap<NodeDatum extends NodeDatumCore, LinkDatum extends Link
   }
 
   _renderMap (duration: number): void {
-    const { bleed, config } = this
+    const { bleed, config, datamodel } = this
 
     this.g.attr('transform', `translate(${bleed.left}, ${bleed.top})`)
     const mapData: TopoJSON.Topology = config.topojson
@@ -111,7 +110,7 @@ export class TopoJSONMap<NodeDatum extends NodeDatumCore, LinkDatum extends Link
     if (!featureObject) return
 
     const featureCollection = feature(mapData, featureObject) as GeoJSON.FeatureCollection
-    const featureData = featureCollection?.features
+    const featureData = featureCollection?.features ?? []
     const boundariesData = [mesh(mapData, featureObject, (a, b) => a !== b)]
 
     if (this._firstRender) {
@@ -150,10 +149,20 @@ export class TopoJSONMap<NodeDatum extends NodeDatumCore, LinkDatum extends Link
 
     this._path.projection(this._projection)
 
+    // Merge passed area data and map feature data
+    const areaData = datamodel.areas
+    areaData.forEach(a => {
+      const feature = featureData.find(f => f.id.toString() === getValue(a, config.areaId).toString())
+      // eslint-disable-next-line dot-notation
+      if (feature) feature['data'] = a
+      else if (this._firstRender) console.warn(`Can't find feature by area code ${a.id}`)
+    })
+
     const features = this._featuresGroup.selectAll(`.${s.feature}`).data(featureData)
     const featuresEnter = features.enter().append('path').attr('class', s.feature)
     smartTransition(featuresEnter.merge(features), duration)
       .attr('d', this._path)
+      .style('fill', (d, i) => d.data ? getColor(d.data, config.areaColor, i) : null)
     features.exit().remove()
 
     const boundaries = this._boundariesGroup.selectAll(`.${s.boundary}`).data(boundariesData)
@@ -161,19 +170,6 @@ export class TopoJSONMap<NodeDatum extends NodeDatumCore, LinkDatum extends Link
     smartTransition(boundariesEnter.merge(boundaries), duration)
       .attr('d', this._path)
     boundaries.exit().remove()
-  }
-
-  _colorizeMapFeatures (): void {
-    const { datamodel, config } = this
-
-    const areaData = datamodel.areas
-    const features = this._featuresGroup.selectAll(`.${s.feature}`)
-
-    areaData.forEach((a, i) => {
-      const path = features.filter(d => d.id.toString() === getValue(a, config.areaId).toString())
-      if (!path.empty()) path.style('fill', getColor(a, config.areaColor, i))
-      else if (this._firstRender) console.warn(`Can't find feature by area code ${a.id}`)
-    })
   }
 
   _renderLinks (duration: number): void {
