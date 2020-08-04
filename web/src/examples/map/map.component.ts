@@ -79,6 +79,10 @@ export class MapComponent implements AfterViewInit {
     // selectedNodeId: 'nc72965236',
     initialBounds: { northEast: { lat: 77, lng: -172 }, southWest: { lat: -50, lng: 72 } },
     onMapMoveZoom: ({ mapCenter, zoomLevel, bounds }) => { /* console.log(mapCenter, zoomLevel, bounds) */ },
+    onMapMoveStart: ({ mapCenter, zoomLevel, bounds, userDriven }) => { console.log('onMapMoveStart', mapCenter, zoomLevel, bounds, userDriven) },
+    onMapMoveEnd: ({ mapCenter, zoomLevel, bounds, userDriven }) => { console.log('onMapMoveEnd', mapCenter, zoomLevel, bounds, userDriven) },
+    onMapZoomStart: ({ mapCenter, zoomLevel, bounds, userDriven }) => { console.log('onMapZoomStart', mapCenter, zoomLevel, bounds, userDriven) },
+    onMapZoomEnd: ({ mapCenter, zoomLevel, bounds, userDriven }) => { console.log('onMapZoomEnd', mapCenter, zoomLevel, bounds, userDriven) },
     tooltip: new Tooltip<LeafletMap<MapPoint>, MapPoint>(getTooltipConfig()),
     events: {
       [LeafletMap.selectors.point]: {
