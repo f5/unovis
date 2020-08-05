@@ -76,6 +76,10 @@ export class MapComponent implements AfterViewInit {
       re: { color: '#4c7afc' },
       approving: { color: '#82affd' },
     },
+    attribution: [
+      '<a href="https://www.maptiler.com/copyright/" target="_blank">MapTiler</a>',
+      '<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a>'
+    ],
     // selectedNodeId: 'nc72965236',
     initialBounds: { northEast: { lat: 77, lng: -172 }, southWest: { lat: -50, lng: 72 } },
     onMapMoveZoom: ({ mapCenter, zoomLevel, bounds }) => { /* console.log(mapCenter, zoomLevel, bounds) */ },
