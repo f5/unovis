@@ -9,7 +9,11 @@ export interface ComponentConfigInterface {
   /** Component height in pixels */
   height?: number;
   /** Events */
-  events?: Record<string, unknown>;
+  events?: {
+    [selector: string]: {
+      [eventName: string]: (data: any) => void;
+    };
+  };
 }
 
 export class ComponentConfig extends Config implements ComponentConfigInterface {

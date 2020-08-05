@@ -35,6 +35,16 @@ export class Scatter<Datum> extends XYComponentCore<Datum> {
     if (config) this.setConfig(config)
   }
 
+  setConfig (config: ScatterConfigInterface<Datum>): void {
+    super.setConfig(config)
+    this._updateSizeScale()
+  }
+
+  setData (data: Datum[]): void {
+    super.setData(data)
+    this._updateSizeScale()
+  }
+
   get bleed (): Spacing {
     const maxR = 2 * this._getMaxPointRadius() // We increase the max radius because the D3 Symbol size is not strictly set
     return { top: maxR, bottom: maxR, left: maxR, right: maxR }
@@ -58,12 +68,16 @@ export class Scatter<Datum> extends XYComponentCore<Datum> {
     pointGroupsMerged.call(updateNodes, duration)
   }
 
-  _prepareData (): Record<string, unknown>[] {
-    const { config: { size, sizeScale, sizeRange, x, y, scales, shape, icon, color, cursor }, datamodel, datamodel: { data } } = this
+  _updateSizeScale (): void {
+    const { config, datamodel } = this
 
-    sizeScale
-      .domain(datamodel.getExtent(size))
-      .range(sizeRange)
+    config.sizeScale
+      .domain(datamodel.getExtent(config.size))
+      .range(config.sizeRange)
+  }
+
+  _prepareData (): Record<string, unknown>[] {
+    const { config: { size, sizeScale, x, y, scales, shape, icon, color, cursor }, datamodel: { data } } = this
 
     const maxR = this._getMaxPointRadius()
     const xRange = scales.x.range()
