@@ -77,6 +77,8 @@ export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterfa
   };
   /** Tooltip component */
   tooltip?: Tooltip<LeafletMap<Datum>, Datum>;
+  /** Array of attribution labels */
+  attribution?: string[],
 }
 
 export class LeafletMapConfig<Datum> extends ComponentConfig implements LeafletMapConfigInterface<Datum> {
@@ -112,4 +114,5 @@ export class LeafletMapConfig<Datum> extends ComponentConfig implements LeafletM
   }
 
   tooltip = undefined
+  attribution = []
 }
