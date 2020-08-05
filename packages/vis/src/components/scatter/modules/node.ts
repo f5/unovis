@@ -26,8 +26,10 @@ export function updateNodes (selection, duration): void {
       text
         .html(d._screen.icon)
         .style('font-size', d._screen.size)
+
       smartTransition(text, duration)
         .style('fill', d._screen.color)
+        .style('stroke', d._screen.color)
     } else {
       text.style('display', 'none')
       path.style('display', null)
@@ -37,8 +39,10 @@ export function updateNodes (selection, duration): void {
           .type(Symbol[d._screen.shape])
         return symbolGenerator()
       })
+
       smartTransition(path, duration)
         .style('fill', d._screen.color)
+        .style('stroke', d._screen.color)
     }
 
     path.style('cursor', d._screen.cursor)
