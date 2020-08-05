@@ -210,18 +210,21 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
 
   _getNumTicks (): number {
     const { config: { type, numTicks, width, height } } = this
-    return numTicks ?? Math.floor((type === AxisType.X ? width / 175 : height / 70))
+    return numTicks ?? Math.floor((type === AxisType.X ? width / 175 : height / 50))
   }
 
   _getTickValues (): number[] {
     const { config: { scales, tickValues, type, minMaxTicksOnly } } = this
     const scaleDomain = type === AxisType.X ? scales.x?.domain() : scales.y?.domain()
+
     if (minMaxTicksOnly) {
       return scaleDomain as number[]
     }
+
     if (tickValues) {
       return tickValues.filter(v => (v >= scaleDomain[0]) && (v <= scaleDomain[1]))
     }
+
     return null
   }
 
