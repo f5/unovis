@@ -59,14 +59,19 @@ export class Scatter<Datum> extends XYComponentCore<Datum> {
   }
 
   _prepareData (): Record<string, unknown>[] {
-    const { config: { size, x, y, scales, shape, icon, color, cursor }, datamodel: { data } } = this
+    const { config: { size, sizeScale, sizeRange, x, y, scales, shape, icon, color, cursor }, datamodel, datamodel: { data } } = this
+
+    sizeScale
+      .domain(datamodel.getExtent(size))
+      .range(sizeRange)
+
     const maxR = this._getMaxPointRadius()
     const xRange = scales.x.range()
 
     return data?.reduce((acc, d, i) => {
       const posX = scales.x(getValue(d, x))
       const posY = scales.y(getValue(d, y))
-      const pointSize = getValue(d, size)
+      const pointSize = sizeScale(getValue(d, size))
 
       if ((posX + pointSize >= (xRange[0] - maxR)) && (posX - pointSize <= (xRange[1] + maxR))) {
         acc.push({
@@ -91,6 +96,7 @@ export class Scatter<Datum> extends XYComponentCore<Datum> {
     const { config, datamodel, datamodel: { data } } = this
     if (isEmpty(data)) return 0
 
-    return datamodel.getMax(config.size) / 2
+    const maxSizeValue = datamodel.getMax(config.size)
+    return config.sizeScale(maxSizeValue) / 2
   }
 }
