@@ -86,7 +86,7 @@ export function setupMap<T> (mapContainer: HTMLElement, config: LeafletMapConfig
     zoomControl: false,
     zoomDelta: 0.5,
     zoomSnap: 0,
-    attributionControl: false,
+    attributionControl: true,
     center: initialMapCenter,
     zoom: initialMapZoom,
     minZoom: Math.sqrt(mapContainer.offsetWidth) / 17,
@@ -96,6 +96,10 @@ export function setupMap<T> (mapContainer: HTMLElement, config: LeafletMapConfig
     ),
     maxBoundsViscosity: 1,
   })
+
+  for (const attr of config.attribution) {
+    leaflet.attributionControl.addAttribution(attr)
+  }
 
   let layer
   switch (renderer) {

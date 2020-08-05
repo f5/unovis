@@ -394,6 +394,9 @@
 	}
 .leaflet-control-attribution a {
 	text-decoration: none;
+	color: #333;
+	font-size: 7pt;
+	opacity: 0.6;
 	}
 .leaflet-control-attribution a:hover {
 	text-decoration: underline;
