@@ -94,7 +94,7 @@ export class Scatter<Datum> extends XYComponentCore<Datum> {
             x: posX,
             y: posY,
             size: pointSize,
-            color: getColor(d, color, i),
+            color: getColor(d, color),
             shape: getValue(d, shape),
             icon: getValue(d, icon),
             cursor: getValue(d, cursor),
