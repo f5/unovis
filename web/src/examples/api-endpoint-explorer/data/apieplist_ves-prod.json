@@ -3,6 +3,15 @@
       {
         "collapsed_url": "$$DYNAMIC$$",
         "method": "GET",
+        "value": 10,
+        "dyn_examples": [
+        ],
+        "pdf_info": null
+      },
+      {
+        "collapsed_url": "$$STATIC$$",
+        "method": "GET",
+        "value": 5,
         "dyn_examples": [
         ],
         "pdf_info": null
@@ -733,13 +742,6 @@
           ],
           "creation_timestamp": "2020-06-29T16:08:58Z"
         }
-      },
-      {
-        "collapsed_url": "$$STATIC$$",
-        "method": "GET",
-        "dyn_examples": [
-        ],
-        "pdf_info": null
       },
       {
         "collapsed_url": "/a1795b6917dd4e3645932882a7568b255b81fd83-d1df335c1f5f2be6177e.js",

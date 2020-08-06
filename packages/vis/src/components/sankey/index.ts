@@ -35,7 +35,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
   private _extendedWidth = undefined
   private _extendedHeight = undefined
   private _extendedHeightIncreased = undefined
-  private _extendedSizeMinHeight = 200
+  private _extendedSizeMinHeight = 300
   private _linksGroup: Selection<SVGGElement, Record<string, unknown>[], SVGGElement, Record<string, unknown>[]>
   private _nodesGroup: Selection<SVGGElement, Record<string, unknown>[], SVGGElement, Record<string, unknown>[]>
   private _sankey = sankey()
@@ -128,8 +128,8 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
     const scale = scaleLinear().domain(extentValue).range([nodeMinHeight, nodeMaxHeight]).clamp(true)
     const groupByColumn = groupBy(nodes, d => d.layer)
     const values = Object.values(groupByColumn).map((d: any[]) => sum(d.map(n => scale(n.value) + nodePadding)))
-    const height = max(values)
-    this._extendedHeight = (height || this._extendedSizeMinHeight) + bleed.top + bleed.bottom
+    const height = max(values) ?? 0
+    this._extendedHeight = Math.max(height, this._extendedSizeMinHeight) + bleed.top + bleed.bottom
     this._extendedWidth = (nodeWidth + nodeHorizontalSpacing) * Object.keys(groupByColumn).length - nodeHorizontalSpacing + bleed.left + bleed.right
   }
 
@@ -144,14 +144,18 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
     const hasLinks = links.length > 0
     // If there're no links we manually calculate the visualization layout
     if (!hasLinks) {
-      const nodeHeight = (sankeyHeight - bleed.top - bleed.bottom) / nodes.length - config.nodePadding * (nodes.length - 1)
+      const sumValue = sum(nodes, n => n.fixedValue ?? 1)
       let y = 0
       for (const node of nodes) {
+        const nodeValue = node.fixedValue ?? 1
+        const ySpace = sankeyHeight - bleed.top - bleed.bottom
+        const nodeHeight = ySpace * nodeValue / sumValue - config.nodePadding * (nodes.length - 1)
+
         node.width = Math.max(10, config.nodeWidth)
         node.x0 = 0
         node.x1 = node.width
         node.y0 = y
-        node.y1 = y + nodeHeight
+        node.y1 = y + Math.max(1, nodeHeight)
         node.layer = 0
 
         y = node.y1 + config.nodePadding

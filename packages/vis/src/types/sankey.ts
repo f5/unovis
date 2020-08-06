@@ -10,6 +10,7 @@ export interface SankeyNodeDatumInterface extends NodeDatumCore {
   targetLinks?: SankeyLinkDatumInterface[];
   width?: number;
   value?: number;
+  fixedValue?: number;
   x0?: number;
   x1?: number;
   y0?: number;
