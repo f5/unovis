@@ -34,6 +34,7 @@ function getScatterConfig () {
     shape: (d): SymbolType => d.shape,
     icon: (d): any => d.icon,
     cursor: (d, i) => 'pointer',
+    color: () => _sample(['#f0aaca', '#6798ff', '#fd7492', '#00edff', '#ed916e', '#425673', '#d11d55']),
   }
 }
 
