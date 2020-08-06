@@ -13,12 +13,7 @@ import {
 
 import data from './data/apieplist_ves-prod.json'
 
-const apiData = data.apiep_list.map(d => {
-  return {
-    ...d,
-    value: 1, // Math.random(),
-  }
-})
+const apiData = data.apiep_list
 
 const NODE_WIDTH = 30
 const NODE_HORIZONTAL_SPACE = 260
@@ -149,7 +144,8 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
 
     const getNodeId = (path, depth, method): string => `${depth}:${path}:${method}`
     for (const rec of apiData) {
-      const value = 1
+      const value = rec.value ?? 1
+
       let url = rec.collapsed_url
       const isPartOfOtherUrl = apiData.find(
         r => r.collapsed_url !== url && r.collapsed_url?.includes(url)
@@ -196,6 +192,7 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
           isLeafNode,
           method,
           dynExamples,
+          value,
         })
         if (collapsed) break
       }
@@ -219,10 +216,14 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
     const groupedLinks = Object.values(_groupBy(links, 'id')) as any[]
 
     return {
-      nodes: groupedNodes.map(nodeArr => ({ ...nodeArr[0], leafs: nodeArr.length })),
+      nodes: groupedNodes.map(nodeArr => ({
+        ...nodeArr[0],
+        leafs: nodeArr.length,
+        fixedValue: sum(nodeArr.map(n => n.value)), // Sum up link values
+      })),
       links: groupedLinks.map(linkArr => ({
         ...linkArr[0],
-        value: sum(linkArr.map(l => 1)), // Sum up link values
+        value: sum(linkArr.map(l => l.value)), // Sum up link values
       })),
     }
   }
