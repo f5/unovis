@@ -8,6 +8,8 @@ import { Scale, ContiniousScale } from 'types/scales'
 import { SymbolType } from 'types/symbols'
 
 export interface ScatterConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
+  /** Single Y accessor function or constant value */
+  y?: NumericAccessor<Datum>;
   /** Size accessor function or value in relative units. Default: `1` */
   size?: NumericAccessor<Datum>;
   /** Size Scale. Default: `Scale.scaleLinear()` */
