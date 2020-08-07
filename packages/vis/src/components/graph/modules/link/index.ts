@@ -47,7 +47,7 @@ export function createLinks<N extends NodeDatumCore, L extends LinkDatumCore> (s
     .attr('class', linkSelectors.labelGroups)
 }
 
-export function updateSelectedLink<N extends NodeDatumCore, L extends LinkDatumCore> (selection: Selection<SVGGElement, L, SVGGElement, L[]>, config: GraphConfigInterface<N, L>, scale: number): void {
+export function updateSelectedLinks<N extends NodeDatumCore, L extends LinkDatumCore> (selection: Selection<SVGGElement, L, SVGGElement, L[]>, config: GraphConfigInterface<N, L>, scale: number): void {
   const isGreyout = d => d._state.greyout
 
   selection.select(`.${linkSelectors.link}`)
@@ -164,7 +164,7 @@ export function updateLinks<N extends NodeDatumCore, L extends LinkDatumCore> (s
     selection.attr('opacity', 1)
   }
 
-  updateSelectedLink(selection, config, scale)
+  updateSelectedLinks(selection, config, scale)
 }
 
 export function removeLinks<N extends NodeDatumCore, L extends LinkDatumCore> (selection: Selection<SVGGElement, L, SVGGElement, L[]>, config: GraphConfigInterface<N, L>, duration: number): void {
