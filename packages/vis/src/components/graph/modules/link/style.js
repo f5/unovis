@@ -49,6 +49,7 @@ export const linkDashed = css`
 
 export const gLink = css`
   label: g-link;
+  transition: .4s opacity;
 
   &${`.${linkDashed}`} {
     ${`.${link}`}, ${`.${linkSupport}`} {
@@ -56,6 +57,10 @@ export const gLink = css`
       stroke-dasharray: 6 6;
     }
   }
+`
+export const greyout = css`
+  label: greyout;
+  opacity: 0.1;
 `
 
 export const linkBand = css`
