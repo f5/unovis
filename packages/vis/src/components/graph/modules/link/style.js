@@ -104,5 +104,5 @@ export const labelContent = css`
   fill: var(--vis-graph-link-label-text-color);
   font-size: 8pt;
   text-anchor: middle;
-  alignment-baseline: middle;
+  dominant-baseline: middle;
 `

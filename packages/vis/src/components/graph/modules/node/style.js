@@ -114,7 +114,7 @@ export const sideLabel = css`
   label: side-label;
 
   font-family: var(--vis-graph-node-side-label-font-family), var(--vis-graph-node-icon-font);
-  alignment-baseline: middle;
+  dominant-baseline: middle;
   text-anchor: middle;
   font-size: 16px;
   fill: var(--vis-graph-node-side-label-fill-color-bright);

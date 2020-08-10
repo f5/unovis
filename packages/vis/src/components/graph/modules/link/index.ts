@@ -145,7 +145,7 @@ export function updateLinks<N extends NodeDatumCore, L extends LinkDatumCore> (s
     sideLabelsUpdate.select(`.${linkSelectors.labelContent}`)
       .text(d => d.text)
       .style('fill', d => getSideTexLabelColor(d))
-      .style('font-size', d => 10 / Math.pow(d.text.toString().length, 0.3))
+      .style('font-size', d => `${10 / Math.pow(d.text.toString().length, 0.3)}px`)
 
     sideLabelsUpdate.attr('transform', () => {
       const markerWidth = getValue(l, linkArrow) === LinkArrow.DOUBLE ? LINK_MARKER_WIDTH * 2 : LINK_MARKER_WIDTH
