@@ -167,7 +167,7 @@ export function updateNodes<N extends NodeDatumCore, L extends LinkDatumCore> (s
 
     // Update Node Icon
     icon
-      .style('font-size', d => getValue(d, nodeIconSize) ?? 2.5 * Math.sqrt(getNodeSize(d, nodeSize)))
+      .style('font-size', d => `${getValue(d, nodeIconSize) ?? 2.5 * Math.sqrt(getNodeSize(d, nodeSize))}px`)
       .attr('dy', 1)
       .style('fill', d => getNodeIconColor(d, nodeFill))
       .html(d => getValue(d, nodeIcon))
@@ -188,7 +188,7 @@ export function updateNodes<N extends NodeDatumCore, L extends LinkDatumCore> (s
     sideLabelsUpdate.select(`.${nodeSelectors.sideLabel}`).text(d => d.text)
       .attr('dy', '1px')
       .style('fill', l => getSideTexLabelColor(l))
-      .style('font-size', d => 11 / Math.pow(d.text.toString().length, 0.3))
+      .style('font-size', d => `${11 / Math.pow(d.text.toString().length, 0.3)}px`)
       // Side label circle background
     sideLabelsUpdate.select(`.${nodeSelectors.sideLabelBackground}`)
       .style('fill', d => d.color)
