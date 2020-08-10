@@ -54,7 +54,7 @@ export function updateSelectedLinks<N extends NodeDatumCore, L extends LinkDatum
   selection.select(`.${linkSelectors.linkBand}`)
   selection.select(`.${linkSelectors.linkSupport}`)
     .style('stroke-opacity', d => (d._state.hovered || d._state.selected) ? 0.2 : 0)
-    .style('stroke-width', d => {
+    .attr('stroke-width', d => {
       return d._state.selected ? getLinkBandWidth(d, scale, config) + 5
         : d._state.hovered ? getLinkBandWidth(d, scale, config) + 10 : null
     })
@@ -73,7 +73,7 @@ export function updateLinks<N extends NodeDatumCore, L extends LinkDatumCore> (s
   selection.select(`.${linkSelectors.link}`)
     .attr('class', linkSelectors.link)
     .attr('marker-mid', d => getMarker(d, scale, config))
-    .style('stroke-width', d => getLinkStrokeWidth(d, scale, config))
+    .attr('stroke-width', d => getLinkStrokeWidth(d, scale, config))
     .style('stroke', d => getLinkColor(d, config))
     .attr('transform', getLinkShiftTransform)
     .each((d, i, elements) => {
@@ -89,7 +89,7 @@ export function updateLinks<N extends NodeDatumCore, L extends LinkDatumCore> (s
   linkBand
     .attr('class', linkSelectors.linkBand)
     .attr('transform', getLinkShiftTransform)
-    .style('stroke-width', d => getLinkBandWidth(d, scale, config))
+    .attr('stroke-width', d => getLinkBandWidth(d, scale, config))
     .style('stroke', d => getLinkColor(d, config))
 
   smartTransition(linkBand, duration)
@@ -211,11 +211,11 @@ export function zoomLinks<N extends NodeDatumCore, L extends LinkDatumCore> (sel
   const linkElements: Selection<SVGGElement, L, SVGGElement, L> = selection.selectAll(`.${linkSelectors.link}`)
   linkElements
     .attr('marker-mid', d => getMarker(d, scale, config))
-    .style('stroke-width', d => getLinkStrokeWidth(d, scale, config))
+    .attr('stroke-width', d => getLinkStrokeWidth(d, scale, config))
 
   const linkBandElements: Selection<SVGGElement, L, SVGGElement, L> = selection.selectAll(`.${linkSelectors.linkBand}`)
   linkBandElements
-    .style('stroke-width', d => getLinkBandWidth(d, scale, config))
+    .attr('stroke-width', d => getLinkBandWidth(d, scale, config))
 }
 
 export const zoomLinksThrottled = throttle(zoomLinks, 500)
