@@ -57,6 +57,10 @@ export const gLink = css`
     }
   }
 `
+export const greyout = css`
+  label: greyout;
+  opacity: 0.1;
+`
 
 export const linkBand = css`
   label: link-band;

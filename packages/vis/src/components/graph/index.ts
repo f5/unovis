@@ -31,7 +31,7 @@ import * as panelSelectors from './modules/panel/style'
 // Modules
 import { createNodes, updateNodes, removeNodes, zoomNodesThrottled, zoomNodes, updateSelectedNodes } from './modules/node'
 import { getMaxNodeSize, getX, getY } from './modules/node/helper'
-import { createLinks, updateLinks, removeLinks, zoomLinksThrottled, zoomLinks, animateLinkFlow, updateSelectedLink } from './modules/link'
+import { createLinks, updateLinks, removeLinks, zoomLinksThrottled, zoomLinks, animateLinkFlow, updateSelectedLinks } from './modules/link'
 import { LINK_MARKER_WIDTH, LINK_MARKER_HEIGHT, getDoubleArrowPath, getArrowPath, getLinkColor } from './modules/link/helper'
 import { createPanels, updatePanels, removePanels } from './modules/panel'
 import { setPanelForNodes, updatePanelBBoxSize, updatePanelNumNodes, getMaxPanlePadding } from './modules/panel/helper'
@@ -459,7 +459,7 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
     const { config } = this
 
     const linkElements: Selection<SVGGElement, L, SVGGElement, L[]> = this._linksGroup.selectAll(`.${linkSelectors.gLink}`)
-    linkElements.call(updateSelectedLink, config, 0, this._scale)
+    linkElements.call(updateSelectedLinks, config, 0, this._scale)
 
     const nodeElements: Selection<SVGGElement, N, SVGGElement, N[]> = this._nodesGroup.selectAll(`.${nodeSelectors.gNode}`)
     nodeElements.call(updateSelectedNodes, config)

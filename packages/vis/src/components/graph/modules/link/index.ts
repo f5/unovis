@@ -47,8 +47,8 @@ export function createLinks<N extends NodeDatumCore, L extends LinkDatumCore> (s
     .attr('class', linkSelectors.labelGroups)
 }
 
-export function updateSelectedLink<N extends NodeDatumCore, L extends LinkDatumCore> (selection: Selection<SVGGElement, L, SVGGElement, L[]>, config: GraphConfigInterface<N, L>, duration: number, scale: number): void {
-  const { nodeDisabled } = config
+export function updateSelectedLinks<N extends NodeDatumCore, L extends LinkDatumCore> (selection: Selection<SVGGElement, L, SVGGElement, L[]>, config: GraphConfigInterface<N, L>, scale: number): void {
+  const isGreyout = d => d._state.greyout
 
   selection.select(`.${linkSelectors.link}`)
   selection.select(`.${linkSelectors.linkBand}`)
@@ -59,17 +59,8 @@ export function updateSelectedLink<N extends NodeDatumCore, L extends LinkDatumC
         : d._state.hovered ? getLinkBandWidth(d, scale, config) + 10 : null
     })
 
-  if (duration > 0) {
-    selection.attr('pointer-events', 'none')
-
-    const t = smartTransition(selection, duration) as Selection<SVGGElement, L, SVGGElement, L[]>
-    t.attr('opacity', d => (getValue(d, nodeDisabled) || d._state.greyout) ? 0.1 : 1)
-      .on('end', (d, i, elements) => {
-        select(elements[i]).attr('pointer-events', 'stroke')
-      })
-  } else {
-    selection.attr('opacity', d => (getValue(d, nodeDisabled) || d._state.greyout) ? 0.1 : 1)
-  }
+  selection
+    .classed(linkSelectors.greyout, d => isGreyout(d))
 }
 
 export function updateLinks<N extends NodeDatumCore, L extends LinkDatumCore> (selection: Selection<SVGGElement, L, SVGGElement, L[]>, config: GraphConfigInterface<N, L>, duration: number, scale = 1): void {
@@ -115,18 +106,19 @@ export function updateLinks<N extends NodeDatumCore, L extends LinkDatumCore> (s
     .attr('y2', d => getY(d.target as N))
     .style('stroke', d => getLinkColor(d, config))
 
-  selection.select(`.${linkSelectors.flowGroup}`)
-    .attr('class', linkSelectors.flowGroup)
+  const flowGroup = selection.select(`.${linkSelectors.flowGroup}`)
+  flowGroup
     .attr('transform', getLinkShiftTransform)
     .style('display', d => getValue(d, linkFlow) ? null : 'none')
+    .style('opacity', 0)
     .each((d, i, els) => {
       select(els[i]).selectAll(`.${linkSelectors.flowCircle}`)
         .attr('r', flowCircleSize / scale)
         .style('fill', getLinkColor(d, config))
     })
-    .style('opacity', 0)
-  smartTransition(selection.selectAll(`.${linkSelectors.flowGroup}`), duration)
-    .style('opacity', 1)
+    .attr('opacity', 0)
+
+  smartTransition(flowGroup, duration).style('opacity', 1)
 
   selection.each((l, i, elements) => {
     const linkGroup = select(elements[i])
@@ -161,12 +153,24 @@ export function updateLinks<N extends NodeDatumCore, L extends LinkDatumCore> (s
     })
   })
 
-  updateSelectedLink(selection, config, duration, scale)
+  if (duration > 0) {
+    selection.attr('pointer-events', 'none')
+
+    const t = smartTransition(selection, duration) as Selection<SVGGElement, L, SVGGElement, L[]>
+    t.attr('opacity', 1)
+      .on('end interrupt', (d, i, elements) => {
+        select(elements[i]).attr('pointer-events', 'stroke')
+      })
+  } else {
+    selection.attr('opacity', 1)
+  }
+
+  updateSelectedLinks(selection, config, scale)
 }
 
 export function removeLinks<N extends NodeDatumCore, L extends LinkDatumCore> (selection: Selection<SVGGElement, L, SVGGElement, L[]>, config: GraphConfigInterface<N, L>, duration: number): void {
   smartTransition(selection, duration)
-    .attr('opacity', 0)
+    .style('opacity', 0)
     .remove()
 }
 
