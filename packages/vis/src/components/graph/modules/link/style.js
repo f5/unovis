@@ -49,7 +49,6 @@ export const linkDashed = css`
 
 export const gLink = css`
   label: g-link;
-  transition: .4s opacity;
 
   &${`.${linkDashed}`} {
     ${`.${link}`}, ${`.${linkSupport}`} {

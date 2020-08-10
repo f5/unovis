@@ -110,6 +110,7 @@ export function updateLinks<N extends NodeDatumCore, L extends LinkDatumCore> (s
   flowGroup
     .attr('transform', getLinkShiftTransform)
     .style('display', d => getValue(d, linkFlow) ? null : 'none')
+    .style('opacity', 0)
     .each((d, i, els) => {
       select(els[i]).selectAll(`.${linkSelectors.flowCircle}`)
         .attr('r', flowCircleSize / scale)
