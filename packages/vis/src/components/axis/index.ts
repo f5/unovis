@@ -210,7 +210,7 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
 
   _getNumTicks (): number {
     const { config: { type, numTicks, width, height } } = this
-    return numTicks ?? Math.floor((type === AxisType.X ? width / 175 : height / 50))
+    return numTicks ?? Math.floor((type === AxisType.X ? width / 175 : Math.pow(height, 0.85) / 25))
   }
 
   _getTickValues (): number[] {
