@@ -101,7 +101,7 @@ export interface SankeyConfigInterface<N extends SankeyNodeDatumInterface, L ext
   labelFontSize?: number;
   /** Label text separators for wrapping. Default: `[' ', '-']` */
   labelTextSeparator?: string[];
-  /** Force break words to fit long labels. Default: `false` */
+  /** Force break words to fit long labels. Default: `true` */
   labelForceWordBreak?: boolean;
   /** Label color.. Default: `null` */
   labelColor?: ColorAccessor<N>;
