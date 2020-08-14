@@ -20,7 +20,7 @@ export const linkSupport = css`
   fill: none;
   stroke-linecap: round;
   pointer-events: stroke;
-  stroke-width: 15px;
+  stroke-width: 10px;
   stroke-opacity: 0;
   stroke: var(--vis-graph-link-stroke-color);
   transition: .2s;
