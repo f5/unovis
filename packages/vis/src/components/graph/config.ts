@@ -141,7 +141,7 @@ export class GraphConfig<N extends NodeDatumCore, L extends LinkDatumCore> exten
   forceLayoutSettings = {
     linkDistance: 60,
     linkStrength: 0.45,
-    charge: -350,
+    charge: -500,
     forceXStrength: 0.15,
     forceYStrength: 0.25,
   }
