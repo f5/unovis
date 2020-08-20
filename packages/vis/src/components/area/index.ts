@@ -29,7 +29,6 @@ export class Area<Datum> extends XYComponentCore<Datum> {
   areaGen: AreaInterface<AreaDatum>
   events = {
     [Area.selectors.area]: {
-      mouseover: this._raiseSelection,
     },
   }
 
@@ -114,9 +113,5 @@ export class Area<Datum> extends XYComponentCore<Datum> {
       { y0, y1, x: xRange[0] },
       { y0, y1, x: xRange[1] },
     ])
-  }
-
-  _raiseSelection (d, i, els): void {
-    select(els[i]).raise()
   }
 }
