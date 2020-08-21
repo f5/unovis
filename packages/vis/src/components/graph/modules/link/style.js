@@ -7,6 +7,8 @@ export const variables = injectGlobal`
     --vis-graph-link-label-stroke-color: #fff;
     --vis-graph-link-label-text-color: #fff;
     --vis-graph-link-label-fill-color: #acb3b8;
+    
+    --vis-graph-link-support-stroke-width: 10px;
   }
 `
 
@@ -20,7 +22,7 @@ export const linkSupport = css`
   fill: none;
   stroke-linecap: round;
   pointer-events: stroke;
-  stroke-width: 10px;
+  stroke-width: var(--vis-graph-link-support-stroke-width);
   stroke-opacity: 0;
   stroke: var(--vis-graph-link-stroke-color);
   transition: .2s;
