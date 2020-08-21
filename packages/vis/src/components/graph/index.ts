@@ -346,13 +346,13 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
     const { left, top, right, bottom } = this.bleed
 
     const maxNodeSize = getMaxNodeSize(nodes, nodeSize)
-    const w = width - left - right
-    const h = height - top - bottom
+    const w = width
+    const h = height
     const xExtent = extent(nodes, d => getX(d)) as number[]
     const yExtent = extent(nodes, d => getY(d)) as number[]
 
-    const xScale = w / (xExtent[1] - xExtent[0])
-    const yScale = h / (yExtent[1] - yExtent[0] + maxNodeSize)
+    const xScale = w / (xExtent[1] - xExtent[0] + left + right)
+    const yScale = h / (yExtent[1] - yExtent[0] + maxNodeSize + top + bottom)
 
     const clampedScale = clamp(min([xScale, yScale]), zoomScaleExtent[0], zoomScaleExtent[1])
 
