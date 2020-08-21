@@ -71,6 +71,7 @@ export function updateSelectedNodes<N extends NodeDatumCore, L extends LinkDatum
     const isGreyout = getValue(d, nodeDisabled) || d._state.greyout
 
     group.classed(nodeSelectors.greyoutNode, isGreyout)
+      .classed(nodeSelectors.draggable, !config.disableDrag)
 
     const nodeSelection: Selection<SVGGElement, N, SVGGElement, N> = group.selectAll(`.${nodeSelectors.nodeSelection}`)
     nodeSelection.classed(nodeSelectors.nodeSelectionActive, d._state.selected)

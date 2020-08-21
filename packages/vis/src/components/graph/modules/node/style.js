@@ -128,6 +128,10 @@ export const gNode = css`
   label: g-node;
 
   transition: .25s opacity;
+`
+
+export const draggable = css`
+  label: draggable;
 
   &:hover {
     cursor: grab;
@@ -136,7 +140,6 @@ export const gNode = css`
   &${`.${nodeIsDragged}`} {
     cursor: grabbing;
   }
-
 `
 
 export const gNodeExit = css`
