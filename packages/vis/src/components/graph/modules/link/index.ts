@@ -116,9 +116,8 @@ export function updateLinks<N extends NodeDatumCore, L extends LinkDatumCore> (s
         .attr('r', flowCircleSize / scale)
         .style('fill', getLinkColor(d, config))
     })
-    .attr('opacity', 0)
 
-  smartTransition(flowGroup, duration).style('opacity', 1)
+  smartTransition(flowGroup, duration).style('opacity', scale < ZOOM_LEVEL.LEVEL2 ? 0 : 1)
 
   selection.each((l, i, elements) => {
     const linkGroup = select(elements[i])
