@@ -16,9 +16,11 @@ export const variables = injectGlobal`
     --vis-graph-node-icon-fill-color-dark: #a5abb2;
 
     /* Node Label */
+    --vis-graph-node-label-font-size: 9pt;
     --vis-graph-node-label-background: #ffffff;
     --vis-graph-node-label-text-color: #5b5f6d;
     --vis-graph-node-sublabel-text-color: #989aa3;
+    --vis-graph-node-sublabel-font-size: 8pt;
     --vis-graph-node-label-font-family: var(--vis-font-family);
 
     /* Node Side Labels (circular labels)*/
@@ -67,7 +69,7 @@ export const label = css`
 
   text-anchor: middle;
   font-weight: 300;
-  font-size: 9pt;
+  font-size: var(--vis-graph-node-label-font-size);
 `
 
 export const labelBackground = css`
@@ -95,7 +97,7 @@ export const subLabelTextContent = css`
 
   fill: var(--vis-graph-node-sublabel-text-color);
   font-family: var(--vis-graph-node-label-font-family);
-  font-size: 8pt;
+  font-size: var(--vis-graph-node-sublabel-font-size);
 `
 
 export const sideLabelsGroup = css`

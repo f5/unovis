@@ -225,7 +225,8 @@ export function updateNodes<N extends NodeDatumCore, L extends LinkDatumCore> (s
     sublabelTextContent.text(trimText(getValue(d, nodeSubLabel)))
 
     // Position label
-    const labelMargin = 18
+    const labelFontSize = parseFloat(window.getComputedStyle(document.documentElement).getPropertyValue('--vis-graph-node-label-font-size')) || 12
+    const labelMargin = labelFontSize * 1.5
     const nodeHeight = isCustomXml(getValue(d, nodeShape)) ? nodeBBox.height : getNodeSize(d, nodeSize)
     label.attr('transform', `translate(0, ${nodeHeight / 2 + labelMargin})`)
     if (scale >= ZOOM_LEVEL.LEVEL3) setLabelRect(label, getValue(d, nodeLabel), nodeSelectors.labelText)
