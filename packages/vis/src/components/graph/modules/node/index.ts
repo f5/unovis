@@ -214,7 +214,7 @@ export function updateNodes<N extends NodeDatumCore, L extends LinkDatumCore> (s
     labelTextContent.text(labelTextTrimmed)
     sublabelTextContent.text(sublabelTextTrimmed)
     group
-      .on('mouseover', () => {
+      .on('mouseenter', () => {
         labelTextContent.text(labelText)
         sublabelTextContent.text(sublabelText)
         setLabelRect(label, labelText, nodeSelectors.labelText)
