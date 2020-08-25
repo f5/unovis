@@ -17,7 +17,7 @@ import { getValue, throttle } from 'utils/data'
 import { GraphConfigInterface } from '../../config'
 
 // Helpers
-import { arcTween, polyTween, setLabelRect, getX, getY, getSideTexLabelColor, getNodeColor, getNodeIconColor, getNodeSize } from './helper'
+import { arcTween, polyTween, setLabelRect, getX, getY, getSideTexLabelColor, getNodeColor, getNodeIconColor, getNodeSize, LABEL_RECT_VERTICAL_PADDING } from './helper'
 import { appendShape, updateShape, isCustomXml } from '../shape'
 import ZOOM_LEVEL from '../zoom-levels'
 
@@ -104,7 +104,8 @@ export function updateNodes<N extends NodeDatumCore, L extends LinkDatumCore> (s
 
   // Update nodes themselves
   selection.each((d, i, elements) => {
-    const group: Selection<SVGGElement, N, SVGGElement, N> = select(elements[i])
+    const groupElement = elements[i]
+    const group: Selection<SVGGElement, N, SVGGElement, N> = select(groupElement)
     const node: Selection<SVGGElement, N, SVGGElement, N> = group.select(`.${nodeSelectors.node}`)
     const nodeArc = group.select(`.${nodeSelectors.nodeArc}`)
     const icon = group.select(`.${nodeSelectors.nodeIcon}`)
@@ -205,28 +206,30 @@ export function updateNodes<N extends NodeDatumCore, L extends LinkDatumCore> (s
     sideLabels.exit().remove()
 
     // Set Label and Sublabel text
+    const labelText = getValue(d, nodeLabel)
+    const sublabelText = getValue(d, nodeSubLabel)
+    const labelTextTrimmed = trimText(getValue(d, nodeLabel))
+    const sublabelTextTrimmed = trimText(getValue(d, nodeSubLabel))
+
+    labelTextContent.text(labelTextTrimmed)
+    sublabelTextContent.text(sublabelTextTrimmed)
     group
-      .on('mouseover', () => {
-        const labelContent = getValue(d, nodeLabel)
-        labelTextContent.text(labelContent)
-        sublabelTextContent.text(getValue(d, nodeSubLabel))
-        setLabelRect(label, labelContent, nodeSelectors.labelText)
+      .on('mouseenter', () => {
+        labelTextContent.text(labelText)
+        sublabelTextContent.text(sublabelText)
+        setLabelRect(label, labelText, nodeSelectors.labelText)
         group.raise()
       })
       .on('mouseleave', () => {
-        const labelContent = trimText(getValue(d, nodeLabel))
-        labelTextContent.text(labelContent)
-        sublabelTextContent.text(trimText(getValue(d, nodeSubLabel)))
-        setLabelRect(label, labelContent, nodeSelectors.labelText)
+        labelTextContent.text(labelTextTrimmed)
+        sublabelTextContent.text(sublabelTextTrimmed)
+        setLabelRect(label, labelTextTrimmed, nodeSelectors.labelText)
       })
 
-    labelTextContent.text(trimText(getValue(d, nodeLabel)))
-
-    sublabelTextContent.text(trimText(getValue(d, nodeSubLabel)))
 
     // Position label
-    const labelFontSize = parseFloat(window.getComputedStyle(document.documentElement).getPropertyValue('--vis-graph-node-label-font-size')) || 12
-    const labelMargin = labelFontSize * 1.5
+    const labelFontSize = parseFloat(window.getComputedStyle(groupElement).getPropertyValue('--vis-graph-node-label-font-size')) || 12
+    const labelMargin = LABEL_RECT_VERTICAL_PADDING + 1.25 * labelFontSize ** 1.03
     const nodeHeight = isCustomXml(getValue(d, nodeShape)) ? nodeBBox.height : getNodeSize(d, nodeSize)
     label.attr('transform', `translate(0, ${nodeHeight / 2 + labelMargin})`)
     if (scale >= ZOOM_LEVEL.LEVEL3) setLabelRect(label, getValue(d, nodeLabel), nodeSelectors.labelText)
