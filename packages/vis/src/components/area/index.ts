@@ -76,7 +76,10 @@ export class Area<Datum> extends XYComponentCore<Datum> {
       .style('fill', (d, i) => getColor(d, config.color, i))
 
     const areasMerged = smartTransition(areasEnter.merge(areas), duration)
-      .style('opacity', d => getValue(d, config.opacity))
+      .style('opacity', d => {
+        const isDefined = d.some(p => (p.y0 - p.y1) !== 0)
+        return isDefined ? getValue(d, config.opacity) : 0
+      })
       .style('fill', (d, i) => getColor(d, config.color, i))
       .style('cursor', (d, i) => getValue(d, config.cursor, i))
 
@@ -88,7 +91,7 @@ export class Area<Datum> extends XYComponentCore<Datum> {
           return interpolatePath(previous, next)
         })
     } else {
-      areasMerged.attr('d', d => this.areaGen(d))
+      areasMerged.attr('d', d => this.areaGen(d) || this._emptyPath())
     }
 
     areas.exit().remove()
