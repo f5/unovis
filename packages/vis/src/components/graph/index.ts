@@ -41,7 +41,7 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
   static selectors = {
     background: generalSelectors.background,
     node: nodeSelectors.gNode,
-    link: linkSelectors.linkSupport,
+    link: linkSelectors.gLink,
   }
 
   static nodeSelectors = nodeSelectors
