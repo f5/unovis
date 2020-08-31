@@ -28,7 +28,7 @@ import { getLonLat, arc } from './modules/utils'
 // Styles
 import * as s from './style'
 
-export class TopoJSONMap<NodeDatum extends NodeDatumCore, LinkDatum extends LinkDatumCore, AreaDatum extends MapAreaCore> extends ComponentCore<{nodes: NodeDatum[]; links: LinkDatum[]; areas: AreaDatum[]}> {
+export class TopoJSONMap<NodeDatum extends NodeDatumCore, LinkDatum extends LinkDatumCore, AreaDatum extends MapAreaCore> extends ComponentCore<{nodes: NodeDatum[]; links?: LinkDatum[]; areas?: AreaDatum[]}> {
   static selectors = s
   config: TopoJSONMapConfig<NodeDatum, LinkDatum, AreaDatum> = new TopoJSONMapConfig()
   datamodel: MapGraphDataModel<NodeDatum, LinkDatum, AreaDatum> = new MapGraphDataModel()

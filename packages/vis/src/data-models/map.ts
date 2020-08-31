@@ -12,8 +12,6 @@ import { NumericAccessor } from 'types/misc'
 import { getValue } from 'utils/data'
 
 export class MapDataModel<PointDatum> extends CoreDataModel<PointDatum[]> {
-  data: PointDatum[] = []
-
   getDataLatLngBounds (pointLatitude: NumericAccessor<PointDatum>, pointLongitute: NumericAccessor<PointDatum>, paddingDegrees = 1): number[][] {
     if (!this.data.length) return
 

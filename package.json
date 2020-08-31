@@ -35,7 +35,7 @@
     "git-pack": "git+ssh://git@gitlab.com:volterra/ves-ui-packages/git-pack.git#v0.0.13",
     "jest": "^26.1.0",
     "lerna": "^3.22.1",
-    "typescript": "^3.9.7"
+    "typescript": "^4.0.2"
   },
   "precommit": "lint"
 }
