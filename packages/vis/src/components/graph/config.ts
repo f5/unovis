@@ -105,7 +105,7 @@ export interface GraphConfigInterface<N extends NodeDatumCore, L extends LinkDat
   /** Node Sublabel accessor function or value */
   nodeSubLabel?: StringAccessor<N>;
   /** Node Side Label accessor function or undefined */
-  nodeSideLabels?: ((d: N, i?: number, ...any) => SideLabel) | undefined;
+  nodeSideLabels?: ((d: N, i?: number, ...any) => SideLabel[]) | undefined;
   /** Node disabled accessor function or value */
   nodeDisabled?: BooleanAccessor<N>;
   /** Node fill color accessor function or value */
