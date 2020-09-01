@@ -11,8 +11,6 @@ import { isArray, getValue } from 'utils/data'
 import { CoreDataModel } from './core'
 
 export class SeriesDataModel<Datum> extends CoreDataModel<Datum[]> {
-  data: Datum[] = [];
-
   constructor (data: Datum[] = []) {
     super(data)
   }
