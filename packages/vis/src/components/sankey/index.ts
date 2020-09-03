@@ -60,9 +60,9 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
   }
 
   get bleed (): Spacing {
-    const { config: { labelMaxWidth, labelFontSize, labelPosition, labelBackground } } = this
+    const { config: { labelMaxWidth, labelFontSize, labelPosition } } = this
 
-    const labelSize = requiredLabelSpace(labelMaxWidth, labelFontSize, labelBackground)
+    const labelSize = requiredLabelSpace(labelMaxWidth, labelFontSize)
     return { top: labelSize.height / 2, bottom: labelSize.height / 2, left: labelPosition === Position.AUTO ? labelSize.width : 0, right: labelSize.width }
   }
 
