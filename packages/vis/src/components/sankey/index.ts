@@ -43,12 +43,12 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
   private _highlightActive = false
   events = {
     [Sankey.selectors.gNode]: {
-      mouseover: this._onNodeMouseOver.bind(this),
-      mouseout: this._onNodeMouseOut.bind(this),
+      mouseenter: this._onNodeMouseOver.bind(this),
+      mouseleave: this._onNodeMouseOut.bind(this),
     },
     [Sankey.selectors.link]: {
-      mouseover: this._onLinkMouseOver.bind(this),
-      mouseout: this._onLinkMouseOut.bind(this),
+      mouseenter: this._onLinkMouseOver.bind(this),
+      mouseleave: this._onLinkMouseOut.bind(this),
     },
   }
 
