@@ -251,7 +251,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     }
 
     if (foundPoint) {
-      // If point was found and it's insiade an expanded cluster -> simply select it
+      // If point was found and it's inside an expanded cluster -> simply select it
       const isPointInsideExpandedCluster = this._expandedCluster?.points?.find(d => d.properties.id === id)
       if (isPointInsideExpandedCluster && selectNode) {
         this._selectedPoint = foundPoint
@@ -259,6 +259,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
         return
       }
 
+      // Else - trigger zoom
       this._externallySelectedPoint = foundPoint
       this._zoomingToExternallySelectedPoint = true
 
