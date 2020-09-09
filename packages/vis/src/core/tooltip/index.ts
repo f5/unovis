@@ -111,8 +111,8 @@ export class Tooltip<T extends ComponentCore<any>, TooltipDatum> {
       : pos.y < (height - dy + paddingY) ? height - dy - pos.y + paddingY : 0
 
     // Place
-    const x = pos.x + constraintX + dx
-    const y = pos.y + constraintY + dy
+    const x = containerWidth < width ? 0 : pos.x + constraintX + dx
+    const y = containerHeight < height ? height : pos.y + constraintY + dy
     this.div
       .style('bottom', `${containerHeight - y}px`)
       .style('left', `${x}px`)
