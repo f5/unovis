@@ -158,7 +158,9 @@ export function updateLinks<N extends NodeDatumCore, L extends LinkDatumCore> (s
     const t = smartTransition(selection, duration) as Selection<SVGGElement, L, SVGGElement, L[]>
     t.attr('opacity', 1)
       .on('end interrupt', (d, i, elements) => {
-        select(elements[i]).attr('pointer-events', 'stroke')
+        select(elements[i])
+          .attr('pointer-events', 'stroke')
+          .attr('opacity', 1)
       })
   } else {
     selection.attr('opacity', 1)
