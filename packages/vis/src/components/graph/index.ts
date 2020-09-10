@@ -137,11 +137,15 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
     this._setPanels = true
 
     this._resetSelection()
-    const selectedNode = this.config.selectedNodeId && find(nodes, node => node.id === this.config.selectedNodeId)
-    this._selectNode(selectedNode)
+    if (this.config.selectedNodeId) {
+      const selectedNode = find(nodes, node => node.id === this.config.selectedNodeId)
+      this._selectNode(selectedNode)
+    }
 
-    const selectedLink = this.config.selectedLinkId && find(links, link => link.id === this.config.selectedLinkId)
-    this._selectLink(selectedLink)
+    if (this.config.selectedLinkId) {
+      const selectedLink = find(links, link => link.id === this.config.selectedLinkId)
+      this._selectLink(selectedLink)
+    }
   }
 
   get bleed (): Spacing {
@@ -369,50 +373,52 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
 
   _selectNode (node: N): void {
     const { datamodel: { nodes, links } } = this
-    if (!node) return
+    if (!node) console.warn('Graph | Select Node: Not found')
     this._selectedNode = node
 
-    // Apply Greyout
-    // Grayout all nodes
+    // Apply grey out
+    // Grey out all nodes
     nodes.forEach(n => {
       n._state.selected = false
       n._state.greyout = true
     })
 
-    // Grayout all links
+    // Grey out all links
     links.forEach(l => {
       l._state.greyout = true
       l._state.selected = false
     })
 
     // Highlight selected
-    node._state.selected = true
-    node._state.greyout = false
+    if (node) {
+      node._state.selected = true
+      node._state.greyout = false
 
-    const connectedLinks = links.filter(l => (l.source === node) || (l.target === node))
-    connectedLinks.forEach(l => {
-      const source = l.source as L
-      const target = l.target as L
-      source._state.greyout = false
-      target._state.greyout = false
-      l._state.greyout = false
-    })
+      const connectedLinks = links.filter(l => (l.source === node) || (l.target === node))
+      connectedLinks.forEach(l => {
+        const source = l.source as L
+        const target = l.target as L
+        source._state.greyout = false
+        target._state.greyout = false
+        l._state.greyout = false
+      })
+    }
 
     this._updateSelectedElements()
   }
 
   _selectLink (link: L): void {
     const { datamodel: { nodes, links } } = this
-    if (!link) return
+    if (!link) console.warn('Graph | Select Link: Not found')
     this._selectedLink = link
-    const selectedLinkSource = link.source as N
-    const selectedLinkTarget = link.target as N
+    const selectedLinkSource = link?.source as N
+    const selectedLinkTarget = link?.target as N
 
-    // Apply greyout
+    // Apply grey out
     nodes.forEach(n => {
       n._state.selected = false
       n._state.greyout = true
-      if (selectedLinkTarget._id === n._id || selectedLinkSource._id === n._id) {
+      if (selectedLinkTarget?._id === n._id || selectedLinkSource?._id === n._id) {
         link._state.greyout = false
       }
     })
@@ -421,7 +427,7 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
       l._state.greyout = true
       const source = l.source as N
       const target = l.target as N
-      if ((source._id === selectedLinkSource._id) && (target._id === selectedLinkTarget._id)) {
+      if ((source._id === selectedLinkSource?._id) && (target._id === selectedLinkTarget?._id)) {
         source._state.greyout = false
         target._state.greyout = false
         l._state.greyout = false
@@ -432,7 +438,7 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
       delete l._state.selected
     })
 
-    link._state.selected = true
+    if (link) link._state.selected = true
 
     this._updateSelectedElements()
   }
