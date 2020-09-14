@@ -128,24 +128,11 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
   }
 
   setConfig (config: GraphConfigInterface<N, L>): void {
-    const { datamodel: { links, nodes } } = this
     this._fitLayout = this._fitLayout || this.config.layoutType !== config.layoutType
     this._recalculateLayout = this._recalculateLayout || this._shouldLayoutRecalculate(config)
 
     super.setConfig(config)
-
     this._setPanels = true
-
-    this._resetSelection()
-    if (this.config.selectedNodeId) {
-      const selectedNode = find(nodes, node => node.id === this.config.selectedNodeId)
-      this._selectNode(selectedNode)
-    }
-
-    if (this.config.selectedLinkId) {
-      const selectedLink = find(links, link => link.id === this.config.selectedLinkId)
-      this._selectLink(selectedLink)
-    }
   }
 
   get bleed (): Spacing {
@@ -202,6 +189,18 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
     // Draw
     this._drawNodes(animDuration)
     this._drawLinks(animDuration)
+
+    // Select Links / Nodes
+    this._resetSelection()
+    if (this.config.selectedNodeId) {
+      const selectedNode = find(datamodel.nodes, node => node.id === this.config.selectedNodeId)
+      this._selectNode(selectedNode)
+    }
+
+    if (this.config.selectedLinkId) {
+      const selectedLink = find(datamodel.links, link => link.id === this.config.selectedLinkId)
+      this._selectLink(selectedLink)
+    }
 
     // Link flow animation timer
     if (!this._timer) {
