@@ -16,6 +16,7 @@ export const variables = injectGlobal`
     --vis-sankey-node-label-background-stroke-color: #eaeaea;
     --vis-sankey-node-label-text-decoration: none;
     --vis-sankey-node-label-font-weight: 600;
+    --vis-sankey-node-sublabel-font-weight: 500;
     --vis-sankey-node-label-cursor: default;
 
     --vis-sankey-icon-size: ${SANKEY_ICON_SIZE}px;
@@ -88,11 +89,11 @@ export const sublabel = css`
 
   fill: var(--vis-sankey-node-label-color);
   pointer-events: none;
-  font-weight: 600;
   user-select: none;
 
   &, tspan {
     font-family: var(--vis-sankey-label-font-family);
+    font-weight: var(--vis-sankey-node-sublabel-font-weight);
   }
 
 `

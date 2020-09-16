@@ -50,10 +50,6 @@ export const requiredLabelSpace = (labelWidth: number, labelFontSize: number): {
   }
 }
 
-function getSublabelFontSize (labelFontSize: number): number {
-  return labelFontSize * 0.8
-}
-
 export function getLabelGroupXTranslate<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> (d: N, config: SankeyConfig<N, L>): number {
   const orientation = getLabelOrientation(d, config.width, config.labelPosition)
   switch (orientation) {
@@ -123,11 +119,13 @@ export function renderLabel<N extends SankeyNodeDatumInterface, L extends Sankey
   const sublabelText = getValue(d, config.subLabel)
 
   // Render the main label, wrap / trim it and estimate its size
+  const labelsFontSizeDifference = sublabelText ? config.labelFontSize - config.subLabelFontSize : 0
+  const labelTranslateY = labelPadding + ((isSublabelInline && labelsFontSizeDifference < 0) ? -0.6 * labelsFontSizeDifference : 0)
   labelTextSelection
     .text(labelText)
     .attr('font-size', config.labelFontSize)
     .style('fill', getValue(d, config.labelColor))
-    .attr('transform', `translate(${labelOrientationMult * labelPadding},${labelPadding})`)
+    .attr('transform', `translate(${labelOrientationMult * labelPadding},${labelTranslateY})`)
 
   const labelMaxWidth = isSublabelInline ? config.labelMaxWidth * (1 - (sublabelText ? config.subLabelToLabelInlineWidthRatio : 0)) : config.labelMaxWidth
   if (config.labelFit === FitMode.WRAP || forceExpand) wrapSVGText(labelTextSelection, { width: labelMaxWidth, separator, verticalAlign: VerticalAlign.TOP })
@@ -136,20 +134,21 @@ export function renderLabel<N extends SankeyNodeDatumInterface, L extends Sankey
   const labelSize = estimateTextSize(labelTextSelection, config.labelFontSize, dy, fastEstimatesMode, fontWidthToHeightRatio)
 
   // Render the sub-label, wrap / trim it and estimate its size
-  const sublabelFontSize = getSublabelFontSize(config.labelFontSize)
   const sublabelTranslateX = labelOrientationMult * (labelPadding + (isSublabelInline ? config.labelMaxWidth : 0))
-  const sublabelTranslateY = labelPadding + (isSublabelInline ? 0.18 * sublabelFontSize : labelSize.height)
+  const sublabelTranslateY = labelPadding + (isSublabelInline
+    ? (labelsFontSizeDifference > 0 ? 0.6 * labelsFontSizeDifference : 0)
+    : labelSize.height)
   sublabelTextSelection
     .text(sublabelText)
-    .attr('font-size', sublabelFontSize)
+    .attr('font-size', config.subLabelFontSize)
     .style('fill', getValue(d, config.subLabelColor))
     .attr('transform', `translate(${sublabelTranslateX},${sublabelTranslateY})`)
 
   const sublabelMaxWidth = isSublabelInline ? config.labelMaxWidth * config.subLabelToLabelInlineWidthRatio : config.labelMaxWidth
   if (config.labelFit === FitMode.WRAP || forceExpand) wrapSVGText(sublabelTextSelection, { width: sublabelMaxWidth, separator, verticalAlign: VerticalAlign.TOP })
-  else trimSVGText(sublabelTextSelection, sublabelMaxWidth, config.labelTrimMode, fastEstimatesMode, sublabelFontSize, fontWidthToHeightRatio)
+  else trimSVGText(sublabelTextSelection, sublabelMaxWidth, config.labelTrimMode, fastEstimatesMode, config.subLabelFontSize, fontWidthToHeightRatio)
 
-  const sublabelSize = estimateTextSize(sublabelTextSelection, sublabelFontSize, dy, fastEstimatesMode, fontWidthToHeightRatio)
+  const sublabelSize = estimateTextSize(sublabelTextSelection, config.subLabelFontSize, dy, fastEstimatesMode, fontWidthToHeightRatio)
 
   // Draw the background if needed
   const labelGroupHeight = (isSublabelInline ? Math.max(labelSize.height, sublabelSize.height) : (labelSize.height + sublabelSize.height)) + 2 * labelPadding

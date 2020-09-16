@@ -109,6 +109,8 @@ export interface SankeyConfigInterface<N extends SankeyNodeDatumInterface, L ext
   labelColor?: ColorAccessor<N>;
   /** Custom function to set the label visibility. Default: `undefined` */
   labelVisibility?: ((d: N, bbox: { x: number; y: number; width: number; height: number }, hovered: boolean) => boolean) | undefined;
+  /** Sub-label font size in pixel. Default: `10` */
+  subLabelFontSize?: number;
   /** Sub-label color. Default: `null` */
   subLabelColor?: ColorAccessor<N>;
   /** Sub-label position. Default: `SubLabelPlacement.INLINE` */
@@ -162,6 +164,7 @@ export class SankeyConfig<N extends SankeyNodeDatumInterface, L extends SankeyLi
   labelLength = undefined
   labelVisibility = undefined
   subLabel = undefined
+  subLabelFontSize = 10
   subLabelColor = null
   subLabelPlacement = SubLabelPlacement.BELOW
   subLabelToLabelInlineWidthRatio = 0.4
