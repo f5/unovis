@@ -50,7 +50,7 @@ export enum LayoutType {
 
 export type SideLabel = {
   text: string;
-  color?: string;
+  color?: string | null;
 }
 
 export enum LinkStyle {
