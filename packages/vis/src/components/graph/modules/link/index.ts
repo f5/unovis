@@ -2,7 +2,7 @@
 import { select, Selection } from 'd3-selection'
 
 // Types
-import { NodeDatumCore, LinkDatumCore, LinkStyle, LinkArrow } from 'types/graph'
+import { NodeDatumCore, LinkDatumCore, LinkStyle } from 'types/graph'
 
 // Utils
 import { range, throttle, getValue } from 'utils/data'
@@ -98,13 +98,14 @@ export function updateLinks<N extends NodeDatumCore, L extends LinkDatumCore> (s
     .attr('x2', d => getX(d.target as N))
     .attr('y2', d => getY(d.target as N))
 
-  selection.select(`.${linkSelectors.linkSupport}`)
-    .attr('transform', getLinkShiftTransform)
+  const linkSupport = selection.select(`.${linkSelectors.linkSupport}`)
+    .style('stroke', d => getLinkColor(d, config))
+
+  smartTransition(linkSupport, duration).attr('transform', getLinkShiftTransform)
     .attr('x1', d => getX(d.source as N))
     .attr('y1', d => getY(d.source as N))
     .attr('x2', d => getX(d.target as N))
     .attr('y2', d => getY(d.target as N))
-    .style('stroke', d => getLinkColor(d, config))
 
   const flowGroup = selection.select(`.${linkSelectors.flowGroup}`)
   flowGroup
@@ -119,26 +120,35 @@ export function updateLinks<N extends NodeDatumCore, L extends LinkDatumCore> (s
 
   smartTransition(flowGroup, duration).style('opacity', scale < ZOOM_LEVEL.LEVEL2 ? 0 : 1)
 
+  // Labels
   selection.each((l, i, elements) => {
     const linkGroup = select(elements[i])
     const labelGroups = linkGroup.selectAll(`.${linkSelectors.labelGroups}`)
-    const sideLabelData = getValue(l, linkLabel)
+    const sideLabelDatum = getValue(l, linkLabel)
+    const markerWidth = getValue(l, linkArrow) ? LINK_MARKER_WIDTH * 2 : 0
+    const labelShift = getValue(l, linkLabelShiftFromCenter) ? -markerWidth + 4 : 0
+    const labelTranslate = getLinkLabelShift(l, labelShift)
 
-    const sideLabels = labelGroups.selectAll(`.${linkSelectors.labelGroup}`).data(sideLabelData ? [sideLabelData] : [])
+    const sideLabels = labelGroups.selectAll(`.${linkSelectors.labelGroup}`).data(sideLabelDatum ? [sideLabelDatum] : [])
+    // Enter
     const sideLabelsEnter = sideLabels.enter().append('g')
       .attr('class', linkSelectors.labelGroup)
+      .attr('transform', labelTranslate)
+      .style('opacity', 0)
 
     sideLabelsEnter.append('circle')
       .attr('class', linkSelectors.labelCircle)
-      .attr('r', LINK_LABEL_RADIUS)
+      .attr('r', 0)
 
     sideLabelsEnter.append('text')
       .attr('class', linkSelectors.labelContent)
       .attr('dy', 1)
 
+    // Update
     const sideLabelsUpdate = sideLabels.merge(sideLabelsEnter)
 
-    sideLabelsUpdate.select(`.${linkSelectors.labelCircle}`)
+    smartTransition(sideLabelsUpdate.select(`.${linkSelectors.labelCircle}`), duration)
+      .attr('r', LINK_LABEL_RADIUS)
       .style('fill', d => d.color)
 
     sideLabelsUpdate.select(`.${linkSelectors.labelContent}`)
@@ -146,10 +156,18 @@ export function updateLinks<N extends NodeDatumCore, L extends LinkDatumCore> (s
       .style('fill', d => getSideTexLabelColor(d))
       .style('font-size', d => `${10 / Math.pow(d.text.toString().length, 0.3)}px`)
 
-    sideLabelsUpdate.attr('transform', () => {
-      const markerWidth = getValue(l, linkArrow) === LinkArrow.DOUBLE ? LINK_MARKER_WIDTH * 2 : LINK_MARKER_WIDTH
-      return getLinkLabelShift(l, getValue(l, linkLabelShiftFromCenter) ? -markerWidth + 4 : 0)
-    })
+    smartTransition(sideLabelsUpdate, duration)
+      .attr('transform', labelTranslate)
+      .style('opacity', 1)
+
+    // Exit
+    const sideLabelsExit = sideLabels.exit()
+    smartTransition(sideLabelsExit.select(`.${linkSelectors.labelCircle}`), duration)
+      .attr('r', 0)
+
+    smartTransition(sideLabelsExit, duration)
+      .style('opacity', 0)
+      .remove()
   })
 
   if (duration > 0) {
