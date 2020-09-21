@@ -48,7 +48,7 @@ export enum LayoutType {
   FORCE = 'force',
 }
 
-export type SideLabel = {
+export type CircleLabel = {
   text: string;
   color?: string | null;
 }

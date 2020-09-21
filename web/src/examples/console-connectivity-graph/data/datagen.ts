@@ -3,7 +3,7 @@ import _random from 'lodash/random'
 import _sample from 'lodash/sample'
 import _times from 'lodash/times'
 import _uniqueId from 'lodash/uniqueId'
-import { LinkStyle, LinkArrow, NodeDatumCore, LinkDatumCore, SideLabel } from '@volterra/vis'
+import { LinkStyle, LinkArrow, NodeDatumCore, LinkDatumCore, CircleLabel } from '@volterra/vis'
 
 interface NodeDatum extends NodeDatumCore {
   shape: string;
@@ -18,7 +18,7 @@ interface NodeDatum extends NodeDatumCore {
   fill: string;
   icon: string;
   iconSize: number;
-  sideLabels: SideLabel[];
+  sideLabels: CircleLabel[];
   disabled: boolean;
   alerts: string[];
 }
@@ -32,7 +32,7 @@ interface LinkDatum extends LinkDatumCore {
   bandWidth: number;
   linkStyle: LinkStyle;
   linkFlow: boolean;
-  linkLabel: SideLabel;
+  linkLabel: CircleLabel;
 }
 
 const status = ['alert', 'healthy', 'warning', 'inactive']
