@@ -41,15 +41,12 @@ export function getLinkLabelShift<L extends LinkDatumCore> (link: L, shiftFromCe
   const y1 = getY(link.source as NodeDatumCore)
   const x2 = getX(link.target as NodeDatumCore)
   const y2 = getY(link.target as NodeDatumCore)
-  const dist = Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1))
+  const angle = Math.atan2(y2 - y1, x2 - x1)
+  const perpendicularShift = getLinkShift(link)
 
-  const dx = ((x2 - x1) / dist) * shiftFromCenter
-  const dy = ((y2 - y1) / dist) * shiftFromCenter
-  const shift = getLinkShift(link)
-
-  const x = x1 + 0.5 * (x2 - x1)
-  const y = y1 + 0.5 * (y2 - y1)
-  return `translate(${x + dx + shift.dx}, ${y + dy + shift.dy})`
+  const x = x1 + 0.5 * (x2 - x1) + shiftFromCenter * Math.cos(angle) + perpendicularShift.dx
+  const y = y1 + 0.5 * (y2 - y1) + shiftFromCenter * Math.sin(angle) + perpendicularShift.dy
+  return `translate(${x}, ${y})`
 }
 
 export function getLinkStrokeWidth<N extends NodeDatumCore, L extends LinkDatumCore> (d: L, scale: number, config: GraphConfigInterface<N, L>): number {

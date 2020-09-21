@@ -4,7 +4,7 @@
 import { ComponentConfigInterface, ComponentConfig } from 'core/component/config'
 
 // Types
-import { NodeDatumCore, LinkDatumCore, LayoutType, SideLabel, LinkStyle, LinkArrow, PanelConfigInterface } from 'types/graph'
+import { NodeDatumCore, LinkDatumCore, LayoutType, CircleLabel, LinkStyle, LinkArrow, PanelConfigInterface } from 'types/graph'
 import { NumericAccessor, StringAccessor, BooleanAccessor, ColorAccessor } from 'types/misc'
 import { SHAPE } from 'types/shape'
 
@@ -79,7 +79,7 @@ export interface GraphConfigInterface<N extends NodeDatumCore, L extends LinkDat
   /** Link flow display accessor or boolean value */
   linkFlow?: BooleanAccessor<L>;
   /** Link side Label accessor function or undefined */
-  linkLabel?: ((d: L, i?: number, ...any) => SideLabel) | undefined;
+  linkLabel?: ((d: L, i?: number, ...any) => CircleLabel | undefined) | undefined;
   /** Shift or not link side Label from center */
   linkLabelShiftFromCenter?: BooleanAccessor<L>;
   /** Set selected link by Id */
@@ -105,7 +105,7 @@ export interface GraphConfigInterface<N extends NodeDatumCore, L extends LinkDat
   /** Node Sublabel accessor function or value */
   nodeSubLabel?: StringAccessor<N>;
   /** Node Side Label accessor function or undefined */
-  nodeSideLabels?: ((d: N, i?: number, ...any) => SideLabel[]) | undefined;
+  nodeSideLabels?: ((d: N, i?: number, ...any) => CircleLabel[] | undefined) | undefined;
   /** Node disabled accessor function or value */
   nodeDisabled?: BooleanAccessor<N>;
   /** Node fill color accessor function or value */

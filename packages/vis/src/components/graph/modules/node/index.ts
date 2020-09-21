@@ -5,7 +5,7 @@ import { arc } from 'd3-shape'
 
 // Type
 import { SHAPE } from 'types/shape'
-import { NodeDatumCore, LinkDatumCore, SideLabel } from 'types/graph'
+import { NodeDatumCore, LinkDatumCore, CircleLabel } from 'types/graph'
 
 // Utils
 import { trimText } from 'utils/text'
@@ -77,10 +77,10 @@ export function updateSelectedNodes<N extends NodeDatumCore, L extends LinkDatum
     nodeSelection.classed(nodeSelectors.nodeSelectionActive, d._state.selected)
 
     group.selectAll(`.${nodeSelectors.sideLabel}`)
-      .style('fill', (l: SideLabel) => isGreyout ? null : getSideTexLabelColor(l))
+      .style('fill', (l: CircleLabel) => isGreyout ? null : getSideTexLabelColor(l))
 
     group.selectAll(`.${nodeSelectors.sideLabelBackground}`)
-      .style('fill', (l: SideLabel) => isGreyout ? null : l.color)
+      .style('fill', (l: CircleLabel) => isGreyout ? null : l.color)
   })
 }
 
@@ -176,7 +176,7 @@ export function updateNodes<N extends NodeDatumCore, L extends LinkDatumCore> (s
 
     // Side Labels
     const sideLabelsData = getValue(d, nodeSideLabels) || []
-    const sideLabels = sideLabelsGroup.selectAll('g').data(sideLabelsData as SideLabel[])
+    const sideLabels = sideLabelsGroup.selectAll('g').data(sideLabelsData as CircleLabel[])
     const sideLabelsEnter = sideLabels.enter().append('g')
       .attr('class', nodeSelectors.sideLabelGroup)
     sideLabelsEnter.append('circle')
@@ -225,7 +225,6 @@ export function updateNodes<N extends NodeDatumCore, L extends LinkDatumCore> (s
         sublabelTextContent.text(sublabelTextTrimmed)
         setLabelRect(label, labelTextTrimmed, nodeSelectors.labelText)
       })
-
 
     // Position label
     const labelFontSize = parseFloat(window.getComputedStyle(groupElement).getPropertyValue('--vis-graph-node-label-font-size')) || 12

@@ -7,7 +7,7 @@ import { color } from 'd3-color'
 
 // Types
 import { SHAPE } from 'types/shape'
-import { NodeDatumCore, LinkDatumCore, SideLabel } from 'types/graph'
+import { NodeDatumCore, LinkDatumCore, CircleLabel } from 'types/graph'
 import { NumericAccessor } from 'types/misc'
 
 // Utils
@@ -113,7 +113,7 @@ export function getMaxNodeSize<T> (data: T[], nodeSize: NumericAccessor<T>): num
   return max(data || [], d => getNodeSize(d, nodeSize)) || NODE_SIZE
 }
 
-export function getSideTexLabelColor (label: SideLabel): string {
+export function getSideTexLabelColor (label: CircleLabel): string {
   if (!label.color) return null
 
   const hex = color(label.color).hex()

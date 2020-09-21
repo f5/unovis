@@ -5,7 +5,7 @@ import { Scale } from 'types/scales'
 import { Position, Arrangement } from 'types/position'
 import { Projection } from 'types/map-projections'
 import { Hierarchy } from 'types/radial-dendrogram'
-import { LayoutType, LinkStyle, LinkArrow, NodeDatumCore, LinkDatumCore, SideLabel } from 'types/graph'
+import { LayoutType, LinkStyle, LinkArrow, NodeDatumCore, LinkDatumCore, CircleLabel } from 'types/graph'
 import { SHAPE } from 'types/shape'
 import { Sizing } from 'types/component'
 import { NodeAlignType, SubLabelPlacement } from 'types/sankey'
@@ -24,7 +24,7 @@ export {
   NodeDatumCore,
   LinkDatumCore,
   SHAPE,
-  SideLabel,
+  CircleLabel,
   Hierarchy,
   Position,
   Arrangement,
