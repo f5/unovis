@@ -18,7 +18,7 @@
     "@types/d3": "^5.7.2",
     "@types/mapbox-gl-leaflet": "^0.0.1",
     "@types/supercluster": "^5.0.2",
-    "@typescript-eslint/parser": "^3.7.1",
+    "@typescript-eslint/parser": "^4.2.0",
     "@zerollup/ts-transform-paths": "^1.7.18",
     "rimraf": "^3.0.2",
     "rollup": "^2.23.0",
@@ -39,10 +39,10 @@
     "leaflet": "^1.6.0",
     "lodash": "^4.17.19",
     "mapbox-gl": "^1.11.1",
-    "mapbox-gl-leaflet": "^0.0.12",
+    "mapbox-gl-leaflet": "^0.0.13",
     "resize-observer-polyfill": "^1.5.1",
     "supercluster": "^7.0.0",
-    "tangram": "^0.20.1",
+    "tangram": "^0.21.0",
     "topojson": "^3.0.2"
   }
 }
