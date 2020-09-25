@@ -28,7 +28,7 @@ export class Tooltip<T extends ComponentCore<any>, TooltipDatum> {
 
   private _container: HTMLElement
 
-  constructor (config: TooltipConfigInterface<T, TooltipDatum> = {}, containerElement?: HTMLElement | null) {
+  constructor (config: TooltipConfigInterface<T, TooltipDatum> = {}) {
     this.config = new TooltipConfig<T, TooltipDatum>().init(config)
     this.components = this.config.components
 
@@ -36,17 +36,20 @@ export class Tooltip<T extends ComponentCore<any>, TooltipDatum> {
     this.div = select(this.element)
       .attr('class', s.tooltip)
 
-    this.setContainer(containerElement)
+    if (this.config.container) this.setContainer(this.config.container)
   }
 
-  public setContainer (container: HTMLElement | null): void {
-    if (!container) return
+  public setContainer (container: HTMLElement): void {
     this._container?.removeChild(this.element)
 
     this._container = container
     this._container.appendChild(this.element)
 
     this._setContainerPositionThrottled()
+  }
+
+  public hasContainer (): boolean {
+    return !!this._container
   }
 
   public setComponents (components: T[]): void {
@@ -107,10 +110,13 @@ export class Tooltip<T extends ComponentCore<any>, TooltipDatum> {
       : hitLeft ? -dx - pos.x + paddingX : 0
 
     const paddingY = 10
-    const constraintY = pos.y > (containerHeight - dy - paddingY) ? containerHeight - dy - pos.y - paddingY
-      : pos.y < (height - dy + paddingY) ? height - dy - pos.y + paddingY : 0
+    const hitBottom = pos.y > (containerHeight - dy - paddingY)
+    const hitTop = pos.y < (height - dy + paddingY)
+    const constraintY = hitBottom ? containerHeight - dy - pos.y - paddingY
+      : hitTop ? height - dy - pos.y + paddingY : 0
 
-    // Place
+    // Placing
+    // If the container size is smaller than the the tooltip size we just stick the tooltip to the top / left
     const x = containerWidth < width ? 0 : pos.x + constraintX + dx
     const y = containerHeight < height ? height : pos.y + constraintY + dy
     this.div

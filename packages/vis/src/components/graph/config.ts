@@ -68,9 +68,9 @@ export interface GraphConfigInterface<N extends NodeDatumCore, L extends LinkDat
   flowCircleSize?: number;
   /** Link width accessor function or value */
   linkWidth?: NumericAccessor<L>;
-  /** Link style accessor function or value */
+  /** Link style accessor function or value: 'solid' or 'dashed'. Default: 'solid'  */
   linkStyle?: StringAccessor<L>;
-  /** Link band width accessor function or value */
+  /** Link band width accessor function or value. Default: 0 */
   linkBandWidth?: NumericAccessor<L>;
   /** Link arrow accessor function or undefined */
   linkArrow?: ((d: L, i?: number, ...any) => LinkArrow) | undefined;
@@ -82,7 +82,7 @@ export interface GraphConfigInterface<N extends NodeDatumCore, L extends LinkDat
   linkLabel?: ((d: L, i?: number, ...any) => CircleLabel | undefined) | undefined;
   /** Shift or not link side Label from center */
   linkLabelShiftFromCenter?: BooleanAccessor<L>;
-  /** Set selected link by Id */
+  /** Set selected link by id */
   selectedLinkId?: number | string;
 
   // Nodes

@@ -48,9 +48,10 @@ export class SingleChart<Datum> extends ContainerCore {
     if (containerConfig.sizing) this.component.sizing = containerConfig.sizing
     this.element.appendChild(this.component.element)
 
-    if (containerConfig.tooltip) {
-      containerConfig.tooltip.setContainer(this._container)
-      containerConfig.tooltip.setComponents([this.component])
+    const tooltip = containerConfig.tooltip
+    if (tooltip) {
+      if (!tooltip.hasContainer()) tooltip.setContainer(this._container)
+      tooltip.setComponents([this.component])
     }
 
     if (!preventRender) this.render()
