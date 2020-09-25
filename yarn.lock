@@ -8562,7 +8562,7 @@ js-yaml@^3.13.1:
     argparse "^1.0.7"
     esprima "^4.0.0"
 
-"js-yaml@github:tangrams/js-yaml#read-only":
+js-yaml@tangrams/js-yaml#read-only:
   version "3.5.3"
   resolved "https://codeload.github.com/tangrams/js-yaml/tar.gz/1637976c6f593bed33ed088aedb6d01390a947c0"
   dependencies:
@@ -13182,7 +13182,7 @@ topojson-client@3.0.0:
   dependencies:
     commander "2"
 
-"topojson-client@github:tangrams/topojson-client#read-only":
+topojson-client@tangrams/topojson-client#read-only:
   version "2.1.0"
   resolved "https://codeload.github.com/tangrams/topojson-client/tar.gz/1068f4f2e03ddf8236499bbc896cec98d7a342b7"
   dependencies:
