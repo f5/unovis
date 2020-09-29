@@ -24,6 +24,7 @@ import { ServiceGraphComponent } from 'examples/service-graph/service-graph.comp
 import { ConnectivityGraphComponent } from 'examples/console-connectivity-graph/console-connectivity-graph.component'
 import { TrafficGraphComponent } from 'examples/console-traffic-graph-pg2/console-traffic-graph-pg2.component'
 import { ChordDiagramComponent } from 'examples/chord-diagram/chord-diagram.component'
+import { DonutChartComponent } from 'examples/donut/donut.component'
 
 import { AppComponent } from './app.component'
 import { BulletLegendComponent } from './components/bullet-legend/bullet-legend.component'
@@ -55,6 +56,7 @@ const appRoutes: Routes = [
   { path: 'connectivity-graph', component: ConnectivityGraphComponent },
   { path: 'traffic-graph', component: TrafficGraphComponent },
   { path: 'chord-diagram', component: ChordDiagramComponent },
+  { path: 'donut', component: DonutChartComponent },
 ]
 
 appRoutes.push({ path: '', redirectTo: `/${appRoutes[0].path}`, pathMatch: 'full' })
@@ -89,6 +91,7 @@ appRoutes.push({ path: '', redirectTo: `/${appRoutes[0].path}`, pathMatch: 'full
     TrafficGraphComponent,
     ChordDiagramComponent,
     VisControlsComponent,
+    DonutChartComponent,
   ],
 
   imports: [
