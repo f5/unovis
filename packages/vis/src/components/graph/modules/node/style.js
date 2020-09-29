@@ -52,7 +52,7 @@ export const node = css`
 export const nodeIcon = css`
   label: icon;
 
-  font-family: var(--vis-graph-node-icon-font), Open Sans, Helvetica Neue, Helvetica, Arial, sans-serif;
+  font-family: var(--vis-graph-node-icon-font), var(--vis-font-family);
   dominant-baseline: middle;
   text-anchor: middle;
   pointer-events: none;
