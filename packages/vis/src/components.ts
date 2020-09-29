@@ -18,6 +18,7 @@ import { RadialDendrogram } from './components/radial-dendrogram'
 import { ChordDiagram } from './components/chord-diagram'
 import { Graph } from './components/graph'
 import { VisControls } from './components/vis-controls'
+import { Donut } from './components/donut'
 
 import { LineConfigInterface } from './components/line/config'
 import { StackedBarConfigInterface } from './components/stacked-bar/config'
@@ -38,6 +39,7 @@ import { RadialDendrogramConfigInterface } from './components/radial-dendrogram/
 import { ChordDiagramConfigInterface } from './components/chord-diagram/config'
 import { GraphConfigInterface } from './components/graph/config'
 import { VisControlsConfigInterface } from './components/vis-controls/config'
+import { DonutConfigInterface } from './components/donut/config'
 
 import './styles/css-variables'
 
@@ -80,4 +82,6 @@ export {
   ChordDiagramConfigInterface,
   VisControls,
   VisControlsConfigInterface,
+  Donut,
+  DonutConfigInterface,
 }
