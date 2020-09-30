@@ -22,6 +22,7 @@
   /* box-shadow: 3px 0px 20px -10px #e4e4e4; */
   padding: 10px;
   backdrop-filter: blur(5px);
+  overflow-y: auto;
 }
 
 .block-header {
@@ -44,7 +45,7 @@ a {
 
 .logo {
   padding: 8px 5px;
-  
+
   .alpha {
     margin-left: 5px;
     color: #5242aa;

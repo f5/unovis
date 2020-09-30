@@ -15,10 +15,11 @@ export class SingleChartComponent implements AfterViewInit {
   @Input() component
   @Input() config = {}
   @Input() data = []
+  @Input() tooltip
   chart: SingleChart<unknown>
 
   ngAfterViewInit (): void {
-    this.chart = new SingleChart<unknown>(this.containerRef.nativeElement, { component: this.component }, this.data)
+    this.chart = new SingleChart<unknown>(this.containerRef.nativeElement, this.getConfig(), this.data)
   }
 
   ngOnChanges (changes): void {
@@ -45,7 +46,7 @@ export class SingleChartComponent implements AfterViewInit {
   }
 
   getConfig (): SingleChartConfigInterface<unknown> {
-    const { margin, component } = this
-    return { margin, component }
+    const { margin, component, tooltip } = this
+    return { margin, component, tooltip }
   }
 }

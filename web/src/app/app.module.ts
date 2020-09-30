@@ -16,6 +16,7 @@ import { WrapperUsageExampleComponent } from 'examples/wrapper-usage-example/wra
 import { TimelineComponent } from 'examples/timeline/timeline.component'
 import { BulletLegendExampleComponent } from 'examples/bullet-legend/bullet-legend.component'
 import { TopoJSONMapComponent } from 'examples/topojson-map/topojson-map.component'
+import { TopoJSONHeatMapComponent } from 'examples/topojson-heatmap/topojson-heatmap.component'
 import { MapComponent } from 'examples/map/map.component'
 import { MapHeatmapComponent } from 'examples/map-heatmap/map-heatmap.component'
 import { RadialDendrogramComponent } from 'examples/radial-dendrogram/radial-dendrogram.component'
@@ -50,6 +51,7 @@ const appRoutes: Routes = [
   { path: 'timeline', component: TimelineComponent },
   { path: 'bullet-legend', component: BulletLegendExampleComponent },
   { path: 'topojson-map', component: TopoJSONMapComponent },
+  { path: 'topojson-heatmap', component: TopoJSONHeatMapComponent },
   { path: 'radial-dendrogram', component: RadialDendrogramComponent },
   { path: 'graph', component: GraphComponent },
   { path: 'force-graph', component: ServiceGraphComponent },
@@ -80,6 +82,7 @@ appRoutes.push({ path: '', redirectTo: `/${appRoutes[0].path}`, pathMatch: 'full
     TimelineComponent,
     BulletLegendExampleComponent,
     TopoJSONMapComponent,
+    TopoJSONHeatMapComponent,
     MapComponent,
     MapLeafletComponent,
     MapHeatmapComponent,
