@@ -59,6 +59,10 @@ export const points = css`
 
 export const point = css`
   label: point;
+`
+
+export const pointCircle = css`
+  label: point;
 
   stroke-opacity: 0.4;
   pointer-events: fill;
@@ -68,7 +72,7 @@ export const point = css`
   }
 `
 
-export const label = css`
+export const pointLabel = css`
   label: label;
 
   text-anchor: middle;

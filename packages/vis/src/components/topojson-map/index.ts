@@ -61,6 +61,14 @@ export class TopoJSONMap<NodeDatum extends NodeDatumCore, LinkDatum extends Link
 
     if (config) this.setConfig(config)
     if (data) this.setData(data)
+
+    this.g.append('defs')
+      .append('filter')
+      .attr('id', 'heatmapFilter')
+      .html(`
+        <feGaussianBlur in="SourceGraphic" stdDeviation="${this.config.heatmapModeBlurStdDeviation}" color-interpolation-filters="sRGB" result="blur"></feGaussianBlur>
+        <feColorMatrix class="blurValues" in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 20 -4"></feColorMatrix>
+      `)
   }
 
   setConfig (config?: TopoJSONMapConfigInterface<NodeDatum, LinkDatum, AreaDatum>): void {
@@ -196,54 +204,53 @@ export class TopoJSONMap<NodeDatum extends NodeDatumCore, LinkDatum extends Link
     const { config, datamodel } = this
     const pointData = datamodel.nodes
 
-    // Circles
-    const circles = this._pointsGroup.selectAll(`.${s.point}`).data(pointData, d => d.id)
-    const circlesEnter = circles.enter().append('circle')
-      .attr('id', (data) => `${data.id}-circle`)
-      .attr('class', s.point)
-      .attr('r', 0)
-      .attr('cx', d => this._projection(getLonLat(d, config.longitude, config.latitude))[0])
-      .attr('cy', d => this._projection(getLonLat(d, config.longitude, config.latitude))[1])
-      .style('fill', (node, i) => getColor(node, config.pointColor, i))
-      .style('stroke-width', node => getValue(node, d => getValue(d, config.pointStrokeWidth)))
+    this._pointsGroup
+      .style('filter', config.heatmapMode ? 'url(#heatmapFilter)' : null)
 
-    smartTransition(circlesEnter.merge(circles), duration)
-      .attr('cx', d => this._projection(getLonLat(d, config.longitude, config.latitude))[0])
-      .attr('cy', d => this._projection(getLonLat(d, config.longitude, config.latitude))[1])
-      .attr('r', d => getValue(d, config.pointRadius))
-      .style('fill', (node, i) => getColor(node, config.pointColor, i))
-      .style('stroke', (node, i) => getColor(node, config.pointColor, i))
-      .style('stroke-width', node => getValue(node, d => getValue(d, config.pointStrokeWidth)))
-      // .style('opacity', node => getValue(node, d => getValue(d, config.pointDisabled)) ? 0.2 : 1)
+    const points = this._pointsGroup.selectAll(`.${s.point}`).data(pointData, (d, i) => getValue(d, config.pointId, i))
 
-    circles.exit().remove()
-
-    // Labels
-    const labels = this._pointsGroup.selectAll(`.${s.label}`).data(pointData, d => d.id)
-    const labelsEnter = labels.enter().append('text')
-      .attr('class', s.label)
+    // Enter
+    const pointsEnter = points.enter().append('g').attr('class', s.point)
       .attr('transform', d => {
         const pos = this._projection(getLonLat(d, config.longitude, config.latitude))
         return `translate(${pos[0]},${pos[1]})`
       })
-      .attr('dy', '0.32em')
 
-    const labelsUpdate = labelsEnter.merge(labels)
-    labelsUpdate
+    pointsEnter.append('circle').attr('class', s.pointCircle)
+      .attr('r', 0)
+      .style('fill', (d, i) => getColor(d, config.pointColor, i))
+      .style('stroke-width', d => getValue(d, config.pointStrokeWidth))
+
+    pointsEnter.append('text').attr('class', s.pointLabel)
+      .attr('dy', '0.32em')
+      .style('opacity', 0)
+
+    // Update
+    const pointsMerged = pointsEnter.merge(points)
+    smartTransition(pointsMerged, duration)
+      .attr('transform', d => {
+        const pos = this._projection(getLonLat(d, config.longitude, config.latitude))
+        return `translate(${pos[0]},${pos[1]})`
+      })
+
+    smartTransition(pointsMerged.select(`.${s.pointCircle}`), duration)
+      .attr('r', d => getValue(d, config.pointRadius))
+      .style('fill', (d, i) => getColor(d, config.pointColor, i))
+      .style('stroke', (d, i) => getColor(d, config.pointColor, i))
+      .style('stroke-width', d => getValue(d, config.pointStrokeWidth))
+
+    const pointLabelsMerged = pointsMerged.select(`.${s.pointLabel}`)
+    pointLabelsMerged
       .text(config.pointLabel ?? '')
       .style('font-size', d => {
         const pointDiameter = 2 * getValue(d, config.pointRadius)
-        const pointLabelText = getValue(d, config.pointLabel)
+        const pointLabelText = getValue(d, config.pointLabel) || ''
         const textLength = pointLabelText.length
         const fontSize = 0.6 * pointDiameter / Math.pow(textLength, 0.35)
         return clamp(fontSize, fontSize, 16)
       })
 
-    smartTransition(labelsUpdate, duration)
-      .attr('transform', d => {
-        const pos = this._projection(getLonLat(d, config.longitude, config.latitude))
-        return `translate(${pos[0]},${pos[1]})`
-      })
+    smartTransition(pointLabelsMerged, duration)
       .style('fill', (d, i) => {
         const pointColor = getColor(d, config.pointColor, i)
         const hex = color(isStringCSSVariable(pointColor) ? getCSSVariableValue(pointColor, this.element) : pointColor)?.hex()
@@ -252,8 +259,10 @@ export class TopoJSONMap<NodeDatum extends NodeDatumCore, LinkDatum extends Link
         const brightness = hexToBrightness(hex)
         return brightness > config.pointLabelTextBrightnessRatio ? 'var(--vis-map-point-label-text-color-dark)' : 'var(--vis-map-point-label-text-color-light)'
       })
+      .style('opacity', 1)
 
-    labels.exit().remove()
+    // Exit
+    points.exit().remove()
   }
 
   _fitToPoints (points?, pad = 0.1): void {

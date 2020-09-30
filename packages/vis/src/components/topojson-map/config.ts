@@ -45,6 +45,12 @@ export interface TopoJSONMapConfigInterface<N extends NodeDatumCore, L extends L
   pointLabel?: StringAccessor<N>;
   /** Point color brightness ratio for switching between dark and light text label color. Default: `0.65` */
   pointLabelTextBrightnessRatio?: number;
+  /** Point id accessor function. Default: `d => d.id` */
+  pointId?: StringAccessor<N>;
+  /** Enables blur and blending between neighbouring points. Default: `false` */
+  heatmapMode?: boolean;
+  /** Heatmap blur filter stdDeviation value. Default: `10` */
+  heatmapModeBlurStdDeviation?: number;
 }
 
 export class TopoJSONMapConfig<N extends NodeDatumCore, L extends LinkDatumCore, A extends MapAreaCore> extends ComponentConfig implements TopoJSONMapConfigInterface<N, L, A> {
@@ -69,4 +75,8 @@ export class TopoJSONMapConfig<N extends NodeDatumCore, L extends LinkDatumCore,
   latitude = (d: N): number => d['latitude']
   pointLabel = undefined
   pointLabelTextBrightnessRatio = 0.65
+  pointId = (d: N, i: number): string => `${d['id'] ?? i}`
+
+  heatmapMode = false
+  heatmapModeBlurStdDeviation = 8
 }
