@@ -48,10 +48,11 @@ export class SimpleMapComponent implements OnInit, AfterViewInit {
     const config = {
       component: new TopoJSONMap<MapPoint, any, any>({
         topojson: WorldMapTopoJSON,
+        pointLabel: d => d.city.substr(0, 2),
       }),
       tooltip: new Tooltip<any, any>({
         triggers: {
-          // [TopoJSONMap.selectors.node]: d => `<span>${d.city}</span>`,
+          [TopoJSONMap.selectors.point]: d => `<span>${d.city}</span>`,
           // [TopoJSONMap.selectors.feature]: d => `<span>${d.properties.name}</span>`,
         },
       }),
