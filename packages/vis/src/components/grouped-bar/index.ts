@@ -7,7 +7,7 @@ import { select } from 'd3'
 import { XYComponentCore } from 'core/xy-component'
 
 // Utils
-import { getValue, isNumber, isArray, isEmpty, clamp } from 'utils/data'
+import { getValue, isNumber, isArray, isEmpty, clamp, getMin, getMax } from 'utils/data'
 import { roundedRectPath } from 'utils/path'
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
@@ -191,8 +191,8 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum> {
   getYDataExtent (): number[] {
     const { datamodel } = this
     const yAccessors = this.getAccessors()
-    const min = datamodel.getMin(...yAccessors)
-    const max = datamodel.getMax(...yAccessors)
+    const min = getMin(datamodel.data, ...yAccessors)
+    const max = getMax(datamodel.data, ...yAccessors)
     return [min > 0 ? 0 : min, max < 0 ? 0 : max]
   }
 

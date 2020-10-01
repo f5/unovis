@@ -8,7 +8,7 @@ import { max } from 'd3-array'
 import { XYComponentCore } from 'core/xy-component'
 
 // Utils
-import { getValue, isNumber, countUnique, indexArray } from 'utils/data'
+import { getValue, isNumber, countUnique, indexArray, getMin, getMax } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
 
@@ -201,8 +201,8 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
   // Override the default XYComponent getXDataExtent method to take into account line lengths
   getXDataExtent (): number[] {
     const { config, datamodel } = this
-    const min = datamodel.getMin(config.x)
-    const max = datamodel.getMax(d => getValue(d, config.x) + getValue(d, config.length))
+    const min = getMin(datamodel.data, config.x)
+    const max = getMax(datamodel.data, d => getValue(d, config.x) + getValue(d, config.length))
     return [min, max]
   }
 }

@@ -25,7 +25,12 @@ import _groupBy from 'lodash/groupBy'
 import _uniq from 'lodash/uniq'
 import _sortBy from 'lodash/sortBy'
 import _range from 'lodash/range'
-// If you add a new lodash import here, please specify it in rollup.config.js as well
+// !!! If you add a new lodash import here, please specify it in rollup.config.js as well
+
+import { max, min, bisector } from 'd3-array'
+
+// Types
+import { NumericAccessor } from 'types/misc'
 
 export const isNumber = _isNumber
 export const isEqual = _isEqual
@@ -83,4 +88,65 @@ export function shallowDiff (o1: Record<string, unknown> = {}, o2: Record<string
       [key]: o2[key],
     }
   }, {})
+}
+
+export function getStackedExtent<Datum> (data: Datum[], ...acs: NumericAccessor<Datum>[]): number[] {
+  if (isArray(acs)) {
+    let minValue = 0
+    let maxValue = 0
+    for (const d of data) {
+      let positiveStack = 0
+      let negativeStack = 0
+      for (const a of acs as NumericAccessor<Datum>[]) {
+        const value = getValue(d, a) || 0
+        if (value >= 0) positiveStack += value
+        else negativeStack += value
+      }
+
+      if (positiveStack > maxValue) maxValue = positiveStack
+      if (negativeStack < minValue) minValue = negativeStack
+    }
+    return [minValue, maxValue]
+  }
+}
+
+export function getStackedValues<Datum> (d: Datum, ...acs: NumericAccessor<Datum>[]): number[] {
+  const values = []
+
+  let positiveStack = 0
+  let negativeStack = 0
+  for (const a of acs as NumericAccessor<Datum>[]) {
+    const value = getValue(d, a) || 0
+    if (value >= 0) {
+      positiveStack += value
+      values.push(positiveStack)
+    } else {
+      negativeStack += value
+      values.push(negativeStack)
+    }
+  }
+
+  return values
+}
+
+export function getExtent<Datum> (data: Datum[], ...acs: NumericAccessor<Datum>[]): number[] {
+  return [getMin(data, ...acs), getMax(data, ...acs)]
+}
+
+export function getMin<Datum> (data: Datum[], ...acs: NumericAccessor<Datum>[]): number {
+  const minValue = min(data, d => min(acs as NumericAccessor<Datum>[], a => getValue(d, a)))
+  return minValue
+}
+
+export function getMax<Datum> (data: Datum[], ...acs: NumericAccessor<Datum>[]): number {
+  const maxValue = max(data, d => max(acs as NumericAccessor<Datum>[], a => getValue(d, a)))
+  return maxValue
+}
+
+export function getNearest<Datum> (data: Datum[], value: number, accessor: NumericAccessor<Datum>): Datum {
+  if (data.length <= 1) return data[0]
+
+  const xBisector = bisector(d => getValue(d, accessor)).left
+  const index = xBisector(data, value, 1, data.length - 1)
+  return value - getValue(data[index - 1], accessor) > getValue(data[index], accessor) - value ? data[index] : data[index - 1]
 }

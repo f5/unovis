@@ -4,7 +4,7 @@
 import { XYComponentCore } from 'core/xy-component'
 
 // Utils
-import { getValue, isNumber, isEmpty } from 'utils/data'
+import { getValue, isNumber, isEmpty, getExtent, getMax } from 'utils/data'
 import { getColor } from 'utils/color'
 
 // Types
@@ -72,7 +72,7 @@ export class Scatter<Datum> extends XYComponentCore<Datum> {
     const { config, datamodel } = this
 
     config.sizeScale
-      .domain(datamodel.getExtent(config.size))
+      .domain(getExtent(datamodel.data, config.size))
       .range(config.sizeRange)
   }
 
@@ -107,10 +107,10 @@ export class Scatter<Datum> extends XYComponentCore<Datum> {
   }
 
   _getMaxPointRadius (): number {
-    const { config, datamodel, datamodel: { data } } = this
-    if (isEmpty(data)) return 0
+    const { config, datamodel } = this
+    if (isEmpty(datamodel.data)) return 0
 
-    const maxSizeValue = datamodel.getMax(config.size)
+    const maxSizeValue = getMax(datamodel.data, config.size)
     return config.sizeScale(maxSizeValue) / 2
   }
 }
