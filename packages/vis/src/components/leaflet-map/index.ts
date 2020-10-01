@@ -74,6 +74,13 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
   constructor (container: HTMLElement, config?: LeafletMapConfigInterface<Datum>, data?: Datum[]) {
     super(ComponentType.HTML)
     this._container = container
+    if (!this._container.clientWidth || !this._container.clientHeight) {
+      console.error(`The map container element should have width and height prior to initialization, otherwise it'll fail!
+        Check your DOM rendering pipeline to make sure the container is being displayed when you initialize LeafletMap.`
+      )
+      return
+    }
+
     this._container.appendChild(this.element)
     this.g.attr('class', s.mapContainer)
 
@@ -140,7 +147,18 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
   }
 
   setData (data): void {
-    this.datamodel.data = data
+    const { config, datamodel } = this
+
+    const dataValid = data.filter(d => {
+      const lat = getValue(d, config.pointLatitude)
+      const lon = getValue(d, config.pointLongitude)
+      const valid = isFinite(lat) && isFinite(lon)
+
+      if (!valid) console.warn('Map: Invalid point coordinates', d)
+      return valid
+    })
+
+    datamodel.data = dataValid
 
     // We use Supercluster for real-time node clustering
     this._clusterIndex = calulateClusterIndex<Datum>(data, this.config)
