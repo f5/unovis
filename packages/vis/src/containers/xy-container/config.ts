@@ -35,6 +35,8 @@ export interface XYContainerConfigInterface<Datum> extends ContainerConfigInterf
    *  Setting to `true` will automatically extend the domain by `+1` when needed. Defaul: `true`
   */
   preventEmptyDomain?: boolean;
+  /** Sets the Y scale domain based on the X scale domain not the whole data. Default: `false` */
+  adaptiveYScale?: boolean
 }
 
 export class XYContainerConfig<Datum> extends ContainerConfig implements XYContainerConfigInterface<Datum> {
@@ -49,4 +51,5 @@ export class XYContainerConfig<Datum> extends ContainerConfig implements XYConta
   }
 
   preventEmptyDomain = true
+  adaptiveYScale = false
 }

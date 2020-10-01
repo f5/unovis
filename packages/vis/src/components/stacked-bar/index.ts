@@ -5,7 +5,7 @@ import { min } from 'd3-array'
 import { XYComponentCore } from 'core/xy-component'
 
 // Utils
-import { getValue, isNumber, isArray, isEmpty, clamp } from 'utils/data'
+import { getValue, isNumber, isArray, isEmpty, clamp, getStackedExtent, getStackedValues } from 'utils/data'
 import { roundedRectPath } from 'utils/path'
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
@@ -38,12 +38,12 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
   }
 
   _render (customDuration?: number): void {
-    const { config, datamodel } = this
+    const { config } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
     const visibleData = this._getVisibleData()
 
     const yAccessors = this.getAccessors() // (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
-    const stackedValues = visibleData.map(d => datamodel.getStackedValues(d, ...yAccessors))
+    const stackedValues = visibleData.map(d => getStackedValues(d, ...yAccessors))
 
     const barGroups = this.g
       .selectAll(`.${s.barGroup}`)
@@ -171,8 +171,10 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
   }
 
   getYDataExtent (): number[] {
-    const { datamodel } = this
+    const { datamodel, config } = this
     const yAccessors = this.getAccessors()
-    return datamodel.getStackedExtent(...yAccessors)
+
+    const data = config.adaptiveYScale ? this._getVisibleData() : datamodel.data
+    return getStackedExtent(data, ...yAccessors)
   }
 }

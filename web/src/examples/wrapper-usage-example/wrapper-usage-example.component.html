@@ -1,25 +1,26 @@
 
 <div #chart class="chart">
- <vis-xychart 
+ <vis-xychart
   [duration]="duration"
   [margin]="margin"
   [padding]="padding"
   [components]="components"
-  [componentConfigs]="[stackedBarConfig]"
+  [componentConfigs]="[groupedBarConfig]"
   [dimensions]="dimensions"
   [axes]="axes"
   [tooltip]="tooltip"
   [crosshair]="crosshair"
   [data]="data"
+  [adaptiveYScale]="true"
  ></vis-xychart>
 </div>
 
 <div #nav class="navigation">
-<vis-xychart 
+<vis-xychart
     [margin]="margin"
     [padding]="padding"
     [components]="navComponents"
-    [componentConfigs]="[stackedBarConfig]"
+    [componentConfigs]="[groupedBarConfig]"
     [axes]="navAxes"
     [data]="data"
 ></vis-xychart>

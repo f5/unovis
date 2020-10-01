@@ -5,7 +5,7 @@ import { easeLinear } from 'd3-ease'
 import { XYComponentCore } from 'core/xy-component'
 
 // Utils
-import { isNumber, isArray, getValue, clamp } from 'utils/data'
+import { isNumber, isArray, getValue, clamp, getStackedValues, getNearest } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
 
@@ -63,7 +63,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
       .attr('x2', this.x)
 
     const baselineValue = getValue(this.datum, config.baseline) || 0
-    const stackedValues = this.datamodel.getStackedValues(this.datum, ...config.yStacked)
+    const stackedValues = getStackedValues(this.datum, ...config.yStacked)
       .map((value, index, arr) => ({
         index,
         value: value + baselineValue,
@@ -104,7 +104,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
     const scale = config.scales.x
     const value = scale.invert(x) as number
 
-    this.datum = datamodel.getNearest(value, config.x)
+    this.datum = getNearest(datamodel.data, value, config.x)
     if (!this.datum) return
 
     this.x = clamp(Math.round(scale(getValue(this.datum, config.x))), 0, config.width)

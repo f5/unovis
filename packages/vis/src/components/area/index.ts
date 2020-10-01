@@ -7,7 +7,7 @@ import { interpolatePath } from 'd3-interpolate-path'
 import { XYComponentCore } from 'core/xy-component'
 
 // Utils
-import { getValue, isNumber, isArray } from 'utils/data'
+import { getValue, isNumber, isArray, getStackedExtent, getStackedValues, filterDataByRange } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
 
@@ -39,7 +39,7 @@ export class Area<Datum> extends XYComponentCore<Datum> {
 
   _render (customDuration?: number): void {
     super._render(customDuration)
-    const { config, datamodel, datamodel: { data } } = this
+    const { config, datamodel: { data } } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
 
     const curveGen = Curve[config.curveType]
@@ -52,7 +52,7 @@ export class Area<Datum> extends XYComponentCore<Datum> {
       .curve(curveGen)
 
     const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
-    const stackedValues = data.map(d => datamodel.getStackedValues(d, ...yAccessors))
+    const stackedValues = data.map(d => getStackedValues(d, ...yAccessors))
     const baselineValues = data.map(d => getValue(d, config.baseline) || 0)
     const areaDataX = data.map(d => config.scales.x(getValue(d, config.x)))
     const stackedData: AreaDatum[][] = yAccessors.map(
@@ -101,7 +101,8 @@ export class Area<Datum> extends XYComponentCore<Datum> {
     const { config, datamodel } = this
     const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
 
-    return datamodel.getStackedExtent(config.baseline, ...yAccessors)
+    const data = config.adaptiveYScale ? filterDataByRange(datamodel.data, config.scales.x.domain() as [number, number], config.x) : datamodel.data
+    return getStackedExtent(data, config.baseline, ...yAccessors)
   }
 
   _emptyPath (): string {

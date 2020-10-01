@@ -21,6 +21,8 @@ export interface XYComponentConfigInterface<Datum> extends ComponentConfigInterf
     x?: ContiniousScale;
     y?: ContiniousScale;
   };
+  /** Sets the Y scale domain based on the X scale domain not the whole data. Default: `false` */
+  adaptiveYScale?: boolean;
   events?: {
     [selector: string]: {
       [eventName: string]: (data: Datum) => void;
@@ -42,4 +44,6 @@ export class XYComponentConfig<Datum> extends ComponentConfig implements XYCompo
     x: Scale.scaleLinear() as ContiniousScale,
     y: Scale.scaleLinear() as ContiniousScale,
   }
+
+  adaptiveYScale = false
 }
