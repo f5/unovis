@@ -150,7 +150,7 @@ export class XYContainer<Datum> extends ContainerCore {
       tooltip.setComponents(this.components)
     }
 
-    // Set up crosshair
+    // Set up the crosshair
     const crosshair = containerConfig.crosshair
     if (crosshair) {
       crosshair.setContainer(this.svg)
@@ -260,9 +260,13 @@ export class XYContainer<Datum> extends ContainerCore {
   }
 
   _updateScalesDomain<T extends XYComponentCore<Datum>> (...components: T[]): void {
-    const { config: { dimensions, preventEmptyDomain } } = this
+    const { config: { dimensions, preventEmptyDomain, adaptiveYScale } } = this
     if (!components) return
 
+    // Passing the adaptiveYScale property to the components
+    components.forEach(c => { c.config.adaptiveYScale = adaptiveYScale })
+
+    // Loop over all the dimensions
     Object.keys(dimensions).forEach(key => {
       const dim: Dimension = dimensions[key]
       let [min, max] = extent(mergeArrays(components.map(c => c.getDataExtent(key))) as number[]) // Components with undefined dimension accessors will return [undefined, undefined] but d3.extent will take care of that
