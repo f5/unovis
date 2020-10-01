@@ -1,5 +1,4 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-/* eslint-disable */
 import { AfterViewInit, OnDestroy, Component } from '@angular/core'
 
 // Vis
@@ -33,20 +32,22 @@ export class WrapperUsageExampleComponent implements AfterViewInit, OnDestroy {
     roundedCorners: 2,
     events: {
       [GroupedBar.selectors.bar]: {
-        click: d => { },
+        // click: d => {},
       },
     },
   }
+
   groupedBar = new GroupedBar<SampleDatum>(this.groupedBarConfig)
 
   components = [this.groupedBar]
 
   margin = { top: 10, bottom: 10, left: 10, right: 10 }
+  padding = {}
 
   dimensions = {
     x: {
       domain: undefined,
-    }
+    },
   }
 
   axes = {
@@ -56,7 +57,8 @@ export class WrapperUsageExampleComponent implements AfterViewInit, OnDestroy {
 
   tooltip = new Tooltip({
     triggers: {
-      [GroupedBar.selectors.bar]: (d) => {console.log(d)},
+      // eslint-disable-next-line no-console
+      [GroupedBar.selectors.bar]: (d) => { console.log(d) },
     },
   })
 
@@ -92,10 +94,9 @@ export class WrapperUsageExampleComponent implements AfterViewInit, OnDestroy {
   intervalId: NodeJS.Timeout
 
   ngAfterViewInit (): void {
-
     this.intervalId = setInterval(() => {
       this.duration = undefined
-      this.data = sampleSeriesData(Math.floor(10 + 50*Math.random()))
+      this.data = sampleSeriesData(Math.floor(10 + 50 * Math.random()))
       this.groupedBarConfig.barMaxWidth = Math.random() * 20
       this.groupedBarConfig = { ...this.groupedBarConfig } // Updating the object to trigger change detection
     }, 15000)
@@ -105,5 +106,3 @@ export class WrapperUsageExampleComponent implements AfterViewInit, OnDestroy {
     clearInterval(this.intervalId)
   }
 }
-
-
