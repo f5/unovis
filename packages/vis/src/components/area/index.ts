@@ -7,7 +7,7 @@ import { interpolatePath } from 'd3-interpolate-path'
 import { XYComponentCore } from 'core/xy-component'
 
 // Utils
-import { getValue, isNumber, isArray, getStackedExtent, getStackedValues } from 'utils/data'
+import { getValue, isNumber, isArray, getStackedExtent, getStackedValues, filterDataByRange } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
 
@@ -101,7 +101,8 @@ export class Area<Datum> extends XYComponentCore<Datum> {
     const { config, datamodel } = this
     const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
 
-    return getStackedExtent(datamodel.data, config.baseline, ...yAccessors)
+    const data = config.adaptiveYScale ? filterDataByRange(datamodel.data, config.scales.x.domain() as [number, number], config.x) : datamodel.data
+    return getStackedExtent(data, config.baseline, ...yAccessors)
   }
 
   _emptyPath (): string {

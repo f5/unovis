@@ -150,3 +150,12 @@ export function getNearest<Datum> (data: Datum[], value: number, accessor: Numer
   const index = xBisector(data, value, 1, data.length - 1)
   return value - getValue(data[index - 1], accessor) > getValue(data[index], accessor) - value ? data[index] : data[index - 1]
 }
+
+export function filterDataByRange<Datum> (data: Datum[], range: [number, number], accessor: NumericAccessor<Datum>) {
+  const filteredData = data.filter(d => {
+    const value = getValue(d, accessor)
+    return (value >= range[0]) && (value < range[1])
+  })
+
+  return filteredData
+}

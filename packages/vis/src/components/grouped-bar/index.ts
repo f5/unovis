@@ -189,10 +189,12 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum> {
   }
 
   getYDataExtent (): number[] {
-    const { datamodel } = this
+    const { config, datamodel } = this
     const yAccessors = this.getAccessors()
-    const min = getMin(datamodel.data, ...yAccessors)
-    const max = getMax(datamodel.data, ...yAccessors)
+
+    const data = config.adaptiveYScale ? this._getVisibleData() : datamodel.data
+    const min = getMin(data, ...yAccessors)
+    const max = getMax(data, ...yAccessors)
     return [min > 0 ? 0 : min, max < 0 ? 0 : max]
   }
 
