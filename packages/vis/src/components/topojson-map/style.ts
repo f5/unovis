@@ -3,8 +3,13 @@ import { css, injectGlobal } from 'emotion'
 
 export const variables = injectGlobal`
   :root {
-    --map-feature-color: #dce3eb;
-    --map-boundry-color: #ffffff;
+    --vis-map-feature-color: #dce3eb;
+    --vis-map-boundary-color: #ffffff;
+    
+    --vis-map-point-label-text-color-dark: #5b5f6d;
+    --vis-map-point-label-text-color-light: #fff;
+    --vis-map-point-label-font-family: var(--vis-font-family);
+    --vis-map-point-label-font-weight: 600;
   }
 `
 
@@ -27,7 +32,7 @@ export const features = css`
 export const feature = css`
   label: feature;
   
-  fill: var(--map-feature-color);
+  fill: var(--vis-map-feature-color);
 `
 export const boundaries = css`
   label: boundaries;
@@ -37,7 +42,7 @@ export const boundary = css`
   label: boundary;
 
   fill: none;
-  stroke: var(--map-boundry-color);
+  stroke: var(--vis-map-boundary-color);
   stroke-width: .5px;
 `
 
@@ -48,12 +53,16 @@ export const background = css`
   pointer-events: all;
 `
 
-export const nodes = css`
-  label: nodes;
+export const points = css`
+  label: points;
 `
 
-export const node = css`
-  label: node;
+export const point = css`
+  label: point;
+`
+
+export const pointCircle = css`
+  label: point;
 
   stroke-opacity: 0.4;
   pointer-events: fill;
@@ -61,6 +70,18 @@ export const node = css`
   &:active {
     cursor: default;
   }
+`
+
+export const pointLabel = css`
+  label: label;
+
+  text-anchor: middle;
+  cursor: default;
+  pointer-events:none;
+
+  font-family: var(--vis-map-point-label-font-family);
+  font-weight: var(--vis-map-point-label-font-weight);
+  fill: var(--vis-map-point-label-text-color-dark);
 `
 
 export const links = css`

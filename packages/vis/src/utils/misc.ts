@@ -17,3 +17,12 @@ export function guid (): string {
 export function stringToHtmlId (str: string): string {
   return (str || '').replace(/\W/g, '_')
 }
+
+export function isStringCSSVariable (s: string): boolean {
+  return s.substring(0, 6) === 'var(--'
+}
+
+export function getCSSVariableValue (s: string, context: HTMLElement | SVGGElement): string {
+  const variableName = s.substr(4, s.length - 5)
+  return getComputedStyle(context).getPropertyValue(variableName)
+}

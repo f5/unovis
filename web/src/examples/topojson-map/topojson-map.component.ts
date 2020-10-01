@@ -18,17 +18,17 @@ type MapPoint = {
 }
 
 @Component({
-  selector: 'simplemap',
-  templateUrl: './simple-map.component.html',
-  styleUrls: ['./simple-map.component.css'],
+  selector: 'topojson-map',
+  templateUrl: './topojson-map.component.html',
+  styleUrls: ['./topojson-map.component.css'],
 })
 
-export class SimpleMapComponent implements OnInit, AfterViewInit {
-  title = 'simple-map'
+export class TopoJSONMapComponent implements OnInit, AfterViewInit {
+  title = 'topojson-map'
   chart: any
   data: { nodes: MapPoint[] }
   config: any
-  @ViewChild('simplemap', { static: false }) simpleMap: ElementRef
+  @ViewChild('topojsonmap', { static: false }) simpleMap: ElementRef
 
   ngAfterViewInit (): void {
     const data = {
@@ -48,10 +48,12 @@ export class SimpleMapComponent implements OnInit, AfterViewInit {
     const config = {
       component: new TopoJSONMap<MapPoint, any, any>({
         topojson: WorldMapTopoJSON,
+        duration: 3500,
+        pointLabel: d => d.city.substr(0, 2),
       }),
       tooltip: new Tooltip<any, any>({
         triggers: {
-          // [TopoJSONMap.selectors.node]: d => `<span>${d.city}</span>`,
+          [TopoJSONMap.selectors.point]: d => `<span>${d.city}</span>`,
           // [TopoJSONMap.selectors.feature]: d => `<span>${d.properties.name}</span>`,
         },
       }),

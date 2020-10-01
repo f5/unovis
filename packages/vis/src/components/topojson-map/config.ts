@@ -21,7 +21,7 @@ export interface TopoJSONMapConfigInterface<N extends NodeDatumCore, L extends L
   zoomFactor?: number;
   /** Disable pan / zoom interactions */
   disableZoom?: boolean;
-  /** Zoom extent, default [1, 6] */
+  /** Zoom extent. Default: `[1, 6]` */
   zoomExtent?: number[];
   /** Link width accessor */
   linkWidth?: NumericAccessor<L>;
@@ -41,6 +41,16 @@ export interface TopoJSONMapConfigInterface<N extends NodeDatumCore, L extends L
   longitude?: NumericAccessor<N>;
   /** Point latitude accessor */
   latitude?: NumericAccessor<N>;
+  /** Point label accessor. Default: `undefined` */
+  pointLabel?: StringAccessor<N>;
+  /** Point color brightness ratio for switching between dark and light text label color. Default: `0.65` */
+  pointLabelTextBrightnessRatio?: number;
+  /** Point id accessor function. Default: `d => d.id` */
+  pointId?: StringAccessor<N>;
+  /** Enables blur and blending between neighbouring points. Default: `false` */
+  heatmapMode?: boolean;
+  /** Heatmap blur filter stdDeviation value. Default: `10` */
+  heatmapModeBlurStdDeviation?: number;
 }
 
 export class TopoJSONMapConfig<N extends NodeDatumCore, L extends LinkDatumCore, A extends MapAreaCore> extends ComponentConfig implements TopoJSONMapConfigInterface<N, L, A> {
@@ -59,8 +69,14 @@ export class TopoJSONMapConfig<N extends NodeDatumCore, L extends LinkDatumCore,
   areaId = (d: A): string => d['id'] ?? ''
   areaColor = (d: A): string => d['color'] ?? null
   pointColor = (d: N): string => d['color'] ?? null
-  pointRadius = (d: N): number => d['radius'] ?? 6
+  pointRadius = (d: N): number => d['radius'] ?? 8
   pointStrokeWidth = (d: N): number => d['strokeWidth'] ?? 0
   longitude = (d: N): number => d['longitude']
   latitude = (d: N): number => d['latitude']
+  pointLabel = undefined
+  pointLabelTextBrightnessRatio = 0.65
+  pointId = (d: N, i: number): string => `${d['id'] ?? i}`
+
+  heatmapMode = false
+  heatmapModeBlurStdDeviation = 8
 }
