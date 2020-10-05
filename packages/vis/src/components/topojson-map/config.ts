@@ -51,6 +51,8 @@ export interface TopoJSONMapConfigInterface<N extends NodeDatumCore, L extends L
   heatmapMode?: boolean;
   /** Heatmap blur filter stdDeviation value. Default: `10` */
   heatmapModeBlurStdDeviation?: number;
+  /** Zoom level at which the heatmap mode will be disabled. Default: `2.5` */
+  heatmapModeZoomLevelThreshold?: number;
 }
 
 export class TopoJSONMapConfig<N extends NodeDatumCore, L extends LinkDatumCore, A extends MapAreaCore> extends ComponentConfig implements TopoJSONMapConfigInterface<N, L, A> {
@@ -79,4 +81,5 @@ export class TopoJSONMapConfig<N extends NodeDatumCore, L extends LinkDatumCore,
 
   heatmapMode = false
   heatmapModeBlurStdDeviation = 8
+  heatmapModeZoomLevelThreshold = 2.5
 }

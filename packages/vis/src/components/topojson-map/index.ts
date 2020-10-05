@@ -36,6 +36,7 @@ export class TopoJSONMap<NodeDatum extends NodeDatumCore, LinkDatum extends Link
   datamodel: MapGraphDataModel<NodeDatum, LinkDatum, AreaDatum> = new MapGraphDataModel()
   private _firstRender = true
   private _initialScale = undefined
+  private _currentZoomLevel = undefined
   private _path = geoPath()
   private _projection: GeoProjection
   private _prevWidth: number
@@ -127,6 +128,7 @@ export class TopoJSONMap<NodeDatum extends NodeDatumCore, LinkDatum extends Link
       // Rendering the map for the first time.
       this._projection.fitExtent([[0, 0], [config.width, config.height]], featureCollection)
       this._initialScale = this._projection.scale()
+      this._currentZoomLevel = 1
 
       const zoomFactor = config.zoomFactor
       if (zoomFactor) {
@@ -204,9 +206,6 @@ export class TopoJSONMap<NodeDatum extends NodeDatumCore, LinkDatum extends Link
     const { config, datamodel } = this
     const pointData = datamodel.nodes
 
-    this._pointsGroup
-      .style('filter', config.heatmapMode ? 'url(#heatmapFilter)' : null)
-
     const points = this._pointsGroup.selectAll(`.${s.point}`).data(pointData, (d, i) => getValue(d, config.pointId, i))
 
     // Enter
@@ -263,6 +262,10 @@ export class TopoJSONMap<NodeDatum extends NodeDatumCore, LinkDatum extends Link
 
     // Exit
     points.exit().remove()
+
+    // Heatmap
+    this._pointsGroup.style('filter', (config.heatmapMode && this._currentZoomLevel < config.heatmapModeZoomLevelThreshold) ? 'url(#heatmapFilter)' : null)
+    this._pointsGroup.selectAll(`.${s.pointLabel}`).style('display', this._currentZoomLevel < config.heatmapModeZoomLevelThreshold ? 'none' : null)
   }
 
   _fitToPoints (points?, pad = 0.1): void {
@@ -323,6 +326,8 @@ export class TopoJSONMap<NodeDatum extends NodeDatumCore, LinkDatum extends Link
 
     window.cancelAnimationFrame(this._animFrameId)
     this._animFrameId = window.requestAnimationFrame(this._onZoomHandler.bind(this, event.transform, isMouseEvent))
+
+    this._currentZoomLevel = (event?.transform.k / this._initialScale) || 1
   }
 
   _onZoomHandler (transform: ZoomTransform, isMouseEvent: boolean): void {
