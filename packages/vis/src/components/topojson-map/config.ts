@@ -23,6 +23,8 @@ export interface TopoJSONMapConfigInterface<N extends NodeDatumCore, L extends L
   disableZoom?: boolean;
   /** Zoom extent. Default: `[1, 6]` */
   zoomExtent?: number[];
+  /** Zoom animation duration. Default: `400` */
+  zoomDuration?: number;
   /** Link width accessor */
   linkWidth?: NumericAccessor<L>;
   /** Link color accessor */
@@ -63,6 +65,7 @@ export class TopoJSONMapConfig<N extends NodeDatumCore, L extends LinkDatumCore,
   mapFitToPoints = false
 
   zoomExtent = [1, 6]
+  zoomDuration = 400
   disableZoom = false
   zoomFactor = undefined
 
