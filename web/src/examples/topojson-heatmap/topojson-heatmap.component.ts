@@ -1,11 +1,12 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 /* eslint-disable */
 import { Component, AfterViewInit } from '@angular/core'
-import _sample from 'lodash/sample'
+import { scaleLinear } from 'd3-scale'
 
-import { TopoJSONMap, Tooltip, WorldMapTopoJSON } from '@volterra/vis'
+import {TopoJSONMap, Tooltip, WorldMapTopoJSON, VisControlItemInterface, VisControlsOrientation} from '@volterra/vis'
 
 import cities from './data/cities_big.json'
+
 
 type HeatMapPoint = {
   id: string,
@@ -23,11 +24,13 @@ type HeatMapPoint = {
 
 export class TopoJSONHeatMapComponent implements AfterViewInit {
   title = 'topojson-heatmap'
-  data: { nodes: HeatMapPoint[] } = { nodes: cities.map(c => ({...c, color: _sample(['#FF2C00','#08E084', '#F7CD67'])})) }
+  colorScale = scaleLinear<string>().domain([1, 10]).range(['#BFD8FF', '#0065FF'])
+  data: { nodes: HeatMapPoint[] } = { nodes: cities.map(c => ({...c, color: this.colorScale(1 + 10 * Math.random()) })) }
   config = {
     topojson: WorldMapTopoJSON,
     duration: 2500,
     pointColor: d => d.color,
+    pointLabel: d => d.city.substr(0, 1),
     heatmapMode: true,
   }
   component = new TopoJSONMap<HeatMapPoint, any, any>(this.config)
@@ -36,6 +39,22 @@ export class TopoJSONHeatMapComponent implements AfterViewInit {
       [TopoJSONMap.selectors.point]: d => `<span>${d.city}</span>`,
     },
   })
+  controlItems: VisControlItemInterface[] = [
+    {
+      icon: '&#xe986',
+      callback: () => { this.component.fitView() },
+      borderBottom: true,
+    },
+    {
+      icon: '&#xe936',
+      callback: () => { this.component.zoomIn() },
+    },
+    {
+      icon: '&#xe934',
+      callback: () => { this.component.zoomOut() },
+    },
+  ]
+  controlsOrientation = VisControlsOrientation.VERTICAL
 
   ngAfterViewInit (): void {
   }
