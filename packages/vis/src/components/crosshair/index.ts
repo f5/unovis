@@ -110,7 +110,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
     this.x = clamp(Math.round(scale(getValue(this.datum, config.x))), 0, config.width)
 
     // Show the crosshair only if it's in the chart range
-    this.show = (this.x > 0) && (this.x < config.width)
+    this.show = (this.x >= 0) && (this.x <= config.width)
 
     window.cancelAnimationFrame(this._animFrameId)
     this._animFrameId = window.requestAnimationFrame(() => {
