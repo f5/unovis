@@ -34,6 +34,7 @@ export class DonutChartComponent implements AfterViewInit {
       radius: this.radiusScale(sum),
       duration: 1000,
       arcWidth: 25,
+      preventEmptySegments: true,
       // color: 'grey',
     }
 
