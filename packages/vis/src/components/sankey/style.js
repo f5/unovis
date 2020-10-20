@@ -146,3 +146,7 @@ export const nodeIcon = css`
 export const nodeExit = css`
   label: node-exit;
 `
+
+export const background = css`
+  label: background;
+`
