@@ -25,6 +25,8 @@ export interface DonutConfigInterface<Datum> extends ComponentConfigInterface {
   arcWidth?: number;
   /** Central label accessor function or text. Default: `undefined` */
   centralLabel?: string;
+  /** Prevent having empty segments when the segment value is 0. Default: `false` */
+  preventEmptySegments?: boolean;
 }
 
 export class DonutConfig<Datum> extends ComponentConfig implements DonutConfigInterface<Datum> {
@@ -37,4 +39,5 @@ export class DonutConfig<Datum> extends ComponentConfig implements DonutConfigIn
   radius = undefined
   arcWidth = 20
   centralLabel = undefined
+  preventEmptySegments = false
 }
