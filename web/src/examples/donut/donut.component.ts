@@ -29,6 +29,7 @@ export class DonutChartComponent implements AfterViewInit {
     const sum = data.reduce((sum, d) => sum + d.y, 0)
 
     const config: DonutConfigInterface<SampleDatum> = {
+      id: (d, i) => i,
       value: d => d.y,
       centralLabel: `${sum.toFixed(2)}K`,
       radius: this.radiusScale(sum),
