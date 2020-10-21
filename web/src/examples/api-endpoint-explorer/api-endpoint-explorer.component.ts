@@ -71,6 +71,10 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
       return b.value - a.value || this.compareStrings(a.target?.path, b.target?.path) // Links sorted by: value + alphabetically
     },
     events: {
+      [Sankey.selectors.background]: {
+        // eslint-disable-next-line no-console
+        click: () => { console.log('Background click!') },
+      },
       [Sankey.selectors.gNode]: {
         click: (d: any) => {
           if (!d.targetLinks?.[0] || (!this.collapsedItems[d.id] && !d.sourceLinks?.[0])) return
@@ -235,12 +239,12 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
         <td class="content">${d.path.replace('//', '/')}</td>
       </tr>
       ${
-        d.dynExamples?.length
-          ? `<tr class="item">
+  d.dynExamples?.length
+    ? `<tr class="item">
         <td class="label">Example DYNs: </td>
         <td class="content">${d.dynExamples?.[0]}</td>
       </tr>`
-          : ''
+    : ''
 }
       ${
   d.method
@@ -251,14 +255,14 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
     : ''
 }
       ${d.dynExamples
-        ?.slice(1)
-        .map(
-          str => `<tr class="item">
+    ?.slice(1)
+    .map(
+      str => `<tr class="item">
         <td class="label"></td>
         <td class="content">${str}</td>
       </tr>`
-        )
-        .join('')}
+    )
+    .join('')}
       </table>`
   }
 

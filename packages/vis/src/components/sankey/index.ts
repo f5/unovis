@@ -38,6 +38,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
   private _extendedSizeMinHeight = 300
   private _linksGroup: Selection<SVGGElement, Record<string, unknown>[], SVGGElement, Record<string, unknown>[]>
   private _nodesGroup: Selection<SVGGElement, Record<string, unknown>[], SVGGElement, Record<string, unknown>[]>
+  private _backgroundRect: Selection<SVGRectElement, any, SVGGElement, any>
   private _sankey = sankey()
   private _highlightTimeoutId = null
   private _highlightActive = false
@@ -55,6 +56,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
   constructor (config?: SankeyConfigInterface<N, L>) {
     super()
     if (config) this.config.init(config)
+    this._backgroundRect = this.g.append('rect').attr('class', s.background)
     this._linksGroup = this.g.append('g').attr('class', s.links)
     this._nodesGroup = this.g.append('g').attr('class', s.nodes)
   }
@@ -83,6 +85,12 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
   _render (customDuration?: number): void {
     const { config, bleed, datamodel: { nodes, links } } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
+
+    this._backgroundRect
+      .attr('width', this.getWidth())
+      .attr('height', this.getHeight())
+      .attr('opacity', 0)
+
     if (
       (nodes.length === 0) ||
       (nodes.length === 1 && links.length > 0) ||
