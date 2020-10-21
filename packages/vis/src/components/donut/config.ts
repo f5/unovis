@@ -7,6 +7,8 @@ import { ComponentConfigInterface, ComponentConfig } from 'core/component/config
 import { NumericAccessor, ColorAccessor } from 'types/misc'
 
 export interface DonutConfigInterface<Datum> extends ComponentConfigInterface {
+  /** Id accessor for better visual data updates */
+  id?: ((d: Datum, i?: number, ...any) => string | number);
   /** Value accessor function. Default: `undefined` */
   value: NumericAccessor<Datum>;
   /** Diagram angle range. Default: `[0, 2 * Math.PI]` */
@@ -30,6 +32,8 @@ export interface DonutConfigInterface<Datum> extends ComponentConfigInterface {
 }
 
 export class DonutConfig<Datum> extends ComponentConfig implements DonutConfigInterface<Datum> {
+  // eslint-disable-next-line dot-notation
+  id = (d: Datum, i: number): string | number => d['id'] ?? i
   value = undefined
   angleRange: [number, number] = [0, 2 * Math.PI]
   padAngle = 0

@@ -30,8 +30,8 @@ export function createArc<Datum> (
       const angleCenter = (d.startAngle + d.endAngle) / 2
       const angleHalfWidth = (d.endAngle - d.startAngle) / 2
       arcNode._animState = {
-        startAngle: angleCenter - angleHalfWidth * 0.8,
-        endAngle: angleCenter + angleHalfWidth * 0.8,
+        startAngle: angleCenter - angleHalfWidth,
+        endAngle: angleCenter + angleHalfWidth,
         innerRadius: d.innerRadius,
         outerRadius: d.outerRadius,
       }
@@ -63,7 +63,9 @@ export function updateArc<Datum> (
         }
       })
   } else {
-    selection.attr('d', arcGen)
+    selection
+      .attr('d', arcGen)
+      .style('opacity', 1)
   }
 }
 

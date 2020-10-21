@@ -14,6 +14,10 @@ export const segment = css`
   label: segment;
 `
 
+export const segmentExit = css`
+  label: segment-exit;
+`
+
 export const centralLabel = css`
   label: central-label;
   text-anchor: middle;
