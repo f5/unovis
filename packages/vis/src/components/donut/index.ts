@@ -79,7 +79,7 @@ export class Donut<Datum> extends ComponentCore<Datum[]> {
     // Arc segments
     const arcsSelection = this.arcGroup
       .selectAll(`.${s.segment}`)
-      .data(arcData)
+      .data(arcData, (d: DonutArcDatum<Datum>, i) => config.id(d.data, i))
 
     const arcsEnter = arcsSelection.enter().append('path')
       .attr('class', s.segment)
@@ -89,6 +89,7 @@ export class Donut<Datum> extends ComponentCore<Datum[]> {
     arcsMerged.call(updateArc, config, this.arcGen, duration)
 
     arcsSelection.exit()
+      .attr('class', s.segmentExit)
       .call(removeArc, duration)
 
     // Label
