@@ -102,7 +102,7 @@ export class SingleChart<Datum> extends ContainerCore {
       const currentHeight = this.svg.attr('height')
       const scaledWidth = componentWidth * scale
       const scaledHeight = componentHeight * scale
-      const animated = currentWidth || currentHeight // true // (scaledWidth < currentWidth) || (scaledHeight < currentHeight)
+      const animated = currentWidth || currentHeight
       smartTransition(this.svg, animated ? (customDuration ?? component.config.duration) : 0)
         .attr('width', scaledWidth)
         .attr('height', scaledHeight)
