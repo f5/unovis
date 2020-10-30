@@ -79,6 +79,7 @@ export const label = css`
 
   &, tspan {
     font-family: var(--vis-sankey-label-font-family);
+    dominant-baseline: hanging;
   }
 
 `
@@ -94,6 +95,7 @@ export const sublabel = css`
   &, tspan {
     font-family: var(--vis-sankey-label-font-family);
     font-weight: var(--vis-sankey-node-sublabel-font-weight);
+    dominant-baseline: hanging;
   }
 
 `

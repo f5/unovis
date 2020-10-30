@@ -203,7 +203,7 @@ export function estimateTextSize (svgTextSelection: Selection<SVGTextElement, an
   const tspanSelection = svgTextSelection.selectAll('tspan')
 
   const lines = tspanSelection.size() || 1
-  const height = svgTextSelection.text() ? 0.8 * fontSize * lines * (1 + dy) - dy : 0
+  const height = svgTextSelection.text() ? 0.85 * fontSize * lines * (1 + dy) - dy : 0
 
   let width = 0
   if (tspanSelection.empty()) {

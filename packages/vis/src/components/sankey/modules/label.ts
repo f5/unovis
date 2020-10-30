@@ -16,7 +16,7 @@ import { SankeyConfig } from '../config'
 import * as s from '../style'
 
 const NODE_LABEL_SPACING = 10
-const LABEL_BLOCK_PADDING = 6
+const LABEL_BLOCK_PADDING = 6.5
 
 function getLabelBackground (width: number, height: number, orientation: Position.LEFT | Position.RIGHT, arrowWidth = 5, arrowHeight = 8): string {
   const halfHeight = height / 2

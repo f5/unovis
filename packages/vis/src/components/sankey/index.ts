@@ -208,11 +208,11 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
   }
 
   getWidth (): number {
-    return this._extendedWidth ?? this.config.width
+    return Math.max(this._extendedWidth || 0, this.config.width)
   }
 
   getHeight (): number {
-    return this._extendedHeightIncreased ?? this._extendedHeight ?? this.config.height
+    return Math.max(this._extendedHeightIncreased || 0, this._extendedHeight || 0, this.config.height)
   }
 
   getColumnCenters (): number[] {
