@@ -122,6 +122,7 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
   setData (data: GraphDataModel<N, L>): void {
     const { config } = this
 
+    this.datamodel.nodeSort = config.nodeSort
     this.datamodel.data = data
     this._recalculateLayout = true
     if (config.layoutAutofit) this._fitLayout = true
