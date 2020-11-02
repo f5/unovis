@@ -274,7 +274,9 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
     linkGroupsMerged.call(updateLinks, config, duration, this._scale)
 
     const linkGroupsExit: Selection<BaseType, L, SVGGElement, L[]> = linkGroups.exit()
-    linkGroupsExit.call(removeLinks, config, duration)
+    linkGroupsExit
+      .attr('class', linkSelectors.gLinkExit)
+      .call(removeLinks, config, duration)
   }
 
   _drawPanels (nodeUpdateSelection: Selection<BaseType, N, SVGGElement, N[]> | Transition<BaseType, N, SVGGElement, N[]>, duration: number): void {

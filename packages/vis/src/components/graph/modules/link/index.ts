@@ -172,9 +172,9 @@ export function updateLinks<N extends NodeDatumCore, L extends LinkDatumCore> (s
 
   if (duration > 0) {
     selection.attr('pointer-events', 'none')
-
     const t = smartTransition(selection, duration) as Selection<SVGGElement, L, SVGGElement, L[]>
-    t.attr('opacity', 1)
+    t
+      .attr('opacity', 1)
       .on('end interrupt', (d, i, elements) => {
         select(elements[i])
           .attr('pointer-events', 'stroke')
@@ -188,8 +188,8 @@ export function updateLinks<N extends NodeDatumCore, L extends LinkDatumCore> (s
 }
 
 export function removeLinks<N extends NodeDatumCore, L extends LinkDatumCore> (selection: Selection<SVGGElement, L, SVGGElement, L[]>, config: GraphConfigInterface<N, L>, duration: number): void {
-  smartTransition(selection, duration)
-    .style('opacity', 0)
+  smartTransition(selection, duration / 2)
+    .attr('opacity', 0)
     .remove()
 }
 
