@@ -16,7 +16,7 @@ import { without, clamp, groupBy, uniq, sortBy, getValue } from 'utils/data'
 // Config
 import { GraphConfigInterface } from '../config'
 
-// Heleprs
+// Helpers
 import { getMaxNodeSize, configuredNodeSize, getNodeSize } from './node/helper'
 import { positionNonConnectedNodes } from './layout-helpers'
 

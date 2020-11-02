@@ -47,18 +47,21 @@ const dash = keyframes`
 
 export const linkDashed = css`
   label: dashed;
+  
+  ${`.${link}`}, ${`.${linkSupport}`} {
+    animation: ${dash} 15s linear infinite;
+    stroke-dasharray: 6 6;
+  }
 `
 
 export const gLink = css`
   label: g-link;
-
-  &${`.${linkDashed}`} {
-    ${`.${link}`}, ${`.${linkSupport}`} {
-      animation: ${dash} 15s linear infinite;
-      stroke-dasharray: 6 6;
-    }
-  }
 `
+export const gLinkExit = css`
+  label: g-link-exit;
+  pointer-events: none;
+`
+
 export const greyout = css`
   label: greyout;
   opacity: 0.1;

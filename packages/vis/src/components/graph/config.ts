@@ -114,6 +114,8 @@ export interface GraphConfigInterface<N extends NodeDatumCore, L extends LinkDat
   nodeStrokeSegmentFill?: ColorAccessor<N>;
   /** Node stroke color accessor function or value */
   nodeStroke?: ColorAccessor<N>;
+  /** Node Sorting Function. Default: `undefined` */
+  nodeSort?: ((a: N, b: N) => number)
   /** Set selected node by Id  */
   selectedNodeId?: number | string;
 
@@ -176,6 +178,7 @@ export class GraphConfig<N extends NodeDatumCore, L extends LinkDatumCore> exten
   nodeFill = (n: N): string => n['fill']
   nodeStrokeSegmentFill = undefined
   nodeStroke = (n: N): string => n['stroke']
+  nodeSort = undefined
 
   selectedNodeId = undefined
   panels = undefined
