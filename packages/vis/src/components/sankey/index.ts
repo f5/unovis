@@ -86,11 +86,6 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
     const { config, bleed, datamodel: { nodes, links } } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
 
-    this._backgroundRect
-      .attr('width', this.getWidth())
-      .attr('height', this.getHeight())
-      .attr('opacity', 0)
-
     if (
       (nodes.length === 0) ||
       (nodes.length === 1 && links.length > 0) ||
@@ -122,6 +117,12 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
     nodeSelection.exit()
       .attr('class', s.nodeExit)
       .call(removeNodes, config, duration)
+
+    // Background
+    this._backgroundRect
+      .attr('width', this.getWidth())
+      .attr('height', this.getHeight())
+      .attr('opacity', 0)
   }
 
   private _preCalculateComponentSize (): void {
