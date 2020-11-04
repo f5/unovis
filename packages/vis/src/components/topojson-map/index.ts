@@ -242,11 +242,11 @@ export class TopoJSONMap<NodeDatum extends NodeDatumCore, LinkDatum extends Link
     const pointLabelsMerged = pointsMerged.select(`.${s.pointLabel}`)
     pointLabelsMerged
       .text(config.pointLabel ?? '')
-      .style('font-size', d => {
+      .attr('font-size', d => {
         const pointDiameter = 2 * getValue(d, config.pointRadius)
         const pointLabelText = getValue(d, config.pointLabel) || ''
         const textLength = pointLabelText.length
-        const fontSize = 0.6 * pointDiameter / Math.pow(textLength, 0.35)
+        const fontSize = 0.5 * pointDiameter / Math.pow(textLength, 0.4)
         return clamp(fontSize, fontSize, 16)
       })
 
