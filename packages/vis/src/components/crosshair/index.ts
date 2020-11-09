@@ -67,7 +67,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
       .map((value, index, arr) => ({
         index,
         value: value + baselineValue,
-        visible: !!(value - (arr[index - 1] ?? 0)),
+        visible: !!getValue(this.datum, config.yStacked[index]),
       }))
 
     const regularValues = yAccessors
@@ -96,6 +96,10 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
       .attr('r', 4)
       .style('opacity', d => d.visible ? 1 : 0)
       .style('fill', d => getColor(this.datum, config.color, d.index))
+  }
+
+  hide (): void {
+    this._onMouseOut()
   }
 
   _onMouseMove (): void {
