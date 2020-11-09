@@ -248,6 +248,7 @@ export class XYContainer<Datum> extends ContainerCore {
       crosshair.config.yStacked = flatten(yStackedAccessors)
       crosshair.config.baseline = crosshair.config.baseline || baselineAccessor || null
       crosshair.g.attr('transform', `translate(${margin.left},${margin.top})`)
+      crosshair.hide()
     }
 
     this._firstRender = false
