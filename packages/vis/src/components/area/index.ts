@@ -7,7 +7,7 @@ import { interpolatePath } from 'd3-interpolate-path'
 import { XYComponentCore } from 'core/xy-component'
 
 // Utils
-import { getValue, isNumber, isArray, getStackedExtent, getStackedValues, getStackedData, filterDataByRange } from 'utils/data'
+import { getValue, isNumber, isArray, getStackedExtent, getStackedData, filterDataByRange } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
 
