@@ -23,12 +23,13 @@ interface AreaSampleDatum extends SampleDatum {
 }
 
 function generateData (): AreaSampleDatum[] {
-  return _times(30).map((i) => ({
+  return _times(10).map((i) => ({
     x: i,
-    y: _random(0, 100),
+    y: _random(-100, 0),
     y1: _random(0, 100),
-    y2: _random(0, 100),
+    y2: _random(-100, 0),
     y3: _random(0, 100),
+    y4: _random(0, 100),
     baseline: _random(30, 80),
   }))
 }
@@ -46,6 +47,7 @@ export class BulletLegendExampleComponent implements AfterViewInit, OnDestroy {
     undefined,
     d => d.y2,
     d => d.y3,
+    d => d.y4,
   ]
   legendItems: { name: string, inactive?: boolean }[] = this.yAccessors.map((d, i) => ({ name: `Stream ${i + 1}`, hidden: !d }))
   chartConfig: XYContainerConfigInterface<AreaSampleDatum>
@@ -108,11 +110,12 @@ export class BulletLegendExampleComponent implements AfterViewInit, OnDestroy {
   }
 }
 
-function getAreaConfig (y): AreaConfigInterface<AreaSampleDatum> {  
+function getAreaConfig (y): AreaConfigInterface<AreaSampleDatum> {
   return {
     x: d => d.x,
     y,
     baseline: d => d.baseline,
+    opacity: 0.8,
   }
 }
 
