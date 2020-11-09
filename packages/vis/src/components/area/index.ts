@@ -7,7 +7,7 @@ import { interpolatePath } from 'd3-interpolate-path'
 import { XYComponentCore } from 'core/xy-component'
 
 // Utils
-import { getValue, isNumber, isArray, getStackedExtent, getStackedValues, filterDataByRange } from 'utils/data'
+import { getValue, isNumber, isArray, getStackedExtent, getStackedData, filterDataByRange } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
 
@@ -52,14 +52,14 @@ export class Area<Datum> extends XYComponentCore<Datum> {
       .curve(curveGen)
 
     const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
-    const stackedValues = data.map(d => getStackedValues(d, ...yAccessors))
-    const baselineValues = data.map(d => getValue(d, config.baseline) || 0)
     const areaDataX = data.map(d => config.scales.x(getValue(d, config.x)))
-    const stackedData: AreaDatum[][] = yAccessors.map(
-      (acs, i) => stackedValues.map(
+
+    const stacked = getStackedData(data, config.baseline, ...yAccessors)
+    const stackedData: AreaDatum[][] = stacked.map(
+      arr => arr.map(
         (d, j) => ({
-          y0: config.scales.y(baselineValues[j] + (d[i - 1] ?? 0)),
-          y1: config.scales.y(d[i] + baselineValues[j]),
+          y0: config.scales.y(d[0]),
+          y1: config.scales.y(d[1]),
           x: areaDataX[j],
         })
       )

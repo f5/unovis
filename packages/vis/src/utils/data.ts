@@ -27,7 +27,7 @@ import _sortBy from 'lodash/sortBy'
 import _range from 'lodash/range'
 // !!! If you add a new lodash import here, please specify it in rollup.config.js as well
 
-import { max, min, bisector } from 'd3-array'
+import { max, min, mean, bisector } from 'd3-array'
 
 // Types
 import { NumericAccessor } from 'types/misc'
@@ -118,15 +118,34 @@ export function getStackedValues<Datum> (d: Datum, ...acs: NumericAccessor<Datum
   for (const a of acs as NumericAccessor<Datum>[]) {
     const value = getValue(d, a) || 0
     if (value >= 0) {
-      positiveStack += value
-      values.push(positiveStack)
+      values.push(positiveStack += value)
     } else {
-      negativeStack += value
-      values.push(negativeStack)
+      values.push(negativeStack += value)
     }
   }
 
   return values
+}
+
+export function getStackedData<Datum> (data: Datum[], baseline: NumericAccessor<Datum>, ...acs: NumericAccessor<Datum>[]): number[][][] {
+  const baselineValues = data.map(d => getValue(d, baseline) || 0)
+  const isNegativeStack = acs.map(a => mean(data, d => getValue(d, a) || 0) < 0)
+
+  const stackedData = acs.map(() => [])
+  data.forEach((d, i) => {
+    let positiveStack = baselineValues[i]
+    let negativeStack = baselineValues[i]
+    acs.forEach((a, j) => {
+      const value = getValue(d, a) || 0
+      if (!isNegativeStack[j]) {
+        stackedData[j].push([positiveStack, positiveStack += value])
+      } else {
+        stackedData[j].push([negativeStack, negativeStack += value])
+      }
+    })
+  })
+
+  return stackedData
 }
 
 export function getExtent<Datum> (data: Datum[], ...acs: NumericAccessor<Datum>[]): number[] {
