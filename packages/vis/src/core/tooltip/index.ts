@@ -48,6 +48,10 @@ export class Tooltip<T extends ComponentCore<any>, TooltipDatum> {
     this._setContainerPositionThrottled()
   }
 
+  public getContainer (): HTMLElement {
+    return this._container
+  }
+
   public hasContainer (): boolean {
     return !!this._container
   }

@@ -11,7 +11,6 @@ import { getColor } from 'utils/color'
 
 // Types
 import { NumericAccessor } from 'types/misc'
-import { Position } from 'types/position'
 
 // Config
 import { CrosshairConfig, CrosshairConfigInterface } from './config'
@@ -137,10 +136,11 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
 
   _showTooltip (): void {
     const { config: { tooltip, template } } = this
+    if (!tooltip) return
 
-    const [x, y] = mouse(this.container.node())
-    if (tooltip) tooltip.config.horizontalPlacement = Position.RIGHT
-    tooltip?.show(template(this.datum), { x, y })
+    const container = tooltip.getContainer() || this.container.node()
+    const [x, y] = mouse(container)
+    tooltip.show(template(this.datum), { x, y })
   }
 
   _hideTooltip (): void {

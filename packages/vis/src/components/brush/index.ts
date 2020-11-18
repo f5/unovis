@@ -91,8 +91,8 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
       .attr('height', h)
 
     this.handleLines
-      .attr('y1', yRange[1] + h / 2 - 10)
-      .attr('y2', yRange[1] + h / 2 + 10)
+      .attr('y1', yRange[1] + 10)
+      .attr('y2', yRange[1] + h - 10)
 
     const xRange = xScale.range()
     const selectionMin = clamp(xScale(config.selection?.[0]) ?? 0, xRange[0], xRange[1])
