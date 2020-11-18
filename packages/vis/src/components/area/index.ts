@@ -46,7 +46,10 @@ export class Area<Datum> extends XYComponentCore<Datum> {
     this.areaGen = area<AreaDatum>()
       .x(d => d.x)
       .y0(d => d.y0)
-      .y1(d => d.y1)
+      .y1(d => {
+        const isSmallerThanPixel = Math.abs(d.y1 - d.y0) < 1
+        return d.y1 - (isSmallerThanPixel ? 1 : 0)
+      })
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       .curve(curveGen)
@@ -65,23 +68,27 @@ export class Area<Datum> extends XYComponentCore<Datum> {
       )
     )
 
+    // We reverse the data in order to have the first areas to be displayed on top
+    //   for better visibility when they're close to zero
+    const areaMaxIdx = stackedData.length - 1
+    const stackedDataReversed = stackedData.reverse()
     const areas = this.g
       .selectAll(`.${s.area}`)
-      .data(stackedData)
+      .data(stackedDataReversed)
 
     const areasEnter = areas.enter().append('path')
       .attr('class', s.area)
       .attr('d', d => this.areaGen(d) || this._emptyPath())
       .style('opacity', 0)
-      .style('fill', (d, i) => getColor(d, config.color, i))
+      .style('fill', (d, i) => getColor(d, config.color, areaMaxIdx - i))
 
     const areasMerged = smartTransition(areasEnter.merge(areas), duration)
       .style('opacity', d => {
         const isDefined = d.some(p => (p.y0 - p.y1) !== 0)
         return isDefined ? getValue(d, config.opacity) : 0
       })
-      .style('fill', (d, i) => getColor(d, config.color, i))
-      .style('cursor', (d, i) => getValue(d, config.cursor, i))
+      .style('fill', (d, i) => getColor(d, config.color, areaMaxIdx - i))
+      .style('cursor', (d, i) => getValue(d, config.cursor, areaMaxIdx - i))
 
     if (duration) {
       areasMerged
