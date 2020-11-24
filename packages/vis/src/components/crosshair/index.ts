@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { Selection, mouse } from 'd3-selection'
+import { Selection, mouse, event } from 'd3-selection'
 import { easeLinear } from 'd3-ease'
 // Core
 import { XYComponentCore } from 'core/xy-component'
@@ -11,6 +11,7 @@ import { getColor } from 'utils/color'
 
 // Types
 import { NumericAccessor } from 'types/misc'
+import { PositionStrategy } from 'types/position'
 
 // Config
 import { CrosshairConfig, CrosshairConfigInterface } from './config'
@@ -139,7 +140,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
     if (!tooltip) return
 
     const container = tooltip.getContainer() || this.container.node()
-    const [x, y] = mouse(container)
+    const [x, y] = tooltip.config.positionStrategy === PositionStrategy.FIXED ? [event.clientX, event.clientY] : mouse(container)
     tooltip.show(template(this.datum), { x, y })
   }
 

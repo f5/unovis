@@ -2,7 +2,7 @@
 import { CurveType } from 'types/curves'
 import { SymbolType } from 'types/symbols'
 import { Scale } from 'types/scales'
-import { Position, Arrangement } from 'types/position'
+import { Position, PositionStrategy, Arrangement } from 'types/position'
 import { Projection } from 'types/map-projections'
 import { Hierarchy } from 'types/radial-dendrogram'
 import { LayoutType, LinkStyle, LinkArrow, NodeDatumCore, LinkDatumCore, CircleLabel } from 'types/graph'
@@ -38,4 +38,5 @@ export {
   TrimMode,
   VerticalAlign,
   FitMode,
+  PositionStrategy,
 }

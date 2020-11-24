@@ -8,6 +8,11 @@ export enum Position {
   AUTO = 'auto',
 }
 
+export enum PositionStrategy {
+  ABSOLUTE = 'absolute',
+  FIXED = 'fixed',
+}
+
 export enum Arrangement {
   INSIDE = 'inside',
   OUTSIDE = 'outside',
