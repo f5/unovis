@@ -1,12 +1,12 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { select, Selection, mouse } from 'd3-selection'
+import { select, Selection, mouse, event } from 'd3-selection'
 
 // Core
 // import { ContainerCore } from 'core/container'
 import { ComponentCore } from 'core/component'
 
 // Types
-import { Position } from 'types/position'
+import { Position, PositionStrategy } from 'types/position'
 
 // Utils
 import { throttle } from 'utils/data'
@@ -84,10 +84,11 @@ export class Tooltip<T extends ComponentCore<any>, TooltipDatum> {
 
   public place (pos): void {
     const { config } = this
+    const positionFixed = config.positionStrategy === PositionStrategy.FIXED
     const width = this.element.offsetWidth
     const height = this.element.offsetHeight
-    const containerHeight = this._container.scrollHeight
-    const containerWidth = this._container.scrollWidth
+    const containerHeight = positionFixed ? window.innerHeight : this._container.scrollHeight
+    const containerWidth = positionFixed ? window.innerWidth : this._container.scrollWidth
 
     const horizontalPlacement = config.horizontalPlacement === Position.AUTO
       ? (pos.x > containerWidth / 2 ? Position.LEFT : Position.RIGHT)
@@ -123,8 +124,11 @@ export class Tooltip<T extends ComponentCore<any>, TooltipDatum> {
     // If the container size is smaller than the the tooltip size we just stick the tooltip to the top / left
     const x = containerWidth < width ? 0 : pos.x + constraintX + dx
     const y = containerHeight < height ? height : pos.y + constraintY + dy
+
     this.div
-      .style('bottom', `${containerHeight - y}px`)
+      .classed(s.positionFixed, positionFixed)
+      .style('top', positionFixed ? `${y - height}px` : 'unset')
+      .style('bottom', !positionFixed ? `${containerHeight - y}px` : 'unset')
       .style('left', `${x}px`)
   }
 
@@ -137,14 +141,14 @@ export class Tooltip<T extends ComponentCore<any>, TooltipDatum> {
   }
 
   private _setUpEvents (): void {
-    const { config: { triggers } } = this
+    const { config: { triggers, positionStrategy } } = this
 
     Object.keys(triggers).forEach(className => {
       const template = triggers[className]
       this.components.forEach(component => {
         select(component.element).selectAll(`.${className}`)
           .on('mousemove.tooltip', (d: TooltipDatum, i, elements) => {
-            const [x, y] = mouse(this._container)
+            const [x, y] = positionStrategy === PositionStrategy.FIXED ? [event.clientX, event.clientY] : mouse(this._container)
             const content = template(d, i, elements)
             if (content) this.show(content, { x, y })
             else this.hide()
