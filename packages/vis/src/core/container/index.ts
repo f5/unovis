@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { select } from 'd3-selection'
+import { select, Selection } from 'd3-selection'
 import ResizeObserver from 'resize-observer-polyfill'
 
 // Types
@@ -13,8 +13,8 @@ import { getBoundingClientRectObject } from 'utils/misc'
 import { ContainerConfig, ContainerConfigInterface } from './config'
 
 export class ContainerCore {
-  svg: any
-  element: HTMLElement
+  svg: Selection<SVGSVGElement, any, HTMLElement, any>
+  element: SVGSVGElement
   prevConfig: ContainerConfig
   config: ContainerConfig
 
@@ -104,5 +104,6 @@ export class ContainerCore {
 
   destroy (): void {
     this._resizeObserver.disconnect()
+    this.svg.remove()
   }
 }

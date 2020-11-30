@@ -18,7 +18,7 @@ import { ComponentConfig, ComponentConfigInterface } from './config'
 export class ComponentCore<CoreDatum> {
   element: HTMLElement | SVGGElement
   type: ComponentType = ComponentType.SVG
-  g: any
+  g: any // Selection<HTMLElement | SVGElement, any, any, any>
   config: ComponentConfig
   prevConfig: ComponentConfig
   datamodel: CoreDataModel<CoreDatum> = new CoreDataModel()
@@ -92,5 +92,9 @@ export class ComponentCore<CoreDatum> {
           .on(eventType + suffix, (d, i, els) => events[className][eventType](d, i, els))
       })
     })
+  }
+
+  public destroy (): void {
+    this.g?.remove()
   }
 }

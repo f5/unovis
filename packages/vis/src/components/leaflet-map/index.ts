@@ -599,5 +599,6 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
 
   public destroy (): void {
     this._map?.leaflet?.remove()
+    super.destroy()
   }
 }
