@@ -478,6 +478,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
 
   private _onMapMove (): void {
     const { config } = this
+    if (!this._map) return
     this._hasBeenMoved = true
     this._renderData()
 
@@ -486,12 +487,14 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
 
   private _onMapMoveStart (): void {
     const { config } = this
+    if (!this._map) return
     this._isMoving = true
     config.onMapMoveStart?.(this._getMapZoomState())
   }
 
   private _onMapMoveEnd (): void {
     const { config } = this
+    if (!this._map) return
     config.onMapMoveEnd?.(this._getMapZoomState())
 
     if (config.renderer === LeafletMapRenderer.MAPBOXGL) {
@@ -512,12 +515,14 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
 
   private _onMapZoomStart (): void {
     const { config } = this
+    if (!this._map) return
     this._isZooming = true
     config.onMapZoomStart?.(this._getMapZoomState())
   }
 
   private _onMapZoomEnd (): void {
     const { config } = this
+    if (!this._map) return
     config.onMapZoomEnd?.(this._getMapZoomState())
     this._isZooming = false
     if (!this._isMoving) this._eventInitiatedByComponent = false
@@ -525,6 +530,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
 
   private _onMapZoom (): void {
     const { config } = this
+    if (!this._map) return
     this._hasBeenZoomed = true
 
     if (!this._externallySelectedPoint) this._resetExpandedCluster()
@@ -598,7 +604,12 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
   }
 
   public destroy (): void {
-    this._map?.leaflet?.remove()
-    super.destroy()
+    constraintMapViewThrottled.cancel()
+    const map = this._map.leaflet
+    this._map = undefined
+
+    map.stop()
+    map.remove()
+    this.g.remove()
   }
 }
