@@ -116,4 +116,12 @@ export class SingleChart<Datum> extends ContainerCore {
 
     if (config.tooltip) config.tooltip.update()
   }
+
+  public destroy (): void {
+    const { component, config: { tooltip } } = this
+    super.destroy()
+
+    component?.destroy()
+    tooltip?.destroy()
+  }
 }

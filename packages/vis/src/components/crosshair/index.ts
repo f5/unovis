@@ -38,7 +38,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
       .attr('class', s.line)
   }
 
-  setContainer (containerSvg: Selection<SVGSVGElement, any, SVGSVGElement, any>): void {
+  setContainer (containerSvg: Selection<SVGSVGElement, any, any, any>): void {
     // Set up mousemove event for Crosshair
     this.container = containerSvg
     this.container.on('mousemove.crosshair', this._onMouseMove.bind(this))

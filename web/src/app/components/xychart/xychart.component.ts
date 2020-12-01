@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { Component, ViewChild, ElementRef, AfterViewInit, Input } from '@angular/core'
+import { Component, ViewChild, ElementRef, AfterViewInit, Input, OnDestroy } from '@angular/core'
 
 // Vis
 import { XYContainer, XYContainerConfigInterface } from '@volterra/vis'
@@ -9,7 +9,7 @@ import { XYContainer, XYContainerConfigInterface } from '@volterra/vis'
   templateUrl: './xychart.component.html',
   styleUrls: ['./xychart.component.css'],
 })
-export class XYChartComponent implements AfterViewInit {
+export class XYChartComponent implements AfterViewInit, OnDestroy {
   @ViewChild('container', { static: false }) containerRef: ElementRef
   @Input() duration = undefined
   @Input() margin = { top: 10, bottom: 10, left: 10, right: 10 }
@@ -57,5 +57,9 @@ export class XYChartComponent implements AfterViewInit {
     return {
       duration, margin, padding, components, dimensions, axes, tooltip, crosshair, adaptiveYScale,
     }
+  }
+
+  ngOnDestroy () {
+    this.chart.destroy()
   }
 }

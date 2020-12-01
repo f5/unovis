@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { Component, ViewChild, ElementRef, AfterViewInit, Input } from '@angular/core'
+import { Component, ViewChild, ElementRef, AfterViewInit, Input, OnDestroy } from '@angular/core'
 
 // Vis
 import { SingleChart, SingleChartConfigInterface } from '@volterra/vis'
@@ -9,7 +9,7 @@ import { SingleChart, SingleChartConfigInterface } from '@volterra/vis'
   templateUrl: './singlechart.component.html',
   styleUrls: ['./singlechart.component.css'],
 })
-export class SingleChartComponent implements AfterViewInit {
+export class SingleChartComponent implements AfterViewInit, OnDestroy {
   @ViewChild('container', { static: false }) containerRef: ElementRef
   @Input() margin = { top: 10, bottom: 10, left: 10, right: 10 }
   @Input() component
@@ -48,5 +48,9 @@ export class SingleChartComponent implements AfterViewInit {
   getConfig (): SingleChartConfigInterface<unknown> {
     const { margin, component, tooltip } = this
     return { margin, component, tooltip }
+  }
+
+  ngOnDestroy () {
+    this.chart.destroy()
   }
 }

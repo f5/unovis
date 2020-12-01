@@ -19,7 +19,7 @@ import * as s from './style'
 
 export class Tooltip<T extends ComponentCore<any>, TooltipDatum> {
   element: HTMLElement
-  div: Selection<HTMLElement, any, any, any>
+  div: Selection<HTMLElement, any, HTMLElement | null, any>
   config: TooltipConfig<T, TooltipDatum>
   prevConfig: TooltipConfig<T, TooltipDatum>
   components: T[]
@@ -156,5 +156,9 @@ export class Tooltip<T extends ComponentCore<any>, TooltipDatum> {
           .on('mouseleave.tooltip', (d, i, elements) => this.hide())
       })
     })
+  }
+
+  public destroy (): void {
+    this.div?.remove()
   }
 }

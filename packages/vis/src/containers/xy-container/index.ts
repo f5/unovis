@@ -49,8 +49,8 @@ export type XYConfigInterface<Datum> = XYComponentConfigInterface<Datum>
 export class XYContainer<Datum> extends ContainerCore {
   config: XYContainerConfig<Datum> = new XYContainerConfig()
   datamodel: SeriesDataModel<Datum> = new SeriesDataModel()
-  private _svgDefs: Selection<SVGDefsElement, Record<string, unknown>[], SVGGElement, Record<string, unknown>[]>
-  private _clipPath: Selection<SVGGElement, Record<string, unknown>[], SVGGElement, Record<string, unknown>[]>
+  private _svgDefs: Selection<SVGDefsElement, Record<string, unknown>[], any, Record<string, unknown>[]>
+  private _clipPath: Selection<SVGClipPathElement, Record<string, unknown>[], any, Record<string, unknown>[]>
   private _clipPathId = guid()
   private _axisMargin: Spacing = { top: 0, bottom: 0, left: 0, right: 0 }
   private _firstRender = true
@@ -354,5 +354,16 @@ export class XYContainer<Datum> extends ContainerCore {
       left: margin.left + this._axisMargin.left,
       right: margin.right + this._axisMargin.right,
     }
+  }
+
+  public destroy (): void {
+    const { components, config: { tooltip, crosshair, axes } } = this
+    super.destroy()
+
+    for (const c of components) c?.destroy()
+    tooltip?.destroy()
+    crosshair?.destroy()
+    axes.x?.destroy()
+    axes.y?.destroy()
   }
 }
