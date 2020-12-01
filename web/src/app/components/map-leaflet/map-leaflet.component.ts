@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { Component, ViewChild, ElementRef, AfterViewInit, Input } from '@angular/core'
+import { Component, ViewChild, ElementRef, AfterViewInit, Input, OnDestroy } from '@angular/core'
 
 // Viz
 import { LeafletMap, LeafletMapConfigInterface, VisControlItemInterface, VisControlsOrientation } from '@volterra/vis'
@@ -10,7 +10,7 @@ import { LeafletMap, LeafletMapConfigInterface, VisControlItemInterface, VisCont
   styleUrls: ['./map-leaflet.component.css'],
 })
 
-export class MapLeafletComponent<Datum> implements AfterViewInit {
+export class MapLeafletComponent<Datum> implements AfterViewInit, OnDestroy {
   title = 'leaflet-map'
   @ViewChild('container', { static: false }) mapRef: ElementRef
   @Input() data: Datum[]
@@ -55,5 +55,9 @@ export class MapLeafletComponent<Datum> implements AfterViewInit {
 
     // Render map
     this.map?.render()
+  }
+
+  ngOnDestroy () {
+    this.map.destroy()
   }
 }
