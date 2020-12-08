@@ -45,10 +45,8 @@ export type Point = {
     point_count: number;
     // eslint-disable-next-line camelcase
     cluster_id: string | number;
-    sum: {
-      [key: string]: number;
-    };
     expandedClusterPoint?: Point;
+    value?: number;
   };
   _zIndex: number;
 }
