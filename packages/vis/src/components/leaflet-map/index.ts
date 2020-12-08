@@ -29,7 +29,7 @@ import { createNodes, updateNodes, removeNodes } from './modules/node'
 import { createNodeSelectionRing, updateNodeSelectionRing } from './modules/selectionRing'
 import { createBackgroundNode, updateBackgroundNode } from './modules/clusterBackground'
 import {
-  bBoxMerge, clampZoomLevel, getNodeRadius, getPointDisplayOrder, calulateClusterIndex, geoJSONPointToScreenPoint,
+  bBoxMerge, clampZoomLevel, getPointRadius, getPointDisplayOrder, calculateClusterIndex, geoJSONPointToScreenPoint,
   shouldClusterExpand, findNodeAndClusterInPointsById, getNodeRelativePosition, getClusterRadius, getClustersAndPoints,
 } from './modules/utils'
 import { constraintMapViewThrottled } from './renderer/mapboxgl-layer'
@@ -161,7 +161,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     datamodel.data = dataValid
 
     // We use Supercluster for real-time node clustering
-    this._clusterIndex = calulateClusterIndex<Datum>(data, this.config)
+    this._clusterIndex = calculateClusterIndex<Datum>(data, this.config)
     this.render()
   }
 
@@ -410,7 +410,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     this._forceExpandCluster = false
     if (clusterPoint) {
       const points: PointFeature<any>[] = clusterPoint.index.getLeaves(clusterPoint.properties.cluster_id, Infinity)
-      const packPoints = points.map(p => ({ x: null, y: null, r: getNodeRadius(p, config.pointRadius, this._map.leaflet.getZoom()) + padding }))
+      const packPoints = points.map(p => ({ x: null, y: null, r: getPointRadius(p, config.pointRadius, this._map.leaflet.getZoom()) + padding }))
       packSiblings(packPoints)
 
       points.forEach((p, i) => {
@@ -554,12 +554,12 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
   }
 
   private _onPointClick (d, i, elements): void {
-    const { config: { flyToDuration } } = this
+    const { config: { flyToDuration, clusterExpandOnClick } } = this
 
     this._externallySelectedPoint = null
     event.stopPropagation()
 
-    if (d.properties.cluster) {
+    if (clusterExpandOnClick && d.properties.cluster) {
       const zoomLevel = this._map.leaflet.getZoom()
       const coordinates = { lng: d.geometry.coordinates[0], lat: d.geometry.coordinates[1] }
 

@@ -4,7 +4,7 @@ import { min, max } from 'd3-array'
 import Supercluster, { PointFeature } from 'supercluster'
 
 // Utils
-import { clamp, getValue, isNil, find } from 'utils/data'
+import { clamp, getValue } from 'utils/data'
 import { polygon, circlePath } from 'utils/path'
 import { getHTMLTransform } from 'utils/html'
 
@@ -47,13 +47,13 @@ export function projectPoint (geoJSONPoint, leafletMap: L.Map): { x: number; y: 
   return projected
 }
 
-export function getNodeRadius<Datum> (geoPoint: PointFeature<any>, pointRadius: NumericAccessor<Datum>, zoomLevel: number): number {
+export function getPointRadius<Datum> (geoPoint: PointFeature<any>, pointRadius: NumericAccessor<Datum>, zoomLevel: number): number {
   const isCluster = geoPoint.properties.cluster
-  const isDynamic = isNil(pointRadius)
+  const isDynamic = !pointRadius
 
   const radius = isDynamic ? 1 + 2 * Math.pow(zoomLevel, 0.80) : getValue(geoPoint.properties, pointRadius)
 
-  return isCluster
+  return (isCluster && isDynamic)
     ? clamp(Math.pow(geoPoint.properties.point_count, 0.35) * radius, radius * 1.1, radius * 3)
     : radius
 }
@@ -93,22 +93,26 @@ export function toGeoJSONPoint<Datum> (d: Datum, pointLatitude: NumericAccessor<
   }
 }
 
-export function calulateClusterIndex<Datum> (data: Datum[], config: LeafletMapConfigInterface<Datum>, maxClusterZoomLevel = 20): Supercluster {
-  const { statusMap, pointShape, pointStatus, pointLatitude, pointLongitude } = config
+export function calculateClusterIndex<Datum> (data: Datum[], config: LeafletMapConfigInterface<Datum>, maxClusterZoomLevel = 20): Supercluster {
+  const { statusMap, pointShape, pointStatus, pointLatitude, pointLongitude, pointValue } = config
   return new Supercluster({
     radius: 45,
     maxZoom: maxClusterZoomLevel,
     map: (d): Record<string, unknown> => {
-      const pStatus = getValue(d, pointStatus)
+      const status = getValue(d, pointStatus)
       const shape = getValue(d, pointShape)
-      const result = { shape }
-      Object.keys(statusMap).forEach(status => {
-        result[`sum${status}`] = pStatus === status ? 1 : 0
+      const value = getValue(d, pointValue)
+
+      const result = { shape, value }
+      Object.keys(statusMap).forEach(s => {
+        result[`sum${s}`] = status === s ? 1 : 0
       })
+
       return result
     },
     reduce: (accumulated, props): void => {
       accumulated.shape = accumulated.shape === props.shape ? accumulated.shape : PointShape.CIRCLE
+      accumulated.value = (accumulated.value ?? 0) + (props.value ?? 0)
       Object.keys(statusMap).forEach(status => {
         accumulated[`sum${status}`] += props[`sum${status}`]
       })
@@ -132,7 +136,7 @@ export function geoJSONPointToScreenPoint<Datum> (geoPoint: PointFeature<any>, l
   const zoomLevel = leafletMap.getZoom()
   const { x, y } = getPointPos(geoPoint, leafletMap)
   const color = getValue(geoPoint.properties, pointColor)
-  const radius = getNodeRadius(geoPoint, pointRadius, zoomLevel)
+  const radius = getPointRadius(geoPoint, pointRadius, zoomLevel)
   const shape = getValue(geoPoint.properties, pointShape)
   const isCluster = geoPoint.properties.cluster
 
@@ -172,7 +176,7 @@ export function findNodeAndClusterInPointsById (points: Point[], id: string): { 
   points.forEach(point => {
     if (point.properties.cluster) {
       const leaves = point.index.getLeaves(point.properties.cluster_id, Infinity)
-      const foundNode = find(leaves, d => d.properties.id === id)
+      const foundNode = leaves.find(d => d.properties.id === id)
       if (foundNode) {
         node = foundNode
         cluster = point

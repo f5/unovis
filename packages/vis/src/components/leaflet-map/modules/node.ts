@@ -1,12 +1,15 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { select, Selection } from 'd3-selection'
+import { color } from 'd3-color'
 import L from 'leaflet'
 
 // Types
 import { ClusterOutlineType, Point } from 'types/map'
 
 // Utils
-import { clamp } from 'utils/data'
+import { clamp, getValue } from 'utils/data'
+import { getCSSVariableValue, isStringCSSVariable } from 'utils/misc'
+import { hexToBrightness } from 'utils/color'
 import { getPointPos, getDonutData } from './utils'
 
 // Modules
@@ -44,34 +47,44 @@ export function updateNodes<T> (selection, config: LeafletMapConfigInterface<T>,
     const group = select(elements[i])
     const node: Selection<SVGPathElement, any, SVGGElement, any> = group.select(`.${s.pointPath}`)
     const innerLabel = group.select(`.${s.innerLabel}`)
+    const isCluster = d.properties.cluster
+    const innerLabelText = getValue(d, config.pointLabel)
+    const pointColor = d.fill || statusMap?.[d.properties.status]?.color
 
-    if (clusterOutlineType === ClusterOutlineType.DONUT && d.properties.cluster) {
+    if (clusterOutlineType === ClusterOutlineType.DONUT && isCluster) {
       group.select(`.${s.donutCluster}`)
         .call(updateDonut, getDonutData(d, config.statusMap), { radius: d.radius, arcWidth: clusterOutlineWidth, statusMap })
     }
 
     const statusStyle = statusMap?.[d.properties.status]
     node
-      .classed('cluster', d.properties.cluster)
-      .classed('withStroke', d.properties.cluster && clusterOutlineType === ClusterOutlineType.LINE)
+      .classed('cluster', isCluster)
+      .classed('withStroke', isCluster && clusterOutlineType === ClusterOutlineType.LINE)
       .classed('fromCluster', !!d.properties.expandedClusterPoint)
       .classed(statusStyle?.className, !!statusStyle?.className)
       .attr('d', d.path)
-      .style('fill', d.fill || statusMap?.[d.properties.status]?.color)
+      .style('fill', pointColor)
       .style('stroke', d.stroke || statusMap?.[d.properties.status]?.color)
       .style('stroke-width', d.strokeWidth)
       .style('opacity', 1)
 
     innerLabel
-      .text(d.properties.cluster ? d.properties.point_count : null)
+      .text(innerLabelText || null)
       .attr('font-size', (d: Point) => {
-        if (!d.properties.point_count) return null
-        const nodeWidth = node.node().getBBox().width
-        const textLength = d.properties.point_count.toString().length
-        const fontSize = 0.6 * nodeWidth / Math.pow(textLength, 0.35)
+        const pointDiameter = 2 * d.radius
+        const textLength = innerLabelText.length
+        const fontSize = 0.5 * pointDiameter / Math.pow(textLength, 0.4)
         return clamp(fontSize, fontSize, 16)
       })
-      .attr('visibility', d.properties.cluster ? null : 'hidden')
+      .attr('visibility', innerLabelText ? null : 'hidden')
+      .style('fill', (d, i) => {
+        if (!pointColor) return null
+        const hex = color(isStringCSSVariable(pointColor) ? getCSSVariableValue(pointColor, this.element) : pointColor)?.hex()
+        if (!hex) return null
+
+        const brightness = hexToBrightness(hex)
+        return brightness > 0.5 ? 'var(--vis-map-point-label-text-color-dark)' : 'var(--vis-map-point-label-text-color-light)'
+      })
   })
 }
 
