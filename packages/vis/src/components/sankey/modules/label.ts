@@ -1,4 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
+import { Selection } from 'd3-selection'
+
 // Utils
 import { estimateTextSize, trimSVGText, wrapSVGText } from 'utils/text'
 import { smartTransition } from 'utils/d3'
@@ -6,7 +8,7 @@ import { getValue } from 'utils/data'
 
 // Types
 import { FitMode, VerticalAlign } from 'types/text'
-import { SankeyLinkDatumInterface, SankeyNodeDatumInterface, SubLabelPlacement } from 'types/sankey'
+import { InputLink, InputNode, SankeyNode, SubLabelPlacement } from 'types/sankey'
 import { Position } from 'types/position'
 
 // Config
@@ -43,6 +45,14 @@ function getLabelBackground (width: number, height: number, orientation: Positio
   }
 }
 
+export function getLabelOrientation<N extends InputNode, L extends InputLink> (d: SankeyNode<N, L>, sankeyWidth: number, labelPosition: Position): (Position.LEFT | Position.RIGHT) {
+  const orientation = labelPosition === Position.AUTO
+    ? d.x0 < sankeyWidth / 2 ? Position.LEFT : Position.RIGHT
+    : labelPosition
+
+  return orientation as (Position.LEFT | Position.RIGHT)
+}
+
 export const requiredLabelSpace = (labelWidth: number, labelFontSize: number): { width: number; height: number } => {
   return {
     height: labelFontSize * 2 + 2 * LABEL_BLOCK_PADDING, // Assuming 2.5 lines per label
@@ -50,7 +60,7 @@ export const requiredLabelSpace = (labelWidth: number, labelFontSize: number): {
   }
 }
 
-export function getLabelGroupXTranslate<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> (d: N, config: SankeyConfig<N, L>): number {
+export function getLabelGroupXTranslate<N extends InputNode, L extends InputLink> (d: SankeyNode<N, L>, config: SankeyConfig<N, L>): number {
   const orientation = getLabelOrientation(d, config.width, config.labelPosition)
   switch (orientation) {
   case Position.RIGHT: return config.nodeWidth + NODE_LABEL_SPACING
@@ -60,7 +70,7 @@ export function getLabelGroupXTranslate<N extends SankeyNodeDatumInterface, L ex
   }
 }
 
-export function getLabelGroupYTranslate<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> (d: N, labelGroupHeight: number, config: SankeyConfig<N, L>): number {
+export function getLabelGroupYTranslate<N extends InputNode, L extends InputLink> (d: SankeyNode<N, L>, labelGroupHeight: number, config: SankeyConfig<N, L>): number {
   const nodeHeight = d.y1 - d.y0
   if (config.labelBackground && (nodeHeight < labelGroupHeight)) return (nodeHeight - labelGroupHeight) / 2
 
@@ -72,7 +82,7 @@ export function getLabelGroupYTranslate<N extends SankeyNodeDatumInterface, L ex
   }
 }
 
-export function getLabelTextAnchor<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> (d: N, config: SankeyConfig<N, L>): string {
+export function getLabelTextAnchor<N extends InputNode, L extends InputLink> (d: SankeyNode<N, L>, config: SankeyConfig<N, L>): string {
   const orientation = getLabelOrientation(d, config.width, config.labelPosition)
   switch (orientation) {
   case Position.RIGHT: return 'start'
@@ -82,7 +92,7 @@ export function getLabelTextAnchor<N extends SankeyNodeDatumInterface, L extends
   }
 }
 
-export function getSubLabelTextAnchor<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> (d: N, config: SankeyConfig<N, L>): string {
+export function getSubLabelTextAnchor<N extends InputNode, L extends InputLink> (d: SankeyNode<N, L>, config: SankeyConfig<N, L>): string {
   const isSublabelInline = config.subLabelPlacement === SubLabelPlacement.INLINE
   const orientation = getLabelOrientation(d, config.width, config.labelPosition)
   switch (orientation) {
@@ -93,18 +103,15 @@ export function getSubLabelTextAnchor<N extends SankeyNodeDatumInterface, L exte
   }
 }
 
-export function getLabelOrientation<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> (d: N, sankeyWidth: number, labelPosition: Position): (Position.LEFT | Position.RIGHT) {
-  const orientation = labelPosition === Position.AUTO
-    ? d.x0 < sankeyWidth / 2 ? Position.LEFT : Position.RIGHT
-    : labelPosition
-
-  return orientation as (Position.LEFT | Position.RIGHT)
-}
-
-export function renderLabel<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> (labelGroup, d: N, config: SankeyConfig<N, L>, duration: number, forceExpand = false): { x: number; y: number; width: number; height: number; layer: number; selection: any } {
-  const labelTextSelection = labelGroup.select(`.${s.label}`)
+export function renderLabel<N extends InputNode, L extends InputLink> (
+  labelGroup: Selection<SVGGElement, SankeyNode<N, L>, SVGGElement, any>,
+  d: SankeyNode<N, L>,
+  config: SankeyConfig<N, L>,
+  duration: number,
+  forceExpand = false): { x: number; y: number; width: number; height: number; layer: number; selection: any; hidden?: boolean } {
+  const labelTextSelection: Selection<SVGTextElement, SankeyNode<N, L>, SVGGElement, SankeyNode<N, L>> = labelGroup.select(`.${s.label}`)
   const labelShowBackground = config.labelBackground || forceExpand
-  const sublabelTextSelection = labelGroup.select(`.${s.sublabel}`)
+  const sublabelTextSelection: Selection<SVGTextElement, SankeyNode<N, L>, SVGGElement, SankeyNode<N, L>> = labelGroup.select(`.${s.sublabel}`)
   const labelPadding = labelShowBackground ? LABEL_BLOCK_PADDING : 0
   const isSublabelInline = config.subLabelPlacement === SubLabelPlacement.INLINE
   const separator = config.labelForceWordBreak ? '' : config.labelTextSeparator
@@ -166,7 +173,8 @@ export function renderLabel<N extends SankeyNodeDatumInterface, L extends Sankey
   labelTextSelection.attr('text-anchor', labelTextAnchor)
   sublabelTextSelection.attr('text-anchor', sublabelTextAnchor)
 
-  smartTransition(labelGroup, duration)
+  const hasTransform = !!labelGroup.attr('transform')
+  smartTransition(labelGroup, hasTransform ? duration : 0)
     .attr('transform', `translate(${xTranslate},${yTranslate})`)
 
   return {

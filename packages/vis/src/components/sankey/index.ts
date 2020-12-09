@@ -11,7 +11,7 @@ import { GraphDataModel } from 'data-models/graph'
 // Types
 import { Spacing } from 'types/misc'
 import { ExtendedSizeComponent, Sizing } from 'types/component'
-import { SankeyNodeDatumInterface, SankeyLinkDatumInterface } from 'types/sankey'
+import { InputNode, InputLink, SankeyNode, SankeyLink } from 'types/sankey'
 import { Position } from 'types/position'
 
 // Utils
@@ -28,10 +28,10 @@ import { removeLinks, createLinks, updateLinks } from './modules/link'
 import { removeNodes, createNodes, updateNodes, onNodeMouseOver, onNodeMouseOut } from './modules/node'
 import { requiredLabelSpace } from './modules/label'
 
-export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> extends ComponentCore<{nodes: N[]; links?: L[]}> implements ExtendedSizeComponent {
+export class Sankey<N extends InputNode, L extends InputLink> extends ComponentCore<{nodes: N[]; links?: L[]}> implements ExtendedSizeComponent {
   static selectors = s
   config: SankeyConfig<N, L> = new SankeyConfig()
-  datamodel: GraphDataModel<N, L> = new GraphDataModel()
+  datamodel: GraphDataModel<SankeyNode<N, L>, SankeyLink<N, L>> = new GraphDataModel()
   private _extendedWidth = undefined
   private _extendedHeight = undefined
   private _extendedHeightIncreased = undefined
@@ -151,7 +151,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
     const links = datamodel.links
 
     const hasLinks = links.length > 0
-    // If there're no links we manually calculate the visualization layout
+    // If there are no links we manually calculate the visualization layout
     if (!hasLinks) {
       const sumValue = sum(nodes, n => n.fixedValue ?? 1)
       let y = 0
@@ -230,7 +230,7 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
     return centers
   }
 
-  highlightSubtree (node: SankeyNodeDatumInterface): void {
+  highlightSubtree (node: SankeyNode<N, L>): void {
     const { config, datamodel } = this
 
     clearTimeout(this._highlightTimeoutId)
@@ -245,12 +245,12 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
     }, config.highlightDelay)
   }
 
-  recursiveSetSubtreeState (node: SankeyNodeDatumInterface, linksKey: 'sourceLinks' | 'targetLinks', nodeKey: 'source' | 'target', key: string, value: any): void {
+  recursiveSetSubtreeState (node: SankeyNode<N, L>, linksKey: 'sourceLinks' | 'targetLinks', nodeKey: 'source' | 'target', key: string, value: any): void {
     node._state[key] = value
 
     for (const l of node[linksKey]) {
       l._state[key] = value
-      this.recursiveSetSubtreeState(l[nodeKey] as SankeyNodeDatumInterface, linksKey, nodeKey, key, value)
+      this.recursiveSetSubtreeState(l[nodeKey] as SankeyNode<N, L>, linksKey, nodeKey, key, value)
     }
   }
 
@@ -267,25 +267,25 @@ export class Sankey<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatu
     }
   }
 
-  private _onNodeMouseOver (d: SankeyNodeDatumInterface, i, els): void {
+  private _onNodeMouseOver (d: SankeyNode<N, L>, i, els): void {
     const { config } = this
 
     if (config.highlightSubtreeOnHover) this.highlightSubtree(d)
     onNodeMouseOver(d, select(els[i]), this.config)
   }
 
-  private _onNodeMouseOut (d: SankeyNodeDatumInterface, i, els): void {
+  private _onNodeMouseOut (d: SankeyNode<N, L>, i, els): void {
     this.disableHighlight()
     onNodeMouseOut(d, select(els[i]), this.config)
   }
 
-  private _onLinkMouseOver (d: SankeyLinkDatumInterface, i, els): void {
+  private _onLinkMouseOver (d: SankeyLink<N, L>, i, els): void {
     const { config } = this
 
-    if (config.highlightSubtreeOnHover) this.highlightSubtree(d.target as SankeyNodeDatumInterface)
+    if (config.highlightSubtreeOnHover) this.highlightSubtree(d.target as SankeyNode<N, L>)
   }
 
-  private _onLinkMouseOut (d: SankeyLinkDatumInterface, i, els): void {
+  private _onLinkMouseOut (d: SankeyLink<N, L>, i, els): void {
     this.disableHighlight()
   }
 }
