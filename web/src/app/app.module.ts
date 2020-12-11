@@ -18,6 +18,7 @@ import { BulletLegendExampleComponent } from 'examples/bullet-legend/bullet-lege
 import { TopoJSONMapComponent } from 'examples/topojson-map/topojson-map.component'
 import { TopoJSONHeatMapComponent } from 'examples/topojson-heatmap/topojson-heatmap.component'
 import { MapComponent } from 'examples/map/map.component'
+import { PieMapComponent } from 'examples/pie-map/pie-map.component'
 import { MapHeatmapComponent } from 'examples/map-heatmap/map-heatmap.component'
 import { RadialDendrogramComponent } from 'examples/radial-dendrogram/radial-dendrogram.component'
 import { GraphComponent } from 'examples/graph/graph.component'
@@ -38,6 +39,7 @@ import { VisControlsComponent } from './components/vis-controls/vis-controls.com
 
 const appRoutes: Routes = [
   { path: 'map', component: MapComponent },
+  { path: 'pie-map', component: PieMapComponent },
   { path: 'heatmap-map', component: MapHeatmapComponent },
   { path: 'scatter', component: ScatterComponent },
   { path: 'line', component: LineComponent },
@@ -84,6 +86,7 @@ appRoutes.push({ path: '', redirectTo: `/${appRoutes[0].path}`, pathMatch: 'full
     TopoJSONMapComponent,
     TopoJSONHeatMapComponent,
     MapComponent,
+    PieMapComponent,
     MapLeafletComponent,
     MapHeatmapComponent,
     Collection,
