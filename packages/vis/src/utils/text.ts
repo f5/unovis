@@ -199,7 +199,7 @@ export function trimSVGText (svgTextSelection: Selection<SVGTextElement, any, SV
   svgTextSelection.text(trimText(text, maxCharaters, trimType))
 }
 
-export function estimateTextSize (svgTextSelection: Selection<SVGTextElement, any, SVGElement, any>, fontSize: number, dy = 0.32, fastMode?: boolean, widthToHeightRatio?: number): { width: number; height: number } {
+export function estimateTextSize (svgTextSelection: Selection<SVGTextElement, any, SVGElement, any>, fontSize: number, dy = 0.32, fastMode = true, widthToHeightRatio = 0.52): { width: number; height: number } {
   const tspanSelection = svgTextSelection.selectAll('tspan')
 
   const lines = tspanSelection.size() || 1
