@@ -4590,7 +4590,7 @@
       },
       "metadata": {},
       "paint": {
-        "text-color": "rgb(161, 169, 176)",
+        "text-color": "rgba(161, 169, 176, 0.8)",
         "text-halo-color": "rgba(255, 255, 255, 0.8)",
         "text-halo-width": 1.2
       },
@@ -4638,7 +4638,7 @@
       "metadata": {},
       "minzoom": 5,
       "paint": {
-        "text-color": "rgb(161, 169, 176)",
+        "text-color": "rgba(161, 169, 176, 0.8)",
         "text-halo-color": "rgba(255, 255, 255, 0.8)",
         "text-halo-width": 1.2
       },
@@ -4681,7 +4681,7 @@
       "maxzoom": 6,
       "metadata": {},
       "paint": {
-        "text-color": "rgb(178, 188, 197)",
+        "text-color": "rgba(178, 188, 197, 0.6)",
         "text-halo-color": "rgba(255, 255, 255, 0.7)",
         "text-halo-width": 0.8
       },
@@ -4725,7 +4725,7 @@
       },
       "metadata": {},
       "paint": {
-        "text-color": "rgb(159, 178, 195)",
+        "text-color": "rgba(159, 178, 195, 0.85)",
         "text-halo-blur": 1,
         "text-halo-color": "rgba(255, 255, 255, 0.8)",
         "text-halo-width": 0.8
@@ -4776,7 +4776,7 @@
       "metadata": {},
       "minzoom": 3,
       "paint": {
-        "text-color": "rgb(159, 178, 195)",
+        "text-color": "rgba(159, 178, 195, 0.85)",
         "text-halo-blur": 1,
         "text-halo-color": "rgba(255, 255, 255, 0.8)",
         "text-halo-width": 0.8
@@ -4827,7 +4827,7 @@
       "metadata": {},
       "minzoom": 3,
       "paint": {
-        "text-color": "rgb(159, 178, 195)",
+        "text-color": "rgba(159, 178, 195, 0.85)",
         "text-halo-blur": 1,
         "text-halo-color": "rgba(255, 255, 255, 0.8)",
         "text-halo-width": 0.8
@@ -4878,7 +4878,7 @@
       "metadata": {},
       "minzoom": 3,
       "paint": {
-        "text-color": "rgb(159, 178, 195)",
+        "text-color": "rgba(159, 178, 195, 0.85)",
         "text-halo-blur": 1,
         "text-halo-color": "rgba(255, 255, 255, 0.8)",
         "text-halo-width": 0.8
