@@ -129,7 +129,7 @@ export class LeafletMapConfig<Datum> extends ComponentConfig implements LeafletM
   clusterOutlineWidth = 1.25
   clusterBackground = true
   clusterExpandOnClick = true;
-  clusterRadius = 45
+  clusterRadius = 55
   valuesMap = {}
 
   // TopoJSON Overlay
