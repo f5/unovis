@@ -12,18 +12,36 @@ type MapPoint = {
   id: string;
   longitude: number;
   latitude: number;
-  status: string;
   shape: string;
+
+  healthy?: number,
+  warning?: number,
+  alert?: number,
+  inactive?: number,
+  pending?: number,
+  re?: number,
+  approving?: number,
 }
 
-function mapSampleData (): object[] {  
-  return earthquakes.features.map(d => ({
+function mapSampleData (): object[] {
+  return earthquakes.features.map(d => {
+    const status = Math.random() < 0.4 ? _.sample(['healthy', 'warning', 'alert', 'inactive', 'pending', 're', 'approving']) : 'healthy';
+
+    return {
       id: d.id,
       longitude: d.geometry.coordinates[0],
       latitude: d.geometry.coordinates[1],
-      status: Math.random() < 0.4 ? _.sample(['healthy', 'warning', 'alert', 'inactive', 'pending', 're', 'approving']) : 'healthy',
       shape: Math.random() < 0.07 ? _.sample(['square', 'triangle']) : 'circle',
-  }))
+      // healthy: 0,
+      // warning: 0,
+      // alert: 0,
+      // inactive: 0,
+      // pending: 0,
+      // re: 0,
+      // approving: 0,
+      [status]: 1,
+    }
+  })
 }
 
 function getTooltipConfig (): TooltipConfigInterface<LeafletMap<MapPoint>, MapPoint> {
@@ -67,7 +85,7 @@ export class MapComponent implements AfterViewInit {
       // }
     },
     // accessToken: '',
-    statusMap: {
+    valuesMap: {
       healthy: { color: '#47e845' },
       warning: { color: '#ffc226' },
       alert: { color: '#f8442d' },
@@ -80,6 +98,7 @@ export class MapComponent implements AfterViewInit {
       '<a href="https://www.maptiler.com/copyright/" target="_blank">MapTiler</a>',
       '<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a>'
     ],
+    pointBottomLabel: d => d.cluster ? `${d.point_count} sites` : d.id,
     // selectedNodeId: 'nc72965236',
     initialBounds: { northEast: { lat: 77, lng: -172 }, southWest: { lat: -50, lng: 72 } },
     onMapMoveZoom: ({ mapCenter, zoomLevel, bounds }) => { /* console.log(mapCenter, zoomLevel, bounds) */ },
@@ -106,13 +125,13 @@ export class MapComponent implements AfterViewInit {
     // }, 4000)
 
     // // set new bounds
-    // setTimeout(() => {      
+    // setTimeout(() => {
     //   this.config.bounds = { northEast: { lat: 77, lng: -172 }, southWest: { lat: -50, lng: 72 } }
     //   this.config = { ...this.config } // Updating the object to trigger change detection
     // }, 8000)
 
     // // update data
-    // setTimeout(() => {      
+    // setTimeout(() => {
     //   this.data = mapSampleData()
     // }, 12000)
   }
