@@ -25,7 +25,7 @@ import * as s from './style'
 
 // Modules
 import { setupMap, updateTopoJson, initialMapCenter, initialMapZoom } from './modules/map'
-import { createNodes, updateNodes, removeNodes } from './modules/node'
+import { createNodes, updateNodes, removeNodes, collideLabels } from './modules/node'
 import { createNodeSelectionRing, updateNodeSelectionRing } from './modules/selectionRing'
 import { createBackgroundNode, updateBackgroundNode } from './modules/clusterBackground'
 import {
@@ -62,6 +62,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
   private _selectedPoint: Point<Datum> = null
   private _currentZoomLevel = null
   private _firstRender = true
+  private _renderDataAnimationFrame: number
 
   events = {
     [LeafletMap.selectors.point]: {
@@ -328,7 +329,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     }
   }
 
-  private _renderData (): void {
+  private _renderData (mapMoveZoomUpdateOnly = false): void {
     const { config } = this
 
     const pointData = this._getPointData()
@@ -356,7 +357,9 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
       .call(createNodes)
 
     const pointsMerged = points.merge(pointsEnter)
-    pointsMerged.call(updateNodes, config, this._map.leaflet)
+    pointsEnter.call(updateNodes, config, this._map.leaflet)
+    points.call(updateNodes, config, this._map.leaflet, mapMoveZoomUpdateOnly)
+    pointsMerged.call(collideLabels, this._map.leaflet)
 
     this._clusterBackground.call(updateBackgroundNode, this._expandedCluster, config, this._map.leaflet, this._clusterBackgroundRadius)
     if (this._expandedCluster && config.clusterBackground) {
@@ -482,8 +485,9 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     const { config } = this
     if (!this._map) return
     this._hasBeenMoved = true
-    this._renderData()
-
+    this._renderDataAnimationFrame = requestAnimationFrame(() => {
+      this._renderData(true)
+    })
     config.onMapMoveZoom?.(this._getMapZoomState())
   }
 
@@ -607,6 +611,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
 
   public destroy (): void {
     constraintMapViewThrottled.cancel()
+    cancelAnimationFrame(this._renderDataAnimationFrame)
     const map = this._map.leaflet
     this._map = undefined
 
