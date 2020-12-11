@@ -32,13 +32,6 @@ function mapSampleData (): object[] {
       longitude: d.geometry.coordinates[0],
       latitude: d.geometry.coordinates[1],
       shape: Math.random() < 0.07 ? _.sample(['square', 'triangle']) : 'circle',
-      // healthy: 0,
-      // warning: 0,
-      // alert: 0,
-      // inactive: 0,
-      // pending: 0,
-      // re: 0,
-      // approving: 0,
       [status]: 1,
     }
   })
