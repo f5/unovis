@@ -1,5 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { LatLng } from 'leaflet'
+import Supercluster from 'supercluster'
 
 export enum LeafletMapRenderer {
   TANGRAM = 'tangram',
@@ -14,48 +15,53 @@ export enum PointShape {
   CLUSTER = 'cluster',
 }
 
-export enum ClusterOutlineType {
-  LINE = 'line',
-  DONUT = 'donut',
-}
-
-export interface StatusStyle {
-  color?: string;
+export type PieDatum = {
+  value: number;
+  name: string;
+  color: string;
   className?: string;
 }
 
-export type StatusMap = { [key: string]: StatusStyle }
+export interface ValuesMapItem {
+  color: string;
+  className?: string;
+}
 
-export type Point = {
+export type ValuesMap = { [key: string]: ValuesMapItem }
+
+export type PointExpandedClusterProperties<D> = {
+  // Expanded cluster related data:
+  // eslint-disable-next-line no-use-before-define
+  expandedClusterPoint?: Point<D>;
+  r?: number;
+  dx?: number;
+  dy?: number;
+}
+
+export type PointDatum<D> = D & PointExpandedClusterProperties<D> & {
+  id: string | number;
+  clusterIndex?: Supercluster<D>;
+  shape: PointShape;
+
+  // Supercluster generated data:
+  cluster: boolean;
+  // eslint-disable-next-line camelcase
+  point_count: number;
+  // eslint-disable-next-line camelcase
+  cluster_id: string | number;
+};
+
+export type Point<D> = {
   geometry: GeoJSON.Geometry;
   bbox: Record<string, unknown>;
   radius: number;
   path: string;
   fill: string;
-  stroke: string;
-  strokeWidth: number;
   index: any;
   id: number | string;
-  properties: {
-    cluster: any;
-    status: string;
-    shape: PointShape;
-    id: string | number;
-    // eslint-disable-next-line camelcase
-    point_count: number;
-    // eslint-disable-next-line camelcase
-    cluster_id: string | number;
-    sum: {
-      [key: string]: number;
-    };
-    expandedClusterPoint?: Point;
-  };
+  properties: PointDatum<D>,
+  donutData: PieDatum[],
   _zIndex: number;
-}
-
-export type PieDatum = {
-  value: number;
-  status: string;
 }
 
 export type Bounds = {

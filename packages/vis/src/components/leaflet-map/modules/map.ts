@@ -114,7 +114,7 @@ export function setupMap<T> (mapContainer: HTMLElement, config: LeafletMapConfig
     layer.addTo(leaflet)
 
     // leaflet-mapbox-gl has a layer positioning issue on far zoom levels which leads to having wrong
-    //   map points projection. We're constraing the view to prevent that.
+    //   map points projection. We constraint the view to prevent that.
     constraintMapView(leaflet)
     select(mapContainer)
       .on('wheel', () => {

@@ -9,7 +9,7 @@ const pieConstructor = pie<PieDatum>()
   .sort(null)
   .value((d: PieDatum): number => d.value)
 
-export function updateDonut (selection, data, { radius, statusMap, arcWidth = 2, padAngle = 0.05 }): void {
+export function updateDonut (selection, data, radius, arcWidth = 2, padAngle = 0.05): void {
   pieConstructor.padAngle(padAngle)
   const arcs = pieConstructor(data.filter((d: PieDatum) => d.value))
 
@@ -21,11 +21,11 @@ export function updateDonut (selection, data, { radius, statusMap, arcWidth = 2,
   donuts.enter()
     .append('path')
     .merge(donuts)
-    .attr('class', d => statusMap?.[d.data.status]?.className ?? null)
+    .attr('class', d => d.data.className ?? null)
     .attr('d', arc()
-      .innerRadius(radius - arcWidth * 0.5)
-      .outerRadius(radius + arcWidth * 0.5)
+      .innerRadius(arcWidth ? radius - arcWidth * 0.5 : 0)
+      .outerRadius(arcWidth ? radius + arcWidth * 0.5 : radius)
     )
-    .style('fill', d => statusMap?.[d.data.status]?.color ?? null)
-    .style('stroke', d => statusMap?.[d.data.status]?.color ?? null)
+    .style('fill', d => d.data.color ?? null)
+    .style('stroke', d => d.data.color ?? null)
 }
