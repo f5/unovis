@@ -7,7 +7,7 @@ import { Tooltip } from 'core/tooltip'
 
 // Types
 import { NumericAccessor, StringAccessor, ColorAccessor } from 'types/misc'
-import { LeafletMapRenderer, ClusterOutlineType, Bounds, StatusMap, MapZoomState, Point } from 'types/map'
+import { LeafletMapRenderer, Bounds, ValuesMap, MapZoomState, PointDatum } from 'types/map'
 import { LeafletMap } from './index'
 
 export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterface {
@@ -54,34 +54,30 @@ export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterfa
   pointLatitude?: NumericAccessor<Datum>;
   /** Point id accessor function or value */
   pointId?: StringAccessor<Datum>;
-  /** Point status accessor function or value */
-  pointStatus?: StringAccessor<Datum>;
   /** Point shape accessor function or value */
   pointShape?: StringAccessor<Datum>;
   /** Point color accessor function or value */
   pointColor?: ColorAccessor<Datum>;
   /** Point radius accessor function or value */
-  pointRadius?: NumericAccessor<Datum>;
-  /** Point value accessor function. If there's a value associated with a point, it can be displayed as a text label */
-  pointValue?: NumericAccessor<Datum>;
-  /** Point value accessor function. If there's a value associated with a point, it can be displayed as a text label */
-  pointLabel?: StringAccessor<Point>;
-  /** Point stroke width accessor function or value */
-  pointStrokeWidth?: NumericAccessor<Datum>;
+  pointRadius?: NumericAccessor<PointDatum<Datum>>;
+  /** Point inner label accessor function */
+  pointLabel?: StringAccessor<PointDatum<Datum>>;
+  /** Point bottom label accessor function */
+  pointBottomLabel?: StringAccessor<PointDatum<Datum>>;
   /** */
   selectedNodeId?: string;
 
   // Cluster
-  /** Cluster point outline type */
-  clusterOutlineType?: ClusterOutlineType;
   /** Cluster point outline width */
   clusterOutlineWidth?: number;
   /** Use cluster background */
   clusterBackground?: boolean;
   /** Defines whether the cluster should expand on click or not. Default: `false` */
   clusterExpandOnClick?: boolean;
+  /** Clustering radius. Default: `45` */
+  clusterRadius?: number;
   /** Status styles */
-  statusMap?: StatusMap;
+  valuesMap?: ValuesMap;
 
   // TopoJSON overlay
   /** A TopoJSON Geometry layer to be displayed on top of the map. Supports fill and stroke */
@@ -122,21 +118,19 @@ export class LeafletMapConfig<Datum> extends ComponentConfig implements LeafletM
   pointLongitude = (d: Datum): number => d['longitude']
   pointLatitude = (d: Datum): number => d['latitude']
   pointId = (d: Datum): string => d['id']
-  pointStatus = (d: Datum): string => d['status']
   pointShape = (d: Datum): string => d['shape']
   pointColor = (d: Datum): string => d['color']
   pointRadius = undefined
-  pointValue = undefined
-  pointLabel = (d: Point): string => `${d.properties.point_count ?? ''}`
-  pointStrokeWidth = 1
+  pointLabel = (d: PointDatum<Datum>): string => `${d.point_count ?? ''}`
+  pointBottomLabel = (d: PointDatum<Datum>): string => ''
   selectedNodeId = undefined
 
   // Cluster
-  clusterOutlineType = ClusterOutlineType.DONUT
   clusterOutlineWidth = 1.25
   clusterBackground = true
   clusterExpandOnClick = true;
-  statusMap = {}
+  clusterRadius = 45
+  valuesMap = {}
 
   // TopoJSON Overlay
   topoJSONLayer = {

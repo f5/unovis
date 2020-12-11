@@ -2,7 +2,7 @@
 import { Selection, event } from 'd3-selection'
 import { packSiblings } from 'd3-hierarchy'
 import L from 'leaflet'
-import Supercluster, { PointFeature } from 'supercluster'
+import Supercluster, { ClusterFeature, PointFeature } from 'supercluster'
 
 // Core
 import { ComponentCore } from 'core/component'
@@ -12,7 +12,7 @@ import { MapDataModel } from 'data-models/map'
 
 // Types
 import { ComponentType } from 'types/component'
-import { LeafletMapRenderer, Point, Bounds, MapZoomState } from 'types/map'
+import { LeafletMapRenderer, Point, Bounds, MapZoomState, PointDatum } from 'types/map'
 
 // Utils
 import { getValue, clamp, isNil, find } from 'utils/data'
@@ -29,7 +29,7 @@ import { createNodes, updateNodes, removeNodes } from './modules/node'
 import { createNodeSelectionRing, updateNodeSelectionRing } from './modules/selectionRing'
 import { createBackgroundNode, updateBackgroundNode } from './modules/clusterBackground'
 import {
-  bBoxMerge, clampZoomLevel, getPointRadius, getPointDisplayOrder, calculateClusterIndex, geoJSONPointToScreenPoint,
+  bBoxMerge, clampZoomLevel, getPointRadius, calculateClusterIndex, geoJSONPointToScreenPoint,
   shouldClusterExpand, findNodeAndClusterInPointsById, getNodeRelativePosition, getClusterRadius, getClustersAndPoints,
 } from './modules/utils'
 import { constraintMapViewThrottled } from './renderer/mapboxgl-layer'
@@ -43,8 +43,8 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
   datamodel: MapDataModel<Datum> = new MapDataModel()
   protected _container: HTMLElement
   private _map: { leaflet: L.Map; layer: L.Layer; svgOverlay: Selection<SVGElement, any, HTMLElement, any>; svgGroup: Selection<SVGGElement, any, SVGElement, any> }
-  private _clusterIndex: Supercluster
-  private _expandedCluster: { points: PointFeature<any>[]; cluster: Point } = null
+  private _clusterIndex: Supercluster<Datum>
+  private _expandedCluster: { points: ClusterFeature<PointDatum<Datum>>[]; cluster: Point<Datum> } = null
   private _cancelBackgroundClick = false
   private _hasBeenMoved = false
   private _hasBeenZoomed = false
@@ -59,7 +59,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
   private _pointSelectionRing: Selection<SVGGElement, Record<string, unknown>[], SVGElement, Record<string, unknown>[]>
   private _clusterBackground: Selection<SVGGElement, Record<string, unknown>[], SVGElement, Record<string, unknown>[]>
   private _clusterBackgroundRadius = 0
-  private _selectedPoint: Point = null
+  private _selectedPoint: Point<Datum> = null
   private _currentZoomLevel = null
   private _firstRender = true
 
@@ -254,7 +254,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     const bounds = [dataBoundsAll[0][1], dataBoundsAll[1][0], dataBoundsAll[1][1], dataBoundsAll[0][0]]
     const pointDataAll = this._getPointData(bounds)
 
-    let foundPoint = pointDataAll.find((d: Point) => d.properties.id === id)
+    let foundPoint = pointDataAll.find((d: Point<Datum>) => d.properties.id === id)
 
     // If point was found and it's a cluster -> do nothing
     if (foundPoint?.properties?.cluster) {
@@ -349,7 +349,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
 
     // Render content
     const points = this._pointGroup.selectAll(`.${s.point}:not(.exit)`)
-      .data(pointData, (d: Point) => d.id.toString())
+      .data(pointData, (d: Point<Datum>) => d.id.toString())
 
     points.exit().classed('exit', true).call(removeNodes)
     const pointsEnter = points.enter().append('g').attr('class', s.point)
@@ -363,7 +363,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
       pointData.forEach((d, i) => { d._zIndex = d.properties?.expandedClusterPoint ? 2 : 0 })
       this._pointGroup
         .selectAll(`.${s.point}, .${s.clusterBackground}, .${s.pointSelectionRing}`)
-        .sort((a: Point, b: Point) => a._zIndex - b._zIndex)
+        .sort((a: Point<Datum>, b: Point<Datum>) => a._zIndex - b._zIndex)
     }
 
     // Show selection border and hide it when the node
@@ -409,15 +409,15 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
 
     this._forceExpandCluster = false
     if (clusterPoint) {
-      const points: PointFeature<any>[] = clusterPoint.index.getLeaves(clusterPoint.properties.cluster_id, Infinity)
+      const points: ClusterFeature<PointDatum<Datum>>[] = clusterPoint.index.getLeaves(clusterPoint.properties.cluster_id, Infinity)
       const packPoints = points.map(p => ({ x: null, y: null, r: getPointRadius(p, config.pointRadius, this._map.leaflet.getZoom()) + padding }))
       packSiblings(packPoints)
 
       points.forEach((p, i) => {
         p.properties.expandedClusterPoint = clusterPoint
         p.properties.r = packPoints[i].r
-        p.properties.x = packPoints[i].x
-        p.properties.y = packPoints[i].y
+        p.properties.dx = packPoints[i].x
+        p.properties.dy = packPoints[i].y
       })
 
       this._resetExpandedCluster()
@@ -439,8 +439,10 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     this._expandedCluster = null
   }
 
-  private _getPointData (customBounds?): Point[] {
+  private _getPointData (customBounds?): Point<Datum>[] {
     const { config, datamodel: { data } } = this
+    const { pointRadius, pointColor, pointShape, pointId, valuesMap } = config
+
     if (!data || !this._clusterIndex) return []
 
     let geoJSONPoints = getClustersAndPoints<Datum>(this._clusterIndex, this._map.leaflet, customBounds)
@@ -453,8 +455,8 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     }
 
     const pointData = geoJSONPoints
-      .map((d: PointFeature<any>) => geoJSONPointToScreenPoint(d, this._map.leaflet, config.pointRadius, config.pointStrokeWidth, config.pointColor, config.pointShape, config.pointId))
-      .sort((a, b) => getPointDisplayOrder(a, config.pointStatus, config.statusMap) - getPointDisplayOrder(b, config.pointStatus, config.statusMap))
+      .map((d: PointFeature<any>) => geoJSONPointToScreenPoint(d, this._map.leaflet, pointRadius, pointColor, pointShape, pointId, valuesMap))
+      // .sort((a, b) => getPointDisplayOrder(a, config.pointStatus, config.valuesMap) - getPointDisplayOrder(b, config.pointStatus, config.valuesMap))
 
     return pointData
   }
