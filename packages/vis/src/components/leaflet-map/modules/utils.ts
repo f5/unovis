@@ -104,7 +104,7 @@ export function calculateClusterIndex<D> (data: D[], config: LeafletMapConfigInt
 
       const clusterPoint = { shape }
       for (const key of Object.keys(valuesMap)) {
-        clusterPoint[key] = d[key]
+        clusterPoint[key] = d[key] || 0
       }
 
       return clusterPoint
