@@ -94,7 +94,7 @@ export function toGeoJSONPoint<D> (d: D, pointLatitude: NumericAccessor<D>, poin
   }
 }
 
-export function calculateClusterIndex<D> (data: D[], config: LeafletMapConfigInterface<D>, maxClusterZoomLevel = 20): Supercluster<D> {
+export function calculateClusterIndex<D> (data: D[], config: LeafletMapConfigInterface<D>, maxClusterZoomLevel = 23): Supercluster<D> {
   const { valuesMap, pointShape, pointLatitude, pointLongitude, clusterRadius } = config
   return new Supercluster<D>({
     radius: clusterRadius,
@@ -174,7 +174,7 @@ export function geoJSONPointToScreenPoint<D> (
   return screenPoint
 }
 
-export function shouldClusterExpand (cluster, zoomLevel: number, midLevel = 4, maxLevel = 11, maxClusterZoomLevel = 20): boolean {
+export function shouldClusterExpand (cluster, zoomLevel: number, midLevel = 4, maxLevel = 11, maxClusterZoomLevel = 23): boolean {
   const clusterExpansionZoomLevel = cluster.index.getClusterExpansionZoom(cluster.id)
   return clusterExpansionZoomLevel >= maxClusterZoomLevel ||
     zoomLevel >= maxLevel ||
