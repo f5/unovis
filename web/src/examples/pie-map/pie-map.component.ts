@@ -1,6 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-/* eslint-disable */
-import _ from 'lodash'
+import clamp from 'lodash/clamp'
+import mean from 'lodash/mean'
 import { Component, ViewEncapsulation, ViewChild } from '@angular/core'
 import { LeafletMap, LeafletMapConfigInterface } from '@volterra/vis'
 import { MapLeafletComponent } from '../../app/components/map-leaflet/map-leaflet.component'
@@ -21,7 +21,7 @@ type SitePoint = {
   selector: 'pie-map',
   templateUrl: './pie-map.component.html',
   styleUrls: ['./pie-map.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 
 export class PieMapComponent {
@@ -31,21 +31,24 @@ export class PieMapComponent {
   data = sites.map(d => ({
     ...d,
     normal: d.events - d.blocked,
-  }))
+  })).slice(0, 2)
+
+  grandAvg = mean(this.data.map(d => d.events))
+
   config: LeafletMapConfigInterface<SitePoint> = {
     renderer: 'mapboxgl',
     mapboxglGlyphs: 'https://maps.volterra.io/fonts/{fontstack}/{range}.pbf',
     sources: {
       openmaptiles: {
-        type: "vector",
-        url: "https://maps.volterra.io/data/v3.json"
+        type: 'vector',
+        url: 'https://maps.volterra.io/data/v3.json',
       },
     },
     pointRadius: d => {
-      return _.clamp(7 + Math.sqrt((d.normal + d.blocked) / 80), 6, 25)
+      return clamp(7 + 10 * Math.sqrt((d.normal + d.blocked) / this.grandAvg), 6, 25)
     },
     pointLabel: d => {
-      return ((d.blocked + d.normal) / 1000).toFixed(1) + 'K'
+      return `${((d.blocked + d.normal) / 1000).toFixed(1)}K`
     },
     pointId: d => d.name,
     clusterOutlineWidth: 2,
@@ -62,15 +65,17 @@ export class PieMapComponent {
     clusterRadius: 65,
     attribution: [
       '<a href="https://www.maptiler.com/copyright/" target="_blank">MapTiler</a>',
-      '<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a>'
+      '<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a>',
     ],
     events: {
       [LeafletMap.selectors.point]: {
-        click: d => { !d.properties?.cluster && this.mapContainer?.map.zoomToPointById(d.id, true) },
+        click: d => {
+          if (d.properties?.cluster) this.mapContainer?.map.zoomToPointById(d.id, true)
+        },
       },
       [LeafletMap.selectors.background]: {
         click: () => { this.mapContainer?.map.unselectPoint() },
-      }
-    }
+      },
+    },
   }
 }
