@@ -336,7 +336,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     const contentBBox = pointData.length ? bBoxMerge(pointData.map(d => d.bbox)) : { x: 0, y: 0, width: 0, height: 0 }
 
     // Set SVG size to match Leaflet transform
-    const svgExtraPadding = 25 + this._clusterBackgroundRadius
+    const svgExtraPadding = 30 + this._clusterBackgroundRadius
     const dx = contentBBox.x - svgExtraPadding
     const dy = contentBBox.y - svgExtraPadding
     this._map.svgOverlay
