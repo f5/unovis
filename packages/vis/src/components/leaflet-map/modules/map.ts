@@ -90,6 +90,7 @@ export function setupMap<T> (mapContainer: HTMLElement, config: LeafletMapConfig
     center: initialMapCenter,
     zoom: initialMapZoom,
     minZoom: Math.sqrt(mapContainer.offsetWidth) / 17,
+    maxZoom: 23,
     maxBounds: L.latLngBounds(
       L.latLng(-75, -290),
       L.latLng(85, 290)
