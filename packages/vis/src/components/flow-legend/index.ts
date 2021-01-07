@@ -92,7 +92,7 @@ export class FlowLegend {
     this.line.attr('class', s.line({ lineColor }))
   }
 
-  _onItemClick (d): void {
+  _onItemClick (event: MouseEvent, d): void {
     const { config: { onLegendItemClick } } = this
 
     if (onLegendItemClick) onLegendItemClick(d.text, d.index)

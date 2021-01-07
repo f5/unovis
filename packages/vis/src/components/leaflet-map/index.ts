@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { Selection, event } from 'd3-selection'
+import { Selection } from 'd3-selection'
 import { packSiblings } from 'd3-hierarchy'
 import L from 'leaflet'
 import Supercluster, { ClusterFeature, PointFeature } from 'supercluster'
@@ -562,9 +562,8 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     config.onMapClick?.(this._getMapZoomState())
   }
 
-  private _onPointClick (d, i, elements): void {
+  private _onPointClick (d: ClusterFeature<Datum>, event: MouseEvent): void {
     const { config: { flyToDuration, clusterExpandOnClick } } = this
-
     this._externallySelectedPoint = null
     event.stopPropagation()
 
@@ -581,11 +580,11 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     }
   }
 
-  private _onPointMouseDown (d, el, event): void {
+  private _onPointMouseDown (d: ClusterFeature<Datum>, event: MouseEvent): void {
     this._cancelBackgroundClick = true
   }
 
-  private _onPointMouseUp (d, el, event): void {
+  private _onPointMouseUp (d: ClusterFeature<Datum>, event: MouseEvent): void {
     this._cancelBackgroundClick = false
   }
 

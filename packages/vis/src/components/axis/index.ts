@@ -283,10 +283,10 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  _onTickMouseOver (d: any, i: number, elements: []): void {
+  _onTickMouseOver (d: any, event: MouseEvent): void {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  _onTickMouseOut (d: any, i: number, elements: []): void {
+  _onTickMouseOut (d: any, event: MouseEvent): void {
   }
 }

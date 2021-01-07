@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { Selection, mouse, event } from 'd3-selection'
+import { Selection, pointer } from 'd3-selection'
 import { easeLinear } from 'd3-ease'
 // Core
 import { XYComponentCore } from 'core/xy-component'
@@ -102,9 +102,9 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
     this._onMouseOut()
   }
 
-  _onMouseMove (): void {
+  _onMouseMove (event: MouseEvent): void {
     const { config, datamodel, element } = this
-    const [x] = mouse(element)
+    const [x] = pointer(event, element)
     const scale = config.scales.x
     const value = scale.invert(x) as number
 
@@ -121,7 +121,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
       this._render()
     })
 
-    if (this.show) this._showTooltip()
+    if (this.show) this._showTooltip(event)
     else this._hideTooltip()
   }
 
@@ -135,12 +135,12 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
     this._hideTooltip()
   }
 
-  _showTooltip (): void {
+  _showTooltip (event: MouseEvent): void {
     const { config: { tooltip, template } } = this
     if (!tooltip) return
 
     const container = tooltip.getContainer() || this.container.node()
-    const [x, y] = tooltip.config.positionStrategy === PositionStrategy.FIXED ? [event.clientX, event.clientY] : mouse(container)
+    const [x, y] = tooltip.config.positionStrategy === PositionStrategy.FIXED ? [event.clientX, event.clientY] : pointer(event, container)
     tooltip.show(template(this.datum), { x, y })
   }
 

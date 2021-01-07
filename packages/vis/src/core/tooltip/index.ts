@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { select, Selection, mouse, event } from 'd3-selection'
+import { select, Selection, pointer } from 'd3-selection'
 
 // Core
 // import { ContainerCore } from 'core/container'
@@ -146,14 +146,17 @@ export class Tooltip<T extends ComponentCore<any>, TooltipDatum> {
     Object.keys(triggers).forEach(className => {
       const template = triggers[className]
       this.components.forEach(component => {
-        select(component.element).selectAll(`.${className}`)
-          .on('mousemove.tooltip', (d: TooltipDatum, i, elements) => {
-            const [x, y] = positionStrategy === PositionStrategy.FIXED ? [event.clientX, event.clientY] : mouse(this._container)
-            const content = template(d, i, elements)
+        const selection = select(component.element).selectAll(`.${className}`)
+        selection
+          .on('mousemove.tooltip', (e: MouseEvent, d: TooltipDatum) => {
+            const [x, y] = positionStrategy === PositionStrategy.FIXED ? [e.clientX, e.clientY] : pointer(e, this._container)
+            const els = selection.nodes()
+            const i = els.indexOf(e.currentTarget as any)
+            const content = template(d, i, els)
             if (content) this.show(content, { x, y })
             else this.hide()
           })
-          .on('mouseleave.tooltip', (d, i, elements) => this.hide())
+          .on('mouseleave.tooltip', () => this.hide())
       })
     })
   }

@@ -24,7 +24,12 @@ export class ComponentCore<CoreDatum> {
   datamodel: CoreDataModel<CoreDatum> = new CoreDataModel()
   sizing: Sizing = Sizing.FIT
 
-  events = {}
+  events: {
+    [selectorString: string]: {
+      [eventType: string]: (d: any, event: Event, i: number, elements: HTMLElement[] | SVGElement[]) => void
+    }
+  } = {}
+
   _setUpComponentEventsThrottled = throttle(this._setUpComponentEvents, 500)
   _setCustomAttributesThrottled = throttle(this._setCustomAttributes, 500)
 
@@ -88,8 +93,12 @@ export class ComponentCore<CoreDatum> {
   _bindEvents (events, suffix = ''): void {
     Object.keys(events).forEach(className => {
       Object.keys(events[className]).forEach(eventType => {
-        this.g.selectAll(`.${className}`)
-          .on(eventType + suffix, (d, i, els) => events[className][eventType](d, i, els))
+        const selection = this.g.selectAll(`.${className}`)
+        selection.on(eventType + suffix, (event: Event, d) => {
+          const els = selection.nodes()
+          const i = els.indexOf(event.currentTarget)
+          return events[className][eventType](d, event, i, els)
+        })
       })
     })
   }

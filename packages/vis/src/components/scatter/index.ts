@@ -23,11 +23,7 @@ export class Scatter<Datum> extends XYComponentCore<Datum> {
   static selectors = s
   config: ScatterConfig<Datum> = new ScatterConfig()
   events = {
-    [Scatter.selectors.point]: {
-      mousemove: this._onEvent,
-      mouseover: this._onEvent,
-      mouseleave: this._onEvent,
-    },
+    [Scatter.selectors.point]: {},
   }
 
   constructor (config?: ScatterConfigInterface<Datum>) {

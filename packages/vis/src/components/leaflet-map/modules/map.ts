@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { select, Selection, event } from 'd3-selection'
+import { select, Selection } from 'd3-selection'
 import L from 'leaflet'
 import { feature } from 'topojson'
 
@@ -118,7 +118,7 @@ export function setupMap<T> (mapContainer: HTMLElement, config: LeafletMapConfig
     //   map points projection. We constraint the view to prevent that.
     constraintMapView(leaflet)
     select(mapContainer)
-      .on('wheel', () => {
+      .on('wheel', (event: WheelEvent) => {
         event.preventDefault()
         mapboxglWheelEventThrottled(leaflet, layer, event)
       })
