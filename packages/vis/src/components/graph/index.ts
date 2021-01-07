@@ -249,6 +249,7 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
       .attr('class', nodeSelectors.gNodeExit)
       .call(removeNodes, config, duration)
 
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const thisRef = this
     if (!config.disableDrag) {
       const dragBehaviour = drag<SVGGElement, N>()

@@ -47,6 +47,7 @@
     "@typescript-eslint/no-unused-expressions": ["error"],
     "@typescript-eslint/no-explicit-any": "off",
     "@typescript-eslint/explicit-member-accessibility": "off",
-    "@typescript-eslint/indent": "off"
+    "@typescript-eslint/indent": "off",
+    "multiline-ternary": "off"
   }
 }
