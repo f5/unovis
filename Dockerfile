@@ -27,7 +27,7 @@ RUN rm -rf ~/.ssh
 ##################
 # Stage 2 - host #
 ##################
-FROM nginxinc/nginx-unprivileged:1.18.0
+FROM nginxinc/nginx-unprivileged:1.18
 
 USER root
 
