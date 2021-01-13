@@ -145,8 +145,8 @@ export function geoJSONPointToScreenPoint<D> (
   const { x, y } = getPointPos(geoPoint, leafletMap)
   const color = getValue(geoPoint.properties, pointColor)
   const radius = getPointRadius(geoPoint, pointRadius, zoomLevel)
-  const shape = getValue(geoPoint.properties, pointShape)
   const isCluster = geoPoint.properties.cluster
+  const shape = isCluster ? PointShape.CIRCLE : getValue(geoPoint.properties, pointShape)
 
   const donutData = getDonutData(geoPoint.properties, valuesMap)
   const maxValue = max(donutData, d => d.value)
