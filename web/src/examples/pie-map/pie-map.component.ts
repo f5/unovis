@@ -31,7 +31,7 @@ export class PieMapComponent {
   data = sites.map(d => ({
     ...d,
     normal: d.events - d.blocked,
-  })).slice(0, 2)
+  }))
 
   grandAvg = mean(this.data.map(d => d.events))
 
