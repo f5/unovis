@@ -148,4 +148,9 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
     const { config: { tooltip } } = this
     tooltip?.hide()
   }
+
+  // We don't want Crosshair to be be taken in to account in domain calculations
+  getYDataExtent (): number[] {
+    return [undefined, undefined]
+  }
 }
