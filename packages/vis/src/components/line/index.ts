@@ -99,9 +99,11 @@ export class Line<Datum> extends XYComponentCore<Datum> {
       const lineSelectionHelper = group.select(`.${s.lineSelectionHelper}`)
 
       const isLineVisible = yAccessors[i] && d.defined
+      const dashArray = getValue(d, config.lineDashArray, i)
       const transition = smartTransition(linePath, duration)
         .style('stroke', getColor(d, config.color, i))
         .attr('stroke-width', config.lineWidth)
+        .attr('stroke-dasharray', dashArray?.join(' ') ?? null)
         .style('stroke-opacity', isLineVisible ? 1 : 0)
 
       const svgPathD = this.lineGen(d.values) || this._emptyPath()
