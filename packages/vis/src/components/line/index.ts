@@ -131,13 +131,8 @@ export class Line<Datum> extends XYComponentCore<Datum> {
     return `M${xRange[0]},${yRange[0]} L${xRange[1]},${yRange[0]}`
   }
 
-  private _raiseSelection (d, i, els): void {
-    select(els[i]).raise()
-  }
-
   private _highlight (datum, i, els): void {
     const { config } = this
-    this._raiseSelection(datum, i, els)
 
     if (config.highlightOnHover) {
       this.g
