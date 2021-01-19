@@ -88,14 +88,14 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
       .append('circle')
       .attr('class', s.circle)
       .attr('r', 0)
-      .style('fill', d => getColor(this.datum, config.color, d.index))
+      .style('fill', (d, i) => getColor(this.datum, config.color, i))
 
     smartTransition(circlesEnter.merge(circles), duration, easeLinear)
       .attr('cx', this.x)
       .attr('cy', d => config.scales.y(d.value))
       .attr('r', 4)
       .style('opacity', d => d.visible ? 1 : 0)
-      .style('fill', d => getColor(this.datum, config.color, d.index))
+      .style('fill', (d, i) => getColor(this.datum, config.color, i))
   }
 
   hide (): void {
