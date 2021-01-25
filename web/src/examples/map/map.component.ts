@@ -1,5 +1,5 @@
+/* eslint-disable no-console */
 // Copyright (c) Volterra, Inc. All rights reserved.
-/* eslint-disable */
 import _ from 'lodash'
 import { Component, AfterViewInit, ViewEncapsulation, ViewChild } from '@angular/core'
 import { LeafletMap, LeafletMapConfigInterface, TooltipConfigInterface, Tooltip, Position } from '@volterra/vis'
@@ -23,9 +23,9 @@ type MapPoint = {
   approving?: number,
 }
 
-function mapSampleData (): object[] {
+function mapSampleData (): Record<string, any>[] {
   return earthquakes.features.map(d => {
-    const status = Math.random() < 0.4 ? _.sample(['healthy', 'warning', 'alert', 'inactive', 'pending', 're', 'approving']) : 'healthy';
+    const status = Math.random() < 0.4 ? _.sample(['healthy', 'warning', 'alert', 'inactive', 'pending', 're', 'approving']) : 'healthy'
 
     return {
       id: d.id,
@@ -42,16 +42,16 @@ function getTooltipConfig (): TooltipConfigInterface<LeafletMap<MapPoint>, MapPo
     verticalPlacement: Position.CENTER,
     horizontalShift: 10,
     triggers: {
-      [LeafletMap.selectors.point]: d => `<div>${d.id}</div>`
-    }
+      [LeafletMap.selectors.point]: d => `<div>${d.id}</div>`,
+    },
   }
-};
+}
 
 @Component({
   selector: 'map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 
 export class MapComponent implements AfterViewInit {
@@ -64,8 +64,8 @@ export class MapComponent implements AfterViewInit {
     mapboxglGlyphs: 'https://maps.volterra.io/fonts/{fontstack}/{range}.pbf',
     sources: {
       openmaptiles: {
-        type: "vector",
-        url: "https://maps.volterra.io/data/v3.json"
+        type: 'vector',
+        url: 'https://maps.volterra.io/data/v3.json',
       },
       // mapzen: {
       //   max_zoom: 16,
@@ -89,7 +89,7 @@ export class MapComponent implements AfterViewInit {
     },
     attribution: [
       '<a href="https://www.maptiler.com/copyright/" target="_blank">MapTiler</a>',
-      '<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a>'
+      '<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a>',
     ],
     pointBottomLabel: d => d.cluster ? `${d.point_count} sites` : d.id,
     // selectedNodeId: 'nc72965236',
@@ -106,9 +106,11 @@ export class MapComponent implements AfterViewInit {
     tooltip: new Tooltip<LeafletMap<MapPoint>, MapPoint>(getTooltipConfig()),
     events: {
       [LeafletMap.selectors.point]: {
-        click: d => { !d.properties?.cluster && this.mapContainer?.map.zoomToPointById(d.id, true) },
-      }
-    }
+        click: d => {
+          if (!d.properties?.cluster) this.mapContainer?.map.zoomToPointById(d.id, true)
+        },
+      },
+    },
   }
 
   ngAfterViewInit (): void {
