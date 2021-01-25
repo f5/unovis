@@ -99,13 +99,14 @@ export class MapComponent implements AfterViewInit {
     onMapMoveEnd: ({ mapCenter, zoomLevel, bounds, userDriven }) => { console.log('onMapMoveEnd', mapCenter, zoomLevel, bounds, userDriven) },
     onMapZoomStart: ({ mapCenter, zoomLevel, bounds, userDriven }) => { console.log('onMapZoomStart', mapCenter, zoomLevel, bounds, userDriven) },
     onMapZoomEnd: ({ mapCenter, zoomLevel, bounds, userDriven }) => { console.log('onMapZoomEnd', mapCenter, zoomLevel, bounds, userDriven) },
+    onMapClick: ({ mapCenter, zoomLevel, bounds, userDriven }) => {
+      console.log('onMapClick', mapCenter, zoomLevel, bounds, userDriven)
+      this.mapContainer?.map.unselectPoint()
+    },
     tooltip: new Tooltip<LeafletMap<MapPoint>, MapPoint>(getTooltipConfig()),
     events: {
       [LeafletMap.selectors.point]: {
         click: d => { !d.properties?.cluster && this.mapContainer?.map.zoomToPointById(d.id, true) },
-      },
-      [LeafletMap.selectors.background]: {
-        click: () => { this.mapContainer?.map.unselectPoint() },
       }
     }
   }
