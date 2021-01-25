@@ -46,6 +46,8 @@ export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterfa
   onMapZoomStart?: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => any);
   /** Move Zoom End callback function. Default: `undefined` */
   onMapZoomEnd?: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => any);
+  /** Move Zoom End callback function. Default: `undefined` */
+  onMapClick?: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => any);
 
   // Point
   /** Point longitude accessor function or value */
@@ -113,6 +115,7 @@ export class LeafletMapConfig<Datum> extends ComponentConfig implements LeafletM
   onMapMoveEnd = undefined
   onMapZoomStart = undefined
   onMapZoomEnd = undefined
+  onMapClick = undefined
 
   // Point
   pointLongitude = (d: Datum): number => d['longitude']

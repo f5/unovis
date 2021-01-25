@@ -549,6 +549,8 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
   }
 
   private _onBackgroundClick (d, el, event): void {
+    const { config } = this
+
     if (this._cancelBackgroundClick) {
       this._cancelBackgroundClick = false
       return
@@ -557,6 +559,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     this._externallySelectedPoint = null
     this._resetExpandedCluster()
     this._renderData()
+    config.onMapClick?.(this._getMapZoomState())
   }
 
   private _onPointClick (d, i, elements): void {
