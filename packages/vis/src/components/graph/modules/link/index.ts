@@ -1,5 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { select, Selection } from 'd3-selection'
+import { Transition } from 'd3-transition'
 
 // Types
 import { NodeDatumCore, LinkDatumCore, LinkStyle } from 'types/graph'
@@ -172,7 +173,7 @@ export function updateLinks<N extends NodeDatumCore, L extends LinkDatumCore> (s
 
   if (duration > 0) {
     selection.attr('pointer-events', 'none')
-    const t = smartTransition(selection, duration) as Selection<SVGGElement, L, SVGGElement, L[]>
+    const t = smartTransition(selection, duration) as Transition<SVGGElement, L, SVGGElement, L[]>
     t
       .attr('opacity', 1)
       .on('end interrupt', (d, i, elements) => {

@@ -38,6 +38,6 @@ export class SankeyComponent implements AfterViewInit {
   dataGenerator = sampleSankeyData
   configGenerator = getSankeyConfig
 
-  ngAfterViewInit (): void {
-  }
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  ngAfterViewInit (): void {}
 }

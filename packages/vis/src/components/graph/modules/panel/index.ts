@@ -57,7 +57,7 @@ export function createPanels<N extends NodeDatumCore, P extends PanelConfigInter
   sideLabel.call(appendShape, (d: P) => d.sideLabelShape, panelSelectors.sideLabel, panelSelectors.customSideLabel)
   sideLabel.append('text').attr('class', panelSelectors.sideLabelIcon)
 
-  selection.on('mouseover', (d, i, els) => {
+  selection.on('mouseover', (event: MouseEvent, d) => {
     if (nodesSelection) {
       nodesSelection.sort((a, b) => {
         const aIndex = d.nodes.indexOf(a.id)
@@ -65,7 +65,8 @@ export function createPanels<N extends NodeDatumCore, P extends PanelConfigInter
         return (bIndex === -1 ? 1 : 0) - (aIndex === -1 ? 1 : 0)
       })
     }
-    const group = select(els[i])
+    const element = event.currentTarget as SVGGElement
+    const group = select(element)
     group.raise()
   })
 }
@@ -129,14 +130,14 @@ export function updatePanels<N extends NodeDatumCore, L extends LinkDatumCore, P
     .attr('transform', d => `translate(${d._width / 2}, ${-(d.padding || groupPadding) - labelMargin - (d.selectionOutline ? OUTLINE_SELECTION_PADDING : 0)})`)
 
   labels
-    .on('mouseover', (d, i, els) => {
-      const label = select(els[i])
+    .on('mouseover', (event: MouseEvent, d) => {
+      const label = select(event.currentTarget as SVGTextElement)
       const labelContent = d.label
       label.select('text').text(labelContent)
       setLabelRect(label, labelContent, panelSelectors.labelText)
     })
-    .on('mouseleave', (d, i, els) => {
-      const label = select(els[i])
+    .on('mouseleave', (event: MouseEvent, d) => {
+      const label = select(event.currentTarget as SVGTextElement)
       const labelContent = trimText(d.label)
       label.select('text').text(labelContent)
       setLabelRect(label, labelContent, panelSelectors.labelText)

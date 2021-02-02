@@ -1,9 +1,9 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { min, extent } from 'd3-array'
 import { Transition } from 'd3-transition'
-import { select, Selection, mouse, event, BaseType } from 'd3-selection'
-import { zoom, zoomTransform, zoomIdentity, ZoomTransform } from 'd3-zoom'
-import { drag } from 'd3-drag'
+import { select, Selection, pointer, BaseType } from 'd3-selection'
+import { zoom, zoomTransform, zoomIdentity, ZoomTransform, D3ZoomEvent } from 'd3-zoom'
+import { drag, D3DragEvent } from 'd3-drag'
 import { interval, Timer } from 'd3-timer'
 
 // Core
@@ -110,7 +110,7 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
 
     this._zoomBehavior = zoom()
       .scaleExtent(this.config.zoomScaleExtent)
-      .on('zoom', this._onZoom.bind(this))
+      .on('zoom', (e: D3ZoomEvent<any, any>) => this._onZoom(e.transform, e))
 
     this._panelsGroup = this._graphContainer.append('g').attr('class', panelSelectors.panels)
     this._linksGroup = this._graphContainer.append('g').attr('class', linkSelectors.links)
@@ -249,11 +249,13 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
       .attr('class', nodeSelectors.gNodeExit)
       .call(removeNodes, config, duration)
 
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const thisRef = this
     if (!config.disableDrag) {
-      const dragBehaviour = drag<SVGElement, N>()
-        .on('start', this._onDragStarted.bind(this))
-        .on('drag', d => this._onDragged(d, nodeGroupsMerged))
-        .on('end', this._onDragEnded.bind(this))
+      const dragBehaviour = drag<SVGGElement, N>()
+        .on('start', function (event, d) { thisRef._onDragStarted(d, event, select(this)) })
+        .on('drag', function (event, d) { thisRef._onDragged(d, event, nodeGroupsMerged) })
+        .on('end', function (event, d) { thisRef._onDragEnded(d, event, select(this)) })
       nodeGroupsMerged.call(dragBehaviour)
     } else {
       nodeGroupsMerged.on('.drag', null)
@@ -525,7 +527,7 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
     animateLinkFlow(linksToAnimate, this.config, this._scale)
   }
 
-  _onZoom (t): void {
+  _onZoom (t, event?: D3ZoomEvent<any, any>): void {
     const { config, datamodel: { nodes } } = this
     const transform = t || event.transform
     this._scale = transform.k
@@ -535,8 +537,8 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
     if (!this._initialTransform) this._initialTransform = transform
 
     // If the event was triggered by a mouse interaction (pan or zoom) we don't
-    //   refit the layout after recalculation (eg. on contianar resize)
-    if (event && event.sourceEvent) {
+    //   refit the layout after recalculation (eg. on container resize)
+    if (event?.sourceEvent) {
       const diff = Object.keys(transform).reduce((acc, prop) => {
         const val = transform[prop]
         const dVal = Math.abs(val - this._initialTransform[prop])
@@ -554,15 +556,14 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
       .call(nodes.length > config.zoomThrottledUpdateNodeThreshold ? zoomLinksThrottled : zoomLinks, config, this._scale)
   }
 
-  _onDragStarted (d, i, elements): void {
+  _onDragStarted (d: N, event: D3DragEvent<any, any, any>, nodeSelection: Selection<SVGGElement, N, any, any>): void {
     const { config } = this
     this._isDragging = true
     d._state.isDragged = true
-    const node = select(elements[i])
-    node.call(updateNodes, config, 0, this._scale)
+    nodeSelection.call(updateNodes, config, 0, this._scale)
   }
 
-  _onDragged (d: N, selection): void {
+  _onDragged (d: N, event: D3DragEvent<any, any, any>, allNodesSelection: Selection<SVGGElement, N, any, any>): void {
     const { config } = this
     const transform = zoomTransform(this.g.node())
     const scale = transform.k
@@ -572,7 +573,7 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
     const maxX = (config.width - transform.x) / scale
     const minY = -transform.y / scale
     const minX = -transform.x / scale
-    let [x, y] = mouse(this._graphContainer.node())
+    let [x, y] = pointer(event, this._graphContainer.node())
     if (y < minY) y = minY
     else if (y > maxY) y = maxY
     if (x < minX) x = minX
@@ -603,7 +604,7 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
       if (d._state.fy === d.y) delete d._state.fy
     }
 
-    const panelNodesToUpdate = selection.filter((node: N) => {
+    const panelNodesToUpdate = allNodesSelection.filter((node: N) => {
       return node._id === d._id || findIndex(panelNeighbourNodes, (n: N) => node._id === n._id) !== -1
     })
 
@@ -635,12 +636,11 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
     // }
   }
 
-  _onDragEnded (d: N, i: number, elements: Selection<SVGGElement, L, SVGGElement, L[]>): void {
+  _onDragEnded (d: N, event: D3DragEvent<any, any, any>, nodeSelection: Selection<SVGGElement, N, any, any>): void {
     const { config } = this
     this._isDragging = false
     d._state.isDragged = false
-    const node = select(elements[i])
-    node.call(updateNodes, config, 0, this._scale)
+    nodeSelection.call(updateNodes, config, 0, this._scale)
   }
 
   _shouldLayoutRecalculate (nextConfig: GraphConfigInterface<N, L>): boolean {

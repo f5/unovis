@@ -1,6 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { event } from 'd3-selection'
-import { ZoomBehavior, zoom, zoomIdentity, ZoomTransform } from 'd3-zoom'
+import { ZoomBehavior, zoom, zoomIdentity, ZoomTransform, D3ZoomEvent } from 'd3-zoom'
 import { timeout } from 'd3-timer'
 import { geoPath, GeoProjection } from 'd3-geo'
 import { color } from 'd3-color'
@@ -321,7 +320,7 @@ export class TopoJSONMap<NodeDatum extends NodeDatumCore, LinkDatum extends Link
     this._prevHeight = config.height
   }
 
-  _onZoom (): void {
+  _onZoom (event: D3ZoomEvent<any, any>): void {
     if (this._firstRender) return // To prevent double render because of binding zoom behaviour
     const isMouseEvent = event.sourceEvent instanceof WheelEvent || event.sourceEvent instanceof MouseEvent
     const isClickEvent = isMouseEvent && event.sourceEvent.type === 'click'
