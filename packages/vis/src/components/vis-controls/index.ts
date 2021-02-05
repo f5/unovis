@@ -61,7 +61,7 @@ export class VisControls {
     controlItems.exit().remove()
   }
 
-  _onItemClick (item: VisControlItemInterface): void {
-    item.callback?.()
+  _onItemClick (event: MouseEvent, item: VisControlItemInterface): void {
+    item.callback?.(event)
   }
 }
