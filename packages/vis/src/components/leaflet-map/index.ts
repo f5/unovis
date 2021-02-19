@@ -51,7 +51,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
   private _isMoving = false
   private _isZooming = false
   private _eventInitiatedByComponent = false
-  private _triggerBackroundClick = false
+  private _triggerBackgroundClick = false
   private _externallySelectedPoint = null
   private _zoomingToExternallySelectedPoint = false
   private _forceExpandCluster = false
@@ -100,12 +100,12 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     //   with d3 svg overlay that might have smaller size than the map itself
     //   (see this._onNodeMouseDown() and this this._onNodeMouseDown())
     this._map.leaflet.on('mousedown', () => {
-      if (!this._cancelBackgroundClick) this._triggerBackroundClick = true
+      if (!this._cancelBackgroundClick) this._triggerBackgroundClick = true
     })
 
     this._map.leaflet.on('mouseup', (e) => {
-      if (this._triggerBackroundClick) {
-        this._triggerBackroundClick = false
+      if (this._triggerBackgroundClick) {
+        this._triggerBackgroundClick = false
         const originalEvent = (e as any).originalEvent
         this._onBackgroundClick(null, originalEvent.target, originalEvent)
       }
@@ -180,6 +180,10 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     if (config.bounds) this.fitToBounds(config.bounds)
 
     this._firstRender = false
+  }
+
+  public getLeafletInstance (): L.Map {
+    return this._map.leaflet
   }
 
   public fitToPoints (duration = this.config.flyToDuration, padding = [40, 40]): void {
