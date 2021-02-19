@@ -1,22 +1,30 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { Component, ViewChild, ElementRef, AfterViewInit, Input, OnDestroy } from '@angular/core'
+import { Component, ViewChild, ElementRef, SimpleChanges, AfterViewInit, Input, OnDestroy } from '@angular/core'
 
 // Viz
-import { LeafletMap, LeafletMapConfigInterface, VisControlItemInterface, VisControlsOrientation } from '@volterra/vis'
+import {
+  LeafletMap, LeafletMapConfigInterface, LeafletFlowMap, LeafletFlowMapConfigInterface,
+  VisControlItemInterface, VisControlsOrientation,
+} from '@volterra/vis'
+
+type FlowMapData<P, L> = {
+  points: P[],
+  flows: L[],
+}
 
 @Component({
   selector: 'vis-map-leaflet',
   templateUrl: './map-leaflet.component.html',
   styleUrls: ['./map-leaflet.component.css'],
 })
-
-export class MapLeafletComponent<Datum> implements AfterViewInit, OnDestroy {
+export class MapLeafletComponent<PointDatum, FlowDatum = any> implements AfterViewInit, OnDestroy {
   title = 'leaflet-map'
   @ViewChild('container', { static: false }) mapRef: ElementRef
-  @Input() data: Datum[]
-  @Input() config: LeafletMapConfigInterface<Datum>
+  @Input() data: PointDatum[] | FlowMapData<PointDatum, FlowDatum>
+  @Input() config: LeafletMapConfigInterface<PointDatum> | LeafletFlowMapConfigInterface<PointDatum, FlowDatum>
+  @Input() ddos = false
 
-  map: LeafletMap<Datum>
+  map: LeafletMap<PointDatum> | LeafletFlowMap<PointDatum, FlowDatum>
 
   // Zoom Controls
   controlItems: VisControlItemInterface[] = [
@@ -38,26 +46,31 @@ export class MapLeafletComponent<Datum> implements AfterViewInit, OnDestroy {
   controlsOrientation = VisControlsOrientation.VERTICAL;
 
   ngAfterViewInit (): void {
-    this.map = new LeafletMap(this.mapRef.nativeElement, this.config, this.data)
+    this.map = this.ddos
+      ? new LeafletFlowMap(this.mapRef.nativeElement, this.config, this.data as FlowMapData<PointDatum, FlowDatum>)
+      : new LeafletMap(this.mapRef.nativeElement, this.config, this.data as PointDatum[])
   }
 
-  ngOnChanges (changes): void {
+  ngOnChanges (changes: SimpleChanges): void {
+    if (!this.map) return
+
     // Set new Data without re-render
     if (changes.data) {
-      this.map?.setData(this.data)
+      if (this.ddos) this.map.setData(this.data as FlowMapData<PointDatum, FlowDatum>)
+      else (this.map as LeafletMap<PointDatum>).setData(this.data as PointDatum[])
       delete changes.data
     }
 
     // Set new Config without re-render
     if (changes.config) {
-      this.map?.setConfig(this.config)
+      this.map.setConfig(this.config)
     }
 
     // Render map
-    this.map?.render()
+    this.map.render()
   }
 
-  ngOnDestroy () {
+  ngOnDestroy (): void {
     this.map.destroy()
   }
 }
