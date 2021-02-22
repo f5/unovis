@@ -14,6 +14,7 @@ import { Sankey } from './components/sankey'
 import { Area } from './components/area'
 import { TopoJSONMap } from './components/topojson-map'
 import { LeafletMap } from './components/leaflet-map'
+import { LeafletFlowMap } from './components/leaflet-flow-map'
 import { RadialDendrogram } from './components/radial-dendrogram'
 import { ChordDiagram } from './components/chord-diagram'
 import { Graph } from './components/graph'
@@ -35,6 +36,7 @@ import { SankeyConfigInterface } from './components/sankey/config'
 import { AreaConfigInterface } from './components/area/config'
 import { TopoJSONMapConfigInterface } from './components/topojson-map/config'
 import { LeafletMapConfigInterface } from './components/leaflet-map/config'
+import { LeafletFlowMapConfigInterface } from './components/leaflet-flow-map/config'
 import { RadialDendrogramConfigInterface } from './components/radial-dendrogram/config'
 import { ChordDiagramConfigInterface } from './components/chord-diagram/config'
 import { GraphConfigInterface } from './components/graph/config'
@@ -74,6 +76,8 @@ export {
   TopoJSONMapConfigInterface,
   LeafletMap,
   LeafletMapConfigInterface,
+  LeafletFlowMap,
+  LeafletFlowMapConfigInterface,
   RadialDendrogram,
   RadialDendrogramConfigInterface,
   Graph,

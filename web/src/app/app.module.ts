@@ -18,6 +18,7 @@ import { BulletLegendExampleComponent } from 'examples/bullet-legend/bullet-lege
 import { TopoJSONMapComponent } from 'examples/topojson-map/topojson-map.component'
 import { TopoJSONHeatMapComponent } from 'examples/topojson-heatmap/topojson-heatmap.component'
 import { MapComponent } from 'examples/map/map.component'
+import { DDoSMapComponent } from 'examples/ddos-map/ddos-map.component'
 import { PieMapComponent } from 'examples/pie-map/pie-map.component'
 import { MapHeatmapComponent } from 'examples/map-heatmap/map-heatmap.component'
 import { RadialDendrogramComponent } from 'examples/radial-dendrogram/radial-dendrogram.component'
@@ -41,6 +42,7 @@ const appRoutes: Routes = [
   { path: 'map', component: MapComponent },
   { path: 'pie-map', component: PieMapComponent },
   { path: 'heatmap-map', component: MapHeatmapComponent },
+  { path: 'ddos-map', component: DDoSMapComponent },
   { path: 'scatter', component: ScatterComponent },
   { path: 'line', component: LineComponent },
   { path: 'stacked-bar', component: StackedBarComponent },
@@ -89,6 +91,7 @@ appRoutes.push({ path: '', redirectTo: `/${appRoutes[0].path}`, pathMatch: 'full
     PieMapComponent,
     MapLeafletComponent,
     MapHeatmapComponent,
+    DDoSMapComponent,
     Collection,
     RadialDendrogramComponent,
     GraphComponent,
