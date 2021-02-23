@@ -124,7 +124,7 @@ export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ point
         }
 
         const pos = map.latLngToLayerPoint(new L.LatLng(p.location.lat, p.location.lon))
-        const orthogonalArcShift = 25 * Math.cos(Math.PI / 2 * (fullDist / 2 - remainedDist) / (fullDist / 2)) || 0
+        const orthogonalArcShift = -50 * Math.cos(Math.PI / 2 * (fullDist / 2 - remainedDist) / (fullDist / 2)) || 0
         p.x = pos.x
         p.y = pos.y + orthogonalArcShift
       }
