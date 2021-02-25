@@ -78,6 +78,12 @@ export class DDoSMapComponent {
         url: 'https://maps.volterra.io/data/v3.json',
       },
     },
+    // eslint-disable-next-line no-console
+    onSourcePointClick: (f, x, y) => { console.log('onSourcePointClick', f, x, y) },
+    // eslint-disable-next-line no-console
+    onSourcePointMouseEnter: (f, x, y) => { console.log('onSourcePointMouseEnter', f, x, y) },
+    // eslint-disable-next-line no-console
+    onSourcePointMouseLeave: (f) => { console.log('onSourcePointMouseLeave', f) },
     pointRadius: 5,
     pointId: d => d.name,
     clusterOutlineWidth: 2,

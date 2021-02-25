@@ -16,6 +16,7 @@ export class PointRenderer {
   private devicePixelRatio = window.devicePixelRatio || 1
   private containerNode: HTMLDivElement
   private renderer: WebGLRenderer
+  private rendererCanvasElement: HTMLCanvasElement
   private readonly camera: OrthographicCamera
   private readonly scene: Scene
 
@@ -27,7 +28,7 @@ export class PointRenderer {
   private pointsSizes: BufferAttribute | InterleavedBufferAttribute | undefined
   private pointData: Particle[] = []
 
-  constructor (containerNode: HTMLDivElement, width: number, height: number) {
+  constructor (containerNode: HTMLDivElement, width: number, height: number, canvas?: HTMLCanvasElement) {
     this.containerNode = containerNode
     this.width = width
     this.height = height
@@ -35,15 +36,19 @@ export class PointRenderer {
     this.renderer = new WebGLRenderer({
       antialias: true,
       alpha: true,
+      canvas,
     })
     this.renderer.setSize(this.width, this.height)
     this.renderer.setPixelRatio(this.devicePixelRatio)
     this.renderer.setClearColor(0x00000000, 0)
     this.renderer.clear()
-    this.renderer.domElement.style.pointerEvents = 'none'
-    this.renderer.domElement.style.position = 'absolute'
-    this.renderer.domElement.style.top = '0'
-    this.containerNode.appendChild(this.renderer.domElement)
+
+    if (!canvas) {
+      this.rendererCanvasElement = this.renderer.domElement
+      this.rendererCanvasElement.style.position = 'absolute'
+      this.rendererCanvasElement.style.top = '0'
+      this.containerNode.appendChild(this.rendererCanvasElement)
+    }
 
     // Set up camera
     this.camera = new OrthographicCamera(-0, this.width, -0, this.height, 0)
@@ -139,6 +144,10 @@ export class PointRenderer {
   public setSize (width: number, height: number): void {
     this.width = width
     this.height = height
+  }
+
+  public getCanvasElement (): HTMLCanvasElement {
+    return this.rendererCanvasElement
   }
 
   public destroy (): void {

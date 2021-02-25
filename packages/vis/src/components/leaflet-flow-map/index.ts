@@ -5,7 +5,7 @@ import { ComponentCore } from 'core/component'
 import { ComponentType } from 'types/component'
 
 // Utils
-import { getValue } from 'utils/data'
+import { getValue, throttle } from 'utils/data'
 
 // Components
 import { LeafletMap } from 'components/leaflet-map'
@@ -24,6 +24,10 @@ export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ point
   type = ComponentType.HTML
   private leafletMap: LeafletMap<PointDatum>
   private flows: FlowDatum[] = []
+  private hoveredSourcePoint: FlowDatum | undefined
+  private onCanvasMouseMoveBound = throttle(this.onCanvasMouseMove.bind(this), 60)
+  private onCanvasClickBound = this.onCanvasClick.bind(this)
+  private canvasElement: HTMLCanvasElement
   config: LeafletFlowMapConfig<PointDatum, FlowDatum> = new LeafletFlowMapConfig()
 
   private renderer: PointRenderer
@@ -35,6 +39,9 @@ export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ point
     this.leafletMap = new LeafletMap<PointDatum>(container, config, data.points)
     const canvasContainer = this.leafletMap.getLeafletInstance().getPanes().overlayPane as HTMLDivElement
     this.renderer = new PointRenderer(canvasContainer, container.offsetWidth, container.offsetHeight)
+    this.canvasElement = this.renderer.getCanvasElement()
+    this.canvasElement.addEventListener('mousemove', this.onCanvasMouseMoveBound)
+    this.canvasElement.addEventListener('click', this.onCanvasClickBound)
 
     if (config) this.setConfig(config)
     if (data) this.setData(data)
@@ -52,6 +59,7 @@ export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ point
     this.flows = data.flows
     this.initParticles()
     this.leafletMap.setData(data.points)
+    this.render()
   }
 
   render (): void {
@@ -108,6 +116,7 @@ export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ point
     const map = this.leafletMap.getLeafletInstance()
 
     requestAnimationFrame(() => {
+      const zoomLevel = map.getZoom()
       for (const p of this.particles) {
         const fullDist = Math.sqrt((p.target.lat - p.source.lat) ** 2 + (p.target.lon - p.source.lon) ** 2)
         const remainedDist = Math.sqrt((p.target.lat - p.location.lat) ** 2 + (p.target.lon - p.location.lon) ** 2)
@@ -124,7 +133,7 @@ export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ point
         }
 
         const pos = map.latLngToLayerPoint(new L.LatLng(p.location.lat, p.location.lon))
-        const orthogonalArcShift = 25 * Math.cos(Math.PI / 2 * (fullDist / 2 - remainedDist) / (fullDist / 2)) || 0
+        const orthogonalArcShift = -(zoomLevel ** 2 * fullDist / 8) * Math.cos(Math.PI / 2 * (fullDist / 2 - remainedDist) / (fullDist / 2)) || 0
         p.x = pos.x
         p.y = pos.y + orthogonalArcShift
       }
@@ -135,8 +144,48 @@ export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ point
     })
   }
 
+  private getPointByContainerPos (x: number, y: number): [FlowDatum, number, number] | [] {
+    const map = this.leafletMap.getLeafletInstance()
+
+    for (const flow of this.flows) {
+      const lat = getValue(flow, this.config.sourceLatitude)
+      const lon = getValue(flow, this.config.sourceLongitude)
+      const r = getValue(flow, this.config.sourcePointRadius)
+      const pos = map.latLngToLayerPoint(new L.LatLng(lat, lon))
+
+      if ((Math.abs(x - pos.x) < r) && (Math.abs(y - pos.y) < r)) {
+        return [flow, pos.x, pos.y]
+      }
+    }
+
+    return []
+  }
+
+  private onCanvasMouseMove (event: MouseEvent) {
+    const { config } = this
+
+    this.canvasElement.style.removeProperty('cursor')
+    const [hoveredPoint, x, y] = this.getPointByContainerPos(event.offsetX, event.offsetY)
+    if (hoveredPoint) this.canvasElement.style.cursor = 'default'
+
+    if (this.hoveredSourcePoint !== hoveredPoint) {
+      if (hoveredPoint) config.onSourcePointMouseEnter?.(hoveredPoint, x, y, event)
+      if (this.hoveredSourcePoint) config.onSourcePointMouseLeave?.(this.hoveredSourcePoint, event)
+      this.hoveredSourcePoint = hoveredPoint
+    }
+  }
+
+  private onCanvasClick (event: MouseEvent) {
+    const { config } = this
+
+    const [clickedPoint, x, y] = this.getPointByContainerPos(event.offsetX, event.offsetY)
+    if (clickedPoint) config.onSourcePointClick?.(clickedPoint, x, y, event)
+  }
+
   public destroy (): void {
     this.renderer.destroy()
+    this.canvasElement.removeEventListener('mousemove', this.onCanvasMouseMoveBound)
+    this.canvasElement.removeEventListener('click', this.onCanvasClickBound)
     super.destroy()
   }
 
