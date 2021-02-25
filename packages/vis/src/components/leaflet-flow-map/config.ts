@@ -28,6 +28,14 @@ export interface LeafletFlowMapConfigInterface<P, F> extends LeafletMapConfigInt
   flowParticleSpeed?: NumericAccessor<F>;
   /** Flow particle density accessor function or value on the range of [0, 1]. Default: `0.6` */
   flowParticleDensity?: NumericAccessor<F>;
+
+  // Events
+  /** Flow source point click callback function. Default: `undefined` */
+  onSourcePointClick?: ((f: F, x: number, y: number, event: MouseEvent) => unknown);
+  /** Flow source point mouse over callback function. Default: `undefined` */
+  onSourcePointMouseEnter?: ((f: F, x: number, y: number, event: MouseEvent) => unknown);
+  /** Flow source point mouse leave callback function. Default: `undefined` */
+  onSourcePointMouseLeave?: ((f: F, event: MouseEvent) => unknown);
 }
 
 export class LeafletFlowMapConfig<P, F> extends LeafletMapConfig<P> implements LeafletFlowMapConfigInterface<P, F> {
@@ -41,4 +49,9 @@ export class LeafletFlowMapConfig<P, F> extends LeafletMapConfig<P> implements L
   flowParticleRadius = 1.1
   flowParticleSpeed = 0.07
   flowParticleDensity = 0.6
+
+  // Events
+  onSourcePointClick = undefined
+  onSourcePointMouseEnter = undefined
+  onSourcePointMouseLeave = undefined
 }
