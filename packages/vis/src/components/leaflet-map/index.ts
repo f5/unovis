@@ -190,7 +190,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     const { config, datamodel, datamodel: { data } } = this
 
     if (!this._map || !this._map.leaflet) return
-    if (!data.length) return
+    if (!data?.length) return
     const bounds = datamodel.getDataLatLngBounds(config.pointLatitude, config.pointLongitude)
     this._flyToBounds(bounds, duration, padding)
   }
