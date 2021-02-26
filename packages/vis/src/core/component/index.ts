@@ -26,7 +26,7 @@ export class ComponentCore<CoreDatum> {
 
   events: {
     [selectorString: string]: {
-      [eventType: string]: (d: any, event: Event, i: number, elements: HTMLElement[] | SVGElement[]) => void
+      [eventType: string]: (((d: any, event: Event, i: number, elements: HTMLElement[] | SVGElement[]) => void)) | undefined
     }
   } = {}
 

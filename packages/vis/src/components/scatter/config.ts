@@ -1,4 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
+import { ScaleLinear } from 'd3-scale'
 // Core
 import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component/config'
 
@@ -26,7 +27,7 @@ export interface ScatterConfigInterface<Datum> extends XYComponentConfigInterfac
 
 export class ScatterConfig<Datum> extends XYComponentConfig<Datum> implements ScatterConfigInterface<Datum> {
   size = 1
-  sizeScale = Scale.scaleLinear()
+  sizeScale: ScaleLinear<number, number> = Scale.scaleLinear()
   sizeRange: [number, number] = [5, 20]
   shape = SymbolType.CIRCLE
   icon = undefined

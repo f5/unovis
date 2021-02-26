@@ -19,7 +19,6 @@ export const area = css`
   stroke: var(--vis-area-stroke);
   stroke-width: var(--vis-area-stroke-width);
 
-
   &:hover {
     stroke-width: var(--vis-area-hover-stroke-width);
     stroke: var(--vis-area-hover-stroke);
