@@ -15,3 +15,4 @@ yarn-error.log
 docs-html/
 .git-pack-cache
 .DS_Store
+.eslintcache
