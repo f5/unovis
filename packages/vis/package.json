@@ -1,6 +1,6 @@
 {
   "name": "@volterra/vis",
-  "version": "0.0.1-beta.103",
+  "version": "0.0.1-beta.104",
   "main": "lib/esm/index.js",
   "module": "lib/esm/index.js",
   "typings": "lib/index.d.ts",
