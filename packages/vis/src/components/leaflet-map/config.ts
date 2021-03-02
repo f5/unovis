@@ -36,6 +36,8 @@ export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterfa
   attribution?: string[];
 
   // Map events
+  /** Function to be called after Map async initialization is done. Default: `undefined` */
+  onMapInitialized?: (() => any);
   /** Map Move / Zoom joint callback function. Default: `undefined` */
   onMapMoveZoom?: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => any);
   /** Move Move Start callback function. Default: `undefined` */
@@ -110,6 +112,7 @@ export class LeafletMapConfig<Datum> extends ComponentConfig implements LeafletM
   accessToken = ''
 
   // Map events
+  onMapInitialized = undefined
   onMapMoveZoom = undefined
   onMapMoveStart = undefined
   onMapMoveEnd = undefined
@@ -141,6 +144,9 @@ export class LeafletMapConfig<Datum> extends ComponentConfig implements LeafletM
     fillOpacity: 0.6,
     strokeOpacity: 0.8,
     strokeWidth: 1,
+    featureName: undefined,
+    fillProperty: undefined,
+    strokeProperty: undefined,
   }
 
   // Misc

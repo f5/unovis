@@ -23,6 +23,7 @@ export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ point
   static selectors = LeafletMap.selectors
   type = ComponentType.HTML
   private leafletMap: LeafletMap<PointDatum>
+  private leafletMapInstance: L.Map
   private flows: FlowDatum[] = []
   private hoveredSourcePoint: FlowDatum | undefined
   private onCanvasMouseMoveBound = throttle(this.onCanvasMouseMove.bind(this), 60)
@@ -37,15 +38,18 @@ export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ point
     super(ComponentType.HTML)
 
     this.leafletMap = new LeafletMap<PointDatum>(container, config, data.points)
-    const canvasContainer = this.leafletMap.getLeafletInstance().getPanes().overlayPane as HTMLDivElement
-    this.renderer = new PointRenderer(canvasContainer, container.offsetWidth, container.offsetHeight)
-    this.canvasElement = this.renderer.getCanvasElement()
-    this.canvasElement.addEventListener('mousemove', this.onCanvasMouseMoveBound)
-    this.canvasElement.addEventListener('click', this.onCanvasClickBound)
+    this.leafletMap.getLeafletInstancePromise().then((leaflet) => {
+      this.leafletMapInstance = leaflet
+      const canvasContainer = this.leafletMapInstance.getPanes().overlayPane as HTMLDivElement
+      this.renderer = new PointRenderer(canvasContainer, container.offsetWidth, container.offsetHeight)
+      this.canvasElement = this.renderer.getCanvasElement()
+      this.canvasElement.addEventListener('mousemove', this.onCanvasMouseMoveBound)
+      this.canvasElement.addEventListener('click', this.onCanvasClickBound)
 
-    if (config) this.setConfig(config)
-    if (data) this.setData(data)
-    this.animate()
+      if (config) this.setConfig(config)
+      if (data) this.setData(data)
+      this.animate()
+    })
   }
 
   setConfig (config: LeafletFlowMapConfigInterface<PointDatum, FlowDatum>): void {
@@ -113,10 +117,10 @@ export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ point
   }
 
   private animate (): void {
-    const map = this.leafletMap.getLeafletInstance()
+    const map = this.leafletMapInstance
 
     requestAnimationFrame(() => {
-      const zoomLevel = map.getZoom()
+      const zoomLevel = map?.getZoom()
       for (const p of this.particles) {
         const fullDist = Math.sqrt((p.target.lat - p.source.lat) ** 2 + (p.target.lon - p.source.lon) ** 2)
         const remainedDist = Math.sqrt((p.target.lat - p.location.lat) ** 2 + (p.target.lon - p.location.lon) ** 2)
@@ -132,10 +136,10 @@ export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ point
           p.location.lon = p.source.lon
         }
 
-        const pos = map.latLngToLayerPoint(new L.LatLng(p.location.lat, p.location.lon))
+        const pos = map?.latLngToLayerPoint(new L.LatLng(p.location.lat, p.location.lon))
         const orthogonalArcShift = -(zoomLevel ** 2 * fullDist / 8) * Math.cos(Math.PI / 2 * (fullDist / 2 - remainedDist) / (fullDist / 2)) || 0
-        p.x = pos.x
-        p.y = pos.y + orthogonalArcShift
+        p.x = pos?.x
+        p.y = pos?.y + orthogonalArcShift
       }
 
       this.renderer.updatePointsPosition(this.particles)
@@ -145,16 +149,16 @@ export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ point
   }
 
   private getPointByContainerPos (x: number, y: number): [FlowDatum, number, number] | [] {
-    const map = this.leafletMap.getLeafletInstance()
+    const map = this.leafletMapInstance
 
     for (const flow of this.flows) {
       const lat = getValue(flow, this.config.sourceLatitude)
       const lon = getValue(flow, this.config.sourceLongitude)
       const r = getValue(flow, this.config.sourcePointRadius)
-      const pos = map.latLngToLayerPoint(new L.LatLng(lat, lon))
+      const pos = map?.latLngToLayerPoint(new L.LatLng(lat, lon))
 
       if ((Math.abs(x - pos.x) < r) && (Math.abs(y - pos.y) < r)) {
-        return [flow, pos.x, pos.y]
+        return [flow, pos?.x, pos?.y]
       }
     }
 
