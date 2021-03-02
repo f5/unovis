@@ -42,6 +42,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
   config: LeafletMapConfig<Datum> = new LeafletMapConfig()
   datamodel: MapDataModel<Datum> = new MapDataModel()
   protected _container: HTMLElement
+  public _onMapMoveEndInternal: (leaflet: L.Map) => void // Internal callback needed by Leaflet Flow Map
   private _map: { leaflet: L.Map; layer: L.Layer; svgOverlay: Selection<SVGElement, any, HTMLElement, any>; svgGroup: Selection<SVGGElement, any, SVGElement, any> }
   private _clusterIndex: Supercluster<Datum>
   private _expandedCluster: { points: ClusterFeature<PointDatum<Datum>>[]; cluster: Point<Datum> } = null
@@ -516,6 +517,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
   private _onMapMoveEnd (): void {
     const { config } = this
     if (!this._map) return
+    this._onMapMoveEndInternal?.(this._map.leaflet)
     config.onMapMoveEnd?.(this._getMapZoomState())
 
     if (config.renderer === LeafletMapRenderer.MAPBOXGL) {

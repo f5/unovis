@@ -30,6 +30,7 @@ export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ point
   private onCanvasClickBound = this.onCanvasClick.bind(this)
   private canvasElement: HTMLCanvasElement
   config: LeafletFlowMapConfig<PointDatum, FlowDatum> = new LeafletFlowMapConfig()
+  private panningOffset = { x: 0, y: 0 }
 
   private renderer: PointRenderer
   particles: Particle[] = []
@@ -45,6 +46,8 @@ export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ point
       this.canvasElement = this.renderer.getCanvasElement()
       this.canvasElement.addEventListener('mousemove', this.onCanvasMouseMoveBound)
       this.canvasElement.addEventListener('click', this.onCanvasClickBound)
+
+      this.leafletMap._onMapMoveEndInternal = this.onMapMove.bind(this)
 
       if (config) this.setConfig(config)
       if (data) this.setData(data)
@@ -138,8 +141,8 @@ export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ point
 
         const pos = map?.latLngToLayerPoint(new L.LatLng(p.location.lat, p.location.lon))
         const orthogonalArcShift = -(zoomLevel ** 2 * fullDist / 8) * Math.cos(Math.PI / 2 * (fullDist / 2 - remainedDist) / (fullDist / 2)) || 0
-        p.x = pos?.x
-        p.y = pos?.y + orthogonalArcShift
+        p.x = pos?.x - this.panningOffset.x
+        p.y = pos?.y + orthogonalArcShift - this.panningOffset.y
       }
 
       this.renderer.updatePointsPosition(this.particles)
@@ -184,6 +187,13 @@ export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ point
 
     const [clickedPoint, x, y] = this.getPointByContainerPos(event.offsetX, event.offsetY)
     if (clickedPoint) config.onSourcePointClick?.(clickedPoint, x, y, event)
+  }
+
+  private onMapMove (leaflet: L.Map) {
+    const shift = leaflet.containerPointToLayerPoint([0, 0])
+    this.panningOffset.x = shift.x
+    this.panningOffset.y = shift.y
+    this.canvasElement.style.transform = `translate(${shift.x}px, ${shift.y}px)`
   }
 
   public destroy (): void {
