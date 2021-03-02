@@ -1,8 +1,8 @@
 {
   "name": "@volterra/vis",
   "version": "0.0.1-beta.103",
-  "main": "lib/volterra-vis.js",
-  "module": "lib/volterra-vis.esm.js",
+  "main": "lib/esm/index.js",
+  "module": "lib/esm/index.js",
   "typings": "lib/index.d.ts",
   "files": [
     "lib"
@@ -20,7 +20,6 @@
     "@types/three": "^0.125.1",
     "@typescript-eslint/parser": "^4.2.0",
     "@zerollup/ts-transform-paths": "^1.7.18",
-    "d3-collection": "^1.0.7",
     "rimraf": "^3.0.2",
     "rollup": "^2.36.1",
     "rollup-plugin-commonjs": "^10.1.0",
@@ -35,6 +34,7 @@
     "d3": "^6.3.1",
     "d3-interpolate-path": "^2.2.1",
     "d3-sankey": "^0.12.3",
+    "d3-collection": "^1.0.7",
     "dagre-layout": "^0.8.8",
     "emotion": "^10.0.27",
     "leaflet": "^1.7.1",

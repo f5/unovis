@@ -16,6 +16,7 @@ import { LeafletMapRenderer, Point, Bounds, MapZoomState, PointDatum } from 'typ
 
 // Utils
 import { getValue, clamp, isNil, find } from 'utils/data'
+import { constraintMapViewThrottled } from './renderer/mapboxgl-utils'
 
 // Config
 import { LeafletMapConfig, LeafletMapConfigInterface } from './config'
@@ -32,7 +33,6 @@ import {
   bBoxMerge, clampZoomLevel, getPointRadius, calculateClusterIndex, geoJSONPointToScreenPoint,
   shouldClusterExpand, findNodeAndClusterInPointsById, getNodeRelativePosition, getClusterRadius, getClustersAndPoints,
 } from './modules/utils'
-import { constraintMapViewThrottled } from './renderer/mapboxgl-layer'
 
 export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
   static selectors = s
@@ -63,6 +63,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
   private _currentZoomLevel = null
   private _firstRender = true
   private _renderDataAnimationFrame: number
+  readonly _leafletInitializationPromise: Promise<L.Map>
 
   events = {
     [LeafletMap.selectors.point]: {
@@ -86,58 +87,66 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     this.g.attr('class', s.mapContainer)
 
     if (config) this.setConfig(config)
+    this._leafletInitializationPromise = new Promise((resolve) => {
+      setupMap(this.element, this.config).then(map => {
+        if (config) this.setConfig(config)
 
-    this._map = setupMap(this.element, this.config)
-    this._map.leaflet.on('drag', this._onMapDragLeaflet.bind(this))
-    this._map.leaflet.on('move', this._onMapMove.bind(this))
-    this._map.leaflet.on('movestart', this._onMapMoveStart.bind(this))
-    this._map.leaflet.on('moveend', this._onMapMoveEnd.bind(this))
-    this._map.leaflet.on('zoom', this._onMapZoom.bind(this))
-    this._map.leaflet.on('zoomstart', this._onMapZoomStart.bind(this))
-    this._map.leaflet.on('zoomend', this._onMapZoomEnd.bind(this))
+        this._map = map
+        this._map.leaflet.on('drag', this._onMapDragLeaflet.bind(this))
+        this._map.leaflet.on('move', this._onMapMove.bind(this))
+        this._map.leaflet.on('movestart', this._onMapMoveStart.bind(this))
+        this._map.leaflet.on('moveend', this._onMapMoveEnd.bind(this))
+        this._map.leaflet.on('zoom', this._onMapZoom.bind(this))
+        this._map.leaflet.on('zoomstart', this._onMapZoomStart.bind(this))
+        this._map.leaflet.on('zoomend', this._onMapZoomEnd.bind(this))
 
-    // We need to handle background click in a special way to deal
-    //   with d3 svg overlay that might have smaller size than the map itself
-    //   (see this._onNodeMouseDown() and this this._onNodeMouseDown())
-    this._map.leaflet.on('mousedown', () => {
-      if (!this._cancelBackgroundClick) this._triggerBackgroundClick = true
+        // We need to handle background click in a special way to deal
+        //   with d3 svg overlay that might have smaller size than the map itself
+        //   (see this._onNodeMouseDown() and this this._onNodeMouseDown())
+        this._map.leaflet.on('mousedown', () => {
+          if (!this._cancelBackgroundClick) this._triggerBackgroundClick = true
+        })
+
+        this._map.leaflet.on('mouseup', (e) => {
+          if (this._triggerBackgroundClick) {
+            this._triggerBackgroundClick = false
+            const originalEvent = (e as any).originalEvent
+            this._onBackgroundClick(null, originalEvent.target, originalEvent)
+          }
+        })
+
+        this._map.svgOverlay
+          .attr('class', s.svgOverlay)
+          .insert('rect', ':first-child')
+          .attr('class', s.backgroundRect)
+          .attr('width', '100%')
+          .attr('height', '100%')
+
+        this._pointGroup = this._map.svgGroup.append('g').attr('class', s.points)
+        this._clusterBackground = this._pointGroup.append('g')
+          .attr('class', s.clusterBackground)
+          .call(createBackgroundNode)
+        this._pointSelectionRing = this._pointGroup.append('g')
+          .attr('class', s.pointSelectionRing)
+          .call(createNodeSelectionRing)
+
+        this._map.leaflet.setView(initialMapCenter, initialMapZoom)
+        if (data) this.setData(data)
+        this.config.onMapInitialized?.()
+        resolve(this._map.leaflet)
+      })
     })
-
-    this._map.leaflet.on('mouseup', (e) => {
-      if (this._triggerBackgroundClick) {
-        this._triggerBackgroundClick = false
-        const originalEvent = (e as any).originalEvent
-        this._onBackgroundClick(null, originalEvent.target, originalEvent)
-      }
-    })
-
-    this._map.svgOverlay
-      .attr('class', s.svgOverlay)
-      .insert('rect', ':first-child')
-      .attr('class', s.backgroundRect)
-      .attr('width', '100%')
-      .attr('height', '100%')
-
-    this._pointGroup = this._map.svgGroup.append('g').attr('class', s.points)
-    this._clusterBackground = this._pointGroup.append('g')
-      .attr('class', s.clusterBackground)
-      .call(createBackgroundNode)
-    this._pointSelectionRing = this._pointGroup.append('g')
-      .attr('class', s.pointSelectionRing)
-      .call(createNodeSelectionRing)
-
-    this._map.leaflet.setView(initialMapCenter, initialMapZoom)
-    if (data) this.setData(data)
   }
 
   setConfig (config: LeafletMapConfigInterface<Datum>): void {
     this.config.init(config)
+
     if (this._map) {
       if (this.config.topoJSONLayer?.sources && this.config.renderer === LeafletMapRenderer.TANGRAM) {
         console.warn('TopoJSON layer render does not supported with Tangram renderer')
       } else {
-        const mapboxmap = (this._map.layer as any).getMapboxMap()
-        if (mapboxmap.isStyleLoaded()) updateTopoJson(mapboxmap, this.config)
+        const mapboxMap = (this._map.layer as any).getMapboxMap()
+        if (mapboxMap.isStyleLoaded()) updateTopoJson(mapboxMap, this.config)
       }
     }
 
@@ -163,7 +172,9 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
 
     // We use Supercluster for real-time node clustering
     this._clusterIndex = calculateClusterIndex<Datum>(data, this.config)
-    this.render()
+    this._leafletInitializationPromise.then(() => {
+      this.render()
+    })
   }
 
   // We redefine the ComponentCore render function to bind event to newly created elements in this._renderData(),
@@ -182,8 +193,8 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     this._firstRender = false
   }
 
-  public getLeafletInstance (): L.Map {
-    return this._map.leaflet
+  public getLeafletInstancePromise (): Promise<L.Map> {
+    return this._leafletInitializationPromise
   }
 
   public fitToPoints (duration = this.config.flyToDuration, padding = [40, 40]): void {
@@ -618,11 +629,11 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
   public destroy (): void {
     constraintMapViewThrottled.cancel()
     cancelAnimationFrame(this._renderDataAnimationFrame)
-    const map = this._map.leaflet
+    const map = this._map?.leaflet
     this._map = undefined
 
-    map.stop()
-    map.remove()
+    map?.stop()
+    map?.remove()
     this.g.remove()
   }
 }
