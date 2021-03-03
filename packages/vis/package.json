@@ -45,6 +45,6 @@
     "supercluster": "^7.1.0",
     "tangram": "^0.21.0",
     "three": "^0.125.2",
-    "topojson": "^3.0.2"
+    "topojson-client": "^3.0.2"
   }
 }

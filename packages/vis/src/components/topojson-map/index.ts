@@ -3,7 +3,7 @@ import { ZoomBehavior, zoom, zoomIdentity, ZoomTransform, D3ZoomEvent } from 'd3
 import { timeout } from 'd3-timer'
 import { geoPath, GeoProjection } from 'd3-geo'
 import { color } from 'd3-color'
-import { feature, mesh } from 'topojson'
+import { feature, mesh } from 'topojson-client'
 
 // Core
 import { ComponentCore } from 'core/component'
