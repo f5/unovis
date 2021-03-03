@@ -1,7 +1,7 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { select, Selection } from 'd3-selection'
 import L from 'leaflet'
-import { feature } from 'topojson'
+import { feature } from 'topojson-client'
 
 // Types
 import { LeafletMapRenderer } from 'types/map'
