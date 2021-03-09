@@ -1,19 +1,24 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import L from 'leaflet'
+import ResizeObserver from 'resize-observer-polyfill'
 
 import { ComponentCore } from 'core/component'
 import { ComponentType } from 'types/component'
 
 // Utils
 import { getValue, throttle } from 'utils/data'
+import { getDataLatLngBounds } from 'utils/map'
 
 // Components
 import { LeafletMap } from 'components/leaflet-map'
 
+// Types
+import { Bounds } from 'types/map'
+
 // Config
 import { LeafletFlowMapConfig, LeafletFlowMapConfigInterface } from './config'
 
-// Types
+// Local Types
 import { LatLon, Particle } from './types'
 
 // Renderer
@@ -32,6 +37,7 @@ export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ point
   config: LeafletFlowMapConfig<PointDatum, FlowDatum> = new LeafletFlowMapConfig()
   private panningOffset = { x: 0, y: 0 }
 
+  private resizeObserver: ResizeObserver
   private renderer: PointRenderer
   particles: Particle[] = []
 
@@ -42,12 +48,20 @@ export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ point
     this.leafletMap.getLeafletInstancePromise().then((leaflet) => {
       this.leafletMapInstance = leaflet
       const canvasContainer = this.leafletMapInstance.getPanes().overlayPane as HTMLDivElement
+
+      // Initialize renderer
       this.renderer = new PointRenderer(canvasContainer, container.offsetWidth, container.offsetHeight)
       this.canvasElement = this.renderer.getCanvasElement()
       this.canvasElement.addEventListener('mousemove', this.onCanvasMouseMoveBound)
       this.canvasElement.addEventListener('click', this.onCanvasClickBound)
 
       this.leafletMap._onMapMoveEndInternal = this.onMapMove.bind(this)
+
+      // Update renderer size on container resize
+      this.resizeObserver = new ResizeObserver(() => {
+        this.renderer.setSize(container.offsetWidth, container.offsetHeight)
+      })
+      this.resizeObserver.observe(container)
 
       if (config) this.setConfig(config)
       if (data) this.setData(data)
@@ -56,7 +70,7 @@ export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ point
   }
 
   setConfig (config: LeafletFlowMapConfigInterface<PointDatum, FlowDatum>): void {
-    config.clusterRadius = 0
+    config.clusterRadius = -1
     super.setConfig(config)
     this.leafletMap.setConfig(config)
   }
@@ -151,7 +165,7 @@ export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ point
     })
   }
 
-  private getPointByContainerPos (x: number, y: number): [FlowDatum, number, number] | [] {
+  private getPointByScreenPos (x: number, y: number): [FlowDatum, number, number] | [] {
     const map = this.leafletMapInstance
 
     for (const flow of this.flows) {
@@ -172,7 +186,7 @@ export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ point
     const { config } = this
 
     this.canvasElement.style.removeProperty('cursor')
-    const [hoveredPoint, x, y] = this.getPointByContainerPos(event.offsetX, event.offsetY)
+    const [hoveredPoint, x, y] = this.getPointByScreenPos(event.offsetX, event.offsetY)
     if (hoveredPoint) this.canvasElement.style.cursor = 'default'
 
     if (this.hoveredSourcePoint !== hoveredPoint) {
@@ -185,7 +199,7 @@ export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ point
   private onCanvasClick (event: MouseEvent) {
     const { config } = this
 
-    const [clickedPoint, x, y] = this.getPointByContainerPos(event.offsetX, event.offsetY)
+    const [clickedPoint, x, y] = this.getPointByScreenPos(event.offsetX, event.offsetY)
     if (clickedPoint) config.onSourcePointClick?.(clickedPoint, x, y, event)
   }
 
@@ -197,6 +211,7 @@ export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ point
   }
 
   public destroy (): void {
+    this.resizeObserver.disconnect()
     this.renderer.destroy()
     this.canvasElement.removeEventListener('mousemove', this.onCanvasMouseMoveBound)
     this.canvasElement.removeEventListener('click', this.onCanvasClickBound)
@@ -209,7 +224,30 @@ export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ point
   public unselectPoint (): void { this.leafletMap.unselectPoint() }
   public zoomToPointById (id: string, selectNode = false, customZoomLevel?: number): void { this.leafletMap.zoomToPointById(id, selectNode, customZoomLevel) }
   public zoomIn (increment = 1): void { this.leafletMap.zoomIn(increment) }
-  public zoomOut (increment = 1): void { this.leafletMap.zoomIn(increment) }
+  public zoomOut (increment = 1): void { this.leafletMap.zoomOut(increment) }
   public setZoom (zoomLevel: number): void { this.leafletMap.setZoom(zoomLevel) }
-  public fitView (): void { this.leafletMap.fitView() }
+  public fitView (): void {
+    const points = []
+    for (const flow of this.flows) {
+      const source = {
+        lat: getValue(flow, this.config.sourceLatitude),
+        lon: getValue(flow, this.config.sourceLongitude),
+      }
+
+      const target = {
+        lat: getValue(flow, this.config.targetLatitude),
+        lon: getValue(flow, this.config.targetLongitude),
+      }
+
+      points.push(source)
+      points.push(target)
+    }
+
+    const boundsArray = getDataLatLngBounds(points, d => d.lat, d => d.lon, 4)
+    const bounds: Bounds = {
+      northEast: { lat: boundsArray[0][0], lng: boundsArray[1][1] },
+      southWest: { lat: boundsArray[1][0], lng: boundsArray[0][1] },
+    }
+    this.leafletMap.fitToBounds(bounds)
+  }
 }

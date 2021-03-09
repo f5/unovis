@@ -92,7 +92,7 @@ export function updateNodes<D> (selection, config: LeafletMapConfigInterface<D>,
       .attr('visibility', innerLabelText ? null : 'hidden')
       .style('fill', () => {
         if (!d.fill) return null
-        const hex = color(isStringCSSVariable(d.fill) ? getCSSVariableValue(d.fill, this.element) : d.fill)?.hex()
+        const hex = color(isStringCSSVariable(d.fill) ? getCSSVariableValue(d.fill, selection.node()) : d.fill)?.hex()
         if (!hex) return null
 
         const brightness = hexToBrightness(hex)

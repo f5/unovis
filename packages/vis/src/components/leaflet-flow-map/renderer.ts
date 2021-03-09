@@ -3,7 +3,6 @@ import {
   WebGLRenderer, OrthographicCamera, Scene, BufferGeometry, Points,
   BufferAttribute, InterleavedBufferAttribute, ShaderMaterial, Color,
 } from 'three'
-import { extent, max } from 'd3-array'
 
 import { Particle } from './types'
 
@@ -121,29 +120,15 @@ export class PointRenderer {
     pointsPosition.needsUpdate = true
   }
 
-  public resize (): void {
-    this.renderer.setSize(this.width, this.height)
-    this.renderer.render(this.scene, this.camera)
-  }
-
-  public fitToPoints (): void {
-    this.renderer.setSize(this.width, this.height)
-    const [left, right] = extent(this.pointData.map(d => d.x)) as number[]
-    const [top, bottom] = extent(this.pointData.map(d => d.y)) as number[]
-    let maxRadius = max(this.pointData.map(d => getRadius(d.r, this.devicePixelRatio))) as number
-    maxRadius /= Math.min(this.width, this.height)
-    maxRadius *= 10
-    this.camera.left = left - maxRadius
-    this.camera.right = right + maxRadius
-    this.camera.top = top - maxRadius
-    this.camera.bottom = bottom + maxRadius
-    this.camera.updateProjectionMatrix()
-    this.renderer.render(this.scene, this.camera)
-  }
-
   public setSize (width: number, height: number): void {
     this.width = width
     this.height = height
+
+    this.renderer.setSize(this.width, this.height)
+    this.camera.right = this.width
+    this.camera.bottom = this.height
+    this.camera.updateProjectionMatrix()
+    this.renderer.render(this.scene, this.camera)
   }
 
   public getCanvasElement (): HTMLCanvasElement {
