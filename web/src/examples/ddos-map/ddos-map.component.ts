@@ -1,8 +1,7 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
+import { AfterViewInit, Component, ViewChild, ViewEncapsulation } from '@angular/core'
 import flatten from 'lodash/flatten'
-
-import { Component, ViewEncapsulation, ViewChild } from '@angular/core'
-import { LeafletFlowMap, LeafletFlowMapConfigInterface } from '@volterra/vis'
+import { LeafletFlowMap, LeafletFlowMapConfigInterface, Position, PositionStrategy, Tooltip } from '@volterra/vis'
 import { MapLeafletComponent } from '../../app/components/map-leaflet/map-leaflet.component'
 
 // Data
@@ -30,7 +29,7 @@ type DDoSFlow = {
   encapsulation: ViewEncapsulation.None,
 })
 
-export class DDoSMapComponent {
+export class DDoSMapComponent implements AfterViewInit {
   @ViewChild('mapContainer', { static: false }) mapContainer: MapLeafletComponent<SitePoint, DDoSFlow>
 
   title = 'DDoS Map'
@@ -44,6 +43,8 @@ export class DDoSMapComponent {
     })
     return flows
   }))
+
+  tooltip: Tooltip<LeafletFlowMap<SitePoint, DDoSFlow>, DDoSFlow>
 
   data = {
     points: sites.map(s => {
@@ -81,9 +82,15 @@ export class DDoSMapComponent {
     // eslint-disable-next-line no-console
     onSourcePointClick: (f, x, y) => { console.log('onSourcePointClick', f, x, y) },
     // eslint-disable-next-line no-console
-    onSourcePointMouseEnter: (f, x, y) => { console.log('onSourcePointMouseEnter', f, x, y) },
+    onSourcePointMouseEnter: (f, x, y) => {
+      console.log('onSourcePointMouseEnter', f, x, y)
+      this.tooltip.show('hello world', { x, y })
+    },
     // eslint-disable-next-line no-console
-    onSourcePointMouseLeave: (f) => { console.log('onSourcePointMouseLeave', f) },
+    onSourcePointMouseLeave: (f) => {
+      console.log('onSourcePointMouseLeave', f)
+      this.tooltip.hide()
+    },
     pointRadius: 5,
     pointId: d => d.name,
     clusterOutlineWidth: 2,
@@ -120,5 +127,14 @@ export class DDoSMapComponent {
 
       this.data = { ...this.data, flows: this.flows }
     }, 3000)
+  }
+
+  ngAfterViewInit (): void {
+    this.tooltip = new Tooltip({
+      container: this.mapContainer.mapRef.nativeElement,
+      positionStrategy: PositionStrategy.ABSOLUTE,
+      horizontalPlacement: Position.CENTER,
+      verticalPlacement: Position.TOP,
+    })
   }
 }

@@ -1,4 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
+import { select } from 'd3-selection'
 import L from 'leaflet'
 import ResizeObserver from 'resize-observer-polyfill'
 
@@ -50,8 +51,9 @@ export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ point
       const canvasContainer = this.leafletMapInstance.getPanes().overlayPane as HTMLDivElement
 
       // Initialize renderer
-      this.renderer = new PointRenderer(canvasContainer, container.offsetWidth, container.offsetHeight)
-      this.canvasElement = this.renderer.getCanvasElement()
+      const canvas = select(canvasContainer).insert('canvas', ':first-child')
+      this.canvasElement = canvas.node()
+      this.renderer = new PointRenderer(canvasContainer, container.offsetWidth, container.offsetHeight, this.canvasElement)
       this.canvasElement.addEventListener('mousemove', this.onCanvasMouseMoveBound)
       this.canvasElement.addEventListener('click', this.onCanvasClickBound)
 
@@ -70,7 +72,7 @@ export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ point
   }
 
   setConfig (config: LeafletFlowMapConfigInterface<PointDatum, FlowDatum>): void {
-    config.clusterRadius = -1
+    config.clusterRadius = 0
     super.setConfig(config)
     this.leafletMap.setConfig(config)
   }
@@ -173,9 +175,11 @@ export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ point
       const lon = getValue(flow, this.config.sourceLongitude)
       const r = getValue(flow, this.config.sourcePointRadius)
       const pos = map?.latLngToLayerPoint(new L.LatLng(lat, lon))
+      const posX = pos.x - this.panningOffset.x
+      const posY = pos.y - this.panningOffset.y
 
-      if ((Math.abs(x - pos.x) < r) && (Math.abs(y - pos.y) < r)) {
-        return [flow, pos?.x, pos?.y]
+      if ((Math.abs(x - posX) < r) && (Math.abs(y - posY) < r)) {
+        return [flow, posX, posY]
       }
     }
 
