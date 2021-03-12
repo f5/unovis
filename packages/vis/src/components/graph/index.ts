@@ -472,7 +472,7 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
     const { config } = this
 
     const linkElements: Selection<SVGGElement, L, SVGGElement, L[]> = this._linksGroup.selectAll(`.${linkSelectors.gLink}`)
-    linkElements.call(updateSelectedLinks, config, 0, this._scale)
+    linkElements.call(updateSelectedLinks, config, this._scale)
 
     const nodeElements: Selection<SVGGElement, N, SVGGElement, N[]> = this._nodesGroup.selectAll(`.${nodeSelectors.gNode}`)
     nodeElements.call(updateSelectedNodes, config)

@@ -59,7 +59,7 @@ export function getLinkBandWidth<N extends NodeDatumCore, L extends LinkDatumCor
   const sourceNodeSize = getValue(d.source, nodeSize)
   const targetNodeSize = getValue(d.target, nodeSize)
   const minNodeSize = Math.min(sourceNodeSize, targetNodeSize)
-  return Math.min(minNodeSize, getValue(d, linkBandWidth) / Math.pow(scale, 0.5)) || 0
+  return Math.min(minNodeSize, getValue(d, linkBandWidth) / Math.pow(scale || 1, 0.5)) || 0
 }
 
 export function getLinkColor<N extends NodeDatumCore, L extends LinkDatumCore> (link: L, config: GraphConfigInterface<N, L>, value = 0.05): string {
