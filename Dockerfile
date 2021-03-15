@@ -31,6 +31,10 @@ FROM nginxinc/nginx-unprivileged:1.19
 
 USER root
 
+# fix: CVE-2021-24031	libzstd1-1.3.8+dfsg-3
+# next line can be removed after base image update to nginx-unprivileged:1.20
+RUN apt-get update; apt-get install --only-upgrade libzstd1=1.3.8+dfsg-3+deb10u2
+
 # Clean default static site
 RUN rm -rf /usr/share/nginx/html/*
 
