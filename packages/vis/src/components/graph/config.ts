@@ -32,7 +32,7 @@ export interface GraphConfigInterface<N extends NodeDatumCore, L extends LinkDat
   // Settings for Parallel and Concentric Layouts
   /** Order of the layout groups, for parallel and concentric layouts */
   layoutGroupOrder?: any[];
-  /** Number of rows per group. Default: 2 */
+  /** Number of rows per group. Default: 1 */
   layoutGroupRows?: number;
   /** */
   layoutSubgroupMaxNodes?: number;
@@ -137,7 +137,7 @@ export class GraphConfig<N extends NodeDatumCore, L extends LinkDatumCore> exten
   layoutNonConnectedAside: true
 
   layoutGroupOrder = []
-  layoutGroupRows = 2
+  layoutGroupRows = 1
   layoutSubgroupMaxNodes = 6
   layoutSortConnectionsByGroup = ''
   nodeGroup = (n: N): string => n['group']
