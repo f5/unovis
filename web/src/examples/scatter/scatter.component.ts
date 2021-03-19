@@ -3,7 +3,7 @@ import { AfterViewInit, Component } from '@angular/core'
 import _random from 'lodash/random'
 import _sample from 'lodash/sample'
 
-import { Scatter, Axis, SymbolType } from '@volterra/vis'
+import { Scatter, Axis, SymbolType, ScatterConfigInterface } from '@volterra/vis'
 
 // Helpers
 import { SampleDatum } from '../../utils/data'
@@ -11,30 +11,32 @@ import { SampleDatum } from '../../utils/data'
 interface ScatterDatum extends SampleDatum {
   size: number;
   shape: SymbolType;
-  icon: any;
+  label: any;
 }
 
 function sampleScatterData (n: number): ScatterDatum[] {
-  const minR = n >= 160 ? 5 : null
-  const maxR = n >= 160 ? 10 : null
+  const minD = 10
+  const maxD = 50
   return Array(n).fill(0).map((d, i) => ({
     x: i,
     y: Math.random(),
-    size: minR && maxR ? _random(minR, maxR) : 50,
-    shape: Math.random() > 0.8 ? SymbolType.CIRCLE : _sample([SymbolType.CROSS, SymbolType.DIAMOND, SymbolType.SQUARE, SymbolType.STAR, SymbolType.TRIANGLE, SymbolType.WYE]),
-    icon: Math.random() > 0.8 ? '☁️' : undefined,
+    size: _random(minD, maxD),
+    shape: Math.random() > 0.2 ? SymbolType.CIRCLE : _sample([SymbolType.CROSS, SymbolType.DIAMOND, SymbolType.SQUARE, SymbolType.STAR, SymbolType.TRIANGLE, SymbolType.WYE]),
+    label: Math.random() > 0.8 ? 'G' : undefined,
   }))
 }
 
-function getScatterConfig () {
+function getScatterConfig (): ScatterConfigInterface<ScatterDatum> {
   return {
+    sizeRange: [10, 25],
     x: (d): number => d.x,
     y: (d): number => d.y,
     size: (d): number => d.size,
     shape: (d): SymbolType => d.shape,
-    icon: (d): any => d.icon,
-    cursor: (d, i) => 'pointer',
+    label: (d): any => d.label,
+    cursor: (d) => d.label ? 'pointer' : null,
     color: () => _sample(['#f0aaca', '#6798ff', '#fd7492', '#00edff', '#ed916e', '#425673', '#d11d55']),
+    labelColor: () => _sample(['#f0aaca', '#6798ff', '#fd7492', '#00edff', '#ed916e', '#425673', '#d11d55']),
   }
 }
 
@@ -56,6 +58,5 @@ export class ScatterComponent implements AfterViewInit {
   })
 
   ngAfterViewInit (): void {
-    //
   }
 }
