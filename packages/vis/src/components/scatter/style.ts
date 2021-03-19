@@ -10,6 +10,9 @@ export const global = injectGlobal`
     --vis-scatter-fill-opacity: 1;
     --vis-scatter-stroke-opacity: 1;
     --vis-scatter-hover-stroke-width: 2px;
+    
+    --vis-scatter-point-label-text-color-dark: #5b5f6d;
+    --vis-scatter-point-label-text-color-light: #fff;
   }
 `
 
@@ -26,9 +29,9 @@ export const point = css`
     stroke-opacity: var(--vis-scatter-stroke-opacity);
 
     user-select: none;
-
-    &:hover {
-      stroke-width: var(--vis-scatter-hover-stroke-width);
-    }
+  }
+  
+  path:hover {
+    stroke-width: var(--vis-scatter-hover-stroke-width);
   }
 `
