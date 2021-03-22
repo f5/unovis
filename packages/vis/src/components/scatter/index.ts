@@ -9,6 +9,7 @@ import { getColor } from 'utils/color'
 
 // Types
 import { Spacing } from 'types/misc'
+import { ScatterPoint } from 'components/scatter/types'
 
 // Config
 import { ScatterConfig, ScatterConfigInterface } from './config'
@@ -52,7 +53,7 @@ export class Scatter<Datum> extends XYComponentCore<Datum> {
 
     const pointGroups = this.g
       .selectAll(`.${s.point}`)
-      .data(this._prepareData())
+      .data(this._getOnScreenData())
 
     pointGroups.exit().call(removeNodes, duration)
 
@@ -61,10 +62,10 @@ export class Scatter<Datum> extends XYComponentCore<Datum> {
       .call(createNodes)
 
     const pointGroupsMerged = pointGroupsEnter.merge(pointGroups)
-    pointGroupsMerged.call(updateNodes, duration)
+    pointGroupsMerged.call(updateNodes, config, duration)
   }
 
-  _updateSizeScale (): void {
+  private _updateSizeScale (): void {
     const { config, datamodel } = this
 
     config.sizeScale
@@ -72,13 +73,13 @@ export class Scatter<Datum> extends XYComponentCore<Datum> {
       .range(config.sizeRange)
   }
 
-  _prepareData (): Record<string, unknown>[] {
-    const { config: { size, sizeScale, x, y, scales, shape, icon, color, cursor }, datamodel: { data } } = this
+  private _getOnScreenData (): ScatterPoint<Datum>[] {
+    const { config: { size, sizeScale, x, y, scales, shape, label, labelColor, color, cursor }, datamodel: { data } } = this
 
     const maxR = this._getMaxPointRadius()
     const xRange = scales.x.range()
 
-    return data?.reduce((acc, d, i) => {
+    return data?.reduce<ScatterPoint<Datum>[]>((acc, d) => {
       const posX = scales.x(getValue(d, x))
       const posY = scales.y(getValue(d, y))
       const pointSize = sizeScale(getValue(d, size))
@@ -92,7 +93,8 @@ export class Scatter<Datum> extends XYComponentCore<Datum> {
             size: pointSize,
             color: getColor(d, color),
             shape: getValue(d, shape),
-            icon: getValue(d, icon),
+            label: getValue(d, label),
+            labelColor: getValue(d, labelColor),
             cursor: getValue(d, cursor),
           },
         })
@@ -102,7 +104,7 @@ export class Scatter<Datum> extends XYComponentCore<Datum> {
     }, []) ?? []
   }
 
-  _getMaxPointRadius (): number {
+  private _getMaxPointRadius (): number {
     const { config, datamodel } = this
     if (isEmpty(datamodel.data)) return 0
 
