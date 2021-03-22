@@ -50,7 +50,7 @@ export function updateNodes (selection, config, duration): void {
 
     let labelColor = d._screen.labelColor
     if (!labelColor) {
-      const hex = color(isStringCSSVariable(pointColor) ? getCSSVariableValue(pointColor, this.element) : pointColor)?.hex()
+      const hex = color(isStringCSSVariable(pointColor) ? getCSSVariableValue(pointColor, group.node()) : pointColor)?.hex()
       const brightness = hexToBrightness(hex)
       labelColor = brightness > config.labelTextBrightnessRatio ? 'var(--vis-scatter-point-label-text-color-dark)' : 'var(--vis-scatter-point-label-text-color-light)'
     }
