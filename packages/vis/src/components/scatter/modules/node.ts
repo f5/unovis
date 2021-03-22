@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { select } from 'd3-selection'
+import { Selection, select } from 'd3-selection'
 import { symbol } from 'd3-shape'
 import { color } from 'd3-color'
 import { Symbol } from 'types/symbols'
@@ -9,7 +9,13 @@ import { smartTransition } from 'utils/d3'
 import { getCSSVariableValue, isStringCSSVariable } from 'utils/misc'
 import { hexToBrightness } from 'utils/color'
 
-export function createNodes (selection): void {
+// Config
+import { ScatterConfig } from '../config'
+
+// Types
+import { ScatterPoint } from '../types'
+
+export function createNodes<Datum> (selection: Selection<SVGGElement, ScatterPoint<Datum>, any, any>): void {
   selection.attr('transform', d => `translate(${d._screen.x},${d._screen.y})`)
   selection.append('path').style('fill', d => d._screen.color)
   selection.append('text')
@@ -21,11 +27,11 @@ export function createNodes (selection): void {
   selection.attr('transform', d => `translate(${d._screen.x},${d._screen.y}) scale(0)`)
 }
 
-export function updateNodes (selection, config, duration): void {
+export function updateNodes<Datum> (selection: Selection<SVGGElement, ScatterPoint<Datum>, any, any>, config: ScatterConfig<Datum>, duration: number): void {
   const symbolGenerator = symbol()
 
   selection.each((d, i, elements) => {
-    const group = select(elements[i])
+    const group: Selection<SVGGElement, ScatterPoint<Datum>, any, any> = select(elements[i])
     const text = group.select('text')
     const path = group.select('path')
 
@@ -68,7 +74,7 @@ export function updateNodes (selection, config, duration): void {
     .attr('transform', d => `translate(${d._screen.x},${d._screen.y}) scale(1)`)
 }
 
-export function removeNodes (selection, duration): void {
+export function removeNodes<Datum> (selection: Selection<SVGGElement, ScatterPoint<Datum>, any, any>, duration: number): void {
   smartTransition(selection, duration)
     .attr('transform', d => `translate(${d._screen.x},${d._screen.y}) scale(0)`)
     .remove()
