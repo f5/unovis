@@ -1,8 +1,13 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import {
-  WebGLRenderer, OrthographicCamera, Scene, BufferGeometry, Points,
-  BufferAttribute, InterleavedBufferAttribute, ShaderMaterial, Color,
-} from 'three'
+import { WebGLRenderer } from 'three/src/renderers/WebGLRenderer.js'
+import { OrthographicCamera } from 'three/src/cameras/OrthographicCamera'
+import { Scene } from 'three/src/scenes/Scene'
+import { BufferGeometry } from 'three/src/core/BufferGeometry'
+import { Points } from 'three/src/objects/Points'
+import { BufferAttribute } from 'three/src/core/BufferAttribute'
+import { InterleavedBufferAttribute } from 'three/src/core/InterleavedBufferAttribute'
+import { ShaderMaterial } from 'three/src/materials/ShaderMaterial'
+import { Color } from 'three/src/math/Color'
 
 import { Particle } from './types'
 

@@ -23,7 +23,7 @@ import { LeafletFlowMapConfig, LeafletFlowMapConfigInterface } from './config'
 import { LatLon, Particle } from './types'
 
 // Renderer
-import { PointRenderer } from './renderer'
+import { PointRenderer as PointRendererType } from './renderer'
 
 export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ points: PointDatum[], flows?: FlowDatum[] }> {
   static selectors = LeafletMap.selectors
@@ -39,36 +39,41 @@ export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ point
   private panningOffset = { x: 0, y: 0 }
 
   private resizeObserver: ResizeObserver
-  private renderer: PointRenderer
+  private renderer: PointRendererType
   particles: Particle[] = []
 
   constructor (container: HTMLDivElement, config?: LeafletFlowMapConfigInterface<PointDatum, FlowDatum>, data?: { points: PointDatum[], flows?: FlowDatum[] }) {
     super(ComponentType.HTML)
 
     this.leafletMap = new LeafletMap<PointDatum>(container, config, data.points)
-    this.leafletMap.getLeafletInstancePromise().then((leaflet) => {
-      this.leafletMapInstance = leaflet
-      const canvasContainer = this.leafletMapInstance.getPanes().overlayPane as HTMLDivElement
 
-      // Initialize renderer
-      const canvas = select(canvasContainer).insert('canvas', ':first-child')
-      this.canvasElement = canvas.node()
-      this.renderer = new PointRenderer(canvasContainer, container.offsetWidth, container.offsetHeight, this.canvasElement)
-      this.canvasElement.addEventListener('mousemove', this.onCanvasMouseMoveBound)
-      this.canvasElement.addEventListener('click', this.onCanvasClickBound)
+    const rendererImportPromise = import('./renderer')
+    Promise.all([rendererImportPromise, this.leafletMap.getLeafletInstancePromise()])
+      .then((imports) => {
+        const [{ PointRenderer }, leaflet] = imports
 
-      this.leafletMap._onMapMoveEndInternal = this.onMapMove.bind(this)
+        this.leafletMapInstance = leaflet
+        const canvasContainer = this.leafletMapInstance.getPanes().overlayPane as HTMLDivElement
 
-      // Update renderer size on container resize
-      this.resizeObserver = new ResizeObserver(() => {
-        this.renderer.setSize(container.offsetWidth, container.offsetHeight)
+        // Initialize renderer
+        const canvas = select(canvasContainer).insert('canvas', ':first-child')
+        this.canvasElement = canvas.node()
+        this.renderer = new PointRenderer(canvasContainer, container.offsetWidth, container.offsetHeight, this.canvasElement)
+        this.canvasElement.addEventListener('mousemove', this.onCanvasMouseMoveBound)
+        this.canvasElement.addEventListener('click', this.onCanvasClickBound)
+
+        this.leafletMap._onMapMoveEndInternal = this.onMapMove.bind(this)
+
+        // Update renderer size on container resize
+        this.resizeObserver = new ResizeObserver(() => {
+          this.renderer.setSize(container.offsetWidth, container.offsetHeight)
+        })
+        this.resizeObserver.observe(container)
+
+        if (config) this.setConfig(config)
+        if (data) this.setData(data)
+        this.animate()
       })
-      this.resizeObserver.observe(container)
-
-      if (config) this.setConfig(config)
-      if (data) this.setData(data)
-      this.animate()
-    })
   }
 
   setConfig (config: LeafletFlowMapConfigInterface<PointDatum, FlowDatum>): void {
