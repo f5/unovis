@@ -64,7 +64,7 @@ export const gLinkExit = css`
 
 export const greyout = css`
   label: greyout;
-  opacity: 0.1;
+  opacity: 0.2;
 `
 
 export const linkBand = css`
