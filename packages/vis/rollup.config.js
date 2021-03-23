@@ -7,6 +7,7 @@ import commonjs from 'rollup-plugin-commonjs'
 import postcss from 'rollup-plugin-postcss'
 import pkg from './package.json'
 import modules from './rollup.modules.json'
+// import visualizer from 'rollup-plugin-visualizer'
 
 const d3Libs = ['d3-array', 'd3-axis', 'd3-brush', 'd3-chord', 'd3-collection', 'd3-color',
   'd3-contour', 'd3-dispatch', 'd3-drag', 'd3-dsv', 'd3-ease', 'd3-fetch', 'd3-force',
@@ -43,12 +44,15 @@ const plugins = [
     minimize: true,
   }),
   commonjs(),
-  resolve(),
+  resolve({
+    mainFields: ['jsnext:main', 'module', 'main', 'browser'],
+  }),
   json(),
   typescript({
     typescript: require('typescript'),
     transformers: [(service) => transformPaths(service.getProgram())],
   }),
+  // visualizer({ sourcemap: true }),
 ]
 
 export default [

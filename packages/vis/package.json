@@ -26,15 +26,16 @@
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-postcss": "^4.0.0",
     "rollup-plugin-terser": "^7.0.2",
-    "rollup-plugin-typescript2": "^0.29.0"
+    "rollup-plugin-typescript2": "^0.29.0",
+    "rollup-plugin-visualizer": "^4.2.2"
   },
   "dependencies": {
     "@types/geojson": "^7946.0.7",
     "@types/topojson": "^3.2.2",
     "d3": "^6.3.1",
+    "d3-collection": "^1.0.7",
     "d3-interpolate-path": "^2.2.1",
     "d3-sankey": "^0.12.3",
-    "d3-collection": "^1.0.7",
     "dagre-layout": "^0.8.8",
     "emotion": "^10.0.27",
     "leaflet": "^1.7.1",

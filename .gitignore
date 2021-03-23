@@ -16,3 +16,4 @@ docs-html/
 .git-pack-cache
 .DS_Store
 .eslintcache
+stats.html
