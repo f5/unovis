@@ -62,7 +62,7 @@ export class Line<Datum> extends XYComponentCore<Datum> {
         return {
           x: lineDataX[i],
           y: config.scales.y(value),
-          defined: isNumber(value),
+          defined: isFinite(value),
         }
       })
 
