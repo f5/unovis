@@ -56,19 +56,6 @@ export function createPanels<N extends NodeDatumCore, P extends PanelConfigInter
     })
   sideLabel.call(appendShape, (d: P) => d.sideLabelShape, panelSelectors.sideLabel, panelSelectors.customSideLabel)
   sideLabel.append('text').attr('class', panelSelectors.sideLabelIcon)
-
-  selection.on('mouseover', (event: MouseEvent, d) => {
-    if (nodesSelection) {
-      nodesSelection.sort((a, b) => {
-        const aIndex = d.nodes.indexOf(a.id)
-        const bIndex = d.nodes.indexOf(b.id)
-        return (bIndex === -1 ? 1 : 0) - (aIndex === -1 ? 1 : 0)
-      })
-    }
-    const element = event.currentTarget as SVGGElement
-    const group = select(element)
-    group.raise()
-  })
 }
 
 export function updatePanels<N extends NodeDatumCore, L extends LinkDatumCore, P extends PanelConfigInterface> (selection: Selection<SVGGElement, P, SVGGElement, P[]>, config: GraphConfigInterface<N, L>, duration: number): void {
