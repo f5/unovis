@@ -106,8 +106,9 @@ export class Line<Datum> extends XYComponentCore<Datum> {
         .attr('stroke-dasharray', dashArray?.join(' ') ?? null)
         .style('stroke-opacity', isLineVisible ? 1 : 0)
 
+      const hasUndefinedSegments = d.values.some(d => !d.defined)
       const svgPathD = this.lineGen(d.values) || this._emptyPath()
-      if (duration) {
+      if (duration && !hasUndefinedSegments) {
         const previous = linePath.attr('d')
         const next = svgPathD
         transition.attrTween('d', () => interpolatePath(previous, next))
