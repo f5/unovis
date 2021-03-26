@@ -303,9 +303,9 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
     const panelGroupEnter = panelGroup.enter().append('g')
       .attr('class', panelSelectors.gPanel)
       .call(createPanels, selection)
-    const panleGroupMerged = panelGroup.merge(panelGroupEnter)
+    const panelGroupMerged = panelGroup.merge(panelGroupEnter)
 
-    this._updatePanels(panleGroupMerged, duration)
+    this._updatePanels(panelGroupMerged, duration)
   }
 
   _updatePanels (panelToUpdate, duration: number): void {
