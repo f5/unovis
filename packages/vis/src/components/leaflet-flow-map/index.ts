@@ -31,6 +31,7 @@ export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ point
   private leafletMap: LeafletMap<PointDatum>
   private leafletMapInstance: L.Map
   private flows: FlowDatum[] = []
+  private points: PointDatum[] = []
   private hoveredSourcePoint: FlowDatum | undefined
   private onCanvasMouseMoveBound = throttle(this.onCanvasMouseMove.bind(this), 60)
   private onCanvasClickBound = this.onCanvasClick.bind(this)
@@ -45,7 +46,7 @@ export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ point
   constructor (container: HTMLDivElement, config?: LeafletFlowMapConfigInterface<PointDatum, FlowDatum>, data?: { points: PointDatum[], flows?: FlowDatum[] }) {
     super(ComponentType.HTML)
 
-    this.leafletMap = new LeafletMap<PointDatum>(container, config, data.points)
+    this.leafletMap = new LeafletMap<PointDatum>(container, config, data?.points ?? [])
 
     const rendererImportPromise = import('./renderer')
     Promise.all([rendererImportPromise, this.leafletMap.getLeafletInstancePromise()])
@@ -85,8 +86,9 @@ export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ point
   setData (data: { points: PointDatum[], flows?: FlowDatum[] }): void {
     super.setData(data)
     this.flows = data.flows
+    this.points = data.points
     this.initParticles()
-    this.leafletMap.setData(data.points)
+    this.leafletMap.setData(this.points)
     this.render()
   }
 
@@ -236,7 +238,15 @@ export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ point
   public zoomOut (increment = 1): void { this.leafletMap.zoomOut(increment) }
   public setZoom (zoomLevel: number): void { this.leafletMap.setZoom(zoomLevel) }
   public fitView (): void {
-    const points = []
+    const points: { lat: number; lon: number }[] = []
+
+    for (const point of this.points) {
+      points.push({
+        lat: getValue(point, this.config.pointLatitude),
+        lon: getValue(point, this.config.pointLongitude),
+      })
+    }
+
     for (const flow of this.flows) {
       const source = {
         lat: getValue(flow, this.config.sourceLatitude),
