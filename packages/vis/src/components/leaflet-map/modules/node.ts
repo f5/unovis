@@ -59,6 +59,7 @@ export function updateNodes<D> (selection, config: LeafletMapConfigInterface<D>,
     const bottomLabel: Selection<SVGTextElement, any, SVGElement, any> = group.select(`.${s.bottomLabel}`)
     const innerLabelText = getValue(d.properties, config.pointLabel)
     const bottomLabelText = getValue(d.properties, config.pointBottomLabel)
+    const pointCursor = getValue(d.properties, config.pointCursor)
     const fromExpandedCluster = !!d.properties.expandedClusterPoint
     const donutData = d.donutData
     const isCluster = d.properties.cluster
@@ -69,6 +70,7 @@ export function updateNodes<D> (selection, config: LeafletMapConfigInterface<D>,
     group.select(`.${s.donutCluster}`)
       .call(updateDonut, donutData, d.radius, isCluster ? clusterOutlineWidth : 0)
     node.attr('d', d.path)
+    node.style('cursor', isCluster ? 'pointer' : pointCursor)
     bottomLabel.attr('transform', `translate(0,${d.radius + BOTTOM_LABEL_TOP_MARGIN})`)
 
     if (mapMoveZoomUpdateOnly) return
