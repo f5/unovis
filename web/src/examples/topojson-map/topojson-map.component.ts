@@ -37,11 +37,13 @@ export class TopoJSONMapComponent implements OnInit, AfterViewInit {
         id: a['ISO'],
         name: a.Country,
         color: '#ef8f73',
+        cursor: 'pointer',
       })),
       links: _times(10).map(i => ({
         source: _sample(cities).id,
         target: _sample(cities).id,
         width: _random(1, 5),
+        cursor: 'crosshair',
       })),
     }
 
@@ -50,6 +52,9 @@ export class TopoJSONMapComponent implements OnInit, AfterViewInit {
         topojson: WorldMapTopoJSON,
         duration: 3500,
         pointLabel: d => d.city.substr(0, 2),
+        pointCursor: 'pointer',
+        linkCursor: d => d.cursor,
+        areaCursor: d => d.cursor
       }),
       tooltip: new Tooltip<any, any>({
         triggers: {
