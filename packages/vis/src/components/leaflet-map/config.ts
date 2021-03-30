@@ -68,6 +68,8 @@ export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterfa
   pointLabel?: StringAccessor<PointDatum<Datum>>;
   /** Point bottom label accessor function */
   pointBottomLabel?: StringAccessor<PointDatum<Datum>>;
+  /** Point cursor value or accessor function, Default: `null` */
+  pointCursor?: StringAccessor<PointDatum<Datum>>;
   /** */
   selectedNodeId?: string;
 
@@ -129,6 +131,7 @@ export class LeafletMapConfig<Datum> extends ComponentConfig implements LeafletM
   pointRadius = undefined
   pointLabel = (d: PointDatum<Datum>): string => `${d.point_count ?? ''}`
   pointBottomLabel = (d: PointDatum<Datum>): string => ''
+  pointCursor = null
   selectedNodeId = undefined
 
   // Cluster

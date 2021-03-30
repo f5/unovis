@@ -14,6 +14,7 @@ export const variables = injectGlobal`
     --vis-map-point-default-fill-color: #B9BEC3;
     --vis-map-point-default-stroke-color: #959da3;
     --vis-map-point-default-stroke-width: 0px;
+    --vis-map-point-default-cursor: default;
     
     --vis-map-cluster-default-fill-color: #fff;
     --vis-map-cluster-default-stroke-color: #B9BEC3;
@@ -60,6 +61,7 @@ export const pointPath = css`
   stroke-width: var(--vis-map-point-default-stroke-width);
   pointer-events: fill !important;
   transition: .2s stroke-width, .3s transform;
+  cursor: var(--vis-map-point-default-cursor);
 
   &.cluster {
     fill-opacity: 0.9;
@@ -71,7 +73,6 @@ export const pointPath = css`
   }
 
   &:hover {
-    cursor: pointer;
     stroke-width: 2;
     fill-opacity: 1;
     animation: none;
