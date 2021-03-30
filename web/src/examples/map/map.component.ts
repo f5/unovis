@@ -92,6 +92,7 @@ export class MapComponent implements AfterViewInit {
       '<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a>',
     ],
     pointBottomLabel: d => d.cluster ? `${d.point_count} sites` : d.id,
+    pointCursor: 'crosshair',
     // selectedNodeId: 'nc72965236',
     initialBounds: { northEast: { lat: 77, lng: -172 }, southWest: { lat: -50, lng: 72 } },
     onMapMoveZoom: ({ mapCenter, zoomLevel, bounds }) => { /* console.log(mapCenter, zoomLevel, bounds) */ },
