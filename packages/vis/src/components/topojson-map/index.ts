@@ -175,6 +175,7 @@ export class TopoJSONMap<NodeDatum extends NodeDatumCore, LinkDatum extends Link
     smartTransition(featuresEnter.merge(features), duration)
       .attr('d', this._path)
       .style('fill', (d, i) => d.data ? getColor(d.data, config.areaColor, i) : null)
+      .style('cursor', d => d.data ? getValue(d.data, config.areaCursor) : null)
     features.exit().remove()
 
     const boundaries = this._boundariesGroup.selectAll(`.${s.boundary}`).data(boundariesData)
@@ -198,6 +199,7 @@ export class TopoJSONMap<NodeDatum extends NodeDatumCore, LinkDatum extends Link
         return arc(source, target)
       })
       .style('stroke-width', link => getValue(link, config.linkWidth))
+      .style('cursor', link => getValue(link, config.linkCursor))
       .style('stroke', (link, i) => getColor(link, config.linkColor, i))
     edges.exit().remove()
   }
@@ -231,6 +233,7 @@ export class TopoJSONMap<NodeDatum extends NodeDatumCore, LinkDatum extends Link
         const pos = this._projection(getLonLat(d, config.longitude, config.latitude))
         return `translate(${pos[0]},${pos[1]})`
       })
+      .style('cursor', d => getValue(d, config.pointCursor))
 
     smartTransition(pointsMerged.select(`.${s.pointCircle}`), duration)
       .attr('r', d => getValue(d, config.pointRadius))

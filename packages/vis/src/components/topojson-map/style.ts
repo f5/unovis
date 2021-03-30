@@ -96,7 +96,6 @@ export const link = css`
   stroke-linecap: round;
 
   &:hover {
-    cursor: pointer;
     stroke-opacity: .90;
   }
 `
