@@ -8,8 +8,9 @@
     "lib"
   ],
   "scripts": {
-    "prebuild": "rimraf lib",
-    "build": "npm run prebuild && rollup -c",
+    "build": "sha=$(tar cf - ./src | shasum); if [[ $(echo $sha) == $(< .srcsha) ]] && [[ -d \"./lib\" ]]; then echo \"Lib Build Exists\"; else npm run forcebuild; echo $sha > .srcsha; fi",
+    "forcebuild": "rimraf lib; rollup -c",
+    "dev:parallel": "rollup -c -w",
     "test": "jest --colors"
   },
   "publishConfig": {

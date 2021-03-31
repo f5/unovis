@@ -56,6 +56,7 @@ stats.html
 packages/vis-angular/.autogen.js
 packages/**/package-lock.json
 yarn.lock
+.srcsha
 
 # System Files
 .DS_Store

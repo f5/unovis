@@ -10,6 +10,7 @@
     "npm": ">=7.0.0"
   },
   "scripts": {
+    "postinstall": "npm run build:lib",
     "dev": "cd packages/dev-demo; npm run dev",
     "storybook": "cd packages/vis-angular; npm run storybook",
     "build": "npm run build:lib; cd packages/dev-demo; npm run build",
