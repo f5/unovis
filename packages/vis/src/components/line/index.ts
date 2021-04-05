@@ -1,6 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { select } from 'd3-selection'
-import { line, Line as LineGenInterface, CurveFactory } from 'd3-shape'
+import { line, Line as LineGenInterface, CurveFactoryLineOnly } from 'd3-shape'
 import { interpolatePath } from 'd3-interpolate-path'
 
 // Core
@@ -25,7 +25,7 @@ export class Line<Datum> extends XYComponentCore<Datum> {
   static selectors = s
   config: LineConfig<Datum> = new LineConfig()
   lineGen: LineGenInterface<{ x: number; y: number; defined: boolean }>
-  curve: CurveFactory = Curve[CurveType.MonotoneX]
+  curve: CurveFactoryLineOnly = Curve[CurveType.MonotoneX]
   events = {
     [Line.selectors.line]: {
       mouseover: this._highlight.bind(this),
@@ -48,6 +48,7 @@ export class Line<Datum> extends XYComponentCore<Datum> {
     const { config, datamodel: { data } } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
 
+    this.curve = Curve[config.curveType]
     this.lineGen = line<{ x: number; y: number; defined: boolean }>()
       .x(d => d.x)
       .y(d => d.y)
