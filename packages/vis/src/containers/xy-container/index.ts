@@ -120,6 +120,7 @@ export class XYContainer<Datum> extends ContainerCore {
     config.crosshair?.setData(data)
     config.axes.x?.setData(data)
     config.axes.y?.setData(data)
+    config.tooltip?.hide()
     if (!preventRender) this.render()
   }
 
@@ -233,7 +234,7 @@ export class XYContainer<Datum> extends ContainerCore {
       .attr('height', this.height)
 
     // Tooltip
-    config.tooltip?.update()
+    config.tooltip?.update() // Re-bind events
 
     // Crosshair
     const crosshair = config.crosshair
