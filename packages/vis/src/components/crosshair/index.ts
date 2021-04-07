@@ -141,7 +141,8 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
 
     const container = tooltip.getContainer() || this.container.node()
     const [x, y] = tooltip.config.positionStrategy === PositionStrategy.FIXED ? [event.clientX, event.clientY] : pointer(event, container)
-    tooltip.show(template(this.datum), { x, y })
+    const content = template(this.datum)
+    if (content) tooltip.show(content, { x, y })
   }
 
   _hideTooltip (): void {
