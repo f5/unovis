@@ -96,6 +96,8 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
       .attr('r', 4)
       .style('opacity', d => d.visible ? 1 : 0)
       .style('fill', (d, i) => getColor(this.datum, config.color, i))
+
+    circles.exit().remove()
   }
 
   hide (): void {
