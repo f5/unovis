@@ -88,6 +88,7 @@ export class Area<Datum> extends XYComponentCore<Datum> {
         return isDefined ? getValue(d, config.opacity) : 0
       })
       .style('fill', (d, i) => getColor(d, config.color, areaMaxIdx - i))
+      .style('stroke', (d, i) => getColor(d, config.color, areaMaxIdx - i))
       .style('cursor', (d, i) => getValue(d, config.cursor, areaMaxIdx - i))
 
     if (duration) {
