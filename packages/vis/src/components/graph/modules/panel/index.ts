@@ -14,17 +14,13 @@ import { GraphConfigInterface } from '../../config'
 
 // Helpers
 import { setLabelRect } from '../node/helper'
+import { getLabelTranslateTransform, OUTLINE_SELECTION_PADDING, DEFAULT_PADDING } from './helper'
 
 // Styles
 import * as panelSelectors from './style'
 import { appendShape, updateShape } from '../shape'
 
-const OUTLINE_SELECTION_PADDING = 5
-
 export function createPanels<N extends NodeDatumCore, P extends PanelConfigInterface> (selection: Selection<SVGGElement, P, SVGGElement, P[]>, nodesSelection: Selection<SVGGElement, N, SVGGElement, N[]>): void {
-  const groupPadding = 15
-  const labelMargin = 16
-
   selection
     .attr('transform', d => `translate(${d._x}, ${d._y})`)
     .style('opacity', 0)
@@ -36,13 +32,13 @@ export function createPanels<N extends NodeDatumCore, P extends PanelConfigInter
   selection.append('rect').attr('class', panelSelectors.panel)
     .attr('rx', 7)
     .attr('ry', 7)
-    .attr('x', d => -(d.padding || groupPadding))
-    .attr('y', d => -(d.padding || groupPadding))
-    .attr('width', d => d._width + (d.padding || groupPadding) * 2)
-    .attr('height', d => d._height + (d.padding || groupPadding) * 2)
+    .attr('x', d => -(d.padding || DEFAULT_PADDING))
+    .attr('y', d => -(d.padding || DEFAULT_PADDING))
+    .attr('width', d => d._width + (d.padding || DEFAULT_PADDING) * 2)
+    .attr('height', d => d._height + (d.padding || DEFAULT_PADDING) * 2)
 
   const label = selection.append('g').attr('class', panelSelectors.label)
-    .attr('transform', d => `translate(${d._width / 2}, ${-(d.padding || groupPadding) - labelMargin - (d.selectionOutline ? OUTLINE_SELECTION_PADDING : 0)})`)
+    .attr('transform', getLabelTranslateTransform)
   label.append('rect').attr('class', panelSelectors.background)
   label.append('text').attr('class', panelSelectors.labelText)
     .attr('dy', '0.32em')
@@ -50,8 +46,8 @@ export function createPanels<N extends NodeDatumCore, P extends PanelConfigInter
   const sideLabel = selection.append('g')
     .attr('class', panelSelectors.sideLabelGroup)
     .attr('transform', (d, i, elements) => {
-      const dx = (d.padding || groupPadding) - OUTLINE_SELECTION_PADDING
-      const dy = (d.padding || groupPadding) - OUTLINE_SELECTION_PADDING
+      const dx = (d.padding || DEFAULT_PADDING) - OUTLINE_SELECTION_PADDING
+      const dy = (d.padding || DEFAULT_PADDING) - OUTLINE_SELECTION_PADDING
       return `translate(${d._width + dx}, ${-dy})`
     })
   sideLabel.call(appendShape, (d: P) => d.sideLabelShape, panelSelectors.sideLabel, panelSelectors.customSideLabel)
@@ -60,7 +56,6 @@ export function createPanels<N extends NodeDatumCore, P extends PanelConfigInter
 
 export function updatePanels<N extends NodeDatumCore, L extends LinkDatumCore, P extends PanelConfigInterface> (selection: Selection<SVGGElement, P, SVGGElement, P[]>, config: GraphConfigInterface<N, L>, duration: number): void {
   const { nodeDisabled } = config
-  const groupPadding = 15
   selection.classed(panelSelectors.greyout, d => d._data.map(node => getValue(node, nodeDisabled) || node._state.greyout).every(d => d))
 
   smartTransition(selection, duration)
@@ -70,10 +65,10 @@ export function updatePanels<N extends NodeDatumCore, L extends LinkDatumCore, P
 
   const panels = selection.selectAll(`.${panelSelectors.panel}`).data(d => [d])
   smartTransition(panels, duration)
-    .attr('x', d => -(d.padding || groupPadding))
-    .attr('y', d => -(d.padding || groupPadding))
-    .attr('width', d => d._width + (d.padding || groupPadding) * 2)
-    .attr('height', d => d._height + (d.padding || groupPadding) * 2)
+    .attr('x', d => -(d.padding || DEFAULT_PADDING))
+    .attr('y', d => -(d.padding || DEFAULT_PADDING))
+    .attr('width', d => d._width + (d.padding || DEFAULT_PADDING) * 2)
+    .attr('height', d => d._height + (d.padding || DEFAULT_PADDING) * 2)
     .style('stroke-width', d => d.borderWidth)
 
   const panelSelectionOutlines = selection.selectAll(`.${panelSelectors.panelSelection}`)
@@ -81,10 +76,10 @@ export function updatePanels<N extends NodeDatumCore, L extends LinkDatumCore, P
     .classed(panelSelectors.panelSelectionActive, d => d.selectionOutline)
 
   smartTransition(panelSelectionOutlines, duration)
-    .attr('x', d => -(d.padding || groupPadding) - OUTLINE_SELECTION_PADDING)
-    .attr('y', d => -(d.padding || groupPadding) - OUTLINE_SELECTION_PADDING)
-    .attr('width', d => d._width + (d.padding || groupPadding) * 2 + OUTLINE_SELECTION_PADDING * 2)
-    .attr('height', d => d._height + (d.padding || groupPadding) * 2 + OUTLINE_SELECTION_PADDING * 2)
+    .attr('x', d => -(d.padding || DEFAULT_PADDING) - OUTLINE_SELECTION_PADDING)
+    .attr('y', d => -(d.padding || DEFAULT_PADDING) - OUTLINE_SELECTION_PADDING)
+    .attr('width', d => d._width + (d.padding || DEFAULT_PADDING) * 2 + OUTLINE_SELECTION_PADDING * 2)
+    .attr('height', d => d._height + (d.padding || DEFAULT_PADDING) * 2 + OUTLINE_SELECTION_PADDING * 2)
 
   const sideLabelSize = 25
   const sideLabels = selection.selectAll(`.${panelSelectors.sideLabelGroup}`)
@@ -101,12 +96,11 @@ export function updatePanels<N extends NodeDatumCore, L extends LinkDatumCore, P
 
   smartTransition(sideLabels, duration)
     .attr('transform', (d, i, elements) => {
-      const dx = (d.padding || groupPadding) - OUTLINE_SELECTION_PADDING
-      const dy = (d.padding || groupPadding) - OUTLINE_SELECTION_PADDING
+      const dx = (d.padding || DEFAULT_PADDING) - OUTLINE_SELECTION_PADDING
+      const dy = (d.padding || DEFAULT_PADDING) - OUTLINE_SELECTION_PADDING
       return `translate(${d._width + dx}, ${-dy})`
     })
 
-  const labelMargin = 16
   const labels = selection.selectAll(`.${panelSelectors.label}`)
     .data(d => [d])
 
@@ -114,7 +108,7 @@ export function updatePanels<N extends NodeDatumCore, L extends LinkDatumCore, P
     .text(d => trimText(d.label))
 
   smartTransition(labels, duration)
-    .attr('transform', d => `translate(${d._width / 2}, ${-(d.padding || groupPadding) - labelMargin - (d.selectionOutline ? OUTLINE_SELECTION_PADDING : 0)})`)
+    .attr('transform', getLabelTranslateTransform)
 
   labels
     .on('mouseover', (event: MouseEvent, d) => {

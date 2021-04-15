@@ -5,6 +5,7 @@ import { max } from 'd3-array'
 // Type
 import { NodeDatumCore, LinkDatumCore, PanelConfigInterface } from 'types/graph'
 import { NumericAccessor } from 'types/misc'
+import { Position } from 'types/position'
 
 // Utils
 import { find } from 'utils/data'
@@ -18,7 +19,9 @@ import { getX, getY, getNodeSize } from '../node/helper'
 // Styles
 import * as nodeSelectors from '../node/style'
 
-const DEFAULT_PADDING = 10
+export const DEFAULT_PADDING = 15
+export const DEFAULT_LABEL_MARGIN = 16
+export const OUTLINE_SELECTION_PADDING = 5
 
 export function setPanelForNodes<N extends NodeDatumCore, L extends LinkDatumCore> (panels: PanelConfigInterface[], nodes: N[], config: GraphConfigInterface<N, L>): void {
   const { layoutNonConnectedAside } = config
@@ -55,7 +58,7 @@ export function setPanelBBox<N extends NodeDatumCore> (panelConfig: PanelConfigI
     const yShift = 10 // This is hard to calculate so we just using an approximation
 
     const coords = {
-      x1: getX(d) - w / 2 - DEFAULT_PADDING, // We use d.x and d.y instead of bBox values here becasue gBBox contains initial ...
+      x1: getX(d) - w / 2 - DEFAULT_PADDING, // We use d.x and d.y instead of bBox values here because gBBox contains initial ...
       y1: getY(d) - h / 2 + yShift - DEFAULT_PADDING, // ... coordinates (before transition starts), not target coordinates
       x2: getX(d) + w / 2 + DEFAULT_PADDING,
       y2: getY(d) + h / 2 + yShift + DEFAULT_PADDING,
@@ -108,6 +111,16 @@ export function updatePanelNumNodes<N extends NodeDatumCore, L extends LinkDatum
   })
 }
 
-export function getMaxPanlePadding<P extends PanelConfigInterface> (panels: P[]): number {
+export function getMaxPanelPadding<P extends PanelConfigInterface> (panels: P[]): number {
   return panels?.length ? DEFAULT_PADDING + max(panels.map(d => d.padding)) : 0
+}
+
+export function getLabelTranslateTransform<P extends PanelConfigInterface> (panel: P): string {
+  const x = panel._width / 2
+  const dy = (panel.padding ?? DEFAULT_PADDING) + DEFAULT_LABEL_MARGIN + (panel.selectionOutline ? OUTLINE_SELECTION_PADDING : 0)
+  const y = panel.labelPosition === Position.BOTTOM
+    ? panel._height + dy
+    : -dy
+
+  return `translate(${x}, ${y})`
 }
