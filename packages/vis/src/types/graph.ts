@@ -1,6 +1,7 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 // Types
 import { SHAPE } from 'types/shape'
+import { Position } from 'types/position'
 
 export type NodeDatumCore = {
   id?: number | string;
@@ -66,6 +67,7 @@ export enum LinkArrow {
 export interface PanelConfigInterface {
   nodes: (string|number)[];
   label?: string;
+  labelPosition?: Position.TOP | Position.BOTTOM;
   color?: string;
   borderWidth?: number;
   padding?: number;

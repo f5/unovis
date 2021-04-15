@@ -34,7 +34,7 @@ import { getMaxNodeSize, getX, getY } from './modules/node/helper'
 import { createLinks, updateLinks, removeLinks, zoomLinksThrottled, zoomLinks, animateLinkFlow, updateSelectedLinks } from './modules/link'
 import { LINK_MARKER_WIDTH, LINK_MARKER_HEIGHT, getDoubleArrowPath, getArrowPath, getLinkColor } from './modules/link/helper'
 import { createPanels, updatePanels, removePanels } from './modules/panel'
-import { setPanelForNodes, updatePanelBBoxSize, updatePanelNumNodes, getMaxPanlePadding } from './modules/panel/helper'
+import { setPanelForNodes, updatePanelBBoxSize, updatePanelNumNodes, getMaxPanelPadding } from './modules/panel/helper'
 import { applyLayoutCircular, applyLayoutParallel, applyLayoutDagre, applyLayoutConcentric, applyLayoutForce } from './modules/layout'
 
 export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends PanelConfigInterface> extends ComponentCore<{nodes: N[]; links?: L[]}> {
@@ -141,7 +141,7 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
 
   get bleed (): Spacing {
     const { datamodel: { nodes }, config: { nodeSize } } = this
-    const maxPanelPadding = getMaxPanlePadding(this._panels)
+    const maxPanelPadding = getMaxPanelPadding(this._panels)
     const maxNodeSize = getMaxNodeSize(nodes, nodeSize)
     const extra = 20 // Extra padding to take into account labels
     const padding = maxNodeSize * 0.5 + maxPanelPadding + extra
