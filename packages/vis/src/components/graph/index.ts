@@ -342,7 +342,7 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
 
   _fit (duration = 0): void {
     const { datamodel: { nodes } } = this
-    if (nodes?.length) {
+    if (nodes?.length && this.g?.size()) {
       const transform = this._getTransform(nodes)
       smartTransition(this.g, duration)
         .call(this._zoomBehavior.transform, transform)
