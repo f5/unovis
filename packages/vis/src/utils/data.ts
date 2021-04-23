@@ -165,9 +165,12 @@ export function getMax<Datum> (data: Datum[], ...acs: NumericAccessor<Datum>[]):
 export function getNearest<Datum> (data: Datum[], value: number, accessor: NumericAccessor<Datum>): Datum {
   if (data.length <= 1) return data[0]
 
-  const xBisector = bisector(d => getValue(d, accessor)).left
-  const index = xBisector(data, value, 1, data.length - 1)
-  return value - getValue(data[index - 1], accessor) > getValue(data[index], accessor) - value ? data[index] : data[index - 1]
+  const values = data.map(d => getValue(d, accessor))
+  values.sort((a, b) => a - b)
+
+  const xBisector = bisector(d => d).left
+  const index = xBisector(values, value, 1, data.length - 1)
+  return value - values[index - 1] > values[index] - value ? data[index] : data[index - 1]
 }
 
 export function filterDataByRange<Datum> (data: Datum[], range: [number, number], accessor: NumericAccessor<Datum>) {
