@@ -265,8 +265,10 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
 
   public zoomToPointById (id: string, selectNode = false, customZoomLevel?: number): void {
     const { config, datamodel } = this
-    // this._resetExpandedCluster()
-
+    if (!datamodel.data.length) {
+      console.warn('There are no points on the map')
+      return
+    }
     const dataBoundsAll = datamodel.getDataLatLngBounds(config.pointLatitude, config.pointLongitude)
     const bounds = [dataBoundsAll[0][1], dataBoundsAll[1][0], dataBoundsAll[1][1], dataBoundsAll[0][0]]
     const pointDataAll = this._getPointData(bounds)
