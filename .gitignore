@@ -17,3 +17,4 @@ docs-html/
 .DS_Store
 .eslintcache
 stats.html
+.cache/
