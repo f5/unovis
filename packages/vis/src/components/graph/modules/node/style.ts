@@ -18,7 +18,7 @@ export const variables = injectGlobal`
     /* Node Label */
     --vis-graph-node-label-font-size: 9pt;
     --vis-graph-node-label-background: #ffffff;
-    --vis-graph-node-label-text-color: #5b5f6d;
+    --vis-graph-node-label-text-color: #0F1E57;
     --vis-graph-node-sublabel-text-color: #989aa3;
     --vis-graph-node-sublabel-font-size: 8pt;
     --vis-graph-node-label-font-family: var(--vis-font-family);
