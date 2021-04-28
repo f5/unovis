@@ -22,7 +22,7 @@ export class WrapperUsageExampleComponent implements AfterViewInit, OnDestroy {
   // Chart configuration
   duration = undefined
   groupedBarConfig = {
-    x: d => d.x,
+    x: d => d.timestamp,
     y: [
       d => d.y,
       d => d.y1,
@@ -51,7 +51,11 @@ export class WrapperUsageExampleComponent implements AfterViewInit, OnDestroy {
   }
 
   axes = {
-    x: new Axis({ label: 'x axis' }),
+    x: new Axis({
+      label: 'x axis',
+      tickFormat: d => (new Date(d)).toTimeString(),
+      tickTextWidth: 80,
+    }),
     y: new Axis({ label: 'y axis' }),
   }
 
@@ -87,7 +91,11 @@ export class WrapperUsageExampleComponent implements AfterViewInit, OnDestroy {
   ]
 
   navAxes = {
-    x: new Axis({ label: 'x axis' }),
+    x: new Axis({
+      label: 'x axis',
+      tickFormat: d => (new Date(d)).toTimeString(),
+      tickTextWidth: 120,
+    }),
     y: new Axis({ label: 'y axis' }),
   }
 
