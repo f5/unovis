@@ -1,5 +1,4 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { color } from 'd3-color'
 
 // Types
 import { NodeDatumCore, LinkDatumCore } from 'types/graph'
@@ -65,7 +64,7 @@ export function getLinkBandWidth<N extends NodeDatumCore, L extends LinkDatumCor
 export function getLinkColor<N extends NodeDatumCore, L extends LinkDatumCore> (link: L, config: GraphConfigInterface<N, L>, value = 0.05): string {
   const { linkStroke } = config
   const c = getValue(link, linkStroke) ?? window.getComputedStyle(document.documentElement).getPropertyValue('--vis-graph-link-stroke-color')
-  return c ? String(color(c).brighter(value)) : null
+  return c || null
 }
 
 export function getMarker<N extends NodeDatumCore, L extends LinkDatumCore> (d: L, scale: number, config: GraphConfigInterface<N, L>): string {
