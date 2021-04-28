@@ -17,6 +17,11 @@ export enum FitMode {
   TRIM = 'trim',
 }
 
+export enum WrapMode {
+  FONTSIZE = 'fontsize',
+  DOM = 'dom'
+}
+
 export type WrapTextOptions = {
   readonly length?: number;
   readonly width?: number | undefined;
@@ -27,4 +32,8 @@ export type WrapTextOptions = {
   readonly trimOnly?: boolean;
   readonly dy?: number;
   readonly fitMode?: FitMode;
+  readonly wrapMode?:WrapMode;
+  readonly maxStrLen?:number;
+  readonly fontSize?: number;
+  readonly widthToHeightRatio?: number;
 }
