@@ -32,8 +32,8 @@ export type WrapTextOptions = {
   readonly trimOnly?: boolean;
   readonly dy?: number;
   readonly fitMode?: FitMode;
-  readonly wrapMode?:WrapMode;
-  readonly maxStrLen?:number;
+  readonly wrapMode?: WrapMode;
+  readonly maxStrLen?: number;
   readonly fontSize?: number;
   readonly widthToHeightRatio?: number;
 }

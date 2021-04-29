@@ -110,7 +110,7 @@ export class WrapperUsageExampleComponent implements AfterViewInit, OnDestroy {
     }, 15000)
   }
 
-  ngOnDestroy () : void {
+  ngOnDestroy (): void {
     clearInterval(this.intervalId)
   }
 }
