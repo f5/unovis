@@ -18,14 +18,20 @@ import { ComponentConfig, ComponentConfigInterface } from './config'
 export class ComponentCore<CoreDatum> {
   element: HTMLElement | SVGGElement
   type: ComponentType = ComponentType.SVG
-  g: any
+  g: any // Selection<HTMLElement | SVGElement, any, any, any>
   config: ComponentConfig
   prevConfig: ComponentConfig
   datamodel: CoreDataModel<CoreDatum> = new CoreDataModel()
   sizing: Sizing = Sizing.FIT
 
-  events = {}
+  events: {
+    [selectorString: string]: {
+      [eventType: string]: (((d: any, event: Event, i: number, elements: HTMLElement[] | SVGElement[]) => void)) | undefined
+    }
+  } = {}
+
   _setUpComponentEventsThrottled = throttle(this._setUpComponentEvents, 500)
+  _setCustomAttributesThrottled = throttle(this._setCustomAttributes, 500)
 
   constructor (type = ComponentType.SVG) {
     if (type === ComponentType.SVG) {
@@ -50,6 +56,7 @@ export class ComponentCore<CoreDatum> {
     this._render(duration)
 
     this._setUpComponentEventsThrottled()
+    this._setCustomAttributesThrottled()
   }
 
   get bleed (): Spacing {
@@ -64,6 +71,17 @@ export class ComponentCore<CoreDatum> {
   _onEvent (d: any, i: number, elements: []): void {
   }
 
+  _setCustomAttributes (): void {
+    const attributeMap = this.config.attributes
+
+    Object.keys(attributeMap).forEach(className => {
+      Object.keys(attributeMap[className]).forEach(attr => {
+        this.g.selectAll(`.${className}`)
+          .attr(attr, attributeMap[className][attr])
+      })
+    })
+  }
+
   _setUpComponentEvents (): void {
     // Set up default events
     this._bindEvents(this.events)
@@ -75,9 +93,17 @@ export class ComponentCore<CoreDatum> {
   _bindEvents (events, suffix = ''): void {
     Object.keys(events).forEach(className => {
       Object.keys(events[className]).forEach(eventType => {
-        this.g.selectAll(`.${className}`)
-          .on(eventType + suffix, (d, i, els) => events[className][eventType](d, i, els))
+        const selection = this.g.selectAll(`.${className}`)
+        selection.on(eventType + suffix, (event: Event, d) => {
+          const els = selection.nodes()
+          const i = els.indexOf(event.currentTarget)
+          return events[className][eventType](d, event, i, els)
+        })
       })
     })
+  }
+
+  public destroy (): void {
+    this.g?.remove()
   }
 }

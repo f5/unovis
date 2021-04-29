@@ -3,17 +3,16 @@ import Tangram from 'tangram'
 import { getRendererSettings } from './settings'
 
 export function getTangramLayer (config): any {
-  const { accessToken, tamgramRenderer } = config
+  const { accessToken, tangramRenderer } = config
   if (!accessToken) {
     console.warn('To show map provide Nextzen API Key using the accessToken config property')
     return
   }
 
   const tangramScene = getRendererSettings(config)
-  // eslint-disable-next-line @typescript-eslint/camelcase
   tangramScene.global.sdk_api_key = accessToken
 
-  const tangramLayer = (tamgramRenderer || Tangram).leafletLayer({
+  const tangramLayer = (tangramRenderer || Tangram).leafletLayer({
     scene: {
       ...tangramScene,
     },

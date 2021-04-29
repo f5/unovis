@@ -28,6 +28,8 @@ export const accessors: GraphConfigInterface<any, any> = {
   linkLabel: l => l.linkLabel,
   linkStroke: l => l.score === 100 ? 'rgba(49, 208, 49, 0.500)' : null,
   linkBandWidth: 12,
+  layoutSubgroupMaxNodes: 6,
+  layoutGroupRows: 1,
 }
 
 export const overviewConfig = (data, onNodeClick): GraphConfigInterface<any, any> => ({

@@ -1,5 +1,4 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { color } from 'd3-color'
 
 // Types
 import { NodeDatumCore, LinkDatumCore } from 'types/graph'
@@ -41,15 +40,12 @@ export function getLinkLabelShift<L extends LinkDatumCore> (link: L, shiftFromCe
   const y1 = getY(link.source as NodeDatumCore)
   const x2 = getX(link.target as NodeDatumCore)
   const y2 = getY(link.target as NodeDatumCore)
-  const dist = Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1))
+  const angle = Math.atan2(y2 - y1, x2 - x1)
+  const perpendicularShift = getLinkShift(link)
 
-  const dx = ((x2 - x1) / dist) * shiftFromCenter
-  const dy = ((y2 - y1) / dist) * shiftFromCenter
-  const shift = getLinkShift(link)
-
-  const x = x1 + 0.5 * (x2 - x1)
-  const y = y1 + 0.5 * (y2 - y1)
-  return `translate(${x + dx + shift.dx}, ${y + dy + shift.dy})`
+  const x = x1 + 0.5 * (x2 - x1) + shiftFromCenter * Math.cos(angle) + perpendicularShift.dx
+  const y = y1 + 0.5 * (y2 - y1) + shiftFromCenter * Math.sin(angle) + perpendicularShift.dy
+  return `translate(${x}, ${y})`
 }
 
 export function getLinkStrokeWidth<N extends NodeDatumCore, L extends LinkDatumCore> (d: L, scale: number, config: GraphConfigInterface<N, L>): number {
@@ -62,13 +58,13 @@ export function getLinkBandWidth<N extends NodeDatumCore, L extends LinkDatumCor
   const sourceNodeSize = getValue(d.source, nodeSize)
   const targetNodeSize = getValue(d.target, nodeSize)
   const minNodeSize = Math.min(sourceNodeSize, targetNodeSize)
-  return Math.min(minNodeSize, getValue(d, linkBandWidth) / Math.pow(scale, 0.5))
+  return Math.min(minNodeSize, getValue(d, linkBandWidth) / Math.pow(scale || 1, 0.5)) || 0
 }
 
 export function getLinkColor<N extends NodeDatumCore, L extends LinkDatumCore> (link: L, config: GraphConfigInterface<N, L>, value = 0.05): string {
   const { linkStroke } = config
   const c = getValue(link, linkStroke) ?? window.getComputedStyle(document.documentElement).getPropertyValue('--vis-graph-link-stroke-color')
-  return c ? String(color(c).brighter(value)) : null
+  return c || null
 }
 
 export function getMarker<N extends NodeDatumCore, L extends LinkDatumCore> (d: L, scale: number, config: GraphConfigInterface<N, L>): string {

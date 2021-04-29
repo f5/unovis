@@ -1,24 +1,41 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
+import { ScaleLinear } from 'd3-scale'
+// Core
 import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component/config'
 
 // Types
-import { NumericAccessor, StringAccessor } from 'types/misc'
+import { NumericAccessor, StringAccessor, ColorAccessor } from 'types/misc'
+import { Scale, ContiniousScale } from 'types/scales'
 import { SymbolType } from 'types/symbols'
 
 export interface ScatterConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
-  /** Size accessor function or value in pixels */
+  /** Single Y accessor function or constant value */
+  y?: NumericAccessor<Datum>;
+  /** Size accessor function or value in relative units. Default: `1` */
   size?: NumericAccessor<Datum>;
-  /** Shape of scatter point: circle, cross, diamond, square, star, triangle and wye */
+  /** Size Scale. Default: `Scale.scaleLinear()` */
+  sizeScale?: ContiniousScale;
+  /** Size Range, [number, number]. Default: `[5, 20]` */
+  sizeRange?: [number, number];
+  /** Shape of scatter point: circle, cross, diamond, square, star, triangle and wye. Default: `SymbolType.CIRCLE` */
   shape?: ((d: Datum, i?: number, ...any) => SymbolType) | SymbolType;
-  /** Icon */
-  icon?: ((d: Datum, i?: number, ...any) => string) | string;
+  /** Label accessor function or string. Default: `undefined` */
+  label?: StringAccessor<Datum>;
+  /** Label color. Default: `undefined` */
+  labelColor?: ColorAccessor<Datum>;
   /** Optional point cursor. Default: `null` */
   cursor?: StringAccessor<Datum>;
+  /** Point color brightness ratio for switching between dark and light text label color. Default: `0.65` */
+  labelTextBrightnessRatio?: number;
 }
 
 export class ScatterConfig<Datum> extends XYComponentConfig<Datum> implements ScatterConfigInterface<Datum> {
-  size = 10
+  size = 1
+  sizeScale: ScaleLinear<number, number> = Scale.scaleLinear()
+  sizeRange: [number, number] = [5, 20]
   shape = SymbolType.CIRCLE
-  icon = undefined
+  label = undefined
+  labelColor = undefined
   cursor = null
+  labelTextBrightnessRatio = 0.65
 }

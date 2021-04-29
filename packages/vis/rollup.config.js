@@ -7,6 +7,7 @@ import commonjs from 'rollup-plugin-commonjs'
 import postcss from 'rollup-plugin-postcss'
 import pkg from './package.json'
 import modules from './rollup.modules.json'
+// import visualizer from 'rollup-plugin-visualizer'
 
 const d3Libs = ['d3-array', 'd3-axis', 'd3-brush', 'd3-chord', 'd3-collection', 'd3-color',
   'd3-contour', 'd3-dispatch', 'd3-drag', 'd3-dsv', 'd3-ease', 'd3-fetch', 'd3-force',
@@ -19,7 +20,8 @@ const lodashLibs = ['lodash/isUndefined', 'lodash/isArray', 'lodash/isEmpty', 'l
   'lodash/isNil', 'lodash/cloneDeep', 'lodash/throttle', 'lodash/each', 'lodash/filter',
   'lodash/get', 'lodash/without', 'lodash/find', 'lodash/isString', 'lodash/isObject',
   'lodash/isFunction', 'lodash/isNumber', 'lodash/merge', 'lodash/isPlainObject', 'lodash/flatten',
-  'lodash/omit', 'lodash/extend', 'lodash/groupBy', 'lodash/uniq', 'lodash/sortBy', 'lodash/range']
+  'lodash/omit', 'lodash/extend', 'lodash/groupBy', 'lodash/uniq', 'lodash/sortBy', 'lodash/range',
+  'lodash/findIndex']
 
 const globals = {}
 d3Libs.reduce((acc, name) => { acc[name] = 'd3'; return acc }, globals)
@@ -42,39 +44,45 @@ const plugins = [
     minimize: true,
   }),
   commonjs(),
-  resolve(),
+  resolve({
+    mainFields: ['jsnext:main', 'module', 'main', 'browser'],
+  }),
   json(),
   typescript({
     typescript: require('typescript'),
-    transformers: [
-      service => transformPaths(service.getProgram()),
-    ],
+    transformers: [(service) => transformPaths(service.getProgram())],
   }),
+  // visualizer({ sourcemap: true }),
 ]
 
-export default [{
-  input: 'src/index.ts',
-  external: externals,
-  output: [{
-    file: pkg.main,
-    sourcemap: true,
-    globals,
-    format: 'cjs',
-  }, {
-    file: pkg.module,
-    sourcemap: true,
-    format: 'esm',
-  }],
-  plugins,
-},
-...modules.map(d => ({
-  input: d.input,
-  external: externals,
-  output: {
-    file: d.output,
-    sourcemap: true,
-    format: 'esm',
+export default [
+  {
+    input: 'src/index.ts',
+    external: externals,
+    output: [
+      {
+        dir: 'lib/cjs',
+        sourcemap: true,
+        globals,
+        format: 'cjs',
+      },
+      {
+        dir: 'lib/esm',
+        sourcemap: true,
+        format: 'esm',
+      },
+    ],
+    plugins,
   },
-  plugins,
-})),
+  ...modules.map((d) => ({
+    input: d.input,
+    external: externals,
+    output: {
+      dir: 'lib',
+      name: d.output,
+      sourcemap: true,
+      format: 'esm',
+    },
+    plugins,
+  })),
 ]

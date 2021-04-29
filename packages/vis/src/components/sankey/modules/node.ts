@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { select } from 'd3-selection'
+import { select, Selection } from 'd3-selection'
 
 // Utils
 import { getColor } from 'utils/color'
@@ -8,7 +8,7 @@ import { smartTransition } from 'utils/d3'
 
 // Types
 import { Spacing } from 'types/misc'
-import { SankeyNodeDatumInterface, SankeyLinkDatumInterface } from 'types/sankey'
+import { InputLink, InputNode, SankeyNode } from 'types/sankey'
 import { ExitTransitionType, EnterTransitionType } from 'types/animation'
 import { Position } from 'types/position'
 
@@ -21,7 +21,7 @@ import { renderLabel } from './label'
 // Styles
 import * as s from '../style'
 
-export function createNodes<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> (sel, config: SankeyConfig<N, L>, bleed: Spacing): void {
+export function createNodes<N extends InputNode, L extends InputLink> (sel: Selection<SVGGElement, SankeyNode<N, L>, SVGGElement, any>, config: SankeyConfig<N, L>, bleed: Spacing): void {
   const { enterTransitionType } = config
 
   // Node
@@ -50,24 +50,22 @@ export function createNodes<N extends SankeyNodeDatumInterface, L extends Sankey
     .style('opacity', 0)
 }
 
-export function updateNodes<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> (sel, config: SankeyConfig<N, L>, bleed: Spacing, duration: number): void {
+export function updateNodes<N extends InputNode, L extends InputLink> (sel, config: SankeyConfig<N, L>, bleed: Spacing, duration: number): void {
   smartTransition(sel, duration)
-    .attr('transform', d => `translate(${
+    .attr('transform', (d: SankeyNode<N, L>) => `translate(${
       (sel.size() === 1 && config.singleNodePosition === Position.CENTER) ? config.width * 0.5 - bleed.left : d.x0
     },${d.y0})`)
-    .style('opacity', (d: N) => d._state.greyout ? 0.2 : 1)
+    .style('opacity', (d: SankeyNode<N, L>) => d._state.greyout ? 0.2 : 1)
 
   // Node
   smartTransition(sel.select(`.${s.node}`), duration)
     .attr('width', config.nodeWidth)
-    .attr('height', d => d.y1 - d.y0)
-    .style('cursor', d => getValue(d, config.nodeCursor))
+    .attr('height', (d: SankeyNode<N, L>) => d.y1 - d.y0)
+    .style('cursor', (d: SankeyNode<N, L>) => getValue(d, config.nodeCursor))
 
-  // Label
-  const labelGroupSelection = sel.select(`.${s.labelGroup}`)
-  labelGroupSelection.each((d, i, els) => {
-    renderLabel(select(els[i]), d, config, duration)
-  })
+  // Label Rendering
+  // eslint-disable-next-line @typescript-eslint/no-use-before-define
+  renderNodeLabels(sel, config, duration)
 
   // Node Icon
   const nodeIcon = sel.select(`.${s.nodeIcon}`)
@@ -76,50 +74,100 @@ export function updateNodes<N extends SankeyNodeDatumInterface, L extends Sankey
       .attr('visibility', null)
       .attr('text-anchor', 'middle')
       .attr('alignment-baseline', 'middle')
-      .style('stroke', node => getColor(node, config.iconColor))
-      .style('fill', node => getColor(node, config.iconColor))
-      .style('font-size', node => {
-        const nodeHeight = node.y1 - node.y0
-        return nodeHeight < s.SANKEY_ICON_SIZE ? `${nodeHeight}px` : null
+      .style('stroke', (d: SankeyNode<N, L>) => getColor(d, config.iconColor))
+      .style('fill', (d: SankeyNode<N, L>) => getColor(d, config.iconColor))
+      .style('font-size', (d: SankeyNode<N, L>) => {
+        const nodeHeight = d.y1 - d.y0
+        return nodeHeight < s.SANKEY_ICON_SIZE ? `${nodeHeight * 0.65}px` : null
       })
       .html(config.nodeIcon)
 
     smartTransition(nodeIcon, duration)
       .attr('x', config.nodeWidth / 2)
-      .attr('y', d => (d.y1 - d.y0) / 2)
+      .attr('y', (d: SankeyNode<N, L>) => (d.y1 - d.y0) / 2)
   } else {
     nodeIcon
       .attr('visibility', 'hidden')
   }
 }
 
-export function removeNodes (selection, config, duration): void {
+export function renderNodeLabels<N extends InputNode, L extends InputLink> (sel: Selection<SVGGElement, SankeyNode<N, L>, SVGGElement, any>, config: SankeyConfig<N, L>, duration: number, enforceNodeVisibility?: SankeyNode<N, L>): void {
+  // Label Rendering
+  const labelGroupSelection: Selection<SVGGElement, SankeyNode<N, L>, SVGGElement, any> = sel.select(`.${s.labelGroup}`)
+  const labelGroupEls = labelGroupSelection.nodes() || []
+
+  // After rendering Label return a BBox so we can do intersection detection and hide some of tem
+  const labelGroupBBoxes = labelGroupEls.map(g => {
+    const gSelection: Selection<SVGGElement, SankeyNode<N, L>, SVGGElement, any> = select(g)
+    const datum = gSelection.datum()
+    return renderLabel(gSelection, datum, config, duration, enforceNodeVisibility === datum)
+  })
+
+  if (config.labelVisibility) {
+    for (const b of labelGroupBBoxes) {
+      const datum = b.selection.datum()
+      const box = { x: b.x, y: b.y, width: b.width, height: b.height }
+      b.hidden = !config.labelVisibility(datum, box, enforceNodeVisibility === datum)
+    }
+  } else {
+    // Detect intersecting labels
+    const maxLayer = Math.max(...labelGroupBBoxes.map(b => b.layer))
+    for (let layer = 0; layer <= maxLayer; layer += 1) {
+      const boxes = labelGroupBBoxes.filter(b => (b.layer === layer))
+      boxes.sort((a, b) => a.y - b.y)
+
+      let lastVisibleIdx = 0
+      for (let i = 1; i < boxes.length; i += 1) {
+        const b0 = boxes[lastVisibleIdx]
+        const b1 = boxes[i]
+
+        const shouldBeHidden = b1.y < (b0.y + b0.height)
+        if (shouldBeHidden) {
+          if (b1.selection.datum() === enforceNodeVisibility) b0.hidden = true // If the hovered node should be hidden, hide the previous one instead
+          else b1.hidden = true
+        }
+
+        if (!b1.hidden) lastVisibleIdx = i
+      }
+    }
+  }
+
+  // Hide intersecting labels
+  for (const b of labelGroupBBoxes) {
+    b.selection.classed(s.hidden, b.hidden)
+  }
+}
+
+export function removeNodes<N extends InputNode, L extends InputLink> (selection: Selection<SVGGElement, SankeyNode<N, L>, SVGGElement, any>, config, duration): void {
   const { exitTransitionType } = config
   const transitionSelection = smartTransition(selection, duration)
   if (exitTransitionType === ExitTransitionType.TO_ANCESTOR) {
-    transitionSelection.attr('transform', d => {
+    transitionSelection.attr('transform', (d: SankeyNode<N, L>) => {
       if (d.targetLinks?.[0]) {
         return `translate(${d.targetLinks[0].source.x0},${d.y0})`
       } else return null
     })
   }
+
   transitionSelection
     .style('opacity', 0)
     .remove()
 }
 
-export function onNodeMouseOver<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> (d: N, sel, config: SankeyConfig<N, L>): void {
-  // sel.classed(s.visibleLabel, true)
+export function onNodeMouseOver<N extends InputNode, L extends InputLink> (d: SankeyNode<N, L>, nodeSelection, config: SankeyConfig<N, L>): void {
+  const labelGroup = nodeSelection.raise()
+    .select(`.${s.labelGroup}`)
 
-  // sel.select(`.${s.label}`)
-  //   .text(config.label)
-  //   .call(wrapTextElement, getWrapOption(config, false))
+  if (config.labelExpandTrimmedOnHover) {
+    renderLabel(labelGroup, d, config, 0, true)
+  }
+  labelGroup.classed(s.forceShow, true)
 }
 
-export function onNodeMouseOut<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> (d: N, sel, config: SankeyConfig<N, L>): void {
-  // sel.classed(s.visibleLabel, d => shouldLabelBeVisible(d, config))
-
-  // sel.select(`.${s.label}`)
-  //   .text(config.label)
-  //   .call(wrapTextElement, getWrapOption(config))
+export function onNodeMouseOut<N extends InputNode, L extends InputLink> (d: SankeyNode<N, L>, nodeSelection, config: SankeyConfig<N, L>): void {
+  const labelGroup = nodeSelection.select(`.${s.labelGroup}`)
+  if (config.labelExpandTrimmedOnHover) {
+    renderLabel(labelGroup, d, config, 0)
+  }
+  labelGroup.classed(s.forceShow, false)
 }

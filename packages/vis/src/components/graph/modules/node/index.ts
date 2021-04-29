@@ -5,7 +5,7 @@ import { arc } from 'd3-shape'
 
 // Type
 import { SHAPE } from 'types/shape'
-import { NodeDatumCore, LinkDatumCore, SideLabel } from 'types/graph'
+import { NodeDatumCore, LinkDatumCore, CircleLabel } from 'types/graph'
 
 // Utils
 import { trimText } from 'utils/text'
@@ -17,7 +17,7 @@ import { getValue, throttle } from 'utils/data'
 import { GraphConfigInterface } from '../../config'
 
 // Helpers
-import { arcTween, polyTween, setLabelRect, getX, getY, getSideTexLabelColor, getNodeColor, getNodeIconColor, getNodeSize } from './helper'
+import { arcTween, polyTween, setLabelRect, getX, getY, getSideTexLabelColor, getNodeColor, getNodeIconColor, getNodeSize, LABEL_RECT_VERTICAL_PADDING } from './helper'
 import { appendShape, updateShape, isCustomXml } from '../shape'
 import ZOOM_LEVEL from '../zoom-levels'
 
@@ -71,15 +71,16 @@ export function updateSelectedNodes<N extends NodeDatumCore, L extends LinkDatum
     const isGreyout = getValue(d, nodeDisabled) || d._state.greyout
 
     group.classed(nodeSelectors.greyoutNode, isGreyout)
+      .classed(nodeSelectors.draggable, !config.disableDrag)
 
     const nodeSelection: Selection<SVGGElement, N, SVGGElement, N> = group.selectAll(`.${nodeSelectors.nodeSelection}`)
     nodeSelection.classed(nodeSelectors.nodeSelectionActive, d._state.selected)
 
     group.selectAll(`.${nodeSelectors.sideLabel}`)
-      .style('fill', (l: SideLabel) => isGreyout ? null : getSideTexLabelColor(l))
+      .style('fill', (l: CircleLabel) => isGreyout ? null : getSideTexLabelColor(l))
 
     group.selectAll(`.${nodeSelectors.sideLabelBackground}`)
-      .style('fill', (l: SideLabel) => isGreyout ? null : l.color)
+      .style('fill', (l: CircleLabel) => isGreyout ? null : l.color)
   })
 }
 
@@ -103,7 +104,8 @@ export function updateNodes<N extends NodeDatumCore, L extends LinkDatumCore> (s
 
   // Update nodes themselves
   selection.each((d, i, elements) => {
-    const group: Selection<SVGGElement, N, SVGGElement, N> = select(elements[i])
+    const groupElement = elements[i]
+    const group: Selection<SVGGElement, N, SVGGElement, N> = select(groupElement)
     const node: Selection<SVGGElement, N, SVGGElement, N> = group.select(`.${nodeSelectors.node}`)
     const nodeArc = group.select(`.${nodeSelectors.nodeArc}`)
     const icon = group.select(`.${nodeSelectors.nodeIcon}`)
@@ -167,14 +169,14 @@ export function updateNodes<N extends NodeDatumCore, L extends LinkDatumCore> (s
 
     // Update Node Icon
     icon
-      .style('font-size', d => getValue(d, nodeIconSize) ?? 2.5 * Math.sqrt(getNodeSize(d, nodeSize)))
+      .style('font-size', d => `${getValue(d, nodeIconSize) ?? 2.5 * Math.sqrt(getNodeSize(d, nodeSize))}px`)
       .attr('dy', 1)
       .style('fill', d => getNodeIconColor(d, nodeFill))
       .html(d => getValue(d, nodeIcon))
 
     // Side Labels
     const sideLabelsData = getValue(d, nodeSideLabels) || []
-    const sideLabels = sideLabelsGroup.selectAll('g').data(sideLabelsData as SideLabel[])
+    const sideLabels = sideLabelsGroup.selectAll('g').data(sideLabelsData as CircleLabel[])
     const sideLabelsEnter = sideLabels.enter().append('g')
       .attr('class', nodeSelectors.sideLabelGroup)
     sideLabelsEnter.append('circle')
@@ -188,7 +190,7 @@ export function updateNodes<N extends NodeDatumCore, L extends LinkDatumCore> (s
     sideLabelsUpdate.select(`.${nodeSelectors.sideLabel}`).text(d => d.text)
       .attr('dy', '1px')
       .style('fill', l => getSideTexLabelColor(l))
-      .style('font-size', d => 11 / Math.pow(d.text.toString().length, 0.3))
+      .style('font-size', d => `${11 / Math.pow(d.text.toString().length, 0.3)}px`)
       // Side label circle background
     sideLabelsUpdate.select(`.${nodeSelectors.sideLabelBackground}`)
       .style('fill', d => d.color)
@@ -204,27 +206,29 @@ export function updateNodes<N extends NodeDatumCore, L extends LinkDatumCore> (s
     sideLabels.exit().remove()
 
     // Set Label and Sublabel text
+    const labelText = getValue(d, nodeLabel)
+    const sublabelText = getValue(d, nodeSubLabel)
+    const labelTextTrimmed = trimText(getValue(d, nodeLabel))
+    const sublabelTextTrimmed = trimText(getValue(d, nodeSubLabel))
+
+    labelTextContent.text(labelTextTrimmed)
+    sublabelTextContent.text(sublabelTextTrimmed)
     group
-      .on('mouseover', () => {
-        const labelContent = getValue(d, nodeLabel)
-        labelTextContent.text(labelContent)
-        sublabelTextContent.text(getValue(d, nodeSubLabel))
-        setLabelRect(label, labelContent, nodeSelectors.labelText)
+      .on('mouseenter', () => {
+        labelTextContent.text(labelText)
+        sublabelTextContent.text(sublabelText)
+        setLabelRect(label, labelText, nodeSelectors.labelText)
         group.raise()
       })
       .on('mouseleave', () => {
-        const labelContent = trimText(getValue(d, nodeLabel))
-        labelTextContent.text(labelContent)
-        sublabelTextContent.text(trimText(getValue(d, nodeSubLabel)))
-        setLabelRect(label, labelContent, nodeSelectors.labelText)
+        labelTextContent.text(labelTextTrimmed)
+        sublabelTextContent.text(sublabelTextTrimmed)
+        setLabelRect(label, labelTextTrimmed, nodeSelectors.labelText)
       })
 
-    labelTextContent.text(trimText(getValue(d, nodeLabel)))
-
-    sublabelTextContent.text(trimText(getValue(d, nodeSubLabel)))
-
     // Position label
-    const labelMargin = 18
+    const labelFontSize = parseFloat(window.getComputedStyle(groupElement).getPropertyValue('--vis-graph-node-label-font-size')) || 12
+    const labelMargin = LABEL_RECT_VERTICAL_PADDING + 1.25 * labelFontSize ** 1.03
     const nodeHeight = isCustomXml(getValue(d, nodeShape)) ? nodeBBox.height : getNodeSize(d, nodeSize)
     label.attr('transform', `translate(0, ${nodeHeight / 2 + labelMargin})`)
     if (scale >= ZOOM_LEVEL.LEVEL3) setLabelRect(label, getValue(d, nodeLabel), nodeSelectors.labelText)

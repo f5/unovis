@@ -7,6 +7,8 @@ export const variables = injectGlobal`
     --vis-graph-link-label-stroke-color: #fff;
     --vis-graph-link-label-text-color: #fff;
     --vis-graph-link-label-fill-color: #acb3b8;
+    
+    --vis-graph-link-support-stroke-width: 10px;
   }
 `
 
@@ -20,7 +22,7 @@ export const linkSupport = css`
   fill: none;
   stroke-linecap: round;
   pointer-events: stroke;
-  stroke-width: 15px;
+  stroke-width: var(--vis-graph-link-support-stroke-width);
   stroke-opacity: 0;
   stroke: var(--vis-graph-link-stroke-color);
   transition: .2s;
@@ -45,17 +47,24 @@ const dash = keyframes`
 
 export const linkDashed = css`
   label: dashed;
+  
+  ${`.${link}`}, ${`.${linkSupport}`} {
+    animation: ${dash} 15s linear infinite;
+    stroke-dasharray: 6 6;
+  }
 `
 
 export const gLink = css`
   label: g-link;
+`
+export const gLinkExit = css`
+  label: g-link-exit;
+  pointer-events: none;
+`
 
-  &${`.${linkDashed}`} {
-    ${`.${link}`}, ${`.${linkSupport}`} {
-      animation: ${dash} 15s linear infinite;
-      stroke-dasharray: 6 6;
-    }
-  }
+export const greyout = css`
+  label: greyout;
+  opacity: 0.2;
 `
 
 export const linkBand = css`
@@ -100,5 +109,5 @@ export const labelContent = css`
   fill: var(--vis-graph-link-label-text-color);
   font-size: 8pt;
   text-anchor: middle;
-  alignment-baseline: middle;
+  dominant-baseline: middle;
 `

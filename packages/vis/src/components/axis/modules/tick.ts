@@ -8,7 +8,7 @@ import { wrapTextElement } from 'utils/text'
 // Types
 import { AxisType } from 'types/axis'
 import { Position } from 'types/position'
-import { VerticalAlign, FitMode, WrapTextOptions } from 'types/text'
+import { VerticalAlign, FitMode, WrapTextOptions, WrapMode } from 'types/text'
 
 import * as s from '../style'
 
@@ -39,6 +39,7 @@ export function getWrapOptions (ticks, config): WrapTextOptions {
     verticalAlign = position === Position.TOP ? VerticalAlign.TOP : VerticalAlign.BOTTOM
   }
 
+  const computedSize = ticks.size() ? getComputedStyle(ticks.node())?.fontSize : null
   return {
     width: wrapWidth,
     separator: tickTextSeparator,
@@ -49,5 +50,8 @@ export function getWrapOptions (ticks, config): WrapTextOptions {
     dy: type === AxisType.X ? 0.71 : 0.32,
     verticalAlign,
     fitMode: tickTextFitMode,
+    wrapMode: WrapMode.DOM,
+    widthToHeightRatio: 0.52,
+    fontSize: computedSize ? Number.parseFloat(computedSize) : 12,
   }
 }

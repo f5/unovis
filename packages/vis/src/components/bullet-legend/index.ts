@@ -84,9 +84,11 @@ export class BulletLegend {
     return item.pointer === undefined ? true : item.pointer
   }
 
-  _onItemClick (d: BulletLegendItemInterface, i: number): void {
+  _onItemClick (event: MouseEvent, d: BulletLegendItemInterface): void {
     const { config: { onLegendItemClick } } = this
 
-    if (onLegendItemClick) onLegendItemClick(d, i)
+    const legendItems = this.div.selectAll(`.${s.item}`).nodes() as HTMLElement[]
+    const index = legendItems.indexOf(event.currentTarget as HTMLElement)
+    if (onLegendItemClick) onLegendItemClick(d, index)
   }
 }

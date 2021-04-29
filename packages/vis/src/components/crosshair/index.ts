@@ -1,17 +1,17 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { Selection, mouse } from 'd3-selection'
+import { Selection, pointer } from 'd3-selection'
 import { easeLinear } from 'd3-ease'
 // Core
 import { XYComponentCore } from 'core/xy-component'
 
 // Utils
-import { isNumber, isArray, getValue, clamp } from 'utils/data'
+import { isNumber, isArray, getValue, clamp, getStackedValues, getNearest } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
 
 // Types
 import { NumericAccessor } from 'types/misc'
-import { Position } from 'types/position'
+import { PositionStrategy } from 'types/position'
 
 // Config
 import { CrosshairConfig, CrosshairConfigInterface } from './config'
@@ -38,7 +38,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
       .attr('class', s.line)
   }
 
-  setContainer (containerSvg: Selection<SVGSVGElement, any, SVGSVGElement, any>): void {
+  setContainer (containerSvg: Selection<SVGSVGElement, any, any, any>): void {
     // Set up mousemove event for Crosshair
     this.container = containerSvg
     this.container.on('mousemove.crosshair', this._onMouseMove.bind(this))
@@ -63,11 +63,11 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
       .attr('x2', this.x)
 
     const baselineValue = getValue(this.datum, config.baseline) || 0
-    const stackedValues = this.datamodel.getStackedValues(this.datum, ...config.yStacked)
+    const stackedValues = getStackedValues(this.datum, ...config.yStacked)
       .map((value, index, arr) => ({
         index,
         value: value + baselineValue,
-        visible: !!(value - (arr[index - 1] ?? 0)),
+        visible: !!getValue(this.datum, config.yStacked[index]),
       }))
 
     const regularValues = yAccessors
@@ -88,36 +88,42 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
       .append('circle')
       .attr('class', s.circle)
       .attr('r', 0)
-      .style('fill', d => getColor(this.datum, config.color, d.index))
+      .style('fill', (d, i) => getColor(this.datum, config.color, i))
 
     smartTransition(circlesEnter.merge(circles), duration, easeLinear)
       .attr('cx', this.x)
       .attr('cy', d => config.scales.y(d.value))
       .attr('r', 4)
       .style('opacity', d => d.visible ? 1 : 0)
-      .style('fill', d => getColor(this.datum, config.color, d.index))
+      .style('fill', (d, i) => getColor(this.datum, config.color, i))
+
+    circles.exit().remove()
   }
 
-  _onMouseMove (): void {
+  hide (): void {
+    this._onMouseOut()
+  }
+
+  _onMouseMove (event: MouseEvent): void {
     const { config, datamodel, element } = this
-    const [x] = mouse(element)
+    const [x] = pointer(event, element)
     const scale = config.scales.x
     const value = scale.invert(x) as number
 
-    this.datum = datamodel.getNearest(value, config.x)
+    this.datum = getNearest(datamodel.data, value, config.x)
     if (!this.datum) return
 
     this.x = clamp(Math.round(scale(getValue(this.datum, config.x))), 0, config.width)
 
     // Show the crosshair only if it's in the chart range
-    this.show = (this.x > 0) && (this.x < config.width)
+    this.show = (this.x >= 0) && (this.x <= config.width)
 
     window.cancelAnimationFrame(this._animFrameId)
     this._animFrameId = window.requestAnimationFrame(() => {
       this._render()
     })
 
-    if (this.show) this._showTooltip()
+    if (this.show) this._showTooltip(event)
     else this._hideTooltip()
   }
 
@@ -131,16 +137,23 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
     this._hideTooltip()
   }
 
-  _showTooltip (): void {
+  _showTooltip (event: MouseEvent): void {
     const { config: { tooltip, template } } = this
+    if (!tooltip) return
 
-    const [x, y] = mouse(this.container.node())
-    if (tooltip) tooltip.config.horizontalPlacement = Position.RIGHT
-    tooltip?.show(template(this.datum), { x, y })
+    const container = tooltip.getContainer() || this.container.node()
+    const [x, y] = tooltip.config.positionStrategy === PositionStrategy.FIXED ? [event.clientX, event.clientY] : pointer(event, container)
+    const content = template(this.datum)
+    if (content) tooltip.show(content, { x, y })
   }
 
   _hideTooltip (): void {
     const { config: { tooltip } } = this
     tooltip?.hide()
+  }
+
+  // We don't want Crosshair to be be taken in to account in domain calculations
+  getYDataExtent (): number[] {
+    return [undefined, undefined]
   }
 }

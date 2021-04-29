@@ -48,9 +48,10 @@ export class SingleChart<Datum> extends ContainerCore {
     if (containerConfig.sizing) this.component.sizing = containerConfig.sizing
     this.element.appendChild(this.component.element)
 
-    if (containerConfig.tooltip) {
-      containerConfig.tooltip.setContainer(this._container)
-      containerConfig.tooltip.setComponents([this.component])
+    const tooltip = containerConfig.tooltip
+    if (tooltip) {
+      if (!tooltip.hasContainer()) tooltip.setContainer(this._container)
+      tooltip.setComponents([this.component])
     }
 
     if (!preventRender) this.render()
@@ -95,14 +96,18 @@ export class SingleChart<Datum> extends ContainerCore {
 
       const componentWidth = extendedSizeComponent.getWidth() + config.margin.left + config.margin.right
       const componentHeight = extendedSizeComponent.getHeight() + config.margin.top + config.margin.bottom
-
       const scale = fitToWidth ? this.getFitWidthScale() : 1
 
-      smartTransition(this.svg, customDuration ?? component.config.duration)
-        .attr('width', componentWidth * scale)
-        .attr('height', componentHeight * scale)
-        .attr('viewBox', fitToWidth ? `${0} ${0} ${componentWidth} ${componentHeight * scale}` : null)
-        .attr('preserveAspectRatio', fitToWidth ? 'xMinYMin' : null)
+      const currentWidth = this.svg.attr('width')
+      const currentHeight = this.svg.attr('height')
+      const scaledWidth = componentWidth * scale
+      const scaledHeight = componentHeight * scale
+      const animated = currentWidth || currentHeight
+      smartTransition(this.svg, animated ? (customDuration ?? component.config.duration) : 0)
+        .attr('width', scaledWidth)
+        .attr('height', scaledHeight)
+        .attr('viewBox', `${0} ${0} ${componentWidth} ${fitToWidth ? scaledHeight : componentHeight}`)
+        .attr('preserveAspectRatio', 'xMinYMin')
     } else {
       this.svg
         .attr('width', this.containerWidth)
@@ -110,5 +115,13 @@ export class SingleChart<Datum> extends ContainerCore {
     }
 
     if (config.tooltip) config.tooltip.update()
+  }
+
+  public destroy (): void {
+    const { component, config: { tooltip } } = this
+    super.destroy()
+
+    component?.destroy()
+    tooltip?.destroy()
   }
 }

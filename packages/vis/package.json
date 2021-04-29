@@ -1,8 +1,8 @@
 {
   "name": "@volterra/vis",
-  "version": "0.0.1-beta.54",
-  "main": "lib/volterra-vis.js",
-  "module": "lib/volterra-vis.esm.js",
+  "version": "0.0.1-beta.120",
+  "main": "lib/esm/index.js",
+  "module": "lib/esm/index.js",
   "typings": "lib/index.d.ts",
   "files": [
     "lib"
@@ -13,36 +13,43 @@
     "dev:parallel": "rollup -c -w",
     "test": "jest --colors"
   },
+  "publishConfig": {
+    "cache": ".cache/.npm",
+    "@volterra:registry": " https://gitlab.com/api/v4/projects/13430565/packages/npm/"
+  },
   "devDependencies": {
-    "@rollup/plugin-json": "^4.0.2",
-    "@types/d3": "^5.7.2",
+    "@rollup/plugin-json": "^4.1.0",
     "@types/mapbox-gl-leaflet": "^0.0.1",
-    "@types/supercluster": "^5.0.1",
-    "@typescript-eslint/parser": "^2.16.0",
-    "@zerollup/ts-transform-paths": "^1.7.11",
-    "rimraf": "^3.0.0",
-    "rollup": "^1.29.0",
+    "@types/supercluster": "^5.0.2",
+    "@types/three": "^0.125.1",
+    "@typescript-eslint/parser": "^4.2.0",
+    "@zerollup/ts-transform-paths": "^1.7.18",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.36.1",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
-    "rollup-plugin-postcss": "^2.1.1",
-    "rollup-plugin-terser": "^5.1.2",
-    "rollup-plugin-typescript2": "^0.25.3"
+    "rollup-plugin-postcss": "^4.0.0",
+    "rollup-plugin-terser": "^7.0.2",
+    "rollup-plugin-typescript2": "^0.29.0",
+    "rollup-plugin-visualizer": "^4.2.2"
   },
   "dependencies": {
     "@types/geojson": "^7946.0.7",
     "@types/topojson": "^3.2.2",
-    "d3": "^5.14.2",
-    "d3-interpolate-path": "^2.1.1",
+    "d3": "^6.3.1",
+    "d3-collection": "^1.0.7",
+    "d3-interpolate-path": "^2.2.1",
     "d3-sankey": "^0.12.3",
     "dagre-layout": "^0.8.8",
-    "emotion": "^10.0.23",
-    "leaflet": "^1.6.0",
-    "lodash": "^4.17.19",
-    "mapbox-gl": "^1.7.0",
-    "mapbox-gl-leaflet": "^0.0.11",
+    "emotion": "^10.0.27",
+    "leaflet": "^1.7.1",
+    "lodash": "^4.17.20",
+    "mapbox-gl": "^1.13.0",
+    "mapbox-gl-leaflet": "^0.0.14",
     "resize-observer-polyfill": "^1.5.1",
-    "supercluster": "^7.0.0",
-    "tangram": "^0.20.0",
-    "topojson": "^3.0.2"
+    "supercluster": "^7.1.0",
+    "tangram": "^0.21.0",
+    "three": "^0.125.2",
+    "topojson-client": "^3.0.2"
   }
 }

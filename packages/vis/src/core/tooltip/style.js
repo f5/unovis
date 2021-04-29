@@ -33,6 +33,11 @@ export const tooltip = css`
   backdrop-filter: var(--vis-tooltip-backdrop-filter);
 `
 
+export const positionFixed = css`
+  bottom: unset;
+  position: fixed;
+`
+
 export const show = css`
   opacity: 1;
 `

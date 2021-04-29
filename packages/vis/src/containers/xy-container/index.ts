@@ -49,8 +49,8 @@ export type XYConfigInterface<Datum> = XYComponentConfigInterface<Datum>
 export class XYContainer<Datum> extends ContainerCore {
   config: XYContainerConfig<Datum> = new XYContainerConfig()
   datamodel: SeriesDataModel<Datum> = new SeriesDataModel()
-  private _svgDefs: Selection<SVGDefsElement, object[], SVGGElement, object[]>
-  private _clipPath: Selection<SVGGElement, object[], SVGGElement, object[]>
+  private _svgDefs: Selection<SVGDefsElement, Record<string, unknown>[], any, Record<string, unknown>[]>
+  private _clipPath: Selection<SVGClipPathElement, Record<string, unknown>[], any, Record<string, unknown>[]>
   private _clipPathId = guid()
   private _axisMargin: Spacing = { top: 0, bottom: 0, left: 0, right: 0 }
   private _firstRender = true
@@ -120,6 +120,7 @@ export class XYContainer<Datum> extends ContainerCore {
     config.crosshair?.setData(data)
     config.axes.x?.setData(data)
     config.axes.y?.setData(data)
+    config.tooltip?.hide()
     if (!preventRender) this.render()
   }
 
@@ -146,11 +147,11 @@ export class XYContainer<Datum> extends ContainerCore {
     // Set up the tooltip
     const tooltip = containerConfig.tooltip
     if (tooltip) {
-      tooltip.setContainer(this._container)
+      if (!tooltip.hasContainer()) tooltip.setContainer(this._container)
       tooltip.setComponents(this.components)
     }
 
-    // Set up crosshair
+    // Set up the crosshair
     const crosshair = containerConfig.crosshair
     if (crosshair) {
       crosshair.setContainer(this.svg)
@@ -233,7 +234,7 @@ export class XYContainer<Datum> extends ContainerCore {
       .attr('height', this.height)
 
     // Tooltip
-    config.tooltip?.update()
+    config.tooltip?.update() // Re-bind events
 
     // Crosshair
     const crosshair = config.crosshair
@@ -248,6 +249,7 @@ export class XYContainer<Datum> extends ContainerCore {
       crosshair.config.yStacked = flatten(yStackedAccessors)
       crosshair.config.baseline = crosshair.config.baseline || baselineAccessor || null
       crosshair.g.attr('transform', `translate(${margin.left},${margin.top})`)
+      crosshair.hide()
     }
 
     this._firstRender = false
@@ -260,12 +262,18 @@ export class XYContainer<Datum> extends ContainerCore {
   }
 
   _updateScalesDomain<T extends XYComponentCore<Datum>> (...components: T[]): void {
-    const { config: { dimensions } } = this
+    const { config: { dimensions, preventEmptyDomain, adaptiveYScale } } = this
     if (!components) return
 
+    // Passing the adaptiveYScale property to the components
+    components.forEach(c => { c.config.adaptiveYScale = adaptiveYScale })
+
+    // Loop over all the dimensions
     Object.keys(dimensions).forEach(key => {
       const dim: Dimension = dimensions[key]
-      const [min, max] = extent(mergeArrays(components.map(c => c.getDataExtent(key))) as number[]) // Components with undefined dimenstion accessors will return [undefined, undefined] but d3.extent will take care of that
+      let [min, max] = extent(mergeArrays(components.map(c => c.getDataExtent(key))) as number[]) // Components with undefined dimension accessors will return [undefined, undefined] but d3.extent will take care of that
+      if (preventEmptyDomain && (min === max) && isFinite(min)) max = min + 1
+
       const domainMin = dim.domain?.[0] ?? min ?? 0
       const domainMax = dim.domain?.[1] ?? max ?? 1
       const domain = [
@@ -347,5 +355,16 @@ export class XYContainer<Datum> extends ContainerCore {
       left: margin.left + this._axisMargin.left,
       right: margin.right + this._axisMargin.right,
     }
+  }
+
+  public destroy (): void {
+    const { components, config: { tooltip, crosshair, axes } } = this
+    super.destroy()
+
+    for (const c of components) c?.destroy()
+    tooltip?.destroy()
+    crosshair?.destroy()
+    axes.x?.destroy()
+    axes.y?.destroy()
   }
 }

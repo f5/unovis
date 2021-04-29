@@ -1,0 +1,268 @@
+[
+  {
+    "latitude": 52.35598,
+    "longitude": 4.95035,
+    "name": "ams9-ams",
+    "events": 948,
+    "blocked": 4
+  },
+  {
+    "latitude": 33.649895,
+    "longitude": 130.12389,
+    "name": "ap-store-0",
+    "events": 980,
+    "blocked": 5
+  },
+  {
+    "latitude": 35.668224,
+    "longitude": 139.67082,
+    "name": "ap-store-1",
+    "events": 105,
+    "blocked": 0
+  },
+  {
+    "latitude": 34.67764,
+    "longitude": 135.45105,
+    "name": "ap-store-2",
+    "events": 783,
+    "blocked": 7
+  },
+  {
+    "latitude": 22.161829,
+    "longitude": 113.53505,
+    "name": "ap-store-3",
+    "events": 361,
+    "blocked": 2
+  },
+  {
+    "latitude": 37.56508,
+    "longitude": 126.91934,
+    "name": "ap-store-4",
+    "events": 446,
+    "blocked": 5
+  },
+  {
+    "latitude": 38.313595,
+    "longitude": 140.69612,
+    "name": "ap-store-5",
+    "events": 220,
+    "blocked": 6
+  },
+  {
+    "latitude": 44,
+    "longitude": -120.5,
+    "name": "astral-aws",
+    "events": 88,
+    "blocked": 10
+  },
+  {
+    "latitude": 51.509865,
+    "longitude": -0.118092,
+    "name": "astral-azure",
+    "events": 878,
+    "blocked": 4
+  },
+  {
+    "latitude": 1.352083,
+    "longitude": 103.81984,
+    "name": "astral-gcp",
+    "events": 716,
+    "blocked": 1
+  },
+  {
+    "latitude": 37.49858,
+    "longitude": -122.29465,
+    "name": "corp-branch-1",
+    "events": 143,
+    "blocked": 8
+  },
+  {
+    "latitude": 48.90162,
+    "longitude": 2.4153903,
+    "name": "dc-eu-west",
+    "events": 684,
+    "blocked": 0
+  },
+  {
+    "latitude": 40.741356,
+    "longitude": -74.005394,
+    "name": "dc-us-east",
+    "events": 874,
+    "blocked": 2
+  },
+  {
+    "latitude": 37.445824,
+    "longitude": -122.163,
+    "name": "dc-us-west",
+    "events": 974,
+    "blocked": 8
+  },
+  {
+    "latitude": 51.528557,
+    "longitude": -0.2420208,
+    "name": "eu-store-0",
+    "events": 24289,
+    "blocked": 6672
+  },
+  {
+    "latitude": 48.858837,
+    "longitude": 2.2768495,
+    "name": "eu-store-1",
+    "events": 554,
+    "blocked": 155
+  },
+  {
+    "latitude": 38.74362,
+    "longitude": -9.195309,
+    "name": "eu-store-2",
+    "events": 841,
+    "blocked": 655
+  },
+  {
+    "latitude": 50.12119,
+    "longitude": 8.566354,
+    "name": "eu-store-3",
+    "events": 452,
+    "blocked": 0
+  },
+  {
+    "latitude": 40.437935,
+    "longitude": -3.749747,
+    "name": "eu-store-4",
+    "events": 343,
+    "blocked": 0
+  },
+  {
+    "latitude": 41.91005,
+    "longitude": 12.465787,
+    "name": "eu-store-5",
+    "events": 444,
+    "blocked": 3
+  },
+  {
+    "latitude": 50.059586,
+    "longitude": 14.325202,
+    "name": "eu-store-6",
+    "events": 287,
+    "blocked": 5
+  },
+  {
+    "latitude": 40.717724,
+    "longitude": -74.0083,
+    "name": "ny8-nyc",
+    "events": 41,
+    "blocked": 8
+  },
+  {
+    "latitude": 48.927166,
+    "longitude": 2.350664,
+    "name": "pa2-par",
+    "events": 498,
+    "blocked": 4
+  },
+  {
+    "latitude": 48.901054,
+    "longitude": 2.423093,
+    "name": "pa4-par",
+    "events": 626,
+    "blocked": 0
+  },
+  {
+    "latitude": 1.2959429,
+    "longitude": 103.788376,
+    "name": "sg3-sin",
+    "events": 992,
+    "blocked": 0
+  },
+  {
+    "latitude": 37.24117,
+    "longitude": -121.77938,
+    "name": "sv10-sjc",
+    "events": 637,
+    "blocked": 3
+  },
+  {
+    "latitude": 51.511395,
+    "longitude": -0.001787,
+    "name": "tn2-lon",
+    "events": 979,
+    "blocked": 6
+  },
+  {
+    "latitude": 35.622677,
+    "longitude": 139.77003,
+    "name": "ty8-tky",
+    "events": 174,
+    "blocked": 6
+  },
+  {
+    "latitude": 40.72916,
+    "longitude": -74.00558,
+    "name": "usa-store-0",
+    "events": 631,
+    "blocked": 1
+  },
+  {
+    "latitude": 38.90632,
+    "longitude": -77.04191,
+    "name": "usa-store-1",
+    "events": 21,
+    "blocked": 0
+  },
+  {
+    "latitude": 25.79083,
+    "longitude": -80.14021,
+    "name": "usa-store-2",
+    "events": 487,
+    "blocked": 0
+  },
+  {
+    "latitude": 30.00407,
+    "longitude": -90.15977,
+    "name": "usa-store-3",
+    "events": 751,
+    "blocked": 3
+  },
+  {
+    "latitude": 41.89261,
+    "longitude": -87.62556,
+    "name": "usa-store-4",
+    "events": 764,
+    "blocked": 3
+  },
+  {
+    "latitude": 32.78868,
+    "longitude": -97.34767,
+    "name": "usa-store-5",
+    "events": 530,
+    "blocked": 7
+  },
+  {
+    "latitude": 36.10304,
+    "longitude": -115.17369,
+    "name": "usa-store-6",
+    "events": 609,
+    "blocked": 5
+  },
+  {
+    "latitude": 34.10182,
+    "longitude": -118.32421,
+    "name": "usa-store-7",
+    "events": 543,
+    "blocked": 0
+  },
+  {
+    "latitude": 37.44428,
+    "longitude": -122.17108,
+    "name": "usa-store-8",
+    "events": 1920,
+    "blocked": 0
+  },
+  {
+    "latitude": 47.61698,
+    "longitude": -122.33839,
+    "name": "usa-store-9",
+    "events": 513,
+    "blocked": 2
+  }
+]

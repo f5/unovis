@@ -13,11 +13,12 @@ variables:
 stages:
   - build
   - docker
+  - secscan
   - upload-templates
   - trigger
 
 build:
-  image: volterrasystem/angular-e2e-testing-java:node10
+  image: volterrasystem/angular-e2e-testing:node12
   stage: build
   before_script:
     - set -e
@@ -66,9 +67,47 @@ docker:
       fi
   after_script:
     - podman logout "${REGISTRY_SERVER}"
-  only:
-    - master
-    - develop
+
+test-trivy:
+  tags: [docker]
+  stage: secscan
+  image: volterra.azurecr.io/ves.io/secscan
+  before_script:
+    - podman login --username "${REGISTRY_USERNAME}" --password "${REGISTRY_PASSWORD}" "${REGISTRY_SERVER}"
+  script:
+    - podman pull docker://${REGISTRY_IMAGE}:${CI_COMMIT_SHA}
+    - podman push docker://${REGISTRY_IMAGE}:${CI_COMMIT_SHA} oci:`pwd`/ociimage
+    - trivy-report --scan-tag trivy.scan.${CI_PROJECT_NAME} --vuln-tag trivy.vuln.${CI_PROJECT_NAME} --sqs-url ${REPORTS_SQS_URL} --sqs-access-key ${REPORTS_SQS_ACCESS_KEY} --sqs-secret-key ${REPORTS_SQS_SECRET_KEY} -p "https://${AZURE_SECURITY_STORAGE_ACCOUNT}.blob.core.windows.net/security/profiles/${CI_PROJECT_NAME}.yml${AZURE_SECURITY_STORAGE_TOKEN}" "https://${AZURE_SECURITY_STORAGE_ACCOUNT}.blob.core.windows.net/security/profiles/common.yml${AZURE_SECURITY_STORAGE_TOKEN}" --image `pwd`/ociimage
+  after_script:
+    - podman logout "${REGISTRY_SERVER}"
+
+test-trivy-fs:
+  tags: [docker]
+  stage: secscan
+  image: volterra.azurecr.io/ves.io/secscan
+  script:
+    - trivy-report --scan-tag trivy.scan.${CI_PROJECT_NAME} --vuln-tag trivy.vuln.${CI_PROJECT_NAME} --sqs-url ${REPORTS_SQS_URL} --sqs-access-key ${REPORTS_SQS_ACCESS_KEY} --sqs-secret-key ${REPORTS_SQS_SECRET_KEY} -p "https://${AZURE_SECURITY_STORAGE_ACCOUNT}.blob.core.windows.net/security/profiles/${CI_PROJECT_NAME}.yml${AZURE_SECURITY_STORAGE_TOKEN}" "https://${AZURE_SECURITY_STORAGE_ACCOUNT}.blob.core.windows.net/security/profiles/common.yml${AZURE_SECURITY_STORAGE_TOKEN}" --fs .
+
+test-license:
+  stage: secscan
+  image: volterra.azurecr.io/ves.io/secscan
+  tags: [kubernetes]
+  dependencies:
+    - build
+  before_script:
+    - set -e
+    - eval $(ssh-agent -s)
+    - ssh-add <(echo "$SSH_PRIVATE_KEY")
+    - mkdir -p ~/.ssh
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+    - echo "machine gitlab.com login gitlab-ci-token password ${CI_JOB_TOKEN}" > /root/.netrc
+  script:
+    - license-report --scan-tag license.scan.${CI_PROJECT_NAME} --vuln-tag license.vuln.${CI_PROJECT_NAME} --sqs-url ${REPORTS_SQS_URL} --sqs-access-key ${REPORTS_SQS_ACCESS_KEY} --sqs-secret-key ${REPORTS_SQS_SECRET_KEY} -p "https://${AZURE_SECURITY_STORAGE_ACCOUNT}.blob.core.windows.net/security/profiles/${CI_PROJECT_NAME}.yml${AZURE_SECURITY_STORAGE_TOKEN}" "https://${AZURE_SECURITY_STORAGE_ACCOUNT}.blob.core.windows.net/security/profiles/common.yml${AZURE_SECURITY_STORAGE_TOKEN}"
+  cache:
+    policy: pull
+    key: "$CI_COMMIT_REF_SLUG"
+    paths:
+      - node_modules
 
 upload-templates:
   tags: [kubernetes]

@@ -7,7 +7,7 @@ import { select } from 'd3'
 import { XYComponentCore } from 'core/xy-component'
 
 // Utils
-import { getValue, isNumber, isArray, isEmpty, clamp } from 'utils/data'
+import { getValue, isNumber, isArray, isEmpty, clamp, getMin, getMax } from 'utils/data'
 import { roundedRectPath } from 'utils/path'
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
@@ -24,6 +24,7 @@ import * as s from './style'
 export class GroupedBar<Datum> extends XYComponentCore<Datum> {
   static selectors = s
   config: GroupedBarConfig<Datum> = new GroupedBarConfig()
+  getAccessors = (): NumericAccessor<Datum>[] => (isArray(this.config.y) ? this.config.y : [this.config.y])
   events = {
     [GroupedBar.selectors.barGroup]: {
       mouseover: this._raiseSelection,
@@ -48,7 +49,7 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum> {
     const duration = isNumber(customDuration) ? customDuration : config.duration
     const groupWidth = this._getGroupWidth()
 
-    const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
+    const yAccessors = this.getAccessors()
     const innerBandScaleRange = [-groupWidth / 2, groupWidth / 2] as [number, number]
     const innerBandScale = scaleBand<number>()
       .domain(range(yAccessors.length))
@@ -107,9 +108,9 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum> {
         let height = config.scales.y(0) - config.scales.y(getValue(d, yAccessors[i]))
 
         // Optionally set minumum bar height
-        if (height < config.minBarHeight) {
-          y = config.scales.y(0) - config.minBarHeight
-          height = config.minBarHeight
+        if (height < config.barMinHeight) {
+          y = config.scales.y(0) - config.barMinHeight
+          height = config.barMinHeight
         }
 
         return this._getBarPath(x, y, width, height)
@@ -162,7 +163,7 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum> {
     if (isEmpty(data)) return 0
     if (config.groupWidth) return min([config.groupWidth, config.groupMaxWidth])
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const isOrdinal = config.scales.x.bandwidth
     const xDomain = (config.scales.x.domain ? config.scales.x.domain() : []) as number[]
@@ -189,9 +190,11 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum> {
 
   getYDataExtent (): number[] {
     const { config, datamodel } = this
-    const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
-    const min = datamodel.getMin(...yAccessors)
-    const max = datamodel.getMax(...yAccessors)
+    const yAccessors = this.getAccessors()
+
+    const data = config.adaptiveYScale ? this._getVisibleData() : datamodel.data
+    const min = getMin(data, ...yAccessors)
+    const max = getMax(data, ...yAccessors)
     return [min > 0 ? 0 : min, max < 0 ? 0 : max]
   }
 

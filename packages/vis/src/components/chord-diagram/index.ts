@@ -3,7 +3,7 @@ import { Selection } from 'd3-selection'
 import { nest } from 'd3-collection'
 import { hierarchy, HierarchyRectangularNode, partition } from 'd3-hierarchy'
 import { arc, area, CurveCatmullRomFactory, CurveFactory } from 'd3-shape'
-import { scalePow } from 'd3-scale'
+import { scalePow, ScalePower } from 'd3-scale'
 import { max } from 'd3-array'
 
 // Core
@@ -39,7 +39,7 @@ export class ChordDiagram<H extends Hierarchy, N extends NodeDatumCore, L extend
   linkGroup: Selection<SVGGElement, Ribbon<H>[], SVGGElement, Ribbon<H>[]>
   labelGroup: Selection<SVGGElement, HierarchyRectangularNode<H>[], SVGGElement, HierarchyRectangularNode<H>[]>
   arcGen = arc<HierarchyRectangularNode<H>>()
-  radiusScale = scalePow()
+  radiusScale: ScalePower<number, number> = scalePow()
   linkAreaGen = area<HierarchyRectangularNode<H>>()
   private _nodes: HNode<H>[] = []
   private _links: Ribbon<H>[] = []

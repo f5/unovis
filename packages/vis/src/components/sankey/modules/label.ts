@@ -1,12 +1,15 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
+import { Selection } from 'd3-selection'
+
 // Utils
-import { wrapTextElement, trimTextMiddle } from 'utils/text'
+import { estimateTextSize, trimSVGText, wrapSVGText } from 'utils/text'
 import { smartTransition } from 'utils/d3'
 import { getValue } from 'utils/data'
 
 // Types
-import { WrapTextOptions } from 'types/text'
-import { SankeyNodeDatumInterface, SankeyLinkDatumInterface, LabelPosition } from 'types/sankey'
+import { FitMode, VerticalAlign } from 'types/text'
+import { InputLink, InputNode, SankeyNode, SubLabelPlacement } from 'types/sankey'
+import { Position } from 'types/position'
 
 // Config
 import { SankeyConfig } from '../config'
@@ -14,123 +17,172 @@ import { SankeyConfig } from '../config'
 // Styles
 import * as s from '../style'
 
-export const NODE_LABEL_SPACING = 10
-const ARROW_HEIGHT = 8
-const ARROW_WIDTH = 5
-const LABEL_BLOCK_PADDING = 3
-const LABEL_BLOCK_TOP_MARGIN = 2
+const NODE_LABEL_SPACING = 10
+const LABEL_BLOCK_PADDING = 6.5
 
-function getLabelBackground (width: number, height: number): string {
+function getLabelBackground (width: number, height: number, orientation: Position.LEFT | Position.RIGHT, arrowWidth = 5, arrowHeight = 8): string {
   const halfHeight = height / 2
-  const halfArrowHeight = ARROW_HEIGHT / 2
-  const leftArrowPos = `L 0 ${halfHeight - halfArrowHeight}   L   ${-ARROW_WIDTH} ${halfHeight} L 0 ${halfHeight + halfArrowHeight}`
-  return `
-    M 0 0 
-    ${leftArrowPos}
-    L 0  ${height}
-    L ${width} ${height} 
-    L ${width} 0 
-    L 0 0 `
-}
+  const halfArrowHeight = arrowHeight / 2
 
-export const labelBackgroundWidth = (nodeWidth: number, nodeHorizontalSpacing: number): number => nodeHorizontalSpacing - ARROW_WIDTH - NODE_LABEL_SPACING * 2
-export const labelBackgroundHeight = (labelFontSize: number): number => labelFontSize + 2 * LABEL_BLOCK_PADDING
-
-export const requiredLabelSpace = (nodeWidth: number, nodeHorizontalSpacing: number, labelFontSize: number): { x: number; y: number } => {
-  const w = labelBackgroundWidth(nodeWidth, nodeHorizontalSpacing)
-  const h = labelBackgroundHeight(labelFontSize)
-  return {
-    y: h + LABEL_BLOCK_TOP_MARGIN * 2,
-    x: w + ARROW_WIDTH + NODE_LABEL_SPACING * 3,
-  }
-}
-export function shouldLabelBeVisible<N extends SankeyNodeDatumInterface> (d: N, config: SankeyConfig<N, any>): boolean {
-  const nodeVerticalSpace = d.y1 - d.y0 + config.nodePadding / 2
-  const requiredSpace = config.labelPosition === LabelPosition.AUTO
-    ? config.labelFontSize
-    : labelBackgroundHeight(config.labelFontSize)
-
-  return config.forceShowLabels || (nodeVerticalSpace > requiredSpace)
-}
-
-export function getWrapOption (config, trimText = true): WrapTextOptions {
-  const {
-    labelWidth, labelTextSeparator, labelForceWordBreak, labelLength, labelTrim,
-    labelPosition, nodeHorizontalSpacing, nodeWidth,
-  } = config
-  return {
-    width: labelPosition === LabelPosition.AUTO ? labelWidth : labelBackgroundWidth(nodeWidth, nodeHorizontalSpacing) - LABEL_BLOCK_PADDING * 2,
-    separator: labelTextSeparator,
-    wordBreak: labelForceWordBreak,
-
-    length: trimText && labelLength,
-    trimType: trimText && labelTrim,
-    dy: labelPosition === LabelPosition.AUTO ? 0.32 : 1,
-    trimOnly: true, // labelPosition === LabelPosition.RIGHT,
+  if (orientation === Position.LEFT) {
+    const rightArrowPos = `L 0 ${halfHeight - halfArrowHeight}   L   ${+arrowWidth} ${halfHeight} L 0 ${halfHeight + halfArrowHeight}`
+    return `
+      M 0 0 
+      ${rightArrowPos}
+      L 0  ${height}
+      L ${-width} ${height} 
+      L ${-width} 0 
+      L 0 0 `
+  } else {
+    const leftArrowPos = `L 0 ${halfHeight - halfArrowHeight}   L   ${-arrowWidth} ${halfHeight} L 0 ${halfHeight + halfArrowHeight}`
+    return `
+      M 0 0 
+      ${leftArrowPos}
+      L 0  ${height}
+      L ${width} ${height} 
+      L ${width} 0 
+      L 0 0 `
   }
 }
 
-export function renderLabel<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> (group, d: N, config: SankeyConfig<N, L>, duration: number): void {
-  const isVisible = shouldLabelBeVisible(d, config)
-  group.classed(s.visibleLabel, isVisible)
-  if (!isVisible) return
+export function getLabelOrientation<N extends InputNode, L extends InputLink> (d: SankeyNode<N, L>, sankeyWidth: number, labelPosition: Position): (Position.LEFT | Position.RIGHT) {
+  const orientation = labelPosition === Position.AUTO
+    ? d.x0 < sankeyWidth / 2 ? Position.LEFT : Position.RIGHT
+    : labelPosition
 
-  const labelText = group.select(`.${s.label}`)
-  labelText
+  return orientation as (Position.LEFT | Position.RIGHT)
+}
+
+export const requiredLabelSpace = (labelWidth: number, labelFontSize: number): { width: number; height: number } => {
+  return {
+    height: labelFontSize * 2 + 2 * LABEL_BLOCK_PADDING, // Assuming 2.5 lines per label
+    width: labelWidth + 2 * NODE_LABEL_SPACING + 2 * LABEL_BLOCK_PADDING,
+  }
+}
+
+export function getLabelGroupXTranslate<N extends InputNode, L extends InputLink> (d: SankeyNode<N, L>, config: SankeyConfig<N, L>): number {
+  const orientation = getLabelOrientation(d, config.width, config.labelPosition)
+  switch (orientation) {
+  case Position.RIGHT: return config.nodeWidth + NODE_LABEL_SPACING
+  case Position.LEFT:
+  default:
+    return -NODE_LABEL_SPACING
+  }
+}
+
+export function getLabelGroupYTranslate<N extends InputNode, L extends InputLink> (d: SankeyNode<N, L>, labelGroupHeight: number, config: SankeyConfig<N, L>): number {
+  const nodeHeight = d.y1 - d.y0
+  if (config.labelBackground && (nodeHeight < labelGroupHeight)) return (nodeHeight - labelGroupHeight) / 2
+
+  switch (config.labelVerticalAlign) {
+  case VerticalAlign.BOTTOM: return nodeHeight - labelGroupHeight
+  case VerticalAlign.MIDDLE: return nodeHeight / 2 - labelGroupHeight / 2
+  case VerticalAlign.TOP:
+  default: return 0
+  }
+}
+
+export function getLabelTextAnchor<N extends InputNode, L extends InputLink> (d: SankeyNode<N, L>, config: SankeyConfig<N, L>): string {
+  const orientation = getLabelOrientation(d, config.width, config.labelPosition)
+  switch (orientation) {
+  case Position.RIGHT: return 'start'
+  case Position.LEFT:
+  default:
+    return 'end'
+  }
+}
+
+export function getSubLabelTextAnchor<N extends InputNode, L extends InputLink> (d: SankeyNode<N, L>, config: SankeyConfig<N, L>): string {
+  const isSublabelInline = config.subLabelPlacement === SubLabelPlacement.INLINE
+  const orientation = getLabelOrientation(d, config.width, config.labelPosition)
+  switch (orientation) {
+  case Position.RIGHT: return isSublabelInline ? 'end' : 'start'
+  case Position.LEFT:
+  default:
+    return isSublabelInline ? 'start' : 'end'
+  }
+}
+
+export function renderLabel<N extends InputNode, L extends InputLink> (
+  labelGroup: Selection<SVGGElement, SankeyNode<N, L>, SVGGElement, any>,
+  d: SankeyNode<N, L>,
+  config: SankeyConfig<N, L>,
+  duration: number,
+  forceExpand = false): { x: number; y: number; width: number; height: number; layer: number; selection: any; hidden?: boolean } {
+  const labelTextSelection: Selection<SVGTextElement, SankeyNode<N, L>, SVGGElement, SankeyNode<N, L>> = labelGroup.select(`.${s.label}`)
+  const labelShowBackground = config.labelBackground || forceExpand
+  const sublabelTextSelection: Selection<SVGTextElement, SankeyNode<N, L>, SVGGElement, SankeyNode<N, L>> = labelGroup.select(`.${s.sublabel}`)
+  const labelPadding = labelShowBackground ? LABEL_BLOCK_PADDING : 0
+  const isSublabelInline = config.subLabelPlacement === SubLabelPlacement.INLINE
+  const separator = config.labelForceWordBreak ? '' : config.labelTextSeparator
+  const fastEstimatesMode = true // Fast but inaccurate
+  const fontWidthToHeightRatio = 0.52
+  const dy = 0.32
+  const labelOrientation = config.labelPosition === Position.AUTO
+    ? d.x0 < config.width / 2 ? Position.LEFT : Position.RIGHT
+    : config.labelPosition
+  const labelOrientationMult = labelOrientation === Position.LEFT ? -1 : 1
+  const labelText = getValue(d, config.label)
+  const sublabelText = getValue(d, config.subLabel)
+
+  // Render the main label, wrap / trim it and estimate its size
+  const labelsFontSizeDifference = sublabelText ? config.labelFontSize - config.subLabelFontSize : 0
+  const labelTranslateY = labelPadding + ((isSublabelInline && labelsFontSizeDifference < 0) ? -0.6 * labelsFontSizeDifference : 0)
+  labelTextSelection
+    .text(labelText)
     .attr('font-size', config.labelFontSize)
     .style('fill', getValue(d, config.labelColor))
+    .attr('transform', `translate(${labelOrientationMult * labelPadding},${labelTranslateY})`)
 
-  switch (config.labelPosition) {
-  case LabelPosition.AUTO: {
-    labelText
-      .attr('dy', '0.32em')
-      .attr('x', d.x0 < config.width / 2 ? -NODE_LABEL_SPACING : config.nodeWidth + NODE_LABEL_SPACING)
-      .attr('text-anchor', d.x0 < config.width / 2 ? 'end' : 'start')
+  const labelMaxWidth = isSublabelInline ? config.labelMaxWidth * (1 - (sublabelText ? config.subLabelToLabelInlineWidthRatio : 0)) : config.labelMaxWidth
+  if (config.labelFit === FitMode.WRAP || forceExpand) wrapSVGText(labelTextSelection, { width: labelMaxWidth, separator, verticalAlign: VerticalAlign.TOP })
+  else trimSVGText(labelTextSelection, labelMaxWidth, config.labelTrimMode, fastEstimatesMode, config.labelFontSize, fontWidthToHeightRatio)
 
-    labelText
-      .text(config.label)
-      .call(wrapTextElement, getWrapOption(config))
+  const labelSize = estimateTextSize(labelTextSelection, config.labelFontSize, dy, fastEstimatesMode, fontWidthToHeightRatio)
 
-    smartTransition(group, duration)
-      .attr('transform', `translate(0, ${(d.y1 - d.y0) / 2})`)
+  // Render the sub-label, wrap / trim it and estimate its size
+  const sublabelTranslateX = labelOrientationMult * (labelPadding + (isSublabelInline ? config.labelMaxWidth : 0))
+  const sublabelTranslateY = labelPadding + (isSublabelInline
+    ? (labelsFontSizeDifference > 0 ? 0.6 * labelsFontSizeDifference : 0)
+    : labelSize.height)
+  sublabelTextSelection
+    .text(sublabelText)
+    .attr('font-size', config.subLabelFontSize)
+    .style('fill', getValue(d, config.subLabelColor))
+    .attr('transform', `translate(${sublabelTranslateX},${sublabelTranslateY})`)
 
-    break
-  }
-  case LabelPosition.RIGHT: {
-    const LabelBlockWidth = labelBackgroundWidth(config.nodeWidth, config.nodeHorizontalSpacing) + LABEL_BLOCK_PADDING * 2
-    const labelBlockHeight = labelBackgroundHeight(config.labelFontSize) + LABEL_BLOCK_PADDING * 2
+  const sublabelMaxWidth = isSublabelInline ? config.labelMaxWidth * config.subLabelToLabelInlineWidthRatio : config.labelMaxWidth
+  if (config.labelFit === FitMode.WRAP || forceExpand) wrapSVGText(sublabelTextSelection, { width: sublabelMaxWidth, separator, verticalAlign: VerticalAlign.TOP })
+  else trimSVGText(sublabelTextSelection, sublabelMaxWidth, config.labelTrimMode, fastEstimatesMode, config.subLabelFontSize, fontWidthToHeightRatio)
 
-    labelText
-      .text(trimTextMiddle(getValue(d, config.label), 25))
-      .attr('dy', '1em')
-      .attr('y', LABEL_BLOCK_PADDING)
-      .attr('x', ARROW_WIDTH + LABEL_BLOCK_PADDING)
+  const sublabelSize = estimateTextSize(sublabelTextSelection, config.subLabelFontSize, dy, fastEstimatesMode, fontWidthToHeightRatio)
 
-    const sublabelText = group.select(`.${s.sublabel}`)
-    sublabelText
-      .text(d => {
-        let text = getValue(d, config.subLabel)
-        if (typeof text === 'number') text = text.toFixed(2)
-        return text
-      })
-      .attr('dy', '1.2em')
-      .attr('y', LABEL_BLOCK_PADDING)
-      .attr('x', LabelBlockWidth - LABEL_BLOCK_PADDING * 2)
-      .attr('text-anchor', 'end')
-      .attr('font-size', config.labelFontSize * 0.8)
-      .style('fill', getValue(d, config.subLabelColor))
+  // Draw the background if needed
+  const labelGroupHeight = (isSublabelInline ? Math.max(labelSize.height, sublabelSize.height) : (labelSize.height + sublabelSize.height)) + 2 * labelPadding
+  const labelBackground = labelGroup.select(`.${s.labelBackground}`)
 
-    const labelBackground = group.select(`.${s.labelBackground}`)
-    labelBackground
-      .attr('d', getLabelBackground(LabelBlockWidth, labelBlockHeight))
+  labelBackground
+    .attr('d', labelShowBackground ? getLabelBackground(config.labelMaxWidth + 2 * labelPadding, labelGroupHeight, labelOrientation as (Position.LEFT | Position.RIGHT)) : null)
 
-    smartTransition(group, duration)
-      .attr('transform', d => {
-        const nodeHeight = d.y1 - d.y0
-        const h = labelBlockHeight
-        const dy = nodeHeight > h ? LABEL_BLOCK_TOP_MARGIN : (nodeHeight - h) / 2
-        return `translate(${config.nodeWidth + NODE_LABEL_SPACING}, ${dy})`
-      })
-  }
+  // Position the label
+  const labelTextAnchor = getLabelTextAnchor(d, config)
+  const sublabelTextAnchor = getSubLabelTextAnchor(d, config)
+  const xTranslate = getLabelGroupXTranslate(d, config)
+  const yTranslate = getLabelGroupYTranslate(d, labelGroupHeight, config)
+
+  labelTextSelection.attr('text-anchor', labelTextAnchor)
+  sublabelTextSelection.attr('text-anchor', sublabelTextAnchor)
+
+  const hasTransform = !!labelGroup.attr('transform')
+  smartTransition(labelGroup, hasTransform ? duration : 0)
+    .attr('transform', `translate(${xTranslate},${yTranslate})`)
+
+  return {
+    x: d.x0 + xTranslate,
+    y: d.y0 + yTranslate,
+    width: config.labelMaxWidth,
+    height: labelGroupHeight,
+    layer: d.layer,
+    selection: labelGroup,
   }
 }

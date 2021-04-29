@@ -30,7 +30,7 @@ export interface ChordDiagramConfigInterface<H extends NodeDatumCore> extends Co
   padAngle?: NumericAccessor<H>;
   /** Corner radius value or accessor function */
   cornerRadius?: NumericAccessor<H>;
-  /** Dendogram angles [0, 2 * Math.PI] */
+  /** Diagram angle range. Default: `[0, 2 * Math.PI]` */
   angleRange?: [number, number];
   /** Curve type from the CurveType enum */
   curveType?: CurveType;

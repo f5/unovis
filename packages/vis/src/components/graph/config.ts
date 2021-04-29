@@ -4,7 +4,7 @@
 import { ComponentConfigInterface, ComponentConfig } from 'core/component/config'
 
 // Types
-import { NodeDatumCore, LinkDatumCore, LayoutType, SideLabel, LinkStyle, LinkArrow, PanelConfigInterface } from 'types/graph'
+import { NodeDatumCore, LinkDatumCore, LayoutType, CircleLabel, LinkStyle, LinkArrow, PanelConfigInterface } from 'types/graph'
 import { NumericAccessor, StringAccessor, BooleanAccessor, ColorAccessor } from 'types/misc'
 import { SHAPE } from 'types/shape'
 
@@ -30,8 +30,10 @@ export interface GraphConfigInterface<N extends NodeDatumCore, L extends LinkDat
   layoutNonConnectedAside?: boolean;
 
   // Settings for Parallel and Concentric Layouts
-  /** Order of the layput groups, for paralllel and concentric layouts */
+  /** Order of the layout groups, for parallel and concentric layouts */
   layoutGroupOrder?: any[];
+  /** Number of rows per group. Default: 1 */
+  layoutGroupRows?: number;
   /** */
   layoutSubgroupMaxNodes?: number;
   /** */
@@ -68,9 +70,9 @@ export interface GraphConfigInterface<N extends NodeDatumCore, L extends LinkDat
   flowCircleSize?: number;
   /** Link width accessor function or value */
   linkWidth?: NumericAccessor<L>;
-  /** Link style accessor function or value */
+  /** Link style accessor function or value: 'solid' or 'dashed'. Default: 'solid'  */
   linkStyle?: StringAccessor<L>;
-  /** Link band width accessor function or value */
+  /** Link band width accessor function or value. Default: 0 */
   linkBandWidth?: NumericAccessor<L>;
   /** Link arrow accessor function or undefined */
   linkArrow?: ((d: L, i?: number, ...any) => LinkArrow) | undefined;
@@ -79,10 +81,10 @@ export interface GraphConfigInterface<N extends NodeDatumCore, L extends LinkDat
   /** Link flow display accessor or boolean value */
   linkFlow?: BooleanAccessor<L>;
   /** Link side Label accessor function or undefined */
-  linkLabel?: ((d: L, i?: number, ...any) => SideLabel) | undefined;
+  linkLabel?: ((d: L, i?: number, ...any) => CircleLabel | undefined) | undefined;
   /** Shift or not link side Label from center */
   linkLabelShiftFromCenter?: BooleanAccessor<L>;
-  /** Set selected link by Id */
+  /** Set selected link by id */
   selectedLinkId?: number | string;
 
   // Nodes
@@ -105,7 +107,7 @@ export interface GraphConfigInterface<N extends NodeDatumCore, L extends LinkDat
   /** Node Sublabel accessor function or value */
   nodeSubLabel?: StringAccessor<N>;
   /** Node Side Label accessor function or undefined */
-  nodeSideLabels?: ((d: N, i?: number, ...any) => SideLabel) | undefined;
+  nodeSideLabels?: ((d: N, i?: number, ...any) => CircleLabel[] | undefined) | undefined;
   /** Node disabled accessor function or value */
   nodeDisabled?: BooleanAccessor<N>;
   /** Node fill color accessor function or value */
@@ -114,6 +116,8 @@ export interface GraphConfigInterface<N extends NodeDatumCore, L extends LinkDat
   nodeStrokeSegmentFill?: ColorAccessor<N>;
   /** Node stroke color accessor function or value */
   nodeStroke?: ColorAccessor<N>;
+  /** Node Sorting Function. Default: `undefined` */
+  nodeSort?: ((a: N, b: N) => number)
   /** Set selected node by Id  */
   selectedNodeId?: number | string;
 
@@ -133,6 +137,7 @@ export class GraphConfig<N extends NodeDatumCore, L extends LinkDatumCore> exten
   layoutNonConnectedAside: true
 
   layoutGroupOrder = []
+  layoutGroupRows = 1
   layoutSubgroupMaxNodes = 6
   layoutSortConnectionsByGroup = ''
   nodeGroup = (n: N): string => n['group']
@@ -141,7 +146,7 @@ export class GraphConfig<N extends NodeDatumCore, L extends LinkDatumCore> exten
   forceLayoutSettings = {
     linkDistance: 60,
     linkStrength: 0.45,
-    charge: -350,
+    charge: -500,
     forceXStrength: 0.15,
     forceYStrength: 0.25,
   }
@@ -176,6 +181,7 @@ export class GraphConfig<N extends NodeDatumCore, L extends LinkDatumCore> exten
   nodeFill = (n: N): string => n['fill']
   nodeStrokeSegmentFill = undefined
   nodeStroke = (n: N): string => n['stroke']
+  nodeSort = undefined
 
   selectedNodeId = undefined
   panels = undefined

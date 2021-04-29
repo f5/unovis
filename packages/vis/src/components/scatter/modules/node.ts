@@ -1,45 +1,71 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { select } from 'd3-selection'
+import { Selection, select } from 'd3-selection'
 import { symbol } from 'd3-shape'
-import { smartTransition } from 'utils/d3'
+import { color } from 'd3-color'
 import { Symbol } from 'types/symbols'
 
-export function createNodes (selection): void {
+// Utils
+import { smartTransition } from 'utils/d3'
+import { getCSSVariableValue, isStringCSSVariable } from 'utils/misc'
+import { hexToBrightness } from 'utils/color'
+
+// Config
+import { ScatterConfig } from '../config'
+
+// Types
+import { ScatterPoint } from '../types'
+
+export function createNodes<Datum> (selection: Selection<SVGGElement, ScatterPoint<Datum>, any, any>): void {
   selection.attr('transform', d => `translate(${d._screen.x},${d._screen.y})`)
-  selection.append('text').style('fill', d => d._screen.color)
   selection.append('path').style('fill', d => d._screen.color)
+  selection.append('text')
+    .style('text-anchor', 'middle')
+    .style('dominant-baseline', 'central')
+    .style('fill', d => d._screen.color)
+    .style('pointer-events', 'none')
 
   selection.attr('transform', d => `translate(${d._screen.x},${d._screen.y}) scale(0)`)
 }
 
-export function updateNodes (selection, duration): void {
+export function updateNodes<Datum> (selection: Selection<SVGGElement, ScatterPoint<Datum>, any, any>, config: ScatterConfig<Datum>, duration: number): void {
   const symbolGenerator = symbol()
 
   selection.each((d, i, elements) => {
-    const group = select(elements[i])
+    const group: Selection<SVGGElement, ScatterPoint<Datum>, any, any> = select(elements[i])
     const text = group.select('text')
     const path = group.select('path')
 
-    if (d._screen.icon) {
-      text.style('display', null)
-      path.style('display', 'none')
-      text
-        .html(d._screen.icon)
-        .style('font-size', d._screen.size)
-      smartTransition(text, duration)
-        .style('fill', d._screen.color)
-    } else {
-      text.style('display', 'none')
-      path.style('display', null)
-      path.attr('d', () => {
-        symbolGenerator
-          .size(d._screen.size * d._screen.size)
-          .type(Symbol[d._screen.shape])
-        return symbolGenerator()
-      })
-      smartTransition(path, duration)
-        .style('fill', d._screen.color)
+    // Shape
+    const pointDiameter = d._screen.size
+    const pointColor = d._screen.color
+    path.attr('d', () => {
+      const svgPath = d._screen.shape ? symbolGenerator
+        .size(pointDiameter * pointDiameter)
+        .type(Symbol[d._screen.shape])() : null
+      return svgPath
+    })
+
+    smartTransition(path, duration)
+      .style('fill', pointColor)
+      .style('stroke', pointColor)
+
+    // Label
+    const pointLabelText = d._screen.label ?? ''
+    const textLength = pointLabelText.length
+    const pointLabelFontSize = 0.5 * pointDiameter / Math.pow(textLength, 0.4)
+
+    let labelColor = d._screen.labelColor
+    if (!labelColor) {
+      const hex = color(isStringCSSVariable(pointColor) ? getCSSVariableValue(pointColor, group.node()) : pointColor)?.hex()
+      const brightness = hexToBrightness(hex)
+      labelColor = brightness > config.labelTextBrightnessRatio ? 'var(--vis-scatter-point-label-text-color-dark)' : 'var(--vis-scatter-point-label-text-color-light)'
     }
+
+    text.html(pointLabelText)
+      .style('font-size', pointLabelFontSize)
+
+    smartTransition(text, duration)
+      .style('fill', labelColor)
 
     path.style('cursor', d._screen.cursor)
   })
@@ -48,7 +74,7 @@ export function updateNodes (selection, duration): void {
     .attr('transform', d => `translate(${d._screen.x},${d._screen.y}) scale(1)`)
 }
 
-export function removeNodes (selection, duration): void {
+export function removeNodes<Datum> (selection: Selection<SVGGElement, ScatterPoint<Datum>, any, any>, duration: number): void {
   smartTransition(selection, duration)
     .attr('transform', d => `translate(${d._screen.x},${d._screen.y}) scale(0)`)
     .remove()

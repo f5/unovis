@@ -27,8 +27,8 @@ import * as s from './style'
 export class Axis<Datum> extends XYComponentCore<Datum> {
   static selectors = s
   config: AxisConfig<Datum> = new AxisConfig<Datum>()
-  axisGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
-  gridGroup: Selection<SVGGElement, object[], SVGGElement, object[]>
+  axisGroup: Selection<SVGGElement, Record<string, unknown>[], SVGGElement, Record<string, unknown>[]>
+  gridGroup: Selection<SVGGElement, Record<string, unknown>[], SVGGElement, Record<string, unknown>[]>
 
   private _axisRawBBox: DOMRect
   private _axisSize: { width: number; height: number }
@@ -210,18 +210,21 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
 
   _getNumTicks (): number {
     const { config: { type, numTicks, width, height } } = this
-    return numTicks ?? Math.floor((type === AxisType.X ? width / 175 : height / 70))
+    return numTicks ?? Math.floor((type === AxisType.X ? width / 175 : Math.pow(height, 0.85) / 25))
   }
 
   _getTickValues (): number[] {
     const { config: { scales, tickValues, type, minMaxTicksOnly } } = this
     const scaleDomain = type === AxisType.X ? scales.x?.domain() : scales.y?.domain()
+
     if (minMaxTicksOnly) {
       return scaleDomain as number[]
     }
+
     if (tickValues) {
       return tickValues.filter(v => (v >= scaleDomain[0]) && (v <= scaleDomain[1]))
     }
+
     return null
   }
 
@@ -280,10 +283,10 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  _onTickMouseOver (d: any, i: number, elements: []): void {
+  _onTickMouseOver (d: any, event: MouseEvent): void {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  _onTickMouseOut (d: any, i: number, elements: []): void {
+  _onTickMouseOut (d: any, event: MouseEvent): void {
   }
 }

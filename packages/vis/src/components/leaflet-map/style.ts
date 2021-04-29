@@ -8,16 +8,23 @@ injectGlobal(leafletCSS)
 
 export const variables = injectGlobal`
   :root {
-    --vis-map-background-color: #dfe5eb;
+    --vis-map-container-background-color: #dfe5eb;
+    --vis-map-label-font-family: var(--vis-font-family);
+    
+    --vis-map-point-default-fill-color: #B9BEC3;
+    --vis-map-point-default-stroke-color: #959da3;
+    --vis-map-point-default-stroke-width: 0px;
+    --vis-map-point-default-cursor: default;
+    
+    --vis-map-cluster-default-fill-color: #fff;
+    --vis-map-cluster-default-stroke-color: #B9BEC3;
+    --vis-map-cluster-default-stroke-width: 1.5px;
     --vis-map-cluster-donut-fill-color: #959da3;
-    --vis-map-point-default-fill-color: #3aea38;
-    --vis-map-point-from-cluster-stroke-color: #fff;
-    --vis-map-point-cluster-fill-color: #fff;
-    --vis-map-inner-label-font-family: var(--vis-font-family);
-    --vis-map-inner-label-color: #7e8992;
-    --vis-map-point-with-stroke-color: #fff;
-    --vis-map-cluser-expanded-color-fill: #fff;
-
+    
+    --vis-map-point-label-text-color-dark: #5b5f6d;
+    --vis-map-point-label-text-color-light: #fff;
+        
+    --vis-map-cluster-expanded-background-fill: #fff;
   }
 `
 
@@ -27,7 +34,7 @@ export const mapContainer = css`
   width: 100%;
   height: 100%;
   position: absolute;
-  background-color: var(--vis-map-background-color);
+  background-color: var(--vis-map-container-background-color);
 
   canvas {
     pointer-events: all;
@@ -48,29 +55,24 @@ export const pointPath = css`
   label: point-path;
 
   stroke-opacity: 1;
-  fill-opacity: 0.85;
+  fill-opacity: 1.0;
   fill: var(--vis-map-point-default-fill-color);
+  stroke: var(--vis-map-point-default-stroke-color);
+  stroke-width: var(--vis-map-point-default-stroke-width);
   pointer-events: fill !important;
   transition: .2s stroke-width, .3s transform;
-
-  &.fromCluster {
-    stroke: var(--vis-map-point-from-cluster-stroke-color);
-  }
+  cursor: var(--vis-map-point-default-cursor);
 
   &.cluster {
     fill-opacity: 0.9;
     stroke: none;
     animation: none;
-    fill: var(--vis-map-point-cluster-fill-color);
-  }
-
-  &.withStroke {
-    stroke-width: 1.25px;
-    stroke: var(--vis-map-point-with-stroke-color);
+    fill: var(--vis-map-cluster-default-fill-color);
+    stroke: var(--vis-map-cluster-default-stroke-color);
+    stroke-width: var(--vis-map-cluster-default-stroke-width);
   }
 
   &:hover {
-    cursor: pointer;
     stroke-width: 2;
     fill-opacity: 1;
     animation: none;
@@ -93,7 +95,7 @@ export const pointSelection = css`
   &.active {
     transition: all 400ms cubic-bezier(0.230, 1.000, 0.320, 1.000);
     opacity: 1;
-    transform: scale(1.6);
+    transform: scale(1.25);
   }
 `
 
@@ -101,8 +103,18 @@ export const innerLabel = css`
   label: inner-label;
 
   text-anchor: middle;
-  fill: var(--vis-map-inner-label-color);
-  font-family: var(--vis-map-inner-label-font-family);
+  fill: var(--vis-map-point-label-text-color-dark);
+  font-family: var(--vis-map-label-font-family);
+  pointer-events: none;
+  font-weight: 600;
+`
+
+export const bottomLabel = css`
+  label: bottom-label;
+
+  text-anchor: middle;
+  fill: var(--vis-map-point-label-text-color-dark);
+  font-family: var(--vis-map-label-font-family);
   pointer-events: none;
   font-weight: 600;
 `
@@ -137,7 +149,7 @@ export const backgroundRect = css`
 export const clusterBackground = css`
   label: cluster-background;
 
-  fill: var(--vis-map-cluser-expanded-color-fill);
+  fill: var(--vis-map-cluster-expanded-background-fill);
   opacity: 0.6;
   visibility: hidden;
 

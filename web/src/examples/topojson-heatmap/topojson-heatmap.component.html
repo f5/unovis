@@ -1,0 +1,16 @@
+<div #topojsonmap class="chart">
+  <vis-singlechart
+      [margin]="{}"
+      [component]="component"
+      [config]="config"
+      [data]="data"
+      [tooltip]="tooltip"
+  ></vis-singlechart>
+  
+  <vis-controls
+    class="vis-controls"
+    #controlsRef
+    [orientation]="controlsOrientation"
+    [items]="controlItems"
+  ></vis-controls>
+</div>

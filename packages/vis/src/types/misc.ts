@@ -1,14 +1,15 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { ScaleType } from 'types/scales'
+import { ContiniousScale } from 'types/scales'
 
 export type NumericAccessor<Datum> = ((d: Datum, i?: number, ...any) => number | null) | number | null | undefined
-export type StringAccessor<Datum> = ((d: Datum, i?: number, ...any) => string) | string
-export type ColorAccessor<Datum> = ((d: Datum, i?: number, ...any) => string) | string
-export type BooleanAccessor<Datum> = ((d: Datum, i?: number, ...any) => boolean) | boolean
+export type StringAccessor<Datum> = ((d: Datum, i?: number, ...any) => string | null) | string | null
+export type ColorAccessor<Datum> = ((d: Datum, i?: number, ...any) => string | null) | string | null
+export type BooleanAccessor<Datum> = ((d: Datum, i?: number, ...any) => boolean | null) | boolean | null
+export type GenericAccessor<T, Datum> = ((d: Datum, i?: number, ...any) => T | null) | T | null
 
 export type Dimension = {
   /** D3 scale, e.g. Scale.ScaleLinear */
-  scale?: ScaleType;
+  scale?: ContiniousScale;
   /** Force set scale domain (data extent) */
   domain?: [number | undefined, number | undefined];
   /** Constraint the minimum value of the scale domain */
@@ -24,4 +25,11 @@ export type Spacing = {
   right?: number;
   top?: number;
   bottom?: number;
+}
+
+export type Rect = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
 }

@@ -1,14 +1,14 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { Selection, event } from 'd3-selection'
+import { Selection } from 'd3-selection'
 import { scaleOrdinal, ScaleOrdinal } from 'd3-scale'
-import { drag } from 'd3-drag'
+import { drag, D3DragEvent } from 'd3-drag'
 import { max } from 'd3-array'
 
 // Core
 import { XYComponentCore } from 'core/xy-component'
 
 // Utils
-import { getValue, isNumber, countUnique, indexArray } from 'utils/data'
+import { getValue, isNumber, countUnique, indexArray, getMin, getMax } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
 
@@ -158,14 +158,14 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
       .style('opacity', 1)
   }
 
-  _onScrollbarDrag (): void {
+  _onScrollbarDrag (event: D3DragEvent<any, any, any>): void {
     const { config } = this
     const yRange = config.scales.y.range()
     const yHeight = Math.abs(yRange[1] - yRange[0])
     this._updateScrollPosition(event.dy * this._maxScroll / (yHeight - this._scrollbarHeight))
   }
 
-  _onMouseWheel (): void {
+  _onMouseWheel (d: unknown, event: WheelEvent): void {
     event?.preventDefault()
     this._updateScrollPosition(event?.deltaY)
 
@@ -201,8 +201,8 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
   // Override the default XYComponent getXDataExtent method to take into account line lengths
   getXDataExtent (): number[] {
     const { config, datamodel } = this
-    const min = datamodel.getMin(config.x)
-    const max = datamodel.getMax(d => getValue(d, config.x) + getValue(d, config.length))
+    const min = getMin(datamodel.data, config.x)
+    const max = getMax(datamodel.data, d => getValue(d, config.x) + getValue(d, config.length))
     return [min, max]
   }
 }

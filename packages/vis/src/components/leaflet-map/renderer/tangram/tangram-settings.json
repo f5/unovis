@@ -264,7 +264,7 @@
         "shading_river_fill_color": "global.ultralight_color",
         "shading_river_tint_color": "global.extralight_color",
         "text_fill": "global.black_color",
-        "text_font_family": "Open Sans",
+        "text_font_family": "Inter",
         "text_stroke": [
             1,
             1,

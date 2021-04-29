@@ -9,38 +9,62 @@ import { ProjectionType } from 'types/map-projections'
 import { MapAreaCore } from './modules/types'
 
 export interface TopoJSONMapConfigInterface<N extends NodeDatumCore, L extends LinkDatumCore, A extends MapAreaCore> extends ComponentConfigInterface {
-  /** Projection Type: 'mercator' or 'equirectangular' */
-  porjection?: ProjectionType;
+  // General
+  /** Projection Type: 'mercator' or 'equirectangular'. Default: `ProjectionType.MERCATOR` */
+  projection?: ProjectionType;
   /** Map data in the TopoJSON topology format */
   topojson?: /* TopoJSON.Topology */ any; // TopoJSON typings have troubles with being bundled so we're temporary disabling them
-  /** Name of the map features to be displayed, e.g. 'countries' or 'counties' */
+  /** Name of the map features to be displayed, e.g. 'countries' or 'counties'. Default: `countries` */
   mapFeatureName?: string;
-  /** Set initial map fit to points instead of topojson features */
+  /** Set initial map fit to points instead of topojson features. Default: `false` */
   mapFitToPoints?: boolean;
-  /** Initial zoom level */
+  /** Initial zoom level. Default: `undefined` */
   zoomFactor?: number;
   /** Disable pan / zoom interactions */
   disableZoom?: boolean;
-  /** Zoom extent, default [1, 6] */
+  /** Zoom extent. Default: `[1, 6]` */
   zoomExtent?: number[];
-  /** Link width accessor */
+  /** Zoom animation duration. Default: `400` */
+  zoomDuration?: number;
+
+  /** Link width value or accessor function. Default: `d => d.width ?? 1` */
   linkWidth?: NumericAccessor<L>;
-  /** Link color accessor */
+  /** Link color value or accessor function. Default: `d => d.color ?? null` */
   linkColor?: ColorAccessor<L>;
-  /** Area id accessor corresponding to the feature id from TopoJSON */
+  /** Link cursor value or accessor function, Default: `null` */
+  linkCursor?: StringAccessor<A>;
+  /** Area id accessor function corresponding to the feature id from TopoJSON. Default: `d => d.id ?? ''` */
   areaId?: StringAccessor<A>;
-  /** Area color accessor */
+  /** Area color value or accessor function. Default: `d => d.color ?? null` */
   areaColor?: ColorAccessor<A>;
-  /** Point color accessor */
+  /** Area cursor value or accessor function, Default: `null` */
+  areaCursor?: StringAccessor<A>;
+
+  /** Point color accessor. Default: `d => d.color ?? null` */
   pointColor?: ColorAccessor<N>;
-  /** Point radius accessor */
+  /** Point radius accessor. Default: `d => d.radius ?? 8` */
   pointRadius?: NumericAccessor<N>;
-  /** Point stroke width accessor */
+  /** Point stroke width accessor. Default: `d => d.strokeWidth ?? null` */
   pointStrokeWidth?: NumericAccessor<N>;
-  /** Point longitude accessor */
+  /** Point cursor value or accessor function, Default: `null` */
+  pointCursor?: StringAccessor<A>;
+  /** Point longitude accessor function. Default: `d => d.longitude ?? null` */
   longitude?: NumericAccessor<N>;
-  /** Point latitude accessor */
+  /** Point latitude accessor function. Default: `d => d.latitude ?? null` */
   latitude?: NumericAccessor<N>;
+  /** Point label accessor function. Default: `undefined` */
+  pointLabel?: StringAccessor<N>;
+  /** Point color brightness ratio for switching between dark and light text label color. Default: `0.65` */
+  pointLabelTextBrightnessRatio?: number;
+  /** Point id accessor function. Default: `d => d.id` */
+  pointId?: StringAccessor<N>;
+
+  /** Enables blur and blending between neighbouring points. Default: `false` */
+  heatmapMode?: boolean;
+  /** Heatmap blur filter stdDeviation value. Default: `10` */
+  heatmapModeBlurStdDeviation?: number;
+  /** Zoom level at which the heatmap mode will be disabled. Default: `2.5` */
+  heatmapModeZoomLevelThreshold?: number;
 }
 
 export class TopoJSONMapConfig<N extends NodeDatumCore, L extends LinkDatumCore, A extends MapAreaCore> extends ComponentConfig implements TopoJSONMapConfigInterface<N, L, A> {
@@ -51,16 +75,29 @@ export class TopoJSONMapConfig<N extends NodeDatumCore, L extends LinkDatumCore,
   mapFitToPoints = false
 
   zoomExtent = [1, 6]
+  zoomDuration = 400
   disableZoom = false
   zoomFactor = undefined
 
   linkWidth = (d: L): number => d['width'] ?? 1
   linkColor = (d: L): string => d['color'] ?? null
+  linkCursor = null
+
   areaId = (d: A): string => d['id'] ?? ''
   areaColor = (d: A): string => d['color'] ?? null
-  pointColor = (d: N): string => d['color'] ?? null
-  pointRadius = (d: N): number => d['radius'] ?? 6
-  pointStrokeWidth = (d: N): number => d['strokeWidth'] ?? 0
+  areaCursor = null
+
   longitude = (d: N): number => d['longitude']
   latitude = (d: N): number => d['latitude']
+  pointColor = (d: N): string => d['color'] ?? null
+  pointRadius = (d: N): number => d['radius'] ?? 8
+  pointStrokeWidth = (d: N): number => d['strokeWidth'] ?? 0
+  pointCursor = null
+  pointLabel = undefined
+  pointLabelTextBrightnessRatio = 0.65
+  pointId = (d: N, i: number): string => `${d['id'] ?? i}`
+
+  heatmapMode = false
+  heatmapModeBlurStdDeviation = 8
+  heatmapModeZoomLevelThreshold = 2.5
 }

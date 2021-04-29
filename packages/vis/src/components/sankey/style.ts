@@ -13,9 +13,10 @@ export const variables = injectGlobal`
     --vis-sankey-node-label-color: #575c65;
 
     --vis-sankey-node-label-background-fill-color: #ffffff;
-    --vis-sankey-node-label-background-stroke-color: #dadada;
+    --vis-sankey-node-label-background-stroke-color: #eaeaea;
     --vis-sankey-node-label-text-decoration: none;
     --vis-sankey-node-label-font-weight: 600;
+    --vis-sankey-node-sublabel-font-weight: 500;
     --vis-sankey-node-label-cursor: default;
 
     --vis-sankey-icon-size: ${SANKEY_ICON_SIZE}px;
@@ -64,11 +65,11 @@ export const linkSelectionHelper = css`
 
 export const labelGroup = css`
   label: label-group;
-  visibility: hidden;
 `
 
 export const label = css`
   label: label;
+  dominant-baseline: hanging;
 
   fill: var(--vis-sankey-node-label-color);
   text-decoration: var(--vis-sankey-node-label-text-decoration);
@@ -78,20 +79,23 @@ export const label = css`
 
   &, tspan {
     font-family: var(--vis-sankey-label-font-family);
+    dominant-baseline: hanging;
   }
 
 `
 
 export const sublabel = css`
   label: sub-label;
+  dominant-baseline: hanging;
 
   fill: var(--vis-sankey-node-label-color);
   pointer-events: none;
-  font-weight: 600;
   user-select: none;
 
   &, tspan {
     font-family: var(--vis-sankey-label-font-family);
+    font-weight: var(--vis-sankey-node-sublabel-font-weight);
+    dominant-baseline: hanging;
   }
 
 `
@@ -100,28 +104,21 @@ export const labelBackground = css`
   label: label-background;
   stroke: var(--vis-sankey-node-label-background-stroke-color);
   fill: var(--vis-sankey-node-label-background-fill-color);
-  opacity: 0.8;
+  opacity: 0.9;
 `
 
-export const visibleLabel = css`
-  label: visible-label;
+export const hidden = css`
+  label: hidden;
+  visibility: hidden;
+`
+
+export const forceShow = css`
+  label: forceShow;
   visibility: visible;
 `
 
 export const gNode = css`
   label: g-node;
-
-  &${`.${visibleLabel}`} {
-    ${`.${label}`} {
-      visibility: visible;
-    }
-    ${`.${sublabel}`} {
-      visibility: visible;
-    }
-    ${`.${labelBackground}`} {
-      visibility: visible;
-    }
-  }
 `
 
 export const node = css`
@@ -150,4 +147,8 @@ export const nodeIcon = css`
 
 export const nodeExit = css`
   label: node-exit;
+`
+
+export const background = css`
+  label: background;
 `

@@ -18,17 +18,17 @@ type MapPoint = {
 }
 
 @Component({
-  selector: 'simplemap',
-  templateUrl: './simple-map.component.html',
-  styleUrls: ['./simple-map.component.css'],
+  selector: 'topojson-map',
+  templateUrl: './topojson-map.component.html',
+  styleUrls: ['./topojson-map.component.css'],
 })
 
-export class SimpleMapComponent implements OnInit, AfterViewInit {
-  title = 'simple-map'
+export class TopoJSONMapComponent implements OnInit, AfterViewInit {
+  title = 'topojson-map'
   chart: any
   data: { nodes: MapPoint[] }
   config: any
-  @ViewChild('simplemap', { static: false }) simpleMap: ElementRef
+  @ViewChild('topojsonmap', { static: false }) simpleMap: ElementRef
 
   ngAfterViewInit (): void {
     const data = {
@@ -37,21 +37,28 @@ export class SimpleMapComponent implements OnInit, AfterViewInit {
         id: a['ISO'],
         name: a.Country,
         color: '#ef8f73',
+        cursor: 'pointer',
       })),
       links: _times(10).map(i => ({
         source: _sample(cities).id,
         target: _sample(cities).id,
         width: _random(1, 5),
+        cursor: 'crosshair',
       })),
     }
 
     const config = {
       component: new TopoJSONMap<MapPoint, any, any>({
         topojson: WorldMapTopoJSON,
+        duration: 3500,
+        pointLabel: d => d.city.substr(0, 2),
+        pointCursor: 'pointer',
+        linkCursor: d => d.cursor,
+        areaCursor: d => d.cursor
       }),
       tooltip: new Tooltip<any, any>({
         triggers: {
-          // [TopoJSONMap.selectors.node]: d => `<span>${d.city}</span>`,
+          [TopoJSONMap.selectors.point]: d => `<span>${d.city}</span>`,
           // [TopoJSONMap.selectors.feature]: d => `<span>${d.properties.name}</span>`,
         },
       }),

@@ -6,18 +6,14 @@ import _times from 'lodash/times'
 
 // Vis
 import {
-  SingleChart, Sankey, SankeyConfigInterface, Sizing, LabelPosition, NodeAlignType, ExitTransitionType,
+  SingleChart, Sankey, SankeyConfigInterface, Sizing, NodeAlignType, ExitTransitionType,
   EnterTransitionType, VisControlItemInterface, VisControlsOrientation, Tooltip, Position,
+  VerticalAlign, SubLabelPlacement,
 } from '@volterra/vis'
 
 import data from './data/apieplist_ves-prod.json'
 
-const apiData = data.apiep_list.map(d => {
-  return {
-    ...d,
-    value: 1, // Math.random(),
-  }
-})
+const apiData = data.apiep_list
 
 const NODE_WIDTH = 30
 const NODE_HORIZONTAL_SPACE = 260
@@ -38,7 +34,9 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
   fitToWidthScale = 1
 
   config: SankeyConfigInterface<any, any> = {
-    labelPosition: LabelPosition.RIGHT,
+    labelPosition: Position.RIGHT,
+    labelVerticalAlign: VerticalAlign.TOP,
+    labelBackground: true,
     nodeHorizontalSpacing: NODE_HORIZONTAL_SPACE,
     nodeWidth: NODE_WIDTH,
     nodeAlign: NodeAlignType.LEFT,
@@ -47,6 +45,8 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
     labelColor: d => d.dynExamples.length ? '#4c52ca' : null,
     subLabelColor: this.getSubLabelColor,
     subLabel: d => d.isLeafNode ? d.method : `${d.leafs} leaf${d.leafs === 1 ? '' : 's'}`,
+    labelMaxWidth: NODE_HORIZONTAL_SPACE - 40,
+    subLabelPlacement: SubLabelPlacement.INLINE,
     nodeCursor: 'pointer',
     linkCursor: 'pointer',
     nodeIcon: d => (d.sourceLinks[0] || (!d.sourceLinks[0] && d.collapsed)) ? (d.collapsed ? '+' : '') : null,
@@ -71,6 +71,10 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
       return b.value - a.value || this.compareStrings(a.target?.path, b.target?.path) // Links sorted by: value + alphabetically
     },
     events: {
+      [Sankey.selectors.background]: {
+        // eslint-disable-next-line no-console
+        click: () => { console.log('Background click!') },
+      },
       [Sankey.selectors.gNode]: {
         click: (d: any) => {
           if (!d.targetLinks?.[0] || (!this.collapsedItems[d.id] && !d.sourceLinks?.[0])) return
@@ -128,6 +132,7 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
   flowlegendWidth = 0;
 
   ngAfterViewInit (): void {
+    // eslint-disable-next-line no-console
     console.log({ apiData, sankeyData: this.sankeyData })
 
     this.sankey = new SingleChart(this.chart.nativeElement, this.containerConfig, this.sankeyData)
@@ -143,7 +148,8 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
 
     const getNodeId = (path, depth, method): string => `${depth}:${path}:${method}`
     for (const rec of apiData) {
-      const value = 1
+      const value = rec.value ?? 1
+
       let url = rec.collapsed_url
       const isPartOfOtherUrl = apiData.find(
         r => r.collapsed_url !== url && r.collapsed_url?.includes(url)
@@ -190,6 +196,7 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
           isLeafNode,
           method,
           dynExamples,
+          value,
         })
         if (collapsed) break
       }
@@ -213,10 +220,14 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
     const groupedLinks = Object.values(_groupBy(links, 'id')) as any[]
 
     return {
-      nodes: groupedNodes.map(nodeArr => ({ ...nodeArr[0], leafs: nodeArr.length })),
+      nodes: groupedNodes.map(nodeArr => ({
+        ...nodeArr[0],
+        leafs: nodeArr.length,
+        fixedValue: sum(nodeArr.map(n => n.value)), // Sum up link values
+      })),
       links: groupedLinks.map(linkArr => ({
         ...linkArr[0],
-        value: sum(linkArr.map(l => 1)), // Sum up link values
+        value: sum(linkArr.map(l => l.value)), // Sum up link values
       })),
     }
   }
@@ -228,12 +239,12 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
         <td class="content">${d.path.replace('//', '/')}</td>
       </tr>
       ${
-        d.dynExamples?.length
-          ? `<tr class="item">
+  d.dynExamples?.length
+    ? `<tr class="item">
         <td class="label">Example DYNs: </td>
         <td class="content">${d.dynExamples?.[0]}</td>
       </tr>`
-          : ''
+    : ''
 }
       ${
   d.method
@@ -244,14 +255,14 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
     : ''
 }
       ${d.dynExamples
-        ?.slice(1)
-        .map(
-          str => `<tr class="item">
+    ?.slice(1)
+    .map(
+      str => `<tr class="item">
         <td class="label"></td>
         <td class="content">${str}</td>
       </tr>`
-        )
-        .join('')}
+    )
+    .join('')}
       </table>`
   }
 

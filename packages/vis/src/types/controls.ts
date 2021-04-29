@@ -2,7 +2,7 @@
 
 export interface VisControlItemInterface {
   icon: string;
-  callback?: () => any;
+  callback?: (event: MouseEvent) => any;
   disabled?: boolean;
   borderLeft?: boolean;
   borderTop?: boolean;

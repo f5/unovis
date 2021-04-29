@@ -3,13 +3,15 @@ import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component
 
 // Types
 import { CurveType } from 'types/curves'
-import { StringAccessor } from 'types/misc'
+import { StringAccessor, GenericAccessor } from 'types/misc'
 
 export interface LineConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
   /** Curve type from the CurveType enum */
   curveType?: CurveType;
   /** Line width in pixels */
   lineWidth?: number;
+  /** Line dash array, see SVG's stroke-dasharray. Default: `undefined` */
+  lineDashArray?: GenericAccessor<number[], Datum>;
   /** Value to be used in case of no data */
   noDataValue?: number | null;
   /** Highlight line on hover */
@@ -21,6 +23,7 @@ export interface LineConfigInterface<Datum> extends XYComponentConfigInterface<D
 export class LineConfig<Datum> extends XYComponentConfig<Datum> implements LineConfigInterface<Datum> {
   curveType = CurveType.MonotoneX
   lineWidth = 2
+  lineDashArray = undefined
   noDataValue = null
   highlightOnHover = true
   cursor = null

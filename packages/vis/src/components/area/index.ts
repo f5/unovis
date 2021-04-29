@@ -7,7 +7,7 @@ import { interpolatePath } from 'd3-interpolate-path'
 import { XYComponentCore } from 'core/xy-component'
 
 // Utils
-import { getValue, isNumber, isArray } from 'utils/data'
+import { getValue, isNumber, isArray, getStackedExtent, getStackedData, filterDataByRange } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
 
@@ -29,7 +29,6 @@ export class Area<Datum> extends XYComponentCore<Datum> {
   areaGen: AreaInterface<AreaDatum>
   events = {
     [Area.selectors.area]: {
-      mouseover: this._raiseSelection,
     },
   }
 
@@ -40,46 +39,57 @@ export class Area<Datum> extends XYComponentCore<Datum> {
 
   _render (customDuration?: number): void {
     super._render(customDuration)
-    const { config, datamodel, datamodel: { data } } = this
+    const { config, datamodel: { data } } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
 
     const curveGen = Curve[config.curveType]
     this.areaGen = area<AreaDatum>()
       .x(d => d.x)
       .y0(d => d.y0)
-      .y1(d => d.y1)
-      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+      .y1(d => {
+        const isSmallerThanPixel = Math.abs(d.y1 - d.y0) < 1
+        return d.y1 - (isSmallerThanPixel ? 1 : 0)
+      })
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       .curve(curveGen)
 
     const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
-    const stackedValues = data.map(d => datamodel.getStackedValues(d, ...yAccessors))
-    const baselineValues = data.map(d => getValue(d, config.baseline) || 0)
     const areaDataX = data.map(d => config.scales.x(getValue(d, config.x)))
-    const stackedData: AreaDatum[][] = yAccessors.map(
-      (acs, i) => stackedValues.map(
+
+    const stacked = getStackedData(data, config.baseline, ...yAccessors)
+    const stackedData: AreaDatum[][] = stacked.map(
+      arr => arr.map(
         (d, j) => ({
-          y0: config.scales.y(baselineValues[j] + (d[i - 1] ?? 0)),
-          y1: config.scales.y(d[i] + baselineValues[j]),
+          y0: config.scales.y(d[0]),
+          y1: config.scales.y(d[1]),
           x: areaDataX[j],
         })
       )
     )
 
+    // We reverse the data in order to have the first areas to be displayed on top
+    //   for better visibility when they're close to zero
+    const areaMaxIdx = stackedData.length - 1
+    const stackedDataReversed = stackedData.reverse()
     const areas = this.g
       .selectAll(`.${s.area}`)
-      .data(stackedData)
+      .data(stackedDataReversed)
 
     const areasEnter = areas.enter().append('path')
       .attr('class', s.area)
       .attr('d', d => this.areaGen(d) || this._emptyPath())
       .style('opacity', 0)
-      .style('fill', (d, i) => getColor(d, config.color, i))
+      .style('fill', (d, i) => getColor(d, config.color, areaMaxIdx - i))
 
     const areasMerged = smartTransition(areasEnter.merge(areas), duration)
-      .style('opacity', d => getValue(d, config.opacity))
-      .style('fill', (d, i) => getColor(d, config.color, i))
-      .style('cursor', (d, i) => getValue(d, config.cursor, i))
+      .style('opacity', d => {
+        const isDefined = d.some(p => (p.y0 - p.y1) !== 0)
+        return isDefined ? getValue(d, config.opacity) : 0
+      })
+      .style('fill', (d, i) => getColor(d, config.color, areaMaxIdx - i))
+      .style('stroke', (d, i) => getColor(d, config.color, areaMaxIdx - i))
+      .style('cursor', (d, i) => getValue(d, config.cursor, areaMaxIdx - i))
 
     if (duration) {
       areasMerged
@@ -89,7 +99,7 @@ export class Area<Datum> extends XYComponentCore<Datum> {
           return interpolatePath(previous, next)
         })
     } else {
-      areasMerged.attr('d', d => this.areaGen(d))
+      areasMerged.attr('d', d => this.areaGen(d) || this._emptyPath())
     }
 
     areas.exit().remove()
@@ -99,7 +109,8 @@ export class Area<Datum> extends XYComponentCore<Datum> {
     const { config, datamodel } = this
     const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
 
-    return datamodel.getStackedExtent(config.baseline, ...yAccessors)
+    const data = config.adaptiveYScale ? filterDataByRange(datamodel.data, config.scales.x.domain() as [number, number], config.x) : datamodel.data
+    return getStackedExtent(data, config.baseline, ...yAccessors)
   }
 
   _emptyPath (): string {
@@ -114,9 +125,5 @@ export class Area<Datum> extends XYComponentCore<Datum> {
       { y0, y1, x: xRange[0] },
       { y0, y1, x: xRange[1] },
     ])
-  }
-
-  _raiseSelection (d, i, els): void {
-    select(els[i]).raise()
   }
 }

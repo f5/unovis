@@ -3,10 +3,10 @@ import { css, injectGlobal } from 'emotion'
 
 export const variables = injectGlobal`
   :root {
-    --vis-brush-selection-fill: #262933;
+    --vis-brush-selection-fill: #0b1640;
     --vis-brush-selection-stroke: #acb2b9;
-    --vis-brush-handle-fill: #a0a7c2;
-    --vis-brush-handle-stroke: #dddddd;
+    --vis-brush-handle-fill: #6d778c;
+    --vis-brush-handle-stroke: #eee;
   }
 `
 
@@ -36,14 +36,14 @@ export const brush = css`
 export const unselected = css`
   label: unselected;
   fill: var(--vis-brush-selection-fill);
-  opacity: 0.35;
+  opacity: 0.4;
   pointer-events: none;
 `
 
 export const handleLine = css`
   label: handle-line;
   stroke: var(--vis-brush-handle-stroke);
-  stroke-width: 1.5;
+  stroke-width: 1;
   fill: none;
   pointer-events: none;
 `

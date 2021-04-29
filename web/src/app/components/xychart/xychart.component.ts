@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { Component, ViewChild, ElementRef, AfterViewInit, Input } from '@angular/core'
+import { Component, ViewChild, ElementRef, AfterViewInit, Input, OnDestroy } from '@angular/core'
 
 // Vis
 import { XYContainer, XYContainerConfigInterface } from '@volterra/vis'
@@ -9,7 +9,7 @@ import { XYContainer, XYContainerConfigInterface } from '@volterra/vis'
   templateUrl: './xychart.component.html',
   styleUrls: ['./xychart.component.css'],
 })
-export class XYChartComponent implements AfterViewInit {
+export class XYChartComponent implements AfterViewInit, OnDestroy {
   @ViewChild('container', { static: false }) containerRef: ElementRef
   @Input() duration = undefined
   @Input() margin = { top: 10, bottom: 10, left: 10, right: 10 }
@@ -20,12 +20,13 @@ export class XYChartComponent implements AfterViewInit {
   @Input() axes = {}
   @Input() tooltip
   @Input() crosshair
+  @Input() adaptiveYScale
   @Input() data = []
-  chart: XYContainer<object>
+  chart: XYContainer<Record<string, unknown>>
   config = {}
 
   ngAfterViewInit (): void {
-    this.chart = new XYContainer<object>(this.containerRef.nativeElement, this.getConfig(), this.data)
+    this.chart = new XYContainer<Record<string, unknown>>(this.containerRef.nativeElement, this.getConfig(), this.data)
   }
 
   ngOnChanges (changes): void {
@@ -51,10 +52,14 @@ export class XYChartComponent implements AfterViewInit {
     this.chart?.updateContainer(this.getConfig())
   }
 
-  getConfig (): XYContainerConfigInterface<object> {
-    const { duration, margin, padding, components, dimensions, axes, tooltip, crosshair } = this
+  getConfig (): XYContainerConfigInterface<Record<string, unknown>> {
+    const { duration, margin, padding, components, dimensions, axes, tooltip, crosshair, adaptiveYScale } = this
     return {
-      duration, margin, padding, components, dimensions, axes, tooltip, crosshair,
+      duration, margin, padding, components, dimensions, axes, tooltip, crosshair, adaptiveYScale,
     }
+  }
+
+  ngOnDestroy () {
+    this.chart.destroy()
   }
 }

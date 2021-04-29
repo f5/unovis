@@ -1,5 +1,4 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-/* eslint-disable */
 import { AfterViewInit, OnDestroy, Component } from '@angular/core'
 
 // Vis
@@ -23,7 +22,7 @@ export class WrapperUsageExampleComponent implements AfterViewInit, OnDestroy {
   // Chart configuration
   duration = undefined
   groupedBarConfig = {
-    x: d => d.x,
+    x: d => d.timestamp,
     y: [
       d => d.y,
       d => d.y1,
@@ -33,30 +32,37 @@ export class WrapperUsageExampleComponent implements AfterViewInit, OnDestroy {
     roundedCorners: 2,
     events: {
       [GroupedBar.selectors.bar]: {
-        click: d => { },
+        // click: d => {},
       },
     },
   }
+
   groupedBar = new GroupedBar<SampleDatum>(this.groupedBarConfig)
 
   components = [this.groupedBar]
 
   margin = { top: 10, bottom: 10, left: 10, right: 10 }
+  padding = {}
 
   dimensions = {
     x: {
       domain: undefined,
-    }
+    },
   }
 
   axes = {
-    x: new Axis({ label: 'x axis' }),
+    x: new Axis({
+      label: 'x axis',
+      tickFormat: d => (new Date(d)).toTimeString(),
+      tickTextWidth: 80,
+    }),
     y: new Axis({ label: 'y axis' }),
   }
 
   tooltip = new Tooltip({
     triggers: {
-      [GroupedBar.selectors.bar]: (d) => {console.log(d)},
+      // eslint-disable-next-line no-console
+      [GroupedBar.selectors.bar]: (d) => { console.log(d) },
     },
   })
 
@@ -85,25 +91,26 @@ export class WrapperUsageExampleComponent implements AfterViewInit, OnDestroy {
   ]
 
   navAxes = {
-    x: new Axis({ label: 'x axis' }),
+    x: new Axis({
+      label: 'x axis',
+      tickFormat: d => (new Date(d)).toTimeString(),
+      tickTextWidth: 120,
+    }),
     y: new Axis({ label: 'y axis' }),
   }
 
   intervalId: NodeJS.Timeout
 
   ngAfterViewInit (): void {
-
     this.intervalId = setInterval(() => {
       this.duration = undefined
-      this.data = sampleSeriesData(Math.floor(10 + 50*Math.random()))
+      this.data = sampleSeriesData(Math.floor(10 + 50 * Math.random()))
       this.groupedBarConfig.barMaxWidth = Math.random() * 20
       this.groupedBarConfig = { ...this.groupedBarConfig } // Updating the object to trigger change detection
     }, 15000)
   }
 
-  ngOnDestroy () : void {
+  ngOnDestroy (): void {
     clearInterval(this.intervalId)
   }
 }
-
-

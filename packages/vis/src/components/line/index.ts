@@ -1,6 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { select } from 'd3-selection'
-import { line, Line as LineGenInterface, CurveFactory } from 'd3-shape'
+import { line, Line as LineGenInterface, CurveFactoryLineOnly } from 'd3-shape'
 import { interpolatePath } from 'd3-interpolate-path'
 
 // Core
@@ -25,7 +25,7 @@ export class Line<Datum> extends XYComponentCore<Datum> {
   static selectors = s
   config: LineConfig<Datum> = new LineConfig()
   lineGen: LineGenInterface<{ x: number; y: number; defined: boolean }>
-  curve: CurveFactory = Curve[CurveType.MonotoneX]
+  curve: CurveFactoryLineOnly = Curve[CurveType.MonotoneX]
   events = {
     [Line.selectors.line]: {
       mouseover: this._highlight.bind(this),
@@ -48,6 +48,7 @@ export class Line<Datum> extends XYComponentCore<Datum> {
     const { config, datamodel: { data } } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
 
+    this.curve = Curve[config.curveType]
     this.lineGen = line<{ x: number; y: number; defined: boolean }>()
       .x(d => d.x)
       .y(d => d.y)
@@ -62,7 +63,7 @@ export class Line<Datum> extends XYComponentCore<Datum> {
         return {
           x: lineDataX[i],
           y: config.scales.y(value),
-          defined: isNumber(value),
+          defined: isFinite(value),
         }
       })
 
@@ -99,13 +100,16 @@ export class Line<Datum> extends XYComponentCore<Datum> {
       const lineSelectionHelper = group.select(`.${s.lineSelectionHelper}`)
 
       const isLineVisible = yAccessors[i] && d.defined
+      const dashArray = getValue(d, config.lineDashArray, i)
       const transition = smartTransition(linePath, duration)
         .style('stroke', getColor(d, config.color, i))
         .attr('stroke-width', config.lineWidth)
+        .attr('stroke-dasharray', dashArray?.join(' ') ?? null)
         .style('stroke-opacity', isLineVisible ? 1 : 0)
 
+      const hasUndefinedSegments = d.values.some(d => !d.defined)
       const svgPathD = this.lineGen(d.values) || this._emptyPath()
-      if (duration) {
+      if (duration && !hasUndefinedSegments) {
         const previous = linePath.attr('d')
         const next = svgPathD
         transition.attrTween('d', () => interpolatePath(previous, next))
@@ -129,13 +133,8 @@ export class Line<Datum> extends XYComponentCore<Datum> {
     return `M${xRange[0]},${yRange[0]} L${xRange[1]},${yRange[0]}`
   }
 
-  private _raiseSelection (d, i, els): void {
-    select(els[i]).raise()
-  }
-
   private _highlight (datum, i, els): void {
     const { config } = this
-    this._raiseSelection(datum, i, els)
 
     if (config.highlightOnHover) {
       this.g

@@ -4,17 +4,20 @@
 // Config
 import { ComponentConfigInterface, ComponentConfig } from 'core/component/config'
 
+// Utils
+import { getValue } from 'utils/data'
+
 // Types
 import { NumericAccessor, ColorAccessor, StringAccessor } from 'types/misc'
-import { TrimMode } from 'types/text'
-import { SankeyNodeDatumInterface, SankeyLinkDatumInterface, LabelPosition, NodeAlignType } from 'types/sankey'
+import { TrimMode, VerticalAlign, FitMode } from 'types/text'
+import { InputLink, InputNode, NodeAlignType, SubLabelPlacement } from 'types/sankey'
 import { ExitTransitionType, EnterTransitionType } from 'types/animation'
 import { Position } from 'types/position'
 
-export interface SankeyConfigInterface<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> extends ComponentConfigInterface {
+export interface SankeyConfigInterface<N extends InputNode, L extends InputLink> extends ComponentConfigInterface {
   // General
   /** Node / Link id accessor function. Used for mapping of data updates to corresponding SVG objects. Default: `(d, i) => (d._id ?? i).toString()` */
-  id?: (d: SankeyNodeDatumInterface | SankeyLinkDatumInterface, i?: number, ...any) => string;
+  id?: (d: InputNode | InputLink, i?: number, ...any) => string;
   /** Coefficient to scale the height of the diagram when the amount of links is low: `C * links.length`, clamped to `[height / 2, height]`. Default: `1/16` */
   heightNormalizationCoeff?: number;
   /** Type of animation on removing nodes. Default: `ExitTransitionType.DEFAULT` */
@@ -83,42 +86,55 @@ export interface SankeyConfigInterface<N extends SankeyNodeDatumInterface, L ext
   label?: StringAccessor<N>;
   /** Node sub-label accessor function or value. Default: `undefined` */
   subLabel?: StringAccessor<N>;
-  /** Display node labels even when there's not enough vertical space. Default: `false` */
-  forceShowLabels?: boolean;
-  /** Label position relative to the Node. Default: `LabelPosition.AUTO` */
-  labelPosition?: LabelPosition;
+  /** Label position relative to the Node. Default: `Position.AUTO` */
+  labelPosition?: Position.AUTO | Position.LEFT | Position.RIGHT | string;
+  /** Label vertical alignment */
+  labelVerticalAlign?: VerticalAlign | string;
+  /** Label background */
+  labelBackground?: boolean;
+  /** Label fit mode (wrap or trim). Default: `FitMode.TRIM` **/
+  labelFit?: FitMode;
   /** Maximum label with in pixels. Default: `70` */
-  labelWidth?: number;
+  labelMaxWidth?: number;
+  /** Expand trimmed label on hover. Default: `true` */
+  labelExpandTrimmedOnHover?: boolean
   /** Maximum label length (in characters number) for wrapping. Default: `undefined` */
-  labelLength?: number;
+  // labelLength?: number;
   /** Label trimming mode. Default: `TrimMode.MIDDLE` */
-  labelTrim?: TrimMode;
+  labelTrimMode?: TrimMode;
   /** Label font size in pixel. Default: `12` */
   labelFontSize?: number;
   /** Label text separators for wrapping. Default: `[' ', '-']` */
   labelTextSeparator?: string[];
-  /** Force break words to fit long labels. Default: `false` */
+  /** Force break words to fit long labels. Default: `true` */
   labelForceWordBreak?: boolean;
   /** Label color.. Default: `null` */
   labelColor?: ColorAccessor<N>;
+  /** Custom function to set the label visibility. Default: `undefined` */
+  labelVisibility?: ((d: N, bbox: { x: number; y: number; width: number; height: number }, hovered: boolean) => boolean) | undefined;
+  /** Sub-label font size in pixel. Default: `10` */
+  subLabelFontSize?: number;
   /** Sub-label color. Default: `null` */
   subLabelColor?: ColorAccessor<N>;
-
+  /** Sub-label position. Default: `SubLabelPlacement.INLINE` */
+  subLabelPlacement?: SubLabelPlacement | string;
+  /** Sub-label to label width ration when SubLabelPlacement.INLINE is set. Default: `0.4` */
+  subLabelToLabelInlineWidthRatio?: number;
 }
 
-export class SankeyConfig<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> extends ComponentConfig implements SankeyConfigInterface<N, L> {
+export class SankeyConfig<N extends InputNode, L extends InputLink> extends ComponentConfig implements SankeyConfigInterface<N, L> {
   // General
   heightNormalizationCoeff = 1 / 16
   exitTransitionType = ExitTransitionType.DEFAULT
   enterTransitionType = EnterTransitionType.DEFAULT
   // eslint-disable-next-line dot-notation
-  id = (d: SankeyNodeDatumInterface | SankeyLinkDatumInterface, i: number): string => (d['_id'] ?? i).toString()
+  id = (d: InputNode | InputLink, i: number): string => (d['_id'] ?? i).toString()
   highlightSubtreeOnHover = false
   highlightDuration = 400
   highlightDelay = 1000
 
   // Sorting
-  linkSort = (link2: L, link1: L): number => link1.value - link2.value
+  linkSort = (link2: L, link1: L): number => getValue(this.linkValue, link1) - getValue(this.linkValue, link2)
   nodeSort = undefined
 
   // Nodes
@@ -137,17 +153,24 @@ export class SankeyConfig<N extends SankeyNodeDatumInterface, L extends SankeyLi
 
   // Labels
   label = (d: N): string => d['label']
-  subLabel = undefined
-  labelPosition = LabelPosition.AUTO
+  labelPosition = Position.AUTO
+  labelVerticalAlign = VerticalAlign.MIDDLE
+  labelBackground = false
   labelTextSeparator = [' ', '-']
-  labelTrim = TrimMode.MIDDLE
+  labelFit = FitMode.TRIM
+  labelTrimMode = TrimMode.MIDDLE
   labelForceWordBreak = true
   labelFontSize = 12
   labelColor = null
-  labelWidth = 70
+  labelMaxWidth = 70
+  labelExpandTrimmedOnHover = true;
   labelLength = undefined
+  labelVisibility = undefined
+  subLabel = undefined
+  subLabelFontSize = 10
   subLabelColor = null
-  forceShowLabels = false
+  subLabelPlacement = SubLabelPlacement.BELOW
+  subLabelToLabelInlineWidthRatio = 0.4
 
   // Links
   linkValue = (d: N): number => d['value']

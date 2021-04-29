@@ -3,8 +3,6 @@
 import { BrowserModule } from '@angular/platform-browser'
 import { NgModule } from '@angular/core'
 import { RouterModule, Routes } from '@angular/router'
-import { MatButtonModule } from '@angular/material/button'
-import { NoopAnimationsModule } from '@angular/platform-browser/animations'
 
 import { ScatterComponent } from 'examples/scatter/scatter.component'
 import { LineComponent } from 'examples/line/line.component'
@@ -17,8 +15,11 @@ import { CompositeComponent } from 'examples/composite/composite.component'
 import { WrapperUsageExampleComponent } from 'examples/wrapper-usage-example/wrapper-usage-example.component'
 import { TimelineComponent } from 'examples/timeline/timeline.component'
 import { BulletLegendExampleComponent } from 'examples/bullet-legend/bullet-legend.component'
-import { SimpleMapComponent } from 'examples/simple-map/simple-map.component'
+import { TopoJSONMapComponent } from 'examples/topojson-map/topojson-map.component'
+import { TopoJSONHeatMapComponent } from 'examples/topojson-heatmap/topojson-heatmap.component'
 import { MapComponent } from 'examples/map/map.component'
+import { DDoSMapComponent } from 'examples/ddos-map/ddos-map.component'
+import { PieMapComponent } from 'examples/pie-map/pie-map.component'
 import { MapHeatmapComponent } from 'examples/map-heatmap/map-heatmap.component'
 import { RadialDendrogramComponent } from 'examples/radial-dendrogram/radial-dendrogram.component'
 import { GraphComponent } from 'examples/graph/graph.component'
@@ -26,6 +27,7 @@ import { ServiceGraphComponent } from 'examples/service-graph/service-graph.comp
 import { ConnectivityGraphComponent } from 'examples/console-connectivity-graph/console-connectivity-graph.component'
 import { TrafficGraphComponent } from 'examples/console-traffic-graph-pg2/console-traffic-graph-pg2.component'
 import { ChordDiagramComponent } from 'examples/chord-diagram/chord-diagram.component'
+import { DonutChartComponent } from 'examples/donut/donut.component'
 
 import { AppComponent } from './app.component'
 import { BulletLegendComponent } from './components/bullet-legend/bullet-legend.component'
@@ -38,7 +40,9 @@ import { VisControlsComponent } from './components/vis-controls/vis-controls.com
 
 const appRoutes: Routes = [
   { path: 'map', component: MapComponent },
+  { path: 'pie-map', component: PieMapComponent },
   { path: 'heatmap-map', component: MapHeatmapComponent },
+  { path: 'ddos-map', component: DDoSMapComponent },
   { path: 'scatter', component: ScatterComponent },
   { path: 'line', component: LineComponent },
   { path: 'stacked-bar', component: StackedBarComponent },
@@ -50,13 +54,15 @@ const appRoutes: Routes = [
   { path: 'wrapper-usage-example', component: WrapperUsageExampleComponent },
   { path: 'timeline', component: TimelineComponent },
   { path: 'bullet-legend', component: BulletLegendExampleComponent },
-  { path: 'simplemap', component: SimpleMapComponent },
+  { path: 'topojson-map', component: TopoJSONMapComponent },
+  { path: 'topojson-heatmap', component: TopoJSONHeatMapComponent },
   { path: 'radial-dendrogram', component: RadialDendrogramComponent },
   { path: 'graph', component: GraphComponent },
   { path: 'force-graph', component: ServiceGraphComponent },
   { path: 'connectivity-graph', component: ConnectivityGraphComponent },
   { path: 'traffic-graph', component: TrafficGraphComponent },
   { path: 'chord-diagram', component: ChordDiagramComponent },
+  { path: 'donut', component: DonutChartComponent },
 ]
 
 appRoutes.push({ path: '', redirectTo: `/${appRoutes[0].path}`, pathMatch: 'full' })
@@ -79,10 +85,13 @@ appRoutes.push({ path: '', redirectTo: `/${appRoutes[0].path}`, pathMatch: 'full
     WrapperUsageExampleComponent,
     TimelineComponent,
     BulletLegendExampleComponent,
-    SimpleMapComponent,
+    TopoJSONMapComponent,
+    TopoJSONHeatMapComponent,
     MapComponent,
+    PieMapComponent,
     MapLeafletComponent,
     MapHeatmapComponent,
+    DDoSMapComponent,
     Collection,
     RadialDendrogramComponent,
     GraphComponent,
@@ -91,6 +100,7 @@ appRoutes.push({ path: '', redirectTo: `/${appRoutes[0].path}`, pathMatch: 'full
     TrafficGraphComponent,
     ChordDiagramComponent,
     VisControlsComponent,
+    DonutChartComponent,
   ],
 
   imports: [
@@ -98,8 +108,6 @@ appRoutes.push({ path: '', redirectTo: `/${appRoutes[0].path}`, pathMatch: 'full
       appRoutes
     ),
     BrowserModule,
-    NoopAnimationsModule,
-    MatButtonModule,
   ],
 
   providers: [],

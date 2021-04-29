@@ -7,7 +7,7 @@ import { color } from 'd3-color'
 
 // Types
 import { SHAPE } from 'types/shape'
-import { NodeDatumCore, LinkDatumCore, SideLabel } from 'types/graph'
+import { NodeDatumCore, LinkDatumCore, CircleLabel } from 'types/graph'
 import { NumericAccessor } from 'types/misc'
 
 // Utils
@@ -19,6 +19,8 @@ import { hexToBrightness } from 'utils/color'
 import { GraphConfigInterface } from '../../config'
 
 export const NODE_SIZE = 30
+export const LABEL_RECT_HORIZONTAL_PADDING = 10
+export const LABEL_RECT_VERTICAL_PADDING = 4
 
 export function getNodeSize<T> (d: T, nodeSizeAccessor: NumericAccessor<T>): number {
   return getValue(d, nodeSizeAccessor) || NODE_SIZE
@@ -82,16 +84,15 @@ export function setLabelRect<A> (labelSelection: Selection<BaseType, A, SVGGElem
   const labelIsEmpty = isEmpty(label)
   const labelTextSelection = labelSelection.select(`.${selector}`)
   const labelTextBBox = (labelTextSelection.node() as SVGGraphicsElement).getBBox()
-  const padding = [4, 10]
   const backroundRect = labelSelection.select('rect')
     .attr('visibility', labelIsEmpty ? 'hidden' : null)
     .attr('rx', 4)
     .attr('ry', 4)
-    .attr('x', -labelTextBBox.width / 2 - padding[1])
+    .attr('x', -labelTextBBox.width / 2 - LABEL_RECT_HORIZONTAL_PADDING)
     .attr('y', '-0.64em')
-    .attr('width', labelTextBBox.width + 2 * padding[1])
-    .attr('height', labelTextBBox.height + 2 * padding[0])
-    .style('transform', `translateY(${-padding[0]}px)`)
+    .attr('width', labelTextBBox.width + 2 * LABEL_RECT_HORIZONTAL_PADDING)
+    .attr('height', labelTextBBox.height + 2 * LABEL_RECT_VERTICAL_PADDING)
+    .style('transform', `translateY(${-LABEL_RECT_VERTICAL_PADDING}px)`)
 
   return backroundRect
 }
@@ -112,7 +113,7 @@ export function getMaxNodeSize<T> (data: T[], nodeSize: NumericAccessor<T>): num
   return max(data || [], d => getNodeSize(d, nodeSize)) || NODE_SIZE
 }
 
-export function getSideTexLabelColor (label: SideLabel): string {
+export function getSideTexLabelColor (label: CircleLabel): string {
   if (!label.color) return null
 
   const hex = color(label.color).hex()

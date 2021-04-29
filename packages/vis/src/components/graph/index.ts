@@ -1,9 +1,9 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { min, extent } from 'd3-array'
 import { Transition } from 'd3-transition'
-import { select, Selection, mouse, event, BaseType } from 'd3-selection'
-import { zoom, zoomTransform, zoomIdentity, ZoomTransform } from 'd3-zoom'
-import { drag } from 'd3-drag'
+import { select, Selection, pointer, BaseType } from 'd3-selection'
+import { zoom, zoomTransform, zoomIdentity, ZoomTransform, D3ZoomEvent } from 'd3-zoom'
+import { drag, D3DragEvent } from 'd3-drag'
 import { interval, Timer } from 'd3-timer'
 
 // Core
@@ -31,17 +31,20 @@ import * as panelSelectors from './modules/panel/style'
 // Modules
 import { createNodes, updateNodes, removeNodes, zoomNodesThrottled, zoomNodes, updateSelectedNodes } from './modules/node'
 import { getMaxNodeSize, getX, getY } from './modules/node/helper'
-import { createLinks, updateLinks, removeLinks, zoomLinksThrottled, zoomLinks, animateLinkFlow, updateSelectedLink } from './modules/link'
+import { createLinks, updateLinks, removeLinks, zoomLinksThrottled, zoomLinks, animateLinkFlow, updateSelectedLinks } from './modules/link'
 import { LINK_MARKER_WIDTH, LINK_MARKER_HEIGHT, getDoubleArrowPath, getArrowPath, getLinkColor } from './modules/link/helper'
 import { createPanels, updatePanels, removePanels } from './modules/panel'
-import { setPanelForNodes, updatePanelBBoxSize, updatePanelNumNodes, getMaxPanlePadding } from './modules/panel/helper'
+import { setPanelForNodes, updatePanelBBoxSize, updatePanelNumNodes, getMaxPanelPadding } from './modules/panel/helper'
 import { applyLayoutCircular, applyLayoutParallel, applyLayoutDagre, applyLayoutConcentric, applyLayoutForce } from './modules/layout'
 
 export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends PanelConfigInterface> extends ComponentCore<{nodes: N[]; links?: L[]}> {
   static selectors = {
     background: generalSelectors.background,
     node: nodeSelectors.gNode,
-    link: linkSelectors.linkSupport,
+    link: linkSelectors.gLink,
+    nodeShape: nodeSelectors.node,
+    nodeOutline: nodeSelectors.nodeArc,
+    linkLine: linkSelectors.link,
   }
 
   static nodeSelectors = nodeSelectors
@@ -107,7 +110,7 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
 
     this._zoomBehavior = zoom()
       .scaleExtent(this.config.zoomScaleExtent)
-      .on('zoom', this._onZoom.bind(this))
+      .on('zoom', (e: D3ZoomEvent<any, any>) => this._onZoom(e.transform, e))
 
     this._panelsGroup = this._graphContainer.append('g').attr('class', panelSelectors.panels)
     this._linksGroup = this._graphContainer.append('g').attr('class', linkSelectors.links)
@@ -119,6 +122,7 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
   setData (data: GraphDataModel<N, L>): void {
     const { config } = this
 
+    this.datamodel.nodeSort = config.nodeSort
     this.datamodel.data = data
     this._recalculateLayout = true
     if (config.layoutAutofit) this._fitLayout = true
@@ -128,25 +132,16 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
   }
 
   setConfig (config: GraphConfigInterface<N, L>): void {
-    const { datamodel: { links, nodes } } = this
     this._fitLayout = this._fitLayout || this.config.layoutType !== config.layoutType
     this._recalculateLayout = this._recalculateLayout || this._shouldLayoutRecalculate(config)
 
     super.setConfig(config)
-
     this._setPanels = true
-
-    this._resetSelection()
-    const selectedNode = this.config.selectedNodeId && find(nodes, node => node.id === this.config.selectedNodeId)
-    this._selectNode(selectedNode)
-
-    const selectedLink = this.config.selectedLinkId && find(links, link => link.id === this.config.selectedLinkId)
-    this._selectLink(selectedLink)
   }
 
   get bleed (): Spacing {
     const { datamodel: { nodes }, config: { nodeSize } } = this
-    const maxPanelPadding = getMaxPanlePadding(this._panels)
+    const maxPanelPadding = getMaxPanelPadding(this._panels)
     const maxNodeSize = getMaxNodeSize(nodes, nodeSize)
     const extra = 20 // Extra padding to take into account labels
     const padding = maxNodeSize * 0.5 + maxPanelPadding + extra
@@ -199,6 +194,18 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
     this._drawNodes(animDuration)
     this._drawLinks(animDuration)
 
+    // Select Links / Nodes
+    this._resetSelection()
+    if (this.config.selectedNodeId) {
+      const selectedNode = find(datamodel.nodes, node => node.id === this.config.selectedNodeId)
+      this._selectNode(selectedNode)
+    }
+
+    if (this.config.selectedLinkId) {
+      const selectedLink = find(datamodel.links, link => link.id === this.config.selectedLinkId)
+      this._selectLink(selectedLink)
+    }
+
     // Link flow animation timer
     if (!this._timer) {
       const refreshRateMs = 35
@@ -242,11 +249,13 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
       .attr('class', nodeSelectors.gNodeExit)
       .call(removeNodes, config, duration)
 
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const thisRef = this
     if (!config.disableDrag) {
-      const dragBehaviour = drag<SVGElement, N>()
-        .on('start', this._onDragStarted.bind(this))
-        .on('drag', d => this._onDragged(d, nodeGroupsMerged))
-        .on('end', this._onDragEnded.bind(this))
+      const dragBehaviour = drag<SVGGElement, N>()
+        .on('start', function (event, d) { thisRef._onDragStarted(d, event, select(this)) })
+        .on('drag', function (event, d) { thisRef._onDragged(d, event, nodeGroupsMerged) })
+        .on('end', function (event, d) { thisRef._onDragEnded(d, event, select(this)) })
       nodeGroupsMerged.call(dragBehaviour)
     } else {
       nodeGroupsMerged.on('.drag', null)
@@ -268,7 +277,9 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
     linkGroupsMerged.call(updateLinks, config, duration, this._scale)
 
     const linkGroupsExit: Selection<BaseType, L, SVGGElement, L[]> = linkGroups.exit()
-    linkGroupsExit.call(removeLinks, config, duration)
+    linkGroupsExit
+      .attr('class', linkSelectors.gLinkExit)
+      .call(removeLinks, config, duration)
   }
 
   _drawPanels (nodeUpdateSelection: Selection<BaseType, N, SVGGElement, N[]> | Transition<BaseType, N, SVGGElement, N[]>, duration: number): void {
@@ -292,9 +303,9 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
     const panelGroupEnter = panelGroup.enter().append('g')
       .attr('class', panelSelectors.gPanel)
       .call(createPanels, selection)
-    const panleGroupMerged = panelGroup.merge(panelGroupEnter)
+    const panelGroupMerged = panelGroup.merge(panelGroupEnter)
 
-    this._updatePanels(panleGroupMerged, duration)
+    this._updatePanels(panelGroupMerged, duration)
   }
 
   _updatePanels (panelToUpdate, duration: number): void {
@@ -331,7 +342,7 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
 
   _fit (duration = 0): void {
     const { datamodel: { nodes } } = this
-    if (nodes?.length) {
+    if (nodes?.length && this.g?.size()) {
       const transform = this._getTransform(nodes)
       smartTransition(this.g, duration)
         .call(this._zoomBehavior.transform, transform)
@@ -346,13 +357,13 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
     const { left, top, right, bottom } = this.bleed
 
     const maxNodeSize = getMaxNodeSize(nodes, nodeSize)
-    const w = width - left - right
-    const h = height - top - bottom
+    const w = width
+    const h = height
     const xExtent = extent(nodes, d => getX(d)) as number[]
     const yExtent = extent(nodes, d => getY(d)) as number[]
 
-    const xScale = w / (xExtent[1] - xExtent[0])
-    const yScale = h / (yExtent[1] - yExtent[0] + maxNodeSize)
+    const xScale = w / (xExtent[1] - xExtent[0] + left + right)
+    const yScale = h / (yExtent[1] - yExtent[0] + maxNodeSize + top + bottom)
 
     const clampedScale = clamp(min([xScale, yScale]), zoomScaleExtent[0], zoomScaleExtent[1])
 
@@ -369,50 +380,52 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
 
   _selectNode (node: N): void {
     const { datamodel: { nodes, links } } = this
-    if (!node) return
+    if (!node) console.warn('Graph | Select Node: Not found')
     this._selectedNode = node
 
-    // Apply Greyout
-    // Grayout all nodes
+    // Apply grey out
+    // Grey out all nodes
     nodes.forEach(n => {
       n._state.selected = false
       n._state.greyout = true
     })
 
-    // Grayout all links
+    // Grey out all links
     links.forEach(l => {
       l._state.greyout = true
       l._state.selected = false
     })
 
     // Highlight selected
-    node._state.selected = true
-    node._state.greyout = false
+    if (node) {
+      node._state.selected = true
+      node._state.greyout = false
 
-    const connectedLinks = links.filter(l => (l.source === node) || (l.target === node))
-    connectedLinks.forEach(l => {
-      const source = l.source as L
-      const target = l.target as L
-      source._state.greyout = false
-      target._state.greyout = false
-      l._state.greyout = false
-    })
+      const connectedLinks = links.filter(l => (l.source === node) || (l.target === node))
+      connectedLinks.forEach(l => {
+        const source = l.source as L
+        const target = l.target as L
+        source._state.greyout = false
+        target._state.greyout = false
+        l._state.greyout = false
+      })
+    }
 
     this._updateSelectedElements()
   }
 
   _selectLink (link: L): void {
     const { datamodel: { nodes, links } } = this
-    if (!link) return
+    if (!link) console.warn('Graph | Select Link: Not found')
     this._selectedLink = link
-    const selectedLinkSource = link.source as N
-    const selectedLinkTarget = link.target as N
+    const selectedLinkSource = link?.source as N
+    const selectedLinkTarget = link?.target as N
 
-    // Apply greyout
+    // Apply grey out
     nodes.forEach(n => {
       n._state.selected = false
       n._state.greyout = true
-      if (selectedLinkTarget._id === n._id || selectedLinkSource._id === n._id) {
+      if (selectedLinkTarget?._id === n._id || selectedLinkSource?._id === n._id) {
         link._state.greyout = false
       }
     })
@@ -421,7 +434,7 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
       l._state.greyout = true
       const source = l.source as N
       const target = l.target as N
-      if ((source._id === selectedLinkSource._id) && (target._id === selectedLinkTarget._id)) {
+      if ((source._id === selectedLinkSource?._id) && (target._id === selectedLinkTarget?._id)) {
         source._state.greyout = false
         target._state.greyout = false
         l._state.greyout = false
@@ -432,7 +445,7 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
       delete l._state.selected
     })
 
-    link._state.selected = true
+    if (link) link._state.selected = true
 
     this._updateSelectedElements()
   }
@@ -459,7 +472,7 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
     const { config } = this
 
     const linkElements: Selection<SVGGElement, L, SVGGElement, L[]> = this._linksGroup.selectAll(`.${linkSelectors.gLink}`)
-    linkElements.call(updateSelectedLink, config, 0, this._scale)
+    linkElements.call(updateSelectedLinks, config, this._scale)
 
     const nodeElements: Selection<SVGGElement, N, SVGGElement, N[]> = this._nodesGroup.selectAll(`.${nodeSelectors.gNode}`)
     nodeElements.call(updateSelectedNodes, config)
@@ -514,7 +527,7 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
     animateLinkFlow(linksToAnimate, this.config, this._scale)
   }
 
-  _onZoom (t): void {
+  _onZoom (t, event?: D3ZoomEvent<any, any>): void {
     const { config, datamodel: { nodes } } = this
     const transform = t || event.transform
     this._scale = transform.k
@@ -524,8 +537,8 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
     if (!this._initialTransform) this._initialTransform = transform
 
     // If the event was triggered by a mouse interaction (pan or zoom) we don't
-    //   refit the layout after recalculation (eg. on contianar resize)
-    if (event && event.sourceEvent) {
+    //   refit the layout after recalculation (eg. on container resize)
+    if (event?.sourceEvent) {
       const diff = Object.keys(transform).reduce((acc, prop) => {
         const val = transform[prop]
         const dVal = Math.abs(val - this._initialTransform[prop])
@@ -543,15 +556,14 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
       .call(nodes.length > config.zoomThrottledUpdateNodeThreshold ? zoomLinksThrottled : zoomLinks, config, this._scale)
   }
 
-  _onDragStarted (d, i, elements): void {
+  _onDragStarted (d: N, event: D3DragEvent<any, any, any>, nodeSelection: Selection<SVGGElement, N, any, any>): void {
     const { config } = this
     this._isDragging = true
     d._state.isDragged = true
-    const node = select(elements[i])
-    node.call(updateNodes, config, 0, this._scale)
+    nodeSelection.call(updateNodes, config, 0, this._scale)
   }
 
-  _onDragged (d: N, selection): void {
+  _onDragged (d: N, event: D3DragEvent<any, any, any>, allNodesSelection: Selection<SVGGElement, N, any, any>): void {
     const { config } = this
     const transform = zoomTransform(this.g.node())
     const scale = transform.k
@@ -561,7 +573,7 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
     const maxX = (config.width - transform.x) / scale
     const minY = -transform.y / scale
     const minX = -transform.x / scale
-    let [x, y] = mouse(this._graphContainer.node())
+    let [x, y] = pointer(event, this._graphContainer.node())
     if (y < minY) y = minY
     else if (y > maxY) y = maxY
     if (x < minX) x = minX
@@ -592,7 +604,7 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
       if (d._state.fy === d.y) delete d._state.fy
     }
 
-    const panelNodesToUpdate = selection.filter((node: N) => {
+    const panelNodesToUpdate = allNodesSelection.filter((node: N) => {
       return node._id === d._id || findIndex(panelNeighbourNodes, (n: N) => node._id === n._id) !== -1
     })
 
@@ -624,12 +636,11 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
     // }
   }
 
-  _onDragEnded (d: N, i: number, elements: Selection<SVGGElement, L, SVGGElement, L[]>): void {
+  _onDragEnded (d: N, event: D3DragEvent<any, any, any>, nodeSelection: Selection<SVGGElement, N, any, any>): void {
     const { config } = this
     this._isDragging = false
     d._state.isDragged = false
-    const node = select(elements[i])
-    node.call(updateNodes, config, 0, this._scale)
+    nodeSelection.call(updateNodes, config, 0, this._scale)
   }
 
   _shouldLayoutRecalculate (nextConfig: GraphConfigInterface<N, L>): boolean {

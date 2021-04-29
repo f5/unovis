@@ -1,6 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { BrushBehavior, brushX } from 'd3-brush'
-import { Selection, event } from 'd3-selection'
+import { BrushBehavior, brushX, D3BrushEvent } from 'd3-brush'
+import { Selection } from 'd3-selection'
 
 // Core
 import { XYComponentCore } from 'core/xy-component'
@@ -71,9 +71,9 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
 
     brushBehaviour
       .extent([[0, 0], [config.width, config.height]])
-      .on('start', () => { this._onBrushStart() })
-      .on('brush', () => { this._onBrushMove() })
-      .on('end', () => { this._onBrushEnd() })
+      .on('start', this._onBrushStart.bind(this))
+      .on('brush', this._onBrushMove.bind(this))
+      .on('end', this._onBrushEnd.bind(this))
 
     this.brush
       .call(brushBehaviour)
@@ -91,8 +91,8 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
       .attr('height', h)
 
     this.handleLines
-      .attr('y1', yRange[1] + h / 2 - 10)
-      .attr('y2', yRange[1] + h / 2 + 10)
+      .attr('y1', yRange[1] + 10)
+      .attr('y2', yRange[1] + h - 10)
 
     const xRange = xScale.range()
     const selectionMin = clamp(xScale(config.selection?.[0]) ?? 0, xRange[0], xRange[1])
@@ -157,11 +157,11 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
       })
   }
 
-  _onBrush (): void {
+  _onBrush (event: D3BrushEvent<Datum>): void {
     const { config } = this
     const xScale = config.scales.x
     const xRange = xScale.range()
-    const s = event?.selection || xRange
+    const s = (event?.selection || xRange) as [number, number]
     const userDriven = !!event?.sourceEvent
 
     // Handle edge cases:
@@ -183,10 +183,10 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
     // The first call will have equal selection coordinates (e.g. [441, 441]), the second call will have the full range (e.g. [0, 700]).
     // To avoid unnecessary render from the first call we skip it
     if (s[0] !== s[1] && isNumber(s[0]) && isNumber(s[1])) {
-      const selectedDomain = s.map(xScale.invert) as [number, number]
+      const selectedDomain = s.map(n => xScale.invert(n)) as [number, number]
 
       if (userDriven) {
-        // Constaint the selection if configured
+        // Constraint the selection if configured
         const xDomain = xScale.domain() as [number, number]
         const xDomainLength = Math.abs(xDomain[1] - xDomain[0])
         const selectionLength = Math.abs(selectedDomain[1] - selectedDomain[0])
@@ -210,24 +210,24 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
     }
   }
 
-  _onBrushStart (): void {
+  _onBrushStart (event: D3BrushEvent<Datum>): void {
     const { config } = this
 
-    this._onBrush()
+    this._onBrush(event)
     if (!this._firstRender) config.onBrushStart(config.selection, event, !!event?.sourceEvent)
   }
 
-  _onBrushMove (): void {
+  _onBrushMove (event: D3BrushEvent<Datum>): void {
     const { config } = this
 
-    this._onBrush()
+    this._onBrush(event)
     if (!this._firstRender) config.onBrushMove(config.selection, event, !!event?.sourceEvent)
   }
 
-  _onBrushEnd (): void {
+  _onBrushEnd (event: D3BrushEvent<Datum>): void {
     const { config } = this
 
-    this._onBrush()
+    this._onBrush(event)
     if (!this._firstRender) config.onBrushEnd(config.selection, event, !!event?.sourceEvent)
   }
 }

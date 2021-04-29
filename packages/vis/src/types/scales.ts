@@ -6,7 +6,7 @@ import {
   ScaleLinear, ScalePower, ScaleLogarithmic, ScaleTime, /* ScaleOrdinal, ScaleBand, ScalePoint, ScaleThreshold, ScaleQuantile, ScaleQuantize, ScaleDiverging, ScaleSequential */
 } from 'd3-scale'
 
-export type ScaleType = ScaleLinear<number, any> | ScalePower<any, any> | ScaleLogarithmic<any, any> | ScaleTime<any, any>
+export type ContiniousScale = ScaleLinear<number, any> | ScalePower<any, any> | ScaleLogarithmic<any, any> | ScaleTime<any, any>
 
 export const Scale = {
   scaleLinear,
@@ -25,40 +25,3 @@ export const Scale = {
   scaleBand,
   scalePoint,
 }
-
-// export enum ScaleType {
-//   Linear,
-//   Pow,
-//   Sqrt,
-//   Log,
-//   Identity,
-//   Time,
-//   Utc,
-//   Sequential,
-//   Diverging,
-//   Quantize,
-//   Quantile,
-//   Threshold,
-//   Ordinal,
-//   Implicit,
-//   Band,
-//   Point,
-// }
-
-// export const Scale = {
-//   [ScaleType.Linear]: scaleLinear,
-//   [ScaleType.Pow]: scalePow,
-//   [ScaleType.Sqrt]: scaleSqrt,
-//   [ScaleType.Log]: scaleLog,
-//   [ScaleType.Identity]: scaleIdentity,
-//   [ScaleType.Time]: scaleTime,
-//   [ScaleType.Utc]: scaleUtc,
-//   [ScaleType.Sequential]: scaleSequential,
-//   [ScaleType.Diverging]: scaleDiverging,
-//   [ScaleType.Quantize]: scaleQuantize,
-//   [ScaleType.Quantile]: scaleQuantile,
-//   [ScaleType.Threshold]: scaleThreshold,
-//   [ScaleType.Ordinal]: scaleOrdinal,
-//   [ScaleType.Band]: scaleBand,
-//   [ScaleType.Point]: scalePoint,
-// }

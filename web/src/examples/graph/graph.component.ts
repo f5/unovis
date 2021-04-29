@@ -45,6 +45,18 @@ export class GraphComponent implements OnInit, AfterViewInit {
       [Graph.selectors.node]: {
         click: (d) => { this.onNodeClick(d) }
       },
+    },
+
+    attributes: {
+      [Graph.selectors.node]: {
+        'ves-e2e-node-id': d => d.id,
+        'ves-e2e-test': 'node',
+      },
+      [Graph.selectors.link]: {
+        'ves-e2e-source-id': d => d.target.id,
+        'ves-e2e-target-id': d => d.target.id,
+        'ves-e2e-test': 'link',
+      },
     }
   }
 
@@ -65,7 +77,7 @@ export class GraphComponent implements OnInit, AfterViewInit {
     },
   ]
   controlsOrientation = VisControlsOrientation.VERTICAL
-  
+
   ngAfterViewInit (): void {
     const generator = dataGenerator()
     const data = generator.next().value

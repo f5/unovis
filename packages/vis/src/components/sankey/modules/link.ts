@@ -1,4 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
+import { Selection } from 'd3-selection'
 import { interpolateNumber } from 'd3-interpolate'
 
 // Utils
@@ -7,7 +8,7 @@ import { getValue } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 
 // Types
-import { SankeyNodeDatumInterface, SankeyLinkDatumInterface } from 'types/sankey'
+import { InputLink, InputNode, SankeyLink } from 'types/sankey'
 
 // Config
 import { SankeyConfig } from '../config'
@@ -38,35 +39,37 @@ export function linkPath ({ x0, x1, y0, y1, width }): string {
   `
 }
 
-export function createLinks (sel): void {
+export function createLinks<N extends InputNode, L extends InputLink> (sel: Selection<SVGGElement, SankeyLink<N, L>, SVGGElement, any>): void {
   sel.append('path').attr('class', s.linkPath)
-    .attr('d', (d, i, el) => {
-      el[i]._animState = {
+    .attr('d', (d: SankeyLink<N, L>, i, el) => {
+    // eslint-disable-next-line dot-notation
+      el[i]['_animState'] = {
         x0: d.source.x1,
         x1: d.target.x0,
         y0: d.y0,
         y1: d.y1,
         width: Math.max(1, d.width),
       }
-      return linkPath(el[i]._animState)
+      // eslint-disable-next-line dot-notation
+      return linkPath(el[i]['_animState'])
     })
   sel.append('path').attr('class', s.linkSelectionHelper)
   sel.style('opacity', 0)
 }
 
-export function updateLinks<N extends SankeyNodeDatumInterface, L extends SankeyLinkDatumInterface> (sel, config: SankeyConfig<N, L>, duration): void {
+export function updateLinks<N extends InputNode, L extends InputLink> (sel: Selection<SVGGElement, SankeyLink<N, L>, SVGGElement, any>, config: SankeyConfig<N, L>, duration): void {
   smartTransition(sel, duration)
-    .style('opacity', (d: L) => d._state.greyout ? 0.2 : 1)
+    .style('opacity', (d: SankeyLink<N, L>) => d._state.greyout ? 0.2 : 1)
 
   const linkSelection = sel.select(`.${s.linkPath}`)
-    .style('cursor', d => getValue(d, config.linkCursor))
+    .style('cursor', (d: SankeyLink<N, L>) => getValue(d, config.linkCursor))
 
   const selectionTransition = smartTransition(linkSelection, duration)
-    .style('fill', link => getColor(link, config.linkColor))
+    .style('fill', (link: SankeyLink<N, L>) => getColor(link, config.linkColor))
 
   if (duration) {
     selectionTransition
-      .attrTween('d', (d, i, el) => {
+      .attrTween('d', (d: SankeyLink<N, L>, i, el) => {
         const previous = el[i]._animState
         const next = {
           x0: d.source.x1,
@@ -85,7 +88,7 @@ export function updateLinks<N extends SankeyNodeDatumInterface, L extends Sankey
 
         el[i]._animState = next
 
-        return function (t) {
+        return function (t: number) {
           return linkPath({
             x0: interpolator.x0(t),
             x1: interpolator.x1(t),
@@ -96,7 +99,7 @@ export function updateLinks<N extends SankeyNodeDatumInterface, L extends Sankey
         }
       })
   } else {
-    linkSelection.attr('d', d => linkPath({
+    linkSelection.attr('d', (d: SankeyLink<N, L>) => linkPath({
       x0: d.source.x1,
       x1: d.target.x0,
       y0: d.y0,
@@ -106,7 +109,7 @@ export function updateLinks<N extends SankeyNodeDatumInterface, L extends Sankey
   }
 
   sel.select(`.${s.linkSelectionHelper}`)
-    .attr('d', d => linkPath({
+    .attr('d', (d: SankeyLink<N, L>) => linkPath({
       x0: d.source.x1,
       x1: d.target.x0,
       y0: d.y0,

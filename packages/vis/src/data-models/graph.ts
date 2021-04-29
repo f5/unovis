@@ -1,6 +1,7 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
+/* eslint-disable dot-notation */
 import {
-  isNumber, isUndefined, cloneDeep,
+  isNumber, isUndefined, cloneDeep, isFunction,
   each, filter, without, find, isString, isObject,
 } from 'utils/data'
 
@@ -13,6 +14,12 @@ export class GraphDataModel<NodeDatum, LinkDatum> extends CoreDataModel<{nodes: 
   private _nodes: NodeDatum[] = []
   private _links: LinkDatum[] = []
 
+  // Model configuration
+  public nodeId: ((n: NodeDatum, i?: number) => string) = n => n['id']
+  public linkId: ((n: LinkDatum, i?: number) => string) = l => l['id']
+  public nodeSort: ((a: NodeDatum, b: NodeDatum) => number)
+
+  // eslint-disable-next-line accessor-pairs
   set data (inputData: { nodes: NodeDatum[]; links?: LinkDatum[]}) {
     if (!inputData) return
     const prevData = this.data
@@ -25,11 +32,14 @@ export class GraphDataModel<NodeDatum, LinkDatum> extends CoreDataModel<{nodes: 
     this.transferState(nodes, prevData?.nodes)
     this.transferState(links, prevData?.links)
 
-    // Set node index
+    // Set node `_id` and `_index`
     each(nodes, (node, i) => {
       node._index = i
-      node._id = node.id || i
+      node._id = this.nodeId(node) || `${i}`
     })
+
+    // Sort nodes
+    if (isFunction(this.nodeSort)) nodes.sort(this.nodeSort)
 
     // Fill link source and target
     each(links, (link, i) => {
@@ -48,7 +58,7 @@ export class GraphDataModel<NodeDatum, LinkDatum> extends CoreDataModel<{nodes: 
 
       each(linksFiltered, (l, i) => {
         l._index = i
-        l._id = l.id || `${l.source?._id}-${l.target?._id}-${i}`
+        l._id = this.linkId(l) || `${l.source?._id}-${l.target?._id}-${i}`
         l._neighbours = linksFiltered.length
         l._direction = ((link.source === l.source) && (link.target === l.target)) ? 1 : -1
       })
@@ -84,10 +94,10 @@ export class GraphDataModel<NodeDatum, LinkDatum> extends CoreDataModel<{nodes: 
     return this._nonConnectedNodes
   }
 
-  findNode (nodes: NodeDatum[], n: number | string | object): NodeDatum {
+  private findNode (nodes: NodeDatum[], n: number | string | Record<string, unknown>): NodeDatum {
     let foundNode
     if (isNumber(n)) foundNode = nodes[n as number]
-    else if (isString(n)) foundNode = find(nodes, node => node.id === n)
+    else if (isString(n)) foundNode = find(nodes, node => this.nodeId(node) === n)
     else if (isObject(n)) foundNode = find(nodes, node => node === n)
 
     if (!foundNode) {
@@ -97,9 +107,9 @@ export class GraphDataModel<NodeDatum, LinkDatum> extends CoreDataModel<{nodes: 
     return foundNode
   }
 
-  transferState (arr, arrPrev): void {
+  private transferState (arr, arrPrev): void {
     each(arr, d => {
-      const dPrev = find(arrPrev, dp => dp.id === d.id)
+      const dPrev = find(arrPrev, dp => this.nodeId(dp) === this.nodeId(d))
       if (dPrev) d._state = { ...dPrev._state }
       else d._state = {}
     })

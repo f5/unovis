@@ -1,0 +1,1164 @@
+[
+  {
+    "region": "ae",
+    "city": "Abu Dhabi",
+    "id": "603687",
+    "latitude": 24.4666667,
+    "longitude": 54.3666667
+  },
+  {
+    "region": "ae",
+    "city": "Dubai",
+    "id": "1137376",
+    "latitude": 25.2522222,
+    "longitude": 55.28
+  },
+  {
+    "region": "ae",
+    "city": "Sharjah",
+    "id": "543942",
+    "latitude": 25.3622222,
+    "longitude": 55.3911111
+  },
+  {
+    "region": "af",
+    "city": "Kabul",
+    "id": "3043589",
+    "latitude": 34.5166667,
+    "longitude": 69.1833333
+  },
+  {
+    "region": "am",
+    "city": "Yerevan",
+    "id": "1093499",
+    "latitude": 40.1811111,
+    "longitude": 44.5136111
+  },
+  {
+    "region": "ao",
+    "city": "Luanda",
+    "id": "2776125",
+    "latitude": -8.8383333,
+    "longitude": 13.2344444
+  },
+  {
+    "region": "ar",
+    "city": "Cуrdoba",
+    "id": "1441007",
+    "latitude": -31.4,
+    "longitude": -64.1833333
+  },
+  {
+    "region": "ar",
+    "city": "La Plata",
+    "id": "684318",
+    "latitude": -34.9313889,
+    "longitude": -57.9488889
+  },
+  {
+    "region": "ar",
+    "city": "Mar del Plata",
+    "id": "645771",
+    "latitude": -38,
+    "longitude": -57.55
+  },
+  {
+    "region": "ar",
+    "city": "Mendoza",
+    "id": "973047",
+    "latitude": -32.8833333,
+    "longitude": -68.8166667
+  },
+  {
+    "region": "ar",
+    "city": "Rosario",
+    "id": "1218497",
+    "latitude": -32.9511111,
+    "longitude": -60.6663889
+  },
+  {
+    "region": "br",
+    "city": "Sгo Paulo",
+    "id": "10021437",
+    "latitude": -23.5333333,
+    "longitude": -46.6166667
+  },
+  {
+    "region": "br",
+    "city": "Sorocaba",
+    "id": "558874",
+    "latitude": -23.4833333,
+    "longitude": -47.45
+  },
+  {
+    "region": "br",
+    "city": "Teresina",
+    "id": "744526",
+    "latitude": -5.0833333,
+    "longitude": -42.8166667
+  },
+  {
+    "region": "br",
+    "city": "Uberlвndia",
+    "id": "563545",
+    "latitude": -18.9166667,
+    "longitude": -48.3
+  },
+  {
+    "region": "by",
+    "city": "Minsk",
+    "id": "1742123",
+    "latitude": 53.9,
+    "longitude": 27.5666667
+  },
+  {
+    "region": "ca",
+    "city": "Calgary",
+    "id": "968475",
+    "latitude": 51.083333,
+    "longitude": -114.083333
+  },
+  {
+    "region": "ca",
+    "city": "Edmonton",
+    "id": "822319",
+    "latitude": 53.55,
+    "longitude": -113.5
+  },
+  {
+    "region": "ca",
+    "city": "Hamilton",
+    "id": "653637",
+    "latitude": 43.25,
+    "longitude": -79.833333
+  },
+  {
+    "region": "ca",
+    "city": "Montreal",
+    "id": "3268513",
+    "latitude": 45.5,
+    "longitude": -73.583333
+  },
+  {
+    "region": "ca",
+    "city": "Ottawa",
+    "id": "874433",
+    "latitude": 45.416667,
+    "longitude": -75.7
+  },
+  {
+    "region": "ca",
+    "city": "Quebec",
+    "id": "645623",
+    "latitude": 46.8,
+    "longitude": -71.25
+  },
+  {
+    "region": "ca",
+    "city": "Toronto",
+    "id": "4612187",
+    "latitude": 43.666667,
+    "longitude": -79.416667
+  },
+  {
+    "region": "ca",
+    "city": "Vancouver",
+    "id": "1837970",
+    "latitude": 49.25,
+    "longitude": -123.133333
+  },
+  {
+    "region": "ca",
+    "city": "Winnipeg",
+    "id": "632069",
+    "latitude": 49.883333,
+    "longitude": -97.166667
+  },
+  {
+    "region": "cd",
+    "city": "Kinshasa",
+    "id": "7787832",
+    "latitude": -4.3,
+    "longitude": 15.3
+  },
+  {
+    "region": "cd",
+    "city": "Kisangani",
+    "id": "539164",
+    "latitude": 0.516667,
+    "longitude": 25.2
+  },
+  {
+    "region": "cd",
+    "city": "Lubumbashi",
+    "id": "1374808",
+    "latitude": -11.666667,
+    "longitude": 27.466667
+  },
+  {
+    "region": "cd",
+    "city": "Mbuji-Mayi",
+    "id": "874974",
+    "latitude": -6.15,
+    "longitude": 23.6
+  },
+  {
+    "region": "cf",
+    "city": "Bangui",
+    "id": "684190",
+    "latitude": 4.3666667,
+    "longitude": 18.5833333
+  },
+  {
+    "region": "cg",
+    "city": "Brazzaville",
+    "id": "1115773",
+    "latitude": -4.2591667,
+    "longitude": 15.2847222
+  },
+  {
+    "region": "ci",
+    "city": "Abidjan",
+    "id": "3692570",
+    "latitude": 5.341111,
+    "longitude": -4.028056
+  },
+  {
+    "region": "ci",
+    "city": "Bouakй",
+    "id": "572149",
+    "latitude": 7.683333,
+    "longitude": -5.033056
+  },
+  {
+    "region": "cl",
+    "city": "Santiago",
+    "id": "4837248",
+    "latitude": -33.45,
+    "longitude": -70.6666667
+  },
+  {
+    "region": "cm",
+    "city": "Douala",
+    "id": "1338144",
+    "latitude": 4.0502778,
+    "longitude": 9.7
+  },
+  {
+    "region": "cm",
+    "city": "Yaoundй",
+    "id": "1299446",
+    "latitude": 3.8666667,
+    "longitude": 11.5166667
+  },
+  {
+    "region": "cn",
+    "city": "Anshan",
+    "id": "1199275",
+    "latitude": 41.1236111,
+    "longitude": 122.99
+  },
+  {
+    "region": "cn",
+    "city": "Anyang",
+    "id": "781129",
+    "latitude": 36.0994444,
+    "longitude": 114.3288889
+  },
+  {
+    "region": "cn",
+    "city": "Baoding",
+    "id": "995652",
+    "latitude": 38.8511111,
+    "longitude": 115.4902778
+  },
+  {
+    "region": "cn",
+    "city": "Bengbu",
+    "id": "576648",
+    "latitude": 32.9408333,
+    "longitude": 117.3608333
+  },
+  {
+    "region": "cn",
+    "city": "Benxi",
+    "id": "987717",
+    "latitude": 41.2886111,
+    "longitude": 123.765
+  },
+  {
+    "region": "cn",
+    "city": "Cangzhou",
+    "id": "527681",
+    "latitude": 38.3166667,
+    "longitude": 116.8666667
+  },
+  {
+    "region": "cn",
+    "city": "Changchun",
+    "id": "2537421",
+    "latitude": 43.88,
+    "longitude": 125.3227778
+  },
+  {
+    "region": "cn",
+    "city": "Changde",
+    "id": "517780",
+    "latitude": 29.0322222,
+    "longitude": 111.6780556
+  },
+  {
+    "region": "cn",
+    "city": "Changsha",
+    "id": "2073938",
+    "latitude": 28.1791667,
+    "longitude": 113.1136111
+  },
+  {
+    "region": "cn",
+    "city": "Changzhou",
+    "id": "949018",
+    "latitude": 31.7833333,
+    "longitude": 119.9666667
+  },
+  {
+    "region": "cn",
+    "city": "Chengdu",
+    "id": "3950437",
+    "latitude": 30.6666667,
+    "longitude": 104.0666667
+  },
+  {
+    "region": "cn",
+    "city": "Chongqing",
+    "id": "3967028",
+    "latitude": 29.5627778,
+    "longitude": 106.5527778
+  },
+  {
+    "region": "cn",
+    "city": "Dalian",
+    "id": "2035307",
+    "latitude": 38.9122222,
+    "longitude": 121.6022222
+  },
+  {
+    "region": "cn",
+    "city": "Dandong",
+    "id": "631973",
+    "latitude": 40.1291667,
+    "longitude": 124.3947222
+  },
+  {
+    "region": "cn",
+    "city": "Datong",
+    "id": "1052678",
+    "latitude": 40.0416667,
+    "longitude": 113.5972222
+  },
+  {
+    "region": "cn",
+    "city": "Foshan",
+    "id": "627348",
+    "latitude": 23.0333333,
+    "longitude": 113.1166667
+  },
+  {
+    "region": "cn",
+    "city": "Fushun",
+    "id": "1400646",
+    "latitude": 41.7,
+    "longitude": 123.8833333
+  },
+  {
+    "region": "cn",
+    "city": "Fuxin",
+    "id": "689050",
+    "latitude": 42.0155556,
+    "longitude": 121.6588889
+  },
+  {
+    "region": "cn",
+    "city": "Fuzhou",
+    "id": "1179720",
+    "latitude": 26.0613889,
+    "longitude": 119.3061111
+  },
+  {
+    "region": "cn",
+    "city": "Guangzhou",
+    "id": "3152825",
+    "latitude": 23.1166667,
+    "longitude": 113.25
+  },
+  {
+    "region": "cn",
+    "city": "Guilin",
+    "id": "649352",
+    "latitude": 25.2833333,
+    "longitude": 110.2833333
+  },
+  {
+    "region": "cn",
+    "city": "Guiyang",
+    "id": "1171633",
+    "latitude": 26.5833333,
+    "longitude": 106.7166667
+  },
+  {
+    "region": "cn",
+    "city": "Haikou",
+    "id": "615835",
+    "latitude": 20.0458333,
+    "longitude": 110.3416667
+  },
+  {
+    "region": "cn",
+    "city": "Handan",
+    "id": "1358318",
+    "latitude": 36.5666667,
+    "longitude": 114.5333333
+  },
+  {
+    "region": "cn",
+    "city": "Hangzhou",
+    "id": "1878129",
+    "latitude": 30.2552778,
+    "longitude": 120.1688889
+  },
+  {
+    "region": "cn",
+    "city": "Harbin",
+    "id": "3229883",
+    "latitude": 45.75,
+    "longitude": 126.65
+  },
+  {
+    "region": "cn",
+    "city": "Hefei",
+    "id": "1388904",
+    "latitude": 31.8638889,
+    "longitude": 117.2808333
+  },
+  {
+    "region": "cn",
+    "city": "Hegang",
+    "id": "743307",
+    "latitude": 47.4,
+    "longitude": 130.3666667
+  },
+  {
+    "region": "cn",
+    "city": "Hengyang",
+    "id": "759602",
+    "latitude": 26.8880556,
+    "longitude": 112.615
+  },
+  {
+    "region": "cn",
+    "city": "Hohhot",
+    "id": "774477",
+    "latitude": 40.8105556,
+    "longitude": 111.6522222
+  },
+  {
+    "region": "cn",
+    "city": "Huaibei",
+    "id": "903039",
+    "latitude": 33.9744444,
+    "longitude": 116.7916667
+  },
+  {
+    "region": "cn",
+    "city": "Huainan",
+    "id": "1027655",
+    "latitude": 32.6263889,
+    "longitude": 116.9969444
+  },
+  {
+    "region": "cn",
+    "city": "Huaiyin",
+    "id": "555230",
+    "latitude": 33.5886111,
+    "longitude": 119.0191667
+  },
+  {
+    "region": "cn",
+    "city": "Jiamusi",
+    "id": "549549",
+    "latitude": 46.8333333,
+    "longitude": 130.35
+  },
+  {
+    "region": "cn",
+    "city": "Jiangmen",
+    "id": "532419",
+    "latitude": 22.5833333,
+    "longitude": 113.0833333
+  },
+  {
+    "region": "cn",
+    "city": "Jiaozuo",
+    "id": "517540",
+    "latitude": 35.2397222,
+    "longitude": 113.2330556
+  },
+  {
+    "region": "cn",
+    "city": "Jilin",
+    "id": "1881977",
+    "latitude": 43.8508333,
+    "longitude": 126.5602778
+  },
+  {
+    "region": "cn",
+    "city": "Jinan",
+    "id": "2069266",
+    "latitude": 36.6683333,
+    "longitude": 116.9972222
+  },
+  {
+    "region": "cn",
+    "city": "Kaifeng",
+    "id": "576915",
+    "latitude": 34.7441667,
+    "longitude": 114.4186111
+  },
+  {
+    "region": "cn",
+    "city": "Kunming",
+    "id": "1023674",
+    "latitude": 25.0388889,
+    "longitude": 102.7183333
+  },
+  {
+    "region": "cn",
+    "city": "Langfang",
+    "id": "720119",
+    "latitude": 39.5097222,
+    "longitude": 116.6947222
+  },
+  {
+    "region": "cn",
+    "city": "Lanzhou",
+    "id": "1417742",
+    "latitude": 36.0563889,
+    "longitude": 103.7922222
+  },
+  {
+    "region": "cn",
+    "city": "Liaoyang",
+    "id": "687890",
+    "latitude": 41.2261111,
+    "longitude": 123.0561111
+  },
+  {
+    "region": "cn",
+    "city": "Liuzhou",
+    "id": "763168",
+    "latitude": 24.3125,
+    "longitude": 109.3886111
+  },
+  {
+    "region": "cn",
+    "city": "Luancheng",
+    "id": "597130",
+    "latitude": 37.8791667,
+    "longitude": 114.6516667
+  },
+  {
+    "region": "cn",
+    "city": "Luoyang",
+    "id": "1390581",
+    "latitude": 34.6836111,
+    "longitude": 112.4536111
+  },
+  {
+    "region": "cn",
+    "city": "Maanshan",
+    "id": "540198",
+    "latitude": 31.7333333,
+    "longitude": 118.4833333
+  },
+  {
+    "region": "cn",
+    "city": "Mudanjiang",
+    "id": "665915",
+    "latitude": 44.5833333,
+    "longitude": 129.6
+  },
+  {
+    "region": "cn",
+    "city": "Nanchang",
+    "id": "1871351",
+    "latitude": 28.55,
+    "longitude": 115.9333333
+  },
+  {
+    "region": "cn",
+    "city": "Nanjing",
+    "id": "3087010",
+    "latitude": 32.0616667,
+    "longitude": 118.7777778
+  },
+  {
+    "region": "cn",
+    "city": "Nanning",
+    "id": "803788",
+    "latitude": 22.8166667,
+    "longitude": 108.3166667
+  },
+  {
+    "region": "cn",
+    "city": "Nantong",
+    "id": "666251",
+    "latitude": 32.0302778,
+    "longitude": 120.8747222
+  },
+  {
+    "region": "cn",
+    "city": "Neijiang",
+    "id": "546854",
+    "latitude": 29.5836111,
+    "longitude": 105.0591667
+  },
+  {
+    "region": "cn",
+    "city": "Ningbo",
+    "id": "719867",
+    "latitude": 29.875,
+    "longitude": 121.5419444
+  },
+  {
+    "region": "co",
+    "city": "Barranquilla",
+    "id": "1380437",
+    "latitude": 10.9638889,
+    "longitude": -74.7963889
+  },
+  {
+    "region": "co",
+    "city": "Bogotб",
+    "id": "7102602",
+    "latitude": 4.6,
+    "longitude": -74.0833333
+  },
+  {
+    "region": "co",
+    "city": "Bucaramanga",
+    "id": "571827",
+    "latitude": 7.1297222,
+    "longitude": -73.1258333
+  },
+  {
+    "region": "co",
+    "city": "Cali",
+    "id": "2392897",
+    "latitude": 3.4372222,
+    "longitude": -76.5225
+  },
+  {
+    "region": "co",
+    "city": "Cartagena",
+    "id": "952036",
+    "latitude": 10.3997222,
+    "longitude": -75.5144444
+  },
+  {
+    "region": "co",
+    "city": "Cъcuta",
+    "id": "721406",
+    "latitude": 7.8833333,
+    "longitude": -72.5052778
+  },
+  {
+    "region": "co",
+    "city": "Medellнn",
+    "id": "2000001",
+    "latitude": 6.2913889,
+    "longitude": -75.5361111
+  },
+  {
+    "region": "cu",
+    "city": "Santiago de Cuba",
+    "id": "555878",
+    "latitude": 20.0247222,
+    "longitude": -75.8219444
+  },
+  {
+    "region": "cz",
+    "city": "Prague",
+    "id": "1154508",
+    "latitude": 50.0833333,
+    "longitude": 14.4666667
+  },
+  {
+    "region": "de",
+    "city": "Berlin",
+    "id": "3398362",
+    "latitude": 52.5166667,
+    "longitude": 13.4
+  },
+  {
+    "region": "de",
+    "city": "Bremen",
+    "id": "546429",
+    "latitude": 53.0833333,
+    "longitude": 8.8
+  },
+  {
+    "region": "de",
+    "city": "Cologne",
+    "id": "968823",
+    "latitude": 50.9333333,
+    "longitude": 6.95
+  },
+  {
+    "region": "de",
+    "city": "Dortmund",
+    "id": "594255",
+    "latitude": 51.5166667,
+    "longitude": 7.45
+  },
+  {
+    "region": "de",
+    "city": "Duisburg",
+    "id": "505271",
+    "latitude": 51.4333333,
+    "longitude": 6.75
+  },
+  {
+    "region": "de",
+    "city": "Dьsseldorf",
+    "id": "577139",
+    "latitude": 51.2166667,
+    "longitude": 6.7666667
+  },
+  {
+    "region": "de",
+    "city": "Essen",
+    "id": "576914",
+    "latitude": 51.45,
+    "longitude": 7.0166667
+  },
+  {
+    "region": "de",
+    "city": "Frankfurt",
+    "id": "648034",
+    "latitude": 50.1166667,
+    "longitude": 8.6833333
+  },
+  {
+    "region": "de",
+    "city": "Hamburg",
+    "id": "1733846",
+    "latitude": 53.55,
+    "longitude": 10
+  },
+  {
+    "region": "de",
+    "city": "Hanover",
+    "id": "519144",
+    "latitude": 52.3666667,
+    "longitude": 9.7166667
+  },
+  {
+    "region": "de",
+    "city": "Munich",
+    "id": "1246133",
+    "latitude": 48.15,
+    "longitude": 11.5833333
+  },
+  {
+    "region": "de",
+    "city": "Stuttgart",
+    "id": "591688",
+    "latitude": 48.7666667,
+    "longitude": 9.1833333
+  },
+  {
+    "region": "dj",
+    "city": "Jibuti",
+    "id": "623891",
+    "latitude": 11.595,
+    "longitude": 43.1480556
+  },
+  {
+    "region": "dk",
+    "city": "Copenhagen",
+    "id": "1089958",
+    "latitude": 55.6666667,
+    "longitude": 12.5833333
+  },
+  {
+    "region": "do",
+    "city": "Santiago",
+    "id": "555911",
+    "latitude": 19.45,
+    "longitude": -70.7
+  },
+  {
+    "region": "do",
+    "city": "Santo Domingo",
+    "id": "2202016",
+    "latitude": 18.4666667,
+    "longitude": -69.9
+  },
+  {
+    "region": "dz",
+    "city": "Algiers",
+    "id": "1980242",
+    "latitude": 36.7630556,
+    "longitude": 3.0505556
+  },
+  {
+    "region": "dz",
+    "city": "Wahran",
+    "id": "646025",
+    "latitude": 35.6911111,
+    "longitude": -0.6416667
+  },
+  {
+    "region": "ec",
+    "city": "Guayaquil",
+    "id": "1952029",
+    "latitude": -2.1666667,
+    "longitude": -79.9
+  },
+  {
+    "region": "ec",
+    "city": "Quito",
+    "id": "1399814",
+    "latitude": -0.2166667,
+    "longitude": -78.5
+  },
+  {
+    "region": "eg",
+    "city": "Alexandria",
+    "id": "3811512",
+    "latitude": 31.1980556,
+    "longitude": 29.9191667
+  },
+  {
+    "region": "eg",
+    "city": "Cairo",
+    "id": "7734602",
+    "latitude": 30.05,
+    "longitude": 31.25
+  },
+  {
+    "region": "eg",
+    "city": "Gizeh",
+    "id": "2443490",
+    "latitude": 30.0086111,
+    "longitude": 31.2122222
+  },
+  {
+    "region": "eg",
+    "city": "Port Said",
+    "id": "538377",
+    "latitude": 31.2666667,
+    "longitude": 32.3
+  },
+  {
+    "region": "er",
+    "city": "Asmara",
+    "id": "563948",
+    "latitude": 15.3333333,
+    "longitude": 38.9333333
+  },
+  {
+    "region": "es",
+    "city": "Barcelona",
+    "id": "1570378",
+    "latitude": 41.3833333,
+    "longitude": 2.1833333
+  },
+  {
+    "region": "es",
+    "city": "Madrid",
+    "id": "3102644",
+    "latitude": 40.4,
+    "longitude": -3.6833333
+  },
+  {
+    "region": "es",
+    "city": "Mбlaga",
+    "id": "557875",
+    "latitude": 36.7166667,
+    "longitude": -4.4166667
+  },
+  {
+    "region": "es",
+    "city": "Sevilla",
+    "id": "686647",
+    "latitude": 37.3772222,
+    "longitude": -5.9869444
+  },
+  {
+    "region": "es",
+    "city": "Valencia",
+    "id": "769897",
+    "latitude": 39.4666667,
+    "longitude": -0.3666667
+  },
+  {
+    "region": "es",
+    "city": "Zaragoza",
+    "id": "635509",
+    "latitude": 41.6333333,
+    "longitude": -0.8833333
+  },
+  {
+    "region": "et",
+    "city": "Addis Abeba",
+    "id": "2757807",
+    "latitude": 9.0333333,
+    "longitude": 38.7
+  },
+  {
+    "region": "fi",
+    "city": "Helsinki",
+    "id": "558457",
+    "latitude": 60.1755556,
+    "longitude": 24.9341667
+  },
+  {
+    "region": "fr",
+    "city": "Marseille",
+    "id": "792823",
+    "latitude": 43.3,
+    "longitude": 5.4
+  },
+  {
+    "region": "fr",
+    "city": "Paris",
+    "id": "2110694",
+    "latitude": 48.866667,
+    "longitude": 2.333333
+  },
+  {
+    "region": "ga",
+    "city": "Libreville",
+    "id": "578156",
+    "latitude": 0.3833333,
+    "longitude": 9.45
+  },
+  {
+    "region": "gb",
+    "city": "Belfast",
+    "id": "585994",
+    "latitude": 54.583333,
+    "longitude": -5.933333
+  },
+  {
+    "region": "gb",
+    "city": "Birmingham",
+    "id": "984336",
+    "latitude": 52.466667,
+    "longitude": -1.916667
+  },
+  {
+    "region": "gb",
+    "city": "Glasgow",
+    "id": "610271",
+    "latitude": 55.833333,
+    "longitude": -4.25
+  },
+  {
+    "region": "gb",
+    "city": "London",
+    "id": "7421228",
+    "latitude": 51.5,
+    "longitude": -0.116667
+  },
+  {
+    "region": "ge",
+    "city": "Tbilisi",
+    "id": "1049516",
+    "latitude": 41.725,
+    "longitude": 44.7908333
+  },
+  {
+    "region": "gh",
+    "city": "Accra",
+    "id": "1963460",
+    "latitude": 5.55,
+    "longitude": -0.2166667
+  },
+  {
+    "region": "gh",
+    "city": "Kumasi",
+    "id": "1468797",
+    "latitude": 6.6833333,
+    "longitude": -1.6166667
+  },
+  {
+    "region": "gn",
+    "city": "Conakry",
+    "id": "1871185",
+    "latitude": 9.5091667,
+    "longitude": -13.7122222
+  },
+  {
+    "region": "gr",
+    "city": "Athens",
+    "id": "729139",
+    "latitude": 37.9833333,
+    "longitude": 23.7333333
+  },
+  {
+    "region": "gt",
+    "city": "Guatemala City",
+    "id": "973208",
+    "latitude": 14.6211111,
+    "longitude": -90.5269444
+  },
+  {
+    "region": "gt",
+    "city": "Guatemala",
+    "id": "973208",
+    "latitude": 14.6211111,
+    "longitude": -90.5269444
+  },
+  {
+    "region": "hn",
+    "city": "Tegucigalpa",
+    "id": "850961",
+    "latitude": 14.1,
+    "longitude": -87.2166667
+  },
+  {
+    "region": "hr",
+    "city": "Zagreb",
+    "id": "698967",
+    "latitude": 45.8,
+    "longitude": 16
+  },
+  {
+    "region": "ht",
+    "city": "Port-au-Prince",
+    "id": "1234750",
+    "latitude": 18.5391667,
+    "longitude": -72.335
+  },
+  {
+    "region": "hu",
+    "city": "Budapest",
+    "id": "1708088",
+    "latitude": 47.5,
+    "longitude": 19.0833333
+  },
+  {
+    "region": "id",
+    "city": "Bandar Lampung",
+    "id": "800446",
+    "latitude": -5.45,
+    "longitude": 105.2666667
+  },
+  {
+    "region": "id",
+    "city": "Bandung",
+    "id": "1699822",
+    "latitude": -6.9127778,
+    "longitude": 107.6205556
+  },
+  {
+    "region": "id",
+    "city": "Banjarmasin",
+    "id": "572910",
+    "latitude": -3.3333333,
+    "longitude": 114.5833333
+  },
+  {
+    "region": "id",
+    "city": "Bekasi",
+    "id": "1520204",
+    "latitude": -6.2394444,
+    "longitude": 106.9927778
+  },
+  {
+    "region": "id",
+    "city": "Bogor",
+    "id": "769328",
+    "latitude": -6.5897222,
+    "longitude": 106.7913889
+  },
+  {
+    "region": "id",
+    "city": "Depok",
+    "id": "1198195",
+    "latitude": -6.4,
+    "longitude": 106.8186111
+  },
+  {
+    "region": "id",
+    "city": "Jakarta",
+    "id": "8540306",
+    "latitude": -6.1744444,
+    "longitude": 106.8294444
+  },
+  {
+    "region": "id",
+    "city": "Makasar",
+    "id": "1321832",
+    "latitude": -5.1463889,
+    "longitude": 119.4386111
+  },
+  {
+    "region": "id",
+    "city": "Malang",
+    "id": "746780",
+    "latitude": -7.9777778,
+    "longitude": 112.6280556
+  },
+  {
+    "region": "id",
+    "city": "Medan",
+    "id": "1751190",
+    "latitude": 3.5833333,
+    "longitude": 98.6666667
+  },
+  {
+    "region": "id",
+    "city": "Padang",
+    "id": "840458",
+    "latitude": -0.95,
+    "longitude": 100.35
+  },
+  {
+    "region": "id",
+    "city": "Palembang",
+    "id": "1241334",
+    "latitude": -2.9166667,
+    "longitude": 104.75
+  },
+  {
+    "region": "id",
+    "city": "Semarang",
+    "id": "1288221",
+    "latitude": -6.9666667,
+    "longitude": 110.4166667
+  },
+  {
+    "region": "id",
+    "city": "Surabaya",
+    "id": "2374920",
+    "latitude": -7.2491667,
+    "longitude": 112.7508333
+  },
+  {
+    "region": "id",
+    "city": "Surakarta",
+    "id": "555368",
+    "latitude": -7.5833333,
+    "longitude": 110.8333333
+  },
+  {
+    "region": "id",
+    "city": "Tangerang",
+    "id": "1372185",
+    "latitude": -6.1780556,
+    "longitude": 106.63
+  }
+]
