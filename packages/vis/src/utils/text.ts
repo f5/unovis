@@ -2,7 +2,7 @@
 import { Selection } from 'd3-selection'
 
 // Types
-import { TrimMode, VerticalAlign, WrapTextOptions } from 'types/text'
+import { TrimMode, VerticalAlign, WrapMode, WrapTextOptions } from 'types/text'
 
 // Utils
 import { isArray, flatten } from 'utils/data'
@@ -85,6 +85,9 @@ export function wrapTextElement (element: Selection<SVGTextElement, any, SVGElem
     wordBreak = false,
     trimOnly = false,
     dy = 0.32,
+    wrapMode,
+    fontSize,
+    widthToHeightRatio = 0.52,
   } = options
 
   // Trim text first
@@ -107,8 +110,11 @@ export function wrapTextElement (element: Selection<SVGTextElement, any, SVGElem
 
   words.forEach((word, i) => {
     if (i === 0) return
-    tspan.text(`${tspanText}${word}`)
-    if (tspan.node().getComputedTextLength() > width) {
+    const _text = `${tspanText}${word}`
+    tspan.text(_text)
+    const _wrapText = wrapMode === WrapMode.FONTSIZE ? fontSize * _text.length * widthToHeightRatio > width
+      : tspan.node().getComputedTextLength() > width
+    if (_wrapText) {
       tspan.text(tspanText)
       if (wordBreak) word = breakTspan(tspan, width, word)
       tspan = element.append('tspan')
@@ -121,7 +127,12 @@ export function wrapTextElement (element: Selection<SVGTextElement, any, SVGElem
   })
 
   if (wordBreak) {
-    const numTspan = Math.ceil(tspan.node().getComputedTextLength() / (width || 1))
+    let numTspan
+    if (wrapMode === WrapMode.FONTSIZE) {
+      numTspan = Math.ceil(tspan.text().length * fontSize * widthToHeightRatio / (width || 1))
+    } else {
+      numTspan = Math.ceil(tspan.node().getComputedTextLength() / (width || 1))
+    }
     for (let i = 0; i < numTspan; i++) {
       const word = breakTspan(tspan, width || 1)
       if (word) {
