@@ -13,7 +13,7 @@ export const variables = injectGlobal`
     --vis-graph-node-icon-color: #a0a6ad;
     --vis-graph-node-icon-font: FontAwesome;
     --vis-graph-node-icon-fill-color-bright: #ffffff;
-    --vis-graph-node-icon-fill-color-dark: #a5abb2;
+    --vis-graph-node-icon-fill-color-dark: #9ea7b8;
 
     /* Node Label */
     --vis-graph-node-label-font-size: 9pt;
