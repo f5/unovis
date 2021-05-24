@@ -14,13 +14,13 @@ type MapPoint = {
   latitude: number;
   shape: string;
 
-  healthy?: number,
-  warning?: number,
-  alert?: number,
-  inactive?: number,
-  pending?: number,
-  re?: number,
-  approving?: number,
+  healthy?: number;
+  warning?: number;
+  alert?: number;
+  inactive?: number;
+  pending?: number;
+  re?: number;
+  approving?: number;
 }
 
 function mapSampleData (): Record<string, any>[] {

@@ -26,8 +26,8 @@ export class ComponentCore<CoreDatum> {
 
   events: {
     [selectorString: string]: {
-      [eventType: string]: (((d: any, event: Event, i: number, elements: HTMLElement[] | SVGElement[]) => void)) | undefined
-    }
+      [eventType: string]: (((d: any, event: Event, i: number, elements: HTMLElement[] | SVGElement[]) => void)) | undefined;
+    };
   } = {}
 
   _setUpComponentEventsThrottled = throttle(this._setUpComponentEvents, 500)

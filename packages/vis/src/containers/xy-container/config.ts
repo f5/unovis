@@ -32,11 +32,11 @@ export interface XYContainerConfigInterface<Datum> extends ContainerConfigInterf
   crosshair?: Crosshair<Datum> | undefined;
   /** Prevents the chart domain from being empty (when domain's min and max values are equal).
    *  That usually happens when all the data values are the same.
-   *  Setting to `true` will automatically extend the domain by `+1` when needed. Defaul: `true`
+   *  Setting to `true` will automatically extend the domain by `+1` when needed. Default: `true`
   */
   preventEmptyDomain?: boolean;
   /** Sets the Y scale domain based on the X scale domain not the whole data. Default: `false` */
-  adaptiveYScale?: boolean
+  adaptiveYScale?: boolean;
 }
 
 export class XYContainerConfig<Datum> extends ContainerConfig implements XYContainerConfigInterface<Datum> {

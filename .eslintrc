@@ -49,6 +49,16 @@
     "@typescript-eslint/explicit-member-accessibility": "off",
     "@typescript-eslint/indent": "off",
     "@typescript-eslint/type-annotation-spacing": ["error"],
+    "@typescript-eslint/member-delimiter-style": ["error", {
+      "multiline": {
+        "delimiter": "semi",
+        "requireLast": true
+      },
+      "singleline": {
+        "delimiter": "semi",
+        "requireLast": false
+      }
+    }],
     "multiline-ternary": "off"
   }
 }
