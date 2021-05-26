@@ -1,7 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-/* eslint-disable */
-import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core'
-// Vis
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core'
 import {
   XYContainer,
   XYContainerConfigInterface,
@@ -33,15 +31,16 @@ export class CompositeComponent implements AfterViewInit {
     d => d.y3,
     d => d.y4,
   ]
-  legendItems: { name: string, inactive?: boolean }[] = this.yAccessors.map((d, i) => ({ name: `Stream ${i + 1}` }))
+
+  legendItems: { name: string; inactive?: boolean }[] = this.yAccessors.map((d, i) => ({ name: `Stream ${i + 1}` }))
   chartConfig: XYContainerConfigInterface<SampleDatum>
   barConfig: StackedBarConfigInterface<SampleDatum>
   lineConfig: LineConfigInterface<SampleDatum>
   composite: XYContainer<SampleDatum>
-  @ViewChild('chart', { static: false }) chart: ElementRef
-  @ViewChild('navigation', { static: false }) navigation: ElementRef
+  navigation: XYContainer<SampleDatum>
+  @ViewChild('chart', { static: false }) chartRef: ElementRef
+  @ViewChild('navigation', { static: false }) navigationRef: ElementRef
   @ViewChild('legendRef', { static: false }) legendRef: ElementRef
-
 
   ngAfterViewInit (): void {
     const data: SampleDatum[] = sampleSeriesData(100)
@@ -56,18 +55,18 @@ export class CompositeComponent implements AfterViewInit {
       ],
       dimensions: {
         y: {
-          domainMaxConstraint: [1, undefined]
+          domainMaxConstraint: [1, undefined],
         },
         x: {
-          domain: undefined
-        }
+          domain: undefined,
+        },
       },
       axes: {
         x: new Axis({
           // position: 'top',
           label: 'Index',
           // tickValues: [0, 5, 10, 15, 20, 25],
-          fullSize: true
+          fullSize: true,
         }),
         y: new Axis({
           // position: 'left',
@@ -87,9 +86,9 @@ export class CompositeComponent implements AfterViewInit {
       }),
     }
 
-    this.composite = new XYContainer(this.chart.nativeElement, this.chartConfig, data)
+    this.composite = new XYContainer(this.chartRef.nativeElement, this.chartConfig, data)
 
-    const navConfig = {
+    const navConfig: XYContainerConfigInterface<SampleDatum> = {
       margin: { left: 9, right: 9 },
       components: [
         new StackedBar(this.lineConfig),
@@ -105,17 +104,16 @@ export class CompositeComponent implements AfterViewInit {
       },
       axes: {
         x: new Axis(),
-      }
+      },
     }
 
-    // @ts-ignore
-    const nav = new XYContainer(this.navigation.nativeElement, navConfig, data)
+    this.navigation = new XYContainer<SampleDatum>(this.navigationRef.nativeElement, navConfig, data)
   }
 
   onLegendItemClick (event): void {
     const { d } = event
     d.inactive = !d.inactive
-    this.legendItems = [ ...this.legendItems ]
+    this.legendItems = [...this.legendItems]
     const accessors = this.yAccessors.map((acc, i) => !this.legendItems[i].inactive ? acc : null)
     this.barConfig.y = accessors
     this.composite.updateComponents([this.barConfig])
@@ -129,22 +127,17 @@ function getBarConfig (y): StackedBarConfigInterface<SampleDatum> {
     barMaxWidth: 15,
     roundedCorners: false,
     events: {
-      [StackedBar.selectors.bar]: {
-        click: d => { },
-      },
+      [StackedBar.selectors.bar]: {},
     },
   }
 }
 
 function getLineConfig (y): LineConfigInterface<SampleDatum> {
   return {
-    // barMaxWidth: 15,
     x: d => d.x,
     y,
     events: {
-      [Line.selectors.line]: {
-        click: d => { },
-      },
+      [Line.selectors.line]: {},
     },
   }
 }
