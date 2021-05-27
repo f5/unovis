@@ -40,7 +40,7 @@ export class Tooltip<T extends ComponentCore<any>, TooltipDatum> {
   }
 
   public setContainer (container: HTMLElement): void {
-    this._container?.removeChild(this.element)
+    this.element.parentNode?.removeChild(this.element)
 
     this._container = container
     this._container.appendChild(this.element)
@@ -53,7 +53,7 @@ export class Tooltip<T extends ComponentCore<any>, TooltipDatum> {
   }
 
   public hasContainer (): boolean {
-    return !!this._container
+    return !!this._container && this._container.isConnected
   }
 
   public setComponents (components: T[]): void {

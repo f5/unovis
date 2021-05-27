@@ -7,4 +7,4 @@ export interface DonutArcDatum<Datum> extends PieArcDatum<Datum> {
   outerRadius: number;
 }
 
-export type DonutArcAnimState = { startAngle: number; endAngle: number; innerRadius: number; outerRadius: number; }
+export type DonutArcAnimState = { startAngle: number; endAngle: number; innerRadius: number; outerRadius: number }

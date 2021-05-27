@@ -59,7 +59,7 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
     // Store axis raw BBox (without the label) for further label positioning (see _renderAxisLabel)
     this._axisRawBBox = axisRenderHelperGroup.node().getBBox()
 
-    // Render label and store total axis size and reqired margins
+    // Render label and store total axis size and required margins
     this._renderAxisLabel(axisRenderHelperGroup)
     this._axisSize = this._getSize(axisRenderHelperGroup)
     this._requiredMargin = this._getRequiredMargin(this._axisSize)

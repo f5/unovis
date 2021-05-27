@@ -97,7 +97,7 @@ export interface SankeyConfigInterface<N extends InputNode, L extends InputLink>
   /** Maximum label with in pixels. Default: `70` */
   labelMaxWidth?: number;
   /** Expand trimmed label on hover. Default: `true` */
-  labelExpandTrimmedOnHover?: boolean
+  labelExpandTrimmedOnHover?: boolean;
   /** Maximum label length (in characters number) for wrapping. Default: `undefined` */
   // labelLength?: number;
   /** Label trimming mode. Default: `TrimMode.MIDDLE` */

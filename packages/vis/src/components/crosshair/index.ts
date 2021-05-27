@@ -34,6 +34,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
     super()
     if (config) this.config.init(config)
 
+    this.g.style('opacity', this.show ? 1 : 0)
     this.line = this.g.append('line')
       .attr('class', s.line)
   }
@@ -49,7 +50,6 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
     const { config } = this
     if (!this.datum) return
     const duration = isNumber(customDuration) ? customDuration : config.duration
-    const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
 
     smartTransition(this.g, duration)
       .style('opacity', this.show ? 1 : 0)
@@ -62,25 +62,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
       .attr('x1', this.x)
       .attr('x2', this.x)
 
-    const baselineValue = getValue(this.datum, config.baseline) || 0
-    const stackedValues = getStackedValues(this.datum, ...config.yStacked)
-      .map((value, index, arr) => ({
-        index,
-        value: value + baselineValue,
-        visible: !!getValue(this.datum, config.yStacked[index]),
-      }))
-
-    const regularValues = yAccessors
-      .map((a, index) => {
-        const value = getValue(this.datum, a)
-        return {
-          index,
-          value,
-          visible: !!value,
-        }
-      })
-    const circleData = stackedValues.concat(regularValues)
-
+    const circleData = this.getCircleData()
     const circles = this.g.selectAll('circle')
       .data(circleData)
 
@@ -107,16 +89,16 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
   _onMouseMove (event: MouseEvent): void {
     const { config, datamodel, element } = this
     const [x] = pointer(event, element)
-    const scale = config.scales.x
-    const value = scale.invert(x) as number
+    const scaleX = config.scales.x
+    const valueX = scaleX.invert(x) as number
 
-    this.datum = getNearest(datamodel.data, value, config.x)
+    this.datum = getNearest(datamodel.data, valueX, config.x)
     if (!this.datum) return
 
-    this.x = clamp(Math.round(scale(getValue(this.datum, config.x))), 0, config.width)
+    this.x = clamp(Math.round(scaleX(getValue(this.datum, config.x))), 0, config.width)
 
-    // Show the crosshair only if it's in the chart range
-    this.show = (this.x >= 0) && (this.x <= config.width)
+    // Show the crosshair only if it's in the chart range and not far from mouse pointer (if configured)
+    this.show = (this.x >= 0) && (this.x <= config.width) && (config.hideWhenFarFromPointer && (Math.abs(this.x - x) < config.hideWhenFarFromPointerDistance))
 
     window.cancelAnimationFrame(this._animFrameId)
     this._animFrameId = window.requestAnimationFrame(() => {
@@ -155,5 +137,29 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
   // We don't want Crosshair to be be taken in to account in domain calculations
   getYDataExtent (): number[] {
     return [undefined, undefined]
+  }
+
+  private getCircleData (): { index: number; value: any; visible: boolean }[] {
+    const { config } = this
+    const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
+    const baselineValue = getValue(this.datum, config.baseline) || 0
+    const stackedValues = getStackedValues(this.datum, ...config.yStacked)
+      .map((value, index, arr) => ({
+        index,
+        value: value + baselineValue,
+        visible: !!getValue(this.datum, config.yStacked[index]),
+      }))
+
+    const regularValues = yAccessors
+      .map((a, index) => {
+        const value = getValue(this.datum, a)
+        return {
+          index,
+          value,
+          visible: !!value,
+        }
+      })
+
+    return stackedValues.concat(regularValues)
   }
 }

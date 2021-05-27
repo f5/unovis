@@ -3,10 +3,10 @@ import { css, injectGlobal, keyframes } from 'emotion'
 
 export const variables = injectGlobal`
   :root {
-    --vis-graph-link-stroke-color: #acb3b8;
+    --vis-graph-link-stroke-color: #e6e9f3;
     --vis-graph-link-label-stroke-color: #fff;
     --vis-graph-link-label-text-color: #fff;
-    --vis-graph-link-label-fill-color: #acb3b8;
+    --vis-graph-link-label-fill-color: #e6e9f3;
     
     --vis-graph-link-support-stroke-width: 10px;
   }

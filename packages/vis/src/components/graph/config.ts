@@ -117,7 +117,7 @@ export interface GraphConfigInterface<N extends NodeDatumCore, L extends LinkDat
   /** Node stroke color accessor function or value */
   nodeStroke?: ColorAccessor<N>;
   /** Node Sorting Function. Default: `undefined` */
-  nodeSort?: ((a: N, b: N) => number)
+  nodeSort?: ((a: N, b: N) => number);
   /** Set selected node by Id  */
   selectedNodeId?: number | string;
 

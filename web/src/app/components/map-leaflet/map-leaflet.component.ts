@@ -8,8 +8,8 @@ import {
 } from '@volterra/vis'
 
 type FlowMapData<P, L> = {
-  points: P[],
-  flows: L[],
+  points: P[];
+  flows: L[];
 }
 
 @Component({

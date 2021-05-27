@@ -59,8 +59,8 @@ export type Point<D> = {
   fill: string;
   index: any;
   id: number | string;
-  properties: PointDatum<D>,
-  donutData: PieDatum[],
+  properties: PointDatum<D>;
+  donutData: PieDatum[];
   _zIndex: number;
 }
 

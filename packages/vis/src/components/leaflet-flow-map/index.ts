@@ -25,7 +25,7 @@ import { LatLon, Particle } from './types'
 // Renderer
 import { PointRenderer as PointRendererType } from './renderer'
 
-export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ points: PointDatum[], flows?: FlowDatum[] }> {
+export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ points: PointDatum[]; flows?: FlowDatum[] }> {
   static selectors = LeafletMap.selectors
   type = ComponentType.HTML
   private leafletMap: LeafletMap<PointDatum>
@@ -43,7 +43,7 @@ export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ point
   private renderer: PointRendererType
   particles: Particle[] = []
 
-  constructor (container: HTMLDivElement, config?: LeafletFlowMapConfigInterface<PointDatum, FlowDatum>, data?: { points: PointDatum[], flows?: FlowDatum[] }) {
+  constructor (container: HTMLDivElement, config?: LeafletFlowMapConfigInterface<PointDatum, FlowDatum>, data?: { points: PointDatum[]; flows?: FlowDatum[] }) {
     super(ComponentType.HTML)
 
     this.leafletMap = new LeafletMap<PointDatum>(container, config, data?.points ?? [])
@@ -83,7 +83,7 @@ export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ point
     this.leafletMap.setConfig(config)
   }
 
-  setData (data: { points: PointDatum[], flows?: FlowDatum[] }): void {
+  setData (data: { points: PointDatum[]; flows?: FlowDatum[] }): void {
     super.setData(data)
     this.flows = data.flows
     this.points = data.points
