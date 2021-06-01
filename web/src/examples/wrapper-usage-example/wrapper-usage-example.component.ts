@@ -1,5 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { AfterViewInit, OnDestroy, Component } from '@angular/core'
+import { format } from 'date-fns'
 
 // Vis
 import { Axis, Brush, GroupedBar, Tooltip, Crosshair } from '@volterra/vis'
@@ -53,8 +54,15 @@ export class WrapperUsageExampleComponent implements AfterViewInit, OnDestroy {
   axes = {
     x: new Axis({
       label: 'x axis',
-      tickFormat: d => (new Date(d)).toTimeString(),
-      tickTextWidth: 80,
+      numTicks: 10,
+      tickFormat: (tick, i, ticks) => {
+        const currentDate = new Date(tick)
+        const prevDate: Date | undefined = ticks[i - 1] && new Date(ticks[i - 1])
+        const currentDay = currentDate.getDate()
+        const prevDay = prevDate?.getDate()
+        return format(currentDate, prevDay !== currentDay ? 'h:mm aaa MMM d' : 'h:mm aaa')
+      },
+      tickTextWidth: 60,
     }),
     y: new Axis({ label: 'y axis' }),
   }
