@@ -3,7 +3,7 @@ import { AfterViewInit, OnDestroy, Component } from '@angular/core'
 import { format } from 'date-fns'
 
 // Vis
-import { Axis, Brush, GroupedBar, Tooltip, Crosshair } from '@volterra/vis'
+import { Axis, Brush, GroupedBar, Tooltip, Crosshair, Scale } from '@volterra/vis'
 
 // Helpers
 import { sampleSeriesData, SampleDatum } from '../../utils/data'
@@ -48,6 +48,7 @@ export class WrapperUsageExampleComponent implements AfterViewInit, OnDestroy {
   dimensions = {
     x: {
       domain: undefined,
+      scale: Scale.scaleTime(),
     },
   }
 

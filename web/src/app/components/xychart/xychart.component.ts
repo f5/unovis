@@ -3,6 +3,7 @@ import { Component, ViewChild, ElementRef, AfterViewInit, Input, OnDestroy } fro
 
 // Vis
 import { XYContainer, XYContainerConfigInterface } from '@volterra/vis'
+import { Dimension } from 'types/misc'
 
 @Component({
   selector: 'vis-xychart',
@@ -16,7 +17,7 @@ export class XYChartComponent implements AfterViewInit, OnDestroy {
   @Input() padding = {}
   @Input() components = []
   @Input() componentConfigs = []
-  @Input() dimensions = { x: {}, y: {} }
+  @Input() dimensions: Record<string, Dimension> = { x: {}, y: {} }
   @Input() axes = {}
   @Input() tooltip
   @Input() crosshair
