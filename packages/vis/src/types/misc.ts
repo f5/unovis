@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { ContiniousScale } from 'types/scales'
+import { ContinuousScale } from 'types/scales'
 
 export type NumericAccessor<Datum> = ((d: Datum, i?: number, ...any) => number | null) | number | null | undefined
 export type StringAccessor<Datum> = ((d: Datum, i?: number, ...any) => string | null) | string | null
@@ -9,7 +9,7 @@ export type GenericAccessor<T, Datum> = ((d: Datum, i?: number, ...any) => T | n
 
 export type Dimension = {
   /** D3 scale, e.g. Scale.ScaleLinear */
-  scale?: ContiniousScale;
+  scale?: ContinuousScale;
   /** Force set scale domain (data extent) */
   domain?: [number | undefined, number | undefined];
   /** Constraint the minimum value of the scale domain */

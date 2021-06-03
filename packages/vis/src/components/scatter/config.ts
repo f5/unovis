@@ -5,7 +5,7 @@ import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component
 
 // Types
 import { NumericAccessor, StringAccessor, ColorAccessor } from 'types/misc'
-import { Scale, ContiniousScale } from 'types/scales'
+import { Scale, ContinuousScale } from 'types/scales'
 import { SymbolType } from 'types/symbols'
 
 export interface ScatterConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
@@ -14,7 +14,7 @@ export interface ScatterConfigInterface<Datum> extends XYComponentConfigInterfac
   /** Size accessor function or value in relative units. Default: `1` */
   size?: NumericAccessor<Datum>;
   /** Size Scale. Default: `Scale.scaleLinear()` */
-  sizeScale?: ContiniousScale;
+  sizeScale?: ContinuousScale;
   /** Size Range, [number, number]. Default: `[5, 20]` */
   sizeRange?: [number, number];
   /** Shape of scatter point: circle, cross, diamond, square, star, triangle and wye. Default: `SymbolType.CIRCLE` */

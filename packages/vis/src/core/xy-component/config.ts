@@ -1,6 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { ColorType } from 'types/color'
-import { Scale, ContiniousScale } from 'types/scales'
+import { Scale, ContinuousScale } from 'types/scales'
 // Types
 import { NumericAccessor } from 'types/misc'
 // Config
@@ -18,8 +18,8 @@ export interface XYComponentConfigInterface<Datum> extends ComponentConfigInterf
   /** Coloring type */
   colorType?: ColorType;
   scales?: {
-    x?: ContiniousScale;
-    y?: ContiniousScale;
+    x?: ContinuousScale;
+    y?: ContinuousScale;
   };
   /** Sets the Y scale domain based on the X scale domain not the whole data. Default: `false` */
   adaptiveYScale?: boolean;
@@ -41,8 +41,8 @@ export class XYComponentConfig<Datum> extends ComponentConfig implements XYCompo
   color = (d: Datum): string => d['color']
   colorType = ColorType.Static
   scales = {
-    x: Scale.scaleLinear() as ContiniousScale,
-    y: Scale.scaleLinear() as ContiniousScale,
+    x: Scale.scaleLinear() as ContinuousScale,
+    y: Scale.scaleLinear() as ContinuousScale,
   }
 
   adaptiveYScale = false
