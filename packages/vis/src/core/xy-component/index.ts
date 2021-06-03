@@ -1,16 +1,16 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { extent } from 'd3-array'
 
 // Core
 import { ComponentCore } from 'core/component'
 import { SeriesDataModel } from 'data-models/series'
 
 // Utils
-import { filterDataByRange, getExtent, getValue, isArray } from 'utils/data'
+import { filterDataByRange, getExtent, isArray } from 'utils/data'
 import { defaultRange } from 'utils/scale'
 
 // Types
-import { NumericAccessor, Dimension, Spacing } from 'types/misc'
+import { NumericAccessor, Spacing } from 'types/misc'
+import { ContinuousScale } from 'types/scales'
 
 // Config
 import { XYComponentConfig } from './config'
@@ -36,32 +36,9 @@ export class XYComponentCore<Datum> extends ComponentCore<Datum[]> {
     scales[key].range(range)
   }
 
-  updateScale (key: string, dim: Dimension = {}, padding: Spacing = {}): void {
-    if (!key) return
-    const { config, config: { scales, width, height }, datamodel: { data } } = this
-
-    switch (key) {
-    case 'x': {
-      if (dim.scale) scales.x = dim.scale
-      scales.x.domain(dim.domain ?? this.getXDataExtent())
-      const bleed = this.bleed // Bleed depends on the domain settings ☝️
-      scales.x.range(dim.range ?? [padding.left + bleed.left, width - padding.right - bleed.right])
-      break
-    }
-    case 'y': {
-      if (dim.scale) scales.y = dim.scale
-      scales.y.domain(dim.domain ?? this.getYDataExtent())
-      const bleed = this.bleed // Bleed depends on the domain settings ☝️
-      scales.y.range(dim.range ?? [height - padding.bottom - bleed.bottom, padding.top + bleed.top])
-      break
-    }
-    default: {
-      if (!scales[key]) break
-      if (dim.scale) scales[key] = dim.scale
-      scales[key].domain(dim.domain ?? extent(data, d => getValue(d, config[key])))
-      if (dim.range) scales[key].range(dim.range)
-    }
-    }
+  setScale (key: string, scale: ContinuousScale): void {
+    const { config } = this
+    if (key && scale && config.scales[key] !== scale) config.scales[key] = scale
   }
 
   getDataExtent (accessorKey: string): number[] {
