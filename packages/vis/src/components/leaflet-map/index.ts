@@ -608,15 +608,18 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
   }
 
   public zoomIn (increment = 1): void {
+    if (!this._map?.leaflet) return
     this.setZoom(this._map.leaflet.getZoom() + increment)
   }
 
   public zoomOut (increment = 1): void {
+    if (!this._map?.leaflet) return
     this.setZoom(this._map.leaflet.getZoom() - increment)
   }
 
   public setZoom (zoomLevel: number): void {
-    const leaflet = this._map.leaflet
+    const leaflet = this._map?.leaflet
+    if (!leaflet) return
 
     this._eventInitiatedByComponent = true
     leaflet.flyTo(
