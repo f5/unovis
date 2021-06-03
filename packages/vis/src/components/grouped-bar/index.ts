@@ -132,8 +132,10 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum> {
     const xHalfGroupWidth = Math.abs((xScale.invert(halfGroupWidth) as number) - (xScale.invert(0) as number))
     const filtered = data?.filter(d => {
       const v = getValue(d, config.x)
-      const xDomain = xScale.domain() as number[]
-      return (v >= (xDomain[0] - xHalfGroupWidth)) && (v <= (xDomain[1] + xHalfGroupWidth))
+      const xDomain: number[] | Date[] = xScale.domain()
+      const xDomainMin = +xDomain[0]
+      const xDomainMax = +xDomain[1]
+      return (v >= (xDomainMin - xHalfGroupWidth)) && (v <= (xDomainMax + xHalfGroupWidth))
     })
 
     return filtered
@@ -170,7 +172,7 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum> {
     const xDomainLength = isOrdinal ? xDomain.length : xDomain[1] - xDomain[0]
 
     // If the dataStep property is provided the amount of data elements is calculates as domainLength / dataStep
-    //   othwerise we get the number of data elements within the domain range
+    //   otherwise we get the number of data elements within the domain range
     // Or if the scale is ordinal we use data.length
     let dataSize = (1 + xDomainLength / config.dataStep) ||
         (!isOrdinal && data.filter(d => {
