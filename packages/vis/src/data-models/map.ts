@@ -12,8 +12,6 @@ import { getDataLatLngBounds } from 'utils/map'
 
 export class MapDataModel<PointDatum> extends CoreDataModel<PointDatum[]> {
   getDataLatLngBounds (pointLatitude: NumericAccessor<PointDatum>, pointLongitude: NumericAccessor<PointDatum>, paddingDegrees = 1): number[][] {
-    if (!this.data.length) return
-
     return getDataLatLngBounds(this.data, pointLatitude, pointLongitude, paddingDegrees)
   }
 }
