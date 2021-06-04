@@ -16,7 +16,7 @@ export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterfa
   flyToDuration?: number;
   /** Zoom Duration */
   zoomDuration?: number;
-  /** Default bounds that will be applid on the first map render if the bounds property is not set */
+  /** Default bounds that will be applied on the first map render if the bounds property is not set */
   initialBounds?: Bounds;
   /** Force set map bounds */
   bounds?: Bounds;

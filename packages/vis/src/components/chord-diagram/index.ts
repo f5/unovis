@@ -174,7 +174,7 @@ export class ChordDiagram<H extends Hierarchy, N extends NodeDatumCore, L extend
       .call(removeLabel, duration)
   }
 
-  _getHierarchyNodes () {
+  _getHierarchyNodes (): { values: N[] } {
     const { config: { nodeLevels, value }, datamodel: { nodes, links } } = this
     nodes.forEach((n: any) => { delete n._state.value })
     links.forEach((l: any) => {
@@ -199,14 +199,14 @@ export class ChordDiagram<H extends Hierarchy, N extends NodeDatumCore, L extend
     const groupedBySource = groupBy(links, d => d.source.id)
     const groupedByTarget = groupBy(links, d => d.target.id)
 
-    const getNodesInRibbon = (source, target, dendrogramHeight, nodes = []) => {
+    const getNodesInRibbon = (source, target, dendrogramHeight, nodes: HNode<H>[] = []): HNode<H>[] => {
       nodes[source.height] = source
       nodes[dendrogramHeight * 2 - target.height] = target
       if (source.parent && target.parent) getNodesInRibbon(source.parent, target.parent, dendrogramHeight, nodes)
       return nodes
     }
 
-    const calculatePoints = (links, type, depth) => {
+    const calculatePoints = (links, type, depth): void => {
       links.forEach(link => {
         if (!link._state.points) link._state.points = []
         const sourceLeaf = findNode(leafNodes, link.source.id)

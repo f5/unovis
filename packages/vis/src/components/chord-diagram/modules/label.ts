@@ -42,7 +42,7 @@ export function createLabel<H extends Hierarchy> (selection: Selection<SVGGEleme
     .style('fill', d => getColor(d, config.nodeColor, d.depth))
 }
 
-function getLabelFillColor (d, config) {
+function getLabelFillColor (d, config): string {
   const { nodeLabelType, nodeColor } = config
   switch (nodeLabelType) {
   case LabelType.PERPENDICULAR: {
@@ -57,7 +57,7 @@ function getLabelFillColor (d, config) {
   }
 }
 
-function getLabelTextAnchor (d, config) {
+function getLabelTextAnchor (d, config): string | null {
   const { nodeLabelType } = config
   switch (nodeLabelType) {
   case LabelType.PERPENDICULAR: {

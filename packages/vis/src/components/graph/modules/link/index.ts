@@ -49,7 +49,7 @@ export function createLinks<N extends NodeDatumCore, L extends LinkDatumCore> (s
 }
 
 export function updateSelectedLinks<N extends NodeDatumCore, L extends LinkDatumCore> (selection: Selection<SVGGElement, L, SVGGElement, L[]>, config: GraphConfigInterface<N, L>, scale: number): void {
-  const isGreyout = d => d._state.greyout
+  const isGreyout = (d): boolean => d._state.greyout
 
   selection.select(`.${linkSelectors.link}`)
   selection.select(`.${linkSelectors.linkBand}`)

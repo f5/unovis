@@ -173,7 +173,7 @@ export function getNearest<Datum> (data: Datum[], value: number, accessor: Numer
   return value - values[index - 1] > values[index] - value ? data[index] : data[index - 1]
 }
 
-export function filterDataByRange<Datum> (data: Datum[], range: [number, number], accessor: NumericAccessor<Datum>) {
+export function filterDataByRange<Datum> (data: Datum[], range: [number, number], accessor: NumericAccessor<Datum>): Datum[] {
   const filteredData = data.filter(d => {
     const value = getValue(d, accessor)
     return (value >= range[0]) && (value < range[1])

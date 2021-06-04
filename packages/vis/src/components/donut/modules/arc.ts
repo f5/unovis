@@ -1,5 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { Selection } from 'd3-selection'
+import { Transition } from 'd3-transition'
 import { interpolate } from 'd3-interpolate'
 import { Arc } from 'd3-shape'
 
@@ -50,18 +51,19 @@ export function updateArc<Datum> (
     .style('stroke', (d, i) => getColor(d.data, config.color, i))
 
   if (duration) {
-    smartTransition(selection, duration)
-      .style('opacity', 1)
-      .attrTween('d', (d, i, els) => {
-        const arcNode: ArcNode = els[i]
-        const nextAnimState: DonutArcAnimState = { startAngle: d.startAngle, endAngle: d.endAngle, innerRadius: d.innerRadius, outerRadius: d.outerRadius }
-        const datum = interpolate(arcNode._animState, nextAnimState)
+    const transition = smartTransition(selection, duration)
+      .style('opacity', 1) as Transition<SVGElement, DonutArcDatum<Datum>, SVGGElement, DonutArcDatum<Datum>[]>
 
-        return (t: number): string => {
-          arcNode._animState = datum(t)
-          return arcGen(arcNode._animState as DonutArcDatum<Datum>)
-        }
-      })
+    transition.attrTween('d', (d, i, els) => {
+      const arcNode: ArcNode = els[i]
+      const nextAnimState: DonutArcAnimState = { startAngle: d.startAngle, endAngle: d.endAngle, innerRadius: d.innerRadius, outerRadius: d.outerRadius }
+      const datum = interpolate(arcNode._animState, nextAnimState)
+
+      return (t: number): string => {
+        arcNode._animState = datum(t)
+        return arcGen(arcNode._animState as DonutArcDatum<Datum>)
+      }
+    })
   } else {
     selection
       .attr('d', arcGen)

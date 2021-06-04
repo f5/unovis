@@ -5,7 +5,7 @@ import { Scale } from 'types/scales'
 import { Position, PositionStrategy, Arrangement } from 'types/position'
 import { Projection } from 'types/map-projections'
 import { Hierarchy } from 'types/radial-dendrogram'
-import { LayoutType, LinkStyle, LinkArrow, NodeDatumCore, LinkDatumCore, CircleLabel } from 'types/graph'
+import { LayoutType, LinkStyle, LinkArrow, NodeDatumCore, LinkDatumCore, CircleLabel, PanelConfigInterface } from 'types/graph'
 import { SHAPE } from 'types/shape'
 import { Sizing } from 'types/component'
 import { NodeAlignType, SubLabelPlacement } from 'types/sankey'
@@ -41,4 +41,5 @@ export {
   FitMode,
   PositionStrategy,
   Dimension,
+  PanelConfigInterface,
 }

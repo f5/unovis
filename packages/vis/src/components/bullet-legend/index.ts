@@ -18,7 +18,7 @@ export class BulletLegend {
   config: BulletLegendConfig
   protected _container: HTMLElement
 
-  private _colorAccessor = (d: BulletLegendItemInterface) => d.color
+  private _colorAccessor = (d: BulletLegendItemInterface): string => d.color
 
   constructor (element: HTMLElement, config?: BulletLegendConfigInterface) {
     this._container = element

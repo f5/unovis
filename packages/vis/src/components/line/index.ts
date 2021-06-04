@@ -1,5 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { select } from 'd3-selection'
+import { Transition } from 'd3-transition'
 import { line, Line as LineGenInterface, CurveFactoryLineOnly } from 'd3-shape'
 import { interpolatePath } from 'd3-interpolate-path'
 
@@ -14,6 +15,7 @@ import { getColor } from 'utils/color'
 // Types
 import { Curve, CurveType } from 'types/curves'
 import { NumericAccessor, Spacing } from 'types/misc'
+import { LineData, LineDatum } from 'types/line'
 
 // Config
 import { LineConfig, LineConfigInterface } from './config'
@@ -57,8 +59,8 @@ export class Line<Datum> extends XYComponentCore<Datum> {
 
     const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
     const lineDataX = data.map(d => config.scales.x(getValue(d, config.x)))
-    const lineData = yAccessors.map(a => {
-      const ld = data.map((d, i) => {
+    const lineData: LineData[] = yAccessors.map(a => {
+      const ld: LineDatum[] = data.map((d, i) => {
         const value = getValue(d, a) ?? config.noDataValue
         return {
           x: lineDataX[i],
@@ -112,7 +114,8 @@ export class Line<Datum> extends XYComponentCore<Datum> {
       if (duration && !hasUndefinedSegments) {
         const previous = linePath.attr('d')
         const next = svgPathD
-        transition.attrTween('d', () => interpolatePath(previous, next))
+        const t = transition as Transition<SVGPathElement, LineData, SVGGElement, LineData>
+        t.attrTween('d', () => interpolatePath(previous, next))
       } else {
         transition.attr('d', svgPathD)
       }
