@@ -1,5 +1,4 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-
 import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component/config'
 
 // Types
@@ -7,7 +6,6 @@ import { AxisType } from 'types/axis'
 import { Position } from 'types/position'
 import { FitMode, TrimMode } from 'types/text'
 import { Spacing } from 'types/misc'
-import { BaseType } from 'd3-selection'
 
 export interface AxisConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
     /** Axis position: top, bottom, right or left */
@@ -33,7 +31,7 @@ export interface AxisConfigInterface<Datum> extends XYComponentConfigInterface<D
     /** Draw minimum and maximum axis ticks only */
     minMaxTicksOnly?: boolean;
     /** Tick label formatter */
-    tickFormat?: (d: number | string, i: number, n: BaseType[]) => string;
+    tickFormat?: (d: number | string, i: number, n: (number | string)[]) => string;
     /** Explicitly set tick values */
     tickValues?: number[];
     /** Approximate number of axis ticks (passed to d3 axis constructor) */
