@@ -59,6 +59,9 @@
         "requireLast": false
       }
     }],
-    "multiline-ternary": "off"
+    "multiline-ternary": "off",
+    "@typescript-eslint/explicit-function-return-type": ["error", {
+      "allowExpressions": true
+    }]
   }
 }
