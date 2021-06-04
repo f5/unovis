@@ -50,7 +50,7 @@ export class SingleChartComponent implements AfterViewInit, OnDestroy {
     return { margin, component, tooltip }
   }
 
-  ngOnDestroy () {
+  ngOnDestroy (): void {
     this.chart.destroy()
   }
 }

@@ -7,7 +7,7 @@ import { Sankey, SankeyConfigInterface } from '@volterra/vis'
 
 import { sankeySampleData } from './data/datagen'
 
-function sampleSankeyData (n: number) {
+function sampleSankeyData (n: number): { nodes: unknown[]; links: unknown[]} {
   const sources = _times(n).map((d) => `RE ${d + 1}`)
   const targets = ['Site', 'VN selector', 'Endpoint 3', 'Endpoint 2', 'Endpoint 3']
   const vhost = ['Balancer']
