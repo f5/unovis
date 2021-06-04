@@ -257,8 +257,20 @@ export class XYContainer<Datum> extends ContainerCore {
 
   updateScales<T extends XYComponentCore<Datum>> (...components: T[]): void {
     const c = clean(components || this.components)
+    this._setScales(...c)
     this._updateScalesDomain(...c)
     this._updateScalesRange(...c)
+  }
+
+  _setScales<T extends XYComponentCore<Datum>> (...components: T[]): void {
+    const { config: { dimensions } } = this
+    if (!components) return
+
+    // Loop over all the dimensions
+    Object.keys(dimensions).forEach(key => {
+      const dim: Dimension = dimensions[key]
+      components.forEach(c => c.setScale(key, dim.scale))
+    })
   }
 
   _updateScalesDomain<T extends XYComponentCore<Datum>> (...components: T[]): void {

@@ -12,6 +12,7 @@ import { NodeAlignType, SubLabelPlacement } from 'types/sankey'
 import { EnterTransitionType, ExitTransitionType } from 'types/animation'
 import { VisControlItemInterface, VisControlsOrientation } from 'types/controls'
 import { TrimMode, VerticalAlign, FitMode } from 'types/text'
+import { Dimension } from 'types/misc'
 
 export {
   CurveType,
@@ -39,4 +40,5 @@ export {
   VerticalAlign,
   FitMode,
   PositionStrategy,
+  Dimension,
 }

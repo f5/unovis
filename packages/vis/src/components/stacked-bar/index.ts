@@ -131,8 +131,10 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
     const xHalfGroupWidth = Math.abs((xScale.invert(halfGroupWidth) as number) - (xScale.invert(0) as number))
     const filtered = data?.filter(d => {
       const v = getValue(d, config.x)
-      const xDomain = xScale.domain() as number[]
-      return (v >= (xDomain[0] - xHalfGroupWidth)) && (v <= (xDomain[1] + xHalfGroupWidth))
+      const xDomain: number[] | Date[] = xScale.domain()
+      const xDomainMin = +xDomain[0]
+      const xDomainMax = +xDomain[1]
+      return (v >= (xDomainMin - xHalfGroupWidth)) && (v <= (xDomainMax + xHalfGroupWidth))
     })
 
     return filtered
