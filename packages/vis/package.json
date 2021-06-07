@@ -34,6 +34,7 @@
     "rollup-plugin-visualizer": "^4.2.2"
   },
   "dependencies": {
+    "@juggle/resize-observer": "^3.3.1",
     "@types/geojson": "^7946.0.7",
     "@types/topojson": "^3.2.2",
     "d3": "^6.3.1",
@@ -46,7 +47,6 @@
     "lodash": "^4.17.21",
     "mapbox-gl": "1.13.1",
     "mapbox-gl-leaflet": "^0.0.15",
-    "resize-observer-polyfill": "^1.5.1",
     "supercluster": "^7.1.0",
     "tangram": "^0.21.1",
     "three": "^0.129.0",
