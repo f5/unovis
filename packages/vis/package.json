@@ -34,6 +34,7 @@
     "rollup-plugin-visualizer": "^4.2.2"
   },
   "dependencies": {
+    "@juggle/resize-observer": "^3.3.1",
     "@types/geojson": "^7946.0.7",
     "@types/topojson": "^3.2.2",
     "d3": "^6.3.1",
@@ -43,13 +44,12 @@
     "dagre-layout": "^0.8.8",
     "emotion": "^10.0.27",
     "leaflet": "^1.7.1",
-    "lodash": "^4.17.20",
-    "mapbox-gl": "^1.13.0",
-    "mapbox-gl-leaflet": "^0.0.14",
-    "resize-observer-polyfill": "^1.5.1",
+    "lodash": "^4.17.21",
+    "mapbox-gl": "1.13.1",
+    "mapbox-gl-leaflet": "^0.0.15",
     "supercluster": "^7.1.0",
-    "tangram": "^0.21.0",
-    "three": "^0.125.2",
-    "topojson-client": "^3.0.2"
+    "tangram": "^0.21.1",
+    "three": "^0.129.0",
+    "topojson-client": "^3.1.0"
   }
 }

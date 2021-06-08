@@ -1,7 +1,7 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { select } from 'd3-selection'
 import L from 'leaflet'
-import ResizeObserver from 'resize-observer-polyfill'
+import { ResizeObserver } from '@juggle/resize-observer'
 
 import { ComponentCore } from 'core/component'
 import { ComponentType } from 'types/component'
