@@ -50,7 +50,7 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
       .attr('class', s.grid)
   }
 
-  /** Renders axis to an invisible groupd to calculate automatic chart margins */
+  /** Renders axis to an invisible grouped to calculate automatic chart margins */
   preRender (): void {
     const axisRenderHelperGroup = this.g.append('g').attr('opacity', 0)
 
@@ -132,7 +132,7 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
 
     if (config.gridLine) {
       const gridGen = this._buildGrid().tickFormat(() => '')
-      gridGen.tickValues(this._getTickValues())
+      gridGen.tickValues(this._getConfiguredTickValues())
       smartTransition(this.gridGroup, duration).call(gridGen).style('opacity', 1)
     } else {
       smartTransition(this.gridGroup, duration).style('opacity', 0)
@@ -179,21 +179,21 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
     const { config } = this
 
     const axisGen = this._buildAxis()
-    if (config.tickFormat) axisGen.tickFormat(config.tickFormat)
-    axisGen.tickValues(this._getTickValues())
+    axisGen.tickValues(this._getConfiguredTickValues())
 
     smartTransition(selection, duration).call(axisGen)
 
     const ticks = selection.selectAll('g.tick')
+    const tickValues = ticks.data()
 
     ticks
       .classed(s.tick, true)
       .style('font-size', config.tickTextFontSize)
 
     // We interrupt transition on tick Text to make it 'wrappable'
-    const tickText = ticks.selectAll('text')
+    const tickText = selection.selectAll('g.tick > text')
     tickText.nodes().forEach(node => interrupt(node))
-    tickText.text((d, i) => config.tickFormat?.(d, i) ?? d)
+    tickText.text((value, i) => config.tickFormat?.(value, i, tickValues) ?? value)
     tickText
       .call(wrapTickText, getWrapOptions(ticks, config))
 
@@ -213,9 +213,10 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
     return numTicks ?? Math.floor((type === AxisType.X ? width / 175 : Math.pow(height, 0.85) / 25))
   }
 
-  _getTickValues (): number[] {
+  _getConfiguredTickValues (): number[] | null {
     const { config: { scales, tickValues, type, minMaxTicksOnly } } = this
-    const scaleDomain = type === AxisType.X ? scales.x?.domain() : scales.y?.domain()
+    const scale = type === AxisType.X ? scales.x : scales.y
+    const scaleDomain = scale?.domain()
 
     if (minMaxTicksOnly) {
       return scaleDomain as number[]
@@ -242,10 +243,10 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
     // Remove the old label first to calculate the axis size properly
     selection.selectAll(`.${s.label}`).remove()
 
-    // Lalculate label position and rotation
+    // Calculate label position and rotation
     const axisPosition = this.getPosition()
     // We always use this.axisRenderHelperGroup to calculate the size of the axis because
-    //    this.gaxisGroup will give us incorrrect values due to animation
+    //    this.axisGroup will give us incorrect values due to animation
     const { width: axisWidth, height: axisHeight } = this._axisRawBBox ?? selection.node().getBBox()
 
     const offsetX = type === AxisType.X ? width / 2 : (-1) ** (+(axisPosition === Position.LEFT)) * axisWidth
@@ -256,7 +257,7 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
 
     const rotation = type === AxisType.Y ? -90 : 0
 
-    // Apped new label
+    // Append new label
     selection
       .append('text')
       .attr('class', s.label)

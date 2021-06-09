@@ -6,7 +6,7 @@ import {
   ScaleLinear, ScalePower, ScaleLogarithmic, ScaleTime, /* ScaleOrdinal, ScaleBand, ScalePoint, ScaleThreshold, ScaleQuantile, ScaleQuantize, ScaleDiverging, ScaleSequential */
 } from 'd3-scale'
 
-export type ContiniousScale = ScaleLinear<number, any> | ScalePower<any, any> | ScaleLogarithmic<any, any> | ScaleTime<any, any>
+export type ContinuousScale = ScaleLinear<number, any> | ScalePower<any, any> | ScaleLogarithmic<any, any> | ScaleTime<any, any>
 
 export const Scale = {
   scaleLinear,

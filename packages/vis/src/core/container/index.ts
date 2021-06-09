@@ -1,6 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { select, Selection } from 'd3-selection'
-import ResizeObserver from 'resize-observer-polyfill'
+import { ResizeObserver } from '@juggle/resize-observer'
 
 // Types
 import { Sizing } from 'types/component'

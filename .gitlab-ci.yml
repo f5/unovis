@@ -7,8 +7,6 @@ variables:
   JENKINS_URL: https://jenkins-dev.volterra.us
   JENKINS_TOKENS: eeph1eitohZaeMew
   AZURE_STORAGE_ACCOUNT: volterrasites
-  AZURE_STORAGE_IMAGE_TOKEN: '?sp=racwdl&st=2019-12-06T13:49:28Z&se=2030-12-07T13:49:00Z&sv=2019-02-02&sr=c&sig=Ol%2FYJ9k3OJDwWMrBIgJqmIrMyDZLN8pbwF%2F%2FX%2Fiw5a8%3D'
-  AZURE_STORAGE_TOKEN: '?sp=w&st=2019-05-06T10:33:00Z&se=2029-05-08T10:33:00Z&sv=2018-03-28&sig=mBVIJob9m8HfYyvCCr%2FJc7J6JfdUqPDJKC%2F%2Bq2QUB6Q%3D&sr=c'
 
 stages:
   - build

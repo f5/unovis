@@ -20,7 +20,7 @@ export function sampleSeriesData (n: number): SampleDatum[] {
   return _times(n).map((i) => ({
     id: _uniqueId(),
     x: i,
-    timestamp: Date.now() + i * 1000 * 60 * 5,
+    timestamp: Date.now() + i * 1000 * 60 * 15,
     y: Math.random(),
     y1: Math.random(),
     y2: Math.random(),
