@@ -60,7 +60,7 @@ export class XYChartComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  ngOnDestroy () {
+  ngOnDestroy (): void {
     this.chart.destroy()
   }
 }

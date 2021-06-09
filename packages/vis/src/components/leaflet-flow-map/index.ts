@@ -193,7 +193,7 @@ export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ point
     return []
   }
 
-  private onCanvasMouseMove (event: MouseEvent) {
+  private onCanvasMouseMove (event: MouseEvent): void {
     const { config } = this
 
     this.canvasElement.style.removeProperty('cursor')
@@ -207,14 +207,14 @@ export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ point
     }
   }
 
-  private onCanvasClick (event: MouseEvent) {
+  private onCanvasClick (event: MouseEvent): void {
     const { config } = this
 
     const [clickedPoint, x, y] = this.getPointByScreenPos(event.offsetX, event.offsetY)
     if (clickedPoint) config.onSourcePointClick?.(clickedPoint, x, y, event)
   }
 
-  private onMapMove (leaflet: L.Map) {
+  private onMapMove (leaflet: L.Map): void {
     const shift = leaflet.containerPointToLayerPoint([0, 0])
     this.panningOffset.x = shift.x
     this.panningOffset.y = shift.y

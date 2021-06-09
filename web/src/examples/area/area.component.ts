@@ -42,7 +42,7 @@ export class AreaComponent implements AfterViewInit {
 
   configGenerator = getAreaConfig
   dataGenerator = sampleAreaData
-  axesGenerator = () => ({
+  axesGenerator = (): { x: Axis<SampleDatum>; y: Axis<SampleDatum> } => ({
     x: new Axis({ label: 'x axis' }),
     y: new Axis({ label: 'y axis' }),
   })

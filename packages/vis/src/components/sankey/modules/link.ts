@@ -1,5 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { Selection } from 'd3-selection'
+import { Transition } from 'd3-transition'
 import { interpolateNumber } from 'd3-interpolate'
 
 // Utils
@@ -68,9 +69,10 @@ export function updateLinks<N extends InputNode, L extends InputLink> (sel: Sele
     .style('fill', (link: SankeyLink<N, L>) => getColor(link, config.linkColor))
 
   if (duration) {
-    selectionTransition
+    (selectionTransition as Transition<SVGGElement, SankeyLink<N, L>, SVGGElement, any>)
       .attrTween('d', (d: SankeyLink<N, L>, i, el) => {
-        const previous = el[i]._animState
+      // eslint-disable-next-line dot-notation
+        const previous = el[i]['_animState']
         const next = {
           x0: d.source.x1,
           x1: d.target.x0,
@@ -85,8 +87,8 @@ export function updateLinks<N extends InputNode, L extends InputLink> (sel: Sele
           y1: interpolateNumber(previous.y1, next.y1),
           width: interpolateNumber(previous.width, next.width),
         }
-
-        el[i]._animState = next
+        // eslint-disable-next-line dot-notation
+        el[i]['_animState'] = next
 
         return function (t: number) {
           return linkPath({

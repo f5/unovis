@@ -15,13 +15,13 @@ import { NumericAccessor, StringAccessor, ColorAccessor } from 'types/misc'
 // Config
 import { LeafletMapConfigInterface } from '../config'
 
-export function bBoxMerge (bBoxArray) {
-  let box
+export function bBoxMerge (
+  bBoxArray: ({x1: number; x2: number; y1: number; y2: number})[]):
+    { x: number; y: number; width: number; height: number } {
+  let box = { x1: 0, x2: 0, y1: 0, y2: 0 }
   bBoxArray.forEach(coords => {
     if (!box) {
-      box = {
-        ...coords,
-      }
+      box = { ...coords }
     } else {
       if (box.x1 > coords.x1) box.x1 = coords.x1
       if (box.y1 > coords.y1) box.y1 = coords.y1

@@ -14,7 +14,7 @@ export const container = css`
   user-select: none;
 `
 
-export const line = ({ lineColor }) => css`
+export const line = (lineColor: string): string => css`
   label: line;
 
   height: 2px;
@@ -51,7 +51,7 @@ export const clickable = css`
   }
 `
 
-export const label = ({ labelFontSize, labelColor }) => css`
+export const label = (labelFontSize: number, labelColor: string): string => css`
   label: label;
 
   position: absolute;
@@ -64,7 +64,7 @@ export const label = ({ labelFontSize, labelColor }) => css`
   text-align: center;
 `
 
-export const arrow = ({ lineColor }) => css`
+export const arrow = (lineColor: string): string => css`
   label: arrow;
 
   font-size: 9px;

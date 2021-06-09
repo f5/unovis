@@ -1,5 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { Selection } from 'd3-selection'
+import { Transition } from 'd3-transition'
 import { interpolate } from 'd3-interpolate'
 import { Arc } from 'd3-shape'
 
@@ -39,28 +40,29 @@ export function createLink<L extends Link<Hierarchy>> (selection: Selection<SVGE
 
 export function updateLink<L extends Link<Hierarchy>> (selection: Selection<SVGElement, L, SVGGElement, L[]>, linkArcGen: Arc<any, any>, duration: number): void {
   if (duration) {
-    smartTransition(selection, duration)
-      .style('opacity', 1)
-      .attrTween('d', (d, i, els) => {
-        const arcLink: ArcLink = els[i]
-        const nextAnimState = {
-          target: {
-            x0: d.target.x0,
-            x1: d.target.x1,
-            y1: d.target.y1,
-          },
-          source: {
-            y0: d.source.y0,
-            y1: d.source.y1,
-          },
-        }
-        const datum = interpolate(arcLink._animState, nextAnimState)
+    const transition = smartTransition(selection, duration)
+      .style('opacity', 1) as Transition<SVGElement, L, SVGGElement, L[]>
 
-        return (t: number): string => {
-          arcLink._animState = datum(t)
-          return linkArcGen(arcLink._animState)
-        }
-      })
+    transition.attrTween('d', (d, i, els) => {
+      const arcLink: ArcLink = els[i]
+      const nextAnimState = {
+        target: {
+          x0: d.target.x0,
+          x1: d.target.x1,
+          y1: d.target.y1,
+        },
+        source: {
+          y0: d.source.y0,
+          y1: d.source.y1,
+        },
+      }
+      const datum = interpolate(arcLink._animState, nextAnimState)
+
+      return (t: number): string => {
+        arcLink._animState = datum(t)
+        return linkArcGen(arcLink._animState)
+      }
+    })
   } else {
     selection.attr('d', d => linkArcGen(d))
   }
