@@ -4,13 +4,12 @@
     "outDir": "./lib",
     "declaration": true,
     "paths": {
-      "examples/*": ["web/src/examples/*"],
       "types/*": ["packages/vis/src/types/*"],
       "utils/*": ["packages/vis/src/utils/*"],
       "core/*": ["packages/vis/src/core/*"],
       "components/*": ["packages/vis/src/components/*"],
       "styles/*": ["packages/vis/src/styles/*"],
-      "data-models/*": ["packages/vis/src/data-models/*"]
+      "data-models/*": ["packages/vis/src/data-models/*"],
     }
   },
   "exclude": [
