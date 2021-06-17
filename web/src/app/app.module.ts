@@ -28,6 +28,8 @@ import { ConnectivityGraphComponent } from 'examples/console-connectivity-graph/
 import { TrafficGraphComponent } from 'examples/console-traffic-graph-pg2/console-traffic-graph-pg2.component'
 import { ChordDiagramComponent } from 'examples/chord-diagram/chord-diagram.component'
 import { DonutChartComponent } from 'examples/donut/donut.component'
+import { AtomicAngularWrapperComponent } from 'examples/atomic-angular-wrapper/atomic-angular-wrapper.component'
+import { AtomicAngularWrapperModule } from 'examples/atomic-angular-wrapper/atomic-angular-wrapper.module'
 
 import { AppComponent } from './app.component'
 import { BulletLegendComponent } from './components/bullet-legend/bullet-legend.component'
@@ -63,6 +65,7 @@ const appRoutes: Routes = [
   { path: 'traffic-graph', component: TrafficGraphComponent },
   { path: 'chord-diagram', component: ChordDiagramComponent },
   { path: 'donut', component: DonutChartComponent },
+  { path: 'atomic-angular-wrapper', component: AtomicAngularWrapperComponent },
 ]
 
 appRoutes.push({ path: '', redirectTo: `/${appRoutes[0].path}`, pathMatch: 'full' })
@@ -108,6 +111,7 @@ appRoutes.push({ path: '', redirectTo: `/${appRoutes[0].path}`, pathMatch: 'full
       appRoutes
     ),
     BrowserModule,
+    AtomicAngularWrapperModule,
   ],
 
   providers: [],

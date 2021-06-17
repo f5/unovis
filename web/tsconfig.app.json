@@ -3,7 +3,20 @@
   "compilerOptions": {
     "outDir": "./out-tsc/app",
     "types": [ "node" ],
-
+    "paths": {
+      // @volterra/vis
+      "@volterra/vis": ["packages/vis/src"],
+      "@volterra/vis/*": ["packages/vis/src/*"],
+      "types/*": ["packages/vis/src/types/*"],
+      "utils/*": ["packages/vis/src/utils/*"],
+      "core/*": ["packages/vis/src/core/*"],
+      "components/*": ["packages/vis/src/components/*"],
+      "styles/*": ["packages/vis/src/styles/*"],
+      "data-models/*": ["packages/vis/src/data-models/*"],
+      "data/*": ["packages/vis/src/data/*"],
+      // Local paths
+      "examples/*": ["web/src/examples/*"]
+    }
   },
   "files": [
     "src/main.ts",
