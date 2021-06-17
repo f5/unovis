@@ -32,6 +32,8 @@ export function getMapboxglLayer<Datum> (config: LeafletMapConfig<Datum>): any {
     return
   }
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   const glLayer = L.mapboxGL({
     style: rendererSettings,
     accessToken: accessToken || 'not-needed',

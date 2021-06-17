@@ -154,11 +154,11 @@ export function updateNodes<N extends NodeDatumCore, L extends LinkDatumCore> (s
       .duration(scoreAnimDuration)
       .attrTween('d', (d, i, arr) => {
         switch (getValue(d, nodeShape)) {
-        case SHAPE.CIRCLE: return arcTween(d, config, arcGenerator, arr[i])
-        case SHAPE.HEXAGON: return polyTween(d, config, polygon, arr[i])
-        case SHAPE.SQUARE: return polyTween(d, config, polygon, arr[i])
-        case SHAPE.TRIANGLE: return polyTween(d, config, polygon, arr[i])
-        default: return null
+          case SHAPE.CIRCLE: return arcTween(d, config, arcGenerator, arr[i])
+          case SHAPE.HEXAGON: return polyTween(d, config, polygon, arr[i])
+          case SHAPE.SQUARE: return polyTween(d, config, polygon, arr[i])
+          case SHAPE.TRIANGLE: return polyTween(d, config, polygon, arr[i])
+          default: return null
         }
       })
 

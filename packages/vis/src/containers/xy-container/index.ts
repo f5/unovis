@@ -39,12 +39,12 @@ import {
 } from '../../components'
 
 export type XYConfigInterface<Datum> = XYComponentConfigInterface<Datum>
-  | StackedBarConfigInterface<Datum>
-  | LineConfigInterface<Datum>
-  | ScatterConfigInterface<Datum>
-  | BrushConfigInterface<Datum>
-  | TimelineConfigInterface<Datum>
-  | AreaConfigInterface<Datum>
+| StackedBarConfigInterface<Datum>
+| LineConfigInterface<Datum>
+| ScatterConfigInterface<Datum>
+| BrushConfigInterface<Datum>
+| TimelineConfigInterface<Datum>
+| AreaConfigInterface<Datum>
 
 export class XYContainer<Datum> extends ContainerCore {
   config: XYContainerConfig<Datum> = new XYContainerConfig()
