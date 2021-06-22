@@ -1,6 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 /* eslint-disable */
-import {AfterViewInit, OnDestroy, Component, ElementRef, ViewChild} from '@angular/core'
+import { AfterViewInit, OnDestroy, Component, ElementRef, ViewChild } from '@angular/core'
 // Vis
 import {
   XYContainer,
@@ -10,6 +10,8 @@ import {
   AreaConfigInterface,
   Tooltip,
   Crosshair,
+  BrushInteractive,
+  BrushInteractiveType,
 } from '@volterra/vis'
 
 // Helpers
@@ -22,7 +24,7 @@ interface AreaSampleDatum extends SampleDatum {
   baseline: number
 }
 
-function generateData (): AreaSampleDatum[] {
+function generateData(): AreaSampleDatum[] {
   return _times(10).map((i) => ({
     x: i,
     y: _random(-100, 0),
@@ -58,7 +60,7 @@ export class BulletLegendExampleComponent implements AfterViewInit, OnDestroy {
   @ViewChild('legendRef', { static: false }) legendRef: ElementRef
 
 
-  ngAfterViewInit (): void {
+  ngAfterViewInit(): void {
     const data: AreaSampleDatum[] = generateData()
     this.areaConfig = getAreaConfig(this.yAccessors)
 
@@ -66,6 +68,23 @@ export class BulletLegendExampleComponent implements AfterViewInit, OnDestroy {
       margin: { top: 10, bottom: 10, left: 15, right: 10 },
       components: [
         new Area(this.areaConfig),
+        new BrushInteractive(
+          {
+            type: BrushInteractiveType.XY,
+            onBrush: (s: [number, number]) => {
+              console.log('onbrush', s);
+            },
+            onBrushStart: (s: [number, number]) => {
+              console.log('onBrushStart', s);
+            },
+            onBrushMove: (s: [number, number]) => {
+              console.log('onBrushMove', s);
+            },
+            onBrushEnd: (s: [number, number]) => {
+              console.log('onBrushEnd', s);
+            },
+          }
+        )
       ],
       dimensions: {
         x: {
@@ -96,21 +115,21 @@ export class BulletLegendExampleComponent implements AfterViewInit, OnDestroy {
     }, 5000)
   }
 
-  ngOnDestroy () : void {
+  ngOnDestroy(): void {
     clearInterval(this.intervalId)
   }
 
-  onLegendItemClick (event): void {
+  onLegendItemClick(event): void {
     const { d } = event
     d.inactive = !d.inactive
-    this.legendItems = [ ...this.legendItems ]
+    this.legendItems = [...this.legendItems]
     const accessors = this.yAccessors.map((acc, i) => !this.legendItems[i].inactive ? acc : null)
     this.areaConfig.y = accessors
     this.composite.updateComponents([this.areaConfig])
   }
 }
 
-function getAreaConfig (y): AreaConfigInterface<AreaSampleDatum> {
+function getAreaConfig(y): AreaConfigInterface<AreaSampleDatum> {
   return {
     x: d => d.x,
     y,
