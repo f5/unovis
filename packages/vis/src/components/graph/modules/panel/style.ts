@@ -3,9 +3,9 @@ import { css, injectGlobal } from 'emotion'
 
 export const variables = injectGlobal`
   :root {
-    --vis-graph-panel-border-color: #959595;
+    --vis-graph-panel-border-color: #E6E9F3;
     --vis-graph-panel-fill-color: #ffffff;
-    --vis-graph-panel-label-color: #7d8892;
+    --vis-graph-panel-label-color: #6c778c;
     --vis-graph-panel-label-background: #ffffff;
     --vis-graph-panel-label-font-family: var(--vis-font-family);
     --vis-graph-panel-side-label-fill: #ffffff;
