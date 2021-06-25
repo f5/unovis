@@ -3,6 +3,7 @@ import { Selection } from 'd3-selection'
 import { packSiblings } from 'd3-hierarchy'
 import L from 'leaflet'
 import Supercluster, { ClusterFeature, PointFeature } from 'supercluster'
+import { ResizeObserver } from '@juggle/resize-observer'
 
 // Core
 import { ComponentCore } from 'core/component'
@@ -64,6 +65,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
   private _currentZoomLevel = null
   private _firstRender = true
   private _renderDataAnimationFrame: number
+  private resizeObserver: ResizeObserver
   readonly _leafletInitializationPromise: Promise<L.Map>
 
   events = {
@@ -137,6 +139,12 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
         resolve(this._map.leaflet)
       })
     })
+
+    // When the container size changes we have to initiate map resize in order to update its dimensions
+    this.resizeObserver = new ResizeObserver(() => {
+      this._map?.leaflet?.invalidateSize()
+    })
+    this.resizeObserver.observe(container)
   }
 
   setConfig (config: LeafletMapConfigInterface<Datum>): void {
@@ -642,5 +650,6 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     map?.stop()
     map?.remove()
     this.g.remove()
+    this.resizeObserver.disconnect()
   }
 }
