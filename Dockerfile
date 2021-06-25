@@ -15,7 +15,9 @@ RUN chmod 600 ~/.ssh/id_rsa && \
 
 # Install dependencies
 COPY --chown=node:node . .
+RUN npm config set "//gitlab.com/api/v4/projects/13430565/packages/npm/:_authToken" "${GITLAB_NPM_REGISTRY_AUTH_TOKEN}"
 RUN yarn install --network-concurrency 1
+RUN yarn build:lib
 
 # Install dependencies for web
 WORKDIR /app/web/

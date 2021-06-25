@@ -9,7 +9,7 @@
   "scripts": {
     "install": "cd packages/vis-angular && yarn install",
     "dev": "cd web; yarn dev",
-    "build": "cd web; yarn build",
+    "build": "yarn build:lib; cd web; yarn build",
     "build:lib": "cd packages/vis && yarn build",
     "build:vis-angular": "cd packages/vis-angular && yarn build",
     "publish:lib": "cd packages/vis; yarn build; npm publish",

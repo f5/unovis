@@ -7,6 +7,7 @@ variables:
   JENKINS_URL: https://jenkins-dev.volterra.us
   JENKINS_TOKENS: eeph1eitohZaeMew
   AZURE_STORAGE_ACCOUNT: volterrasites
+  GITLAB_NPM_REGISTRY_AUTH_TOKEN: ${CI_JOB_TOKEN}
 
 stages:
   - build
@@ -24,6 +25,7 @@ build:
     - ssh-add <(echo "$SSH_PRIVATE_KEY")
     - mkdir -p ~/.ssh
     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+    - npm config set "//gitlab.com/api/v4/projects/13430565/packages/npm/:_authToken" "${GITLAB_NPM_REGISTRY_AUTH_TOKEN}"
   script:
     - yarn install
     - yarn build
@@ -46,7 +48,10 @@ docker:
     - IMAGE_TAG_LATEST=${REGISTRY_IMAGE}:latest
     # Build an image
     - echo "${SSH_PRIVATE_KEY}" > deploy.key
-    - podman build --no-cache --pull-always --format docker -t ${IMAGE_TAG_SHA} .
+    - |
+      podman build --no-cache --pull-always \
+          --build-arg GITLAB_NPM_REGISTRY_AUTH_TOKEN="${GITLAB_NPM_REGISTRY_AUTH_TOKEN}" \
+          --format docker -t ${IMAGE_TAG_SHA} .
     # Push the image (tag sha)
     - echo "Pushing image ${IMAGE_TAG_SHA}"
     - podman push ${IMAGE_TAG_SHA} docker://${IMAGE_TAG_SHA}
