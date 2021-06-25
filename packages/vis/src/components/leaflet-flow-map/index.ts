@@ -262,7 +262,7 @@ export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ point
       points.push(target)
     }
 
-    const boundsArray = getDataLatLngBounds(points, d => d.lat, d => d.lon, 4)
+    const boundsArray = getDataLatLngBounds(points, d => d.lat, d => d.lon, 0)
     const bounds: Bounds = {
       northEast: { lat: boundsArray[0][0], lng: boundsArray[1][1] },
       southWest: { lat: boundsArray[1][0], lng: boundsArray[0][1] },

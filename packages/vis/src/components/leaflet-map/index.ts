@@ -206,7 +206,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     return this._leafletInitializationPromise
   }
 
-  public fitToPoints (duration = this.config.flyToDuration, padding = [40, 40]): void {
+  public fitToPoints (duration = this.config.flyToDuration, padding = this.config.fitViewPadding): void {
     const { config, datamodel, datamodel: { data } } = this
 
     if (!this._map || !this._map.leaflet) return
@@ -215,7 +215,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     this._flyToBounds(bounds, duration, padding)
   }
 
-  public fitToBounds (bounds: Bounds, duration = this.config.flyToDuration): void {
+  public fitToBounds (bounds: Bounds, duration = this.config.flyToDuration, padding = this.config.fitViewPadding): void {
     const { northEast, southWest } = bounds
     if (isNil(northEast) || isNil(southWest)) return
     if (isNil(northEast.lat) || isNil(northEast.lng)) return
@@ -224,7 +224,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     this._flyToBounds([
       [northEast.lat, southWest.lng],
       [southWest.lat, northEast.lng],
-    ], duration)
+    ], duration, padding)
   }
 
   public selectPointById (id: string, centerPoint = false): void {
