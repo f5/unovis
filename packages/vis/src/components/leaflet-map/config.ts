@@ -12,23 +12,25 @@ import { LeafletMap } from './index'
 
 export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterface {
   // General
-  /** FlyTo Duration */
+  /** Animation duration when the map is automatically panning or zooming to a point or area. Default: `1500` ms */
   flyToDuration?: number;
-  /** Zoom Duration */
+  /** Padding to be used when the `fitView` function has been called. The value is in pixels. Default: `[150, 150]` */
+  fitViewPadding?: [number, number];
+  /** Animation duration for the `setZoom` function. Default: `800` ms */
   zoomDuration?: number;
-  /** Default bounds that will be applied on the first map render if the bounds property is not set */
+  /** Default bounds that will be applied on the first map render if the bounds property is not set. Default: `undefined` */
   initialBounds?: Bounds;
-  /** Force set map bounds */
+  /** Force set map bounds on config update. Default: `undefined` */
   bounds?: Bounds;
-  /** */
+  /** The map renderer type. Default: `LeafletMapRenderer.TANGRAM` */
   renderer?: LeafletMapRenderer | string;
-  /**  */
+  /** External instance of Tangram to be used in the map. Default: `undefined` */
   tangramRenderer?: any;
-  /** Mapboxgl Access Token or Nextzen API key */
+  /** Mapboxgl Access Token or Nextzen API key. Default: `''` */
   accessToken?: string;
-  /** Mapbox style glyphs URL */
+  /** Mapbox style glyphs URL. Default: `undefined` */
   mapboxglGlyphs?: string;
-  /** Tangram or Mapbox sources settings */
+  /** Tangram or Mapbox sources settings. Default: `undefined` */
   sources?: Record<string, unknown>;
   /** Tangram or Mapbox style renderer settings */
   rendererSettings?: Record<string, unknown>;
@@ -106,12 +108,17 @@ export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterfa
 export class LeafletMapConfig<Datum> extends ComponentConfig implements LeafletMapConfigInterface<Datum> {
   // General
   flyToDuration = 1500
+  fitViewPadding = [150, 150] as [number, number]
   zoomDuration = 800
   initialBounds = undefined
   bounds = undefined
   renderer = LeafletMapRenderer.TANGRAM
   attribution = []
   accessToken = ''
+  tangramRenderer = undefined
+  mapboxglGlyphs = undefined
+  sources = undefined
+  rendererSettings = undefined
 
   // Map events
   onMapInitialized = undefined
