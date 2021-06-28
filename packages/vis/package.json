@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "prebuild": "rimraf lib",
-    "build": "yarn prebuild && rollup -c",
+    "build": "npm run prebuild && rollup -c",
     "test": "jest --colors"
   },
   "publishConfig": {
