@@ -21,8 +21,7 @@ ARG GITLAB_NPM_REGISTRY_AUTH_TOKEN
 RUN npm config set "//gitlab.com/api/v4/packages/npm/:_authToken" "${GITLAB_NPM_REGISTRY_AUTH_TOKEN}"
 RUN bash -c 'set -o pipefail && npm install --unsafe-perm 2>&1 | tee'
 
-# Install dependencies for web
-WORKDIR /app/web/
+# Npm build
 RUN npm run build
 
 # Clean up SSH key
