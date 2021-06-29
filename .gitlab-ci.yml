@@ -17,7 +17,7 @@ stages:
   - trigger
 
 build:
-  image: volterrasystem/angular-e2e-testing:node12
+  image: volterrasystem/angular-e2e-testing:node14
   stage: build
   before_script:
     - set -e
