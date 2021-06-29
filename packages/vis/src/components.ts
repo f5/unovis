@@ -1,4 +1,7 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
+import { XYComponentCore } from 'core/xy-component'
+import { XYComponentConfigInterface } from 'core/xy-component/config'
+
 import { Tooltip } from 'core/tooltip'
 import { Line } from './components/line'
 import { StackedBar } from './components/stacked-bar'
@@ -46,6 +49,8 @@ import { DonutConfigInterface } from './components/donut/config'
 import './styles/css-variables'
 
 export {
+  XYComponentCore,
+  XYComponentConfigInterface,
   Line,
   LineConfigInterface,
   StackedBar,

@@ -1,7 +1,0 @@
-[{
-    "packagePath": "packages/vis/package.json",
-    "appPackage": "",
-    "publishPath": "packages/vis",
-    "buildScript": "yarn build",
-    "repository": "git@gitlab.com:volterra/ves-ui-packages/volterra-vis.git"
-}]

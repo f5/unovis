@@ -1,0 +1,49 @@
+{
+  "name": "@volterra/vis-angular",
+  "version": "0.0.1beta12",
+  "scripts": {
+    "ng": "ng",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test",
+    "generate": "rollup -c; node generate-components.js; rm generate-components.js"
+  },
+  "main": "dist/lib/bundles/volterra-vis-angular.umd.js",
+  "module": "dist/lib/esm2015/public-api.js",
+  "typings": "dist/lib/public-api.d.ts",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "cache": ".cache/.npm",
+    "@volterra:registry": " https://gitlab.com/api/v4/projects/13430565/packages/npm/"
+  },
+  "dependencies": {
+    "tslib": "^2.1.0"
+  },
+  "peerDependencies": {
+    "@angular/common": "~12.0.3",
+    "@angular/compiler": "~12.0.3",
+    "@angular/core": "~12.0.3",
+    "@angular/platform-browser-dynamic": "~12.0.3",
+    "@volterra/vis": "0.0.1-beta.126"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "~12.0.3",
+    "@angular/cli": "~12.0.3",
+    "@angular/compiler-cli": "~12.0.3",
+    "@angular/platform-browser-dynamic": "~12.0.3",
+    "@types/jasmine": "~3.6.0",
+    "@types/node": "^12.11.1",
+    "jasmine-core": "~3.7.0",
+    "karma": "~6.3.0",
+    "karma-chrome-launcher": "~3.1.0",
+    "karma-coverage": "~2.0.3",
+    "karma-jasmine": "~4.0.0",
+    "karma-jasmine-html-reporter": "^1.5.0",
+    "ng-packagr": "^12.0.0",
+    "ts-transformer-keys": "^0.4.3",
+    "ttypescript": "^1.5.12",
+    "typescript": "~4.2.3"
+  }
+}

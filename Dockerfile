@@ -1,10 +1,12 @@
 ###################
 # Stage 1 - build #
 ###################
-FROM node:lts as builder
+FROM node:14-stretch as builder
 
 WORKDIR /app
 RUN chown node:node /app
+
+RUN npm install -g npm@7
 
 # Add SSH key
 USER node
@@ -15,11 +17,12 @@ RUN chmod 600 ~/.ssh/id_rsa && \
 
 # Install dependencies
 COPY --chown=node:node . .
-RUN yarn install --network-concurrency 1
+ARG GITLAB_NPM_REGISTRY_AUTH_TOKEN
+RUN npm config set "//gitlab.com/api/v4/packages/npm/:_authToken" "${GITLAB_NPM_REGISTRY_AUTH_TOKEN}"
+RUN bash -c 'set -o pipefail && npm install --unsafe-perm 2>&1 | tee'
 
-# Install dependencies for web
-WORKDIR /app/web/
-RUN yarn build
+# Npm build
+RUN npm run build
 
 # Clean up SSH key
 RUN rm -rf ~/.ssh
@@ -27,13 +30,9 @@ RUN rm -rf ~/.ssh
 ##################
 # Stage 2 - host #
 ##################
-FROM nginxinc/nginx-unprivileged:1.19
+FROM nginxinc/nginx-unprivileged:1.20
 
 USER root
-
-# fix: CVE-2021-24031	libzstd1-1.3.8+dfsg-3
-# next line can be removed after base image update to nginx-unprivileged:1.20
-RUN apt-get update; apt-get install --only-upgrade libzstd1=1.3.8+dfsg-3+deb10u2
 
 # Clean default static site
 RUN rm -rf /usr/share/nginx/html/*

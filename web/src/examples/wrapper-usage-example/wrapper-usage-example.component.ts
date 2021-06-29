@@ -122,4 +122,12 @@ export class WrapperUsageExampleComponent implements AfterViewInit, OnDestroy {
   ngOnDestroy (): void {
     clearInterval(this.intervalId)
   }
+
+  x (d): number {
+    return d.timestamp
+  }
+
+  y (d): number {
+    return d.y
+  }
 }
