@@ -30,10 +30,10 @@ build:
     - npm install -g npm@7
     - npm install
     - npm run build
-  cache:
-    key: '$CI_COMMIT_REF_SLUG'
-    paths:
-      - node_modules
+#  cache:
+#    key: '$CI_COMMIT_REF_SLUG'
+#    paths:
+#      - node_modules
 
 docker:
   tags: [docker]
