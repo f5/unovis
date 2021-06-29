@@ -1,10 +1,12 @@
 ###################
 # Stage 1 - build #
 ###################
-FROM node:16 as builder
+FROM node:14-stretch as builder
 
 WORKDIR /app
 RUN chown node:node /app
+
+RUN npm install -g npm@7
 
 # Add SSH key
 USER node
@@ -15,9 +17,9 @@ RUN chmod 600 ~/.ssh/id_rsa && \
 
 # Install dependencies
 COPY --chown=node:node . .
+ARG GITLAB_NPM_REGISTRY_AUTH_TOKEN
 RUN npm config set "//gitlab.com/api/v4/packages/npm/:_authToken" "${GITLAB_NPM_REGISTRY_AUTH_TOKEN}"
-RUN npm install --network-concurrency 1
-RUN npm run build:lib
+RUN bash -c 'set -o pipefail && npm install --unsafe-perm 2>&1 | tee'
 
 # Install dependencies for web
 WORKDIR /app/web/
