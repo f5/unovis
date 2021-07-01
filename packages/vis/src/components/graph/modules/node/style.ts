@@ -42,7 +42,7 @@ export const nodes = css`
 `
 
 export const node = css`
-  label: node;
+  label: node-shape;
 
   stroke: var(--vis-graph-node-stroke-color);
   fill: var(--vis-graph-node-fill-color);
@@ -124,6 +124,7 @@ export const sideLabel = css`
 
 export const sideLabelGroup = css`
   label: side-label-group; 
+  cursor: default;
 `
 
 export const gNode = css`
