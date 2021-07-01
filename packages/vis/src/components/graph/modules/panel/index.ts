@@ -88,6 +88,7 @@ export function updatePanels<N extends NodeDatumCore, L extends LinkDatumCore, P
   sideLabels.select(`.${panelSelectors.sideLabel}`)
     .call(updateShape, (d: P) => d.sideLabelShape, sideLabelSize)
     .style('stroke', d => d.sideLabelColor)
+    .style('cursor', d => d.sideLabelCursor ?? null)
     .style('opacity', d => d.sideLabelShape ? 1 : 0)
 
   sideLabels.select(`.${panelSelectors.sideLabelIcon}`)

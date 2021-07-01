@@ -186,6 +186,8 @@ export function updateNodes<N extends NodeDatumCore, L extends LinkDatumCore> (s
       .attr('class', nodeSelectors.sideLabel)
 
     const sideLabelsUpdate = sideLabels.merge(sideLabelsEnter)
+      .style('cursor', (d: CircleLabel) => d.cursor ?? null)
+
     // Side label text
     sideLabelsUpdate.select(`.${nodeSelectors.sideLabel}`).text(d => d.text)
       .attr('dy', '1px')

@@ -52,6 +52,7 @@ export enum LayoutType {
 export type CircleLabel = {
   text: string;
   color?: string | null;
+  cursor?: string | null;
 }
 
 export enum LinkStyle {
@@ -75,6 +76,7 @@ export interface PanelConfigInterface {
   sideLabelIcon?: string;
   sideLabelShape?: SHAPE;
   sideLabelColor?: string;
+  sideLabelCursor?: string;
   _numNodes?: number;
   _x?: number;
   _y?: number;
