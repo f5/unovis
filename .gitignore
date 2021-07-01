@@ -16,6 +16,9 @@ node_modules
 # profiling files
 chrome-profiler-events*.json
 
+# Storybook
+packages/*/documentation.json
+
 # IDEs and editors
 .idea
 .project
@@ -55,4 +58,3 @@ packages/vis-angular/generate-components.js
 # System Files
 .DS_Store
 Thumbs.db
-
