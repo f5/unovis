@@ -11,7 +11,7 @@ export interface ComponentConfigInterface {
   /** Events */
   events?: {
     [selector: string]: {
-      [eventName: string]: (data: any) => void;
+      [eventName: string]: (data: any, event?: Event, i?: number, els?: SVGElement[] | HTMLElement[]) => void;
     };
   };
   /** Custom attributes */
