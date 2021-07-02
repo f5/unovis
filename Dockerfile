@@ -37,6 +37,10 @@ USER root
 # Clean default static site
 RUN rm -rf /usr/share/nginx/html/*
 
+# fix: CVE-2021-20231, CVE-2021-3520, CVE-2018-25010
+# next line can be removed after base image update to nginx-unprivileged:1.21
+RUN apt-get update && apt-get install --only-upgrade libwebp6=0.6.1-2+deb10u1 liblz4-1=1.8.3-1+deb10u1 libgnutls30=3.6.7-4+deb10u7
+
 # Copy static files from previous step
 COPY --from=builder /app/web/lib/volterra-vis-examples /usr/share/nginx/html/
 
