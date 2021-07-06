@@ -108,6 +108,8 @@ export interface GraphConfigInterface<N extends NodeDatumCore, L extends LinkDat
   nodeSubLabel?: StringAccessor<N>;
   /** Node Side Label accessor function or undefined */
   nodeSideLabels?: ((d: N, i?: number, ...any) => CircleLabel[] | undefined) | undefined;
+  /** Node Bottom Icon accessor function. Default: `undefined` */
+  nodeBottomIcon?: StringAccessor<N>;
   /** Node disabled accessor function or value */
   nodeDisabled?: BooleanAccessor<N>;
   /** Node fill color accessor function or value */
@@ -177,6 +179,7 @@ export class GraphConfig<N extends NodeDatumCore, L extends LinkDatumCore> exten
   nodeLabel = (n: N): string => n['label']
   nodeSubLabel = ''
   nodeSideLabels = undefined
+  nodeBottomIcon = undefined
   nodeDisabled = false
   nodeFill = (n: N): string => n['fill']
   nodeStrokeSegmentFill = undefined
