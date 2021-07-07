@@ -10,8 +10,8 @@ import {
   AreaConfigInterface,
   Tooltip,
   Crosshair,
-  BrushInteractive,
-  BrushInteractiveType,
+  FreeBrush,
+  FreeBrushMode,
 } from '@volterra/vis'
 
 // Helpers
@@ -24,8 +24,8 @@ interface AreaSampleDatum extends SampleDatum {
   baseline: number
 }
 
-function generateData(): AreaSampleDatum[] {
-  return _times(10).map((i) => ({
+function generateData(n = 10): AreaSampleDatum[] {
+  return _times(n).map((i) => ({
     x: i,
     y: _random(-100, 0),
     y1: _random(0, 100),
@@ -68,9 +68,12 @@ export class BulletLegendExampleComponent implements AfterViewInit, OnDestroy {
       margin: { top: 10, bottom: 10, left: 15, right: 10 },
       components: [
         new Area(this.areaConfig),
-        new BrushInteractive(
+        new FreeBrush(
           {
-            type: BrushInteractiveType.XY,
+            mode: FreeBrushMode.XY,
+            selectionMinLength: [0.5, 5],
+            autoHide: false,
+            selection: [ [2, 4], [0, 50]],
             onBrush: (s: [number, number]) => {
               console.log('onbrush', s);
             },
@@ -111,7 +114,7 @@ export class BulletLegendExampleComponent implements AfterViewInit, OnDestroy {
     this.composite = new XYContainer(this.chart.nativeElement, this.chartConfig, data)
 
     this.intervalId = setInterval(() => {
-      this.composite.setData(generateData())
+      this.composite.setData(generateData(20))
     }, 5000)
   }
 
