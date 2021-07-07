@@ -10,27 +10,41 @@ import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component
 import { Arrangement } from 'types/position'
 
 export interface BrushConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
+  /** Callback function to be called on any Brush event.
+   * Default: `(selection: [number, number], event: D3BrushEvent<Datum>, userDriven: boolean): void => {}`
+  */
   onBrush?: ((selection?: [number, number], event?: D3BrushEvent<Datum>, userDriven?: boolean) => any);
+  /** Callback function to be called on the Brush start event.
+   * Default: `(selection: [number, number], event: D3BrushEvent<Datum>, userDriven: boolean): void => {}`
+  */
   onBrushStart?: ((selection?: [number, number], event?: D3BrushEvent<Datum>, userDriven?: boolean) => any);
+  /** Callback function to be called on the Brush move event.
+   * Default: `(selection: [number, number], event: D3BrushEvent<Datum>, userDriven: boolean): void => {}`
+  */
   onBrushMove?: ((selection?: [number, number], event?: D3BrushEvent<Datum>, userDriven?: boolean) => any);
+  /** Callback function to be called on the Brush end event.
+   * Default: `(selection: [number, number], event: D3BrushEvent<Datum>, userDriven: boolean): void => {}`
+  */
   onBrushEnd?: ((selection?: [number, number], event?: D3BrushEvent<Datum>, userDriven?: boolean) => any);
-  /** Width of the brush handle */
+  /** Width of the Brush handle. Default: `1` */
   handleWidth?: number;
-  /** Selection is the actual value units: [start, end] */
+  /** Brush selection in data space, can be used to force set the selection from outside.
+   * This config property gets updated on internal brush events. Default: `undefined`
+  */
   selection?: [number, number] | null;
-  /** Allow dragging the selected area in order to change the selected range */
+  /** Allow dragging the selected area as a whole in order to change the selected range. Default: `false` */
   draggable?: boolean;
-  /** Position of the handle: 'inside' or 'outside' */
+  /** Position of the handle: 'Arrangement.INSIDE' or 'Arrangement.OUTSIDE'. Default: `Arrangement.INSIDE` */
   handlePosition?: Arrangement | string;
-  /** Constraint selection by some minimum size */
+  /** Constraint Brush selection to a minimal length in data units. Default: `undefined` */
   selectionMinLength?: number;
 }
 
 export class BrushConfig<Datum> extends XYComponentConfig<Datum> implements BrushConfigInterface<Datum> {
-  onBrush = (s: [number, number], e: D3BrushEvent<Datum>, userDriven: boolean) => {}
-  onBrushStart = (s: [number, number], e: D3BrushEvent<Datum>, userDriven: boolean) => {}
-  onBrushMove = (s: [number, number], e: D3BrushEvent<Datum>, userDriven: boolean) => {}
-  onBrushEnd = (s: [number, number], e: D3BrushEvent<Datum>, userDriven: boolean) => {}
+  onBrush = (s: [number, number], e: D3BrushEvent<Datum>, userDriven: boolean): void => {}
+  onBrushStart = (s: [number, number], e: D3BrushEvent<Datum>, userDriven: boolean): void => {}
+  onBrushMove = (s: [number, number], e: D3BrushEvent<Datum>, userDriven: boolean): void => {}
+  onBrushEnd = (s: [number, number], e: D3BrushEvent<Datum>, userDriven: boolean): void => {}
   handleWidth = 9
   selection = null
   draggable = false
