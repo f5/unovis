@@ -36,6 +36,8 @@ export class FreeBrush<Datum> extends XYComponentCore<Datum> {
     const yScale = config.scales.y
     const duration = isNumber(customDuration) ? customDuration : config.duration
 
+    if (this._firstRender) this.brush.classed(s.hide, this._firstRender && config.autoHide)
+
     this.brushBehaviour = this._getBrushBehaviour(config.mode)
 
     this.brushBehaviour
@@ -48,6 +50,7 @@ export class FreeBrush<Datum> extends XYComponentCore<Datum> {
     this.brush
       .call(this.brushBehaviour)
 
+    // Calculate the brush range from configured selection and apply it
     let brushRange: FreeBrushSelectionInPixels
     switch (config.mode) {
       case FreeBrushMode.XY: {
@@ -63,8 +66,6 @@ export class FreeBrush<Datum> extends XYComponentCore<Datum> {
         brushRange = this._dataRangeToPixelRange(config.selection as [number, number], scale, config.mode === FreeBrushMode.Y)
       }
     }
-
-    if (this._firstRender) this.brush.classed(s.hide, this._firstRender && config.autoHide)
 
     smartTransition(this.brush, duration)
       .call(this.brushBehaviour.move, brushRange) // Sets up the brush and calls brush events
@@ -86,6 +87,7 @@ export class FreeBrush<Datum> extends XYComponentCore<Datum> {
       return
     }
 
+    // Convert the raw brush selection from pixels to data units, store it in the config and trigger the onBrush callback
     let selectedDomain: FreeBrushSelection
     switch (config.mode) {
       case FreeBrushMode.XY: {
