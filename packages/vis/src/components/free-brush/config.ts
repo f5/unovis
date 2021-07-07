@@ -1,10 +1,8 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-empty-function */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { D3BrushEvent } from 'd3-brush'
-
 import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component/config'
+
+// Types
 import { FreeBrushMode, FreeBrushSelection } from './types'
 
 export interface FreeBrushConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
@@ -40,9 +38,13 @@ export interface FreeBrushConfigInterface<Datum> extends XYComponentConfigInterf
 }
 
 export class FreeBrushConfig<Datum> extends XYComponentConfig<Datum> implements FreeBrushConfigInterface<Datum> {
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function */
   onBrush = (s: FreeBrushSelection, e: D3BrushEvent<Datum>, userDriven: boolean): void => {}
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function */
   onBrushStart = (s: FreeBrushSelection, e: D3BrushEvent<Datum>, userDriven: boolean): void => {}
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function */
   onBrushMove = (s: FreeBrushSelection, e: D3BrushEvent<Datum>, userDriven: boolean): void => {}
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function */
   onBrushEnd = (s: FreeBrushSelection, e: D3BrushEvent<Datum>, userDriven: boolean): void => {}
   handleWidth = 1
   selection: FreeBrushSelection = undefined;
