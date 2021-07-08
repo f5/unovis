@@ -30,6 +30,8 @@ import { ChordDiagramComponent } from 'examples/chord-diagram/chord-diagram.comp
 import { DonutChartComponent } from 'examples/donut/donut.component'
 import { AtomicAngularWrapperComponent } from 'examples/atomic-angular-wrapper/atomic-angular-wrapper.component'
 import { AtomicAngularWrapperModule } from 'examples/atomic-angular-wrapper/atomic-angular-wrapper.module'
+import { FreeBrushComponent } from 'examples/free-brush/free-brush.component'
+import { FreeBrushModule } from 'examples/free-brush/free-brush.module'
 
 import { AppComponent } from './app.component'
 import { BulletLegendComponent } from './components/bullet-legend/bullet-legend.component'
@@ -66,6 +68,7 @@ const appRoutes: Routes = [
   { path: 'chord-diagram', component: ChordDiagramComponent },
   { path: 'donut', component: DonutChartComponent },
   { path: 'atomic-angular-wrapper', component: AtomicAngularWrapperComponent },
+  { path: 'free-brush', component: FreeBrushComponent },
 ]
 
 appRoutes.push({ path: '', redirectTo: `/${appRoutes[0].path}`, pathMatch: 'full' })
@@ -112,6 +115,7 @@ appRoutes.push({ path: '', redirectTo: `/${appRoutes[0].path}`, pathMatch: 'full
     ),
     BrowserModule,
     AtomicAngularWrapperModule,
+    FreeBrushModule,
   ],
 
   providers: [],

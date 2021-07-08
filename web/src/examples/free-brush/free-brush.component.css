@@ -1,0 +1,9 @@
+.chart {
+  position: relative;
+  height: 400px;
+  width: 100%;
+}
+.annotation {
+  text-align: center;
+  color: #8a8d95;
+}
