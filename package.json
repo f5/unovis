@@ -13,6 +13,7 @@
   "scripts": {
     "install": "cd packages/vis-angular && npm install",
     "dev": "cd web; npm run dev",
+    "storybook": "cd packages/vis-angular; npm run storybook",
     "build": "npm run build:lib; cd web; npm run build",
     "build:lib": "cd packages/vis && npm run build",
     "build:vis-angular": "cd packages/vis-angular && npm run build",

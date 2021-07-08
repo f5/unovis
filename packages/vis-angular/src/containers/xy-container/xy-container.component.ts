@@ -12,7 +12,7 @@ import {
 } from '@angular/core'
 
 // Vis
-import { XYContainer, XYContainerConfigInterface } from '@volterra/vis'
+import { XYComponentCore, XYContainer, XYContainerConfigInterface, Axis, Crosshair, Tooltip } from '@volterra/vis'
 import { VisXYComponent } from '@src/core'
 
 @Component({
@@ -20,7 +20,7 @@ import { VisXYComponent } from '@src/core'
   templateUrl: './xy-container.component.html',
   styleUrls: ['./xy-container.component.css'],
 })
-export class VisXYContainerComponent implements AfterViewInit, OnDestroy {
+export class VisXYContainerComponent<Datum = Record<string, unknown>> implements AfterViewInit, OnDestroy {
   @ViewChild('container', { static: false }) containerRef: ElementRef
   @ContentChildren(VisXYComponent) visComponents: QueryList<VisXYComponent>
   @Input() duration = undefined
@@ -32,11 +32,11 @@ export class VisXYContainerComponent implements AfterViewInit, OnDestroy {
   @Input() crosshair
   @Input() adaptiveYScale
   @Input() data = []
-  chart: XYContainer<Record<string, unknown>>
+  chart: XYContainer<Datum>
   config = {}
 
   ngAfterViewInit (): void {
-    this.chart = new XYContainer<Record<string, unknown>>(this.containerRef.nativeElement, this.getConfig(), this.data)
+    this.chart = new XYContainer<Datum>(this.containerRef.nativeElement, this.getConfig(), this.data)
   }
 
   ngOnChanges (changes: SimpleChanges): void {
@@ -57,9 +57,21 @@ export class VisXYContainerComponent implements AfterViewInit, OnDestroy {
     this.chart?.updateContainer(this.getConfig())
   }
 
-  getConfig (): XYContainerConfigInterface<any> {
-    const { duration, margin, padding, dimensions, axes, tooltip, crosshair, adaptiveYScale } = this
-    const components = this.visComponents.toArray().map(d => d.component)
+  getConfig (): XYContainerConfigInterface<Datum> {
+    const { duration, margin, padding, dimensions, adaptiveYScale } = this
+    const visComponents = this.visComponents.toArray().map(d => d.component)
+
+    const crosshair = visComponents.find(c => c instanceof Crosshair) as Crosshair<Datum>
+    const tooltip = visComponents.find(c => c instanceof Tooltip) as unknown as Tooltip<XYComponentCore<Datum>, Datum>
+
+    const xAxis = visComponents.find(c => c instanceof Axis && c?.config?.type === 'x') as Axis<Datum>
+    const yAxis = visComponents.find(c => c instanceof Axis && c?.config?.type === 'y') as Axis<Datum>
+    const axes: {x?: Axis<Datum>; y?: Axis<Datum>} = {}
+    if (xAxis) axes.x = xAxis
+    if (yAxis) axes.y = yAxis
+
+    const components = visComponents.filter(c => !(c instanceof Crosshair) && !(c instanceof Tooltip) && !(c instanceof Axis))
+
     return { components, duration, margin, padding, dimensions, axes, tooltip, crosshair, adaptiveYScale }
   }
 

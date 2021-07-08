@@ -6,7 +6,10 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "generate": "rollup -c; node generate-components.js; rm generate-components.js"
+    "generate": "rollup -c; node generate-components.js; rm generate-components.js",
+    "docs:json": "compodoc -p ./tsconfig.json -e json -d .",
+    "storybook": "npm run docs:json && start-storybook -p 6006",
+    "build-storybook": "npm run docs:json && build-storybook"
   },
   "main": "dist/lib/bundles/volterra-vis-angular.umd.js",
   "module": "dist/lib/esm2015/public-api.js",
@@ -22,17 +25,22 @@
     "tslib": "^2.1.0"
   },
   "peerDependencies": {
-    "@angular/common": "~12.0.3",
-    "@angular/compiler": "~12.0.3",
-    "@angular/core": "~12.0.3",
-    "@angular/platform-browser-dynamic": "~12.0.3",
-    "@volterra/vis": "0.0.1-beta.126"
+    "@angular/common": "^12.0.3",
+    "@angular/compiler": "^12.0.3",
+    "@angular/core": "^12.0.3",
+    "@volterra/vis": "0.0.1-beta.128"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~12.0.3",
-    "@angular/cli": "~12.0.3",
-    "@angular/compiler-cli": "~12.0.3",
-    "@angular/platform-browser-dynamic": "~12.0.3",
+    "@angular-devkit/build-angular": "^12.0.3",
+    "@angular/cli": "^12.0.3",
+    "@angular/compiler-cli": "^12.0.3",
+    "@compodoc/compodoc": "^1.1.11",
+    "@storybook/addon-actions": "^6.3.1",
+    "@storybook/addon-essentials": "^6.3.1",
+    "@storybook/addon-links": "^6.3.1",
+    "@storybook/angular": "^6.3.1",
+    "@storybook/builder-webpack5": "^6.3.1",
+    "@storybook/manager-webpack5": "^6.3.1",
     "@types/jasmine": "~3.6.0",
     "@types/node": "^12.11.1",
     "jasmine-core": "~3.7.0",
