@@ -17,7 +17,6 @@
         "dist/lib/lib",
         "dist/lib"
       ],
-      "@src/*": ["src/*"],
     },
     "sourceMap": true,
     "declaration": false,
@@ -32,9 +31,7 @@
       "dom"
     ],
     "plugins": [
-      {
-        "transform": "ts-transformer-keys/transformer"
-      }
+      { "transform": "ts-transformer-keys/transformer" },
     ]
   },
   "angularCompilerOptions": {

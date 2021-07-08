@@ -6,7 +6,7 @@ import {
   // XYComponentConfigInterface has to be imported so ts-transformer-keys gets its keys
   XYComponentConfigInterface, LineConfigInterface, AreaConfigInterface, AxisConfigInterface, BrushConfigInterface,
   CrosshairConfigInterface, GroupedBarConfigInterface, ScatterConfigInterface, StackedBarConfigInterface,
-  TimelineConfigInterface, DonutConfigInterface,
+  TimelineConfigInterface, DonutConfigInterface, FreeBrushConfigInterface,
 } from '@volterra/vis'
 
 type D = any
@@ -15,6 +15,7 @@ const components = {
   Area: { keys: keys<AreaConfigInterface<D>>(), generics: '<T>', provide: 'VisXYComponent' },
   Axis: { keys: keys<AxisConfigInterface<D>>(), generics: '<T>', provide: 'VisXYComponent' },
   Brush: { keys: keys<BrushConfigInterface<D>>(), generics: '<T>', provide: 'VisXYComponent' },
+  FreeBrush: { keys: keys<FreeBrushConfigInterface<D>>(), generics: '<T>', provide: 'VisXYComponent' },
   Crosshair: { keys: keys<CrosshairConfigInterface<D>>(), generics: '<T>', provide: 'VisXYComponent' },
   Donut: { keys: keys<DonutConfigInterface<D>>(), generics: '<T>', provide: 'VisCoreComponent' },
   GroupedBar: { keys: keys<GroupedBarConfigInterface<D>>(), generics: '<T>', provide: 'VisXYComponent' },
@@ -35,10 +36,11 @@ for (const [componentName, data] of Object.entries(components)) {
   const configKeys = data.keys as string[]
   const generics = data.generics
   const provide = data.provide
-  const generatedCode = `// !!! This code was automatically generated. You should not change it !!!
+  const generatedCode = `/* eslint-disable notice/notice */
+// !!! This code was automatically generated. You should not change it !!!
 import { Directive, AfterViewInit, Input, SimpleChanges } from '@angular/core'
 import { ${componentName}, ${componentName}ConfigInterface } from '@volterra/vis'
-import { ${provide} } from '@src/core'
+import { ${provide} } from '../../core'
 
 @Directive({
   selector: 'vis-${nameKebabCase}',
@@ -70,7 +72,8 @@ export class Vis${componentName}Component${generics} implements ${componentName}
   }
 }
 `
-  const moduleCode = `// !!! This code was automatically generated. You should not change it !!!
+  const moduleCode = `/* eslint-disable notice/notice */
+// !!! This code was automatically generated. You should not change it !!!
 import { NgModule } from '@angular/core'
 import { Vis${componentName}Component } from './${nameKebabCase}.directive'
 
@@ -92,7 +95,8 @@ export class Vis${componentName}Module {}
   })
 }
 
-const exports = `// !!! This code was automatically generated. You should not change it !!!
+const exports = `/* eslint-disable notice/notice */
+// !!! This code was automatically generated. You should not change it !!!
   ${Object.keys(components).map(
     componentName => `export { Vis${componentName}Component } from './components/${kebabCase(componentName)}/${kebabCase(componentName)}.directive'`
   ).join('\n')}
