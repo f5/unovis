@@ -1,7 +1,8 @@
+/* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
 import { Directive, AfterViewInit, Input, SimpleChanges } from '@angular/core'
 import { Timeline, TimelineConfigInterface } from '@volterra/vis'
-import { VisXYComponent } from '@src/core'
+import { VisXYComponent } from '../../core'
 
 @Directive({
   selector: 'vis-timeline',

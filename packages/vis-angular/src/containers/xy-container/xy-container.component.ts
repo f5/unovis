@@ -13,7 +13,7 @@ import {
 
 // Vis
 import { XYComponentCore, XYContainer, XYContainerConfigInterface, Axis, Crosshair, Tooltip } from '@volterra/vis'
-import { VisXYComponent } from '@src/core'
+import { VisXYComponent } from '../../core'
 
 @Component({
   selector: 'vis-xy-container',

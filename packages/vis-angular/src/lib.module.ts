@@ -5,6 +5,7 @@ import { VisLineComponent } from './components/line/line.directive'
 import { VisAreaComponent } from './components/area/area.directive'
 import { VisAxisComponent } from './components/axis/axis.directive'
 import { VisBrushComponent } from './components/brush/brush.directive'
+import { VisFreeBrushComponent } from './components/free-brush/free-brush.directive'
 import { VisCrosshairComponent } from './components/crosshair/crosshair.directive'
 import { VisDonutComponent } from './components/donut/donut.directive'
 import { VisGroupedBarComponent } from './components/grouped-bar/grouped-bar.directive'
@@ -19,6 +20,7 @@ import { VisTimelineComponent } from './components/timeline/timeline.directive'
     VisAreaComponent,
     VisAxisComponent,
     VisBrushComponent,
+    VisFreeBrushComponent,
     VisCrosshairComponent,
     VisDonutComponent,
     VisGroupedBarComponent,
@@ -34,6 +36,7 @@ import { VisTimelineComponent } from './components/timeline/timeline.directive'
     VisAreaComponent,
     VisAxisComponent,
     VisBrushComponent,
+    VisFreeBrushComponent,
     VisCrosshairComponent,
     VisDonutComponent,
     VisGroupedBarComponent,
