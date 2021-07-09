@@ -6,7 +6,7 @@
     "lib"
   ],
   "scripts": {
-    "dev": "ng serve --port 9900",
+    "dev": "npx ng serve --port 9900",
     "build": "node --max_old_space_size=4096 ../node_modules/@angular/cli/bin/ng build",
     "test": "jest --colors",
     "lint": "eslint \"src/**/*.ts\""
