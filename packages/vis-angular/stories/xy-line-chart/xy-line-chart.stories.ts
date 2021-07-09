@@ -1,6 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { moduleMetadata, Story, Meta, componentWrapperDecorator } from '@storybook/angular'
-import { VisAngularModule } from '@src/lib.module'
+import { VisAngularModule } from 'src/lib.module'
 import XYLineChartComponent from './xy-line-chart.component'
 
 export default {
