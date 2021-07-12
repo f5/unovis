@@ -13,6 +13,7 @@ import { EnterTransitionType, ExitTransitionType } from 'types/animation'
 import { VisControlItemInterface, VisControlsOrientation } from 'types/controls'
 import { TrimMode, VerticalAlign, FitMode } from 'types/text'
 import { Dimension } from 'types/misc'
+import { FreeBrushMode } from 'components/free-brush/types'
 
 export {
   CurveType,
@@ -42,4 +43,5 @@ export {
   PositionStrategy,
   Dimension,
   PanelConfigInterface,
+  FreeBrushMode,
 }

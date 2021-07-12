@@ -23,6 +23,7 @@ import { ChordDiagram } from './components/chord-diagram'
 import { Graph } from './components/graph'
 import { VisControls } from './components/vis-controls'
 import { Donut } from './components/donut'
+import { FreeBrush } from './components/free-brush'
 
 import { LineConfigInterface } from './components/line/config'
 import { StackedBarConfigInterface } from './components/stacked-bar/config'
@@ -45,7 +46,7 @@ import { ChordDiagramConfigInterface } from './components/chord-diagram/config'
 import { GraphConfigInterface } from './components/graph/config'
 import { VisControlsConfigInterface } from './components/vis-controls/config'
 import { DonutConfigInterface } from './components/donut/config'
-
+import { FreeBrushConfigInterface } from './components/free-brush/config'
 import './styles/css-variables'
 
 export {
@@ -93,4 +94,6 @@ export {
   VisControlsConfigInterface,
   Donut,
   DonutConfigInterface,
+  FreeBrush,
+  FreeBrushConfigInterface,
 }

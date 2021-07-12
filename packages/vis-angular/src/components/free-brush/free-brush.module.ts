@@ -1,11 +1,11 @@
 /* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
 import { NgModule } from '@angular/core'
-import { VisAreaComponent } from './area.directive'
+import { VisFreeBrushComponent } from './free-brush.directive'
 
 @NgModule({
   imports: [],
-  declarations: [VisAreaComponent],
-  exports: [VisAreaComponent],
+  declarations: [VisFreeBrushComponent],
+  exports: [VisFreeBrushComponent],
 })
-export class VisAreaModule {}
+export class VisFreeBrushModule {}

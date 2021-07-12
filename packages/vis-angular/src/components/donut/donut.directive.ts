@@ -1,7 +1,8 @@
+/* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
 import { Directive, AfterViewInit, Input, SimpleChanges } from '@angular/core'
 import { Donut, DonutConfigInterface } from '@volterra/vis'
-import { VisCoreComponent } from '@src/core'
+import { VisCoreComponent } from '../../core'
 
 @Directive({
   selector: 'vis-donut',
