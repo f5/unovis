@@ -12,28 +12,26 @@ import {
 } from '@angular/core'
 
 // Vis
-import { XYComponentCore, XYContainer, XYContainerConfigInterface, Axis, Crosshair, Tooltip } from '@volterra/vis'
+import { XYComponentCore, XYContainer, XYContainerConfigInterface, Axis, Crosshair, Tooltip, Dimension } from '@volterra/vis'
 import { VisXYComponent } from '../../core'
 
 @Component({
   selector: 'vis-xy-container',
-  templateUrl: './xy-container.component.html',
-  styleUrls: ['./xy-container.component.css'],
+  template: `<div #container class="container">
+    <ng-content></ng-content>
+  </div>`,
+  styles: ['.container { width: 100%; height: 100%; position: relative; }'],
 })
 export class VisXYContainerComponent<Datum = Record<string, unknown>> implements AfterViewInit, OnDestroy {
   @ViewChild('container', { static: false }) containerRef: ElementRef
   @ContentChildren(VisXYComponent) visComponents: QueryList<VisXYComponent>
-  @Input() duration = undefined
+  @Input() duration: number = undefined
   @Input() margin = { top: 10, bottom: 10, left: 10, right: 10 }
   @Input() padding = {}
-  @Input() dimensions = { x: {}, y: {} }
-  @Input() axes = {}
-  @Input() tooltip
-  @Input() crosshair
+  @Input() dimensions: { x: Dimension; y: Dimension } = { x: {}, y: {} }
   @Input() adaptiveYScale
-  @Input() data = []
+  @Input() data: Datum[] = []
   chart: XYContainer<Datum>
-  config = {}
 
   ngAfterViewInit (): void {
     this.chart = new XYContainer<Datum>(this.containerRef.nativeElement, this.getConfig(), this.data)
@@ -47,11 +45,6 @@ export class VisXYContainerComponent<Datum = Record<string, unknown>> implements
       this.chart?.setData(this.data, preventRender)
       delete changes.data
     }
-
-    // Update Container properties
-    Object.keys(changes).forEach(key => {
-      this[key] = changes[key].currentValue
-    })
 
     // Update Container and render
     this.chart?.updateContainer(this.getConfig())
