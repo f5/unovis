@@ -3,6 +3,7 @@ import {
   Component,
   ViewChild,
   ContentChildren,
+  ContentChild,
   ElementRef,
   AfterViewInit,
   Input,
@@ -14,6 +15,7 @@ import {
 // Vis
 import { XYComponentCore, XYContainer, XYContainerConfigInterface, Axis, Crosshair, Tooltip, Dimension } from '@volterra/vis'
 import { VisXYComponent } from '../../core'
+import { VisTooltipComponent } from '../../core/tooltip/tooltip.directive'
 
 @Component({
   selector: 'vis-xy-container',
@@ -25,6 +27,7 @@ import { VisXYComponent } from '../../core'
 export class VisXYContainerComponent<Datum = Record<string, unknown>> implements AfterViewInit, OnDestroy {
   @ViewChild('container', { static: false }) containerRef: ElementRef
   @ContentChildren(VisXYComponent) visComponents: QueryList<VisXYComponent>
+  @ContentChild(VisTooltipComponent) tooltipComponent: VisTooltipComponent
   @Input() duration: number = undefined
   @Input() margin = { top: 10, bottom: 10, left: 10, right: 10 }
   @Input() padding = {}
@@ -55,8 +58,7 @@ export class VisXYContainerComponent<Datum = Record<string, unknown>> implements
     const visComponents = this.visComponents.toArray().map(d => d.component)
 
     const crosshair = visComponents.find(c => c instanceof Crosshair) as Crosshair<Datum>
-    const tooltip = visComponents.find(c => c instanceof Tooltip) as unknown as Tooltip<XYComponentCore<Datum>, Datum>
-
+    const tooltip = this.tooltipComponent?.component as Tooltip<XYComponentCore<Datum>, Datum>
     const xAxis = visComponents.find(c => c instanceof Axis && c?.config?.type === 'x') as Axis<Datum>
     const yAxis = visComponents.find(c => c instanceof Axis && c?.config?.type === 'y') as Axis<Datum>
     const axes: {x?: Axis<Datum>; y?: Axis<Datum>} = {}
