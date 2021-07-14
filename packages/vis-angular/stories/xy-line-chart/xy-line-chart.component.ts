@@ -1,5 +1,8 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { Component, Input } from '@angular/core'
+import { Component, Input, ViewChild } from '@angular/core'
+import { VisCrosshairComponent } from '../../src/components/crosshair/crosshair.directive'
+import { VisTooltipComponent } from '../../src/core/tooltip/tooltip.directive'
+import { DataRecord } from './xy-line-chart.types'
 
 @Component({
   selector: 'xy-line-chart',
@@ -10,18 +13,45 @@ import { Component, Input } from '@angular/core'
          [data]="data"
      >
       <vis-area [x]="x" [y]="y" [opacity]="1"></vis-area>
-      <vis-line [x]="x" [y]="y" [color]="'black'"></vis-line>
-      <vis-crosshair [x]="x" [y]="y" template="hello"></vis-crosshair>
-      <vis-axis type="x" label="X Axis"></vis-axis>
-      <vis-axis type="y" label="X Axis"></vis-axis>
+      <vis-crosshair [x]="x" [y]="y" [template]="crosshairTemplate"></vis-crosshair>
+      <vis-tooltip></vis-tooltip>
+      <vis-free-brush mode="x" [selectionMinLength]="0.25" [onBrushStart]="onBrushStart" [onBrushMove]="onBrushMove" [onBrushEnd]="onBrushEnd"></vis-free-brush>
+      <vis-axis type="x" label="Time" [tickFormat]="formatXTicks"></vis-axis>
+      <vis-axis type="y" label="Value"></vis-axis>
      </vis-xy-container>
   </div>`,
   styleUrls: ['./xy-line-chart.css'],
 })
 export default class XYLineChartComponent {
-  @Input() data = [{ x: 0, y: 5 }, { x: 1, y: 1 }, { x: 2, y: 10 }, { x: 3, y: 3 }, { x: 4, y: 5 }]
+  @ViewChild(VisCrosshairComponent, { static: false }) crosshairRef: VisCrosshairComponent<DataRecord>
+  @ViewChild(VisTooltipComponent, { static: false }) tooltipRef: VisTooltipComponent<DataRecord>
+
+  @Input() data: DataRecord[] = Array(100).fill(0).map((_, i: number) => ({
+    timestamp: Date.now() + i * 1000 * 60 * 60 * 24,
+    value: i / 10 + Math.sin(i / 5) + Math.cos(i / 3),
+  }))
+
   @Input() margin = { top: 10, bottom: 10, left: 10, right: 10 }
   @Input() padding = {}
-  @Input() x = (d): number => d.x
-  @Input() y = (d): number => d.y
+  @Input() x = (d: DataRecord): number => d.timestamp
+  @Input() y = (d: DataRecord): number => d.value
+  @Input() formatXTicks = (timestamp: number): string => (new Date(timestamp)).toLocaleDateString()
+
+  crosshairTemplate = (d: DataRecord): string => `${new Date(d.timestamp).toLocaleDateString()}`
+
+  onBrushStart = (): void => {
+    this.crosshairRef?.component.hide()
+  }
+
+  onBrushMove = (selection: [number, number], e: { sourceEvent: MouseEvent }): void => {
+    const content = `
+      <div>Start: ${(new Date(selection?.[0])).toLocaleDateString()}</div>
+      <div>End: ${(new Date(selection?.[1])).toLocaleDateString()}</div>
+    `
+    if (selection) this.tooltipRef?.component.show(content, { x: e.sourceEvent?.offsetX, y: e.sourceEvent?.offsetY })
+  }
+
+  onBrushEnd = (): void => {
+    this.tooltipRef?.component.hide()
+  }
 }
