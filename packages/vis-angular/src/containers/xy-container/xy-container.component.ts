@@ -27,7 +27,7 @@ import { VisTooltipComponent } from '../../core/tooltip/tooltip.directive'
 export class VisXYContainerComponent<Datum = Record<string, unknown>> implements AfterViewInit, OnDestroy {
   @ViewChild('container', { static: false }) containerRef: ElementRef
   @ContentChildren(VisXYComponent) visComponents: QueryList<VisXYComponent>
-  @ContentChild(VisTooltipComponent) tooltipComponent: VisTooltipComponent
+  @ContentChild(VisTooltipComponent) tooltipComponent: VisTooltipComponent<Datum>
   @Input() duration: number = undefined
   @Input() margin = { top: 10, bottom: 10, left: 10, right: 10 }
   @Input() padding = {}
