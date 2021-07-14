@@ -1,6 +1,9 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { NgModule } from '@angular/core'
 import { VisXYContainerComponent, VisSingleContainerComponent } from './containers'
+import { VisTooltipComponent } from './core/tooltip/tooltip.directive'
+
+// Auto-generated components
 import { VisLineComponent } from './components/line/line.directive'
 import { VisAreaComponent } from './components/area/area.directive'
 import { VisAxisComponent } from './components/axis/axis.directive'
@@ -17,6 +20,7 @@ import { VisTimelineComponent } from './components/timeline/timeline.directive'
   declarations: [
     VisXYContainerComponent,
     VisSingleContainerComponent,
+    VisTooltipComponent,
     VisLineComponent,
     VisAreaComponent,
     VisAxisComponent,
@@ -34,6 +38,7 @@ import { VisTimelineComponent } from './components/timeline/timeline.directive'
   exports: [
     VisXYContainerComponent,
     VisSingleContainerComponent,
+    VisTooltipComponent,
     VisLineComponent,
     VisAreaComponent,
     VisAxisComponent,
