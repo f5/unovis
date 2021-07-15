@@ -241,7 +241,6 @@ export function updateNodes<N extends NodeDatumCore, L extends LinkDatumCore> (s
 
     // Bottom Icon
     bottomIcon.html(d => {
-      console.log(d, nodeBottomIcon)
       return getValue(d, nodeBottomIcon)
     })
       .attr('transform', `translate(0, ${nodeHeight / 2})`)
