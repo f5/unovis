@@ -14,7 +14,7 @@ import { getDataLatLngBounds } from 'utils/map'
 import { LeafletMap } from 'components/leaflet-map'
 
 // Types
-import { Bounds } from 'types/map'
+import { Bounds } from 'components/leaflet-map/types'
 
 // Config
 import { LeafletFlowMapConfig, LeafletFlowMapConfigInterface } from './config'

@@ -2,8 +2,8 @@
 
 import { pie, arc } from 'd3-shape'
 
-// Types
-import { PieDatum } from 'types/map'
+// Local Types
+import { PieDatum } from '../types'
 
 const pieConstructor = pie<PieDatum>()
   .sort(null)

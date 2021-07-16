@@ -1,12 +1,12 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import L from 'leaflet'
 
-// Types
-import { PointShape } from 'types/map'
-
 // Utils
 import { cloneDeep } from 'utils/data'
 import { getPointPos, getNodePathData } from './utils'
+
+// Local Types
+import { PointShape } from '../types'
 
 // Config Interface
 import { LeafletMapConfigInterface } from '../config'

@@ -13,11 +13,12 @@ import { MapDataModel } from 'data-models/map'
 
 // Types
 import { ComponentType } from 'types/component'
-import { LeafletMapRenderer, Point, Bounds, MapZoomState, PointDatum } from 'types/map'
 
 // Utils
 import { getValue, clamp, isNil, find } from 'utils/data'
 import { constraintMapViewThrottled } from './renderer/mapboxgl-utils'
+
+import { LeafletMapRenderer, Point, Bounds, MapZoomState, PointDatum } from './types'
 
 // Config
 import { LeafletMapConfig, LeafletMapConfigInterface } from './config'

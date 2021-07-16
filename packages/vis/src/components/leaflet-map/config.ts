@@ -7,7 +7,11 @@ import { Tooltip } from 'core/tooltip'
 
 // Types
 import { NumericAccessor, StringAccessor, ColorAccessor } from 'types/misc'
-import { LeafletMapRenderer, Bounds, ValuesMap, MapZoomState, PointDatum } from 'types/map'
+
+// Local Types
+import { LeafletMapRenderer, Bounds, ValuesMap, MapZoomState, PointDatum } from './types'
+
+// Component
 import { LeafletMap } from './index'
 
 export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterface {

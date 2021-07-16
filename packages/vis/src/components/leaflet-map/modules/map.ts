@@ -3,11 +3,11 @@ import { select, Selection } from 'd3-selection'
 import L from 'leaflet'
 import { feature } from 'topojson-client'
 
-// Types
-import { LeafletMapRenderer } from 'types/map'
-
 // Config
 import { LeafletMapConfig } from '../config'
+
+// Local Types
+import { LeafletMapRenderer } from '../types'
 
 // Utils
 import { constraintMapView, mapboxglWheelEventThrottled } from '../renderer/mapboxgl-utils'

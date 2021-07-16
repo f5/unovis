@@ -1,8 +1,8 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import L from 'leaflet'
 
-// Types
-import { Point } from 'types/map'
+// Local Types
+import { Point } from 'components/leaflet-map/types'
 
 // Utils
 import { getPointPos } from './utils'

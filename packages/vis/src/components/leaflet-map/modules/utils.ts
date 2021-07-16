@@ -9,8 +9,10 @@ import { polygon, circlePath } from 'utils/path'
 import { getHTMLTransform } from 'utils/html'
 
 // Types
-import { Point, PointShape, PieDatum, ValuesMap, PointExpandedClusterProperties, PointDatum } from 'types/map'
 import { NumericAccessor, StringAccessor, ColorAccessor } from 'types/misc'
+
+// Local Types
+import { Point, PointShape, PieDatum, ValuesMap, PointExpandedClusterProperties, PointDatum } from '../types'
 
 // Config
 import { LeafletMapConfigInterface } from '../config'
