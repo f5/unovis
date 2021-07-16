@@ -11,7 +11,9 @@ import { getValue, isNumber, clamp } from 'utils/data'
 
 // Types
 import { Spacing } from 'types/misc'
-import { DonutArcDatum, DonutArcAnimState } from 'types/donut'
+
+// Local Types
+import { DonutArcDatum, DonutArcAnimState } from './types'
 
 // Config
 import { DonutConfig, DonutConfigInterface } from './config'
