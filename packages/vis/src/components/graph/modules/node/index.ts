@@ -5,13 +5,15 @@ import { arc } from 'd3-shape'
 
 // Type
 import { Shape } from 'types/shape'
-import { NodeDatumCore, LinkDatumCore, CircleLabel } from 'types/graph'
 
 // Utils
 import { trimText } from 'utils/text'
 import { polygon } from 'utils/path'
 import { smartTransition } from 'utils/d3'
 import { getValue, throttle } from 'utils/data'
+
+// Local Types
+import { NodeDatumCore, LinkDatumCore, CircleLabel } from '../../types'
 
 // Config
 import { GraphConfigInterface } from '../../config'

@@ -4,9 +4,11 @@
 import { ComponentConfigInterface, ComponentConfig } from 'core/component/config'
 
 // Types
-import { NodeDatumCore, LinkDatumCore, LayoutType, CircleLabel, LinkStyle, LinkArrow, PanelConfigInterface } from 'types/graph'
 import { NumericAccessor, StringAccessor, BooleanAccessor, ColorAccessor } from 'types/misc'
 import { Shape } from 'types/shape'
+
+// Local Types
+import { NodeDatumCore, LinkDatumCore, LayoutType, CircleLabel, LinkStyle, LinkArrow, PanelConfigInterface } from './types'
 
 export interface GraphConfigInterface<N extends NodeDatumCore, L extends LinkDatumCore> extends ComponentConfigInterface {
   // Zoom and drag

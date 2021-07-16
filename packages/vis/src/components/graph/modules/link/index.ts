@@ -2,12 +2,12 @@
 import { select, Selection } from 'd3-selection'
 import { Transition } from 'd3-transition'
 
-// Types
-import { NodeDatumCore, LinkDatumCore, LinkStyle } from 'types/graph'
-
 // Utils
 import { range, throttle, getValue } from 'utils/data'
 import { smartTransition } from 'utils/d3'
+
+// Local Types
+import { NodeDatumCore, LinkDatumCore, LinkStyle } from '../../types'
 
 // Config
 import { GraphConfigInterface } from '../../config'

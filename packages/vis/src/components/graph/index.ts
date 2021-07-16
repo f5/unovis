@@ -12,12 +12,14 @@ import { GraphDataModel } from 'data-models/graph'
 
 // Types
 import { Spacing } from 'types/misc'
-import { NodeDatumCore, LinkDatumCore, LayoutType, LinkArrow, PanelConfigInterface } from 'types/graph'
 
 // Utils
 import { isNumber, clamp, getValue, find, cloneDeep, flatten, findIndex, clean, uniq, shallowDiff, isFunction } from 'utils/data'
 import { stringToHtmlId } from 'utils/misc'
 import { smartTransition } from 'utils/d3'
+
+// Local Types
+import { NodeDatumCore, LinkDatumCore, LayoutType, LinkArrow, PanelConfigInterface } from './types'
 
 // Config
 import { GraphConfig, GraphConfigInterface } from './config'

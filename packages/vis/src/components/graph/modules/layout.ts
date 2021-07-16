@@ -7,11 +7,11 @@ import { Graph } from 'graphlibrary'
 // Core
 import { GraphDataModel } from 'data-models/graph'
 
-// Types
-import { NodeDatumCore, LinkDatumCore } from 'types/graph'
-
 // Utils
 import { without, clamp, groupBy, uniq, sortBy, getValue } from 'utils/data'
+
+// Local Types
+import { NodeDatumCore, LinkDatumCore } from '../types'
 
 // Config
 import { GraphConfigInterface } from '../config'

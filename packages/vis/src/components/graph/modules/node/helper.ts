@@ -7,13 +7,15 @@ import { color } from 'd3-color'
 
 // Types
 import { Shape } from 'types/shape'
-import { NodeDatumCore, LinkDatumCore, CircleLabel } from 'types/graph'
 import { NumericAccessor } from 'types/misc'
 
 // Utils
 import { scoreRectPath } from 'utils/path'
 import { isEmpty, isNil, getValue } from 'utils/data'
 import { hexToBrightness } from 'utils/color'
+
+// Local Types
+import { NodeDatumCore, LinkDatumCore, CircleLabel } from '../../types'
 
 // Config
 import { GraphConfigInterface } from '../../config'

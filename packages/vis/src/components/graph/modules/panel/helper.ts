@@ -3,12 +3,14 @@ import { Selection, BaseType } from 'd3-selection'
 import { max } from 'd3-array'
 
 // Type
-import { NodeDatumCore, LinkDatumCore, PanelConfigInterface } from 'types/graph'
 import { NumericAccessor } from 'types/misc'
 import { Position } from 'types/position'
 
 // Utils
 import { find } from 'utils/data'
+
+// Local Types
+import { NodeDatumCore, LinkDatumCore, PanelConfigInterface } from '../../types'
 
 // Config
 import { GraphConfigInterface } from '../../config'

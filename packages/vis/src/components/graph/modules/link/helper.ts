@@ -1,11 +1,11 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 
-// Types
-import { NodeDatumCore, LinkDatumCore } from 'types/graph'
-
 // Utils
 import { getValue } from 'utils/data'
 import { stringToHtmlId } from 'utils/misc'
+
+// Local Types
+import { NodeDatumCore, LinkDatumCore } from '../../types'
 
 // Config
 import { GraphConfigInterface } from '../../config'
