@@ -68,9 +68,10 @@ export class AxisConfig<Datum> extends XYComponentConfig<Datum> implements AxisC
   tickTextWidth = undefined
   tickTextSeparator = ' '
   tickTextForceWordBreak = false
-  tickTextTrimType = TrimMode.MIDDLE
-  tickTextFitMode = FitMode.WRAP
+  tickTextTrimType = TrimMode.Middle
+  tickTextFitMode = FitMode.Wrap
   tickTextAlign = undefined
+
   padding = {
     top: 0,
     bottom: 0,

@@ -1,4 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
+/* eslint-disable @typescript-eslint/naming-convention */
 import { keys } from 'ts-transformer-keys'
 import { writeFileSync } from 'fs'
 import { exec } from 'child_process'

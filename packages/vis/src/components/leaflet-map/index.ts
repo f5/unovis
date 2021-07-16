@@ -151,7 +151,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     this.config.init(config)
 
     if (this._map) {
-      if (this.config.topoJSONLayer?.sources && this.config.renderer === LeafletMapRenderer.TANGRAM) {
+      if (this.config.topoJSONLayer?.sources && this.config.renderer === LeafletMapRenderer.Tangram) {
         console.warn('TopoJSON layer render does not supported with Tangram renderer')
       } else {
         const mapboxMap = (this._map.layer as any).getMapboxMap()
@@ -530,7 +530,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     this._onMapMoveEndInternal?.(this._map.leaflet)
     config.onMapMoveEnd?.(this._getMapZoomState())
 
-    if (config.renderer === LeafletMapRenderer.MAPBOXGL) {
+    if (config.renderer === LeafletMapRenderer.MapboxGL) {
       constraintMapViewThrottled(this._map.leaflet)
 
       const events = this._map.layer.getEvents()

@@ -51,6 +51,7 @@ export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ point
     const rendererImportPromise = import('./renderer')
     Promise.all([rendererImportPromise, this.leafletMap.getLeafletInstancePromise()])
       .then((imports) => {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         const [{ PointRenderer }, leaflet] = imports
 
         this.leafletMapInstance = leaflet

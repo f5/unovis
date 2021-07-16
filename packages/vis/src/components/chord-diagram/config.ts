@@ -46,7 +46,7 @@ export class ChordDiagramConfig<H extends Hierarchy> extends ComponentConfig imp
   nodeWidth = 15
   nodeColor = (d: HierarchyNode<H>): string => d['color']
   nodeLabel = (d: H): string => d['label'] ?? d['key']
-  nodeLabelType = LabelType.PERPENDICULAR
+  nodeLabelType = LabelType.Perpendicular
   padAngle = 0.02
   cornerRadius = 2
   angleRange: [number, number] = [0, 2 * Math.PI]

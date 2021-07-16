@@ -321,22 +321,22 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
   _calculateLayout (): void {
     const { config, datamodel } = this
     switch (config.layoutType) {
-      case LayoutType.PARALLEL:
+      case LayoutType.Parallel:
         applyLayoutParallel(datamodel, config)
         break
-      case LayoutType.PARALLEL_HORIZONTAL:
+      case LayoutType.ParallelHorizontal:
         applyLayoutParallel(datamodel, config, 'horizontal')
         break
-      case LayoutType.DAGRE:
+      case LayoutType.Dagre:
         applyLayoutDagre(datamodel, config)
         break
-      case LayoutType.FORCE:
+      case LayoutType.Force:
         applyLayoutForce(datamodel, config)
         break
-      case LayoutType.CONCENTRIC:
+      case LayoutType.Concentric:
         applyLayoutConcentric(datamodel, config)
         break
-      case LayoutType.CIRCULAR:
+      case LayoutType.Circular:
       default:
         applyLayoutCircular(datamodel, config)
         break
@@ -651,17 +651,17 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
     if (config.layoutType !== nextConfig.layoutType) return true
     if (config.layoutNonConnectedAside !== nextConfig.layoutNonConnectedAside) return true
 
-    if (config.layoutType === LayoutType.FORCE) {
+    if (config.layoutType === LayoutType.Force) {
       const forceSettingsDiff = shallowDiff(config.forceLayoutSettings, nextConfig.forceLayoutSettings)
       if (Object.keys(forceSettingsDiff).length) return true
     }
 
-    if (config.layoutType === LayoutType.DAGRE) {
+    if (config.layoutType === LayoutType.Dagre) {
       const dagreSettingsDiff = shallowDiff(config.dagreLayoutSettings, nextConfig.dagreLayoutSettings)
       if (Object.keys(dagreSettingsDiff).length) return true
     }
 
-    if (config.layoutType === LayoutType.PARALLEL || config.layoutType === LayoutType.PARALLEL_HORIZONTAL || config.layoutType === LayoutType.CONCENTRIC) {
+    if (config.layoutType === LayoutType.Parallel || config.layoutType === LayoutType.ParallelHorizontal || config.layoutType === LayoutType.Concentric) {
       if (config.layoutGroupOrder !== nextConfig.layoutGroupOrder) return true
       if (config.layoutSubgroupMaxNodes !== nextConfig.layoutSubgroupMaxNodes) return true
       if (config.layoutSortConnectionsByGroup !== nextConfig.layoutSortConnectionsByGroup) return true
@@ -683,21 +683,21 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
 
     this._defs.selectAll('marker')
       .data([
-        ...linkColors.map(d => ({ color: d, arrow: LinkArrow.SINGLE })), // Single-sided arrows
-        ...linkColors.map(d => ({ color: d, arrow: LinkArrow.DOUBLE })), // Double-sided arrows
+        ...linkColors.map(d => ({ color: d, arrow: LinkArrow.Single })), // Single-sided arrows
+        ...linkColors.map(d => ({ color: d, arrow: LinkArrow.Double })), // Double-sided arrows
       ]).enter()
       .append('marker')
       .attr('id', d => `${stringToHtmlId(d.color)}-${d.arrow}`)
       .attr('orient', 'auto')
-      .attr('markerWidth', d => d.arrow === LinkArrow.DOUBLE ? LINK_MARKER_WIDTH * 2 : LINK_MARKER_WIDTH)
-      .attr('markerHeight', d => d.arrow === LinkArrow.DOUBLE ? LINK_MARKER_HEIGHT * 2 : LINK_MARKER_HEIGHT)
+      .attr('markerWidth', d => d.arrow === LinkArrow.Double ? LINK_MARKER_WIDTH * 2 : LINK_MARKER_WIDTH)
+      .attr('markerHeight', d => d.arrow === LinkArrow.Double ? LINK_MARKER_HEIGHT * 2 : LINK_MARKER_HEIGHT)
       .attr('markerUnits', 'userSpaceOnUse')
       .attr('refX', LINK_MARKER_WIDTH - LINK_MARKER_HEIGHT / 2)
       .attr('refY', LINK_MARKER_HEIGHT - LINK_MARKER_HEIGHT / 2)
       .html(d => {
         return `
           <path
-            d="${d.arrow === LinkArrow.DOUBLE ? getDoubleArrowPath() : getArrowPath()}"
+            d="${d.arrow === LinkArrow.Double ? getDoubleArrowPath() : getArrowPath()}"
             fill="${d.color ?? null}"
           />
         `

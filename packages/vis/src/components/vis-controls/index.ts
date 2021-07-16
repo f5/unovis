@@ -36,7 +36,7 @@ export class VisControls {
   render (): void {
     const { config: { items, orientation } } = this
     this._items
-      .classed(s.horizontalItems, orientation === VisControlsOrientation.HORIZONTAL)
+      .classed(s.horizontalItems, orientation === VisControlsOrientation.Horizontal)
     const controlItems = this._items.selectAll(`.${s.item}`)
       .data(items) as Selection<HTMLDivElement, any, HTMLDivElement, any>
 

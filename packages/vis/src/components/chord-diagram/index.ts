@@ -106,7 +106,7 @@ export class ChordDiagram<H extends Hierarchy, N extends NodeDatumCore, L extend
     hierarchyData.sum(d => d._state?.value)
 
     let radius = Math.min(config.width, config.height) / 2 - max([this.bleed.top, this.bleed.bottom, this.bleed.left, this.bleed.right])
-    let ladelWidth = nodeLabelType === LabelType.PERPENDICULAR ? radius / (hierarchyData.height + 1) - config.nodeWidth : 0
+    let ladelWidth = nodeLabelType === LabelType.Perpendicular ? radius / (hierarchyData.height + 1) - config.nodeWidth : 0
     radius = radius - ladelWidth
     radiusScale
       .exponent(radiusScaleExponent)

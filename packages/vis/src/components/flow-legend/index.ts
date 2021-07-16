@@ -11,8 +11,8 @@ import { FlowLegendConfig, FlowLegendConfigInterface } from './config'
 import * as s from './style'
 
 enum LegendItemType {
-  LABEL = 'label',
-  SYMBOL = 'symbol',
+  Label = 'label',
+  Symbol = 'symbol',
 }
 
 export class FlowLegend {
@@ -53,14 +53,14 @@ export class FlowLegend {
       acc.push({
         text: label,
         index: i,
-        type: LegendItemType.LABEL,
+        type: LegendItemType.Label,
       })
 
       if (arrowSymbol && acc.length !== items.length * 2 - 1) {
         acc.push({
           text: arrowSymbol,
           index: i,
-          type: LegendItemType.SYMBOL,
+          type: LegendItemType.Symbol,
         })
       }
       return acc
@@ -75,12 +75,12 @@ export class FlowLegend {
       .attr('class', s.item)
       .attr('opacity', 0)
 
-    legendItemsEnter.filter(d => d.type === LegendItemType.LABEL)
+    legendItemsEnter.filter(d => d.type === LegendItemType.Label)
       .on('click', this._onItemClick.bind(this))
 
     legendItemsEnter.append('span')
-      .attr('class', d => d.type === LegendItemType.SYMBOL ? s.arrow(lineColor) : s.label(labelFontSize, labelColor))
-      .classed(s.clickable, d => d.type === LegendItemType.LABEL && !!onLegendItemClick)
+      .attr('class', d => d.type === LegendItemType.Symbol ? s.arrow(lineColor) : s.label(labelFontSize, labelColor))
+      .classed(s.clickable, d => d.type === LegendItemType.Label && !!onLegendItemClick)
 
     const legendItemsMerged = legendItemsEnter.merge(legendItems)
     smartTransition(legendItemsMerged, 500)

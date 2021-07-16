@@ -24,9 +24,9 @@ export function getRendererSettings<T> (config: LeafletMapConfigInterface<T>): a
       settings = rendererSettings
       break
     default: {
-      const baseSettings = renderer === LeafletMapRenderer.TANGRAM ? baseTangramSettings : baseMapboxglSettings
+      const baseSettings = renderer === LeafletMapRenderer.Tangram ? baseTangramSettings : baseMapboxglSettings
       // const dark = renderer === MapRenderer.TANGRAM ? tangramDarkTheme : mapboxglDarkTheme
-      const light = renderer === LeafletMapRenderer.TANGRAM ? tangramLightTheme : mapboxglLightTheme
+      const light = renderer === LeafletMapRenderer.Tangram ? tangramLightTheme : mapboxglLightTheme
       settings = merge(baseSettings, light)
       break
     }

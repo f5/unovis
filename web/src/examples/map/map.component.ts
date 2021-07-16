@@ -39,7 +39,7 @@ function mapSampleData (): Record<string, any>[] {
 
 function getTooltipConfig (): TooltipConfigInterface<LeafletMap<MapPoint>, MapPoint> {
   return {
-    verticalPlacement: Position.CENTER,
+    verticalPlacement: Position.Center,
     horizontalShift: 10,
     triggers: {
       [LeafletMap.selectors.point]: d => `<div>${d.id}</div>`,

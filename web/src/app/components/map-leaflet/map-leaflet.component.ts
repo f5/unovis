@@ -43,7 +43,7 @@ export class MapLeafletComponent<PointDatum, FlowDatum = any> implements AfterVi
     },
   ];
 
-  controlsOrientation = VisControlsOrientation.VERTICAL;
+  controlsOrientation = VisControlsOrientation.Vertical;
 
   ngAfterViewInit (): void {
     this.map = this.ddos

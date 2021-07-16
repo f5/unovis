@@ -18,10 +18,10 @@ export default {
   argTypes: {},
 } as Meta
 
-const Template: Story<XYLineChartComponent> = (args: XYLineChartComponent) => ({
+const template: Story<XYLineChartComponent> = (args: XYLineChartComponent) => ({
   props: args,
 })
 
-export const Primary = Template.bind({})
+export const Primary = template.bind({})
 Primary.args = {
 }

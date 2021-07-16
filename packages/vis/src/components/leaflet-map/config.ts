@@ -22,7 +22,7 @@ export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterfa
   initialBounds?: Bounds;
   /** Force set map bounds on config update. Default: `undefined` */
   bounds?: Bounds;
-  /** The map renderer type. Default: `LeafletMapRenderer.TANGRAM` */
+  /** The map renderer type. Default: `LeafletMapRenderer.Tangram` */
   renderer?: LeafletMapRenderer | string;
   /** External instance of Tangram to be used in the map. Default: `undefined` */
   tangramRenderer?: any;
@@ -112,7 +112,7 @@ export class LeafletMapConfig<Datum> extends ComponentConfig implements LeafletM
   zoomDuration = 800
   initialBounds = undefined
   bounds = undefined
-  renderer = LeafletMapRenderer.TANGRAM
+  renderer = LeafletMapRenderer.Tangram
   attribution = []
   accessToken = ''
   tangramRenderer = undefined

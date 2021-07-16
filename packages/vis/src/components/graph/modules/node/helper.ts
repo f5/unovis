@@ -6,7 +6,7 @@ import { Arc } from 'd3-shape'
 import { color } from 'd3-color'
 
 // Types
-import { SHAPE } from 'types/shape'
+import { Shape } from 'types/shape'
 import { NodeDatumCore, LinkDatumCore, CircleLabel } from 'types/graph'
 import { NumericAccessor } from 'types/misc'
 
@@ -56,13 +56,13 @@ export function polyTween<N extends NodeDatumCore, L extends LinkDatumCore> (d: 
   const nodeSize = getNodeSize(d, config.nodeSize)
   let n: number
   switch (getValue(d, nodeShape)) {
-    case SHAPE.SQUARE:
+    case Shape.Square:
       n = 4
       break
-    case SHAPE.TRIANGLE:
+    case Shape.Triangle:
       n = 3
       break
-    case SHAPE.HEXAGON:
+    case Shape.Hexagon:
     default:
       n = 6
   }

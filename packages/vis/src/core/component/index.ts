@@ -22,7 +22,7 @@ export class ComponentCore<CoreDatum> {
   config: ComponentConfig
   prevConfig: ComponentConfig
   datamodel: CoreDataModel<CoreDatum> = new CoreDataModel()
-  sizing: Sizing = Sizing.FIT
+  sizing: Sizing = Sizing.Fit
 
   events: {
     [selectorString: string]: {
@@ -43,6 +43,7 @@ export class ComponentCore<CoreDatum> {
   }
 
   setConfig<T extends ComponentConfigInterface> (config: T): void {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     const ConfigModel = (this.config.constructor as typeof ComponentConfig)
     this.prevConfig = this.config
     this.config = new ConfigModel().init(config)

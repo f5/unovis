@@ -1,8 +1,8 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 
-export default {
-  LEVEL0: 1.0,
-  LEVEL1: 0.6,
-  LEVEL2: 0.4,
-  LEVEL3: 0.2,
+export enum ZoomLevel {
+  Level0 = 1.0,
+  Level1 = 0.6,
+  Level2 = 0.4,
+  Level3 = 0.2,
 }

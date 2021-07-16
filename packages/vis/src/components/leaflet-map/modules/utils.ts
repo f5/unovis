@@ -110,7 +110,7 @@ export function calculateClusterIndex<D> (data: D[], config: LeafletMapConfigInt
       return clusterPoint
     },
     reduce: (acc, clusterPoint): void => {
-      acc.shape = acc.shape === clusterPoint.shape ? acc.shape : PointShape.CIRCLE
+      acc.shape = acc.shape === clusterPoint.shape ? acc.shape : PointShape.Circle
       acc.value = (acc.value ?? 0) + (clusterPoint.value ?? 0)
 
       for (const key of Object.keys(valuesMap)) {
@@ -122,11 +122,11 @@ export function calculateClusterIndex<D> (data: D[], config: LeafletMapConfigInt
 
 export function getNodePathData ({ x, y }, radius: number, shape: PointShape): string {
   switch (shape) {
-    case PointShape.TRIANGLE:
+    case PointShape.Triangle:
       return polygon(radius * 2, 3)
-    case PointShape.SQUARE:
+    case PointShape.Square:
       return polygon(radius * 2, 4)
-    case PointShape.CIRCLE:
+    case PointShape.Circle:
     default:
       return circlePath(x, y, radius)
   }
@@ -146,7 +146,7 @@ export function geoJSONPointToScreenPoint<D> (
   const color = getValue(geoPoint.properties, pointColor)
   const radius = getPointRadius(geoPoint, pointRadius, zoomLevel)
   const isCluster = geoPoint.properties.cluster
-  const shape = isCluster ? PointShape.CIRCLE : getValue(geoPoint.properties, pointShape)
+  const shape = isCluster ? PointShape.Circle : getValue(geoPoint.properties, pointShape)
 
   const donutData = getDonutData(geoPoint.properties, valuesMap)
   const maxValue = max(donutData, d => d.value)

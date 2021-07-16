@@ -33,5 +33,5 @@ export class ContainerConfig extends Config implements ContainerConfigInterface 
     right: 0,
   }
 
-  sizing = Sizing.FIT
+  sizing = Sizing.Fit
 }

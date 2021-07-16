@@ -69,13 +69,13 @@ export type SankeyLink<N extends any, L extends any> = L & {
 }
 
 export enum SubLabelPlacement {
-  INLINE = 'inline',
-  BELOW = 'below',
+  Inline = 'inline',
+  Below = 'below',
 }
 
 export enum NodeAlignType {
-  LEFT = sankeyLeft,
-  RIGHT = sankeyRight,
-  CENTER = sankeyCenter,
-  JUSTIFY = sankeyJustify,
+  Left = sankeyLeft,
+  Right = sankeyRight,
+  Center = sankeyCenter,
+  Justify = sankeyJustify,
 }

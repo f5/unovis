@@ -132,9 +132,9 @@ export class DDoSMapComponent implements AfterViewInit {
   ngAfterViewInit (): void {
     this.tooltip = new Tooltip({
       container: this.mapContainer.mapRef.nativeElement,
-      positionStrategy: PositionStrategy.ABSOLUTE,
-      horizontalPlacement: Position.CENTER,
-      verticalPlacement: Position.TOP,
+      positionStrategy: PositionStrategy.Absolute,
+      horizontalPlacement: Position.Center,
+      verticalPlacement: Position.Top,
     })
   }
 }

@@ -20,9 +20,9 @@ export interface SankeyConfigInterface<N extends InputNode, L extends InputLink>
   id?: (d: InputNode | InputLink, i?: number, ...any) => string;
   /** Coefficient to scale the height of the diagram when the amount of links is low: `C * links.length`, clamped to `[height / 2, height]`. Default: `1/16` */
   heightNormalizationCoeff?: number;
-  /** Type of animation on removing nodes. Default: `ExitTransitionType.DEFAULT` */
+  /** Type of animation on removing nodes. Default: `ExitTransitionType.Default` */
   exitTransitionType?: ExitTransitionType;
-  /** Type of animation on creating nodes. Default: `EnterTransitionType.DEFAULT` */
+  /** Type of animation on creating nodes. Default: `EnterTransitionType.Default` */
   enterTransitionType?: EnterTransitionType;
   /** Highight the corresponding subtree on node / link hover. Default: `false` */
   highlightSubtreeOnHover?: boolean;
@@ -63,7 +63,7 @@ export interface SankeyConfigInterface<N extends InputNode, L extends InputLink>
   /** Display the graph when data has just one element */
   showSingleNode?: boolean;
   /** Single node position. Default: `Position.CENTER` */
-  singleNodePosition?: Position.CENTER | Position.LEFT | string;
+  singleNodePosition?: Position.Center | Position.Left | string;
   /** Node cursor on hover. Default: `null` */
   nodeCursor?: StringAccessor<L>;
   /** Node icon accessor function or value. Default: `null` */
@@ -87,7 +87,7 @@ export interface SankeyConfigInterface<N extends InputNode, L extends InputLink>
   /** Node sub-label accessor function or value. Default: `undefined` */
   subLabel?: StringAccessor<N>;
   /** Label position relative to the Node. Default: `Position.AUTO` */
-  labelPosition?: Position.AUTO | Position.LEFT | Position.RIGHT | string;
+  labelPosition?: Position.Auto | Position.Left | Position.Right | string;
   /** Label vertical alignment */
   labelVerticalAlign?: VerticalAlign | string;
   /** Label background */
@@ -125,8 +125,8 @@ export interface SankeyConfigInterface<N extends InputNode, L extends InputLink>
 export class SankeyConfig<N extends InputNode, L extends InputLink> extends ComponentConfig implements SankeyConfigInterface<N, L> {
   // General
   heightNormalizationCoeff = 1 / 16
-  exitTransitionType = ExitTransitionType.DEFAULT
-  enterTransitionType = EnterTransitionType.DEFAULT
+  exitTransitionType = ExitTransitionType.Default
+  enterTransitionType = EnterTransitionType.Default
   // eslint-disable-next-line dot-notation
   id = (d: InputNode | InputLink, i: number): string => (d['_id'] ?? i).toString()
   highlightSubtreeOnHover = false
@@ -139,26 +139,26 @@ export class SankeyConfig<N extends InputNode, L extends InputLink> extends Comp
 
   // Nodes
   nodeWidth = 25
-  nodeAlign = NodeAlignType.JUSTIFY
+  nodeAlign = NodeAlignType.Justify
   nodeHorizontalSpacing = 150
   nodeMinHeight = 20
   nodeMaxHeight = 100
   nodePadding = 2
   nodeColor = (d: N): string => d['color']
   showSingleNode = true
-  singleNodePosition = Position.CENTER
+  singleNodePosition = Position.Center
   nodeCursor = null
   nodeIcon = null
   iconColor = null
 
   // Labels
   label = (d: N): string => d['label']
-  labelPosition = Position.AUTO
-  labelVerticalAlign = VerticalAlign.MIDDLE
+  labelPosition = Position.Auto
+  labelVerticalAlign = VerticalAlign.Middle
   labelBackground = false
   labelTextSeparator = [' ', '-']
-  labelFit = FitMode.TRIM
-  labelTrimMode = TrimMode.MIDDLE
+  labelFit = FitMode.Trim
+  labelTrimMode = TrimMode.Middle
   labelForceWordBreak = true
   labelFontSize = 12
   labelColor = null
@@ -169,7 +169,7 @@ export class SankeyConfig<N extends InputNode, L extends InputLink> extends Comp
   subLabel = undefined
   subLabelFontSize = 10
   subLabelColor = null
-  subLabelPlacement = SubLabelPlacement.BELOW
+  subLabelPlacement = SubLabelPlacement.Below
   subLabelToLabelInlineWidthRatio = 0.4
 
   // Links

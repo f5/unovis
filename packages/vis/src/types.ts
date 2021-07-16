@@ -6,7 +6,7 @@ import { Position, PositionStrategy, Arrangement } from 'types/position'
 import { Projection } from 'types/map-projections'
 import { Hierarchy } from 'types/radial-dendrogram'
 import { LayoutType, LinkStyle, LinkArrow, NodeDatumCore, LinkDatumCore, CircleLabel, PanelConfigInterface } from 'types/graph'
-import { SHAPE } from 'types/shape'
+import { Shape } from 'types/shape'
 import { Sizing } from 'types/component'
 import { NodeAlignType, SubLabelPlacement } from 'types/sankey'
 import { EnterTransitionType, ExitTransitionType } from 'types/animation'
@@ -26,7 +26,7 @@ export {
   LinkArrow,
   NodeDatumCore,
   LinkDatumCore,
-  SHAPE,
+  Shape,
   CircleLabel,
   Hierarchy,
   Position,

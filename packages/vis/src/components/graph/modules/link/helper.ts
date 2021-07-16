@@ -12,7 +12,7 @@ import { GraphConfigInterface } from '../../config'
 
 // Helpers
 import { getX, getY } from '../node/helper'
-import ZOOM_LEVEL from '../zoom-levels'
+import { ZoomLevel } from '../zoom-levels'
 
 export const getPolylineData = (d: { x1: number; x2: number; y1: number; y2: number}): string => `${d.x1},${d.y1} ${(d.x1 + d.x2) / 2},${(d.y1 + d.y2) / 2} ${d.x2},${d.y2}`
 
@@ -69,7 +69,7 @@ export function getLinkColor<N extends NodeDatumCore, L extends LinkDatumCore> (
 
 export function getMarker<N extends NodeDatumCore, L extends LinkDatumCore> (d: L, scale: number, config: GraphConfigInterface<N, L>): string {
   const { linkArrow } = config
-  if ((scale > ZOOM_LEVEL.LEVEL2) && getValue(d, linkArrow)) {
+  if ((scale > ZoomLevel.Level2) && getValue(d, linkArrow)) {
     const color = getLinkColor(d, config)
     return `url(#${stringToHtmlId(color)}-${getValue(d, linkArrow)})`
   } else {

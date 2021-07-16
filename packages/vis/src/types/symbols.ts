@@ -2,21 +2,21 @@
 import { symbolCircle, symbolCross, symbolDiamond, symbolSquare, symbolStar, symbolTriangle, symbolWye } from 'd3-shape'
 
 export enum SymbolType {
-  CIRCLE = 'circle',
-  CROSS = 'cross',
-  DIAMOND = 'diamond',
-  SQUARE = 'square',
-  STAR = 'star',
-  TRIANGLE = 'triangle',
-  WYE = 'wye'
+  Circle = 'circle',
+  Cross = 'cross',
+  Diamond = 'diamond',
+  Square = 'square',
+  Star = 'star',
+  Triangle = 'triangle',
+  Wye = 'wye',
 }
 
 export const Symbol = {
-  [SymbolType.CIRCLE]: symbolCircle,
-  [SymbolType.CROSS]: symbolCross,
-  [SymbolType.DIAMOND]: symbolDiamond,
-  [SymbolType.SQUARE]: symbolSquare,
-  [SymbolType.STAR]: symbolStar,
-  [SymbolType.TRIANGLE]: symbolTriangle,
-  [SymbolType.WYE]: symbolWye,
+  [SymbolType.Circle]: symbolCircle,
+  [SymbolType.Cross]: symbolCross,
+  [SymbolType.Diamond]: symbolDiamond,
+  [SymbolType.Square]: symbolSquare,
+  [SymbolType.Star]: symbolStar,
+  [SymbolType.Triangle]: symbolTriangle,
+  [SymbolType.Wye]: symbolWye,
 }

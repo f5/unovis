@@ -3,16 +3,16 @@ import { LatLng } from 'leaflet'
 import Supercluster from 'supercluster'
 
 export enum LeafletMapRenderer {
-  TANGRAM = 'tangram',
-  MAPBOXGL = 'mapboxgl',
+  Tangram = 'tangram',
+  MapboxGL = 'mapboxgl',
 }
 
 export enum PointShape {
-  SQUARE = 'square',
-  CIRCLE = 'circle',
-  HEXAGON = 'hexagon',
-  TRIANGLE = 'triangle',
-  CLUSTER = 'cluster',
+  Square = 'square',
+  Circle = 'circle',
+  Hexagon = 'hexagon',
+  Triangle = 'triangle',
+  Cluster = 'cluster',
 }
 
 export type PieDatum = {
@@ -45,9 +45,9 @@ export type PointDatum<D> = D & PointExpandedClusterProperties<D> & {
 
   // Supercluster generated data:
   cluster: boolean;
-  // eslint-disable-next-line camelcase
+  // eslint-disable-next-line camelcase,@typescript-eslint/naming-convention
   point_count: number;
-  // eslint-disable-next-line camelcase
+  // eslint-disable-next-line camelcase,@typescript-eslint/naming-convention
   cluster_id: string | number;
 };
 

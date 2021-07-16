@@ -13,5 +13,5 @@ export interface VisControlsConfigInterface {
 
 export class VisControlsConfig extends Config implements VisControlsConfigInterface {
   items = []
-  orientation = VisControlsOrientation.HORIZONTAL
+  orientation = VisControlsOrientation.Horizontal
 }

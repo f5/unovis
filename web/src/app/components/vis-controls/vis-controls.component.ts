@@ -12,7 +12,7 @@ import { VisControls, VisControlsConfigInterface, VisControlItemInterface, VisCo
 export class VisControlsComponent implements AfterViewInit {
   @ViewChild('controls', { static: false }) controlsRef: ElementRef
   @Input() items: VisControlItemInterface[] = [];
-  @Input() orientation: VisControlsOrientation = VisControlsOrientation.VERTICAL
+  @Input() orientation: VisControlsOrientation = VisControlsOrientation.Vertical
 
   config: VisControlsConfigInterface = {}
   controls = null

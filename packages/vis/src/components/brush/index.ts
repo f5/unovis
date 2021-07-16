@@ -115,9 +115,9 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
     const yScale = config.scales.y
     const xRange = xScale.range()
     this.unselectedRange
-      .attr('x', d => d.type === Direction.WEST ? xRange[0] : s[1])
+      .attr('x', d => d.type === Direction.West ? xRange[0] : s[1])
       .attr('width', d => {
-        const length = d.type === Direction.WEST ? s[0] - xRange[0] : xRange[1] - s[1]
+        const length = d.type === Direction.West ? s[0] - xRange[0] : xRange[1] - s[1]
         const lengthClamped = clamp(length, 0, xRange[1] - xRange[0])
         return lengthClamped
       })
@@ -139,8 +139,8 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
       .attr('width', config.handleWidth)
       .attr('x', d => {
         if (!s) return 0
-        const west = (d as any).type === Direction.WEST
-        const inside = config.handlePosition === Arrangement.INSIDE
+        const west = (d as any).type === Direction.West
+        const inside = config.handlePosition === Arrangement.Inside
 
         if (west) return s[0] + (inside ? 0 : -config.handleWidth)
         else return s[1] + (inside ? -config.handleWidth : 0)
@@ -149,8 +149,8 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
     this.handleLines
       .attr('transform', d => {
         if (!s) return null
-        const west = (d as any).type === Direction.WEST
-        const inside = config.handlePosition === Arrangement.INSIDE
+        const west = (d as any).type === Direction.West
+        const inside = config.handlePosition === Arrangement.Inside
         return `translate(${west
           ? s[0] - (-1) ** Number(inside) * config.handleWidth / 2
           : s[1] + (-1) ** Number(inside) * config.handleWidth / 2},0)`

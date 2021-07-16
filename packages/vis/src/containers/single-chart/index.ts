@@ -90,8 +90,8 @@ export class SingleChart<Datum> extends ContainerCore {
 
     component.render(customDuration)
 
-    if (config.sizing === Sizing.EXTEND || config.sizing === Sizing.FIT_WIDTH) {
-      const fitToWidth = config.sizing === Sizing.FIT_WIDTH
+    if (config.sizing === Sizing.Extend || config.sizing === Sizing.FitWidth) {
+      const fitToWidth = config.sizing === Sizing.FitWidth
       const extendedSizeComponent = component as ExtendedSizeComponent
 
       const componentWidth = extendedSizeComponent.getWidth() + config.margin.left + config.margin.right

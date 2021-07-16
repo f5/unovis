@@ -1,5 +1,4 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { ColorType } from 'types/color'
 import { Scale, ContinuousScale } from 'types/scales'
 // Types
 import { NumericAccessor } from 'types/misc'
@@ -16,7 +15,6 @@ export interface XYComponentConfigInterface<Datum> extends ComponentConfigInterf
   /** Component color (string or color object) */
   color?: string | any;
   /** Coloring type */
-  colorType?: ColorType;
   scales?: {
     x?: ContinuousScale;
     y?: ContinuousScale;
@@ -39,7 +37,6 @@ export class XYComponentConfig<Datum> extends ComponentConfig implements XYCompo
   id = (d: Datum, i: number): string | number => d['id'] ?? i
   // eslint-disable-next-line dot-notation
   color = (d: Datum): string => d['color']
-  colorType = ColorType.Static
   scales = {
     x: Scale.scaleLinear() as ContinuousScale,
     y: Scale.scaleLinear() as ContinuousScale,

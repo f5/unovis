@@ -11,6 +11,6 @@ export interface VisControlItemInterface {
 }
 
 export enum VisControlsOrientation {
-  HORIZONTAL = 'horizontal',
-  VERTICAL = 'vertical',
+  Horizontal = 'horizontal',
+  Vertical = 'vertical',
 }

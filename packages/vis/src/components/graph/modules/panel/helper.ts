@@ -118,7 +118,7 @@ export function getMaxPanelPadding<P extends PanelConfigInterface> (panels: P[])
 export function getLabelTranslateTransform<P extends PanelConfigInterface> (panel: P): string {
   const x = panel._width / 2
   const dy = (panel.padding ?? DEFAULT_PADDING) + DEFAULT_LABEL_MARGIN + (panel.selectionOutline ? OUTLINE_SELECTION_PADDING : 0)
-  const y = panel.labelPosition === Position.BOTTOM
+  const y = panel.labelPosition === Position.Bottom
     ? panel._height + dy
     : -dy
 

@@ -10,7 +10,7 @@ import { MapAreaCore } from './modules/types'
 
 export interface TopoJSONMapConfigInterface<N extends NodeDatumCore, L extends LinkDatumCore, A extends MapAreaCore> extends ComponentConfigInterface {
   // General
-  /** Projection Type: 'mercator' or 'equirectangular'. Default: `ProjectionType.MERCATOR` */
+  /** Projection Type: 'mercator' or 'equirectangular'. Default: `ProjectionType.Mercator` */
   projection?: ProjectionType;
   /** Map data in the TopoJSON topology format */
   topojson?: /* TopoJSON.Topology */ any; // TopoJSON typings have troubles with being bundled so we're temporary disabling them
@@ -68,7 +68,7 @@ export interface TopoJSONMapConfigInterface<N extends NodeDatumCore, L extends L
 }
 
 export class TopoJSONMapConfig<N extends NodeDatumCore, L extends LinkDatumCore, A extends MapAreaCore> extends ComponentConfig implements TopoJSONMapConfigInterface<N, L, A> {
-  projection = ProjectionType.MERCATOR
+  projection = ProjectionType.Mercator
   duration = 1500
   topojson = null
   mapFeatureName = 'countries'

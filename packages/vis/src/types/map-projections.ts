@@ -2,11 +2,11 @@
 import { geoMercator, geoEquirectangular } from 'd3-geo'
 
 export enum ProjectionType {
-  MERCATOR = 'mercator',
-  EQUIRECTANGULAR = 'equirectangular',
+  Mercator = 'mercator',
+  Equirectangular = 'equirectangular',
 }
 
 export const Projection = {
-  [ProjectionType.MERCATOR]: geoMercator,
-  [ProjectionType.EQUIRECTANGULAR]: geoEquirectangular,
+  [ProjectionType.Mercator]: geoMercator,
+  [ProjectionType.Equirectangular]: geoEquirectangular,
 }

@@ -30,7 +30,7 @@ export interface BrushConfigInterface<Datum> extends XYComponentConfigInterface<
   selection?: [number, number] | null;
   /** Allow dragging the selected area as a whole in order to change the selected range. Default: `false` */
   draggable?: boolean;
-  /** Position of the handle: 'Arrangement.INSIDE' or 'Arrangement.OUTSIDE'. Default: `Arrangement.INSIDE` */
+  /** Position of the handle: 'Arrangement.Inside' or 'Arrangement.Outside'. Default: `Arrangement.Inside` */
   handlePosition?: Arrangement | string;
   /** Constraint Brush selection to a minimal length in data units. Default: `undefined` */
   selectionMinLength?: number;
@@ -48,6 +48,6 @@ export class BrushConfig<Datum> extends XYComponentConfig<Datum> implements Brus
   handleWidth = 9
   selection = null
   draggable = false
-  handlePosition: Arrangement | string = Arrangement.INSIDE
+  handlePosition: Arrangement | string = Arrangement.Inside
   selectionMinLength = undefined
 }

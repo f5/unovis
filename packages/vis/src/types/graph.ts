@@ -1,6 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 // Types
-import { SHAPE } from 'types/shape'
+import { Shape } from 'types/shape'
 import { Position } from 'types/position'
 
 export type NodeDatumCore = {
@@ -41,12 +41,12 @@ export type LinkDatumCore = {
 }
 
 export enum LayoutType {
-  CIRCULAR = 'circular',
-  CONCENTRIC = 'concentric',
-  PARALLEL = 'parallel',
-  PARALLEL_HORIZONTAL = 'parallel horizontal',
-  DAGRE = 'dagre',
-  FORCE = 'force',
+  Circular = 'circular',
+  Concentric = 'concentric',
+  Parallel = 'parallel',
+  ParallelHorizontal = 'parallel horizontal',
+  Dagre = 'dagre',
+  Force = 'force',
 }
 
 export type CircleLabel = {
@@ -56,25 +56,25 @@ export type CircleLabel = {
 }
 
 export enum LinkStyle {
-  DASHED = 'dashed',
-  SOLID = 'solid',
+  Dashed = 'dashed',
+  Solid = 'solid',
 }
 
 export enum LinkArrow {
-  SINGLE = 'single',
-  DOUBLE = 'double',
+  Single = 'single',
+  Double = 'double',
 }
 
 export interface PanelConfigInterface {
   nodes: (string|number)[];
   label?: string;
-  labelPosition?: Position.TOP | Position.BOTTOM;
+  labelPosition?: Position.Top | Position.Bottom;
   color?: string;
   borderWidth?: number;
   padding?: number;
   selectionOutline?: boolean;
   sideLabelIcon?: string;
-  sideLabelShape?: SHAPE;
+  sideLabelShape?: Shape;
   sideLabelColor?: string;
   sideLabelCursor?: string;
   _numNodes?: number;

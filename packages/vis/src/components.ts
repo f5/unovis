@@ -1,4 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
+import { ComponentCore } from 'core/component'
+import { ComponentConfigInterface } from 'core/component/config'
 import { XYComponentCore } from 'core/xy-component'
 import { XYComponentConfigInterface } from 'core/xy-component/config'
 
@@ -50,6 +52,8 @@ import { FreeBrushConfigInterface } from './components/free-brush/config'
 import './styles/css-variables'
 
 export {
+  ComponentCore,
+  ComponentConfigInterface,
   XYComponentCore,
   XYComponentConfigInterface,
   Line,

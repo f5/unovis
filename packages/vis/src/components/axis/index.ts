@@ -74,7 +74,7 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
 
   getPosition (): Position {
     const { config: { type, position } } = this
-    return (position ?? ((type === AxisType.X) ? Position.BOTTOM : Position.LEFT)) as Position
+    return (position ?? ((type === AxisType.X) ? Position.Bottom : Position.Left)) as Position
   }
 
   _getSize (selection): { width: number; height: number } {
@@ -102,8 +102,8 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
             : bleedX)
 
         switch (position) {
-          case Position.TOP: return { top: axisSize.height, left, right }
-          case Position.BOTTOM: default: return { bottom: axisSize.height, left, right }
+          case Position.Top: return { top: axisSize.height, left, right }
+          case Position.Bottom: default: return { bottom: axisSize.height, left, right }
         }
       }
       case AxisType.Y: {
@@ -112,8 +112,8 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
         const bottom = padding.bottom + bleedY
 
         switch (position) {
-          case Position.RIGHT: return { right: axisSize.width, top, bottom }
-          case Position.LEFT: default: return { left: axisSize.width, top, bottom }
+          case Position.Right: return { right: axisSize.width, top, bottom }
+          case Position.Left: default: return { left: axisSize.width, top, bottom }
         }
       }
     }
@@ -130,13 +130,13 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
     switch (type) {
       case AxisType.X:
         switch (position) {
-          case Position.TOP: return { top: containerMargin.top - padding.top, left: containerMargin.left }
-          case Position.BOTTOM: default: return { top: containerMargin.top + height + padding.top, left: containerMargin.left }
+          case Position.Top: return { top: containerMargin.top - padding.top, left: containerMargin.left }
+          case Position.Bottom: default: return { top: containerMargin.top + height + padding.top, left: containerMargin.left }
         }
       case AxisType.Y:
         switch (position) {
-          case Position.RIGHT: return { top: containerMargin.top, left: containerMargin.left + width + padding.left }
-          case Position.LEFT: default: return { top: containerMargin.top, left: containerMargin.left - padding.right }
+          case Position.Right: return { top: containerMargin.top, left: containerMargin.left + width + padding.left }
+          case Position.Left: default: return { top: containerMargin.top, left: containerMargin.left - padding.right }
         }
     }
   }
@@ -165,13 +165,13 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
     switch (type) {
       case AxisType.X:
         switch (position) {
-          case Position.TOP: return axisTop(scales.x).ticks(ticks)
-          case Position.BOTTOM: default: return axisBottom(scales.x).ticks(ticks)
+          case Position.Top: return axisTop(scales.x).ticks(ticks)
+          case Position.Bottom: default: return axisBottom(scales.x).ticks(ticks)
         }
       case AxisType.Y:
         switch (position) {
-          case Position.RIGHT: return axisRight(scales.y).ticks(ticks)
-          case Position.LEFT: default: return axisLeft(scales.y).ticks(ticks)
+          case Position.Right: return axisRight(scales.y).ticks(ticks)
+          case Position.Left: default: return axisLeft(scales.y).ticks(ticks)
         }
     }
   }
@@ -183,13 +183,13 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
     switch (type) {
       case AxisType.X:
         switch (position) {
-          case Position.TOP: return axisTop(scales.x).ticks(ticks * 2).tickSize(-height).tickSizeOuter(0)
-          case Position.BOTTOM: default: return axisBottom(scales.x).ticks(ticks * 2).tickSize(-height).tickSizeOuter(0)
+          case Position.Top: return axisTop(scales.x).ticks(ticks * 2).tickSize(-height).tickSizeOuter(0)
+          case Position.Bottom: default: return axisBottom(scales.x).ticks(ticks * 2).tickSize(-height).tickSizeOuter(0)
         }
       case AxisType.Y:
         switch (position) {
-          case Position.RIGHT: return axisRight(scales.y).ticks(ticks * 2).tickSize(-width).tickSizeOuter(0)
-          case Position.LEFT: default: return axisLeft(scales.y).ticks(ticks * 2).tickSize(-width).tickSizeOuter(0)
+          case Position.Right: return axisRight(scales.y).ticks(ticks * 2).tickSize(-width).tickSizeOuter(0)
+          case Position.Left: default: return axisLeft(scales.y).ticks(ticks * 2).tickSize(-width).tickSizeOuter(0)
         }
     }
   }
@@ -268,11 +268,11 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
     //    this.axisGroup will give us incorrect values due to animation
     const { width: axisWidth, height: axisHeight } = this._axisRawBBox ?? selection.node().getBBox()
 
-    const offsetX = type === AxisType.X ? width / 2 : (-1) ** (+(axisPosition === Position.LEFT)) * axisWidth
-    const offsetY = type === AxisType.X ? (-1) ** (+(axisPosition === Position.TOP)) * axisHeight : height / 2
+    const offsetX = type === AxisType.X ? width / 2 : (-1) ** (+(axisPosition === Position.Left)) * axisWidth
+    const offsetY = type === AxisType.X ? (-1) ** (+(axisPosition === Position.Top)) * axisHeight : height / 2
 
-    const marginX = type === AxisType.X ? 0 : (-1) ** (+(axisPosition === Position.LEFT)) * labelMargin
-    const marginY = type === AxisType.X ? (-1) ** (+(axisPosition === Position.TOP)) * labelMargin : 0
+    const marginX = type === AxisType.X ? 0 : (-1) ** (+(axisPosition === Position.Left)) * labelMargin
+    const marginY = type === AxisType.X ? (-1) ** (+(axisPosition === Position.Top)) * labelMargin : 0
 
     const rotation = type === AxisType.Y ? -90 : 0
 
@@ -291,13 +291,13 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
     switch (type) {
       case AxisType.X:
         switch (position) {
-          case Position.TOP: return 0
-          case Position.BOTTOM: default: return 0.75
+          case Position.Top: return 0
+          case Position.Bottom: default: return 0.75
         }
       case AxisType.Y:
         switch (position) {
-          case Position.RIGHT: return 0.75
-          case Position.LEFT: default: return -0.25
+          case Position.Right: return 0.75
+          case Position.Left: default: return -0.25
         }
     }
   }
@@ -323,14 +323,14 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
     }
   }
 
-  _getYTickTextTranslate (textAlign: TextAlign, axisPosition: Position = Position.LEFT): number {
+  _getYTickTextTranslate (textAlign: TextAlign, axisPosition: Position = Position.Left): number {
     const defaultTickTextSpacingPx = 9 // Default in D3
     const width = this._axisRawBBox.width - defaultTickTextSpacingPx
 
     switch (textAlign) {
-      case TextAlign.Left: return axisPosition === Position.LEFT ? width * -1 : 0
-      case TextAlign.Right: return axisPosition === Position.LEFT ? 0 : width
-      case TextAlign.Center: return axisPosition === Position.LEFT ? width * (-0.5) : width * 0.5
+      case TextAlign.Left: return axisPosition === Position.Left ? width * -1 : 0
+      case TextAlign.Right: return axisPosition === Position.Left ? 0 : width
+      case TextAlign.Center: return axisPosition === Position.Left ? width * (-0.5) : width * 0.5
       default: return 0
     }
   }

@@ -34,26 +34,26 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
   fitToWidthScale = 1
 
   config: SankeyConfigInterface<any, any> = {
-    labelPosition: Position.RIGHT,
-    labelVerticalAlign: VerticalAlign.TOP,
+    labelPosition: Position.Right,
+    labelVerticalAlign: VerticalAlign.Top,
     labelBackground: true,
     nodeHorizontalSpacing: NODE_HORIZONTAL_SPACE,
     nodeWidth: NODE_WIDTH,
-    nodeAlign: NodeAlignType.LEFT,
+    nodeAlign: NodeAlignType.Left,
     iconColor: '#e9edfe',
     nodePadding: 28,
     labelColor: d => d.dynExamples.length ? '#4c52ca' : null,
     subLabelColor: this.getSubLabelColor,
     subLabel: d => d.isLeafNode ? d.method : `${d.leafs} leaf${d.leafs === 1 ? '' : 's'}`,
     labelMaxWidth: NODE_HORIZONTAL_SPACE - 40,
-    subLabelPlacement: SubLabelPlacement.INLINE,
+    subLabelPlacement: SubLabelPlacement.Inline,
     nodeCursor: 'pointer',
     linkCursor: 'pointer',
     nodeIcon: d => (d.sourceLinks[0] || (!d.sourceLinks[0] && d.collapsed)) ? (d.collapsed ? '+' : '') : null,
     // iconColor: 'white',
-    exitTransitionType: ExitTransitionType.TO_ANCESTOR,
-    enterTransitionType: EnterTransitionType.FROM_ANCESTOR,
-    singleNodePosition: Position.LEFT,
+    exitTransitionType: ExitTransitionType.ToAncestor,
+    enterTransitionType: EnterTransitionType.FromAncestor,
+    singleNodePosition: Position.Left,
     highlightSubtreeOnHover: true,
     nodeSort: (a, b) => {
       const aParent = a.targetLinks[0]?.source
@@ -90,11 +90,11 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
 
   containerConfig = {
     component: this.component,
-    sizing: Sizing.EXTEND,
+    sizing: Sizing.Extend,
     margin: this.margin,
     tooltip: new Tooltip({
-      horizontalPlacement: Position.RIGHT,
-      verticalPlacement: Position.CENTER,
+      horizontalPlacement: Position.Right,
+      verticalPlacement: Position.Center,
       horizontalShift: 15,
       triggers: {
         [Sankey.selectors.gNode]: d => this.getTooltipContent(d),
@@ -107,7 +107,7 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
       icon: '&#xe986',
       callback: () => {
         this.fitToWidth = !this.fitToWidth
-        this.containerConfig.sizing = this.fitToWidth ? Sizing.FIT_WIDTH : Sizing.EXTEND
+        this.containerConfig.sizing = this.fitToWidth ? Sizing.FitWidth : Sizing.Extend
 
         this.sankey.update(this.containerConfig)
 
@@ -121,7 +121,7 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
     },
   ]
 
-  controlsOrientation = VisControlsOrientation.VERTICAL
+  controlsOrientation = VisControlsOrientation.Vertical
 
   collapsedItems: { [key: string]: boolean } = {}
   sankeyData: { nodes: any[]; links: any[] } = this.process(apiData)

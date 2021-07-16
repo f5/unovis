@@ -21,7 +21,7 @@ export class GraphComponent implements OnInit, AfterViewInit {
   chart: any
   data: {}
   config: GraphConfigInterface<any, any> = {
-    layoutType: LayoutType.DAGRE,
+    layoutType: LayoutType.Dagre,
     nodeSize: d => d.nodeSize,
     nodeShape: d => d.shape,
     nodeStrokeSegmentValue: d => d.score,
@@ -76,7 +76,7 @@ export class GraphComponent implements OnInit, AfterViewInit {
       callback: () => { this.component.zoomOut() },
     },
   ]
-  controlsOrientation = VisControlsOrientation.VERTICAL
+  controlsOrientation = VisControlsOrientation.Vertical
 
   ngAfterViewInit (): void {
     const generator = dataGenerator()

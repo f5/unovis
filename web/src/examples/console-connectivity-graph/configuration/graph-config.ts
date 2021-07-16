@@ -33,7 +33,7 @@ export const overviewConfig = (onNodeClick): GraphConfigInterface<any, any> => (
   ...accessors,
 
   // Layout
-  layoutType: LayoutType.PARALLEL_HORIZONTAL,
+  layoutType: LayoutType.ParallelHorizontal,
   layoutGroupOrder: ['cCUSTOMER_EDGE', 'REGIONAL_EDGE', 'pCUSTOMER_EDGE'],
 
   // Events
@@ -48,7 +48,7 @@ export const drilldownConfig = (onNodeClick?): GraphConfigInterface<any, any> =>
   ...accessors,
 
   // Layout
-  layoutType: LayoutType.FORCE,
+  layoutType: LayoutType.Force,
 
   // Events
   events: {

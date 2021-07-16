@@ -21,7 +21,7 @@ export function updateBackgroundNode<T> (selection, expandedCluster, config: Lea
   if (expandedCluster && clusterBackground) {
     const node = cloneDeep(expandedCluster.cluster)
     const { x, y } = getPointPos(node, leafletMap)
-    const path = getNodePathData({ x: 0, y: 0 }, clusterBackgroundRadius, PointShape.CIRCLE)
+    const path = getNodePathData({ x: 0, y: 0 }, clusterBackgroundRadius, PointShape.Circle)
     selection.select('path').attr('d', d => path)
     selection
       .classed('active', true)

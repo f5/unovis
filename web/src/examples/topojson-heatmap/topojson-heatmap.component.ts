@@ -54,7 +54,7 @@ export class TopoJSONHeatMapComponent implements AfterViewInit {
       callback: () => { this.component.zoomOut() },
     },
   ]
-  controlsOrientation = VisControlsOrientation.VERTICAL
+  controlsOrientation = VisControlsOrientation.Vertical
 
   ngAfterViewInit (): void {
   }
