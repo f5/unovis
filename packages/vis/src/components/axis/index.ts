@@ -8,13 +8,15 @@ import { axisLeft, axisTop, axisRight, axisBottom, Axis as D3Axis } from 'd3-axi
 import { XYComponentCore } from 'core/xy-component'
 
 // Types
-import { AxisType } from 'types/axis'
 import { Position } from 'types/position'
 import { Spacing } from 'types/misc'
 import { TextAlign } from 'types/text'
 
 // Utils
 import { smartTransition } from 'utils/d3'
+
+// Local Types
+import { AxisType } from './types'
 
 // Config
 import { AxisConfig, AxisConfigInterface } from './config'

@@ -11,7 +11,7 @@ import { smartTransition } from 'utils/d3'
 
 // Types
 import { Direction } from 'types/direction'
-import { AxisType } from 'types/axis'
+import { AxisType } from 'components/axis/types'
 import { Arrangement } from 'types/position'
 
 // Config

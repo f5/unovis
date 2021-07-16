@@ -19,7 +19,7 @@ import { Axis } from 'components/axis'
 import { XYComponentConfigInterface } from 'core/xy-component/config'
 
 // Types
-import { AxisType } from 'types/axis'
+import { AxisType } from 'components/axis/types'
 import { Spacing, Dimension } from 'types/misc'
 
 // Utils

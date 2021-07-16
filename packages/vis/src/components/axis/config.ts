@@ -2,7 +2,7 @@
 import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component/config'
 
 // Types
-import { AxisType } from 'types/axis'
+import { AxisType } from 'components/axis/types'
 import { Position } from 'types/position'
 import { FitMode, TextAlign, TrimMode } from 'types/text'
 import { Spacing } from 'types/misc'

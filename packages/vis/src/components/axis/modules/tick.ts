@@ -6,9 +6,11 @@ import { wrapTextElement } from 'utils/text'
 // import { isNil } from 'utils/data'
 
 // Types
-import { AxisType } from 'types/axis'
 import { Position } from 'types/position'
 import { VerticalAlign, FitMode, WrapTextOptions, WrapMode } from 'types/text'
+
+// Local Types
+import { AxisType } from '../types'
 
 import * as s from '../style'
 
