@@ -2,7 +2,7 @@
 import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component/config'
 
 // Types
-import { StringAccessor } from 'types/misc'
+import { StringAccessor } from 'types/accessor'
 
 export interface StackedBarConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
   /** Bar width in pixels */

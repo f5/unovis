@@ -2,8 +2,8 @@
 import { select } from 'd3-selection'
 
 // Types
+import { NumericAccessor, StringAccessor } from 'types/accessor'
 import { Shape } from 'types/shape'
-import { NumericAccessor, StringAccessor } from 'types/misc'
 
 // Utils
 import { polygon } from 'utils/path'

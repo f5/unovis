@@ -3,7 +3,7 @@
 import { ComponentConfigInterface, ComponentConfig } from 'core/component/config'
 
 // Types
-import { NumericAccessor, ColorAccessor, StringAccessor } from 'types/misc'
+import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
 
 // Local Types
 import { Hierarchy } from './types'

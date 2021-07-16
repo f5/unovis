@@ -6,8 +6,8 @@ import { Arc } from 'd3-shape'
 import { color } from 'd3-color'
 
 // Types
+import { NumericAccessor } from 'types/accessor'
 import { Shape } from 'types/shape'
-import { NumericAccessor } from 'types/misc'
 
 // Utils
 import { scoreRectPath } from 'utils/path'

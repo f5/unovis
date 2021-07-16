@@ -7,8 +7,8 @@ import { getValue } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 
 // Types
-import { Spacing } from 'types/misc'
 import { Position } from 'types/position'
+import { Spacing } from 'types/spacing'
 
 // Local Types
 import { InputLink, InputNode, SankeyNode, ExitTransitionType, EnterTransitionType } from '../types'

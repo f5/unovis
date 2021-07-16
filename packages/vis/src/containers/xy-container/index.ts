@@ -19,8 +19,9 @@ import { Axis } from 'components/axis'
 import { XYComponentConfigInterface } from 'core/xy-component/config'
 
 // Types
+import { Spacing } from 'types/spacing'
+import { Dimension } from 'types/dimension'
 import { AxisType } from 'components/axis/types'
-import { Spacing, Dimension } from 'types/misc'
 
 // Utils
 import { clean, flatten, clamp } from 'utils/data'

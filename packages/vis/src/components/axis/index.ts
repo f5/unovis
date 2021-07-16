@@ -9,7 +9,7 @@ import { XYComponentCore } from 'core/xy-component'
 
 // Types
 import { Position } from 'types/position'
-import { Spacing } from 'types/misc'
+import { Spacing } from 'types/spacing'
 import { TextAlign } from 'types/text'
 
 // Utils

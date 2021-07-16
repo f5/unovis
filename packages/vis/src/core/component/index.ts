@@ -6,8 +6,7 @@ import { CoreDataModel } from 'data-models/core'
 
 // Types
 import { ComponentType, Sizing } from 'types/component'
-
-import { Spacing } from 'types/misc'
+import { Spacing } from 'types/spacing'
 
 // Utils
 import { throttle } from 'utils/data'

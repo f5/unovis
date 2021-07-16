@@ -3,7 +3,7 @@
 import { ComponentConfigInterface, ComponentConfig } from 'core/component/config'
 
 // Types
-import { NumericAccessor, StringAccessor, ColorAccessor } from 'types/misc'
+import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
 
 // Local Types
 import { ProjectionType, MapInputNode, MapInputLink, MapInputArea } from './types'

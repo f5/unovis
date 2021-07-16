@@ -6,7 +6,7 @@ import { ComponentConfig, ComponentConfigInterface } from 'core/component/config
 import { Tooltip } from 'core/tooltip'
 
 // Types
-import { NumericAccessor, StringAccessor, ColorAccessor } from 'types/misc'
+import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
 
 // Local Types
 import { LeafletMapRenderer, Bounds, ValuesMap, MapZoomState, PointDatum } from './types'

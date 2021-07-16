@@ -8,7 +8,7 @@ import { ComponentConfigInterface, ComponentConfig } from 'core/component/config
 import { getValue } from 'utils/data'
 
 // Types
-import { NumericAccessor, ColorAccessor, StringAccessor } from 'types/misc'
+import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
 import { TrimMode, VerticalAlign, FitMode } from 'types/text'
 import { Position } from 'types/position'
 import { InputLink, InputNode, NodeAlignType, SubLabelPlacement, ExitTransitionType, EnterTransitionType } from './types'

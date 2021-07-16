@@ -4,7 +4,7 @@
 import { ComponentConfigInterface, ComponentConfig } from 'core/component/config'
 
 // Types
-import { NumericAccessor, StringAccessor, BooleanAccessor, ColorAccessor } from 'types/misc'
+import { BooleanAccessor, ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
 import { Shape } from 'types/shape'
 
 // Local Types

@@ -3,7 +3,7 @@ import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component
 
 // Types
 import { CurveType } from 'types/curve'
-import { StringAccessor, GenericAccessor } from 'types/misc'
+import { GenericAccessor, StringAccessor } from 'types/accessor'
 
 export interface LineConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
   /** Curve type from the CurveType enum */

@@ -14,7 +14,7 @@ import { getColor } from 'utils/color'
 
 // Types
 import { Curve } from 'types/curve'
-import { NumericAccessor } from 'types/misc'
+import { NumericAccessor } from 'types/accessor'
 
 // Local Types
 import { AreaDatum } from './types'

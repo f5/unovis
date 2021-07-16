@@ -11,7 +11,7 @@ import { ComponentCore } from 'core/component'
 import { GraphDataModel } from 'data-models/graph'
 
 // Types
-import { Spacing } from 'types/misc'
+import { Spacing } from 'types/spacing'
 
 // Utils
 import { isNumber, clamp, getValue, find, cloneDeep, flatten, findIndex, clean, uniq, shallowDiff, isFunction } from 'utils/data'

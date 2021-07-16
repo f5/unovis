@@ -9,8 +9,9 @@ import { filterDataByRange, getExtent, isArray } from 'utils/data'
 import { defaultRange } from 'utils/scale'
 
 // Types
-import { NumericAccessor, Spacing } from 'types/misc'
+import { NumericAccessor } from 'types/accessor'
 import { ContinuousScale } from 'types/scale'
+import { Spacing } from 'types/spacing'
 
 // Config
 import { XYComponentConfig } from './config'

@@ -3,7 +3,7 @@ import { Selection, BaseType } from 'd3-selection'
 import { max } from 'd3-array'
 
 // Type
-import { NumericAccessor } from 'types/misc'
+import { NumericAccessor } from 'types/accessor'
 import { Position } from 'types/position'
 
 // Utils

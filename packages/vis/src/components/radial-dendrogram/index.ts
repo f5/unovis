@@ -10,7 +10,7 @@ import { ComponentCore } from 'core/component'
 import { getValue, isNumber } from 'utils/data'
 
 // Types
-import { Spacing } from 'types/misc'
+import { Spacing } from 'types/spacing'
 
 // Local Types
 import { Hierarchy, Link } from './types'

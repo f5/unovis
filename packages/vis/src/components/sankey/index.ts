@@ -9,9 +9,9 @@ import { ComponentCore } from 'core/component'
 import { GraphDataModel } from 'data-models/graph'
 
 // Types
-import { Spacing } from 'types/misc'
 import { ExtendedSizeComponent, Sizing } from 'types/component'
 import { Position } from 'types/position'
+import { Spacing } from 'types/spacing'
 
 // Utils
 import { getValue, isNumber, groupBy } from 'utils/data'

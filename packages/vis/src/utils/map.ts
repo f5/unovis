@@ -2,7 +2,7 @@
 import { min, max } from 'd3-array'
 
 // Types
-import { NumericAccessor } from 'types/misc'
+import { NumericAccessor } from 'types/accessor'
 
 // Utils
 import { getValue } from 'utils/data'

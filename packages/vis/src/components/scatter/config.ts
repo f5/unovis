@@ -4,9 +4,9 @@ import { ScaleLinear } from 'd3-scale'
 import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component/config'
 
 // Types
-import { NumericAccessor, StringAccessor, ColorAccessor } from 'types/misc'
 import { Scale, ContinuousScale } from 'types/scale'
 import { SymbolType } from 'types/symbol'
+import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
 
 export interface ScatterConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
   /** Single Y accessor function or constant value */

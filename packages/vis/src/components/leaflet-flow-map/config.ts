@@ -5,7 +5,7 @@
 import { LeafletMapConfig, LeafletMapConfigInterface } from 'components/leaflet-map/config'
 
 // Types
-import { ColorAccessor, NumericAccessor } from 'types/misc'
+import { ColorAccessor, NumericAccessor } from 'types/accessor'
 
 export interface LeafletFlowMapConfigInterface<P, F> extends LeafletMapConfigInterface<P> {
   /** Flow source point longitude accessor function or value. Default:.`f => f.sourceLongitude` */

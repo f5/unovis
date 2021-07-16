@@ -1,7 +1,8 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { Scale, ContinuousScale } from 'types/scale'
 // Types
-import { NumericAccessor } from 'types/misc'
+import { NumericAccessor } from 'types/accessor'
+
 // Config
 import { ComponentConfig, ComponentConfigInterface } from '../component/config'
 

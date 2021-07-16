@@ -9,7 +9,7 @@ import { polygon, circlePath } from 'utils/path'
 import { getHTMLTransform } from 'utils/html'
 
 // Types
-import { NumericAccessor, StringAccessor, ColorAccessor } from 'types/misc'
+import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
 
 // Local Types
 import { Point, PointShape, PieDatum, ValuesMap, PointExpandedClusterProperties, PointDatum } from '../types'

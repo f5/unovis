@@ -14,7 +14,7 @@ import { GraphDataModel } from 'data-models/graph'
 import { getValue, isNumber, groupBy } from 'utils/data'
 
 // Types
-import { Spacing } from 'types/misc'
+import { Spacing } from 'types/spacing'
 import { Hierarchy, LabelType, HNode, HLink, Ribbon } from 'components/radial-dendrogram/types'
 import { Curve } from 'types/curve'
 

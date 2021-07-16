@@ -5,7 +5,7 @@ import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component
 
 // Types
 import { CurveType } from 'types/curve'
-import { NumericAccessor, StringAccessor } from 'types/misc'
+import { NumericAccessor, StringAccessor } from 'types/accessor'
 
 export interface AreaConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
   /** Curve type from the CurveType enum. Default: `CurveType.MonotoneX` */

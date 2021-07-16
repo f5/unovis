@@ -8,8 +8,10 @@ import { getValue, isNumber, isEmpty, getExtent, getMax } from 'utils/data'
 import { getColor } from 'utils/color'
 
 // Types
-import { Spacing } from 'types/misc'
-import { ScatterPoint } from 'components/scatter/types'
+import { Spacing } from 'types/spacing'
+
+// Local Types
+import { ScatterPoint } from './types'
 
 // Config
 import { ScatterConfig, ScatterConfigInterface } from './config'
