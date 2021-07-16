@@ -8,8 +8,10 @@ import { getValue } from 'utils/data'
 
 // Types
 import { FitMode, VerticalAlign } from 'types/text'
-import { InputLink, InputNode, SankeyNode, SubLabelPlacement } from 'types/sankey'
 import { Position } from 'types/position'
+
+// Local Types
+import { InputLink, InputNode, SankeyNode, SubLabelPlacement } from '../types'
 
 // Config
 import { SankeyConfig } from '../config'

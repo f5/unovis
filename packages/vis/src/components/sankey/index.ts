@@ -11,7 +11,6 @@ import { GraphDataModel } from 'data-models/graph'
 // Types
 import { Spacing } from 'types/misc'
 import { ExtendedSizeComponent, Sizing } from 'types/component'
-import { InputNode, InputLink, SankeyNode, SankeyLink } from 'types/sankey'
 import { Position } from 'types/position'
 
 // Utils
@@ -22,6 +21,9 @@ import { SankeyConfig, SankeyConfigInterface } from './config'
 
 // Styles
 import * as s from './style'
+
+// Local Types
+import { InputNode, InputLink, SankeyNode, SankeyLink } from './types'
 
 // Modules
 import { removeLinks, createLinks, updateLinks } from './modules/link'

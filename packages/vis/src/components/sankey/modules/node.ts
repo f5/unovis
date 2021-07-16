@@ -8,9 +8,10 @@ import { smartTransition } from 'utils/d3'
 
 // Types
 import { Spacing } from 'types/misc'
-import { InputLink, InputNode, SankeyNode } from 'types/sankey'
-import { ExitTransitionType, EnterTransitionType } from 'types/animation'
 import { Position } from 'types/position'
+
+// Local Types
+import { InputLink, InputNode, SankeyNode, ExitTransitionType, EnterTransitionType } from '../types'
 
 // Config
 import { SankeyConfig } from '../config'

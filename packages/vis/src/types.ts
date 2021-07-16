@@ -9,7 +9,7 @@ import { LayoutType, LinkStyle, LinkArrow, NodeDatumCore, LinkDatumCore, CircleL
 import { Shape } from 'types/shape'
 import { Sizing } from 'types/component'
 import { NodeAlignType, SubLabelPlacement } from 'types/sankey'
-import { EnterTransitionType, ExitTransitionType } from 'types/animation'
+import { EnterTransitionType, ExitTransitionType } from 'components/sankey/types'
 import { VisControlItemInterface, VisControlsOrientation } from 'types/controls'
 import { TrimMode, VerticalAlign, FitMode, TextAlign } from 'types/text'
 import { Dimension } from 'types/misc'

@@ -10,9 +10,8 @@ import { getValue } from 'utils/data'
 // Types
 import { NumericAccessor, ColorAccessor, StringAccessor } from 'types/misc'
 import { TrimMode, VerticalAlign, FitMode } from 'types/text'
-import { InputLink, InputNode, NodeAlignType, SubLabelPlacement } from 'types/sankey'
-import { ExitTransitionType, EnterTransitionType } from 'types/animation'
 import { Position } from 'types/position'
+import { InputLink, InputNode, NodeAlignType, SubLabelPlacement, ExitTransitionType, EnterTransitionType } from './types'
 
 export interface SankeyConfigInterface<N extends InputNode, L extends InputLink> extends ComponentConfigInterface {
   // General
