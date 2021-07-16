@@ -5,8 +5,9 @@ import { ComponentConfigInterface, ComponentConfig } from 'core/component/config
 // Types
 import { NodeDatumCore, LinkDatumCore } from 'types/graph'
 import { NumericAccessor, StringAccessor, ColorAccessor } from 'types/misc'
-import { ProjectionType } from 'types/map-projections'
-import { MapAreaCore } from './modules/types'
+
+// Local Types
+import { ProjectionType, MapAreaCore } from './types'
 
 export interface TopoJSONMapConfigInterface<N extends NodeDatumCore, L extends LinkDatumCore, A extends MapAreaCore> extends ComponentConfigInterface {
   // General

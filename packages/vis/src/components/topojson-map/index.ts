@@ -17,14 +17,15 @@ import { getCSSVariableValue, isStringCSSVariable } from 'utils/misc'
 
 // Types
 import { NodeDatumCore, LinkDatumCore } from 'types/graph'
-import { Projection } from 'types/map-projections'
-import { MapAreaCore } from './modules/types'
+
+// Local Types
+import { Projection, MapAreaCore } from './types'
 
 // Config
 import { TopoJSONMapConfig, TopoJSONMapConfigInterface } from './config'
 
 // Modules
-import { getLonLat, arc } from './modules/utils'
+import { getLonLat, arc } from './utils'
 
 // Styles
 import * as s from './style'
