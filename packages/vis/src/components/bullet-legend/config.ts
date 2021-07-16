@@ -1,17 +1,8 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-empty-function */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-
 import { Config } from 'core/config'
 
-export interface BulletLegendItemInterface {
-  name: string | number;
-  color?: string;
-  inactive?: boolean;
-  hidden?: boolean;
-  pointer?: boolean;
-}
+// Local Types
+import { BulletLegendItemInterface } from './types'
 
 export interface BulletLegendConfigInterface {
   /** Legend items array { name, color }[] */
