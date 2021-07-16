@@ -1,6 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { CurveType } from 'types/curve'
-import { SymbolType } from 'types/symbols'
+import { SymbolType } from 'types/symbol'
 import { Scale } from 'types/scales'
 import { Position, PositionStrategy, Arrangement } from 'types/position'
 import { Projection } from 'components/topojson-map/types'

@@ -2,7 +2,7 @@
 import { Selection, select } from 'd3-selection'
 import { symbol } from 'd3-shape'
 import { color } from 'd3-color'
-import { Symbol } from 'types/symbols'
+import { Symbol } from 'types/symbol'
 
 // Utils
 import { smartTransition } from 'utils/d3'
