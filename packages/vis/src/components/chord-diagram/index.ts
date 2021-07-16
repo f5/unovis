@@ -16,7 +16,7 @@ import { getValue, isNumber, groupBy } from 'utils/data'
 // Types
 import { Spacing } from 'types/misc'
 import { Hierarchy, LabelType, HNode, HLink, Ribbon } from 'components/radial-dendrogram/types'
-import { Curve } from 'types/curves'
+import { Curve } from 'types/curve'
 
 // Local Types
 import { ChordInputNode, ChordInputLink } from './types'

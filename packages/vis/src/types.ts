@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { CurveType } from 'types/curves'
+import { CurveType } from 'types/curve'
 import { SymbolType } from 'types/symbols'
 import { Scale } from 'types/scales'
 import { Position, PositionStrategy, Arrangement } from 'types/position'

@@ -13,7 +13,7 @@ import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
 
 // Types
-import { Curve } from 'types/curves'
+import { Curve } from 'types/curve'
 import { NumericAccessor } from 'types/misc'
 
 // Local Types

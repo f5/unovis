@@ -4,7 +4,7 @@
 import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component/config'
 
 // Types
-import { CurveType } from 'types/curves'
+import { CurveType } from 'types/curve'
 import { NumericAccessor, StringAccessor } from 'types/misc'
 
 export interface AreaConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {

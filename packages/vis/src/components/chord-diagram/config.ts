@@ -8,7 +8,7 @@ import { ComponentConfigInterface, ComponentConfig } from 'core/component/config
 // Types
 import { NumericAccessor, ColorAccessor, StringAccessor } from 'types/misc'
 import { Hierarchy, LabelType } from 'components/radial-dendrogram/types'
-import { CurveType } from 'types/curves'
+import { CurveType } from 'types/curve'
 
 // Local Types
 import { ChordInputNode } from './types'
