@@ -7,11 +7,13 @@ import { ComponentConfigInterface, ComponentConfig } from 'core/component/config
 
 // Types
 import { NumericAccessor, ColorAccessor, StringAccessor } from 'types/misc'
-import { Hierarchy, LabelType } from 'types/radial-dendrogram'
+import { Hierarchy, LabelType } from 'components/radial-dendrogram/types'
 import { CurveType } from 'types/curves'
-import { NodeDatumCore } from 'types/graph'
 
-export interface ChordDiagramConfigInterface<H extends NodeDatumCore> extends ComponentConfigInterface {
+// Local Types
+import { ChordInputNode } from './types'
+
+export interface ChordDiagramConfigInterface<H extends ChordInputNode> extends ComponentConfigInterface {
   /** Children accessor function */
   children?: (d: H) => H[];
   /** Value accessor function */

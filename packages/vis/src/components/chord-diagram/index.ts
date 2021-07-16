@@ -15,9 +15,11 @@ import { getValue, isNumber, groupBy } from 'utils/data'
 
 // Types
 import { Spacing } from 'types/misc'
-import { Hierarchy, LabelType, HNode, HLink, Ribbon } from 'types/radial-dendrogram'
-import { NodeDatumCore, LinkDatumCore } from 'types/graph'
+import { Hierarchy, LabelType, HNode, HLink, Ribbon } from 'components/radial-dendrogram/types'
 import { Curve } from 'types/curves'
+
+// Local Types
+import { ChordInputNode, ChordInputLink } from './types'
 
 // Config
 import { ChordDiagramConfig, ChordDiagramConfigInterface } from './config'
@@ -30,7 +32,7 @@ import { createLink, updateLink, removeLink } from './modules/link'
 // Styles
 import * as s from './style'
 
-export class ChordDiagram<H extends Hierarchy, N extends NodeDatumCore, L extends LinkDatumCore> extends ComponentCore<{ nodes: N[]; links?: L[] }> {
+export class ChordDiagram<H extends Hierarchy, N extends ChordInputNode, L extends ChordInputLink> extends ComponentCore<{ nodes: N[]; links?: L[] }> {
   static selectors = s
   config: ChordDiagramConfig<H> = new ChordDiagramConfig()
   datamodel: GraphDataModel<N, L> = new GraphDataModel()

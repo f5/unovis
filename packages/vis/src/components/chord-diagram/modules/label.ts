@@ -7,7 +7,7 @@ import { color } from 'd3-color'
 import { getCSSVarName } from 'styles/colors'
 
 // Types
-import { Hierarchy, LabelType } from 'types/radial-dendrogram'
+import { Hierarchy, LabelType } from 'components/radial-dendrogram/types'
 
 // Utils
 import { wrapTextElement } from 'utils/text'
