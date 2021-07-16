@@ -1,8 +1,8 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { Selection, select } from 'd3-selection'
 
-// Types
-import { VisControlItemInterface, VisControlsOrientation } from 'types/controls'
+// Local Types
+import { VisControlItemInterface, VisControlsOrientation } from './types'
 
 // Config
 import { VisControlsConfig, VisControlsConfigInterface } from './config'
