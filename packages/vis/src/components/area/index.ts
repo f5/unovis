@@ -15,7 +15,9 @@ import { getColor } from 'utils/color'
 // Types
 import { Curve } from 'types/curves'
 import { NumericAccessor } from 'types/misc'
-import { AreaDatum } from 'types/area'
+
+// Local Types
+import { AreaDatum } from './types'
 
 // Config
 import { AreaConfig, AreaConfigInterface } from './config'
