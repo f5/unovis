@@ -15,7 +15,9 @@ import { getColor } from 'utils/color'
 // Types
 import { Curve, CurveType } from 'types/curves'
 import { NumericAccessor, Spacing } from 'types/misc'
-import { LineData, LineDatum } from 'types/line'
+
+// Local Types
+import { LineData, LineDatum } from './types'
 
 // Config
 import { LineConfig, LineConfigInterface } from './config'
