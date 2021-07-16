@@ -2,8 +2,7 @@
 import { Component, ViewChild, ElementRef, AfterViewInit, Input, OnDestroy } from '@angular/core'
 
 // Vis
-import { XYContainer, XYContainerConfigInterface } from '@volterra/vis'
-import { Dimension } from 'types/misc'
+import { Dimension, XYContainer, XYContainerConfigInterface } from '@volterra/vis'
 
 @Component({
   selector: 'vis-xychart',
