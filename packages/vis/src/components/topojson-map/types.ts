@@ -11,7 +11,17 @@ export const Projection = {
   [ProjectionType.Equirectangular]: geoEquirectangular,
 }
 
-export type MapAreaCore = {
+export interface MapInputNode {
+  id?: string;
+}
+
+export interface MapInputLink {
+  id?: string;
+  source: number | string | MapInputNode;
+  target: number | string | MapInputNode;
+}
+
+export type MapInputArea = {
   /** Area id related to the feature id in TopoJSON */
   id: string;
   color?: string;

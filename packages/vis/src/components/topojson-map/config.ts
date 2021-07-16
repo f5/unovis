@@ -3,13 +3,12 @@
 import { ComponentConfigInterface, ComponentConfig } from 'core/component/config'
 
 // Types
-import { NodeDatumCore, LinkDatumCore } from 'types/graph'
 import { NumericAccessor, StringAccessor, ColorAccessor } from 'types/misc'
 
 // Local Types
-import { ProjectionType, MapAreaCore } from './types'
+import { ProjectionType, MapInputNode, MapInputLink, MapInputArea } from './types'
 
-export interface TopoJSONMapConfigInterface<N extends NodeDatumCore, L extends LinkDatumCore, A extends MapAreaCore> extends ComponentConfigInterface {
+export interface TopoJSONMapConfigInterface<N extends MapInputNode, L extends MapInputLink, A extends MapInputArea> extends ComponentConfigInterface {
   // General
   /** Projection Type: 'mercator' or 'equirectangular'. Default: `ProjectionType.Mercator` */
   projection?: ProjectionType;
@@ -68,7 +67,7 @@ export interface TopoJSONMapConfigInterface<N extends NodeDatumCore, L extends L
   heatmapModeZoomLevelThreshold?: number;
 }
 
-export class TopoJSONMapConfig<N extends NodeDatumCore, L extends LinkDatumCore, A extends MapAreaCore> extends ComponentConfig implements TopoJSONMapConfigInterface<N, L, A> {
+export class TopoJSONMapConfig<N extends MapInputNode, L extends MapInputLink, A extends MapInputArea> extends ComponentConfig implements TopoJSONMapConfigInterface<N, L, A> {
   projection = ProjectionType.Mercator
   duration = 1500
   topojson = null
