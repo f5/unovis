@@ -11,7 +11,9 @@ import { getValue, isNumber } from 'utils/data'
 
 // Types
 import { Spacing } from 'types/misc'
-import { Hierarchy, Link } from 'types/radial-dendrogram'
+
+// Local Types
+import { Hierarchy, Link } from './types'
 
 // Config
 import { RadialDendrogramConfig, RadialDendrogramConfigInterface } from './config'

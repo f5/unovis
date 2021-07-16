@@ -2,14 +2,14 @@
 import { select, Selection } from 'd3-selection'
 import { HierarchyRectangularNode } from 'd3-hierarchy'
 
-// Types
-import { Hierarchy } from 'types/radial-dendrogram'
-
 // Utils
 import { wrapTextElement } from 'utils/text'
 import { smartTransition } from 'utils/d3'
 import { getValue } from 'utils/data'
 import { getColor } from 'utils/color'
+
+// Local Types
+import { Hierarchy } from '../types'
 
 // Config
 import { RadialDendrogramConfig } from '../config'
