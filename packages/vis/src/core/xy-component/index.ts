@@ -10,7 +10,7 @@ import { defaultRange } from 'utils/scale'
 
 // Types
 import { NumericAccessor, Spacing } from 'types/misc'
-import { ContinuousScale } from 'types/scales'
+import { ContinuousScale } from 'types/scale'
 
 // Config
 import { XYComponentConfig } from './config'

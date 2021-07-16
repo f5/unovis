@@ -6,7 +6,7 @@ import { clamp, isNumber } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 
 // Types
-import { ContinuousScale } from 'types/scales'
+import { ContinuousScale } from 'types/scale'
 import { FreeBrushMode, FreeBrushSelection, FreeBrushSelectionInPixels } from './types'
 
 // Config

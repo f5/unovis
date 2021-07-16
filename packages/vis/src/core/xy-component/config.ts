@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { Scale, ContinuousScale } from 'types/scales'
+import { Scale, ContinuousScale } from 'types/scale'
 // Types
 import { NumericAccessor } from 'types/misc'
 // Config

@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { ContinuousScale } from 'types/scales'
+import { ContinuousScale } from 'types/scale'
 
 export type NumericAccessor<Datum> = ((d: Datum, i?: number, ...any) => number | null) | number | null | undefined
 export type StringAccessor<Datum> = ((d: Datum, i?: number, ...any) => string | null) | string | null

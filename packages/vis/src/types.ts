@@ -1,7 +1,7 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { CurveType } from 'types/curve'
 import { SymbolType } from 'types/symbol'
-import { Scale } from 'types/scales'
+import { Scale } from 'types/scale'
 import { Position, PositionStrategy, Arrangement } from 'types/position'
 import { Projection } from 'components/topojson-map/types'
 import { Hierarchy } from 'components/radial-dendrogram/types'

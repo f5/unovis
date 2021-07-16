@@ -5,7 +5,7 @@ import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component
 
 // Types
 import { NumericAccessor, StringAccessor, ColorAccessor } from 'types/misc'
-import { Scale, ContinuousScale } from 'types/scales'
+import { Scale, ContinuousScale } from 'types/scale'
 import { SymbolType } from 'types/symbol'
 
 export interface ScatterConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
