@@ -115,7 +115,7 @@ export function wrapTextElement (element: Selection<SVGTextElement, any, SVGElem
     const _wrapText = wrapMode === WrapMode.FONTSIZE ? fontSize * _text.length * widthToHeightRatio > width
       : tspan.node().getComputedTextLength() > width
     if (_wrapText) {
-      tspan.text(tspanText)
+      tspan.text(tspanText.trim())
       if (wordBreak) word = breakTspan(tspan, width, word)
       tspan = element.append('tspan')
         .attr('x', x)

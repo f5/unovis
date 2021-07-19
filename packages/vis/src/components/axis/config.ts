@@ -4,7 +4,7 @@ import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component
 // Types
 import { AxisType } from 'types/axis'
 import { Position } from 'types/position'
-import { FitMode, TrimMode } from 'types/text'
+import { FitMode, TextAlign, TrimMode } from 'types/text'
 import { Spacing } from 'types/misc'
 
 export interface AxisConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
@@ -50,6 +50,8 @@ export interface AxisConfigInterface<Datum> extends XYComponentConfigInterface<D
   tickTextTrimType?: TrimMode | string;
   /** Font size of tick text */
   tickTextFontSize?: string;
+  /** Text alignment for ticks: `TextAlign.Left`, `TextAlign.Center` or `TextAlign.Right`. Default: `undefined` */
+  tickTextAlign?: TextAlign;
 }
 
 export class AxisConfig<Datum> extends XYComponentConfig<Datum> implements AxisConfigInterface<Datum> {
@@ -68,6 +70,7 @@ export class AxisConfig<Datum> extends XYComponentConfig<Datum> implements AxisC
   tickTextForceWordBreak = false
   tickTextTrimType = TrimMode.MIDDLE
   tickTextFitMode = FitMode.WRAP
+  tickTextAlign = undefined
   padding = {
     top: 0,
     bottom: 0,
