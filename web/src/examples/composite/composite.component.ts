@@ -11,6 +11,7 @@ import {
   StackedBarConfigInterface,
   Tooltip,
   Crosshair,
+  TextAlign,
 } from '@volterra/vis'
 
 // Helpers
@@ -67,6 +68,11 @@ export class CompositeComponent implements AfterViewInit {
           label: 'Index',
           // tickValues: [0, 5, 10, 15, 20, 25],
           fullSize: true,
+          tickFormat: d => {
+            return `${d} long label example`
+          },
+          tickTextAlign: TextAlign.Left,
+          tickTextWidth: 100,
         }),
         y: new Axis({
           // position: 'left',
@@ -74,6 +80,8 @@ export class CompositeComponent implements AfterViewInit {
           tickFormat: d => {
             return `${d} ms`
           },
+          tickTextAlign: TextAlign.Left,
+          tickTextWidth: 80,
         }),
       },
       tooltip: new Tooltip({
