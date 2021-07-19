@@ -19,7 +19,13 @@ export enum FitMode {
 
 export enum WrapMode {
   FONTSIZE = 'fontsize',
-  DOM = 'dom'
+  DOM = 'dom',
+}
+
+export enum TextAlign {
+  Left = 'left',
+  Center = 'center',
+  Right = 'right',
 }
 
 export type WrapTextOptions = {
