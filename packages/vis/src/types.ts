@@ -11,7 +11,7 @@ import { Sizing } from 'types/component'
 import { NodeAlignType, SubLabelPlacement } from 'types/sankey'
 import { EnterTransitionType, ExitTransitionType } from 'types/animation'
 import { VisControlItemInterface, VisControlsOrientation } from 'types/controls'
-import { TrimMode, VerticalAlign, FitMode } from 'types/text'
+import { TrimMode, VerticalAlign, FitMode, TextAlign } from 'types/text'
 import { Dimension } from 'types/misc'
 import { FreeBrushMode } from 'components/free-brush/types'
 import { BulletLegendItemInterface } from 'components/bullet-legend/config'
@@ -46,4 +46,5 @@ export {
   PanelConfigInterface,
   FreeBrushMode,
   BulletLegendItemInterface,
+  TextAlign,
 }
