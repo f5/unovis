@@ -14,6 +14,7 @@ import { VisControlItemInterface, VisControlsOrientation } from 'types/controls'
 import { TrimMode, VerticalAlign, FitMode } from 'types/text'
 import { Dimension } from 'types/misc'
 import { FreeBrushMode } from 'components/free-brush/types'
+import { BulletLegendItemInterface } from 'components/bullet-legend/config'
 
 export {
   CurveType,
@@ -44,4 +45,5 @@ export {
   Dimension,
   PanelConfigInterface,
   FreeBrushMode,
+  BulletLegendItemInterface,
 }
