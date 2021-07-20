@@ -10,6 +10,7 @@ export const variables = injectGlobal`
     --vis-graph-node-selection-color: #acb3b8;
 
     /* Node Central Icon */
+    --vis-graph-node-icon-color: #9ea7b8;
     --vis-graph-node-icon-font: FontAwesome;
     --vis-graph-node-icon-fill-color-bright: #ffffff;
     --vis-graph-node-icon-fill-color-dark: #9ea7b8;
