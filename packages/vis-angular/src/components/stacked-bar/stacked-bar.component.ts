@@ -1,11 +1,12 @@
 /* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
-import { Directive, AfterViewInit, Input, SimpleChanges } from '@angular/core'
+import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
 import { StackedBar, StackedBarConfigInterface } from '@volterra/vis'
 import { VisXYComponent } from '../../core'
 
-@Directive({
+@Component({
   selector: 'vis-stacked-bar',
+  template: '',
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisXYComponent, useExisting: VisStackedBarComponent }],
 })
@@ -23,7 +24,6 @@ export class VisStackedBarComponent<T> implements StackedBarConfigInterface<T>, 
   @Input() y: any
   @Input() id: any
   @Input() color: any
-  @Input() colorType: any
   @Input() scales: any
   @Input() adaptiveYScale: any
   @Input() events: any
@@ -45,8 +45,8 @@ export class VisStackedBarComponent<T> implements StackedBarConfigInterface<T>, 
   }
 
   getConfig (): StackedBarConfigInterface<T> {
-    const { barWidth, barMaxWidth, dataStep, barPadding, isVertical, roundedCorners, cursor, barMinHeight, barMinHeightZeroValue, x, y, id, color, colorType, scales, adaptiveYScale, events, duration, width, height, attributes } = this
-    const config = { barWidth, barMaxWidth, dataStep, barPadding, isVertical, roundedCorners, cursor, barMinHeight, barMinHeightZeroValue, x, y, id, color, colorType, scales, adaptiveYScale, events, duration, width, height, attributes }
+    const { barWidth, barMaxWidth, dataStep, barPadding, isVertical, roundedCorners, cursor, barMinHeight, barMinHeightZeroValue, x, y, id, color, scales, adaptiveYScale, events, duration, width, height, attributes } = this
+    const config = { barWidth, barMaxWidth, dataStep, barPadding, isVertical, roundedCorners, cursor, barMinHeight, barMinHeightZeroValue, x, y, id, color, scales, adaptiveYScale, events, duration, width, height, attributes }
     const keys = Object.keys(config) as (keyof StackedBarConfigInterface<T>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

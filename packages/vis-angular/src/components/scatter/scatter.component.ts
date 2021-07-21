@@ -1,11 +1,12 @@
 /* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
-import { Directive, AfterViewInit, Input, SimpleChanges } from '@angular/core'
+import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
 import { Scatter, ScatterConfigInterface } from '@volterra/vis'
 import { VisXYComponent } from '../../core'
 
-@Directive({
+@Component({
   selector: 'vis-scatter',
+  template: '',
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisXYComponent, useExisting: VisScatterComponent }],
 })
@@ -22,7 +23,6 @@ export class VisScatterComponent<T> implements ScatterConfigInterface<T>, AfterV
   @Input() x: any
   @Input() id: any
   @Input() color: any
-  @Input() colorType: any
   @Input() scales: any
   @Input() adaptiveYScale: any
   @Input() events: any
@@ -44,8 +44,8 @@ export class VisScatterComponent<T> implements ScatterConfigInterface<T>, AfterV
   }
 
   getConfig (): ScatterConfigInterface<T> {
-    const { y, size, sizeScale, sizeRange, shape, label, labelColor, cursor, labelTextBrightnessRatio, x, id, color, colorType, scales, adaptiveYScale, events, duration, width, height, attributes } = this
-    const config = { y, size, sizeScale, sizeRange, shape, label, labelColor, cursor, labelTextBrightnessRatio, x, id, color, colorType, scales, adaptiveYScale, events, duration, width, height, attributes }
+    const { y, size, sizeScale, sizeRange, shape, label, labelColor, cursor, labelTextBrightnessRatio, x, id, color, scales, adaptiveYScale, events, duration, width, height, attributes } = this
+    const config = { y, size, sizeScale, sizeRange, shape, label, labelColor, cursor, labelTextBrightnessRatio, x, id, color, scales, adaptiveYScale, events, duration, width, height, attributes }
     const keys = Object.keys(config) as (keyof ScatterConfigInterface<T>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

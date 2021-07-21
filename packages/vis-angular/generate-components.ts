@@ -39,12 +39,13 @@ for (const [componentName, data] of Object.entries(components)) {
   const provide = data.provide
   const generatedCode = `/* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
-import { Directive, AfterViewInit, Input, SimpleChanges } from '@angular/core'
+import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
 import { ${componentName}, ${componentName}ConfigInterface } from '@volterra/vis'
 import { ${provide} } from '../../core'
 
-@Directive({
+@Component({
   selector: 'vis-${nameKebabCase}',
+  template: '',
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: ${provide}, useExisting: Vis${componentName}Component }],
 })
@@ -76,7 +77,7 @@ export class Vis${componentName}Component${generics} implements ${componentName}
   const moduleCode = `/* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
 import { NgModule } from '@angular/core'
-import { Vis${componentName}Component } from './${nameKebabCase}.directive'
+import { Vis${componentName}Component } from './${nameKebabCase}.component'
 
 @NgModule({
   imports: [],
@@ -86,7 +87,7 @@ import { Vis${componentName}Component } from './${nameKebabCase}.directive'
 export class Vis${componentName}Module {}
 `
   const basePath = `src/components/${nameKebabCase}`
-  const pathComponent = `${basePath}/${nameKebabCase}.directive.ts`
+  const pathComponent = `${basePath}/${nameKebabCase}.component.ts`
   const pathModule = `${basePath}/${nameKebabCase}.module.ts`
 
   exec(`mkdir ${basePath}`, () => {
@@ -99,7 +100,7 @@ export class Vis${componentName}Module {}
 const exports = `/* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
   ${Object.keys(components).map(
-    componentName => `export { Vis${componentName}Component } from './components/${kebabCase(componentName)}/${kebabCase(componentName)}.directive'`
+    componentName => `export { Vis${componentName}Component } from './components/${kebabCase(componentName)}/${kebabCase(componentName)}.component'`
   ).join('\n')}
 `
 

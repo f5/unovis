@@ -1,11 +1,12 @@
 /* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
-import { Directive, AfterViewInit, Input, SimpleChanges } from '@angular/core'
+import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
 import { FreeBrush, FreeBrushConfigInterface } from '@volterra/vis'
 import { VisXYComponent } from '../../core'
 
-@Directive({
+@Component({
   selector: 'vis-free-brush',
+  template: '',
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisXYComponent, useExisting: VisFreeBrushComponent }],
 })
@@ -23,7 +24,6 @@ export class VisFreeBrushComponent<T> implements FreeBrushConfigInterface<T>, Af
   @Input() y: any
   @Input() id: any
   @Input() color: any
-  @Input() colorType: any
   @Input() scales: any
   @Input() adaptiveYScale: any
   @Input() events: any
@@ -45,8 +45,8 @@ export class VisFreeBrushComponent<T> implements FreeBrushConfigInterface<T>, Af
   }
 
   getConfig (): FreeBrushConfigInterface<T> {
-    const { mode, onBrush, onBrushStart, onBrushMove, onBrushEnd, handleWidth, selection, selectionMinLength, autoHide, x, y, id, color, colorType, scales, adaptiveYScale, events, duration, width, height, attributes } = this
-    const config = { mode, onBrush, onBrushStart, onBrushMove, onBrushEnd, handleWidth, selection, selectionMinLength, autoHide, x, y, id, color, colorType, scales, adaptiveYScale, events, duration, width, height, attributes }
+    const { mode, onBrush, onBrushStart, onBrushMove, onBrushEnd, handleWidth, selection, selectionMinLength, autoHide, x, y, id, color, scales, adaptiveYScale, events, duration, width, height, attributes } = this
+    const config = { mode, onBrush, onBrushStart, onBrushMove, onBrushEnd, handleWidth, selection, selectionMinLength, autoHide, x, y, id, color, scales, adaptiveYScale, events, duration, width, height, attributes }
     const keys = Object.keys(config) as (keyof FreeBrushConfigInterface<T>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

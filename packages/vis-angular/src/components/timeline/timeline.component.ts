@@ -1,11 +1,12 @@
 /* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
-import { Directive, AfterViewInit, Input, SimpleChanges } from '@angular/core'
+import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
 import { Timeline, TimelineConfigInterface } from '@volterra/vis'
 import { VisXYComponent } from '../../core'
 
-@Directive({
+@Component({
   selector: 'vis-timeline',
+  template: '',
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisXYComponent, useExisting: VisTimelineComponent }],
 })
@@ -19,7 +20,6 @@ export class VisTimelineComponent<T> implements TimelineConfigInterface<T>, Afte
   @Input() y: any
   @Input() id: any
   @Input() color: any
-  @Input() colorType: any
   @Input() scales: any
   @Input() adaptiveYScale: any
   @Input() events: any
@@ -41,8 +41,8 @@ export class VisTimelineComponent<T> implements TimelineConfigInterface<T>, Afte
   }
 
   getConfig (): TimelineConfigInterface<T> {
-    const { lineWidth, rowHeight, length, type, cursor, x, y, id, color, colorType, scales, adaptiveYScale, events, duration, width, height, attributes } = this
-    const config = { lineWidth, rowHeight, length, type, cursor, x, y, id, color, colorType, scales, adaptiveYScale, events, duration, width, height, attributes }
+    const { lineWidth, rowHeight, length, type, cursor, x, y, id, color, scales, adaptiveYScale, events, duration, width, height, attributes } = this
+    const config = { lineWidth, rowHeight, length, type, cursor, x, y, id, color, scales, adaptiveYScale, events, duration, width, height, attributes }
     const keys = Object.keys(config) as (keyof TimelineConfigInterface<T>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
