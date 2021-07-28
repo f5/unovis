@@ -4,9 +4,11 @@
 import { ComponentConfigInterface, ComponentConfig } from 'core/component/config'
 
 // Types
-import { NodeDatumCore, LinkDatumCore, LayoutType, CircleLabel, LinkStyle, LinkArrow, PanelConfigInterface } from 'types/graph'
-import { NumericAccessor, StringAccessor, BooleanAccessor, ColorAccessor } from 'types/misc'
-import { SHAPE } from 'types/shape'
+import { BooleanAccessor, ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
+import { Shape } from 'types/shape'
+
+// Local Types
+import { NodeDatumCore, LinkDatumCore, LayoutType, CircleLabel, LinkStyle, LinkArrow, PanelConfigInterface } from './types'
 
 export interface GraphConfigInterface<N extends NodeDatumCore, L extends LinkDatumCore> extends ComponentConfigInterface {
   // Zoom and drag
@@ -134,7 +136,7 @@ export class GraphConfig<N extends NodeDatumCore, L extends LinkDatumCore> exten
   disableDrag = false
   zoomThrottledUpdateNodeThreshold = 100
   onZoom = undefined
-  layoutType = LayoutType.FORCE
+  layoutType = LayoutType.Force
   layoutAutofit = true
   layoutNonConnectedAside: true
 
@@ -161,7 +163,7 @@ export class GraphConfig<N extends NodeDatumCore, L extends LinkDatumCore> exten
   flowAnimDuration = 20000
   flowCircleSize = 2
   linkWidth = 1
-  linkStyle = LinkStyle.SOLID
+  linkStyle = LinkStyle.Solid
   linkBandWidth = 0
   linkArrow = undefined
   linkStroke = undefined
@@ -172,7 +174,7 @@ export class GraphConfig<N extends NodeDatumCore, L extends LinkDatumCore> exten
   scoreAnimDuration = 1500
   nodeSize = 30
   nodeBorderWidth = 3
-  nodeShape = SHAPE.CIRCLE
+  nodeShape = Shape.Circle
   nodeStrokeSegmentValue = 0
   nodeIcon = (n: N): string => n['icon']
   nodeIconSize = undefined

@@ -6,6 +6,7 @@ import { Graph, GraphConfigInterface, SingleChart, LayoutType, NodeDatumCore, Li
 
 import graphData from './data/ves-io-service-graph.json'
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
 const StatusMap = {
   healthy: { color: '#47e845' },
   warning: { color: '#ffc226' },
@@ -15,7 +16,7 @@ const StatusMap = {
 
 function getGraphConfig<N extends NodeDatumCore, L extends LinkDatumCore> (selectedNodeId?): GraphConfigInterface<N, L> {
   return {
-    layoutType: LayoutType.FORCE,
+    layoutType: LayoutType.Force,
     layoutAutofit: false,
     layoutNonConnectedAside: false,
     forceLayoutSettings: {

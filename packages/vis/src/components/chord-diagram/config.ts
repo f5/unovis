@@ -6,12 +6,14 @@ import { HierarchyNode } from 'd3-hierarchy'
 import { ComponentConfigInterface, ComponentConfig } from 'core/component/config'
 
 // Types
-import { NumericAccessor, ColorAccessor, StringAccessor } from 'types/misc'
-import { Hierarchy, LabelType } from 'types/radial-dendrogram'
-import { CurveType } from 'types/curves'
-import { NodeDatumCore } from 'types/graph'
+import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
+import { Hierarchy, LabelType } from 'components/radial-dendrogram/types'
+import { CurveType } from 'types/curve'
 
-export interface ChordDiagramConfigInterface<H extends NodeDatumCore> extends ComponentConfigInterface {
+// Local Types
+import { ChordInputNode } from './types'
+
+export interface ChordDiagramConfigInterface<H extends ChordInputNode> extends ComponentConfigInterface {
   /** Children accessor function */
   children?: (d: H) => H[];
   /** Value accessor function */
@@ -46,7 +48,7 @@ export class ChordDiagramConfig<H extends Hierarchy> extends ComponentConfig imp
   nodeWidth = 15
   nodeColor = (d: HierarchyNode<H>): string => d['color']
   nodeLabel = (d: H): string => d['label'] ?? d['key']
-  nodeLabelType = LabelType.PERPENDICULAR
+  nodeLabelType = LabelType.Perpendicular
   padAngle = 0.02
   cornerRadius = 2
   angleRange: [number, number] = [0, 2 * Math.PI]

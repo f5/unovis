@@ -10,14 +10,15 @@ import { SeriesDataModel } from 'data-models/series'
 import { getValue, isNumber, clamp } from 'utils/data'
 
 // Types
-import { Spacing } from 'types/misc'
-import { DonutArcDatum, DonutArcAnimState } from 'types/donut'
+import { Spacing } from 'types/spacing'
+
+// Local Types
+import { DonutArcDatum, DonutArcAnimState } from './types'
 
 // Config
 import { DonutConfig, DonutConfigInterface } from './config'
 
 // Modules
-
 import { createArc, updateArc, removeArc } from './modules/arc'
 
 // Styles

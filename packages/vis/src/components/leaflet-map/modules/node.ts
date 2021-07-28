@@ -4,18 +4,18 @@ import { color } from 'd3-color'
 import L from 'leaflet'
 
 // Types
-import { Point } from 'types/map'
 import { Rect } from 'types/misc'
 
 // Utils
 import { smartTransition } from 'utils/d3'
 import { estimateTextSize, trimTextMiddle } from 'utils/text'
 import { clamp, getValue } from 'utils/data'
-
 import { getCSSVariableValue, isStringCSSVariable, rectIntersect } from 'utils/misc'
 import { hexToBrightness } from 'utils/color'
-
 import { getPointPos } from './utils'
+
+// Local Types
+import { Point } from '../types'
 
 // Modules
 import { updateDonut } from './donut'

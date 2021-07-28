@@ -31,6 +31,6 @@ export interface Ribbon<H> {
 }
 
 export enum LabelType {
-  ALONG = 'along',
-  PERPENDICULAR = 'perpendicular',
+  Along = 'along',
+  Perpendicular = 'perpendicular',
 }

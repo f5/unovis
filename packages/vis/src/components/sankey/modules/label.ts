@@ -8,8 +8,10 @@ import { getValue } from 'utils/data'
 
 // Types
 import { FitMode, VerticalAlign } from 'types/text'
-import { InputLink, InputNode, SankeyNode, SubLabelPlacement } from 'types/sankey'
 import { Position } from 'types/position'
+
+// Local Types
+import { InputLink, InputNode, SankeyNode, SubLabelPlacement } from '../types'
 
 // Config
 import { SankeyConfig } from '../config'
@@ -20,37 +22,37 @@ import * as s from '../style'
 const NODE_LABEL_SPACING = 10
 const LABEL_BLOCK_PADDING = 6.5
 
-function getLabelBackground (width: number, height: number, orientation: Position.LEFT | Position.RIGHT, arrowWidth = 5, arrowHeight = 8): string {
+function getLabelBackground (width: number, height: number, orientation: Position.Left | Position.Right, arrowWidth = 5, arrowHeight = 8): string {
   const halfHeight = height / 2
   const halfArrowHeight = arrowHeight / 2
 
-  if (orientation === Position.LEFT) {
+  if (orientation === Position.Left) {
     const rightArrowPos = `L 0 ${halfHeight - halfArrowHeight}   L   ${+arrowWidth} ${halfHeight} L 0 ${halfHeight + halfArrowHeight}`
     return `
-      M 0 0 
+      M 0 0
       ${rightArrowPos}
       L 0  ${height}
-      L ${-width} ${height} 
-      L ${-width} 0 
+      L ${-width} ${height}
+      L ${-width} 0
       L 0 0 `
   } else {
     const leftArrowPos = `L 0 ${halfHeight - halfArrowHeight}   L   ${-arrowWidth} ${halfHeight} L 0 ${halfHeight + halfArrowHeight}`
     return `
-      M 0 0 
+      M 0 0
       ${leftArrowPos}
       L 0  ${height}
-      L ${width} ${height} 
-      L ${width} 0 
+      L ${width} ${height}
+      L ${width} 0
       L 0 0 `
   }
 }
 
-export function getLabelOrientation<N extends InputNode, L extends InputLink> (d: SankeyNode<N, L>, sankeyWidth: number, labelPosition: Position): (Position.LEFT | Position.RIGHT) {
-  const orientation = labelPosition === Position.AUTO
-    ? d.x0 < sankeyWidth / 2 ? Position.LEFT : Position.RIGHT
+export function getLabelOrientation<N extends InputNode, L extends InputLink> (d: SankeyNode<N, L>, sankeyWidth: number, labelPosition: Position): (Position.Left | Position.Right) {
+  const orientation = labelPosition === Position.Auto
+    ? d.x0 < sankeyWidth / 2 ? Position.Left : Position.Right
     : labelPosition
 
-  return orientation as (Position.LEFT | Position.RIGHT)
+  return orientation as (Position.Left | Position.Right)
 }
 
 export const requiredLabelSpace = (labelWidth: number, labelFontSize: number): { width: number; height: number } => {
@@ -63,8 +65,8 @@ export const requiredLabelSpace = (labelWidth: number, labelFontSize: number): {
 export function getLabelGroupXTranslate<N extends InputNode, L extends InputLink> (d: SankeyNode<N, L>, config: SankeyConfig<N, L>): number {
   const orientation = getLabelOrientation(d, config.width, config.labelPosition)
   switch (orientation) {
-    case Position.RIGHT: return config.nodeWidth + NODE_LABEL_SPACING
-    case Position.LEFT:
+    case Position.Right: return config.nodeWidth + NODE_LABEL_SPACING
+    case Position.Left:
     default:
       return -NODE_LABEL_SPACING
   }
@@ -75,9 +77,9 @@ export function getLabelGroupYTranslate<N extends InputNode, L extends InputLink
   if (config.labelBackground && (nodeHeight < labelGroupHeight)) return (nodeHeight - labelGroupHeight) / 2
 
   switch (config.labelVerticalAlign) {
-    case VerticalAlign.BOTTOM: return nodeHeight - labelGroupHeight
-    case VerticalAlign.MIDDLE: return nodeHeight / 2 - labelGroupHeight / 2
-    case VerticalAlign.TOP:
+    case VerticalAlign.Bottom: return nodeHeight - labelGroupHeight
+    case VerticalAlign.Middle: return nodeHeight / 2 - labelGroupHeight / 2
+    case VerticalAlign.Top:
     default: return 0
   }
 }
@@ -85,19 +87,19 @@ export function getLabelGroupYTranslate<N extends InputNode, L extends InputLink
 export function getLabelTextAnchor<N extends InputNode, L extends InputLink> (d: SankeyNode<N, L>, config: SankeyConfig<N, L>): string {
   const orientation = getLabelOrientation(d, config.width, config.labelPosition)
   switch (orientation) {
-    case Position.RIGHT: return 'start'
-    case Position.LEFT:
+    case Position.Right: return 'start'
+    case Position.Left:
     default:
       return 'end'
   }
 }
 
 export function getSubLabelTextAnchor<N extends InputNode, L extends InputLink> (d: SankeyNode<N, L>, config: SankeyConfig<N, L>): string {
-  const isSublabelInline = config.subLabelPlacement === SubLabelPlacement.INLINE
+  const isSublabelInline = config.subLabelPlacement === SubLabelPlacement.Inline
   const orientation = getLabelOrientation(d, config.width, config.labelPosition)
   switch (orientation) {
-    case Position.RIGHT: return isSublabelInline ? 'end' : 'start'
-    case Position.LEFT:
+    case Position.Right: return isSublabelInline ? 'end' : 'start'
+    case Position.Left:
     default:
       return isSublabelInline ? 'start' : 'end'
   }
@@ -113,15 +115,15 @@ export function renderLabel<N extends InputNode, L extends InputLink> (
   const labelShowBackground = config.labelBackground || forceExpand
   const sublabelTextSelection: Selection<SVGTextElement, SankeyNode<N, L>, SVGGElement, SankeyNode<N, L>> = labelGroup.select(`.${s.sublabel}`)
   const labelPadding = labelShowBackground ? LABEL_BLOCK_PADDING : 0
-  const isSublabelInline = config.subLabelPlacement === SubLabelPlacement.INLINE
+  const isSublabelInline = config.subLabelPlacement === SubLabelPlacement.Inline
   const separator = config.labelForceWordBreak ? '' : config.labelTextSeparator
   const fastEstimatesMode = true // Fast but inaccurate
   const fontWidthToHeightRatio = 0.52
   const dy = 0.32
-  const labelOrientation = config.labelPosition === Position.AUTO
-    ? d.x0 < config.width / 2 ? Position.LEFT : Position.RIGHT
+  const labelOrientation = config.labelPosition === Position.Auto
+    ? d.x0 < config.width / 2 ? Position.Left : Position.Right
     : config.labelPosition
-  const labelOrientationMult = labelOrientation === Position.LEFT ? -1 : 1
+  const labelOrientationMult = labelOrientation === Position.Left ? -1 : 1
   const labelText = getValue(d, config.label)
   const sublabelText = getValue(d, config.subLabel)
 
@@ -135,7 +137,7 @@ export function renderLabel<N extends InputNode, L extends InputLink> (
     .attr('transform', `translate(${labelOrientationMult * labelPadding},${labelTranslateY})`)
 
   const labelMaxWidth = isSublabelInline ? config.labelMaxWidth * (1 - (sublabelText ? config.subLabelToLabelInlineWidthRatio : 0)) : config.labelMaxWidth
-  if (config.labelFit === FitMode.WRAP || forceExpand) wrapSVGText(labelTextSelection, { width: labelMaxWidth, separator, verticalAlign: VerticalAlign.TOP })
+  if (config.labelFit === FitMode.Wrap || forceExpand) wrapSVGText(labelTextSelection, { width: labelMaxWidth, separator, verticalAlign: VerticalAlign.Top })
   else trimSVGText(labelTextSelection, labelMaxWidth, config.labelTrimMode, fastEstimatesMode, config.labelFontSize, fontWidthToHeightRatio)
 
   const labelSize = estimateTextSize(labelTextSelection, config.labelFontSize, dy, fastEstimatesMode, fontWidthToHeightRatio)
@@ -152,7 +154,7 @@ export function renderLabel<N extends InputNode, L extends InputLink> (
     .attr('transform', `translate(${sublabelTranslateX},${sublabelTranslateY})`)
 
   const sublabelMaxWidth = isSublabelInline ? config.labelMaxWidth * config.subLabelToLabelInlineWidthRatio : config.labelMaxWidth
-  if (config.labelFit === FitMode.WRAP || forceExpand) wrapSVGText(sublabelTextSelection, { width: sublabelMaxWidth, separator, verticalAlign: VerticalAlign.TOP })
+  if (config.labelFit === FitMode.Wrap || forceExpand) wrapSVGText(sublabelTextSelection, { width: sublabelMaxWidth, separator, verticalAlign: VerticalAlign.Top })
   else trimSVGText(sublabelTextSelection, sublabelMaxWidth, config.labelTrimMode, fastEstimatesMode, config.subLabelFontSize, fontWidthToHeightRatio)
 
   const sublabelSize = estimateTextSize(sublabelTextSelection, config.subLabelFontSize, dy, fastEstimatesMode, fontWidthToHeightRatio)
@@ -162,7 +164,7 @@ export function renderLabel<N extends InputNode, L extends InputLink> (
   const labelBackground = labelGroup.select(`.${s.labelBackground}`)
 
   labelBackground
-    .attr('d', labelShowBackground ? getLabelBackground(config.labelMaxWidth + 2 * labelPadding, labelGroupHeight, labelOrientation as (Position.LEFT | Position.RIGHT)) : null)
+    .attr('d', labelShowBackground ? getLabelBackground(config.labelMaxWidth + 2 * labelPadding, labelGroupHeight, labelOrientation as (Position.Left | Position.Right)) : null)
 
   // Position the label
   const labelTextAnchor = getLabelTextAnchor(d, config)

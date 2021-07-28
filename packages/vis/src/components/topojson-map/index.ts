@@ -15,24 +15,22 @@ import { smartTransition } from 'utils/d3'
 import { getColor, hexToBrightness } from 'utils/color'
 import { getCSSVariableValue, isStringCSSVariable } from 'utils/misc'
 
-// Types
-import { NodeDatumCore, LinkDatumCore } from 'types/graph'
-import { Projection } from 'types/map-projections'
-import { MapAreaCore } from './modules/types'
+// Local Types
+import { Projection, MapInputNode, MapInputLink, MapInputArea } from './types'
 
 // Config
 import { TopoJSONMapConfig, TopoJSONMapConfigInterface } from './config'
 
 // Modules
-import { getLonLat, arc } from './modules/utils'
+import { getLonLat, arc } from './utils'
 
 // Styles
 import * as s from './style'
 
-export class TopoJSONMap<NodeDatum extends NodeDatumCore, LinkDatum extends LinkDatumCore, AreaDatum extends MapAreaCore> extends ComponentCore<{nodes: NodeDatum[]; links?: LinkDatum[]; areas?: AreaDatum[]}> {
+export class TopoJSONMap<N extends MapInputNode, L extends MapInputLink, A extends MapInputArea> extends ComponentCore<{nodes: N[]; links?: L[]; areas?: A[]}> {
   static selectors = s
-  config: TopoJSONMapConfig<NodeDatum, LinkDatum, AreaDatum> = new TopoJSONMapConfig()
-  datamodel: MapGraphDataModel<NodeDatum, LinkDatum, AreaDatum> = new MapGraphDataModel()
+  config: TopoJSONMapConfig<N, L, A> = new TopoJSONMapConfig()
+  datamodel: MapGraphDataModel<N, L, A> = new MapGraphDataModel()
   private _firstRender = true
   private _initialScale = undefined
   private _currentZoomLevel = undefined
@@ -55,7 +53,7 @@ export class TopoJSONMap<NodeDatum extends NodeDatumCore, LinkDatum extends Link
     [TopoJSONMap.selectors.feature]: {},
   }
 
-  constructor (config?: TopoJSONMapConfigInterface<NodeDatum, LinkDatum, AreaDatum>, data?: {nodes: NodeDatum[]; links: LinkDatum[]; areas: AreaDatum[]}) {
+  constructor (config?: TopoJSONMapConfigInterface<N, L, A>, data?: {nodes: N[]; links: L[]; areas: A[]}) {
     super()
     this.g.attr('class', s.map)
     this._zoomBehavior.on('zoom', this._onZoom.bind(this))
@@ -72,7 +70,7 @@ export class TopoJSONMap<NodeDatum extends NodeDatumCore, LinkDatum extends Link
       `)
   }
 
-  setConfig (config?: TopoJSONMapConfigInterface<NodeDatum, LinkDatum, AreaDatum>): void {
+  setConfig (config?: TopoJSONMapConfigInterface<N, L, A>): void {
     super.setConfig(config)
 
     const newProjection = Projection[this.config.projection]()

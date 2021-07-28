@@ -4,15 +4,15 @@
 import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component/config'
 
 // Types
-import { CurveType } from 'types/curves'
-import { NumericAccessor, StringAccessor } from 'types/misc'
+import { CurveType } from 'types/curve'
+import { NumericAccessor, StringAccessor } from 'types/accessor'
 
 export interface AreaConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
-  /** Curve type from the CurveType enum */
+  /** Curve type from the CurveType enum. Default: `CurveType.MonotoneX` */
   curveType?: CurveType;
-  /** Baseline accessor function */
+  /** Baseline accessor function. Default: `undefined` */
   baseline?: NumericAccessor<Datum>;
-  /** Opacity accessor function */
+  /** Opacity accessor function. Default: `1` */
   opacity?: NumericAccessor<Datum>;
   /** Optional area cursor. Default: `null` */
   cursor?: StringAccessor<Datum>;

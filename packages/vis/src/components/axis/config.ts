@@ -2,10 +2,10 @@
 import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component/config'
 
 // Types
-import { AxisType } from 'types/axis'
+import { AxisType } from 'components/axis/types'
 import { Position } from 'types/position'
-import { FitMode, TextAlign, TrimMode } from 'types/text'
-import { Spacing } from 'types/misc'
+import { FitMode, TrimMode, TextAlign } from 'types/text'
+import { Spacing } from 'types/spacing'
 
 export interface AxisConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
   /** Axis position: top, bottom, right or left */
@@ -68,9 +68,10 @@ export class AxisConfig<Datum> extends XYComponentConfig<Datum> implements AxisC
   tickTextWidth = undefined
   tickTextSeparator = ' '
   tickTextForceWordBreak = false
-  tickTextTrimType = TrimMode.MIDDLE
-  tickTextFitMode = FitMode.WRAP
+  tickTextTrimType = TrimMode.Middle
+  tickTextFitMode = FitMode.Wrap
   tickTextAlign = undefined
+
   padding = {
     top: 0,
     bottom: 0,

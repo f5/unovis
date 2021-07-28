@@ -5,7 +5,7 @@ import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component
 import { Tooltip } from 'core/tooltip'
 
 // Types
-import { NumericAccessor } from 'types/misc'
+import { NumericAccessor } from 'types/accessor'
 
 export interface CrosshairConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
   /** Separate array of accessors for stacked components (eg StackedBar, Area). Default: `[]` */

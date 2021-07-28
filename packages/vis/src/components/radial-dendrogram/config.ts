@@ -3,8 +3,10 @@
 import { ComponentConfigInterface, ComponentConfig } from 'core/component/config'
 
 // Types
-import { NumericAccessor, ColorAccessor, StringAccessor } from 'types/misc'
-import { Hierarchy } from 'types/radial-dendrogram'
+import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
+
+// Local Types
+import { Hierarchy } from './types'
 
 export interface RadialDendrogramConfigInterface<H extends Hierarchy> extends ComponentConfigInterface {
   /** Children accessor function */

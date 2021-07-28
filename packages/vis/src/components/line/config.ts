@@ -2,8 +2,8 @@
 import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component/config'
 
 // Types
-import { CurveType } from 'types/curves'
-import { StringAccessor, GenericAccessor } from 'types/misc'
+import { CurveType } from 'types/curve'
+import { GenericAccessor, StringAccessor } from 'types/accessor'
 
 export interface LineConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
   /** Curve type from the CurveType enum */

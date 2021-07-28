@@ -11,7 +11,7 @@ import { Axis } from 'components/axis'
 import { Crosshair } from 'components/crosshair'
 
 // Types
-import { Dimension } from 'types/misc'
+import { Dimension } from 'types/dimension'
 
 export interface XYContainerConfigInterface<Datum> extends ContainerConfigInterface {
   /** Visualization Component. Default: `[]` */

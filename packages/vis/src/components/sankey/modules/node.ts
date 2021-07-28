@@ -7,10 +7,11 @@ import { getValue } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 
 // Types
-import { Spacing } from 'types/misc'
-import { InputLink, InputNode, SankeyNode } from 'types/sankey'
-import { ExitTransitionType, EnterTransitionType } from 'types/animation'
 import { Position } from 'types/position'
+import { Spacing } from 'types/spacing'
+
+// Local Types
+import { InputLink, InputNode, SankeyNode, ExitTransitionType, EnterTransitionType } from '../types'
 
 // Config
 import { SankeyConfig } from '../config'
@@ -44,7 +45,7 @@ export function createNodes<N extends InputNode, L extends InputLink> (sel: Sele
 
   sel
     .attr('transform', d => {
-      const x = (enterTransitionType === EnterTransitionType.FROM_ANCESTOR && d.targetLinks?.[0]) ? d.targetLinks[0].source.x0 : d.x0
+      const x = (enterTransitionType === EnterTransitionType.FromAncestor && d.targetLinks?.[0]) ? d.targetLinks[0].source.x0 : d.x0
       return `translate(${sel.size() === 1 ? config.width * 0.5 - bleed.left : x}, ${d.y0})`
     })
     .style('opacity', 0)
@@ -53,7 +54,7 @@ export function createNodes<N extends InputNode, L extends InputLink> (sel: Sele
 export function updateNodes<N extends InputNode, L extends InputLink> (sel, config: SankeyConfig<N, L>, bleed: Spacing, duration: number): void {
   smartTransition(sel, duration)
     .attr('transform', (d: SankeyNode<N, L>) => `translate(${
-      (sel.size() === 1 && config.singleNodePosition === Position.CENTER) ? config.width * 0.5 - bleed.left : d.x0
+      (sel.size() === 1 && config.singleNodePosition === Position.Center) ? config.width * 0.5 - bleed.left : d.x0
     },${d.y0})`)
     .style('opacity', (d: SankeyNode<N, L>) => d._state.greyout ? 0.2 : 1)
 
@@ -141,7 +142,7 @@ export function renderNodeLabels<N extends InputNode, L extends InputLink> (sel:
 export function removeNodes<N extends InputNode, L extends InputLink> (selection: Selection<SVGGElement, SankeyNode<N, L>, SVGGElement, any>, config, duration): void {
   const { exitTransitionType } = config
   const transitionSelection = smartTransition(selection, duration)
-  if (exitTransitionType === ExitTransitionType.TO_ANCESTOR) {
+  if (exitTransitionType === ExitTransitionType.ToAncestor) {
     transitionSelection.attr('transform', (d: SankeyNode<N, L>) => {
       if (d.targetLinks?.[0]) {
         return `translate(${d.targetLinks[0].source.x0},${d.y0})`

@@ -1,13 +1,13 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { select, Selection } from 'd3-selection'
 
-// Type
-import { NodeDatumCore, LinkDatumCore, PanelConfigInterface } from 'types/graph'
-
 // Utils
 import { trimText } from 'utils/text'
 import { getValue } from 'utils/data'
 import { smartTransition } from 'utils/d3'
+
+// Local Types
+import { NodeDatumCore, LinkDatumCore, PanelConfigInterface } from '../../types'
 
 // Config
 import { GraphConfigInterface } from '../../config'

@@ -2,12 +2,12 @@
 import { select, Selection } from 'd3-selection'
 import { Transition } from 'd3-transition'
 
-// Types
-import { NodeDatumCore, LinkDatumCore, LinkStyle } from 'types/graph'
-
 // Utils
 import { range, throttle, getValue } from 'utils/data'
 import { smartTransition } from 'utils/d3'
+
+// Local Types
+import { NodeDatumCore, LinkDatumCore, LinkStyle } from '../../types'
 
 // Config
 import { GraphConfigInterface } from '../../config'
@@ -15,7 +15,7 @@ import { GraphConfigInterface } from '../../config'
 // Helpers
 import { getX, getY, getSideTexLabelColor } from '../node/helper'
 import { getPolylineData, getLinkShiftTransform, getLinkLabelShift, getLinkStrokeWidth, getLinkBandWidth, getMarker, getLinkColor, LINK_LABEL_RADIUS, LINK_MARKER_WIDTH } from './helper'
-import ZOOM_LEVEL from '../zoom-levels'
+import { ZoomLevel } from '../zoom-levels'
 
 // Styles
 import * as generalSelectors from '../../style'
@@ -69,7 +69,7 @@ export function updateLinks<N extends NodeDatumCore, L extends LinkDatumCore> (s
   if (!selection.size()) return
 
   selection
-    .classed(linkSelectors.linkDashed, d => getValue(d, linkStyle) === LinkStyle.DASHED)
+    .classed(linkSelectors.linkDashed, d => getValue(d, linkStyle) === LinkStyle.Dashed)
 
   selection.select(`.${linkSelectors.link}`)
     .attr('class', linkSelectors.link)
@@ -119,7 +119,7 @@ export function updateLinks<N extends NodeDatumCore, L extends LinkDatumCore> (s
         .style('fill', getLinkColor(d, config))
     })
 
-  smartTransition(flowGroup, duration).style('opacity', scale < ZOOM_LEVEL.LEVEL2 ? 0 : 1)
+  smartTransition(flowGroup, duration).style('opacity', scale < ZoomLevel.Level2 ? 0 : 1)
 
   // Labels
   selection.each((l, i, elements) => {
@@ -196,7 +196,7 @@ export function removeLinks<N extends NodeDatumCore, L extends LinkDatumCore> (s
 
 export function animateLinkFlow<N extends NodeDatumCore, L extends LinkDatumCore> (selection: Selection<SVGGElement, L, SVGGElement, L[]>, config: GraphConfigInterface<N, L>, scale: number): void {
   const { linkFlow } = config
-  if (scale < ZOOM_LEVEL.LEVEL2) return
+  if (scale < ZoomLevel.Level2) return
 
   selection.selectAll(`.${linkSelectors.flowGroup}`)
     .each((d, i, elements) => {
@@ -224,7 +224,7 @@ export function animateLinkFlow<N extends NodeDatumCore, L extends LinkDatumCore
 export function zoomLinks<N extends NodeDatumCore, L extends LinkDatumCore> (selection: Selection<SVGGElement, L, SVGGElement, L[]>, config: GraphConfigInterface<N, L>, scale: number): void {
   const { flowCircleSize } = config
 
-  selection.classed(generalSelectors.zoomOutLevel2, scale < ZOOM_LEVEL.LEVEL2)
+  selection.classed(generalSelectors.zoomOutLevel2, scale < ZoomLevel.Level2)
   selection.selectAll(`.${linkSelectors.flowCircle}`)
     .attr('r', flowCircleSize / scale)
 

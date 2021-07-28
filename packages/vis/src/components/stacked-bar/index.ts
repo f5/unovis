@@ -11,7 +11,8 @@ import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
 
 // Types
-import { NumericAccessor, Spacing } from 'types/misc'
+import { NumericAccessor } from 'types/accessor'
+import { Spacing } from 'types/spacing'
 
 // Config
 import { StackedBarConfig, StackedBarConfigInterface } from './config'

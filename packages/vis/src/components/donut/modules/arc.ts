@@ -8,8 +8,8 @@ import { Arc } from 'd3-shape'
 import { getColor } from 'utils/color'
 import { smartTransition } from 'utils/d3'
 
-// Types
-import { DonutArcDatum, DonutArcAnimState } from 'types/donut'
+// Local Types
+import { DonutArcDatum, DonutArcAnimState } from '../types'
 
 // Config
 import { DonutConfig } from '../config'

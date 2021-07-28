@@ -1,7 +1,8 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import _uniq from 'lodash/uniq'
-import { Graph, LayoutType, GraphConfigInterface, SHAPE, PanelConfigInterface } from '@volterra/vis'
+import { Graph, LayoutType, GraphConfigInterface, Shape, PanelConfigInterface } from '@volterra/vis'
 
+// eslint-disable-next-line @typescript-eslint/naming-convention
 const StatusMap = {
   healthy: { color: '#47e845' },
   warning: { color: '#ffc226' },
@@ -35,7 +36,7 @@ export const overviewConfig = (data, onNodeClick): GraphConfigInterface<any, any
   ...accessors,
 
   // Layout
-  layoutType: LayoutType.PARALLEL,
+  layoutType: LayoutType.Parallel,
   layoutGroupOrder: ['column1', 'ce01-ashburn-aws', 'column3'],
   layoutNonConnectedAside: false,
 
@@ -61,7 +62,7 @@ export const getPanels = (data): PanelConfigInterface[] => _uniq(data.nodes.map(
   sideLabelIcon: label === 'ce01-ashburn-aws' ? '&#xe9a0;'
     : label === 'ce02-paris-azure' ? '&#xe9a2;'
       : '&#xe946;',
-  sideLabelShape: ((label === 'ce01-ashburn-aws') || (label === 'ce02-paris-azure')) ? SHAPE.CIRCLE : SHAPE.SQUARE,
+  sideLabelShape: ((label === 'ce01-ashburn-aws') || (label === 'ce02-paris-azure')) ? Shape.Circle : Shape.Square,
   sideLabelColor: label === 'ce01-ashburn-aws' ? StatusMap.healthy.color : '#acb2b9',
 }))
 
@@ -69,7 +70,7 @@ export const drilldownConfig = (onNodeClick): GraphConfigInterface<any, any> => 
   ...accessors,
 
   // Layout
-  layoutType: LayoutType.FORCE,
+  layoutType: LayoutType.Force,
 
   // Events
   events: {

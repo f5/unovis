@@ -59,11 +59,11 @@ export function randomLink (node1: NodeDatum, node2: NodeDatum): LinkDatum {
     alerts: ['This is a link'],
     target: node2.id,
     status: _sample(status),
-    linkArrow: _sample([LinkArrow.SINGLE, LinkArrow.DOUBLE]),
+    linkArrow: _sample([LinkArrow.Single, LinkArrow.Double]),
     label: `link ${node1.id} ${node2.id}`,
     linkWidth: _sample([null, 1, 2]),
     bandWidth: _sample([null, 5, 7, 10, 12, 15]),
-    linkStyle: LinkStyle.SOLID,
+    linkStyle: LinkStyle.Solid,
     linkFlow: true, // _sample([false, true, true, true, true]),
     linkLabel: _sample([undefined, {
       text: _random(1, 50),

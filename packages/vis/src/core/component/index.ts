@@ -6,8 +6,7 @@ import { CoreDataModel } from 'data-models/core'
 
 // Types
 import { ComponentType, Sizing } from 'types/component'
-
-import { Spacing } from 'types/misc'
+import { Spacing } from 'types/spacing'
 
 // Utils
 import { throttle } from 'utils/data'
@@ -22,7 +21,7 @@ export class ComponentCore<CoreDatum> {
   config: ComponentConfig
   prevConfig: ComponentConfig
   datamodel: CoreDataModel<CoreDatum> = new CoreDataModel()
-  sizing: Sizing = Sizing.FIT
+  sizing: Sizing = Sizing.Fit
 
   events: {
     [selectorString: string]: {
@@ -43,6 +42,7 @@ export class ComponentCore<CoreDatum> {
   }
 
   setConfig<T extends ComponentConfigInterface> (config: T): void {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     const ConfigModel = (this.config.constructor as typeof ComponentConfig)
     this.prevConfig = this.config
     this.config = new ConfigModel().init(config)

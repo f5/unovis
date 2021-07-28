@@ -9,10 +9,9 @@ import { ComponentCore } from 'core/component'
 import { GraphDataModel } from 'data-models/graph'
 
 // Types
-import { Spacing } from 'types/misc'
 import { ExtendedSizeComponent, Sizing } from 'types/component'
-import { InputNode, InputLink, SankeyNode, SankeyLink } from 'types/sankey'
 import { Position } from 'types/position'
+import { Spacing } from 'types/spacing'
 
 // Utils
 import { getValue, isNumber, groupBy } from 'utils/data'
@@ -22,6 +21,9 @@ import { SankeyConfig, SankeyConfigInterface } from './config'
 
 // Styles
 import * as s from './style'
+
+// Local Types
+import { InputNode, InputLink, SankeyNode, SankeyLink } from './types'
 
 // Modules
 import { removeLinks, createLinks, updateLinks } from './modules/link'
@@ -65,21 +67,21 @@ export class Sankey<N extends InputNode, L extends InputLink> extends ComponentC
     const { config: { labelMaxWidth, labelFontSize, labelPosition } } = this
 
     const labelSize = requiredLabelSpace(labelMaxWidth, labelFontSize)
-    return { top: labelSize.height / 2, bottom: labelSize.height / 2, left: labelPosition === Position.AUTO ? labelSize.width : 0, right: labelSize.width }
+    return { top: labelSize.height / 2, bottom: labelSize.height / 2, left: labelPosition === Position.Auto ? labelSize.width : 0, right: labelSize.width }
   }
 
   setData (data: GraphDataModel<N, L>): void {
     super.setData(data)
 
     // Pre-calculate component size for Sizing.EXTEND
-    if (this.sizing !== Sizing.FIT) this._preCalculateComponentSize()
+    if (this.sizing !== Sizing.Fit) this._preCalculateComponentSize()
   }
 
   setConfig (config: SankeyConfigInterface<N, L>): void {
     super.setConfig(config)
 
     // Pre-calculate component size for Sizing.EXTEND
-    if (this.sizing !== Sizing.FIT) this._preCalculateComponentSize()
+    if (this.sizing !== Sizing.Fit) this._preCalculateComponentSize()
   }
 
   _render (customDuration?: number): void {
@@ -144,8 +146,8 @@ export class Sankey<N extends InputNode, L extends InputLink> extends ComponentC
 
   private _prepareLayout (): void {
     const { config, bleed, datamodel } = this
-    const sankeyHeight = this.sizing === Sizing.FIT ? config.height : this._extendedHeight
-    const sankeyWidth = this.sizing === Sizing.FIT ? config.width : this._extendedWidth
+    const sankeyHeight = this.sizing === Sizing.Fit ? config.height : this._extendedHeight
+    const sankeyWidth = this.sizing === Sizing.Fit ? config.width : this._extendedWidth
 
     const nodes = datamodel.nodes// this._sortNodes()
     const links = datamodel.links
@@ -195,14 +197,14 @@ export class Sankey<N extends InputNode, L extends InputLink> extends ComponentC
     //   Default: 1px
     //   Extended size nodes that have no links: config.nodeMinHeight
     for (const node of nodes) {
-      const singleExtendedSize = this.sizing === Sizing.EXTEND && !node.sourceLinks?.length && !node.targetLinks?.length
+      const singleExtendedSize = this.sizing === Sizing.Extend && !node.sourceLinks?.length && !node.targetLinks?.length
       const h = Math.max(singleExtendedSize ? config.nodeMinHeight : 1, node.y1 - node.y0)
       const y = (node.y0 + node.y1) / 2
       node.y0 = y - h / 2
       node.y1 = y + h / 2
     }
 
-    if (this.sizing === Sizing.EXTEND) {
+    if (this.sizing === Sizing.Extend) {
       const height = max(nodes, d => d.y1)
       this._extendedHeightIncreased = height + bleed.top + bleed.bottom
     }

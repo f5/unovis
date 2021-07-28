@@ -30,7 +30,7 @@ import _range from 'lodash/range'
 import { max, min, mean, bisector } from 'd3-array'
 
 // Types
-import { NumericAccessor } from 'types/misc'
+import { NumericAccessor } from 'types/accessor'
 
 export const isNumber = _isNumber
 export const isEqual = _isEqual

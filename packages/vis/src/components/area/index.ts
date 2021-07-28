@@ -13,9 +13,11 @@ import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
 
 // Types
-import { Curve } from 'types/curves'
-import { NumericAccessor } from 'types/misc'
-import { AreaDatum } from 'types/area'
+import { Curve } from 'types/curve'
+import { NumericAccessor } from 'types/accessor'
+
+// Local Types
+import { AreaDatum } from './types'
 
 // Config
 import { AreaConfig, AreaConfigInterface } from './config'

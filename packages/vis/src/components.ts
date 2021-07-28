@@ -1,99 +1,56 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { XYComponentCore } from 'core/xy-component'
-import { XYComponentConfigInterface } from 'core/xy-component/config'
-
-import { Tooltip } from 'core/tooltip'
-import { Line } from './components/line'
-import { StackedBar } from './components/stacked-bar'
-import { GroupedBar } from './components/grouped-bar'
-import { Axis } from './components/axis'
-import { Scatter } from './components/scatter'
-import { Brush } from './components/brush'
-import { BulletLegend } from './components/bullet-legend'
-import { FlowLegend } from './components/flow-legend'
-import { Crosshair } from './components/crosshair'
-import { Timeline } from './components/timeline'
-import { Sankey } from './components/sankey'
-import { Area } from './components/area'
-import { TopoJSONMap } from './components/topojson-map'
-import { LeafletMap } from './components/leaflet-map'
-import { LeafletFlowMap } from './components/leaflet-flow-map'
-import { RadialDendrogram } from './components/radial-dendrogram'
-import { ChordDiagram } from './components/chord-diagram'
-import { Graph } from './components/graph'
-import { VisControls } from './components/vis-controls'
-import { Donut } from './components/donut'
-import { FreeBrush } from './components/free-brush'
-
-import { LineConfigInterface } from './components/line/config'
-import { StackedBarConfigInterface } from './components/stacked-bar/config'
-import { GroupedBarConfigInterface } from './components/grouped-bar/config'
-import { ScatterConfigInterface } from './components/scatter/config'
-import { TooltipConfigInterface } from './core/tooltip/config'
-import { BrushConfigInterface } from './components/brush/config'
-import { AxisConfigInterface } from './components/axis/config'
-import { BulletLegendConfigInterface } from './components/bullet-legend/config'
-import { FlowLegendConfigInterface } from './components/flow-legend/config'
-import { CrosshairConfigInterface } from './components/crosshair/config'
-import { TimelineConfigInterface } from './components/timeline/config'
-import { SankeyConfigInterface } from './components/sankey/config'
-import { AreaConfigInterface } from './components/area/config'
-import { TopoJSONMapConfigInterface } from './components/topojson-map/config'
-import { LeafletMapConfigInterface } from './components/leaflet-map/config'
-import { LeafletFlowMapConfigInterface } from './components/leaflet-flow-map/config'
-import { RadialDendrogramConfigInterface } from './components/radial-dendrogram/config'
-import { ChordDiagramConfigInterface } from './components/chord-diagram/config'
-import { GraphConfigInterface } from './components/graph/config'
-import { VisControlsConfigInterface } from './components/vis-controls/config'
-import { DonutConfigInterface } from './components/donut/config'
-import { FreeBrushConfigInterface } from './components/free-brush/config'
 import './styles/css-variables'
 
-export {
-  XYComponentCore,
-  XYComponentConfigInterface,
-  Line,
-  LineConfigInterface,
-  StackedBar,
-  StackedBarConfigInterface,
-  GroupedBar,
-  GroupedBarConfigInterface,
-  Scatter,
-  ScatterConfigInterface,
-  Tooltip,
-  TooltipConfigInterface,
-  Brush,
-  BrushConfigInterface,
-  Axis,
-  AxisConfigInterface,
-  BulletLegend,
-  BulletLegendConfigInterface,
-  FlowLegend,
-  FlowLegendConfigInterface,
-  Crosshair,
-  CrosshairConfigInterface,
-  Timeline,
-  TimelineConfigInterface,
-  Sankey,
-  SankeyConfigInterface,
-  Area,
-  AreaConfigInterface,
-  TopoJSONMap,
-  TopoJSONMapConfigInterface,
-  LeafletMap,
-  LeafletMapConfigInterface,
-  LeafletFlowMap,
-  LeafletFlowMapConfigInterface,
-  RadialDendrogram,
-  RadialDendrogramConfigInterface,
-  Graph,
-  GraphConfigInterface,
-  ChordDiagram,
-  ChordDiagramConfigInterface,
-  VisControls,
-  VisControlsConfigInterface,
-  Donut,
-  DonutConfigInterface,
-  FreeBrush,
-  FreeBrushConfigInterface,
-}
+// Core
+export { ComponentCore } from 'core/component'
+export { ComponentConfigInterface } from 'core/component/config'
+export { XYComponentCore } from 'core/xy-component'
+export { XYComponentConfigInterface } from 'core/xy-component/config'
+export { Tooltip } from 'core/tooltip'
+
+// Components
+export { Line } from './components/line'
+export { StackedBar } from './components/stacked-bar'
+export { GroupedBar } from './components/grouped-bar'
+export { Axis } from './components/axis'
+export { Scatter } from './components/scatter'
+export { Brush } from './components/brush'
+export { BulletLegend } from './components/bullet-legend'
+export { FlowLegend } from './components/flow-legend'
+export { Crosshair } from './components/crosshair'
+export { Timeline } from './components/timeline'
+export { Sankey } from './components/sankey'
+export { Area } from './components/area'
+export { TopoJSONMap } from './components/topojson-map'
+export { LeafletMap } from './components/leaflet-map'
+export { LeafletFlowMap } from './components/leaflet-flow-map'
+export { RadialDendrogram } from './components/radial-dendrogram'
+export { ChordDiagram } from './components/chord-diagram'
+export { Graph } from './components/graph'
+export { VisControls } from './components/vis-controls'
+export { Donut } from './components/donut'
+export { FreeBrush } from './components/free-brush'
+
+// Config Interfaces
+export { LineConfigInterface } from './components/line/config'
+export { StackedBarConfigInterface } from './components/stacked-bar/config'
+export { GroupedBarConfigInterface } from './components/grouped-bar/config'
+export { ScatterConfigInterface } from './components/scatter/config'
+export { TooltipConfigInterface } from './core/tooltip/config'
+export { BrushConfigInterface } from './components/brush/config'
+export { AxisConfigInterface } from './components/axis/config'
+export { BulletLegendConfigInterface } from './components/bullet-legend/config'
+export { FlowLegendConfigInterface } from './components/flow-legend/config'
+export { CrosshairConfigInterface } from './components/crosshair/config'
+export { TimelineConfigInterface } from './components/timeline/config'
+export { SankeyConfigInterface } from './components/sankey/config'
+export { AreaConfigInterface } from './components/area/config'
+export { TopoJSONMapConfigInterface } from './components/topojson-map/config'
+export { LeafletMapConfigInterface } from './components/leaflet-map/config'
+export { LeafletFlowMapConfigInterface } from './components/leaflet-flow-map/config'
+export { RadialDendrogramConfigInterface } from './components/radial-dendrogram/config'
+export { ChordDiagramConfigInterface } from './components/chord-diagram/config'
+export { GraphConfigInterface } from './components/graph/config'
+export { VisControlsConfigInterface } from './components/vis-controls/config'
+export { DonutConfigInterface } from './components/donut/config'
+export { FreeBrushConfigInterface } from './components/free-brush/config'

@@ -1,4 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
+/* eslint-disable @typescript-eslint/naming-convention */
+
 import { OnInit, OnDestroy, Component, Input } from '@angular/core'
 
 // Vis

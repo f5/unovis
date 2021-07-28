@@ -10,7 +10,7 @@ import { getColor } from 'utils/color'
 import { smartTransition } from 'utils/d3'
 
 // Types
-import { Hierarchy } from 'types/radial-dendrogram'
+import { Hierarchy } from 'components/radial-dendrogram/types'
 
 // Config
 import { ChordDiagramConfig } from '../config'

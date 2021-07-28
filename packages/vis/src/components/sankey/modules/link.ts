@@ -8,8 +8,8 @@ import { getColor } from 'utils/color'
 import { getValue } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 
-// Types
-import { InputLink, InputNode, SankeyLink } from 'types/sankey'
+// Local Types
+import { InputLink, InputNode, SankeyLink } from '../types'
 
 // Config
 import { SankeyConfig } from '../config'
@@ -30,9 +30,9 @@ export function linkPath ({ x0, x1, y0, y1, width }): string {
     C ${centerX}, ${top0}
       ${centerX}, ${top1}
       ${x1}, ${top1}
-    
+
     L ${x1}, ${bottom1}
-    
+
     C ${centerX}, ${bottom1}
       ${centerX}, ${bottom0}
       ${x0}, ${bottom0}

@@ -7,7 +7,7 @@ import { ComponentCore } from 'core/component'
 import { Tooltip } from 'core/tooltip'
 
 // Types
-import { Dimension } from 'types/misc'
+import { Dimension } from 'types/dimension'
 
 export interface SingleChartConfigInterface<Datum> extends ContainerConfigInterface {
   /** Visualization Component */

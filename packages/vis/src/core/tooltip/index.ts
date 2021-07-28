@@ -84,27 +84,27 @@ export class Tooltip<T extends ComponentCore<any>, TooltipDatum> {
 
   public place (pos): void {
     const { config } = this
-    const positionFixed = config.positionStrategy === PositionStrategy.FIXED
+    const positionFixed = config.positionStrategy === PositionStrategy.Fixed
     const width = this.element.offsetWidth
     const height = this.element.offsetHeight
     const containerHeight = positionFixed ? window.innerHeight : this._container.scrollHeight
     const containerWidth = positionFixed ? window.innerWidth : this._container.scrollWidth
 
-    const horizontalPlacement = config.horizontalPlacement === Position.AUTO
-      ? (pos.x > containerWidth / 2 ? Position.LEFT : Position.RIGHT)
+    const horizontalPlacement = config.horizontalPlacement === Position.Auto
+      ? (pos.x > containerWidth / 2 ? Position.Left : Position.Right)
       : config.horizontalPlacement
 
-    const verticalPlacement = config.verticalPlacement === Position.AUTO
-      ? (pos.y > containerHeight / 2 ? Position.TOP : Position.BOTTOM)
+    const verticalPlacement = config.verticalPlacement === Position.Auto
+      ? (pos.y > containerHeight / 2 ? Position.Top : Position.Bottom)
       : config.verticalPlacement
 
     // dx and dy variables shift the tooltip from the default position (above the cursor, centred horizontally)
     const margin = 5
-    const dx = horizontalPlacement === Position.LEFT ? -width - margin - config.horizontalShift
-      : horizontalPlacement === Position.CENTER ? -width / 2
+    const dx = horizontalPlacement === Position.Left ? -width - margin - config.horizontalShift
+      : horizontalPlacement === Position.Center ? -width / 2
         : margin + config.horizontalShift
-    const dy = verticalPlacement === Position.BOTTOM ? height + margin + config.verticalShift
-      : verticalPlacement === Position.CENTER ? height / 2
+    const dy = verticalPlacement === Position.Bottom ? height + margin + config.verticalShift
+      : verticalPlacement === Position.Center ? height / 2
         : -margin - config.verticalShift
 
     // Constraint to container
@@ -149,7 +149,7 @@ export class Tooltip<T extends ComponentCore<any>, TooltipDatum> {
         const selection = select(component.element).selectAll(`.${className}`)
         selection
           .on('mousemove.tooltip', (e: MouseEvent, d: TooltipDatum) => {
-            const [x, y] = positionStrategy === PositionStrategy.FIXED ? [e.clientX, e.clientY] : pointer(e, this._container)
+            const [x, y] = positionStrategy === PositionStrategy.Fixed ? [e.clientX, e.clientY] : pointer(e, this._container)
             const els = selection.nodes()
             const i = els.indexOf(e.currentTarget as any)
             const content = template(d, i, els)

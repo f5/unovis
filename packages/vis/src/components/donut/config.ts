@@ -4,7 +4,7 @@
 import { ComponentConfigInterface, ComponentConfig } from 'core/component/config'
 
 // Types
-import { NumericAccessor, ColorAccessor } from 'types/misc'
+import { ColorAccessor, NumericAccessor } from 'types/accessor'
 
 export interface DonutConfigInterface<Datum> extends ComponentConfigInterface {
   /** Id accessor for better visual data updates */

@@ -3,14 +3,14 @@
 import { ComponentConfigInterface, ComponentConfig } from 'core/component/config'
 
 // Types
-import { NodeDatumCore, LinkDatumCore } from 'types/graph'
-import { NumericAccessor, StringAccessor, ColorAccessor } from 'types/misc'
-import { ProjectionType } from 'types/map-projections'
-import { MapAreaCore } from './modules/types'
+import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
 
-export interface TopoJSONMapConfigInterface<N extends NodeDatumCore, L extends LinkDatumCore, A extends MapAreaCore> extends ComponentConfigInterface {
+// Local Types
+import { ProjectionType, MapInputNode, MapInputLink, MapInputArea } from './types'
+
+export interface TopoJSONMapConfigInterface<N extends MapInputNode, L extends MapInputLink, A extends MapInputArea> extends ComponentConfigInterface {
   // General
-  /** Projection Type: 'mercator' or 'equirectangular'. Default: `ProjectionType.MERCATOR` */
+  /** Projection Type: 'mercator' or 'equirectangular'. Default: `ProjectionType.Mercator` */
   projection?: ProjectionType;
   /** Map data in the TopoJSON topology format */
   topojson?: /* TopoJSON.Topology */ any; // TopoJSON typings have troubles with being bundled so we're temporary disabling them
@@ -67,8 +67,8 @@ export interface TopoJSONMapConfigInterface<N extends NodeDatumCore, L extends L
   heatmapModeZoomLevelThreshold?: number;
 }
 
-export class TopoJSONMapConfig<N extends NodeDatumCore, L extends LinkDatumCore, A extends MapAreaCore> extends ComponentConfig implements TopoJSONMapConfigInterface<N, L, A> {
-  projection = ProjectionType.MERCATOR
+export class TopoJSONMapConfig<N extends MapInputNode, L extends MapInputLink, A extends MapInputArea> extends ComponentConfig implements TopoJSONMapConfigInterface<N, L, A> {
+  projection = ProjectionType.Mercator
   duration = 1500
   topojson = null
   mapFeatureName = 'countries'

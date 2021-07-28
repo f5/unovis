@@ -10,7 +10,7 @@ import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
 
 // Types
-import { NumericAccessor } from 'types/misc'
+import { NumericAccessor } from 'types/accessor'
 import { PositionStrategy } from 'types/position'
 
 // Config
@@ -124,7 +124,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
     if (!tooltip) return
 
     const container = tooltip.getContainer() || this.container.node()
-    const [x, y] = tooltip.config.positionStrategy === PositionStrategy.FIXED ? [event.clientX, event.clientY] : pointer(event, container)
+    const [x, y] = tooltip.config.positionStrategy === PositionStrategy.Fixed ? [event.clientX, event.clientY] : pointer(event, container)
     const content = template(this.datum)
     if (content) tooltip.show(content, { x, y })
   }

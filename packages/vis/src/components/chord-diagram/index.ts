@@ -14,10 +14,12 @@ import { GraphDataModel } from 'data-models/graph'
 import { getValue, isNumber, groupBy } from 'utils/data'
 
 // Types
-import { Spacing } from 'types/misc'
-import { Hierarchy, LabelType, HNode, HLink, Ribbon } from 'types/radial-dendrogram'
-import { NodeDatumCore, LinkDatumCore } from 'types/graph'
-import { Curve } from 'types/curves'
+import { Spacing } from 'types/spacing'
+import { Hierarchy, LabelType, HNode, HLink, Ribbon } from 'components/radial-dendrogram/types'
+import { Curve } from 'types/curve'
+
+// Local Types
+import { ChordInputNode, ChordInputLink } from './types'
 
 // Config
 import { ChordDiagramConfig, ChordDiagramConfigInterface } from './config'
@@ -30,7 +32,7 @@ import { createLink, updateLink, removeLink } from './modules/link'
 // Styles
 import * as s from './style'
 
-export class ChordDiagram<H extends Hierarchy, N extends NodeDatumCore, L extends LinkDatumCore> extends ComponentCore<{ nodes: N[]; links?: L[] }> {
+export class ChordDiagram<H extends Hierarchy, N extends ChordInputNode, L extends ChordInputLink> extends ComponentCore<{ nodes: N[]; links?: L[] }> {
   static selectors = s
   config: ChordDiagramConfig<H> = new ChordDiagramConfig()
   datamodel: GraphDataModel<N, L> = new GraphDataModel()
@@ -106,7 +108,7 @@ export class ChordDiagram<H extends Hierarchy, N extends NodeDatumCore, L extend
     hierarchyData.sum(d => d._state?.value)
 
     let radius = Math.min(config.width, config.height) / 2 - max([this.bleed.top, this.bleed.bottom, this.bleed.left, this.bleed.right])
-    let ladelWidth = nodeLabelType === LabelType.PERPENDICULAR ? radius / (hierarchyData.height + 1) - config.nodeWidth : 0
+    let ladelWidth = nodeLabelType === LabelType.Perpendicular ? radius / (hierarchyData.height + 1) - config.nodeWidth : 0
     radius = radius - ladelWidth
     radiusScale
       .exponent(radiusScaleExponent)

@@ -7,7 +7,7 @@ import { color } from 'd3-color'
 import { getCSSVarName } from 'styles/colors'
 
 // Types
-import { Hierarchy, LabelType } from 'types/radial-dendrogram'
+import { Hierarchy, LabelType } from 'components/radial-dendrogram/types'
 
 // Utils
 import { wrapTextElement } from 'utils/text'
@@ -26,7 +26,7 @@ export const LABEL_PADDING = 3
 export function createLabel<H extends Hierarchy> (selection: Selection<SVGGElement, HierarchyRectangularNode<H>, SVGGElement, HierarchyRectangularNode<H>[]>, config: ChordDiagramConfig<H>, radiusScale): void {
   selection.style('opacity', 0)
 
-  if (config.nodeLabelType === LabelType.PERPENDICULAR) {
+  if (config.nodeLabelType === LabelType.Perpendicular) {
     selection.attr('transform', d => {
       const angleCenter = (d.x0 + d.x1) / 2
       const angle = angleCenter - Math.PI / 2
@@ -45,10 +45,10 @@ export function createLabel<H extends Hierarchy> (selection: Selection<SVGGEleme
 function getLabelFillColor (d, config): string {
   const { nodeLabelType, nodeColor } = config
   switch (nodeLabelType) {
-    case LabelType.PERPENDICULAR: {
+    case LabelType.Perpendicular: {
       return getColor(d, nodeColor, d.data.depth)
     }
-    case LabelType.ALONG: {
+    case LabelType.Along: {
       const c = getValue(d.data, nodeColor) || window.getComputedStyle(document.documentElement).getPropertyValue(getCSSVarName(d.depth))
       const hex = color(c).hex()
       const brightness = hexToBrightness(hex)
@@ -60,12 +60,12 @@ function getLabelFillColor (d, config): string {
 function getLabelTextAnchor (d, config): string | null {
   const { nodeLabelType } = config
   switch (nodeLabelType) {
-    case LabelType.PERPENDICULAR: {
+    case LabelType.Perpendicular: {
       const angleCenter = (d.x0 + d.x1) / 2
       const angleDegree = angleCenter * 180 / Math.PI
       return angleDegree < 180 ? 'start' : 'end'
     }
-    case LabelType.ALONG: {
+    case LabelType.Along: {
       return null
     }
   }
@@ -76,7 +76,7 @@ export function updateLabel<H extends Hierarchy> (selection: Selection<SVGElemen
   selection.style('opacity', 0)
   const selTransition = smartTransition(selection, duration)
     .style('opacity', 1)
-  if (nodeLabelType === LabelType.PERPENDICULAR) {
+  if (nodeLabelType === LabelType.Perpendicular) {
     selTransition.attr('transform', d => {
       const angleCenter = (d.x0 + d.x1) / 2
       const angle = angleCenter - Math.PI / 2
@@ -108,7 +108,7 @@ export function updateLabel<H extends Hierarchy> (selection: Selection<SVGElemen
   label
     .each((d, i, elements) => {
       let textWidth = width
-      if (nodeLabelType === LabelType.ALONG) {
+      if (nodeLabelType === LabelType.Along) {
         const radianArcLength = d.x1 - d.x0 - getValue(d, config.padAngle) * 2
         const radius = radiusScale(d.y1) - getValue(d, config.nodeWidth) / 2
         textWidth = radius * radianArcLength
@@ -116,7 +116,7 @@ export function updateLabel<H extends Hierarchy> (selection: Selection<SVGElemen
 
       select(elements[i]).call(wrapTextElement, { width: textWidth - LABEL_PADDING * 2, trimOnly: true })
 
-      if (nodeLabelType === LabelType.ALONG) {
+      if (nodeLabelType === LabelType.Along) {
         const labelText = select(elements[i]).text()
         select(elements[i])
           .attr('dx', LABEL_PADDING)
@@ -129,7 +129,7 @@ export function updateLabel<H extends Hierarchy> (selection: Selection<SVGElemen
       }
     })
 
-  if (nodeLabelType === LabelType.PERPENDICULAR) {
+  if (nodeLabelType === LabelType.Perpendicular) {
     smartTransition(label, duration)
       .attr('transform', d => {
         const angleCenter = (d.x0 + d.x1) / 2

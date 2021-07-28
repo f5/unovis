@@ -20,14 +20,14 @@ export function trimTextEnd (str = '', maxLength = 15): string {
   return str.length > maxLength ? `${str.substr(0, maxLength)}…` : str
 }
 
-export function trimText (str = '', length = 15, type = TrimMode.MIDDLE): string {
+export function trimText (str = '', length = 15, type = TrimMode.Middle): string {
   let result = trimTextEnd(str, length)
-  if (type === TrimMode.START) result = trimTextStart(str, length)
-  else if (type === TrimMode.MIDDLE) result = trimTextMiddle(str, length)
+  if (type === TrimMode.Start) result = trimTextStart(str, length)
+  else if (type === TrimMode.Middle) result = trimTextMiddle(str, length)
   return result
 }
 
-export function trimSVGTextToPixel (svgTextSelection: Selection<SVGTextElement, any, SVGElement, any>, minWidth = 50, trimType = TrimMode.MIDDLE): void {
+export function trimSVGTextToPixel (svgTextSelection: Selection<SVGTextElement, any, SVGElement, any>, minWidth = 50, trimType = TrimMode.Middle): void {
   let i = 0
   let textBBox = svgTextSelection.node().getBBox()
   const text = svgTextSelection.text()
@@ -80,8 +80,8 @@ export function wrapTextElement (element: Selection<SVGTextElement, any, SVGElem
     length,
     width,
     separator = '',
-    trimType = TrimMode.END,
-    verticalAlign = VerticalAlign.MIDDLE,
+    trimType = TrimMode.End,
+    verticalAlign = VerticalAlign.Middle,
     wordBreak = false,
     trimOnly = false,
     dy = 0.32,
@@ -112,7 +112,7 @@ export function wrapTextElement (element: Selection<SVGTextElement, any, SVGElem
     if (i === 0) return
     const _text = `${tspanText}${word}`
     tspan.text(_text)
-    const _wrapText = wrapMode === WrapMode.FONTSIZE ? fontSize * _text.length * widthToHeightRatio > width
+    const _wrapText = wrapMode === WrapMode.FontSize ? fontSize * _text.length * widthToHeightRatio > width
       : tspan.node().getComputedTextLength() > width
     if (_wrapText) {
       tspan.text(tspanText.trim())
@@ -128,7 +128,7 @@ export function wrapTextElement (element: Selection<SVGTextElement, any, SVGElem
 
   if (wordBreak) {
     let numTspan
-    if (wrapMode === WrapMode.FONTSIZE) {
+    if (wrapMode === WrapMode.FontSize) {
       numTspan = Math.ceil(tspan.text().length * fontSize * widthToHeightRatio / (width || 1))
     } else {
       numTspan = Math.ceil(tspan.node().getComputedTextLength() / (width || 1))
@@ -147,8 +147,8 @@ export function wrapTextElement (element: Selection<SVGTextElement, any, SVGElem
 
   // Vertical Align
   let addY = -(tspanCount - 1) * 0.5 + dy
-  if (verticalAlign === VerticalAlign.BOTTOM) addY = dy
-  else if (verticalAlign === VerticalAlign.TOP) addY = -(tspanCount - 1) - (1 - dy)
+  if (verticalAlign === VerticalAlign.Bottom) addY = dy
+  else if (verticalAlign === VerticalAlign.Top) addY = -(tspanCount - 1) - (1 - dy)
   element.attr('dy', `${addY}em`)
 }
 
@@ -201,7 +201,7 @@ export function wrapSVGText (textElement: Selection<SVGTextElement, any, SVGElem
   })
 }
 
-export function trimSVGText (svgTextSelection: Selection<SVGTextElement, any, SVGElement, any>, maxWidth = 50, trimType = TrimMode.MIDDLE, fastMode?: boolean, fontSize?: number, widthToHeightRatio?: number): void {
+export function trimSVGText (svgTextSelection: Selection<SVGTextElement, any, SVGElement, any>, maxWidth = 50, trimType = TrimMode.Middle, fastMode?: boolean, fontSize?: number, widthToHeightRatio?: number): void {
   const text = svgTextSelection.text()
   const textLength = text.length
 

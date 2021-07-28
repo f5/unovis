@@ -3,8 +3,8 @@
 import { Config } from 'core/config'
 
 // Types
-import { Spacing } from 'types/misc'
 import { Sizing } from 'types/component'
+import { Spacing } from 'types/spacing'
 
 export interface ContainerConfigInterface {
   /** Animation duration of all the components within the container */
@@ -33,5 +33,5 @@ export class ContainerConfig extends Config implements ContainerConfigInterface 
     right: 0,
   }
 
-  sizing = Sizing.FIT
+  sizing = Sizing.Fit
 }

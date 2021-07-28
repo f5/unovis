@@ -2,7 +2,7 @@
 import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component/config'
 
 // Types
-import { NumericAccessor, StringAccessor } from 'types/misc'
+import { NumericAccessor, StringAccessor } from 'types/accessor'
 
 export interface TimelineConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
   /** Width of the lines */

@@ -4,9 +4,9 @@ import { ScaleLinear } from 'd3-scale'
 import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component/config'
 
 // Types
-import { NumericAccessor, StringAccessor, ColorAccessor } from 'types/misc'
-import { Scale, ContinuousScale } from 'types/scales'
-import { SymbolType } from 'types/symbols'
+import { Scale, ContinuousScale } from 'types/scale'
+import { SymbolType } from 'types/symbol'
+import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
 
 export interface ScatterConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
   /** Single Y accessor function or constant value */
@@ -17,7 +17,7 @@ export interface ScatterConfigInterface<Datum> extends XYComponentConfigInterfac
   sizeScale?: ContinuousScale;
   /** Size Range, [number, number]. Default: `[5, 20]` */
   sizeRange?: [number, number];
-  /** Shape of scatter point: circle, cross, diamond, square, star, triangle and wye. Default: `SymbolType.CIRCLE` */
+  /** Shape of scatter point: circle, cross, diamond, square, star, triangle and wye. Default: `SymbolType.Circle` */
   shape?: ((d: Datum, i?: number, ...any) => SymbolType) | SymbolType;
   /** Label accessor function or string. Default: `undefined` */
   label?: StringAccessor<Datum>;
@@ -33,7 +33,7 @@ export class ScatterConfig<Datum> extends XYComponentConfig<Datum> implements Sc
   size = 1
   sizeScale: ScaleLinear<number, number> = Scale.scaleLinear()
   sizeRange: [number, number] = [5, 20]
-  shape = SymbolType.CIRCLE
+  shape = SymbolType.Circle
   label = undefined
   labelColor = undefined
   cursor = null

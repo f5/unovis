@@ -1,6 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-// Types
-import { NodeDatumCore } from 'types/graph'
+// Local Types
+import { NodeDatumCore } from '../types'
 
 export function positionNonConnectedNodes<N extends NodeDatumCore> (nodes: N[], y: number, spacing: number, width: number, xStart = 0): void {
   nodes.forEach((d, i) => {

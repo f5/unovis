@@ -21,7 +21,7 @@ function sampleScatterData (n: number): ScatterDatum[] {
     x: i,
     y: Math.random(),
     size: _random(minD, maxD),
-    shape: Math.random() > 0.2 ? SymbolType.CIRCLE : _sample([SymbolType.CROSS, SymbolType.DIAMOND, SymbolType.SQUARE, SymbolType.STAR, SymbolType.TRIANGLE, SymbolType.WYE]),
+    shape: Math.random() > 0.2 ? SymbolType.Circle : _sample([SymbolType.Cross, SymbolType.Diamond, SymbolType.Square, SymbolType.Star, SymbolType.Triangle, SymbolType.Wye]),
     label: Math.random() > 0.8 ? 'G' : undefined,
   }))
 }

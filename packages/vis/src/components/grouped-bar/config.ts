@@ -2,7 +2,7 @@
 import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component/config'
 
 // Types
-import { StringAccessor } from 'types/misc'
+import { StringAccessor } from 'types/accessor'
 
 export interface GroupedBarConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
   /** Optionaly set the group width in pixels (distributed evenly among the group bars) */

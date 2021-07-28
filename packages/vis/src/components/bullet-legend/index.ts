@@ -6,7 +6,10 @@ import { color } from 'd3-color'
 import { getColor } from 'utils/color'
 
 // Config
-import { BulletLegendConfig, BulletLegendConfigInterface, BulletLegendItemInterface } from './config'
+import { BulletLegendConfig, BulletLegendConfigInterface } from './config'
+
+// Local Types
+import { BulletLegendItemInterface } from './types'
 
 // Styles
 import * as s from './style'

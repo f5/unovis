@@ -1,50 +1,19 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { CurveType } from 'types/curves'
-import { SymbolType } from 'types/symbols'
-import { Scale } from 'types/scales'
-import { Position, PositionStrategy, Arrangement } from 'types/position'
-import { Projection } from 'types/map-projections'
-import { Hierarchy } from 'types/radial-dendrogram'
-import { LayoutType, LinkStyle, LinkArrow, NodeDatumCore, LinkDatumCore, CircleLabel, PanelConfigInterface } from 'types/graph'
-import { SHAPE } from 'types/shape'
-import { Sizing } from 'types/component'
-import { NodeAlignType, SubLabelPlacement } from 'types/sankey'
-import { EnterTransitionType, ExitTransitionType } from 'types/animation'
-import { VisControlItemInterface, VisControlsOrientation } from 'types/controls'
-import { TrimMode, VerticalAlign, FitMode, TextAlign } from 'types/text'
-import { Dimension } from 'types/misc'
-import { FreeBrushMode } from 'components/free-brush/types'
-import { BulletLegendItemInterface } from 'components/bullet-legend/config'
+// Global Types
+export { CurveType } from 'types/curve'
+export { SymbolType } from 'types/symbol'
+export { Scale } from 'types/scale'
+export { Position, PositionStrategy, Arrangement } from 'types/position'
+export { Shape } from 'types/shape'
+export { Sizing } from 'types/component'
+export { Dimension } from 'types/dimension'
+export { TrimMode, VerticalAlign, FitMode, TextAlign } from 'types/text'
 
-export {
-  CurveType,
-  SymbolType,
-  Scale,
-  Projection,
-  LayoutType,
-  LinkStyle,
-  LinkArrow,
-  NodeDatumCore,
-  LinkDatumCore,
-  SHAPE,
-  CircleLabel,
-  Hierarchy,
-  Position,
-  Arrangement,
-  Sizing,
-  NodeAlignType,
-  EnterTransitionType,
-  ExitTransitionType,
-  VisControlItemInterface,
-  VisControlsOrientation,
-  SubLabelPlacement,
-  TrimMode,
-  VerticalAlign,
-  FitMode,
-  PositionStrategy,
-  Dimension,
-  PanelConfigInterface,
-  FreeBrushMode,
-  BulletLegendItemInterface,
-  TextAlign,
-}
+// Component Types
+export { Projection } from 'components/topojson-map/types'
+export { Hierarchy } from 'components/radial-dendrogram/types'
+export { LayoutType, LinkStyle, LinkArrow, NodeDatumCore, LinkDatumCore, CircleLabel, PanelConfigInterface } from 'components/graph/types'
+export { NodeAlignType, SubLabelPlacement, EnterTransitionType, ExitTransitionType } from 'components/sankey/types'
+export { VisControlItemInterface, VisControlsOrientation } from 'components/vis-controls/types'
+export { FreeBrushMode } from 'components/free-brush/types'
+export { BulletLegendItemInterface } from 'components/bullet-legend/types'

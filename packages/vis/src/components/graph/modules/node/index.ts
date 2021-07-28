@@ -4,8 +4,7 @@ import { Transition } from 'd3-transition'
 import { arc } from 'd3-shape'
 
 // Type
-import { SHAPE } from 'types/shape'
-import { NodeDatumCore, LinkDatumCore, CircleLabel } from 'types/graph'
+import { Shape } from 'types/shape'
 
 // Utils
 import { trimText } from 'utils/text'
@@ -13,13 +12,16 @@ import { polygon } from 'utils/path'
 import { smartTransition } from 'utils/d3'
 import { getValue, throttle } from 'utils/data'
 
+// Local Types
+import { NodeDatumCore, LinkDatumCore, CircleLabel } from '../../types'
+
 // Config
 import { GraphConfigInterface } from '../../config'
 
 // Helpers
 import { arcTween, polyTween, setLabelRect, getX, getY, getSideTexLabelColor, getNodeColor, getNodeIconColor, getNodeSize, LABEL_RECT_VERTICAL_PADDING } from './helper'
 import { appendShape, updateShape, isCustomXml } from '../shape'
-import ZOOM_LEVEL from '../zoom-levels'
+import { ZoomLevel } from '../zoom-levels'
 
 // Styles
 import * as generalSelectors from '../../style'
@@ -120,14 +122,14 @@ export function updateNodes<N extends NodeDatumCore, L extends LinkDatumCore> (s
     const nodeSelection = group.select(`.${nodeSelectors.nodeSelection}`)
 
     group
-      .classed(generalSelectors.zoomOutLevel2, scale < ZOOM_LEVEL.LEVEL2)
+      .classed(generalSelectors.zoomOutLevel2, scale < ZoomLevel.Level2)
       .classed(nodeSelectors.nodeIsDragged, (d: NodeDatumCore) => d._state.isDragged)
 
     // Update Group
     group
       .classed(nodeSelectors.nodePolygon, d => {
         const shape = getValue(d, nodeShape)
-        return shape === SHAPE.TRIANGLE || shape === SHAPE.HEXAGON || shape === SHAPE.SQUARE
+        return shape === Shape.Triangle || shape === Shape.Hexagon || shape === Shape.Square
       })
 
     // Update Node
@@ -151,17 +153,17 @@ export function updateNodes<N extends NodeDatumCore, L extends LinkDatumCore> (s
       .style('display', d => !getValue(d, nodeStrokeSegmentValue) ? 'none' : null)
       .style('fill', getNodeColor(d, nodeStrokeSegmentFill))
       .style('stroke', getNodeColor(d, nodeStrokeSegmentFill))
-      .style('stroke-opacity', d => getValue(d, nodeShape) === SHAPE.CIRCLE ? 0 : null)
+      .style('stroke-opacity', d => getValue(d, nodeShape) === Shape.Circle ? 0 : null)
 
     nodeArc
       .transition()
       .duration(scoreAnimDuration)
       .attrTween('d', (d, i, arr) => {
         switch (getValue(d, nodeShape)) {
-          case SHAPE.CIRCLE: return arcTween(d, config, arcGenerator, arr[i])
-          case SHAPE.HEXAGON: return polyTween(d, config, polygon, arr[i])
-          case SHAPE.SQUARE: return polyTween(d, config, polygon, arr[i])
-          case SHAPE.TRIANGLE: return polyTween(d, config, polygon, arr[i])
+          case Shape.Circle: return arcTween(d, config, arcGenerator, arr[i])
+          case Shape.Hexagon: return polyTween(d, config, polygon, arr[i])
+          case Shape.Square: return polyTween(d, config, polygon, arr[i])
+          case Shape.Triangle: return polyTween(d, config, polygon, arr[i])
           default: return null
         }
       })
@@ -237,7 +239,7 @@ export function updateNodes<N extends NodeDatumCore, L extends LinkDatumCore> (s
     const labelMargin = LABEL_RECT_VERTICAL_PADDING + 1.25 * labelFontSize ** 1.03
     const nodeHeight = isCustomXml(getValue(d, nodeShape)) ? nodeBBox.height : getNodeSize(d, nodeSize)
     label.attr('transform', `translate(0, ${nodeHeight / 2 + labelMargin})`)
-    if (scale >= ZOOM_LEVEL.LEVEL3) setLabelRect(label, getValue(d, nodeLabel), nodeSelectors.labelText)
+    if (scale >= ZoomLevel.Level3) setLabelRect(label, getValue(d, nodeLabel), nodeSelectors.labelText)
 
     // Bottom Icon
     bottomIcon.html(d => {
@@ -273,15 +275,15 @@ function setLabelBackgroundRect<N extends NodeDatumCore, L extends LinkDatumCore
 const setLabelBackgroundRectThrottled = throttle(setLabelBackgroundRect, 1000)
 
 export function zoomNodes<N extends NodeDatumCore, L extends LinkDatumCore> (selection: Selection<SVGGElement, N, SVGGElement, N[]>, config: GraphConfigInterface<N, L>, scale: number): void {
-  selection.classed(generalSelectors.zoomOutLevel1, scale < ZOOM_LEVEL.LEVEL1)
-  selection.classed(generalSelectors.zoomOutLevel2, scale < ZOOM_LEVEL.LEVEL2)
+  selection.classed(generalSelectors.zoomOutLevel1, scale < ZoomLevel.Level1)
+  selection.classed(generalSelectors.zoomOutLevel2, scale < ZoomLevel.Level2)
 
   selection.selectAll(`${nodeSelectors.sideLabelBackground}`)
     .attr('transform', `scale(${1 / Math.pow(scale, 0.35)})`)
   selection.selectAll(`.${nodeSelectors.sideLabel}`)
     .attr('transform', `scale(${1 / Math.pow(scale, 0.45)})`)
 
-  if (scale >= ZOOM_LEVEL.LEVEL3) selection.call(setLabelBackgroundRectThrottled, config)
+  if (scale >= ZoomLevel.Level3) selection.call(setLabelBackgroundRectThrottled, config)
 }
 
 export const zoomNodesThrottled = throttle(zoomNodes, 500)

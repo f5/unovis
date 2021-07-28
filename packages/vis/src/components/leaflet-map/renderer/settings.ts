@@ -3,8 +3,10 @@
 // Utils
 import { merge } from 'utils/data'
 
-// Types
-import { LeafletMapRenderer } from 'types/map'
+// Local Types
+import { LeafletMapRenderer } from '../types'
+
+// Config
 import { LeafletMapConfigInterface } from '../config'
 
 import baseTangramSettings from './tangram/tangram-settings.json'
@@ -24,9 +26,9 @@ export function getRendererSettings<T> (config: LeafletMapConfigInterface<T>): a
       settings = rendererSettings
       break
     default: {
-      const baseSettings = renderer === LeafletMapRenderer.TANGRAM ? baseTangramSettings : baseMapboxglSettings
-      // const dark = renderer === MapRenderer.TANGRAM ? tangramDarkTheme : mapboxglDarkTheme
-      const light = renderer === LeafletMapRenderer.TANGRAM ? tangramLightTheme : mapboxglLightTheme
+      const baseSettings = renderer === LeafletMapRenderer.Tangram ? baseTangramSettings : baseMapboxglSettings
+      // const dark = renderer === MapRenderer.Tangram ? tangramDarkTheme : mapboxglDarkTheme
+      const light = renderer === LeafletMapRenderer.Tangram ? tangramLightTheme : mapboxglLightTheme
       settings = merge(baseSettings, light)
       break
     }

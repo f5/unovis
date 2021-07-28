@@ -1,19 +1,19 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 export enum Position {
-  TOP = 'top',
-  BOTTOM = 'bottom',
-  LEFT = 'left',
-  RIGHT = 'right',
-  CENTER = 'center',
-  AUTO = 'auto',
+  Top = 'top',
+  Bottom = 'bottom',
+  Left = 'left',
+  Right = 'right',
+  Center = 'center',
+  Auto = 'auto',
 }
 
 export enum PositionStrategy {
-  ABSOLUTE = 'absolute',
-  FIXED = 'fixed',
+  Absolute = 'absolute',
+  Fixed = 'fixed',
 }
 
 export enum Arrangement {
-  INSIDE = 'inside',
-  OUTSIDE = 'outside',
+  Inside = 'inside',
+  Outside = 'outside',
 }

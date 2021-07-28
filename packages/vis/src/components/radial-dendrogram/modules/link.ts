@@ -7,8 +7,8 @@ import { Arc } from 'd3-shape'
 // Utils
 import { smartTransition } from 'utils/d3'
 
-// Types
-import { Hierarchy, Link } from 'types/radial-dendrogram'
+// Local Types
+import { Hierarchy, Link } from '../types'
 
 export interface ArcLink extends SVGElement {
   _animState?: {

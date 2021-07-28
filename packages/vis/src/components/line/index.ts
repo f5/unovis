@@ -13,9 +13,12 @@ import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
 
 // Types
-import { Curve, CurveType } from 'types/curves'
-import { NumericAccessor, Spacing } from 'types/misc'
-import { LineData, LineDatum } from 'types/line'
+import { NumericAccessor } from 'types/accessor'
+import { Spacing } from 'types/spacing'
+import { Curve, CurveType } from 'types/curve'
+
+// Local Types
+import { LineData, LineDatum } from './types'
 
 // Config
 import { LineConfig, LineConfigInterface } from './config'

@@ -14,7 +14,7 @@ import { getDataLatLngBounds } from 'utils/map'
 import { LeafletMap } from 'components/leaflet-map'
 
 // Types
-import { Bounds } from 'types/map'
+import { Bounds } from 'components/leaflet-map/types'
 
 // Config
 import { LeafletFlowMapConfig, LeafletFlowMapConfigInterface } from './config'
@@ -51,6 +51,7 @@ export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ point
     const rendererImportPromise = import('./renderer')
     Promise.all([rendererImportPromise, this.leafletMap.getLeafletInstancePromise()])
       .then((imports) => {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         const [{ PointRenderer }, leaflet] = imports
 
         this.leafletMapInstance = leaflet
