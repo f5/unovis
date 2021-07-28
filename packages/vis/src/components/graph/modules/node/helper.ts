@@ -56,15 +56,15 @@ export function polyTween<N extends NodeDatumCore, L extends LinkDatumCore> (d: 
   const nodeSize = getNodeSize(d, config.nodeSize)
   let n: number
   switch (getValue(d, nodeShape)) {
-  case SHAPE.SQUARE:
-    n = 4
-    break
-  case SHAPE.TRIANGLE:
-    n = 3
-    break
-  case SHAPE.HEXAGON:
-  default:
-    n = 6
+    case SHAPE.SQUARE:
+      n = 4
+      break
+    case SHAPE.TRIANGLE:
+      n = 3
+      break
+    case SHAPE.HEXAGON:
+    default:
+      n = 6
   }
 
   if (!el._animState) _setInitialAnimState(el)

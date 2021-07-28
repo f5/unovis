@@ -6,8 +6,7 @@
     "lib"
   ],
   "scripts": {
-    "dev": "ng serve --port 9900",
-    "dev:parallel": "ng serve --port 9900",
+    "dev": "npx ng serve --port 9900",
     "build": "node --max_old_space_size=4096 ../node_modules/@angular/cli/bin/ng build",
     "test": "jest --colors",
     "lint": "eslint \"src/**/*.ts\""
@@ -21,6 +20,7 @@
     "@angular/platform-browser": "^12.0.3",
     "@angular/platform-browser-dynamic": "^12.0.3",
     "@angular/router": "^12.0.3",
+    "@volterra/vis-angular": "^0.0.1beta16",
     "date-fns": "^2.22.1",
     "lodash": "^4.17.21",
     "rxjs": "^7.1.0",

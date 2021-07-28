@@ -60,6 +60,9 @@ export function createNodes<N extends NodeDatumCore, L extends LinkDatumCore> (s
 
     group.append('g')
       .attr('class', nodeSelectors.sideLabelsGroup)
+
+    group.append('text')
+      .attr('class', nodeSelectors.nodeBottomIcon)
   })
 }
 
@@ -85,9 +88,9 @@ export function updateSelectedNodes<N extends NodeDatumCore, L extends LinkDatum
 }
 
 export function updateNodes<N extends NodeDatumCore, L extends LinkDatumCore> (selection: Selection<SVGGElement, N, SVGGElement, N[]>, config: GraphConfigInterface<N, L>, duration: number, scale = 1): Selection<SVGGElement, N, SVGGElement, N[]> | Transition<SVGGElement, N, SVGGElement, N[]> {
-  const { scoreAnimDuration, nodeBorderWidth, nodeShape, nodeSize, nodeStrokeSegmentValue, nodeStrokeSegmentFill, nodeIcon, nodeIconSize, nodeLabel, nodeSubLabel, nodeSideLabels, nodeStroke, nodeFill } = config
+  const { scoreAnimDuration, nodeBorderWidth, nodeShape, nodeSize, nodeStrokeSegmentValue, nodeStrokeSegmentFill, nodeIcon, nodeIconSize, nodeLabel, nodeSubLabel, nodeSideLabels, nodeStroke, nodeFill, nodeBottomIcon } = config
 
-  // Re-create node to update shapes if they were changes
+  // Re-create nodes to update shapes if they were changes
   selection.each((d, i, elements) => {
     const element = elements[i]
     const group = select(element)
@@ -113,6 +116,7 @@ export function updateNodes<N extends NodeDatumCore, L extends LinkDatumCore> (s
     const label: Selection<SVGGElement, N, SVGGElement, N> = group.select(`.${nodeSelectors.label}`)
     const labelTextContent = label.select(`.${nodeSelectors.labelTextContent}`)
     const sublabelTextContent = label.select(`.${nodeSelectors.subLabelTextContent}`)
+    const bottomIcon = group.select(`.${nodeSelectors.nodeBottomIcon}`)
     const nodeSelection = group.select(`.${nodeSelectors.nodeSelection}`)
 
     group
@@ -154,11 +158,11 @@ export function updateNodes<N extends NodeDatumCore, L extends LinkDatumCore> (s
       .duration(scoreAnimDuration)
       .attrTween('d', (d, i, arr) => {
         switch (getValue(d, nodeShape)) {
-        case SHAPE.CIRCLE: return arcTween(d, config, arcGenerator, arr[i])
-        case SHAPE.HEXAGON: return polyTween(d, config, polygon, arr[i])
-        case SHAPE.SQUARE: return polyTween(d, config, polygon, arr[i])
-        case SHAPE.TRIANGLE: return polyTween(d, config, polygon, arr[i])
-        default: return null
+          case SHAPE.CIRCLE: return arcTween(d, config, arcGenerator, arr[i])
+          case SHAPE.HEXAGON: return polyTween(d, config, polygon, arr[i])
+          case SHAPE.SQUARE: return polyTween(d, config, polygon, arr[i])
+          case SHAPE.TRIANGLE: return polyTween(d, config, polygon, arr[i])
+          default: return null
         }
       })
 
@@ -186,6 +190,8 @@ export function updateNodes<N extends NodeDatumCore, L extends LinkDatumCore> (s
       .attr('class', nodeSelectors.sideLabel)
 
     const sideLabelsUpdate = sideLabels.merge(sideLabelsEnter)
+      .style('cursor', (d: CircleLabel) => d.cursor ?? null)
+
     // Side label text
     sideLabelsUpdate.select(`.${nodeSelectors.sideLabel}`).text(d => d.text)
       .attr('dy', '1px')
@@ -232,6 +238,12 @@ export function updateNodes<N extends NodeDatumCore, L extends LinkDatumCore> (s
     const nodeHeight = isCustomXml(getValue(d, nodeShape)) ? nodeBBox.height : getNodeSize(d, nodeSize)
     label.attr('transform', `translate(0, ${nodeHeight / 2 + labelMargin})`)
     if (scale >= ZOOM_LEVEL.LEVEL3) setLabelRect(label, getValue(d, nodeLabel), nodeSelectors.labelText)
+
+    // Bottom Icon
+    bottomIcon.html(d => {
+      return getValue(d, nodeBottomIcon)
+    })
+      .attr('transform', `translate(0, ${nodeHeight / 2})`)
   })
 
   updateSelectedNodes(selection, config)

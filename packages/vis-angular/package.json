@@ -1,0 +1,57 @@
+{
+  "name": "@volterra/vis-angular",
+  "version": "0.0.1beta16",
+  "scripts": {
+    "ng": "npx ng",
+    "build": "npx ng build",
+    "watch": "npx ng build --watch --configuration development",
+    "test": "npx ng test",
+    "generate": "rollup -c; node generate-components.js; rm generate-components.js",
+    "docs:json": "compodoc -p ./tsconfig.json -e json -d .",
+    "storybook": "npm run docs:json && start-storybook -p 6006",
+    "build-storybook": "npm run docs:json && build-storybook"
+  },
+  "main": "dist/lib/bundles/volterra-vis-angular.umd.js",
+  "module": "dist/lib/esm2015/public-api.js",
+  "typings": "dist/lib/public-api.d.ts",
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "cache": ".cache/.npm",
+    "@volterra:registry": " https://gitlab.com/api/v4/projects/13430565/packages/npm/"
+  },
+  "dependencies": {
+    "tslib": "^2.1.0"
+  },
+  "peerDependencies": {
+    "@angular/common": "^12.0.3",
+    "@angular/compiler": "^12.0.3",
+    "@angular/core": "^12.0.3",
+    "@volterra/vis": "0.0.1-beta.129"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^12.0.3",
+    "@angular/cli": "^12.0.3",
+    "@angular/compiler-cli": "^12.0.3",
+    "@compodoc/compodoc": "^1.1.11",
+    "@storybook/addon-actions": "^6.3.1",
+    "@storybook/addon-essentials": "^6.3.1",
+    "@storybook/addon-links": "^6.3.1",
+    "@storybook/angular": "^6.3.1",
+    "@storybook/builder-webpack5": "^6.3.1",
+    "@storybook/manager-webpack5": "^6.3.1",
+    "@types/jasmine": "~3.6.0",
+    "@types/node": "^12.11.1",
+    "jasmine-core": "~3.7.0",
+    "karma": "~6.3.0",
+    "karma-chrome-launcher": "~3.1.0",
+    "karma-coverage": "~2.0.3",
+    "karma-jasmine": "~4.0.0",
+    "karma-jasmine-html-reporter": "^1.5.0",
+    "ng-packagr": "^12.0.0",
+    "ts-transformer-keys": "^0.4.3",
+    "ttypescript": "^1.5.12",
+    "typescript": "~4.2.3"
+  }
+}

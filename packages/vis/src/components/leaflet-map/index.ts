@@ -3,6 +3,7 @@ import { Selection } from 'd3-selection'
 import { packSiblings } from 'd3-hierarchy'
 import L from 'leaflet'
 import Supercluster, { ClusterFeature, PointFeature } from 'supercluster'
+import { ResizeObserver } from '@juggle/resize-observer'
 
 // Core
 import { ComponentCore } from 'core/component'
@@ -64,6 +65,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
   private _currentZoomLevel = null
   private _firstRender = true
   private _renderDataAnimationFrame: number
+  private resizeObserver: ResizeObserver
   readonly _leafletInitializationPromise: Promise<L.Map>
 
   events = {
@@ -137,6 +139,12 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
         resolve(this._map.leaflet)
       })
     })
+
+    // When the container size changes we have to initiate map resize in order to update its dimensions
+    this.resizeObserver = new ResizeObserver(() => {
+      this._map?.leaflet?.invalidateSize()
+    })
+    this.resizeObserver.observe(container)
   }
 
   setConfig (config: LeafletMapConfigInterface<Datum>): void {
@@ -198,7 +206,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     return this._leafletInitializationPromise
   }
 
-  public fitToPoints (duration = this.config.flyToDuration, padding = [40, 40]): void {
+  public fitToPoints (duration = this.config.flyToDuration, padding = this.config.fitViewPadding): void {
     const { config, datamodel, datamodel: { data } } = this
 
     if (!this._map || !this._map.leaflet) return
@@ -207,7 +215,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     this._flyToBounds(bounds, duration, padding)
   }
 
-  public fitToBounds (bounds: Bounds, duration = this.config.flyToDuration): void {
+  public fitToBounds (bounds: Bounds, duration = this.config.flyToDuration, padding = this.config.fitViewPadding): void {
     const { northEast, southWest } = bounds
     if (isNil(northEast) || isNil(southWest)) return
     if (isNil(northEast.lat) || isNil(northEast.lng)) return
@@ -216,7 +224,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     this._flyToBounds([
       [northEast.lat, southWest.lng],
       [southWest.lat, northEast.lng],
-    ], duration)
+    ], duration, padding)
   }
 
   public selectPointById (id: string, centerPoint = false): void {
@@ -642,5 +650,6 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     map?.stop()
     map?.remove()
     this.g.remove()
+    this.resizeObserver.disconnect()
   }
 }

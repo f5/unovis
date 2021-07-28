@@ -193,7 +193,7 @@ export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ point
     return []
   }
 
-  private onCanvasMouseMove (event: MouseEvent) {
+  private onCanvasMouseMove (event: MouseEvent): void {
     const { config } = this
 
     this.canvasElement.style.removeProperty('cursor')
@@ -207,14 +207,14 @@ export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ point
     }
   }
 
-  private onCanvasClick (event: MouseEvent) {
+  private onCanvasClick (event: MouseEvent): void {
     const { config } = this
 
     const [clickedPoint, x, y] = this.getPointByScreenPos(event.offsetX, event.offsetY)
     if (clickedPoint) config.onSourcePointClick?.(clickedPoint, x, y, event)
   }
 
-  private onMapMove (leaflet: L.Map) {
+  private onMapMove (leaflet: L.Map): void {
     const shift = leaflet.containerPointToLayerPoint([0, 0])
     this.panningOffset.x = shift.x
     this.panningOffset.y = shift.y
@@ -262,7 +262,7 @@ export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ point
       points.push(target)
     }
 
-    const boundsArray = getDataLatLngBounds(points, d => d.lat, d => d.lon, 4)
+    const boundsArray = getDataLatLngBounds(points, d => d.lat, d => d.lon, 0)
     const bounds: Bounds = {
       northEast: { lat: boundsArray[0][0], lng: boundsArray[1][1] },
       southWest: { lat: boundsArray[1][0], lng: boundsArray[0][1] },

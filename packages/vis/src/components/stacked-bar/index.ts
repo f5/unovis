@@ -150,7 +150,7 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
 
     const height = isEntering ? 0 : config.scales.y(d._stacked[i - 1] ?? 0) - config.scales.y(stackedValue)
     const h = !isEntering && config.barMinHeight && (height < 1) && isFinite(value) && (value !== config.barMinHeightZeroValue) ? 1 : height
-    const y = isEntering ? config.scales.y(0) : config.scales.y(stackedValue) - (height === 0 && config.barMinHeight ? 1 : 0)
+    const y = isEntering ? config.scales.y(0) : config.scales.y(stackedValue) - (height < 1 && config.barMinHeight ? 1 : 0)
 
     const x = -barWidth / 2
     const width = barWidth

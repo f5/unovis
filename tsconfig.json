@@ -3,9 +3,6 @@
   "compilerOptions": {
       "baseUrl": ".",
       "paths": {
-        "@volterra/vis": ["packages/vis/src"],
-        "@volterra/vis/*": ["packages/vis/src/*"],
-
         "examples/*": ["web/src/examples/*"],
         "types/*": ["packages/vis/src/types/*"],
         "utils/*": ["packages/vis/src/utils/*"],

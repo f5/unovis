@@ -1,0 +1,7 @@
+.chart {
+  position: relative;
+  height: 400px;
+  width: 100%;
+  font-family: Inter, "Helvetica Neue", sans-serif;
+  font-size: 12px;
+}

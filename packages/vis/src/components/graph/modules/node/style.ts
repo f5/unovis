@@ -10,11 +10,17 @@ export const variables = injectGlobal`
     --vis-graph-node-selection-color: #acb3b8;
 
     /* Node Central Icon */
-    --vis-graph-node-icon-color: #a0a6ad;
+    --vis-graph-node-icon-color: #9ea7b8;
     --vis-graph-node-icon-font: FontAwesome;
     --vis-graph-node-icon-fill-color-bright: #ffffff;
     --vis-graph-node-icon-fill-color-dark: #9ea7b8;
-
+    
+    /* Node Bottom Icon */
+    --vis-graph-node-bottom-icon-font-size: 14pt;
+    --vis-graph-node-bottom-icon-fill-color: #a0a6ad;
+    --vis-graph-node-bottom-icon-stroke-color: #fff;
+    --vis-graph-node-bottom-icon-stroke-width: 2px;
+    
     /* Node Label */
     --vis-graph-node-label-font-size: 9pt;
     --vis-graph-node-label-background: #ffffff;
@@ -42,7 +48,7 @@ export const nodes = css`
 `
 
 export const node = css`
-  label: node;
+  label: node-shape;
 
   stroke: var(--vis-graph-node-stroke-color);
   fill: var(--vis-graph-node-fill-color);
@@ -58,6 +64,19 @@ export const nodeIcon = css`
   pointer-events: none;
   transition: .4s all;
   fill: var(--vis-graph-node-icon-color);
+`
+
+export const nodeBottomIcon = css`
+  label: node-bottom-icon; 
+  font-family: var(--vis-graph-node-icon-font), var(--vis-font-family);;
+  font-size: var(--vis-graph-node-bottom-icon-font-size);
+  dominant-baseline: middle;
+  text-anchor: middle;
+  pointer-events: none;
+  transition: .4s fill;
+  fill: var(--vis-graph-node-bottom-icon-fill-color);
+  stroke: var(--vis-graph-node-bottom-icon-stroke-color);
+  stroke-width: var(--vis-graph-node-bottom-icon-stroke-width);
 `
 
 export const nodeIsDragged = css`
@@ -124,6 +143,7 @@ export const sideLabel = css`
 
 export const sideLabelGroup = css`
   label: side-label-group; 
+  cursor: default;
 `
 
 export const gNode = css`

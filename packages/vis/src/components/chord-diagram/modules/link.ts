@@ -1,5 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { Selection, select } from 'd3-selection'
+import { Transition } from 'd3-transition'
 import { interpolatePath } from 'd3-interpolate-path'
 
 // Utils
@@ -29,7 +30,8 @@ export function updateLink<H extends Hierarchy, L extends Ribbon<H>> (selection:
   const selTransition = smartTransition(selection, duration)
     .style('opacity', 0.7)
   if (duration) {
-    selTransition.attrTween('d', (d, i, el) => {
+    const transition = selTransition as Transition<SVGElement, L, SVGGElement, L[]>
+    transition.attrTween('d', (d, i, el) => {
       const previous = select(el[i]).attr('d')
       const next = areaGen(d.points) || this._emptyPath()
       return interpolatePath(previous, next)

@@ -81,13 +81,13 @@ export class DDoSMapComponent implements AfterViewInit {
     },
     // eslint-disable-next-line no-console
     onSourcePointClick: (f, x, y) => { console.log('onSourcePointClick', f, x, y) },
-    // eslint-disable-next-line no-console
     onSourcePointMouseEnter: (f, x, y) => {
+      // eslint-disable-next-line no-console
       console.log('onSourcePointMouseEnter', f, x, y)
       this.tooltip.show('hello world', { x, y })
     },
-    // eslint-disable-next-line no-console
     onSourcePointMouseLeave: (f) => {
+      // eslint-disable-next-line no-console
       console.log('onSourcePointMouseLeave', f)
       this.tooltip.hide()
     },

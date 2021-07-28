@@ -270,11 +270,11 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
     if (!d.isLeafNode) return '#888'
 
     switch (d.method) {
-    case 'GET': return '#50a6fe'
-    case 'POST': return '#05c66c'
-    case 'PUT': return '#fc8d04'
-    case 'DELETE': return '#e64f48'
-    default: return null
+      case 'GET': return '#50a6fe'
+      case 'POST': return '#05c66c'
+      case 'PUT': return '#fc8d04'
+      case 'DELETE': return '#e64f48'
+      default: return null
     }
   }
 

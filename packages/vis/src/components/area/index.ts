@@ -1,5 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { select } from 'd3-selection'
+import { Transition } from 'd3-transition'
 import { area, Area as AreaInterface } from 'd3-shape'
 import { interpolatePath } from 'd3-interpolate-path'
 
@@ -92,12 +93,12 @@ export class Area<Datum> extends XYComponentCore<Datum> {
       .style('cursor', (d, i) => getValue(d, config.cursor, areaMaxIdx - i))
 
     if (duration) {
-      areasMerged
-        .attrTween('d', (d, i, el) => {
-          const previous = select(el[i]).attr('d')
-          const next = this.areaGen(d) || this._emptyPath()
-          return interpolatePath(previous, next)
-        })
+      const transition = areasMerged as Transition<SVGPathElement, AreaDatum[], SVGGElement, AreaDatum[]>
+      transition.attrTween('d', (d, i, el) => {
+        const previous = select(el[i]).attr('d')
+        const next = this.areaGen(d) || this._emptyPath()
+        return interpolatePath(previous, next)
+      })
     } else {
       areasMerged.attr('d', d => this.areaGen(d) || this._emptyPath())
     }

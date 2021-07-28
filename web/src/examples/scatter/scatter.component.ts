@@ -52,11 +52,12 @@ export class ScatterComponent implements AfterViewInit {
 
   configGenerator = getScatterConfig
   dataGenerator = sampleScatterData
-  axesGenerator = () => ({
+  axesGenerator = (): { x: Axis<SampleDatum>; y: Axis<SampleDatum> } => ({
     x: new Axis({ label: 'x axis' }),
     y: new Axis({ label: 'y axis' }),
   })
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   ngAfterViewInit (): void {
   }
 }

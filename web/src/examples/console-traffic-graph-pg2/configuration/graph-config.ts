@@ -1,7 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import _sample from 'lodash/sample'
 import _uniq from 'lodash/uniq'
-import { Graph, LayoutType, GraphConfigInterface, SHAPE } from '@volterra/vis'
+import { Graph, LayoutType, GraphConfigInterface, SHAPE, PanelConfigInterface } from '@volterra/vis'
 
 const StatusMap = {
   healthy: { color: '#47e845' },
@@ -51,7 +50,7 @@ export const overviewConfig = (data, onNodeClick): GraphConfigInterface<any, any
   panels: [],
 })
 
-export const getPanels = (data) => _uniq(data.nodes.map(d => d.site)).map(label => ({
+export const getPanels = (data): PanelConfigInterface[] => _uniq(data.nodes.map(d => d.site)).map(label => ({
   label,
   nodes: data.nodes.filter(d => d.site === label).map(d => d.id),
   color: '#333',

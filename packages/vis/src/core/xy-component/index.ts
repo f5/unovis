@@ -45,17 +45,17 @@ export class XYComponentCore<Datum> extends ComponentCore<Datum[]> {
     const { config, datamodel } = this
 
     switch (accessorKey) {
-    case 'x': return this.getXDataExtent()
-    case 'y': return this.getYDataExtent()
-    default: return getExtent(datamodel.data, config[accessorKey])
+      case 'x': return this.getXDataExtent()
+      case 'y': return this.getYDataExtent()
+      default: return getExtent(datamodel.data, config[accessorKey])
     }
   }
 
   getScreenRange (accessorKey: string, padding: Spacing = {}): number[] {
     switch (accessorKey) {
-    case 'x': return this.getXScreenRange(padding)
-    case 'y': return this.getYScreenRange(padding)
-    default: return defaultRange
+      case 'x': return this.getXScreenRange(padding)
+      case 'y': return this.getYScreenRange(padding)
+      default: return defaultRange
     }
   }
 

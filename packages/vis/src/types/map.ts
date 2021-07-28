@@ -53,7 +53,7 @@ export type PointDatum<D> = D & PointExpandedClusterProperties<D> & {
 
 export type Point<D> = {
   geometry: GeoJSON.Geometry;
-  bbox: Record<string, unknown>;
+  bbox: { x1: number; x2: number; y1: number; y2: number };
   radius: number;
   path: string;
   fill: string;

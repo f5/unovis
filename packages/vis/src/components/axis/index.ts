@@ -11,6 +11,7 @@ import { XYComponentCore } from 'core/xy-component'
 import { AxisType } from 'types/axis'
 import { Position } from 'types/position'
 import { Spacing } from 'types/misc'
+import { TextAlign } from 'types/text'
 
 // Utils
 import { smartTransition } from 'utils/d3'
@@ -52,12 +53,16 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
 
   /** Renders axis to an invisible grouped to calculate automatic chart margins */
   preRender (): void {
+    const { config } = this
     const axisRenderHelperGroup = this.g.append('g').attr('opacity', 0)
 
     this._renderAxis(axisRenderHelperGroup, 0)
 
     // Store axis raw BBox (without the label) for further label positioning (see _renderAxisLabel)
     this._axisRawBBox = axisRenderHelperGroup.node().getBBox()
+
+    // Align tick text
+    if (config.tickTextAlign) this._alignTickLabels()
 
     // Render label and store total axis size and required margins
     this._renderAxisLabel(axisRenderHelperGroup)
@@ -83,21 +88,33 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
   }
 
   _getRequiredMargin (axisSize = this._axisSize): Spacing {
-    const { config: { type, position, padding, width, height } } = this
-
-    const bleedX = axisSize.width > width ? (axisSize.width - width) / 2 : 0
-    const bleedY = axisSize.height > height ? (axisSize.height - height) / 2 : 0
+    const { config: { type, position, padding, width, height, tickTextAlign } } = this
 
     switch (type) {
-    case AxisType.X:
-      switch (position) {
-      case Position.TOP: return { top: axisSize.height, left: padding.left + bleedX, right: padding.right + bleedX }
-      case Position.BOTTOM: default: return { bottom: axisSize.height, left: padding.left + bleedX, right: padding.right + bleedX }
+      case AxisType.X: {
+        const bleedX = axisSize.width > width ? (axisSize.width - width) / 2 : 0
+        const left = padding.left + ((tickTextAlign === TextAlign.Left) ? 0
+          : (tickTextAlign === TextAlign.Right) ? 2 * bleedX
+            : bleedX)
+
+        const right = padding.right + ((tickTextAlign === TextAlign.Left) ? 2 * bleedX
+          : (tickTextAlign === TextAlign.Right) ? 0
+            : bleedX)
+
+        switch (position) {
+          case Position.TOP: return { top: axisSize.height, left, right }
+          case Position.BOTTOM: default: return { bottom: axisSize.height, left, right }
+        }
       }
-    case AxisType.Y:
-      switch (position) {
-      case Position.RIGHT: return { right: axisSize.width, top: padding.top + bleedY, bottom: padding.bottom + bleedY }
-      case Position.LEFT: default: return { left: axisSize.width, top: padding.top + bleedY, bottom: padding.bottom + bleedY }
+      case AxisType.Y: {
+        const bleedY = axisSize.height > height ? (axisSize.height - height) / 2 : 0
+        const top = padding.top + bleedY
+        const bottom = padding.bottom + bleedY
+
+        switch (position) {
+          case Position.RIGHT: return { right: axisSize.width, top, bottom }
+          case Position.LEFT: default: return { left: axisSize.width, top, bottom }
+        }
       }
     }
   }
@@ -111,16 +128,16 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
     const { config: { type, position, padding, width, height } } = this
 
     switch (type) {
-    case AxisType.X:
-      switch (position) {
-      case Position.TOP: return { top: containerMargin.top - padding.top, left: containerMargin.left }
-      case Position.BOTTOM: default: return { top: containerMargin.top + height + padding.top, left: containerMargin.left }
-      }
-    case AxisType.Y:
-      switch (position) {
-      case Position.RIGHT: return { top: containerMargin.top, left: containerMargin.left + width + padding.left }
-      case Position.LEFT: default: return { top: containerMargin.top, left: containerMargin.left - padding.right }
-      }
+      case AxisType.X:
+        switch (position) {
+          case Position.TOP: return { top: containerMargin.top - padding.top, left: containerMargin.left }
+          case Position.BOTTOM: default: return { top: containerMargin.top + height + padding.top, left: containerMargin.left }
+        }
+      case AxisType.Y:
+        switch (position) {
+          case Position.RIGHT: return { top: containerMargin.top, left: containerMargin.left + width + padding.left }
+          case Position.LEFT: default: return { top: containerMargin.top, left: containerMargin.left - padding.right }
+        }
     }
   }
 
@@ -137,6 +154,8 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
     } else {
       smartTransition(this.gridGroup, duration).style('opacity', 0)
     }
+
+    if (config.tickTextAlign) this._alignTickLabels()
   }
 
   _buildAxis (): D3Axis<any> {
@@ -144,16 +163,16 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
 
     const ticks = this._getNumTicks()
     switch (type) {
-    case AxisType.X:
-      switch (position) {
-      case Position.TOP: return axisTop(scales.x).ticks(ticks)
-      case Position.BOTTOM: default: return axisBottom(scales.x).ticks(ticks)
-      }
-    case AxisType.Y:
-      switch (position) {
-      case Position.RIGHT: return axisRight(scales.y).ticks(ticks)
-      case Position.LEFT: default: return axisLeft(scales.y).ticks(ticks)
-      }
+      case AxisType.X:
+        switch (position) {
+          case Position.TOP: return axisTop(scales.x).ticks(ticks)
+          case Position.BOTTOM: default: return axisBottom(scales.x).ticks(ticks)
+        }
+      case AxisType.Y:
+        switch (position) {
+          case Position.RIGHT: return axisRight(scales.y).ticks(ticks)
+          case Position.LEFT: default: return axisLeft(scales.y).ticks(ticks)
+        }
     }
   }
 
@@ -162,16 +181,16 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
 
     const ticks = this._getNumTicks()
     switch (type) {
-    case AxisType.X:
-      switch (position) {
-      case Position.TOP: return axisTop(scales.x).ticks(ticks * 2).tickSize(-height).tickSizeOuter(0)
-      case Position.BOTTOM: default: return axisBottom(scales.x).ticks(ticks * 2).tickSize(-height).tickSizeOuter(0)
-      }
-    case AxisType.Y:
-      switch (position) {
-      case Position.RIGHT: return axisRight(scales.y).ticks(ticks * 2).tickSize(-width).tickSizeOuter(0)
-      case Position.LEFT: default: return axisLeft(scales.y).ticks(ticks * 2).tickSize(-width).tickSizeOuter(0)
-      }
+      case AxisType.X:
+        switch (position) {
+          case Position.TOP: return axisTop(scales.x).ticks(ticks * 2).tickSize(-height).tickSizeOuter(0)
+          case Position.BOTTOM: default: return axisBottom(scales.x).ticks(ticks * 2).tickSize(-height).tickSizeOuter(0)
+        }
+      case AxisType.Y:
+        switch (position) {
+          case Position.RIGHT: return axisRight(scales.y).ticks(ticks * 2).tickSize(-width).tickSizeOuter(0)
+          case Position.LEFT: default: return axisLeft(scales.y).ticks(ticks * 2).tickSize(-width).tickSizeOuter(0)
+        }
     }
   }
 
@@ -232,8 +251,8 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
   _getFullDomainPath (tickSize = 0): string {
     const { config: { type, width, height } } = this
     switch (type) {
-    case AxisType.X: return `M0.5, ${tickSize} V0.5 H${width + 0.5} V${tickSize}`
-    case AxisType.Y: return `M${-tickSize}, ${height + 0.5} H0.5 V0.5 H${-tickSize}`
+      case AxisType.X: return `M0.5, ${tickSize} V0.5 H${width + 0.5} V${tickSize}`
+      case AxisType.Y: return `M${-tickSize}, ${height + 0.5} H0.5 V0.5 H${-tickSize}`
     }
   }
 
@@ -270,16 +289,49 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
   _getLabelDY (): number {
     const { type, position } = this.config
     switch (type) {
-    case AxisType.X:
-      switch (position) {
-      case Position.TOP: return 0
-      case Position.BOTTOM: default: return 0.75
-      }
-    case AxisType.Y:
-      switch (position) {
-      case Position.RIGHT: return 0.75
-      case Position.LEFT: default: return -0.25
-      }
+      case AxisType.X:
+        switch (position) {
+          case Position.TOP: return 0
+          case Position.BOTTOM: default: return 0.75
+        }
+      case AxisType.Y:
+        switch (position) {
+          case Position.RIGHT: return 0.75
+          case Position.LEFT: default: return -0.25
+        }
+    }
+  }
+
+  _alignTickLabels (): void {
+    const { config: { type, tickTextAlign, position } } = this
+
+    const tickText = this.g.selectAll('g.tick > text')
+    const textAnchor = this._getTickTextAnchor(tickTextAlign)
+    const translateX = type === AxisType.X ? 0 : this._getYTickTextTranslate(tickTextAlign, position)
+
+    tickText
+      .attr('text-anchor', textAnchor)
+      .attr('transform', `translate(${translateX},0)`)
+  }
+
+  _getTickTextAnchor (textAlign: TextAlign): string {
+    switch (textAlign) {
+      case TextAlign.Left: return 'start'
+      case TextAlign.Right: return 'end'
+      case TextAlign.Center: return 'middle'
+      default: return null
+    }
+  }
+
+  _getYTickTextTranslate (textAlign: TextAlign, axisPosition: Position = Position.LEFT): number {
+    const defaultTickTextSpacingPx = 9 // Default in D3
+    const width = this._axisRawBBox.width - defaultTickTextSpacingPx
+
+    switch (textAlign) {
+      case TextAlign.Left: return axisPosition === Position.LEFT ? width * -1 : 0
+      case TextAlign.Right: return axisPosition === Position.LEFT ? 0 : width
+      case TextAlign.Center: return axisPosition === Position.LEFT ? width * (-0.5) : width * 0.5
+      default: return 0
     }
   }
 

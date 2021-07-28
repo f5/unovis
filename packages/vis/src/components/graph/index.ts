@@ -45,6 +45,9 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
     nodeShape: nodeSelectors.node,
     nodeOutline: nodeSelectors.nodeArc,
     linkLine: linkSelectors.link,
+    nodeSideLabel: nodeSelectors.sideLabelGroup,
+    nodeLabel: nodeSelectors.label,
+    panelSideLabel: panelSelectors.sideLabelGroup,
   }
 
   static nodeSelectors = nodeSelectors
@@ -318,25 +321,25 @@ export class Graph<N extends NodeDatumCore, L extends LinkDatumCore, P extends P
   _calculateLayout (): void {
     const { config, datamodel } = this
     switch (config.layoutType) {
-    case LayoutType.PARALLEL:
-      applyLayoutParallel(datamodel, config)
-      break
-    case LayoutType.PARALLEL_HORIZONTAL:
-      applyLayoutParallel(datamodel, config, 'horizontal')
-      break
-    case LayoutType.DAGRE:
-      applyLayoutDagre(datamodel, config)
-      break
-    case LayoutType.FORCE:
-      applyLayoutForce(datamodel, config)
-      break
-    case LayoutType.CONCENTRIC:
-      applyLayoutConcentric(datamodel, config)
-      break
-    case LayoutType.CIRCULAR:
-    default:
-      applyLayoutCircular(datamodel, config)
-      break
+      case LayoutType.PARALLEL:
+        applyLayoutParallel(datamodel, config)
+        break
+      case LayoutType.PARALLEL_HORIZONTAL:
+        applyLayoutParallel(datamodel, config, 'horizontal')
+        break
+      case LayoutType.DAGRE:
+        applyLayoutDagre(datamodel, config)
+        break
+      case LayoutType.FORCE:
+        applyLayoutForce(datamodel, config)
+        break
+      case LayoutType.CONCENTRIC:
+        applyLayoutConcentric(datamodel, config)
+        break
+      case LayoutType.CIRCULAR:
+      default:
+        applyLayoutCircular(datamodel, config)
+        break
     }
   }
 

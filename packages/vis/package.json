@@ -1,6 +1,6 @@
 {
   "name": "@volterra/vis",
-  "version": "0.0.1-beta.124",
+  "version": "0.0.1-beta.133",
   "main": "lib/esm/index.js",
   "module": "lib/esm/index.js",
   "typings": "lib/index.d.ts",
@@ -9,8 +9,7 @@
   ],
   "scripts": {
     "prebuild": "rimraf lib",
-    "build": "yarn prebuild && rollup -c",
-    "dev:parallel": "rollup -c -w",
+    "build": "npm run prebuild && rollup -c",
     "test": "jest --colors"
   },
   "publishConfig": {

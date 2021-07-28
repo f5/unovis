@@ -28,18 +28,18 @@ export function appendShape<T> (selection, shapeAccessor: StringAccessor<T>, sha
         .html(shape)
     } else {
       switch (shape) {
-      case SHAPE.SQUARE:
-        shapeElement = element.insert('rect', insertSelector)
-          .attr('rx', 5)
-          .attr('ry', 5)
-        break
-      case SHAPE.HEXAGON:
-      case SHAPE.TRIANGLE:
-        shapeElement = element.insert('path', insertSelector)
-        break
-      case SHAPE.CIRCLE:
-      default:
-        shapeElement = element.insert('circle', insertSelector)
+        case SHAPE.SQUARE:
+          shapeElement = element.insert('rect', insertSelector)
+            .attr('rx', 5)
+            .attr('ry', 5)
+          break
+        case SHAPE.HEXAGON:
+        case SHAPE.TRIANGLE:
+          shapeElement = element.insert('path', insertSelector)
+          break
+        case SHAPE.CIRCLE:
+        default:
+          shapeElement = element.insert('circle', insertSelector)
       }
     }
 
@@ -66,15 +66,15 @@ export function updateShape<T> (selection, shape: StringAccessor<T>, size: Numer
     .attr('d', (d: T) => {
       let n
       switch (getValue(d, shape)) {
-      case SHAPE.SQUARE:
-        n = 4
-        break
-      case SHAPE.TRIANGLE:
-        n = 3
-        break
-      case SHAPE.HEXAGON:
-      default:
-        n = 6
+        case SHAPE.SQUARE:
+          n = 4
+          break
+        case SHAPE.TRIANGLE:
+          n = 3
+          break
+        case SHAPE.HEXAGON:
+        default:
+          n = 6
       }
 
       return polygon(nodeSize, n)

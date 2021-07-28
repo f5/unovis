@@ -5,14 +5,35 @@ import _findKey from 'lodash/findKey'
 import _times from 'lodash/times'
 import _groupBy from 'lodash/groupBy'
 
-export const randomRecord = (sources, middle, targets) => ({
+interface SankeyRecord {
+  src: string;
+  balancer: string;
+  dest: string;
+  flow: number;
+}
+
+interface SankeyNode {
+  id: string;
+  type: string;
+  label: string;
+  sublabel: string;
+}
+
+interface SankeyLink {
+  source: string;
+  target: string;
+  flow: number;
+  record: SankeyRecord;
+}
+
+export const randomRecord = (sources: string[], middle: string[], targets: string[]): SankeyRecord => ({
   src: _sample(sources),
   balancer: _sample(middle),
   dest: _sample(targets),
   flow: Math.round(150 * Math.random()),
 })
 
-export const recordsToNodes = (data) => {
+export const recordsToNodes = (data: SankeyRecord[]): { nodes: SankeyNode[]; links: SankeyLink[] } => {
   const multilinks = _flatten(
     data.map(d => [
       { source: d.src, target: d.balancer, flow: d.flow, record: d },
@@ -40,7 +61,6 @@ export const recordsToNodes = (data) => {
       if (!nodes[nodeName]) {
         nodes[nodeName] = {
           id: nodeName,
-          links: [],
           type,
           label: nodeName,
           sublabel: Math.random() > 0.8 ? 'sublabel' : '',
@@ -52,7 +72,7 @@ export const recordsToNodes = (data) => {
   return { nodes: Object.values(nodes), links }
 }
 
-export function sankeySampleData (n: number, sources, middle, targets) {
+export function sankeySampleData (n: number, sources: string[], middle: string[], targets: string[]): { nodes: SankeyNode[]; links: SankeyLink[] } {
   return recordsToNodes(
     _times(n, () => randomRecord(sources, middle, targets))
   )

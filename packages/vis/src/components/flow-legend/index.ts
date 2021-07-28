@@ -79,7 +79,7 @@ export class FlowLegend {
       .on('click', this._onItemClick.bind(this))
 
     legendItemsEnter.append('span')
-      .attr('class', d => d.type === LegendItemType.SYMBOL ? s.arrow({ lineColor }) : s.label({ labelFontSize, labelColor }))
+      .attr('class', d => d.type === LegendItemType.SYMBOL ? s.arrow(lineColor) : s.label(labelFontSize, labelColor))
       .classed(s.clickable, d => d.type === LegendItemType.LABEL && !!onLegendItemClick)
 
     const legendItemsMerged = legendItemsEnter.merge(legendItems)
@@ -89,7 +89,7 @@ export class FlowLegend {
 
     legendItems.exit().remove()
 
-    this.line.attr('class', s.line({ lineColor }))
+    this.line.attr('class', s.line(lineColor))
   }
 
   _onItemClick (event: MouseEvent, d): void {

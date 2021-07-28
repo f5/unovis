@@ -63,10 +63,10 @@ export const requiredLabelSpace = (labelWidth: number, labelFontSize: number): {
 export function getLabelGroupXTranslate<N extends InputNode, L extends InputLink> (d: SankeyNode<N, L>, config: SankeyConfig<N, L>): number {
   const orientation = getLabelOrientation(d, config.width, config.labelPosition)
   switch (orientation) {
-  case Position.RIGHT: return config.nodeWidth + NODE_LABEL_SPACING
-  case Position.LEFT:
-  default:
-    return -NODE_LABEL_SPACING
+    case Position.RIGHT: return config.nodeWidth + NODE_LABEL_SPACING
+    case Position.LEFT:
+    default:
+      return -NODE_LABEL_SPACING
   }
 }
 
@@ -75,20 +75,20 @@ export function getLabelGroupYTranslate<N extends InputNode, L extends InputLink
   if (config.labelBackground && (nodeHeight < labelGroupHeight)) return (nodeHeight - labelGroupHeight) / 2
 
   switch (config.labelVerticalAlign) {
-  case VerticalAlign.BOTTOM: return nodeHeight - labelGroupHeight
-  case VerticalAlign.MIDDLE: return nodeHeight / 2 - labelGroupHeight / 2
-  case VerticalAlign.TOP:
-  default: return 0
+    case VerticalAlign.BOTTOM: return nodeHeight - labelGroupHeight
+    case VerticalAlign.MIDDLE: return nodeHeight / 2 - labelGroupHeight / 2
+    case VerticalAlign.TOP:
+    default: return 0
   }
 }
 
 export function getLabelTextAnchor<N extends InputNode, L extends InputLink> (d: SankeyNode<N, L>, config: SankeyConfig<N, L>): string {
   const orientation = getLabelOrientation(d, config.width, config.labelPosition)
   switch (orientation) {
-  case Position.RIGHT: return 'start'
-  case Position.LEFT:
-  default:
-    return 'end'
+    case Position.RIGHT: return 'start'
+    case Position.LEFT:
+    default:
+      return 'end'
   }
 }
 
@@ -96,10 +96,10 @@ export function getSubLabelTextAnchor<N extends InputNode, L extends InputLink> 
   const isSublabelInline = config.subLabelPlacement === SubLabelPlacement.INLINE
   const orientation = getLabelOrientation(d, config.width, config.labelPosition)
   switch (orientation) {
-  case Position.RIGHT: return isSublabelInline ? 'end' : 'start'
-  case Position.LEFT:
-  default:
-    return isSublabelInline ? 'start' : 'end'
+    case Position.RIGHT: return isSublabelInline ? 'end' : 'start'
+    case Position.LEFT:
+    default:
+      return isSublabelInline ? 'start' : 'end'
   }
 }
 

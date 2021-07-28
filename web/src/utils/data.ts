@@ -14,6 +14,7 @@ export interface SampleDatum {
   y2?: number;
   y3?: number;
   y4?: number;
+  timestamp?: number;
 }
 
 export function sampleSeriesData (n: number): SampleDatum[] {

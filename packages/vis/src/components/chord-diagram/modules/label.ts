@@ -42,32 +42,32 @@ export function createLabel<H extends Hierarchy> (selection: Selection<SVGGEleme
     .style('fill', d => getColor(d, config.nodeColor, d.depth))
 }
 
-function getLabelFillColor (d, config) {
+function getLabelFillColor (d, config): string {
   const { nodeLabelType, nodeColor } = config
   switch (nodeLabelType) {
-  case LabelType.PERPENDICULAR: {
-    return getColor(d, nodeColor, d.data.depth)
-  }
-  case LabelType.ALONG: {
-    const c = getValue(d.data, nodeColor) || window.getComputedStyle(document.documentElement).getPropertyValue(getCSSVarName(d.depth))
-    const hex = color(c).hex()
-    const brightness = hexToBrightness(hex)
-    return brightness > 0.65 ? 'var(--vis-chord-diagram-label-text-fill-color-dark)' : 'var(--vis-chord-diagram-label-text-fill-color-bright)'
-  }
+    case LabelType.PERPENDICULAR: {
+      return getColor(d, nodeColor, d.data.depth)
+    }
+    case LabelType.ALONG: {
+      const c = getValue(d.data, nodeColor) || window.getComputedStyle(document.documentElement).getPropertyValue(getCSSVarName(d.depth))
+      const hex = color(c).hex()
+      const brightness = hexToBrightness(hex)
+      return brightness > 0.65 ? 'var(--vis-chord-diagram-label-text-fill-color-dark)' : 'var(--vis-chord-diagram-label-text-fill-color-bright)'
+    }
   }
 }
 
-function getLabelTextAnchor (d, config) {
+function getLabelTextAnchor (d, config): string | null {
   const { nodeLabelType } = config
   switch (nodeLabelType) {
-  case LabelType.PERPENDICULAR: {
-    const angleCenter = (d.x0 + d.x1) / 2
-    const angleDegree = angleCenter * 180 / Math.PI
-    return angleDegree < 180 ? 'start' : 'end'
-  }
-  case LabelType.ALONG: {
-    return null
-  }
+    case LabelType.PERPENDICULAR: {
+      const angleCenter = (d.x0 + d.x1) / 2
+      const angleDegree = angleCenter * 180 / Math.PI
+      return angleDegree < 180 ? 'start' : 'end'
+    }
+    case LabelType.ALONG: {
+      return null
+    }
   }
 }
 
