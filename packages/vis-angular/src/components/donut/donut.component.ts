@@ -1,7 +1,8 @@
 /* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import { Donut, DonutConfigInterface } from '@volterra/vis'
+import { NumericAccessor, ColorAccessor, Donut, DonutConfigInterface } from '@volterra/vis'
+
 import { VisCoreComponent } from '../../core'
 
 @Component({
@@ -10,29 +11,62 @@ import { VisCoreComponent } from '../../core'
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisCoreComponent, useExisting: VisDonutComponent }],
 })
-export class VisDonutComponent<T> implements DonutConfigInterface<T>, AfterViewInit {
-  @Input() id: any
-  @Input() value: any
-  @Input() angleRange: any
-  @Input() padAngle: any
-  @Input() sortFunction: any
-  @Input() cornerRadius: any
-  @Input() color: any
-  @Input() radius: any
-  @Input() arcWidth: any
-  @Input() centralLabel: any
-  @Input() preventEmptySegments: any
-  @Input() duration: any
-  @Input() width: any
-  @Input() height: any
-  @Input() events: any
-  @Input() attributes: any
+export class VisDonutComponent<Datum> implements DonutConfigInterface<Datum>, AfterViewInit {
+  /** Animation duration */
+  @Input() duration: number
+
+  /** Events */
+  @Input() events: {
+    [selector: string]: {
+      [eventName: string]: (data: any, event?: Event, i?: number, els?: SVGElement[] | HTMLElement[]) => void;
+    };
+  }
+
+  /** Custom attributes */
+  @Input() attributes: {
+    [selector: string]: {
+      [attr: string]: string | number | boolean | ((datum: any) => string | number | boolean);
+    };
+  }
+
+  /** Id accessor for better visual data updates */
+  @Input() id: ((d: Datum, i?: number, ...rest) => string | number)
+
+  /** Value accessor function. Default: `undefined` */
+  @Input() value: NumericAccessor<Datum>
+
+  /** Diagram angle range. Default: `[0, 2 * Math.PI]` */
+  @Input() angleRange: [number, number]
+
+  /** Pad angle. Default: `0` */
+  @Input() padAngle: number
+
+  /** Custom sort function. Default: `undefined` */
+  @Input() sortFunction: (a: Datum, b: Datum) => number
+
+  /** Corner Radius. Default: `0` */
+  @Input() cornerRadius: number
+
+  /** Color accessor function. Default: `undefined` */
+  @Input() color: ColorAccessor<Datum>
+
+  /** Explicitly set the donut outer radius. Default: `undefined` */
+  @Input() radius: number
+
+  /** Arc width in pixels. Set to `0` if you want to have a pie chart. Default: `20` */
+  @Input() arcWidth: number
+
+  /** Central label accessor function or text. Default: `undefined` */
+  @Input() centralLabel: string
+
+  /** Prevent having empty segments when the segment value is 0. Default: `false` */
+  @Input() preventEmptySegments: boolean
   @Input() data: any
 
-  component: Donut<T> | undefined
+  component: Donut<Datum> | undefined
 
   ngAfterViewInit (): void {
-    this.component = new Donut<T>(this.getConfig())
+    this.component = new Donut<Datum>(this.getConfig())
   }
 
   ngOnChanges (changes: SimpleChanges): void {
@@ -40,10 +74,10 @@ export class VisDonutComponent<T> implements DonutConfigInterface<T>, AfterViewI
     this.component?.setConfig(this.getConfig())
   }
 
-  getConfig (): DonutConfigInterface<T> {
-    const { id, value, angleRange, padAngle, sortFunction, cornerRadius, color, radius, arcWidth, centralLabel, preventEmptySegments, duration, width, height, events, attributes } = this
-    const config = { id, value, angleRange, padAngle, sortFunction, cornerRadius, color, radius, arcWidth, centralLabel, preventEmptySegments, duration, width, height, events, attributes }
-    const keys = Object.keys(config) as (keyof DonutConfigInterface<T>)[]
+  private getConfig (): DonutConfigInterface<Datum> {
+    const { duration, events, attributes, id, value, angleRange, padAngle, sortFunction, cornerRadius, color, radius, arcWidth, centralLabel, preventEmptySegments } = this
+    const config = { duration, events, attributes, id, value, angleRange, padAngle, sortFunction, cornerRadius, color, radius, arcWidth, centralLabel, preventEmptySegments }
+    const keys = Object.keys(config) as (keyof DonutConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
     return config
