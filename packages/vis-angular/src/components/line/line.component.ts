@@ -1,11 +1,12 @@
 /* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
-import { Directive, AfterViewInit, Input, SimpleChanges } from '@angular/core'
+import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
 import { Line, LineConfigInterface } from '@volterra/vis'
 import { VisXYComponent } from '../../core'
 
-@Directive({
+@Component({
   selector: 'vis-line',
+  template: '',
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisXYComponent, useExisting: VisLineComponent }],
 })
@@ -20,7 +21,6 @@ export class VisLineComponent<T> implements LineConfigInterface<T>, AfterViewIni
   @Input() y: any
   @Input() id: any
   @Input() color: any
-  @Input() colorType: any
   @Input() scales: any
   @Input() adaptiveYScale: any
   @Input() events: any
@@ -42,8 +42,8 @@ export class VisLineComponent<T> implements LineConfigInterface<T>, AfterViewIni
   }
 
   getConfig (): LineConfigInterface<T> {
-    const { curveType, lineWidth, lineDashArray, noDataValue, highlightOnHover, cursor, x, y, id, color, colorType, scales, adaptiveYScale, events, duration, width, height, attributes } = this
-    const config = { curveType, lineWidth, lineDashArray, noDataValue, highlightOnHover, cursor, x, y, id, color, colorType, scales, adaptiveYScale, events, duration, width, height, attributes }
+    const { curveType, lineWidth, lineDashArray, noDataValue, highlightOnHover, cursor, x, y, id, color, scales, adaptiveYScale, events, duration, width, height, attributes } = this
+    const config = { curveType, lineWidth, lineDashArray, noDataValue, highlightOnHover, cursor, x, y, id, color, scales, adaptiveYScale, events, duration, width, height, attributes }
     const keys = Object.keys(config) as (keyof LineConfigInterface<T>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

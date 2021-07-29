@@ -1,11 +1,12 @@
 /* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
-import { Directive, AfterViewInit, Input, SimpleChanges } from '@angular/core'
+import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
 import { Brush, BrushConfigInterface } from '@volterra/vis'
 import { VisXYComponent } from '../../core'
 
-@Directive({
+@Component({
   selector: 'vis-brush',
+  template: '',
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisXYComponent, useExisting: VisBrushComponent }],
 })
@@ -23,7 +24,6 @@ export class VisBrushComponent<T> implements BrushConfigInterface<T>, AfterViewI
   @Input() y: any
   @Input() id: any
   @Input() color: any
-  @Input() colorType: any
   @Input() scales: any
   @Input() adaptiveYScale: any
   @Input() events: any
@@ -45,8 +45,8 @@ export class VisBrushComponent<T> implements BrushConfigInterface<T>, AfterViewI
   }
 
   getConfig (): BrushConfigInterface<T> {
-    const { onBrush, onBrushStart, onBrushMove, onBrushEnd, handleWidth, selection, draggable, handlePosition, selectionMinLength, x, y, id, color, colorType, scales, adaptiveYScale, events, duration, width, height, attributes } = this
-    const config = { onBrush, onBrushStart, onBrushMove, onBrushEnd, handleWidth, selection, draggable, handlePosition, selectionMinLength, x, y, id, color, colorType, scales, adaptiveYScale, events, duration, width, height, attributes }
+    const { onBrush, onBrushStart, onBrushMove, onBrushEnd, handleWidth, selection, draggable, handlePosition, selectionMinLength, x, y, id, color, scales, adaptiveYScale, events, duration, width, height, attributes } = this
+    const config = { onBrush, onBrushStart, onBrushMove, onBrushEnd, handleWidth, selection, draggable, handlePosition, selectionMinLength, x, y, id, color, scales, adaptiveYScale, events, duration, width, height, attributes }
     const keys = Object.keys(config) as (keyof BrushConfigInterface<T>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

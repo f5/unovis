@@ -1,10 +1,11 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { Directive, AfterViewInit, Input } from '@angular/core'
+import { Component, AfterViewInit, Input } from '@angular/core'
 import { Tooltip, TooltipConfigInterface } from '@volterra/vis'
 import { VisGenericComponent } from '../index'
 
-@Directive({
+@Component({
   selector: 'vis-tooltip',
+  template: '',
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisGenericComponent, useExisting: VisTooltipComponent }],
 })

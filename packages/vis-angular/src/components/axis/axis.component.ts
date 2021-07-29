@@ -1,11 +1,12 @@
 /* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
-import { Directive, AfterViewInit, Input, SimpleChanges } from '@angular/core'
+import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
 import { Axis, AxisConfigInterface } from '@volterra/vis'
 import { VisXYComponent } from '../../core'
 
-@Directive({
+@Component({
   selector: 'vis-axis',
+  template: '',
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisXYComponent, useExisting: VisAxisComponent }],
 })
@@ -31,11 +32,11 @@ export class VisAxisComponent<T> implements AxisConfigInterface<T>, AfterViewIni
   @Input() tickTextForceWordBreak: any
   @Input() tickTextTrimType: any
   @Input() tickTextFontSize: any
+  @Input() tickTextAlign: any
   @Input() x: any
   @Input() y: any
   @Input() id: any
   @Input() color: any
-  @Input() colorType: any
   @Input() scales: any
   @Input() adaptiveYScale: any
   @Input() events: any
@@ -57,8 +58,8 @@ export class VisAxisComponent<T> implements AxisConfigInterface<T>, AfterViewIni
   }
 
   getConfig (): AxisConfigInterface<T> {
-    const { position, type, padding, fullSize, label, labelFontSize, labelMargin, gridLine, tickLine, domainLine, minMaxTicksOnly, tickFormat, tickValues, numTicks, tickTextFitMode, tickTextLength, tickTextWidth, tickTextSeparator, tickTextForceWordBreak, tickTextTrimType, tickTextFontSize, x, y, id, color, colorType, scales, adaptiveYScale, events, duration, width, height, attributes } = this
-    const config = { position, type, padding, fullSize, label, labelFontSize, labelMargin, gridLine, tickLine, domainLine, minMaxTicksOnly, tickFormat, tickValues, numTicks, tickTextFitMode, tickTextLength, tickTextWidth, tickTextSeparator, tickTextForceWordBreak, tickTextTrimType, tickTextFontSize, x, y, id, color, colorType, scales, adaptiveYScale, events, duration, width, height, attributes }
+    const { position, type, padding, fullSize, label, labelFontSize, labelMargin, gridLine, tickLine, domainLine, minMaxTicksOnly, tickFormat, tickValues, numTicks, tickTextFitMode, tickTextLength, tickTextWidth, tickTextSeparator, tickTextForceWordBreak, tickTextTrimType, tickTextFontSize, tickTextAlign, x, y, id, color, scales, adaptiveYScale, events, duration, width, height, attributes } = this
+    const config = { position, type, padding, fullSize, label, labelFontSize, labelMargin, gridLine, tickLine, domainLine, minMaxTicksOnly, tickFormat, tickValues, numTicks, tickTextFitMode, tickTextLength, tickTextWidth, tickTextSeparator, tickTextForceWordBreak, tickTextTrimType, tickTextFontSize, tickTextAlign, x, y, id, color, scales, adaptiveYScale, events, duration, width, height, attributes }
     const keys = Object.keys(config) as (keyof AxisConfigInterface<T>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

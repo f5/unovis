@@ -1,6 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { NgModule } from '@angular/core'
-import { VisTooltipComponent } from './tooltip.directive'
+import { VisTooltipComponent } from './tooltip.component'
 
 @NgModule({
   imports: [],

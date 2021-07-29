@@ -1,11 +1,12 @@
 /* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
-import { Directive, AfterViewInit, Input, SimpleChanges } from '@angular/core'
+import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
 import { Donut, DonutConfigInterface } from '@volterra/vis'
 import { VisCoreComponent } from '../../core'
 
-@Directive({
+@Component({
   selector: 'vis-donut',
+  template: '',
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisCoreComponent, useExisting: VisDonutComponent }],
 })

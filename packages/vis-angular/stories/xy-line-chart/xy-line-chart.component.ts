@@ -1,7 +1,7 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { Component, Input, ViewChild } from '@angular/core'
-import { VisCrosshairComponent } from '../../src/components/crosshair/crosshair.directive'
-import { VisTooltipComponent } from '../../src/core/tooltip/tooltip.directive'
+import { VisCrosshairComponent } from '../../src/components/crosshair/crosshair.component'
+import { VisTooltipComponent } from '../../src/core/tooltip/tooltip.component'
 import { DataRecord } from './xy-line-chart.types'
 
 @Component({
