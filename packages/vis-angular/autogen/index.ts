@@ -1,46 +1,64 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { readFileSync, writeFileSync } from 'fs'
+import { writeFileSync } from 'fs'
 import { exec } from 'child_process'
 import ts from 'typescript'
 
 // Utils
-import { getImportStatements, getConfigProperties, kebabCase } from './utils'
+import { getImportStatements, getConfigProperties, kebabCase, getTSStatements } from './utils'
 import { getComponentCode } from './component'
 import { getModuleCode } from './module'
+import { ConfigProperty } from './types'
 
-const volterraVisBasePath = '../vis/src/components'
+const volterraVisBasePath = '../vis/src'
 const configFileName = '/config.ts'
+const coreComponentConfigPath = '/core/component'
+const xyComponentConfigPath = '/core/xy-component'
+const skipProperties = ['width', 'height']
 const components = [
   // XY Components
-  { name: 'Line', path: '/line', provide: 'VisXYComponent' },
-  { name: 'Area', path: '/area', provide: 'VisXYComponent' },
-  { name: 'Axis', path: '/axis', provide: 'VisXYComponent' },
-  { name: 'Brush', path: '/brush', provide: 'VisXYComponent' },
-  { name: 'FreeBrush', path: '/free-brush', provide: 'VisXYComponent' },
-  { name: 'Crosshair', path: '/crosshair', provide: 'VisXYComponent' },
-  { name: 'Donut', path: '/donut', provide: 'VisXYComponent' },
-  { name: 'GroupedBar', path: '/grouped-bar', provide: 'VisXYComponent' },
-  { name: 'Scatter', path: '/scatter', provide: 'VisXYComponent' },
-  { name: 'StackedBar', path: '/stacked-bar', provide: 'VisXYComponent' },
+  { name: 'Line', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/line'], provide: 'VisXYComponent' },
+  { name: 'Area', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/area'], provide: 'VisXYComponent' },
+  { name: 'Axis', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/axis'], provide: 'VisXYComponent' },
+  { name: 'Brush', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/brush'], provide: 'VisXYComponent' },
+  { name: 'FreeBrush', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/free-brush'], provide: 'VisXYComponent' },
+  { name: 'Crosshair', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/crosshair'], provide: 'VisXYComponent' },
+  { name: 'GroupedBar', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/grouped-bar'], provide: 'VisXYComponent' },
+  { name: 'Scatter', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/scatter'], provide: 'VisXYComponent' },
+  { name: 'StackedBar', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/stacked-bar'], provide: 'VisXYComponent' },
+  { name: 'Timeline', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/timeline'], provide: 'VisXYComponent' },
 
   // Single components
-  { name: 'Timeline', path: '/timeline', provide: 'VisCoreComponent' },
+  { name: 'Donut', sources: [coreComponentConfigPath, '/components/donut'], provide: 'VisCoreComponent' },
 ]
 
 for (const component of components) {
-  const path = `${volterraVisBasePath}${component.path}${configFileName}`
-  const code = readFileSync(path, 'utf8')
-  const parsed = ts.createSourceFile(configFileName, code, ts.ScriptTarget.Latest)
+  const configPropertiesMap = new Map<string, ConfigProperty>() // The map of all config properties
+  let statements: ts.Statement[] = [] // Statements and ...
+  let configInterfaceMembers: ts.TypeElement[] = [] // ... config interface members to resolve imports of custom types
+  let generics: string[] = [] // Generics
 
-  const configInterface = parsed.statements.find(node => ts.isInterfaceDeclaration(node)) as ts.InterfaceDeclaration
-  if (!configInterface) {
-    console.error('Config Interface was not found, ', path)
-    continue
+  for (const [i, path] of component.sources.entries()) {
+    const fullPath = `${volterraVisBasePath}${path}${configFileName}`
+
+    const sourceStatements = getTSStatements(fullPath)
+    const configInterface = sourceStatements.find(node => ts.isInterfaceDeclaration(node)) as ts.InterfaceDeclaration
+    if (!configInterface) {
+      console.error('Config Interface was not found, ', path)
+      continue
+    }
+
+    const props = getConfigProperties(configInterface)
+    props.forEach(p => {
+      if (!skipProperties.includes(p.name)) configPropertiesMap.set(p.name, p)
+    })
+
+    configInterfaceMembers = [...configInterfaceMembers, ...configInterface.members]
+    statements = [...statements, ...sourceStatements]
+    if (i === component.sources.length - 1) generics = configInterface.typeParameters?.map(t => t.name.escapedText) as string[]
   }
 
-  const generics = configInterface.typeParameters?.map(t => t.name.escapedText) as string[]
-  const configProperties = getConfigProperties(configInterface)
-  const importStatements = getImportStatements(parsed.statements, configInterface, generics)
+  const configProperties = Array.from(configPropertiesMap.values())
+  const importStatements = getImportStatements(statements, configInterfaceMembers, generics)
 
   const componentCode = getComponentCode(
     component.name,

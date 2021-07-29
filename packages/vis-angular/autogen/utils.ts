@@ -1,4 +1,5 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
+// Copyright (c) Volterra, Inc. All rights reserved.import { readFileSync } from 'fs'
+import { readFileSync } from 'fs'
 import * as ts from 'typescript'
 import { ConfigProperty } from './types'
 
@@ -13,6 +14,27 @@ export function getTypeName (type: ts.Node): string {
     case (ts.SyntaxKind.NullKeyword): return 'null'
     case (ts.SyntaxKind.UndefinedKeyword): return 'undefined'
     case (ts.SyntaxKind.AnyKeyword): return 'any'
+    case (ts.SyntaxKind.VoidKeyword): return 'void'
+    case (ts.SyntaxKind.TypeLiteral): return `{\n${(type as ts.TypeLiteralNode).members.map(getTypeName).join('\n')}\n}`
+    case (ts.SyntaxKind.PropertySignature): {
+      const t = type as ts.IndexSignatureDeclaration
+      const propName = (t.name as ts.Identifier).escapedText
+      const propType = getTypeName(t.type)
+      return `${propName}${t.questionToken ? '?' : ''}: ${propType};`
+    }
+    case (ts.SyntaxKind.IndexSignature): {
+      const parameters = (type as ts.IndexSignatureDeclaration).parameters
+        .map((p: ts.ParameterDeclaration) => {
+          const paramName = (p.name as ts.Identifier).escapedText
+          const paramType = p.type ? getTypeName(p.type) : undefined
+          return `${paramName}${p.questionToken ? '?' : ''}${paramType ? `: ${paramType}` : ''}`
+        })
+        .join(', ')
+
+      const returnType = getTypeName((type as ts.FunctionTypeNode).type)
+
+      return `[${parameters}]: ${returnType}`
+    }
     case (ts.SyntaxKind.ParenthesizedType): return `(${getTypeName((type as ts.ParenthesizedTypeNode).type)})`
     case (ts.SyntaxKind.FunctionType): {
       const parameters = (type as ts.FunctionTypeNode).parameters
@@ -20,7 +42,9 @@ export function getTypeName (type: ts.Node): string {
           const paramName = (p.name as ts.Identifier).escapedText
           const paramType = p.type ? getTypeName(p.type) : undefined
           const isRest = p.dotDotDotToken
-          return isRest ? '...rest' : (paramName + (paramType ? `: ${paramType}` : ''))
+          return isRest
+            ? '...rest'
+            : (`${paramName}${p.questionToken ? '?' : ''}${paramType ? `: ${paramType}` : ''}`)
         })
         .join(', ')
 
@@ -55,36 +79,53 @@ export function getConfigProperties (configInterface: ts.InterfaceDeclaration): 
   return properties
 }
 
-export function getImports (types: ts.Node[] | ts.NodeArray<ts.Node>, collected = new Set<string>()): string[] {
+export function gatherTypeReferences (types: ts.Node[] | ts.NodeArray<ts.Node>, collected = new Set<string>()): string[] {
   for (const type of types) {
+    if (!type) continue
     switch (type.kind) {
       case (ts.SyntaxKind.TypeReference): {
         const t = (type as ts.TypeReferenceNode)
         collected.add((t.typeName as ts.Identifier).escapedText as string)
-        if (t.typeArguments) getImports(t.typeArguments, collected)
+        if (t.typeArguments) gatherTypeReferences(t.typeArguments, collected)
         break
       }
       case (ts.SyntaxKind.ParenthesizedType): {
-        getImports([(type as ts.ParenthesizedTypeNode).type], collected)
+        gatherTypeReferences([(type as ts.ParenthesizedTypeNode).type], collected)
         break
       }
       case (ts.SyntaxKind.FunctionType): {
-        getImports((type as ts.FunctionTypeNode).parameters.map(p => p.type).filter(t => t), collected)
-        getImports([(type as ts.FunctionTypeNode).type], collected)
+        gatherTypeReferences((type as ts.FunctionTypeNode).parameters.map(p => p.type).filter(t => t), collected)
+        gatherTypeReferences([(type as ts.FunctionTypeNode).type], collected)
         break
       }
       case (ts.SyntaxKind.TupleType):
-        getImports((type as ts.TupleTypeNode).elements)
+        gatherTypeReferences((type as ts.TupleTypeNode).elements)
         break
       case (ts.SyntaxKind.UnionType):
-        getImports((type as ts.UnionTypeNode).types, collected)
+        gatherTypeReferences((type as ts.UnionTypeNode).types, collected)
         break
       case (ts.SyntaxKind.IntersectionType):
-        getImports((type as ts.IntersectionTypeNode).types, collected)
+        gatherTypeReferences((type as ts.IntersectionTypeNode).types, collected)
         break
       case (ts.SyntaxKind.ArrayType):
-        getImports([(type as ts.ArrayTypeNode).elementType], collected)
+        gatherTypeReferences([(type as ts.ArrayTypeNode).elementType], collected)
         break
+      case (ts.SyntaxKind.TypeLiteral): {
+        gatherTypeReferences((type as ts.TypeLiteralNode).members, collected)
+        break
+      }
+      case (ts.SyntaxKind.PropertySignature): {
+        gatherTypeReferences([(type as ts.IndexSignatureDeclaration).type], collected)
+        break
+      }
+      case (ts.SyntaxKind.IndexSignature): {
+        const types = (type as ts.IndexSignatureDeclaration).parameters
+          .map((p: ts.ParameterDeclaration) => p.type)
+          .filter(t => t)
+        gatherTypeReferences(types, collected)
+        gatherTypeReferences([(type as ts.IndexSignatureDeclaration).type], collected)
+        break
+      }
       default:
     }
   }
@@ -92,7 +133,7 @@ export function getImports (types: ts.Node[] | ts.NodeArray<ts.Node>, collected 
   return Array.from(collected)
 }
 
-export function getImportStatements (statements, configInterface, generics: string[] = []): { source: string; elements: string[] }[] {
+export function getImportStatements (statements: ts.Statement[], configInterfaceMembers: ts.TypeElement[], generics: string[] = []): { source: string; elements: string[] }[] {
   const importDeclarations: any[] = statements.filter(node => node.kind === ts.SyntaxKind.ImportDeclaration)
   const importSources = {}
   for (const importDec of importDeclarations) {
@@ -106,12 +147,11 @@ export function getImportStatements (statements, configInterface, generics: stri
       importSources[importEl.name.escapedText] = importSource
     }
   }
-
-  const imports = getImports(configInterface.members.map(node => node.type))
+  const typeList = gatherTypeReferences(configInterfaceMembers.map(node => (node as ts.IndexSignatureDeclaration).type))
     .filter(name => !generics.includes(name)) // Filter out generics
 
   const importStatements: { source: string; elements: string[] }[] = []
-  for (const name of imports) {
+  for (const name of typeList) {
     const importSource: string = importSources[name]
     if (!importSource) {
       console.error(`Can't find import source for: ${name}`)
@@ -126,6 +166,14 @@ export function getImportStatements (statements, configInterface, generics: stri
   return importStatements
 }
 
+export function getTSStatements (path: string): ts.NodeArray<ts.Statement> {
+  const splitPath = path.split('/')
+  const filename = splitPath[splitPath.length - 1]
+  const code = readFileSync(path, 'utf8')
+  const parsed = ts.createSourceFile(filename, code, ts.ScriptTarget.Latest)
+
+  return parsed.statements
+}
 export function kebabCase (str: string): string {
   return str.match(/[A-Z]{2,}(?=[A-Z][a-z0-9]*|\b)|[A-Z]?[a-z0-9]*|[A-Z]|[0-9]+/g)
     ?.filter(Boolean)

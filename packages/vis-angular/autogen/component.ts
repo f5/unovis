@@ -29,7 +29,7 @@ export class Vis${componentName}Component${genericsStr} implements ${componentNa
 ${
   configProps
     .map((p: ConfigProperty) => `
-      /* ${p.doc.join('\n')} */
+      /** ${(p.doc ?? []).join('\n')} */
       @Input() ${p.name}: ${p.type}`)
     .join('\n')
 }

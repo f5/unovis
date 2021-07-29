@@ -31,7 +31,6 @@
       "dom"
     ],
     "plugins": [
-      { "transform": "ts-transformer-keys/transformer" },
     ]
   },
   "angularCompilerOptions": {
