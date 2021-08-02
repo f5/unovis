@@ -1,7 +1,8 @@
 /* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import { Line, LineConfigInterface } from '@volterra/vis'
+import { NumericAccessor, ContinuousScale, CurveType, GenericAccessor, StringAccessor, Line, LineConfigInterface } from '@volterra/vis'
+
 import { VisXYComponent } from '../../core'
 
 @Component({
@@ -10,30 +11,68 @@ import { VisXYComponent } from '../../core'
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisXYComponent, useExisting: VisLineComponent }],
 })
-export class VisLineComponent<T> implements LineConfigInterface<T>, AfterViewInit {
-  @Input() curveType: any
-  @Input() lineWidth: any
-  @Input() lineDashArray: any
-  @Input() noDataValue: any
-  @Input() highlightOnHover: any
-  @Input() cursor: any
-  @Input() x: any
-  @Input() y: any
-  @Input() id: any
-  @Input() color: any
-  @Input() scales: any
-  @Input() adaptiveYScale: any
-  @Input() events: any
-  @Input() duration: any
-  @Input() width: any
-  @Input() height: any
-  @Input() attributes: any
+export class VisLineComponent<Datum> implements LineConfigInterface<Datum>, AfterViewInit {
+  /** Animation duration */
+  @Input() duration: number
+
+  /**  */
+  @Input() events: {
+    [selector: string]: {
+      [eventName: string]: (data: Datum) => void;
+    };
+  }
+
+  /** Custom attributes */
+  @Input() attributes: {
+    [selector: string]: {
+      [attr: string]: string | number | boolean | ((datum: any) => string | number | boolean);
+    };
+  }
+
+  /** X accessor or number value */
+  @Input() x: NumericAccessor<Datum>
+
+  /** Y accessor or value */
+  @Input() y: NumericAccessor<Datum> | NumericAccessor<Datum>[]
+
+  /** Id accessor for better visual data updates */
+  @Input() id: ((d: Datum, i?: number, ...rest) => string | number)
+
+  /** Component color (string or color object) */
+  @Input() color: string | any
+
+  /** Coloring type */
+  @Input() scales: {
+    x?: ContinuousScale;
+    y?: ContinuousScale;
+  }
+
+  /** Sets the Y scale domain based on the X scale domain not the whole data. Default: `false` */
+  @Input() adaptiveYScale: boolean
+
+  /** Curve type from the CurveType enum */
+  @Input() curveType: CurveType
+
+  /** Line width in pixels */
+  @Input() lineWidth: number
+
+  /** Line dash array, see SVG's stroke-dasharray. Default: `undefined` */
+  @Input() lineDashArray: GenericAccessor<number[], Datum>
+
+  /** Value to be used in case of no data */
+  @Input() noDataValue: number | null
+
+  /** Highlight line on hover */
+  @Input() highlightOnHover: boolean
+
+  /** Optional link cursor. Default: `null` */
+  @Input() cursor: StringAccessor<Datum>
   @Input() data: any
 
-  component: Line<T> | undefined
+  component: Line<Datum> | undefined
 
   ngAfterViewInit (): void {
-    this.component = new Line<T>(this.getConfig())
+    this.component = new Line<Datum>(this.getConfig())
   }
 
   ngOnChanges (changes: SimpleChanges): void {
@@ -41,10 +80,10 @@ export class VisLineComponent<T> implements LineConfigInterface<T>, AfterViewIni
     this.component?.setConfig(this.getConfig())
   }
 
-  getConfig (): LineConfigInterface<T> {
-    const { curveType, lineWidth, lineDashArray, noDataValue, highlightOnHover, cursor, x, y, id, color, scales, adaptiveYScale, events, duration, width, height, attributes } = this
-    const config = { curveType, lineWidth, lineDashArray, noDataValue, highlightOnHover, cursor, x, y, id, color, scales, adaptiveYScale, events, duration, width, height, attributes }
-    const keys = Object.keys(config) as (keyof LineConfigInterface<T>)[]
+  private getConfig (): LineConfigInterface<Datum> {
+    const { duration, events, attributes, x, y, id, color, scales, adaptiveYScale, curveType, lineWidth, lineDashArray, noDataValue, highlightOnHover, cursor } = this
+    const config = { duration, events, attributes, x, y, id, color, scales, adaptiveYScale, curveType, lineWidth, lineDashArray, noDataValue, highlightOnHover, cursor }
+    const keys = Object.keys(config) as (keyof LineConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
     return config

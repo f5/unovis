@@ -53,7 +53,7 @@ docs-html/
 .eslintcache
 stats.html
 .cache/
-packages/vis-angular/generate-components.js
+packages/vis-angular/.autogen.js
 
 # System Files
 .DS_Store
