@@ -15,6 +15,7 @@ export function getTypeName (type: ts.Node): string {
     case (ts.SyntaxKind.UndefinedKeyword): return 'undefined'
     case (ts.SyntaxKind.AnyKeyword): return 'any'
     case (ts.SyntaxKind.VoidKeyword): return 'void'
+    case (ts.SyntaxKind.UnknownKeyword): return 'unknown'
     case (ts.SyntaxKind.Identifier): return (type as ts.Identifier).escapedText as string
     case (ts.SyntaxKind.QualifiedName): return `${getTypeName((type as ts.QualifiedName).left)}.${getTypeName((type as ts.QualifiedName).right)}`
     case (ts.SyntaxKind.TypeLiteral): return `{\n${(type as ts.TypeLiteralNode).members.map(getTypeName).join('\n')}\n}`
