@@ -30,6 +30,7 @@ const components: ComponentInput[] = [
   // Single components
   { name: 'Donut', sources: [coreComponentConfigPath, '/components/donut'], provide: 'VisCoreComponent' },
   { name: 'TopoJSONMap', kebabCaseName: 'topojson-map', sources: [coreComponentConfigPath, '/components/topojson-map'], dataType: 'any', provide: 'VisCoreComponent' },
+  { name: 'Sankey', sources: [coreComponentConfigPath, '/components/sankey'], provide: 'VisCoreComponent' },
 ]
 
 for (const component of components) {
