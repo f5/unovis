@@ -15,6 +15,7 @@ import { VisGroupedBarComponent } from './components/grouped-bar/grouped-bar.com
 import { VisScatterComponent } from './components/scatter/scatter.component'
 import { VisStackedBarComponent } from './components/stacked-bar/stacked-bar.component'
 import { VisTimelineComponent } from './components/timeline/timeline.component'
+import { VisTopoJSONMapComponent } from './components/topojson-map/topojson-map.component'
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { VisTimelineComponent } from './components/timeline/timeline.component'
     VisScatterComponent,
     VisStackedBarComponent,
     VisTimelineComponent,
+    VisTopoJSONMapComponent,
   ],
   imports: [
   ],
@@ -50,6 +52,7 @@ import { VisTimelineComponent } from './components/timeline/timeline.component'
     VisScatterComponent,
     VisStackedBarComponent,
     VisTimelineComponent,
+    VisTopoJSONMapComponent,
   ],
 })
 export class VisAngularModule { }
