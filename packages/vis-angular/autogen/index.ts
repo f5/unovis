@@ -7,14 +7,14 @@ import ts from 'typescript'
 import { getImportStatements, getConfigProperties, kebabCase, getTSStatements } from './utils'
 import { getComponentCode } from './component'
 import { getModuleCode } from './module'
-import { ConfigProperty } from './types'
+import { ComponentInput, ConfigProperty, GenericParameter } from './types'
 
 const volterraVisBasePath = '../vis/src'
 const configFileName = '/config.ts'
 const coreComponentConfigPath = '/core/component'
 const xyComponentConfigPath = '/core/xy-component'
 const skipProperties = ['width', 'height']
-const components = [
+const components: ComponentInput[] = [
   // XY Components
   { name: 'Line', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/line'], provide: 'VisXYComponent' },
   { name: 'Area', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/area'], provide: 'VisXYComponent' },
@@ -29,13 +29,14 @@ const components = [
 
   // Single components
   { name: 'Donut', sources: [coreComponentConfigPath, '/components/donut'], provide: 'VisCoreComponent' },
+  { name: 'TopoJSONMap', kebabCaseName: 'topojson-map', sources: [coreComponentConfigPath, '/components/topojson-map'], dataType: 'any', provide: 'VisCoreComponent' },
 ]
 
 for (const component of components) {
   const configPropertiesMap = new Map<string, ConfigProperty>() // The map of all config properties
   let statements: ts.Statement[] = [] // Statements and ...
   let configInterfaceMembers: ts.TypeElement[] = [] // ... config interface members to resolve imports of custom types
-  let generics: string[] = [] // Generics
+  let generics: GenericParameter[] = [] // Generics
 
   for (const [i, path] of component.sources.entries()) {
     const fullPath = `${volterraVisBasePath}${path}${configFileName}`
@@ -54,22 +55,32 @@ for (const component of components) {
 
     configInterfaceMembers = [...configInterfaceMembers, ...configInterface.members]
     statements = [...statements, ...sourceStatements]
-    if (i === component.sources.length - 1) generics = configInterface.typeParameters?.map(t => t.name.escapedText) as string[]
+    if (i === component.sources.length - 1) {
+      generics = configInterface.typeParameters?.map(t => {
+        const name = t.name.escapedText as string
+        const constraint = t.constraint as ts.TypeReferenceNode
+        const constraintTypeName = (constraint?.typeName as ts.Identifier)?.escapedText as string
+
+        return { name, extends: constraintTypeName }
+      })
+    }
   }
 
   const configProperties = Array.from(configPropertiesMap.values())
-  const importStatements = getImportStatements(statements, configInterfaceMembers, generics)
+  const importStatements = getImportStatements(component.name, statements, configInterfaceMembers, generics)
 
   const componentCode = getComponentCode(
     component.name,
     generics,
     configProperties,
     component.provide,
-    importStatements
+    importStatements,
+    component.dataType ?? 'any',
+    component.kebabCaseName
   )
-  const moduleCode = getModuleCode(component.name)
+  const moduleCode = getModuleCode(component.name, component.kebabCaseName)
 
-  const nameKebabCase = kebabCase(component.name)
+  const nameKebabCase = component.kebabCaseName ?? kebabCase(component.name)
   const pathComponentBase = `src/components/${nameKebabCase}`
   const pathComponent = `${pathComponentBase}/${nameKebabCase}.component.ts`
   const pathModule = `${pathComponentBase}/${nameKebabCase}.module.ts`

@@ -7,3 +7,16 @@ export type ConfigProperty = {
   doc: string[];
   kind: SyntaxKind;
 }
+
+export type GenericParameter = {
+  name: string;
+  extends: string;
+}
+
+export type ComponentInput = {
+  name: string;
+  sources: string[];
+  provide: string;
+  kebabCaseName?: string;
+  dataType?: string;
+}

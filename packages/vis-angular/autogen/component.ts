@@ -1,31 +1,32 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 
 import { kebabCase } from './utils'
-import { ConfigProperty } from './types'
+import { ConfigProperty, GenericParameter } from './types'
 
 export function getComponentCode (
   componentName: string,
-  generics: string[],
+  generics: GenericParameter[],
   configProps: ConfigProperty[],
   provide: string,
   importStatements: { source: string; elements: string[] }[],
-  dataType = 'any'
+  dataType = 'any',
+  kebabCaseName?: string
 ): string {
-  const genericsStr = generics ? `<${generics?.join(', ')}>` : ''
+  const genericsStr = generics ? `<${generics?.map(g => g.name).join(', ')}>` : ''
+  const genericsDefStr = generics ? `<${generics?.map(g => g.name + (g.extends ? ` extends ${g.extends}` : '')).join(', ')}>` : ''
   return `/* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
 ${importStatements.map(s => `import { ${s.elements.join(', ')} } from '${s.source}'`).join('\n')}
-import { ${componentName}, ${componentName}ConfigInterface } from '@volterra/vis'
 import { ${provide} } from '../../core'
 
 @Component({
-  selector: 'vis-${kebabCase(componentName)}',
+  selector: 'vis-${kebabCaseName ?? kebabCase(componentName)}',
   template: '',
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: ${provide}, useExisting: Vis${componentName}Component }],
 })
-export class Vis${componentName}Component${genericsStr} implements ${componentName}ConfigInterface${genericsStr}, AfterViewInit {
+export class Vis${componentName}Component${genericsDefStr} implements ${componentName}ConfigInterface${genericsStr}, AfterViewInit {
 ${
   configProps
     .map((p: ConfigProperty) => `

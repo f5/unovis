@@ -1,7 +1,7 @@
 // Copyright (c) Volterra, Inc. All rights reserved.import { readFileSync } from 'fs'
 import { readFileSync } from 'fs'
 import * as ts from 'typescript'
-import { ConfigProperty } from './types'
+import { ConfigProperty, GenericParameter } from './types'
 
 export function getTypeName (type: ts.Node): string {
   switch (type.kind) {
@@ -15,6 +15,8 @@ export function getTypeName (type: ts.Node): string {
     case (ts.SyntaxKind.UndefinedKeyword): return 'undefined'
     case (ts.SyntaxKind.AnyKeyword): return 'any'
     case (ts.SyntaxKind.VoidKeyword): return 'void'
+    case (ts.SyntaxKind.Identifier): return (type as ts.Identifier).escapedText as string
+    case (ts.SyntaxKind.QualifiedName): return `${getTypeName((type as ts.QualifiedName).left)}.${getTypeName((type as ts.QualifiedName).right)}`
     case (ts.SyntaxKind.TypeLiteral): return `{\n${(type as ts.TypeLiteralNode).members.map(getTypeName).join('\n')}\n}`
     case (ts.SyntaxKind.PropertySignature): {
       const t = type as ts.IndexSignatureDeclaration
@@ -53,7 +55,7 @@ export function getTypeName (type: ts.Node): string {
       return `(${parameters}) => ${returnType}`
     }
     case (ts.SyntaxKind.TypeReference): {
-      const name = ((type as ts.TypeReferenceNode).typeName as ts.Identifier).escapedText
+      const name = getTypeName((type as ts.TypeReferenceNode).typeName)
       const generics = (type as ts.TypeReferenceNode).typeArguments?.map(getTypeName).join(', ')
       return name + (generics ? `<${generics}>` : '')
     }
@@ -83,9 +85,17 @@ export function gatherTypeReferences (types: ts.Node[] | ts.NodeArray<ts.Node>, 
   for (const type of types) {
     if (!type) continue
     switch (type.kind) {
+      case (ts.SyntaxKind.Identifier): {
+        collected.add((type as ts.Identifier).escapedText as string)
+        break
+      }
+      case (ts.SyntaxKind.QualifiedName): {
+        gatherTypeReferences([(type as ts.QualifiedName).left], collected)
+        break
+      }
       case (ts.SyntaxKind.TypeReference): {
         const t = (type as ts.TypeReferenceNode)
-        collected.add((t.typeName as ts.Identifier).escapedText as string)
+        gatherTypeReferences([(type as ts.TypeReferenceNode).typeName], collected)
         if (t.typeArguments) gatherTypeReferences(t.typeArguments, collected)
         break
       }
@@ -133,9 +143,22 @@ export function gatherTypeReferences (types: ts.Node[] | ts.NodeArray<ts.Node>, 
   return Array.from(collected)
 }
 
-export function getImportStatements (statements: ts.Statement[], configInterfaceMembers: ts.TypeElement[], generics: string[] = []): { source: string; elements: string[] }[] {
-  const importDeclarations: any[] = statements.filter(node => node.kind === ts.SyntaxKind.ImportDeclaration)
+export function getImportStatements (
+  componentName: string,
+  statements: ts.Statement[],
+  configInterfaceMembers: ts.TypeElement[],
+  generics: GenericParameter[] = []
+): { source: string; elements: string[] }[] {
   const importSources = {}
+
+  // We assume that all extend types in generics come from volterra/vis
+  const genericExtends = generics.map(g => g.extends).filter(g => g)
+  const componentTypes = [componentName, `${componentName}ConfigInterface`]
+  for (const typeName of [...componentTypes, ...genericExtends]) {
+    importSources[typeName] = '@volterra/vis'
+  }
+
+  const importDeclarations: any[] = statements.filter(node => node.kind === ts.SyntaxKind.ImportDeclaration)
   for (const importDec of importDeclarations) {
     for (const importEl of importDec.importClause.namedBindings.elements) {
       let importSource: string = importDec.moduleSpecifier.text
@@ -147,11 +170,13 @@ export function getImportStatements (statements: ts.Statement[], configInterface
       importSources[importEl.name.escapedText] = importSource
     }
   }
+
+  const genericNames = generics.map(g => g.name)
   const typeList = gatherTypeReferences(configInterfaceMembers.map(node => (node as ts.IndexSignatureDeclaration).type))
-    .filter(name => !generics.includes(name)) // Filter out generics
+    .filter(name => !genericNames.includes(name)) // Filter out generics
 
   const importStatements: { source: string; elements: string[] }[] = []
-  for (const name of typeList) {
+  for (const name of Array.from(new Set([...componentTypes, ...genericExtends, ...typeList]))) {
     const importSource: string = importSources[name]
     if (!importSource) {
       console.error(`Can't find import source for: ${name}`)
