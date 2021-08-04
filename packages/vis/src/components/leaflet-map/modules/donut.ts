@@ -3,15 +3,15 @@
 import { pie, arc } from 'd3-shape'
 
 // Local Types
-import { PieDatum } from '../types'
+import { LeafletMapPieDatum } from '../types'
 
-const pieConstructor = pie<PieDatum>()
+const pieConstructor = pie<LeafletMapPieDatum>()
   .sort(null)
-  .value((d: PieDatum): number => d.value)
+  .value((d: LeafletMapPieDatum): number => d.value)
 
 export function updateDonut (selection, data, radius, arcWidth = 2, padAngle = 0.05): void {
   pieConstructor.padAngle(padAngle)
-  const arcs = pieConstructor(data.filter((d: PieDatum) => d.value))
+  const arcs = pieConstructor(data.filter((d: LeafletMapPieDatum) => d.value))
 
   const donuts = selection.selectAll('path')
     .data(arcs)
