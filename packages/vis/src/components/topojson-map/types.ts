@@ -33,7 +33,7 @@ export type MapInputArea = {
   color?: string;
 }
 
-export enum MapProjectionType {
+export enum MapProjectionKind {
   Mercator = 'Mercator',
   Equirectangular = 'Equirectangular',
   AzimuthalEqualArea = 'AzimuthalEqualArea',
@@ -52,19 +52,19 @@ export enum MapProjectionType {
 }
 
 export const MapProjection = {
-  [MapProjectionType.Mercator]: geoMercator,
-  [MapProjectionType.Equirectangular]: geoEquirectangular,
-  [MapProjectionType.AzimuthalEqualArea]: geoAzimuthalEqualArea,
-  [MapProjectionType.AzimuthalEquidistant]: geoAzimuthalEquidistant,
-  [MapProjectionType.Gnomonic]: geoGnomonic,
-  [MapProjectionType.Orthographic]: geoOrthographic,
-  [MapProjectionType.Stereographic]: geoStereographic,
-  [MapProjectionType.EqualEarth]: geoEqualEarth,
-  [MapProjectionType.AlbersUsa]: geoAlbersUsa,
-  [MapProjectionType.Albers]: geoAlbers,
-  [MapProjectionType.ConicConformal]: geoConicConformal,
-  [MapProjectionType.ConicEqualArea]: geoConicEqualArea,
-  [MapProjectionType.ConicEquidistant]: geoConicEquidistant,
-  [MapProjectionType.TransverseMercator]: geoTransverseMercator,
-  [MapProjectionType.NaturalEarth1]: geoNaturalEarth1,
+  [MapProjectionKind.Mercator]: geoMercator,
+  [MapProjectionKind.Equirectangular]: geoEquirectangular,
+  [MapProjectionKind.AzimuthalEqualArea]: geoAzimuthalEqualArea,
+  [MapProjectionKind.AzimuthalEquidistant]: geoAzimuthalEquidistant,
+  [MapProjectionKind.Gnomonic]: geoGnomonic,
+  [MapProjectionKind.Orthographic]: geoOrthographic,
+  [MapProjectionKind.Stereographic]: geoStereographic,
+  [MapProjectionKind.EqualEarth]: geoEqualEarth,
+  [MapProjectionKind.AlbersUsa]: geoAlbersUsa,
+  [MapProjectionKind.Albers]: geoAlbers,
+  [MapProjectionKind.ConicConformal]: geoConicConformal,
+  [MapProjectionKind.ConicEqualArea]: geoConicEqualArea,
+  [MapProjectionKind.ConicEquidistant]: geoConicEquidistant,
+  [MapProjectionKind.TransverseMercator]: geoTransverseMercator,
+  [MapProjectionKind.NaturalEarth1]: geoNaturalEarth1,
 }
