@@ -2,14 +2,14 @@
 /* eslint-disable no-use-before-define */
 import { sankeyLeft, sankeyRight, sankeyCenter, sankeyJustify } from 'd3-sankey'
 
-export interface InputNode {
+export interface SankeyInputNode {
   id?: string;
 }
 
-export interface InputLink {
+export interface SankeyInputLink {
   id?: string;
-  source: number | string | InputNode;
-  target: number | string | InputNode;
+  source: number | string | SankeyInputNode;
+  target: number | string | SankeyInputNode;
 }
 
 export type SankeyNode<N extends any, L extends any> = N & {

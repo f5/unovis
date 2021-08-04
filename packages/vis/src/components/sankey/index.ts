@@ -23,14 +23,14 @@ import { SankeyConfig, SankeyConfigInterface } from './config'
 import * as s from './style'
 
 // Local Types
-import { InputNode, InputLink, SankeyNode, SankeyLink } from './types'
+import { SankeyInputNode, SankeyInputLink, SankeyNode, SankeyLink } from './types'
 
 // Modules
 import { removeLinks, createLinks, updateLinks } from './modules/link'
 import { removeNodes, createNodes, updateNodes, onNodeMouseOver, onNodeMouseOut } from './modules/node'
 import { requiredLabelSpace } from './modules/label'
 
-export class Sankey<N extends InputNode, L extends InputLink> extends ComponentCore<{nodes: N[]; links?: L[]}> implements ExtendedSizeComponent {
+export class Sankey<N extends SankeyInputNode, L extends SankeyInputLink> extends ComponentCore<{nodes: N[]; links?: L[]}> implements ExtendedSizeComponent {
   static selectors = s
   config: SankeyConfig<N, L> = new SankeyConfig()
   datamodel: GraphDataModel<SankeyNode<N, L>, SankeyLink<N, L>> = new GraphDataModel()
