@@ -16,7 +16,7 @@ import { getColor, hexToBrightness } from 'utils/color'
 import { getCSSVariableValue, isStringCSSVariable } from 'utils/misc'
 
 // Local Types
-import { Projection, MapInputNode, MapInputLink, MapInputArea } from './types'
+import { MapInputNode, MapInputLink, MapInputArea } from './types'
 
 // Config
 import { TopoJSONMapConfig, TopoJSONMapConfigInterface } from './config'
@@ -73,7 +73,7 @@ export class TopoJSONMap<N extends MapInputNode, L extends MapInputLink, A exten
   setConfig (config?: TopoJSONMapConfigInterface<N, L, A>): void {
     super.setConfig(config)
 
-    const newProjection = Projection[this.config.projection]()
+    const newProjection = this.config.projection
     if (this._projection) {
       newProjection.scale(this._projection.scale()).translate(this._projection.translate())
     }
