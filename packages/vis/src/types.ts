@@ -18,7 +18,7 @@ export { MapProjection, MapProjectionKind, MapInputNode, MapInputLink, MapInputA
 export { Hierarchy } from 'components/radial-dendrogram/types'
 export { Bounds, MapZoomState } from 'components/leaflet-map/types'
 export { LayoutType, LinkStyle, LinkArrow, NodeDatumCore, LinkDatumCore, CircleLabel, PanelConfigInterface } from 'components/graph/types'
-export { NodeAlignType, SubLabelPlacement, EnterTransitionType, ExitTransitionType } from 'components/sankey/types'
+export { SankeyInputNode, SankeyInputLink, SankeyNode, SankeyLink, NodeAlignType, SubLabelPlacement, EnterTransitionType, ExitTransitionType } from 'components/sankey/types'
 export { VisControlItemInterface, VisControlsOrientation } from 'components/vis-controls/types'
 export { FreeBrushMode, FreeBrushSelection } from 'components/free-brush/types'
 export { BulletLegendItemInterface } from 'components/bullet-legend/types'
