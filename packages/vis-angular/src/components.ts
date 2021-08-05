@@ -11,3 +11,4 @@ export { VisGroupedBarComponent } from './components/grouped-bar/grouped-bar.com
 export { VisScatterComponent } from './components/scatter/scatter.component'
 export { VisStackedBarComponent } from './components/stacked-bar/stacked-bar.component'
 export { VisTimelineComponent } from './components/timeline/timeline.component'
+export { VisTopoJSONMapComponent } from './components/topojson-map/topojson-map.component'
