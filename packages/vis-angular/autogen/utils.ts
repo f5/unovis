@@ -16,6 +16,17 @@ export function getTypeName (type: ts.Node): string {
     case (ts.SyntaxKind.AnyKeyword): return 'any'
     case (ts.SyntaxKind.VoidKeyword): return 'void'
     case (ts.SyntaxKind.UnknownKeyword): return 'unknown'
+    case (ts.SyntaxKind.Parameter): {
+      const p = type as ts.ParameterDeclaration
+      const paramName = getTypeName(p.name)
+      const paramType = p.type ? getTypeName(p.type) : undefined
+      const isRest = p.dotDotDotToken
+      return isRest
+        ? '...rest'
+        : (`${paramName}${p.questionToken ? '?' : ''}${paramType ? `: ${paramType}` : ''}`)
+    }
+    case (ts.SyntaxKind.ObjectBindingPattern): return `{ ${(type as ts.BindingPattern).elements.map(getTypeName).join(', ')} }`
+    case (ts.SyntaxKind.BindingElement): return getTypeName((type as ts.BindingElement).name)
     case (ts.SyntaxKind.Identifier): return (type as ts.Identifier).escapedText as string
     case (ts.SyntaxKind.QualifiedName): return `${getTypeName((type as ts.QualifiedName).left)}.${getTypeName((type as ts.QualifiedName).right)}`
     case (ts.SyntaxKind.TypeLiteral): return `{\n${(type as ts.TypeLiteralNode).members.map(getTypeName).join('\n')}\n}`
@@ -41,14 +52,7 @@ export function getTypeName (type: ts.Node): string {
     case (ts.SyntaxKind.ParenthesizedType): return `(${getTypeName((type as ts.ParenthesizedTypeNode).type)})`
     case (ts.SyntaxKind.FunctionType): {
       const parameters = (type as ts.FunctionTypeNode).parameters
-        .map((p: ts.ParameterDeclaration) => {
-          const paramName = (p.name as ts.Identifier).escapedText
-          const paramType = p.type ? getTypeName(p.type) : undefined
-          const isRest = p.dotDotDotToken
-          return isRest
-            ? '...rest'
-            : (`${paramName}${p.questionToken ? '?' : ''}${paramType ? `: ${paramType}` : ''}`)
-        })
+        .map(getTypeName)
         .join(', ')
 
       const returnType = getTypeName((type as ts.FunctionTypeNode).type)
