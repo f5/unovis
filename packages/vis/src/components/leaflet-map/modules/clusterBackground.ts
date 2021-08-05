@@ -6,7 +6,7 @@ import { cloneDeep } from 'utils/data'
 import { getPointPos, getNodePathData } from './utils'
 
 // Local Types
-import { PointShape } from '../types'
+import { LeafletMapPointShape } from '../types'
 
 // Config Interface
 import { LeafletMapConfigInterface } from '../config'
@@ -21,7 +21,7 @@ export function updateBackgroundNode<T> (selection, expandedCluster, config: Lea
   if (expandedCluster && clusterBackground) {
     const node = cloneDeep(expandedCluster.cluster)
     const { x, y } = getPointPos(node, leafletMap)
-    const path = getNodePathData({ x: 0, y: 0 }, clusterBackgroundRadius, PointShape.Circle)
+    const path = getNodePathData({ x: 0, y: 0 }, clusterBackgroundRadius, LeafletMapPointShape.Circle)
     selection.select('path').attr('d', d => path)
     selection
       .classed('active', true)

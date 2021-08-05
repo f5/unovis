@@ -1,9 +1,16 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { NgModule } from '@angular/core'
+
+// SVG Container Components
 import { VisXYContainerComponent, VisSingleContainerComponent } from './containers'
+
+// Ancillary Components
 import { VisTooltipComponent } from './core/tooltip/tooltip.component'
 
-// Auto-generated components
+// HTML Components
+import { VisLeafletMapComponent } from './html-components/leaflet-map/leaflet-map.component'
+
+// Auto-generated SVG components
 import { VisLineComponent } from './components/line/line.component'
 import { VisAreaComponent } from './components/area/area.component'
 import { VisAxisComponent } from './components/axis/axis.component'
@@ -36,6 +43,7 @@ import { VisSankeyComponent } from './components/sankey/sankey.component'
     VisTimelineComponent,
     VisTopoJSONMapComponent,
     VisSankeyComponent,
+    VisLeafletMapComponent,
   ],
   imports: [
   ],
@@ -56,6 +64,7 @@ import { VisSankeyComponent } from './components/sankey/sankey.component'
     VisTimelineComponent,
     VisTopoJSONMapComponent,
     VisSankeyComponent,
+    VisLeafletMapComponent,
   ],
 })
 export class VisAngularModule { }

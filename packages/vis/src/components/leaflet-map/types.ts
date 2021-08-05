@@ -7,7 +7,7 @@ export enum LeafletMapRenderer {
   MapboxGL = 'mapboxgl',
 }
 
-export enum PointShape {
+export enum LeafletMapPointShape {
   Square = 'square',
   Circle = 'circle',
   Hexagon = 'hexagon',
@@ -15,33 +15,33 @@ export enum PointShape {
   Cluster = 'cluster',
 }
 
-export type PieDatum = {
+export type LeafletMapPieDatum = {
   value: number;
   name: string;
   color: string;
   className?: string;
 }
 
-export interface ValuesMapItem {
+export interface LeafletMapPointStyle {
   color: string;
   className?: string;
 }
 
-export type ValuesMap = { [key: string]: ValuesMapItem }
+export type LeafletMapPointStyles = { [key: string]: LeafletMapPointStyle }
 
 export type PointExpandedClusterProperties<D> = {
   // Expanded cluster related data:
   // eslint-disable-next-line no-use-before-define
-  expandedClusterPoint?: Point<D>;
+  expandedClusterPoint?: LeafletMapPoint<D>;
   r?: number;
   dx?: number;
   dy?: number;
 }
 
-export type PointDatum<D> = D & PointExpandedClusterProperties<D> & {
+export type LeafletMapPointDatum<D> = D & PointExpandedClusterProperties<D> & {
   id: string | number;
   clusterIndex?: Supercluster<D>;
-  shape: PointShape;
+  shape: LeafletMapPointShape;
 
   // Supercluster generated data:
   cluster: boolean;
@@ -51,7 +51,7 @@ export type PointDatum<D> = D & PointExpandedClusterProperties<D> & {
   cluster_id: string | number;
 };
 
-export type Point<D> = {
+export type LeafletMapPoint<D> = {
   geometry: GeoJSON.Geometry;
   bbox: { x1: number; x2: number; y1: number; y2: number };
   radius: number;
@@ -59,8 +59,8 @@ export type Point<D> = {
   fill: string;
   index: any;
   id: number | string;
-  properties: PointDatum<D>;
-  donutData: PieDatum[];
+  properties: LeafletMapPointDatum<D>;
+  donutData: LeafletMapPieDatum[];
   _zIndex: number;
 }
 

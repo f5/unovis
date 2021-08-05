@@ -9,7 +9,7 @@ import { Tooltip } from 'core/tooltip'
 import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
 
 // Local Types
-import { LeafletMapRenderer, Bounds, ValuesMap, MapZoomState, PointDatum } from './types'
+import { LeafletMapRenderer, Bounds, LeafletMapPointStyles, MapZoomState, LeafletMapPointDatum } from './types'
 
 // Component
 import { LeafletMap } from './index'
@@ -69,13 +69,13 @@ export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterfa
   /** Point color accessor function or value */
   pointColor?: ColorAccessor<Datum>;
   /** Point radius accessor function or value */
-  pointRadius?: NumericAccessor<PointDatum<Datum>>;
+  pointRadius?: NumericAccessor<LeafletMapPointDatum<Datum>>;
   /** Point inner label accessor function */
-  pointLabel?: StringAccessor<PointDatum<Datum>>;
+  pointLabel?: StringAccessor<LeafletMapPointDatum<Datum>>;
   /** Point bottom label accessor function */
-  pointBottomLabel?: StringAccessor<PointDatum<Datum>>;
+  pointBottomLabel?: StringAccessor<LeafletMapPointDatum<Datum>>;
   /** Point cursor value or accessor function, Default: `null` */
-  pointCursor?: StringAccessor<PointDatum<Datum>>;
+  pointCursor?: StringAccessor<LeafletMapPointDatum<Datum>>;
   /** */
   selectedNodeId?: string;
 
@@ -89,7 +89,7 @@ export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterfa
   /** Clustering radius. Default: `45` */
   clusterRadius?: number;
   /** Status styles */
-  valuesMap?: ValuesMap;
+  valuesMap?: LeafletMapPointStyles;
 
   // TopoJSON overlay
   /** A TopoJSON Geometry layer to be displayed on top of the map. Supports fill and stroke */
@@ -140,8 +140,8 @@ export class LeafletMapConfig<Datum> extends ComponentConfig implements LeafletM
   pointShape = (d: Datum): string => d['shape']
   pointColor = (d: Datum): string => d['color']
   pointRadius = undefined
-  pointLabel = (d: PointDatum<Datum>): string => `${d.point_count ?? ''}`
-  pointBottomLabel = (d: PointDatum<Datum>): string => ''
+  pointLabel = (d: LeafletMapPointDatum<Datum>): string => `${d.point_count ?? ''}`
+  pointBottomLabel = (d: LeafletMapPointDatum<Datum>): string => ''
   pointCursor = null
   selectedNodeId = undefined
 

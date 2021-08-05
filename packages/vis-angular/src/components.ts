@@ -1,5 +1,5 @@
-/* eslint-disable notice/notice */
-// !!! This code was automatically generated. You should not change it !!!
+// Copyright (c) Volterra, Inc. All rights reserved.
+// SVG Components
 export { VisLineComponent } from './components/line/line.component'
 export { VisAreaComponent } from './components/area/area.component'
 export { VisAxisComponent } from './components/axis/axis.component'
@@ -13,3 +13,6 @@ export { VisStackedBarComponent } from './components/stacked-bar/stacked-bar.com
 export { VisTimelineComponent } from './components/timeline/timeline.component'
 export { VisTopoJSONMapComponent } from './components/topojson-map/topojson-map.component'
 export { VisSankeyComponent } from './components/sankey/sankey.component'
+
+// HTML Components
+export { VisLeafletMapComponent } from './html-components/leaflet-map/leaflet-map.component'
