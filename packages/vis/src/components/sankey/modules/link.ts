@@ -9,7 +9,7 @@ import { getValue } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 
 // Local Types
-import { InputLink, InputNode, SankeyLink } from '../types'
+import { SankeyInputLink, SankeyInputNode, SankeyLink } from '../types'
 
 // Config
 import { SankeyConfig } from '../config'
@@ -40,7 +40,7 @@ export function linkPath ({ x0, x1, y0, y1, width }): string {
   `
 }
 
-export function createLinks<N extends InputNode, L extends InputLink> (sel: Selection<SVGGElement, SankeyLink<N, L>, SVGGElement, any>): void {
+export function createLinks<N extends SankeyInputNode, L extends SankeyInputLink> (sel: Selection<SVGGElement, SankeyLink<N, L>, SVGGElement, any>): void {
   sel.append('path').attr('class', s.linkPath)
     .attr('d', (d: SankeyLink<N, L>, i, el) => {
     // eslint-disable-next-line dot-notation
@@ -58,7 +58,7 @@ export function createLinks<N extends InputNode, L extends InputLink> (sel: Sele
   sel.style('opacity', 0)
 }
 
-export function updateLinks<N extends InputNode, L extends InputLink> (sel: Selection<SVGGElement, SankeyLink<N, L>, SVGGElement, any>, config: SankeyConfig<N, L>, duration): void {
+export function updateLinks<N extends SankeyInputNode, L extends SankeyInputLink> (sel: Selection<SVGGElement, SankeyLink<N, L>, SVGGElement, any>, config: SankeyConfig<N, L>, duration): void {
   smartTransition(sel, duration)
     .style('opacity', (d: SankeyLink<N, L>) => d._state.greyout ? 0.2 : 1)
 

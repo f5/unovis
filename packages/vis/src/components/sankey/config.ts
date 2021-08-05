@@ -11,12 +11,12 @@ import { getValue } from 'utils/data'
 import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
 import { TrimMode, VerticalAlign, FitMode } from 'types/text'
 import { Position } from 'types/position'
-import { InputLink, InputNode, NodeAlignType, SubLabelPlacement, ExitTransitionType, EnterTransitionType } from './types'
+import { SankeyInputLink, SankeyInputNode, NodeAlignType, SubLabelPlacement, ExitTransitionType, EnterTransitionType } from './types'
 
-export interface SankeyConfigInterface<N extends InputNode, L extends InputLink> extends ComponentConfigInterface {
+export interface SankeyConfigInterface<N extends SankeyInputNode, L extends SankeyInputLink> extends ComponentConfigInterface {
   // General
   /** Node / Link id accessor function. Used for mapping of data updates to corresponding SVG objects. Default: `(d, i) => (d._id ?? i).toString()` */
-  id?: (d: InputNode | InputLink, i?: number, ...any) => string;
+  id?: (d: SankeyInputNode | SankeyInputLink, i?: number, ...any) => string;
   /** Coefficient to scale the height of the diagram when the amount of links is low: `C * links.length`, clamped to `[height / 2, height]`. Default: `1/16` */
   heightNormalizationCoeff?: number;
   /** Type of animation on removing nodes. Default: `ExitTransitionType.Default` */
@@ -121,13 +121,13 @@ export interface SankeyConfigInterface<N extends InputNode, L extends InputLink>
   subLabelToLabelInlineWidthRatio?: number;
 }
 
-export class SankeyConfig<N extends InputNode, L extends InputLink> extends ComponentConfig implements SankeyConfigInterface<N, L> {
+export class SankeyConfig<N extends SankeyInputNode, L extends SankeyInputLink> extends ComponentConfig implements SankeyConfigInterface<N, L> {
   // General
   heightNormalizationCoeff = 1 / 16
   exitTransitionType = ExitTransitionType.Default
   enterTransitionType = EnterTransitionType.Default
   // eslint-disable-next-line dot-notation
-  id = (d: InputNode | InputLink, i: number): string => (d['_id'] ?? i).toString()
+  id = (d: SankeyInputNode | SankeyInputLink, i: number): string => (d['_id'] ?? i).toString()
   highlightSubtreeOnHover = false
   highlightDuration = 400
   highlightDelay = 1000

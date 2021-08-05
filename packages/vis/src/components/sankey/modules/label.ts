@@ -11,7 +11,7 @@ import { FitMode, VerticalAlign } from 'types/text'
 import { Position } from 'types/position'
 
 // Local Types
-import { InputLink, InputNode, SankeyNode, SubLabelPlacement } from '../types'
+import { SankeyInputLink, SankeyInputNode, SankeyNode, SubLabelPlacement } from '../types'
 
 // Config
 import { SankeyConfig } from '../config'
@@ -47,7 +47,7 @@ function getLabelBackground (width: number, height: number, orientation: Positio
   }
 }
 
-export function getLabelOrientation<N extends InputNode, L extends InputLink> (d: SankeyNode<N, L>, sankeyWidth: number, labelPosition: Position): (Position.Left | Position.Right) {
+export function getLabelOrientation<N extends SankeyInputNode, L extends SankeyInputLink> (d: SankeyNode<N, L>, sankeyWidth: number, labelPosition: Position): (Position.Left | Position.Right) {
   const orientation = labelPosition === Position.Auto
     ? d.x0 < sankeyWidth / 2 ? Position.Left : Position.Right
     : labelPosition
@@ -62,7 +62,7 @@ export const requiredLabelSpace = (labelWidth: number, labelFontSize: number): {
   }
 }
 
-export function getLabelGroupXTranslate<N extends InputNode, L extends InputLink> (d: SankeyNode<N, L>, config: SankeyConfig<N, L>): number {
+export function getLabelGroupXTranslate<N extends SankeyInputNode, L extends SankeyInputLink> (d: SankeyNode<N, L>, config: SankeyConfig<N, L>): number {
   const orientation = getLabelOrientation(d, config.width, config.labelPosition)
   switch (orientation) {
     case Position.Right: return config.nodeWidth + NODE_LABEL_SPACING
@@ -72,7 +72,7 @@ export function getLabelGroupXTranslate<N extends InputNode, L extends InputLink
   }
 }
 
-export function getLabelGroupYTranslate<N extends InputNode, L extends InputLink> (d: SankeyNode<N, L>, labelGroupHeight: number, config: SankeyConfig<N, L>): number {
+export function getLabelGroupYTranslate<N extends SankeyInputNode, L extends SankeyInputLink> (d: SankeyNode<N, L>, labelGroupHeight: number, config: SankeyConfig<N, L>): number {
   const nodeHeight = d.y1 - d.y0
   if (config.labelBackground && (nodeHeight < labelGroupHeight)) return (nodeHeight - labelGroupHeight) / 2
 
@@ -84,7 +84,7 @@ export function getLabelGroupYTranslate<N extends InputNode, L extends InputLink
   }
 }
 
-export function getLabelTextAnchor<N extends InputNode, L extends InputLink> (d: SankeyNode<N, L>, config: SankeyConfig<N, L>): string {
+export function getLabelTextAnchor<N extends SankeyInputNode, L extends SankeyInputLink> (d: SankeyNode<N, L>, config: SankeyConfig<N, L>): string {
   const orientation = getLabelOrientation(d, config.width, config.labelPosition)
   switch (orientation) {
     case Position.Right: return 'start'
@@ -94,7 +94,7 @@ export function getLabelTextAnchor<N extends InputNode, L extends InputLink> (d:
   }
 }
 
-export function getSubLabelTextAnchor<N extends InputNode, L extends InputLink> (d: SankeyNode<N, L>, config: SankeyConfig<N, L>): string {
+export function getSubLabelTextAnchor<N extends SankeyInputNode, L extends SankeyInputLink> (d: SankeyNode<N, L>, config: SankeyConfig<N, L>): string {
   const isSublabelInline = config.subLabelPlacement === SubLabelPlacement.Inline
   const orientation = getLabelOrientation(d, config.width, config.labelPosition)
   switch (orientation) {
@@ -105,7 +105,7 @@ export function getSubLabelTextAnchor<N extends InputNode, L extends InputLink> 
   }
 }
 
-export function renderLabel<N extends InputNode, L extends InputLink> (
+export function renderLabel<N extends SankeyInputNode, L extends SankeyInputLink> (
   labelGroup: Selection<SVGGElement, SankeyNode<N, L>, SVGGElement, any>,
   d: SankeyNode<N, L>,
   config: SankeyConfig<N, L>,
