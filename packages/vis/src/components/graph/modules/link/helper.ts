@@ -4,11 +4,14 @@
 import { getValue } from 'utils/data'
 import { stringToHtmlId } from 'utils/misc'
 
+// Types
+import { GraphInputLink, GraphInputNode } from 'types/graph'
+
 // Local Types
-import { NodeDatumCore, LinkDatumCore } from '../../types'
+import { GraphLink } from '../../types'
 
 // Config
-import { GraphConfigInterface } from '../../config'
+import { GraphConfig } from '../../config'
 
 // Helpers
 import { getX, getY } from '../node/helper'
@@ -21,25 +24,25 @@ export const LINK_LABEL_RADIUS = 8
 export const LINK_MARKER_WIDTH = 12
 export const LINK_MARKER_HEIGHT = 8
 
-export function getLinkShift<L extends LinkDatumCore> (link: L): { dx: number; dy: number } {
-  const sourceNode = link.source as NodeDatumCore
-  const targetNode = link.target as NodeDatumCore
+export function getLinkShift (link: GraphLink): { dx: number; dy: number } {
+  const sourceNode = link.source
+  const targetNode = link.target
   const angle = Math.atan2(getY(targetNode) - getY(sourceNode), getX(targetNode) - getX(sourceNode)) - Math.PI / 2
   const dx = Math.cos(angle) * LINK_MARGIN * link._direction * (link._index - (link._neighbours - 1) / 2)
   const dy = Math.sin(angle) * LINK_MARGIN * link._direction * (link._index - (link._neighbours - 1) / 2)
   return { dx, dy }
 }
 
-export function getLinkShiftTransform<L extends LinkDatumCore> (link: L): string {
+export function getLinkShiftTransform (link: GraphLink): string {
   const { dx, dy } = getLinkShift(link)
   return `translate(${dx}, ${dy})`
 }
 
-export function getLinkLabelShift<L extends LinkDatumCore> (link: L, shiftFromCenter = 0): string {
-  const x1 = getX(link.source as NodeDatumCore)
-  const y1 = getY(link.source as NodeDatumCore)
-  const x2 = getX(link.target as NodeDatumCore)
-  const y2 = getY(link.target as NodeDatumCore)
+export function getLinkLabelShift (link: GraphLink, shiftFromCenter = 0): string {
+  const x1 = getX(link.source)
+  const y1 = getY(link.source)
+  const x2 = getX(link.target)
+  const y2 = getY(link.target)
   const angle = Math.atan2(y2 - y1, x2 - x1)
   const perpendicularShift = getLinkShift(link)
 
@@ -48,12 +51,12 @@ export function getLinkLabelShift<L extends LinkDatumCore> (link: L, shiftFromCe
   return `translate(${x}, ${y})`
 }
 
-export function getLinkStrokeWidth<N extends NodeDatumCore, L extends LinkDatumCore> (d: L, scale: number, config: GraphConfigInterface<N, L>): number {
-  const m = getValue(d, config.linkWidth) // (d._state.hovered || d._state.selected) ? 1 : 1
+export function getLinkStrokeWidth (d: GraphLink, scale: number, config: GraphConfig<GraphInputNode, GraphInputLink>): number {
+  const m = getValue(d, config.linkWidth)
   return m / Math.pow(scale, 0.5)
 }
 
-export function getLinkBandWidth<N extends NodeDatumCore, L extends LinkDatumCore> (d: L, scale: number, config: GraphConfigInterface<N, L>): number {
+export function getLinkBandWidth (d: GraphLink, scale: number, config: GraphConfig<GraphInputNode, GraphInputLink>): number {
   const { nodeSize, linkBandWidth } = config
   const sourceNodeSize = getValue(d.source, nodeSize)
   const targetNodeSize = getValue(d.target, nodeSize)
@@ -61,13 +64,13 @@ export function getLinkBandWidth<N extends NodeDatumCore, L extends LinkDatumCor
   return Math.min(minNodeSize, getValue(d, linkBandWidth) / Math.pow(scale || 1, 0.5)) || 0
 }
 
-export function getLinkColor<N extends NodeDatumCore, L extends LinkDatumCore> (link: L, config: GraphConfigInterface<N, L>, value = 0.05): string {
+export function getLinkColor (link: GraphLink, config: GraphConfig<GraphInputNode, GraphInputLink>): string {
   const { linkStroke } = config
   const c = getValue(link, linkStroke) ?? window.getComputedStyle(document.documentElement).getPropertyValue('--vis-graph-link-stroke-color')
   return c || null
 }
 
-export function getMarker<N extends NodeDatumCore, L extends LinkDatumCore> (d: L, scale: number, config: GraphConfigInterface<N, L>): string {
+export function getMarker (d: GraphLink, scale: number, config: GraphConfig<GraphInputNode, GraphInputLink>): string {
   const { linkArrow } = config
   if ((scale > ZoomLevel.Level2) && getValue(d, linkArrow)) {
     const color = getLinkColor(d, config)

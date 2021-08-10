@@ -1,18 +1,14 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 /* eslint-disable no-use-before-define */
 import { sankeyLeft, sankeyRight, sankeyCenter, sankeyJustify } from 'd3-sankey'
+import { GraphInputLink, GraphLinkCore, GraphNodeCore } from 'types/graph'
+import { GraphInputNode } from '../../types'
 
-export interface SankeyInputNode {
-  id?: string;
-}
+export type SankeyInputNode = GraphInputNode
 
-export interface SankeyInputLink {
-  id?: string;
-  source: number | string | SankeyInputNode;
-  target: number | string | SankeyInputNode;
-}
+export type SankeyInputLink = GraphInputLink
 
-export type SankeyNode<N extends any, L extends any> = N & {
+export type SankeyNode<N extends SankeyInputNode, L extends SankeyInputLink> = GraphNodeCore<N, L> & {
   id: string;
   /** the node’s value; this is the sum of link.value for the node’s incoming links, or node.fixedValue if defined */
   value: number;
@@ -48,7 +44,7 @@ export type SankeyNode<N extends any, L extends any> = N & {
   };
 }
 
-export type SankeyLink<N extends any, L extends any> = L & {
+export type SankeyLink<N extends SankeyInputNode, L extends SankeyInputLink> = GraphLinkCore<N, L> & {
   value: number;
   /** the link’s source node */
   source: SankeyNode<N, L>;

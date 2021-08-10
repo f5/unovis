@@ -2,9 +2,12 @@
 // Types
 import { Shape } from 'types/shape'
 import { Position } from 'types/position'
+import { GraphInputLink, GraphInputNode, GraphNodeCore, GraphLinkCore } from 'types/graph'
 
-export type NodeDatumCore = {
-  id?: number | string;
+export type GraphNode<
+  N extends GraphInputNode = GraphInputNode,
+  L extends GraphInputLink = GraphInputLink,
+> = GraphNodeCore<N, L> & {
   x?: number;
   y?: number;
 
@@ -18,14 +21,17 @@ export type NodeDatumCore = {
     greyout?: boolean;
   };
 
-  _panels?: NodeDatumCore[][];
+  _panels?: GraphNode<N>[][];
   _isConnected?: boolean;
 }
 
-export type LinkDatumCore = {
+export type GraphLink<
+  N extends GraphInputNode = GraphInputNode,
+  L extends GraphInputLink = GraphInputLink,
+> = GraphLinkCore<N, L> & {
   id?: number | string;
-  source: number | string | NodeDatumCore;
-  target: number | string | NodeDatumCore;
+  source: number | string | GraphNode<N>;
+  target: number | string | GraphNode<N>;
 
   _id?: number | string;
   _direction?: number;
@@ -40,7 +46,7 @@ export type LinkDatumCore = {
   };
 }
 
-export enum LayoutType {
+export enum GraphLayoutType {
   Circular = 'circular',
   Concentric = 'concentric',
   Parallel = 'parallel',
@@ -49,23 +55,26 @@ export enum LayoutType {
   Force = 'force',
 }
 
-export type CircleLabel = {
+export type GraphCircleLabel = {
   text: string;
   color?: string | null;
   cursor?: string | null;
 }
 
-export enum LinkStyle {
+export enum GraphLinkStyle {
   Dashed = 'dashed',
   Solid = 'solid',
 }
 
-export enum LinkArrow {
+export enum GraphLinkArrow {
   Single = 'single',
   Double = 'double',
 }
 
-export interface PanelConfigInterface {
+export interface GraphPanelConfigInterface<
+  N extends GraphInputNode = GraphInputNode,
+  L extends GraphInputLink = GraphInputLink,
+> {
   nodes: (string|number)[];
   label?: string;
   labelPosition?: Position.Top | Position.Bottom;
@@ -82,5 +91,15 @@ export interface PanelConfigInterface {
   _y?: number;
   _width?: number;
   _height?: number;
-  _data?: NodeDatumCore[];
+  _data?: GraphNode<N, L>[];
+}
+
+export type GraphNodeAnimationState = {
+  endAngle: number;
+  nodeSize?: number;
+  borderWidth?: number;
+}
+
+export type GraphNodeAnimatedElement<T = SVGElement> = T & {
+  _animState: GraphNodeAnimationState;
 }
