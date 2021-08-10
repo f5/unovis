@@ -1,5 +1,24 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { curveBasis, curveBasisClosed, curveBasisOpen, curveBundle, curveCardinal, curveCardinalClosed, curveCardinalOpen, curveCatmullRom, curveCatmullRomClosed, curveCatmullRomOpen, curveLinear, curveLinearClosed, curveMonotoneX, curveMonotoneY, curveNatural, curveStep, curveStepAfter, curveStepBefore } from 'd3-shape'
+import {
+  curveBasis,
+  curveBasisClosed,
+  curveBasisOpen,
+  curveBundle,
+  curveCardinal,
+  curveCardinalClosed,
+  curveCardinalOpen,
+  curveCatmullRom,
+  curveCatmullRomClosed,
+  curveCatmullRomOpen,
+  curveLinear,
+  curveLinearClosed,
+  curveMonotoneX,
+  curveMonotoneY,
+  curveNatural,
+  curveStep,
+  curveStepAfter,
+  curveStepBefore,
+} from 'd3-shape'
 
 export enum CurveType {
   Basis = 'basis',
