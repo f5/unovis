@@ -1,6 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import _sample from 'lodash/sample'
-import { Graph, LayoutType, GraphConfigInterface } from '@volterra/vis'
+import { Graph, GraphLayoutType, GraphConfigInterface } from '@volterra/vis'
 
 // const StatusMap = {
 //   healthy: { color: '#47e845' },
@@ -33,7 +33,7 @@ export const overviewConfig = (onNodeClick): GraphConfigInterface<any, any> => (
   ...accessors,
 
   // Layout
-  layoutType: LayoutType.ParallelHorizontal,
+  layoutType: GraphLayoutType.ParallelHorizontal,
   layoutGroupOrder: ['cCUSTOMER_EDGE', 'REGIONAL_EDGE', 'pCUSTOMER_EDGE'],
 
   // Events
@@ -48,7 +48,7 @@ export const drilldownConfig = (onNodeClick?): GraphConfigInterface<any, any> =>
   ...accessors,
 
   // Layout
-  layoutType: LayoutType.Force,
+  layoutType: GraphLayoutType.Force,
 
   // Events
   events: {

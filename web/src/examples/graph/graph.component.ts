@@ -5,7 +5,7 @@ import _times from 'lodash/times'
 import _sample from 'lodash/sample'
 import _random from 'lodash/random'
 
-import { Graph, SingleChart, LayoutType, GraphConfigInterface, VisControlItemInterface, VisControlsOrientation } from '@volterra/vis'
+import { Graph, SingleChart, GraphLayoutType, GraphConfigInterface, VisControlItemInterface, VisControlsOrientation } from '@volterra/vis'
 
 import { dataGenerator } from './data/datagen'
 
@@ -21,7 +21,7 @@ export class GraphComponent implements OnInit, AfterViewInit {
   chart: any
   data: {}
   config: GraphConfigInterface<any, any> = {
-    layoutType: LayoutType.Dagre,
+    layoutType: GraphLayoutType.Dagre,
     nodeSize: d => d.nodeSize,
     nodeShape: d => d.shape,
     nodeStrokeSegmentValue: d => d.score,

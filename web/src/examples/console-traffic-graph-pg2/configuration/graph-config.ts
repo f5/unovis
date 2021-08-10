@@ -1,6 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import _uniq from 'lodash/uniq'
-import { Graph, LayoutType, GraphConfigInterface, Shape, PanelConfigInterface } from '@volterra/vis'
+import { Graph, GraphLayoutType, GraphConfigInterface, Shape, GraphPanelConfigInterface } from '@volterra/vis'
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const StatusMap = {
@@ -36,7 +36,7 @@ export const overviewConfig = (data, onNodeClick): GraphConfigInterface<any, any
   ...accessors,
 
   // Layout
-  layoutType: LayoutType.Parallel,
+  layoutType: GraphLayoutType.Parallel,
   layoutGroupOrder: ['column1', 'ce01-ashburn-aws', 'column3'],
   layoutNonConnectedAside: false,
 
@@ -51,7 +51,7 @@ export const overviewConfig = (data, onNodeClick): GraphConfigInterface<any, any
   panels: [],
 })
 
-export const getPanels = (data): PanelConfigInterface[] => _uniq(data.nodes.map(d => d.site)).map(label => ({
+export const getPanels = (data): GraphPanelConfigInterface[] => _uniq(data.nodes.map(d => d.site)).map(label => ({
   label,
   nodes: data.nodes.filter(d => d.site === label).map(d => d.id),
   color: '#333',
@@ -70,7 +70,7 @@ export const drilldownConfig = (onNodeClick): GraphConfigInterface<any, any> => 
   ...accessors,
 
   // Layout
-  layoutType: LayoutType.Force,
+  layoutType: GraphLayoutType.Force,
 
   // Events
   events: {

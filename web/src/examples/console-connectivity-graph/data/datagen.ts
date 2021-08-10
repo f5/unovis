@@ -3,9 +3,9 @@ import _random from 'lodash/random'
 import _sample from 'lodash/sample'
 import _times from 'lodash/times'
 import _uniqueId from 'lodash/uniqueId'
-import { LinkStyle, LinkArrow, NodeDatumCore, LinkDatumCore, CircleLabel } from '@volterra/vis'
+import { GraphLinkStyle, GraphLinkArrow, GraphInputNode, GraphInputLink, GraphCircleLabel } from '@volterra/vis'
 
-interface NodeDatum extends NodeDatumCore {
+interface NodeDatum extends GraphInputNode {
   shape: string;
   status: string;
   score: number;
@@ -18,21 +18,21 @@ interface NodeDatum extends NodeDatumCore {
   fill: string;
   icon: string;
   iconSize: number;
-  sideLabels: CircleLabel[];
+  sideLabels: GraphCircleLabel[];
   disabled: boolean;
   alerts: string[];
 }
 
-interface LinkDatum extends LinkDatumCore {
+interface LinkDatum extends GraphInputLink {
   alerts: string[];
   status: string;
-  linkArrow: LinkArrow;
+  linkArrow: GraphLinkArrow;
   label: string;
   linkWidth: number;
   bandWidth: number;
-  linkStyle: LinkStyle;
+  linkStyle: GraphLinkStyle;
   linkFlow: boolean;
-  linkLabel: CircleLabel;
+  linkLabel: GraphCircleLabel;
 }
 
 const status = ['alert', 'healthy', 'warning', 'inactive']
@@ -59,11 +59,11 @@ export function randomLink (node1: NodeDatum, node2: NodeDatum): LinkDatum {
     alerts: ['This is a link'],
     target: node2.id,
     status: _sample(status),
-    linkArrow: _sample([LinkArrow.Single, LinkArrow.Double]),
+    linkArrow: _sample([GraphLinkArrow.Single, GraphLinkArrow.Double]),
     label: `link ${node1.id} ${node2.id}`,
     linkWidth: _sample([null, 1, 2]),
     bandWidth: _sample([null, 5, 7, 10, 12, 15]),
-    linkStyle: LinkStyle.Solid,
+    linkStyle: GraphLinkStyle.Solid,
     linkFlow: true, // _sample([false, true, true, true, true]),
     linkLabel: _sample([undefined, {
       text: _random(1, 50),
