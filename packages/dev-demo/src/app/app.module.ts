@@ -28,8 +28,6 @@ import { ConnectivityGraphComponent } from 'examples/console-connectivity-graph/
 import { TrafficGraphComponent } from 'examples/console-traffic-graph-pg2/console-traffic-graph-pg2.component'
 import { ChordDiagramComponent } from 'examples/chord-diagram/chord-diagram.component'
 import { DonutChartComponent } from 'examples/donut/donut.component'
-import { FreeBrushComponent } from 'examples/free-brush/free-brush.component'
-import { FreeBrushModule } from 'examples/free-brush/free-brush.module'
 
 import { AppComponent } from './app.component'
 import { BulletLegendComponent } from './components/bullet-legend/bullet-legend.component'
@@ -65,7 +63,6 @@ const appRoutes: Routes = [
   { path: 'traffic-graph', component: TrafficGraphComponent },
   { path: 'chord-diagram', component: ChordDiagramComponent },
   { path: 'donut', component: DonutChartComponent },
-  { path: 'free-brush', component: FreeBrushComponent },
 ]
 
 appRoutes.push({ path: '', redirectTo: `/${appRoutes[0].path}`, pathMatch: 'full' })
