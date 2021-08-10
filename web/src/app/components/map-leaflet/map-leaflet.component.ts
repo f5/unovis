@@ -3,8 +3,12 @@ import { Component, ViewChild, ElementRef, SimpleChanges, AfterViewInit, Input, 
 
 // Viz
 import {
-  LeafletMap, LeafletMapConfigInterface, LeafletFlowMap, LeafletFlowMapConfigInterface,
-  VisControlItemInterface, VisControlsOrientation,
+  LeafletMap,
+  LeafletMapConfigInterface,
+  LeafletFlowMap,
+  LeafletFlowMapConfigInterface,
+  VisControlItemInterface,
+  VisControlsOrientation,
 } from '@volterra/vis'
 
 type FlowMapData<P, L> = {
