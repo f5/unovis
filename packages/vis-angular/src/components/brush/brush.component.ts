@@ -1,9 +1,8 @@
 /* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import { NumericAccessor, ContinuousScale, Arrangement, Brush, BrushConfigInterface } from '@volterra/vis'
+import { Brush, BrushConfigInterface, NumericAccessor, ContinuousScale, Arrangement } from '@volterra/vis'
 import { D3BrushEvent } from 'd3-brush'
-
 import { VisXYComponent } from '../../core'
 
 @Component({

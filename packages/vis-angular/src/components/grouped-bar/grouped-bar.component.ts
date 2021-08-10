@@ -1,8 +1,7 @@
 /* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import { NumericAccessor, ContinuousScale, StringAccessor, GroupedBar, GroupedBarConfigInterface } from '@volterra/vis'
-
+import { GroupedBar, GroupedBarConfigInterface, NumericAccessor, ContinuousScale, StringAccessor } from '@volterra/vis'
 import { VisXYComponent } from '../../core'
 
 @Component({

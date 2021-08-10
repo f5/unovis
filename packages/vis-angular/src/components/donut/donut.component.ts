@@ -1,8 +1,7 @@
 /* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import { NumericAccessor, ColorAccessor, Donut, DonutConfigInterface } from '@volterra/vis'
-
+import { Donut, DonutConfigInterface, NumericAccessor, ColorAccessor } from '@volterra/vis'
 import { VisCoreComponent } from '../../core'
 
 @Component({
