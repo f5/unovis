@@ -33,7 +33,7 @@ import { requiredLabelSpace } from './modules/label'
 export class Sankey<N extends SankeyInputNode, L extends SankeyInputLink> extends ComponentCore<{nodes: N[]; links?: L[]}> implements ExtendedSizeComponent {
   static selectors = s
   config: SankeyConfig<N, L> = new SankeyConfig()
-  datamodel: GraphDataModel<SankeyNode<N, L>, SankeyLink<N, L>> = new GraphDataModel()
+  datamodel: GraphDataModel<N, L, SankeyNode<N, L>, SankeyLink<N, L>> = new GraphDataModel()
   private _extendedWidth = undefined
   private _extendedHeight = undefined
   private _extendedHeightIncreased = undefined
@@ -70,7 +70,7 @@ export class Sankey<N extends SankeyInputNode, L extends SankeyInputLink> extend
     return { top: labelSize.height / 2, bottom: labelSize.height / 2, left: labelPosition === Position.Auto ? labelSize.width : 0, right: labelSize.width }
   }
 
-  setData (data: GraphDataModel<N, L>): void {
+  setData (data: { nodes: N[]; links?: L[] }): void {
     super.setData(data)
 
     // Pre-calculate component size for Sizing.EXTEND
@@ -128,13 +128,14 @@ export class Sankey<N extends SankeyInputNode, L extends SankeyInputLink> extend
   }
 
   private _preCalculateComponentSize (): void {
-    const { bleed, config: { nodePadding, nodeWidth, nodeAlign, nodeMinHeight, nodeMaxHeight, nodeHorizontalSpacing }, datamodel: { nodes, links } } = this
+    const { bleed, config: { nodePadding, nodeWidth, nodeAlign, nodeMinHeight, nodeMaxHeight, nodeHorizontalSpacing }, datamodel } = this
     this._sankey
       .nodeId(d => d.id)
       .iterations(32)
       .nodeAlign(nodeAlign)
 
-    if (nodes.length) this._sankey({ nodes, links })
+    if (datamodel.nodes.length) this._sankey(datamodel)
+    const nodes = datamodel.nodes
     const extentValue = extent(nodes, d => d.value || undefined)
     const scale = scaleLinear().domain(extentValue).range([nodeMinHeight, nodeMaxHeight]).clamp(true)
     const groupByColumn = groupBy(nodes, d => d.layer)
@@ -149,7 +150,7 @@ export class Sankey<N extends SankeyInputNode, L extends SankeyInputLink> extend
     const sankeyHeight = this.sizing === Sizing.Fit ? config.height : this._extendedHeight
     const sankeyWidth = this.sizing === Sizing.Fit ? config.width : this._extendedWidth
 
-    const nodes = datamodel.nodes// this._sortNodes()
+    const nodes = datamodel.nodes
     const links = datamodel.links
 
     const hasLinks = links.length > 0
@@ -220,8 +221,8 @@ export class Sankey<N extends SankeyInputNode, L extends SankeyInputLink> extend
 
   getColumnCenters (): number[] {
     const { datamodel } = this
-
-    const centers = datamodel.nodes.reduce((pos, node) => {
+    const nodes = datamodel.nodes as SankeyNode<N, L>[]
+    const centers = nodes.reduce((pos, node) => {
       const idx = node.layer
       if (!isFinite(pos[idx])) {
         pos[idx] = (node.x0 + node.x1) / 2

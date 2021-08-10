@@ -1,8 +1,12 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-// Data Models
+
+// Types
+import { GraphInputLink, GraphInputNode } from 'types/graph'
+
+// Graph Data Model
 import { GraphDataModel } from './graph'
 
-export class MapGraphDataModel<NodeDatum, LinkDatum, AreaDatum> extends GraphDataModel<NodeDatum, LinkDatum> {
+export class MapGraphDataModel<NodeDatum extends GraphInputNode, LinkDatum extends GraphInputLink, AreaDatum> extends GraphDataModel<NodeDatum, LinkDatum> {
   private _areas: AreaDatum[] = []
 
   // eslint-disable-next-line accessor-pairs

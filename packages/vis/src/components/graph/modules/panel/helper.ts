@@ -2,18 +2,19 @@
 import { Selection, BaseType } from 'd3-selection'
 import { max } from 'd3-array'
 
-// Type
+// Types
 import { NumericAccessor } from 'types/accessor'
 import { Position } from 'types/position'
+import { GraphInputLink, GraphInputNode } from 'types/graph'
 
 // Utils
 import { find } from 'utils/data'
 
 // Local Types
-import { NodeDatumCore, LinkDatumCore, PanelConfigInterface } from '../../types'
+import { GraphNode, GraphPanelConfigInterface } from '../../types'
 
 // Config
-import { GraphConfigInterface } from '../../config'
+import { GraphConfig } from '../../config'
 
 // Helpers
 import { getX, getY, getNodeSize } from '../node/helper'
@@ -25,7 +26,10 @@ export const DEFAULT_PADDING = 15
 export const DEFAULT_LABEL_MARGIN = 16
 export const OUTLINE_SELECTION_PADDING = 5
 
-export function setPanelForNodes<N extends NodeDatumCore, L extends LinkDatumCore> (panels: PanelConfigInterface[], nodes: N[], config: GraphConfigInterface<N, L>): void {
+export function setPanelForNodes<N extends GraphInputNode, L extends GraphInputLink> (
+  panels: GraphPanelConfigInterface[], nodes: GraphNode<N, L>[],
+  config: GraphConfig<N, L>
+): void {
   const { layoutNonConnectedAside } = config
   if (!panels) return
 
@@ -37,14 +41,18 @@ export function setPanelForNodes<N extends NodeDatumCore, L extends LinkDatumCor
     if (!layoutNonConnectedAside || node._isConnected) {
       // Find and put neighbour Nodes to each panel
       node._panels = nodePanels.map(panel => {
-        const panelNodes = panel.nodes.map((panelNodeId): N => find(nodes, (n: N) => panelNodeId === n._id))
-        return layoutNonConnectedAside ? panelNodes.filter((n: N) => n._isConnected) : panelNodes
+        const panelNodes = panel.nodes.map((panelNodeId): GraphNode<N, L> => find(nodes, (n: GraphNode<N, L>) => panelNodeId === n._id))
+        return layoutNonConnectedAside ? panelNodes.filter((n: GraphNode<N, L>) => n._isConnected) : panelNodes
       })
     }
   })
 }
 
-export function setPanelBBox<N extends NodeDatumCore> (panelConfig: PanelConfigInterface, panelNodes: Selection<BaseType, N, SVGGElement, N[]>, nodeSizeAccessor: NumericAccessor<N>): void {
+export function setPanelBBox<N extends GraphInputNode, L extends GraphInputLink> (
+  panelConfig: GraphPanelConfigInterface,
+  panelNodes: Selection<BaseType, GraphNode<N, L>, SVGGElement, GraphNode<N, L>>,
+  nodeSizeAccessor: NumericAccessor<N>
+): void {
   const selection = panelNodes.select(`.${nodeSelectors.node}`)
   if (selection.empty()) return
 
@@ -85,11 +93,18 @@ export function setPanelBBox<N extends NodeDatumCore> (panelConfig: PanelConfigI
   panelConfig._data = selection.data()
 }
 
-export function setPanelNumNodes<N extends NodeDatumCore> (panelConfig: PanelConfigInterface, panelNodes: Selection<BaseType, N, SVGGElement, N[]>): void {
+export function setPanelNumNodes<N extends GraphInputNode, L extends GraphInputLink> (
+  panelConfig: GraphPanelConfigInterface,
+  panelNodes: Selection<BaseType, GraphNode<N, L>, SVGGElement, GraphNode<N, L>>
+): void {
   panelConfig._numNodes = panelNodes.size()
 }
 
-export function updatePanelBBoxSize<N extends NodeDatumCore, L extends LinkDatumCore> (nodesSelection: Selection<BaseType, N, SVGGElement, N[]>, panels: PanelConfigInterface[], config: GraphConfigInterface<N, L>): void {
+export function updatePanelBBoxSize<N extends GraphInputNode, L extends GraphInputLink> (
+  nodesSelection: Selection<BaseType, GraphNode<N, L>, SVGGElement, GraphNode<N, L>>,
+  panels: GraphPanelConfigInterface[],
+  config: GraphConfig<N, L>
+): void {
   const { layoutNonConnectedAside } = config
   if (!panels) return
 
@@ -101,7 +116,11 @@ export function updatePanelBBoxSize<N extends NodeDatumCore, L extends LinkDatum
   })
 }
 
-export function updatePanelNumNodes<N extends NodeDatumCore, L extends LinkDatumCore> (nodesSelection: Selection<BaseType, N, SVGGElement, N[]>, panels: PanelConfigInterface[], config: GraphConfigInterface<N, L>): void {
+export function updatePanelNumNodes<N extends GraphInputNode, L extends GraphInputLink> (
+  nodesSelection: Selection<BaseType, GraphNode<N, L>, SVGGElement, GraphNode<N, L>>,
+  panels: GraphPanelConfigInterface[],
+  config: GraphConfig<N, L>
+): void {
   const { layoutNonConnectedAside } = config
   if (!panels) return
 
@@ -113,11 +132,11 @@ export function updatePanelNumNodes<N extends NodeDatumCore, L extends LinkDatum
   })
 }
 
-export function getMaxPanelPadding<P extends PanelConfigInterface> (panels: P[]): number {
+export function getMaxPanelPadding<P extends GraphPanelConfigInterface> (panels: P[]): number {
   return panels?.length ? DEFAULT_PADDING + max(panels.map(d => d.padding)) : 0
 }
 
-export function getLabelTranslateTransform<P extends PanelConfigInterface> (panel: P): string {
+export function getLabelTranslateTransform<P extends GraphPanelConfigInterface> (panel: P): string {
   const x = panel._width / 2
   const dy = (panel.padding ?? DEFAULT_PADDING) + DEFAULT_LABEL_MARGIN + (panel.selectionOutline ? OUTLINE_SELECTION_PADDING : 0)
   const y = panel.labelPosition === Position.Bottom

@@ -4,13 +4,14 @@
 import { ComponentConfigInterface, ComponentConfig } from 'core/component/config'
 
 // Types
+import { GraphInputLink, GraphInputNode } from 'types/graph'
 import { BooleanAccessor, ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
 import { Shape } from 'types/shape'
 
 // Local Types
-import { NodeDatumCore, LinkDatumCore, LayoutType, CircleLabel, LinkStyle, LinkArrow, PanelConfigInterface } from './types'
+import { GraphLayoutType, GraphCircleLabel, GraphLinkStyle, GraphLinkArrow, GraphPanelConfigInterface } from './types'
 
-export interface GraphConfigInterface<N extends NodeDatumCore, L extends LinkDatumCore> extends ComponentConfigInterface {
+export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphInputLink> extends ComponentConfigInterface {
   // Zoom and drag
   /** Zoom level constraints, default: [0.35, 1.25] */
   zoomScaleExtent?: [number, number];
@@ -25,7 +26,7 @@ export interface GraphConfigInterface<N extends NodeDatumCore, L extends LinkDat
 
   // Layout
   /** Type of graph layout */
-  layoutType?: LayoutType | string;
+  layoutType?: GraphLayoutType | string;
   /** Refit the layout on data or configuration update */
   layoutAutofit?: boolean;
   /** Place non-connected nodes to the bottom of the graph */
@@ -77,13 +78,13 @@ export interface GraphConfigInterface<N extends NodeDatumCore, L extends LinkDat
   /** Link band width accessor function or value. Default: 0 */
   linkBandWidth?: NumericAccessor<L>;
   /** Link arrow accessor function or undefined */
-  linkArrow?: ((d: L, i?: number, ...any) => LinkArrow) | undefined;
+  linkArrow?: ((d: L, i?: number, ...any) => GraphLinkArrow) | undefined;
   /** Link stroke color accessor function or value */
   linkStroke?: ColorAccessor<L>;
   /** Link flow display accessor or boolean value */
   linkFlow?: BooleanAccessor<L>;
   /** Link side Label accessor function or undefined */
-  linkLabel?: ((d: L, i?: number, ...any) => CircleLabel | undefined) | undefined;
+  linkLabel?: ((d: L, i?: number, ...any) => GraphCircleLabel | undefined) | undefined;
   /** Shift or not link side Label from center */
   linkLabelShiftFromCenter?: BooleanAccessor<L>;
   /** Set selected link by id */
@@ -109,7 +110,7 @@ export interface GraphConfigInterface<N extends NodeDatumCore, L extends LinkDat
   /** Node Sublabel accessor function or value */
   nodeSubLabel?: StringAccessor<N>;
   /** Node Side Label accessor function or undefined */
-  nodeSideLabels?: ((d: N, i?: number, ...any) => CircleLabel[] | undefined) | undefined;
+  nodeSideLabels?: ((d: N, i?: number, ...any) => GraphCircleLabel[] | undefined) | undefined;
   /** Node Bottom Icon accessor function. Default: `undefined` */
   nodeBottomIcon?: StringAccessor<N>;
   /** Node disabled accessor function or value */
@@ -126,17 +127,17 @@ export interface GraphConfigInterface<N extends NodeDatumCore, L extends LinkDat
   selectedNodeId?: number | string;
 
   // Panels
-  panels?: PanelConfigInterface[];
+  panels?: GraphPanelConfigInterface[];
 }
 
-export class GraphConfig<N extends NodeDatumCore, L extends LinkDatumCore> extends ComponentConfig implements GraphConfigInterface<N, L> {
+export class GraphConfig<N extends GraphInputNode, L extends GraphInputLink> extends ComponentConfig implements GraphConfigInterface<N, L> {
   duration = 1000
   zoomScaleExtent: [number, number] = [0.35, 1.25]
   disableZoom = false
   disableDrag = false
   zoomThrottledUpdateNodeThreshold = 100
   onZoom = undefined
-  layoutType = LayoutType.Force
+  layoutType = GraphLayoutType.Force
   layoutAutofit = true
   layoutNonConnectedAside: true
 
@@ -163,7 +164,7 @@ export class GraphConfig<N extends NodeDatumCore, L extends LinkDatumCore> exten
   flowAnimDuration = 20000
   flowCircleSize = 2
   linkWidth = 1
-  linkStyle = LinkStyle.Solid
+  linkStyle = GraphLinkStyle.Solid
   linkBandWidth = 0
   linkArrow = undefined
   linkStroke = undefined

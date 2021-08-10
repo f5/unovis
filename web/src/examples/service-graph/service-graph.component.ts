@@ -2,7 +2,7 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { Component, ViewChild, ElementRef, OnInit, AfterViewInit } from '@angular/core'
 
-import { Graph, GraphConfigInterface, SingleChart, LayoutType, NodeDatumCore, LinkDatumCore } from '@volterra/vis'
+import { Graph, GraphConfigInterface, SingleChart, GraphLayoutType, GraphNode, GraphLink } from '@volterra/vis'
 
 import graphData from './data/ves-io-service-graph.json'
 
@@ -14,9 +14,9 @@ const StatusMap = {
   alert: { color: '#f88080' },
 }
 
-function getGraphConfig<N extends NodeDatumCore, L extends LinkDatumCore> (selectedNodeId?): GraphConfigInterface<N, L> {
+function getGraphConfig<N extends GraphNode, L extends GraphLink> (selectedNodeId?): GraphConfigInterface<N, L> {
   return {
-    layoutType: LayoutType.Force,
+    layoutType: GraphLayoutType.Force,
     layoutAutofit: false,
     layoutNonConnectedAside: false,
     forceLayoutSettings: {

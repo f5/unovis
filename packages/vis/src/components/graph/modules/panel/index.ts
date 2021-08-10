@@ -6,11 +6,14 @@ import { trimText } from 'utils/text'
 import { getValue } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 
+// Types
+import { GraphInputLink, GraphInputNode } from 'types/graph'
+
 // Local Types
-import { NodeDatumCore, LinkDatumCore, PanelConfigInterface } from '../../types'
+import { GraphNode, GraphLink, GraphPanelConfigInterface } from '../../types'
 
 // Config
-import { GraphConfigInterface } from '../../config'
+import { GraphConfig } from '../../config'
 
 // Helpers
 import { setLabelRect } from '../node/helper'
@@ -20,7 +23,7 @@ import { getLabelTranslateTransform, OUTLINE_SELECTION_PADDING, DEFAULT_PADDING 
 import * as panelSelectors from './style'
 import { appendShape, updateShape } from '../shape'
 
-export function createPanels<N extends NodeDatumCore, P extends PanelConfigInterface> (selection: Selection<SVGGElement, P, SVGGElement, P[]>, nodesSelection: Selection<SVGGElement, N, SVGGElement, N[]>): void {
+export function createPanels<N extends GraphNode, P extends GraphPanelConfigInterface> (selection: Selection<SVGGElement, P, SVGGElement, P[]>, nodesSelection: Selection<SVGGElement, N, SVGGElement, N>): void {
   selection
     .attr('transform', d => `translate(${d._x}, ${d._y})`)
     .style('opacity', 0)
@@ -54,7 +57,7 @@ export function createPanels<N extends NodeDatumCore, P extends PanelConfigInter
   sideLabel.append('text').attr('class', panelSelectors.sideLabelIcon)
 }
 
-export function updatePanels<N extends NodeDatumCore, L extends LinkDatumCore, P extends PanelConfigInterface> (selection: Selection<SVGGElement, P, SVGGElement, P[]>, config: GraphConfigInterface<N, L>, duration: number): void {
+export function updatePanels<N extends GraphNode, L extends GraphLink, P extends GraphPanelConfigInterface> (selection: Selection<SVGGElement, P, SVGGElement, P>, config: GraphConfig<GraphInputNode, GraphInputLink>, duration: number): void {
   const { nodeDisabled } = config
   selection.classed(panelSelectors.greyout, d => d._data.map(node => getValue(node, nodeDisabled) || node._state.greyout).every(d => d))
 
@@ -126,7 +129,7 @@ export function updatePanels<N extends NodeDatumCore, L extends LinkDatumCore, P
     })
 }
 
-export function removePanels<N extends NodeDatumCore, L extends LinkDatumCore, P extends PanelConfigInterface> (selection: Selection<SVGGElement, P, SVGGElement, P[]>, config: GraphConfigInterface<N, L>, duration: number): void {
+export function removePanels<N extends GraphNode, L extends GraphLink, P extends GraphPanelConfigInterface> (selection: Selection<SVGGElement, P, SVGGElement, P[]>, config: GraphConfig<GraphInputNode, GraphInputLink>, duration: number): void {
   smartTransition(selection, duration / 2)
     .style('opacity', 0)
     .remove()
