@@ -6,9 +6,19 @@ import _times from 'lodash/times'
 
 // Vis
 import {
-  SingleChart, Sankey, SankeyConfigInterface, Sizing, NodeAlignType, ExitTransitionType,
-  EnterTransitionType, VisControlItemInterface, VisControlsOrientation, Tooltip, Position,
-  VerticalAlign, SubLabelPlacement,
+  SingleChart,
+  Sankey,
+  SankeyConfigInterface,
+  Sizing,
+  NodeAlignType,
+  ExitTransitionType,
+  EnterTransitionType,
+  VisControlItemInterface,
+  VisControlsOrientation,
+  Tooltip,
+  Position,
+  VerticalAlign,
+  SubLabelPlacement,
 } from '@volterra/vis'
 
 import data from './data/apieplist_ves-prod.json'

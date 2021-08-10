@@ -1,8 +1,7 @@
 /* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import { NumericAccessor, ContinuousScale, Tooltip, XYComponentCore, Crosshair, CrosshairConfigInterface } from '@volterra/vis'
-
+import { Crosshair, CrosshairConfigInterface, NumericAccessor, ContinuousScale, Tooltip, XYComponentCore } from '@volterra/vis'
 import { VisXYComponent } from '../../core'
 
 @Component({

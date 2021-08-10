@@ -1,8 +1,7 @@
 /* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import { NumericAccessor, ContinuousScale, CurveType, GenericAccessor, StringAccessor, Line, LineConfigInterface } from '@volterra/vis'
-
+import { Line, LineConfigInterface, NumericAccessor, ContinuousScale, CurveType, GenericAccessor, StringAccessor } from '@volterra/vis'
 import { VisXYComponent } from '../../core'
 
 @Component({
