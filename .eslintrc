@@ -9,7 +9,8 @@
   },
   "plugins": [
     "notice",
-    "import"
+    "import",
+    "import-newlines"
   ],
   "settings": {
     "import/resolver": {
@@ -34,6 +35,7 @@
     "no-console": ["error", { "allow": ["warn", "error"] }],
     "no-undef": 0,
     "no-unused-vars": 0,
+    "max-len": ["warn", { "code": 150, "tabWidth": 2, "ignoreTrailingComments": true, "ignoreComments": true,  "ignoreUrls": true }],
     "notice/notice":[ "warn",
       {
         "mustMatch": "Copyright \\(c\\) (Volterra), Inc. All rights reserved.",
@@ -101,6 +103,7 @@
         "selector": "enumMember",
         "format": ["PascalCase"]
       }
-    ]
+    ],
+    "import-newlines/enforce": ["error", { "items": 12, "max-len": 150, "semi": false }]
   }
 }
