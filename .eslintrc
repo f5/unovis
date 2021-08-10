@@ -17,7 +17,7 @@
       "typescript": {
         "project": [
           "packages/*/tsconfig.json",
-          "web/tsconfig.app.json"
+          "packages/dev-demo/tsconfig.app.json"
         ]
       }
     }

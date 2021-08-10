@@ -6,7 +6,6 @@ demo/dist
 tmp
 out-tsc
 packages/*/lib
-web/lib
 # Only exists if Bazel was run
 bazel-out
 
@@ -54,6 +53,8 @@ docs-html/
 stats.html
 .cache/
 packages/vis-angular/.autogen.js
+packages/**/package-lock.json
+yarn.lock
 
 # System Files
 .DS_Store

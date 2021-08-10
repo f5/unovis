@@ -206,3 +206,4 @@ export class VisGraphComponent<N extends GraphInputNode, L extends GraphInputLin
     return config
   }
 }
+
