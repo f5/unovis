@@ -108,7 +108,6 @@ appRoutes.push({ path: '', redirectTo: `/${appRoutes[0].path}`, pathMatch: 'full
       appRoutes
     ),
     BrowserModule,
-    FreeBrushModule,
   ],
 
   providers: [],
