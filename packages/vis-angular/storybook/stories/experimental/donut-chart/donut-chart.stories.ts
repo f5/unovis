@@ -1,16 +1,18 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { moduleMetadata, Story, Meta, componentWrapperDecorator } from '@storybook/angular'
-import { VisAngularModule } from 'src/lib.module'
+import { VisDonutModule, VisSingleContainerModule } from 'src/public-api'
+
+// Component
 import DonutChartComponent from './donut-chart.component'
 
 export default {
-  title: 'XY Charts/XYDonutChartComponent',
+  title: 'Experimental/Donut',
   component: DonutChartComponent,
   decorators: [
     moduleMetadata({
       // 👇 Imports both components to allow component composition with Storybook
       declarations: [],
-      imports: [VisAngularModule],
+      imports: [VisDonutModule, VisSingleContainerModule],
     }),
     // 👇 Wraps our stories with a decorator
     componentWrapperDecorator(story => `<div style="margin: 3em">${story}</div>`),
