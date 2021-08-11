@@ -1,16 +1,18 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { moduleMetadata, Story, Meta, componentWrapperDecorator } from '@storybook/angular'
-import { VisAngularModule } from 'src/lib.module'
+import { VisXYContainerModule, VisAxisModule, VisLineModule, VisTooltipModule, VisCrosshairModule, VisFreeBrushModule } from 'src/public-api'
+
+// Component
 import XYLineChartComponent from './xy-line-chart.component'
 
 export default {
-  title: 'XY Charts/XYLineChartComponent',
+  title: 'Experimental/Line',
   component: XYLineChartComponent,
   decorators: [
     moduleMetadata({
       // 👇 Imports both components to allow component composition with Storybook
       declarations: [],
-      imports: [VisAngularModule],
+      imports: [VisXYContainerModule, VisAxisModule, VisLineModule, VisTooltipModule, VisCrosshairModule, VisFreeBrushModule],
     }),
     // 👇 Wraps our stories with a decorator
     componentWrapperDecorator(story => `<div style="margin: 3em">${story}</div>`),
