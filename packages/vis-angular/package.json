@@ -36,6 +36,7 @@
     "@angular/compiler-cli": "^12.0.3",
     "@compodoc/compodoc": "^1.1.11",
     "@storybook/addon-actions": "^6.3.4",
+    "@storybook/addon-docs": "^6.3.4",
     "@storybook/addon-essentials": "^6.3.4",
     "@storybook/addon-links": "^6.3.4",
     "@storybook/angular": "^6.3.4",
