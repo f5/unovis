@@ -1,13 +1,13 @@
 {
   "name": "@volterra/vis-demo",
-  "version": "0.0.0",
+  "version": "0.9.0",
   "main": "lib/demo.js",
   "files": [
     "lib"
   ],
   "scripts": {
     "dev": "npx ng serve --port 9900",
-    "build": "node --max_old_space_size=4096 ../node_modules/@angular/cli/bin/ng build",
+    "build": "ng build",
     "test": "jest --colors",
     "lint": "eslint \"src/**/*.ts\""
   },
@@ -20,7 +20,6 @@
     "@angular/platform-browser": "^12.0.3",
     "@angular/platform-browser-dynamic": "^12.0.3",
     "@angular/router": "^12.0.3",
-    "@volterra/vis-angular": "^0.0.1beta16",
     "date-fns": "^2.22.1",
     "lodash": "^4.17.21",
     "rxjs": "^7.1.0",

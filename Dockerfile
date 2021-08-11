@@ -42,7 +42,7 @@ RUN rm -rf /usr/share/nginx/html/*
 RUN apt-get update && apt-get install --only-upgrade libwebp6=0.6.1-2+deb10u1 liblz4-1=1.8.3-1+deb10u1 libgnutls30=3.6.7-4+deb10u7
 
 # Copy static files from previous step
-COPY --from=builder /app/web/lib/volterra-vis-examples /usr/share/nginx/html/
+COPY --from=builder /app/packages/dev-demo/lib/volterra-vis-examples /usr/share/nginx/html/
 
 # RUN NGINX ON A CUSTOM PORT
 EXPOSE 9001
