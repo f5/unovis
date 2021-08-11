@@ -15,6 +15,9 @@
       "data-models/*": ["packages/vis/src/data-models/*"],
       "data/*": ["packages/vis/src/data/*"],
 
+      // @volterra/vis-angular
+      "@volterra/vis-angular": ["packages/vis-angular/src/public-api"],
+
       // Local paths
       "examples/*": ["packages/dev-demo/src/examples/*"]
     }
