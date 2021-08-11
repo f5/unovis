@@ -1,10 +1,9 @@
 import { moduleMetadata, componentWrapperDecorator } from '@storybook/angular'
 import { Meta, Story, ArgsTable } from '@storybook/addon-docs';
 import { CurveType } from '@volterra/vis'
-import { VisXYContainerModule, VisAxisModule } from 'src/public-api'
+import { VisXYContainerModule, VisAxisModule, VisAreaModule } from 'src/public-api'
 
 import { VisAreaComponent } from 'src/components/area/area.component'
-import { VisAreaModule } from 'src/components/area/area.module'
 
 import { xyChartContentWrapper } from '../../utils/content-wrappers'
 import { baseConfig, getColor } from './xy-area-chart.config'
