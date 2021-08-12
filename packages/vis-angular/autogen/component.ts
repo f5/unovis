@@ -3,6 +3,21 @@
 import { kebabCase } from './utils'
 import { ConfigProperty, GenericParameter } from './types'
 
+function getJSDocComments (jsdocStringArray: string[]): string {
+  return jsdocStringArray.map(jsdoc => {
+    const strings = (jsdoc || '')
+      // eslint-disable-next-line no-irregular-whitespace
+      .replace(/ /g, '\\')
+      .split('\n')
+
+    for (let i = 1; i < strings.length; i += 1) {
+      strings[i] = `   * ${strings[i]}`
+    }
+
+    return `/** ${strings.join('\n')} */`
+  }).join('\n')
+}
+
 export function getComponentCode (
   componentName: string,
   generics: GenericParameter[],
@@ -30,7 +45,7 @@ export class Vis${componentName}Component${genericsDefStr} implements ${componen
 ${
   configProps
     .map((p: ConfigProperty) => `
-      /** ${(p.doc ?? []).join('\n')} */
+      ${getJSDocComments(p.doc ?? [])}
       @Input() ${p.name}: ${p.type}`)
     .join('\n')
 }
