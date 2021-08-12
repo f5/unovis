@@ -10,11 +10,11 @@ import { NumericAccessor, StringAccessor } from 'types/accessor'
 export interface AreaConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
   /** Curve type from the CurveType enum. Default: `CurveType.MonotoneX` */
   curveType?: CurveType;
-  /** Baseline accessor function. Default: `undefined` */
+  /** Baseline value or accessor function. Default: `undefined` */
   baseline?: NumericAccessor<Datum>;
-  /** Opacity accessor function. Default: `1` */
+  /** Opacity value or accessor function. Default: `1` */
   opacity?: NumericAccessor<Datum>;
-  /** Optional area cursor. Default: `null` */
+  /** Optional area cursor. String or accessor function. Default: `null` */
   cursor?: StringAccessor<Datum>;
 }
 
