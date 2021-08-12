@@ -1,7 +1,7 @@
 /* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import { Scatter, ScatterConfigInterface, NumericAccessor, ContinuousScale, SymbolType, StringAccessor, ColorAccessor } from '@volterra/vis'
+import { Scatter, ScatterConfigInterface, NumericAccessor, ColorAccessor, ContinuousScale, SymbolType, StringAccessor } from '@volterra/vis'
 import { VisXYComponent } from '../../core'
 
 @Component({
@@ -11,55 +11,90 @@ import { VisXYComponent } from '../../core'
   providers: [{ provide: VisXYComponent, useExisting: VisScatterComponent }],
 })
 export class VisScatterComponent<Datum> implements ScatterConfigInterface<Datum>, AfterViewInit {
-  /** Animation duration */
+  /** Animation duration of the data update transitions in milliseconds. Default: `600` */
   @Input() duration: number
 
-  /**  */
+  /** Events configuration. An object containing properties in the following format:
+   *
+   * ```
+   * {
+   * \[selectorString]: {
+   *     \[eventType]: callbackFunction
+   *  }
+   * }
+   * ```
+   * e.g.:
+   * ```
+   * {
+   * \[Area.selectors.area]: {
+   *    click: (d) => console.log("Clicked Area", d)
+   *  }
+   * }
+   * ``` */
   @Input() events: {
     [selector: string]: {
-      [eventName: string]: (data: Datum) => void;
+      [eventName: string]: (data: any, event?: Event, i?: number, els?: SVGElement[] | HTMLElement[]) => void;
     };
   }
 
-  /** Custom attributes */
+  /** You can set every SVG and HTML visualization object to have a custom DOM attributes, which is useful
+   * when you want to do unit or end-to-end testing. Attributes configuration object has the following structure:
+   *
+   * ```
+   * {
+   * \[selectorString]: {
+   *     \[attributeName]: attribute constant value or accessor function
+   *  }
+   * }
+   * ```
+   * e.g.:
+   * ```
+   * {
+   * \[Area.selectors.area]: {
+   *    "test-value": d => d.value
+   *  }
+   * }
+   * ``` */
   @Input() attributes: {
     [selector: string]: {
       [attr: string]: string | number | boolean | ((datum: any) => string | number | boolean);
     };
   }
 
-  /** X accessor or number value */
+  /** Accessor function for getting the values along the X axis. Default: `undefined` */
   @Input() x: NumericAccessor<Datum>
 
-  /** Single Y accessor function or constant value */
+  /** Single Y accessor function. Default: `undefined` */
   @Input() y: NumericAccessor<Datum>
 
-  /** Id accessor for better visual data updates */
+  /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */
   @Input() id: ((d: Datum, i?: number, ...rest) => string | number)
 
-  /** Component color (string or color object) */
-  @Input() color: string | any
+  /** Component color accessor function. Default: `d => d.color` */
+  @Input() color: ColorAccessor<Datum>
 
-  /** Coloring type */
+  /** X and Y scales. As of now, only continuous scales are supported. Default: `{ x: Scale.scaleLinear(), y: Scale.scaleLinear() } */
   @Input() scales: {
     x?: ContinuousScale;
     y?: ContinuousScale;
   }
 
-  /** Sets the Y scale domain based on the X scale domain not the whole data. Default: `false` */
+  /** Sets the Y scale domain based on the X scale domain not the whole data. Useful when you manipulate chart's X domain from outside. Default: `false` */
   @Input() adaptiveYScale: boolean
 
-  /** Size accessor function or value in relative units. Default: `1` */
+  /** Size accessor function or constant value in relative units. Default: `1` */
   @Input() size: NumericAccessor<Datum>
 
-  /** Size Scale. Default: `Scale.scaleLinear()` */
+  /** Size scale. Default: `Scale.scaleLinear()` */
   @Input() sizeScale: ContinuousScale
 
   /** Size Range, [number, number]. Default: `[5, 20]` */
   @Input() sizeRange: [number, number]
 
-  /** Shape of scatter point: circle, cross, diamond, square, star, triangle and wye. Default: `SymbolType.Circle` */
-  @Input() shape: ((d: Datum, i?: number, ...rest) => SymbolType) | SymbolType
+  /** Shape of the scatter point. Accessor function or constant value: `SymbolType.Circle`, `SymbolType.Cross`, `SymbolType.Diamond`, `SymbolType.Square`,
+   * `SymbolType.Star`, `SymbolType.Triangle` or `SymbolType.Wye`.
+   * Default: `SymbolType.Circle` */
+  @Input() shape: ((d: Datum, i?: number, ...rest) => (SymbolType | string)) | SymbolType | string
 
   /** Label accessor function or string. Default: `undefined` */
   @Input() label: StringAccessor<Datum>

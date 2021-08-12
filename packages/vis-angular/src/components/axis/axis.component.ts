@@ -1,7 +1,19 @@
 /* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import { Axis, AxisConfigInterface, NumericAccessor, ContinuousScale, Position, AxisType, Spacing, FitMode, TrimMode, TextAlign } from '@volterra/vis'
+import {
+  Axis,
+  AxisConfigInterface,
+  NumericAccessor,
+  ColorAccessor,
+  ContinuousScale,
+  Position,
+  AxisType,
+  Spacing,
+  FitMode,
+  TrimMode,
+  TextAlign,
+} from '@volterra/vis'
 import { VisXYComponent } from '../../core'
 
 @Component({
@@ -11,106 +23,139 @@ import { VisXYComponent } from '../../core'
   providers: [{ provide: VisXYComponent, useExisting: VisAxisComponent }],
 })
 export class VisAxisComponent<Datum> implements AxisConfigInterface<Datum>, AfterViewInit {
-  /** Animation duration */
+  /** Animation duration of the data update transitions in milliseconds. Default: `600` */
   @Input() duration: number
 
-  /**  */
+  /** Events configuration. An object containing properties in the following format:
+   *
+   * ```
+   * {
+   * \[selectorString]: {
+   *     \[eventType]: callbackFunction
+   *  }
+   * }
+   * ```
+   * e.g.:
+   * ```
+   * {
+   * \[Area.selectors.area]: {
+   *    click: (d) => console.log("Clicked Area", d)
+   *  }
+   * }
+   * ``` */
   @Input() events: {
     [selector: string]: {
-      [eventName: string]: (data: Datum) => void;
+      [eventName: string]: (data: any, event?: Event, i?: number, els?: SVGElement[] | HTMLElement[]) => void;
     };
   }
 
-  /** Custom attributes */
+  /** You can set every SVG and HTML visualization object to have a custom DOM attributes, which is useful
+   * when you want to do unit or end-to-end testing. Attributes configuration object has the following structure:
+   *
+   * ```
+   * {
+   * \[selectorString]: {
+   *     \[attributeName]: attribute constant value or accessor function
+   *  }
+   * }
+   * ```
+   * e.g.:
+   * ```
+   * {
+   * \[Area.selectors.area]: {
+   *    "test-value": d => d.value
+   *  }
+   * }
+   * ``` */
   @Input() attributes: {
     [selector: string]: {
       [attr: string]: string | number | boolean | ((datum: any) => string | number | boolean);
     };
   }
 
-  /** X accessor or number value */
+  /** Accessor function for getting the values along the X axis. Default: `undefined` */
   @Input() x: NumericAccessor<Datum>
 
-  /** Y accessor or value */
+  /** A single of multiple accessor functions for getting the values along the Y axis. Default: `undefined` */
   @Input() y: NumericAccessor<Datum> | NumericAccessor<Datum>[]
 
-  /** Id accessor for better visual data updates */
+  /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */
   @Input() id: ((d: Datum, i?: number, ...rest) => string | number)
 
-  /** Component color (string or color object) */
-  @Input() color: string | any
+  /** Component color accessor function. Default: `d => d.color` */
+  @Input() color: ColorAccessor<Datum>
 
-  /** Coloring type */
+  /** X and Y scales. As of now, only continuous scales are supported. Default: `{ x: Scale.scaleLinear(), y: Scale.scaleLinear() } */
   @Input() scales: {
     x?: ContinuousScale;
     y?: ContinuousScale;
   }
 
-  /** Sets the Y scale domain based on the X scale domain not the whole data. Default: `false` */
+  /** Sets the Y scale domain based on the X scale domain not the whole data. Useful when you manipulate chart's X domain from outside. Default: `false` */
   @Input() adaptiveYScale: boolean
 
-  /** Axis position: top, bottom, right or left */
+  /** Axis position: `Position.Top`, `Position.Bottom`, `Position.Right` or `Position.Left`. Default: `undefined` */
   @Input() position: Position | string
 
-  /** Axis type: x or y */
-  @Input() type: AxisType
+  /** Axis type: `AxisType.X` or `AxisType.Y` */
+  @Input() type: AxisType | string
 
-  /** Inner axis padding. Adds space between chart and axis */
+  /** Inner axis padding. Adds space between the chart and the axis. Default: `{ top: 0, bottom: 0, left: 0, right: 0 }` */
   @Input() padding: Spacing
 
-  /** Extend domain line to be full size dimension */
+  /** Extend the axis domain line to be full width or full height. Default: `true` */
   @Input() fullSize: boolean
 
-  /** Axis label */
+  /** Axis label. Default: `undefined` */
   @Input() label: string
 
-  /** Font size of the axis label */
-  @Input() labelFontSize: string
+  /** Font size of the axis label as CSS string. Default: `null` */
+  @Input() labelFontSize: string | null
 
-  /** Distance between axis and label in pixels */
+  /** Distance between the axis and the label in pixels. Default: `8` */
   @Input() labelMargin: number
 
-  /** Whether to draw the grid lines or not, default: true */
+  /** Sets whether to draw the grid lines or not. Default: `true` */
   @Input() gridLine: boolean
 
-  /** Whether to draw the tick lines or not, default: true */
+  /** Sets whether to draw the tick lines or not. Default: `true` */
   @Input() tickLine: boolean
 
-  /** Whether to draw the domain line or not, default: true */
+  /** Sets whether to draw the domain line or not. Default: `true` */
   @Input() domainLine: boolean
 
-  /** Draw minimum and maximum axis ticks only */
+  /** Draw the min and max axis ticks only. Default: `false` */
   @Input() minMaxTicksOnly: boolean
 
-  /** Tick label formatter */
+  /** Tick label formatter function. Default: `undefined` */
   @Input() tickFormat: (d: number | string, i: number, n: (number | string)[]) => string
 
-  /** Explicitly set tick values */
+  /** Explicitly set tick values. Default: `undefined` */
   @Input() tickValues: number[]
 
-  /** Approximate number of axis ticks (passed to d3 axis constructor) */
+  /** Set the approximate number of axis ticks (will be passed to D3's axis constructor). Default: `undefined` */
   @Input() numTicks: number
 
-  /** Tick text fit mode: 'wrap' or 'trim' */
+  /** Tick text fit mode: `FitMode.Wrap` or `FitMode.Trim`. Default: `FitMode.Wrap`. */
   @Input() tickTextFitMode: FitMode | string
 
-  /** Maximum number of characters for tick text wrapping */
+  /** Maximum number of characters for tick text wrapping. Default: `undefined` */
   @Input() tickTextLength: number
 
-  /** Maximum width of tick text for wrapping */
+  /** Maximum width in pixels for the tick text to be wrapped or trimmed. Default: `undefined` */
   @Input() tickTextWidth: number
 
-  /** Tick text wrapping separator */
+  /** Tick text wrapping separator. String or array of strings. Default: `' '` */
   @Input() tickTextSeparator: string | string[]
 
-  /** Tick text force word break if it doesn't fit */
+  /** Force word break for ticks when they don't fit. Default: `false` */
   @Input() tickTextForceWordBreak: boolean
 
-  /** Tick text trim mode: 'start , 'middle' or 'end' */
+  /** Tick text trim mode: `TrimMode.Start`, `TrimMode.Middle` or `TrimMode.End`. Default: `TrimMode.Middle` */
   @Input() tickTextTrimType: TrimMode | string
 
-  /** Font size of tick text */
-  @Input() tickTextFontSize: string
+  /** Font size of the tick text as CSS string. Default: `null` */
+  @Input() tickTextFontSize: string | null
 
   /** Text alignment for ticks: `TextAlign.Left`, `TextAlign.Center` or `TextAlign.Right`. Default: `undefined` */
   @Input() tickTextAlign: TextAlign
