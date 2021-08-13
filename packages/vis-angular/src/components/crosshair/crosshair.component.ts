@@ -97,7 +97,7 @@ export class VisCrosshairComponent<Datum> implements CrosshairConfigInterface<Da
   /** Hide Crosshair when the corresponding element is far from mouse pointer. Default: `true` */
   @Input() hideWhenFarFromPointer: boolean
 
-  /** Distance to check in the hideWhenFarFromPointer condition. Default: `100` */
+  /** Distance in pixels to check in the hideWhenFarFromPointer condition. Default: `100` */
   @Input() hideWhenFarFromPointerDistance: number
   @Input() data: any
 

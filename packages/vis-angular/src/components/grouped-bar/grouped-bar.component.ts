@@ -82,31 +82,30 @@ export class VisGroupedBarComponent<Datum> implements GroupedBarConfigInterface<
   /** Sets the Y scale domain based on the X scale domain not the whole data. Useful when you manipulate chart's X domain from outside. Default: `false` */
   @Input() adaptiveYScale: boolean
 
-  /** Optionaly set the group width in pixels (distributed evenly among the group bars) */
+  /** Force set the group width in pixels. Default: `undefined` */
   @Input() groupWidth: number
 
-  /** Maximum bar width for dynamic sizing. Limits the barWidth property from the top */
+  /** Maximum group width for dynamic sizing. Limits the barWidth property from the top. Default: `undefined` */
   @Input() groupMaxWidth: number
 
-  /** Expected step between the bars in the X axis units. Used to dynamically calculate the width for bars correctly when data has gaps */
+  /** Expected step between the bar groups in the X axis units.
+   * Needed to correctly calculate the width of the bar groups when there are gaps in the data.
+   * Default: `undefined` */
   @Input() dataStep: number
 
-  /** Fractional padding between the groups in the range of [0,1). Default 0.05 */
+  /** Fractional padding between the groups in the range of [0,1). Default: `0.05` */
   @Input() groupPadding: number
 
-  /** Fractional padding between the bars in the range of [0,1). Default: 0 */
+  /** Fractional padding between the bars in the range of [0,1). Default: `0` */
   @Input() barPadding: number
 
-  /** Orientation of the chart. Default: true */
-  @Input() isVertical: boolean
-
-  /** Rounded corners for bars. Boolean or number (to set the radius in pixels). Default: true */
+  /** Rounded bar corners. Boolean or number (to set the radius in pixels explicitly). Default: `true` */
   @Input() roundedCorners: number | boolean
 
-  /** Sets the minimum bar height for better visibility of small values. Default: 1 */
+  /** Sets the minimum bar height for better visibility of small values. Default: `1` */
   @Input() barMinHeight: number
 
-  /** Optional bar cursor. Default: `null` */
+  /** Configurable bar cursor when hovering over. Default: `null` */
   @Input() cursor: StringAccessor<Datum>
   @Input() data: any
 
@@ -122,8 +121,8 @@ export class VisGroupedBarComponent<Datum> implements GroupedBarConfigInterface<
   }
 
   private getConfig (): GroupedBarConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, scales, adaptiveYScale, groupWidth, groupMaxWidth, dataStep, groupPadding, barPadding, isVertical, roundedCorners, barMinHeight, cursor } = this
-    const config = { duration, events, attributes, x, y, id, color, scales, adaptiveYScale, groupWidth, groupMaxWidth, dataStep, groupPadding, barPadding, isVertical, roundedCorners, barMinHeight, cursor }
+    const { duration, events, attributes, x, y, id, color, scales, adaptiveYScale, groupWidth, groupMaxWidth, dataStep, groupPadding, barPadding, roundedCorners, barMinHeight, cursor } = this
+    const config = { duration, events, attributes, x, y, id, color, scales, adaptiveYScale, groupWidth, groupMaxWidth, dataStep, groupPadding, barPadding, roundedCorners, barMinHeight, cursor }
     const keys = Object.keys(config) as (keyof GroupedBarConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

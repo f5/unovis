@@ -96,19 +96,19 @@ export class VisFreeBrushComponent<Datum> implements FreeBrushConfigInterface<Da
 
   /** Callback function to be called on any Brush event.
    * Default: `(selection: FreeBrushSelection, event: D3BrushEvent<Datum>, userDriven: boolean): void => {}` */
-  @Input() onBrush: ((selection?: FreeBrushSelection, event?: D3BrushEvent<Datum>, userDriven?: boolean) => any)
+  @Input() onBrush: ((selection?: FreeBrushSelection, event?: D3BrushEvent<Datum>, userDriven?: boolean) => void)
 
   /** Callback function to be called on the Brush start event.
    * Default: `(selection: FreeBrushSelection, event: D3BrushEvent<Datum>, userDriven: boolean): void => {}` */
-  @Input() onBrushStart: ((selection?: FreeBrushSelection, event?: D3BrushEvent<Datum>, userDriven?: boolean) => any)
+  @Input() onBrushStart: ((selection?: FreeBrushSelection, event?: D3BrushEvent<Datum>, userDriven?: boolean) => void)
 
   /** Callback function to be called on the Brush move event.
    * Default: `(selection: FreeBrushSelection, event: D3BrushEvent<Datum>, userDriven: boolean): void => {}` */
-  @Input() onBrushMove: ((selection?: FreeBrushSelection, event?: D3BrushEvent<Datum>, userDriven?: boolean) => any)
+  @Input() onBrushMove: ((selection?: FreeBrushSelection, event?: D3BrushEvent<Datum>, userDriven?: boolean) => void)
 
   /** Callback function to be called on the Brush end event.
    * Default: `(selection: FreeBrushSelection, event: D3BrushEvent<Datum>, userDriven: boolean)L void => {}` */
-  @Input() onBrushEnd: ((selection?: FreeBrushSelection, event?: D3BrushEvent<Datum>, userDriven?: boolean) => any)
+  @Input() onBrushEnd: ((selection?: FreeBrushSelection, event?: D3BrushEvent<Datum>, userDriven?: boolean) => void)
 
   /** Width of the Brush handle. Default: `1` */
   @Input() handleWidth: number

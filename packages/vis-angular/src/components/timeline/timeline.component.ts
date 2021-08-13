@@ -82,19 +82,19 @@ export class VisTimelineComponent<Datum> implements TimelineConfigInterface<Datu
   /** Sets the Y scale domain based on the X scale domain not the whole data. Useful when you manipulate chart's X domain from outside. Default: `false` */
   @Input() adaptiveYScale: boolean
 
-  /** Width of the lines */
+  /** Width of the timeline items. Default: `8` */
   @Input() lineWidth: NumericAccessor<Datum>
 
-  /** Timeline row height */
+  /** Timeline row height. Default: `22` */
   @Input() rowHeight: number
 
-  /** Line length accessor function or a value */
+  /** Timeline item length accessor function. Default: `d => d.length` */
   @Input() length: NumericAccessor<Datum>
 
-  /** Type accessor function, records of one type are plotted in one row */
+  /** Timeline item type accessor function. Records of one type will be plotted in one row. Default: `d => d.type` */
   @Input() type: StringAccessor<Datum>
 
-  /** Optional line cursor */
+  /** Configurable Timeline item cursor when hovering over. Default: `null` */
   @Input() cursor: StringAccessor<Datum>
   @Input() data: any
 
