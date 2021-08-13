@@ -1,0 +1,294 @@
+import { moduleMetadata, componentWrapperDecorator } from '@storybook/angular'
+import { Meta, Story, ArgsTable } from '@storybook/addon-docs';
+import { CurveType } from '@volterra/vis'
+import { VisXYContainerModule, VisAxisModule } from 'src/public-api'
+
+import { VisLineComponent } from 'src/components/line/line.component'
+import { VisLineModule } from 'src/components/line/line.module'
+
+import { xyChartContentWrapper } from '../../utils/content-wrappers'
+import { baseConfig, incompleteConfig, getColor, getDashes } from './xy-line-chart.config'
+
+<Meta
+  title="XY Charts/Line"
+  component={VisLineComponent}
+  decorators={[
+    moduleMetadata({ imports: [VisLineModule, VisXYContainerModule, VisAxisModule] }),
+    componentWrapperDecorator(xyChartContentWrapper)
+  ]}
+/>
+
+<style>{``}</style>
+
+# Line
+### Basic configuration
+The Line component has been designed to work together with `<vis-xy-container>`. The minimal Line configuration looks like:
+```angular2html
+<vis-xy-container [data]="dataArray">
+  <vis-line [x]="xAccessor" [y]="yAccessor"></vis-line>
+</vis-xy-container>
+```
+where `data: DataRecord[] = [{x: 0, y: 1}, ...]`, `xAccessor = (d: DataRecord) => d.x` and `yAccessor = (d: DataRecord) => d.y`.
+<Story name="Simple Line">
+  {{
+    props: {
+      ...baseConfig(),
+      storyHideAxes: true,
+      storyHeight: 150,
+    },
+  }}
+</Story>
+
+### Multiple Lines
+Line accepts an array of y accesors to display multiple lines:
+```angular2html
+// Define your accessors in the component file:
+y = [d => d.y1, d => d.y2, d => d.y3]
+
+// Pass them to vis-line as inputs in the template file:
+<vis-line [x]="xAccessor" [y]="yAccessor"></vis-line>
+```
+<Story name="Multiple Lines">
+  {{
+    props: {
+      ...baseConfig(),
+       y: [d => d.y1, d => d.y2, d => d.y3],
+      storyHideAxes: true,
+      storyHeight: 250,
+    },
+  }}
+</Story>
+
+### Line Width
+Specify the line's width in pixels using the `lineWidth` property:
+```angular2html
+<vis-line ... [lineWidth]="20"></vis-line>
+```
+<Story name="Line Width">
+  {{
+    props: {
+      ...baseConfig(),
+      lineWidth: 20,
+      storyHideAxes: true,
+      storyHeight: 150,
+    },
+  }}
+</Story>
+
+### Curve types
+Using the `curveType: CurveType` property you can set various curve type options:
+
+##### CurveType.Step
+<Story name="Curve Types: Step">
+  {{
+    props: {
+      ...baseConfig(100),
+      curveType: CurveType.Step,
+      storyHideAxes: true,
+      storyHeight: 80,
+    },
+  }}
+</Story>
+
+##### CurveType.Basis
+<Story name="Curve Types: Basis">
+  {{
+    props: {
+      ...baseConfig(100),
+      curveType: CurveType.Basis,
+      storyHideAxes: true,
+      storyHeight: 80,
+    },
+  }}
+</Story>
+
+##### CurveType.Linear
+<Story name="Curve Types: Linear">
+  {{
+    props: {
+      ...baseConfig(100),
+      curveType: CurveType.Linear,
+      storyHideAxes: true,
+      storyHeight: 80,
+    },
+  }}
+</Story>
+
+### Custom Color
+Set the color of the line by assigning the `color` property to a hex string.
+```
+<vis-line ... [color]="#2BAB44"></vis-area>
+```
+<Story name="Custom Color">
+  {{
+    props: {
+      ...baseConfig(),
+      storyHideAxes: true,
+      storyHeight: 150,
+      color: "#2BAB44",
+    },
+  }}
+</Story>
+
+If you want to set color for multiple lines at once, you'll have to define a colors array in your component and reference colors by index in the accessor function:
+
+```javascript
+// In the component file, define the colors and the accessor function:
+colors = ["#FF4F4E", "#FFBA00", "#2BAB44"]
+getColor (data: DataRecord[], i: number) {
+  return this.colors[i];
+}
+
+// In the template:
+<vis-line ... [color]="getColor"></vis-area>
+```
+
+<Story name="Custom Color: Multiple Lines">
+  {{
+    props: {
+      ...baseConfig(25),
+      storyHideAxes: true,
+      storyHeight: 250,
+      y: [d => d.y1, d => d.y2, d => d.y3],
+      color: getColor,
+    },
+  }}
+</Story>
+
+### Dashed Line
+You can configure a dashed line with the `lineDashArray` property and a dash array.
+See [SVG stroke-dasharray](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray) to learn more about this attribute.
+
+```angular2html
+<vis-line ... [lineDashArray]="[5]"></vis-area>
+```
+
+<Story name="Dashed Line">
+  {{
+    props: {
+      ...baseConfig(),
+      lineDashArray: [5],
+      storyHideAxes: true,
+      storyHeight: 150,
+    },
+  }}
+</Story>
+
+
+Similar to coloring, in order to specify different dash patterns among lines, you will need to define an accessor function in your component:
+
+```javascript
+// In the component file, define the dash array and the accessor function:
+dashes = [[5], undefined, [2,2,2]]
+getDashes (data: DataRecord[], i: number) {
+  return this.dashes[i];
+}
+
+// In the template:
+<vis-line ... [lineDashArray]="getDashes"></vis-area>
+```
+
+<Story name="Multiple Dashed Lines">
+  {{
+    props: {
+      ...baseConfig(),
+      y: [d => d.y1, d => d.y2, d => d.y3],
+      lineDashArray: getDashes,
+      storyHideAxes: true,
+      storyHeight: 200,
+    },
+  }}
+</Story>
+
+### Line with Axes
+You can add axes using `<vis-axis>`:
+```angular2html
+<vis-xy-container [data]="dataArray">
+  <vis-line [x]="xAccessor" [y]="yAccessor"></vis-line>
+  <vis-axis type="x" label="X"></vis-axis>
+  <vis-axis type="y" label="Y"></vis-axis>
+</vis-xy-container>
+```
+<Story name="Line with Axes">
+  {{
+    props: {
+      ...baseConfig(),
+      y: [d => d.y1, d => d.y2, d => d.y3],
+      storyHeight: 200,
+    },
+  }}
+</Story>
+
+### No Data Value
+In the case of missing data, you can assign a fallback value using `noDataValue`. See this example where it is set to `0`.
+```angular2html
+<vis-xy-container [data]="dataArray">
+  <vis-line ... [noDataValue]="0"></vis-line>
+</vis-xy-container>
+```
+where `data` contains missing y values in the domain `4 <= x <= 6`.
+<Story name="No Data Value">
+  {{
+    props: {
+      ...incompleteConfig([4,5,6]),
+      noDataValue: 0,
+      storyHeight: 250,
+    },
+  }}
+</Story>
+
+
+### Hover
+Use the boolean property called `highlightOnHover` to allow users to focus on individual lines.
+
+<Story name="Highlight on Hover">
+  {{
+    props: {
+      ...baseConfig(),
+      y: [d => d.y1, d => d.y2, d => d.y3],
+      lineWidth: 8,
+      highlightOnHover: true,
+      storyHideAxes: true,
+      storyHeight: 150,
+    },
+  }}
+</Story>
+
+### Custom Cursor
+Line also accepts the [cursor CSS property](https://developer.mozilla.org/en-US/docs/Web/CSS/cursor) to enable different cursors when a user hovers over a line.
+
+```angular2html
+<vis-line ... [cursor]="cell"></vis-line>
+```
+
+<Story name="Custom Cursor">
+  {{
+    props: {
+      ...baseConfig(),
+      storyHideAxes: true,
+      lineWidth: 8,
+      storyHeight: 150,
+      cursor: "cell",
+    },
+  }}
+</Story>
+
+### Events
+For further customization, the Line component supports the following events:
+```javascript
+// In the component file:
+import { Line } from '@volterra/vis`
+...
+events = {
+  [Line.selectors.line]: {
+    mouseover: (data: DataRecord[]) => {},
+    mouseleave: (data: DataRecord[]) => {},
+    ...
+  }
+}
+
+// In the template file:
+<vis-line ... events="events"></vis-area>
+```
+
+<ArgsTable of={VisLineComponent}/>
