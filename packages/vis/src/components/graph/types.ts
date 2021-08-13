@@ -75,22 +75,40 @@ export interface GraphPanelConfigInterface<
   N extends GraphInputNode = GraphInputNode,
   L extends GraphInputLink = GraphInputLink,
 > {
+  /** Panel nodes references by unique ids */
   nodes: (string|number)[];
+  /** Panel label */
   label?: string;
+  /** Position of the label */
   labelPosition?: Position.Top | Position.Bottom;
+  /** Color of the panel */
   color?: string;
+  /** Border width of the panel in pixels */
   borderWidth?: number;
+  /** Inner padding */
   padding?: number;
+  /** Dashed outline showing that the panel is selected */
   selectionOutline?: boolean;
+  /** Icon of the side label */
   sideLabelIcon?: string;
+  /** Shape of the side label */
   sideLabelShape?: Shape;
+  /** Color of the side label */
   sideLabelColor?: string;
+  /** Cursor of when hovering over the side label */
   sideLabelCursor?: string;
+
+  /** Private property */
   _numNodes?: number;
+  /** Private property */
   _x?: number;
+  /** Private property */
   _y?: number;
+  /** Private property */
   _width?: number;
+  /** Private property */
   _height?: number;
+  /** Private property */
   _data?: GraphNode<N, L>[];
 }
 

@@ -117,7 +117,7 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
     if (!isOrdinal && dataSize >= 2) dataSize += 1
 
     const c = dataSize < 2 ? 1 : 1 - config.barPadding
-    const barWidth = c * (config.isVertical ? config.width : config.height) / dataSize
+    const barWidth = c * config.width / dataSize
 
     return min([barWidth, config.barMaxWidth])
   }

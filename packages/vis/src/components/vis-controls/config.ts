@@ -5,9 +5,9 @@ import { Config } from 'core/config'
 import { VisControlItemInterface, VisControlsOrientation } from './types'
 
 export interface VisControlsConfigInterface {
-  /** Controls items array */
+  /** Controls items array, VisControlItemInterface[]. Default: `[]` */
   items?: VisControlItemInterface[];
-  /** Controls orientation. Default is horizontal */
+  /** Controls orientation. `VisControlsOrientation.Horizontal` or `VisControlsOrientation.Horizontal`. Default: `VisControlsOrientation.Horizontal` */
   orientation?: VisControlsOrientation;
 }
 

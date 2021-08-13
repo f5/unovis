@@ -13,7 +13,7 @@ export interface TopoJSONMapConfigInterface<N extends MapInputNode, L extends Ma
   // General
   /** MapProjection (or D3's GeoProjection) instance. Default: `MapProjection.Mercator()` */
   projection?: GeoProjection;
-  /** Map data in the TopoJSON topology format */
+  /** Map data in the TopoJSON topology format. Default: `topojson` */
   topojson?: /* TopoJSON.Topology */ any; // TopoJSON typings have troubles with being bundled so we're temporary disabling them
   /** Name of the map features to be displayed, e.g. 'countries' or 'counties'. Default: `countries` */
   mapFeatureName?: string;
@@ -21,7 +21,7 @@ export interface TopoJSONMapConfigInterface<N extends MapInputNode, L extends Ma
   mapFitToPoints?: boolean;
   /** Initial zoom level. Default: `undefined` */
   zoomFactor?: number;
-  /** Disable pan / zoom interactions */
+  /** Disable pan / zoom interactions. Default: `false` */
   disableZoom?: boolean;
   /** Zoom extent. Default: `[1, 6]` */
   zoomExtent?: number[];
@@ -32,13 +32,13 @@ export interface TopoJSONMapConfigInterface<N extends MapInputNode, L extends Ma
   linkWidth?: NumericAccessor<L>;
   /** Link color value or accessor function. Default: `d => d.color ?? null` */
   linkColor?: ColorAccessor<L>;
-  /** Link cursor value or accessor function, Default: `null` */
+  /** Link cursor value or accessor function. Default: `null` */
   linkCursor?: StringAccessor<A>;
   /** Area id accessor function corresponding to the feature id from TopoJSON. Default: `d => d.id ?? ''` */
   areaId?: StringAccessor<A>;
   /** Area color value or accessor function. Default: `d => d.color ?? null` */
   areaColor?: ColorAccessor<A>;
-  /** Area cursor value or accessor function, Default: `null` */
+  /** Area cursor value or accessor function. Default: `null` */
   areaCursor?: StringAccessor<A>;
 
   /** Point color accessor. Default: `d => d.color ?? null` */
@@ -47,7 +47,7 @@ export interface TopoJSONMapConfigInterface<N extends MapInputNode, L extends Ma
   pointRadius?: NumericAccessor<N>;
   /** Point stroke width accessor. Default: `d => d.strokeWidth ?? null` */
   pointStrokeWidth?: NumericAccessor<N>;
-  /** Point cursor value or accessor function, Default: `null` */
+  /** Point cursor constant value or accessor function. Default: `null` */
   pointCursor?: StringAccessor<A>;
   /** Point longitude accessor function. Default: `d => d.longitude ?? null` */
   longitude?: NumericAccessor<N>;
@@ -71,7 +71,7 @@ export interface TopoJSONMapConfigInterface<N extends MapInputNode, L extends Ma
 export class TopoJSONMapConfig<N extends MapInputNode, L extends MapInputLink, A extends MapInputArea> extends ComponentConfig implements TopoJSONMapConfigInterface<N, L, A> {
   projection = MapProjection.Mercator()
   duration = 1500
-  topojson = null
+  topojson = undefined
   mapFeatureName = 'countries'
   mapFitToPoints = false
 

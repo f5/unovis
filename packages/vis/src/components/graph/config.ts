@@ -5,7 +5,7 @@ import { ComponentConfigInterface, ComponentConfig } from 'core/component/config
 
 // Types
 import { GraphInputLink, GraphInputNode } from 'types/graph'
-import { BooleanAccessor, ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
+import { BooleanAccessor, ColorAccessor, NumericAccessor, StringAccessor, GenericAccessor } from 'types/accessor'
 import { Shape } from 'types/shape'
 
 // Local Types
@@ -13,120 +13,134 @@ import { GraphLayoutType, GraphCircleLabel, GraphLinkStyle, GraphLinkArrow, Grap
 
 export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphInputLink> extends ComponentConfigInterface {
   // Zoom and drag
-  /** Zoom level constraints, default: [0.35, 1.25] */
+  /** Zoom level constraints. Default: [0.35, 1.25] */
   zoomScaleExtent?: [number, number];
-  /** Disable zooming */
+  /** Disable zooming. Default: `false` */
   disableZoom?: boolean;
-  /** Disable node dragging */
+  /** Disable node dragging. Default: `false` */
   disableDrag?: boolean;
-  /** Interval to re-render the graph when zooming */
+  /** Interval to re-render the graph when zooming. Default: `100` */
   zoomThrottledUpdateNodeThreshold?: number;
-  /** On zoom callback */
-  onZoom?: (zoomScale: number, zoomScaleExtent: number) => any;
+  /** Zoom event callback. Default: `undefined` */
+  onZoom?: (zoomScale: number, zoomScaleExtent: number) => void;
 
   // Layout
-  /** Type of graph layout */
+  /** Type of the graph layout. Default: `GraphLayoutType.Force` */
   layoutType?: GraphLayoutType | string;
-  /** Refit the layout on data or configuration update */
+  /** Refit the layout on data or config updates. Default: `true` */
   layoutAutofit?: boolean;
-  /** Place non-connected nodes to the bottom of the graph */
+  /** Place non-connected nodes to the bottom of the graph. Default: `false` */
   layoutNonConnectedAside?: boolean;
 
   // Settings for Parallel and Concentric Layouts
-  /** Order of the layout groups, for parallel and concentric layouts */
-  layoutGroupOrder?: any[];
-  /** Number of rows per group. Default: 1 */
+  /** Order of the layout groups.
+   * Only for `GraphLayoutType.Parallel`, `GraphLayoutType.ParallelHorizontal` and `GraphLayoutType.Concentric` layouts.
+   * Default: `[]` */
+  layoutGroupOrder?: string[];
+  /** Number of rows per group.
+   * Only for `GraphLayoutType.Parallel` and `GraphLayoutType.ParallelHorizontal` layouts.
+   * Default: `1` */
   layoutGroupRows?: number;
-  /** */
+  /** Set the number of nodes in a sub-group after which they'll continue from the next line or column.
+   * Only for `GraphLayoutType.Parallel` and `GraphLayoutType.ParallelHorizontal` layouts.
+   * Default: `6` */
   layoutSubgroupMaxNodes?: number;
-  /** */
+  /** Set a group by name to have priority in sorting the graph links.
+   * Only for `GraphLayoutType.Parallel` and `GraphLayoutType.ParallelHorizontal` layouts.
+   * Default: `undefined` */
   layoutSortConnectionsByGroup?: string;
-  /** Node Group accessor function or value */
+  /** Node group accessor function. Default: `node => node.group` */
   nodeGroup?: StringAccessor<N>;
-  /** Node Sub Group accessor function or value */
+  /** Node sub-group accessor function. Default: `node => node.subgroup` */
   nodeSubGroup?: StringAccessor<N>;
 
-  /** Force Layout settings, see d3.force */
+  /** Force Layout settings, see the `d3-force` package for more details */
   forceLayoutSettings?: {
-    /** Preferred Link Distance, default 60 */
+    /** Preferred Link Distance. Default: `60` */
     linkDistance?: number;
-    /** Link Strength [0:1], default 0.45 */
+    /** Link Strength [0:1]. Default: `0.45` */
     linkStrength?: number;
-    /** Charge Force (<0 repulsion, >0 attraction), default -350 */
+    /** Charge Force (<0 repulsion, >0 attraction). Default: `-500` */
     charge?: number;
-    /** X-centring force, default 0.15 */
+    /** X-centring force. Default: `0.15` */
     forceXStrength?: number;
-    /** Y-centring force, default 0.25 */
+    /** Y-centring force. Default: `0.25` */
     forceYStrength?: number;
   };
 
-  /** Darge Layout settings, see dagrejs */
+  /** Darge Layout settings, see the `dagrejs` package fore more details */
   dagreLayoutSettings?: {
+    /** Direction for rank node. `TB`, `BT`, `LR`, or `RL`. Default: `BT` */
     rankdir: string;
+    /** Type of algorithm to assigns a rank to each node in the input graph.
+     * `network-simplex`, `tight-tree` or `longest-path`.
+     * Default: `longest-path` */
     ranker: string;
+    /** Other configurable Dagre settings. https://github.com/dagrejs/dagre/wiki */
+    [key: string]: any;
   };
 
   // Links
-  /** Animation duration of the flow (traffic) circles */
+  /** Animation duration of the flow (traffic) circles. Default: `20000` */
   flowAnimDuration?: number;
-  /** Flow circle size */
+  /** Size of the moving circles that represent traffic flow. Default: `2` */
   flowCircleSize?: number;
-  /** Link width accessor function or value */
+  /** Link width accessor function ot constant value. Default: `1` */
   linkWidth?: NumericAccessor<L>;
-  /** Link style accessor function or value: 'solid' or 'dashed'. Default: 'solid'  */
-  linkStyle?: StringAccessor<L>;
-  /** Link band width accessor function or value. Default: 0 */
+  /** Link style accessor function or constant value. Default: `GraphLinkStyle.Solid`  */
+  linkStyle?: GenericAccessor<GraphLinkStyle, L>;
+  /** Link band width accessor function or constant value. Default: `0` */
   linkBandWidth?: NumericAccessor<L>;
-  /** Link arrow accessor function or undefined */
-  linkArrow?: ((d: L, i?: number, ...any) => GraphLinkArrow) | undefined;
-  /** Link stroke color accessor function or value */
+  /** Link arrow accessor function or constant value. Default: `undefined` */
+  linkArrow?: GenericAccessor<GraphLinkArrow, L> | undefined;
+  /** Link stroke color accessor function or constant value. Default: `undefined` */
   linkStroke?: ColorAccessor<L>;
-  /** Link flow display accessor or boolean value */
+  /** Link flow animation accessor function or constant value. Default: `false` */
   linkFlow?: BooleanAccessor<L>;
-  /** Link side Label accessor function or undefined */
-  linkLabel?: ((d: L, i?: number, ...any) => GraphCircleLabel | undefined) | undefined;
-  /** Shift or not link side Label from center */
+  /** Link  abel accessor function or constant value. Default: `undefined` */
+  linkLabel?: GenericAccessor<GraphCircleLabel, L> | undefined;
+  /** Shift label along the link center a little bit to avoid overlap with the link arrow. Default: `true` */
   linkLabelShiftFromCenter?: BooleanAccessor<L>;
-  /** Set selected link by id */
+  /** Set selected link by its unique id. Default: `undefined` */
   selectedLinkId?: number | string;
 
   // Nodes
-  /** Animation duration of the Node Score circle */
+  /** Animation duration of the node score outline. Default: `1500` */
   scoreAnimDuration?: number;
-  /** Node size accessor function or value */
+  /** Node size accessor function or constant value. Default: `30` */
   nodeSize?: NumericAccessor<N>;
-  /** Node border width accessor function or value */
+  /** Node border width accessor function or constant value. Default: `3` */
   nodeBorderWidth?: NumericAccessor<N>;
-  /** Node shape accessor function or value */
-  nodeShape?: StringAccessor<N>;
-  /** Node Score accessor function or value, in the range [0,100] */
+  /** Node shape accessor function or constant value. Default: `Shape.Circle` */
+  nodeShape?: GenericAccessor<Shape, N>;
+  /** Node score outline accessor function or constant value in the range [0,100]. Default: `0` */
   nodeStrokeSegmentValue?: NumericAccessor<N>;
-  /** Node Icon accessor function or value */
+  /** Node central icon accessor function or constant value. Default: `node => node.icon` */
   nodeIcon?: StringAccessor<N>;
-  /** Node Icon size accessor function or value */
+  /** Node central icon size accessor function or constant value. Default: `undefined` */
   nodeIconSize?: NumericAccessor<N>;
-  /** Node Label accessor function or value */
+  /** Node label accessor function or constant value. Default: `node => node.label` */
   nodeLabel?: StringAccessor<N>;
-  /** Node Sublabel accessor function or value */
+  /** Node sub-label accessor function or constant value: Default: `''` */
   nodeSubLabel?: StringAccessor<N>;
-  /** Node Side Label accessor function or undefined */
-  nodeSideLabels?: ((d: N, i?: number, ...any) => GraphCircleLabel[] | undefined) | undefined;
-  /** Node Bottom Icon accessor function. Default: `undefined` */
+  /** Node circular side labels accessor function. The function should return an array of GraphCircleLabel objects. Default: `undefined` */
+  nodeSideLabels?: GenericAccessor<GraphCircleLabel[], N>;
+  /** Node bottom icon accessor function. Default: `undefined` */
   nodeBottomIcon?: StringAccessor<N>;
-  /** Node disabled accessor function or value */
+  /** Node disabled state accessor function or constant value. Default: `false` */
   nodeDisabled?: BooleanAccessor<N>;
-  /** Node fill color accessor function or value */
+  /** Node fill color accessor function or constant value. Default: `node => node.fill` */
   nodeFill?: ColorAccessor<N>;
-  /** Node stroke segment fill color accessor function or value */
+  /** Node score outline fill color accessor function or constant value. Default: `undefined` */
   nodeStrokeSegmentFill?: ColorAccessor<N>;
-  /** Node stroke color accessor function or value */
+  /** Node stroke color accessor function or constant value. Default: `node => node.stroke` */
   nodeStroke?: ColorAccessor<N>;
-  /** Node Sorting Function. Default: `undefined` */
+  /** Sorting function to determine node placement. Default: `undefined` */
   nodeSort?: ((a: N, b: N) => number);
-  /** Set selected node by Id  */
+  /** Set selected node by unique id. Default: `undefined` */
   selectedNodeId?: number | string;
 
-  // Panels
+  /** Panels configuration. An array of GraphPanelConfigInterface objects. Default: `[]` */
   panels?: GraphPanelConfigInterface[];
 }
 
@@ -139,12 +153,12 @@ export class GraphConfig<N extends GraphInputNode, L extends GraphInputLink> ext
   onZoom = undefined
   layoutType = GraphLayoutType.Force
   layoutAutofit = true
-  layoutNonConnectedAside: true
+  layoutNonConnectedAside = false
 
   layoutGroupOrder = []
   layoutGroupRows = 1
   layoutSubgroupMaxNodes = 6
-  layoutSortConnectionsByGroup = ''
+  layoutSortConnectionsByGroup = undefined
   nodeGroup = (n: N): string => n['group']
   nodeSubGroup = (n: N): string => n['subgroup']
 
