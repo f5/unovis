@@ -1,32 +1,28 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { Scale, ContinuousScale } from 'types/scale'
+
 // Types
-import { NumericAccessor } from 'types/accessor'
+import { ColorAccessor, NumericAccessor } from 'types/accessor'
 
 // Config
 import { ComponentConfig, ComponentConfigInterface } from '../component/config'
 
 export interface XYComponentConfigInterface<Datum> extends ComponentConfigInterface {
-  /** X accessor or number value */
+  /** Accessor function for getting the values along the X axis. Default: `undefined` */
   x?: NumericAccessor<Datum>;
-  /** Y accessor or value */
+  /** A single of multiple accessor functions for getting the values along the Y axis. Default: `undefined` */
   y?: NumericAccessor<Datum> | NumericAccessor<Datum>[];
-  /** Id accessor for better visual data updates */
+  /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */
   id?: ((d: Datum, i?: number, ...any) => string | number);
-  /** Component color (string or color object) */
-  color?: string | any;
-  /** Coloring type */
+  /** Component color accessor function. Default: `d => d.color` */
+  color?: ColorAccessor<Datum>;
+  /** X and Y scales. As of now, only continuous scales are supported. Default: `{ x: Scale.scaleLinear(), y: Scale.scaleLinear() } */
   scales?: {
     x?: ContinuousScale;
     y?: ContinuousScale;
   };
-  /** Sets the Y scale domain based on the X scale domain not the whole data. Default: `false` */
+  /** Sets the Y scale domain based on the X scale domain not the whole data. Useful when you manipulate chart's X domain from outside. Default: `false` */
   adaptiveYScale?: boolean;
-  events?: {
-    [selector: string]: {
-      [eventName: string]: (data: Datum) => void;
-    };
-  };
 }
 
 export class XYComponentConfig<Datum> extends ComponentConfig implements XYComponentConfigInterface<Datum> {

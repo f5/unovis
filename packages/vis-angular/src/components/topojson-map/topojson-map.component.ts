@@ -21,17 +21,50 @@ import { VisCoreComponent } from '../../core'
   providers: [{ provide: VisCoreComponent, useExisting: VisTopoJSONMapComponent }],
 })
 export class VisTopoJSONMapComponent<N extends MapInputNode, L extends MapInputLink, A extends MapInputArea> implements TopoJSONMapConfigInterface<N, L, A>, AfterViewInit {
-  /** Animation duration */
+  /** Animation duration of the data update transitions in milliseconds. Default: `600` */
   @Input() duration: number
 
-  /** Events */
+  /** Events configuration. An object containing properties in the following format:
+   *
+   * ```
+   * {
+   * \[selectorString]: {
+   *     \[eventType]: callbackFunction
+   *  }
+   * }
+   * ```
+   * e.g.:
+   * ```
+   * {
+   * \[Area.selectors.area]: {
+   *    click: (d) => console.log("Clicked Area", d)
+   *  }
+   * }
+   * ``` */
   @Input() events: {
     [selector: string]: {
       [eventName: string]: (data: any, event?: Event, i?: number, els?: SVGElement[] | HTMLElement[]) => void;
     };
   }
 
-  /** Custom attributes */
+  /** You can set every SVG and HTML visualization object to have a custom DOM attributes, which is useful
+   * when you want to do unit or end-to-end testing. Attributes configuration object has the following structure:
+   *
+   * ```
+   * {
+   * \[selectorString]: {
+   *     \[attributeName]: attribute constant value or accessor function
+   *  }
+   * }
+   * ```
+   * e.g.:
+   * ```
+   * {
+   * \[Area.selectors.area]: {
+   *    "test-value": d => d.value
+   *  }
+   * }
+   * ``` */
   @Input() attributes: {
     [selector: string]: {
       [attr: string]: string | number | boolean | ((datum: any) => string | number | boolean);

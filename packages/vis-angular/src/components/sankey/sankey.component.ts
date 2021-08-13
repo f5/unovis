@@ -27,17 +27,50 @@ import { VisCoreComponent } from '../../core'
   providers: [{ provide: VisCoreComponent, useExisting: VisSankeyComponent }],
 })
 export class VisSankeyComponent<N extends SankeyInputNode, L extends SankeyInputLink> implements SankeyConfigInterface<N, L>, AfterViewInit {
-  /** Animation duration */
+  /** Animation duration of the data update transitions in milliseconds. Default: `600` */
   @Input() duration: number
 
-  /** Events */
+  /** Events configuration. An object containing properties in the following format:
+   *
+   * ```
+   * {
+   * \[selectorString]: {
+   *     \[eventType]: callbackFunction
+   *  }
+   * }
+   * ```
+   * e.g.:
+   * ```
+   * {
+   * \[Area.selectors.area]: {
+   *    click: (d) => console.log("Clicked Area", d)
+   *  }
+   * }
+   * ``` */
   @Input() events: {
     [selector: string]: {
       [eventName: string]: (data: any, event?: Event, i?: number, els?: SVGElement[] | HTMLElement[]) => void;
     };
   }
 
-  /** Custom attributes */
+  /** You can set every SVG and HTML visualization object to have a custom DOM attributes, which is useful
+   * when you want to do unit or end-to-end testing. Attributes configuration object has the following structure:
+   *
+   * ```
+   * {
+   * \[selectorString]: {
+   *     \[attributeName]: attribute constant value or accessor function
+   *  }
+   * }
+   * ```
+   * e.g.:
+   * ```
+   * {
+   * \[Area.selectors.area]: {
+   *    "test-value": d => d.value
+   *  }
+   * }
+   * ``` */
   @Input() attributes: {
     [selector: string]: {
       [attr: string]: string | number | boolean | ((datum: any) => string | number | boolean);
@@ -66,17 +99,17 @@ export class VisSankeyComponent<N extends SankeyInputNode, L extends SankeyInput
   @Input() highlightDelay: number
 
   /** Sankey node sorting function. Default: `undefined`.
-Node sorting is applied to nodes in one layer (column). Layer by layer.
-Options: `undefined` - the order is determined by the layout;
-         `null` - the order is fixed by the input;
-         sort function - the order is determined by the function. */
+   * Node sorting is applied to nodes in one layer (column). Layer by layer.
+   * Options: `undefined` - the order is determined by the layout;
+   *          `null` - the order is fixed by the input;
+   *          sort function - the order is determined by the function. */
   @Input() nodeSort: ((node1: N, node2: N) => number) | null | undefined
 
   /** Sankey link sorting function. Default: `(link2, link1) => link1.value - link2.value`.
-Link sorting is applied to the source (exiting) links within one node.
-Options: `undefined` - the order is determined by the layout;
-         `null` - the order is fixed by the input;
-         sort function - the order is determined by the function. */
+   * Link sorting is applied to the source (exiting) links within one node.
+   * Options: `undefined` - the order is determined by the layout;
+   *          `null` - the order is fixed by the input;
+   *          sort function - the order is determined by the function. */
   @Input() linkSort: ((link1: L, link2: L) => number) | null | undefined
 
   /** Sankey node width in pixels */
@@ -148,8 +181,8 @@ Options: `undefined` - the order is determined by the layout;
   /** Expand trimmed label on hover. Default: `true` */
   @Input() labelExpandTrimmedOnHover: boolean
 
-  /** Maximum label length (in characters number) for wrapping. Default: `undefined`
-Label trimming mode. Default: `TrimMode.MIDDLE` */
+  /** Maximum label length (in characters number) for wrapping. Default: `undefined` */
+  /** Label trimming mode. Default: `TrimMode.MIDDLE` */
   @Input() labelTrimMode: TrimMode
 
   /** Label font size in pixel. Default: `12` */

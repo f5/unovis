@@ -9,16 +9,18 @@ import { SymbolType } from 'types/symbol'
 import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
 
 export interface ScatterConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
-  /** Single Y accessor function or constant value */
+  /** Single Y accessor function. Default: `undefined` */
   y?: NumericAccessor<Datum>;
-  /** Size accessor function or value in relative units. Default: `1` */
+  /** Size accessor function or constant value in relative units. Default: `1` */
   size?: NumericAccessor<Datum>;
-  /** Size Scale. Default: `Scale.scaleLinear()` */
+  /** Size scale. Default: `Scale.scaleLinear()` */
   sizeScale?: ContinuousScale;
   /** Size Range, [number, number]. Default: `[5, 20]` */
   sizeRange?: [number, number];
-  /** Shape of scatter point: circle, cross, diamond, square, star, triangle and wye. Default: `SymbolType.Circle` */
-  shape?: ((d: Datum, i?: number, ...any) => SymbolType) | SymbolType;
+  /** Shape of the scatter point. Accessor function or constant value: `SymbolType.Circle`, `SymbolType.Cross`, `SymbolType.Diamond`, `SymbolType.Square`,
+   * `SymbolType.Star`, `SymbolType.Triangle` or `SymbolType.Wye`.
+   * Default: `SymbolType.Circle` */
+  shape?: ((d: Datum, i?: number, ...any) => (SymbolType | string)) | SymbolType | string;
   /** Label accessor function or string. Default: `undefined` */
   label?: StringAccessor<Datum>;
   /** Label color. Default: `undefined` */
