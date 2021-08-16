@@ -5,15 +5,15 @@ import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component
 import { NumericAccessor, StringAccessor } from 'types/accessor'
 
 export interface TimelineConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
-  /** Width of the lines */
+  /** Width of the timeline items. Default: `8` */
   lineWidth?: NumericAccessor<Datum>;
-  /** Timeline row height */
+  /** Timeline row height. Default: `22` */
   rowHeight?: number;
-  /** Line length accessor function or a value */
+  /** Timeline item length accessor function. Default: `d => d.length` */
   length?: NumericAccessor<Datum>;
-  /** Type accessor function, records of one type are plotted in one row */
+  /** Timeline item type accessor function. Records of one type will be plotted in one row. Default: `d => d.type` */
   type?: StringAccessor<Datum>;
-  /** Optional line cursor */
+  /** Configurable Timeline item cursor when hovering over. Default: `null` */
   cursor?: StringAccessor<Datum>;
 }
 

@@ -11,19 +11,19 @@ export interface FreeBrushConfigInterface<Datum> extends XYComponentConfigInterf
   /** Callback function to be called on any Brush event.
    * Default: `(selection: FreeBrushSelection, event: D3BrushEvent<Datum>, userDriven: boolean): void => {}`
   */
-  onBrush?: ((selection?: FreeBrushSelection, event?: D3BrushEvent<Datum>, userDriven?: boolean) => any);
+  onBrush?: ((selection?: FreeBrushSelection, event?: D3BrushEvent<Datum>, userDriven?: boolean) => void);
   /** Callback function to be called on the Brush start event.
    * Default: `(selection: FreeBrushSelection, event: D3BrushEvent<Datum>, userDriven: boolean): void => {}`
   */
-  onBrushStart?: ((selection?: FreeBrushSelection, event?: D3BrushEvent<Datum>, userDriven?: boolean) => any);
+  onBrushStart?: ((selection?: FreeBrushSelection, event?: D3BrushEvent<Datum>, userDriven?: boolean) => void);
   /** Callback function to be called on the Brush move event.
    * Default: `(selection: FreeBrushSelection, event: D3BrushEvent<Datum>, userDriven: boolean): void => {}`
   */
-  onBrushMove?: ((selection?: FreeBrushSelection, event?: D3BrushEvent<Datum>, userDriven?: boolean) => any);
+  onBrushMove?: ((selection?: FreeBrushSelection, event?: D3BrushEvent<Datum>, userDriven?: boolean) => void);
   /** Callback function to be called on the Brush end event.
    * Default: `(selection: FreeBrushSelection, event: D3BrushEvent<Datum>, userDriven: boolean)L void => {}`
   */
-  onBrushEnd?: ((selection?: FreeBrushSelection, event?: D3BrushEvent<Datum>, userDriven?: boolean) => any);
+  onBrushEnd?: ((selection?: FreeBrushSelection, event?: D3BrushEvent<Datum>, userDriven?: boolean) => void);
   /** Width of the Brush handle. Default: `1` */
   handleWidth?: number;
   /** Brush selection in data space, can be used to force set the selection from outside.

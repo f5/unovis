@@ -82,32 +82,32 @@ export class VisStackedBarComponent<Datum> implements StackedBarConfigInterface<
   /** Sets the Y scale domain based on the X scale domain not the whole data. Useful when you manipulate chart's X domain from outside. Default: `false` */
   @Input() adaptiveYScale: boolean
 
-  /** Bar width in pixels */
+  /** Force set bar width in pixels. Default: `undefined` */
   @Input() barWidth: number
 
-  /** Maximum bar width for dynamic sizing. Limits the barWidth property on the top */
+  /** Maximum bar width for dynamic sizing. Default: `undefined` */
   @Input() barMaxWidth: number
 
-  /** Expected step between the bars in the X axis units. Used to dynamically calculate the width for bars correctly when data has gaps */
+  /** Expected step between the bars in the X axis units.
+   * Needed to correctly calculate the width of the bars when there are gaps in the data.
+   * Default: `undefined` */
   @Input() dataStep: number
 
   /** Fractional padding between the bars in the range of [0,1). Default: `0` */
   @Input() barPadding: number
 
-  /** Orientation of the chart */
-  @Input() isVertical: boolean
-
   /** Rounded corners for top bars. Boolean or number (to set the radius in pixels). Default: `true` */
   @Input() roundedCorners: number | boolean
 
-  /** Optional bar cursor. Default: `null` */
+  /** Configurable bar cursor when hovering over. Default: `null` */
   @Input() cursor: StringAccessor<Datum>
 
-  /** Sets the minimum bar height to 1 for better visibility of small values. Default: `false` */
+  /** Sets the minimum bar height to 1 pixel for better visibility of small values. Default: `false` */
   @Input() barMinHeight: boolean
 
-  /** Base value to test data existence when barMinHeight is set to `true`. Anything equal to barMinHeightZeroValue
-   *  will not be rendered on the chart. Default: `null` */
+  /** Base value to test data existence when barMinHeight is set to `true`.
+   * Everything equal to barMinHeightZeroValue will not be rendered on the chart.
+   * Default: `null` */
   @Input() barMinHeightZeroValue: any
   @Input() data: any
 
@@ -123,8 +123,8 @@ export class VisStackedBarComponent<Datum> implements StackedBarConfigInterface<
   }
 
   private getConfig (): StackedBarConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, scales, adaptiveYScale, barWidth, barMaxWidth, dataStep, barPadding, isVertical, roundedCorners, cursor, barMinHeight, barMinHeightZeroValue } = this
-    const config = { duration, events, attributes, x, y, id, color, scales, adaptiveYScale, barWidth, barMaxWidth, dataStep, barPadding, isVertical, roundedCorners, cursor, barMinHeight, barMinHeightZeroValue }
+    const { duration, events, attributes, x, y, id, color, scales, adaptiveYScale, barWidth, barMaxWidth, dataStep, barPadding, roundedCorners, cursor, barMinHeight, barMinHeightZeroValue } = this
+    const config = { duration, events, attributes, x, y, id, color, scales, adaptiveYScale, barWidth, barMaxWidth, dataStep, barPadding, roundedCorners, cursor, barMinHeight, barMinHeightZeroValue }
     const keys = Object.keys(config) as (keyof StackedBarConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

@@ -1,5 +1,4 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { XYComponentCore } from 'core/xy-component'
 import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component/config'
 import { Tooltip } from 'core/tooltip'
@@ -18,7 +17,7 @@ export interface CrosshairConfigInterface<Datum> extends XYComponentConfigInterf
   template?: (data: Datum, i: number, elements: any) => string | HTMLElement;
   /** Hide Crosshair when the corresponding element is far from mouse pointer. Default: `true` */
   hideWhenFarFromPointer?: boolean;
-  /** Distance to check in the hideWhenFarFromPointer condition. Default: `100` */
+  /** Distance in pixels to check in the hideWhenFarFromPointer condition. Default: `100` */
   hideWhenFarFromPointerDistance?: number;
 }
 

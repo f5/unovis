@@ -7,7 +7,7 @@ import { ComponentConfigInterface, ComponentConfig } from 'core/component/config
 import { ColorAccessor, NumericAccessor } from 'types/accessor'
 
 export interface DonutConfigInterface<Datum> extends ComponentConfigInterface {
-  /** Id accessor for better visual data updates */
+  /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */
   id?: ((d: Datum, i?: number, ...any) => string | number);
   /** Value accessor function. Default: `undefined` */
   value: NumericAccessor<Datum>;

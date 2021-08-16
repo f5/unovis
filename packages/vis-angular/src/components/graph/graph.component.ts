@@ -9,10 +9,13 @@ import {
   GraphLayoutType,
   StringAccessor,
   NumericAccessor,
+  GenericAccessor,
+  GraphLinkStyle,
   GraphLinkArrow,
   ColorAccessor,
   BooleanAccessor,
   GraphCircleLabel,
+  Shape,
   GraphPanelConfigInterface,
 } from '@volterra/vis'
 import { VisCoreComponent } from '../../core'
@@ -74,49 +77,57 @@ export class VisGraphComponent<N extends GraphInputNode, L extends GraphInputLin
     };
   }
 
-  /** Zoom level constraints, default: [0.35, 1.25] */
+  /** Zoom level constraints. Default: [0.35, 1.25] */
   @Input() zoomScaleExtent: [number, number]
 
-  /** Disable zooming */
+  /** Disable zooming. Default: `false` */
   @Input() disableZoom: boolean
 
-  /** Disable node dragging */
+  /** Disable node dragging. Default: `false` */
   @Input() disableDrag: boolean
 
-  /** Interval to re-render the graph when zooming */
+  /** Interval to re-render the graph when zooming. Default: `100` */
   @Input() zoomThrottledUpdateNodeThreshold: number
 
-  /** On zoom callback */
-  @Input() onZoom: (zoomScale: number, zoomScaleExtent: number) => any
+  /** Zoom event callback. Default: `undefined` */
+  @Input() onZoom: (zoomScale: number, zoomScaleExtent: number) => void
 
-  /** Type of graph layout */
+  /** Type of the graph layout. Default: `GraphLayoutType.Force` */
   @Input() layoutType: GraphLayoutType | string
 
-  /** Refit the layout on data or configuration update */
+  /** Refit the layout on data or config updates. Default: `true` */
   @Input() layoutAutofit: boolean
 
-  /** Place non-connected nodes to the bottom of the graph */
+  /** Place non-connected nodes to the bottom of the graph. Default: `false` */
   @Input() layoutNonConnectedAside: boolean
 
-  /** Order of the layout groups, for parallel and concentric layouts */
-  @Input() layoutGroupOrder: any[]
+  /** Order of the layout groups.
+   * Only for `GraphLayoutType.Parallel`, `GraphLayoutType.ParallelHorizontal` and `GraphLayoutType.Concentric` layouts.
+   * Default: `[]` */
+  @Input() layoutGroupOrder: string[]
 
-  /** Number of rows per group. Default: 1 */
+  /** Number of rows per group.
+   * Only for `GraphLayoutType.Parallel` and `GraphLayoutType.ParallelHorizontal` layouts.
+   * Default: `1` */
   @Input() layoutGroupRows: number
 
-  /**  */
+  /** Set the number of nodes in a sub-group after which they'll continue from the next line or column.
+   * Only for `GraphLayoutType.Parallel` and `GraphLayoutType.ParallelHorizontal` layouts.
+   * Default: `6` */
   @Input() layoutSubgroupMaxNodes: number
 
-  /**  */
+  /** Set a group by name to have priority in sorting the graph links.
+   * Only for `GraphLayoutType.Parallel` and `GraphLayoutType.ParallelHorizontal` layouts.
+   * Default: `undefined` */
   @Input() layoutSortConnectionsByGroup: string
 
-  /** Node Group accessor function or value */
+  /** Node group accessor function. Default: `node => node.group` */
   @Input() nodeGroup: StringAccessor<N>
 
-  /** Node Sub Group accessor function or value */
+  /** Node sub-group accessor function. Default: `node => node.subgroup` */
   @Input() nodeSubGroup: StringAccessor<N>
 
-  /** Force Layout settings, see d3.force */
+  /** Force Layout settings, see the `d3-force` package for more details */
   @Input() forceLayoutSettings: {
     linkDistance?: number;
     linkStrength?: number;
@@ -125,96 +136,98 @@ export class VisGraphComponent<N extends GraphInputNode, L extends GraphInputLin
     forceYStrength?: number;
   }
 
-  /** Darge Layout settings, see dagrejs */
+  /** Darge Layout settings, see the `dagrejs` package fore more details */
   @Input() dagreLayoutSettings: {
     rankdir: string;
     ranker: string;
+    [key: string]: any;
   }
 
-  /** Animation duration of the flow (traffic) circles */
+  /** Animation duration of the flow (traffic) circles. Default: `20000` */
   @Input() flowAnimDuration: number
 
-  /** Flow circle size */
+  /** Size of the moving circles that represent traffic flow. Default: `2` */
   @Input() flowCircleSize: number
 
-  /** Link width accessor function or value */
+  /** Link width accessor function ot constant value. Default: `1` */
   @Input() linkWidth: NumericAccessor<L>
 
-  /** Link style accessor function or value: 'solid' or 'dashed'. Default: 'solid' */
-  @Input() linkStyle: StringAccessor<L>
+  /** Link style accessor function or constant value. Default: `GraphLinkStyle.Solid` */
+  @Input() linkStyle: GenericAccessor<GraphLinkStyle, L>
 
-  /** Link band width accessor function or value. Default: 0 */
+  /** Link band width accessor function or constant value. Default: `0` */
   @Input() linkBandWidth: NumericAccessor<L>
 
-  /** Link arrow accessor function or undefined */
-  @Input() linkArrow: ((d: L, i?: number, ...rest) => GraphLinkArrow) | undefined
+  /** Link arrow accessor function or constant value. Default: `undefined` */
+  @Input() linkArrow: GenericAccessor<GraphLinkArrow, L> | undefined
 
-  /** Link stroke color accessor function or value */
+  /** Link stroke color accessor function or constant value. Default: `undefined` */
   @Input() linkStroke: ColorAccessor<L>
 
-  /** Link flow display accessor or boolean value */
+  /** Link flow animation accessor function or constant value. Default: `false` */
   @Input() linkFlow: BooleanAccessor<L>
 
-  /** Link side Label accessor function or undefined */
-  @Input() linkLabel: ((d: L, i?: number, ...rest) => GraphCircleLabel | undefined) | undefined
+  /** Link  abel accessor function or constant value. Default: `undefined` */
+  @Input() linkLabel: GenericAccessor<GraphCircleLabel, L> | undefined
 
-  /** Shift or not link side Label from center */
+  /** Shift label along the link center a little bit to avoid overlap with the link arrow. Default: `true` */
   @Input() linkLabelShiftFromCenter: BooleanAccessor<L>
 
-  /** Set selected link by id */
+  /** Set selected link by its unique id. Default: `undefined` */
   @Input() selectedLinkId: number | string
 
-  /** Animation duration of the Node Score circle */
+  /** Animation duration of the node score outline. Default: `1500` */
   @Input() scoreAnimDuration: number
 
-  /** Node size accessor function or value */
+  /** Node size accessor function or constant value. Default: `30` */
   @Input() nodeSize: NumericAccessor<N>
 
-  /** Node border width accessor function or value */
+  /** Node border width accessor function or constant value. Default: `3` */
   @Input() nodeBorderWidth: NumericAccessor<N>
 
-  /** Node shape accessor function or value */
-  @Input() nodeShape: StringAccessor<N>
+  /** Node shape accessor function or constant value. Default: `Shape.Circle` */
+  @Input() nodeShape: GenericAccessor<Shape, N>
 
-  /** Node Score accessor function or value, in the range [0,100] */
+  /** Node score outline accessor function or constant value in the range [0,100]. Default: `0` */
   @Input() nodeStrokeSegmentValue: NumericAccessor<N>
 
-  /** Node Icon accessor function or value */
+  /** Node central icon accessor function or constant value. Default: `node => node.icon` */
   @Input() nodeIcon: StringAccessor<N>
 
-  /** Node Icon size accessor function or value */
+  /** Node central icon size accessor function or constant value. Default: `undefined` */
   @Input() nodeIconSize: NumericAccessor<N>
 
-  /** Node Label accessor function or value */
+  /** Node label accessor function or constant value. Default: `node => node.label` */
   @Input() nodeLabel: StringAccessor<N>
 
-  /** Node Sublabel accessor function or value */
+  /** Node sub-label accessor function or constant value: Default: `''` */
   @Input() nodeSubLabel: StringAccessor<N>
 
-  /** Node Side Label accessor function or undefined */
-  @Input() nodeSideLabels: ((d: N, i?: number, ...rest) => GraphCircleLabel[] | undefined) | undefined
+  /** Node circular side labels accessor function. The function should return an array of GraphCircleLabel objects. Default: `undefined` */
+  @Input() nodeSideLabels: GenericAccessor<GraphCircleLabel[], N>
 
-  /** Node Bottom Icon accessor function. Default: `undefined` */
+  /** Node bottom icon accessor function. Default: `undefined` */
   @Input() nodeBottomIcon: StringAccessor<N>
 
-  /** Node disabled accessor function or value */
+  /** Node disabled state accessor function or constant value. Default: `false` */
   @Input() nodeDisabled: BooleanAccessor<N>
 
-  /** Node fill color accessor function or value */
+  /** Node fill color accessor function or constant value. Default: `node => node.fill` */
   @Input() nodeFill: ColorAccessor<N>
 
-  /** Node stroke segment fill color accessor function or value */
+  /** Node score outline fill color accessor function or constant value. Default: `undefined` */
   @Input() nodeStrokeSegmentFill: ColorAccessor<N>
 
-  /** Node stroke color accessor function or value */
+  /** Node stroke color accessor function or constant value. Default: `node => node.stroke` */
   @Input() nodeStroke: ColorAccessor<N>
 
-  /** Node Sorting Function. Default: `undefined` */
+  /** Sorting function to determine node placement. Default: `undefined` */
   @Input() nodeSort: ((a: N, b: N) => number)
 
-  /** Set selected node by Id */
+  /** Set selected node by unique id. Default: `undefined` */
   @Input() selectedNodeId: number | string
 
+  /** Panels configuration. An array of GraphPanelConfigInterface objects. Default: `[]` */
   @Input() panels: GraphPanelConfigInterface[]
   @Input() data: any
 

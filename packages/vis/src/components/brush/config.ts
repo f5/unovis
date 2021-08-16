@@ -9,19 +9,19 @@ export interface BrushConfigInterface<Datum> extends XYComponentConfigInterface<
   /** Callback function to be called on any Brush event.
    * Default: `(selection: [number, number], event: D3BrushEvent<Datum>, userDriven: boolean): void => {}`
   */
-  onBrush?: ((selection?: [number, number], event?: D3BrushEvent<Datum>, userDriven?: boolean) => any);
+  onBrush?: ((selection?: [number, number], event?: D3BrushEvent<Datum>, userDriven?: boolean) => void);
   /** Callback function to be called on the Brush start event.
    * Default: `(selection: [number, number], event: D3BrushEvent<Datum>, userDriven: boolean): void => {}`
   */
-  onBrushStart?: ((selection?: [number, number], event?: D3BrushEvent<Datum>, userDriven?: boolean) => any);
+  onBrushStart?: ((selection?: [number, number], event?: D3BrushEvent<Datum>, userDriven?: boolean) => void);
   /** Callback function to be called on the Brush move event.
    * Default: `(selection: [number, number], event: D3BrushEvent<Datum>, userDriven: boolean): void => {}`
   */
-  onBrushMove?: ((selection?: [number, number], event?: D3BrushEvent<Datum>, userDriven?: boolean) => any);
+  onBrushMove?: ((selection?: [number, number], event?: D3BrushEvent<Datum>, userDriven?: boolean) => void);
   /** Callback function to be called on the Brush end event.
    * Default: `(selection: [number, number], event: D3BrushEvent<Datum>, userDriven: boolean): void => {}`
   */
-  onBrushEnd?: ((selection?: [number, number], event?: D3BrushEvent<Datum>, userDriven?: boolean) => any);
+  onBrushEnd?: ((selection?: [number, number], event?: D3BrushEvent<Datum>, userDriven?: boolean) => void);
   /** Width of the Brush handle. Default: `1` */
   handleWidth?: number;
   /** Brush selection in data space, can be used to force set the selection from outside.
@@ -30,7 +30,7 @@ export interface BrushConfigInterface<Datum> extends XYComponentConfigInterface<
   selection?: [number, number] | null;
   /** Allow dragging the selected area as a whole in order to change the selected range. Default: `false` */
   draggable?: boolean;
-  /** Position of the handle: 'Arrangement.Inside' or 'Arrangement.Outside'. Default: `Arrangement.Inside` */
+  /** Position of the handle: `Arrangement.Inside` or `Arrangement.Outside`. Default: `Arrangement.Inside` */
   handlePosition?: Arrangement | string;
   /** Constraint Brush selection to a minimal length in data units. Default: `undefined` */
   selectionMinLength?: number;

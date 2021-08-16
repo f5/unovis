@@ -85,19 +85,19 @@ export class VisBrushComponent<Datum> implements BrushConfigInterface<Datum>, Af
 
   /** Callback function to be called on any Brush event.
    * Default: `(selection: [number, number], event: D3BrushEvent<Datum>, userDriven: boolean): void => {}` */
-  @Input() onBrush: ((selection?: [number, number], event?: D3BrushEvent<Datum>, userDriven?: boolean) => any)
+  @Input() onBrush: ((selection?: [number, number], event?: D3BrushEvent<Datum>, userDriven?: boolean) => void)
 
   /** Callback function to be called on the Brush start event.
    * Default: `(selection: [number, number], event: D3BrushEvent<Datum>, userDriven: boolean): void => {}` */
-  @Input() onBrushStart: ((selection?: [number, number], event?: D3BrushEvent<Datum>, userDriven?: boolean) => any)
+  @Input() onBrushStart: ((selection?: [number, number], event?: D3BrushEvent<Datum>, userDriven?: boolean) => void)
 
   /** Callback function to be called on the Brush move event.
    * Default: `(selection: [number, number], event: D3BrushEvent<Datum>, userDriven: boolean): void => {}` */
-  @Input() onBrushMove: ((selection?: [number, number], event?: D3BrushEvent<Datum>, userDriven?: boolean) => any)
+  @Input() onBrushMove: ((selection?: [number, number], event?: D3BrushEvent<Datum>, userDriven?: boolean) => void)
 
   /** Callback function to be called on the Brush end event.
    * Default: `(selection: [number, number], event: D3BrushEvent<Datum>, userDriven: boolean): void => {}` */
-  @Input() onBrushEnd: ((selection?: [number, number], event?: D3BrushEvent<Datum>, userDriven?: boolean) => any)
+  @Input() onBrushEnd: ((selection?: [number, number], event?: D3BrushEvent<Datum>, userDriven?: boolean) => void)
 
   /** Width of the Brush handle. Default: `1` */
   @Input() handleWidth: number
@@ -109,7 +109,7 @@ export class VisBrushComponent<Datum> implements BrushConfigInterface<Datum>, Af
   /** Allow dragging the selected area as a whole in order to change the selected range. Default: `false` */
   @Input() draggable: boolean
 
-  /** Position of the handle: 'Arrangement.Inside' or 'Arrangement.Outside'. Default: `Arrangement.Inside` */
+  /** Position of the handle: `Arrangement.Inside` or `Arrangement.Outside`. Default: `Arrangement.Inside` */
   @Input() handlePosition: Arrangement | string
 
   /** Constraint Brush selection to a minimal length in data units. Default: `undefined` */

@@ -186,7 +186,7 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum> {
     if (!isOrdinal && dataSize >= 2) dataSize += 1
 
     const c = dataSize < 2 ? 1 : 1 - config.groupPadding
-    const groupWidth = c * (config.isVertical ? config.width : config.height) / (dataSize)
+    const groupWidth = c * config.width / (dataSize)
 
     return min([groupWidth, config.groupMaxWidth])
   }

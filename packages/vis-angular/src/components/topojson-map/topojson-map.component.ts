@@ -74,7 +74,7 @@ export class VisTopoJSONMapComponent<N extends MapInputNode, L extends MapInputL
   /** MapProjection (or D3's GeoProjection) instance. Default: `MapProjection.Mercator()` */
   @Input() projection: GeoProjection
 
-  /** Map data in the TopoJSON topology format */
+  /** Map data in the TopoJSON topology format. Default: `topojson` */
   @Input() topojson: any
 
   /** Name of the map features to be displayed, e.g. 'countries' or 'counties'. Default: `countries` */
@@ -86,7 +86,7 @@ export class VisTopoJSONMapComponent<N extends MapInputNode, L extends MapInputL
   /** Initial zoom level. Default: `undefined` */
   @Input() zoomFactor: number
 
-  /** Disable pan / zoom interactions */
+  /** Disable pan / zoom interactions. Default: `false` */
   @Input() disableZoom: boolean
 
   /** Zoom extent. Default: `[1, 6]` */
@@ -101,7 +101,7 @@ export class VisTopoJSONMapComponent<N extends MapInputNode, L extends MapInputL
   /** Link color value or accessor function. Default: `d => d.color ?? null` */
   @Input() linkColor: ColorAccessor<L>
 
-  /** Link cursor value or accessor function, Default: `null` */
+  /** Link cursor value or accessor function. Default: `null` */
   @Input() linkCursor: StringAccessor<A>
 
   /** Area id accessor function corresponding to the feature id from TopoJSON. Default: `d => d.id ?? ''` */
@@ -110,7 +110,7 @@ export class VisTopoJSONMapComponent<N extends MapInputNode, L extends MapInputL
   /** Area color value or accessor function. Default: `d => d.color ?? null` */
   @Input() areaColor: ColorAccessor<A>
 
-  /** Area cursor value or accessor function, Default: `null` */
+  /** Area cursor value or accessor function. Default: `null` */
   @Input() areaCursor: StringAccessor<A>
 
   /** Point color accessor. Default: `d => d.color ?? null` */
@@ -122,7 +122,7 @@ export class VisTopoJSONMapComponent<N extends MapInputNode, L extends MapInputL
   /** Point stroke width accessor. Default: `d => d.strokeWidth ?? null` */
   @Input() pointStrokeWidth: NumericAccessor<N>
 
-  /** Point cursor value or accessor function, Default: `null` */
+  /** Point cursor constant value or accessor function. Default: `null` */
   @Input() pointCursor: StringAccessor<A>
 
   /** Point longitude accessor function. Default: `d => d.longitude ?? null` */
