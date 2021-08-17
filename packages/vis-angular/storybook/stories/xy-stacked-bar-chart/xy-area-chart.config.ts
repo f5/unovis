@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { AreaConfigInterface } from '@volterra/vis'
+import { AreaConfigInterface, LineConfigInterface } from '@volterra/vis'
 import { XYChartStoryConfig } from '../../utils/content-wrappers'
 import { DataRecord, generateDataRecords } from '../../data/time-series'
 

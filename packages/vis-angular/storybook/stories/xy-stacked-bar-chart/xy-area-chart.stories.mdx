@@ -27,7 +27,6 @@ The Stacked Bar component has been designed to work together with `<vis-xy-conta
 </vis-xy-container>
 ```
 where `data: DataRecord[] = [{x: 0, y: 1}, ...]`, `xAccessor = (d: DataRecord) => d.x` and `yAccessor = (d: DataRecord) => d.y`.
-
 <Story name="Simple Area">
   {{
     props: {
@@ -38,6 +37,11 @@ where `data: DataRecord[] = [{x: 0, y: 1}, ...]`, `xAccessor = (d: DataRecord) =
   }}
 </Story>
 
+### Limiting Maximum Bar Width
+Maximum bar width for dynamic sizing. Default: `undefined`
+```angular2html
+  <vis-stacked-bar ... [barMaxWidth]="10"></vis-stacked-bar>
+```
 <Story name="Limiting Maximum Bar Width">
   {{
     props: {
@@ -49,6 +53,11 @@ where `data: DataRecord[] = [{x: 0, y: 1}, ...]`, `xAccessor = (d: DataRecord) =
   }}
 </Story>
 
+### Limiting Minimum Bar Height
+Sets the minimum bar height to 1 pixel for better visibility of small values. Default: `false`.
+```angular2html
+  <vis-stacked-bar ... [barMinHeight]="true"></vis-stacked-bar>
+```
 <Story name="Limiting Minimum Bar Height">
   {{
     props: {
@@ -61,14 +70,60 @@ where `data: DataRecord[] = [{x: 0, y: 1}, ...]`, `xAccessor = (d: DataRecord) =
   }}
 </Story>
 
+### Bar Width
+Specify the bar's width in pixels using the barWidth property:
+
+```angular2html
+  <vis-stacked-bar ... [barWidth]="3"></vis-stacked-bar>
+```
 <Story name="Bar Width">
   {{
     props: {
+       ...baseConfig(),
+      barWidth: 3
+    }
+  }}
+</Story>
+
+### Rounded Corners
+Rounded corners for top bars. Boolean or number (to set the radius in pixels). Default: `true` 
+
+```angular2html
+  <vis-stacked-bar ... [roundedCorners]="true"></vis-stacked-bar>
+```
+<Story name ="Rounded Corners">
+  {{
+    props: {
       ...baseConfig(),
-      storyHideAxes: true,
-      storyHeight: 150,
-      barWidth: 150,
-    },
+      roundedCorners: true
+    }
+  }}
+</Story>
+
+### Bar Minimum Height
+Sets the minimum bar height to 1 pixel for better visibility of small values. Default: false
+
+```angular2html
+  <vis-stacked-bar ... [barMinHeight]="true"></vis-stacked-bar>
+```
+<Story name ="Bar Minimum Height"> 
+  {{
+    props: {
+      ...baseConfig(),
+      minBarHeight: true
+    }
+  }}
+</Story>
+
+### Color 
+Component color accessor function. Default: d => d.color
+
+<Story name="Color">
+  {{
+    props:{
+      ...baseConfig(),
+      color: "#00FFFF"
+    }
   }}
 </Story>
 
@@ -76,3 +131,4 @@ where `data: DataRecord[] = [{x: 0, y: 1}, ...]`, `xAccessor = (d: DataRecord) =
 ### Component Inputs
 
 <ArgsTable of={VisStackedBarComponent} />
+
