@@ -65,7 +65,7 @@ Sets the minimum bar height to 1 pixel for better visibility of small values. De
       data: minBarHeightExampleData,
       storyHideAxes: true,
       storyHeight: 150,
-      barMinHeight: true,
+      barMinHeight: true
     },
   }}
 </Story>
@@ -89,7 +89,7 @@ Specify the bar's width in pixels using the barWidth property:
 Rounded corners for top bars. Boolean or number (to set the radius in pixels). Default: `true` 
 
 ```angular2html
-  <vis-stacked-bar ... [roundedCorners]="true"></vis-stacked-bar>
+  <vis-stacked-bar ... [roundedCorners]="false"></vis-stacked-bar>
 ```
 <Story name ="Rounded Corners">
   {{
@@ -117,16 +117,77 @@ Sets the minimum bar height to 1 pixel for better visibility of small values. De
 
 ### Color 
 Component color accessor function. Default: d => d.color
-
+```angular2html
+  <vis-stacked-bar ... [color]="getColor""></vis-stacked-bar>
+```
 <Story name="Color">
   {{
     props:{
       ...baseConfig(),
-      color: "#00FFFF"
+      color: getColor
     }
   }}
 </Story>
 
+### Data Step 
+Expected step between the bars in the X axis units.
+  Needed to correctly calculate the width of the bars when there are gaps in the data.
+  Default: `undefined`
+
+```angular2html
+  <vis-stacked-bar ... [dataStep]="1"></vis-stacked-bar>
+```
+
+<Story name="Data Step">
+  {{
+    props:{
+      ...baseConfig(),
+      dataStep:1
+    }
+  }}
+</Story>
+
+### Bar Padding
+Fractional padding between the bars in the range of [0,1). Default: `0`
+```angular2html
+  <vis-stacked-bar ... [barPadding]="1"></vis-stacked-bar>
+```
+<Story name="Bar Padding">
+  {{
+    props:{
+      ...baseConfig(),
+      barPadding:0.5
+    }
+  }}
+</Story>
+
+### Cursor
+Configurable bar cursor when hovering over. Default: `null` 
+```angular2html
+  <vis-stacked-bar ... [cursor]="pointer"></vis-stacked-bar>
+```
+<Story name="Cursor">
+  {{
+    props:{
+      ...baseConfig(),
+      cursor: 'pointer'
+    }
+  }}
+</Story>
+
+### Bar Min Height Zero value
+Sets the minimum bar height to 1 pixel for better visibility of small values. Default: `false`
+```angular2html
+  <vis-stacked-bar ... [barMinHeightZeroValue]="true"></vis-stacked-bar>
+```
+<Story name="Bar Min Height Zero value">
+  {{
+    props: {
+      ...baseConfig(),
+      barMinHeightZeroValue: true
+    }
+  }}
+</Story>
 
 ### Component Inputs
 
