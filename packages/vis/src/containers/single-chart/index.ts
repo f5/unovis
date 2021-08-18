@@ -1,16 +1,13 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-// import { extent } from 'd3-array'
 
 // Core
 import { ContainerCore } from 'core/container'
 import { ComponentCore } from 'core/component'
 
-// import { ComponentConfig } from 'core/component/config'
-import { XYComponentConfigInterface } from 'core/xy-component/config'
+import { ComponentConfigInterface } from 'core/component/config'
 
 // Utils
 import { smartTransition } from 'utils/d3'
-// import { getValue, merge } from 'utils/data'
 
 // Types
 import { Sizing, ExtendedSizeComponent } from 'types/component'
@@ -57,7 +54,7 @@ export class SingleChart<Datum> extends ContainerCore {
     if (!preventRender) this.render()
   }
 
-  public updateComponent (componentConfig: XYComponentConfigInterface<Datum>, preventRender?: boolean): void {
+  public updateComponent (componentConfig: ComponentConfigInterface, preventRender?: boolean): void {
     this.component.prevConfig = this.component.config
     this.component.setConfig(componentConfig)
     if (!preventRender) this.render()

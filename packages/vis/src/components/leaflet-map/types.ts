@@ -27,7 +27,7 @@ export interface LeafletMapPointStyle {
   className?: string;
 }
 
-export type LeafletMapPointStyles = { [key: string]: LeafletMapPointStyle }
+export type LeafletMapPointStyles<D> = { [key in keyof D]?: LeafletMapPointStyle }
 
 export type PointExpandedClusterProperties<D> = {
   // Expanded cluster related data:

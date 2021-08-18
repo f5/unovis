@@ -28,12 +28,19 @@ export class VisXYContainerComponent<Datum = Record<string, unknown>> implements
   @ViewChild('container', { static: false }) containerRef: ElementRef
   @ContentChildren(VisXYComponent) visComponents: QueryList<VisXYComponent>
   @ContentChild(VisTooltipComponent) tooltipComponent: VisTooltipComponent<Datum>
+  /** Animation duration of all the components within the container. Default: `undefined` */
   @Input() duration: number = undefined
+  /** Margins. Default: `{ top: 0, bottom: 0, left: 0, right: 0 }` */
   @Input() margin = { top: 10, bottom: 10, left: 10, right: 10 }
+  /** Padding. Default: `{ top: 0, bottom: 0, left: 0, right: 0 }` */
   @Input() padding = {}
+  /** Dimension configuration. Default: `{x: {}, y: {}}` */
   @Input() dimensions: { x: Dimension; y: Dimension } = { x: {}, y: {} }
+  /** Sets the Y scale domain based on the X scale domain not the whole data. Default: `false` */
   @Input() adaptiveYScale
+
   @Input() data: Datum[] = []
+
   chart: XYContainer<Datum>
 
   ngAfterViewInit (): void {
