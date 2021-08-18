@@ -71,7 +71,7 @@ export class WrapperUsageExampleComponent implements AfterViewInit, OnDestroy {
   tooltip = new Tooltip({
     triggers: {
       // eslint-disable-next-line no-console
-      [GroupedBar.selectors.bar]: (d) => { console.log(d) },
+      [GroupedBar.selectors.bar]: (d) => { console.log(d); return '' },
     },
   })
 
