@@ -14,15 +14,17 @@ import { Crosshair } from 'components/crosshair'
 import { Dimension } from 'types/dimension'
 
 export interface XYContainerConfigInterface<Datum> extends ContainerConfigInterface {
-  /** Visualization Component. Default: `[]` */
+  /** An array of visualization components. Default: `[]` */
   components?: XYComponentCore<Datum>[];
   /** Dimension configuration. Default: `{x: {}, y: {}}` */
   dimensions?: {
-    [key: string]: Dimension;
+    x?: Dimension;
+    y?: Dimension;
   };
-  /** Axis configuration. Default: `{}` */
+  /** Axis configuration with instances of the Axis components. Default: `{}` */
   axes?: {
-    [key: string]: Axis<Datum>;
+    x?: Axis<Datum>;
+    y?: Axis<Datum>;
   };
   /** Enables automatic calculation of chart margins based on the size of the axes. Default: `true` */
   autoMargin?: boolean;
@@ -32,8 +34,8 @@ export interface XYContainerConfigInterface<Datum> extends ContainerConfigInterf
   crosshair?: Crosshair<Datum> | undefined;
   /** Prevents the chart domain from being empty (when domain's min and max values are equal).
    *  That usually happens when all the data values are the same.
-   *  Setting to `true` will automatically extend the domain by `+1` when needed. Default: `true`
-  */
+   *  Setting to `true` will automatically extend the domain by `+1` when needed.
+   *  Default: `true` */
   preventEmptyDomain?: boolean;
   /** Sets the Y scale domain based on the X scale domain not the whole data. Default: `false` */
   adaptiveYScale?: boolean;
