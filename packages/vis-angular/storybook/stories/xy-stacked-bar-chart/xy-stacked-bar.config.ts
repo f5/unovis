@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { AreaConfigInterface, LineConfigInterface } from '@volterra/vis'
+import { AreaConfigInterface } from '@volterra/vis'
 import { XYChartStoryConfig } from '../../utils/content-wrappers'
 import { DataRecord, generateDataRecords } from '../../data/time-series'
 
@@ -9,7 +9,13 @@ export const baseConfig = (n?: number): XYChartStoryConfig & AreaConfigInterface
   data: generateDataRecords(n),
 })
 
-export const getColor = (_: DataRecord[], i: number): string => (['#FF4F4E', '#FFBA00', '#2BAB44'])[i]
+// export const getColor = (_: DataRecord[], i: number): string => (['#FF4F4E', '#FFBA00', '#2BAB44'])[i]
+export const getColor = (d: DataRecord, i: number): string => d.y > 7 ? '#FF4F4E' : null
 
 export const minBarHeightExampleData = generateDataRecords(20)
-  .map((d, i) => ({ ...d, y: i % 3 ? Number.MIN_VALUE : d.y }))
+  .map((d: DataRecord, i: number) => ({
+    ...d,
+    y: i % 3 ? 0
+      : i % 6 ? null
+        : d.y,
+  }))
