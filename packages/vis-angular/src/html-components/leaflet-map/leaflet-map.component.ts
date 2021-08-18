@@ -25,17 +25,50 @@ import { VisCoreComponent } from '../../core'
 export class VisLeafletMapComponent<Datum> implements LeafletMapConfigInterface<Datum>, AfterViewInit {
   @ViewChild('container', { static: false }) containerRef: ElementRef
 
-  /** Animation duration */
+  /** Animation duration of the data update transitions in milliseconds. Default: `600` */
   @Input() duration: number
 
-  /** Events */
+  /** Events configuration. An object containing properties in the following format:
+   *
+   * ```
+   * {
+   * \[selectorString]: {
+   *     \[eventType]: callbackFunction
+   *  }
+   * }
+   * ```
+   * e.g.:
+   * ```
+   * {
+   * \[Area.selectors.area]: {
+   *    click: (d) => console.log("Clicked Area", d)
+   *  }
+   * }
+   * ``` */
   @Input() events: {
     [selector: string]: {
       [eventName: string]: (data: any, event?: Event, i?: number, els?: SVGElement[] | HTMLElement[]) => void;
     };
   }
 
-  /** Custom attributes */
+  /** You can set every SVG and HTML visualization object to have a custom DOM attributes, which is useful
+   * when you want to do unit or end-to-end testing. Attributes configuration object has the following structure:
+   *
+   * ```
+   * {
+   * \[selectorString]: {
+   *     \[attributeName]: attribute constant value or accessor function
+   *  }
+   * }
+   * ```
+   * e.g.:
+   * ```
+   * {
+   * \[Area.selectors.area]: {
+   *    "test-value": d => d.value
+   *  }
+   * }
+   * ``` */
   @Input() attributes: {
     [selector: string]: {
       [attr: string]: string | number | boolean | ((datum: any) => string | number | boolean);
@@ -72,77 +105,93 @@ export class VisLeafletMapComponent<Datum> implements LeafletMapConfigInterface<
   /** Tangram or Mapbox sources settings. Default: `undefined` */
   @Input() sources: Record<string, unknown>
 
-  /** Tangram or Mapbox style renderer settings */
+  /** Tangram or Mapbox style renderer settings. Default: `undefined` */
   @Input() rendererSettings: Record<string, unknown>
 
-  /** Array of attribution labels */
+  /** Array of attribution labels. Default: `undefined` */
   @Input() attribution: string[]
 
   /** Function to be called after Map async initialization is done. Default: `undefined` */
-  @Input() onMapInitialized: (() => any)
+  @Input() onMapInitialized: (() => void)
 
   /** Map Move / Zoom joint callback function. Default: `undefined` */
-  @Input() onMapMoveZoom: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => any)
+  @Input() onMapMoveZoom: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => void)
 
   /** Move Move Start callback function. Default: `undefined` */
-  @Input() onMapMoveStart: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => any)
+  @Input() onMapMoveStart: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => void)
 
   /** Move Move End callback function. Default: `undefined` */
-  @Input() onMapMoveEnd: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => any)
+  @Input() onMapMoveEnd: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => void)
 
   /** Move Zoom Start callback function. Default: `undefined` */
-  @Input() onMapZoomStart: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => any)
+  @Input() onMapZoomStart: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => void)
 
   /** Move Zoom End callback function. Default: `undefined` */
-  @Input() onMapZoomEnd: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => any)
+  @Input() onMapZoomEnd: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => void)
 
   /** Move Zoom End callback function. Default: `undefined` */
-  @Input() onMapClick: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => any)
+  @Input() onMapClick: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => void)
 
-  /** Point longitude accessor function or value */
+  /** Point longitude accessor function. Default: `d => d.longitude` */
   @Input() pointLongitude: NumericAccessor<Datum>
 
-  /** Point latitude accessor function or value */
+  /** Point latitude accessor function. Default: `d => d.latitude` */
   @Input() pointLatitude: NumericAccessor<Datum>
 
-  /** Point id accessor function or value */
+  /** Point id accessor function or constant value. Default: `d => d.id` */
   @Input() pointId: StringAccessor<Datum>
 
-  /** Point shape accessor function or value */
+  /** Point shape accessor function or constant value. Default: `d => d.shape` */
   @Input() pointShape: StringAccessor<Datum>
 
-  /** Point color accessor function or value */
+  /** Point color accessor function or constant value. Default: `d => d.color` */
   @Input() pointColor: ColorAccessor<Datum>
 
-  /** Point radius accessor function or value */
+  /** Point radius accessor function or constant value. Default: `undefined` */
   @Input() pointRadius: NumericAccessor<LeafletMapPointDatum<Datum>>
 
-  /** Point inner label accessor function */
+  /** Point inner label accessor function. Default: `d => d.point_count ?? ''` */
   @Input() pointLabel: StringAccessor<LeafletMapPointDatum<Datum>>
 
-  /** Point bottom label accessor function */
+  /** Point bottom label accessor function. Default: `''` */
   @Input() pointBottomLabel: StringAccessor<LeafletMapPointDatum<Datum>>
 
-  /** Point cursor value or accessor function, Default: `null` */
+  /** Point cursor value or accessor function. Default: `null` */
   @Input() pointCursor: StringAccessor<LeafletMapPointDatum<Datum>>
 
-  /**  */
+  /** Set selected node by its unique id. Default: `undefined` */
   @Input() selectedNodeId: string
 
-  /** Cluster point outline width */
+  /** The width of the cluster point outline. Default: `1.25` */
   @Input() clusterOutlineWidth: number
 
-  /** Use cluster background */
+  /** When cluster is expanded, show a background circle to netter separate points from the base map. Default: `true` */
   @Input() clusterBackground: boolean
 
-  /** Defines whether the cluster should expand on click or not. Default: `false` */
+  /** Defines whether the cluster should expand on click or not. Default: `true` */
   @Input() clusterExpandOnClick: boolean
 
-  /** Clustering radius. Default: `45` */
+  /** Clustering radius in pixels. This value will be passed to Supercluster https://github.com/mapbox/supercluster. Default: `55` */
   @Input() clusterRadius: number
 
-  /** Status styles */
-  @Input() valuesMap: LeafletMapPointStyles
+  /** A single map point can have multiple properties displayed as a small pie chart (or a donut chart for a cluster of points).
+   * By setting the valuesMap configuration you can specify data properties that should be mapped to various pie / donut segments.
+   *
+   * ```
+   * {
+   * \[key in keyof Datum]?: { color: string, className?: string }
+   * }
+   * ```
+   * e.g.:
+   * ```
+   * {
+   * \healthy: { color: 'green' },
+   * \warning: { color: 'orange' },
+   * \danger: { color: 'red' }
+   * }
+   * ```
+   * where every data point has the `healthy`, `warning` and `danger` numerical or boolean property. */
+  @Input() valuesMap: LeafletMapPointStyles<Datum>
 
   /** A TopoJSON Geometry layer to be displayed on top of the map. Supports fill and stroke */
   @Input() topoJSONLayer: {
@@ -155,7 +204,7 @@ export class VisLeafletMapComponent<Datum> implements LeafletMapConfigInterface<
     strokeWidth?: number;
   }
 
-  /** Tooltip component */
+  /** Tooltip component. Default: `undefined` */
   @Input() tooltip: Tooltip<LeafletMap<Datum>, Datum>
 
   /** Data */

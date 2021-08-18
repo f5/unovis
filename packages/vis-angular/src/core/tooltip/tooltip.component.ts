@@ -1,6 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { Component, AfterViewInit, Input } from '@angular/core'
-import { Tooltip, TooltipConfigInterface } from '@volterra/vis'
+import { Position, PositionStrategy, Tooltip, TooltipConfigInterface } from '@volterra/vis'
 import { VisGenericComponent } from '../index'
 
 @Component({
@@ -10,14 +10,38 @@ import { VisGenericComponent } from '../index'
   providers: [{ provide: VisGenericComponent, useExisting: VisTooltipComponent }],
 })
 export class VisTooltipComponent<T> implements TooltipConfigInterface<any, T>, AfterViewInit {
-  @Input() components: any
-  @Input() container: any
-  @Input() horizontalPlacement: any
-  @Input() horizontalShift: any
-  @Input() verticalPlacement: any
-  @Input() verticalShift: any
-  @Input() positionStrategy: any
-  @Input() triggers: any
+  /** An array of visualization components to interact with. Default: `[]` */
+  @Input() components?: T[];
+  /** Container to where the Tooltip component should be inserted. Default: `undefined` */
+  @Input() container?: HTMLElement;
+  /** Horizontal placement of the tooltip. Default: `Position.Auto` */
+  @Input() horizontalPlacement?: Position | string | undefined;
+  /** Horizontal shift of the tooltip in pixels. Default: `0` */
+  @Input() horizontalShift?: number;
+  /** Vertical placement of the tooltip. Default: `Position.Top` */
+  @Input() verticalPlacement?: Position | string | undefined;
+  /** Vertical shift of the tooltip in pixels. Default: `0` */
+  @Input() verticalShift?: number;
+  /** Tooltip positioning within the container: absolute or fixed. Default: `PositionStrategy.Absolute` */
+  @Input() positionStrategy?: PositionStrategy | string;
+  /** Defines the content of the tooltip and hovering over which elements should trigger it.
+   * An object containing properties in the following format:
+   *
+   * ```
+   * {
+   *   [selectorString]: (d) => string | HTMLElement
+   * }
+   * ```
+   * e.g.:
+   * ```
+   * {
+   *   [Area.selectors.area]: (d) => `<div>${d.value.toString()}</div>
+   * }
+   * ```
+   */
+  @Input() triggers?: {
+    [selector: string]: (data: any, i: number, elements: (HTMLElement | SVGElement)[]) => string | HTMLElement;
+  };
 
   component: Tooltip<any, T> | undefined
 
