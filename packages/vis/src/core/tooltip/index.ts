@@ -146,7 +146,7 @@ export class Tooltip<T extends ComponentCore<any>, TooltipDatum> {
     Object.keys(triggers).forEach(className => {
       const template = triggers[className]
       this.components.forEach(component => {
-        const selection = select(component.element).selectAll(`.${className}`)
+        const selection = select(component.element).selectAll<HTMLElement | SVGGElement, unknown>(`.${className}`)
         selection
           .on('mousemove.tooltip', (e: MouseEvent, d: TooltipDatum) => {
             const [x, y] = positionStrategy === PositionStrategy.Fixed ? [e.clientX, e.clientY] : pointer(e, this._container)

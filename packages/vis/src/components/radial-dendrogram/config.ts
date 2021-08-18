@@ -9,21 +9,23 @@ import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
 import { Hierarchy } from './types'
 
 export interface RadialDendrogramConfigInterface<H extends Hierarchy> extends ComponentConfigInterface {
-  /** Children accessor function */
+  /** Children accessor function. Default: `d.children || d.values` */
   children?: (d: H) => H[];
-  /** Value accessor function */
+  /** Value accessor function. Default: `d => d.value` */
   value?: NumericAccessor<H>;
-  /** Node width value in pixels */
+  /** Array of node hierarchy levels. Data records are supposed to have corresponding properties, e.g. ['site', 'sublabel']. Default: `[]` */
+  nodeLevels?: string[];
+  /** Node width in pixels. Default: `15` */
   nodeWidth?: number;
-  /** Node color value or accessor function */
+  /** Node color accessor function ot constant value. Default: `d => d.color` */
   nodeColor?: ColorAccessor<H>;
-  /** Node label value or accessor function */
+  /** Node label accessor function. Default: `d => d.label ?? d.key` */
   nodeLabel?: StringAccessor<H>;
-  /** Pad angle in radians. Value or accessor function */
+  /** Pad angle in radians. Constant value or accessor function. Default: `0.02` */
   padAngle?: NumericAccessor<H>;
-  /** Corner radius value or accessor function */
+  /** Corner radius constant value or accessor function. Default: `2` */
   cornerRadius?: NumericAccessor<H>;
-  /** Dendogram angles [0, 2 * Math.PI] */
+  /** Angular range of the diagram. Default: `[0, 2 * Math.PI]` */
   angleRange?: [number, number];
 }
 

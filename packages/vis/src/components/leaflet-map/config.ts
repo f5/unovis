@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-/* eslint-disable dot-notation */
+/* eslint-disable dot-notation, no-irregular-whitespace */
 
 // Core
 import { ComponentConfig, ComponentConfigInterface } from 'core/component/config'
@@ -36,76 +36,99 @@ export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterfa
   mapboxglGlyphs?: string;
   /** Tangram or Mapbox sources settings. Default: `undefined` */
   sources?: Record<string, unknown>;
-  /** Tangram or Mapbox style renderer settings */
+  /** Tangram or Mapbox style renderer settings. Default: `undefined` */
   rendererSettings?: Record<string, unknown>;
-  /** Array of attribution labels */
+  /** Array of attribution labels. Default: `undefined` */
   attribution?: string[];
 
   // Map events
   /** Function to be called after Map async initialization is done. Default: `undefined` */
-  onMapInitialized?: (() => any);
+  onMapInitialized?: (() => void);
   /** Map Move / Zoom joint callback function. Default: `undefined` */
-  onMapMoveZoom?: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => any);
+  onMapMoveZoom?: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => void);
   /** Move Move Start callback function. Default: `undefined` */
-  onMapMoveStart?: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => any);
+  onMapMoveStart?: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => void);
   /** Move Move End callback function. Default: `undefined` */
-  onMapMoveEnd?: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => any);
+  onMapMoveEnd?: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => void);
   /** Move Zoom Start callback function. Default: `undefined` */
-  onMapZoomStart?: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => any);
+  onMapZoomStart?: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => void);
   /** Move Zoom End callback function. Default: `undefined` */
-  onMapZoomEnd?: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => any);
+  onMapZoomEnd?: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => void);
   /** Move Zoom End callback function. Default: `undefined` */
-  onMapClick?: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => any);
+  onMapClick?: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => void);
 
   // Point
-  /** Point longitude accessor function or value */
+  /** Point longitude accessor function. Default: `d => d.longitude` */
   pointLongitude?: NumericAccessor<Datum>;
-  /** Point latitude accessor function or value */
+  /** Point latitude accessor function. Default: `d => d.latitude` */
   pointLatitude?: NumericAccessor<Datum>;
-  /** Point id accessor function or value */
+  /** Point id accessor function or constant value. Default: `d => d.id`  */
   pointId?: StringAccessor<Datum>;
-  /** Point shape accessor function or value */
+  /** Point shape accessor function or constant value. Default: `d => d.shape`  */
   pointShape?: StringAccessor<Datum>;
-  /** Point color accessor function or value */
+  /** Point color accessor function or constant value. Default: `d => d.color`  */
   pointColor?: ColorAccessor<Datum>;
-  /** Point radius accessor function or value */
+  /** Point radius accessor function or constant value. Default: `undefined`  */
   pointRadius?: NumericAccessor<LeafletMapPointDatum<Datum>>;
-  /** Point inner label accessor function */
+  /** Point inner label accessor function. Default: `d => d.point_count ?? ''`  */
   pointLabel?: StringAccessor<LeafletMapPointDatum<Datum>>;
-  /** Point bottom label accessor function */
+  /** Point bottom label accessor function. Default: `''` */
   pointBottomLabel?: StringAccessor<LeafletMapPointDatum<Datum>>;
-  /** Point cursor value or accessor function, Default: `null` */
+  /** Point cursor value or accessor function. Default: `null` */
   pointCursor?: StringAccessor<LeafletMapPointDatum<Datum>>;
-  /** */
+  /** Set selected node by its unique id. Default: `undefined` */
   selectedNodeId?: string;
 
   // Cluster
-  /** Cluster point outline width */
+  /** The width of the cluster point outline. Default: `1.25` */
   clusterOutlineWidth?: number;
-  /** Use cluster background */
+  /** When cluster is expanded, show a background circle to netter separate points from the base map. Default: `true` */
   clusterBackground?: boolean;
-  /** Defines whether the cluster should expand on click or not. Default: `false` */
+  /** Defines whether the cluster should expand on click or not. Default: `true` */
   clusterExpandOnClick?: boolean;
-  /** Clustering radius. Default: `45` */
+  /** Clustering radius in pixels. This value will be passed to Supercluster https://github.com/mapbox/supercluster. Default: `55` */
   clusterRadius?: number;
-  /** Status styles */
-  valuesMap?: LeafletMapPointStyles;
+  /** A single map point can have multiple properties displayed as a small pie chart (or a donut chart for a cluster of points).
+   * By setting the valuesMap configuration you can specify data properties that should be mapped to various pie / donut segments.
+   *
+   * ```
+   * {
+   *   [key in keyof Datum]?: { color: string, className?: string }
+   * }
+   * ```
+   * e.g.:
+   * ```
+   * {
+   *   healthy: { color: 'green' },
+   *   warning: { color: 'orange' },
+   *   danger: { color: 'red' }
+   * }
+   * ```
+   * where every data point has the `healthy`, `warning` and `danger` numerical or boolean property.
+   */
+  valuesMap?: LeafletMapPointStyles<Datum>;
 
   // TopoJSON overlay
   /** A TopoJSON Geometry layer to be displayed on top of the map. Supports fill and stroke */
   topoJSONLayer?: {
-    /** TopoJSON.Topology */
+    /** The TopoJSON.Topology object. Default: `undefined` */
     sources?: any;
+    /** Name of the geometry feature to be displayed. Default: `undefined` */
     featureName?: string;
+    /** Name of the property to be used for defining the fill color of the geometry. Default: `undefined` */
     fillProperty?: string;
+    /** Name of the property to be used for defining the stroke color of the geometry. Default: `undefined` */
     strokeProperty?: string;
+    /** Geometry fill opacity value. Default: `0.6` */
     fillOpacity?: number;
+    /** Geometry stroke opacity value. Default: `0.8` */
     strokeOpacity?: number;
+    /** Geometry stroke width. Default: `2` */
     strokeWidth?: number;
   };
 
   // Misc
-  /** Tooltip component */
+  /** Tooltip component. Default: `undefined` */
   tooltip?: Tooltip<LeafletMap<Datum>, Datum>;
 }
 
@@ -141,7 +164,7 @@ export class LeafletMapConfig<Datum> extends ComponentConfig implements LeafletM
   pointColor = (d: Datum): string => d['color']
   pointRadius = undefined
   pointLabel = (d: LeafletMapPointDatum<Datum>): string => `${d.point_count ?? ''}`
-  pointBottomLabel = (d: LeafletMapPointDatum<Datum>): string => ''
+  pointBottomLabel = ''
   pointCursor = null
   selectedNodeId = undefined
 
@@ -150,7 +173,7 @@ export class LeafletMapConfig<Datum> extends ComponentConfig implements LeafletM
   clusterBackground = true
   clusterExpandOnClick = true;
   clusterRadius = 55
-  valuesMap = {}
+  valuesMap = {} as LeafletMapPointStyles<Datum>
 
   // TopoJSON Overlay
   topoJSONLayer = {

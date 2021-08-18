@@ -81,7 +81,7 @@ export function getPointPos<D> (point: LeafletMapPoint<D> | ClusterFeature<Point
   }
 }
 
-export function getPointDisplayOrder<T> (d, pointStatus: StringAccessor<T>, valuesMap: LeafletMapPointStyles): number {
+export function getPointDisplayOrder<T> (d, pointStatus: StringAccessor<T>, valuesMap: LeafletMapPointStyles<T>): number {
   const status = getValue(d.properties, pointStatus)
   const statusList = Object.keys(valuesMap)
   return Object.keys(statusList).indexOf(status)
@@ -148,7 +148,7 @@ export function geoJSONPointToScreenPoint<D> (
   pointColor: ColorAccessor<D>,
   pointShape: StringAccessor<D>,
   pointId: StringAccessor<D>,
-  valuesMap: LeafletMapPointStyles
+  valuesMap: LeafletMapPointStyles<D>
 ): LeafletMapPoint<D> {
   const zoomLevel = leafletMap.getZoom()
   const { x, y } = getPointPos(geoPoint, leafletMap)
@@ -206,7 +206,7 @@ export function findNodeAndClusterInPointsById<D> (points: LeafletMapPoint<D>[],
   return { node, cluster }
 }
 
-export function getDonutData<D> (d: LeafletMapPointDatum<D>, valuesMap: LeafletMapPointStyles): LeafletMapPieDatum[] {
+export function getDonutData<D> (d: LeafletMapPointDatum<D>, valuesMap: LeafletMapPointStyles<D>): LeafletMapPieDatum[] {
   return Object.keys(valuesMap).map(key => ({
     name: key,
     value: d[key],

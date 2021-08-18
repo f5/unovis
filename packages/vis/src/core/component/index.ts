@@ -21,7 +21,7 @@ export class ComponentCore<CoreDatum> {
   config: ComponentConfig
   prevConfig: ComponentConfig
   datamodel: CoreDataModel<CoreDatum> = new CoreDataModel()
-  sizing: Sizing = Sizing.Fit
+  sizing: Sizing | string = Sizing.Fit
 
   events: {
     [selectorString: string]: {
