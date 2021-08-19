@@ -36,32 +36,8 @@ where `data: DataRecord[] = [{x: 0, y: 1}, ...]`, `xAccessor = (d: DataRecord) =
   }}
 </Story>
 
-### Point Color
-You can provide Scatter with a single color string or a color accessor function.
-Consider this example, where a point's color depends on its category.
-```javascript
-/// Define colors and accessor method in the component
-colorConfig = { 'a': '#6A9DFF', 'b': '#1acb9a', 'c': '#8777d9', ... }
-getColor = data => colorConfig[data.category]
-
-// In the template
-<vis-xy-container [data]="dataArray">
-    <vis-scatter ... [color]="getColor"></vis-scatter>
-</vis-xy-container>
-```
-where `data` contains an ordinal property 'category'.
-
-<Story name="Point Color">
-  {{
-    props: {
-      ...baseConfig(),
-      color: getColor,
-    },
-  }}
-</Story>
-
 ### Point Shape
-Similarly, you can change the point's symbol using the `symbol` attribute, which accepts a `SymbolType` or string.
+You can change the point's symbol using the `symbol` attribute, which accepts a `SymbolType` or string.
 ```javascript
 /// In the component file
 import { SymbolType } from '@volterra/vis'
@@ -103,6 +79,29 @@ where data `data: DataRecord[] = [{x: 0, y: 1, z: 1}, ...]`.
 
 **Note**: this property is relative, so unlike `shape` and `color`, providing a constant value here will not result in any visible changes.
 See `sizeRange` to learn about universal size configuration.
+
+### Point Color
+You can provide Scatter with a single color string or a color accessor function.
+```javascript
+/// Define colors and accessor method in the component
+colorConfig = { 'a': '#6A9DFF', 'b': '#1acb9a', 'c': '#8777d9', ... }
+getColor = data => colorConfig[data.category]
+
+// In the template
+<vis-xy-container [data]="dataArray">
+    <vis-scatter ... [color]="getColor"></vis-scatter>
+</vis-xy-container>
+```
+where `data` contains an ordinal property 'category'.
+
+<Story name="Point Color">
+  {{
+    props: {
+      ...baseConfig(),
+      color: getColor,
+    },
+  }}
+</Story>
 
 ### Point Label
 You can also place labels on Scatter's points by passing a String accesor function to the `label` property.
@@ -264,8 +263,8 @@ import { Scatter } from '@volterra/vis`
 ...
 events = {
   [Scatter.selectors.point]: {
-    mouseover: (data: DataRecord[]) => {},
-    mouseleave: (data: DataRecord[]) => {},
+    mouseover: (data: DataRecord) => {},
+    mouseleave: (data: DataRecord) => {},
     ...
   }
 }

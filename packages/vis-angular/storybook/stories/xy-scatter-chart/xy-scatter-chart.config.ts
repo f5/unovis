@@ -3,14 +3,14 @@ import { ScatterConfigInterface, SymbolType } from '@volterra/vis'
 import { XYChartStoryConfig } from '../../utils/content-wrappers'
 import { DataRecord, generateDataRecords } from '../../data/time-series'
 
-function getElement (this: any[], _: DataRecord, i?: number): any {
-  return this[i !== undefined ? i : Math.floor(Math.random() * this.length)]
+function getArrayElement<T> (array: T[], i?: number): T {
+  return array[i !== undefined ? i : Math.floor(Math.random() * array.length)]
 }
 
 export const baseConfig = (n?: number): XYChartStoryConfig & ScatterConfigInterface<DataRecord> => ({
   x: d => d.x,
   y: d => d.y,
-  color: () => getColor(null, 0),
+  color: getColor(null, 0),
   data: generateDataRecords(n).map((d, i) => ({ ...d, y1: i, y2: i % 2, y3: i % 3 })),
 })
 
@@ -29,6 +29,6 @@ export const customConfig = (): XYChartStoryConfig & ScatterConfigInterface<Data
   color: d => getColor(d, d.y3),
 })
 
-export const getColor = getElement.bind(['#6A9DFF', '#1acb9a', '#8777d9', '#f88080'])
-export const getLabel = getElement.bind(['A', 'B', 'C'])
-export const getShape = getElement.bind([SymbolType.Circle, SymbolType.Square, SymbolType.Star])
+export const getColor = (_: DataRecord, i?: number): string => getArrayElement(['#6A9DFF', '#1acb9a', '#8777d9', '#f88080'], i)
+export const getLabel = (_: DataRecord, i?: number): string => getArrayElement(['A', 'B', 'C'], i)
+export const getShape = (_: DataRecord, i?: number): SymbolType => getArrayElement([SymbolType.Circle, SymbolType.Square, SymbolType.Star], i)
