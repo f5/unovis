@@ -230,13 +230,18 @@ You can add axes using the `storyHideAxes` property:
 </Story>
 
 ### Events
-For further customization, the Stacked Bar component supports the following events:
+For further customization, the Stacked Bar component supports the following JavaScript events: `Mouse events` and `Touch events`. A list of JavaScript events can be found [here](https://developer.mozilla.org/en-US/docs/Web/API/Element#mouse_events).
 ```javascript
 // In the component file:
 import { StackedBar } from '@volterra/vis`
 ...
 events = {
-        [StackedBar.selectors.bar]: {}
+        [StackedBar.selectors.bar]: {
+          mouseover: (data: DataRecord[]) => {},
+        ...
+        },
+        [StackedBar.selectors.barGroup]: {},
+
 }
 
 // In the template file:
