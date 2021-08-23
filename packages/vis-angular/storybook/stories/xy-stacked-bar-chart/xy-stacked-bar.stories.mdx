@@ -5,7 +5,7 @@ import { VisXYContainerModule, VisAxisModule, VisStackedBarModule } from 'src/pu
 import { VisStackedBarComponent } from 'src/components/stacked-bar/stacked-bar.component'
 
 import { xyChartContentWrapper } from '../../utils/content-wrappers'
-import { baseConfig, getColor, minBarHeightExampleData } from './xy-stacked-bar.config'
+import { baseConfig, getColor, minBarHeightExampleData, dataStepExampleData } from './xy-stacked-bar.config'
 
 <Meta
   title="XY Charts/Stacked Bar"
@@ -27,226 +27,314 @@ The Stacked Bar component has been designed to work together with `<vis-xy-conta
 </vis-xy-container>
 ```
 where `data: DataRecord[] = [{x: 0, y: 1}, ...]`, `xAccessor = (d: DataRecord) => d.x` and `yAccessor = (d: DataRecord) => d.y`.
-<Story name="Simple Stacked Bar">
+<Story name="Simple Bar">
   {{
     props: {
       ...baseConfig(),
-      storyHeight: 150,
+      storyHeight: 100,
+      storyHideAxes: true,
     },
   }}
 </Story>
 
+### Stacked Bars
+Stacked Bar can accept an array of `y` accessors to display values as a stack of bars:
+
+```
+// Define your accessors in the component file:
+y = [d => d.y1, d => d.y2, d => d.y3, d => d.y4],
+
+// In the template, pass them to vis-stacked-bar as inputs:
+<vis-stacked-bar [x]="xAccessor" [y]="yAccessorArray"></vis-stacked-bar>
+```
+
+<Story name="Stacked Bars">
+  {{
+    props: {
+      ...baseConfig(),
+      y: [d => d.y2, d => d.y1, d => d.y, d => d.y4],
+      storyHeight: 100,
+      storyHideAxes: true,
+    },
+  }}
+</Story>
+
+
 ### Bar Width
-Specify the bar's width in pixels using the `barWidth` property:
+By default, the width of the bars is calculated automatically based on their count. But you can also strictly set the bar's width in pixels using the `barWidth` property:
 ```angular2html
-  <vis-stacked-bar ... [barWidth]="3"></vis-stacked-bar>
+  <vis-stacked-bar ... [barWidth]="5"></vis-stacked-bar>
 ```
 <Story name="Bar Width">
   {{
     props: {
        ...baseConfig(),
-      barWidth: 3
+      barWidth: 5,
+      storyHeight: 100,
+      storyHideAxes: true,
     }
   }}
 </Story>
 
-### Limiting Maximum Bar Width
-Set the maximum bar's width. Default value is: `undefined`
+### Limiting Dynamic Bar Width
+When you don't know the number of bars in advance, and you're relying on automatic bar width calculation,
+you might want to limit the maximum bar width to prevent the bars from being too wide when there are just a few of them.
+That can be achieved by setting the `barMaxWidth` property.
 ```angular2html
-  <vis-stacked-bar ... [barMaxWidth]="10"></vis-stacked-bar>
+  <vis-stacked-bar ... [barMaxWidth]="25"></vis-stacked-bar>
 ```
-<Story name="Limiting Maximum Bar Width">
+<Story name="Bar Width: Upper Limit">
   {{
     props: {
-      ...baseConfig(),
-      storyHeight: 150,
-      barMaxWidth: 10,
+      ...baseConfig(10),
+      storyHeight: 100,
+      barMaxWidth: 25,
+      storyHideAxes: true,
     },
   }}
 </Story>
 
-### Limiting Minimum Bar Height
-Set the minimum bar height to 1 pixel for better visibility of small values using the `barMinHeight` property. Default: `false`.
+### Bar Padding
+Another way to control the bar's width is by changing the `barPadding` property, which specifies how much of the available sector should be empty, in the range of [0,1).
+```angular2html
+  <vis-stacked-bar ... [barPadding]="0.5"></vis-stacked-bar>
+```
+##### Bar Padding: 0 *(full width)*
+<Story name="Bar Padding: 0">
+  {{
+    props:{
+      ...baseConfig(),
+      storyHeight: 50,
+      storyHideAxes: true,
+      barPadding: 0
+    }
+  }}
+</Story>
+
+##### Bar Padding: 0.5 *(half width)*
+<Story name="Bar Padding: 0.5">
+  {{
+    props:{
+      ...baseConfig(),
+      storyHeight: 50,
+      storyHideAxes: true,
+      barPadding: 0.5
+    }
+  }}
+</Story>
+
+
+### Bar Height Limit
+When you have highly scattered data with very low and high values, the bars corresponding to the lower values can be so small, so they become invisible.
+If you want to prevent that you can set the minimum bar height to 1 pixel using the `barMinHeight` *boolean* property.
 ```angular2html
   <vis-stacked-bar ... [barMinHeight]="true"></vis-stacked-bar>
 ```
-##### Limiting Minimum Bar Height: true
-<Story name="Limiting Minimum Bar Height: true">
+##### barMinHeight: false *(small bars are invisible)*
+<Story name="Bar Height Limit: false">
   {{
     props: {
       ...baseConfig(),
       data: minBarHeightExampleData,
-      storyHeight: 150,
-      barMinHeight: true
-    },
-  }}
-</Story>
-
-##### Limiting Minimum Bar Height: false
-<Story name="Limiting Minimum Bar Height: false">
-  {{
-    props: {
-      ...baseConfig(),
-      data: minBarHeightExampleData,
-      storyHeight: 150,
+      storyHeight: 50,
+      barPadding: 0.2,
+      storyHideAxes: true,
       barMinHeight: false
     },
   }}
 </Story>
 
-### Bar Min Height Zero value
-Sets the minimum bar height to 1 pixel for better visibility of small values. Default: `false`
-```angular2html
-  <vis-stacked-bar ... [barMinHeightZeroValue]="true"></vis-stacked-bar>
-```
-<Story name="Bar Min Height Zero value">
+##### barMinHeight: true *(small bars have 1px height)*
+<Story name="Bar Height Limit: true">
   {{
     props: {
       ...baseConfig(),
+      data: minBarHeightExampleData,
+      storyHeight: 50,
+      barPadding: 0.2,
+      storyHideAxes: true,
+      barMinHeight: true,
       barMinHeightZeroValue: false,
+    },
+  }}
+</Story>
+
+In situations when your data contains missing values (e.g. `null`, `''`, `undefined`), and you don't want them to be confused with just very small values,
+you can set the `barMinHeightZeroValue` to your missing value identifier (e.g. `null`) and such bars will not be displayed at all.
+##### barMinHeight: true, barMinHeightZeroValue: null <br/> *(small bars have 1px height, missing value bars not visible)*
+
+```angular2html
+  <vis-stacked-bar ... [barMinHeight]="true" [barMinHeightZeroValue]="null"></vis-stacked-bar>
+```
+
+<Story name="Bar Height: Missing Value">
+  {{
+    props: {
+      ...baseConfig(),
+      barMinHeight: true,
+      barMinHeightZeroValue: null,
+      storyHideAxes: true,
+      storyHeight: 50,
+      barPadding: 0.2,
       data: minBarHeightExampleData
     }
   }}
 </Story>
 
-### Data Step 
-Set the expected step between the bars in the X axis units.
+### Dealing with inconsistent data
+When your data has gaps, it's impossible to do calculate of the bar width automatically. The visualization will still try
+to do that, but most likely the result will be wrong, and you'll see wide overlapping bars. However, you can help the calculation
+by setting your data step implicitly using the `dataStep` property.
 
 ```angular2html
-  <vis-stacked-bar ... [dataStep]="0.5"></vis-stacked-bar>
+  <vis-stacked-bar ... [dataStep]="1.0"></vis-stacked-bar>
 ```
+##### dataStep: Not set
+<Story name="Data Step: Not set">
+  {{
+    props:{
+      ...baseConfig(),
+      storyHideYAxis: true,
+      storyXAxisLabel: '',
+      storyHeight: 70,
+      data: dataStepExampleData,
+    }
+  }}
+</Story>
+
+##### dataStep: 1.0
 <Story name="Data Step">
   {{
     props:{
       ...baseConfig(),
-      dataStep:0.5
+      storyHideYAxis: true,
+      storyXAxisLabel: '',
+      storyHeight: 70,
+      dataStep: 1,
+      data: dataStepExampleData,
     }
   }}
 </Story>
 
-### Bar Padding
-Set the `barPadding` property to specify how much of the available sector should be empty. In the range of [0,1). Default: `0`
-```angular2html
-  <vis-stacked-bar ... [barPadding]="1"></vis-stacked-bar>
-```
-##### Bar Padding: 0
-<Story name="Bar Padding: 0">
-  {{
-    props:{
-      ...baseConfig(),
-      barPadding:0
-    }
-  }}
-</Story>
-
-##### Bar Padding: 1
-<Story name="Bar Padding: 1">
-  {{
-    props:{
-      ...baseConfig(),
-      barPadding:1
-    }
-  }}
-</Story>
 
 ### Rounded Corners
-Using the `roundedCorners` property, you can modernize your UI by applying rounded corners to the stacked bar.
+Using the `roundedCorners` property, you can modernize your UI by applying rounded corners to the top bar in the stack.
 ```angular2html
   <vis-stacked-bar ... [roundedCorners]="true"></vis-stacked-bar>
 ```
-##### RoundedCorners: true
-<Story name ="Rounded Corners: true">
-  {{
-    props: {
-      ...baseConfig(),
-      roundedCorners: true
-    }
-  }}
-</Story>
-
-##### RoundedCorners: false
+##### roundedCorners: false
 <Story name ="Rounded Corners: false">
   {{
     props: {
-      ...baseConfig(),
+      ...baseConfig(10),
+      storyHeight: 80,
+      storyHideAxes: true,
       roundedCorners: false
     }
   }}
 </Story>
 
-### Color 
-Set the color of the line by assigning the `color` property to a hex string and/or by assigning the `color` property to a function: ` getColor = (d: DataRecord, i: number): string => d.y > 7 ? '#FF4F4E' : null`
+##### roundedCorners: 5
+<Story name ="Rounded Corners: 5">
+  {{
+    props: {
+      ...baseConfig(10),
+      storyHeight: 80,
+      storyHideAxes: true,
+      roundedCorners: 5
+    }
+  }}
+</Story>
+
+##### roundedCorners: true
+<Story name ="Rounded Corners: true">
+  {{
+    props: {
+      ...baseConfig(10),
+      storyHeight: 80,
+      storyHideAxes: true,
+      roundedCorners: true
+    }
+  }}
+</Story>
+
+
+### Bar Color
+Set the color of the bar by assigning the `color` property to a hex string and/or by assigning the `color` property to a function evaluated per each bar, e.g. ` getColor = (d: DataRecord, i: number): string => d.y > THRESHOLD ? '#FF4F4E' : null`
 ```angular2html
-  <vis-stacked-bar ... [color]="getColor""></vis-stacked-bar>
+  <vis-stacked-bar ... [color]="getColor"></vis-stacked-bar>
 ```
-<Story name="Color">
+<Story name="Bar Color">
   {{
     props:{
       ...baseConfig(),
+      storyHeight: 100,
+      storyHideAxes: true,
       color: getColor
     }
   }}
 </Story>
 
-### Cursor
-Specify the type of cursor when hovering over. Configurable bar cursor [cursor CSS property](https://developer.mozilla.org/en-US/docs/Web/CSS/cursor). Default: `null` . 
+### Custom Cursor
+You can specify the type of cursor when hovering over by setting the `cursor` property that corresponds to the [CSS's cursor property](https://developer.mozilla.org/en-US/docs/Web/CSS/cursor).
 ```angular2html
   <vis-stacked-bar ... [cursor]="pointer"></vis-stacked-bar>
 ```
-<Story name="Cursor">
+
+###### Hover over to see how the cursor changes
+<Story name="Custom Cursor">
   {{
     props:{
       ...baseConfig(),
+      storyHeight: 100,
+      storyHideAxes: true,
       cursor: 'pointer'
     }
   }}
 </Story>
 
-### Stacked Bar with Axes 
-You can add axes using the `storyHideAxes` property:
+### Stacked Bar with Axes
+You can add axes using the `<vis-axis>` component:
 ```angular2html
-  <vis-stacked-bar ... [storyHideAxes]="true"></vis-stacked-bar>
+<vis-xy-container [data]="dataArray">
+  <vis-stacked-bar [x]="xAccessor" [y]="yAccessors"></vis-stacked-bar>
+  <vis-axis type="x" label="X"></vis-axis>
+  <vis-axis type="y" label="Y"></vis-axis>
+</vis-xy-container>
 ```
-##### Stacked Bar with Axes: true
-<Story name="Stacked bar with Axes: true">
-  {{
-    props: {
-      ...baseConfig(),
-      storyHeight: 200,
-      storyHideAxes: true
-    },
-  }}
-</Story>
 
-##### Stacked Bar with Axes: false
-<Story name="Stacked bar with Axes: false">
+##### Stacked Bar with Axes
+<Story name="Stacked Bar with Axes">
   {{
     props: {
       ...baseConfig(),
-      storyHeight: 200,
-      storyHideAxes: false
+      y: [d => d.y2, d => d.y1],
+      storyHeight: 250,
     },
   }}
 </Story>
 
 ### Events
-For further customization, the Stacked Bar component supports the following JavaScript events: `Mouse events` and `Touch events`. A list of JavaScript events can be found [here](https://developer.mozilla.org/en-US/docs/Web/API/Element#mouse_events).
+For further customization, the Stacked Bar component supports the following events:
 ```javascript
 // In the component file:
 import { StackedBar } from '@volterra/vis`
 ...
 events = {
         [StackedBar.selectors.bar]: {
-          mouseover: (data: DataRecord[]) => {},
-        ...
+            mouseover: (d: DataRecord) => {},
+            ...
         },
-        [StackedBar.selectors.barGroup]: {},
+        [StackedBar.selectors.barGroup]: {
+            ...
+        },
 
 }
 
 // In the template file:
 <vis-stacked-bar ... events="events"></vis-stacked-bar>
 ```
+A list of available JavaScript's mouse and touch events (e.g. `click`, `mouseover`, `mouseout`)  can be found [here](https://developer.mozilla.org/en-US/docs/Web/API/Element#mouse_events).
 
 ### Component Inputs
 <ArgsTable of={VisStackedBarComponent} />
