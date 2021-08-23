@@ -1,0 +1,277 @@
+import { moduleMetadata, componentWrapperDecorator } from '@storybook/angular'
+import { Meta, Story, ArgsTable } from '@storybook/addon-docs';
+import { VisXYContainerModule, VisAxisModule, VisScatterModule } from 'src/public-api'
+
+import { VisScatterComponent } from 'src/components/scatter/scatter.component';
+
+import { xyChartContentWrapper } from '../../utils/content-wrappers'
+import { baseConfig, customConfig, labelConfig, getColor, getLabel, getShape } from './xy-scatter-chart.config'
+
+<Meta
+  title="XY Charts/Scatter"
+  component={VisScatterComponent}
+  decorators={[
+    moduleMetadata({ imports: [VisScatterModule, VisXYContainerModule, VisAxisModule] }),
+    componentWrapperDecorator(xyChartContentWrapper)
+  ]}
+/>
+
+<style>{``}</style>
+
+# Scatter
+
+### Basic Configuration
+The Scatter component has been designed to work together with `<vis-xy-container>`. The minimal Scatter configuration looks like:
+```angular2html
+<vis-xy-container [data]="dataArray">
+  <vis-scatter [x]="xAccessor" [y]="yAccessor"></vis-scatter>
+</vis-xy-container>
+```
+where `data: DataRecord[] = [{x: 0, y: 1}, ...]`, `xAccessor = (d: DataRecord) => d.x` and `yAccessor = (d: DataRecord) => d.y`.
+<Story name="Simple Scatter">
+  {{
+    props: {
+      ...baseConfig(),
+    },
+  }}
+</Story>
+
+### Point Shape
+You can change the point's symbol using the `symbol` attribute, which accepts a `SymbolType` or string.
+```javascript
+/// In the component file
+import { SymbolType } from '@volterra/vis'
+
+shapeConfig = { 'a': SymbolType.Circle, 'b': SymbolType.Square, 'c': SymbolType.Star }
+getShape = data => shapeConfig[data.category]
+
+// In the template file
+<vis-scatter ... [shape]="getShape"></vis-scatter>
+```
+
+<Story name="Point Shape">
+  {{
+    props: {
+      ...baseConfig(),
+      shape: getShape,
+    },
+  }}
+</Story>
+
+### Point Size
+You can create an accessor function to set point size for inidividal points.
+```
+// In the component
+getSize = d => d.z
+
+// In the template
+<vis-scatter ... [size]="getSize"></vis-scatter>
+```
+where data `data: DataRecord[] = [{x: 0, y: 1, z: 1}, ...]`.
+<Story name="Point Size">
+  {{
+    props: {
+      ...baseConfig(),
+      size: d => Math.random() * 20,
+    },
+  }}
+</Story>
+
+**Note**: this property is relative, so unlike `shape` and `color`, providing a constant value here will not result in any visible changes.
+See `sizeRange` to learn about universal size configuration.
+
+### Point Color
+You can provide Scatter with a single color string or a color accessor function.
+```javascript
+/// Define colors and accessor method in the component
+colorConfig = { 'a': '#6A9DFF', 'b': '#1acb9a', 'c': '#8777d9', ... }
+getColor = data => colorConfig[data.category]
+
+// In the template
+<vis-xy-container [data]="dataArray">
+    <vis-scatter ... [color]="getColor"></vis-scatter>
+</vis-xy-container>
+```
+where `data` contains an ordinal property 'category'.
+
+<Story name="Point Color">
+  {{
+    props: {
+      ...baseConfig(),
+      color: getColor,
+    },
+  }}
+</Story>
+
+### Point Label
+You can also place labels on Scatter's points by passing a String accesor function to the `label` property.
+```angular2html
+/// In the component
+getLabel= d => d.category
+
+// In the template
+<vis-scatter ... [label]="getLabel"></vis-scatter>
+```
+<Story name="Point Label">
+  {{
+    props: {
+      ...labelConfig(),
+      label: getLabel,
+    },
+  }}
+</Story>
+
+### Label Text Brightness Ratio
+By default, the Scatter component will assign a labelColor based on the point's shade with the `labelTextBrightnessRatio` property.
+It accepts any value between `0` and `1` (inclusive). The default value is `0.65`.
+
+<Story name="Label Brightness Ratio">
+  {{
+    props: {
+      ...labelConfig(true),
+      label: 'L',
+    },
+  }}
+</Story>
+
+Notice that the default setting creates darker text on light backgrounds and light text on dark backgrounds. See how the contrast differs in the following
+examples, when we assign more extreme values to the `labelTextBrightnessRatio` property:
+
+#### High Contrast Example
+`labelTextBrightnessRatio = 1`
+
+<Story name="Label: High Contrast">
+  {{
+    props: {
+      ...labelConfig(true),
+      label: 'L',
+      labelTextBrightnessRatio: 1,
+    },
+  }}
+</Story>
+
+#### Low Contrast Example
+`labelTextBrightnessRatio = 0.1`
+
+<Story name="Label: Low Contrast">
+  {{
+    props: {
+      ...labelConfig(true),
+      label: 'L',
+      labelTextBrightnessRatio: 0.1,
+    },
+  }}
+</Story>
+
+### Label Color
+You can also configure a custom color for your labels by provide the `labelColor` attribute with a color accesor method or string. Note that setting this property overrides `labelTextBrightnessRatio`.
+```angular2html
+<vis-scatter ... labelColor="black"></vis-scatter>
+```
+<Story name="Label: Custom Color">
+  {{
+    props: {
+      ...labelConfig(),
+      label: getLabel,
+      color: getColor,
+      labelColor: 'black',
+    },
+  }}
+</Story>
+
+
+
+
+### Size Range
+Scatter's `sizeRange` attribute represents a range of numbers for a point's radius. By default, every radius
+will be the median value of this range.
+The default range is `[5,20]` making the default radius `12.5px` (or `(min + max)/2`). If you want to make all of your points
+bigger or smaller, adjust sizeRange accordingly. In this example, we can set the universal point size to `40px` by setting the `sizeRange`
+property to `[30,50]`.
+
+```angular2html
+// In the component
+range = [30,50]
+
+/// In the template
+<vis-scatter ... [sizeRange]="range"></vis-scatter>
+```
+
+<Story name="Size Range">
+  {{
+    props: {
+      ...baseConfig(),
+      sizeRange: [30,50],
+    },
+  }}
+</Story>
+
+### More on Size Range
+Notice that when there is no variation in point size, many size ranges could produce the same result. In this example, the range `[30,50]`
+is equivalent to `[39,41]`, `[30,50]`, `[20,60]`... and so on. However, when size also varies, the size range determines how varied the point sizes are.
+
+Consider the following example, which have equivalent data and sizeAccesors but different sizeRanges with a middle value of `20px`.
+
+#### Small Size Range
+```
+range = [35,45]
+```
+
+<Story name="Size Range: Small Variance">
+    {{
+      props: {
+        ...customConfig(),
+        sizeRange: [35,45],
+    },
+  }}
+</Story>
+
+#### Large Size Range
+```
+range = [20,60]
+```
+<Story name="Size Range: Large Variance">
+    {{
+      props: {
+        ...customConfig(),
+        sizeRange: [20,60],
+    },
+  }}
+</Story>
+
+### Custom Cursor
+Scatter also accepts the [cursor CSS property](https://developer.mozilla.org/en-US/docs/Web/CSS/cursor) to enable different cursors when a user hovers over a line.
+
+```angular2html
+<vis-scatter ... [cursor]="crosshair"></vis-line>
+```
+
+<Story name="Custom Cursor">
+  {{
+    props: {
+      ...baseConfig(),
+      cursor: "crosshair",
+    },
+  }}
+</Story>
+
+### Events
+The Scatter component accepts the following events:
+```javascript
+// In the component file, define the events configuration:
+import { Scatter } from '@volterra/vis`
+...
+events = {
+  [Scatter.selectors.point]: {
+    mouseover: (data: DataRecord) => {},
+    mouseleave: (data: DataRecord) => {},
+    ...
+  }
+}
+
+// In the template:
+<vis-scatter ... events="events"></vis-scatter>
+```
+
+### Component Inputs
+<ArgsTable of={VisScatterComponent} />
