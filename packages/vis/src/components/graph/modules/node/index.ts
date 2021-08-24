@@ -218,10 +218,10 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
       .style('cursor', (d: GraphCircleLabel) => d.cursor ?? null)
 
     // Side label text
-    sideLabelsUpdate.select(`.${nodeSelectors.sideLabel}`).text(d => d.text)
+    sideLabelsUpdate.select(`.${nodeSelectors.sideLabel}`).html(d => d.text)
       .attr('dy', '1px')
       .style('fill', l => getSideTexLabelColor(l))
-      .style('font-size', d => `${11 / Math.pow(d.text.toString().length, 0.3)}px`)
+      .style('font-size', d => d.fontSize ?? `${11 / Math.pow(d.text.toString().length, 0.3)}px`)
       // Side label circle background
     sideLabelsUpdate.select(`.${nodeSelectors.sideLabelBackground}`)
       .style('fill', d => d.color)
