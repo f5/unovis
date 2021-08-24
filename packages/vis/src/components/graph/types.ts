@@ -59,6 +59,7 @@ export type GraphCircleLabel = {
   text: string;
   color?: string | null;
   cursor?: string | null;
+  fontSize?: string;
 }
 
 export enum GraphLinkStyle {
