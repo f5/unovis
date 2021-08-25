@@ -54,7 +54,7 @@ export class Scatter<Datum> extends XYComponentCore<Datum> {
     const duration = isNumber(customDuration) ? customDuration : config.duration
 
     const pointGroups = this.g
-      .selectAll(`.${s.point}`)
+      .selectAll<SVGGElement, Datum>(`.${s.point}`)
       .data(this._getOnScreenData())
 
     pointGroups.exit().call(removeNodes, duration)

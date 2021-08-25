@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { Selection, BaseType } from 'd3-selection'
+import { Selection } from 'd3-selection'
 import { hierarchy, partition, HierarchyRectangularNode } from 'd3-hierarchy'
 import { arc } from 'd3-shape'
 
@@ -29,9 +29,9 @@ import * as s from './style'
 export class RadialDendrogram<H extends Hierarchy> extends ComponentCore<H> {
   static selectors = s
   config: RadialDendrogramConfig<H> = new RadialDendrogramConfig()
-  nodeGroup: Selection<SVGGElement, HierarchyRectangularNode<H>[], SVGGElement, HierarchyRectangularNode<H>[]>
-  linkGroup: Selection<SVGGElement, Link<H>[], SVGGElement, Link<H>[]>
-  labelGroup: Selection<SVGGElement, HierarchyRectangularNode<H>[], SVGGElement, HierarchyRectangularNode<H>[]>
+  nodeGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
+  linkGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
+  labelGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
   arcGen = arc<HierarchyRectangularNode<H>>()
   linkArcGen = arc<Link<H>>()
 
@@ -100,7 +100,7 @@ export class RadialDendrogram<H extends Hierarchy> extends ComponentCore<H> {
     const linksMerged = links.merge(linkEnter)
     linksMerged.call(updateLink, this.linkArcGen, duration)
 
-    const linksRemove: Selection<BaseType, Link<H>, SVGGElement, Link<H>[]> = links.exit()
+    const linksRemove = links.exit()
     linksRemove.call(removeLink, duration)
 
     // Nodes

@@ -1,4 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
+import { Selection } from 'd3-selection'
 import { ZoomBehavior, zoom, zoomIdentity, ZoomTransform, D3ZoomEvent } from 'd3-zoom'
 import { timeout } from 'd3-timer'
 import { geoPath, GeoProjection } from 'd3-geo'
@@ -14,6 +15,9 @@ import { clamp, getValue, isNumber } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { getColor, hexToBrightness } from 'utils/color'
 import { getCSSVariableValue, isStringCSSVariable } from 'utils/misc'
+
+// Types
+import { GraphLinkCore, GraphNodeCore } from 'types/graph'
 
 // Local Types
 import { MapInputNode, MapInputLink, MapInputArea } from './types'
@@ -31,6 +35,7 @@ export class TopoJSONMap<N extends MapInputNode, L extends MapInputLink, A exten
   static selectors = s
   config: TopoJSONMapConfig<N, L, A> = new TopoJSONMapConfig()
   datamodel: MapGraphDataModel<N, L, A> = new MapGraphDataModel()
+  g: Selection<SVGGElement, unknown, null, undefined>
   private _firstRender = true
   private _initialScale = undefined
   private _currentZoomLevel = undefined
@@ -41,7 +46,7 @@ export class TopoJSONMap<N extends MapInputNode, L extends MapInputLink, A exten
   private _animFrameId: number
 
   private _featureCollection: GeoJSON.FeatureCollection
-  private _zoomBehavior: ZoomBehavior<SVGRectElement, any> = zoom()
+  private _zoomBehavior: ZoomBehavior<SVGGElement, any> = zoom()
   private _backgroundRect = this.g.append('rect').attr('class', s.background)
   private _featuresGroup = this.g.append('g').attr('class', s.features)
   private _boundariesGroup = this.g.append('g').attr('class', s.boundaries)
@@ -168,7 +173,10 @@ export class TopoJSONMap<N extends MapInputNode, L extends MapInputLink, A exten
       else if (this._firstRender) console.warn(`Can't find feature by area code ${a.id}`)
     })
 
-    const features = this._featuresGroup.selectAll(`.${s.feature}`).data(featureData)
+    const features = this._featuresGroup
+      .selectAll<SVGPathElement, unknown>(`.${s.feature}`)
+      .data(featureData)
+
     const featuresEnter = features.enter().append('path').attr('class', s.feature)
     smartTransition(featuresEnter.merge(features), duration)
       .attr('d', this._path)
@@ -176,7 +184,10 @@ export class TopoJSONMap<N extends MapInputNode, L extends MapInputLink, A exten
       .style('cursor', d => d.data ? getValue(d.data, config.areaCursor) : null)
     features.exit().remove()
 
-    const boundaries = this._boundariesGroup.selectAll(`.${s.boundary}`).data(boundariesData)
+    const boundaries = this._boundariesGroup
+      .selectAll<SVGPathElement, unknown>(`.${s.boundary}`)
+      .data(boundariesData)
+
     const boundariesEnter = boundaries.enter().append('path').attr('class', s.boundary)
     smartTransition(boundariesEnter.merge(boundaries), duration)
       .attr('d', this._path)
@@ -187,9 +198,13 @@ export class TopoJSONMap<N extends MapInputNode, L extends MapInputLink, A exten
     const { config, datamodel } = this
     const links = datamodel.links
 
-    const edges = this._linksGroup.selectAll(`.${s.link}`).data(links)
+    const edges = this._linksGroup
+      .selectAll<SVGPathElement, GraphLinkCore<N, L>>(`.${s.link}`)
+      .data(links)
+
     const edgesEnter = edges.enter().append('path').attr('class', s.link)
       .style('stroke-width', 0)
+
     smartTransition(edgesEnter.merge(edges), duration)
       .attr('d', link => {
         const source = this._projection(getLonLat(link.source, config.longitude, config.latitude))
@@ -206,7 +221,9 @@ export class TopoJSONMap<N extends MapInputNode, L extends MapInputLink, A exten
     const { config, datamodel } = this
     const pointData = datamodel.nodes
 
-    const points = this._pointsGroup.selectAll(`.${s.point}`).data(pointData, (d, i) => getValue(d, config.pointId, i))
+    const points = this._pointsGroup
+      .selectAll<SVGGElement, GraphNodeCore<N, L>>(`.${s.point}`)
+      .data(pointData, (d, i) => getValue(d, config.pointId, i))
 
     // Enter
     const pointsEnter = points.enter().append('g').attr('class', s.point)

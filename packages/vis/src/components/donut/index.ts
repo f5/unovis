@@ -29,8 +29,8 @@ export class Donut<Datum> extends ComponentCore<Datum[]> {
   config: DonutConfig<Datum> = new DonutConfig()
   datamodel: SeriesDataModel<Datum> = new SeriesDataModel()
 
-  arcGroup: Selection<SVGGElement, DonutArcDatum<Datum>[], SVGGElement, DonutArcDatum<Datum>[]>
-  centralLabel: Selection<SVGGElement, Datum, SVGGElement, Datum>
+  arcGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
+  centralLabel: Selection<SVGGElement, unknown, SVGGElement, unknown>
   arcGen = arc<DonutArcAnimState>()
 
   events = {

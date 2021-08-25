@@ -63,7 +63,8 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
       .attr('x2', this.x)
 
     const circleData = this.getCircleData()
-    const circles = this.g.selectAll('circle')
+    const circles = this.g
+      .selectAll<SVGCircleElement, Datum>('circle')
       .data(circleData)
 
     const circlesEnter = circles.enter()

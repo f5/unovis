@@ -37,9 +37,9 @@ export class ChordDiagram<H extends Hierarchy, N extends ChordInputNode, L exten
   config: ChordDiagramConfig<H> = new ChordDiagramConfig()
   datamodel: GraphDataModel<N, L> = new GraphDataModel()
 
-  nodeGroup: Selection<SVGGElement, HierarchyRectangularNode<H>[], SVGGElement, HierarchyRectangularNode<H>[]>
-  linkGroup: Selection<SVGGElement, Ribbon<H>[], SVGGElement, Ribbon<H>[]>
-  labelGroup: Selection<SVGGElement, HierarchyRectangularNode<H>[], SVGGElement, HierarchyRectangularNode<H>[]>
+  nodeGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
+  linkGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
+  labelGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
   arcGen = arc<HierarchyRectangularNode<H>>()
   radiusScale: ScalePower<number, number> = scalePow()
   linkAreaGen = area<HierarchyRectangularNode<H>>()

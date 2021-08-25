@@ -79,7 +79,7 @@ export class Line<Datum> extends XYComponentCore<Datum> {
     })
 
     const lines = this.g
-      .selectAll(`.${s.line}`)
+      .selectAll<SVGGElement, LineData>(`.${s.line}`)
       .data(lineData)
 
     const linesEnter = lines.enter().append('g')

@@ -38,9 +38,9 @@ export class Sankey<N extends SankeyInputNode, L extends SankeyInputLink> extend
   private _extendedHeight = undefined
   private _extendedHeightIncreased = undefined
   private _extendedSizeMinHeight = 300
-  private _linksGroup: Selection<SVGGElement, Record<string, unknown>[], SVGGElement, Record<string, unknown>[]>
-  private _nodesGroup: Selection<SVGGElement, Record<string, unknown>[], SVGGElement, Record<string, unknown>[]>
-  private _backgroundRect: Selection<SVGRectElement, any, SVGGElement, any>
+  private _linksGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
+  private _nodesGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
+  private _backgroundRect: Selection<SVGRectElement, unknown, SVGGElement, unknown>
   private _sankey = sankey()
   private _highlightTimeoutId = null
   private _highlightActive = false

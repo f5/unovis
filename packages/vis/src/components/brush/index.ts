@@ -25,8 +25,8 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
   clippable = false // Don't apply clipping path to this component. See XYContainer
   config: BrushConfig<Datum> = new BrushConfig()
   brush: Selection<SVGGElement, any, SVGGElement, any>
-  unselectedRange: Selection<SVGGElement, any, SVGGElement, any>
-  handleLines: Selection<SVGGElement, any, SVGGElement, any>
+  unselectedRange: Selection<SVGRectElement, any, SVGGElement, any>
+  handleLines: Selection<SVGLineElement, any, SVGGElement, any>
   brushBehaviour: BrushBehavior<any> = brushX()
   events = {
     [Brush.selectors.brush]: {
@@ -44,12 +44,14 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
       .attr('class', s.brush)
 
     const directions = [{ type: 'w' }, { type: 'e' }]
-    this.unselectedRange = this.g.selectAll(`.${s.unselected}`)
+    this.unselectedRange = this.g
+      .selectAll(`.${s.unselected}`)
       .data(directions)
       .enter().append('rect')
       .attr('class', s.unselected)
 
-    this.handleLines = this.g.selectAll(`.${s.handleLine}`)
+    this.handleLines = this.g
+      .selectAll(`.${s.handleLine}`)
       .data(directions)
       .enter().append('line')
       .attr('class', s.handleLine)

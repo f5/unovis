@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { select } from 'd3-selection'
+import { select, Selection } from 'd3-selection'
 
 // Core
 import { CoreDataModel } from 'data-models/core'
@@ -15,9 +15,9 @@ import { throttle } from 'utils/data'
 import { ComponentConfig, ComponentConfigInterface } from './config'
 
 export class ComponentCore<CoreDatum> {
-  element: HTMLElement | SVGGElement
+  element: SVGGElement | HTMLElement
   type: ComponentType = ComponentType.SVG
-  g: any // Selection<HTMLElement | SVGElement, any, any, any>
+  g: Selection<SVGGElement | HTMLElement, unknown, null, undefined>
   config: ComponentConfig
   prevConfig: ComponentConfig
   datamodel: CoreDataModel<CoreDatum> = new CoreDataModel()
@@ -93,10 +93,10 @@ export class ComponentCore<CoreDatum> {
   _bindEvents (events, suffix = ''): void {
     Object.keys(events).forEach(className => {
       Object.keys(events[className]).forEach(eventType => {
-        const selection = this.g.selectAll(`.${className}`)
+        const selection: Selection<SVGGElement | HTMLElement, any, SVGElement | HTMLElement, any> = this.g.selectAll(`.${className}`)
         selection.on(eventType + suffix, (event: Event, d) => {
           const els = selection.nodes()
-          const i = els.indexOf(event.currentTarget)
+          const i = els.indexOf(event.currentTarget as SVGGElement | HTMLElement)
           return events[className][eventType](d, event, i, els)
         })
       })

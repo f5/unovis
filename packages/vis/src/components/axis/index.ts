@@ -30,8 +30,8 @@ import * as s from './style'
 export class Axis<Datum> extends XYComponentCore<Datum> {
   static selectors = s
   config: AxisConfig<Datum> = new AxisConfig<Datum>()
-  axisGroup: Selection<SVGGElement, Record<string, unknown>[], SVGGElement, Record<string, unknown>[]>
-  gridGroup: Selection<SVGGElement, Record<string, unknown>[], SVGGElement, Record<string, unknown>[]>
+  axisGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
+  gridGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
 
   private _axisRawBBox: DOMRect
   private _axisSize: { width: number; height: number }

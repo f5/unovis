@@ -76,7 +76,7 @@ export class Area<Datum> extends XYComponentCore<Datum> {
     const areaMaxIdx = stackedData.length - 1
     const stackedDataReversed = stackedData.reverse()
     const areas = this.g
-      .selectAll(`.${s.area}`)
+      .selectAll<SVGPathElement, AreaDatum>(`.${s.area}`)
       .data(stackedDataReversed)
 
     const areasEnter = areas.enter().append('path')

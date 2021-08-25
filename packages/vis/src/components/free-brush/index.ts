@@ -17,7 +17,7 @@ import * as s from './style'
 
 export class FreeBrush<Datum> extends XYComponentCore<Datum> {
   config: FreeBrushConfig<Datum> = new FreeBrushConfig();
-  private brush: Selection<SVGGElement, Datum, SVGGElement, Datum>
+  private brush: Selection<SVGGElement, unknown, SVGGElement, unknown>
   private brushBehaviour: BrushBehavior<Datum>;
   private _firstRender = true;
 

@@ -17,7 +17,7 @@ export interface ArcLink extends SVGElement {
   };
 }
 
-export function createLink<L extends Link<Hierarchy>> (selection: Selection<SVGElement, L, SVGGElement, L[]>): void {
+export function createLink<L extends Link<Hierarchy>> (selection: Selection<SVGPathElement, L, SVGGElement, L[]>): void {
   selection
     .style('opacity', 0)
     .each((d, i, els) => {
@@ -38,7 +38,7 @@ export function createLink<L extends Link<Hierarchy>> (selection: Selection<SVGE
     })
 }
 
-export function updateLink<L extends Link<Hierarchy>> (selection: Selection<SVGElement, L, SVGGElement, L[]>, linkArcGen: Arc<any, any>, duration: number): void {
+export function updateLink<L extends Link<Hierarchy>> (selection: Selection<SVGPathElement, L, SVGGElement, L[]>, linkArcGen: Arc<any, any>, duration: number): void {
   if (duration) {
     const transition = smartTransition(selection, duration)
       .style('opacity', 1) as Transition<SVGElement, L, SVGGElement, L[]>
@@ -68,7 +68,7 @@ export function updateLink<L extends Link<Hierarchy>> (selection: Selection<SVGE
   }
 }
 
-export function removeLink<L extends Link<Hierarchy>> (selection: Selection<SVGElement, L, SVGGElement, L[]>, duration: number): void {
+export function removeLink<L extends Link<Hierarchy>> (selection: Selection<SVGPathElement, L, SVGGElement, L[]>, duration: number): void {
   smartTransition(selection, duration)
     .style('opacity', 0)
     .remove()

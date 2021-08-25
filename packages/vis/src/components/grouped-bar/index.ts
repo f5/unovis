@@ -60,7 +60,7 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum> {
 
     const visibleData = this._getVisibleData()
     const barGroups = this.g
-      .selectAll(`.${s.barGroup}`)
+      .selectAll<SVGGElement, Datum>(`.${s.barGroup}`)
       .data(visibleData, (d, i) => `${getValue(d, config.id) ?? i}`)
 
     const barGroupsEnter = barGroups.enter().append('g')
@@ -84,7 +84,8 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum> {
       .attr('transform', `translate(0,${config.height / 3})`)
 
     const barWidth = innerBandScale.bandwidth()
-    const bars = barGroupsMerged.selectAll(`.${s.bar}`)
+    const bars = barGroupsMerged
+      .selectAll<SVGPathElement, Datum>(`.${s.bar}`)
       .data(d => yAccessors.map(() => d))
 
     const barsEnter = bars.enter().append('path')

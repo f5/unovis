@@ -1,4 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
+import { Selection } from 'd3-selection'
 
 // Core
 import { ComponentCore } from 'core/component'
@@ -18,6 +19,7 @@ import { XYComponentConfig } from './config'
 
 export class XYComponentCore<Datum> extends ComponentCore<Datum[]> {
   element: SVGGraphicsElement
+  g: Selection<SVGGElement, unknown, null, undefined>
   config: XYComponentConfig<Datum>
   datamodel: SeriesDataModel<Datum> = new SeriesDataModel()
   /** Clippable components can be affected by a clipping path (set up in the container) */

@@ -47,7 +47,7 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
     const stackedValues = visibleData.map(d => getStackedValues(d, ...yAccessors))
 
     const barGroups = this.g
-      .selectAll(`.${s.barGroup}`)
+      .selectAll<SVGGElement, Datum>(`.${s.barGroup}`)
       .data(visibleData, (d, i) => `${getValue(d, config.id) ?? i}`)
 
     const barGroupsEnter = barGroups.enter().append('g')
@@ -72,7 +72,8 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
       .attr('transform', `translate(0,${config.height / 3})`)
 
     // Render Bars
-    const bars = barGroupsMerged.selectAll(`.${s.bar}`)
+    const bars = barGroupsMerged
+      .selectAll<SVGPathElement, Datum>(`.${s.bar}`)
       .data((d, i) => yAccessors.map(() => ({ ...d, _stacked: stackedValues[i] })))
 
     const barsEnter = bars.enter().append('path')
