@@ -148,6 +148,39 @@ getColor (data: DataRecord[], i: number) {
   }}
 </Story>
 
+### Additional Styling: CSS Variables
+The Area component supports additional styling via CSS variables that you can define for your visualization container. For example:
+```css
+/* In the styles file */
+.visualization-container-div {
+    --vis-area-fill-opacity: 0.5    ;
+    --vis-area-hover-fill-opacity: 1;
+    --vis-area-stroke-width: 1px;
+}
+```
+
+<Story name="Additional Styling: CSS Variables">
+  {{
+    props: {
+      ...baseConfig(25),
+      storyHideAxes: true,
+      storyHeight: 100,
+      y: d => d.y2,
+      color: '#2BAB44',
+      curveType: CurveType.Basis,
+      baseline: d => d.baseline,
+      storyStyles: `
+        --vis-area-fill-opacity: 0.5  ;
+        --vis-area-hover-fill-opacity: 1;
+        --vis-area-stroke-width: 1px;
+      `
+    },
+  }}
+</Story>
+
+Here is the list of all supported CSS variables: `--vis-area-cursor`, `--vis-area-fill-opacity`, `--vis-area-stroke-width`, `--vis-area-stroke-dasharray`, `--vis-area-stroke-opacity`, `--vis-area-hover-fill-opacity`, `--vis-area-hover-stroke-width`.
+
+
 ### Events
 The Area component supports the following events:
 ```javascript
