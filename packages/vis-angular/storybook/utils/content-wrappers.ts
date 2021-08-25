@@ -25,3 +25,21 @@ export function xyChartContentWrapper<T> (story: Story<XYChartStoryConfig & T>):
     </div>
   `
 }
+
+export type XYAxisStoryConfig = {
+  data?: DataRecord[];
+  showChart?: boolean;
+  storyHeight?: number;
+  storyStyles?: string;
+}
+
+export function xyAxisWrapper<T> (story: Story<XYAxisStoryConfig & T>): string {
+  return `
+    <div [ngStyle]="{'width.%': 100, 'height.px': storyHeight ?? 300 }">
+      <vis-xy-container [data]="data" [style]="storyStyles">
+        ${story}
+        <vis-line *ngIf="showChart" [x]="x" [y]="y"></vis-line>
+      </vis-xy-container>
+    </div>
+  `
+}
