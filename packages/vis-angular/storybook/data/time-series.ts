@@ -21,6 +21,7 @@ export function generateDataRecords (n = 10): DataRecord[] {
     y1: 1 + 3 * Math.random(),
     y2: 2 * Math.random(),
     y3: -1 - 2 * Math.random(),
+    y4: 3 * Math.random(),
     baseline: 2 * Math.random() - 0.5,
   }))
 }
