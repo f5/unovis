@@ -1,5 +1,7 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 /* eslint-disable dot-notation */
+// eslint-disable-next-line import/no-unresolved
+import { Topology } from 'topojson-specification'
 import { GeoProjection } from 'd3-geo'
 import { ComponentConfigInterface, ComponentConfig } from 'core/component/config'
 
@@ -14,7 +16,7 @@ export interface TopoJSONMapConfigInterface<N extends MapInputNode, L extends Ma
   /** MapProjection (or D3's GeoProjection) instance. Default: `MapProjection.Mercator()` */
   projection?: GeoProjection;
   /** Map data in the TopoJSON topology format. Default: `topojson` */
-  topojson?: /* TopoJSON.Topology */ any; // TopoJSON typings have troubles with being bundled so we're temporary disabling them
+  topojson?: Topology; // TopoJSON typings have troubles with being bundled so we're temporary disabling them
   /** Name of the map features to be displayed, e.g. 'countries' or 'counties'. Default: `countries` */
   mapFeatureName?: string;
   /** Set initial map fit to points instead of topojson features. Default: `false` */
