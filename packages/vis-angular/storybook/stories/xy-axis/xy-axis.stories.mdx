@@ -422,32 +422,6 @@ You can include a chart within your `vis-xy-container` with the same method.
   }}
 </Story>
 
-### Axis Padding
-If you want to change the distance between the axis and chart, you can change the `padding` property on the Axis component. See the same data
-used in the previous example but with a custom `Spacing` given to `padding`.
-
-```angular2html
-// In the component
-const axisPadding = { top: 50 }
-
-// In the template
-<vis-axis ... [tickValues]="axisPadding"></vis-axis>
-```
-
-<Story name="Axis Padding">
-  {{
-    props: {
-      ...withDataConfig(10, "X"),
-      y: d => d.x,
-      storyHeight: 250,
-      showChart: true,
-      gridLine: true,
-      padding: {
-        top: 50,
-      },
-    },
-  }}
-</Story>
 
 ### Additional Styling: CSS Variables
 The Axis component supports additional styling via CSS variables that you can define for your visualization container. For example:
