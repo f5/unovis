@@ -42,6 +42,7 @@
     "d3-sankey": "^0.12.3",
     "dagre-layout": "^0.8.8",
     "emotion": "^10.0.27",
+    "geojson": "^0.5.0",
     "leaflet": "^1.7.1",
     "lodash": "^4.17.21",
     "mapbox-gl": "1.13.1",
