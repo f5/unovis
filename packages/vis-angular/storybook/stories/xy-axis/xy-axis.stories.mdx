@@ -160,8 +160,8 @@ You can enable or disable the visibility of the axis domain line with the `domai
 <br/>
 
 ### Providing Data to the Axis Component
-Like with other xy-components, you can provide xAccessor and yAccessors to populate the axis values. Consider the following example with a
-dataArray and a single axis and xAccesor function:
+If you use the Axis component alone, without other xy-components, you'll need to provide xAccessor or yAccessors to populate the axis values. Consider the following example with a
+dataArray and a single axis and xAccessor function:
 
 ```javascript
 /// Define accessor functions in the component
@@ -187,7 +187,7 @@ The Axis component supports a wide variety of tick customization options.
 
 ### Tick Line
 You can remove tick labels from your axis by setting the `tickLine` property to false:
-Source:
+
 ```angular2html
 <vis-axis ... tickLine="false"></vis-axis>
 ```
@@ -494,8 +494,8 @@ import { Axis } from '@volterra/vis`
 
 events = {
     [Axis.selectors.tick]: {
-      mouseover: (d: any) => {}
-      mouseout: (d: any) => {}
+      mouseover: (d: number | Date) => {},
+      mouseout: (d: number | Date) => {}
     },
   }
 
