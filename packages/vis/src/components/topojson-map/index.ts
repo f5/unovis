@@ -1,5 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { Selection } from 'd3-selection'
+import { Feature, Geometry } from 'geojson'
 import { ZoomBehavior, zoom, zoomIdentity, ZoomTransform, D3ZoomEvent } from 'd3-zoom'
 import { timeout } from 'd3-timer'
 import { geoPath, GeoProjection } from 'd3-geo'
@@ -124,7 +125,7 @@ export class TopoJSONMap<N extends MapInputNode, L extends MapInputLink, A exten
     if (!featureObject) return
 
     this._featureCollection = feature(mapData, featureObject) as GeoJSON.FeatureCollection
-    const featureData = this._featureCollection?.features ?? []
+    const featureData = (this._featureCollection?.features ?? []) as (Feature<Geometry, {data: A}>)[]
     const boundariesData = [mesh(mapData, featureObject, (a, b) => a !== b)]
 
     if (this._firstRender) {
@@ -168,8 +169,7 @@ export class TopoJSONMap<N extends MapInputNode, L extends MapInputLink, A exten
     const areaData = datamodel.areas
     areaData.forEach(a => {
       const feature = featureData.find(f => f.id.toString() === getString(a, config.areaId).toString())
-      // eslint-disable-next-line dot-notation
-      if (feature) feature['data'] = a
+      if (feature) feature.properties.data = a
       else if (this._firstRender) console.warn(`Can't find feature by area code ${a.id}`)
     })
 
@@ -180,8 +180,8 @@ export class TopoJSONMap<N extends MapInputNode, L extends MapInputLink, A exten
     const featuresEnter = features.enter().append('path').attr('class', s.feature)
     smartTransition(featuresEnter.merge(features), duration)
       .attr('d', this._path)
-      .style('fill', (d, i) => d.data ? getColor(d.data, config.areaColor, i) : null)
-      .style('cursor', d => d.data ? getString(d.data, config.areaCursor) : null)
+      .style('fill', (d, i) => d.properties.data ? getColor(d.properties.data, config.areaColor, i) : null)
+      .style('cursor', d => d.properties.data ? getString(d.properties.data, config.areaCursor) : null)
     features.exit().remove()
 
     const boundaries = this._boundariesGroup
