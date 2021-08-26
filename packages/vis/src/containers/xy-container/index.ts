@@ -50,13 +50,13 @@ export type XYConfigInterface<Datum> = XYComponentConfigInterface<Datum>
 export class XYContainer<Datum> extends ContainerCore {
   config: XYContainerConfig<Datum> = new XYContainerConfig()
   datamodel: SeriesDataModel<Datum> = new SeriesDataModel()
-  private _svgDefs: Selection<SVGDefsElement, Record<string, unknown>[], any, Record<string, unknown>[]>
-  private _clipPath: Selection<SVGClipPathElement, Record<string, unknown>[], any, Record<string, unknown>[]>
+  private _svgDefs: Selection<SVGDefsElement, unknown, null, undefined>
+  private _clipPath: Selection<SVGClipPathElement, unknown, null, undefined>
   private _clipPathId = guid()
   private _axisMargin: Spacing = { top: 0, bottom: 0, left: 0, right: 0 }
   private _firstRender = true
 
-  constructor (element, config?: XYContainerConfigInterface<Datum>, data?) {
+  constructor (element, config?: XYContainerConfigInterface<Datum>, data?: Datum[]) {
     super(element)
 
     this._clipPath = this.svg.append('clipPath')
@@ -109,7 +109,7 @@ export class XYContainer<Datum> extends ContainerCore {
     return clamp(this.containerHeight - margin.top - margin.bottom, 0, Number.POSITIVE_INFINITY)
   }
 
-  setData (data: any, preventRender?: boolean): void {
+  setData (data: Datum[], preventRender?: boolean): void {
     const { components, config } = this
     if (!data) return
     this.datamodel.data = data
@@ -129,7 +129,7 @@ export class XYContainer<Datum> extends ContainerCore {
     super.updateContainer(containerConfig)
     this.removeAllChildren()
 
-    // If there were any new comonents added we need to pass them data
+    // If there were any new components added we need to pass them data
     this.setData(this.datamodel.data, false)
 
     // Set up the axes
@@ -196,7 +196,7 @@ export class XYContainer<Datum> extends ContainerCore {
     })
   }
 
-  update (containerConfig: XYContainerConfigInterface<Datum>, componentConfigs?: XYComponentConfigInterface<Datum>[], data?: any): void {
+  update (containerConfig: XYContainerConfigInterface<Datum>, componentConfigs?: XYComponentConfigInterface<Datum>[], data?: Datum[]): void {
     if (containerConfig) this.updateContainer(containerConfig, true)
     if (componentConfigs) this.updateComponents(componentConfigs, true)
     if (data) this.setData(data, true)
