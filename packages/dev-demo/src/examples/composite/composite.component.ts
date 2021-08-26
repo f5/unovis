@@ -5,8 +5,6 @@ import {
   XYContainerConfigInterface,
   Axis,
   Brush,
-  Line,
-  LineConfigInterface,
   StackedBar,
   StackedBarConfigInterface,
   Tooltip,
@@ -35,8 +33,8 @@ export class CompositeComponent implements AfterViewInit {
 
   legendItems: { name: string; inactive?: boolean }[] = this.yAccessors.map((d, i) => ({ name: `Stream ${i + 1}` }))
   chartConfig: XYContainerConfigInterface<SampleDatum>
-  barConfig: StackedBarConfigInterface<SampleDatum>
-  lineConfig: LineConfigInterface<SampleDatum>
+  mainStakedBarConfig: StackedBarConfigInterface<SampleDatum>
+  navStackedBarConfig: StackedBarConfigInterface<SampleDatum>
   composite: XYContainer<SampleDatum>
   navigation: XYContainer<SampleDatum>
   @ViewChild('chart', { static: false }) chartRef: ElementRef
@@ -45,14 +43,14 @@ export class CompositeComponent implements AfterViewInit {
 
   ngAfterViewInit (): void {
     const data: SampleDatum[] = sampleSeriesData(100)
-    this.barConfig = getBarConfig(this.yAccessors)
-    this.lineConfig = getLineConfig(this.yAccessors)
+    this.mainStakedBarConfig = getMainStackedBarConfig(this.yAccessors)
+    this.navStackedBarConfig = getNavStackedBarConfig(this.yAccessors)
 
     this.chartConfig = {
       margin: { top: 10, bottom: 10, left: 10, right: 10 },
       padding: { left: 20, right: 20 },
       components: [
-        new StackedBar(this.barConfig),
+        new StackedBar(this.mainStakedBarConfig),
       ],
       dimensions: {
         y: {
@@ -99,7 +97,7 @@ export class CompositeComponent implements AfterViewInit {
     const navConfig: XYContainerConfigInterface<SampleDatum> = {
       margin: { left: 9, right: 9 },
       components: [
-        new StackedBar(this.lineConfig),
+        new StackedBar(this.navStackedBarConfig),
         new Brush({
           onBrush: (s: [number, number]) => {
             this.chartConfig.dimensions.x.domain = s
@@ -123,12 +121,12 @@ export class CompositeComponent implements AfterViewInit {
     d.inactive = !d.inactive
     this.legendItems = [...this.legendItems]
     const accessors = this.yAccessors.map((acc, i) => !this.legendItems[i].inactive ? acc : null)
-    this.barConfig.y = accessors
-    this.composite.updateComponents([this.barConfig])
+    this.mainStakedBarConfig.y = accessors
+    this.composite.updateComponents([this.mainStakedBarConfig])
   }
 }
 
-function getBarConfig (y): StackedBarConfigInterface<SampleDatum> {
+function getMainStackedBarConfig (y): StackedBarConfigInterface<SampleDatum> {
   return {
     x: d => d.x,
     y,
@@ -140,12 +138,12 @@ function getBarConfig (y): StackedBarConfigInterface<SampleDatum> {
   }
 }
 
-function getLineConfig (y): LineConfigInterface<SampleDatum> {
+function getNavStackedBarConfig (y): StackedBarConfigInterface<SampleDatum> {
   return {
     x: d => d.x,
     y,
     events: {
-      [Line.selectors.line]: {},
+      [StackedBar.selectors.bar]: {},
     },
   }
 }
