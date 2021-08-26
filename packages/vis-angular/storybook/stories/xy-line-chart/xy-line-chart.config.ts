@@ -1,6 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { LineConfigInterface } from '@volterra/vis'
-import { XYChartStoryConfig } from '../../utils/content-wrappers'
+import { XYChartStoryConfig } from '../../utils/xy-content-wrapper'
 import { DataRecord, generateDataRecords } from '../../data/time-series'
 
 export const baseConfig = (n?: number): XYChartStoryConfig & LineConfigInterface<DataRecord> => ({

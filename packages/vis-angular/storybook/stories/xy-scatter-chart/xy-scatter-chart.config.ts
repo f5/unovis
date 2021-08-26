@@ -1,6 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { ScatterConfigInterface, SymbolType } from '@volterra/vis'
-import { XYChartStoryConfig } from '../../utils/content-wrappers'
+import { XYChartStoryConfig } from '../../utils/xy-content-wrapper'
 import { DataRecord, generateDataRecords } from '../../data/time-series'
 
 function getArrayElement<T> (array: T[], i?: number): T {
