@@ -1,12 +1,12 @@
 import { moduleMetadata, componentWrapperDecorator } from '@storybook/angular'
-import { Meta, Canvas, Story, ArgsTable } from '@storybook/addon-docs';
-import { AxisType, Position, TrimMode, FitMode, TextAlign } from '@volterra/vis';
+import { Meta, Story, ArgsTable } from '@storybook/addon-docs';
+import { FitMode, TextAlign } from '@volterra/vis';
 import { VisXYContainerModule, VisAxisModule, VisLineModule } from 'src/public-api'
 
 import { VisAxisComponent } from 'src/components/axis/axis.component'
 
 import { xyAxisWrapper } from '../../utils/content-wrappers'
-import { baseConfig, baseXConfig, baseYConfig, withDataConfig, withTimeDataConfig, multiAxisConfig, multiAxisStory } from './xy-axis.config'
+import { baseXConfig, baseYConfig, withDataConfig, withTimeDataConfig, multiAxisStory } from './xy-axis.config'
 
 <Meta
   title="XY Charts/Axis"
@@ -38,7 +38,6 @@ where `type` is `AxisType.X` or `AxisType.Y`.
   }}
 </Story>
 
- 
 ### Axis Types
 Axis supports two `AxisType` properties to bind to your data: `AxisType.X` and `AxisType.Y`. You can also simply provide the string `"x"` or `"y"`.
 ```angular2html
@@ -51,7 +50,6 @@ Axis supports two `AxisType` properties to bind to your data: `AxisType.X` and `
         ...baseXConfig(),
         storyHeight: 200,
         gridLine: true,
-        
       },
     }}
   </Story>
@@ -174,7 +172,7 @@ xAccessor = (data: DataRecord[]) => d.x;
   <vis-axis type="x" label="X" [x]="xAccessor"></vis-axis>
 </vis-xy-container>
 ```
-where `data: DataRecord[] = [{x: 0, ...}, ...]` and `0 < x < 10`. 
+where `data: DataRecord[] = [{x: 0, ...}, ...]` and `0 < x < 10`.
 
 <Story name="Axis Data">
   {{
