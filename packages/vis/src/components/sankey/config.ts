@@ -5,7 +5,7 @@
 import { ComponentConfigInterface, ComponentConfig } from 'core/component/config'
 
 // Utils
-import { getValue } from 'utils/data'
+import { getNumber } from 'utils/data'
 
 // Types
 import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
@@ -76,7 +76,7 @@ export interface SankeyConfigInterface<N extends SankeyInputNode, L extends Sank
   /** Link color accessor function or value. Default: `l => l.color` */
   linkColor?: StringAccessor<L>;
   /** Link flow accessor function or value. Default: `l => l.value` */
-  linkValue?: NumericAccessor<N>;
+  linkValue?: NumericAccessor<L>;
   /** Link cursor on hover. Default: `null` */
   linkCursor?: StringAccessor<L>;
 
@@ -133,7 +133,7 @@ export class SankeyConfig<N extends SankeyInputNode, L extends SankeyInputLink> 
   highlightDelay = 1000
 
   // Sorting
-  linkSort = (link2: L, link1: L): number => getValue(this.linkValue, link1) - getValue(this.linkValue, link2)
+  linkSort = (link2: L, link1: L): number => getNumber(link1, this.linkValue) - getNumber(link2, this.linkValue)
   nodeSort = undefined
 
   // Nodes
@@ -172,7 +172,7 @@ export class SankeyConfig<N extends SankeyInputNode, L extends SankeyInputLink> 
   subLabelToLabelInlineWidthRatio = 0.4
 
   // Links
-  linkValue = (d: N): number => d['value']
+  linkValue = (d: L): number => d['value']
   linkColor = (d: L): string => d['color']
   linkCursor = null
 }

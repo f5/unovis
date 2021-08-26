@@ -1,14 +1,15 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 
 // Utils
-import { getValue } from 'utils/data'
+import { getNumber, getString, getValue } from 'utils/data'
 import { stringToHtmlId } from 'utils/misc'
+import { getColor } from 'utils/color'
 
 // Types
 import { GraphInputLink, GraphInputNode } from 'types/graph'
 
 // Local Types
-import { GraphLink } from '../../types'
+import { GraphLink, GraphLinkArrow } from '../../types'
 
 // Config
 import { GraphConfig } from '../../config'
@@ -52,29 +53,29 @@ export function getLinkLabelShift (link: GraphLink, shiftFromCenter = 0): string
 }
 
 export function getLinkStrokeWidth (d: GraphLink, scale: number, config: GraphConfig<GraphInputNode, GraphInputLink>): number {
-  const m = getValue(d, config.linkWidth)
+  const m = getNumber(d, config.linkWidth)
   return m / Math.pow(scale, 0.5)
 }
 
 export function getLinkBandWidth (d: GraphLink, scale: number, config: GraphConfig<GraphInputNode, GraphInputLink>): number {
   const { nodeSize, linkBandWidth } = config
-  const sourceNodeSize = getValue(d.source, nodeSize)
-  const targetNodeSize = getValue(d.target, nodeSize)
+  const sourceNodeSize = getNumber(d.source, nodeSize)
+  const targetNodeSize = getNumber(d.target, nodeSize)
   const minNodeSize = Math.min(sourceNodeSize, targetNodeSize)
-  return Math.min(minNodeSize, getValue(d, linkBandWidth) / Math.pow(scale || 1, 0.5)) || 0
+  return Math.min(minNodeSize, getNumber(d, linkBandWidth) / Math.pow(scale || 1, 0.5)) || 0
 }
 
 export function getLinkColor (link: GraphLink, config: GraphConfig<GraphInputNode, GraphInputLink>): string {
   const { linkStroke } = config
-  const c = getValue(link, linkStroke) ?? window.getComputedStyle(document.documentElement).getPropertyValue('--vis-graph-link-stroke-color')
+  const c = getColor(link, linkStroke) ?? window.getComputedStyle(document.documentElement).getPropertyValue('--vis-graph-link-stroke-color')
   return c || null
 }
 
 export function getMarker (d: GraphLink, scale: number, config: GraphConfig<GraphInputNode, GraphInputLink>): string {
   const { linkArrow } = config
-  if ((scale > ZoomLevel.Level2) && getValue(d, linkArrow)) {
+  if ((scale > ZoomLevel.Level2) && getString(d, linkArrow)) {
     const color = getLinkColor(d, config)
-    return `url(#${stringToHtmlId(color)}-${getValue(d, linkArrow)})`
+    return `url(#${stringToHtmlId(color)}-${getValue<GraphLink, GraphLinkArrow>(d, linkArrow)})`
   } else {
     return null
   }

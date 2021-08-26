@@ -8,7 +8,7 @@ import { interpolatePath } from 'd3-interpolate-path'
 import { XYComponentCore } from 'core/xy-component'
 
 // Utils
-import { getValue, isNumber, isArray, getStackedExtent, getStackedData, filterDataByRange } from 'utils/data'
+import { getNumber, getString, isArray, isNumber, getStackedExtent, getStackedData, filterDataByRange } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
 
@@ -58,7 +58,7 @@ export class Area<Datum> extends XYComponentCore<Datum> {
       .curve(curveGen)
 
     const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
-    const areaDataX = data.map(d => config.scales.x(getValue(d, config.x)))
+    const areaDataX = data.map(d => config.scales.x(getNumber(d, config.x)))
 
     const stacked = getStackedData(data, config.baseline, ...yAccessors)
     const stackedData: AreaDatum[][] = stacked.map(
@@ -83,16 +83,16 @@ export class Area<Datum> extends XYComponentCore<Datum> {
       .attr('class', s.area)
       .attr('d', d => this.areaGen(d) || this._emptyPath())
       .style('opacity', 0)
-      .style('fill', (d, i) => getColor(d, config.color, areaMaxIdx - i))
+      .style('fill', (d, i) => getColor(data, config.color, areaMaxIdx - i))
 
     const areasMerged = smartTransition(areasEnter.merge(areas), duration)
       .style('opacity', d => {
         const isDefined = d.some(p => (p.y0 - p.y1) !== 0)
-        return isDefined ? getValue(d, config.opacity) : 0
+        return isDefined ? getNumber(d, config.opacity) : 0
       })
-      .style('fill', (d, i) => getColor(d, config.color, areaMaxIdx - i))
-      .style('stroke', (d, i) => getColor(d, config.color, areaMaxIdx - i))
-      .style('cursor', (d, i) => getValue(d, config.cursor, areaMaxIdx - i))
+      .style('fill', (d, i) => getColor(data, config.color, areaMaxIdx - i))
+      .style('stroke', (d, i) => getColor(data, config.color, areaMaxIdx - i))
+      .style('cursor', (d, i) => getString(data, config.cursor, areaMaxIdx - i))
 
     if (duration) {
       const transition = areasMerged as Transition<SVGPathElement, AreaDatum[], SVGGElement, AreaDatum[]>

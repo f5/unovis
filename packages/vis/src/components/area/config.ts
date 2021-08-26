@@ -1,6 +1,4 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-/* eslint-disable dot-notation */
-
 import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component/config'
 
 // Types
@@ -15,7 +13,7 @@ export interface AreaConfigInterface<Datum> extends XYComponentConfigInterface<D
   /** Opacity value or accessor function. Default: `1` */
   opacity?: NumericAccessor<Datum>;
   /** Optional area cursor. String or accessor function. Default: `null` */
-  cursor?: StringAccessor<Datum>;
+  cursor?: StringAccessor<Datum[]>;
 }
 
 export class AreaConfig<Datum> extends XYComponentConfig<Datum> implements AreaConfigInterface<Datum> {

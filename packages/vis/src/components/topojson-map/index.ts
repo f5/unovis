@@ -11,7 +11,7 @@ import { ComponentCore } from 'core/component'
 import { MapGraphDataModel } from 'data-models/map-graph'
 
 // Utils
-import { clamp, getValue, isNumber } from 'utils/data'
+import { clamp, getNumber, getString, isNumber } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { getColor, hexToBrightness } from 'utils/color'
 import { getCSSVariableValue, isStringCSSVariable } from 'utils/misc'
@@ -167,7 +167,7 @@ export class TopoJSONMap<N extends MapInputNode, L extends MapInputLink, A exten
     // Merge passed area data and map feature data
     const areaData = datamodel.areas
     areaData.forEach(a => {
-      const feature = featureData.find(f => f.id.toString() === getValue(a, config.areaId).toString())
+      const feature = featureData.find(f => f.id.toString() === getString(a, config.areaId).toString())
       // eslint-disable-next-line dot-notation
       if (feature) feature['data'] = a
       else if (this._firstRender) console.warn(`Can't find feature by area code ${a.id}`)
@@ -181,7 +181,7 @@ export class TopoJSONMap<N extends MapInputNode, L extends MapInputLink, A exten
     smartTransition(featuresEnter.merge(features), duration)
       .attr('d', this._path)
       .style('fill', (d, i) => d.data ? getColor(d.data, config.areaColor, i) : null)
-      .style('cursor', d => d.data ? getValue(d.data, config.areaCursor) : null)
+      .style('cursor', d => d.data ? getString(d.data, config.areaCursor) : null)
     features.exit().remove()
 
     const boundaries = this._boundariesGroup
@@ -211,8 +211,8 @@ export class TopoJSONMap<N extends MapInputNode, L extends MapInputLink, A exten
         const target = this._projection(getLonLat(link.target, config.longitude, config.latitude))
         return arc(source, target)
       })
-      .style('stroke-width', link => getValue(link, config.linkWidth))
-      .style('cursor', link => getValue(link, config.linkCursor))
+      .style('stroke-width', link => getNumber(link, config.linkWidth))
+      .style('cursor', link => getString(link, config.linkCursor))
       .style('stroke', (link, i) => getColor(link, config.linkColor, i))
     edges.exit().remove()
   }
@@ -223,7 +223,7 @@ export class TopoJSONMap<N extends MapInputNode, L extends MapInputLink, A exten
 
     const points = this._pointsGroup
       .selectAll<SVGGElement, GraphNodeCore<N, L>>(`.${s.point}`)
-      .data(pointData, (d, i) => getValue(d, config.pointId, i))
+      .data(pointData, (d, i) => getString(d, config.pointId, i))
 
     // Enter
     const pointsEnter = points.enter().append('g').attr('class', s.point)
@@ -235,7 +235,7 @@ export class TopoJSONMap<N extends MapInputNode, L extends MapInputLink, A exten
     pointsEnter.append('circle').attr('class', s.pointCircle)
       .attr('r', 0)
       .style('fill', (d, i) => getColor(d, config.pointColor, i))
-      .style('stroke-width', d => getValue(d, config.pointStrokeWidth))
+      .style('stroke-width', d => getNumber(d, config.pointStrokeWidth))
 
     pointsEnter.append('text').attr('class', s.pointLabel)
       .attr('dy', '0.32em')
@@ -248,20 +248,20 @@ export class TopoJSONMap<N extends MapInputNode, L extends MapInputLink, A exten
         const pos = this._projection(getLonLat(d, config.longitude, config.latitude))
         return `translate(${pos[0]},${pos[1]})`
       })
-      .style('cursor', d => getValue(d, config.pointCursor))
+      .style('cursor', d => getString(d, config.pointCursor))
 
     smartTransition(pointsMerged.select(`.${s.pointCircle}`), duration)
-      .attr('r', d => getValue(d, config.pointRadius))
+      .attr('r', d => getNumber(d, config.pointRadius))
       .style('fill', (d, i) => getColor(d, config.pointColor, i))
       .style('stroke', (d, i) => getColor(d, config.pointColor, i))
-      .style('stroke-width', d => getValue(d, config.pointStrokeWidth))
+      .style('stroke-width', d => getNumber(d, config.pointStrokeWidth))
 
     const pointLabelsMerged = pointsMerged.select(`.${s.pointLabel}`)
     pointLabelsMerged
       .text(config.pointLabel ?? '')
       .attr('font-size', d => {
-        const pointDiameter = 2 * getValue(d, config.pointRadius)
-        const pointLabelText = getValue(d, config.pointLabel) || ''
+        const pointDiameter = 2 * getNumber(d, config.pointRadius)
+        const pointLabelText = getString(d, config.pointLabel) || ''
         const textLength = pointLabelText.length
         const fontSize = 0.5 * pointDiameter / Math.pow(textLength, 0.4)
         return clamp(fontSize, fontSize, 16)
@@ -300,8 +300,8 @@ export class TopoJSONMap<N extends MapInputNode, L extends MapInputLink, A exten
           type: 'MultiPoint',
           coordinates: pointData.map(p => {
             return [
-              getValue(p, d => getValue(d, config.longitude)),
-              getValue(p, d => getValue(d, config.latitude)),
+              getNumber(p, d => getNumber(d, config.longitude)),
+              getNumber(p, d => getNumber(d, config.latitude)),
             ]
           }),
         },

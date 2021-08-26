@@ -13,9 +13,9 @@ export interface XYComponentConfigInterface<Datum> extends ComponentConfigInterf
   /** A single of multiple accessor functions for getting the values along the Y axis. Default: `undefined` */
   y?: NumericAccessor<Datum> | NumericAccessor<Datum>[];
   /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */
-  id?: ((d: Datum, i?: number, ...any) => string | number);
+  id?: ((d: Datum, i?: number, ...any) => string);
   /** Component color accessor function. Default: `d => d.color` */
-  color?: ColorAccessor<Datum>;
+  color?: ColorAccessor<Datum | Datum[]>;
   /** X and Y scales. As of now, only continuous scales are supported. Default: `{ x: Scale.scaleLinear(), y: Scale.scaleLinear() } */
   scales?: {
     x?: ContinuousScale;
@@ -31,9 +31,9 @@ export class XYComponentConfig<Datum> extends ComponentConfig implements XYCompo
   // eslint-disable-next-line dot-notation
   y = undefined; // NumericAccessor<Datum> = d => d['y'];
   // eslint-disable-next-line dot-notation
-  id = (d: Datum, i: number): string | number => d['id'] ?? i
+  id = (d: Datum, i: number): string => d['id'] ?? `${i}`
   // eslint-disable-next-line dot-notation
-  color = (d: Datum): string => d['color']
+  color = (d: Datum | Datum[]): string => d['color']
   scales = {
     x: Scale.scaleLinear() as ContinuousScale,
     y: Scale.scaleLinear() as ContinuousScale,

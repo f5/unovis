@@ -3,7 +3,7 @@ import { select, Selection } from 'd3-selection'
 
 // Utils
 import { trimText } from 'utils/text'
-import { getValue } from 'utils/data'
+import { getBoolean } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 
 // Types
@@ -59,7 +59,7 @@ export function createPanels<N extends GraphNode, P extends GraphPanelConfigInte
 
 export function updatePanels<N extends GraphNode, L extends GraphLink, P extends GraphPanelConfigInterface> (selection: Selection<SVGGElement, P, SVGGElement, P>, config: GraphConfig<GraphInputNode, GraphInputLink>, duration: number): void {
   const { nodeDisabled } = config
-  selection.classed(panelSelectors.greyout, d => d._data.map(node => getValue(node, nodeDisabled) || node._state.greyout).every(d => d))
+  selection.classed(panelSelectors.greyout, d => d._data.map(node => getBoolean(node, nodeDisabled) || node._state.greyout).every(d => d))
 
   smartTransition(selection, duration)
     .attr('transform', d => `translate(${d._x}, ${d._y})`)

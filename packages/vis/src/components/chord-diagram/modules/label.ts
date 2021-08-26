@@ -4,7 +4,7 @@ import { HierarchyRectangularNode } from 'd3-hierarchy'
 import { color } from 'd3-color'
 
 // Core
-import { getCSSVarName } from 'styles/colors'
+import { getCSSColorVariable } from 'styles/colors'
 
 // Types
 import { Hierarchy, LabelType } from 'components/radial-dendrogram/types'
@@ -12,7 +12,7 @@ import { Hierarchy, LabelType } from 'components/radial-dendrogram/types'
 // Utils
 import { wrapTextElement } from 'utils/text'
 import { smartTransition } from 'utils/d3'
-import { getValue } from 'utils/data'
+import { getNumber, getString } from 'utils/data'
 import { getColor, hexToBrightness } from 'utils/color'
 
 // Config
@@ -49,7 +49,7 @@ function getLabelFillColor (d, config): string {
       return getColor(d, nodeColor, d.data.depth)
     }
     case LabelType.Along: {
-      const c = getValue(d.data, nodeColor) || window.getComputedStyle(document.documentElement).getPropertyValue(getCSSVarName(d.depth))
+      const c = getColor(d.data, nodeColor) || window.getComputedStyle(document.documentElement).getPropertyValue(getCSSColorVariable(d.depth))
       const hex = color(c).hex()
       const brightness = hexToBrightness(hex)
       return brightness > 0.65 ? 'var(--vis-chord-diagram-label-text-fill-color-dark)' : 'var(--vis-chord-diagram-label-text-fill-color-bright)'
@@ -92,10 +92,10 @@ export function updateLabel<H extends Hierarchy> (selection: Selection<SVGElemen
   const label: Selection<SVGTextElement, any, SVGElement, any> = selection.select(`.${s.label}`)
   label.select('textPath').remove()
   label
-    .text(d => getValue(d.data, nodeLabel))
+    .text(d => getString(d.data, nodeLabel))
     .style('display', d => {
-      const radianArcLength = d.x1 - d.x0 - getValue(d, config.padAngle) * 2
-      const radius = radiusScale(d.y1) - getValue(d, config.nodeWidth) / 2
+      const radianArcLength = d.x1 - d.x0 - getNumber(d, config.padAngle) * 2
+      const radius = radiusScale(d.y1) - getNumber(d, config.nodeWidth) / 2
       const arcLength = radius * radianArcLength
       // Hide label if length of node arc less then 70
       return arcLength < 70 ? 'none' : 'block'
@@ -109,8 +109,8 @@ export function updateLabel<H extends Hierarchy> (selection: Selection<SVGElemen
     .each((d, i, elements) => {
       let textWidth = width
       if (nodeLabelType === LabelType.Along) {
-        const radianArcLength = d.x1 - d.x0 - getValue(d, config.padAngle) * 2
-        const radius = radiusScale(d.y1) - getValue(d, config.nodeWidth) / 2
+        const radianArcLength = d.x1 - d.x0 - getNumber(d, config.padAngle) * 2
+        const radius = radiusScale(d.y1) - getNumber(d, config.nodeWidth) / 2
         textWidth = radius * radianArcLength
       }
 
@@ -120,7 +120,7 @@ export function updateLabel<H extends Hierarchy> (selection: Selection<SVGElemen
         const labelText = select(elements[i]).text()
         select(elements[i])
           .attr('dx', LABEL_PADDING)
-          .attr('dy', getValue(d, nodeWidth) / 2)
+          .attr('dy', getNumber(d, nodeWidth) / 2)
           .text('')
 
         select(elements[i]).append('textPath')

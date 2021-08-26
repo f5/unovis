@@ -17,7 +17,7 @@ export interface LineConfigInterface<Datum> extends XYComponentConfigInterface<D
   /** Highlight line on hover */
   highlightOnHover?: boolean;
   /** Optional link cursor. Default: `null` */
-  cursor?: StringAccessor<Datum>;
+  cursor?: StringAccessor<Datum[]>;
 }
 
 export class LineConfig<Datum> extends XYComponentConfig<Datum> implements LineConfigInterface<Datum> {

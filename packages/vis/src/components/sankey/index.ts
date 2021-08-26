@@ -14,7 +14,7 @@ import { Position } from 'types/position'
 import { Spacing } from 'types/spacing'
 
 // Utils
-import { getValue, isNumber, groupBy } from 'utils/data'
+import { isNumber, groupBy, getNumber } from 'utils/data'
 
 // Config
 import { SankeyConfig, SankeyConfigInterface } from './config'
@@ -179,7 +179,7 @@ export class Sankey<N extends SankeyInputNode, L extends SankeyInputLink> extend
 
     // For d3 sankey function each link must be an object with the `value` property
     links.forEach(link => {
-      link.value = getValue(link, d => getValue(d, config.linkValue))
+      link.value = getNumber(link, d => getNumber(d, config.linkValue))
     })
 
     this._sankey

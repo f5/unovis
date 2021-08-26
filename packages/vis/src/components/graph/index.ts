@@ -15,7 +15,7 @@ import { GraphInputLink, GraphInputNode } from 'types/graph'
 import { Spacing } from 'types/spacing'
 
 // Utils
-import { isNumber, clamp, getValue, find, cloneDeep, flatten, findIndex, clean, uniq, shallowDiff, isFunction } from 'utils/data'
+import { isNumber, clamp, find, cloneDeep, flatten, findIndex, clean, uniq, shallowDiff, isFunction, getBoolean } from 'utils/data'
 import { stringToHtmlId } from 'utils/misc'
 import { smartTransition } from 'utils/d3'
 
@@ -529,7 +529,7 @@ export class Graph<N extends GraphInputNode, L extends GraphInputLink, P extends
     const { config: { linkFlow, flowAnimDuration }, datamodel: { links } } = this
     // this._elapsed = elapsed
 
-    const hasLinksWithFlow = links.some(d => getValue(d, linkFlow))
+    const hasLinksWithFlow = links.some(d => getBoolean(d, linkFlow))
     if (!hasLinksWithFlow) return
     const t = (elapsed % flowAnimDuration) / flowAnimDuration
     const linkElements: Selection<SVGGElement, GraphLink<N, L>, SVGGElement, GraphLink<N, L>> =

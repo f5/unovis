@@ -5,7 +5,7 @@ import { HierarchyRectangularNode } from 'd3-hierarchy'
 // Utils
 import { wrapTextElement } from 'utils/text'
 import { smartTransition } from 'utils/d3'
-import { getValue } from 'utils/data'
+import { getString } from 'utils/data'
 import { getColor } from 'utils/color'
 
 // Local Types
@@ -50,7 +50,7 @@ export function updateLabel<H extends Hierarchy> (selection: Selection<SVGGEleme
     })
   const label: Selection<SVGTextElement, any, SVGElement, any> = selection.select(`.${s.label}`)
   label
-    .text(d => getValue(d.data, nodeLabel))
+    .text(d => getString(d.data, nodeLabel))
     .style('fill', d => getColor(d.data, config.nodeColor, d.depth))
     .style('display', d => {
       const radianArcLength = d.x1 - d.x0

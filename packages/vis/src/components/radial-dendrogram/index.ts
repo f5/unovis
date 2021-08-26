@@ -7,7 +7,7 @@ import { arc } from 'd3-shape'
 import { ComponentCore } from 'core/component'
 
 // Utils
-import { getValue, isNumber } from 'utils/data'
+import { getNumber, isNumber } from 'utils/data'
 
 // Types
 import { Spacing } from 'types/spacing'
@@ -59,21 +59,21 @@ export class RadialDendrogram<H extends Hierarchy> extends ComponentCore<H> {
     this.arcGen
       .startAngle(d => config.angleRange[0] + d.x0)
       .endAngle(d => config.angleRange[0] + d.x1)
-      .padAngle(d => Math.min((d.x1 - d.x0) / 2, getValue(d, config.padAngle)))
-      .cornerRadius(d => getValue(d, config.cornerRadius))
-      .innerRadius(d => d.y1 - getValue(d, config.nodeWidth))
+      .padAngle(d => Math.min((d.x1 - d.x0) / 2, getNumber(d, config.padAngle)))
+      .cornerRadius(d => getNumber(d, config.cornerRadius))
+      .innerRadius(d => d.y1 - getNumber(d, config.nodeWidth))
       .outerRadius(d => d.y1)
 
     this.linkArcGen
       .startAngle(d => config.angleRange[0] + d.target.x0)
       .endAngle(d => config.angleRange[0] + d.target.x1)
-      .padAngle(d => Math.min((d.target.x1 - d.target.x0) / 2, getValue(d, config.padAngle)))
-      .cornerRadius(d => getValue(d, config.cornerRadius))
+      .padAngle(d => Math.min((d.target.x1 - d.target.x0) / 2, getNumber(d, config.padAngle)))
+      .cornerRadius(d => getNumber(d, config.cornerRadius))
       .innerRadius(d => d.source.y1)
-      .outerRadius(d => d.target.y1 - getValue(d, config.nodeWidth))
+      .outerRadius(d => d.target.y1 - getNumber(d, config.nodeWidth))
 
     const hierarchyData = hierarchy(data, d => config.children(d))
-    hierarchyData.sum(d => getValue(d, config.value))
+    hierarchyData.sum(d => getNumber(d, config.value))
 
     let radius = Math.min(config.width, config.height) / 2
     let ladelWidth = radius / (hierarchyData.height + 1) - config.nodeWidth

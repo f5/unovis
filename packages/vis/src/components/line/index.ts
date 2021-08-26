@@ -8,7 +8,7 @@ import { interpolatePath } from 'd3-interpolate-path'
 import { XYComponentCore } from 'core/xy-component'
 
 // Utils
-import { getValue, isNumber, isArray } from 'utils/data'
+import { getValue, isNumber, isArray, getNumber, getString } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
 
@@ -61,10 +61,10 @@ export class Line<Datum> extends XYComponentCore<Datum> {
       .curve(this.curve)
 
     const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
-    const lineDataX = data.map(d => config.scales.x(getValue(d, config.x)))
+    const lineDataX = data.map(d => config.scales.x(getNumber(d, config.x)))
     const lineData: LineData[] = yAccessors.map(a => {
       const ld: LineDatum[] = data.map((d, i) => {
-        const value = getValue(d, a) ?? config.noDataValue
+        const value = getNumber(d, a) ?? config.noDataValue
         return {
           x: lineDataX[i],
           y: config.scales.y(value),
@@ -89,7 +89,7 @@ export class Line<Datum> extends XYComponentCore<Datum> {
       .append('path')
       .attr('class', s.linePath)
       .attr('d', this._emptyPath())
-      .style('stroke', (d, i) => getColor(d, config.color, i))
+      .style('stroke', (d, i) => getColor(data, config.color, i))
       .style('stroke-opacity', 0)
 
     linesEnter
@@ -98,16 +98,16 @@ export class Line<Datum> extends XYComponentCore<Datum> {
       .attr('d', this._emptyPath())
 
     const linesMerged = linesEnter.merge(lines)
-    linesMerged.style('cursor', (d, i) => getValue(d, config.cursor, i))
+    linesMerged.style('cursor', (d, i) => getString(data, config.cursor, i))
     linesMerged.each((d, i, elements) => {
       const group = select(elements[i])
       const linePath = group.select(`.${s.linePath}`)
       const lineSelectionHelper = group.select(`.${s.lineSelectionHelper}`)
 
       const isLineVisible = yAccessors[i] && d.defined
-      const dashArray = getValue(d, config.lineDashArray, i)
+      const dashArray = getValue<LineData, number[]>(d, config.lineDashArray, i)
       const transition = smartTransition(linePath, duration)
-        .style('stroke', getColor(d, config.color, i))
+        .style('stroke', getColor(data, config.color, i))
         .attr('stroke-width', config.lineWidth)
         .attr('stroke-dasharray', dashArray?.join(' ') ?? null)
         .style('stroke-opacity', isLineVisible ? 1 : 0)

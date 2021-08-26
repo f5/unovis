@@ -7,7 +7,7 @@ import { Shape } from 'types/shape'
 
 // Utils
 import { polygon } from 'utils/path'
-import { getValue } from 'utils/data'
+import { getString } from 'utils/data'
 
 // Helpers
 import { getNodeSize } from './node/helper'
@@ -19,7 +19,7 @@ export function isCustomXml (shape: Shape): boolean {
 export function appendShape<T> (selection, shapeAccessor: StringAccessor<T>, shapeSelector: string, customShapeSelector: string, insertSelector = ':last-child'): void {
   selection.each((d, i, elements) => {
     const element = select(elements[i])
-    const shape = getValue(d, shapeAccessor)
+    const shape = getString(d, shapeAccessor) as Shape
 
     let shapeElement
     const isCustomXmlShape = isCustomXml(shape)
@@ -65,7 +65,7 @@ export function updateShape<T> (selection, shape: StringAccessor<T>, size: Numer
   selection.filter('path')
     .attr('d', (d: T) => {
       let n
-      switch (getValue(d, shape)) {
+      switch (getString(d, shape)) {
         case Shape.Square:
           n = 4
           break
@@ -81,8 +81,8 @@ export function updateShape<T> (selection, shape: StringAccessor<T>, size: Numer
     })
 
   selection.filter('g')
-    .filter((d: T) => !isCustomXml(getValue(d, shape)))
-    .html((d: T) => getValue(d, shape))
+    .filter((d: T) => !isCustomXml(getString(d, shape) as Shape))
+    .html((d: T) => getString(d, shape))
 
   selection.filter('g')
     .each((d, i, elements) => {

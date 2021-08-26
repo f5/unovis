@@ -4,7 +4,7 @@ import { Selection } from 'd3-selection'
 // Utils
 import { estimateTextSize, trimSVGText, wrapSVGText } from 'utils/text'
 import { smartTransition } from 'utils/d3'
-import { getValue } from 'utils/data'
+import { getString } from 'utils/data'
 
 // Types
 import { FitMode, VerticalAlign } from 'types/text'
@@ -18,6 +18,7 @@ import { SankeyConfig } from '../config'
 
 // Styles
 import * as s from '../style'
+import { getColor } from 'utils/color'
 
 const NODE_LABEL_SPACING = 10
 const LABEL_BLOCK_PADDING = 6.5
@@ -124,8 +125,8 @@ export function renderLabel<N extends SankeyInputNode, L extends SankeyInputLink
     ? d.x0 < config.width / 2 ? Position.Left : Position.Right
     : config.labelPosition
   const labelOrientationMult = labelOrientation === Position.Left ? -1 : 1
-  const labelText = getValue(d, config.label)
-  const sublabelText = getValue(d, config.subLabel)
+  const labelText = getString(d, config.label)
+  const sublabelText = getString(d, config.subLabel)
 
   // Render the main label, wrap / trim it and estimate its size
   const labelsFontSizeDifference = sublabelText ? config.labelFontSize - config.subLabelFontSize : 0
@@ -133,7 +134,7 @@ export function renderLabel<N extends SankeyInputNode, L extends SankeyInputLink
   labelTextSelection
     .text(labelText)
     .attr('font-size', config.labelFontSize)
-    .style('fill', getValue(d, config.labelColor))
+    .style('fill', getColor(d, config.labelColor))
     .attr('transform', `translate(${labelOrientationMult * labelPadding},${labelTranslateY})`)
 
   const labelMaxWidth = isSublabelInline ? config.labelMaxWidth * (1 - (sublabelText ? config.subLabelToLabelInlineWidthRatio : 0)) : config.labelMaxWidth
@@ -150,7 +151,7 @@ export function renderLabel<N extends SankeyInputNode, L extends SankeyInputLink
   sublabelTextSelection
     .text(sublabelText)
     .attr('font-size', config.subLabelFontSize)
-    .style('fill', getValue(d, config.subLabelColor))
+    .style('fill', getColor(d, config.subLabelColor))
     .attr('transform', `translate(${sublabelTranslateX},${sublabelTranslateY})`)
 
   const sublabelMaxWidth = isSublabelInline ? config.labelMaxWidth * config.subLabelToLabelInlineWidthRatio : config.labelMaxWidth

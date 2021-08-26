@@ -7,7 +7,7 @@ import { ComponentCore } from 'core/component'
 import { ComponentType } from 'types/component'
 
 // Utils
-import { getValue, throttle } from 'utils/data'
+import { getNumber, throttle } from 'utils/data'
 import { getDataLatLngBounds } from 'utils/map'
 
 // Components
@@ -24,6 +24,7 @@ import { LatLon, Particle } from './types'
 
 // Renderer
 import { PointRenderer as PointRendererType } from './renderer'
+import { getColor } from 'utils/color'
 
 export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ points: PointDatum[]; flows?: FlowDatum[] }> {
   static selectors = LeafletMap.selectors
@@ -101,26 +102,26 @@ export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ point
     this.clearParticles()
     for (const flow of this.flows) {
       const source = {
-        lat: getValue(flow, this.config.sourceLatitude),
-        lon: getValue(flow, this.config.sourceLongitude),
+        lat: getNumber(flow, this.config.sourceLatitude),
+        lon: getNumber(flow, this.config.sourceLongitude),
       }
 
       const target = {
-        lat: getValue(flow, this.config.targetLatitude),
-        lon: getValue(flow, this.config.targetLongitude),
+        lat: getNumber(flow, this.config.targetLatitude),
+        lon: getNumber(flow, this.config.targetLongitude),
       }
 
       // Add source particle, showing the origin of the flow
-      const sourcePointRadius = getValue(flow, this.config.sourcePointRadius)
-      const sourcePointColor = getValue(flow, this.config.sourcePointColor)
+      const sourcePointRadius = getNumber(flow, this.config.sourcePointRadius)
+      const sourcePointColor = getColor(flow, this.config.sourcePointColor)
       this.addParticle(source, source, source, 0, sourcePointRadius, sourcePointColor)
 
       // Add flow particles
       const dist = Math.sqrt((target.lat - source.lat) ** 2 + (target.lon - source.lon) ** 2)
-      const numParticles = Math.round(dist * getValue(flow, this.config.flowParticleDensity))
-      const velocity = getValue(flow, this.config.flowParticleSpeed)
-      const r = getValue(flow, this.config.flowParticleRadius)
-      const color = getValue(flow, this.config.flowParticleColor)
+      const numParticles = Math.round(dist * getNumber(flow, this.config.flowParticleDensity))
+      const velocity = getNumber(flow, this.config.flowParticleSpeed)
+      const r = getNumber(flow, this.config.flowParticleRadius)
+      const color = getColor(flow, this.config.flowParticleColor)
       for (let i = 0; i < numParticles; i += 1) {
         const location = {
           lat: source.lat + (target.lat - source.lat) * i / numParticles,
@@ -179,9 +180,9 @@ export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ point
     const map = this.leafletMapInstance
 
     for (const flow of this.flows) {
-      const lat = getValue(flow, this.config.sourceLatitude)
-      const lon = getValue(flow, this.config.sourceLongitude)
-      const r = getValue(flow, this.config.sourcePointRadius)
+      const lat = getNumber(flow, this.config.sourceLatitude)
+      const lon = getNumber(flow, this.config.sourceLongitude)
+      const r = getNumber(flow, this.config.sourcePointRadius)
       const pos = map?.latLngToLayerPoint(new L.LatLng(lat, lon))
       const posX = pos.x - this.panningOffset.x
       const posY = pos.y - this.panningOffset.y
@@ -243,20 +244,20 @@ export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<{ point
 
     for (const point of this.points) {
       points.push({
-        lat: getValue(point, this.config.pointLatitude),
-        lon: getValue(point, this.config.pointLongitude),
+        lat: getNumber(point, this.config.pointLatitude),
+        lon: getNumber(point, this.config.pointLongitude),
       })
     }
 
     for (const flow of this.flows) {
       const source = {
-        lat: getValue(flow, this.config.sourceLatitude),
-        lon: getValue(flow, this.config.sourceLongitude),
+        lat: getNumber(flow, this.config.sourceLatitude),
+        lon: getNumber(flow, this.config.sourceLongitude),
       }
 
       const target = {
-        lat: getValue(flow, this.config.targetLatitude),
-        lon: getValue(flow, this.config.targetLongitude),
+        lat: getNumber(flow, this.config.targetLatitude),
+        lon: getNumber(flow, this.config.targetLongitude),
       }
 
       points.push(source)

@@ -11,7 +11,7 @@ import { GraphInputLink, GraphInputNode } from 'types/graph'
 import { trimText } from 'utils/text'
 import { polygon } from 'utils/path'
 import { smartTransition } from 'utils/d3'
-import { getValue, throttle } from 'utils/data'
+import { getBoolean, getNumber, getString, getValue, throttle } from 'utils/data'
 
 // Local Types
 import { GraphNode, GraphCircleLabel, GraphNodeAnimationState, GraphNodeAnimatedElement } from '../../types'
@@ -55,7 +55,7 @@ export function createNodes<N extends GraphInputNode, L extends GraphInputLink> 
 
     group.append('circle').attr('class', nodeSelectors.nodeSelection)
 
-    const shape = getValue(d, nodeShape)
+    const shape = getString(d, nodeShape)
     /** Todo: The 'nodeShape' storing logic below it a temporary fix, needs a cleaner implementation */
     // eslint-disable-next-line dot-notation
     element['nodeShape'] = shape
@@ -91,7 +91,7 @@ export function updateSelectedNodes<N extends GraphInputNode, L extends GraphInp
 
   selection.each((d, i, elements) => {
     const group: Selection<SVGGElement, N, SVGGElement, N> = select(elements[i])
-    const isGreyout = getValue(d, nodeDisabled) || d._state.greyout
+    const isGreyout = getBoolean(d, nodeDisabled) || d._state.greyout
 
     group.classed(nodeSelectors.greyoutNode, isGreyout)
       .classed(nodeSelectors.draggable, !config.disableDrag)
@@ -119,7 +119,7 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
   selection.each((d, i, elements) => {
     const element = elements[i]
     const group = select(element)
-    const shape = getValue(d, nodeShape)
+    const shape = getString(d, nodeShape)
 
     // eslint-disable-next-line dot-notation
     if (element['nodeShape'] !== shape) {
@@ -151,38 +151,38 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
     // Update Group
     group
       .classed(nodeSelectors.nodePolygon, d => {
-        const shape = getValue(d, nodeShape)
+        const shape = getString(d, nodeShape)
         return shape === Shape.Triangle || shape === Shape.Hexagon || shape === Shape.Square
       })
 
     // Update Node
     node
       .call(updateShape, nodeShape, nodeSize)
-      .attr('stroke-width', d => getValue(d, nodeBorderWidth) ?? 0)
+      .attr('stroke-width', d => getNumber(d, nodeBorderWidth) ?? 0)
       .style('fill', d => getNodeColor(d, nodeFill))
-      .style('stroke', d => getValue(d, nodeStroke) ?? null)
+      .style('stroke', d => getString(d, nodeStroke) ?? null)
 
     const nodeBBox = (node.node() as SVGGraphicsElement).getBBox()
 
     const arcGenerator = arc<GraphNodeAnimationState>()
-      .innerRadius(d => getNodeSize(d, nodeSize) / 2 - (getValue(d, nodeBorderWidth) / 2))
-      .outerRadius(d => getNodeSize(d, nodeSize) / 2 + (getValue(d, nodeBorderWidth) / 2))
+      .innerRadius(d => getNodeSize(d, nodeSize) / 2 - (getNumber(d, nodeBorderWidth) / 2))
+      .outerRadius(d => getNodeSize(d, nodeSize) / 2 + (getNumber(d, nodeBorderWidth) / 2))
       .startAngle(0 * (Math.PI / 180))
       // eslint-disable-next-line dot-notation
       .endAngle(a => a['endAngle'])
 
     nodeArc
-      .attr('stroke-width', d => getValue(d, nodeBorderWidth))
-      .style('display', d => !getValue(d, nodeStrokeSegmentValue) ? 'none' : null)
+      .attr('stroke-width', d => getNumber(d, nodeBorderWidth))
+      .style('display', d => !getNumber(d, nodeStrokeSegmentValue) ? 'none' : null)
       .style('fill', getNodeColor(d, nodeStrokeSegmentFill))
       .style('stroke', getNodeColor(d, nodeStrokeSegmentFill))
-      .style('stroke-opacity', d => getValue(d, nodeShape) === Shape.Circle ? 0 : null)
+      .style('stroke-opacity', d => getString(d, nodeShape) === Shape.Circle ? 0 : null)
 
     nodeArc
       .transition()
       .duration(scoreAnimDuration)
       .attrTween('d', (d, i, arr: GraphNodeAnimatedElement<SVGElement>[]) => {
-        switch (getValue(d, nodeShape)) {
+        switch (getString(d, nodeShape)) {
           case Shape.Circle: return arcTween(d, config, arcGenerator, arr[i])
           case Shape.Hexagon: return polyTween(d, config, polygon, arr[i])
           case Shape.Square: return polyTween(d, config, polygon, arr[i])
@@ -198,13 +198,13 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
 
     // Update Node Icon
     icon
-      .style('font-size', d => `${getValue(d, nodeIconSize) ?? 2.5 * Math.sqrt(getNodeSize(d, nodeSize))}px`)
+      .style('font-size', d => `${getNumber(d, nodeIconSize) ?? 2.5 * Math.sqrt(getNodeSize(d, nodeSize))}px`)
       .attr('dy', 1)
       .style('fill', d => getNodeIconColor(d, nodeFill))
-      .html(d => getValue(d, nodeIcon))
+      .html(d => getString(d, nodeIcon))
 
     // Side Labels
-    const sideLabelsData = getValue(d, nodeSideLabels) || []
+    const sideLabelsData = getValue<GraphNode<N, L>, GraphCircleLabel[]>(d, nodeSideLabels) || []
     const sideLabels = sideLabelsGroup.selectAll('g').data(sideLabelsData as GraphCircleLabel[])
     const sideLabelsEnter = sideLabels.enter().append('g')
       .attr('class', nodeSelectors.sideLabelGroup)
@@ -237,10 +237,10 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
     sideLabels.exit().remove()
 
     // Set Label and Sublabel text
-    const labelText = getValue(d, nodeLabel)
-    const sublabelText = getValue(d, nodeSubLabel)
-    const labelTextTrimmed = trimText(getValue(d, nodeLabel))
-    const sublabelTextTrimmed = trimText(getValue(d, nodeSubLabel))
+    const labelText = getString(d, nodeLabel)
+    const sublabelText = getString(d, nodeSubLabel)
+    const labelTextTrimmed = trimText(getString(d, nodeLabel))
+    const sublabelTextTrimmed = trimText(getString(d, nodeSubLabel))
 
     labelTextContent.text(labelTextTrimmed)
     sublabelTextContent.text(sublabelTextTrimmed)
@@ -260,13 +260,13 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
     // Position label
     const labelFontSize = parseFloat(window.getComputedStyle(groupElement).getPropertyValue('--vis-graph-node-label-font-size')) || 12
     const labelMargin = LABEL_RECT_VERTICAL_PADDING + 1.25 * labelFontSize ** 1.03
-    const nodeHeight = isCustomXml(getValue(d, nodeShape)) ? nodeBBox.height : getNodeSize(d, nodeSize)
+    const nodeHeight = isCustomXml((getString(d, nodeShape)) as Shape) ? nodeBBox.height : getNodeSize(d, nodeSize)
     label.attr('transform', `translate(0, ${nodeHeight / 2 + labelMargin})`)
-    if (scale >= ZoomLevel.Level3) setLabelRect(label, getValue(d, nodeLabel), nodeSelectors.labelText)
+    if (scale >= ZoomLevel.Level3) setLabelRect(label, getString(d, nodeLabel), nodeSelectors.labelText)
 
     // Bottom Icon
     bottomIcon.html(d => {
-      return getValue(d, nodeBottomIcon)
+      return getString(d, nodeBottomIcon)
     })
       .attr('transform', `translate(0, ${nodeHeight / 2})`)
   })
@@ -298,7 +298,7 @@ function setLabelBackgroundRect<N extends GraphInputNode, L extends GraphInputLi
   selection.each((d, i, elements) => {
     const group: Selection<SVGGElement, N, SVGGElement, N> = select(elements[i])
     const label: Selection<SVGGElement, N, SVGGElement, N> = group.select(`.${nodeSelectors.label}`)
-    setLabelRect(label, getValue(d, nodeLabel), nodeSelectors.labelText)
+    setLabelRect(label, getString(d, nodeLabel), nodeSelectors.labelText)
   })
 }
 
