@@ -36,7 +36,7 @@ export class TopoJSONHeatMapComponent implements AfterViewInit {
   component = new TopoJSONMap<HeatMapPoint, any, any>(this.config)
   tooltip = new Tooltip<any, any>({
     triggers: {
-      [TopoJSONMap.selectors.point]: d => `<span>${d.city}</span>`,
+      [TopoJSONMap.selectors.point]: (d: HeatMapPoint) => `<span>${d.city}</span>`,
     },
   })
   controlItems: VisControlItemInterface[] = [

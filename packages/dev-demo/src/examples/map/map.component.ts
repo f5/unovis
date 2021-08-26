@@ -42,7 +42,7 @@ function getTooltipConfig (): TooltipConfigInterface<LeafletMap<MapPoint>, MapPo
     verticalPlacement: Position.Center,
     horizontalShift: 10,
     triggers: {
-      [LeafletMap.selectors.point]: d => `<div>${d.id}</div>`,
+      [LeafletMap.selectors.point]: (d: MapPoint) => `<div>${d.id}</div>`,
     },
   }
 }

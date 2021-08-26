@@ -36,7 +36,7 @@ export interface TooltipConfigInterface<T extends ComponentCore<any>, Datum = an
    * ```
    */
   triggers?: {
-    [selector: string]: (data: any, i: number, elements: (HTMLElement | SVGElement)[]) => string | HTMLElement;
+    [selector: string]: (data: unknown, i: number, elements: (HTMLElement | SVGElement)[]) => string | HTMLElement;
   };
 }
 
