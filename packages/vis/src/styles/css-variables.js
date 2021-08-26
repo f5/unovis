@@ -1,6 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { injectGlobal } from 'emotion'
-import { colors, getCSSVarName } from './colors'
+import { colors, getCSSColorVariable } from './colors'
 
 export const variables = injectGlobal`
   :root {
@@ -8,6 +8,6 @@ export const variables = injectGlobal`
     --vis-font-family: Inter, Arial, "Helvetica Neue", Helvetica, sans-serif;
     --vis-color-main: #34daa6;
     --vis-color-gray: #2a2a2a;
-    ${colors.map((c, i) => `${getCSSVarName(i)}: ${c};`)}
+    ${colors.map((c, i) => `${getCSSColorVariable(i)}: ${c};`)}
   }
 `
