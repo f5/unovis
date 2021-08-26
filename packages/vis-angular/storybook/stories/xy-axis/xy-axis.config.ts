@@ -1,8 +1,25 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { AxisConfigInterface, AxisType } from '@volterra/vis'
-import { XYAxisStoryConfig } from 'storybook/utils/content-wrappers'
 import { DataRecord, generateDataRecords, generateTimeSeries } from 'storybook/data/time-series'
 import { Story } from '@storybook/angular'
+
+export type XYAxisStoryConfig = {
+  data?: DataRecord[];
+  showChart?: boolean;
+  storyHeight?: number;
+  storyStyles?: string;
+}
+
+export function xyAxisWrapper<T> (story: Story<XYAxisStoryConfig & T>): string {
+  return `
+    <div [ngStyle]="{'width.%': 100, 'height.px': storyHeight ?? 300 }">
+      <vis-xy-container [data]="data" [style]="storyStyles">
+        ${story}
+        <vis-line *ngIf="showChart" [x]="x" [y]="y"></vis-line>
+      </vis-xy-container>
+    </div>
+  `
+}
 
 export const baseConfig = (label?: string): XYAxisStoryConfig & AxisConfigInterface<DataRecord> => ({
   storyHeight: 100,
