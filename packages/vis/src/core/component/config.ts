@@ -65,7 +65,3 @@ export class ComponentConfig extends Config implements ComponentConfigInterface 
   events = {}
   attributes = {}
 }
-
-export interface ConfigConstructor {
-  new(config?: ComponentConfigInterface): ComponentConfig;
-}

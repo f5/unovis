@@ -7,7 +7,8 @@ import { Position } from 'types/position'
 import { FitMode, TrimMode, TextAlign } from 'types/text'
 import { Spacing } from 'types/spacing'
 
-export interface AxisConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
+// We extend partial XY config interface because x and y properties are optional for Axis
+export interface AxisConfigInterface<Datum>extends Partial<XYComponentConfigInterface<Datum>> {
   /** Axis position: `Position.Top`, `Position.Bottom`, `Position.Right` or `Position.Left`. Default: `undefined` */
   position?: Position | string;
   /** Axis type: `AxisType.X` or `AxisType.Y` */

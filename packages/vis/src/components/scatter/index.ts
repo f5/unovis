@@ -35,7 +35,7 @@ export class Scatter<Datum> extends XYComponentCore<Datum> {
     if (config) this.setConfig(config)
   }
 
-  setConfig (config: ScatterConfigInterface<Datum>): void {
+  setConfig<T = ScatterConfigInterface<Datum>> (config: T): void {
     super.setConfig(config)
     this._updateSizeScale()
   }

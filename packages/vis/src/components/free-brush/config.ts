@@ -5,7 +5,8 @@ import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component
 // Types
 import { FreeBrushMode, FreeBrushSelection } from './types'
 
-export interface FreeBrushConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
+// We extend partial XY config interface because x and y properties are optional for FreeBrush
+export interface FreeBrushConfigInterface<Datum> extends Partial<XYComponentConfigInterface<Datum>> {
   /** Brush selection mode. X - horizontal, Y - vertical, XY - both. Default: `FreeBrushMode.X` */
   mode?: FreeBrushMode;
   /** Callback function to be called on any Brush event.

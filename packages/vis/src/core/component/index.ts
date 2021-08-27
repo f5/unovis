@@ -14,12 +14,12 @@ import { throttle } from 'utils/data'
 // Config
 import { ComponentConfig, ComponentConfigInterface } from './config'
 
-export class ComponentCore<CoreDatum> {
+export class ComponentCore<CoreDatum, ConfigClass extends ComponentConfig = ComponentConfig> {
   element: SVGGElement | HTMLElement
   type: ComponentType = ComponentType.SVG
   g: Selection<SVGGElement | HTMLElement, unknown, null, undefined>
-  config: ComponentConfig
-  prevConfig: ComponentConfig
+  config: ConfigClass
+  prevConfig: ConfigClass
   datamodel: CoreDataModel<CoreDatum> = new CoreDataModel()
   sizing: Sizing | string = Sizing.Fit
 
@@ -45,7 +45,7 @@ export class ComponentCore<CoreDatum> {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const ConfigModel = (this.config.constructor as typeof ComponentConfig)
     this.prevConfig = this.config
-    this.config = new ConfigModel().init(config)
+    this.config = new ConfigModel().init(config) as ConfigClass
   }
 
   setData (data: CoreDatum): void {

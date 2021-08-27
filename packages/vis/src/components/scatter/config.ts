@@ -10,7 +10,7 @@ import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
 
 export interface ScatterConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
   /** Single Y accessor function. Default: `undefined` */
-  y?: NumericAccessor<Datum>;
+  y: NumericAccessor<Datum>;
   /** Size accessor function or constant value in relative units. Default: `1` */
   size?: NumericAccessor<Datum>;
   /** Size scale. Default: `Scale.scaleLinear()` */

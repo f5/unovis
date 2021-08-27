@@ -6,7 +6,8 @@ import { Tooltip } from 'core/tooltip'
 // Types
 import { NumericAccessor } from 'types/accessor'
 
-export interface CrosshairConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
+// We extend partial XY config interface because x and y properties are optional for Crosshair
+export interface CrosshairConfigInterface<Datum> extends Partial<XYComponentConfigInterface<Datum>> {
   /** Separate array of accessors for stacked components (eg StackedBar, Area). Default: `[]` */
   yStacked?: NumericAccessor<Datum>[];
   /** Baseline accessor function for stacked values, useful with stacked areas. Default: `null` */

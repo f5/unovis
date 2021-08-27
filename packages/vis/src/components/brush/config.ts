@@ -5,7 +5,8 @@ import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component
 // Types
 import { Arrangement } from 'types/position'
 
-export interface BrushConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
+// We extend partial XY config interface because x and y properties are optional for Brush
+export interface BrushConfigInterface<Datum> extends Partial<XYComponentConfigInterface<Datum>> {
   /** Callback function to be called on any Brush event.
    * Default: `(selection: [number, number], event: D3BrushEvent<Datum>, userDriven: boolean): void => {}`
   */
