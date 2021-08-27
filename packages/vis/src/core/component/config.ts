@@ -1,6 +1,7 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 /* eslint-disable no-irregular-whitespace */
 import { Config } from 'core/config'
+import { VisEventCallback, VisEventType } from 'core/component/types'
 
 export interface ComponentConfigInterface {
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */
@@ -29,7 +30,7 @@ export interface ComponentConfigInterface {
    */
   events?: {
     [selector: string]: {
-      [eventName: string]: (data: any, event?: Event, i?: number, els?: SVGElement[] | HTMLElement[]) => void;
+      [eventType in VisEventType]?: VisEventCallback;
     };
   };
   /** You can set every SVG and HTML visualization object to have a custom DOM attributes, which is useful

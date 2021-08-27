@@ -4,12 +4,15 @@ import { select, Selection } from 'd3-selection'
 // Core
 import { CoreDataModel } from 'data-models/core'
 
+// Utils
+import { throttle } from 'utils/data'
+
 // Types
 import { ComponentType, Sizing } from 'types/component'
 import { Spacing } from 'types/spacing'
 
-// Utils
-import { throttle } from 'utils/data'
+// Local Types
+import { VisEventCallback, VisEventType } from './types'
 
 // Config
 import { ComponentConfig, ComponentConfigInterface } from './config'
@@ -24,8 +27,8 @@ export class ComponentCore<CoreDatum, ConfigClass extends ComponentConfig = Comp
   sizing: Sizing | string = Sizing.Fit
 
   events: {
-    [selectorString: string]: {
-      [eventType: string]: (((d: any, event: Event, i: number, elements: HTMLElement[] | SVGElement[]) => void)) | undefined;
+    [selector: string]: {
+      [eventType in VisEventType]?: VisEventCallback;
     };
   } = {}
 
@@ -67,10 +70,6 @@ export class ComponentCore<CoreDatum, ConfigClass extends ComponentConfig = Comp
   _render (duration = this.config.duration): void {
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  _onEvent (d: any, i: number, elements: []): void {
-  }
-
   _setCustomAttributes (): void {
     const attributeMap = this.config.attributes
 
@@ -90,7 +89,7 @@ export class ComponentCore<CoreDatum, ConfigClass extends ComponentConfig = Comp
     this._bindEvents(this.config.events, '.user')
   }
 
-  _bindEvents (events, suffix = ''): void {
+  _bindEvents (events = this.events, suffix = ''): void {
     Object.keys(events).forEach(className => {
       Object.keys(events[className]).forEach(eventType => {
         const selection: Selection<SVGGElement | HTMLElement, any, SVGElement | HTMLElement, any> = this.g.selectAll(`.${className}`)
