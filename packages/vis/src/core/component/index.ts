@@ -70,7 +70,7 @@ export class ComponentCore<CoreDatum, ConfigClass extends ComponentConfig = Comp
   _render (duration = this.config.duration): void {
   }
 
-  _setCustomAttributes (): void {
+  private _setCustomAttributes (): void {
     const attributeMap = this.config.attributes
 
     Object.keys(attributeMap).forEach(className => {
@@ -81,7 +81,7 @@ export class ComponentCore<CoreDatum, ConfigClass extends ComponentConfig = Comp
     })
   }
 
-  _setUpComponentEvents (): void {
+  private _setUpComponentEvents (): void {
     // Set up default events
     this._bindEvents(this.events)
 
@@ -89,7 +89,7 @@ export class ComponentCore<CoreDatum, ConfigClass extends ComponentConfig = Comp
     this._bindEvents(this.config.events, '.user')
   }
 
-  _bindEvents (events = this.events, suffix = ''): void {
+  private _bindEvents (events = this.events, suffix = ''): void {
     Object.keys(events).forEach(className => {
       Object.keys(events[className]).forEach(eventType => {
         const selection: Selection<SVGGElement | HTMLElement, any, SVGElement | HTMLElement, any> = this.g.selectAll(`.${className}`)
