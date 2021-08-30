@@ -2,7 +2,6 @@
 import { select, Selection, pointer } from 'd3-selection'
 
 // Core
-// import { ContainerCore } from 'core/container'
 import { ComponentCore } from 'core/component'
 
 // Types
