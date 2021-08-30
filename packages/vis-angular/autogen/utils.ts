@@ -30,6 +30,17 @@ export function getTypeName (type: ts.Node): string {
     case (ts.SyntaxKind.Identifier): return (type as ts.Identifier).escapedText as string
     case (ts.SyntaxKind.QualifiedName): return `${getTypeName((type as ts.QualifiedName).left)}.${getTypeName((type as ts.QualifiedName).right)}`
     case (ts.SyntaxKind.TypeLiteral): return `{\n${(type as ts.TypeLiteralNode).members.map(getTypeName).join('\n')}\n}`
+    case (ts.SyntaxKind.TypeParameter): {
+      const t = type as ts.TypeParameterDeclaration
+      return `${getTypeName(t.name)} in ${getTypeName(t.constraint)}`
+    }
+    case (ts.SyntaxKind.MappedType): {
+      const t = type as ts.MappedTypeNode
+      const propName = getTypeName(t.typeParameter)
+      const questionToken = t.questionToken ? '?' : ''
+      const propType = getTypeName(t.type)
+      return `{\n[${propName}]${questionToken}:${propType}\n}`
+    }
     case (ts.SyntaxKind.PropertySignature): {
       const t = type as ts.IndexSignatureDeclaration
       const propName = (t.name as ts.Identifier).escapedText
@@ -139,6 +150,16 @@ export function gatherTypeReferences (types: ts.Node[] | ts.NodeArray<ts.Node>, 
           .filter(t => t)
         gatherTypeReferences(types, collected)
         gatherTypeReferences([(type as ts.IndexSignatureDeclaration).type], collected)
+        break
+      }
+      case (ts.SyntaxKind.TypeParameter): {
+        gatherTypeReferences([(type as ts.TypeParameterDeclaration).constraint], collected)
+        break
+      }
+      case (ts.SyntaxKind.MappedType): {
+        const t = type as ts.MappedTypeNode
+        gatherTypeReferences([(type as ts.MappedTypeNode).typeParameter], collected)
+        gatherTypeReferences([(type as ts.MappedTypeNode).type], collected)
         break
       }
       default:
