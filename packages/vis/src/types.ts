@@ -14,6 +14,7 @@ export { Spacing } from 'types/spacing'
 export { GraphInputNode, GraphInputLink, GraphNodeCore, GraphLinkCore } from 'types/graph'
 
 // Component Types
+export { VisEventType, VisEventCallback } from 'core/component/types'
 export { AxisType } from 'components/axis/types'
 export { MapProjection, MapProjectionKind, MapInputNode, MapInputLink, MapInputArea } from 'components/topojson-map/types'
 export { Hierarchy } from 'components/radial-dendrogram/types'
