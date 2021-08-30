@@ -39,6 +39,11 @@ export class Tooltip<T extends ComponentCore<any>, TooltipDatum> {
     if (this.config.container) this.setContainer(this.config.container)
   }
 
+  public setConfig (config: TooltipConfigInterface<T, TooltipDatum>): void {
+    this.prevConfig = this.config
+    this.config = new TooltipConfig<T, TooltipDatum>().init(config)
+  }
+
   public setContainer (container: HTMLElement): void {
     this.element.parentNode?.removeChild(this.element)
 
