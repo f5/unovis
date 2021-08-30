@@ -67,7 +67,7 @@ export function getLinkBandWidth (d: GraphLink, scale: number, config: GraphConf
 
 export function getLinkColor (link: GraphLink, config: GraphConfig<GraphInputNode, GraphInputLink>): string {
   const { linkStroke } = config
-  const c = getColor(link, linkStroke) ?? window.getComputedStyle(document.documentElement).getPropertyValue('--vis-graph-link-stroke-color')
+  const c = getColor(link, linkStroke) ?? 'var(--vis-graph-link-stroke-color)'
   return c || null
 }
 
