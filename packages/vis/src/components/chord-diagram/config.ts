@@ -46,7 +46,7 @@ export class ChordDiagramConfig<H extends Hierarchy> extends ComponentConfig imp
   value = (d: H): number => d['value']
   nodeLevels = []
   nodeWidth = 15
-  nodeColor = (d: HierarchyNode<H>): string => d['color']
+  nodeColor = (d: HierarchyNode<H>): string => d.data?.['color']
   nodeLabel = (d: H): string => d['label'] ?? d['key']
   nodeLabelType = LabelType.Perpendicular
   padAngle = 0.02
