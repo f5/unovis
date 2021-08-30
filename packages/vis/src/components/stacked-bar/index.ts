@@ -178,7 +178,7 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
     const { datamodel, config } = this
     const yAccessors = this.getAccessors()
 
-    const data = config.adaptiveYScale ? this._getVisibleData() : datamodel.data
+    const data = config.scaleByDomain ? this._getVisibleData() : datamodel.data
     return getStackedExtent(data, ...yAccessors)
   }
 }

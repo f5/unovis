@@ -22,7 +22,7 @@ export interface XYComponentConfigInterface<Datum> extends ComponentConfigInterf
     y?: ContinuousScale;
   };
   /** Sets the Y scale domain based on the X scale domain not the whole data. Useful when you manipulate chart's X domain from outside. Default: `false` */
-  adaptiveYScale?: boolean;
+  scaleByDomain?: boolean;
 }
 
 export class XYComponentConfig<Datum> extends ComponentConfig implements XYComponentConfigInterface<Datum> {
@@ -39,5 +39,5 @@ export class XYComponentConfig<Datum> extends ComponentConfig implements XYCompo
     y: Scale.scaleLinear() as ContinuousScale,
   }
 
-  adaptiveYScale = false
+  scaleByDomain = false
 }

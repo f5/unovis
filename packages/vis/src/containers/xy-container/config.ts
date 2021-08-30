@@ -1,5 +1,4 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-// import { scale } from 'd3-scale'
 
 // Core
 import { XYComponentCore } from 'core/xy-component'
@@ -38,7 +37,7 @@ export interface XYContainerConfigInterface<Datum> extends ContainerConfigInterf
    *  Default: `true` */
   preventEmptyDomain?: boolean;
   /** Sets the Y scale domain based on the X scale domain not the whole data. Default: `false` */
-  adaptiveYScale?: boolean;
+  scaleByDomain?: boolean;
 }
 
 export class XYContainerConfig<Datum> extends ContainerConfig implements XYContainerConfigInterface<Datum> {
@@ -53,5 +52,5 @@ export class XYContainerConfig<Datum> extends ContainerConfig implements XYConta
   }
 
   preventEmptyDomain = true
-  adaptiveYScale = false
+  scaleByDomain = false
 }

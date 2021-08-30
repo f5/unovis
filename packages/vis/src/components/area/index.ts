@@ -112,7 +112,7 @@ export class Area<Datum> extends XYComponentCore<Datum> {
     const { config, datamodel } = this
     const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
 
-    const data = config.adaptiveYScale ? filterDataByRange(datamodel.data, config.scales.x.domain() as [number, number], config.x) : datamodel.data
+    const data = config.scaleByDomain ? filterDataByRange(datamodel.data, config.scales.x.domain() as [number, number], config.x) : datamodel.data
     return getStackedExtent(data, config.baseline, ...yAccessors)
   }
 

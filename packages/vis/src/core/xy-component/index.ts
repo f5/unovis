@@ -70,7 +70,7 @@ export class XYComponentCore<Datum> extends ComponentCore<Datum[]> {
   getYDataExtent (): number[] {
     const { config, datamodel } = this
 
-    const data = config.adaptiveYScale ? filterDataByRange(datamodel.data, config.scales.x.domain() as [number, number], config.x) : datamodel.data
+    const data = config.scaleByDomain ? filterDataByRange(datamodel.data, config.scales.x.domain() as [number, number], config.x) : datamodel.data
     const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
     return getExtent(data, ...yAccessors)
   }

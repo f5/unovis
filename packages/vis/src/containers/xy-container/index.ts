@@ -275,11 +275,11 @@ export class XYContainer<Datum> extends ContainerCore {
   }
 
   _updateScalesDomain<T extends XYComponentCore<Datum>> (...components: T[]): void {
-    const { config: { dimensions, preventEmptyDomain, adaptiveYScale } } = this
+    const { config: { dimensions, preventEmptyDomain, scaleByDomain } } = this
     if (!components) return
 
-    // Passing the adaptiveYScale property to the components
-    components.forEach(c => { c.config.adaptiveYScale = adaptiveYScale })
+    // Passing the scaleByDomain property to the components
+    components.forEach(c => { c.config.scaleByDomain = scaleByDomain })
 
     // Loop over all the dimensions
     Object.keys(dimensions).forEach(key => {
