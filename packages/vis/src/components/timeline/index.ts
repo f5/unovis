@@ -12,10 +12,6 @@ import { isNumber, countUnique, arrayOfIndices, getMin, getMax, getString, getNu
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
 
-// Types
-// import { Curve, CurveType } from 'types/curves'
-// import { NumericAccessor } from 'types/misc'
-
 // Config
 import { TimelineConfig, TimelineConfigInterface } from './config'
 
