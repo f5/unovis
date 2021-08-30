@@ -20,7 +20,7 @@ export class XYChartComponent implements AfterViewInit, OnDestroy {
   @Input() axes = {}
   @Input() tooltip
   @Input() crosshair
-  @Input() adaptiveYScale
+  @Input() scaleByDomain
   @Input() data = []
   chart: XYContainer<Record<string, unknown>>
   config = {}
@@ -53,9 +53,9 @@ export class XYChartComponent implements AfterViewInit, OnDestroy {
   }
 
   getConfig (): XYContainerConfigInterface<Record<string, unknown>> {
-    const { duration, margin, padding, components, dimensions, axes, tooltip, crosshair, adaptiveYScale } = this
+    const { duration, margin, padding, components, dimensions, axes, tooltip, crosshair, scaleByDomain } = this
     return {
-      duration, margin, padding, components, dimensions, axes, tooltip, crosshair, adaptiveYScale,
+      duration, margin, padding, components, dimensions, axes, tooltip, crosshair, scaleByDomain,
     }
   }
 
