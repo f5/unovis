@@ -41,7 +41,7 @@ export function getWrapOptions (ticks, config): WrapTextOptions {
     verticalAlign = position === Position.Top ? VerticalAlign.Top : VerticalAlign.Bottom
   }
 
-  const computedSize = ticks.size() ? getComputedStyle(ticks.node())?.fontSize : null
+  const computedSize = ticks.size() ? window.getComputedStyle(ticks.node())?.fontSize : null
   return {
     width: wrapWidth,
     separator: tickTextSeparator,
