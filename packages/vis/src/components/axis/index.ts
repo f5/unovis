@@ -80,26 +80,25 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
   }
 
   _getSize (selection): { width: number; height: number } {
-    const { padding } = this.config
     const { width, height } = selection.node().getBBox()
 
     return {
-      width: width + padding.left + padding.right,
-      height: height + padding.top + padding.bottom,
+      width: width,
+      height: height,
     }
   }
 
   _getRequiredMargin (axisSize = this._axisSize): Spacing {
-    const { config: { type, position, padding, width, height, tickTextAlign } } = this
+    const { config: { type, position, width, height, tickTextAlign } } = this
 
     switch (type) {
       case AxisType.X: {
         const bleedX = axisSize.width > width ? (axisSize.width - width) / 2 : 0
-        const left = padding.left + ((tickTextAlign === TextAlign.Left) ? 0
+        const left = ((tickTextAlign === TextAlign.Left) ? 0
           : (tickTextAlign === TextAlign.Right) ? 2 * bleedX
             : bleedX)
 
-        const right = padding.right + ((tickTextAlign === TextAlign.Left) ? 2 * bleedX
+        const right = ((tickTextAlign === TextAlign.Left) ? 2 * bleedX
           : (tickTextAlign === TextAlign.Right) ? 0
             : bleedX)
 
@@ -110,8 +109,8 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
       }
       case AxisType.Y: {
         const bleedY = axisSize.height > height ? (axisSize.height - height) / 2 : 0
-        const top = padding.top + bleedY
-        const bottom = padding.bottom + bleedY
+        const top = bleedY
+        const bottom = bleedY
 
         switch (position) {
           case Position.Right: return { right: axisSize.width, top, bottom }
@@ -127,18 +126,18 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
 
   /** Calculates axis transform:translate offset based on passed container margins */
   getOffset (containerMargin: Spacing): {left: number; top: number} {
-    const { config: { type, position, padding, width, height } } = this
+    const { config: { type, position, width, height } } = this
 
     switch (type) {
       case AxisType.X:
         switch (position) {
-          case Position.Top: return { top: containerMargin.top - padding.top, left: containerMargin.left }
-          case Position.Bottom: default: return { top: containerMargin.top + height + padding.top, left: containerMargin.left }
+          case Position.Top: return { top: containerMargin.top, left: containerMargin.left }
+          case Position.Bottom: default: return { top: containerMargin.top + height, left: containerMargin.left }
         }
       case AxisType.Y:
         switch (position) {
-          case Position.Right: return { top: containerMargin.top, left: containerMargin.left + width + padding.left }
-          case Position.Left: default: return { top: containerMargin.top, left: containerMargin.left - padding.right }
+          case Position.Right: return { top: containerMargin.top, left: containerMargin.left + width }
+          case Position.Left: default: return { top: containerMargin.top, left: containerMargin.left }
         }
     }
   }

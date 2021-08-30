@@ -5,7 +5,6 @@ import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component
 import { AxisType } from 'components/axis/types'
 import { Position } from 'types/position'
 import { FitMode, TrimMode, TextAlign } from 'types/text'
-import { Spacing } from 'types/spacing'
 
 // We extend partial XY config interface because x and y properties are optional for Axis
 export interface AxisConfigInterface<Datum>extends Partial<XYComponentConfigInterface<Datum>> {
@@ -13,8 +12,6 @@ export interface AxisConfigInterface<Datum>extends Partial<XYComponentConfigInte
   position?: Position | string;
   /** Axis type: `AxisType.X` or `AxisType.Y` */
   type?: AxisType | string;
-  /** Inner axis padding. Adds space between the chart and the axis. Default: `{ top: 0, bottom: 0, left: 0, right: 0 }` */
-  padding?: Spacing;
   /** Extend the axis domain line to be full width or full height. Default: `true` */
   fullSize?: boolean;
   /** Axis label. Default: `undefined` */
@@ -73,14 +70,6 @@ export class AxisConfig<Datum> extends XYComponentConfig<Datum> implements AxisC
   tickTextFitMode = FitMode.Wrap
   tickTextFontSize = null
   tickTextAlign = undefined
-
-  padding = {
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-  }
-
   labelMargin = 8
   tickFormat = undefined
   tickValues = undefined
