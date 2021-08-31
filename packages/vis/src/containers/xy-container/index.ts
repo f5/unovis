@@ -6,17 +6,10 @@ import { Selection } from 'd3-selection'
 // Core
 import { ContainerCore } from 'core/container'
 import { XYComponentCore } from 'core/xy-component'
+import { XYComponentConfigInterface } from 'core/xy-component/config'
 
 // Data Model
 import { SeriesDataModel } from 'data-models/series'
-
-// Components
-import { Axis } from 'components/axis'
-
-// import { ComponentCore } from 'core/component'
-
-// import { ComponentConfig } from 'core/component/config'
-import { XYComponentConfigInterface } from 'core/xy-component/config'
 
 // Types
 import { Spacing } from 'types/spacing'
@@ -31,7 +24,6 @@ import { guid } from 'utils/misc'
 import { XYContainerConfig, XYContainerConfigInterface } from './config'
 import {
   AreaConfigInterface,
-  AxisConfigInterface,
   BrushConfigInterface,
   LineConfigInterface,
   ScatterConfigInterface,
@@ -119,8 +111,8 @@ export class XYContainer<Datum> extends ContainerCore {
     })
 
     config.crosshair?.setData(data)
-    config.axes.x?.setData(data)
-    config.axes.y?.setData(data)
+    config.xAxis?.setData(data)
+    config.yAxis?.setData(data)
     config.tooltip?.hide()
     if (!preventRender) this.render()
   }
@@ -133,12 +125,14 @@ export class XYContainer<Datum> extends ContainerCore {
     this.setData(this.datamodel.data, false)
 
     // Set up the axes
-    Object.keys(containerConfig.axes ?? {}).forEach(key => {
-      this.config.axes[key].config.type = key as AxisType
-    })
-
-    if (containerConfig.axes?.x) this.element.appendChild(containerConfig.axes.x.element)
-    if (containerConfig.axes?.y) this.element.appendChild(containerConfig.axes.y.element)
+    if (containerConfig.xAxis) {
+      this.config.xAxis.config.type = AxisType.X
+      this.element.appendChild(containerConfig.xAxis.element)
+    }
+    if (containerConfig.yAxis) {
+      this.config.yAxis.config.type = AxisType.Y
+      this.element.appendChild(containerConfig.yAxis.element)
+    }
 
     // Re-insert elements to the DOM
     for (const c of this.components) {
@@ -183,17 +177,8 @@ export class XYContainer<Datum> extends ContainerCore {
       }
     })
 
-    this.updateScales(...this.components, config.axes.x, config.axes.y, config.crosshair)
+    this.updateScales(...this.components, config.xAxis, config.yAxis, config.crosshair)
     if (!preventRender) this.render()
-  }
-
-  updateAxes (axesConfig: {[k: string]: AxisConfigInterface<Datum>}): void {
-    Object.keys(this.config.axes).forEach((key) => {
-      const axis: Axis<Datum> = this.config.axes[key]
-      if (axesConfig[key]) {
-        axis.setConfig({ ...axesConfig[key], type: key })
-      }
-    })
   }
 
   update (containerConfig: XYContainerConfigInterface<Datum>, componentConfigs?: XYComponentConfigInterface<Datum>[], data?: Datum[]): void {
@@ -216,7 +201,7 @@ export class XYContainer<Datum> extends ContainerCore {
     const margin = this._getMargin()
 
     // Update Scales of all the components at once to calculate required paddings and sync them
-    this.updateScales(...this.components, config.axes.x, config.axes.y, config.crosshair)
+    this.updateScales(...this.components, config.xAxis, config.yAxis, config.crosshair)
 
     // Render components
     for (const c of this.components) {
@@ -318,11 +303,11 @@ export class XYContainer<Datum> extends ContainerCore {
   }
 
   _renderAxes (duration: number): void {
-    const { config: { axes } } = this
+    const { config: { xAxis, yAxis } } = this
     const margin = this._getMargin()
 
-    Object.keys(axes).forEach(key => {
-      const axis = axes[key]
+    const axes = clean([xAxis, yAxis])
+    axes.forEach(axis => {
       const offset = axis.getOffset(margin)
       axis.g.attr('transform', `translate(${offset.left},${offset.top})`)
       axis.render(duration)
@@ -330,10 +315,10 @@ export class XYContainer<Datum> extends ContainerCore {
   }
 
   _setAutoMargin (): void {
-    const { config: { axes } } = this
+    const { config: { xAxis, yAxis } } = this
 
     // At first we need to set the domain to the scales
-    const components = clean([...this.components, axes.x, axes.y])
+    const components = clean([...this.components, xAxis, yAxis])
     this._updateScalesDomain(...components)
 
     // Calculate margin required by the axes
@@ -344,8 +329,8 @@ export class XYContainer<Datum> extends ContainerCore {
     for (let i = 0; i < numIterations; i += 1) {
       const axisMargin: Spacing = { top: 0, bottom: 0, left: 0, right: 0 }
       this._updateScalesRange(...components)
-      Object.keys(axes).forEach(key => {
-        const axis = axes[key]
+      const axes = clean([xAxis, yAxis])
+      axes.forEach(axis => {
         axis.preRender()
 
         const m = axis.getRequiredMargin()
@@ -371,13 +356,13 @@ export class XYContainer<Datum> extends ContainerCore {
   }
 
   public destroy (): void {
-    const { components, config: { tooltip, crosshair, axes } } = this
+    const { components, config: { tooltip, crosshair, xAxis, yAxis } } = this
     super.destroy()
 
     for (const c of components) c?.destroy()
     tooltip?.destroy()
     crosshair?.destroy()
-    axes.x?.destroy()
-    axes.y?.destroy()
+    xAxis?.destroy()
+    yAxis?.destroy()
   }
 }

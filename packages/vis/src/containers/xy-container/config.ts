@@ -20,11 +20,10 @@ export interface XYContainerConfigInterface<Datum> extends ContainerConfigInterf
     x?: Dimension;
     y?: Dimension;
   };
-  /** Axis configuration with instances of the Axis components. Default: `{}` */
-  axes?: {
-    x?: Axis<Datum>;
-    y?: Axis<Datum>;
-  };
+  /** X Axis component instance. Default: `undefined` */
+  xAxis?: Axis<Datum>;
+  /** Y Axis component instance. Default: `undefined` */
+  yAxis?: Axis<Datum>;
   /** Enables automatic calculation of chart margins based on the size of the axes. Default: `true` */
   autoMargin?: boolean;
   /** Tooltip component. Default: `undefined` */
@@ -42,9 +41,10 @@ export interface XYContainerConfigInterface<Datum> extends ContainerConfigInterf
 
 export class XYContainerConfig<Datum> extends ContainerConfig implements XYContainerConfigInterface<Datum> {
   components = []
-  tooltip = undefined
-  crosshair = undefined
-  axes: { [key: string]: Axis<Datum> } = {}
+  tooltip: Tooltip<XYComponentCore<Datum>, Datum> = undefined
+  crosshair: Crosshair<Datum> = undefined
+  xAxis: Axis<Datum> = undefined
+  yAxis: Axis<Datum> = undefined
   autoMargin = true
   dimensions = {
     x: {} as Dimension,
