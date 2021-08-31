@@ -36,6 +36,7 @@ where `data: DataRecord[] = [{x: 0, y: 1}, ...]`, `xAccessor = (d: DataRecord) =
     },
   }}
 </Story>
+
 ### Grouped Bars
 Grouped Bar can accept an array of `y` accessors to display values as a group of bars:
 ```
@@ -44,6 +45,7 @@ y = [d => d.y1, d => d.y2, d => d.y3, d => d.y4],
 // In the template, pass them to vis-grouped-bar as inputs:
 <vis-grouped-bar [x]="xAccessor" [y]="yAccessorArray"></vis-grouped-bar>
 ```
+
 <Story name="Grouped Bars">
   {{
     props: {
@@ -54,11 +56,13 @@ y = [d => d.y1, d => d.y2, d => d.y3, d => d.y4],
     },
   }}
 </Story>
+
 ### Grouped Bar Width
 By default, the width of the grouped bar is calculated automatically based on their count. But you can also strictly set the grouped bar's width in pixels using the `groupWidth` property:
 ```angular2html
   <vis-grouped-bar ... [groupWidth]="5"></vis-grouped-bar>
 ```
+
 <Story name="Grouped Bar Width">
   {{
     props: {
@@ -69,6 +73,7 @@ By default, the width of the grouped bar is calculated automatically based on th
     }
   }}
 </Story>
+
 ### Limiting Dynamic Grouped Bar Width
 When you don't know the number of bars in advance, and you're relying on automatic bar width calculation,
 you might want to limit the maximum bar width to prevent the bars from being too wide when there are just a few of them.
@@ -76,6 +81,7 @@ That can be achieved by setting the `groupMaxWidth` property.
 ```angular2html
   <vis-grouped-bar ... [groupMaxWidth]="25"></vis-grouped-bar>
 ```
+
 <Story name="Grouped Bar Width: Upper Limit">
   {{
     props: {
@@ -86,11 +92,13 @@ That can be achieved by setting the `groupMaxWidth` property.
     },
   }}
 </Story>
+
 ### Grouped Bar Padding
 Another way to control the grouped bar's width is by changing the `groupPadding` property, which specifies how much of the available sector should be empty, in the range of [0,1).
 ```angular2html
   <vis-grouped-bar ... [groupPadding]="0.5"></vis-grouped-bar>
 ```
+
 ##### Grouped Bar Padding: 0 *(full width)*
 <Story name="Grouped Bar Padding: 0">
   {{
@@ -102,6 +110,7 @@ Another way to control the grouped bar's width is by changing the `groupPadding`
     }
   }}
 </Story>
+
 ##### Grouped Bar Padding: 0.5 *(half width)*
 <Story name="Grouped Bar Padding: 0.5">
   {{
@@ -113,6 +122,7 @@ Another way to control the grouped bar's width is by changing the `groupPadding`
     }
   }}
 </Story>
+
 ### Grouped Bar Height Limit
 When you have highly scattered data with very low and high values, the bars corresponding to the lower values can be so small, so they become invisible.
 If you want to prevent that you can set the minimum bar height to 1 pixel using the `barMinHeight` *boolean* property.
@@ -132,6 +142,7 @@ If you want to prevent that you can set the minimum bar height to 1 pixel using 
     },
   }}
 </Story>
+
 ##### barMinHeight: true *(small bars have 1px height)*
 <Story name="Grouped Bar Height Limit: true">
   {{
@@ -146,6 +157,7 @@ If you want to prevent that you can set the minimum bar height to 1 pixel using 
     },
   }}
 </Story>
+
 ### Dealing with inconsistent data
 When your data has gaps, it's impossible to calculate the group bar's width automatically. The visualization will still try
 to do that, but most likely the result will be wrong, and you'll see wide overlapping bars. However, you can help the calculation
@@ -165,6 +177,7 @@ by setting your data step implicitly using the `dataStep` property.
     }
   }}
 </Story>
+
 ##### dataStep: 1.0
 <Story name="Data Step">
   {{
@@ -178,11 +191,13 @@ by setting your data step implicitly using the `dataStep` property.
     }
   }}
 </Story>
+
 ### Rounded Corners
 Using the `roundedCorners` property, you can modernize your UI by applying rounded corners to the top bar in the group.
 ```angular2html
   <vis-grouped-bar ... [roundedCorners]="true"></vis-grouped-bar>
 ```
+
 ##### roundedCorners: false
 <Story name ="Rounded Corners: false">
   {{
@@ -194,6 +209,7 @@ Using the `roundedCorners` property, you can modernize your UI by applying round
     }
   }}
 </Story>
+
 ##### roundedCorners: 5
 <Story name ="Rounded Corners: 5">
   {{
@@ -205,6 +221,7 @@ Using the `roundedCorners` property, you can modernize your UI by applying round
     }
   }}
 </Story>
+
 ##### roundedCorners: true
 <Story name ="Rounded Corners: true">
   {{
@@ -216,11 +233,13 @@ Using the `roundedCorners` property, you can modernize your UI by applying round
     }
   }}
 </Story>
+
 ### Grouped Bar Color
 Set the color of the bar by assigning the `color` property to a hex string and/or by assigning the `color` property to a function evaluated per each bar, e.g. ` getColor = (d: DataRecord, i: number): string => d.y > THRESHOLD ? '#FF4F4E' : null`
 ```angular2html
   <vis-grouped-bar ... [color]="getColor"></vis-grouped-bar>
 ```
+
 <Story name="Grouped Bar Color">
   {{
     props:{
@@ -231,11 +250,13 @@ Set the color of the bar by assigning the `color` property to a hex string and/o
     }
   }}
 </Story>
+
 ### Custom Cursor
 You can specify the type of cursor when hovering over by setting the `cursor` property that corresponds to the [CSS's cursor property](https://developer.mozilla.org/en-US/docs/Web/CSS/cursor).
 ```angular2html
   <vis-grouped-bar ... [cursor]="pointer"></vis-grouped-bar>
 ```
+
 ###### Hover over to see how the cursor changes
 <Story name="Custom Cursor">
   {{
@@ -247,6 +268,7 @@ You can specify the type of cursor when hovering over by setting the `cursor` pr
     }
   }}
 </Story>
+
 ### Grouped Bar with Axes
 You can add axes using the `<vis-axis>` component:
 ```angular2html
@@ -256,6 +278,7 @@ You can add axes using the `<vis-axis>` component:
   <vis-axis type="y" label="Y"></vis-axis>
 </vis-xy-container>
 ```
+
 ##### Grouped Bar with Axes
 <Story name="Group Bar with Axes">
   {{
@@ -266,6 +289,7 @@ You can add axes using the `<vis-axis>` component:
     },
   }}
 </Story>
+
 ### Events
 For further customization, the Grouped Bar component supports the following events:
 ```javascript
@@ -285,6 +309,7 @@ events = {
 <vis-grouped-bar ... events="events"></vis-grouped-bar>
 ```
 A list of available JavaScript's mouse and touch events (e.g. `click`, `mouseover`, `mouseout`)  can be found [here](https://developer.mozilla.org/en-US/docs/Web/API/Element#mouse_events).
+
 ### Component Inputs
 <ArgsTable of={VisGroupedBarComponent} />
 
