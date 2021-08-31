@@ -37,6 +37,7 @@ export class Collection implements OnInit, OnDestroy {
       const n = this.options[key]
       const config = this.configGenerator(n)
       const component = new ComponentConstructor(config)
+      const axes = this.axesGenerator?.()
 
       items[key] = {
         margin: this.margin,
@@ -45,7 +46,8 @@ export class Collection implements OnInit, OnDestroy {
         data: this.dataGenerator(n),
         type: key,
         numDataElements: n,
-        axes: this.axesGenerator?.(),
+        xAxis: axes.x,
+        yAxis: axes.y,
       }
 
       return items

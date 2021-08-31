@@ -52,21 +52,20 @@ export class WrapperUsageExampleComponent implements AfterViewInit, OnDestroy {
     },
   }
 
-  axes = {
-    x: new Axis({
-      label: 'x axis',
-      numTicks: 10,
-      tickFormat: (tick, i, ticks) => {
-        const currentDate = new Date(tick)
-        const prevDate: Date | undefined = ticks[i - 1] && new Date(ticks[i - 1])
-        const currentDay = currentDate.getDate()
-        const prevDay = prevDate?.getDate()
-        return format(currentDate, prevDay !== currentDay ? 'h:mm aaa MMM d' : 'h:mm aaa')
-      },
-      tickTextWidth: 60,
-    }),
-    y: new Axis({ label: 'y axis' }),
-  }
+  xAxis = new Axis({
+    label: 'x axis',
+    numTicks: 10,
+    tickFormat: (tick, i, ticks) => {
+      const currentDate = new Date(tick)
+      const prevDate: Date | undefined = ticks[i - 1] && new Date(ticks[i - 1])
+      const currentDay = currentDate.getDate()
+      const prevDay = prevDate?.getDate()
+      return format(currentDate, prevDay !== currentDay ? 'h:mm aaa MMM d' : 'h:mm aaa')
+    },
+    tickTextWidth: 60,
+  })
+
+  yAxis = new Axis({ label: 'y axis' })
 
   tooltip = new Tooltip({
     triggers: {

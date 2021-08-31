@@ -1,30 +1,19 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-/* eslint-disable */
 import { AfterViewInit, OnDestroy, Component, ElementRef, ViewChild } from '@angular/core'
+import _times from 'lodash/times'
+import _random from 'lodash/random'
+
 // Vis
-import {
-  XYContainer,
-  XYContainerConfigInterface,
-  Axis,
-  Area,
-  AreaConfigInterface,
-  Tooltip,
-  Crosshair,
-  FreeBrush,
-  FreeBrushMode,
-} from '@volterra/vis'
+import { XYContainer, XYContainerConfigInterface, Axis, Area, AreaConfigInterface, Tooltip, Crosshair, FreeBrush, FreeBrushMode } from '@volterra/vis'
 
 // Helpers
 import { SampleDatum } from '../../utils/data'
 
-import _times from 'lodash/times'
-import _random from 'lodash/random'
-
 interface AreaSampleDatum extends SampleDatum {
-  baseline: number
+  baseline: number;
 }
 
-function generateData(n = 10): AreaSampleDatum[] {
+function generateData (n = 10): AreaSampleDatum[] {
   return _times(n).map((i) => ({
     x: i,
     y: _random(-100, 0),
@@ -51,7 +40,8 @@ export class BulletLegendExampleComponent implements AfterViewInit, OnDestroy {
     d => d.y3,
     d => d.y4,
   ]
-  legendItems: { name: string, inactive?: boolean }[] = this.yAccessors.map((d, i) => ({ name: `Stream ${i + 1}`, hidden: !d }))
+
+  legendItems: { name: string; inactive?: boolean }[] = this.yAccessors.map((d, i) => ({ name: `Stream ${i + 1}`, hidden: !d }))
   chartConfig: XYContainerConfigInterface<AreaSampleDatum>
   areaConfig: AreaConfigInterface<AreaSampleDatum>
   composite: XYContainer<AreaSampleDatum>
@@ -59,8 +49,7 @@ export class BulletLegendExampleComponent implements AfterViewInit, OnDestroy {
   @ViewChild('chart', { static: false }) chart: ElementRef
   @ViewChild('legendRef', { static: false }) legendRef: ElementRef
 
-
-  ngAfterViewInit(): void {
+  ngAfterViewInit (): void {
     const data: AreaSampleDatum[] = generateData()
     this.areaConfig = getAreaConfig(this.yAccessors)
 
@@ -73,34 +62,36 @@ export class BulletLegendExampleComponent implements AfterViewInit, OnDestroy {
             mode: FreeBrushMode.XY,
             selectionMinLength: [0.5, 5],
             autoHide: false,
-            selection: [ [2, 4], [0, 50]],
+            selection: [[2, 4], [0, 50]],
             onBrush: (s: [number, number]) => {
-              console.log('onbrush', s);
+              // eslint-disable-next-line no-console
+              console.log('onbrush', s)
             },
             onBrushStart: (s: [number, number]) => {
-              console.log('onBrushStart', s);
+              // eslint-disable-next-line no-console
+              console.log('onBrushStart', s)
             },
             onBrushMove: (s: [number, number]) => {
-              console.log('onBrushMove', s);
+              // eslint-disable-next-line no-console
+              console.log('onBrushMove', s)
             },
             onBrushEnd: (s: [number, number]) => {
-              console.log('onBrushEnd', s);
+              // eslint-disable-next-line no-console
+              console.log('onBrushEnd', s)
             },
           }
-        )
+        ),
       ],
       dimensions: {
         x: {
-          domain: undefined
-        }
+          domain: undefined,
+        },
       },
-      axes: {
-        x: new Axis({
-          label: 'Index',
-        }),
-        y: new Axis({
-        }),
-      },
+      xAxis: new Axis({
+        label: 'Index',
+      }),
+      yAxis: new Axis({
+      }),
       tooltip: new Tooltip({
         triggers: {
           [Area.selectors.area]: (d) => '<span>Area</span>',
@@ -118,11 +109,11 @@ export class BulletLegendExampleComponent implements AfterViewInit, OnDestroy {
     }, 5000)
   }
 
-  ngOnDestroy(): void {
+  ngOnDestroy (): void {
     clearInterval(this.intervalId)
   }
 
-  onLegendItemClick(event): void {
+  onLegendItemClick (event): void {
     const { d } = event
     d.inactive = !d.inactive
     this.legendItems = [...this.legendItems]
@@ -132,7 +123,7 @@ export class BulletLegendExampleComponent implements AfterViewInit, OnDestroy {
   }
 }
 
-function getAreaConfig(y): AreaConfigInterface<AreaSampleDatum> {
+function getAreaConfig (y): AreaConfigInterface<AreaSampleDatum> {
   return {
     x: d => d.x,
     y,
@@ -140,4 +131,3 @@ function getAreaConfig(y): AreaConfigInterface<AreaSampleDatum> {
     opacity: 0.8,
   }
 }
-

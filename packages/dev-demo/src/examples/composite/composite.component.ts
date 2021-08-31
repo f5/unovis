@@ -60,28 +60,26 @@ export class CompositeComponent implements AfterViewInit {
           domain: undefined,
         },
       },
-      axes: {
-        x: new Axis({
-          // position: 'top',
-          label: 'Index',
-          // tickValues: [0, 5, 10, 15, 20, 25],
-          fullSize: true,
-          tickFormat: d => {
-            return `${d} long label example`
-          },
-          tickTextAlign: TextAlign.Left,
-          tickTextWidth: 100,
-        }),
-        y: new Axis({
-          // position: 'left',
-          label: 'Latency',
-          tickFormat: d => {
-            return `${d} ms`
-          },
-          tickTextAlign: TextAlign.Left,
-          tickTextWidth: 80,
-        }),
-      },
+      xAxis: new Axis({
+        // position: 'top',
+        label: 'Index',
+        // tickValues: [0, 5, 10, 15, 20, 25],
+        fullSize: true,
+        tickFormat: d => {
+          return `${d} long label example`
+        },
+        tickTextAlign: TextAlign.Left,
+        tickTextWidth: 100,
+      }),
+      yAxis: new Axis({
+        // position: 'left',
+        label: 'Latency',
+        tickFormat: d => {
+          return `${d} ms`
+        },
+        tickTextAlign: TextAlign.Left,
+        tickTextWidth: 80,
+      }),
       tooltip: new Tooltip({
         triggers: {
           [StackedBar.selectors.bar]: (d) => '<span>Bar Chart</span>',
@@ -108,9 +106,7 @@ export class CompositeComponent implements AfterViewInit {
       ],
       dimensions: {
       },
-      axes: {
-        x: new Axis(),
-      },
+      xAxis: new Axis(),
     }
 
     this.navigation = new XYContainer<SampleDatum>(this.navigationRef.nativeElement, navConfig, data)
