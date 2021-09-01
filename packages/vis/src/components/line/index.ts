@@ -61,13 +61,13 @@ export class Line<Datum> extends XYComponentCore<Datum> {
       .curve(this.curve)
 
     const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
-    const lineDataX = data.map(d => config.scales.x(getNumber(d, config.x)))
+    const lineDataX = data.map(d => config.xScale(getNumber(d, config.x)))
     const lineData: LineData[] = yAccessors.map(a => {
       const ld: LineDatum[] = data.map((d, i) => {
         const value = getNumber(d, a) ?? config.noDataValue
         return {
           x: lineDataX[i],
-          y: config.scales.y(value),
+          y: config.yScale(value),
           defined: isFinite(value),
         }
       })
@@ -132,10 +132,10 @@ export class Line<Datum> extends XYComponentCore<Datum> {
   }
 
   private _emptyPath (): string {
-    const { config: { scales: { x, y } } } = this
+    const { config: { xScale, yScale } } = this
 
-    const xRange = x.range()
-    const yRange = y.range()
+    const xRange = xScale.range()
+    const yRange = yScale.range()
     return `M${xRange[0]},${yRange[0]} L${xRange[1]},${yRange[0]}`
   }
 

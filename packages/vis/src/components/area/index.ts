@@ -58,14 +58,14 @@ export class Area<Datum> extends XYComponentCore<Datum> {
       .curve(curveGen)
 
     const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
-    const areaDataX = data.map(d => config.scales.x(getNumber(d, config.x)))
+    const areaDataX = data.map(d => config.xScale(getNumber(d, config.x)))
 
     const stacked = getStackedData(data, config.baseline, ...yAccessors)
     const stackedData: AreaDatum[][] = stacked.map(
       arr => arr.map(
         (d, j) => ({
-          y0: config.scales.y(d[0]),
-          y1: config.scales.y(d[1]),
+          y0: config.yScale(d[0]),
+          y1: config.yScale(d[1]),
           x: areaDataX[j],
         })
       )
@@ -112,16 +112,16 @@ export class Area<Datum> extends XYComponentCore<Datum> {
     const { config, datamodel } = this
     const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
 
-    const data = config.scaleByDomain ? filterDataByRange(datamodel.data, config.scales.x.domain() as [number, number], config.x) : datamodel.data
+    const data = config.scaleByDomain ? filterDataByRange(datamodel.data, config.xScale.domain() as [number, number], config.x) : datamodel.data
     return getStackedExtent(data, config.baseline, ...yAccessors)
   }
 
   _emptyPath (): string {
-    const { config: { scales: { x, y } } } = this
-    const xRange = x.range()
-    const yDomain = y.domain() as number[]
+    const { config } = this
+    const xRange = config.xScale.range()
+    const yDomain = config.yScale.domain() as number[]
 
-    const y0 = y((yDomain[0] + yDomain[1]) / 2)
+    const y0 = config.yScale((yDomain[0] + yDomain[1]) / 2)
     const y1 = y0
 
     return this.areaGen([

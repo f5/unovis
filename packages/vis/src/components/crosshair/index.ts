@@ -75,7 +75,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
 
     smartTransition(circlesEnter.merge(circles), duration, easeLinear)
       .attr('cx', this.x)
-      .attr('cy', d => config.scales.y(d.value))
+      .attr('cy', d => config.yScale(d.value))
       .attr('r', 4)
       .style('opacity', d => d.visible ? 1 : 0)
       .style('fill', (d, i) => getColor(this.datum, config.color, i))
@@ -90,7 +90,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
   _onMouseMove (event: MouseEvent): void {
     const { config, datamodel, element } = this
     const [x] = pointer(event, element)
-    const scaleX = config.scales.x
+    const scaleX = config.xScale
     const valueX = scaleX.invert(x) as number
 
     this.datum = getNearest(datamodel.data, valueX, config.x)

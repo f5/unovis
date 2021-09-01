@@ -28,20 +28,21 @@ export class XYComponentCore<Datum> extends ComponentCore<Datum[]> {
   stacked = false
 
   setScaleDomain (dimension: ScaleDimension, domain: number[]): void {
-    const { config: { scales } } = this
-    if (!dimension || !scales[dimension]) return
-    scales[dimension].domain(domain)
+    const { config } = this
+    if (dimension === ScaleDimension.X) config.xScale?.domain(domain)
+    if (dimension === ScaleDimension.Y) config.yScale?.domain(domain)
   }
 
   setScaleRange (dimension: ScaleDimension, range: number[]): void {
-    const { config: { scales } } = this
-    if (!dimension || !scales[dimension]) return
-    scales[dimension].range(range)
+    const { config } = this
+    if (dimension === ScaleDimension.X) config.xScale?.range(range)
+    if (dimension === ScaleDimension.Y) config.yScale?.range(range)
   }
 
   setScale (dimension: ScaleDimension, scale: ContinuousScale): void {
     const { config } = this
-    if (dimension && scale && config.scales[dimension] !== scale) config.scales[dimension] = scale
+    if (scale && (dimension === ScaleDimension.X)) config.xScale = scale
+    if (scale && (dimension === ScaleDimension.Y)) config.yScale = scale
   }
 
   getDataExtent (dimension: ScaleDimension): number[] {
@@ -70,7 +71,7 @@ export class XYComponentCore<Datum> extends ComponentCore<Datum[]> {
   getYDataExtent (): number[] {
     const { config, datamodel } = this
 
-    const data = config.scaleByDomain ? filterDataByRange(datamodel.data, config.scales.x.domain() as [number, number], config.x) : datamodel.data
+    const data = config.scaleByDomain ? filterDataByRange(datamodel.data, config.xScale.domain() as [number, number], config.x) : datamodel.data
     const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
     return getExtent(data, ...yAccessors)
   }

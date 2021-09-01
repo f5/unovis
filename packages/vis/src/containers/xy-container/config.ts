@@ -10,13 +10,16 @@ import { Axis } from 'components/axis'
 import { Crosshair } from 'components/crosshair'
 
 // Types
-import { ContinuousScale, Scale } from 'types/scale'
+import { ContinuousScale } from 'types/scale'
 
 export interface XYContainerConfigInterface<Datum> extends ContainerConfigInterface {
   /** An array of visualization components. Default: `[]` */
   components?: XYComponentCore<Datum>[];
 
-  /** Scale for X dimension, e.g. Scale.scaleLinear(). Default: `Scale.scaleLinear()` */
+  /** Scale for X dimension, e.g. Scale.scaleLinear().
+   * If set, this value will override the components' xScale and they will have a single shared xScale instance.
+   * By default the components have their own scale instances but their `domain` and `range` values are synchronized.
+   * Default: `undefined` */
   xScale?: ContinuousScale;
   /** Scale domain (data extent) for X dimension. By default this value is calculated automatically based on data. */
   xDomain?: [number | undefined, number | undefined];
@@ -38,7 +41,10 @@ export interface XYContainerConfigInterface<Datum> extends ContainerConfigInterf
    * chart's set up */
   xRange?: [number, number];
 
-  /** Scale for Y dimension, e.g. Scale.ScaleLinear. Default: `Scale.ScaleLinear()` */
+  /** Scale for Y dimension, e.g. Scale.scaleLinear().
+   * If set, this value will override the components' yScale and they will have a single shared yScale instance.
+   * By default the components have their own scale instances but their `domain` and `range` values are synchronized.
+   * Default: `undefined` */
   yScale?: ContinuousScale;
   /** Scale domain (data extent) for Y dimension. By default this value is calculated automatically based on data. */
   yDomain?: [number | undefined, number | undefined];
@@ -87,13 +93,13 @@ export class XYContainerConfig<Datum> extends ContainerConfig implements XYConta
   yAxis: Axis<Datum> = undefined
   autoMargin = true
 
-  xScale = Scale.scaleLinear()
+  xScale = undefined
   xDomain = undefined
   xDomainMinConstraint = undefined
   xDomainMaxConstraint = undefined
   xRange = undefined
 
-  yScale = Scale.scaleLinear()
+  yScale = undefined
   yDomain = undefined
   yDomainMinConstraint = undefined
   yDomainMaxConstraint = undefined
