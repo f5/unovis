@@ -7,11 +7,11 @@ import { SeriesDataModel } from 'data-models/series'
 
 // Utils
 import { filterDataByRange, getExtent, isArray } from 'utils/data'
-import { defaultRange } from 'utils/scale'
+import { DefaultRange } from 'utils/scale'
 
 // Types
 import { NumericAccessor } from 'types/accessor'
-import { ContinuousScale } from 'types/scale'
+import { ContinuousScale, ScaleDimension } from 'types/scale'
 import { Spacing } from 'types/spacing'
 
 // Config
@@ -27,38 +27,38 @@ export class XYComponentCore<Datum> extends ComponentCore<Datum[]> {
   /** Identifies whether the component displayed stacked data (eg StackedBar, Area) */
   stacked = false
 
-  setScaleDomain (key: string, domain: number[]): void {
+  setScaleDomain (dimension: ScaleDimension, domain: number[]): void {
     const { config: { scales } } = this
-    if (!key || !scales[key]) return
-    scales[key].domain(domain)
+    if (!dimension || !scales[dimension]) return
+    scales[dimension].domain(domain)
   }
 
-  setScaleRange (key: string, range: number[]): void {
+  setScaleRange (dimension: ScaleDimension, range: number[]): void {
     const { config: { scales } } = this
-    if (!key || !scales[key]) return
-    scales[key].range(range)
+    if (!dimension || !scales[dimension]) return
+    scales[dimension].range(range)
   }
 
-  setScale (key: string, scale: ContinuousScale): void {
+  setScale (dimension: ScaleDimension, scale: ContinuousScale): void {
     const { config } = this
-    if (key && scale && config.scales[key] !== scale) config.scales[key] = scale
+    if (dimension && scale && config.scales[dimension] !== scale) config.scales[dimension] = scale
   }
 
-  getDataExtent (accessorKey: string): number[] {
+  getDataExtent (dimension: ScaleDimension): number[] {
     const { config, datamodel } = this
 
-    switch (accessorKey) {
-      case 'x': return this.getXDataExtent()
-      case 'y': return this.getYDataExtent()
-      default: return getExtent(datamodel.data, config[accessorKey])
+    switch (dimension) {
+      case ScaleDimension.X: return this.getXDataExtent()
+      case ScaleDimension.Y: return this.getYDataExtent()
+      default: return getExtent(datamodel.data, config[dimension])
     }
   }
 
-  getScreenRange (accessorKey: string, padding: Spacing = {}): number[] {
-    switch (accessorKey) {
-      case 'x': return this.getXScreenRange(padding)
-      case 'y': return this.getYScreenRange(padding)
-      default: return defaultRange
+  getScreenRange (dimension: ScaleDimension, padding: Spacing = {}): number[] {
+    switch (dimension) {
+      case ScaleDimension.X: return this.getXScreenRange(padding)
+      case ScaleDimension.Y: return this.getYScreenRange(padding)
+      default: return DefaultRange
     }
   }
 
