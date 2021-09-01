@@ -11,7 +11,6 @@ import { smartTransition } from 'utils/d3'
 
 // Types
 import { Direction } from 'types/direction'
-import { AxisType } from 'components/axis/types'
 import { Arrangement } from 'types/position'
 
 // Config
@@ -57,19 +56,10 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
       .attr('class', s.handleLine)
   }
 
-  setScaleRange (key: string): void {
-    const { config: { scales, width, height } } = this
-    if (!key || !scales[key]) return
-
-    const range = key === AxisType.Y ? [height, 0] : [0, width]
-    scales[key]?.range(range)
-  }
-
   _render (customDuration?: number): void {
     const { brushBehaviour, config } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
     const xScale = config.scales.x
-    const yScale = config.scales.y
 
     brushBehaviour
       .extent([[0, 0], [config.width, config.height]])
@@ -81,7 +71,7 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
       .call(brushBehaviour)
       .classed('non-draggable', !config.draggable)
 
-    const yRange = yScale.range()
+    const yRange = [config.height, 0]
     const h = yRange[0] - yRange[1]
 
     this.g.selectAll('.handle')
@@ -96,11 +86,11 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
       .attr('y1', yRange[1] + 10)
       .attr('y2', yRange[1] + h - 10)
 
-    const xRange = xScale.range()
+    const xRange = [0, config.width]
     const selectionMin = clamp(xScale(config.selection?.[0]) ?? 0, xRange[0], xRange[1])
     const selectionMax = clamp(xScale(config.selection?.[1]) ?? 0, xRange[0], xRange[1])
     const selectionLength = selectionMax - selectionMin
-    const brushRange = (selectionLength ? [selectionMin, selectionMax] : xScale.range()) as [number, number]
+    const brushRange = (selectionLength ? [selectionMin, selectionMax] : xRange) as [number, number]
 
     this._positionHandles(brushRange)
 
@@ -113,9 +103,7 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
 
   _updateSelection (s: [number, number]): void {
     const { config } = this
-    const xScale = config.scales.x
-    const yScale = config.scales.y
-    const xRange = xScale.range()
+    const xRange = [0, config.width]
     this.unselectedRange
       .attr('x', d => d.type === Direction.West ? xRange[0] : s[1])
       .attr('width', d => {
@@ -127,7 +115,7 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
     this._positionHandles(s)
 
     // D3 sets brush handle height to be too long, so we need to update it
-    const yRange = yScale.range()
+    const yRange = [config.height, 0]
     const h = yRange[0] - yRange[1]
     this.g.selectAll('.handle')
       .attr('y', yRange[1])
@@ -162,7 +150,7 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
   _onBrush (event: D3BrushEvent<Datum>): void {
     const { config } = this
     const xScale = config.scales.x
-    const xRange = xScale.range()
+    const xRange = [0, config.width]
     const s = (event?.selection || xRange) as [number, number]
     const userDriven = !!event?.sourceEvent
 
@@ -185,7 +173,12 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
     // The first call will have equal selection coordinates (e.g. [441, 441]), the second call will have the full range (e.g. [0, 700]).
     // To avoid unnecessary render from the first call we skip it
     if (s[0] !== s[1] && isNumber(s[0]) && isNumber(s[1])) {
+      // We save the X scale range and set it to the available horizontal space to invert the selection correctly
+      const xScaleRange = xScale.range()
+      xScale.range(xRange)
       const selectedDomain = s.map(n => xScale.invert(n)) as [number, number]
+      // Restore the X scale range
+      xScale.range(xScaleRange)
 
       if (userDriven) {
         // Constraint the selection if configured
