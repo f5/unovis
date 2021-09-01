@@ -82,11 +82,6 @@ export class BulletLegendExampleComponent implements AfterViewInit, OnDestroy {
           }
         ),
       ],
-      dimensions: {
-        x: {
-          domain: undefined,
-        },
-      },
       xAxis: new Axis({
         label: 'Index',
       }),

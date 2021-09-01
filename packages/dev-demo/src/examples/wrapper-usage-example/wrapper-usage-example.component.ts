@@ -45,12 +45,8 @@ export class WrapperUsageExampleComponent implements AfterViewInit, OnDestroy {
   margin = { top: 10, bottom: 10, left: 10, right: 10 }
   padding = {}
 
-  dimensions = {
-    x: {
-      domain: undefined,
-      scale: Scale.scaleTime(),
-    },
-  }
+  xDomain = undefined
+  xScale = Scale.scaleTime()
 
   xAxis = new Axis({
     label: 'x axis',
@@ -58,6 +54,7 @@ export class WrapperUsageExampleComponent implements AfterViewInit, OnDestroy {
     tickFormat: (tick, i, ticks) => {
       const currentDate = new Date(tick)
       const prevDate: Date | undefined = ticks[i - 1] && new Date(ticks[i - 1])
+      console.log(ticks)
       const currentDay = currentDate.getDate()
       const prevDay = prevDate?.getDate()
       return format(currentDate, prevDay !== currentDay ? 'h:mm aaa MMM d' : 'h:mm aaa')
@@ -90,10 +87,7 @@ export class WrapperUsageExampleComponent implements AfterViewInit, OnDestroy {
       draggable: true,
       onBrush: (s: [number, number]) => {
         this.duration = 0
-        this.dimensions.x.domain = s
-        this.dimensions = { ...this.dimensions }
-        // this.composite.updateContainer(this.chartConfig, true)
-        // this.composite.render(0)
+        this.xDomain = s
       },
     }),
   ]

@@ -52,14 +52,7 @@ export class CompositeComponent implements AfterViewInit {
       components: [
         new StackedBar(this.mainStakedBarConfig),
       ],
-      dimensions: {
-        y: {
-          domainMaxConstraint: [1, undefined],
-        },
-        x: {
-          domain: undefined,
-        },
-      },
+      yDomainMaxConstraint: [1, undefined],
       xAxis: new Axis({
         // position: 'top',
         label: 'Index',
@@ -98,14 +91,12 @@ export class CompositeComponent implements AfterViewInit {
         new StackedBar(this.navStackedBarConfig),
         new Brush({
           onBrush: (s: [number, number]) => {
-            this.chartConfig.dimensions.x.domain = s
+            this.chartConfig.xDomain = s
             this.composite.updateContainer(this.chartConfig, true)
             this.composite.render(0)
           },
         }),
       ],
-      dimensions: {
-      },
       xAxis: new Axis(),
     }
 
