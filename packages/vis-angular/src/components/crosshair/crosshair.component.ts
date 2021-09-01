@@ -83,11 +83,11 @@ export class VisCrosshairComponent<Datum> implements CrosshairConfigInterface<Da
   /** Component color accessor function. Default: `d => d.color` */
   @Input() color: ColorAccessor<Datum | Datum[]>
 
-  /** X and Y scales. As of now, only continuous scales are supported. Default: `{ x: Scale.scaleLinear(), y: Scale.scaleLinear() } */
-  @Input() scales: {
-    x?: ContinuousScale;
-    y?: ContinuousScale;
-  }
+  /** Scale for X dimension, e.g. Scale.scaleLinear(). As of now, only continuous scales are supported. Default: `Scale.scaleLinear()` */
+  @Input() xScale: ContinuousScale
+
+  /** Scale for Y dimension, e.g. Scale.scaleLinear(). As of now, only continuous scales are supported. Default: `Scale.scaleLinear()` */
+  @Input() yScale: ContinuousScale
 
   /** Sets the Y scale domain based on the X scale domain not the whole data. Useful when you manipulate chart's X domain from outside. Default: `false` */
   @Input() scaleByDomain: boolean
@@ -123,8 +123,8 @@ export class VisCrosshairComponent<Datum> implements CrosshairConfigInterface<Da
   }
 
   private getConfig (): CrosshairConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, scales, scaleByDomain, yStacked, baseline, tooltip, template, hideWhenFarFromPointer, hideWhenFarFromPointerDistance } = this
-    const config = { duration, events, attributes, x, y, id, color, scales, scaleByDomain, yStacked, baseline, tooltip, template, hideWhenFarFromPointer, hideWhenFarFromPointerDistance }
+    const { duration, events, attributes, x, y, id, color, xScale, yScale, scaleByDomain, yStacked, baseline, tooltip, template, hideWhenFarFromPointer, hideWhenFarFromPointerDistance } = this
+    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, scaleByDomain, yStacked, baseline, tooltip, template, hideWhenFarFromPointer, hideWhenFarFromPointerDistance }
     const keys = Object.keys(config) as (keyof CrosshairConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

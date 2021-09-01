@@ -83,11 +83,11 @@ export class VisScatterComponent<Datum> implements ScatterConfigInterface<Datum>
   /** Component color accessor function. Default: `d => d.color` */
   @Input() color: ColorAccessor<Datum | Datum[]>
 
-  /** X and Y scales. As of now, only continuous scales are supported. Default: `{ x: Scale.scaleLinear(), y: Scale.scaleLinear() } */
-  @Input() scales: {
-    x?: ContinuousScale;
-    y?: ContinuousScale;
-  }
+  /** Scale for X dimension, e.g. Scale.scaleLinear(). As of now, only continuous scales are supported. Default: `Scale.scaleLinear()` */
+  @Input() xScale: ContinuousScale
+
+  /** Scale for Y dimension, e.g. Scale.scaleLinear(). As of now, only continuous scales are supported. Default: `Scale.scaleLinear()` */
+  @Input() yScale: ContinuousScale
 
   /** Sets the Y scale domain based on the X scale domain not the whole data. Useful when you manipulate chart's X domain from outside. Default: `false` */
   @Input() scaleByDomain: boolean
@@ -131,8 +131,8 @@ export class VisScatterComponent<Datum> implements ScatterConfigInterface<Datum>
   }
 
   private getConfig (): ScatterConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, scales, scaleByDomain, size, sizeScale, sizeRange, shape, label, labelColor, cursor, labelTextBrightnessRatio } = this
-    const config = { duration, events, attributes, x, y, id, color, scales, scaleByDomain, size, sizeScale, sizeRange, shape, label, labelColor, cursor, labelTextBrightnessRatio }
+    const { duration, events, attributes, x, y, id, color, xScale, yScale, scaleByDomain, size, sizeScale, sizeRange, shape, label, labelColor, cursor, labelTextBrightnessRatio } = this
+    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, scaleByDomain, size, sizeScale, sizeRange, shape, label, labelColor, cursor, labelTextBrightnessRatio }
     const keys = Object.keys(config) as (keyof ScatterConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

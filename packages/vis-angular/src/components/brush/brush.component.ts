@@ -83,11 +83,11 @@ export class VisBrushComponent<Datum> implements BrushConfigInterface<Datum>, Af
   /** Component color accessor function. Default: `d => d.color` */
   @Input() color: ColorAccessor<Datum | Datum[]>
 
-  /** X and Y scales. As of now, only continuous scales are supported. Default: `{ x: Scale.scaleLinear(), y: Scale.scaleLinear() } */
-  @Input() scales: {
-    x?: ContinuousScale;
-    y?: ContinuousScale;
-  }
+  /** Scale for X dimension, e.g. Scale.scaleLinear(). As of now, only continuous scales are supported. Default: `Scale.scaleLinear()` */
+  @Input() xScale: ContinuousScale
+
+  /** Scale for Y dimension, e.g. Scale.scaleLinear(). As of now, only continuous scales are supported. Default: `Scale.scaleLinear()` */
+  @Input() yScale: ContinuousScale
 
   /** Sets the Y scale domain based on the X scale domain not the whole data. Useful when you manipulate chart's X domain from outside. Default: `false` */
   @Input() scaleByDomain: boolean
@@ -137,8 +137,8 @@ export class VisBrushComponent<Datum> implements BrushConfigInterface<Datum>, Af
   }
 
   private getConfig (): BrushConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, scales, scaleByDomain, onBrush, onBrushStart, onBrushMove, onBrushEnd, handleWidth, selection, draggable, handlePosition, selectionMinLength } = this
-    const config = { duration, events, attributes, x, y, id, color, scales, scaleByDomain, onBrush, onBrushStart, onBrushMove, onBrushEnd, handleWidth, selection, draggable, handlePosition, selectionMinLength }
+    const { duration, events, attributes, x, y, id, color, xScale, yScale, scaleByDomain, onBrush, onBrushStart, onBrushMove, onBrushEnd, handleWidth, selection, draggable, handlePosition, selectionMinLength } = this
+    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, scaleByDomain, onBrush, onBrushStart, onBrushMove, onBrushEnd, handleWidth, selection, draggable, handlePosition, selectionMinLength }
     const keys = Object.keys(config) as (keyof BrushConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
