@@ -49,7 +49,8 @@ ${
       @Input() ${p.name}: ${p.type}`)
     .join('\n')
 }
-  @Input() data: ${dataType}
+  ${dataType ? `@Input() data: ${dataType}` : ''}
+
 
   component: ${componentName}${genericsStr} | undefined
 
@@ -58,7 +59,7 @@ ${
   }
 
   ngOnChanges (changes: SimpleChanges): void {
-    if (changes.data) { this.component?.setData(this.data) }
+    ${dataType ? 'if (changes.data) { this.component?.setData(this.data) }' : ''}
     this.component?.setConfig(this.getConfig())
   }
 
