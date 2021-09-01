@@ -1,7 +1,7 @@
 /* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import { Donut, DonutConfigInterface, NumericAccessor, ColorAccessor } from '@volterra/vis'
+import { Donut, DonutConfigInterface, VisEventType, VisEventCallback, NumericAccessor, ColorAccessor } from '@volterra/vis'
 import { VisCoreComponent } from '../../core'
 
 @Component({
@@ -33,7 +33,7 @@ export class VisDonutComponent<Datum> implements DonutConfigInterface<Datum>, Af
    * ``` */
   @Input() events: {
     [selector: string]: {
-      [eventName: string]: (data: any, event?: Event, i?: number, els?: SVGElement[] | HTMLElement[]) => void;
+      [eventType in VisEventType]?: VisEventCallback
     };
   }
 

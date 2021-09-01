@@ -13,7 +13,7 @@ import {
 } from '@angular/core'
 
 // Vis
-import { XYComponentCore, XYContainer, XYContainerConfigInterface, Axis, Crosshair, Tooltip, Dimension } from '@volterra/vis'
+import { XYComponentCore, XYContainer, XYContainerConfigInterface, Axis, Crosshair, Tooltip, ContinuousScale } from '@volterra/vis'
 import { VisXYComponent } from '../../core'
 import { VisTooltipComponent } from '../../core/tooltip/tooltip.component'
 
@@ -28,16 +28,59 @@ export class VisXYContainerComponent<Datum = Record<string, unknown>> implements
   @ViewChild('container', { static: false }) containerRef: ElementRef
   @ContentChildren(VisXYComponent) visComponents: QueryList<VisXYComponent>
   @ContentChild(VisTooltipComponent) tooltipComponent: VisTooltipComponent<Datum>
+
+  /** Scale for X dimension, e.g. Scale.scaleLinear(). Default: `Scale.scaleLinear()` */
+  @Input() xScale?: ContinuousScale;
+  /** Scale domain (data extent) for X dimension. By default this value is calculated automatically based on data. */
+  @Input() xDomain?: [number | undefined, number | undefined];
+  /** Constraint the minimum value of the X scale domain. Useful when the data is plotted along the X axis.
+   * For example, imagine that you have a chart with dynamic data that has negative values. When values are small
+   * (let's say in the range of [-0.01, 0]), you might still want the chart to display some meaningful value range (e.g. [-1, 0]). That can
+   * be achieved by setting `xDomainMinConstraint` to `[undefined, -1]`. In addition to that, if you want to cut off the
+   * values that are too low (let's say lower than -100), you can set the constraint to `[-100, -1]`
+   * Default: `undefined` */
+  @Input() xDomainMinConstraint?: [number | undefined, number | undefined];
+  /** Constraint the minimum value of the X scale domain. Useful when the data is plotted along the X axis.
+   * For example, imagine that you have a chart with dynamic data. When values are small
+   * (let's say < 0.01), you might still want the chart to display some meaningful value range (e.g. [0, 1]). That can
+   * be achieved by setting `xDomainMaxConstraint` to `[1, undefined]`. In addition to that, if you want to cut off the
+   * values that are too high (let's say higher than 100), you can set the constraint to `[1, 100]`
+   * Default: `undefined` */
+  @Input() xDomainMaxConstraint?: [number | undefined, number | undefined];
+  /** Force set the X scale range (in the screen space). By default the range is calculated automatically based on the
+   * chart's set up */
+  @Input() xRange?: [number, number];
+
+  /** Scale for Y dimension, e.g. Scale.ScaleLinear. Default: `Scale.ScaleLinear()` */
+  @Input() yScale?: ContinuousScale;
+  /** Scale domain (data extent) for Y dimension. By default this value is calculated automatically based on data. */
+  @Input() yDomain?: [number | undefined, number | undefined];
+  /** Constraint the minimum value of the Y scale domain.
+   * For example, imagine that you have a chart with dynamic data that has negative values. When values are small
+   * (let's say in the range of [-0.01, 0]), you might still want the chart to display some meaningful value range (e.g. [-1, 0]). That can
+   * be achieved by setting `yDomainMinConstraint` to `[undefined, -1]`. In addition to that, if you want to cut off the
+   * values that are too low (let's say lower than -100), you can set the constraint to `[-100, -1]`
+   * Default: `undefined` */
+  @Input() yDomainMinConstraint?: [number | undefined, number | undefined];
+  /** Constraint the minimum value of the Y scale domain.
+   * For example, imagine that you have a chart with dynamic data. When values are small
+   * (let's say < 0.01), you might still want the chart to display some meaningful value range (e.g. [0, 1]). That can
+   * be achieved by setting `yDomainMaxConstraint` to `[1, undefined]`. In addition to that, if you want to cut off the
+   * values that are too high (let's say higher than 100), you can set the constraint to `[1, 100]`
+   * Default: `undefined` */
+  @Input() yDomainMaxConstraint?: [number | undefined, number | undefined];
+  /** Force set the Y scale range (in the screen space). By default the range is calculated automatically based on the
+   * chart's set up */
+  @Input() yRange?: [number, number];
+
   /** Animation duration of all the components within the container. Default: `undefined` */
   @Input() duration: number = undefined
   /** Margins. Default: `{ top: 0, bottom: 0, left: 0, right: 0 }` */
   @Input() margin = { top: 10, bottom: 10, left: 10, right: 10 }
   /** Padding. Default: `{ top: 0, bottom: 0, left: 0, right: 0 }` */
   @Input() padding = {}
-  /** Dimension configuration. Default: `{x: {}, y: {}}` */
-  @Input() dimensions: { x: Dimension; y: Dimension } = { x: {}, y: {} }
   /** Sets the Y scale domain based on the X scale domain not the whole data. Default: `false` */
-  @Input() adaptiveYScale
+  @Input() scaleByDomain
 
   @Input() data: Datum[] = []
 
@@ -61,20 +104,41 @@ export class VisXYContainerComponent<Datum = Record<string, unknown>> implements
   }
 
   getConfig (): XYContainerConfigInterface<Datum> {
-    const { duration, margin, padding, dimensions, adaptiveYScale } = this
+    const {
+      duration, margin, padding, scaleByDomain,
+      xScale, xDomain, xDomainMinConstraint, xDomainMaxConstraint, xRange,
+      yScale, yDomain, yDomainMinConstraint, yDomainMaxConstraint, yRange,
+    } = this
     const visComponents = this.visComponents.toArray().map(d => d.component)
 
     const crosshair = visComponents.find(c => c instanceof Crosshair) as Crosshair<Datum>
     const tooltip = this.tooltipComponent?.component as Tooltip<XYComponentCore<Datum>, Datum>
     const xAxis = visComponents.find(c => c instanceof Axis && c?.config?.type === 'x') as Axis<Datum>
     const yAxis = visComponents.find(c => c instanceof Axis && c?.config?.type === 'y') as Axis<Datum>
-    const axes: {x?: Axis<Datum>; y?: Axis<Datum>} = {}
-    if (xAxis) axes.x = xAxis
-    if (yAxis) axes.y = yAxis
 
     const components = visComponents.filter(c => !(c instanceof Crosshair) && !(c instanceof Tooltip) && !(c instanceof Axis))
 
-    return { components, duration, margin, padding, dimensions, axes, tooltip, crosshair, adaptiveYScale }
+    return {
+      components,
+      duration,
+      margin,
+      padding,
+      xAxis,
+      yAxis,
+      tooltip,
+      crosshair,
+      scaleByDomain,
+      xScale,
+      xDomain,
+      xDomainMinConstraint,
+      xDomainMaxConstraint,
+      xRange,
+      yScale,
+      yDomain,
+      yDomainMinConstraint,
+      yDomainMaxConstraint,
+      yRange,
+    }
   }
 
   ngOnDestroy (): void {

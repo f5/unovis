@@ -4,6 +4,8 @@ import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
 import {
   FreeBrush,
   FreeBrushConfigInterface,
+  VisEventType,
+  VisEventCallback,
   NumericAccessor,
   ColorAccessor,
   ContinuousScale,
@@ -42,7 +44,7 @@ export class VisFreeBrushComponent<Datum> implements FreeBrushConfigInterface<Da
    * ``` */
   @Input() events: {
     [selector: string]: {
-      [eventName: string]: (data: any, event?: Event, i?: number, els?: SVGElement[] | HTMLElement[]) => void;
+      [eventType in VisEventType]?: VisEventCallback
     };
   }
 
@@ -77,10 +79,10 @@ export class VisFreeBrushComponent<Datum> implements FreeBrushConfigInterface<Da
   @Input() y: NumericAccessor<Datum> | NumericAccessor<Datum>[]
 
   /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */
-  @Input() id: ((d: Datum, i?: number, ...rest) => string | number)
+  @Input() id: ((d: Datum, i?: number, ...rest) => string)
 
   /** Component color accessor function. Default: `d => d.color` */
-  @Input() color: ColorAccessor<Datum>
+  @Input() color: ColorAccessor<Datum | Datum[]>
 
   /** X and Y scales. As of now, only continuous scales are supported. Default: `{ x: Scale.scaleLinear(), y: Scale.scaleLinear() } */
   @Input() scales: {
@@ -89,7 +91,7 @@ export class VisFreeBrushComponent<Datum> implements FreeBrushConfigInterface<Da
   }
 
   /** Sets the Y scale domain based on the X scale domain not the whole data. Useful when you manipulate chart's X domain from outside. Default: `false` */
-  @Input() adaptiveYScale: boolean
+  @Input() scaleByDomain: boolean
 
   /** Brush selection mode. X - horizontal, Y - vertical, XY - both. Default: `FreeBrushMode.X` */
   @Input() mode: FreeBrushMode
@@ -123,7 +125,7 @@ export class VisFreeBrushComponent<Datum> implements FreeBrushConfigInterface<Da
 
   /** Automatically hide the brush after selection. Default: `true` */
   @Input() autoHide: boolean
-  @Input() data: any
+  @Input() data: Datum[]
 
   component: FreeBrush<Datum> | undefined
 
@@ -137,8 +139,8 @@ export class VisFreeBrushComponent<Datum> implements FreeBrushConfigInterface<Da
   }
 
   private getConfig (): FreeBrushConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, scales, adaptiveYScale, mode, onBrush, onBrushStart, onBrushMove, onBrushEnd, handleWidth, selection, selectionMinLength, autoHide } = this
-    const config = { duration, events, attributes, x, y, id, color, scales, adaptiveYScale, mode, onBrush, onBrushStart, onBrushMove, onBrushEnd, handleWidth, selection, selectionMinLength, autoHide }
+    const { duration, events, attributes, x, y, id, color, scales, scaleByDomain, mode, onBrush, onBrushStart, onBrushMove, onBrushEnd, handleWidth, selection, selectionMinLength, autoHide } = this
+    const config = { duration, events, attributes, x, y, id, color, scales, scaleByDomain, mode, onBrush, onBrushStart, onBrushMove, onBrushEnd, handleWidth, selection, selectionMinLength, autoHide }
     const keys = Object.keys(config) as (keyof FreeBrushConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

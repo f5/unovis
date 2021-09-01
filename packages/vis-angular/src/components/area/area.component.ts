@@ -1,7 +1,17 @@
 /* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import { Area, AreaConfigInterface, NumericAccessor, ColorAccessor, ContinuousScale, CurveType, StringAccessor } from '@volterra/vis'
+import {
+  Area,
+  AreaConfigInterface,
+  VisEventType,
+  VisEventCallback,
+  NumericAccessor,
+  ColorAccessor,
+  ContinuousScale,
+  CurveType,
+  StringAccessor,
+} from '@volterra/vis'
 import { VisXYComponent } from '../../core'
 
 @Component({
@@ -33,7 +43,7 @@ export class VisAreaComponent<Datum> implements AreaConfigInterface<Datum>, Afte
    * ``` */
   @Input() events: {
     [selector: string]: {
-      [eventName: string]: (data: any, event?: Event, i?: number, els?: SVGElement[] | HTMLElement[]) => void;
+      [eventType in VisEventType]?: VisEventCallback
     };
   }
 
@@ -68,10 +78,10 @@ export class VisAreaComponent<Datum> implements AreaConfigInterface<Datum>, Afte
   @Input() y: NumericAccessor<Datum> | NumericAccessor<Datum>[]
 
   /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */
-  @Input() id: ((d: Datum, i?: number, ...rest) => string | number)
+  @Input() id: ((d: Datum, i?: number, ...rest) => string)
 
   /** Component color accessor function. Default: `d => d.color` */
-  @Input() color: ColorAccessor<Datum>
+  @Input() color: ColorAccessor<Datum | Datum[]>
 
   /** X and Y scales. As of now, only continuous scales are supported. Default: `{ x: Scale.scaleLinear(), y: Scale.scaleLinear() } */
   @Input() scales: {
@@ -80,7 +90,7 @@ export class VisAreaComponent<Datum> implements AreaConfigInterface<Datum>, Afte
   }
 
   /** Sets the Y scale domain based on the X scale domain not the whole data. Useful when you manipulate chart's X domain from outside. Default: `false` */
-  @Input() adaptiveYScale: boolean
+  @Input() scaleByDomain: boolean
 
   /** Curve type from the CurveType enum. Default: `CurveType.MonotoneX` */
   @Input() curveType: CurveType
@@ -92,8 +102,8 @@ export class VisAreaComponent<Datum> implements AreaConfigInterface<Datum>, Afte
   @Input() opacity: NumericAccessor<Datum>
 
   /** Optional area cursor. String or accessor function. Default: `null` */
-  @Input() cursor: StringAccessor<Datum>
-  @Input() data: any
+  @Input() cursor: StringAccessor<Datum[]>
+  @Input() data: Datum[]
 
   component: Area<Datum> | undefined
 
@@ -107,8 +117,8 @@ export class VisAreaComponent<Datum> implements AreaConfigInterface<Datum>, Afte
   }
 
   private getConfig (): AreaConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, scales, adaptiveYScale, curveType, baseline, opacity, cursor } = this
-    const config = { duration, events, attributes, x, y, id, color, scales, adaptiveYScale, curveType, baseline, opacity, cursor }
+    const { duration, events, attributes, x, y, id, color, scales, scaleByDomain, curveType, baseline, opacity, cursor } = this
+    const config = { duration, events, attributes, x, y, id, color, scales, scaleByDomain, curveType, baseline, opacity, cursor }
     const keys = Object.keys(config) as (keyof AreaConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

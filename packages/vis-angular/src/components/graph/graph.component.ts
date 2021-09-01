@@ -6,6 +6,8 @@ import {
   GraphConfigInterface,
   GraphInputNode,
   GraphInputLink,
+  VisEventType,
+  VisEventCallback,
   GraphLayoutType,
   StringAccessor,
   NumericAccessor,
@@ -49,7 +51,7 @@ export class VisGraphComponent<N extends GraphInputNode, L extends GraphInputLin
    * ``` */
   @Input() events: {
     [selector: string]: {
-      [eventName: string]: (data: any, event?: Event, i?: number, els?: SVGElement[] | HTMLElement[]) => void;
+      [eventType in VisEventType]?: VisEventCallback
     };
   }
 

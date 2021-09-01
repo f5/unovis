@@ -1,7 +1,16 @@
 /* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import { GroupedBar, GroupedBarConfigInterface, NumericAccessor, ColorAccessor, ContinuousScale, StringAccessor } from '@volterra/vis'
+import {
+  GroupedBar,
+  GroupedBarConfigInterface,
+  VisEventType,
+  VisEventCallback,
+  NumericAccessor,
+  ColorAccessor,
+  ContinuousScale,
+  StringAccessor,
+} from '@volterra/vis'
 import { VisXYComponent } from '../../core'
 
 @Component({
@@ -33,7 +42,7 @@ export class VisGroupedBarComponent<Datum> implements GroupedBarConfigInterface<
    * ``` */
   @Input() events: {
     [selector: string]: {
-      [eventName: string]: (data: any, event?: Event, i?: number, els?: SVGElement[] | HTMLElement[]) => void;
+      [eventType in VisEventType]?: VisEventCallback
     };
   }
 
@@ -68,10 +77,10 @@ export class VisGroupedBarComponent<Datum> implements GroupedBarConfigInterface<
   @Input() y: NumericAccessor<Datum> | NumericAccessor<Datum>[]
 
   /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */
-  @Input() id: ((d: Datum, i?: number, ...rest) => string | number)
+  @Input() id: ((d: Datum, i?: number, ...rest) => string)
 
   /** Component color accessor function. Default: `d => d.color` */
-  @Input() color: ColorAccessor<Datum>
+  @Input() color: ColorAccessor<Datum | Datum[]>
 
   /** X and Y scales. As of now, only continuous scales are supported. Default: `{ x: Scale.scaleLinear(), y: Scale.scaleLinear() } */
   @Input() scales: {
@@ -80,7 +89,7 @@ export class VisGroupedBarComponent<Datum> implements GroupedBarConfigInterface<
   }
 
   /** Sets the Y scale domain based on the X scale domain not the whole data. Useful when you manipulate chart's X domain from outside. Default: `false` */
-  @Input() adaptiveYScale: boolean
+  @Input() scaleByDomain: boolean
 
   /** Force set the group width in pixels. Default: `undefined` */
   @Input() groupWidth: number
@@ -107,7 +116,7 @@ export class VisGroupedBarComponent<Datum> implements GroupedBarConfigInterface<
 
   /** Configurable bar cursor when hovering over. Default: `null` */
   @Input() cursor: StringAccessor<Datum>
-  @Input() data: any
+  @Input() data: Datum[]
 
   component: GroupedBar<Datum> | undefined
 
@@ -121,8 +130,8 @@ export class VisGroupedBarComponent<Datum> implements GroupedBarConfigInterface<
   }
 
   private getConfig (): GroupedBarConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, scales, adaptiveYScale, groupWidth, groupMaxWidth, dataStep, groupPadding, barPadding, roundedCorners, barMinHeight, cursor } = this
-    const config = { duration, events, attributes, x, y, id, color, scales, adaptiveYScale, groupWidth, groupMaxWidth, dataStep, groupPadding, barPadding, roundedCorners, barMinHeight, cursor }
+    const { duration, events, attributes, x, y, id, color, scales, scaleByDomain, groupWidth, groupMaxWidth, dataStep, groupPadding, barPadding, roundedCorners, barMinHeight, cursor } = this
+    const config = { duration, events, attributes, x, y, id, color, scales, scaleByDomain, groupWidth, groupMaxWidth, dataStep, groupPadding, barPadding, roundedCorners, barMinHeight, cursor }
     const keys = Object.keys(config) as (keyof GroupedBarConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

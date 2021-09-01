@@ -4,12 +4,13 @@ import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
 import {
   Axis,
   AxisConfigInterface,
+  VisEventType,
+  VisEventCallback,
   NumericAccessor,
   ColorAccessor,
   ContinuousScale,
   Position,
   AxisType,
-  Spacing,
   FitMode,
   TrimMode,
   TextAlign,
@@ -45,7 +46,7 @@ export class VisAxisComponent<Datum> implements AxisConfigInterface<Datum>, Afte
    * ``` */
   @Input() events: {
     [selector: string]: {
-      [eventName: string]: (data: any, event?: Event, i?: number, els?: SVGElement[] | HTMLElement[]) => void;
+      [eventType in VisEventType]?: VisEventCallback
     };
   }
 
@@ -80,10 +81,10 @@ export class VisAxisComponent<Datum> implements AxisConfigInterface<Datum>, Afte
   @Input() y: NumericAccessor<Datum> | NumericAccessor<Datum>[]
 
   /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */
-  @Input() id: ((d: Datum, i?: number, ...rest) => string | number)
+  @Input() id: ((d: Datum, i?: number, ...rest) => string)
 
   /** Component color accessor function. Default: `d => d.color` */
-  @Input() color: ColorAccessor<Datum>
+  @Input() color: ColorAccessor<Datum | Datum[]>
 
   /** X and Y scales. As of now, only continuous scales are supported. Default: `{ x: Scale.scaleLinear(), y: Scale.scaleLinear() } */
   @Input() scales: {
@@ -92,16 +93,13 @@ export class VisAxisComponent<Datum> implements AxisConfigInterface<Datum>, Afte
   }
 
   /** Sets the Y scale domain based on the X scale domain not the whole data. Useful when you manipulate chart's X domain from outside. Default: `false` */
-  @Input() adaptiveYScale: boolean
+  @Input() scaleByDomain: boolean
 
   /** Axis position: `Position.Top`, `Position.Bottom`, `Position.Right` or `Position.Left`. Default: `undefined` */
   @Input() position: Position | string
 
   /** Axis type: `AxisType.X` or `AxisType.Y` */
   @Input() type: AxisType | string
-
-  /** Inner axis padding. Adds space between the chart and the axis. Default: `{ top: 0, bottom: 0, left: 0, right: 0 }` */
-  @Input() padding: Spacing
 
   /** Extend the axis domain line to be full width or full height. Default: `true` */
   @Input() fullSize: boolean
@@ -128,7 +126,7 @@ export class VisAxisComponent<Datum> implements AxisConfigInterface<Datum>, Afte
   @Input() minMaxTicksOnly: boolean
 
   /** Tick label formatter function. Default: `undefined` */
-  @Input() tickFormat: (d: number | string, i: number, n: (number | string)[]) => string
+  @Input() tickFormat: (tick: number | Date, i: number, ticks: (number | Date)[]) => string
 
   /** Explicitly set tick values. Default: `undefined` */
   @Input() tickValues: number[]
@@ -159,7 +157,7 @@ export class VisAxisComponent<Datum> implements AxisConfigInterface<Datum>, Afte
 
   /** Text alignment for ticks: `TextAlign.Left`, `TextAlign.Center` or `TextAlign.Right`. Default: `undefined` */
   @Input() tickTextAlign: TextAlign
-  @Input() data: any
+  @Input() data: Datum[]
 
   component: Axis<Datum> | undefined
 
@@ -173,8 +171,8 @@ export class VisAxisComponent<Datum> implements AxisConfigInterface<Datum>, Afte
   }
 
   private getConfig (): AxisConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, scales, adaptiveYScale, position, type, padding, fullSize, label, labelFontSize, labelMargin, gridLine, tickLine, domainLine, minMaxTicksOnly, tickFormat, tickValues, numTicks, tickTextFitMode, tickTextLength, tickTextWidth, tickTextSeparator, tickTextForceWordBreak, tickTextTrimType, tickTextFontSize, tickTextAlign } = this
-    const config = { duration, events, attributes, x, y, id, color, scales, adaptiveYScale, position, type, padding, fullSize, label, labelFontSize, labelMargin, gridLine, tickLine, domainLine, minMaxTicksOnly, tickFormat, tickValues, numTicks, tickTextFitMode, tickTextLength, tickTextWidth, tickTextSeparator, tickTextForceWordBreak, tickTextTrimType, tickTextFontSize, tickTextAlign }
+    const { duration, events, attributes, x, y, id, color, scales, scaleByDomain, position, type, fullSize, label, labelFontSize, labelMargin, gridLine, tickLine, domainLine, minMaxTicksOnly, tickFormat, tickValues, numTicks, tickTextFitMode, tickTextLength, tickTextWidth, tickTextSeparator, tickTextForceWordBreak, tickTextTrimType, tickTextFontSize, tickTextAlign } = this
+    const config = { duration, events, attributes, x, y, id, color, scales, scaleByDomain, position, type, fullSize, label, labelFontSize, labelMargin, gridLine, tickLine, domainLine, minMaxTicksOnly, tickFormat, tickValues, numTicks, tickTextFitMode, tickTextLength, tickTextWidth, tickTextSeparator, tickTextForceWordBreak, tickTextTrimType, tickTextFontSize, tickTextAlign }
     const keys = Object.keys(config) as (keyof AxisConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

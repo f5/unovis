@@ -1,7 +1,18 @@
 /* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import { Line, LineConfigInterface, NumericAccessor, ColorAccessor, ContinuousScale, CurveType, GenericAccessor, StringAccessor } from '@volterra/vis'
+import {
+  Line,
+  LineConfigInterface,
+  VisEventType,
+  VisEventCallback,
+  NumericAccessor,
+  ColorAccessor,
+  ContinuousScale,
+  CurveType,
+  GenericAccessor,
+  StringAccessor,
+} from '@volterra/vis'
 import { VisXYComponent } from '../../core'
 
 @Component({
@@ -33,7 +44,7 @@ export class VisLineComponent<Datum> implements LineConfigInterface<Datum>, Afte
    * ``` */
   @Input() events: {
     [selector: string]: {
-      [eventName: string]: (data: any, event?: Event, i?: number, els?: SVGElement[] | HTMLElement[]) => void;
+      [eventType in VisEventType]?: VisEventCallback
     };
   }
 
@@ -68,10 +79,10 @@ export class VisLineComponent<Datum> implements LineConfigInterface<Datum>, Afte
   @Input() y: NumericAccessor<Datum> | NumericAccessor<Datum>[]
 
   /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */
-  @Input() id: ((d: Datum, i?: number, ...rest) => string | number)
+  @Input() id: ((d: Datum, i?: number, ...rest) => string)
 
   /** Component color accessor function. Default: `d => d.color` */
-  @Input() color: ColorAccessor<Datum>
+  @Input() color: ColorAccessor<Datum | Datum[]>
 
   /** X and Y scales. As of now, only continuous scales are supported. Default: `{ x: Scale.scaleLinear(), y: Scale.scaleLinear() } */
   @Input() scales: {
@@ -80,7 +91,7 @@ export class VisLineComponent<Datum> implements LineConfigInterface<Datum>, Afte
   }
 
   /** Sets the Y scale domain based on the X scale domain not the whole data. Useful when you manipulate chart's X domain from outside. Default: `false` */
-  @Input() adaptiveYScale: boolean
+  @Input() scaleByDomain: boolean
 
   /** Curve type from the CurveType enum */
   @Input() curveType: CurveType
@@ -98,8 +109,8 @@ export class VisLineComponent<Datum> implements LineConfigInterface<Datum>, Afte
   @Input() highlightOnHover: boolean
 
   /** Optional link cursor. Default: `null` */
-  @Input() cursor: StringAccessor<Datum>
-  @Input() data: any
+  @Input() cursor: StringAccessor<Datum[]>
+  @Input() data: Datum[]
 
   component: Line<Datum> | undefined
 
@@ -113,8 +124,8 @@ export class VisLineComponent<Datum> implements LineConfigInterface<Datum>, Afte
   }
 
   private getConfig (): LineConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, scales, adaptiveYScale, curveType, lineWidth, lineDashArray, noDataValue, highlightOnHover, cursor } = this
-    const config = { duration, events, attributes, x, y, id, color, scales, adaptiveYScale, curveType, lineWidth, lineDashArray, noDataValue, highlightOnHover, cursor }
+    const { duration, events, attributes, x, y, id, color, scales, scaleByDomain, curveType, lineWidth, lineDashArray, noDataValue, highlightOnHover, cursor } = this
+    const config = { duration, events, attributes, x, y, id, color, scales, scaleByDomain, curveType, lineWidth, lineDashArray, noDataValue, highlightOnHover, cursor }
     const keys = Object.keys(config) as (keyof LineConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
