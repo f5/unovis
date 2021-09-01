@@ -41,3 +41,8 @@ export const Scale = {
   scaleBand,
   scalePoint,
 }
+
+export enum ScaleDimension {
+  X = 'x',
+  Y = 'y',
+}

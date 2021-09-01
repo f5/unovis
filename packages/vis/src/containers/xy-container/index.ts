@@ -13,11 +13,11 @@ import { SeriesDataModel } from 'data-models/series'
 
 // Types
 import { Spacing } from 'types/spacing'
-import { Dimension } from 'types/dimension'
 import { AxisType } from 'components/axis/types'
+import { ScaleDimension } from 'types/scale'
 
 // Utils
-import { clean, flatten, clamp } from 'utils/data'
+import { clamp, clean, flatten } from 'utils/data'
 import { guid } from 'utils/misc'
 
 // Config
@@ -249,41 +249,45 @@ export class XYContainer<Datum> extends ContainerCore {
   }
 
   _setScales<T extends XYComponentCore<Datum>> (...components: T[]): void {
-    const { config: { dimensions } } = this
+    const { config } = this
     if (!components) return
 
-    // Loop over all the dimensions
-    Object.keys(dimensions).forEach(key => {
-      const dim: Dimension = dimensions[key]
-      components.forEach(c => c.setScale(key, dim.scale))
-    })
+    // Set the X and Y scales
+    components.forEach(c => c.setScale(ScaleDimension.X, config.xScale))
+    components.forEach(c => c.setScale(ScaleDimension.Y, config.yScale))
   }
 
   _updateScalesDomain<T extends XYComponentCore<Datum>> (...components: T[]): void {
-    const { config: { dimensions, preventEmptyDomain, scaleByDomain } } = this
+    const { config } = this
     if (!components) return
 
     // Passing the scaleByDomain property to the components
-    components.forEach(c => { c.config.scaleByDomain = scaleByDomain })
+    components.forEach(c => { c.config.scaleByDomain = config.scaleByDomain })
 
     // Loop over all the dimensions
-    Object.keys(dimensions).forEach(key => {
-      const dim: Dimension = dimensions[key]
-      let [min, max] = extent(mergeArrays(components.map(c => c.getDataExtent(key))) as number[]) // Components with undefined dimension accessors will return [undefined, undefined] but d3.extent will take care of that
-      if (preventEmptyDomain && (min === max) && isFinite(min)) max = min + 1
+    Object.values(ScaleDimension).forEach((dimension: ScaleDimension) => {
+      let [min, max] = extent(
+        mergeArrays(components.map(c => c.getDataExtent(dimension))) as number[]
+      ) // Components with undefined dimension accessors will return [undefined, undefined] but d3.extent will take care of that
 
-      const domainMin = dim.domain?.[0] ?? min ?? 0
-      const domainMax = dim.domain?.[1] ?? max ?? 1
+      if (config.preventEmptyDomain && (min === max) && isFinite(min)) max = min + 1
+
+      const configuredDomain = dimension === ScaleDimension.Y ? config.yDomain : config.xDomain
+      const configuredDomainMinConstraint = dimension === ScaleDimension.Y ? config.yDomainMinConstraint : config.xDomainMinConstraint
+      const configuredDomainMaxConstraint = dimension === ScaleDimension.Y ? config.yDomainMaxConstraint : config.xDomainMaxConstraint
+      const domainMin = configuredDomain?.[0] ?? min ?? 0
+      const domainMax = configuredDomain?.[1] ?? max ?? 1
       const domain = [
-        clamp(domainMin, dim.domainMinConstraint?.[0] ?? Number.NEGATIVE_INFINITY, dim.domainMinConstraint?.[1] ?? Number.POSITIVE_INFINITY),
-        clamp(domainMax, dim.domainMaxConstraint?.[0] ?? Number.NEGATIVE_INFINITY, dim.domainMaxConstraint?.[1] ?? Number.POSITIVE_INFINITY),
+        clamp(domainMin, configuredDomainMinConstraint?.[0] ?? Number.NEGATIVE_INFINITY, configuredDomainMinConstraint?.[1] ?? Number.POSITIVE_INFINITY),
+        clamp(domainMax, configuredDomainMaxConstraint?.[0] ?? Number.NEGATIVE_INFINITY, configuredDomainMaxConstraint?.[1] ?? Number.POSITIVE_INFINITY),
       ]
-      components.forEach(c => c.setScaleDomain(key, domain))
+
+      components.forEach(c => c.setScaleDomain(dimension, domain))
     })
   }
 
   _updateScalesRange<T extends XYComponentCore<Datum>> (...components: T[]): void {
-    const { config: { dimensions, padding } } = this
+    const { config } = this
     if (!components) return
 
     for (const c of components) {
@@ -291,14 +295,15 @@ export class XYContainer<Datum> extends ContainerCore {
       c.config.height = this.height
     }
 
-    Object.keys(dimensions).forEach(key => {
-      const range = components.map(c => c.getScreenRange(key, padding)).reduce((res, r) => {
+    Object.values(ScaleDimension).forEach((dimension: ScaleDimension) => {
+      const range = components.map(c => c.getScreenRange(dimension, config.padding)).reduce((res, r) => {
         if (r[0] > res[0]) res[0] = r[0]
         if (r[1] < res[1]) res[1] = r[1]
         return res
       }, [Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY])
-      const scaleRange = key === AxisType.Y ? [range[1], range[0]] : range
-      components.forEach(c => c.setScaleRange(key, dimensions[key].range ?? scaleRange))
+      const scaleRange = dimension === ScaleDimension.Y ? [range[1], range[0]] : range
+      const configuredRange = dimension === ScaleDimension.Y ? config.yRange : config.xRange
+      components.forEach(c => c.setScaleRange(dimension, configuredRange ?? scaleRange))
     })
   }
 
@@ -323,7 +328,7 @@ export class XYContainer<Datum> extends ContainerCore {
 
     // Calculate margin required by the axes
     // We do two iterations on the first render, because the amount and size of ticks can change
-    //    after new margin are calculated and applied (axies dimentions will change).
+    //    after new margin are calculated and applied (axes dimensions will change).
     //    That's needed for correct label placement.
     const numIterations = this._firstRender ? 2 : 1
     for (let i = 0; i < numIterations; i += 1) {
