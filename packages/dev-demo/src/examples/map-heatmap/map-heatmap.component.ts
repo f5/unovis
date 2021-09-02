@@ -1,6 +1,9 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-/* eslint-disable */
 import _ from 'lodash'
+import { Feature } from 'geojson'
+// eslint-disable-next-line import/no-unresolved
+import { Topology } from 'topojson-specification'
+
 import { scaleLinear, max } from 'd3'
 import { Component, ViewEncapsulation, AfterViewInit } from '@angular/core'
 import { LeafletMap, LeafletMapConfigInterface, WorldMap110mAlphaTopoJSON, Tooltip } from '@volterra/vis'
@@ -16,7 +19,7 @@ type MapPoint = {
 const FILL_PROPERTY = 'color-area'
 const STROKE_PROPERTY = 'color-stroke'
 
-function getCountries () {
+function getCountries (): {name: string; value: number }[] {
   const countries: any[] = [
     { name: 'Canada' },
     { name: 'Sudan' },
@@ -31,10 +34,10 @@ function getCountries () {
   return countries
 }
 
-function getTopo () {
+function getTopo (): Topology {
   const countries = getCountries()
   const colorScale = scaleLinear<string>().range(['#FFFFFF', '#3E5FFF']).domain([0, max(countries, c => c.value)])
-  const topo = _.cloneDeep(WorldMap110mAlphaTopoJSON)
+  const topo = _.cloneDeep(WorldMap110mAlphaTopoJSON) as typeof WorldMap110mAlphaTopoJSON
   const geometries = topo.objects.countries.geometries
   const newGeometries = []
   countries.forEach((country, id) => {
@@ -43,10 +46,9 @@ function getTopo () {
     geometry.properties[FILL_PROPERTY] = colorScale(country.value)
     newGeometries.push(geometry)
   })
-  topo.objects.countries.geometries = newGeometries  
+  topo.objects.countries.geometries = newGeometries
   return topo
 }
-
 
 function getMapConfig (): LeafletMapConfigInterface<MapPoint> {
   return {
@@ -54,8 +56,8 @@ function getMapConfig (): LeafletMapConfigInterface<MapPoint> {
     mapboxglGlyphs: 'https://maps.volterra.io/fonts/{fontstack}/{range}.pbf',
     sources: {
       openmaptiles: {
-        type: "vector",
-        url: "https://maps.volterra.io/data/v3.json"
+        type: 'vector',
+        url: 'https://maps.volterra.io/data/v3.json',
       },
     },
     initialBounds: { northEast: { lat: 77, lng: -172 }, southWest: { lat: -50, lng: 72 } },
@@ -72,7 +74,7 @@ function getMapConfig (): LeafletMapConfigInterface<MapPoint> {
   selector: 'map-heatmap',
   templateUrl: './map-heatmap.component.html',
   styleUrls: ['./map-heatmap.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
 })
 
 export class MapHeatmapComponent implements AfterViewInit {
@@ -81,37 +83,37 @@ export class MapHeatmapComponent implements AfterViewInit {
   config = getMapConfig()
 
   ngAfterViewInit (): void {
-    this.config.tooltip = new Tooltip<any, any>({
+    this.config.tooltip = new Tooltip({
       triggers: {
-        [LeafletMap.selectors.mapboxglCanvas]: features => {
+        [LeafletMap.selectors.mapboxglCanvas]: (features: Feature[]) => {
           let name
           if (features?.length) {
             name = features[0].properties.name
           }
-          
-          return name &&  `<span>${name}</span>`
+
+          return name && `<span>${name}</span>`
         },
       },
     })
     this.config = { ...this.config }
   }
 
-  onRequestsClick () {
+  onRequestsClick (): void {
     this.config.topoJSONLayer.sources = getTopo()
     this.config = { ...this.config }
   }
 
-  onThroughputClick () {
+  onThroughputClick (): void {
     this.config.topoJSONLayer.sources = getTopo()
     this.config = { ...this.config }
   }
 
-  onBandwidthClick () {
+  onBandwidthClick (): void {
     this.config.topoJSONLayer.sources = getTopo()
     this.config = { ...this.config }
   }
 
-  onSecurityClick () {
+  onSecurityClick (): void {
     this.config.topoJSONLayer.sources = getTopo()
     this.config = { ...this.config }
   }

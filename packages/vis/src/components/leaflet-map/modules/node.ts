@@ -9,7 +9,7 @@ import { Rect } from 'types/misc'
 // Utils
 import { smartTransition } from 'utils/d3'
 import { estimateTextSize, trimTextMiddle } from 'utils/text'
-import { clamp, getValue } from 'utils/data'
+import { clamp, getString } from 'utils/data'
 import { getCSSVariableValue, isStringCSSVariable, rectIntersect } from 'utils/misc'
 import { hexToBrightness } from 'utils/color'
 import { getPointPos } from './utils'
@@ -57,9 +57,9 @@ export function updateNodes<D> (selection, config: LeafletMapConfigInterface<D>,
     const node: Selection<SVGPathElement, any, SVGGElement, any> = group.select(`.${s.pointPath}`)
     const innerLabel: Selection<SVGTextElement, any, SVGElement, any> = group.select(`.${s.innerLabel}`)
     const bottomLabel: Selection<SVGTextElement, any, SVGElement, any> = group.select(`.${s.bottomLabel}`)
-    const innerLabelText = getValue(d.properties, config.pointLabel)
-    const bottomLabelText = getValue(d.properties, config.pointBottomLabel)
-    const pointCursor = getValue(d.properties, config.pointCursor)
+    const innerLabelText = getString(d.properties, config.pointLabel)
+    const bottomLabelText = getString(d.properties, config.pointBottomLabel)
+    const pointCursor = getString(d.properties, config.pointCursor)
     const fromExpandedCluster = !!d.properties.expandedClusterPoint
     const donutData = d.donutData
     const isCluster = d.properties.cluster

@@ -8,13 +8,12 @@ import { max } from 'd3-array'
 import { XYComponentCore } from 'core/xy-component'
 
 // Utils
-import { getValue, isNumber, countUnique, indexArray, getMin, getMax } from 'utils/data'
+import { isNumber, countUnique, arrayOfIndices, getMin, getMax, getString, getNumber } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
 
 // Types
-// import { Curve, CurveType } from 'types/curves'
-// import { NumericAccessor } from 'types/misc'
+import { GenericDataRecord } from 'types/data'
 
 // Config
 import { TimelineConfig, TimelineConfigInterface } from './config'
@@ -22,7 +21,7 @@ import { TimelineConfig, TimelineConfigInterface } from './config'
 // Styles
 import * as s from './style'
 
-export class Timeline<Datum> extends XYComponentCore<Datum> {
+export class Timeline<Datum = GenericDataRecord> extends XYComponentCore<Datum> {
   static selectors = s
   config: TimelineConfig<Datum> = new TimelineConfig()
   events = {
@@ -72,16 +71,16 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
     super._render(customDuration)
     const { config, datamodel: { data } } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
-    const xRange = config.scales.x.range()
-    const yRange = config.scales.y.range()
+    const xRange = config.xScale.range()
+    const yRange = config.yScale.range()
     const yHeight = Math.abs(yRange[1] - yRange[0])
     const maxLineWidth = this._getMaxLineWidth()
 
     // Ordinal scale to handle records on the same type
     const ordinal: ScaleOrdinal<string, number> = scaleOrdinal()
-    const recordTypes = data.map((d, i) => getValue(d, config.type) || i)
+    const recordTypes = data.map((d, i) => getString(d, config.type) || i)
     const numUniqueRecords = countUnique(recordTypes)
-    ordinal.range(indexArray(numUniqueRecords))
+    ordinal.range(arrayOfIndices(numUniqueRecords))
 
     // Invisible Background rect to track events
     this._background
@@ -108,7 +107,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
 
     // Lines
     const lines = this._linesGroup.selectAll(`.${s.line}`)
-      .data(data, (d, i) => `${getValue(d, config.id) ?? i}`) as Selection<SVGLineElement, Datum, SVGGElement, any>
+      .data(data, (d, i) => `${getString(d, config.id) ?? i}`) as Selection<SVGLineElement, Datum, SVGGElement, any>
 
     const linesEnter = lines.enter().append('line')
       .attr('class', s.line)
@@ -119,10 +118,10 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
 
     smartTransition(linesEnter.merge(lines), duration)
       .style('stroke', (d, i) => getColor(d, config.color, i))
-      .attr('stroke-width', d => getValue(d, config.lineWidth))
+      .attr('stroke-width', d => getNumber(d, config.lineWidth))
       .call(this._positionLines, config, ordinal)
       .attr('transform', 'translate(0, 0)')
-      .style('cursor', d => getValue(d, config.cursor))
+      .style('cursor', d => getString(d, config.cursor))
       .style('opacity', 1)
 
     smartTransition(lines.exit(), duration)
@@ -147,12 +146,12 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
   }
 
   _positionLines (selection, config, ordinal): void {
-    const xScale = config.scales.x
-    const yRange = config.scales.y.range()
+    const xScale = config.xScale
+    const yRange = config.yScale.range()
 
     return selection
-      .attr('x1', d => xScale(getValue(d, config.x)))
-      .attr('x2', d => xScale(getValue(d, config.x) + getValue(d, config.length)))
+      .attr('x1', d => xScale(getNumber(d, config.x)))
+      .attr('x2', d => xScale(getNumber(d, config.x) + getNumber(d, config.length)))
       .attr('y1', (d, i) => yRange[1] + (ordinal(d.type || i) + 0.5) * config.rowHeight)
       .attr('y2', (d, i) => yRange[1] + (ordinal(d.type || i) + 0.5) * config.rowHeight)
       .style('opacity', 1)
@@ -160,7 +159,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
 
   _onScrollbarDrag (event: D3DragEvent<any, any, any>): void {
     const { config } = this
-    const yRange = config.scales.y.range()
+    const yRange = config.yScale.range()
     const yHeight = Math.abs(yRange[1] - yRange[0])
     this._updateScrollPosition(event.dy * this._maxScroll / (yHeight - this._scrollbarHeight))
   }
@@ -179,7 +178,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
 
   _updateScrollPosition (diff): void {
     const { config } = this
-    const yRange = config.scales.y.range()
+    const yRange = config.yScale.range()
     const yHeight = Math.abs(yRange[1] - yRange[0])
 
     this._scrollDistance += diff
@@ -195,14 +194,14 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
   _getMaxLineWidth (): number {
     const { config, datamodel: { data } } = this
 
-    return max(data, d => getValue(d, config.lineWidth)) ?? 0
+    return max(data, d => getNumber(d, config.lineWidth)) ?? 0
   }
 
   // Override the default XYComponent getXDataExtent method to take into account line lengths
   getXDataExtent (): number[] {
     const { config, datamodel } = this
     const min = getMin(datamodel.data, config.x)
-    const max = getMax(datamodel.data, d => getValue(d, config.x) + getValue(d, config.length))
+    const max = getMax(datamodel.data, d => getNumber(d, config.x) + getNumber(d, config.length))
     return [min, max]
   }
 }

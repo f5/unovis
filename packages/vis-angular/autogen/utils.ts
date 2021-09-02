@@ -30,6 +30,17 @@ export function getTypeName (type: ts.Node): string {
     case (ts.SyntaxKind.Identifier): return (type as ts.Identifier).escapedText as string
     case (ts.SyntaxKind.QualifiedName): return `${getTypeName((type as ts.QualifiedName).left)}.${getTypeName((type as ts.QualifiedName).right)}`
     case (ts.SyntaxKind.TypeLiteral): return `{\n${(type as ts.TypeLiteralNode).members.map(getTypeName).join('\n')}\n}`
+    case (ts.SyntaxKind.TypeParameter): {
+      const t = type as ts.TypeParameterDeclaration
+      return `${getTypeName(t.name)} in ${getTypeName(t.constraint)}`
+    }
+    case (ts.SyntaxKind.MappedType): {
+      const t = type as ts.MappedTypeNode
+      const propName = getTypeName(t.typeParameter)
+      const questionToken = t.questionToken ? '?' : ''
+      const propType = getTypeName(t.type)
+      return `{\n[${propName}]${questionToken}:${propType}\n}`
+    }
     case (ts.SyntaxKind.PropertySignature): {
       const t = type as ts.IndexSignatureDeclaration
       const propName = (t.name as ts.Identifier).escapedText
@@ -141,6 +152,16 @@ export function gatherTypeReferences (types: ts.Node[] | ts.NodeArray<ts.Node>, 
         gatherTypeReferences([(type as ts.IndexSignatureDeclaration).type], collected)
         break
       }
+      case (ts.SyntaxKind.TypeParameter): {
+        gatherTypeReferences([(type as ts.TypeParameterDeclaration).constraint], collected)
+        break
+      }
+      case (ts.SyntaxKind.MappedType): {
+        const t = type as ts.MappedTypeNode
+        gatherTypeReferences([(type as ts.MappedTypeNode).typeParameter], collected)
+        gatherTypeReferences([(type as ts.MappedTypeNode).type], collected)
+        break
+      }
       default:
     }
   }
@@ -158,8 +179,9 @@ export function getImportStatements (
 
   // We assume that all extend types in generics come from volterra/vis
   const genericExtends = generics.map(g => g.extends).filter(g => g)
+  const genericDefaults = generics.map(g => g.default).filter(g => g)
   const componentTypes = [componentName, `${componentName}ConfigInterface`]
-  for (const typeName of [...componentTypes, ...genericExtends]) {
+  for (const typeName of [...componentTypes, ...genericExtends, ...genericDefaults]) {
     importSources[typeName] = '@volterra/vis'
   }
 
@@ -181,7 +203,7 @@ export function getImportStatements (
     .filter(name => !genericNames.includes(name)) // Filter out generics
 
   const importStatements: { source: string; elements: string[] }[] = []
-  for (const name of Array.from(new Set([...componentTypes, ...genericExtends, ...typeList]))) {
+  for (const name of Array.from(new Set([...componentTypes, ...genericExtends, ...genericDefaults, ...typeList]))) {
     const importSource: string = importSources[name]
     if (!importSource) {
       console.error(`Can't find import source for: ${name}`)

@@ -205,7 +205,7 @@ export class VisLeafletMapComponent<Datum> implements LeafletMapConfigInterface<
   }
 
   /** Tooltip component. Default: `undefined` */
-  @Input() tooltip: Tooltip<LeafletMap<Datum>, Datum>
+  @Input() tooltip: Tooltip
 
   /** Data */
   @Input() data: Datum[]

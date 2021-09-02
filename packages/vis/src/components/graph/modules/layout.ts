@@ -8,7 +8,7 @@ import { Graph } from 'graphlibrary'
 import { GraphDataModel } from 'data-models/graph'
 
 // Utils
-import { without, clamp, groupBy, uniq, sortBy, getValue } from 'utils/data'
+import { without, clamp, groupBy, uniq, sortBy, getString, getNumber } from 'utils/data'
 
 // Types
 import { GraphInputLink, GraphInputNode } from 'types/graph'
@@ -70,12 +70,12 @@ export function applyLayoutParallel<N extends GraphInputNode, L extends GraphInp
 
   // Handle connected nodes
   const layoutNodes = layoutNonConnectedAside ? connectedNodes : nodes
-  const groupNames: any[] = uniq(layoutNodes.map(d => getValue(d, nodeGroup)))
+  const groupNames: any[] = uniq(layoutNodes.map(d => getString(d, nodeGroup)))
   const groupNamesSorted: any[] = sortBy(groupNames, d => layoutGroupOrder.indexOf(d))
 
   const groups = groupNamesSorted.map(groupName => {
-    const groupNodes = layoutNodes.filter(d => getValue(d, nodeGroup) === groupName)
-    const groupedBySubgroup = groupBy(groupNodes, d => getValue(d, nodeSubGroup))
+    const groupNodes = layoutNodes.filter(d => getString(d, nodeGroup) === groupName)
+    const groupedBySubgroup = groupBy(groupNodes, d => getString(d, nodeSubGroup))
     const subgroups = Object.keys(groupedBySubgroup).map(name => ({
       nodes: groupedBySubgroup[name],
       name,
@@ -279,9 +279,9 @@ export function applyLayoutDagre<N extends GraphInputNode, L extends GraphInputL
   const nds = (layoutNonConnectedAside ? connectedNodes : nodes)
   nds.forEach(node => {
     dagreGraph.setNode(node._index, {
-      label: getValue(node, nodeLabel),
-      width: getValue(node, nodeSize) * 1.5 + getValue(node, nodeBorderWidth),
-      height: labelApprxHeight + getValue(node, nodeSize) * 1.5,
+      label: getString(node, nodeLabel),
+      width: getNumber(node, nodeSize) * 1.5 + getNumber(node, nodeBorderWidth),
+      height: labelApprxHeight + getNumber(node, nodeSize) * 1.5,
       originalNode: node,
     })
   })
@@ -318,12 +318,12 @@ export function applyLayoutConcentric<N extends GraphInputNode, L extends GraphI
 
   const layoutNodes = layoutNonConnectedAside ? connectedNodes : nodes
 
-  const groupNames = uniq(layoutNodes.map(d => getValue(d, nodeGroup)))
+  const groupNames = uniq(layoutNodes.map(d => getString(d, nodeGroup)))
   const groupNamesSorted = sortBy(groupNames, d => layoutGroupOrder.indexOf(d))
 
   const groups = groupNamesSorted.map(groupName => ({
     name: groupName,
-    nodes: layoutNodes.filter(d => getValue(d, nodeGroup) === groupName),
+    nodes: layoutNodes.filter(d => getString(d, nodeGroup) === groupName),
   }))
 
   // Handle connected nodes

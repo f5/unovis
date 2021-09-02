@@ -7,6 +7,6 @@ export const colors = ['#6A9DFF', '#a611a5', '#1acb9a', '#8777d9', '#f88080', '#
 // export const colors = ['#34daa6', '#82acff', '#9874f8', '#ffb541', '#48f28c', '#d5b1ff', '#f0aaca', '#6798ff', '#fd7492', '#00edff', '#ed916e', '#425673', '#d11d55', '#ffcc00', '#a0d6e5', '#f45a6d']
 
 /** Return a CSS Variable name for a given color index or string */
-export const getCSSVarName = (suffix: string | number): string => {
+export const getCSSColorVariable = (suffix: string | number): string => {
   return `--vis-${isNumber(suffix) ? `color${(suffix as number) % colors.length}` : suffix}`
 }

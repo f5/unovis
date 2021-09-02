@@ -28,7 +28,9 @@ export function getComponentCode (
   kebabCaseName?: string
 ): string {
   const genericsStr = generics ? `<${generics?.map(g => g.name).join(', ')}>` : ''
-  const genericsDefStr = generics ? `<${generics?.map(g => g.name + (g.extends ? ` extends ${g.extends}` : '')).join(', ')}>` : ''
+  const genericsDefStr = generics
+    ? `<${generics?.map(g => g.name + (g.extends ? ` extends ${g.extends}` : '') + (g.default ? ` = ${g.default}` : '')).join(', ')}>`
+    : ''
   return `/* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
@@ -49,7 +51,8 @@ ${
       @Input() ${p.name}: ${p.type}`)
     .join('\n')
 }
-  @Input() data: ${dataType}
+  ${dataType ? `@Input() data: ${dataType}` : ''}
+
 
   component: ${componentName}${genericsStr} | undefined
 
@@ -58,7 +61,7 @@ ${
   }
 
   ngOnChanges (changes: SimpleChanges): void {
-    if (changes.data) { this.component?.setData(this.data) }
+    ${dataType ? 'if (changes.data) { this.component?.setData(this.data) }' : ''}
     this.component?.setConfig(this.getConfig())
   }
 

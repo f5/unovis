@@ -6,32 +6,25 @@ import { Selection } from 'd3-selection'
 // Core
 import { ContainerCore } from 'core/container'
 import { XYComponentCore } from 'core/xy-component'
+import { XYComponentConfigInterface } from 'core/xy-component/config'
 
 // Data Model
 import { SeriesDataModel } from 'data-models/series'
 
-// Components
-import { Axis } from 'components/axis'
-
-// import { ComponentCore } from 'core/component'
-
-// import { ComponentConfig } from 'core/component/config'
-import { XYComponentConfigInterface } from 'core/xy-component/config'
-
 // Types
 import { Spacing } from 'types/spacing'
-import { Dimension } from 'types/dimension'
 import { AxisType } from 'components/axis/types'
+import { ScaleDimension } from 'types/scale'
+import { GenericDataRecord } from 'types/data'
 
 // Utils
-import { clean, flatten, clamp } from 'utils/data'
+import { clamp, clean, flatten } from 'utils/data'
 import { guid } from 'utils/misc'
 
 // Config
 import { XYContainerConfig, XYContainerConfigInterface } from './config'
 import {
   AreaConfigInterface,
-  AxisConfigInterface,
   BrushConfigInterface,
   LineConfigInterface,
   ScatterConfigInterface,
@@ -39,7 +32,7 @@ import {
   TimelineConfigInterface,
 } from '../../components'
 
-export type XYConfigInterface<Datum> = XYComponentConfigInterface<Datum>
+export type XYConfigInterface<Datum = GenericDataRecord> = XYComponentConfigInterface<Datum>
 | StackedBarConfigInterface<Datum>
 | LineConfigInterface<Datum>
 | ScatterConfigInterface<Datum>
@@ -47,16 +40,16 @@ export type XYConfigInterface<Datum> = XYComponentConfigInterface<Datum>
 | TimelineConfigInterface<Datum>
 | AreaConfigInterface<Datum>
 
-export class XYContainer<Datum> extends ContainerCore {
+export class XYContainer<Datum = GenericDataRecord> extends ContainerCore {
   config: XYContainerConfig<Datum> = new XYContainerConfig()
   datamodel: SeriesDataModel<Datum> = new SeriesDataModel()
-  private _svgDefs: Selection<SVGDefsElement, Record<string, unknown>[], any, Record<string, unknown>[]>
-  private _clipPath: Selection<SVGClipPathElement, Record<string, unknown>[], any, Record<string, unknown>[]>
+  private _svgDefs: Selection<SVGDefsElement, unknown, null, undefined>
+  private _clipPath: Selection<SVGClipPathElement, unknown, null, undefined>
   private _clipPathId = guid()
   private _axisMargin: Spacing = { top: 0, bottom: 0, left: 0, right: 0 }
   private _firstRender = true
 
-  constructor (element, config?: XYContainerConfigInterface<Datum>, data?) {
+  constructor (element, config?: XYContainerConfigInterface<Datum>, data?: Datum[]) {
     super(element)
 
     this._clipPath = this.svg.append('clipPath')
@@ -109,7 +102,7 @@ export class XYContainer<Datum> extends ContainerCore {
     return clamp(this.containerHeight - margin.top - margin.bottom, 0, Number.POSITIVE_INFINITY)
   }
 
-  setData (data: any, preventRender?: boolean): void {
+  setData (data: Datum[], preventRender?: boolean): void {
     const { components, config } = this
     if (!data) return
     this.datamodel.data = data
@@ -119,8 +112,8 @@ export class XYContainer<Datum> extends ContainerCore {
     })
 
     config.crosshair?.setData(data)
-    config.axes.x?.setData(data)
-    config.axes.y?.setData(data)
+    config.xAxis?.setData(data)
+    config.yAxis?.setData(data)
     config.tooltip?.hide()
     if (!preventRender) this.render()
   }
@@ -129,16 +122,18 @@ export class XYContainer<Datum> extends ContainerCore {
     super.updateContainer(containerConfig)
     this.removeAllChildren()
 
-    // If there were any new comonents added we need to pass them data
+    // If there were any new components added we need to pass them data
     this.setData(this.datamodel.data, false)
 
     // Set up the axes
-    Object.keys(containerConfig.axes ?? {}).forEach(key => {
-      this.config.axes[key].config.type = key as AxisType
-    })
-
-    if (containerConfig.axes?.x) this.element.appendChild(containerConfig.axes.x.element)
-    if (containerConfig.axes?.y) this.element.appendChild(containerConfig.axes.y.element)
+    if (containerConfig.xAxis) {
+      this.config.xAxis.config.type = AxisType.X
+      this.element.appendChild(containerConfig.xAxis.element)
+    }
+    if (containerConfig.yAxis) {
+      this.config.yAxis.config.type = AxisType.Y
+      this.element.appendChild(containerConfig.yAxis.element)
+    }
 
     // Re-insert elements to the DOM
     for (const c of this.components) {
@@ -183,20 +178,11 @@ export class XYContainer<Datum> extends ContainerCore {
       }
     })
 
-    this.updateScales(...this.components, config.axes.x, config.axes.y, config.crosshair)
+    this.updateScales(...this.components, config.xAxis, config.yAxis, config.crosshair)
     if (!preventRender) this.render()
   }
 
-  updateAxes (axesConfig: {[k: string]: AxisConfigInterface<Datum>}): void {
-    Object.keys(this.config.axes).forEach((key) => {
-      const axis: Axis<Datum> = this.config.axes[key]
-      if (axesConfig[key]) {
-        axis.setConfig({ ...axesConfig[key], type: key })
-      }
-    })
-  }
-
-  update (containerConfig: XYContainerConfigInterface<Datum>, componentConfigs?: XYComponentConfigInterface<Datum>[], data?: any): void {
+  update (containerConfig: XYContainerConfigInterface<Datum>, componentConfigs?: XYComponentConfigInterface<Datum>[], data?: Datum[]): void {
     if (containerConfig) this.updateContainer(containerConfig, true)
     if (componentConfigs) this.updateComponents(componentConfigs, true)
     if (data) this.setData(data, true)
@@ -216,7 +202,7 @@ export class XYContainer<Datum> extends ContainerCore {
     const margin = this._getMargin()
 
     // Update Scales of all the components at once to calculate required paddings and sync them
-    this.updateScales(...this.components, config.axes.x, config.axes.y, config.crosshair)
+    this.updateScales(...this.components, config.xAxis, config.yAxis, config.crosshair)
 
     // Render components
     for (const c of this.components) {
@@ -264,41 +250,45 @@ export class XYContainer<Datum> extends ContainerCore {
   }
 
   _setScales<T extends XYComponentCore<Datum>> (...components: T[]): void {
-    const { config: { dimensions } } = this
+    const { config } = this
     if (!components) return
 
-    // Loop over all the dimensions
-    Object.keys(dimensions).forEach(key => {
-      const dim: Dimension = dimensions[key]
-      components.forEach(c => c.setScale(key, dim.scale))
-    })
+    // Set the X and Y scales
+    components.forEach(c => c.setScale(ScaleDimension.X, config.xScale))
+    components.forEach(c => c.setScale(ScaleDimension.Y, config.yScale))
   }
 
   _updateScalesDomain<T extends XYComponentCore<Datum>> (...components: T[]): void {
-    const { config: { dimensions, preventEmptyDomain, adaptiveYScale } } = this
+    const { config } = this
     if (!components) return
 
-    // Passing the adaptiveYScale property to the components
-    components.forEach(c => { c.config.adaptiveYScale = adaptiveYScale })
+    // Passing the scaleByDomain property to the components
+    components.forEach(c => { c.config.scaleByDomain = config.scaleByDomain })
 
     // Loop over all the dimensions
-    Object.keys(dimensions).forEach(key => {
-      const dim: Dimension = dimensions[key]
-      let [min, max] = extent(mergeArrays(components.map(c => c.getDataExtent(key))) as number[]) // Components with undefined dimension accessors will return [undefined, undefined] but d3.extent will take care of that
-      if (preventEmptyDomain && (min === max) && isFinite(min)) max = min + 1
+    Object.values(ScaleDimension).forEach((dimension: ScaleDimension) => {
+      let [min, max] = extent(
+        mergeArrays(components.map(c => c.getDataExtent(dimension))) as number[]
+      ) // Components with undefined dimension accessors will return [undefined, undefined] but d3.extent will take care of that
 
-      const domainMin = dim.domain?.[0] ?? min ?? 0
-      const domainMax = dim.domain?.[1] ?? max ?? 1
+      if (config.preventEmptyDomain && (min === max) && isFinite(min)) max = min + 1
+
+      const configuredDomain = dimension === ScaleDimension.Y ? config.yDomain : config.xDomain
+      const configuredDomainMinConstraint = dimension === ScaleDimension.Y ? config.yDomainMinConstraint : config.xDomainMinConstraint
+      const configuredDomainMaxConstraint = dimension === ScaleDimension.Y ? config.yDomainMaxConstraint : config.xDomainMaxConstraint
+      const domainMin = configuredDomain?.[0] ?? min ?? 0
+      const domainMax = configuredDomain?.[1] ?? max ?? 1
       const domain = [
-        clamp(domainMin, dim.domainMinConstraint?.[0] ?? Number.NEGATIVE_INFINITY, dim.domainMinConstraint?.[1] ?? Number.POSITIVE_INFINITY),
-        clamp(domainMax, dim.domainMaxConstraint?.[0] ?? Number.NEGATIVE_INFINITY, dim.domainMaxConstraint?.[1] ?? Number.POSITIVE_INFINITY),
+        clamp(domainMin, configuredDomainMinConstraint?.[0] ?? Number.NEGATIVE_INFINITY, configuredDomainMinConstraint?.[1] ?? Number.POSITIVE_INFINITY),
+        clamp(domainMax, configuredDomainMaxConstraint?.[0] ?? Number.NEGATIVE_INFINITY, configuredDomainMaxConstraint?.[1] ?? Number.POSITIVE_INFINITY),
       ]
-      components.forEach(c => c.setScaleDomain(key, domain))
+
+      components.forEach(c => c.setScaleDomain(dimension, domain))
     })
   }
 
   _updateScalesRange<T extends XYComponentCore<Datum>> (...components: T[]): void {
-    const { config: { dimensions, padding } } = this
+    const { config } = this
     if (!components) return
 
     for (const c of components) {
@@ -306,23 +296,24 @@ export class XYContainer<Datum> extends ContainerCore {
       c.config.height = this.height
     }
 
-    Object.keys(dimensions).forEach(key => {
-      const range = components.map(c => c.getScreenRange(key, padding)).reduce((res, r) => {
+    Object.values(ScaleDimension).forEach((dimension: ScaleDimension) => {
+      const range = components.map(c => c.getScreenRange(dimension, config.padding)).reduce((res, r) => {
         if (r[0] > res[0]) res[0] = r[0]
         if (r[1] < res[1]) res[1] = r[1]
         return res
       }, [Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY])
-      const scaleRange = key === AxisType.Y ? [range[1], range[0]] : range
-      components.forEach(c => c.setScaleRange(key, dimensions[key].range ?? scaleRange))
+      const scaleRange = dimension === ScaleDimension.Y ? [range[1], range[0]] : range
+      const configuredRange = dimension === ScaleDimension.Y ? config.yRange : config.xRange
+      components.forEach(c => c.setScaleRange(dimension, configuredRange ?? scaleRange))
     })
   }
 
   _renderAxes (duration: number): void {
-    const { config: { axes } } = this
+    const { config: { xAxis, yAxis } } = this
     const margin = this._getMargin()
 
-    Object.keys(axes).forEach(key => {
-      const axis = axes[key]
+    const axes = clean([xAxis, yAxis])
+    axes.forEach(axis => {
       const offset = axis.getOffset(margin)
       axis.g.attr('transform', `translate(${offset.left},${offset.top})`)
       axis.render(duration)
@@ -330,22 +321,22 @@ export class XYContainer<Datum> extends ContainerCore {
   }
 
   _setAutoMargin (): void {
-    const { config: { axes } } = this
+    const { config: { xAxis, yAxis } } = this
 
     // At first we need to set the domain to the scales
-    const components = clean([...this.components, axes.x, axes.y])
+    const components = clean([...this.components, xAxis, yAxis])
     this._updateScalesDomain(...components)
 
     // Calculate margin required by the axes
     // We do two iterations on the first render, because the amount and size of ticks can change
-    //    after new margin are calculated and applied (axies dimentions will change).
+    //    after new margin are calculated and applied (axes dimensions will change).
     //    That's needed for correct label placement.
     const numIterations = this._firstRender ? 2 : 1
     for (let i = 0; i < numIterations; i += 1) {
       const axisMargin: Spacing = { top: 0, bottom: 0, left: 0, right: 0 }
       this._updateScalesRange(...components)
-      Object.keys(axes).forEach(key => {
-        const axis = axes[key]
+      const axes = clean([xAxis, yAxis])
+      axes.forEach(axis => {
         axis.preRender()
 
         const m = axis.getRequiredMargin()
@@ -371,13 +362,13 @@ export class XYContainer<Datum> extends ContainerCore {
   }
 
   public destroy (): void {
-    const { components, config: { tooltip, crosshair, axes } } = this
+    const { components, config: { tooltip, crosshair, xAxis, yAxis } } = this
     super.destroy()
 
     for (const c of components) c?.destroy()
     tooltip?.destroy()
     crosshair?.destroy()
-    axes.x?.destroy()
-    axes.y?.destroy()
+    xAxis?.destroy()
+    yAxis?.destroy()
   }
 }

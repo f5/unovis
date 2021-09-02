@@ -2,7 +2,6 @@
 import { select, Selection, pointer } from 'd3-selection'
 
 // Core
-// import { ContainerCore } from 'core/container'
 import { ComponentCore } from 'core/component'
 
 // Types
@@ -17,19 +16,19 @@ import { TooltipConfig, TooltipConfigInterface } from './config'
 // Style
 import * as s from './style'
 
-export class Tooltip<T extends ComponentCore<any>, TooltipDatum> {
+export class Tooltip {
   element: HTMLElement
-  div: Selection<HTMLElement, any, HTMLElement | null, any>
-  config: TooltipConfig<T, TooltipDatum>
-  prevConfig: TooltipConfig<T, TooltipDatum>
-  components: T[]
+  div: Selection<HTMLElement, unknown, null, undefined>
+  config: TooltipConfig
+  prevConfig: TooltipConfig
+  components: ComponentCore<unknown>[]
   private _setUpEventsThrottled = throttle(this._setUpEvents, 500)
   private _setContainerPositionThrottled = throttle(this._setContainerPosition, 500)
 
   private _container: HTMLElement
 
-  constructor (config: TooltipConfigInterface<T, TooltipDatum> = {}) {
-    this.config = new TooltipConfig<T, TooltipDatum>().init(config)
+  constructor (config: TooltipConfigInterface = {}) {
+    this.config = new TooltipConfig().init(config)
     this.components = this.config.components
 
     this.element = document.createElement('div')
@@ -37,6 +36,11 @@ export class Tooltip<T extends ComponentCore<any>, TooltipDatum> {
       .attr('class', s.tooltip)
 
     if (this.config.container) this.setContainer(this.config.container)
+  }
+
+  public setConfig (config: TooltipConfigInterface): void {
+    this.prevConfig = this.config
+    this.config = new TooltipConfig().init(config)
   }
 
   public setContainer (container: HTMLElement): void {
@@ -56,7 +60,7 @@ export class Tooltip<T extends ComponentCore<any>, TooltipDatum> {
     return !!this._container && this._container.isConnected
   }
 
-  public setComponents (components: T[]): void {
+  public setComponents (components: ComponentCore<unknown>[]): void {
     this.components = components
   }
 
@@ -148,7 +152,7 @@ export class Tooltip<T extends ComponentCore<any>, TooltipDatum> {
       this.components.forEach(component => {
         const selection = select(component.element).selectAll<HTMLElement | SVGGElement, unknown>(`.${className}`)
         selection
-          .on('mousemove.tooltip', (e: MouseEvent, d: TooltipDatum) => {
+          .on('mousemove.tooltip', (e: MouseEvent, d: unknown) => {
             const [x, y] = positionStrategy === PositionStrategy.Fixed ? [e.clientX, e.clientY] : pointer(e, this._container)
             const els = selection.nodes()
             const i = els.indexOf(e.currentTarget as any)

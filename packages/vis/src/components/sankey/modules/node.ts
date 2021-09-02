@@ -3,7 +3,7 @@ import { select, Selection } from 'd3-selection'
 
 // Utils
 import { getColor } from 'utils/color'
-import { getValue } from 'utils/data'
+import { getString } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 
 // Types
@@ -62,7 +62,7 @@ export function updateNodes<N extends SankeyInputNode, L extends SankeyInputLink
   smartTransition(sel.select(`.${s.node}`), duration)
     .attr('width', config.nodeWidth)
     .attr('height', (d: SankeyNode<N, L>) => d.y1 - d.y0)
-    .style('cursor', (d: SankeyNode<N, L>) => getValue(d, config.nodeCursor))
+    .style('cursor', (d: SankeyNode<N, L>) => getString(d, config.nodeCursor))
 
   // Label Rendering
   // eslint-disable-next-line @typescript-eslint/no-use-before-define

@@ -6,43 +6,50 @@ import { LeafletMapConfig, LeafletMapConfigInterface } from 'components/leaflet-
 
 // Types
 import { ColorAccessor, NumericAccessor } from 'types/accessor'
+import { GenericDataRecord } from 'types/data'
 
-export interface LeafletFlowMapConfigInterface<P, F> extends LeafletMapConfigInterface<P> {
+export interface LeafletFlowMapConfigInterface<
+  PointDatum = GenericDataRecord,
+  FlowDatum = GenericDataRecord,
+> extends LeafletMapConfigInterface<PointDatum> {
   /** Flow source point longitude accessor function or value. Default:.`f => f.sourceLongitude` */
-  sourceLongitude?: NumericAccessor<F>;
+  sourceLongitude?: NumericAccessor<FlowDatum>;
   /** Flow source point latitude accessor function or value. Default: `f => f.sourceLatitude` */
-  sourceLatitude?: NumericAccessor<F>;
+  sourceLatitude?: NumericAccessor<FlowDatum>;
   /** Flow target point longitude accessor function or value. Default: `f => f.targetLongitude` */
-  targetLongitude?: NumericAccessor<F>;
+  targetLongitude?: NumericAccessor<FlowDatum>;
   /** Flow target point latitude accessor function or value. Default: `f => f.targetLatitude` */
-  targetLatitude?: NumericAccessor<F>;
+  targetLatitude?: NumericAccessor<FlowDatum>;
   /** Flow source point radius accessor function or value. Default: `3` */
-  sourcePointRadius?: NumericAccessor<F>;
+  sourcePointRadius?: NumericAccessor<FlowDatum>;
   /** Source point color accessor function or value. Default: `'#88919f'` */
-  sourcePointColor?: ColorAccessor<F>;
+  sourcePointColor?: ColorAccessor<FlowDatum>;
   /** Flow particle color accessor function or value. Default: `'#949dad'` */
-  flowParticleColor?: ColorAccessor<F>;
+  flowParticleColor?: ColorAccessor<FlowDatum>;
   /** Flow particle radius accessor function or value. Default: `1.1` */
-  flowParticleRadius?: NumericAccessor<F>;
+  flowParticleRadius?: NumericAccessor<FlowDatum>;
   /** Flow particle speed accessor function or value in angular degrees. Default: `0.07` */
-  flowParticleSpeed?: NumericAccessor<F>;
+  flowParticleSpeed?: NumericAccessor<FlowDatum>;
   /** Flow particle density accessor function or value on the range of [0, 1]. Default: `0.6` */
-  flowParticleDensity?: NumericAccessor<F>;
+  flowParticleDensity?: NumericAccessor<FlowDatum>;
 
   // Events
   /** Flow source point click callback function. Default: `undefined` */
-  onSourcePointClick?: ((f: F, x: number, y: number, event: MouseEvent) => unknown);
+  onSourcePointClick?: ((f: FlowDatum, x: number, y: number, event: MouseEvent) => unknown);
   /** Flow source point mouse over callback function. Default: `undefined` */
-  onSourcePointMouseEnter?: ((f: F, x: number, y: number, event: MouseEvent) => unknown);
+  onSourcePointMouseEnter?: ((f: FlowDatum, x: number, y: number, event: MouseEvent) => unknown);
   /** Flow source point mouse leave callback function. Default: `undefined` */
-  onSourcePointMouseLeave?: ((f: F, event: MouseEvent) => unknown);
+  onSourcePointMouseLeave?: ((f: FlowDatum, event: MouseEvent) => unknown);
 }
 
-export class LeafletFlowMapConfig<P, F> extends LeafletMapConfig<P> implements LeafletFlowMapConfigInterface<P, F> {
-  sourceLongitude = (f: F): number => f['sourceLongitude']
-  sourceLatitude = (f: F): number => f['sourceLatitude']
-  targetLongitude = (f: F): number => f['targetLongitude']
-  targetLatitude = (f: F): number => f['targetLatitude']
+export class LeafletFlowMapConfig<
+  PointDatum = GenericDataRecord,
+  FlowDatum = GenericDataRecord,
+> extends LeafletMapConfig<PointDatum> implements LeafletFlowMapConfigInterface<PointDatum, FlowDatum> {
+  sourceLongitude = (f: FlowDatum): number => f['sourceLongitude']
+  sourceLatitude = (f: FlowDatum): number => f['sourceLatitude']
+  targetLongitude = (f: FlowDatum): number => f['targetLongitude']
+  targetLatitude = (f: FlowDatum): number => f['targetLatitude']
   sourcePointRadius = 3
   sourcePointColor = '#88919f'
   flowParticleColor = '#949dad'

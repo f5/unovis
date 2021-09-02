@@ -6,12 +6,14 @@
   [padding]="padding"
   [components]="components"
   [componentConfigs]="[groupedBarConfig]"
-  [dimensions]="dimensions"
-  [axes]="axes"
+  [xDomain]="xDomain"
+  [xScale]="xScale"
+  [xAxis]="xAxis"
+  [yAxis]="yAxis"
   [tooltip]="tooltip"
   [crosshair]="crosshair"
   [data]="data"
-  [adaptiveYScale]="true"
+  [scaleByDomain]="true"
  ></vis-xychart>
 </div>
 
@@ -21,7 +23,8 @@
     [padding]="padding"
     [components]="navComponents"
     [componentConfigs]="[groupedBarConfig]"
-    [axes]="navAxes"
+    [xAxis]="navAxes.x"
+    [yAxis]="navAxes.y"
     [data]="data"
 ></vis-xychart>
 </div>

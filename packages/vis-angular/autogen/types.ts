@@ -11,6 +11,7 @@ export type ConfigProperty = {
 export type GenericParameter = {
   name: string;
   extends: string;
+  default: string;
 }
 
 export type ComponentInput = {

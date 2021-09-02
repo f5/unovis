@@ -5,7 +5,7 @@ import { interpolateNumber } from 'd3-interpolate'
 
 // Utils
 import { getColor } from 'utils/color'
-import { getValue } from 'utils/data'
+import { getString } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 
 // Local Types
@@ -63,7 +63,7 @@ export function updateLinks<N extends SankeyInputNode, L extends SankeyInputLink
     .style('opacity', (d: SankeyLink<N, L>) => d._state.greyout ? 0.2 : 1)
 
   const linkSelection = sel.select(`.${s.linkPath}`)
-    .style('cursor', (d: SankeyLink<N, L>) => getValue(d, config.linkCursor))
+    .style('cursor', (d: SankeyLink<N, L>) => getString(d, config.linkCursor))
 
   const selectionTransition = smartTransition(linkSelection, duration)
     .style('fill', (link: SankeyLink<N, L>) => getColor(link, config.linkColor))
@@ -118,7 +118,7 @@ export function updateLinks<N extends SankeyInputNode, L extends SankeyInputLink
       y1: d.y1,
       width: Math.max(10, d.width),
     }))
-    .style('cursor', d => getValue(d, config.linkCursor))
+    .style('cursor', d => getString(d, config.linkCursor))
 }
 
 export function removeLinks (sel): void {

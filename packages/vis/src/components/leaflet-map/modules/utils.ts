@@ -4,7 +4,8 @@ import { min, max } from 'd3-array'
 import Supercluster, { ClusterFeature, PointFeature } from 'supercluster'
 
 // Utils
-import { clamp, getValue } from 'utils/data'
+import { clamp, getString, getNumber } from 'utils/data'
+import { getColor } from 'utils/color'
 import { polygon, circlePath } from 'utils/path'
 import { getHTMLTransform } from 'utils/html'
 
@@ -60,7 +61,7 @@ export function getPointRadius<D> (geoPoint: ClusterFeature<D>, pointRadius: Num
   const isCluster = geoPoint.properties.cluster
   const isDynamic = !pointRadius
 
-  const radius = isDynamic ? 1 + 2 * Math.pow(zoomLevel, 0.80) : getValue(geoPoint.properties, pointRadius)
+  const radius = isDynamic ? 1 + 2 * Math.pow(zoomLevel, 0.80) : getNumber(geoPoint.properties, pointRadius)
 
   return (isCluster && isDynamic)
     ? clamp(Math.pow(geoPoint.properties.point_count, 0.35) * radius, radius * 1.1, radius * 3)
@@ -82,14 +83,14 @@ export function getPointPos<D> (point: LeafletMapPoint<D> | ClusterFeature<Point
 }
 
 export function getPointDisplayOrder<T> (d, pointStatus: StringAccessor<T>, valuesMap: LeafletMapPointStyles<T>): number {
-  const status = getValue(d.properties, pointStatus)
+  const status = getString(d.properties, pointStatus)
   const statusList = Object.keys(valuesMap)
   return Object.keys(statusList).indexOf(status)
 }
 
 export function toGeoJSONPoint<D> (d: D, pointLatitude: NumericAccessor<D>, pointLongitude: NumericAccessor<D>): PointFeature<D> {
-  const lat = getValue(d, pointLatitude) as number
-  const lon = getValue(d, pointLongitude) as number
+  const lat = getNumber(d, pointLatitude) as number
+  const lon = getNumber(d, pointLongitude) as number
 
   return {
     type: 'Feature',
@@ -109,7 +110,7 @@ export function calculateClusterIndex<D> (data: D[], config: LeafletMapConfigInt
     radius: clusterRadius,
     maxZoom: maxClusterZoomLevel,
     map: (d): Record<string, unknown> => {
-      const shape = getValue(d, pointShape)
+      const shape = getString(d, pointShape)
 
       const clusterPoint = { shape }
       for (const key of Object.keys(valuesMap)) {
@@ -152,10 +153,10 @@ export function geoJSONPointToScreenPoint<D> (
 ): LeafletMapPoint<D> {
   const zoomLevel = leafletMap.getZoom()
   const { x, y } = getPointPos(geoPoint, leafletMap)
-  const color = getValue(geoPoint.properties, pointColor)
+  const color = getColor(geoPoint.properties, pointColor)
   const radius = getPointRadius(geoPoint, pointRadius, zoomLevel)
   const isCluster = geoPoint.properties.cluster
-  const shape = isCluster ? LeafletMapPointShape.Circle : getValue(geoPoint.properties, pointShape)
+  const shape = isCluster ? LeafletMapPointShape.Circle : getString(geoPoint.properties, pointShape) as LeafletMapPointShape
 
   const donutData = getDonutData(geoPoint.properties, valuesMap)
   const maxValue = max(donutData, d => d.value)
@@ -165,7 +166,7 @@ export function geoJSONPointToScreenPoint<D> (
 
   const screenPoint: LeafletMapPoint<D> = {
     ...geoPoint,
-    id: isCluster ? `cluster-${geoPoint.id}` : getValue(geoPoint.properties, pointId),
+    id: isCluster ? `cluster-${geoPoint.id}` : getString(geoPoint.properties, pointId),
     bbox: {
       x1: x - radius,
       y1: y - radius,

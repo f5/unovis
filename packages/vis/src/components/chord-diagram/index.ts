@@ -11,7 +11,7 @@ import { ComponentCore } from 'core/component'
 import { GraphDataModel } from 'data-models/graph'
 
 // Utils
-import { getValue, isNumber, groupBy } from 'utils/data'
+import { getNumber, isNumber, groupBy } from 'utils/data'
 
 // Types
 import { Spacing } from 'types/spacing'
@@ -37,9 +37,9 @@ export class ChordDiagram<H extends Hierarchy, N extends ChordInputNode, L exten
   config: ChordDiagramConfig<H> = new ChordDiagramConfig()
   datamodel: GraphDataModel<N, L> = new GraphDataModel()
 
-  nodeGroup: Selection<SVGGElement, HierarchyRectangularNode<H>[], SVGGElement, HierarchyRectangularNode<H>[]>
-  linkGroup: Selection<SVGGElement, Ribbon<H>[], SVGGElement, Ribbon<H>[]>
-  labelGroup: Selection<SVGGElement, HierarchyRectangularNode<H>[], SVGGElement, HierarchyRectangularNode<H>[]>
+  nodeGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
+  linkGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
+  labelGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
   arcGen = arc<HierarchyRectangularNode<H>>()
   radiusScale: ScalePower<number, number> = scalePow()
   linkAreaGen = area<HierarchyRectangularNode<H>>()
@@ -90,8 +90,8 @@ export class ChordDiagram<H extends Hierarchy, N extends ChordInputNode, L exten
     this.arcGen
       .startAngle(d => d.x0)
       .endAngle(d => d.x1)
-      .cornerRadius(d => getValue(d, config.cornerRadius))
-      .innerRadius(d => this.radiusScale(d.y1) - getValue(d, config.nodeWidth))
+      .cornerRadius(d => getNumber(d, config.cornerRadius))
+      .innerRadius(d => this.radiusScale(d.y1) - getNumber(d, config.nodeWidth))
       .outerRadius(d => this.radiusScale(d.y1))
 
     const curveGen = Curve[config.curveType]
@@ -181,8 +181,8 @@ export class ChordDiagram<H extends Hierarchy, N extends ChordInputNode, L exten
     nodes.forEach((n: any) => { delete n._state.value })
     links.forEach((l: any) => {
       delete l._state.points
-      l.source._state.value = (l.source._state.value || 0) + getValue(l, value)
-      l.target._state.value = (l.target._state.value || 0) + getValue(l, value)
+      l.source._state.value = (l.source._state.value || 0) + getNumber(l, value)
+      l.target._state.value = (l.target._state.value || 0) + getNumber(l, value)
     })
 
     const nestGen = nest<any, any>()

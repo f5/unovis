@@ -3,8 +3,9 @@ import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component
 
 // Types
 import { StringAccessor } from 'types/accessor'
+import { GenericDataRecord } from 'types/data'
 
-export interface GroupedBarConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
+export interface GroupedBarConfigInterface<Datum = GenericDataRecord> extends XYComponentConfigInterface<Datum> {
   /** Force set the group width in pixels. Default: `undefined` */
   groupWidth?: number;
   /** Maximum group width for dynamic sizing. Limits the barWidth property from the top. Default: `undefined` */
@@ -25,7 +26,7 @@ export interface GroupedBarConfigInterface<Datum> extends XYComponentConfigInter
   cursor?: StringAccessor<Datum>;
 }
 
-export class GroupedBarConfig<Datum> extends XYComponentConfig<Datum> implements GroupedBarConfigInterface<Datum> {
+export class GroupedBarConfig<Datum = GenericDataRecord> extends XYComponentConfig<Datum> implements GroupedBarConfigInterface<Datum> {
   groupMaxWidth = undefined
   groupWidth = undefined
   dataStep = undefined

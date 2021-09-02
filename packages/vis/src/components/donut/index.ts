@@ -7,10 +7,11 @@ import { ComponentCore } from 'core/component'
 import { SeriesDataModel } from 'data-models/series'
 
 // Utils
-import { getValue, isNumber, clamp } from 'utils/data'
+import { isNumber, clamp, getNumber } from 'utils/data'
 
 // Types
 import { Spacing } from 'types/spacing'
+import { GenericDataRecord } from 'types/data'
 
 // Local Types
 import { DonutArcDatum, DonutArcAnimState } from './types'
@@ -24,13 +25,13 @@ import { createArc, updateArc, removeArc } from './modules/arc'
 // Styles
 import * as s from './style'
 
-export class Donut<Datum> extends ComponentCore<Datum[]> {
+export class Donut<Datum = GenericDataRecord> extends ComponentCore<Datum[]> {
   static selectors = s
   config: DonutConfig<Datum> = new DonutConfig()
   datamodel: SeriesDataModel<Datum> = new SeriesDataModel()
 
-  arcGroup: Selection<SVGGElement, DonutArcDatum<Datum>[], SVGGElement, DonutArcDatum<Datum>[]>
-  centralLabel: Selection<SVGGElement, Datum, SVGGElement, Datum>
+  arcGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
+  centralLabel: Selection<SVGGElement, unknown, SVGGElement, unknown>
   arcGen = arc<DonutArcAnimState>()
 
   events = {
@@ -67,7 +68,7 @@ export class Donut<Datum> extends ComponentCore<Datum[]> {
       .startAngle(config.angleRange[0] ?? 0)
       .endAngle(config.angleRange[1] ?? 2 * Math.PI)
       .padAngle(config.padAngle)
-      .value(d => getValue(d, config.value) || (config.preventEmptySegments && Number.EPSILON) || 0)
+      .value(d => getNumber(d, config.value) || (config.preventEmptySegments && Number.EPSILON) || 0)
       .sort(config.sortFunction)
 
     this.arcGroup.attr('transform', `translate(${config.width / 2},${config.height / 2})`)

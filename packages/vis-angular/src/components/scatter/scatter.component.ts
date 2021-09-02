@@ -1,7 +1,18 @@
 /* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import { Scatter, ScatterConfigInterface, NumericAccessor, ColorAccessor, ContinuousScale, SymbolType, StringAccessor } from '@volterra/vis'
+import {
+  Scatter,
+  ScatterConfigInterface,
+  GenericDataRecord,
+  VisEventType,
+  VisEventCallback,
+  NumericAccessor,
+  ColorAccessor,
+  ContinuousScale,
+  SymbolType,
+  StringAccessor,
+} from '@volterra/vis'
 import { VisXYComponent } from '../../core'
 
 @Component({
@@ -10,7 +21,7 @@ import { VisXYComponent } from '../../core'
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisXYComponent, useExisting: VisScatterComponent }],
 })
-export class VisScatterComponent<Datum> implements ScatterConfigInterface<Datum>, AfterViewInit {
+export class VisScatterComponent<Datum = GenericDataRecord> implements ScatterConfigInterface<Datum>, AfterViewInit {
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */
   @Input() duration: number
 
@@ -33,7 +44,7 @@ export class VisScatterComponent<Datum> implements ScatterConfigInterface<Datum>
    * ``` */
   @Input() events: {
     [selector: string]: {
-      [eventName: string]: (data: any, event?: Event, i?: number, els?: SVGElement[] | HTMLElement[]) => void;
+      [eventType in VisEventType]?: VisEventCallback
     };
   }
 
@@ -68,19 +79,19 @@ export class VisScatterComponent<Datum> implements ScatterConfigInterface<Datum>
   @Input() y: NumericAccessor<Datum>
 
   /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */
-  @Input() id: ((d: Datum, i?: number, ...rest) => string | number)
+  @Input() id: ((d: Datum, i?: number, ...rest) => string)
 
   /** Component color accessor function. Default: `d => d.color` */
-  @Input() color: ColorAccessor<Datum>
+  @Input() color: ColorAccessor<Datum | Datum[]>
 
-  /** X and Y scales. As of now, only continuous scales are supported. Default: `{ x: Scale.scaleLinear(), y: Scale.scaleLinear() } */
-  @Input() scales: {
-    x?: ContinuousScale;
-    y?: ContinuousScale;
-  }
+  /** Scale for X dimension, e.g. Scale.scaleLinear(). As of now, only continuous scales are supported. Default: `Scale.scaleLinear()` */
+  @Input() xScale: ContinuousScale
+
+  /** Scale for Y dimension, e.g. Scale.scaleLinear(). As of now, only continuous scales are supported. Default: `Scale.scaleLinear()` */
+  @Input() yScale: ContinuousScale
 
   /** Sets the Y scale domain based on the X scale domain not the whole data. Useful when you manipulate chart's X domain from outside. Default: `false` */
-  @Input() adaptiveYScale: boolean
+  @Input() scaleByDomain: boolean
 
   /** Size accessor function or constant value in relative units. Default: `1` */
   @Input() size: NumericAccessor<Datum>
@@ -107,7 +118,7 @@ export class VisScatterComponent<Datum> implements ScatterConfigInterface<Datum>
 
   /** Point color brightness ratio for switching between dark and light text label color. Default: `0.65` */
   @Input() labelTextBrightnessRatio: number
-  @Input() data: any
+  @Input() data: Datum[]
 
   component: Scatter<Datum> | undefined
 
@@ -121,8 +132,8 @@ export class VisScatterComponent<Datum> implements ScatterConfigInterface<Datum>
   }
 
   private getConfig (): ScatterConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, scales, adaptiveYScale, size, sizeScale, sizeRange, shape, label, labelColor, cursor, labelTextBrightnessRatio } = this
-    const config = { duration, events, attributes, x, y, id, color, scales, adaptiveYScale, size, sizeScale, sizeRange, shape, label, labelColor, cursor, labelTextBrightnessRatio }
+    const { duration, events, attributes, x, y, id, color, xScale, yScale, scaleByDomain, size, sizeScale, sizeRange, shape, label, labelColor, cursor, labelTextBrightnessRatio } = this
+    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, scaleByDomain, size, sizeScale, sizeRange, shape, label, labelColor, cursor, labelTextBrightnessRatio }
     const keys = Object.keys(config) as (keyof ScatterConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

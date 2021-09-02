@@ -1,7 +1,17 @@
 /* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import { StackedBar, StackedBarConfigInterface, NumericAccessor, ColorAccessor, ContinuousScale, StringAccessor } from '@volterra/vis'
+import {
+  StackedBar,
+  StackedBarConfigInterface,
+  GenericDataRecord,
+  VisEventType,
+  VisEventCallback,
+  NumericAccessor,
+  ColorAccessor,
+  ContinuousScale,
+  StringAccessor,
+} from '@volterra/vis'
 import { VisXYComponent } from '../../core'
 
 @Component({
@@ -10,7 +20,7 @@ import { VisXYComponent } from '../../core'
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisXYComponent, useExisting: VisStackedBarComponent }],
 })
-export class VisStackedBarComponent<Datum> implements StackedBarConfigInterface<Datum>, AfterViewInit {
+export class VisStackedBarComponent<Datum = GenericDataRecord> implements StackedBarConfigInterface<Datum>, AfterViewInit {
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */
   @Input() duration: number
 
@@ -33,7 +43,7 @@ export class VisStackedBarComponent<Datum> implements StackedBarConfigInterface<
    * ``` */
   @Input() events: {
     [selector: string]: {
-      [eventName: string]: (data: any, event?: Event, i?: number, els?: SVGElement[] | HTMLElement[]) => void;
+      [eventType in VisEventType]?: VisEventCallback
     };
   }
 
@@ -68,19 +78,19 @@ export class VisStackedBarComponent<Datum> implements StackedBarConfigInterface<
   @Input() y: NumericAccessor<Datum> | NumericAccessor<Datum>[]
 
   /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */
-  @Input() id: ((d: Datum, i?: number, ...rest) => string | number)
+  @Input() id: ((d: Datum, i?: number, ...rest) => string)
 
   /** Component color accessor function. Default: `d => d.color` */
-  @Input() color: ColorAccessor<Datum>
+  @Input() color: ColorAccessor<Datum | Datum[]>
 
-  /** X and Y scales. As of now, only continuous scales are supported. Default: `{ x: Scale.scaleLinear(), y: Scale.scaleLinear() } */
-  @Input() scales: {
-    x?: ContinuousScale;
-    y?: ContinuousScale;
-  }
+  /** Scale for X dimension, e.g. Scale.scaleLinear(). As of now, only continuous scales are supported. Default: `Scale.scaleLinear()` */
+  @Input() xScale: ContinuousScale
+
+  /** Scale for Y dimension, e.g. Scale.scaleLinear(). As of now, only continuous scales are supported. Default: `Scale.scaleLinear()` */
+  @Input() yScale: ContinuousScale
 
   /** Sets the Y scale domain based on the X scale domain not the whole data. Useful when you manipulate chart's X domain from outside. Default: `false` */
-  @Input() adaptiveYScale: boolean
+  @Input() scaleByDomain: boolean
 
   /** Force set bar width in pixels. Default: `undefined` */
   @Input() barWidth: number
@@ -109,7 +119,7 @@ export class VisStackedBarComponent<Datum> implements StackedBarConfigInterface<
    * Everything equal to barMinHeightZeroValue will not be rendered on the chart.
    * Default: `null` */
   @Input() barMinHeightZeroValue: any
-  @Input() data: any
+  @Input() data: Datum[]
 
   component: StackedBar<Datum> | undefined
 
@@ -123,8 +133,8 @@ export class VisStackedBarComponent<Datum> implements StackedBarConfigInterface<
   }
 
   private getConfig (): StackedBarConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, scales, adaptiveYScale, barWidth, barMaxWidth, dataStep, barPadding, roundedCorners, cursor, barMinHeight, barMinHeightZeroValue } = this
-    const config = { duration, events, attributes, x, y, id, color, scales, adaptiveYScale, barWidth, barMaxWidth, dataStep, barPadding, roundedCorners, cursor, barMinHeight, barMinHeightZeroValue }
+    const { duration, events, attributes, x, y, id, color, xScale, yScale, scaleByDomain, barWidth, barMaxWidth, dataStep, barPadding, roundedCorners, cursor, barMinHeight, barMinHeightZeroValue } = this
+    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, scaleByDomain, barWidth, barMaxWidth, dataStep, barPadding, roundedCorners, cursor, barMinHeight, barMinHeightZeroValue }
     const keys = Object.keys(config) as (keyof StackedBarConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

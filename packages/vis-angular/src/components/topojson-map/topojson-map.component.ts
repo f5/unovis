@@ -7,11 +7,14 @@ import {
   MapInputNode,
   MapInputLink,
   MapInputArea,
+  VisEventType,
+  VisEventCallback,
   NumericAccessor,
   ColorAccessor,
   StringAccessor,
 } from '@volterra/vis'
 import { GeoProjection } from 'd3-geo'
+import { Topology } from 'topojson-specification'
 import { VisCoreComponent } from '../../core'
 
 @Component({
@@ -20,7 +23,7 @@ import { VisCoreComponent } from '../../core'
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisCoreComponent, useExisting: VisTopoJSONMapComponent }],
 })
-export class VisTopoJSONMapComponent<N extends MapInputNode, L extends MapInputLink, A extends MapInputArea> implements TopoJSONMapConfigInterface<N, L, A>, AfterViewInit {
+export class VisTopoJSONMapComponent<N extends MapInputNode = MapInputNode, L extends MapInputLink = MapInputLink, A extends MapInputArea = MapInputArea> implements TopoJSONMapConfigInterface<N, L, A>, AfterViewInit {
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */
   @Input() duration: number
 
@@ -43,7 +46,7 @@ export class VisTopoJSONMapComponent<N extends MapInputNode, L extends MapInputL
    * ``` */
   @Input() events: {
     [selector: string]: {
-      [eventName: string]: (data: any, event?: Event, i?: number, els?: SVGElement[] | HTMLElement[]) => void;
+      [eventType in VisEventType]?: VisEventCallback
     };
   }
 
@@ -75,7 +78,7 @@ export class VisTopoJSONMapComponent<N extends MapInputNode, L extends MapInputL
   @Input() projection: GeoProjection
 
   /** Map data in the TopoJSON topology format. Default: `topojson` */
-  @Input() topojson: any
+  @Input() topojson: Topology
 
   /** Name of the map features to be displayed, e.g. 'countries' or 'counties'. Default: `countries` */
   @Input() mapFeatureName: string

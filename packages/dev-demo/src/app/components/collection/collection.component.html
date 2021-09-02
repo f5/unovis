@@ -1,12 +1,13 @@
 <div *ngFor="let item of getItems()">
   <h3>{{ item.type }}</h3>
   <div class="chart">
-    <vis-xychart 
+    <vis-xychart
       *ngIf="!isSingle()"
       [margin]="margin"
       [components]="[item.component]"
       [componentConfigs]="[item.config]"
-      [axes]="item.axes"
+      [xAxis]="item.xAxis"
+      [yAxis]="item.yAxis"
       [data]="item.data"
     ></vis-xychart>
     <vis-singlechart

@@ -14,7 +14,7 @@ import { Position } from 'types/position'
 import { Spacing } from 'types/spacing'
 
 // Utils
-import { getValue, isNumber, groupBy } from 'utils/data'
+import { isNumber, groupBy, getNumber } from 'utils/data'
 
 // Config
 import { SankeyConfig, SankeyConfigInterface } from './config'
@@ -30,7 +30,10 @@ import { removeLinks, createLinks, updateLinks } from './modules/link'
 import { removeNodes, createNodes, updateNodes, onNodeMouseOver, onNodeMouseOut } from './modules/node'
 import { requiredLabelSpace } from './modules/label'
 
-export class Sankey<N extends SankeyInputNode, L extends SankeyInputLink> extends ComponentCore<{nodes: N[]; links?: L[]}> implements ExtendedSizeComponent {
+export class Sankey<
+  N extends SankeyInputNode = SankeyInputNode,
+  L extends SankeyInputLink = SankeyInputLink,
+> extends ComponentCore<{nodes: N[]; links?: L[]}> implements ExtendedSizeComponent {
   static selectors = s
   config: SankeyConfig<N, L> = new SankeyConfig()
   datamodel: GraphDataModel<N, L, SankeyNode<N, L>, SankeyLink<N, L>> = new GraphDataModel()
@@ -38,9 +41,9 @@ export class Sankey<N extends SankeyInputNode, L extends SankeyInputLink> extend
   private _extendedHeight = undefined
   private _extendedHeightIncreased = undefined
   private _extendedSizeMinHeight = 300
-  private _linksGroup: Selection<SVGGElement, Record<string, unknown>[], SVGGElement, Record<string, unknown>[]>
-  private _nodesGroup: Selection<SVGGElement, Record<string, unknown>[], SVGGElement, Record<string, unknown>[]>
-  private _backgroundRect: Selection<SVGRectElement, any, SVGGElement, any>
+  private _linksGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
+  private _nodesGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
+  private _backgroundRect: Selection<SVGRectElement, unknown, SVGGElement, unknown>
   private _sankey = sankey()
   private _highlightTimeoutId = null
   private _highlightActive = false
@@ -179,7 +182,7 @@ export class Sankey<N extends SankeyInputNode, L extends SankeyInputLink> extend
 
     // For d3 sankey function each link must be an object with the `value` property
     links.forEach(link => {
-      link.value = getValue(link, d => getValue(d, config.linkValue))
+      link.value = getNumber(link, d => getNumber(d, config.linkValue))
     })
 
     this._sankey

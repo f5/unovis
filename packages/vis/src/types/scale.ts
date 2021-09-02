@@ -22,7 +22,7 @@ import {
 } from 'd3-scale'
 // Todo Ordinal Scales: ScaleOrdinal, ScaleBand, ScalePoint, ScaleThreshold, ScaleQuantile, ScaleQuantize, ScaleDiverging, ScaleSequential
 
-export type ContinuousScale = ScaleLinear<number, any> | ScalePower<any, any> | ScaleLogarithmic<any, any> | ScaleTime<any, any>
+export type ContinuousScale = ScaleLinear<number, number> | ScalePower<number, number> | ScaleLogarithmic<number, number> | ScaleTime<number, number>
 
 export const Scale = {
   scaleLinear,
@@ -40,4 +40,9 @@ export const Scale = {
   scaleOrdinal,
   scaleBand,
   scalePoint,
+}
+
+export enum ScaleDimension {
+  X = 'x',
+  Y = 'y',
 }

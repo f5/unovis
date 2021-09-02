@@ -3,14 +3,14 @@ import { select, Selection } from 'd3-selection'
 import { Transition } from 'd3-transition'
 
 // Utils
-import { range, throttle, getValue } from 'utils/data'
+import { range, throttle, getValue, getBoolean } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 
 // Types
 import { GraphInputLink, GraphInputNode } from 'types/graph'
 
 // Local Types
-import { GraphLink, GraphLinkStyle } from '../../types'
+import { GraphCircleLabel, GraphLink, GraphLinkArrow, GraphLinkStyle } from '../../types'
 
 // Config
 import { GraphConfig } from '../../config'
@@ -93,7 +93,7 @@ export function updateLinks<N extends GraphInputNode, L extends GraphInputLink> 
   if (!selection.size()) return
 
   selection
-    .classed(linkSelectors.linkDashed, d => getValue(d, linkStyle) === GraphLinkStyle.Dashed)
+    .classed(linkSelectors.linkDashed, d => getValue<GraphLink<N, L>, GraphLinkStyle>(d, linkStyle) === GraphLinkStyle.Dashed)
 
   selection.select(`.${linkSelectors.link}`)
     .attr('class', linkSelectors.link)
@@ -135,7 +135,7 @@ export function updateLinks<N extends GraphInputNode, L extends GraphInputLink> 
   const flowGroup = selection.select(`.${linkSelectors.flowGroup}`)
   flowGroup
     .attr('transform', getLinkShiftTransform)
-    .style('display', d => getValue(d, linkFlow) ? null : 'none')
+    .style('display', d => getBoolean(d, linkFlow) ? null : 'none')
     .style('opacity', 0)
     .each((d, i, els) => {
       select(els[i]).selectAll(`.${linkSelectors.flowCircle}`)
@@ -149,9 +149,9 @@ export function updateLinks<N extends GraphInputNode, L extends GraphInputLink> 
   selection.each((l, i, elements) => {
     const linkGroup = select(elements[i])
     const labelGroups = linkGroup.selectAll(`.${linkSelectors.labelGroups}`)
-    const sideLabelDatum = getValue(l, linkLabel)
-    const markerWidth = getValue(l, linkArrow) ? LINK_MARKER_WIDTH * 2 : 0
-    const labelShift = getValue(l, linkLabelShiftFromCenter) ? -markerWidth + 4 : 0
+    const sideLabelDatum = getValue<GraphLink<N, L>, GraphCircleLabel>(l, linkLabel)
+    const markerWidth = getValue<GraphLink<N, L>, GraphLinkArrow>(l, linkArrow) ? LINK_MARKER_WIDTH * 2 : 0
+    const labelShift = getBoolean(l, linkLabelShiftFromCenter) ? -markerWidth + 4 : 0
     const labelTranslate = getLinkLabelShift(l, labelShift)
 
     const sideLabels = labelGroups.selectAll(`.${linkSelectors.labelGroup}`).data(sideLabelDatum ? [sideLabelDatum] : [])
@@ -232,7 +232,7 @@ export function animateLinkFlow<N extends GraphInputNode, L extends GraphInputLi
 
   selection.selectAll(`.${linkSelectors.flowGroup}`)
     .each((link: GraphLink, i, elements) => {
-      if (!getValue(link, linkFlow)) return
+      if (!getBoolean(link, linkFlow)) return
       const t = link._state.flowAnimTime
       const el = select(elements[i])
       const circles = el.selectAll(`.${linkSelectors.flowCircle}`)

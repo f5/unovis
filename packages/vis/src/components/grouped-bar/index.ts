@@ -7,7 +7,7 @@ import { select } from 'd3'
 import { XYComponentCore } from 'core/xy-component'
 
 // Utils
-import { getValue, isNumber, isArray, isEmpty, clamp, getMin, getMax } from 'utils/data'
+import { isNumber, isArray, isEmpty, clamp, getMin, getMax, getString, getNumber } from 'utils/data'
 import { roundedRectPath } from 'utils/path'
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
@@ -15,6 +15,7 @@ import { getColor } from 'utils/color'
 // Types
 import { NumericAccessor } from 'types/accessor'
 import { Spacing } from 'types/spacing'
+import { GenericDataRecord } from 'types/data'
 
 // Config
 import { GroupedBarConfig, GroupedBarConfigInterface } from './config'
@@ -22,7 +23,7 @@ import { GroupedBarConfig, GroupedBarConfigInterface } from './config'
 // Styles
 import * as s from './style'
 
-export class GroupedBar<Datum> extends XYComponentCore<Datum> {
+export class GroupedBar<Datum = GenericDataRecord> extends XYComponentCore<Datum> {
   static selectors = s
   config: GroupedBarConfig<Datum> = new GroupedBarConfig()
   getAccessors = (): NumericAccessor<Datum>[] => (isArray(this.config.y) ? this.config.y : [this.config.y])
@@ -60,17 +61,17 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum> {
 
     const visibleData = this._getVisibleData()
     const barGroups = this.g
-      .selectAll(`.${s.barGroup}`)
-      .data(visibleData, (d, i) => `${getValue(d, config.id) ?? i}`)
+      .selectAll<SVGGElement, Datum>(`.${s.barGroup}`)
+      .data(visibleData, (d, i) => `${getString(d, config.id) ?? i}`)
 
     const barGroupsEnter = barGroups.enter().append('g')
       .attr('class', s.barGroup)
-      .attr('transform', d => `translate(${config.scales.x(getValue(d, config.x))}, 0)`)
+      .attr('transform', d => `translate(${config.xScale(getNumber(d, config.x))}, 0)`)
       .style('opacity', 1)
 
     const barGroupsMerged = barGroupsEnter.merge(barGroups)
     smartTransition(barGroupsMerged, duration)
-      .attr('transform', d => `translate(${config.scales.x(getValue(d, config.x))}, 0)`)
+      .attr('transform', d => `translate(${config.xScale(getNumber(d, config.x))}, 0)`)
       .style('opacity', 1)
 
     const barGroupExit = barGroups.exit()
@@ -84,14 +85,15 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum> {
       .attr('transform', `translate(0,${config.height / 3})`)
 
     const barWidth = innerBandScale.bandwidth()
-    const bars = barGroupsMerged.selectAll(`.${s.bar}`)
+    const bars = barGroupsMerged
+      .selectAll<SVGPathElement, Datum>(`.${s.bar}`)
       .data(d => yAccessors.map(() => d))
 
     const barsEnter = bars.enter().append('path')
       .attr('class', s.bar)
       .attr('d', (d, i) => {
         const x = innerBandScale(i)
-        const y = config.scales.y(0)
+        const y = config.yScale(0)
         const width = barWidth
         const height = 0
         return this._getBarPath(x, y, width, height)
@@ -105,19 +107,19 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum> {
         const x = innerBandScale(i)
         const width = barWidth
 
-        let y = config.scales.y(getValue(d, yAccessors[i]))
-        let height = config.scales.y(0) - config.scales.y(getValue(d, yAccessors[i]))
+        let y = config.yScale(getNumber(d, yAccessors[i]))
+        let height = config.yScale(0) - config.yScale(getNumber(d, yAccessors[i]))
 
         // Optionally set minumum bar height
         if (height < config.barMinHeight) {
-          y = config.scales.y(0) - config.barMinHeight
+          y = config.yScale(0) - config.barMinHeight
           height = config.barMinHeight
         }
 
         return this._getBarPath(x, y, width, height)
       })
       .style('fill', (d, i) => getColor(d, config.color, i))
-      .style('cursor', (d, i) => getValue(d, config.cursor, i))
+      .style('cursor', (d, i) => getString(d, config.cursor, i))
 
     smartTransition(bars.exit(), duration)
       .remove()
@@ -129,10 +131,10 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum> {
     const groupWidth = this._getGroupWidth()
     const halfGroupWidth = data.length < 2 ? 0 : groupWidth / 2
 
-    const xScale = config.scales.x
+    const xScale = config.xScale
     const xHalfGroupWidth = Math.abs((xScale.invert(halfGroupWidth) as number) - (xScale.invert(0) as number))
     const filtered = data?.filter(d => {
-      const v = getValue(d, config.x)
+      const v = getNumber(d, config.x)
       const xDomain: number[] | Date[] = xScale.domain()
       const xDomainMin = +xDomain[0]
       const xDomainMax = +xDomain[1]
@@ -168,8 +170,8 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum> {
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const isOrdinal = config.scales.x.bandwidth
-    const xDomain = (config.scales.x.domain ? config.scales.x.domain() : []) as number[]
+    const isOrdinal = config.xScale.bandwidth
+    const xDomain = (config.xScale.domain ? config.xScale.domain() : []) as number[]
     const xDomainLength = isOrdinal ? xDomain.length : xDomain[1] - xDomain[0]
 
     // If the dataStep property is provided the amount of data elements is calculates as domainLength / dataStep
@@ -177,7 +179,7 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum> {
     // Or if the scale is ordinal we use data.length
     let dataSize = (1 + xDomainLength / config.dataStep) ||
         (!isOrdinal && data.filter(d => {
-          const value = getValue(d, config.x)
+          const value = getNumber(d, config.x)
           return (value >= xDomain[0]) && (value <= xDomain[1])
         }).length) ||
         data.length
@@ -195,7 +197,7 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum> {
     const { config, datamodel } = this
     const yAccessors = this.getAccessors()
 
-    const data = config.adaptiveYScale ? this._getVisibleData() : datamodel.data
+    const data = config.scaleByDomain ? this._getVisibleData() : datamodel.data
     const min = getMin(data, ...yAccessors)
     const max = getMax(data, ...yAccessors)
     return [min > 0 ? 0 : min, max < 0 ? 0 : max]

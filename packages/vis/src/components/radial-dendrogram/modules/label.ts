@@ -5,7 +5,7 @@ import { HierarchyRectangularNode } from 'd3-hierarchy'
 // Utils
 import { wrapTextElement } from 'utils/text'
 import { smartTransition } from 'utils/d3'
-import { getValue } from 'utils/data'
+import { getString } from 'utils/data'
 import { getColor } from 'utils/color'
 
 // Local Types
@@ -19,7 +19,7 @@ import * as s from '../style'
 
 export const LABEL_PADDING = 3
 
-export function createLabel<H extends Hierarchy> (selection: Selection<SVGElement, HierarchyRectangularNode<H>, SVGGElement, HierarchyRectangularNode<H>[]>, config: RadialDendrogramConfig<H>): void {
+export function createLabel<H extends Hierarchy> (selection: Selection<SVGGElement, HierarchyRectangularNode<H>, SVGGElement, HierarchyRectangularNode<H>[]>, config: RadialDendrogramConfig<H>): void {
   selection
     .style('opacity', 0)
     .attr('transform', d => {
@@ -35,7 +35,7 @@ export function createLabel<H extends Hierarchy> (selection: Selection<SVGElemen
     .style('fill', d => getColor(d.data, config.nodeColor, d.depth))
 }
 
-export function updateLabel<H extends Hierarchy> (selection: Selection<SVGElement, HierarchyRectangularNode<H>, SVGGElement, HierarchyRectangularNode<H>[]>, config: RadialDendrogramConfig<H>, width: number, duration: number): void {
+export function updateLabel<H extends Hierarchy> (selection: Selection<SVGGElement, HierarchyRectangularNode<H>, SVGGElement, HierarchyRectangularNode<H>[]>, config: RadialDendrogramConfig<H>, width: number, duration: number): void {
   const { nodeLabel } = config
   selection.style('opacity', 0)
   smartTransition(selection, duration)
@@ -50,7 +50,7 @@ export function updateLabel<H extends Hierarchy> (selection: Selection<SVGElemen
     })
   const label: Selection<SVGTextElement, any, SVGElement, any> = selection.select(`.${s.label}`)
   label
-    .text(d => getValue(d.data, nodeLabel))
+    .text(d => getString(d.data, nodeLabel))
     .style('fill', d => getColor(d.data, config.nodeColor, d.depth))
     .style('display', d => {
       const radianArcLength = d.x1 - d.x0
@@ -77,7 +77,7 @@ export function updateLabel<H extends Hierarchy> (selection: Selection<SVGElemen
     })
 }
 
-export function removeLabel<H extends Hierarchy> (selection: Selection<SVGElement, HierarchyRectangularNode<H>, SVGGElement, HierarchyRectangularNode<H>[]>, duration: number): void {
+export function removeLabel<H extends Hierarchy> (selection: Selection<SVGGElement, HierarchyRectangularNode<H>, SVGGElement, HierarchyRectangularNode<H>[]>, duration: number): void {
   smartTransition(selection, duration)
     .style('opacity', 0)
     .remove()

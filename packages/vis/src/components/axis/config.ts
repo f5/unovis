@@ -5,15 +5,14 @@ import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component
 import { AxisType } from 'components/axis/types'
 import { Position } from 'types/position'
 import { FitMode, TrimMode, TextAlign } from 'types/text'
-import { Spacing } from 'types/spacing'
+import { GenericDataRecord } from 'types/data'
 
-export interface AxisConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
+// We extend partial XY config interface because x and y properties are optional for Axis
+export interface AxisConfigInterface<Datum = GenericDataRecord> extends Partial<XYComponentConfigInterface<Datum>> {
   /** Axis position: `Position.Top`, `Position.Bottom`, `Position.Right` or `Position.Left`. Default: `undefined` */
   position?: Position | string;
   /** Axis type: `AxisType.X` or `AxisType.Y` */
   type?: AxisType | string;
-  /** Inner axis padding. Adds space between the chart and the axis. Default: `{ top: 0, bottom: 0, left: 0, right: 0 }` */
-  padding?: Spacing;
   /** Extend the axis domain line to be full width or full height. Default: `true` */
   fullSize?: boolean;
   /** Axis label. Default: `undefined` */
@@ -31,7 +30,7 @@ export interface AxisConfigInterface<Datum> extends XYComponentConfigInterface<D
   /** Draw the min and max axis ticks only. Default: `false` */
   minMaxTicksOnly?: boolean;
   /** Tick label formatter function. Default: `undefined` */
-  tickFormat?: (d: number | string, i: number, n: (number | string)[]) => string;
+  tickFormat?: (tick: number | Date, i: number, ticks: (number | Date)[]) => string;
   /** Explicitly set tick values. Default: `undefined` */
   tickValues?: number[];
   /** Set the approximate number of axis ticks (will be passed to D3's axis constructor). Default: `undefined` */
@@ -54,7 +53,7 @@ export interface AxisConfigInterface<Datum> extends XYComponentConfigInterface<D
   tickTextAlign?: TextAlign;
 }
 
-export class AxisConfig<Datum> extends XYComponentConfig<Datum> implements AxisConfigInterface<Datum> {
+export class AxisConfig<Datum = GenericDataRecord> extends XYComponentConfig<Datum> implements AxisConfigInterface<Datum> {
   position = undefined
   type = undefined
   label = undefined
@@ -72,14 +71,6 @@ export class AxisConfig<Datum> extends XYComponentConfig<Datum> implements AxisC
   tickTextFitMode = FitMode.Wrap
   tickTextFontSize = null
   tickTextAlign = undefined
-
-  padding = {
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-  }
-
   labelMargin = 8
   tickFormat = undefined
   tickValues = undefined

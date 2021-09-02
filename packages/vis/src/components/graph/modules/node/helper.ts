@@ -12,8 +12,8 @@ import { GraphInputLink, GraphInputNode } from 'types/graph'
 
 // Utils
 import { scoreRectPath } from 'utils/path'
-import { isEmpty, isNil, getValue } from 'utils/data'
-import { hexToBrightness } from 'utils/color'
+import { isEmpty, isNil, getNumber, getString } from 'utils/data'
+import { getColor, hexToBrightness } from 'utils/color'
 
 // Local Types
 import { GraphNode, GraphCircleLabel, GraphNodeAnimatedElement, GraphNodeAnimationState } from '../../types'
@@ -26,7 +26,7 @@ export const LABEL_RECT_HORIZONTAL_PADDING = 10
 export const LABEL_RECT_VERTICAL_PADDING = 4
 
 export function getNodeSize<T> (d: T, nodeSizeAccessor: NumericAccessor<T>): number {
-  return getValue(d, nodeSizeAccessor) || NODE_SIZE
+  return getNumber(d, nodeSizeAccessor) || NODE_SIZE
 }
 
 function _setInitialAnimState (el: GraphNodeAnimatedElement<SVGElement>): void {
@@ -47,9 +47,9 @@ export function arcTween<N extends GraphInputNode, L extends GraphInputLink> (
   if (!el._animState) _setInitialAnimState(el)
 
   const i = interpolate(el._animState, {
-    endAngle: 2 * Math.PI * (getValue(d, nodeStrokeSegmentValue) ?? 0) / 100,
+    endAngle: 2 * Math.PI * (getNumber(d, nodeStrokeSegmentValue) ?? 0) / 100,
     nodeSize: getNodeSize(d, nodeSize),
-    borderWidth: getValue(d, nodeBorderWidth),
+    borderWidth: getNumber(d, nodeBorderWidth),
   })
   el._animState = i(0)
 
@@ -67,7 +67,7 @@ export function polyTween<N extends GraphInputNode, L extends GraphInputLink> (
   const { nodeShape, nodeStrokeSegmentValue } = config
   const nodeSize = getNodeSize(d, config.nodeSize)
   let n: number
-  switch (getValue(d, nodeShape)) {
+  switch (getString(d, nodeShape)) {
     case Shape.Square:
       n = 4
       break
@@ -81,7 +81,7 @@ export function polyTween<N extends GraphInputNode, L extends GraphInputLink> (
 
   if (!el._animState) _setInitialAnimState(el)
   const i = interpolate(el._animState, {
-    endAngle: 2 * Math.PI * (getValue(d, nodeStrokeSegmentValue) ?? 0) / 100,
+    endAngle: 2 * Math.PI * (getNumber(d, nodeStrokeSegmentValue) ?? 0) / 100,
   })
   el._animState = i(0)
 
@@ -138,7 +138,7 @@ export function getSideTexLabelColor (label: GraphCircleLabel): string {
 }
 
 export function getNodeColor<T> (d: T, colorAccessor): string {
-  return getValue(d, colorAccessor) ?? null
+  return getColor(d, colorAccessor) ?? null
 }
 
 export function getNodeIconColor<T> (d: T, colorAccessor): string {

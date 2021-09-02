@@ -1,5 +1,7 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 /* eslint-disable dot-notation */
+// eslint-disable-next-line import/no-unresolved
+import { Topology } from 'topojson-specification'
 import { GeoProjection } from 'd3-geo'
 import { ComponentConfigInterface, ComponentConfig } from 'core/component/config'
 
@@ -9,12 +11,16 @@ import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
 // Local Types
 import { MapProjection, MapInputNode, MapInputLink, MapInputArea } from './types'
 
-export interface TopoJSONMapConfigInterface<N extends MapInputNode, L extends MapInputLink, A extends MapInputArea> extends ComponentConfigInterface {
+export interface TopoJSONMapConfigInterface<
+  N extends MapInputNode = MapInputNode,
+  L extends MapInputLink = MapInputLink,
+  A extends MapInputArea = MapInputArea,
+> extends ComponentConfigInterface {
   // General
   /** MapProjection (or D3's GeoProjection) instance. Default: `MapProjection.Mercator()` */
   projection?: GeoProjection;
   /** Map data in the TopoJSON topology format. Default: `topojson` */
-  topojson?: /* TopoJSON.Topology */ any; // TopoJSON typings have troubles with being bundled so we're temporary disabling them
+  topojson?: Topology; // TopoJSON typings have troubles with being bundled so we're temporary disabling them
   /** Name of the map features to be displayed, e.g. 'countries' or 'counties'. Default: `countries` */
   mapFeatureName?: string;
   /** Set initial map fit to points instead of topojson features. Default: `false` */
@@ -68,7 +74,11 @@ export interface TopoJSONMapConfigInterface<N extends MapInputNode, L extends Ma
   heatmapModeZoomLevelThreshold?: number;
 }
 
-export class TopoJSONMapConfig<N extends MapInputNode, L extends MapInputLink, A extends MapInputArea> extends ComponentConfig implements TopoJSONMapConfigInterface<N, L, A> {
+export class TopoJSONMapConfig<
+  N extends MapInputNode = MapInputNode,
+  L extends MapInputLink = MapInputLink,
+  A extends MapInputArea = MapInputArea,
+> extends ComponentConfig implements TopoJSONMapConfigInterface<N, L, A> {
   projection = MapProjection.Mercator()
   duration = 1500
   topojson = undefined

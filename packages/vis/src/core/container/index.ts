@@ -13,7 +13,7 @@ import { getBoundingClientRectObject } from 'utils/misc'
 import { ContainerConfig, ContainerConfigInterface } from './config'
 
 export class ContainerCore {
-  svg: Selection<SVGSVGElement, any, HTMLElement, any>
+  svg: Selection<SVGSVGElement, unknown, null, undefined>
   element: SVGSVGElement
   prevConfig: ContainerConfig
   config: ContainerConfig

@@ -37,12 +37,12 @@ function mapSampleData (): Record<string, any>[] {
   })
 }
 
-function getTooltipConfig (): TooltipConfigInterface<LeafletMap<MapPoint>, MapPoint> {
+function getTooltipConfig (): TooltipConfigInterface {
   return {
     verticalPlacement: Position.Center,
     horizontalShift: 10,
     triggers: {
-      [LeafletMap.selectors.point]: d => `<div>${d.id}</div>`,
+      [LeafletMap.selectors.point]: (d: MapPoint) => `<div>${d.id}</div>`,
     },
   }
 }
@@ -104,7 +104,7 @@ export class MapComponent implements AfterViewInit {
       console.log('onMapClick', mapCenter, zoomLevel, bounds, userDriven)
       this.mapContainer?.map.unselectPoint()
     },
-    tooltip: new Tooltip<LeafletMap<MapPoint>, MapPoint>(getTooltipConfig()),
+    tooltip: new Tooltip(getTooltipConfig()),
     events: {
       [LeafletMap.selectors.point]: {
         click: d => {

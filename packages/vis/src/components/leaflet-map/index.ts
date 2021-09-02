@@ -13,9 +13,10 @@ import { MapDataModel } from 'data-models/map'
 
 // Types
 import { ComponentType } from 'types/component'
+import { GenericDataRecord } from 'types/data'
 
 // Utils
-import { getValue, clamp, isNil, find } from 'utils/data'
+import { clamp, isNil, find, getNumber } from 'utils/data'
 import { constraintMapViewThrottled } from './renderer/mapboxgl-utils'
 
 import { LeafletMapRenderer, LeafletMapPoint, Bounds, MapZoomState, LeafletMapPointDatum } from './types'
@@ -44,7 +45,7 @@ import {
   getClustersAndPoints,
 } from './modules/utils'
 
-export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
+export class LeafletMap<Datum = GenericDataRecord> extends ComponentCore<Datum[]> {
   static selectors = s
   type = ComponentType.HTML
   div: Selection<HTMLElement, any, HTMLElement, any>
@@ -178,8 +179,8 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     const { config, datamodel } = this
 
     const dataValid = data.filter(d => {
-      const lat = getValue(d, config.pointLatitude)
-      const lon = getValue(d, config.pointLongitude)
+      const lat = getNumber(d, config.pointLatitude)
+      const lon = getNumber(d, config.pointLongitude)
       const valid = isFinite(lat) && isFinite(lon)
 
       if (!valid) console.warn('Map: Invalid point coordinates', d)
@@ -258,8 +259,8 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
 
     if (centerPoint) {
       const coordinates = {
-        lng: getValue(foundPoint.properties, config.pointLongitude),
-        lat: getValue(foundPoint.properties, config.pointLatitude),
+        lng: getNumber(foundPoint.properties, config.pointLongitude),
+        lat: getNumber(foundPoint.properties, config.pointLatitude),
       }
 
       const zoomLevel = this._map.leaflet.getZoom()
@@ -322,8 +323,8 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
 
       const zoomLevel = isNil(customZoomLevel) ? this._map.leaflet.getZoom() : customZoomLevel
       const coordinates = {
-        lng: getValue(foundPoint.properties, config.pointLongitude),
-        lat: getValue(foundPoint.properties, config.pointLatitude),
+        lng: getNumber(foundPoint.properties, config.pointLongitude),
+        lat: getNumber(foundPoint.properties, config.pointLatitude),
       }
       this._eventInitiatedByComponent = true
       this._map.leaflet.flyTo(coordinates, zoomLevel, { duration: 0 })

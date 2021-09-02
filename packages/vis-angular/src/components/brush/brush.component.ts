@@ -1,7 +1,17 @@
 /* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import { Brush, BrushConfigInterface, NumericAccessor, ColorAccessor, ContinuousScale, Arrangement } from '@volterra/vis'
+import {
+  Brush,
+  BrushConfigInterface,
+  GenericDataRecord,
+  VisEventType,
+  VisEventCallback,
+  NumericAccessor,
+  ColorAccessor,
+  ContinuousScale,
+  Arrangement,
+} from '@volterra/vis'
 import { D3BrushEvent } from 'd3-brush'
 import { VisXYComponent } from '../../core'
 
@@ -11,7 +21,7 @@ import { VisXYComponent } from '../../core'
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisXYComponent, useExisting: VisBrushComponent }],
 })
-export class VisBrushComponent<Datum> implements BrushConfigInterface<Datum>, AfterViewInit {
+export class VisBrushComponent<Datum = GenericDataRecord> implements BrushConfigInterface<Datum>, AfterViewInit {
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */
   @Input() duration: number
 
@@ -34,7 +44,7 @@ export class VisBrushComponent<Datum> implements BrushConfigInterface<Datum>, Af
    * ``` */
   @Input() events: {
     [selector: string]: {
-      [eventName: string]: (data: any, event?: Event, i?: number, els?: SVGElement[] | HTMLElement[]) => void;
+      [eventType in VisEventType]?: VisEventCallback
     };
   }
 
@@ -69,19 +79,19 @@ export class VisBrushComponent<Datum> implements BrushConfigInterface<Datum>, Af
   @Input() y: NumericAccessor<Datum> | NumericAccessor<Datum>[]
 
   /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */
-  @Input() id: ((d: Datum, i?: number, ...rest) => string | number)
+  @Input() id: ((d: Datum, i?: number, ...rest) => string)
 
   /** Component color accessor function. Default: `d => d.color` */
-  @Input() color: ColorAccessor<Datum>
+  @Input() color: ColorAccessor<Datum | Datum[]>
 
-  /** X and Y scales. As of now, only continuous scales are supported. Default: `{ x: Scale.scaleLinear(), y: Scale.scaleLinear() } */
-  @Input() scales: {
-    x?: ContinuousScale;
-    y?: ContinuousScale;
-  }
+  /** Scale for X dimension, e.g. Scale.scaleLinear(). As of now, only continuous scales are supported. Default: `Scale.scaleLinear()` */
+  @Input() xScale: ContinuousScale
+
+  /** Scale for Y dimension, e.g. Scale.scaleLinear(). As of now, only continuous scales are supported. Default: `Scale.scaleLinear()` */
+  @Input() yScale: ContinuousScale
 
   /** Sets the Y scale domain based on the X scale domain not the whole data. Useful when you manipulate chart's X domain from outside. Default: `false` */
-  @Input() adaptiveYScale: boolean
+  @Input() scaleByDomain: boolean
 
   /** Callback function to be called on any Brush event.
    * Default: `(selection: [number, number], event: D3BrushEvent<Datum>, userDriven: boolean): void => {}` */
@@ -114,7 +124,7 @@ export class VisBrushComponent<Datum> implements BrushConfigInterface<Datum>, Af
 
   /** Constraint Brush selection to a minimal length in data units. Default: `undefined` */
   @Input() selectionMinLength: number
-  @Input() data: any
+  @Input() data: Datum[]
 
   component: Brush<Datum> | undefined
 
@@ -128,8 +138,8 @@ export class VisBrushComponent<Datum> implements BrushConfigInterface<Datum>, Af
   }
 
   private getConfig (): BrushConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, scales, adaptiveYScale, onBrush, onBrushStart, onBrushMove, onBrushEnd, handleWidth, selection, draggable, handlePosition, selectionMinLength } = this
-    const config = { duration, events, attributes, x, y, id, color, scales, adaptiveYScale, onBrush, onBrushStart, onBrushMove, onBrushEnd, handleWidth, selection, draggable, handlePosition, selectionMinLength }
+    const { duration, events, attributes, x, y, id, color, xScale, yScale, scaleByDomain, onBrush, onBrushStart, onBrushMove, onBrushEnd, handleWidth, selection, draggable, handlePosition, selectionMinLength } = this
+    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, scaleByDomain, onBrush, onBrushStart, onBrushMove, onBrushEnd, handleWidth, selection, draggable, handlePosition, selectionMinLength }
     const keys = Object.keys(config) as (keyof BrushConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

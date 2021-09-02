@@ -16,22 +16,25 @@ const xyComponentConfigPath = '/core/xy-component'
 const skipProperties = ['width', 'height']
 const components: ComponentInput[] = [
   // XY Components
-  { name: 'Line', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/line'], provide: 'VisXYComponent' },
-  { name: 'Area', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/area'], provide: 'VisXYComponent' },
-  { name: 'Axis', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/axis'], provide: 'VisXYComponent' },
-  { name: 'Brush', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/brush'], provide: 'VisXYComponent' },
-  { name: 'FreeBrush', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/free-brush'], provide: 'VisXYComponent' },
-  { name: 'Crosshair', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/crosshair'], provide: 'VisXYComponent' },
-  { name: 'GroupedBar', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/grouped-bar'], provide: 'VisXYComponent' },
-  { name: 'Scatter', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/scatter'], provide: 'VisXYComponent' },
-  { name: 'StackedBar', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/stacked-bar'], provide: 'VisXYComponent' },
-  { name: 'Timeline', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/timeline'], provide: 'VisXYComponent' },
+  { name: 'Line', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/line'], dataType: 'Datum[]', provide: 'VisXYComponent' },
+  { name: 'Area', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/area'], dataType: 'Datum[]', provide: 'VisXYComponent' },
+  { name: 'Axis', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/axis'], dataType: 'Datum[]', provide: 'VisXYComponent' },
+  { name: 'Brush', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/brush'], dataType: 'Datum[]', provide: 'VisXYComponent' },
+  { name: 'FreeBrush', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/free-brush'], dataType: 'Datum[]', provide: 'VisXYComponent' },
+  { name: 'Crosshair', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/crosshair'], dataType: 'Datum[]', provide: 'VisXYComponent' },
+  { name: 'GroupedBar', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/grouped-bar'], dataType: 'Datum[]', provide: 'VisXYComponent' },
+  { name: 'Scatter', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/scatter'], dataType: 'Datum[]', provide: 'VisXYComponent' },
+  { name: 'StackedBar', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/stacked-bar'], dataType: 'Datum[]', provide: 'VisXYComponent' },
+  { name: 'Timeline', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/timeline'], dataType: 'Datum[]', provide: 'VisXYComponent' },
 
   // Single components
   { name: 'Donut', sources: [coreComponentConfigPath, '/components/donut'], provide: 'VisCoreComponent' },
   { name: 'TopoJSONMap', kebabCaseName: 'topojson-map', sources: [coreComponentConfigPath, '/components/topojson-map'], dataType: 'any', provide: 'VisCoreComponent' },
   { name: 'Sankey', sources: [coreComponentConfigPath, '/components/sankey'], provide: 'VisCoreComponent' },
   { name: 'Graph', sources: [coreComponentConfigPath, '/components/graph'], provide: 'VisCoreComponent' },
+
+  // Ancillary components
+  { name: 'Tooltip', sources: ['/components/tooltip'], dataType: null, provide: 'VisGenericComponent' },
 
   // Unique cases (you can still generate a wrapper for these components, but most likely it will require some changes)
   // { name: 'LeafletMap', sources: [coreComponentConfigPath, '/components/leaflet-map'], provide: 'VisCoreComponent' },
@@ -61,12 +64,13 @@ for (const component of components) {
     configInterfaceMembers = [...configInterfaceMembers, ...configInterface.members]
     statements = [...statements, ...sourceStatements]
     if (i === component.sources.length - 1) {
-      generics = configInterface.typeParameters?.map(t => {
+      generics = configInterface.typeParameters?.map((t: ts.TypeParameterDeclaration) => {
         const name = t.name.escapedText as string
         const constraint = t.constraint as ts.TypeReferenceNode
         const constraintTypeName = (constraint?.typeName as ts.Identifier)?.escapedText as string
+        const defaultValue = ((t.default as ts.TypeReferenceNode)?.typeName as ts.Identifier)?.escapedText as string
 
-        return { name, extends: constraintTypeName }
+        return { name, extends: constraintTypeName, default: defaultValue }
       })
     }
   }
@@ -80,7 +84,7 @@ for (const component of components) {
     configProperties,
     component.provide,
     importStatements,
-    component.dataType ?? 'any',
+    component.dataType,
     component.kebabCaseName
   )
   const moduleCode = getModuleCode(component.name, component.kebabCaseName)

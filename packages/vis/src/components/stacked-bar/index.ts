@@ -5,7 +5,7 @@ import { min } from 'd3-array'
 import { XYComponentCore } from 'core/xy-component'
 
 // Utils
-import { getValue, isNumber, isArray, isEmpty, clamp, getStackedExtent, getStackedValues } from 'utils/data'
+import { isNumber, isArray, isEmpty, clamp, getStackedExtent, getStackedValues, getString, getNumber } from 'utils/data'
 import { roundedRectPath } from 'utils/path'
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
@@ -13,6 +13,7 @@ import { getColor } from 'utils/color'
 // Types
 import { NumericAccessor } from 'types/accessor'
 import { Spacing } from 'types/spacing'
+import { GenericDataRecord } from 'types/data'
 
 // Config
 import { StackedBarConfig, StackedBarConfigInterface } from './config'
@@ -20,7 +21,7 @@ import { StackedBarConfig, StackedBarConfigInterface } from './config'
 // Styles
 import * as s from './style'
 
-export class StackedBar<Datum> extends XYComponentCore<Datum> {
+export class StackedBar<Datum = GenericDataRecord> extends XYComponentCore<Datum> {
   static selectors = s
   config: StackedBarConfig<Datum> = new StackedBarConfig()
   getAccessors = (): NumericAccessor<Datum>[] => (isArray(this.config.y) ? this.config.y : [this.config.y])
@@ -47,17 +48,17 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
     const stackedValues = visibleData.map(d => getStackedValues(d, ...yAccessors))
 
     const barGroups = this.g
-      .selectAll(`.${s.barGroup}`)
-      .data(visibleData, (d, i) => `${getValue(d, config.id) ?? i}`)
+      .selectAll<SVGGElement, Datum>(`.${s.barGroup}`)
+      .data(visibleData, (d, i) => `${getString(d, config.id) ?? i}`)
 
     const barGroupsEnter = barGroups.enter().append('g')
       .attr('class', s.barGroup)
-      .attr('transform', d => `translate(${config.scales.x(getValue(d, config.x))}, 0)`)
+      .attr('transform', d => `translate(${config.xScale(getNumber(d, config.x))}, 0)`)
       .style('opacity', 1)
 
     const barGroupsMerged = barGroupsEnter.merge(barGroups)
     smartTransition(barGroupsMerged, duration)
-      .attr('transform', d => `translate(${config.scales.x(getValue(d, config.x))}, 0)`)
+      .attr('transform', d => `translate(${config.xScale(getNumber(d, config.x))}, 0)`)
       .style('opacity', 1)
 
     const barGroupExit = barGroups.exit()
@@ -72,7 +73,8 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
       .attr('transform', `translate(0,${config.height / 3})`)
 
     // Render Bars
-    const bars = barGroupsMerged.selectAll(`.${s.bar}`)
+    const bars = barGroupsMerged
+      .selectAll<SVGPathElement, Datum>(`.${s.bar}`)
       .data((d, i) => yAccessors.map(() => ({ ...d, _stacked: stackedValues[i] })))
 
     const barsEnter = bars.enter().append('path')
@@ -85,7 +87,7 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
     smartTransition(barsMerged, duration)
       .attr('d', (d, i) => this._getBarPath(d, i))
       .style('fill', (d, i) => getColor(d, config.color, i))
-      .style('cursor', (d, i) => getValue(d, config.cursor, i))
+      .style('cursor', (d, i) => getString(d, config.cursor, i))
 
     smartTransition(bars.exit(), duration)
       .style('opacity', 0)
@@ -99,16 +101,16 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const isOrdinal = config.scales.x.bandwidth
-    const xDomain = (config.scales.x.domain ? config.scales.x.domain() : []) as number[]
+    const isOrdinal = config.xScale.bandwidth
+    const xDomain = (config.xScale.domain ? config.xScale.domain() : []) as number[]
     const xDomainLength = isOrdinal ? xDomain.length : xDomain[1] - xDomain[0]
 
     // If the dataStep property is provided the amount of data elements is calculates as domainLength / dataStep
-    //   othwerise we get the number of data elements within the domain range
+    //   otherwise we get the number of data elements within the domain range
     // Or if the scale is ordinal we use data.length
     let dataSize = (1 + xDomainLength / config.dataStep) ||
         (!isOrdinal && data.filter(d => {
-          const value = getValue(d, config.x)
+          const value = getNumber(d, config.x)
           return (value >= xDomain[0]) && (value <= xDomain[1])
         }).length) ||
         data.length
@@ -128,10 +130,10 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
     const groupWidth = this._getBarWidth()
     const halfGroupWidth = data.length < 2 ? 0 : groupWidth / 2
 
-    const xScale = config.scales.x
+    const xScale = config.xScale
     const xHalfGroupWidth = Math.abs((xScale.invert(halfGroupWidth) as number) - (xScale.invert(0) as number))
     const filtered = data?.filter(d => {
-      const v = getValue(d, config.x)
+      const v = getNumber(d, config.x)
       const xDomain: number[] | Date[] = xScale.domain()
       const xDomainMin = +xDomain[0]
       const xDomainMax = +xDomain[1]
@@ -147,11 +149,11 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
     const barWidth = this._getBarWidth()
 
     const stackedValue = d._stacked[i]
-    const value = getValue(d, yAccessors[i])
+    const value = getNumber(d, yAccessors[i])
 
-    const height = isEntering ? 0 : config.scales.y(d._stacked[i - 1] ?? 0) - config.scales.y(stackedValue)
+    const height = isEntering ? 0 : config.yScale(d._stacked[i - 1] ?? 0) - config.yScale(stackedValue)
     const h = !isEntering && config.barMinHeight && (height < 1) && isFinite(value) && (value !== config.barMinHeightZeroValue) ? 1 : height
-    const y = isEntering ? config.scales.y(0) : config.scales.y(stackedValue) - (height < 1 && config.barMinHeight ? 1 : 0)
+    const y = isEntering ? config.yScale(0) : config.yScale(stackedValue) - (height < 1 && config.barMinHeight ? 1 : 0)
 
     const x = -barWidth / 2
     const width = barWidth
@@ -177,7 +179,7 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
     const { datamodel, config } = this
     const yAccessors = this.getAccessors()
 
-    const data = config.adaptiveYScale ? this._getVisibleData() : datamodel.data
+    const data = config.scaleByDomain ? this._getVisibleData() : datamodel.data
     return getStackedExtent(data, ...yAccessors)
   }
 }

@@ -1,7 +1,17 @@
 /* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import { Crosshair, CrosshairConfigInterface, NumericAccessor, ColorAccessor, ContinuousScale, Tooltip, XYComponentCore } from '@volterra/vis'
+import {
+  Crosshair,
+  CrosshairConfigInterface,
+  GenericDataRecord,
+  VisEventType,
+  VisEventCallback,
+  NumericAccessor,
+  ColorAccessor,
+  ContinuousScale,
+  Tooltip,
+} from '@volterra/vis'
 import { VisXYComponent } from '../../core'
 
 @Component({
@@ -10,7 +20,7 @@ import { VisXYComponent } from '../../core'
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisXYComponent, useExisting: VisCrosshairComponent }],
 })
-export class VisCrosshairComponent<Datum> implements CrosshairConfigInterface<Datum>, AfterViewInit {
+export class VisCrosshairComponent<Datum = GenericDataRecord> implements CrosshairConfigInterface<Datum>, AfterViewInit {
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */
   @Input() duration: number
 
@@ -33,7 +43,7 @@ export class VisCrosshairComponent<Datum> implements CrosshairConfigInterface<Da
    * ``` */
   @Input() events: {
     [selector: string]: {
-      [eventName: string]: (data: any, event?: Event, i?: number, els?: SVGElement[] | HTMLElement[]) => void;
+      [eventType in VisEventType]?: VisEventCallback
     };
   }
 
@@ -68,19 +78,19 @@ export class VisCrosshairComponent<Datum> implements CrosshairConfigInterface<Da
   @Input() y: NumericAccessor<Datum> | NumericAccessor<Datum>[]
 
   /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */
-  @Input() id: ((d: Datum, i?: number, ...rest) => string | number)
+  @Input() id: ((d: Datum, i?: number, ...rest) => string)
 
   /** Component color accessor function. Default: `d => d.color` */
-  @Input() color: ColorAccessor<Datum>
+  @Input() color: ColorAccessor<Datum | Datum[]>
 
-  /** X and Y scales. As of now, only continuous scales are supported. Default: `{ x: Scale.scaleLinear(), y: Scale.scaleLinear() } */
-  @Input() scales: {
-    x?: ContinuousScale;
-    y?: ContinuousScale;
-  }
+  /** Scale for X dimension, e.g. Scale.scaleLinear(). As of now, only continuous scales are supported. Default: `Scale.scaleLinear()` */
+  @Input() xScale: ContinuousScale
+
+  /** Scale for Y dimension, e.g. Scale.scaleLinear(). As of now, only continuous scales are supported. Default: `Scale.scaleLinear()` */
+  @Input() yScale: ContinuousScale
 
   /** Sets the Y scale domain based on the X scale domain not the whole data. Useful when you manipulate chart's X domain from outside. Default: `false` */
-  @Input() adaptiveYScale: boolean
+  @Input() scaleByDomain: boolean
 
   /** Separate array of accessors for stacked components (eg StackedBar, Area). Default: `[]` */
   @Input() yStacked: NumericAccessor<Datum>[]
@@ -89,7 +99,7 @@ export class VisCrosshairComponent<Datum> implements CrosshairConfigInterface<Da
   @Input() baseline: NumericAccessor<Datum>
 
   /** An instance of the Tooltip component to be used with Crosshair. Default: `undefined` */
-  @Input() tooltip: Tooltip<XYComponentCore<Datum>, Datum> | undefined
+  @Input() tooltip: Tooltip | undefined
 
   /** Tooltip template accessor. The function is supposed to return either a valid HTML string or an HTMLElement. Default: `d => ''` */
   @Input() template: (data: Datum, i: number, elements: any) => string | HTMLElement
@@ -99,7 +109,7 @@ export class VisCrosshairComponent<Datum> implements CrosshairConfigInterface<Da
 
   /** Distance in pixels to check in the hideWhenFarFromPointer condition. Default: `100` */
   @Input() hideWhenFarFromPointerDistance: number
-  @Input() data: any
+  @Input() data: Datum[]
 
   component: Crosshair<Datum> | undefined
 
@@ -113,8 +123,8 @@ export class VisCrosshairComponent<Datum> implements CrosshairConfigInterface<Da
   }
 
   private getConfig (): CrosshairConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, scales, adaptiveYScale, yStacked, baseline, tooltip, template, hideWhenFarFromPointer, hideWhenFarFromPointerDistance } = this
-    const config = { duration, events, attributes, x, y, id, color, scales, adaptiveYScale, yStacked, baseline, tooltip, template, hideWhenFarFromPointer, hideWhenFarFromPointerDistance }
+    const { duration, events, attributes, x, y, id, color, xScale, yScale, scaleByDomain, yStacked, baseline, tooltip, template, hideWhenFarFromPointer, hideWhenFarFromPointerDistance } = this
+    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, scaleByDomain, yStacked, baseline, tooltip, template, hideWhenFarFromPointer, hideWhenFarFromPointerDistance }
     const keys = Object.keys(config) as (keyof CrosshairConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

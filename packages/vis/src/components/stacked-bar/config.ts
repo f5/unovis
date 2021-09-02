@@ -3,8 +3,9 @@ import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component
 
 // Types
 import { StringAccessor } from 'types/accessor'
+import { GenericDataRecord } from 'types/data'
 
-export interface StackedBarConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
+export interface StackedBarConfigInterface<Datum = GenericDataRecord> extends XYComponentConfigInterface<Datum> {
   /** Force set bar width in pixels. Default: `undefined` */
   barWidth?: number;
   /** Maximum bar width for dynamic sizing. Default: `undefined` */
@@ -27,7 +28,7 @@ export interface StackedBarConfigInterface<Datum> extends XYComponentConfigInter
   barMinHeightZeroValue?: any;
 }
 
-export class StackedBarConfig<Datum> extends XYComponentConfig<Datum> implements StackedBarConfigInterface<Datum> {
+export class StackedBarConfig<Datum = GenericDataRecord> extends XYComponentConfig<Datum> implements StackedBarConfigInterface<Datum> {
   barMaxWidth = undefined
   barWidth = undefined
   dataStep = undefined
