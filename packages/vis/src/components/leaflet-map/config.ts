@@ -3,7 +3,7 @@
 
 // Core
 import { ComponentConfig, ComponentConfigInterface } from 'core/component/config'
-import { Tooltip } from 'core/tooltip'
+import { Tooltip } from 'components/tooltip'
 
 // Types
 import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'

@@ -3,7 +3,7 @@
 // Core
 import { XYComponentCore } from 'core/xy-component'
 import { ContainerConfig, ContainerConfigInterface } from 'core/container/config'
-import { Tooltip } from 'core/tooltip'
+import { Tooltip } from 'components/tooltip'
 
 // Components
 import { Axis } from 'components/axis'

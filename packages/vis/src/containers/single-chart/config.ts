@@ -3,7 +3,7 @@
 // Core
 import { ContainerConfig, ContainerConfigInterface } from 'core/container/config'
 import { ComponentCore } from 'core/component'
-import { Tooltip } from 'core/tooltip'
+import { Tooltip } from 'components/tooltip'
 import { GenericDataRecord } from 'types/data'
 
 export interface SingleChartConfigInterface<Datum = GenericDataRecord> extends ContainerConfigInterface {
