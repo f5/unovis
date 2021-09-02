@@ -179,8 +179,9 @@ export function getImportStatements (
 
   // We assume that all extend types in generics come from volterra/vis
   const genericExtends = generics.map(g => g.extends).filter(g => g)
+  const genericDefaults = generics.map(g => g.default).filter(g => g)
   const componentTypes = [componentName, `${componentName}ConfigInterface`]
-  for (const typeName of [...componentTypes, ...genericExtends]) {
+  for (const typeName of [...componentTypes, ...genericExtends, ...genericDefaults]) {
     importSources[typeName] = '@volterra/vis'
   }
 
@@ -202,7 +203,7 @@ export function getImportStatements (
     .filter(name => !genericNames.includes(name)) // Filter out generics
 
   const importStatements: { source: string; elements: string[] }[] = []
-  for (const name of Array.from(new Set([...componentTypes, ...genericExtends, ...typeList]))) {
+  for (const name of Array.from(new Set([...componentTypes, ...genericExtends, ...genericDefaults, ...typeList]))) {
     const importSource: string = importSources[name]
     if (!importSource) {
       console.error(`Can't find import source for: ${name}`)

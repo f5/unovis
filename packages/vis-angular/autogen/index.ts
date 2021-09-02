@@ -62,12 +62,13 @@ for (const component of components) {
     configInterfaceMembers = [...configInterfaceMembers, ...configInterface.members]
     statements = [...statements, ...sourceStatements]
     if (i === component.sources.length - 1) {
-      generics = configInterface.typeParameters?.map(t => {
+      generics = configInterface.typeParameters?.map((t: ts.TypeParameterDeclaration) => {
         const name = t.name.escapedText as string
         const constraint = t.constraint as ts.TypeReferenceNode
         const constraintTypeName = (constraint?.typeName as ts.Identifier)?.escapedText as string
+        const defaultValue = ((t.default as ts.TypeReferenceNode)?.typeName as ts.Identifier)?.escapedText as string
 
-        return { name, extends: constraintTypeName }
+        return { name, extends: constraintTypeName, default: defaultValue }
       })
     }
   }
