@@ -12,9 +12,6 @@ import { GenericDataRecord } from 'types/data'
 // Local Types
 import { LeafletMapRenderer, Bounds, LeafletMapPointStyles, MapZoomState, LeafletMapPointDatum } from './types'
 
-// Component
-import { LeafletMap } from './index'
-
 export interface LeafletMapConfigInterface<Datum = GenericDataRecord> extends ComponentConfigInterface {
   // General
   /** Animation duration when the map is automatically panning or zooming to a point or area. Default: `1500` ms */
@@ -130,7 +127,7 @@ export interface LeafletMapConfigInterface<Datum = GenericDataRecord> extends Co
 
   // Misc
   /** Tooltip component. Default: `undefined` */
-  tooltip?: Tooltip<LeafletMap<Datum>, Datum>;
+  tooltip?: Tooltip;
 }
 
 export class LeafletMapConfig<Datum = GenericDataRecord> extends ComponentConfig implements LeafletMapConfigInterface<Datum> {

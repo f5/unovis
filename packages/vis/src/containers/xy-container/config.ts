@@ -74,7 +74,7 @@ export interface XYContainerConfigInterface<Datum = GenericDataRecord> extends C
   /** Enables automatic calculation of chart margins based on the size of the axes. Default: `true` */
   autoMargin?: boolean;
   /** Tooltip component. Default: `undefined` */
-  tooltip?: Tooltip<XYComponentCore<Datum>, Datum> | undefined;
+  tooltip?: Tooltip | undefined;
   /** Crosshair component. Default: `undefined` */
   crosshair?: Crosshair<Datum> | undefined;
   /** Prevents the chart domain from being empty (when domain's min and max values are equal).
@@ -88,7 +88,7 @@ export interface XYContainerConfigInterface<Datum = GenericDataRecord> extends C
 
 export class XYContainerConfig<Datum = GenericDataRecord> extends ContainerConfig implements XYContainerConfigInterface<Datum> {
   components = []
-  tooltip: Tooltip<XYComponentCore<Datum>, Datum> = undefined
+  tooltip: Tooltip = undefined
   crosshair: Crosshair<Datum> = undefined
   xAxis: Axis<Datum> = undefined
   yAxis: Axis<Datum> = undefined

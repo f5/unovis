@@ -1,5 +1,4 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { XYComponentCore } from 'core/xy-component'
 import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component/config'
 import { Tooltip } from 'core/tooltip'
 
@@ -14,7 +13,7 @@ export interface CrosshairConfigInterface<Datum = GenericDataRecord> extends Par
   /** Baseline accessor function for stacked values, useful with stacked areas. Default: `null` */
   baseline?: NumericAccessor<Datum>;
   /** An instance of the Tooltip component to be used with Crosshair. Default: `undefined` */
-  tooltip?: Tooltip<XYComponentCore<Datum>, Datum> | undefined;
+  tooltip?: Tooltip | undefined;
   /** Tooltip template accessor. The function is supposed to return either a valid HTML string or an HTMLElement. Default: `d => ''` */
   template?: (data: Datum, i: number, elements: any) => string | HTMLElement;
   /** Hide Crosshair when the corresponding element is far from mouse pointer. Default: `true` */
@@ -27,7 +26,7 @@ export class CrosshairConfig<Datum = GenericDataRecord> extends XYComponentConfi
   yStacked = []
   baseline = null
   duration = 100
-  tooltip: Tooltip<XYComponentCore<Datum>, Datum> = undefined
+  tooltip: Tooltip = undefined
   template = (d: Datum): string => ''
   hideWhenFarFromPointer = true
   hideWhenFarFromPointerDistance = 100

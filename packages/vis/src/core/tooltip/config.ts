@@ -5,9 +5,9 @@ import { ComponentCore } from 'core/component'
 // Types
 import { Position, PositionStrategy } from 'types/position'
 
-export interface TooltipConfigInterface<T extends ComponentCore<any>, Datum = any> {
+export interface TooltipConfigInterface {
   /** An array of visualization components to interact with. Default: `[]` */
-  components?: T[];
+  components?: ComponentCore<unknown>[];
   /** Container to where the Tooltip component should be inserted. Default: `undefined` */
   container?: HTMLElement;
   /** Horizontal placement of the tooltip. Default: `Position.Auto` */
@@ -40,8 +40,8 @@ export interface TooltipConfigInterface<T extends ComponentCore<any>, Datum = an
   };
 }
 
-export class TooltipConfig<T extends ComponentCore<any>, Datum = any> extends Config implements TooltipConfigInterface<T, Datum> {
-  components: T[] = []
+export class TooltipConfig extends Config implements TooltipConfigInterface {
+  components: ComponentCore<unknown>[] = []
   container = undefined
   horizontalPlacement = Position.Auto
   horizontalShift = 0

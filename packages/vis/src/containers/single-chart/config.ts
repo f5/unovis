@@ -10,7 +10,7 @@ export interface SingleChartConfigInterface<Datum = GenericDataRecord> extends C
   /** Visualization component. Default: `undefined` */
   component?: ComponentCore<Datum>;
   /** Tooltip component. Default: `undefined` */
-  tooltip?: Tooltip<ComponentCore<Datum>, Datum>;
+  tooltip?: Tooltip;
 }
 
 export class SingleChartConfig<Datum = GenericDataRecord> extends ContainerConfig implements SingleChartConfigInterface<Datum> {
