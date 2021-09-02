@@ -34,7 +34,7 @@ const components: ComponentInput[] = [
   { name: 'Graph', sources: [coreComponentConfigPath, '/components/graph'], provide: 'VisCoreComponent' },
 
   // Ancillary components
-  { name: 'Tooltip', sources: ['/core/tooltip'], dataType: null, provide: 'VisGenericComponent' },
+  { name: 'Tooltip', sources: ['/components/tooltip'], dataType: null, provide: 'VisGenericComponent' },
 
   // Unique cases (you can still generate a wrapper for these components, but most likely it will require some changes)
   // { name: 'LeafletMap', sources: [coreComponentConfigPath, '/components/leaflet-map'], provide: 'VisCoreComponent' },
