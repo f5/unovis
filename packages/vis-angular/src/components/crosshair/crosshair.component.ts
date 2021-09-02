@@ -4,6 +4,7 @@ import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
 import {
   Crosshair,
   CrosshairConfigInterface,
+  GenericDataRecord,
   VisEventType,
   VisEventCallback,
   NumericAccessor,
@@ -20,7 +21,7 @@ import { VisXYComponent } from '../../core'
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisXYComponent, useExisting: VisCrosshairComponent }],
 })
-export class VisCrosshairComponent<Datum> implements CrosshairConfigInterface<Datum>, AfterViewInit {
+export class VisCrosshairComponent<Datum = GenericDataRecord> implements CrosshairConfigInterface<Datum>, AfterViewInit {
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */
   @Input() duration: number
 

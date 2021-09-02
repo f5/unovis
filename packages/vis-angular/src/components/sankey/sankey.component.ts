@@ -28,7 +28,7 @@ import { VisCoreComponent } from '../../core'
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisCoreComponent, useExisting: VisSankeyComponent }],
 })
-export class VisSankeyComponent<N extends SankeyInputNode, L extends SankeyInputLink> implements SankeyConfigInterface<N, L>, AfterViewInit {
+export class VisSankeyComponent<N extends SankeyInputNode = SankeyInputNode, L extends SankeyInputLink = SankeyInputLink> implements SankeyConfigInterface<N, L>, AfterViewInit {
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */
   @Input() duration: number
 

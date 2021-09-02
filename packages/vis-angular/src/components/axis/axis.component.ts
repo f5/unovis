@@ -4,6 +4,7 @@ import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
 import {
   Axis,
   AxisConfigInterface,
+  GenericDataRecord,
   VisEventType,
   VisEventCallback,
   NumericAccessor,
@@ -23,7 +24,7 @@ import { VisXYComponent } from '../../core'
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisXYComponent, useExisting: VisAxisComponent }],
 })
-export class VisAxisComponent<Datum> implements AxisConfigInterface<Datum>, AfterViewInit {
+export class VisAxisComponent<Datum = GenericDataRecord> implements AxisConfigInterface<Datum>, AfterViewInit {
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */
   @Input() duration: number
 

@@ -23,7 +23,7 @@ import { VisCoreComponent } from '../../core'
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisCoreComponent, useExisting: VisTopoJSONMapComponent }],
 })
-export class VisTopoJSONMapComponent<N extends MapInputNode, L extends MapInputLink, A extends MapInputArea> implements TopoJSONMapConfigInterface<N, L, A>, AfterViewInit {
+export class VisTopoJSONMapComponent<N extends MapInputNode = MapInputNode, L extends MapInputLink = MapInputLink, A extends MapInputArea = MapInputArea> implements TopoJSONMapConfigInterface<N, L, A>, AfterViewInit {
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */
   @Input() duration: number
 

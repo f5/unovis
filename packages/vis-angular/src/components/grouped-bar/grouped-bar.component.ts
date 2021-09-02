@@ -4,6 +4,7 @@ import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
 import {
   GroupedBar,
   GroupedBarConfigInterface,
+  GenericDataRecord,
   VisEventType,
   VisEventCallback,
   NumericAccessor,
@@ -19,7 +20,7 @@ import { VisXYComponent } from '../../core'
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisXYComponent, useExisting: VisGroupedBarComponent }],
 })
-export class VisGroupedBarComponent<Datum> implements GroupedBarConfigInterface<Datum>, AfterViewInit {
+export class VisGroupedBarComponent<Datum = GenericDataRecord> implements GroupedBarConfigInterface<Datum>, AfterViewInit {
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */
   @Input() duration: number
 

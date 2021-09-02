@@ -4,6 +4,7 @@ import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
 import {
   Area,
   AreaConfigInterface,
+  GenericDataRecord,
   VisEventType,
   VisEventCallback,
   NumericAccessor,
@@ -20,7 +21,7 @@ import { VisXYComponent } from '../../core'
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisXYComponent, useExisting: VisAreaComponent }],
 })
-export class VisAreaComponent<Datum> implements AreaConfigInterface<Datum>, AfterViewInit {
+export class VisAreaComponent<Datum = GenericDataRecord> implements AreaConfigInterface<Datum>, AfterViewInit {
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */
   @Input() duration: number
 

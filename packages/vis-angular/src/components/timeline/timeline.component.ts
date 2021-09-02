@@ -4,6 +4,7 @@ import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
 import {
   Timeline,
   TimelineConfigInterface,
+  GenericDataRecord,
   VisEventType,
   VisEventCallback,
   NumericAccessor,
@@ -19,7 +20,7 @@ import { VisXYComponent } from '../../core'
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisXYComponent, useExisting: VisTimelineComponent }],
 })
-export class VisTimelineComponent<Datum> implements TimelineConfigInterface<Datum>, AfterViewInit {
+export class VisTimelineComponent<Datum = GenericDataRecord> implements TimelineConfigInterface<Datum>, AfterViewInit {
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */
   @Input() duration: number
 

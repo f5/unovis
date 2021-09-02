@@ -4,6 +4,7 @@ import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
 import {
   Scatter,
   ScatterConfigInterface,
+  GenericDataRecord,
   VisEventType,
   VisEventCallback,
   NumericAccessor,
@@ -20,7 +21,7 @@ import { VisXYComponent } from '../../core'
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisXYComponent, useExisting: VisScatterComponent }],
 })
-export class VisScatterComponent<Datum> implements ScatterConfigInterface<Datum>, AfterViewInit {
+export class VisScatterComponent<Datum = GenericDataRecord> implements ScatterConfigInterface<Datum>, AfterViewInit {
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */
   @Input() duration: number
 
