@@ -13,9 +13,9 @@ import {
 } from '@angular/core'
 
 // Vis
-import { XYComponentCore, XYContainer, XYContainerConfigInterface, Axis, Crosshair, Tooltip, ContinuousScale } from '@volterra/vis'
+import { XYContainer, XYContainerConfigInterface, Axis, Crosshair, Tooltip, ContinuousScale } from '@volterra/vis'
 import { VisXYComponent } from '../../core'
-import { VisTooltipComponent } from '../../core/tooltip/tooltip.component'
+import { VisTooltipComponent } from '../../components/tooltip/tooltip.component'
 
 @Component({
   selector: 'vis-xy-container',
@@ -27,7 +27,7 @@ import { VisTooltipComponent } from '../../core/tooltip/tooltip.component'
 export class VisXYContainerComponent<Datum = Record<string, unknown>> implements AfterViewInit, OnDestroy {
   @ViewChild('container', { static: false }) containerRef: ElementRef
   @ContentChildren(VisXYComponent) visComponents: QueryList<VisXYComponent>
-  @ContentChild(VisTooltipComponent) tooltipComponent: VisTooltipComponent<Datum>
+  @ContentChild(VisTooltipComponent) tooltipComponent: VisTooltipComponent
 
   /** Scale for X dimension, e.g. Scale.scaleLinear(). Default: `Scale.scaleLinear()` */
   @Input() xScale?: ContinuousScale;
@@ -112,7 +112,7 @@ export class VisXYContainerComponent<Datum = Record<string, unknown>> implements
     const visComponents = this.visComponents.toArray().map(d => d.component)
 
     const crosshair = visComponents.find(c => c instanceof Crosshair) as Crosshair<Datum>
-    const tooltip = this.tooltipComponent?.component as Tooltip<XYComponentCore<Datum>, Datum>
+    const tooltip = this.tooltipComponent?.component as Tooltip
     const xAxis = visComponents.find(c => c instanceof Axis && c?.config?.type === 'x') as Axis<Datum>
     const yAxis = visComponents.find(c => c instanceof Axis && c?.config?.type === 'y') as Axis<Datum>
 

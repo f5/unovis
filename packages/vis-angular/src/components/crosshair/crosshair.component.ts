@@ -11,7 +11,6 @@ import {
   ColorAccessor,
   ContinuousScale,
   Tooltip,
-  XYComponentCore,
 } from '@volterra/vis'
 import { VisXYComponent } from '../../core'
 
@@ -100,7 +99,7 @@ export class VisCrosshairComponent<Datum = GenericDataRecord> implements Crossha
   @Input() baseline: NumericAccessor<Datum>
 
   /** An instance of the Tooltip component to be used with Crosshair. Default: `undefined` */
-  @Input() tooltip: Tooltip<XYComponentCore<Datum>, Datum> | undefined
+  @Input() tooltip: Tooltip | undefined
 
   /** Tooltip template accessor. The function is supposed to return either a valid HTML string or an HTMLElement. Default: `d => ''` */
   @Input() template: (data: Datum, i: number, elements: any) => string | HTMLElement

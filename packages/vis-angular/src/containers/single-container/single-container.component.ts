@@ -4,7 +4,7 @@ import { Component, ViewChild, ElementRef, AfterViewInit, Input, OnDestroy, Simp
 // Vis
 import { ComponentCore, SingleChart, SingleChartConfigInterface, Tooltip } from '@volterra/vis'
 import { VisCoreComponent } from '../../core'
-import { VisTooltipComponent } from '../../core/tooltip/tooltip.component'
+import { VisTooltipComponent } from '../../components/tooltip/tooltip.component'
 
 @Component({
   selector: 'vis-single-container',
@@ -16,7 +16,7 @@ import { VisTooltipComponent } from '../../core/tooltip/tooltip.component'
 export class VisSingleContainerComponent<Datum = any, C extends ComponentCore<Datum> = ComponentCore<Datum>> implements AfterViewInit, OnDestroy {
   @ViewChild('container', { static: false }) containerRef: ElementRef
   @ContentChild(VisCoreComponent) visComponent: VisCoreComponent
-  @ContentChild(VisTooltipComponent) tooltipComponent: VisTooltipComponent<Datum>
+  @ContentChild(VisTooltipComponent) tooltipComponent: VisTooltipComponent
 
   /** Margins. Default: `{ top: 0, bottom: 0, left: 0, right: 0 }` */
   @Input() margin = { top: 10, bottom: 10, left: 10, right: 10 }
@@ -45,7 +45,7 @@ export class VisSingleContainerComponent<Datum = any, C extends ComponentCore<Da
     const { duration, margin } = this
 
     const component = this.visComponent?.component as C
-    const tooltip = this.tooltipComponent?.component as Tooltip<C, Datum>
+    const tooltip = this.tooltipComponent?.component as Tooltip
 
     return { duration, margin, component, tooltip }
   }
