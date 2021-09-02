@@ -56,7 +56,7 @@ export class TopoJSONMapComponent implements OnInit, AfterViewInit {
         linkCursor: d => d.cursor,
         areaCursor: d => d.cursor
       }),
-      tooltip: new Tooltip<any, any>({
+      tooltip: new Tooltip({
         triggers: {
           [TopoJSONMap.selectors.point]: (d: MapPoint) => `<span>${d.city}</span>`,
           // [TopoJSONMap.selectors.feature]: d => `<span>${d.properties.name}</span>`,

@@ -44,7 +44,7 @@ export class DDoSMapComponent implements AfterViewInit {
     return flows
   }))
 
-  tooltip: Tooltip<LeafletFlowMap<SitePoint, DDoSFlow>, DDoSFlow>
+  tooltip: Tooltip
 
   data = {
     points: sites.map(s => {

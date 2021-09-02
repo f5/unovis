@@ -83,7 +83,7 @@ export class MapHeatmapComponent implements AfterViewInit {
   config = getMapConfig()
 
   ngAfterViewInit (): void {
-    this.config.tooltip = new Tooltip<any, any>({
+    this.config.tooltip = new Tooltip({
       triggers: {
         [LeafletMap.selectors.mapboxglCanvas]: (features: Feature[]) => {
           let name
