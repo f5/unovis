@@ -32,7 +32,11 @@ import { getLonLat, arc } from './utils'
 // Styles
 import * as s from './style'
 
-export class TopoJSONMap<N extends MapInputNode, L extends MapInputLink, A extends MapInputArea> extends ComponentCore<{nodes: N[]; links?: L[]; areas?: A[]}> {
+export class TopoJSONMap<
+  N extends MapInputNode = MapInputNode,
+  L extends MapInputLink = MapInputLink,
+  A extends MapInputArea = MapInputArea,
+> extends ComponentCore<{nodes: N[]; links?: L[]; areas?: A[]}> {
   static selectors = s
   config: TopoJSONMapConfig<N, L, A> = new TopoJSONMapConfig()
   datamodel: MapGraphDataModel<N, L, A> = new MapGraphDataModel()

@@ -13,7 +13,10 @@ import { TrimMode, VerticalAlign, FitMode } from 'types/text'
 import { Position } from 'types/position'
 import { SankeyInputLink, SankeyInputNode, NodeAlignType, SubLabelPlacement, ExitTransitionType, EnterTransitionType } from './types'
 
-export interface SankeyConfigInterface<N extends SankeyInputNode, L extends SankeyInputLink> extends ComponentConfigInterface {
+export interface SankeyConfigInterface<
+  N extends SankeyInputNode = SankeyInputNode,
+  L extends SankeyInputLink = SankeyInputLink,
+> extends ComponentConfigInterface {
   // General
   /** Node / Link id accessor function. Used for mapping of data updates to corresponding SVG objects. Default: `(d, i) => (d._id ?? i).toString()` */
   id?: (d: SankeyInputNode | SankeyInputLink, i?: number, ...any) => string;
@@ -121,7 +124,10 @@ export interface SankeyConfigInterface<N extends SankeyInputNode, L extends Sank
   subLabelToLabelInlineWidthRatio?: number;
 }
 
-export class SankeyConfig<N extends SankeyInputNode, L extends SankeyInputLink> extends ComponentConfig implements SankeyConfigInterface<N, L> {
+export class SankeyConfig<
+  N extends SankeyInputNode = SankeyInputNode,
+  L extends SankeyInputLink = SankeyInputLink,
+> extends ComponentConfig implements SankeyConfigInterface<N, L> {
   // General
   heightNormalizationCoeff = 1 / 16
   exitTransitionType = ExitTransitionType.Default

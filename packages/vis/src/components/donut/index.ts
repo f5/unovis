@@ -11,6 +11,7 @@ import { isNumber, clamp, getNumber } from 'utils/data'
 
 // Types
 import { Spacing } from 'types/spacing'
+import { GenericDataRecord } from 'types/data'
 
 // Local Types
 import { DonutArcDatum, DonutArcAnimState } from './types'
@@ -24,7 +25,7 @@ import { createArc, updateArc, removeArc } from './modules/arc'
 // Styles
 import * as s from './style'
 
-export class Donut<Datum> extends ComponentCore<Datum[]> {
+export class Donut<Datum = GenericDataRecord> extends ComponentCore<Datum[]> {
   static selectors = s
   config: DonutConfig<Datum> = new DonutConfig()
   datamodel: SeriesDataModel<Datum> = new SeriesDataModel()

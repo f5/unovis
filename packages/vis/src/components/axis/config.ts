@@ -5,9 +5,10 @@ import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component
 import { AxisType } from 'components/axis/types'
 import { Position } from 'types/position'
 import { FitMode, TrimMode, TextAlign } from 'types/text'
+import { GenericDataRecord } from 'types/data'
 
 // We extend partial XY config interface because x and y properties are optional for Axis
-export interface AxisConfigInterface<Datum>extends Partial<XYComponentConfigInterface<Datum>> {
+export interface AxisConfigInterface<Datum = GenericDataRecord> extends Partial<XYComponentConfigInterface<Datum>> {
   /** Axis position: `Position.Top`, `Position.Bottom`, `Position.Right` or `Position.Left`. Default: `undefined` */
   position?: Position | string;
   /** Axis type: `AxisType.X` or `AxisType.Y` */
@@ -52,7 +53,7 @@ export interface AxisConfigInterface<Datum>extends Partial<XYComponentConfigInte
   tickTextAlign?: TextAlign;
 }
 
-export class AxisConfig<Datum> extends XYComponentConfig<Datum> implements AxisConfigInterface<Datum> {
+export class AxisConfig<Datum = GenericDataRecord> extends XYComponentConfig<Datum> implements AxisConfigInterface<Datum> {
   position = undefined
   type = undefined
   label = undefined

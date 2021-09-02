@@ -10,6 +10,7 @@ import { getColor } from 'utils/color'
 // Types
 import { Spacing } from 'types/spacing'
 import { SymbolType } from 'types/symbol'
+import { GenericDataRecord } from 'types/data'
 
 // Local Types
 import { ScatterPoint } from './types'
@@ -23,7 +24,7 @@ import { createNodes, updateNodes, removeNodes } from './modules/node'
 // Styles
 import * as s from './style'
 
-export class Scatter<Datum> extends XYComponentCore<Datum> {
+export class Scatter<Datum = GenericDataRecord> extends XYComponentCore<Datum> {
   static selectors = s
   config: ScatterConfig<Datum> = new ScatterConfig()
   events = {

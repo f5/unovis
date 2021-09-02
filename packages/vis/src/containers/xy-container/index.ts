@@ -15,6 +15,7 @@ import { SeriesDataModel } from 'data-models/series'
 import { Spacing } from 'types/spacing'
 import { AxisType } from 'components/axis/types'
 import { ScaleDimension } from 'types/scale'
+import { GenericDataRecord } from 'types/data'
 
 // Utils
 import { clamp, clean, flatten } from 'utils/data'
@@ -31,7 +32,7 @@ import {
   TimelineConfigInterface,
 } from '../../components'
 
-export type XYConfigInterface<Datum> = XYComponentConfigInterface<Datum>
+export type XYConfigInterface<Datum = GenericDataRecord> = XYComponentConfigInterface<Datum>
 | StackedBarConfigInterface<Datum>
 | LineConfigInterface<Datum>
 | ScatterConfigInterface<Datum>
@@ -39,7 +40,7 @@ export type XYConfigInterface<Datum> = XYComponentConfigInterface<Datum>
 | TimelineConfigInterface<Datum>
 | AreaConfigInterface<Datum>
 
-export class XYContainer<Datum> extends ContainerCore {
+export class XYContainer<Datum = GenericDataRecord> extends ContainerCore {
   config: XYContainerConfig<Datum> = new XYContainerConfig()
   datamodel: SeriesDataModel<Datum> = new SeriesDataModel()
   private _svgDefs: Selection<SVGDefsElement, unknown, null, undefined>

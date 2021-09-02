@@ -4,8 +4,9 @@ import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component
 // Types
 import { CurveType } from 'types/curve'
 import { GenericAccessor, StringAccessor } from 'types/accessor'
+import { GenericDataRecord } from 'types/data'
 
-export interface LineConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
+export interface LineConfigInterface<Datum = GenericDataRecord> extends XYComponentConfigInterface<Datum> {
   /** Curve type from the CurveType enum */
   curveType?: CurveType;
   /** Line width in pixels */
@@ -20,7 +21,7 @@ export interface LineConfigInterface<Datum> extends XYComponentConfigInterface<D
   cursor?: StringAccessor<Datum[]>;
 }
 
-export class LineConfig<Datum> extends XYComponentConfig<Datum> implements LineConfigInterface<Datum> {
+export class LineConfig<Datum = GenericDataRecord> extends XYComponentConfig<Datum> implements LineConfigInterface<Datum> {
   curveType = CurveType.MonotoneX
   lineWidth = 2
   lineDashArray = undefined

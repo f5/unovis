@@ -13,6 +13,7 @@ import { getColor } from 'utils/color'
 // Types
 import { NumericAccessor } from 'types/accessor'
 import { Spacing } from 'types/spacing'
+import { GenericDataRecord } from 'types/data'
 
 // Config
 import { StackedBarConfig, StackedBarConfigInterface } from './config'
@@ -20,7 +21,7 @@ import { StackedBarConfig, StackedBarConfigInterface } from './config'
 // Styles
 import * as s from './style'
 
-export class StackedBar<Datum> extends XYComponentCore<Datum> {
+export class StackedBar<Datum = GenericDataRecord> extends XYComponentCore<Datum> {
   static selectors = s
   config: StackedBarConfig<Datum> = new StackedBarConfig()
   getAccessors = (): NumericAccessor<Datum>[] => (isArray(this.config.y) ? this.config.y : [this.config.y])

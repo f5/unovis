@@ -11,6 +11,7 @@ export { TrimMode, VerticalAlign, FitMode, TextAlign } from 'types/text'
 export { ContinuousScale } from 'types/scale'
 export { Spacing } from 'types/spacing'
 export { GraphInputNode, GraphInputLink, GraphNodeCore, GraphLinkCore } from 'types/graph'
+export { GenericDataRecord } from 'types/data'
 
 // Component Types
 export { VisEventType, VisEventCallback } from 'core/component/types'

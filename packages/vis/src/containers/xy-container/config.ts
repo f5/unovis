@@ -11,8 +11,9 @@ import { Crosshair } from 'components/crosshair'
 
 // Types
 import { ContinuousScale } from 'types/scale'
+import { GenericDataRecord } from 'types/data'
 
-export interface XYContainerConfigInterface<Datum> extends ContainerConfigInterface {
+export interface XYContainerConfigInterface<Datum = GenericDataRecord> extends ContainerConfigInterface {
   /** An array of visualization components. Default: `[]` */
   components?: XYComponentCore<Datum>[];
 
@@ -85,7 +86,7 @@ export interface XYContainerConfigInterface<Datum> extends ContainerConfigInterf
   scaleByDomain?: boolean;
 }
 
-export class XYContainerConfig<Datum> extends ContainerConfig implements XYContainerConfigInterface<Datum> {
+export class XYContainerConfig<Datum = GenericDataRecord> extends ContainerConfig implements XYContainerConfigInterface<Datum> {
   components = []
   tooltip: Tooltip<XYComponentCore<Datum>, Datum> = undefined
   crosshair: Crosshair<Datum> = undefined

@@ -11,7 +11,11 @@ import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
 // Local Types
 import { MapProjection, MapInputNode, MapInputLink, MapInputArea } from './types'
 
-export interface TopoJSONMapConfigInterface<N extends MapInputNode, L extends MapInputLink, A extends MapInputArea> extends ComponentConfigInterface {
+export interface TopoJSONMapConfigInterface<
+  N extends MapInputNode = MapInputNode,
+  L extends MapInputLink = MapInputLink,
+  A extends MapInputArea = MapInputArea,
+> extends ComponentConfigInterface {
   // General
   /** MapProjection (or D3's GeoProjection) instance. Default: `MapProjection.Mercator()` */
   projection?: GeoProjection;
@@ -70,7 +74,11 @@ export interface TopoJSONMapConfigInterface<N extends MapInputNode, L extends Ma
   heatmapModeZoomLevelThreshold?: number;
 }
 
-export class TopoJSONMapConfig<N extends MapInputNode, L extends MapInputLink, A extends MapInputArea> extends ComponentConfig implements TopoJSONMapConfigInterface<N, L, A> {
+export class TopoJSONMapConfig<
+  N extends MapInputNode = MapInputNode,
+  L extends MapInputLink = MapInputLink,
+  A extends MapInputArea = MapInputArea,
+> extends ComponentConfig implements TopoJSONMapConfigInterface<N, L, A> {
   projection = MapProjection.Mercator()
   duration = 1500
   topojson = undefined

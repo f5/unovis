@@ -15,6 +15,7 @@ import { getColor } from 'utils/color'
 // Types
 import { Curve } from 'types/curve'
 import { NumericAccessor } from 'types/accessor'
+import { GenericDataRecord } from 'types/data'
 
 // Local Types
 import { AreaDatum } from './types'
@@ -25,7 +26,7 @@ import { AreaConfig, AreaConfigInterface } from './config'
 // Styles
 import * as s from './style'
 
-export class Area<Datum> extends XYComponentCore<Datum> {
+export class Area<Datum = GenericDataRecord> extends XYComponentCore<Datum> {
   static selectors = s
   stacked = true
   config: AreaConfig<Datum> = new AreaConfig()

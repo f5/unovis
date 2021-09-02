@@ -13,11 +13,12 @@ import { DefaultRange } from 'utils/scale'
 import { NumericAccessor } from 'types/accessor'
 import { ContinuousScale, ScaleDimension } from 'types/scale'
 import { Spacing } from 'types/spacing'
+import { GenericDataRecord } from 'types/data'
 
 // Config
 import { XYComponentConfig } from './config'
 
-export class XYComponentCore<Datum> extends ComponentCore<Datum[]> {
+export class XYComponentCore<Datum = GenericDataRecord> extends ComponentCore<Datum[]> {
   element: SVGGraphicsElement
   g: Selection<SVGGElement, unknown, null, undefined>
   config: XYComponentConfig<Datum>

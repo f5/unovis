@@ -7,8 +7,9 @@ import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component
 import { Scale, ContinuousScale } from 'types/scale'
 import { SymbolType } from 'types/symbol'
 import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
+import { GenericDataRecord } from 'types/data'
 
-export interface ScatterConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
+export interface ScatterConfigInterface<Datum = GenericDataRecord> extends XYComponentConfigInterface<Datum> {
   /** Single Y accessor function. Default: `undefined` */
   y: NumericAccessor<Datum>;
   /** Size accessor function or constant value in relative units. Default: `1` */
@@ -31,7 +32,7 @@ export interface ScatterConfigInterface<Datum> extends XYComponentConfigInterfac
   labelTextBrightnessRatio?: number;
 }
 
-export class ScatterConfig<Datum> extends XYComponentConfig<Datum> implements ScatterConfigInterface<Datum> {
+export class ScatterConfig<Datum = GenericDataRecord> extends XYComponentConfig<Datum> implements ScatterConfigInterface<Datum> {
   size = 1
   sizeScale: ScaleLinear<number, number> = Scale.scaleLinear()
   sizeRange: [number, number] = [5, 20]

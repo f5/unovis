@@ -12,6 +12,7 @@ import { getColor } from 'utils/color'
 // Types
 import { NumericAccessor } from 'types/accessor'
 import { PositionStrategy } from 'types/position'
+import { GenericDataRecord } from 'types/data'
 
 // Config
 import { CrosshairConfig, CrosshairConfigInterface } from './config'
@@ -19,7 +20,7 @@ import { CrosshairConfig, CrosshairConfigInterface } from './config'
 // Styles
 import * as s from './style'
 
-export class Crosshair<Datum> extends XYComponentCore<Datum> {
+export class Crosshair<Datum = GenericDataRecord> extends XYComponentCore<Datum> {
   static selectors = s
   clippable = false // Don't apply clipping path to this component. See XYContainer
   config: CrosshairConfig<Datum> = new CrosshairConfig()

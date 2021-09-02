@@ -11,11 +11,12 @@ import { smartTransition } from 'utils/d3'
 
 // Types
 import { Sizing, ExtendedSizeComponent } from 'types/component'
+import { GenericDataRecord } from 'types/data'
 
 // Config
 import { SingleChartConfig, SingleChartConfigInterface } from './config'
 
-export class SingleChart<Datum> extends ContainerCore {
+export class SingleChart<Datum = GenericDataRecord> extends ContainerCore {
   component: ComponentCore<Datum>
   config: SingleChartConfig<Datum> = new SingleChartConfig()
 

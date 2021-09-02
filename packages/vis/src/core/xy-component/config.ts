@@ -3,11 +3,12 @@ import { Scale, ContinuousScale } from 'types/scale'
 
 // Types
 import { ColorAccessor, NumericAccessor } from 'types/accessor'
+import { GenericDataRecord } from 'types/data'
 
 // Config
 import { ComponentConfig, ComponentConfigInterface } from '../component/config'
 
-export interface XYComponentConfigInterface<Datum> extends ComponentConfigInterface {
+export interface XYComponentConfigInterface<Datum = GenericDataRecord> extends ComponentConfigInterface {
   /** Accessor function for getting the values along the X axis. Default: `undefined` */
   x: NumericAccessor<Datum>;
   /** A single of multiple accessor functions for getting the values along the Y axis. Default: `undefined` */
@@ -24,7 +25,7 @@ export interface XYComponentConfigInterface<Datum> extends ComponentConfigInterf
   scaleByDomain?: boolean;
 }
 
-export class XYComponentConfig<Datum> extends ComponentConfig implements XYComponentConfigInterface<Datum> {
+export class XYComponentConfig<Datum = GenericDataRecord> extends ComponentConfig implements XYComponentConfigInterface<Datum> {
   // eslint-disable-next-line dot-notation
   x = undefined; // NumericAccessor<Datum> = d => d['x'];
   // eslint-disable-next-line dot-notation
