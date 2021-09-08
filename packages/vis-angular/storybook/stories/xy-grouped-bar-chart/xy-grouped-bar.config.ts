@@ -9,16 +9,16 @@ export const baseConfig = (n = 25): XYChartStoryConfig & GroupedBarConfigInterfa
   data: generateDataRecords(n),
 })
 
-export const getColor = (d: DataRecord, i: number): string => d.y > 7 ? '#FF4F4E' : null
+export const getColor = (d: DataRecord, i: number): string => (i === 0 && d.y > 7) ? '#FF4F4E' : null
 
-export const minBarHeightExampleData = generateDataRecords(50)
+export const minBarHeightExampleData = generateDataRecords(20)
   .map((d: DataRecord, i: number) => ({
     ...d,
     y: (i % 3 && Math.random() > 0.5)
-      ? (Math.random() > 0.5) ? 0 : null
+      ? 0
       : d.y,
   }))
 
-export const dataStepExampleData = generateDataRecords(50)
-  .map((d: DataRecord, i: number) => Math.random() > 0.3 ? d : null)
+export const dataStepExampleData = generateDataRecords(30)
+  .map((d: DataRecord, i: number) => Math.random() > 0.5 ? d : null)
   .filter((d: DataRecord) => d)

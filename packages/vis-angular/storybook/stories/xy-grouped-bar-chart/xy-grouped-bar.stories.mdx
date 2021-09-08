@@ -60,14 +60,15 @@ y = [d => d.y1, d => d.y2, d => d.y3, d => d.y4],
 ### Grouped Bar Width
 By default, the width of the grouped bar is calculated automatically based on their count. But you can also strictly set the grouped bar's width in pixels using the `groupWidth` property:
 ```angular2html
-  <vis-grouped-bar ... [groupWidth]="5"></vis-grouped-bar>
+  <vis-grouped-bar ... [groupWidth]="10"></vis-grouped-bar>
 ```
 
 <Story name="Grouped Bar Width">
   {{
     props: {
        ...baseConfig(),
-      groupWidth: 5,
+      y: [d => d.y2, d => d.y1],
+      groupWidth: 10,
       storyHeight: 100,
       storyHideAxes: true,
     }
@@ -86,6 +87,7 @@ That can be achieved by setting the `groupMaxWidth` property.
   {{
     props: {
       ...baseConfig(10),
+      y: [d => d.y2, d => d.y1, d => d.y],
       storyHeight: 100,
       groupMaxWidth: 25,
       storyHideAxes: true,
@@ -104,6 +106,7 @@ Another way to control the grouped bar's width is by changing the `groupPadding`
   {{
     props:{
       ...baseConfig(),
+      y: [d => d.y2, d => d.y1],
       storyHeight: 50,
       storyHideAxes: true,
       groupPadding: 0
@@ -116,6 +119,7 @@ Another way to control the grouped bar's width is by changing the `groupPadding`
   {{
     props:{
       ...baseConfig(),
+      y: [d => d.y2, d => d.y1],
       storyHeight: 50,
       storyHideAxes: true,
       groupPadding: 0.5
@@ -135,6 +139,7 @@ If you want to prevent that you can set the minimum bar height to 1 pixel using 
     props: {
       ...baseConfig(),
       data: minBarHeightExampleData,
+      y: [d => d.y, d => d.y1],
       storyHeight: 50,
       barPadding: 0.2,
       storyHideAxes: true,
@@ -149,6 +154,7 @@ If you want to prevent that you can set the minimum bar height to 1 pixel using 
     props: {
       ...baseConfig(),
       data: minBarHeightExampleData,
+      y: [d => d.y, d => d.y1],
       storyHeight: 50,
       barPadding: 0.2,
       storyHideAxes: true,
@@ -170,6 +176,7 @@ by setting your data step implicitly using the `dataStep` property.
   {{
     props:{
       ...baseConfig(),
+      y: [d => d.y, d => d.y1],
       storyHideYAxis: true,
       storyXAxisLabel: '',
       storyHeight: 70,
@@ -183,6 +190,7 @@ by setting your data step implicitly using the `dataStep` property.
   {{
     props:{
       ...baseConfig(),
+      y: [d => d.y, d => d.y1],
       storyHideYAxis: true,
       storyXAxisLabel: '',
       storyHeight: 70,
@@ -203,6 +211,7 @@ Using the `roundedCorners` property, you can modernize your UI by applying round
   {{
     props: {
       ...baseConfig(10),
+      y: [d => d.y, d => d.y1],
       storyHeight: 80,
       storyHideAxes: true,
       roundedCorners: false
@@ -215,6 +224,7 @@ Using the `roundedCorners` property, you can modernize your UI by applying round
   {{
     props: {
       ...baseConfig(10),
+      y: [d => d.y, d => d.y1],
       storyHeight: 80,
       storyHideAxes: true,
       roundedCorners: 5
@@ -227,6 +237,7 @@ Using the `roundedCorners` property, you can modernize your UI by applying round
   {{
     props: {
       ...baseConfig(10),
+      y: [d => d.y, d => d.y1],
       storyHeight: 80,
       storyHideAxes: true,
       roundedCorners: true
@@ -244,6 +255,8 @@ Set the color of the bar by assigning the `color` property to a hex string and/o
   {{
     props:{
       ...baseConfig(),
+      y: [d => d.y, d => d.y1],
+      barPadding: 0.1,
       storyHeight: 100,
       storyHideAxes: true,
       color: getColor
