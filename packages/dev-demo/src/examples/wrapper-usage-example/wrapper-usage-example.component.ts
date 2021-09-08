@@ -54,7 +54,6 @@ export class WrapperUsageExampleComponent implements AfterViewInit, OnDestroy {
     tickFormat: (tick, i, ticks) => {
       const currentDate = new Date(tick)
       const prevDate: Date | undefined = ticks[i - 1] && new Date(ticks[i - 1])
-      console.log(ticks)
       const currentDay = currentDate.getDate()
       const prevDay = prevDate?.getDate()
       return format(currentDate, prevDay !== currentDay ? 'h:mm aaa MMM d' : 'h:mm aaa')
