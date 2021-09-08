@@ -15,6 +15,7 @@ stages:
   - secscan
   - upload-templates
   - trigger
+  - publish-demo
 
 build:
   image: volterrasystem/angular-e2e-testing:node14
@@ -30,10 +31,14 @@ build:
     - npm install -g npm@7
     - npm install
     - npm run build
+    - npm run build:storybook
   cache:
     key: '$CI_COMMIT_REF_SLUG'
     paths:
       - node_modules
+      - packages/vis/lib
+      - packages/dev-demo/lib
+      - packages/vis-angular/storybook-static
 
 docker:
   tags: [docker]
@@ -150,3 +155,25 @@ jenkins_develop:
   only:
     - develop
     - master
+
+pages:
+  stage: publish-demo
+  image: volterrasystem/angular-e2e-testing:node14
+  cache:
+      key: "$CI_COMMIT_REF_SLUG"
+      policy: pull
+      paths:
+        - node_modules
+        - packages/vis/lib
+        - packages/dev-demo/lib
+        - packages/vis-angular/storybook-static
+  script:
+      - mv packages/dev-demo/lib/volterra-vis-examples public
+      - cp public/index.html public/404.html
+      - mv packages/vis-angular/storybook-static public/storybook
+  artifacts:
+      paths:
+          - public
+      expire_in: 6 hrs
+  only:
+      - master

@@ -7,7 +7,7 @@
   ],
   "scripts": {
     "dev": "npx ng serve --port 9900",
-    "build": "ng build",
+    "build": "ng build --base-href ./",
     "test": "jest --colors",
     "lint": "eslint \"src/**/*.ts\""
   },
