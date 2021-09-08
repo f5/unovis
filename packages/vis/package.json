@@ -1,6 +1,6 @@
 {
   "name": "@volterra/vis",
-  "version": "0.0.1-beta.133",
+  "version": "0.9.0",
   "main": "lib/esm/index.js",
   "module": "lib/esm/index.js",
   "typings": "lib/index.d.ts",
@@ -8,8 +8,9 @@
     "lib"
   ],
   "scripts": {
-    "prebuild": "rimraf lib",
-    "build": "npm run prebuild && rollup -c",
+    "build": "sha=$(tar cf - ./src | shasum); if [[ $(echo $sha) == $(< .srcsha) ]] && [[ -d \"./lib\" ]]; then echo \"Lib Build Exists\"; else npm run forcebuild; echo $sha > .srcsha; fi",
+    "forcebuild": "rimraf lib; rollup -c",
+    "dev:parallel": "rollup -c -w",
     "test": "jest --colors"
   },
   "publishConfig": {
@@ -36,12 +37,14 @@
     "@juggle/resize-observer": "^3.3.1",
     "@types/geojson": "^7946.0.7",
     "@types/topojson": "^3.2.2",
+    "@types/topojson-specification": "^1.0.2",
     "d3": "^6.3.1",
     "d3-collection": "^1.0.7",
     "d3-interpolate-path": "^2.2.1",
     "d3-sankey": "^0.12.3",
     "dagre-layout": "^0.8.8",
     "emotion": "^10.0.27",
+    "geojson": "^0.5.0",
     "leaflet": "^1.7.1",
     "lodash": "^4.17.21",
     "mapbox-gl": "1.13.1",

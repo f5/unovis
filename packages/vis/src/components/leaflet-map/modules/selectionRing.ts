@@ -1,8 +1,8 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import L from 'leaflet'
 
-// Types
-import { Point } from 'types/map'
+// Local Types
+import { LeafletMapPoint } from 'components/leaflet-map/types'
 
 // Utils
 import { getPointPos } from './utils'
@@ -17,7 +17,7 @@ export function createNodeSelectionRing (selection): void {
   selection.append('path').attr('class', s.pointSelection)
 }
 
-export function updateNodeSelectionRing<D> (selection, selectedNode: Point<D>, pointData: Point<D>[], config: LeafletMapConfigInterface<D>, leafletMap: L.Map): void {
+export function updateNodeSelectionRing<D> (selection, selectedNode: LeafletMapPoint<D>, pointData: LeafletMapPoint<D>[], config: LeafletMapConfigInterface<D>, leafletMap: L.Map): void {
   selection.attr('class', s.pointSelectionRing)
   const pointSelection = selection.select(`.${s.pointSelection}`)
   if (selectedNode) {

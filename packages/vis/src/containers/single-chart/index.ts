@@ -1,24 +1,22 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-// import { extent } from 'd3-array'
 
 // Core
 import { ContainerCore } from 'core/container'
 import { ComponentCore } from 'core/component'
 
-// import { ComponentConfig } from 'core/component/config'
-import { XYComponentConfigInterface } from 'core/xy-component/config'
+import { ComponentConfigInterface } from 'core/component/config'
 
 // Utils
 import { smartTransition } from 'utils/d3'
-// import { getValue, merge } from 'utils/data'
 
 // Types
 import { Sizing, ExtendedSizeComponent } from 'types/component'
+import { GenericDataRecord } from 'types/data'
 
 // Config
 import { SingleChartConfig, SingleChartConfigInterface } from './config'
 
-export class SingleChart<Datum> extends ContainerCore {
+export class SingleChart<Datum = GenericDataRecord> extends ContainerCore {
   component: ComponentCore<Datum>
   config: SingleChartConfig<Datum> = new SingleChartConfig()
 
@@ -57,7 +55,7 @@ export class SingleChart<Datum> extends ContainerCore {
     if (!preventRender) this.render()
   }
 
-  public updateComponent (componentConfig: XYComponentConfigInterface<Datum>, preventRender?: boolean): void {
+  public updateComponent (componentConfig: ComponentConfigInterface, preventRender?: boolean): void {
     this.component.prevConfig = this.component.config
     this.component.setConfig(componentConfig)
     if (!preventRender) this.render()
@@ -90,8 +88,8 @@ export class SingleChart<Datum> extends ContainerCore {
 
     component.render(customDuration)
 
-    if (config.sizing === Sizing.EXTEND || config.sizing === Sizing.FIT_WIDTH) {
-      const fitToWidth = config.sizing === Sizing.FIT_WIDTH
+    if (config.sizing === Sizing.Extend || config.sizing === Sizing.FitWidth) {
+      const fitToWidth = config.sizing === Sizing.FitWidth
       const extendedSizeComponent = component as ExtendedSizeComponent
 
       const componentWidth = extendedSizeComponent.getWidth() + config.margin.left + config.margin.right

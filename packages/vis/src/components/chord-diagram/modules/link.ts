@@ -7,7 +7,7 @@ import { interpolatePath } from 'd3-interpolate-path'
 import { smartTransition } from 'utils/d3'
 
 // Types
-import { Hierarchy, Ribbon } from 'types/radial-dendrogram'
+import { Hierarchy, Ribbon } from 'components/radial-dendrogram/types'
 
 export interface ArcLink extends SVGElement {
   _animState?: {

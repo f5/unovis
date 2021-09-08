@@ -11,8 +11,8 @@ import { smartTransition } from 'utils/d3'
 
 // Types
 import { Direction } from 'types/direction'
-import { AxisType } from 'types/axis'
 import { Arrangement } from 'types/position'
+import { GenericDataRecord } from 'types/data'
 
 // Config
 import { BrushConfig, BrushConfigInterface } from './config'
@@ -20,13 +20,13 @@ import { BrushConfig, BrushConfigInterface } from './config'
 // Styles
 import * as s from './style'
 
-export class Brush<Datum> extends XYComponentCore<Datum> {
+export class Brush<Datum = GenericDataRecord> extends XYComponentCore<Datum> {
   static selectors = s
   clippable = false // Don't apply clipping path to this component. See XYContainer
   config: BrushConfig<Datum> = new BrushConfig()
   brush: Selection<SVGGElement, any, SVGGElement, any>
-  unselectedRange: Selection<SVGGElement, any, SVGGElement, any>
-  handleLines: Selection<SVGGElement, any, SVGGElement, any>
+  unselectedRange: Selection<SVGRectElement, any, SVGGElement, any>
+  handleLines: Selection<SVGLineElement, any, SVGGElement, any>
   brushBehaviour: BrushBehavior<any> = brushX()
   events = {
     [Brush.selectors.brush]: {
@@ -44,30 +44,23 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
       .attr('class', s.brush)
 
     const directions = [{ type: 'w' }, { type: 'e' }]
-    this.unselectedRange = this.g.selectAll(`.${s.unselected}`)
+    this.unselectedRange = this.g
+      .selectAll(`.${s.unselected}`)
       .data(directions)
       .enter().append('rect')
       .attr('class', s.unselected)
 
-    this.handleLines = this.g.selectAll(`.${s.handleLine}`)
+    this.handleLines = this.g
+      .selectAll(`.${s.handleLine}`)
       .data(directions)
       .enter().append('line')
       .attr('class', s.handleLine)
   }
 
-  setScaleRange (key: string): void {
-    const { config: { scales, width, height } } = this
-    if (!key || !scales[key]) return
-
-    const range = key === AxisType.Y ? [height, 0] : [0, width]
-    scales[key]?.range(range)
-  }
-
   _render (customDuration?: number): void {
     const { brushBehaviour, config } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
-    const xScale = config.scales.x
-    const yScale = config.scales.y
+    const xScale = config.xScale
 
     brushBehaviour
       .extent([[0, 0], [config.width, config.height]])
@@ -79,7 +72,7 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
       .call(brushBehaviour)
       .classed('non-draggable', !config.draggable)
 
-    const yRange = yScale.range()
+    const yRange = [config.height, 0]
     const h = yRange[0] - yRange[1]
 
     this.g.selectAll('.handle')
@@ -94,11 +87,11 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
       .attr('y1', yRange[1] + 10)
       .attr('y2', yRange[1] + h - 10)
 
-    const xRange = xScale.range()
+    const xRange = [0, config.width]
     const selectionMin = clamp(xScale(config.selection?.[0]) ?? 0, xRange[0], xRange[1])
     const selectionMax = clamp(xScale(config.selection?.[1]) ?? 0, xRange[0], xRange[1])
     const selectionLength = selectionMax - selectionMin
-    const brushRange = (selectionLength ? [selectionMin, selectionMax] : xScale.range()) as [number, number]
+    const brushRange = (selectionLength ? [selectionMin, selectionMax] : xRange) as [number, number]
 
     this._positionHandles(brushRange)
 
@@ -111,13 +104,11 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
 
   _updateSelection (s: [number, number]): void {
     const { config } = this
-    const xScale = config.scales.x
-    const yScale = config.scales.y
-    const xRange = xScale.range()
+    const xRange = [0, config.width]
     this.unselectedRange
-      .attr('x', d => d.type === Direction.WEST ? xRange[0] : s[1])
+      .attr('x', d => d.type === Direction.West ? xRange[0] : s[1])
       .attr('width', d => {
-        const length = d.type === Direction.WEST ? s[0] - xRange[0] : xRange[1] - s[1]
+        const length = d.type === Direction.West ? s[0] - xRange[0] : xRange[1] - s[1]
         const lengthClamped = clamp(length, 0, xRange[1] - xRange[0])
         return lengthClamped
       })
@@ -125,7 +116,7 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
     this._positionHandles(s)
 
     // D3 sets brush handle height to be too long, so we need to update it
-    const yRange = yScale.range()
+    const yRange = [config.height, 0]
     const h = yRange[0] - yRange[1]
     this.g.selectAll('.handle')
       .attr('y', yRange[1])
@@ -139,8 +130,8 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
       .attr('width', config.handleWidth)
       .attr('x', d => {
         if (!s) return 0
-        const west = (d as any).type === Direction.WEST
-        const inside = config.handlePosition === Arrangement.INSIDE
+        const west = (d as any).type === Direction.West
+        const inside = config.handlePosition === Arrangement.Inside
 
         if (west) return s[0] + (inside ? 0 : -config.handleWidth)
         else return s[1] + (inside ? -config.handleWidth : 0)
@@ -149,8 +140,8 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
     this.handleLines
       .attr('transform', d => {
         if (!s) return null
-        const west = (d as any).type === Direction.WEST
-        const inside = config.handlePosition === Arrangement.INSIDE
+        const west = (d as any).type === Direction.West
+        const inside = config.handlePosition === Arrangement.Inside
         return `translate(${west
           ? s[0] - (-1) ** Number(inside) * config.handleWidth / 2
           : s[1] + (-1) ** Number(inside) * config.handleWidth / 2},0)`
@@ -159,8 +150,8 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
 
   _onBrush (event: D3BrushEvent<Datum>): void {
     const { config } = this
-    const xScale = config.scales.x
-    const xRange = xScale.range()
+    const xScale = config.xScale
+    const xRange = [0, config.width]
     const s = (event?.selection || xRange) as [number, number]
     const userDriven = !!event?.sourceEvent
 
@@ -183,7 +174,12 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
     // The first call will have equal selection coordinates (e.g. [441, 441]), the second call will have the full range (e.g. [0, 700]).
     // To avoid unnecessary render from the first call we skip it
     if (s[0] !== s[1] && isNumber(s[0]) && isNumber(s[1])) {
+      // We save the X scale range and set it to the available horizontal space to invert the selection correctly
+      const xScaleRange = xScale.range()
+      xScale.range(xRange)
       const selectedDomain = s.map(n => xScale.invert(n)) as [number, number]
+      // Restore the X scale range
+      xScale.range(xScaleRange)
 
       if (userDriven) {
         // Constraint the selection if configured

@@ -74,15 +74,4 @@ export default [
     ],
     plugins,
   },
-  ...modules.map((d) => ({
-    input: d.input,
-    external: externals,
-    output: {
-      dir: 'lib',
-      name: d.output,
-      sourcemap: true,
-      format: 'esm',
-    },
-    plugins,
-  })),
 ]

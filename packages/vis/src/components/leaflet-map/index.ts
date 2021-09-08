@@ -13,11 +13,13 @@ import { MapDataModel } from 'data-models/map'
 
 // Types
 import { ComponentType } from 'types/component'
-import { LeafletMapRenderer, Point, Bounds, MapZoomState, PointDatum } from 'types/map'
+import { GenericDataRecord } from 'types/data'
 
 // Utils
-import { getValue, clamp, isNil, find } from 'utils/data'
+import { clamp, isNil, find, getNumber } from 'utils/data'
 import { constraintMapViewThrottled } from './renderer/mapboxgl-utils'
+
+import { LeafletMapRenderer, LeafletMapPoint, Bounds, MapZoomState, LeafletMapPointDatum } from './types'
 
 // Config
 import { LeafletMapConfig, LeafletMapConfigInterface } from './config'
@@ -31,11 +33,19 @@ import { createNodes, updateNodes, removeNodes, collideLabels } from './modules/
 import { createNodeSelectionRing, updateNodeSelectionRing } from './modules/selectionRing'
 import { createBackgroundNode, updateBackgroundNode } from './modules/clusterBackground'
 import {
-  bBoxMerge, clampZoomLevel, getPointRadius, calculateClusterIndex, geoJSONPointToScreenPoint,
-  shouldClusterExpand, findNodeAndClusterInPointsById, getNodeRelativePosition, getClusterRadius, getClustersAndPoints,
+  bBoxMerge,
+  clampZoomLevel,
+  getPointRadius,
+  calculateClusterIndex,
+  geoJSONPointToScreenPoint,
+  shouldClusterExpand,
+  findNodeAndClusterInPointsById,
+  getNodeRelativePosition,
+  getClusterRadius,
+  getClustersAndPoints,
 } from './modules/utils'
 
-export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
+export class LeafletMap<Datum = GenericDataRecord> extends ComponentCore<Datum[]> {
   static selectors = s
   type = ComponentType.HTML
   div: Selection<HTMLElement, any, HTMLElement, any>
@@ -46,7 +56,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
   public _onMapMoveEndInternal: (leaflet: L.Map) => void // Internal callback needed by Leaflet Flow Map
   private _map: { leaflet: L.Map; layer: L.Layer; svgOverlay: Selection<SVGElement, any, HTMLElement, any>; svgGroup: Selection<SVGGElement, any, SVGElement, any> }
   private _clusterIndex: Supercluster<Datum>
-  private _expandedCluster: { points: ClusterFeature<PointDatum<Datum>>[]; cluster: Point<Datum> } = null
+  private _expandedCluster: { points: ClusterFeature<LeafletMapPointDatum<Datum>>[]; cluster: LeafletMapPoint<Datum> } = null
   private _cancelBackgroundClick = false
   private _hasBeenMoved = false
   private _hasBeenZoomed = false
@@ -61,7 +71,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
   private _pointSelectionRing: Selection<SVGGElement, Record<string, unknown>[], SVGElement, Record<string, unknown>[]>
   private _clusterBackground: Selection<SVGGElement, Record<string, unknown>[], SVGElement, Record<string, unknown>[]>
   private _clusterBackgroundRadius = 0
-  private _selectedPoint: Point<Datum> = null
+  private _selectedPoint: LeafletMapPoint<Datum> = null
   private _currentZoomLevel = null
   private _firstRender = true
   private _renderDataAnimationFrame: number
@@ -151,7 +161,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     this.config.init(config)
 
     if (this._map) {
-      if (this.config.topoJSONLayer?.sources && this.config.renderer === LeafletMapRenderer.TANGRAM) {
+      if (this.config.topoJSONLayer?.sources && this.config.renderer === LeafletMapRenderer.Tangram) {
         console.warn('TopoJSON layer render does not supported with Tangram renderer')
       } else {
         const mapboxMap = (this._map.layer as any).getMapboxMap()
@@ -169,8 +179,8 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     const { config, datamodel } = this
 
     const dataValid = data.filter(d => {
-      const lat = getValue(d, config.pointLatitude)
-      const lon = getValue(d, config.pointLongitude)
+      const lat = getNumber(d, config.pointLatitude)
+      const lon = getNumber(d, config.pointLongitude)
       const valid = isFinite(lat) && isFinite(lon)
 
       if (!valid) console.warn('Map: Invalid point coordinates', d)
@@ -249,8 +259,8 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
 
     if (centerPoint) {
       const coordinates = {
-        lng: getValue(foundPoint.properties, config.pointLongitude),
-        lat: getValue(foundPoint.properties, config.pointLatitude),
+        lng: getNumber(foundPoint.properties, config.pointLongitude),
+        lat: getNumber(foundPoint.properties, config.pointLatitude),
       }
 
       const zoomLevel = this._map.leaflet.getZoom()
@@ -281,7 +291,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     const bounds = [dataBoundsAll[0][1], dataBoundsAll[1][0], dataBoundsAll[1][1], dataBoundsAll[0][0]]
     const pointDataAll = this._getPointData(bounds)
 
-    let foundPoint = pointDataAll.find((d: Point<Datum>) => d.properties.id === id)
+    let foundPoint = pointDataAll.find((d: LeafletMapPoint<Datum>) => d.properties.id === id)
 
     // If point was found and it's a cluster -> do nothing
     if (foundPoint?.properties?.cluster) {
@@ -313,8 +323,8 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
 
       const zoomLevel = isNil(customZoomLevel) ? this._map.leaflet.getZoom() : customZoomLevel
       const coordinates = {
-        lng: getValue(foundPoint.properties, config.pointLongitude),
-        lat: getValue(foundPoint.properties, config.pointLatitude),
+        lng: getNumber(foundPoint.properties, config.pointLongitude),
+        lat: getNumber(foundPoint.properties, config.pointLatitude),
       }
       this._eventInitiatedByComponent = true
       this._map.leaflet.flyTo(coordinates, zoomLevel, { duration: 0 })
@@ -376,7 +386,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
 
     // Render content
     const points = this._pointGroup.selectAll(`.${s.point}:not(.exit)`)
-      .data(pointData, (d: Point<Datum>) => d.id.toString())
+      .data(pointData, (d: LeafletMapPoint<Datum>) => d.id.toString())
 
     points.exit().classed('exit', true).call(removeNodes)
     const pointsEnter = points.enter().append('g').attr('class', s.point)
@@ -392,7 +402,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
       pointData.forEach((d, i) => { d._zIndex = d.properties?.expandedClusterPoint ? 2 : 0 })
       this._pointGroup
         .selectAll(`.${s.point}, .${s.clusterBackground}, .${s.pointSelectionRing}`)
-        .sort((a: Point<Datum>, b: Point<Datum>) => a._zIndex - b._zIndex)
+        .sort((a: LeafletMapPoint<Datum>, b: LeafletMapPoint<Datum>) => a._zIndex - b._zIndex)
     }
 
     // Show selection border and hide it when the node
@@ -438,7 +448,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
 
     this._forceExpandCluster = false
     if (clusterPoint) {
-      const points: ClusterFeature<PointDatum<Datum>>[] = clusterPoint.index.getLeaves(clusterPoint.properties.cluster_id, Infinity)
+      const points: ClusterFeature<LeafletMapPointDatum<Datum>>[] = clusterPoint.index.getLeaves(clusterPoint.properties.cluster_id, Infinity)
       const packPoints = points.map(p => ({ x: null, y: null, r: getPointRadius(p, config.pointRadius, this._map.leaflet.getZoom()) + padding }))
       packSiblings(packPoints)
 
@@ -468,7 +478,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     this._expandedCluster = null
   }
 
-  private _getPointData (customBounds?): Point<Datum>[] {
+  private _getPointData (customBounds?): LeafletMapPoint<Datum>[] {
     const { config, datamodel: { data } } = this
     const { pointRadius, pointColor, pointShape, pointId, valuesMap } = config
 
@@ -530,7 +540,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     this._onMapMoveEndInternal?.(this._map.leaflet)
     config.onMapMoveEnd?.(this._getMapZoomState())
 
-    if (config.renderer === LeafletMapRenderer.MAPBOXGL) {
+    if (config.renderer === LeafletMapRenderer.MapboxGL) {
       constraintMapViewThrottled(this._map.leaflet)
 
       const events = this._map.layer.getEvents()

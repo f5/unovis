@@ -1,32 +1,34 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { select } from 'd3-selection'
+import { select, Selection } from 'd3-selection'
 
 // Core
 import { CoreDataModel } from 'data-models/core'
 
-// Types
-import { ComponentType, Sizing } from 'types/component'
-
-import { Spacing } from 'types/misc'
-
 // Utils
 import { throttle } from 'utils/data'
+
+// Types
+import { ComponentType, Sizing } from 'types/component'
+import { Spacing } from 'types/spacing'
+
+// Local Types
+import { VisEventCallback, VisEventType } from './types'
 
 // Config
 import { ComponentConfig, ComponentConfigInterface } from './config'
 
-export class ComponentCore<CoreDatum> {
-  element: HTMLElement | SVGGElement
+export class ComponentCore<CoreDatum, ConfigClass extends ComponentConfig = ComponentConfig> {
+  element: SVGGElement | HTMLElement
   type: ComponentType = ComponentType.SVG
-  g: any // Selection<HTMLElement | SVGElement, any, any, any>
-  config: ComponentConfig
-  prevConfig: ComponentConfig
+  g: Selection<SVGGElement | HTMLElement, unknown, null, undefined>
+  config: ConfigClass
+  prevConfig: ConfigClass
   datamodel: CoreDataModel<CoreDatum> = new CoreDataModel()
-  sizing: Sizing = Sizing.FIT
+  sizing: Sizing | string = Sizing.Fit
 
   events: {
-    [selectorString: string]: {
-      [eventType: string]: (((d: any, event: Event, i: number, elements: HTMLElement[] | SVGElement[]) => void)) | undefined;
+    [selector: string]: {
+      [eventType in VisEventType]?: VisEventCallback;
     };
   } = {}
 
@@ -43,9 +45,10 @@ export class ComponentCore<CoreDatum> {
   }
 
   setConfig<T extends ComponentConfigInterface> (config: T): void {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     const ConfigModel = (this.config.constructor as typeof ComponentConfig)
     this.prevConfig = this.config
-    this.config = new ConfigModel().init(config)
+    this.config = new ConfigModel().init(config) as ConfigClass
   }
 
   setData (data: CoreDatum): void {
@@ -67,11 +70,7 @@ export class ComponentCore<CoreDatum> {
   _render (duration = this.config.duration): void {
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  _onEvent (d: any, i: number, elements: []): void {
-  }
-
-  _setCustomAttributes (): void {
+  private _setCustomAttributes (): void {
     const attributeMap = this.config.attributes
 
     Object.keys(attributeMap).forEach(className => {
@@ -82,7 +81,7 @@ export class ComponentCore<CoreDatum> {
     })
   }
 
-  _setUpComponentEvents (): void {
+  private _setUpComponentEvents (): void {
     // Set up default events
     this._bindEvents(this.events)
 
@@ -90,13 +89,13 @@ export class ComponentCore<CoreDatum> {
     this._bindEvents(this.config.events, '.user')
   }
 
-  _bindEvents (events, suffix = ''): void {
+  private _bindEvents (events = this.events, suffix = ''): void {
     Object.keys(events).forEach(className => {
       Object.keys(events[className]).forEach(eventType => {
-        const selection = this.g.selectAll(`.${className}`)
+        const selection: Selection<SVGGElement | HTMLElement, any, SVGElement | HTMLElement, any> = this.g.selectAll(`.${className}`)
         selection.on(eventType + suffix, (event: Event, d) => {
           const els = selection.nodes()
-          const i = els.indexOf(event.currentTarget)
+          const i = els.indexOf(event.currentTarget as SVGGElement | HTMLElement)
           return events[className][eventType](d, event, i, els)
         })
       })

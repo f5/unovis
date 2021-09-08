@@ -3,11 +3,11 @@ import { select, Selection } from 'd3-selection'
 import L from 'leaflet'
 import { feature } from 'topojson-client'
 
-// Types
-import { LeafletMapRenderer } from 'types/map'
-
 // Config
 import { LeafletMapConfig } from '../config'
+
+// Local Types
+import { LeafletMapRenderer } from '../types'
 
 // Utils
 import { constraintMapView, mapboxglWheelEventThrottled } from '../renderer/mapboxgl-utils'
@@ -27,7 +27,7 @@ export async function setupMap<T> (mapContainer: HTMLElement, config: LeafletMap
   const { renderer, topoJSONLayer } = config
 
   const leaflet = L.map(mapContainer, {
-    scrollWheelZoom: renderer === LeafletMapRenderer.TANGRAM, // We define custom scroll event for MapboxGL to enabling smooth zooming
+    scrollWheelZoom: renderer === LeafletMapRenderer.Tangram, // We define custom scroll event for MapboxGL to enabling smooth zooming
     zoomControl: false,
     zoomDelta: 0.5,
     zoomSnap: 0,
@@ -46,13 +46,13 @@ export async function setupMap<T> (mapContainer: HTMLElement, config: LeafletMap
 
   let layer
   switch (renderer) {
-    case LeafletMapRenderer.TANGRAM: {
+    case LeafletMapRenderer.Tangram: {
       const { getTangramLayer } = await import('../renderer/tangram-layer')
       layer = getTangramLayer(config)
       layer.addTo(leaflet)
       break
     }
-    case LeafletMapRenderer.MAPBOXGL:
+    case LeafletMapRenderer.MapboxGL:
     default: {
       const { getMapboxglLayer } = await import('../renderer/mapboxgl-layer')
 
@@ -70,7 +70,7 @@ export async function setupMap<T> (mapContainer: HTMLElement, config: LeafletMap
     }
   }
 
-  if (topoJSONLayer?.sources && renderer === LeafletMapRenderer.MAPBOXGL) {
+  if (topoJSONLayer?.sources && renderer === LeafletMapRenderer.MapboxGL) {
     const mapboxmap = layer.getMapboxMap()
     const canvas = mapboxmap.getCanvas()
     select(canvas).classed(s.mapboxglCanvas, true)

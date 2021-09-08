@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { Selection, BaseType } from 'd3-selection'
+import { Selection } from 'd3-selection'
 import { hierarchy, partition, HierarchyRectangularNode } from 'd3-hierarchy'
 import { arc } from 'd3-shape'
 
@@ -7,11 +7,13 @@ import { arc } from 'd3-shape'
 import { ComponentCore } from 'core/component'
 
 // Utils
-import { getValue, isNumber } from 'utils/data'
+import { getNumber, isNumber } from 'utils/data'
 
 // Types
-import { Spacing } from 'types/misc'
-import { Hierarchy, Link } from 'types/radial-dendrogram'
+import { Spacing } from 'types/spacing'
+
+// Local Types
+import { Hierarchy, Link } from './types'
 
 // Config
 import { RadialDendrogramConfig, RadialDendrogramConfigInterface } from './config'
@@ -27,9 +29,9 @@ import * as s from './style'
 export class RadialDendrogram<H extends Hierarchy> extends ComponentCore<H> {
   static selectors = s
   config: RadialDendrogramConfig<H> = new RadialDendrogramConfig()
-  nodeGroup: Selection<SVGGElement, HierarchyRectangularNode<H>[], SVGGElement, HierarchyRectangularNode<H>[]>
-  linkGroup: Selection<SVGGElement, Link<H>[], SVGGElement, Link<H>[]>
-  labelGroup: Selection<SVGGElement, HierarchyRectangularNode<H>[], SVGGElement, HierarchyRectangularNode<H>[]>
+  nodeGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
+  linkGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
+  labelGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
   arcGen = arc<HierarchyRectangularNode<H>>()
   linkArcGen = arc<Link<H>>()
 
@@ -57,21 +59,21 @@ export class RadialDendrogram<H extends Hierarchy> extends ComponentCore<H> {
     this.arcGen
       .startAngle(d => config.angleRange[0] + d.x0)
       .endAngle(d => config.angleRange[0] + d.x1)
-      .padAngle(d => Math.min((d.x1 - d.x0) / 2, getValue(d, config.padAngle)))
-      .cornerRadius(d => getValue(d, config.cornerRadius))
-      .innerRadius(d => d.y1 - getValue(d, config.nodeWidth))
+      .padAngle(d => Math.min((d.x1 - d.x0) / 2, getNumber(d, config.padAngle)))
+      .cornerRadius(d => getNumber(d, config.cornerRadius))
+      .innerRadius(d => d.y1 - getNumber(d, config.nodeWidth))
       .outerRadius(d => d.y1)
 
     this.linkArcGen
       .startAngle(d => config.angleRange[0] + d.target.x0)
       .endAngle(d => config.angleRange[0] + d.target.x1)
-      .padAngle(d => Math.min((d.target.x1 - d.target.x0) / 2, getValue(d, config.padAngle)))
-      .cornerRadius(d => getValue(d, config.cornerRadius))
+      .padAngle(d => Math.min((d.target.x1 - d.target.x0) / 2, getNumber(d, config.padAngle)))
+      .cornerRadius(d => getNumber(d, config.cornerRadius))
       .innerRadius(d => d.source.y1)
-      .outerRadius(d => d.target.y1 - getValue(d, config.nodeWidth))
+      .outerRadius(d => d.target.y1 - getNumber(d, config.nodeWidth))
 
     const hierarchyData = hierarchy(data, d => config.children(d))
-    hierarchyData.sum(d => getValue(d, config.value))
+    hierarchyData.sum(d => getNumber(d, config.value))
 
     let radius = Math.min(config.width, config.height) / 2
     let ladelWidth = radius / (hierarchyData.height + 1) - config.nodeWidth
@@ -98,7 +100,7 @@ export class RadialDendrogram<H extends Hierarchy> extends ComponentCore<H> {
     const linksMerged = links.merge(linkEnter)
     linksMerged.call(updateLink, this.linkArcGen, duration)
 
-    const linksRemove: Selection<BaseType, Link<H>, SVGGElement, Link<H>[]> = links.exit()
+    const linksRemove = links.exit()
     linksRemove.call(removeLink, duration)
 
     // Nodes

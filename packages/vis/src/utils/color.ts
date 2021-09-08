@@ -1,14 +1,15 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 // Core
-import { getCSSVarName } from 'styles/colors'
+import { getCSSColorVariable } from 'styles/colors'
 
 // Utils
-import { getValue, isNumber } from 'utils/data'
+import { getString, isNumber } from 'utils/data'
+import { StringAccessor } from 'types/accessor'
 
-/** Retrieves color from data if available, fallbacks to a css variable with a specified suffix or to a null value if the suffix is not passed */
-export function getColor (d: any, accessor: any, index?: number): string {
-  const value = getValue(d, accessor, index)
-  return (value || (isNumber(index) ? `var(${getCSSVarName(index)})` : null)) as string
+/** Retrieves color from data if available, fallbacks to a css variable in an index has been passed */
+export function getColor<T> (d: T, accessor: StringAccessor<T>, index?: number): string {
+  const value = getString(d, accessor, index)
+  return (value || (isNumber(index) ? `var(${getCSSColorVariable(index)})` : null)) as string
 }
 
 export function hexToRgb (hex: string): { r: number; g: number; b: number } {

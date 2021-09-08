@@ -3,18 +3,18 @@
 import { Config } from 'core/config'
 
 // Types
-import { Spacing } from 'types/misc'
 import { Sizing } from 'types/component'
+import { Spacing } from 'types/spacing'
 
 export interface ContainerConfigInterface {
-  /** Animation duration of all the components within the container */
+  /** Animation duration of all the components within the container. Default: `undefined` */
   duration?: number;
-  /** Container margins */
+  /** Margins. Default: `{ top: 0, bottom: 0, left: 0, right: 0 }` */
   margin?: Spacing;
-  /** Chart padding */
+  /** Padding. Default: `{ top: 0, bottom: 0, left: 0, right: 0 }` */
   padding?: Spacing;
-  /** Defines whether components should fit into the container or the container should expand to fit to the component's size. Default: Sizing.FIT or "fit" */
-  sizing?: Sizing;
+  /** Defines whether components should fit into the container or the container should expand to fit to the component's size. Default: `Sizing.FIT` */
+  sizing?: Sizing | string;
 }
 
 export class ContainerConfig extends Config implements ContainerConfigInterface {
@@ -33,5 +33,5 @@ export class ContainerConfig extends Config implements ContainerConfigInterface 
     right: 0,
   }
 
-  sizing = Sizing.FIT
+  sizing = Sizing.Fit
 }

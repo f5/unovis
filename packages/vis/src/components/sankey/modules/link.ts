@@ -5,11 +5,11 @@ import { interpolateNumber } from 'd3-interpolate'
 
 // Utils
 import { getColor } from 'utils/color'
-import { getValue } from 'utils/data'
+import { getString } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 
-// Types
-import { InputLink, InputNode, SankeyLink } from 'types/sankey'
+// Local Types
+import { SankeyInputLink, SankeyInputNode, SankeyLink } from '../types'
 
 // Config
 import { SankeyConfig } from '../config'
@@ -30,9 +30,9 @@ export function linkPath ({ x0, x1, y0, y1, width }): string {
     C ${centerX}, ${top0}
       ${centerX}, ${top1}
       ${x1}, ${top1}
-    
+
     L ${x1}, ${bottom1}
-    
+
     C ${centerX}, ${bottom1}
       ${centerX}, ${bottom0}
       ${x0}, ${bottom0}
@@ -40,7 +40,7 @@ export function linkPath ({ x0, x1, y0, y1, width }): string {
   `
 }
 
-export function createLinks<N extends InputNode, L extends InputLink> (sel: Selection<SVGGElement, SankeyLink<N, L>, SVGGElement, any>): void {
+export function createLinks<N extends SankeyInputNode, L extends SankeyInputLink> (sel: Selection<SVGGElement, SankeyLink<N, L>, SVGGElement, any>): void {
   sel.append('path').attr('class', s.linkPath)
     .attr('d', (d: SankeyLink<N, L>, i, el) => {
     // eslint-disable-next-line dot-notation
@@ -58,12 +58,12 @@ export function createLinks<N extends InputNode, L extends InputLink> (sel: Sele
   sel.style('opacity', 0)
 }
 
-export function updateLinks<N extends InputNode, L extends InputLink> (sel: Selection<SVGGElement, SankeyLink<N, L>, SVGGElement, any>, config: SankeyConfig<N, L>, duration): void {
+export function updateLinks<N extends SankeyInputNode, L extends SankeyInputLink> (sel: Selection<SVGGElement, SankeyLink<N, L>, SVGGElement, any>, config: SankeyConfig<N, L>, duration): void {
   smartTransition(sel, duration)
     .style('opacity', (d: SankeyLink<N, L>) => d._state.greyout ? 0.2 : 1)
 
   const linkSelection = sel.select(`.${s.linkPath}`)
-    .style('cursor', (d: SankeyLink<N, L>) => getValue(d, config.linkCursor))
+    .style('cursor', (d: SankeyLink<N, L>) => getString(d, config.linkCursor))
 
   const selectionTransition = smartTransition(linkSelection, duration)
     .style('fill', (link: SankeyLink<N, L>) => getColor(link, config.linkColor))
@@ -118,7 +118,7 @@ export function updateLinks<N extends InputNode, L extends InputLink> (sel: Sele
       y1: d.y1,
       width: Math.max(10, d.width),
     }))
-    .style('cursor', d => getValue(d, config.linkCursor))
+    .style('cursor', d => getString(d, config.linkCursor))
 }
 
 export function removeLinks (sel): void {

@@ -9,8 +9,8 @@ import { Arc } from 'd3-shape'
 import { getColor } from 'utils/color'
 import { smartTransition } from 'utils/d3'
 
-// Types
-import { Hierarchy } from 'types/radial-dendrogram'
+// Local Types
+import { Hierarchy } from '../types'
 
 // Config
 import { RadialDendrogramConfig } from '../config'

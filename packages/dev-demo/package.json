@@ -1,0 +1,36 @@
+{
+  "name": "@volterra/vis-demo",
+  "version": "0.9.0",
+  "main": "lib/demo.js",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "dev": "npx ng serve --port 9900",
+    "build": "ng build --base-href ./",
+    "test": "jest --colors",
+    "lint": "eslint \"src/**/*.ts\""
+  },
+  "dependencies": {
+    "@angular/animations": "^12.0.3",
+    "@angular/common": "^12.0.3",
+    "@angular/compiler": "^12.0.3",
+    "@angular/core": "^12.0.3",
+    "@angular/forms": "^12.0.3",
+    "@angular/platform-browser": "^12.0.3",
+    "@angular/platform-browser-dynamic": "^12.0.3",
+    "@angular/router": "^12.0.3",
+    "date-fns": "^2.22.1",
+    "lodash": "^4.17.21",
+    "rxjs": "^7.1.0",
+    "tslib": "^2.2.0",
+    "zone.js": "~0.11.4"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^12.0.3",
+    "@angular/cli": "^12.0.3",
+    "@angular/compiler-cli": "^12.0.3",
+    "@angular/language-service": "^12.0.3",
+    "jest-preset-angular": "^8.3.2"
+  }
+}

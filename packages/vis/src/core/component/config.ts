@@ -1,20 +1,57 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
+/* eslint-disable no-irregular-whitespace */
 import { Config } from 'core/config'
+import { VisEventCallback, VisEventType } from 'core/component/types'
 
 export interface ComponentConfigInterface {
-  /** Animation duration */
+  /** Animation duration of the data update transitions in milliseconds. Default: `600` */
   duration?: number;
-  /** Component width in pixels */
+  /** Component width in pixels. This property is set automatically by the container. */
   width?: number;
-  /** Component height in pixels */
+  /** Component height in pixels. This property is set automatically by the container. */
   height?: number;
-  /** Events */
+  /** Events configuration. An object containing properties in the following format:
+   *
+   * ```
+   * {
+   *   [selectorString]: {
+   *       [eventType]: callbackFunction
+   *   }
+   * }
+   * ```
+   * e.g.:
+   * ```
+   * {
+   *   [Area.selectors.area]: {
+   *     click: (d) => console.log("Clicked Area", d)
+   *   }
+   * }
+   * ```
+   */
   events?: {
     [selector: string]: {
-      [eventName: string]: (data: any, event?: Event, i?: number, els?: SVGElement[] | HTMLElement[]) => void;
+      [eventType in VisEventType]?: VisEventCallback;
     };
   };
-  /** Custom attributes */
+  /** You can set every SVG and HTML visualization object to have a custom DOM attributes, which is useful
+   * when you want to do unit or end-to-end testing. Attributes configuration object has the following structure:
+   *
+   * ```
+   * {
+   *   [selectorString]: {
+   *       [attributeName]: attribute constant value or accessor function
+   *   }
+   * }
+   * ```
+   * e.g.:
+   * ```
+   * {
+   *   [Area.selectors.area]: {
+   *     "test-value": d => d.value
+   *   }
+   * }
+   * ```
+   */
   attributes?: {
     [selector: string]: {
       [attr: string]: string | number | boolean | ((datum: any) => string | number | boolean);
@@ -28,8 +65,4 @@ export class ComponentConfig extends Config implements ComponentConfigInterface 
   height = 200
   events = {}
   attributes = {}
-}
-
-export interface ConfigConstructor {
-  new(config?: ComponentConfigInterface): ComponentConfig;
 }

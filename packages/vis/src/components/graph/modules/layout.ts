@@ -7,20 +7,23 @@ import { Graph } from 'graphlibrary'
 // Core
 import { GraphDataModel } from 'data-models/graph'
 
-// Types
-import { NodeDatumCore, LinkDatumCore } from 'types/graph'
-
 // Utils
-import { without, clamp, groupBy, uniq, sortBy, getValue } from 'utils/data'
+import { without, clamp, groupBy, uniq, sortBy, getString, getNumber } from 'utils/data'
+
+// Types
+import { GraphInputLink, GraphInputNode } from 'types/graph'
+
+// Local Types
+import { GraphNode, GraphLink } from '../types'
 
 // Config
-import { GraphConfigInterface } from '../config'
+import { GraphConfig } from '../config'
 
 // Helpers
 import { getMaxNodeSize, configuredNodeSize, getNodeSize } from './node/helper'
 import { positionNonConnectedNodes } from './layout-helpers'
 
-export function applyLayoutCircular<N extends NodeDatumCore, L extends LinkDatumCore> (datamodel: GraphDataModel<N, L>, config: GraphConfigInterface<N, L>): void {
+export function applyLayoutCircular<N extends GraphInputNode, L extends GraphInputLink> (datamodel: GraphDataModel<N, L, GraphNode<N, L>, GraphLink<N, L>>, config: GraphConfig<GraphInputNode, GraphInputLink>): void {
   const { nonConnectedNodes, connectedNodes, nodes } = datamodel
   const { layoutNonConnectedAside, width, height, nodeSize } = config
 
@@ -55,7 +58,7 @@ export function applyLayoutCircular<N extends NodeDatumCore, L extends LinkDatum
   }
 }
 
-export function applyLayoutParallel<N extends NodeDatumCore, L extends LinkDatumCore> (datamodel: GraphDataModel<N, L>, config: GraphConfigInterface<N, L>, orientation?: string): void {
+export function applyLayoutParallel<N extends GraphInputNode, L extends GraphInputLink> (datamodel: GraphDataModel<N, L, GraphNode<N, L>, GraphLink<N, L>>, config: GraphConfig<GraphInputNode, GraphInputLink>, orientation?: string): void {
   const { nonConnectedNodes, connectedNodes, nodes } = datamodel
   const {
     layoutNonConnectedAside, layoutGroupOrder, layoutSortConnectionsByGroup,
@@ -67,12 +70,12 @@ export function applyLayoutParallel<N extends NodeDatumCore, L extends LinkDatum
 
   // Handle connected nodes
   const layoutNodes = layoutNonConnectedAside ? connectedNodes : nodes
-  const groupNames: any[] = uniq(layoutNodes.map(d => getValue(d, nodeGroup)))
+  const groupNames: any[] = uniq(layoutNodes.map(d => getString(d, nodeGroup)))
   const groupNamesSorted: any[] = sortBy(groupNames, d => layoutGroupOrder.indexOf(d))
 
   const groups = groupNamesSorted.map(groupName => {
-    const groupNodes = layoutNodes.filter(d => getValue(d, nodeGroup) === groupName)
-    const groupedBySubgroup = groupBy(groupNodes, d => getValue(d, nodeSubGroup))
+    const groupNodes = layoutNodes.filter(d => getString(d, nodeGroup) === groupName)
+    const groupedBySubgroup = groupBy(groupNodes, d => getString(d, nodeSubGroup))
     const subgroups = Object.keys(groupedBySubgroup).map(name => ({
       nodes: groupedBySubgroup[name],
       name,
@@ -256,7 +259,7 @@ export function applyLayoutParallel<N extends NodeDatumCore, L extends LinkDatum
   }
 }
 
-export function applyLayoutDagre<N extends NodeDatumCore, L extends LinkDatumCore> (datamodel: GraphDataModel<N, L>, config: GraphConfigInterface<N, L>): void {
+export function applyLayoutDagre<N extends GraphInputNode, L extends GraphInputLink> (datamodel: GraphDataModel<N, L, GraphNode<N, L>, GraphLink<N, L>>, config: GraphConfig<GraphInputNode, GraphInputLink>): void {
   const { nonConnectedNodes, connectedNodes, nodes, links } = datamodel
   const { nodeSize, layoutNonConnectedAside, width, dagreLayoutSettings, nodeBorderWidth, nodeLabel } = config
 
@@ -276,16 +279,16 @@ export function applyLayoutDagre<N extends NodeDatumCore, L extends LinkDatumCor
   const nds = (layoutNonConnectedAside ? connectedNodes : nodes)
   nds.forEach(node => {
     dagreGraph.setNode(node._index, {
-      label: getValue(node, nodeLabel),
-      width: getValue(node, nodeSize) * 1.5 + getValue(node, nodeBorderWidth),
-      height: labelApprxHeight + getValue(node, nodeSize) * 1.5,
+      label: getString(node, nodeLabel),
+      width: getNumber(node, nodeSize) * 1.5 + getNumber(node, nodeBorderWidth),
+      height: labelApprxHeight + getNumber(node, nodeSize) * 1.5,
       originalNode: node,
     })
   })
 
   // Add edges to the graph.
   links.forEach(link => {
-    dagreGraph.setEdge((link.source as NodeDatumCore)._index, (link.target as NodeDatumCore)._index)
+    dagreGraph.setEdge((link.source as GraphNode)._index, (link.target as GraphNode)._index)
   })
 
   // Calculate the layout
@@ -309,18 +312,18 @@ export function applyLayoutDagre<N extends NodeDatumCore, L extends LinkDatumCor
   }
 }
 
-export function applyLayoutConcentric<N extends NodeDatumCore, L extends LinkDatumCore> (datamodel: GraphDataModel<N, L>, config: GraphConfigInterface<N, L>): void {
+export function applyLayoutConcentric<N extends GraphInputNode, L extends GraphInputLink> (datamodel: GraphDataModel<N, L, GraphNode<N, L>, GraphLink<N, L>>, config: GraphConfig<GraphInputNode, GraphInputLink>): void {
   const { nonConnectedNodes, connectedNodes, nodes } = datamodel
   const { layoutNonConnectedAside, layoutGroupOrder, nodeSize, nodeGroup, width, height } = config
 
   const layoutNodes = layoutNonConnectedAside ? connectedNodes : nodes
 
-  const groupNames = uniq(layoutNodes.map(d => getValue(d, nodeGroup)))
+  const groupNames = uniq(layoutNodes.map(d => getString(d, nodeGroup)))
   const groupNamesSorted = sortBy(groupNames, d => layoutGroupOrder.indexOf(d))
 
   const groups = groupNamesSorted.map(groupName => ({
     name: groupName,
-    nodes: layoutNodes.filter(d => getValue(d, nodeGroup) === groupName),
+    nodes: layoutNodes.filter(d => getString(d, nodeGroup) === groupName),
   }))
 
   // Handle connected nodes
@@ -356,12 +359,12 @@ export function applyLayoutConcentric<N extends NodeDatumCore, L extends LinkDat
   }
 }
 
-export function applyLayoutForce<N extends NodeDatumCore, L extends LinkDatumCore> (datamodel: GraphDataModel<N, L>, config: GraphConfigInterface<N, L>): void {
+export function applyLayoutForce<N extends GraphInputNode, L extends GraphInputLink> (datamodel: GraphDataModel<N, L, GraphNode<N, L>, GraphLink<N, L>>, config: GraphConfig<GraphInputNode, GraphInputLink>): void {
   const { layoutNonConnectedAside, forceLayoutSettings: { linkDistance, linkStrength, charge, forceXStrength, forceYStrength }, nodeSize, width } = config
 
   const { nonConnectedNodes, connectedNodes, nodes, links } = datamodel
   const simulation = forceSimulation(layoutNonConnectedAside ? connectedNodes : nodes)
-    .force('link', forceLink(links).id((d: N) => String(d._id)).distance(linkDistance).strength(linkStrength))
+    .force('link', forceLink(links).id((d: GraphNode<N, L>) => String(d._id)).distance(linkDistance).strength(linkStrength))
     .force('charge', forceManyBody().strength(d => {
       const linkCount = links.reduce((count, l) => count + Number((l.source === d) || (l.target === d)), 0)
       return charge * Math.sqrt(linkCount)

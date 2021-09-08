@@ -13,7 +13,7 @@ import { getBoundingClientRectObject } from 'utils/misc'
 import { ContainerConfig, ContainerConfigInterface } from './config'
 
 export class ContainerCore {
-  svg: Selection<SVGSVGElement, any, HTMLElement, any>
+  svg: Selection<SVGSVGElement, unknown, null, undefined>
   element: SVGSVGElement
   prevConfig: ContainerConfig
   config: ContainerConfig
@@ -49,6 +49,7 @@ export class ContainerCore {
   }
 
   updateContainer<T extends ContainerConfigInterface> (config: T): void {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     const ConfigModel = (this.config.constructor as typeof ContainerConfig)
     this.prevConfig = this.config
     this.config = new ConfigModel().init(config)
@@ -97,7 +98,7 @@ export class ContainerCore {
 
   _onResize (): void {
     const { config } = this
-    const redrawOnResize = config.sizing === Sizing.FIT || config.sizing === Sizing.FIT_WIDTH
+    const redrawOnResize = config.sizing === Sizing.Fit || config.sizing === Sizing.FitWidth
 
     if (redrawOnResize) this.render(0)
   }

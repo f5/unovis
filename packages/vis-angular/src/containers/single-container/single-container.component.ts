@@ -1,9 +1,10 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { Component, ContentChildren, ViewChild, ElementRef, AfterViewInit, Input, OnDestroy, QueryList, SimpleChanges } from '@angular/core'
+import { Component, ViewChild, ElementRef, AfterViewInit, Input, OnDestroy, SimpleChanges, ContentChild } from '@angular/core'
 
 // Vis
-import { SingleChart, SingleChartConfigInterface, Axis, Crosshair, Tooltip } from '@volterra/vis'
+import { ComponentCore, SingleChart, SingleChartConfigInterface, Tooltip } from '@volterra/vis'
 import { VisCoreComponent } from '../../core'
+import { VisTooltipComponent } from '../../components/tooltip/tooltip.component'
 
 @Component({
   selector: 'vis-single-container',
@@ -12,12 +13,17 @@ import { VisCoreComponent } from '../../core'
   </div>`,
   styles: ['.container { width: 100%; height: 100%; position: relative; }'],
 })
-export class VisSingleContainerComponent implements AfterViewInit, OnDestroy {
+export class VisSingleContainerComponent<Datum = any, C extends ComponentCore<Datum> = ComponentCore<Datum>> implements AfterViewInit, OnDestroy {
   @ViewChild('container', { static: false }) containerRef: ElementRef
-  @ContentChildren(VisCoreComponent) visComponents: QueryList<VisCoreComponent>
+  @ContentChild(VisCoreComponent) visComponent: VisCoreComponent
+  @ContentChild(VisTooltipComponent) tooltipComponent: VisTooltipComponent
+
+  /** Margins. Default: `{ top: 0, bottom: 0, left: 0, right: 0 }` */
   @Input() margin = { top: 10, bottom: 10, left: 10, right: 10 }
+  /** Animation duration of all the components within the container. Default: `undefined` */
   @Input() duration: number
   @Input() data
+
   chart: SingleChart<unknown>
 
   ngAfterViewInit (): void {
@@ -37,9 +43,9 @@ export class VisSingleContainerComponent implements AfterViewInit, OnDestroy {
 
   getConfig (): SingleChartConfigInterface<unknown> {
     const { duration, margin } = this
-    const visComponents = this.visComponents.toArray().map(d => d.component)
-    const tooltip = visComponents.find(c => c instanceof Tooltip) as unknown as Tooltip<any, unknown>
-    const component = visComponents.find(c => !(c instanceof Crosshair) && !(c instanceof Tooltip) && !(c instanceof Axis))
+
+    const component = this.visComponent?.component as C
+    const tooltip = this.tooltipComponent?.component as Tooltip
 
     return { duration, margin, component, tooltip }
   }

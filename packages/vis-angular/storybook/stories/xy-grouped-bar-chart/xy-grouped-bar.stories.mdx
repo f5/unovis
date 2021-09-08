@@ -1,0 +1,328 @@
+import { moduleMetadata, componentWrapperDecorator } from '@storybook/angular'
+import { Meta, Story, ArgsTable } from '@storybook/addon-docs';
+import { VisXYContainerModule, VisAxisModule, VisGroupedBarModule } from 'src/public-api'
+
+import { VisGroupedBarComponent } from 'src/components/grouped-bar/grouped-bar.component'
+
+import { xyChartContentWrapper } from '../../utils/xy-content-wrapper'
+import { baseConfig, getColor, minBarHeightExampleData, dataStepExampleData } from './xy-grouped-bar.config'
+
+<Meta
+  title="XY Charts/Grouped Bar"
+  component={VisGroupedBarComponent}
+  decorators={[
+    moduleMetadata({ imports: [VisGroupedBarModule, VisXYContainerModule, VisAxisModule] }),
+    componentWrapperDecorator(xyChartContentWrapper)
+  ]}
+/>
+
+<style>{``}</style>
+
+# Group Bar
+### Basic configuration
+The Grouped Bar component has been designed to work together with `<vis-xy-container>`. The minimal Grouped Bar configuration looks like:
+```angular2html
+<vis-xy-container [data]="dataArray">
+  <vis-grouped-bar [x]="xAccessor" [y]="yAccessor"></vis-grouped-bar>
+</vis-xy-container>
+```
+where `data: DataRecord[] = [{x: 0, y: 1}, ...]`, `xAccessor = (d: DataRecord) => d.x` and `yAccessor = (d: DataRecord) => d.y`.
+<Story name="Simple Bar Chart">
+  {{
+    props: {
+      ...baseConfig(),
+      storyHeight: 100,
+      storyHideAxes: true,
+    },
+  }}
+</Story>
+
+### Grouped Bars
+Grouped Bar can accept an array of `y` accessors to display values as a group of bars:
+```
+// Define your accessors in the component file:
+y = [d => d.y1, d => d.y2, d => d.y3, d => d.y4],
+// In the template, pass them to vis-grouped-bar as inputs:
+<vis-grouped-bar [x]="xAccessor" [y]="yAccessorArray"></vis-grouped-bar>
+```
+
+<Story name="Grouped Bars">
+  {{
+    props: {
+      ...baseConfig(),
+      y: [d => d.y2, d => d.y1, d => d.y, d => d.y4],
+      storyHeight: 100,
+      storyHideAxes: true,
+    },
+  }}
+</Story>
+
+### Grouped Bar Width
+By default, the width of the grouped bar is calculated automatically based on their count. But you can also strictly set the grouped bar's width in pixels using the `groupWidth` property:
+```angular2html
+  <vis-grouped-bar ... [groupWidth]="10"></vis-grouped-bar>
+```
+
+<Story name="Grouped Bar Width">
+  {{
+    props: {
+       ...baseConfig(),
+      y: [d => d.y2, d => d.y1],
+      groupWidth: 10,
+      storyHeight: 100,
+      storyHideAxes: true,
+    }
+  }}
+</Story>
+
+### Limiting Dynamic Grouped Bar Width
+When you don't know the number of bars in advance, and you're relying on automatic bar width calculation,
+you might want to limit the maximum bar width to prevent the bars from being too wide when there are just a few of them.
+That can be achieved by setting the `groupMaxWidth` property.
+```angular2html
+  <vis-grouped-bar ... [groupMaxWidth]="25"></vis-grouped-bar>
+```
+
+<Story name="Grouped Bar Width: Upper Limit">
+  {{
+    props: {
+      ...baseConfig(10),
+      y: [d => d.y2, d => d.y1, d => d.y],
+      storyHeight: 100,
+      groupMaxWidth: 25,
+      storyHideAxes: true,
+    },
+  }}
+</Story>
+
+### Grouped Bar Padding
+Another way to control the grouped bar's width is by changing the `groupPadding` property, which specifies how much of the available sector should be empty, in the range of [0,1).
+```angular2html
+  <vis-grouped-bar ... [groupPadding]="0.5"></vis-grouped-bar>
+```
+
+##### Grouped Bar Padding: 0 *(full width)*
+<Story name="Grouped Bar Padding: 0">
+  {{
+    props:{
+      ...baseConfig(),
+      y: [d => d.y2, d => d.y1],
+      storyHeight: 50,
+      storyHideAxes: true,
+      groupPadding: 0
+    }
+  }}
+</Story>
+
+##### Grouped Bar Padding: 0.5 *(half width)*
+<Story name="Grouped Bar Padding: 0.5">
+  {{
+    props:{
+      ...baseConfig(),
+      y: [d => d.y2, d => d.y1],
+      storyHeight: 50,
+      storyHideAxes: true,
+      groupPadding: 0.5
+    }
+  }}
+</Story>
+
+### Grouped Bar Height Limit
+When you have highly scattered data with very low and high values, the bars corresponding to the lower values can be so small, so they become invisible.
+If you want to prevent that you can set the minimum bar height to 1 pixel using the `barMinHeight` *boolean* property.
+```angular2html
+  <vis-grouped-bar ... [barMinHeight]="true"></vis-grouped-bar>
+```
+##### barMinHeight: false *(small bars are invisible)*
+<Story name="Grouped Bar Height Limit: false">
+  {{
+    props: {
+      ...baseConfig(),
+      data: minBarHeightExampleData,
+      y: [d => d.y, d => d.y1],
+      storyHeight: 50,
+      barPadding: 0.2,
+      storyHideAxes: true,
+      barMinHeight: false
+    },
+  }}
+</Story>
+
+##### barMinHeight: true *(small bars have 1px height)*
+<Story name="Grouped Bar Height Limit: true">
+  {{
+    props: {
+      ...baseConfig(),
+      data: minBarHeightExampleData,
+      y: [d => d.y, d => d.y1],
+      storyHeight: 50,
+      barPadding: 0.2,
+      storyHideAxes: true,
+      barMinHeight: true,
+      barMinHeightZeroValue: false,
+    },
+  }}
+</Story>
+
+### Dealing with inconsistent data
+When your data has gaps, it's impossible to calculate the group bar's width automatically. The visualization will still try
+to do that, but most likely the result will be wrong, and you'll see wide overlapping bars. However, you can help the calculation
+by setting your data step implicitly using the `dataStep` property.
+```angular2html
+  <vis-grouped-bar ... [dataStep]="1.0"></vis-grouped-bar>
+```
+##### dataStep: Not set
+<Story name="Data Step: Not set">
+  {{
+    props:{
+      ...baseConfig(),
+      y: [d => d.y, d => d.y1],
+      storyHideYAxis: true,
+      storyXAxisLabel: '',
+      storyHeight: 70,
+      data: dataStepExampleData,
+    }
+  }}
+</Story>
+
+##### dataStep: 1.0
+<Story name="Data Step">
+  {{
+    props:{
+      ...baseConfig(),
+      y: [d => d.y, d => d.y1],
+      storyHideYAxis: true,
+      storyXAxisLabel: '',
+      storyHeight: 70,
+      dataStep: 1,
+      data: dataStepExampleData,
+    }
+  }}
+</Story>
+
+### Rounded Corners
+Using the `roundedCorners` property, you can modernize your UI by applying rounded corners to the top bar in the group.
+```angular2html
+  <vis-grouped-bar ... [roundedCorners]="true"></vis-grouped-bar>
+```
+
+##### roundedCorners: false
+<Story name ="Rounded Corners: false">
+  {{
+    props: {
+      ...baseConfig(10),
+      y: [d => d.y, d => d.y1],
+      storyHeight: 80,
+      storyHideAxes: true,
+      roundedCorners: false
+    }
+  }}
+</Story>
+
+##### roundedCorners: 5
+<Story name ="Rounded Corners: 5">
+  {{
+    props: {
+      ...baseConfig(10),
+      y: [d => d.y, d => d.y1],
+      storyHeight: 80,
+      storyHideAxes: true,
+      roundedCorners: 5
+    }
+  }}
+</Story>
+
+##### roundedCorners: true
+<Story name ="Rounded Corners: true">
+  {{
+    props: {
+      ...baseConfig(10),
+      y: [d => d.y, d => d.y1],
+      storyHeight: 80,
+      storyHideAxes: true,
+      roundedCorners: true
+    }
+  }}
+</Story>
+
+### Grouped Bar Color
+Set the color of the bar by assigning the `color` property to a hex string and/or by assigning the `color` property to a function evaluated per each bar, e.g. ` getColor = (d: DataRecord, i: number): string => d.y > THRESHOLD ? '#FF4F4E' : null`
+```angular2html
+  <vis-grouped-bar ... [color]="getColor"></vis-grouped-bar>
+```
+
+<Story name="Grouped Bar Color">
+  {{
+    props:{
+      ...baseConfig(),
+      y: [d => d.y, d => d.y1],
+      barPadding: 0.1,
+      storyHeight: 100,
+      storyHideAxes: true,
+      color: getColor
+    }
+  }}
+</Story>
+
+### Custom Cursor
+You can specify the type of cursor when hovering over by setting the `cursor` property that corresponds to the [CSS's cursor property](https://developer.mozilla.org/en-US/docs/Web/CSS/cursor).
+```angular2html
+  <vis-grouped-bar ... [cursor]="pointer"></vis-grouped-bar>
+```
+
+###### Hover over to see how the cursor changes
+<Story name="Custom Cursor">
+  {{
+    props:{
+      ...baseConfig(),
+      storyHeight: 100,
+      storyHideAxes: true,
+      cursor: 'pointer'
+    }
+  }}
+</Story>
+
+### Grouped Bar with Axes
+You can add axes using the `<vis-axis>` component:
+```angular2html
+<vis-xy-container [data]="dataArray">
+  <vis-grouped-bar [x]="xAccessor" [y]="yAccessors"></vis-grouped-bar>
+  <vis-axis type="x" label="X"></vis-axis>
+  <vis-axis type="y" label="Y"></vis-axis>
+</vis-xy-container>
+```
+
+##### Grouped Bar with Axes
+<Story name="Group Bar with Axes">
+  {{
+    props: {
+      ...baseConfig(),
+      y: [d => d.y2, d => d.y1],
+      storyHeight: 250,
+    },
+  }}
+</Story>
+
+### Events
+For further customization, the Grouped Bar component supports the following events:
+```javascript
+// In the component file:
+import { GroupedBar } from '@volterra/vis`
+...
+events = {
+        [GroupedBar.selectors.bar]: {
+            mouseover: (d: DataRecord) => {},
+            ...
+        },
+        [GroupedBar.selectors.barGroup]: {
+            ...
+        },
+}
+// In the template file:
+<vis-grouped-bar ... events="events"></vis-grouped-bar>
+```
+A list of available JavaScript's mouse and touch events (e.g. `click`, `mouseover`, `mouseout`)  can be found [here](https://developer.mozilla.org/en-US/docs/Web/API/Element#mouse_events).
+
+### Component Inputs
+<ArgsTable of={VisGroupedBarComponent} />
+

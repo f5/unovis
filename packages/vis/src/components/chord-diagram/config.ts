@@ -6,35 +6,37 @@ import { HierarchyNode } from 'd3-hierarchy'
 import { ComponentConfigInterface, ComponentConfig } from 'core/component/config'
 
 // Types
-import { NumericAccessor, ColorAccessor, StringAccessor } from 'types/misc'
-import { Hierarchy, LabelType } from 'types/radial-dendrogram'
-import { CurveType } from 'types/curves'
-import { NodeDatumCore } from 'types/graph'
+import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
+import { Hierarchy, LabelType } from 'components/radial-dendrogram/types'
+import { CurveType } from 'types/curve'
 
-export interface ChordDiagramConfigInterface<H extends NodeDatumCore> extends ComponentConfigInterface {
-  /** Children accessor function */
+// Local Types
+import { ChordInputNode } from './types'
+
+export interface ChordDiagramConfigInterface<H extends ChordInputNode> extends ComponentConfigInterface {
+  /** Children accessor function. Default: `d.children || d.values` */
   children?: (d: H) => H[];
-  /** Value accessor function */
+  /** Value accessor function. Default: `d => d.value` */
   value?: NumericAccessor<H>;
-  /** Array of node hierarchy levels as a data property name, e.g. ['site', 'sublabel']. Default is [] */
+  /** Array of node hierarchy levels. Data records are supposed to have corresponding properties, e.g. ['site', 'sublabel']. Default: `[]` */
   nodeLevels?: string[];
-  /** Node width value in pixels */
+  /** Node width in pixels. Default: `15` */
   nodeWidth?: number;
-  /** Node color value or accessor function */
+  /** Node color accessor function ot constant value. Default: `d => d.color` */
   nodeColor?: ColorAccessor<HierarchyNode<H>>;
-  /** Node label value or accessor function */
+  /** Node label accessor function. Default: `d => d.label ?? d.key` */
   nodeLabel?: StringAccessor<H>;
-  /** Node label position type */
+  /** Node label position. Default: `LabelType.Perpendicular` */
   nodeLabelType?: LabelType | string;
-  /** Pad angle in radians. Value or accessor function */
+  /** Pad angle in radians. Constant value or accessor function. Default: `0.02` */
   padAngle?: NumericAccessor<H>;
-  /** Corner radius value or accessor function */
+  /** Corner radius constant value or accessor function. Default: `2` */
   cornerRadius?: NumericAccessor<H>;
-  /** Diagram angle range. Default: `[0, 2 * Math.PI]` */
+  /** Angular range of the diagram. Default: `[0, 2 * Math.PI]` */
   angleRange?: [number, number];
-  /** Curve type from the CurveType enum */
+  /** Curve type. Default: `CurveType.CatmullRom` */
   curveType?: CurveType;
-  /**  */
+  /** The exponent property of the radius scale. Default: `2` */
   radiusScaleExponent?: number;
 }
 
@@ -44,9 +46,9 @@ export class ChordDiagramConfig<H extends Hierarchy> extends ComponentConfig imp
   value = (d: H): number => d['value']
   nodeLevels = []
   nodeWidth = 15
-  nodeColor = (d: HierarchyNode<H>): string => d['color']
+  nodeColor = (d: HierarchyNode<H>): string => d.data?.['color']
   nodeLabel = (d: H): string => d['label'] ?? d['key']
-  nodeLabelType = LabelType.PERPENDICULAR
+  nodeLabelType = LabelType.Perpendicular
   padAngle = 0.02
   cornerRadius = 2
   angleRange: [number, number] = [0, 2 * Math.PI]

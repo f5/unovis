@@ -3,42 +3,59 @@ import { select, Selection } from 'd3-selection'
 import { Transition } from 'd3-transition'
 import { arc } from 'd3-shape'
 
-// Type
-import { SHAPE } from 'types/shape'
-import { NodeDatumCore, LinkDatumCore, CircleLabel } from 'types/graph'
+// Types
+import { Shape } from 'types/shape'
+import { GraphInputLink, GraphInputNode } from 'types/graph'
 
 // Utils
 import { trimText } from 'utils/text'
 import { polygon } from 'utils/path'
 import { smartTransition } from 'utils/d3'
-import { getValue, throttle } from 'utils/data'
+import { getBoolean, getNumber, getString, getValue, throttle } from 'utils/data'
+
+// Local Types
+import { GraphNode, GraphCircleLabel, GraphNodeAnimationState, GraphNodeAnimatedElement } from '../../types'
 
 // Config
-import { GraphConfigInterface } from '../../config'
+import { GraphConfig } from '../../config'
 
 // Helpers
-import { arcTween, polyTween, setLabelRect, getX, getY, getSideTexLabelColor, getNodeColor, getNodeIconColor, getNodeSize, LABEL_RECT_VERTICAL_PADDING } from './helper'
+import {
+  arcTween,
+  polyTween,
+  setLabelRect,
+  getX,
+  getY,
+  getSideTexLabelColor,
+  getNodeColor,
+  getNodeIconColor,
+  getNodeSize,
+  LABEL_RECT_VERTICAL_PADDING,
+} from './helper'
 import { appendShape, updateShape, isCustomXml } from '../shape'
-import ZOOM_LEVEL from '../zoom-levels'
+import { ZoomLevel } from '../zoom-levels'
 
 // Styles
 import * as generalSelectors from '../../style'
 import * as nodeSelectors from './style'
 
-const SIDE_LABLE_SIZE = 10
+const SIDE_LABEL_SIZE = 10
 
-export function createNodes<N extends NodeDatumCore, L extends LinkDatumCore> (selection: Selection<SVGGElement, N, SVGGElement, N[]>, config: GraphConfigInterface<N, L>): void {
+export function createNodes<N extends GraphInputNode, L extends GraphInputLink> (
+  selection: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, GraphNode<N, L>>,
+  config: GraphConfig<N, L>
+): void {
   const { nodeShape } = config
 
   selection.each((d, i, elements) => {
     const element = elements[i]
     const group = select(element)
     group
-      .attr('transform', d => `rotate(0) translate(${getX(d)}, ${getY(d)}) scale(0)`)
+      .attr('transform', d => `rotate(0) translate(${getX(d as GraphNode<N, L>)}, ${getY(d as GraphNode<N, L>)}) scale(0)`)
 
     group.append('circle').attr('class', nodeSelectors.nodeSelection)
 
-    const shape = getValue(d, nodeShape)
+    const shape = getString(d, nodeShape)
     /** Todo: The 'nodeShape' storing logic below it a temporary fix, needs a cleaner implementation */
     // eslint-disable-next-line dot-notation
     element['nodeShape'] = shape
@@ -66,12 +83,15 @@ export function createNodes<N extends NodeDatumCore, L extends LinkDatumCore> (s
   })
 }
 
-export function updateSelectedNodes<N extends NodeDatumCore, L extends LinkDatumCore> (selection: Selection<SVGGElement, N, SVGGElement, N[]>, config: GraphConfigInterface<N, L>): void {
+export function updateSelectedNodes<N extends GraphInputNode, L extends GraphInputLink> (
+  selection: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, GraphNode<N, L>>,
+  config: GraphConfig<N, L>
+): void {
   const { nodeDisabled } = config
 
   selection.each((d, i, elements) => {
     const group: Selection<SVGGElement, N, SVGGElement, N> = select(elements[i])
-    const isGreyout = getValue(d, nodeDisabled) || d._state.greyout
+    const isGreyout = getBoolean(d, nodeDisabled) || d._state.greyout
 
     group.classed(nodeSelectors.greyoutNode, isGreyout)
       .classed(nodeSelectors.draggable, !config.disableDrag)
@@ -80,21 +100,26 @@ export function updateSelectedNodes<N extends NodeDatumCore, L extends LinkDatum
     nodeSelection.classed(nodeSelectors.nodeSelectionActive, d._state.selected)
 
     group.selectAll(`.${nodeSelectors.sideLabel}`)
-      .style('fill', (l: CircleLabel) => isGreyout ? null : getSideTexLabelColor(l))
+      .style('fill', (l: GraphCircleLabel) => isGreyout ? null : getSideTexLabelColor(l))
 
     group.selectAll(`.${nodeSelectors.sideLabelBackground}`)
-      .style('fill', (l: CircleLabel) => isGreyout ? null : l.color)
+      .style('fill', (l: GraphCircleLabel) => isGreyout ? null : l.color)
   })
 }
 
-export function updateNodes<N extends NodeDatumCore, L extends LinkDatumCore> (selection: Selection<SVGGElement, N, SVGGElement, N[]>, config: GraphConfigInterface<N, L>, duration: number, scale = 1): Selection<SVGGElement, N, SVGGElement, N[]> | Transition<SVGGElement, N, SVGGElement, N[]> {
+export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> (
+  selection: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, GraphNode<N, L>>,
+  config: GraphConfig<N, L>,
+  duration: number,
+  scale = 1
+): Selection<SVGGElement, GraphNode<N, L>, SVGGElement, GraphNode<N, L>> | Transition<SVGGElement, GraphNode<N, L>, SVGGElement, GraphNode<N, L>> {
   const { scoreAnimDuration, nodeBorderWidth, nodeShape, nodeSize, nodeStrokeSegmentValue, nodeStrokeSegmentFill, nodeIcon, nodeIconSize, nodeLabel, nodeSubLabel, nodeSideLabels, nodeStroke, nodeFill, nodeBottomIcon } = config
 
   // Re-create nodes to update shapes if they were changes
   selection.each((d, i, elements) => {
     const element = elements[i]
     const group = select(element)
-    const shape = getValue(d, nodeShape)
+    const shape = getString(d, nodeShape)
 
     // eslint-disable-next-line dot-notation
     if (element['nodeShape'] !== shape) {
@@ -108,60 +133,60 @@ export function updateNodes<N extends NodeDatumCore, L extends LinkDatumCore> (s
   // Update nodes themselves
   selection.each((d, i, elements) => {
     const groupElement = elements[i]
-    const group: Selection<SVGGElement, N, SVGGElement, N> = select(groupElement)
-    const node: Selection<SVGGElement, N, SVGGElement, N> = group.select(`.${nodeSelectors.node}`)
+    const group: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, GraphNode<N, L>> = select(groupElement)
+    const node: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, GraphNode<N, L>> = group.select(`.${nodeSelectors.node}`)
     const nodeArc = group.select(`.${nodeSelectors.nodeArc}`)
     const icon = group.select(`.${nodeSelectors.nodeIcon}`)
     const sideLabelsGroup = group.select(`.${nodeSelectors.sideLabelsGroup}`)
-    const label: Selection<SVGGElement, N, SVGGElement, N> = group.select(`.${nodeSelectors.label}`)
+    const label: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, GraphNode<N, L>> = group.select(`.${nodeSelectors.label}`)
     const labelTextContent = label.select(`.${nodeSelectors.labelTextContent}`)
     const sublabelTextContent = label.select(`.${nodeSelectors.subLabelTextContent}`)
     const bottomIcon = group.select(`.${nodeSelectors.nodeBottomIcon}`)
     const nodeSelection = group.select(`.${nodeSelectors.nodeSelection}`)
 
     group
-      .classed(generalSelectors.zoomOutLevel2, scale < ZOOM_LEVEL.LEVEL2)
-      .classed(nodeSelectors.nodeIsDragged, (d: NodeDatumCore) => d._state.isDragged)
+      .classed(generalSelectors.zoomOutLevel2, scale < ZoomLevel.Level2)
+      .classed(nodeSelectors.nodeIsDragged, (d: GraphNode<N, L>) => d._state.isDragged)
 
     // Update Group
     group
       .classed(nodeSelectors.nodePolygon, d => {
-        const shape = getValue(d, nodeShape)
-        return shape === SHAPE.TRIANGLE || shape === SHAPE.HEXAGON || shape === SHAPE.SQUARE
+        const shape = getString(d, nodeShape)
+        return shape === Shape.Triangle || shape === Shape.Hexagon || shape === Shape.Square
       })
 
     // Update Node
     node
       .call(updateShape, nodeShape, nodeSize)
-      .attr('stroke-width', d => getValue(d, nodeBorderWidth) ?? 0)
+      .attr('stroke-width', d => getNumber(d, nodeBorderWidth) ?? 0)
       .style('fill', d => getNodeColor(d, nodeFill))
-      .style('stroke', d => getValue(d, nodeStroke) ?? null)
+      .style('stroke', d => getString(d, nodeStroke) ?? null)
 
     const nodeBBox = (node.node() as SVGGraphicsElement).getBBox()
 
-    const arcGenerator = arc<N>()
-      .innerRadius(d => getNodeSize(d, nodeSize) / 2 - (getValue(d, nodeBorderWidth) / 2))
-      .outerRadius(d => getNodeSize(d, nodeSize) / 2 + (getValue(d, nodeBorderWidth) / 2))
+    const arcGenerator = arc<GraphNodeAnimationState>()
+      .innerRadius(d => getNodeSize(d, nodeSize) / 2 - (getNumber(d, nodeBorderWidth) / 2))
+      .outerRadius(d => getNodeSize(d, nodeSize) / 2 + (getNumber(d, nodeBorderWidth) / 2))
       .startAngle(0 * (Math.PI / 180))
       // eslint-disable-next-line dot-notation
       .endAngle(a => a['endAngle'])
 
     nodeArc
-      .attr('stroke-width', d => getValue(d, nodeBorderWidth))
-      .style('display', d => !getValue(d, nodeStrokeSegmentValue) ? 'none' : null)
+      .attr('stroke-width', d => getNumber(d, nodeBorderWidth))
+      .style('display', d => !getNumber(d, nodeStrokeSegmentValue) ? 'none' : null)
       .style('fill', getNodeColor(d, nodeStrokeSegmentFill))
       .style('stroke', getNodeColor(d, nodeStrokeSegmentFill))
-      .style('stroke-opacity', d => getValue(d, nodeShape) === SHAPE.CIRCLE ? 0 : null)
+      .style('stroke-opacity', d => getString(d, nodeShape) === Shape.Circle ? 0 : null)
 
     nodeArc
       .transition()
       .duration(scoreAnimDuration)
-      .attrTween('d', (d, i, arr) => {
-        switch (getValue(d, nodeShape)) {
-          case SHAPE.CIRCLE: return arcTween(d, config, arcGenerator, arr[i])
-          case SHAPE.HEXAGON: return polyTween(d, config, polygon, arr[i])
-          case SHAPE.SQUARE: return polyTween(d, config, polygon, arr[i])
-          case SHAPE.TRIANGLE: return polyTween(d, config, polygon, arr[i])
+      .attrTween('d', (d, i, arr: GraphNodeAnimatedElement<SVGElement>[]) => {
+        switch (getString(d, nodeShape)) {
+          case Shape.Circle: return arcTween(d, config, arcGenerator, arr[i])
+          case Shape.Hexagon: return polyTween(d, config, polygon, arr[i])
+          case Shape.Square: return polyTween(d, config, polygon, arr[i])
+          case Shape.Triangle: return polyTween(d, config, polygon, arr[i])
           default: return null
         }
       })
@@ -173,30 +198,30 @@ export function updateNodes<N extends NodeDatumCore, L extends LinkDatumCore> (s
 
     // Update Node Icon
     icon
-      .style('font-size', d => `${getValue(d, nodeIconSize) ?? 2.5 * Math.sqrt(getNodeSize(d, nodeSize))}px`)
+      .style('font-size', d => `${getNumber(d, nodeIconSize) ?? 2.5 * Math.sqrt(getNodeSize(d, nodeSize))}px`)
       .attr('dy', 1)
       .style('fill', d => getNodeIconColor(d, nodeFill))
-      .html(d => getValue(d, nodeIcon))
+      .html(d => getString(d, nodeIcon))
 
     // Side Labels
-    const sideLabelsData = getValue(d, nodeSideLabels) || []
-    const sideLabels = sideLabelsGroup.selectAll('g').data(sideLabelsData as CircleLabel[])
+    const sideLabelsData = getValue<GraphNode<N, L>, GraphCircleLabel[]>(d, nodeSideLabels) || []
+    const sideLabels = sideLabelsGroup.selectAll('g').data(sideLabelsData as GraphCircleLabel[])
     const sideLabelsEnter = sideLabels.enter().append('g')
       .attr('class', nodeSelectors.sideLabelGroup)
     sideLabelsEnter.append('circle')
       .attr('class', nodeSelectors.sideLabelBackground)
-      .attr('r', SIDE_LABLE_SIZE)
+      .attr('r', SIDE_LABEL_SIZE)
     sideLabelsEnter.append('text')
       .attr('class', nodeSelectors.sideLabel)
 
     const sideLabelsUpdate = sideLabels.merge(sideLabelsEnter)
-      .style('cursor', (d: CircleLabel) => d.cursor ?? null)
+      .style('cursor', (d: GraphCircleLabel) => d.cursor ?? null)
 
     // Side label text
-    sideLabelsUpdate.select(`.${nodeSelectors.sideLabel}`).text(d => d.text)
+    sideLabelsUpdate.select(`.${nodeSelectors.sideLabel}`).html(d => d.text)
       .attr('dy', '1px')
       .style('fill', l => getSideTexLabelColor(l))
-      .style('font-size', d => `${11 / Math.pow(d.text.toString().length, 0.3)}px`)
+      .style('font-size', d => d.fontSize ?? `${11 / Math.pow(d.text.toString().length, 0.3)}px`)
       // Side label circle background
     sideLabelsUpdate.select(`.${nodeSelectors.sideLabelBackground}`)
       .style('fill', d => d.color)
@@ -205,17 +230,17 @@ export function updateNodes<N extends NodeDatumCore, L extends LinkDatumCore> (s
       if (sideLabelsData.length === 1) return `translate(${getNodeSize(d, nodeSize) / 2.5}, ${-getNodeSize(d, nodeSize) / 2.5})`
       const r = 1.05 * getNodeSize(d, nodeSize) / 2
       // const angle = i * Math.PI / 4 - Math.PI / 2
-      const angle = i * 1.15 * 2 * Math.atan2(SIDE_LABLE_SIZE, r) - Math.PI / 3
+      const angle = i * 1.15 * 2 * Math.atan2(SIDE_LABEL_SIZE, r) - Math.PI / 3
       return `translate(${r * Math.cos(angle)}, ${r * Math.sin(angle)})`
     })
 
     sideLabels.exit().remove()
 
     // Set Label and Sublabel text
-    const labelText = getValue(d, nodeLabel)
-    const sublabelText = getValue(d, nodeSubLabel)
-    const labelTextTrimmed = trimText(getValue(d, nodeLabel))
-    const sublabelTextTrimmed = trimText(getValue(d, nodeSubLabel))
+    const labelText = getString(d, nodeLabel)
+    const sublabelText = getString(d, nodeSubLabel)
+    const labelTextTrimmed = trimText(getString(d, nodeLabel))
+    const sublabelTextTrimmed = trimText(getString(d, nodeSubLabel))
 
     labelTextContent.text(labelTextTrimmed)
     sublabelTextContent.text(sublabelTextTrimmed)
@@ -235,13 +260,13 @@ export function updateNodes<N extends NodeDatumCore, L extends LinkDatumCore> (s
     // Position label
     const labelFontSize = parseFloat(window.getComputedStyle(groupElement).getPropertyValue('--vis-graph-node-label-font-size')) || 12
     const labelMargin = LABEL_RECT_VERTICAL_PADDING + 1.25 * labelFontSize ** 1.03
-    const nodeHeight = isCustomXml(getValue(d, nodeShape)) ? nodeBBox.height : getNodeSize(d, nodeSize)
+    const nodeHeight = isCustomXml((getString(d, nodeShape)) as Shape) ? nodeBBox.height : getNodeSize(d, nodeSize)
     label.attr('transform', `translate(0, ${nodeHeight / 2 + labelMargin})`)
-    if (scale >= ZOOM_LEVEL.LEVEL3) setLabelRect(label, getValue(d, nodeLabel), nodeSelectors.labelText)
+    if (scale >= ZoomLevel.Level3) setLabelRect(label, getString(d, nodeLabel), nodeSelectors.labelText)
 
     // Bottom Icon
     bottomIcon.html(d => {
-      return getValue(d, nodeBottomIcon)
+      return getString(d, nodeBottomIcon)
     })
       .attr('transform', `translate(0, ${nodeHeight / 2})`)
   })
@@ -253,35 +278,46 @@ export function updateNodes<N extends NodeDatumCore, L extends LinkDatumCore> (s
     .attr('opacity', 1)
 }
 
-export function removeNodes<N extends NodeDatumCore, L extends LinkDatumCore> (selection: Selection<SVGGElement, N, SVGGElement, N[]>, config: GraphConfigInterface<N, L>, duration: number): void {
+export function removeNodes<N extends GraphInputNode, L extends GraphInputLink> (
+  selection: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, GraphNode<N, L>>,
+  config: GraphConfig<N, L>,
+  duration: number
+): void {
   smartTransition(selection, duration / 2)
     .attr('opacity', 0)
     // .attr('transform', d => 'scale(0)')
     .remove()
 }
 
-function setLabelBackgroundRect<N extends NodeDatumCore, L extends LinkDatumCore> (selection: Selection<SVGGElement, N, SVGGElement, N[]>, config: GraphConfigInterface<N, L>): void {
+function setLabelBackgroundRect<N extends GraphInputNode, L extends GraphInputLink> (
+  selection: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, GraphNode<N, L>>,
+  config: GraphConfig<N, L>
+): void {
   const { nodeLabel } = config
 
   selection.each((d, i, elements) => {
     const group: Selection<SVGGElement, N, SVGGElement, N> = select(elements[i])
     const label: Selection<SVGGElement, N, SVGGElement, N> = group.select(`.${nodeSelectors.label}`)
-    setLabelRect(label, getValue(d, nodeLabel), nodeSelectors.labelText)
+    setLabelRect(label, getString(d, nodeLabel), nodeSelectors.labelText)
   })
 }
 
 const setLabelBackgroundRectThrottled = throttle(setLabelBackgroundRect, 1000)
 
-export function zoomNodes<N extends NodeDatumCore, L extends LinkDatumCore> (selection: Selection<SVGGElement, N, SVGGElement, N[]>, config: GraphConfigInterface<N, L>, scale: number): void {
-  selection.classed(generalSelectors.zoomOutLevel1, scale < ZOOM_LEVEL.LEVEL1)
-  selection.classed(generalSelectors.zoomOutLevel2, scale < ZOOM_LEVEL.LEVEL2)
+export function zoomNodes<N extends GraphInputNode, L extends GraphInputLink> (
+  selection: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, GraphNode<N, L>>,
+  config: GraphConfig<N, L>,
+  scale: number
+): void {
+  selection.classed(generalSelectors.zoomOutLevel1, scale < ZoomLevel.Level1)
+  selection.classed(generalSelectors.zoomOutLevel2, scale < ZoomLevel.Level2)
 
   selection.selectAll(`${nodeSelectors.sideLabelBackground}`)
     .attr('transform', `scale(${1 / Math.pow(scale, 0.35)})`)
   selection.selectAll(`.${nodeSelectors.sideLabel}`)
     .attr('transform', `scale(${1 / Math.pow(scale, 0.45)})`)
 
-  if (scale >= ZOOM_LEVEL.LEVEL3) selection.call(setLabelBackgroundRectThrottled, config)
+  if (scale >= ZoomLevel.Level3) selection.call(setLabelBackgroundRectThrottled, config)
 }
 
 export const zoomNodesThrottled = throttle(zoomNodes, 500)

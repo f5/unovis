@@ -4,24 +4,26 @@ import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component
 
 // Types
 import { Arrangement } from 'types/position'
+import { GenericDataRecord } from 'types/data'
 
-export interface BrushConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
+// We extend partial XY config interface because x and y properties are optional for Brush
+export interface BrushConfigInterface<Datum = GenericDataRecord> extends Partial<XYComponentConfigInterface<Datum>> {
   /** Callback function to be called on any Brush event.
    * Default: `(selection: [number, number], event: D3BrushEvent<Datum>, userDriven: boolean): void => {}`
   */
-  onBrush?: ((selection?: [number, number], event?: D3BrushEvent<Datum>, userDriven?: boolean) => any);
+  onBrush?: ((selection?: [number, number], event?: D3BrushEvent<Datum>, userDriven?: boolean) => void);
   /** Callback function to be called on the Brush start event.
    * Default: `(selection: [number, number], event: D3BrushEvent<Datum>, userDriven: boolean): void => {}`
   */
-  onBrushStart?: ((selection?: [number, number], event?: D3BrushEvent<Datum>, userDriven?: boolean) => any);
+  onBrushStart?: ((selection?: [number, number], event?: D3BrushEvent<Datum>, userDriven?: boolean) => void);
   /** Callback function to be called on the Brush move event.
    * Default: `(selection: [number, number], event: D3BrushEvent<Datum>, userDriven: boolean): void => {}`
   */
-  onBrushMove?: ((selection?: [number, number], event?: D3BrushEvent<Datum>, userDriven?: boolean) => any);
+  onBrushMove?: ((selection?: [number, number], event?: D3BrushEvent<Datum>, userDriven?: boolean) => void);
   /** Callback function to be called on the Brush end event.
    * Default: `(selection: [number, number], event: D3BrushEvent<Datum>, userDriven: boolean): void => {}`
   */
-  onBrushEnd?: ((selection?: [number, number], event?: D3BrushEvent<Datum>, userDriven?: boolean) => any);
+  onBrushEnd?: ((selection?: [number, number], event?: D3BrushEvent<Datum>, userDriven?: boolean) => void);
   /** Width of the Brush handle. Default: `1` */
   handleWidth?: number;
   /** Brush selection in data space, can be used to force set the selection from outside.
@@ -30,13 +32,13 @@ export interface BrushConfigInterface<Datum> extends XYComponentConfigInterface<
   selection?: [number, number] | null;
   /** Allow dragging the selected area as a whole in order to change the selected range. Default: `false` */
   draggable?: boolean;
-  /** Position of the handle: 'Arrangement.INSIDE' or 'Arrangement.OUTSIDE'. Default: `Arrangement.INSIDE` */
+  /** Position of the handle: `Arrangement.Inside` or `Arrangement.Outside`. Default: `Arrangement.Inside` */
   handlePosition?: Arrangement | string;
   /** Constraint Brush selection to a minimal length in data units. Default: `undefined` */
   selectionMinLength?: number;
 }
 
-export class BrushConfig<Datum> extends XYComponentConfig<Datum> implements BrushConfigInterface<Datum> {
+export class BrushConfig<Datum = GenericDataRecord> extends XYComponentConfig<Datum> implements BrushConfigInterface<Datum> {
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function */
   onBrush = (s: [number, number], e: D3BrushEvent<Datum>, userDriven: boolean): void => {}
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function */
@@ -48,6 +50,6 @@ export class BrushConfig<Datum> extends XYComponentConfig<Datum> implements Brus
   handleWidth = 9
   selection = null
   draggable = false
-  handlePosition: Arrangement | string = Arrangement.INSIDE
+  handlePosition: Arrangement | string = Arrangement.Inside
   selectionMinLength = undefined
 }

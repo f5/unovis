@@ -2,59 +2,58 @@
 import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component/config'
 
 // Types
-import { AxisType } from 'types/axis'
+import { AxisType } from 'components/axis/types'
 import { Position } from 'types/position'
-import { FitMode, TextAlign, TrimMode } from 'types/text'
-import { Spacing } from 'types/misc'
+import { FitMode, TrimMode, TextAlign } from 'types/text'
+import { GenericDataRecord } from 'types/data'
 
-export interface AxisConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
-  /** Axis position: top, bottom, right or left */
+// We extend partial XY config interface because x and y properties are optional for Axis
+export interface AxisConfigInterface<Datum = GenericDataRecord> extends Partial<XYComponentConfigInterface<Datum>> {
+  /** Axis position: `Position.Top`, `Position.Bottom`, `Position.Right` or `Position.Left`. Default: `undefined` */
   position?: Position | string;
-  /** Axis type: x or y */
-  type?: AxisType;
-  /** Inner axis padding. Adds space between chart and axis */
-  padding?: Spacing;
-  /** Extend domain line to be full size dimension */
+  /** Axis type: `AxisType.X` or `AxisType.Y` */
+  type?: AxisType | string;
+  /** Extend the axis domain line to be full width or full height. Default: `true` */
   fullSize?: boolean;
-  /** Axis label */
+  /** Axis label. Default: `undefined` */
   label?: string;
-  /** Font size of the axis label */
-  labelFontSize?: string;
-  /** Distance between axis and label in pixels */
+  /** Font size of the axis label as CSS string. Default: `null` */
+  labelFontSize?: string | null;
+  /** Distance between the axis and the label in pixels. Default: `8` */
   labelMargin?: number;
-  /** Whether to draw the grid lines or not, default: true */
+  /** Sets whether to draw the grid lines or not. Default: `true` */
   gridLine?: boolean;
-  /** Whether to draw the tick lines or not, default: true */
+  /** Sets whether to draw the tick lines or not. Default: `true` */
   tickLine?: boolean;
-  /** Whether to draw the domain line or not, default: true */
+  /** Sets whether to draw the domain line or not. Default: `true` */
   domainLine?: boolean;
-  /** Draw minimum and maximum axis ticks only */
+  /** Draw the min and max axis ticks only. Default: `false` */
   minMaxTicksOnly?: boolean;
-  /** Tick label formatter */
-  tickFormat?: (d: number | string, i: number, n: (number | string)[]) => string;
-  /** Explicitly set tick values */
+  /** Tick label formatter function. Default: `undefined` */
+  tickFormat?: (tick: number | Date, i: number, ticks: (number | Date)[]) => string;
+  /** Explicitly set tick values. Default: `undefined` */
   tickValues?: number[];
-  /** Approximate number of axis ticks (passed to d3 axis constructor) */
+  /** Set the approximate number of axis ticks (will be passed to D3's axis constructor). Default: `undefined` */
   numTicks?: number;
-  /** Tick text fit mode: 'wrap' or 'trim' */
+  /** Tick text fit mode: `FitMode.Wrap` or `FitMode.Trim`. Default: `FitMode.Wrap`. */
   tickTextFitMode?: FitMode | string;
-  /** Maximum number of characters for tick text wrapping */
+  /** Maximum number of characters for tick text wrapping. Default: `undefined` */
   tickTextLength?: number;
-  /** Maximum width of tick text for wrapping */
+  /** Maximum width in pixels for the tick text to be wrapped or trimmed. Default: `undefined` */
   tickTextWidth?: number;
-  /** Tick text wrapping separator */
+  /** Tick text wrapping separator. String or array of strings. Default: `' '` */
   tickTextSeparator?: string | string[];
-  /** Tick text force word break if it doesn't fit */
+  /** Force word break for ticks when they don't fit. Default: `false` */
   tickTextForceWordBreak?: boolean;
-  /** Tick text trim mode: 'start , 'middle' or 'end' */
+  /** Tick text trim mode: `TrimMode.Start`, `TrimMode.Middle` or `TrimMode.End`. Default: `TrimMode.Middle` */
   tickTextTrimType?: TrimMode | string;
-  /** Font size of tick text */
-  tickTextFontSize?: string;
+  /** Font size of the tick text as CSS string. Default: `null` */
+  tickTextFontSize?: string | null;
   /** Text alignment for ticks: `TextAlign.Left`, `TextAlign.Center` or `TextAlign.Right`. Default: `undefined` */
   tickTextAlign?: TextAlign;
 }
 
-export class AxisConfig<Datum> extends XYComponentConfig<Datum> implements AxisConfigInterface<Datum> {
+export class AxisConfig<Datum = GenericDataRecord> extends XYComponentConfig<Datum> implements AxisConfigInterface<Datum> {
   position = undefined
   type = undefined
   label = undefined
@@ -68,19 +67,12 @@ export class AxisConfig<Datum> extends XYComponentConfig<Datum> implements AxisC
   tickTextWidth = undefined
   tickTextSeparator = ' '
   tickTextForceWordBreak = false
-  tickTextTrimType = TrimMode.MIDDLE
-  tickTextFitMode = FitMode.WRAP
-  tickTextAlign = undefined
-  padding = {
-    top: 0,
-    bottom: 0,
-    left: 0,
-    right: 0,
-  }
-
-  labelMargin = 8
+  tickTextTrimType = TrimMode.Middle
+  tickTextFitMode = FitMode.Wrap
   tickTextFontSize = null
-  tickFormat = null
-  tickValues = null
+  tickTextAlign = undefined
+  labelMargin = 8
+  tickFormat = undefined
+  tickValues = undefined
   fullSize = true
 }

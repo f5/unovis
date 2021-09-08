@@ -1,17 +1,17 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { Config } from 'core/config'
 
-// Types
-import { VisControlItemInterface, VisControlsOrientation } from 'types/controls'
+// Local Types
+import { VisControlItemInterface, VisControlsOrientation } from './types'
 
 export interface VisControlsConfigInterface {
-  /** Controls items array */
+  /** Controls items array, VisControlItemInterface[]. Default: `[]` */
   items?: VisControlItemInterface[];
-  /** Controls orientation. Default is horizontal */
+  /** Controls orientation. `VisControlsOrientation.Horizontal` or `VisControlsOrientation.Horizontal`. Default: `VisControlsOrientation.Horizontal` */
   orientation?: VisControlsOrientation;
 }
 
 export class VisControlsConfig extends Config implements VisControlsConfigInterface {
   items = []
-  orientation = VisControlsOrientation.HORIZONTAL
+  orientation = VisControlsOrientation.Horizontal
 }

@@ -5,7 +5,7 @@
 import { CoreDataModel } from 'data-models/core'
 
 // Types
-import { NumericAccessor } from 'types/misc'
+import { NumericAccessor } from 'types/accessor'
 
 // Utils
 import { getDataLatLngBounds } from 'utils/map'

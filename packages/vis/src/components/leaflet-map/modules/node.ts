@@ -4,18 +4,18 @@ import { color } from 'd3-color'
 import L from 'leaflet'
 
 // Types
-import { Point } from 'types/map'
 import { Rect } from 'types/misc'
 
 // Utils
 import { smartTransition } from 'utils/d3'
 import { estimateTextSize, trimTextMiddle } from 'utils/text'
-import { clamp, getValue } from 'utils/data'
-
+import { clamp, getString } from 'utils/data'
 import { getCSSVariableValue, isStringCSSVariable, rectIntersect } from 'utils/misc'
 import { hexToBrightness } from 'utils/color'
-
 import { getPointPos } from './utils'
+
+// Local Types
+import { LeafletMapPoint } from '../types'
 
 // Modules
 import { updateDonut } from './donut'
@@ -52,14 +52,14 @@ export function createNodes (selection): void {
 export function updateNodes<D> (selection, config: LeafletMapConfigInterface<D>, leafletMap: L.Map, mapMoveZoomUpdateOnly: boolean): void {
   const { clusterOutlineWidth } = config
 
-  selection.each((d: Point<D>, i: number, elements: SVGElement[]) => {
+  selection.each((d: LeafletMapPoint<D>, i: number, elements: SVGElement[]) => {
     const group = select(elements[i])
     const node: Selection<SVGPathElement, any, SVGGElement, any> = group.select(`.${s.pointPath}`)
     const innerLabel: Selection<SVGTextElement, any, SVGElement, any> = group.select(`.${s.innerLabel}`)
     const bottomLabel: Selection<SVGTextElement, any, SVGElement, any> = group.select(`.${s.bottomLabel}`)
-    const innerLabelText = getValue(d.properties, config.pointLabel)
-    const bottomLabelText = getValue(d.properties, config.pointBottomLabel)
-    const pointCursor = getValue(d.properties, config.pointCursor)
+    const innerLabelText = getString(d.properties, config.pointLabel)
+    const bottomLabelText = getString(d.properties, config.pointBottomLabel)
+    const pointCursor = getString(d.properties, config.pointCursor)
     const fromExpandedCluster = !!d.properties.expandedClusterPoint
     const donutData = d.donutData
     const isCluster = d.properties.cluster
@@ -85,7 +85,7 @@ export function updateNodes<D> (selection, config: LeafletMapConfigInterface<D>,
 
     innerLabel
       .text(innerLabelText || null)
-      .attr('font-size', (d: Point<D>) => {
+      .attr('font-size', (d: LeafletMapPoint<D>) => {
         const pointDiameter = 2 * d.radius
         const textLength = innerLabelText.length
         const fontSize = 0.5 * pointDiameter / Math.pow(textLength, 0.4)
@@ -110,7 +110,7 @@ export function updateNodes<D> (selection, config: LeafletMapConfigInterface<D>,
 }
 
 export function collideLabels<D> (selection, leafletMap: L.Map): void {
-  selection.each((datum1: Point<D>, i: number, elements: SVGElement[]) => {
+  selection.each((datum1: LeafletMapPoint<D>, i: number, elements: SVGElement[]) => {
     const group1HTMLNode = elements[i]
     const group1 = select(group1HTMLNode)
     const label1: Selection<SVGTextElement, any, SVGElement, any> = group1.select(`.${s.bottomLabel}`)
@@ -132,7 +132,7 @@ export function collideLabels<D> (selection, leafletMap: L.Map): void {
       const group2HTMLNode = elements[j]
       const group2 = select(group2HTMLNode)
       const label2: Selection<SVGTextElement, any, SVGElement, any> = group2.select(`.${s.bottomLabel}`)
-      const datum2 = group2.datum() as Point<D>
+      const datum2 = group2.datum() as LeafletMapPoint<D>
 
       // Calculate bounding rect of the second point's circle
       const p2Pos = getPointPos(datum2, leafletMap)

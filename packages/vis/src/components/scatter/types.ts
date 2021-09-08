@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { SymbolType } from 'types/symbols'
+import { SymbolType } from 'types/symbol'
 
 export type ScatterPoint<D> = D & {
   _screen: {

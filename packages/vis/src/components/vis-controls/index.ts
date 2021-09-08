@@ -1,8 +1,8 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { Selection, select } from 'd3-selection'
 
-// Types
-import { VisControlItemInterface, VisControlsOrientation } from 'types/controls'
+// Local Types
+import { VisControlItemInterface, VisControlsOrientation } from './types'
 
 // Config
 import { VisControlsConfig, VisControlsConfigInterface } from './config'
@@ -36,7 +36,7 @@ export class VisControls {
   render (): void {
     const { config: { items, orientation } } = this
     this._items
-      .classed(s.horizontalItems, orientation === VisControlsOrientation.HORIZONTAL)
+      .classed(s.horizontalItems, orientation === VisControlsOrientation.Horizontal)
     const controlItems = this._items.selectAll(`.${s.item}`)
       .data(items) as Selection<HTMLDivElement, any, HTMLDivElement, any>
 

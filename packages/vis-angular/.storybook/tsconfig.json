@@ -2,7 +2,8 @@
   "extends": "../tsconfig.lib.json",
   "compilerOptions": {
     "types": [
-      "node"
+      "node",
+      "topojson-specification"
     ]
   },
   "exclude": [

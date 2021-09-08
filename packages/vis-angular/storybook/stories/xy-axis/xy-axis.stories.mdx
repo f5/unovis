@@ -1,0 +1,480 @@
+import { moduleMetadata, componentWrapperDecorator } from '@storybook/angular'
+import { Meta, Story, ArgsTable } from '@storybook/addon-docs';
+import { FitMode, TextAlign } from '@volterra/vis';
+import { VisXYContainerModule, VisAxisModule, VisLineModule } from 'src/public-api'
+
+import { VisAxisComponent } from 'src/components/axis/axis.component'
+
+import { baseXConfig, baseYConfig, withDataConfig, withTimeDataConfig, multiAxisStory, xyAxisWrapper } from './xy-axis.config'
+
+<Meta
+  title="XY Charts/Axis"
+  component={VisAxisComponent}
+  decorators={[
+    moduleMetadata({ imports: [VisAxisModule, VisXYContainerModule, VisLineModule] }),
+    componentWrapperDecorator(xyAxisWrapper),
+  ]}
+/>
+
+<style>{`
+  --vis-axis-label-color: #000000;
+  `}</style>
+
+# Axis
+### Basic Configuration
+The Axis component has been designed to work together with `<vis-xy-container>`. The minimal Axis configuration looks like:
+```angular2html
+<vis-xy-container>
+  <vis-axis [type]="axisType"></vis-axis>
+</vis-xy-container>
+```
+where `type` is `AxisType.X` or `AxisType.Y`.
+<Story name="Simple Axis">
+  {{
+    props: {
+      ...baseXConfig(),
+    },
+  }}
+</Story>
+
+### Axis Types
+Axis supports two `AxisType` properties to bind to your data: `AxisType.X` and `AxisType.Y`. You can also simply provide the string `"x"` or `"y"`.
+```angular2html
+<vis-axis type="x"></vis-axis>
+```
+#### AxisType.X
+<Story name="X Axis">
+    {{
+      props: {
+        ...baseXConfig(),
+        storyHeight: 200,
+        gridLine: true,
+      },
+    }}
+  </Story>
+
+#### AxisType.Y
+```angular2html
+<vis-axis type="y"></vis-axis>
+```
+<Story name="Y Axis">
+  {{
+    props: {
+      ...baseYConfig(),
+      storyHeight: 200,
+      gridLine: true,
+    },
+  }}
+</Story>
+
+### Axis Position
+You can change the position of your axis with a `Position` type or a string equivalent: `"top"`, `"right"`, `"bottom"`, or `"left"`.
+
+```angular2html
+<vis-xy-container>
+  <vis-axis type="x" label="X" position="top"></vis-axis>
+  <vis-axis type="y" label="Y" position="right"></vis-axis>
+</vis-xy-container>
+```
+<Story name="Position" args={{ xAxis: { position: "top"}, yAxis: { position: "right"}}}>
+  {multiAxisStory.bind({})}
+</Story>
+
+Note: An **X axis** can only accept the values `Position.Bottom` (default) and `Position.Top` and a **Y axis** can only accept `Position.Left` (default) and  `Position.Right`.
+The default will be used in the case of an invalid position argument.
+
+### Labeling
+#### Axis Label
+You can provide a string to label your axes with the `label` property:
+<Story name="Axis Label">
+  {{
+    props: {
+      ...baseXConfig('Label'),
+    },
+  }}
+</Story>
+
+#### Axis Label: Font Size
+Change the label size (in pixels) with the `labelFontSize` property.
+```angular2html
+<vis-xy-container>
+  <vis-axis type="x" label="Label" labelFontSize="30"></vis-axis>
+</vis-xy-container>
+```
+<Story name="Axis Label: Font Size">
+  {{
+    props: {
+      ...baseXConfig('Label'),
+      labelFontSize: 30,
+    },
+  }}
+</Story>
+
+#### Axis Label: Margin
+In order to change the distance between the axis and label (in pixels), use the `labelMargin` property.
+
+```angular2html
+<vis-xy-container>
+  <vis-axis ... label="Label" labelMargin="50"></vis-axis>
+</vis-xy-container>
+```
+<Story name="Axis Label: Margin">
+  {{
+    props: {
+      ...baseXConfig("Label"),
+      labelMargin: 50,
+      storyHeight: 250,
+    },
+  }}
+</Story>
+
+### Grid Line
+You can enable or disable the visibility of the axis grid line with the `gridLine` attribute.
+```angular2html
+<vis-axis ... gridLine="true"></vis-axis>
+```
+<Story name="Grid Line">
+  {{
+    props: {
+      ...baseXConfig(),
+      gridLine: true,
+    },
+  }}
+</Story>
+
+### Axis Domain Line
+You can enable or disable the visibility of the axis domain line with the `domainLine` attribute.
+```angular2html
+<vis-axis ... domainLine="false"></vis-axis>
+```
+<Story name="Domain Line">
+  {{
+    props: {
+      ...baseXConfig(),
+      domainLine: false,
+    },
+  }}
+</Story>
+
+<br/>
+
+### Providing Data to the Axis Component
+If you use the Axis component alone, without other xy-components, you'll need to provide xAccessor or yAccessors to populate the axis values. Consider the following example with a
+dataArray and a single axis and xAccessor function:
+
+```javascript
+/// Define accessor functions in the component
+xAccessor = (data: DataRecord[]) => d.x;
+
+// In the template:
+<vis-xy-container [data]="dataArray">
+  <vis-axis type="x" label="X" [x]="xAccessor"></vis-axis>
+</vis-xy-container>
+```
+where `data: DataRecord[] = [{x: 0, ...}, ...]` and `0 < x < 10`.
+
+<Story name="Axis Data">
+  {{
+    props: {
+      ...withDataConfig(10, "X"),
+    },
+  }}
+</Story>
+
+## Tick Configuration
+The Axis component supports a wide variety of tick customization options.
+
+### Tick Line
+You can remove tick labels from your axis by setting the `tickLine` property to false:
+
+```angular2html
+<vis-axis ... tickLine="false"></vis-axis>
+```
+
+<Story name="Ticks: Tick Line">
+  {{
+    props: {
+      ...withDataConfig(),
+      tickLine: false,
+    },
+  }}
+</Story>
+
+### Tick Labels
+#### Custom Font Size
+To change the font size for the tick labels, you provide the `tickTextFontSize` property with a CSS string.
+```angular2html
+<vis-axis ... [tickTextFontSize]="'50px'"></vis-axis>
+```
+<Story name="Ticks: Font Size">
+  {{
+    props: {
+      ...withDataConfig(),
+      tickTextFontSize: '50px',
+    },
+  }}
+</Story>
+
+#### Custom Format
+You can customize how ticks are formatted using the `tickFormat` attribute and a label formatter function. The following example uses
+Javascript's built-in Date formatter function `toDateString()`.
+```angular2html
+/// In the component
+tickFormatFunction = (d) = d.toDateString()
+
+// In the template
+<vis-axis ... [tickFormat]="tickFormatFunction"></vis-axis>
+```
+where each tick is of type `Date`.
+
+<Story name="Ticks: Custom Format">
+  {{
+    props: {
+      ...withTimeDataConfig(),
+    },
+  }}
+</Story>
+
+#### Text Alignment
+Change the tick's label alignment with respect to the tick marker using `tickTextAlign` property with a `TextAlign` value: `TextAlign.Left`, `TextAlign.Right` or `TextAlign.Center`.
+```angular2html
+<vis-axis ... tickTextAlign="right"></vis-axis>
+```
+<Story name="Ticks: Text Align">
+  {{
+    props: {
+      ...withTimeDataConfig(),
+      tickTextAlign: TextAlign.Right,
+    },
+  }}
+</Story>
+
+#### Text Length
+To limit the string length of the tick labels, use the `tickTextLength` property
+```angular2html
+<vis-axis ... tickTextLength="10"></vis-axis>
+```
+<Story name="Ticks: Text Length">
+  {{
+    props: {
+      ...withTimeDataConfig(),
+      tickTextLength: 10,
+    },
+  }}
+</Story>
+
+#### Text Trim Mode
+When a tick label becomes too long, you can customize the trimming method with the `tickTextLength` property. Axis accepts a `TrimMode` or a `string`.
+When we provide the previous example with `TrimMode.End` property, we can see the end of the label gets cut off instead of the middle.
+```angular2html
+<vis-axis ... tickTextLength="10" tickTextTrimType="end"></vis-axis>
+```
+<Story name="Ticks: Text Trim">
+  {{
+    props: {
+      ...withTimeDataConfig(),
+      tickTextLength: 10,
+      tickTextTrimType: "end",
+    },
+  }}
+</Story>
+
+#### Text Width
+To limit the width of the tick labels (in pixels), you can use the `tickTextWidth` property.
+```angular2html
+<vis-axis ... tickTextWidth="10"></vis-axis>
+```
+<Story name="Ticks: Text Width">
+  {{
+    props: {
+      ...withTimeDataConfig(),
+      tickTextWidth: 10,
+    },
+  }}
+</Story>
+
+#### Text Fit Mode
+Axis accepts the following values for the `tickTextFitMode` property: `FitMode.Wrap` or `FitMode.Trim`. This determines
+how the axis will handle tick text overflow. The following example showcases the previous example using "trim" instead of "wrap".
+```angular2html
+<vis-axis ... tickTextTrimType="end" tickTextFitMode="FitMode.Trim"></vis-axis>
+```
+<Story name="Ticks: Text Fit Mode">
+  {{
+    props: {
+      ...withTimeDataConfig(),
+      tickTextWidth: 10,
+      tickTextTrimType: "end",
+      tickTextFitMode: FitMode.Trim,
+    },
+  }}
+</Story>
+
+#### Force Word Break
+In addition, you can enable a forced word break for overflowing tick labels with the `tickTextForceWordBreak` property.
+<Story name="Ticks: Force Word Break">
+  {{
+    props: {
+      ...withTimeDataConfig(),
+      tickTextWidth: 10,
+      tickTextForceWordBreak: true,
+    },
+  }}
+</Story>
+
+#### Text Separator
+Axis accepts a `string` or `string[]` value for`tickTextSeparator` attribute. This will allow tick labels to be separated by custom values
+in the case of overflow. Note: this only takes effect when `FitMode.Wrap` is enabled and a `tickTextWidth` is defined.
+```angular2html
+<vis-axis ... tickTextWidth="15" tickTextSeparator=","></vis-axis>
+```
+<Story name="Ticks: Text Separator">
+  {{
+    props: {
+      ...withTimeDataConfig(),
+      tickFormat: x => (new Date(x)).toLocaleString(),
+      tickTextWidth: 15,
+      tickTextSeparator: ',',
+    },
+  }}
+</Story>
+
+
+### Tick Values
+#### Custom Number of Ticks
+By default, the Axis component provides an optimal the number of ticks displayed based on the component's size. You can
+alter the tick count to your liking using the `numTicks` property.
+
+```angular2html
+<vis-axis ... numTicks="20"></vis-axis>
+```
+<Story name="Ticks: NumTicks">
+  {{
+    props: {
+      ...baseXConfig(),
+      numTicks: 20,
+    },
+  }}
+</Story>
+
+#### Display Only Minimum and Maximum Ticks
+Set the `minMaxTicksOnly` property to true if you only want to see the two end ticks on the axis:
+<Story name="Ticks: minMaxTicksOnly">
+  {{
+    props: {
+      ...baseXConfig(),
+      minMaxTicksOnly: true,
+    },
+  }}
+</Story>
+
+#### Custom Values
+You can customize the ticks displayed by providing the Axis component with an `number` array. The following example only shows even values for x
+after getting the tickValue array from a filter function.
+
+```angular2html
+/// In the component
+function getTickValues() {
+  return data.filter(d => d.x % 2 == 0)
+})
+<vis-axis ... [tickValues]="getTickValues()"></vis-axis>
+```
+<Story name="Ticks: Custom Values">
+  {{
+    props: {
+      ...withDataConfig(5),
+      tickValues: [0,2,4,6],
+    },
+  }}
+</Story>
+
+### Displaying Multiple Axes
+More commonly, you will want to display both an x and y axis for your graph. You can display multiple axes in a `vis-xy-container` like so:
+
+```angular2html
+<vis-xy-container>
+  <vis-axis type="x" label="X"></vis-axis>
+  <vis-axis type="y" label="Y"></vis-axis>
+</vis-xy-container>
+```
+<Story name="Multiple Axes">
+  {multiAxisStory.bind({})}
+</Story>
+
+### Displaying Axis with a Chart
+You can include a chart within your `vis-xy-container` with the same method.
+```angular2html
+<vis-xy-container [data]="dataArray">
+  <vis-axis ...></vis-axis>
+  <vis-line ... ></vis-line>
+</vis-xy-container>
+```
+<Story name="Axis with Chart">
+  {{
+    props: {
+      ...withDataConfig(10),
+      y: d => d.x,
+      storyHeight: 250,
+      gridLine: true,
+      showChart: true,
+    },
+  }}
+</Story>
+
+
+### Additional Styling: CSS Variables
+The Axis component supports additional styling via CSS variables that you can define for your visualization container. For example:
+```css
+/* In the styles file */
+.visualization-container-div {
+  --vis-axis-tick-label-font-size: 20px;
+  --vis-axis-label-color: #1acb9a;
+  --vis-axis-font-family: monospace;
+  --vis-axis-tick-label-color:  #8777d9;
+}
+```
+
+<Story name="Additional Styling: CSS Variables">
+  {{
+    props: {
+      ...withTimeDataConfig(10, 'Label'),
+      storyHeight: 200,
+      gridLine: true,
+      storyStyles: `
+       --vis-axis-tick-label-font-size: 20px;
+        --vis-axis-label-color: #1acb9a;
+        --vis-axis-font-family: monospace;
+        --vis-axis-tick-label-color:  #8777d9;
+      `,
+    },
+  }}
+</Story>
+
+Here is the list of all supported CSS variables:
+`--vis-axis-font-family`,
+`--vis-axis-tick-color`,
+`--vis-axis-tick-label-color`,
+`--vis-axis-grid-color`,
+`--vis-axis-label-color`,
+`--vis-axis-tick-label-font-size`,
+`--vis-axis-label-font-size`.
+
+### Axis Events
+The Axis component supports the following events:
+```javascript
+// In the component file, define the events configuration:
+import { Axis } from '@volterra/vis`
+
+events = {
+    [Axis.selectors.tick]: {
+      mouseover: (d: number | Date) => {},
+      mouseout: (d: number | Date) => {}
+    },
+  }
+
+// In the template:
+<vis-axis ... events="events"></vis-axis>
+```
+
+### Component Inputs
+<ArgsTable of={VisAxisComponent} />

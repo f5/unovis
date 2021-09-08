@@ -1,24 +1,24 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 
 export enum TrimMode {
-  START = 'start',
-  MIDDLE = 'middle',
-  END = 'end',
+  Start = 'start',
+  Middle = 'middle',
+  End = 'end',
 }
 
 export enum VerticalAlign {
-  TOP = 'top',
-  MIDDLE = 'middle',
-  BOTTOM = 'bottom',
+  Top = 'top',
+  Middle = 'middle',
+  Bottom = 'bottom',
 }
 
 export enum FitMode {
-  WRAP = 'wrap',
-  TRIM = 'trim',
+  Wrap = 'wrap',
+  Trim = 'Trim',
 }
 
 export enum WrapMode {
-  FONTSIZE = 'fontsize',
+  FontSize = 'fontsize',
   DOM = 'dom',
 }
 

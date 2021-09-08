@@ -3,24 +3,24 @@
   "version": "0.0.0",
   "private": true,
   "workspaces": [
-    "packages/vis/",
-    "web/"
+    "packages/*"
   ],
   "engines": {
     "node": ">=12.0.0",
     "npm": ">=7.0.0"
   },
   "scripts": {
-    "install": "cd packages/vis-angular && npm install",
-    "dev": "cd web; npm run dev",
+    "postinstall": "npm run build:lib",
+    "dev": "cd packages/dev-demo; npm run dev",
     "storybook": "cd packages/vis-angular; npm run storybook",
-    "build": "npm run build:lib; cd web; npm run build",
+    "build": "npm run build:lib; npm run build:dev-demo; npm run build:vis-angular-lib; npm run build:vis-angular-storybook",
     "build:lib": "cd packages/vis && npm run build",
-    "build:vis-angular": "cd packages/vis-angular && npm run build",
+    "build:dev-demo": "cd packages/dev-demo && npm run build",
+    "build:vis-angular-lib": "cd packages/vis-angular && npm run build",
+    "build:vis-angular-storybook": "cd packages/vis-angular && npm run build-storybook",
     "publish:lib": "cd packages/vis; npm run build; npm publish",
     "lint": "eslint ./ --ext .js,.jsx,.ts,.tsx --ignore-path .gitignore",
-    "lint:fix": "eslint ./ --ext .js,.jsx,.ts,.tsx --fix --ignore-path .gitignore",
-    "lint:staged": "for file in $(git diff --cached --name-only); do echo \"$file\"; done"
+    "lint:fix": "eslint ./ --ext .js,.jsx,.ts,.tsx --fix --ignore-path .gitignore"
   },
   "devDependencies": {
     "@types/d3": "^6.7.0",
@@ -34,21 +34,17 @@
     "eslint-config-standard": "^16.0.2",
     "eslint-import-resolver-typescript": "^2.4.0",
     "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-import-newlines": "^1.1.4",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-notice": "^0.9.10",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^5.0.0",
-    "husky": "^4.3.8",
+    "husky": "^7.0.2",
     "jest": "^26.6.3",
-    "lint-staged": "^10.5.4",
+    "lint-staged": "^11.1.2",
     "typescript": "~4.2.4"
   },
   "lint-staged": {
     "*.{js,ts}": "eslint --cache --fix"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   }
 }

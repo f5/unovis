@@ -7,13 +7,11 @@ import { smartTransition } from 'utils/d3'
 // Config
 import { FlowLegendConfig, FlowLegendConfigInterface } from './config'
 
+// Local Types
+import { FlowLegendItem, FlowLegendItemType } from './types'
+
 // Styles
 import * as s from './style'
-
-enum LegendItemType {
-  LABEL = 'label',
-  SYMBOL = 'symbol',
-}
 
 export class FlowLegend {
   div: Selection<HTMLElement, any, HTMLElement, any>
@@ -49,18 +47,18 @@ export class FlowLegend {
     if (customWidth) this.div.style('width', `${customWidth}px`)
 
     // Prepare Data
-    const legendData = items.reduce((acc, label, i) => {
+    const legendData: FlowLegendItem[] = items.reduce((acc, label, i) => {
       acc.push({
         text: label,
         index: i,
-        type: LegendItemType.LABEL,
+        type: FlowLegendItemType.Label,
       })
 
       if (arrowSymbol && acc.length !== items.length * 2 - 1) {
         acc.push({
           text: arrowSymbol,
           index: i,
-          type: LegendItemType.SYMBOL,
+          type: FlowLegendItemType.Symbol,
         })
       }
       return acc
@@ -68,19 +66,19 @@ export class FlowLegend {
 
     // Draw
     const legendItems = this.labels.selectAll(`.${s.item}`)
-      .data(legendData) as Selection<HTMLDivElement, any, HTMLDivElement, any>
+      .data(legendData) as Selection<HTMLDivElement, FlowLegendItem, HTMLDivElement, FlowLegendItem>
 
     const legendItemsEnter = legendItems.enter()
       .append('div')
       .attr('class', s.item)
       .attr('opacity', 0)
 
-    legendItemsEnter.filter(d => d.type === LegendItemType.LABEL)
+    legendItemsEnter.filter(d => d.type === FlowLegendItemType.Label)
       .on('click', this._onItemClick.bind(this))
 
     legendItemsEnter.append('span')
-      .attr('class', d => d.type === LegendItemType.SYMBOL ? s.arrow(lineColor) : s.label(labelFontSize, labelColor))
-      .classed(s.clickable, d => d.type === LegendItemType.LABEL && !!onLegendItemClick)
+      .attr('class', d => d.type === FlowLegendItemType.Symbol ? s.arrow(lineColor) : s.label(labelFontSize, labelColor))
+      .classed(s.clickable, d => d.type === FlowLegendItemType.Label && !!onLegendItemClick)
 
     const legendItemsMerged = legendItemsEnter.merge(legendItems)
     smartTransition(legendItemsMerged, 500)
@@ -92,7 +90,7 @@ export class FlowLegend {
     this.line.attr('class', s.line(lineColor))
   }
 
-  _onItemClick (event: MouseEvent, d): void {
+  _onItemClick (event: MouseEvent, d: FlowLegendItem): void {
     const { config: { onLegendItemClick } } = this
 
     if (onLegendItemClick) onLegendItemClick(d.text, d.index)

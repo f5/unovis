@@ -4,10 +4,11 @@
 import { ComponentConfigInterface, ComponentConfig } from 'core/component/config'
 
 // Types
-import { NumericAccessor, ColorAccessor } from 'types/misc'
+import { ColorAccessor, NumericAccessor } from 'types/accessor'
+import { GenericDataRecord } from 'types/data'
 
-export interface DonutConfigInterface<Datum> extends ComponentConfigInterface {
-  /** Id accessor for better visual data updates */
+export interface DonutConfigInterface<Datum = GenericDataRecord> extends ComponentConfigInterface {
+  /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */
   id?: ((d: Datum, i?: number, ...any) => string | number);
   /** Value accessor function. Default: `undefined` */
   value: NumericAccessor<Datum>;
@@ -31,7 +32,7 @@ export interface DonutConfigInterface<Datum> extends ComponentConfigInterface {
   preventEmptySegments?: boolean;
 }
 
-export class DonutConfig<Datum> extends ComponentConfig implements DonutConfigInterface<Datum> {
+export class DonutConfig<Datum = GenericDataRecord> extends ComponentConfig implements DonutConfigInterface<Datum> {
   // eslint-disable-next-line dot-notation
   id = (d: Datum, i: number): string | number => d['id'] ?? i
   value = undefined

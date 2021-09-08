@@ -2,24 +2,24 @@
 import { select } from 'd3-selection'
 
 // Types
-import { SHAPE } from 'types/shape'
-import { NumericAccessor, StringAccessor } from 'types/misc'
+import { NumericAccessor, StringAccessor } from 'types/accessor'
+import { Shape } from 'types/shape'
 
 // Utils
 import { polygon } from 'utils/path'
-import { getValue } from 'utils/data'
+import { getString } from 'utils/data'
 
 // Helpers
 import { getNodeSize } from './node/helper'
 
-export function isCustomXml (shape: SHAPE): boolean {
+export function isCustomXml (shape: Shape): boolean {
   return /<[a-z][\s\S]*>/i.test(shape)
 }
 
 export function appendShape<T> (selection, shapeAccessor: StringAccessor<T>, shapeSelector: string, customShapeSelector: string, insertSelector = ':last-child'): void {
   selection.each((d, i, elements) => {
     const element = select(elements[i])
-    const shape = getValue(d, shapeAccessor)
+    const shape = getString(d, shapeAccessor) as Shape
 
     let shapeElement
     const isCustomXmlShape = isCustomXml(shape)
@@ -28,16 +28,16 @@ export function appendShape<T> (selection, shapeAccessor: StringAccessor<T>, sha
         .html(shape)
     } else {
       switch (shape) {
-        case SHAPE.SQUARE:
+        case Shape.Square:
           shapeElement = element.insert('rect', insertSelector)
             .attr('rx', 5)
             .attr('ry', 5)
           break
-        case SHAPE.HEXAGON:
-        case SHAPE.TRIANGLE:
+        case Shape.Hexagon:
+        case Shape.Triangle:
           shapeElement = element.insert('path', insertSelector)
           break
-        case SHAPE.CIRCLE:
+        case Shape.Circle:
         default:
           shapeElement = element.insert('circle', insertSelector)
       }
@@ -65,14 +65,14 @@ export function updateShape<T> (selection, shape: StringAccessor<T>, size: Numer
   selection.filter('path')
     .attr('d', (d: T) => {
       let n
-      switch (getValue(d, shape)) {
-        case SHAPE.SQUARE:
+      switch (getString(d, shape)) {
+        case Shape.Square:
           n = 4
           break
-        case SHAPE.TRIANGLE:
+        case Shape.Triangle:
           n = 3
           break
-        case SHAPE.HEXAGON:
+        case Shape.Hexagon:
         default:
           n = 6
       }
@@ -81,8 +81,8 @@ export function updateShape<T> (selection, shape: StringAccessor<T>, size: Numer
     })
 
   selection.filter('g')
-    .filter((d: T) => !isCustomXml(getValue(d, shape)))
-    .html((d: T) => getValue(d, shape))
+    .filter((d: T) => !isCustomXml(getString(d, shape) as Shape))
+    .html((d: T) => getString(d, shape))
 
   selection.filter('g')
     .each((d, i, elements) => {

@@ -30,7 +30,7 @@ import _range from 'lodash/range'
 import { max, min, mean, bisector } from 'd3-array'
 
 // Types
-import { NumericAccessor } from 'types/misc'
+import { NumericAccessor, StringAccessor, BooleanAccessor, ColorAccessor, GenericAccessor } from 'types/accessor'
 
 export const isNumber = _isNumber
 export const isEqual = _isEqual
@@ -59,12 +59,29 @@ export const uniq = _uniq
 export const sortBy = _sortBy
 export const range = _range
 
-export function getValue (d, accessor, index?: number): any {
-  if (isFunction(accessor)) return accessor(d, index)
-  else return accessor
+export function getValue<T, ReturnType> (
+  d: T,
+  accessor: NumericAccessor<T> | StringAccessor<T> | BooleanAccessor<T> | ColorAccessor<T> | GenericAccessor<T, ReturnType>,
+  index?: number
+): ReturnType {
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  if (isFunction(accessor)) return (accessor as Function)(d, index) as (ReturnType | null | undefined)
+  else return accessor as unknown as (ReturnType | null | undefined)
 }
 
-export function clean (data: any[]): any[] {
+export function getString<T> (d: T, accessor: StringAccessor<T>, i?: number): string | null | undefined {
+  return getValue<T, string>(d, accessor, i)
+}
+
+export function getNumber<T> (d: T, accessor: NumericAccessor<T>, i?: number): number | null | undefined {
+  return getValue<T, number>(d, accessor, i)
+}
+
+export function getBoolean<T> (d: T, accessor: BooleanAccessor<T>, i?: number): boolean | null | undefined {
+  return getValue<T, boolean>(d, accessor, i)
+}
+
+export function clean<T> (data: T[]): T[] {
   return data.filter(d => d && !isNumber(d))
 }
 
@@ -72,11 +89,11 @@ export function clamp (d: number, min: number, max: number): number {
   return Math.min(Math.max(d, min), max)
 }
 
-export function countUnique (array, accessor = d => d): number {
+export function countUnique<T> (array: T[], accessor = d => d): number {
   return new Set(array.map(d => accessor(d))).size
 }
 
-export function indexArray (n: number): number[] {
+export function arrayOfIndices (n: number): number[] {
   return [...Array(n).keys()]
 }
 
@@ -98,7 +115,7 @@ export function getStackedExtent<Datum> (data: Datum[], ...acs: NumericAccessor<
       let positiveStack = 0
       let negativeStack = 0
       for (const a of acs as NumericAccessor<Datum>[]) {
-        const value = getValue(d, a) || 0
+        const value = getNumber(d, a) || 0
         if (value >= 0) positiveStack += value
         else negativeStack += value
       }
@@ -116,7 +133,7 @@ export function getStackedValues<Datum> (d: Datum, ...acs: NumericAccessor<Datum
   let positiveStack = 0
   let negativeStack = 0
   for (const a of acs as NumericAccessor<Datum>[]) {
-    const value = getValue(d, a) || 0
+    const value = getNumber(d, a) || 0
     if (value >= 0) {
       values.push(positiveStack += value)
     } else {
@@ -128,15 +145,15 @@ export function getStackedValues<Datum> (d: Datum, ...acs: NumericAccessor<Datum
 }
 
 export function getStackedData<Datum> (data: Datum[], baseline: NumericAccessor<Datum>, ...acs: NumericAccessor<Datum>[]): number[][][] {
-  const baselineValues = data.map(d => getValue(d, baseline) || 0)
-  const isNegativeStack = acs.map(a => mean(data, d => getValue(d, a) || 0) < 0)
+  const baselineValues = data.map(d => getNumber(d, baseline) || 0)
+  const isNegativeStack = acs.map(a => mean(data, d => getNumber(d, a) || 0) < 0)
 
   const stackedData = acs.map(() => [])
   data.forEach((d, i) => {
     let positiveStack = baselineValues[i]
     let negativeStack = baselineValues[i]
     acs.forEach((a, j) => {
-      const value = getValue(d, a) || 0
+      const value = getNumber(d, a) || 0
       if (!isNegativeStack[j]) {
         stackedData[j].push([positiveStack, positiveStack += value])
       } else {
@@ -153,19 +170,19 @@ export function getExtent<Datum> (data: Datum[], ...acs: NumericAccessor<Datum>[
 }
 
 export function getMin<Datum> (data: Datum[], ...acs: NumericAccessor<Datum>[]): number {
-  const minValue = min(data, d => min(acs as NumericAccessor<Datum>[], a => getValue(d, a)))
+  const minValue = min(data, d => min(acs as NumericAccessor<Datum>[], a => getNumber(d, a)))
   return minValue
 }
 
 export function getMax<Datum> (data: Datum[], ...acs: NumericAccessor<Datum>[]): number {
-  const maxValue = max(data, d => max(acs as NumericAccessor<Datum>[], a => getValue(d, a)))
+  const maxValue = max(data, d => max(acs as NumericAccessor<Datum>[], a => getNumber(d, a)))
   return maxValue
 }
 
 export function getNearest<Datum> (data: Datum[], value: number, accessor: NumericAccessor<Datum>): Datum {
   if (data.length <= 1) return data[0]
 
-  const values = data.map(d => getValue(d, accessor))
+  const values = data.map(d => getNumber(d, accessor))
   values.sort((a, b) => a - b)
 
   const xBisector = bisector(d => d).left
@@ -175,7 +192,7 @@ export function getNearest<Datum> (data: Datum[], value: number, accessor: Numer
 
 export function filterDataByRange<Datum> (data: Datum[], range: [number, number], accessor: NumericAccessor<Datum>): Datum[] {
   const filteredData = data.filter(d => {
-    const value = getValue(d, accessor)
+    const value = getNumber(d, accessor)
     return (value >= range[0]) && (value < range[1])
   })
 

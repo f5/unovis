@@ -2,10 +2,10 @@
 import { min, max } from 'd3-array'
 
 // Types
-import { NumericAccessor } from 'types/misc'
+import { NumericAccessor } from 'types/accessor'
 
 // Utils
-import { getValue } from 'utils/data'
+import { getNumber } from 'utils/data'
 
 export function getDataLatLngBounds<D> (
   data: D[],
@@ -14,13 +14,13 @@ export function getDataLatLngBounds<D> (
   paddingDegrees = 1
 ): number[][] {
   const northWest = {
-    lat: max(data ?? [], d => getValue(d, pointLatitude)),
-    lng: min(data ?? [], d => getValue(d, pointLongitude)),
+    lat: max(data ?? [], d => getNumber(d, pointLatitude)),
+    lng: min(data ?? [], d => getNumber(d, pointLongitude)),
   }
 
   const southEast = {
-    lat: min(data ?? [], d => getValue(d, pointLatitude)),
-    lng: max(data ?? [], d => getValue(d, pointLongitude)),
+    lat: min(data ?? [], d => getNumber(d, pointLatitude)),
+    lng: max(data ?? [], d => getNumber(d, pointLongitude)),
   }
 
   return [

@@ -5,24 +5,26 @@
 import { ComponentConfigInterface, ComponentConfig } from 'core/component/config'
 
 // Utils
-import { getValue } from 'utils/data'
+import { getNumber } from 'utils/data'
 
 // Types
-import { NumericAccessor, ColorAccessor, StringAccessor } from 'types/misc'
+import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
 import { TrimMode, VerticalAlign, FitMode } from 'types/text'
-import { InputLink, InputNode, NodeAlignType, SubLabelPlacement } from 'types/sankey'
-import { ExitTransitionType, EnterTransitionType } from 'types/animation'
 import { Position } from 'types/position'
+import { SankeyInputLink, SankeyInputNode, NodeAlignType, SubLabelPlacement, ExitTransitionType, EnterTransitionType } from './types'
 
-export interface SankeyConfigInterface<N extends InputNode, L extends InputLink> extends ComponentConfigInterface {
+export interface SankeyConfigInterface<
+  N extends SankeyInputNode = SankeyInputNode,
+  L extends SankeyInputLink = SankeyInputLink,
+> extends ComponentConfigInterface {
   // General
   /** Node / Link id accessor function. Used for mapping of data updates to corresponding SVG objects. Default: `(d, i) => (d._id ?? i).toString()` */
-  id?: (d: InputNode | InputLink, i?: number, ...any) => string;
+  id?: (d: SankeyInputNode | SankeyInputLink, i?: number, ...any) => string;
   /** Coefficient to scale the height of the diagram when the amount of links is low: `C * links.length`, clamped to `[height / 2, height]`. Default: `1/16` */
   heightNormalizationCoeff?: number;
-  /** Type of animation on removing nodes. Default: `ExitTransitionType.DEFAULT` */
+  /** Type of animation on removing nodes. Default: `ExitTransitionType.Default` */
   exitTransitionType?: ExitTransitionType;
-  /** Type of animation on creating nodes. Default: `EnterTransitionType.DEFAULT` */
+  /** Type of animation on creating nodes. Default: `EnterTransitionType.Default` */
   enterTransitionType?: EnterTransitionType;
   /** Highight the corresponding subtree on node / link hover. Default: `false` */
   highlightSubtreeOnHover?: boolean;
@@ -63,7 +65,7 @@ export interface SankeyConfigInterface<N extends InputNode, L extends InputLink>
   /** Display the graph when data has just one element */
   showSingleNode?: boolean;
   /** Single node position. Default: `Position.CENTER` */
-  singleNodePosition?: Position.CENTER | Position.LEFT | string;
+  singleNodePosition?: Position.Center | Position.Left | string;
   /** Node cursor on hover. Default: `null` */
   nodeCursor?: StringAccessor<L>;
   /** Node icon accessor function or value. Default: `null` */
@@ -77,7 +79,7 @@ export interface SankeyConfigInterface<N extends InputNode, L extends InputLink>
   /** Link color accessor function or value. Default: `l => l.color` */
   linkColor?: StringAccessor<L>;
   /** Link flow accessor function or value. Default: `l => l.value` */
-  linkValue?: NumericAccessor<N>;
+  linkValue?: NumericAccessor<L>;
   /** Link cursor on hover. Default: `null` */
   linkCursor?: StringAccessor<L>;
 
@@ -87,7 +89,7 @@ export interface SankeyConfigInterface<N extends InputNode, L extends InputLink>
   /** Node sub-label accessor function or value. Default: `undefined` */
   subLabel?: StringAccessor<N>;
   /** Label position relative to the Node. Default: `Position.AUTO` */
-  labelPosition?: Position.AUTO | Position.LEFT | Position.RIGHT | string;
+  labelPosition?: Position.Auto | Position.Left | Position.Right | string;
   /** Label vertical alignment */
   labelVerticalAlign?: VerticalAlign | string;
   /** Label background */
@@ -122,43 +124,46 @@ export interface SankeyConfigInterface<N extends InputNode, L extends InputLink>
   subLabelToLabelInlineWidthRatio?: number;
 }
 
-export class SankeyConfig<N extends InputNode, L extends InputLink> extends ComponentConfig implements SankeyConfigInterface<N, L> {
+export class SankeyConfig<
+  N extends SankeyInputNode = SankeyInputNode,
+  L extends SankeyInputLink = SankeyInputLink,
+> extends ComponentConfig implements SankeyConfigInterface<N, L> {
   // General
   heightNormalizationCoeff = 1 / 16
-  exitTransitionType = ExitTransitionType.DEFAULT
-  enterTransitionType = EnterTransitionType.DEFAULT
+  exitTransitionType = ExitTransitionType.Default
+  enterTransitionType = EnterTransitionType.Default
   // eslint-disable-next-line dot-notation
-  id = (d: InputNode | InputLink, i: number): string => (d['_id'] ?? i).toString()
+  id = (d: SankeyInputNode | SankeyInputLink, i: number): string => (d['_id'] ?? i).toString()
   highlightSubtreeOnHover = false
   highlightDuration = 400
   highlightDelay = 1000
 
   // Sorting
-  linkSort = (link2: L, link1: L): number => getValue(this.linkValue, link1) - getValue(this.linkValue, link2)
+  linkSort = (link2: L, link1: L): number => getNumber(link1, this.linkValue) - getNumber(link2, this.linkValue)
   nodeSort = undefined
 
   // Nodes
   nodeWidth = 25
-  nodeAlign = NodeAlignType.JUSTIFY
+  nodeAlign = NodeAlignType.Justify
   nodeHorizontalSpacing = 150
   nodeMinHeight = 20
   nodeMaxHeight = 100
   nodePadding = 2
   nodeColor = (d: N): string => d['color']
   showSingleNode = true
-  singleNodePosition = Position.CENTER
+  singleNodePosition = Position.Center
   nodeCursor = null
   nodeIcon = null
   iconColor = null
 
   // Labels
   label = (d: N): string => d['label']
-  labelPosition = Position.AUTO
-  labelVerticalAlign = VerticalAlign.MIDDLE
+  labelPosition = Position.Auto
+  labelVerticalAlign = VerticalAlign.Middle
   labelBackground = false
   labelTextSeparator = [' ', '-']
-  labelFit = FitMode.TRIM
-  labelTrimMode = TrimMode.MIDDLE
+  labelFit = FitMode.Trim
+  labelTrimMode = TrimMode.Middle
   labelForceWordBreak = true
   labelFontSize = 12
   labelColor = null
@@ -169,11 +174,11 @@ export class SankeyConfig<N extends InputNode, L extends InputLink> extends Comp
   subLabel = undefined
   subLabelFontSize = 10
   subLabelColor = null
-  subLabelPlacement = SubLabelPlacement.BELOW
+  subLabelPlacement = SubLabelPlacement.Below
   subLabelToLabelInlineWidthRatio = 0.4
 
   // Links
-  linkValue = (d: N): number => d['value']
+  linkValue = (d: L): number => d['value']
   linkColor = (d: L): string => d['color']
   linkCursor = null
 }
