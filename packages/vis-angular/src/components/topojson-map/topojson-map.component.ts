@@ -14,7 +14,6 @@ import {
   StringAccessor,
 } from '@volterra/vis'
 import { GeoProjection } from 'd3-geo'
-import { Topology } from 'topojson-specification'
 import { VisCoreComponent } from '../../core'
 
 @Component({
@@ -77,8 +76,8 @@ export class VisTopoJSONMapComponent<N extends MapInputNode = MapInputNode, L ex
   /** MapProjection (or D3's GeoProjection) instance. Default: `MapProjection.Mercator()` */
   @Input() projection: GeoProjection
 
-  /** Map data in the TopoJSON topology format. Default: `topojson` */
-  @Input() topojson: Topology
+  /** Map data in the TopoJSON topology format. Default: `undefined` */
+  @Input() topojson: TopoJSON.Topology
 
   /** Name of the map features to be displayed, e.g. 'countries' or 'counties'. Default: `countries` */
   @Input() mapFeatureName: string

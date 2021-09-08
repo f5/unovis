@@ -7,7 +7,7 @@
     "declaration": true,
     "declarationMap": true,
     "inlineSources": true,
-    "types": [],
+    "types": ["topojson-specification"],
     "lib": [
       "dom",
       "es2018"
