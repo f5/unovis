@@ -8,7 +8,7 @@ import { GenericDataRecord } from 'types/data'
 export interface GroupedBarConfigInterface<Datum = GenericDataRecord> extends XYComponentConfigInterface<Datum> {
   /** Force set the group width in pixels. Default: `undefined` */
   groupWidth?: number;
-  /** Maximum group width for dynamic sizing. Limits the barWidth property from the top. Default: `undefined` */
+  /** Maximum group width for dynamic sizing. Limits the groupWidth property from the top. Default: `undefined` */
   groupMaxWidth?: number;
   /** Expected step between the bar groups in the X axis units.
    * Needed to correctly calculate the width of the bar groups when there are gaps in the data.
@@ -32,7 +32,7 @@ export class GroupedBarConfig<Datum = GenericDataRecord> extends XYComponentConf
   dataStep = undefined
   groupPadding = 0.05
   barPadding = 0.0
-  roundedCorners = true
+  roundedCorners = 2
   barMinHeight = 2
   cursor = null
 }
