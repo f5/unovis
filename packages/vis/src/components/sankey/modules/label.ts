@@ -5,6 +5,7 @@ import { Selection } from 'd3-selection'
 import { estimateTextSize, trimSVGText, wrapSVGText } from 'utils/text'
 import { smartTransition } from 'utils/d3'
 import { getString } from 'utils/data'
+import { getColor } from 'utils/color'
 
 // Types
 import { FitMode, VerticalAlign } from 'types/text'
@@ -18,7 +19,6 @@ import { SankeyConfig } from '../config'
 
 // Styles
 import * as s from '../style'
-import { getColor } from 'utils/color'
 
 const NODE_LABEL_SPACING = 10
 const LABEL_BLOCK_PADDING = 6.5
