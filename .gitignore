@@ -17,6 +17,7 @@ chrome-profiler-events*.json
 
 # Storybook
 packages/*/documentation.json
+packages/*/storybook-static
 
 # IDEs and editors
 .idea

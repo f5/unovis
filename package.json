@@ -15,6 +15,7 @@
     "build": "npm run build:lib; cd packages/dev-demo; npm run build",
     "build:lib": "cd packages/vis && npm run build",
     "build:vis-angular": "cd packages/vis-angular && npm run build",
+    "build:storybook": "cd packages/vis-angular && npm run build-storybook",
     "publish:lib": "cd packages/vis; npm run build; npm publish",
     "lint": "eslint ./ --ext .js,.jsx,.ts,.tsx --ignore-path .gitignore",
     "lint:fix": "eslint ./ --ext .js,.jsx,.ts,.tsx --fix --ignore-path .gitignore",
