@@ -25,6 +25,7 @@ import * as nodeSelectors from '../node/style'
 export const DEFAULT_PADDING = 15
 export const DEFAULT_LABEL_MARGIN = 16
 export const OUTLINE_SELECTION_PADDING = 5
+export const DEFAULT_SIDE_LABEL_SIZE = 25
 
 export function setPanelForNodes<N extends GraphInputNode, L extends GraphInputLink> (
   panels: GraphPanelConfigInterface[], nodes: GraphNode<N, L>[],

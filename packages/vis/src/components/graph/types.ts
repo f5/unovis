@@ -92,13 +92,16 @@ export interface GraphPanelConfigInterface<
   selectionOutline?: boolean;
   /** Icon of the side label */
   sideLabelIcon?: string;
+  /** Size of the label icon as a CSS string. e.g.: `12pt` or `12px` */
+  sideLabelIconFontSize?: string;
   /** Shape of the side label */
   sideLabelShape?: Shape;
   /** Color of the side label */
   sideLabelColor?: string;
   /** Cursor of when hovering over the side label */
   sideLabelCursor?: string;
-
+  /** Custom size for the node panel side label in pixels */
+  sideLabelSize?: number;
   /** Private property */
   _numNodes?: number;
   /** Private property */

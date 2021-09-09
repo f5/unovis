@@ -17,7 +17,7 @@ import { GraphConfig } from '../../config'
 
 // Helpers
 import { setLabelRect } from '../node/helper'
-import { getLabelTranslateTransform, OUTLINE_SELECTION_PADDING, DEFAULT_PADDING } from './helper'
+import { getLabelTranslateTransform, OUTLINE_SELECTION_PADDING, DEFAULT_PADDING, DEFAULT_SIDE_LABEL_SIZE } from './helper'
 
 // Styles
 import * as panelSelectors from './style'
@@ -84,12 +84,11 @@ export function updatePanels<N extends GraphNode, L extends GraphLink, P extends
     .attr('width', d => d._width + (d.padding || DEFAULT_PADDING) * 2 + OUTLINE_SELECTION_PADDING * 2)
     .attr('height', d => d._height + (d.padding || DEFAULT_PADDING) * 2 + OUTLINE_SELECTION_PADDING * 2)
 
-  const sideLabelSize = 25
   const sideLabels = selection.selectAll(`.${panelSelectors.sideLabelGroup}`)
     .data(d => [d])
 
   sideLabels.select(`.${panelSelectors.sideLabel}`)
-    .call(updateShape, (d: P) => d.sideLabelShape, sideLabelSize)
+    .call(updateShape, (d: P) => d.sideLabelShape, (d: P) => d.sideLabelSize ?? DEFAULT_SIDE_LABEL_SIZE)
     .style('stroke', d => d.sideLabelColor)
     .style('cursor', d => d.sideLabelCursor ?? null)
     .style('opacity', d => d.sideLabelShape ? 1 : 0)
@@ -97,6 +96,7 @@ export function updatePanels<N extends GraphNode, L extends GraphLink, P extends
   sideLabels.select(`.${panelSelectors.sideLabelIcon}`)
     .html(d => d.sideLabelIcon)
     .attr('dy', 1)
+    .style('font-size', d => d.sideLabelIconFontSize ?? ((d.sideLabelSize ?? DEFAULT_SIDE_LABEL_SIZE) / 2.5))
 
   smartTransition(sideLabels, duration)
     .attr('transform', (d, i, elements) => {
