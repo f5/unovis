@@ -35,7 +35,7 @@ export const panel = css`
 
 export const label = css`
   label: label;
-  
+
   fill: var(--vis-graph-panel-label-color);
 `
 
@@ -110,5 +110,4 @@ export const sideLabelIcon = css`
   text-anchor: middle;
   pointer-events: none;
   cursor: default;
-  font-size: 8pt;
 `
