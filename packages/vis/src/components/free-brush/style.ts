@@ -7,7 +7,7 @@ export const variables = injectGlobal`
     --vis-free-brush-selection-fill-opacity: 0.4;
     --vis-free-brush-selection-stroke: #acb2b9;
     --vis-free-brush-handle-fill: #6d778c;
-    --vis-free-brush-handle-stroke: #eee;
+    --vis-free-brush-handle-stroke: none;
   }
 `
 
@@ -18,6 +18,7 @@ export const brush = css`
 
   .selection {
     fill: var(--vis-free-brush-selection-fill);
+    fill-opacity: var(--vis-free-brush-selection-fill-opacity);
     stroke: var(--vis-free-brush-selection-stroke);
     stroke-width: 0;
     stroke-opacity: 0;
@@ -25,6 +26,7 @@ export const brush = css`
 
   .handle {
     fill: var(--vis-free-brush-handle-fill);
+    stroke: var(--vis-free-brush-handle-stroke);
   }
 `
 
@@ -32,19 +34,4 @@ export const hide = css`
   .selection, .handle {
     display: none;
   }
-`
-
-export const unselected = css`
-  label: unselected;
-  fill: var(--vis-free-brush-selection-fill);
-  opacity: var(--vis-free-brush-selection-fill-opacity);
-  pointer-events: none;
-`
-
-export const handleLine = css`
-  label: handle-line;
-  stroke: var(--vis-free-brush-handle-stroke);
-  stroke-width: 1;
-  fill: none;
-  pointer-events: none;
 `
