@@ -53,13 +53,12 @@ export function createNodes<N extends GraphInputNode, L extends GraphInputLink> 
     group
       .attr('transform', d => `rotate(0) translate(${getX(d as GraphNode<N, L>)}, ${getY(d as GraphNode<N, L>)}) scale(0)`)
 
-    group.append('circle').attr('class', nodeSelectors.nodeSelection)
-
     const shape = getString(d, nodeShape)
     /** Todo: The 'nodeShape' storing logic below it a temporary fix, needs a cleaner implementation */
     // eslint-disable-next-line dot-notation
     element['nodeShape'] = shape
     group.call(appendShape, shape, nodeSelectors.node, nodeSelectors.customNode)
+    group.call(appendShape, shape, nodeSelectors.nodeSelection)
     group.append('path').attr('class', nodeSelectors.nodeArc)
     group.append('text').attr('class', nodeSelectors.nodeIcon)
 
@@ -125,6 +124,8 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
     if (element['nodeShape'] !== shape) {
       group.select(`.${nodeSelectors.node}`).remove()
       group.call(appendShape, nodeShape, nodeSelectors.node, nodeSelectors.customNode, `.${nodeSelectors.nodeSelection}`)
+      group.select(`.${nodeSelectors.nodeSelection}`).remove()
+      group.call(appendShape, shape, nodeSelectors.nodeSelection)
       // eslint-disable-next-line dot-notation
       element['nodeShape'] = shape
     }
@@ -192,9 +193,8 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
       })
 
     // Set Node Selection
-    const selectionPadding = 12
     nodeSelection
-      .attr('r', getNodeSize(d, nodeSize) / 2 + selectionPadding)
+      .call(updateShape, nodeShape, nodeSize)
 
     // Update Node Icon
     icon

@@ -189,7 +189,7 @@ export const nodeSelection = css`
 
   &${`.${nodeSelectionActive}`} {
     opacity: 1;
-    transform: scale(1);
+    transform: scale(1.2);
   }
 `
 
