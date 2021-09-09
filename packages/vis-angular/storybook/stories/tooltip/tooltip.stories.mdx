@@ -18,7 +18,7 @@ import { TooltipExampleComponent } from './tooltip.component.ts'
 
 # Tooltip
 ### Base Configuration
-The Tooltip component has been designed to work alongside XY charts. The minimal Tooltip configuration looks like: 
+The Tooltip component has been designed to work alongside XY charts. The minimal Tooltip configuration looks like:
 ```angular2html
 <vis-xy-container>
   <vis-xy-chart ... ></vis-xy-chart>
@@ -89,7 +89,7 @@ overflow, the Tooltip will ignore the position argument in order to remain in th
 
 #### horizontalPlacement
 ```angular2html
-<vis-tooltip ... horizontalPlacement="left"></vis-tooltip> 
+<vis-tooltip ... horizontalPlacement="left"></vis-tooltip>
 ```
 <Story name="Horizontal Placement">
   {{
@@ -105,7 +105,7 @@ overflow, the Tooltip will ignore the position argument in order to remain in th
 <vis-tooltip ... verticalPlacement="top"</vis-tooltip>
 ```
 <Story name="Vertical Placement">
-  {{ 
+  {{
     props: {
       ...scatterTooltipConfig(),
       verticalPlacement: 'top',
@@ -118,7 +118,7 @@ You can also supply the Tooltip component with `horizontalShift` or `verticalShi
 the selector and tooltip.
 #### horizontalShift
 ```angular2html
-<vis-tooltip ... horizontalShift="100"></vis-tooltip> 
+<vis-tooltip ... horizontalShift="100"></vis-tooltip>
 ```
 <Story name="Horizontal Shift">
   {{
@@ -131,7 +131,7 @@ the selector and tooltip.
 
 #### verticalShift
 ```angular2html
-<vis-tooltip ... horizontalShift="100"></vis-tooltip> 
+<vis-tooltip ... horizontalShift="100"></vis-tooltip>
 ```
 <Story name="Vertical Shift">
   {{ props: {
@@ -141,7 +141,7 @@ the selector and tooltip.
 </Story>
 
 ### Position Strategy
-You can set the position of the tooltip to `absolute` or `fixed` to change how to tooltip adjusts its position during scrolling.
+You can set the position of the tooltip to `absolute` or `fixed` to change how the tooltip adjusts its position during scrolling.
 <Story name="Position Strategy">
   {{
     props: {
