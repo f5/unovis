@@ -1,7 +1,7 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { Axis, XYContainer } from '@volterra/vis'
 import { AfterViewInit, Component, ContentChild, ElementRef, ViewChild } from '@angular/core'
-import { VisTooltipComponent } from 'src/core/tooltip/tooltip.component'
+import { VisTooltipComponent } from 'src/components/tooltip/tooltip.component'
 import { DataRecord, generateDataRecords } from '../../data/time-series'
 
 @Component({
@@ -18,7 +18,7 @@ import { DataRecord, generateDataRecords } from '../../data/time-series'
   `],
 })
 export class TooltipExampleComponent implements AfterViewInit {
-  @ContentChild(VisTooltipComponent) tooltipRef: VisTooltipComponent<DataRecord>;
+  @ContentChild(VisTooltipComponent) tooltipRef: VisTooltipComponent;
   @ViewChild('altContainer') altContainer: ElementRef;
   @ViewChild('chart') chartRef: ElementRef;
 
@@ -37,10 +37,8 @@ export class TooltipExampleComponent implements AfterViewInit {
 
     const chartConfig = {
       components: this.tooltipRef.components,
-      axes: {
-        x: new Axis<DataRecord>(),
-        y: new Axis<DataRecord>(),
-      },
+      xAxis: new Axis<DataRecord>(),
+      yAxis: new Axis<DataRecord>(),
       tooltip: this.tooltipRef.component,
     }
     this.chart = new XYContainer<DataRecord>(this.chartRef.nativeElement, chartConfig, this.data)
