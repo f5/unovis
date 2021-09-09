@@ -46,8 +46,8 @@ export class Collection implements OnInit, OnDestroy {
         data: this.dataGenerator(n),
         type: key,
         numDataElements: n,
-        xAxis: axes.x,
-        yAxis: axes.y,
+        xAxis: axes?.x,
+        yAxis: axes?.y,
       }
 
       return items
