@@ -1,0 +1,224 @@
+import { moduleMetadata, componentWrapperDecorator } from "@storybook/angular";
+import { Meta, Story, ArgsTable } from "@storybook/addon-docs";
+import { Tooltip } from "@volterra/vis";
+import {
+  VisAreaModule,
+  VisAxisModule,
+  VisCrosshairModule,
+  VisLineModule,
+  VisStackedBarModule,
+  VisTooltipModule,
+  VisXYContainerModule,
+} from "src/public-api";
+
+import { VisCrosshairComponent } from "src/components/crosshair/crosshair.component";
+import { xyChartContentWrapper } from "../../utils/xy-content-wrapper";
+import {
+  areaChartConfig,
+  barChartConfig,
+  lineChartConfig,
+  getTemplate,
+  crosshairWrapper,
+} from "./crosshair.config";
+
+<Meta
+  title="XY Charts/Crosshair"
+  component={VisCrosshairComponent}
+  decorators={[
+    moduleMetadata({
+      imports: [
+        VisAreaModule,
+        VisAxisModule,
+        VisCrosshairModule,
+        VisLineModule,
+        VisStackedBarModule,
+        VisTooltipModule,
+        VisXYContainerModule,
+      ],
+    }),
+    componentWrapperDecorator(crosshairWrapper),
+    componentWrapperDecorator(xyChartContentWrapper),
+  ]}
+/>
+
+<style>{``}</style>
+
+# Crosshair
+
+### Basic configuration
+
+The Crosshair component is a special tooltip designed to work in an `xy-container`.
+When a user is interacting with an `xy-chart` and a `crosshair` is provided, the crosshair will appear as a vertical line and render circles on the corresponding y values in the dataset.
+
+```angular2html
+<vis-xy-container [data]="data">
+  <vis-line [x]="xAccessor" [y]="yAccessor"></vis-line>
+  <vis-crosshair></vis-crosshair>
+</vis-xy-container>
+```
+
+<Story name="Simple Crosshair">
+  {{
+    props: {
+      ...lineChartConfig(),
+    },
+  }}
+</Story>
+
+### X and Y accessors
+
+Like other vis components, you can supply x and y accessors to the `crosshair` component to control where it appears in your container.
+See the following example which moves the position of the crosshair line to the right of each bar.
+
+```angular2html
+// Component
+customXAccessor = d => d.x + 0.5,
+
+// Template
+<vis-stacked-bar [x]="xAccessor" [y]="yAccessor"></vis-line>
+<vis-crosshair [x]="customXAccessor"></vis-crosshair>
+```
+
+<Story name="Custom X and Y Accessors">
+  {{
+    props: {
+      ...barChartConfig(8),
+      x: (d) => d.x + 0.5,
+    },
+  }}
+</Story>
+
+### Hiding the crosshair
+
+By default, the `crosshair` component will render if the cursor is within a certain distance in pixels from a valid x value. You can
+disable this feature using the `hideWhenFarFromPointer` attribute.
+
+#### `hideWhenFarFromPointer: false`
+
+```angular2html
+<vis-scatter [x]="xAccessor" [y]="yAccessor"></vis-line>
+<vis-crosshair hideWhenFarFromPointer="false"></vis-crosshair>
+```
+
+<Story name="Hiding Behavior">
+  {{
+    props: {
+      ...barChartConfig(5),
+      hideWhenFarFromPointer: false,
+    },
+  }}
+</Story>
+
+#### `hideWhenFarFromPointerDistance`
+
+Use the `hideWhenFarFromPointerDistance` attribute with a length (in pixels) that represents the minimum horizontal distance the cursor must be from a datapoint before hiding.
+In the following example, the crosshair renders if within `50px` of the data point.
+
+```angular2html
+<vis-scatter [x]="xAccessor" [y]="yAccessor"></vis-line>
+<vis-crosshair hideWhenFarFromPointerDistance="50"></vis-crosshair>
+```
+
+<Story name="Hiding Behavior: Pointer Distance">
+  {{
+    props: {
+      ...barChartConfig(5),
+      hideWhenFarFromPointerDistance: 50,
+    },
+  }}
+</Story>
+
+### Custom Color
+
+Provide a `string` or color accessor function to the `color` attribute to customize the crosshair's point color:
+
+```angular2html
+<vis-crosshair color="red"></vis-crosshair>
+```
+
+<Story name="Custom Color">
+  {{
+    props: {
+      ...lineChartConfig(),
+      color: "red",
+    },
+  }}
+</Story>
+
+### Displaying Custom Content
+
+You can add a `vis-tooltip` component alongside the crosshair to render text content for your crosshair.
+
+```angular2html
+<vis-xy-container [data]="data">
+  <vis-line [x]="xAccessor" [y]="yAccesor"></vis-line>
+  <vis-crosshair></vis-crosshair>
+  <vis-tooltip></vis-tooltip>
+</vis-xy-container>
+```
+
+With a `vis-tooltip` element and a `template` argument provided, you can display information that triggers alongside your crosshair component.
+
+```angular2html
+// In the component
+template: d => `<div>x: ${d.x}<br/>y: ${d.y}</div>`,
+
+// In the template
+<vis-crosshair [template]="template"></vis-crosshair>
+<vis-tooltip></vis-tooltip>
+```
+
+<Story name="Crosshair Template">
+  {{
+    props: {
+      ...areaChartConfig(30),
+      chartY: (d) => d.y,
+      template: getTemplate,
+    },
+  }}
+</Story>
+
+Additionally, you can provide `crosshair` with a Tooltip component that already exists.
+
+### Additional Styling: CSS Variables
+
+The Crosshair component supports styling via two CSS variables: `--vis-crosshair-line-stroke` and `--vis-crosshair-circle-stroke`.
+These provide color customization for the crosshair's line and circle stroke (border).
+
+```css
+/* In the styles file */
+.visualization-container-div {
+  --vis-crosshair-line-stroke: #f88080;
+  --vis-crosshair-circle-stroke: #000000;
+}
+```
+
+<Story name="Additional Styling: CSS Variables">
+  {{
+    props: {
+      ...areaChartConfig(),
+      storyStyles: `
+        --vis-crosshair-line-stroke: #f88080;
+        --vis-crosshair-circle-stroke: #000000;
+      `,
+    },
+  }}
+</Story>
+
+### Events
+
+The crosshair component supports the following events:
+
+```javascript
+// In the component
+events = {
+   [selector: string]: {
+      [eventType in VisEventType]?: VisEventCallback
+  };
+}
+
+// In the template:
+<vis-crosshair ... events="events"></vis-area>
+```
+
+<ArgsTable of={VisCrosshairComponent} />
