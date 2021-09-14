@@ -1,15 +1,15 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import L from 'leaflet'
-import mapboxGl from 'mapbox-gl'
-import 'mapbox-gl-leaflet'
+import mapboxGl from 'maplibre-gl'
+import '@maplibre/maplibre-gl-leaflet/leaflet-maplibre-gl'
 
 import { injectGlobal } from 'emotion'
 
 import { getRendererSettings } from './settings'
 
-// Inject Mapboxgl global style
+// Inject MapLibreGL global style
 // eslint-disable-next-line
-import mapboxglCSS from 'mapbox-gl/dist/mapbox-gl.css'
+import mapboxglCSS from 'maplibre-gl/dist/maplibre-gl.css'
 
 // Config
 import { LeafletMapConfig } from '../config'
@@ -34,7 +34,7 @@ export function getMapboxglLayer<Datum> (config: LeafletMapConfig<Datum>): any {
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  const glLayer = L.mapboxGL({
+  const glLayer = L.maplibreGL({
     style: rendererSettings,
     accessToken: accessToken || 'not-needed',
   })

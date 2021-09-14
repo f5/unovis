@@ -4,7 +4,7 @@ import Supercluster from 'supercluster'
 
 export enum LeafletMapRenderer {
   Tangram = 'tangram',
-  MapboxGL = 'mapboxgl',
+  MapLibreGL = 'maplibregl',
 }
 
 export enum LeafletMapPointShape {

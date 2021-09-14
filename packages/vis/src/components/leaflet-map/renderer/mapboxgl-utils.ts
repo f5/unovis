@@ -18,7 +18,7 @@ export function constraintMapView (map: L.Map, latMin = -75, latMax = 85): void 
 export function mapboxglWheelEvent (map, layer, event): void {
   const { wheelDelta, deltaY } = event
   if (!layer) return
-  const mapboxmap = layer.getMapboxMap()
+  const mapboxmap = layer.getMaplibreMap()
   const delta = wheelDelta || deltaY * -1 // We use deltaY for Firefox because wheelDelta is not implemented there
 
   // Prevent Map from being zoomed-out too far away
