@@ -2,7 +2,7 @@
 import clamp from 'lodash/clamp'
 import mean from 'lodash/mean'
 import { Component, ViewEncapsulation, ViewChild } from '@angular/core'
-import { LeafletMap, LeafletMapConfigInterface } from '@volterra/vis'
+import { LeafletMap, LeafletMapConfigInterface, LeafletMapRenderer } from '@volterra/vis'
 import { MapLeafletComponent } from '../../app/components/map-leaflet/map-leaflet.component'
 
 // Data
@@ -36,7 +36,7 @@ export class PieMapComponent {
   grandAvg = mean(this.data.map(d => d.events))
 
   config: LeafletMapConfigInterface<SitePoint> = {
-    renderer: 'mapboxgl',
+    renderer: LeafletMapRenderer.MapLibreGL,
     mapboxglGlyphs: 'https://maps.volterra.io/fonts/{fontstack}/{range}.pbf',
     sources: {
       openmaptiles: {

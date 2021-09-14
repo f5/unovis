@@ -6,7 +6,7 @@ import { Topology } from 'topojson-specification'
 
 import { scaleLinear, max } from 'd3'
 import { Component, ViewEncapsulation, AfterViewInit } from '@angular/core'
-import { LeafletMap, LeafletMapConfigInterface, WorldMap110mAlphaTopoJSON, Tooltip } from '@volterra/vis'
+import { LeafletMap, LeafletMapConfigInterface, WorldMap110mAlphaTopoJSON, Tooltip, LeafletMapRenderer } from '@volterra/vis'
 
 type MapPoint = {
   id: string;
@@ -52,7 +52,7 @@ function getTopo (): Topology {
 
 function getMapConfig (): LeafletMapConfigInterface<MapPoint> {
   return {
-    renderer: 'mapboxgl',
+    renderer: LeafletMapRenderer.MapLibreGL,
     mapboxglGlyphs: 'https://maps.volterra.io/fonts/{fontstack}/{range}.pbf',
     sources: {
       openmaptiles: {
