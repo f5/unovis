@@ -1,6 +1,7 @@
 {
   "name": "@volterra/vis",
   "version": "0.9.0",
+  "license": "MIT",
   "main": "lib/esm/index.js",
   "module": "lib/esm/index.js",
   "typings": "lib/index.d.ts",
@@ -19,9 +20,12 @@
   },
   "devDependencies": {
     "@rollup/plugin-json": "^4.1.0",
+    "@types/d3": "^6.7.0",
+    "@types/leaflet": "^1.5.19",
     "@types/mapbox-gl-leaflet": "^0.0.1",
     "@types/supercluster": "^5.0.2",
     "@types/three": "^0.125.1",
+    "@types/topojson-client": "^3.0.0",
     "@typescript-eslint/parser": "^4.2.0",
     "@zerollup/ts-transform-paths": "^1.7.18",
     "rimraf": "^3.0.2",
