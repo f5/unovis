@@ -36,7 +36,7 @@ export interface LeafletMapConfigInterface<Datum = GenericDataRecord> extends Co
   sources?: Record<string, unknown>;
   /** Tangram or Mapbox style renderer settings. Default: `undefined` */
   rendererSettings?: Record<string, unknown>;
-  /** Array of attribution labels. Default: `undefined` */
+  /** Array of attribution labels. Default: `['<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a>']` */
   attribution?: string[];
 
   // Map events
@@ -138,7 +138,7 @@ export class LeafletMapConfig<Datum = GenericDataRecord> extends ComponentConfig
   initialBounds = undefined
   bounds = undefined
   renderer = LeafletMapRenderer.Tangram
-  attribution = []
+  attribution = ['<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a>']
   accessToken = ''
   tangramRenderer = undefined
   mapboxglGlyphs = undefined

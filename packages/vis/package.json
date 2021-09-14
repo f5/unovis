@@ -35,6 +35,7 @@
   },
   "dependencies": {
     "@juggle/resize-observer": "^3.3.1",
+    "@maplibre/maplibre-gl-leaflet": "^0.0.15",
     "@types/geojson": "^7946.0.7",
     "@types/topojson": "^3.2.2",
     "@types/topojson-specification": "^1.0.2",
@@ -47,8 +48,7 @@
     "geojson": "^0.5.0",
     "leaflet": "^1.7.1",
     "lodash": "^4.17.21",
-    "mapbox-gl": "1.13.1",
-    "mapbox-gl-leaflet": "^0.0.15",
+    "maplibre-gl": "^v1.15.2",
     "supercluster": "^7.1.0",
     "tangram": "^0.21.1",
     "three": "^0.129.0",

@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
 // Copyright (c) Volterra, Inc. All rights reserved.
 import _ from 'lodash'
-import { Component, AfterViewInit, ViewEncapsulation, ViewChild } from '@angular/core'
-import { LeafletMap, LeafletMapConfigInterface, TooltipConfigInterface, Tooltip, Position } from '@volterra/vis'
+import { AfterViewInit, Component, ViewChild, ViewEncapsulation } from '@angular/core'
+import { LeafletMap, LeafletMapConfigInterface, LeafletMapRenderer, Position, Tooltip, TooltipConfigInterface } from '@volterra/vis'
 import { MapLeafletComponent } from '../../app/components/map-leaflet/map-leaflet.component'
 
 // Data
@@ -60,7 +60,7 @@ export class MapComponent implements AfterViewInit {
   title = 'map'
   data = mapSampleData()
   config: LeafletMapConfigInterface<MapPoint> = {
-    renderer: 'mapboxgl',
+    renderer: LeafletMapRenderer.MapLibreGL,
     mapboxglGlyphs: 'https://maps.volterra.io/fonts/{fontstack}/{range}.pbf',
     sources: {
       openmaptiles: {

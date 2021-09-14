@@ -1,7 +1,7 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { AfterViewInit, Component, ViewChild, ViewEncapsulation } from '@angular/core'
 import flatten from 'lodash/flatten'
-import { LeafletFlowMap, LeafletFlowMapConfigInterface, Position, PositionStrategy, Tooltip } from '@volterra/vis'
+import { LeafletFlowMap, LeafletFlowMapConfigInterface, LeafletMapRenderer, Position, PositionStrategy, Tooltip } from '@volterra/vis'
 import { MapLeafletComponent } from '../../app/components/map-leaflet/map-leaflet.component'
 
 // Data
@@ -71,7 +71,7 @@ export class DDoSMapComponent implements AfterViewInit {
         className: 'pulse',
       },
     },
-    renderer: 'mapboxgl',
+    renderer: LeafletMapRenderer.MapLibreGL,
     mapboxglGlyphs: 'https://maps.volterra.io/fonts/{fontstack}/{range}.pbf',
     sources: {
       openmaptiles: {
