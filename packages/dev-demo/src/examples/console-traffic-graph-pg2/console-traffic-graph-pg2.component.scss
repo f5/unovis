@@ -34,4 +34,14 @@
   position: absolute;
 
   --vis-graph-node-icon-font: voltuiicons;
+
+  ::ng-deep {
+    rect[ves-graph-panel-selection] { transition: opacity 400ms; }
+    rect[ves-graph-panel-rect] { transition: stroke 400ms }
+
+    g[ves-graph-panel="ce02-paris-azure"]:hover {
+      > rect[ves-graph-panel-selection] { opacity: 1; }
+      > rect[ves-graph-panel-rect] { --vis-graph-panel-border-color: #9FA9BC; }
+    }
+  }
 }
