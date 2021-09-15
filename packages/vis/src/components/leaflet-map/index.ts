@@ -418,6 +418,7 @@ export class LeafletMap<Datum = GenericDataRecord> extends ComponentCore<Datum[]
   }
 
   private _zoomToExternallySelectedPoint (): void {
+    if (!this._externallySelectedPoint) return
     const pointData = this._getPointData()
     const foundNode = find(pointData, d => d.properties.id === this._externallySelectedPoint.properties.id)
     if (foundNode) {

@@ -30,7 +30,11 @@ import { PointRenderer as PointRendererType } from './renderer'
 export class LeafletFlowMap<
   PointDatum = GenericDataRecord,
   FlowDatum = GenericDataRecord,
-> extends ComponentCore<{ points: PointDatum[]; flows?: FlowDatum[] }> {
+> extends ComponentCore<
+  { points: PointDatum[]; flows?: FlowDatum[] },
+  LeafletFlowMapConfig<PointDatum, FlowDatum>,
+  LeafletFlowMapConfigInterface<PointDatum, FlowDatum>
+  > {
   static selectors = LeafletMap.selectors
   type = ComponentType.HTML
   private leafletMap: LeafletMap<PointDatum>
