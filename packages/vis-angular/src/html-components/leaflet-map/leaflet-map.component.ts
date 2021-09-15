@@ -3,8 +3,11 @@ import { Component, AfterViewInit, Input, SimpleChanges, ViewChild, ElementRef }
 import {
   LeafletMap,
   LeafletMapConfigInterface,
+  VisEventType,
+  VisEventCallback,
   Bounds,
   LeafletMapRenderer,
+  TangramScene,
   MapZoomState,
   NumericAccessor,
   StringAccessor,
@@ -13,6 +16,7 @@ import {
   LeafletMapPointStyles,
   Tooltip,
 } from '@volterra/vis'
+import { Style } from 'maplibre-gl'
 import { VisCoreComponent } from '../../core'
 
 @Component({
@@ -47,7 +51,7 @@ export class VisLeafletMapComponent<Datum> implements LeafletMapConfigInterface<
    * ``` */
   @Input() events: {
     [selector: string]: {
-      [eventName: string]: (data: any, event?: Event, i?: number, els?: SVGElement[] | HTMLElement[]) => void;
+      [eventType in VisEventType]?: VisEventCallback
     };
   }
 
@@ -96,19 +100,13 @@ export class VisLeafletMapComponent<Datum> implements LeafletMapConfigInterface<
   /** External instance of Tangram to be used in the map. Default: `undefined` */
   @Input() tangramRenderer: any
 
-  /** Mapboxgl Access Token or Nextzen API key. Default: `''` */
+  /** Tangram Scene or Mapbox Style settings. Default: `MapLibreArcticLight` */
+  @Input() rendererSettings: TangramScene | Style
+
+  /** Tile server access token or API key. Default: `''` */
   @Input() accessToken: string
 
-  /** Mapbox style glyphs URL. Default: `undefined` */
-  @Input() mapboxglGlyphs: string
-
-  /** Tangram or Mapbox sources settings. Default: `undefined` */
-  @Input() sources: Record<string, unknown>
-
-  /** Tangram or Mapbox style renderer settings. Default: `undefined` */
-  @Input() rendererSettings: Record<string, unknown>
-
-  /** Array of attribution labels. Default: `undefined` */
+  /** Array of attribution labels. Default: `['<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a>']` */
   @Input() attribution: string[]
 
   /** Function to be called after Map async initialization is done. Default: `undefined` */
@@ -193,7 +191,7 @@ export class VisLeafletMapComponent<Datum> implements LeafletMapConfigInterface<
    * where every data point has the `healthy`, `warning` and `danger` numerical or boolean property. */
   @Input() valuesMap: LeafletMapPointStyles<Datum>
 
-  /** A TopoJSON Geometry layer to be displayed on top of the map. Supports fill and stroke */
+  /** Only for MapLibreGL Renderer. A TopoJSON Geometry layer to be displayed on top of the map. Supports fill and stroke */
   @Input() topoJSONLayer: {
     sources?: any;
     featureName?: string;
@@ -223,8 +221,8 @@ export class VisLeafletMapComponent<Datum> implements LeafletMapConfigInterface<
   }
 
   private getConfig (): LeafletMapConfigInterface<Datum> {
-    const { duration, events, attributes, flyToDuration, fitViewPadding, zoomDuration, initialBounds, bounds, renderer, tangramRenderer, accessToken, mapboxglGlyphs, sources, rendererSettings, attribution, onMapInitialized, onMapMoveZoom, onMapMoveStart, onMapMoveEnd, onMapZoomStart, onMapZoomEnd, onMapClick, pointLongitude, pointLatitude, pointId, pointShape, pointColor, pointRadius, pointLabel, pointBottomLabel, pointCursor, selectedNodeId, clusterOutlineWidth, clusterBackground, clusterExpandOnClick, clusterRadius, valuesMap, topoJSONLayer, tooltip } = this
-    const config = { duration, events, attributes, flyToDuration, fitViewPadding, zoomDuration, initialBounds, bounds, renderer, tangramRenderer, accessToken, mapboxglGlyphs, sources, rendererSettings, attribution, onMapInitialized, onMapMoveZoom, onMapMoveStart, onMapMoveEnd, onMapZoomStart, onMapZoomEnd, onMapClick, pointLongitude, pointLatitude, pointId, pointShape, pointColor, pointRadius, pointLabel, pointBottomLabel, pointCursor, selectedNodeId, clusterOutlineWidth, clusterBackground, clusterExpandOnClick, clusterRadius, valuesMap, topoJSONLayer, tooltip }
+    const { duration, events, attributes, flyToDuration, fitViewPadding, zoomDuration, initialBounds, bounds, renderer, tangramRenderer, accessToken, rendererSettings, attribution, onMapInitialized, onMapMoveZoom, onMapMoveStart, onMapMoveEnd, onMapZoomStart, onMapZoomEnd, onMapClick, pointLongitude, pointLatitude, pointId, pointShape, pointColor, pointRadius, pointLabel, pointBottomLabel, pointCursor, selectedNodeId, clusterOutlineWidth, clusterBackground, clusterExpandOnClick, clusterRadius, valuesMap, topoJSONLayer, tooltip } = this
+    const config = { duration, events, attributes, flyToDuration, fitViewPadding, zoomDuration, initialBounds, bounds, renderer, tangramRenderer, accessToken, rendererSettings, attribution, onMapInitialized, onMapMoveZoom, onMapMoveStart, onMapMoveEnd, onMapZoomStart, onMapZoomEnd, onMapClick, pointLongitude, pointLatitude, pointId, pointShape, pointColor, pointRadius, pointLabel, pointBottomLabel, pointCursor, selectedNodeId, clusterOutlineWidth, clusterBackground, clusterExpandOnClick, clusterRadius, valuesMap, topoJSONLayer, tooltip }
     const keys = Object.keys(config) as (keyof LeafletMapConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
