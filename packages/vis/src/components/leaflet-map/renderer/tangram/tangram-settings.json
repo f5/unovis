@@ -8,15 +8,6 @@
             "url_params": {
                 "api_key": "global.sdk_api_key"
             }
-        },
-        "normals": {
-            "max_zoom": 14,
-            "tile_size": 256,
-            "type": "Raster",
-            "url": "https://tile.nextzen.org/tilezen/terrain/v1/256/normal/{z}/{x}/{y}.png",
-            "url_params": {
-                "api_key": "global.sdk_api_key"
-            }
         }
     },
     "cameras": {

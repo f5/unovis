@@ -1,20 +1,21 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import Tangram from 'tangram'
-import { getRendererSettings } from './settings'
 
-export function getTangramLayer (config): any {
-  const { accessToken, tangramRenderer } = config
+// Config
+import { LeafletMapConfig } from 'components/leaflet-map/config'
+import { TangramScene } from '../../../types'
+
+export function getTangramLayer<Datum> (config: LeafletMapConfig<Datum>): unknown {
+  const { accessToken, tangramRenderer, rendererSettings } = config
   if (!accessToken) {
-    console.warn('To show map provide Nextzen API Key using the accessToken config property')
+    console.warn('To show map provide the tile server API key using the accessToken config property')
     return
   }
-
-  const tangramScene = getRendererSettings(config)
-  tangramScene.global.sdk_api_key = accessToken
+  (rendererSettings as TangramScene).global.sdk_api_key = accessToken
 
   const tangramLayer = (tangramRenderer || Tangram).leafletLayer({
     scene: {
-      ...tangramScene,
+      ...rendererSettings,
     },
     numWorkers: 4,
     unloadInvisibleTiles: false,

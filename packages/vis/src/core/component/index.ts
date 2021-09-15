@@ -17,7 +17,11 @@ import { VisEventCallback, VisEventType } from './types'
 // Config
 import { ComponentConfig, ComponentConfigInterface } from './config'
 
-export class ComponentCore<CoreDatum, ConfigClass extends ComponentConfig = ComponentConfig> {
+export class ComponentCore<
+  CoreDatum,
+  ConfigClass extends ComponentConfig = ComponentConfig,
+  ConfigInterface extends ComponentConfigInterface = ComponentConfigInterface,
+> {
   element: SVGGElement | HTMLElement
   type: ComponentType = ComponentType.SVG
   g: Selection<SVGGElement | HTMLElement, unknown, null, undefined>
@@ -44,7 +48,7 @@ export class ComponentCore<CoreDatum, ConfigClass extends ComponentConfig = Comp
     this.g = select(this.element)
   }
 
-  setConfig<T extends ComponentConfigInterface> (config: T): void {
+  setConfig (config: ConfigInterface): void {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const ConfigModel = (this.config.constructor as typeof ComponentConfig)
     this.prevConfig = this.config
