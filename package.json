@@ -1,6 +1,7 @@
 {
   "name": "volterra-vis",
   "version": "0.0.0",
+  "license": "MIT",
   "private": true,
   "workspaces": [
     "packages/*"
@@ -10,7 +11,7 @@
     "npm": ">=7.0.0"
   },
   "scripts": {
-    "postinstall": "npm run build:lib",
+    "postinstall": "npm run build:lib; npm run gather-licenses",
     "dev": "cd packages/dev-demo; npm run dev",
     "storybook": "cd packages/vis-angular; npm run storybook",
     "build": "npm run build:lib; npm run build:dev-demo; npm run build:vis-angular-lib; npm run build:vis-angular-storybook",
@@ -20,14 +21,11 @@
     "build:vis-angular-storybook": "cd packages/vis-angular && npm run build-storybook",
     "publish:lib": "cd packages/vis; npm run build; npm publish",
     "lint": "eslint ./ --ext .js,.jsx,.ts,.tsx --ignore-path .gitignore",
-    "lint:fix": "eslint ./ --ext .js,.jsx,.ts,.tsx --fix --ignore-path .gitignore"
+    "lint:fix": "eslint ./ --ext .js,.jsx,.ts,.tsx --fix --ignore-path .gitignore",
+    "gather-licenses": "for p in packages/*; do npx license-report --package=$p/package.json --config license-report-config.json --output=table > $p/licences.txt; done"
   },
   "devDependencies": {
-    "@types/d3": "^6.7.0",
-    "@types/jest": "^26.0.20",
-    "@types/leaflet": "^1.5.19",
     "@types/node": "^14.14.20",
-    "@types/topojson-client": "^3.0.0",
     "@typescript-eslint/eslint-plugin": "^4.12.0",
     "@typescript-eslint/parser": "^4.12.0",
     "eslint": "^7.17.0",
@@ -40,7 +38,7 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^5.0.0",
     "husky": "^7.0.2",
-    "jest": "^26.6.3",
+    "license-report": "^4.5.0",
     "lint-staged": "^11.1.2",
     "typescript": "~4.2.4"
   },
