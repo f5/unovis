@@ -2,7 +2,16 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import _ from 'lodash'
 import { AfterViewInit, Component, ViewChild, ViewEncapsulation } from '@angular/core'
-import { LeafletMap, LeafletMapConfigInterface, LeafletMapRenderer, Position, Tooltip, TooltipConfigInterface } from '@volterra/vis'
+import {
+  LeafletMap,
+  LeafletMapConfigInterface,
+  LeafletMapRenderer,
+  MapLibreArcticLight,
+  TangramArcticDark,
+  Position,
+  Tooltip,
+  TooltipConfigInterface,
+} from '@volterra/vis'
 import { MapLeafletComponent } from '../../app/components/map-leaflet/map-leaflet.component'
 
 // Data
@@ -59,25 +68,35 @@ export class MapComponent implements AfterViewInit {
 
   title = 'map'
   data = mapSampleData()
+  a = TangramArcticDark
+
   config: LeafletMapConfigInterface<MapPoint> = {
     renderer: LeafletMapRenderer.MapLibreGL,
-    mapboxglGlyphs: 'https://maps.volterra.io/fonts/{fontstack}/{range}.pbf',
-    sources: {
-      openmaptiles: {
-        type: 'vector',
-        url: 'https://maps.volterra.io/data/v3.json',
+    rendererSettings: {
+      ...MapLibreArcticLight,
+      sources: {
+        openmaptiles: {
+          type: 'vector',
+          url: 'https://maps.volterra.io/data/v3.json',
+        },
       },
-      // mapzen: {
-      //   max_zoom: 16,
-      //   tile_size: 256,
-      //   type: 'MVT',
-      //   url: 'https://tile.nextzen.org/tilezen/vector/v1/256/all/{z}/{x}/{y}.mvt',
-      //   url_params: {
-      //     api_key: ''
-      //   }
-      // }
+      glyphs: 'https://maps.volterra.io/fonts/{fontstack}/{range}.pbf',
     },
-    // accessToken: '',
+    // sources: {
+    //   openmaptiles: {
+    //     type: 'vector',
+    //     url: 'https://maps.volterra.io/data/v3.json',
+    //   },
+    //   // mapzen: {
+    //   //   max_zoom: 16,
+    //   //   tile_size: 256,
+    //   //   type: 'MVT',
+    //   //   url: 'https://tile.nextzen.org/tilezen/vector/v1/256/all/{z}/{x}/{y}.mvt',
+    //   //   url_params: {
+    //   //     api_key: ''
+    //   //   }
+    //   // }
+    // },
     valuesMap: {
       healthy: { color: '#47e845' },
       warning: { color: '#ffc226' },
