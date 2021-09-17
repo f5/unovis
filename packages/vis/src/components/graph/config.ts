@@ -115,7 +115,7 @@ export interface GraphConfigInterface<
   /** Node border width accessor function or constant value. Default: `3` */
   nodeBorderWidth?: NumericAccessor<N>;
   /** Node shape accessor function or constant value. Default: `Shape.Circle` */
-  nodeShape?: GenericAccessor<Shape, N>;
+  nodeShape?: GenericAccessor<Shape | string, N>;
   /** Node score outline accessor function or constant value in the range [0,100]. Default: `0` */
   nodeStrokeSegmentValue?: NumericAccessor<N>;
   /** Node central icon accessor function or constant value. Default: `node => node.icon` */

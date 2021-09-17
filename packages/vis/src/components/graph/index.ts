@@ -65,6 +65,7 @@ export class Graph<
   }
 
   static nodeSelectors = nodeSelectors
+  g: Selection<SVGGElement, unknown, null, undefined>
   config: GraphConfig<N, L> = new GraphConfig()
   datamodel: GraphDataModel<N, L, GraphNode<N, L>, GraphLink<N, L>> = new GraphDataModel()
   private _selectedNode: GraphNode<N>;

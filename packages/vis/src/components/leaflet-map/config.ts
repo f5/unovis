@@ -1,7 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 /* eslint-disable dot-notation, no-irregular-whitespace */
 import { Style } from 'maplibre-gl'
-import Tangram from 'tangram'
 
 // Core
 import { ComponentConfig, ComponentConfigInterface } from 'core/component/config'
@@ -32,7 +31,7 @@ export interface LeafletMapConfigInterface<Datum = GenericDataRecord> extends Co
   /** The map renderer type. Default: `LeafletMapRenderer.Tangram` */
   renderer?: LeafletMapRenderer | string;
   /** External instance of Tangram to be used in the map. Default: `undefined` */
-  tangramRenderer?: Tangram;
+  tangramRenderer?: any;
   /** Tangram Scene or Mapbox Style settings. Default: `undefined` */
   rendererSettings: TangramScene | Style;
   /** Tile server access token or API key. Default: `''` */

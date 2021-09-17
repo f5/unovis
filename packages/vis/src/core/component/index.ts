@@ -24,7 +24,7 @@ export class ComponentCore<
 > {
   element: SVGGElement | HTMLElement
   type: ComponentType = ComponentType.SVG
-  g: Selection<SVGGElement | HTMLElement, unknown, null, undefined>
+  g: Selection<SVGGElement, unknown, null, undefined> | Selection<HTMLElement, unknown, null, undefined>
   config: ConfigClass
   prevConfig: ConfigClass
   datamodel: CoreDataModel<CoreDatum> = new CoreDataModel()
@@ -45,7 +45,7 @@ export class ComponentCore<
     } else {
       this.element = document.createElement('div')
     }
-    this.g = select(this.element)
+    this.g = select(this.element) as Selection<SVGGElement, unknown, null, undefined> | Selection<HTMLElement, unknown, null, undefined>
   }
 
   setConfig (config: ConfigInterface): void {
@@ -79,7 +79,8 @@ export class ComponentCore<
 
     Object.keys(attributeMap).forEach(className => {
       Object.keys(attributeMap[className]).forEach(attr => {
-        this.g.selectAll(`.${className}`)
+        (this.g as Selection<SVGGElement | HTMLElement, unknown, null, undefined>)
+          .selectAll(`.${className}`)
           .attr(attr, attributeMap[className][attr])
       })
     })
@@ -96,7 +97,7 @@ export class ComponentCore<
   private _bindEvents (events = this.events, suffix = ''): void {
     Object.keys(events).forEach(className => {
       Object.keys(events[className]).forEach(eventType => {
-        const selection: Selection<SVGGElement | HTMLElement, any, SVGElement | HTMLElement, any> = this.g.selectAll(`.${className}`)
+        const selection = (this.g as Selection<SVGGElement | HTMLElement, unknown, null, undefined>).selectAll(`.${className}`)
         selection.on(eventType + suffix, (event: Event, d) => {
           const els = selection.nodes()
           const i = els.indexOf(event.currentTarget as SVGGElement | HTMLElement)
