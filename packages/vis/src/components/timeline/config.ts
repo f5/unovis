@@ -2,10 +2,11 @@
 import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component/config'
 
 // Types
+import { WithOptional } from 'types/misc'
 import { NumericAccessor, StringAccessor } from 'types/accessor'
 import { GenericDataRecord } from 'types/data'
 
-export interface TimelineConfigInterface<Datum = GenericDataRecord> extends XYComponentConfigInterface<Datum> {
+export interface TimelineConfigInterface<Datum = GenericDataRecord> extends WithOptional<XYComponentConfigInterface<Datum>, 'y'> {
   /** Width of the timeline items. Default: `8` */
   lineWidth?: NumericAccessor<Datum>;
   /** Timeline row height. Default: `22` */
