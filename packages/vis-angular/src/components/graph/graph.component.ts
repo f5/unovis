@@ -188,7 +188,7 @@ export class VisGraphComponent<N extends GraphInputNode = GraphInputNode, L exte
   @Input() nodeBorderWidth: NumericAccessor<N>
 
   /** Node shape accessor function or constant value. Default: `Shape.Circle` */
-  @Input() nodeShape: GenericAccessor<Shape, N>
+  @Input() nodeShape: GenericAccessor<Shape | string, N>
 
   /** Node score outline accessor function or constant value in the range [0,100]. Default: `0` */
   @Input() nodeStrokeSegmentValue: NumericAccessor<N>
