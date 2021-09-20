@@ -100,7 +100,7 @@ export class Crosshair<Datum = GenericDataRecord> extends XYComponentCore<Datum>
     this.x = clamp(Math.round(scaleX(getNumber(this.datum, config.x))), 0, config.width)
 
     // Show the crosshair only if it's in the chart range and not far from mouse pointer (if configured)
-    this.show = (this.x >= 0) && (this.x <= config.width) && (config.hideWhenFarFromPointer && (Math.abs(this.x - x) < config.hideWhenFarFromPointerDistance))
+    this.show = (this.x >= 0) && (this.x <= config.width) && (!config.hideWhenFarFromPointer || (Math.abs(this.x - x) < config.hideWhenFarFromPointerDistance))
 
     window.cancelAnimationFrame(this._animFrameId)
     this._animFrameId = window.requestAnimationFrame(() => {
