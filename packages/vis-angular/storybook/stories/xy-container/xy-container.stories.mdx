@@ -4,7 +4,6 @@ import { Scale } from "@volterra/vis";
 import { VisXYContainerModule } from "src/public-api";
 
 import { VisXYContainerComponent } from "src/containers/xy-container/xy-container.component";
-import { VisLineComponent } from "src/components/line/line.component";
 import { XYContainerStory } from "./xy-container.component";
 import {
   baseConfig,
@@ -32,12 +31,12 @@ import {
 
 ### Basic configuration
 
-The XYContainer is designed as a wrapper to hold other `vis` elements. Here is an example of a common congifuration:
+The XYContainer is designed as a wrapper to hold other `vis` elements. Here is an example of a common configuration:
 an `xy-chart` alongside two `axis` components:
 
 ```angular2html
 <vis-xy-container [data]="data">
-  <vis-stacked-bar [x]="x" [y]="y"></vis-line>
+  <vis-stacked-bar [x]="x" [y]="y"></vis-stacked-bar>
   <vis-axis type="x"></vis-axis>
   <vis-axis type="y"></vis-axis>
 </vis-xy-container>
@@ -98,7 +97,7 @@ containerPadding = { top: 100; bottom: 100; left: 100; right: 100 }
 ### xRange and yRange
 
 Changing the range of screen space occupied by each dimension of your data using the `xRange` and `yRange` properties.
-It accepts type `[number, number]` where the the elements represent the starting and ending positions, respectively.
+It accepts type `[number, number]` where the elements represent the starting and ending positions, respectively.
 
 #### xRange
 
@@ -253,22 +252,21 @@ These properties accept a number array in the form `[number, number]` or more ty
 
 ### xScale and yScale
 
-To change the scale of one of your axes, use the `xScale` or `yScale` property and a `Scale` function. (i.e. `Scale.scaleLinear()`) The following optoins are available:
+To change the scale of one of your axes, use the `xScale` or `yScale` property and a `Scale` function (i.e. `Scale.scaleLinear()`).
+Currently, only continuous scales are supported:
 
-`scaleLinear`, `scalePow`, `scaleSqrt`, `scaleLog`, `scaleIdentity`, `scaleTime`,
-`scaleUtc`, `scaleSequential`, `scaleDiverging`, `scaleQuantize`, `scaleQuantile`,
-`scaleThreshold`, `scaleOrdinal`, `scaleBand`, `scalePoint`
+`scaleLinear`, `scalePow`, `scaleSqrt`, `scaleLog`, `scaleTime`, `scaleUtc`
 
 See [d3-scale](https://github.com/d3/d3-scale) for more information about the meaning behind these functions.
 
 #### xScale
 
-See an example of the a simple `y = x` line with an xScale property set to `Scale.scaleSqrt()`
+See an example of a simple `y = x` line with an xScale property set to `Scale.scaleSqrt()`
 
 ```javascript
 // Component file
 import { Scale } from '@volterra/vis'
-altScale = Scale.scaleSqrt();
+altScale = Scale.scaleSqrt()
 
 // Template file
 <vis-xy-container ... [xScale]="altScale"></vis-xy-container>
@@ -285,12 +283,12 @@ altScale = Scale.scaleSqrt();
 
 #### yScale
 
-See an example of the a simple `y = x` line with an yScale property set to `
+See an example of a simple `y = x` line with an yScale property set to `Scale.scaleLog()`
 
 ```javascript
 // Component file
 import { Scale } from '@volterra/vis'
-logScale = Scale.scaleSqrt();
+logScale = Scale.scaleSqrt()
 
 // Template file
 <vis-xy-container ... [yScale]="logScale"></vis-xy-container>
