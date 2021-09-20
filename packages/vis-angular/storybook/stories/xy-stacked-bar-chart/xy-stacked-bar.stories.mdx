@@ -322,10 +322,11 @@ import { StackedBar } from '@volterra/vis`
 ...
 events = {
         [StackedBar.selectors.bar]: {
-            mouseover: (d: DataRecord) => {},
+            click: (d: DataRecord) => {},
             ...
         },
         [StackedBar.selectors.barGroup]: {
+            mouseover: (d: DataRecord[]) => {},
             ...
         },
 
