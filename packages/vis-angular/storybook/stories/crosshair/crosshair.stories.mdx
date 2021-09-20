@@ -1,6 +1,5 @@
 import { moduleMetadata, componentWrapperDecorator } from "@storybook/angular";
 import { Meta, Story, ArgsTable } from "@storybook/addon-docs";
-import { Tooltip } from "@volterra/vis";
 import {
   VisAreaModule,
   VisAxisModule,
@@ -75,7 +74,7 @@ See the following example which moves the position of the crosshair line to the 
 customXAccessor = d => d.x + 0.5,
 
 // Template
-<vis-stacked-bar [x]="xAccessor" [y]="yAccessor"></vis-line>
+<vis-stacked-bar [x]="xAccessor" [y]="yAccessor"></vis-stacked-bar>
 <vis-crosshair [x]="customXAccessor"></vis-crosshair>
 ```
 
@@ -96,7 +95,7 @@ disable this feature using the `hideWhenFarFromPointer` attribute.
 #### `hideWhenFarFromPointer: false`
 
 ```angular2html
-<vis-scatter [x]="xAccessor" [y]="yAccessor"></vis-line>
+<vis-scatter [x]="xAccessor" [y]="yAccessor"></vis-scatter>
 <vis-crosshair hideWhenFarFromPointer="false"></vis-crosshair>
 ```
 
@@ -115,7 +114,7 @@ Use the `hideWhenFarFromPointerDistance` attribute with a length (in pixels) tha
 In the following example, the crosshair renders if within `50px` of the data point.
 
 ```angular2html
-<vis-scatter [x]="xAccessor" [y]="yAccessor"></vis-line>
+<vis-scatter [x]="xAccessor" [y]="yAccessor"></vis-scatter>
 <vis-crosshair hideWhenFarFromPointerDistance="50"></vis-crosshair>
 ```
 
@@ -205,20 +204,5 @@ These provide color customization for the crosshair's line and circle stroke (bo
   }}
 </Story>
 
-### Events
-
-The crosshair component supports the following events:
-
-```javascript
-// In the component
-events = {
-   [selector: string]: {
-      [eventType in VisEventType]?: VisEventCallback
-  };
-}
-
-// In the template:
-<vis-crosshair ... events="events"></vis-area>
-```
 
 <ArgsTable of={VisCrosshairComponent} />
