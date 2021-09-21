@@ -3,12 +3,12 @@
 import { AfterViewInit, Component } from '@angular/core'
 
 // Vis
-import { Axis, Timeline } from '@volterra/vis'
+import { Axis, Timeline, TimelineConfigInterface } from '@volterra/vis'
 
 // Helpers
 import { sampleTimelineData, SampleTimelineDatum } from '../../utils/data'
 
-function getTimelineConfig () {
+function getTimelineConfig (): TimelineConfigInterface<SampleTimelineDatum> {
   return {
     x: d => d.time,
     length: d => d.duration,

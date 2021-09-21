@@ -40,7 +40,7 @@ where `data: DataRecord[] = [{x: 0, y: 1}, ...]`, `xAccessor = (d: DataRecord) =
 </Story>
 
 ### Multiple Lines
-Line accepts an array of y accesors to display multiple lines:
+Line accepts an array of y accessors to display multiple lines:
 ```angular2html
 // Define your accessors in the component file:
 y = [d => d.y1, d => d.y2, d => d.y3]
@@ -140,7 +140,7 @@ getColor (data: DataRecord[], i: number) {
 }
 
 // In the template:
-<vis-line ... [color]="getColor"></vis-area>
+<vis-line ... [color]="getColor"></vis-line>
 ```
 
 <Story name="Custom Color: Multiple Lines">
@@ -160,7 +160,7 @@ You can configure a dashed line with the `lineDashArray` property and a dash arr
 See [SVG stroke-dasharray](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray) to learn more about this attribute.
 
 ```angular2html
-<vis-line ... [lineDashArray]="[5]"></vis-area>
+<vis-line ... [lineDashArray]="[5]"></vis-line>
 ```
 
 <Story name="Dashed Line">
@@ -185,7 +185,7 @@ getDashes (data: DataRecord[], i: number) {
 }
 
 // In the template:
-<vis-line ... [lineDashArray]="getDashes"></vis-area>
+<vis-line ... [lineDashArray]="getDashes"></vis-line>
 ```
 
 <Story name="Multiple Dashed Lines">
@@ -288,7 +288,7 @@ events = {
 }
 
 // In the template file:
-<vis-line ... events="events"></vis-area>
+<vis-line ... events="events"></vis-line>
 ```
 
 <ArgsTable of={VisLineComponent}/>

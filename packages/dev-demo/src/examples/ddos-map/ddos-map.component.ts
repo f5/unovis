@@ -1,7 +1,15 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { AfterViewInit, Component, ViewChild, ViewEncapsulation } from '@angular/core'
 import flatten from 'lodash/flatten'
-import { LeafletFlowMap, LeafletFlowMapConfigInterface, Position, PositionStrategy, Tooltip } from '@volterra/vis'
+import {
+  LeafletFlowMap,
+  LeafletFlowMapConfigInterface,
+  LeafletMapRenderer,
+  MapLibreArcticLight,
+  Position,
+  PositionStrategy,
+  Tooltip,
+} from '@volterra/vis'
 import { MapLeafletComponent } from '../../app/components/map-leaflet/map-leaflet.component'
 
 // Data
@@ -71,13 +79,16 @@ export class DDoSMapComponent implements AfterViewInit {
         className: 'pulse',
       },
     },
-    renderer: 'mapboxgl',
-    mapboxglGlyphs: 'https://maps.volterra.io/fonts/{fontstack}/{range}.pbf',
-    sources: {
-      openmaptiles: {
-        type: 'vector',
-        url: 'https://maps.volterra.io/data/v3.json',
+    renderer: LeafletMapRenderer.MapLibreGL,
+    rendererSettings: {
+      ...MapLibreArcticLight,
+      sources: {
+        openmaptiles: {
+          type: 'vector',
+          url: 'https://maps.volterra.io/data/v3.json',
+        },
       },
+      glyphs: 'https://maps.volterra.io/fonts/{fontstack}/{range}.pbf',
     },
     // eslint-disable-next-line no-console
     onSourcePointClick: (f, x, y) => { console.log('onSourcePointClick', f, x, y) },

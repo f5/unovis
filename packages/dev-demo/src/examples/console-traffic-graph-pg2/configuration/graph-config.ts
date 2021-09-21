@@ -30,6 +30,18 @@ export const accessors: GraphConfigInterface<any, any> = {
   linkBandWidth: 12,
   layoutSubgroupMaxNodes: 6,
   layoutGroupRows: 1,
+
+  attributes: {
+    [Graph.selectors.panel]: {
+      'ves-graph-panel': (p: GraphPanelConfigInterface) => p.label,
+    },
+    [Graph.selectors.panelSelection]: {
+      'ves-graph-panel-selection': '',
+    },
+    [Graph.selectors.panelRect]: {
+      'ves-graph-panel-rect': '',
+    },
+  },
 }
 
 export const overviewConfig = (data, onNodeClick): GraphConfigInterface<any, any> => ({

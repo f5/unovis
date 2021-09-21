@@ -1,6 +1,12 @@
 {
   "bearing": 0,
-  "glyphs": "",
+  "glyphs": "https://api.maptiler.com/fonts/{fontstack}/{range}.pbf",
+  "sources":{
+    "openmaptiles": {
+      "url": "https://api.maptiler.com/tiles/v3/tiles.json",
+      "type":"vector"
+    }
+  },
   "layers": [
     {
       "id": "background",

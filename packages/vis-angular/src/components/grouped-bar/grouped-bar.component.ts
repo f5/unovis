@@ -95,7 +95,7 @@ export class VisGroupedBarComponent<Datum = GenericDataRecord> implements Groupe
   /** Force set the group width in pixels. Default: `undefined` */
   @Input() groupWidth: number
 
-  /** Maximum group width for dynamic sizing. Limits the barWidth property from the top. Default: `undefined` */
+  /** Maximum group width for dynamic sizing. Limits the groupWidth property from the top. Default: `undefined` */
   @Input() groupMaxWidth: number
 
   /** Expected step between the bar groups in the X axis units.

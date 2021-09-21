@@ -1,5 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 /* eslint-disable dot-notation, no-irregular-whitespace */
+import { Style } from 'maplibre-gl'
 
 // Core
 import { ComponentConfig, ComponentConfigInterface } from 'core/component/config'
@@ -11,6 +12,9 @@ import { GenericDataRecord } from 'types/data'
 
 // Local Types
 import { LeafletMapRenderer, Bounds, LeafletMapPointStyles, MapZoomState, LeafletMapPointDatum } from './types'
+
+// Renderer settings
+import { TangramScene } from './renderer/map-style'
 
 export interface LeafletMapConfigInterface<Datum = GenericDataRecord> extends ComponentConfigInterface {
   // General
@@ -28,15 +32,11 @@ export interface LeafletMapConfigInterface<Datum = GenericDataRecord> extends Co
   renderer?: LeafletMapRenderer | string;
   /** External instance of Tangram to be used in the map. Default: `undefined` */
   tangramRenderer?: any;
-  /** Mapboxgl Access Token or Nextzen API key. Default: `''` */
+  /** Tangram Scene or Mapbox Style settings. Default: `undefined` */
+  rendererSettings: TangramScene | Style;
+  /** Tile server access token or API key. Default: `''` */
   accessToken?: string;
-  /** Mapbox style glyphs URL. Default: `undefined` */
-  mapboxglGlyphs?: string;
-  /** Tangram or Mapbox sources settings. Default: `undefined` */
-  sources?: Record<string, unknown>;
-  /** Tangram or Mapbox style renderer settings. Default: `undefined` */
-  rendererSettings?: Record<string, unknown>;
-  /** Array of attribution labels. Default: `undefined` */
+  /** Array of attribution labels. Default: `['<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a>']` */
   attribution?: string[];
 
   // Map events
@@ -107,7 +107,7 @@ export interface LeafletMapConfigInterface<Datum = GenericDataRecord> extends Co
   valuesMap?: LeafletMapPointStyles<Datum>;
 
   // TopoJSON overlay
-  /** A TopoJSON Geometry layer to be displayed on top of the map. Supports fill and stroke */
+  /** Only for MapLibreGL Renderer. A TopoJSON Geometry layer to be displayed on top of the map. Supports fill and stroke */
   topoJSONLayer?: {
     /** The TopoJSON.Topology object. Default: `undefined` */
     sources?: any;
@@ -138,11 +138,9 @@ export class LeafletMapConfig<Datum = GenericDataRecord> extends ComponentConfig
   initialBounds = undefined
   bounds = undefined
   renderer = LeafletMapRenderer.Tangram
-  attribution = []
-  accessToken = ''
+  attribution = ['<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a>']
   tangramRenderer = undefined
-  mapboxglGlyphs = undefined
-  sources = undefined
+  accessToken = ''
   rendererSettings = undefined
 
   // Map events

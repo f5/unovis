@@ -24,7 +24,11 @@ export async function setupMap<T> (mapContainer: HTMLElement, config: LeafletMap
   svgOverlay: Selection<SVGElement, any, HTMLElement, any>;
   svgGroup: Selection<SVGGElement, any, SVGElement, any>;
 }> {
-  const { renderer, topoJSONLayer } = config
+  const { renderer, rendererSettings, topoJSONLayer } = config
+  if (!rendererSettings) {
+    console.error('Please provide renderer settings in the map configuration object')
+    return
+  }
 
   const leaflet = L.map(mapContainer, {
     scrollWheelZoom: renderer === LeafletMapRenderer.Tangram, // We define custom scroll event for MapboxGL to enabling smooth zooming
@@ -52,7 +56,7 @@ export async function setupMap<T> (mapContainer: HTMLElement, config: LeafletMap
       layer.addTo(leaflet)
       break
     }
-    case LeafletMapRenderer.MapboxGL:
+    case LeafletMapRenderer.MapLibreGL:
     default: {
       const { getMapboxglLayer } = await import('../renderer/mapboxgl-layer')
 
@@ -70,8 +74,8 @@ export async function setupMap<T> (mapContainer: HTMLElement, config: LeafletMap
     }
   }
 
-  if (topoJSONLayer?.sources && renderer === LeafletMapRenderer.MapboxGL) {
-    const mapboxmap = layer.getMapboxMap()
+  if (topoJSONLayer?.sources && renderer === LeafletMapRenderer.MapLibreGL) {
+    const mapboxmap = layer.getMaplibreMap()
     const canvas = mapboxmap.getCanvas()
     select(canvas).classed(s.mapboxglCanvas, true)
     mapboxmap.on('mousemove', (event) => {

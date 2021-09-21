@@ -311,10 +311,11 @@ import { GroupedBar } from '@volterra/vis`
 ...
 events = {
         [GroupedBar.selectors.bar]: {
-            mouseover: (d: DataRecord) => {},
+            click: (d: DataRecord) => {},
             ...
         },
         [GroupedBar.selectors.barGroup]: {
+            mouseover: (d: DataRecord[]) => {},
             ...
         },
 }

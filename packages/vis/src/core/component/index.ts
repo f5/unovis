@@ -17,10 +17,14 @@ import { VisEventCallback, VisEventType } from './types'
 // Config
 import { ComponentConfig, ComponentConfigInterface } from './config'
 
-export class ComponentCore<CoreDatum, ConfigClass extends ComponentConfig = ComponentConfig> {
+export class ComponentCore<
+  CoreDatum,
+  ConfigClass extends ComponentConfig = ComponentConfig,
+  ConfigInterface extends ComponentConfigInterface = ComponentConfigInterface,
+> {
   element: SVGGElement | HTMLElement
   type: ComponentType = ComponentType.SVG
-  g: Selection<SVGGElement | HTMLElement, unknown, null, undefined>
+  g: Selection<SVGGElement, unknown, null, undefined> | Selection<HTMLElement, unknown, null, undefined>
   config: ConfigClass
   prevConfig: ConfigClass
   datamodel: CoreDataModel<CoreDatum> = new CoreDataModel()
@@ -41,10 +45,10 @@ export class ComponentCore<CoreDatum, ConfigClass extends ComponentConfig = Comp
     } else {
       this.element = document.createElement('div')
     }
-    this.g = select(this.element)
+    this.g = select(this.element) as Selection<SVGGElement, unknown, null, undefined> | Selection<HTMLElement, unknown, null, undefined>
   }
 
-  setConfig<T extends ComponentConfigInterface> (config: T): void {
+  setConfig (config: ConfigInterface): void {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const ConfigModel = (this.config.constructor as typeof ComponentConfig)
     this.prevConfig = this.config
@@ -75,7 +79,8 @@ export class ComponentCore<CoreDatum, ConfigClass extends ComponentConfig = Comp
 
     Object.keys(attributeMap).forEach(className => {
       Object.keys(attributeMap[className]).forEach(attr => {
-        this.g.selectAll(`.${className}`)
+        (this.g as Selection<SVGGElement | HTMLElement, unknown, null, undefined>)
+          .selectAll(`.${className}`)
           .attr(attr, attributeMap[className][attr])
       })
     })
@@ -92,7 +97,7 @@ export class ComponentCore<CoreDatum, ConfigClass extends ComponentConfig = Comp
   private _bindEvents (events = this.events, suffix = ''): void {
     Object.keys(events).forEach(className => {
       Object.keys(events[className]).forEach(eventType => {
-        const selection: Selection<SVGGElement | HTMLElement, any, SVGElement | HTMLElement, any> = this.g.selectAll(`.${className}`)
+        const selection = (this.g as Selection<SVGGElement | HTMLElement, unknown, null, undefined>).selectAll(`.${className}`)
         selection.on(eventType + suffix, (event: Event, d) => {
           const els = selection.nodes()
           const i = els.indexOf(event.currentTarget as SVGGElement | HTMLElement)

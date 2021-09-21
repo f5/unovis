@@ -26,18 +26,18 @@ export interface TooltipConfigInterface {
    *
    * ```
    * {
-   *   [selectorString]: (d) => string | HTMLElement
+   *   [selectorString]: (d: unknown) => string | HTMLElement
    * }
    * ```
    * e.g.:
    * ```
    * {
-   *   [Area.selectors.area]: (d) => `<div>${d.value.toString()}</div>
+   *   [Area.selectors.area]: (d: AreaDatum[]) => `<div>${d.value.toString()}</div>
    * }
    * ```
    */
   triggers?: {
-    [selector: string]: (data: unknown, i: number, elements: (HTMLElement | SVGElement)[]) => string | HTMLElement;
+    [selector: string]: (data: unknown, i: number, elements: (HTMLElement | SVGElement)[]) => string | HTMLElement | undefined | null;
   };
 }
 
@@ -50,6 +50,6 @@ export class TooltipConfig extends Config implements TooltipConfigInterface {
   verticalShift = 0
   positionStrategy = PositionStrategy.Absolute
   triggers: {
-    [selector: string]: (data: any, i: number, elements: (HTMLElement | SVGElement)[]) => string | HTMLElement;
+    [selector: string]: (data: any, i: number, elements: (HTMLElement | SVGElement)[]) => string | HTMLElement | undefined | null;
   } = {}
 }

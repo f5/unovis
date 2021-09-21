@@ -54,10 +54,18 @@ export class Graph<
     linkLine: linkSelectors.link,
     nodeSideLabel: nodeSelectors.sideLabelGroup,
     nodeLabel: nodeSelectors.label,
+    panel: panelSelectors.gPanel,
+    panelRect: panelSelectors.panel,
+    panelSelection: panelSelectors.panelSelection,
+    panelLabel: panelSelectors.label,
+    panelLabelText: panelSelectors.labelText,
     panelSideLabel: panelSelectors.sideLabelGroup,
+    panelSideLabelShape: panelSelectors.sideLabel,
+    panelSideLabelIcon: panelSelectors.sideLabelIcon,
   }
 
   static nodeSelectors = nodeSelectors
+  g: Selection<SVGGElement, unknown, null, undefined>
   config: GraphConfig<N, L> = new GraphConfig()
   datamodel: GraphDataModel<N, L, GraphNode<N, L>, GraphLink<N, L>> = new GraphDataModel()
   private _selectedNode: GraphNode<N>;

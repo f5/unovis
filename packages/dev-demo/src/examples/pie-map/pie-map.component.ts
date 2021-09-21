@@ -2,7 +2,7 @@
 import clamp from 'lodash/clamp'
 import mean from 'lodash/mean'
 import { Component, ViewEncapsulation, ViewChild } from '@angular/core'
-import { LeafletMap, LeafletMapConfigInterface } from '@volterra/vis'
+import { LeafletMap, LeafletMapConfigInterface, LeafletMapRenderer, MapLibreArcticLight } from '@volterra/vis'
 import { MapLeafletComponent } from '../../app/components/map-leaflet/map-leaflet.component'
 
 // Data
@@ -36,13 +36,16 @@ export class PieMapComponent {
   grandAvg = mean(this.data.map(d => d.events))
 
   config: LeafletMapConfigInterface<SitePoint> = {
-    renderer: 'mapboxgl',
-    mapboxglGlyphs: 'https://maps.volterra.io/fonts/{fontstack}/{range}.pbf',
-    sources: {
-      openmaptiles: {
-        type: 'vector',
-        url: 'https://maps.volterra.io/data/v3.json',
+    renderer: LeafletMapRenderer.MapLibreGL,
+    rendererSettings: {
+      ...MapLibreArcticLight,
+      sources: {
+        openmaptiles: {
+          type: 'vector',
+          url: 'https://maps.volterra.io/data/v3.json',
+        },
       },
+      glyphs: 'https://maps.volterra.io/fonts/{fontstack}/{range}.pbf',
     },
     pointRadius: d => {
       return clamp(7 + 10 * Math.sqrt((d.normal + d.blocked) / this.grandAvg), 6, 25)
