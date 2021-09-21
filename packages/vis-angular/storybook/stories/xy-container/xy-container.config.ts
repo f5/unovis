@@ -6,21 +6,22 @@ const baseComponentConfig = { x: d => d.x, y: d => d.y }
 
 export type ContainerConfig = XYContainerConfigInterface<DataRecord> & {
   config: XYContainerConfigInterface<DataRecord>;
-  sideElement: boolean;
-  storyHeight: number;
+  sideElement?: boolean;
+  storyHeight?: number;
+  storyWidth?: number;
+  data?: DataRecord[];
 }
-
 
 export const defaultArgs = (): ContainerConfig => ({
   config: {
     xAxis: new Axis<DataRecord>({ gridLine: false }),
     yAxis: new Axis<DataRecord>({ gridLine: false }),
-    tooltip: new Tooltip<DataRecord>({
+    tooltip: new Tooltip({
       triggers: {
-        [StackedBar.selectors.bar]: d => `<div>${d.x}, ${d.y.toFixed(2)}</div>`,
-        [Scatter.selectors.point]: d => `<div>${d.x}, ${d.y}</div>`,
+        [StackedBar.selectors.bar]: (d: any) => `<div>${d.x}, ${d.y.toFixed(2)}</div>`,
+        [Scatter.selectors.point]: (d: any) => `<div>${d.x}, ${d.y}</div>`,
       },
-    })
+    }),
   },
   sideElement: false,
   storyHeight: 300,
@@ -36,12 +37,12 @@ export const baseConfig = (n = 50): ContainerConfig => ({
 })
 
 export const skewedConfig = (): ContainerConfig => ({
-  data: generateDataRecords(100).map(d => ({ x: d.x + 1, y: d.x + 1})),
+  data: generateDataRecords(100).map(d => ({ x: d.x + 1, y: d.x + 1 })),
   config: {
     ...defaultArgs().config,
     components: [
       new Line<DataRecord>({ ...baseComponentConfig, lineWidth: 7 }),
-      new Scatter<DataRecord>({ ...baseComponentConfig, color: () => '#5242aa', sizeRange: [5, 10], }),
+      new Scatter<DataRecord>({ ...baseComponentConfig, color: () => '#5242aa', sizeRange: [5, 10] }),
     ],
   },
 })
@@ -60,8 +61,11 @@ export const flatConfig = (): ContainerConfig => ({
   ]),
   config: {
     ...defaultArgs().config,
-    components: [new Scatter<DataRecord>({ ...baseComponentConfig, color: () => '#5242aa'})],
+    components: [new Scatter<DataRecord>({ ...baseComponentConfig, color: () => '#5242aa' })],
   },
   storyHeight: 200,
 })
 
+export const scaleByDomainStoryData = Array(100)
+  .fill(0)
+  .map((_, i) => ({ x: i, y: i + i * Math.sin(i / 10) }))

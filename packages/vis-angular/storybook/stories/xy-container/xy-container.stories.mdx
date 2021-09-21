@@ -11,6 +11,7 @@ import {
   flatConfig,
   skewedConfig,
   specialConfig,
+  scaleByDomainStoryData,
 } from "./xy-container.config";
 
 <Meta
@@ -241,7 +242,7 @@ These properties accept a number array in the form `[number, number]` or more ty
 <vis-xy-container ... [yDomainMaxConstraint]="[0,50]",></vis-xy-container>
 ```
 
-<Story name="Domain: Max Constraints">
+<Story name="yDomainMaxConstraint">
   {{
     props: {
       ...flatConfig(),
@@ -277,6 +278,7 @@ altScale = Scale.scaleSqrt()
     props: {
       ...skewedConfig(),
       xScale: Scale.scaleSqrt(),
+      storyHeight: 200,
     },
   }}
 </Story>
@@ -299,23 +301,54 @@ logScale = Scale.scaleSqrt()
     props: {
       ...skewedConfig(),
       yScale: Scale.scaleLog(),
-      storyHeight: 400,
+      storyHeight: 500,
     },
   }}
 </Story>
 
-### Scale by Domain
+### Dynamic vertical scale based on the current xDomain
 
-You can also set the yScale domain based on X's, rather than customizing
+You can also set the `yScale` domain dynamically based on the current `xDomain`, meaning that only visible data will be used
+in the domain calculation.
 
-<Story name="Scale by Domain">
+Take a look at the example below. The `xDomain` configuration property there is not set, the chart displays the whole dataset and the
+Y axis shows ticks from 0 to 150.
+<Story name="scaleByDomain">
   {{
     props: {
       ...baseConfig(),
-      data: Array(10)
-        .fill(0)
-        .map((_, i) => ({ x: i, y: i * 10 })),
-      scaleByDomain: [0, 1],
+      data: scaleByDomainStoryData,
+      storyHeight: 210,
+    },
+  }}
+</Story>
+
+Let's set `xDomain` to `[0, 50]`. The chart now shows only a portion of the original data but the Y axis still displays
+the whole data range.
+<Story name="scaleByDomain: false">
+  {{
+    props: {
+      ...baseConfig(),
+      data: scaleByDomainStoryData,
+      storyHeight: 210,
+      xDomain: [0, 50],
+      scaleByDomain: false,
+    },
+  }}
+</Story>
+
+Setting `scaleByDomain` to `true` will tell the chart to dynamically calculate the domain of `yScale` based on the
+data within `xDomain`. It comes in hand when you're updating `xDomain` programmatically using, for example,
+the Brush component to provide some navigation capabilities to a chart with lots of data points.
+
+<Story name="scaleByDomain: true">
+  {{
+    props: {
+      ...baseConfig(),
+      data: scaleByDomainStoryData,
+      storyHeight: 210,
+      xDomain: [0, 50],
+      scaleByDomain: true,
     },
   }}
 </Story>

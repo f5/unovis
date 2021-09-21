@@ -37,7 +37,7 @@ export class XYContainerStory implements AfterViewInit {
   @Input() sideElement: boolean;
   @Input() storyHeight: number;
   @Input() storyWidth: number;
-  @ContentChild(VisXYContainerComponent) containerStory: VisXYContainerComponent;
+  @ContentChild(VisXYContainerComponent) containerStory: VisXYContainerComponent<DataRecord>;
 
   ngAfterViewInit (): void {
     this.containerStory.chart.update({ ...this.containerStory.getConfig(), ...this.config })
