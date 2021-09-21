@@ -82,7 +82,7 @@ export interface XYContainerConfigInterface<Datum = GenericDataRecord> extends C
    *  Setting to `true` will automatically extend the domain by `+1` when needed.
    *  Default: `true` */
   preventEmptyDomain?: boolean;
-  /** Sets the Y scale domain based on the X scale domain not the whole data. Default: `false` */
+  /** Sets the Y scale domain based on the current X scale domain (not the whole dataset). Default: `false` */
   scaleByDomain?: boolean;
 }
 
