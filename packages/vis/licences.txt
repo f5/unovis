@@ -29,10 +29,10 @@ topojson-client                perpetual       ISC           3.1.0              
 @typescript-eslint/parser      perpetual       BSD-2-Clause  4.2.0              n/a
 @zerollup/ts-transform-paths   perpetual       MIT           1.7.18             Stefan Zerkalica
 rimraf                         perpetual       ISC           3.0.2              Isaac Z. Schlueter
-rollup                         perpetual       MIT           2.36.1             Rich Harris
+rollup                         perpetual       MIT           2.57.0             Rich Harris
 rollup-plugin-commonjs         perpetual       MIT           10.1.0             Rich Harris
 rollup-plugin-node-resolve     perpetual       MIT           5.2.0              Rich Harris
 rollup-plugin-postcss          perpetual       MIT           4.0.0              EGOIST
 rollup-plugin-terser           perpetual       MIT           7.0.2              Bogdan Chadkin
-rollup-plugin-typescript2      perpetual       MIT           0.29.0             @ezolenko
+rollup-plugin-typescript2      perpetual       MIT           0.30.0             @ezolenko
 rollup-plugin-visualizer       perpetual       MIT           4.2.2              Denis Bardadym

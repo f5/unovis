@@ -1,0 +1,24 @@
+name                                     license period  license type  installed version  author
+----                                     --------------  ------------  -----------------  ------
+@babel/core                              perpetual       MIT           7.15.5             The Babel Team (https://babel.dev/team)
+@babel/plugin-proposal-class-properties  perpetual       MIT           7.14.5             The Babel Team (https://babel.dev/team)
+@babel/preset-env                        perpetual       MIT           7.15.6             The Babel Team (https://babel.dev/team)
+@babel/preset-react                      perpetual       MIT           7.14.5             The Babel Team (https://babel.dev/team)
+@babel/preset-typescript                 perpetual       MIT           7.15.0             The Babel Team (https://babel.dev/team)
+@rollup/plugin-babel                     perpetual       MIT           5.3.0              Rich Harris
+@rollup/plugin-node-resolve              perpetual       MIT           13.0.4             Rich Harris
+@storybook/addon-actions                 perpetual       MIT           6.3.8              n/a
+@storybook/addon-essentials              perpetual       MIT           6.3.8              n/a
+@storybook/addon-links                   perpetual       MIT           6.3.8              n/a
+@storybook/react                         perpetual       MIT           6.3.8              n/a
+@types/react                             perpetual       MIT           17.0.22            n/a
+babel-loader                             perpetual       MIT           8.2.2              Luis Couto <hello@luiscouto.pt>
+react                                    perpetual       MIT           >=16.8.0           n/a
+react-dom                                perpetual       MIT           >=16.8.0           n/a
+rimraf                                   perpetual       ISC           3.0.2              Isaac Z. Schlueter
+rollup                                   perpetual       MIT           2.57.0             Rich Harris
+rollup-plugin-peer-deps-external         perpetual       MIT           2.2.4              n/a
+rollup-plugin-typescript2                perpetual       MIT           0.30.0             @ezolenko
+tslib                                    perpetual       0BSD          2.3.1              Microsoft Corp.
+ttypescript                              perpetual       MIT           1.5.12             cevek
+typescript                               perpetual       Apache-2.0    4.2.4              Microsoft Corp.
