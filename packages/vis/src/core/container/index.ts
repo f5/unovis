@@ -24,23 +24,30 @@ export class ContainerCore {
   private _containerRect
   private _resizeObserver
 
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  static DEFAULT_CONTAINER_HEIGHT = 300
+
   constructor (element: HTMLElement) {
     this._requestedAnimationFrame = null
     this._container = element
 
     // Create SVG element for visualizations
     this.svg = select(this._container).append('svg')
+      // We set `display` to `block` because inline elements have an invisible
+      //   inline space that adds 4px to the height of the container
+      .style('display', 'block')
       .attr('xmlns', 'http://www.w3.org/2000/svg')
+      .attr('height', ContainerCore.DEFAULT_CONTAINER_HEIGHT)
     this.element = this.svg.node()
 
     // ResizeObserver: Re-render on container resize
     this._containerRect = getBoundingClientRectObject(this._container)
     this._resizeObserver = new ResizeObserver((entries, observer) => {
       const resizedContainerRect = getBoundingClientRectObject(this._container)
-      const isSizeChanged = !isEqual(this._containerRect, resizedContainerRect)
+      const hasSizeChanged = !isEqual(this._containerRect, resizedContainerRect)
       // do resize only if element is attached to the DOM
       // will come in useful when some ancestor of container becomes detached
-      if (isSizeChanged && resizedContainerRect.width && resizedContainerRect.height) {
+      if (hasSizeChanged && resizedContainerRect.width && resizedContainerRect.height) {
         this._containerRect = resizedContainerRect
         this._onResize()
       }

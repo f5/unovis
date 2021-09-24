@@ -49,7 +49,7 @@ export class XYContainer<Datum = GenericDataRecord> extends ContainerCore {
   private _axisMargin: Spacing = { top: 0, bottom: 0, left: 0, right: 0 }
   private _firstRender = true
 
-  constructor (element, config?: XYContainerConfigInterface<Datum>, data?: Datum[]) {
+  constructor (element: HTMLElement, config?: XYContainerConfigInterface<Datum>, data?: Datum[]) {
     super(element)
 
     this._clipPath = this.svg.append('clipPath')

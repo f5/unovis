@@ -29,12 +29,12 @@
     "@typescript-eslint/parser": "^4.2.0",
     "@zerollup/ts-transform-paths": "^1.7.18",
     "rimraf": "^3.0.2",
-    "rollup": "^2.36.1",
+    "rollup": "^2.57.0",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-postcss": "^4.0.0",
     "rollup-plugin-terser": "^7.0.2",
-    "rollup-plugin-typescript2": "^0.29.0",
+    "rollup-plugin-typescript2": "^0.30.0",
     "rollup-plugin-visualizer": "^4.2.2"
   },
   "dependencies": {
