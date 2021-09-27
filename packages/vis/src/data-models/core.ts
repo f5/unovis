@@ -1,7 +1,7 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 
 export class CoreDataModel<CoreDatum> {
-  private _data?: CoreDatum
+  protected _data?: CoreDatum
 
   get data (): CoreDatum {
     return this._data
