@@ -123,7 +123,7 @@ export class XYContainer<Datum = GenericDataRecord> extends ContainerCore {
     this.removeAllChildren()
 
     // If there were any new components added we need to pass them data
-    this.setData(this.datamodel.data, false)
+    this.setData(this.datamodel.data, true)
 
     // Set up the axes
     if (containerConfig.xAxis) {
@@ -183,9 +183,9 @@ export class XYContainer<Datum = GenericDataRecord> extends ContainerCore {
   }
 
   update (containerConfig: XYContainerConfigInterface<Datum>, componentConfigs?: XYComponentConfigInterface<Datum>[], data?: Datum[]): void {
+    if (data) this.datamodel.data = data // Just updating the data model because the `updateContainer` method has the `setData` step inside
     if (containerConfig) this.updateContainer(containerConfig, true)
     if (componentConfigs) this.updateComponents(componentConfigs, true)
-    if (data) this.setData(data, true)
     this.render()
   }
 
@@ -231,9 +231,12 @@ export class XYContainer<Datum = GenericDataRecord> extends ContainerCore {
       const yStackedAccessors = this.components.filter(c => c.stacked).map(c => c.config.y)
       // eslint-disable-next-line dot-notation
       const baselineAccessor = this.components.find(c => c.config['baseline'])?.config['baseline']
-      crosshair.config.x = crosshair.config.x || this.components[0]?.config.x
-      crosshair.config.y = flatten(yAccessors)
-      crosshair.config.yStacked = flatten(yStackedAccessors)
+      const hasConfig = crosshair.config.x || crosshair.config.y || crosshair.config.yStacked
+      if (!hasConfig) {
+        crosshair.config.x = this.components[0]?.config.x
+        crosshair.config.y = flatten(yAccessors)
+        crosshair.config.yStacked = flatten(yStackedAccessors)
+      }
       crosshair.config.baseline = crosshair.config.baseline || baselineAccessor || null
       crosshair.g.attr('transform', `translate(${margin.left},${margin.top})`)
       crosshair.hide()
