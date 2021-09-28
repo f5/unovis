@@ -1,6 +1,10 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
+/* eslint-disable @typescript-eslint/naming-convention */
 import { useEffect, useRef, useState } from 'react'
-import { XYContainer, XYContainerConfigInterface, XYComponentCore } from '@volterra/vis'
+import { XYContainer, XYContainerConfigInterface, XYComponentCore, Tooltip, Crosshair, Axis, AxisType } from '@volterra/vis'
+
+// Types
+import { VisComponentElement } from 'src/types/dom'
 
 export type VisXYContainerProps<Datum> = XYContainerConfigInterface<Datum> & {
   data: Datum[];
@@ -13,11 +17,20 @@ export function VisXYContainer<Datum> (props: VisXYContainerProps<Datum>): JSX.E
   const [chart, setChart] = useState<XYContainer<Datum>>()
 
   const getConfig = (): XYContainerConfigInterface<Datum> => ({
+    components: Array
+      .from(container.current?.querySelectorAll<VisComponentElement<XYComponentCore<Datum>>>('vis-component') ?? [])
+      .map(c => c.__component__),
+    tooltip: container.current?.querySelector<VisComponentElement<Tooltip>>('vis-tooltip')?.__component__,
+    crosshair: container.current?.querySelector<VisComponentElement<Crosshair<Datum>>>('vis-crosshair')?.__component__,
+    xAxis: Array
+      .from(container.current?.querySelectorAll<VisComponentElement<Axis<Datum>>>('vis-tooltip') ?? [])
+      .map(c => c.__component__)
+      .find(c => c.config.type === AxisType.X),
+    yAxis: Array
+      .from(container.current?.querySelectorAll<VisComponentElement<Axis<Datum>>>('vis-tooltip') ?? [])
+      .map(c => c.__component__)
+      .find(c => c.config.type === AxisType.Y),
     ...props,
-    components: Array.from(
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      container.current?.querySelectorAll<HTMLElement & {__component__: XYComponentCore<Datum>}>('vis-component') ?? []
-    ).map(c => c.__component__),
   })
 
   // On Mount
