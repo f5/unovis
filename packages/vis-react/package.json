@@ -7,7 +7,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "rimraf dist && tsc --emitDeclarationOnly && rollup --config",
+    "build": "rimraf dist && tsc --project tsconfig.lib.json --emitDeclarationOnly && rollup --config",
     "tsc": "tsc",
     "generate": "rollup -c ./autogen/rollup.config.js; node .autogen.js; rm .autogen.js",
     "storybook": "start-storybook -p 6006",
