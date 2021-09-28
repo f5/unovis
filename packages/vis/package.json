@@ -1,6 +1,6 @@
 {
   "name": "@volterra/vis",
-  "version": "0.9.2",
+  "version": "0.9.3",
   "license": "MIT",
   "main": "lib/esm/index.js",
   "module": "lib/esm/index.js",
