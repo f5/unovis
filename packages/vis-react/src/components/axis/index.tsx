@@ -4,18 +4,19 @@ import { useEffect, useRef, useState } from 'react'
 // import { Axis, AxisConfigInterface } from '@volterra/vis'
 import { Axis, AxisConfigInterface, GenericDataRecord } from '@volterra/vis'
 
+// Types
+import { VisComponentElement } from 'src/types/dom'
+
 export type VisAxisProps<Datum = GenericDataRecord> = AxisConfigInterface<Datum> & { data?: Datum[] }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function VisAxis<Datum = GenericDataRecord> (props: VisAxisProps<Datum>): JSX.Element {
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  type RefType = HTMLDivElement & { __component__: Axis<Datum> }
-  const ref = useRef<RefType>(null)
+  const ref = useRef<VisComponentElement<Axis<Datum>>>(null)
   const [component] = useState<Axis<Datum>>(new Axis(props))
 
   // On Mount
   useEffect(() => {
-    (ref.current as RefType).__component__ = component
+    (ref.current as VisComponentElement<Axis<Datum>>).__component__ = component
   }, [])
 
   // On Props Update
@@ -24,5 +25,5 @@ export function VisAxis<Datum = GenericDataRecord> (props: VisAxisProps<Datum>):
     component?.setConfig(props)
   })
 
-  return <vis-component ref={ref} />
+  return <vis-axis ref={ref} />
 }

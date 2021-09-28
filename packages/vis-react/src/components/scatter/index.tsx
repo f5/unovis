@@ -4,18 +4,19 @@ import { useEffect, useRef, useState } from 'react'
 // import { Scatter, ScatterConfigInterface } from '@volterra/vis'
 import { Scatter, ScatterConfigInterface, GenericDataRecord } from '@volterra/vis'
 
+// Types
+import { VisComponentElement } from 'src/types/dom'
+
 export type VisScatterProps<Datum = GenericDataRecord> = ScatterConfigInterface<Datum> & { data?: Datum[] }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function VisScatter<Datum = GenericDataRecord> (props: VisScatterProps<Datum>): JSX.Element {
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  type RefType = HTMLDivElement & { __component__: Scatter<Datum> }
-  const ref = useRef<RefType>(null)
+  const ref = useRef<VisComponentElement<Scatter<Datum>>>(null)
   const [component] = useState<Scatter<Datum>>(new Scatter(props))
 
   // On Mount
   useEffect(() => {
-    (ref.current as RefType).__component__ = component
+    (ref.current as VisComponentElement<Scatter<Datum>>).__component__ = component
   }, [])
 
   // On Props Update
