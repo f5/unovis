@@ -109,7 +109,7 @@ export class VisGroupedBarComponent<Datum = GenericDataRecord> implements Groupe
   /** Fractional padding between the bars in the range of [0,1). Default: `0` */
   @Input() barPadding: number
 
-  /** Rounded bar corners. Boolean or number (to set the radius in pixels explicitly). Default: `true` */
+  /** Rounded bar corners. Boolean or number (to set the radius in pixels explicitly). Default: `2` */
   @Input() roundedCorners: number | boolean
 
   /** Sets the minimum bar height for better visibility of small values. Default: `1` */

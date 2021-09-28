@@ -93,7 +93,7 @@ export class VisDonutComponent<Datum = GenericDataRecord> implements DonutConfig
 
   /** Prevent having empty segments when the segment value is 0. Default: `false` */
   @Input() preventEmptySegments: boolean
-  @Input() data: any
+  @Input() data: Datum[]
 
   component: Donut<Datum> | undefined
 
