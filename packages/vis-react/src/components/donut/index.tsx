@@ -7,7 +7,7 @@ import { Donut, DonutConfigInterface, GenericDataRecord } from '@volterra/vis'
 // Types
 import { VisComponentElement } from 'src/types/dom'
 
-export type VisDonutProps<Datum = GenericDataRecord> = DonutConfigInterface<Datum> & { data?: any }
+export type VisDonutProps<Datum = GenericDataRecord> = DonutConfigInterface<Datum> & { data?: Datum[] }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function VisDonut<Datum = GenericDataRecord> (props: VisDonutProps<Datum>): JSX.Element {

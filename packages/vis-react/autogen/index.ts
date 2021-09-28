@@ -27,7 +27,7 @@ const components: ComponentInput[] = [
   { name: 'Timeline', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/timeline'], dataType: 'Datum[]' },
 
   // Single components
-  { name: 'Donut', sources: [coreComponentConfigPath, '/components/donut'] },
+  { name: 'Donut', sources: [coreComponentConfigPath, '/components/donut'], dataType: 'Datum[]' },
   { name: 'TopoJSONMap', kebabCaseName: 'topojson-map', sources: [coreComponentConfigPath, '/components/topojson-map'], dataType: 'any' },
   { name: 'Sankey', sources: [coreComponentConfigPath, '/components/sankey'] },
   { name: 'Graph', sources: [coreComponentConfigPath, '/components/graph'] },
