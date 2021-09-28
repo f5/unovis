@@ -1,13 +1,13 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { useEffect, useRef, useState } from 'react'
+import { ReactNode, useEffect, useRef, useState } from 'react'
 import { SingleChart, SingleChartConfigInterface, ComponentCore, Tooltip } from '@volterra/vis'
 
 // Types
 import { VisComponentElement } from 'src/types/dom'
 
 export type VisSingleContainerProps<Datum> = SingleChartConfigInterface<Datum> & {
-  data: Datum;
-  children?: JSX.Element[];
+  data?: Datum;
+  children?: ReactNode | undefined;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention

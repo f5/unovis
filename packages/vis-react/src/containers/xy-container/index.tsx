@@ -1,14 +1,14 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useEffect, useRef, useState } from 'react'
+import { ReactNode, useEffect, useRef, useState } from 'react'
 import { XYContainer, XYContainerConfigInterface, XYComponentCore, Tooltip, Crosshair, Axis, AxisType } from '@volterra/vis'
 
 // Types
 import { VisComponentElement } from 'src/types/dom'
 
 export type VisXYContainerProps<Datum> = XYContainerConfigInterface<Datum> & {
-  data: Datum[];
-  children?: JSX.Element[];
+  data?: Datum[];
+  children?: ReactNode | undefined;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
