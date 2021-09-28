@@ -125,7 +125,7 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
       group.select(`.${nodeSelectors.node}`).remove()
       group.call(appendShape, nodeShape, nodeSelectors.node, nodeSelectors.customNode, `.${nodeSelectors.nodeSelection}`)
       group.select(`.${nodeSelectors.nodeSelection}`).remove()
-      group.call(appendShape, shape, nodeSelectors.nodeSelection)
+      group.call(appendShape, shape, nodeSelectors.nodeSelection, null, `.${nodeSelectors.nodeArc}`)
       // eslint-disable-next-line dot-notation
       element['nodeShape'] = shape
     }
