@@ -18,7 +18,7 @@ export interface GroupedBarConfigInterface<Datum = GenericDataRecord> extends XY
   groupPadding?: number;
   /** Fractional padding between the bars in the range of [0,1). Default: `0` */
   barPadding?: number;
-  /** Rounded bar corners. Boolean or number (to set the radius in pixels explicitly). Default: `true` */
+  /** Rounded bar corners. Boolean or number (to set the radius in pixels explicitly). Default: `2` */
   roundedCorners?: number | boolean;
   /** Sets the minimum bar height for better visibility of small values. Default: `1` */
   barMinHeight?: number;

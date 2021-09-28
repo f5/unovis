@@ -16,7 +16,7 @@ export interface StackedBarConfigInterface<Datum = GenericDataRecord> extends XY
   dataStep?: number;
   /** Fractional padding between the bars in the range of [0,1). Default: `0` */
   barPadding?: number;
-  /** Rounded corners for top bars. Boolean or number (to set the radius in pixels). Default: `true` */
+  /** Rounded corners for top bars. Boolean or number (to set the radius in pixels). Default: `2` */
   roundedCorners?: number | boolean;
   /** Configurable bar cursor when hovering over. Default: `null` */
   cursor?: StringAccessor<Datum>;
