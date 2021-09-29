@@ -23,6 +23,9 @@
     "build:vis-react-lib": "cd packages/vis-react && npm run build",
     "build:vis-react-storybook": "cd packages/vis-react && npm run build-storybook",
     "publish:lib": "cd packages/vis; npm run build; npm publish",
+    "publish:vis-angular-lib": "cd packages/vis-angular; npm run build; npm publish",
+    "publish:vis-react-lib": "cd packages/vis-react; npm run build; npm publish",
+    "publish:all": "sh prepublish.sh; sh publish.sh",
     "lint": "eslint ./ --ext .js,.jsx,.ts,.tsx --ignore-path .gitignore",
     "lint:fix": "eslint ./ --ext .js,.jsx,.ts,.tsx --fix --ignore-path .gitignore",
     "gather-licenses": "for p in packages/*; do npx license-report --package=$p/package.json --config license-report-config.json --output=table > $p/licences.txt; done"
