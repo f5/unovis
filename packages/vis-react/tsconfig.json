@@ -12,10 +12,7 @@
   "compilerOptions": {
     "target": "es2017",
     "module": "esnext",
-    "lib": [
-      "es5",
-      "dom"
-    ],
+    "lib": ["es5", "es6", "dom", "dom.iterable"],
     "types": [],
     "allowJs": false,
     "jsx": "react-jsx",

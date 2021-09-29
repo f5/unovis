@@ -17,7 +17,7 @@ export type GenericParameter = {
 export type ComponentInput = {
   name: string;
   sources: string[];
-  provide: string;
+  elementSuffix?: string;
   kebabCaseName?: string;
   dataType?: string | null;
 }

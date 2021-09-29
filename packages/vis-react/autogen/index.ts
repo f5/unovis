@@ -15,25 +15,25 @@ const xyComponentConfigPath = '/core/xy-component'
 const skipProperties = ['width', 'height']
 const components: ComponentInput[] = [
   // XY Components
-  { name: 'Line', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/line'], dataType: 'Datum[]', provide: 'VisXYComponent' },
-  { name: 'Area', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/area'], dataType: 'Datum[]', provide: 'VisXYComponent' },
-  { name: 'Axis', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/axis'], dataType: 'Datum[]', provide: 'VisXYComponent' },
-  { name: 'Brush', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/brush'], dataType: 'Datum[]', provide: 'VisXYComponent' },
-  { name: 'FreeBrush', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/free-brush'], dataType: 'Datum[]', provide: 'VisXYComponent' },
-  { name: 'Crosshair', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/crosshair'], dataType: 'Datum[]', provide: 'VisXYComponent' },
-  { name: 'GroupedBar', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/grouped-bar'], dataType: 'Datum[]', provide: 'VisXYComponent' },
-  { name: 'Scatter', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/scatter'], dataType: 'Datum[]', provide: 'VisXYComponent' },
-  { name: 'StackedBar', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/stacked-bar'], dataType: 'Datum[]', provide: 'VisXYComponent' },
-  { name: 'Timeline', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/timeline'], dataType: 'Datum[]', provide: 'VisXYComponent' },
+  { name: 'Line', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/line'], dataType: 'Datum[]' },
+  { name: 'Area', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/area'], dataType: 'Datum[]' },
+  { name: 'Axis', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/axis'], dataType: 'Datum[]', elementSuffix: 'axis' },
+  { name: 'Brush', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/brush'], dataType: 'Datum[]' },
+  { name: 'FreeBrush', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/free-brush'], dataType: 'Datum[]' },
+  { name: 'Crosshair', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/crosshair'], dataType: 'Datum[]', elementSuffix: 'crosshair' },
+  { name: 'GroupedBar', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/grouped-bar'], dataType: 'Datum[]' },
+  { name: 'Scatter', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/scatter'], dataType: 'Datum[]' },
+  { name: 'StackedBar', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/stacked-bar'], dataType: 'Datum[]' },
+  { name: 'Timeline', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/timeline'], dataType: 'Datum[]' },
 
   // Single components
-  { name: 'Donut', sources: [coreComponentConfigPath, '/components/donut'], provide: 'VisCoreComponent' },
-  { name: 'TopoJSONMap', kebabCaseName: 'topojson-map', sources: [coreComponentConfigPath, '/components/topojson-map'], dataType: 'any', provide: 'VisCoreComponent' },
-  { name: 'Sankey', sources: [coreComponentConfigPath, '/components/sankey'], provide: 'VisCoreComponent' },
-  { name: 'Graph', sources: [coreComponentConfigPath, '/components/graph'], provide: 'VisCoreComponent' },
+  { name: 'Donut', sources: [coreComponentConfigPath, '/components/donut'], dataType: 'Datum[]' },
+  { name: 'TopoJSONMap', kebabCaseName: 'topojson-map', sources: [coreComponentConfigPath, '/components/topojson-map'], dataType: 'any' },
+  { name: 'Sankey', sources: [coreComponentConfigPath, '/components/sankey'] },
+  { name: 'Graph', sources: [coreComponentConfigPath, '/components/graph'] },
 
   // Ancillary components
-  { name: 'Tooltip', sources: ['/components/tooltip'], dataType: null, provide: 'VisGenericComponent' },
+  { name: 'Tooltip', sources: ['/components/tooltip'], dataType: null, elementSuffix: 'tooltip' },
 
   // Unique cases (you can still generate a wrapper for these components, but most likely it will require some changes)
   // { name: 'LeafletMap', sources: [coreComponentConfigPath, '/components/leaflet-map'], provide: 'VisCoreComponent' },
@@ -78,7 +78,8 @@ for (const component of components) {
     component.name,
     generics,
     importStatements,
-    component.dataType
+    component.dataType,
+    component.elementSuffix
   )
 
   const nameKebabCase = component.kebabCaseName ?? kebabCase(component.name)

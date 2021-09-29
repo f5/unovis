@@ -4,18 +4,19 @@ import { useEffect, useRef, useState } from 'react'
 // import { GroupedBar, GroupedBarConfigInterface } from '@volterra/vis'
 import { GroupedBar, GroupedBarConfigInterface, GenericDataRecord } from '@volterra/vis'
 
+// Types
+import { VisComponentElement } from 'src/types/dom'
+
 export type VisGroupedBarProps<Datum = GenericDataRecord> = GroupedBarConfigInterface<Datum> & { data?: Datum[] }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function VisGroupedBar<Datum = GenericDataRecord> (props: VisGroupedBarProps<Datum>): JSX.Element {
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  type RefType = HTMLDivElement & { __component__: GroupedBar<Datum> }
-  const ref = useRef<RefType>(null)
+  const ref = useRef<VisComponentElement<GroupedBar<Datum>>>(null)
   const [component] = useState<GroupedBar<Datum>>(new GroupedBar(props))
 
   // On Mount
   useEffect(() => {
-    (ref.current as RefType).__component__ = component
+    (ref.current as VisComponentElement<GroupedBar<Datum>>).__component__ = component
   }, [])
 
   // On Props Update
