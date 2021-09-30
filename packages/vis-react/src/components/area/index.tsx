@@ -2,15 +2,15 @@
 // !!! This code was automatically generated. You should not change it !!!
 import { useEffect, useRef, useState } from 'react'
 // import { Area, AreaConfigInterface } from '@volterra/vis'
-import { Area, AreaConfigInterface, GenericDataRecord } from '@volterra/vis'
+import { Area, AreaConfigInterface } from '@volterra/vis'
 
 // Types
 import { VisComponentElement } from 'src/types/dom'
 
-export type VisAreaProps<Datum = GenericDataRecord> = AreaConfigInterface<Datum> & { data?: Datum[] }
+export type VisAreaProps<Datum> = AreaConfigInterface<Datum> & { data?: Datum[] }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export function VisArea<Datum = GenericDataRecord> (props: VisAreaProps<Datum>): JSX.Element {
+export function VisArea<Datum> (props: VisAreaProps<Datum>): JSX.Element {
   const ref = useRef<VisComponentElement<Area<Datum>>>(null)
   const [component] = useState<Area<Datum>>(new Area(props))
 

@@ -2,15 +2,15 @@
 // !!! This code was automatically generated. You should not change it !!!
 import { useEffect, useRef, useState } from 'react'
 // import { Timeline, TimelineConfigInterface } from '@volterra/vis'
-import { Timeline, TimelineConfigInterface, GenericDataRecord } from '@volterra/vis'
+import { Timeline, TimelineConfigInterface } from '@volterra/vis'
 
 // Types
 import { VisComponentElement } from 'src/types/dom'
 
-export type VisTimelineProps<Datum = GenericDataRecord> = TimelineConfigInterface<Datum> & { data?: Datum[] }
+export type VisTimelineProps<Datum> = TimelineConfigInterface<Datum> & { data?: Datum[] }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export function VisTimeline<Datum = GenericDataRecord> (props: VisTimelineProps<Datum>): JSX.Element {
+export function VisTimeline<Datum> (props: VisTimelineProps<Datum>): JSX.Element {
   const ref = useRef<VisComponentElement<Timeline<Datum>>>(null)
   const [component] = useState<Timeline<Datum>>(new Timeline(props))
 
