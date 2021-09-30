@@ -3,13 +3,10 @@ import { D3BrushEvent } from 'd3-brush'
 import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component/config'
 
 // Types
-import { GenericDataRecord } from 'types/data'
-
-// Local Types
 import { FreeBrushMode, FreeBrushSelection } from './types'
 
 // We extend partial XY config interface because x and y properties are optional for FreeBrush
-export interface FreeBrushConfigInterface<Datum = GenericDataRecord> extends Partial<XYComponentConfigInterface<Datum>> {
+export interface FreeBrushConfigInterface<Datum> extends Partial<XYComponentConfigInterface<Datum>> {
   /** Brush selection mode. X - horizontal, Y - vertical, XY - both. Default: `FreeBrushMode.X` */
   mode?: FreeBrushMode;
   /** Callback function to be called on any Brush event.
@@ -41,7 +38,7 @@ export interface FreeBrushConfigInterface<Datum = GenericDataRecord> extends Par
   autoHide?: boolean;
 }
 
-export class FreeBrushConfig<Datum = GenericDataRecord> extends XYComponentConfig<Datum> implements FreeBrushConfigInterface<Datum> {
+export class FreeBrushConfig<Datum> extends XYComponentConfig<Datum> implements FreeBrushConfigInterface<Datum> {
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function */
   onBrush = (s: FreeBrushSelection, e: D3BrushEvent<Datum>, userDriven: boolean): void => {}
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function */

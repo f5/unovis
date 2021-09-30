@@ -12,7 +12,6 @@ import { smartTransition } from 'utils/d3'
 // Types
 import { Direction } from 'types/direction'
 import { Arrangement } from 'types/position'
-import { GenericDataRecord } from 'types/data'
 
 // Config
 import { BrushConfig, BrushConfigInterface } from './config'
@@ -20,7 +19,7 @@ import { BrushConfig, BrushConfigInterface } from './config'
 // Styles
 import * as s from './style'
 
-export class Brush<Datum = GenericDataRecord> extends XYComponentCore<Datum> {
+export class Brush<Datum> extends XYComponentCore<Datum> {
   static selectors = s
   clippable = false // Don't apply clipping path to this component. See XYContainer
   config: BrushConfig<Datum> = new BrushConfig()

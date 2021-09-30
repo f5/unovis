@@ -33,7 +33,7 @@ import { getLonLat, arc } from './utils'
 import * as s from './style'
 
 export class TopoJSONMap<
-  N extends MapInputNode = MapInputNode,
+  N extends MapInputNode,
   L extends MapInputLink = MapInputLink,
   A extends MapInputArea = MapInputArea,
 > extends ComponentCore<{nodes: N[]; links?: L[]; areas?: A[]}> {

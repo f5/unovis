@@ -4,10 +4,9 @@ import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component
 
 // Types
 import { Arrangement } from 'types/position'
-import { GenericDataRecord } from 'types/data'
 
 // We extend partial XY config interface because x and y properties are optional for Brush
-export interface BrushConfigInterface<Datum = GenericDataRecord> extends Partial<XYComponentConfigInterface<Datum>> {
+export interface BrushConfigInterface<Datum> extends Partial<XYComponentConfigInterface<Datum>> {
   /** Callback function to be called on any Brush event.
    * Default: `(selection: [number, number], event: D3BrushEvent<Datum>, userDriven: boolean): void => {}`
   */
@@ -38,7 +37,7 @@ export interface BrushConfigInterface<Datum = GenericDataRecord> extends Partial
   selectionMinLength?: number;
 }
 
-export class BrushConfig<Datum = GenericDataRecord> extends XYComponentConfig<Datum> implements BrushConfigInterface<Datum> {
+export class BrushConfig<Datum> extends XYComponentConfig<Datum> implements BrushConfigInterface<Datum> {
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function */
   onBrush = (s: [number, number], e: D3BrushEvent<Datum>, userDriven: boolean): void => {}
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function */

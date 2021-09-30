@@ -11,7 +11,6 @@ import { XYComponentCore } from 'core/xy-component'
 import { Position } from 'types/position'
 import { Spacing } from 'types/spacing'
 import { TextAlign } from 'types/text'
-import { GenericDataRecord } from 'types/data'
 
 // Utils
 import { smartTransition } from 'utils/d3'
@@ -28,7 +27,7 @@ import { wrapTickText, getWrapOptions } from './modules/tick'
 // Styles
 import * as s from './style'
 
-export class Axis<Datum = GenericDataRecord> extends XYComponentCore<Datum> {
+export class Axis<Datum> extends XYComponentCore<Datum> {
   static selectors = s
   config: AxisConfig<Datum> = new AxisConfig<Datum>()
   axisGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>

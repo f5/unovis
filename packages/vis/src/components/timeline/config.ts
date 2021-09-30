@@ -4,9 +4,8 @@ import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component
 // Types
 import { WithOptional } from 'types/misc'
 import { NumericAccessor, StringAccessor } from 'types/accessor'
-import { GenericDataRecord } from 'types/data'
 
-export interface TimelineConfigInterface<Datum = GenericDataRecord> extends WithOptional<XYComponentConfigInterface<Datum>, 'y'> {
+export interface TimelineConfigInterface<Datum> extends WithOptional<XYComponentConfigInterface<Datum>, 'y'> {
   /** Width of the timeline items. Default: `8` */
   lineWidth?: NumericAccessor<Datum>;
   /** Timeline row height. Default: `22` */
@@ -19,7 +18,7 @@ export interface TimelineConfigInterface<Datum = GenericDataRecord> extends With
   cursor?: StringAccessor<Datum>;
 }
 
-export class TimelineConfig<Datum = GenericDataRecord> extends XYComponentConfig<Datum> implements TimelineConfigInterface<Datum> {
+export class TimelineConfig<Datum> extends XYComponentConfig<Datum> implements TimelineConfigInterface<Datum> {
   lineWidth = 8
   rowHeight = 22;
   // eslint-disable-next-line dot-notation

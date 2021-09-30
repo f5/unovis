@@ -16,7 +16,6 @@ import { getColor } from 'utils/color'
 import { NumericAccessor } from 'types/accessor'
 import { Spacing } from 'types/spacing'
 import { Curve, CurveType } from 'types/curve'
-import { GenericDataRecord } from 'types/data'
 
 // Local Types
 import { LineData, LineDatum } from './types'
@@ -27,7 +26,7 @@ import { LineConfig, LineConfigInterface } from './config'
 // Styles
 import * as s from './style'
 
-export class Line<Datum = GenericDataRecord> extends XYComponentCore<Datum> {
+export class Line<Datum> extends XYComponentCore<Datum> {
   static selectors = s
   config: LineConfig<Datum> = new LineConfig()
   lineGen: LineGenInterface<{ x: number; y: number; defined: boolean }>

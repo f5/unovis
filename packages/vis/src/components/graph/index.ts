@@ -41,8 +41,8 @@ import { setPanelForNodes, updatePanelBBoxSize, updatePanelNumNodes, getMaxPanel
 import { applyLayoutCircular, applyLayoutParallel, applyLayoutDagre, applyLayoutConcentric, applyLayoutForce } from './modules/layout'
 
 export class Graph<
-  N extends GraphInputNode = GraphInputNode,
-  L extends GraphInputLink = GraphInputLink,
+  N extends GraphInputNode,
+  L extends GraphInputLink,
   P extends GraphPanelConfigInterface = GraphPanelConfigInterface,
 > extends ComponentCore<{nodes: N[]; links?: L[]}> {
   static selectors = {

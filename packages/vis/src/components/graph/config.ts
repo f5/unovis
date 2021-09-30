@@ -11,10 +11,7 @@ import { Shape } from 'types/shape'
 // Local Types
 import { GraphLayoutType, GraphCircleLabel, GraphLinkStyle, GraphLinkArrow, GraphPanelConfigInterface } from './types'
 
-export interface GraphConfigInterface<
-  N extends GraphInputNode = GraphInputNode,
-  L extends GraphInputLink = GraphInputLink,
-> extends ComponentConfigInterface {
+export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphInputLink> extends ComponentConfigInterface {
   // Zoom and drag
   /** Zoom level constraints. Default: [0.35, 1.25] */
   zoomScaleExtent?: [number, number];
@@ -147,10 +144,7 @@ export interface GraphConfigInterface<
   panels?: GraphPanelConfigInterface[];
 }
 
-export class GraphConfig<
-  N extends GraphInputNode = GraphInputNode,
-  L extends GraphInputLink = GraphInputLink,
-> extends ComponentConfig implements GraphConfigInterface<N, L> {
+export class GraphConfig<N extends GraphInputNode, L extends GraphInputLink> extends ComponentConfig implements GraphConfigInterface<N, L> {
   duration = 1000
   zoomScaleExtent: [number, number] = [0.35, 1.25]
   disableZoom = false
