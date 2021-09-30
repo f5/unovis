@@ -1,16 +1,13 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { AfterViewInit, Component, ViewChild, ViewEncapsulation } from '@angular/core'
-import flatten from 'lodash/flatten'
-import {
-  LeafletFlowMap,
-  LeafletFlowMapConfigInterface,
-  LeafletMapRenderer,
-  MapLibreArcticLight,
-  Position,
-  PositionStrategy,
-  Tooltip,
-} from '@volterra/vis'
+import _sample from 'lodash/sample'
+import _flatten from 'lodash/flatten'
+import { Style } from 'maplibre-gl'
+import { LeafletFlowMap, LeafletFlowMapConfigInterface, LeafletMapRenderer, Position, PositionStrategy, Tooltip } from '@volterra/vis'
 import { MapLeafletComponent } from '../../app/components/map-leaflet/map-leaflet.component'
+
+// Configuration
+import tilesConfig from '../map/tiles-config.json'
 
 // Data
 import sites from './data/sites.json'
@@ -42,13 +39,9 @@ export class DDoSMapComponent implements AfterViewInit {
 
   title = 'DDoS Map'
 
-  flows = flatten(sites.map(s => {
+  flows = _flatten(sites.map((s: SitePoint) => {
     const flows = []
-    flows.push({
-      from: [s.latitude + (Math.random() - 0.5) * 60, s.longitude + (Math.random() - 0.5) * 120],
-      to: [s.latitude, s.longitude],
-      value: Math.random() * 10,
-    })
+    flows.push(this.getSampleFlow(s))
     return flows
   }))
 
@@ -80,16 +73,7 @@ export class DDoSMapComponent implements AfterViewInit {
       },
     },
     renderer: LeafletMapRenderer.MapLibreGL,
-    rendererSettings: {
-      ...MapLibreArcticLight,
-      sources: {
-        openmaptiles: {
-          type: 'vector',
-          url: 'https://maps.volterra.io/data/v3.json',
-        },
-      },
-      glyphs: 'https://maps.volterra.io/fonts/{fontstack}/{range}.pbf',
-    },
+    rendererSettings: tilesConfig as Style,
     // eslint-disable-next-line no-console
     onSourcePointClick: (f, x, y) => { console.log('onSourcePointClick', f, x, y) },
     onSourcePointMouseEnter: (f, x, y) => {
@@ -110,7 +94,6 @@ export class DDoSMapComponent implements AfterViewInit {
     clusterRadius: 65,
     attribution: [
       '<a href="https://www.maptiler.com/copyright/" target="_blank">MapTiler</a>',
-      '<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a>',
     ],
     events: {
       [LeafletFlowMap.selectors.point]: {
@@ -126,18 +109,12 @@ export class DDoSMapComponent implements AfterViewInit {
 
   constructor () {
     setInterval(() => {
-      this.flows = flatten(sites.map(s => {
-        const flows = []
-        flows.push({
-          from: [s.latitude + (Math.random() - 0.5) * 60, s.longitude + (Math.random() - 0.5) * 120],
-          to: [s.latitude, s.longitude],
-          value: Math.random() * 10,
-        })
-        return flows
-      }))
+      const site = _sample(sites)
+      this.flows.splice(0, 1)
+      this.flows.push(this.getSampleFlow(site))
 
       this.data = { ...this.data, flows: this.flows }
-    }, 3000)
+    }, 200)
   }
 
   ngAfterViewInit (): void {
@@ -147,5 +124,13 @@ export class DDoSMapComponent implements AfterViewInit {
       horizontalPlacement: Position.Center,
       verticalPlacement: Position.Top,
     })
+  }
+
+  getSampleFlow (s: SitePoint): DDoSFlow {
+    return {
+      from: [s.latitude + (Math.random() - 0.5) * 60, s.longitude + (Math.random() - 0.5) * 120],
+      to: [s.latitude, s.longitude],
+      value: 4 + Math.random() * 2,
+    }
   }
 }

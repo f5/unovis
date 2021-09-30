@@ -1,12 +1,16 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import _ from 'lodash'
 import { Feature } from 'geojson'
+import { Style } from 'maplibre-gl'
 // eslint-disable-next-line import/no-unresolved
 import { Topology } from 'topojson-specification'
 
 import { scaleLinear, max } from 'd3'
 import { Component, ViewEncapsulation, AfterViewInit } from '@angular/core'
-import { LeafletMap, LeafletMapConfigInterface, WorldMap110mAlphaTopoJSON, Tooltip, LeafletMapRenderer, MapLibreArcticLight } from '@volterra/vis'
+import { LeafletMap, LeafletMapConfigInterface, WorldMap110mAlphaTopoJSON, Tooltip, LeafletMapRenderer } from '@volterra/vis'
+
+// Configuration
+import tilesConfig from '../map/tiles-config.json'
 
 type MapPoint = {
   id: string;
@@ -53,16 +57,10 @@ function getTopo (): Topology {
 function getMapConfig (): LeafletMapConfigInterface<MapPoint> {
   return {
     renderer: LeafletMapRenderer.MapLibreGL,
-    rendererSettings: {
-      ...MapLibreArcticLight,
-      sources: {
-        openmaptiles: {
-          type: 'vector',
-          url: 'https://maps.volterra.io/data/v3.json',
-        },
-      },
-      glyphs: 'https://maps.volterra.io/fonts/{fontstack}/{range}.pbf',
-    },
+    rendererSettings: tilesConfig as Style,
+    attribution: [
+      '<a href="https://www.maptiler.com/copyright/" target="_blank">MapTiler</a>',
+    ],
     initialBounds: { northEast: { lat: 77, lng: -172 }, southWest: { lat: -50, lng: 72 } },
     topoJSONLayer: {
       sources: getTopo(),
