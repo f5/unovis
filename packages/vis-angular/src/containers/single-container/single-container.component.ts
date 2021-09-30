@@ -13,7 +13,7 @@ import { VisTooltipComponent } from '../../components/tooltip/tooltip.component'
   </div>`,
   styles: ['.container { width: 100%; height: 100%; position: relative; }'],
 })
-export class VisSingleContainerComponent<Datum = any, C extends ComponentCore<Datum> = ComponentCore<Datum>> implements AfterViewInit, OnDestroy {
+export class VisSingleContainerComponent<Data = unknown, C extends ComponentCore<Data> = ComponentCore<Data>> implements AfterViewInit, OnDestroy {
   @ViewChild('container', { static: false }) containerRef: ElementRef
   @ContentChild(VisCoreComponent) visComponent: VisCoreComponent
   @ContentChild(VisTooltipComponent) tooltipComponent: VisTooltipComponent
@@ -24,10 +24,10 @@ export class VisSingleContainerComponent<Datum = any, C extends ComponentCore<Da
   @Input() duration: number
   @Input() data
 
-  chart: SingleChart<unknown>
+  chart: SingleChart<Data>
 
   ngAfterViewInit (): void {
-    this.chart = new SingleChart<unknown>(this.containerRef.nativeElement, this.getConfig(), this.data)
+    this.chart = new SingleChart<Data>(this.containerRef.nativeElement, this.getConfig(), this.data)
   }
 
   ngOnChanges (changes: SimpleChanges): void {
@@ -41,7 +41,7 @@ export class VisSingleContainerComponent<Datum = any, C extends ComponentCore<Da
     this.chart?.updateContainer(this.getConfig())
   }
 
-  getConfig (): SingleChartConfigInterface<unknown> {
+  getConfig (): SingleChartConfigInterface<Data> {
     const { duration, margin } = this
 
     const component = this.visComponent?.component as C

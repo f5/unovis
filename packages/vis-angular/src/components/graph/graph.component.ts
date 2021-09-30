@@ -28,7 +28,7 @@ import { VisCoreComponent } from '../../core'
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisCoreComponent, useExisting: VisGraphComponent }],
 })
-export class VisGraphComponent<N extends GraphInputNode = GraphInputNode, L extends GraphInputLink = GraphInputLink> implements GraphConfigInterface<N, L>, AfterViewInit {
+export class VisGraphComponent<N extends GraphInputNode, L extends GraphInputLink> implements GraphConfigInterface<N, L>, AfterViewInit {
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */
   @Input() duration: number
 
