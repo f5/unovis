@@ -2,15 +2,15 @@
 // !!! This code was automatically generated. You should not change it !!!
 import { useEffect, useRef, useState } from 'react'
 // import { Donut, DonutConfigInterface } from '@volterra/vis'
-import { Donut, DonutConfigInterface, GenericDataRecord } from '@volterra/vis'
+import { Donut, DonutConfigInterface } from '@volterra/vis'
 
 // Types
 import { VisComponentElement } from 'src/types/dom'
 
-export type VisDonutProps<Datum = GenericDataRecord> = DonutConfigInterface<Datum> & { data?: Datum[] }
+export type VisDonutProps<Datum> = DonutConfigInterface<Datum> & { data?: Datum[] }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export function VisDonut<Datum = GenericDataRecord> (props: VisDonutProps<Datum>): JSX.Element {
+export function VisDonut<Datum> (props: VisDonutProps<Datum>): JSX.Element {
   const ref = useRef<VisComponentElement<Donut<Datum>>>(null)
   const [component] = useState<Donut<Datum>>(new Donut(props))
 

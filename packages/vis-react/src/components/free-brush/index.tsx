@@ -2,15 +2,15 @@
 // !!! This code was automatically generated. You should not change it !!!
 import { useEffect, useRef, useState } from 'react'
 // import { FreeBrush, FreeBrushConfigInterface } from '@volterra/vis'
-import { FreeBrush, FreeBrushConfigInterface, GenericDataRecord } from '@volterra/vis'
+import { FreeBrush, FreeBrushConfigInterface } from '@volterra/vis'
 
 // Types
 import { VisComponentElement } from 'src/types/dom'
 
-export type VisFreeBrushProps<Datum = GenericDataRecord> = FreeBrushConfigInterface<Datum> & { data?: Datum[] }
+export type VisFreeBrushProps<Datum> = FreeBrushConfigInterface<Datum> & { data?: Datum[] }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export function VisFreeBrush<Datum = GenericDataRecord> (props: VisFreeBrushProps<Datum>): JSX.Element {
+export function VisFreeBrush<Datum> (props: VisFreeBrushProps<Datum>): JSX.Element {
   const ref = useRef<VisComponentElement<FreeBrush<Datum>>>(null)
   const [component] = useState<FreeBrush<Datum>>(new FreeBrush(props))
 

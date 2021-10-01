@@ -7,10 +7,10 @@ import { TopoJSONMap, TopoJSONMapConfigInterface, MapInputNode, MapInputLink, Ma
 // Types
 import { VisComponentElement } from 'src/types/dom'
 
-export type VisTopoJSONMapProps<N extends MapInputNode = MapInputNode, L extends MapInputLink = MapInputLink, A extends MapInputArea = MapInputArea> = TopoJSONMapConfigInterface<N, L, A> & { data?: any }
+export type VisTopoJSONMapProps<N extends MapInputNode, L extends MapInputLink = MapInputLink, A extends MapInputArea = MapInputArea> = TopoJSONMapConfigInterface<N, L, A> & { data?: any }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export function VisTopoJSONMap<N extends MapInputNode = MapInputNode, L extends MapInputLink = MapInputLink, A extends MapInputArea = MapInputArea> (props: VisTopoJSONMapProps<N, L, A>): JSX.Element {
+export function VisTopoJSONMap<N extends MapInputNode, L extends MapInputLink = MapInputLink, A extends MapInputArea = MapInputArea> (props: VisTopoJSONMapProps<N, L, A>): JSX.Element {
   const ref = useRef<VisComponentElement<TopoJSONMap<N, L, A>>>(null)
   const [component] = useState<TopoJSONMap<N, L, A>>(new TopoJSONMap(props))
 

@@ -10,7 +10,7 @@ import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
 import { MapProjection, MapInputNode, MapInputLink, MapInputArea } from './types'
 
 export interface TopoJSONMapConfigInterface<
-  N extends MapInputNode = MapInputNode,
+  N extends MapInputNode,
   L extends MapInputLink = MapInputLink,
   A extends MapInputArea = MapInputArea,
 > extends ComponentConfigInterface {
@@ -73,7 +73,7 @@ export interface TopoJSONMapConfigInterface<
 }
 
 export class TopoJSONMapConfig<
-  N extends MapInputNode = MapInputNode,
+  N extends MapInputNode,
   L extends MapInputLink = MapInputLink,
   A extends MapInputArea = MapInputArea,
 > extends ComponentConfig implements TopoJSONMapConfigInterface<N, L, A> {

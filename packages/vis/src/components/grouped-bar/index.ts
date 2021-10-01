@@ -15,7 +15,6 @@ import { getColor } from 'utils/color'
 // Types
 import { NumericAccessor } from 'types/accessor'
 import { Spacing } from 'types/spacing'
-import { GenericDataRecord } from 'types/data'
 
 // Config
 import { GroupedBarConfig, GroupedBarConfigInterface } from './config'
@@ -23,7 +22,7 @@ import { GroupedBarConfig, GroupedBarConfigInterface } from './config'
 // Styles
 import * as s from './style'
 
-export class GroupedBar<Datum = GenericDataRecord> extends XYComponentCore<Datum> {
+export class GroupedBar<Datum> extends XYComponentCore<Datum> {
   static selectors = s
   config: GroupedBarConfig<Datum> = new GroupedBarConfig()
   getAccessors = (): NumericAccessor<Datum>[] => (isArray(this.config.y) ? this.config.y : [this.config.y])

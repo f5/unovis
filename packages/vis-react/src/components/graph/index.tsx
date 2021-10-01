@@ -7,10 +7,10 @@ import { Graph, GraphConfigInterface, GraphInputNode, GraphInputLink } from '@vo
 // Types
 import { VisComponentElement } from 'src/types/dom'
 
-export type VisGraphProps<N extends GraphInputNode = GraphInputNode, L extends GraphInputLink = GraphInputLink> = GraphConfigInterface<N, L> & { data?: any }
+export type VisGraphProps<N extends GraphInputNode, L extends GraphInputLink> = GraphConfigInterface<N, L> & { data?: any }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export function VisGraph<N extends GraphInputNode = GraphInputNode, L extends GraphInputLink = GraphInputLink> (props: VisGraphProps<N, L>): JSX.Element {
+export function VisGraph<N extends GraphInputNode, L extends GraphInputLink> (props: VisGraphProps<N, L>): JSX.Element {
   const ref = useRef<VisComponentElement<Graph<N, L>>>(null)
   const [component] = useState<Graph<N, L>>(new Graph(props))
 

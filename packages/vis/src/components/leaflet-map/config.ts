@@ -8,7 +8,6 @@ import { Tooltip } from 'components/tooltip'
 
 // Types
 import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
-import { GenericDataRecord } from 'types/data'
 
 // Local Types
 import { LeafletMapRenderer, Bounds, LeafletMapPointStyles, MapZoomState, LeafletMapPointDatum } from './types'
@@ -16,7 +15,7 @@ import { LeafletMapRenderer, Bounds, LeafletMapPointStyles, MapZoomState, Leafle
 // Renderer settings
 import { TangramScene } from './renderer/map-style'
 
-export interface LeafletMapConfigInterface<Datum = GenericDataRecord> extends ComponentConfigInterface {
+export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterface {
   // General
   /** Animation duration when the map is automatically panning or zooming to a point or area. Default: `1500` ms */
   flyToDuration?: number;
@@ -130,7 +129,7 @@ export interface LeafletMapConfigInterface<Datum = GenericDataRecord> extends Co
   tooltip?: Tooltip;
 }
 
-export class LeafletMapConfig<Datum = GenericDataRecord> extends ComponentConfig implements LeafletMapConfigInterface<Datum> {
+export class LeafletMapConfig<Datum> extends ComponentConfig implements LeafletMapConfigInterface<Datum> {
   // General
   flyToDuration = 1500
   fitViewPadding = [150, 150] as [number, number]
