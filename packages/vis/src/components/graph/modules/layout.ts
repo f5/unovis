@@ -20,7 +20,7 @@ import { GraphNode, GraphLink } from '../types'
 import { GraphConfig } from '../config'
 
 // Helpers
-import { getMaxNodeSize, configuredNodeSize, getNodeSize } from './node/helper'
+import { getMaxNodeSize, configuredNodeSize, getNodeSize, getAverageNodeSize } from './node/helper'
 import { positionNonConnectedNodes } from './layout-helpers'
 
 export function applyLayoutCircular<N extends GraphInputNode, L extends GraphInputLink> (datamodel: GraphDataModel<N, L, GraphNode<N, L>, GraphLink<N, L>>, config: GraphConfig<GraphInputNode, GraphInputLink>): void {
@@ -318,8 +318,8 @@ export function applyLayoutConcentric<N extends GraphInputNode, L extends GraphI
 
   const layoutNodes = layoutNonConnectedAside ? connectedNodes : nodes
 
-  const groupNames = uniq(layoutNodes.map(d => getString(d, nodeGroup)))
-  const groupNamesSorted = sortBy(groupNames, d => layoutGroupOrder.indexOf(d))
+  const groupNames: string[] = uniq(layoutNodes.map(d => getString(d, nodeGroup)))
+  const groupNamesSorted: string[] = sortBy(groupNames, d => layoutGroupOrder.indexOf(d))
 
   const groups = groupNamesSorted.map(groupName => ({
     name: groupName,
@@ -327,13 +327,13 @@ export function applyLayoutConcentric<N extends GraphInputNode, L extends GraphI
   }))
 
   // Handle connected nodes
-  let r = 0
-  const groupSpacing = configuredNodeSize(nodeSize) * 5
+  let r = 2 * getAverageNodeSize(groups[0]?.nodes ?? [], nodeSize)
+  const widthToHeightRatio = width / height
+
   groups.forEach((group, i) => {
-    const maxNodeSize = getMaxNodeSize(group.nodes, nodeSize)
-    r = r + groupSpacing
-    const d = (0.25 * maxNodeSize * group.nodes.length - 2 * r)
-    if (d > 0) r += d
+    const avgNodeSize = getAverageNodeSize(group.nodes, nodeSize)
+    const requiredRadius = 1.1 * avgNodeSize * group.nodes.length / Math.PI
+    if (r < requiredRadius) r = requiredRadius
 
     group.nodes.forEach((node, j) => {
       // If the first (central) group has only one node
@@ -341,11 +341,17 @@ export function applyLayoutConcentric<N extends GraphInputNode, L extends GraphI
         node.x = width / 2
         node.y = height / 2
       } else {
-        const angle = 2 * j * Math.PI / group.nodes.length + i * Math.PI / 12
-        node.x = width / 2 + r * Math.cos(angle)
+        let dAngle = 0
+        if (i === 0 && group.nodes.length === 3) dAngle = Math.PI / 6
+        if (i === 0 && group.nodes.length === 4) dAngle = Math.PI / 4
+        const angle = 2 * j * Math.PI / group.nodes.length + i * Math.PI / 12 + dAngle
+        node.x = width / 2 + r * Math.cos(angle) * widthToHeightRatio
         node.y = height / 2 + r * Math.sin(angle)
       }
     })
+
+    const groupSpacing = avgNodeSize * 3
+    r += groupSpacing
   })
 
   // Handle non-connected nodes
