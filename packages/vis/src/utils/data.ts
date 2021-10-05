@@ -107,7 +107,8 @@ export function shallowDiff (o1: Record<string, unknown> = {}, o2: Record<string
   }, {})
 }
 
-export function getStackedExtent<Datum> (data: Datum[], ...acs: NumericAccessor<Datum>[]): number[] {
+export function getStackedExtent<Datum> (data: Datum[], ...acs: NumericAccessor<Datum>[]): (number | undefined)[] {
+  if (!data) return [undefined, undefined]
   if (isArray(acs)) {
     let minValue = 0
     let maxValue = 0
@@ -127,7 +128,7 @@ export function getStackedExtent<Datum> (data: Datum[], ...acs: NumericAccessor<
   }
 }
 
-export function getStackedValues<Datum> (d: Datum, ...acs: NumericAccessor<Datum>[]): number[] {
+export function getStackedValues<Datum> (d: Datum, ...acs: NumericAccessor<Datum>[]): (number | undefined)[] {
   const values = []
 
   let positiveStack = 0
@@ -165,16 +166,18 @@ export function getStackedData<Datum> (data: Datum[], baseline: NumericAccessor<
   return stackedData
 }
 
-export function getExtent<Datum> (data: Datum[], ...acs: NumericAccessor<Datum>[]): number[] {
+export function getExtent<Datum> (data: Datum[], ...acs: NumericAccessor<Datum>[]): (number | undefined)[] {
   return [getMin(data, ...acs), getMax(data, ...acs)]
 }
 
-export function getMin<Datum> (data: Datum[], ...acs: NumericAccessor<Datum>[]): number {
+export function getMin<Datum> (data: Datum[], ...acs: NumericAccessor<Datum>[]): number | undefined {
+  if (!data) return undefined
   const minValue = min(data, d => min(acs as NumericAccessor<Datum>[], a => getNumber(d, a)))
   return minValue
 }
 
-export function getMax<Datum> (data: Datum[], ...acs: NumericAccessor<Datum>[]): number {
+export function getMax<Datum> (data: Datum[], ...acs: NumericAccessor<Datum>[]): number | undefined {
+  if (!data) return undefined
   const maxValue = max(data, d => max(acs as NumericAccessor<Datum>[], a => getNumber(d, a)))
   return maxValue
 }

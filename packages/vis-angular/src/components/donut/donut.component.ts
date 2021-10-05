@@ -1,7 +1,7 @@
 /* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import { Donut, DonutConfigInterface, GenericDataRecord, VisEventType, VisEventCallback, NumericAccessor, ColorAccessor } from '@volterra/vis'
+import { Donut, DonutConfigInterface, VisEventType, VisEventCallback, NumericAccessor, ColorAccessor } from '@volterra/vis'
 import { VisCoreComponent } from '../../core'
 
 @Component({
@@ -10,7 +10,7 @@ import { VisCoreComponent } from '../../core'
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisCoreComponent, useExisting: VisDonutComponent }],
 })
-export class VisDonutComponent<Datum = GenericDataRecord> implements DonutConfigInterface<Datum>, AfterViewInit {
+export class VisDonutComponent<Datum> implements DonutConfigInterface<Datum>, AfterViewInit {
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */
   @Input() duration: number
 
@@ -93,7 +93,7 @@ export class VisDonutComponent<Datum = GenericDataRecord> implements DonutConfig
 
   /** Prevent having empty segments when the segment value is 0. Default: `false` */
   @Input() preventEmptySegments: boolean
-  @Input() data: any
+  @Input() data: Datum[]
 
   component: Donut<Datum> | undefined
 

@@ -8,10 +8,7 @@ import { LeafletMapConfig, LeafletMapConfigInterface } from 'components/leaflet-
 import { ColorAccessor, NumericAccessor } from 'types/accessor'
 import { GenericDataRecord } from 'types/data'
 
-export interface LeafletFlowMapConfigInterface<
-  PointDatum = GenericDataRecord,
-  FlowDatum = GenericDataRecord,
-> extends LeafletMapConfigInterface<PointDatum> {
+export interface LeafletFlowMapConfigInterface<PointDatum, FlowDatum> extends LeafletMapConfigInterface<PointDatum> {
   /** Flow source point longitude accessor function or value. Default:.`f => f.sourceLongitude` */
   sourceLongitude?: NumericAccessor<FlowDatum>;
   /** Flow source point latitude accessor function or value. Default: `f => f.sourceLatitude` */

@@ -4,7 +4,6 @@ import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
 import {
   GroupedBar,
   GroupedBarConfigInterface,
-  GenericDataRecord,
   VisEventType,
   VisEventCallback,
   NumericAccessor,
@@ -20,7 +19,7 @@ import { VisXYComponent } from '../../core'
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisXYComponent, useExisting: VisGroupedBarComponent }],
 })
-export class VisGroupedBarComponent<Datum = GenericDataRecord> implements GroupedBarConfigInterface<Datum>, AfterViewInit {
+export class VisGroupedBarComponent<Datum> implements GroupedBarConfigInterface<Datum>, AfterViewInit {
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */
   @Input() duration: number
 
@@ -109,7 +108,7 @@ export class VisGroupedBarComponent<Datum = GenericDataRecord> implements Groupe
   /** Fractional padding between the bars in the range of [0,1). Default: `0` */
   @Input() barPadding: number
 
-  /** Rounded bar corners. Boolean or number (to set the radius in pixels explicitly). Default: `true` */
+  /** Rounded bar corners. Boolean or number (to set the radius in pixels explicitly). Default: `2` */
   @Input() roundedCorners: number | boolean
 
   /** Sets the minimum bar height for better visibility of small values. Default: `1` */

@@ -4,9 +4,8 @@ import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component
 // Types
 import { CurveType } from 'types/curve'
 import { NumericAccessor, StringAccessor } from 'types/accessor'
-import { GenericDataRecord } from 'types/data'
 
-export interface AreaConfigInterface<Datum = GenericDataRecord> extends XYComponentConfigInterface<Datum> {
+export interface AreaConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
   /** Curve type from the CurveType enum. Default: `CurveType.MonotoneX` */
   curveType?: CurveType;
   /** Baseline value or accessor function. Default: `undefined` */
@@ -17,7 +16,7 @@ export interface AreaConfigInterface<Datum = GenericDataRecord> extends XYCompon
   cursor?: StringAccessor<Datum[]>;
 }
 
-export class AreaConfig<Datum = GenericDataRecord> extends XYComponentConfig<Datum> implements AreaConfigInterface<Datum> {
+export class AreaConfig<Datum> extends XYComponentConfig<Datum> implements AreaConfigInterface<Datum> {
   curveType = CurveType.MonotoneX
   baseline = (): number => 0
   opacity = 1

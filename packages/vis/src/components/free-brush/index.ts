@@ -7,9 +7,6 @@ import { smartTransition } from 'utils/d3'
 
 // Types
 import { ContinuousScale } from 'types/scale'
-import { GenericDataRecord } from 'types/data'
-
-// Local Types
 import { FreeBrushMode, FreeBrushSelection, FreeBrushSelectionInPixels } from './types'
 
 // Config
@@ -18,7 +15,7 @@ import { FreeBrushConfig, FreeBrushConfigInterface } from './config'
 // Styles
 import * as s from './style'
 
-export class FreeBrush<Datum = GenericDataRecord> extends XYComponentCore<Datum> {
+export class FreeBrush<Datum> extends XYComponentCore<Datum> {
   config: FreeBrushConfig<Datum> = new FreeBrushConfig();
   private brush: Selection<SVGGElement, unknown, SVGGElement, unknown>
   private brushBehaviour: BrushBehavior<unknown>;

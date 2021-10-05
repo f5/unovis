@@ -2,7 +2,6 @@
 import _random from 'lodash/random'
 import _sample from 'lodash/sample'
 import _times from 'lodash/times'
-import _uniqueId from 'lodash/uniqueId'
 import { GraphLinkStyle, GraphLinkArrow, GraphInputNode, GraphInputLink, GraphCircleLabel } from '@volterra/vis'
 
 interface NodeDatum extends GraphInputNode {
@@ -82,14 +81,13 @@ export function generateRandomLinks (nodes: NodeDatum[], count: number): LinkDat
     } while (node2 === node1)
 
     const link = randomLink(node1, node2)
-    // node1.links.push(link)
     return link
   })
   return links
 }
 
-export function randomNode (): NodeDatum {
-  const id = _uniqueId()
+export function randomNode (n: number): NodeDatum {
+  const id = `${n}`
   const nodeShape = _sample(shape)
   const nodeStatus = _sample(status)
 

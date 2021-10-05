@@ -15,7 +15,6 @@ import { SeriesDataModel } from 'data-models/series'
 import { Spacing } from 'types/spacing'
 import { AxisType } from 'components/axis/types'
 import { ScaleDimension } from 'types/scale'
-import { GenericDataRecord } from 'types/data'
 
 // Utils
 import { clamp, clean, flatten } from 'utils/data'
@@ -32,7 +31,7 @@ import {
   TimelineConfigInterface,
 } from '../../components'
 
-export type XYConfigInterface<Datum = GenericDataRecord> = XYComponentConfigInterface<Datum>
+export type XYConfigInterface<Datum> = XYComponentConfigInterface<Datum>
 | StackedBarConfigInterface<Datum>
 | LineConfigInterface<Datum>
 | ScatterConfigInterface<Datum>
@@ -40,7 +39,7 @@ export type XYConfigInterface<Datum = GenericDataRecord> = XYComponentConfigInte
 | TimelineConfigInterface<Datum>
 | AreaConfigInterface<Datum>
 
-export class XYContainer<Datum = GenericDataRecord> extends ContainerCore {
+export class XYContainer<Datum> extends ContainerCore {
   config: XYContainerConfig<Datum> = new XYContainerConfig()
   datamodel: SeriesDataModel<Datum> = new SeriesDataModel()
   private _svgDefs: Selection<SVGDefsElement, unknown, null, undefined>
@@ -49,7 +48,7 @@ export class XYContainer<Datum = GenericDataRecord> extends ContainerCore {
   private _axisMargin: Spacing = { top: 0, bottom: 0, left: 0, right: 0 }
   private _firstRender = true
 
-  constructor (element, config?: XYContainerConfigInterface<Datum>, data?: Datum[]) {
+  constructor (element: HTMLElement, config?: XYContainerConfigInterface<Datum>, data?: Datum[]) {
     super(element)
 
     this._clipPath = this.svg.append('clipPath')
@@ -123,7 +122,7 @@ export class XYContainer<Datum = GenericDataRecord> extends ContainerCore {
     this.removeAllChildren()
 
     // If there were any new components added we need to pass them data
-    this.setData(this.datamodel.data, false)
+    this.setData(this.datamodel.data, true)
 
     // Set up the axes
     if (containerConfig.xAxis) {
@@ -183,9 +182,9 @@ export class XYContainer<Datum = GenericDataRecord> extends ContainerCore {
   }
 
   update (containerConfig: XYContainerConfigInterface<Datum>, componentConfigs?: XYComponentConfigInterface<Datum>[], data?: Datum[]): void {
+    if (data) this.datamodel.data = data // Just updating the data model because the `updateContainer` method has the `setData` step inside
     if (containerConfig) this.updateContainer(containerConfig, true)
     if (componentConfigs) this.updateComponents(componentConfigs, true)
-    if (data) this.setData(data, true)
     this.render()
   }
 
@@ -231,9 +230,12 @@ export class XYContainer<Datum = GenericDataRecord> extends ContainerCore {
       const yStackedAccessors = this.components.filter(c => c.stacked).map(c => c.config.y)
       // eslint-disable-next-line dot-notation
       const baselineAccessor = this.components.find(c => c.config['baseline'])?.config['baseline']
-      crosshair.config.x = crosshair.config.x || this.components[0]?.config.x
-      crosshair.config.y = flatten(yAccessors)
-      crosshair.config.yStacked = flatten(yStackedAccessors)
+      const hasConfig = crosshair.config.x || crosshair.config.y || crosshair.config.yStacked
+      if (!hasConfig) {
+        crosshair.config.x = this.components[0]?.config.x
+        crosshair.config.y = flatten(yAccessors)
+        crosshair.config.yStacked = flatten(yStackedAccessors)
+      }
       crosshair.config.baseline = crosshair.config.baseline || baselineAccessor || null
       crosshair.g.attr('transform', `translate(${margin.left},${margin.top})`)
       crosshair.hide()

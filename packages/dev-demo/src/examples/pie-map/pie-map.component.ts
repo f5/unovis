@@ -1,9 +1,13 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import clamp from 'lodash/clamp'
 import mean from 'lodash/mean'
+import { Style } from 'maplibre-gl'
 import { Component, ViewEncapsulation, ViewChild } from '@angular/core'
-import { LeafletMap, LeafletMapConfigInterface, LeafletMapRenderer, MapLibreArcticLight } from '@volterra/vis'
+import { LeafletMap, LeafletMapConfigInterface, LeafletMapRenderer } from '@volterra/vis'
 import { MapLeafletComponent } from '../../app/components/map-leaflet/map-leaflet.component'
+
+// Configuration
+import tilesConfig from '../map/tiles-config.json'
 
 // Data
 import sites from './data/sites.json'
@@ -37,16 +41,7 @@ export class PieMapComponent {
 
   config: LeafletMapConfigInterface<SitePoint> = {
     renderer: LeafletMapRenderer.MapLibreGL,
-    rendererSettings: {
-      ...MapLibreArcticLight,
-      sources: {
-        openmaptiles: {
-          type: 'vector',
-          url: 'https://maps.volterra.io/data/v3.json',
-        },
-      },
-      glyphs: 'https://maps.volterra.io/fonts/{fontstack}/{range}.pbf',
-    },
+    rendererSettings: tilesConfig as Style,
     pointRadius: d => {
       return clamp(7 + 10 * Math.sqrt((d.normal + d.blocked) / this.grandAvg), 6, 25)
     },
@@ -68,7 +63,6 @@ export class PieMapComponent {
     clusterRadius: 65,
     attribution: [
       '<a href="https://www.maptiler.com/copyright/" target="_blank">MapTiler</a>',
-      '<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a>',
     ],
     events: {
       [LeafletMap.selectors.point]: {

@@ -1,7 +1,7 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { Selection, BaseType } from 'd3-selection'
 import { interpolate } from 'd3-interpolate'
-import { max } from 'd3-array'
+import { max, mean } from 'd3-array'
 import { Arc } from 'd3-shape'
 import { color } from 'd3-color'
 
@@ -127,6 +127,10 @@ export function configuredNodeSize<T> (nodeSizeAccessor: NumericAccessor<T>): nu
 
 export function getMaxNodeSize<T> (data: T[], nodeSize: NumericAccessor<T>): number {
   return max(data || [], d => getNodeSize(d, nodeSize)) || NODE_SIZE
+}
+
+export function getAverageNodeSize<T> (data: T[], nodeSize: NumericAccessor<T>): number {
+  return mean(data || [], d => getNodeSize(d, nodeSize)) || NODE_SIZE
 }
 
 export function getSideTexLabelColor (label: GraphCircleLabel): string {

@@ -12,16 +12,13 @@ import { isNumber, countUnique, arrayOfIndices, getMin, getMax, getString, getNu
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
 
-// Types
-import { GenericDataRecord } from 'types/data'
-
 // Config
 import { TimelineConfig, TimelineConfigInterface } from './config'
 
 // Styles
 import * as s from './style'
 
-export class Timeline<Datum = GenericDataRecord> extends XYComponentCore<Datum> {
+export class Timeline<Datum> extends XYComponentCore<Datum> {
   static selectors = s
   config: TimelineConfig<Datum> = new TimelineConfig()
   events = {
@@ -165,8 +162,8 @@ export class Timeline<Datum = GenericDataRecord> extends XYComponentCore<Datum> 
   }
 
   _onMouseWheel (d: unknown, event: WheelEvent): void {
-    event?.preventDefault()
     this._updateScrollPosition(event?.deltaY)
+    if (this._scrollDistance > 0 && this._scrollDistance < this._maxScroll) event?.preventDefault()
 
     // Temporarily disable pointer events on lines to prevent scrolling from being interrupted
     this._linesGroup.attr('pointer-events', 'none')

@@ -4,7 +4,6 @@ import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
 import {
   FreeBrush,
   FreeBrushConfigInterface,
-  GenericDataRecord,
   VisEventType,
   VisEventCallback,
   NumericAccessor,
@@ -22,7 +21,7 @@ import { VisXYComponent } from '../../core'
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisXYComponent, useExisting: VisFreeBrushComponent }],
 })
-export class VisFreeBrushComponent<Datum = GenericDataRecord> implements FreeBrushConfigInterface<Datum>, AfterViewInit {
+export class VisFreeBrushComponent<Datum> implements FreeBrushConfigInterface<Datum>, AfterViewInit {
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */
   @Input() duration: number
 

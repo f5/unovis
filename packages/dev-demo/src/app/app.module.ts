@@ -32,6 +32,7 @@ import { AtomicAngularWrapperComponent } from 'examples/atomic-angular-wrapper/a
 import { AtomicAngularWrapperModule } from 'examples/atomic-angular-wrapper/atomic-angular-wrapper.module'
 import { FreeBrushComponent } from 'examples/free-brush/free-brush.component'
 import { FreeBrushModule } from 'examples/free-brush/free-brush.module'
+import { ConcentricGraphComponent } from 'examples/concentric-graph/concentric-graph.component'
 
 import { AppComponent } from './app.component'
 import { BulletLegendComponent } from './components/bullet-legend/bullet-legend.component'
@@ -62,6 +63,7 @@ const appRoutes: Routes = [
   { path: 'topojson-heatmap', component: TopoJSONHeatMapComponent },
   { path: 'radial-dendrogram', component: RadialDendrogramComponent },
   { path: 'graph', component: GraphComponent },
+  { path: 'concentric-graph', component: ConcentricGraphComponent },
   { path: 'force-graph', component: ServiceGraphComponent },
   { path: 'connectivity-graph', component: ConnectivityGraphComponent },
   { path: 'traffic-graph', component: TrafficGraphComponent },
@@ -107,6 +109,7 @@ appRoutes.push({ path: '', redirectTo: `/${appRoutes[0].path}`, pathMatch: 'full
     ChordDiagramComponent,
     VisControlsComponent,
     DonutChartComponent,
+    ConcentricGraphComponent,
   ],
 
   imports: [

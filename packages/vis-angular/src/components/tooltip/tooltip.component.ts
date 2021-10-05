@@ -37,13 +37,13 @@ export class VisTooltipComponent implements TooltipConfigInterface, AfterViewIni
    *
    * ```
    * {
-   * \[selectorString]: (d) => string | HTMLElement
+   * \[selectorString]: (d: unknown) => string | HTMLElement
    * }
    * ```
    * e.g.:
    * ```
    * {
-   * \[Area.selectors.area]: (d) => `<div>${d.value.toString()}</div>
+   * \[Area.selectors.area]: (d: AreaDatum[]) => `<div>${d.value.toString()}</div>
    * }
    * ``` */
   @Input() triggers: {

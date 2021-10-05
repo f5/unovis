@@ -1,18 +1,13 @@
 /* eslint-disable no-console */
 // Copyright (c) Volterra, Inc. All rights reserved.
 import _ from 'lodash'
-import { AfterViewInit, Component, ViewChild, ViewEncapsulation } from '@angular/core'
-import {
-  LeafletMap,
-  LeafletMapConfigInterface,
-  LeafletMapRenderer,
-  MapLibreArcticLight,
-  TangramArcticDark,
-  Position,
-  Tooltip,
-  TooltipConfigInterface,
-} from '@volterra/vis'
+import { Component, ViewChild, ViewEncapsulation } from '@angular/core'
+import { Style } from 'maplibre-gl'
+import { LeafletMap, LeafletMapConfigInterface, LeafletMapRenderer, Position, Tooltip, TooltipConfigInterface } from '@volterra/vis'
 import { MapLeafletComponent } from '../../app/components/map-leaflet/map-leaflet.component'
+
+// Configuration
+import tilesConfig from './tiles-config.json'
 
 // Data
 import earthquakes from './data/earthquakes100.geo.json'
@@ -62,41 +57,15 @@ function getTooltipConfig (): TooltipConfigInterface {
   styleUrls: ['./map.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-
-export class MapComponent implements AfterViewInit {
+export class MapComponent {
   @ViewChild('mapContainer', { static: false }) mapContainer: MapLeafletComponent<MapPoint>
 
   title = 'map'
   data = mapSampleData()
-  a = TangramArcticDark
 
   config: LeafletMapConfigInterface<MapPoint> = {
     renderer: LeafletMapRenderer.MapLibreGL,
-    rendererSettings: {
-      ...MapLibreArcticLight,
-      sources: {
-        openmaptiles: {
-          type: 'vector',
-          url: 'https://maps.volterra.io/data/v3.json',
-        },
-      },
-      glyphs: 'https://maps.volterra.io/fonts/{fontstack}/{range}.pbf',
-    },
-    // sources: {
-    //   openmaptiles: {
-    //     type: 'vector',
-    //     url: 'https://maps.volterra.io/data/v3.json',
-    //   },
-    //   // mapzen: {
-    //   //   max_zoom: 16,
-    //   //   tile_size: 256,
-    //   //   type: 'MVT',
-    //   //   url: 'https://tile.nextzen.org/tilezen/vector/v1/256/all/{z}/{x}/{y}.mvt',
-    //   //   url_params: {
-    //   //     api_key: ''
-    //   //   }
-    //   // }
-    // },
+    rendererSettings: tilesConfig as Style,
     valuesMap: {
       healthy: { color: '#47e845' },
       warning: { color: '#ffc226' },
@@ -108,7 +77,6 @@ export class MapComponent implements AfterViewInit {
     },
     attribution: [
       '<a href="https://www.maptiler.com/copyright/" target="_blank">MapTiler</a>',
-      '<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a>',
     ],
     pointBottomLabel: d => d.cluster ? `${d.point_count} sites` : d.id,
     pointCursor: 'crosshair',
@@ -131,24 +99,5 @@ export class MapComponent implements AfterViewInit {
         },
       },
     },
-  }
-
-  ngAfterViewInit (): void {
-    // select node by id
-    // setTimeout(() => {
-    //   this.config.selectedNodeId = _.sample(this.data).id
-    //   this.config = { ...this.config } // Updating the object to trigger change detection
-    // }, 4000)
-
-    // // set new bounds
-    // setTimeout(() => {
-    //   this.config.bounds = { northEast: { lat: 77, lng: -172 }, southWest: { lat: -50, lng: 72 } }
-    //   this.config = { ...this.config } // Updating the object to trigger change detection
-    // }, 8000)
-
-    // // update data
-    // setTimeout(() => {
-    //   this.data = mapSampleData()
-    // }, 12000)
   }
 }

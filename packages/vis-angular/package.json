@@ -1,6 +1,6 @@
 {
   "name": "@volterra/vis-angular",
-  "version": "0.9.2",
+  "version": "0.9.4",
   "license": "MIT",
   "scripts": {
     "ng": "npx ng",
@@ -29,20 +29,20 @@
     "@angular/common": "^12.0.3",
     "@angular/compiler": "^12.0.3",
     "@angular/core": "^12.0.3",
-    "@volterra/vis": "0.9.2"
+    "@volterra/vis": "^0.9.4"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^12.0.3",
     "@angular/cli": "^12.0.3",
     "@angular/compiler-cli": "^12.0.3",
     "@compodoc/compodoc": "^1.1.11",
-    "@storybook/addon-actions": "^6.3.4",
-    "@storybook/addon-docs": "^6.3.4",
-    "@storybook/addon-essentials": "^6.3.4",
-    "@storybook/addon-links": "^6.3.4",
-    "@storybook/angular": "^6.3.4",
-    "@storybook/builder-webpack5": "^6.3.4",
-    "@storybook/manager-webpack5": "^6.3.4",
+    "@storybook/addon-actions": "^6.3.8",
+    "@storybook/addon-docs": "^6.3.8",
+    "@storybook/addon-essentials": "^6.3.8",
+    "@storybook/addon-links": "^6.3.8",
+    "@storybook/angular": "^6.3.8",
+    "@storybook/builder-webpack5": "^6.3.8",
+    "@storybook/manager-webpack5": "^6.3.8",
     "@types/jasmine": "~3.6.0",
     "@types/node": "^12.11.1",
     "jasmine-core": "~3.7.0",
@@ -52,6 +52,8 @@
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "^1.5.0",
     "ng-packagr": "^12.0.0",
+    "rollup": "^2.57.0",
+    "rollup-plugin-typescript2": "^0.30.0",
     "ttypescript": "^1.5.12"
   }
 }

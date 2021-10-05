@@ -12,7 +12,7 @@ variables:
 stages:
   - build
   - docker
-  - secscan
+  - vuln-scan
   - upload-templates
   - trigger
   - publish-demo
@@ -78,26 +78,34 @@ docker:
 
 test-trivy:
   tags: [docker]
-  stage: secscan
+  stage: vuln-scan
   image: volterra.azurecr.io/ves.io/secscan
   before_script:
     - podman login --username "${REGISTRY_USERNAME}" --password "${REGISTRY_PASSWORD}" "${REGISTRY_SERVER}"
   script:
     - podman pull docker://${REGISTRY_IMAGE}:${CI_COMMIT_SHA}
     - podman push docker://${REGISTRY_IMAGE}:${CI_COMMIT_SHA} oci:`pwd`/ociimage
-    - trivy-report --scan-tag trivy.scan.${CI_PROJECT_NAME} --vuln-tag trivy.vuln.${CI_PROJECT_NAME} --sqs-url ${REPORTS_SQS_URL} --sqs-access-key ${REPORTS_SQS_ACCESS_KEY} --sqs-secret-key ${REPORTS_SQS_SECRET_KEY} -p "https://${AZURE_SECURITY_STORAGE_ACCOUNT}.blob.core.windows.net/security/profiles/${CI_PROJECT_NAME}.yml${AZURE_SECURITY_STORAGE_TOKEN}" "https://${AZURE_SECURITY_STORAGE_ACCOUNT}.blob.core.windows.net/security/profiles/common.yml${AZURE_SECURITY_STORAGE_TOKEN}" --image `pwd`/ociimage
+    - trivy-report --scan-tag trivy.scan.${CI_PROJECT_NAME} --vuln-tag trivy.vuln.${CI_PROJECT_NAME}
+      --sqs-url ${REPORTS_SQS_URL} --sqs-access-key ${REPORTS_SQS_ACCESS_KEY} --sqs-secret-key
+      ${REPORTS_SQS_SECRET_KEY} -p "https://${AZURE_SECURITY_STORAGE_ACCOUNT}.blob.core.windows.net/security/profiles/${CI_PROJECT_NAME}.yml${AZURE_SECURITY_STORAGE_TOKEN}"
+      "https://${AZURE_SECURITY_STORAGE_ACCOUNT}.blob.core.windows.net/security/profiles/common.yml${AZURE_SECURITY_STORAGE_TOKEN}"
+      --image `pwd`/ociimage
   after_script:
     - podman logout "${REGISTRY_SERVER}"
 
 test-trivy-fs:
   tags: [docker]
-  stage: secscan
+  stage: vuln-scan
   image: volterra.azurecr.io/ves.io/secscan
   script:
-    - trivy-report --scan-tag trivy.scan.${CI_PROJECT_NAME} --vuln-tag trivy.vuln.${CI_PROJECT_NAME} --sqs-url ${REPORTS_SQS_URL} --sqs-access-key ${REPORTS_SQS_ACCESS_KEY} --sqs-secret-key ${REPORTS_SQS_SECRET_KEY} -p "https://${AZURE_SECURITY_STORAGE_ACCOUNT}.blob.core.windows.net/security/profiles/${CI_PROJECT_NAME}.yml${AZURE_SECURITY_STORAGE_TOKEN}" "https://${AZURE_SECURITY_STORAGE_ACCOUNT}.blob.core.windows.net/security/profiles/common.yml${AZURE_SECURITY_STORAGE_TOKEN}" --fs .
+    - trivy-report --scan-tag trivy.scan.${CI_PROJECT_NAME} --vuln-tag trivy.vuln.${CI_PROJECT_NAME}
+      --sqs-url ${REPORTS_SQS_URL} --sqs-access-key ${REPORTS_SQS_ACCESS_KEY} --sqs-secret-key
+      ${REPORTS_SQS_SECRET_KEY} -p "https://${AZURE_SECURITY_STORAGE_ACCOUNT}.blob.core.windows.net/security/profiles/${CI_PROJECT_NAME}.yml${AZURE_SECURITY_STORAGE_TOKEN}"
+      "https://${AZURE_SECURITY_STORAGE_ACCOUNT}.blob.core.windows.net/security/profiles/common.yml${AZURE_SECURITY_STORAGE_TOKEN}"
+      --fs .
 
 test-license:
-  stage: secscan
+  stage: vuln-scan
   image: volterra.azurecr.io/ves.io/secscan
   tags: [kubernetes]
   dependencies:
@@ -110,7 +118,10 @@ test-license:
     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
     - echo "machine gitlab.com login gitlab-ci-token password ${CI_JOB_TOKEN}" > /root/.netrc
   script:
-    - license-report --scan-tag license.scan.${CI_PROJECT_NAME} --vuln-tag license.vuln.${CI_PROJECT_NAME} --sqs-url ${REPORTS_SQS_URL} --sqs-access-key ${REPORTS_SQS_ACCESS_KEY} --sqs-secret-key ${REPORTS_SQS_SECRET_KEY} -p "https://${AZURE_SECURITY_STORAGE_ACCOUNT}.blob.core.windows.net/security/profiles/${CI_PROJECT_NAME}.yml${AZURE_SECURITY_STORAGE_TOKEN}" "https://${AZURE_SECURITY_STORAGE_ACCOUNT}.blob.core.windows.net/security/profiles/common.yml${AZURE_SECURITY_STORAGE_TOKEN}"
+    - license-report --scan-tag license.scan.${CI_PROJECT_NAME} --vuln-tag license.vuln.${CI_PROJECT_NAME}
+      --sqs-url ${REPORTS_SQS_URL} --sqs-access-key ${REPORTS_SQS_ACCESS_KEY} --sqs-secret-key
+      ${REPORTS_SQS_SECRET_KEY} -p "https://${AZURE_SECURITY_STORAGE_ACCOUNT}.blob.core.windows.net/security/profiles/${CI_PROJECT_NAME}.yml${AZURE_SECURITY_STORAGE_TOKEN}"
+      "https://${AZURE_SECURITY_STORAGE_ACCOUNT}.blob.core.windows.net/security/profiles/common.yml${AZURE_SECURITY_STORAGE_TOKEN}"
   cache:
     policy: pull
     key: "$CI_COMMIT_REF_SLUG"
@@ -159,20 +170,25 @@ pages:
   stage: publish-demo
   image: volterrasystem/angular-e2e-testing:node14
   cache:
-      key: "$CI_COMMIT_REF_SLUG"
-      policy: pull
-      paths:
-        - node_modules
-        - packages/vis/lib
-        - packages/dev-demo/lib
-        - packages/vis-angular/storybook-static
+    key: "$CI_COMMIT_REF_SLUG"
+    policy: pull
+    paths:
+      - node_modules
+      - packages/vis/lib
+      - packages/dev-demo/lib
+      - packages/vis-angular/storybook-static
   script:
-      - mv packages/dev-demo/lib/volterra-vis-examples public
-      - cp public/index.html public/404.html
-      - mv packages/vis-angular/storybook-static public/storybook
+    - mv packages/dev-demo/lib/volterra-vis-examples public
+    - cp public/index.html public/404.html
+    - mv packages/vis-angular/storybook-static public/storybook
   artifacts:
-      paths:
-          - public
-      expire_in: 6 hrs
+    paths:
+      - public
+    expire_in: 6 hrs
   only:
-      - master
+    - master
+
+include:
+  - project: volterra/security/security-config/cicd-includes
+    ref: main
+    file: whitesource/wss-javascript.yml
