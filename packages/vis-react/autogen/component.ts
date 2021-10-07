@@ -14,7 +14,7 @@ export function getComponentCode (
     : ''
   return `/* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
-import { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 //import { ${componentName}, ${componentName}ConfigInterface } from '@volterra/vis'
 ${importStatements.map(s => `import { ${s.elements.join(', ')} } from '${s.source}'`).join('\n')}
 
