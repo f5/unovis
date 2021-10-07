@@ -1,5 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { ReactNode, useEffect, useRef, useState } from 'react'
+// eslint-disable-next-line no-use-before-define
+import React, { ReactNode, useEffect, useRef, useState } from 'react'
 import { SingleChart, SingleChartConfigInterface, ComponentCore, Tooltip } from '@volterra/vis'
 
 // Types
