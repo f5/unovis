@@ -10,4 +10,4 @@ npm run publish:vis-react-lib
 version=$(node -e "console.log(require('./packages/vis/package.json').version)")
 
 git add .
-git commit -m 'Release: v'${version}
+git commit -m "Release: v${version}" -m "ref #129"
