@@ -22,6 +22,8 @@
     "rootDir": "./",
     "baseUrl": "./",
     "paths": {
+      "@volterra/vis-react": ["src/"],
+      "@volterra/vis-react/*": ["src/*"],
     },
     "removeComments": true,
     "strict": true,
