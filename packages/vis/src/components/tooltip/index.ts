@@ -22,6 +22,7 @@ export class Tooltip {
   config: TooltipConfig
   prevConfig: TooltipConfig
   components: ComponentCore<unknown>[]
+  static selectors = s
   private _setUpEventsThrottled = throttle(this._setUpEvents, 500)
   private _setContainerPositionThrottled = throttle(this._setContainerPosition, 500)
 
