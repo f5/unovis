@@ -89,6 +89,9 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
 
   _onMouseMove (event: MouseEvent): void {
     const { config, datamodel, element } = this
+    if (!config.x) console.error('Crosshair: X accessor function has not been configured. Please check if it\'s preset in the configuration object')
+    if (!config.y && !config.yStacked) console.error('Crosshair: Y accessors have not been configured. Please check if they\'re preset in the configuration object')
+
     const [x] = pointer(event, element)
     const scaleX = config.xScale
     const valueX = scaleX.invert(x) as number
@@ -143,12 +146,13 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
   private getCircleData (): { index: number; value: any; visible: boolean }[] {
     const { config } = this
     const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
+    const yStackedAccessors = config.yStacked ?? []
     const baselineValue = getNumber(this.datum, config.baseline) || 0
-    const stackedValues = getStackedValues(this.datum, ...config.yStacked)
+    const stackedValues = getStackedValues(this.datum, ...yStackedAccessors)
       .map((value, index, arr) => ({
         index,
         value: value + baselineValue,
-        visible: !!getNumber(this.datum, config.yStacked[index]),
+        visible: !!getNumber(this.datum, yStackedAccessors[index]),
       }))
 
     const regularValues = yAccessors
