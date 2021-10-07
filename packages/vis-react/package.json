@@ -1,6 +1,6 @@
 {
   "name": "@volterra/vis-react",
-  "version": "0.9.4",
+  "version": "0.9.5",
   "description": "React wrapper for @volterra/vis",
   "main": "dist/index.js",
   "files": [
@@ -21,7 +21,7 @@
     "@volterra:registry": " https://gitlab.com/api/v4/projects/13430565/packages/npm/"
   },
   "peerDependencies": {
-    "@volterra/vis": "^0.9.4",
+    "@volterra/vis": "^0.9.5",
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0"
   },
