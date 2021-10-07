@@ -91,7 +91,7 @@ export class VisCrosshairComponent<Datum> implements CrosshairConfigInterface<Da
   /** Sets the Y scale domain based on the X scale domain not the whole data. Useful when you manipulate chart's X domain from outside. Default: `false` */
   @Input() scaleByDomain: boolean
 
-  /** Separate array of accessors for stacked components (eg StackedBar, Area). Default: `[]` */
+  /** Separate array of accessors for stacked components (eg StackedBar, Area). Default: `undefined` */
   @Input() yStacked: NumericAccessor<Datum>[]
 
   /** Baseline accessor function for stacked values, useful with stacked areas. Default: `null` */

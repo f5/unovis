@@ -47,7 +47,7 @@ export class VisTooltipComponent implements TooltipConfigInterface, AfterViewIni
    * }
    * ``` */
   @Input() triggers: {
-    [selector: string]: (data: unknown, i: number, elements: (HTMLElement | SVGElement)[]) => string | HTMLElement | undefined | null;
+    [selector: string]: (data: any, i: number, elements: (HTMLElement | SVGElement)[]) => string | HTMLElement | undefined | null;
   }
 
   component: Tooltip | undefined
