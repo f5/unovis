@@ -41,5 +41,6 @@ export function Vis${componentName}${genericsDefStr} (props: Vis${componentName}
 
   return <vis-${elementSuffix} ref={ref} />
 }
+Vis${componentName}.selectors = ${componentName}.selectors
 `
 }
