@@ -1,6 +1,6 @@
 /* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
-import { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 // import { Scatter, ScatterConfigInterface } from '@volterra/vis'
 import { Scatter, ScatterConfigInterface } from '@volterra/vis'
 
@@ -27,3 +27,4 @@ export function VisScatter<Datum> (props: VisScatterProps<Datum>): JSX.Element {
 
   return <vis-component ref={ref} />
 }
+VisScatter.selectors = Scatter.selectors

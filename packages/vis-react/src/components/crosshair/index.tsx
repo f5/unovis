@@ -1,6 +1,6 @@
 /* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
-import { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 // import { Crosshair, CrosshairConfigInterface } from '@volterra/vis'
 import { Crosshair, CrosshairConfigInterface } from '@volterra/vis'
 
@@ -27,3 +27,4 @@ export function VisCrosshair<Datum> (props: VisCrosshairProps<Datum>): JSX.Eleme
 
   return <vis-crosshair ref={ref} />
 }
+VisCrosshair.selectors = Crosshair.selectors

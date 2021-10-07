@@ -1,6 +1,6 @@
 /* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
-import { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 // import { Axis, AxisConfigInterface } from '@volterra/vis'
 import { Axis, AxisConfigInterface } from '@volterra/vis'
 
@@ -27,3 +27,4 @@ export function VisAxis<Datum> (props: VisAxisProps<Datum>): JSX.Element {
 
   return <vis-axis ref={ref} />
 }
+VisAxis.selectors = Axis.selectors

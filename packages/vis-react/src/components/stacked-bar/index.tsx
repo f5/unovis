@@ -1,6 +1,6 @@
 /* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
-import { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 // import { StackedBar, StackedBarConfigInterface } from '@volterra/vis'
 import { StackedBar, StackedBarConfigInterface } from '@volterra/vis'
 
@@ -27,3 +27,4 @@ export function VisStackedBar<Datum> (props: VisStackedBarProps<Datum>): JSX.Ele
 
   return <vis-component ref={ref} />
 }
+VisStackedBar.selectors = StackedBar.selectors

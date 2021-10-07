@@ -1,6 +1,6 @@
 /* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
-import { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 // import { Timeline, TimelineConfigInterface } from '@volterra/vis'
 import { Timeline, TimelineConfigInterface } from '@volterra/vis'
 
@@ -27,3 +27,4 @@ export function VisTimeline<Datum> (props: VisTimelineProps<Datum>): JSX.Element
 
   return <vis-component ref={ref} />
 }
+VisTimeline.selectors = Timeline.selectors

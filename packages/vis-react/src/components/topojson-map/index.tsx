@@ -1,6 +1,6 @@
 /* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
-import { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 // import { TopoJSONMap, TopoJSONMapConfigInterface } from '@volterra/vis'
 import { TopoJSONMap, TopoJSONMapConfigInterface, MapInputNode, MapInputLink, MapInputArea } from '@volterra/vis'
 
@@ -27,3 +27,4 @@ export function VisTopoJSONMap<N extends MapInputNode, L extends MapInputLink = 
 
   return <vis-component ref={ref} />
 }
+VisTopoJSONMap.selectors = TopoJSONMap.selectors
