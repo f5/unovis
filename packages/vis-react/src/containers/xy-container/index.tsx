@@ -23,14 +23,15 @@ export function VisXYContainer<Datum> (props: VisXYContainerProps<Datum>): JSX.E
     tooltip: container.current?.querySelector<VisComponentElement<Tooltip>>('vis-tooltip')?.__component__,
     crosshair: container.current?.querySelector<VisComponentElement<Crosshair<Datum>>>('vis-crosshair')?.__component__,
     xAxis: Array
-      .from(container.current?.querySelectorAll<VisComponentElement<Axis<Datum>>>('vis-tooltip') ?? [])
+      .from(container.current?.querySelectorAll<VisComponentElement<Axis<Datum>>>('vis-axis') ?? [])
       .map(c => c.__component__)
       .find(c => c.config.type === AxisType.X),
     yAxis: Array
-      .from(container.current?.querySelectorAll<VisComponentElement<Axis<Datum>>>('vis-tooltip') ?? [])
+      .from(container.current?.querySelectorAll<VisComponentElement<Axis<Datum>>>('vis-axis') ?? [])
       .map(c => c.__component__)
       .find(c => c.config.type === AxisType.Y),
     ...props,
+    margin: { top: 5, left: 5, right: 5, bottom: 5 },
   })
 
   // On Mount
