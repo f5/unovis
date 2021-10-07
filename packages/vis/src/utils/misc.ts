@@ -1,5 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { Rect } from 'types/misc'
+import { isString } from 'utils/data'
 
 export const getBoundingClientRectObject = (element: HTMLElement):
 { top: number; right: number; bottom: number; left: number; width: number; height: number; x: number; y: number } => {
@@ -21,10 +22,11 @@ export function stringToHtmlId (str: string): string {
 }
 
 export function isStringCSSVariable (s: string): boolean {
-  return s.substring(0, 6) === 'var(--'
+  return isString(s) ? (s.substring(0, 6) === 'var(--') : false
 }
 
 export function getCSSVariableValue (s: string, context: HTMLElement | SVGGElement): string {
+  if (!isString(s)) return ''
   const variableName = s.substr(4, s.length - 5)
   return getComputedStyle(context).getPropertyValue(variableName)
 }
