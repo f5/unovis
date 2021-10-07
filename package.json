@@ -11,7 +11,7 @@
     "npm": ">=7.0.0"
   },
   "scripts": {
-    "postinstall": "npm run build:lib; npm run gather-licenses; cd packages/vis-react; npm i @storybook/react",
+    "postinstall": "npm run build:lib; npm run gather-licenses; cd packages/vis-react; npm ci @storybook/react; rm -rf node_modules/@volterra/vis",
     "dev": "cd packages/dev-demo; npm run dev",
     "storybook:angular": "cd packages/vis-angular; npm run storybook",
     "storybook:react": "cd packages/vis-react; npm run storybook",
