@@ -1,6 +1,6 @@
 {
   "name": "@volterra/vis",
-  "version": "0.9.6",
+  "version": "0.9.7",
   "license": "MIT",
   "main": "lib/esm/index.js",
   "module": "lib/esm/index.js",
@@ -16,7 +16,7 @@
   },
   "publishConfig": {
     "cache": ".cache/.npm",
-    "@volterra:registry": " https://gitlab.com/api/v4/projects/13430565/packages/npm/"
+    "@volterra:registry": "https://gitlab.com/api/v4/projects/13430565/packages/npm/"
   },
   "devDependencies": {
     "@rollup/plugin-json": "^4.1.0",
