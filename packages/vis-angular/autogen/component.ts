@@ -58,6 +58,7 @@ ${
 
   ngAfterViewInit (): void {
     this.component = new ${componentName}${genericsStr}(this.getConfig())
+    ${dataType ? 'if (this.data) this.component.setData(this.data)' : ''}
   }
 
   ngOnChanges (changes: SimpleChanges): void {
