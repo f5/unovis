@@ -1,7 +1,7 @@
 <div class="chart">
- <vis-xy-container [margin]="margin" [padding]="padding" [data]="data">
-  <vis-area [x]="x" [y]="y" [opacity]="1"></vis-area>
-  <vis-line [x]="x" [y]="y" [color]="'black'"></vis-line>
+ <vis-xy-container [margin]="margin" [padding]="padding">
+  <vis-area [x]="x" [y]="y" [opacity]="1" [data]="data"></vis-area>
+  <vis-line [x]="x" [y]="y" [color]="'black'" [data]="customData"></vis-line>
   <vis-axis type="x" label="X Axis"></vis-axis>
   <vis-axis type="y" label="Y Axis"></vis-axis>
  </vis-xy-container>

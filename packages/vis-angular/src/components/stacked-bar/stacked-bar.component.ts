@@ -124,6 +124,7 @@ export class VisStackedBarComponent<Datum> implements StackedBarConfigInterface<
 
   ngAfterViewInit (): void {
     this.component = new StackedBar<Datum>(this.getConfig())
+    if (this.data) this.component.setData(this.data)
   }
 
   ngOnChanges (changes: SimpleChanges): void {

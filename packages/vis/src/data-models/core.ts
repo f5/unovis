@@ -1,17 +1,17 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 
-export class CoreDataModel<CoreDatum> {
-  protected _data?: CoreDatum
+export class CoreDataModel<T> {
+  protected _data: T | undefined
 
-  get data (): CoreDatum {
+  get data (): T {
     return this._data
   }
 
-  set data (value: CoreDatum) {
+  set data (value: T) {
     this._data = value
   }
 
-  constructor (data?: CoreDatum) {
+  constructor (data?: T) {
     this.data = data
   }
 }
