@@ -2,23 +2,21 @@
   "name": "@volterra/vis-react",
   "version": "0.9.6",
   "description": "React wrapper for @volterra/vis",
-  "main": "dist/index.js",
-  "files": [
-    "dist"
-  ],
+  "main": "./index.js",
+  "types": "./index.d.ts",
   "scripts": {
     "build": "rimraf dist && tsc --project tsconfig.lib.json --emitDeclarationOnly && rollup --config",
     "tsc": "tsc",
     "generate": "rollup -c ./autogen/rollup.config.js; node .autogen.js; rm .autogen.js",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "prepublishOnly": "npm run build"
+    "publish-dist": "cp ./{.npmrc,package.json} ./dist; cp ../../LICENSE ./dist; cd ./dist; npm publish; rm -rf .cache"
   },
   "author": "Nikita Rokotyan",
   "license": "MIT",
   "publishConfig": {
     "cache": ".cache/.npm",
-    "@volterra:registry": " https://gitlab.com/api/v4/projects/13430565/packages/npm/"
+    "@volterra:registry": "https://gitlab.com/api/v4/projects/13430565/packages/npm/"
   },
   "peerDependencies": {
     "@volterra/vis": "^0.9.6",
