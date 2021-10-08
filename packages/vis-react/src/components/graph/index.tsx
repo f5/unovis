@@ -1,7 +1,6 @@
 /* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
 import React, { useEffect, useRef, useState } from 'react'
-// import { Graph, GraphConfigInterface } from '@volterra/vis'
 import { Graph, GraphConfigInterface, GraphInputNode, GraphInputLink } from '@volterra/vis'
 
 // Types

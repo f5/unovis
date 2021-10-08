@@ -1,7 +1,6 @@
 /* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
 import React, { useEffect, useRef, useState } from 'react'
-// import { Scatter, ScatterConfigInterface } from '@volterra/vis'
 import { Scatter, ScatterConfigInterface } from '@volterra/vis'
 
 // Types
