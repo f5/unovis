@@ -11,11 +11,11 @@
     "npm": ">=7.0.0"
   },
   "scripts": {
-    "postinstall": "npm run build:lib; npm run gather-licenses; cd packages/vis-react; npm ci @storybook/react; rm -rf node_modules/@volterra/vis",
+    "postinstall": "npm run build:lib; npm run gather-licenses; cd packages/vis-react; npm i; rm -rf node_modules/@volterra/vis",
     "dev": "cd packages/dev-demo; npm run dev",
     "storybook:angular": "cd packages/vis-angular; npm run storybook",
     "storybook:react": "cd packages/vis-react; npm run storybook",
-    "build": "npm run build:lib; npm run build:dev-demo; npm run build:vis-angular-lib; npm run build:vis-angular-storybook; npm run build:vis-react-lib; npm run build:vis-react-storybook",
+    "build": "npm run build:lib; npm run build:vis-react-lib; npm run build:vis-react-storybook; npm run build:vis-angular-lib; npm run build:vis-angular-storybook; npm run build:dev-demo;",
     "build:lib": "cd packages/vis && npm run build",
     "build:dev-demo": "cd packages/dev-demo && npm run build",
     "build:vis-angular-lib": "cd packages/vis-angular && npm run build",
