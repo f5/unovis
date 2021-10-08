@@ -224,6 +224,7 @@ export class VisSankeyComponent<N extends SankeyInputNode, L extends SankeyInput
 
   ngAfterViewInit (): void {
     this.component = new Sankey<N, L>(this.getConfig())
+    if (this.data) this.component.setData(this.data)
   }
 
   ngOnChanges (changes: SimpleChanges): void {

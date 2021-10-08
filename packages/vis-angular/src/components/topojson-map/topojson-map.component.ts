@@ -156,6 +156,7 @@ export class VisTopoJSONMapComponent<N extends MapInputNode, L extends MapInputL
 
   ngAfterViewInit (): void {
     this.component = new TopoJSONMap<N, L, A>(this.getConfig())
+    if (this.data) this.component.setData(this.data)
   }
 
   ngOnChanges (changes: SimpleChanges): void {

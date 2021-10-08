@@ -109,6 +109,7 @@ export class VisAreaComponent<Datum> implements AreaConfigInterface<Datum>, Afte
 
   ngAfterViewInit (): void {
     this.component = new Area<Datum>(this.getConfig())
+    if (this.data) this.component.setData(this.data)
   }
 
   ngOnChanges (changes: SimpleChanges): void {

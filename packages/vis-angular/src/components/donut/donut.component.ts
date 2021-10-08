@@ -99,6 +99,7 @@ export class VisDonutComponent<Datum> implements DonutConfigInterface<Datum>, Af
 
   ngAfterViewInit (): void {
     this.component = new Donut<Datum>(this.getConfig())
+    if (this.data) this.component.setData(this.data)
   }
 
   ngOnChanges (changes: SimpleChanges): void {
