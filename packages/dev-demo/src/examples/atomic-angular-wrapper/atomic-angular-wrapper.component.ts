@@ -15,6 +15,7 @@ export class AtomicAngularWrapperComponent {
 
   // Data
   data: SampleDatum[] = sampleSeriesData(100)
+  customData: SampleDatum[] = sampleSeriesData(10)
   margin = { top: 10, bottom: 10, left: 10, right: 10 }
   padding = {}
   x = (d: SampleDatum): number => d.timestamp
