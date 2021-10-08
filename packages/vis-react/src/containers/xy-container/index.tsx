@@ -37,7 +37,7 @@ export function VisXYContainer<Datum> (props: VisXYContainerProps<Datum>): JSX.E
   // On Mount
   useEffect(() => {
     setChart(
-      new XYContainer<Datum>(container.current as HTMLDivElement, getConfig(), props.data ?? [])
+      new XYContainer<Datum>(container.current as HTMLDivElement, getConfig(), props.data)
     )
 
     return () => chart?.destroy()
@@ -48,7 +48,7 @@ export function VisXYContainer<Datum> (props: VisXYContainerProps<Datum>): JSX.E
     const preventRender = true
 
     // Set new Data without re-render
-    chart?.setData(props.data ?? [], preventRender)
+    if (props.data) chart?.setData(props.data, preventRender)
 
     // Update Container and render
     chart?.updateContainer(getConfig())
