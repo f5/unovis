@@ -352,13 +352,15 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     return this._isMoving
   }
 
-  private _flyToBounds (bounds, duration, padding?): void {
+  private _flyToBounds (bounds: [[number, number], [number, number]], durationMs: number, paddingPx?: [number, number]): void {
     this._eventInitiatedByComponent = true
+    const duration = durationMs / 1000
+    const padding: [number, number] | undefined = paddingPx ? [
+      paddingPx[0] < this._container.clientWidth / 2 ? paddingPx[0] : this._container.clientWidth / 2,
+      paddingPx[1] < this._container.clientHeight / 2 ? paddingPx[1] : this._container.clientHeight / 2,
+    ] : undefined
     if (duration) {
-      this._map.leaflet.flyToBounds(bounds, {
-        duration: duration / 1000,
-        padding,
-      })
+      this._map.leaflet.flyToBounds(bounds, { duration, padding })
     } else {
       this._map.leaflet.fitBounds(bounds, { padding })
     }
