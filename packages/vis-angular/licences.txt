@@ -1,6 +1,6 @@
 name                           license period  license type  installed version  author
 ----                           --------------  ------------  -----------------  ------
-tslib                          perpetual       0BSD          2.1.0              Microsoft Corp.
+tslib                          perpetual       0BSD          2.3.1              Microsoft Corp.
 @angular-devkit/build-angular  perpetual       MIT           12.0.3             Angular Authors
 @angular/cli                   perpetual       MIT           12.0.3             Angular Authors
 @angular/compiler-cli          perpetual       MIT           12.0.3             n/a

@@ -12,6 +12,7 @@ d3-sankey                      perpetual       BSD-3-Clause  0.12.3             
 dagre-layout                   perpetual       MIT           0.8.8              Tyler Long
 emotion                        perpetual       MIT           10.0.27            Kye Hohenberger
 geojson                        perpetual       MIT           0.5.0              Casey Cesari
+graphlibrary                   perpetual       MIT           2.2.0              Tyler Long
 leaflet                        perpetual       BSD-2-Clause  1.7.1              n/a
 lodash                         perpetual       MIT           4.17.21            John-David Dalton
 maplibre-gl                    perpetual       BSD-3-Clause  v1.15.2            n/a
@@ -19,6 +20,7 @@ supercluster                   perpetual       ISC           7.1.0              
 tangram                        perpetual       MIT           0.21.1             Tangram contributors
 three                          perpetual       MIT           0.129.0            mrdoob
 topojson-client                perpetual       ISC           3.1.0              Mike Bostock
+tslib                          perpetual       0BSD          2.3.1              Microsoft Corp.
 @rollup/plugin-json            perpetual       MIT           4.1.0              rollup
 @types/d3                      perpetual       MIT           6.7.0              n/a
 @types/leaflet                 perpetual       MIT           1.5.19             n/a

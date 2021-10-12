@@ -4,6 +4,8 @@
     "outDir": "./lib"
   },
   "angularCompilerOptions": {
+    "fullTemplateTypeCheck": true,
+    "strictInjectionParameters": true,
     "disableTypeScriptVersionCheck": true
-  }
+  },
  }

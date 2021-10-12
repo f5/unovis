@@ -2,17 +2,13 @@
   "name": "@volterra/vis",
   "version": "0.9.8",
   "license": "MIT",
-  "main": "lib/esm/index.js",
-  "module": "lib/esm/index.js",
-  "typings": "lib/esm/index.d.ts",
-  "files": [
-    "lib"
-  ],
+  "main": "./index.js",
+  "module": "./index.js",
+  "typings": "./index.d.ts",
   "scripts": {
     "build": "sha=$(tar cf - ./src | shasum); if [[ $(echo $sha) == $(< .srcsha) ]] && [[ -d \"./lib\" ]]; then echo \"Lib Build Exists\"; else npm run forcebuild; echo $sha > .srcsha; fi",
     "forcebuild": "rimraf lib; rollup -c",
-    "dev:parallel": "rollup -c -w",
-    "test": "jest --colors"
+    "publish-dist": "cp ./{.npmrc,package.json} ./lib; cp ../../LICENSE ./lib; cd ./lib; npm publish; rm -rf .cache"
   },
   "publishConfig": {
     "cache": ".cache/.npm",
@@ -50,12 +46,14 @@
     "dagre-layout": "^0.8.8",
     "emotion": "^10.0.27",
     "geojson": "^0.5.0",
+    "graphlibrary": "^2.2.0",
     "leaflet": "^1.7.1",
     "lodash": "^4.17.21",
     "maplibre-gl": "^v1.15.2",
     "supercluster": "^7.1.0",
     "tangram": "^0.21.1",
     "three": "^0.129.0",
-    "topojson-client": "^3.1.0"
+    "topojson-client": "^3.1.0",
+    "tslib": "^2.3.1"
   }
 }

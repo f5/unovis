@@ -2,18 +2,7 @@
   "compileOnSave": false,
   "compilerOptions": {
       "baseUrl": ".",
-      "paths": {
-        "examples/*": ["web/src/examples/*"],
-        "types/*": ["packages/vis/src/types/*"],
-        "utils/*": ["packages/vis/src/utils/*"],
-        "core/*": ["packages/vis/src/core/*"],
-        "components/*": ["packages/vis/src/components/*"],
-        "styles/*": ["packages/vis/src/styles/*"],
-        "data-models/*": ["packages/vis/src/data-models/*"],
-        "data/*": ["packages/vis/src/data/*"]
-      },
       "downlevelIteration": true,
-      "outDir": "./dist/out-tsc",
       "allowSyntheticDefaultImports": true,
       "sourceMap": true,
       "declaration": false,
@@ -22,8 +11,8 @@
       "resolveJsonModule": true,
       "emitDecoratorMetadata": true,
       "experimentalDecorators": true,
-      "target": "es2015",
       "noUnusedLocals": true,
+      "importHelpers": true,
       "typeRoots": [
           "node_modules/@types"
       ],
@@ -32,14 +21,12 @@
           "es2016",
           "es2015",
           "dom"
-      ]
+      ],
+      "target": "es2015",
   },
   "exclude": [
       "node_modules",
-      "*/node_modules/*"
-  ],
-  "angularCompilerOptions": {
-      "fullTemplateTypeCheck": true,
-      "strictInjectionParameters": true
-  }
+      "*/node_modules/*",
+      "**/*.spec.ts"
+  ]
 }

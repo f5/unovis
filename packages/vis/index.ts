@@ -1,4 +1,2 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-
-module.exports = {
-}
+export * from './lib'
