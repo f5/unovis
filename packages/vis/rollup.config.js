@@ -5,9 +5,8 @@ import transformPaths from '@zerollup/ts-transform-paths'
 import resolve from 'rollup-plugin-node-resolve'
 import commonjs from 'rollup-plugin-commonjs'
 import postcss from 'rollup-plugin-postcss'
+import visualizer from 'rollup-plugin-visualizer'
 import pkg from './package.json'
-import modules from './rollup.modules.json'
-// import visualizer from 'rollup-plugin-visualizer'
 
 const d3Libs = ['d3-array', 'd3-axis', 'd3-brush', 'd3-chord', 'd3-collection', 'd3-color',
   'd3-contour', 'd3-dispatch', 'd3-drag', 'd3-dsv', 'd3-ease', 'd3-fetch', 'd3-force',
@@ -37,6 +36,9 @@ const externals = [
   ...lodashLibs,
 ]
 
+const regexesOfPackages = externals // To prevent having node_modules in the build files
+  .map(packageName => new RegExp(`^${packageName}(/.*)?`))
+
 const plugins = [
   postcss({
     plugins: [],
@@ -45,6 +47,7 @@ const plugins = [
   }),
   commonjs(),
   resolve({
+    extensions: ['.ts'],
     mainFields: ['jsnext:main', 'module', 'main', 'browser'],
   }),
   json(),
@@ -52,26 +55,20 @@ const plugins = [
     typescript: require('typescript'),
     transformers: [(service) => transformPaths(service.getProgram())],
   }),
-  // visualizer({ sourcemap: true }),
+  // visualizer({ sourcemap: true, template: 'network' }),
 ]
 
 export default [
   {
     input: 'src/index.ts',
-    external: externals,
-    output: [
-      {
-        dir: 'lib/cjs',
-        sourcemap: true,
-        globals,
-        format: 'cjs',
-      },
-      {
-        dir: 'lib/esm',
-        sourcemap: true,
-        format: 'esm',
-      },
-    ],
+    external: regexesOfPackages,
+    output: {
+      dir: 'lib',
+      sourcemap: true,
+      format: 'esm',
+      preserveModules: true,
+      preserveModulesRoot: './src',
+    },
     plugins,
   },
 ]
