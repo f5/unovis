@@ -67,14 +67,18 @@ export class Line<Datum> extends XYComponentCore<Datum> {
         const value = getNumber(d, a) ?? config.noDataValue
         return {
           x: lineDataX[i],
-          y: config.yScale(value),
+          y: config.yScale(value ?? 0),
           defined: isFinite(value),
+          value,
         }
       })
 
+      const defined = ld.reduce((def, d) => (d.defined || def), false)
+      const visible = defined && ld.some(d => d.value !== null)
       return {
         values: ld,
-        defined: ld.reduce((def, d) => (d.defined || def), false),
+        defined,
+        visible,
       }
     })
 
@@ -104,7 +108,7 @@ export class Line<Datum> extends XYComponentCore<Datum> {
       const linePath = group.select(`.${s.linePath}`)
       const lineSelectionHelper = group.select(`.${s.lineSelectionHelper}`)
 
-      const isLineVisible = yAccessors[i] && d.defined
+      const isLineVisible = d.visible
       const dashArray = getValue<LineData, number[]>(d, config.lineDashArray, i)
       const transition = smartTransition(linePath, duration)
         .style('stroke', getColor(data, config.color, i))
