@@ -95,7 +95,7 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum> {
         const y = config.yScale(0)
         const width = barWidth
         const height = 0
-        return this._getBarPath(x, y, width, height)
+        return this._getBarPath(x, y, width, height, false)
       })
       .style('fill', (d, i) => getColor(d, config.color, i))
 
@@ -106,16 +106,18 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum> {
         const x = innerBandScale(i)
         const width = barWidth
 
-        let y = config.yScale(getNumber(d, yAccessors[i]))
-        let height = config.yScale(0) - config.yScale(getNumber(d, yAccessors[i]))
+        const value = getNumber(d, yAccessors[i])
+        const isNegative = value < 0
+        let y = isNegative ? config.yScale(0) : config.yScale(value || 0)
+        let height = Math.abs(config.yScale(0) - config.yScale(value)) || 0
 
-        // Optionally set minumum bar height
+        // Optionally set minimum bar height
         if (height < config.barMinHeight) {
           y = config.yScale(0) - config.barMinHeight
           height = config.barMinHeight
         }
 
-        return this._getBarPath(x, y, width, height)
+        return this._getBarPath(x, y, width, height, isNegative)
       })
       .style('fill', (d, i) => getColor(d, config.color, i))
       .style('cursor', (d, i) => getString(d, config.cursor, i))
@@ -143,7 +145,7 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum> {
     return filtered
   }
 
-  _getBarPath (x, y, width, height): string {
+  _getBarPath (x: number, y: number, width: number, height: number, isNegative: boolean): string {
     const { config } = this
 
     const cornerRadius = config.roundedCorners
@@ -156,8 +158,10 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum> {
       y,
       w: width,
       h: height,
-      tl: true,
-      tr: true,
+      tl: !isNegative,
+      tr: !isNegative,
+      bl: isNegative,
+      br: isNegative,
       r: cornerRadiusClamped,
     })
   }
