@@ -12,7 +12,7 @@ export function getDataLatLngBounds<D> (
   pointLatitude: NumericAccessor<D>,
   pointLongitude: NumericAccessor<D>,
   paddingDegrees = 1
-): number[][] {
+): [[number, number], [number, number]] {
   const northWest = {
     lat: max(data ?? [], d => getNumber(d, pointLatitude)),
     lng: min(data ?? [], d => getNumber(d, pointLongitude)),
