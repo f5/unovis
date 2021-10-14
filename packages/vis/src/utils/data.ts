@@ -31,6 +31,7 @@ import { max, min, mean, bisector } from 'd3-array'
 
 // Types
 import { NumericAccessor, StringAccessor, BooleanAccessor, ColorAccessor, GenericAccessor } from 'types/accessor'
+import { StackValuesRecord } from 'types/data'
 
 export const isNumber = _isNumber
 export const isEqual = _isEqual
@@ -145,11 +146,11 @@ export function getStackedValues<Datum> (d: Datum, ...acs: NumericAccessor<Datum
   return values
 }
 
-export function getStackedData<Datum> (data: Datum[], baseline: NumericAccessor<Datum>, ...acs: NumericAccessor<Datum>[]): number[][][] {
+export function getStackedData<Datum> (data: Datum[], baseline: NumericAccessor<Datum>, ...acs: NumericAccessor<Datum>[]): StackValuesRecord[] {
   const baselineValues = data.map(d => getNumber(d, baseline) || 0)
   const isNegativeStack = acs.map(a => mean(data, d => getNumber(d, a) || 0) < 0)
 
-  const stackedData = acs.map(() => [])
+  const stackedData: StackValuesRecord[] = acs.map(() => [])
   data.forEach((d, i) => {
     let positiveStack = baselineValues[i]
     let negativeStack = baselineValues[i]
@@ -162,6 +163,21 @@ export function getStackedData<Datum> (data: Datum[], baseline: NumericAccessor<
       }
     })
   })
+
+  // Fill in additional stack information
+  stackedData.forEach((stack, i) => {
+    stack.negative = isNegativeStack[i]
+  })
+
+  stackedData.filter(s => s.negative)
+    .forEach((s, i, arr) => {
+      s.ending = i === arr.length - 1
+    })
+
+  stackedData.filter(s => !s.negative)
+    .forEach((s, i, arr) => {
+      s.ending = i === arr.length - 1
+    })
 
   return stackedData
 }
