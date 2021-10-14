@@ -13,5 +13,8 @@
       "styles/*": ["./styles/*"],
       "data-models/*": ["./data-models/*"],
     },
-  }
+  },
+  "exclude": [
+    "index.ts"
+  ]
  }
