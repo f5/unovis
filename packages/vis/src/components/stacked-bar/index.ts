@@ -28,8 +28,8 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
   config: StackedBarConfig<Datum> = new StackedBarConfig()
   getAccessors = (): NumericAccessor<Datum>[] => (isArray(this.config.y) ? this.config.y : [this.config.y])
   stacked = true
-  events = {
-  }
+  private _prevNegative: boolean[] | undefined // To help guessing the bar direction when an accessor was set to null or 0
+  events = {}
 
   constructor (config?: StackedBarConfigInterface<Datum>) {
     super()
@@ -47,7 +47,8 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
     const visibleData = this._getVisibleData()
 
     const yAccessors = this.getAccessors()
-    const stacked = getStackedData(visibleData, 0, ...yAccessors)
+    const stacked = getStackedData(visibleData, 0, yAccessors, this._prevNegative)
+    this._prevNegative = stacked.map(s => !!s.negative)
 
     const barGroups = this.g
       .selectAll<SVGGElement, Datum>(`.${s.barGroup}`)

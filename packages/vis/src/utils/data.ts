@@ -146,9 +146,17 @@ export function getStackedValues<Datum> (d: Datum, ...acs: NumericAccessor<Datum
   return values
 }
 
-export function getStackedData<Datum> (data: Datum[], baseline: NumericAccessor<Datum>, ...acs: NumericAccessor<Datum>[]): StackValuesRecord[] {
+export function getStackedData<Datum> (
+  data: Datum[],
+  baseline: NumericAccessor<Datum>,
+  acs: NumericAccessor<Datum>[],
+  prevNegative?: boolean[] // to help guessing the stack direction (positive/negative) when the values are 0 or null
+): StackValuesRecord[] {
   const baselineValues = data.map(d => getNumber(d, baseline) || 0)
-  const isNegativeStack = acs.map(a => mean(data, d => getNumber(d, a) || 0) < 0)
+  const isNegativeStack = acs.map((a, i) => {
+    const average = mean(data, d => getNumber(d, a) || 0)
+    return (average === 0 && Array.isArray(prevNegative)) ? prevNegative[i] : average < 0
+  })
 
   const stackedData: StackValuesRecord[] = acs.map(() => [])
   data.forEach((d, i) => {
