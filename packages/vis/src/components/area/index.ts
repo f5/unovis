@@ -30,9 +30,10 @@ export class Area<Datum> extends XYComponentCore<Datum> {
   stacked = true
   config: AreaConfig<Datum> = new AreaConfig()
   areaGen: AreaInterface<AreaDatum>
+  private _prevNegative: boolean[] | undefined // To help guessing the stack direction when an accessor was set to null or 0
+
   events = {
-    [Area.selectors.area]: {
-    },
+    [Area.selectors.area]: {},
   }
 
   constructor (config?: AreaConfigInterface<Datum>) {
@@ -60,7 +61,8 @@ export class Area<Datum> extends XYComponentCore<Datum> {
     const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
     const areaDataX = data.map(d => config.xScale(getNumber(d, config.x)))
 
-    const stacked = getStackedData(data, config.baseline, ...yAccessors)
+    const stacked = getStackedData(data, config.baseline, yAccessors, this._prevNegative)
+    this._prevNegative = stacked.map(s => !!s.negative)
     const stackedData: AreaDatum[][] = stacked.map(
       arr => arr.map(
         (d, j) => ({
@@ -86,10 +88,7 @@ export class Area<Datum> extends XYComponentCore<Datum> {
       .style('fill', (d, i) => getColor(data, config.color, areaMaxIdx - i))
 
     const areasMerged = smartTransition(areasEnter.merge(areas), duration)
-      .style('opacity', d => {
-        const isDefined = d.some(p => (p.y0 - p.y1) !== 0)
-        return isDefined ? getNumber(d, config.opacity) : 0
-      })
+      .style('opacity', d => getNumber(d, config.opacity))
       .style('fill', (d, i) => getColor(data, config.color, areaMaxIdx - i))
       .style('stroke', (d, i) => getColor(data, config.color, areaMaxIdx - i))
       .style('cursor', (d, i) => getString(data, config.cursor, areaMaxIdx - i))
@@ -105,7 +104,9 @@ export class Area<Datum> extends XYComponentCore<Datum> {
       areasMerged.attr('d', d => this.areaGen(d) || this._emptyPath())
     }
 
-    areas.exit().remove()
+    smartTransition(areas.exit(), duration)
+      .style('opacity', 0)
+      .remove()
   }
 
   getYDataExtent (): number[] {

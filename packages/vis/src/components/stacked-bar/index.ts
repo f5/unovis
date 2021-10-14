@@ -5,7 +5,7 @@ import { min } from 'd3-array'
 import { XYComponentCore } from 'core/xy-component'
 
 // Utils
-import { isNumber, isArray, isEmpty, clamp, getStackedExtent, getStackedValues, getString, getNumber } from 'utils/data'
+import { isNumber, isArray, isEmpty, clamp, getStackedExtent, getString, getNumber, getStackedData } from 'utils/data'
 import { roundedRectPath } from 'utils/path'
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
@@ -13,6 +13,9 @@ import { getColor } from 'utils/color'
 // Types
 import { NumericAccessor } from 'types/accessor'
 import { Spacing } from 'types/spacing'
+
+// Local Types
+import { StackedBarDataRecord } from './types'
 
 // Config
 import { StackedBarConfig, StackedBarConfigInterface } from './config'
@@ -25,8 +28,8 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
   config: StackedBarConfig<Datum> = new StackedBarConfig()
   getAccessors = (): NumericAccessor<Datum>[] => (isArray(this.config.y) ? this.config.y : [this.config.y])
   stacked = true
-  events = {
-  }
+  private _prevNegative: boolean[] | undefined // To help guessing the bar direction when an accessor was set to null or 0
+  events = {}
 
   constructor (config?: StackedBarConfigInterface<Datum>) {
     super()
@@ -43,8 +46,9 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
     const duration = isNumber(customDuration) ? customDuration : config.duration
     const visibleData = this._getVisibleData()
 
-    const yAccessors = this.getAccessors() // (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
-    const stackedValues = visibleData.map(d => getStackedValues(d, ...yAccessors))
+    const yAccessors = this.getAccessors()
+    const stacked = getStackedData(visibleData, 0, yAccessors, this._prevNegative)
+    this._prevNegative = stacked.map(s => !!s.negative)
 
     const barGroups = this.g
       .selectAll<SVGGElement, Datum>(`.${s.barGroup}`)
@@ -73,8 +77,10 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
 
     // Render Bars
     const bars = barGroupsMerged
-      .selectAll<SVGPathElement, Datum>(`.${s.bar}`)
-      .data((d, i) => yAccessors.map(() => ({ ...d, _stacked: stackedValues[i] })))
+      .selectAll<SVGPathElement, StackedBarDataRecord<Datum>>(`.${s.bar}`)
+      .data((d, i) => stacked.map((s) =>
+        ({ ...d, _stacked: s[i], _negative: s.negative, _ending: s.ending }))
+      )
 
     const barsEnter = bars.enter().append('path')
       .attr('class', s.bar)
@@ -142,22 +148,22 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
     return filtered
   }
 
-  _getBarPath (d, i: number, isEntering = false): string {
+  _getBarPath (d: StackedBarDataRecord<Datum>, i: number, isEntering = false): string {
     const { config } = this
     const yAccessors = this.getAccessors()
     const barWidth = this._getBarWidth()
 
-    const stackedValue = d._stacked[i]
+    const isNegative = d._negative
+    const isEnding = d._ending // The most top bar or, if the value is negative, the most bottom bar
     const value = getNumber(d, yAccessors[i])
 
-    const height = isEntering ? 0 : config.yScale(d._stacked[i - 1] ?? 0) - config.yScale(stackedValue)
+    const height = isEntering ? 0 : Math.abs(config.yScale(d._stacked[0]) - config.yScale(d._stacked[1]))
     const h = !isEntering && config.barMinHeight && (height < 1) && isFinite(value) && (value !== config.barMinHeightZeroValue) ? 1 : height
-    const y = isEntering ? config.yScale(0) : config.yScale(stackedValue) - (height < 1 && config.barMinHeight ? 1 : 0)
+    const y = isEntering ? config.yScale(0) : config.yScale(isNegative ? d._stacked[0] : d._stacked[1]) - (height < 1 && config.barMinHeight ? 1 : 0)
 
     const x = -barWidth / 2
     const width = barWidth
 
-    const rounded = (i === d._stacked.length - 1) || (!config.barMinHeight && stackedValue === d._stacked[d._stacked.length - 1])
     const cornerRadius = config.roundedCorners
       ? isNumber(config.roundedCorners) ? +config.roundedCorners : width / 2
       : 0
@@ -168,8 +174,10 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
       y,
       w: width,
       h,
-      tl: rounded,
-      tr: rounded,
+      br: isNegative && isEnding,
+      bl: isNegative && isEnding,
+      tl: !isNegative && isEnding,
+      tr: !isNegative && isEnding,
       r: cornerRadiusClamped,
     })
   }
