@@ -4,11 +4,13 @@ import { getCSSColorVariable } from 'styles/colors'
 
 // Utils
 import { getString, isNumber } from 'utils/data'
-import { StringAccessor } from 'types/accessor'
+import { ColorAccessor, StringAccessor } from 'types/accessor'
 
 /** Retrieves color from data if available, fallbacks to a css variable in an index has been passed */
-export function getColor<T> (d: T, accessor: StringAccessor<T>, index?: number): string {
-  const value = getString(d, accessor, index)
+export function getColor<T> (d: T, accessor: ColorAccessor<T>, index?: number): string {
+  if (Array.isArray(accessor) && isFinite(index)) return accessor[index % accessor.length]
+
+  const value = getString(d, accessor as StringAccessor<T>, index)
   return (value || (isNumber(index) ? `var(${getCSSColorVariable(index)})` : null)) as string
 }
 
