@@ -22,7 +22,7 @@
     "build:vis-angular-storybook": "cd packages/vis-angular && npm run build-storybook",
     "build:vis-react-lib": "cd packages/vis-react && npm run build",
     "build:vis-react-storybook": "cd packages/vis-react && npm run build-storybook",
-    "publish:lib": "cd packages/vis; npm run build; npm publish-dist",
+    "publish:lib": "cd packages/vis; npm run build; npm run publish-dist",
     "publish:vis-angular-lib": "cd packages/vis-angular; npm run build; npm publish",
     "publish:vis-react-lib": "cd packages/vis-react; npm run build; npm run publish-dist",
     "publish:all": "sh prepublish.sh; sh publish.sh",
