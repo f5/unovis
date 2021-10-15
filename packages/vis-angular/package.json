@@ -1,6 +1,6 @@
 {
   "name": "@volterra/vis-angular",
-  "version": "0.9.8",
+  "version": "0.9.9",
   "license": "MIT",
   "scripts": {
     "ng": "npx ng",
@@ -29,7 +29,7 @@
     "@angular/common": "^12.0.3",
     "@angular/compiler": "^12.0.3",
     "@angular/core": "^12.0.3",
-    "@volterra/vis": "^0.9.8"
+    "@volterra/vis": "^0.9.9"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^12.0.3",
