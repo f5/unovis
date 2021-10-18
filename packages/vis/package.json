@@ -1,6 +1,6 @@
 {
   "name": "@volterra/vis",
-  "version": "0.9.9",
+  "version": "0.9.10",
   "license": "MIT",
   "main": "./index.js",
   "module": "./index.js",
