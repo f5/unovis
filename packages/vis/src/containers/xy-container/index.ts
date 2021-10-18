@@ -150,8 +150,7 @@ export class XYContainer<Datum> extends ContainerCore {
     const crosshair = containerConfig.crosshair
     if (crosshair) {
       crosshair.setContainer(this.svg)
-      // Pass tooltip
-      if (tooltip) crosshair.config.tooltip = tooltip
+      crosshair.tooltip = tooltip
 
       this.element.appendChild(crosshair.element)
     }
