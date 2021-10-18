@@ -1,8 +1,10 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { Selection, pointer } from 'd3-selection'
 import { easeLinear } from 'd3-ease'
+
 // Core
 import { XYComponentCore } from 'core/xy-component'
+import { Tooltip } from 'components/tooltip'
 
 // Utils
 import { isNumber, isArray, getNumber, clamp, getStackedValues, getNearest } from 'utils/data'
@@ -29,6 +31,10 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
   datum: Datum
   show = false
   private _animFrameId: number = null
+
+  /** Tooltip component to be used by Crosshair if not provided by the config. This field is supposed to be set
+   * externally by a container component like XYContainer. */
+  public tooltip: Tooltip
 
   constructor (config?: CrosshairConfigInterface<Datum>) {
     super()
@@ -124,17 +130,19 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
   }
 
   _showTooltip (event: MouseEvent): void {
-    const { config: { tooltip, template } } = this
+    const { config } = this
+    const tooltip = config.tooltip ?? this.tooltip
     if (!tooltip) return
 
     const container = tooltip.getContainer() || this.container.node()
     const [x, y] = tooltip.config.positionStrategy === PositionStrategy.Fixed ? [event.clientX, event.clientY] : pointer(event, container)
-    const content = template(this.datum)
+    const content = config.template(this.datum)
     if (content) tooltip.show(content, { x, y })
   }
 
   _hideTooltip (): void {
-    const { config: { tooltip } } = this
+    const { config } = this
+    const tooltip = config.tooltip ?? this.tooltip
     tooltip?.hide()
   }
 
