@@ -1,8 +1,11 @@
 <div class="chart">
- <vis-xy-container [margin]="margin" [padding]="padding">
-  <vis-area [x]="x" [y]="y" [opacity]="1" [data]="data"></vis-area>
-  <vis-line [x]="x" [y]="y" [color]="'black'" [data]="customData"></vis-line>
-  <vis-axis type="x" label="X Axis"></vis-axis>
-  <vis-axis type="y" label="Y Axis"></vis-axis>
- </vis-xy-container>
+  <vis-xy-container [margin]="margin" [padding]="padding" [data]="data">
+    <vis-area [x]="x" [y]="y" [opacity]="1" [color]="palette"></vis-area>
+    <vis-line [x]="x" [y]="0" [color]="'black'"></vis-line>
+    <vis-axis type="x" label="" [tickFormat]="formatXTicks"></vis-axis>
+    <vis-axis type="y" label="Y Axis"></vis-axis>
+    <vis-crosshair [template]="crosshairTemplate" [x]="x" [yStacked]="y" [color]="palette"></vis-crosshair>
+    <vis-free-brush mode="x" [selectionMinLength]="0.25" [onBrushStart]="onBrushStart" [onBrushMove]="onBrushMove" [onBrushEnd]="onBrushEnd"></vis-free-brush>
+    <vis-tooltip></vis-tooltip>
+  </vis-xy-container>
 </div>
