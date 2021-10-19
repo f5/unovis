@@ -95,8 +95,8 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
 
   _onMouseMove (event: MouseEvent): void {
     const { config, datamodel, element } = this
-    if (!config.x) console.error('Crosshair: X accessor function has not been configured. Please check if it\'s preset in the configuration object')
-    if (!config.y && !config.yStacked) console.error('Crosshair: Y accessors have not been configured. Please check if they\'re preset in the configuration object')
+    if (!config.x && datamodel.data?.length) console.warn('Crosshair: X accessor function has not been configured. Please check if it\'s present in the configuration object')
+    if (!config.y && !config.yStacked && datamodel.data?.length) console.warn('Crosshair: Y accessors have not been configured. Please check if they\'re present in the configuration object')
 
     const [x] = pointer(event, element)
     const scaleX = config.xScale
