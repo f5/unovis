@@ -1,7 +1,6 @@
 /* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
-import { useEffect, useRef, useState } from 'react'
-// import { Line, LineConfigInterface } from '@volterra/vis'
+import React, { useEffect, useRef, useState } from 'react'
 import { Line, LineConfigInterface } from '@volterra/vis'
 
 // Types
@@ -27,3 +26,4 @@ export function VisLine<Datum> (props: VisLineProps<Datum>): JSX.Element {
 
   return <vis-component ref={ref} />
 }
+VisLine.selectors = Line.selectors

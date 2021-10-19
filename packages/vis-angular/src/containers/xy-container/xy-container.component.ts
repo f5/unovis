@@ -82,7 +82,9 @@ export class VisXYContainerComponent<Datum> implements AfterViewInit, OnDestroy 
   /** Sets the Y scale domain based on the current X scale domain (not the whole dataset). Default: `false` */
   @Input() scaleByDomain: boolean
 
-  @Input() data: Datum[] = []
+  /** Data to be passed to all child components. But if `data` is `undefined` it'll to be passed allowing components to
+   * have their individual data. Default: `undefined` */
+  @Input() data: Datum[] | undefined = undefined
 
   chart: XYContainer<Datum>
 

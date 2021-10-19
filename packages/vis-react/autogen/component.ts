@@ -14,8 +14,7 @@ export function getComponentCode (
     : ''
   return `/* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
-import { useEffect, useRef, useState } from 'react'
-//import { ${componentName}, ${componentName}ConfigInterface } from '@volterra/vis'
+import React, { useEffect, useRef, useState } from 'react'
 ${importStatements.map(s => `import { ${s.elements.join(', ')} } from '${s.source}'`).join('\n')}
 
 // Types
@@ -41,5 +40,6 @@ export function Vis${componentName}${genericsDefStr} (props: Vis${componentName}
 
   return <vis-${elementSuffix} ref={ref} />
 }
+Vis${componentName}.selectors = ${componentName}.selectors
 `
 }

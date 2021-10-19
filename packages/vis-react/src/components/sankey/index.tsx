@@ -1,7 +1,6 @@
 /* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
-import { useEffect, useRef, useState } from 'react'
-// import { Sankey, SankeyConfigInterface } from '@volterra/vis'
+import React, { useEffect, useRef, useState } from 'react'
 import { Sankey, SankeyConfigInterface, SankeyInputNode, SankeyInputLink } from '@volterra/vis'
 
 // Types
@@ -27,3 +26,4 @@ export function VisSankey<N extends SankeyInputNode, L extends SankeyInputLink> 
 
   return <vis-component ref={ref} />
 }
+VisSankey.selectors = Sankey.selectors

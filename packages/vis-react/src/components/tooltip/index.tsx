@@ -1,7 +1,6 @@
 /* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
-import { useEffect, useRef, useState } from 'react'
-// import { Tooltip, TooltipConfigInterface } from '@volterra/vis'
+import React, { useEffect, useRef, useState } from 'react'
 import { Tooltip, TooltipConfigInterface } from '@volterra/vis'
 
 // Types
@@ -26,3 +25,4 @@ export function VisTooltip (props: VisTooltipProps): JSX.Element {
 
   return <vis-tooltip ref={ref} />
 }
+VisTooltip.selectors = Tooltip.selectors

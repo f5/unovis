@@ -36,6 +36,7 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
   private _axisRawBBox: DOMRect
   private _axisSize: { width: number; height: number }
   private _requiredMargin: Spacing
+  private _defaultNumTicks = 3
 
   events = {
     [Axis.selectors.tick]: {
@@ -229,8 +230,23 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
   }
 
   _getNumTicks (): number {
-    const { config: { type, numTicks, width, height } } = this
-    return numTicks ?? Math.floor((type === AxisType.X ? width / 175 : Math.pow(height, 0.85) / 25))
+    const { config: { type, numTicks, xScale, yScale } } = this
+
+    if (numTicks) return numTicks
+
+    if (type === AxisType.X) {
+      const xRange = xScale.range() as [number, number]
+      const width = xRange[1] - xRange[0]
+      return Math.floor(width / 175)
+    }
+
+    if (type === AxisType.Y) {
+      const yRange = yScale.range() as [number, number]
+      const height = yRange[0] - yRange[1]
+      return Math.pow(height, 0.85) / 25
+    }
+
+    return this._defaultNumTicks
   }
 
   _getConfiguredTickValues (): number[] | null {

@@ -131,6 +131,7 @@ export class VisFreeBrushComponent<Datum> implements FreeBrushConfigInterface<Da
 
   ngAfterViewInit (): void {
     this.component = new FreeBrush<Datum>(this.getConfig())
+    if (this.data) this.component.setData(this.data)
   }
 
   ngOnChanges (changes: SimpleChanges): void {

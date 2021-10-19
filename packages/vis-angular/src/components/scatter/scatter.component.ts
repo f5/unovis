@@ -123,6 +123,7 @@ export class VisScatterComponent<Datum> implements ScatterConfigInterface<Datum>
 
   ngAfterViewInit (): void {
     this.component = new Scatter<Datum>(this.getConfig())
+    if (this.data) this.component.setData(this.data)
   }
 
   ngOnChanges (changes: SimpleChanges): void {

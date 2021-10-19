@@ -1,4 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
+import { Feature, Geometry } from 'geojson'
 import {
   geoMercator,
   geoEquirectangular,
@@ -26,6 +27,8 @@ export interface MapInputLink {
   source: number | string | MapInputNode;
   target: number | string | MapInputNode;
 }
+
+export type MapFeature<D> = Feature<Geometry> & { data: D }
 
 export type MapInputArea = {
   /** Area id related to the feature id in TopoJSON */

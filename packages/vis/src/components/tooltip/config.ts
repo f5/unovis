@@ -37,7 +37,7 @@ export interface TooltipConfigInterface {
    * ```
    */
   triggers?: {
-    [selector: string]: (data: unknown, i: number, elements: (HTMLElement | SVGElement)[]) => string | HTMLElement | undefined | null;
+    [selector: string]: (data: any, i: number, elements: (HTMLElement | SVGElement)[]) => string | HTMLElement | undefined | null;
   };
 }
 

@@ -22,6 +22,8 @@
     "rootDir": "./",
     "baseUrl": "./",
     "paths": {
+      "@volterra/vis-react": ["src/"],
+      "@volterra/vis-react/*": ["src/*"],
     },
     "removeComments": true,
     "strict": true,
@@ -31,6 +33,7 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "downlevelIteration": true
+    "downlevelIteration": true,
+    "importHelpers": true
   }
 }

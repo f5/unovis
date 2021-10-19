@@ -12,6 +12,6 @@ export class SeriesDataModel<Datum> extends CoreDataModel<Datum[]> {
   }
 
   set data (data: Datum[]) {
-    if (Array.isArray(data) && data.length) this._data = data
+    if (Array.isArray(data)) this._data = data
   }
 }

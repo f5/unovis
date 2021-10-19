@@ -1,6 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 /* eslint-disable @typescript-eslint/naming-convention */
-import { ReactNode, useEffect, useRef, useState } from 'react'
+import React, { ReactNode, useEffect, useRef, useState } from 'react'
 import { XYContainer, XYContainerConfigInterface, XYComponentCore, Tooltip, Crosshair, Axis, AxisType } from '@volterra/vis'
 
 // Types
@@ -23,20 +23,21 @@ export function VisXYContainer<Datum> (props: VisXYContainerProps<Datum>): JSX.E
     tooltip: container.current?.querySelector<VisComponentElement<Tooltip>>('vis-tooltip')?.__component__,
     crosshair: container.current?.querySelector<VisComponentElement<Crosshair<Datum>>>('vis-crosshair')?.__component__,
     xAxis: Array
-      .from(container.current?.querySelectorAll<VisComponentElement<Axis<Datum>>>('vis-tooltip') ?? [])
+      .from(container.current?.querySelectorAll<VisComponentElement<Axis<Datum>>>('vis-axis') ?? [])
       .map(c => c.__component__)
       .find(c => c.config.type === AxisType.X),
     yAxis: Array
-      .from(container.current?.querySelectorAll<VisComponentElement<Axis<Datum>>>('vis-tooltip') ?? [])
+      .from(container.current?.querySelectorAll<VisComponentElement<Axis<Datum>>>('vis-axis') ?? [])
       .map(c => c.__component__)
       .find(c => c.config.type === AxisType.Y),
     ...props,
+    margin: { top: 5, left: 5, right: 5, bottom: 5 },
   })
 
   // On Mount
   useEffect(() => {
     setChart(
-      new XYContainer<Datum>(container.current as HTMLDivElement, getConfig(), props.data ?? [])
+      new XYContainer<Datum>(container.current as HTMLDivElement, getConfig(), props.data)
     )
 
     return () => chart?.destroy()
@@ -47,7 +48,7 @@ export function VisXYContainer<Datum> (props: VisXYContainerProps<Datum>): JSX.E
     const preventRender = true
 
     // Set new Data without re-render
-    chart?.setData(props.data ?? [], preventRender)
+    if (props.data) chart?.setData(props.data, preventRender)
 
     // Update Container and render
     chart?.updateContainer(getConfig())

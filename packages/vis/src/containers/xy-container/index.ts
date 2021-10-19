@@ -9,7 +9,7 @@ import { XYComponentCore } from 'core/xy-component'
 import { XYComponentConfigInterface } from 'core/xy-component/config'
 
 // Data Model
-import { SeriesDataModel } from 'data-models/series'
+import { CoreDataModel } from 'data-models/core'
 
 // Types
 import { Spacing } from 'types/spacing'
@@ -41,7 +41,7 @@ export type XYConfigInterface<Datum> = XYComponentConfigInterface<Datum>
 
 export class XYContainer<Datum> extends ContainerCore {
   config: XYContainerConfig<Datum> = new XYContainerConfig()
-  datamodel: SeriesDataModel<Datum> = new SeriesDataModel()
+  datamodel: CoreDataModel<Datum[]> = new CoreDataModel()
   private _svgDefs: Selection<SVGDefsElement, unknown, null, undefined>
   private _clipPath: Selection<SVGClipPathElement, unknown, null, undefined>
   private _clipPathId = guid()
@@ -150,8 +150,7 @@ export class XYContainer<Datum> extends ContainerCore {
     const crosshair = containerConfig.crosshair
     if (crosshair) {
       crosshair.setContainer(this.svg)
-      // Pass tooltip
-      if (tooltip) crosshair.config.tooltip = tooltip
+      crosshair.tooltip = tooltip
 
       this.element.appendChild(crosshair.element)
     }

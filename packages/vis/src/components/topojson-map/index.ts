@@ -1,6 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { Selection } from 'd3-selection'
-import { Feature, Geometry } from 'geojson'
 import { ZoomBehavior, zoom, zoomIdentity, ZoomTransform, D3ZoomEvent } from 'd3-zoom'
 import { timeout } from 'd3-timer'
 import { geoPath, GeoProjection } from 'd3-geo'
@@ -21,7 +20,7 @@ import { getCSSVariableValue, isStringCSSVariable } from 'utils/misc'
 import { GraphLinkCore, GraphNodeCore } from 'types/graph'
 
 // Local Types
-import { MapInputNode, MapInputLink, MapInputArea } from './types'
+import { MapInputNode, MapInputLink, MapInputArea, MapFeature } from './types'
 
 // Config
 import { TopoJSONMapConfig, TopoJSONMapConfigInterface } from './config'
@@ -129,7 +128,7 @@ export class TopoJSONMap<
     if (!featureObject) return
 
     this._featureCollection = feature(mapData, featureObject) as GeoJSON.FeatureCollection
-    const featureData = (this._featureCollection?.features ?? []) as (Feature<Geometry, {data: A}>)[]
+    const featureData = (this._featureCollection?.features ?? []) as MapFeature<A>[]
     const boundariesData = [mesh(mapData, featureObject, (a, b) => a !== b)]
 
     if (this._firstRender) {
@@ -173,7 +172,7 @@ export class TopoJSONMap<
     const areaData = datamodel.areas
     areaData.forEach(a => {
       const feature = featureData.find(f => f.id.toString() === getString(a, config.areaId).toString())
-      if (feature) feature.properties.data = a
+      if (feature) feature.data = a
       else if (this._firstRender) console.warn(`Can't find feature by area code ${a.id}`)
     })
 
@@ -184,8 +183,8 @@ export class TopoJSONMap<
     const featuresEnter = features.enter().append('path').attr('class', s.feature)
     smartTransition(featuresEnter.merge(features), duration)
       .attr('d', this._path)
-      .style('fill', (d, i) => d.properties.data ? getColor(d.properties.data, config.areaColor, i) : null)
-      .style('cursor', d => d.properties.data ? getString(d.properties.data, config.areaCursor) : null)
+      .style('fill', (d, i) => d.data ? getColor(d.data, config.areaColor, i) : null)
+      .style('cursor', d => d.data ? getString(d.data, config.areaCursor) : null)
     features.exit().remove()
 
     const boundaries = this._boundariesGroup

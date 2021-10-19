@@ -6,10 +6,10 @@ export type ScatterPoint<D> = D & {
     x: number;
     y: number;
     size: number;
-    color: string;
-    shape: SymbolType;
-    label: string;
-    labelColor: string;
-    cursor: string;
+    color: string | null;
+    shape: SymbolType | string;
+    label: string | null;
+    labelColor: string | null;
+    cursor: string | null;
   };
 }

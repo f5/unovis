@@ -1,7 +1,6 @@
 /* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
-import { useEffect, useRef, useState } from 'react'
-// import { Brush, BrushConfigInterface } from '@volterra/vis'
+import React, { useEffect, useRef, useState } from 'react'
 import { Brush, BrushConfigInterface } from '@volterra/vis'
 
 // Types
@@ -27,3 +26,4 @@ export function VisBrush<Datum> (props: VisBrushProps<Datum>): JSX.Element {
 
   return <vis-component ref={ref} />
 }
+VisBrush.selectors = Brush.selectors

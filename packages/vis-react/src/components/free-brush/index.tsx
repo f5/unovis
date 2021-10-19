@@ -1,7 +1,6 @@
 /* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
-import { useEffect, useRef, useState } from 'react'
-// import { FreeBrush, FreeBrushConfigInterface } from '@volterra/vis'
+import React, { useEffect, useRef, useState } from 'react'
 import { FreeBrush, FreeBrushConfigInterface } from '@volterra/vis'
 
 // Types
@@ -27,3 +26,4 @@ export function VisFreeBrush<Datum> (props: VisFreeBrushProps<Datum>): JSX.Eleme
 
   return <vis-component ref={ref} />
 }
+VisFreeBrush.selectors = FreeBrush.selectors
