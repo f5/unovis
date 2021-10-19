@@ -24,7 +24,7 @@ import { DataRecord } from './xy-line-chart.types'
 })
 export default class XYLineChartComponent {
   @ViewChild(VisCrosshairComponent, { static: false }) crosshairRef: VisCrosshairComponent<DataRecord>
-  @ViewChild(VisTooltipComponent, { static: false }) tooltipRef: VisTooltipComponent<DataRecord>
+  @ViewChild(VisTooltipComponent, { static: false }) tooltipRef: VisTooltipComponent
 
   @Input() data: DataRecord[] = Array(100).fill(0).map((_, i: number) => ({
     timestamp: Date.now() + i * 1000 * 60 * 60 * 24,
