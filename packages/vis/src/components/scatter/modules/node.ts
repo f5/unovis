@@ -52,7 +52,7 @@ export function updateNodes<Datum> (selection: Selection<SVGGElement, ScatterPoi
     // Label
     const pointLabelText = d._screen.label ?? ''
     const textLength = pointLabelText.length
-    const pointLabelFontSize = 0.5 * pointDiameter / Math.pow(textLength, 0.4)
+    const pointLabelFontSize = 0.7 * pointDiameter / Math.pow(textLength, 0.4)
 
     let labelColor = d._screen.labelColor
     if (!labelColor) {
@@ -62,7 +62,7 @@ export function updateNodes<Datum> (selection: Selection<SVGGElement, ScatterPoi
     }
 
     text.html(pointLabelText)
-      .style('font-size', pointLabelFontSize)
+      .attr('font-size', pointLabelFontSize)
 
     smartTransition(text, duration)
       .style('fill', labelColor)
