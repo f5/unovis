@@ -26,6 +26,8 @@ export class XYComponentCore<Datum> extends ComponentCore<Datum[]> {
   clippable = true
   /** Identifies whether the component displayed stacked data (eg StackedBar, Area) */
   stacked = false
+  /** Identifies whether the component should not be included in Domain calculations */
+  excludeFromDomainCalculation = false
 
   setScaleDomain (dimension: ScaleDimension, domain: number[]): void {
     const { config } = this
@@ -78,11 +80,11 @@ export class XYComponentCore<Datum> extends ComponentCore<Datum[]> {
 
   getXScreenRange (padding: Spacing = {}): number[] {
     const bleed = this.bleed // Bleed depends on the domain. You should set it first in order to get correct results
-    return [padding.left + bleed.left, this.config.width - padding.right - bleed.right]
+    return [(padding.left ?? 0) + (bleed.left ?? 0), this.config.width - (padding.right ?? 0) - (bleed.right ?? 0)]
   }
 
   getYScreenRange (padding: Spacing = {}): number[] {
     const bleed = this.bleed // Bleed depends on the domain. You should set it first in order to get correct results
-    return [padding.top + bleed.top, this.config.height - padding.bottom - bleed.bottom]
+    return [(padding.top ?? 0) + (bleed.top ?? 0), this.config.height - (padding.bottom ?? 0) - (bleed.bottom ?? 0)]
   }
 }
