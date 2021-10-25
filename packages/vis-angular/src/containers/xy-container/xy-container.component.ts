@@ -82,7 +82,7 @@ export class VisXYContainerComponent<Datum> implements AfterViewInit, OnDestroy 
   /** Sets the Y scale domain based on the current X scale domain (not the whole dataset). Default: `false` */
   @Input() scaleByDomain: boolean
   /** Enables automatic calculation of chart margins based on the size of the axes. Default: `true` */
-  @Input() autoMargin?: boolean;
+  @Input() autoMargin?: boolean = true;
 
   /** Data to be passed to all child components. But if `data` is `undefined` it'll to be passed allowing components to
    * have their individual data. Default: `undefined` */
