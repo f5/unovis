@@ -6,7 +6,7 @@ import { VisDonutModule, VisSingleContainerModule } from 'src/public-api'
 import DonutChartComponent from './donut-chart.component'
 
 export default {
-  title: 'Experimental/Donut',
+  title: 'Full Charts/Donut',
   component: DonutChartComponent,
   decorators: [
     moduleMetadata({

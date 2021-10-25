@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { Axis, XYContainer } from '@volterra/vis'
+import { Axis, XYComponentCore, XYContainer, XYContainerConfigInterface } from '@volterra/vis'
 import { AfterViewInit, Component, ContentChild, ElementRef, ViewChild } from '@angular/core'
 import { VisTooltipComponent } from 'src/components/tooltip/tooltip.component'
 import { DataRecord, generateDataRecords } from '../../data/time-series'
@@ -8,7 +8,7 @@ import { DataRecord, generateDataRecords } from '../../data/time-series'
   selector: 'tooltip-example',
   template: `
     <div #altContainer class="container" [class.hidden]="!useAltContainer"></div>
-    <button *ngIf="showButton" (click)="showTooltip($e)">{{tooltipVisible ? 'Hide' : ' Show'}} tooltip</button>
+    <button *ngIf="showButton" (click)="showTooltip()">{{tooltipVisible ? 'Hide' : ' Show'}} tooltip</button>
     <div #chart class="chart"></div>
   `,
   styles: [`
@@ -35,8 +35,8 @@ export class TooltipExampleComponent implements AfterViewInit {
     }
     this.showButton = !this.tooltipRef.triggers
 
-    const chartConfig = {
-      components: this.tooltipRef.components,
+    const chartConfig: XYContainerConfigInterface<DataRecord> = {
+      components: this.tooltipRef.components as XYComponentCore<DataRecord>[],
       xAxis: new Axis<DataRecord>(),
       yAxis: new Axis<DataRecord>(),
       tooltip: this.tooltipRef.component,

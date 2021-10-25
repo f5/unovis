@@ -1,0 +1,26 @@
+import { moduleMetadata, componentWrapperDecorator } from '@storybook/angular'
+import { Meta, Story, ArgsTable } from '@storybook/addon-docs';
+import { VisSingleContainerModule, VisGraphModule } from '../../../src/public-api'
+
+import { VisGraphComponent } from '../../../src/components/graph/graph.component'
+
+import { singleVisContentWrapper } from '../../utils/single-content-wrapper'
+
+<Meta
+  title="Maps/Leaflet Flow Map ✍️"
+  component={VisGraphComponent}
+  decorators={[
+    moduleMetadata({ imports: [VisGraphModule, VisSingleContainerModule] }),
+    componentWrapperDecorator(singleVisContentWrapper)
+  ]}
+/>
+
+<style>{``}</style>
+
+###### ✍️ This story is Work in Progress
+
+# Leaflet Flow Map
+
+
+
+
