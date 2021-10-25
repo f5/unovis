@@ -1,11 +1,22 @@
 <div class="chart">
-  <vis-xy-container [margin]="margin" [padding]="padding" [data]="data">
-    <vis-area [x]="x" [y]="y" [opacity]="1" [color]="palette"></vis-area>
-    <vis-line [x]="x" [y]="0" [color]="'black'"></vis-line>
+  <vis-xy-container [margin]="margin">
+    <vis-area [x]="x" [y]="y" [opacity]="1" [color]="palette" [data]="data"></vis-area>
+    <vis-line [x]="x" [y]="0" [color]="'black'" [data]="data"></vis-line>
     <vis-axis type="x" label="" [tickFormat]="formatXTicks"></vis-axis>
     <vis-axis type="y" label="Y Axis"></vis-axis>
-    <vis-crosshair [template]="crosshairTemplate" [x]="x" [yStacked]="y" [color]="palette"></vis-crosshair>
+    <vis-tooltip [triggers]="triggers"></vis-tooltip>
+    <vis-crosshair [template]="crosshairTemplate" [x]="x" [yStacked]="y" [color]="palette" [data]="data"></vis-crosshair>
     <vis-free-brush mode="x" [selectionMinLength]="0.25" [onBrushStart]="onBrushStart" [onBrushMove]="onBrushMove" [onBrushEnd]="onBrushEnd"></vis-free-brush>
-    <vis-tooltip></vis-tooltip>
+    <vis-xy-labels
+      [x]="x"
+      [y]="0"
+      [label]="labelAccessor"
+      [data]="alerts"
+      yPositioning="absolute_percentage"
+      backgroundColor="#F64627"
+      clusterBackgroundColor="#F64627"
+      labelFontSize="8"
+      clusterFontSize="12"
+    ></vis-xy-labels>
   </vis-xy-container>
 </div>
