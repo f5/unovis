@@ -37,18 +37,19 @@ export class XYLabels<Datum> extends XYComponentCore<Datum> {
     const duration = isNumber(customDuration) ? customDuration : config.duration
 
     const labelGroups = this.g
-      .selectAll<SVGGElement, XYLabel<Datum> | XYLabelCluster<Datum>>(`.${s.label}`)
+      .selectAll<SVGGElement, XYLabel<Datum> | XYLabelCluster<Datum>>(`.${s.labelGroup}`)
       .data(this._getDataToRender())
 
     labelGroups.exit().call(removeLabels, duration)
 
     const labelGroupsEnter = labelGroups.enter().append('g')
-      .attr('class', s.label)
+      .attr('class', s.labelGroup)
       .call(createLabels)
 
     const labelGroupsMerged = labelGroupsEnter
       .merge(labelGroups)
       .classed(s.cluster, d => !!(d as XYLabelCluster<Datum>).records)
+      .classed(s.label, d => !(d as XYLabelCluster<Datum>).records)
 
     labelGroupsMerged.call(updateLabels, config, duration)
   }

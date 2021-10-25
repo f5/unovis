@@ -17,8 +17,8 @@ export const global = injectGlobal`
   }
 `
 
-export const label = css`
-  label: label;
+export const labelGroup = css`
+  label: label-g;
 
   > rect, text {
     cursor: var(--vis-xy-label-cursor);
@@ -44,4 +44,8 @@ export const label = css`
 
 export const cluster = css`
   label: cluster;
+`
+
+export const label = css`
+  label: label;
 `
