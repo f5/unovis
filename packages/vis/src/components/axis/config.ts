@@ -50,6 +50,8 @@ export interface AxisConfigInterface<Datum> extends Partial<XYComponentConfigInt
   tickTextFontSize?: string | null;
   /** Text alignment for ticks: `TextAlign.Left`, `TextAlign.Center` or `TextAlign.Right`. Default: `undefined` */
   tickTextAlign?: TextAlign;
+  /** The spacing in pixels between the tick and it's label. Default: `8` */
+  tickPadding?: number;
 }
 
 export class AxisConfig<Datum> extends XYComponentConfig<Datum> implements AxisConfigInterface<Datum> {
@@ -74,4 +76,5 @@ export class AxisConfig<Datum> extends XYComponentConfig<Datum> implements AxisC
   tickFormat = undefined
   tickValues = undefined
   fullSize = true
+  tickPadding = 8
 }

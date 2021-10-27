@@ -106,7 +106,7 @@ export class XYContainer<Datum> extends ContainerCore {
     if (!data) return
     this.datamodel.data = data
 
-    components.forEach((c, i) => {
+    components.forEach((c) => {
       c.setData(data)
     })
 
@@ -255,8 +255,8 @@ export class XYContainer<Datum> extends ContainerCore {
     if (!components) return
 
     // Set the X and Y scales
-    components.forEach(c => c.setScale(ScaleDimension.X, config.xScale))
-    components.forEach(c => c.setScale(ScaleDimension.Y, config.yScale))
+    if (config.xScale) components.forEach(c => c.setScale(ScaleDimension.X, config.xScale))
+    if (config.yScale) components.forEach(c => c.setScale(ScaleDimension.Y, config.yScale))
   }
 
   _updateScalesDomain<T extends XYComponentCore<Datum>> (...components: T[]): void {
@@ -269,7 +269,11 @@ export class XYContainer<Datum> extends ContainerCore {
     // Loop over all the dimensions
     Object.values(ScaleDimension).forEach((dimension: ScaleDimension) => {
       let [min, max] = extent(
-        mergeArrays(components.map(c => c.getDataExtent(dimension))) as number[]
+        mergeArrays(
+          components
+            .filter(c => !c.excludeFromDomainCalculation)
+            .map(c => c.getDataExtent(dimension))
+        ) as number[]
       ) // Components with undefined dimension accessors will return [undefined, undefined] but d3.extent will take care of that
 
       if (config.preventEmptyDomain && (min === max) && isFinite(min)) max = min + 1

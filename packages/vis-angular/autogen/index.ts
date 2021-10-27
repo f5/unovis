@@ -26,6 +26,7 @@ const components: ComponentInput[] = [
   { name: 'Scatter', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/scatter'], dataType: 'Datum[]', provide: 'VisXYComponent' },
   { name: 'StackedBar', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/stacked-bar'], dataType: 'Datum[]', provide: 'VisXYComponent' },
   { name: 'Timeline', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/timeline'], dataType: 'Datum[]', provide: 'VisXYComponent' },
+  { name: 'XYLabels', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/xy-labels'], dataType: 'Datum[]', provide: 'VisXYComponent' },
 
   // Single components
   { name: 'Donut', sources: [coreComponentConfigPath, '/components/donut'], dataType: 'Datum[]', provide: 'VisCoreComponent' },

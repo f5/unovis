@@ -30,6 +30,7 @@ export { Graph } from './components/graph'
 export { VisControls } from './components/vis-controls'
 export { Donut } from './components/donut'
 export { FreeBrush } from './components/free-brush'
+export { XYLabels } from './components/xy-labels'
 
 // Config Interfaces
 export { LineConfigInterface } from './components/line/config'
@@ -54,3 +55,4 @@ export { GraphConfigInterface } from './components/graph/config'
 export { VisControlsConfigInterface } from './components/vis-controls/config'
 export { DonutConfigInterface } from './components/donut/config'
 export { FreeBrushConfigInterface } from './components/free-brush/config'
+export { XYLabelsConfigInterface } from './components/xy-labels/config'

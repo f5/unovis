@@ -225,3 +225,7 @@ export function filterDataByRange<Datum> (data: Datum[], range: [number, number]
 
   return filteredData
 }
+
+export function isNumberWithinRange (value: number, range: [number, number]): boolean {
+  return (value >= range[0]) && (value <= range[1])
+}

@@ -33,6 +33,9 @@ export { VisStackedBarModule } from './components/stacked-bar/stacked-bar.module
 export { VisTimelineComponent } from './components/timeline/timeline.component'
 export { VisTimelineModule } from './components/timeline/timeline.module'
 
+export { VisXYLabelsComponent } from './components/xy-labels/xy-labels.component'
+export { VisXYLabelsModule } from './components/xy-labels/xy-labels.module'
+
 export { VisTopoJSONMapComponent } from './components/topojson-map/topojson-map.component'
 export { VisTopoJSONMapModule } from './components/topojson-map/topojson-map.module'
 

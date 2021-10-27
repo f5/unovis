@@ -9,10 +9,11 @@ import {
   VisTooltipModule,
   VisCrosshairModule,
   VisFreeBrushModule,
+  VisXYLabelsModule,
 } from '@volterra/vis-angular'
 
 @NgModule({
-  imports: [VisXYContainerModule, VisAreaModule, VisLineModule, VisAxisModule, VisCrosshairModule, VisTooltipModule, VisFreeBrushModule],
+  imports: [VisXYContainerModule, VisAreaModule, VisLineModule, VisAxisModule, VisCrosshairModule, VisTooltipModule, VisFreeBrushModule, VisXYLabelsModule],
   declarations: [AtomicAngularWrapperComponent],
   exports: [AtomicAngularWrapperComponent],
 })
