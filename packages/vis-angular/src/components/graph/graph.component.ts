@@ -118,6 +118,11 @@ export class VisGraphComponent<N extends GraphInputNode, L extends GraphInputLin
    * Default: `6` */
   @Input() layoutSubgroupMaxNodes: number
 
+  /** Set the spacing between the groups.
+   * Only for `GraphLayoutType.Parallel` and `GraphLayoutType.ParallelHorizontal` layouts.
+   * Default: `undefined` */
+  @Input() layoutGroupSpacing: number
+
   /** Set a group by name to have priority in sorting the graph links.
    * Only for `GraphLayoutType.Parallel` and `GraphLayoutType.ParallelHorizontal` layouts.
    * Default: `undefined` */
@@ -246,8 +251,8 @@ export class VisGraphComponent<N extends GraphInputNode, L extends GraphInputLin
   }
 
   private getConfig (): GraphConfigInterface<N, L> {
-    const { duration, events, attributes, zoomScaleExtent, disableZoom, disableDrag, zoomThrottledUpdateNodeThreshold, onZoom, layoutType, layoutAutofit, layoutNonConnectedAside, layoutGroupOrder, layoutGroupRows, layoutSubgroupMaxNodes, layoutSortConnectionsByGroup, nodeGroup, nodeSubGroup, forceLayoutSettings, dagreLayoutSettings, flowAnimDuration, flowCircleSize, linkWidth, linkStyle, linkBandWidth, linkArrow, linkStroke, linkFlow, linkLabel, linkLabelShiftFromCenter, selectedLinkId, scoreAnimDuration, nodeSize, nodeBorderWidth, nodeShape, nodeStrokeSegmentValue, nodeIcon, nodeIconSize, nodeLabel, nodeSubLabel, nodeSideLabels, nodeBottomIcon, nodeDisabled, nodeFill, nodeStrokeSegmentFill, nodeStroke, nodeSort, selectedNodeId, panels } = this
-    const config = { duration, events, attributes, zoomScaleExtent, disableZoom, disableDrag, zoomThrottledUpdateNodeThreshold, onZoom, layoutType, layoutAutofit, layoutNonConnectedAside, layoutGroupOrder, layoutGroupRows, layoutSubgroupMaxNodes, layoutSortConnectionsByGroup, nodeGroup, nodeSubGroup, forceLayoutSettings, dagreLayoutSettings, flowAnimDuration, flowCircleSize, linkWidth, linkStyle, linkBandWidth, linkArrow, linkStroke, linkFlow, linkLabel, linkLabelShiftFromCenter, selectedLinkId, scoreAnimDuration, nodeSize, nodeBorderWidth, nodeShape, nodeStrokeSegmentValue, nodeIcon, nodeIconSize, nodeLabel, nodeSubLabel, nodeSideLabels, nodeBottomIcon, nodeDisabled, nodeFill, nodeStrokeSegmentFill, nodeStroke, nodeSort, selectedNodeId, panels }
+    const { duration, events, attributes, zoomScaleExtent, disableZoom, disableDrag, zoomThrottledUpdateNodeThreshold, onZoom, layoutType, layoutAutofit, layoutNonConnectedAside, layoutGroupOrder, layoutGroupRows, layoutSubgroupMaxNodes, layoutGroupSpacing, layoutSortConnectionsByGroup, nodeGroup, nodeSubGroup, forceLayoutSettings, dagreLayoutSettings, flowAnimDuration, flowCircleSize, linkWidth, linkStyle, linkBandWidth, linkArrow, linkStroke, linkFlow, linkLabel, linkLabelShiftFromCenter, selectedLinkId, scoreAnimDuration, nodeSize, nodeBorderWidth, nodeShape, nodeStrokeSegmentValue, nodeIcon, nodeIconSize, nodeLabel, nodeSubLabel, nodeSideLabels, nodeBottomIcon, nodeDisabled, nodeFill, nodeStrokeSegmentFill, nodeStroke, nodeSort, selectedNodeId, panels } = this
+    const config = { duration, events, attributes, zoomScaleExtent, disableZoom, disableDrag, zoomThrottledUpdateNodeThreshold, onZoom, layoutType, layoutAutofit, layoutNonConnectedAside, layoutGroupOrder, layoutGroupRows, layoutSubgroupMaxNodes, layoutGroupSpacing, layoutSortConnectionsByGroup, nodeGroup, nodeSubGroup, forceLayoutSettings, dagreLayoutSettings, flowAnimDuration, flowCircleSize, linkWidth, linkStyle, linkBandWidth, linkArrow, linkStroke, linkFlow, linkLabel, linkLabelShiftFromCenter, selectedLinkId, scoreAnimDuration, nodeSize, nodeBorderWidth, nodeShape, nodeStrokeSegmentValue, nodeIcon, nodeIconSize, nodeLabel, nodeSubLabel, nodeSideLabels, nodeBottomIcon, nodeDisabled, nodeFill, nodeStrokeSegmentFill, nodeStroke, nodeSort, selectedNodeId, panels }
     const keys = Object.keys(config) as (keyof GraphConfigInterface<N, L>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
