@@ -88,7 +88,10 @@ export class Area<Datum> extends XYComponentCore<Datum> {
       .style('fill', (d, i) => getColor(data, config.color, areaMaxIdx - i))
 
     const areasMerged = smartTransition(areasEnter.merge(areas), duration)
-      .style('opacity', d => getNumber(d, config.opacity))
+      .style('opacity', d => {
+        const isDefined = d.some(p => (p.y0 - p.y1) !== 0)
+        return isDefined ? getNumber(d, config.opacity) : 0
+      })
       .style('fill', (d, i) => getColor(data, config.color, areaMaxIdx - i))
       .style('stroke', (d, i) => getColor(data, config.color, areaMaxIdx - i))
       .style('cursor', (d, i) => getString(data, config.cursor, areaMaxIdx - i))
