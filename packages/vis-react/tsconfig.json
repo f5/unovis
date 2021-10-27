@@ -34,6 +34,7 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "downlevelIteration": true,
-    "importHelpers": true
+    "importHelpers": true,
+    "strictFunctionTypes": false
   }
 }

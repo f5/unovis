@@ -42,6 +42,9 @@ export { VisTopoJSONMapModule } from './components/topojson-map/topojson-map.mod
 export { VisSankeyComponent } from './components/sankey/sankey.component'
 export { VisSankeyModule } from './components/sankey/sankey.module'
 
+export { VisGraphComponent } from './components/graph/graph.component'
+export { VisGraphModule } from './components/graph/graph.module'
+
 // HTML Components
 export { VisLeafletMapComponent } from './html-components/leaflet-map/leaflet-map.component'
 export { VisLeafletMapModule } from './html-components/leaflet-map/leaflet-map.module'

@@ -1,0 +1,25 @@
+import { Meta, Story, Canvas, ArgsTable } from '@storybook/addon-docs';
+
+import { VisXYContainer } from '@volterra/vis-react/containers/xy-container'
+import { VisGroupedBar } from '@volterra/vis-react/components/grouped-bar'
+
+import { data } from '../data/time-series'
+
+<Meta title="XY Primitives / Grouped Bar ✍️" component={VisGroupedBar} />
+
+###### ✍️ This story is Work in Progress
+
+# Grouped Bar
+
+The example below shows you the most basic GroupedBar configuration:
+
+<Canvas>
+  <Story name="Basic Grouped Bar">
+    <VisXYContainer data={data}>
+      <VisGroupedBar x={d => d.x} y={[d => d.y, d => d.y1, d => d.y2]} />
+    </VisXYContainer>
+  </Story>
+</Canvas>
+
+### Component Props
+<ArgsTable of={VisGroupedBar} />

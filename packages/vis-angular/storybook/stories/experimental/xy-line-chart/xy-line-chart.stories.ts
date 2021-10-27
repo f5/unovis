@@ -6,7 +6,7 @@ import { VisXYContainerModule, VisAxisModule, VisLineModule, VisTooltipModule, V
 import XYLineChartComponent from './xy-line-chart.component'
 
 export default {
-  title: 'Experimental/Line',
+  title: 'Full Charts/Line',
   component: XYLineChartComponent,
   decorators: [
     moduleMetadata({

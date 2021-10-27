@@ -1,0 +1,27 @@
+import { moduleMetadata, componentWrapperDecorator } from '@storybook/angular'
+import { Meta, Story, ArgsTable } from '@storybook/addon-docs';
+import { VisXYContainerModule, VisAxisModule, VisBrushModule } from 'src/public-api'
+
+import { VisBrushComponent } from 'src/components/brush/brush.component'
+
+import { xyChartContentWrapper } from '../../utils/xy-content-wrapper'
+import { baseConfig } from './xy-brush.config'
+
+<Meta
+  title="XY Charts/Brush ✍️"
+  component={VisBrushComponent}
+  decorators={[
+    moduleMetadata({ imports: [VisBrushModule, VisXYContainerModule, VisAxisModule] }),
+    componentWrapperDecorator(xyChartContentWrapper)
+  ]}
+/>
+
+<style>{``}</style>
+
+###### ✍️ This story is Work in Progress
+
+# Brush
+
+### Component Inputs
+<ArgsTable of={VisBrushComponent} />
+
