@@ -8,6 +8,7 @@ name                                     license period  license type  installed
 @rollup/plugin-babel                     perpetual       MIT           5.3.0              Rich Harris
 @rollup/plugin-node-resolve              perpetual       MIT           13.0.4             Rich Harris
 @storybook/addon-actions                 perpetual       MIT           6.3.8              n/a
+@storybook/addon-docs                    perpetual       MIT           6.3.8              n/a
 @storybook/addon-essentials              perpetual       MIT           6.3.8              n/a
 @storybook/addon-links                   perpetual       MIT           6.3.8              n/a
 @storybook/react                         perpetual       MIT           6.3.8              n/a

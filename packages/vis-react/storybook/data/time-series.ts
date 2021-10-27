@@ -26,9 +26,13 @@ export function generateDataRecords (n = 10): DataRecord[] {
   }))
 }
 
+export const data = generateDataRecords(10)
+
 export function generateTimeSeries (n = 10): TimeDataRecord[] {
   return Array(n).fill(0).map((_, i: number) => ({
     timestamp: Date.now() + i * 1000 * 60 * 60 * 24,
     value: i / 10 + Math.sin(i / 5) + Math.cos(i / 3),
   }))
 }
+
+export const timeSeriesData = generateTimeSeries(10)

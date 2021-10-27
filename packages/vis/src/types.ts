@@ -16,7 +16,7 @@ export { GenericDataRecord } from 'types/data'
 // Component Types
 export { VisEventType, VisEventCallback } from 'core/component/types'
 export { AxisType } from 'components/axis/types'
-export { MapProjection, MapProjectionKind, MapInputNode, MapInputLink, MapInputArea } from 'components/topojson-map/types'
+export { MapProjection, MapProjectionKind, MapInputNode, MapInputLink, MapInputArea, MapFeature } from 'components/topojson-map/types'
 export { Hierarchy } from 'components/radial-dendrogram/types'
 export { Bounds, MapZoomState, LeafletMapRenderer, LeafletMapPoint, LeafletMapPointDatum, LeafletMapPointStyles, LeafletMapPointStyle, LeafletMapPointShape } from 'components/leaflet-map/types'
 export { TangramScene } from 'components/leaflet-map/renderer/map-style'
@@ -25,3 +25,4 @@ export { SankeyInputNode, SankeyInputLink, SankeyNode, SankeyLink, NodeAlignType
 export { VisControlItemInterface, VisControlsOrientation } from 'components/vis-controls/types'
 export { FreeBrushMode, FreeBrushSelection } from 'components/free-brush/types'
 export { BulletLegendItemInterface } from 'components/bullet-legend/types'
+export { XYLabel, XYLabelCluster, XYLabelPositioning } from 'components/xy-labels/types'

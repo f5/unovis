@@ -1,6 +1,6 @@
 {
   "name": "@volterra/vis-react",
-  "version": "0.9.10",
+  "version": "0.9.11",
   "description": "React wrapper for @volterra/vis",
   "main": "./index.js",
   "types": "./index.d.ts",
@@ -19,7 +19,7 @@
     "@volterra:registry": "https://gitlab.com/api/v4/projects/13430565/packages/npm/"
   },
   "peerDependencies": {
-    "@volterra/vis": "^0.9.10",
+    "@volterra/vis": "^0.9.11",
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0"
   },
@@ -32,6 +32,7 @@
     "@rollup/plugin-babel": "^5.3.0",
     "@rollup/plugin-node-resolve": "^13.0.4",
     "@storybook/addon-actions": "^6.3.8",
+    "@storybook/addon-docs": "^6.3.8",
     "@storybook/addon-essentials": "^6.3.8",
     "@storybook/addon-links": "^6.3.8",
     "@storybook/react": "^6.3.8",

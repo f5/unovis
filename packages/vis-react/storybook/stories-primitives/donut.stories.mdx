@@ -1,0 +1,26 @@
+import { Meta, Story, Canvas, ArgsTable } from '@storybook/addon-docs';
+
+import { VisSingleContainer } from '@volterra/vis-react/containers/single-container'
+import { VisDonut } from '@volterra/vis-react/components/donut'
+
+import { generateDataRecords } from '../data/time-series'
+const data = generateDataRecords(2)
+
+<Meta title="Misc / Donut ✍️" component={VisDonut} />
+
+###### ✍️ This story is Work in Progress
+
+# Donut
+
+The example below shows you the most basic Donut configuration:
+
+<Canvas>
+  <Story name="Basic Donut">
+    <VisSingleContainer data={data}>
+      <VisDonut value={d => d.y} arcWidth={40} centralLabel="420K"/>
+    </VisSingleContainer>
+  </Story>
+</Canvas>
+
+### Component Props
+<ArgsTable of={VisDonut} />

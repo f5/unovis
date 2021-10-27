@@ -1,0 +1,23 @@
+import { moduleMetadata, componentWrapperDecorator } from '@storybook/angular'
+import { Meta, Story, ArgsTable } from '@storybook/addon-docs';
+import { VisXYContainerModule, VisAxisModule, VisTimelineModule } from 'src/public-api'
+
+import { VisTimelineComponent } from 'src/components/timeline/timeline.component'
+
+import { xyChartContentWrapper } from '../../utils/xy-content-wrapper'
+
+<Meta
+  title="Maps/Leaflet Map ✍️"
+  component={VisTimelineComponent}
+  decorators={[
+    moduleMetadata({ imports: [VisTimelineModule, VisXYContainerModule, VisAxisModule] }),
+    componentWrapperDecorator(xyChartContentWrapper)
+  ]}
+/>
+
+<style>{``}</style>
+
+###### ✍️ This story is Work in Progress
+
+# Leaflet Flow Map
+

@@ -154,6 +154,7 @@ export class Tooltip {
         const selection = select(component.element).selectAll<HTMLElement | SVGGElement, unknown>(`.${className}`)
         selection
           .on('mousemove.tooltip', (e: MouseEvent, d: unknown) => {
+            e.stopPropagation() // Stop propagation to prevent other interfering events from being triggered, e.g. Crosshair
             const [x, y] = positionStrategy === PositionStrategy.Fixed ? [e.clientX, e.clientY] : pointer(e, this._container)
             const els = selection.nodes()
             const i = els.indexOf(e.currentTarget as any)
@@ -161,7 +162,10 @@ export class Tooltip {
             if (content) this.show(content, { x, y })
             else this.hide()
           })
-          .on('mouseleave.tooltip', () => this.hide())
+          .on('mouseleave.tooltip', (e: MouseEvent) => {
+            e.stopPropagation() // Stop propagation to prevent other interfering events from being triggered, e.g. Crosshair
+            this.hide()
+          })
       })
     })
   }

@@ -2,7 +2,7 @@
 import { StackedBar, XYComponentCore, TooltipConfigInterface, Scatter, Line } from '@volterra/vis'
 import { DataRecord } from '../../data/time-series'
 
-export type TooltipStoryConfig = TooltipConfigInterface<XYComponentCore<DataRecord>, DataRecord>
+export type TooltipStoryConfig = TooltipConfigInterface
 
 const colors = Array(4).fill(0).map((_, i) => `var(--vis-color${i})`)
 const defaultChartConfig = { x: d => d.x, y: d => d.y }
@@ -45,7 +45,7 @@ export const multiTooltipConfig = (): TooltipStoryConfig => {
           <center>
             <h3>x: ${d.x}, y: ${total.toFixed(2)}</h3>
             ${data.map((d, i) => `<span style="color: ${colors[i]}">${(d / total * 100).toFixed(2)}%</span>`).join('<br/>')}
-          </center> 
+          </center>
         `
       },
     },

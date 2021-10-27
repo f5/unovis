@@ -33,11 +33,17 @@ export { VisStackedBarModule } from './components/stacked-bar/stacked-bar.module
 export { VisTimelineComponent } from './components/timeline/timeline.component'
 export { VisTimelineModule } from './components/timeline/timeline.module'
 
+export { VisXYLabelsComponent } from './components/xy-labels/xy-labels.component'
+export { VisXYLabelsModule } from './components/xy-labels/xy-labels.module'
+
 export { VisTopoJSONMapComponent } from './components/topojson-map/topojson-map.component'
 export { VisTopoJSONMapModule } from './components/topojson-map/topojson-map.module'
 
 export { VisSankeyComponent } from './components/sankey/sankey.component'
 export { VisSankeyModule } from './components/sankey/sankey.module'
+
+export { VisGraphComponent } from './components/graph/graph.component'
+export { VisGraphModule } from './components/graph/graph.module'
 
 // HTML Components
 export { VisLeafletMapComponent } from './html-components/leaflet-map/leaflet-map.component'

@@ -161,19 +161,19 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
   }
 
   _buildAxis (): D3Axis<any> {
-    const { config: { type, xScale, yScale, position } } = this
+    const { config: { type, xScale, yScale, position, tickPadding } } = this
 
     const ticks = this._getNumTicks()
     switch (type) {
       case AxisType.X:
         switch (position) {
-          case Position.Top: return axisTop(xScale).ticks(ticks)
-          case Position.Bottom: default: return axisBottom(xScale).ticks(ticks)
+          case Position.Top: return axisTop(xScale).ticks(ticks).tickPadding(tickPadding)
+          case Position.Bottom: default: return axisBottom(xScale).ticks(ticks).tickPadding(tickPadding)
         }
       case AxisType.Y:
         switch (position) {
-          case Position.Right: return axisRight(yScale).ticks(ticks)
-          case Position.Left: default: return axisLeft(yScale).ticks(ticks)
+          case Position.Right: return axisRight(yScale).ticks(ticks).tickPadding(tickPadding)
+          case Position.Left: default: return axisLeft(yScale).ticks(ticks).tickPadding(tickPadding)
         }
     }
   }
