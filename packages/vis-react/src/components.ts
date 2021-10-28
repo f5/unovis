@@ -14,3 +14,6 @@ export * from './components/tooltip/'
 export * from './components/timeline/'
 export * from './components/topojson-map/'
 export * from './components/sankey'
+
+// HTML Components
+export * from './html-components/bullet-legend'
