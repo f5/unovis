@@ -1,4 +1,5 @@
 <div class="chart">
+  <vis-bullet-legend [items]="legendItems"></vis-bullet-legend>
   <vis-xy-container [margin]="margin">
     <vis-area [x]="x" [y]="y" [opacity]="1" [color]="palette" [data]="data"></vis-area>
     <vis-line [x]="x" [y]="0" [color]="'black'" [data]="data"></vis-line>

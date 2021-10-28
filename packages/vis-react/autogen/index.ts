@@ -38,6 +38,7 @@ const components: ComponentInput[] = [
 
   // Unique cases (you can still generate a wrapper for these components, but most likely it will require some changes)
   // { name: 'LeafletMap', sources: [coreComponentConfigPath, '/components/leaflet-map'], provide: 'VisCoreComponent' },
+  // { name: 'BulletLegend', sources: ['/components/bullet-legend'], dataType: null },
 ]
 
 for (const component of components) {

@@ -18,7 +18,7 @@ export class BulletLegendComponent implements AfterViewInit {
   @Output() itemClick = new EventEmitter()
 
   legend = null
-  config: BulletLegendConfigInterface = {}
+  config: BulletLegendConfigInterface = { items: [] }
 
   ngAfterViewInit (): void {
     this.config = {
