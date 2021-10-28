@@ -1,6 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.import { readFileSync } from 'fs'
 import { readFileSync } from 'fs'
-import * as ts from 'typescript'
+import ts from 'typescript'
 import { ConfigProperty, GenericParameter } from './types'
 
 export function getTypeName (type: ts.Node | undefined): string {
