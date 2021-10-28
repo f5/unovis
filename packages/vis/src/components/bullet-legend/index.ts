@@ -15,6 +15,7 @@ import { BulletLegendItemInterface } from './types'
 import * as s from './style'
 
 export class BulletLegend {
+  static selectors = s
   div: Selection<HTMLElement, any, HTMLElement, any>
   element: HTMLElement
   prevConfig: BulletLegendConfig
@@ -93,5 +94,9 @@ export class BulletLegend {
     const legendItems = this.div.selectAll(`.${s.item}`).nodes() as HTMLElement[]
     const index = legendItems.indexOf(event.currentTarget as HTMLElement)
     if (onLegendItemClick) onLegendItemClick(d, index)
+  }
+
+  public destroy (): void {
+    this.div.remove()
   }
 }
