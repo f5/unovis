@@ -62,9 +62,9 @@ export class ChordDiagram<H extends Hierarchy, N extends ChordInputNode, L exten
   constructor (config?: ChordDiagramConfigInterface<H>) {
     super()
     if (config) this.config.init(config)
-    this.linkGroup = this.g.append('g')
-    this.nodeGroup = this.g.append('g')
-    this.labelGroup = this.g.append('g')
+    this.linkGroup = this.g.append('g').attr('class', s.nodes)
+    this.nodeGroup = this.g.append('g').attr('class', s.links)
+    this.labelGroup = this.g.append('g').attr('class', s.labels)
   }
 
   setData (data: GraphDataModel<N, L>): void {
