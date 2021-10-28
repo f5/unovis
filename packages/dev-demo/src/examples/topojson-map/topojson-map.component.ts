@@ -50,8 +50,8 @@ export class TopoJSONMapComponent implements OnInit, AfterViewInit {
     const config = {
       component: new TopoJSONMap<MapPoint, any, any>({
         topojson: WorldMapTopoJSON,
-        duration: 3500,
-        pointLabel: d => d.city.substr(0, 2),
+        duration: 1000,
+        pointLabel: d => d.city,
         pointCursor: 'pointer',
         linkCursor: d => d.cursor,
         areaCursor: d => d.cursor
