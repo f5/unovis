@@ -5,11 +5,12 @@ export const variables = injectGlobal`
   :root {
     --vis-map-feature-color: #dce3eb;
     --vis-map-boundary-color: #ffffff;
-    
+
     --vis-map-point-label-text-color-dark: #5b5f6d;
     --vis-map-point-label-text-color-light: #fff;
     --vis-map-point-label-font-family: var(--vis-font-family);
     --vis-map-point-label-font-weight: 600;
+    --vis-map-point-label-font-size: 12px;
   }
 `
 
@@ -31,7 +32,7 @@ export const features = css`
 
 export const feature = css`
   label: feature;
-  
+
   fill: var(--vis-map-feature-color);
 `
 export const boundaries = css`
@@ -79,6 +80,7 @@ export const pointLabel = css`
   cursor: default;
   pointer-events:none;
 
+  font-size: var(--vis-map-point-label-font-size);
   font-family: var(--vis-map-point-label-font-family);
   font-weight: var(--vis-map-point-label-font-weight);
   fill: var(--vis-map-point-label-text-color-dark);

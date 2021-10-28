@@ -1,6 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { Selection } from 'd3-selection'
-import { ZoomBehavior, zoom, zoomIdentity, ZoomTransform, D3ZoomEvent } from 'd3-zoom'
+import { D3ZoomEvent, zoom, ZoomBehavior, zoomIdentity, ZoomTransform } from 'd3-zoom'
 import { timeout } from 'd3-timer'
 import { geoPath, GeoProjection } from 'd3-geo'
 import { color } from 'd3-color'
@@ -20,13 +20,13 @@ import { getCSSVariableValue, isStringCSSVariable } from 'utils/misc'
 import { GraphLinkCore, GraphNodeCore } from 'types/graph'
 
 // Local Types
-import { MapInputNode, MapInputLink, MapInputArea, MapFeature } from './types'
+import { MapFeature, MapInputArea, MapInputLink, MapInputNode, MapPointLabelPosition } from './types'
 
 // Config
 import { TopoJSONMapConfig, TopoJSONMapConfigInterface } from './config'
 
 // Modules
-import { getLonLat, arc } from './utils'
+import { arc, getLonLat } from './utils'
 
 // Styles
 import * as s from './style'
@@ -241,7 +241,6 @@ export class TopoJSONMap<
       .style('stroke-width', d => getNumber(d, config.pointStrokeWidth))
 
     pointsEnter.append('text').attr('class', s.pointLabel)
-      .attr('dy', '0.32em')
       .style('opacity', 0)
 
     // Update
@@ -263,15 +262,26 @@ export class TopoJSONMap<
     pointLabelsMerged
       .text(config.pointLabel ?? '')
       .attr('font-size', d => {
+        if (config.pointLabelPosition === MapPointLabelPosition.Bottom) return null
+
         const pointDiameter = 2 * getNumber(d, config.pointRadius)
         const pointLabelText = getString(d, config.pointLabel) || ''
         const textLength = pointLabelText.length
         const fontSize = 0.5 * pointDiameter / Math.pow(textLength, 0.4)
         return clamp(fontSize, fontSize, 16)
       })
+      .attr('y', d => {
+        if (config.pointLabelPosition === MapPointLabelPosition.Center) return null
+
+        const pointRadius = getNumber(d, config.pointRadius)
+        return pointRadius
+      })
+      .attr('dy', config.pointLabelPosition === MapPointLabelPosition.Center ? '0.32em' : '1em')
 
     smartTransition(pointLabelsMerged, duration)
       .style('fill', (d, i) => {
+        if (config.pointLabelPosition === MapPointLabelPosition.Bottom) return null
+
         const pointColor = getColor(d, config.pointColor, i)
         const hex = color(isStringCSSVariable(pointColor) ? getCSSVariableValue(pointColor, this.element) : pointColor)?.hex()
         if (!hex) return null
@@ -286,7 +296,7 @@ export class TopoJSONMap<
 
     // Heatmap
     this._pointsGroup.style('filter', (config.heatmapMode && this._currentZoomLevel < config.heatmapModeZoomLevelThreshold) ? 'url(#heatmapFilter)' : null)
-    this._pointsGroup.selectAll(`.${s.pointLabel}`).style('display', this._currentZoomLevel < config.heatmapModeZoomLevelThreshold ? 'none' : null)
+    this._pointsGroup.selectAll(`.${s.pointLabel}`).style('display', (config.heatmapMode && (this._currentZoomLevel < config.heatmapModeZoomLevelThreshold)) ? 'none' : null)
   }
 
   _fitToPoints (points?, pad = 0.1): void {
