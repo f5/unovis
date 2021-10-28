@@ -13,6 +13,18 @@ export const variables = injectGlobal`
   }
 `
 
+export const nodes = css`
+  label: nodes;
+`
+
+export const links = css`
+  label: links;
+`
+
+export const labels = css`
+  label: labels;
+`
+
 export const node = css`
   label: node;
   stroke-width: 0;
@@ -36,10 +48,14 @@ export const gLabel = css`
 
 export const label = css`
   label: label;
-  
+
   dominant-baseline: middle;
   user-select: none;
   pointer-events: none;
+
+  > textPath {
+    dominant-baseline: middle;
+  }
 `
 
 export const labelExit = css`
