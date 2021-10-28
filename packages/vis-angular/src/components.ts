@@ -48,3 +48,9 @@ export { VisGraphModule } from './components/graph/graph.module'
 // HTML Components
 export { VisLeafletMapComponent } from './html-components/leaflet-map/leaflet-map.component'
 export { VisLeafletMapModule } from './html-components/leaflet-map/leaflet-map.module'
+
+export { VisBulletLegendComponent } from './html-components/bullet-legend/bullet-legend.component'
+export { VisBulletLegendModule } from './html-components/bullet-legend/bullet-legend.module'
+
+export { VisTooltipComponent } from './components/tooltip/tooltip.component'
+export { VisTooltipModule } from './components/tooltip/tooltip.module'
