@@ -12,7 +12,7 @@
   },
   "scripts": {
     "preinstall": "npx npm-force-resolutions",
-    "postinstall": "npm run build:lib; npm run gather-licenses; cd packages/vis-react; npm i; rm -rf node_modules/@volterra/vis",
+    "postinstall": "sh postinstall.sh",
     "dev": "cd packages/dev-demo; npm run dev",
     "storybook:angular": "cd packages/vis-angular; npm run storybook",
     "storybook:react": "cd packages/vis-react; npm run storybook",
