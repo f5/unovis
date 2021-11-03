@@ -7,11 +7,11 @@ name                                     license period  license type  installed
 @babel/preset-typescript                 perpetual       MIT           7.15.0             The Babel Team (https://babel.dev/team)
 @rollup/plugin-babel                     perpetual       MIT           5.3.0              Rich Harris
 @rollup/plugin-node-resolve              perpetual       MIT           13.0.4             Rich Harris
-@storybook/addon-actions                 perpetual       MIT           6.3.8              n/a
-@storybook/addon-docs                    perpetual       MIT           6.3.8              n/a
-@storybook/addon-essentials              perpetual       MIT           6.3.8              n/a
-@storybook/addon-links                   perpetual       MIT           6.3.8              n/a
-@storybook/react                         perpetual       MIT           6.3.8              n/a
+@storybook/addon-actions                 perpetual       MIT           6.3.12             n/a
+@storybook/addon-docs                    perpetual       MIT           6.3.12             n/a
+@storybook/addon-essentials              perpetual       MIT           6.3.12             n/a
+@storybook/addon-links                   perpetual       MIT           6.3.12             n/a
+@storybook/react                         perpetual       MIT           6.3.12             n/a
 @types/react                             perpetual       MIT           17.0.22            n/a
 babel-loader                             perpetual       MIT           8.2.2              Luis Couto <hello@luiscouto.pt>
 react                                    perpetual       MIT           >=16.8.0           n/a

@@ -82,11 +82,11 @@ export class ContainerCore {
   }
 
   get containerWidth (): number {
-    return clamp(this._container.clientWidth || this._container.getBoundingClientRect().width, 0, Number.POSITIVE_INFINITY)
+    return this.config.width || clamp(this._container.clientWidth || this._container.getBoundingClientRect().width, 0, Number.POSITIVE_INFINITY)
   }
 
   get containerHeight (): number {
-    return clamp(this._container.clientHeight || this._container.getBoundingClientRect().height, 0, Number.POSITIVE_INFINITY)
+    return this.config.height || clamp(this._container.clientHeight || this._container.getBoundingClientRect().height, 0, Number.POSITIVE_INFINITY)
   }
 
   get width (): number {
