@@ -1,17 +1,17 @@
 import { moduleMetadata, componentWrapperDecorator } from '@storybook/angular'
 import { Meta, Story, ArgsTable } from '@storybook/addon-docs';
-import { VisSingleContainerModule, VisGraphModule } from '../../../src/public-api'
+import { VisLeafletFlowMapModule } from 'src/public-api'
 
-import { VisGraphComponent } from '../../../src/components/graph/graph.component'
+import { VisLeafletFlowMapComponent } from 'src/html-components/leaflet-flow-map/leaflet-flow-map.component'
 
-import { singleVisContentWrapper } from '../../utils/single-content-wrapper'
+import { htmlVisContentWrapper } from '../../utils/html-content-wrapper'
 
 <Meta
   title="Maps/Leaflet Flow Map ✍️"
-  component={VisGraphComponent}
+  component={VisLeafletFlowMapComponent}
   decorators={[
-    moduleMetadata({ imports: [VisGraphModule, VisSingleContainerModule] }),
-    componentWrapperDecorator(singleVisContentWrapper)
+    moduleMetadata({ imports: [VisLeafletFlowMapModule] }),
+    componentWrapperDecorator(htmlVisContentWrapper)
   ]}
 />
 
@@ -20,7 +20,5 @@ import { singleVisContentWrapper } from '../../utils/single-content-wrapper'
 ###### ✍️ This story is Work in Progress
 
 # Leaflet Flow Map
-
-
-
+<ArgsTable of={VisLeafletFlowMapComponent} />
 

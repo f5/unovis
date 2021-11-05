@@ -12,6 +12,7 @@
     "allowSyntheticDefaultImports": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
+    "resolveJsonModule": true,
     "paths": {
       "lib": [
         "dist/lib/lib",
