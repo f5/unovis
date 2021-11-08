@@ -49,6 +49,9 @@ export { VisGraphModule } from './components/graph/graph.module'
 export { VisLeafletMapComponent } from './html-components/leaflet-map/leaflet-map.component'
 export { VisLeafletMapModule } from './html-components/leaflet-map/leaflet-map.module'
 
+export { VisLeafletFlowMapComponent } from './html-components/leaflet-flow-map/leaflet-flow-map.component'
+export { VisLeafletFlowMapModule } from './html-components/leaflet-flow-map/leaflet-flow-map.module'
+
 export { VisBulletLegendComponent } from './html-components/bullet-legend/bullet-legend.component'
 export { VisBulletLegendModule } from './html-components/bullet-legend/bullet-legend.module'
 

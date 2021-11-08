@@ -1,10 +1,14 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { TimelineConfigInterface } from '@volterra/vis'
-import { XYChartStoryConfig } from '../../utils/xy-content-wrapper'
-import { DataRecord } from '../../data/time-series'
+import { SankeyConfigInterface } from '@volterra/vis'
+import { SingleVisStoryConfig } from '../../utils/single-content-wrapper'
 
-export const baseConfig = (n = 25): XYChartStoryConfig & TimelineConfigInterface<DataRecord> => ({
-  x: d => d.x,
-  y: d => d.y,
-  data: [],
+// eslint-disable-next-line @typescript-eslint/ban-types
+type SankeyNode = {}
+type SankeyLink = {
+  source: number;
+  target: number;
+}
+
+export const baseConfig = (n = 25): SingleVisStoryConfig & SankeyConfigInterface<SankeyNode, SankeyLink> => ({
+  data: { nodes: [], links: [] },
 })

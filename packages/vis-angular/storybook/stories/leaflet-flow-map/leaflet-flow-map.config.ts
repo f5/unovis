@@ -1,7 +1,17 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { GraphConfigInterface } from '@volterra/vis'
-import { SingleVisStoryConfig } from '../../utils/single-content-wrapper'
+import { LeafletFlowMapConfigInterface } from '@volterra/vis'
+import { Style } from 'maplibre-gl'
+import { HtmlVisStoryConfig } from '../../utils/html-content-wrapper'
 
-export const baseConfig = (n = 25): SingleVisStoryConfig & GraphConfigInterface<any, any> => ({
+// Configuration
+import tilesConfig from '../leaflet-map/tiles-config.json'
+
+// eslint-disable-next-line @typescript-eslint/ban-types
+type MapPoint = {}
+// eslint-disable-next-line @typescript-eslint/ban-types
+type MapFlow = {}
+
+export const baseConfig = (n = 25): HtmlVisStoryConfig & LeafletFlowMapConfigInterface<MapPoint, MapFlow> => ({
   data: [],
+  rendererSettings: tilesConfig as Style,
 })
