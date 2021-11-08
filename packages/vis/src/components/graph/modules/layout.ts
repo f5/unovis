@@ -62,7 +62,8 @@ export function applyLayoutParallel<N extends GraphInputNode, L extends GraphInp
   const { nonConnectedNodes, connectedNodes, nodes } = datamodel
   const {
     layoutNonConnectedAside, layoutGroupOrder, layoutSortConnectionsByGroup,
-    layoutSubgroupMaxNodes, layoutGroupRows, nodeSize, nodeGroup, nodeSubGroup, width, height,
+    layoutSubgroupMaxNodes, layoutGroupRows, nodeSize, nodeGroup, nodeSubGroup,
+    width, height, layoutGroupSpacing,
   } = config
 
   const activeWidth = width - configuredNodeSize(nodeSize)
@@ -125,7 +126,7 @@ export function applyLayoutParallel<N extends GraphInputNode, L extends GraphInp
 
     const maxVerticalStep = maxNodeSize * 4 + labelApprxHeight
     const minVerticalStep = maxNodeSize * 1.5 + labelApprxHeight
-    const verticalStep = clamp(activeHeight / (groups.length - 1), minVerticalStep, maxVerticalStep)
+    const verticalStep = (maxNodeSize + layoutGroupSpacing) || clamp(activeHeight / (groups.length - 1), minVerticalStep, maxVerticalStep)
     const subgroupNodeStep = maxNodeSize + labelApprxHeight + labelMargin
 
     let y0 = (groups.length < 2) ? height / 2 : 0
@@ -185,7 +186,7 @@ export function applyLayoutParallel<N extends GraphInputNode, L extends GraphInp
   } else {
     const minHorizontalStep = 6 * maxNodeSize + labelMargin
     const maxHorizontalStep = 10 * maxNodeSize + labelMargin
-    const horizontalStep = clamp(activeWidth / (maxN - 1), minHorizontalStep, maxHorizontalStep)
+    const horizontalStep = (maxNodeSize + layoutGroupSpacing) || clamp(activeWidth / (maxN - 1), minHorizontalStep, maxHorizontalStep)
 
     const maxVerticalStep = maxNodeSize * 2.0 + labelApprxHeight
     const minVerticalStep = maxNodeSize * 1.5 + labelApprxHeight

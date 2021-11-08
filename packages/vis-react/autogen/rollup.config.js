@@ -1,11 +1,18 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import typescript from 'rollup-plugin-typescript2'
-import ttypescript from 'ttypescript'
+import resolve from '@rollup/plugin-node-resolve'
+import babel from '@rollup/plugin-babel'
+import commonjs from 'rollup-plugin-commonjs'
 
+const extensions = ['.ts']
 const plugins = [
-  typescript({
-    typescript: ttypescript,
-    tsconfig: './autogen/tsconfig.json',
+  resolve({
+    extensions,
+  }),
+  commonjs(),
+  babel({
+    extensions,
+    babelHelpers: 'inline',
+    include: extensions.map(ext => `autogen/*${ext}`),
   }),
 ]
 

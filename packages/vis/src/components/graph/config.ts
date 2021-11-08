@@ -45,6 +45,10 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
    * Only for `GraphLayoutType.Parallel` and `GraphLayoutType.ParallelHorizontal` layouts.
    * Default: `6` */
   layoutSubgroupMaxNodes?: number;
+  /** Set the spacing between the groups.
+   * Only for `GraphLayoutType.Parallel` and `GraphLayoutType.ParallelHorizontal` layouts.
+   * Default: `undefined` */
+  layoutGroupSpacing?: number;
   /** Set a group by name to have priority in sorting the graph links.
    * Only for `GraphLayoutType.Parallel` and `GraphLayoutType.ParallelHorizontal` layouts.
    * Default: `undefined` */
@@ -158,6 +162,7 @@ export class GraphConfig<N extends GraphInputNode, L extends GraphInputLink> ext
   layoutGroupOrder = []
   layoutGroupRows = 1
   layoutSubgroupMaxNodes = 6
+  layoutGroupSpacing = undefined
   layoutSortConnectionsByGroup = undefined
   nodeGroup = (n: N): string => n['group']
   nodeSubGroup = (n: N): string => n['subgroup']

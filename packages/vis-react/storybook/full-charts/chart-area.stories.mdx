@@ -5,6 +5,7 @@ import { VisArea } from '@volterra/vis-react/components/area'
 import { VisAxis } from '@volterra/vis-react/components/axis'
 import { VisCrosshair } from '@volterra/vis-react/components/crosshair'
 import { VisTooltip } from '@volterra/vis-react/components/tooltip'
+import { VisBulletLegend } from '@volterra/vis-react/html-components/bullet-legend'
 import { DataRecord, generateDataRecords } from '../data/time-series'
 const data = generateDataRecords(15)
 
@@ -16,6 +17,7 @@ const data = generateDataRecords(15)
 
 <Canvas>
   <Story name="Area Chart">
+    <VisBulletLegend items={[{ name: "Inbound" }, { name: "Outbound", inactive: true }]} />
     <VisXYContainer data={data} margin={{ top: 5, left: 5 }}>
       <VisArea
         x={d => d.x}

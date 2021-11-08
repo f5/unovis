@@ -15,6 +15,10 @@ export interface ContainerConfigInterface {
   padding?: Spacing;
   /** Defines whether components should fit into the container or the container should expand to fit to the component's size. Default: `Sizing.FIT` */
   sizing?: Sizing | string;
+  /** Width in pixels. By default, Container automatically fits to the size of the parent element. Default: `undefined`. */
+  width?: number;
+  /** Height in pixels. By default, Container automatically fits to the size of the parent element. Default: `undefined`. */
+  height?: number;
 }
 
 export class ContainerConfig extends Config implements ContainerConfigInterface {
@@ -34,4 +38,6 @@ export class ContainerConfig extends Config implements ContainerConfigInterface 
   }
 
   sizing = Sizing.Fit
+  width = undefined
+  height = undefined
 }

@@ -6,7 +6,7 @@ import { BulletLegendItemInterface } from './types'
 
 export interface BulletLegendConfigInterface {
   /** Legend items array BulletLegendItemInterface[]. Default: `[]` */
-  items?: BulletLegendItemInterface[];
+  items: BulletLegendItemInterface[];
   /** Apply a specific class to the labels. Default: `''` */
   labelClassName?: string;
   /** Callback function for the legend item click. Default: `undefined` */

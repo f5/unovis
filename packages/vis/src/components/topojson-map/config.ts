@@ -7,7 +7,7 @@ import { ComponentConfigInterface, ComponentConfig } from 'core/component/config
 import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
 
 // Local Types
-import { MapProjection, MapInputNode, MapInputLink, MapInputArea } from './types'
+import { MapProjection, MapInputNode, MapInputLink, MapInputArea, MapPointLabelPosition } from './types'
 
 export interface TopoJSONMapConfigInterface<
   N extends MapInputNode,
@@ -59,6 +59,8 @@ export interface TopoJSONMapConfigInterface<
   latitude?: NumericAccessor<N>;
   /** Point label accessor function. Default: `undefined` */
   pointLabel?: StringAccessor<N>;
+  /** Point label position. Default: `Position.Bottom` */
+  pointLabelPosition?: MapPointLabelPosition;
   /** Point color brightness ratio for switching between dark and light text label color. Default: `0.65` */
   pointLabelTextBrightnessRatio?: number;
   /** Point id accessor function. Default: `d => d.id` */
@@ -103,6 +105,7 @@ export class TopoJSONMapConfig<
   pointStrokeWidth = (d: N): number => d['strokeWidth'] ?? 0
   pointCursor = null
   pointLabel = undefined
+  pointLabelPosition = MapPointLabelPosition.Bottom
   pointLabelTextBrightnessRatio = 0.65
   pointId = (d: N, i: number): string => `${d['id'] ?? i}`
 

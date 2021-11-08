@@ -28,6 +28,11 @@ export interface MapInputLink {
   target: number | string | MapInputNode;
 }
 
+export enum MapPointLabelPosition {
+  Center = 'center',
+  Bottom = 'bottom',
+}
+
 export type MapFeature<D> = Feature<Geometry> & { data: D }
 
 export type MapInputArea = {

@@ -1,7 +1,7 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { Component, ViewChild } from '@angular/core'
 import { VisCrosshairComponent, VisTooltipComponent } from '@volterra/vis-angular'
-import { XYLabels, XYLabelCluster } from '@volterra/vis'
+import { XYLabels, XYLabelCluster, BulletLegendItemInterface } from '@volterra/vis'
 
 // Helpers
 import { sampleSeriesData, SampleDatum } from '../../utils/data'
@@ -41,6 +41,8 @@ export class AtomicAngularWrapperComponent {
     [XYLabels.selectors.label]: (d: SampleDatum) => d.timestamp.toString(),
     [XYLabels.selectors.cluster]: (data: XYLabelCluster<SampleDatum>) => `${data.records.length} alerts`,
   }
+
+  legendItems: BulletLegendItemInterface[] = [{ name: 'Hello' }, { name: 'World' }]
 
   onBrushStart = (): void => {
     this.crosshairRef?.component.hide()
