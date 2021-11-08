@@ -8,12 +8,16 @@ import * as nodeSelectors from './modules/node/style'
 import * as linkSelectors from './modules/link/style'
 
 // General
+export const root = css`
+  label: graph-component;
+`
+
 export const background = css`
   label: background;
 `
 
-export const graphContainer = css`
-  label: graph-container;
+export const graphGroup = css`
+  label: graph-group;
 `
 
 export const zoomOutLevel1 = css`

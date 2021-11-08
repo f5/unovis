@@ -46,6 +46,7 @@ export class Graph<
   P extends GraphPanelConfigInterface = GraphPanelConfigInterface,
 > extends ComponentCore<{nodes: N[]; links?: L[]}> {
   static selectors = {
+    root: generalSelectors.root,
     background: generalSelectors.background,
     node: nodeSelectors.gNode,
     link: linkSelectors.gLink,
@@ -88,7 +89,7 @@ export class Graph<
   // private _panelsGroup
   private _defs
   private _backgroundRect
-  private _graphContainer
+  private _graphGroup
   private _zoomBehavior
   private _disableAutoFit = false
   private _scale: number
@@ -123,18 +124,19 @@ export class Graph<
     super()
     if (config) this.config.init(config)
 
+    this.g.attr('class', generalSelectors.root)
     this._backgroundRect = this.g.append('rect').attr('class', generalSelectors.background)
-    this._graphContainer = this.g.append('g').attr('class', generalSelectors.graphContainer)
+    this._graphGroup = this.g.append('g').attr('class', generalSelectors.graphGroup)
 
     this._zoomBehavior = zoom()
       .scaleExtent(this.config.zoomScaleExtent)
       .on('zoom', (e: D3ZoomEvent<any, any>) => this._onZoom(e.transform, e))
 
-    this._panelsGroup = this._graphContainer.append('g').attr('class', panelSelectors.panels)
-    this._linksGroup = this._graphContainer.append('g').attr('class', linkSelectors.links)
-    this._nodesGroup = this._graphContainer.append('g').attr('class', nodeSelectors.nodes)
+    this._panelsGroup = this._graphGroup.append('g').attr('class', panelSelectors.panels)
+    this._linksGroup = this._graphGroup.append('g').attr('class', linkSelectors.links)
+    this._nodesGroup = this._graphGroup.append('g').attr('class', nodeSelectors.nodes)
 
-    this._defs = this._graphContainer.append('defs')
+    this._defs = this._graphGroup.append('defs')
   }
 
   setData (data: {nodes: N[]; links?: L[]}): void {
@@ -239,10 +241,16 @@ export class Graph<
       this._onZoom(transform)
     }
 
-    // Reset pointer-events
-    if (animDuration) this._graphContainer.attr('pointer-events', 'none')
-    smartTransition(this._graphContainer, animDuration)
-      .on('end interrupt', () => this._graphContainer.attr('pointer-events', null))
+    // While the graph is animating, we set the `animating` attribute to the root group and disable pointer events on the graph group
+    if (animDuration) {
+      this.g.attr('animating', '')
+      this._graphGroup.attr('pointer-events', 'none')
+    }
+    smartTransition(this._graphGroup, animDuration)
+      .on('end interrupt', () => {
+        this.g.attr('animating', null)
+        this._graphGroup.attr('pointer-events', null)
+      })
 
     this._firstRender = false
   }
@@ -555,7 +563,7 @@ export class Graph<
     const { config, datamodel: { nodes } } = this
     const transform = t || event.transform
     this._scale = transform.k
-    this._graphContainer.attr('transform', transform)
+    this._graphGroup.attr('transform', transform)
     if (isFunction(config.onZoom)) config.onZoom(this._scale, config.zoomScaleExtent)
 
     if (!this._initialTransform) this._initialTransform = transform
@@ -597,7 +605,7 @@ export class Graph<
     const maxX = (config.width - transform.x) / scale
     const minY = -transform.y / scale
     const minX = -transform.x / scale
-    let [x, y] = pointer(event, this._graphContainer.node())
+    let [x, y] = pointer(event, this._graphGroup.node())
     if (y < minY) y = minY
     else if (y > maxY) y = maxY
     if (x < minX) x = minX
