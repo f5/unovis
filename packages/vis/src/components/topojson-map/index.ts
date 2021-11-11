@@ -4,7 +4,7 @@ import { D3ZoomEvent, zoom, ZoomBehavior, zoomIdentity, ZoomTransform } from 'd3
 import { timeout } from 'd3-timer'
 import { geoPath, GeoProjection } from 'd3-geo'
 import { color } from 'd3-color'
-import { feature, mesh } from 'topojson-client'
+import { feature } from 'topojson-client'
 
 // Core
 import { ComponentCore } from 'core/component'
@@ -53,7 +53,6 @@ export class TopoJSONMap<
   private _zoomBehavior: ZoomBehavior<SVGGElement, any> = zoom()
   private _backgroundRect = this.g.append('rect').attr('class', s.background)
   private _featuresGroup = this.g.append('g').attr('class', s.features)
-  private _boundariesGroup = this.g.append('g').attr('class', s.boundaries)
   private _linksGroup = this.g.append('g').attr('class', s.links)
   private _pointsGroup = this.g.append('g').attr('class', s.points)
 
@@ -129,7 +128,6 @@ export class TopoJSONMap<
 
     this._featureCollection = feature(mapData, featureObject) as GeoJSON.FeatureCollection
     const featureData = (this._featureCollection?.features ?? []) as MapFeature<A>[]
-    const boundariesData = [mesh(mapData, featureObject, (a, b) => a !== b)]
 
     if (this._firstRender) {
       // Rendering the map for the first time.
@@ -186,15 +184,6 @@ export class TopoJSONMap<
       .style('fill', (d, i) => d.data ? getColor(d.data, config.areaColor, i) : null)
       .style('cursor', d => d.data ? getString(d.data, config.areaCursor) : null)
     features.exit().remove()
-
-    const boundaries = this._boundariesGroup
-      .selectAll<SVGPathElement, unknown>(`.${s.boundary}`)
-      .data(boundariesData)
-
-    const boundariesEnter = boundaries.enter().append('path').attr('class', s.boundary)
-    smartTransition(boundariesEnter.merge(boundaries), duration)
-      .attr('d', this._path)
-    boundaries.exit().remove()
   }
 
   _renderLinks (duration: number): void {
