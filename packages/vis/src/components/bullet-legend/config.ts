@@ -10,7 +10,7 @@ export interface BulletLegendConfigInterface {
   /** Apply a specific class to the labels. Default: `''` */
   labelClassName?: string;
   /** Callback function for the legend item click. Default: `undefined` */
-  onLegendItemClick?: ((d?: BulletLegendItemInterface, i?: number) => void);
+  onLegendItemClick?: ((d: BulletLegendItemInterface, i: number) => void);
   /** Label text (<span> element) font-size CSS. Default: `null` */
   labelFontSize?: string | null;
   /** Label text (<span> element) max-width CSS property. Default: `null` */

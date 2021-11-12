@@ -4,7 +4,7 @@ import { D3ZoomEvent, zoom, ZoomBehavior, zoomIdentity, ZoomTransform } from 'd3
 import { timeout } from 'd3-timer'
 import { geoPath, GeoProjection } from 'd3-geo'
 import { color } from 'd3-color'
-import { feature, mesh } from 'topojson-client'
+import { feature } from 'topojson-client'
 
 // Core
 import { ComponentCore } from 'core/component'
@@ -17,10 +17,10 @@ import { getColor, hexToBrightness } from 'utils/color'
 import { getCSSVariableValue, isStringCSSVariable } from 'utils/misc'
 
 // Types
-import { GraphLinkCore, GraphNodeCore } from 'types/graph'
+import { MapLink } from 'types/map'
 
 // Local Types
-import { MapFeature, MapInputArea, MapInputLink, MapInputNode, MapPointLabelPosition } from './types'
+import { MapFeature, MapPointLabelPosition } from './types'
 
 // Config
 import { TopoJSONMapConfig, TopoJSONMapConfigInterface } from './config'
@@ -31,14 +31,10 @@ import { arc, getLonLat } from './utils'
 // Styles
 import * as s from './style'
 
-export class TopoJSONMap<
-  N extends MapInputNode,
-  L extends MapInputLink = MapInputLink,
-  A extends MapInputArea = MapInputArea,
-> extends ComponentCore<{nodes: N[]; links?: L[]; areas?: A[]}> {
+export class TopoJSONMap<AreaDatum, PointDatum, LinkDatum> extends ComponentCore<{ areas?: AreaDatum[]; points?: PointDatum[]; links?: LinkDatum[] }> {
   static selectors = s
-  config: TopoJSONMapConfig<N, L, A> = new TopoJSONMapConfig()
-  datamodel: MapGraphDataModel<N, L, A> = new MapGraphDataModel()
+  config: TopoJSONMapConfig<AreaDatum, PointDatum, LinkDatum> = new TopoJSONMapConfig()
+  datamodel: MapGraphDataModel<AreaDatum, PointDatum, LinkDatum> = new MapGraphDataModel()
   g: Selection<SVGGElement, unknown, null, undefined>
   private _firstRender = true
   private _initialScale = undefined
@@ -53,7 +49,6 @@ export class TopoJSONMap<
   private _zoomBehavior: ZoomBehavior<SVGGElement, any> = zoom()
   private _backgroundRect = this.g.append('rect').attr('class', s.background)
   private _featuresGroup = this.g.append('g').attr('class', s.features)
-  private _boundariesGroup = this.g.append('g').attr('class', s.boundaries)
   private _linksGroup = this.g.append('g').attr('class', s.links)
   private _pointsGroup = this.g.append('g').attr('class', s.points)
 
@@ -62,7 +57,7 @@ export class TopoJSONMap<
     [TopoJSONMap.selectors.feature]: {},
   }
 
-  constructor (config?: TopoJSONMapConfigInterface<N, L, A>, data?: {nodes: N[]; links: L[]; areas: A[]}) {
+  constructor (config?: TopoJSONMapConfigInterface<AreaDatum, PointDatum, LinkDatum>, data?: {areas?: AreaDatum[]; points?: PointDatum[]; links?: LinkDatum[] }) {
     super()
     this.g.attr('class', s.map)
     this._zoomBehavior.on('zoom', this._onZoom.bind(this))
@@ -79,7 +74,16 @@ export class TopoJSONMap<
       `)
   }
 
-  setConfig (config?: TopoJSONMapConfigInterface<N, L, A>): void {
+  setData (data: { areas?: AreaDatum[]; points?: PointDatum[]; links?: LinkDatum[] }): void {
+    const { config } = this
+
+    this.datamodel.pointId = config.pointId
+    this.datamodel.linkSource = config.linkSource
+    this.datamodel.linkTarget = config.linkTarget
+    this.datamodel.data = data
+  }
+
+  setConfig (config?: TopoJSONMapConfigInterface<AreaDatum, PointDatum, LinkDatum>): void {
     super.setConfig(config)
 
     const newProjection = this.config.projection
@@ -128,8 +132,7 @@ export class TopoJSONMap<
     if (!featureObject) return
 
     this._featureCollection = feature(mapData, featureObject) as GeoJSON.FeatureCollection
-    const featureData = (this._featureCollection?.features ?? []) as MapFeature<A>[]
-    const boundariesData = [mesh(mapData, featureObject, (a, b) => a !== b)]
+    const featureData = (this._featureCollection?.features ?? []) as MapFeature<AreaDatum>[]
 
     if (this._firstRender) {
       // Rendering the map for the first time.
@@ -173,7 +176,7 @@ export class TopoJSONMap<
     areaData.forEach(a => {
       const feature = featureData.find(f => f.id.toString() === getString(a, config.areaId).toString())
       if (feature) feature.data = a
-      else if (this._firstRender) console.warn(`Can't find feature by area code ${a.id}`)
+      else if (this._firstRender) console.warn(`Can't find feature by area code ${getString(a, config.areaId)}`)
     })
 
     const features = this._featuresGroup
@@ -186,15 +189,6 @@ export class TopoJSONMap<
       .style('fill', (d, i) => d.data ? getColor(d.data, config.areaColor, i) : null)
       .style('cursor', d => d.data ? getString(d.data, config.areaCursor) : null)
     features.exit().remove()
-
-    const boundaries = this._boundariesGroup
-      .selectAll<SVGPathElement, unknown>(`.${s.boundary}`)
-      .data(boundariesData)
-
-    const boundariesEnter = boundaries.enter().append('path').attr('class', s.boundary)
-    smartTransition(boundariesEnter.merge(boundaries), duration)
-      .attr('d', this._path)
-    boundaries.exit().remove()
   }
 
   _renderLinks (duration: number): void {
@@ -202,8 +196,8 @@ export class TopoJSONMap<
     const links = datamodel.links
 
     const edges = this._linksGroup
-      .selectAll<SVGPathElement, GraphLinkCore<N, L>>(`.${s.link}`)
-      .data(links)
+      .selectAll<SVGPathElement, MapLink<PointDatum, LinkDatum>>(`.${s.link}`)
+      .data(links, (d, i) => getString(d, config.linkId, i))
 
     const edgesEnter = edges.enter().append('path').attr('class', s.link)
       .style('stroke-width', 0)
@@ -222,10 +216,10 @@ export class TopoJSONMap<
 
   _renderPoints (duration: number): void {
     const { config, datamodel } = this
-    const pointData = datamodel.nodes
+    const pointData = datamodel.points
 
     const points = this._pointsGroup
-      .selectAll<SVGGElement, GraphNodeCore<N, L>>(`.${s.point}`)
+      .selectAll<SVGGElement, PointDatum>(`.${s.point}`)
       .data(pointData, (d, i) => getString(d, config.pointId, i))
 
     // Enter
@@ -301,7 +295,7 @@ export class TopoJSONMap<
 
   _fitToPoints (points?, pad = 0.1): void {
     const { config, datamodel } = this
-    const pointData = points || datamodel.nodes
+    const pointData = points || datamodel.points
     if (pointData.length === 0) return
 
     const featureCollection = {

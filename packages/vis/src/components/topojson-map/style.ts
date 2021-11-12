@@ -32,19 +32,9 @@ export const features = css`
 
 export const feature = css`
   label: feature;
-
   fill: var(--vis-map-feature-color);
-`
-export const boundaries = css`
-  label: boundaries;
-`
-
-export const boundary = css`
-  label: boundary;
-
-  fill: none;
   stroke: var(--vis-map-boundary-color);
-  stroke-width: .5px;
+  stroke-opacity: 0.5;
 `
 
 export const background = css`
