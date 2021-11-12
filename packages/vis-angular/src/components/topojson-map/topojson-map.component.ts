@@ -4,14 +4,12 @@ import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
 import {
   TopoJSONMap,
   TopoJSONMapConfigInterface,
-  MapInputNode,
-  MapInputLink,
-  MapInputArea,
   VisEventType,
   VisEventCallback,
   NumericAccessor,
   ColorAccessor,
   StringAccessor,
+  MapPointLabelPosition,
 } from '@volterra/vis'
 import { GeoProjection } from 'd3-geo'
 import { VisCoreComponent } from '../../core'
@@ -22,7 +20,7 @@ import { VisCoreComponent } from '../../core'
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisCoreComponent, useExisting: VisTopoJSONMapComponent }],
 })
-export class VisTopoJSONMapComponent<N extends MapInputNode, L extends MapInputLink = MapInputLink, A extends MapInputArea = MapInputArea> implements TopoJSONMapConfigInterface<N, L, A>, AfterViewInit {
+export class VisTopoJSONMapComponent<AreaDatum, PointDatum, LinkDatum> implements TopoJSONMapConfigInterface<AreaDatum, PointDatum, LinkDatum>, AfterViewInit {
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */
   @Input() duration: number
 
@@ -98,49 +96,61 @@ export class VisTopoJSONMapComponent<N extends MapInputNode, L extends MapInputL
   @Input() zoomDuration: number
 
   /** Link width value or accessor function. Default: `d => d.width ?? 1` */
-  @Input() linkWidth: NumericAccessor<L>
+  @Input() linkWidth: NumericAccessor<LinkDatum>
 
   /** Link color value or accessor function. Default: `d => d.color ?? null` */
-  @Input() linkColor: ColorAccessor<L>
+  @Input() linkColor: ColorAccessor<LinkDatum>
 
   /** Link cursor value or accessor function. Default: `null` */
-  @Input() linkCursor: StringAccessor<A>
+  @Input() linkCursor: StringAccessor<AreaDatum>
+
+  /** Link id accessor function. Default: `d => d.id` */
+  @Input() linkId: StringAccessor<LinkDatum>
+
+  /** Link source accessor function. Default: `d => d.source` */
+  @Input() linkSource: ((l: LinkDatum) => number | string | PointDatum)
+
+  /** Link target accessor function. Default: `d => d.target` */
+  @Input() linkTarget: ((l: LinkDatum) => number | string | PointDatum)
 
   /** Area id accessor function corresponding to the feature id from TopoJSON. Default: `d => d.id ?? ''` */
-  @Input() areaId: StringAccessor<A>
+  @Input() areaId: StringAccessor<AreaDatum>
 
   /** Area color value or accessor function. Default: `d => d.color ?? null` */
-  @Input() areaColor: ColorAccessor<A>
+  @Input() areaColor: ColorAccessor<AreaDatum>
 
   /** Area cursor value or accessor function. Default: `null` */
-  @Input() areaCursor: StringAccessor<A>
+  @Input() areaCursor: StringAccessor<AreaDatum>
 
   /** Point color accessor. Default: `d => d.color ?? null` */
-  @Input() pointColor: ColorAccessor<N>
+  @Input() pointColor: ColorAccessor<PointDatum>
 
   /** Point radius accessor. Default: `d => d.radius ?? 8` */
-  @Input() pointRadius: NumericAccessor<N>
+  @Input() pointRadius: NumericAccessor<PointDatum>
 
   /** Point stroke width accessor. Default: `d => d.strokeWidth ?? null` */
-  @Input() pointStrokeWidth: NumericAccessor<N>
+  @Input() pointStrokeWidth: NumericAccessor<PointDatum>
 
   /** Point cursor constant value or accessor function. Default: `null` */
-  @Input() pointCursor: StringAccessor<A>
+  @Input() pointCursor: StringAccessor<AreaDatum>
 
   /** Point longitude accessor function. Default: `d => d.longitude ?? null` */
-  @Input() longitude: NumericAccessor<N>
+  @Input() longitude: NumericAccessor<PointDatum>
 
   /** Point latitude accessor function. Default: `d => d.latitude ?? null` */
-  @Input() latitude: NumericAccessor<N>
+  @Input() latitude: NumericAccessor<PointDatum>
 
   /** Point label accessor function. Default: `undefined` */
-  @Input() pointLabel: StringAccessor<N>
+  @Input() pointLabel: StringAccessor<PointDatum>
+
+  /** Point label position. Default: `Position.Bottom` */
+  @Input() pointLabelPosition: MapPointLabelPosition
 
   /** Point color brightness ratio for switching between dark and light text label color. Default: `0.65` */
   @Input() pointLabelTextBrightnessRatio: number
 
   /** Point id accessor function. Default: `d => d.id` */
-  @Input() pointId: StringAccessor<N>
+  @Input() pointId: ((d: PointDatum, i: number) => string)
 
   /** Enables blur and blending between neighbouring points. Default: `false` */
   @Input() heatmapMode: boolean
@@ -152,10 +162,10 @@ export class VisTopoJSONMapComponent<N extends MapInputNode, L extends MapInputL
   @Input() heatmapModeZoomLevelThreshold: number
   @Input() data: any
 
-  component: TopoJSONMap<N, L, A> | undefined
+  component: TopoJSONMap<AreaDatum, PointDatum, LinkDatum> | undefined
 
   ngAfterViewInit (): void {
-    this.component = new TopoJSONMap<N, L, A>(this.getConfig())
+    this.component = new TopoJSONMap<AreaDatum, PointDatum, LinkDatum>(this.getConfig())
     if (this.data) this.component.setData(this.data)
   }
 
@@ -164,10 +174,10 @@ export class VisTopoJSONMapComponent<N extends MapInputNode, L extends MapInputL
     this.component?.setConfig(this.getConfig())
   }
 
-  private getConfig (): TopoJSONMapConfigInterface<N, L, A> {
-    const { duration, events, attributes, projection, topojson, mapFeatureName, mapFitToPoints, zoomFactor, disableZoom, zoomExtent, zoomDuration, linkWidth, linkColor, linkCursor, areaId, areaColor, areaCursor, pointColor, pointRadius, pointStrokeWidth, pointCursor, longitude, latitude, pointLabel, pointLabelTextBrightnessRatio, pointId, heatmapMode, heatmapModeBlurStdDeviation, heatmapModeZoomLevelThreshold } = this
-    const config = { duration, events, attributes, projection, topojson, mapFeatureName, mapFitToPoints, zoomFactor, disableZoom, zoomExtent, zoomDuration, linkWidth, linkColor, linkCursor, areaId, areaColor, areaCursor, pointColor, pointRadius, pointStrokeWidth, pointCursor, longitude, latitude, pointLabel, pointLabelTextBrightnessRatio, pointId, heatmapMode, heatmapModeBlurStdDeviation, heatmapModeZoomLevelThreshold }
-    const keys = Object.keys(config) as (keyof TopoJSONMapConfigInterface<N, L, A>)[]
+  private getConfig (): TopoJSONMapConfigInterface<AreaDatum, PointDatum, LinkDatum> {
+    const { duration, events, attributes, projection, topojson, mapFeatureName, mapFitToPoints, zoomFactor, disableZoom, zoomExtent, zoomDuration, linkWidth, linkColor, linkCursor, linkId, linkSource, linkTarget, areaId, areaColor, areaCursor, pointColor, pointRadius, pointStrokeWidth, pointCursor, longitude, latitude, pointLabel, pointLabelPosition, pointLabelTextBrightnessRatio, pointId, heatmapMode, heatmapModeBlurStdDeviation, heatmapModeZoomLevelThreshold } = this
+    const config = { duration, events, attributes, projection, topojson, mapFeatureName, mapFitToPoints, zoomFactor, disableZoom, zoomExtent, zoomDuration, linkWidth, linkColor, linkCursor, linkId, linkSource, linkTarget, areaId, areaColor, areaCursor, pointColor, pointRadius, pointStrokeWidth, pointCursor, longitude, latitude, pointLabel, pointLabelPosition, pointLabelTextBrightnessRatio, pointId, heatmapMode, heatmapModeBlurStdDeviation, heatmapModeZoomLevelThreshold }
+    const keys = Object.keys(config) as (keyof TopoJSONMapConfigInterface<AreaDatum, PointDatum, LinkDatum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
     return config

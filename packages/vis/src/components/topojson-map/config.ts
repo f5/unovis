@@ -7,13 +7,9 @@ import { ComponentConfigInterface, ComponentConfig } from 'core/component/config
 import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
 
 // Local Types
-import { MapProjection, MapInputNode, MapInputLink, MapInputArea, MapPointLabelPosition } from './types'
+import { MapProjection, MapPointLabelPosition } from './types'
 
-export interface TopoJSONMapConfigInterface<
-  N extends MapInputNode,
-  L extends MapInputLink = MapInputLink,
-  A extends MapInputArea = MapInputArea,
-> extends ComponentConfigInterface {
+export interface TopoJSONMapConfigInterface<AreaDatum, PointDatum, LinkDatum> extends ComponentConfigInterface {
   // General
   /** MapProjection (or D3's GeoProjection) instance. Default: `MapProjection.Mercator()` */
   projection?: GeoProjection;
@@ -33,38 +29,45 @@ export interface TopoJSONMapConfigInterface<
   zoomDuration?: number;
 
   /** Link width value or accessor function. Default: `d => d.width ?? 1` */
-  linkWidth?: NumericAccessor<L>;
+  linkWidth?: NumericAccessor<LinkDatum>;
   /** Link color value or accessor function. Default: `d => d.color ?? null` */
-  linkColor?: ColorAccessor<L>;
+  linkColor?: ColorAccessor<LinkDatum>;
   /** Link cursor value or accessor function. Default: `null` */
-  linkCursor?: StringAccessor<A>;
+  linkCursor?: StringAccessor<AreaDatum>;
+  /** Link id accessor function. Default: `d => d.id` */
+  linkId?: StringAccessor<LinkDatum>;
+  /** Link source accessor function. Default: `d => d.source` */
+  linkSource?: ((l: LinkDatum) => number | string | PointDatum);
+  /** Link target accessor function. Default: `d => d.target` */
+  linkTarget?: ((l: LinkDatum) => number | string | PointDatum);
+
   /** Area id accessor function corresponding to the feature id from TopoJSON. Default: `d => d.id ?? ''` */
-  areaId?: StringAccessor<A>;
+  areaId?: StringAccessor<AreaDatum>;
   /** Area color value or accessor function. Default: `d => d.color ?? null` */
-  areaColor?: ColorAccessor<A>;
+  areaColor?: ColorAccessor<AreaDatum>;
   /** Area cursor value or accessor function. Default: `null` */
-  areaCursor?: StringAccessor<A>;
+  areaCursor?: StringAccessor<AreaDatum>;
 
   /** Point color accessor. Default: `d => d.color ?? null` */
-  pointColor?: ColorAccessor<N>;
+  pointColor?: ColorAccessor<PointDatum>;
   /** Point radius accessor. Default: `d => d.radius ?? 8` */
-  pointRadius?: NumericAccessor<N>;
+  pointRadius?: NumericAccessor<PointDatum>;
   /** Point stroke width accessor. Default: `d => d.strokeWidth ?? null` */
-  pointStrokeWidth?: NumericAccessor<N>;
+  pointStrokeWidth?: NumericAccessor<PointDatum>;
   /** Point cursor constant value or accessor function. Default: `null` */
-  pointCursor?: StringAccessor<A>;
+  pointCursor?: StringAccessor<AreaDatum>;
   /** Point longitude accessor function. Default: `d => d.longitude ?? null` */
-  longitude?: NumericAccessor<N>;
+  longitude?: NumericAccessor<PointDatum>;
   /** Point latitude accessor function. Default: `d => d.latitude ?? null` */
-  latitude?: NumericAccessor<N>;
+  latitude?: NumericAccessor<PointDatum>;
   /** Point label accessor function. Default: `undefined` */
-  pointLabel?: StringAccessor<N>;
+  pointLabel?: StringAccessor<PointDatum>;
   /** Point label position. Default: `Position.Bottom` */
   pointLabelPosition?: MapPointLabelPosition;
   /** Point color brightness ratio for switching between dark and light text label color. Default: `0.65` */
   pointLabelTextBrightnessRatio?: number;
   /** Point id accessor function. Default: `d => d.id` */
-  pointId?: StringAccessor<N>;
+  pointId?: ((d: PointDatum, i: number) => string);
 
   /** Enables blur and blending between neighbouring points. Default: `false` */
   heatmapMode?: boolean;
@@ -74,11 +77,7 @@ export interface TopoJSONMapConfigInterface<
   heatmapModeZoomLevelThreshold?: number;
 }
 
-export class TopoJSONMapConfig<
-  N extends MapInputNode,
-  L extends MapInputLink = MapInputLink,
-  A extends MapInputArea = MapInputArea,
-> extends ComponentConfig implements TopoJSONMapConfigInterface<N, L, A> {
+export class TopoJSONMapConfig<AreaDatum, PointDatum, LinkDatum> extends ComponentConfig implements TopoJSONMapConfigInterface<AreaDatum, PointDatum, LinkDatum> {
   projection = MapProjection.Mercator()
   duration = 1500
   topojson = undefined
@@ -90,24 +89,27 @@ export class TopoJSONMapConfig<
   disableZoom = false
   zoomFactor = undefined
 
-  linkWidth = (d: L): number => d['width'] ?? 1
-  linkColor = (d: L): string => d['color'] ?? null
+  linkWidth = (d: LinkDatum): number => d['width'] ?? 1
+  linkColor = (d: LinkDatum): string => d['color'] ?? null
   linkCursor = null
+  linkId = (d: LinkDatum, i: number): string => `${d['id'] ?? i}`
+  linkSource = (d: LinkDatum): (number | string | PointDatum) => d['source']
+  linkTarget = (d: LinkDatum): (number | string | PointDatum) => d['target']
 
-  areaId = (d: A): string => d['id'] ?? ''
-  areaColor = (d: A): string => d['color'] ?? null
+  areaId = (d: AreaDatum): string => d['id'] ?? ''
+  areaColor = (d: AreaDatum): string => d['color'] ?? null
   areaCursor = null
 
-  longitude = (d: N): number => d['longitude']
-  latitude = (d: N): number => d['latitude']
-  pointColor = (d: N): string => d['color'] ?? null
-  pointRadius = (d: N): number => d['radius'] ?? 8
-  pointStrokeWidth = (d: N): number => d['strokeWidth'] ?? 0
+  longitude = (d: PointDatum): number => d['longitude']
+  latitude = (d: PointDatum): number => d['latitude']
+  pointColor = (d: PointDatum): string => d['color'] ?? null
+  pointRadius = (d: PointDatum): number => d['radius'] ?? 8
+  pointStrokeWidth = (d: PointDatum): number => d['strokeWidth'] ?? 0
   pointCursor = null
   pointLabel = undefined
   pointLabelPosition = MapPointLabelPosition.Bottom
   pointLabelTextBrightnessRatio = 0.65
-  pointId = (d: N, i: number): string => `${d['id'] ?? i}`
+  pointId = (d: PointDatum): string => d['id']
 
   heatmapMode = false
   heatmapModeBlurStdDeviation = 8
