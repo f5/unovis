@@ -34,7 +34,6 @@ pages:
   script:
     - mv packages/dev-demo/lib/volterra-vis-examples public
     - cp public/index.html public/404.html
-    - mv packages/vis-reacr/storybook-static public/storybook-react
     - mv packages/vis-angular/storybook-static public/storybook-angular
   artifacts:
     paths:
