@@ -15,6 +15,21 @@ type MapPoint = {
   latitude: number,
   longitude: number,
   city: string,
+  cursor: string,
+}
+
+type MapArea = {
+  id: string,
+  name: string,
+  color: string,
+  cursor: string,
+}
+
+type MapLink = {
+  source: string,
+  target: number,
+  width: number,
+  cursor: string,
 }
 
 @Component({
@@ -32,23 +47,23 @@ export class TopoJSONMapComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit (): void {
     const data = {
-      nodes: cities as MapPoint[],
+      points: cities as MapPoint[],
       areas: areas.slice(0, 30).map(a => ({
         id: a['ISO'],
         name: a.Country,
         color: '#ef8f73',
         cursor: 'pointer',
-      })),
+      })) as MapArea[],
       links: _times(10).map(i => ({
         source: _sample(cities).id,
         target: _sample(cities).id,
         width: _random(1, 5),
         cursor: 'crosshair',
-      })),
+      })) as MapLink[],
     }
 
     const config = {
-      component: new TopoJSONMap<MapPoint, any, any>({
+      component: new TopoJSONMap<MapArea, MapPoint, MapLink>({
         topojson: WorldMapTopoJSON,
         duration: 1000,
         pointLabel: d => d.city,
