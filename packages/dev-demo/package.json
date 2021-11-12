@@ -1,6 +1,6 @@
 {
   "name": "@volterra/vis-demo",
-  "version": "0.9.12",
+  "version": "0.9.13",
   "license": "MIT",
   "main": "lib/demo.js",
   "files": [
