@@ -18,28 +18,12 @@ import {
   geoNaturalEarth1,
 } from 'd3-geo'
 
-export interface MapInputNode {
-  id?: string;
-}
-
-export interface MapInputLink {
-  id?: string;
-  source: number | string | MapInputNode;
-  target: number | string | MapInputNode;
-}
-
 export enum MapPointLabelPosition {
   Center = 'center',
   Bottom = 'bottom',
 }
 
 export type MapFeature<D> = Feature<Geometry> & { data: D }
-
-export type MapInputArea = {
-  /** Area id related to the feature id in TopoJSON */
-  id: string;
-  color?: string;
-}
 
 export enum MapProjectionKind {
   Mercator = 'Mercator',
