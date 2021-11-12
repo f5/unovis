@@ -19,7 +19,7 @@ export class VisBulletLegendComponent implements BulletLegendConfigInterface, Af
   @Input() labelClassName: string
 
   /** Callback function for the legend item click. Default: `undefined` */
-  @Input() onLegendItemClick: ((d?: BulletLegendItemInterface, i?: number) => void)
+  @Input() onLegendItemClick: ((d: BulletLegendItemInterface, i: number) => void)
 
   /** Label text (<span> element) font-size CSS. Default: `null` */
   @Input() labelFontSize: string | null
