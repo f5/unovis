@@ -1,32 +1,11 @@
-# Required variables:
-#   - REGISTRY_USERNAME
-#   - REGISTRY_PASSWORD
-variables:
-  REGISTRY_IMAGE: volterra.azurecr.io/ves.io/${CI_PROJECT_NAME}
-  REGISTRY_SERVER: volterra.azurecr.io
-  JENKINS_URL: https://jenkins-dev.volterra.us
-  JENKINS_TOKENS: eeph1eitohZaeMew
-  AZURE_STORAGE_ACCOUNT: volterrasites
-  GITLAB_NPM_REGISTRY_AUTH_TOKEN: ${CI_JOB_TOKEN}
 
 stages:
   - build
-  - docker
-  - vuln-scan
-  - upload-templates
-  - trigger
   - publish-demo
 
 build:
   image: volterrasystem/angular-e2e-testing:node14
   stage: build
-  before_script:
-    - set -e
-    - eval $(ssh-agent -s)
-    - ssh-add <(echo "$SSH_PRIVATE_KEY")
-    - mkdir -p ~/.ssh
-    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
-    - npm config set "//gitlab.com/api/v4/packages/npm/:_authToken" "${GITLAB_NPM_REGISTRY_AUTH_TOKEN}"
   script:
     - npm install -g npm@7
     - npm install
@@ -38,133 +17,7 @@ build:
       - packages/vis/lib
       - packages/dev-demo/lib
       - packages/vis-angular/storybook-static
-
-docker:
-  tags: [docker]
-  stage: docker
-  image: tomkukral/buildah
-  before_script:
-    - podman version
-    - buildah version
-    - podman login --username "${REGISTRY_USERNAME}" --password "${REGISTRY_PASSWORD}" "${REGISTRY_SERVER}"
-  script:
-    - IMAGE_TAG_SHA=${REGISTRY_IMAGE}:${CI_COMMIT_SHA}
-    - IMAGE_TAG_BRANCH=${REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}
-    - IMAGE_TAG_LATEST=${REGISTRY_IMAGE}:latest
-    # Build an image
-    - echo "${SSH_PRIVATE_KEY}" > deploy.key
-    - |
-      podman build --no-cache --pull-always \
-          --build-arg GITLAB_NPM_REGISTRY_AUTH_TOKEN="${GITLAB_NPM_REGISTRY_AUTH_TOKEN}" \
-          --format docker -t ${IMAGE_TAG_SHA} .
-    # Push the image (tag sha)
-    - echo "Pushing image ${IMAGE_TAG_SHA}"
-    - podman push ${IMAGE_TAG_SHA} docker://${IMAGE_TAG_SHA}
-    # Push the image (tag branch)
-    - echo "Pushing image ${IMAGE_TAG_BRANCH}"
-    - podman push ${IMAGE_TAG_SHA} docker://${IMAGE_TAG_BRANCH}
-    # Only for master branch
-    - |
-      if [ ${CI_COMMIT_REF_SLUG} == "master" ]; then
-        echo "Pushing image ${IMAGE_TAG_LATEST}"
-        podman push ${IMAGE_TAG_SHA} docker://${IMAGE_TAG_LATEST}
-        skopeo inspect docker://${IMAGE_TAG_LATEST} | grep Digest | awk '{print $2}'| sed 's/[\",]//g' > last
-        echo "Created image digest:" && cat last
-      else
-        echo "Created image digest:" && skopeo inspect docker://${IMAGE_TAG_SHA} | grep Digest
-      fi
-  after_script:
-    - podman logout "${REGISTRY_SERVER}"
-
-test-trivy:
-  tags: [docker]
-  stage: vuln-scan
-  image: volterra.azurecr.io/ves.io/secscan
-  before_script:
-    - podman login --username "${REGISTRY_USERNAME}" --password "${REGISTRY_PASSWORD}" "${REGISTRY_SERVER}"
-  script:
-    - podman pull docker://${REGISTRY_IMAGE}:${CI_COMMIT_SHA}
-    - podman push docker://${REGISTRY_IMAGE}:${CI_COMMIT_SHA} oci:`pwd`/ociimage
-    - trivy-report --scan-tag trivy.scan.${CI_PROJECT_NAME} --vuln-tag trivy.vuln.${CI_PROJECT_NAME}
-      --sqs-url ${REPORTS_SQS_URL} --sqs-access-key ${REPORTS_SQS_ACCESS_KEY} --sqs-secret-key
-      ${REPORTS_SQS_SECRET_KEY} -p "https://${AZURE_SECURITY_STORAGE_ACCOUNT}.blob.core.windows.net/security/profiles/${CI_PROJECT_NAME}.yml${AZURE_SECURITY_STORAGE_TOKEN}"
-      "https://${AZURE_SECURITY_STORAGE_ACCOUNT}.blob.core.windows.net/security/profiles/common.yml${AZURE_SECURITY_STORAGE_TOKEN}"
-      --image `pwd`/ociimage
-  after_script:
-    - podman logout "${REGISTRY_SERVER}"
-
-test-trivy-fs:
-  tags: [docker]
-  stage: vuln-scan
-  image: volterra.azurecr.io/ves.io/secscan
-  script:
-    - trivy-report --scan-tag trivy.scan.${CI_PROJECT_NAME} --vuln-tag trivy.vuln.${CI_PROJECT_NAME}
-      --sqs-url ${REPORTS_SQS_URL} --sqs-access-key ${REPORTS_SQS_ACCESS_KEY} --sqs-secret-key
-      ${REPORTS_SQS_SECRET_KEY} -p "https://${AZURE_SECURITY_STORAGE_ACCOUNT}.blob.core.windows.net/security/profiles/${CI_PROJECT_NAME}.yml${AZURE_SECURITY_STORAGE_TOKEN}"
-      "https://${AZURE_SECURITY_STORAGE_ACCOUNT}.blob.core.windows.net/security/profiles/common.yml${AZURE_SECURITY_STORAGE_TOKEN}"
-      --fs .
-
-test-license:
-  stage: vuln-scan
-  image: volterra.azurecr.io/ves.io/secscan
-  tags: [kubernetes]
-  dependencies:
-    - build
-  before_script:
-    - set -e
-    - eval $(ssh-agent -s)
-    - ssh-add <(echo "$SSH_PRIVATE_KEY")
-    - mkdir -p ~/.ssh
-    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
-    - echo "machine gitlab.com login gitlab-ci-token password ${CI_JOB_TOKEN}" > /root/.netrc
-  script:
-    - license-report --scan-tag license.scan.${CI_PROJECT_NAME} --vuln-tag license.vuln.${CI_PROJECT_NAME}
-      --sqs-url ${REPORTS_SQS_URL} --sqs-access-key ${REPORTS_SQS_ACCESS_KEY} --sqs-secret-key
-      ${REPORTS_SQS_SECRET_KEY} -p "https://${AZURE_SECURITY_STORAGE_ACCOUNT}.blob.core.windows.net/security/profiles/${CI_PROJECT_NAME}.yml${AZURE_SECURITY_STORAGE_TOKEN}"
-      "https://${AZURE_SECURITY_STORAGE_ACCOUNT}.blob.core.windows.net/security/profiles/common.yml${AZURE_SECURITY_STORAGE_TOKEN}"
-  cache:
-    policy: pull
-    key: "$CI_COMMIT_REF_SLUG"
-    paths:
-      - node_modules
-
-upload-templates:
-  tags: [kubernetes]
-  stage: upload-templates
-  only:
-    - develop
-    - master
-  image: tomkukral/buildah:0.6
-  before_script:
-    - podman login --username "${REGISTRY_USERNAME}" --password "${REGISTRY_PASSWORD}" "${REGISTRY_SERVER}"
-  script:
-    - cd deploy
-    - export IMAGE_DIGEST=$(skopeo inspect docker://${REGISTRY_IMAGE}:${CI_COMMIT_SHA} | grep Digest | awk '{print $2}'| sed 's/[\",]//g')
-    - |
-      if [ ! -z IMAGE_DIGEST ]; then
-        for manifest in k8s/*.y*ml*; do
-          echo "---" >> ${IMAGE_DIGEST}.yml.tmpl;
-          cat $manifest >> ${IMAGE_DIGEST}.yml.tmpl;
-        done
-        curl -f -v -X PUT -H "Content-Type: application/octet-stream" -H "x-ms-date: $(date -Ru | sed -e 's/\\+0000/GMT/' -e 's/UTC/GMT/')" -H "x-ms-version: 2018-03-28" -H "x-ms-blob-type: BlockBlob" --data-binary @${IMAGE_DIGEST}.yml.tmpl "https://${AZURE_STORAGE_ACCOUNT}.blob.core.windows.net/templates/volterra-vis/${IMAGE_DIGEST}.yml.tmpl${AZURE_STORAGE_TOKEN}"
-      else
-        echo "Image digest for ${REGISTRY_IMAGE}:${CI_COMMIT_SHA} cannot be obtained!"
-        exit 1
-      fi
-
-jenkins_develop:
-  stage: trigger
-  image: byrnedo/alpine-curl
-  tags: [docker]
-  script:
-    - set ${JENKINS_TOKENS}
-    - |
-      for token do
-        curl -k ${JENKINS_URL}/generic-webhook-trigger/invoke?token=${token}
-      done
-  only:
-    - develop
-    - master
+      - packages/vis-react/storybook-static
 
 pages:
   stage: publish-demo
@@ -177,18 +30,15 @@ pages:
       - packages/vis/lib
       - packages/dev-demo/lib
       - packages/vis-angular/storybook-static
+      - packages/vis-rect/storybook-static
   script:
     - mv packages/dev-demo/lib/volterra-vis-examples public
     - cp public/index.html public/404.html
-    - mv packages/vis-angular/storybook-static public/storybook
+    - mv packages/vis-reacr/storybook-static public/storybook-react
+    - mv packages/vis-angular/storybook-static public/storybook-angular
   artifacts:
     paths:
       - public
     expire_in: 6 hrs
   only:
-    - master
-
-include:
-  - project: volterra/security/security-config/cicd-includes
-    ref: main
-    file: whitesource/wss-javascript.yml
+    - main
