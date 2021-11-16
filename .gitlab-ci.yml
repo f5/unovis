@@ -7,6 +7,7 @@ build:
   image: volterrasystem/angular-e2e-testing:node14
   stage: build
   script:
+    - export NODE_OPTIONS=--max-old-space-size=4096
     - npm install -g npm@7
     - npm install
     - npm run build
@@ -30,11 +31,12 @@ pages:
       - packages/vis/lib
       - packages/dev-demo/lib
       - packages/vis-angular/storybook-static
-      - packages/vis-rect/storybook-static
+      - packages/vis-react/storybook-static
   script:
     - mv packages/dev-demo/lib/volterra-vis-examples public
     - cp public/index.html public/404.html
     - mv packages/vis-angular/storybook-static public/storybook-angular
+    - mv packages/vis-react/storybook-static public/storybook-react
   artifacts:
     paths:
       - public
