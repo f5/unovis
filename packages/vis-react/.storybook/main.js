@@ -6,9 +6,9 @@ module.exports = {
     "../storybook/**/*.stories.@(js|jsx|ts|tsx)"
   ],
   "addons": [
-    "@storybook/addon-links",
-    "@storybook/addon-essentials",
     "@storybook/addon-docs",
+    "@storybook/addon-links",
+    "@storybook/addon-essentials"
   ],
   typescript: {
     reactDocgen: 'react-docgen-typescript',
@@ -19,9 +19,12 @@ module.exports = {
       },
     }
   },
+  core: {
+    builder: "webpack5",
+  },
   webpackFinal: async (config, { configType }) => {
     config.resolve.plugins = [
-      ...config.resolve.plugins,
+      ...(config.resolve.plugins || []),
       new tsconfigPathsPlugin(),
     ]
     return config
