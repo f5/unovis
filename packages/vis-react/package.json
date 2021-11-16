@@ -35,6 +35,8 @@
     "@storybook/addon-docs": "^6.3.12",
     "@storybook/addon-essentials": "^6.3.12",
     "@storybook/addon-links": "^6.3.12",
+    "@storybook/builder-webpack5": "^6.3.12",
+    "@storybook/manager-webpack5": "^6.3.12",
     "@storybook/react": "^6.3.12",
     "@types/react": "^17.0.22",
     "babel-loader": "^8.2.2",
