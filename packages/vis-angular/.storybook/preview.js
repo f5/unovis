@@ -12,4 +12,9 @@ export const parameters = {
     },
   },
   docs: { inlineStories: true },
+  options: {
+    storySort: {
+      order: ['XY Charts', 'Maps', 'Networks and Flows', 'Ancillary', 'Full Charts'],
+    },
+  },
 }
