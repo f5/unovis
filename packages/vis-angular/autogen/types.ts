@@ -20,4 +20,5 @@ export type ComponentInput = {
   provide: string;
   kebabCaseName?: string;
   dataType?: string;
+  hasNoRender?: boolean;
 }

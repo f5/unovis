@@ -25,7 +25,8 @@ export function getComponentCode (
   provide: string,
   importStatements: { source: string; elements: string[] }[],
   dataType = 'any',
-  kebabCaseName?: string
+  kebabCaseName?: string,
+  hasNoRender?: boolean
 ): string {
   const genericsStr = generics ? `<${generics?.map(g => g.name).join(', ')}>` : ''
   const genericsDefStr = generics
@@ -64,6 +65,7 @@ ${
   ngOnChanges (changes: SimpleChanges): void {
     ${dataType ? 'if (changes.data) { this.component?.setData(this.data) }' : ''}
     this.component?.setConfig(this.getConfig())
+    ${!hasNoRender ? 'this.component?.render()' : ''}
   }
 
   private getConfig (): ${componentName}ConfigInterface${genericsStr} {
