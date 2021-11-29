@@ -56,12 +56,12 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
 
     const barGroupsEnter = barGroups.enter().append('g')
       .attr('class', s.barGroup)
-      .attr('transform', d => `translate(${config.xScale(getNumber(d, config.x))}, 0)`)
+      .attr('transform', d => `translate(${this.xScale(getNumber(d, config.x))}, 0)`)
       .style('opacity', 1)
 
     const barGroupsMerged = barGroupsEnter.merge(barGroups)
     smartTransition(barGroupsMerged, duration)
-      .attr('transform', d => `translate(${config.xScale(getNumber(d, config.x))}, 0)`)
+      .attr('transform', d => `translate(${this.xScale(getNumber(d, config.x))}, 0)`)
       .style('opacity', 1)
 
     const barGroupExit = barGroups.exit()
@@ -106,8 +106,8 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const isOrdinal = config.xScale.bandwidth
-    const xDomain = (config.xScale.domain ? config.xScale.domain() : []) as number[]
+    const isOrdinal = this.xScale.bandwidth
+    const xDomain = (this.xScale.domain ? this.xScale.domain() : []) as number[]
     const xDomainLength = isOrdinal ? xDomain.length : xDomain[1] - xDomain[0]
 
     // If the dataStep property is provided the amount of data elements is calculates as domainLength / dataStep
@@ -135,7 +135,7 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
     const groupWidth = this._getBarWidth()
     const halfGroupWidth = data.length < 2 ? 0 : groupWidth / 2
 
-    const xScale = config.xScale
+    const xScale = this.xScale
     const xHalfGroupWidth = Math.abs((xScale.invert(halfGroupWidth) as number) - (xScale.invert(0) as number))
     const filtered = data?.filter(d => {
       const v = getNumber(d, config.x)
@@ -157,9 +157,9 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
     const isEnding = d._ending // The most top bar or, if the value is negative, the most bottom bar
     const value = getNumber(d, yAccessors[i])
 
-    const height = isEntering ? 0 : Math.abs(config.yScale(d._stacked[0]) - config.yScale(d._stacked[1]))
+    const height = isEntering ? 0 : Math.abs(this.yScale(d._stacked[0]) - this.yScale(d._stacked[1]))
     const h = !isEntering && config.barMinHeight && (height < 1) && isFinite(value) && (value !== config.barMinHeightZeroValue) ? 1 : height
-    const y = isEntering ? config.yScale(0) : config.yScale(isNegative ? d._stacked[0] : d._stacked[1]) - (height < 1 && config.barMinHeight ? 1 : 0)
+    const y = isEntering ? this.yScale(0) : this.yScale(isNegative ? d._stacked[0] : d._stacked[1]) - (height < 1 && config.barMinHeight ? 1 : 0)
 
     const x = -barWidth / 2
     const width = barWidth

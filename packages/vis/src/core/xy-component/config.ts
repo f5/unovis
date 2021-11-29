@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { Scale, ContinuousScale } from 'types/scale'
+import { ContinuousScale } from 'types/scale'
 
 // Types
 import { ColorAccessor, NumericAccessor } from 'types/accessor'
@@ -16,9 +16,15 @@ export interface XYComponentConfigInterface<Datum> extends ComponentConfigInterf
   id?: ((d: Datum, i?: number, ...any) => string);
   /** Component color accessor function. Default: `d => d.color` */
   color?: ColorAccessor<Datum | Datum[]>;
-  /** Scale for X dimension, e.g. Scale.scaleLinear(). As of now, only continuous scales are supported. Default: `Scale.scaleLinear()` */
+  /** Scale for X dimension, e.g. Scale.scaleLinear(). If you set xScale you'll be responsible for setting it's `domain` and `range` as well.
+   * Only continuous scales are supported.
+   * Default: `undefined`
+   */
   xScale?: ContinuousScale;
-  /** Scale for Y dimension, e.g. Scale.scaleLinear(). As of now, only continuous scales are supported. Default: `Scale.scaleLinear()` */
+  /** Scale for Y dimension, e.g. Scale.scaleLinear(). If you set yScale you'll be responsible for setting it's `domain` and `range` as well.
+   * Only continuous scales are supported.
+   * Default: `undefined`
+  */
   yScale?: ContinuousScale;
   /** Sets the Y scale domain based on the X scale domain not the whole data. Useful when you manipulate chart's X domain from outside. Default: `false` */
   scaleByDomain?: boolean;
@@ -33,7 +39,7 @@ export class XYComponentConfig<Datum> extends ComponentConfig implements XYCompo
   id = (d: Datum, i: number): string => d['id'] ?? `${i}`
   // eslint-disable-next-line dot-notation
   color = (d: Datum | Datum[]): string => d['color']
-  xScale = Scale.scaleLinear() as ContinuousScale
-  yScale = Scale.scaleLinear() as ContinuousScale
+  xScale = undefined
+  yScale = undefined
   scaleByDomain = false
 }

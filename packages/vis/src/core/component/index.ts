@@ -57,6 +57,12 @@ export class ComponentCore<
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const ConfigModel = (this.config.constructor as typeof ComponentConfig)
     this.prevConfig = this.config
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    if (this.prevConfig?.xScale) config.xScale = this.prevConfig.xScale
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    if (this.prevConfig?.yScale) config.yScale = this.prevConfig.yScale
     this.config = new ConfigModel().init(config) as ConfigClass
   }
 

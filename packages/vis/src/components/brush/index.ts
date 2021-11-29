@@ -59,7 +59,7 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
   _render (customDuration?: number): void {
     const { brushBehaviour, config } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
-    const xScale = config.xScale
+    const xScale = this.xScale
 
     brushBehaviour
       .extent([[0, 0], [this._width, this._height]])
@@ -147,7 +147,7 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
 
   _onBrush (event: D3BrushEvent<Datum>): void {
     const { config } = this
-    const xScale = config.xScale
+    const xScale = this.xScale
     const xRange = [0, this._width]
     const s = (event?.selection || xRange) as [number, number]
     const userDriven = !!event?.sourceEvent

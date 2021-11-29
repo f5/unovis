@@ -103,7 +103,12 @@ export function getLabelPosition (value: number, positioning: XYLabelPositioning
   }
 }
 
-export function getLabelRenderProps<Datum> (data: Datum | XYLabel<Datum>[], config: XYLabelsConfig<Datum>): XYLabelRenderProps {
+export function getLabelRenderProps<Datum> (
+  data: Datum | XYLabel<Datum>[],
+  config: XYLabelsConfig<Datum>,
+  xScale: ContinuousScale,
+  yScale: ContinuousScale
+): XYLabelRenderProps {
   const isCluster = Array.isArray(data)
 
   const fontSize = isCluster ? getNumber(data, config.clusterFontSize) : getNumber(data, config.labelFontSize)
@@ -114,11 +119,11 @@ export function getLabelRenderProps<Datum> (data: Datum | XYLabel<Datum>[], conf
 
   const x = isCluster
     ? mean(data as XYLabel<Datum>[], d => d._screen.x)
-    : getLabelPosition(getNumber(data, config.x), getValue(data, config.xPositioning), config.xScale)
+    : getLabelPosition(getNumber(data, config.x), getValue(data, config.xPositioning), xScale)
 
   const y = isCluster
     ? mean(data as XYLabel<Datum>[], d => d._screen.y)
-    : getLabelPosition(getNumber(data, config.y), getValue(data, config.yPositioning), config.yScale)
+    : getLabelPosition(getNumber(data, config.y), getValue(data, config.yPositioning), yScale)
 
   return {
     x,

@@ -65,12 +65,12 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum> {
 
     const barGroupsEnter = barGroups.enter().append('g')
       .attr('class', s.barGroup)
-      .attr('transform', d => `translate(${config.xScale(getNumber(d, config.x))}, 0)`)
+      .attr('transform', d => `translate(${this.xScale(getNumber(d, config.x))}, 0)`)
       .style('opacity', 1)
 
     const barGroupsMerged = barGroupsEnter.merge(barGroups)
     smartTransition(barGroupsMerged, duration)
-      .attr('transform', d => `translate(${config.xScale(getNumber(d, config.x))}, 0)`)
+      .attr('transform', d => `translate(${this.xScale(getNumber(d, config.x))}, 0)`)
       .style('opacity', 1)
 
     const barGroupExit = barGroups.exit()
@@ -92,7 +92,7 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum> {
       .attr('class', s.bar)
       .attr('d', (d, i) => {
         const x = innerBandScale(i)
-        const y = config.yScale(0)
+        const y = this.yScale(0)
         const width = barWidth
         const height = 0
         return this._getBarPath(x, y, width, height, false)
@@ -108,12 +108,12 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum> {
 
         const value = getNumber(d, yAccessors[i])
         const isNegative = value < 0
-        let y = isNegative ? config.yScale(0) : config.yScale(value || 0)
-        let height = Math.abs(config.yScale(0) - config.yScale(value)) || 0
+        let y = isNegative ? this.yScale(0) : this.yScale(value || 0)
+        let height = Math.abs(this.yScale(0) - this.yScale(value)) || 0
 
         // Optionally set minimum bar height
         if (height < config.barMinHeight) {
-          y = config.yScale(0) - config.barMinHeight
+          y = this.yScale(0) - config.barMinHeight
           height = config.barMinHeight
         }
 
@@ -132,7 +132,7 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum> {
     const groupWidth = this._getGroupWidth()
     const halfGroupWidth = data.length < 2 ? 0 : groupWidth / 2
 
-    const xScale = config.xScale
+    const xScale = this.xScale
     const xHalfGroupWidth = Math.abs((xScale.invert(halfGroupWidth) as number) - (xScale.invert(0) as number))
     const filtered = data?.filter(d => {
       const v = getNumber(d, config.x)
@@ -173,8 +173,8 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum> {
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    const isOrdinal = config.xScale.bandwidth
-    const xDomain = (config.xScale.domain ? config.xScale.domain() : []) as number[]
+    const isOrdinal = this.xScale.bandwidth
+    const xDomain = (this.xScale.domain ? this.xScale.domain() : []) as number[]
     const xDomainLength = isOrdinal ? xDomain.length : xDomain[1] - xDomain[0]
 
     // If the dataStep property is provided the amount of data elements is calculates as domainLength / dataStep

@@ -33,8 +33,8 @@ export class FreeBrush<Datum> extends XYComponentCore<Datum> {
 
   _render (customDuration?: number): void {
     const { config } = this
-    const xScale = config.xScale
-    const yScale = config.yScale
+    const xScale = this.xScale
+    const yScale = this.yScale
     const duration = isNumber(customDuration) ? customDuration : config.duration
 
     if (this._firstRender) this.brush.classed(s.hide, this._firstRender && config.autoHide)
@@ -92,8 +92,8 @@ export class FreeBrush<Datum> extends XYComponentCore<Datum> {
     let selectedDomain: FreeBrushSelection
     switch (config.mode) {
       case FreeBrushMode.XY: {
-        const xSelection = this._pixelRangeToDataRange([s[0][0], s[1][0]], config.xScale, config.selectionMinLength[0] ?? config.selectionMinLength)
-        const ySelection = this._pixelRangeToDataRange([s[0][1], s[1][1]], config.yScale, config.selectionMinLength[1] ?? config.selectionMinLength, true)
+        const xSelection = this._pixelRangeToDataRange([s[0][0], s[1][0]], this.xScale, config.selectionMinLength[0] ?? config.selectionMinLength)
+        const ySelection = this._pixelRangeToDataRange([s[0][1], s[1][1]], this.yScale, config.selectionMinLength[1] ?? config.selectionMinLength, true)
         selectedDomain = (xSelection && ySelection) ? [
           [xSelection?.[0], xSelection?.[1]],
           [ySelection?.[0], ySelection?.[1]],
@@ -101,12 +101,12 @@ export class FreeBrush<Datum> extends XYComponentCore<Datum> {
         break
       }
       case FreeBrushMode.Y: {
-        selectedDomain = this._pixelRangeToDataRange(s as [number, number], config.yScale, config.selectionMinLength, true)
+        selectedDomain = this._pixelRangeToDataRange(s as [number, number], this.yScale, config.selectionMinLength, true)
         break
       }
       case FreeBrushMode.X:
       default: {
-        selectedDomain = this._pixelRangeToDataRange(s as [number, number], config.xScale, config.selectionMinLength)
+        selectedDomain = this._pixelRangeToDataRange(s as [number, number], this.xScale, config.selectionMinLength)
         break
       }
     }

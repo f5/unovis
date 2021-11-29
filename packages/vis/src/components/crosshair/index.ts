@@ -81,7 +81,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
 
     smartTransition(circlesEnter.merge(circles), duration, easeLinear)
       .attr('cx', this.x)
-      .attr('cy', d => config.yScale(d.value))
+      .attr('cy', d => this.yScale(d.value))
       .attr('r', 4)
       .style('opacity', d => d.visible ? 1 : 0)
       .style('fill', (d, i) => getColor(this.datum, config.color, i))
@@ -99,7 +99,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
     if (!config.y && !config.yStacked && datamodel.data?.length) console.warn('Crosshair: Y accessors have not been configured. Please check if they\'re present in the configuration object')
 
     const [x] = pointer(event, element)
-    const scaleX = config.xScale
+    const scaleX = this.xScale
     const valueX = scaleX.invert(x) as number
 
     this.datum = getNearest(datamodel.data, valueX, config.x)

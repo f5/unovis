@@ -161,37 +161,37 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
   }
 
   _buildAxis (): D3Axis<any> {
-    const { config: { type, xScale, yScale, position, tickPadding } } = this
+    const { config: { type, position, tickPadding } } = this
 
     const ticks = this._getNumTicks()
     switch (type) {
       case AxisType.X:
         switch (position) {
-          case Position.Top: return axisTop(xScale).ticks(ticks).tickPadding(tickPadding)
-          case Position.Bottom: default: return axisBottom(xScale).ticks(ticks).tickPadding(tickPadding)
+          case Position.Top: return axisTop(this.xScale).ticks(ticks).tickPadding(tickPadding)
+          case Position.Bottom: default: return axisBottom(this.xScale).ticks(ticks).tickPadding(tickPadding)
         }
       case AxisType.Y:
         switch (position) {
-          case Position.Right: return axisRight(yScale).ticks(ticks).tickPadding(tickPadding)
-          case Position.Left: default: return axisLeft(yScale).ticks(ticks).tickPadding(tickPadding)
+          case Position.Right: return axisRight(this.yScale).ticks(ticks).tickPadding(tickPadding)
+          case Position.Left: default: return axisLeft(this.yScale).ticks(ticks).tickPadding(tickPadding)
         }
     }
   }
 
   _buildGrid (): D3Axis<any> {
-    const { config: { type, xScale, yScale, position } } = this
+    const { config: { type, position } } = this
 
     const ticks = this._getNumTicks()
     switch (type) {
       case AxisType.X:
         switch (position) {
-          case Position.Top: return axisTop(xScale).ticks(ticks * 2).tickSize(-this._height).tickSizeOuter(0)
-          case Position.Bottom: default: return axisBottom(xScale).ticks(ticks * 2).tickSize(-this._height).tickSizeOuter(0)
+          case Position.Top: return axisTop(this.xScale).ticks(ticks * 2).tickSize(-this._height).tickSizeOuter(0)
+          case Position.Bottom: default: return axisBottom(this.xScale).ticks(ticks * 2).tickSize(-this._height).tickSizeOuter(0)
         }
       case AxisType.Y:
         switch (position) {
-          case Position.Right: return axisRight(yScale).ticks(ticks * 2).tickSize(-this._width).tickSizeOuter(0)
-          case Position.Left: default: return axisLeft(yScale).ticks(ticks * 2).tickSize(-this._width).tickSizeOuter(0)
+          case Position.Right: return axisRight(this.yScale).ticks(ticks * 2).tickSize(-this._width).tickSizeOuter(0)
+          case Position.Left: default: return axisLeft(this.yScale).ticks(ticks * 2).tickSize(-this._width).tickSizeOuter(0)
         }
     }
   }
@@ -230,18 +230,18 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
   }
 
   _getNumTicks (): number {
-    const { config: { type, numTicks, xScale, yScale } } = this
+    const { config: { type, numTicks } } = this
 
     if (numTicks) return numTicks
 
     if (type === AxisType.X) {
-      const xRange = xScale.range() as [number, number]
+      const xRange = this.xScale.range() as [number, number]
       const width = xRange[1] - xRange[0]
       return Math.floor(width / 175)
     }
 
     if (type === AxisType.Y) {
-      const yRange = yScale.range() as [number, number]
+      const yRange = this.yScale.range() as [number, number]
       const height = yRange[0] - yRange[1]
       return Math.pow(height, 0.85) / 25
     }
@@ -250,8 +250,8 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
   }
 
   _getConfiguredTickValues (): number[] | null {
-    const { config: { xScale, yScale, tickValues, type, minMaxTicksOnly } } = this
-    const scale = type === AxisType.X ? xScale : yScale
+    const { config: { tickValues, type, minMaxTicksOnly } } = this
+    const scale = type === AxisType.X ? this.xScale : this.yScale
     const scaleDomain = scale?.domain()
 
     if (minMaxTicksOnly) {

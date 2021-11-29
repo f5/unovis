@@ -68,8 +68,8 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
     super._render(customDuration)
     const { config, datamodel: { data } } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
-    const xRange = config.xScale.range()
-    const yRange = config.yScale.range()
+    const xRange = this.xScale.range()
+    const yRange = this.yScale.range()
     const yHeight = Math.abs(yRange[1] - yRange[0])
     const maxLineWidth = this._getMaxLineWidth()
 
@@ -143,8 +143,8 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
   }
 
   _positionLines (selection, config, ordinal): void {
-    const xScale = config.xScale
-    const yRange = config.yScale.range()
+    const xScale = this.xScale
+    const yRange = this.yScale.range()
 
     return selection
       .attr('x1', d => xScale(getNumber(d, config.x)))
@@ -155,8 +155,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
   }
 
   _onScrollbarDrag (event: D3DragEvent<any, any, any>): void {
-    const { config } = this
-    const yRange = config.yScale.range()
+    const yRange = this.yScale.range()
     const yHeight = Math.abs(yRange[1] - yRange[0])
     this._updateScrollPosition(event.dy * this._maxScroll / (yHeight - this._scrollbarHeight))
   }
@@ -174,8 +173,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
   }
 
   _updateScrollPosition (diff): void {
-    const { config } = this
-    const yRange = config.yScale.range()
+    const yRange = this.yScale.range()
     const yHeight = Math.abs(yRange[1] - yRange[0])
 
     this._scrollDistance += diff

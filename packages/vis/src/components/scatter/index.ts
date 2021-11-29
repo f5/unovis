@@ -77,14 +77,14 @@ export class Scatter<Datum> extends XYComponentCore<Datum> {
   }
 
   private _getOnScreenData (): ScatterPoint<Datum>[] {
-    const { config: { size, sizeScale, x, y, xScale, yScale, shape, label, labelColor, color, cursor }, datamodel: { data } } = this
+    const { config: { size, sizeScale, x, y, shape, label, labelColor, color, cursor }, datamodel: { data } } = this
 
     const maxR = this._getMaxPointRadius()
-    const xRange = xScale.range()
+    const xRange = this.xScale.range()
 
     return data?.reduce<ScatterPoint<Datum>[]>((acc, d) => {
-      const posX = xScale(getNumber(d, x))
-      const posY = yScale(getNumber(d, y))
+      const posX = this.xScale(getNumber(d, x))
+      const posY = this.yScale(getNumber(d, y))
       const pointSize = sizeScale(getNumber(d, size))
 
       if ((posX + pointSize >= (xRange[0] - maxR)) && (posX - pointSize <= (xRange[1] + maxR))) {

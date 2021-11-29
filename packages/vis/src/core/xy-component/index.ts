@@ -11,7 +11,7 @@ import { DefaultRange } from 'utils/scale'
 
 // Types
 import { NumericAccessor } from 'types/accessor'
-import { ContinuousScale, ScaleDimension } from 'types/scale'
+import { ContinuousScale, Scale, ScaleDimension } from 'types/scale'
 import { Spacing } from 'types/spacing'
 
 // Config
@@ -29,22 +29,30 @@ export class XYComponentCore<Datum> extends ComponentCore<Datum[]> {
   /** Identifies whether the component should not be included in Domain calculations */
   excludeFromDomainCalculation = false
 
+  private _xScale: ContinuousScale = Scale.scaleLinear();
+  private _yScale: ContinuousScale = Scale.scaleLinear();
+
+  get xScale (): ContinuousScale {
+    return this.config.xScale || this._xScale
+  }
+
+  get yScale (): ContinuousScale {
+    return this.config.yScale || this._yScale
+  }
+
   setScaleDomain (dimension: ScaleDimension, domain: number[]): void {
-    const { config } = this
-    if (dimension === ScaleDimension.X) config.xScale?.domain(domain)
-    if (dimension === ScaleDimension.Y) config.yScale?.domain(domain)
+    if (dimension === ScaleDimension.X) this._xScale?.domain(domain)
+    if (dimension === ScaleDimension.Y) this._yScale?.domain(domain)
   }
 
   setScaleRange (dimension: ScaleDimension, range: number[]): void {
-    const { config } = this
-    if (dimension === ScaleDimension.X) config.xScale?.range(range)
-    if (dimension === ScaleDimension.Y) config.yScale?.range(range)
+    if (dimension === ScaleDimension.X) this._xScale?.range(range)
+    if (dimension === ScaleDimension.Y) this._yScale?.range(range)
   }
 
   setScale (dimension: ScaleDimension, scale: ContinuousScale): void {
-    const { config } = this
-    if (scale && (dimension === ScaleDimension.X)) config.xScale = scale
-    if (scale && (dimension === ScaleDimension.Y)) config.yScale = scale
+    if (scale && (dimension === ScaleDimension.X)) this._xScale = scale
+    if (scale && (dimension === ScaleDimension.Y)) this._yScale = scale
   }
 
   getDataExtent (dimension: ScaleDimension): number[] {
@@ -73,7 +81,7 @@ export class XYComponentCore<Datum> extends ComponentCore<Datum[]> {
   getYDataExtent (): number[] {
     const { config, datamodel } = this
 
-    const data = config.scaleByDomain ? filterDataByRange(datamodel.data, config.xScale.domain() as [number, number], config.x) : datamodel.data
+    const data = config.scaleByDomain ? filterDataByRange(datamodel.data, this.xScale.domain() as [number, number], config.x) : datamodel.data
     const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
     return getExtent(data, ...yAccessors)
   }
