@@ -172,6 +172,7 @@ export class VisTopoJSONMapComponent<AreaDatum, PointDatum, LinkDatum> implement
   ngOnChanges (changes: SimpleChanges): void {
     if (changes.data) { this.component?.setData(this.data) }
     this.component?.setConfig(this.getConfig())
+    this.component?.render()
   }
 
   private getConfig (): TopoJSONMapConfigInterface<AreaDatum, PointDatum, LinkDatum> {

@@ -230,6 +230,7 @@ export class VisSankeyComponent<N extends SankeyInputNode, L extends SankeyInput
   ngOnChanges (changes: SimpleChanges): void {
     if (changes.data) { this.component?.setData(this.data) }
     this.component?.setConfig(this.getConfig())
+    this.component?.render()
   }
 
   private getConfig (): SankeyConfigInterface<N, L> {

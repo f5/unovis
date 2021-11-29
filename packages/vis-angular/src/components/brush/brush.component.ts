@@ -83,14 +83,15 @@ export class VisBrushComponent<Datum> implements BrushConfigInterface<Datum>, Af
   /** Component color accessor function. Default: `d => d.color` */
   @Input() color: ColorAccessor<Datum | Datum[]>
 
-  /** Scale for X dimension, e.g. Scale.scaleLinear(). As of now, only continuous scales are supported. Default: `Scale.scaleLinear()` */
+  /** Scale for X dimension, e.g. Scale.scaleLinear(). If you set xScale you'll be responsible for setting it's `domain` and `range` as well.
+   * Only continuous scales are supported.
+   * Default: `undefined` */
   @Input() xScale: ContinuousScale
 
-  /** Scale for Y dimension, e.g. Scale.scaleLinear(). As of now, only continuous scales are supported. Default: `Scale.scaleLinear()` */
+  /** Scale for Y dimension, e.g. Scale.scaleLinear(). If you set yScale you'll be responsible for setting it's `domain` and `range` as well.
+   * Only continuous scales are supported.
+   * Default: `undefined` */
   @Input() yScale: ContinuousScale
-
-  /** Sets the Y scale domain based on the X scale domain not the whole data. Useful when you manipulate chart's X domain from outside. Default: `false` */
-  @Input() scaleByDomain: boolean
 
   /** Callback function to be called on any Brush event.
    * Default: `(selection: [number, number], event: D3BrushEvent<Datum>, userDriven: boolean): void => {}` */
@@ -111,8 +112,7 @@ export class VisBrushComponent<Datum> implements BrushConfigInterface<Datum>, Af
   /** Width of the Brush handle. Default: `1` */
   @Input() handleWidth: number
 
-  /** Brush selection in data space, can be used to force set the selection from outside.
-   * This config property gets updated on internal brush events. Default: `undefined` */
+  /** Brush selection in the data space coordinates, can be used to control the selection. Default: `undefined` */
   @Input() selection: [number, number] | null
 
   /** Allow dragging the selected area as a whole in order to change the selected range. Default: `false` */
@@ -135,11 +135,12 @@ export class VisBrushComponent<Datum> implements BrushConfigInterface<Datum>, Af
   ngOnChanges (changes: SimpleChanges): void {
     if (changes.data) { this.component?.setData(this.data) }
     this.component?.setConfig(this.getConfig())
+    this.component?.render()
   }
 
   private getConfig (): BrushConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, xScale, yScale, scaleByDomain, onBrush, onBrushStart, onBrushMove, onBrushEnd, handleWidth, selection, draggable, handlePosition, selectionMinLength } = this
-    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, scaleByDomain, onBrush, onBrushStart, onBrushMove, onBrushEnd, handleWidth, selection, draggable, handlePosition, selectionMinLength }
+    const { duration, events, attributes, x, y, id, color, xScale, yScale, onBrush, onBrushStart, onBrushMove, onBrushEnd, handleWidth, selection, draggable, handlePosition, selectionMinLength } = this
+    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, onBrush, onBrushStart, onBrushMove, onBrushEnd, handleWidth, selection, draggable, handlePosition, selectionMinLength }
     const keys = Object.keys(config) as (keyof BrushConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

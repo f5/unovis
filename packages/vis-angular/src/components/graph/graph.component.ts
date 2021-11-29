@@ -248,6 +248,7 @@ export class VisGraphComponent<N extends GraphInputNode, L extends GraphInputLin
   ngOnChanges (changes: SimpleChanges): void {
     if (changes.data) { this.component?.setData(this.data) }
     this.component?.setConfig(this.getConfig())
+    this.component?.render()
   }
 
   private getConfig (): GraphConfigInterface<N, L> {

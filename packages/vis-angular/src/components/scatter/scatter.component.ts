@@ -83,14 +83,15 @@ export class VisScatterComponent<Datum> implements ScatterConfigInterface<Datum>
   /** Component color accessor function. Default: `d => d.color` */
   @Input() color: ColorAccessor<Datum | Datum[]>
 
-  /** Scale for X dimension, e.g. Scale.scaleLinear(). As of now, only continuous scales are supported. Default: `Scale.scaleLinear()` */
+  /** Scale for X dimension, e.g. Scale.scaleLinear(). If you set xScale you'll be responsible for setting it's `domain` and `range` as well.
+   * Only continuous scales are supported.
+   * Default: `undefined` */
   @Input() xScale: ContinuousScale
 
-  /** Scale for Y dimension, e.g. Scale.scaleLinear(). As of now, only continuous scales are supported. Default: `Scale.scaleLinear()` */
+  /** Scale for Y dimension, e.g. Scale.scaleLinear(). If you set yScale you'll be responsible for setting it's `domain` and `range` as well.
+   * Only continuous scales are supported.
+   * Default: `undefined` */
   @Input() yScale: ContinuousScale
-
-  /** Sets the Y scale domain based on the X scale domain not the whole data. Useful when you manipulate chart's X domain from outside. Default: `false` */
-  @Input() scaleByDomain: boolean
 
   /** Size accessor function or constant value in relative units. Default: `1` */
   @Input() size: NumericAccessor<Datum>
@@ -129,11 +130,12 @@ export class VisScatterComponent<Datum> implements ScatterConfigInterface<Datum>
   ngOnChanges (changes: SimpleChanges): void {
     if (changes.data) { this.component?.setData(this.data) }
     this.component?.setConfig(this.getConfig())
+    this.component?.render()
   }
 
   private getConfig (): ScatterConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, xScale, yScale, scaleByDomain, size, sizeScale, sizeRange, shape, label, labelColor, cursor, labelTextBrightnessRatio } = this
-    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, scaleByDomain, size, sizeScale, sizeRange, shape, label, labelColor, cursor, labelTextBrightnessRatio }
+    const { duration, events, attributes, x, y, id, color, xScale, yScale, size, sizeScale, sizeRange, shape, label, labelColor, cursor, labelTextBrightnessRatio } = this
+    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, size, sizeScale, sizeRange, shape, label, labelColor, cursor, labelTextBrightnessRatio }
     const keys = Object.keys(config) as (keyof ScatterConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
