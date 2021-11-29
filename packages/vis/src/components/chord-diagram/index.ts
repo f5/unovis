@@ -107,7 +107,7 @@ export class ChordDiagram<H extends Hierarchy, N extends ChordInputNode, L exten
 
     hierarchyData.sum(d => d._state?.value)
 
-    let radius = Math.min(config.width, config.height) / 2 - max([this.bleed.top, this.bleed.bottom, this.bleed.left, this.bleed.right])
+    let radius = Math.min(this._width, this._height) / 2 - max([this.bleed.top, this.bleed.bottom, this.bleed.left, this.bleed.right])
     let ladelWidth = nodeLabelType === LabelType.Perpendicular ? radius / (hierarchyData.height + 1) - config.nodeWidth : 0
     radius = radius - ladelWidth
     radiusScale
@@ -127,7 +127,7 @@ export class ChordDiagram<H extends Hierarchy, N extends ChordInputNode, L exten
     this._nodes.forEach((node: HNode<H>) => { node._state = {} })
     this._links.forEach((link: HLink<H>) => { link._state = {} })
 
-    this.g.attr('transform', `translate(${config.width / 2},${config.height / 2})`)
+    this.g.attr('transform', `translate(${this._width / 2},${this._height / 2})`)
 
     // Links
     const linksSelection = this.linkGroup

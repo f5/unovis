@@ -43,7 +43,7 @@ export class FreeBrush<Datum> extends XYComponentCore<Datum> {
 
     this.brushBehaviour
       .handleSize(config.handleWidth)
-      .extent([[0, 0], [config.width, config.height]])
+      .extent([[0, 0], [this._width, this._height]])
       .on('start', this._onBrushStart.bind(this))
       .on('brush', this._onBrushMove.bind(this))
       .on('end', this._onBrushEnd.bind(this))

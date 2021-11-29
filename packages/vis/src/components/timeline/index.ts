@@ -81,8 +81,8 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
 
     // Invisible Background rect to track events
     this._background
-      .attr('width', config.width)
-      .attr('height', config.height)
+      .attr('width', this._width)
+      .attr('height', this._height)
       .attr('opacity', 0)
 
     // Line background rects
@@ -136,7 +136,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
       .attr('width', this._scrollBarWidth)
       .attr('rx', this._scrollBarWidth / 2)
       .attr('ry', this._scrollBarWidth / 2)
-      .attr('transform', `translate(${config.width - this._scrollBarWidth}, ${yRange[1]})`)
+      .attr('transform', `translate(${this._width - this._scrollBarWidth}, ${yRange[1]})`)
       .attr('opacity', this._maxScroll ? 1 : 0)
 
     this._updateScrollPosition(0)

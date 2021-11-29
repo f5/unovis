@@ -75,7 +75,7 @@ export class RadialDendrogram<H extends Hierarchy> extends ComponentCore<H> {
     const hierarchyData = hierarchy(data, d => config.children(d))
     hierarchyData.sum(d => getNumber(d, config.value))
 
-    let radius = Math.min(config.width, config.height) / 2
+    let radius = Math.min(this._width, this._height) / 2
     let ladelWidth = radius / (hierarchyData.height + 1) - config.nodeWidth
     radius = radius - ladelWidth
     ladelWidth -= ladelWidth / (hierarchyData.height + 1)
@@ -86,7 +86,7 @@ export class RadialDendrogram<H extends Hierarchy> extends ComponentCore<H> {
 
     const linksData = dendogramDataWithRoot[0].links().filter(l => l.source.parent)
 
-    this.g.attr('transform', `translate(${config.width / 2},${config.height / 2})`)
+    this.g.attr('transform', `translate(${this._width / 2},${this._height / 2})`)
 
     // Links
     const links = this.linkGroup

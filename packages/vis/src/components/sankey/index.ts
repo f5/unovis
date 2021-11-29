@@ -114,8 +114,8 @@ export class Sankey<N extends SankeyInputNode, L extends SankeyInputLink> extend
 
     const nodeSelection = this._nodesGroup.selectAll(`.${s.gNode}`).data(nodes, config.id)
     const nodeSelectionEnter = nodeSelection.enter().append('g').attr('class', s.gNode)
-    nodeSelectionEnter.call(createNodes, this.config, bleed)
-    nodeSelection.merge(nodeSelectionEnter).call(updateNodes, config, bleed, duration)
+    nodeSelectionEnter.call(createNodes, this.config, this._width, bleed)
+    nodeSelection.merge(nodeSelectionEnter).call(updateNodes, config, this._width, bleed, duration)
     nodeSelection.exit()
       .attr('class', s.nodeExit)
       .call(removeNodes, config, duration)
@@ -147,8 +147,8 @@ export class Sankey<N extends SankeyInputNode, L extends SankeyInputLink> extend
 
   private _prepareLayout (): void {
     const { config, bleed, datamodel } = this
-    const sankeyHeight = this.sizing === Sizing.Fit ? config.height : this._extendedHeight
-    const sankeyWidth = this.sizing === Sizing.Fit ? config.width : this._extendedWidth
+    const sankeyHeight = this.sizing === Sizing.Fit ? this._height : this._extendedHeight
+    const sankeyWidth = this.sizing === Sizing.Fit ? this._width : this._extendedWidth
 
     const nodes = datamodel.nodes
     const links = datamodel.links
@@ -212,11 +212,11 @@ export class Sankey<N extends SankeyInputNode, L extends SankeyInputLink> extend
   }
 
   getWidth (): number {
-    return Math.max(this._extendedWidth || 0, this.config.width)
+    return Math.max(this._extendedWidth || 0, this._width)
   }
 
   getHeight (): number {
-    return Math.max(this._extendedHeightIncreased || 0, this._extendedHeight || 0, this.config.height)
+    return Math.max(this._extendedHeightIncreased || 0, this._extendedHeight || 0, this._height)
   }
 
   getColumnCenters (): number[] {
@@ -273,12 +273,12 @@ export class Sankey<N extends SankeyInputNode, L extends SankeyInputLink> extend
   private _onNodeMouseOver (d: SankeyNode<N, L>, event: MouseEvent): void {
     const { config } = this
     if (config.highlightSubtreeOnHover) this.highlightSubtree(d)
-    onNodeMouseOver(d, select(event.currentTarget as SVGGElement), this.config)
+    onNodeMouseOver(d, select(event.currentTarget as SVGGElement), this.config, this._width)
   }
 
   private _onNodeMouseOut (d: SankeyNode<N, L>, event: MouseEvent): void {
     this.disableHighlight()
-    onNodeMouseOut(d, select(event.currentTarget as SVGGElement), this.config)
+    onNodeMouseOut(d, select(event.currentTarget as SVGGElement), this.config, this._width)
   }
 
   private _onLinkMouseOver (d: SankeyLink<N, L>, event: MouseEvent): void {

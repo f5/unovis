@@ -79,8 +79,7 @@ export class SingleChart<Datum> extends ContainerCore {
 
   _render (customDuration?: number): void {
     const { config, component } = this
-    component.config.width = this.width
-    component.config.height = this.height
+    component.setSize(this.width, this.height)
 
     component.g
       .attr('transform', `translate(${config.margin.left},${config.margin.top})`)

@@ -90,11 +90,11 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
   }
 
   _getRequiredMargin (axisSize = this._axisSize): Spacing {
-    const { config: { type, position, width, height, tickTextAlign } } = this
+    const { config: { type, position, tickTextAlign } } = this
 
     switch (type) {
       case AxisType.X: {
-        const bleedX = axisSize.width > width ? (axisSize.width - width) / 2 : 0
+        const bleedX = axisSize.width > this._width ? (axisSize.width - this._width) / 2 : 0
         const left = ((tickTextAlign === TextAlign.Left) ? 0
           : (tickTextAlign === TextAlign.Right) ? 2 * bleedX
             : bleedX)
@@ -109,7 +109,7 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
         }
       }
       case AxisType.Y: {
-        const bleedY = axisSize.height > height ? (axisSize.height - height) / 2 : 0
+        const bleedY = axisSize.height > this._height ? (axisSize.height - this._height) / 2 : 0
         const top = bleedY
         const bottom = bleedY
 
@@ -127,17 +127,17 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
 
   /** Calculates axis transform:translate offset based on passed container margins */
   getOffset (containerMargin: Spacing): {left: number; top: number} {
-    const { config: { type, position, width, height } } = this
+    const { config: { type, position } } = this
 
     switch (type) {
       case AxisType.X:
         switch (position) {
           case Position.Top: return { top: containerMargin.top, left: containerMargin.left }
-          case Position.Bottom: default: return { top: containerMargin.top + height, left: containerMargin.left }
+          case Position.Bottom: default: return { top: containerMargin.top + this._height, left: containerMargin.left }
         }
       case AxisType.Y:
         switch (position) {
-          case Position.Right: return { top: containerMargin.top, left: containerMargin.left + width }
+          case Position.Right: return { top: containerMargin.top, left: containerMargin.left + this._width }
           case Position.Left: default: return { top: containerMargin.top, left: containerMargin.left }
         }
     }
@@ -179,19 +179,19 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
   }
 
   _buildGrid (): D3Axis<any> {
-    const { config: { type, xScale, yScale, position, width, height } } = this
+    const { config: { type, xScale, yScale, position } } = this
 
     const ticks = this._getNumTicks()
     switch (type) {
       case AxisType.X:
         switch (position) {
-          case Position.Top: return axisTop(xScale).ticks(ticks * 2).tickSize(-height).tickSizeOuter(0)
-          case Position.Bottom: default: return axisBottom(xScale).ticks(ticks * 2).tickSize(-height).tickSizeOuter(0)
+          case Position.Top: return axisTop(xScale).ticks(ticks * 2).tickSize(-this._height).tickSizeOuter(0)
+          case Position.Bottom: default: return axisBottom(xScale).ticks(ticks * 2).tickSize(-this._height).tickSizeOuter(0)
         }
       case AxisType.Y:
         switch (position) {
-          case Position.Right: return axisRight(yScale).ticks(ticks * 2).tickSize(-width).tickSizeOuter(0)
-          case Position.Left: default: return axisLeft(yScale).ticks(ticks * 2).tickSize(-width).tickSizeOuter(0)
+          case Position.Right: return axisRight(yScale).ticks(ticks * 2).tickSize(-this._width).tickSizeOuter(0)
+          case Position.Left: default: return axisLeft(yScale).ticks(ticks * 2).tickSize(-this._width).tickSizeOuter(0)
         }
     }
   }
@@ -204,7 +204,7 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
 
     smartTransition(selection, duration).call(axisGen)
 
-    const ticks = selection.selectAll('g.tick')
+    const ticks = selection.selectAll<SVGGElement, unknown>('g.tick')
     const tickValues = ticks.data()
 
     ticks
@@ -212,11 +212,11 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
       .style('font-size', config.tickTextFontSize)
 
     // We interrupt transition on tick Text to make it 'wrappable'
-    const tickText = selection.selectAll('g.tick > text')
+    const tickText = selection.selectAll<SVGTextElement, unknown>('g.tick > text')
     tickText.nodes().forEach(node => interrupt(node))
     tickText.text((value, i) => config.tickFormat?.(value, i, tickValues) ?? value)
     tickText
-      .call(wrapTickText, getWrapOptions(ticks, config))
+      .call(wrapTickText, getWrapOptions(ticks, config, this._width))
 
     selection
       .classed(s.axis, true)
@@ -266,15 +266,15 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
   }
 
   _getFullDomainPath (tickSize = 0): string {
-    const { config: { type, width, height } } = this
+    const { config: { type } } = this
     switch (type) {
-      case AxisType.X: return `M0.5, ${tickSize} V0.5 H${width + 0.5} V${tickSize}`
-      case AxisType.Y: return `M${-tickSize}, ${height + 0.5} H0.5 V0.5 H${-tickSize}`
+      case AxisType.X: return `M0.5, ${tickSize} V0.5 H${this._width + 0.5} V${tickSize}`
+      case AxisType.Y: return `M${-tickSize}, ${this._height + 0.5} H0.5 V0.5 H${-tickSize}`
     }
   }
 
   _renderAxisLabel (selection = this.axisGroup): void {
-    const { type, label, width, height, labelMargin, labelFontSize } = this.config
+    const { type, label, labelMargin, labelFontSize } = this.config
 
     // Remove the old label first to calculate the axis size properly
     selection.selectAll(`.${s.label}`).remove()
@@ -285,8 +285,8 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
     //    this.axisGroup will give us incorrect values due to animation
     const { width: axisWidth, height: axisHeight } = this._axisRawBBox ?? selection.node().getBBox()
 
-    const offsetX = type === AxisType.X ? width / 2 : (-1) ** (+(axisPosition === Position.Left)) * axisWidth
-    const offsetY = type === AxisType.X ? (-1) ** (+(axisPosition === Position.Top)) * axisHeight : height / 2
+    const offsetX = type === AxisType.X ? this._width / 2 : (-1) ** (+(axisPosition === Position.Left)) * axisWidth
+    const offsetY = type === AxisType.X ? (-1) ** (+(axisPosition === Position.Top)) * axisHeight : this._height / 2
 
     const marginX = type === AxisType.X ? 0 : (-1) ** (+(axisPosition === Position.Left)) * labelMargin
     const marginY = type === AxisType.X ? (-1) ** (+(axisPosition === Position.Top)) * labelMargin : 0

@@ -81,7 +81,7 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum> {
 
     // Animate exiting bars going down
     smartTransition(barGroupExit.selectAll(`.${s.bar}`), duration)
-      .attr('transform', `translate(0,${config.height / 3})`)
+      .attr('transform', `translate(0,${this._height / 3})`)
 
     const barWidth = innerBandScale.bandwidth()
     const bars = barGroupsMerged
@@ -191,7 +191,7 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum> {
     if (!isOrdinal && dataSize >= 2) dataSize += 1
 
     const c = dataSize < 2 ? 1 : 1 - config.groupPadding
-    const groupWidth = c * config.width / (dataSize)
+    const groupWidth = c * this._width / (dataSize)
 
     return min([groupWidth, config.groupMaxWidth])
   }

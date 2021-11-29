@@ -3,30 +3,36 @@ import { select, Selection } from 'd3-selection'
 
 // Utils
 import { wrapTextElement } from 'utils/text'
-// import { isNil } from 'utils/data'
 
 // Types
 import { Position } from 'types/position'
 import { VerticalAlign, FitMode, WrapTextOptions, WrapMode } from 'types/text'
+
+// Config
+import { AxisConfig } from '../config'
 
 // Local Types
 import { AxisType } from '../types'
 
 import * as s from '../style'
 
-export function wrapTickText (selection, wrapOptions): void {
+export function wrapTickText (selection: Selection<SVGTextElement, unknown, SVGGElement, unknown>, wrapOptions: WrapTextOptions): void {
   selection.each((d, i, elements) => {
-    const textElement = select(elements[i]) as Selection<SVGTextElement, any, SVGElement, any>
+    const textElement = select(elements[i]) as Selection<SVGTextElement, unknown, SVGGElement, unknown>
     textElement
       .classed(s.tickText, true)
       .call(wrapTextElement, wrapOptions)
   })
 }
 
-export function getWrapOptions (ticks, config): WrapTextOptions {
+export function getWrapOptions<Datum> (
+  ticks: Selection<SVGGElement, unknown, SVGGElement, unknown>,
+  config: AxisConfig<Datum>,
+  width: number
+): WrapTextOptions {
   const {
     type, position, tickTextLength, tickTextWidth, tickTextSeparator, tickTextForceWordBreak,
-    tickTextTrimType, tickTextFitMode, width,
+    tickTextTrimType, tickTextFitMode,
   } = config
 
   let wrapWidth

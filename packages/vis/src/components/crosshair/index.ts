@@ -62,7 +62,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
 
     this.line
       .attr('y1', 0)
-      .attr('y1', config.height)
+      .attr('y1', this._height)
 
     smartTransition(this.line, duration, easeLinear)
       .attr('x1', this.x)
@@ -105,10 +105,10 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
     this.datum = getNearest(datamodel.data, valueX, config.x)
     if (!this.datum) return
 
-    this.x = clamp(Math.round(scaleX(getNumber(this.datum, config.x))), 0, config.width)
+    this.x = clamp(Math.round(scaleX(getNumber(this.datum, config.x))), 0, this._width)
 
     // Show the crosshair only if it's in the chart range and not far from mouse pointer (if configured)
-    this.show = (this.x >= 0) && (this.x <= config.width) && (!config.hideWhenFarFromPointer || (Math.abs(this.x - x) < config.hideWhenFarFromPointerDistance))
+    this.show = (this.x >= 0) && (this.x <= this._width) && (!config.hideWhenFarFromPointer || (Math.abs(this.x - x) < config.hideWhenFarFromPointerDistance))
 
     window.cancelAnimationFrame(this._animFrameId)
     this._animFrameId = window.requestAnimationFrame(() => {

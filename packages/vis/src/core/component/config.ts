@@ -6,10 +6,6 @@ import { VisEventCallback, VisEventType } from 'core/component/types'
 export interface ComponentConfigInterface {
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */
   duration?: number;
-  /** Component width in pixels. This property is set automatically by the container. */
-  width?: number;
-  /** Component height in pixels. This property is set automatically by the container. */
-  height?: number;
   /** Events configuration. An object containing properties in the following format:
    *
    * ```
@@ -61,8 +57,6 @@ export interface ComponentConfigInterface {
 
 export class ComponentConfig extends Config implements ComponentConfigInterface {
   duration = 600
-  width = 400
-  height = 200
   events = {}
   attributes = {}
 }

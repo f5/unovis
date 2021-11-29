@@ -296,10 +296,7 @@ export class XYContainer<Datum> extends ContainerCore {
     const { config } = this
     if (!components) return
 
-    for (const c of components) {
-      c.config.width = this.width
-      c.config.height = this.height
-    }
+    for (const c of components) c.setSize(this.width, this.height)
 
     Object.values(ScaleDimension).forEach((dimension: ScaleDimension) => {
       const range = components.map(c => c.getScreenRange(dimension, config.padding)).reduce((res, r) => {

@@ -73,7 +73,7 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
 
     // Animate bars from exiting groups going down
     smartTransition(barGroupExit.selectAll(`.${s.bar}`), duration)
-      .attr('transform', `translate(0,${config.height / 3})`)
+      .attr('transform', `translate(0,${this._height / 3})`)
 
     // Render Bars
     const bars = barGroupsMerged
@@ -124,7 +124,7 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
     if (!isOrdinal && dataSize >= 2) dataSize += 1
 
     const c = dataSize < 2 ? 1 : 1 - config.barPadding
-    const barWidth = c * config.width / dataSize
+    const barWidth = c * this._width / dataSize
 
     return min([barWidth, config.barMaxWidth])
   }

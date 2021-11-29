@@ -53,7 +53,7 @@ export class Donut<Datum> extends ComponentCore<Datum[]> {
     const data = datamodel.data
     const duration = isNumber(customDuration) ? customDuration : config.duration
 
-    const radius = config.radius || Math.min(config.width - bleed.left - bleed.right, config.height - bleed.top - bleed.bottom) / 2
+    const radius = config.radius || Math.min(this._width - bleed.left - bleed.right, this._height - bleed.top - bleed.bottom) / 2
 
     this.arcGen
       .startAngle(d => d.startAngle)
@@ -70,7 +70,7 @@ export class Donut<Datum> extends ComponentCore<Datum[]> {
       .value(d => getNumber(d, config.value) || (config.preventEmptySegments && Number.EPSILON) || 0)
       .sort(config.sortFunction)
 
-    this.arcGroup.attr('transform', `translate(${config.width / 2},${config.height / 2})`)
+    this.arcGroup.attr('transform', `translate(${this._width / 2},${this._height / 2})`)
     const arcData = pieGen(data) as DonutArcDatum<Datum>[]
     arcData.forEach(d => {
       d.innerRadius = config.arcWidth === 0 ? 0 : clamp(radius - config.arcWidth, 0, radius - 1)
@@ -95,7 +95,7 @@ export class Donut<Datum> extends ComponentCore<Datum[]> {
 
     // Label
     this.centralLabel
-      .attr('transform', `translate(${config.width / 2},${config.height / 2})`)
+      .attr('transform', `translate(${this._width / 2},${this._height / 2})`)
       .text(config.centralLabel ?? null)
   }
 }

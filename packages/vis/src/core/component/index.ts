@@ -36,6 +36,11 @@ export class ComponentCore<
     };
   } = {}
 
+  /** Component width in pixels. This property is set automatically by the container. */
+  protected _width = 400
+  /** Component height in pixels. This property is set automatically by the container. */
+  protected _height = 200
+
   _setUpComponentEventsThrottled = throttle(this._setUpComponentEvents, 500)
   _setCustomAttributesThrottled = throttle(this._setCustomAttributes, 500)
 
@@ -57,6 +62,11 @@ export class ComponentCore<
 
   setData (data: CoreDatum): void {
     this.datamodel.data = data
+  }
+
+  setSize (width: number, height: number): void {
+    if (isFinite(width)) this._width = width
+    if (isFinite(height)) this._height = height
   }
 
   render (duration = this.config.duration): void {

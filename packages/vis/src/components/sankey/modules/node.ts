@@ -22,7 +22,12 @@ import { renderLabel } from './label'
 // Styles
 import * as s from '../style'
 
-export function createNodes<N extends SankeyInputNode, L extends SankeyInputLink> (sel: Selection<SVGGElement, SankeyNode<N, L>, SVGGElement, any>, config: SankeyConfig<N, L>, bleed: Spacing): void {
+export function createNodes<N extends SankeyInputNode, L extends SankeyInputLink> (
+  sel: Selection<SVGGElement, SankeyNode<N, L>, SVGGElement, unknown>,
+  config: SankeyConfig<N, L>,
+  width: number,
+  bleed: Spacing
+): void {
   const { enterTransitionType } = config
 
   // Node
@@ -46,15 +51,21 @@ export function createNodes<N extends SankeyInputNode, L extends SankeyInputLink
   sel
     .attr('transform', d => {
       const x = (enterTransitionType === EnterTransitionType.FromAncestor && d.targetLinks?.[0]) ? d.targetLinks[0].source.x0 : d.x0
-      return `translate(${sel.size() === 1 ? config.width * 0.5 - bleed.left : x}, ${d.y0})`
+      return `translate(${sel.size() === 1 ? width * 0.5 - bleed.left : x}, ${d.y0})`
     })
     .style('opacity', 0)
 }
 
-export function updateNodes<N extends SankeyInputNode, L extends SankeyInputLink> (sel, config: SankeyConfig<N, L>, bleed: Spacing, duration: number): void {
+export function updateNodes<N extends SankeyInputNode, L extends SankeyInputLink> (
+  sel: Selection<SVGGElement, SankeyNode<N, L>, SVGGElement, unknown>,
+  config: SankeyConfig<N, L>,
+  width: number,
+  bleed: Spacing,
+  duration: number
+): void {
   smartTransition(sel, duration)
     .attr('transform', (d: SankeyNode<N, L>) => `translate(${
-      (sel.size() === 1 && config.singleNodePosition === Position.Center) ? config.width * 0.5 - bleed.left : d.x0
+      (sel.size() === 1 && config.singleNodePosition === Position.Center) ? width * 0.5 - bleed.left : d.x0
     },${d.y0})`)
     .style('opacity', (d: SankeyNode<N, L>) => d._state.greyout ? 0.2 : 1)
 
@@ -66,7 +77,7 @@ export function updateNodes<N extends SankeyInputNode, L extends SankeyInputLink
 
   // Label Rendering
   // eslint-disable-next-line @typescript-eslint/no-use-before-define
-  renderNodeLabels(sel, config, duration)
+  renderNodeLabels(sel, config, width, duration)
 
   // Node Icon
   const nodeIcon = sel.select(`.${s.nodeIcon}`)
@@ -92,7 +103,13 @@ export function updateNodes<N extends SankeyInputNode, L extends SankeyInputLink
   }
 }
 
-export function renderNodeLabels<N extends SankeyInputNode, L extends SankeyInputLink> (sel: Selection<SVGGElement, SankeyNode<N, L>, SVGGElement, any>, config: SankeyConfig<N, L>, duration: number, enforceNodeVisibility?: SankeyNode<N, L>): void {
+export function renderNodeLabels<N extends SankeyInputNode, L extends SankeyInputLink> (
+  sel: Selection<SVGGElement, SankeyNode<N, L>, SVGGElement, unknown>,
+  config: SankeyConfig<N, L>,
+  width: number,
+  duration: number,
+  enforceNodeVisibility?: SankeyNode<N, L>
+): void {
   // Label Rendering
   const labelGroupSelection: Selection<SVGGElement, SankeyNode<N, L>, SVGGElement, any> = sel.select(`.${s.labelGroup}`)
   const labelGroupEls = labelGroupSelection.nodes() || []
@@ -101,7 +118,7 @@ export function renderNodeLabels<N extends SankeyInputNode, L extends SankeyInpu
   const labelGroupBBoxes = labelGroupEls.map(g => {
     const gSelection: Selection<SVGGElement, SankeyNode<N, L>, SVGGElement, any> = select(g)
     const datum = gSelection.datum()
-    return renderLabel(gSelection, datum, config, duration, enforceNodeVisibility === datum)
+    return renderLabel(gSelection, datum, config, width, duration, enforceNodeVisibility === datum)
   })
 
   if (config.labelVisibility) {
@@ -139,7 +156,11 @@ export function renderNodeLabels<N extends SankeyInputNode, L extends SankeyInpu
   }
 }
 
-export function removeNodes<N extends SankeyInputNode, L extends SankeyInputLink> (selection: Selection<SVGGElement, SankeyNode<N, L>, SVGGElement, any>, config, duration): void {
+export function removeNodes<N extends SankeyInputNode, L extends SankeyInputLink> (
+  selection: Selection<SVGGElement, SankeyNode<N, L>, SVGGElement, unknown>,
+  config: SankeyConfig<N, L>,
+  duration: number
+): void {
   const { exitTransitionType } = config
   const transitionSelection = smartTransition(selection, duration)
   if (exitTransitionType === ExitTransitionType.ToAncestor) {
@@ -155,20 +176,30 @@ export function removeNodes<N extends SankeyInputNode, L extends SankeyInputLink
     .remove()
 }
 
-export function onNodeMouseOver<N extends SankeyInputNode, L extends SankeyInputLink> (d: SankeyNode<N, L>, nodeSelection, config: SankeyConfig<N, L>): void {
+export function onNodeMouseOver<N extends SankeyInputNode, L extends SankeyInputLink> (
+  d: SankeyNode<N, L>,
+  nodeSelection: Selection<SVGGElement, SankeyNode<N, L>, SVGGElement, unknown>,
+  config: SankeyConfig<N, L>,
+  width: number
+): void {
   const labelGroup = nodeSelection.raise()
-    .select(`.${s.labelGroup}`)
+    .select<SVGGElement>(`.${s.labelGroup}`)
 
   if (config.labelExpandTrimmedOnHover) {
-    renderLabel(labelGroup, d, config, 0, true)
+    renderLabel(labelGroup, d, config, width, 0, true)
   }
   labelGroup.classed(s.forceShow, true)
 }
 
-export function onNodeMouseOut<N extends SankeyInputNode, L extends SankeyInputLink> (d: SankeyNode<N, L>, nodeSelection, config: SankeyConfig<N, L>): void {
+export function onNodeMouseOut<N extends SankeyInputNode, L extends SankeyInputLink> (
+  d: SankeyNode<N, L>,
+  nodeSelection,
+  config: SankeyConfig<N, L>,
+  width: number
+): void {
   const labelGroup = nodeSelection.select(`.${s.labelGroup}`)
   if (config.labelExpandTrimmedOnHover) {
-    renderLabel(labelGroup, d, config, 0)
+    renderLabel(labelGroup, d, config, width, 0)
   }
   labelGroup.classed(s.forceShow, false)
 }

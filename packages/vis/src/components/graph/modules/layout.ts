@@ -23,9 +23,14 @@ import { GraphConfig } from '../config'
 import { getMaxNodeSize, configuredNodeSize, getNodeSize, getAverageNodeSize } from './node/helper'
 import { positionNonConnectedNodes } from './layout-helpers'
 
-export function applyLayoutCircular<N extends GraphInputNode, L extends GraphInputLink> (datamodel: GraphDataModel<N, L, GraphNode<N, L>, GraphLink<N, L>>, config: GraphConfig<GraphInputNode, GraphInputLink>): void {
+export function applyLayoutCircular<N extends GraphInputNode, L extends GraphInputLink> (
+  datamodel: GraphDataModel<N, L, GraphNode<N, L>, GraphLink<N, L>>,
+  config: GraphConfig<GraphInputNode, GraphInputLink>,
+  width: number,
+  height: number
+): void {
   const { nonConnectedNodes, connectedNodes, nodes } = datamodel
-  const { layoutNonConnectedAside, width, height, nodeSize } = config
+  const { layoutNonConnectedAside, nodeSize } = config
 
   const activeWidth = width
   const activeHeight = height
@@ -58,12 +63,17 @@ export function applyLayoutCircular<N extends GraphInputNode, L extends GraphInp
   }
 }
 
-export function applyLayoutParallel<N extends GraphInputNode, L extends GraphInputLink> (datamodel: GraphDataModel<N, L, GraphNode<N, L>, GraphLink<N, L>>, config: GraphConfig<GraphInputNode, GraphInputLink>, orientation?: string): void {
+export function applyLayoutParallel<N extends GraphInputNode, L extends GraphInputLink> (
+  datamodel: GraphDataModel<N, L, GraphNode<N, L>, GraphLink<N, L>>,
+  config: GraphConfig<GraphInputNode, GraphInputLink>,
+  width: number,
+  height: number,
+  orientation?: string
+): void {
   const { nonConnectedNodes, connectedNodes, nodes } = datamodel
   const {
-    layoutNonConnectedAside, layoutGroupOrder, layoutSortConnectionsByGroup,
-    layoutSubgroupMaxNodes, layoutGroupRows, nodeSize, nodeGroup, nodeSubGroup,
-    width, height, layoutGroupSpacing,
+    layoutNonConnectedAside, layoutGroupOrder, layoutSortConnectionsByGroup, layoutSubgroupMaxNodes,
+    layoutGroupRows, nodeSize, nodeGroup, nodeSubGroup, layoutGroupSpacing,
   } = config
 
   const activeWidth = width - configuredNodeSize(nodeSize)
@@ -260,9 +270,13 @@ export function applyLayoutParallel<N extends GraphInputNode, L extends GraphInp
   }
 }
 
-export function applyLayoutDagre<N extends GraphInputNode, L extends GraphInputLink> (datamodel: GraphDataModel<N, L, GraphNode<N, L>, GraphLink<N, L>>, config: GraphConfig<GraphInputNode, GraphInputLink>): void {
+export function applyLayoutDagre<N extends GraphInputNode, L extends GraphInputLink> (
+  datamodel: GraphDataModel<N, L, GraphNode<N, L>, GraphLink<N, L>>,
+  config: GraphConfig<GraphInputNode, GraphInputLink>,
+  width: number
+): void {
   const { nonConnectedNodes, connectedNodes, nodes, links } = datamodel
-  const { nodeSize, layoutNonConnectedAside, width, dagreLayoutSettings, nodeBorderWidth, nodeLabel } = config
+  const { nodeSize, layoutNonConnectedAside, dagreLayoutSettings, nodeBorderWidth, nodeLabel } = config
 
   // https://github.com/dagrejs/dagre/wiki
   const dagreGraph = new Graph()
@@ -313,9 +327,14 @@ export function applyLayoutDagre<N extends GraphInputNode, L extends GraphInputL
   }
 }
 
-export function applyLayoutConcentric<N extends GraphInputNode, L extends GraphInputLink> (datamodel: GraphDataModel<N, L, GraphNode<N, L>, GraphLink<N, L>>, config: GraphConfig<GraphInputNode, GraphInputLink>): void {
+export function applyLayoutConcentric<N extends GraphInputNode, L extends GraphInputLink> (
+  datamodel: GraphDataModel<N, L, GraphNode<N, L>, GraphLink<N, L>>,
+  config: GraphConfig<GraphInputNode, GraphInputLink>,
+  width: number,
+  height: number
+): void {
   const { nonConnectedNodes, connectedNodes, nodes } = datamodel
-  const { layoutNonConnectedAside, layoutGroupOrder, nodeSize, nodeGroup, width, height } = config
+  const { layoutNonConnectedAside, layoutGroupOrder, nodeSize, nodeGroup } = config
 
   const layoutNodes = layoutNonConnectedAside ? connectedNodes : nodes
 
@@ -366,8 +385,12 @@ export function applyLayoutConcentric<N extends GraphInputNode, L extends GraphI
   }
 }
 
-export function applyLayoutForce<N extends GraphInputNode, L extends GraphInputLink> (datamodel: GraphDataModel<N, L, GraphNode<N, L>, GraphLink<N, L>>, config: GraphConfig<GraphInputNode, GraphInputLink>): void {
-  const { layoutNonConnectedAside, forceLayoutSettings: { linkDistance, linkStrength, charge, forceXStrength, forceYStrength }, nodeSize, width } = config
+export function applyLayoutForce<N extends GraphInputNode, L extends GraphInputLink> (
+  datamodel: GraphDataModel<N, L, GraphNode<N, L>, GraphLink<N, L>>,
+  config: GraphConfig<GraphInputNode, GraphInputLink>,
+  width: number
+): void {
+  const { layoutNonConnectedAside, forceLayoutSettings: { linkDistance, linkStrength, charge, forceXStrength, forceYStrength }, nodeSize } = config
 
   const { nonConnectedNodes, connectedNodes, nodes, links } = datamodel
   const simulation = forceSimulation(layoutNonConnectedAside ? connectedNodes : nodes)

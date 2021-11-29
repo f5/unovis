@@ -171,20 +171,20 @@ export class Graph<
   }
 
   _render (customDuration?: number): void {
-    const { config: { disableZoom, duration, width, height, layoutAutofit, panels }, datamodel } = this
+    const { config: { disableZoom, duration, layoutAutofit, panels }, datamodel } = this
     if (!datamodel.nodes && !datamodel.links) return
     const animDuration = isNumber(customDuration) ? customDuration : duration
 
     this._backgroundRect
-      .attr('width', width)
-      .attr('height', height)
+      .attr('width', this._width)
+      .attr('height', this._height)
       .attr('opacity', 0)
 
-    if ((this._prevWidth !== width || this._prevHeight !== height) && layoutAutofit) {
+    if ((this._prevWidth !== this._width || this._prevHeight !== this._height) && layoutAutofit) {
       // Fit layout on resize
       this._fitLayout = true
-      this._prevWidth = width
-      this._prevHeight = height
+      this._prevWidth = this._width
+      this._prevHeight = this._height
     }
 
     // Apply layout
@@ -350,23 +350,23 @@ export class Graph<
     const { config, datamodel } = this
     switch (config.layoutType) {
       case GraphLayoutType.Parallel:
-        applyLayoutParallel(datamodel, config)
+        applyLayoutParallel(datamodel, config, this._width, this._height)
         break
       case GraphLayoutType.ParallelHorizontal:
-        applyLayoutParallel(datamodel, config, 'horizontal')
+        applyLayoutParallel(datamodel, config, this._width, this._height, 'horizontal')
         break
       case GraphLayoutType.Dagre:
-        applyLayoutDagre(datamodel, config)
+        applyLayoutDagre(datamodel, config, this._width)
         break
       case GraphLayoutType.Force:
-        applyLayoutForce(datamodel, config)
+        applyLayoutForce(datamodel, config, this._width)
         break
       case GraphLayoutType.Concentric:
-        applyLayoutConcentric(datamodel, config)
+        applyLayoutConcentric(datamodel, config, this._width, this._height)
         break
       case GraphLayoutType.Circular:
       default:
-        applyLayoutCircular(datamodel, config)
+        applyLayoutCircular(datamodel, config, this._width, this._height)
         break
     }
   }
@@ -384,12 +384,12 @@ export class Graph<
   }
 
   _getTransform (nodes: GraphNode<N>[]): ZoomTransform {
-    const { nodeSize, width, height, zoomScaleExtent } = this.config
+    const { nodeSize, zoomScaleExtent } = this.config
     const { left, top, right, bottom } = this.bleed
 
     const maxNodeSize = getMaxNodeSize(nodes, nodeSize)
-    const w = width
-    const h = height
+    const w = this._width
+    const h = this._height
     const xExtent = extent(nodes, d => getX(d)) as number[]
     const yExtent = extent(nodes, d => getY(d)) as number[]
 
@@ -400,8 +400,8 @@ export class Graph<
 
     const xCenter = (xExtent[1] + xExtent[0]) / 2
     const yCenter = (yExtent[1] + yExtent[0] + maxNodeSize) / 2
-    const translateX = width / 2 - xCenter * clampedScale
-    const translateY = height / 2 - yCenter * clampedScale
+    const translateX = this._width / 2 - xCenter * clampedScale
+    const translateY = this._height / 2 - yCenter * clampedScale
     const transform = zoomIdentity
       .translate(translateX, translateY)
       .scale(clampedScale)
@@ -601,8 +601,8 @@ export class Graph<
     const scale = transform.k
 
     // Prevent from dragging outside
-    const maxY = (config.height - transform.y) / scale
-    const maxX = (config.width - transform.x) / scale
+    const maxY = (this._height - transform.y) / scale
+    const maxX = (this._width - transform.x) / scale
     const minY = -transform.y / scale
     const minX = -transform.x / scale
     let [x, y] = pointer(event, this._graphGroup.node())

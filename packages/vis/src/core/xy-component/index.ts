@@ -80,11 +80,11 @@ export class XYComponentCore<Datum> extends ComponentCore<Datum[]> {
 
   getXScreenRange (padding: Spacing = {}): number[] {
     const bleed = this.bleed // Bleed depends on the domain. You should set it first in order to get correct results
-    return [(padding.left ?? 0) + (bleed.left ?? 0), this.config.width - (padding.right ?? 0) - (bleed.right ?? 0)]
+    return [(padding.left ?? 0) + (bleed.left ?? 0), this._width - (padding.right ?? 0) - (bleed.right ?? 0)]
   }
 
   getYScreenRange (padding: Spacing = {}): number[] {
     const bleed = this.bleed // Bleed depends on the domain. You should set it first in order to get correct results
-    return [(padding.top ?? 0) + (bleed.top ?? 0), this.config.height - (padding.bottom ?? 0) - (bleed.bottom ?? 0)]
+    return [(padding.top ?? 0) + (bleed.top ?? 0), this._height - (padding.bottom ?? 0) - (bleed.bottom ?? 0)]
   }
 }

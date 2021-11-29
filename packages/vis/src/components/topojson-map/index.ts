@@ -136,7 +136,7 @@ export class TopoJSONMap<AreaDatum, PointDatum, LinkDatum> extends ComponentCore
 
     if (this._firstRender) {
       // Rendering the map for the first time.
-      this._projection.fitExtent([[0, 0], [config.width, config.height]], this._featureCollection)
+      this._projection.fitExtent([[0, 0], [this._width, this._height]], this._featureCollection)
       this._initialScale = this._projection.scale()
       this._currentZoomLevel = 1
 
@@ -144,12 +144,12 @@ export class TopoJSONMap<AreaDatum, PointDatum, LinkDatum> extends ComponentCore
       if (zoomFactor) {
         this._projection
           .scale(zoomFactor)
-          .translate([config.width / 2, config.height / 2])
+          .translate([this._width / 2, this._height / 2])
       } else {
         if (config.mapFitToPoints) {
           this._fitToPoints()
         } else {
-          this._projection.fitExtent([[0, 0], [config.width, config.height]], this._featureCollection)
+          this._projection.fitExtent([[0, 0], [this._width, this._height]], this._featureCollection)
         }
       }
 
@@ -161,11 +161,11 @@ export class TopoJSONMap<AreaDatum, PointDatum, LinkDatum> extends ComponentCore
         this._applyZoom()
       }
 
-      this._prevWidth = config.width
-      this._prevHeight = config.height
+      this._prevWidth = this._width
+      this._prevHeight = this._height
     }
 
-    if (this._prevWidth !== config.width || this._prevHeight !== config.height) {
+    if (this._prevWidth !== this._width || this._prevHeight !== this._height) {
       this._onResize()
     }
 
@@ -317,8 +317,8 @@ export class TopoJSONMap<AreaDatum, PointDatum, LinkDatum> extends ComponentCore
     }
 
     this._projection.fitExtent([
-      [config.width * pad, config.height * pad],
-      [config.width * (1 - pad), config.height * (1 - pad)],
+      [this._width * pad, this._height * pad],
+      [this._width * (1 - pad), this._height * (1 - pad)],
     ], featureCollection)
 
     const maxScale = config.zoomExtent[1] * this._initialScale
@@ -334,15 +334,15 @@ export class TopoJSONMap<AreaDatum, PointDatum, LinkDatum> extends ComponentCore
   }
 
   _onResize (): void {
-    const { config, _prevWidth, _prevHeight, _projection } = this
+    const { _prevWidth, _prevHeight, _projection } = this
     const translatePrev = _projection.translate()
     _projection.translate([
-      translatePrev[0] * (1 + (config.width - _prevWidth) / _prevWidth),
-      translatePrev[1] * (1 + (config.height - _prevHeight) / _prevHeight),
+      translatePrev[0] * (1 + (this._width - _prevWidth) / _prevWidth),
+      translatePrev[1] * (1 + (this._height - _prevHeight) / _prevHeight),
     ])
     this._applyZoom()
-    this._prevWidth = config.width
-    this._prevHeight = config.height
+    this._prevWidth = this._width
+    this._prevHeight = this._height
   }
 
   _onZoom (event: D3ZoomEvent<any, any>): void {
@@ -393,8 +393,7 @@ export class TopoJSONMap<AreaDatum, PointDatum, LinkDatum> extends ComponentCore
   }
 
   public fitView (): void {
-    const { config } = this
-    this._projection.fitExtent([[0, 0], [config.width, config.height]], this._featureCollection)
+    this._projection.fitExtent([[0, 0], [this._width, this._height]], this._featureCollection)
     this._currentZoomLevel = (this._projection?.scale() / this._initialScale) || 1
 
     // We are using this._applyZoom() instead of directly calling this._render(config.zoomDuration) because
