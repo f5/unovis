@@ -25,9 +25,7 @@ export interface BrushConfigInterface<Datum> extends Partial<XYComponentConfigIn
   onBrushEnd?: ((selection?: [number, number], event?: D3BrushEvent<Datum>, userDriven?: boolean) => void);
   /** Width of the Brush handle. Default: `1` */
   handleWidth?: number;
-  /** Brush selection in data space, can be used to force set the selection from outside.
-   * This config property gets updated on internal brush events. Default: `undefined`
-  */
+  /** Brush selection in the data space coordinates, can be used to control the selection. Default: `undefined` */
   selection?: [number, number] | null;
   /** Allow dragging the selected area as a whole in order to change the selected range. Default: `false` */
   draggable?: boolean;

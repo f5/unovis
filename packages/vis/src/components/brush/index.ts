@@ -28,11 +28,11 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
   handleLines: Selection<SVGLineElement, any, SVGGElement, any>
   brushBehaviour: BrushBehavior<any> = brushX()
   events = {
-    [Brush.selectors.brush]: {
-    },
+    [Brush.selectors.brush]: {},
   }
 
-  _firstRender = true
+  private _selection: [number, number] | null = null
+  private _firstRender = true
 
   constructor (config?: BrushConfigInterface<Datum>) {
     super()
@@ -62,7 +62,7 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
     const xScale = config.xScale
 
     brushBehaviour
-      .extent([[0, 0], [config.width, config.height]])
+      .extent([[0, 0], [this._width, this._height]])
       .on('start', this._onBrushStart.bind(this))
       .on('brush', this._onBrushMove.bind(this))
       .on('end', this._onBrushEnd.bind(this))
@@ -71,7 +71,7 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
       .call(brushBehaviour)
       .classed('non-draggable', !config.draggable)
 
-    const yRange = [config.height, 0]
+    const yRange = [this._height, 0]
     const h = yRange[0] - yRange[1]
 
     this.g.selectAll('.handle')
@@ -86,12 +86,11 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
       .attr('y1', yRange[1] + 10)
       .attr('y2', yRange[1] + h - 10)
 
-    const xRange = [0, config.width]
-    const selectionMin = clamp(xScale(config.selection?.[0]) ?? 0, xRange[0], xRange[1])
-    const selectionMax = clamp(xScale(config.selection?.[1]) ?? 0, xRange[0], xRange[1])
+    const xRange = [0, this._width]
+    const selectionMin = clamp(xScale((config.selection || this._selection)?.[0]) ?? 0, xRange[0], xRange[1])
+    const selectionMax = clamp(xScale((config.selection || this._selection)?.[1]) ?? 0, xRange[0], xRange[1])
     const selectionLength = selectionMax - selectionMin
     const brushRange = (selectionLength ? [selectionMin, selectionMax] : xRange) as [number, number]
-
     this._positionHandles(brushRange)
 
     smartTransition(this.brush, duration)
@@ -102,8 +101,7 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
   }
 
   _updateSelection (s: [number, number]): void {
-    const { config } = this
-    const xRange = [0, config.width]
+    const xRange = [0, this._width]
     this.unselectedRange
       .attr('x', d => d.type === Direction.West ? xRange[0] : s[1])
       .attr('width', d => {
@@ -115,7 +113,7 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
     this._positionHandles(s)
 
     // D3 sets brush handle height to be too long, so we need to update it
-    const yRange = [config.height, 0]
+    const yRange = [this._height, 0]
     const h = yRange[0] - yRange[1]
     this.g.selectAll('.handle')
       .attr('y', yRange[1])
@@ -150,10 +148,9 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
   _onBrush (event: D3BrushEvent<Datum>): void {
     const { config } = this
     const xScale = config.xScale
-    const xRange = [0, config.width]
+    const xRange = [0, this._width]
     const s = (event?.selection || xRange) as [number, number]
     const userDriven = !!event?.sourceEvent
-
     // Handle edge cases:
     // (event?.selection === null) happens when user clicks to reset the selection
     // (s?.[0] === s?.[1]) happens when user drags the selection out of range
@@ -195,11 +192,10 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
           this.brush.call(this.brushBehaviour.move, range) // Will trigger the 'brush end' callback with `range`
           return
         } else {
-          config.selection = selectedDomain
+          this._selection = selectedDomain
         }
       }
 
-      // if (userDriven) config.selection = selectedDomain
       this._updateSelection(s)
       if (!this._firstRender) config.onBrush(selectedDomain, event, userDriven)
     }
@@ -209,20 +205,20 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
     const { config } = this
 
     this._onBrush(event)
-    if (!this._firstRender) config.onBrushStart(config.selection, event, !!event?.sourceEvent)
+    if (!this._firstRender) config.onBrushStart(this._selection, event, !!event?.sourceEvent)
   }
 
   _onBrushMove (event: D3BrushEvent<Datum>): void {
     const { config } = this
 
     this._onBrush(event)
-    if (!this._firstRender) config.onBrushMove(config.selection, event, !!event?.sourceEvent)
+    if (!this._firstRender) config.onBrushMove(this._selection, event, !!event?.sourceEvent)
   }
 
   _onBrushEnd (event: D3BrushEvent<Datum>): void {
     const { config } = this
 
     this._onBrush(event)
-    if (!this._firstRender) config.onBrushEnd(config.selection, event, !!event?.sourceEvent)
+    if (!this._firstRender) config.onBrushEnd(this._selection, event, !!event?.sourceEvent)
   }
 }
