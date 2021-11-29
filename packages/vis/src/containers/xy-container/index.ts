@@ -263,16 +263,13 @@ export class XYContainer<Datum> extends ContainerCore {
     const { config } = this
     if (!components) return
 
-    // Passing the scaleByDomain property to the components
-    components.forEach(c => { c.config.scaleByDomain = config.scaleByDomain })
-
     // Loop over all the dimensions
     Object.values(ScaleDimension).forEach((dimension: ScaleDimension) => {
       let [min, max] = extent(
         mergeArrays(
           components
             .filter(c => !c.excludeFromDomainCalculation)
-            .map(c => c.getDataExtent(dimension))
+            .map(c => c.getDataExtent(dimension, config.scaleByDomain))
         ) as number[]
       ) // Components with undefined dimension accessors will return [undefined, undefined] but d3.extent will take care of that
 

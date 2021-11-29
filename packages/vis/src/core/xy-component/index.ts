@@ -55,12 +55,12 @@ export class XYComponentCore<Datum> extends ComponentCore<Datum[]> {
     if (scale && (dimension === ScaleDimension.Y)) this._yScale = scale
   }
 
-  getDataExtent (dimension: ScaleDimension): number[] {
+  getDataExtent (dimension: ScaleDimension, scaleByVisibleData: boolean): number[] {
     const { config, datamodel } = this
 
     switch (dimension) {
       case ScaleDimension.X: return this.getXDataExtent()
-      case ScaleDimension.Y: return this.getYDataExtent()
+      case ScaleDimension.Y: return this.getYDataExtent(scaleByVisibleData)
       default: return getExtent(datamodel.data, config[dimension])
     }
   }
@@ -78,10 +78,10 @@ export class XYComponentCore<Datum> extends ComponentCore<Datum[]> {
     return getExtent(datamodel.data, config.x)
   }
 
-  getYDataExtent (): number[] {
+  getYDataExtent (scaleByVisibleData: boolean): number[] {
     const { config, datamodel } = this
 
-    const data = config.scaleByDomain ? filterDataByRange(datamodel.data, this.xScale.domain() as [number, number], config.x) : datamodel.data
+    const data = scaleByVisibleData ? filterDataByRange(datamodel.data, this.xScale.domain() as [number, number], config.x) : datamodel.data
     const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
     return getExtent(data, ...yAccessors)
   }

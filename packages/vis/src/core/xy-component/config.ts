@@ -26,8 +26,6 @@ export interface XYComponentConfigInterface<Datum> extends ComponentConfigInterf
    * Default: `undefined`
   */
   yScale?: ContinuousScale;
-  /** Sets the Y scale domain based on the X scale domain not the whole data. Useful when you manipulate chart's X domain from outside. Default: `false` */
-  scaleByDomain?: boolean;
 }
 
 export class XYComponentConfig<Datum> extends ComponentConfig implements XYComponentConfigInterface<Datum> {
@@ -41,5 +39,4 @@ export class XYComponentConfig<Datum> extends ComponentConfig implements XYCompo
   color = (d: Datum | Datum[]): string => d['color']
   xScale = undefined
   yScale = undefined
-  scaleByDomain = false
 }
