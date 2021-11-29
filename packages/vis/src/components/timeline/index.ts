@@ -1,11 +1,15 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { Selection } from 'd3-selection'
+import { Transition } from 'd3-transition'
 import { scaleOrdinal, ScaleOrdinal } from 'd3-scale'
 import { drag, D3DragEvent } from 'd3-drag'
 import { max } from 'd3-array'
 
 // Core
 import { XYComponentCore } from 'core/xy-component'
+
+// Types
+import { ContinuousScale } from 'types/scale'
 
 // Utils
 import { isNumber, countUnique, arrayOfIndices, getMin, getMax, getString, getNumber } from 'utils/data'
@@ -109,14 +113,14 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
     const linesEnter = lines.enter().append('line')
       .attr('class', s.line)
       .style('stroke', (d, i) => getColor(d, config.color, i))
-      .call(this._positionLines, config, ordinal)
+      .call(this._positionLines, config, this.xScale, this.yScale, ordinal)
       .attr('transform', 'translate(0, 10)')
       .style('opacity', 0)
 
     smartTransition(linesEnter.merge(lines), duration)
       .style('stroke', (d, i) => getColor(d, config.color, i))
       .attr('stroke-width', d => getNumber(d, config.lineWidth))
-      .call(this._positionLines, config, ordinal)
+      .call(this._positionLines, config, this.xScale, this.yScale, ordinal)
       .attr('transform', 'translate(0, 0)')
       .style('cursor', d => getString(d, config.cursor))
       .style('opacity', 1)
@@ -142,15 +146,20 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
     this._updateScrollPosition(0)
   }
 
-  _positionLines (selection, config, ordinal): void {
-    const xScale = this.xScale
-    const yRange = this.yScale.range()
+  _positionLines (
+    selection: Selection<SVGLineElement, Datum, SVGGElement, unknown> | Transition<SVGLineElement, Datum, SVGGElement, unknown>,
+    config: TimelineConfig<Datum>,
+    xScale: ContinuousScale,
+    yScale: ContinuousScale,
+    ordinalScale: ScaleOrdinal<string, number>
+  ): typeof selection {
+    const yRange = yScale.range()
 
     return selection
       .attr('x1', d => xScale(getNumber(d, config.x)))
       .attr('x2', d => xScale(getNumber(d, config.x) + getNumber(d, config.length)))
-      .attr('y1', (d, i) => yRange[1] + (ordinal(d.type || i) + 0.5) * config.rowHeight)
-      .attr('y2', (d, i) => yRange[1] + (ordinal(d.type || i) + 0.5) * config.rowHeight)
+      .attr('y1', (d, i) => yRange[1] + (ordinalScale(getString(d, config.type) || `__${i}`) + 0.5) * config.rowHeight)
+      .attr('y2', (d, i) => yRange[1] + (ordinalScale(getString(d, config.type) || `__${i}`) + 0.5) * config.rowHeight)
       .style('opacity', 1)
   }
 
@@ -172,7 +181,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
     }, 300)
   }
 
-  _updateScrollPosition (diff): void {
+  _updateScrollPosition (diff: number): void {
     const yRange = this.yScale.range()
     const yHeight = Math.abs(yRange[1] - yRange[0])
 
