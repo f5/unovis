@@ -26,8 +26,6 @@ export class XYComponentCore<Datum> extends ComponentCore<Datum[]> {
   clippable = true
   /** Identifies whether the component displayed stacked data (eg StackedBar, Area) */
   stacked = false
-  /** Identifies whether the component should not be included in Domain calculations */
-  excludeFromDomainCalculation = false
 
   private _xScale: ContinuousScale = Scale.scaleLinear();
   private _yScale: ContinuousScale = Scale.scaleLinear();

@@ -268,7 +268,7 @@ export class XYContainer<Datum> extends ContainerCore {
       let [min, max] = extent(
         mergeArrays(
           components
-            .filter(c => !c.excludeFromDomainCalculation)
+            .filter(c => !c.config.excludeFromDomainCalculation)
             .map(c => c.getDataExtent(dimension, config.scaleByDomain))
         ) as number[]
       ) // Components with undefined dimension accessors will return [undefined, undefined] but d3.extent will take care of that

@@ -19,13 +19,19 @@ export interface XYComponentConfigInterface<Datum> extends ComponentConfigInterf
   /** Scale for X dimension, e.g. Scale.scaleLinear(). If you set xScale you'll be responsible for setting it's `domain` and `range` as well.
    * Only continuous scales are supported.
    * Default: `undefined`
-   */
+  */
   xScale?: ContinuousScale;
   /** Scale for Y dimension, e.g. Scale.scaleLinear(). If you set yScale you'll be responsible for setting it's `domain` and `range` as well.
    * Only continuous scales are supported.
    * Default: `undefined`
   */
   yScale?: ContinuousScale;
+  /** Identifies whether the component should be excluded from overall X and Y domain calculations or not.
+   * This property can be useful when you want pass individual data to a component and you don't want it to affect
+   * the scales of the chart.
+   * Default: `false`
+  */
+  excludeFromDomainCalculation?: boolean;
 }
 
 export class XYComponentConfig<Datum> extends ComponentConfig implements XYComponentConfigInterface<Datum> {
@@ -39,4 +45,5 @@ export class XYComponentConfig<Datum> extends ComponentConfig implements XYCompo
   color = (d: Datum | Datum[]): string => d['color']
   xScale = undefined
   yScale = undefined
+  excludeFromDomainCalculation = false
 }

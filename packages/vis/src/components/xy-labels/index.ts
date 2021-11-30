@@ -21,7 +21,6 @@ import * as s from './style'
 export class XYLabels<Datum> extends XYComponentCore<Datum> {
   static selectors = s
   clippable = false
-  excludeFromDomainCalculation = true
   config: XYLabelsConfig<Datum> = new XYLabelsConfig()
   events = {
     [XYLabels.selectors.label]: {},
