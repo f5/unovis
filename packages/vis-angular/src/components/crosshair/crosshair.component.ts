@@ -4,6 +4,7 @@ import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
 import {
   Crosshair,
   CrosshairConfigInterface,
+  ContainerCore,
   VisEventType,
   VisEventCallback,
   NumericAccessor,
@@ -92,6 +93,12 @@ export class VisCrosshairComponent<Datum> implements CrosshairConfigInterface<Da
    * Default: `undefined` */
   @Input() yScale: ContinuousScale
 
+  /** Identifies whether the component should be excluded from overall X and Y domain calculations or not.
+   * This property can be useful when you want pass individual data to a component and you don't want it to affect
+   * the scales of the chart.
+   * Default: `false` */
+  @Input() excludeFromDomainCalculation: boolean
+
   /** Separate array of accessors for stacked components (eg StackedBar, Area). Default: `undefined` */
   @Input() yStacked: NumericAccessor<Datum>[]
 
@@ -112,21 +119,26 @@ export class VisCrosshairComponent<Datum> implements CrosshairConfigInterface<Da
   @Input() data: Datum[]
 
   component: Crosshair<Datum> | undefined
+  public componentContainer: ContainerCore | undefined
 
   ngAfterViewInit (): void {
     this.component = new Crosshair<Datum>(this.getConfig())
-    if (this.data) this.component.setData(this.data)
+
+    if (this.data) {
+      this.component.setData(this.data)
+      this.componentContainer?.render()
+    }
   }
 
   ngOnChanges (changes: SimpleChanges): void {
     if (changes.data) { this.component?.setData(this.data) }
     this.component?.setConfig(this.getConfig())
-    this.component?.render()
+    this.componentContainer?.render()
   }
 
   private getConfig (): CrosshairConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, xScale, yScale, yStacked, baseline, tooltip, template, hideWhenFarFromPointer, hideWhenFarFromPointerDistance } = this
-    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, yStacked, baseline, tooltip, template, hideWhenFarFromPointer, hideWhenFarFromPointerDistance }
+    const { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, yStacked, baseline, tooltip, template, hideWhenFarFromPointer, hideWhenFarFromPointerDistance } = this
+    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, yStacked, baseline, tooltip, template, hideWhenFarFromPointer, hideWhenFarFromPointerDistance }
     const keys = Object.keys(config) as (keyof CrosshairConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

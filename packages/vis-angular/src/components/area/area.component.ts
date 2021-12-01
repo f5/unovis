@@ -4,6 +4,7 @@ import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
 import {
   Area,
   AreaConfigInterface,
+  ContainerCore,
   VisEventType,
   VisEventCallback,
   NumericAccessor,
@@ -93,6 +94,12 @@ export class VisAreaComponent<Datum> implements AreaConfigInterface<Datum>, Afte
    * Default: `undefined` */
   @Input() yScale: ContinuousScale
 
+  /** Identifies whether the component should be excluded from overall X and Y domain calculations or not.
+   * This property can be useful when you want pass individual data to a component and you don't want it to affect
+   * the scales of the chart.
+   * Default: `false` */
+  @Input() excludeFromDomainCalculation: boolean
+
   /** Curve type from the CurveType enum. Default: `CurveType.MonotoneX` */
   @Input() curveType: CurveType
 
@@ -107,21 +114,26 @@ export class VisAreaComponent<Datum> implements AreaConfigInterface<Datum>, Afte
   @Input() data: Datum[]
 
   component: Area<Datum> | undefined
+  public componentContainer: ContainerCore | undefined
 
   ngAfterViewInit (): void {
     this.component = new Area<Datum>(this.getConfig())
-    if (this.data) this.component.setData(this.data)
+
+    if (this.data) {
+      this.component.setData(this.data)
+      this.componentContainer?.render()
+    }
   }
 
   ngOnChanges (changes: SimpleChanges): void {
     if (changes.data) { this.component?.setData(this.data) }
     this.component?.setConfig(this.getConfig())
-    this.component?.render()
+    this.componentContainer?.render()
   }
 
   private getConfig (): AreaConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, xScale, yScale, curveType, baseline, opacity, cursor } = this
-    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, curveType, baseline, opacity, cursor }
+    const { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, curveType, baseline, opacity, cursor } = this
+    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, curveType, baseline, opacity, cursor }
     const keys = Object.keys(config) as (keyof AreaConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

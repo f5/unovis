@@ -4,6 +4,7 @@ import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
 import {
   Sankey,
   SankeyConfigInterface,
+  ContainerCore,
   SankeyInputNode,
   SankeyInputLink,
   VisEventType,
@@ -221,16 +222,21 @@ export class VisSankeyComponent<N extends SankeyInputNode, L extends SankeyInput
   @Input() data: any
 
   component: Sankey<N, L> | undefined
+  public componentContainer: ContainerCore | undefined
 
   ngAfterViewInit (): void {
     this.component = new Sankey<N, L>(this.getConfig())
-    if (this.data) this.component.setData(this.data)
+
+    if (this.data) {
+      this.component.setData(this.data)
+      this.componentContainer?.render()
+    }
   }
 
   ngOnChanges (changes: SimpleChanges): void {
     if (changes.data) { this.component?.setData(this.data) }
     this.component?.setConfig(this.getConfig())
-    this.component?.render()
+    this.componentContainer?.render()
   }
 
   private getConfig (): SankeyConfigInterface<N, L> {

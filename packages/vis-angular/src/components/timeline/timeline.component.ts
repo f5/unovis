@@ -4,6 +4,7 @@ import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
 import {
   Timeline,
   TimelineConfigInterface,
+  ContainerCore,
   VisEventType,
   VisEventCallback,
   NumericAccessor,
@@ -92,6 +93,12 @@ export class VisTimelineComponent<Datum> implements TimelineConfigInterface<Datu
    * Default: `undefined` */
   @Input() yScale: ContinuousScale
 
+  /** Identifies whether the component should be excluded from overall X and Y domain calculations or not.
+   * This property can be useful when you want pass individual data to a component and you don't want it to affect
+   * the scales of the chart.
+   * Default: `false` */
+  @Input() excludeFromDomainCalculation: boolean
+
   /** Width of the timeline items. Default: `8` */
   @Input() lineWidth: NumericAccessor<Datum>
 
@@ -109,21 +116,26 @@ export class VisTimelineComponent<Datum> implements TimelineConfigInterface<Datu
   @Input() data: Datum[]
 
   component: Timeline<Datum> | undefined
+  public componentContainer: ContainerCore | undefined
 
   ngAfterViewInit (): void {
     this.component = new Timeline<Datum>(this.getConfig())
-    if (this.data) this.component.setData(this.data)
+
+    if (this.data) {
+      this.component.setData(this.data)
+      this.componentContainer?.render()
+    }
   }
 
   ngOnChanges (changes: SimpleChanges): void {
     if (changes.data) { this.component?.setData(this.data) }
     this.component?.setConfig(this.getConfig())
-    this.component?.render()
+    this.componentContainer?.render()
   }
 
   private getConfig (): TimelineConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, xScale, yScale, lineWidth, rowHeight, length, type, cursor } = this
-    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, lineWidth, rowHeight, length, type, cursor }
+    const { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, lineWidth, rowHeight, length, type, cursor } = this
+    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, lineWidth, rowHeight, length, type, cursor }
     const keys = Object.keys(config) as (keyof TimelineConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

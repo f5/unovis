@@ -4,6 +4,7 @@ import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
 import {
   FreeBrush,
   FreeBrushConfigInterface,
+  ContainerCore,
   VisEventType,
   VisEventCallback,
   NumericAccessor,
@@ -94,6 +95,12 @@ export class VisFreeBrushComponent<Datum> implements FreeBrushConfigInterface<Da
    * Default: `undefined` */
   @Input() yScale: ContinuousScale
 
+  /** Identifies whether the component should be excluded from overall X and Y domain calculations or not.
+   * This property can be useful when you want pass individual data to a component and you don't want it to affect
+   * the scales of the chart.
+   * Default: `false` */
+  @Input() excludeFromDomainCalculation: boolean
+
   /** Brush selection mode. X - horizontal, Y - vertical, XY - both. Default: `FreeBrushMode.X` */
   @Input() mode: FreeBrushMode
 
@@ -129,21 +136,26 @@ export class VisFreeBrushComponent<Datum> implements FreeBrushConfigInterface<Da
   @Input() data: Datum[]
 
   component: FreeBrush<Datum> | undefined
+  public componentContainer: ContainerCore | undefined
 
   ngAfterViewInit (): void {
     this.component = new FreeBrush<Datum>(this.getConfig())
-    if (this.data) this.component.setData(this.data)
+
+    if (this.data) {
+      this.component.setData(this.data)
+      this.componentContainer?.render()
+    }
   }
 
   ngOnChanges (changes: SimpleChanges): void {
     if (changes.data) { this.component?.setData(this.data) }
     this.component?.setConfig(this.getConfig())
-    this.component?.render()
+    this.componentContainer?.render()
   }
 
   private getConfig (): FreeBrushConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, xScale, yScale, mode, onBrush, onBrushStart, onBrushMove, onBrushEnd, handleWidth, selection, selectionMinLength, autoHide } = this
-    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, mode, onBrush, onBrushStart, onBrushMove, onBrushEnd, handleWidth, selection, selectionMinLength, autoHide }
+    const { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, mode, onBrush, onBrushStart, onBrushMove, onBrushEnd, handleWidth, selection, selectionMinLength, autoHide } = this
+    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, mode, onBrush, onBrushStart, onBrushMove, onBrushEnd, handleWidth, selection, selectionMinLength, autoHide }
     const keys = Object.keys(config) as (keyof FreeBrushConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

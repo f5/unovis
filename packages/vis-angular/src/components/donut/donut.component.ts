@@ -1,7 +1,7 @@
 /* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import { Donut, DonutConfigInterface, VisEventType, VisEventCallback, NumericAccessor, ColorAccessor } from '@volterra/vis'
+import { Donut, DonutConfigInterface, ContainerCore, VisEventType, VisEventCallback, NumericAccessor, ColorAccessor } from '@volterra/vis'
 import { VisCoreComponent } from '../../core'
 
 @Component({
@@ -96,16 +96,21 @@ export class VisDonutComponent<Datum> implements DonutConfigInterface<Datum>, Af
   @Input() data: Datum[]
 
   component: Donut<Datum> | undefined
+  public componentContainer: ContainerCore | undefined
 
   ngAfterViewInit (): void {
     this.component = new Donut<Datum>(this.getConfig())
-    if (this.data) this.component.setData(this.data)
+
+    if (this.data) {
+      this.component.setData(this.data)
+      this.componentContainer?.render()
+    }
   }
 
   ngOnChanges (changes: SimpleChanges): void {
     if (changes.data) { this.component?.setData(this.data) }
     this.component?.setConfig(this.getConfig())
-    this.component?.render()
+    this.componentContainer?.render()
   }
 
   private getConfig (): DonutConfigInterface<Datum> {

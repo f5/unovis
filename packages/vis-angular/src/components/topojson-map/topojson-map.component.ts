@@ -4,6 +4,7 @@ import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
 import {
   TopoJSONMap,
   TopoJSONMapConfigInterface,
+  ContainerCore,
   VisEventType,
   VisEventCallback,
   NumericAccessor,
@@ -163,16 +164,21 @@ export class VisTopoJSONMapComponent<AreaDatum, PointDatum, LinkDatum> implement
   @Input() data: any
 
   component: TopoJSONMap<AreaDatum, PointDatum, LinkDatum> | undefined
+  public componentContainer: ContainerCore | undefined
 
   ngAfterViewInit (): void {
     this.component = new TopoJSONMap<AreaDatum, PointDatum, LinkDatum>(this.getConfig())
-    if (this.data) this.component.setData(this.data)
+
+    if (this.data) {
+      this.component.setData(this.data)
+      this.componentContainer?.render()
+    }
   }
 
   ngOnChanges (changes: SimpleChanges): void {
     if (changes.data) { this.component?.setData(this.data) }
     this.component?.setConfig(this.getConfig())
-    this.component?.render()
+    this.componentContainer?.render()
   }
 
   private getConfig (): TopoJSONMapConfigInterface<AreaDatum, PointDatum, LinkDatum> {

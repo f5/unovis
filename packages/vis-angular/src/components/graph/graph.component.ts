@@ -4,6 +4,7 @@ import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
 import {
   Graph,
   GraphConfigInterface,
+  ContainerCore,
   GraphInputNode,
   GraphInputLink,
   VisEventType,
@@ -239,16 +240,21 @@ export class VisGraphComponent<N extends GraphInputNode, L extends GraphInputLin
   @Input() data: any
 
   component: Graph<N, L> | undefined
+  public componentContainer: ContainerCore | undefined
 
   ngAfterViewInit (): void {
     this.component = new Graph<N, L>(this.getConfig())
-    if (this.data) this.component.setData(this.data)
+
+    if (this.data) {
+      this.component.setData(this.data)
+      this.componentContainer?.render()
+    }
   }
 
   ngOnChanges (changes: SimpleChanges): void {
     if (changes.data) { this.component?.setData(this.data) }
     this.component?.setConfig(this.getConfig())
-    this.component?.render()
+    this.componentContainer?.render()
   }
 
   private getConfig (): GraphConfigInterface<N, L> {

@@ -4,6 +4,7 @@ import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
 import {
   XYLabels,
   XYLabelsConfigInterface,
+  ContainerCore,
   VisEventType,
   VisEventCallback,
   NumericAccessor,
@@ -95,6 +96,12 @@ export class VisXYLabelsComponent<Datum> implements XYLabelsConfigInterface<Datu
    * Default: `undefined` */
   @Input() yScale: ContinuousScale
 
+  /** Identifies whether the component should be excluded from overall X and Y domain calculations or not.
+   * This property can be useful when you want pass individual data to a component and you don't want it to affect
+   * the scales of the chart.
+   * Default: `false` */
+  @Input() excludeFromDomainCalculation: boolean
+
   /** Defines how to position the label horizontally: in data space or in screen space. Default: `LabelPositioning.DataSpace` */
   @Input() xPositioning: GenericAccessor<XYLabelPositioning, Datum>
 
@@ -136,21 +143,26 @@ export class VisXYLabelsComponent<Datum> implements XYLabelsConfigInterface<Datu
   @Input() data: Datum[]
 
   component: XYLabels<Datum> | undefined
+  public componentContainer: ContainerCore | undefined
 
   ngAfterViewInit (): void {
     this.component = new XYLabels<Datum>(this.getConfig())
-    if (this.data) this.component.setData(this.data)
+
+    if (this.data) {
+      this.component.setData(this.data)
+      this.componentContainer?.render()
+    }
   }
 
   ngOnChanges (changes: SimpleChanges): void {
     if (changes.data) { this.component?.setData(this.data) }
     this.component?.setConfig(this.getConfig())
-    this.component?.render()
+    this.componentContainer?.render()
   }
 
   private getConfig (): XYLabelsConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, xScale, yScale, xPositioning, yPositioning, labelFontSize, label, backgroundColor, cursor, labelTextBrightnessRatio, clustering, clusterLabel, clusterFontSize, clusterBackgroundColor, clusterCursor, clusterLabelColor } = this
-    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, xPositioning, yPositioning, labelFontSize, label, backgroundColor, cursor, labelTextBrightnessRatio, clustering, clusterLabel, clusterFontSize, clusterBackgroundColor, clusterCursor, clusterLabelColor }
+    const { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, xPositioning, yPositioning, labelFontSize, label, backgroundColor, cursor, labelTextBrightnessRatio, clustering, clusterLabel, clusterFontSize, clusterBackgroundColor, clusterCursor, clusterLabelColor } = this
+    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, xPositioning, yPositioning, labelFontSize, label, backgroundColor, cursor, labelTextBrightnessRatio, clustering, clusterLabel, clusterFontSize, clusterBackgroundColor, clusterCursor, clusterLabelColor }
     const keys = Object.keys(config) as (keyof XYLabelsConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

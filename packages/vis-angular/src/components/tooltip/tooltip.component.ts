@@ -1,7 +1,7 @@
 /* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import { Tooltip, TooltipConfigInterface, ComponentCore, Position, PositionStrategy } from '@volterra/vis'
+import { Tooltip, TooltipConfigInterface, ContainerCore, ComponentCore, Position, PositionStrategy } from '@volterra/vis'
 import { VisGenericComponent } from '../../core'
 
 @Component({
@@ -51,6 +51,7 @@ export class VisTooltipComponent implements TooltipConfigInterface, AfterViewIni
   }
 
   component: Tooltip | undefined
+  public componentContainer: ContainerCore | undefined
 
   ngAfterViewInit (): void {
     this.component = new Tooltip(this.getConfig())
@@ -58,6 +59,7 @@ export class VisTooltipComponent implements TooltipConfigInterface, AfterViewIni
 
   ngOnChanges (changes: SimpleChanges): void {
     this.component?.setConfig(this.getConfig())
+    this.componentContainer?.render()
   }
 
   private getConfig (): TooltipConfigInterface {
