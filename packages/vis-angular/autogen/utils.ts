@@ -180,7 +180,7 @@ export function getImportStatements (
   // We assume that all extend types in generics come from volterra/vis
   const genericExtends = generics.map(g => g.extends).filter(g => g)
   const genericDefaults = generics.map(g => g.default).filter(g => g)
-  const componentTypes = [componentName, `${componentName}ConfigInterface`]
+  const componentTypes = [componentName, `${componentName}ConfigInterface`, 'ContainerCore']
   for (const typeName of [...componentTypes, ...genericExtends, ...genericDefaults]) {
     importSources[typeName] = '@volterra/vis'
   }

@@ -25,8 +25,7 @@ export function getComponentCode (
   provide: string,
   importStatements: { source: string; elements: string[] }[],
   dataType = 'any',
-  kebabCaseName?: string,
-  hasNoRender?: boolean
+  kebabCaseName?: string
 ): string {
   const genericsStr = generics ? `<${generics?.map(g => g.name).join(', ')}>` : ''
   const genericsDefStr = generics
@@ -56,16 +55,21 @@ ${
 
 
   component: ${componentName}${genericsStr} | undefined
+  public componentContainer: ContainerCore | undefined
 
   ngAfterViewInit (): void {
     this.component = new ${componentName}${genericsStr}(this.getConfig())
-    ${dataType ? 'if (this.data) this.component.setData(this.data)' : ''}
+    ${dataType ? `
+      if (this.data) {
+        this.component.setData(this.data)
+        this.componentContainer?.render()
+      }` : ''}
   }
 
   ngOnChanges (changes: SimpleChanges): void {
     ${dataType ? 'if (changes.data) { this.component?.setData(this.data) }' : ''}
     this.component?.setConfig(this.getConfig())
-    ${!hasNoRender ? 'this.component?.render()' : ''}
+    this.componentContainer?.render()
   }
 
   private getConfig (): ${componentName}ConfigInterface${genericsStr} {
