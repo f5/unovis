@@ -28,6 +28,8 @@ export class VisSingleContainerComponent<Data = unknown, C extends ComponentCore
 
   ngAfterViewInit (): void {
     this.chart = new SingleChart<Data>(this.containerRef.nativeElement, this.getConfig(), this.data)
+    // We pass the container for the component to trigger re-render if the data has changed
+    this.visComponent.componentContainer = this.chart
   }
 
   ngOnChanges (changes: SimpleChanges): void {

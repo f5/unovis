@@ -6,6 +6,7 @@ import {
   ContentChild,
   ElementRef,
   AfterViewInit,
+  AfterContentInit,
   Input,
   OnDestroy,
   QueryList,
@@ -24,7 +25,7 @@ import { VisTooltipComponent } from '../../components/tooltip/tooltip.component'
   </div>`,
   styles: ['.container { width: 100%; height: 100%; position: relative; }'],
 })
-export class VisXYContainerComponent<Datum> implements AfterViewInit, OnDestroy {
+export class VisXYContainerComponent<Datum> implements AfterViewInit, AfterContentInit, OnDestroy {
   @ViewChild('container', { static: false }) containerRef: ElementRef
   @ContentChildren(VisXYComponent) visComponents: QueryList<VisXYComponent>
   @ContentChild(VisTooltipComponent) tooltipComponent: VisTooltipComponent
@@ -92,6 +93,15 @@ export class VisXYContainerComponent<Datum> implements AfterViewInit, OnDestroy 
 
   ngAfterViewInit (): void {
     this.chart = new XYContainer<Datum>(this.containerRef.nativeElement, this.getConfig(), this.data)
+    this.passContainerReferenceToChildren()
+  }
+
+  ngAfterContentInit (): void {
+    // QueryList does unsubscribe automatically when it gets destroyed
+    this.visComponents.changes.subscribe(() => {
+      this.passContainerReferenceToChildren()
+      this.chart?.updateContainer(this.getConfig())
+    })
   }
 
   ngOnChanges (changes: SimpleChanges): void {
@@ -144,6 +154,11 @@ export class VisXYContainerComponent<Datum> implements AfterViewInit, OnDestroy 
       yDomainMaxConstraint,
       yRange,
     }
+  }
+
+  passContainerReferenceToChildren (): void {
+    // We set the container for each vis component to trigger chart re-render if the data has changed
+    if (this.chart) this.visComponents.toArray().forEach(c => { c.componentContainer = this.chart })
   }
 
   ngOnDestroy (): void {
