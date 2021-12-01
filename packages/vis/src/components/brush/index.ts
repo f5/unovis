@@ -86,9 +86,14 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
       .attr('y1', yRange[1] + 10)
       .attr('y2', yRange[1] + h - 10)
 
+    // We save the X scale range and set it to the available horizontal space to calculate the selection range in pixels correctly
     const xRange = [0, this._width]
+    const xScaleRange = xScale.range()
+    xScale.range(xRange)
     const selectionMin = clamp(xScale((config.selection || this._selection)?.[0]) ?? 0, xRange[0], xRange[1])
     const selectionMax = clamp(xScale((config.selection || this._selection)?.[1]) ?? 0, xRange[0], xRange[1])
+    xScale.range(xScaleRange) // Restore the X scale range
+
     const selectionLength = selectionMax - selectionMin
     const brushRange = (selectionLength ? [selectionMin, selectionMax] : xRange) as [number, number]
     this._positionHandles(brushRange)
