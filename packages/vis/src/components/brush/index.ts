@@ -178,7 +178,7 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
       // We save the X scale range and set it to the available horizontal space to invert the selection correctly
       const xScaleRange = xScale.range()
       xScale.range(xRange)
-      const selectedDomain = s.map(n => xScale.invert(n)) as [number, number]
+      const selectedDomain = s.map(n => +xScale.invert(n)) as [number, number]
       // Restore the X scale range
       xScale.range(xScaleRange)
 
