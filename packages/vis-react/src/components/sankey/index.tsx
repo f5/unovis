@@ -3,13 +3,17 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Sankey, SankeyConfigInterface, SankeyInputNode, SankeyInputLink } from '@volterra/vis'
 
+// Utils
+import { arePropsEqual } from 'src/utils/react'
+
 // Types
+import { WithSelectors } from 'src/types/react'
 import { VisComponentElement } from 'src/types/dom'
 
 export type VisSankeyProps<N extends SankeyInputNode, L extends SankeyInputLink> = SankeyConfigInterface<N, L> & { data?: any }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export function VisSankey<N extends SankeyInputNode, L extends SankeyInputLink> (props: VisSankeyProps<N, L>): JSX.Element {
+function VisSankeyFC<N extends SankeyInputNode, L extends SankeyInputLink> (props: VisSankeyProps<N, L>): JSX.Element {
   const ref = useRef<VisComponentElement<Sankey<N, L>>>(null)
   const [component] = useState<Sankey<N, L>>(new Sankey(props))
 
@@ -26,4 +30,6 @@ export function VisSankey<N extends SankeyInputNode, L extends SankeyInputLink> 
 
   return <vis-component ref={ref} />
 }
+const memoizedComponent = React.memo(VisSankeyFC, arePropsEqual)
+export const VisSankey = memoizedComponent as WithSelectors<typeof memoizedComponent, typeof Sankey.selectors>
 VisSankey.selectors = Sankey.selectors

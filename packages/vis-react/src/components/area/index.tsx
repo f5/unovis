@@ -3,13 +3,17 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Area, AreaConfigInterface } from '@volterra/vis'
 
+// Utils
+import { arePropsEqual } from 'src/utils/react'
+
 // Types
+import { WithSelectors } from 'src/types/react'
 import { VisComponentElement } from 'src/types/dom'
 
 export type VisAreaProps<Datum> = AreaConfigInterface<Datum> & { data?: Datum[] }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export function VisArea<Datum> (props: VisAreaProps<Datum>): JSX.Element {
+function VisAreaFC<Datum> (props: VisAreaProps<Datum>): JSX.Element {
   const ref = useRef<VisComponentElement<Area<Datum>>>(null)
   const [component] = useState<Area<Datum>>(new Area(props))
 
@@ -26,4 +30,6 @@ export function VisArea<Datum> (props: VisAreaProps<Datum>): JSX.Element {
 
   return <vis-component ref={ref} />
 }
+const memoizedComponent = React.memo(VisAreaFC, arePropsEqual)
+export const VisArea = memoizedComponent as WithSelectors<typeof memoizedComponent, typeof Area.selectors>
 VisArea.selectors = Area.selectors

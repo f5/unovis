@@ -3,13 +3,17 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { TopoJSONMap, TopoJSONMapConfigInterface } from '@volterra/vis'
 
+// Utils
+import { arePropsEqual } from 'src/utils/react'
+
 // Types
+import { WithSelectors } from 'src/types/react'
 import { VisComponentElement } from 'src/types/dom'
 
 export type VisTopoJSONMapProps<AreaDatum, PointDatum, LinkDatum> = TopoJSONMapConfigInterface<AreaDatum, PointDatum, LinkDatum> & { data?: any }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export function VisTopoJSONMap<AreaDatum, PointDatum, LinkDatum> (props: VisTopoJSONMapProps<AreaDatum, PointDatum, LinkDatum>): JSX.Element {
+function VisTopoJSONMapFC<AreaDatum, PointDatum, LinkDatum> (props: VisTopoJSONMapProps<AreaDatum, PointDatum, LinkDatum>): JSX.Element {
   const ref = useRef<VisComponentElement<TopoJSONMap<AreaDatum, PointDatum, LinkDatum>>>(null)
   const [component] = useState<TopoJSONMap<AreaDatum, PointDatum, LinkDatum>>(new TopoJSONMap(props))
 
@@ -26,4 +30,6 @@ export function VisTopoJSONMap<AreaDatum, PointDatum, LinkDatum> (props: VisTopo
 
   return <vis-component ref={ref} />
 }
+const memoizedComponent = React.memo(VisTopoJSONMapFC, arePropsEqual)
+export const VisTopoJSONMap = memoizedComponent as WithSelectors<typeof memoizedComponent, typeof TopoJSONMap.selectors>
 VisTopoJSONMap.selectors = TopoJSONMap.selectors

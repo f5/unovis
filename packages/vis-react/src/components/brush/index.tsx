@@ -3,13 +3,17 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Brush, BrushConfigInterface } from '@volterra/vis'
 
+// Utils
+import { arePropsEqual } from 'src/utils/react'
+
 // Types
+import { WithSelectors } from 'src/types/react'
 import { VisComponentElement } from 'src/types/dom'
 
 export type VisBrushProps<Datum> = BrushConfigInterface<Datum> & { data?: Datum[] }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export function VisBrush<Datum> (props: VisBrushProps<Datum>): JSX.Element {
+function VisBrushFC<Datum> (props: VisBrushProps<Datum>): JSX.Element {
   const ref = useRef<VisComponentElement<Brush<Datum>>>(null)
   const [component] = useState<Brush<Datum>>(new Brush(props))
 
@@ -26,4 +30,6 @@ export function VisBrush<Datum> (props: VisBrushProps<Datum>): JSX.Element {
 
   return <vis-component ref={ref} />
 }
+const memoizedComponent = React.memo(VisBrushFC, arePropsEqual)
+export const VisBrush = memoizedComponent as WithSelectors<typeof memoizedComponent, typeof Brush.selectors>
 VisBrush.selectors = Brush.selectors

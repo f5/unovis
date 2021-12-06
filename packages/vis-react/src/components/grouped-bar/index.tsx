@@ -3,13 +3,17 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { GroupedBar, GroupedBarConfigInterface } from '@volterra/vis'
 
+// Utils
+import { arePropsEqual } from 'src/utils/react'
+
 // Types
+import { WithSelectors } from 'src/types/react'
 import { VisComponentElement } from 'src/types/dom'
 
 export type VisGroupedBarProps<Datum> = GroupedBarConfigInterface<Datum> & { data?: Datum[] }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export function VisGroupedBar<Datum> (props: VisGroupedBarProps<Datum>): JSX.Element {
+function VisGroupedBarFC<Datum> (props: VisGroupedBarProps<Datum>): JSX.Element {
   const ref = useRef<VisComponentElement<GroupedBar<Datum>>>(null)
   const [component] = useState<GroupedBar<Datum>>(new GroupedBar(props))
 
@@ -26,4 +30,6 @@ export function VisGroupedBar<Datum> (props: VisGroupedBarProps<Datum>): JSX.Ele
 
   return <vis-component ref={ref} />
 }
+const memoizedComponent = React.memo(VisGroupedBarFC, arePropsEqual)
+export const VisGroupedBar = memoizedComponent as WithSelectors<typeof memoizedComponent, typeof GroupedBar.selectors>
 VisGroupedBar.selectors = GroupedBar.selectors

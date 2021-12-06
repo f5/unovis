@@ -3,13 +3,17 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Timeline, TimelineConfigInterface } from '@volterra/vis'
 
+// Utils
+import { arePropsEqual } from 'src/utils/react'
+
 // Types
+import { WithSelectors } from 'src/types/react'
 import { VisComponentElement } from 'src/types/dom'
 
 export type VisTimelineProps<Datum> = TimelineConfigInterface<Datum> & { data?: Datum[] }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export function VisTimeline<Datum> (props: VisTimelineProps<Datum>): JSX.Element {
+function VisTimelineFC<Datum> (props: VisTimelineProps<Datum>): JSX.Element {
   const ref = useRef<VisComponentElement<Timeline<Datum>>>(null)
   const [component] = useState<Timeline<Datum>>(new Timeline(props))
 
@@ -26,4 +30,6 @@ export function VisTimeline<Datum> (props: VisTimelineProps<Datum>): JSX.Element
 
   return <vis-component ref={ref} />
 }
+const memoizedComponent = React.memo(VisTimelineFC, arePropsEqual)
+export const VisTimeline = memoizedComponent as WithSelectors<typeof memoizedComponent, typeof Timeline.selectors>
 VisTimeline.selectors = Timeline.selectors

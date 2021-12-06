@@ -3,13 +3,17 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Graph, GraphConfigInterface, GraphInputNode, GraphInputLink } from '@volterra/vis'
 
+// Utils
+import { arePropsEqual } from 'src/utils/react'
+
 // Types
+import { WithSelectors } from 'src/types/react'
 import { VisComponentElement } from 'src/types/dom'
 
 export type VisGraphProps<N extends GraphInputNode, L extends GraphInputLink> = GraphConfigInterface<N, L> & { data?: any }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export function VisGraph<N extends GraphInputNode, L extends GraphInputLink> (props: VisGraphProps<N, L>): JSX.Element {
+function VisGraphFC<N extends GraphInputNode, L extends GraphInputLink> (props: VisGraphProps<N, L>): JSX.Element {
   const ref = useRef<VisComponentElement<Graph<N, L>>>(null)
   const [component] = useState<Graph<N, L>>(new Graph(props))
 
@@ -26,4 +30,6 @@ export function VisGraph<N extends GraphInputNode, L extends GraphInputLink> (pr
 
   return <vis-component ref={ref} />
 }
+const memoizedComponent = React.memo(VisGraphFC, arePropsEqual)
+export const VisGraph = memoizedComponent as WithSelectors<typeof memoizedComponent, typeof Graph.selectors>
 VisGraph.selectors = Graph.selectors

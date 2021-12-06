@@ -3,13 +3,17 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { FreeBrush, FreeBrushConfigInterface } from '@volterra/vis'
 
+// Utils
+import { arePropsEqual } from 'src/utils/react'
+
 // Types
+import { WithSelectors } from 'src/types/react'
 import { VisComponentElement } from 'src/types/dom'
 
 export type VisFreeBrushProps<Datum> = FreeBrushConfigInterface<Datum> & { data?: Datum[] }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export function VisFreeBrush<Datum> (props: VisFreeBrushProps<Datum>): JSX.Element {
+function VisFreeBrushFC<Datum> (props: VisFreeBrushProps<Datum>): JSX.Element {
   const ref = useRef<VisComponentElement<FreeBrush<Datum>>>(null)
   const [component] = useState<FreeBrush<Datum>>(new FreeBrush(props))
 
@@ -26,4 +30,6 @@ export function VisFreeBrush<Datum> (props: VisFreeBrushProps<Datum>): JSX.Eleme
 
   return <vis-component ref={ref} />
 }
+const memoizedComponent = React.memo(VisFreeBrushFC, arePropsEqual)
+export const VisFreeBrush = memoizedComponent as WithSelectors<typeof memoizedComponent, typeof FreeBrush.selectors>
 VisFreeBrush.selectors = FreeBrush.selectors

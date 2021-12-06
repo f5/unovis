@@ -3,13 +3,17 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { XYLabels, XYLabelsConfigInterface } from '@volterra/vis'
 
+// Utils
+import { arePropsEqual } from 'src/utils/react'
+
 // Types
+import { WithSelectors } from 'src/types/react'
 import { VisComponentElement } from 'src/types/dom'
 
 export type VisXYLabelsProps<Datum> = XYLabelsConfigInterface<Datum> & { data?: Datum[] }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export function VisXYLabels<Datum> (props: VisXYLabelsProps<Datum>): JSX.Element {
+function VisXYLabelsFC<Datum> (props: VisXYLabelsProps<Datum>): JSX.Element {
   const ref = useRef<VisComponentElement<XYLabels<Datum>>>(null)
   const [component] = useState<XYLabels<Datum>>(new XYLabels(props))
 
@@ -26,4 +30,6 @@ export function VisXYLabels<Datum> (props: VisXYLabelsProps<Datum>): JSX.Element
 
   return <vis-component ref={ref} />
 }
+const memoizedComponent = React.memo(VisXYLabelsFC, arePropsEqual)
+export const VisXYLabels = memoizedComponent as WithSelectors<typeof memoizedComponent, typeof XYLabels.selectors>
 VisXYLabels.selectors = XYLabels.selectors

@@ -3,13 +3,17 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { StackedBar, StackedBarConfigInterface } from '@volterra/vis'
 
+// Utils
+import { arePropsEqual } from 'src/utils/react'
+
 // Types
+import { WithSelectors } from 'src/types/react'
 import { VisComponentElement } from 'src/types/dom'
 
 export type VisStackedBarProps<Datum> = StackedBarConfigInterface<Datum> & { data?: Datum[] }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export function VisStackedBar<Datum> (props: VisStackedBarProps<Datum>): JSX.Element {
+function VisStackedBarFC<Datum> (props: VisStackedBarProps<Datum>): JSX.Element {
   const ref = useRef<VisComponentElement<StackedBar<Datum>>>(null)
   const [component] = useState<StackedBar<Datum>>(new StackedBar(props))
 
@@ -26,4 +30,6 @@ export function VisStackedBar<Datum> (props: VisStackedBarProps<Datum>): JSX.Ele
 
   return <vis-component ref={ref} />
 }
+const memoizedComponent = React.memo(VisStackedBarFC, arePropsEqual)
+export const VisStackedBar = memoizedComponent as WithSelectors<typeof memoizedComponent, typeof StackedBar.selectors>
 VisStackedBar.selectors = StackedBar.selectors
