@@ -17,13 +17,17 @@ export function getComponentCode (
 import React, { useEffect, useRef, useState } from 'react'
 ${importStatements.map(s => `import { ${s.elements.join(', ')} } from '${s.source}'`).join('\n')}
 
+// Utils
+import { arePropsEqual } from 'src/utils/react'
+
 // Types
+import { WithSelectors } from 'src/types/react'
 import { VisComponentElement } from 'src/types/dom'
 
 export type Vis${componentName}Props${genericsDefStr} = ${componentName}ConfigInterface${genericsStr} & { data?: ${dataType} }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export function Vis${componentName}${genericsDefStr} (props: Vis${componentName}Props${genericsStr}): JSX.Element {
+function Vis${componentName}FC${genericsDefStr} (props: Vis${componentName}Props${genericsStr}): JSX.Element {
   const ref = useRef<VisComponentElement<${componentName}${genericsStr}>>(null)
   const [component] = useState<${componentName}${genericsStr}>(new ${componentName}(props))
 
@@ -40,6 +44,8 @@ export function Vis${componentName}${genericsDefStr} (props: Vis${componentName}
 
   return <vis-${elementSuffix} ref={ref} />
 }
+const memoizedComponent = React.memo(Vis${componentName}FC, arePropsEqual)
+export const Vis${componentName} = memoizedComponent as WithSelectors<typeof memoizedComponent, typeof ${componentName}.selectors>
 Vis${componentName}.selectors = ${componentName}.selectors
 `
 }
