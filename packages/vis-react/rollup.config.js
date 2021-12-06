@@ -8,7 +8,10 @@ import pkg from './package.json'
 const extensions = ['.ts', '.tsx']
 
 // Excluded dependencies
-const external = Object.keys(pkg.devDependencies)
+const external = [
+  ...Object.keys(pkg.devDependencies),
+  'lodash/isEqual',
+]
 
 export default {
   input: ['src/index.ts'],
