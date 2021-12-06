@@ -1,18 +1,21 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 /* eslint-disable @typescript-eslint/naming-convention */
-import React, { ReactNode, useEffect, useRef, useState } from 'react'
+import React, { ReactNode, useEffect, useRef, useState, PropsWithChildren } from 'react'
 import { XYContainer, XYContainerConfigInterface, XYComponentCore, Tooltip, Crosshair, Axis, AxisType } from '@volterra/vis'
+
+// Utils
+import { arePropsEqual } from 'src/utils/react'
 
 // Types
 import { VisComponentElement } from 'src/types/dom'
 
 export type VisXYContainerProps<Datum> = XYContainerConfigInterface<Datum> & {
   data?: Datum[];
-  children?: ReactNode | undefined;
+  className?: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export function VisXYContainer<Datum> (props: VisXYContainerProps<Datum>): JSX.Element {
+export function VisXYContainerFC<Datum> (props: PropsWithChildren<VisXYContainerProps<Datum>>): JSX.Element {
   const container = useRef<HTMLDivElement>(null)
   const [chart, setChart] = useState<XYContainer<Datum>>()
 
@@ -55,8 +58,10 @@ export function VisXYContainer<Datum> (props: VisXYContainerProps<Datum>): JSX.E
   })
 
   return (
-    <div ref={container} style={{ width: '100%', height: '100%', position: 'relative' }}>
+    <div ref={container} className={props.className}>
       {props.children}
     </div>
   )
 }
+
+export const VisXYContainer = React.memo(VisXYContainerFC, arePropsEqual)

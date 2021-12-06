@@ -1,18 +1,20 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 // eslint-disable-next-line no-use-before-define
-import React, { ReactNode, useEffect, useRef, useState } from 'react'
+import React, { ReactNode, useEffect, useRef, useState, PropsWithChildren } from 'react'
 import { SingleChart, SingleChartConfigInterface, ComponentCore, Tooltip } from '@volterra/vis'
+
+// Utils
+import { arePropsEqual } from 'src/utils/react'
 
 // Types
 import { VisComponentElement } from 'src/types/dom'
 
 export type VisSingleContainerProps<Datum> = SingleChartConfigInterface<Datum> & {
   data?: Datum;
-  children?: ReactNode | undefined;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export function VisSingleContainer<Datum> (props: VisSingleContainerProps<Datum>): JSX.Element {
+function VisSingleContainerFC<Datum> (props: PropsWithChildren<VisSingleContainerProps<Datum>>): JSX.Element {
   const container = useRef<HTMLDivElement>(null)
   const [chart, setChart] = useState<SingleChart<Datum>>()
 
@@ -50,3 +52,5 @@ export function VisSingleContainer<Datum> (props: VisSingleContainerProps<Datum>
     </div>
   )
 }
+
+export const VisSingleContainer = React.memo(VisSingleContainerFC, arePropsEqual)
