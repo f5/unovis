@@ -38,7 +38,6 @@
     "@storybook/builder-webpack5": "^6.3.12",
     "@storybook/manager-webpack5": "^6.3.12",
     "@storybook/react": "^6.3.12",
-    "@types/lodash": "^4.14.177",
     "@types/react": "^17.0.22",
     "babel-loader": "^8.2.2",
     "react": ">=16.8.0",
