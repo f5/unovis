@@ -9,11 +9,40 @@ import { VisBulletLegend } from '@volterra/vis-react/html-components/bullet-lege
 import { DataRecord, generateDataRecords } from '../data/time-series'
 const data = generateDataRecords(15)
 
-<Meta title="Full Charts / Area Chart ✍️" component={VisXYContainer} />
+<Meta title="Charts / How To: Area Chart ✍️" component={VisXYContainer} />
 
 ###### ✍️ This story is Work in Progress
 
 # XY Container + Area + Tooltip + Crosshair
+
+In the most cases you'll be composing your chart using a Container component (like `XYContainer`) and multiple
+primitives (like `Area`, `Tooltip`, `Crosshair`, etc ...). This story shows you how to create a simple Area Chart with
+a Bulled Legend.
+
+```tsx
+// Import container, primitives and additional constants if needed
+import { VisXYContainer, VisArea, VisAxis, VisCrosshair, VisTooltip, VisBulletLegend } from '@volterra/vis-react'
+import { TextAlign } from '@volterra/vis'
+
+// Use them in your JSX
+<VisBulletLegend items={[{ name: "Inbound" }, { name: "Outbound", inactive: true }]} />
+<VisXYContainer data={data} margin={{ top: 5, left: 5 }}>
+  <VisArea
+    x={d => d.x}
+    y={d => d.y}
+    events={{
+      [VisArea.selectors.area]: {
+        click: (data) => console.log('clicked', data),
+        mouseover: (data) => console.log('hovered', data),
+      },
+    }}
+  />
+  <VisAxis type='x' numTicks={5} tickFormat={(x) => `${x}ms`} tickTextAlign={TextAlign.Left}/>
+  <VisAxis type='y' tickFormat={(y) => `${y}bps`}/>
+  <VisTooltip />
+  <VisCrosshair template={d => `${d.x}, ${d.y.toFixed(2)}`}/>
+</VisXYContainer>
+```
 
 <Canvas>
   <Story name="Area Chart">
@@ -36,7 +65,3 @@ const data = generateDataRecords(15)
     </VisXYContainer>
   </Story>
 </Canvas>
-
-### Component Props
-<ArgsTable of={VisXYContainer} />
-
