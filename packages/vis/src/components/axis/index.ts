@@ -37,6 +37,7 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
   private _axisSizeBBox: SVGRect
   private _requiredMargin: Spacing
   private _defaultNumTicks = 3
+  private _minMaxTicksOnlyEnforceWidth = 250
 
   events = {
     [Axis.selectors.tick]: {
@@ -247,12 +248,12 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
     const scale = type === AxisType.X ? this.xScale : this.yScale
     const scaleDomain = scale?.domain()
 
-    if (minMaxTicksOnly) {
-      return scaleDomain as number[]
-    }
-
     if (tickValues) {
       return tickValues.filter(v => (v >= scaleDomain[0]) && (v <= scaleDomain[1]))
+    }
+
+    if (minMaxTicksOnly || (type === AxisType.X && this._width < this._minMaxTicksOnlyEnforceWidth)) {
+      return scaleDomain as number[]
     }
 
     return null
