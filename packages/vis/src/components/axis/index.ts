@@ -34,7 +34,7 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
   gridGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
 
   private _axisRawBBox: DOMRect
-  private _axisSize: { width: number; height: number }
+  private _axisSizeBBox: SVGRect
   private _requiredMargin: Spacing
   private _defaultNumTicks = 3
 
@@ -69,8 +69,8 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
 
     // Render label and store total axis size and required margins
     this._renderAxisLabel(axisRenderHelperGroup)
-    this._axisSize = this._getSize(axisRenderHelperGroup)
-    this._requiredMargin = this._getRequiredMargin(this._axisSize)
+    this._axisSizeBBox = this._getAxisSize(axisRenderHelperGroup)
+    this._requiredMargin = this._getRequiredMargin(this._axisSizeBBox)
 
     axisRenderHelperGroup.remove()
   }
@@ -80,28 +80,21 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
     return (position ?? ((type === AxisType.X) ? Position.Bottom : Position.Left)) as Position
   }
 
-  _getSize (selection): { width: number; height: number } {
-    const { width, height } = selection.node().getBBox()
-
-    return {
-      width: width,
-      height: height,
-    }
+  _getAxisSize (selection: Selection<SVGGElement, unknown, SVGGElement, undefined>): SVGRect {
+    const bBox = selection.node().getBBox()
+    return bBox
   }
 
-  _getRequiredMargin (axisSize = this._axisSize): Spacing {
-    const { config: { type, position, tickTextAlign } } = this
+  _getRequiredMargin (axisSize = this._axisSizeBBox): Spacing {
+    const { config: { type, position } } = this
 
     switch (type) {
       case AxisType.X: {
-        const bleedX = axisSize.width > this._width ? (axisSize.width - this._width) / 2 : 0
-        const left = ((tickTextAlign === TextAlign.Left) ? 0
-          : (tickTextAlign === TextAlign.Right) ? 2 * bleedX
-            : bleedX)
+        const tolerancePx = 1
+        const xEnd = this._axisSizeBBox.x + this._axisSizeBBox.width
 
-        const right = ((tickTextAlign === TextAlign.Left) ? 2 * bleedX
-          : (tickTextAlign === TextAlign.Right) ? 0
-            : bleedX)
+        const left = this._axisSizeBBox.x < 0 ? Math.abs(this._axisSizeBBox.x) : 0
+        const right = (xEnd - this._width) > tolerancePx ? xEnd - this._width : 0
 
         switch (position) {
           case Position.Top: return { top: axisSize.height, left, right }
