@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { css, injectGlobal } from 'emotion'
+import { css, injectGlobal } from '@emotion/css'
 
 // Inject Leaflet global style
 // eslint-disable-next-line
@@ -10,20 +10,20 @@ export const variables = injectGlobal`
   :root {
     --vis-map-container-background-color: #dfe5eb;
     --vis-map-label-font-family: var(--vis-font-family);
-    
+
     --vis-map-point-default-fill-color: #B9BEC3;
     --vis-map-point-default-stroke-color: #959da3;
     --vis-map-point-default-stroke-width: 0px;
     --vis-map-point-default-cursor: default;
-    
+
     --vis-map-cluster-default-fill-color: #fff;
     --vis-map-cluster-default-stroke-color: #B9BEC3;
     --vis-map-cluster-default-stroke-width: 1.5px;
     --vis-map-cluster-donut-fill-color: #959da3;
-    
+
     --vis-map-point-label-text-color-dark: #5b5f6d;
     --vis-map-point-label-text-color-light: #fff;
-        
+
     --vis-map-cluster-expanded-background-fill: #fff;
   }
 `

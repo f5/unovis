@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { css, injectGlobal } from 'emotion'
+import { css, injectGlobal } from '@emotion/css'
 
 export const variables = injectGlobal`
   :root {
@@ -14,13 +14,13 @@ export const variables = injectGlobal`
     --vis-graph-node-icon-font: FontAwesome;
     --vis-graph-node-icon-fill-color-bright: #ffffff;
     --vis-graph-node-icon-fill-color-dark: #9ea7b8;
-    
+
     /* Node Bottom Icon */
     --vis-graph-node-bottom-icon-font-size: 14pt;
     --vis-graph-node-bottom-icon-fill-color: #a0a6ad;
     --vis-graph-node-bottom-icon-stroke-color: #fff;
     --vis-graph-node-bottom-icon-stroke-width: 2px;
-    
+
     /* Node Label */
     --vis-graph-node-label-font-size: 9pt;
     --vis-graph-node-label-background: #ffffff;
@@ -67,7 +67,7 @@ export const nodeIcon = css`
 `
 
 export const nodeBottomIcon = css`
-  label: node-bottom-icon; 
+  label: node-bottom-icon;
   font-family: var(--vis-graph-node-icon-font), var(--vis-font-family);;
   font-size: var(--vis-graph-node-bottom-icon-font-size);
   dominant-baseline: middle;
@@ -142,7 +142,7 @@ export const sideLabel = css`
 `
 
 export const sideLabelGroup = css`
-  label: side-label-group; 
+  label: side-label-group;
   cursor: default;
 `
 
@@ -218,7 +218,7 @@ export const customNode = css`
 
 export const greyoutNode = css`
   label: greyout;
-  
+
   ${`.${node}`} {
     fill: var(--vis-graph-node-greyout-color) !important;
     stroke: var(--vis-graph-node-greyout-color) !important;

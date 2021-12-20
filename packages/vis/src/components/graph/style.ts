@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { css } from 'emotion'
+import { css } from '@emotion/css'
 
 // Nodes
 import * as nodeSelectors from './modules/node/style'

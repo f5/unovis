@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { css, injectGlobal } from 'emotion'
+import { css, injectGlobal } from '@emotion/css'
 
 export const variables = injectGlobal`
   :root {
@@ -14,14 +14,14 @@ export const brush = css`
   label: brush;
   fill: none;
   stroke: none;
-  
+
   .selection {
     fill: none;
     stroke: var(--vis-brush-selection-stroke);
     stroke-width: 0;
     stroke-opacity: 0;
   }
-  
+
   .handle {
     fill: var(--vis-brush-handle-fill);
   }

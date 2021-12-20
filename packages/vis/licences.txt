@@ -1,5 +1,6 @@
 name                           license period  license type  installed version  author
 ----                           --------------  ------------  -----------------  ------
+@emotion/css                   perpetual       MIT           11.7.1             Kye Hohenberger
 @juggle/resize-observer        perpetual       Apache-2.0    3.3.1              Juggle
 @maplibre/maplibre-gl-leaflet  perpetual       ISC           0.0.15             n/a
 d3                             perpetual       ISC           7.2.1              Mike Bostock
@@ -7,7 +8,6 @@ d3-collection                  perpetual       BSD-3-Clause  1.0.7              
 d3-interpolate-path            perpetual       BSD-3-Clause  2.2.3              Peter Beshai
 d3-sankey                      perpetual       BSD-3-Clause  0.12.3             Mike Bostock
 dagre-layout                   perpetual       MIT           0.8.8              Tyler Long
-emotion                        perpetual       MIT           10.0.27            Kye Hohenberger
 geojson                        perpetual       MIT           0.5.0              Casey Cesari
 graphlibrary                   perpetual       MIT           2.2.0              Tyler Long
 leaflet                        perpetual       BSD-2-Clause  1.7.1              n/a

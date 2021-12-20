@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { css, injectGlobal, keyframes } from 'emotion'
+import { css, injectGlobal, keyframes } from '@emotion/css'
 
 export const variables = injectGlobal`
   :root {
@@ -7,7 +7,7 @@ export const variables = injectGlobal`
     --vis-graph-link-label-stroke-color: #fff;
     --vis-graph-link-label-text-color: #fff;
     --vis-graph-link-label-fill-color: #e6e9f3;
-    
+
     --vis-graph-link-support-stroke-width: 10px;
   }
 `
@@ -47,7 +47,7 @@ const dash = keyframes`
 
 export const linkDashed = css`
   label: dashed;
-  
+
   ${`.${link}`}, ${`.${linkSupport}`} {
     animation: ${dash} 15s linear infinite;
     stroke-dasharray: 6 6;

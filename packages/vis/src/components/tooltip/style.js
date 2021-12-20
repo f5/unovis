@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { css, injectGlobal } from 'emotion'
+import { css, injectGlobal } from '@emotion/css'
 
 export const variables = injectGlobal`
   :root {
@@ -24,7 +24,7 @@ export const tooltip = css`
   z-index: 999999;
   padding: var(--vis-tooltip-padding);
   transform: translate(0, -5px);
-  
+
   /* object-fit: contain; */
   border-radius: 5px;
   box-shadow: 0 13px 25px 0 rgba(172, 179, 184, 0.35);

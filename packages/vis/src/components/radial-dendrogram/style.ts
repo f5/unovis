@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { css, injectGlobal } from 'emotion'
+import { css, injectGlobal } from '@emotion/css'
 
 export const variables = injectGlobal`
   :root {
@@ -26,7 +26,7 @@ export const gLabel = css`
 
 export const label = css`
   label: label;
-  
+
   &, tspan {
     font-family: var(--vis-radial-dendrogram-label-font-family);
   }

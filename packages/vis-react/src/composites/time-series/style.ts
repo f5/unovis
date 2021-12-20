@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { css } from 'emotion'
+import { css } from '@emotion/css'
 
 export const timeSeriesContainer = css`
   position: relative;

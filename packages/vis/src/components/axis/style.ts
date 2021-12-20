@@ -1,6 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-
-import { css, injectGlobal } from 'emotion'
+import { css, injectGlobal } from '@emotion/css'
 
 export const global = injectGlobal`
   :root {
@@ -46,7 +45,7 @@ export const axis = css`
 
 export const grid = css`
   label: grid;
-  
+
   .domain {
     opacity: 0;
   }

@@ -19,8 +19,8 @@
     "@volterra:registry": "https://gitlab.com/api/v4/projects/31255670/packages/npm/"
   },
   "peerDependencies": {
+    "@emotion/css": "^11.7.1",
     "@volterra/vis": "^0.9.14",
-    "emotion": "^10.0.27",
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0"
   },
@@ -30,6 +30,7 @@
     "@babel/preset-env": "^7.15.6",
     "@babel/preset-react": "^7.14.5",
     "@babel/preset-typescript": "^7.15.0",
+    "@emotion/css": "^11.7.1",
     "@rollup/plugin-babel": "^5.3.0",
     "@rollup/plugin-node-resolve": "^13.0.4",
     "@storybook/addon-actions": "^6.3.12",
@@ -40,7 +41,6 @@
     "@storybook/manager-webpack5": "^6.3.12",
     "@storybook/react": "^6.3.12",
     "@types/react": "^17.0.22",
-    "emotion": "^10.0.27",
     "babel-loader": "^8.2.2",
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0",

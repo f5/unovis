@@ -3,7 +3,7 @@ import L from 'leaflet'
 import mapLibreGL from 'maplibre-gl'
 import '@maplibre/maplibre-gl-leaflet/leaflet-maplibre-gl'
 
-import { injectGlobal } from 'emotion'
+import { injectGlobal } from '@emotion/css'
 
 // Inject MapLibreGL global style
 // eslint-disable-next-line

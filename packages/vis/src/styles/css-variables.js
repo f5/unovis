@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { injectGlobal } from 'emotion'
+import { injectGlobal } from '@emotion/css'
 import { colors, getCSSColorVariable } from './colors'
 
 export const variables = injectGlobal`

@@ -6,6 +6,7 @@ lodash                                   perpetual       MIT           4.17.21  
 @babel/preset-env                        perpetual       MIT           7.15.6             The Babel Team (https://babel.dev/team)
 @babel/preset-react                      perpetual       MIT           7.14.5             The Babel Team (https://babel.dev/team)
 @babel/preset-typescript                 perpetual       MIT           7.15.0             The Babel Team (https://babel.dev/team)
+@emotion/css                             perpetual       MIT           11.7.1             Kye Hohenberger
 @rollup/plugin-babel                     perpetual       MIT           5.3.0              Rich Harris
 @rollup/plugin-node-resolve              perpetual       MIT           13.0.4             Rich Harris
 @storybook/addon-actions                 perpetual       MIT           6.3.12             n/a
@@ -16,7 +17,6 @@ lodash                                   perpetual       MIT           4.17.21  
 @storybook/manager-webpack5              perpetual       MIT           6.3.12             n/a
 @storybook/react                         perpetual       MIT           6.3.12             n/a
 @types/react                             perpetual       MIT           17.0.22            n/a
-emotion                                  perpetual       MIT           10.0.27            Kye Hohenberger
 babel-loader                             perpetual       MIT           8.2.2              Luis Couto <hello@luiscouto.pt>
 react                                    perpetual       MIT           >=16.8.0           n/a
 react-dom                                perpetual       MIT           >=16.8.0           n/a
