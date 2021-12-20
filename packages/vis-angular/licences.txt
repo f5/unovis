@@ -21,6 +21,6 @@ karma-coverage                 perpetual       MIT           2.0.3              
 karma-jasmine                  perpetual       MIT           4.0.0              Vojta Jina
 karma-jasmine-html-reporter    perpetual       MIT           1.5.0              n/a
 ng-packagr                     perpetual       MIT           12.0.0             David Herges
-rollup                         perpetual       MIT           2.57.0             Rich Harris
-rollup-plugin-typescript2      perpetual       MIT           0.30.0             @ezolenko
-ttypescript                    perpetual       MIT           1.5.12             cevek
+rollup                         perpetual       MIT           2.61.1             Rich Harris
+rollup-plugin-typescript2      perpetual       MIT           0.31.1             @ezolenko
+ttypescript                    perpetual       MIT           1.5.13             cevek

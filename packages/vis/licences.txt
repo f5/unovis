@@ -2,9 +2,6 @@ name                           license period  license type  installed version  
 ----                           --------------  ------------  -----------------  ------
 @juggle/resize-observer        perpetual       Apache-2.0    3.3.1              Juggle
 @maplibre/maplibre-gl-leaflet  perpetual       ISC           0.0.15             n/a
-@types/geojson                 perpetual       MIT           7946.0.7           n/a
-@types/topojson                perpetual       MIT           3.2.2              n/a
-@types/topojson-specification  perpetual       MIT           1.0.2              n/a
 d3                             perpetual       ISC           7.2.1              Mike Bostock
 d3-collection                  perpetual       BSD-3-Clause  1.0.7              Mike Bostock
 d3-interpolate-path            perpetual       BSD-3-Clause  2.2.3              Peter Beshai
@@ -15,26 +12,28 @@ geojson                        perpetual       MIT           0.5.0              
 graphlibrary                   perpetual       MIT           2.2.0              Tyler Long
 leaflet                        perpetual       BSD-2-Clause  1.7.1              n/a
 lodash                         perpetual       MIT           4.17.21            John-David Dalton
-maplibre-gl                    perpetual       BSD-3-Clause  v1.15.2            n/a
-supercluster                   perpetual       ISC           7.1.0              Vladimir Agafonkin
+maplibre-gl                    perpetual       BSD-3-Clause  1.15.2             n/a
+supercluster                   perpetual       ISC           7.1.4              Vladimir Agafonkin
 tangram                        perpetual       MIT           0.21.1             Tangram contributors
-three                          perpetual       MIT           0.129.0            mrdoob
+three                          perpetual       MIT           0.135.0            mrdoob
 topojson-client                perpetual       ISC           3.1.0              Mike Bostock
 tslib                          perpetual       0BSD          2.3.1              Microsoft Corp.
 @rollup/plugin-json            perpetual       MIT           4.1.0              rollup
 @types/d3                      perpetual       MIT           7.1.0              n/a
-@types/leaflet                 perpetual       MIT           1.5.19             n/a
+@types/leaflet                 perpetual       MIT           1.7.6              n/a
 @types/mapbox-gl-leaflet       perpetual       MIT           0.0.1              n/a
 @types/supercluster            perpetual       MIT           5.0.2              n/a
-@types/three                   perpetual       MIT           0.125.1            n/a
+@types/geojson                 perpetual       MIT           7946.0.8           n/a
+@types/topojson                perpetual       MIT           3.2.3              n/a
 @types/topojson-client         perpetual       MIT           3.0.0              n/a
-@typescript-eslint/parser      perpetual       BSD-2-Clause  4.2.0              n/a
+@types/topojson-specification  perpetual       MIT           1.0.2              n/a
+@types/three                   perpetual       MIT           0.135.0            n/a
 @zerollup/ts-transform-paths   perpetual       MIT           1.7.18             Stefan Zerkalica
 rimraf                         perpetual       ISC           3.0.2              Isaac Z. Schlueter
-rollup                         perpetual       MIT           2.57.0             Rich Harris
+rollup                         perpetual       MIT           2.61.1             Rich Harris
 rollup-plugin-commonjs         perpetual       MIT           10.1.0             Rich Harris
 rollup-plugin-node-resolve     perpetual       MIT           5.2.0              Rich Harris
 rollup-plugin-postcss          perpetual       MIT           4.0.1              EGOIST
 rollup-plugin-terser           perpetual       MIT           7.0.2              Bogdan Chadkin
-rollup-plugin-typescript2      perpetual       MIT           0.30.0             @ezolenko
+rollup-plugin-typescript2      perpetual       MIT           0.31.1             @ezolenko
 rollup-plugin-visualizer       perpetual       MIT           4.2.2              Denis Bardadym
