@@ -8,10 +8,13 @@ import pkg from './package.json'
 const extensions = ['.ts', '.tsx']
 
 // Excluded dependencies
-const external = [
+const externals = [
   ...Object.keys(pkg.devDependencies),
   'lodash/isEqual',
 ]
+
+const regexesOfPackages = externals // To prevent having node_modules in the build files
+  .map(packageName => new RegExp(`^${packageName}(/.*)?`))
 
 export default {
   input: ['src/index.ts'],
@@ -20,6 +23,7 @@ export default {
     sourcemap: true,
     format: 'esm',
     preserveModules: true,
+    preserveModulesRoot: './src',
   },
   plugins: [
     peerDepsExternal(),
@@ -32,5 +36,5 @@ export default {
       include: extensions.map(ext => `src/**/*${ext}`),
     }),
   ],
-  external,
+  external: regexesOfPackages,
 }
