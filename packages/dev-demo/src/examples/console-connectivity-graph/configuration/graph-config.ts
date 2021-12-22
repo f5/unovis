@@ -22,6 +22,7 @@ export const accessors: GraphConfigInterface<any, any> = {
   nodeSideLabels: d => d.sideLabels,
   nodeDisabled: d => d.disabled,
   nodeFill: d => d.fill || 'white',
+  nodeEnterPosition: d => d.enterPosition,
   linkArrow: d => d.linkArrow,
   linkFlow: d => d.linkFlow,
   linkLabel: d => d.linkLabel,

@@ -45,6 +45,10 @@ export class ConnectivityGraphComponent implements AfterViewInit {
         ))
     )
 
+    nodes.forEach(n => {
+      n.enterPosition = [d.x, d.y]
+    })
+
     this.drilldownData = { nodes: nodes.concat(connectedNodes), links: drilldownLinks }
     this.config = drilldownConfig()
     this.chart.updateComponent(this.config)
