@@ -62,7 +62,7 @@ export const range = _range
 
 export function getValue<T, ReturnType> (
   d: T,
-  accessor: NumericAccessor<T> | StringAccessor<T> | BooleanAccessor<T> | ColorAccessor<T> | GenericAccessor<T, ReturnType>,
+  accessor: NumericAccessor<T> | StringAccessor<T> | BooleanAccessor<T> | ColorAccessor<T> | GenericAccessor<ReturnType, T>,
   index?: number
 ): ReturnType {
   // eslint-disable-next-line @typescript-eslint/ban-types
