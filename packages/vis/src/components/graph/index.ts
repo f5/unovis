@@ -260,7 +260,7 @@ export class Graph<
 
     const nodes: GraphNode<N>[] = datamodel.nodes
     const nodeGroups = this._nodesGroup
-      .selectAll(`.${nodeSelectors.gNode}`)
+      .selectAll(`.${nodeSelectors.gNode}:not(.${nodeSelectors.gNodeExit})`)
       .data(nodes, (d: GraphNode<N>) => String(d._id))
 
     const nodeGroupsEnter = nodeGroups.enter().append('g')
@@ -273,7 +273,7 @@ export class Graph<
 
     const nodesGroupExit: Selection<BaseType, GraphNode<N>, SVGGElement, GraphNode<N>> = nodeGroups.exit()
     nodesGroupExit
-      .attr('class', nodeSelectors.gNodeExit)
+      .classed(nodeSelectors.gNodeExit, true)
       .call(removeNodes, config, duration)
 
     // eslint-disable-next-line @typescript-eslint/no-this-alias
