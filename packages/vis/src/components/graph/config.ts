@@ -141,6 +141,14 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   nodeStroke?: ColorAccessor<N>;
   /** Sorting function to determine node placement. Default: `undefined` */
   nodeSort?: ((a: N, b: N) => number);
+  /** Specify the initial position for entering nodes as [x, y]. Default: `undefined` */
+  nodeEnterPosition?: GenericAccessor<[number, number], N> | undefined;
+  /** Specify the initial scale for entering nodes in the range [0,1]. Default: `0.75` */
+  nodeEnterScale?: NumericAccessor<N> | undefined;
+  /** Specify the destination position for exiting nodes as [x, y]. Default: `undefined` */
+  nodeExitPosition?: GenericAccessor<[number, number], N> | undefined;
+  /** Specify the destination scale for exiting nodes in the range [0,1]. Default: `0.75` */
+  nodeExitScale?: NumericAccessor<N> | undefined;
   /** Set selected node by unique id. Default: `undefined` */
   selectedNodeId?: number | string;
 
@@ -206,6 +214,10 @@ export class GraphConfig<N extends GraphInputNode, L extends GraphInputLink> ext
   nodeFill = (n: N): string => n['fill']
   nodeStrokeSegmentFill = undefined
   nodeStroke = (n: N): string => n['stroke']
+  nodeEnterPosition = undefined
+  nodeEnterScale = 0.75
+  nodeExitPosition = undefined
+  nodeExitScale = 0.75
   nodeSort = undefined
 
   selectedNodeId = undefined

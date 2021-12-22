@@ -51,7 +51,14 @@ export function createNodes<N extends GraphInputNode, L extends GraphInputLink> 
     const element = elements[i]
     const group = select(element)
     group
-      .attr('transform', d => `rotate(0) translate(${getX(d as GraphNode<N, L>)}, ${getY(d as GraphNode<N, L>)}) scale(0)`)
+      .attr('transform', (d: GraphNode<N, L>) => {
+        const configuredPosition = getValue<GraphNode<N, L>, [number, number] | undefined>(d, config.nodeEnterPosition)
+        const scale = getNumber(d, config.nodeEnterScale) ?? 0
+        const x = configuredPosition?.[0] ?? getX(d)
+        const y = configuredPosition?.[1] ?? getY(d)
+        return `translate(${x}, ${y}) scale(${scale})`
+      })
+      .attr('opacity', 0)
 
     const shape = getString(d, nodeShape)
     /** Todo: The 'nodeShape' storing logic below it a temporary fix, needs a cleaner implementation */
@@ -274,7 +281,7 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
   updateSelectedNodes(selection, config)
 
   return smartTransition(selection, duration)
-    .attr('transform', d => `rotate(0) translate(${getX(d)}, ${getY(d)}) scale(1)`)
+    .attr('transform', d => `translate(${getX(d)}, ${getY(d)}) scale(1)`)
     .attr('opacity', 1)
 }
 
@@ -285,7 +292,13 @@ export function removeNodes<N extends GraphInputNode, L extends GraphInputLink> 
 ): void {
   smartTransition(selection, duration / 2)
     .attr('opacity', 0)
-    // .attr('transform', d => 'scale(0)')
+    .attr('transform', d => {
+      const configuredPosition = getValue<GraphNode<N, L>, [number, number] | undefined>(d, config.nodeExitPosition)
+      const scale = getNumber(d, config.nodeExitScale) ?? 0
+      const x = configuredPosition?.[0] ?? getX(d)
+      const y = configuredPosition?.[1] ?? getY(d)
+      return `translate(${x}, ${y}) scale(${scale})`
+    })
     .remove()
 }
 
