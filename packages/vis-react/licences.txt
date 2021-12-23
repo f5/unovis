@@ -3,13 +3,13 @@ name                              license period  license type  installed versio
 lodash                            perpetual       MIT           4.17.21            John-David Dalton
 @emotion/css                      perpetual       MIT           11.7.1             Kye Hohenberger
 @rollup/plugin-node-resolve       perpetual       MIT           13.0.4             Rich Harris
-@storybook/addon-actions          perpetual       MIT           6.3.12             n/a
-@storybook/addon-docs             perpetual       MIT           6.3.12             n/a
-@storybook/addon-essentials       perpetual       MIT           6.3.12             n/a
-@storybook/addon-links            perpetual       MIT           6.3.12             n/a
-@storybook/builder-webpack5       perpetual       MIT           6.3.12             n/a
-@storybook/manager-webpack5       perpetual       MIT           6.3.12             n/a
-@storybook/react                  perpetual       MIT           6.3.12             n/a
+@storybook/addon-actions          perpetual       MIT           6.4.9              n/a
+@storybook/addon-docs             perpetual       MIT           6.4.9              n/a
+@storybook/addon-essentials       perpetual       MIT           6.4.9              n/a
+@storybook/addon-links            perpetual       MIT           6.4.9              n/a
+@storybook/builder-webpack5       perpetual       MIT           6.4.9              n/a
+@storybook/manager-webpack5       perpetual       MIT           6.4.9              n/a
+@storybook/react                  perpetual       MIT           6.4.9              n/a
 @types/react                      perpetual       MIT           17.0.22            n/a
 @zerollup/ts-transform-paths      perpetual       MIT           1.7.18             Stefan Zerkalica
 react                             perpetual       MIT           >=16.8.0           n/a

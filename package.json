@@ -32,7 +32,6 @@
     "gather-licenses": "for p in packages/*; do npx license-report --package=$p/package.json --config license-report-config.json --output=table > $p/licences.txt; done"
   },
   "devDependencies": {
-    "@storybook/manager-webpack5": "^6.3.12",
     "@types/node": "^16.11.14",
     "@typescript-eslint/eslint-plugin": "^5.8.0",
     "@typescript-eslint/parser": "^5.8.0",
