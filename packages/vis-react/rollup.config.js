@@ -1,7 +1,8 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import babel from '@rollup/plugin-babel'
 import resolve from '@rollup/plugin-node-resolve'
 import peerDepsExternal from 'rollup-plugin-peer-deps-external'
+import typescript from 'rollup-plugin-typescript2'
+import transformPaths from '@zerollup/ts-transform-paths'
 import pkg from './package.json'
 
 // Array of extensions to be handled by babel
@@ -30,10 +31,9 @@ export default {
     resolve({
       extensions,
     }),
-    babel({
-      extensions,
-      babelHelpers: 'inline',
-      include: extensions.map(ext => `src/**/*${ext}`),
+    typescript({
+      typescript: require('typescript'),
+      transformers: [(service) => transformPaths(service.getProgram())],
     }),
   ],
   external: regexesOfPackages,
