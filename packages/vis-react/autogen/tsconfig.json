@@ -5,5 +5,8 @@
     "strictNullChecks": false,
     "strictPropertyInitialization": false,
     "declaration": false,
+    "types": [
+      "node"
+    ],
   }
 }

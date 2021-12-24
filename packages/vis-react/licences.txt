@@ -11,6 +11,7 @@ lodash                            perpetual       MIT           4.17.21         
 @storybook/manager-webpack5       perpetual       MIT           6.4.9              n/a
 @storybook/react                  perpetual       MIT           6.4.9              n/a
 @types/react                      perpetual       MIT           17.0.22            n/a
+@types/node                       perpetual       MIT           16.11.17           n/a
 @zerollup/ts-transform-paths      perpetual       MIT           1.7.18             Stefan Zerkalica
 react                             perpetual       MIT           >=16.8.0           n/a
 react-dom                         perpetual       MIT           >=16.8.0           n/a
