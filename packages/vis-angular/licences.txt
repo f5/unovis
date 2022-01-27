@@ -5,13 +5,13 @@ tslib                          perpetual       0BSD          2.3.1              
 @angular/cli                   perpetual       MIT           12.0.3             Angular Authors
 @angular/compiler-cli          perpetual       MIT           12.0.3             n/a
 @compodoc/compodoc             perpetual       MIT           1.1.11             Vindent Ogloblinsky
-@storybook/addon-actions       perpetual       MIT           6.4.9              n/a
-@storybook/addon-docs          perpetual       MIT           6.4.9              n/a
-@storybook/addon-essentials    perpetual       MIT           6.4.9              n/a
-@storybook/addon-links         perpetual       MIT           6.4.9              n/a
-@storybook/angular             perpetual       MIT           6.4.9              n/a
-@storybook/builder-webpack5    perpetual       MIT           6.4.9              n/a
-@storybook/manager-webpack5    perpetual       MIT           6.4.9              n/a
+@storybook/addon-actions       perpetual       MIT           6.3.13             n/a
+@storybook/addon-docs          perpetual       MIT           6.3.13             n/a
+@storybook/addon-essentials    perpetual       MIT           6.3.13             n/a
+@storybook/addon-links         perpetual       MIT           6.3.13             n/a
+@storybook/angular             perpetual       MIT           6.3.13             n/a
+@storybook/builder-webpack5    perpetual       MIT           6.3.13             n/a
+@storybook/manager-webpack5    perpetual       MIT           6.3.13             n/a
 @types/jasmine                 perpetual       MIT           3.6.0              n/a
 @types/node                    perpetual       MIT           12.11.1            n/a
 jasmine-core                   perpetual       MIT           3.7.0              n/a
