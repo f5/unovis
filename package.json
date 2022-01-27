@@ -29,7 +29,8 @@
     "publish:all": "sh prepublish.sh && sh publish.sh",
     "lint": "eslint ./ --ext .js,.jsx,.ts,.tsx --ignore-path .gitignore",
     "lint:fix": "eslint ./ --ext .js,.jsx,.ts,.tsx --fix --ignore-path .gitignore",
-    "gather-licenses": "for p in packages/*; do npx license-report --package=$p/package.json --config license-report-config.json --output=table > $p/licences.txt; done"
+    "gather-licenses": "for p in packages/*; do npx license-report --package=$p/package.json --config license-report-config.json --output=table > $p/licences.txt; done",
+    "install:clean": "for p in packages/*; do rm -rf $p/node_modules; done; rm -rf node_modules; npm i"
   },
   "devDependencies": {
     "@types/node": "^16.11.14",
