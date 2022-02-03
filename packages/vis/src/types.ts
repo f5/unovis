@@ -1,10 +1,11 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
+/* eslint-disable max-len */
 // Global Types
 export { NumericAccessor, StringAccessor, ColorAccessor, BooleanAccessor, GenericAccessor } from 'types/accessor'
 export { CurveType } from 'types/curve'
 export { SymbolType } from 'types/symbol'
 export { Scale } from 'types/scale'
-export { Position, PositionStrategy, Arrangement } from 'types/position'
+export { Position, PositionStrategy, Arrangement, Orientation } from 'types/position'
 export { Shape } from 'types/shape'
 export { Sizing } from 'types/component'
 export { TrimMode, VerticalAlign, FitMode, TextAlign } from 'types/text'

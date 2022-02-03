@@ -3,6 +3,7 @@ import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component
 
 // Types
 import { StringAccessor } from 'types/accessor'
+import { Orientation } from 'types/position'
 
 export interface StackedBarConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
   /** Force set bar width in pixels. Default: `undefined` */
@@ -25,6 +26,8 @@ export interface StackedBarConfigInterface<Datum> extends XYComponentConfigInter
    * Everything equal to barMinHeightZeroValue will not be rendered on the chart.
    * Default: `null` */
   barMinHeightZeroValue?: any;
+  /** Chart orientation: `Orientation.Vertical` or `Orientation.Horizontal`. Default `Orientation.Vertical` */
+  orientation?: Orientation;
 }
 
 export class StackedBarConfig<Datum> extends XYComponentConfig<Datum> implements StackedBarConfigInterface<Datum> {
@@ -36,4 +39,5 @@ export class StackedBarConfig<Datum> extends XYComponentConfig<Datum> implements
   cursor = null
   barMinHeight = false
   barMinHeightZeroValue = null
+  orientation = Orientation.Vertical
 }

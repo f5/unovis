@@ -17,3 +17,8 @@ export enum Arrangement {
   Inside = 'inside',
   Outside = 'outside',
 }
+
+export enum Orientation {
+  Horizontal = 'horizontal',
+  Vertical = 'vertical',
+}
