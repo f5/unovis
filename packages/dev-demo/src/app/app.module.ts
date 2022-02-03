@@ -33,6 +33,7 @@ import { AtomicAngularWrapperModule } from 'examples/atomic-angular-wrapper/atom
 import { FreeBrushComponent } from 'examples/free-brush/free-brush.component'
 import { FreeBrushModule } from 'examples/free-brush/free-brush.module'
 import { ConcentricGraphComponent } from 'examples/concentric-graph/concentric-graph.component'
+import { HorizontalBarComponent } from 'examples/horizontal-bar/horizontal-bar.component'
 
 import { AppComponent } from './app.component'
 import { BulletLegendComponent } from './components/bullet-legend/bullet-legend.component'
@@ -52,6 +53,7 @@ const appRoutes: Routes = [
   { path: 'line', component: LineComponent },
   { path: 'stacked-bar', component: StackedBarComponent },
   { path: 'grouped-bar', component: GroupedBarComponent },
+  { path: 'horizontal-bar', component: HorizontalBarComponent },
   { path: 'area', component: AreaComponent },
   { path: 'sankey', component: SankeyComponent },
   { path: 'api-endpoint-explorer', component: ApiEndpointExplorerComponent },
@@ -110,6 +112,7 @@ appRoutes.push({ path: '', redirectTo: `/${appRoutes[0].path}`, pathMatch: 'full
     VisControlsComponent,
     DonutChartComponent,
     ConcentricGraphComponent,
+    HorizontalBarComponent,
   ],
 
   imports: [
