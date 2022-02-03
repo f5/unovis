@@ -235,7 +235,7 @@ export class Axis<Datum> extends XYComponentCore<Datum> {
 
     if (type === AxisType.Y) {
       const yRange = this.yScale.range() as [number, number]
-      const height = yRange[0] - yRange[1]
+      const height = Math.abs(yRange[0] - yRange[1])
       return Math.pow(height, 0.85) / 25
     }
 
