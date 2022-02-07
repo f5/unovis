@@ -11,6 +11,7 @@ import {
   ColorAccessor,
   ContinuousScale,
   StringAccessor,
+  Orientation,
 } from '@volterra/vis'
 import { VisXYComponent } from '../../core'
 
@@ -126,6 +127,9 @@ export class VisStackedBarComponent<Datum> implements StackedBarConfigInterface<
    * Everything equal to barMinHeightZeroValue will not be rendered on the chart.
    * Default: `null` */
   @Input() barMinHeightZeroValue: any
+
+  /** Chart orientation: `Orientation.Vertical` or `Orientation.Horizontal`. Default `Orientation.Vertical` */
+  @Input() orientation: Orientation
   @Input() data: Datum[]
 
   component: StackedBar<Datum> | undefined
@@ -147,8 +151,8 @@ export class VisStackedBarComponent<Datum> implements StackedBarConfigInterface<
   }
 
   private getConfig (): StackedBarConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, barWidth, barMaxWidth, dataStep, barPadding, roundedCorners, cursor, barMinHeight, barMinHeightZeroValue } = this
-    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, barWidth, barMaxWidth, dataStep, barPadding, roundedCorners, cursor, barMinHeight, barMinHeightZeroValue }
+    const { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, barWidth, barMaxWidth, dataStep, barPadding, roundedCorners, cursor, barMinHeight, barMinHeightZeroValue, orientation } = this
+    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, barWidth, barMaxWidth, dataStep, barPadding, roundedCorners, cursor, barMinHeight, barMinHeightZeroValue, orientation }
     const keys = Object.keys(config) as (keyof StackedBarConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
