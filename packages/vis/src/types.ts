@@ -14,6 +14,7 @@ export { MapLink } from 'types/map'
 export { Spacing } from 'types/spacing'
 export { GraphInputNode, GraphInputLink, GraphNodeCore, GraphLinkCore } from 'types/graph'
 export { GenericDataRecord } from 'types/data'
+export { Direction } from 'types/direction'
 
 // Component Types
 export { VisEventType, VisEventCallback } from 'core/component/types'
