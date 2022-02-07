@@ -7,7 +7,7 @@ import { select } from 'd3'
 import { XYComponentCore } from 'core/xy-component'
 
 // Utils
-import { isNumber, isArray, isEmpty, clamp, getMin, getMax, getString, getNumber } from 'utils/data'
+import { clamp, getMax, getMin, getNumber, getString, isArray, isEmpty, isNumber } from 'utils/data'
 import { roundedRectPath } from 'utils/path'
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
@@ -15,6 +15,7 @@ import { getColor } from 'utils/color'
 // Types
 import { NumericAccessor } from 'types/accessor'
 import { Spacing } from 'types/spacing'
+import { Direction } from 'types/direction'
 
 // Config
 import { GroupedBarConfig, GroupedBarConfigInterface } from './config'
@@ -88,6 +89,7 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum> {
       .selectAll<SVGPathElement, Datum>(`.${s.bar}`)
       .data(d => yAccessors.map(() => d))
 
+    const yDirection = this.yScale.range()[0] > this.yScale.range()[1] ? Direction.North : Direction.South
     const barsEnter = bars.enter().append('path')
       .attr('class', s.bar)
       .attr('d', (d, i) => {
@@ -95,7 +97,7 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum> {
         const y = this.yScale(0)
         const width = barWidth
         const height = 0
-        return this._getBarPath(x, y, width, height, false)
+        return this._getBarPath(x, y, width, height, false, yDirection)
       })
       .style('fill', (d, i) => getColor(d, config.color, i))
 
@@ -117,7 +119,7 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum> {
           height = config.barMinHeight
         }
 
-        return this._getBarPath(x, y, width, height, isNegative)
+        return this._getBarPath(x, y, width, height, isNegative, yDirection)
       })
       .style('fill', (d, i) => getColor(d, config.color, i))
       .style('cursor', (d, i) => getString(d, config.cursor, i))
@@ -145,7 +147,7 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum> {
     return filtered
   }
 
-  _getBarPath (x: number, y: number, width: number, height: number, isNegative: boolean): string {
+  _getBarPath (x: number, y: number, width: number, height: number, isNegative: boolean, direction: Direction.North | Direction.South): string {
     const { config } = this
 
     const cornerRadius = config.roundedCorners
@@ -153,15 +155,16 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum> {
       : 0
     const cornerRadiusClamped = clamp(cornerRadius, 0, Math.min(height, width) / 2)
 
+    const isNorthDirected = direction === Direction.North
     return roundedRectPath({
       x,
-      y,
+      y: y + (isNorthDirected ? 0 : -height),
       w: width,
       h: height,
-      tl: !isNegative,
-      tr: !isNegative,
-      bl: isNegative,
-      br: isNegative,
+      tl: (!isNegative && isNorthDirected) || (isNegative && !isNorthDirected),
+      tr: (!isNegative && isNorthDirected) || (isNegative && !isNorthDirected),
+      bl: (isNegative && isNorthDirected) || (!isNorthDirected && !isNegative),
+      br: (isNegative && isNorthDirected) || (!isNorthDirected && !isNegative),
       r: cornerRadiusClamped,
     })
   }
