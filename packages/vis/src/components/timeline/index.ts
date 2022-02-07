@@ -74,6 +74,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
     const duration = isNumber(customDuration) ? customDuration : config.duration
     const xRange = this.xScale.range()
     const yRange = this.yScale.range()
+    const yStart = Math.min(...yRange)
     const yHeight = Math.abs(yRange[1] - yRange[0])
     const maxLineWidth = this._getMaxLineWidth()
 
@@ -101,7 +102,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
       .classed('even', (d, i) => !(i % 2))
       .attr('x', xRange[0] - maxLineWidth / 2)
       .attr('width', xRange[1] - xRange[0] + maxLineWidth)
-      .attr('y', (d, i) => yRange[1] + i * config.rowHeight)
+      .attr('y', (d, i) => yStart + i * config.rowHeight)
       .attr('height', config.rowHeight)
 
     rects.exit().remove()
@@ -140,7 +141,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
       .attr('width', this._scrollBarWidth)
       .attr('rx', this._scrollBarWidth / 2)
       .attr('ry', this._scrollBarWidth / 2)
-      .attr('transform', `translate(${this._width - this._scrollBarWidth}, ${yRange[1]})`)
+      .attr('transform', `translate(${this._width - this._scrollBarWidth}, ${yRange[0]})`)
       .attr('opacity', this._maxScroll ? 1 : 0)
 
     this._updateScrollPosition(0)
@@ -154,12 +155,13 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
     ordinalScale: ScaleOrdinal<string, number>
   ): typeof selection {
     const yRange = yScale.range()
+    const yStart = Math.min(...yRange)
 
     return selection
       .attr('x1', d => xScale(getNumber(d, config.x)))
       .attr('x2', d => xScale(getNumber(d, config.x) + getNumber(d, config.length)))
-      .attr('y1', (d, i) => yRange[1] + (ordinalScale(getString(d, config.type) || `__${i}`) + 0.5) * config.rowHeight)
-      .attr('y2', (d, i) => yRange[1] + (ordinalScale(getString(d, config.type) || `__${i}`) + 0.5) * config.rowHeight)
+      .attr('y1', (d, i) => yStart + (ordinalScale(getString(d, config.type) || `__${i}`) + 0.5) * config.rowHeight)
+      .attr('y2', (d, i) => yStart + (ordinalScale(getString(d, config.type) || `__${i}`) + 0.5) * config.rowHeight)
       .style('opacity', 1)
   }
 
