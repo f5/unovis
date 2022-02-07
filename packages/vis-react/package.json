@@ -1,6 +1,6 @@
 {
   "name": "@volterra/vis-react",
-  "version": "0.9.17",
+  "version": "0.9.20",
   "description": "React wrapper for @volterra/vis",
   "main": "./index.js",
   "types": "./index.d.ts",
@@ -20,7 +20,7 @@
   },
   "peerDependencies": {
     "@emotion/css": "^11.7.1",
-    "@volterra/vis": "^0.9.17",
+    "@volterra/vis": "^0.9.20",
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0"
   },
