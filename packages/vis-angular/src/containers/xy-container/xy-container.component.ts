@@ -14,7 +14,7 @@ import {
 } from '@angular/core'
 
 // Vis
-import { XYContainer, XYContainerConfigInterface, Axis, Crosshair, Tooltip, ContinuousScale, Spacing } from '@volterra/vis'
+import { XYContainer, XYContainerConfigInterface, Axis, Crosshair, Tooltip, ContinuousScale, Spacing, Direction } from '@volterra/vis'
 import { VisXYComponent } from '../../core'
 import { VisTooltipComponent } from '../../components/tooltip/tooltip.component'
 
@@ -73,6 +73,8 @@ export class VisXYContainerComponent<Datum> implements AfterViewInit, AfterConte
   /** Force set the Y scale range (in the screen space). By default the range is calculated automatically based on the
    * chart's set up */
   @Input() yRange: [number, number];
+  /** Y Axis direction. Default: `Direction.North` */
+  @Input() yDirection?: Direction.South | Direction.North | string;
 
   /** Animation duration of all the components within the container. Default: `undefined` */
   @Input() duration: number = undefined
@@ -121,7 +123,7 @@ export class VisXYContainerComponent<Datum> implements AfterViewInit, AfterConte
     const {
       duration, margin, padding, scaleByDomain, autoMargin,
       xScale, xDomain, xDomainMinConstraint, xDomainMaxConstraint, xRange,
-      yScale, yDomain, yDomainMinConstraint, yDomainMaxConstraint, yRange,
+      yScale, yDomain, yDomainMinConstraint, yDomainMaxConstraint, yRange, yDirection,
     } = this
     const visComponents = this.visComponents.toArray().map(d => d.component)
 
@@ -153,6 +155,7 @@ export class VisXYContainerComponent<Datum> implements AfterViewInit, AfterConte
       yDomainMinConstraint,
       yDomainMaxConstraint,
       yRange,
+      yDirection,
     }
   }
 
