@@ -14,6 +14,7 @@ import {
   StackedBar,
   Orientation,
   NumericAccessor,
+  Direction,
 } from '@volterra/vis'
 
 // Helpers
@@ -68,6 +69,7 @@ export class HorizontalBarComponent implements AfterViewInit, OnDestroy {
       }),
       yAxis: new Axis({
       }),
+      yDirection: Direction.South,
       tooltip: new Tooltip({
         triggers: {
           [StackedBar.selectors.bar]: (d, i) => {
