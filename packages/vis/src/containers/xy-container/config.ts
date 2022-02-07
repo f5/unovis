@@ -11,6 +11,7 @@ import { Crosshair } from 'components/crosshair'
 
 // Types
 import { ContinuousScale } from 'types/scale'
+import { Direction } from 'types/direction'
 
 export interface XYContainerConfigInterface<Datum> extends ContainerConfigInterface {
   /** An array of visualization components. Default: `[]` */
@@ -65,6 +66,8 @@ export interface XYContainerConfigInterface<Datum> extends ContainerConfigInterf
   /** Force set the Y scale range (in the screen space). By default the range is calculated automatically based on the
    * chart's set up */
   yRange?: [number, number];
+  /** Y Axis direction. Default: `Direction.North` */
+  yDirection?: Direction.South | Direction.North | string;
 
   /** X Axis component instance. Default: `undefined` */
   xAxis?: Axis<Datum>;
@@ -104,6 +107,7 @@ export class XYContainerConfig<Datum> extends ContainerConfig implements XYConta
   yDomainMinConstraint = undefined
   yDomainMaxConstraint = undefined
   yRange = undefined
+  yDirection = Direction.North
 
   preventEmptyDomain = true
   scaleByDomain = false

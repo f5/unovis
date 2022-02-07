@@ -15,6 +15,7 @@ import { CoreDataModel } from 'data-models/core'
 import { Spacing } from 'types/spacing'
 import { AxisType } from 'components/axis/types'
 import { ScaleDimension } from 'types/scale'
+import { Direction } from 'types/direction'
 
 // Utils
 import { clamp, clean, flatten } from 'utils/data'
@@ -301,7 +302,9 @@ export class XYContainer<Datum> extends ContainerCore {
         if (r[1] < res[1]) res[1] = r[1]
         return res
       }, [Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY])
-      const scaleRange = dimension === ScaleDimension.Y ? [range[1], range[0]] : range
+      const scaleRange = (dimension === ScaleDimension.Y && (config.yDirection === Direction.North))
+        ? [range[1], range[0]]
+        : range
       const configuredRange = dimension === ScaleDimension.Y ? config.yRange : config.xRange
       components.forEach(c => c.setScaleRange(dimension, configuredRange ?? scaleRange))
     })
