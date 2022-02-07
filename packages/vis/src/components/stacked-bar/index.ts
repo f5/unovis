@@ -200,16 +200,29 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
       ? isNumber(config.roundedCorners) ? +config.roundedCorners : width / 2
       : 0
     const cornerRadiusClamped = clamp(cornerRadius, 0, Math.min(height, width) / 2)
+    const isNorthDirected = this.yScale.range()[0] > this.yScale.range()[1]
 
     return roundedRectPath({
       x: this.isVertical() ? x : y - h,
-      y: this.isVertical() ? y : x,
+      y: this.isVertical() ? y + (isNorthDirected ? 0 : -h) : x,
       w: this.isVertical() ? width : h,
       h: this.isVertical() ? h : width,
-      br: isEnding && (this.isVertical() ? isNegative : !isNegative),
-      bl: isEnding && (this.isVertical() ? isNegative : isNegative),
-      tl: isEnding && (this.isVertical() ? !isNegative : isNegative),
-      tr: isEnding && (this.isVertical() ? !isNegative : !isNegative),
+      tl: isEnding && (this.isVertical()
+        ? (!isNegative && isNorthDirected) || (isNegative && !isNorthDirected)
+        : isNegative
+      ),
+      tr: isEnding && (this.isVertical()
+        ? (!isNegative && isNorthDirected) || (isNegative && !isNorthDirected)
+        : !isNegative
+      ),
+      br: isEnding && (this.isVertical()
+        ? (isNegative && isNorthDirected) || (!isNegative && !isNorthDirected)
+        : !isNegative
+      ),
+      bl: isEnding && (this.isVertical()
+        ? (isNegative && isNorthDirected) || (!isNegative && !isNorthDirected)
+        : isNegative
+      ),
       r: cornerRadiusClamped,
     })
   }
