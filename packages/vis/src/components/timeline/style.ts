@@ -5,14 +5,21 @@ export const global = injectGlobal`
   :root {
     --vis-timeline-row-even-fill: #fff;
     --vis-timeline-row-odd-fill: #f7f9fa;
-    --vis-timeline-scrollbar-color: #e7ebf6;
+    --vis-timeline-scrollbar-background-color: #E6E9F3;
+    --vis-timeline-scrollbar-color: #9EA7B8;
 
     --vis-timeline-cursor: default;
     --vis-timeline-stroke: var(--vis-color-main);
   }
 `
 
-export const background = css``
+export const background = css`
+  label: background;
+`
+
+export const lines = css`
+  label: lines;
+`
 
 export const line = css`
   label: line;
@@ -20,6 +27,10 @@ export const line = css`
   stroke: var(--vis-timeline-stroke);
   cursor: var(--vis-timeline-cursor);
   stroke-linecap: round;
+`
+
+export const rows = css`
+  label: rows;
 `
 
 export const rect = css`
@@ -34,5 +45,14 @@ export const rect = css`
 
 export const scrollbar = css`
   label: scroll-bar;
+`
+
+export const scrollbarHandle = css`
+  label: scroll-bar-handle;
   fill: var(--vis-timeline-scrollbar-color);
+`
+
+export const scrollbarBackground = css`
+  label: scroll-bar-background;
+  fill: var(--vis-timeline-scrollbar-background-color);
 `

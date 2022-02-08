@@ -34,8 +34,10 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
   private _background: Selection<SVGRectElement, any, SVGGElement, any>
   private _rectsGroup: Selection<SVGGElement, any, SVGGElement, any>
   private _linesGroup: Selection<SVGGElement, any, SVGGElement, any>
-  private _scrollBar: Selection<SVGRectElement, any, SVGGElement, any>
-  private _scrollBarWidth = 8
+  private _scrollBarGroup: Selection<SVGGElement, any, SVGGElement, any>
+  private _scrollBarBackground: Selection<SVGRectElement, any, SVGGElement, any>
+  private _scrollBarHandle: Selection<SVGRectElement, any, SVGGElement, any>
+  private _scrollBarWidth = 5
   private _scrollDistance = 0
   private _maxScroll = 0
   private _scrollbarHeight = 0
@@ -49,18 +51,22 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
     this._background = this.g.append('rect').attr('class', s.background)
 
     // Group for content
-    this._rectsGroup = this.g.append('g')
-    this._linesGroup = this.g.append('g')
+    this._rectsGroup = this.g.append('g').attr('class', s.rows)
+    this._linesGroup = this.g.append('g').attr('class', s.lines)
+    this._scrollBarGroup = this.g.append('g').attr('class', s.scrollbar)
 
     // Scroll bar
-    this._scrollBar = this.g.append('rect')
-      .attr('class', s.scrollbar)
+    this._scrollBarBackground = this._scrollBarGroup.append('rect')
+      .attr('class', s.scrollbarBackground)
+
+    this._scrollBarHandle = this._scrollBarGroup.append('rect')
+      .attr('class', s.scrollbarHandle)
 
     // Set up scrollbar drag event
     const dragBehaviour = drag()
       .on('drag', this._onScrollbarDrag.bind(this))
 
-    this._scrollBar.call(dragBehaviour)
+    this._scrollBarHandle.call(dragBehaviour)
   }
 
   get bleed (): { top: number; bottom: number; left: number; right: number } {
@@ -134,15 +140,23 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
     const contentBBox = this._rectsGroup.node().getBBox() // We determine content size using the rects group because lines are animated
     const absoluteContentHeight = contentBBox.height
     this._scrollbarHeight = yHeight * yHeight / absoluteContentHeight
-    this._scrollBar.attr('height', this._scrollbarHeight)
     this._maxScroll = Math.max(absoluteContentHeight - yHeight, 0)
 
-    this._scrollBar
+    this._scrollBarGroup
+      .attr('transform', `translate(${this._width - this._scrollBarWidth}, ${yStart})`)
+      .attr('opacity', this._maxScroll ? 1 : 0)
+
+    this._scrollBarBackground
       .attr('width', this._scrollBarWidth)
+      .attr('height', this._height)
       .attr('rx', this._scrollBarWidth / 2)
       .attr('ry', this._scrollBarWidth / 2)
-      .attr('transform', `translate(${this._width - this._scrollBarWidth}, ${yRange[0]})`)
-      .attr('opacity', this._maxScroll ? 1 : 0)
+
+    this._scrollBarHandle
+      .attr('width', this._scrollBarWidth)
+      .attr('height', this._scrollbarHeight)
+      .attr('rx', this._scrollBarWidth / 2)
+      .attr('ry', this._scrollBarWidth / 2)
 
     this._updateScrollPosition(0)
   }
@@ -194,7 +208,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
     this._linesGroup.attr('transform', `translate(0,${-this._scrollDistance})`)
     this._rectsGroup.attr('transform', `translate(0,${-this._scrollDistance})`)
     const scrollBarPosition = (this._scrollDistance / this._maxScroll * (yHeight - this._scrollbarHeight)) || 0
-    this._scrollBar.attr('y', scrollBarPosition)
+    this._scrollBarHandle.attr('y', scrollBarPosition)
   }
 
   _getMaxLineWidth (): number {
