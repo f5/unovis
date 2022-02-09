@@ -20,6 +20,8 @@ export interface TimelineConfigInterface<Datum> extends WithOptional<XYComponent
   showLabels?: boolean;
   /** Maximum label width in pixels. Labels longer than the specified value will be trimmed. Default: `120` */
   maxLabelWidth?: number;
+  /** Alternating row colors. Default: `true` */
+  alternatingRowColors?: boolean;
 }
 
 export class TimelineConfig<Datum> extends XYComponentConfig<Datum> implements TimelineConfigInterface<Datum> {
@@ -32,4 +34,5 @@ export class TimelineConfig<Datum> extends XYComponentConfig<Datum> implements T
   cursor = null
   showLabels = false
   maxLabelWidth = 120
+  alternatingRowColors = true
 }

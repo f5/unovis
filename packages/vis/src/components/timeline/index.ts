@@ -148,7 +148,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
       .attr('class', s.rect)
 
     rectsEnter.merge(rects)
-      .classed('even', (_, i) => !(i % 2))
+      .classed('odd', config.alternatingRowColors ? (_, i) => !(i % 2) : null)
       .attr('x', xStart - maxLineWidth / 2)
       .attr('width', xRange[1] - xStart + maxLineWidth)
       .attr('y', (_, i) => yStart + i * config.rowHeight)

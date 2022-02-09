@@ -4,7 +4,8 @@ import { css, injectGlobal } from '@emotion/css'
 export const global = injectGlobal`
   :root {
     --vis-timeline-row-even-fill: #fff;
-    --vis-timeline-row-odd-fill: #f7f9fa;
+    --vis-timeline-row-odd-fill: #EFF5F8;
+    --vis-timeline-row-background-opacity: 0.5;
     --vis-timeline-scrollbar-background-color: #E6E9F3;
     --vis-timeline-scrollbar-color: #9EA7B8;
 
@@ -40,8 +41,9 @@ export const rect = css`
   label: rect;
   pointer-events: none;
   fill: var(--vis-timeline-row-even-fill);
+  opacity: var(--vis-timeline-row-background-opacity);
 
-  &.even {
+  &.odd {
     fill: var(--vis-timeline-row-odd-fill);
   }
 `
