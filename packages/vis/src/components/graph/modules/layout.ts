@@ -8,7 +8,7 @@ import { Graph } from 'graphlibrary'
 import { GraphDataModel } from 'data-models/graph'
 
 // Utils
-import { without, clamp, groupBy, uniq, sortBy, getString, getNumber } from 'utils/data'
+import { without, clamp, groupBy, unique, sortBy, getString, getNumber } from 'utils/data'
 
 // Types
 import { GraphInputLink, GraphInputNode } from 'types/graph'
@@ -81,8 +81,8 @@ export function applyLayoutParallel<N extends GraphInputNode, L extends GraphInp
 
   // Handle connected nodes
   const layoutNodes = layoutNonConnectedAside ? connectedNodes : nodes
-  const groupNames: any[] = uniq(layoutNodes.map(d => getString(d, nodeGroup)))
-  const groupNamesSorted: any[] = sortBy(groupNames, d => layoutGroupOrder.indexOf(d))
+  const groupNames = unique(layoutNodes.map(d => getString(d, nodeGroup)))
+  const groupNamesSorted: string[] = sortBy(groupNames, d => layoutGroupOrder.indexOf(d))
 
   const groups = groupNamesSorted.map(groupName => {
     const groupNodes = layoutNodes.filter(d => getString(d, nodeGroup) === groupName)
@@ -338,7 +338,7 @@ export function applyLayoutConcentric<N extends GraphInputNode, L extends GraphI
 
   const layoutNodes = layoutNonConnectedAside ? connectedNodes : nodes
 
-  const groupNames: string[] = uniq(layoutNodes.map(d => getString(d, nodeGroup)))
+  const groupNames: string[] = unique(layoutNodes.map(d => getString(d, nodeGroup)))
   const groupNamesSorted: string[] = sortBy(groupNames, d => layoutGroupOrder.indexOf(d))
 
   const groups = groupNamesSorted.map(groupName => ({

@@ -22,7 +22,6 @@ import _flatten from 'lodash/flatten'
 import _omit from 'lodash/omit'
 import _extend from 'lodash/extend'
 import _groupBy from 'lodash/groupBy'
-import _uniq from 'lodash/uniq'
 import _sortBy from 'lodash/sortBy'
 import _range from 'lodash/range'
 // !!! If you add a new lodash import here, please specify it in rollup.config.js as well
@@ -56,7 +55,6 @@ export const flatten = _flatten
 export const omit = _omit
 export const extend = _extend
 export const groupBy = _groupBy
-export const uniq = _uniq
 export const sortBy = _sortBy
 export const range = _range
 
@@ -88,6 +86,10 @@ export function clean<T> (data: T[]): T[] {
 
 export function clamp (d: number, min: number, max: number): number {
   return Math.min(Math.max(d, min), max)
+}
+
+export function unique<T> (array: T[]): T[] {
+  return Array.from(new Set(array))
 }
 
 export function countUnique<T> (array: T[], accessor = d => d): number {

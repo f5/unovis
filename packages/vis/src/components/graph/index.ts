@@ -15,7 +15,7 @@ import { GraphInputLink, GraphInputNode } from 'types/graph'
 import { Spacing } from 'types/spacing'
 
 // Utils
-import { isNumber, clamp, find, cloneDeep, flatten, findIndex, clean, uniq, shallowDiff, isFunction, getBoolean } from 'utils/data'
+import { isNumber, clamp, find, cloneDeep, flatten, findIndex, clean, unique, shallowDiff, isFunction, getBoolean } from 'utils/data'
 import { stringToHtmlId } from 'utils/misc'
 import { smartTransition } from 'utils/d3'
 
@@ -704,7 +704,7 @@ export class Graph<
     this._defs.selectAll('*').remove()
 
     // Get all variations of link colors to create markers
-    const linkColors = uniq(clean(
+    const linkColors = unique(clean(
       links.map(d => getLinkColor(d, this.config))
     ))
 
