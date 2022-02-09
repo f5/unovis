@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { Selection } from 'd3-selection'
+import { select, Selection } from 'd3-selection'
 import { Transition } from 'd3-transition'
 import { scaleOrdinal, ScaleOrdinal } from 'd3-scale'
 import { drag, D3DragEvent } from 'd3-drag'
@@ -8,13 +8,11 @@ import { max } from 'd3-array'
 // Core
 import { XYComponentCore } from 'core/xy-component'
 
-// Types
-import { ContinuousScale } from 'types/scale'
-
 // Utils
-import { isNumber, countUnique, arrayOfIndices, getMin, getMax, getString, getNumber } from 'utils/data'
+import { isNumber, unique, arrayOfIndices, getMin, getMax, getString, getNumber } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
+import { trimSVGText } from 'utils/text'
 
 // Config
 import { TimelineConfig, TimelineConfigInterface } from './config'
@@ -32,16 +30,19 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
   }
 
   private _background: Selection<SVGRectElement, any, SVGGElement, any>
-  private _rectsGroup: Selection<SVGGElement, any, SVGGElement, any>
+  private _rowsGroup: Selection<SVGGElement, any, SVGGElement, any>
   private _linesGroup: Selection<SVGGElement, any, SVGGElement, any>
+  private _labelsGroup: Selection<SVGGElement, any, SVGGElement, any>
   private _scrollBarGroup: Selection<SVGGElement, any, SVGGElement, any>
   private _scrollBarBackground: Selection<SVGRectElement, any, SVGGElement, any>
   private _scrollBarHandle: Selection<SVGRectElement, any, SVGGElement, any>
   private _scrollBarWidth = 5
   private _scrollDistance = 0
+  private _scrollBarMargin = 5
   private _maxScroll = 0
   private _scrollbarHeight = 0
   private _scrollTimeoutId = null
+  private _labelMargin = 5
 
   constructor (config?: TimelineConfigInterface<Datum>) {
     super()
@@ -51,8 +52,9 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
     this._background = this.g.append('rect').attr('class', s.background)
 
     // Group for content
-    this._rectsGroup = this.g.append('g').attr('class', s.rows)
+    this._rowsGroup = this.g.append('g').attr('class', s.rows)
     this._linesGroup = this.g.append('g').attr('class', s.lines)
+    this._labelsGroup = this.g.append('g').attr('class', s.labels)
     this._scrollBarGroup = this.g.append('g').attr('class', s.scrollbar)
 
     // Scroll bar
@@ -70,8 +72,30 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
   }
 
   get bleed (): { top: number; bottom: number; left: number; right: number } {
+    const { config, datamodel: { data } } = this
+
+    // We calculate the longest label width to set the bleed values accordingly
+    let labelsBleed = 0
+    if (config.showLabels) {
+      const recordLabels = this._getRecordLabels(data)
+      const longestLabel = recordLabels.reduce((acc, val) => acc.length > val.length ? acc : val, '')
+      const label = this._labelsGroup.append('text')
+        .attr('class', s.label)
+        .text(longestLabel)
+        .call(trimSVGText, config.maxLabelWidth)
+      const labelWidth = label.node().getBBox().width
+      this._labelsGroup.empty()
+
+      labelsBleed = labelWidth ? labelWidth + this._labelMargin : 0
+    }
+
     const maxLineWidth = this._getMaxLineWidth()
-    return { top: 0, bottom: 0, left: maxLineWidth / 2, right: maxLineWidth / 2 + this._scrollBarWidth * 1.5 }
+    return {
+      top: 0,
+      bottom: 0,
+      left: maxLineWidth / 2 + labelsBleed,
+      right: maxLineWidth / 2 + this._scrollBarWidth + this._scrollBarMargin,
+    }
   }
 
   _render (customDuration?: number): void {
@@ -83,12 +107,13 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
     const yStart = Math.min(...yRange)
     const yHeight = Math.abs(yRange[1] - yRange[0])
     const maxLineWidth = this._getMaxLineWidth()
+    const recordLabels = this._getRecordLabels(data)
+    const recordLabelsUnique = unique(recordLabels)
+    const numUniqueRecords = recordLabelsUnique.length
 
     // Ordinal scale to handle records on the same type
-    const ordinal: ScaleOrdinal<string, number> = scaleOrdinal()
-    const recordTypes = data.map((d, i) => getString(d, config.type) || i)
-    const numUniqueRecords = countUnique(recordTypes)
-    ordinal.range(arrayOfIndices(numUniqueRecords))
+    const ordinalScale: ScaleOrdinal<string, number> = scaleOrdinal()
+    ordinalScale.range(arrayOfIndices(numUniqueRecords))
 
     // Invisible Background rect to track events
     this._background
@@ -96,19 +121,37 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
       .attr('height', this._height)
       .attr('opacity', 0)
 
-    // Line background rects
+    // Labels
+    const labels = this._labelsGroup.selectAll(`.${s.label}`)
+      .data(config.showLabels ? recordLabelsUnique : []) as Selection<SVGTextElement, string, SVGGElement, any>
+
+    const labelsEnter = labels.enter().append('text')
+      .attr('class', s.label)
+
+    labelsEnter.merge(labels)
+      .attr('x', xRange[0] - maxLineWidth / 2 - this._labelMargin)
+      .attr('y', (_, i) => yStart + (i + 0.5) * config.rowHeight)
+      .text(label => label)
+      .each((label, i, els) => {
+        trimSVGText(select(els[i]), config.maxLabelWidth)
+      })
+
+    labels.exit().remove()
+
+    // Row background rects
+    const xStart = xRange[0]
     const numRows = Math.max(Math.floor(yHeight / config.rowHeight), numUniqueRecords)
-    const rects = this._rectsGroup.selectAll(`.${s.rect}`)
-      .data(Array(numRows).fill(0)) as Selection<SVGRectElement, Datum, SVGGElement, any>
+    const rects = this._rowsGroup.selectAll(`.${s.rect}`)
+      .data(Array(numRows).fill(0)) as Selection<SVGRectElement, number, SVGGElement, any>
 
     const rectsEnter = rects.enter().append('rect')
       .attr('class', s.rect)
 
     rectsEnter.merge(rects)
-      .classed('even', (d, i) => !(i % 2))
-      .attr('x', xRange[0] - maxLineWidth / 2)
-      .attr('width', xRange[1] - xRange[0] + maxLineWidth)
-      .attr('y', (d, i) => yStart + i * config.rowHeight)
+      .classed('even', (_, i) => !(i % 2))
+      .attr('x', xStart - maxLineWidth / 2)
+      .attr('width', xRange[1] - xStart + maxLineWidth)
+      .attr('y', (_, i) => yStart + i * config.rowHeight)
       .attr('height', config.rowHeight)
 
     rects.exit().remove()
@@ -120,24 +163,24 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
     const linesEnter = lines.enter().append('line')
       .attr('class', s.line)
       .style('stroke', (d, i) => getColor(d, config.color, i))
-      .call(this._positionLines, config, this.xScale, this.yScale, ordinal)
       .attr('transform', 'translate(0, 10)')
       .style('opacity', 0)
+    this._positionLines(linesEnter, ordinalScale)
 
-    smartTransition(linesEnter.merge(lines), duration)
+    const linesMerged = smartTransition(linesEnter.merge(lines), duration)
       .style('stroke', (d, i) => getColor(d, config.color, i))
       .attr('stroke-width', d => getNumber(d, config.lineWidth))
-      .call(this._positionLines, config, this.xScale, this.yScale, ordinal)
       .attr('transform', 'translate(0, 0)')
       .style('cursor', d => getString(d, config.cursor))
       .style('opacity', 1)
+    this._positionLines(linesMerged, ordinalScale)
 
     smartTransition(lines.exit(), duration)
       .style('opacity', 0)
       .remove()
 
     // Scroll Bar
-    const contentBBox = this._rectsGroup.node().getBBox() // We determine content size using the rects group because lines are animated
+    const contentBBox = this._rowsGroup.node().getBBox() // We determine content size using the rects group because lines are animated
     const absoluteContentHeight = contentBBox.height
     this._scrollbarHeight = yHeight * yHeight / absoluteContentHeight
     this._maxScroll = Math.max(absoluteContentHeight - yHeight, 0)
@@ -161,31 +204,29 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
     this._updateScrollPosition(0)
   }
 
-  _positionLines (
+  private _positionLines (
     selection: Selection<SVGLineElement, Datum, SVGGElement, unknown> | Transition<SVGLineElement, Datum, SVGGElement, unknown>,
-    config: TimelineConfig<Datum>,
-    xScale: ContinuousScale,
-    yScale: ContinuousScale,
     ordinalScale: ScaleOrdinal<string, number>
   ): typeof selection {
+    const { config, xScale, yScale } = this
     const yRange = yScale.range()
     const yStart = Math.min(...yRange)
 
     return selection
       .attr('x1', d => xScale(getNumber(d, config.x)))
       .attr('x2', d => xScale(getNumber(d, config.x) + getNumber(d, config.length)))
-      .attr('y1', (d, i) => yStart + (ordinalScale(getString(d, config.type) || `__${i}`) + 0.5) * config.rowHeight)
-      .attr('y2', (d, i) => yStart + (ordinalScale(getString(d, config.type) || `__${i}`) + 0.5) * config.rowHeight)
+      .attr('y1', (d, i) => yStart + (ordinalScale(this._getRecordType(d, i)) + 0.5) * config.rowHeight)
+      .attr('y2', (d, i) => yStart + (ordinalScale(this._getRecordType(d, i)) + 0.5) * config.rowHeight)
       .style('opacity', 1)
   }
 
-  _onScrollbarDrag (event: D3DragEvent<any, any, any>): void {
+  private _onScrollbarDrag (event: D3DragEvent<any, any, any>): void {
     const yRange = this.yScale.range()
     const yHeight = Math.abs(yRange[1] - yRange[0])
     this._updateScrollPosition(event.dy * this._maxScroll / (yHeight - this._scrollbarHeight))
   }
 
-  _onMouseWheel (d: unknown, event: WheelEvent): void {
+  private _onMouseWheel (d: unknown, event: WheelEvent): void {
     this._updateScrollPosition(event?.deltaY)
     if (this._scrollDistance > 0 && this._scrollDistance < this._maxScroll) event?.preventDefault()
 
@@ -197,7 +238,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
     }, 300)
   }
 
-  _updateScrollPosition (diff: number): void {
+  private _updateScrollPosition (diff: number): void {
     const yRange = this.yScale.range()
     const yHeight = Math.abs(yRange[1] - yRange[0])
 
@@ -206,15 +247,23 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
     this._scrollDistance = Math.min(this._maxScroll, this._scrollDistance)
 
     this._linesGroup.attr('transform', `translate(0,${-this._scrollDistance})`)
-    this._rectsGroup.attr('transform', `translate(0,${-this._scrollDistance})`)
+    this._rowsGroup.attr('transform', `translate(0,${-this._scrollDistance})`)
+    this._labelsGroup.attr('transform', `translate(0,${-this._scrollDistance})`)
     const scrollBarPosition = (this._scrollDistance / this._maxScroll * (yHeight - this._scrollbarHeight)) || 0
     this._scrollBarHandle.attr('y', scrollBarPosition)
   }
 
-  _getMaxLineWidth (): number {
+  private _getMaxLineWidth (): number {
     const { config, datamodel: { data } } = this
-
     return max(data, d => getNumber(d, config.lineWidth)) ?? 0
+  }
+
+  private _getRecordType (d: Datum, i: number): string {
+    return getString(d, this.config.type) || `__${i}`
+  }
+
+  private _getRecordLabels (data: Datum[]): string[] {
+    return data.map((d, i) => getString(d, this.config.type) || `${i + 1}`)
   }
 
   // Override the default XYComponent getXDataExtent method to take into account line lengths

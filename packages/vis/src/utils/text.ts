@@ -206,8 +206,8 @@ export function trimSVGText (svgTextSelection: Selection<SVGTextElement, any, SV
   const textLength = text.length
 
   const textWidth = fastMode ? fontSize * textLength * widthToHeightRatio : svgTextSelection.node().getComputedTextLength()
-  const maxCharaters = Math.ceil(textLength * maxWidth / textWidth)
-  svgTextSelection.text(trimText(text, maxCharaters, trimType))
+  const maxCharacters = Math.ceil(textLength * maxWidth / textWidth)
+  svgTextSelection.text(trimText(text, maxCharacters, trimType))
 }
 
 export function estimateTextSize (svgTextSelection: Selection<SVGTextElement, any, SVGElement, any>, fontSize: number, dy = 0.32, fastMode = true, widthToHeightRatio = 0.52): { width: number; height: number } {

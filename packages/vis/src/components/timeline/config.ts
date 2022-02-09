@@ -16,6 +16,10 @@ export interface TimelineConfigInterface<Datum> extends WithOptional<XYComponent
   type?: StringAccessor<Datum>;
   /** Configurable Timeline item cursor when hovering over. Default: `null` */
   cursor?: StringAccessor<Datum>;
+  /** Show item type labels when set to `true`. Default: `false` */
+  showLabels?: boolean;
+  /** Maximum label width in pixels. Labels longer than the specified value will be trimmed. Default: `120` */
+  maxLabelWidth?: number;
 }
 
 export class TimelineConfig<Datum> extends XYComponentConfig<Datum> implements TimelineConfigInterface<Datum> {
@@ -26,4 +30,6 @@ export class TimelineConfig<Datum> extends XYComponentConfig<Datum> implements T
   // eslint-disable-next-line dot-notation
   type: StringAccessor<Datum> = d => d['type']
   cursor = null
+  showLabels = false
+  maxLabelWidth = 120
 }
