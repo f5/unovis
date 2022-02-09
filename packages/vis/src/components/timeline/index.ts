@@ -86,7 +86,8 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
       const labelWidth = label.node().getBBox().width
       this._labelsGroup.empty()
 
-      labelsBleed = labelWidth ? labelWidth + this._labelMargin : 0
+      const tolerance = 1.15 // Some characters are wider than others so we add a little of extra space to take that into account
+      labelsBleed = labelWidth ? tolerance * labelWidth + this._labelMargin : 0
     }
 
     const maxLineWidth = this._getMaxLineWidth()
