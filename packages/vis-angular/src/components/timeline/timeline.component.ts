@@ -113,6 +113,15 @@ export class VisTimelineComponent<Datum> implements TimelineConfigInterface<Datu
 
   /** Configurable Timeline item cursor when hovering over. Default: `null` */
   @Input() cursor: StringAccessor<Datum>
+
+  /** Show item type labels when set to `true`. Default: `false` */
+  @Input() showLabels: boolean
+
+  /** Maximum label width in pixels. Labels longer than the specified value will be trimmed. Default: `120` */
+  @Input() maxLabelWidth: number
+
+  /** Alternating row colors. Default: `true` */
+  @Input() alternatingRowColors: boolean
   @Input() data: Datum[]
 
   component: Timeline<Datum> | undefined
@@ -134,8 +143,8 @@ export class VisTimelineComponent<Datum> implements TimelineConfigInterface<Datu
   }
 
   private getConfig (): TimelineConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, lineWidth, rowHeight, length, type, cursor } = this
-    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, lineWidth, rowHeight, length, type, cursor }
+    const { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, lineWidth, rowHeight, length, type, cursor, showLabels, maxLabelWidth, alternatingRowColors } = this
+    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, lineWidth, rowHeight, length, type, cursor, showLabels, maxLabelWidth, alternatingRowColors }
     const keys = Object.keys(config) as (keyof TimelineConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
