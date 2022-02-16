@@ -52,12 +52,12 @@ export type LeafletMapPointDatum<D> = D & PointExpandedClusterProperties<D> & {
 };
 
 export type LeafletMapPoint<D> = {
-  geometry: GeoJSON.Geometry;
+  geometry: GeoJSON.Point;
   bbox: { x1: number; x2: number; y1: number; y2: number };
   radius: number;
   path: string;
   fill: string;
-  index: any;
+  index: Supercluster<D, Supercluster.AnyProps>;
   id: number | string;
   properties: LeafletMapPointDatum<D>;
   donutData: LeafletMapPieDatum[];

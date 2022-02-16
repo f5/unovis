@@ -123,7 +123,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
           if (this._triggerBackgroundClick) {
             this._triggerBackgroundClick = false
             const originalEvent = (e as any).originalEvent
-            this._onBackgroundClick(null, originalEvent.target, originalEvent)
+            this._onBackgroundClick(originalEvent.target, originalEvent)
           }
         })
 
@@ -300,7 +300,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
 
     // If point was not found -> search for it in all collapsed clusters
     if (!foundPoint) {
-      const { node } = findNodeAndClusterInPointsById(pointDataAll, id)
+      const { node } = findNodeAndClusterInPointsById(pointDataAll, id, config.pointId)
       foundPoint = node
     }
 
@@ -419,18 +419,23 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
   }
 
   private _zoomToExternallySelectedPoint (): void {
+    const { config } = this
     if (!this._externallySelectedPoint) return
+
     const pointData = this._getPointData()
     const foundNode = find(pointData, d => d.properties.id === this._externallySelectedPoint.properties.id)
     if (foundNode) {
       this._zoomingToExternallySelectedPoint = false
       this._currentZoomLevel = null
     } else {
-      const { cluster } = findNodeAndClusterInPointsById(pointData, this._externallySelectedPoint.properties.id)
+      const { cluster } = findNodeAndClusterInPointsById(pointData, this._externallySelectedPoint.properties.id, config.pointId)
+      if (!cluster) return
+
       const zoomLevel = this._map.leaflet.getZoom()
       // Expand cluster or fly further
-      if (this._forceExpandCluster || shouldClusterExpand(cluster, zoomLevel, 8, 13)) this._expandCluster(cluster)
-      else {
+      if (this._forceExpandCluster || shouldClusterExpand(cluster, zoomLevel, 8, 13)) {
+        this._expandCluster(cluster)
+      } else {
         const newZoomLevel = clampZoomLevel(zoomLevel)
         const coordinates = { lng: this._externallySelectedPoint.properties.longitude, lat: this._externallySelectedPoint.properties.latitude }
         if (this._currentZoomLevel !== newZoomLevel) {
@@ -587,7 +592,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     config.onMapMoveZoom?.(this._getMapZoomState())
   }
 
-  private _onBackgroundClick (d, el, event): void {
+  private _onBackgroundClick (el: HTMLElement, event: MouseEvent): void {
     const { config } = this
 
     if (this._cancelBackgroundClick) {
@@ -601,7 +606,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     config.onMapClick?.(this._getMapZoomState())
   }
 
-  private _onPointClick (d: ClusterFeature<Datum>, event: MouseEvent): void {
+  private _onPointClick (d: LeafletMapPoint<Datum>, event: MouseEvent): void {
     const { config: { flyToDuration, clusterExpandOnClick } } = this
     this._externallySelectedPoint = null
     event.stopPropagation()
@@ -610,7 +615,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
       const zoomLevel = this._map.leaflet.getZoom()
       const coordinates = { lng: d.geometry.coordinates[0], lat: d.geometry.coordinates[1] }
 
-      if (shouldClusterExpand(d, zoomLevel)) this._expandCluster(d)
+      if (shouldClusterExpand(d as any, zoomLevel)) this._expandCluster(d)
       else {
         const newZoomLevel = clampZoomLevel(zoomLevel)
         this._eventInitiatedByComponent = true
@@ -619,11 +624,11 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     }
   }
 
-  private _onPointMouseDown (d: ClusterFeature<Datum>, event: MouseEvent): void {
+  private _onPointMouseDown (d: LeafletMapPoint<Datum>, event: MouseEvent): void {
     this._cancelBackgroundClick = true
   }
 
-  private _onPointMouseUp (d: ClusterFeature<Datum>, event: MouseEvent): void {
+  private _onPointMouseUp (d: LeafletMapPoint<Datum>, event: MouseEvent): void {
     this._cancelBackgroundClick = false
   }
 

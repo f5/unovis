@@ -184,20 +184,22 @@ export function geoJSONPointToScreenPoint<D> (
   return screenPoint
 }
 
-export function shouldClusterExpand (cluster, zoomLevel: number, midLevel = 4, maxLevel = 11, maxClusterZoomLevel = 23): boolean {
-  const clusterExpansionZoomLevel = cluster.index.getClusterExpansionZoom(cluster.id)
+export function shouldClusterExpand<D> (cluster: LeafletMapPoint<D>, zoomLevel: number, midLevel = 4, maxLevel = 11, maxClusterZoomLevel = 23): boolean {
+  if (!cluster) return false
+
+  const clusterExpansionZoomLevel: number = cluster.index.getClusterExpansionZoom(cluster.id as number)
   return clusterExpansionZoomLevel >= maxClusterZoomLevel ||
     zoomLevel >= maxLevel ||
     (zoomLevel >= midLevel && cluster && cluster.properties.point_count < 20)
 }
 
-export function findNodeAndClusterInPointsById<D> (points: LeafletMapPoint<D>[], id: string): { node: null | LeafletMapPoint<D>; cluster: null | LeafletMapPoint<D> } {
+export function findNodeAndClusterInPointsById<D> (points: LeafletMapPoint<D>[], id: string, pointId: StringAccessor<D>): { node: null | LeafletMapPoint<D>; cluster: null | LeafletMapPoint<D> } {
   let node = null
   let cluster = null
   points.forEach(point => {
     if (point.properties.cluster) {
-      const leaves = point.index.getLeaves(point.properties.cluster_id, Infinity)
-      const foundNode = leaves.find(d => d.properties.id === id)
+      const leaves = point.index.getLeaves(point.properties.cluster_id as number, Infinity)
+      const foundNode = leaves.find(d => getString(d.properties, pointId) === id)
       if (foundNode) {
         node = foundNode
         cluster = point
