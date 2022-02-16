@@ -8,6 +8,7 @@ import {
   XYContainer,
   XYContainerConfigInterface,
   Axis,
+  GroupedBarConfigInterface,
   StackedBarConfigInterface,
   Tooltip,
   Crosshair,
@@ -15,6 +16,8 @@ import {
   Orientation,
   NumericAccessor,
   Direction,
+  GroupedBar,
+  PositionStrategy,
 } from '@volterra/vis'
 
 // Helpers
@@ -36,7 +39,6 @@ function generateData (n = 10): SampleDatum[] {
   templateUrl: './horizontal-bar.component.html',
   styleUrls: ['./horizontal-bar.component.css'],
 })
-
 export class HorizontalBarComponent implements AfterViewInit, OnDestroy {
   title = 'horizontal-bar'
   yAccessors: NumericAccessor<SampleDatum>[] = [
@@ -47,47 +49,77 @@ export class HorizontalBarComponent implements AfterViewInit, OnDestroy {
     d => d.y4,
   ]
 
-  legendItems: { name: string; inactive?: boolean }[] = this.yAccessors.map((d, i) => ({ name: `Stream ${i + 1}`, hidden: !d }))
+  legendItems: {
+    name: string;
+    inactive?: boolean;
+  }[] = this.yAccessors.map((d, i) => ({
+    name: `Stream ${i + 1}`,
+    hidden: !d,
+  }))
+
   chartConfig: XYContainerConfigInterface<SampleDatum>
-  areaConfig: StackedBarConfigInterface<SampleDatum>
-  composite: XYContainer<SampleDatum>
+  groupedBarChart: XYContainer<SampleDatum>
+  stackedBarChart: XYContainer<SampleDatum>
   intervalId: NodeJS.Timeout
-  @ViewChild('chart', { static: false }) chart: ElementRef
+  @ViewChild('stacked', { static: false }) stacked: ElementRef
+  @ViewChild('grouped', { static: false }) grouped: ElementRef
   @ViewChild('legendRef', { static: false }) legendRef: ElementRef
+
+  tooltip = new Tooltip({
+    container: document.body,
+    positionStrategy: PositionStrategy.Fixed,
+    triggers: {
+      [StackedBar.selectors.bar]: (d, i) => {
+        const accessor = this.yAccessors[i % 5]
+        const value = (typeof accessor === 'function') ? accessor(d) : 'No Data'
+        return `<span>${value}</span>`
+      },
+      [GroupedBar.selectors.bar]: (d, i) => {
+        const accessor = this.yAccessors[i % 5]
+        const value = (typeof accessor === 'function') ? accessor(d) : 'No Data'
+        return `<span>${value}</span>`
+      }
+    }
+  })
 
   ngAfterViewInit (): void {
     const data: SampleDatum[] = generateData()
-    this.areaConfig = getStackedBarConfig(this.yAccessors)
+    const stackedConfig = getStackedBarConfig(this.yAccessors)
+    const groupConfig = getGroupedBarConfig(this.yAccessors)
 
     this.chartConfig = {
       margin: { top: 10, bottom: 10, left: 15, right: 10 },
-      components: [
-        new StackedBar(this.areaConfig),
-      ],
       xAxis: new Axis({
         label: 'Index',
       }),
-      yAxis: new Axis({
-      }),
+      yAxis: new Axis({}),
       yDirection: Direction.South,
-      tooltip: new Tooltip({
-        triggers: {
-          [StackedBar.selectors.bar]: (d, i) => {
-            const accessor = this.yAccessors[i % 5]
-            const value = (typeof accessor === 'function') ? accessor(d) : 'No Data'
-            return `<span>${value}</span>`
-          },
-        },
-      }),
+      tooltip: this.tooltip
+    }
+
+    this.stackedBarChart = new XYContainer(this.stacked.nativeElement, {
+      ...this.chartConfig,
+      components: [
+        new StackedBar(stackedConfig),
+      ],
       crosshair: new Crosshair({
         template: (d) => `<span>Index: ${d.x}</span>`,
       }),
-    }
+    }, data)
 
-    this.composite = new XYContainer(this.chart.nativeElement, this.chartConfig, data)
+    this.groupedBarChart = new XYContainer(this.grouped.nativeElement, {
+      ...this.chartConfig,
+      xAxis: new Axis({}),
+      yAxis: new Axis({}),
+      height: this.stackedBarChart.containerHeight * 2,
+      components: [new GroupedBar(groupConfig)],
+    }, data)
 
     this.intervalId = setInterval(() => {
-      this.composite.setData(generateData(20))
+      const newData = generateData(10);
+      [this.groupedBarChart, this.stackedBarChart].forEach((c) => {
+        c.setData(newData)
+      })
     }, 25000)
   }
 
@@ -99,13 +131,24 @@ export class HorizontalBarComponent implements AfterViewInit, OnDestroy {
     const { d } = event
     d.inactive = !d.inactive
     this.legendItems = [...this.legendItems]
-    const accessors = this.yAccessors.map((acc, i) => !this.legendItems[i].inactive ? acc : null)
-    this.areaConfig.y = accessors
-    this.composite.updateComponents([this.areaConfig])
+    const accessors = this.yAccessors.map((acc, i) =>
+      !this.legendItems[i].inactive ? acc : null
+    )
+    this.stackedBarChart.updateComponents([getStackedBarConfig(accessors)])
+    this.groupedBarChart.updateComponents([getGroupedBarConfig(accessors)])
   }
 }
 
 function getStackedBarConfig (y: NumericAccessor<SampleDatum>[]): StackedBarConfigInterface<SampleDatum> {
+  return {
+    orientation: Orientation.Horizontal,
+    y: y,
+    x: d => d.x,
+    roundedCorners: 5,
+  }
+}
+
+function getGroupedBarConfig (y: NumericAccessor<SampleDatum>[]): GroupedBarConfigInterface<SampleDatum> {
   return {
     orientation: Orientation.Horizontal,
     y: y,

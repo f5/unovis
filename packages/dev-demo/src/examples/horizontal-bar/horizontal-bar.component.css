@@ -2,15 +2,21 @@
   position: absolute;
   display: flex;
   flex-direction: column;
-  height: 80%;
+  height: 100%;
   width: 99%;
 }
 
 .chartLegend {
   flex-grow: 0;
+
 }
 
 .chartMain {
   flex-grow: 1;
   overflow: auto;
+  display: flex;
+  flex-direction: column;
 }
+
+
+

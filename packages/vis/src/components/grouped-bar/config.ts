@@ -3,6 +3,7 @@ import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component
 
 // Types
 import { StringAccessor } from 'types/accessor'
+import { Orientation } from 'types/position'
 
 export interface GroupedBarConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
   /** Force set the group width in pixels. Default: `undefined` */
@@ -23,6 +24,8 @@ export interface GroupedBarConfigInterface<Datum> extends XYComponentConfigInter
   barMinHeight?: number;
   /** Configurable bar cursor when hovering over. Default: `null` */
   cursor?: StringAccessor<Datum>;
+  /** Chart orientation: `Orientation.Vertical` or `Orientation.Horizontal`. Default `Orientation.Vertical` */
+  orientation?: Orientation;
 }
 
 export class GroupedBarConfig<Datum> extends XYComponentConfig<Datum> implements GroupedBarConfigInterface<Datum> {
@@ -34,4 +37,5 @@ export class GroupedBarConfig<Datum> extends XYComponentConfig<Datum> implements
   roundedCorners = 2
   barMinHeight = 2
   cursor = null
+  orientation = Orientation.Vertical
 }
