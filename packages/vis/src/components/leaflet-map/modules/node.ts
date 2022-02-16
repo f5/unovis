@@ -15,12 +15,12 @@ import { hexToBrightness } from 'utils/color'
 import { getPointPos } from './utils'
 
 // Local Types
-import { LeafletMapPoint } from '../types'
+import { LeafletMapPoint, LeafletMapPointShape } from '../types'
 
 // Modules
 import { updateDonut } from './donut'
 
-// Types
+// Config
 import { LeafletMapConfigInterface } from '../config'
 
 import * as s from '../style'
@@ -46,13 +46,17 @@ export function createNodes (selection): void {
     .attr('class', s.bottomLabel)
     .attr('dy', '0.32em')
     .attr('opacity', 1)
-    // .text('sdsdfsdfsdfsdfsdf')
 }
 
-export function updateNodes<D> (selection, config: LeafletMapConfigInterface<D>, leafletMap: L.Map, mapMoveZoomUpdateOnly: boolean): void {
+export function updateNodes<D> (
+  selection: Selection<SVGGElement, LeafletMapPoint<D>, SVGGElement, Record<string, unknown>[]>,
+  config: LeafletMapConfigInterface<D>,
+  leafletMap: L.Map,
+  mapMoveZoomUpdateOnly: boolean
+): void {
   const { clusterOutlineWidth } = config
 
-  selection.each((d: LeafletMapPoint<D>, i: number, elements: SVGElement[]) => {
+  selection.each((d: LeafletMapPoint<D>, i: number, elements: SVGGElement[]) => {
     const group = select(elements[i])
     const node: Selection<SVGPathElement, any, SVGGElement, any> = group.select(`.${s.pointPath}`)
     const innerLabel: Selection<SVGTextElement, any, SVGElement, any> = group.select(`.${s.innerLabel}`)
@@ -63,12 +67,13 @@ export function updateNodes<D> (selection, config: LeafletMapConfigInterface<D>,
     const fromExpandedCluster = !!d.properties.expandedClusterPoint
     const donutData = d.donutData
     const isCluster = d.properties.cluster
+    const isCircle = (d.properties.shape === LeafletMapPointShape.Circle) || !d.properties.shape
     const { x, y } = getPointPos(d, leafletMap)
 
     // Every frame updates
     group.attr('transform', `translate(${x},${y})`)
     group.select(`.${s.donutCluster}`)
-      .call(updateDonut, donutData, d.radius, isCluster ? clusterOutlineWidth : 0)
+      .call(updateDonut, donutData, isCircle || isCluster ? d.radius : 0, isCluster ? clusterOutlineWidth : 0)
     node.attr('d', d.path)
     node.style('cursor', isCluster ? 'pointer' : pointCursor)
     bottomLabel.attr('transform', `translate(0,${d.radius + BOTTOM_LABEL_TOP_MARGIN})`)
