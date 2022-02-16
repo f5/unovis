@@ -1,20 +1,20 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import {
-  Component,
-  ViewChild,
-  ContentChildren,
-  ContentChild,
-  ElementRef,
-  AfterViewInit,
   AfterContentInit,
+  AfterViewInit,
+  Component,
+  ContentChild,
+  ContentChildren,
+  ElementRef,
   Input,
   OnDestroy,
   QueryList,
   SimpleChanges,
+  ViewChild,
 } from '@angular/core'
 
 // Vis
-import { XYContainer, XYContainerConfigInterface, Axis, Crosshair, Tooltip, ContinuousScale, Spacing, Direction } from '@volterra/vis'
+import { Axis, ContinuousScale, Crosshair, Direction, Spacing, Tooltip, XYContainer, XYContainerConfigInterface } from '@volterra/vis'
 import { VisXYComponent } from '../../core'
 import { VisTooltipComponent } from '../../components/tooltip/tooltip.component'
 
@@ -74,7 +74,7 @@ export class VisXYContainerComponent<Datum> implements AfterViewInit, AfterConte
    * chart's set up */
   @Input() yRange: [number, number];
   /** Y Axis direction. Default: `Direction.North` */
-  @Input() yDirection?: Direction.South | Direction.North | string;
+  @Input() yDirection: Direction.South | Direction.North | string = Direction.North;
 
   /** Animation duration of all the components within the container. Default: `undefined` */
   @Input() duration: number = undefined
