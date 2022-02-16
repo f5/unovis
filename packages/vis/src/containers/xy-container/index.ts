@@ -302,7 +302,7 @@ export class XYContainer<Datum> extends ContainerCore {
         if (r[1] < res[1]) res[1] = r[1]
         return res
       }, [Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY])
-      const scaleRange = (dimension === ScaleDimension.Y && (config.yDirection === Direction.North))
+      const scaleRange = ((dimension === ScaleDimension.Y) && (config.yDirection !== Direction.South))
         ? [range[1], range[0]]
         : range
       const configuredRange = dimension === ScaleDimension.Y ? config.yRange : config.xRange
