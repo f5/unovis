@@ -77,17 +77,20 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
     // We calculate the longest label width to set the bleed values accordingly
     let labelsBleed = 0
     if (config.showLabels) {
-      const recordLabels = this._getRecordLabels(data)
-      const longestLabel = recordLabels.reduce((acc, val) => acc.length > val.length ? acc : val, '')
-      const label = this._labelsGroup.append('text')
-        .attr('class', s.label)
-        .text(longestLabel)
-        .call(trimSVGText, config.maxLabelWidth)
-      const labelWidth = label.node().getBBox().width
-      this._labelsGroup.empty()
+      if (config.labelWidth) labelsBleed = config.labelWidth + this._labelMargin
+      else {
+        const recordLabels = this._getRecordLabels(data)
+        const longestLabel = recordLabels.reduce((acc, val) => acc.length > val.length ? acc : val, '')
+        const label = this._labelsGroup.append('text')
+          .attr('class', s.label)
+          .text(longestLabel)
+          .call(trimSVGText, config.maxLabelWidth)
+        const labelWidth = label.node().getBBox().width
+        this._labelsGroup.empty()
 
-      const tolerance = 1.15 // Some characters are wider than others so we add a little of extra space to take that into account
-      labelsBleed = labelWidth ? tolerance * labelWidth + this._labelMargin : 0
+        const tolerance = 1.15 // Some characters are wider than others so we add a little of extra space to take that into account
+        labelsBleed = labelWidth ? tolerance * labelWidth + this._labelMargin : 0
+      }
     }
 
     const maxLineWidth = this._getMaxLineWidth()
@@ -134,7 +137,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
       .attr('y', (_, i) => yStart + (i + 0.5) * config.rowHeight)
       .text(label => label)
       .each((label, i, els) => {
-        trimSVGText(select(els[i]), config.maxLabelWidth)
+        trimSVGText(select(els[i]), config.labelWidth || config.maxLabelWidth)
       })
 
     labels.exit().remove()

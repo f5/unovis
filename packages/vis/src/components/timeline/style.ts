@@ -72,4 +72,5 @@ export const label = css`
   font-size: var(--vis-timeline-label-font-size);
   fill: var(--vis-timeline-label-color);
   text-anchor: end;
+  user-select: none;
 `
