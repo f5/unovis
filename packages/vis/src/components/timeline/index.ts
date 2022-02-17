@@ -176,6 +176,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
       .attr('stroke-width', d => getNumber(d, config.lineWidth))
       .attr('transform', 'translate(0, 0)')
       .style('cursor', d => getString(d, config.cursor))
+      .style('stroke-linecap', d => getString(d, config.lineCap))
       .style('opacity', 1)
     this._positionLines(linesMerged, ordinalScale)
 

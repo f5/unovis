@@ -13,7 +13,8 @@ export const global = injectGlobal`
     --vis-timeline-label-color: #6C778C;
 
     --vis-timeline-cursor: default;
-    --vis-timeline-stroke: var(--vis-color-main);
+    --vis-timeline-line-color: var(--vis-color-main);
+    --vis-timeline-line-cap: round;
   }
 `
 
@@ -28,9 +29,9 @@ export const lines = css`
 export const line = css`
   label: line;
   fill: none;
-  stroke: var(--vis-timeline-stroke);
+  stroke: var(--vis-timeline-line-color);
   cursor: var(--vis-timeline-cursor);
-  stroke-linecap: round;
+  stroke-linecap: var(--vis-timeline-line-cap);
 `
 
 export const rows = css`
