@@ -1,0 +1,10 @@
+<div class="chart">
+  <vis-xy-container [margin]="margin" [data]="data" [height]="numRows * 15">
+    <vis-timeline [x]="x" [type]="type" [length]="length" [showLabels]="true" [alternatingRowColors]="false" [labelWidth]="120"></vis-timeline>
+  </vis-xy-container>
+
+  <vis-xy-container [margin]="margin" [data]="dataGlobal" [height]="45">
+    <vis-timeline [x]="x" [type]="type" [length]="length" [showLabels]="true" [alternatingRowColors]="false" [labelWidth]="120"></vis-timeline>
+    <vis-axis type="x" label="" [tickFormat]="formatXTicks" [gridLine]="false" [domainLine]="false" [tickLine]="false" [tickPadding]="-10"></vis-axis>
+  </vis-xy-container>
+</div>

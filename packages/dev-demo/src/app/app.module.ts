@@ -29,11 +29,14 @@ import { TrafficGraphComponent } from 'examples/console-traffic-graph-pg2/consol
 import { ChordDiagramComponent } from 'examples/chord-diagram/chord-diagram.component'
 import { DonutChartComponent } from 'examples/donut/donut.component'
 import { AtomicAngularWrapperComponent } from 'examples/atomic-angular-wrapper/atomic-angular-wrapper.component'
-import { AtomicAngularWrapperModule } from 'examples/atomic-angular-wrapper/atomic-angular-wrapper.module'
 import { FreeBrushComponent } from 'examples/free-brush/free-brush.component'
-import { FreeBrushModule } from 'examples/free-brush/free-brush.module'
 import { ConcentricGraphComponent } from 'examples/concentric-graph/concentric-graph.component'
 import { HorizontalBarComponent } from 'examples/horizontal-bar/horizontal-bar.component'
+import { TimelineLabelsComponent } from 'examples/timeline-labels/timeline-labels.component'
+
+import { AtomicAngularWrapperModule } from 'examples/atomic-angular-wrapper/atomic-angular-wrapper.module'
+import { FreeBrushModule } from 'examples/free-brush/free-brush.module'
+import { TimelineLabelsModule } from 'examples/timeline-labels/timeline-labels.module'
 
 import { AppComponent } from './app.component'
 import { BulletLegendComponent } from './components/bullet-legend/bullet-legend.component'
@@ -60,6 +63,7 @@ const appRoutes: Routes = [
   { path: 'composite', component: CompositeComponent },
   { path: 'wrapper-usage-example', component: WrapperUsageExampleComponent },
   { path: 'timeline', component: TimelineComponent },
+  { path: 'timeline-with-labels', component: TimelineLabelsComponent },
   { path: 'bullet-legend', component: BulletLegendExampleComponent },
   { path: 'topojson-map', component: TopoJSONMapComponent },
   { path: 'topojson-heatmap', component: TopoJSONHeatMapComponent },
@@ -122,6 +126,7 @@ appRoutes.push({ path: '', redirectTo: `/${appRoutes[0].path}`, pathMatch: 'full
     BrowserModule,
     AtomicAngularWrapperModule,
     FreeBrushModule,
+    TimelineLabelsModule,
     BrowserModule,
   ],
 
