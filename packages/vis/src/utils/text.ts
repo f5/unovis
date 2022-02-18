@@ -206,7 +206,8 @@ export function trimSVGText (svgTextSelection: Selection<SVGTextElement, any, SV
   const textLength = text.length
 
   const textWidth = fastMode ? fontSize * textLength * widthToHeightRatio : svgTextSelection.node().getComputedTextLength()
-  const maxCharacters = Math.ceil(textLength * maxWidth / textWidth)
+  const tolerance = 1.1
+  const maxCharacters = Math.ceil(textLength * maxWidth / (tolerance * textWidth))
   svgTextSelection.text(trimText(text, maxCharacters, trimType))
 }
 
