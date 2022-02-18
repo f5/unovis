@@ -115,10 +115,9 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum> {
     // Animate exiting bars going down
     smartTransition(barGroupExit.selectAll<SVGPathElement, Datum>(`.${s.bar}`), duration)
       .attr('transform', (d, i, e) => {
-        const dim = e[i].getBBox()
         return this.isVertical()
-          ? `translate(0,${dim.height}) scale(1,0)`
-          : `translate(${dim.width},0) scale(0,1)`
+          ? `translate(0,${this.yScale(0)}) scale(1,0)`
+          : `translate(${this.xScale(0)},0) scale(0,1)`
       })
 
     const barWidth = innerBandScale.bandwidth()
