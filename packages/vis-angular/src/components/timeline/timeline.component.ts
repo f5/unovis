@@ -102,6 +102,11 @@ export class VisTimelineComponent<Datum> implements TimelineConfigInterface<Datu
   /** Width of the timeline items. Default: `8` */
   @Input() lineWidth: NumericAccessor<Datum>
 
+  /** Line cap: 'butt', 'round' or 'square'.
+   * Default appearance is `round` and comes from the `--vis-timeline-line-cap`` CSS variable.
+   * Default configuration object value: `undefined` */
+  @Input() lineCap: StringAccessor<Datum>
+
   /** Timeline row height. Default: `22` */
   @Input() rowHeight: number
 
@@ -116,6 +121,9 @@ export class VisTimelineComponent<Datum> implements TimelineConfigInterface<Datu
 
   /** Show item type labels when set to `true`. Default: `false` */
   @Input() showLabels: boolean
+
+  /** Fixed label width in pixels. Labels longer than the specified value will be trimmed. Default: `undefined` */
+  @Input() labelWidth: number
 
   /** Maximum label width in pixels. Labels longer than the specified value will be trimmed. Default: `120` */
   @Input() maxLabelWidth: number
@@ -143,8 +151,8 @@ export class VisTimelineComponent<Datum> implements TimelineConfigInterface<Datu
   }
 
   private getConfig (): TimelineConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, lineWidth, rowHeight, length, type, cursor, showLabels, maxLabelWidth, alternatingRowColors } = this
-    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, lineWidth, rowHeight, length, type, cursor, showLabels, maxLabelWidth, alternatingRowColors }
+    const { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, lineWidth, lineCap, rowHeight, length, type, cursor, showLabels, labelWidth, maxLabelWidth, alternatingRowColors } = this
+    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, lineWidth, lineCap, rowHeight, length, type, cursor, showLabels, labelWidth, maxLabelWidth, alternatingRowColors }
     const keys = Object.keys(config) as (keyof TimelineConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
