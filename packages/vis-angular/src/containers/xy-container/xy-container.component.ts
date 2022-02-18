@@ -30,6 +30,11 @@ export class VisXYContainerComponent<Datum> implements AfterViewInit, AfterConte
   @ContentChildren(VisXYComponent) visComponents: QueryList<VisXYComponent>
   @ContentChild(VisTooltipComponent) tooltipComponent: VisTooltipComponent
 
+  /** Width in pixels. By default, Container automatically fits to the size of the parent element. Default: `undefined`. */
+  @Input() width?: number;
+  /** Height in pixels. By default, Container automatically fits to the size of the parent element. Default: `undefined`. */
+  @Input() height?: number;
+
   /** Scale for X dimension, e.g. Scale.scaleLinear(). Default: `Scale.scaleLinear()` */
   @Input() xScale: ContinuousScale;
   /** Scale domain (data extent) for X dimension. By default this value is calculated automatically based on data. */
@@ -121,7 +126,7 @@ export class VisXYContainerComponent<Datum> implements AfterViewInit, AfterConte
 
   getConfig (): XYContainerConfigInterface<Datum> {
     const {
-      duration, margin, padding, scaleByDomain, autoMargin,
+      duration, margin, padding, scaleByDomain, autoMargin, width, height,
       xScale, xDomain, xDomainMinConstraint, xDomainMaxConstraint, xRange,
       yScale, yDomain, yDomainMinConstraint, yDomainMaxConstraint, yRange, yDirection,
     } = this
@@ -136,6 +141,8 @@ export class VisXYContainerComponent<Datum> implements AfterViewInit, AfterConte
 
     return {
       components,
+      width,
+      height,
       duration,
       margin,
       padding,

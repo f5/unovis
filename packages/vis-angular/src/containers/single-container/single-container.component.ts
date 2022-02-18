@@ -18,11 +18,16 @@ export class VisSingleContainerComponent<Data = unknown, C extends ComponentCore
   @ContentChild(VisCoreComponent) visComponent: VisCoreComponent
   @ContentChild(VisTooltipComponent) tooltipComponent: VisTooltipComponent
 
+  /** Width in pixels. By default, Container automatically fits to the size of the parent element. Default: `undefined`. */
+  @Input() width?: number;
+  /** Height in pixels. By default, Container automatically fits to the size of the parent element. Default: `undefined`. */
+  @Input() height?: number;
+
   /** Margins. Default: `{ top: 0, bottom: 0, left: 0, right: 0 }` */
   @Input() margin = { top: 10, bottom: 10, left: 10, right: 10 }
   /** Animation duration of all the components within the container. Default: `undefined` */
   @Input() duration: number
-  @Input() data
+  @Input() data: Data
 
   chart: SingleChart<Data>
 
@@ -44,12 +49,12 @@ export class VisSingleContainerComponent<Data = unknown, C extends ComponentCore
   }
 
   getConfig (): SingleChartConfigInterface<Data> {
-    const { duration, margin } = this
+    const { width, height, duration, margin } = this
 
     const component = this.visComponent?.component as C
     const tooltip = this.tooltipComponent?.component as Tooltip
 
-    return { duration, margin, component, tooltip }
+    return { width, height, duration, margin, component, tooltip }
   }
 
   ngOnDestroy (): void {
