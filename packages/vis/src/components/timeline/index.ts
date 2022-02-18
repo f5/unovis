@@ -207,6 +207,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
       .attr('ry', this._scrollBarWidth / 2)
 
     this._updateScrollPosition(0)
+    this._setPointerEvents()
   }
 
   private _positionLines (
@@ -239,8 +240,16 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
     this._linesGroup.attr('pointer-events', 'none')
     clearTimeout(this._scrollTimeoutId)
     this._scrollTimeoutId = setTimeout(() => {
-      this._linesGroup.attr('pointer-events', null)
+      this._setPointerEvents()
     }, 300)
+  }
+
+  private _setPointerEvents (): void {
+    const { config } = this
+
+    const hasLineEvents = Object.keys(config.events).includes(s.line)
+    const hasLinesGroupEvents = Object.keys(config.events).includes(s.lines)
+    this._linesGroup.attr('pointer-events', (hasLineEvents || hasLinesGroupEvents) ? null : 'none')
   }
 
   private _updateScrollPosition (diff: number): void {
