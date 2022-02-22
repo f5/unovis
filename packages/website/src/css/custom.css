@@ -42,3 +42,26 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
 .navbar__logo > img {
   display: block !important;
 }
+
+.prop-preview-menu {
+  font-size: small;
+  justify-content: center;
+}
+
+.prop-preview-menu > li {
+  border-radius: 10px;
+  border: 1px solid var(--ifm-color-primary);
+  padding: 5px;
+  margin: 5px;
+}
+
+.prop-preview-menu > li[aria-selected='true'] {
+  background:var(--ifm-color-primary);
+  color: white;
+}
+
+.visualization-container-div {
+  --vis-area-fill-opacity: 0.5;
+  --vis-area-hover-fill-opacity: 1;
+  --vis-area-stroke-width: 1px;
+}
