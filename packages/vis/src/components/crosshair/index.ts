@@ -7,13 +7,16 @@ import { XYComponentCore } from 'core/xy-component'
 import { Tooltip } from 'components/tooltip'
 
 // Utils
-import { isNumber, isArray, getNumber, clamp, getStackedValues, getNearest } from 'utils/data'
+import { isNumber, isArray, getNumber, clamp, getStackedValues, getNearest, isFunction } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
 
 // Types
 import { NumericAccessor } from 'types/accessor'
 import { PositionStrategy } from 'types/position'
+
+// Local Types
+import { CrosshairCircle } from './types'
 
 // Config
 import { CrosshairConfig, CrosshairConfigInterface } from './config'
@@ -54,7 +57,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
 
   _render (customDuration?: number): void {
     const { config } = this
-    if (!this.datum) return
+    if (config.snapToData && !this.datum) return
     const duration = isNumber(customDuration) ? customDuration : config.duration
 
     smartTransition(this.g, duration)
@@ -77,14 +80,14 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
       .append('circle')
       .attr('class', s.circle)
       .attr('r', 0)
-      .style('fill', (d, i) => getColor(this.datum, config.color, i))
+      .style('fill', d => d.color)
 
     smartTransition(circlesEnter.merge(circles), duration, easeLinear)
       .attr('cx', this.x)
-      .attr('cy', d => this.yScale(d.value))
+      .attr('cy', d => d.y)
       .attr('r', 4)
-      .style('opacity', d => d.visible ? 1 : 0)
-      .style('fill', (d, i) => getColor(this.datum, config.color, i))
+      .style('opacity', d => d.opacity)
+      .style('fill', d => d.color)
 
     circles.exit().remove()
   }
@@ -96,19 +99,25 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
   _onMouseMove (event: MouseEvent): void {
     const { config, datamodel, element } = this
     if (!config.x && datamodel.data?.length) console.warn('Crosshair: X accessor function has not been configured. Please check if it\'s present in the configuration object')
-    if (!config.y && !config.yStacked && datamodel.data?.length) console.warn('Crosshair: Y accessors have not been configured. Please check if they\'re present in the configuration object')
-
     const [x] = pointer(event, element)
-    const scaleX = this.xScale
-    const valueX = scaleX.invert(x) as number
+    const xRange = this.xScale.range()
 
-    this.datum = getNearest(datamodel.data, valueX, config.x)
-    if (!this.datum) return
+    if (config.snapToData) {
+      if (!config.y && !config.yStacked && datamodel.data?.length) console.warn('Crosshair: Y accessors have not been configured. Please check if they\'re present in the configuration object')
+      const scaleX = this.xScale
+      const valueX = scaleX.invert(x) as number
 
-    this.x = clamp(Math.round(scaleX(getNumber(this.datum, config.x))), 0, this._width)
+      this.datum = getNearest(datamodel.data, valueX, config.x)
+      if (!this.datum) return
 
-    // Show the crosshair only if it's in the chart range and not far from mouse pointer (if configured)
-    this.show = (this.x >= 0) && (this.x <= this._width) && (!config.hideWhenFarFromPointer || (Math.abs(this.x - x) < config.hideWhenFarFromPointerDistance))
+      this.x = clamp(Math.round(scaleX(getNumber(this.datum, config.x))), 0, this._width)
+
+      // Show the crosshair only if it's in the chart range and not far from mouse pointer (if configured)
+      this.show = (this.x >= 0) && (this.x <= this._width) && (!config.hideWhenFarFromPointer || (Math.abs(this.x - x) < config.hideWhenFarFromPointerDistance))
+    } else {
+      this.x = clamp(x, xRange[0], xRange[1])
+      this.show = (this.x > xRange[0]) && (this.x < xRange[1])
+    }
 
     window.cancelAnimationFrame(this._animFrameId)
     this._animFrameId = window.requestAnimationFrame(() => {
@@ -136,7 +145,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
 
     const container = tooltip.getContainer() || this.container.node()
     const [x, y] = tooltip.config.positionStrategy === PositionStrategy.Fixed ? [event.clientX, event.clientY] : pointer(event, container)
-    const content = config.template(this.datum)
+    const content = config.template(this.datum, this.xScale.invert(this.x))
     if (content) tooltip.show(content, { x, y })
   }
 
@@ -151,28 +160,35 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
     return [undefined, undefined]
   }
 
-  private getCircleData (): { index: number; value: any; visible: boolean }[] {
-    const { config } = this
-    const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
-    const yStackedAccessors = config.yStacked ?? []
-    const baselineValue = getNumber(this.datum, config.baseline) || 0
-    const stackedValues = getStackedValues(this.datum, ...yStackedAccessors)
-      .map((value, index, arr) => ({
-        index,
-        value: value + baselineValue,
-        visible: !!getNumber(this.datum, yStackedAccessors[index]),
-      }))
+  private getCircleData (): CrosshairCircle[] {
+    const { config, datamodel: { data } } = this
 
-    const regularValues = yAccessors
-      .map((a, index) => {
-        const value = getNumber(this.datum, a)
-        return {
-          index,
-          value,
-          visible: !!value,
-        }
-      })
+    if (isFunction(config.getCircles)) return config.getCircles(this.xScale.invert(this.x), data)
 
-    return stackedValues.concat(regularValues)
+    if (config.snapToData && this.datum) {
+      const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
+      const yStackedAccessors = config.yStacked ?? []
+      const baselineValue = getNumber(this.datum, config.baseline) || 0
+      const stackedValues: CrosshairCircle[] = getStackedValues(this.datum, ...yStackedAccessors)
+        .map((value, index, arr) => ({
+          y: this.yScale(value + baselineValue),
+          opacity: getNumber(this.datum, yStackedAccessors[index]) ? 1 : 0,
+          color: getColor(this.datum, config.color, index),
+        }))
+
+      const regularValues: CrosshairCircle[] = yAccessors
+        .map((a, index) => {
+          const value = getNumber(this.datum, a)
+          return {
+            y: this.yScale(value),
+            opacity: value ? 1 : 0,
+            color: getColor(this.datum, config.color, index),
+          }
+        })
+
+      return stackedValues.concat(regularValues)
+    }
+
+    return []
   }
 }

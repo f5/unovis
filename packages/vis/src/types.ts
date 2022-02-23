@@ -18,6 +18,7 @@ export { Direction } from 'types/direction'
 
 // Component Types
 export { VisEventType, VisEventCallback } from 'core/component/types'
+export { CrosshairCircle } from 'components/crosshair/types'
 export { AxisType } from 'components/axis/types'
 export { MapProjection, MapProjectionKind, MapFeature, MapPointLabelPosition } from 'components/topojson-map/types'
 export { Hierarchy } from 'components/radial-dendrogram/types'
