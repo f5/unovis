@@ -1,8 +1,11 @@
+<div class="title">Timeline with labels and Crosshair</div>
 <div class="chart">
   <vis-xy-container [margin]="margin" [data]="data" [height]="numRows * 15">
     <vis-timeline [x]="x" [type]="type" [length]="length" [showLabels]="true" [alternatingRowColors]="false" [labelWidth]="120"></vis-timeline>
+    <vis-tooltip [container]="tooltipContainer" [positionStrategy]="tooltipPositionStrategy" [horizontalShift]="10"></vis-tooltip>
+    <vis-crosshair [x]="x" [template]="crosshairTemplate" [snapToData]="false" [getCircles]="getCircles"></vis-crosshair>
   </vis-xy-container>
-
+  <div class="separator"></div>
   <vis-xy-container [margin]="margin" [data]="dataGlobal" [height]="45">
     <vis-timeline [x]="x" [type]="type" [length]="length" [showLabels]="true" [alternatingRowColors]="false" [labelWidth]="120"></vis-timeline>
     <vis-axis type="x" label="" [tickFormat]="formatXTicks" [gridLine]="false" [domainLine]="false" [tickLine]="false" [tickPadding]="-10"></vis-axis>
