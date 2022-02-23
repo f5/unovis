@@ -1,5 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { select, Selection } from 'd3-selection'
+import { active, Transition } from 'd3-transition'
 
 // Core
 import { CoreDataModel } from 'data-models/core'
@@ -78,6 +79,17 @@ export class ComponentCore<
   render (duration = this.config.duration): void {
     this._render(duration)
 
+    const ANIMATING_ATTR = 'animating'
+    if (duration) {
+      this.g.attr(ANIMATING_ATTR, '')
+      const transition = active(this.g.node()) || this.g
+        .transition()
+        .duration(duration) as Transition<SVGGElement | HTMLElement, unknown, null, undefined>
+
+      transition.on('end interrupt', () => {
+        this.g.attr(ANIMATING_ATTR, null)
+      })
+    }
     this._setUpComponentEventsThrottled()
     this._setCustomAttributesThrottled()
   }
