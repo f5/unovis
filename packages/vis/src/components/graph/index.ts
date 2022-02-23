@@ -124,7 +124,6 @@ export class Graph<
     super()
     if (config) this.config.init(config)
 
-    this.g.attr('class', generalSelectors.root)
     this._backgroundRect = this.g.append('rect').attr('class', generalSelectors.background)
     this._graphGroup = this.g.append('g').attr('class', generalSelectors.graphGroup)
 
@@ -241,14 +240,12 @@ export class Graph<
       this._onZoom(transform)
     }
 
-    // While the graph is animating, we set the `animating` attribute to the root group and disable pointer events on the graph group
+    // While the graph is animating we disable pointer events on the graph group
     if (animDuration) {
-      this.g.attr('animating', '')
       this._graphGroup.attr('pointer-events', 'none')
     }
     smartTransition(this._graphGroup, animDuration)
       .on('end interrupt', () => {
-        this.g.attr('animating', null)
         this._graphGroup.attr('pointer-events', null)
       })
 
