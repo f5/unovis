@@ -52,6 +52,11 @@ export class ComponentCore<
       this.element = document.createElement('div')
     }
     this.g = select(this.element) as Selection<SVGGElement, unknown, null, undefined> | Selection<HTMLElement, unknown, null, undefined>
+
+    // Setting the root class if available
+    // eslint-disable-next-line dot-notation
+    const rootClass = this.constructor?.['selectors']?.root as string
+    if (rootClass) this.g.attr('class', rootClass)
   }
 
   setConfig (config: ConfigInterface): void {
