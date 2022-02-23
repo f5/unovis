@@ -10,6 +10,10 @@ export const variables = injectGlobal`
   }
 `
 
+export const root = css`
+  label: brush-component;
+`
+
 export const brush = css`
   label: brush;
   fill: none;

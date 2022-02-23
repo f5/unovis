@@ -16,6 +16,10 @@ export const global = injectGlobal`
   }
 `
 
+export const root = css`
+  label: area-component;
+`
+
 export const area = css`
   label: area;
   cursor: var(--vis-area-cursor);

@@ -28,7 +28,10 @@ export class BulletLegend {
     this._container = element
 
     // Create SVG element for visualizations
-    this.div = select(this._container).append('div')
+    this.div = select(this._container)
+      .append('div')
+      .attr('class', s.root)
+
     this.element = this.div.node()
 
     if (config) this.update(config)

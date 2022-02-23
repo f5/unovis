@@ -13,6 +13,10 @@ export const variables = injectGlobal`
   }
 `
 
+export const root = css`
+  label: chord-diagram-component;
+`
+
 export const nodes = css`
   label: nodes;
 `

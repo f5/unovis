@@ -13,6 +13,10 @@ export const global = injectGlobal`
   }
 `
 
+export const root = css`
+  label: axis-component;
+`
+
 export const hideTickLine = css`
   label: hide-tick-line;
 `

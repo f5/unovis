@@ -13,6 +13,9 @@ export const variables = injectGlobal`
     --vis-legend-bullet-label-spacing: 8px;
   }
 `
+export const root = css`
+  label: bullet-legend-component;
+`
 
 export const item = css`
   label: legendItem;

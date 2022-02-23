@@ -18,6 +18,10 @@ export const global = injectGlobal`
   }
 `
 
+export const root = css`
+  label: timeline-component;
+`
+
 export const background = css`
   label: background;
 `

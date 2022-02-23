@@ -8,6 +8,10 @@ export const global = injectGlobal`
   }
 `
 
+export const root = css`
+  label: crosshair-component;
+`
+
 export const line = css`
   stroke: var(--vis-crosshair-line-stroke);
   stroke-opacity: 1;

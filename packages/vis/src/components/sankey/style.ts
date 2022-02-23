@@ -27,6 +27,10 @@ export const variables = injectGlobal`
   }
 `
 
+export const root = css`
+  label: sankey-component;
+`
+
 export const links = css`
   label: links;
 `

@@ -7,8 +7,9 @@ export const global = injectGlobal`
     --vis-flow-legend-link-color: #E5E9F7;
   }
 `
-export const container = css`
-  label: flow-label;
+
+export const root = css`
+  label: flow-legend-component;
 
   position: relative;
   user-select: none;

@@ -10,6 +10,10 @@ export const variables = injectGlobal`
   }
 `
 
+export const root = css`
+  label: vis-controls-component;
+`
+
 export const items = css`
   label: items;
   background-color: var(--vis-controls-buttons-background-color);

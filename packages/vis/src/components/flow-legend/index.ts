@@ -25,7 +25,7 @@ export class FlowLegend {
   constructor (element: HTMLElement, config?: FlowLegendConfigInterface) {
     this._container = element
 
-    this.div = select(this._container).append('div').attr('class', s.container)
+    this.div = select(this._container).append('div').attr('class', s.root)
     this.element = this.div.node()
 
     this.line = this.div.append('div')

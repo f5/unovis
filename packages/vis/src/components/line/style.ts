@@ -8,6 +8,10 @@ export const global = injectGlobal`
   }
 `
 
+export const root = css`
+  label: line-component;
+`
+
 export const line = css`
   label: line;
   transition: opacity 200ms;

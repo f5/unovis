@@ -17,6 +17,10 @@ export const global = injectGlobal`
   }
 `
 
+export const root = css`
+  label: scatter-component;
+`
+
 export const point = css`
   label: point;
 

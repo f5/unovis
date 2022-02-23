@@ -20,7 +20,9 @@ export class VisControls {
   constructor (element: HTMLElement, config?: VisControlsConfigInterface) {
     this._container = element
 
-    this.div = select(this._container).append('div')
+    this.div = select(this._container)
+      .append('div')
+      .attr('class', s.root)
     this.element = this.div.node()
     this._items = this.div.append('div')
       .attr('class', s.items)

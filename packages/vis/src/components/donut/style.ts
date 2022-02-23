@@ -10,6 +10,10 @@ export const variables = injectGlobal`
   }
 `
 
+export const root = css`
+  label: donut-component;
+`
+
 export const segment = css`
   label: segment;
 `

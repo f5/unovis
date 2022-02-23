@@ -59,7 +59,6 @@ export class TopoJSONMap<AreaDatum, PointDatum, LinkDatum> extends ComponentCore
 
   constructor (config?: TopoJSONMapConfigInterface<AreaDatum, PointDatum, LinkDatum>, data?: {areas?: AreaDatum[]; points?: PointDatum[]; links?: LinkDatum[] }) {
     super()
-    this.g.attr('class', s.map)
     this._zoomBehavior.on('zoom', this._onZoom.bind(this))
 
     if (config) this.setConfig(config)

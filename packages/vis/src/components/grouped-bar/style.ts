@@ -12,6 +12,10 @@ export const global = injectGlobal`
   }
 `
 
+export const root = css`
+  label: grouped-bar-component;
+`
+
 export const bar = css`
   label: bar;
   fill: var(--vis-grouped-bar-fill);

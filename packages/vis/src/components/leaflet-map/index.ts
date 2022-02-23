@@ -96,7 +96,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     }
 
     this._container.appendChild(this.element)
-    this.g.attr('class', s.mapContainer)
+    this.g.attr('class', s.root)
 
     if (config) this.setConfig(config)
     this._leafletInitializationPromise = new Promise((resolve) => {

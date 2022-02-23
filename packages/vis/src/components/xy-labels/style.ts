@@ -17,6 +17,10 @@ export const global = injectGlobal`
   }
 `
 
+export const root = css`
+  label: xy-labels-component;
+`
+
 export const labelGroup = css`
   label: label-g;
 

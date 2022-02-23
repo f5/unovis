@@ -14,8 +14,8 @@ export const variables = injectGlobal`
   }
 `
 
-export const map = css`
-  label: map;
+export const root = css`
+  label: topojson-map-component;
 
   &.draggable {
     &:active {

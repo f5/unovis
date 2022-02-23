@@ -9,6 +9,10 @@ export const variables = injectGlobal`
   }
 `
 
+export const root = css`
+  label: radial-dendrogram-component;
+`
+
 export const node = css`
   label: node;
   stroke-width: 0;

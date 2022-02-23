@@ -28,8 +28,8 @@ export const variables = injectGlobal`
   }
 `
 
-export const mapContainer = css`
-  label: map-leaflet;
+export const root = css`
+  label: leaflet-map-component;
 
   width: 100%;
   height: 100%;
@@ -41,7 +41,7 @@ export const mapContainer = css`
   }
 `
 
-export const background = `${mapContainer} canvas`
+export const background = `${root} canvas`
 
 export const points = css`
   label: g-points;
