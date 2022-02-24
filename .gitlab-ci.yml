@@ -33,6 +33,10 @@ pages:
       - packages/vis-angular/storybook-static
       - packages/vis-react/storybook-static
   script:
+    - export NODE_OPTIONS=--max-old-space-size=4096
+    - npm install -g npm@7
+    - npm install
+    - npm run build
     - mv packages/dev-demo/lib/volterra-vis-examples public
     - cp public/index.html public/404.html
     - mv packages/vis-angular/storybook-static public/storybook-angular
