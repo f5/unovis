@@ -53,4 +53,7 @@ function VisSingleContainerFC<Datum> (props: PropsWithChildren<VisSingleContaine
   )
 }
 
-export const VisSingleContainer = React.memo(VisSingleContainerFC, arePropsEqual)
+// We export a memoized component to avoid unnecessary re-renders
+//  and define its type explicitly to help react-docgen-typescript to extract information about props
+export const VisSingleContainer: (<Datum>(props: PropsWithChildren<VisSingleContainerProps<Datum>>) => JSX.Element | null) =
+  React.memo(VisSingleContainerFC, arePropsEqual)

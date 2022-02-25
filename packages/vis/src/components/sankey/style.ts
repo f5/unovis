@@ -10,8 +10,8 @@ export const variables = injectGlobal`
 
     --vis-sankey-node-cursor: default;
     --vis-sankey-node-fill: #4e4dd1;
-    --vis-sankey-node-label-color: #575c65;
 
+    --vis-sankey-node-label-color: #575c65;
     --vis-sankey-node-label-background-fill-color: #ffffff;
     --vis-sankey-node-label-background-stroke-color: #eaeaea;
     --vis-sankey-node-label-text-decoration: none;

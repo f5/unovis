@@ -64,4 +64,7 @@ export function VisXYContainerFC<Datum> (props: PropsWithChildren<VisXYContainer
   )
 }
 
-export const VisXYContainer = React.memo(VisXYContainerFC, arePropsEqual)
+// We export a memoized component to avoid unnecessary re-renders
+//  and define its type explicitly to help react-docgen-typescript to extract information about props
+export const VisXYContainer: (<Datum>(props: PropsWithChildren<VisXYContainerProps<Datum>>) => JSX.Element | null) =
+  React.memo(VisXYContainerFC, arePropsEqual)

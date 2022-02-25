@@ -118,5 +118,6 @@ VisTimeSeries.defaultProps = {
 
   formatYTicks: (d: number) => d.toFixed(1),
 
-  crosshairTemplate: (d: VisTimeSeriesDatum) => `<div>Date: ${new Date(d.timestamp).toLocaleDateString()}</div><div>Value: ${d.value?.toFixed(1)}</div>`,
+  crosshairTemplate: (d: VisTimeSeriesDatum) =>
+    `<div>Date: ${new Date(d.timestamp).toLocaleDateString()}</div><div>Value: ${d.value?.toFixed(1)}</div>`,
 }
