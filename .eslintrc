@@ -96,6 +96,11 @@
         "format": ["camelCase", "UPPER_CASE", "PascalCase"]
       },
       {
+        "selector": "function",
+        "modifiers": ["exported"],
+        "format": ["camelCase", "PascalCase"]
+      },
+      {
         "selector": "typeLike",
         "format": ["PascalCase"]
       },
