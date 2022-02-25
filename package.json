@@ -4,7 +4,10 @@
   "license": "MIT",
   "private": true,
   "workspaces": [
-    "packages/*"
+    "packages/dev-demo",
+    "packages/vis",
+    "packages/vis-angular",
+    "packages/vis-react"
   ],
   "engines": {
     "node": ">=12.0.0",
@@ -13,24 +16,22 @@
   "scripts": {
     "preinstall": "npx npm-force-resolutions",
     "postinstall": "sh postinstall.sh",
-    "dev": "cd packages/dev-demo; npm run dev",
-    "storybook:angular": "cd packages/vis-angular && npm run storybook",
-    "storybook:react": "cd packages/vis-react && npm run storybook",
-    "build": "npm run build:lib && npm run build:vis-react-lib && npm run build:vis-react-storybook && npm run build:vis-angular-lib && npm run build:vis-angular-storybook && npm run build:dev-demo",
+    "dev": "cd packages/dev-demo && npm run dev",
+    "website": "cd packages/website && npm run start",
+    "build": "npm run build:lib && npm run build:vis-react-lib && npm run build:vis-angular-lib && npm run build:dev-demo && npm run build:website",
     "build:lib": "cd packages/vis && npm run build",
     "build:dev-demo": "cd packages/dev-demo && npm run build",
     "build:vis-angular-lib": "cd packages/vis-angular && npm run build",
-    "build:vis-angular-storybook": "cd packages/vis-angular && npm run build-storybook",
     "build:vis-react-lib": "cd packages/vis-react && npm run build",
-    "build:vis-react-storybook": "cd packages/vis-react && npm run build-storybook",
+    "build:website": "cd packages/website && npm run build",
     "publish:lib": "cd packages/vis && npm run build && npm run publish-dist",
     "publish:vis-angular-lib": "cd packages/vis-angular && npm run build && npm publish",
     "publish:vis-react-lib": "cd packages/vis-react && npm run build && npm run publish-dist",
-    "publish:all": "sh prepublish.sh; sh publish.sh",
+    "publish:all": "sh prepublish.sh && sh publish.sh",
     "lint": "eslint ./ --ext .js,.jsx,.ts,.tsx --ignore-path .gitignore",
     "lint:fix": "eslint ./ --ext .js,.jsx,.ts,.tsx --fix --ignore-path .gitignore",
     "gather-licenses": "for p in packages/*; do npx license-report --package=$p/package.json --config license-report-config.json --output=table > $p/licences.txt; done",
-    "install:clean": "for p in packages/*; do rm -rf $p/node_modules; done; rm -rf node_modules; npm i"
+    "install:clean": "for p in packages/*; do rm -f $p/package-lock.json; rm -rf $p/node_modules; done; rm -rf node_modules; npm i"
   },
   "devDependencies": {
     "@types/node": "^16.11.14",

@@ -1,0 +1,16 @@
+name                                       license period  license type  installed version  author
+----                                       --------------  ------------  -----------------  ------
+@docusaurus/core                           perpetual       MIT           2.0.0-beta.16      n/a
+@docusaurus/plugin-debug                   perpetual       MIT           2.0.0-beta.16      n/a
+@docusaurus/plugin-sitemap                 perpetual       MIT           2.0.0-beta.16      n/a
+@docusaurus/preset-classic                 perpetual       MIT           2.0.0-beta.16      n/a
+@mdx-js/react                              perpetual       MIT           1.6.21             John Otander
+clsx                                       perpetual       MIT           1.1.1              Luke Edwards
+docusaurus-plugin-react-docgen-typescript  perpetual       MIT           0.1.0              Dennis Thompson
+prism-react-renderer                       perpetual       MIT           1.2.1              n/a
+react                                      perpetual       MIT           17.0.1             n/a
+react-docgen-typescript                    perpetual       MIT           1.2.0              n/a
+react-dom                                  perpetual       MIT           17.0.1             n/a
+@docusaurus/module-type-aliases            perpetual       MIT           2.0.0-beta.16      n/a
+@tsconfig/docusaurus                       perpetual       MIT           1.0.4              n/a
+typescript                                 perpetual       Apache-2.0    4.2.4              Microsoft Corp.

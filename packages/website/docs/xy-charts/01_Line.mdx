@@ -1,0 +1,84 @@
+---
+sidebar_position: 1
+---
+
+import BrowserOnly from '@docusaurus/BrowserOnly';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+import { PropTable } from '../utils/props-table'
+import { data } from '../utils/time-series'
+
+# Line
+### Basic configuration
+The *Line* component has been designed to work together with *XY Container*. The minimal *Line* configuration looks like:
+
+<Tabs groupId="framework">
+  <TabItem value="react" label="React">
+
+```jsx
+<VisXYContainer data={data}>
+  <VisLine x={x} y={y} />
+</VisXYContainer>
+```
+
+</TabItem>
+<TabItem value="angular" label="Angular">
+
+```html
+<vis-xy-container [data]="data">
+  <vis-line [x]="x" [y]="y"></vis-line>
+</vis-xy-container>
+```
+
+</TabItem>
+<TabItem value="typescript" label="TypeScript">
+
+```typescript
+const config: XYContainerConfigInterface<DataRecord> = {
+  components: [
+    new Line({ x, y })
+  ]
+}
+
+const chart = new XYContainer(containerNode, config, data)
+```
+
+</TabItem>
+</Tabs>
+
+where
+
+```ts
+const data: DataRecord[] = [{x: 0, y: 1}, ...]
+const x = (d: DataRecord) => d.x
+const y = (d: DataRecord) => d.y
+```
+
+<BrowserOnly>
+  {() => {
+    const { VisXYContainer, VisLine } = require('@volterra/vis-react');
+    return <VisXYContainer data={data} height={100}>
+      <VisLine x={d => d.x} y={d => d.y} />
+    </VisXYContainer>
+  }}
+</BrowserOnly>
+
+### Multiple Lines
+*Line* can also accept an array of `y` accessors to display multiple lines:
+
+```ts
+const y: ((d: DataRecord) => number)[] = [d => d.y1, d => d.y2, d => d.y3]
+```
+
+<BrowserOnly>
+  {() => {
+    const { VisXYContainer, VisLine } = require('@volterra/vis-react');
+    return <VisXYContainer data={data} height={150}>
+      <VisLine x={d => d.x} y={[d => d.y, d => d.y1, d => d.y2]} />
+    </VisXYContainer>
+  }}
+</BrowserOnly>
+
+## Component Props
+<PropTable name="VisLine"></PropTable>
