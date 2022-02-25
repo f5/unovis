@@ -21,7 +21,6 @@ ${importStatements.map(s => `import { ${s.elements.join(', ')} } from '${s.sourc
 import { arePropsEqual } from 'src/utils/react'
 
 // Types
-import { WithSelectors } from 'src/types/react'
 import { VisComponentElement } from 'src/types/dom'
 
 export type Vis${componentName}Props${genericsDefStr} = ${componentName}ConfigInterface${genericsStr} & { data?: ${dataType} }
@@ -44,8 +43,10 @@ function Vis${componentName}FC${genericsDefStr} (props: Vis${componentName}Props
 
   return <vis-${elementSuffix} ref={ref} />
 }
-const memoizedComponent = React.memo(Vis${componentName}FC, arePropsEqual)
-export const Vis${componentName} = memoizedComponent as WithSelectors<typeof memoizedComponent, typeof ${componentName}.selectors>
-Vis${componentName}.selectors = ${componentName}.selectors
+
+// We export a memoized component to avoid unnecessary re-renders
+//  and define its type explicitly to help react-docgen-typescript to extract information about props
+export const Vis${componentName}: (${genericsDefStr}(props: Vis${componentName}Props${genericsStr}) => JSX.Element | null) = React.memo(Vis${componentName}FC, arePropsEqual)
+export const Vis${componentName}Selectors = ${componentName}.selectors
 `
 }
