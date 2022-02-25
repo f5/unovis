@@ -7,7 +7,6 @@ import { Line, LineConfigInterface } from '@volterra/vis'
 import { arePropsEqual } from 'src/utils/react'
 
 // Types
-import { WithSelectors } from 'src/types/react'
 import { VisComponentElement } from 'src/types/dom'
 
 export type VisLineProps<Datum> = LineConfigInterface<Datum> & { data?: Datum[] }
@@ -30,6 +29,8 @@ function VisLineFC<Datum> (props: VisLineProps<Datum>): JSX.Element {
 
   return <vis-component ref={ref} />
 }
-const memoizedComponent = React.memo(VisLineFC, arePropsEqual)
-export const VisLine = memoizedComponent as WithSelectors<typeof memoizedComponent, typeof Line.selectors>
-VisLine.selectors = Line.selectors
+
+// We export a memoized component to avoid unnecessary re-renders
+//  and define its type explicitly to help react-docgen-typescript to extract information about props
+export const VisLine: (<Datum>(props: VisLineProps<Datum>) => JSX.Element | null) = React.memo(VisLineFC, arePropsEqual)
+export const VisLineSelectors = Line.selectors

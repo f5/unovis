@@ -7,7 +7,6 @@ import { Donut, DonutConfigInterface } from '@volterra/vis'
 import { arePropsEqual } from 'src/utils/react'
 
 // Types
-import { WithSelectors } from 'src/types/react'
 import { VisComponentElement } from 'src/types/dom'
 
 export type VisDonutProps<Datum> = DonutConfigInterface<Datum> & { data?: Datum[] }
@@ -30,6 +29,8 @@ function VisDonutFC<Datum> (props: VisDonutProps<Datum>): JSX.Element {
 
   return <vis-component ref={ref} />
 }
-const memoizedComponent = React.memo(VisDonutFC, arePropsEqual)
-export const VisDonut = memoizedComponent as WithSelectors<typeof memoizedComponent, typeof Donut.selectors>
-VisDonut.selectors = Donut.selectors
+
+// We export a memoized component to avoid unnecessary re-renders
+//  and define its type explicitly to help react-docgen-typescript to extract information about props
+export const VisDonut: (<Datum>(props: VisDonutProps<Datum>) => JSX.Element | null) = React.memo(VisDonutFC, arePropsEqual)
+export const VisDonutSelectors = Donut.selectors

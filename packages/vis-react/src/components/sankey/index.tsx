@@ -7,7 +7,6 @@ import { Sankey, SankeyConfigInterface, SankeyInputNode, SankeyInputLink } from 
 import { arePropsEqual } from 'src/utils/react'
 
 // Types
-import { WithSelectors } from 'src/types/react'
 import { VisComponentElement } from 'src/types/dom'
 
 export type VisSankeyProps<N extends SankeyInputNode, L extends SankeyInputLink> = SankeyConfigInterface<N, L> & { data?: any }
@@ -30,6 +29,8 @@ function VisSankeyFC<N extends SankeyInputNode, L extends SankeyInputLink> (prop
 
   return <vis-component ref={ref} />
 }
-const memoizedComponent = React.memo(VisSankeyFC, arePropsEqual)
-export const VisSankey = memoizedComponent as WithSelectors<typeof memoizedComponent, typeof Sankey.selectors>
-VisSankey.selectors = Sankey.selectors
+
+// We export a memoized component to avoid unnecessary re-renders
+//  and define its type explicitly to help react-docgen-typescript to extract information about props
+export const VisSankey: (<N extends SankeyInputNode, L extends SankeyInputLink>(props: VisSankeyProps<N, L>) => JSX.Element | null) = React.memo(VisSankeyFC, arePropsEqual)
+export const VisSankeySelectors = Sankey.selectors

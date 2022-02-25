@@ -7,7 +7,6 @@ import { Graph, GraphConfigInterface, GraphInputNode, GraphInputLink } from '@vo
 import { arePropsEqual } from 'src/utils/react'
 
 // Types
-import { WithSelectors } from 'src/types/react'
 import { VisComponentElement } from 'src/types/dom'
 
 export type VisGraphProps<N extends GraphInputNode, L extends GraphInputLink> = GraphConfigInterface<N, L> & { data?: any }
@@ -30,6 +29,8 @@ function VisGraphFC<N extends GraphInputNode, L extends GraphInputLink> (props: 
 
   return <vis-component ref={ref} />
 }
-const memoizedComponent = React.memo(VisGraphFC, arePropsEqual)
-export const VisGraph = memoizedComponent as WithSelectors<typeof memoizedComponent, typeof Graph.selectors>
-VisGraph.selectors = Graph.selectors
+
+// We export a memoized component to avoid unnecessary re-renders
+//  and define its type explicitly to help react-docgen-typescript to extract information about props
+export const VisGraph: (<N extends GraphInputNode, L extends GraphInputLink>(props: VisGraphProps<N, L>) => JSX.Element | null) = React.memo(VisGraphFC, arePropsEqual)
+export const VisGraphSelectors = Graph.selectors

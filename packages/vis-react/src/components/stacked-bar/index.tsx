@@ -7,7 +7,6 @@ import { StackedBar, StackedBarConfigInterface } from '@volterra/vis'
 import { arePropsEqual } from 'src/utils/react'
 
 // Types
-import { WithSelectors } from 'src/types/react'
 import { VisComponentElement } from 'src/types/dom'
 
 export type VisStackedBarProps<Datum> = StackedBarConfigInterface<Datum> & { data?: Datum[] }
@@ -30,6 +29,8 @@ function VisStackedBarFC<Datum> (props: VisStackedBarProps<Datum>): JSX.Element 
 
   return <vis-component ref={ref} />
 }
-const memoizedComponent = React.memo(VisStackedBarFC, arePropsEqual)
-export const VisStackedBar = memoizedComponent as WithSelectors<typeof memoizedComponent, typeof StackedBar.selectors>
-VisStackedBar.selectors = StackedBar.selectors
+
+// We export a memoized component to avoid unnecessary re-renders
+//  and define its type explicitly to help react-docgen-typescript to extract information about props
+export const VisStackedBar: (<Datum>(props: VisStackedBarProps<Datum>) => JSX.Element | null) = React.memo(VisStackedBarFC, arePropsEqual)
+export const VisStackedBarSelectors = StackedBar.selectors

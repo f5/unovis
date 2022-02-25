@@ -7,7 +7,6 @@ import { Crosshair, CrosshairConfigInterface } from '@volterra/vis'
 import { arePropsEqual } from 'src/utils/react'
 
 // Types
-import { WithSelectors } from 'src/types/react'
 import { VisComponentElement } from 'src/types/dom'
 
 export type VisCrosshairProps<Datum> = CrosshairConfigInterface<Datum> & { data?: Datum[] }
@@ -30,6 +29,8 @@ function VisCrosshairFC<Datum> (props: VisCrosshairProps<Datum>): JSX.Element {
 
   return <vis-crosshair ref={ref} />
 }
-const memoizedComponent = React.memo(VisCrosshairFC, arePropsEqual)
-export const VisCrosshair = memoizedComponent as WithSelectors<typeof memoizedComponent, typeof Crosshair.selectors>
-VisCrosshair.selectors = Crosshair.selectors
+
+// We export a memoized component to avoid unnecessary re-renders
+//  and define its type explicitly to help react-docgen-typescript to extract information about props
+export const VisCrosshair: (<Datum>(props: VisCrosshairProps<Datum>) => JSX.Element | null) = React.memo(VisCrosshairFC, arePropsEqual)
+export const VisCrosshairSelectors = Crosshair.selectors

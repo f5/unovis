@@ -7,7 +7,6 @@ import { Scatter, ScatterConfigInterface } from '@volterra/vis'
 import { arePropsEqual } from 'src/utils/react'
 
 // Types
-import { WithSelectors } from 'src/types/react'
 import { VisComponentElement } from 'src/types/dom'
 
 export type VisScatterProps<Datum> = ScatterConfigInterface<Datum> & { data?: Datum[] }
@@ -30,6 +29,8 @@ function VisScatterFC<Datum> (props: VisScatterProps<Datum>): JSX.Element {
 
   return <vis-component ref={ref} />
 }
-const memoizedComponent = React.memo(VisScatterFC, arePropsEqual)
-export const VisScatter = memoizedComponent as WithSelectors<typeof memoizedComponent, typeof Scatter.selectors>
-VisScatter.selectors = Scatter.selectors
+
+// We export a memoized component to avoid unnecessary re-renders
+//  and define its type explicitly to help react-docgen-typescript to extract information about props
+export const VisScatter: (<Datum>(props: VisScatterProps<Datum>) => JSX.Element | null) = React.memo(VisScatterFC, arePropsEqual)
+export const VisScatterSelectors = Scatter.selectors

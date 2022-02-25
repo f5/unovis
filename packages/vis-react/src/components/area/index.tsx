@@ -7,7 +7,6 @@ import { Area, AreaConfigInterface } from '@volterra/vis'
 import { arePropsEqual } from 'src/utils/react'
 
 // Types
-import { WithSelectors } from 'src/types/react'
 import { VisComponentElement } from 'src/types/dom'
 
 export type VisAreaProps<Datum> = AreaConfigInterface<Datum> & { data?: Datum[] }
@@ -30,6 +29,8 @@ function VisAreaFC<Datum> (props: VisAreaProps<Datum>): JSX.Element {
 
   return <vis-component ref={ref} />
 }
-const memoizedComponent = React.memo(VisAreaFC, arePropsEqual)
-export const VisArea = memoizedComponent as WithSelectors<typeof memoizedComponent, typeof Area.selectors>
-VisArea.selectors = Area.selectors
+
+// We export a memoized component to avoid unnecessary re-renders
+//  and define its type explicitly to help react-docgen-typescript to extract information about props
+export const VisArea: (<Datum>(props: VisAreaProps<Datum>) => JSX.Element | null) = React.memo(VisAreaFC, arePropsEqual)
+export const VisAreaSelectors = Area.selectors

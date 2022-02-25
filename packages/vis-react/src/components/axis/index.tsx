@@ -7,7 +7,6 @@ import { Axis, AxisConfigInterface } from '@volterra/vis'
 import { arePropsEqual } from 'src/utils/react'
 
 // Types
-import { WithSelectors } from 'src/types/react'
 import { VisComponentElement } from 'src/types/dom'
 
 export type VisAxisProps<Datum> = AxisConfigInterface<Datum> & { data?: Datum[] }
@@ -30,6 +29,8 @@ function VisAxisFC<Datum> (props: VisAxisProps<Datum>): JSX.Element {
 
   return <vis-axis ref={ref} />
 }
-const memoizedComponent = React.memo(VisAxisFC, arePropsEqual)
-export const VisAxis = memoizedComponent as WithSelectors<typeof memoizedComponent, typeof Axis.selectors>
-VisAxis.selectors = Axis.selectors
+
+// We export a memoized component to avoid unnecessary re-renders
+//  and define its type explicitly to help react-docgen-typescript to extract information about props
+export const VisAxis: (<Datum>(props: VisAxisProps<Datum>) => JSX.Element | null) = React.memo(VisAxisFC, arePropsEqual)
+export const VisAxisSelectors = Axis.selectors

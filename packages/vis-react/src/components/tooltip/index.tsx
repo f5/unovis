@@ -7,7 +7,6 @@ import { Tooltip, TooltipConfigInterface } from '@volterra/vis'
 import { arePropsEqual } from 'src/utils/react'
 
 // Types
-import { WithSelectors } from 'src/types/react'
 import { VisComponentElement } from 'src/types/dom'
 
 export type VisTooltipProps = TooltipConfigInterface & { data?: null }
@@ -29,6 +28,8 @@ function VisTooltipFC (props: VisTooltipProps): JSX.Element {
 
   return <vis-tooltip ref={ref} />
 }
-const memoizedComponent = React.memo(VisTooltipFC, arePropsEqual)
-export const VisTooltip = memoizedComponent as WithSelectors<typeof memoizedComponent, typeof Tooltip.selectors>
-VisTooltip.selectors = Tooltip.selectors
+
+// We export a memoized component to avoid unnecessary re-renders
+//  and define its type explicitly to help react-docgen-typescript to extract information about props
+export const VisTooltip: ((props: VisTooltipProps) => JSX.Element | null) = React.memo(VisTooltipFC, arePropsEqual)
+export const VisTooltipSelectors = Tooltip.selectors

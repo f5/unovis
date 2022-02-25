@@ -7,7 +7,6 @@ import { Brush, BrushConfigInterface } from '@volterra/vis'
 import { arePropsEqual } from 'src/utils/react'
 
 // Types
-import { WithSelectors } from 'src/types/react'
 import { VisComponentElement } from 'src/types/dom'
 
 export type VisBrushProps<Datum> = BrushConfigInterface<Datum> & { data?: Datum[] }
@@ -30,6 +29,8 @@ function VisBrushFC<Datum> (props: VisBrushProps<Datum>): JSX.Element {
 
   return <vis-component ref={ref} />
 }
-const memoizedComponent = React.memo(VisBrushFC, arePropsEqual)
-export const VisBrush = memoizedComponent as WithSelectors<typeof memoizedComponent, typeof Brush.selectors>
-VisBrush.selectors = Brush.selectors
+
+// We export a memoized component to avoid unnecessary re-renders
+//  and define its type explicitly to help react-docgen-typescript to extract information about props
+export const VisBrush: (<Datum>(props: VisBrushProps<Datum>) => JSX.Element | null) = React.memo(VisBrushFC, arePropsEqual)
+export const VisBrushSelectors = Brush.selectors

@@ -25,4 +25,5 @@ export function VisBulletLegend (props: VisBulletLegendProps): JSX.Element {
 
   return <div ref={container} />
 }
-VisBulletLegend.selectors = BulletLegend.selectors
+
+export const VisBulletLegendSelectors = BulletLegend.selectors

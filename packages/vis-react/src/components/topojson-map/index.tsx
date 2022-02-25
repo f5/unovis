@@ -7,7 +7,6 @@ import { TopoJSONMap, TopoJSONMapConfigInterface } from '@volterra/vis'
 import { arePropsEqual } from 'src/utils/react'
 
 // Types
-import { WithSelectors } from 'src/types/react'
 import { VisComponentElement } from 'src/types/dom'
 
 export type VisTopoJSONMapProps<AreaDatum, PointDatum, LinkDatum> = TopoJSONMapConfigInterface<AreaDatum, PointDatum, LinkDatum> & { data?: any }
@@ -30,6 +29,8 @@ function VisTopoJSONMapFC<AreaDatum, PointDatum, LinkDatum> (props: VisTopoJSONM
 
   return <vis-component ref={ref} />
 }
-const memoizedComponent = React.memo(VisTopoJSONMapFC, arePropsEqual)
-export const VisTopoJSONMap = memoizedComponent as WithSelectors<typeof memoizedComponent, typeof TopoJSONMap.selectors>
-VisTopoJSONMap.selectors = TopoJSONMap.selectors
+
+// We export a memoized component to avoid unnecessary re-renders
+//  and define its type explicitly to help react-docgen-typescript to extract information about props
+export const VisTopoJSONMap: (<AreaDatum, PointDatum, LinkDatum>(props: VisTopoJSONMapProps<AreaDatum, PointDatum, LinkDatum>) => JSX.Element | null) = React.memo(VisTopoJSONMapFC, arePropsEqual)
+export const VisTopoJSONMapSelectors = TopoJSONMap.selectors
