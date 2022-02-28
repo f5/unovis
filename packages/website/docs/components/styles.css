@@ -1,0 +1,60 @@
+.input-wrapper {
+  position: relative;
+}
+
+.prop-input-label {
+  position: absolute;
+  right: 1em;
+  top: 1em;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px;
+}
+
+.prop-name {
+  margin: 0 0.5em;
+  font-weight: bold;
+}
+
+.prop-name:after {
+  content: ' = ';
+}
+
+input[type="number"] {
+  width: 50px;
+}
+
+.prop-preview-menu {
+  font-size: small;
+  justify-content: center;
+}
+
+.prop-preview-menu > li {
+  border-radius: 10px;
+  border: 1px solid var(--ifm-color-primary);
+  padding: 5px;
+  margin: 5px;
+  text-transform: capitalize;
+}
+
+.prop-preview-menu > li[aria-selected="true"] {
+  background: var(--ifm-color-primary);
+  color: white;
+}
+
+.prop-preview-menu + div {
+  margin-top: 0 !important;
+}
+
+/* custom vis components */
+.custom-area {
+  --vis-area-fill-opacity: 0.5;
+  --vis-area-hover-fill-opacity: 1;
+  --vis-area-stroke-width: 1px;
+}
+
+.custom-line {
+  --vis-line-stroke: #fcfc00;
+  --vis-line-cursor: 'cell';
+}

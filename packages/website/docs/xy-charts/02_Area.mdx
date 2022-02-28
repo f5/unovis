@@ -57,6 +57,8 @@ The _Area_ component has been designed to work together with _XY Container_. The
         '    <VisXYContainer data={data}>',
         '      <VisArea x={x} y={y} />',
         '    </VisXYContainer>',
+        '  )',
+        '};'
       ].join("\n")}
     </CodeBlock>
   </TabItem>
@@ -159,13 +161,13 @@ const getColor: ((d: DataRecord) => string)[] = [
 The _Area_ component supports additional styling via CSS variables that you can define for your visualization container. For example:
 
 <CodeBlock language="css" title="styles.css">
-  {`.visualization-container-div {
+  {`.custom-area {
   --vis-area-fill-opacity: 0.5;
   --vis-area-hover-fill-opacity: 1;
   --vis-area-stroke-width: 1px;
 }`}
 </CodeBlock>
-<AreaComponent y={[(d) => d.y, (d) => d.y1, (d) => d.y2]} className="visualization-container-div"/>
+<AreaComponent y={[(d) => d.y, (d) => d.y1, (d) => d.y2]} className="custom-area"/>
 
 <Details summary={<summary>All supported CSS variables</summary>} open>
   <CodeBlock language="css">

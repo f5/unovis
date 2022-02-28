@@ -2,47 +2,68 @@
 import { PropItem } from 'react-docgen-typescript'
 
 export interface FrameworkProps {
-  angularProps: string;
-  reactProps: string;
-  typescriptProps: string;
+  componentStrings: {
+    angular: string;
+    react: string;
+    typescript: string;
+  };
   contextProps?: string[];
 }
 
 type PropParser = { (k: string, v: PropItem): string }
 
-const getReactProps: PropParser = (k, v) => [k, typeof v === 'string' ? `"${v}"` : `{${k}}`].join('=')
-const getNgProps: PropParser = (k, v) => [typeof v !== 'string' ? `[${k}]` : k, `"${k}"`].join('=')
-const getTsProps: PropParser = (k, v) => [k, typeof v === 'string' ? `"${v}"` : `${k}`].join(': ')
+const literals = ['boolean', 'number', 'string']
+const isLiteral = (prop: PropItem): boolean => literals.includes(typeof prop)
+const isString = (prop: PropItem): boolean => typeof prop === 'string'
+
+const getReactProps: PropParser = (k, v) => [k, isString(v) ? `"${v}"` : `{${isLiteral(v) ? v : k}}`].join('=')
+const getNgProps: PropParser = (k, v) => (isString(v) ? [k, `"${v}"`] : [`[${k}]`, `"${isLiteral(v) ? v : k}"`]).join('=')
+const getTsProps: PropParser = (k, v) => (isLiteral(v) ? [k, isString(v) ? `"${v}"` : v].join(': ') : `${k}`)
+
 const getContextProps: PropParser = (k, v) => {
   let str = String(v)
-  if (typeof v === 'object') {
-    str = `d=>[${str.split(',').join(', ')}]`
+  if (k === 'y' && typeof v === 'object') {
+    str = `((d: DataRecord) => number)[] = [${str.split(',').join(', ')}]`
+  } else {
+    str = str.replace('d=>', '(d: DataRecord) => ')
+    str = str.replace('(d,i)=>', '(d: DataRecord, i: number) => ')
+    str = str.replace('?', ' ? ')
   }
-  str = str.replace('d=>', '(d: DataRecord) => ')
-  str = str.replace('(d,i)=>', '(d: DataRecord, i: number) => ')
   return [k, str].join(' = ')
 }
 
-export function parseProps (props: Record<string, PropItem>, addToContext: boolean): FrameworkProps {
+function getHtmlTag(name: string): string {
+  const hasUpper = name.match(/.+[A-Z]/)
+  if (hasUpper) {
+    const ch = name[hasUpper[0].length - 1]
+    name = name.split(ch).join('-'.concat(ch))
+  }
+  return name.toLowerCase()
+}
+
+export function parseProps (name: string, props: Record<string, PropItem>, addToContext: boolean): FrameworkProps {
   const angularProps: string[] = []
   const reactProps: string[] = []
   const typescriptProps: string[] = []
   const contextProps: string[] = []
 
   Object.entries(props).forEach(([k, v]) => {
+    if (!isLiteral(v) && addToContext) {
+      contextProps.push(getContextProps(k, v))
+    }
     angularProps.push(getNgProps(k, v))
     reactProps.push(getReactProps(k, v))
     typescriptProps.push(getTsProps(k, v))
-
-    if (addToContext && typeof v !== 'string') {
-      contextProps.push(getContextProps(k, v))
-    }
   })
 
+  const tag = getHtmlTag(name)
+
   return {
-    angularProps: angularProps.join(' '),
-    reactProps: reactProps.join(' '),
-    typescriptProps: typescriptProps.join(', '),
+    componentStrings: {
+      angular: `<vis-${tag} ${angularProps.join(' ')}></vis-${tag}>`,
+      react: `<Vis${name} ${reactProps.join(' ')}/>`,
+      typescript: `const component = new ${name}({ ${typescriptProps.join(', ')} }})`,
+    },
     contextProps,
   }
 }

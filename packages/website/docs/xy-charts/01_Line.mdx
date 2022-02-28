@@ -1,33 +1,87 @@
 ---
 sidebar_position: 1
 ---
+import CodeBlock from '@theme/CodeBlock';
+import Details from "@theme/Details";
 import { PropTable } from '../utils/props-table'
-import { data } from '../utils/time-series'
+import { data, generateDataRecords } from '../utils/time-series'
+import { XYWrapper, XYWrapperWithInput, XYWrapperWithMenu } from '../components/xy-wrapper';
 
-import { XYWrapper } from './xy-wrapper';
+export const lineProps = (n=10) => ({
+  name: "Line",
+  data: generateDataRecords(n)
+});
 
-export const LineDoc = (props) => (
-  <XYWrapper name="Line" {...props}/>
-)
-
-# Line
 ### Basic configuration
 The *Line* component has been designed to work together with *XY Container*. The minimal *Line* configuration looks like:
 
-<LineDoc showContext={true}/>
+<XYWrapper {...lineProps()} showContext={true}/>
 
 ### Multiple Lines
 *Line* can also accept an array of `y` accessors to display multiple lines:
-<LineDoc showContext={true} y={[d => d.y, d => d.y1, d => d.y2]}/>
+<XYWrapper {...lineProps()} showContext={true} y={[d => d.y, d => d.y1, d => d.y2]}/>
+
+### Line Width
+Specify the Line's width in pixels using the `lineWidth` property:
+<XYWrapperWithInput {...lineProps()} property="lineWidth" type="number" defaultValue={5}/>
+
+### Curve Types
+Using the `curveType: CurveType` property you can set various curve type options. For example:
+<XYWrapperWithMenu {...lineProps(50)} options={["basis", "linear", "step"]} attr="curveType"/>
 
 ### Colored Line
-<LineDoc color="blue"/>
+<XYWrapperWithInput {...lineProps()} property="color" type="color" defaultValue="#a611a5"/>
 
-### Colored Lines
-<LineDoc showContext={true} y={[d => d.y, d => d.y1, d => d.y2]} color={(d,i) => ["blue", "green", "yellow"][i]}/>
+#### For multiple lines:
+If you want to set color for multiple lines at once, you'll have to define a colors array in your component and reference colors by index in the accessor function:
+<XYWrapper {...lineProps()} showContext={true} y={[d => d.y, d => d.y1, d => d.y2]} color={(d,i) => ['#6A9DFF', '#1acb9a', '#f88080'][i]}/>
 
-<LineDoc excludeGraph/>
-<LineDoc showAxes/>
+### Dashed Line
+You can configure a dashed line with the lineDashArray property and a dash array. See [SVG stroke-dasharray](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray)
+to learn more about this attribute.
+```ts
+const lineDashArray=[5]
+```
+<XYWrapper {...lineProps()} lineDashArray={[5]} />
+
+### No Data Value
+In the case of missing data, you can assign a fallback value for *Line* using `noDataValue`.
+Consider the following example, where the dataset contains undefined values over in the following domain:
+`4 <= x <= 6`
+
+<XYWrapperWithInput showAxes name="Line" data={generateDataRecords(10).map((d,i) => ({ x: d.x, y: i >= 4 && i <= 6 ? undefined : d.y }))} property="noDataValue" type="number" defaultValue={7} />
+
+### Additional Styling: CSS Variables
+The _Line_ component supports additional styling via CSS variables that you can define for your visualization container. For example:
+
+<CodeBlock language="css" title="styles.css">
+  {`.custom-line {
+  --vis-line-stroke: #fcfc00;
+  --vis-line-cursor: 'cell';
+}`}
+</CodeBlock>
+<XYWrapper {...lineProps()} excludeTabs className="custom-line" lineWidth={5} color="fcfc00" cursor="cell"/>
+
+<Details summary={<summary>All supported CSS variables</summary>} open>
+  <CodeBlock language="css">
+    {`--vis-line-stroke\n--vis-line-cursor`}
+  </CodeBlock>
+</Details>
+
+
+### Events
+```ts
+import { Line } from '@volterra/vis`
+...
+events = {
+  [Line.selectors.line]: {
+    mouseover: (data: DataRecord[]) => {},
+    mouseleave: (data: DataRecord[]) => {},
+    ...
+  }
+}
+```
+<XYWrapper {...lineProps()} excludeGraph events={{}}/>
 
 ## Component Props
 <PropTable name="VisLine"></PropTable>
