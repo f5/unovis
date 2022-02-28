@@ -2,14 +2,22 @@
   position: relative;
 }
 
-.prop-input-label {
+.prop-input-label, .toggle {
   position: absolute;
-  right: 1em;
-  top: 1em;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  right: 1em;
+  top: 1.25em;
+}
+
+.prop-input-label {
   padding: 5px;
+  font-size: smaller;
+}
+
+.toggle {
+  color: white;
 }
 
 .prop-name {
@@ -17,12 +25,8 @@
   font-weight: bold;
 }
 
-.prop-name:after {
-  content: ' = ';
-}
-
-input[type="number"] {
-  width: 50px;
+input {
+  max-width: 50px;
 }
 
 .prop-preview-menu {
@@ -45,6 +49,10 @@ input[type="number"] {
 
 .prop-preview-menu + div {
   margin-top: 0 !important;
+}
+
+.hidden {
+  display: none;
 }
 
 /* custom vis components */

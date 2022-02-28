@@ -1,0 +1,91 @@
+---
+sidebar_position: 3
+---
+import BrowserOnly from '@docusaurus/BrowserOnly'
+
+import { PropTable } from '../utils/props-table'
+import { data, generateDataRecords } from '../utils/time-series'
+import { XYWrapper, XYWrapperWithInput, XYWrapperWithMenu, DynamicDoc } from '../components/xy-wrapper';
+
+export const defaultProps = (n=10) => ({
+  name: "StackedBar",
+  data: generateDataRecords(n)
+});
+
+
+### Basic configuration
+The *Stacked Bar* component has been designed to work together with *XY Container*. The minimal *Stacked Bar* configuration looks like:
+
+<XYWrapper {...defaultProps()} showContext={true}/>
+
+### Multiple Stacked Bars
+*Stacked Bar* can accept an array of y accessors to display values as a stack of bars:
+<XYWrapper {...defaultProps()} showContext={true} y={[d => d.y, d => d.y1, d => d.y2]}/>
+
+### Orientation
+*Stacked Bar* supports horizontal and vertical orientation.
+<XYWrapperWithMenu {...defaultProps()} y={[d => d.y, d => d.y1, d => d.y2]} height={250} showAxes attr="orientation" options={["vertical", "horizontal"]}/>
+
+### Bar Width
+By default, the width of the bars is calculated automatically based on their count. But you can also strictly set the bar's width in pixels using the barWidth property:
+<XYWrapperWithInput {...defaultProps()} property="barWidth" type="number" defaultValue={5}/>
+
+### Limiting Dynamic Bar Width
+When you don't know the number of bars in advance, and you're relying on automatic bar width calculation, you might want to limit the
+maximum bar width to prevent the bars from being too wide when there are just a few of them. That can be achieved by setting the barMaxWidth property.
+<DynamicDoc name="StackedBar" primaryData={generateDataRecords(3)} secondaryData={generateDataRecords(50)} exampleProps={{barMaxWidth: 40}}/>
+
+### Bar Padding
+Another way to control the bar's width is by changing the barPadding property, which specifies how much of the available sector should be empty, in the range of [0,1).
+<XYWrapperWithInput {...defaultProps()} property="barPadding" type="range" inputProps={{ min: 0, max: 1, step: 0.1}} defaultValue={0.5}/>
+
+### Bar Height Limit
+When you have highly scattered data with very low and high values, the bars corresponding to the lower values can be so small, so they become invisible.
+If you want to prevent that you can set the minimum bar height to 1 pixel using the `barMinHeight` boolean property.
+<XYWrapperWithInput name="StackedBar"
+    data={generateDataRecords(10).map((d, i)=> ({ x: d.x, y: i % 2 === 1 ? d.y * 20 : Math.random() }))}
+    property="barMinHeight"  type="checkbox" showAxes/>
+
+### Dealing With Inconsisent Data
+When your data has gaps, it's impossible to do calculate of the bar width automatically. The visualization will still try to do that, but most likely the result will be wrong,
+and you'll see wide overlapping bars. However, you can help the calculation by setting your data step implicitly using the dataStep property.
+Consider the following example, with data mainly clumped in the domain `0 < x < 1`:
+
+<DynamicDoc name="StackedBar" showAxes secondaryData={generateDataRecords(5)} primaryData={generateDataRecords(10).map((d, i)=> ({ x: i < 5 ? Math.random() : i - 6, y: d.y }))} exampleProps={{dataStep: 0.1}}/>
+
+### Rounded Corners
+You can apply rounded corners to the top bar in your _Stacked Bar_ component using the `roundedCorners` property, which accepts
+either a `number` (in pixels) or `boolean` argument.
+<XYWrapperWithInput
+    {...defaultProps()}
+    property="roundedCorners"
+    type="checkbox"
+    defaultValue={true}
+/>
+<XYWrapperWithInput {...defaultProps()} y={d => d.y} property="roundedCorners" type="range" inputProps={{ min: 0, max: 30}} defaultValue={5}/>
+
+
+### Bar Color
+Set the color of the bar by assigning the color property to a hex string and/or by assigning the color property to a function evaluated per each bar.
+In this example, each bar's color is assigned based on it's value:
+<XYWrapper {...defaultProps()} showContext showAxes color={(d,i) => d.y > 7 ? '#FF4F4E' : '#1acb9a'}/>
+
+### Events
+```ts
+import { StackedBar } from '@volterra/vis`
+...
+events = {
+    [StackedBar.selectors.bar]: {
+        click: (d: DataRecord) => {},
+        ...
+    },
+    [StackedBar.selectors.barGroup]: {
+        mouseover: (d: DataRecord[]) => {},
+        ...
+    },
+}
+```
+<XYWrapper {...defaultProps()} excludeGraph events={{}}/>
+
+## Component Props
+<PropTable name="VisStackedBar"></PropTable>

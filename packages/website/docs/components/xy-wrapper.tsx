@@ -4,8 +4,9 @@ import Tabs from '@theme/Tabs'
 import TabItem from '@theme/TabItem'
 import CodeBlock, { Props as CodeblockProps } from '@theme/CodeBlock'
 import BrowserOnly from '@docusaurus/BrowserOnly'
+import Toggle from '@theme/Toggle'
 
-import { generateDataRecords, DataRecord } from '../utils/time-series'
+import { DataRecord } from '../utils/time-series'
 import { parseProps } from '../utils/props-helper'
 import './styles.css'
 
@@ -15,10 +16,12 @@ export const XYWrapper = (props): JSX.Element => {
     data,
     className,
     height,
+    hideTabs,
     showAxes,
     showContext,
     excludeTabs,
     excludeGraph,
+    dynamicData,
     ...rest
   } = props
   const componentProps = {
@@ -26,19 +29,22 @@ export const XYWrapper = (props): JSX.Element => {
     y: (d: DataRecord) => d.y,
     ...rest,
   }
-  const tabProps = { name, showContext, componentProps }
+
+  const tabProps = { name, showContext, hideTabs, componentProps }
   const graphProps = {
     name,
-    data,
     height,
+    data,
     showAxes,
     className,
     componentProps,
+    dynamicData,
   }
+
   return (
     <>
       {!excludeTabs && <XYDocTabs {...tabProps} />}
-      {!excludeGraph && <XYComponentDoc {...graphProps} />}
+      {!excludeGraph && <XYComponentDoc {...graphProps}/>}
     </>
   )
 }
@@ -46,6 +52,7 @@ export const XYWrapper = (props): JSX.Element => {
 export const XYDocTabs = ({
   name,
   componentProps,
+  hideTabs,
   showContext,
 }): JSX.Element => {
   const codeType = (ext: string): Partial<CodeblockProps> => ({
@@ -56,7 +63,7 @@ export const XYDocTabs = ({
     parseProps(name, componentProps, showContext)
 
   return (
-    <Tabs groupId="framework">
+    <Tabs groupId="framework" className={hideTabs ? 'hidden' : ''}>
       <TabItem value="react" label="React">
         <CodeBlock {...codeType('tsx')}>
           {showContext
@@ -114,17 +121,18 @@ export const XYComponentDoc = ({
   componentProps,
 }): JSX.Element => {
   return (
-    <BrowserOnly>
+    <BrowserOnly fallback={<div>Loading...</div>}>
       {() => {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         const { VisXYContainer, [`Vis${name}`]: Component, VisAxis } = require('@volterra/vis-react')
+
         return (
           <VisXYContainer
-            data={data ?? generateDataRecords(10)}
+            data={data}
             height={height ?? 150}
             className={className}
           >
-            <Component {...componentProps} />
+            <Component {...componentProps}/>
             {!!showAxes && (
               <>
                 <VisAxis type="x" />
@@ -176,5 +184,41 @@ export const XYWrapperWithMenu = (props): JSX.Element => {
         </TabItem>
       ))}
     </Tabs>
+  )
+}
+
+export const DynamicDoc = ({ primaryData, secondaryData, exampleProps, ...rest }): JSX.Element => {
+  const [current, setCurrent] = React.useState(secondaryData)
+  const anim = React.useRef(null)
+
+  function start (): void {
+    const time = current === primaryData ? 2000 : 1200
+    anim.current = setTimeout(() => {
+      setCurrent(current === primaryData ? secondaryData : primaryData)
+    }, time)
+  }
+  function stop (): void {
+    clearInterval(anim.current)
+    anim.current = null
+  }
+  React.useEffect(() => {
+    start()
+    return () => stop()
+  }, [current])
+
+  return (
+    <BrowserOnly>
+      {() => {
+        return (
+          <div className="input-wrapper">
+            <Toggle className="toggle"
+              switchConfig={{ darkIcon: '॥', darkIconStyle: { fontWeight: 'bold', marginLeft: '2px' }, lightIcon: '▶' }}
+              checked={anim.current} onChange={() => anim.current ? stop() : start()}/>
+            <XYWrapper data={current} {...rest} />
+            <XYWrapper hideTabs data={current} {...exampleProps} {...rest }/>
+          </div>
+        )
+      }}
+    </BrowserOnly>
   )
 }
