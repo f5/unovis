@@ -12,7 +12,7 @@ import { VisCoreComponent } from '../../core'
 })
 export class VisDonutComponent<Datum> implements DonutConfigInterface<Datum>, AfterViewInit {
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */
-  @Input() duration: number
+  @Input() duration?: number
 
   /** Events configuration. An object containing properties in the following format:
    *
@@ -31,7 +31,7 @@ export class VisDonutComponent<Datum> implements DonutConfigInterface<Datum>, Af
    *  }
    * }
    * ``` */
-  @Input() events: {
+  @Input() events?: {
     [selector: string]: {
       [eventType in VisEventType]?: VisEventCallback
     };
@@ -55,44 +55,44 @@ export class VisDonutComponent<Datum> implements DonutConfigInterface<Datum>, Af
    *  }
    * }
    * ``` */
-  @Input() attributes: {
+  @Input() attributes?: {
     [selector: string]: {
       [attr: string]: string | number | boolean | ((datum: any) => string | number | boolean);
     };
   }
 
   /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */
-  @Input() id: ((d: Datum, i?: number, ...rest) => string | number)
+  @Input() id?: ((d: Datum, i?: number, ...rest) => string | number)
 
   /** Value accessor function. Default: `undefined` */
   @Input() value: NumericAccessor<Datum>
 
   /** Diagram angle range. Default: `[0, 2 * Math.PI]` */
-  @Input() angleRange: [number, number]
+  @Input() angleRange?: [number, number]
 
   /** Pad angle. Default: `0` */
-  @Input() padAngle: number
+  @Input() padAngle?: number
 
   /** Custom sort function. Default: `undefined` */
-  @Input() sortFunction: (a: Datum, b: Datum) => number
+  @Input() sortFunction?: (a: Datum, b: Datum) => number
 
   /** Corner Radius. Default: `0` */
-  @Input() cornerRadius: number
+  @Input() cornerRadius?: number
 
   /** Color accessor function. Default: `undefined` */
-  @Input() color: ColorAccessor<Datum>
+  @Input() color?: ColorAccessor<Datum>
 
   /** Explicitly set the donut outer radius. Default: `undefined` */
-  @Input() radius: number
+  @Input() radius?: number
 
   /** Arc width in pixels. Set to `0` if you want to have a pie chart. Default: `20` */
-  @Input() arcWidth: number
+  @Input() arcWidth?: number
 
   /** Central label accessor function or text. Default: `undefined` */
-  @Input() centralLabel: string
+  @Input() centralLabel?: string
 
   /** Prevent having empty segments when the segment value is 0. Default: `false` */
-  @Input() preventEmptySegments: boolean
+  @Input() preventEmptySegments?: boolean
   @Input() data: Datum[]
 
   component: Donut<Datum> | undefined

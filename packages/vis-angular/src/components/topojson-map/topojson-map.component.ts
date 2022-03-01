@@ -23,7 +23,7 @@ import { VisCoreComponent } from '../../core'
 })
 export class VisTopoJSONMapComponent<AreaDatum, PointDatum, LinkDatum> implements TopoJSONMapConfigInterface<AreaDatum, PointDatum, LinkDatum>, AfterViewInit {
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */
-  @Input() duration: number
+  @Input() duration?: number
 
   /** Events configuration. An object containing properties in the following format:
    *
@@ -42,7 +42,7 @@ export class VisTopoJSONMapComponent<AreaDatum, PointDatum, LinkDatum> implement
    *  }
    * }
    * ``` */
-  @Input() events: {
+  @Input() events?: {
     [selector: string]: {
       [eventType in VisEventType]?: VisEventCallback
     };
@@ -66,101 +66,101 @@ export class VisTopoJSONMapComponent<AreaDatum, PointDatum, LinkDatum> implement
    *  }
    * }
    * ``` */
-  @Input() attributes: {
+  @Input() attributes?: {
     [selector: string]: {
       [attr: string]: string | number | boolean | ((datum: any) => string | number | boolean);
     };
   }
 
   /** MapProjection (or D3's GeoProjection) instance. Default: `MapProjection.Mercator()` */
-  @Input() projection: GeoProjection
+  @Input() projection?: GeoProjection
 
   /** Map data in the TopoJSON topology format. Default: `undefined` */
-  @Input() topojson: TopoJSON.Topology
+  @Input() topojson?: TopoJSON.Topology
 
   /** Name of the map features to be displayed, e.g. 'countries' or 'counties'. Default: `countries` */
-  @Input() mapFeatureName: string
+  @Input() mapFeatureName?: string
 
   /** Set initial map fit to points instead of topojson features. Default: `false` */
-  @Input() mapFitToPoints: boolean
+  @Input() mapFitToPoints?: boolean
 
   /** Initial zoom level. Default: `undefined` */
-  @Input() zoomFactor: number
+  @Input() zoomFactor?: number
 
   /** Disable pan / zoom interactions. Default: `false` */
-  @Input() disableZoom: boolean
+  @Input() disableZoom?: boolean
 
   /** Zoom extent. Default: `[1, 6]` */
-  @Input() zoomExtent: number[]
+  @Input() zoomExtent?: number[]
 
   /** Zoom animation duration. Default: `400` */
-  @Input() zoomDuration: number
+  @Input() zoomDuration?: number
 
   /** Link width value or accessor function. Default: `d => d.width ?? 1` */
-  @Input() linkWidth: NumericAccessor<LinkDatum>
+  @Input() linkWidth?: NumericAccessor<LinkDatum>
 
   /** Link color value or accessor function. Default: `d => d.color ?? null` */
-  @Input() linkColor: ColorAccessor<LinkDatum>
+  @Input() linkColor?: ColorAccessor<LinkDatum>
 
   /** Link cursor value or accessor function. Default: `null` */
-  @Input() linkCursor: StringAccessor<AreaDatum>
+  @Input() linkCursor?: StringAccessor<AreaDatum>
 
   /** Link id accessor function. Default: `d => d.id` */
-  @Input() linkId: StringAccessor<LinkDatum>
+  @Input() linkId?: StringAccessor<LinkDatum>
 
   /** Link source accessor function. Default: `d => d.source` */
-  @Input() linkSource: ((l: LinkDatum) => number | string | PointDatum)
+  @Input() linkSource?: ((l: LinkDatum) => number | string | PointDatum)
 
   /** Link target accessor function. Default: `d => d.target` */
-  @Input() linkTarget: ((l: LinkDatum) => number | string | PointDatum)
+  @Input() linkTarget?: ((l: LinkDatum) => number | string | PointDatum)
 
   /** Area id accessor function corresponding to the feature id from TopoJSON. Default: `d => d.id ?? ''` */
-  @Input() areaId: StringAccessor<AreaDatum>
+  @Input() areaId?: StringAccessor<AreaDatum>
 
   /** Area color value or accessor function. Default: `d => d.color ?? null` */
-  @Input() areaColor: ColorAccessor<AreaDatum>
+  @Input() areaColor?: ColorAccessor<AreaDatum>
 
   /** Area cursor value or accessor function. Default: `null` */
-  @Input() areaCursor: StringAccessor<AreaDatum>
+  @Input() areaCursor?: StringAccessor<AreaDatum>
 
   /** Point color accessor. Default: `d => d.color ?? null` */
-  @Input() pointColor: ColorAccessor<PointDatum>
+  @Input() pointColor?: ColorAccessor<PointDatum>
 
   /** Point radius accessor. Default: `d => d.radius ?? 8` */
-  @Input() pointRadius: NumericAccessor<PointDatum>
+  @Input() pointRadius?: NumericAccessor<PointDatum>
 
   /** Point stroke width accessor. Default: `d => d.strokeWidth ?? null` */
-  @Input() pointStrokeWidth: NumericAccessor<PointDatum>
+  @Input() pointStrokeWidth?: NumericAccessor<PointDatum>
 
   /** Point cursor constant value or accessor function. Default: `null` */
-  @Input() pointCursor: StringAccessor<AreaDatum>
+  @Input() pointCursor?: StringAccessor<AreaDatum>
 
   /** Point longitude accessor function. Default: `d => d.longitude ?? null` */
-  @Input() longitude: NumericAccessor<PointDatum>
+  @Input() longitude?: NumericAccessor<PointDatum>
 
   /** Point latitude accessor function. Default: `d => d.latitude ?? null` */
-  @Input() latitude: NumericAccessor<PointDatum>
+  @Input() latitude?: NumericAccessor<PointDatum>
 
   /** Point label accessor function. Default: `undefined` */
-  @Input() pointLabel: StringAccessor<PointDatum>
+  @Input() pointLabel?: StringAccessor<PointDatum>
 
   /** Point label position. Default: `Position.Bottom` */
-  @Input() pointLabelPosition: MapPointLabelPosition
+  @Input() pointLabelPosition?: MapPointLabelPosition
 
   /** Point color brightness ratio for switching between dark and light text label color. Default: `0.65` */
-  @Input() pointLabelTextBrightnessRatio: number
+  @Input() pointLabelTextBrightnessRatio?: number
 
   /** Point id accessor function. Default: `d => d.id` */
-  @Input() pointId: ((d: PointDatum, i: number) => string)
+  @Input() pointId?: ((d: PointDatum, i: number) => string)
 
   /** Enables blur and blending between neighbouring points. Default: `false` */
-  @Input() heatmapMode: boolean
+  @Input() heatmapMode?: boolean
 
   /** Heatmap blur filter stdDeviation value. Default: `10` */
-  @Input() heatmapModeBlurStdDeviation: number
+  @Input() heatmapModeBlurStdDeviation?: number
 
   /** Zoom level at which the heatmap mode will be disabled. Default: `2.5` */
-  @Input() heatmapModeZoomLevelThreshold: number
+  @Input() heatmapModeZoomLevelThreshold?: number
   @Input() data: any
 
   component: TopoJSONMap<AreaDatum, PointDatum, LinkDatum> | undefined

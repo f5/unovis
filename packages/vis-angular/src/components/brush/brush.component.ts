@@ -23,7 +23,7 @@ import { VisXYComponent } from '../../core'
 })
 export class VisBrushComponent<Datum> implements BrushConfigInterface<Datum>, AfterViewInit {
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */
-  @Input() duration: number
+  @Input() duration?: number
 
   /** Events configuration. An object containing properties in the following format:
    *
@@ -42,7 +42,7 @@ export class VisBrushComponent<Datum> implements BrushConfigInterface<Datum>, Af
    *  }
    * }
    * ``` */
-  @Input() events: {
+  @Input() events?: {
     [selector: string]: {
       [eventType in VisEventType]?: VisEventCallback
     };
@@ -66,7 +66,7 @@ export class VisBrushComponent<Datum> implements BrushConfigInterface<Datum>, Af
    *  }
    * }
    * ``` */
-  @Input() attributes: {
+  @Input() attributes?: {
     [selector: string]: {
       [attr: string]: string | number | boolean | ((datum: any) => string | number | boolean);
     };
@@ -79,57 +79,57 @@ export class VisBrushComponent<Datum> implements BrushConfigInterface<Datum>, Af
   @Input() y: NumericAccessor<Datum> | NumericAccessor<Datum>[]
 
   /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */
-  @Input() id: ((d: Datum, i?: number, ...rest) => string)
+  @Input() id?: ((d: Datum, i?: number, ...rest) => string)
 
   /** Component color accessor function. Default: `d => d.color` */
-  @Input() color: ColorAccessor<Datum | Datum[]>
+  @Input() color?: ColorAccessor<Datum | Datum[]>
 
   /** Scale for X dimension, e.g. Scale.scaleLinear(). If you set xScale you'll be responsible for setting it's `domain` and `range` as well.
    * Only continuous scales are supported.
    * Default: `undefined` */
-  @Input() xScale: ContinuousScale
+  @Input() xScale?: ContinuousScale
 
   /** Scale for Y dimension, e.g. Scale.scaleLinear(). If you set yScale you'll be responsible for setting it's `domain` and `range` as well.
    * Only continuous scales are supported.
    * Default: `undefined` */
-  @Input() yScale: ContinuousScale
+  @Input() yScale?: ContinuousScale
 
   /** Identifies whether the component should be excluded from overall X and Y domain calculations or not.
    * This property can be useful when you want pass individual data to a component and you don't want it to affect
    * the scales of the chart.
    * Default: `false` */
-  @Input() excludeFromDomainCalculation: boolean
+  @Input() excludeFromDomainCalculation?: boolean
 
   /** Callback function to be called on any Brush event.
    * Default: `(selection: [number, number], event: D3BrushEvent<Datum>, userDriven: boolean): void => {}` */
-  @Input() onBrush: ((selection?: [number, number], event?: D3BrushEvent<Datum>, userDriven?: boolean) => void)
+  @Input() onBrush?: ((selection?: [number, number], event?: D3BrushEvent<Datum>, userDriven?: boolean) => void)
 
   /** Callback function to be called on the Brush start event.
    * Default: `(selection: [number, number], event: D3BrushEvent<Datum>, userDriven: boolean): void => {}` */
-  @Input() onBrushStart: ((selection?: [number, number], event?: D3BrushEvent<Datum>, userDriven?: boolean) => void)
+  @Input() onBrushStart?: ((selection?: [number, number], event?: D3BrushEvent<Datum>, userDriven?: boolean) => void)
 
   /** Callback function to be called on the Brush move event.
    * Default: `(selection: [number, number], event: D3BrushEvent<Datum>, userDriven: boolean): void => {}` */
-  @Input() onBrushMove: ((selection?: [number, number], event?: D3BrushEvent<Datum>, userDriven?: boolean) => void)
+  @Input() onBrushMove?: ((selection?: [number, number], event?: D3BrushEvent<Datum>, userDriven?: boolean) => void)
 
   /** Callback function to be called on the Brush end event.
    * Default: `(selection: [number, number], event: D3BrushEvent<Datum>, userDriven: boolean): void => {}` */
-  @Input() onBrushEnd: ((selection?: [number, number], event?: D3BrushEvent<Datum>, userDriven?: boolean) => void)
+  @Input() onBrushEnd?: ((selection?: [number, number], event?: D3BrushEvent<Datum>, userDriven?: boolean) => void)
 
   /** Width of the Brush handle. Default: `1` */
-  @Input() handleWidth: number
+  @Input() handleWidth?: number
 
   /** Brush selection in the data space coordinates, can be used to control the selection. Default: `undefined` */
-  @Input() selection: [number, number] | null
+  @Input() selection?: [number, number] | null
 
   /** Allow dragging the selected area as a whole in order to change the selected range. Default: `false` */
-  @Input() draggable: boolean
+  @Input() draggable?: boolean
 
   /** Position of the handle: `Arrangement.Inside` or `Arrangement.Outside`. Default: `Arrangement.Inside` */
-  @Input() handlePosition: Arrangement | string
+  @Input() handlePosition?: Arrangement | string
 
   /** Constraint Brush selection to a minimal length in data units. Default: `undefined` */
-  @Input() selectionMinLength: number
+  @Input() selectionMinLength?: number
   @Input() data: Datum[]
 
   component: Brush<Datum> | undefined

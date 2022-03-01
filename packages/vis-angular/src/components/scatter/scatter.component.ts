@@ -23,7 +23,7 @@ import { VisXYComponent } from '../../core'
 })
 export class VisScatterComponent<Datum> implements ScatterConfigInterface<Datum>, AfterViewInit {
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */
-  @Input() duration: number
+  @Input() duration?: number
 
   /** Events configuration. An object containing properties in the following format:
    *
@@ -42,7 +42,7 @@ export class VisScatterComponent<Datum> implements ScatterConfigInterface<Datum>
    *  }
    * }
    * ``` */
-  @Input() events: {
+  @Input() events?: {
     [selector: string]: {
       [eventType in VisEventType]?: VisEventCallback
     };
@@ -66,7 +66,7 @@ export class VisScatterComponent<Datum> implements ScatterConfigInterface<Datum>
    *  }
    * }
    * ``` */
-  @Input() attributes: {
+  @Input() attributes?: {
     [selector: string]: {
       [attr: string]: string | number | boolean | ((datum: any) => string | number | boolean);
     };
@@ -79,52 +79,52 @@ export class VisScatterComponent<Datum> implements ScatterConfigInterface<Datum>
   @Input() y: NumericAccessor<Datum>
 
   /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */
-  @Input() id: ((d: Datum, i?: number, ...rest) => string)
+  @Input() id?: ((d: Datum, i?: number, ...rest) => string)
 
   /** Component color accessor function. Default: `d => d.color` */
-  @Input() color: ColorAccessor<Datum | Datum[]>
+  @Input() color?: ColorAccessor<Datum | Datum[]>
 
   /** Scale for X dimension, e.g. Scale.scaleLinear(). If you set xScale you'll be responsible for setting it's `domain` and `range` as well.
    * Only continuous scales are supported.
    * Default: `undefined` */
-  @Input() xScale: ContinuousScale
+  @Input() xScale?: ContinuousScale
 
   /** Scale for Y dimension, e.g. Scale.scaleLinear(). If you set yScale you'll be responsible for setting it's `domain` and `range` as well.
    * Only continuous scales are supported.
    * Default: `undefined` */
-  @Input() yScale: ContinuousScale
+  @Input() yScale?: ContinuousScale
 
   /** Identifies whether the component should be excluded from overall X and Y domain calculations or not.
    * This property can be useful when you want pass individual data to a component and you don't want it to affect
    * the scales of the chart.
    * Default: `false` */
-  @Input() excludeFromDomainCalculation: boolean
+  @Input() excludeFromDomainCalculation?: boolean
 
   /** Size accessor function or constant value in relative units. Default: `1` */
-  @Input() size: NumericAccessor<Datum>
+  @Input() size?: NumericAccessor<Datum>
 
   /** Size scale. Default: `Scale.scaleLinear()` */
-  @Input() sizeScale: ContinuousScale
+  @Input() sizeScale?: ContinuousScale
 
   /** Size Range, [number, number]. Default: `[5, 20]` */
-  @Input() sizeRange: [number, number]
+  @Input() sizeRange?: [number, number]
 
   /** Shape of the scatter point. Accessor function or constant value: `SymbolType.Circle`, `SymbolType.Cross`, `SymbolType.Diamond`, `SymbolType.Square`,
    * `SymbolType.Star`, `SymbolType.Triangle` or `SymbolType.Wye`.
    * Default: `SymbolType.Circle` */
-  @Input() shape: ((d: Datum, i?: number, ...rest) => (SymbolType | string)) | SymbolType | string
+  @Input() shape?: ((d: Datum, i?: number, ...rest) => (SymbolType | string)) | SymbolType | string
 
   /** Label accessor function or string. Default: `undefined` */
-  @Input() label: StringAccessor<Datum>
+  @Input() label?: StringAccessor<Datum>
 
   /** Label color. Default: `undefined` */
-  @Input() labelColor: ColorAccessor<Datum>
+  @Input() labelColor?: ColorAccessor<Datum>
 
   /** Optional point cursor. Default: `null` */
-  @Input() cursor: StringAccessor<Datum>
+  @Input() cursor?: StringAccessor<Datum>
 
   /** Point color brightness ratio for switching between dark and light text label color. Default: `0.65` */
-  @Input() labelTextBrightnessRatio: number
+  @Input() labelTextBrightnessRatio?: number
   @Input() data: Datum[]
 
   component: Scatter<Datum> | undefined

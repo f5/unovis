@@ -22,7 +22,7 @@ import { VisXYComponent } from '../../core'
 })
 export class VisTimelineComponent<Datum> implements TimelineConfigInterface<Datum>, AfterViewInit {
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */
-  @Input() duration: number
+  @Input() duration?: number
 
   /** Events configuration. An object containing properties in the following format:
    *
@@ -41,7 +41,7 @@ export class VisTimelineComponent<Datum> implements TimelineConfigInterface<Datu
    *  }
    * }
    * ``` */
-  @Input() events: {
+  @Input() events?: {
     [selector: string]: {
       [eventType in VisEventType]?: VisEventCallback
     };
@@ -65,7 +65,7 @@ export class VisTimelineComponent<Datum> implements TimelineConfigInterface<Datu
    *  }
    * }
    * ``` */
-  @Input() attributes: {
+  @Input() attributes?: {
     [selector: string]: {
       [attr: string]: string | number | boolean | ((datum: any) => string | number | boolean);
     };
@@ -78,58 +78,58 @@ export class VisTimelineComponent<Datum> implements TimelineConfigInterface<Datu
   @Input() y: NumericAccessor<Datum> | NumericAccessor<Datum>[]
 
   /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */
-  @Input() id: ((d: Datum, i?: number, ...rest) => string)
+  @Input() id?: ((d: Datum, i?: number, ...rest) => string)
 
   /** Component color accessor function. Default: `d => d.color` */
-  @Input() color: ColorAccessor<Datum | Datum[]>
+  @Input() color?: ColorAccessor<Datum | Datum[]>
 
   /** Scale for X dimension, e.g. Scale.scaleLinear(). If you set xScale you'll be responsible for setting it's `domain` and `range` as well.
    * Only continuous scales are supported.
    * Default: `undefined` */
-  @Input() xScale: ContinuousScale
+  @Input() xScale?: ContinuousScale
 
   /** Scale for Y dimension, e.g. Scale.scaleLinear(). If you set yScale you'll be responsible for setting it's `domain` and `range` as well.
    * Only continuous scales are supported.
    * Default: `undefined` */
-  @Input() yScale: ContinuousScale
+  @Input() yScale?: ContinuousScale
 
   /** Identifies whether the component should be excluded from overall X and Y domain calculations or not.
    * This property can be useful when you want pass individual data to a component and you don't want it to affect
    * the scales of the chart.
    * Default: `false` */
-  @Input() excludeFromDomainCalculation: boolean
+  @Input() excludeFromDomainCalculation?: boolean
 
   /** Width of the timeline items. Default: `8` */
-  @Input() lineWidth: NumericAccessor<Datum>
+  @Input() lineWidth?: NumericAccessor<Datum>
 
   /** Line cap: 'butt', 'round' or 'square'.
    * Default appearance is `round` and comes from the `--vis-timeline-line-cap`` CSS variable.
    * Default configuration object value: `undefined` */
-  @Input() lineCap: StringAccessor<Datum>
+  @Input() lineCap?: StringAccessor<Datum>
 
   /** Timeline row height. Default: `22` */
-  @Input() rowHeight: number
+  @Input() rowHeight?: number
 
   /** Timeline item length accessor function. Default: `d => d.length` */
-  @Input() length: NumericAccessor<Datum>
+  @Input() length?: NumericAccessor<Datum>
 
   /** Timeline item type accessor function. Records of one type will be plotted in one row. Default: `d => d.type` */
-  @Input() type: StringAccessor<Datum>
+  @Input() type?: StringAccessor<Datum>
 
   /** Configurable Timeline item cursor when hovering over. Default: `null` */
-  @Input() cursor: StringAccessor<Datum>
+  @Input() cursor?: StringAccessor<Datum>
 
   /** Show item type labels when set to `true`. Default: `false` */
-  @Input() showLabels: boolean
+  @Input() showLabels?: boolean
 
   /** Fixed label width in pixels. Labels longer than the specified value will be trimmed. Default: `undefined` */
-  @Input() labelWidth: number
+  @Input() labelWidth?: number
 
   /** Maximum label width in pixels. Labels longer than the specified value will be trimmed. Default: `120` */
-  @Input() maxLabelWidth: number
+  @Input() maxLabelWidth?: number
 
   /** Alternating row colors. Default: `true` */
-  @Input() alternatingRowColors: boolean
+  @Input() alternatingRowColors?: boolean
   @Input() data: Datum[]
 
   component: Timeline<Datum> | undefined

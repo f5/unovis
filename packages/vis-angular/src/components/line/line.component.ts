@@ -24,7 +24,7 @@ import { VisXYComponent } from '../../core'
 })
 export class VisLineComponent<Datum> implements LineConfigInterface<Datum>, AfterViewInit {
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */
-  @Input() duration: number
+  @Input() duration?: number
 
   /** Events configuration. An object containing properties in the following format:
    *
@@ -43,7 +43,7 @@ export class VisLineComponent<Datum> implements LineConfigInterface<Datum>, Afte
    *  }
    * }
    * ``` */
-  @Input() events: {
+  @Input() events?: {
     [selector: string]: {
       [eventType in VisEventType]?: VisEventCallback
     };
@@ -67,7 +67,7 @@ export class VisLineComponent<Datum> implements LineConfigInterface<Datum>, Afte
    *  }
    * }
    * ``` */
-  @Input() attributes: {
+  @Input() attributes?: {
     [selector: string]: {
       [attr: string]: string | number | boolean | ((datum: any) => string | number | boolean);
     };
@@ -80,44 +80,44 @@ export class VisLineComponent<Datum> implements LineConfigInterface<Datum>, Afte
   @Input() y: NumericAccessor<Datum> | NumericAccessor<Datum>[]
 
   /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */
-  @Input() id: ((d: Datum, i?: number, ...rest) => string)
+  @Input() id?: ((d: Datum, i?: number, ...rest) => string)
 
   /** Component color accessor function. Default: `d => d.color` */
-  @Input() color: ColorAccessor<Datum | Datum[]>
+  @Input() color?: ColorAccessor<Datum | Datum[]>
 
   /** Scale for X dimension, e.g. Scale.scaleLinear(). If you set xScale you'll be responsible for setting it's `domain` and `range` as well.
    * Only continuous scales are supported.
    * Default: `undefined` */
-  @Input() xScale: ContinuousScale
+  @Input() xScale?: ContinuousScale
 
   /** Scale for Y dimension, e.g. Scale.scaleLinear(). If you set yScale you'll be responsible for setting it's `domain` and `range` as well.
    * Only continuous scales are supported.
    * Default: `undefined` */
-  @Input() yScale: ContinuousScale
+  @Input() yScale?: ContinuousScale
 
   /** Identifies whether the component should be excluded from overall X and Y domain calculations or not.
    * This property can be useful when you want pass individual data to a component and you don't want it to affect
    * the scales of the chart.
    * Default: `false` */
-  @Input() excludeFromDomainCalculation: boolean
+  @Input() excludeFromDomainCalculation?: boolean
 
   /** Curve type from the CurveType enum */
-  @Input() curveType: CurveType
+  @Input() curveType?: CurveType
 
   /** Line width in pixels */
-  @Input() lineWidth: number
+  @Input() lineWidth?: number
 
   /** Line dash array, see SVG's stroke-dasharray. Default: `undefined` */
-  @Input() lineDashArray: GenericAccessor<number[], Datum>
+  @Input() lineDashArray?: GenericAccessor<number[], Datum>
 
   /** Value to be used in case of no data */
-  @Input() noDataValue: number | null
+  @Input() noDataValue?: number | null
 
   /** Highlight line on hover */
-  @Input() highlightOnHover: boolean
+  @Input() highlightOnHover?: boolean
 
   /** Optional link cursor. Default: `null` */
-  @Input() cursor: StringAccessor<Datum[]>
+  @Input() cursor?: StringAccessor<Datum[]>
   @Input() data: Datum[]
 
   component: Line<Datum> | undefined

@@ -26,7 +26,7 @@ import { VisXYComponent } from '../../core'
 })
 export class VisAxisComponent<Datum> implements AxisConfigInterface<Datum>, AfterViewInit {
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */
-  @Input() duration: number
+  @Input() duration?: number
 
   /** Events configuration. An object containing properties in the following format:
    *
@@ -45,7 +45,7 @@ export class VisAxisComponent<Datum> implements AxisConfigInterface<Datum>, Afte
    *  }
    * }
    * ``` */
-  @Input() events: {
+  @Input() events?: {
     [selector: string]: {
       [eventType in VisEventType]?: VisEventCallback
     };
@@ -69,7 +69,7 @@ export class VisAxisComponent<Datum> implements AxisConfigInterface<Datum>, Afte
    *  }
    * }
    * ``` */
-  @Input() attributes: {
+  @Input() attributes?: {
     [selector: string]: {
       [attr: string]: string | number | boolean | ((datum: any) => string | number | boolean);
     };
@@ -82,92 +82,92 @@ export class VisAxisComponent<Datum> implements AxisConfigInterface<Datum>, Afte
   @Input() y: NumericAccessor<Datum> | NumericAccessor<Datum>[]
 
   /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */
-  @Input() id: ((d: Datum, i?: number, ...rest) => string)
+  @Input() id?: ((d: Datum, i?: number, ...rest) => string)
 
   /** Component color accessor function. Default: `d => d.color` */
-  @Input() color: ColorAccessor<Datum | Datum[]>
+  @Input() color?: ColorAccessor<Datum | Datum[]>
 
   /** Scale for X dimension, e.g. Scale.scaleLinear(). If you set xScale you'll be responsible for setting it's `domain` and `range` as well.
    * Only continuous scales are supported.
    * Default: `undefined` */
-  @Input() xScale: ContinuousScale
+  @Input() xScale?: ContinuousScale
 
   /** Scale for Y dimension, e.g. Scale.scaleLinear(). If you set yScale you'll be responsible for setting it's `domain` and `range` as well.
    * Only continuous scales are supported.
    * Default: `undefined` */
-  @Input() yScale: ContinuousScale
+  @Input() yScale?: ContinuousScale
 
   /** Identifies whether the component should be excluded from overall X and Y domain calculations or not.
    * This property can be useful when you want pass individual data to a component and you don't want it to affect
    * the scales of the chart.
    * Default: `false` */
-  @Input() excludeFromDomainCalculation: boolean
+  @Input() excludeFromDomainCalculation?: boolean
 
   /** Axis position: `Position.Top`, `Position.Bottom`, `Position.Right` or `Position.Left`. Default: `undefined` */
-  @Input() position: Position | string
+  @Input() position?: Position | string
 
   /** Axis type: `AxisType.X` or `AxisType.Y` */
-  @Input() type: AxisType | string
+  @Input() type?: AxisType | string
 
   /** Extend the axis domain line to be full width or full height. Default: `true` */
-  @Input() fullSize: boolean
+  @Input() fullSize?: boolean
 
   /** Axis label. Default: `undefined` */
-  @Input() label: string
+  @Input() label?: string
 
   /** Font size of the axis label as CSS string. Default: `null` */
-  @Input() labelFontSize: string | null
+  @Input() labelFontSize?: string | null
 
   /** Distance between the axis and the label in pixels. Default: `8` */
-  @Input() labelMargin: number
+  @Input() labelMargin?: number
 
   /** Sets whether to draw the grid lines or not. Default: `true` */
-  @Input() gridLine: boolean
+  @Input() gridLine?: boolean
 
   /** Sets whether to draw the tick lines or not. Default: `true` */
-  @Input() tickLine: boolean
+  @Input() tickLine?: boolean
 
   /** Sets whether to draw the domain line or not. Default: `true` */
-  @Input() domainLine: boolean
+  @Input() domainLine?: boolean
 
   /** Draw the min and max axis ticks only. Default: `false` */
-  @Input() minMaxTicksOnly: boolean
+  @Input() minMaxTicksOnly?: boolean
 
   /** Tick label formatter function. Default: `undefined` */
-  @Input() tickFormat: (tick: number | Date, i: number, ticks: (number | Date)[]) => string
+  @Input() tickFormat?: (tick: number | Date, i: number, ticks: (number | Date)[]) => string
 
   /** Explicitly set tick values. Default: `undefined` */
-  @Input() tickValues: number[]
+  @Input() tickValues?: number[]
 
   /** Set the approximate number of axis ticks (will be passed to D3's axis constructor). Default: `undefined` */
-  @Input() numTicks: number
+  @Input() numTicks?: number
 
   /** Tick text fit mode: `FitMode.Wrap` or `FitMode.Trim`. Default: `FitMode.Wrap`. */
-  @Input() tickTextFitMode: FitMode | string
+  @Input() tickTextFitMode?: FitMode | string
 
   /** Maximum number of characters for tick text wrapping. Default: `undefined` */
-  @Input() tickTextLength: number
+  @Input() tickTextLength?: number
 
   /** Maximum width in pixels for the tick text to be wrapped or trimmed. Default: `undefined` */
-  @Input() tickTextWidth: number
+  @Input() tickTextWidth?: number
 
   /** Tick text wrapping separator. String or array of strings. Default: `' '` */
-  @Input() tickTextSeparator: string | string[]
+  @Input() tickTextSeparator?: string | string[]
 
   /** Force word break for ticks when they don't fit. Default: `false` */
-  @Input() tickTextForceWordBreak: boolean
+  @Input() tickTextForceWordBreak?: boolean
 
   /** Tick text trim mode: `TrimMode.Start`, `TrimMode.Middle` or `TrimMode.End`. Default: `TrimMode.Middle` */
-  @Input() tickTextTrimType: TrimMode | string
+  @Input() tickTextTrimType?: TrimMode | string
 
   /** Font size of the tick text as CSS string. Default: `null` */
-  @Input() tickTextFontSize: string | null
+  @Input() tickTextFontSize?: string | null
 
   /** Text alignment for ticks: `TextAlign.Left`, `TextAlign.Center` or `TextAlign.Right`. Default: `undefined` */
-  @Input() tickTextAlign: TextAlign
+  @Input() tickTextAlign?: TextAlign
 
   /** The spacing in pixels between the tick and it's label. Default: `8` */
-  @Input() tickPadding: number
+  @Input() tickPadding?: number
   @Input() data: Datum[]
 
   component: Axis<Datum> | undefined

@@ -12,25 +12,25 @@ import { VisGenericComponent } from '../../core'
 })
 export class VisTooltipComponent implements TooltipConfigInterface, AfterViewInit {
   /** An array of visualization components to interact with. Default: `[]` */
-  @Input() components: ComponentCore<unknown>[]
+  @Input() components?: ComponentCore<unknown>[]
 
   /** Container to where the Tooltip component should be inserted. Default: `undefined` */
-  @Input() container: HTMLElement
+  @Input() container?: HTMLElement
 
   /** Horizontal placement of the tooltip. Default: `Position.Auto` */
-  @Input() horizontalPlacement: Position | string | undefined
+  @Input() horizontalPlacement?: Position | string | undefined
 
   /** Horizontal shift of the tooltip in pixels. Default: `0` */
-  @Input() horizontalShift: number
+  @Input() horizontalShift?: number
 
   /** Vertical placement of the tooltip. Default: `Position.Top` */
-  @Input() verticalPlacement: Position | string | undefined
+  @Input() verticalPlacement?: Position | string | undefined
 
   /** Vertical shift of the tooltip in pixels. Default: `0` */
-  @Input() verticalShift: number
+  @Input() verticalShift?: number
 
   /** Tooltip positioning within the container: absolute or fixed. Default: `PositionStrategy.Absolute` */
-  @Input() positionStrategy: PositionStrategy | string
+  @Input() positionStrategy?: PositionStrategy | string
 
   /** Defines the content of the tooltip and hovering over which elements should trigger it.
    * An object containing properties in the following format:
@@ -46,7 +46,7 @@ export class VisTooltipComponent implements TooltipConfigInterface, AfterViewIni
    * \[Area.selectors.area]: (d: AreaDatum[]) => `<div>${d.value.toString()}</div>
    * }
    * ``` */
-  @Input() triggers: {
+  @Input() triggers?: {
     [selector: string]: (data: any, i: number, elements: (HTMLElement | SVGElement)[]) => string | HTMLElement | undefined | null;
   }
 

@@ -23,7 +23,7 @@ import { VisXYComponent } from '../../core'
 })
 export class VisAreaComponent<Datum> implements AreaConfigInterface<Datum>, AfterViewInit {
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */
-  @Input() duration: number
+  @Input() duration?: number
 
   /** Events configuration. An object containing properties in the following format:
    *
@@ -42,7 +42,7 @@ export class VisAreaComponent<Datum> implements AreaConfigInterface<Datum>, Afte
    *  }
    * }
    * ``` */
-  @Input() events: {
+  @Input() events?: {
     [selector: string]: {
       [eventType in VisEventType]?: VisEventCallback
     };
@@ -66,7 +66,7 @@ export class VisAreaComponent<Datum> implements AreaConfigInterface<Datum>, Afte
    *  }
    * }
    * ``` */
-  @Input() attributes: {
+  @Input() attributes?: {
     [selector: string]: {
       [attr: string]: string | number | boolean | ((datum: any) => string | number | boolean);
     };
@@ -79,38 +79,38 @@ export class VisAreaComponent<Datum> implements AreaConfigInterface<Datum>, Afte
   @Input() y: NumericAccessor<Datum> | NumericAccessor<Datum>[]
 
   /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */
-  @Input() id: ((d: Datum, i?: number, ...rest) => string)
+  @Input() id?: ((d: Datum, i?: number, ...rest) => string)
 
   /** Component color accessor function. Default: `d => d.color` */
-  @Input() color: ColorAccessor<Datum | Datum[]>
+  @Input() color?: ColorAccessor<Datum | Datum[]>
 
   /** Scale for X dimension, e.g. Scale.scaleLinear(). If you set xScale you'll be responsible for setting it's `domain` and `range` as well.
    * Only continuous scales are supported.
    * Default: `undefined` */
-  @Input() xScale: ContinuousScale
+  @Input() xScale?: ContinuousScale
 
   /** Scale for Y dimension, e.g. Scale.scaleLinear(). If you set yScale you'll be responsible for setting it's `domain` and `range` as well.
    * Only continuous scales are supported.
    * Default: `undefined` */
-  @Input() yScale: ContinuousScale
+  @Input() yScale?: ContinuousScale
 
   /** Identifies whether the component should be excluded from overall X and Y domain calculations or not.
    * This property can be useful when you want pass individual data to a component and you don't want it to affect
    * the scales of the chart.
    * Default: `false` */
-  @Input() excludeFromDomainCalculation: boolean
+  @Input() excludeFromDomainCalculation?: boolean
 
   /** Curve type from the CurveType enum. Default: `CurveType.MonotoneX` */
-  @Input() curveType: CurveType
+  @Input() curveType?: CurveType
 
   /** Baseline value or accessor function. Default: `undefined` */
-  @Input() baseline: NumericAccessor<Datum>
+  @Input() baseline?: NumericAccessor<Datum>
 
   /** Opacity value or accessor function. Default: `1` */
-  @Input() opacity: NumericAccessor<Datum>
+  @Input() opacity?: NumericAccessor<Datum>
 
   /** Optional area cursor. String or accessor function. Default: `null` */
-  @Input() cursor: StringAccessor<Datum[]>
+  @Input() cursor?: StringAccessor<Datum[]>
   @Input() data: Datum[]
 
   component: Area<Datum> | undefined

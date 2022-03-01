@@ -24,7 +24,7 @@ import { VisXYComponent } from '../../core'
 })
 export class VisFreeBrushComponent<Datum> implements FreeBrushConfigInterface<Datum>, AfterViewInit {
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */
-  @Input() duration: number
+  @Input() duration?: number
 
   /** Events configuration. An object containing properties in the following format:
    *
@@ -43,7 +43,7 @@ export class VisFreeBrushComponent<Datum> implements FreeBrushConfigInterface<Da
    *  }
    * }
    * ``` */
-  @Input() events: {
+  @Input() events?: {
     [selector: string]: {
       [eventType in VisEventType]?: VisEventCallback
     };
@@ -67,7 +67,7 @@ export class VisFreeBrushComponent<Datum> implements FreeBrushConfigInterface<Da
    *  }
    * }
    * ``` */
-  @Input() attributes: {
+  @Input() attributes?: {
     [selector: string]: {
       [attr: string]: string | number | boolean | ((datum: any) => string | number | boolean);
     };
@@ -80,59 +80,59 @@ export class VisFreeBrushComponent<Datum> implements FreeBrushConfigInterface<Da
   @Input() y: NumericAccessor<Datum> | NumericAccessor<Datum>[]
 
   /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */
-  @Input() id: ((d: Datum, i?: number, ...rest) => string)
+  @Input() id?: ((d: Datum, i?: number, ...rest) => string)
 
   /** Component color accessor function. Default: `d => d.color` */
-  @Input() color: ColorAccessor<Datum | Datum[]>
+  @Input() color?: ColorAccessor<Datum | Datum[]>
 
   /** Scale for X dimension, e.g. Scale.scaleLinear(). If you set xScale you'll be responsible for setting it's `domain` and `range` as well.
    * Only continuous scales are supported.
    * Default: `undefined` */
-  @Input() xScale: ContinuousScale
+  @Input() xScale?: ContinuousScale
 
   /** Scale for Y dimension, e.g. Scale.scaleLinear(). If you set yScale you'll be responsible for setting it's `domain` and `range` as well.
    * Only continuous scales are supported.
    * Default: `undefined` */
-  @Input() yScale: ContinuousScale
+  @Input() yScale?: ContinuousScale
 
   /** Identifies whether the component should be excluded from overall X and Y domain calculations or not.
    * This property can be useful when you want pass individual data to a component and you don't want it to affect
    * the scales of the chart.
    * Default: `false` */
-  @Input() excludeFromDomainCalculation: boolean
+  @Input() excludeFromDomainCalculation?: boolean
 
   /** Brush selection mode. X - horizontal, Y - vertical, XY - both. Default: `FreeBrushMode.X` */
-  @Input() mode: FreeBrushMode
+  @Input() mode?: FreeBrushMode
 
   /** Callback function to be called on any Brush event.
    * Default: `(selection: FreeBrushSelection, event: D3BrushEvent<Datum>, userDriven: boolean): void => {}` */
-  @Input() onBrush: ((selection?: FreeBrushSelection, event?: D3BrushEvent<Datum>, userDriven?: boolean) => void)
+  @Input() onBrush?: ((selection?: FreeBrushSelection, event?: D3BrushEvent<Datum>, userDriven?: boolean) => void)
 
   /** Callback function to be called on the Brush start event.
    * Default: `(selection: FreeBrushSelection, event: D3BrushEvent<Datum>, userDriven: boolean): void => {}` */
-  @Input() onBrushStart: ((selection?: FreeBrushSelection, event?: D3BrushEvent<Datum>, userDriven?: boolean) => void)
+  @Input() onBrushStart?: ((selection?: FreeBrushSelection, event?: D3BrushEvent<Datum>, userDriven?: boolean) => void)
 
   /** Callback function to be called on the Brush move event.
    * Default: `(selection: FreeBrushSelection, event: D3BrushEvent<Datum>, userDriven: boolean): void => {}` */
-  @Input() onBrushMove: ((selection?: FreeBrushSelection, event?: D3BrushEvent<Datum>, userDriven?: boolean) => void)
+  @Input() onBrushMove?: ((selection?: FreeBrushSelection, event?: D3BrushEvent<Datum>, userDriven?: boolean) => void)
 
   /** Callback function to be called on the Brush end event.
    * Default: `(selection: FreeBrushSelection, event: D3BrushEvent<Datum>, userDriven: boolean)L void => {}` */
-  @Input() onBrushEnd: ((selection?: FreeBrushSelection, event?: D3BrushEvent<Datum>, userDriven?: boolean) => void)
+  @Input() onBrushEnd?: ((selection?: FreeBrushSelection, event?: D3BrushEvent<Datum>, userDriven?: boolean) => void)
 
   /** Width of the Brush handle. Default: `1` */
-  @Input() handleWidth: number
+  @Input() handleWidth?: number
 
   /** Brush selection in data space, can be used to force set the selection from outside.
    * In case of two dimensional mode, the selection has the following format: `[[xMin, xMax], [yMin, yMax]]`.
    * This config property gets updated on internal brush events. Default: `undefined` */
-  @Input() selection: FreeBrushSelection | null
+  @Input() selection?: FreeBrushSelection | null
 
   /** Constraint Brush selection to a minimal length in data units. Default: `undefined` */
-  @Input() selectionMinLength: number | [number, number]
+  @Input() selectionMinLength?: number | [number, number]
 
   /** Automatically hide the brush after selection. Default: `true` */
-  @Input() autoHide: boolean
+  @Input() autoHide?: boolean
   @Input() data: Datum[]
 
   component: FreeBrush<Datum> | undefined
