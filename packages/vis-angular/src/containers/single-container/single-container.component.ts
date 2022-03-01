@@ -2,7 +2,7 @@
 import { Component, ViewChild, ElementRef, AfterViewInit, Input, OnDestroy, SimpleChanges, ContentChild } from '@angular/core'
 
 // Vis
-import { ComponentCore, SingleChart, SingleChartConfigInterface, Tooltip } from '@volterra/vis'
+import { ComponentCore, SingleChart, SingleChartConfigInterface, Tooltip, Spacing } from '@volterra/vis'
 import { VisCoreComponent } from '../../core'
 import { VisTooltipComponent } from '../../components/tooltip/tooltip.component'
 
@@ -24,10 +24,10 @@ export class VisSingleContainerComponent<Data = unknown, C extends ComponentCore
   @Input() height?: number;
 
   /** Margins. Default: `{ top: 0, bottom: 0, left: 0, right: 0 }` */
-  @Input() margin = { top: 10, bottom: 10, left: 10, right: 10 }
+  @Input() margin?: Spacing = { top: 10, bottom: 10, left: 10, right: 10 }
   /** Animation duration of all the components within the container. Default: `undefined` */
-  @Input() duration: number
-  @Input() data: Data
+  @Input() duration?: number
+  @Input() data?: Data
 
   chart: SingleChart<Data>
 

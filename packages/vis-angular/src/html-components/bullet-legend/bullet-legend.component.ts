@@ -16,19 +16,19 @@ export class VisBulletLegendComponent implements BulletLegendConfigInterface, Af
   @Input() items: BulletLegendItemInterface[]
 
   /** Apply a specific class to the labels. Default: `''` */
-  @Input() labelClassName: string
+  @Input() labelClassName?: string
 
   /** Callback function for the legend item click. Default: `undefined` */
-  @Input() onLegendItemClick: ((d: BulletLegendItemInterface, i: number) => void)
+  @Input() onLegendItemClick?: ((d: BulletLegendItemInterface, i: number) => void)
 
   /** Label text (<span> element) font-size CSS. Default: `null` */
-  @Input() labelFontSize: string | null
+  @Input() labelFontSize?: string | null
 
   /** Label text (<span> element) max-width CSS property. Default: `null` */
-  @Input() labelMaxWidth: string | null
+  @Input() labelMaxWidth?: string | null
 
   /** Bullet circle size, mapped to the width and height CSS properties. Default: `null` */
-  @Input() bulletSize: string | null
+  @Input() bulletSize?: string | null
 
   component: BulletLegend | undefined
 
