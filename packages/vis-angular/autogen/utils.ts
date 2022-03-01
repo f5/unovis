@@ -90,8 +90,9 @@ export function getConfigProperties (configInterface: ts.InterfaceDeclaration): 
     const type = getTypeName(node.type)
     const doc = node.jsDoc?.map(doc => doc.comment)
     const kind: ts.SyntaxKind = node.kind
+    const optional = !!node.questionToken
 
-    return { name, type, doc, kind }
+    return { name, type, doc, kind, optional }
   })
 
   return properties

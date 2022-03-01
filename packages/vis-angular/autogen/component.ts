@@ -48,7 +48,7 @@ ${
   configProps
     .map((p: ConfigProperty) => `
       ${getJSDocComments(p.doc ?? [])}
-      @Input() ${p.name}: ${p.type}`)
+      @Input() ${p.name}${p.optional ? '?' : ''}: ${p.type}`)
     .join('\n')
 }
   ${dataType ? `@Input() data: ${dataType}` : ''}

@@ -6,6 +6,7 @@ export type ConfigProperty = {
   type: string;
   doc: string[];
   kind: SyntaxKind;
+  optional: boolean;
 }
 
 export type GenericParameter = {
