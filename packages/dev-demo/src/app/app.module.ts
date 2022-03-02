@@ -33,10 +33,12 @@ import { FreeBrushComponent } from 'examples/free-brush/free-brush.component'
 import { ConcentricGraphComponent } from 'examples/concentric-graph/concentric-graph.component'
 import { HorizontalBarComponent } from 'examples/horizontal-bar/horizontal-bar.component'
 import { TimelineLabelsComponent } from 'examples/timeline-labels/timeline-labels.component'
+import { SankeyLoginFlowComponent } from 'examples/sankey-login-flow/sankey-login-flow.component'
 
 import { AtomicAngularWrapperModule } from 'examples/atomic-angular-wrapper/atomic-angular-wrapper.module'
 import { FreeBrushModule } from 'examples/free-brush/free-brush.module'
 import { TimelineLabelsModule } from 'examples/timeline-labels/timeline-labels.module'
+import { SankeyLoginFlowModule } from 'examples/sankey-login-flow/sankey-login-flow.module'
 
 import { AppComponent } from './app.component'
 import { BulletLegendComponent } from './components/bullet-legend/bullet-legend.component'
@@ -77,6 +79,7 @@ const appRoutes: Routes = [
   { path: 'donut', component: DonutChartComponent },
   { path: 'atomic-angular-wrapper', component: AtomicAngularWrapperComponent },
   { path: 'free-brush', component: FreeBrushComponent },
+  { path: 'sankey-login-flow', component: SankeyLoginFlowComponent },
 ]
 
 appRoutes.push({ path: '', redirectTo: `/${appRoutes[0].path}`, pathMatch: 'full' })
@@ -128,6 +131,7 @@ appRoutes.push({ path: '', redirectTo: `/${appRoutes[0].path}`, pathMatch: 'full
     FreeBrushModule,
     TimelineLabelsModule,
     BrowserModule,
+    SankeyLoginFlowModule,
   ],
 
   providers: [],
