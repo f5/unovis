@@ -18,6 +18,7 @@ export const variables = injectGlobal`
     --vis-sankey-node-label-font-weight: 600;
     --vis-sankey-node-sublabel-font-weight: 500;
     --vis-sankey-node-label-cursor: default;
+    --vis-sankey-node-opacity: 0.9;
 
     --vis-sankey-icon-size: ${SANKEY_ICON_SIZE}px;
     --vis-sankey-icon-color: #ffffff;
@@ -130,7 +131,7 @@ export const node = css`
 
   cursor: var(--vis-sankey-node-cursor);
   fill: var(--vis-sankey-node-fill);
-  opacity: 0.9;
+  opacity: var(--vis-sankey-node-opacity);
 
   &:hover {
     opacity: 1;
