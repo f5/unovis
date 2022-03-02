@@ -4,10 +4,11 @@ import { Selection } from 'd3-selection'
 // Utils
 import { estimateTextSize, trimSVGText, wrapSVGText } from 'utils/text'
 import { smartTransition } from 'utils/d3'
-import { getString } from 'utils/data'
+import { getString, getValue } from 'utils/data'
 import { getColor } from 'utils/color'
 
 // Types
+import { GenericAccessor } from 'types/accessor'
 import { FitMode, VerticalAlign } from 'types/text'
 import { Position } from 'types/position'
 
@@ -57,11 +58,12 @@ function getLabelBackground (
 export function getLabelOrientation<N extends SankeyInputNode, L extends SankeyInputLink> (
   d: SankeyNode<N, L>,
   sankeyWidth: number,
-  labelPosition: Position
+  labelPosition: GenericAccessor<Position.Auto | Position.Left | Position.Right | string, N>
 ): (Position.Left | Position.Right) {
-  const orientation = labelPosition === Position.Auto
-    ? d.x0 < sankeyWidth / 2 ? Position.Left : Position.Right
-    : labelPosition
+  let orientation = getValue(d, labelPosition)
+  if (orientation === Position.Auto || !orientation) {
+    orientation = d.x0 < sankeyWidth / 2 ? Position.Left : Position.Right
+  }
 
   return orientation as (Position.Left | Position.Right)
 }

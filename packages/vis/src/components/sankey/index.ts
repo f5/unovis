@@ -1,7 +1,7 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { select, Selection } from 'd3-selection'
 import { sankey } from 'd3-sankey'
-import { sum, max, extent } from 'd3-array'
+import { extent, max, sum } from 'd3-array'
 import { scaleLinear } from 'd3-scale'
 
 // Core
@@ -14,7 +14,7 @@ import { Position } from 'types/position'
 import { Spacing } from 'types/spacing'
 
 // Utils
-import { isNumber, groupBy, getNumber } from 'utils/data'
+import { getNumber, getString, groupBy, isNumber } from 'utils/data'
 
 // Config
 import { SankeyConfig, SankeyConfigInterface } from './config'
@@ -23,12 +23,12 @@ import { SankeyConfig, SankeyConfigInterface } from './config'
 import * as s from './style'
 
 // Local Types
-import { SankeyInputNode, SankeyInputLink, SankeyNode, SankeyLink } from './types'
+import { SankeyInputLink, SankeyInputNode, SankeyLink, SankeyNode } from './types'
 
 // Modules
-import { removeLinks, createLinks, updateLinks } from './modules/link'
-import { removeNodes, createNodes, updateNodes, onNodeMouseOver, onNodeMouseOut } from './modules/node'
-import { requiredLabelSpace } from './modules/label'
+import { createLinks, removeLinks, updateLinks } from './modules/link'
+import { createNodes, onNodeMouseOut, onNodeMouseOver, removeNodes, updateNodes } from './modules/node'
+import { getLabelOrientation, requiredLabelSpace } from './modules/label'
 
 export class Sankey<N extends SankeyInputNode, L extends SankeyInputLink> extends ComponentCore<{nodes: N[]; links?: L[]}> implements ExtendedSizeComponent {
   static selectors = s
@@ -57,17 +57,34 @@ export class Sankey<N extends SankeyInputNode, L extends SankeyInputLink> extend
 
   constructor (config?: SankeyConfigInterface<N, L>) {
     super()
-    if (config) this.config.init(config)
+    if (config) this.setConfig(config)
     this._backgroundRect = this.g.append('rect').attr('class', s.background)
     this._linksGroup = this.g.append('g').attr('class', s.links)
     this._nodesGroup = this.g.append('g').attr('class', s.nodes)
   }
 
   get bleed (): Spacing {
-    const { config: { labelMaxWidth, labelFontSize, labelPosition } } = this
-
+    const { config: { labelMaxWidth, labelFontSize, labelPosition }, datamodel: { nodes, links } } = this
     const labelSize = requiredLabelSpace(labelMaxWidth, labelFontSize)
-    return { top: labelSize.height / 2, bottom: labelSize.height / 2, left: labelPosition === Position.Auto ? labelSize.width : 0, right: labelSize.width }
+
+    let left = 0
+    let right = 0
+
+    // We pre-calculate sankey layout to get information about node labels placement and calculate bleed properly
+    // Potentially it can be a performance bottleneck for large layouts, but generally rendering of such layouts is much more computationally heavy
+    if (nodes.length) {
+      const sankeyProbeSize = 1000
+      this._sankey.size([sankeyProbeSize, sankeyProbeSize])
+      this._sankey({ nodes, links })
+      const maxDepth = max(nodes, d => d.depth)
+      const zeroDepthNodes = nodes.filter(d => d.depth === 0)
+      const maxDepthNodes = nodes.filter(d => d.depth === maxDepth)
+
+      left = zeroDepthNodes.some(d => getLabelOrientation(d, sankeyProbeSize, labelPosition) === Position.Left) ? labelSize.width : 0
+      right = maxDepthNodes.some(d => getLabelOrientation(d, sankeyProbeSize, labelPosition) === Position.Right) ? labelSize.width : 0
+    }
+
+    return { top: labelSize.height / 2, bottom: labelSize.height / 2, left, right }
   }
 
   setData (data: { nodes: N[]; links?: L[] }): void {
@@ -82,6 +99,15 @@ export class Sankey<N extends SankeyInputNode, L extends SankeyInputLink> extend
 
     // Pre-calculate component size for Sizing.EXTEND
     if (this.sizing !== Sizing.Fit) this._preCalculateComponentSize()
+
+    this._sankey
+      .nodeId((d, i) => getString(d, this.config.id, i))
+      .nodeWidth(this.config.nodeWidth)
+      .nodePadding(this.config.nodePadding)
+      .nodeAlign(this.config.nodeAlign)
+      .nodeSort(this.config.nodeSort)
+      .linkSort(this.config.linkSort)
+      .iterations(this.config.iterations)
   }
 
   _render (customDuration?: number): void {
@@ -128,11 +154,7 @@ export class Sankey<N extends SankeyInputNode, L extends SankeyInputLink> extend
   }
 
   private _preCalculateComponentSize (): void {
-    const { bleed, config: { nodePadding, nodeWidth, nodeAlign, nodeMinHeight, nodeMaxHeight, nodeHorizontalSpacing }, datamodel } = this
-    this._sankey
-      .nodeId(d => d.id)
-      .iterations(32)
-      .nodeAlign(nodeAlign)
+    const { bleed, config: { nodePadding, nodeWidth, nodeMinHeight, nodeMaxHeight, nodeHorizontalSpacing }, datamodel } = this
 
     if (datamodel.nodes.length) this._sankey(datamodel)
     const nodes = datamodel.nodes
@@ -149,6 +171,8 @@ export class Sankey<N extends SankeyInputNode, L extends SankeyInputLink> extend
     const { config, bleed, datamodel } = this
     const sankeyHeight = this.sizing === Sizing.Fit ? this._height : this._extendedHeight
     const sankeyWidth = this.sizing === Sizing.Fit ? this._width : this._extendedWidth
+    this._sankey
+      .size([sankeyWidth - bleed.left - bleed.right, sankeyHeight - bleed.top - bleed.bottom])
 
     const nodes = datamodel.nodes
     const links = datamodel.links
@@ -182,16 +206,7 @@ export class Sankey<N extends SankeyInputNode, L extends SankeyInputLink> extend
       link.value = getNumber(link, d => getNumber(d, config.linkValue))
     })
 
-    this._sankey
-      .nodeWidth(config.nodeWidth)
-      .nodePadding(config.nodePadding)
-      .size([sankeyWidth - bleed.left - bleed.right, sankeyHeight - bleed.top - bleed.bottom])
-      .nodeId(d => d.id)
-      .iterations(32)
-      .nodeAlign(config.nodeAlign)
-      .nodeSort(config.nodeSort)
-      .linkSort(config.linkSort)
-
+    // Calculate sankey
     this._sankey({ nodes, links })
 
     // Setting minimum node height

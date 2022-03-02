@@ -8,7 +8,7 @@ import { ComponentConfigInterface, ComponentConfig } from 'core/component/config
 import { getNumber } from 'utils/data'
 
 // Types
-import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
+import { ColorAccessor, GenericAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
 import { TrimMode, VerticalAlign, FitMode } from 'types/text'
 import { Position } from 'types/position'
 import { SankeyInputLink, SankeyInputNode, NodeAlignType, SubLabelPlacement, ExitTransitionType, EnterTransitionType } from './types'
@@ -29,6 +29,8 @@ export interface SankeyConfigInterface<N extends SankeyInputNode, L extends Sank
   highlightDuration?: number;
   /** Highlight delay, ms. Default: `1000` */
   highlightDelay?: number;
+  /** Sankey algorithm iterations. Default: `32` */
+  iterations?: number;
 
   // Sorting
   /** Sankey node sorting function. Default: `undefined`.
@@ -86,7 +88,7 @@ export interface SankeyConfigInterface<N extends SankeyInputNode, L extends Sank
   /** Node sub-label accessor function or value. Default: `undefined` */
   subLabel?: StringAccessor<N>;
   /** Label position relative to the Node. Default: `Position.AUTO` */
-  labelPosition?: Position.Auto | Position.Left | Position.Right | string;
+  labelPosition?: GenericAccessor<Position.Auto | Position.Left | Position.Right | string, N>;
   /** Label vertical alignment */
   labelVerticalAlign?: VerticalAlign | string;
   /** Label background */
@@ -131,6 +133,7 @@ export class SankeyConfig<N extends SankeyInputNode, L extends SankeyInputLink> 
   highlightSubtreeOnHover = false
   highlightDuration = 400
   highlightDelay = 1000
+  iterations = 32
 
   // Sorting
   linkSort = (link2: L, link1: L): number => getNumber(link1, this.linkValue) - getNumber(link2, this.linkValue)
