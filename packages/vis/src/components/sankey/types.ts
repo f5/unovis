@@ -64,24 +64,24 @@ export type SankeyLink<N extends SankeyInputNode, L extends SankeyInputLink> = G
   };
 }
 
-export enum SubLabelPlacement {
+export enum SankeySubLabelPlacement {
   Inline = 'inline',
   Below = 'below',
 }
 
-export enum NodeAlignType {
+export enum SankeyNodeAlign {
   Left = sankeyLeft,
   Right = sankeyRight,
   Center = sankeyCenter,
   Justify = sankeyJustify,
 }
 
-export enum ExitTransitionType {
+export enum SankeyExitTransitionType {
   Default = 'default',
   ToAncestor = 'to ancestor',
 }
 
-export enum EnterTransitionType {
+export enum SankeyEnterTransitionType {
   Default = 'default',
   FromAncestor = 'from ancestor',
 }

@@ -11,7 +11,7 @@ import { Position } from 'types/position'
 import { Spacing } from 'types/spacing'
 
 // Local Types
-import { EnterTransitionType, ExitTransitionType, SankeyInputLink, SankeyInputNode, SankeyNode } from '../types'
+import { SankeyEnterTransitionType, SankeyExitTransitionType, SankeyInputLink, SankeyInputNode, SankeyNode } from '../types'
 
 // Config
 import { SankeyConfig } from '../config'
@@ -50,7 +50,7 @@ export function createNodes<N extends SankeyInputNode, L extends SankeyInputLink
 
   sel
     .attr('transform', d => {
-      const x = (enterTransitionType === EnterTransitionType.FromAncestor && d.targetLinks?.[0]) ? d.targetLinks[0].source.x0 : d.x0
+      const x = (enterTransitionType === SankeyEnterTransitionType.FromAncestor && d.targetLinks?.[0]) ? d.targetLinks[0].source.x0 : d.x0
       return `translate(${sel.size() === 1 ? width * 0.5 - bleed.left : x}, ${d.y0})`
     })
     .style('opacity', 0)
@@ -163,7 +163,7 @@ export function removeNodes<N extends SankeyInputNode, L extends SankeyInputLink
 ): void {
   const { exitTransitionType } = config
   const transitionSelection = smartTransition(selection, duration)
-  if (exitTransitionType === ExitTransitionType.ToAncestor) {
+  if (exitTransitionType === SankeyExitTransitionType.ToAncestor) {
     transitionSelection.attr('transform', (d: SankeyNode<N, L>) => {
       if (d.targetLinks?.[0]) {
         return `translate(${d.targetLinks[0].source.x0},${d.y0})`

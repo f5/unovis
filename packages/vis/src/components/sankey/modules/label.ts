@@ -13,7 +13,7 @@ import { FitMode, VerticalAlign } from 'types/text'
 import { Position } from 'types/position'
 
 // Local Types
-import { SankeyInputLink, SankeyInputNode, SankeyNode, SubLabelPlacement } from '../types'
+import { SankeyInputLink, SankeyInputNode, SankeyNode, SankeySubLabelPlacement } from '../types'
 
 // Config
 import { SankeyConfig } from '../config'
@@ -124,7 +124,7 @@ export function getSubLabelTextAnchor<N extends SankeyInputNode, L extends Sanke
   config: SankeyConfig<N, L>,
   width: number
 ): string {
-  const isSublabelInline = config.subLabelPlacement === SubLabelPlacement.Inline
+  const isSublabelInline = config.subLabelPlacement === SankeySubLabelPlacement.Inline
   const orientation = getLabelOrientation(d, width, config.labelPosition)
   switch (orientation) {
     case Position.Right: return isSublabelInline ? 'end' : 'start'
@@ -146,7 +146,7 @@ export function renderLabel<N extends SankeyInputNode, L extends SankeyInputLink
   const labelShowBackground = config.labelBackground || forceExpand
   const sublabelTextSelection: Selection<SVGTextElement, SankeyNode<N, L>, SVGGElement, SankeyNode<N, L>> = labelGroup.select(`.${s.sublabel}`)
   const labelPadding = labelShowBackground ? LABEL_BLOCK_PADDING : 0
-  const isSublabelInline = config.subLabelPlacement === SubLabelPlacement.Inline
+  const isSublabelInline = config.subLabelPlacement === SankeySubLabelPlacement.Inline
   const separator = config.labelForceWordBreak ? '' : config.labelTextSeparator
   const fastEstimatesMode = true // Fast but inaccurate
   const fontWidthToHeightRatio = 0.52

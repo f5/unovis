@@ -11,7 +11,14 @@ import { getNumber } from 'utils/data'
 import { ColorAccessor, GenericAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
 import { TrimMode, VerticalAlign, FitMode } from 'types/text'
 import { Position } from 'types/position'
-import { SankeyInputLink, SankeyInputNode, NodeAlignType, SubLabelPlacement, ExitTransitionType, EnterTransitionType } from './types'
+import {
+  SankeyInputLink,
+  SankeyInputNode,
+  SankeyNodeAlign,
+  SankeySubLabelPlacement,
+  SankeyExitTransitionType,
+  SankeyEnterTransitionType,
+} from './types'
 
 export interface SankeyConfigInterface<N extends SankeyInputNode, L extends SankeyInputLink> extends ComponentConfigInterface {
   // General
@@ -20,9 +27,9 @@ export interface SankeyConfigInterface<N extends SankeyInputNode, L extends Sank
   /** Coefficient to scale the height of the diagram when the amount of links is low: `C * links.length`, clamped to `[height / 2, height]`. Default: `1/16` */
   heightNormalizationCoeff?: number;
   /** Type of animation on removing nodes. Default: `ExitTransitionType.Default` */
-  exitTransitionType?: ExitTransitionType;
+  exitTransitionType?: SankeyExitTransitionType;
   /** Type of animation on creating nodes. Default: `EnterTransitionType.Default` */
-  enterTransitionType?: EnterTransitionType;
+  enterTransitionType?: SankeyEnterTransitionType;
   /** Highight the corresponding subtree on node / link hover. Default: `false` */
   highlightSubtreeOnHover?: boolean;
   /** Highlight animation duration, ms. Default: `400` */
@@ -52,7 +59,7 @@ export interface SankeyConfigInterface<N extends SankeyInputNode, L extends Sank
   /** Sankey node width in pixels */
   nodeWidth?: number;
   /** Sankey node alignment method */
-  nodeAlign?: NodeAlignType;
+  nodeAlign?: SankeyNodeAlign;
   /** Horizontal space between the nodes. Extended Sizing property only. Default: `150` */
   nodeHorizontalSpacing?: number;
   /** Minimum node height. Extended Sizing property only. Default: `20` */
@@ -118,7 +125,7 @@ export interface SankeyConfigInterface<N extends SankeyInputNode, L extends Sank
   /** Sub-label color. Default: `null` */
   subLabelColor?: ColorAccessor<N>;
   /** Sub-label position. Default: `SubLabelPlacement.INLINE` */
-  subLabelPlacement?: SubLabelPlacement | string;
+  subLabelPlacement?: SankeySubLabelPlacement | string;
   /** Sub-label to label width ration when SubLabelPlacement.INLINE is set. Default: `0.4` */
   subLabelToLabelInlineWidthRatio?: number;
 }
@@ -126,8 +133,8 @@ export interface SankeyConfigInterface<N extends SankeyInputNode, L extends Sank
 export class SankeyConfig<N extends SankeyInputNode, L extends SankeyInputLink> extends ComponentConfig implements SankeyConfigInterface<N, L> {
   // General
   heightNormalizationCoeff = 1 / 16
-  exitTransitionType = ExitTransitionType.Default
-  enterTransitionType = EnterTransitionType.Default
+  exitTransitionType = SankeyExitTransitionType.Default
+  enterTransitionType = SankeyEnterTransitionType.Default
   // eslint-disable-next-line dot-notation
   id = (d: SankeyInputNode | SankeyInputLink, i: number): string => (d['_id'] ?? i).toString()
   highlightSubtreeOnHover = false
@@ -141,7 +148,7 @@ export class SankeyConfig<N extends SankeyInputNode, L extends SankeyInputLink> 
 
   // Nodes
   nodeWidth = 25
-  nodeAlign = NodeAlignType.Justify
+  nodeAlign = SankeyNodeAlign.Justify
   nodeHorizontalSpacing = 150
   nodeMinHeight = 20
   nodeMaxHeight = 100
@@ -171,7 +178,7 @@ export class SankeyConfig<N extends SankeyInputNode, L extends SankeyInputLink> 
   subLabel = undefined
   subLabelFontSize = 10
   subLabelColor = null
-  subLabelPlacement = SubLabelPlacement.Below
+  subLabelPlacement = SankeySubLabelPlacement.Below
   subLabelToLabelInlineWidthRatio = 0.4
 
   // Links
