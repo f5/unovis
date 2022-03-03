@@ -189,7 +189,7 @@ export function wrapSVGText (textElement: Selection<SVGTextElement, any, SVGElem
     tspan.text(tspanText)
     const tspanWidth = tspan.node().getComputedTextLength()
     if (tspanWidth > width) {
-      tspan.text(tspanContent)
+      tspan.text(tspanContent.trim())
 
       tspan = textElement.append('tspan')
         .attr('x', x)
