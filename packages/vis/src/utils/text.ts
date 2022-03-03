@@ -201,14 +201,19 @@ export function wrapSVGText (textElement: Selection<SVGTextElement, any, SVGElem
   })
 }
 
-export function trimSVGText (svgTextSelection: Selection<SVGTextElement, any, SVGElement, any>, maxWidth = 50, trimType = TrimMode.Middle, fastMode?: boolean, fontSize?: number, widthToHeightRatio?: number): void {
+export function trimSVGText (svgTextSelection: Selection<SVGTextElement, any, SVGElement, any>, maxWidth = 50, trimType = TrimMode.Middle, fastMode?: boolean, fontSize?: number, widthToHeightRatio?: number): boolean {
   const text = svgTextSelection.text()
   const textLength = text.length
 
   const textWidth = fastMode ? fontSize * textLength * widthToHeightRatio : svgTextSelection.node().getComputedTextLength()
   const tolerance = 1.1
   const maxCharacters = Math.ceil(textLength * maxWidth / (tolerance * textWidth))
-  svgTextSelection.text(trimText(text, maxCharacters, trimType))
+  if (maxCharacters < textLength) {
+    svgTextSelection.text(trimText(text, maxCharacters, trimType))
+    return true
+  }
+
+  return false
 }
 
 export function estimateTextSize (svgTextSelection: Selection<SVGTextElement, any, SVGElement, any>, fontSize: number, dy = 0.32, fastMode = true, widthToHeightRatio = 0.52): { width: number; height: number } {
