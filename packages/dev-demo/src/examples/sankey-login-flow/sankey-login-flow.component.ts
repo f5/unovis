@@ -1,6 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { Component } from '@angular/core'
-import { SankeyConfigInterface, NodeAlignType, FitMode } from '@volterra/vis'
+import { SankeyConfigInterface, SankeyNodeAlign, FitMode } from '@volterra/vis'
 
 import { loginFlowData, SankeyLink, SankeyNode } from './sankey-login-flow.data'
 
@@ -20,7 +20,7 @@ export class SankeyLoginFlowComponent {
     nodeColor: (d) => d.color,
     linkValue: (d) => d.flow,
     subLabel: (d) => d.sublabel,
-    nodeAlign: NodeAlignType.Left,
+    nodeAlign: SankeyNodeAlign.Left,
     labelFit: FitMode.Wrap,
     labelPosition: d => d.orientation,
   };
