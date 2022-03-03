@@ -11,7 +11,7 @@ import { Position } from 'types/position'
 import { Spacing } from 'types/spacing'
 
 // Local Types
-import { SankeyInputLink, SankeyInputNode, SankeyNode, ExitTransitionType, EnterTransitionType } from '../types'
+import { EnterTransitionType, ExitTransitionType, SankeyInputLink, SankeyInputNode, SankeyNode } from '../types'
 
 // Config
 import { SankeyConfig } from '../config'
@@ -185,7 +185,7 @@ export function onNodeMouseOver<N extends SankeyInputNode, L extends SankeyInput
   const labelGroup = nodeSelection.raise()
     .select<SVGGElement>(`.${s.labelGroup}`)
 
-  if (config.labelExpandTrimmedOnHover) {
+  if ((config.labelExpandTrimmedOnHover && labelGroup.classed(s.labelTrimmed)) || labelGroup.classed(s.hidden)) {
     renderLabel(labelGroup, d, config, width, 0, true)
   }
   labelGroup.classed(s.forceShow, true)
@@ -198,7 +198,7 @@ export function onNodeMouseOut<N extends SankeyInputNode, L extends SankeyInputL
   width: number
 ): void {
   const labelGroup = nodeSelection.select(`.${s.labelGroup}`)
-  if (config.labelExpandTrimmedOnHover) {
+  if (config.labelExpandTrimmedOnHover || labelGroup.classed(s.hidden)) {
     renderLabel(labelGroup, d, config, width, 0)
   }
   labelGroup.classed(s.forceShow, false)

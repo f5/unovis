@@ -72,6 +72,10 @@ export const labelGroup = css`
   label: label-group;
 `
 
+export const labelTrimmed = css`
+  label: label-trimmed;
+`
+
 export const label = css`
   label: label;
   dominant-baseline: hanging;

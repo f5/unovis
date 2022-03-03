@@ -151,12 +151,11 @@ export function renderLabel<N extends SankeyInputNode, L extends SankeyInputLink
   const fastEstimatesMode = true // Fast but inaccurate
   const fontWidthToHeightRatio = 0.52
   const dy = 0.32
-  const labelOrientation = config.labelPosition === Position.Auto
-    ? d.x0 < width / 2 ? Position.Left : Position.Right
-    : config.labelPosition
+  const labelOrientation = getLabelOrientation(d, width, config.labelPosition)
   const labelOrientationMult = labelOrientation === Position.Left ? -1 : 1
   const labelText = getString(d, config.label)
   const sublabelText = getString(d, config.subLabel)
+  let wasTrimmed = false
 
   // Render the main label, wrap / trim it and estimate its size
   const labelsFontSizeDifference = sublabelText ? config.labelFontSize - config.subLabelFontSize : 0
@@ -169,15 +168,16 @@ export function renderLabel<N extends SankeyInputNode, L extends SankeyInputLink
 
   const labelMaxWidth = isSublabelInline ? config.labelMaxWidth * (1 - (sublabelText ? config.subLabelToLabelInlineWidthRatio : 0)) : config.labelMaxWidth
   if (config.labelFit === FitMode.Wrap || forceExpand) wrapSVGText(labelTextSelection, { width: labelMaxWidth, separator, verticalAlign: VerticalAlign.Top })
-  else trimSVGText(labelTextSelection, labelMaxWidth, config.labelTrimMode, fastEstimatesMode, config.labelFontSize, fontWidthToHeightRatio)
+  else wasTrimmed = trimSVGText(labelTextSelection, labelMaxWidth, config.labelTrimMode, fastEstimatesMode, config.labelFontSize, fontWidthToHeightRatio)
 
   const labelSize = estimateTextSize(labelTextSelection, config.labelFontSize, dy, fastEstimatesMode, fontWidthToHeightRatio)
 
   // Render the sub-label, wrap / trim it and estimate its size
   const sublabelTranslateX = labelOrientationMult * (labelPadding + (isSublabelInline ? config.labelMaxWidth : 0))
+  const sublabelMarginTop = 3
   const sublabelTranslateY = labelPadding + (isSublabelInline
     ? (labelsFontSizeDifference > 0 ? 0.6 * labelsFontSizeDifference : 0)
-    : labelSize.height)
+    : labelSize.height + sublabelMarginTop)
   sublabelTextSelection
     .text(sublabelText)
     .attr('font-size', config.subLabelFontSize)
@@ -186,8 +186,9 @@ export function renderLabel<N extends SankeyInputNode, L extends SankeyInputLink
 
   const sublabelMaxWidth = isSublabelInline ? config.labelMaxWidth * config.subLabelToLabelInlineWidthRatio : config.labelMaxWidth
   if (config.labelFit === FitMode.Wrap || forceExpand) wrapSVGText(sublabelTextSelection, { width: sublabelMaxWidth, separator, verticalAlign: VerticalAlign.Top })
-  else trimSVGText(sublabelTextSelection, sublabelMaxWidth, config.labelTrimMode, fastEstimatesMode, config.subLabelFontSize, fontWidthToHeightRatio)
+  else wasTrimmed = wasTrimmed || trimSVGText(sublabelTextSelection, sublabelMaxWidth, config.labelTrimMode, fastEstimatesMode, config.subLabelFontSize, fontWidthToHeightRatio)
 
+  labelGroup.classed(s.labelTrimmed, wasTrimmed)
   const sublabelSize = estimateTextSize(sublabelTextSelection, config.subLabelFontSize, dy, fastEstimatesMode, fontWidthToHeightRatio)
 
   // Draw the background if needed
