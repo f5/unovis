@@ -9,17 +9,18 @@ import {
   SankeyInputLink,
   VisEventType,
   VisEventCallback,
-  ExitTransitionType,
-  EnterTransitionType,
-  NodeAlignType,
+  SankeyExitTransitionType,
+  SankeyEnterTransitionType,
+  SankeyNodeAlign,
   Position,
   StringAccessor,
   ColorAccessor,
   NumericAccessor,
+  GenericAccessor,
   VerticalAlign,
   FitMode,
   TrimMode,
-  SubLabelPlacement,
+  SankeySubLabelPlacement,
 } from '@volterra/vis'
 import { VisCoreComponent } from '../../core'
 
@@ -87,10 +88,10 @@ export class VisSankeyComponent<N extends SankeyInputNode, L extends SankeyInput
   @Input() heightNormalizationCoeff?: number
 
   /** Type of animation on removing nodes. Default: `ExitTransitionType.Default` */
-  @Input() exitTransitionType?: ExitTransitionType
+  @Input() exitTransitionType?: SankeyExitTransitionType
 
   /** Type of animation on creating nodes. Default: `EnterTransitionType.Default` */
-  @Input() enterTransitionType?: EnterTransitionType
+  @Input() enterTransitionType?: SankeyEnterTransitionType
 
   /** Highight the corresponding subtree on node / link hover. Default: `false` */
   @Input() highlightSubtreeOnHover?: boolean
@@ -100,6 +101,9 @@ export class VisSankeyComponent<N extends SankeyInputNode, L extends SankeyInput
 
   /** Highlight delay, ms. Default: `1000` */
   @Input() highlightDelay?: number
+
+  /** Sankey algorithm iterations. Default: `32` */
+  @Input() iterations?: number
 
   /** Sankey node sorting function. Default: `undefined`.
    * Node sorting is applied to nodes in one layer (column). Layer by layer.
@@ -119,7 +123,7 @@ export class VisSankeyComponent<N extends SankeyInputNode, L extends SankeyInput
   @Input() nodeWidth?: number
 
   /** Sankey node alignment method */
-  @Input() nodeAlign?: NodeAlignType
+  @Input() nodeAlign?: SankeyNodeAlign
 
   /** Horizontal space between the nodes. Extended Sizing property only. Default: `150` */
   @Input() nodeHorizontalSpacing?: number
@@ -167,7 +171,7 @@ export class VisSankeyComponent<N extends SankeyInputNode, L extends SankeyInput
   @Input() subLabel?: StringAccessor<N>
 
   /** Label position relative to the Node. Default: `Position.AUTO` */
-  @Input() labelPosition?: Position.Auto | Position.Left | Position.Right | string
+  @Input() labelPosition?: GenericAccessor<Position.Auto | Position.Left | Position.Right | string, N>
 
   /** Label vertical alignment */
   @Input() labelVerticalAlign?: VerticalAlign | string
@@ -215,7 +219,7 @@ export class VisSankeyComponent<N extends SankeyInputNode, L extends SankeyInput
   @Input() subLabelColor?: ColorAccessor<N>
 
   /** Sub-label position. Default: `SubLabelPlacement.INLINE` */
-  @Input() subLabelPlacement?: SubLabelPlacement | string
+  @Input() subLabelPlacement?: SankeySubLabelPlacement | string
 
   /** Sub-label to label width ration when SubLabelPlacement.INLINE is set. Default: `0.4` */
   @Input() subLabelToLabelInlineWidthRatio?: number
@@ -240,8 +244,8 @@ export class VisSankeyComponent<N extends SankeyInputNode, L extends SankeyInput
   }
 
   private getConfig (): SankeyConfigInterface<N, L> {
-    const { duration, events, attributes, id, heightNormalizationCoeff, exitTransitionType, enterTransitionType, highlightSubtreeOnHover, highlightDuration, highlightDelay, nodeSort, linkSort, nodeWidth, nodeAlign, nodeHorizontalSpacing, nodeMinHeight, nodeMaxHeight, nodePadding, showSingleNode, singleNodePosition, nodeCursor, nodeIcon, nodeColor, iconColor, linkColor, linkValue, linkCursor, label, subLabel, labelPosition, labelVerticalAlign, labelBackground, labelFit, labelMaxWidth, labelExpandTrimmedOnHover, labelTrimMode, labelFontSize, labelTextSeparator, labelForceWordBreak, labelColor, labelVisibility, subLabelFontSize, subLabelColor, subLabelPlacement, subLabelToLabelInlineWidthRatio } = this
-    const config = { duration, events, attributes, id, heightNormalizationCoeff, exitTransitionType, enterTransitionType, highlightSubtreeOnHover, highlightDuration, highlightDelay, nodeSort, linkSort, nodeWidth, nodeAlign, nodeHorizontalSpacing, nodeMinHeight, nodeMaxHeight, nodePadding, showSingleNode, singleNodePosition, nodeCursor, nodeIcon, nodeColor, iconColor, linkColor, linkValue, linkCursor, label, subLabel, labelPosition, labelVerticalAlign, labelBackground, labelFit, labelMaxWidth, labelExpandTrimmedOnHover, labelTrimMode, labelFontSize, labelTextSeparator, labelForceWordBreak, labelColor, labelVisibility, subLabelFontSize, subLabelColor, subLabelPlacement, subLabelToLabelInlineWidthRatio }
+    const { duration, events, attributes, id, heightNormalizationCoeff, exitTransitionType, enterTransitionType, highlightSubtreeOnHover, highlightDuration, highlightDelay, iterations, nodeSort, linkSort, nodeWidth, nodeAlign, nodeHorizontalSpacing, nodeMinHeight, nodeMaxHeight, nodePadding, showSingleNode, singleNodePosition, nodeCursor, nodeIcon, nodeColor, iconColor, linkColor, linkValue, linkCursor, label, subLabel, labelPosition, labelVerticalAlign, labelBackground, labelFit, labelMaxWidth, labelExpandTrimmedOnHover, labelTrimMode, labelFontSize, labelTextSeparator, labelForceWordBreak, labelColor, labelVisibility, subLabelFontSize, subLabelColor, subLabelPlacement, subLabelToLabelInlineWidthRatio } = this
+    const config = { duration, events, attributes, id, heightNormalizationCoeff, exitTransitionType, enterTransitionType, highlightSubtreeOnHover, highlightDuration, highlightDelay, iterations, nodeSort, linkSort, nodeWidth, nodeAlign, nodeHorizontalSpacing, nodeMinHeight, nodeMaxHeight, nodePadding, showSingleNode, singleNodePosition, nodeCursor, nodeIcon, nodeColor, iconColor, linkColor, linkValue, linkCursor, label, subLabel, labelPosition, labelVerticalAlign, labelBackground, labelFit, labelMaxWidth, labelExpandTrimmedOnHover, labelTrimMode, labelFontSize, labelTextSeparator, labelForceWordBreak, labelColor, labelVisibility, subLabelFontSize, subLabelColor, subLabelPlacement, subLabelToLabelInlineWidthRatio }
     const keys = Object.keys(config) as (keyof SankeyConfigInterface<N, L>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
