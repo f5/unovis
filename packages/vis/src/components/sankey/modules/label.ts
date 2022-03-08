@@ -174,7 +174,7 @@ export function renderLabel<N extends SankeyInputNode, L extends SankeyInputLink
 
   // Render the sub-label, wrap / trim it and estimate its size
   const sublabelTranslateX = labelOrientationMult * (labelPadding + (isSublabelInline ? config.labelMaxWidth : 0))
-  const sublabelMarginTop = 3
+  const sublabelMarginTop = 0
   const sublabelTranslateY = labelPadding + (isSublabelInline
     ? (labelsFontSizeDifference > 0 ? 0.6 * labelsFontSizeDifference : 0)
     : labelSize.height + sublabelMarginTop)
