@@ -1,6 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { select, Selection } from 'd3-selection'
-import { active, Transition } from 'd3-transition'
+import { Transition } from 'd3-transition'
 
 // Core
 import { CoreDataModel } from 'data-models/core'
@@ -87,8 +87,8 @@ export class ComponentCore<
     const ANIMATING_ATTR = 'animating'
     if (duration) {
       this.g.attr(ANIMATING_ATTR, '')
-      const transition = active(this.g.node()) || this.g
-        .transition()
+      const transition = this.g
+        .transition(ANIMATING_ATTR)
         .duration(duration) as Transition<SVGGElement | HTMLElement, unknown, null, undefined>
 
       transition.on('end interrupt', () => {
