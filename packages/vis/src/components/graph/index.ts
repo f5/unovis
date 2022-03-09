@@ -376,7 +376,7 @@ export class Graph<
         .call(this._zoomBehavior.transform, transform)
       this._onZoom(transform)
     } else {
-      console.warn('Node data is not defined. Check if the component has been initialized.')
+      console.warn('Graph | Node data is not defined. Check if the component has been initialized.')
     }
   }
 
@@ -769,7 +769,7 @@ export class Graph<
     const node = nodes.find(n => n._id === id)
 
     if (!node) {
-      console.warn(`Node ${id} not found`)
+      console.warn(`Graph | Node ${id} not found`)
       return undefined
     } else {
       return {
