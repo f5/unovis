@@ -27,8 +27,15 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   // Layout
   /** Type of the graph layout. Default: `GraphLayoutType.Force` */
   layoutType?: GraphLayoutType | string;
-  /** Refit the layout on data or config updates. Default: `true` */
+  /** Fit the graph to container on data or config updates, or on container resize. Default: `true` */
   layoutAutofit?: boolean;
+  /** Tolerance constant defining whether the graph should be fitted to container
+   * (on data or config update, or container resize) after a zoom / pan interaction or not.
+   * `0` — Stop fitting after any pan or zoom
+   * `Number.POSITIVE_INFINITY` — Always fit
+   * Default: `8.0`
+  */
+  layoutAutofitTolerance?: number;
   /** Place non-connected nodes to the bottom of the graph. Default: `false` */
   layoutNonConnectedAside?: boolean;
 
@@ -165,6 +172,7 @@ export class GraphConfig<N extends GraphInputNode, L extends GraphInputLink> ext
   onZoom = undefined
   layoutType = GraphLayoutType.Force
   layoutAutofit = true
+  layoutAutofitTolerance = 8.0
   layoutNonConnectedAside = false
 
   layoutGroupOrder = []

@@ -574,8 +574,7 @@ export class Graph<
         return prop === 'k' ? 2 * dVal : dVal / 50
       }, 0)
 
-      const diffTolerance = 2.5
-      if (diff > diffTolerance) this._disableAutoFit = true
+      if (diff > config.layoutAutofitTolerance) this._disableAutoFit = true
       else this._disableAutoFit = false
     }
 
@@ -747,5 +746,10 @@ export class Graph<
 
   public fitView (): void {
     this._fit(this.config.duration / 2)
+  }
+
+  /** Enable automatic fitting to container if it was disabled due to previous zoom / pan interactions */
+  public resetAutofitState (): void {
+    this._disableAutoFit = false
   }
 }
