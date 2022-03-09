@@ -752,4 +752,31 @@ export class Graph<
   public resetAutofitState (): void {
     this._disableAutoFit = false
   }
+
+  /** Get current coordinates of the nodes as an array of { id: string; x: number; y: number } objects */
+  public getNodesCoordinates (): { id: string; x: number; y: number }[] {
+    const { datamodel: { nodes } } = this
+    return nodes.map(n => ({
+      id: n._id,
+      x: n.x,
+      y: n.y,
+    }))
+  }
+
+  /** Get node coordinates by id as { id: string; x: number; y: number } */
+  public getNodeCoordinatesById (id: string): { id: string; x: number; y: number } | undefined {
+    const { datamodel: { nodes } } = this
+    const node = nodes.find(n => n._id === id)
+
+    if (!node) {
+      console.warn(`Node ${id} not found`)
+      return undefined
+    } else {
+      return {
+        id: node._id,
+        x: node.x,
+        y: node.y,
+      }
+    }
+  }
 }
