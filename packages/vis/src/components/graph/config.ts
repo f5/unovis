@@ -112,6 +112,8 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   linkLabel?: GenericAccessor<GraphCircleLabel, L> | undefined;
   /** Shift label along the link center a little bit to avoid overlap with the link arrow. Default: `true` */
   linkLabelShiftFromCenter?: BooleanAccessor<L>;
+  /** Spacing between neighboring links. Default: `8` */
+  linkNeighborSpacing?: number;
   /** Set selected link by its unique id. Default: `undefined` */
   selectedLinkId?: number | string;
 
@@ -206,6 +208,7 @@ export class GraphConfig<N extends GraphInputNode, L extends GraphInputLink> ext
   linkFlow = false
   linkLabel = undefined
   linkLabelShiftFromCenter = true
+  linkNeighborSpacing = 8
   selectedLinkId = undefined
   scoreAnimDuration = 1500
   nodeSize = 30

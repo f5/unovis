@@ -100,7 +100,7 @@ export function updateLinks<N extends GraphInputNode, L extends GraphInputLink> 
     .attr('marker-mid', d => getMarker(d, scale, config))
     .style('stroke-width', d => getLinkStrokeWidth(d, scale, config))
     .style('stroke', d => getLinkColor(d, config))
-    .attr('transform', getLinkShiftTransform)
+    .attr('transform', d => getLinkShiftTransform(d, config.linkNeighborSpacing))
     .each((d, i, elements) => {
       const el = select(elements[i])
       const x1 = getX(d.source)
@@ -113,7 +113,7 @@ export function updateLinks<N extends GraphInputNode, L extends GraphInputLink> 
   const linkBand = selection.select(`.${linkSelectors.linkBand}`)
   linkBand
     .attr('class', linkSelectors.linkBand)
-    .attr('transform', getLinkShiftTransform)
+    .attr('transform', d => getLinkShiftTransform(d, config.linkNeighborSpacing))
     .style('stroke-width', d => getLinkBandWidth(d, scale, config))
     .style('stroke', d => getLinkColor(d, config))
 
@@ -126,7 +126,8 @@ export function updateLinks<N extends GraphInputNode, L extends GraphInputLink> 
   const linkSupport = selection.select(`.${linkSelectors.linkSupport}`)
     .style('stroke', d => getLinkColor(d, config))
 
-  smartTransition(linkSupport, duration).attr('transform', getLinkShiftTransform)
+  smartTransition(linkSupport, duration)
+    .attr('transform', d => getLinkShiftTransform(d, config.linkNeighborSpacing))
     .attr('x1', d => getX(d.source))
     .attr('y1', d => getY(d.source))
     .attr('x2', d => getX(d.target))
@@ -134,7 +135,7 @@ export function updateLinks<N extends GraphInputNode, L extends GraphInputLink> 
 
   const flowGroup = selection.select(`.${linkSelectors.flowGroup}`)
   flowGroup
-    .attr('transform', getLinkShiftTransform)
+    .attr('transform', d => getLinkShiftTransform(d, config.linkNeighborSpacing))
     .style('display', d => getBoolean(d, linkFlow) ? null : 'none')
     .style('opacity', 0)
     .each((d, i, els) => {
@@ -152,7 +153,7 @@ export function updateLinks<N extends GraphInputNode, L extends GraphInputLink> 
     const sideLabelDatum = getValue<GraphLink<N, L>, GraphCircleLabel>(l, linkLabel)
     const markerWidth = getValue<GraphLink<N, L>, GraphLinkArrow>(l, linkArrow) ? LINK_MARKER_WIDTH * 2 : 0
     const labelShift = getBoolean(l, linkLabelShiftFromCenter) ? -markerWidth + 4 : 0
-    const labelTranslate = getLinkLabelShift(l, labelShift)
+    const labelTranslate = getLinkLabelShift(l, config.linkNeighborSpacing, labelShift)
 
     const sideLabels = labelGroups.selectAll(`.${linkSelectors.labelGroup}`).data(sideLabelDatum ? [sideLabelDatum] : [])
     // Enter

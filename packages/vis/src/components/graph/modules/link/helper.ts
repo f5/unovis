@@ -20,32 +20,31 @@ import { ZoomLevel } from '../zoom-levels'
 
 export const getPolylineData = (d: { x1: number; x2: number; y1: number; y2: number}): string => `${d.x1},${d.y1} ${(d.x1 + d.x2) / 2},${(d.y1 + d.y2) / 2} ${d.x2},${d.y2}`
 
-export const LINK_MARGIN = 8
 export const LINK_LABEL_RADIUS = 8
 export const LINK_MARKER_WIDTH = 12
 export const LINK_MARKER_HEIGHT = 8
 
-export function getLinkShift (link: GraphLink): { dx: number; dy: number } {
+export function getLinkShift (link: GraphLink, spacing: number): { dx: number; dy: number } {
   const sourceNode = link.source
   const targetNode = link.target
   const angle = Math.atan2(getY(targetNode) - getY(sourceNode), getX(targetNode) - getX(sourceNode)) - Math.PI / 2
-  const dx = Math.cos(angle) * LINK_MARGIN * link._direction * (link._index - (link._neighbours - 1) / 2)
-  const dy = Math.sin(angle) * LINK_MARGIN * link._direction * (link._index - (link._neighbours - 1) / 2)
+  const dx = Math.cos(angle) * spacing * link._direction * (link._index - (link._neighbours - 1) / 2)
+  const dy = Math.sin(angle) * spacing * link._direction * (link._index - (link._neighbours - 1) / 2)
   return { dx, dy }
 }
 
-export function getLinkShiftTransform (link: GraphLink): string {
-  const { dx, dy } = getLinkShift(link)
+export function getLinkShiftTransform (link: GraphLink, spacing: number): string {
+  const { dx, dy } = getLinkShift(link, spacing)
   return `translate(${dx}, ${dy})`
 }
 
-export function getLinkLabelShift (link: GraphLink, shiftFromCenter = 0): string {
+export function getLinkLabelShift (link: GraphLink, linkSpacing: number, shiftFromCenter = 0): string {
   const x1 = getX(link.source)
   const y1 = getY(link.source)
   const x2 = getX(link.target)
   const y2 = getY(link.target)
   const angle = Math.atan2(y2 - y1, x2 - x1)
-  const perpendicularShift = getLinkShift(link)
+  const perpendicularShift = getLinkShift(link, linkSpacing)
 
   const x = x1 + 0.5 * (x2 - x1) + shiftFromCenter * Math.cos(angle) + perpendicularShift.dx
   const y = y1 + 0.5 * (y2 - y1) + shiftFromCenter * Math.sin(angle) + perpendicularShift.dy
