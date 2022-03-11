@@ -2,6 +2,9 @@
 sidebar_position: 1
 ---
 
+import Link from '@docusaurus/Link';
+
+
 # Introduction
 
 :::note
@@ -10,77 +13,30 @@ The documentation is currently under development, contributions are welcome!
 
 :::
 
-## Welcome to @volterra/vis
+## Welcome to Unovis
 
-This documentation will help you to get comfortable with *@volterra/vis-angular*, which is an Angular wrapper for
-*@volterra/vis* — a modular and platform-agnostic library for charts, maps and graphs.
+This documentation will help you to get comfortable with *Unovis* — a modular and platform-agnostic library for charts, maps and graphs.
 
 ### Installation
-To install *@volterra/vis* and *@volterra/vis-angular* you'll need to add Volterra's registry first.
-Before you do that, you should [create your Gitlab API token](https://gitlab.com/volterra/ves.io/stellar/-/wikis/NPM-SETUP:-Create-auth-token)
-which will allow you to access the registry. Save your unique token as an environmental variable called `GITLAB_NPM_REGISTRY_AUTH_TOKEN`,
-and then add the registry either by adding the following lines to your **.npmrc** file:
-
-```
-@volterra:registry=https://gitlab.com/api/v4/packages/npm/
-//gitlab.com/api/v4/packages/npm/:_authToken=${GITLAB_NPM_REGISTRY_AUTH_TOKEN}
-```
-or by executing the following commands in Terminal:
-```
-npm config set @volterra:registry https://gitlab.com/api/v4/packages/npm/
-npm config set "//gitlab.com/api/v4/packages/npm/:_authToken" ${GITLAB_NPM_REGISTRY_AUTH_TOKEN}
+Unovis is available on F5 Artifactory. If you want to use it with React, install both `@volterra/vis` and `@volterra/vis-react`:
+```bash
+npm install -P @volterra/vis @volterra/vis-react
 ```
 
-After that you should be able in install the libraries for your project:
+If you use Angular, install `@volterra/vis-angular` instead:
 ```bash
 npm install -P @volterra/vis @volterra/vis-angular
 ```
 
+Or if you want to use it with vanilla TypeScript or JavaScript, only the core package will be needed:
+```bash
+npm install -P @volterra/vis
+```
+
+
 ### Usage
-Every visualization component has its individual Angular module. After importing the modules you're going to work with,
-you can assemble your Angular component.
+Pick a component on the left to learn how to configure it (start with <Link to="/docs/xy-charts/Line">Line</Link> if you
+want a simple example). Or check the <Link to="https://f5-innersourcing.pages.gitswarm.f5net.com/unovis/showcase">Showcase</Link>
+section to see what's the library is capable of.
 
-Here is a basic example of an Area chart which has X and Y axes and accepts input data:
-
-**my-chart.module.ts:**
-```typescript
-import { NgModule } from '@angular/core'
-import { VisXYContainerModule, VisAreaModule, VisAxisModule } from '@volterra/vis-angular'
-
-import { MyChartComponent } from './my-chart.component'
-
-@NgModule({
-  imports: [VisXYContainerModule, VisAreaModule, VisAxisModule],
-  declarations: [MyChartComponent],
-  exports: [MyChartComponent],
-})
-export class MyChartModule {}
-```
-
-**my-chart.component.html:**
-```html
-<vis-xy-container>
-  <vis-area [x]="x" [y]="y" [data]="data"></vis-area>
-  <vis-axis type="x" label="X Axis"></vis-axis>
-  <vis-axis type="y" label="Y Axis"></vis-axis>
-</vis-xy-container>
-```
-
-**my-chart.component.ts:**
-```typescript
-import { Component, Input } from '@angular/core'
-
-type DataRecord = { timestamp: number; value: number }
-
-@Component({
-  selector: 'my-chart',
-  templateUrl: './my-chart.component.html',
-})
-export class MyChartComponent {
-  @Input() data: DataRecord[] = []
-  x = (d: DataRecord): number => d.timestamp
-  y = (d: DataRecord): number => d.value
-}
-```
-To learn about supported configuration options of the *@volterra/vis* visualization components check the other pages of this storybook documentation.
 
