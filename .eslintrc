@@ -8,7 +8,6 @@
     "jasmine": true
   },
   "plugins": [
-    "notice",
     "import",
     "import-newlines"
   ],
@@ -36,13 +35,6 @@
     "no-undef": 0,
     "no-unused-vars": 0,
     "max-len": ["warn", { "code": 150, "tabWidth": 2, "ignoreTrailingComments": true, "ignoreComments": true,  "ignoreUrls": true }],
-    "notice/notice":[ "warn",
-      {
-        "mustMatch": "Copyright \\(c\\) (Volterra), Inc. All rights reserved.",
-        "template": "// Copyright (c) Volterra, Inc. All rights reserved.\n",
-        "onNonMatchingHeader": "replace"
-      }
-    ],
     "no-unused-expressions": "off",
     "comma-dangle": "off",
     "@typescript-eslint/comma-dangle": ["error", {
