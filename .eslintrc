@@ -27,7 +27,7 @@
     "prefer-template": "error",
     "no-useless-constructor": "off",
     "import/extensions": 0,
-    "import/no-unresolved": [2, {"commonjs": true, "amd": true}],
+    "import/no-unresolved": [2, {"commonjs": true, "amd": true, "ignore": ["^@theme", "^@docusaurus", "^@site"]}],
     "import/no-extraneous-dependencies": 0,
     "import/prefer-default-export": 0,
     "import/first": ["error", "absolute-first"],
@@ -55,9 +55,12 @@
         "generics": "always-multiline",
         "tuples": "always-multiline"
     }],
+    "no-use-before-define": "off",
+    "@typescript-eslint/no-use-before-define": ["error"],
     "@typescript-eslint/indent": ["error", 2],
     "@typescript-eslint/no-unused-expressions": ["error"],
     "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/explicit-module-boundary-types": ["warn"],
     "@typescript-eslint/explicit-member-accessibility": "off",
     "@typescript-eslint/type-annotation-spacing": ["error"],
     "@typescript-eslint/member-delimiter-style": ["error", {
