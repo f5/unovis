@@ -78,14 +78,14 @@ export class HorizontalBarComponent implements AfterViewInit, OnDestroy {
         const accessor = this.yAccessors[i % 5]
         const value = (typeof accessor === 'function') ? accessor(d) : 'No Data'
         return `<span>${value}</span>`
-      }
-    }
+      },
+    },
   })
 
   ngAfterViewInit (): void {
     const data: SampleDatum[] = generateData()
-    const stackedConfig = getStackedBarConfig(this.yAccessors)
-    const groupConfig = getGroupedBarConfig(this.yAccessors)
+    const stackedConfig = this.getStackedBarConfig(this.yAccessors)
+    const groupConfig = this.getGroupedBarConfig(this.yAccessors)
 
     this.chartConfig = {
       margin: { top: 10, bottom: 10, left: 15, right: 10 },
@@ -94,7 +94,7 @@ export class HorizontalBarComponent implements AfterViewInit, OnDestroy {
       }),
       yAxis: new Axis({}),
       yDirection: Direction.South,
-      tooltip: this.tooltip
+      tooltip: this.tooltip,
     }
 
     this.stackedBarChart = new XYContainer(this.stacked.nativeElement, {
@@ -134,25 +134,25 @@ export class HorizontalBarComponent implements AfterViewInit, OnDestroy {
     const accessors = this.yAccessors.map((acc, i) =>
       !this.legendItems[i].inactive ? acc : null
     )
-    this.stackedBarChart.updateComponents([getStackedBarConfig(accessors)])
-    this.groupedBarChart.updateComponents([getGroupedBarConfig(accessors)])
+    this.stackedBarChart.updateComponents([this.getStackedBarConfig(accessors)])
+    this.groupedBarChart.updateComponents([this.getGroupedBarConfig(accessors)])
   }
-}
 
-function getStackedBarConfig (y: NumericAccessor<SampleDatum>[]): StackedBarConfigInterface<SampleDatum> {
-  return {
-    orientation: Orientation.Horizontal,
-    y: y,
-    x: d => d.x,
-    roundedCorners: 5,
+  getStackedBarConfig (y: NumericAccessor<SampleDatum>[]): StackedBarConfigInterface<SampleDatum> {
+    return {
+      orientation: Orientation.Horizontal,
+      y: y,
+      x: d => d.x,
+      roundedCorners: 5,
+    }
   }
-}
 
-function getGroupedBarConfig (y: NumericAccessor<SampleDatum>[]): GroupedBarConfigInterface<SampleDatum> {
-  return {
-    orientation: Orientation.Horizontal,
-    y: y,
-    x: d => d.x,
-    roundedCorners: 5,
+  getGroupedBarConfig (y: NumericAccessor<SampleDatum>[]): GroupedBarConfigInterface<SampleDatum> {
+    return {
+      orientation: Orientation.Horizontal,
+      y: y,
+      x: d => d.x,
+      roundedCorners: 5,
+    }
   }
 }

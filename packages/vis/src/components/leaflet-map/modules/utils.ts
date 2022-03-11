@@ -142,6 +142,15 @@ export function getNodePathData ({ x, y }, radius: number, shape: LeafletMapPoin
   }
 }
 
+export function getDonutData<D> (d: LeafletMapPointDatum<D>, valuesMap: LeafletMapPointStyles<D>): LeafletMapPieDatum[] {
+  return Object.keys(valuesMap).map(key => ({
+    name: key,
+    value: d[key],
+    color: valuesMap[key].color,
+    className: valuesMap[key].className,
+  }))
+}
+
 export function geoJSONPointToScreenPoint<D> (
   geoPoint: ClusterFeature<LeafletMapPointDatum<D>>,
   leafletMap: L.Map,
@@ -207,15 +216,6 @@ export function findNodeAndClusterInPointsById<D> (points: LeafletMapPoint<D>[],
     }
   })
   return { node, cluster }
-}
-
-export function getDonutData<D> (d: LeafletMapPointDatum<D>, valuesMap: LeafletMapPointStyles<D>): LeafletMapPieDatum[] {
-  return Object.keys(valuesMap).map(key => ({
-    name: key,
-    value: d[key],
-    color: valuesMap[key].color,
-    className: valuesMap[key].className,
-  }))
 }
 
 export function getNodeRelativePosition (d, leafletMap: L.Map): { x: number; y: number } {

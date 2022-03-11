@@ -51,7 +51,7 @@ export class BulletLegendExampleComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit (): void {
     const data: AreaSampleDatum[] = generateData()
-    this.areaConfig = getAreaConfig(this.yAccessors)
+    this.areaConfig = this.getAreaConfig(this.yAccessors)
 
     this.chartConfig = {
       margin: { top: 10, bottom: 10, left: 15, right: 10 },
@@ -116,13 +116,13 @@ export class BulletLegendExampleComponent implements AfterViewInit, OnDestroy {
     this.areaConfig.y = accessors
     this.composite.updateComponents([this.areaConfig])
   }
-}
 
-function getAreaConfig (y): AreaConfigInterface<AreaSampleDatum> {
-  return {
-    x: d => d.x,
-    y,
-    baseline: d => d.baseline,
-    opacity: 0.8,
+  getAreaConfig (y): AreaConfigInterface<AreaSampleDatum> {
+    return {
+      x: d => d.x,
+      y,
+      baseline: d => d.baseline,
+      opacity: 0.8,
+    }
   }
 }

@@ -43,8 +43,8 @@ export class CompositeComponent implements AfterViewInit {
 
   ngAfterViewInit (): void {
     const data: SampleDatum[] = sampleSeriesData(100)
-    this.mainStakedBarConfig = getMainStackedBarConfig(this.yAccessors)
-    this.navStackedBarConfig = getNavStackedBarConfig(this.yAccessors)
+    this.mainStakedBarConfig = this.getMainStackedBarConfig(this.yAccessors)
+    this.navStackedBarConfig = this.getNavStackedBarConfig(this.yAccessors)
 
     this.chartConfig = {
       margin: { top: 10, bottom: 10, left: 10, right: 10 },
@@ -111,26 +111,26 @@ export class CompositeComponent implements AfterViewInit {
     this.mainStakedBarConfig.y = accessors
     this.composite.updateComponents([this.mainStakedBarConfig])
   }
-}
 
-function getMainStackedBarConfig (y): StackedBarConfigInterface<SampleDatum> {
-  return {
-    x: d => d.x,
-    y,
-    barMaxWidth: 15,
-    roundedCorners: false,
-    events: {
-      [StackedBar.selectors.bar]: {},
-    },
+  getMainStackedBarConfig (y): StackedBarConfigInterface<SampleDatum> {
+    return {
+      x: d => d.x,
+      y,
+      barMaxWidth: 15,
+      roundedCorners: false,
+      events: {
+        [StackedBar.selectors.bar]: {},
+      },
+    }
   }
-}
 
-function getNavStackedBarConfig (y): StackedBarConfigInterface<SampleDatum> {
-  return {
-    x: d => d.x,
-    y,
-    events: {
-      [StackedBar.selectors.bar]: {},
-    },
+  getNavStackedBarConfig (y): StackedBarConfigInterface<SampleDatum> {
+    return {
+      x: d => d.x,
+      y,
+      events: {
+        [StackedBar.selectors.bar]: {},
+      },
+    }
   }
 }

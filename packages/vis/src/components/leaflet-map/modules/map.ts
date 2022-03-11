@@ -18,6 +18,65 @@ import * as s from '../style'
 export const initialMapCenter: L.LatLngExpression = [36, 14]
 export const initialMapZoom = 1.9
 
+export function updateTopoJson<T> (mapboxMap, config: LeafletMapConfig<T>): void {
+  const { topoJSONLayer } = config
+
+  if (topoJSONLayer.sources) {
+    const featureObject = topoJSONLayer.sources?.objects?.[topoJSONLayer.featureName]
+    if (featureObject) {
+      const mapSource = mapboxMap.getSource(topoJSONLayer.featureName)
+      const featureCollection = feature(topoJSONLayer.sources, featureObject)
+      if (mapSource) {
+        mapSource.setData(featureCollection)
+      } else {
+        mapboxMap.addSource(topoJSONLayer.featureName, { type: 'geojson', data: featureCollection })
+      }
+    }
+  }
+
+  const fillLayer = mapboxMap.getLayer(`${topoJSONLayer.featureName}-area`)
+  if (topoJSONLayer.fillProperty) {
+    if (!fillLayer) {
+      mapboxMap.addLayer({
+        id: `${topoJSONLayer.featureName}-area`,
+        type: 'fill',
+        source: topoJSONLayer.featureName,
+        paint: {
+          'fill-antialias': false,
+          'fill-opacity': topoJSONLayer.fillOpacity,
+        },
+      })
+    }
+    mapboxMap.setPaintProperty(`${topoJSONLayer.featureName}-area`, 'fill-color', [
+      'case',
+      ['!', ['has', topoJSONLayer.fillProperty]],
+      'rgba(255, 255, 255, 0)',
+      ['get', topoJSONLayer.fillProperty],
+    ])
+  } else if (fillLayer) mapboxMap.removeLayer(`${topoJSONLayer.featureName}-area`)
+
+  const strokeLayer = mapboxMap.getLayer(`${topoJSONLayer.featureName}-stroke`)
+  if (topoJSONLayer.strokeProperty) {
+    if (!strokeLayer) {
+      mapboxMap.addLayer({
+        id: `${topoJSONLayer.featureName}-stroke`,
+        type: 'line',
+        source: topoJSONLayer.featureName,
+        paint: {
+          'line-opacity': topoJSONLayer.strokeOpacity,
+          'line-width': topoJSONLayer.strokeWidth,
+        },
+      })
+    }
+    mapboxMap.setPaintProperty(`${topoJSONLayer.featureName}-stroke`, 'line-color', [
+      'case',
+      ['!', ['has', topoJSONLayer.strokeProperty]],
+      'rgba(255, 255, 255, 0)',
+      ['get', topoJSONLayer.strokeProperty],
+    ])
+  } else if (strokeLayer) { mapboxMap.removeLayer(`${topoJSONLayer.featureName}-stroke`) }
+}
+
 export async function setupMap<T> (mapContainer: HTMLElement, config: LeafletMapConfig<T>): Promise<{
   leaflet: L.Map;
   layer: L.Layer;
@@ -97,63 +156,4 @@ export async function setupMap<T> (mapContainer: HTMLElement, config: LeafletMap
     svgOverlay,
     svgGroup,
   }
-}
-
-export function updateTopoJson<T> (mapboxMap, config: LeafletMapConfig<T>): void {
-  const { topoJSONLayer } = config
-
-  if (topoJSONLayer.sources) {
-    const featureObject = topoJSONLayer.sources?.objects?.[topoJSONLayer.featureName]
-    if (featureObject) {
-      const mapSource = mapboxMap.getSource(topoJSONLayer.featureName)
-      const featureCollection = feature(topoJSONLayer.sources, featureObject)
-      if (mapSource) {
-        mapSource.setData(featureCollection)
-      } else {
-        mapboxMap.addSource(topoJSONLayer.featureName, { type: 'geojson', data: featureCollection })
-      }
-    }
-  }
-
-  const fillLayer = mapboxMap.getLayer(`${topoJSONLayer.featureName}-area`)
-  if (topoJSONLayer.fillProperty) {
-    if (!fillLayer) {
-      mapboxMap.addLayer({
-        id: `${topoJSONLayer.featureName}-area`,
-        type: 'fill',
-        source: topoJSONLayer.featureName,
-        paint: {
-          'fill-antialias': false,
-          'fill-opacity': topoJSONLayer.fillOpacity,
-        },
-      })
-    }
-    mapboxMap.setPaintProperty(`${topoJSONLayer.featureName}-area`, 'fill-color', [
-      'case',
-      ['!', ['has', topoJSONLayer.fillProperty]],
-      'rgba(255, 255, 255, 0)',
-      ['get', topoJSONLayer.fillProperty],
-    ])
-  } else if (fillLayer) mapboxMap.removeLayer(`${topoJSONLayer.featureName}-area`)
-
-  const strokeLayer = mapboxMap.getLayer(`${topoJSONLayer.featureName}-stroke`)
-  if (topoJSONLayer.strokeProperty) {
-    if (!strokeLayer) {
-      mapboxMap.addLayer({
-        id: `${topoJSONLayer.featureName}-stroke`,
-        type: 'line',
-        source: topoJSONLayer.featureName,
-        paint: {
-          'line-opacity': topoJSONLayer.strokeOpacity,
-          'line-width': topoJSONLayer.strokeWidth,
-        },
-      })
-    }
-    mapboxMap.setPaintProperty(`${topoJSONLayer.featureName}-stroke`, 'line-color', [
-      'case',
-      ['!', ['has', topoJSONLayer.strokeProperty]],
-      'rgba(255, 255, 255, 0)',
-      ['get', topoJSONLayer.strokeProperty],
-    ])
-  } else if (strokeLayer) { mapboxMap.removeLayer(`${topoJSONLayer.featureName}-stroke`) }
 }

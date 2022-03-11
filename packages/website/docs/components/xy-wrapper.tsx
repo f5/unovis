@@ -10,45 +10,6 @@ import { DataRecord } from '../utils/time-series'
 import { parseProps } from '../utils/props-helper'
 import './styles.css'
 
-export const XYWrapper = (props): JSX.Element => {
-  const {
-    name,
-    data,
-    className,
-    height,
-    hideTabs,
-    showAxes,
-    showContext,
-    excludeTabs,
-    excludeGraph,
-    dynamicData,
-    ...rest
-  } = props
-  const componentProps = {
-    x: (d: DataRecord) => d.x,
-    y: (d: DataRecord) => d.y,
-    ...rest,
-  }
-
-  const tabProps = { name, showContext, hideTabs, componentProps }
-  const graphProps = {
-    name,
-    height,
-    data,
-    showAxes,
-    className,
-    componentProps,
-    dynamicData,
-  }
-
-  return (
-    <>
-      {!excludeTabs && <XYDocTabs {...tabProps} />}
-      {!excludeGraph && <XYComponentDoc {...graphProps}/>}
-    </>
-  )
-}
-
 export const XYDocTabs = ({
   name,
   componentProps,
@@ -123,7 +84,7 @@ export const XYComponentDoc = ({
   return (
     <BrowserOnly fallback={<div>Loading...</div>}>
       {() => {
-        // eslint-disable-next-line @typescript-eslint/naming-convention
+        // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-var-requires
         const { VisXYContainer, [`Vis${name}`]: Component, VisAxis } = require('@volterra/vis-react')
 
         return (
@@ -143,6 +104,45 @@ export const XYComponentDoc = ({
         )
       }}
     </BrowserOnly>
+  )
+}
+
+export const XYWrapper = (props): JSX.Element => {
+  const {
+    name,
+    data,
+    className,
+    height,
+    hideTabs,
+    showAxes,
+    showContext,
+    excludeTabs,
+    excludeGraph,
+    dynamicData,
+    ...rest
+  } = props
+  const componentProps = {
+    x: (d: DataRecord) => d.x,
+    y: (d: DataRecord) => d.y,
+    ...rest,
+  }
+
+  const tabProps = { name, showContext, hideTabs, componentProps }
+  const graphProps = {
+    name,
+    height,
+    data,
+    showAxes,
+    className,
+    componentProps,
+    dynamicData,
+  }
+
+  return (
+    <>
+      {!excludeTabs && <XYDocTabs {...tabProps} />}
+      {!excludeGraph && <XYComponentDoc {...graphProps}/>}
+    </>
   )
 }
 

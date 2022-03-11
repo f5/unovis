@@ -192,10 +192,6 @@ export function getStackedData<Datum> (
   return stackedData
 }
 
-export function getExtent<Datum> (data: Datum[], ...acs: NumericAccessor<Datum>[]): (number | undefined)[] {
-  return [getMin(data, ...acs), getMax(data, ...acs)]
-}
-
 export function getMin<Datum> (data: Datum[], ...acs: NumericAccessor<Datum>[]): number | undefined {
   if (!data) return undefined
   const minValue = min(data, d => min(acs as NumericAccessor<Datum>[], a => getNumber(d, a)))
@@ -206,6 +202,10 @@ export function getMax<Datum> (data: Datum[], ...acs: NumericAccessor<Datum>[]):
   if (!data) return undefined
   const maxValue = max(data, d => max(acs as NumericAccessor<Datum>[], a => getNumber(d, a)))
   return maxValue
+}
+
+export function getExtent<Datum> (data: Datum[], ...acs: NumericAccessor<Datum>[]): (number | undefined)[] {
+  return [getMin(data, ...acs), getMax(data, ...acs)]
 }
 
 export function getNearest<Datum> (data: Datum[], value: number, accessor: NumericAccessor<Datum>): Datum {

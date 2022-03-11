@@ -32,7 +32,7 @@ const getContextProps: PropParser = (k, v) => {
   return [k, str].join(' = ')
 }
 
-function getHtmlTag(name: string): string {
+function getHtmlTag (name: string): string {
   const hasUpper = name.match(/.+[A-Z]/)
   if (hasUpper) {
     const ch = name[hasUpper[0].length - 1]
