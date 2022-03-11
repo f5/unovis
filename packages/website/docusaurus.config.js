@@ -60,6 +60,11 @@ const config = {
             label: 'Docs',
           },
           {
+            href: 'https://f5-innersourcing.pages.gitswarm.f5net.com/unovis/showcase',
+            position: 'left',
+            label: 'Showcase',
+          },
+          {
             href: 'https://github.com/f5networks/unovis',
             label: 'GitHub',
             position: 'right',
