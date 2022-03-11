@@ -45,7 +45,7 @@ export const AreaComponent = (props) => (
 )
 
 ### Basic configuration
-The _Area_ component has been designed to work together with _XY Container_. The minimal Area configuration looks like:
+The _Area_ component has been designed to work together with _XY Container_. The minimal _Area_ configuration looks like:
 <Tabs groupId="framework">
   <TabItem value="react" label="React">
     <CodeBlock language="jsx" title="component.tsx">
@@ -114,7 +114,7 @@ Using the `curveType: CurveType` property you can set various curve type options
   </TabItem>
 </Tabs>
 
-Learn more about configurable curves from d3's [documentation](https://github.com/d3/d3-shape#curves)
+Learn more about configurable curves from D3's [documentation](https://github.com/d3/d3-shape#curves)
 
 ### Color
 
@@ -124,7 +124,6 @@ Setting color for a single _Area_ component is simple, you can achieve that just
   {() => {
     const { useState } = require("react");
     const [color, setColor] = useState("#19cb9a");
-    
     return (
       <>
         <label style={{float: "right", margin: "0.5em"}}>
@@ -139,7 +138,7 @@ Setting color for a single _Area_ component is simple, you can achieve that just
         <AreaDoc color={color}/>
         <AreaComponent color={color}/>
       </>
-    );
+    )
   }}
 </BrowserOnly>
 
@@ -183,7 +182,7 @@ The _Area_ component supports additional styling via CSS variables that you can 
 
 ### Events
 
-The Area component supports the following events:
+The _Area_ component supports the following events:
 <CodeBlock language="ts" title="component.ts">
 {[`import { Area } from '@volterra/vis'`,
   ' ',
