@@ -4,7 +4,8 @@ import { css, injectGlobal } from '@emotion/css'
 export const global = injectGlobal`
   :root {
     --vis-line-cursor: default;
-    --vis-line-stroke: var(--vis-color-main);
+    --vis-line-stroke-dasharray: none;
+    --vis-line-stroke-dashoffset: 0;
   }
 `
 
@@ -15,13 +16,14 @@ export const root = css`
 export const line = css`
   label: line;
   transition: opacity 200ms;
+  cursor: var(--vis-line-cursor);
 `
 
 export const linePath = css`
   label: linePath;
   fill: none;
-  stroke: var(--vis-line-stroke);
-  cursor: var(--vis-line-cursor);
+  stroke-dasharray: var(--vis-line-stroke-dasharray);
+  stroke-dashoffset: var(--vis-line-stroke-dashoffset);
 `
 
 export const lineSelectionHelper = css`
