@@ -29,7 +29,7 @@ npm install -P @volterra/vis
 ## Usage
 Check the library's website documentation and usage examples. More learning resources coming soon!
 
-https://f5-innersourcing.pages.gitswarm.f5net.com/volterra-vis/
+https://f5-innersourcing.pages.gitswarm.f5net.com/unovis/
 
 
 ## Repository structure
