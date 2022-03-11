@@ -63,6 +63,7 @@ input {
 }
 
 .custom-line {
-  --vis-line-stroke: #fcfc00;
-  --vis-line-cursor: 'cell';
+  --vis-line-cursor: cell;
+  --vis-line-stroke-dasharray: 55 15;
+  --vis-line-stroke-dashoffset: 0;
 }

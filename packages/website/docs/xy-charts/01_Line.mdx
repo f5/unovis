@@ -56,15 +56,16 @@ The _Line_ component supports additional styling via CSS variables that you can 
 
 <CodeBlock language="css" title="styles.css">
   {`.custom-line {
-  --vis-line-stroke: #fcfc00;
-  --vis-line-cursor: 'cell';
+  --vis-line-cursor: cell;
+  --vis-line-stroke-dasharray: 55 15;
+  --vis-line-stroke-dashoffset: 0;
 }`}
 </CodeBlock>
-<XYWrapper {...lineProps()} excludeTabs className="custom-line" lineWidth={5} color="fcfc00" cursor="cell"/>
+  <XYWrapper {...lineProps()} excludeTabs className="custom-line" lineWidth={5} />
 
 <Details summary={<summary>All supported CSS variables</summary>} open>
   <CodeBlock language="css">
-    {`--vis-line-stroke\n--vis-line-cursor`}
+    {`--vis-line-stroke\n--vis-line-stroke-dasharray\n--vis-line-stroke-dashoffset`}
   </CodeBlock>
 </Details>
 
