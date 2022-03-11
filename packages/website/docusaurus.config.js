@@ -12,7 +12,7 @@ const config = {
   title: 'UNOVIS',
   tagline: 'A modular data visualization framework for React, Angular and vanilla TypeScript',
   url: 'https://f5.com',
-  baseUrl: '/',
+  baseUrl: '/unovis/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/unovis-pictogram.svg',
