@@ -17,8 +17,7 @@ build:
       - node_modules
       - packages/vis/lib
       - packages/dev-demo/lib
-      - packages/vis-angular/storybook-static
-      - packages/vis-react/storybook-static
+      - packages/website/build
 
 pages:
   stage: publish-demo
@@ -30,17 +29,15 @@ pages:
       - node_modules
       - packages/vis/lib
       - packages/dev-demo/lib
-      - packages/vis-angular/storybook-static
-      - packages/vis-react/storybook-static
+      - packages/website/build
   script:
     - export NODE_OPTIONS=--max-old-space-size=4096
     - npm install -g npm@7
     - npm install
     - npm run build
-    - mv packages/dev-demo/lib/volterra-vis-examples public
+    - mv packages/website/build public
     - cp public/index.html public/404.html
-    - mv packages/vis-angular/storybook-static public/storybook-angular
-    - mv packages/vis-react/storybook-static public/storybook-react
+    - mv packages/dev-demo/lib/volterra-vis-examples public/showcase
   artifacts:
     paths:
       - public
