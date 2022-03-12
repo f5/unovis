@@ -67,3 +67,10 @@ input {
   --vis-line-stroke-dasharray: 55 15;
   --vis-line-stroke-dashoffset: 0;
 }
+
+.custom-axis {
+  --vis-axis-tick-label-font-size: 20px;
+  --vis-axis-label-color: #1acb9a;
+  --vis-axis-font-family: monospace;
+  --vis-axis-tick-label-color:  #8777d9;
+}

@@ -5,11 +5,13 @@ import CodeBlock from '@theme/CodeBlock';
 import Details from "@theme/Details";
 import { PropTable } from '../utils/props-table'
 import { data, generateDataRecords } from '../utils/time-series'
-import { XYWrapper, XYWrapperWithInput, XYWrapperWithMenu } from '../components/xy-wrapper';
+import { XYWrapper, XYWrapperWithInput, XYWrapperWithMenu } from '../components';
 
 export const lineProps = (n=10) => ({
   name: "Line",
-  data: generateDataRecords(n)
+  data: generateDataRecords(n),
+  x: d=>d.x,
+  y: d=>d.y,
 });
 
 ### Basic configuration
@@ -23,14 +25,14 @@ The *Line* component has been designed to work together with *XY Container*. The
 
 ### Line Width
 Specify the Line's width in pixels using the `lineWidth` property:
-<XYWrapperWithInput {...lineProps()} property="lineWidth" type="number" defaultValue={5}/>
+<XYWrapperWithInput {...lineProps()} property="lineWidth" inputType="number" defaultValue={5}/>
 
 ### Curve Types
 Using the `curveType: CurveType` property you can set various curve type options. For example:
 <XYWrapperWithMenu {...lineProps(50)} options={["basis", "linear", "step"]} attr="curveType"/>
 
 ### Colored Line
-<XYWrapperWithInput {...lineProps()} property="color" type="color" defaultValue="#a611a5"/>
+<XYWrapperWithInput {...lineProps()} property="color" inputType="color" defaultValue="#a611a5"/>
 
 #### For multiple lines:
 If you want to set color for multiple lines at once, you'll have to define a colors array in your component and reference colors by index in the accessor function:
@@ -49,7 +51,7 @@ In the case of missing data, you can assign a fallback value for *Line* using `n
 Consider the following example, where the dataset contains undefined values over in the following domain:
 `4 <= x <= 6`
 
-<XYWrapperWithInput showAxes name="Line" data={generateDataRecords(10).map((d,i) => ({ x: d.x, y: i >= 4 && i <= 6 ? undefined : d.y }))} property="noDataValue" type="number" defaultValue={7} />
+<XYWrapperWithInput showAxes {...lineProps()} data={generateDataRecords(10).map((d,i) => ({ x: d.x, y: i >= 4 && i <= 6 ? undefined : d.y }))} property="noDataValue" inputType="number" defaultValue={7} />
 
 ### Additional Styling: CSS Variables
 The _Line_ component supports additional styling via CSS variables that you can define for your visualization container. For example:

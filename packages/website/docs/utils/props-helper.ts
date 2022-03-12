@@ -1,6 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { PropItem } from 'react-docgen-typescript'
-
 export interface FrameworkProps {
   componentStrings: {
     angular: string;
@@ -9,7 +8,6 @@ export interface FrameworkProps {
   };
   contextProps?: string[];
 }
-
 type PropParser = { (k: string, v: PropItem): string }
 
 const literals = ['boolean', 'number', 'string']
@@ -62,7 +60,7 @@ export function parseProps (name: string, props: Record<string, PropItem>, addTo
     componentStrings: {
       angular: `<vis-${tag} ${angularProps.join(' ')}></vis-${tag}>`,
       react: `<Vis${name} ${reactProps.join(' ')}/>`,
-      typescript: `const component = new ${name}({ ${typescriptProps.join(', ')} }})`,
+      typescript: `const components = [new ${name}({ ${typescriptProps.join(', ')} }})]`,
     },
     contextProps,
   }
