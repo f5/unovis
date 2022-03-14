@@ -15,7 +15,7 @@ const config = {
   baseUrl: '/unovis/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
-  favicon: 'img/unovis-pictogram.svg',
+  favicon: 'img/unovis-pictogram-square.svg',
   organizationName: 'F5', // Usually your GitHub org/user name.
   projectName: 'unovis', // Usually your repo name.
 
