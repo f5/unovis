@@ -9,7 +9,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula')
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'UNOVIS',
+  title: 'Unovis',
   tagline: 'A modular data visualization framework for React, Angular and vanilla TypeScript',
   url: 'https://f5.com',
   baseUrl: '/unovis/',
@@ -48,7 +48,7 @@ const config = {
       navbar: {
         title: '',
         logo: {
-          alt: 'UNOVIS',
+          alt: 'Unovis',
           src: 'img/unovis-logo.svg',
           srcDark: 'img/unovis-logo-dark-theme.svg',
         },
@@ -65,8 +65,8 @@ const config = {
             label: 'Showcase',
           },
           {
-            href: 'https://github.com/f5networks/unovis',
-            label: 'GitHub',
+            href: 'https://gitswarm.f5net.com/f5-innersourcing/unovis',
+            label: 'Source Code',
             position: 'right',
           },
         ],
@@ -87,12 +87,12 @@ const config = {
             title: 'Community',
             items: [
               {
-                label: 'Stack Overflow',
-                href: 'https://stackoverflow.com/questions/tagged/unovis',
+                label: 'Slack Support Channel',
+                href: 'https://f5.slack.com/archives/C0370HBG9UJ',
               },
               {
-                label: 'Twitter',
-                href: 'https://twitter.com/unovis',
+                label: 'Teams Support Group',
+                href: 'https://teams.microsoft.com/l/team/19%3a3rcii-Zzvkw9D2TinM2HEl-tg7neyFwhUFa2T8aSNz81%40thread.tacv2/conversations?groupId=a92b1611-f06c-4c8b-93f0-df400840ae81&tenantId=dd3dfd2f-6a3b-40d1-9be0-bf8327d81c50',
               },
             ],
           },
@@ -100,8 +100,8 @@ const config = {
             title: 'More',
             items: [
               {
-                label: 'GitHub',
-                href: 'https://github.com/f5networks/unovis',
+                label: 'Source Code',
+                href: 'https://gitswarm.f5net.com/f5-innersourcing/unovis',
               },
             ],
           },

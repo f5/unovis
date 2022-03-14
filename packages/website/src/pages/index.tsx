@@ -32,7 +32,7 @@ export default function Home (): JSX.Element {
   return (
     <Layout
       title={`${siteConfig.title}`}
-      description="Description will go into a meta tag in <head />">
+      description="A modular data visualization framework for React, Angular and vanilla TypeScript">
       <HomepageHeader />
       <main>
         <HomepageFeatures />

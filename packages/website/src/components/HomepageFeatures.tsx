@@ -26,7 +26,7 @@ export const FeatureList: FeatureItem[] = [
     description: (
       <>
         We pay attention to how the library components look and how they react to
-        data changes. Styles are customizable via VSS variables.
+        data changes. Styles are customizable via CSS variables.
       </>
     ),
   },
