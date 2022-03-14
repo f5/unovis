@@ -12,7 +12,7 @@ type FeatureItem = {
 export const FeatureList: FeatureItem[] = [
   {
     title: 'Framework Independent',
-    image: '/img/unovis-image-1.svg',
+    image: 'img/unovis-image-1.svg',
     description: (
       <>
         Use with React, Angular, or without any UI framework.
@@ -22,7 +22,7 @@ export const FeatureList: FeatureItem[] = [
   },
   {
     title: 'Smooth',
-    image: '/img/unovis-image-2.svg',
+    image: 'img/unovis-image-2.svg',
     description: (
       <>
         We pay attention to how the library components look and how they react to
@@ -32,7 +32,7 @@ export const FeatureList: FeatureItem[] = [
   },
   // {
   //   title: 'Modular',
-  //   image: '/img/unovis-image-2.svg',
+  //   image: 'img/unovis-image-2.svg',
   //   description: (
   //     <>
   //       Unovis is modular, which means you can assemble complex unique charts
@@ -42,7 +42,7 @@ export const FeatureList: FeatureItem[] = [
   // },
   {
     title: 'Built with Typescript',
-    image: '/img/unovis-image-3.svg',
+    image: 'img/unovis-image-3.svg',
     description: (
       <>
         Unovis is built with Typescript and allows you to import
