@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import * as React from 'react'
+import React from 'react'
 import BrowserOnly from '@docusaurus/BrowserOnly'
 import Toggle from '@theme/Toggle'
 import { XYComponentConfigInterface } from '@volterra/vis'
@@ -50,8 +50,8 @@ export function DynamicXYWrapper ({ primaryData, secondaryData, exampleProps, ..
               checked={anim.current}
               onChange={() => (anim.current ? stop() : start())}
             />
-            <XYWrapper data={current} {...rest} />
-            <XYWrapper hideTabLabels data={current} {...exampleProps} {...rest} />
+            <XYWrapper {...rest} data={current} />
+            <XYWrapper hideTabLabels {...rest} {...exampleProps} data={current} />
           </div>
         )
       }}
