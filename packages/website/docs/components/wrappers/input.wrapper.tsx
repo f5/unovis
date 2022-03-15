@@ -11,7 +11,7 @@ type InputWrapperProps = XYWrapperProps & {
   defaultValue?: any;
   inputProps?: React.InputHTMLAttributes<any>;
 }
-/* Displays XYWrapper with input element that dynamally upates a given property */
+/* Displays XYWrapper with input element that dynamically updates a given property */
 export function XYWrapperWithInput ({ property, inputType: type, defaultValue, inputProps, ...rest }: InputWrapperProps): JSX.Element {
   const [attr, setAttr] = React.useState(defaultValue)
 

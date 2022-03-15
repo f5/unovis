@@ -40,6 +40,8 @@ export function DynamicXYWrapper ({ primaryData, secondaryData, exampleProps, ..
           <div className="input-wrapper">
             <Toggle
               className="toggle"
+              /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */
+              // @ts-ignore
               switchConfig={{
                 darkIcon: '॥',
                 darkIconStyle: { fontWeight: 'bold', marginLeft: '2px' },

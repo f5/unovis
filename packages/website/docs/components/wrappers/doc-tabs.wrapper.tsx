@@ -42,9 +42,11 @@ export function XYDocTabs ({ componentStrings, contextProps, hideTabLabels, show
           </CodeBlock>
         )}
         <CodeBlock {...codeType('html')}>
-          {showContext && '<vis-xy-container [data]="dataArray">\n  '}
-          {componentStrings.angular}
-          {showContext && '\n</vis-xy-container>'}
+          <>
+            {showContext && '<vis-xy-container [data]="dataArray">\n  '}
+            {componentStrings.angular}
+            {showContext && '\n</vis-xy-container>'}
+          </>
         </CodeBlock>
       </TabItem>
       <TabItem value="typescript" label="TypeScript">
