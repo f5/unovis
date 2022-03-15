@@ -21,6 +21,7 @@ export function XYWrapperWithInput ({ property, inputType: type, defaultValue, i
           preview: <span className="prop-name">{property}</span>
         <input
           type={type}
+          defaultValue={defaultValue}
           onChange={(e) => {
             if (type === 'number' || type === 'range') {
               setAttr(Number(e.target.value))

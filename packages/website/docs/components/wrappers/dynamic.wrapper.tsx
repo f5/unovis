@@ -1,7 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import React from 'react'
 import BrowserOnly from '@docusaurus/BrowserOnly'
-import Toggle from '@theme/Toggle'
 import { XYComponentConfigInterface } from '@volterra/vis'
 
 import { DataRecord } from '../../utils/time-series'
@@ -19,7 +18,7 @@ export function DynamicXYWrapper ({ primaryData, secondaryData, exampleProps, ..
   const anim = React.useRef(null)
 
   function start (): void {
-    const time = current === primaryData ? 2000 : 1200
+    const time = current === primaryData ? 1200 : 2000
     anim.current = setTimeout(() => {
       setCurrent(current === primaryData ? secondaryData : primaryData)
     }, time)
@@ -28,6 +27,7 @@ export function DynamicXYWrapper ({ primaryData, secondaryData, exampleProps, ..
     clearInterval(anim.current)
     anim.current = null
   }
+
   React.useEffect(() => {
     start()
     return () => stop()
@@ -38,20 +38,17 @@ export function DynamicXYWrapper ({ primaryData, secondaryData, exampleProps, ..
       {() => {
         return (
           <div className="input-wrapper">
-            <Toggle
-              className="toggle"
-              /* eslint-disable-next-line @typescript-eslint/ban-ts-comment */
-              // @ts-ignore
-              switchConfig={{
-                darkIcon: '॥',
-                darkIconStyle: { fontWeight: 'bold', marginLeft: '2px' },
-                lightIcon: '▶',
-              }}
-              checked={anim.current}
-              onChange={() => (anim.current ? stop() : start())}
-            />
+            <label className="toggle">
+              <input
+                className="hidden"
+                type="checkbox"
+                defaultChecked
+                onChange={() => anim.current ? stop() : start()}
+              />
+              <div className="slider"></div>
+            </label>
             <XYWrapper {...rest} data={current} />
-            <XYWrapper hideTabLabels {...rest} {...exampleProps} data={current} />
+            <XYWrapper hideTabLabels {...rest} data={current} {...exampleProps} />
           </div>
         )
       }}

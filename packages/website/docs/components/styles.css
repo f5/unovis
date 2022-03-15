@@ -16,17 +16,9 @@
   font-size: smaller;
 }
 
-.toggle {
-  color: white;
-}
-
 .prop-name {
   margin: 0 0.5em;
   font-weight: bold;
-}
-
-input {
-  max-width: 50px;
 }
 
 .prop-preview-menu {
@@ -53,6 +45,55 @@ input {
 
 .hidden {
   display: none;
+}
+
+.toggle {
+  width: 48px;
+  position: absolute;
+  color: white;
+}
+
+.slider {
+  cursor: pointer;
+  pointer-events: all;
+  position: absolute;
+  height: 24px;
+  width: 100%;
+  border-radius: 12px;
+  background-color: #3e3e3e
+}
+ 
+.slider::after {
+  position: absolute;
+  content: '';
+  top: 2px;
+  left: 2px;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  background-color: white;
+  transition: .2s;
+}
+
+.toggle > input:checked +.slider::after {
+  -webkit-transform: translateX(22px);
+  -ms-transform: translateX(22px);
+  transform: translateX(22px);
+}
+
+.toggle > .slider::before {
+  position: absolute;
+  content: '▶';
+  right: 0;
+  margin: 0 6px;
+}
+
+.toggle > input:checked + .slider::before {
+  content: '॥';
+  left: 0;
+  font-size: large;
+  top: -2px;
+  margin-left: 8px;
 }
 
 /* custom vis components */
