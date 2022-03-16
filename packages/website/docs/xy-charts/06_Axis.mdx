@@ -4,8 +4,7 @@ sidebar_position: 0
 import CodeBlock from '@theme/CodeBlock';
 import BrowserOnly from '@docusaurus/BrowserOnly'
 import { PropTable } from '../utils/props-table'
-import { data, generateDataRecords, generateTimeSeries } from '../utils/time-series'
-import { parseProps } from '../utils/props-helper'
+import { generateDataRecords, generateTimeSeries } from '../utils/data'
 import { XYWrapper, XYDocTabs, XYWrapperWithInput, XYWrapperWithMenu } from '../components';
 
 export const defaultProps = (n=10) => ({
@@ -40,12 +39,12 @@ export const AxesWrapper = ({data, xConfig, yConfig, chartName, chartConfig}) =>
 }
 
 ### Basic configuration
-The *Axis* component has been designed to work together with *XY Container*. The minimal *Axis* configuration looks like:
+The _Axis_ component has been designed to work together with _XY Container_. The minimal _Axis_ configuration looks like:
 
 <XYWrapper {...defaultProps()} showContext/>
 
 ### Axis Types
-*Axis* supports two `AxisType` properties to bind to your data: AxisType.X and AxisType.Y. You can also simply provide the string "x" or "y".
+_Axis_ supports two `AxisType` properties to bind to your data: `AxisType.X` and `AxisType.Y`. You can also simply provide the string `"x"` or `"y"`.
 
 #### AxisType.X
 <XYWrapper {...defaultProps()}/>
@@ -54,7 +53,7 @@ The *Axis* component has been designed to work together with *XY Container*. The
 <XYWrapper {...defaultProps()} type="y"/>
 
 ### Axis Position
-You can change the position of your axis with a Position type or a string equivalent: "top", "right", "bottom", or "left".
+You can change the position of your axis with a `Position` type or a string equivalent: `"top"`, `"right"`, `"bottom"`, or `"left"`.
 
 <XYDocTabs componentStrings={{
     react: `<VisAxis type="x" position="top" label="X"/>\n<VisAxis type="y" position="right" label="Y"/>`,
@@ -65,47 +64,51 @@ You can change the position of your axis with a Position type or a string equiva
 }}/>
 <AxesWrapper xConfig={{position: "top", label: "X"}} yConfig={{position: "right", label: "Y"}} showTabs/>
 
-<small>Note: An X *Axis* can only accept the values `Position.Bottom` (default) and `Position.Top` and a Y *Axis* can only accept `Position.Left` (default) and `Position.Right`.
-The default will be used in the case of an invalid position argument.</small>
+:::note
+
+Note: An X _Axis_ can only accept the values `Position.Bottom` (default) and `Position.Top` and a Y _Axis_ can only accept `Position.Left` (default) and `Position.Right`.
+The default will be used in the case of an invalid position argument.
+
+:::
 
 ## Labeling
 ### Axis Label
-You can provide a string to label your axes with the label property:
+You can provide a string to label your axes with the `label` property:
 <XYWrapperWithInput {...defaultProps()} height={75} inputType="text" defaultValue="Label" property="label"/>
 
 ### Label Font Size
-Change the label size (in pixels) with the labelFontSize property.
+Change the label size (in pixels) with the `labelFontSize` property.
 <XYWrapperWithInput {...defaultProps()} inputType="range" label="Label" defaultValue={30} property="labelFontSize"/>
 
 ### Label Margin
-You can provide a string to label your axes with the label property:
-<XYWrapperWithInput {...defaultProps()} label="Label" inputType="range" defaultValue={5} property="labelMargin"/>
+The spacing between the label and the axis itself can be set with the `labelMargin` property:
+<XYWrapperWithInput {...defaultProps()} label="Label" inputType="range" inputProps={{ min: 0, max: 50, step: 1}} defaultValue={5} property="labelMargin"/>
 
-### GridLine 
-You can enable or disable the visibility of the *Axis* grid line with the `gridLine` attribute.
+### GridLine
+You can enable or disable the visibility of the _Axis_ grid line with the `gridLine` property.
 <XYWrapperWithInput {...defaultProps()} label="Label" inputType="checkbox" defaultValue={true} property="gridLine"/>
 
 ### Axis Domain Line
-You can enable or disable the visibility of the axis domain line with the domainLine attribute.
+You can enable or disable the visibility of the axis domain line with the `domainLine` property.
 <XYWrapperWithInput {...defaultProps()} label="Label" inputType="checkbox" defaultValue={true} property="domainLine"/>
 
-### Providing Data to *Axis*
-If you use the Axis component alone, without other xy-components, you'll need to provide xAccessor or yAccessors to populate the axis values.
-Consider the following example with a single axis and a dataArray with x values in the range `0 < x < 10`:
+### Providing Data to _Axis_
+If you use the _Axis_ component alone, without other xy-components, you'll need to provide an `x` accessor or `y` accessors to populate the axis values.
+Consider the following example with a single axis and a data array with x values in the range `0 < x < 10`:
 
 <XYWrapper {...defaultProps()} x={d => d.x} showContext/>
 Another example:
 
 ```ts
-const x = (data: DataRecord[]) => d.x * 100
+const x = (d: DataRecord) => d.x * 100
 ```
 <XYWrapper {...defaultProps()} x={d => d.x * 100} excludeTabs/>
 
 ## Tick Configuration
-The *Axis* component supports a wide variety of tick customization options
+The _Axis_ component supports a wide variety of tick customization options
 
 ### Tick Line
-You can remove tick labels from your axis by setting the tickLine property to false:
+You can remove tick labels from your axis by setting the `tickLine` property to false:
 <XYWrapperWithInput {...defaultProps()} inputType="checkbox" defaultValue={false} property="tickLine"/>
 
 ### Tick Text Font Size
@@ -113,9 +116,9 @@ To change the font size for the tick labels, you provide the `tickTextFontSize` 
 <XYWrapperWithInput {...defaultProps()} inputType="text" defaultValue={'50px'} property="tickTextFontSize"/>
 
 ### Tick Format
-You can customize how ticks are formatted using the tickFormat attribute and a label formatter function.
+You can customize how ticks are formatted using the `tickFormat` property and a label formatter function.
 The following example uses Javascript's built-in Date formatter function `toDateString()`.
-<XYWrapperComponent {...defaultProps()} data={generateTimeSeries(10)} x={d => d.timestamp} tickFormat={d=> new Date(d).toDateString()}/>
+<XYWrapper {...defaultProps()} data={generateTimeSeries(10)} x={d => d.timestamp} tickFormat={d=> new Date(d).toDateString()}/>
 
 ### Text Alignment
 Change the tick's label alignment with respect to the tick marker using `tickTextAlign` property with a TextAlign value: `TextAlign.Left`, `TextAlign.Right` or `TextAlign.Center`.
@@ -134,8 +137,8 @@ To limit the string length of the tick labels, use the `tickTextLength` property
 />
 
 ### Text Trim Type
-When a tick label becomes too long, you can customize the trimming method with the tickTextLength property.
-*Axis* accepts a `TrimMode` or a string. When we provide the previous example with TrimMode.End property, we can see the end of the label gets cut off instead of the middle.
+When a tick label becomes too long, you can customize the trimming method with the `tickTextLength` property.
+_Axis_ accepts a `TrimMode` or a string. When we provide the previous example with `TrimMode.End` property, we can see the end of the label gets cut off instead of the middle.
 <XYWrapperWithMenu
   {...defaultProps()}
   tickTextLength={10}
@@ -145,7 +148,7 @@ When a tick label becomes too long, you can customize the trimming method with t
   attr="tickTextTrimType"/>
 
 ### Text Width
-To limit the width of the tick labels (in pixels), you can use the tickTextWidth property.
+To limit the width of the tick labels (in pixels), you can use the `tickTextWidth` property.
 <XYWrapperWithInput
   {...defaultProps()}
   inputType="number"
@@ -156,18 +159,18 @@ To limit the width of the tick labels (in pixels), you can use the tickTextWidth
 />
 
 ### Text Fit Mode
-*Axis* accepts the following values for the tickTextFitMode property: `FitMode.Wrap` or `FitMode.Trim`. This determines how the axis will
-handle tick text overflow. The following example showcases the previous example using "trim" instead of "wrap".
+_Axis_ accepts the following values for the tickTextFitMode property: `FitMode.Wrap` or `FitMode.Trim`. This determines how the axis will
+handle tick text overflow. The following example showcases the previous example using `"trim"` instead of `"wrap"`.
 <XYWrapperWithMenu
   {...defaultProps()}
   tickTextWidth={10}
   data={generateTimeSeries(10)}
   hiddenProps={{gridLine: false, x: d => d.timestamp, tickFormat: d=> new Date(d).toDateString(), tickTextTrimType:"end"}}
-  options={['Trim', 'wrap']}
+  options={['trim', 'wrap']}
   attr="tickTextFitMode"/>
 
 ### Force Word Break
-In addition, you can enable a forced word break for overflowing tick labels with the tickTextForceWordBreak property.
+In addition, you can enable a forced word break for overflowing tick labels with the `tickTextForceWordBreak` property.
 <XYWrapperWithInput
   {...defaultProps()}
   inputType="checkbox"
@@ -178,7 +181,7 @@ In addition, you can enable a forced word break for overflowing tick labels with
   property="tickTextForceWordBreak"/>
 
 ### Text Separator
-Axis accepts a string or string[] value fortickTextSeparator attribute. This will allow tick labels to be separated by custom values in the case of overflow.
+_Axis_ accepts a `string` or `string[]` value for `tickTextSeparator` property. This will allow tick labels to be separated by custom values in the case of overflow.
 Note: this only takes effect when `FitMode.Wrap` is enabled and `tickTextWidth` is defined.
 <XYWrapperWithInput
   {...defaultProps()}
@@ -190,7 +193,14 @@ Note: this only takes effect when `FitMode.Wrap` is enabled and `tickTextWidth` 
   property="tickTextSeparator"/>
 
 ### Custom Number of Ticks
-By default, the Axis component provides an optimal the number of ticks displayed based on the component's size. You can alter the tick count to your liking using the numTicks property.
+By default, the _Axis_ component provides an optimal number of ticks displayed based on the component's size. You can alter the tick count to your liking using the `numTicks` property.
+
+:::note
+
+The specified count is only a hint, the axis can have more or fewer ticks depending on the data
+
+:::
+
 <XYWrapperWithInput
   {...defaultProps()}
   inputType="range"
@@ -199,7 +209,7 @@ By default, the Axis component provides an optimal the number of ticks displayed
   property="numTicks"/>
 
 ### Display Only Minimum and Maximum Ticks
-Set the `minMaxTicksOnly` property to true if you only want to see the two end ticks on the axis:
+Set the `minMaxTicksOnly` property to `true` if you only want to see the two end ticks on the axis:
 <XYWrapperWithInput
   {...defaultProps()}
   inputType="checkbox"
@@ -207,7 +217,7 @@ Set the `minMaxTicksOnly` property to true if you only want to see the two end t
   property="minMaxTicksOnly"/>
 
 ### Custom Values
-You can customize the ticks displayed by providing the *Axis* component with an number array.
+You can customize the ticks displayed by providing the _Axis_ component with a number array.
 The following example only shows even values for x after getting the `tickValue` array from a filter function.
 ```ts
 function tickValues() {
@@ -218,7 +228,7 @@ function tickValues() {
 
 
 ## Displaying Multiple Axes
-More commonly, you will want to display both an x and y axis for your graph. You can display multiple axes in a vis-xy-container like so:
+More commonly, you will want to display both an x and y axis for your graph. You can display multiple axes in an _XY Container_ like so:
 
 <XYDocTabs componentStrings={{
     react: `<VisAxis type="x"/>\n      <VisAxis type="y"/>`,
@@ -230,7 +240,7 @@ More commonly, you will want to display both an x and y axis for your graph. You
 <AxesWrapper xConfig yConfig/>
 
 ## Displaying Axis with a Chart
-You can include a chart within your *XYContainer* alongside your axes like this:
+You can include a chart within your _XY Container_ alongside your axes like this:
 <XYDocTabs componentStrings={{
     react: `<VisAxis type="x"/>\n      <VisAxis type="y"/>\n      <VisLine x={x} y={y}/>`,
     angular: `<vis-axis type="x"></vis-axis>\n  <vis-axis type="y"></vis-axis>\n   <vis-line [x]="x" [y]="y"/>`,
@@ -242,7 +252,7 @@ You can include a chart within your *XYContainer* alongside your axes like this:
 <AxesWrapper xConfig yConfig chartName="Line" chartConfig={{x: d=>d.x, y: d=>d.y}}/>
 
 ## Axis configuration within container
-Alternatively, you can configure your X and Y *Axis* component within the container's configuration like this:
+Alternatively, you can configure your x and y _Axis_ component within the container's configuration like this:
 
 ```ts
 import { Axis } from '@volterra/vis'
@@ -257,7 +267,7 @@ const chart = new XYContainer(containerNode, config, data)
 <AxesWrapper xConfig yConfig chartName="Line" chartConfig={{x: d=>d.x, y: d=>d.y}}/>
 
 ## Additional Styling: CSS Variables
-The *Axis* component supports additional styling via CSS variables that you can define for your visualization container. For example:
+The _Axis_ component supports additional styling via CSS variables that you can define for your visualization container. For example:
 
 ```css title="styles.css"
 .container {
