@@ -27,7 +27,6 @@ export const XYComponentDoc = ({
       {() => {
         // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-var-requires
         const { VisXYContainer, [`Vis${name}`]: Component, VisAxis } = require('@volterra/vis-react')
-
         return (
           <VisXYContainer
             data={data}

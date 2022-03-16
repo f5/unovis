@@ -92,5 +92,30 @@ events = {
 ```
 <XYWrapper {...defaultProps()} excludeGraph events={{}}/>
 
+### Additional Styling: CSS Variables
+The _Stacked Bar_ component supports additional styling via CSS variables that you can define for your visualization container. For example:
+
+```css title="styles.css"
+.custom-stacked-bar {
+  --vis-stacked-bar-stroke: #000;
+  --vis-stacked-bar-stroke-width: 5px;
+  --vis-stacked-bar-hover-stroke-width: 10px;
+  --vis-stacked-bar-hover-stroke: #8777d9;
+}
+```
+<XYWrapper {...defaultProps()} excludeTabs className="custom-stacked-bar"/>
+
+<details open>
+  <summary open>All supported CSS variables</summary>
+  <CodeBlock language="css">
+{`--vis-stacked-bar-cursor
+--vis-stacked-bar-fill
+--vis-stacked-bar-stroke
+--vis-stacked-bar-stroke-width,
+--vis-stacked-bar-hover-stroke-width
+--vis-stacked-bar-hover-stroke`
+}</CodeBlock>
+</details>
+
 ## Component Props
 <PropTable name="VisStackedBar"></PropTable>

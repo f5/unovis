@@ -4,11 +4,9 @@ title: Grouped Bar
 sidebar_label: Grouped Bar
 ---
 import CodeBlock from '@theme/CodeBlock';
-import Details from "@theme/Details";
 import { PropTable } from '../utils/props-table'
 import { data, generateDataRecords } from '../utils/time-series'
 import { XYWrapper, XYWrapperWithInput, XYWrapperWithMenu, DynamicXYWrapper } from '../components';
-
 export const defaultProps = (n=10) => ({
   name: "GroupedBar",
   data: generateDataRecords(n),
@@ -91,32 +89,29 @@ events = {
 ```
 <XYWrapper {...defaultProps()} excludeGraph events={{}}/>
 
-
 ### Additional Styling: CSS Variables
 The _Grouped Bar_ component supports additional styling via CSS variables that you can define for your visualization container. For example:
 
-<CodeBlock language="css" title="styles.css">
-{`.custom-vis {
+```css title="styles.css"
+.custom-vis {
   --vis-grouped-bar-stroke-width: 2px;
   --vis-grouped-bar-stroke: #000;
   --vis-grouped-bar-cursor: crosshair;
-}`
 }
-</CodeBlock>
+```
 <XYWrapper {...defaultProps(5)} excludeTabs className="custom-grouped-bar"/>
 
-<Details summary={<summary>All supported CSS variables</summary>} open>
-<CodeBlock language="css">
+<details open>
+  <summary open>All supported CSS variables</summary>
+  <CodeBlock language="css">
 {`--vis-grouped-bar-cursor
 --vis-grouped-bar-fill
 --vis-grouped-bar-stroke
 --vis-grouped-bar-stroke-width
 --vis-grouped-bar-hover-stroke-width
 --vis-grouped-bar-hover-stroke`
-}
-  </CodeBlock>
-</Details>
-
+}</CodeBlock>
+</details>
 
 ## Component Props
 <PropTable name="VisGroupedBar"></PropTable>

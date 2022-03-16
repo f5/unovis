@@ -2,7 +2,7 @@
 import * as React from 'react'
 import Tabs from '@theme/Tabs'
 import TabItem from '@theme/TabItem'
-import CodeBlock, { Props as CodeblockProps } from '@theme/CodeBlock'
+import CodeBlock from '@theme/CodeBlock'
 import { FrameworkProps } from '../../utils/props-helper'
 
 export type DocTabsProps = FrameworkProps & {
@@ -11,15 +11,10 @@ export type DocTabsProps = FrameworkProps & {
 }
 /* Displays code snippets with framework tabs */
 export function XYDocTabs ({ componentStrings, contextProps, hideTabLabels, showContext }: DocTabsProps): JSX.Element {
-  const codeType = (ext: string): Partial<CodeblockProps> => ({
-    language: ext,
-    title: showContext && `component.${ext}`,
-  })
-
   return (
     <Tabs groupId="framework" className={hideTabLabels ? 'hidden' : ''}>
       <TabItem value="react" label="React">
-        <CodeBlock {...codeType('tsx')}>
+        <CodeBlock language="jsx" title={showContext && 'component.tsx'}>
           {showContext
             ? [
               'function Component(props) {',
@@ -29,8 +24,8 @@ export function XYDocTabs ({ componentStrings, contextProps, hideTabLabels, show
               '    <VisXYContainer data={data}>',
               `      ${componentStrings.react}`,
               '    </VisXYContainer>',
-              '  );',
-              '}',
+              '  )',
+              '};',
             ].join('\n')
             : componentStrings.react}
         </CodeBlock>
@@ -41,16 +36,17 @@ export function XYDocTabs ({ componentStrings, contextProps, hideTabLabels, show
             {['@Input() dataArray: DataRecord[]', ...contextProps].join('\n')}
           </CodeBlock>
         )}
-        <CodeBlock {...codeType('html')}>
-          <>
-            {showContext && '<vis-xy-container [data]="dataArray">\n  '}
-            {componentStrings.angular}
-            {showContext && '\n</vis-xy-container>'}
-          </>
+        <CodeBlock language="html" title={showContext && 'template.html'}>
+          {showContext
+            ? ['<vis-xy-container [data]="dataArray">',
+              `  ${componentStrings.angular}`,
+              '</vis-xy-container>'].join('\n')
+            : componentStrings.angular
+          }
         </CodeBlock>
       </TabItem>
       <TabItem value="typescript" label="TypeScript">
-        <CodeBlock {...codeType('ts')}>
+        <CodeBlock language="ts" title={showContext && 'component.html'}>
           {showContext
             ? [
               'const data: DataRecord[] = getData()',

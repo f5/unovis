@@ -1,8 +1,7 @@
 ---
 sidebar_position: 1
 ---
-import CodeBlock from '@theme/CodeBlock';
-import Details from "@theme/Details";
+import CodeBlock from "@theme/CodeBlock";
 import { PropTable } from '../utils/props-table'
 import { data, generateDataRecords } from '../utils/time-series'
 import { XYWrapper, XYWrapperWithInput, XYWrapperWithMenu } from '../components';
@@ -56,21 +55,23 @@ Consider the following example, where the dataset contains undefined values over
 ### Additional Styling: CSS Variables
 The _Line_ component supports additional styling via CSS variables that you can define for your visualization container. For example:
 
-<CodeBlock language="css" title="styles.css">
-  {`.custom-line {
+```css title="styles.css"
+.custom-line {
   --vis-line-cursor: cell;
   --vis-line-stroke-dasharray: 55 15;
   --vis-line-stroke-dashoffset: 0;
-}`}
-</CodeBlock>
-  <XYWrapper {...lineProps()} excludeTabs className="custom-line" lineWidth={5} />
+}
+```
+<XYWrapper {...lineProps()} excludeTabs className="custom-line" lineWidth={5} />
 
-<Details summary={<summary>All supported CSS variables</summary>} open>
+<details open>
+  <summary>All supported CSS variables</summary>
   <CodeBlock language="css">
-    {`--vis-line-stroke\n--vis-line-stroke-dasharray\n--vis-line-stroke-dashoffset`}
+{`--vis-line-stroke
+--vis-line-stroke-dasharray
+--vis-line-stroke-dashoffset`}
   </CodeBlock>
-</Details>
-
+</details>
 
 ### Events
 ```ts
