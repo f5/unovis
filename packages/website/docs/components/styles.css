@@ -62,7 +62,7 @@
   border-radius: 12px;
   background-color: #3e3e3e
 }
- 
+
 .slider::after {
   position: absolute;
   content: '';
@@ -129,4 +129,9 @@
   --vis-grouped-bar-cursor: crosshair;
 }
 
-
+.custom-scatter {
+  --vis-scatter-fill-opacity: 0.5;
+  --vis-scatter-stroke-width: 1;
+  --vis-scatter-hover-stroke-width: 2;
+  --vis-scatter-point-label-text-color-dark: darkblue;
+}

@@ -1,0 +1,124 @@
+---
+sidebar_position: 5
+title: Scatter
+sidebar_label: Scatter
+---
+import CodeBlock from '@theme/CodeBlock';
+import Details from "@theme/Details";
+import { PropTable } from '../utils/props-table'
+import { generateScatterDataRecords } from '../utils/data'
+import { XYWrapper, XYWrapperWithInput } from '../components';
+
+export const defaultProps = (n = 10, colored = false) => ({
+  name: "Scatter",
+  data: generateScatterDataRecords(n, colored),
+  x: d => d.x,
+  y: d => d.y,
+});
+
+### Basic configuration
+The _Scatter_ component has been designed to work together with _XY Container_. The minimal _Scatter_ configuration looks like:
+<XYWrapper {...defaultProps()} y={d => d.y} showContext={true}/>
+
+### Point Shape
+You can change the point's symbol using the `symbol` attribute, which accepts a `SymbolType` or a corresponding `string`
+(`'circle'`, `'cross'`, `'diamond'`, `'square'`, `'star'`, `'triangle'`, `'wye'` ) or a function (executed per data point) that returns either of them.
+<XYWrapper {...defaultProps(15)} shape={'wye'}/>
+
+### Point Color
+You can provide _Scatter_ with a single `color` hex value or a `color` accessor function.
+<XYWrapper {...defaultProps(15)} color={'#DA348F'}/>
+
+### Point Size and Size Range
+You can create an accessor function to set point `size` for individual points. e.g.: `d => d.size`.
+This property is relative, so unlike `shape` and `color`, providing a constant value here will not result in any visible changes.
+
+_Scatter's_ `sizeRange` attribute represents a range of numbers for a point's radius. By default, every radius
+will be the median value of this range.
+The default range is `[5,20]` making the default radius 12.5px (or `(min + max)/2`). If you want to make all of your points
+bigger or smaller, adjust `sizeRange` accordingly. In this example, we can set the universal point size to 40px by setting the `sizeRange`
+property to `[30,50]`.
+<XYWrapper {...defaultProps()} excludeGraph={true} size={() => Math.random()} sizeRange={[30, 50]}/>
+
+#### Default Size Range: [5, 20]
+<XYWrapper {...defaultProps(25, true)} excludeTabs={true} size={() => Math.random()}/>
+
+#### Large Size Range: [30, 50]
+<XYWrapper {...defaultProps(15, true)} excludeTabs={true} size={() => Math.random()} sizeRange={[30, 50]}/>
+
+### More on Size Range
+Notice that when there is no variation in point size, many size ranges could produce the same result. In this example, the range `[30,50]`
+is equivalent to `[39,41]`, `[30,50]`, `[20,60]` ... and so on. However, when size also varies, the size range determines how varied the point sizes are.
+
+### Point Label
+You can also place labels on _Scatter's_ points by passing a string accessor function to the `label` property.
+<XYWrapper {...defaultProps(15, true)} label={d => d.label}/>
+
+### Label Text Brightness Ratio
+By default, the _Scatter_ component will assign label color based on the point's shade with the `labelTextBrightnessRatio` property.
+It accepts any value between `0` and `1` (inclusive).
+
+The default setting `0.65` creates darker text on light backgrounds and light text on dark backgrounds.
+See how the contrast differs in the following examples, when we assign more extreme values to the `labelTextBrightnessRatio` property:
+<XYWrapperWithInput {...defaultProps(10, true)} color={d => d.color} label={d => d.label} property="labelTextBrightnessRatio" inputType="range" inputProps={{ min: 0.5, max: 0.7, step: 0.01}} defaultValue={0.65}/>
+
+### Label Color
+You can also configure a custom color for your labels by providing the `labelColor` attribute with a color accessor method or string.
+Note that setting this property overrides `labelTextBrightnessRatio`.
+
+<XYWrapper {...defaultProps(15, true)} label={d => d.label} labelColor={'yellow'}/>
+
+### Custom Cursor
+_Scatter_ also allows to set a [custom](https://developer.mozilla.org/en-US/docs/Web/CSS/cursor) `cursor` when hovering
+over a point by providing a `cursor` accessor function.
+<XYWrapper {...defaultProps(50, true)} cursor={(_, i) => (['crosshair', 'grab', 'cell'])[i % 3]}/>
+
+### Events
+```ts
+import { Scatter } from '@volterra/vis`
+...
+events = {
+    [Scatter.selectors.point]: {
+        click: (d: DataRecord) => {},
+        ...
+    },
+}
+```
+<XYWrapper {...defaultProps()} excludeGraph events={{}}/>
+
+
+### Additional Styling: CSS Variables
+The _Scatter_ component supports additional styling via CSS variables that you can define for your visualization container. For example:
+
+<CodeBlock language="css" title="styles.css">
+{`.custom-vis {
+  --vis-scatter-fill-opacity: 0.5;
+  --vis-scatter-stroke-width: 1;
+  --vis-scatter-hover-stroke-width: 2;
+  --vis-scatter-point-label-text-color-dark: darkblue;
+}`
+}
+</CodeBlock>
+
+<XYWrapper {...defaultProps(50)} showAxes={true} height={250} excludeTabs label={d => d.label} labelTextBrightnessRatio={0.5} className="custom-scatter"/>
+
+<Details summary={<summary>All supported CSS variables</summary>} open>
+<CodeBlock language="css">
+{
+`--vis-scatter-cursor
+--vis-scatter-fill
+--vis-scatter-stroke
+--vis-scatter-stroke-width
+--vis-scatter-fill-opacity
+--vis-scatter-stroke-opacity
+--vis-scatter-hover-stroke-width
+--vis-scatter-point-label-text-color-dark
+--vis-scatter-point-label-text-color-light
+--vis-scatter-point-label-text-font-weight`
+}
+</CodeBlock>
+</Details>
+
+
+## Component Props
+<PropTable name="VisScatter"></PropTable>
