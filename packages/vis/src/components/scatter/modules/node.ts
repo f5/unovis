@@ -56,7 +56,8 @@ export function updateNodes<Datum> (selection: Selection<SVGGElement, ScatterPoi
 
     let labelColor = d._screen.labelColor
     if (!labelColor) {
-      const hex = color(isStringCSSVariable(pointColor) ? getCSSVariableValue(pointColor, group.node()) : pointColor)?.hex()
+      const c = pointColor || 'var(--vis-scatter-fill)'
+      const hex = color(isStringCSSVariable(c) ? getCSSVariableValue(c, group.node()) : c)?.hex()
       const brightness = hexToBrightness(hex)
       labelColor = brightness > config.labelTextBrightnessRatio ? 'var(--vis-scatter-point-label-text-color-dark)' : 'var(--vis-scatter-point-label-text-color-light)'
     }
