@@ -1,6 +1,6 @@
 import { XYComponentConfigInterface } from '@volterra/vis'
 import * as React from 'react'
-import { DataRecord } from '../../utils/time-series'
+import { DataRecord } from '../../utils/data'
 import { parseProps } from '../../utils/props-helper'
 import { XYComponentDoc, DocGraphProps } from './doc-vis.wraper'
 import { XYDocTabs, DocTabsProps } from './doc-tabs.wrapper'

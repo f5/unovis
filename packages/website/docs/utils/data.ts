@@ -36,3 +36,23 @@ export function generateTimeSeries (n = 10): TimeDataRecord[] {
 }
 
 export const timeSeriesData = generateTimeSeries(10)
+
+export interface ScatterDataRecord {
+  x: number;
+  y: number;
+  size: number;
+  label: string;
+  color: string | undefined;
+}
+
+export function generateScatterDataRecords (n = 10, colored = false): ScatterDataRecord[] {
+  const colors = ['#6A9DFF', '#1acb9a', '#8777d9']
+
+  return Array(n).fill(0).map((_, i: number) => ({
+    x: i,
+    y: 5 + 5 * Math.random(),
+    size: 1 + 3 * Math.random(),
+    color: colored ? colors[i % colors.length] : undefined,
+    label: `${i}`,
+  }))
+}

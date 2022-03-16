@@ -2,7 +2,7 @@
 import * as React from 'react'
 import { XYComponentConfigInterface } from '@volterra/vis'
 
-import { DataRecord } from '../../utils/time-series'
+import { DataRecord } from '../../utils/data'
 import { XYWrapper, XYWrapperProps } from './xy-wrapper'
 
 type InputWrapperProps = XYWrapperProps & {
