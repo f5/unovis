@@ -14,12 +14,12 @@ export const lineProps = (n=10) => ({
 });
 
 ### Basic configuration
-The *Line* component has been designed to work together with *XY Container*. The minimal *Line* configuration looks like:
+The _Line_ component has been designed to work together with _XY Container_. The minimal _Line_ configuration looks like:
 
 <XYWrapper {...lineProps()} showContext={true}/>
 
 ### Multiple Lines
-*Line* can also accept an array of `y` accessors to display multiple lines:
+_Line_ can also accept an array of `y` accessors to display multiple lines:
 <XYWrapper {...lineProps()} showContext={true} y={[d => d.y, d => d.y1, d => d.y2]}/>
 
 ### Line Width
@@ -46,7 +46,7 @@ const lineDashArray=[5]
 <XYWrapper {...lineProps()} lineDashArray={[5]} />
 
 ### No Data Value
-In the case of missing data, you can assign a fallback value for *Line* using `noDataValue`.
+In the case of missing data, you can assign a fallback value for _Line_ using `noDataValue`.
 Consider the following example, where the dataset contains undefined values over in the following domain:
 `4 <= x <= 6`
 

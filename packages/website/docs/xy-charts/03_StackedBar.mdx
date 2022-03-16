@@ -18,16 +18,16 @@ export const defaultProps = (n=10) => ({
 
 
 ### Basic configuration
-The *Stacked Bar* component has been designed to work together with *XY Container*. The minimal *Stacked Bar* configuration looks like:
+The _Stacked Bar_ component has been designed to work together with _XY Container_. The minimal _Stacked Bar_ configuration looks like:
 
 <XYWrapper {...defaultProps()} showContext={true}/>
 
 ### Multiple Stacked Bars
-*Stacked Bar* can accept an array of y accessors to display values as a stack of bars:
+_Stacked Bar_ can accept an array of y accessors to display values as a stack of bars:
 <XYWrapper {...defaultProps()} showContext={true} y={[d => d.y, d => d.y1, d => d.y2]}/>
 
 ### Orientation
-*Stacked Bar* supports horizontal and vertical orientation.
+_Stacked Bar_ supports horizontal and vertical orientation.
 <XYWrapperWithMenu {...defaultProps()} y={[d => d.y, d => d.y1, d => d.y2]} height={250} showAxes attr="orientation" options={["vertical", "horizontal"]}/>
 
 ### Bar Width

@@ -15,12 +15,11 @@ export const defaultProps = (n=10) => ({
 });
 
 ### Basic configuration
-The *Grouped Bar* component has been designed to work together with *XY Container*. The minimal *Grouped Bar* configuration looks like:
-
+The _Grouped Bar_ component has been designed to work together with _XY Container_. The minimal _Grouped Bar_ configuration looks like:
 <XYWrapper {...defaultProps()} y={d => d.y} showContext={true}/>
 
 ### Multiple Bars
-*Grouped Bar* can accept an array of y accessors to display values as a group of bars:
+_Grouped Bar_ can accept an array of y accessors to display values as a group of bars:
 <XYWrapper {...defaultProps()} showContext={true}/>
 
 ### Group Width
@@ -45,7 +44,7 @@ When you have highly scattered data with very low and high values, the bars corr
 If you want to prevent that you can set the minimum bar height to 1 pixel using the `barMinHeight` boolean property.
 <XYWrapperWithInput {...defaultProps()} data={generateDataRecords(10).map((d, i)=> ({ x: d.x, y: i % 2 === 1 ? d.y * 100 : Math.random() }))} showAxes property="barMinHeight" inputType="number" defaultValue={1}/>
 
-### Dealing With Inconsisent data
+### Dealing With Inconsistent data
 When your data has gaps, it's impossible to do calculate of the bar width automatically. The visualization will still try to do that, but most likely the result will be wrong,
 and you'll see wide overlapping bars. However, you can help the calculation by setting your data step implicitly using the dataStep property.
 Consider the following example, with data mainly clumped in the domain `0 < x < 1`:
@@ -65,11 +64,11 @@ either a `number` (in pixels) or `boolean` argument.
 
 ### Bar Color
 Set the color of the bar by assigning the color property to a hex string and/or by assigning the color property to a function evaluated per each bar.
-In this example, each bar's color is assigned based on it's value:
+In this example, each bar's color is assigned based on its value:
 <XYWrapper {...defaultProps()} showContext showAxes color={(d,i) => ['#04c0c7', '#5144d3', '#da348f'][i]}/>
 
 ### Orientation
-*Grouped Bar* supports horizontal and vertical orientation.
+_Grouped Bar_ supports horizontal and vertical orientation.
 <XYWrapperWithMenu {...defaultProps()} y={[d => d.y, d => d.y1, d => d.y2]} height={250} showAxes attr="orientation" options={["vertical", "horizontal"]}/>
 
 ### Events
