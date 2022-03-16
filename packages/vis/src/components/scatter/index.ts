@@ -82,7 +82,7 @@ export class Scatter<Datum> extends XYComponentCore<Datum> {
     const maxR = this._getMaxPointRadius()
     const xRange = this.xScale.range()
 
-    return data?.reduce<ScatterPoint<Datum>[]>((acc, d) => {
+    return data?.reduce<ScatterPoint<Datum>[]>((acc, d, i) => {
       const posX = this.xScale(getNumber(d, x))
       const posY = this.yScale(getNumber(d, y))
       const pointSize = sizeScale(getNumber(d, size))
@@ -95,10 +95,10 @@ export class Scatter<Datum> extends XYComponentCore<Datum> {
             y: posY,
             size: pointSize,
             color: getColor(d, color),
-            shape: getString(d, shape) as SymbolType,
-            label: getString(d, label),
+            shape: getString(d, shape, i) as SymbolType,
+            label: getString(d, label, i),
             labelColor: getColor(d, labelColor),
-            cursor: getString(d, cursor),
+            cursor: getString(d, cursor, i),
           },
         })
       }
