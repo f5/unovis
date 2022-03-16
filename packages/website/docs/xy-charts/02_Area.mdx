@@ -1,174 +1,56 @@
 ---
 sidebar_position: 2
 ---
-
-import BrowserOnly from "@docusaurus/BrowserOnly";
-import Tabs from "@theme/Tabs";
-import TabItem from "@theme/TabItem";
 import CodeBlock from "@theme/CodeBlock";
-import Details from "@theme/Details";
 
+import { XYWrapper, XYWrapperWithInput, XYWrapperWithMenu } from '../components';
 import { PropTable } from "../utils/props-table";
-import { data } from "../utils/time-series";
+import { generateDataRecords } from "../utils/time-series";
 
-export const AreaDoc = (props) => (
-  <Tabs groupId="framework">
-    <TabItem value="react" label="React">
-      <CodeBlock language="jsx">
-        {`<VisArea x={x} y={x} ${Object.entries(props).map(([k,v]) => `${k}="${v}"`)}/>`}
-      </CodeBlock>
-    </TabItem>
-    <TabItem value="angular" label="Angular">
-      <CodeBlock language="html">
-        {`<vis-area [x]="x" [y]="y" ${Object.entries(props).map(([k,v]) => `${k}="${v}"`)}></vis-area>`}
-      </CodeBlock>
-    </TabItem>
-    <TabItem value="typescript" label="TypeScript">
-      <CodeBlock language="ts">
-        {`const chart = new Area({ x, y, ${Object.entries(props).map(([k,v]) => `${k}: "${v}"`)}})`}
-      </CodeBlock>
-    </TabItem>
-  </Tabs>
-)
-
-export const AreaComponent = (props) => (
-  <BrowserOnly>
-  {() => {
-    const { VisXYContainer, VisArea } = require("@volterra/vis-react");
-    return (
-      <VisXYContainer data={data} height={150} className={props.className}>
-        <VisArea x={d => d.x} y={d => d.y} {...props} />
-      </VisXYContainer>
-    );
-  }}
-</BrowserOnly>
-)
+export const defaultProps = (n=10) => ({
+  name: "Area",
+  data: generateDataRecords(n),
+  x: d=>d.x,
+  y: d=>d.y
+});
 
 ### Basic configuration
-The _Area_ component has been designed to work together with _XY Container_. The minimal _Area_ configuration looks like:
-<Tabs groupId="framework">
-  <TabItem value="react" label="React">
-    <CodeBlock language="jsx" title="component.tsx">
-      {['function Component(props) {',
-        '  const data: DataRecord[] = props.data',
-        '  const x = (d: DataRecord) => d.x',
-        '  const y = (d: DataRecord) => d.y',
-        '  return (',
-        '    <VisXYContainer data={data}>',
-        '      <VisArea x={x} y={y} />',
-        '    </VisXYContainer>',
-        '  )',
-        '};'
-      ].join("\n")}
-    </CodeBlock>
-  </TabItem>
-  <TabItem value="angular" label="Angular">
-    <CodeBlock language="ts" title="src/component.ts">
-      {['@Input() dataArray: DataRecord[]', 'x = (d: DataRecord) => d.x', 'y = (d: DataRecord) => d.y'].join('\n')}
-    </CodeBlock>
-    <CodeBlock language="html" title="src/component.html">
-      {['<vis-xy-container [data]="dataArray">', '  <vis-area [x]="x" [y]="y"></vis-area>', '</vis-xy-container>'].join("\n")}
-    </CodeBlock>
-  </TabItem>
-  <TabItem value="typescript" label="TypeScript">
-    <CodeBlock language="ts" title="src/component.ts">
-      {['data: DataRecord[] = getData()',
-        'x = (d: DataRecord) => d.x',
-        'y = (d: DataRecord) => d.y',
-        'const config: XYContainerConfigInterface<DataRecord> = {',
-        '  components: [new Area({ x, y })]',
-        '}',
-        'const chart = new XYContainer(containerNode, config, data)'].join("\n")}
-    </CodeBlock>
-  </TabItem>
-</Tabs>
-
-<AreaComponent/>
+<XYWrapper {...defaultProps()} showContext/>
 
 ### Multiple Areas
 _Area_ can accept an array of `y` accessors to display multiple areas at once:
-
-```typescript
-const y: ((d: DataRecord) => number)[] = [
-  d => d.y1,
-  d => d.y2,
-  d => d.y3
-]
-```
-<AreaComponent y={[(d) => d.y, (d) => d.y1, (d) => d.y2]} />
+<XYWrapper {...defaultProps()} y={[(d) => d.y, (d) => d.y1, (d) => d.y2]} showContext/>
 
 ### Curve Types
 Using the `curveType: CurveType` property you can set various curve type options. For example:
-<Tabs groupId="curveType" className="prop-preview-menu">
-  <TabItem value="basis" label="Basis">
-    <AreaDoc curveType="basis"/>
-    <AreaComponent curveType="basis"/>
-  </TabItem>
-  <TabItem value="linear" label="Linear">
-    <AreaDoc curveType="linear"/>
-    <AreaComponent curveType="linear"/>
-  </TabItem>
-  <TabItem value="step" label="Step">
-    <AreaDoc curveType="step"/>
-    <AreaComponent curveType="step"/>
-  </TabItem>
-</Tabs>
+<XYWrapperWithMenu {...defaultProps(25)} options={["basis", "linear", "step"]} attr="curveType"/>
 
 Learn more about configurable curves from D3's [documentation](https://github.com/d3/d3-shape#curves)
 
 ### Color
-
 Setting color for a single _Area_ component is simple, you can achieve that just by setting the `color` property of the component to a hex string.
 
-<BrowserOnly colors="blue">
-  {() => {
-    const { useState } = require("react");
-    const [color, setColor] = useState("#19cb9a");
-    return (
-      <>
-        <label style={{float: "right", margin: "0.5em"}}>
-        <b style={{marginRight: "1.5em"}}>Preview color:</b>
-        <input
-          style={{marginTop: "1.5em"}}
-          type="color"
-          value={color}
-          onChange={e => setColor(e.target.value)}
-        />
-        </label>
-        <AreaDoc color={color}/>
-        <AreaComponent color={color}/>
-      </>
-    )
-  }}
-</BrowserOnly>
+<XYWrapperWithInput {...defaultProps(50)} property="color" inputType="color" defaultValue="#19cb9a"/>
 
 #### Multiple Colors
 If you want to configure multiple colors for your _Area_ component, you'll have to create a color accessor function, similar to `x` and `y` accessors
 described in the base configuration:
 
-```typescript
-const getColor: ((d: DataRecord) => string)[] = [
-  "#FF4F4E",
-  "#FFBA00",
-  "#2BAB44",
-][i];
-```
-
-<AreaComponent  y={[(d) => d.y, (d) => d.y1, (d) => d.y2]} color={(d, i) => ["#FF4F4E","#FFBA00","#2BAB44"][i]}/>
+<XYWrapper {...defaultProps()} showContext y={[(d) => d.y, (d) => d.y1, (d) => d.y2]} color={(d, i) => ['#6A9DFF', '#1acb9a', '#f88080'][i]}/>
 
 ### Additional Styling: CSS Variables
 The _Area_ component supports additional styling via CSS variables that you can define for your visualization container. For example:
 
-<CodeBlock language="css" title="styles.css">
-  {`.custom-area {
+```css title="styles.css"
+.custom-area {
   --vis-area-fill-opacity: 0.5;
   --vis-area-hover-fill-opacity: 1;
   --vis-area-stroke-width: 1px;
-}`}
-</CodeBlock>
-<AreaComponent y={[(d) => d.y, (d) => d.y1, (d) => d.y2]} className="custom-area"/>
+```
+<XYWrapper {...defaultProps()} y={[(d) => d.y, (d) => d.y1, (d) => d.y2]} className="custom-area"/>
 
-<Details summary={<summary>All supported CSS variables</summary>} open>
+<details>
+  <summary>All supported CSS variables</summary>
   <CodeBlock language="css">
     {`--vis-area-cursor
 --vis-area-fill-opacity
@@ -178,45 +60,21 @@ The _Area_ component supports additional styling via CSS variables that you can 
 --vis-area-hover-fill-opacity
 --vis-area-hover-stroke-width`}
   </CodeBlock>
-</Details>
+</details>
 
 ### Events
 
 The _Area_ component supports the following events:
-<CodeBlock language="ts" title="component.ts">
-{[`import { Area } from '@volterra/vis'`,
-  ' ',
-  'events: [Area.selectors.area]: {',
-  '  click: (data: DataRecord[]) => {},',
-  '  mouseover: (data: DataRecord[]) => {},',
-  '  mouseleave: (data: DataRecord[]) => {}',
-  '}',
-].join("\n")}
+```ts
+import { Area } from '@volterra/vis'
 
-</CodeBlock>
-
-<Tabs groupId="framework">
-  <TabItem value="react" label="React">
-    <CodeBlock language="jsx" title="component.tsx">
-      {'<VisArea x={x} y={y} events={events}/>'}
-    </CodeBlock>
-  </TabItem>
-  <TabItem value="angular" label="Angular">
-    <CodeBlock language="html" title="component.html">
-      {'<vis-area [x]="x" [y]="y" [events]="events"></vis-area>'}
-    </CodeBlock>
-  </TabItem>
-  <TabItem value="typescript" label="TypeScript">
-    <CodeBlock language="ts" title="component.ts">
-      {['const config: XYContainerConfigInterface<DataRecord> = {',
-        '  ...config',
-        '  components: [new Area({ x, y, events })]',
-        '}',
-        'const chart = new XYContainer(containerNode, config, data)'].join("\n")}
-    </CodeBlock>
-  </TabItem>
-</Tabs>
+events = [Area.selectors.area]: {
+  click: (data: DataRecord[]) => {},
+  mouseover: (data: DataRecord[]) => {},
+  mouseleave: (data: DataRecord[]) => {}
+}
+```
+<XYWrapper {...defaultProps()} excludeGraph events={{}}/>
 
 ## Component Props
-
 <PropTable name="VisArea"></PropTable>
