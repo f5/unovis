@@ -46,20 +46,20 @@ export function XYDocTabs ({ componentStrings, contextProps, hideTabLabels, show
         </CodeBlock>
       </TabItem>
       <TabItem value="typescript" label="TypeScript">
-        <CodeBlock language="ts" title={showContext && 'component.html'}>
+        <CodeBlock language="ts" title={showContext && 'component.ts'}>
           {showContext
             ? [
               'const data: DataRecord[] = getData()',
               ...contextProps.map((p) => `const ${p}`),
               '',
-              componentStrings.typescript,
-              '',
               'const config: XYContainerConfigInterface<DataRecord> = {',
-              '  components: components',
+              `  ${componentStrings.typescript}`,
               '}',
               'const chart = new XYContainer(containerNode, config, data)',
             ].join('\n')
-            : componentStrings.typescript}
+            : ['const config: XYContainerConfigInterface<DataRecord> = {',
+              `  ${componentStrings.typescript}`,
+              '}'].join('\n')}
         </CodeBlock>
       </TabItem>
     </Tabs>

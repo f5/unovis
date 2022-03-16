@@ -9,6 +9,7 @@ export type XYWrapperProps = {
   excludeTabs: boolean;
   excludeGraph: boolean;
   hiddenProps: Partial<XYComponentConfigInterface<DataRecord>>; // props to pass to component but exclude from doc tabs
+  xyConfigKey: string; // specify the key for the chartConfig in typescript files (default = "components")
 } & DocGraphProps & DocTabsProps & Record<string, /* PropItem */ any> // using `any` to avoid type-checking complains
 
 /* XYWrapper by default displays code snippet tabs and a Vis component with custom props */
@@ -23,11 +24,12 @@ export function XYWrapper ({
   excludeTabs,
   excludeGraph,
   hiddenProps,
+  xyConfigKey,
   ...rest
 }: XYWrapperProps): JSX.Element {
   return (
     <>
-      {!excludeTabs && <XYDocTabs {...{ showContext, hideTabLabels, ...parseProps(name, rest, showContext) }} />}
+      {!excludeTabs && <XYDocTabs {...{ showContext, hideTabLabels, ...parseProps(name, rest, showContext, xyConfigKey || 'components') }} />}
       {!excludeGraph && <XYComponentDoc {...{ data, name, height, showAxes, className, componentProps: { ...hiddenProps, ...rest } }} />}
     </>
   )

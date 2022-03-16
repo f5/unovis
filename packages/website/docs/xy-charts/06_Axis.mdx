@@ -3,6 +3,7 @@ sidebar_position: 0
 ---
 import CodeBlock from '@theme/CodeBlock';
 import BrowserOnly from '@docusaurus/BrowserOnly'
+import { parseProps } from '../utils/props-helper.ts'
 import { PropTable } from '../utils/props-table'
 import { generateDataRecords, generateTimeSeries } from '../utils/data'
 import { XYWrapper, XYDocTabs, XYWrapperWithInput, XYWrapperWithMenu } from '../components';
@@ -12,7 +13,8 @@ export const defaultProps = (n=10) => ({
   data: generateDataRecords(n),
   type: "x",
   height: 100,
-  hiddenProps: { gridLine: false }
+  hiddenProps: { gridLine: false },
+  xyConfigKey: "xAxis",
 });
 
 export const AxesWrapper = ({data, xConfig, yConfig, chartName, chartConfig}) => {
@@ -40,8 +42,7 @@ export const AxesWrapper = ({data, xConfig, yConfig, chartName, chartConfig}) =>
 
 ### Basic configuration
 The _Axis_ component has been designed to work together with _XY Container_. The minimal _Axis_ configuration looks like:
-
-<XYWrapper {...defaultProps()} showContext/>
+<XYWrapper {...defaultProps()}/>
 
 ### Axis Types
 _Axis_ supports two `AxisType` properties to bind to your data: `AxisType.X` and `AxisType.Y`. You can also simply provide the string `"x"` or `"y"`.
@@ -58,9 +59,7 @@ You can change the position of your axis with a `Position` type or a string equi
 <XYDocTabs componentStrings={{
     react: `<VisAxis type="x" position="top" label="X"/>\n<VisAxis type="y" position="right" label="Y"/>`,
     angular: `<vis-axis type="x" position="top" label="X"></vis-axis>\n<vis-axis type="y" position="right" label="Y"></vis-axis>`,
-    typescript: `const components = [
-    new Axis({ type: "x", position: "top", label: "X" }}),
-    new Axis({ type: "y", position: "right", label: "Y" }})\n]`
+    typescript: `xAxis: new Axis({type: "x", position: "top", label: "X"}),\n  yAxis: new Axis({type: "y", position: "right", label: "Y"})`
 }}/>
 <AxesWrapper xConfig={{position: "top", label: "X"}} yConfig={{position: "right", label: "Y"}} showTabs/>
 
@@ -226,17 +225,15 @@ function tickValues() {
 ```
 <XYWrapper {...defaultProps()} tickValues={[0,2,4,6,8]} hiddenProps={{x:d=>d.x}}/>
 
-
 ## Displaying Multiple Axes
 More commonly, you will want to display both an x and y axis for your graph. You can display multiple axes in an _XY Container_ like so:
 
 <XYDocTabs componentStrings={{
     react: `<VisAxis type="x"/>\n      <VisAxis type="y"/>`,
     angular: `<vis-axis type="x"></vis-axis>\n  <vis-axis type="y"></vis-axis>`,
-    typescript: `const components = [
-    new Axis({ type: "x" }}),
-    new Axis({ type: "y" }})\n]`
+    typescript: `xAxis: new Axis({ type: "x" }})\n  yAxis: new Axis({ type: "y" }})`
 }} contextProps={[]} showContext/>
+
 <AxesWrapper xConfig yConfig/>
 
 ## Displaying Axis with a Chart
@@ -244,26 +241,10 @@ You can include a chart within your _XY Container_ alongside your axes like this
 <XYDocTabs componentStrings={{
     react: `<VisAxis type="x"/>\n      <VisAxis type="y"/>\n      <VisLine x={x} y={y}/>`,
     angular: `<vis-axis type="x"></vis-axis>\n  <vis-axis type="y"></vis-axis>\n   <vis-line [x]="x" [y]="y"/>`,
-    typescript: `const components = [
-    new Axis({ type: "x" }}),
-    new Axis({ type: "y" }})
-    new Line({ x: d=>d.x, y: d=>d.y})\n]`
-}} contextProps={['x: (d: DataRecord) => d.x', 'y: (d: DataRecord) => d.y']} showContext/>
-<AxesWrapper xConfig yConfig chartName="Line" chartConfig={{x: d=>d.x, y: d=>d.y}}/>
-
-## Axis configuration within container
-Alternatively, you can configure your x and y _Axis_ component within the container's configuration like this:
-
-```ts
-import { Axis } from '@volterra/vis'
-
-const config: XYContainerConfigInterface<DataRecord> = {
-  components: [new Line(x: d => d.x, y: d=>d.y)]
+    typescript: `components: [new Line({ x, y })],
   xAxis: new Axis({ type: "x" }}),
-  yAxis: new Axis({ type: "y" }})
-}
-const chart = new XYContainer(containerNode, config, data)
-```
+  yAxis: new Axis({ type: "y" }})`
+}} contextProps={['x: (d: DataRecord) => d.x', 'y: (d: DataRecord) => d.y']} showContext/>
 <AxesWrapper xConfig yConfig chartName="Line" chartConfig={{x: d=>d.x, y: d=>d.y}}/>
 
 ## Additional Styling: CSS Variables

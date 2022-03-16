@@ -39,7 +39,14 @@ function getHtmlTag (name: string): string {
   return name.toLowerCase()
 }
 
-export function parseProps (name: string, props: Record<string, PropItem>, addToContext: boolean): FrameworkProps {
+function getChartConfig (key: string, value: string): string {
+  if (key === 'components') {
+    value = `[${value}]`
+  }
+  return [key, value].join(': ')
+}
+
+export function parseProps (name: string, props: Record<string, PropItem>, addToContext: boolean, xyConfigKey: string): FrameworkProps {
   const angularProps: string[] = []
   const reactProps: string[] = []
   const typescriptProps: string[] = []
@@ -60,7 +67,7 @@ export function parseProps (name: string, props: Record<string, PropItem>, addTo
     componentStrings: {
       angular: `<vis-${tag} ${angularProps.join(' ')}></vis-${tag}>`,
       react: `<Vis${name} ${reactProps.join(' ')}/>`,
-      typescript: `const components = [new ${name}({ ${typescriptProps.join(', ')} }})]`,
+      typescript: getChartConfig(xyConfigKey, `new ${name}({ ${typescriptProps.join(', ')} })`),
     },
     contextProps,
   }
