@@ -10,5 +10,9 @@ if (environment.production) {
   enableProdMode()
 }
 
+if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+  document.body.classList.toggle('theme-dark')
+}
+
 platformBrowserDynamic().bootstrapModule(AppModule)
   .catch(err => console.error(err))

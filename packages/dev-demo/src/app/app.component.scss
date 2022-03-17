@@ -1,11 +1,23 @@
+.theme-switcher {
+  position: fixed;
+  top: 5px;
+  right: 5px;
+  background: rgba(255,255,255, 0.6);
+  border-radius: 15px;
+  width: 115px;
+  height: 45px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  z-index: 1;
+}
+
 .vis-container {
   position: absolute;
   left: 200px;
-  // margin: 10px;
   right: 0;
   top: 0px;
   bottom: 0px;
-  // overflow-y: auto;
   overflow-x: visible;
 }
 
@@ -57,4 +69,49 @@ a {
 
 .logo-image {
   width: 120px;
+}
+
+.theme-label {
+  margin-right: 10px;
+  text-align: center;
+  font-family: var(--vis-font-family);
+  color: #444;
+  font-size: small;
+}
+
+.toggle-theme {
+  width: 50px;
+
+  input {
+    display: none;
+
+    &:checked + .slider::after {
+      -webkit-transform: translateX(15px);
+      -ms-transform: translateX(15px);
+      transform: translateX(15px);
+    }
+  }
+
+  .slider {
+    cursor: pointer;
+    pointer-events: all;
+    position: absolute;
+    height: 10px;
+    width: 25px;
+    top: 18px;
+    border-radius: 5px;
+    background-color: #8a8d95;
+
+    &::after {
+      position: absolute;
+      content: '';
+      top: -5px;
+      left: -5px;
+      height: 20px;
+      width: 20px;
+      border-radius: 50%;
+      background-color: #5242aa;
+      transition: .2s;
+    }
+  }
 }

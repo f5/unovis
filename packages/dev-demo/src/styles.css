@@ -2,3 +2,4 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Inter, "Helvetica Neue", sans-serif; }
+body.theme-dark { background: #292b34; }

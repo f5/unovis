@@ -37,6 +37,16 @@
   <a routerLink="bullet-legend">Bullet Legend</a>
   <a routerLink="atomic-angular-wrapper">Atomic Angular Wrapper</a>
 </nav>
+<div class="theme-switcher">
+  <span class="theme-label">{{ darkmode ? "Dark" : "Light"}}</span>
+  <div class="toggle-theme">
+    <label>
+      <input type="checkbox" (change)="toggleTheme()" [(ngModel)]="darkmode">
+      <div class="slider"></div>
+    </label>
+  </div>
+</div>
 <div class="vis-container">
   <router-outlet></router-outlet>
 </div>
+

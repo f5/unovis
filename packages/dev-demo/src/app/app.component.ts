@@ -9,4 +9,11 @@ import { Component } from '@angular/core'
 })
 export class AppComponent {
   title = 'volterra-vis'
+  get darkmode (): boolean {
+    return document.body.classList.contains('theme-dark')
+  }
+
+  toggleTheme (): void {
+    document.body.classList.toggle('theme-dark')
+  }
 }

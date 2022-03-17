@@ -3,6 +3,7 @@
 import { BrowserModule } from '@angular/platform-browser'
 import { NgModule } from '@angular/core'
 import { RouterModule, Routes } from '@angular/router'
+import { FormsModule } from '@angular/forms'
 
 import { ScatterComponent } from 'examples/scatter/scatter.component'
 import { LineComponent } from 'examples/line/line.component'
@@ -127,6 +128,7 @@ appRoutes.push({ path: '', redirectTo: `/${appRoutes[0].path}`, pathMatch: 'full
       appRoutes
     ),
     BrowserModule,
+    FormsModule,
     AtomicAngularWrapperModule,
     FreeBrushModule,
     TimelineLabelsModule,
