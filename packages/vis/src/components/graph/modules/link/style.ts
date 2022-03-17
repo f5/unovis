@@ -4,9 +4,14 @@ import { css, injectGlobal, keyframes } from '@emotion/css'
 export const variables = injectGlobal`
   :root {
     --vis-graph-link-stroke-color: #e6e9f3;
+    --vis-graph-link-greyout-opacity: 0.3;
+    --vis-graph-link-dashed-stroke-dasharray: 6 6;
+
     --vis-graph-link-label-stroke-color: #fff;
     --vis-graph-link-label-text-color: #fff;
     --vis-graph-link-label-fill-color: #e6e9f3;
+
+    --vis-graph-link-band-opacity: 0.35;
 
     --vis-graph-link-support-stroke-width: 10px;
   }
@@ -35,7 +40,6 @@ export const link = css`
   stroke: var(--vis-graph-link-stroke-color);
   transition: stroke 800ms;
   stroke-linecap: round;
-  stroke-width: 1;
   pointer-events: none;
 `
 
@@ -50,13 +54,14 @@ export const linkDashed = css`
 
   ${`.${link}`}, ${`.${linkSupport}`} {
     animation: ${dash} 15s linear infinite;
-    stroke-dasharray: 6 6;
+    stroke-dasharray: var(--vis-graph-link-dashed-stroke-dasharray);
   }
 `
 
 export const gLink = css`
   label: g-link;
 `
+
 export const gLinkExit = css`
   label: g-link-exit;
   pointer-events: none;
@@ -64,13 +69,13 @@ export const gLinkExit = css`
 
 export const greyout = css`
   label: greyout;
-  opacity: 0.2;
+  opacity: var(--vis-graph-link-greyout-opacity);
 `
 
 export const linkBand = css`
   label: link-band;
 
-  stroke-opacity: 0.35;
+  stroke-opacity: var(--vis-graph-link-band-opacity);
   pointer-events: none;
   stroke: var(--vis-graph-node-stroke-color);
 `
@@ -107,7 +112,6 @@ export const labelContent = css`
   label: label-content;
 
   fill: var(--vis-graph-link-label-text-color);
-  font-size: 8pt;
   text-anchor: middle;
   dominant-baseline: middle;
 `
