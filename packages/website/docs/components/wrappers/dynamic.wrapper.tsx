@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import React from 'react'
+import React, { PropsWithChildren, ReactChild, ReactChildren, ReactElement, ReactNode } from 'react'
 import BrowserOnly from '@docusaurus/BrowserOnly'
 import { XYComponentConfigInterface } from '@volterra/vis'
 
@@ -9,7 +9,7 @@ import { XYWrapper, XYWrapperProps } from './xy-wrapper'
 type DynamicWrapperProps = XYWrapperProps & {
   primaryData: DataRecord[];
   secondaryData: DataRecord[];
-  exampleProps: XYComponentConfigInterface<DataRecord>; // props to be passed to bottom component
+  exampleProps: XYComponentConfigInterface<DataRecord>; // props to be passed to (example) component
 }
 
 /* Displays animation of two XYDocs alternating between two datasets. Top item will be the base case, bottom can be provided special props */

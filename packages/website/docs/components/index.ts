@@ -1,6 +1,7 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import './styles.css'
 
+export { XYCompositeDoc } from './wrappers/composite-wrapper'
 export { DynamicXYWrapper } from './wrappers/dynamic.wrapper'
 export { XYComponentDoc } from './wrappers/doc-vis.wraper'
 export { XYDocTabs } from './wrappers/doc-tabs.wrapper'

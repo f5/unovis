@@ -22,6 +22,8 @@ const getContextProps: PropParser = (k, v) => {
   let str = String(v)
   if (k === 'y' && typeof v === 'object') {
     str = `((d: DataRecord) => number)[] = [${str.split(',').join(', ')}]`
+  } else if (typeof v === 'object') {
+    str = JSON.stringify(v).replace(/\"/gi, ' ').replace('\}', ' \}').replace(/ \:/gi, ': ')
   } else {
     str = str.replace('d=>', '(d: DataRecord) => ')
     str = str.replace('(d,i)=>', '(d: DataRecord, i: number) => ')
@@ -30,23 +32,7 @@ const getContextProps: PropParser = (k, v) => {
   return [k, str].join(' = ')
 }
 
-function getHtmlTag (name: string): string {
-  const hasUpper = name.match(/.+[A-Z]/)
-  if (hasUpper) {
-    const ch = name[hasUpper[0].length - 1]
-    name = name.split(ch).join('-'.concat(ch))
-  }
-  return name.toLowerCase()
-}
-
-function getChartConfig (key: string, value: string): string {
-  if (key === 'components') {
-    value = `[${value}]`
-  }
-  return [key, value].join(': ')
-}
-
-export function parseProps (name: string, props: Record<string, PropItem>, addToContext: boolean, xyConfigKey: string): FrameworkProps {
+export function getPropStrings (props: Record<string, PropItem>, addToContext: boolean): FrameworkProps {
   const angularProps: string[] = []
   const reactProps: string[] = []
   const typescriptProps: string[] = []
@@ -60,14 +46,70 @@ export function parseProps (name: string, props: Record<string, PropItem>, addTo
     reactProps.push(getReactProps(k, v))
     typescriptProps.push(getTsProps(k, v))
   })
+  return {
+    componentStrings: {
+      angular: angularProps.join(' '),
+      react: reactProps.join(' '),
+      typescript: typescriptProps.join(', '),
+    },
+    contextProps,
+  }
+}
 
+function getHtmlTag (name: string): string {
+  const hasUpper = name.match(/.+[A-Z]/)
+  if (hasUpper) {
+    const ch = name[hasUpper[0].length - 1]
+    name = name.split(ch).join('-'.concat(ch))
+  }
+  return name.toLowerCase()
+}
+
+function getChartConfig (name: string, key: string, value: string): string {
+  if (!key) {
+    return value.replace(', ', ',\n  ')
+  }
+  value = `new ${name} ({${value}})`
+  if (key === 'components') {
+    value = `[${value}]`
+  }
+  return [key, value].join(': ')
+}
+
+export function parseProps (name: string, props: Record<string, PropItem>, addToContext: boolean, xyConfigKey: string): FrameworkProps {
+  const { componentStrings, contextProps } = getPropStrings(props, addToContext)
   const tag = getHtmlTag(name)
 
   return {
     componentStrings: {
-      angular: `<vis-${tag} ${angularProps.join(' ')}></vis-${tag}>`,
-      react: `<Vis${name} ${reactProps.join(' ')}/>`,
-      typescript: getChartConfig(xyConfigKey, `new ${name}({ ${typescriptProps.join(', ')} })`),
+      angular: `<vis-${tag} ${componentStrings.angular}></vis-${tag}>`,
+      react: `<Vis${name} ${componentStrings.react}/>`,
+      typescript: `${getChartConfig(name, xyConfigKey, componentStrings.typescript)}`,
+    },
+    contextProps,
+  }
+}
+
+type XYConfigArgs = {
+  name: string;
+  props: any;
+  key: string;
+}
+export function parseXYConfig (config: XYConfigArgs[]): FrameworkProps {
+  const contextProps = []
+  const items = config.reduce((obj, { name, props, key }) => {
+    const { componentStrings, contextProps: ctx } = parseProps(name, props, true, key)
+    Object.entries(componentStrings).forEach(([k, v]) => {
+      obj[k].push(v)
+    })
+    if (ctx.length) ctx.forEach(d => contextProps.push(d))
+    return obj
+  }, { angular: [], react: [], typescript: [] })
+  return {
+    componentStrings: {
+      angular: items.angular.join('\n  '),
+      react: items.react.join('\n      '),
+      typescript: items.typescript.join(',\n  '),
     },
     contextProps,
   }

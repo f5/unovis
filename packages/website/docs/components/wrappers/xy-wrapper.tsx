@@ -2,10 +2,14 @@ import { XYComponentConfigInterface } from '@volterra/vis'
 import * as React from 'react'
 import { DataRecord } from '../../utils/data'
 import { parseProps } from '../../utils/props-helper'
-import { XYComponentDoc, DocGraphProps } from './doc-vis.wraper'
+import { ComponentProps, XYCompositeDoc } from './composite-wrapper'
+import { DocGraphProps } from './doc-vis.wraper'
 import { XYDocTabs, DocTabsProps } from './doc-tabs.wrapper'
 
+const axes = ['x', 'y'].map(t => ({ name: 'Axis', props: { type: t }, key: `${t}Axis` }))
+
 export type XYWrapperProps = {
+  componentProps?: ComponentProps[];
   excludeTabs: boolean;
   excludeGraph: boolean;
   hiddenProps: Partial<XYComponentConfigInterface<DataRecord>>; // props to pass to component but exclude from doc tabs
@@ -18,19 +22,28 @@ export function XYWrapper ({
   name,
   height,
   showAxes,
-  className,
   hideTabLabels,
   showContext,
   excludeTabs,
   excludeGraph,
   hiddenProps,
   xyConfigKey,
+  componentProps,
   ...rest
 }: XYWrapperProps): JSX.Element {
+  if (!componentProps) {
+    componentProps = [{ name: name, props: { ...hiddenProps, ...rest }, key: 'components' }]
+    xyConfigKey = 'components'
+  }
   return (
     <>
-      {!excludeTabs && <XYDocTabs {...{ showContext, hideTabLabels, ...parseProps(name, rest, showContext, xyConfigKey || 'components') }} />}
-      {!excludeGraph && <XYComponentDoc {...{ data, name, height, showAxes, className, componentProps: { ...hiddenProps, ...rest } }} />}
+      {!excludeTabs && <XYDocTabs {...{ showContext, hideTabLabels, ...parseProps(name, rest, showContext, xyConfigKey) }} />}
+      {!excludeGraph &&
+        <XYCompositeDoc
+          data={data}
+          containerProps={{ height: height || 150, ...rest }}
+          componentProps={showAxes ? componentProps.concat(axes) : componentProps}/>
+      }
     </>
   )
 }

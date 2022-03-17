@@ -1,0 +1,142 @@
+import BrowserOnly from '@docusaurus/BrowserOnly'
+import Tabs from '@theme/Tabs'
+import TabItem from '@theme/TabItem'
+import CodeBlock from '@theme/CodeBlock'
+import { XYDocTabs, XYWrapperWithInput } from '../components'
+import { parseProps, parseXYConfig } from '../utils/props-helper.ts'
+import { PropTable } from '../utils/props-table.tsx'
+import { generateDataRecords } from '../utils/data'
+
+export const defaultProps = (n=10, chartName = "StackedBar") => ({
+  chartName: chartName,
+  componentProps: { x: d => d.x, y: d => d.y },
+  docTabsMode: "simple",
+  data: generateDataRecords(n),
+  height: 150,
+})
+
+export const ContainerTabs = (props) => {
+  const { componentStrings, contextProps } = parseProps("XYContainer", props, true, null)
+  const Context = () => <CodeBlock language="ts" title="config.ts">{`const config: XYContainerConfigInterface<DataRecord> = {
+  ${contextProps.map(d => d.replace(' =', ':')).join(',\n  ')}\n}`}
+    </CodeBlock>
+  return (
+    <Tabs groupId="framework">
+      <TabItem value="react" label="React">
+        <Context/>
+        <CodeBlock language="jsx" title="component.tsx">
+          {`${componentStrings.react.replace('/>', '>\n  {/* your vis components here */}\n</VisXYContainer>')}`}
+        </CodeBlock>
+      </TabItem>
+      <TabItem value="angular" label="Angular" >
+        <Context/>
+        <CodeBlock language="html" title="component.html">
+          {`${componentStrings.angular.replace('>', '>\n  <!--your vis components here-->\n')}`}
+        </CodeBlock>
+      </TabItem>
+      <TabItem value="typescript" label="TypeScript">
+        <Context/>
+        <CodeBlock language="ts" title="component.ts">
+          {['const config: XYContainerConfigInterface<DataRecord> = {',
+            `  ${componentStrings.typescript},`,
+            '  components: [/* your vis components here */]',
+            '}'].join('\n')}
+        </CodeBlock>
+      </TabItem>
+    </Tabs>
+  )
+}
+
+
+export const XYContainerDoc = ({ chartName, componentProps, docTabsMode, height, ...rest }) => (
+  <>
+  {docTabsMode === "full" && <XYDocTabs {...parseXYConfig({
+    components: { name: chartName, props: componentProps },
+    xAxis: { name: 'Axis', props: { type: 'x' } },
+    yAxis: { name: 'Axis', props: { type: 'y' } }
+  })} showContext/>}
+  {docTabsMode === "simple" && <ContainerTabs {...rest}/>}
+  <BrowserOnly fallback={<div>Loading...</div>}>
+    {() => {
+      const { VisXYContainer, [`Vis${chartName}`]: Component, VisAxis } = require('@volterra/vis-react')
+      return (
+          <VisXYContainer height={height | 150} {...rest} style={{ display: 'inlineBlock' }}>
+            <Component {...componentProps} />
+            <VisAxis type="x" gridLine={false}/>
+            <VisAxis type="y" gridLine={false}/>
+          </VisXYContainer>
+      )
+    }}
+  </BrowserOnly>
+  </>
+)
+
+### Basic configuration
+The _Container_ component is designed as a wrapper to hold other vis elements. Here is an example of a common configuration: one _XYChart_ alongside two _Axis_ components:
+<XYContainerDoc {...defaultProps()} docTabsMode="full"/>
+
+### Margin
+You can change a _Container_ margins using the margin property, which accepts an object with the properties `top`, `bottom`, `left`, and `right` with corresponding pixel values.
+This determines the distance between the XY container and other elements on the page. Notice what happens when each margin is set to 100px and there is another element on the page.
+<XYContainerDoc {...defaultProps()} margin={{ top: 100, bottom: 100, right: 100, left: 100}}/>
+
+### Padding
+Similarly, to provide padding with the same object type to change the container's padding (i.e. the space between the inner components).
+<XYContainerDoc {...defaultProps()} padding={{ top: 100, bottom: 100, right: 100, left: 100}}/>
+
+## Range
+Changing the range of screen space occupied by each dimension of your data using the xRange and yRange properties. It accepts type [number, number] where the elements represent the starting and ending positions, respectively.
+
+### xRange
+Provide xRange with values [xStart, width]. More specifically, xStart is the offset relative to the starting position of the data.
+You can change a _Container_ margins using the margin property, which accepts an object with the properties `top`, `bottom`, `left`, and `right` with corresponding pixel values.
+This determines the distance between the XY container and other elements on the page. Notice what happens when each margin is set to 100px and there is another element on the page.
+<XYContainerDoc {...defaultProps()} xRange={[10,500]}/>
+
+### yRange
+<XYContainerDoc {...defaultProps()} yRange={[150,50]}/>
+
+## Domain
+You can change the domain of your data with the xDomain and yDomain properties to configure which values your xy-chart should display. The result will show all data that is in this range- excluding any values that fall outside of the range, and occupying any missing values with white space.
+### xDomain and yDomain
+### XDomain
+Consider the following example where the actual data contains values for all x values such that 0 <= x <= 50.
+<XYContainerDoc {...defaultProps()} xDomain={[25,55]}/>
+
+#### yDomain
+<XYContainerDoc {...defaultProps()} yDomain={[25,55]}/>
+
+### Domain Constraints
+Customizing your domain is helpful in datasets with outliers. When using dynamic data, you may not know which values to constrain your domain values to.
+With the following constraint properties xDomainMinConstraint, xDomainMaxConstraint, yDomainMinConstraint, and yDomainMaxConstraint, you can define partial domains.
+For the following examples, consider the following case where the majority of the data is within the ranges {0 <= n <= 50} for all values of x and y.
+#### `xDomainMinConstraint`
+<XYContainerDoc {...defaultProps(50)} chartName="Scatter" xDomainMinConstraint={[]}/>
+
+#### `yDomainMinConstraint`
+<XYContainerDoc {...defaultProps(50)} chartName="Scatter" yDomainMinConstraint={[]}/>
+
+#### `xDomainMaxConstraint`
+<XYContainerDoc {...defaultProps(50)} chartName="Scatter" xDomainMaxConstraint={[]}/>
+
+#### `yDomainMaxConstraint`
+<XYContainerDoc {...defaultProps(50)} chartName="Scatter" yDomainMaxConstraint={[]}/>
+
+
+## Scale
+To change the scale of one of your axes, use the `xScale` or `yScale` property and a Scale function (i.e. `Scale.scaleLinear()`). Currently, only continuous scales are supported:
+
+scaleLinear, scalePow, scaleSqrt, scaleLog, scaleTime, scaleUtc
+See d3-scale for more information about the meaning behind these functions.
+
+### xScale
+<XYContainerDoc {...defaultProps(50)} componentProps={{ x: d => d.x, y: d => d.x }} chartName="Scatter" xScale="altScale"/>
+
+### yScale
+<XYContainerDoc {...defaultProps(50)} componentProps={{ x: d => d.x, y: d => d.x }} chartName="Scatter" yScale="logScale"/>
+
+### scaleByDomain
+<XYContainerDoc {...defaultProps(50)} chartName="Scatter"/>
+
+<PropTable name="VisXYContainer"/>
+

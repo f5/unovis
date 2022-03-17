@@ -4,7 +4,6 @@ import BrowserOnly from '@docusaurus/BrowserOnly'
 import { XYComponentConfigInterface } from '@volterra/vis'
 
 import { DataRecord } from '../../utils/data'
-
 export type DocGraphProps = {
   componentProps: Partial<XYComponentConfigInterface<DataRecord>>;
   data: DataRecord[];

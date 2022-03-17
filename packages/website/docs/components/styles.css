@@ -43,6 +43,21 @@
   margin-top: 0 !important;
 }
 
+.inner-tabs  {
+  position: absolute;
+  left: 50%;
+  font-size: small;
+}
+
+details[open=true]  ul.tabs {
+  position: absolute;
+}
+
+.inner-tabs > li[aria-selected="true"]li[label="Hide"] {
+  background: var(--ifm-color-primary);
+  color: white;
+}
+
 .hidden {
   display: none;
 }
