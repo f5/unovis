@@ -1,20 +1,25 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { css, injectGlobal } from '@emotion/css'
 
+export const root = css`
+  label: chord-diagram-component;
+`
+
 export const variables = injectGlobal`
   :root {
     --vis-radial-dendrogram-link-fill-color: #cad5f6;
     --vis-radial-dendrogram-link-stroke-color: #777777;
     --vis-radial-dendrogram-link-stroke-opacity: 0.15;
 
-    /* */
     --vis-chord-diagram-label-text-fill-color-bright: #ffffff;
     --vis-chord-diagram-label-text-fill-color-dark: #a5abb2;
-  }
-`
 
-export const root = css`
-  label: chord-diagram-component;
+    --vis-dark-radial-dendrogram-link-fill-color: #575c65;
+  }
+
+  body.theme-dark .${root} {
+    --vis-radial-dendrogram-link-fill-color: var(--vis-dark-radial-dendrogram-link-fill-color);
+  }
 `
 
 export const nodes = css`

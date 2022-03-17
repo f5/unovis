@@ -1,6 +1,10 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { css, injectGlobal } from '@emotion/css'
 
+export const root = css`
+  label: axis-component;
+`
+
 export const global = injectGlobal`
   :root {
     --vis-axis-font-family: var(--vis-font-family);
@@ -10,11 +14,19 @@ export const global = injectGlobal`
     --vis-axis-label-color: #6c778c;
     --vis-axis-tick-label-font-size: 12px;
     --vis-axis-label-font-size: 14px;
+    
+    --vis-dark-axis-tick-color: #6c778c;
+    --vis-dark-axis-tick-label-color: #e8e9ef;
+    --vis-dark-axis-grid-color: #6c778c;
+    --vis-dark-axis-label-color:#fefefe;
   }
-`
 
-export const root = css`
-  label: axis-component;
+  body.theme-dark .${root} {
+    --vis-axis-tick-color: var(--vis-dark-axis-tick-color);
+    --vis-axis-tick-label-color: var(--vis-dark-axis-tick-label-color);
+    --vis-axis-grid-color: var(--vis-dark-axis-grid-color);
+    --vis-axis-label-color: var(--vis-dark-axis-label-color);
+  }
 `
 
 export const hideTickLine = css`

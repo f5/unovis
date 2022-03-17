@@ -1,6 +1,10 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { css, injectGlobal } from '@emotion/css'
 
+export const root = css`
+  label: free-brush-component;
+`
+
 export const variables = injectGlobal`
   :root {
     --vis-free-brush-selection-fill: #0b1640;
@@ -8,11 +12,17 @@ export const variables = injectGlobal`
     --vis-free-brush-selection-stroke: #acb2b9;
     --vis-free-brush-handle-fill: #6d778c;
     --vis-free-brush-handle-stroke: none;
-  }
-`
 
-export const root = css`
-  label: free-brush-component;
+    --vis-dark-free-brush-selection-fill: #344174;
+    --vis-dark-free-brush-selection-stroke: #0b1640; 
+    --vis-dark-free-brush-handle-fill: #6d778c;
+  }
+
+  body.theme-dark .${root} {
+    --vis-free-brush-selection-fill: var(--vis-dark-free-brush-selection-fill);
+    --vis-free-brush-selection-stroke: var(--vis-dark-free-brush-selection-stroke);
+    --vis-free-brush-handle-fill: var(--vis-dark-free-brush-selection-fill);
+  }
 `
 
 export const brush = css`

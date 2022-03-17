@@ -3,6 +3,10 @@ import { css, injectGlobal } from '@emotion/css'
 
 export const SANKEY_ICON_SIZE = 22
 
+export const root = css`
+  label: sankey-component;
+`
+
 export const variables = injectGlobal`
   :root {
     --vis-sankey-link-cursor: default;
@@ -31,11 +35,21 @@ export const variables = injectGlobal`
     --vis-sankey-icon-font-family: FontAwesome;
 
     --vis-sankey-label-font-family: var(--vis-font-family);
-  }
-`
 
-export const root = css`
-  label: sankey-component;
+    --vis-dark-sankey-link-color: #575c65;
+    --vis-dark-sankey-node-label-color: #eaeaea;
+    --vis-dark-sankey-node-label-background-fill-color: #292b34;
+    --vis-dark-sankey-node-label-background-stroke-color: #575c65;
+    --vis-dark-sankey-icon-color: #292b34;
+  }
+
+  body.theme-dark .${root} {
+    --vis-sankey-link-color: var(--vis-dark--sankey-link-color);
+    --vis-sankey-node-label-color: var(--vis-dark-sankey-node-label-color);
+    --vis-sankey-node-label-background-fill-color: var(--vis-dark-sankey-label-background-fill-color);
+    --vis-sankey-node-label-background-stroke-color: var(--vis-dark-sankey-label-background-stroke-color);
+    --vis-sankey-icon-color: var(--vis-dark-sankey-icon-color);
+  }
 `
 
 export const links = css`
@@ -93,7 +107,6 @@ export const label = css`
     font-family: var(--vis-sankey-label-font-family);
     dominant-baseline: hanging;
   }
-
 `
 
 export const sublabel = css`

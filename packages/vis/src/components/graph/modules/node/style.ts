@@ -1,13 +1,23 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { css, injectGlobal } from '@emotion/css'
 
+
+export const nodes = css`
+  label: nodes;
+`
+
 export const variables = injectGlobal`
   :root {
     /* Node Fill */
-    --vis-graph-node-stroke-color: rgba(255,255,255,0.25);
-    --vis-graph-node-fill-color: #ced3de;
+    --vis-graph-node-stroke-color: rgb(206, 211, 222);
+    --vis-graph-node-fill-color: #fff;
     --vis-graph-node-stroke-segment-color: #adb4c2;
     --vis-graph-node-selection-color: #acb3b8;
+
+    --vis-dark-graph-node-stroke-color: rgba(30,30,30,.25);
+    --vis-dark-graph-node-fill-color: #494b56;
+    --vis-dark-graph-node-stroke-segment-color: #989aa3;
+    --vis-dark-graph-node-selection-color: #494b56;
 
     /* Node Central Icon */
     --vis-graph-node-icon-color: #9ea7b8;
@@ -15,11 +25,17 @@ export const variables = injectGlobal`
     --vis-graph-node-icon-fill-color-bright: #ffffff;
     --vis-graph-node-icon-fill-color-dark: #9ea7b8;
 
+    --vis-dark-graph-node-icon-color: #ced3de;
+    --vis-dark-graph-node-icon-fill-color-dark: var(--vis-color-gray);
+
     /* Node Bottom Icon */
     --vis-graph-node-bottom-icon-font-size: 14pt;
     --vis-graph-node-bottom-icon-fill-color: #a0a6ad;
     --vis-graph-node-bottom-icon-stroke-color: #fff;
     --vis-graph-node-bottom-icon-stroke-width: 2px;
+
+    --vis-dark-graph-node-bottom-icon-fill-color: #a0a6ad;
+    --vis-dark-graph-node-bottom-icon-stroke-color: #fff;
 
     /* Node Label */
     --vis-graph-node-label-font-size: 9pt;
@@ -29,6 +45,10 @@ export const variables = injectGlobal`
     --vis-graph-node-sublabel-font-size: 8pt;
     --vis-graph-node-label-font-family: var(--vis-font-family);
 
+    --vis-dark-graph-node-label-background: var(--vis-color-gray);
+    --vis-dark-graph-node-label-text-color: #ffffff;
+    --vis-dark-graph-node-sublabel-text-color: #989aa3;
+
     /* Node Side Labels (circular labels)*/
     --vis-graph-node-side-label-background-fill-color: #a0a9af;
     --vis-graph-node-side-label-background-stroke-color: #ffffff;
@@ -36,15 +56,45 @@ export const variables = injectGlobal`
     --vis-graph-node-side-label-fill-color-dark: #494b56;
     --vis-graph-node-side-label-font-family: var(--vis-font-family);
 
+    --vis-dark-graph-node-side-label-background-fill-color: #989aa3;
+    --vis-dark-graph-node-side-label-background-stroke-color: var(--vis-color-gray);
+    --vis-dark-graph-node-side-label-fill-color-bright: #f1f4f7;
+    --vis-dark-graph-node-side-label-fill-color-dark: var(--vis-color-gray);
+
     /* Greyout */
     --vis-graph-node-greyout-color: #ebeff7;
     --vis-graph-node-icon-greyout-color: #c6cad1;
     --vis-graph-node-side-label-background-greyout-color: #f1f4f7;
-  }
-`
 
-export const nodes = css`
-  label: nodes;
+    --vis-dark-graph-node-greyout-color: #494b56;
+    --vis-dark-graph-node-icon-greyout-color: var(--vis-color-gray); 
+    --vis-dark-graph-node-side-label-background-greyout-color: #f1f4f7;
+  }
+ 
+  body.theme-dark .${nodes} {
+    --vis-graph-node-stroke-color: var(--vis-dark-graph-node-stroke-color);
+    --vis-graph-node-fill-color: var(--vis-dark-graph-node-fill-color);
+    --vis-graph-node-stroke-segment-color: var(--vis-dark-graph-node-segment-color);
+    --vis-graph-node-selection-color: var(--vis-dark-graph-node-selection-color);
+
+    --vis-graph-node-icon-color: var(--vis-dark-graph-node-icon-color);
+    --vis-graph-node-icon-fill-color-dark: var(--vis-dark-graph-node-icon-fill-color-dark);
+    
+    --vis-graph-node-bottom-icon-fill-color: var(--vis-dark-graph-node-bottom-icon-fill-color);
+    --vis-graph-node-bottom-icon-stroke-color: var(--vis-dark-graph-node-bottom-icon-stroke-color);
+
+    --vis-graph-node-label-background: var(--vis-dark-graph-node-label-background);
+    --vis-graph-node-label-text-color: var(--vis-dark-graph-node-label-text-color);
+    --vis-graph-node-sublabel-text-color: var(--vis-dark-graph-node-sublabel-text-color);
+
+    --vis-graph-node-side-label-background-fill-color: var(--vis-dark-graph-node-side-label-background-fill-color);
+    --vis-graph-node-side-label-background-stroke-color: var(--vis-dark-graph-side-label-background-stroke-color);
+    --vis-graph-node-side-label-fill-color-bright: var(--vis-dark-graph-node-side-label-fill-color-bright);
+    --vis-graph-node-side-label-fill-color-dark: var(vis-dark-graph-node-side-label-fill-color-dark);
+
+    --vis-graph-node-greyout-color: var(--vis-dark-graph-node-greyout-color);
+    --vis-graph-node-icon-greyout-color: var(--vis-dark-graph-node-icon-greyout-color);
+    --vis-graph-node-side-label-background-greyout-color: var(--vis-dark-graph-node-side-label-background-greyout-color);
 `
 
 export const node = css`

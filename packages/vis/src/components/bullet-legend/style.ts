@@ -1,6 +1,10 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { css, injectGlobal } from '@emotion/css'
 
+export const root = css`
+  label: bullet-legend-component;
+`
+
 export const variables = injectGlobal`
   :root {
     --vis-legend-font-family: var(--vis-font-family);
@@ -11,10 +15,15 @@ export const variables = injectGlobal`
     --vis-legend-bullet-inactive-color: #eee;
     --vis-legend-item-spacing: 20px;
     --vis-legend-bullet-label-spacing: 8px;
+
+    --vis-dark-legend-label-color: #eee;
+    --vis-dark-legend-bullet-inactive-color: #6c778c;
   }
-`
-export const root = css`
-  label: bullet-legend-component;
+
+  body.theme-dark .${root} {
+    --vis-legend-label-color: var(--vis-dark-legend-label-color);
+    --vis-legend-bullet-inactive-color: var(--vis-dark-legend-bullet-inactive-color);
+  }
 `
 
 export const item = css`

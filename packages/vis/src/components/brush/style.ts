@@ -1,17 +1,29 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { css, injectGlobal } from '@emotion/css'
 
+export const root = css`
+  label: brush-component;
+`
+
 export const variables = injectGlobal`
   :root {
     --vis-brush-selection-fill: #0b1640;
     --vis-brush-selection-stroke: #acb2b9;
     --vis-brush-handle-fill: #6d778c;
     --vis-brush-handle-stroke: #eee;
-  }
-`
 
-export const root = css`
-  label: brush-component;
+    --vis-dark-brush-selection-fill:#acb2b9;
+    --vis-dark-brush-selection-stroke: #0b1640; 
+    --vis-dark-brush-handle-fill: #acb2b9;
+    --vis-dark-brush-handle-stroke: var(--vis-color-gray);
+  }
+
+  body.theme-dark .${root}{selection);
+    --vis-brush-selection-fill: var(--vis-dark-brush-selection-fill);
+    --vis-brush-selection-stroke: var(--vis-dark-brush-selection-stroke); 
+    --vis-brush-handle-fill: var(--vis-dark-brush-handle-fill);
+    --vis-brush-handle-stroke: var(--vis-dark-brush-handle-stroke);
+  }
 `
 
 export const brush = css`

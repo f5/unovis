@@ -1,17 +1,27 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { css, injectGlobal } from '@emotion/css'
 
+export const root = css`
+  label: vis-controls-component;
+`
+
 export const variables = injectGlobal`
   :root {
     --vis-controls-buttons-border-color: rgba(108, 119, 140, 0.15);
     --vis-controls-buttons-background-color: rgba(255, 255, 255, 1);
     --vis-controls-button-color: #6c778c;
     --vis-controls-button-icon-font: FontAwesome;
-  }
-`
 
-export const root = css`
-  label: vis-controls-component;
+    --vis-dark-controls-buttons-border-color:  #6c778c;
+    --vis-dark-controls-buttons-background-color: var(--vis-color-gray);
+    --vis-dark-controls-button-color: #fff;
+  }
+
+  body.theme-dark .${root} {
+    --vis-controls-buttons-border-color: var(--vis-dark-controls.buttons-border-color);
+    --vis-controls-buttons-background-color: var(--vis-dark-controls-buttons-background-color);
+    --vis-controls-button-color: var(--vis-dark-controls-button-color);
+  }
 `
 
 export const items = css`

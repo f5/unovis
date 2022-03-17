@@ -1,6 +1,10 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { css, injectGlobal } from '@emotion/css'
 
+export const panels = css`
+  label: panels;
+`
+
 export const variables = injectGlobal`
   :root {
     --vis-graph-panel-border-color: #E6E9F3;
@@ -13,11 +17,23 @@ export const variables = injectGlobal`
     --vis-graph-panel-selection-outline-color: #b7b7b7;
     --vis-graph-panel-label-font-size: 10pt;
     --vis-graph-panel-label-font-weight: 300;
-  }
-`
 
-export const panels = css`
-  label: panels;
+    --vis-dark-graph-panel-border-color: var(--vis-color-gray);
+    --vis-dark-graph-panel-fill-color: #292b34;
+    --vis-dark-graph-panel-label-color: #E6E9F3;
+    --vis-dark-graph-panel-label-background: var(--vis-color-gray);
+    --vis-dark-graph-panel-side-label-fill: #6c778c;
+    --vis-dark-graph-panel-border-color: #a0a6ad;
+  }
+
+  body.theme-dark .${panels} {
+    --vis-graph-panel-border-color: var(--vis-dark-graph-panel-border-color);
+    --vis-graph-panel-fill-color: var(--vis-dark-graph-panel-fill-color);
+    --vis-graph-panel-label-color: var(--vis-dark-graph-panel-label-color);
+    --vis-graph-panel-label-background: var(--vis-dark-graph-panel-label-background);
+    --vis-graph-panel-side-label-fill: var(--vis-dark-graph-panel-side-label-fill);
+    --vis-graph-panel-border-color:  var(--vis-dark-graph-panel-border-color);
+  }
 `
 
 export const gPanel = css`

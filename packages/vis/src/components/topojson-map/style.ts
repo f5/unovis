@@ -1,6 +1,18 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { css, injectGlobal } from '@emotion/css'
 
+export const root = css`
+  label: topojson-map-component;
+
+  &.draggable {
+    &:active {
+      cursor: grabbing;
+      cursor: -moz-grabbing;
+      cursor: -webkit-grabbing;
+    }
+  }
+`
+
 export const variables = injectGlobal`
   :root {
     --vis-map-feature-color: #dce3eb;
@@ -11,18 +23,18 @@ export const variables = injectGlobal`
     --vis-map-point-label-font-family: var(--vis-font-family);
     --vis-map-point-label-font-weight: 600;
     --vis-map-point-label-font-size: 12px;
+
+    --vis-dark-map-feature-color: #5b5f6d;
+    --vis-dark-map-boundary-color: #2a2a2a;
+    --vis-dark-map-point-label-text-color-dark: #fff;
+    --vis-dark-map-point-label-text-color-light:#5b5f6d;
   }
-`
 
-export const root = css`
-  label: topojson-map-component;
-
-  &.draggable {
-    &:active {
-      cursor: grabbing;
-      cursor: -moz-grabbing;
-      cursor: -webkit-grabbing;
-    }
+  body.theme-dark .${root} {
+    --vis-map-feature-color: var(--vis-dark-map-feature-color);
+    --vis-map-boundary-color: var(--vis-dark-map-boundary-color);
+    --vis-map-point-label-text-color-dark: var(--vis-dark-map-point-label-text-color-dark);
+    --vis-map-point-label-text-color-light: var(--vis-dark-map-point-label-text-color-light);
   }
 `
 

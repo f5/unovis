@@ -1,6 +1,10 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { css, injectGlobal, keyframes } from '@emotion/css'
 
+export const links = css`
+  label: links;
+`
+
 export const variables = injectGlobal`
   :root {
     --vis-graph-link-stroke-color: #e6e9f3;
@@ -12,13 +16,20 @@ export const variables = injectGlobal`
     --vis-graph-link-label-fill-color: #e6e9f3;
 
     --vis-graph-link-band-opacity: 0.35;
-
     --vis-graph-link-support-stroke-width: 10px;
-  }
-`
 
-export const links = css`
-  label: links;
+    --vis-dark-graph-link-stroke-color: #494b56;
+    --vis-dark-graph-link-label-stroke-color: #000;
+    --vis-dark-graph-link-label-text-color:#e6e9f3;
+    --vis-dark-graph-link-label-fill-color: var(--vis-color-gray);
+  }
+
+  body.theme-dark .${links} {
+    --vis-graph-link-stroke-color: var(--vis-dark-graph-link-stroke-color);
+    --vis-graph-link-label-stroke-color: var(--vis-dark-graph-link-label-stroke-color);
+    --vis-graph-link-label-text-color: var(--vis-dark-graph-link-label-text-color);
+    --vis-graph-link-label-fill-color: var(--vis-dark-graph-link-label-fill-color);
+  }
 `
 
 export const linkSupport = css`

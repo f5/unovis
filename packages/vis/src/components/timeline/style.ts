@@ -1,6 +1,10 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { css, injectGlobal } from '@emotion/css'
 
+export const root = css`
+  label: timeline-component;
+`
+
 export const global = injectGlobal`
   :root {
     --vis-timeline-row-even-fill: #fff;
@@ -15,11 +19,21 @@ export const global = injectGlobal`
     --vis-timeline-cursor: default;
     --vis-timeline-line-color: var(--vis-color-main);
     --vis-timeline-line-cap: round;
-  }
-`
 
-export const root = css`
-  label: timeline-component;
+    --vis-dark-timeline-row-even-fill: #292B34;
+    --vis-dark-timeline-row-odd-fill: #6C778C;
+    --vis-dark-timeline-scrollbar-background-color: #292B34;
+    --vis-dark-timeline-scrollbar-color: #6C778C;
+    --vis-dark-timeline-label-color: #EFF5F8;
+  }
+
+  body.theme-dark .${root} {
+    --vis-timeline-row-even-fill: var(--vis-dark-timeline-row-even-fill);
+    --vis-timeline-row-odd-fill: var(--vis-dark-timeline-row-odd-fill);
+    --vis-timeline-scrollbar-background-color: var(--vis-dark-timeline-scrollbar-background-color);
+    --vis-timeline-scrollbar-color: var(--vis-dark-timeline-scrollbar-color);
+    --vis-timeline-label-color: var(--vis-dark-timeline-label-color);
+  }
 `
 
 export const background = css`
