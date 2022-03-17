@@ -28,22 +28,24 @@ import { LeafletMapConfig, LeafletMapConfigInterface } from './config'
 import * as s from './style'
 
 // Modules
-import { setupMap, updateTopoJson, initialMapCenter, initialMapZoom } from './modules/map'
-import { createNodes, updateNodes, removeNodes, collideLabels } from './modules/node'
+import { initialMapCenter, initialMapZoom, setupMap, updateTopoJson } from './modules/map'
+import { collideLabels, createNodes, removeNodes, updateNodes } from './modules/node'
 import { createNodeSelectionRing, updateNodeSelectionRing } from './modules/selectionRing'
 import { createBackgroundNode, updateBackgroundNode } from './modules/clusterBackground'
 import {
   bBoxMerge,
-  clampZoomLevel,
-  getPointRadius,
   calculateClusterIndex,
-  geoJSONPointToScreenPoint,
-  shouldClusterExpand,
+  clampZoomLevel,
   findNodeAndClusterInPointsById,
-  getNodeRelativePosition,
+  geoJSONPointToScreenPoint,
   getClusterRadius,
   getClustersAndPoints,
+  getNodeRelativePosition,
+  getPointRadius,
+  shouldClusterExpand,
 } from './modules/utils'
+import { TangramScene } from './renderer/map-style'
+import { Style } from 'maplibre-gl'
 
 export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
   static selectors = s
@@ -76,6 +78,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
   private _firstRender = true
   private _renderDataAnimationFrame: number
   private resizeObserver: ResizeObserver
+  private themeObserver: MutationObserver
   readonly _leafletInitializationPromise: Promise<L.Map>
 
   events = {
@@ -144,6 +147,9 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
           .call(createNodeSelectionRing)
 
         this._map.leaflet.setView(initialMapCenter, initialMapZoom)
+        if (document.body.classList.contains('theme-dark') && config.rendererSettingsDarkTheme) {
+          this.setTheme(config.rendererSettingsDarkTheme)
+        }
         if (data) this.setData(data)
         this.config.onMapInitialized?.()
         resolve(this._map.leaflet)
@@ -155,6 +161,21 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
       this._map?.leaflet?.invalidateSize()
     })
     this.resizeObserver.observe(container)
+
+    // If dark theme is enabled, update map's style when document body's class list changes
+    if (this.config.rendererSettingsDarkTheme) {
+      this.themeObserver = new MutationObserver((mutations) => {
+        mutations.forEach(change => {
+          if (change.attributeName === 'class') {
+            this.setTheme((change.target as HTMLElement).classList.contains('theme-dark')
+              ? this.config.rendererSettingsDarkTheme
+              : this.config.rendererSettings
+            )
+          }
+        })
+      })
+      this.themeObserver.observe(document.body, { attributes: true })
+    }
   }
 
   setConfig (config: LeafletMapConfigInterface<Datum>): void {
@@ -195,6 +216,16 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     this._leafletInitializationPromise.then(() => {
       this.render()
     })
+  }
+
+  setTheme (theme: TangramScene | Style): void {
+    const { config } = this
+    const layer = this._map.layer as any // Using any because the typings are not full
+    if (config.renderer === LeafletMapRenderer.Tangram) {
+      layer.scene.load(theme)
+    } else {
+      layer.getMaplibreMap().setStyle(theme)
+    }
   }
 
   // We redefine the ComponentCore render function to bind event to newly created elements in this._renderData(),
@@ -677,5 +708,6 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     map?.remove()
     this.g.remove()
     this.resizeObserver.disconnect()
+    this.themeObserver?.disconnect()
   }
 }

@@ -33,6 +33,8 @@ export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterfa
   tangramRenderer?: any;
   /** Tangram Scene or Mapbox Style settings. Default: `undefined` */
   rendererSettings: TangramScene | Style;
+  /** Tangram Scene or Mapbox Style settings for dark theme. Default: `undefined` */
+  rendererSettingsDarkTheme?: TangramScene | Style;
   /** Tile server access token or API key. Default: `''` */
   accessToken?: string;
   /** Array of attribution labels. Default: `['<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a>']` */
@@ -141,6 +143,7 @@ export class LeafletMapConfig<Datum> extends ComponentConfig implements LeafletM
   tangramRenderer = undefined
   accessToken = ''
   rendererSettings = undefined
+  rendererSettingsDarkTheme = undefined
 
   // Map events
   onMapInitialized = undefined
