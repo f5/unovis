@@ -4,6 +4,7 @@
   flex-direction: column;
   height: 80%;
   width: 99%;
+  padding-top: 40px;
 }
 
 .chartLegend {

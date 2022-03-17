@@ -10,7 +10,7 @@ import { Component, ViewEncapsulation, AfterViewInit } from '@angular/core'
 import { LeafletMap, LeafletMapConfigInterface, WorldMap110mAlphaTopoJSON, Tooltip, LeafletMapRenderer } from '@volterra/vis'
 
 // Configuration
-import tilesConfig from '../map/tiles-config.json'
+import { lightTheme, darkTheme } from '../map/config'
 
 type MapPoint = {
   id: string;
@@ -57,7 +57,8 @@ function getTopo (): Topology {
 function getMapConfig (): LeafletMapConfigInterface<MapPoint> {
   return {
     renderer: LeafletMapRenderer.MapLibreGL,
-    rendererSettings: tilesConfig as Style,
+    rendererSettings: lightTheme as Style,
+    rendererSettingsDarkTheme: darkTheme as Style,
     attribution: [
       '<a href="https://www.maptiler.com/copyright/" target="_blank">MapTiler</a>',
     ],

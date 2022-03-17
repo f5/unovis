@@ -7,7 +7,7 @@ import { LeafletMap, LeafletMapConfigInterface, LeafletMapRenderer, Position, To
 import { MapLeafletComponent } from '../../app/components/map-leaflet/map-leaflet.component'
 
 // Configuration
-import tilesConfig from './tiles-config.json'
+import { lightTheme, darkTheme } from './config'
 
 // Data
 import earthquakes from './data/earthquakes100.geo.json'
@@ -65,7 +65,9 @@ export class MapComponent {
 
   config: LeafletMapConfigInterface<MapPoint> = {
     renderer: LeafletMapRenderer.MapLibreGL,
-    rendererSettings: tilesConfig as Style,
+    rendererSettings: lightTheme as Style,
+    rendererSettingsDarkTheme: darkTheme as Style,
+    accessToken: '47ljKON5THuaUEQRubntaw',
     valuesMap: {
       healthy: { color: '#47e845' },
       warning: { color: '#ffc226' },

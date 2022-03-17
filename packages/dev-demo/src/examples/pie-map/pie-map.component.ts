@@ -7,7 +7,7 @@ import { LeafletMap, LeafletMapConfigInterface, LeafletMapRenderer } from '@volt
 import { MapLeafletComponent } from '../../app/components/map-leaflet/map-leaflet.component'
 
 // Configuration
-import tilesConfig from '../map/tiles-config.json'
+import { lightTheme, darkTheme } from '../map/config'
 
 // Data
 import sites from './data/sites.json'
@@ -41,7 +41,8 @@ export class PieMapComponent {
 
   config: LeafletMapConfigInterface<SitePoint> = {
     renderer: LeafletMapRenderer.MapLibreGL,
-    rendererSettings: tilesConfig as Style,
+    rendererSettings: lightTheme as Style,
+    rendererSettingsDarkTheme: darkTheme as Style,
     pointRadius: d => {
       return clamp(7 + 10 * Math.sqrt((d.normal + d.blocked) / this.grandAvg), 6, 25)
     },

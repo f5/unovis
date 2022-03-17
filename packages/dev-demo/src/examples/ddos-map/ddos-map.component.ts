@@ -7,7 +7,7 @@ import { LeafletFlowMap, LeafletFlowMapConfigInterface, LeafletMapRenderer, Posi
 import { MapLeafletComponent } from '../../app/components/map-leaflet/map-leaflet.component'
 
 // Configuration
-import tilesConfig from '../map/tiles-config.json'
+import { lightTheme, darkTheme } from '../map/config'
 
 // Data
 import sites from './data/sites.json'
@@ -73,7 +73,8 @@ export class DDoSMapComponent implements AfterViewInit {
       },
     },
     renderer: LeafletMapRenderer.MapLibreGL,
-    rendererSettings: tilesConfig as Style,
+    rendererSettings: lightTheme as Style,
+    rendererSettingsDarkTheme: darkTheme as Style,
     // eslint-disable-next-line no-console
     onSourcePointClick: (f, x, y) => { console.log('onSourcePointClick', f, x, y) },
     onSourcePointMouseEnter: (f, x, y) => {

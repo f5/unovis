@@ -16,9 +16,10 @@
   position: absolute;
   left: 200px;
   right: 0;
-  top: 0px;
+  top: 0;
   bottom: 0px;
   overflow-x: visible;
+  width: calc(100% - 200px);
 }
 
 .sidebar {
@@ -91,7 +92,6 @@ a {
       transform: translateX(15px);
     }
   }
-
   .slider {
     cursor: pointer;
     pointer-events: all;
@@ -101,7 +101,6 @@ a {
     top: 18px;
     border-radius: 5px;
     background-color: #8a8d95;
-
     &::after {
       position: absolute;
       content: '';

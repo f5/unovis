@@ -21,9 +21,7 @@ export class ConcentricGraphComponent implements AfterViewInit {
     nodeIcon: d => d.label,
     nodeLabel: d => d.label,
     nodeGroup: d => d.group,
-    nodeFill: '#EEE',
-
-    linkStroke: '#EEE',
+    nodeBorderWidth: 1,
     linkWidth: 1,
   })
 
