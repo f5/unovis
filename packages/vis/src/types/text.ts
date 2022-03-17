@@ -14,7 +14,7 @@ export enum VerticalAlign {
 
 export enum FitMode {
   Wrap = 'wrap',
-  Trim = 'Trim',
+  Trim = 'trim',
 }
 
 export enum WrapMode {
