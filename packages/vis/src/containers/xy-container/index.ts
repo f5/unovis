@@ -230,13 +230,14 @@ export class XYContainer<Datum> extends ContainerCore {
       const yStackedAccessors = this.components.filter(c => c.stacked).map(c => c.config.y)
       // eslint-disable-next-line dot-notation
       const baselineAccessor = this.components.find(c => c.config['baseline'])?.config['baseline']
-      const hasConfig = crosshair.config.x || crosshair.config.y || crosshair.config.yStacked
-      if (!hasConfig) {
-        crosshair.config.x = this.components[0]?.config.x
-        crosshair.config.y = flatten(yAccessors)
-        crosshair.config.yStacked = flatten(yStackedAccessors)
+
+      crosshair.accessors = {
+        x: this.components[0]?.config.x,
+        y: flatten(yAccessors),
+        yStacked: flatten(yStackedAccessors),
+        baseline: baselineAccessor,
       }
-      crosshair.config.baseline = crosshair.config.baseline || baselineAccessor || null
+
       crosshair.g.attr('transform', `translate(${margin.left},${margin.top})`)
       crosshair.hide()
     }

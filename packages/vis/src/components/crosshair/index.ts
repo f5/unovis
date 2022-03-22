@@ -12,11 +12,10 @@ import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
 
 // Types
-import { NumericAccessor } from 'types/accessor'
 import { PositionStrategy } from 'types/position'
 
 // Local Types
-import { CrosshairCircle } from './types'
+import { CrosshairAccessors, CrosshairCircle } from './types'
 
 // Config
 import { CrosshairConfig, CrosshairConfigInterface } from './config'
@@ -35,9 +34,31 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
   show = false
   private _animFrameId: number = null
 
-  /** Tooltip component to be used by Crosshair if not provided by the config. This field is supposed to be set
-   * externally by a container component like XYContainer. */
+  /** Tooltip component to be used by Crosshair if not provided by the config.
+   * This property is supposed to be set externally by a container component like XYContainer. */
   public tooltip: Tooltip
+
+  /** Accessors passed externally (e.g. from XYContainer) */
+  private _accessors: CrosshairAccessors<Datum> = {
+    x: undefined,
+    y: undefined,
+    yStacked: undefined,
+    baseline: undefined,
+  }
+
+  public set accessors (accessors: CrosshairAccessors<Datum>) { this._accessors = accessors }
+  public get accessors (): CrosshairAccessors<Datum> {
+    const { config } = this
+
+    const hasConfig = !!(config.x || config.y || config.yStacked)
+    const x = hasConfig ? config.x : this._accessors.x
+    const yAcc = hasConfig ? config.y : this._accessors.y
+    const y = yAcc ? (isArray(yAcc) ? yAcc : [yAcc]) : undefined
+    const yStacked = hasConfig ? config.yStacked : this._accessors.yStacked
+    const baseline = config.baseline ?? this._accessors.baseline
+
+    return { x, y, yStacked, baseline }
+  }
 
   constructor (config?: CrosshairConfigInterface<Datum>) {
     super()
@@ -48,7 +69,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
       .attr('class', s.line)
   }
 
-  setContainer (containerSvg: Selection<SVGSVGElement, any, any, any>): void {
+  setContainer (containerSvg: Selection<SVGSVGElement, unknown, SVGSVGElement, unknown>): void {
     // Set up mousemove event for Crosshair
     this.container = containerSvg
     this.container.on('mousemove.crosshair', this._onMouseMove.bind(this))
@@ -98,19 +119,19 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
 
   _onMouseMove (event: MouseEvent): void {
     const { config, datamodel, element } = this
-    if (!config.x && datamodel.data?.length) console.warn('Crosshair: X accessor function has not been configured. Please check if it\'s present in the configuration object')
+    if (!this.accessors.x && datamodel.data?.length) console.warn('Crosshair: X accessor function has not been configured. Please check if it\'s present in the configuration object')
     const [x] = pointer(event, element)
     const xRange = this.xScale.range()
 
     if (config.snapToData) {
-      if (!config.y && !config.yStacked && datamodel.data?.length) console.warn('Crosshair: Y accessors have not been configured. Please check if they\'re present in the configuration object')
+      if (!this.accessors.y && !this.accessors.yStacked && datamodel.data?.length) console.warn('Crosshair: Y accessors have not been configured. Please check if they\'re present in the configuration object')
       const scaleX = this.xScale
       const valueX = scaleX.invert(x) as number
 
-      this.datum = getNearest(datamodel.data, valueX, config.x)
+      this.datum = getNearest(datamodel.data, valueX, this.accessors.x)
       if (!this.datum) return
 
-      this.x = clamp(Math.round(scaleX(getNumber(this.datum, config.x))), 0, this._width)
+      this.x = clamp(Math.round(scaleX(getNumber(this.datum, this.accessors.x))), 0, this._width)
 
       // Show the crosshair only if it's in the chart range and not far from mouse pointer (if configured)
       this.show = (this.x >= 0) && (this.x <= this._width) && (!config.hideWhenFarFromPointer || (Math.abs(this.x - x) < config.hideWhenFarFromPointerDistance))
@@ -166,9 +187,9 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
     if (isFunction(config.getCircles)) return config.getCircles(this.xScale.invert(this.x), data)
 
     if (config.snapToData && this.datum) {
-      const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
-      const yStackedAccessors = config.yStacked ?? []
-      const baselineValue = getNumber(this.datum, config.baseline) || 0
+      const yAccessors = this.accessors.y ?? []
+      const yStackedAccessors = this.accessors.yStacked ?? []
+      const baselineValue = getNumber(this.datum, this.accessors.baseline) || 0
       const stackedValues: CrosshairCircle[] = getStackedValues(this.datum, ...yStackedAccessors)
         .map((value, index, arr) => ({
           y: this.yScale(value + baselineValue),
