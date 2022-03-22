@@ -57,10 +57,12 @@ export type LeafletMapPoint<D> = {
   radius: number;
   path: string;
   fill: string;
-  index: Supercluster<D, Supercluster.AnyProps>;
   id: number | string;
   properties: LeafletMapPointDatum<D>;
   donutData: LeafletMapPieDatum[];
+  isCluster: boolean;
+  clusterIndex: Supercluster<D, Supercluster.AnyProps>;
+  clusterPoints?: D[];
   _zIndex: number;
 }
 

@@ -15,10 +15,11 @@ import { MapDataModel } from 'data-models/map'
 import { ComponentType } from 'types/component'
 
 // Utils
-import { clamp, isNil, find, getNumber } from 'utils/data'
+import { clamp, isNil, find, getNumber, getString } from 'utils/data'
 import { constraintMapViewThrottled } from './renderer/mapboxgl-utils'
 
-import { LeafletMapRenderer, LeafletMapPoint, Bounds, MapZoomState, LeafletMapPointDatum } from './types'
+// Local Types
+import { Bounds, LeafletMapPoint, LeafletMapPointDatum, LeafletMapRenderer, MapZoomState, PointExpandedClusterProperties } from './types'
 
 // Config
 import { LeafletMapConfig, LeafletMapConfigInterface } from './config'
@@ -55,7 +56,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
   public _onMapMoveEndInternal: (leaflet: L.Map) => void // Internal callback needed by Leaflet Flow Map
   private _map: { leaflet: L.Map; layer: L.Layer; svgOverlay: Selection<SVGElement, any, HTMLElement, any>; svgGroup: Selection<SVGGElement, any, SVGElement, any> }
   private _clusterIndex: Supercluster<Datum>
-  private _expandedCluster: { points: ClusterFeature<LeafletMapPointDatum<Datum>>[]; cluster: LeafletMapPoint<Datum> } = null
+  private _expandedCluster: { points: PointFeature<PointExpandedClusterProperties<Datum>>[]; cluster: LeafletMapPoint<Datum> } = null
   private _cancelBackgroundClick = false
   private _hasBeenMoved = false
   private _hasBeenZoomed = false
@@ -161,9 +162,10 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
 
     if (this._map) {
       if (this.config.topoJSONLayer?.sources && this.config.renderer === LeafletMapRenderer.Tangram) {
-        console.warn('TopoJSON layer render does not supported with Tangram renderer')
+        console.warn('TopoJSON layer render is not supported with Tangram renderer')
       } else {
-        const mapboxMap = (this._map.layer as any).getMaplibreMap()
+        const layer = this._map.layer as any // Using any because the typings are not full
+        const mapboxMap = layer.getMaplibreMap()
         if (mapboxMap.isStyleLoaded()) updateTopoJson(mapboxMap, this.config)
       }
     }
@@ -174,7 +176,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     }
   }
 
-  setData (data): void {
+  setData (data: Datum[]): void {
     const { config, datamodel } = this
 
     const dataValid = data.filter(d => {
@@ -253,7 +255,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
 
     this._selectedPoint = foundPoint
 
-    const isPointInsideExpandedCluster = this._expandedCluster?.points?.find(d => d.properties.id === id)
+    const isPointInsideExpandedCluster = this._expandedCluster?.points?.find(d => getString(d.properties, config.pointId) === id)
     if (!isPointInsideExpandedCluster) this._resetExpandedCluster()
 
     if (centerPoint) {
@@ -287,7 +289,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
       return
     }
     const dataBoundsAll = datamodel.getDataLatLngBounds(config.pointLatitude, config.pointLongitude)
-    const bounds = [dataBoundsAll[0][1], dataBoundsAll[1][0], dataBoundsAll[1][1], dataBoundsAll[0][0]]
+    const bounds: [number, number, number, number] = [dataBoundsAll[0][1], dataBoundsAll[1][0], dataBoundsAll[1][1], dataBoundsAll[0][0]]
     const pointDataAll = this._getPointData(bounds)
 
     let foundPoint = pointDataAll.find((d: LeafletMapPoint<Datum>) => d.properties.id === id)
@@ -306,7 +308,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
 
     if (foundPoint) {
       // If point was found and it's inside an expanded cluster -> simply select it
-      const isPointInsideExpandedCluster = this._expandedCluster?.points?.find(d => d.properties.id === id)
+      const isPointInsideExpandedCluster = this._expandedCluster?.points?.find(d => getString(d.properties, config.pointId) === id)
       if (isPointInsideExpandedCluster && selectNode) {
         this._selectedPoint = foundPoint
         this._renderData()
@@ -332,7 +334,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     }
   }
 
-  public getNodeRelativePosition (node): { x: number; y: number } {
+  public getNodeRelativePosition (node: LeafletMapPoint<Datum>): { x: number; y: number } {
     return getNodeRelativePosition(node, this._map.leaflet)
   }
 
@@ -447,7 +449,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     }
   }
 
-  private _expandCluster (clusterPoint): void {
+  private _expandCluster (clusterPoint: LeafletMapPoint<Datum>): void {
     const { config, config: { clusterBackground } } = this
     const padding = 1
 
@@ -455,8 +457,13 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
 
     this._forceExpandCluster = false
     if (clusterPoint) {
-      const points: ClusterFeature<LeafletMapPointDatum<Datum>>[] = clusterPoint.index.getLeaves(clusterPoint.properties.cluster_id, Infinity)
-      const packPoints = points.map(p => ({ x: null, y: null, r: getPointRadius(p, config.pointRadius, this._map.leaflet.getZoom()) + padding }))
+      const points: PointFeature<PointExpandedClusterProperties<Datum>>[] =
+        clusterPoint.clusterIndex.getLeaves(clusterPoint.properties.cluster_id as number, Infinity)
+      const packPoints: {x: number; y: number; r: number }[] = points.map(p => ({
+        x: null,
+        y: null,
+        r: getPointRadius(p, config.pointRadius, this._map.leaflet.getZoom()) + padding,
+      }))
       packSiblings(packPoints)
 
       points.forEach((p, i) => {
@@ -485,23 +492,25 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     this._expandedCluster = null
   }
 
-  private _getPointData (customBounds?): LeafletMapPoint<Datum>[] {
+  private _getPointData (customBounds?: [number, number, number, number]): LeafletMapPoint<Datum>[] {
     const { config, datamodel: { data } } = this
     const { pointRadius, pointColor, pointShape, pointId, valuesMap } = config
 
     if (!data || !this._clusterIndex) return []
 
-    let geoJSONPoints = getClustersAndPoints<Datum>(this._clusterIndex, this._map.leaflet, customBounds)
+    let geoJSONPoints: (ClusterFeature<Datum> | PointFeature<PointExpandedClusterProperties<Datum>>)[] =
+      getClustersAndPoints<Datum>(this._clusterIndex, this._map.leaflet, customBounds)
 
     if (this._expandedCluster) {
       // Remove expanded cluster from the data
-      geoJSONPoints = geoJSONPoints.filter(c => c.properties.cluster_id !== this._expandedCluster.cluster.properties.cluster_id)
+      geoJSONPoints = geoJSONPoints.filter(c => (c as ClusterFeature<Datum>).properties.cluster_id !== this._expandedCluster.cluster.properties.cluster_id)
       // Add points from the expanded cluster
       geoJSONPoints = geoJSONPoints.concat(this._expandedCluster.points)
     }
 
     const pointData = geoJSONPoints
-      .map((d: PointFeature<any>) => geoJSONPointToScreenPoint(d, this._map.leaflet, pointRadius, pointColor, pointShape, pointId, valuesMap))
+      // Todo: Remove explicitly set ClusterFeature<LeafletMapPointDatum<Datum>> type
+      .map((d: ClusterFeature<LeafletMapPointDatum<Datum>>) => geoJSONPointToScreenPoint(d, this._map.leaflet, pointRadius, pointColor, pointShape, pointId, valuesMap))
       // .sort((a, b) => getPointDisplayOrder(a, config.pointStatus, config.valuesMap) - getPointDisplayOrder(b, config.pointStatus, config.valuesMap))
 
     return pointData

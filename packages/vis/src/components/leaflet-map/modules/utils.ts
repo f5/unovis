@@ -57,14 +57,17 @@ export function projectPoint (geoJSONPoint, leafletMap: L.Map): { x: number; y: 
   return projected
 }
 
-export function getPointRadius<D> (geoPoint: ClusterFeature<D>, pointRadius: NumericAccessor<D>, zoomLevel: number): number {
-  const isCluster = geoPoint.properties.cluster
+export function getPointRadius<D> (
+  geoPoint: ClusterFeature<D> | PointFeature<D>,
+  pointRadius: NumericAccessor<D>,
+  zoomLevel: number
+): number {
   const isDynamic = !pointRadius
-
   const radius = isDynamic ? 1 + 2 * Math.pow(zoomLevel, 0.80) : getNumber(geoPoint.properties, pointRadius)
 
+  const isCluster = (geoPoint as ClusterFeature<D>).properties.cluster
   return (isCluster && isDynamic)
-    ? clamp(Math.pow(geoPoint.properties.point_count, 0.35) * radius, radius * 1.1, radius * 3)
+    ? clamp(Math.pow((geoPoint as ClusterFeature<D>).properties.point_count, 0.35) * radius, radius * 1.1, radius * 3)
     : radius
 }
 
@@ -152,7 +155,7 @@ export function getDonutData<D> (d: LeafletMapPointDatum<D>, valuesMap: LeafletM
 }
 
 export function geoJSONPointToScreenPoint<D> (
-  geoPoint: ClusterFeature<LeafletMapPointDatum<D>>,
+  geoPoint: ClusterFeature<LeafletMapPointDatum<D>>, // Todo: Add | PointFeature<PointExpandedClusterProperties<D>>,
   leafletMap: L.Map,
   pointRadius: NumericAccessor<D>,
   pointColor: ColorAccessor<D>,
@@ -172,6 +175,7 @@ export function geoJSONPointToScreenPoint<D> (
   const maxValueIndex = donutData.map(d => d.value).indexOf(maxValue)
   const biggestDatum = donutData[maxValueIndex ?? 0]
   const pointFillColor = !isCluster ? (color ?? biggestDatum?.color) : null
+  const clusterIndex = geoPoint.properties.clusterIndex
 
   const screenPoint: LeafletMapPoint<D> = {
     ...geoPoint,
@@ -186,7 +190,9 @@ export function geoJSONPointToScreenPoint<D> (
     donutData,
     path: getNodePathData({ x: 0, y: 0 }, radius, shape),
     fill: pointFillColor,
-    index: geoPoint.properties.clusterIndex,
+    isCluster,
+    clusterIndex,
+    clusterPoints: isCluster ? clusterIndex.getLeaves(geoPoint.properties.cluster_id as number, Infinity).map(d => d.properties) : undefined,
     _zIndex: 0,
   }
 
@@ -196,7 +202,7 @@ export function geoJSONPointToScreenPoint<D> (
 export function shouldClusterExpand<D> (cluster: LeafletMapPoint<D>, zoomLevel: number, midLevel = 4, maxLevel = 11, maxClusterZoomLevel = 23): boolean {
   if (!cluster) return false
 
-  const clusterExpansionZoomLevel: number = cluster.index.getClusterExpansionZoom(cluster.id as number)
+  const clusterExpansionZoomLevel: number = cluster.clusterIndex.getClusterExpansionZoom(cluster.id as number)
   return clusterExpansionZoomLevel >= maxClusterZoomLevel ||
     zoomLevel >= maxLevel ||
     (zoomLevel >= midLevel && cluster && cluster.properties.point_count < 20)
@@ -206,9 +212,9 @@ export function findNodeAndClusterInPointsById<D> (points: LeafletMapPoint<D>[],
   let node = null
   let cluster = null
   points.forEach(point => {
-    if (point.properties.cluster) {
-      const leaves = point.index.getLeaves(point.properties.cluster_id as number, Infinity)
-      const foundNode = leaves.find(d => getString(d.properties, pointId) === id)
+    if (point.isCluster) {
+      const leaves = point.clusterPoints ?? []
+      const foundNode = leaves.find(d => getString(d, pointId) === id)
       if (foundNode) {
         node = foundNode
         cluster = point
@@ -218,7 +224,7 @@ export function findNodeAndClusterInPointsById<D> (points: LeafletMapPoint<D>[],
   return { node, cluster }
 }
 
-export function getNodeRelativePosition (d, leafletMap: L.Map): { x: number; y: number } {
+export function getNodeRelativePosition<D> (d: LeafletMapPoint<D>, leafletMap: L.Map): { x: number; y: number } {
   const paneTransform = getHTMLTransform(leafletMap.getPane('mapPane'))
   const { x, y } = getPointPos(d, leafletMap)
   return { x: x + paneTransform[0], y: y + paneTransform[1] }
@@ -233,7 +239,11 @@ export function getClusterRadius<D> (cluster: { points: PointFeature<PointExpand
   return Math.sqrt((maxX - minX) ** 2 + (maxY - minY) ** 2) * 0.5
 }
 
-export function getClustersAndPoints<D> (clusterIndex: Supercluster<D>, leafletMap: L.Map, customBounds?): ClusterFeature<LeafletMapPointDatum<D>>[] {
+export function getClustersAndPoints<D> (
+  clusterIndex: Supercluster<D>,
+  leafletMap: L.Map,
+  customBounds?: [number, number, number, number]
+): ClusterFeature<D>[] {
   const leafletBounds = leafletMap.getBounds()
   const southWest = leafletBounds.getSouthWest()
   const northEast = leafletBounds.getNorthEast()
