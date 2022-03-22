@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import React, { PropsWithChildren, ReactChild, ReactChildren, ReactElement, ReactNode } from 'react'
+import React from 'react'
 import BrowserOnly from '@docusaurus/BrowserOnly'
 import { XYComponentConfigInterface } from '@volterra/vis'
 

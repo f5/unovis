@@ -18,7 +18,6 @@ export type DocCompositeProps = {
 export const XYCompositeDoc = ({
   containerProps, componentProps, data,
 }: DocCompositeProps): JSX.Element => {
-    console.log(containerProps)
   return (
     <BrowserOnly fallback={<div>Loading...</div>}>
       {() => {
