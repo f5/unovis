@@ -203,7 +203,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
           return {
             y: this.yScale(value),
             opacity: value ? 1 : 0,
-            color: getColor(this.datum, config.color, index),
+            color: getColor(this.datum, config.color, stackedValues.length + index),
           }
         })
 
