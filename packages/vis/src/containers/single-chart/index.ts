@@ -33,8 +33,11 @@ export class SingleChart<Datum> extends ContainerCore {
   }
 
   public setData (data: Datum, preventRender?: boolean): void {
+    const { config } = this
+
     if (this.component) this.component.setData(data)
     if (!preventRender) this.render()
+    config.tooltip?.hide()
   }
 
   public updateContainer (containerConfig: SingleChartConfigInterface<Datum>, preventRender?: boolean): void {
@@ -113,11 +116,17 @@ export class SingleChart<Datum> extends ContainerCore {
     if (config.tooltip) config.tooltip.update()
   }
 
+  _onResize (): void {
+    const { config } = this
+    super._onResize()
+    config.tooltip?.hide()
+  }
+
   public destroy (): void {
-    const { component, config: { tooltip } } = this
+    const { component, config } = this
     super.destroy()
 
     component?.destroy()
-    tooltip?.destroy()
+    config.tooltip?.destroy()
   }
 }
