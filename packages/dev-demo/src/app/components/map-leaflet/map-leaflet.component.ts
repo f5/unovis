@@ -60,7 +60,7 @@ export class MapLeafletComponent<PointDatum, FlowDatum = any> implements AfterVi
 
     // Set new Data without re-render
     if (changes.data) {
-      if (this.ddos) this.map.setData(this.data as FlowMapData<PointDatum, FlowDatum>)
+      if (this.ddos) (this.map as LeafletFlowMap<PointDatum, FlowDatum>).setData(this.data as FlowMapData<PointDatum, FlowDatum>)
       else (this.map as LeafletMap<PointDatum>).setData(this.data as PointDatum[])
       delete changes.data
     }
