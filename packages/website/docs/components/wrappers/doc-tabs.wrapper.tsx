@@ -11,6 +11,7 @@ export type DocTabsProps = FrameworkProps & {
 }
 /* Displays code snippets with framework tabs */
 export function XYDocTabs ({ componentStrings, contextProps, hideTabLabels, showContext }: DocTabsProps): JSX.Element {
+  console.log(contextProps)
   return (
     <Tabs groupId="framework" className={hideTabLabels ? 'hidden' : ''}>
       <TabItem value="react" label="React">
@@ -19,7 +20,7 @@ export function XYDocTabs ({ componentStrings, contextProps, hideTabLabels, show
             ? [
               'function Component(props) {',
               '  const data: DataRecord[] = props.data',
-              ...contextProps.map((p) => `  const ${p}`),
+              ...contextProps.map((p) => `  const ${p.replace(/\n/gm, '\n  ')}`),
               '  return (',
               '    <VisXYContainer data={data}>',
               `      ${componentStrings.react}`,

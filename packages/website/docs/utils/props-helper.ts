@@ -8,11 +8,11 @@ export interface FrameworkProps {
   };
   contextProps?: string[];
 }
-type PropParser = { (k: string, v: PropItem): string }
+type PropParser = { (k: string, v: any): string }
 
 const literals = ['boolean', 'number', 'string']
-const isLiteral = (prop: PropItem): boolean => literals.includes(typeof prop)
-const isString = (prop: PropItem): boolean => typeof prop === 'string'
+const isLiteral = (prop: any): boolean => literals.includes(typeof prop)
+const isString = (prop: any): boolean => typeof prop === 'string'
 
 const getReactProps: PropParser = (k, v) => [k, isString(v) ? `"${v}"` : `{${isLiteral(v) ? v : k}}`].join('=')
 const getNgProps: PropParser = (k, v) => (isString(v) ? [k, `"${v}"`] : [`[${k}]`, `"${isLiteral(v) ? v : k}"`]).join('=')
@@ -23,7 +23,7 @@ const getContextProps: PropParser = (k, v) => {
   if (k === 'y' && typeof v === 'object') {
     str = `((d: DataRecord) => number)[] = [${str.split(',').join(', ')}]`
   } else if (typeof v === 'object') {
-    str = JSON.stringify(v).replace(/\"/gi, ' ').replace('\}', ' \}').replace(/ \:/gi, ': ')
+    str = v.length ? `[${v.toString()}]` : `{\n  ${Object.keys(v).map(k => [k, v[k].toString()].join(': ')).join(',\n  ')} \n}`
   } else {
     str = str.replace('d=>', '(d: DataRecord) => ')
     str = str.replace('(d,i)=>', '(d: DataRecord, i: number) => ')
@@ -32,7 +32,7 @@ const getContextProps: PropParser = (k, v) => {
   return [k, str].join(' = ')
 }
 
-export function getPropStrings (props: Record<string, PropItem>, addToContext: boolean): FrameworkProps {
+export function getPropStrings (props: Record<string, any>, addToContext: boolean): FrameworkProps {
   const angularProps: string[] = []
   const reactProps: string[] = []
   const typescriptProps: string[] = []
@@ -79,11 +79,12 @@ function getChartConfig (name: string, key: string, value: string): string {
 export function parseProps (name: string, props: Record<string, PropItem>, addToContext: boolean, xyConfigKey: string): FrameworkProps {
   const { componentStrings, contextProps } = getPropStrings(props, addToContext)
   const tag = getHtmlTag(name)
+  const pad = (props: string): string => props.length ? ` ${props}` : ''
 
   return {
     componentStrings: {
-      angular: `<vis-${tag} ${componentStrings.angular}></vis-${tag}>`,
-      react: `<Vis${name} ${componentStrings.react}/>`,
+      angular: `<vis-${tag}${pad(componentStrings.angular)}></vis-${tag}>`,
+      react: `<Vis${name}${pad(componentStrings.react)}/>`,
       typescript: `${getChartConfig(name, xyConfigKey, componentStrings.typescript)}`,
     },
     contextProps,

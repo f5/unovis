@@ -33,7 +33,7 @@ export const ContainerTabs = (containerProps) => {
         <CodeBlock language="jsx">
           {['function Component(props) {',
           '  const data: DataRecord[] = props.data',
-           ...contextProps.map((p) => `  const ${p}`),
+           ...contextProps.map((p) => `  const ${p.replace(/\n/gm, '\n  ')}`),
           '  return (',
           `    <VisXYContainer data={data} ${componentStrings.react}>`,
           '      {/* your vis components here */}',
@@ -54,8 +54,8 @@ export const ContainerTabs = (containerProps) => {
       <TabItem value="typescript" label="TypeScript">
         <CodeBlock language="ts">
           {['const config: XYContainerConfigInterface<DataRecord> = {',
-            '  components: [/* your vis components here */]',
-            contextProps.length ? [...contextProps.map(p => `  ${p.replace(' =', ':')},`)] :
+            '  components: [/* your vis components here */],',
+            contextProps.length ? [...contextProps.map(p => `  ${p.replace(/\n/gm, "\n  ").replace(' =', ':')},`)] :
             `  ${componentStrings.typescript}`,
             '}',
             'const chart = new XYContainer(containerNode, config, data)'].join('\n')}
