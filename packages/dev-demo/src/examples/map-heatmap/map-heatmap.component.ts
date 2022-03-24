@@ -1,7 +1,7 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import _ from 'lodash'
 import { Feature } from 'geojson'
-import { Style } from 'maplibre-gl'
+import { StyleSpecification } from 'maplibre-gl'
 // eslint-disable-next-line import/no-unresolved
 import { Topology } from 'topojson-specification'
 
@@ -57,8 +57,8 @@ function getTopo (): Topology {
 function getMapConfig (): LeafletMapConfigInterface<MapPoint> {
   return {
     renderer: LeafletMapRenderer.MapLibreGL,
-    rendererSettings: lightTheme as Style,
-    rendererSettingsDarkTheme: darkTheme as Style,
+    rendererSettings: lightTheme as StyleSpecification,
+    rendererSettingsDarkTheme: darkTheme as StyleSpecification,
     attribution: [
       '<a href="https://www.maptiler.com/copyright/" target="_blank">MapTiler</a>',
     ],

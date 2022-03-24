@@ -1,7 +1,7 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import clamp from 'lodash/clamp'
 import mean from 'lodash/mean'
-import { Style } from 'maplibre-gl'
+import { StyleSpecification } from 'maplibre-gl'
 import { Component, ViewEncapsulation, ViewChild } from '@angular/core'
 import { LeafletMap, LeafletMapConfigInterface, LeafletMapRenderer } from '@volterra/vis'
 import { MapLeafletComponent } from '../../app/components/map-leaflet/map-leaflet.component'
@@ -41,8 +41,8 @@ export class PieMapComponent {
 
   config: LeafletMapConfigInterface<SitePoint> = {
     renderer: LeafletMapRenderer.MapLibreGL,
-    rendererSettings: lightTheme as Style,
-    rendererSettingsDarkTheme: darkTheme as Style,
+    rendererSettings: lightTheme as StyleSpecification,
+    rendererSettingsDarkTheme: darkTheme as StyleSpecification,
     pointRadius: d => {
       return clamp(7 + 10 * Math.sqrt((d.normal + d.blocked) / this.grandAvg), 6, 25)
     },
