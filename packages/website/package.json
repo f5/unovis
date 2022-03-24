@@ -1,6 +1,6 @@
 {
   "name": "@volterra/vis-website",
-  "version": "0.9.21",
+  "version": "0.0.0",
   "private": true,
   "scripts": {
     "docusaurus": "docusaurus",
