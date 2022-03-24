@@ -2,7 +2,7 @@
 import { AfterViewInit, Component, ViewChild, ViewEncapsulation } from '@angular/core'
 import _sample from 'lodash/sample'
 import _flatten from 'lodash/flatten'
-import { Style } from 'maplibre-gl'
+import { StyleSpecification } from 'maplibre-gl'
 import { LeafletFlowMap, LeafletFlowMapConfigInterface, LeafletMapRenderer, Position, PositionStrategy, Tooltip } from '@volterra/vis'
 import { MapLeafletComponent } from '../../app/components/map-leaflet/map-leaflet.component'
 
@@ -73,8 +73,8 @@ export class DDoSMapComponent implements AfterViewInit {
       },
     },
     renderer: LeafletMapRenderer.MapLibreGL,
-    rendererSettings: lightTheme as Style,
-    rendererSettingsDarkTheme: darkTheme as Style,
+    rendererSettings: lightTheme as StyleSpecification,
+    rendererSettingsDarkTheme: darkTheme as StyleSpecification,
     // eslint-disable-next-line no-console
     onSourcePointClick: (f, x, y) => { console.log('onSourcePointClick', f, x, y) },
     onSourcePointMouseEnter: (f, x, y) => {

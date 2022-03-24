@@ -1,5 +1,7 @@
 echo "Building @volterra/vis"
 npm run build:lib
+npm run build:vis-angular-lib
+npm run build:vis-react-lib
 
 echo "Updating licenses"
 npm run gather-licenses

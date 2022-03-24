@@ -48,7 +48,7 @@
     "graphlibrary": "^2.2.0",
     "leaflet": "^1.7.1",
     "lodash": "^4.17.21",
-    "maplibre-gl": "^1.15.2",
+    "maplibre-gl": "^2.1.7",
     "supercluster": "^7.1.4",
     "tangram": "^0.21.1",
     "three": "^0.135.0",

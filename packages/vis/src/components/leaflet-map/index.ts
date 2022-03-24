@@ -4,6 +4,7 @@ import { packSiblings } from 'd3-hierarchy'
 import L from 'leaflet'
 import Supercluster, { ClusterFeature, PointFeature } from 'supercluster'
 import { ResizeObserver } from '@juggle/resize-observer'
+import { StyleSpecification } from 'maplibre-gl'
 
 // Core
 import { ComponentCore } from 'core/component'
@@ -45,7 +46,6 @@ import {
   shouldClusterExpand,
 } from './modules/utils'
 import { TangramScene } from './renderer/map-style'
-import { Style } from 'maplibre-gl'
 
 export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
   static selectors = s
@@ -218,7 +218,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     })
   }
 
-  setTheme (theme: TangramScene | Style): void {
+  setTheme (theme: TangramScene | StyleSpecification): void {
     const { config } = this
     const layer = this._map.layer as any // Using any because the typings are not full
     if (config.renderer === LeafletMapRenderer.Tangram) {
