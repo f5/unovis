@@ -1,5 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { Style } from 'maplibre-gl'
+import { StyleSpecification } from 'maplibre-gl'
 import { merge } from 'utils/data'
 
 import tangramBaseSettings from './tangram/tangram-settings.json'
@@ -17,5 +17,5 @@ export type TangramScene = {
 export const TangramArcticDark: TangramScene = merge(tangramBaseSettings, tangramDarkTheme)
 export const TangramArcticLight: TangramScene = merge(tangramBaseSettings, tangramLightTheme)
 
-export const MapLibreArcticDark: Style = merge(mapLibreBaseSettings, mapLibreDarkTheme)
-export const MapLibreArcticLight: Style = merge(mapLibreBaseSettings, mapLibreLightTheme)
+export const MapLibreArcticDark: StyleSpecification = merge(mapLibreBaseSettings, mapLibreDarkTheme)
+export const MapLibreArcticLight: StyleSpecification = merge(mapLibreBaseSettings, mapLibreLightTheme)

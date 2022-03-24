@@ -15,7 +15,7 @@ geojson                        perpetual       MIT           0.5.0              
 graphlibrary                   perpetual       MIT           2.2.0              Tyler Long
 leaflet                        perpetual       BSD-2-Clause  1.7.1              n/a
 lodash                         perpetual       MIT           4.17.21            John-David Dalton
-maplibre-gl                    perpetual       BSD-3-Clause  1.15.2             n/a
+maplibre-gl                    perpetual       BSD-3-Clause  2.1.7              n/a
 supercluster                   perpetual       ISC           7.1.4              Vladimir Agafonkin
 tangram                        perpetual       MIT           0.21.1             Tangram contributors
 three                          perpetual       MIT           0.135.0            mrdoob

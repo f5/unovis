@@ -1,6 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import L from 'leaflet'
-import mapLibreGL from 'maplibre-gl'
 import '@maplibre/maplibre-gl-leaflet/leaflet-maplibre-gl'
 
 import { injectGlobal } from '@emotion/css'
@@ -13,9 +12,6 @@ import mapboxglCSS from 'maplibre-gl/dist/maplibre-gl.css'
 import { LeafletMapConfig } from '../config'
 
 injectGlobal(mapboxglCSS)
-
-// Setting mapbox-gl baseApiUrl to null to avoid sending events to events.mapbox.com
-mapLibreGL.baseApiUrl = null
 
 export function getMapboxglLayer<Datum> (config: LeafletMapConfig<Datum>): unknown {
   const { accessToken, rendererSettings } = config
