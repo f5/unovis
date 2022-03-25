@@ -40,8 +40,12 @@
 
 .block-header {
   padding: 16px 8px;
-  color: #5242aa;
+  color: #333;
   font-size: 12pt;
+}
+
+::ng-deep body.theme-dark .block-header {
+  color: #eee;
 }
 
 a {
@@ -58,19 +62,18 @@ a {
 
 .logo {
   padding: 8px 5px;
-
-  .alpha {
-    margin-left: 5px;
-    color: #5242aa;
-    vertical-align: top;
-    font-weight: 500;
-    font-size: 8pt;
-  }
 }
 
 .logo-image {
-  width: 120px;
+  background-color: #333;
+  mask: url(../assets/images/unovis-logo.svg) no-repeat left center;
+  height: 25px;
 }
+
+::ng-deep body.theme-dark .logo-image {
+  background-color: #eee;
+}
+
 
 .theme-label {
   margin-right: 10px;
