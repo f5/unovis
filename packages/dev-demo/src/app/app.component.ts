@@ -8,7 +8,7 @@ import { Component } from '@angular/core'
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  title = 'volterra-vis'
+  title = 'Unovis'
   get darkmode (): boolean {
     return document.body.classList.contains('theme-dark')
   }
