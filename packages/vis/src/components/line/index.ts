@@ -93,8 +93,9 @@ export class Line<Datum> extends XYComponentCore<Datum> {
       .append('path')
       .attr('class', s.linePath)
       .attr('d', this._emptyPath())
-      .style('stroke', (d, i) => getColor(data, config.color, i))
-      .style('stroke-opacity', 0)
+      .attr('stroke', (d, i) => getColor(data, config.color, i))
+      .attr('stroke-opacity', 0)
+      .attr('stroke-width', config.lineWidth)
 
     linesEnter
       .append('path')
@@ -111,10 +112,10 @@ export class Line<Datum> extends XYComponentCore<Datum> {
       const isLineVisible = d.visible
       const dashArray = getValue<LineData, number[]>(d, config.lineDashArray, i)
       const transition = smartTransition(linePath, duration)
-        .style('stroke', getColor(data, config.color, i))
+        .attr('stroke', getColor(data, config.color, i))
         .attr('stroke-width', config.lineWidth)
-        .attr('stroke-dasharray', dashArray?.join(' ') ?? null)
-        .style('stroke-opacity', isLineVisible ? 1 : 0)
+        .attr('stroke-opacity', isLineVisible ? 1 : 0)
+        .style('stroke-dasharray', dashArray?.join(' ') ?? null) // We use `.style` because there's also a default CSS-variable for stroke-dasharray
 
       const hasUndefinedSegments = d.values.some(d => !d.defined)
       const svgPathD = this.lineGen(d.values) || this._emptyPath()
