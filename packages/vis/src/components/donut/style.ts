@@ -20,7 +20,6 @@ export const variables = injectGlobal`
   }
 `
 
-
 export const segment = css`
   label: segment;
 `
