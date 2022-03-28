@@ -1,7 +1,7 @@
 import { XYComponentConfigInterface } from '@volterra/vis'
 import * as React from 'react'
 import { DataRecord } from '../../utils/data'
-import { parseProps } from '../../utils/props-helper'
+import { parseProps, parseXYConfig } from '../../utils/props-helper'
 import { ComponentProps, XYCompositeDoc } from './composite-wrapper'
 import { DocGraphProps } from './doc-vis.wraper'
 import { XYDocTabs, DocTabsProps } from './doc-tabs.wrapper'
@@ -13,7 +13,7 @@ export type XYWrapperProps = {
   excludeTabs: boolean;
   excludeGraph: boolean;
   hiddenProps: Partial<XYComponentConfigInterface<DataRecord>>; // props to pass to component but exclude from doc tabs
-  xyConfigKey: string; // specify the key for the chartConfig in typescript files (default = "components")
+  xyConfigKey: string; // specify the key for the chartConfig in typescript files
 } & DocGraphProps & DocTabsProps & Record<string, /* PropItem */ any> // using `any` to avoid type-checking complains
 
 /* XYWrapper by default displays code snippet tabs and a Vis component with custom props */
@@ -31,13 +31,17 @@ export function XYWrapper ({
   componentProps,
   ...rest
 }: XYWrapperProps): JSX.Element {
-  if (!componentProps) {
-    componentProps = [{ name: name, props: { ...hiddenProps, ...rest }, key: 'components' }]
-    xyConfigKey = 'components'
+  const mainComponent = { name: name, props: rest, key: xyConfigKey || 'components' }
+  componentProps = componentProps || []
+  if (name !== 'XYContainer') {
+    componentProps = [mainComponent, ...componentProps]
   }
+  const docTabsProps = (showContext ? parseXYConfig(componentProps) : parseProps(name, rest, false, xyConfigKey))
+  mainComponent.props = { ...rest, ...hiddenProps }
+
   return (
     <>
-      {!excludeTabs && <XYDocTabs {...{ showContext, hideTabLabels, ...parseProps(name, rest, showContext, xyConfigKey) }} />}
+      {!excludeTabs && <XYDocTabs {...{ showContext, hideTabLabels, ...docTabsProps }} />}
       {!excludeGraph &&
         <XYCompositeDoc
           data={data}

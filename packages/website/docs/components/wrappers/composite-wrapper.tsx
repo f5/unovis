@@ -2,13 +2,12 @@
 import * as React from 'react'
 import BrowserOnly from '@docusaurus/BrowserOnly'
 import { XYContainerConfigInterface } from '@volterra/vis'
-
 import { DataRecord } from '../../utils/data'
 
 export type ComponentProps = {
   name: string;
   props: any;
-  key?: string;
+  key: string;
 }
 export type DocCompositeProps = {
   data: DataRecord[];

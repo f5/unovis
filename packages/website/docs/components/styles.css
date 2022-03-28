@@ -150,3 +150,8 @@ details[open=true]  ul.tabs {
   --vis-scatter-hover-stroke-width: 2;
   --vis-scatter-point-label-text-color-dark: darkblue;
 }
+
+.custom-crosshair {
+  --vis-crosshair-line-stroke: #f88080;
+  --vis-crosshair-circle-stroke: #000000;
+}
