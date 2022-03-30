@@ -101,3 +101,8 @@ pre > code {
     font-size: small;
   }
 }
+
+.custom-tooltip {
+  --vis-tooltip-background-color: #3f3f3f;
+  --vis-tooltip-text-color: #fefefe;
+}
