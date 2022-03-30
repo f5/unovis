@@ -26,7 +26,7 @@ export const variables = injectGlobal`
     --vis-dark-graph-panel-border-color: #a0a6ad;
   }
 
-  body.theme-dark .${panels} {
+  body.theme-dark ${`.${panels}`} {
     --vis-graph-panel-border-color: var(--vis-dark-graph-panel-border-color);
     --vis-graph-panel-fill-color: var(--vis-dark-graph-panel-fill-color);
     --vis-graph-panel-label-color: var(--vis-dark-graph-panel-label-color);

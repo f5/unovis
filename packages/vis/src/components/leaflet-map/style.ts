@@ -6,7 +6,6 @@ import { css, injectGlobal } from '@emotion/css'
 import leafletCSS from './leaflet.css'
 injectGlobal(leafletCSS)
 
-
 export const root = css`
   label: leaflet-map-component;
 
@@ -43,18 +42,18 @@ export const variables = injectGlobal`
     --vis-dark-map-container-background-color: #dfe5eb;
     --vis-dark-map-point-default-fill-color: #B9BEC3;
     --vis-dark-map-point-default-stroke-color: #959da3;
-  
+
     --vis-dark-map-cluster-default-fill-color: #5b5f6d;
     --vis-dark-map-cluster-default-stroke-color: #B9BEC3;
     --vis-dark-map-cluster-donut-fill-color: #959da3;
 
     --vis-dark-map-point-label-text-color-dark: #fff;
     --vis-dark-map-point-label-text-color-light: #fff;
-  
+
     --vis-dark-map-cluster-expanded-background-fill: #fff;
   }
 
-  body.theme-dark .${root} {
+  body.theme-dark ${`.${root}`} {
     --vis-map-container-background-color: var(--vis-dark-map-container-background-color);
     --vis-map-point-default-fill-color: var(--vis-dark-map-point-default-fill-color);
     --vis-map-point-default-stroke-color: var(--vis-dark-map-point-default-stroke-color);
@@ -66,7 +65,6 @@ export const variables = injectGlobal`
     --vis-map-point-label-text-color-dark: var(--vis-dark-map-point-label-text-color-dark);
     --vis-map-point-label-text-color-light: var(--vis-dark-map-point-label-text-color-light);
     --vis-map-cluster-expanded-background-fill: var(--vis-dark-map-cluster-expanded-background-fill);
-    }
   }
 `
 

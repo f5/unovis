@@ -19,7 +19,7 @@ export const global = injectGlobal`
     --vis-dark-flow-legend-link-color: #71788a;
   }
 
-  body.theme-dark .${root} {
+  body.theme-dark ${`.${root}`} {
     --vis-flow-legend-label-background: var(--vis-dark-flow-legend-label-background);
     --vis-flow-legend-label-color: var(--vis-dark-flow-legend-label-color);
     --vis-flow-legend-link-color: var(--vis-dark-flow-legend-link-color);

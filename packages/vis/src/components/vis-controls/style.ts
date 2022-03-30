@@ -17,7 +17,7 @@ export const variables = injectGlobal`
     --vis-dark-controls-button-color: #fff;
   }
 
-  body.theme-dark .${root} {
+  body.theme-dark ${`.${root}`} {
     --vis-controls-buttons-border-color: var(--vis-dark-controls.buttons-border-color);
     --vis-controls-buttons-background-color: var(--vis-dark-controls-buttons-background-color);
     --vis-controls-button-color: var(--vis-dark-controls-button-color);
