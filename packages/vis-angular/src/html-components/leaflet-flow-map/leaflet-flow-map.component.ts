@@ -244,11 +244,13 @@ export class VisLeafletFlowMapComponent<PointDatum, FlowDatum> implements Leafle
 
   ngAfterViewInit (): void {
     const config = this.getConfig()
-    this.component = new LeafletFlowMap<PointDatum, FlowDatum>(this.containerRef.nativeElement, config)
+    this.component = new LeafletFlowMap<PointDatum, FlowDatum>(this.containerRef.nativeElement, config, this.data)
   }
 
   ngOnChanges (changes: SimpleChanges): void {
-    if (changes.data) { this.component?.setData(this.data) }
+    if (changes.data) {
+      this.component?.setData(this.data)
+    }
     this.component?.setConfig(this.getConfig())
   }
 
