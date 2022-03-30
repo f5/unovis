@@ -1,10 +1,9 @@
-import { presets } from '@site/babel.config'
 import { XYComponentConfigInterface } from '@volterra/vis'
 import * as React from 'react'
 import { DataRecord } from '../../utils/data'
-import { parseProps, parseXYConfig } from '../../utils/props-helper'
+import { FrameworkProps, parseProps, parseXYConfig } from '../../utils/props-helper'
 import { ComponentProps, XYCompositeDoc } from './composite-wrapper'
-import { XYDocTabs, DocTabsProps } from './doc-tabs.wrapper'
+import { XYDocTabs, DocTabsProps, ContextLevel } from './doc-tabs.wrapper'
 
 const axes = ['x', 'y'].map(t => ({ name: 'Axis', props: { type: t }, key: `${t}Axis` }))
 
@@ -14,6 +13,7 @@ export type XYWrapperProps = {
   className?: string;
   height?: number;
   showAxes?: boolean;
+  containerProps?: any;
   componentProps?: ComponentProps[];
   excludeTabs: boolean;
   excludeGraph: boolean;
@@ -33,6 +33,7 @@ export function XYWrapper ({
   excludeGraph,
   hiddenProps,
   xyConfigKey,
+  containerProps,
   componentProps,
   children,
   ...rest
@@ -42,9 +43,11 @@ export function XYWrapper ({
   if (name !== 'XYContainer') {
     componentProps = [mainComponent, ...componentProps]
   }
-  const docTabsProps = (showContext ? parseXYConfig(componentProps) : parseProps(name, rest, false, xyConfigKey))
+  let docTabsProps: FrameworkProps
+  if (!excludeTabs) {
+    docTabsProps = showContext === ContextLevel.Full ? parseXYConfig(componentProps) : parseProps(name, rest, true, mainComponent.key)
+  }
   mainComponent.props = { ...rest, ...hiddenProps }
-
   return (
     <>
       {!excludeTabs && <XYDocTabs {...{ showContext, hideTabLabels, ...docTabsProps }} />}
@@ -52,7 +55,7 @@ export function XYWrapper ({
       {!excludeGraph &&
         <XYCompositeDoc
           data={data}
-          containerProps={{ height: height || 150, ...rest }}
+          containerProps={{ height: height || 150, className: rest.className, ...containerProps }}
           componentProps={showAxes ? componentProps.concat(axes) : componentProps}/>
       }
     </>

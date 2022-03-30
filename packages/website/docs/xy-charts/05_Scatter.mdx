@@ -18,7 +18,7 @@ export const defaultProps = (n = 10, colored = false) => ({
 
 ### Basic configuration
 The _Scatter_ component has been designed to work together with _XY Container_. The minimal _Scatter_ configuration looks like:
-<XYWrapper {...defaultProps()} y={d => d.y} showContext={true}/>
+<XYWrapper {...defaultProps()} y={d => d.y} showContext="full"/>
 
 ### Point Shape
 You can change the point's symbol using the `symbol` attribute, which accepts a `SymbolType` or a corresponding `string`

@@ -5,62 +5,107 @@ import TabItem from '@theme/TabItem'
 import CodeBlock from '@theme/CodeBlock'
 import { FrameworkProps } from '../../utils/props-helper'
 
+export enum ContextLevel {
+  Full='full', // show typescript declarations for all components in doc
+  Minimal='minimal', // exclude function and container decelarations, keep other ts lines
+}
+
 export type DocTabsProps = FrameworkProps & {
   hideTabLabels?: boolean; // when true, hides tab labels but keeps tab content
-  showContext?: boolean; // shows additional typescript code for more complex functions
+  showContext?: ContextLevel; // shows additional typescript code for more complex functions
 }
+
+type TabProps = {
+  component: string;
+  contextProps: string[];
+  contextLevel: ContextLevel;
+}
+
+function reactReplace (str: string): string {
+  str.match(/[a-zA-Z]*\.selectors/g)?.forEach(m => {
+    str = str.replace(m, `Vis${m.replace('.s', 'S')}`)
+  })
+  return str
+}
+
+export function ReactWrapper ({ component, contextProps, contextLevel }: TabProps): JSX.Element {
+  const context = contextProps.map((p: string) => `const ${reactReplace(p)}`)
+  const codeContent = (): string => {
+    switch (contextLevel) {
+      case ContextLevel.Full:
+        return [
+          'function Component(props) {',
+          ...['const data: DataRecord[] = props.data', ...context.map(p => `${p.replace(/\n/gm, '\n  ')}`)].map(d => `  ${d}`),
+          '\n  return (',
+          '    <VisXYContainer data={data}>',
+          `      ${component}`,
+          '    </VisXYContainer>',
+          '  )',
+          '}'].join('\n')
+      case ContextLevel.Minimal:
+        return [context.join('\n'), 'return (', `  ${component}`, ')'].join('\n')
+      default:
+        return component
+    }
+  }
+  return (
+    <CodeBlock language="jsx" title={contextLevel && 'component.tsx'}>
+      {codeContent()}
+    </CodeBlock>
+  )
+}
+
+export function AngularWrapper ({ component, contextProps, contextLevel }: TabProps): JSX.Element {
+  if (contextLevel === ContextLevel.Full) {
+    contextProps = ['@Input() dataArray: DataRecord[]', ...contextProps]
+    component = ['<vis-xy-container [data]="dataArray">', `  ${component}`, '</vis-xy-container>'].join('\n')
+  }
+  return (
+    <>
+      {contextLevel && (
+        <CodeBlock language="ts" title={contextLevel && 'component.ts'}>
+          {contextProps.join('\n')}
+        </CodeBlock>
+      )}
+      <CodeBlock language="html" title={contextLevel && 'template.html'}>
+        {component}
+      </CodeBlock>
+    </>
+  )
+}
+
+export function TypescriptWrapper ({ component, contextProps, contextLevel }: TabProps): JSX.Element {
+  const context = contextProps?.map((p) => `const ${p}`).join('\n')
+  component = `const config: XYContainerConfigInterface<DataRecord> = {\n  ${component}\n}`
+  const codeContent = (): string => {
+    switch (contextLevel) {
+      case ContextLevel.Full:
+        return ['const data = getData()', context, component, 'const chart = new XYContainer(containerNode, config, data)'].join('\n')
+      case ContextLevel.Minimal:
+        return [context, component].join('\n')
+      default:
+        return component
+    }
+  }
+  return (
+    <CodeBlock language="ts" title={contextLevel && 'component.ts'}>
+      {codeContent()}
+    </CodeBlock>
+  )
+}
+
 /* Displays code snippets with framework tabs */
 export function XYDocTabs ({ componentStrings, contextProps, hideTabLabels, showContext }: DocTabsProps): JSX.Element {
   return (
     <Tabs groupId="framework" className={hideTabLabels ? 'hidden' : ''}>
       <TabItem value="react" label="React">
-        <CodeBlock language="jsx" title={showContext && 'component.tsx'}>
-          {showContext
-            ? [
-              'function Component(props) {',
-              '  const data: DataRecord[] = props.data',
-              ...contextProps.map((p) => `  const ${p.replace(/\n/gm, '\n  ')}`),
-              '  return (',
-              '    <VisXYContainer data={data}>',
-              `      ${componentStrings.react}`,
-              '    </VisXYContainer>',
-              '  )',
-              '};',
-            ].join('\n')
-            : componentStrings.react}
-        </CodeBlock>
+        <ReactWrapper component={componentStrings.react} contextLevel={showContext} contextProps={contextProps}/>
       </TabItem>
       <TabItem value="angular" label="Angular">
-        {showContext && (
-          <CodeBlock language="ts" title="component.ts">
-            {['@Input() dataArray: DataRecord[]', ...contextProps].join('\n')}
-          </CodeBlock>
-        )}
-        <CodeBlock language="html" title={showContext && 'template.html'}>
-          {showContext
-            ? ['<vis-xy-container [data]="dataArray">',
-              `  ${componentStrings.angular}`,
-              '</vis-xy-container>'].join('\n')
-            : componentStrings.angular
-          }
-        </CodeBlock>
+        <AngularWrapper component={componentStrings.angular} contextLevel={showContext} contextProps={contextProps}/>
       </TabItem>
       <TabItem value="typescript" label="TypeScript">
-        <CodeBlock language="ts" title={showContext && 'component.ts'}>
-          {showContext
-            ? [
-              'const data: DataRecord[] = getData()',
-              ...contextProps.map((p) => `const ${p}`),
-              '',
-              'const config: XYContainerConfigInterface<DataRecord> = {',
-              `  ${componentStrings.typescript}`,
-              '}',
-              'const chart = new XYContainer(containerNode, config, data)',
-            ].join('\n')
-            : ['const config: XYContainerConfigInterface<DataRecord> = {',
-              `  ${componentStrings.typescript}`,
-              '}'].join('\n')}
-        </CodeBlock>
+        <TypescriptWrapper component={componentStrings.typescript} contextLevel={showContext} contextProps={contextProps}/>
       </TabItem>
     </Tabs>
   )

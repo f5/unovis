@@ -16,11 +16,11 @@ export const defaultProps = (n=10) => ({
 
 ### Basic configuration
 The _Grouped Bar_ component has been designed to work together with _XY Container_. The minimal _Grouped Bar_ configuration looks like:
-<XYWrapper {...defaultProps()} y={d => d.y} showContext={true}/>
+<XYWrapper {...defaultProps()} y={d => d.y} showContext="full"/>
 
 ### Multiple Bars
 _Grouped Bar_ can accept an array of y accessors to display values as a group of bars:
-<XYWrapper {...defaultProps()} showContext={true}/>
+<XYWrapper {...defaultProps()} showContext="full"/>
 
 ### Group Width
 By default, the width of the bars is calculated automatically based on their count. But you can also strictly set the bar's width in pixels using the barWidth property:
@@ -65,7 +65,7 @@ either a `number` (in pixels) or `boolean` argument.
 ### Bar Color
 Set the color of the bar by assigning the color property to a hex string and/or by assigning the color property to a function evaluated per each bar.
 In this example, each bar's color is assigned based on its value:
-<XYWrapper {...defaultProps()} showContext showAxes color={(d,i) => ['#04c0c7', '#5144d3', '#da348f'][i]}/>
+<XYWrapper {...defaultProps()} showContext="minimal" showAxes color={(d,i) => ['#04c0c7', '#5144d3', '#da348f'][i]}/>
 
 ### Orientation
 _Grouped Bar_ supports horizontal and vertical orientation.

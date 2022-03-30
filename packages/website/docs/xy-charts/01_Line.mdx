@@ -16,11 +16,11 @@ export const lineProps = (n=10) => ({
 ### Basic configuration
 The _Line_ component has been designed to work together with _XY Container_. The minimal _Line_ configuration looks like:
 
-<XYWrapper {...lineProps()} showContext={true}/>
+<XYWrapper {...lineProps()} showContext="full"/>
 
 ### Multiple Lines
 _Line_ can also accept an array of `y` accessors to display multiple lines:
-<XYWrapper {...lineProps()} showContext={true} y={[d => d.y, d => d.y1, d => d.y2]}/>
+<XYWrapper {...lineProps()} showContext="minimal" y={[d => d.y, d => d.y1, d => d.y2]}/>
 
 ### Line Width
 Specify the Line's width in pixels using the `lineWidth` property:

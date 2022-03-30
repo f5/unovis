@@ -20,11 +20,11 @@ export const defaultProps = (n=10) => ({
 ### Basic configuration
 The _Stacked Bar_ component has been designed to work together with _XY Container_. The minimal _Stacked Bar_ configuration looks like:
 
-<XYWrapper {...defaultProps()} showContext={true}/>
+<XYWrapper {...defaultProps()} showContext="full"/>
 
 ### Multiple Stacked Bars
 _Stacked Bar_ can accept an array of y accessors to display values as a stack of bars:
-<XYWrapper {...defaultProps()} showContext={true} y={[d => d.y, d => d.y1, d => d.y2]}/>
+<XYWrapper {...defaultProps()} showContext="full" y={[d => d.y, d => d.y1, d => d.y2]}/>
 
 ### Orientation
 _Stacked Bar_ supports horizontal and vertical orientation.
@@ -73,7 +73,7 @@ either a `number` (in pixels) or `boolean` argument.
 ### Bar Color
 Set the color of the bar by assigning the color property to a hex string and/or by assigning the color property to a function evaluated per each bar.
 In this example, each bar's color is assigned based on it's value:
-<XYWrapper {...defaultProps()} showContext showAxes color={(d,i) => d.y > 7 ? '#FF4F4E' : '#1acb9a'}/>
+<XYWrapper {...defaultProps()} showContext="minimal" showAxes color={(d,i) => d.y > 7 ? '#FF4F4E' : '#1acb9a'}/>
 
 ### Events
 ```ts

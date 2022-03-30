@@ -18,16 +18,17 @@ const getReactProps: PropParser = (k, v) => [k, isString(v) ? `"${v}"` : `{${isL
 const getNgProps: PropParser = (k, v) => (isString(v) ? [k, `"${v}"`] : [`[${k}]`, `"${isLiteral(v) ? v : k}"`]).join('=')
 const getTsProps: PropParser = (k, v) => (isLiteral(v) ? [k, isString(v) ? `"${v}"` : v].join(': ') : `${k}`)
 
-const getContextProps: PropParser = (k, v) => {
+export const getContextProps: PropParser = (k, v) => {
   let str = String(v)
   if (k === 'y' && typeof v === 'object') {
     str = `((d: DataRecord) => number)[] = [${str.split(',').join(', ')}]`
-  } else if (typeof v === 'object') {
+  } else if (v && typeof v === 'object') {
     str = v.length ? `[${v.toString()}]` : `{\n  ${Object.keys(v).map(k => [k, v[k].toString()].join(': ')).join(',\n  ')} \n}`
   } else {
     str = str.replace('d=>', '(d: DataRecord) => ')
     str = str.replace('(d,i)=>', '(d: DataRecord, i: number) => ')
     str = str.replace('?', ' ? ')
+    str = str.replace('y>', 'y > ')
   }
   return [k, str].join(' = ')
 }
@@ -80,7 +81,6 @@ export function parseProps (name: string, props: Record<string, PropItem>, addTo
   const { componentStrings, contextProps } = getPropStrings(props, addToContext)
   const tag = getHtmlTag(name)
   const pad = (props: string): string => props.length ? ` ${props}` : ''
-
   return {
     componentStrings: {
       angular: `<vis-${tag}${pad(componentStrings.angular)}></vis-${tag}>`,
@@ -115,3 +115,4 @@ export function parseXYConfig (config: XYConfigArgs[]): FrameworkProps {
     contextProps,
   }
 }
+
