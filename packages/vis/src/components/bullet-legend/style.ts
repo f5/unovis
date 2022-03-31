@@ -20,7 +20,7 @@ export const variables = injectGlobal`
     --vis-dark-legend-bullet-inactive-color: #6c778c;
   }
 
-  body.theme-dark .${root} {
+  body.theme-dark ${`.${root}`} {
     --vis-legend-label-color: var(--vis-dark-legend-label-color);
     --vis-legend-bullet-inactive-color: var(--vis-dark-legend-bullet-inactive-color);
   }

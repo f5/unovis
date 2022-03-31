@@ -14,14 +14,14 @@ export const global = injectGlobal`
     --vis-axis-label-color: #6c778c;
     --vis-axis-tick-label-font-size: 12px;
     --vis-axis-label-font-size: 14px;
-    
+
     --vis-dark-axis-tick-color: #6c778c;
     --vis-dark-axis-tick-label-color: #e8e9ef;
     --vis-dark-axis-grid-color: #6c778c;
     --vis-dark-axis-label-color:#fefefe;
   }
 
-  body.theme-dark .${root} {
+  body.theme-dark ${`.${root}`} {
     --vis-axis-tick-color: var(--vis-dark-axis-tick-color);
     --vis-axis-tick-label-color: var(--vis-dark-axis-tick-label-color);
     --vis-axis-grid-color: var(--vis-dark-axis-grid-color);

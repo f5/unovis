@@ -15,7 +15,7 @@ export const variables = injectGlobal`
     --vis-dark-donut-central-label-text-color: #C2BECE;
   }
 
-  body.theme-dark .${root} {
+  body.theme-dark ${`.${root}`} {
     --vis-donut-central-label-text-color: var(--vis-dark-donut-central-label-text-color);
   }
 `

@@ -43,7 +43,7 @@ export const variables = injectGlobal`
     --vis-dark-sankey-icon-color: #292b34;
   }
 
-  body.theme-dark .${root} {
+  body.theme-dark ${`.${root}`} {
     --vis-sankey-link-color: var(--vis-dark--sankey-link-color);
     --vis-sankey-node-label-color: var(--vis-dark-sankey-node-label-color);
     --vis-sankey-node-label-background-fill-color: var(--vis-dark-sankey-label-background-fill-color);

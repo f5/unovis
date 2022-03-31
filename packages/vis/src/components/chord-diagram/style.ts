@@ -17,7 +17,7 @@ export const variables = injectGlobal`
     --vis-dark-radial-dendrogram-link-fill-color: #575c65;
   }
 
-  body.theme-dark .${root} {
+  body.theme-dark ${`.${root}`} {
     --vis-radial-dendrogram-link-fill-color: var(--vis-dark-radial-dendrogram-link-fill-color);
   }
 `

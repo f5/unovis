@@ -1,7 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { css, injectGlobal } from '@emotion/css'
 
-
 export const nodes = css`
   label: nodes;
 `
@@ -67,11 +66,11 @@ export const variables = injectGlobal`
     --vis-graph-node-side-label-background-greyout-color: #f1f4f7;
 
     --vis-dark-graph-node-greyout-color: #494b56;
-    --vis-dark-graph-node-icon-greyout-color: var(--vis-color-gray); 
+    --vis-dark-graph-node-icon-greyout-color: var(--vis-color-gray);
     --vis-dark-graph-node-side-label-background-greyout-color: #f1f4f7;
   }
- 
-  body.theme-dark .${nodes} {
+
+  body.theme-dark ${`.${nodes}`} {
     --vis-graph-node-stroke-color: var(--vis-dark-graph-node-stroke-color);
     --vis-graph-node-fill-color: var(--vis-dark-graph-node-fill-color);
     --vis-graph-node-stroke-segment-color: var(--vis-dark-graph-node-segment-color);
@@ -79,7 +78,7 @@ export const variables = injectGlobal`
 
     --vis-graph-node-icon-color: var(--vis-dark-graph-node-icon-color);
     --vis-graph-node-icon-fill-color-dark: var(--vis-dark-graph-node-icon-fill-color-dark);
-    
+
     --vis-graph-node-bottom-icon-fill-color: var(--vis-dark-graph-node-bottom-icon-fill-color);
     --vis-graph-node-bottom-icon-stroke-color: var(--vis-dark-graph-node-bottom-icon-stroke-color);
 

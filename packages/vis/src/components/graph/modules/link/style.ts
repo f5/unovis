@@ -24,7 +24,7 @@ export const variables = injectGlobal`
     --vis-dark-graph-link-label-fill-color: var(--vis-color-gray);
   }
 
-  body.theme-dark .${links} {
+  body.theme-dark ${`.${links}`} {
     --vis-graph-link-stroke-color: var(--vis-dark-graph-link-stroke-color);
     --vis-graph-link-label-stroke-color: var(--vis-dark-graph-link-label-stroke-color);
     --vis-graph-link-label-text-color: var(--vis-dark-graph-link-label-text-color);

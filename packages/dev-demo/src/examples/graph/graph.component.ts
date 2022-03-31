@@ -85,12 +85,9 @@ export class GraphComponent implements OnInit, AfterViewInit {
 
     this.chart = new SingleChart(this.graph.nativeElement, { component: this.component }, data)
 
-    console.log(
-      "here"
-    );
-    /* setInterval(() => {
+    setInterval(() => {
       this.chart.setData(generator.next().value)
-    }, 5000) */
+    }, 5000)
 
   }
 

@@ -20,7 +20,7 @@ export const variables = injectGlobal`
     --vis-dark-tooltip-shadow-color: rgba(0,0,0, 0.95);
   }
 
-  body.theme-dark .${root} {
+  body.theme-dark ${`.${root}`} {
     --vis-tooltip-background-color: var(--vis-dark-tooltip-background-color);
     --vis-tooltip-text-color: var(--vis-dark-tooltip-text-color);
     --vis-tooltip-border-color: var(--vis-dark-tooltip-border-color);

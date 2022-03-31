@@ -27,7 +27,7 @@ export const global = injectGlobal`
     --vis-dark-timeline-label-color: #EFF5F8;
   }
 
-  body.theme-dark .${root} {
+  body.theme-dark ${`.${root}`} {
     --vis-timeline-row-even-fill: var(--vis-dark-timeline-row-even-fill);
     --vis-timeline-row-odd-fill: var(--vis-dark-timeline-row-odd-fill);
     --vis-timeline-scrollbar-background-color: var(--vis-dark-timeline-scrollbar-background-color);

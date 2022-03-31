@@ -13,14 +13,14 @@ export const variables = injectGlobal`
     --vis-brush-handle-stroke: #eee;
 
     --vis-dark-brush-selection-fill:#acb2b9;
-    --vis-dark-brush-selection-stroke: #0b1640; 
+    --vis-dark-brush-selection-stroke: #0b1640;
     --vis-dark-brush-handle-fill: #acb2b9;
     --vis-dark-brush-handle-stroke: var(--vis-color-gray);
   }
 
-  body.theme-dark .${root}{selection);
+  body.theme-dark ${`.${root}`} {
     --vis-brush-selection-fill: var(--vis-dark-brush-selection-fill);
-    --vis-brush-selection-stroke: var(--vis-dark-brush-selection-stroke); 
+    --vis-brush-selection-stroke: var(--vis-dark-brush-selection-stroke);
     --vis-brush-handle-fill: var(--vis-dark-brush-handle-fill);
     --vis-brush-handle-stroke: var(--vis-dark-brush-handle-stroke);
   }

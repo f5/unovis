@@ -1,7 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import { css, injectGlobal } from '@emotion/css'
 
-
 export const root = css`
   label: radial-dendrogram-component;
 `
@@ -14,7 +13,7 @@ export const variables = injectGlobal`
     --vis-dark-radial-dendrogram-link-color: #333333;
   }
 
-  body.theme-dark .${root} {
+  body.theme-dark ${`.${root}`} {
     --vis-radial-dendrogram-link-color: var(--vis-dark-radial-dendrogram-link-color);
   }
 `

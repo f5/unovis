@@ -30,7 +30,7 @@ export const variables = injectGlobal`
     --vis-dark-map-point-label-text-color-light:#5b5f6d;
   }
 
-  body.theme-dark .${root} {
+  body.theme-dark ${`.${root}`} {
     --vis-map-feature-color: var(--vis-dark-map-feature-color);
     --vis-map-boundary-color: var(--vis-dark-map-boundary-color);
     --vis-map-point-label-text-color-dark: var(--vis-dark-map-point-label-text-color-dark);
