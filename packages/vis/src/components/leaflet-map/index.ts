@@ -651,11 +651,11 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     this._externallySelectedPoint = null
     event.stopPropagation()
 
-    if (clusterExpandOnClick && d.properties.cluster) {
+    if (d.properties.cluster) {
       const zoomLevel = this._map.leaflet.getZoom()
       const coordinates = { lng: d.geometry.coordinates[0], lat: d.geometry.coordinates[1] }
 
-      if (shouldClusterExpand(d as any, zoomLevel)) this._expandCluster(d)
+      if (clusterExpandOnClick && shouldClusterExpand(d, zoomLevel)) this._expandCluster(d)
       else {
         const newZoomLevel = clampZoomLevel(zoomLevel)
         this._eventInitiatedByComponent = true

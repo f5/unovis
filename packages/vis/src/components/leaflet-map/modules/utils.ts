@@ -48,7 +48,7 @@ export function bBoxMerge (
   }
 }
 
-export const clampZoomLevel = (level: number): number => clamp((1 + level * 2), (1 + level * 2), 12)
+export const clampZoomLevel = (level: number): number => clamp(1 + level * 1.5, level, 12)
 
 export function projectPoint (geoJSONPoint, leafletMap: L.Map): { x: number; y: number } {
   const lat = geoJSONPoint.geometry.coordinates[1]
