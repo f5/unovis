@@ -1,3 +1,6 @@
+echo "Activating git hooks"
+npx husky install
+
 echo "Building @volterra/vis"
 npm run build:lib
 npm run build:vis-angular-lib
