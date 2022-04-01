@@ -4,7 +4,7 @@ sidebar_position: 1
 import CodeBlock from "@theme/CodeBlock";
 import { PropTable } from '../utils/props-table'
 import { data, generateDataRecords } from '../utils/data'
-import { XYWrapper, XYWrapperWithInput, XYWrapperWithMenu } from '../components';
+import { XYWrapper, XYWrapperWithInput } from '../components';
 
 export const lineProps = (n=10) => ({
   name: "Line",
@@ -28,7 +28,7 @@ Specify the Line's width in pixels using the `lineWidth` property:
 
 ### Curve Types
 Using the `curveType: CurveType` property you can set various curve type options. For example:
-<XYWrapperWithMenu {...lineProps(50)} options={["basis", "linear", "step"]} attr="curveType"/>
+<XYWrapperWithInput {...lineProps(50)} inputType="select" options={["basis", "linear", "step"]} property="curveType"/>
 
 ### Colored Line
 <XYWrapperWithInput {...lineProps()} property="color" inputType="color" defaultValue="#a611a5"/>

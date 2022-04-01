@@ -1,157 +1,103 @@
+.hidden {
+  display: none;
+}
+
 .input-wrapper {
   position: relative;
 }
 
-.prop-input-label, .toggle {
-  position: absolute;
+.input-wrapper label {
   display: flex;
+  justify-content: center;
   align-items: center;
-  justify-content: space-between;
-  right: 1em;
-  top: 1.25em;
+  margin: var(--ifm-tabs-padding-vertical);
+}
+
+.toggle {
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 
 .prop-input-label {
   padding: 5px;
   font-size: smaller;
+  margin-right: 0;
 }
 
-.prop-name {
-  margin: 0 0.5em;
-  font-weight: bold;
+.prop-input-label code {
+  margin-right: 0.5em;
 }
 
-.prop-preview-menu {
-  font-size: small;
-  justify-content: center;
+.prop-input-label input[type="number"]{
+  max-width: 50px;
 }
 
-.prop-preview-menu > li {
-  border-radius: 10px;
-  border: 1px solid var(--ifm-color-primary);
-  padding: 5px;
-  margin: 5px;
-  text-transform: capitalize;
+.prop-input-label input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
 }
 
-.prop-preview-menu > li[aria-selected="true"] {
-  background: var(--ifm-color-primary);
-  color: white;
+.prop-input-label input[type="range"]::-webkit-slider-runnable-track {
+  height: 10px;
+  width: calc(100% * .25);
+  background-color: var(--ifm-color-emphasis-300);
+  border-radius: var(--ifm-global-radius);
 }
 
-.prop-preview-menu + div {
-  margin-top: 0 !important;
-}
-
-.inner-tabs  {
-  position: absolute;
-  left: 50%;
-  font-size: small;
-}
-
-details[open=true]  ul.tabs {
-  position: absolute;
-}
-
-.inner-tabs > li[aria-selected="true"]li[label="Hide"] {
-  background: var(--ifm-color-primary);
-  color: white;
-}
-
-.hidden {
-  display: none;
-}
-
-.toggle {
-  width: 48px;
-  position: absolute;
-  color: white;
-}
-
-.slider {
-  cursor: pointer;
-  pointer-events: all;
-  position: absolute;
-  height: 24px;
-  width: 100%;
-  border-radius: 12px;
-  background-color: #3e3e3e
-}
-
-.slider::after {
-  position: absolute;
-  content: '';
-  top: 2px;
-  left: 2px;
-  height: 20px;
-  width: 20px;
+.prop-input-label input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
   border-radius: 50%;
-  background-color: white;
-  transition: .2s;
+  background-color: var(--ifm-menu-color);
+  width: 16px;
+  height: 16px;
+  margin-top: -4px;
+  cursor: grab;
 }
 
-.toggle > input:checked +.slider::after {
-  -webkit-transform: translateX(22px);
-  -ms-transform: translateX(22px);
-  transform: translateX(22px);
+.prop-input-label select {
+  height: 24px;
+  border-radius: var(--ifm-global-radius);
 }
 
-.toggle > .slider::before {
-  position: absolute;
-  content: '▶';
-  right: 0;
-  margin: 0 6px;
-}
-
-.toggle > input:checked + .slider::before {
-  content: '॥';
-  left: 0;
+.anim-button {
+  cursor: pointer;
   font-size: large;
-  top: -2px;
-  margin-left: 8px;
 }
 
-/* custom vis components */
-.custom-area {
-  --vis-area-fill-opacity: 0.5;
-  --vis-area-hover-fill-opacity: 1;
-  --vis-area-stroke-width: 1px;
+.anim-button:hover::after {
+  text-decoration: underline;
 }
 
-.custom-line {
-  --vis-line-cursor: cell;
-  --vis-line-stroke-dasharray: 55 15;
-  --vis-line-stroke-dashoffset: 0;
+.anim-button::after {
+  content: '▶️';
 }
 
-.custom-axis {
-  --vis-axis-tick-label-font-size: 20px;
-  --vis-axis-label-color: #1acb9a;
-  --vis-axis-font-family: monospace;
-  --vis-axis-tick-label-color:  #8777d9;
+input:checked + .anim-button:after {
+  content: '⏸';
 }
 
-.custom-stacked-bar {
-  --vis-stacked-bar-stroke: #000;
-  --vis-stacked-bar-stroke-width: 5px;
-  --vis-stacked-bar-hover-stroke-width: 10px;
-  --vis-stacked-bar-hover-stroke: #8777d9;
+pre > code {
+  display: block;
+  width: 100%;
 }
 
-.custom-grouped-bar {
-  --vis-grouped-bar-stroke-width: 2px;
-  --vis-grouped-bar-stroke: #000;
-  --vis-grouped-bar-cursor: crosshair;
+@media only screen and (min-width: 550px) {
+  .prop-input-label {
+    position: absolute;
+    right: 0;
+    top: 0;
+    max-width: 45%;
+    flex-wrap: wrap;
+  }
+
+  .prop-input-label input[type="range"] {
+    max-width: calc(100vw / 15);
+  }
 }
 
-.custom-scatter {
-  --vis-scatter-fill-opacity: 0.5;
-  --vis-scatter-stroke-width: 1;
-  --vis-scatter-hover-stroke-width: 2;
-  --vis-scatter-point-label-text-color-dark: darkblue;
-}
-
-.custom-crosshair {
-  --vis-crosshair-line-stroke: #f88080;
-  --vis-crosshair-circle-stroke: #000000;
+@media only screen and (max-width: 550px) {
+  pre > code span {
+    font-size: small;
+  }
 }
