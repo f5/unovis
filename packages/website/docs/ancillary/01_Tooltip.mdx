@@ -49,7 +49,7 @@ export const Tooltip = (props) => (
       const wrapperProps = showTriggers ? { ...rest, triggers } : rest
       return (
         inputWrapper ?
-        <XYWrapperWithInput {...wrapperProps} hiddenProps={{ triggers: triggerConfig}}/> : 
+        <XYWrapperWithInput {...wrapperProps} hiddenProps={{ triggers: triggerConfig}}/> :
         <XYWrapper {...wrapperProps} hiddenProps={{ triggers: triggerConfig}}/>
       )
     }}
@@ -63,14 +63,16 @@ The _Tooltip_ component has been designed to work alongside XY charts. The minim
 
 ### Triggers
 The `triggers` property allows a _Tooltip_ component to display custom content for a given CSS selector.
+
 <Tooltip {...defaultProps("StackedBar", { x: d=> d.x - 0.25, y: [d=>d.y, d=>d.y1, d => d.y3], barWidth: 20})}
   showContext={ContextLevel.Minimal}
   showTriggers
   triggers={{
     "[StackedBar.selectors.bar]": d => `Bar`,
     "[Line.selectors.line]": d => `Line`,
-    "[Scatter.selectors.point]": d=> `Scatter`
-  }}/>
+    "[Scatter.selectors.point]": d=> `Scatter`,
+  }}
+/>
 
 ## Position
 ### Horizontal Placement
@@ -117,77 +119,31 @@ The `triggers` property allows a _Tooltip_ component to display custom content f
   defaultValue={50}
   containerProps={{ padding: { top: 100 }}}/>
 
-### Position Strategy
-You can set the position of the _Tooltip_ to `absolute` or `fixed` to change how the tooltip adjusts its position during scrolling.
-<Tooltip {...defaultProps()} positionStrategy="absolute"/>
-
 ## Manual Configuration
 
-export const ManualTooltip = ({config, docConfig, ...props}) => {
-  return (
-  <BrowserOnly fallback={<div>Loading...</div>}>
-    {() => {
-      const docProps = parseProps("XYContainer", { tooltip: {}}, true)
-      return (
-        <XYDocTabs contextProps={docConfig.context}
-          componentStrings={{
-            react: `${docConfig.react}\n  ${docProps.componentStrings.react}`,
-            angular: `${docConfig.angular}\n${docProps.componentStrings.angular}`,
-            typescript: `${docConfig.typescript}`
-          }}
-          showContext={ContextLevel.Minimal}/>
-      )
-    }}
-  </BrowserOnly>
-  )
-}
-
-export const TooltipContainer = (props) => {
-  const ref = React.useRef(null)
-  return (
-  <BrowserOnly fallback={<div>Loading...</div>}>
-    {() => {
-      const { Tooltip } = require('@volterra/vis')
-      const { VisXYContainer, VisStackedBar, VisStackedBarSelectors } = require('@volterra/vis-react')
-      const tooltip = parseProps("Tooltip", { triggers: props.triggers }, true, "tooltip")
-      console.log(tooltip)
-      return (
-        <>
-        <ManualTooltip
-          docConfig={{
-            context: [
-              'container = document.getElementById("ref")',
-              'tooltip = new Tooltip({ container, triggers })'
-            ],
-            angular: 'Tooltip <div id="ref></div>',
-            react: 'Tooltip <div id="ref></div>',
-            typescript: 'tooltip: tooltip'
-            }}/>
-          <div style={{display: 'flex', alignItems: 'center'}}>
-            <small>Tooltip:</small>
-            <div ref={ref} style={{borderBottom: "2px solid #4f4f4f", width: 70, height: 30}}></div>
-          </div>
-          <VisXYContainer {...props} tooltip={new Tooltip({
-            container: ref.current,
-            triggers: {
-              [VisStackedBarSelectors.bar]: d=> `<span>x: ${d.x}, y: ${d.y}</span>`
-            }
-          })}>
-            <VisStackedBar x={d=>d.x} y={d=>d.y}/>
-          </VisXYContainer>
-        </>
-      )
-    }}
-  </BrowserOnly>
-  )
-}
-
 ### Container
-You can manually set the container for your _Tooltip_ to be placed in using the container property.
-<TooltipContainer {...defaultProps()}/>
+By default the _Tooltip_ will be added to the same DOM element where your chart is located. It will also be constrained
+to stay within the dimensions of that element. That's not always convenient (for example when you have a sparkline chart
+and you need the tooltip to be displayed above it) so there's a way to set the container element manually by using the
+`container` property. In the most cases you might want to set `container` to `document.body` and `positionStrategy`
+to `PositionStrategy.Fixed` (see below).
+
+
+### Position Strategy
+The `positionStrategy` property defines how the tooltip will be positioned relative to its container. Supported values
+are `PositionStrategy.Absolute` (or just `"absolute"`; default value) and  `PositionStrategy.Fixed` (or just `"fixed"`).
+The values correspond to the [CSS position](https://www.w3schools.com/css/css_positioning.asp) property.
+
+When you manually set the `container` property of your tooltip to `document.body` or some other DOM element, it's recommended
+to set `positionStrategy` to `PositionStrategy.Fixed` to avoid misplacement.
+<BrowserOnly fallback={<div>Loading...</div>}>
+  {() => <Tooltip {...defaultProps("StackedBar", {}, 50)} container={document.body} positionStrategy="fixed" height={40} />}
+</BrowserOnly>
 
 ### Components
-Similarly, you can manually define the components a _Tooltip_ interacts with using the `components` property.
+Similarly, you can manually define the components a _Tooltip_ interacts with using the `components` property. By default
+they will be passed from your chart's container (like _XYContainer_), but if you want to use _Tooltip_ independently
+you can do that!
 ```ts
 const tooltip = new Tooltip({
   //highlight-next-line
@@ -206,46 +162,46 @@ You can manually define the behavior of your _Tooltip_ with the following method
 - `show(content: HTMLElement | string, pos: {x: number, y: number})`
    show the value of `content` at the coordinate `(x,y)`
 
-
 export const ButtonTooltip = (props) => {
+  const { componentStrings } = parseProps("XYContainer", { tooltip: {}}, true)
   return (
-  <BrowserOnly fallback={<div>Loading...</div>}>
-    {() => {
-      const { Tooltip } = require('@volterra/vis')
-      const { VisXYContainer, VisLine } = require('@volterra/vis-react')
-      const tooltip = new Tooltip({})
-      const docProps = parseProps("XYContainer", { tooltip: {}}, true)
-      let toggled = false
-      function toggleTooltip() {
-        if (toggled) {
-          tooltip.hide()
-        } else {
-          tooltip.show("+", { x: 0, y: 0})
+  <>
+    <XYDocTabs
+      contextProps={['toggleTooltip = () => {\n  if (toggled) {\n    tooltip.hide()\n  } else {\n    tooltip.show("👋 I\'m a tooltip", {x: 0, y:0})\n  }\n  toggled = !toggled\n}']}
+      componentStrings={{
+        react: `<button onClick={toggleTooltip}>Toggle</button>\n${componentStrings.react}`,
+        angular: `<button (click)="toggleTooltip">Toggle</button>\n${componentStrings.angular}`,
+        typescript: `tooltip: tooltip`
+      }}
+      showContext={ContextLevel.Minimal}/>
+    <BrowserOnly fallback={<div>Loading...</div>}>
+      {() => {
+        const { Tooltip } = require('@volterra/vis')
+        const { VisXYContainer, VisLine } = require('@volterra/vis-react')
+        const tooltip = new Tooltip({})
+        let toggled = false
+        function toggleTooltip() {
+          if (toggled) {
+            tooltip.hide()
+          } else {
+            tooltip.show("👋 I'm a tooltip", { x: 0, y: 0})
+          }
+          toggled = !toggled
         }
-        toggled = !toggled
-      }
-      React.useEffect(() => {
-        toggleTooltip()
-      }, [tooltip])
-      return (
+        React.useEffect(() => {
+          toggleTooltip()
+        }, [tooltip])
+        return (
         <>
-        <ManualTooltip
-          docConfig={{
-            context: ['toggleTooltip = () => {\n  if (toggled) {\n    tooltip.hide()\n  } else {\n    tooltip.show("+", {x: 0, y:0})\n  }\n  toggled = !toggled\n}'],
-            react: '<button onClick={toggleTooltip}>Toggle</button>',
-            angular: '<button (click)="toggleTooltip">Toggle</button>',
-            typescript: 'tooltip: tooltip'
-          }}/>
           <button onClick={() => toggleTooltip()}>Toggle</button>
           <VisXYContainer data={props.data} height={150} tooltip={tooltip}>
             <VisLine x={d=>d.x} y={d=>d.y}/>
           </VisXYContainer>
         </>
-      )
-    }}
-  </BrowserOnly>
-  )
-}
+      )}}
+    </BrowserOnly>
+  </>
+)}
 
 <ButtonTooltip {...defaultProps()} toggle/>
 
@@ -272,4 +228,5 @@ The _Tooltip_ component supports additional styling via CSS variables that you c
 }</CodeBlock>
 </details>
 
+### Component Props
 <PropTable name="VisTooltip"/>
