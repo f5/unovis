@@ -1,5 +1,6 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import * as React from 'react'
+import ReactMarkdown from 'react-markdown'
 import { PropItem } from 'react-docgen-typescript'
 import { useDynamicImport } from 'docusaurus-plugin-react-docgen-typescript/pkg/dist-src/hooks/useDynamicImport'
 
@@ -9,13 +10,11 @@ export const PropTable = ({ name }): JSX.Element => {
     .sort((a, b) => Number(b[1].required) - Number(a[1].required))
 
   return (
-    <table>
+    <table className="table">
       <thead>
         <tr>
           <th>Name</th>
           <th>Type</th>
-          <th>Default Value</th>
-          <th>Required</th>
           <th>Description</th>
         </tr>
       </thead>
@@ -25,21 +24,19 @@ export const PropTable = ({ name }): JSX.Element => {
             <tr key={key}>
               <td>
                 <code>{key}</code>
+                {prop.required && '*'}
               </td>
               <td>
                 <code>{prop.type?.name}</code>
               </td>
               <td>
-                {prop.defaultValue && (
-                  <code>{prop.defaultValue.value}</code>
-                )}
+                <ReactMarkdown children={prop.description}/>
               </td>
-              <td>{prop.required ? 'Yes' : 'No'}</td>
-              <td>{prop.description}</td>
             </tr>
           )
         })}
       </tbody>
+      <div style={{ float: 'right' }}>* required property</div>
     </table>
   )
 }

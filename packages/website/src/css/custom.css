@@ -21,6 +21,9 @@
   --ifm-heading-font-weight: 900;
 
   --ifm-font-family-base: Inter;
+
+  --doc-sidebar-width: 200px !important;
+  --ifm-table-cell-padding: 0.2rem;
 }
 
 .docusaurus-highlight-code-line {
@@ -42,3 +45,40 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
 .navbar__logo > img {
   display: block !important;
 }
+
+.table {
+  font-size: smaller;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+.table > thead,
+.table > tbody {
+  display: block;
+  width: 100% !important;
+}
+
+.table tr {
+  display: grid;
+  width: 100%;
+  grid-template-columns: 25% 25% 50%;
+}
+
+.table td {
+  display: block;
+  width: 100%;
+}
+
+.table td > pre {
+  display: block;
+  width: 100%;
+}
+
+.table pre {
+  font-size: smaller;
+  padding: 5px;
+  width: min-content;
+  margin: 0;
+}
+
+
