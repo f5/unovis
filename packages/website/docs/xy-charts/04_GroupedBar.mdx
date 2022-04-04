@@ -6,7 +6,7 @@ sidebar_label: Grouped Bar
 import CodeBlock from '@theme/CodeBlock';
 import { PropTable } from '../utils/props-table'
 import { data, generateDataRecords } from '../utils/data'
-import { XYWrapper, XYWrapperWithInput, XYWrapperWithMenu, DynamicXYWrapper } from '../components';
+import { XYWrapper, XYWrapperWithInput, DynamicXYWrapper } from '../components';
 export const defaultProps = (n=10) => ({
   name: "GroupedBar",
   data: generateDataRecords(n),
@@ -69,7 +69,7 @@ In this example, each bar's color is assigned based on its value:
 
 ### Orientation
 _Grouped Bar_ supports horizontal and vertical orientation.
-<XYWrapperWithMenu {...defaultProps()} y={[d => d.y, d => d.y1, d => d.y2]} height={250} showAxes attr="orientation" options={["vertical", "horizontal"]}/>
+<XYWrapperWithInput {...defaultProps()} y={[d => d.y, d => d.y1, d => d.y2]} height={250} showAxes inputType="select" property="orientation" defaultValue="horizontal" options={["vertical", "horizontal"]}/>
 
 ### Events
 ```ts

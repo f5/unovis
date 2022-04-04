@@ -1,6 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import React from 'react'
-import BrowserOnly from '@docusaurus/BrowserOnly'
 import { XYComponentConfigInterface } from '@volterra/vis'
 
 import { DataRecord } from '../../utils/data'
@@ -34,24 +33,18 @@ export function DynamicXYWrapper ({ primaryData, secondaryData, exampleProps, ..
   }, [current])
 
   return (
-    <BrowserOnly>
-      {() => {
-        return (
-          <div className="input-wrapper">
-            <label className="toggle">
-              <input
-                className="hidden"
-                type="checkbox"
-                defaultChecked
-                onChange={() => anim.current ? stop() : start()}
-              />
-              <div className="slider"></div>
-            </label>
-            <XYWrapper {...rest} data={current} />
-            <XYWrapper hideTabLabels {...rest} data={current} {...exampleProps} />
-          </div>
-        )
-      }}
-    </BrowserOnly>
+    <div className="input-wrapper">
+      <label className="toggle">
+        <input
+          className='hidden'
+          type="checkbox"
+          defaultChecked
+          onClick={() => anim.current ? stop() : start()}
+        />
+        <div className="anim-button"/>
+      </label>
+      <XYWrapper {...rest} data={current} />
+      <XYWrapper hideTabLabels {...rest} data={current} {...exampleProps} />
+    </div>
   )
 }

@@ -4,10 +4,11 @@ title: Stacked Bar
 sidebar_label: Stacked Bar
 ---
 import BrowserOnly from '@docusaurus/BrowserOnly'
+import CodeBlock from '@theme/CodeBlock'
 
 import { PropTable } from '../utils/props-table'
 import { data, generateDataRecords } from '../utils/data'
-import { XYWrapper, XYWrapperWithInput, XYWrapperWithMenu, DynamicXYWrapper } from '../components/'
+import { XYWrapper, XYWrapperWithInput, DynamicXYWrapper } from '../components/'
 
 export const defaultProps = (n=10) => ({
   name: "StackedBar",
@@ -15,7 +16,6 @@ export const defaultProps = (n=10) => ({
   x: d=>d.x,
   y: d=>d.y,
 });
-
 
 ### Basic configuration
 The _Stacked Bar_ component has been designed to work together with _XY Container_. The minimal _Stacked Bar_ configuration looks like:
@@ -28,7 +28,7 @@ _Stacked Bar_ can accept an array of y accessors to display values as a stack of
 
 ### Orientation
 _Stacked Bar_ supports horizontal and vertical orientation.
-<XYWrapperWithMenu {...defaultProps()} y={[d => d.y, d => d.y1, d => d.y2]} height={250} showAxes attr="orientation" options={["vertical", "horizontal"]}/>
+<XYWrapperWithInput {...defaultProps()} y={[d => d.y, d => d.y1, d => d.y2]} height={250} showAxes property="orientation" inputType="select" options={["vertical", "horizontal"]}/>
 
 ### Bar Width
 By default, the width of the bars is calculated automatically based on their count. But you can also strictly set the bar's width in pixels using the barWidth property:
@@ -111,10 +111,10 @@ The _Stacked Bar_ component supports additional styling via CSS variables that y
 {`--vis-stacked-bar-cursor
 --vis-stacked-bar-fill
 --vis-stacked-bar-stroke
---vis-stacked-bar-stroke-width,
+--vis-stacked-bar-stroke-width
 --vis-stacked-bar-hover-stroke-width
---vis-stacked-bar-hover-stroke`
-}</CodeBlock>
+--vis-stacked-bar-hover-stroke
+`}</CodeBlock>
 </details>
 
 ## Component Props
