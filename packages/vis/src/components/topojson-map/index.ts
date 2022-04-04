@@ -38,6 +38,7 @@ export class TopoJSONMap<AreaDatum, PointDatum, LinkDatum> extends ComponentCore
   g: Selection<SVGGElement, unknown, null, undefined>
   private _firstRender = true
   private _initialScale = undefined
+  private _center: [number, number]
   private _currentZoomLevel = undefined
   private _path = geoPath()
   private _projection: GeoProjection
@@ -152,6 +153,7 @@ export class TopoJSONMap<AreaDatum, PointDatum, LinkDatum> extends ComponentCore
         }
       }
 
+      this._center = this._projection.translate()
       const zoomExtent = config.zoomExtent
       this._zoomBehavior.scaleExtent([zoomExtent[0] * this._initialScale, zoomExtent[1] * this._initialScale])
 
@@ -207,7 +209,7 @@ export class TopoJSONMap<AreaDatum, PointDatum, LinkDatum> extends ComponentCore
         const target = this._projection(getLonLat(link.target, config.longitude, config.latitude))
         return arc(source, target)
       })
-      .style('stroke-width', link => getNumber(link, config.linkWidth))
+      .style('stroke-width', link => getNumber(link, config.linkWidth) / this._currentZoomLevel)
       .style('cursor', link => getString(link, config.linkCursor))
       .style('stroke', (link, i) => getColor(link, config.linkColor, i))
     edges.exit().remove()
@@ -246,17 +248,18 @@ export class TopoJSONMap<AreaDatum, PointDatum, LinkDatum> extends ComponentCore
       .style('cursor', d => getString(d, config.pointCursor))
 
     smartTransition(pointsMerged.select(`.${s.pointCircle}`), duration)
-      .attr('r', d => getNumber(d, config.pointRadius))
+      .attr('r', d => getNumber(d, config.pointRadius) / this._currentZoomLevel)
       .style('fill', (d, i) => getColor(d, config.pointColor, i))
       .style('stroke', (d, i) => getColor(d, config.pointColor, i))
-      .style('stroke-width', d => getNumber(d, config.pointStrokeWidth))
+      .style('stroke-width', d => getNumber(d, config.pointStrokeWidth) / this._currentZoomLevel)
 
     const pointLabelsMerged = pointsMerged.select(`.${s.pointLabel}`)
     pointLabelsMerged
       .text(config.pointLabel ?? '')
-      .attr('font-size', d => {
-        if (config.pointLabelPosition === MapPointLabelPosition.Bottom) return null
-
+      .style('font-size', d => {
+        if (config.pointLabelPosition === MapPointLabelPosition.Bottom) {
+          return `calc(var(--vis-map-point-label-font-size) / ${this._currentZoomLevel}`
+        }
         const pointDiameter = 2 * getNumber(d, config.pointRadius)
         const pointLabelText = getString(d, config.pointLabel) || ''
         const textLength = pointLabelText.length
@@ -266,7 +269,7 @@ export class TopoJSONMap<AreaDatum, PointDatum, LinkDatum> extends ComponentCore
       .attr('y', d => {
         if (config.pointLabelPosition === MapPointLabelPosition.Center) return null
 
-        const pointRadius = getNumber(d, config.pointRadius)
+        const pointRadius = getNumber(d, config.pointRadius) / this._currentZoomLevel
         return pointRadius
       })
       .attr('dy', config.pointLabelPosition === MapPointLabelPosition.Center ? '0.32em' : '1em')
@@ -327,8 +330,8 @@ export class TopoJSONMap<AreaDatum, PointDatum, LinkDatum> extends ComponentCore
   }
 
   _applyZoom (): void {
-    const translate = this._projection.translate()
-    const scale = this._projection.scale()
+    const translate = this._center
+    const scale = this._initialScale * this._currentZoomLevel
     this.g.call(this._zoomBehavior.transform, zoomIdentity.translate(translate[0], translate[1]).scale(scale))
   }
 
@@ -347,26 +350,43 @@ export class TopoJSONMap<AreaDatum, PointDatum, LinkDatum> extends ComponentCore
   _onZoom (event: D3ZoomEvent<any, any>): void {
     if (this._firstRender) return // To prevent double render because of binding zoom behaviour
     const isMouseEvent = event.sourceEvent instanceof WheelEvent || event.sourceEvent instanceof MouseEvent
-    const isClickEvent = isMouseEvent && event.sourceEvent.type === 'click'
+    const isExternalEvent = !event?.sourceEvent
 
     window.cancelAnimationFrame(this._animFrameId)
-    this._animFrameId = window.requestAnimationFrame(this._onZoomHandler.bind(this, event.transform, isMouseEvent, isClickEvent))
+    this._animFrameId = window.requestAnimationFrame(this._onZoomHandler.bind(this, event.transform, isMouseEvent, isExternalEvent))
 
+    if (event) this._center = [event.transform.x, event.transform.y]
     this._currentZoomLevel = (event?.transform.k / this._initialScale) || 1
   }
 
-  _onZoomHandler (transform: ZoomTransform, isMouseEvent: boolean, isClickEvent: boolean): void {
+  _onZoomHandler (transform: ZoomTransform, isMouseEvent: boolean, isExternalEvent: boolean): void {
     const { config } = this
-    this._projection
-      .scale(transform.k)
-      .translate([transform.x, transform.y])
+    const scale = transform.k / this._initialScale
+    const center = this._projection.translate()
+
+    const transformString = zoomIdentity
+      .translate(transform.x - center[0] * scale, transform.y - center[1] * scale)
+      .scale(scale)
+      .toString()
 
     // We are assuming that click events correspond to Zoom Controls button clicks,
     // so we're triggering render with specific animation duration in that case
-    const customDuration = isClickEvent
+    const customDuration = isExternalEvent
       ? config.zoomDuration
       : (isMouseEvent ? 0 : null)
-    this._render(customDuration)
+
+    smartTransition(this._featuresGroup, customDuration)
+      .attr('transform', transformString)
+      .attr('stroke-width', 1 / scale)
+
+    smartTransition(this._linksGroup, customDuration)
+      .attr('transform', transformString)
+
+    smartTransition(this._pointsGroup, customDuration)
+      .attr('transform', transformString)
+
+    this._renderPoints(customDuration)
+    this._renderLinks(customDuration)
   }
 
   public zoomIn (increment = 0.5): void {
@@ -380,11 +400,6 @@ export class TopoJSONMap<AreaDatum, PointDatum, LinkDatum> extends ComponentCore
   public setZoom (zoomLevel: number): void {
     const { config } = this
     this._currentZoomLevel = clamp(zoomLevel, config.zoomExtent[0], config.zoomExtent[1])
-    const translate = this._projection.translate()
-    this._projection
-      .scale(this._initialScale * this._currentZoomLevel)
-      .translate(translate)
-
     // We are using this._applyZoom() instead of directly calling this._render(config.zoomDuration) because
     // we've to "attach" new transform to the map group element. Otherwise zoomBehavior  will not know
     // that the zoom state has changed
@@ -394,7 +409,7 @@ export class TopoJSONMap<AreaDatum, PointDatum, LinkDatum> extends ComponentCore
   public fitView (): void {
     this._projection.fitExtent([[0, 0], [this._width, this._height]], this._featureCollection)
     this._currentZoomLevel = (this._projection?.scale() / this._initialScale) || 1
-
+    this._center = this._projection.translate()
     // We are using this._applyZoom() instead of directly calling this._render(config.zoomDuration) because
     // we've to "attach" new transform to the map group element. Otherwise zoomBehavior  will not know
     // that the zoom state has changed
