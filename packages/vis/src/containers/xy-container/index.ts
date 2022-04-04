@@ -267,15 +267,13 @@ export class XYContainer<Datum> extends ContainerCore {
 
     // Loop over all the dimensions
     Object.values(ScaleDimension).forEach((dimension: ScaleDimension) => {
-      let [min, max] = extent(
+      const [min, max] = extent(
         mergeArrays(
           components
             .filter(c => !c.config.excludeFromDomainCalculation)
             .map(c => c.getDataExtent(dimension, config.scaleByDomain))
         ) as number[]
       ) // Components with undefined dimension accessors will return [undefined, undefined] but d3.extent will take care of that
-
-      if (config.preventEmptyDomain && (min === max) && isFinite(min)) max = min + 1
 
       const configuredDomain = dimension === ScaleDimension.Y ? config.yDomain : config.xDomain
       const configuredDomainMinConstraint = dimension === ScaleDimension.Y ? config.yDomainMinConstraint : config.xDomainMinConstraint
@@ -286,6 +284,8 @@ export class XYContainer<Datum> extends ContainerCore {
         clamp(domainMin, configuredDomainMinConstraint?.[0] ?? Number.NEGATIVE_INFINITY, configuredDomainMinConstraint?.[1] ?? Number.POSITIVE_INFINITY),
         clamp(domainMax, configuredDomainMaxConstraint?.[0] ?? Number.NEGATIVE_INFINITY, configuredDomainMaxConstraint?.[1] ?? Number.POSITIVE_INFINITY),
       ]
+
+      if (config.preventEmptyDomain && (domain[0] === domain[1]) && isFinite(domain[0])) domain[1] = domain[0] + 1
 
       components.forEach(c => c.setScaleDomain(dimension, domain))
     })
