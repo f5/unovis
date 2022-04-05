@@ -36,7 +36,7 @@ export function updateNodeSelectionRing<D> (selection, selectedNode: LeafletMapP
       .style('stroke-width', 1)
       .style('stroke', d => {
         const node = foundNode || selectedNode
-        return node?.fill
+        return node?.color
       })
   } else {
     pointSelection.classed('active', false)
