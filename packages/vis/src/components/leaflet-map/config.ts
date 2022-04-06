@@ -1,6 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 /* eslint-disable dot-notation, no-irregular-whitespace */
-import { StyleSpecification } from 'maplibre-gl'
 
 // Core
 import { ComponentConfig, ComponentConfigInterface } from 'core/component/config'
@@ -13,7 +12,7 @@ import { ColorAccessor, GenericAccessor, NumericAccessor, StringAccessor } from 
 import { LeafletMapRenderer, Bounds, LeafletMapPointStyles, MapZoomState, LeafletMapPointDatum, LeafletMapPointShape } from './types'
 
 // Renderer settings
-import { TangramScene } from './renderer/map-style'
+import { TangramScene, MapLibreStyleSpecs } from './renderer/map-style'
 
 export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterface {
   // General
@@ -32,9 +31,9 @@ export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterfa
   /** External instance of Tangram to be used in the map. Default: `undefined` */
   tangramRenderer?: any;
   /** Tangram Scene or MapLibre StyleSpecification settings. Default: `undefined` */
-  rendererSettings: TangramScene | StyleSpecification;
+  rendererSettings: TangramScene | MapLibreStyleSpecs;
   /** Tangram Scene or MapLibre StyleSpecification settings for dark theme. Default: `undefined` */
-  rendererSettingsDarkTheme?: TangramScene | StyleSpecification;
+  rendererSettingsDarkTheme?: TangramScene | MapLibreStyleSpecs;
   /** Tile server access token or API key. Default: `''` */
   accessToken?: string;
   /** Array of attribution labels. Default: `['<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a>']` */

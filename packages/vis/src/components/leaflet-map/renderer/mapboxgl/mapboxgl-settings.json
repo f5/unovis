@@ -9,35 +9,6 @@
   },
   "layers": [
     {
-      "id": "background",
-      "layout": {
-        "visibility": "visible"
-      },
-      "paint": {
-        "background-color": {
-          "stops": [
-            [
-              6,
-              "rgb(255, 255, 255)"
-            ],
-            [
-              10,
-              "rgb(255, 255, 255)"
-            ],
-            [
-              14,
-              "rgb(252, 252, 252)"
-            ],
-            [
-              15,
-              "rgb(252, 252, 252)"
-            ]
-          ]
-        }
-      },
-      "type": "background"
-    },
-    {
       "filter": [
         "all"
       ],
@@ -420,27 +391,6 @@
       "source": "openmaptiles",
       "source-layer": "waterway",
       "type": "line"
-    },
-    {
-      "filter": [
-        "all",
-        [
-          "!=",
-          "intermittent",
-          1
-        ]
-      ],
-      "id": "water",
-      "layout": {
-        "visibility": "visible"
-      },
-      "metadata": {},
-      "paint": {
-        "fill-color": "rgb(223, 229, 235)"
-      },
-      "source": "openmaptiles",
-      "source-layer": "water",
-      "type": "fill"
     },
     {
       "filter": [
@@ -4925,7 +4875,5 @@
     }
   ],
   "name": "ves.io",
-  "pitch": 0,
-  "version": 8,
-  "zoom": 2.425084284449248
+  "version": 8
 }

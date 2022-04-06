@@ -1,6 +1,5 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
-import { StyleSpecification } from 'maplibre-gl'
-import { merge } from 'utils/data'
+import { StyleSpecification, LayerSpecification } from 'maplibre-gl'
 
 import tangramBaseSettings from './tangram/tangram-settings.json'
 import tangramDarkTheme from './tangram/tangram-dark-theme.json'
@@ -14,8 +13,37 @@ import mapLibreLightTheme from './mapboxgl/mapboxgl-light-theme.json'
 export type TangramScene = {
   [key in ('cameras' | 'layers' | 'sources' | 'global' | 'import' | 'lights' | 'scene' | 'styles' | 'textures')]: any;
 }
-export const TangramArcticDark: TangramScene = merge(tangramBaseSettings, tangramDarkTheme)
-export const TangramArcticLight: TangramScene = merge(tangramBaseSettings, tangramLightTheme)
 
-export const MapLibreArcticDark: StyleSpecification = merge(mapLibreBaseSettings, mapLibreDarkTheme)
-export const MapLibreArcticLight: StyleSpecification = merge(mapLibreBaseSettings, mapLibreLightTheme)
+export type MapLibreStyleSpecs = StyleSpecification
+
+export const TangramArcticDark: TangramScene = {
+  ...(tangramBaseSettings as TangramScene),
+  layers: {
+    ...tangramBaseSettings.layers,
+    ...tangramDarkTheme.layers,
+  },
+}
+
+export const TangramArcticLight: TangramScene = {
+  ...(tangramBaseSettings as TangramScene),
+  layers: {
+    ...tangramBaseSettings.layers,
+    ...tangramLightTheme.layers,
+  },
+}
+
+export const MapLibreArcticDark: MapLibreStyleSpecs = {
+  ...(mapLibreBaseSettings as StyleSpecification),
+  layers: [
+    ...mapLibreDarkTheme.layers,
+    ...mapLibreBaseSettings.layers,
+  ] as Array<LayerSpecification>,
+}
+
+export const MapLibreArcticLight: MapLibreStyleSpecs = {
+  ...(mapLibreBaseSettings as StyleSpecification),
+  layers: [
+    ...mapLibreLightTheme.layers,
+    ...mapLibreBaseSettings.layers,
+  ] as Array<LayerSpecification>,
+}

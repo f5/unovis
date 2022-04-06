@@ -6,9 +6,30 @@
         "visibility": "visible"
       },
       "paint": {
-        "background-color": "#474c5e"
+        "background-color": "#5C627A"
       },
       "type": "background"
+    },
+    {
+      "filter": [
+        "all",
+        [
+          "!=",
+          "intermittent",
+          1
+        ]
+      ],
+      "id": "water",
+      "layout": {
+        "visibility": "visible"
+      },
+      "metadata": {},
+      "paint": {
+        "fill-color": "#2A2D39"
+      },
+      "source": "openmaptiles",
+      "source-layer": "water",
+      "type": "fill"
     }
   ]
 }
