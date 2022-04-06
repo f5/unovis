@@ -11,9 +11,6 @@ import { isNumber, isArray, getNumber, clamp, getStackedValues, getNearest, isFu
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
 
-// Types
-import { PositionStrategy } from 'types/position'
-
 // Local Types
 import { CrosshairAccessors, CrosshairCircle } from './types'
 
@@ -165,7 +162,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
     if (!tooltip) return
 
     const container = tooltip.getContainer() || this.container.node()
-    const [x, y] = tooltip.config.positionStrategy === PositionStrategy.Fixed ? [event.clientX, event.clientY] : pointer(event, container)
+    const [x, y] = tooltip.isContainerBody() ? [event.clientX, event.clientY] : pointer(event, container)
     const content = config.template(this.datum, this.xScale.invert(this.x))
     if (content) tooltip.show(content, { x, y })
   }
