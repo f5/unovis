@@ -180,7 +180,7 @@ export function geoJSONPointToScreenPoint<D> (
 
   const screenPoint: LeafletMapPoint<D> = {
     ...geoPoint,
-    id: isCluster ? `cluster-${geoPoint.id}` : getString(geoPoint.properties, pointId),
+    id: isCluster ? `cluster-${geoPoint.id}` : (getString(geoPoint.properties, pointId) ?? ''),
     bbox: {
       x1: x - radius,
       y1: y - radius,

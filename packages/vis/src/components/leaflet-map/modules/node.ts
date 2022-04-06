@@ -31,7 +31,7 @@ const BOTTOM_LABEL_FONT_SIZE = 10
 export function createNodes<D> (selection: Selection<SVGGElement, LeafletMapPoint<D>, SVGGElement, Record<string, unknown>[]>): void {
   selection.append('path')
     .attr('class', s.pointPath)
-    .attr('id', d => `point-${d.properties.id}`)
+    .attr('id', d => `point-${d.id}`)
     .style('opacity', 0)
 
   selection.append('g')
@@ -39,7 +39,7 @@ export function createNodes<D> (selection: Selection<SVGGElement, LeafletMapPoin
 
   selection.append('text')
     .attr('class', s.innerLabel)
-    .attr('id', d => `label-${d.properties.id}`)
+    .attr('id', d => `label-${d.id}`)
     .attr('dy', '0.32em')
 
   selection.append('text')
