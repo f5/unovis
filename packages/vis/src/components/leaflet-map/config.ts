@@ -74,12 +74,14 @@ export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterfa
   pointBottomLabel?: StringAccessor<LeafletMapPointDatum<Datum>>;
   /** Point cursor value or accessor function. Default: `null` */
   pointCursor?: StringAccessor<LeafletMapPointDatum<Datum>>;
+  /** The width of the ring when a point has a `LeafletMapPointShape.Ring` shape. Default: `1.25` */
+  pointRingWidth?: number;
   /** Set selected node by its unique id. Default: `undefined` */
   selectedNodeId?: string;
 
   // Cluster
-  /** The width of the cluster point outline. Default: `1.25` */
-  clusterOutlineWidth?: number;
+  /** The width of the cluster point ring. Default: `1.25` */
+  clusterRingWidth?: number;
   /** When cluster is expanded, show a background circle to netter separate points from the base map. Default: `true` */
   clusterBackground?: boolean;
   /** Defines whether the cluster should expand on click or not. Default: `true` */
@@ -163,10 +165,11 @@ export class LeafletMapConfig<Datum> extends ComponentConfig implements LeafletM
   pointLabel = (d: LeafletMapPointDatum<Datum>): string => `${d.point_count ?? ''}`
   pointBottomLabel = ''
   pointCursor = null
+  pointRingWidth = 1.25
   selectedNodeId = undefined
 
   // Cluster
-  clusterOutlineWidth = 1.25
+  clusterRingWidth = 1.25
   clusterBackground = true
   clusterExpandOnClick = true;
   clusterRadius = 55

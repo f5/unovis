@@ -54,8 +54,6 @@ export function updateNodes<D> (
   leafletMap: L.Map,
   mapMoveZoomUpdateOnly: boolean
 ): void {
-  const { clusterOutlineWidth } = config
-
   selection.each((d: LeafletMapPoint<D>, i: number, elements: SVGGElement[]) => {
     const group = select(elements[i])
     const node: Selection<SVGPathElement, any, SVGGElement, any> = group.select(`.${s.pointPath}`)
@@ -64,24 +62,27 @@ export function updateNodes<D> (
     const innerLabelText = getString(d.properties, config.pointLabel)
     const bottomLabelText = getString(d.properties, config.pointBottomLabel)
     const pointCursor = getString(d.properties, config.pointCursor)
+    const pointShape = getString(d.properties, config.pointShape)
     const fromExpandedCluster = !!d.properties.expandedClusterPoint
     const donutData = d.donutData
     const isCluster = d.properties.cluster
-    const isRing = getString(d.properties, config.pointShape) === LeafletMapPointShape.Ring
-    const isCircular = (getString(d.properties, config.pointShape) === LeafletMapPointShape.Circle) || isRing || !d.properties.shape
+    const isRing = pointShape === LeafletMapPointShape.Ring
+    const isCircular = (pointShape === LeafletMapPointShape.Circle) || isRing || isCluster || !pointShape
     const { x, y } = getPointPos(d, leafletMap)
 
-    // Every frame updates
+    // To get updated on every render call
+    const ringWidth = (isCluster && config.clusterRingWidth) || (isRing && config.pointRingWidth) || 0
     group.attr('transform', `translate(${x},${y})`)
     group.select(`.${s.donutCluster}`)
-      .call(updateDonut, donutData, isCircular || isCluster ? d.radius : 0, isCluster || isRing ? clusterOutlineWidth : 0)
+      .call(updateDonut, donutData, isCircular ? d.radius : 0, ringWidth)
+
     node.attr('d', d.path)
     node.style('cursor', isCluster ? 'pointer' : pointCursor)
     bottomLabel.attr('transform', `translate(0,${d.radius + BOTTOM_LABEL_TOP_MARGIN})`)
 
     if (mapMoveZoomUpdateOnly) return
 
-    // Updates required for data changes
+    // Updates required only when data changes
     node
       .classed(s.pointPathCluster, isCluster)
       .classed(s.pointPathRing, isRing)
