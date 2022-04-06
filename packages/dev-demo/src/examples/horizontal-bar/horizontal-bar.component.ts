@@ -17,7 +17,6 @@ import {
   NumericAccessor,
   Direction,
   GroupedBar,
-  PositionStrategy,
 } from '@volterra/vis'
 
 // Helpers
@@ -67,7 +66,6 @@ export class HorizontalBarComponent implements AfterViewInit, OnDestroy {
 
   tooltip = new Tooltip({
     container: document.body,
-    positionStrategy: PositionStrategy.Fixed,
     triggers: {
       [StackedBar.selectors.bar]: (d, i) => {
         const accessor = this.yAccessors[i % 5]
