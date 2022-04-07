@@ -9,6 +9,27 @@
         "background-color": "rgba(255, 255, 255, 1)"
       },
       "type": "background"
+    },
+    {
+      "filter": [
+        "all",
+        [
+          "!=",
+          "intermittent",
+          1
+        ]
+      ],
+      "id": "water",
+      "layout": {
+        "visibility": "visible"
+      },
+      "metadata": {},
+      "paint": {
+        "fill-color": "rgb(223, 229, 235)"
+      },
+      "source": "openmaptiles",
+      "source-layer": "water",
+      "type": "fill"
     }
   ]
 }

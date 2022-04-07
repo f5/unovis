@@ -1,19 +1,18 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 /* eslint-disable dot-notation, no-irregular-whitespace */
-import { StyleSpecification } from 'maplibre-gl'
 
 // Core
 import { ComponentConfig, ComponentConfigInterface } from 'core/component/config'
 import { Tooltip } from 'components/tooltip'
 
 // Types
-import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
+import { ColorAccessor, GenericAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
 
 // Local Types
-import { LeafletMapRenderer, Bounds, LeafletMapPointStyles, MapZoomState, LeafletMapPointDatum } from './types'
+import { LeafletMapRenderer, Bounds, LeafletMapPointStyles, MapZoomState, LeafletMapPointDatum, LeafletMapPointShape } from './types'
 
 // Renderer settings
-import { TangramScene } from './renderer/map-style'
+import { TangramScene, MapLibreStyleSpecs } from './renderer/map-style'
 
 export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterface {
   // General
@@ -32,9 +31,9 @@ export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterfa
   /** External instance of Tangram to be used in the map. Default: `undefined` */
   tangramRenderer?: any;
   /** Tangram Scene or MapLibre StyleSpecification settings. Default: `undefined` */
-  rendererSettings: TangramScene | StyleSpecification;
+  rendererSettings: TangramScene | MapLibreStyleSpecs;
   /** Tangram Scene or MapLibre StyleSpecification settings for dark theme. Default: `undefined` */
-  rendererSettingsDarkTheme?: TangramScene | StyleSpecification;
+  rendererSettingsDarkTheme?: TangramScene | MapLibreStyleSpecs;
   /** Tile server access token or API key. Default: `''` */
   accessToken?: string;
   /** Array of attribution labels. Default: `['<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a>']` */
@@ -64,7 +63,7 @@ export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterfa
   /** Point id accessor function or constant value. Default: `d => d.id`  */
   pointId?: StringAccessor<Datum>;
   /** Point shape accessor function or constant value. Default: `d => d.shape`  */
-  pointShape?: StringAccessor<Datum>;
+  pointShape?: GenericAccessor<LeafletMapPointShape | string, Datum>;
   /** Point color accessor function or constant value. Default: `d => d.color`  */
   pointColor?: ColorAccessor<Datum>;
   /** Point radius accessor function or constant value. Default: `undefined`  */
@@ -75,12 +74,14 @@ export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterfa
   pointBottomLabel?: StringAccessor<LeafletMapPointDatum<Datum>>;
   /** Point cursor value or accessor function. Default: `null` */
   pointCursor?: StringAccessor<LeafletMapPointDatum<Datum>>;
+  /** The width of the ring when a point has a `LeafletMapPointShape.Ring` shape. Default: `1.25` */
+  pointRingWidth?: number;
   /** Set selected node by its unique id. Default: `undefined` */
   selectedNodeId?: string;
 
   // Cluster
-  /** The width of the cluster point outline. Default: `1.25` */
-  clusterOutlineWidth?: number;
+  /** The width of the cluster point ring. Default: `1.25` */
+  clusterRingWidth?: number;
   /** When cluster is expanded, show a background circle to netter separate points from the base map. Default: `true` */
   clusterBackground?: boolean;
   /** Defines whether the cluster should expand on click or not. Default: `true` */
@@ -164,10 +165,11 @@ export class LeafletMapConfig<Datum> extends ComponentConfig implements LeafletM
   pointLabel = (d: LeafletMapPointDatum<Datum>): string => `${d.point_count ?? ''}`
   pointBottomLabel = ''
   pointCursor = null
+  pointRingWidth = 1.25
   selectedNodeId = undefined
 
   // Cluster
-  clusterOutlineWidth = 1.25
+  clusterRingWidth = 1.25
   clusterBackground = true
   clusterExpandOnClick = true;
   clusterRadius = 55

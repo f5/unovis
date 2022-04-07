@@ -10,7 +10,7 @@ import { Rect } from 'types/misc'
 import { smartTransition } from 'utils/d3'
 import { estimateTextSize, trimTextMiddle } from 'utils/text'
 import { clamp, getString } from 'utils/data'
-import { getCSSVariableValue, isStringCSSVariable, rectIntersect } from 'utils/misc'
+import { rectIntersect } from 'utils/misc'
 import { hexToBrightness } from 'utils/color'
 import { getPointPos } from './utils'
 
@@ -28,10 +28,10 @@ import * as s from '../style'
 const BOTTOM_LABEL_TOP_MARGIN = 10
 const BOTTOM_LABEL_FONT_SIZE = 10
 
-export function createNodes (selection): void {
+export function createNodes<D> (selection: Selection<SVGGElement, LeafletMapPoint<D>, SVGGElement, Record<string, unknown>[]>): void {
   selection.append('path')
     .attr('class', s.pointPath)
-    .attr('id', d => `point-${d.properties.id}`)
+    .attr('id', d => `point-${d.id}`)
     .style('opacity', 0)
 
   selection.append('g')
@@ -39,7 +39,7 @@ export function createNodes (selection): void {
 
   selection.append('text')
     .attr('class', s.innerLabel)
-    .attr('id', d => `label-${d.properties.id}`)
+    .attr('id', d => `label-${d.id}`)
     .attr('dy', '0.32em')
 
   selection.append('text')
@@ -54,8 +54,6 @@ export function updateNodes<D> (
   leafletMap: L.Map,
   mapMoveZoomUpdateOnly: boolean
 ): void {
-  const { clusterOutlineWidth } = config
-
   selection.each((d: LeafletMapPoint<D>, i: number, elements: SVGGElement[]) => {
     const group = select(elements[i])
     const node: Selection<SVGPathElement, any, SVGGElement, any> = group.select(`.${s.pointPath}`)
@@ -64,28 +62,32 @@ export function updateNodes<D> (
     const innerLabelText = getString(d.properties, config.pointLabel)
     const bottomLabelText = getString(d.properties, config.pointBottomLabel)
     const pointCursor = getString(d.properties, config.pointCursor)
+    const pointShape = getString(d.properties, config.pointShape)
     const fromExpandedCluster = !!d.properties.expandedClusterPoint
     const donutData = d.donutData
     const isCluster = d.properties.cluster
-    const isCircle = (d.properties.shape === LeafletMapPointShape.Circle) || !d.properties.shape
+    const isRing = pointShape === LeafletMapPointShape.Ring
+    const isCircular = (pointShape === LeafletMapPointShape.Circle) || isRing || isCluster || !pointShape
     const { x, y } = getPointPos(d, leafletMap)
 
-    // Every frame updates
+    // To get updated on every render call
+    const ringWidth = (isCluster && config.clusterRingWidth) || (isRing && config.pointRingWidth) || 0
     group.attr('transform', `translate(${x},${y})`)
     group.select(`.${s.donutCluster}`)
-      .call(updateDonut, donutData, isCircle || isCluster ? d.radius : 0, isCluster ? clusterOutlineWidth : 0)
+      .call(updateDonut, donutData, isCircular ? d.radius : 0, ringWidth)
+
     node.attr('d', d.path)
     node.style('cursor', isCluster ? 'pointer' : pointCursor)
     bottomLabel.attr('transform', `translate(0,${d.radius + BOTTOM_LABEL_TOP_MARGIN})`)
 
     if (mapMoveZoomUpdateOnly) return
 
-    // Updates required for data changes
+    // Updates required only when data changes
     node
-      .classed('cluster', isCluster)
-      .classed('fromCluster', fromExpandedCluster)
-      .style('fill', d.fill)
-      .style('stroke', d.fill) // being used for hover
+      .classed(s.pointPathCluster, isCluster)
+      .classed(s.pointPathRing, isRing)
+      .style('fill', d.color)
+      .style('stroke', d.color) // being used for hover
       .style('opacity', 1)
 
     innerLabel
@@ -98,8 +100,8 @@ export function updateNodes<D> (
       })
       .attr('visibility', innerLabelText ? null : 'hidden')
       .style('fill', () => {
-        if (!d.fill) return null
-        const hex = color(isStringCSSVariable(d.fill) ? getCSSVariableValue(d.fill, selection.node()) : d.fill)?.hex()
+        const c = getComputedStyle(node.node()).fill
+        const hex = color(c)?.hex()
         if (!hex) return null
 
         const brightness = hexToBrightness(hex)
@@ -114,8 +116,11 @@ export function updateNodes<D> (
   })
 }
 
-export function collideLabels<D> (selection, leafletMap: L.Map): void {
-  selection.each((datum1: LeafletMapPoint<D>, i: number, elements: SVGElement[]) => {
+export function collideLabels<D> (
+  selection: Selection<SVGGElement, LeafletMapPoint<D>, SVGGElement, Record<string, unknown>[]>,
+  leafletMap: L.Map
+): void {
+  selection.each((datum1: LeafletMapPoint<D>, i, elements) => {
     const group1HTMLNode = elements[i]
     const group1 = select(group1HTMLNode)
     const label1: Selection<SVGTextElement, any, SVGElement, any> = group1.select(`.${s.bottomLabel}`)
@@ -175,6 +180,6 @@ export function collideLabels<D> (selection, leafletMap: L.Map): void {
   })
 }
 
-export function removeNodes (selection): void {
+export function removeNodes<D> (selection: Selection<SVGGElement, LeafletMapPoint<D>, SVGGElement, Record<string, unknown>[]>): void {
   selection.remove()
 }

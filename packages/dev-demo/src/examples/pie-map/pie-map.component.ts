@@ -1,13 +1,14 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import clamp from 'lodash/clamp'
 import mean from 'lodash/mean'
+import sample from 'lodash/sample'
 import { StyleSpecification } from 'maplibre-gl'
-import { Component, ViewEncapsulation, ViewChild } from '@angular/core'
-import { LeafletMap, LeafletMapConfigInterface, LeafletMapRenderer } from '@volterra/vis'
+import { Component, ViewChild, ViewEncapsulation } from '@angular/core'
+import { LeafletMap, LeafletMapConfigInterface, LeafletMapPointShape, LeafletMapRenderer } from '@volterra/vis'
 import { MapLeafletComponent } from '../../app/components/map-leaflet/map-leaflet.component'
 
 // Configuration
-import { lightTheme, darkTheme } from '../map/config'
+import { darkTheme, lightTheme } from '../map/config'
 
 // Data
 import sites from './data/sites.json'
@@ -19,6 +20,7 @@ type SitePoint = {
   events: number;
   blocked: number;
   normal: number;
+  pointShape: LeafletMapPointShape;
 }
 
 @Component({
@@ -35,6 +37,7 @@ export class PieMapComponent {
   data = sites.map(d => ({
     ...d,
     normal: d.events - d.blocked,
+    pointShape: sample([LeafletMapPointShape.Circle, LeafletMapPointShape.Ring]),
   }))
 
   grandAvg = mean(this.data.map(d => d.events))
@@ -44,13 +47,15 @@ export class PieMapComponent {
     rendererSettings: lightTheme as StyleSpecification,
     rendererSettingsDarkTheme: darkTheme as StyleSpecification,
     pointRadius: d => {
-      return clamp(7 + 10 * Math.sqrt((d.normal + d.blocked) / this.grandAvg), 6, 25)
+      return clamp(7 + 10 * Math.sqrt((d.normal + (d.blocked || 0)) / this.grandAvg), 6, 25)
     },
     pointLabel: d => {
       return `${((d.blocked + d.normal) / 1000).toFixed(1)}K`
     },
+    pointShape: d => d.pointShape,
     pointId: d => d.name,
-    clusterOutlineWidth: 2,
+    clusterRingWidth: 2,
+    pointRingWidth: 5,
     clusterExpandOnClick: true,
     valuesMap: {
       blocked: {

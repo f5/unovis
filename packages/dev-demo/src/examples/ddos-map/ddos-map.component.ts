@@ -89,7 +89,7 @@ export class DDoSMapComponent implements AfterViewInit {
     },
     pointRadius: 5,
     pointId: d => d.name,
-    clusterOutlineWidth: 2,
+    clusterRingWidth: 2,
     clusterExpandOnClick: true,
     pointBottomLabel: d => d.cluster ? `${d.point_count} sites` : d.name,
     clusterRadius: 65,

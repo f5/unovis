@@ -10,9 +10,8 @@ export enum LeafletMapRenderer {
 export enum LeafletMapPointShape {
   Square = 'square',
   Circle = 'circle',
-  Hexagon = 'hexagon',
   Triangle = 'triangle',
-  Cluster = 'cluster',
+  Ring = 'ring',
 }
 
 export type LeafletMapPieDatum = {
@@ -56,7 +55,7 @@ export type LeafletMapPoint<D> = {
   bbox: { x1: number; x2: number; y1: number; y2: number };
   radius: number;
   path: string;
-  fill: string;
+  color: string;
   id: number | string;
   properties: LeafletMapPointDatum<D>;
   donutData: LeafletMapPieDatum[];

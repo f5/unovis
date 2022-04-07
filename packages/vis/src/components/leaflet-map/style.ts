@@ -25,6 +25,7 @@ export const variables = injectGlobal`
     --vis-map-label-font-family: var(--vis-font-family);
 
     --vis-map-point-default-fill-color: #B9BEC3;
+    --vis-map-point-ring-fill-color: #ffffff;
     --vis-map-point-default-stroke-color: #959da3;
     --vis-map-point-default-stroke-width: 0px;
     --vis-map-point-default-cursor: default;
@@ -42,6 +43,7 @@ export const variables = injectGlobal`
     --vis-dark-map-container-background-color: #dfe5eb;
     --vis-dark-map-point-default-fill-color: #B9BEC3;
     --vis-dark-map-point-default-stroke-color: #959da3;
+    --vis-dark-map-point-ring-fill-color: #5b5f6d;
 
     --vis-dark-map-cluster-default-fill-color: #5b5f6d;
     --vis-dark-map-cluster-default-stroke-color: #B9BEC3;
@@ -57,6 +59,7 @@ export const variables = injectGlobal`
     --vis-map-container-background-color: var(--vis-dark-map-container-background-color);
     --vis-map-point-default-fill-color: var(--vis-dark-map-point-default-fill-color);
     --vis-map-point-default-stroke-color: var(--vis-dark-map-point-default-stroke-color);
+    --vis-map-point-ring-fill-color: var(--vis-dark-map-point-ring-fill-color);
 
     --vis-map-cluster-default-fill-color: var(--vis-dark-map-cluster-default-fill-color);
     --vis-map-cluster-default-stroke-color: var(--vis-dark-map-cluster-default-stroke-color);
@@ -90,15 +93,6 @@ export const pointPath = css`
   transition: .2s stroke-width, .3s transform;
   cursor: var(--vis-map-point-default-cursor);
 
-  &.cluster {
-    fill-opacity: 0.9;
-    stroke: none;
-    animation: none;
-    fill: var(--vis-map-cluster-default-fill-color);
-    stroke: var(--vis-map-cluster-default-stroke-color);
-    stroke-width: var(--vis-map-cluster-default-stroke-width);
-  }
-
   &:hover {
     stroke-width: 2;
     fill-opacity: 1;
@@ -107,9 +101,23 @@ export const pointPath = css`
   }
 `
 
+export const pointPathRing = css`
+  label: point-path-ring;
+  fill: var(--vis-map-point-ring-fill-color);
+`
+
+export const pointPathCluster = css`
+  label: point-path-cluster;
+  fill-opacity: 0.9;
+  stroke: none;
+  animation: none;
+  fill: var(--vis-map-cluster-default-fill-color);
+  stroke: var(--vis-map-cluster-default-stroke-color);
+  stroke-width: var(--vis-map-cluster-default-stroke-width);
+`
+
 export const pointSelectionRing = css`
   label: point-selection-ring;
-
   stroke: var(--vis-map-point-default-fill-color);
 `
 

@@ -36,7 +36,7 @@ import { createBackgroundNode, updateBackgroundNode } from './modules/clusterBac
 import {
   bBoxMerge,
   calculateClusterIndex,
-  clampZoomLevel,
+  getNextZoomLevelOnClusterClick,
   findNodeAndClusterInPointsById,
   geoJSONPointToScreenPoint,
   getClusterRadius,
@@ -469,7 +469,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
       if (this._forceExpandCluster || shouldClusterExpand(cluster, zoomLevel, 8, 13)) {
         this._expandCluster(cluster)
       } else {
-        const newZoomLevel = clampZoomLevel(zoomLevel)
+        const newZoomLevel = getNextZoomLevelOnClusterClick(zoomLevel)
         const coordinates = { lng: this._externallySelectedPoint.properties.longitude, lat: this._externallySelectedPoint.properties.latitude }
         if (this._currentZoomLevel !== newZoomLevel) {
           this._currentZoomLevel = newZoomLevel
@@ -651,13 +651,13 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     this._externallySelectedPoint = null
     event.stopPropagation()
 
-    if (clusterExpandOnClick && d.properties.cluster) {
+    if (d.properties.cluster) {
       const zoomLevel = this._map.leaflet.getZoom()
       const coordinates = { lng: d.geometry.coordinates[0], lat: d.geometry.coordinates[1] }
 
-      if (shouldClusterExpand(d as any, zoomLevel)) this._expandCluster(d)
+      if (clusterExpandOnClick && shouldClusterExpand(d, zoomLevel)) this._expandCluster(d)
       else {
-        const newZoomLevel = clampZoomLevel(zoomLevel)
+        const newZoomLevel = getNextZoomLevelOnClusterClick(zoomLevel)
         this._eventInitiatedByComponent = true
         this._map.leaflet.flyTo(coordinates, newZoomLevel, { duration: flyToDuration / 1000 })
       }

@@ -20,8 +20,8 @@ export function updateDonut (
   const arcs = pieConstructor(data.filter(d => d.value))
 
   const arcPathGen = arc<PieArcDatum<LeafletMapPieDatum>>()
-    .innerRadius(arcWidth ? radius - arcWidth * 0.5 : 0)
-    .outerRadius(arcWidth ? radius + arcWidth * 0.5 : radius)
+    .innerRadius(arcWidth ? radius - arcWidth / 2 : 0)
+    .outerRadius(arcWidth ? radius + arcWidth / 2 : radius)
 
   const donuts = selection.selectAll<SVGPathElement, LeafletMapPieDatum>('path')
     .data(arcs)

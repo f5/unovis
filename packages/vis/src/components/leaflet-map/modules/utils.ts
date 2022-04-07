@@ -48,7 +48,7 @@ export function bBoxMerge (
   }
 }
 
-export const clampZoomLevel = (level: number): number => clamp((1 + level * 2), (1 + level * 2), 12)
+export const getNextZoomLevelOnClusterClick = (level: number): number => clamp(1 + level * 1.5, level, 12)
 
 export function projectPoint (geoJSONPoint, leafletMap: L.Map): { x: number; y: number } {
   const lat = geoJSONPoint.geometry.coordinates[1]
@@ -85,7 +85,7 @@ export function getPointPos<D> (point: LeafletMapPoint<D> | ClusterFeature<Point
   }
 }
 
-export function getPointDisplayOrder<T> (d, pointStatus: StringAccessor<T>, valuesMap: LeafletMapPointStyles<T>): number {
+export function getPointDisplayOrder<D> (d: LeafletMapPoint<D>, pointStatus: StringAccessor<D>, valuesMap: LeafletMapPointStyles<D>): number {
   const status = getString(d.properties, pointStatus)
   const statusList = Object.keys(valuesMap)
   return Object.keys(statusList).indexOf(status)
@@ -133,13 +133,14 @@ export function calculateClusterIndex<D> (data: D[], config: LeafletMapConfigInt
   }).load(data.map(d => toGeoJSONPoint(d, pointLatitude, pointLongitude)))
 }
 
-export function getNodePathData ({ x, y }, radius: number, shape: LeafletMapPointShape): string {
+export function getNodePathData ({ x, y }: { x: number; y: number }, radius: number, shape: LeafletMapPointShape): string {
   switch (shape) {
     case LeafletMapPointShape.Triangle:
       return polygon(radius * 2, 3)
     case LeafletMapPointShape.Square:
       return polygon(radius * 2, 4)
     case LeafletMapPointShape.Circle:
+    case LeafletMapPointShape.Ring:
     default:
       return circlePath(x, y, radius)
   }
@@ -169,17 +170,17 @@ export function geoJSONPointToScreenPoint<D> (
   const radius = getPointRadius(geoPoint, pointRadius, zoomLevel)
   const isCluster = geoPoint.properties.cluster
   const shape = isCluster ? LeafletMapPointShape.Circle : getString(geoPoint.properties, pointShape) as LeafletMapPointShape
+  const isRing = shape === LeafletMapPointShape.Ring
 
   const donutData = getDonutData(geoPoint.properties, valuesMap)
   const maxValue = max(donutData, d => d.value)
   const maxValueIndex = donutData.map(d => d.value).indexOf(maxValue)
   const biggestDatum = donutData[maxValueIndex ?? 0]
-  const pointFillColor = !isCluster ? (color ?? biggestDatum?.color) : null
   const clusterIndex = geoPoint.properties.clusterIndex
 
   const screenPoint: LeafletMapPoint<D> = {
     ...geoPoint,
-    id: isCluster ? `cluster-${geoPoint.id}` : getString(geoPoint.properties, pointId),
+    id: isCluster ? `cluster-${geoPoint.id}` : (getString(geoPoint.properties, pointId) ?? ''),
     bbox: {
       x1: x - radius,
       y1: y - radius,
@@ -189,7 +190,7 @@ export function geoJSONPointToScreenPoint<D> (
     radius,
     donutData,
     path: getNodePathData({ x: 0, y: 0 }, radius, shape),
-    fill: pointFillColor,
+    color: (isCluster || isRing) ? null : (color ?? biggestDatum?.color),
     isCluster,
     clusterIndex,
     clusterPoints: isCluster ? clusterIndex.getLeaves(geoPoint.properties.cluster_id as number, Infinity).map(d => d.properties) : undefined,
