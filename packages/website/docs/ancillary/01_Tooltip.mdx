@@ -125,19 +125,10 @@ The `triggers` property allows a _Tooltip_ component to display custom content f
 By default the _Tooltip_ will be added to the same DOM element where your chart is located. It will also be constrained
 to stay within the dimensions of that element. That's not always convenient (for example when you have a sparkline chart
 and you need the tooltip to be displayed above it) so there's a way to set the container element manually by using the
-`container` property. In the most cases you might want to set `container` to `document.body` and `positionStrategy`
-to `PositionStrategy.Fixed` (see below).
+`container` property. In the most cases you might want to set `container` to `document.body`.
 
-
-### Position Strategy
-The `positionStrategy` property defines how the tooltip will be positioned relative to its container. Supported values
-are `PositionStrategy.Absolute` (or just `"absolute"`; default value) and  `PositionStrategy.Fixed` (or just `"fixed"`).
-The values correspond to the [CSS position](https://www.w3schools.com/css/css_positioning.asp) property.
-
-When you manually set the `container` property of your tooltip to `document.body` or some other DOM element, it's recommended
-to set `positionStrategy` to `PositionStrategy.Fixed` to avoid misplacement.
 <BrowserOnly fallback={<div>Loading...</div>}>
-  {() => <Tooltip {...defaultProps("StackedBar", {}, 50)} container={document.body} positionStrategy="fixed" height={40} />}
+  {() => <Tooltip {...defaultProps("StackedBar", {}, 50)} container={document.body} height={40} />}
 </BrowserOnly>
 
 ### Components
