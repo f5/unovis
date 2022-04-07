@@ -1,7 +1,6 @@
-/* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import { Tooltip, TooltipConfigInterface, ContainerCore, ComponentCore, Position, PositionStrategy } from '@volterra/vis'
+import { Tooltip, TooltipConfigInterface, ContainerCore, ComponentCore, Position } from '@volterra/vis'
 import { VisGenericComponent } from '../../core'
 
 @Component({
@@ -28,9 +27,6 @@ export class VisTooltipComponent implements TooltipConfigInterface, AfterViewIni
 
   /** Vertical shift of the tooltip in pixels. Default: `0` */
   @Input() verticalShift?: number
-
-  /** Tooltip positioning within the container: absolute or fixed. Default: `PositionStrategy.Absolute` */
-  @Input() positionStrategy?: PositionStrategy | string
 
   /** Defines the content of the tooltip and hovering over which elements should trigger it.
    * An object containing properties in the following format:
@@ -63,8 +59,8 @@ export class VisTooltipComponent implements TooltipConfigInterface, AfterViewIni
   }
 
   private getConfig (): TooltipConfigInterface {
-    const { components, container, horizontalPlacement, horizontalShift, verticalPlacement, verticalShift, positionStrategy, triggers } = this
-    const config = { components, container, horizontalPlacement, horizontalShift, verticalPlacement, verticalShift, positionStrategy, triggers }
+    const { components, container, horizontalPlacement, horizontalShift, verticalPlacement, verticalShift, triggers } = this
+    const config = { components, container, horizontalPlacement, horizontalShift, verticalPlacement, verticalShift, triggers }
     const keys = Object.keys(config) as (keyof TooltipConfigInterface)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
