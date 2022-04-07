@@ -5,7 +5,7 @@ import { select, Selection, pointer } from 'd3-selection'
 import { ComponentCore } from 'core/component'
 
 // Types
-import { Position, PositionStrategy } from 'types/position'
+import { Position } from 'types/position'
 
 // Utils
 import { throttle } from 'utils/data'
@@ -71,7 +71,7 @@ export class Tooltip {
     this._setUpEventsThrottled()
   }
 
-  public show (html: string | HTMLElement, pos: { x: number; y: number}): void {
+  public show (html: string | HTMLElement, pos: { x: number; y: number }): void {
     if (html instanceof HTMLElement) {
       const node = this.div.select(':first-child').node()
       if (node !== html) this.div.html('').append(() => html)
@@ -87,13 +87,13 @@ export class Tooltip {
     this.div.classed(s.show, false)
   }
 
-  public place (pos): void {
+  public place (pos: { x: number; y: number }): void {
     const { config } = this
-    const positionFixed = config.positionStrategy === PositionStrategy.Fixed
+    const isContainerBody = this.isContainerBody()
     const width = this.element.offsetWidth
     const height = this.element.offsetHeight
-    const containerHeight = positionFixed ? window.innerHeight : this._container.scrollHeight
-    const containerWidth = positionFixed ? window.innerWidth : this._container.scrollWidth
+    const containerHeight = isContainerBody ? window.innerHeight : this._container.scrollHeight
+    const containerWidth = isContainerBody ? window.innerWidth : this._container.scrollWidth
 
     const horizontalPlacement = config.horizontalPlacement === Position.Auto
       ? (pos.x > containerWidth / 2 ? Position.Left : Position.Right)
@@ -131,10 +131,14 @@ export class Tooltip {
     const y = containerHeight < height ? height : pos.y + constraintY + dy
 
     this.div
-      .classed(s.positionFixed, positionFixed)
-      .style('top', positionFixed ? `${y - height}px` : 'unset')
-      .style('bottom', !positionFixed ? `${containerHeight - y}px` : 'unset')
+      .classed(s.positionFixed, isContainerBody)
+      .style('top', isContainerBody ? `${y - height}px` : 'unset')
+      .style('bottom', !isContainerBody ? `${containerHeight - y}px` : 'unset')
       .style('left', `${x}px`)
+  }
+
+  public isContainerBody (): boolean {
+    return this._container === document.body
   }
 
   private _setContainerPosition (): void {
@@ -146,8 +150,9 @@ export class Tooltip {
   }
 
   private _setUpEvents (): void {
-    const { config: { triggers, positionStrategy } } = this
+    const { config: { triggers } } = this
 
+    const isContainerBody = this.isContainerBody()
     Object.keys(triggers).forEach(className => {
       const template = triggers[className]
       this.components.forEach(component => {
@@ -155,7 +160,7 @@ export class Tooltip {
         selection
           .on('mousemove.tooltip', (e: MouseEvent, d: unknown) => {
             e.stopPropagation() // Stop propagation to prevent other interfering events from being triggered, e.g. Crosshair
-            const [x, y] = positionStrategy === PositionStrategy.Fixed ? [e.clientX, e.clientY] : pointer(e, this._container)
+            const [x, y] = isContainerBody ? [e.clientX, e.clientY] : pointer(e, this._container)
             const els = selection.nodes()
             const i = els.indexOf(e.currentTarget as any)
             const content = template(d, i, els)

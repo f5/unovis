@@ -3,7 +3,7 @@ import { AfterViewInit, Component, ViewChild, ViewEncapsulation } from '@angular
 import _sample from 'lodash/sample'
 import _flatten from 'lodash/flatten'
 import { StyleSpecification } from 'maplibre-gl'
-import { LeafletFlowMap, LeafletFlowMapConfigInterface, LeafletMapRenderer, Position, PositionStrategy, Tooltip } from '@volterra/vis'
+import { LeafletFlowMap, LeafletFlowMapConfigInterface, LeafletMapRenderer, Position, Tooltip } from '@volterra/vis'
 import { MapLeafletComponent } from '../../app/components/map-leaflet/map-leaflet.component'
 
 // Configuration
@@ -121,7 +121,6 @@ export class DDoSMapComponent implements AfterViewInit {
   ngAfterViewInit (): void {
     this.tooltip = new Tooltip({
       container: this.mapContainer.mapRef.nativeElement,
-      positionStrategy: PositionStrategy.Absolute,
       horizontalPlacement: Position.Center,
       verticalPlacement: Position.Top,
     })
