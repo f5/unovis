@@ -1,4 +1,3 @@
-/* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
 import {
@@ -101,19 +100,23 @@ export class VisLineComponent<Datum> implements LineConfigInterface<Datum>, Afte
    * Default: `false` */
   @Input() excludeFromDomainCalculation?: boolean
 
-  /** Curve type from the CurveType enum */
+  /** Curve type from the CurveType enum. Default: `CurveType.MonotoneX` */
   @Input() curveType?: CurveType
 
-  /** Line width in pixels */
+  /** Line width in pixels. Default: `2` */
   @Input() lineWidth?: number
 
   /** Line dash array, see SVG's stroke-dasharray. Default: `undefined` */
   @Input() lineDashArray?: GenericAccessor<number[], Datum>
 
-  /** Value to be used in case of no data */
-  @Input() noDataValue?: number | null
+  /** When a data point has an `undefined`, `NaN`, or other no-data value, they'll be replaced with a value specified here.
+   * Setting this property to `undefined` will lead to having the line break when there's no data, and continue when
+   * the data appears again. If you set it to `null`, the values will be treated as numerical `0` values and the line
+   * won't break; however if the whole dataset consists of only `null`s, the line won't be displayed.
+   * Default: `undefined` */
+  @Input() fallbackValue?: number | undefined | null
 
-  /** Highlight line on hover */
+  /** Highlight line on hover. Default: `false` */
   @Input() highlightOnHover?: boolean
 
   /** Optional link cursor. Default: `null` */
@@ -139,8 +142,8 @@ export class VisLineComponent<Datum> implements LineConfigInterface<Datum>, Afte
   }
 
   private getConfig (): LineConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, curveType, lineWidth, lineDashArray, noDataValue, highlightOnHover, cursor } = this
-    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, curveType, lineWidth, lineDashArray, noDataValue, highlightOnHover, cursor }
+    const { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, curveType, lineWidth, lineDashArray, fallbackValue, highlightOnHover, cursor } = this
+    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, curveType, lineWidth, lineDashArray, fallbackValue, highlightOnHover, cursor }
     const keys = Object.keys(config) as (keyof LineConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

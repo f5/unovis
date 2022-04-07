@@ -45,9 +45,14 @@ const lineDashArray=[5]
 ```
 <XYWrapper {...lineProps()} lineDashArray={[5]} />
 
-### No Data Value
-In the case of missing data, you can assign a fallback value for _Line_ using `noDataValue`.
-Consider the following example, where the dataset contains undefined values over in the following domain:
+### Dealing with missing data
+In the case of missing data (when the data values are `undefined`, `NaN`, `''`, etc ...), you can assign a fallback value
+for _Line_ using the `fallbackValue` config property. The default value is `undefined`, which means that the line will
+break in the areas of no data and continue when the data appears again. If you set `fallbackValue` to `null`, the values
+will be treated as numerical `0` values and the line won't break; however if the whole dataset consists of only `null`s,
+the line won't be displayed.
+
+Consider the following example, where the dataset contains `undefined` values over in the following domain:
 `4 <= x <= 6`
 
 <XYWrapperWithInput showAxes {...lineProps()} data={generateDataRecords(10).map((d,i) => ({ x: d.x, y: i >= 4 && i <= 6 ? undefined : d.y }))} property="noDataValue" inputType="number" defaultValue={7} />

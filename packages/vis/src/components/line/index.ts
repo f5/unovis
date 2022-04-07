@@ -64,7 +64,9 @@ export class Line<Datum> extends XYComponentCore<Datum> {
     const lineDataX = data.map(d => this.xScale(getNumber(d, config.x)))
     const lineData: LineData[] = yAccessors.map(a => {
       const ld: LineDatum[] = data.map((d, i) => {
-        const value = getNumber(d, a) ?? config.noDataValue
+        const rawValue = getNumber(d, a)
+        // If `rawValue` is not numerical or if it's not finite (`NaN`, `undefined`, ...), we replace it with `config.fallbackValue`
+        const value = (isNumber(rawValue) || (rawValue === null)) && isFinite(rawValue) ? rawValue : config.fallbackValue
         return {
           x: lineDataX[i],
           y: this.yScale(value ?? 0),
@@ -74,6 +76,8 @@ export class Line<Datum> extends XYComponentCore<Datum> {
       })
 
       const defined = ld.reduce((def, d) => (d.defined || def), false)
+      // If the line consists only of `null` values, we'll still render it but it'll be invisible.
+      // Such trick allows us to have better animated transitions.
       const visible = defined && ld.some(d => d.value !== null)
       return {
         values: ld,
