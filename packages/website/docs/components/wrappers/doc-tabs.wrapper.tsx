@@ -21,21 +21,13 @@ type TabProps = {
   contextLevel: ContextLevel;
 }
 
-function reactReplace (str: string): string {
-  str.match(/[a-zA-Z]*\.selectors/g)?.forEach(m => {
-    str = str.replace(m, `Vis${m.replace('.s', 'S')}`)
-  })
-  return str
-}
-
 export function ReactWrapper ({ component, contextProps, contextLevel }: TabProps): JSX.Element {
-  const context = contextProps.map((p: string) => `const ${reactReplace(p)}`)
   const codeContent = (): string => {
     switch (contextLevel) {
       case ContextLevel.Full:
         return [
           'function Component(props) {',
-          ...['const data: DataRecord[] = props.data', ...context.map(p => `${p.replace(/\n/gm, '\n  ')}`)].map(d => `  ${d}`),
+          ...['const data: DataRecord[] = props.data', ...contextProps.map(p => `${p.replace(/\n/gm, '\n  ')}`)].map(d => `  ${d}`),
           '\n  return (',
           '    <VisXYContainer data={data}>',
           `      ${component}`,
@@ -43,7 +35,7 @@ export function ReactWrapper ({ component, contextProps, contextLevel }: TabProp
           '  )',
           '}'].join('\n')
       case ContextLevel.Minimal:
-        return [context.join('\n'), 'return (', `  ${component}`, ')'].join('\n')
+        return [contextProps.join('\n'), 'return (', `  ${component}`, ')'].join('\n')
       default:
         return component
     }
