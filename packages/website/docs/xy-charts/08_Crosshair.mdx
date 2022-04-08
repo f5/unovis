@@ -21,7 +21,7 @@ export const defaultProps = (chart="Line", componentProps, n=5) => ({
 The _Crosshair_ component is a special tooltip designed to work in an _XYContainer_.
 When a user is interacting with the _XYContainer_ and a crosshair is provided, the _Crosshair_ will appear as a vertical line and render circles on the corresponding `y` values in the dataset.
 
-<XYWrapper {...defaultProps('Line', {}, 10)} showContext/>
+<XYWrapper {...defaultProps('Line', {}, 10)} showContext="full"/>
 
 ### X and Y accessors
 Like other components in you can supply `x` and `y` accessors to the _Crosshair_ component to control where it appears in your container.
@@ -50,11 +50,7 @@ Use the `hideWhenFarFromPointerDistance` attribute with a length (in pixels) tha
 
 ### Custom Color
 Provide a `string` or color accessor function to the `color` attribute to customize the crosshair's point color:
-```ts
-const color: (d: DataRecord, i: number) => ['red', 'green', 'blue'][i]
-```
-
-<XYWrapper {...defaultProps()} color={(d, i) => ['red', 'green', 'blue'][i]}/>
+<XYWrapper {...defaultProps()} color={(d, i) => ['red', 'green', 'blue'][i]} showContext="minimal"/>
 
 ### Displaying Custom Content
 You can render text content for your _Crosshair_ component by providing it with a `template` property and a _Tooltip_ component within the same container.
@@ -67,7 +63,7 @@ You can render text content for your _Crosshair_ component by providing it with 
     key: "tooltip",
     props: {},
   })}
-  showContext/>
+  showContext="full"/>
 
 ### Additional Styling: CSS Variables
 The _Crosshair_ component supports additional styling via CSS variables that you can define for your visualization container. For example:

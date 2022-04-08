@@ -15,11 +15,11 @@ export const defaultProps = (n=10) => ({
 });
 
 ### Basic configuration
-<XYWrapper {...defaultProps()} showContext/>
+<XYWrapper {...defaultProps()} showContext="full"/>
 
 ### Multiple Areas
 _Area_ can accept an array of `y` accessors to display multiple areas at once:
-<XYWrapper {...defaultProps()} y={[(d) => d.y, (d) => d.y1, (d) => d.y2]} showContext/>
+<XYWrapper {...defaultProps()} y={[(d) => d.y, (d) => d.y1, (d) => d.y2]} showContext="full"/>
 
 ### Curve Types
 Using the `curveType: CurveType` property you can set various curve type options. For example:
@@ -36,7 +36,7 @@ Setting color for a single _Area_ component is simple, you can achieve that just
 If you want to configure multiple colors for your _Area_ component, you'll have to create a color accessor function, similar to `x` and `y` accessors
 described in the base configuration:
 
-<XYWrapper {...defaultProps()} showContext y={[(d) => d.y, (d) => d.y1, (d) => d.y2]} color={(d, i) => ['#6A9DFF', '#1acb9a', '#f88080'][i]}/>
+<XYWrapper {...defaultProps()} showContext="minimal" y={[(d) => d.y, (d) => d.y1, (d) => d.y2]} color={(d, i) => ['#6A9DFF', '#1acb9a', '#f88080'][i]}/>
 
 ### Additional Styling: CSS Variables
 The _Area_ component supports additional styling via CSS variables that you can define for your visualization container. For example:

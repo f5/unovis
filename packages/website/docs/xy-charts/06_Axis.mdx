@@ -51,17 +51,12 @@ _Axis_ supports two `AxisType` properties to bind to your data: `AxisType.X` and
 <XYWrapper {...defaultProps()}/>
 
 #### AxisType.Y
-<XYWrapper {...defaultProps()} type="y"/>
+<XYWrapper {...defaultProps()} type="y" xyConfigKey="yAxis"/>
 
 ### Axis Position
 You can change the position of your axis with a `Position` type or a string equivalent: `"top"`, `"right"`, `"bottom"`, or `"left"`.
 
-<XYDocTabs componentStrings={{
-    react: `<VisAxis type="x" position="top" label="X"/>\n<VisAxis type="y" position="right" label="Y"/>`,
-    angular: `<vis-axis type="x" position="top" label="X"></vis-axis>\n<vis-axis type="y" position="right" label="Y"></vis-axis>`,
-    typescript: `xAxis: new Axis({type: "x", position: "top", label: "X"}),\n  yAxis: new Axis({type: "y", position: "right", label: "Y"})`
-}}/>
-<AxesWrapper xConfig={{position: "top", label: "X"}} yConfig={{position: "right", label: "Y"}} showTabs/>
+<XYWrapper {...defaultProps()} position="top" label="X" componentProps={[{name: "Axis", key: "yAxis", props: {type: "y", position: "right", label: "Y"}}]} showContext="full"/>
 
 :::note
 
@@ -95,7 +90,7 @@ You can enable or disable the visibility of the axis domain line with the `domai
 If you use the _Axis_ component alone, without other xy-components, you'll need to provide an `x` accessor or `y` accessors to populate the axis values.
 Consider the following example with a single axis and a data array with x values in the range `0 < x < 10`:
 
-<XYWrapper {...defaultProps()} x={d => d.x} showContext/>
+<XYWrapper {...defaultProps()} x={d => d.x} showContext="full"/>
 Another example:
 
 ```ts
@@ -232,7 +227,7 @@ More commonly, you will want to display both an x and y axis for your graph. You
     react: `<VisAxis type="x"/>\n      <VisAxis type="y"/>`,
     angular: `<vis-axis type="x"></vis-axis>\n  <vis-axis type="y"></vis-axis>`,
     typescript: `xAxis: new Axis({ type: "x" }})\n  yAxis: new Axis({ type: "y" }})`
-}} contextProps={[]} showContext/>
+}} contextProps={[]} showContext="full"/>
 
 <AxesWrapper xConfig yConfig/>
 
