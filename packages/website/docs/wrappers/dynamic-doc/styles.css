@@ -1,0 +1,27 @@
+.toggle {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.anim-button {
+  cursor: pointer;
+  font-size: large;
+}
+
+.anim-button:hover::after {
+  border: 1px inset #3f3f3f;
+}
+
+.anim-button::after {
+  content: '▶️';
+}
+
+input:checked + .anim-button:after {
+  content: '⏸';
+}
+
+pre > code {
+  display: block;
+  width: 100%;
+}

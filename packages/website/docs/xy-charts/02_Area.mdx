@@ -2,10 +2,9 @@
 sidebar_position: 2
 ---
 import CodeBlock from "@theme/CodeBlock";
-
-import { XYWrapper, XYWrapperWithInput } from '../components';
 import { PropTable } from "../utils/props-table";
 import { generateDataRecords } from "../utils/data";
+import { XYWrapper, XYWrapperWithInput } from './wrapper';
 
 export const defaultProps = (n=10) => ({
   name: "Area",
@@ -23,7 +22,7 @@ _Area_ can accept an array of `y` accessors to display multiple areas at once:
 
 ### Curve Types
 Using the `curveType: CurveType` property you can set various curve type options. For example:
-<XYWrapperWithInput inputType="select" {...defaultProps(25)} options={["basis", "linear", "step"]} property="curveType"/>
+<XYWrapperWithInput {...defaultProps(25)} inputType="select" options={["basis", "linear", "step"]} defaultValue="basis" property="curveType"/>
 
 Learn more about configurable curves from D3's [documentation](https://github.com/d3/d3-shape#curves)
 

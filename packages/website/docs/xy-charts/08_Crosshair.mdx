@@ -4,13 +4,13 @@ title: Crosshair
 sidebar_label: Crosshair
 ---
 import CodeBlock from '@theme/CodeBlock'
-import { XYWrapperWithInput, XYWrapper } from '../components'
 import { PropTable } from '../utils/props-table.tsx'
 import { generateDataRecords } from '../utils/data'
+import { XYWrapperWithInput, XYWrapper } from './wrapper.tsx'
 
 export const defaultProps = (chart="Line", componentProps, n=5) => ({
   name: "Crosshair",
-  xyConfigKey: "crosshair",
+  configKey: "crosshair",
   data: generateDataRecords(n),
   showAxes: true,
   height: 150,

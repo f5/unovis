@@ -4,7 +4,7 @@ sidebar_position: 1
 import CodeBlock from "@theme/CodeBlock";
 import { PropTable } from '../utils/props-table'
 import { data, generateDataRecords } from '../utils/data'
-import { XYWrapper, XYWrapperWithInput } from '../components';
+import { XYWrapper, XYWrapperWithInput } from './wrapper.tsx';
 
 export const lineProps = (n=10) => ({
   name: "Line",
@@ -18,17 +18,13 @@ The _Line_ component has been designed to work together with _XY Container_. The
 
 <XYWrapper {...lineProps()} showContext="full"/>
 
-### Multiple Lines
-_Line_ can also accept an array of `y` accessors to display multiple lines:
-<XYWrapper {...lineProps()} showContext="minimal" y={[d => d.y, d => d.y1, d => d.y2]}/>
-
 ### Line Width
 Specify the Line's width in pixels using the `lineWidth` property:
 <XYWrapperWithInput {...lineProps()} property="lineWidth" inputType="number" defaultValue={5}/>
 
 ### Curve Types
 Using the `curveType: CurveType` property you can set various curve type options. For example:
-<XYWrapperWithInput {...lineProps(50)} inputType="select" options={["basis", "linear", "step"]} property="curveType"/>
+<XYWrapperWithInput {...lineProps(50)} inputType="select" options={["basis", "linear", "step"]} defaultValue="basis" property="curveType"/>
 
 ### Colored Line
 <XYWrapperWithInput {...lineProps()} property="color" inputType="color" defaultValue="#a611a5"/>
@@ -55,7 +51,18 @@ the line won't be displayed.
 Consider the following example, where the dataset contains `undefined` values over in the following domain:
 `4 <= x <= 6`
 
-<XYWrapperWithInput showAxes {...lineProps()} data={generateDataRecords(10).map((d,i) => ({ x: d.x, y: i >= 4 && i <= 6 ? undefined : d.y }))} property="noDataValue" inputType="number" defaultValue={7} />
+<XYWrapperWithInput {...lineProps()}
+  data={generateDataRecords(10).map((d,i) => ({ x: d.x, y: i >= 4 && i <= 6 ? undefined : d.y }))}
+  property="fallbackValue"
+  inputType="range"
+  inputProps={{ min: 0, max: 15, step: 0.5 }}
+  defaultValue={7}
+  showAxes/>
+
+### Multiple Lines
+_Line_ can also accept an array of `y` accessors to display multiple lines:
+<XYWrapper {...lineProps()} showContext="minimal" y={[d => d.y, d => d.y1, d => d.y2]}/>
+
 
 ### Additional Styling: CSS Variables
 The _Line_ component supports additional styling via CSS variables that you can define for your visualization container. For example:

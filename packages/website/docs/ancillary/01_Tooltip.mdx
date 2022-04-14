@@ -3,11 +3,11 @@ sidebar_position: 1
 ---
 import BrowserOnly from '@docusaurus/BrowserOnly'
 import CodeBlock from '@theme/CodeBlock'
-import { XYDocTabs, XYWrapperWithInput, XYCompositeDoc, DynamicXYWrapper, XYWrapper } from '../components'
-import { parseProps, parseXYConfig, getPropStrings } from '../utils/props-helper.ts'
-import { PropTable } from '../utils/props-table.tsx'
+import { FrameworkTabs } from '../utils/framework-tabs'
+import { PropTable } from '../utils/props-table'
 import { generateDataRecords } from '../utils/data'
-import { ContextLevel } from '../components/wrappers/doc-tabs.wrapper.tsx'
+import { parseObject, t } from '../utils/parser.ts'
+import { XYWrapper, XYWrapperWithInput } from '../xy-charts/wrapper'
 
 export const newComponent = (name, props) => ({
   name: name,
@@ -23,7 +23,7 @@ export const classnames = {
 
 export const defaultProps = (chart="StackedBar", componentProps, n=5) => ({
   name: "Tooltip",
-  xyConfigKey: "tooltip",
+  configKey: "tooltip",
   data: generateDataRecords(n).map(d => ({...d, y: Math.floor(d.y)})),
   height: 150,
   componentProps: [newComponent(chart, componentProps)],
@@ -59,13 +59,13 @@ export const Tooltip = (props) => (
 ### Basic configuration
 The _Tooltip_ component has been designed to work alongside XY charts. The minimal _Tooltip_ configuration looks like:
 
-<Tooltip {...defaultProps()} showContext={ContextLevel.Full} showTriggers/>
+<Tooltip {...defaultProps()} showContext="full" showTriggers/>
 
 ### Triggers
 The `triggers` property allows a _Tooltip_ component to display custom content for a given CSS selector.
 
 <Tooltip {...defaultProps("StackedBar", { x: d=> d.x - 0.25, y: [d=>d.y, d=>d.y1, d => d.y3], barWidth: 20})}
-  showContext={ContextLevel.Minimal}
+  showContext="minimal"
   showTriggers
   triggers={{
     "[StackedBar.selectors.bar]": d => `Bar`,
@@ -154,21 +154,12 @@ You can manually define the behavior of your _Tooltip_ with the following method
    show the value of `content` at the coordinate `(x,y)`
 
 export const ButtonTooltip = (props) => {
-  const { componentStrings } = parseProps("XYContainer", { tooltip: {}}, true)
   return (
   <>
-    <XYDocTabs
-      contextProps={['toggleTooltip = () => {\n  if (toggled) {\n    tooltip.hide()\n  } else {\n    tooltip.show("👋 I\'m a tooltip", {x: 0, y:0})\n  }\n  toggled = !toggled\n}']}
-      componentStrings={{
-        react: `<button onClick={toggleTooltip}>Toggle</button>\n${componentStrings.react}`,
-        angular: `<button (click)="toggleTooltip">Toggle</button>\n${componentStrings.angular}`,
-        typescript: `tooltip: tooltip`
-      }}
-      showContext={ContextLevel.Minimal}/>
     <BrowserOnly fallback={<div>Loading...</div>}>
       {() => {
         const { Tooltip } = require('@volterra/vis')
-        const { VisXYContainer, VisLine } = require('@volterra/vis-react')
+        const { VisXYContainer, VisLine, VisTooltip } = require('@volterra/vis-react')
         const tooltip = new Tooltip({})
         let toggled = false
         function toggleTooltip() {
@@ -194,6 +185,28 @@ export const ButtonTooltip = (props) => {
   </>
 )}
 
+export const tooltipFn = `${[
+  'toggleTooltip() {',
+  'if (toggled) {', `${t}tooltip.hide()`,
+  '} else {',
+  `${t}tooltip.show("👋 I\'m a tooltip", { x: 0, y: 0 })`,
+  '}',
+  'toggled != toggled']
+.join(`\n${t}`)}\n}`
+
+<FrameworkTabs
+  angular={{
+    html: '<vis-tooltip #tooltip></vis-tooltip>\n<button (click)="toggleTooltip">Toggle</button>',
+    ts: `@ElementRef('tooltip') tooltip\ntoggled = false\n${tooltipFn.replace('function ', '')}\n`
+  }}
+  react={[
+    'import { Tooltip } from \'@volterra/vis\'\n',
+    'const tooltip = new Tooltip({})',
+    'const [toggled, setToggled] = useState(true)\n',
+    `${tooltipFn.replace('toggled != toggled', 'setToggled(!toggled)')}`,
+    '\nreturn (', `${t}<>`, `${t}${t}<VisContainer tooltip={tooltip}/>`, `${t}${t}<button onClick={toggleTooltip}/>`, `${t}</>`, ')'].join('\n')}
+  typescript={`const tooltip = new Tooltip({})\nlet toggled = true\n${tooltipFn}\ndocument.getElementById("btn").addEventListener('click', toggleTooltip)}`}
+/>
 <ButtonTooltip {...defaultProps()} toggle/>
 
 ### Additional Styling: CSS Variables
