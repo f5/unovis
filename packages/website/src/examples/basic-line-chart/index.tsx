@@ -1,8 +1,9 @@
 /* eslint-disable import/no-unresolved, import/no-webpack-loader-syntax, @typescript-eslint/no-var-requires */
-import component from './code-react'
+import React from 'react'
+import BrowserOnly from '@docusaurus/BrowserOnly'
 
 export default {
-  component,
+  component: () => <BrowserOnly>{() => require('./code-react').default()}</BrowserOnly>,
   title: 'Basic Line Chart',
   preview: require('./preview.png').default,
   codeReact: require('!!raw-loader!./code-react').default,
