@@ -32,16 +32,19 @@
   --unovis-color-yellow: #FED651;
   --unovis-color-grey: #8E8D95;
   --unovis-color-beige: #BEB18B;
+
+  --ifm-heading-color: var(--unovis-color-deep-blue);
+}
+
+
+html[data-theme="dark"] {
+  --ifm-heading-color: white;
 }
 
 @media screen and (max-width: 966px) {
   :root {
     --unovis-content-padding: 2rem;
   }
-}
-
-h1,h2,h3,h4,h5,h6 {
-  color: var(--unovis-color-deep-blue);
 }
 
 .docusaurus-highlight-code-line {
