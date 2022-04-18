@@ -1,4 +1,3 @@
-/* eslint-disable notice/notice */
 import React, { useEffect, useRef, useState } from 'react'
 import { BulletLegend, BulletLegendConfigInterface } from '@volterra/vis'
 
@@ -25,5 +24,3 @@ export function VisBulletLegend (props: VisBulletLegendProps): JSX.Element {
 
   return <div ref={container} />
 }
-
-export const VisBulletLegendSelectors = BulletLegend.selectors

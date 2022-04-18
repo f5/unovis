@@ -1,4 +1,3 @@
-/* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
 import React, { useEffect, useRef, useState } from 'react'
 import { Donut, DonutConfigInterface } from '@volterra/vis'
@@ -33,4 +32,3 @@ function VisDonutFC<Datum> (props: VisDonutProps<Datum>): JSX.Element {
 // We export a memoized component to avoid unnecessary re-renders
 //  and define its type explicitly to help react-docgen-typescript to extract information about props
 export const VisDonut: (<Datum>(props: VisDonutProps<Datum>) => JSX.Element | null) = React.memo(VisDonutFC, arePropsEqual)
-export const VisDonutSelectors = Donut.selectors

@@ -1,4 +1,3 @@
-/* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
 import React, { useEffect, useRef, useState } from 'react'
 import { XYLabels, XYLabelsConfigInterface } from '@volterra/vis'
@@ -33,4 +32,3 @@ function VisXYLabelsFC<Datum> (props: VisXYLabelsProps<Datum>): JSX.Element {
 // We export a memoized component to avoid unnecessary re-renders
 //  and define its type explicitly to help react-docgen-typescript to extract information about props
 export const VisXYLabels: (<Datum>(props: VisXYLabelsProps<Datum>) => JSX.Element | null) = React.memo(VisXYLabelsFC, arePropsEqual)
-export const VisXYLabelsSelectors = XYLabels.selectors

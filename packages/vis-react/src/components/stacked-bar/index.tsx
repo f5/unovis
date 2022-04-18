@@ -1,4 +1,3 @@
-/* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
 import React, { useEffect, useRef, useState } from 'react'
 import { StackedBar, StackedBarConfigInterface } from '@volterra/vis'
@@ -33,4 +32,3 @@ function VisStackedBarFC<Datum> (props: VisStackedBarProps<Datum>): JSX.Element 
 // We export a memoized component to avoid unnecessary re-renders
 //  and define its type explicitly to help react-docgen-typescript to extract information about props
 export const VisStackedBar: (<Datum>(props: VisStackedBarProps<Datum>) => JSX.Element | null) = React.memo(VisStackedBarFC, arePropsEqual)
-export const VisStackedBarSelectors = StackedBar.selectors
