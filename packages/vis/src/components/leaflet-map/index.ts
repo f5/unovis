@@ -159,6 +159,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     // When the container size changes we have to initiate map resize in order to update its dimensions
     this.resizeObserver = new ResizeObserver(() => {
       this._map?.leaflet?.invalidateSize()
+      this.config.tooltip?.hide()
     })
     this.resizeObserver.observe(container)
 
