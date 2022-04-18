@@ -1,0 +1,39 @@
+.root {
+  padding: var(--unovis-content-padding);
+}
+
+.collectionTitle {
+  font-size: 18pt;
+  font-weight: bold;
+}
+
+.collectionDescription {
+  font-size: 14pt;
+  margin-bottom: 25px;
+}
+
+.linkedCard {
+  display: inline-block;
+  color: var(--unovis-color-deep-blue);
+  margin-right: 30px;
+  margin-bottom: 20px;
+}
+
+.linkedCard:hover {
+  color: var(--unovis-color-deep-blue);
+}
+
+.exampleNotFound {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  text-align: center;
+  display: table;
+}
+
+.exampleNotFound > h1 {
+  display: table-cell;
+  vertical-align: middle;
+}

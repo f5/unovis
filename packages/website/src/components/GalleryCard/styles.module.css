@@ -1,0 +1,29 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  height: 200px;
+}
+
+.root:hover > .image {
+  border: 1px solid var(--unovis-color-deep-blue);
+}
+
+.image {
+  flex: 1 1 auto;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  border-radius: 5px;
+  border: 1px solid rgba(0,0,0,0);
+  background-blend-mode: multiply;
+  background-color: #F9F9FC;
+}
+
+.title {
+  font-size: 12pt;
+}
+
+
+
+

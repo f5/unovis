@@ -5,7 +5,7 @@
 
 .heroBanner {
   height: 800px;
-  padding: 4rem 5rem;
+  padding: var(--unovis-content-padding);
   text-align: left;
   position: relative;
   overflow: hidden;
@@ -27,12 +27,6 @@
 
 .heroBanner h1 {
   font-size: 5rem;
-}
-
-@media screen and (max-width: 966px) {
-  .heroBanner {
-    padding: 2rem;
-  }
 }
 
 .buttons {

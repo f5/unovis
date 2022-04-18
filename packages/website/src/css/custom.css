@@ -8,7 +8,7 @@
 
 /* You can override the default Infima variables here. */
 :root {
-  --ifm-color-primary: #25c2a0;
+  --ifm-color-primary: #4580C0;
   --ifm-color-primary-dark: rgb(33, 175, 144);
   --ifm-color-primary-darker: rgb(31, 165, 136);
   --ifm-color-primary-darkest: rgb(26, 136, 112);
@@ -24,6 +24,27 @@
 
   --doc-sidebar-width: 200px !important;
   --ifm-table-cell-padding: 0.2rem;
+
+  --unovis-content-padding: 4rem 5rem;
+  --unovis-color-blue: #4580C0;
+  --unovis-color-pale-pink: #D9C6BB;
+  --unovis-color-deep-blue: #171329;
+  --unovis-color-yellow: #FED651;
+  --unovis-color-grey: #8E8D95;
+  --unovis-color-beige: #BEB18B;
+
+  --ifm-heading-color: var(--unovis-color-deep-blue);
+}
+
+
+html[data-theme="dark"] {
+  --ifm-heading-color: white;
+}
+
+@media screen and (max-width: 966px) {
+  :root {
+    --unovis-content-padding: 2rem;
+  }
 }
 
 .docusaurus-highlight-code-line {
@@ -81,4 +102,7 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
   margin: 0;
 }
 
+.main-wrapper {
+  position: relative;
+}
 
