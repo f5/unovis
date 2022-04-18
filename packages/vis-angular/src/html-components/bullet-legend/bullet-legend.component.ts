@@ -1,4 +1,3 @@
-/* eslint-disable notice/notice */
 import { Component, AfterViewInit, Input, SimpleChanges, ViewChild, ElementRef } from '@angular/core'
 import { BulletLegend, BulletLegendConfigInterface, BulletLegendItemInterface } from '@volterra/vis'
 import { VisGenericComponent } from '../../core'

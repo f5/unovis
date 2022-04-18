@@ -115,4 +115,3 @@ export function parseXYConfig (config: XYConfigArgs[]): FrameworkProps {
     contextProps,
   }
 }
-

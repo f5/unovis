@@ -3,8 +3,7 @@
 import { kebabCase } from './utils'
 
 export function getModuleCode (componentName: string, kebabCaseName?: string): string {
-  return `/* eslint-disable notice/notice */
-// !!! This code was automatically generated. You should not change it !!!
+  return `// !!! This code was automatically generated. You should not change it !!!
 import { NgModule } from '@angular/core'
 import { Vis${componentName}Component } from './${kebabCaseName ?? kebabCase(componentName)}.component'
 
