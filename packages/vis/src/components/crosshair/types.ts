@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { NumericAccessor } from 'types/accessor'
 
 export type CrosshairCircle = {

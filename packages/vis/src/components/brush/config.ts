@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { D3BrushEvent } from 'd3-brush'
 import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component/config'
 

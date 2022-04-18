@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import dagre from 'dagre-layout'
 import { min, max } from 'd3-array'
 import { forceSimulation, forceLink, forceManyBody, forceX, forceY, forceCollide } from 'd3-force'

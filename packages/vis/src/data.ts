@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import worldMap from './data/world-simple.json'
 import worldMapSimplest from './data/world-simplest.json'
 import worldMap110mAlpha from './data/world-110m-alpha.json'

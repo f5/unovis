@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { XYComponentCore, XYContainer } from '@volterra/vis'
 import { VisCoreComponent } from './core-component'
 

@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { SyntaxKind } from 'typescript'
 
 export type ConfigProperty = {

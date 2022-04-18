@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import _sample from 'lodash/sample'
 import _flatten from 'lodash/flatten'
 import _findKey from 'lodash/findKey'

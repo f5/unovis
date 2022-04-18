@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { AfterViewInit, OnDestroy, Component } from '@angular/core'
 
 // Vis

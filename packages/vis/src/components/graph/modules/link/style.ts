@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { css, injectGlobal, keyframes } from '@emotion/css'
 
 export const links = css`

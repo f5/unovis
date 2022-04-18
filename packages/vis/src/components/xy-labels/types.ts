@@ -1,5 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
-
 export type XYLabelRenderProps = {
   x: number;
   y: number;

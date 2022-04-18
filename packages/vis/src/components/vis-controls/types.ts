@@ -1,5 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
-
 export interface VisControlItemInterface {
   icon: string;
   callback?: (event: MouseEvent) => any;

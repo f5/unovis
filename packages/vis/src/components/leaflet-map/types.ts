@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { LatLng } from 'leaflet'
 import Supercluster from 'supercluster'
 

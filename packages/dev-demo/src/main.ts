@@ -1,5 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
-
 import { enableProdMode } from '@angular/core'
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic'
 

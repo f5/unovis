@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 // Local Types
 import { GraphNode } from '../types'
 

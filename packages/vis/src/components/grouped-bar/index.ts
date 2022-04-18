@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { scaleBand } from 'd3-scale'
 import { min, range } from 'd3-array'
 import { select } from 'd3'

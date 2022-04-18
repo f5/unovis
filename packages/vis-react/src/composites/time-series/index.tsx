@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { useState, useMemo } from 'react'
 import { cx } from '@emotion/css'
 import { Spacing, TextAlign, Scale } from '@volterra/vis'

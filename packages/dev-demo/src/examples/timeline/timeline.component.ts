@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 /* eslint-disable */
 import { AfterViewInit, Component } from '@angular/core'
 

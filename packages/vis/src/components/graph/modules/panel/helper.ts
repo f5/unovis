@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { Selection, BaseType } from 'd3-selection'
 import { max } from 'd3-array'
 

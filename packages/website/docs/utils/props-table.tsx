@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import * as React from 'react'
 import ReactMarkdown from 'react-markdown'
 import { PropItem } from 'react-docgen-typescript'

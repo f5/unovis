@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { range, min, max } from 'd3-array'
 import { line, curveCardinal, curveCardinalClosed } from 'd3-shape'
 

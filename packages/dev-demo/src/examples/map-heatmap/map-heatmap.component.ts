@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import _ from 'lodash'
 import { Feature } from 'geojson'
 import { StyleSpecification } from 'maplibre-gl'

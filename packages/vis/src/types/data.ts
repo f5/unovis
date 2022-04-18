@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 /** The most generic data record: an object with unknown properties */
 export type GenericDataRecord = Record<string, unknown>
 

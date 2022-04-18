@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 // SVG Components
 export { VisLineComponent } from './components/line/line.component'
 export { VisLineModule } from './components/line/line.module'

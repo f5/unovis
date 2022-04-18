@@ -1,5 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
-
 export enum ZoomLevel {
   Level0 = 1.0,
   Level1 = 0.6,

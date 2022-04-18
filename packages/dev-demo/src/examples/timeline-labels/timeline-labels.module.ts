@@ -1,4 +1,4 @@
-// // Copyright (c) Volterra, Inc. All rights reserved.
+//
 import { NgModule } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import {

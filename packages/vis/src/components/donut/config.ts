@@ -1,5 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
-
 // Core
 import { ComponentConfigInterface, ComponentConfig } from 'core/component/config'
 

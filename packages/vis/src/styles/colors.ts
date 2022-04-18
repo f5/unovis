@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { isNumber } from 'utils/data'
 
 /** Array of default colors */

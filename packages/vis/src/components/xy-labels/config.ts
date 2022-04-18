@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 // Core
 import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component/config'
 

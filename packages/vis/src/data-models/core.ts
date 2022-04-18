@@ -1,5 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
-
 export class CoreDataModel<T> {
   protected _data: T | undefined
 

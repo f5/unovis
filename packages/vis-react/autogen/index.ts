@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { writeFileSync } from 'fs'
 import { exec } from 'child_process'
 import ts from 'typescript'

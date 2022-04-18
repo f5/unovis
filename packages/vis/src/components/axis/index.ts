@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { Selection } from 'd3-selection'
 import { interrupt } from 'd3-transition'
 import { axisLeft, axisTop, axisRight, axisBottom, Axis as D3Axis } from 'd3-axis'

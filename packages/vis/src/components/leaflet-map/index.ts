@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { Selection } from 'd3-selection'
 import { packSiblings } from 'd3-hierarchy'
 import L from 'leaflet'

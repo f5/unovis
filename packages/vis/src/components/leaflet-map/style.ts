@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { css, injectGlobal } from '@emotion/css'
 
 // Inject Leaflet global style

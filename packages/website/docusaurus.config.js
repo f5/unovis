@@ -1,5 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
-
 // Note: type annotations allow type checking and IDEs autocompletion
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires

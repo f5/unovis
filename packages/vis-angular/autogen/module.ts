@@ -1,5 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
-
 import { kebabCase } from './utils'
 
 export function getModuleCode (componentName: string, kebabCaseName?: string): string {

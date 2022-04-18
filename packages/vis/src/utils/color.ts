@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 // Core
 import { getCSSColorVariable } from 'styles/colors'
 

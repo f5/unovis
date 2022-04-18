@@ -1,5 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
-
 import { Config } from 'core/config'
 
 export interface FlowLegendConfigInterface {

@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import _times from 'lodash/times'
 import _uniqueId from 'lodash/uniqueId'
 import _sample from 'lodash/sample'

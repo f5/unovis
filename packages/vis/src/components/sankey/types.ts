@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 /* eslint-disable no-use-before-define */
 import { sankeyLeft, sankeyRight, sankeyCenter, sankeyJustify } from 'd3-sankey'
 import { GraphInputLink, GraphLinkCore, GraphNodeCore } from 'types/graph'

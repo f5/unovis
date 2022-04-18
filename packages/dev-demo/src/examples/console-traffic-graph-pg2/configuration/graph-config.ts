@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import _uniq from 'lodash/uniq'
 import { Graph, GraphLayoutType, GraphConfigInterface, Shape, GraphPanelConfigInterface } from '@volterra/vis'
 

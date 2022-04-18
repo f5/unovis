@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { min, max } from 'd3-array'
 
 // Types

@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { isNumber, isUndefined, cloneDeep, isFunction, without, isString, isObject } from 'utils/data'
 
 // Types

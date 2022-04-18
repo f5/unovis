@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { select, Selection } from 'd3-selection'
 import { sankey } from 'd3-sankey'
 import { extent, max, sum } from 'd3-array'

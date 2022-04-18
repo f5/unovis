@@ -1,5 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
-
 // Core
 import { ContainerCore } from 'core/container'
 import { ComponentCore } from 'core/component'

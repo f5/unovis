@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import _sample from 'lodash/sample'
 import { Graph, GraphLayoutType, GraphConfigInterface } from '@volterra/vis'
 

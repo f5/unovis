@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { AfterViewInit, Component, ViewChild, ElementRef } from '@angular/core'
 import { sum, max } from 'd3-array'
 import _groupBy from 'lodash/groupBy'

@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 /* eslint-disable dot-notation */
 // Config
 import { ComponentConfigInterface, ComponentConfig } from 'core/component/config'

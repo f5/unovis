@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import json from '@rollup/plugin-json'
 import typescript from 'rollup-plugin-typescript2'
 import transformPaths from '@zerollup/ts-transform-paths'

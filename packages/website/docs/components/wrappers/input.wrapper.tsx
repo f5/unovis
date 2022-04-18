@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import * as React from 'react'
 import { XYComponentConfigInterface } from '@volterra/vis'
 

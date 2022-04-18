@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { Feature, Geometry } from 'geojson'
 import {
   geoMercator,

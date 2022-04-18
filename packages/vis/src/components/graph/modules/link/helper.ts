@@ -1,5 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
-
 // Utils
 import { getNumber, getString, getValue } from 'utils/data'
 import { stringToHtmlId } from 'utils/misc'

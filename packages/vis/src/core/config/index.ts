@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { isPlainObject, merge } from 'utils/data'
 
 export class Config {

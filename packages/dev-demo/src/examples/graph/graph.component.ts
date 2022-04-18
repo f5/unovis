@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 /* eslint-disable */
 import { Component, ViewChild, ElementRef, OnInit, AfterViewInit } from '@angular/core'
 import _times from 'lodash/times'

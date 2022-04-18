@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import React from 'react'
 import clsx from 'clsx'
 import styles from './HomepageFeatures.module.css'
