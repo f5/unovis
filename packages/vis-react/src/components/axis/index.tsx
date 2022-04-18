@@ -1,4 +1,3 @@
-/* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
 import React, { useEffect, useRef, useState } from 'react'
 import { Axis, AxisConfigInterface } from '@volterra/vis'
@@ -33,4 +32,3 @@ function VisAxisFC<Datum> (props: VisAxisProps<Datum>): JSX.Element {
 // We export a memoized component to avoid unnecessary re-renders
 //  and define its type explicitly to help react-docgen-typescript to extract information about props
 export const VisAxis: (<Datum>(props: VisAxisProps<Datum>) => JSX.Element | null) = React.memo(VisAxisFC, arePropsEqual)
-export const VisAxisSelectors = Axis.selectors

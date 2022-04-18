@@ -1,4 +1,3 @@
-/* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
 import React, { useEffect, useRef, useState } from 'react'
 import { Graph, GraphConfigInterface, GraphInputNode, GraphInputLink } from '@volterra/vis'
@@ -33,4 +32,3 @@ function VisGraphFC<N extends GraphInputNode, L extends GraphInputLink> (props: 
 // We export a memoized component to avoid unnecessary re-renders
 //  and define its type explicitly to help react-docgen-typescript to extract information about props
 export const VisGraph: (<N extends GraphInputNode, L extends GraphInputLink>(props: VisGraphProps<N, L>) => JSX.Element | null) = React.memo(VisGraphFC, arePropsEqual)
-export const VisGraphSelectors = Graph.selectors

@@ -1,4 +1,3 @@
-/* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
 import React, { useEffect, useRef, useState } from 'react'
 import { Sankey, SankeyConfigInterface, SankeyInputNode, SankeyInputLink } from '@volterra/vis'
@@ -33,4 +32,3 @@ function VisSankeyFC<N extends SankeyInputNode, L extends SankeyInputLink> (prop
 // We export a memoized component to avoid unnecessary re-renders
 //  and define its type explicitly to help react-docgen-typescript to extract information about props
 export const VisSankey: (<N extends SankeyInputNode, L extends SankeyInputLink>(props: VisSankeyProps<N, L>) => JSX.Element | null) = React.memo(VisSankeyFC, arePropsEqual)
-export const VisSankeySelectors = Sankey.selectors

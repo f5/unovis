@@ -12,8 +12,7 @@ export function getComponentCode (
   const genericsDefStr = generics
     ? `<${generics?.map(g => g.name + (g.extends ? ` extends ${g.extends}` : '') + (g.default ? ` = ${g.default}` : '')).join(', ')}>`
     : ''
-  return `/* eslint-disable notice/notice */
-// !!! This code was automatically generated. You should not change it !!!
+  return `// !!! This code was automatically generated. You should not change it !!!
 import React, { useEffect, useRef, useState } from 'react'
 ${importStatements.map(s => `import { ${s.elements.join(', ')} } from '${s.source}'`).join('\n')}
 
@@ -47,6 +46,5 @@ function Vis${componentName}FC${genericsDefStr} (props: Vis${componentName}Props
 // We export a memoized component to avoid unnecessary re-renders
 //  and define its type explicitly to help react-docgen-typescript to extract information about props
 export const Vis${componentName}: (${genericsDefStr}(props: Vis${componentName}Props${genericsStr}) => JSX.Element | null) = React.memo(Vis${componentName}FC, arePropsEqual)
-export const Vis${componentName}Selectors = ${componentName}.selectors
 `
 }

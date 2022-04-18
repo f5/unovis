@@ -1,4 +1,3 @@
-/* eslint-disable notice/notice */
 // !!! This code was automatically generated. You should not change it !!!
 import React, { useEffect, useRef, useState } from 'react'
 import { TopoJSONMap, TopoJSONMapConfigInterface } from '@volterra/vis'
@@ -33,4 +32,3 @@ function VisTopoJSONMapFC<AreaDatum, PointDatum, LinkDatum> (props: VisTopoJSONM
 // We export a memoized component to avoid unnecessary re-renders
 //  and define its type explicitly to help react-docgen-typescript to extract information about props
 export const VisTopoJSONMap: (<AreaDatum, PointDatum, LinkDatum>(props: VisTopoJSONMapProps<AreaDatum, PointDatum, LinkDatum>) => JSX.Element | null) = React.memo(VisTopoJSONMapFC, arePropsEqual)
-export const VisTopoJSONMapSelectors = TopoJSONMap.selectors
