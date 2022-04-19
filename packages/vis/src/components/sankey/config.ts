@@ -139,7 +139,7 @@ export class SankeyConfig<N extends SankeyInputNode, L extends SankeyInputLink> 
   // eslint-disable-next-line dot-notation
   id = (d: SankeyInputNode | SankeyInputLink, i: number): string => (d['_id'] ?? i).toString()
   highlightSubtreeOnHover = false
-  highlightDuration = 400
+  highlightDuration = 300
   highlightDelay = 1000
   iterations = 32
 
