@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { min, extent } from 'd3-array'
 import { Transition } from 'd3-transition'
 import { select, Selection, pointer, BaseType } from 'd3-selection'

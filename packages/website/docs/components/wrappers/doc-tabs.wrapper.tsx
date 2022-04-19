@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import * as React from 'react'
 import Tabs from '@theme/Tabs'
 import TabItem from '@theme/TabItem'

@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { Component } from '@angular/core'
 import { CrosshairCircle, PositionStrategy } from '@volterra/vis'
 

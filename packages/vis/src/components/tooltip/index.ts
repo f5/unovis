@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { select, Selection, pointer } from 'd3-selection'
 
 // Core

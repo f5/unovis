@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.import { readFileSync } from 'fs'
 import { readFileSync } from 'fs'
 import ts from 'typescript'
 import { ConfigProperty, GenericParameter } from './types'

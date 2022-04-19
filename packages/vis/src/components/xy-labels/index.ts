@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 // Core
 import { XYComponentCore } from 'core/xy-component'
 

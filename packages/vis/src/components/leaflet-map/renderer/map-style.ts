@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { StyleSpecification, LayerSpecification } from 'maplibre-gl'
 
 import tangramBaseSettings from './tangram/tangram-settings.json'

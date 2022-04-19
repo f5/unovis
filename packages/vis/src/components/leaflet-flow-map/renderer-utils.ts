@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { Color } from 'three/src/math/Color'
 
 export const DEFAULT_POINT_RADIUS = 1

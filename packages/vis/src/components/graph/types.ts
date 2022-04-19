@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 // Types
 import { Shape } from 'types/shape'
 import { Position } from 'types/position'

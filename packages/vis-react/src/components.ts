@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 // SVG Components
 export * from './components/line'
 export * from './components/area'

@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 /* eslint-disable no-irregular-whitespace */
 import { Config } from 'core/config'
 import { VisEventCallback, VisEventType } from 'core/component/types'

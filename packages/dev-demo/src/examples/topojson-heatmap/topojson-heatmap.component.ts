@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { Component, AfterViewInit } from '@angular/core'
 import { scaleLinear } from 'd3-scale'
 

@@ -1,5 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
-
 // Core
 import { ContainerConfig, ContainerConfigInterface } from 'core/container/config'
 import { ComponentCore } from 'core/component'

@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { AfterViewInit, Component, ViewChild, ViewEncapsulation } from '@angular/core'
 import _sample from 'lodash/sample'
 import _flatten from 'lodash/flatten'

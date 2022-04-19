@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { Selection, pointer } from 'd3-selection'
 import { easeLinear } from 'd3-ease'
 

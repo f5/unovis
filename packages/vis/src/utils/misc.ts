@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { Rect } from 'types/misc'
 import { isString } from 'utils/data'
 

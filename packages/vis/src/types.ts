@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 /* eslint-disable max-len */
 // Global Types
 export { NumericAccessor, StringAccessor, ColorAccessor, BooleanAccessor, GenericAccessor } from 'types/accessor'

@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-// Copyright (c) Volterra, Inc. All rights reserved.
+
 import _ from 'lodash'
 import { Component, ViewChild, ViewEncapsulation } from '@angular/core'
 import { StyleSpecification } from 'maplibre-gl'

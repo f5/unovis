@@ -1,5 +1,5 @@
 /* eslint-disable dot-notation */
-// Copyright (c) Volterra, Inc. All rights reserved.
+
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core'
 import { Graph, GraphLayoutType, Shape, SingleChart } from '@volterra/vis'
 

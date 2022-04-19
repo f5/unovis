@@ -21,10 +21,12 @@
       }
     }
   },
+  "ignorePatterns": ["packages/website/src/examples/**/*.component.ts", "packages/website/src/examples/**/*.module.ts"],
   "rules": {
     "object-curly-spacing": ["error", "always"],
     "prefer-template": "error",
     "no-useless-constructor": "off",
+    "no-multiple-empty-lines": ["error", { "max": 2, "maxBOF": 0}],
     "import/extensions": 0,
     "import/no-unresolved": [2, {"commonjs": true, "amd": true, "ignore": ["^@theme", "^@docusaurus", "^@site"]}],
     "import/no-extraneous-dependencies": 0,

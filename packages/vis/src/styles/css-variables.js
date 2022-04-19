@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { injectGlobal } from '@emotion/css'
 import { colors, getCSSColorVariable } from './colors'
 

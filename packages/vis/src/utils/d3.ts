@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { interrupt, Transition } from 'd3-transition'
 import { BaseType, Selection } from 'd3-selection'
 

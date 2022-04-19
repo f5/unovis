@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 export interface Particle {
   // Geographical properties
   source: { lat: number; lon: number };

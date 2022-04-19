@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { select } from 'd3-selection'
 import L from 'leaflet'
 import { ResizeObserver } from '@juggle/resize-observer'

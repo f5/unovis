@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import _isUndefined from 'lodash/isUndefined'
 import _isArray from 'lodash/isArray'
 import _isEmpty from 'lodash/isEmpty'

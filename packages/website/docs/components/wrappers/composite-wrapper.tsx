@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import * as React from 'react'
 import BrowserOnly from '@docusaurus/BrowserOnly'
 import { XYContainerConfigInterface } from '@volterra/vis'

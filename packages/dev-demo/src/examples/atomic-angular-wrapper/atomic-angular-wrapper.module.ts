@@ -1,4 +1,4 @@
-// // Copyright (c) Volterra, Inc. All rights reserved.
+//
 import { AtomicAngularWrapperComponent } from 'examples/atomic-angular-wrapper/atomic-angular-wrapper.component'
 import { NgModule } from '@angular/core'
 import {

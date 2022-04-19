@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { HierarchyRectangularNode, HierarchyNode } from 'd3-hierarchy'
 
 export interface Hierarchy {

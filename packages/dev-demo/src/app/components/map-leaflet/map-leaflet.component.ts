@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { Component, ViewChild, ElementRef, SimpleChanges, AfterViewInit, Input, OnDestroy } from '@angular/core'
 
 // Viz

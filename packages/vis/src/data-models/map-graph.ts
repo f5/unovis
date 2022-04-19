@@ -1,5 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
-
 // Utils
 import { cloneDeep, isNumber, isObject, isString } from 'utils/data'
 

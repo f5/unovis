@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { css, injectGlobal } from '@emotion/css'
 
 export const nodes = css`

@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 export enum Position {
   Top = 'top',
   Bottom = 'bottom',

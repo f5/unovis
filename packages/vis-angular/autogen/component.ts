@@ -1,5 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
-
 import { kebabCase } from './utils'
 import { ConfigProperty, GenericParameter } from './types'
 
@@ -31,8 +29,7 @@ export function getComponentCode (
   const genericsDefStr = generics
     ? `<${generics?.map(g => g.name + (g.extends ? ` extends ${g.extends}` : '') + (g.default ? ` = ${g.default}` : '')).join(', ')}>`
     : ''
-  return `/* eslint-disable notice/notice */
-// !!! This code was automatically generated. You should not change it !!!
+  return `// !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
 ${importStatements.map(s => `import { ${s.elements.join(', ')} } from '${s.source}'`).join('\n')}
 import { ${provide} } from '../../core'

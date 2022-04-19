@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 // eslint-disable-next-line no-use-before-define
 import React, { ReactNode, useEffect, useRef, useState, PropsWithChildren } from 'react'
 import { SingleChart, SingleChartConfigInterface, ComponentCore, Tooltip } from '@volterra/vis'

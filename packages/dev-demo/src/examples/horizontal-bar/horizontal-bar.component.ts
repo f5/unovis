@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { AfterViewInit, OnDestroy, Component, ElementRef, ViewChild } from '@angular/core'
 import _times from 'lodash/times'
 import _random from 'lodash/random'

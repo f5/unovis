@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { ContinuousScale } from 'types/scale'
 
 // Types

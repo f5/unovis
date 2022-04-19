@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import clamp from 'lodash/clamp'
 import mean from 'lodash/mean'
 import sample from 'lodash/sample'

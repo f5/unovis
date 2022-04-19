@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { PieArcDatum } from 'd3-shape'
 
 /** Data type for Donut Arc Generator */

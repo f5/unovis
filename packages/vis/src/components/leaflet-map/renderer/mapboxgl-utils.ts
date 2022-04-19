@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 // Utils
 import { throttle } from 'utils/data'
 

@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { BrushBehavior, brushX, D3BrushEvent } from 'd3-brush'
 import { Selection } from 'd3-selection'
 

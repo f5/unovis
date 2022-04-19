@@ -1,5 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
-
 // Core
 import { CoreDataModel } from 'data-models/core'
 

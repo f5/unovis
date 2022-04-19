@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { PropItem } from 'react-docgen-typescript'
 export interface FrameworkProps {
   componentStrings: {
@@ -115,4 +114,3 @@ export function parseXYConfig (config: XYConfigArgs[]): FrameworkProps {
     contextProps,
   }
 }
-

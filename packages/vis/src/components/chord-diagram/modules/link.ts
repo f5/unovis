@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { Selection, select } from 'd3-selection'
 import { Transition } from 'd3-transition'
 import { interpolatePath } from 'd3-interpolate-path'

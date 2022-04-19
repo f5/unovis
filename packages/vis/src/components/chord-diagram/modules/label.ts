@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { select, Selection } from 'd3-selection'
 import { ScaleContinuousNumeric } from 'd3-scale'
 import { HierarchyRectangularNode } from 'd3-hierarchy'

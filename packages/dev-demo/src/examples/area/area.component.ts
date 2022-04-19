@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { AfterViewInit, Component } from '@angular/core'
 import _times from 'lodash/times'
 

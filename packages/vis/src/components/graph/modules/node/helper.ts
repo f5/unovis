@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { Selection, BaseType } from 'd3-selection'
 import { interpolate } from 'd3-interpolate'
 import { max, mean } from 'd3-array'

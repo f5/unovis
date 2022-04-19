@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 export const vertex = `
 attribute float size;
 attribute vec4 customColor;

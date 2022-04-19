@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { AfterViewInit, Component } from '@angular/core'
 import { scaleSqrt } from 'd3-scale'
 import _times from 'lodash/times'

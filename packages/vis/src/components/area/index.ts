@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { select } from 'd3-selection'
 import { Transition } from 'd3-transition'
 import { area, Area as AreaInterface } from 'd3-shape'

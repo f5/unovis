@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { Selection, select } from 'd3-selection'
 import { mean } from 'd3-array'
 import { color } from 'd3-color'

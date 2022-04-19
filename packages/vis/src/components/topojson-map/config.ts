@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 /* eslint-disable dot-notation */
 import { GeoProjection } from 'd3-geo'
 import { ComponentConfigInterface, ComponentConfig } from 'core/component/config'

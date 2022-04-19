@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { Selection } from 'd3-selection'
 import { nest } from 'd3-collection'
 import { hierarchy, HierarchyRectangularNode, partition } from 'd3-hierarchy'

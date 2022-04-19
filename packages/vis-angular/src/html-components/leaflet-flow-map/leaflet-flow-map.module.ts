@@ -1,5 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
-
 import { NgModule } from '@angular/core'
 import { VisLeafletFlowMapComponent } from './leaflet-flow-map.component'
 

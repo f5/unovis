@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import L from 'leaflet'
 import '@maplibre/maplibre-gl-leaflet/leaflet-maplibre-gl'
 

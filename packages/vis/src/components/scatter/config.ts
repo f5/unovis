@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { ScaleLinear } from 'd3-scale'
 // Core
 import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component/config'

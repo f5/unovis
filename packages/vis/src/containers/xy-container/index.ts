@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { css } from '@emotion/css'
 import { extent, merge as mergeArrays } from 'd3-array'
 import { Selection } from 'd3-selection'

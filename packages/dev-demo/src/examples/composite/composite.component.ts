@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core'
 import {
   XYContainer,

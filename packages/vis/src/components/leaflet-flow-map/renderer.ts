@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { WebGLRenderer } from 'three/src/renderers/WebGLRenderer.js'
 import { OrthographicCamera } from 'three/src/cameras/OrthographicCamera'
 import { Scene } from 'three/src/scenes/Scene'

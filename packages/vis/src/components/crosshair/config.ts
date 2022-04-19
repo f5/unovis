@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component/config'
 import { Tooltip } from 'components/tooltip'
 

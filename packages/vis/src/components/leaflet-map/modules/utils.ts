@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import L from 'leaflet'
 import { min, max } from 'd3-array'
 import Supercluster, { ClusterFeature, PointFeature } from 'supercluster'

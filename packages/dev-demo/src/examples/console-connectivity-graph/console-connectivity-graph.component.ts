@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core'
 import _flatten from 'lodash/flatten'
 

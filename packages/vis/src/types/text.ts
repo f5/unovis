@@ -1,5 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
-
 export enum TrimMode {
   Start = 'start',
   Middle = 'middle',
