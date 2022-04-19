@@ -86,6 +86,7 @@ export const linkSelectionHelper = css`
 
 export const labelGroup = css`
   label: label-group;
+  cursor: var(--vis-sankey-node-label-cursor);
 `
 
 export const labelTrimmed = css`
@@ -99,7 +100,6 @@ export const label = css`
   fill: var(--vis-sankey-node-label-color);
   text-decoration: var(--vis-sankey-node-label-text-decoration);
   font-weight: var(--vis-sankey-node-label-font-weight);
-  cursor: var(--vis-sankey-node-label-cursor);
   user-select: none;
 
   &, tspan {
@@ -113,7 +113,6 @@ export const sublabel = css`
   dominant-baseline: hanging;
 
   fill: var(--vis-sankey-node-label-color);
-  pointer-events: none;
   user-select: none;
 
   &, tspan {

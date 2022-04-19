@@ -71,13 +71,13 @@ export interface SankeyConfigInterface<N extends SankeyInputNode, L extends Sank
   showSingleNode?: boolean;
   /** Single node position. Default: `Position.CENTER` */
   singleNodePosition?: Position.Center | Position.Left | string;
-  /** Node cursor on hover. Default: `null` */
+  /** Node cursor on hover. Default: `undefined` */
   nodeCursor?: StringAccessor<L>;
-  /** Node icon accessor function or value. Default: `null` */
+  /** Node icon accessor function or value. Default: `undefined` */
   nodeIcon?: StringAccessor<N>;
-  /** Node color accessor function or value. Default: `null` */
+  /** Node color accessor function or value. Default: `undefined` */
   nodeColor?: ColorAccessor<N>;
-  /** Icon color accessor function or value. Default: `null` */
+  /** Icon color accessor function or value. Default: `undefined` */
   iconColor?: ColorAccessor<N>;
 
   // Links
@@ -85,7 +85,7 @@ export interface SankeyConfigInterface<N extends SankeyInputNode, L extends Sank
   linkColor?: StringAccessor<L>;
   /** Link flow accessor function or value. Default: `l => l.value` */
   linkValue?: NumericAccessor<L>;
-  /** Link cursor on hover. Default: `null` */
+  /** Link cursor on hover. Default: `undefined` */
   linkCursor?: StringAccessor<L>;
 
   // Labels
@@ -115,17 +115,19 @@ export interface SankeyConfigInterface<N extends SankeyInputNode, L extends Sank
   labelTextSeparator?: string[];
   /** Force break words to fit long labels. Default: `true` */
   labelForceWordBreak?: boolean;
-  /** Label color.. Default: `null` */
+  /** Label color. Default: `undefined` */
   labelColor?: ColorAccessor<N>;
+  /** Label cursor on hover. Default: `undefined` */
+  labelCursor?: StringAccessor<L>;
   /** Custom function to set the label visibility. Default: `undefined` */
   labelVisibility?: ((d: N, bbox: { x: number; y: number; width: number; height: number }, hovered: boolean) => boolean) | undefined;
   /** Sub-label font size in pixel. Default: `10` */
   subLabelFontSize?: number;
-  /** Sub-label color. Default: `null` */
+  /** Sub-label color. Default: `undefined` */
   subLabelColor?: ColorAccessor<N>;
-  /** Sub-label position. Default: `SubLabelPlacement.INLINE` */
+  /** Sub-label position. Default: `SankeySubLabelPlacement.Inline` */
   subLabelPlacement?: SankeySubLabelPlacement | string;
-  /** Sub-label to label width ration when SubLabelPlacement.INLINE is set. Default: `0.4` */
+  /** Sub-label to label width ration when `subLabelPlacement` is set to `SankeySubLabelPlacement.Inline`. Default: `0.4` */
   subLabelToLabelInlineWidthRatio?: number;
 }
 
@@ -155,9 +157,9 @@ export class SankeyConfig<N extends SankeyInputNode, L extends SankeyInputLink> 
   nodeColor = (d: N): string => d['color']
   showSingleNode = true
   singleNodePosition = Position.Center
-  nodeCursor = null
-  nodeIcon = null
-  iconColor = null
+  nodeCursor = undefined
+  nodeIcon = undefined
+  iconColor = undefined
 
   // Labels
   label = (d: N): string => d['label']
@@ -169,19 +171,20 @@ export class SankeyConfig<N extends SankeyInputNode, L extends SankeyInputLink> 
   labelTrimMode = TrimMode.Middle
   labelForceWordBreak = true
   labelFontSize = 12
-  labelColor = null
+  labelCursor = undefined
+  labelColor = undefined
   labelMaxWidth = 70
   labelExpandTrimmedOnHover = true;
   labelLength = undefined
   labelVisibility = undefined
   subLabel = undefined
   subLabelFontSize = 10
-  subLabelColor = null
+  subLabelColor = undefined
   subLabelPlacement = SankeySubLabelPlacement.Below
   subLabelToLabelInlineWidthRatio = 0.4
 
   // Links
   linkValue = (d: L): number => d['value']
   linkColor = (d: L): string => d['color']
-  linkCursor = null
+  linkCursor = undefined
 }
