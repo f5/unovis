@@ -164,6 +164,7 @@ export function renderLabel<N extends SankeyInputNode, L extends SankeyInputLink
     .attr('font-size', config.labelFontSize)
     .style('fill', getColor(d, config.labelColor))
     .attr('transform', `translate(${labelOrientationMult * labelPadding},${labelTranslateY})`)
+    .style('cursor', (d: SankeyNode<N, L>) => getString(d, config.labelCursor))
 
   const labelMaxWidth = isSublabelInline ? config.labelMaxWidth * (1 - (sublabelText ? config.subLabelToLabelInlineWidthRatio : 0)) : config.labelMaxWidth
   if (config.labelFit === FitMode.Wrap || forceExpand) wrapSVGText(labelTextSelection, { width: labelMaxWidth, separator, verticalAlign: VerticalAlign.Top })
@@ -182,6 +183,7 @@ export function renderLabel<N extends SankeyInputNode, L extends SankeyInputLink
     .attr('font-size', config.subLabelFontSize)
     .style('fill', getColor(d, config.subLabelColor))
     .attr('transform', `translate(${sublabelTranslateX},${sublabelTranslateY})`)
+    .style('cursor', (d: SankeyNode<N, L>) => getString(d, config.labelCursor))
 
   const sublabelMaxWidth = isSublabelInline ? config.labelMaxWidth * config.subLabelToLabelInlineWidthRatio : config.labelMaxWidth
   if (config.labelFit === FitMode.Wrap || forceExpand) wrapSVGText(sublabelTextSelection, { width: sublabelMaxWidth, separator, verticalAlign: VerticalAlign.Top })

@@ -14,7 +14,7 @@ export const variables = injectGlobal`
     --vis-sankey-link-hover-opacity: 1.0;
 
     --vis-sankey-node-cursor: default;
-    --vis-sankey-node-fill: #4e4dd1;
+    --vis-sankey-node-color: #4e4dd1;
     --vis-sankey-node-label-color: #575c65;
     --vis-sankey-node-opacity: 0.9;
     --vis-sankey-node-hover-opacity: 1.0;
@@ -35,7 +35,8 @@ export const variables = injectGlobal`
 
     --vis-sankey-label-font-family: var(--vis-font-family);
 
-    --vis-dark-sankey-link-color: #575c65;
+    --vis-dark-sankey-link-color: #555d75;
+    --vis-dark-sankey-node-color: #6b69ff;
     --vis-dark-sankey-node-label-color: #eaeaea;
     --vis-dark-sankey-node-label-background-fill-color: #292b34;
     --vis-dark-sankey-node-label-background-stroke-color: #575c65;
@@ -43,7 +44,8 @@ export const variables = injectGlobal`
   }
 
   body.theme-dark ${`.${root}`} {
-    --vis-sankey-link-color: var(--vis-dark--sankey-link-color);
+    --vis-sankey-node-color: var(--vis-dark-sankey-node-color);
+    --vis-sankey-link-color: var(--vis-dark-sankey-link-color);
     --vis-sankey-node-label-color: var(--vis-dark-sankey-node-label-color);
     --vis-sankey-node-label-background-fill-color: var(--vis-dark-sankey-label-background-fill-color);
     --vis-sankey-node-label-background-stroke-color: var(--vis-dark-sankey-label-background-stroke-color);
@@ -86,6 +88,7 @@ export const linkSelectionHelper = css`
 
 export const labelGroup = css`
   label: label-group;
+  cursor: var(--vis-sankey-node-label-cursor);
 `
 
 export const labelTrimmed = css`
@@ -99,7 +102,6 @@ export const label = css`
   fill: var(--vis-sankey-node-label-color);
   text-decoration: var(--vis-sankey-node-label-text-decoration);
   font-weight: var(--vis-sankey-node-label-font-weight);
-  cursor: var(--vis-sankey-node-label-cursor);
   user-select: none;
 
   &, tspan {
@@ -113,7 +115,6 @@ export const sublabel = css`
   dominant-baseline: hanging;
 
   fill: var(--vis-sankey-node-label-color);
-  pointer-events: none;
   user-select: none;
 
   &, tspan {
@@ -148,7 +149,7 @@ export const node = css`
   label: node;
 
   cursor: var(--vis-sankey-node-cursor);
-  fill: var(--vis-sankey-node-fill);
+  fill: var(--vis-sankey-node-color);
   opacity: var(--vis-sankey-node-opacity);
 
   &:hover {
@@ -163,7 +164,7 @@ export const nodeIcon = css`
   text-anchor: middle;
   font-size: var(--vis-sankey-icon-size);
   fill: var(--vis-sankey-node-icon-color);
-  stroke: var(--vis-sankey-node-fill);
+  stroke: var(--vis-sankey-node-color);
   stroke-opacity: var(--vis-sankey-icon-stroke-opacity);
   user-select: none;
 `

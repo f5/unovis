@@ -2,6 +2,7 @@ import { AfterViewInit, Component, ViewChild, ElementRef } from '@angular/core'
 import { sum, max } from 'd3-array'
 import _groupBy from 'lodash/groupBy'
 import _times from 'lodash/times'
+import _sample from 'lodash/sample'
 
 // Vis
 import {
@@ -44,18 +45,24 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
 
   config: SankeyConfigInterface<any, any> = {
     labelPosition: Position.Right,
-    labelVerticalAlign: VerticalAlign.Top,
-    labelBackground: true,
+    labelVerticalAlign: VerticalAlign.Middle,
+    labelBackground: false,
     nodeHorizontalSpacing: NODE_HORIZONTAL_SPACE,
     nodeWidth: NODE_WIDTH,
     nodeAlign: SankeyNodeAlign.Left,
     iconColor: '#e9edfe',
-    nodePadding: 28,
-    labelColor: d => d.dynExamples.length ? '#4c52ca' : null,
-    subLabelColor: this.getSubLabelColor,
-    subLabel: d => d.isLeafNode ? d.method : `${d.leafs} leaf${d.leafs === 1 ? '' : 's'}`,
+    nodePadding: 50,
+    nodeMinHeight: 6,
+    // labelColor: d => '#0D1C5B', // d.dynExamples.length ? '#4c52ca' : null,
+    labelCursor: 'pointer',
+    // subLabelColor: this.getSubLabelColor,
+    label: d => d.isLeafNode ? d.method : `${d.leafs} ${d.leafs === 1 ? 'Leaf' : 'Leaves'}`,
+    subLabel: d => d.label,
+    nodeColor: d => d.isLeafNode ? _sample(['#0D1C5B', '#FF8400', '#FFCC09']) : null,
+    subLabelFontSize: 14,
+    labelFontSize: 14,
     labelMaxWidth: NODE_HORIZONTAL_SPACE - 40,
-    subLabelPlacement: SankeySubLabelPlacement.Inline,
+    subLabelPlacement: SankeySubLabelPlacement.Below,
     nodeCursor: 'pointer',
     linkCursor: 'pointer',
     nodeIcon: d => (d.sourceLinks[0] || (!d.sourceLinks[0] && d.collapsed)) ? (d.collapsed ? '+' : '') : null,
@@ -102,11 +109,12 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
     sizing: Sizing.Extend,
     margin: this.margin,
     tooltip: new Tooltip({
-      horizontalPlacement: Position.Right,
-      verticalPlacement: Position.Center,
-      horizontalShift: 15,
+      horizontalPlacement: Position.Center,
+      verticalPlacement: Position.Top,
+      horizontalShift: 0,
+      verticalShift: 25,
       triggers: {
-        [Sankey.selectors.gNode]: d => this.getTooltipContent(d),
+        // [Sankey.selectors.gNode]: d => this.getTooltipContent(d),
       },
     }),
   }

@@ -48,6 +48,10 @@ export class Sankey<N extends SankeyInputNode, L extends SankeyInputLink> extend
       mouseenter: this._onNodeMouseOver.bind(this),
       mouseleave: this._onNodeMouseOut.bind(this),
     },
+    [Sankey.selectors.node]: {
+      mouseenter: this._onNodeRectMouseOver.bind(this),
+      mouseleave: this._onNodeRectMouseOut.bind(this),
+    },
     [Sankey.selectors.link]: {
       mouseenter: this._onLinkMouseOver.bind(this),
       mouseleave: this._onLinkMouseOut.bind(this),
@@ -285,14 +289,20 @@ export class Sankey<N extends SankeyInputNode, L extends SankeyInputLink> extend
   }
 
   private _onNodeMouseOver (d: SankeyNode<N, L>, event: MouseEvent): void {
-    const { config } = this
-    if (config.highlightSubtreeOnHover) this.highlightSubtree(d)
     onNodeMouseOver(d, select(event.currentTarget as SVGGElement), this.config, this._width)
   }
 
   private _onNodeMouseOut (d: SankeyNode<N, L>, event: MouseEvent): void {
-    this.disableHighlight()
     onNodeMouseOut(d, select(event.currentTarget as SVGGElement), this.config, this._width)
+  }
+
+  private _onNodeRectMouseOver (d: SankeyNode<N, L>): void {
+    const { config } = this
+    if (config.highlightSubtreeOnHover) this.highlightSubtree(d)
+  }
+
+  private _onNodeRectMouseOut (d: SankeyNode<N, L>): void {
+    this.disableHighlight()
   }
 
   private _onLinkMouseOver (d: SankeyLink<N, L>, event: MouseEvent): void {
