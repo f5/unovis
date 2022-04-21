@@ -218,7 +218,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     })
   }
 
-  setTheme (theme: TangramScene | StyleSpecification): void {
+  setTheme (theme: TangramScene | StyleSpecification | string): void {
     const { config } = this
     const layer = this._map.layer as any // Using any because the typings are not full
     if (config.renderer === LeafletMapRenderer.Tangram) {

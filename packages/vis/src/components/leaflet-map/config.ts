@@ -29,10 +29,10 @@ export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterfa
   renderer?: LeafletMapRenderer | string;
   /** External instance of Tangram to be used in the map. Default: `undefined` */
   tangramRenderer?: any;
-  /** Tangram Scene or MapLibre StyleSpecification settings. Default: `undefined` */
-  rendererSettings: TangramScene | MapLibreStyleSpecs;
+  /** Tangram Scene or MapLibre StyleSpecification settings, or a URL to it. Default: `undefined` */
+  rendererSettings: TangramScene | MapLibreStyleSpecs | string;
   /** Tangram Scene or MapLibre StyleSpecification settings for dark theme. Default: `undefined` */
-  rendererSettingsDarkTheme?: TangramScene | MapLibreStyleSpecs;
+  rendererSettingsDarkTheme?: TangramScene | MapLibreStyleSpecs | string;
   /** Tile server access token or API key. Default: `''` */
   accessToken?: string;
   /** Array of attribution labels. Default: `['<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a>']` */
