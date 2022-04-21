@@ -28,6 +28,11 @@ import { VisCoreComponent } from '../../core'
 export class VisLeafletMapComponent<Datum> implements LeafletMapConfigInterface<Datum>, AfterViewInit {
   @ViewChild('container', { static: false }) containerRef: ElementRef
 
+  /** Width in pixels or in CSS units. By default, the map will automatically fit to the size of the parent element. Default: `undefined`. */
+  @Input() width?: number | string;
+  /** Height in pixels or in CSS units. By default, the map will automatically fit to the size of the parent element. Default: `undefined`. */
+  @Input() height?: number | string;
+
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */
   @Input() duration?: number
 
@@ -100,10 +105,10 @@ export class VisLeafletMapComponent<Datum> implements LeafletMapConfigInterface<
   @Input() tangramRenderer?: any
 
   /** Tangram Scene or MapLibre StyleSpecification settings. Default: `MapLibreArcticLight` */
-  @Input() rendererSettings: TangramScene | StyleSpecification
+  @Input() rendererSettings: TangramScene | StyleSpecification | string
 
   /** Tangram Scene or MapLibre StyleSpecification settings for dark theme. Default: `undefined` */
-  @Input() rendererSettingsDarkTheme: TangramScene | StyleSpecification
+  @Input() rendererSettingsDarkTheme: TangramScene | StyleSpecification | string
 
   /** Tile server access token or API key. Default: `''` */
   @Input() accessToken?: string
@@ -225,8 +230,8 @@ export class VisLeafletMapComponent<Datum> implements LeafletMapConfigInterface<
   }
 
   private getConfig (): LeafletMapConfigInterface<Datum> {
-    const { duration, events, attributes, flyToDuration, fitViewPadding, zoomDuration, initialBounds, bounds, renderer, tangramRenderer, accessToken, rendererSettings, rendererSettingsDarkTheme, attribution, onMapInitialized, onMapMoveZoom, onMapMoveStart, onMapMoveEnd, onMapZoomStart, onMapZoomEnd, onMapClick, pointLongitude, pointLatitude, pointId, pointShape, pointColor, pointRadius, pointLabel, pointBottomLabel, pointCursor, selectedNodeId, clusterOutlineWidth, clusterBackground, clusterExpandOnClick, clusterRadius, valuesMap, topoJSONLayer, tooltip } = this
-    const config = { duration, events, attributes, flyToDuration, fitViewPadding, zoomDuration, initialBounds, bounds, renderer, tangramRenderer, accessToken, rendererSettings, rendererSettingsDarkTheme, attribution, onMapInitialized, onMapMoveZoom, onMapMoveStart, onMapMoveEnd, onMapZoomStart, onMapZoomEnd, onMapClick, pointLongitude, pointLatitude, pointId, pointShape, pointColor, pointRadius, pointLabel, pointBottomLabel, pointCursor, selectedNodeId, clusterOutlineWidth, clusterBackground, clusterExpandOnClick, clusterRadius, valuesMap, topoJSONLayer, tooltip }
+    const { width, height, duration, events, attributes, flyToDuration, fitViewPadding, zoomDuration, initialBounds, bounds, renderer, tangramRenderer, accessToken, rendererSettings, rendererSettingsDarkTheme, attribution, onMapInitialized, onMapMoveZoom, onMapMoveStart, onMapMoveEnd, onMapZoomStart, onMapZoomEnd, onMapClick, pointLongitude, pointLatitude, pointId, pointShape, pointColor, pointRadius, pointLabel, pointBottomLabel, pointCursor, selectedNodeId, clusterOutlineWidth, clusterBackground, clusterExpandOnClick, clusterRadius, valuesMap, topoJSONLayer, tooltip } = this
+    const config = { width, height, duration, events, attributes, flyToDuration, fitViewPadding, zoomDuration, initialBounds, bounds, renderer, tangramRenderer, accessToken, rendererSettings, rendererSettingsDarkTheme, attribution, onMapInitialized, onMapMoveZoom, onMapMoveStart, onMapMoveEnd, onMapZoomStart, onMapZoomEnd, onMapClick, pointLongitude, pointLatitude, pointId, pointShape, pointColor, pointRadius, pointLabel, pointBottomLabel, pointCursor, selectedNodeId, clusterOutlineWidth, clusterBackground, clusterExpandOnClick, clusterRadius, valuesMap, topoJSONLayer, tooltip }
     const keys = Object.keys(config) as (keyof LeafletMapConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
