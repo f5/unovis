@@ -41,3 +41,8 @@
   --vis-crosshair-line-stroke: #f88080;
   --vis-crosshair-circle-stroke: #000000;
 }
+
+.custom-tooltip {
+  --vis-tooltip-background-color: #3f3f3f;
+  --vis-tooltip-text-color: #fefefe;
+}

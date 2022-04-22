@@ -67,6 +67,10 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
   display: block !important;
 }
 
+.hidden {
+  display: none;
+}
+
 .table {
   font-size: smaller;
   width: 100%;

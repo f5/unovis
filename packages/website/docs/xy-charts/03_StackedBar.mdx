@@ -8,7 +8,7 @@ import CodeBlock from '@theme/CodeBlock'
 
 import { PropTable } from '../utils/props-table'
 import { data, generateDataRecords } from '../utils/data'
-import { XYWrapper, XYWrapperWithInput, DynamicXYWrapper } from '../components/'
+import { XYWrapper, XYWrapperWithInput, DynamicXYWrapper } from './wrapper.tsx'
 
 export const defaultProps = (n=10) => ({
   name: "StackedBar",
@@ -37,7 +37,6 @@ By default, the width of the bars is calculated automatically based on their cou
 ### Limiting Dynamic Bar Width
 When you don't know the number of bars in advance, and you're relying on automatic bar width calculation, you might want to limit the
 maximum bar width to prevent the bars from being too wide when there are just a few of them. That can be achieved by setting the barMaxWidth property.
-<DynamicXYWrapper {...defaultProps()} primaryData={generateDataRecords(3)} secondaryData={generateDataRecords(50)} exampleProps={{barMaxWidth: 40}}/>
 
 ### Bar Padding
 Another way to control the bar's width is by changing the barPadding property, which specifies how much of the available sector should be empty, in the range of [0,1).

@@ -1,7 +1,3 @@
-.hidden {
-  display: none;
-}
-
 .input-wrapper {
   position: relative;
 }
@@ -11,12 +7,6 @@
   justify-content: center;
   align-items: center;
   margin: var(--ifm-tabs-padding-vertical);
-}
-
-.toggle {
-  position: absolute;
-  right: 0;
-  top: 0;
 }
 
 .prop-input-label {
@@ -60,28 +50,6 @@
   border-radius: var(--ifm-global-radius);
 }
 
-.anim-button {
-  cursor: pointer;
-  font-size: large;
-}
-
-.anim-button:hover::after {
-  text-decoration: underline;
-}
-
-.anim-button::after {
-  content: '▶️';
-}
-
-input:checked + .anim-button:after {
-  content: '⏸';
-}
-
-pre > code {
-  display: block;
-  width: 100%;
-}
-
 @media only screen and (min-width: 550px) {
   .prop-input-label {
     position: absolute;
@@ -89,6 +57,7 @@ pre > code {
     top: 0;
     max-width: 45%;
     flex-wrap: wrap;
+    z-index: 999;
   }
 
   .prop-input-label input[type="range"] {
@@ -102,7 +71,3 @@ pre > code {
   }
 }
 
-.custom-tooltip {
-  --vis-tooltip-background-color: #3f3f3f;
-  --vis-tooltip-text-color: #fefefe;
-}

@@ -3,10 +3,10 @@ sidebar_position: 0
 ---
 import CodeBlock from '@theme/CodeBlock';
 import BrowserOnly from '@docusaurus/BrowserOnly'
-import { parseProps } from '../utils/props-helper.ts'
+import { FrameworkTabs } from '../utils/framework-tabs'
 import { PropTable } from '../utils/props-table'
 import { generateDataRecords, generateTimeSeries } from '../utils/data'
-import { XYWrapper, XYDocTabs, XYWrapperWithInput } from '../components';
+import { XYWrapper, XYWrapperWithInput } from './wrapper.tsx'
 
 export const defaultProps = (n=10) => ({
   name: "Axis",
@@ -14,31 +14,17 @@ export const defaultProps = (n=10) => ({
   type: "x",
   height: 100,
   hiddenProps: { gridLine: false },
-  xyConfigKey: "xAxis",
+  configKey: "xAxis",
 });
 
-export const AxesWrapper = ({data, xConfig, yConfig, chartName, chartConfig}) => {
-    return (
-        <>
-        <BrowserOnly fallback={<div>Loading...</div>}>
-            {() => {
-            // eslint-disable-next-line @typescript-eslint/naming-convention
-            const { VisXYContainer, VisAxis } = require('@volterra/vis-react')
-            const Chart = chartName ? require('@volterra/vis-react')[`Vis${chartName}`] : <></>
-            return (
-                <VisXYContainer
-                data={data || generateDataRecords(10)}
-                height={150}
-                >
-                {xConfig && <VisAxis type="x" {...xConfig}/>}
-                {yConfig && <VisAxis type="y" {...yConfig}/>}
-                {chartConfig && <Chart {...chartConfig}/>}
-                </VisXYContainer>
-            )
-            }}
-        </BrowserOnly>
-    </>)
-}
+export const multiProps = (xProps, yProps) => ({
+  ...defaultProps(),
+  ...xProps,
+  componentProps: [
+    { name: "Axis", key: "yAxis", props: {type: "y", ...yProps } },
+  ],
+  showContext: "container"
+})
 
 ### Basic configuration
 The _Axis_ component has been designed to work together with _XY Container_. The minimal _Axis_ configuration looks like:
@@ -51,12 +37,12 @@ _Axis_ supports two `AxisType` properties to bind to your data: `AxisType.X` and
 <XYWrapper {...defaultProps()}/>
 
 #### AxisType.Y
-<XYWrapper {...defaultProps()} type="y" xyConfigKey="yAxis"/>
+<XYWrapper {...defaultProps()} type="y" configKey="yAxis"/>
 
 ### Axis Position
 You can change the position of your axis with a `Position` type or a string equivalent: `"top"`, `"right"`, `"bottom"`, or `"left"`.
 
-<XYWrapper {...defaultProps()} position="top" label="X" componentProps={[{name: "Axis", key: "yAxis", props: {type: "y", position: "right", label: "Y"}}]} showContext="full"/>
+<XYWrapper {...multiProps({ position: 'top', label: 'X'}, {position: "right", label: "Y"})}/>
 
 :::note
 
@@ -222,25 +208,15 @@ function tickValues() {
 
 ## Displaying Multiple Axes
 More commonly, you will want to display both an x and y axis for your graph. You can display multiple axes in an _XY Container_ like so:
-
-<XYDocTabs componentStrings={{
-    react: `<VisAxis type="x"/>\n      <VisAxis type="y"/>`,
-    angular: `<vis-axis type="x"></vis-axis>\n  <vis-axis type="y"></vis-axis>`,
-    typescript: `xAxis: new Axis({ type: "x" }})\n  yAxis: new Axis({ type: "y" }})`
-}} contextProps={[]} showContext="full"/>
-
-<AxesWrapper xConfig yConfig/>
+<XYWrapper {...multiProps()}/>
 
 ## Displaying Axis with a Chart
 You can include a chart within your _XY Container_ alongside your axes like this:
-<XYDocTabs componentStrings={{
-    react: `<VisAxis type="x"/>\n      <VisAxis type="y"/>\n      <VisLine x={x} y={y}/>`,
-    angular: `<vis-axis type="x"></vis-axis>\n  <vis-axis type="y"></vis-axis>\n   <vis-line [x]="x" [y]="y"/>`,
-    typescript: `components: [new Line({ x, y })],
-  xAxis: new Axis({ type: "x" }}),
-  yAxis: new Axis({ type: "y" }})`
-}} contextProps={['x: (d: DataRecord) => d.x', 'y: (d: DataRecord) => d.y']} showContext/>
-<AxesWrapper xConfig yConfig chartName="Line" chartConfig={{x: d=>d.x, y: d=>d.y}}/>
+<XYWrapper {...multiProps()}
+  componentProps={[
+    ...multiProps().componentProps,
+    { name: "Line", key: 'components', props: {x: d=>d.x, y: d=>d.y }}
+  ]}/>
 
 ## Additional Styling: CSS Variables
 The _Axis_ component supports additional styling via CSS variables that you can define for your visualization container. For example:
