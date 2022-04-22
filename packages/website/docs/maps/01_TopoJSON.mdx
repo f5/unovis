@@ -28,18 +28,18 @@ export const pointData = {
 }
 
 ### Basic Configuration
-The _VisTopoJSONMap_ is a map that uses [TopoJSON](https://github.com/topojson/topojson) as its underlying data. The basic configuration is:
+The _TopoJSONMap_ is a map that uses [TopoJSON](https://github.com/topojson/topojson) as its underlying data. The basic configuration is:
 <DocWrapper {...defaultProps()} topojson="WorldMapTopoJSON" showContext="container"/>
 
 Currently the following TopoJSONs available to import directly from `@volterra/vis`: `WorldMapTopoJSON`, `WorldMapSimplestTopoJSON`, and `WorldMap110mAlphaTopoJSON`.
 
 ### Map Data
-There are three main building blocks that can make up the data supplied to _VisTopoJSONMap_:
+There are three main building blocks that can make up the data supplied to _TopoJSONMap_:
 * **point**, a geographical coordinate
 * **link**, a graph edge that connects two _points_
 * **area**, a geographical area
 
-The container for _VisTopoJSONMap_ accepts data in the form of an `Object` with these three building blocks as keys mapped to their data arrays.
+The container for _TopoJSONMap_ accepts data in the form of an `Object` with these three building blocks as keys mapped to their data arrays.
 
 <DocWrapper {...defaultProps()}  data={data} showContext="full"/>
 
@@ -52,7 +52,7 @@ type MapPoint = {
   longitute: NumericAccessor;
 }
 ```
-Or, you can simply provide these values through the `latitude` and `longitute` properties of your _VisTopoJSONMap_ directly.
+Or, you can simply provide these values through the `latitude` and `longitute` properties of your _TopoJSONMap_ directly.
 
 <DocWrapper {...defaultProps()} topojson="WorldMapTopoJSON" dataType="undefined,MapPoint,undefined" data={pointData} showContext="full"/>
 
@@ -62,7 +62,7 @@ Or, you can simply provide these values through the `latitude` and `longitute` p
   mapFitToPoints={true}/>
 
 ### Point Customization
-The following _VisTopoJSONMap_ properties accept accessor functions to customize the appearance of your points:
+The following _TopoJSONMap_ properties accept accessor functions to customize the appearance of your points:
 * `pointColor`
 * `pointCursor`
 * `pointRadius`
@@ -73,7 +73,7 @@ You can provide labels with the `pointLabel` attribute, which accepts a `StringA
 <DocWrapper {...defaultProps()} data={pointData} pointLabel={d => d.city} showContext="minimal"/>
 
 ### Custom Point Labels
-The following _VisTopoJSONMap_ properties can further customize your Point Label.
+The following _TopoJSONMap_ properties can further customize your Point Label.
 * `pointLabelPosition`
 * `pointLabelTextBrighnessRatio`
 
@@ -124,28 +124,28 @@ export const colorLegendItems = [
 
 ### Links
 A minimum viable data type of the objects provided to the `links` attribute contains the keys `source` and `target`, which correspond
-to the points the link will connect. Most commonly, the `pointId
+to the points the link will connect. Most commonly, the `pointId`
 
 ```ts
 type MapLink = {
   source: string | number | MapPoint;
-  target: string | number | MapPoint; 
+  target: string | number | MapPoint;
 }
 ```
 Or, you can simply provide these values through the `linkSource` and `linkTarget` properties.
 
 <DocWrapper {...defaultProps()} topojson="WorldMapTopoJSON" dataType="MapPoint,MapLink,undefined"  data={{...data, areas: [] }} showContext="full"/>
 
-#### Link customizaiton
+#### Link customization
 You can further customize the map _Links_ with the following properties:
 * `linkColor`
 * `linkCursor`
 * `linkWidth`
 
 ### Areas
-To work with features in the __VisTopoJSONMap_, all you need is a unique `id` which is defined in the chart's _topojson_ definition.
+To work with features in the __TopoJSONMap_, all you need is a unique `id` which is defined in the chart's _topojson_ definition.
 ```ts
-type MapArea = { 
+type MapArea = {
   id: string;
 }
 ```
@@ -153,13 +153,13 @@ type MapArea = {
   areas: data.areas
 }} dataType="MapArea,undefined,undefined" topojson="WorldMapTopoJSON" showContext="full"/>
 
-#### Area customizaiton
+#### Area customization
 You can further customize the map _Area_ with the following properties:
 * `areaColor`
 * `areaCursor`
 
 ### Projection
-You can provide a projection for your _VisTopoJSONMap_ with a `MapProjection` instance. See d3's geoProjection for more information:
+You can provide a projection for your _TopoJSONMap_ with a `MapProjection` instance. See D3's [geo projections](https://github.com/d3/d3-geo) for more information:
 <BrowserOnly>
   {() => {
     const { WorldMapTopoJSON, MapProjection, MapProjectionKind } = require('@volterra/vis')
@@ -185,12 +185,12 @@ You can provide a projection for your _VisTopoJSONMap_ with a `MapProjection` in
 </BrowserOnly>
 
 ### Zoom
-By default, zooming is enabled for a _VisTopoJSONMap_ component. You can disable it by setting the `disableZoom` property to `true`.
+By default, zooming is enabled for a _TopoJSONMap_ component. You can disable it by setting the `disableZoom` property to `true`.
 
 For further customization, you can configure the following zoom properties:
 
 ### zoomFactor
-To set the initial zooom factor.
+To set the initial zoom factor.
 
 ### zoomExtent
 `zoomExtent` represents the range `[a,b]` which your map can zoom in and out, where `[a, b]` are the minimum and maximum zoom factors, respectively.
@@ -198,20 +198,20 @@ To set the initial zooom factor.
 <DocWrapper {...defaultProps()} zoomFactor={5} zoomExtent={[1,5]}/>
 
 ### zoomDuration
-`zoomDuration` is the duration of the animation on when zooming in on your __VisTopoJSONMap_ with _Vis Controls_.
+`zoomDuration` is the duration of the animation on when zooming in on your _TopoJSONMap_ with _VisControls_.
 See <a href="#TopoJSON#example-topojsonmap-alongside-viscontrols">this example</a> for more details.
 
 ### Example: TopoJSONMap alongside VisControls
 
 ### Heatmap Mode
-For datasets with a lot of points, you can enable `heatMapMode`
+For datasets with a lot of points, you can enable `heatmapMode`
 <DocWrapper {...defaultProps()} data={{ points: cities}} heatmapMode={true}/>
 
-You can customize the apeparance of your heat map blur with the `heatmapModeBlurStdDeviation` property.
+You can customize the appearance of your heat map blur with the `heatmapModeBlurStdDeviation` property.
 
 ### heatmapModeZoomLevelThreshold
-To lower or raise the the threshold hat will disable the blur effect of your heat map, use the the `heatmapModeZoomLevelThreshold` property.
-You can provide a zoom level, (i.e. `2` for _2x_ zoom), that once reached, that will no longer display display the blur effect.
+To lower or raise the threshold hat will disable the blur effect of your heat map, use the the `heatmapModeZoomLevelThreshold` property.
+You can provide a zoom level, (i.e. `2` for _2x_ zoom), that once reached, that will no longer display the blur effect.
 
 ### Component Props
 <PropTable name="VisTopoJSONMap"/>
