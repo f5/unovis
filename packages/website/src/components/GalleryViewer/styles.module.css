@@ -5,10 +5,18 @@
 .title {
 }
 
+.description {
+  font-size: 14pt;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
 .example {
+  position: relative;
   width: 100%;
 }
 
 .codeBlock {
+  margin-top: 10px;
 }
 

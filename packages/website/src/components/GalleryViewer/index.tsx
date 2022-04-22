@@ -20,6 +20,7 @@ export function GalleryViewer ({ example }: GalleryViewerProps): JSX.Element {
     <div className={s.example}>
       {example.component()}
     </div>
+    <div className={s.description}>{example.description}</div>
     <div className={s.codeBlock}>
       <Tabs>
         <TabItem value="react" label="React">
@@ -41,6 +42,11 @@ export function GalleryViewer ({ example }: GalleryViewerProps): JSX.Element {
         <TabItem value="typescript" label="TypeScript">
           <CodeBlock language="typescript">
             {example.codeTs}
+          </CodeBlock>
+        </TabItem>
+        <TabItem value="data" label="Data">
+          <CodeBlock language="typescript">
+            {example.data}
           </CodeBlock>
         </TabItem>
       </Tabs>

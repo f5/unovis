@@ -15,6 +15,10 @@ import { TangramScene, MapLibreStyleSpecs } from './renderer/map-style'
 
 export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterface {
   // General
+  /** Width in pixels or in CSS units. By default, the map will automatically fit to the size of the parent element. Default: `undefined`. */
+  width?: number | string;
+  /** Height in pixels or in CSS units. By default, the map will automatically fit to the size of the parent element. Default: `undefined`. */
+  height?: number | string;
   /** Animation duration when the map is automatically panning or zooming to a point or area. Default: `1500` ms */
   flyToDuration?: number;
   /** Padding to be used when the `fitView` function has been called. The value is in pixels. Default: `[150, 150]` */
@@ -29,10 +33,10 @@ export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterfa
   renderer?: LeafletMapRenderer | string;
   /** External instance of Tangram to be used in the map. Default: `undefined` */
   tangramRenderer?: any;
-  /** Tangram Scene or MapLibre StyleSpecification settings. Default: `undefined` */
-  rendererSettings: TangramScene | MapLibreStyleSpecs;
+  /** Tangram Scene or MapLibre StyleSpecification settings, or a URL to it. Default: `undefined` */
+  rendererSettings: TangramScene | MapLibreStyleSpecs | string;
   /** Tangram Scene or MapLibre StyleSpecification settings for dark theme. Default: `undefined` */
-  rendererSettingsDarkTheme?: TangramScene | MapLibreStyleSpecs;
+  rendererSettingsDarkTheme?: TangramScene | MapLibreStyleSpecs | string;
   /** Tile server access token or API key. Default: `''` */
   accessToken?: string;
   /** Array of attribution labels. Default: `['<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a>']` */
@@ -133,6 +137,8 @@ export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterfa
 
 export class LeafletMapConfig<Datum> extends ComponentConfig implements LeafletMapConfigInterface<Datum> {
   // General
+  width = undefined
+  height = undefined
   flyToDuration = 1500
   fitViewPadding = [150, 150] as [number, number]
   zoomDuration = 800

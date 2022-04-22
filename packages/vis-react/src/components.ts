@@ -16,3 +16,4 @@ export * from './components/sankey'
 
 // HTML Components
 export * from './html-components/bullet-legend'
+export * from './html-components/leaflet-map'

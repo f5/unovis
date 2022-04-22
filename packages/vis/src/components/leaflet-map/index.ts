@@ -1,4 +1,4 @@
-import { Selection } from 'd3-selection'
+import { select, Selection } from 'd3-selection'
 import { packSiblings } from 'd3-hierarchy'
 import L from 'leaflet'
 import Supercluster, { ClusterFeature, PointFeature } from 'supercluster'
@@ -15,7 +15,7 @@ import { MapDataModel } from 'data-models/map'
 import { ComponentType } from 'types/component'
 
 // Utils
-import { clamp, isNil, find, getNumber, getString } from 'utils/data'
+import { clamp, isNil, find, getNumber, getString, isString } from 'utils/data'
 import { constraintMapViewThrottled } from './renderer/mapboxgl-utils'
 
 // Local Types
@@ -49,11 +49,11 @@ import { TangramScene } from './renderer/map-style'
 export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
   static selectors = s
   type = ComponentType.HTML
-  div: Selection<HTMLElement, any, HTMLElement, any>
   element: HTMLElement
   config: LeafletMapConfig<Datum> = new LeafletMapConfig()
   datamodel: MapDataModel<Datum> = new MapDataModel()
   protected _container: HTMLElement
+  protected _containerSelection: Selection<HTMLElement, unknown, null, undefined>
   public _onMapMoveEndInternal: (leaflet: L.Map) => void // Internal callback needed by Leaflet Flow Map
   private _map: { leaflet: L.Map; layer: L.Layer; svgOverlay: Selection<SVGElement, any, HTMLElement, any>; svgGroup: Selection<SVGGElement, any, SVGElement, any> }
   private _clusterIndex: Supercluster<Datum>
@@ -80,6 +80,9 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
   private themeObserver: MutationObserver
   readonly _leafletInitializationPromise: Promise<L.Map>
 
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  static DEFAULT_CONTAINER_HEIGHT = 600
+
   events = {
     [LeafletMap.selectors.point]: {
       mouseup: this._onPointMouseUp.bind(this),
@@ -91,17 +94,23 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
   constructor (container: HTMLElement, config?: LeafletMapConfigInterface<Datum>, data?: Datum[]) {
     super(ComponentType.HTML)
     this._container = container
-    if (!this._container.clientWidth || !this._container.clientHeight) {
-      console.error(`The map container element should have width and height prior to initialization, otherwise it'll fail!
-        Check your DOM rendering pipeline to make sure the container is being displayed when you initialize LeafletMap.`
-      )
-      return
-    }
+    this._containerSelection = select(this._container)
 
     this._container.appendChild(this.element)
     this.g.attr('class', s.root)
 
     if (config) this.setConfig(config)
+
+    if (!this._container.clientWidth) {
+      console.warn('Unovis | Leaflet Map: The width of the container is not set. Setting to 100%.')
+      this._containerSelection.style('width', '100%')
+    }
+
+    if (!this._container.clientHeight) {
+      console.warn(`Unovis | Leaflet Map: The height of the container is not set. Setting to ${LeafletMap.DEFAULT_CONTAINER_HEIGHT}px.`)
+      this._containerSelection.style('height', `${LeafletMap.DEFAULT_CONTAINER_HEIGHT}px`)
+    }
+
     this._leafletInitializationPromise = new Promise((resolve) => {
       setupMap(this.element, this.config).then(map => {
         if (config) this.setConfig(config)
@@ -181,6 +190,9 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
   setConfig (config: LeafletMapConfigInterface<Datum>): void {
     this.config.init(config)
 
+    if (config.width) this._containerSelection.style('width', isString(config.width) ? config.width : `${config.width}px`)
+    if (config.height) this._containerSelection.style('height', isString(config.height) ? config.height : `${config.height}px`)
+
     if (this._map) {
       if (this.config.topoJSONLayer?.sources && this.config.renderer === LeafletMapRenderer.Tangram) {
         console.warn('TopoJSON layer render is not supported with Tangram renderer')
@@ -218,7 +230,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     })
   }
 
-  setTheme (theme: TangramScene | StyleSpecification): void {
+  setTheme (theme: TangramScene | StyleSpecification | string): void {
     const { config } = this
     const layer = this._map.layer as any // Using any because the typings are not full
     if (config.renderer === LeafletMapRenderer.Tangram) {
