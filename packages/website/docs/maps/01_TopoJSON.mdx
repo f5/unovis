@@ -1,0 +1,217 @@
+---
+sidebar_position: 1
+title: TopoJSON Map
+sidebar_label: TopoJSON Map
+---
+
+import BrowserOnly from '@docusaurus/BrowserOnly'
+import CodeBlock from '@theme/CodeBlock'
+import { DocWrapper } from '../wrappers'
+import { PropTable } from '../utils/props-table.tsx'
+
+import { data, generatePointData, generateLinkData } from './data'
+import cities from './data/cities_big.json'
+import areas from './data/areas.json'
+
+export const defaultProps = () => ({
+  name: "TopoJSONMap",
+  configKey: "component",
+  containerName: "SingleContainer",
+  visImports: ["WorldMapTopoJSON"],
+  topojson: "WorldMapTopoJSON",
+  height: 400,
+  dataType: "MapPoint, MapLink, MapFeature",
+})
+
+export const pointData = {
+  points: generatePointData()
+}
+
+### Basic Configuration
+The _VisTopoJSONMap_ is a map that uses [TopoJSON](https://github.com/topojson/topojson) as its underlying data. The basic configuration is:
+<DocWrapper {...defaultProps()} topojson="WorldMapTopoJSON" showContext="container"/>
+
+Currently the following TopoJSONs available to import directly from `@volterra/vis`: `WorldMapTopoJSON`, `WorldMapSimplestTopoJSON`, and `WorldMap110mAlphaTopoJSON`.
+
+### Map Data
+There are three main building blocks that can make up the data supplied to _VisTopoJSONMap_:
+* **point**, a geographical coordinate
+* **link**, a graph edge that connects two _points_
+* **area**, a geographical area
+
+The container for _VisTopoJSONMap_ accepts data in the form of an `Object` with these three building blocks as keys mapped to their data arrays.
+
+<DocWrapper {...defaultProps()}  data={data} showContext="full"/>
+
+### Points
+A minimum viable datatype of the objects provided to the `points` attribute is:
+
+```ts
+type MapPoint = {
+  latitude: NumericAccessor;
+  longitute: NumericAccessor;
+}
+```
+Or, you can simply provide these values through the `latitude` and `longitute` properties of your _VisTopoJSONMap_ directly.
+
+<DocWrapper {...defaultProps()} topojson="WorldMapTopoJSON" dataType="undefined,MapPoint,undefined" data={pointData} showContext="full"/>
+
+### mapFitToPoints
+<DocWrapper {...defaultProps()}
+  data={pointData}
+  mapFitToPoints={true}/>
+
+### Point Customization
+The following _VisTopoJSONMap_ properties accept accessor functions to customize the appearance of your points:
+* `pointColor`
+* `pointCursor`
+* `pointRadius`
+* `pointStrokeWidth`
+
+### Point Labels
+You can provide labels with the `pointLabel` attribute, which accepts a `StringAccessor` function to be called on each `MapPoint` datum.
+<DocWrapper {...defaultProps()} data={pointData} pointLabel={d => d.city} showContext="minimal"/>
+
+### Custom Point Labels
+The following _VisTopoJSONMap_ properties can further customize your Point Label.
+* `pointLabelPosition`
+* `pointLabelTextBrighnessRatio`
+
+### Example: Custom Points
+export const customData = ({
+  points: data.points.map(d => ({
+    ...d,
+    serverName: `server-${d.city.substring(0,1)}${Math.floor(Math.random() * 10)}`,
+    userCount: Math.floor(Math.random() * 100),
+    threatLevel: Math.floor(Math.random() * 4)
+  }))
+});
+export const colorLegendItems = [
+  { name: 'Safe', color: 'green' },
+  { name: 'Mild', color: 'yellow' },
+  { name: 'Moderate', color: 'orange'},
+  { name: 'Severe', color: 'red' }
+]
+
+<BrowserOnly>
+{() => {
+  const { TopoJSONMap } = require('@volterra/vis')
+  return (
+    <DocWrapper
+      {...defaultProps()}
+      data={customData}
+      mapFitToPoints={true}
+      pointLabel={d => d.serverName}
+      pointRadius={d => d.userCount / 10}
+      pointColor={d => ['green', 'yellow', 'orange', 'red'][d.threatLevel]}
+      showContext="minimal"
+      dataType="MapPoint,undefined,undefined"
+      componentProps={[
+        {name: "BulletLegend", props: { items: colorLegendItems }, key: 'components'},
+        {
+          name: "Tooltip",
+          key: "tooltip",
+          props: {
+            triggers: {
+              [TopoJSONMap.selectors.pointCircle]: d => `Users: ${d.userCount}`
+            }
+          }
+        }
+      ]}/>
+  )
+}}
+</BrowserOnly>
+
+### Links
+A minimum viable data type of the objects provided to the `links` attribute contains the keys `source` and `target`, which correspond
+to the points the link will connect. Most commonly, the `pointId
+
+```ts
+type MapLink = {
+  source: string | number | MapPoint;
+  target: string | number | MapPoint; 
+}
+```
+Or, you can simply provide these values through the `linkSource` and `linkTarget` properties.
+
+<DocWrapper {...defaultProps()} topojson="WorldMapTopoJSON" dataType="MapPoint,MapLink,undefined"  data={{...data, areas: [] }} showContext="full"/>
+
+#### Link customizaiton
+You can further customize the map _Links_ with the following properties:
+* `linkColor`
+* `linkCursor`
+* `linkWidth`
+
+### Areas
+To work with features in the __VisTopoJSONMap_, all you need is a unique `id` which is defined in the chart's _topojson_ definition.
+```ts
+type MapArea = { 
+  id: string;
+}
+```
+<DocWrapper {...defaultProps()} data={{
+  areas: data.areas
+}} dataType="MapArea,undefined,undefined" topojson="WorldMapTopoJSON" showContext="full"/>
+
+#### Area customizaiton
+You can further customize the map _Area_ with the following properties:
+* `areaColor`
+* `areaCursor`
+
+### Projection
+You can provide a projection for your _VisTopoJSONMap_ with a `MapProjection` instance. See d3's geoProjection for more information:
+<BrowserOnly>
+  {() => {
+    const { WorldMapTopoJSON, MapProjection, MapProjectionKind } = require('@volterra/vis')
+    const { VisSingleContainer, VisTopoJSONMap } = require('@volterra/vis-react')
+    const [attr, setAttr] = React.useState(MapProjectionKind.Mercator)
+    console.log(attr)
+    return (
+      <div className="input-wrapper">
+        <label className='prop-input-label'>
+          <code>projection: </code>
+          <select defaultValue={MapProjectionKind.Mercator} onChange={e => setAttr(e.target.value)}>
+            {Object.values(MapProjectionKind).map(o => (
+              <option value={o} key={o}>{o}</option>
+            ))}
+          </select>
+        </label>
+        <VisSingleContainer height={400} data={data}>
+          <VisTopoJSONMap topojson={WorldMapTopoJSON} projection={MapProjection[attr]()}/>
+        </VisSingleContainer>
+    </div>
+    )
+  }}
+</BrowserOnly>
+
+### Zoom
+By default, zooming is enabled for a _VisTopoJSONMap_ component. You can disable it by setting the `disableZoom` property to `true`.
+
+For further customization, you can configure the following zoom properties:
+
+### zoomFactor
+To set the initial zooom factor.
+
+### zoomExtent
+`zoomExtent` represents the range `[a,b]` which your map can zoom in and out, where `[a, b]` are the minimum and maximum zoom factors, respectively.
+
+<DocWrapper {...defaultProps()} zoomFactor={5} zoomExtent={[1,5]}/>
+
+### zoomDuration
+`zoomDuration` is the duration of the animation on when zooming in on your __VisTopoJSONMap_ with _Vis Controls_.
+See <a href="#TopoJSON#example-topojsonmap-alongside-viscontrols">this example</a> for more details.
+
+### Example: TopoJSONMap alongside VisControls
+
+### Heatmap Mode
+For datasets with a lot of points, you can enable `heatMapMode`
+<DocWrapper {...defaultProps()} data={{ points: cities}} heatmapMode={true}/>
+
+You can customize the apeparance of your heat map blur with the `heatmapModeBlurStdDeviation` property.
+
+### heatmapModeZoomLevelThreshold
+To lower or raise the the threshold hat will disable the blur effect of your heat map, use the the `heatmapModeZoomLevelThreshold` property.
+You can provide a zoom level, (i.e. `2` for _2x_ zoom), that once reached, that will no longer display display the blur effect.
+
+### Component Props
+<PropTable name="VisTopoJSONMap"/>
