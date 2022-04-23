@@ -1,7 +1,5 @@
-import React from 'react'
+import React, { BaseSyntheticEvent } from 'react'
 import { DocWrapper, DocWrapperProps } from '../base'
-
-import './styles.css'
 
 type InputWrapperProps = DocWrapperProps & {
   inputType: React.HTMLInputTypeAttribute;
@@ -14,13 +12,16 @@ type InputWrapperProps = DocWrapperProps & {
 /* Displays component with an input element that dynamically updates a given property */
 export function InputWrapper ({ property, inputType: type, defaultValue, inputProps, options, ...rest }: InputWrapperProps): JSX.Element {
   const [attr, setAttr] = React.useState(defaultValue || options?.[0])
+  function updateAttr (e: BaseSyntheticEvent): void {
+    return inputProps?.onChange ? setAttr(inputProps.onChange(e.target.value)) : setAttr(e.target.value)
+  }
 
   return (
     <div className='input-wrapper'>
       <label className='prop-input-label'>
         <code>{property}: </code>
         {type === 'select'
-          ? <select defaultValue={defaultValue} onChange={e => setAttr(e.target.value)}>
+          ? <select defaultValue={defaultValue} onChange={updateAttr}>
             {options.map(o => (
               <option value={o} key={o}>{o}</option>
             ))}

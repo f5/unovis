@@ -1,14 +1,8 @@
 // Copyright (c) Volterra, Inc. All rights reserved.
 import * as React from 'react'
 import BrowserOnly from '@docusaurus/BrowserOnly'
+import { DocCompositeProps } from './types'
 
-import { Component } from '.'
-
-export type DocCompositeProps = {
-  containerProps: Component;
-  componentProps: Component[];
-  visImports: string[];
-}
 export const VisComposite = ({
   containerProps, componentProps, visImports,
 }: DocCompositeProps): JSX.Element => {
@@ -34,10 +28,7 @@ export const VisComposite = ({
                 if (typeof v === 'string') {
                   const [i, rest] = v.split('.')
                   if (imports[i]) {
-                    props[k] = imports[i]
-                    if (rest) {
-                      props[k] = props[k][rest] === 'function' ? imports[i][rest]() : props[k][rest]
-                    }
+                    props[k] = rest ? imports[i][rest.replace('()', '')]() : imports[i]
                   }
                 }
               })

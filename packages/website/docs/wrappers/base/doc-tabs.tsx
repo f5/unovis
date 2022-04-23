@@ -1,64 +1,30 @@
 import React from 'react'
 
-import { FrameworkTabProps, FrameworkTabs } from '../../utils/framework-tabs'
-import { PropInfo, parseProps, formatElement, tab, t } from '../../utils/parser'
-import { Component } from '.'
-
-export enum ContextLevel {
-  Full = 'full', // show typescript declarations for all components in doc
-  Container = 'container', // exclude ts lines, keep container and components
-  Minimal = 'minimal', // only include main component and related ts lines
-}
-
-export type FrameworkProps = {
-  container: Component;
-  context: ContextLevel;
-  components: Component[];
-  mainComponent: Component;
-  dataType: string;
-  showData?: boolean;
-  hideTabLabels?: boolean;
-  imports?: string[];
-}
-
-type ComponentInfo = Partial<Component> & { props: PropInfo[] }
+import { FrameworkTabProps, FrameworkTabs } from '../../components/framework-tabs'
+import { ComponentInfo, PropInfo, parseProps, parseComponent as parse, tab, t } from '../../utils/parser'
+import { DocTabsProps, ContextLevel } from './types'
 
 type CodeConfig = {
   container?: ComponentInfo;
   components: ComponentInfo[];
-  dataType: string;
   importString: string | undefined;
-  showData?: boolean;
   declarations?: Record<string, string>;
 }
 
-function parseAngular ({ name, props }: ComponentInfo): string {
-  const hasUpper = name.match(/.+[A-Z]/)
-  if (hasUpper) {
-    const ch = name[hasUpper[0].length - 1]
-    name = name.split(ch).join('-'.concat(ch))
-  }
-  const attrs = props?.map(({ key, value, stringLiteral }) =>
-    [stringLiteral ? key : `[${key}]`, `"${value}"`].join('=')
-  )
-  const tag = `vis-${name.toLowerCase()}`
-  return formatElement(`<${tag}`, attrs, `></${tag}>`)
-}
-
 function getAngularStrings (config: CodeConfig): FrameworkTabProps['angular'] {
-  const { components, container, dataType, declarations, importString, showData } = config
+  const { components, container, declarations, importString } = config
+  const { data, ...rest } = declarations
 
   const html = container
-    ? parseAngular(container).replace('><', `>\n${t}${components.map(c => parseAngular(c)).join(`\n${t}`)}\n<`)
-    : components.map(c => parseAngular(c)).join('\n')
+    ? parse.angular(container).replace('><', `>\n${t}${components.map(c => parse.angular(c)).join(`\n${t}`)}\n<`)
+    : components.map(c => parse.angular(c)).join('\n')
 
   const tsLines = []
   if (importString) tsLines.push(importString)
-  if (Object.values(declarations).length || showData) {
-    if (importString) tsLines.push('\n')
+  if (Object.values(declarations).length) {
     tsLines.push('@Component({ ... })\nclass Component {')
-    if (showData) tsLines.push(`${t}@Input() data: ${dataType}`)
-    tsLines.push(...Object.entries(declarations).map(d => `${t}${d.join(' = ')}`))
+    if (data) tsLines.push(`${t}@Input ${data};`)
+    tsLines.push(...Object.entries(rest).map(d => `${t}${d.join(' = ')}`))
     tsLines.push('}')
   }
 
@@ -68,34 +34,27 @@ function getAngularStrings (config: CodeConfig): FrameworkTabProps['angular'] {
   }
 }
 
-function parseReact ({ name, props }: ComponentInfo, closing = false): string {
-  const attrs = props?.map(({ key, value, stringLiteral }) =>
-    [key, stringLiteral ? `"${value}"` : `{${value}}`].join('=')
-  )
-  const tag = `Vis${name}`
-  return formatElement(`<${tag}`, attrs, `${closing ? `></${tag}>` : '/>'}`)
-}
+function getReactStrings ({ components, container, importString, declarations }: CodeConfig): string {
+  const { data, ...rest } = declarations
+  const lines = []
 
-function getReactStrings ({ components, container, dataType, showData, importString, declarations }: CodeConfig): string {
   let indentLevel = 0
   let containerString: string
 
-  const lines = []
-
   if (importString) lines.push(importString)
-  if (Object.values(declarations).length || showData) {
+  if (Object.values(declarations).length) {
     lines.push('function Component(props) {')
-    if (showData) lines.push(`${t}const data: ${dataType} = props.data`)
-    lines.push(...Object.entries(declarations).map(d => `${t}const ${d.join(' = ')}`))
+    if (data) lines.push(`${t}const ${data} = props.data`)
+    lines.push(...Object.entries(rest).map(d => `${t}const ${d.join(' = ')}`))
     lines.push(`\n${t}return (`)
     indentLevel += 2
   }
 
   if (container) {
-    containerString = `${tab(indentLevel)}${parseReact(container, true)}`
+    containerString = `${parse.react(container, true, indentLevel)}`
     indentLevel++
   }
-  const componentString = `${tab(indentLevel)}${components.map(c => parseReact(c)).join(`\n${tab(indentLevel)}`)}`
+  const componentString = `${components.map(c => parse.react(c, false, indentLevel)).join(`\n${tab(indentLevel)}`)}`
   lines.push(containerString?.replace('><', `>\n${componentString}\n${tab(--indentLevel)}<`) || componentString)
 
   if (indentLevel) {
@@ -104,47 +63,41 @@ function getReactStrings ({ components, container, dataType, showData, importStr
   return lines.join('\n')
 }
 
-function parseTypescript (prefix: string, { name, props }: ComponentInfo, type?: string): string {
-  const attrs = props?.map(({ key, value, stringLiteral }) =>
-    key === value ? key : [key, stringLiteral ? `"${value}"` : `${value}`].join(': ')
-  )
-  return formatElement(`${prefix}new ${name}${type ? `<${type}>` : ''}({`, attrs, ' })', ', ')
-}
-
-function getTypescriptStrings (config: CodeConfig, mainComponent: Component, datum: string): string {
-  const { components, container, dataType, declarations, importString, showData } = config
+function getTypescriptStrings (config: CodeConfig, mainComponent: string, datum: string): string {
+  const { components, container, declarations, importString } = config
   const lines = []
 
   if (importString) lines.push(importString)
-  if (showData) lines.push(`const data: ${dataType} = getData()`)
+  if (declarations.data) {
+    lines.push(`const ${declarations.data} = getData()\n`)
+    container.props = container.props.filter(d => d.key !== 'data')
+  }
 
-  const mainIsContainer = mainComponent?.name?.endsWith('Container')
+  const mainIsContainer = mainComponent && mainComponent.endsWith('Container')
   const getPropDetails = (props: PropInfo[]): PropInfo[] => props.map(p => ({ ...p, value: declarations[p.key] || p.value }))
 
   const containerConfig: Record<string, string[]> = {}
   if (mainComponent && !mainIsContainer) {
-    const name = mainComponent.name.charAt(0).toLowerCase().concat(mainComponent.name.slice(1))
-    const main = components.find(c => c.name === mainComponent.name)
+    const name = mainComponent.charAt(0).toLowerCase().concat(mainComponent.slice(1))
+    const main = components.find(c => c.name === mainComponent)
     if (main?.props) {
-      lines.push(parseTypescript(
+      lines.push(parse.typescript(
         `const ${name} = `, {
           ...main,
           props: main.props.map(p => ({ ...p, value: declarations[p.key] || p.value })),
         },
         datum))
     }
-    containerConfig[mainComponent.key] = [name]
+    containerConfig[main.key] = [name]
   }
-
-  if (lines.length) lines.push('')
 
   if (container) {
     components.forEach(c => {
       if (!containerConfig[c.key]) {
         containerConfig[c.key] = []
       }
-      if (c.name !== mainComponent.name) {
-        containerConfig[c.key].push(parseTypescript('', c))
+      if (c.name !== mainComponent) {
+        containerConfig[c.key].push(parse.typescript('', c))
       }
     })
     lines.push(`const chart = new ${container.name}(containerNode, {`)
@@ -164,20 +117,27 @@ function getTypescriptStrings (config: CodeConfig, mainComponent: Component, dat
 }
 
 /* Displays code snippets with framework tabs */
-export function DocFrameworkTabs (config: FrameworkProps): JSX.Element {
-  const { components, container, context, hideTabLabels, mainComponent, dataType, imports, showData } = config
-  const declarations = {}
+export function DocFrameworkTabs ({
+  components,
+  container,
+  context,
+  hideTabLabels,
+  mainComponent,
+  dataType,
+  imports,
+}: DocTabsProps): JSX.Element {
+  const declarations: Record<string, string> = {}
 
-  const children = mainComponent && !mainComponent.name.endsWith('Container')
+  const children = mainComponent && !mainComponent?.name.endsWith('Container')
     ? (
       !context || context === ContextLevel.Minimal
-        ? [config.mainComponent]
+        ? [mainComponent]
         : [mainComponent, ...components]
     )
     : components
 
   const tabConfig = {
-    container: (config.context === 'container' || config.context === 'full') && {
+    container: (context === ContextLevel.Container || context === ContextLevel.Full) && {
       name: container.name,
       props: parseProps(container.props, dataType, imports, declarations),
     },
@@ -185,11 +145,19 @@ export function DocFrameworkTabs (config: FrameworkProps): JSX.Element {
       ...c,
       props: parseProps(c.props, dataType, imports, declarations),
     })),
-    dataType: dataType.includes(',') ? `<${dataType}>` : `${dataType}[]`,
     declarations: declarations,
     importString: imports?.length && `import { ${imports.join(', ')} } from '@volterra/vis'\n`,
-    showData: showData && context === ContextLevel.Full,
     showTitles: context === ContextLevel.Full,
+  }
+
+  if (context && declarations.data) {
+    if (dataType.includes(',')) {
+      const d = dataType.split(',').filter(d => d !== 'undefined')
+      tabConfig.importString = `${tabConfig.importString}import { ${d.join(', ')} } from '../types.ts'\n`
+      declarations.data = `data: <${d.map(d => `${d}[]`)}>`
+    } else {
+      declarations.data = `data: ${dataType}[]`
+    }
   }
 
   return (
@@ -197,9 +165,7 @@ export function DocFrameworkTabs (config: FrameworkProps): JSX.Element {
       hideTabLabels={hideTabLabels}
       angular={getAngularStrings(tabConfig)}
       react={getReactStrings(tabConfig)}
-      typescript={getTypescriptStrings(
-        tabConfig,
-        context !== 'container' && mainComponent, dataType)}
+      typescript={getTypescriptStrings(tabConfig, context !== ContextLevel.Container && mainComponent?.name, dataType)}
     />
   )
 }

@@ -3,10 +3,10 @@ sidebar_position: 0
 ---
 import CodeBlock from '@theme/CodeBlock';
 import BrowserOnly from '@docusaurus/BrowserOnly'
-import { FrameworkTabs } from '../utils/framework-tabs'
-import { PropTable } from '../utils/props-table'
+import { FrameworkTabs } from '../components/framework-tabs'
+import { PropTable } from '../components/props-table'
 import { generateDataRecords, generateTimeSeries } from '../utils/data'
-import { XYWrapper, XYWrapperWithInput } from './wrapper.tsx'
+import { XYWrapper, XYWrapperWithInput } from './wrapper'
 
 export const defaultProps = (n=10) => ({
   name: "Axis",
