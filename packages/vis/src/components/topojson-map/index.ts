@@ -139,6 +139,8 @@ export class TopoJSONMap<AreaDatum, PointDatum, LinkDatum> extends ComponentCore
       this._initialScale = this._projection.scale()
       this._currentZoomLevel = 1
 
+      this._center = this._projection.translate()
+
       const zoomFactor = config.zoomFactor
       if (zoomFactor) {
         this._projection
@@ -152,7 +154,6 @@ export class TopoJSONMap<AreaDatum, PointDatum, LinkDatum> extends ComponentCore
         }
       }
 
-      this._center = this._projection.translate()
       const zoomExtent = config.zoomExtent
       this._zoomBehavior.scaleExtent([zoomExtent[0] * this._initialScale, zoomExtent[1] * this._initialScale])
 
