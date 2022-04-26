@@ -7,12 +7,13 @@ import { DocTabsProps, ContextLevel } from './types'
 type CodeConfig = {
   container?: ComponentInfo;
   components: ComponentInfo[];
-  importString: string | undefined;
+  dataType: string;
   declarations?: Record<string, string>;
+  importString?: string | undefined;
 }
 
 function getAngularStrings (config: CodeConfig): FrameworkTabProps['angular'] {
-  const { components, container, declarations, importString } = config
+  const { components, container, dataType, declarations, importString } = config
   const { data, ...rest } = declarations
 
   const html = container
@@ -22,7 +23,7 @@ function getAngularStrings (config: CodeConfig): FrameworkTabProps['angular'] {
   const tsLines = []
   if (importString) tsLines.push(importString)
   if (Object.values(declarations).length) {
-    tsLines.push('@Component({ ... })\nclass Component {')
+    tsLines.push(`@Component({ ... })\nclass Component<${dataType}>{`)
     if (data) tsLines.push(`${t}@Input ${data};`)
     tsLines.push(...Object.entries(rest).map(d => `${t}${d.join(' = ')}`))
     tsLines.push('}')
@@ -30,20 +31,23 @@ function getAngularStrings (config: CodeConfig): FrameworkTabProps['angular'] {
 
   return {
     html: html,
-    ts: tsLines.join('\n'),
+    ts: tsLines.length ? tsLines.join('\n') : undefined,
   }
 }
 
-function getReactStrings ({ components, container, importString, declarations }: CodeConfig): string {
-  const { data, ...rest } = declarations
+function getReactStrings ({ components, container, dataType, declarations, importString }: CodeConfig): string {
   const lines = []
 
   let indentLevel = 0
   let containerString: string
 
-  if (importString) lines.push(importString)
+  if (importString) {
+    const reactImports = (container ? [container, ...components] : components).map(c => `Vis${c.name}`).join(', ')
+    lines.push(`${importString}import { ${reactImports} } from '@volterra/vis-react'\n`)
+  }
   if (Object.values(declarations).length) {
-    lines.push('function Component(props) {')
+    const { data, ...rest } = declarations
+    lines.push(`function Component<${dataType}>(props) {`)
     if (data) lines.push(`${t}const ${data} = props.data`)
     lines.push(...Object.entries(rest).map(d => `${t}const ${d.join(' = ')}`))
     lines.push(`\n${t}return (`)
@@ -63,8 +67,8 @@ function getReactStrings ({ components, container, importString, declarations }:
   return lines.join('\n')
 }
 
-function getTypescriptStrings (config: CodeConfig, mainComponent: string, datum: string): string {
-  const { components, container, declarations, importString } = config
+function getTypescriptStrings (config: CodeConfig, mainComponent: string): string {
+  const { components, container, dataType, declarations, importString } = config
   const lines = []
 
   if (importString) lines.push(importString)
@@ -86,7 +90,7 @@ function getTypescriptStrings (config: CodeConfig, mainComponent: string, datum:
           ...main,
           props: main.props.map(p => ({ ...p, value: declarations[p.key] || p.value })),
         },
-        datum))
+        dataType))
     }
     containerConfig[main.key] = [name]
   }
@@ -127,7 +131,6 @@ export function DocFrameworkTabs ({
   imports,
 }: DocTabsProps): JSX.Element {
   const declarations: Record<string, string> = {}
-
   const children = mainComponent && !mainComponent?.name.endsWith('Container')
     ? (
       !context || context === ContextLevel.Minimal
@@ -145,27 +148,22 @@ export function DocFrameworkTabs ({
       ...c,
       props: parseProps(c.props, dataType, imports, declarations),
     })),
-    declarations: declarations,
-    importString: imports?.length && `import { ${imports.join(', ')} } from '@volterra/vis'\n`,
-    showTitles: context === ContextLevel.Full,
+    dataType: dataType,
+    declarations: context ? declarations : {},
+    importString: context && imports?.length && `import { ${imports.join(', ')} } from '@volterra/vis'\n`,
   }
 
   if (context && declarations.data) {
-    if (dataType.includes(',')) {
-      const d = dataType.split(',').filter(d => d !== 'undefined')
-      tabConfig.importString = `${tabConfig.importString}import { ${d.join(', ')} } from '../types.ts'\n`
-      declarations.data = `data: <${d.map(d => `${d}[]`)}>`
-    } else {
-      declarations.data = `data: ${dataType}[]`
-    }
+    declarations.data = `data: ${dataType.startsWith('Map') ? 'MapData' : `${dataType}[]`}`
   }
 
   return (
     <FrameworkTabs
-      hideTabLabels={hideTabLabels}
       angular={getAngularStrings(tabConfig)}
       react={getReactStrings(tabConfig)}
-      typescript={getTypescriptStrings(tabConfig, context !== ContextLevel.Container && mainComponent?.name, dataType)}
+      typescript={getTypescriptStrings(tabConfig, context !== ContextLevel.Container && mainComponent?.name)}
+      hideTabLabels={hideTabLabels}
+      showTitles={context === ContextLevel.Full}
     />
   )
 }

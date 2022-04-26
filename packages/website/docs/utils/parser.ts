@@ -13,7 +13,7 @@ export type ComponentInfo = {
 }
 
 /* constant values for formatting code blocks */
-const lineMaxLength = 100
+const lineMaxLength = 70
 const indentLength = 2
 
 export const tab = (level = 1): string => ' '.repeat(indentLength * level)
