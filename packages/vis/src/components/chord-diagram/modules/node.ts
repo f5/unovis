@@ -1,24 +1,27 @@
 import { Selection } from 'd3-selection'
 import { Transition } from 'd3-transition'
 import { interpolate } from 'd3-interpolate'
-import { HierarchyRectangularNode } from 'd3-hierarchy'
 import { Arc } from 'd3-shape'
 
 // Utils
 import { getColor } from 'utils/color'
 import { smartTransition } from 'utils/d3'
 
-// Types
-import { Hierarchy } from 'components/radial-dendrogram/types'
+// Local Types
+import { ChordInputNode, ChordInputLink, ChordNode } from '../types'
 
 // Config
 import { ChordDiagramConfig } from '../config'
 
+type AnimState = { x0: number; x1: number; y0: number; y1: number }
 export interface ArcNode extends SVGElement {
-  _animState?: { x0: number; x1: number; y0: number; y1: number };
+  _animState?: AnimState;
 }
 
-export function createNode<H extends Hierarchy> (selection: Selection<SVGPathElement, HierarchyRectangularNode<H>, SVGGElement, HierarchyRectangularNode<H>[]>, config: ChordDiagramConfig<H>): void {
+export function createNode<N extends ChordInputNode, L extends ChordInputLink> (
+  selection: Selection<SVGPathElement, ChordNode<N>, SVGGElement, unknown>,
+  config: ChordDiagramConfig<N, L>
+): void {
   selection
     .style('fill', d => getColor(d, config.nodeColor, d.height))
     .style('stroke', d => getColor(d, config.nodeColor, d.height))
@@ -36,16 +39,21 @@ export function createNode<H extends Hierarchy> (selection: Selection<SVGPathEle
     })
 }
 
-export function updateNode<H extends Hierarchy> (selection: Selection<SVGElement, HierarchyRectangularNode<H>, SVGGElement, HierarchyRectangularNode<H>[]>, config: ChordDiagramConfig<H>, arcGen: Arc<any, any>, duration: number): void {
+export function updateNode<N extends ChordInputNode, L extends ChordInputLink> (
+  selection: Selection<SVGElement, ChordNode<N>, SVGGElement, ChordNode<N>[]>,
+  config: ChordDiagramConfig<N, L>,
+  arcGen: Arc<unknown, AnimState>,
+  duration: number
+): void {
   selection
-    .attr('id', d => d.data.id ?? d.data.key)
+    .attr('id', (d, i) => `chord-node-${i}`)
     .style('transition', `fill ${duration}ms`) // Animate color with CSS because we're using CSS-variables
-    .style('fill', d => getColor(d, config.nodeColor, d.height))
-    .style('stroke', d => getColor(d, config.nodeColor, d.height))
+    .style('fill', d => getColor(d, config.nodeColor, d.depth))
+    .style('stroke', d => getColor(d, config.nodeColor, d.depth))
 
   if (duration) {
     const transition = smartTransition(selection, duration)
-      .style('opacity', 1) as Transition<SVGElement, HierarchyRectangularNode<H>, SVGGElement, HierarchyRectangularNode<H>[]>
+      .style('opacity', 1) as Transition<SVGElement, ChordNode<N>, SVGGElement, ChordNode<N>[]>
 
     transition.attrTween('d', (d, i, els) => {
       const arcNode: ArcNode = els[i]
@@ -62,7 +70,10 @@ export function updateNode<H extends Hierarchy> (selection: Selection<SVGElement
   }
 }
 
-export function removeNode<H> (selection: Selection<SVGElement, HierarchyRectangularNode<H>, SVGGElement, HierarchyRectangularNode<H>[]>, duration: number): void {
+export function removeNode<N extends ChordInputNode, L extends ChordInputLink> (
+  selection: Selection<SVGElement, ChordNode<N>, SVGGElement, unknown>,
+  duration: number
+): void {
   smartTransition(selection, duration)
     .style('opacity', 0)
     .remove()

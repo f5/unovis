@@ -6,18 +6,18 @@ export const root = css`
 
 export const variables = injectGlobal`
   :root {
-    --vis-radial-dendrogram-link-fill-color: #cad5f6;
-    --vis-radial-dendrogram-link-stroke-color: #777777;
-    --vis-radial-dendrogram-link-stroke-opacity: 0.15;
+    --vis-chord-diagram-link-fill-color: #cad5f6;
+    --vis-chord-diagram-link-stroke-color: #777777;
+    --vis-chord-diagram-link-stroke-opacity: 0.15;
 
     --vis-chord-diagram-label-text-fill-color-bright: #ffffff;
     --vis-chord-diagram-label-text-fill-color-dark: #a5abb2;
 
-    --vis-dark-radial-dendrogram-link-fill-color: #575c65;
+    --vis-dark-chord-diagram-link-fill-color: #575c65;
   }
 
   body.theme-dark ${`.${root}`} {
-    --vis-radial-dendrogram-link-fill-color: var(--vis-dark-radial-dendrogram-link-fill-color);
+    --vis-chord-diagram-link-fill-color: var(--vis-dark-chord-diagram-link-fill-color);
   }
 `
 
@@ -73,9 +73,9 @@ export const labelExit = css`
 export const link = css`
   label: link;
 
-  fill: var(--vis-radial-dendrogram-link-fill-color);
-  stroke:  var(--vis-radial-dendrogram-link-stroke-color);
-  stroke-opacity:  var(--vis-radial-dendrogram-link-stroke-opacity);
+  fill: var(--vis-chord-diagram-link-fill-color);
+  stroke:  var(--vis-chord-diagram-link-stroke-color);
+  stroke-opacity:  var(--vis-chord-diagram-link-stroke-opacity);
   transition: .1s fill-opacity;
 
   &:hover {

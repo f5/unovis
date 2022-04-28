@@ -1,13 +1,9 @@
 import { select, Selection } from 'd3-selection'
 import { ScaleContinuousNumeric } from 'd3-scale'
-import { HierarchyRectangularNode } from 'd3-hierarchy'
 import { color } from 'd3-color'
 
 // Core
 import { getCSSColorVariable } from 'styles/colors'
-
-// Types
-import { Hierarchy, LabelType } from 'components/radial-dendrogram/types'
 
 // Utils
 import { wrapTextElement } from 'utils/text'
@@ -18,19 +14,22 @@ import { getColor, hexToBrightness } from 'utils/color'
 // Config
 import { ChordDiagramConfig } from '../config'
 
+// Local Types
+import { ChordInputLink, ChordInputNode, ChordLabelAlignment, ChordNode } from '../types'
+
 // Styles
 import * as s from '../style'
 
 export const LABEL_PADDING = 3
 
-export function createLabel<H extends Hierarchy> (
-  selection: Selection<SVGGElement, HierarchyRectangularNode<H>, SVGGElement, HierarchyRectangularNode<H>[]>,
-  config: ChordDiagramConfig<H>,
+export function createLabel<N extends ChordInputNode, L extends ChordInputLink> (
+  selection: Selection<SVGGElement, ChordNode<N>, SVGGElement, unknown>,
+  config: ChordDiagramConfig<N, L>,
   radiusScale: ScaleContinuousNumeric<number, number>
 ): void {
   selection.style('opacity', 0)
 
-  if (config.nodeLabelType === LabelType.Perpendicular) {
+  if (config.nodeLabelAlignment === ChordLabelAlignment.Perpendicular) {
     selection.attr('transform', d => {
       const angleCenter = (d.x0 + d.x1) / 2
       const angle = angleCenter - Math.PI / 2
@@ -46,17 +45,17 @@ export function createLabel<H extends Hierarchy> (
     .style('fill', d => getColor(d, config.nodeColor, d.depth))
 }
 
-function getLabelFillColor<H extends Hierarchy> (
-  d: HierarchyRectangularNode<H>,
-  config: ChordDiagramConfig<H>,
+function getLabelFillColor<N extends ChordInputNode, L extends ChordInputLink> (
+  d: ChordNode<N>,
+  config: ChordDiagramConfig<N, L>,
   context: SVGTextElement
 ): string {
-  const { nodeLabelType, nodeColor } = config
-  switch (nodeLabelType) {
-    case LabelType.Perpendicular: {
+  const { nodeLabelAlignment, nodeColor } = config
+  switch (nodeLabelAlignment) {
+    case ChordLabelAlignment.Perpendicular: {
       return getColor(d, nodeColor, d.depth)
     }
-    case LabelType.Along: {
+    case ChordLabelAlignment.Along: {
       const c = getColor(d, nodeColor) || window.getComputedStyle(context).getPropertyValue(getCSSColorVariable(d.depth))
       const colorParsed = color(c)
       const brightness = colorParsed ? hexToBrightness(colorParsed.hex()) : 0
@@ -65,32 +64,35 @@ function getLabelFillColor<H extends Hierarchy> (
   }
 }
 
-function getLabelTextAnchor<H extends Hierarchy> (d: HierarchyRectangularNode<H>, config: ChordDiagramConfig<H>): string | null {
-  const { nodeLabelType } = config
-  switch (nodeLabelType) {
-    case LabelType.Perpendicular: {
+function getLabelTextAnchor<N extends ChordInputNode, L extends ChordInputLink> (
+  d: ChordNode<N>,
+  config: ChordDiagramConfig<N, L>
+): string | null {
+  const { nodeLabelAlignment } = config
+  switch (nodeLabelAlignment) {
+    case ChordLabelAlignment.Perpendicular: {
       const angleCenter = (d.x0 + d.x1) / 2
       const angleDegree = angleCenter * 180 / Math.PI
       return angleDegree < 180 ? 'start' : 'end'
     }
-    case LabelType.Along: {
+    case ChordLabelAlignment.Along: {
       return null
     }
   }
 }
 
-export function updateLabel<H extends Hierarchy> (
-  selection: Selection<SVGElement, HierarchyRectangularNode<H>, SVGGElement, HierarchyRectangularNode<H>[]>,
-  config: ChordDiagramConfig<H>,
+export function updateLabel<N extends ChordInputNode, L extends ChordInputLink> (
+  selection: Selection<SVGElement, ChordNode<N>, SVGGElement, unknown>,
+  config: ChordDiagramConfig<N, L>,
   width: number,
   radiusScale: ScaleContinuousNumeric<number, number>,
   duration: number
 ): void {
-  const { nodeLabel, nodeWidth, nodeLabelType } = config
+  const { nodeLabel, nodeWidth, nodeLabelAlignment } = config
   selection.style('opacity', 0)
   const selTransition = smartTransition(selection, duration)
     .style('opacity', 1)
-  if (nodeLabelType === LabelType.Perpendicular) {
+  if (nodeLabelAlignment === ChordLabelAlignment.Perpendicular) {
     selTransition.attr('transform', d => {
       const angleCenter = (d.x0 + d.x1) / 2
       const angle = angleCenter - Math.PI / 2
@@ -103,16 +105,17 @@ export function updateLabel<H extends Hierarchy> (
     selection.attr('transform', null)
   }
 
-  const label: Selection<SVGTextElement, any, SVGElement, any> = selection.select(`.${s.label}`)
+  const label: Selection<SVGTextElement, ChordNode<N>, SVGElement, unknown> = selection.select(`.${s.label}`)
   label.select('textPath').remove()
   label
     .text(d => getString(d.data, nodeLabel))
     .style('display', d => {
+      if (config.nodeLabelAlignment === ChordLabelAlignment.Perpendicular) return null
       const radianArcLength = d.x1 - d.x0 - getNumber(d, config.padAngle) * 2
       const radius = radiusScale(d.y1) - getNumber(d, config.nodeWidth) / 2
       const arcLength = radius * radianArcLength
-      // Hide label if length of node arc less then 70
-      return arcLength < 70 ? 'none' : 'block'
+      // Hide label if the length of node arc is less then 70 px
+      return arcLength < 70 ? 'none' : null
     })
 
   label
@@ -120,9 +123,9 @@ export function updateLabel<H extends Hierarchy> (
     .style('text-anchor', d => getLabelTextAnchor(d, config))
 
   label
-    .each((d, i, elements) => {
+    .each((d: any, i, elements) => {
       let textWidth = width
-      if (nodeLabelType === LabelType.Along) {
+      if (nodeLabelAlignment === ChordLabelAlignment.Along) {
         const radianArcLength = d.x1 - d.x0 - getNumber(d, config.padAngle) * 2
         const radius = radiusScale(d.y1) - getNumber(d, config.nodeWidth) / 2
         textWidth = radius * radianArcLength
@@ -130,7 +133,7 @@ export function updateLabel<H extends Hierarchy> (
 
       select(elements[i]).call(wrapTextElement, { width: textWidth - LABEL_PADDING * 2, trimOnly: true })
 
-      if (nodeLabelType === LabelType.Along) {
+      if (nodeLabelAlignment === ChordLabelAlignment.Along) {
         const labelText = select(elements[i]).text()
         select(elements[i])
           .attr('dx', LABEL_PADDING)
@@ -138,12 +141,12 @@ export function updateLabel<H extends Hierarchy> (
           .text('')
 
         select(elements[i]).append('textPath')
-          .attr('xlink:href', `#${d.data.id ?? d.data.key}`)
+          .attr('xlink:href', `#chord-node-${i}`)
           .text(labelText)
       }
     })
 
-  if (nodeLabelType === LabelType.Perpendicular) {
+  if (nodeLabelAlignment === ChordLabelAlignment.Perpendicular) {
     smartTransition(label, duration)
       .attr('transform', d => {
         const angleCenter = (d.x0 + d.x1) / 2
@@ -156,8 +159,8 @@ export function updateLabel<H extends Hierarchy> (
   }
 }
 
-export function removeLabel<H extends Hierarchy> (
-  selection: Selection<SVGElement, HierarchyRectangularNode<H>, SVGGElement, HierarchyRectangularNode<H>[]>,
+export function removeLabel<N extends ChordInputNode, L extends ChordInputLink> (
+  selection: Selection<SVGElement, ChordNode<N>, SVGGElement, unknown>,
   duration: number
 ): void {
   smartTransition(selection, duration)
