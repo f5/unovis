@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core'
 
 // Vis
-import { ChordDiagram, ChordDiagramConfigInterface, Hierarchy } from '@volterra/vis'
+import { ChordDiagram, ChordDiagramConfigInterface, ChordLabelAlignment } from '@volterra/vis'
 
 import trafficData from './data/traffic.json'
 
@@ -16,20 +16,21 @@ trafficData.links.forEach((l: any) => {
   styleUrls: ['./chord-diagram.component.css'],
 })
 
-export class ChordDiagramComponent<N extends Hierarchy> implements OnInit {
+export class ChordDiagramComponent<N> implements OnInit {
   title = 'chord-diagram'
 
   data = trafficData
 
   margin = {}
-  config: ChordDiagramConfigInterface<N> = {
+  config: ChordDiagramConfigInterface<N, any> = {
     nodeWidth: 20,
-    nodeLabelType: 'along',
+    nodeLabelAlignment: ChordLabelAlignment.Along,
     nodeColor: d => {
       const colors = this.legendItems.filter(item => !item.inactive).map(d => d.color)
-      return colors[d.height]
+      return colors[d.depth]
     },
     nodeLevels: ['site'],
+    linkValue: d => d.value,
   }
 
   component = new ChordDiagram(this.config)
