@@ -11,10 +11,11 @@ export const examples: ExampleCollection[] = [
     ],
   },
   {
-    title: 'Stacked and Grouped Bars',
+    title: 'Bar Charts',
     description: '',
     examples: [
       require('./basic-grouped-bar').default,
+      require('./stacked-bar-chart').default,
     ],
   },
   {
@@ -29,5 +30,5 @@ export const examples: ExampleCollection[] = [
       require('./basic-leaflet-map').default,
     ],
   },
-  /* ... */
+  /* {} */
 ]
