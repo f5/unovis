@@ -13,14 +13,16 @@ export const examples: ExampleCollection[] = [
   {
     title: 'Stacked and Grouped Bars',
     description: '',
-    examples: [],
+    examples: [
+      require('./basic-grouped-bar').default,
+    ],
   },
   {
     title: 'Maps',
     description: <div>
-      Simple maps using <a href="https://github.com/topojson/topojson" target="_blank">TopoJSON</a> geometry and fully
-      featured maps powered by <a href="https://github.com/Leaflet/Leaflet" target="_blank">Leaflet</a>{' '}
-      (with <a href="https://maplibre.org/" target="_blank">MapLibre</a> or{' '}
+        Simple maps using <a href="https://github.com/topojson/topojson" target="_blank">TopoJSON</a> geometry and fully
+        featured maps powered by <a href="https://github.com/Leaflet/Leaflet" target="_blank">Leaflet</a>{' '}
+        (with <a href="https://maplibre.org/" target="_blank">MapLibre</a> or{' '}
       <a href="https://github.com/tangrams/tangram" target="_blank">Tangram</a> rendering)
     </div>,
     examples: [
