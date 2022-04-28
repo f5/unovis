@@ -1,8 +1,6 @@
-
 import React from 'react'
-import { DocWrapper, DocWrapperProps } from '../base'
 
-import './styles.css'
+import { DocWrapper, DocWrapperProps } from '../base'
 
 type DynamicWrapperProps = DocWrapperProps & {
   primaryData: any;

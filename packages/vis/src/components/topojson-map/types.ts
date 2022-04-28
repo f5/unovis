@@ -17,6 +17,12 @@ import {
   geoNaturalEarth1,
 } from 'd3-geo'
 
+export type MapData<AreaDatum, PointDatum, LinkDatum> = {
+  areas?: AreaDatum[];
+  points?: PointDatum[];
+  links?: LinkDatum[] ;
+}
+
 export enum MapPointLabelPosition {
   Center = 'center',
   Bottom = 'bottom',
@@ -59,3 +65,4 @@ export const MapProjection = {
   [MapProjectionKind.TransverseMercator]: geoTransverseMercator,
   [MapProjectionKind.NaturalEarth1]: geoNaturalEarth1,
 }
+

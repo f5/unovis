@@ -29,7 +29,7 @@ const components: ComponentInput[] = [
 
   // Single components
   { name: 'Donut', sources: [coreComponentConfigPath, '/components/donut'], dataType: 'Datum[]', provide: 'VisCoreComponent' },
-  { name: 'TopoJSONMap', kebabCaseName: 'topojson-map', sources: [coreComponentConfigPath, '/components/topojson-map'], dataType: 'any', provide: 'VisCoreComponent' },
+  { name: 'TopoJSONMap', kebabCaseName: 'topojson-map', sources: [coreComponentConfigPath, '/components/topojson-map'], dataType: '{areas?: AreaDatum[]; points?: PointDatum[]; links?: LinkDatum[]}', provide: 'VisCoreComponent' },
   { name: 'Sankey', sources: [coreComponentConfigPath, '/components/sankey'], provide: 'VisCoreComponent' },
   { name: 'Graph', sources: [coreComponentConfigPath, '/components/graph'], provide: 'VisCoreComponent' },
 

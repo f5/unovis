@@ -50,7 +50,6 @@ ${
 }
   ${dataType ? `@Input() data: ${dataType}` : ''}
 
-
   component: ${componentName}${genericsStr} | undefined
   public componentContainer: ContainerCore | undefined
 
