@@ -160,7 +160,7 @@ export class VisTopoJSONMapComponent<AreaDatum, PointDatum, LinkDatum> implement
 
   /** Zoom level at which the heatmap mode will be disabled. Default: `2.5` */
   @Input() heatmapModeZoomLevelThreshold?: number
-  @Input() data: any
+  @Input() data: {areas?: AreaDatum[]; points?: PointDatum[]; links?: LinkDatum[]}
 
   component: TopoJSONMap<AreaDatum, PointDatum, LinkDatum> | undefined
   public componentContainer: ContainerCore | undefined
