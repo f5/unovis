@@ -62,11 +62,11 @@ export function parseProps (props: Record<string, any>, dataType: string, import
       imports === undefined || imports.findIndex(i => v?.startsWith(i)) === -1
     )
     if (typeof v === 'object' || typeof v === 'function') {
-      if (declarations) {
+      if ((v.length && typeof v[0] === 'number') || !declarations) {
+        v = parseObject(v, dataType) || k
+      } else {
         declarations[k] = parseObject(v, dataType) || k
         v = k
-      } else {
-        v = parseObject(v, dataType)
       }
     }
     return ({
