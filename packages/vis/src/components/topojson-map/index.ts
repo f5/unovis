@@ -139,8 +139,6 @@ export class TopoJSONMap<AreaDatum, PointDatum, LinkDatum> extends ComponentCore
       this._initialScale = this._projection.scale()
       this._currentZoomLevel = 1
 
-      this._center = this._projection.translate()
-
       const zoomFactor = config.zoomFactor
       if (zoomFactor) {
         this._projection
@@ -330,7 +328,7 @@ export class TopoJSONMap<AreaDatum, PointDatum, LinkDatum> extends ComponentCore
   }
 
   _applyZoom (): void {
-    const translate = this._center
+    const translate = this._center ?? this._projection.translate()
     const scale = this._initialScale * this._currentZoomLevel
     this.g.call(this._zoomBehavior.transform, zoomIdentity.translate(translate[0], translate[1]).scale(scale))
   }
@@ -355,7 +353,11 @@ export class TopoJSONMap<AreaDatum, PointDatum, LinkDatum> extends ComponentCore
     window.cancelAnimationFrame(this._animFrameId)
     this._animFrameId = window.requestAnimationFrame(this._onZoomHandler.bind(this, event.transform, isMouseEvent, isExternalEvent))
 
-    if (event) this._center = [event.transform.x, event.transform.y]
+    if (isMouseEvent) {
+      // Update the center coordinate so that the next call to _applyZoom()
+      // will zoom with respect to the current view
+      this._center = [event.transform.x, event.transform.y]
+    }
     this._currentZoomLevel = (event?.transform.k / this._initialScale) || 1
   }
 
