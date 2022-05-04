@@ -23,6 +23,7 @@ topojson-client                perpetual       ISC           3.1.0              
 tslib                          perpetual       0BSD          2.3.1              Microsoft Corp.
 @rollup/plugin-json            perpetual       MIT           4.1.0              rollup
 @types/d3                      perpetual       MIT           7.1.0              n/a
+@types/d3-collection           perpetual       MIT           1.0.10             n/a
 @types/leaflet                 perpetual       MIT           1.7.6              n/a
 @types/mapbox-gl-leaflet       perpetual       MIT           0.0.1              n/a
 @types/supercluster            perpetual       MIT           5.0.2              n/a

@@ -17,6 +17,7 @@
   "devDependencies": {
     "@rollup/plugin-json": "^4.1.0",
     "@types/d3": "^7.1.0",
+    "@types/d3-collection": "^1.0.10",
     "@types/leaflet": "^1.7.6",
     "@types/mapbox-gl-leaflet": "^0.0.1",
     "@types/supercluster": "^5.0.2",
