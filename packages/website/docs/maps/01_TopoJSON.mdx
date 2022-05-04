@@ -8,9 +8,7 @@ import BrowserOnly from '@docusaurus/BrowserOnly'
 import CodeBlock from '@theme/CodeBlock'
 import { PropTable } from '../components/props-table.tsx'
 import { DocWrapper, InputWrapper } from '../wrappers'
-import { data, generatePointData, generateLinkData } from './data'
-import cities from './data/cities_big.json'
-import areas from './data/areas.json'
+import { data, pointData, heatmapData } from './data'
 
 export const defaultProps = (showData = true) => ({
   name: "TopoJSONMap",
@@ -21,10 +19,6 @@ export const defaultProps = (showData = true) => ({
   height: 400,
   dataType: "MapPoint, MapLink, MapArea",
 })
-
-export const pointData = {
-  points: generatePointData()
-}
 
 ## Basic Configuration
 The _TopoJSONMap_ is a map that uses [TopoJSON](https://github.com/topojson/topojson) as its underlying data. The basic configuration is:
@@ -48,7 +42,7 @@ type MapData = {
 }
 ```
 
-<DocWrapper {...defaultProps()}  data={data} showContext="full"/>
+<DocWrapper {...defaultProps()} data={data} showContext="full"/>
 
 where `MapArea`, `MapPoint`, and `MapLink` are custom types that that represent map data. Keep reading to learn more about the minimum configurations for these types.
 
@@ -63,12 +57,14 @@ type MapPoint = {
 ```
 Or, you can simply provide these values through the `latitude` and `longitute` properties of your _TopoJSONMap_ directly.
 
-<DocWrapper {...defaultProps()} topojson="WorldMapTopoJSON" dataType="MapPoint,undefined,undefined" data={pointData} showContext="container"/>
+<DocWrapper {...defaultProps()} data={pointData} topojson="WorldMapTopoJSON" dataType="MapPoint,undefined,undefined" showContext="container"/>
 
 ### mapFitToPoints
-<DocWrapper {...defaultProps()}
+<DocWrapper
+  {...defaultProps()}
   data={pointData}
-  mapFitToPoints={true}/>
+  mapFitToPoints={true}
+/>
 
 ### Point Customization
 The following _TopoJSONMap_ properties accept accessor functions to customize the appearance of your points:
@@ -79,7 +75,7 @@ The following _TopoJSONMap_ properties accept accessor functions to customize th
 
 ### Point Labels
 You can provide labels with the `pointLabel` attribute, which accepts a `StringAccessor` function to be called on each `MapPoint` datum.
-<DocWrapper {...defaultProps()} data={pointData} dataType="MapPoint,undefined,undefined" pointLabel={d => d.city} showContext="minimal"/>
+<DocWrapper {...defaultProps()} data={{ points: data.points }} dataType="MapPoint,undefined,undefined" pointLabel={d => d.city} showContext="minimal"/>
 
 ### Custom Point Labels
 The following _TopoJSONMap_ properties can further customize your Point Label.
@@ -205,7 +201,7 @@ To set the initial zoom factor.
 
 ## Heatmap Mode
 For datasets with a lot of points, you can enable `heatmapMode`
-<DocWrapper {...defaultProps()} data={{ points: cities}} heatmapMode={true}/>
+<DocWrapper {...defaultProps()} data={heatmapData} heatmapMode={true}/>
 
 You can customize the appearance of your heat map blur with the `heatmapModeBlurStdDeviation` property.
 
