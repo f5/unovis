@@ -28,9 +28,10 @@ const components: ComponentInput[] = [
 
   // Single components
   { name: 'Donut', sources: [coreComponentConfigPath, '/components/donut'], dataType: 'Datum[]' },
-  { name: 'TopoJSONMap', kebabCaseName: 'topojson-map', sources: [coreComponentConfigPath, '/components/topojson-map'], dataType: 'any' },
+  { name: 'TopoJSONMap', kebabCaseName: 'topojson-map', sources: [coreComponentConfigPath, '/components/topojson-map'], dataType: '{areas?: AreaDatum[]; points?: PointDatum[]; links?: LinkDatum[]}' },
   { name: 'Sankey', sources: [coreComponentConfigPath, '/components/sankey'] },
   { name: 'Graph', sources: [coreComponentConfigPath, '/components/graph'] },
+  { name: 'ChordDiagram', sources: [coreComponentConfigPath, '/components/chord-diagram'], dataType: '{ nodes: N[]; links?: L[] }' },
 
   // Ancillary components
   { name: 'Tooltip', sources: ['/components/tooltip'], dataType: null, elementSuffix: 'tooltip' },
