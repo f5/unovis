@@ -32,6 +32,7 @@ const components: ComponentInput[] = [
   { name: 'TopoJSONMap', kebabCaseName: 'topojson-map', sources: [coreComponentConfigPath, '/components/topojson-map'], dataType: '{areas?: AreaDatum[]; points?: PointDatum[]; links?: LinkDatum[]}', provide: 'VisCoreComponent' },
   { name: 'Sankey', sources: [coreComponentConfigPath, '/components/sankey'], provide: 'VisCoreComponent' },
   { name: 'Graph', sources: [coreComponentConfigPath, '/components/graph'], provide: 'VisCoreComponent' },
+  { name: 'ChordDiagram', sources: [coreComponentConfigPath, '/components/chord-diagram'], dataType: '{ nodes: N[]; links?: L[] }', provide: 'VisCoreComponent' },
 
   // Ancillary components
   { name: 'Tooltip', sources: ['/components/tooltip'], dataType: null, provide: 'VisGenericComponent' },
