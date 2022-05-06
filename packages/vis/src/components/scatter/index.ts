@@ -81,9 +81,9 @@ export class Scatter<Datum> extends XYComponentCore<Datum> {
     const xRange = this.xScale.range()
 
     return data?.reduce<ScatterPoint<Datum>[]>((acc, d, i) => {
-      const posX = this.xScale(getNumber(d, x))
-      const posY = this.yScale(getNumber(d, y))
-      const pointSize = sizeScale(getNumber(d, size))
+      const posX = this.xScale(getNumber(d, x, i))
+      const posY = this.yScale(getNumber(d, y, i))
+      const pointSize = sizeScale(getNumber(d, size, i))
 
       if ((posX + pointSize >= (xRange[0] - maxR)) && (posX - pointSize <= (xRange[1] + maxR))) {
         acc.push({

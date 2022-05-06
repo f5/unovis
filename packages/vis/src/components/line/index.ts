@@ -60,10 +60,10 @@ export class Line<Datum> extends XYComponentCore<Datum> {
       .curve(this.curve)
 
     const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
-    const lineDataX = data.map(d => this.xScale(getNumber(d, config.x)))
+    const lineDataX = data.map((d, i) => this.xScale(getNumber(d, config.x, i)))
     const lineData: LineData[] = yAccessors.map(a => {
       const ld: LineDatum[] = data.map((d, i) => {
-        const rawValue = getNumber(d, a)
+        const rawValue = getNumber(d, a, i)
         // If `rawValue` is not numerical or if it's not finite (`NaN`, `undefined`, ...), we replace it with `config.fallbackValue`
         const value = (isNumber(rawValue) || (rawValue === null)) && isFinite(rawValue) ? rawValue : config.fallbackValue
         return {

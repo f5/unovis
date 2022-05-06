@@ -27,6 +27,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
   line: Selection<SVGLineElement, any, SVGElement, any>
   x = 0
   datum: Datum
+  datumIndex: number
   show = false
   private _animFrameId: number = null
 
@@ -125,6 +126,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
       const valueX = scaleX.invert(x) as number
 
       this.datum = getNearest(datamodel.data, valueX, this.accessors.x)
+      this.datumIndex = datamodel.data.indexOf(this.datum)
       if (!this.datum) return
 
       this.x = clamp(Math.round(scaleX(getNumber(this.datum, this.accessors.x))), 0, this._width)
@@ -185,8 +187,8 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
     if (config.snapToData && this.datum) {
       const yAccessors = this.accessors.y ?? []
       const yStackedAccessors = this.accessors.yStacked ?? []
-      const baselineValue = getNumber(this.datum, this.accessors.baseline) || 0
-      const stackedValues: CrosshairCircle[] = getStackedValues(this.datum, ...yStackedAccessors)
+      const baselineValue = getNumber(this.datum, this.accessors.baseline, this.datumIndex) || 0
+      const stackedValues: CrosshairCircle[] = getStackedValues(this.datum, this.datumIndex, ...yStackedAccessors)
         .map((value, index, arr) => ({
           y: this.yScale(value + baselineValue),
           opacity: getNumber(this.datum, yStackedAccessors[index]) ? 1 : 0,
