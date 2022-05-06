@@ -89,8 +89,8 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum> {
       .selectAll<SVGGElement, Datum>(`.${s.barGroup}`)
       .data(visibleData, (d, i) => `${getString(d, config.id, i) ?? i}`)
 
-    const getBarGroupsTransform = (d: Datum): string => {
-      const v = this.dataScale(getNumber(d, config.x))
+    const getBarGroupsTransform = (d: Datum, i: number): string => {
+      const v = this.dataScale(getNumber(d, config.x, i))
       const x = this.isVertical() ? v : 0
       const y = this.isVertical() ? 0 : v
       return `translate(${x},${y})`
@@ -142,11 +142,12 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum> {
 
     const barsMerged = barsEnter.merge(bars)
     smartTransition(barsMerged, duration)
-      .attr('d', (d, i) => {
-        const x = innerBandScale(i)
+      .attr('d', (d, j) => {
+        const x = innerBandScale(j)
         const width = barWidth
 
-        const value = getNumber(d, yAccessors[i])
+        // Todo: Find a way to pass the datum index to `getNumber` below
+        const value = getNumber(d, yAccessors[j])
         const isNegative = value < 0
         let y = isNegative ? this.valueScale(0) : this.valueScale(value || 0)
         let height = Math.abs(this.valueScale(0) - this.valueScale(value)) || 0
@@ -179,8 +180,8 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum> {
       (dataScale.invert(halfGroupWidth) as number) -
         (dataScale.invert(0) as number)
     )
-    const filtered = data?.filter((d) => {
-      const v = getNumber(d, config.x)
+    const filtered = data?.filter((d, i) => {
+      const v = getNumber(d, config.x, i)
       const domain: number[] | Date[] = dataScale.domain()
       const domainMin = +domain[0]
       const domainMax = +domain[1]
@@ -254,8 +255,8 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum> {
     let dataSize =
       1 + domainLength / config.dataStep ||
       (!isOrdinal &&
-        data.filter((d) => {
-          const value = getNumber(d, config.x)
+        data.filter((d, i) => {
+          const value = getNumber(d, config.x, i)
           return value >= domain[0] && value <= domain[1]
         }).length) ||
       data.length

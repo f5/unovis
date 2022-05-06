@@ -66,7 +66,7 @@ export class Donut<Datum> extends ComponentCore<Datum[]> {
       .startAngle(config.angleRange[0] ?? 0)
       .endAngle(config.angleRange[1] ?? 2 * Math.PI)
       .padAngle(config.padAngle)
-      .value(d => getNumber(d, config.value) || (config.preventEmptySegments && Number.EPSILON) || 0)
+      .value((d, i) => getNumber(d, config.value, i) || (config.preventEmptySegments && Number.EPSILON) || 0)
       .sort(config.sortFunction)
 
     this.arcGroup.attr('transform', `translate(${this._width / 2},${this._height / 2})`)

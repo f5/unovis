@@ -58,7 +58,7 @@ export class Area<Datum> extends XYComponentCore<Datum> {
       .curve(curveGen)
 
     const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
-    const areaDataX = data.map(d => this.xScale(getNumber(d, config.x)))
+    const areaDataX = data.map((d, i) => this.xScale(getNumber(d, config.x, i)))
 
     const stacked = getStackedData(data, config.baseline, yAccessors, this._prevNegative)
     this._prevNegative = stacked.map(s => !!s.negative)
@@ -87,9 +87,9 @@ export class Area<Datum> extends XYComponentCore<Datum> {
       .style('fill', (d, i) => getColor(data, config.color, areaMaxIdx - i))
 
     const areasMerged = smartTransition(areasEnter.merge(areas), duration)
-      .style('opacity', d => {
+      .style('opacity', (d, i) => {
         const isDefined = d.some(p => (p.y0 - p.y1) !== 0)
-        return isDefined ? getNumber(d, config.opacity) : 0
+        return isDefined ? getNumber(d, config.opacity, areaMaxIdx - i) : 0
       })
       .style('fill', (d, i) => getColor(data, config.color, areaMaxIdx - i))
       .style('stroke', (d, i) => getColor(data, config.color, areaMaxIdx - i))

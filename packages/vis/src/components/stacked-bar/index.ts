@@ -73,8 +73,8 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
       .selectAll<SVGGElement, Datum>(`.${s.barGroup}`)
       .data(visibleData, (d, i) => `${getString(d, config.id, i) ?? i}`)
 
-    const getBarGroupsTransform = (d: Datum): string => {
-      const v = this.dataScale(getNumber(d, config.x))
+    const getBarGroupsTransform = (d: Datum, i: number): string => {
+      const v = this.dataScale(getNumber(d, config.x, i))
       const x = this.isVertical() ? v : 0
       const y = this.isVertical() ? 0 : v
       return `translate(${x},${y})`
@@ -107,21 +107,21 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
     // Render Bars
     const bars = barGroupsMerged
       .selectAll<SVGPathElement, StackedBarDataRecord<Datum>>(`.${s.bar}`)
-      .data((d, i) => stacked.map((s) =>
-        ({ ...d, _stacked: s[i], _negative: s.negative, _ending: s.ending }))
+      .data((d, j) => stacked.map((s) =>
+        ({ ...d, _stacked: s[j], _negative: s.negative, _ending: s.ending }))
       )
 
     const barsEnter = bars.enter().append('path')
       .attr('class', s.bar)
-      .attr('d', (d, i) => this._getBarPath(d, i, true))
-      .style('fill', (d, i) => getColor(d, config.color, i))
+      .attr('d', (d, j) => this._getBarPath(d, j, true))
+      .style('fill', (d, j) => getColor(d, config.color, j))
 
     const barsMerged = barsEnter.merge(bars)
 
     smartTransition(barsMerged, duration)
-      .attr('d', (d, i) => this._getBarPath(d, i))
-      .style('fill', (d, i) => getColor(d, config.color, i))
-      .style('cursor', (d, i) => getString(d, config.cursor, i))
+      .attr('d', (d, j) => this._getBarPath(d, j))
+      .style('fill', (d, j) => getColor(d, config.color, j))
+      .style('cursor', (d, j) => getString(d, config.cursor, j))
 
     smartTransition(bars.exit(), duration)
       .style('opacity', 0)
@@ -143,8 +143,8 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
     //   otherwise we get the number of data elements within the domain range
     // Or if the scale is ordinal we use data.length
     let dataSize = (1 + domainLength / config.dataStep) ||
-        (!isOrdinal && data.filter(d => {
-          const value = getNumber(d, config.x)
+        (!isOrdinal && data.filter((d, i) => {
+          const value = getNumber(d, config.x, i)
           return (value >= domain[0]) && (value <= domain[1])
         }).length) ||
         data.length
@@ -166,8 +166,8 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
 
     const scale = this.dataScale
     const halfGroupWidth = Math.abs((scale.invert(halfGroupWidthPx) as number) - (scale.invert(0) as number))
-    const filtered = data?.filter(d => {
-      const v = getNumber(d, config.x)
+    const filtered = data?.filter((d, i) => {
+      const v = getNumber(d, config.x, i)
       const domain: number[] | Date[] = scale.domain()
       const domainMin = +domain[0]
       const domainMax = +domain[1]
@@ -177,14 +177,15 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
     return filtered
   }
 
-  _getBarPath (d: StackedBarDataRecord<Datum>, i: number, isEntering = false): string {
+  _getBarPath (d: StackedBarDataRecord<Datum>, accessorIndex: number, isEntering = false): string {
     const { config } = this
     const yAccessors = this.getAccessors()
     const barWidth = this._getBarWidth()
 
     const isNegative = d._negative
     const isEnding = d._ending // The most top bar or, if the value is negative, the most bottom bar
-    const value = getNumber(d, yAccessors[i])
+    // Todo: Find a way to pass the datum index to `getNumber` below
+    const value = getNumber(d, yAccessors[accessorIndex])
 
     const height = isEntering ? 0 : Math.abs(this.valueScale(d._stacked[0]) - this.valueScale(d._stacked[1]))
     const h = !isEntering && config.barMinHeight && (height < 1) && isFinite(value) && (value !== config.barMinHeightZeroValue) ? 1 : height

@@ -172,10 +172,10 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
 
     const linesMerged = smartTransition(linesEnter.merge(lines), duration)
       .style('stroke', (d, i) => getColor(d, config.color, i))
-      .attr('stroke-width', d => getNumber(d, config.lineWidth))
+      .attr('stroke-width', (d, i) => getNumber(d, config.lineWidth, i))
       .attr('transform', 'translate(0, 0)')
-      .style('cursor', d => getString(d, config.cursor))
-      .style('stroke-linecap', d => getString(d, config.lineCap))
+      .style('cursor', (d, i) => getString(d, config.cursor, i))
+      .style('stroke-linecap', (d, i) => getString(d, config.lineCap, i))
       .style('opacity', 1)
     this._positionLines(linesMerged, ordinalScale)
 
@@ -218,8 +218,8 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
     const yStart = Math.min(...yRange)
 
     return selection
-      .attr('x1', d => xScale(getNumber(d, config.x)))
-      .attr('x2', d => xScale(getNumber(d, config.x) + getNumber(d, config.length)))
+      .attr('x1', (d, i) => xScale(getNumber(d, config.x, i)))
+      .attr('x2', (d, i) => xScale(getNumber(d, config.x, i) + getNumber(d, config.length, i)))
       .attr('y1', (d, i) => yStart + (ordinalScale(this._getRecordType(d, i)) + 0.5) * config.rowHeight)
       .attr('y2', (d, i) => yStart + (ordinalScale(this._getRecordType(d, i)) + 0.5) * config.rowHeight)
       .style('opacity', 1)
@@ -268,7 +268,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
 
   private _getMaxLineWidth (): number {
     const { config, datamodel: { data } } = this
-    return max(data, d => getNumber(d, config.lineWidth)) ?? 0
+    return max(data, (d, i) => getNumber(d, config.lineWidth, i)) ?? 0
   }
 
   private _getRecordType (d: Datum, i: number): string {
@@ -283,7 +283,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
   getXDataExtent (): number[] {
     const { config, datamodel } = this
     const min = getMin(datamodel.data, config.x)
-    const max = getMax(datamodel.data, d => getNumber(d, config.x) + getNumber(d, config.length))
+    const max = getMax(datamodel.data, (d, i) => getNumber(d, config.x, i) + getNumber(d, config.length, i))
     return [min, max]
   }
 }

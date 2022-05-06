@@ -114,29 +114,29 @@ export function getStackedExtent<Datum> (data: Datum[], ...acs: NumericAccessor<
   if (isArray(acs)) {
     let minValue = 0
     let maxValue = 0
-    for (const d of data) {
+    data.forEach((d, i) => {
       let positiveStack = 0
       let negativeStack = 0
       for (const a of acs as NumericAccessor<Datum>[]) {
-        const value = getNumber(d, a) || 0
+        const value = getNumber(d, a, i) || 0
         if (value >= 0) positiveStack += value
         else negativeStack += value
       }
 
       if (positiveStack > maxValue) maxValue = positiveStack
       if (negativeStack < minValue) minValue = negativeStack
-    }
+    })
     return [minValue, maxValue]
   }
 }
 
-export function getStackedValues<Datum> (d: Datum, ...acs: NumericAccessor<Datum>[]): (number | undefined)[] {
+export function getStackedValues<Datum> (d: Datum, index: number, ...acs: NumericAccessor<Datum>[]): (number | undefined)[] {
   const values = []
 
   let positiveStack = 0
   let negativeStack = 0
   for (const a of acs as NumericAccessor<Datum>[]) {
-    const value = getNumber(d, a) || 0
+    const value = getNumber(d, a, index) || 0
     if (value >= 0) {
       values.push(positiveStack += value)
     } else {
@@ -153,10 +153,10 @@ export function getStackedData<Datum> (
   acs: NumericAccessor<Datum>[],
   prevNegative?: boolean[] // to help guessing the stack direction (positive/negative) when the values are 0 or null
 ): StackValuesRecord[] {
-  const baselineValues = data.map(d => getNumber(d, baseline) || 0)
-  const isNegativeStack = acs.map((a, i) => {
-    const average = mean(data, d => getNumber(d, a) || 0)
-    return (average === 0 && Array.isArray(prevNegative)) ? prevNegative[i] : average < 0
+  const baselineValues = data.map((d, i) => getNumber(d, baseline, i) || 0)
+  const isNegativeStack = acs.map((a, j) => {
+    const average = mean(data, (d, i) => getNumber(d, a, i) || 0)
+    return (average === 0 && Array.isArray(prevNegative)) ? prevNegative[j] : average < 0
   })
 
   const stackedData: StackValuesRecord[] = acs.map(() => [])
@@ -164,7 +164,7 @@ export function getStackedData<Datum> (
     let positiveStack = baselineValues[i]
     let negativeStack = baselineValues[i]
     acs.forEach((a, j) => {
-      const value = getNumber(d, a) || 0
+      const value = getNumber(d, a, i) || 0
       if (!isNegativeStack[j]) {
         stackedData[j].push([positiveStack, positiveStack += value])
       } else {
@@ -193,13 +193,13 @@ export function getStackedData<Datum> (
 
 export function getMin<Datum> (data: Datum[], ...acs: NumericAccessor<Datum>[]): number | undefined {
   if (!data) return undefined
-  const minValue = min(data, d => min(acs as NumericAccessor<Datum>[], a => getNumber(d, a)))
+  const minValue = min(data, (d, i) => min(acs as NumericAccessor<Datum>[], a => getNumber(d, a, i)))
   return minValue
 }
 
 export function getMax<Datum> (data: Datum[], ...acs: NumericAccessor<Datum>[]): number | undefined {
   if (!data) return undefined
-  const maxValue = max(data, d => max(acs as NumericAccessor<Datum>[], a => getNumber(d, a)))
+  const maxValue = max(data, (d, i) => max(acs as NumericAccessor<Datum>[], a => getNumber(d, a, i)))
   return maxValue
 }
 
@@ -210,7 +210,7 @@ export function getExtent<Datum> (data: Datum[], ...acs: NumericAccessor<Datum>[
 export function getNearest<Datum> (data: Datum[], value: number, accessor: NumericAccessor<Datum>): Datum {
   if (data.length <= 1) return data[0]
 
-  const values = data.map(d => getNumber(d, accessor))
+  const values = data.map((d, i) => getNumber(d, accessor, i))
   values.sort((a, b) => a - b)
 
   const xBisector = bisector(d => d).left
@@ -219,8 +219,8 @@ export function getNearest<Datum> (data: Datum[], value: number, accessor: Numer
 }
 
 export function filterDataByRange<Datum> (data: Datum[], range: [number, number], accessor: NumericAccessor<Datum>): Datum[] {
-  const filteredData = data.filter(d => {
-    const value = getNumber(d, accessor)
+  const filteredData = data.filter((d, i) => {
+    const value = getNumber(d, accessor, i)
     return (value >= range[0]) && (value < range[1])
   })
 
