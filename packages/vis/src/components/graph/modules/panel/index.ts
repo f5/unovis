@@ -58,7 +58,7 @@ export function createPanels<N extends GraphNode, P extends GraphPanelConfigInte
 
 export function updatePanels<N extends GraphNode, L extends GraphLink, P extends GraphPanelConfigInterface> (selection: Selection<SVGGElement, P, SVGGElement, P>, config: GraphConfig<GraphInputNode, GraphInputLink>, duration: number): void {
   const { nodeDisabled } = config
-  selection.classed(panelSelectors.greyout, d => d._data.map(node => getBoolean(node, nodeDisabled) || node._state.greyout).every(d => d))
+  selection.classed(panelSelectors.greyout, d => d._data.map((node, i) => getBoolean(node, nodeDisabled, i) || node._state.greyout).every(d => d))
 
   smartTransition(selection, duration)
     .attr('transform', d => `translate(${d._x}, ${d._y})`)

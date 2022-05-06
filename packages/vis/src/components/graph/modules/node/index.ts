@@ -96,7 +96,7 @@ export function updateSelectedNodes<N extends GraphInputNode, L extends GraphInp
 
   selection.each((d, i, elements) => {
     const group: Selection<SVGGElement, N, SVGGElement, N> = select(elements[i])
-    const isGreyout = getBoolean(d, nodeDisabled) || d._state.greyout
+    const isGreyout = getBoolean(d, nodeDisabled, i) || d._state.greyout
 
     group.classed(nodeSelectors.greyoutNode, isGreyout)
       .classed(nodeSelectors.draggable, !config.disableDrag)

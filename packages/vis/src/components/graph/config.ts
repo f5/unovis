@@ -105,6 +105,8 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   linkArrow?: GenericAccessor<GraphLinkArrow, L> | undefined;
   /** Link stroke color accessor function or constant value. Default: `undefined` */
   linkStroke?: ColorAccessor<L>;
+  /** Link disabled state accessor function or constant value. Default: `false` */
+  linkDisabled?: BooleanAccessor<L>;
   /** Link flow animation accessor function or constant value. Default: `false` */
   linkFlow?: BooleanAccessor<L>;
   /** Link  abel accessor function or constant value. Default: `undefined` */
@@ -208,8 +210,10 @@ export class GraphConfig<N extends GraphInputNode, L extends GraphInputLink> ext
   linkLabel = undefined
   linkLabelShiftFromCenter = true
   linkNeighborSpacing = 8
+  linkDisabled = false
   selectedLinkId = undefined
   scoreAnimDuration = 1500
+
   nodeSize = 30
   nodeBorderWidth = 3
   nodeShape = Shape.Circle
