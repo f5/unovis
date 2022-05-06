@@ -26,7 +26,7 @@ export default function StackedBarChart (): JSX.Element {
       <VisBulletLegend items={chartLabels.map(d => ({ name: d.legend }))}/>
       <VisStackedBar
         data={data}
-        x={(d: EducationDatum, i: number) => data.indexOf(d)}
+        x={(d: EducationDatum, i: number) => i}
         y={chartLabels.map(i => (d: EducationDatum) => d[i.key])}
         orientation={Orientation.Horizontal}
       />
