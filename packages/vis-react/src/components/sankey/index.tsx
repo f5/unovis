@@ -22,7 +22,7 @@ function VisSankeyFC<N extends SankeyInputNode, L extends SankeyInputLink> (prop
 
   // On Props Update
   useEffect(() => {
-    component?.setData(props.data ?? [])
+    if (props.data) component?.setData(props.data)
     component?.setConfig(props)
   })
 
