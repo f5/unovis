@@ -2,7 +2,6 @@
   display: flex;
   flex-direction: column;
   width: 300px;
-  height: 200px;
 }
 
 .root:hover > .image {
@@ -18,6 +17,7 @@
   border: 1px solid rgba(0,0,0,0);
   background-blend-mode: multiply;
   background-color: #F9F9FC;
+  height: 180px;
 }
 
 .title {
