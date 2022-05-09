@@ -35,7 +35,7 @@ function Vis${componentName}FC${genericsDefStr} (props: Vis${componentName}Props
 
   // On Props Update
   useEffect(() => {
-    ${dataType ? 'component?.setData(props.data ?? [])' : ''}
+    ${dataType ? 'if (props.data) component?.setData(props.data)' : ''}
     component?.setConfig(props)
   })
 

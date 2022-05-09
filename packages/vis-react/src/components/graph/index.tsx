@@ -22,7 +22,7 @@ function VisGraphFC<N extends GraphInputNode, L extends GraphInputLink> (props: 
 
   // On Props Update
   useEffect(() => {
-    component?.setData(props.data ?? [])
+    if (props.data) component?.setData(props.data)
     component?.setConfig(props)
   })
 

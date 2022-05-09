@@ -22,7 +22,7 @@ function VisCrosshairFC<Datum> (props: VisCrosshairProps<Datum>): JSX.Element {
 
   // On Props Update
   useEffect(() => {
-    component?.setData(props.data ?? [])
+    if (props.data) component?.setData(props.data)
     component?.setConfig(props)
   })
 

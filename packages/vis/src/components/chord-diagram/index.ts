@@ -66,7 +66,7 @@ export class ChordDiagram<N extends ChordInputNode, L extends ChordInputLink> ex
     this.labelGroup = this.g.append('g').attr('class', s.labels)
   }
 
-  setData (data: GraphDataModel<N, L>): void {
+  setData (data: { nodes: N[]; links?: L[] }): void {
     this.datamodel.data = data
     this._hierarchyNodes = this._getHierarchyNodes()
   }

@@ -8,7 +8,7 @@ import { arePropsEqual } from 'src/utils/react'
 // Types
 import { VisComponentElement } from 'src/types/dom'
 
-export type VisTopoJSONMapProps<AreaDatum, PointDatum, LinkDatum> = TopoJSONMapConfigInterface<AreaDatum, PointDatum, LinkDatum> & { data?: any }
+export type VisTopoJSONMapProps<AreaDatum, PointDatum, LinkDatum> = TopoJSONMapConfigInterface<AreaDatum, PointDatum, LinkDatum> & { data?: {areas?: AreaDatum[]; points?: PointDatum[]; links?: LinkDatum[]} }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 function VisTopoJSONMapFC<AreaDatum, PointDatum, LinkDatum> (props: VisTopoJSONMapProps<AreaDatum, PointDatum, LinkDatum>): JSX.Element {
@@ -22,7 +22,7 @@ function VisTopoJSONMapFC<AreaDatum, PointDatum, LinkDatum> (props: VisTopoJSONM
 
   // On Props Update
   useEffect(() => {
-    component?.setData(props.data ?? [])
+    if (props.data) component?.setData(props.data)
     component?.setConfig(props)
   })
 
