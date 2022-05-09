@@ -15,7 +15,7 @@ export const examples: ExampleCollection[] = [
     description: '',
     examples: [
       require('./basic-grouped-bar').default,
-      require('./stacked-bar-chart').default,
+      require('./horizontal-stacked-bar-chart').default,
     ],
   },
   {
