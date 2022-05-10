@@ -17,6 +17,7 @@ const bar = new GroupedBar<ElectionDatum>({
 
 const chart = new XYContainer(container, {
   components: [bar],
+  height: 500,
   xAxis: new Axis({
     type: 'x',
     label: 'Election Year',
