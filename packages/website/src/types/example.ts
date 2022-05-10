@@ -1,5 +1,6 @@
 export type Example = {
   title: string;
+  pathname: string;
   description: string | JSX.Element;
   component: () => JSX.Element;
   preview: string;
