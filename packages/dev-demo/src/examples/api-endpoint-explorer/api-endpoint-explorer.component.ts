@@ -6,7 +6,7 @@ import _sample from 'lodash/sample'
 
 // Vis
 import {
-  SingleChart,
+  SingleContainer,
   Sankey,
   SankeyConfigInterface,
   Sizing,
@@ -152,7 +152,7 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
     // eslint-disable-next-line no-console
     console.log({ apiData, sankeyData: this.sankeyData })
 
-    this.sankey = new SingleChart(this.chart.nativeElement, this.containerConfig, this.sankeyData)
+    this.sankey = new SingleContainer(this.chart.nativeElement, this.containerConfig, this.sankeyData)
     setTimeout(() => {
       this.sankeyFullWidth = this.sankey.component.getWidth()
       this.flowlegendWidth = this.sankeyFullWidth - NODE_HORIZONTAL_SPACE + NODE_WIDTH / 2

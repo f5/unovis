@@ -4,7 +4,7 @@ import _times from 'lodash/times'
 import _sample from 'lodash/sample'
 import _random from 'lodash/random'
 
-import { SingleChart, TopoJSONMap, Tooltip, WorldMapTopoJSON } from '@volterra/vis'
+import { SingleContainer, TopoJSONMap, Tooltip, WorldMapTopoJSON } from '@volterra/vis'
 
 import cities from './data/cities.json'
 import areas from './data/areas.json'
@@ -77,7 +77,7 @@ export class TopoJSONMapComponent implements OnInit, AfterViewInit {
         },
       }),
     }
-    new SingleChart(this.simpleMap.nativeElement, config, data)
+    new SingleContainer(this.simpleMap.nativeElement, config, data)
 
   }
 

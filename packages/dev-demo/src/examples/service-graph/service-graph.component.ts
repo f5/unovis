@@ -2,7 +2,7 @@
 
 import { Component, ViewChild, ElementRef, OnInit, AfterViewInit } from '@angular/core'
 
-import { Graph, GraphConfigInterface, SingleChart, GraphLayoutType, GraphNode, GraphLink } from '@volterra/vis'
+import { Graph, GraphConfigInterface, SingleContainer, GraphLayoutType, GraphNode, GraphLink } from '@volterra/vis'
 
 import graphData from './data/ves-io-service-graph.json'
 
@@ -65,10 +65,10 @@ export class ServiceGraphComponent implements OnInit, AfterViewInit {
   @ViewChild('graph', { static: false }) containerRef: ElementRef
   title = 'service-graph'
   config = { component: new Graph(getGraphConfig.call(this)) }
-  vis: SingleChart<any>
+  vis: SingleContainer<any>
 
   ngAfterViewInit (): void {
-    this.vis = new SingleChart(this.containerRef.nativeElement, this.config, graphData)
+    this.vis = new SingleContainer(this.containerRef.nativeElement, this.config, graphData)
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function

@@ -6,7 +6,7 @@ import _random from 'lodash/random'
 import _cloneDeep from 'lodash/cloneDeep'
 import _uniq from 'lodash/uniq'
 
-import { Graph, SingleChart, GraphConfigInterface } from '@volterra/vis'
+import { Graph, SingleContainer, GraphConfigInterface } from '@volterra/vis'
 
 import { overviewConfig, getPanels } from './configuration/graph-config'
 import consoleData from './data/traffic.json'
@@ -31,9 +31,9 @@ export class TrafficGraphComponent implements OnInit, AfterViewInit {
 
 
   component = new Graph({ ...this.config, panels: this.panels })
-  
+
   ngAfterViewInit (): void {
-    this.chart = new SingleChart(this.graph.nativeElement, { duration: 1000, component: this.component }, this.overviewData)
+    this.chart = new SingleContainer(this.graph.nativeElement, { duration: 1000, component: this.component }, this.overviewData)
   }
 
   ngOnInit (): void {
@@ -99,7 +99,7 @@ export class TrafficGraphComponent implements OnInit, AfterViewInit {
 
     // Remove self-directed links
     groupedData.links = groupedData.links.filter(l => l.source !== l.target)
-      
+
     groupedData.nodes.sort((a, b) => a.order - b.order)
     return groupedData
   }

@@ -1,7 +1,7 @@
 /* eslint-disable dot-notation */
 
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core'
-import { Graph, GraphLayoutType, Shape, SingleChart } from '@volterra/vis'
+import { Graph, GraphLayoutType, Shape, SingleContainer } from '@volterra/vis'
 
 type GraphNode = { id: string; label: string; group: string }
 type GraphLink = { source: string; target: string }
@@ -25,7 +25,7 @@ export class ConcentricGraphComponent implements AfterViewInit {
     linkWidth: 1,
   })
 
-  vis: SingleChart<{nodes: GraphNode[]; links?: GraphLink[] }>
+  vis: SingleContainer<{nodes: GraphNode[]; links?: GraphLink[] }>
 
   ngAfterViewInit (): void {
     const nodes = this.generateNodes(15 + Math.round(150 * Math.random()))
@@ -33,7 +33,7 @@ export class ConcentricGraphComponent implements AfterViewInit {
     const links = this.generateLinks(nodes)
     const data = { nodes, links }
 
-    this.vis = new SingleChart<{nodes: GraphNode[]; links?: GraphLink[] }>(this.containerRef.nativeElement, { component: this.component }, data)
+    this.vis = new SingleContainer<{nodes: GraphNode[]; links?: GraphLink[] }>(this.containerRef.nativeElement, { component: this.component }, data)
   }
 
   generateNodes (n = 50): GraphNode[] {

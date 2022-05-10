@@ -1,24 +1,24 @@
 import { Component, ViewChild, ElementRef, AfterViewInit, Input, OnDestroy } from '@angular/core'
 
 // Vis
-import { SingleChart, SingleChartConfigInterface } from '@volterra/vis'
+import { SingleContainer, SingleContainerConfigInterface } from '@volterra/vis'
 
 @Component({
   selector: 'vis-singlechart',
   templateUrl: './singlechart.component.html',
   styleUrls: ['./singlechart.component.css'],
 })
-export class SingleChartComponent implements AfterViewInit, OnDestroy {
+export class SingleContainerComponent implements AfterViewInit, OnDestroy {
   @ViewChild('container', { static: false }) containerRef: ElementRef
   @Input() margin = { top: 10, bottom: 10, left: 10, right: 10 }
   @Input() component
   @Input() config = {}
   @Input() data = []
   @Input() tooltip
-  chart: SingleChart<unknown>
+  chart: SingleContainer<unknown>
 
   ngAfterViewInit (): void {
-    this.chart = new SingleChart<unknown>(this.containerRef.nativeElement, this.getConfig(), this.data)
+    this.chart = new SingleContainer<unknown>(this.containerRef.nativeElement, this.getConfig(), this.data)
   }
 
   ngOnChanges (changes): void {
@@ -44,7 +44,7 @@ export class SingleChartComponent implements AfterViewInit, OnDestroy {
     this.chart?.updateContainer(this.getConfig())
   }
 
-  getConfig (): SingleChartConfigInterface<unknown> {
+  getConfig (): SingleContainerConfigInterface<unknown> {
     const { margin, component, tooltip } = this
     return { margin, component, tooltip }
   }
