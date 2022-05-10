@@ -11,13 +11,13 @@ import { smartTransition } from 'utils/d3'
 import { Sizing, ExtendedSizeComponent } from 'types/component'
 
 // Config
-import { SingleChartConfig, SingleChartConfigInterface } from './config'
+import { SingleContainerConfig, SingleContainerConfigInterface } from './config'
 
-export class SingleChart<Datum> extends ContainerCore {
-  component: ComponentCore<Datum>
-  config: SingleChartConfig<Datum> = new SingleChartConfig()
+export class SingleContainer<Data> extends ContainerCore {
+  component: ComponentCore<Data>
+  config: SingleContainerConfig<Data> = new SingleContainerConfig()
 
-  constructor (element, config?: SingleChartConfigInterface<Datum>, data?: Datum) {
+  constructor (element: HTMLElement, config?: SingleContainerConfigInterface<Data>, data?: Data) {
     super(element)
 
     if (config) {
@@ -30,7 +30,7 @@ export class SingleChart<Datum> extends ContainerCore {
     }
   }
 
-  public setData (data: Datum, preventRender?: boolean): void {
+  public setData (data: Data, preventRender?: boolean): void {
     const { config } = this
 
     if (this.component) this.component.setData(data)
@@ -38,7 +38,7 @@ export class SingleChart<Datum> extends ContainerCore {
     config.tooltip?.hide()
   }
 
-  public updateContainer (containerConfig: SingleChartConfigInterface<Datum>, preventRender?: boolean): void {
+  public updateContainer (containerConfig: SingleContainerConfigInterface<Data>, preventRender?: boolean): void {
     super.updateContainer(containerConfig)
     this.removeAllChildren()
 
@@ -61,7 +61,7 @@ export class SingleChart<Datum> extends ContainerCore {
     if (!preventRender) this.render()
   }
 
-  public update (containerConfig: SingleChartConfigInterface<Datum>, componentConfig?, data?: Datum): void {
+  public update (containerConfig: SingleContainerConfigInterface<Data>, componentConfig?, data?: Data): void {
     if (containerConfig) this.updateContainer(containerConfig, true)
     if (componentConfig) this.updateComponent(componentConfig, true)
     if (data) this.setData(data, true)

@@ -1,7 +1,7 @@
 import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core'
 import _flatten from 'lodash/flatten'
 
-import { Graph, SingleChart, GraphConfigInterface } from '@volterra/vis'
+import { Graph, SingleContainer, GraphConfigInterface } from '@volterra/vis'
 
 import { overviewConfig, drilldownConfig } from './configuration/graph-config'
 import consoleData from './data/connectivity.json'
@@ -23,7 +23,7 @@ export class ConnectivityGraphComponent implements AfterViewInit {
   component = new Graph(this.config)
 
   ngAfterViewInit (): void {
-    this.chart = new SingleChart(this.graph.nativeElement, { component: this.component }, this.overviewData)
+    this.chart = new SingleContainer(this.graph.nativeElement, { component: this.component }, this.overviewData)
   }
 
   onNodeClick (d): void {

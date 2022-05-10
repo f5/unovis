@@ -4,7 +4,7 @@ import _times from 'lodash/times'
 import _sample from 'lodash/sample'
 import _random from 'lodash/random'
 
-import { Graph, SingleChart, GraphLayoutType, GraphConfigInterface, VisControlItemInterface, VisControlsOrientation } from '@volterra/vis'
+import { Graph, SingleContainer, GraphLayoutType, GraphConfigInterface, VisControlItemInterface, VisControlsOrientation } from '@volterra/vis'
 
 import { dataGenerator } from './data/datagen'
 
@@ -82,7 +82,7 @@ export class GraphComponent implements OnInit, AfterViewInit {
     const data = generator.next().value
     console.log('data', data);
 
-    this.chart = new SingleChart(this.graph.nativeElement, { component: this.component }, data)
+    this.chart = new SingleContainer(this.graph.nativeElement, { component: this.component }, data)
 
     setInterval(() => {
       this.chart.setData(generator.next().value)

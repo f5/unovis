@@ -44,7 +44,7 @@ import { BulletLegendComponent } from './components/bullet-legend/bullet-legend.
 import { FlowLegendComponent } from './components/flow-legend/flow-legend.component'
 import { XYChartComponent } from './components/xychart/xychart.component'
 import { MapLeafletComponent } from './components/map-leaflet/map-leaflet.component'
-import { SingleChartComponent } from './components/singlechart/singlechart.component'
+import { SingleContainerComponent } from './components/singlechart/singlechart.component'
 import { Collection } from './components/collection/collection.component'
 import { VisControlsComponent } from './components/vis-controls/vis-controls.component'
 
@@ -97,7 +97,7 @@ appRoutes.push({ path: '', redirectTo: `/${appRoutes[0].path}`, pathMatch: 'full
     SankeyComponent,
     ApiEndpointExplorerComponent,
     XYChartComponent,
-    SingleChartComponent,
+    SingleContainerComponent,
     WrapperUsageExampleComponent,
     TimelineComponent,
     BulletLegendExampleComponent,

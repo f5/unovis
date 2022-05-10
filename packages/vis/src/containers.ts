@@ -1,6 +1,6 @@
 export { ContainerCore } from './core/container'
 export { ContainerConfigInterface } from './core/container/config'
-export { SingleChart } from './containers/single-chart'
+export { SingleContainer } from './containers/single-container'
 export { XYContainer } from './containers/xy-container'
 export { XYContainerConfigInterface } from './containers/xy-container/config'
-export { SingleChartConfigInterface } from './containers/single-chart/config'
+export { SingleContainerConfigInterface } from './containers/single-container/config'

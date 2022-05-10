@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-use-before-define
 import React, { ReactNode, useEffect, useRef, useState, PropsWithChildren } from 'react'
-import { SingleChart, SingleChartConfigInterface, ComponentCore, Tooltip } from '@volterra/vis'
+import { SingleContainer, SingleContainerConfigInterface, ComponentCore, Tooltip } from '@volterra/vis'
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'
@@ -8,16 +8,16 @@ import { arePropsEqual } from 'src/utils/react'
 // Types
 import { VisComponentElement } from 'src/types/dom'
 
-export type VisSingleContainerProps<Datum> = SingleChartConfigInterface<Datum> & {
+export type VisSingleContainerProps<Datum> = SingleContainerConfigInterface<Datum> & {
   data?: Datum;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 function VisSingleContainerFC<Datum> (props: PropsWithChildren<VisSingleContainerProps<Datum>>): JSX.Element {
   const container = useRef<HTMLDivElement>(null)
-  const [chart, setChart] = useState<SingleChart<Datum>>()
+  const [chart, setChart] = useState<SingleContainer<Datum>>()
 
-  const getConfig = (): SingleChartConfigInterface<Datum> => ({
+  const getConfig = (): SingleContainerConfigInterface<Datum> => ({
     ...props,
     // eslint-disable-next-line @typescript-eslint/naming-convention
     component: container.current?.querySelector<VisComponentElement<ComponentCore<Datum>>>('vis-component')?.__component__,
@@ -28,7 +28,7 @@ function VisSingleContainerFC<Datum> (props: PropsWithChildren<VisSingleContaine
   // On Mount
   useEffect(() => {
     setChart(
-      new SingleChart<Datum>(container.current as HTMLDivElement, getConfig(), props.data)
+      new SingleContainer<Datum>(container.current as HTMLDivElement, getConfig(), props.data)
     )
 
     return () => chart?.destroy()
