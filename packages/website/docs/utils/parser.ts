@@ -58,7 +58,7 @@ export function parseObject (value: any, type: string, level = 1): string {
 
 export function parseProps (props: Record<string, any>, dataType: string, imports?: string[], declarations?: Record<string, string>): PropInfo[] {
   return props && Object.entries(props).map(([k, v]) => {
-    const isStringLiteral = typeof v === 'string' && (
+    const isStringLiteral = typeof v === 'string' && !declarations[k] && (
       imports === undefined || imports.findIndex(i => v?.startsWith(i)) === -1
     )
     if (typeof v === 'object' || typeof v === 'function') {
@@ -68,6 +68,8 @@ export function parseProps (props: Record<string, any>, dataType: string, import
         declarations[k] = parseObject(v, dataType) || k
         v = k
       }
+    } else if (declarations[k]) {
+      v = k
     }
     return ({
       key: k,

@@ -106,9 +106,7 @@ function getTypescriptStrings (config: CodeConfig, mainComponent: string): strin
     })
     lines.push(`const chart = new ${container.name}(containerNode, {`)
     if (container.props?.length) {
-      const containerProps = mainIsContainer
-        ? getPropDetails(container.props).map(p => [p.key, p.value].join(': '))
-        : container.props.map(p => p.value)
+      const containerProps = getPropDetails(container.props).map(p => [p.key, p.value].join(': '))
       lines.push(`${t}${containerProps.join(`,\n${t}`)},`)
     }
     Object.entries(containerConfig).forEach(([k, v]) => {
@@ -125,12 +123,12 @@ export function DocFrameworkTabs ({
   components,
   container,
   context,
+  declarations = {},
   hideTabLabels,
   mainComponent,
   dataType,
   imports,
 }: DocTabsProps): JSX.Element {
-  const declarations: Record<string, string> = {}
   const children = mainComponent && !mainComponent?.name.endsWith('Container')
     ? (
       !context || context === ContextLevel.Minimal
