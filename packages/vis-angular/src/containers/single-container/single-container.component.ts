@@ -1,7 +1,7 @@
 import { Component, ViewChild, ElementRef, AfterViewInit, Input, OnDestroy, SimpleChanges, ContentChild } from '@angular/core'
 
 // Vis
-import { ComponentCore, SingleChart, SingleChartConfigInterface, Tooltip, Spacing } from '@volterra/vis'
+import { ComponentCore, SingleContainer, SingleContainerConfigInterface, Tooltip, Spacing } from '@volterra/vis'
 import { VisCoreComponent } from '../../core'
 import { VisTooltipComponent } from '../../components/tooltip/tooltip.component'
 
@@ -28,10 +28,10 @@ export class VisSingleContainerComponent<Data = unknown, C extends ComponentCore
   @Input() duration?: number
   @Input() data?: Data
 
-  chart: SingleChart<Data>
+  chart: SingleContainer<Data>
 
   ngAfterViewInit (): void {
-    this.chart = new SingleChart<Data>(this.containerRef.nativeElement, this.getConfig(), this.data)
+    this.chart = new SingleContainer<Data>(this.containerRef.nativeElement, this.getConfig(), this.data)
     // We pass the container for the component to trigger re-render if the data has changed
     this.visComponent.componentContainer = this.chart
   }
@@ -47,7 +47,7 @@ export class VisSingleContainerComponent<Data = unknown, C extends ComponentCore
     this.chart?.updateContainer(this.getConfig())
   }
 
-  getConfig (): SingleChartConfigInterface<Data> {
+  getConfig (): SingleContainerConfigInterface<Data> {
     const { width, height, duration, margin } = this
 
     const component = this.visComponent?.component as C
