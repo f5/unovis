@@ -16,6 +16,7 @@ import { TimelineComponent } from 'examples/timeline/timeline.component'
 import { BulletLegendExampleComponent } from 'examples/bullet-legend/bullet-legend.component'
 import { TopoJSONMapComponent } from 'examples/topojson-map/topojson-map.component'
 import { TopoJSONHeatMapComponent } from 'examples/topojson-heatmap/topojson-heatmap.component'
+import { TopoJSONCountryMapsComponent } from 'examples/topojson-country-maps/topojson-country-maps.component'
 import { MapComponent } from 'examples/map/map.component'
 import { DDoSMapComponent } from 'examples/ddos-map/ddos-map.component'
 import { PieMapComponent } from 'examples/pie-map/pie-map.component'
@@ -68,6 +69,7 @@ const appRoutes: Routes = [
   { path: 'bullet-legend', component: BulletLegendExampleComponent },
   { path: 'topojson-map', component: TopoJSONMapComponent },
   { path: 'topojson-heatmap', component: TopoJSONHeatMapComponent },
+  { path: 'topojson-countries', component: TopoJSONCountryMapsComponent },
   { path: 'radial-dendrogram', component: RadialDendrogramComponent },
   { path: 'graph', component: GraphComponent },
   { path: 'concentric-graph', component: ConcentricGraphComponent },
@@ -103,6 +105,7 @@ appRoutes.push({ path: '', redirectTo: `/${appRoutes[0].path}`, pathMatch: 'full
     BulletLegendExampleComponent,
     TopoJSONMapComponent,
     TopoJSONHeatMapComponent,
+    TopoJSONCountryMapsComponent,
     MapComponent,
     PieMapComponent,
     MapLeafletComponent,

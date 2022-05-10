@@ -1,0 +1,5 @@
+<div class="menu">
+  <vis-bullet-legend [class]="isWorldView ? '' : 'btn'" (click)="resetView()" bulletSize="16px" [items]="legendItems"></vis-bullet-legend>
+  <div *ngIf="!isWorldView" class="title">{{ countryName }}: <span> {{ featureName }}</span></div>
+</div>
+<div #topojsonmap class="chart"></div>
