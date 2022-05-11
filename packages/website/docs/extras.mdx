@@ -9,13 +9,13 @@ import { XYWrapper } from './xy-charts/wrapper'
 import { FrameworkTabs } from './components/framework-tabs.tsx'
 
 
-## Custom Fills with `SVG defs`
-If you want to custom `svg` defintions available for your components, you can use the `svgDefs` property on the container, like this:
+## Custom Fills with SVG `defs`
+If you want to custom SVG definitions available for your components, you can use the `svgDefs` property on the container, like this:
 
 export const defs = `
     <linearGradient id="gradient" gradientTransform="rotate(90)">
       <stop offset="20%" stop-color="#051937" />
-      <stop offset="40%" stop-color=" #004d7a" />
+      <stop offset="40%" stop-color="#004d7a" />
       <stop offset="60%" stop-color="#008793" />
       <stop offset="80%" stop-color="#00bf72" />
     </linearGradient>`
@@ -34,7 +34,7 @@ export const svg = `\n<svg>\n  <defs>   ${defs}\n  </defs>\n</svg>`
 
 :::note
 
-Alternatively, you can define any defs you want to use in a `svg` element on the same page.
+Alternatively, you can define any defs you want to use in an SVG element on the same page.
 
 <FrameworkTabs
   angular={{html: `<vis-area ... color="url(#gradient)"></vis-area>\n${svg}`}}
