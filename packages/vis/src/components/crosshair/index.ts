@@ -21,7 +21,7 @@ import * as s from './style'
 
 export class Crosshair<Datum> extends XYComponentCore<Datum> {
   static selectors = s
-  clippable = false // Don't apply clipping path to this component. See XYContainer
+  clippable = true // Don't apply clipping path to this component. See XYContainer
   config: CrosshairConfig<Datum> = new CrosshairConfig()
   container: Selection<SVGSVGElement, any, SVGSVGElement, any>
   line: Selection<SVGLineElement, any, SVGElement, any>
