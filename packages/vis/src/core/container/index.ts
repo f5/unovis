@@ -37,6 +37,7 @@ export class ContainerCore {
       .style('display', 'block')
       .attr('xmlns', 'http://www.w3.org/2000/svg')
       .attr('height', ContainerCore.DEFAULT_CONTAINER_HEIGHT)
+
     this.element = this.svg.node()
 
     // ResizeObserver: Re-render on container resize
@@ -65,6 +66,11 @@ export class ContainerCore {
     this.svg
       .attr('width', this.containerWidth)
       .attr('height', this.containerHeight)
+
+    if (this.config.svgDefs) {
+      this.svg.select('.svgDefs').remove()
+      this.svg.append('defs').attr('class', 'svgDefs').html(this.config.svgDefs)
+    }
   }
 
   render (duration = this.config.duration): Promise<number> {

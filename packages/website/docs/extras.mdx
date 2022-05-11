@@ -1,0 +1,48 @@
+---
+sidebar_position: 10
+title: Tips and Tricks
+sidebar_label: Tips and Tricks
+---
+import BrowserOnly from '@docusaurus/BrowserOnly'
+import { generateDataRecords } from './utils/data.ts'
+import { XYWrapper } from './xy-charts/wrapper'
+import { FrameworkTabs } from './components/framework-tabs.tsx'
+
+
+## Custom Fills with SVG `defs`
+If you want to custom SVG definitions available for your components, you can use the `svgDefs` property on the container, like this:
+
+export const defs = `
+    <linearGradient id="gradient" gradientTransform="rotate(90)">
+      <stop offset="20%" stop-color="#051937" />
+      <stop offset="40%" stop-color="#004d7a" />
+      <stop offset="60%" stop-color="#008793" />
+      <stop offset="80%" stop-color="#00bf72" />
+    </linearGradient>`
+
+<XYWrapper name="Area"
+  data={generateDataRecords(10)}
+  x={d=>d.x} y={d=>d.y}
+  showContext="container"
+  color="url(#gradient)"
+  declarations={{ svgDefs: `\`${defs}\n  \`` }}
+  containerProps={{
+    svgDefs: defs
+  }}/>
+
+export const svg = `\n<svg>\n  <defs>   ${defs}\n  </defs>\n</svg>`
+
+:::note
+
+Alternatively, you can define any defs you want to use in an SVG element on the same page.
+
+<FrameworkTabs
+  angular={{html: `<vis-area ... color="url(#gradient)"></vis-area>\n${svg}`}}
+  react={`<VisArea ... color="url(#gradient)"/>\n${svg}`}
+  typescript={`const chart = new Area({... color: "url(#gradient)"})\n\ndocument.getElementById('container').insertAdjacentHTML(\`${svg}\`\n)`}/>
+
+:::
+
+
+
+

@@ -18,6 +18,8 @@ export interface ContainerConfigInterface {
   width?: number;
   /** Height in pixels. By default, Container automatically fits to the size of the parent element. Default: `undefined`. */
   height?: number;
+  /** Custom SVG defs available to all the components within the container. Default: `undefined`. */
+  svgDefs?: string;
 }
 
 export class ContainerConfig extends Config implements ContainerConfigInterface {
@@ -39,4 +41,6 @@ export class ContainerConfig extends Config implements ContainerConfigInterface 
   sizing = Sizing.Fit
   width = undefined
   height = undefined
+
+  svgDefs = undefined
 }

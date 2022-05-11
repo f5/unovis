@@ -8,6 +8,7 @@ export function DocWrapper ({
   data,
   name,
   dataType,
+  declarations,
   containerName,
   height,
   hideTabLabels,
@@ -38,7 +39,7 @@ export function DocWrapper ({
         components={componentProps}
         mainComponent={mainComponent}
         context={showContext}
-        {...{ hideTabLabels, dataType }}/>
+        {...{ hideTabLabels, dataType, declarations }}/>
       }
       {!excludeGraph &&
         <VisComposite
