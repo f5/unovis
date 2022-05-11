@@ -16,6 +16,7 @@ export default function Home (): JSX.Element {
   const location = useLocation()
   const query = new URLSearchParams(location.search)
   const exampleTitle = query.get('title')
+  const useTypescriptCode = query.get('ts') !== null
   const example = (examples.map(c => c.examples)).flat().find(e => e.title === exampleTitle)
   return (
     <Layout
@@ -26,7 +27,7 @@ export default function Home (): JSX.Element {
         <Link to="/gallery">❮ Back to Gallery</Link>
         {
           example
-            ? <GalleryViewer example={example} />
+            ? <GalleryViewer example={example} useTypescriptCode={useTypescriptCode}/>
             : <div className={s.exampleNotFound}>
               <h1>Example not found 😢</h1>
             </div>

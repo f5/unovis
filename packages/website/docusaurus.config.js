@@ -139,6 +139,20 @@ const config = {
         },
       },
     ],
+    () => ({
+      configureWebpack () {
+        return {
+          module: {
+            rules: [
+              {
+                test: /\.module.ts|component.ts$/,
+                loader: 'file-loader',
+              },
+            ],
+          },
+        }
+      },
+    }),
   ],
 }
 
