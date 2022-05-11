@@ -129,6 +129,9 @@ export class VisTimelineComponent<Datum> implements TimelineConfigInterface<Datu
 
   /** Alternating row colors. Default: `true` */
   @Input() alternatingRowColors?: boolean
+
+  /** Scrolling callback function: `(scrollTop: number) => void`. Default: `undefined` */
+  @Input() onScroll?: (scrollTop: number) => void
   @Input() data: Datum[]
 
   component: Timeline<Datum> | undefined
@@ -150,8 +153,8 @@ export class VisTimelineComponent<Datum> implements TimelineConfigInterface<Datu
   }
 
   private getConfig (): TimelineConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, lineWidth, lineCap, rowHeight, length, type, cursor, showLabels, labelWidth, maxLabelWidth, alternatingRowColors } = this
-    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, lineWidth, lineCap, rowHeight, length, type, cursor, showLabels, labelWidth, maxLabelWidth, alternatingRowColors }
+    const { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, lineWidth, lineCap, rowHeight, length, type, cursor, showLabels, labelWidth, maxLabelWidth, alternatingRowColors, onScroll } = this
+    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, lineWidth, lineCap, rowHeight, length, type, cursor, showLabels, labelWidth, maxLabelWidth, alternatingRowColors, onScroll }
     const keys = Object.keys(config) as (keyof TimelineConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

@@ -28,6 +28,8 @@ export interface TimelineConfigInterface<Datum> extends WithOptional<XYComponent
   maxLabelWidth?: number;
   /** Alternating row colors. Default: `true` */
   alternatingRowColors?: boolean;
+  /** Scrolling callback function: `(scrollTop: number) => void`. Default: `undefined` */
+  onScroll?: (scrollTop: number) => void;
 }
 
 export class TimelineConfig<Datum> extends XYComponentConfig<Datum> implements TimelineConfigInterface<Datum> {
@@ -43,4 +45,5 @@ export class TimelineConfig<Datum> extends XYComponentConfig<Datum> implements T
   showLabels = false
   maxLabelWidth = 120
   alternatingRowColors = true
+  onScroll = undefined
 }

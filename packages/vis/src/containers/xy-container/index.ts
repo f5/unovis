@@ -238,6 +238,8 @@ export class XYContainer<Datum> extends ContainerCore {
       }
 
       crosshair.g.attr('transform', `translate(${margin.left},${margin.top})`)
+        .style('clip-path', `url(#${this._clipPathId})`)
+        .style('-webkit-clip-path', `url(#${this._clipPathId})`)
       crosshair.hide()
     }
 

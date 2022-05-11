@@ -1,5 +1,6 @@
-import { Component } from '@angular/core'
-import { CrosshairCircle, PositionStrategy } from '@volterra/vis'
+import { Component, ViewChild } from '@angular/core'
+import { CrosshairCircle } from '@volterra/vis'
+import { VisXYComponent } from '@volterra/vis-angular'
 
 // Helpers
 import { SampleTimelineDatum } from '../../utils/data'
@@ -10,6 +11,7 @@ import { SampleTimelineDatum } from '../../utils/data'
   styleUrls: ['./timeline-labels.component.scss'],
 })
 export class TimelineLabelsComponent {
+  @ViewChild('crosshair', { static: false }) crosshairRef: VisXYComponent
   title = 'timeline-labels'
 
   colorCritical = '#F94D2A'
@@ -57,11 +59,16 @@ export class TimelineLabelsComponent {
   type = (d: SampleTimelineDatum): string => d.type
 
   tooltipContainer = document.body
-  tooltipPositionStrategy = PositionStrategy.Fixed
+
+  scrollTop = 0
+  onScroll: (top: number) => void = (top) => {
+    this.scrollTop = top
+    this.crosshairRef.component.render(0)
+  }
 
   getCircles = (x: number, data: SampleTimelineDatum[]): CrosshairCircle[] =>
     this.findDataEntriesAt(x).map((d, i) => ({
-      y: 11 + i * 22,
+      y: 11 + i * 22 - this.scrollTop,
       color: d.color,
     }))
 
