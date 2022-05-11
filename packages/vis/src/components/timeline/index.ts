@@ -232,9 +232,12 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
   }
 
   private _onMouseWheel (d: unknown, event: WheelEvent): void {
+    const { config } = this
+
     this._updateScrollPosition(event?.deltaY)
     if (this._scrollDistance > 0 && this._scrollDistance < this._maxScroll) event?.preventDefault()
 
+    config.onScroll?.(this._scrollDistance)
     // Temporarily disable pointer events on lines to prevent scrolling from being interrupted
     this._linesGroup.attr('pointer-events', 'none')
     clearTimeout(this._scrollTimeoutId)
