@@ -28,7 +28,7 @@ export const examples: ExampleCollection[] = [
     </div>,
     examples: [
       require('./basic-leaflet-map').default,
-      require('./topojson').default,
+      require('./topojson-map').default,
     ],
   },
   /* {} */

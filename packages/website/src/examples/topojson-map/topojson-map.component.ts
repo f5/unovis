@@ -1,19 +1,21 @@
 import { Component } from '@angular/core'
 import { Scale, TopoJSONMap } from '@volterra/vis'
+import { WorldMapTopoJSON } from '@volterra/vis/maps'
 
-import { data, ageRange, yearRange, AreaDatum } from './data'
+import { palette, data, ageRange, yearRange, AreaDatum } from './data'
 
 const yearIndex = Scale.scaleLinear()
     .domain(yearRange)
     .rangeRound([0, yearRange[1] - yearRange[0]])
 
 @Component({
-  selector: 'topojson',
-  templateUrl: './topojson.html',
+  selector: 'topojson-map',
+  templateUrl: './topojson-map.html',
   styleUrls: ['./styles.css'],
 })
-export class TopojsonComponent {
-  color = Scale.scaleSequential(['#ffe991', '#006e8d']).domain(ageRange)
+export class TopojsonMapComponent {
+  topojson = WorldMapTopoJSON
+  color = Scale.scaleSequential(palette).domain(ageRange)
   currentYear = 2019
   mapData = { areas: data }
   tooltipTriggers = {
@@ -29,8 +31,8 @@ export class TopojsonComponent {
   // input config
   min: number = yearRange[0]
   max: number = yearRange[1]
-  setYear = (e: InputEvent) => this.currentYear = e.target.value
-  
+  setYear = (e: Event) => this.currentYear = +(e.target as HTMLInputElement).value
+
   // legend config
   getGradientColor = (_, i: number): string => this.color(i)
   gradientSteps: number[] = Array(100).fill(1)

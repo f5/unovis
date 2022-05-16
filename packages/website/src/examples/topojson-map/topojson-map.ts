@@ -1,10 +1,10 @@
 import { Axis, Orientation, Scale, SingleContainer, StackedBar, Tooltip, TopoJSONMap, XYContainer } from '@volterra/vis'
 import { WorldMapTopoJSON } from '@volterra/vis/maps'
-import { AreaDatum, data, yearRange, ageRange } from './data'
+import { AreaDatum, data, palette, yearRange, ageRange } from './data'
 
 import './styles.css'
 
-const colorScale = Scale.scaleSequential(['#ffe991', '#006e8d']).domain(ageRange)
+const colorScale = Scale.scaleSequential(palette).domain(ageRange)
 const yearScale = Scale.scaleLinear()
   .domain(yearRange)
   .rangeRound([0, yearRange[1] - yearRange[0]])

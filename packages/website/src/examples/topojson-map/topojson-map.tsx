@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react'
 import { Orientation, Scale, TopoJSONMap } from '@volterra/vis'
 import { WorldMapTopoJSON } from '@volterra/vis/maps'
 import { VisSingleContainer, VisTopoJSONMap, VisTooltip, VisAxis, VisXYContainer, VisStackedBar } from '@volterra/vis-react'
-import { data, ageRange, yearRange, AreaDatum } from './data'
+import { palette, data, ageRange, yearRange, AreaDatum } from './data'
 
 export function YearSlider ({ current, range, onUpdate }): JSX.Element {
   return (
@@ -27,14 +27,14 @@ export function GradientLegend ({ colors, range, title }): JSX.Element {
   )
 }
 
-export default function Topojson (): JSX.Element {
+export default function TopojsonMap (): JSX.Element {
   const mapData = useMemo(() => ({ areas: data }), [])
 
   // current year being viewed
   const [year, setYear] = React.useState(2019)
 
   // scale functions
-  const colorScale = Scale.scaleSequential(['#ffe991', '#006e8d']).domain(ageRange)
+  const colorScale = Scale.scaleSequential(palette).domain(ageRange)
   const yearScale = Scale.scaleLinear()
     .domain(yearRange)
     .rangeRound([0, yearRange[1] - yearRange[0]])

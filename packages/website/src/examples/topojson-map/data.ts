@@ -6,6 +6,8 @@ export type AreaDatum = {
 export const yearRange: [number, number] = [1950, 2019]
 export const ageRange: [number, number] = [50, 85]
 
+export const palette = ['#E6B236', '#006E8D']
+
 export const data: AreaDatum[] = [
   {
     id: 'AF',

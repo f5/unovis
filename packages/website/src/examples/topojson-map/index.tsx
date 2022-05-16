@@ -5,7 +5,7 @@ import { Example } from '@site/src/types/example'
 
 import './styles.css'
 
-const pathname = 'topojson'
+const pathname = 'topojson-map'
 const example: Example = {
   component: () => <BrowserOnly>{() => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -16,12 +16,12 @@ const example: Example = {
   title: 'Choropleth World Map with Custom Legend',
   description: <small>Life expectancy data obtained from <a href="https://ourworldindata.org/life-expectancy">Our World in Data</a></small>,
   preview: require('./preview.png').default,
-  codeReact: require('!!raw-loader!./topojson.tsx').default,
-  codeTs: require('!!raw-loader!./topojson.ts').default,
+  codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,
+  codeTs: require(`!!raw-loader!./${pathname}.ts`).default,
   codeAngular: {
-    html: require('!!raw-loader!./topojson.html').default,
-    component: require('!!raw-loader!./topojson.component.ts').default,
-    module: require('!!raw-loader!./topojson.module.ts').default,
+    html: require(`!!raw-loader!./${pathname}.html`).default,
+    component: require(`!!raw-loader!./${pathname}.component.ts`).default,
+    module: require(`!!raw-loader!./${pathname}.module.ts`).default,
   },
   data: require('!!raw-loader!./data').default,
 }
