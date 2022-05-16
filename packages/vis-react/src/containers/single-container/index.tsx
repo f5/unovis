@@ -8,20 +8,20 @@ import { arePropsEqual } from 'src/utils/react'
 // Types
 import { VisComponentElement } from 'src/types/dom'
 
-export type VisSingleContainerProps<Datum> = SingleContainerConfigInterface<Datum> & {
-  data?: Datum;
+export type VisSingleContainerProps<Data> = SingleContainerConfigInterface<Data> & {
+  data?: Data;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-function VisSingleContainerFC<Datum> (props: PropsWithChildren<VisSingleContainerProps<Datum>>): JSX.Element {
+function VisSingleContainerFC<Data> (props: PropsWithChildren<VisSingleContainerProps<Data>>): JSX.Element {
   const container = useRef<HTMLDivElement>(null)
-  const [chart, setChart] = useState<SingleContainer<Datum>>()
-  const [data, setData] = useState<Datum | undefined>(undefined)
+  const [chart, setChart] = useState<SingleContainer<Data>>()
+  const [data, setData] = useState<Data | undefined>(undefined)
 
-  const getConfig = (): SingleContainerConfigInterface<Datum> => ({
+  const getConfig = (): SingleContainerConfigInterface<Data> => ({
     ...props,
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    component: container.current?.querySelector<VisComponentElement<ComponentCore<Datum>>>('vis-component')?.__component__,
+    component: container.current?.querySelector<VisComponentElement<ComponentCore<Data>>>('vis-component')?.__component__,
     // eslint-disable-next-line @typescript-eslint/naming-convention
     tooltip: container.current?.querySelector<VisComponentElement<Tooltip>>('vis-tooltip')?.__component__,
   })
@@ -30,7 +30,7 @@ function VisSingleContainerFC<Datum> (props: PropsWithChildren<VisSingleContaine
   useEffect(() => {
     setData(props.data)
     setChart(
-      new SingleContainer<Datum>(container.current as HTMLDivElement, getConfig(), props.data)
+      new SingleContainer<Data>(container.current as HTMLDivElement, getConfig(), props.data)
     )
     return () => chart?.destroy()
   }, [])
@@ -58,5 +58,5 @@ function VisSingleContainerFC<Datum> (props: PropsWithChildren<VisSingleContaine
 
 // We export a memoized component to avoid unnecessary re-renders
 //  and define its type explicitly to help react-docgen-typescript to extract information about props
-export const VisSingleContainer: (<Datum>(props: PropsWithChildren<VisSingleContainerProps<Datum>>) => JSX.Element | null) =
+export const VisSingleContainer: (<Data>(props: PropsWithChildren<VisSingleContainerProps<Data>>) => JSX.Element | null) =
   React.memo(VisSingleContainerFC, arePropsEqual)
