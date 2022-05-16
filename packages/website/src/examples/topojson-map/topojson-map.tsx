@@ -1,4 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react'
+import { ScaleSequential } from 'd3-scale'
 import { Orientation, Scale, TopoJSONMap } from '@volterra/vis'
 import { WorldMapTopoJSON } from '@volterra/vis/maps'
 import { VisSingleContainer, VisTopoJSONMap, VisTooltip, VisAxis, VisXYContainer, VisStackedBar } from '@volterra/vis-react'
@@ -6,7 +7,13 @@ import { palette, data, ageRange, yearRange, AreaDatum } from './data'
 
 import './styles.css'
 
-export function YearSlider ({ current, range, onUpdate }): JSX.Element {
+type YearSliderProps = {
+  current: number;
+  range: [number, number];
+  onUpdate: (value: number) => void;
+}
+
+export function YearSlider ({ current, range, onUpdate }: YearSliderProps): JSX.Element {
   return (
     <header>
       <h2>Life expectancy by Country, <em>{current}</em></h2>
@@ -15,7 +22,13 @@ export function YearSlider ({ current, range, onUpdate }): JSX.Element {
   )
 }
 
-export function GradientLegend ({ colors, range, title }): JSX.Element {
+type GradientLegendProps = {
+  colors: ScaleSequential<string>;
+  range: [number, number];
+  title: string;
+}
+
+export function GradientLegend ({ colors, range, title }: GradientLegendProps): JSX.Element {
   const y = useMemo(() => Array(100).fill(1), [])
   return (
     <VisXYContainer data={[{}]} height={70} width={500} xDomain={range}>
