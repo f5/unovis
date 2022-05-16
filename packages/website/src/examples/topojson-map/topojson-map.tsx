@@ -52,7 +52,7 @@ export default function TopojsonMap (): JSX.Element {
   return (
     <div id="vis-container">
       <YearSlider current={year} range={yearRange} onUpdate={setYear}/>
-      <VisSingleContainer data={mapData} height={550}>
+      <VisSingleContainer data={mapData} height={550} duration={0}>
         <VisTopoJSONMap topojson={WorldMapTopoJSON} areaColor={getAreaColor} disableZoom/>
         <VisTooltip triggers={tooltipTriggers}/>
       </VisSingleContainer>

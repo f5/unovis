@@ -29,6 +29,7 @@ const map = new TopoJSONMap<AreaDatum, undefined, undefined>({
   disableZoom: true,
 })
 const mapContainer = new SingleContainer(chart, {
+  duration: 0,
   component: map,
   tooltip: new Tooltip({
     triggers: {
