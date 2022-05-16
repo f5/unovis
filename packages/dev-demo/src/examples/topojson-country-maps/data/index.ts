@@ -1,22 +1,13 @@
-import {
-  MapData,
-  MapProjection,
-  ChinaTopoJSONMap,
-  FranceTopoJSONMap,
-  GermanyTopoJSON,
-  IndiaTopoJSONMap,
-  UKTopoJSONMap,
-  USATopoJSON,
-  TopoJSONMapConfigInterface,
-  Scale,
-} from '@volterra/vis'
+import { MapData, MapProjection, TopoJSONMapConfigInterface, Scale } from '@volterra/vis'
+import { ChinaTopoJSON, FranceTopoJSON, GermanyTopoJSON, IndiaTopoJSON, UKTopoJSON, USATopoJSON } from '@volterra/vis/maps'
+
 
 export type Area = { id: string; color: string }
 
 export type Country = {
   id: string;
-  config: TopoJSONMapConfigInterface<undefined, undefined, Area>;
-  data?: MapData;
+  config: TopoJSONMapConfigInterface<Area>;
+  data?: MapData<Area>;
 }
 
 const colorScale = Scale.scaleLinear<string>().domain([0, 1]).range(['#BFD8FF', '#0065FF'])
@@ -40,21 +31,21 @@ export const maps: Country[] = [
   }, {
     id: 'FR',
     config: {
-      topojson: FranceTopoJSONMap,
+      topojson: FranceTopoJSON,
       mapFeatureName: 'regions',
     },
     data: {
-      areas: generateAreaData(FranceTopoJSONMap),
+      areas: generateAreaData(FranceTopoJSON),
     },
   },
   {
     id: 'IN',
     config: {
-      topojson: IndiaTopoJSONMap,
+      topojson: IndiaTopoJSON,
       mapFeatureName: 'regions',
     },
     data: {
-      areas: generateAreaData(IndiaTopoJSONMap),
+      areas: generateAreaData(IndiaTopoJSON),
     },
   },
   {
@@ -70,21 +61,21 @@ export const maps: Country[] = [
   {
     id: 'CN',
     config: {
-      topojson: ChinaTopoJSONMap,
+      topojson: ChinaTopoJSON,
       mapFeatureName: 'provinces',
     },
     data: {
-      areas: generateAreaData(ChinaTopoJSONMap, 'provinces'),
+      areas: generateAreaData(ChinaTopoJSON, 'provinces'),
     },
   },
   {
     id: 'GB',
     config: {
-      topojson: UKTopoJSONMap,
+      topojson: UKTopoJSON,
       mapFeatureName: 'regions',
     },
     data: {
-      areas: generateAreaData(UKTopoJSONMap),
+      areas: generateAreaData(UKTopoJSON),
     },
   },
 ]

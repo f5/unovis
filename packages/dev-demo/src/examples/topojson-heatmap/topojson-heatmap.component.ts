@@ -1,7 +1,8 @@
 import { Component, AfterViewInit } from '@angular/core'
 import { scaleLinear } from 'd3-scale'
 
-import { TopoJSONMap, Tooltip, WorldMapTopoJSON, VisControlItemInterface, VisControlsOrientation } from '@volterra/vis'
+import { TopoJSONMap, Tooltip, VisControlItemInterface, VisControlsOrientation } from '@volterra/vis'
+import { WorldMapTopoJSON } from '@volterra/vis/maps'
 
 import cities from './data/cities_big.json'
 

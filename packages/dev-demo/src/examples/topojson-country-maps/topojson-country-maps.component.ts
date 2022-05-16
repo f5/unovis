@@ -26,7 +26,7 @@ export class TopoJSONCountryMapsComponent implements AfterViewInit {
     },
   })
   topojsons = maps.reduce((obj, m) => ({ ...obj, [m.id]: new TopoJSONMap(m.config, m.data) }), {})
-  worldMap = new TopoJSONMap<Country, undefined, undefined>({
+  worldMap = new TopoJSONMap<Country>({
     topojson: WorldMapTopoJSON,
     areaColor: 'var(--vis-color0)',
     events: {
@@ -48,12 +48,12 @@ export class TopoJSONCountryMapsComponent implements AfterViewInit {
   countryName = undefined
   featureName = undefined
   @ViewChild('topojsonmap') chart: ElementRef
-  
+
   toggleLegend(): void {
     this.legendItems = this.legendItems.map(i => ({ ...i, hidden: !i.hidden}))
   }
 
-  setMap(map: TopoJSONMap<any,any,Country | Area>): void {
+  setMap(map: TopoJSONMap<Country | Area>): void {
     this.container.removeAllChildren()
     this.container.updateContainer({
       component: map,

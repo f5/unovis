@@ -6,7 +6,8 @@ import { Topology } from 'topojson-specification'
 
 import { scaleLinear, max } from 'd3'
 import { Component, ViewEncapsulation, AfterViewInit } from '@angular/core'
-import { LeafletMap, LeafletMapConfigInterface, WorldMap110mAlphaTopoJSON, Tooltip, LeafletMapRenderer } from '@volterra/vis'
+import { LeafletMap, LeafletMapConfigInterface, Tooltip, LeafletMapRenderer } from '@volterra/vis'
+import { WorldMap110mAlphaTopoJSON } from '@volterra/vis/maps'
 
 // Configuration
 import { lightTheme, darkTheme } from '../map/config'
