@@ -17,7 +17,7 @@ import {
   geoNaturalEarth1,
 } from 'd3-geo'
 
-export type MapData<AreaDatum, PointDatum, LinkDatum> = {
+export type MapData<AreaDatum, PointDatum = unknown, LinkDatum = unknown> = {
   areas?: AreaDatum[];
   points?: PointDatum[];
   links?: LinkDatum[] ;
