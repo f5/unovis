@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react'
-import { Orientation, Scale, TopoJSONMap, WorldMapTopoJSON } from '@volterra/vis'
+import { Orientation, Scale, TopoJSONMap } from '@volterra/vis'
+import { WorldMapTopoJSON } from '@volterra/vis/maps'
 import { VisSingleContainer, VisTopoJSONMap, VisTooltip, VisAxis, VisXYContainer, VisStackedBar } from '@volterra/vis-react'
 import { data, ageRange, yearRange, AreaDatum } from './data'
 

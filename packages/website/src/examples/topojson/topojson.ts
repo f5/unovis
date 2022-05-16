@@ -1,4 +1,5 @@
-import { Axis, Orientation, Scale, SingleContainer, StackedBar, Tooltip, TopoJSONMap, WorldMapTopoJSON, XYContainer } from '@volterra/vis'
+import { Axis, Orientation, Scale, SingleContainer, StackedBar, Tooltip, TopoJSONMap, XYContainer } from '@volterra/vis'
+import { WorldMapTopoJSON } from '@volterra/vis/maps'
 import { AreaDatum, data, yearRange, ageRange } from './data'
 
 import './styles.css'

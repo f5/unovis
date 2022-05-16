@@ -13,7 +13,7 @@ const example: Example = {
     return <Component />
   }}</BrowserOnly>,
   pathname,
-  title: 'Chloropleth World Map with Custom Legend',
+  title: 'Choropleth World Map with Custom Legend',
   description: <small>Life expectancy data obtained from <a href="https://ourworldindata.org/life-expectancy">Our World in Data</a></small>,
   preview: require('./preview.png').default,
   codeReact: require('!!raw-loader!./topojson.tsx').default,
