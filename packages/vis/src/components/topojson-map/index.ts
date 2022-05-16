@@ -30,7 +30,7 @@ import { arc, getLonLat } from './utils'
 // Styles
 import * as s from './style'
 
-export class TopoJSONMap<AreaDatum, PointDatum, LinkDatum> extends ComponentCore<MapData<AreaDatum, PointDatum, LinkDatum>> {
+export class TopoJSONMap<AreaDatum, PointDatum = unknown, LinkDatum = unknown> extends ComponentCore<MapData<AreaDatum, PointDatum, LinkDatum>> {
   static selectors = s
   config: TopoJSONMapConfig<AreaDatum, PointDatum, LinkDatum> = new TopoJSONMapConfig()
   datamodel: MapGraphDataModel<AreaDatum, PointDatum, LinkDatum> = new MapGraphDataModel()

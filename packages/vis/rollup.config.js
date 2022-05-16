@@ -70,4 +70,14 @@ export default [
     },
     plugins,
   },
+  {
+    input: 'src/maps.ts',
+    output: {
+      dir: 'lib',
+      format: 'esm',
+      preserveModules: true,
+      preserveModulesRoot: './src',
+    },
+    plugins,
+  },
 ]
