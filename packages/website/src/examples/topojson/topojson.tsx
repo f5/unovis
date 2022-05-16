@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { Orientation, Scale, TopoJSONMap } from '@volterra/vis'
 import { WorldMapTopoJSON } from '@volterra/vis/maps'
 import { VisSingleContainer, VisTopoJSONMap, VisTooltip, VisAxis, VisXYContainer, VisStackedBar } from '@volterra/vis-react'
@@ -14,12 +14,13 @@ export function YearSlider ({ current, range, onUpdate }): JSX.Element {
 }
 
 export function GradientLegend ({ colors, range, title }): JSX.Element {
+  const y = useMemo(() => Array(100).fill(1), [])
   return (
     <VisXYContainer data={[{}]} height={70} width={500} xDomain={range}>
       <VisStackedBar
         orientation={Orientation.Horizontal}
         x={0.5}
-        y={Array(100).fill(1)}
+        y={y}
         color={useCallback((_, i: number) => colors(i), [])}/>
       <VisAxis type="x" position="top" numTicks={(range[1] - range[0]) / 5} label={title} tickPadding={0}/>
     </VisXYContainer>
@@ -27,7 +28,7 @@ export function GradientLegend ({ colors, range, title }): JSX.Element {
 }
 
 export default function Topojson (): JSX.Element {
-  const mapData = { areas: data }
+  const mapData = useMemo(() => ({ areas: data }), [])
 
   // current year being viewed
   const [year, setYear] = React.useState(2019)
