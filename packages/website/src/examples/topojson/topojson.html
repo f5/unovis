@@ -1,0 +1,14 @@
+<header>
+  <h2>Life expectancy by Country, <em>{currentYear}</em></h2>
+  <input type="range" [value]="currentYear" [min]="input.min" [max]="input.max" (input)="input.setYear($event)">
+</header>
+
+<vis-single-container [data]="mapData" height="550">
+  <vis-topojson-map [topojson]="topojson" [areaColor]="getAreaColor" disableZoom></vis-topojson-map>
+  <vis-tooltip [triggers]="tooltipTriggers"></vis-tooltip>
+</vis-single-container>
+
+<vis-xy-container data="[{}]" height="70" width="500" [xDomain]="gradient.range">
+  <vis-axis type="x" position="top" label="Life expectancy (years)" [numTicks]="legend.numLabels" [tickPadding]="0"></vis-axis>
+  <vis-stacked-bar x="0.5" orientation="horizontal" [y]="legend.gradientSteps" [color]="legend.getGradientColor"></vis-stacked-bar>
+</vis-xy-container>

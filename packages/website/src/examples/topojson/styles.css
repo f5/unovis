@@ -1,0 +1,29 @@
+#vis-container, header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+header {
+  width: max-content;
+  position: relative;
+  margin-bottom: 20px;
+}
+
+header > input {
+  width: 75%;
+}
+
+header > input::before {
+  position: absolute;
+  content: attr(min);
+  left: 0;
+}
+
+header > input::after { 
+  position: absolute;
+  content: attr(max);
+  right: 0;
+}
+
