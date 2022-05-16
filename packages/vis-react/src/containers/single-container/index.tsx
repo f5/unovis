@@ -16,6 +16,7 @@ export type VisSingleContainerProps<Datum> = SingleContainerConfigInterface<Datu
 function VisSingleContainerFC<Datum> (props: PropsWithChildren<VisSingleContainerProps<Datum>>): JSX.Element {
   const container = useRef<HTMLDivElement>(null)
   const [chart, setChart] = useState<SingleContainer<Datum>>()
+  const [data, setData] = useState<Datum | undefined>(undefined)
 
   const getConfig = (): SingleContainerConfigInterface<Datum> => ({
     ...props,
@@ -27,10 +28,10 @@ function VisSingleContainerFC<Datum> (props: PropsWithChildren<VisSingleContaine
 
   // On Mount
   useEffect(() => {
+    setData(props.data)
     setChart(
       new SingleContainer<Datum>(container.current as HTMLDivElement, getConfig(), props.data)
     )
-
     return () => chart?.destroy()
   }, [])
 
@@ -39,7 +40,10 @@ function VisSingleContainerFC<Datum> (props: PropsWithChildren<VisSingleContaine
     const preventRender = true
 
     // Set new Data without re-render
-    if (props.data) chart?.setData(props.data, preventRender)
+    if (props.data && (props.data !== data)) {
+      chart?.setData(props.data, preventRender)
+      setData(props.data)
+    }
 
     // Update Container and render
     chart?.updateContainer(getConfig())

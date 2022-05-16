@@ -17,6 +17,7 @@ export type VisXYContainerProps<Datum> = XYContainerConfigInterface<Datum> & {
 export function VisXYContainerFC<Datum> (props: PropsWithChildren<VisXYContainerProps<Datum>>): JSX.Element {
   const container = useRef<HTMLDivElement>(null)
   const [chart, setChart] = useState<XYContainer<Datum>>()
+  const [data, setData] = useState<Datum[] | undefined>(undefined)
 
   const getConfig = (): XYContainerConfigInterface<Datum> => ({
     components: Array
@@ -38,6 +39,7 @@ export function VisXYContainerFC<Datum> (props: PropsWithChildren<VisXYContainer
 
   // On Mount
   useEffect(() => {
+    setData(props.data)
     setChart(
       new XYContainer<Datum>(container.current as HTMLDivElement, getConfig(), props.data)
     )
@@ -50,8 +52,10 @@ export function VisXYContainerFC<Datum> (props: PropsWithChildren<VisXYContainer
     const preventRender = true
 
     // Set new Data without re-render
-    if (props.data) chart?.setData(props.data, preventRender)
-
+    if (props.data && (props.data !== data)) {
+      chart?.setData(props.data, preventRender)
+      setData(props.data)
+    }
     // Update Container and render
     chart?.updateContainer(getConfig())
   })
