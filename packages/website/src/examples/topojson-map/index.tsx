@@ -3,8 +3,6 @@ import React from 'react'
 import BrowserOnly from '@docusaurus/BrowserOnly'
 import { Example } from '@site/src/types/example'
 
-import './styles.css'
-
 const pathname = 'topojson-map'
 const example: Example = {
   component: () => <BrowserOnly>{() => {

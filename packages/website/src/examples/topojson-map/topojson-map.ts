@@ -22,6 +22,9 @@ const slider = container.appendChild(document.createElement('header'))
 const chart = container.appendChild(document.createElement('div'))
 const legend = container.appendChild(document.createElement('div'))
 
+container.classList.add('topojson-map')
+chart.style.width = '100%'
+
 // configure main chart
 const map = new TopoJSONMap<AreaDatum, undefined, undefined>({
   topojson: WorldMapTopoJSON,

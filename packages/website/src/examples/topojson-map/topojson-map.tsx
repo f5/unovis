@@ -4,6 +4,8 @@ import { WorldMapTopoJSON } from '@volterra/vis/maps'
 import { VisSingleContainer, VisTopoJSONMap, VisTooltip, VisAxis, VisXYContainer, VisStackedBar } from '@volterra/vis-react'
 import { palette, data, ageRange, yearRange, AreaDatum } from './data'
 
+import './styles.css'
+
 export function YearSlider ({ current, range, onUpdate }): JSX.Element {
   return (
     <header>
@@ -50,7 +52,7 @@ export default function TopojsonMap (): JSX.Element {
   }
 
   return (
-    <div id="vis-container">
+    <div className="topojson-map">
       <YearSlider current={year} range={yearRange} onUpdate={setYear}/>
       <VisSingleContainer data={mapData} height={550} duration={0}>
         <VisTopoJSONMap topojson={WorldMapTopoJSON} areaColor={getAreaColor} disableZoom/>
