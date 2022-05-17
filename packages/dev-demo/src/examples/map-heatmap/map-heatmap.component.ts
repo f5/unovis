@@ -6,7 +6,7 @@ import { Topology } from 'topojson-specification'
 
 import { scaleLinear, max } from 'd3'
 import { Component, ViewEncapsulation, AfterViewInit } from '@angular/core'
-import { LeafletMap, LeafletMapConfigInterface, Tooltip, LeafletMapRenderer } from '@volterra/vis'
+import { LeafletMap, LeafletMapConfigInterface, Tooltip } from '@volterra/vis'
 import { WorldMap110mAlphaTopoJSON } from '@volterra/vis/maps'
 
 // Configuration
@@ -56,9 +56,8 @@ function getTopo (): Topology {
 
 function getMapConfig (): LeafletMapConfigInterface<MapPoint> {
   return {
-    renderer: LeafletMapRenderer.MapLibreGL,
-    rendererSettings: lightTheme as StyleSpecification,
-    rendererSettingsDarkTheme: darkTheme as StyleSpecification,
+    style: lightTheme as StyleSpecification,
+    styleDarkTheme: darkTheme as StyleSpecification,
     attribution: [
       '<a href="https://www.maptiler.com/copyright/" target="_blank">MapTiler</a>',
     ],

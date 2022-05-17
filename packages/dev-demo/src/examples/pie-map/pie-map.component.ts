@@ -3,7 +3,7 @@ import mean from 'lodash/mean'
 import sample from 'lodash/sample'
 import { StyleSpecification } from 'maplibre-gl'
 import { Component, ViewChild, ViewEncapsulation } from '@angular/core'
-import { LeafletMap, LeafletMapConfigInterface, LeafletMapPointShape, LeafletMapRenderer } from '@volterra/vis'
+import { LeafletMap, LeafletMapConfigInterface, LeafletMapPointShape } from '@volterra/vis'
 import { MapLeafletComponent } from '../../app/components/map-leaflet/map-leaflet.component'
 
 // Configuration
@@ -42,9 +42,8 @@ export class PieMapComponent {
   grandAvg = mean(this.data.map(d => d.events))
 
   config: LeafletMapConfigInterface<SitePoint> = {
-    renderer: LeafletMapRenderer.MapLibreGL,
-    rendererSettings: lightTheme as StyleSpecification,
-    rendererSettingsDarkTheme: darkTheme as StyleSpecification,
+    style: lightTheme as StyleSpecification,
+    styleDarkTheme: darkTheme as StyleSpecification,
     pointRadius: d => {
       return clamp(7 + 10 * Math.sqrt((d.normal + (d.blocked || 0)) / this.grandAvg), 6, 25)
     },
