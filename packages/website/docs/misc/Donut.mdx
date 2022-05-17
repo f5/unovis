@@ -1,0 +1,87 @@
+import CodeBlock from '@theme/CodeBlock'
+import { PropTable } from '../components/props-table.tsx'
+import { DocWrapper, InputWrapper } from '../wrappers'
+
+export const defaultProps = () => ({
+  name: "Donut",
+  height: 200,
+  containerName: "SingleContainer",
+  configKey: "component",
+  value: d => d,
+  dataType: "number",
+  data: Array(4).fill(25).map(d => Math.floor(d * Math.random()))
+})
+
+## Basic Configuration
+The minimum configuration for the _Donut_ component looks like:
+<DocWrapper {...defaultProps()} showContext="full"/>
+
+## Central Label
+Provide a label with `centralLabel` property:
+<DocWrapper {...defaultProps()} centralLabel="Chart Data"/>
+
+## Angle Range
+By default, a _Donut_ will populate values in the angle range `[0, 2π]`. You can adjust your _Donut_'s `angleRange` property to a `[a,b]` of type `[number, number]`
+where a[0] = the starting position and a[1] = the ending position (in radians). A common example might be when you want an incomplete/semi circle:
+<DocWrapper {...defaultProps()} angleRange={[1, Math.PI]}/>
+
+## Sorting
+By default, each _segment_ is placed in order of appearance within your `data` array, from
+To change this, provide a sorting function to the `sortFunction` property. The following example displays the segments in descending order:
+<DocWrapper {...defaultProps()} sortFunction={(a, b) => a - b} data={[5,10,2, 7]} showContext="full"/>
+
+## Size
+You can change the size of your _Donut_ with the following properties:
+
+### Radius
+`radius` defines the outer/overall radius:
+<InputWrapper {...defaultProps()} property="radius" defaultValue={50} inputType="range" inputProps={{ min: 1, max: 100}}/>
+
+### Arc Width
+`arcWidth` defines the width of the circle's outer ring in pixels.
+<InputWrapper {...defaultProps()} property="arcWidth" defaultValue={50} inputType="range"/>
+
+<br/>
+
+:::note
+For the appearance of a traditional pie chart, set _Donut_'s `arcWidth` to `0`.
+:::
+
+## Segment Appearance
+### Custom Color
+Customize the colors for each segment with a `colorAccessor` function:
+<DocWrapper {...defaultProps()} color={(d, i) => ['red', 'orange', 'blue', 'green'][i]} showContext="minimal"/>
+
+### Corner Radius
+Providing a value to the `cornerRadius` property adds rounded corners to your _Donut_'s segments proportional to the _Donut_'s `arcWidth`.
+<InputWrapper {...defaultProps()} property="cornerRadius" defaultValue={5} inputType="range" inputProps={{ min: 0, max: 20}}/>
+
+## Pad angle
+Pad each segment with the `padAngle` property.
+<DocWrapper {...defaultProps()} padAngle={0.1}/>
+
+## Events
+The following selectors are available for events:
+```ts
+import { Donut } from '@volterra/vis'
+...
+events = {
+    [Donut.selectors.segment]: { }
+}
+```
+<DocWrapper {...defaultProps()} excludeGraph events={{}}/>
+
+## CSS Variables
+<details>
+  <summary>All supported CSS variables</summary>
+  <CodeBlock language="css">
+  {`--vis-donut-central-label-font-size
+--vis-donut-central-label-text-color
+--vis-donut-central-label-font-family
+--vis-donut-central-label-font-weight
+--vis-dark-donut-central-label-text-color`}
+  </CodeBlock>
+</details>
+
+## Component Props
+<PropTable name="VisDonut"/>
