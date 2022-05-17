@@ -7,10 +7,10 @@ import { VisTooltipComponent } from '../../components/tooltip/tooltip.component'
 
 @Component({
   selector: 'vis-single-container',
-  template: `<div #container class="vis-single-container">
+  template: `<div #container class="unovis-single-container">
     <ng-content></ng-content>
   </div>`,
-  styles: ['.vis-single-container { width: 100%; height: 100%; position: relative; }'],
+  styles: ['.unovis-single-container { width: 100%; height: 100%; position: relative; }'],
 })
 export class VisSingleContainerComponent<Data = unknown, C extends ComponentCore<Data> = ComponentCore<Data>> implements AfterViewInit, OnDestroy {
   @ViewChild('container', { static: false }) containerRef: ElementRef

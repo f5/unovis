@@ -19,10 +19,10 @@ import { VisTooltipComponent } from '../../components/tooltip/tooltip.component'
 
 @Component({
   selector: 'vis-xy-container',
-  template: `<div #container class="vis-xy-container">
+  template: `<div #container class="unovis-xy-container">
     <ng-content></ng-content>
   </div>`,
-  styles: ['.vis-xy-container { width: 100%; height: 100%; position: relative; }'],
+  styles: ['.unovis-xy-container { width: 100%; height: 100%; position: relative; }'],
 })
 export class VisXYContainerComponent<Datum> implements AfterViewInit, AfterContentInit, OnDestroy {
   @ViewChild('container', { static: false }) containerRef: ElementRef

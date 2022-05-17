@@ -18,8 +18,8 @@ import { VisCoreComponent } from '../../core'
 
 @Component({
   selector: 'vis-leaflet-map',
-  template: '<div #container class="container"></div>',
-  styles: ['.container { width: 100%; height: 100%; position: relative; }'],
+  template: '<div #container class="unovis-leaflet-map-container"></div>',
+  styles: ['.unovis-leaflet-map-container { width: 100%; height: 100%; position: relative; }'],
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisCoreComponent, useExisting: VisLeafletMapComponent }],
 })
