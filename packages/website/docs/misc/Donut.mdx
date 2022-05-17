@@ -1,6 +1,5 @@
 import CodeBlock from '@theme/CodeBlock'
 import { PropTable } from '../components/props-table.tsx'
-import { generateDataRecords } from '../utils/data'
 import { DocWrapper, InputWrapper } from '../wrappers'
 
 export const defaultProps = () => ({
@@ -14,7 +13,7 @@ export const defaultProps = () => ({
 })
 
 ## Basic Configuration
-The minimum configuration for the _Donut_ comopnent looks like: 
+The minimum configuration for the _Donut_ component looks like:
 <DocWrapper {...defaultProps()} showContext="full"/>
 
 ## Central Label
@@ -27,7 +26,7 @@ where a[0] = the starting position and a[1] = the ending position (in radians). 
 <DocWrapper {...defaultProps()} angleRange={[1, Math.PI]}/>
 
 ## Sorting
-By default, each _segment_ is placed in order of appearance within your `data` array, from 
+By default, each _segment_ is placed in order of appearance within your `data` array, from
 To change this, provide a sorting function to the `sortFunction` property. The following example displays the segments in descending order:
 <DocWrapper {...defaultProps()} sortFunction={(a, b) => a - b} data={[5,10,2, 7]} showContext="full"/>
 
