@@ -5,8 +5,6 @@ import {
   VisEventType,
   VisEventCallback,
   Bounds,
-  LeafletMapRenderer,
-  TangramScene,
   MapZoomState,
   NumericAccessor,
   StringAccessor,
@@ -98,17 +96,11 @@ export class VisLeafletMapComponent<Datum> implements LeafletMapConfigInterface<
   /** Force set map bounds on config update. Default: `undefined` */
   @Input() bounds?: Bounds
 
-  /** The map renderer type. Default: `LeafletMapRenderer.Tangram` */
-  @Input() renderer?: LeafletMapRenderer | string
+  /** MapLibre StyleSpecification settings. Default: `MapLibreArcticLight` */
+  @Input() style: StyleSpecification | string
 
-  /** External instance of Tangram to be used in the map. Default: `undefined` */
-  @Input() tangramRenderer?: any
-
-  /** Tangram Scene or MapLibre StyleSpecification settings. Default: `MapLibreArcticLight` */
-  @Input() rendererSettings: TangramScene | StyleSpecification | string
-
-  /** Tangram Scene or MapLibre StyleSpecification settings for dark theme. Default: `undefined` */
-  @Input() rendererSettingsDarkTheme: TangramScene | StyleSpecification | string
+  /** MapLibre StyleSpecification settings for dark theme. Default: `undefined` */
+  @Input() styleDarkTheme: StyleSpecification | string
 
   /** Tile server access token or API key. Default: `''` */
   @Input() accessToken?: string
@@ -198,7 +190,7 @@ export class VisLeafletMapComponent<Datum> implements LeafletMapConfigInterface<
    * where every data point has the `healthy`, `warning` and `danger` numerical or boolean property. */
   @Input() valuesMap?: LeafletMapPointStyles<Datum>
 
-  /** Only for MapLibreGL Renderer. A TopoJSON Geometry layer to be displayed on top of the map. Supports fill and stroke */
+  /** A TopoJSON Geometry layer to be displayed on top of the map. Supports fill and stroke */
   @Input() topoJSONLayer?: {
     sources?: any;
     featureName?: string;
@@ -230,8 +222,8 @@ export class VisLeafletMapComponent<Datum> implements LeafletMapConfigInterface<
   }
 
   private getConfig (): LeafletMapConfigInterface<Datum> {
-    const { width, height, duration, events, attributes, flyToDuration, fitViewPadding, zoomDuration, initialBounds, bounds, renderer, tangramRenderer, accessToken, rendererSettings, rendererSettingsDarkTheme, attribution, onMapInitialized, onMapMoveZoom, onMapMoveStart, onMapMoveEnd, onMapZoomStart, onMapZoomEnd, onMapClick, pointLongitude, pointLatitude, pointId, pointShape, pointColor, pointRadius, pointLabel, pointBottomLabel, pointCursor, selectedNodeId, clusterOutlineWidth, clusterBackground, clusterExpandOnClick, clusterRadius, valuesMap, topoJSONLayer, tooltip } = this
-    const config = { width, height, duration, events, attributes, flyToDuration, fitViewPadding, zoomDuration, initialBounds, bounds, renderer, tangramRenderer, accessToken, rendererSettings, rendererSettingsDarkTheme, attribution, onMapInitialized, onMapMoveZoom, onMapMoveStart, onMapMoveEnd, onMapZoomStart, onMapZoomEnd, onMapClick, pointLongitude, pointLatitude, pointId, pointShape, pointColor, pointRadius, pointLabel, pointBottomLabel, pointCursor, selectedNodeId, clusterOutlineWidth, clusterBackground, clusterExpandOnClick, clusterRadius, valuesMap, topoJSONLayer, tooltip }
+    const { width, height, duration, events, attributes, flyToDuration, fitViewPadding, zoomDuration, initialBounds, bounds, accessToken, style, styleDarkTheme, attribution, onMapInitialized, onMapMoveZoom, onMapMoveStart, onMapMoveEnd, onMapZoomStart, onMapZoomEnd, onMapClick, pointLongitude, pointLatitude, pointId, pointShape, pointColor, pointRadius, pointLabel, pointBottomLabel, pointCursor, selectedNodeId, clusterOutlineWidth, clusterBackground, clusterExpandOnClick, clusterRadius, valuesMap, topoJSONLayer, tooltip } = this
+    const config = { width, height, duration, events, attributes, flyToDuration, fitViewPadding, zoomDuration, initialBounds, bounds, accessToken, style, styleDarkTheme, attribution, onMapInitialized, onMapMoveZoom, onMapMoveStart, onMapMoveEnd, onMapZoomStart, onMapZoomEnd, onMapClick, pointLongitude, pointLatitude, pointId, pointShape, pointColor, pointRadius, pointLabel, pointBottomLabel, pointCursor, selectedNodeId, clusterOutlineWidth, clusterBackground, clusterExpandOnClick, clusterRadius, valuesMap, topoJSONLayer, tooltip }
     const keys = Object.keys(config) as (keyof LeafletMapConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
