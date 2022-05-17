@@ -8,10 +8,10 @@ import { Tooltip } from 'components/tooltip'
 import { ColorAccessor, GenericAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
 
 // Local Types
-import { LeafletMapRenderer, Bounds, LeafletMapPointStyles, MapZoomState, LeafletMapPointDatum, LeafletMapPointShape } from './types'
+import { Bounds, LeafletMapPointStyles, MapZoomState, LeafletMapPointDatum, LeafletMapPointShape } from './types'
 
 // Renderer settings
-import { TangramScene, MapLibreStyleSpecs } from './renderer/map-style'
+import { MapLibreStyleSpecs } from './renderer/map-style'
 
 export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterface {
   // General
@@ -29,14 +29,10 @@ export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterfa
   initialBounds?: Bounds;
   /** Force set map bounds on config update. Default: `undefined` */
   bounds?: Bounds;
-  /** The map renderer type. Default: `LeafletMapRenderer.Tangram` */
-  renderer?: LeafletMapRenderer | string;
-  /** External instance of Tangram to be used in the map. Default: `undefined` */
-  tangramRenderer?: any;
-  /** Tangram Scene or MapLibre StyleSpecification settings, or a URL to it. Default: `undefined` */
-  rendererSettings: TangramScene | MapLibreStyleSpecs | string;
-  /** Tangram Scene or MapLibre StyleSpecification settings for dark theme. Default: `undefined` */
-  rendererSettingsDarkTheme?: TangramScene | MapLibreStyleSpecs | string;
+  /** MapLibre StyleSpecification settings, or a URL to it. Default: `undefined` */
+  rendererSettings: MapLibreStyleSpecs | string;
+  /** MapLibre StyleSpecification settings for dark theme. Default: `undefined` */
+  rendererSettingsDarkTheme?: MapLibreStyleSpecs | string;
   /** Tile server access token or API key. Default: `''` */
   accessToken?: string;
   /** Array of attribution labels. Default: `['<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a>']` */
@@ -112,7 +108,7 @@ export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterfa
   valuesMap?: LeafletMapPointStyles<Datum>;
 
   // TopoJSON overlay
-  /** Only for MapLibreGL Renderer. A TopoJSON Geometry layer to be displayed on top of the map. Supports fill and stroke */
+  /** A TopoJSON Geometry layer to be displayed on top of the map. Supports fill and stroke */
   topoJSONLayer?: {
     /** The TopoJSON.Topology object. Default: `undefined` */
     sources?: any;
@@ -144,9 +140,7 @@ export class LeafletMapConfig<Datum> extends ComponentConfig implements LeafletM
   zoomDuration = 800
   initialBounds = undefined
   bounds = undefined
-  renderer = LeafletMapRenderer.Tangram
   attribution = ['<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a>']
-  tangramRenderer = undefined
   accessToken = ''
   rendererSettings = undefined
   rendererSettingsDarkTheme = undefined

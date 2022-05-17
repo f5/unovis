@@ -19,7 +19,7 @@ import { clamp, isNil, find, getNumber, getString, isString } from 'utils/data'
 import { constraintMapViewThrottled } from './renderer/mapboxgl-utils'
 
 // Local Types
-import { Bounds, LeafletMapPoint, LeafletMapPointDatum, LeafletMapRenderer, MapZoomState, PointExpandedClusterProperties } from './types'
+import { Bounds, LeafletMapPoint, LeafletMapPointDatum, MapZoomState, PointExpandedClusterProperties } from './types'
 
 // Config
 import { LeafletMapConfig, LeafletMapConfigInterface } from './config'
@@ -44,7 +44,6 @@ import {
   getPointRadius,
   shouldClusterExpand,
 } from './modules/utils'
-import { TangramScene } from './renderer/map-style'
 
 export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
   static selectors = s
@@ -194,13 +193,9 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     if (config.height) this._containerSelection.style('height', isString(config.height) ? config.height : `${config.height}px`)
 
     if (this._map) {
-      if (this.config.topoJSONLayer?.sources && this.config.renderer === LeafletMapRenderer.Tangram) {
-        console.warn('TopoJSON layer render is not supported with Tangram renderer')
-      } else {
-        const layer = this._map.layer as any // Using any because the typings are not full
-        const mapboxMap = layer.getMaplibreMap()
-        if (mapboxMap.isStyleLoaded()) updateTopoJson(mapboxMap, this.config)
-      }
+      const layer = this._map.layer as any // Using any because the typings are not full
+      const mapboxMap = layer.getMaplibreMap()
+      if (mapboxMap.isStyleLoaded()) updateTopoJson(mapboxMap, this.config)
     }
 
     if (this.config.tooltip) {
@@ -230,14 +225,9 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     })
   }
 
-  setTheme (theme: TangramScene | StyleSpecification | string): void {
-    const { config } = this
+  setTheme (theme: StyleSpecification | string): void {
     const layer = this._map.layer as any // Using any because the typings are not full
-    if (config.renderer === LeafletMapRenderer.Tangram) {
-      layer.scene.load(theme)
-    } else {
-      layer.getMaplibreMap().setStyle(theme)
-    }
+    layer.getMaplibreMap().setStyle(theme)
   }
 
   // We redefine the ComponentCore render function to bind event to newly created elements in this._renderData(),
@@ -599,13 +589,11 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     this._onMapMoveEndInternal?.(this._map.leaflet)
     config.onMapMoveEnd?.(this._getMapZoomState())
 
-    if (config.renderer === LeafletMapRenderer.MapLibreGL) {
-      constraintMapViewThrottled(this._map.leaflet)
+    constraintMapViewThrottled(this._map.leaflet)
 
-      const events = this._map.layer.getEvents()
-      const zoomEndEvent = events.zoomend.bind(this._map.layer)
-      zoomEndEvent()
-    }
+    const events = this._map.layer.getEvents()
+    const zoomEndEvent = events.zoomend.bind(this._map.layer)
+    zoomEndEvent()
 
     if (this._externallySelectedPoint || this._zoomingToExternallySelectedPoint) {
       this._zoomToExternallySelectedPoint()

@@ -1,11 +1,6 @@
 import { LatLng } from 'leaflet'
 import Supercluster from 'supercluster'
 
-export enum LeafletMapRenderer {
-  Tangram = 'tangram',
-  MapLibreGL = 'maplibregl',
-}
-
 export enum LeafletMapPointShape {
   Square = 'square',
   Circle = 'circle',
