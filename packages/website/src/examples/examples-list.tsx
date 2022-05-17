@@ -8,6 +8,7 @@ export const examples: ExampleCollection[] = [
     description: 'Examples of Line and Area charts',
     examples: [
       require('./basic-line-chart').default,
+      require('./multi-line-chart').default,
     ],
   },
   {
