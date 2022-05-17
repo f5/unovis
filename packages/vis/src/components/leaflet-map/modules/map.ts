@@ -81,11 +81,11 @@ export async function setupMap<T> (mapContainer: HTMLElement, config: LeafletMap
   svgOverlay: Selection<SVGElement, any, HTMLElement, any>;
   svgGroup: Selection<SVGGElement, any, SVGElement, any>;
 }> {
-  const { rendererSettings, topoJSONLayer } = config
+  const { style, topoJSONLayer } = config
   const { getMapboxglLayer } = await import('../renderer/mapboxgl-layer')
 
-  if (!rendererSettings) {
-    console.error('Please provide renderer settings in the map configuration object')
+  if (!style) {
+    console.error('Unovis | Leaflet Map: Please provide style settings in the map configuration object')
     return
   }
 

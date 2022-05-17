@@ -154,8 +154,8 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
           .call(createNodeSelectionRing)
 
         this._map.leaflet.setView(initialMapCenter, initialMapZoom)
-        if (document.body.classList.contains('theme-dark') && config.rendererSettingsDarkTheme) {
-          this.setTheme(config.rendererSettingsDarkTheme)
+        if (document.body.classList.contains('theme-dark') && config.styleDarkTheme) {
+          this.setTheme(config.styleDarkTheme)
         }
         if (data) this.setData(data)
         this.config.onMapInitialized?.()
@@ -171,13 +171,13 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     this.resizeObserver.observe(container)
 
     // If dark theme is enabled, update map's style when document body's class list changes
-    if (this.config.rendererSettingsDarkTheme) {
+    if (this.config.styleDarkTheme) {
       this.themeObserver = new MutationObserver((mutations) => {
         mutations.forEach(change => {
           if (change.attributeName === 'class') {
             this.setTheme((change.target as HTMLElement).classList.contains('theme-dark')
-              ? this.config.rendererSettingsDarkTheme
-              : this.config.rendererSettings
+              ? this.config.styleDarkTheme
+              : this.config.style
             )
           }
         })
@@ -212,7 +212,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
       const lon = getNumber(d, config.pointLongitude)
       const valid = isFinite(lat) && isFinite(lon)
 
-      if (!valid) console.warn('Map: Invalid point coordinates', d)
+      if (!valid) console.warn('Unovis | Leaflet Map: Invalid point coordinates', d)
       return valid
     })
 
@@ -277,12 +277,12 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     const foundPoint = pointData.find(d => d.properties.id === id)
 
     if (!foundPoint) {
-      console.warn(`Node with id ${id} can not be found`)
+      console.warn(`Unovis | Leaflet Map: Node with id ${id} can not be found`)
       return
     }
 
     if (foundPoint.properties?.cluster) {
-      console.warn('Cluster can\'t be selected')
+      console.warn('Unovis | Leaflet Map: Cluster can\'t be selected')
       return
     }
 
@@ -318,7 +318,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
   public zoomToPointById (id: string, selectNode = false, customZoomLevel?: number): void {
     const { config, datamodel } = this
     if (!datamodel.data.length) {
-      console.warn('There are no points on the map')
+      console.warn('Unovis | Leaflet Map: There are no points on the map')
       return
     }
     const dataBoundsAll = datamodel.getDataLatLngBounds(config.pointLatitude, config.pointLongitude)
@@ -329,7 +329,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
 
     // If point was found and it's a cluster -> do nothing
     if (foundPoint?.properties?.cluster) {
-      console.warn('Cluster can\'t be zoomed in')
+      console.warn('Unovis | Leaflet Map: Cluster can\'t be zoomed in')
       return
     }
 
@@ -363,7 +363,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
       this._eventInitiatedByComponent = true
       this._map.leaflet.flyTo(coordinates, zoomLevel, { duration: 0 })
     } else {
-      console.warn(`Node with id ${id} can not be found`)
+      console.warn(`Unovis | Leaflet Map: Node with id ${id} can not be found`)
     }
   }
 

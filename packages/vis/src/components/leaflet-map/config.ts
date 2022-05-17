@@ -29,10 +29,10 @@ export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterfa
   initialBounds?: Bounds;
   /** Force set map bounds on config update. Default: `undefined` */
   bounds?: Bounds;
-  /** MapLibre StyleSpecification settings, or a URL to it. Default: `undefined` */
-  rendererSettings: MapLibreStyleSpecs | string;
-  /** MapLibre StyleSpecification settings for dark theme. Default: `undefined` */
-  rendererSettingsDarkTheme?: MapLibreStyleSpecs | string;
+  /** MapLibre `StyleSpecification` settings, or a URL to it. Default: `undefined` */
+  style: MapLibreStyleSpecs | string;
+  /** MapLibre `StyleSpecification` settings for dark theme. Default: `undefined` */
+  styleDarkTheme?: MapLibreStyleSpecs | string;
   /** Tile server access token or API key. Default: `''` */
   accessToken?: string;
   /** Array of attribution labels. Default: `['<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a>']` */
@@ -142,8 +142,8 @@ export class LeafletMapConfig<Datum> extends ComponentConfig implements LeafletM
   bounds = undefined
   attribution = ['<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a>']
   accessToken = ''
-  rendererSettings = undefined
-  rendererSettingsDarkTheme = undefined
+  style = undefined
+  styleDarkTheme = undefined
 
   // Map events
   onMapInitialized = undefined
