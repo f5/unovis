@@ -1,6 +1,5 @@
 import React, { useCallback } from 'react'
 import { VisLeafletMap } from '@volterra/vis-react'
-import { LeafletMapRenderer } from '@volterra/vis'
 
 // Data
 import { MapPointDataRecord, data } from './data'
@@ -18,8 +17,7 @@ export default function BasicLeafletMap (): JSX.Element {
     <VisLeafletMap
       height="50vh"
       data={data}
-      renderer={LeafletMapRenderer.MapLibreGL}
-      rendererSettings={style}
+      style={style}
       pointLatitude={pointLatitude}
       pointLongitude={pointLongitude}
       pointBottomLabel={pointBottomLabel}

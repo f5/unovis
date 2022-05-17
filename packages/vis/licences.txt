@@ -17,7 +17,6 @@ leaflet                        perpetual       BSD-2-Clause  1.7.1              
 lodash                         perpetual       MIT           4.17.21            John-David Dalton
 maplibre-gl                    perpetual       BSD-3-Clause  2.1.7              n/a
 supercluster                   perpetual       ISC           7.1.4              Vladimir Agafonkin
-tangram                        perpetual       MIT           0.21.1             Tangram contributors
 three                          perpetual       MIT           0.135.0            mrdoob
 topojson-client                perpetual       ISC           3.1.0              Mike Bostock
 tslib                          perpetual       0BSD          2.3.1              Microsoft Corp.

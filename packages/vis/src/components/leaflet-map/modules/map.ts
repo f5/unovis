@@ -6,7 +6,6 @@ import { feature } from 'topojson-client'
 import { LeafletMapConfig } from '../config'
 
 // Local Types
-import { LeafletMapRenderer } from '../types'
 
 // Utils
 import { constraintMapView, mapboxglWheelEventThrottled } from '../renderer/mapboxgl-utils'
@@ -82,14 +81,16 @@ export async function setupMap<T> (mapContainer: HTMLElement, config: LeafletMap
   svgOverlay: Selection<SVGElement, any, HTMLElement, any>;
   svgGroup: Selection<SVGGElement, any, SVGElement, any>;
 }> {
-  const { renderer, rendererSettings, topoJSONLayer } = config
-  if (!rendererSettings) {
-    console.error('Please provide renderer settings in the map configuration object')
+  const { style, topoJSONLayer } = config
+  const { getMapboxglLayer } = await import('../renderer/mapboxgl-layer')
+
+  if (!style) {
+    console.error('Unovis | Leaflet Map: Please provide style settings in the map configuration object')
     return
   }
 
   const leaflet = L.map(mapContainer, {
-    scrollWheelZoom: renderer === LeafletMapRenderer.Tangram, // We define custom scroll event for MapboxGL to enabling smooth zooming
+    scrollWheelZoom: false, // We define custom scroll event for MapboxGL to enabling smooth zooming
     zoomControl: false,
     zoomDelta: 0.5,
     zoomSnap: 0,
@@ -106,33 +107,19 @@ export async function setupMap<T> (mapContainer: HTMLElement, config: LeafletMap
     leaflet.attributionControl.addAttribution(attr)
   }
 
-  let layer
-  switch (renderer) {
-    case LeafletMapRenderer.Tangram: {
-      const { getTangramLayer } = await import('../renderer/tangram-layer')
-      layer = getTangramLayer(config)
-      layer.addTo(leaflet)
-      break
-    }
-    case LeafletMapRenderer.MapLibreGL:
-    default: {
-      const { getMapboxglLayer } = await import('../renderer/mapboxgl-layer')
+  const layer = getMapboxglLayer(config) as any // we don't know the type of `layer`
+  layer.addTo(leaflet)
 
-      layer = getMapboxglLayer(config)
-      layer.addTo(leaflet)
+  // leaflet-mapbox-gl has a layer positioning issue on far zoom levels which leads to having wrong
+  //   map points projection. We constraint the view to prevent that.
+  constraintMapView(leaflet)
+  select(mapContainer).on('wheel', (event: WheelEvent) => {
+    event.preventDefault()
+    mapboxglWheelEventThrottled(leaflet, layer, event)
+  })
 
-      // leaflet-mapbox-gl has a layer positioning issue on far zoom levels which leads to having wrong
-      //   map points projection. We constraint the view to prevent that.
-      constraintMapView(leaflet)
-      select(mapContainer).on('wheel', (event: WheelEvent) => {
-        event.preventDefault()
-        mapboxglWheelEventThrottled(leaflet, layer, event)
-      })
-      break
-    }
-  }
 
-  if (topoJSONLayer?.sources && renderer === LeafletMapRenderer.MapLibreGL) {
+  if (topoJSONLayer?.sources) {
     const mapboxmap = layer.getMaplibreMap()
     const canvas = mapboxmap.getCanvas()
     select(canvas).classed(s.mapboxglCanvas, true)

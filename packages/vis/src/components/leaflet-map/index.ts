@@ -19,7 +19,7 @@ import { clamp, isNil, find, getNumber, getString, isString } from 'utils/data'
 import { constraintMapViewThrottled } from './renderer/mapboxgl-utils'
 
 // Local Types
-import { Bounds, LeafletMapPoint, LeafletMapPointDatum, LeafletMapRenderer, MapZoomState, PointExpandedClusterProperties } from './types'
+import { Bounds, LeafletMapPoint, LeafletMapPointDatum, MapZoomState, PointExpandedClusterProperties } from './types'
 
 // Config
 import { LeafletMapConfig, LeafletMapConfigInterface } from './config'
@@ -44,7 +44,6 @@ import {
   getPointRadius,
   shouldClusterExpand,
 } from './modules/utils'
-import { TangramScene } from './renderer/map-style'
 
 export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
   static selectors = s
@@ -155,8 +154,8 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
           .call(createNodeSelectionRing)
 
         this._map.leaflet.setView(initialMapCenter, initialMapZoom)
-        if (document.body.classList.contains('theme-dark') && config.rendererSettingsDarkTheme) {
-          this.setTheme(config.rendererSettingsDarkTheme)
+        if (document.body.classList.contains('theme-dark') && config.styleDarkTheme) {
+          this.setTheme(config.styleDarkTheme)
         }
         if (data) this.setData(data)
         this.config.onMapInitialized?.()
@@ -172,13 +171,13 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     this.resizeObserver.observe(container)
 
     // If dark theme is enabled, update map's style when document body's class list changes
-    if (this.config.rendererSettingsDarkTheme) {
+    if (this.config.styleDarkTheme) {
       this.themeObserver = new MutationObserver((mutations) => {
         mutations.forEach(change => {
           if (change.attributeName === 'class') {
             this.setTheme((change.target as HTMLElement).classList.contains('theme-dark')
-              ? this.config.rendererSettingsDarkTheme
-              : this.config.rendererSettings
+              ? this.config.styleDarkTheme
+              : this.config.style
             )
           }
         })
@@ -194,13 +193,9 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     if (config.height) this._containerSelection.style('height', isString(config.height) ? config.height : `${config.height}px`)
 
     if (this._map) {
-      if (this.config.topoJSONLayer?.sources && this.config.renderer === LeafletMapRenderer.Tangram) {
-        console.warn('TopoJSON layer render is not supported with Tangram renderer')
-      } else {
-        const layer = this._map.layer as any // Using any because the typings are not full
-        const mapboxMap = layer.getMaplibreMap()
-        if (mapboxMap.isStyleLoaded()) updateTopoJson(mapboxMap, this.config)
-      }
+      const layer = this._map.layer as any // Using any because the typings are not full
+      const mapboxMap = layer.getMaplibreMap()
+      if (mapboxMap.isStyleLoaded()) updateTopoJson(mapboxMap, this.config)
     }
 
     if (this.config.tooltip) {
@@ -217,7 +212,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
       const lon = getNumber(d, config.pointLongitude)
       const valid = isFinite(lat) && isFinite(lon)
 
-      if (!valid) console.warn('Map: Invalid point coordinates', d)
+      if (!valid) console.warn('Unovis | Leaflet Map: Invalid point coordinates', d)
       return valid
     })
 
@@ -230,14 +225,9 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     })
   }
 
-  setTheme (theme: TangramScene | StyleSpecification | string): void {
-    const { config } = this
+  setTheme (theme: StyleSpecification | string): void {
     const layer = this._map.layer as any // Using any because the typings are not full
-    if (config.renderer === LeafletMapRenderer.Tangram) {
-      layer.scene.load(theme)
-    } else {
-      layer.getMaplibreMap().setStyle(theme)
-    }
+    layer.getMaplibreMap().setStyle(theme)
   }
 
   // We redefine the ComponentCore render function to bind event to newly created elements in this._renderData(),
@@ -287,12 +277,12 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     const foundPoint = pointData.find(d => d.properties.id === id)
 
     if (!foundPoint) {
-      console.warn(`Node with id ${id} can not be found`)
+      console.warn(`Unovis | Leaflet Map: Node with id ${id} can not be found`)
       return
     }
 
     if (foundPoint.properties?.cluster) {
-      console.warn('Cluster can\'t be selected')
+      console.warn('Unovis | Leaflet Map: Cluster can\'t be selected')
       return
     }
 
@@ -328,7 +318,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
   public zoomToPointById (id: string, selectNode = false, customZoomLevel?: number): void {
     const { config, datamodel } = this
     if (!datamodel.data.length) {
-      console.warn('There are no points on the map')
+      console.warn('Unovis | Leaflet Map: There are no points on the map')
       return
     }
     const dataBoundsAll = datamodel.getDataLatLngBounds(config.pointLatitude, config.pointLongitude)
@@ -339,7 +329,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
 
     // If point was found and it's a cluster -> do nothing
     if (foundPoint?.properties?.cluster) {
-      console.warn('Cluster can\'t be zoomed in')
+      console.warn('Unovis | Leaflet Map: Cluster can\'t be zoomed in')
       return
     }
 
@@ -373,7 +363,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
       this._eventInitiatedByComponent = true
       this._map.leaflet.flyTo(coordinates, zoomLevel, { duration: 0 })
     } else {
-      console.warn(`Node with id ${id} can not be found`)
+      console.warn(`Unovis | Leaflet Map: Node with id ${id} can not be found`)
     }
   }
 
@@ -599,13 +589,11 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     this._onMapMoveEndInternal?.(this._map.leaflet)
     config.onMapMoveEnd?.(this._getMapZoomState())
 
-    if (config.renderer === LeafletMapRenderer.MapLibreGL) {
-      constraintMapViewThrottled(this._map.leaflet)
+    constraintMapViewThrottled(this._map.leaflet)
 
-      const events = this._map.layer.getEvents()
-      const zoomEndEvent = events.zoomend.bind(this._map.layer)
-      zoomEndEvent()
-    }
+    const events = this._map.layer.getEvents()
+    const zoomEndEvent = events.zoomend.bind(this._map.layer)
+    zoomEndEvent()
 
     if (this._externallySelectedPoint || this._zoomingToExternallySelectedPoint) {
       this._zoomToExternallySelectedPoint()

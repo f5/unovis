@@ -5,8 +5,6 @@ import {
   VisEventType,
   VisEventCallback,
   Bounds,
-  LeafletMapRenderer,
-  TangramScene,
   MapZoomState,
   NumericAccessor,
   StringAccessor,
@@ -20,8 +18,8 @@ import { VisCoreComponent } from '../../core'
 
 @Component({
   selector: 'vis-leaflet-flow-map',
-  template: '<div #container class="container"></div>',
-  styles: ['.container { width: 100%; height: 100%; position: relative; }'],
+  template: '<div #container class="unovis-leaflet-flow-map-container"></div>',
+  styles: ['.unovis-leaflet-flow-map-container { width: 100%; height: 100%; position: relative; }'],
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisCoreComponent, useExisting: VisLeafletFlowMapComponent }],
 })
@@ -98,17 +96,11 @@ export class VisLeafletFlowMapComponent<PointDatum, FlowDatum> implements Leafle
   /** Force set map bounds on config update. Default: `undefined` */
   @Input() bounds?: Bounds
 
-  /** The map renderer type. Default: `LeafletMapRenderer.Tangram` */
-  @Input() renderer?: LeafletMapRenderer | string
+  /** MapLibre StyleSpecification settings. Default: `MapLibreArcticLight` */
+  @Input() style: StyleSpecification | string
 
-  /** External instance of Tangram to be used in the map. Default: `undefined` */
-  @Input() tangramRenderer?: any
-
-  /** Tangram Scene or MapLibre StyleSpecification settings. Default: `MapLibreArcticLight` */
-  @Input() rendererSettings: TangramScene | StyleSpecification | string
-
-  /** Tangram Scene or MapLibre StyleSpecification settings for dark theme. Default: `undefined` */
-  @Input() rendererSettingsDarkTheme: TangramScene | StyleSpecification | string
+  /** MapLibre StyleSpecification settings for dark theme. Default: `undefined` */
+  @Input() styleDarkTheme: StyleSpecification | string
 
   /** Tile server access token or API key. Default: `''` */
   @Input() accessToken?: string
@@ -198,7 +190,7 @@ export class VisLeafletFlowMapComponent<PointDatum, FlowDatum> implements Leafle
    * where every data point has the `healthy`, `warning` and `danger` numerical or boolean property. */
   @Input() valuesMap?: LeafletMapPointStyles<PointDatum>
 
-  /** Only for MapLibreGL Renderer. A TopoJSON Geometry layer to be displayed on top of the map. Supports fill and stroke */
+  /** A TopoJSON Geometry layer to be displayed on top of the map. Supports fill and stroke */
   @Input() topoJSONLayer?: {
     sources?: any;
     featureName?: string;
@@ -259,8 +251,8 @@ export class VisLeafletFlowMapComponent<PointDatum, FlowDatum> implements Leafle
   }
 
   private getConfig (): LeafletFlowMapConfigInterface<PointDatum, FlowDatum> {
-    const { width, height, duration, events, attributes, flyToDuration, fitViewPadding, zoomDuration, initialBounds, bounds, renderer, tangramRenderer, accessToken, rendererSettings, rendererSettingsDarkTheme, attribution, onMapInitialized, onMapMoveZoom, onMapMoveStart, onMapMoveEnd, onMapZoomStart, onMapZoomEnd, onMapClick, pointLongitude, pointLatitude, pointId, pointShape, pointColor, pointRadius, pointLabel, pointBottomLabel, pointCursor, selectedNodeId, clusterOutlineWidth, clusterBackground, clusterExpandOnClick, clusterRadius, valuesMap, topoJSONLayer, tooltip, sourceLongitude, sourceLatitude, targetLongitude, targetLatitude, sourcePointRadius, sourcePointColor, flowParticleColor, flowParticleRadius, flowParticleSpeed, flowParticleDensity, onSourcePointClick, onSourcePointMouseEnter, onSourcePointMouseLeave } = this
-    const config = { width, height, duration, events, attributes, flyToDuration, fitViewPadding, zoomDuration, initialBounds, bounds, renderer, tangramRenderer, accessToken, rendererSettings, rendererSettingsDarkTheme, attribution, onMapInitialized, onMapMoveZoom, onMapMoveStart, onMapMoveEnd, onMapZoomStart, onMapZoomEnd, onMapClick, pointLongitude, pointLatitude, pointId, pointShape, pointColor, pointRadius, pointLabel, pointBottomLabel, pointCursor, selectedNodeId, clusterOutlineWidth, clusterBackground, clusterExpandOnClick, clusterRadius, valuesMap, topoJSONLayer, tooltip, sourceLongitude, sourceLatitude, targetLongitude, targetLatitude, sourcePointRadius, sourcePointColor, flowParticleColor, flowParticleRadius, flowParticleSpeed, flowParticleDensity, onSourcePointClick, onSourcePointMouseEnter, onSourcePointMouseLeave }
+    const { width, height, duration, events, attributes, flyToDuration, fitViewPadding, zoomDuration, initialBounds, bounds, accessToken, style, styleDarkTheme, attribution, onMapInitialized, onMapMoveZoom, onMapMoveStart, onMapMoveEnd, onMapZoomStart, onMapZoomEnd, onMapClick, pointLongitude, pointLatitude, pointId, pointShape, pointColor, pointRadius, pointLabel, pointBottomLabel, pointCursor, selectedNodeId, clusterOutlineWidth, clusterBackground, clusterExpandOnClick, clusterRadius, valuesMap, topoJSONLayer, tooltip, sourceLongitude, sourceLatitude, targetLongitude, targetLatitude, sourcePointRadius, sourcePointColor, flowParticleColor, flowParticleRadius, flowParticleSpeed, flowParticleDensity, onSourcePointClick, onSourcePointMouseEnter, onSourcePointMouseLeave } = this
+    const config = { width, height, duration, events, attributes, flyToDuration, fitViewPadding, zoomDuration, initialBounds, bounds, accessToken, style, styleDarkTheme, attribution, onMapInitialized, onMapMoveZoom, onMapMoveStart, onMapMoveEnd, onMapZoomStart, onMapZoomEnd, onMapClick, pointLongitude, pointLatitude, pointId, pointShape, pointColor, pointRadius, pointLabel, pointBottomLabel, pointCursor, selectedNodeId, clusterOutlineWidth, clusterBackground, clusterExpandOnClick, clusterRadius, valuesMap, topoJSONLayer, tooltip, sourceLongitude, sourceLatitude, targetLongitude, targetLatitude, sourcePointRadius, sourcePointColor, flowParticleColor, flowParticleRadius, flowParticleSpeed, flowParticleDensity, onSourcePointClick, onSourcePointMouseEnter, onSourcePointMouseLeave }
     const keys = Object.keys(config) as (keyof LeafletFlowMapConfigInterface<PointDatum, FlowDatum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

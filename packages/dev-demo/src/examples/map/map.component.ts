@@ -3,7 +3,7 @@
 import _ from 'lodash'
 import { Component, ViewChild, ViewEncapsulation } from '@angular/core'
 import { StyleSpecification } from 'maplibre-gl'
-import { LeafletMap, LeafletMapConfigInterface, LeafletMapRenderer, Position, Tooltip, TooltipConfigInterface } from '@volterra/vis'
+import { LeafletMap, LeafletMapConfigInterface, Position, Tooltip, TooltipConfigInterface } from '@volterra/vis'
 import { MapLeafletComponent } from '../../app/components/map-leaflet/map-leaflet.component'
 
 // Configuration
@@ -64,10 +64,9 @@ export class MapComponent {
   data = mapSampleData()
 
   config: LeafletMapConfigInterface<MapPoint> = {
-    renderer: LeafletMapRenderer.MapLibreGL,
-    rendererSettings: lightTheme as StyleSpecification,
-    rendererSettingsDarkTheme: darkTheme as StyleSpecification,
-    accessToken: '47ljKON5THuaUEQRubntaw',
+    style: lightTheme as StyleSpecification,
+    styleDarkTheme: darkTheme as StyleSpecification,
+    accessToken: '',
     valuesMap: {
       healthy: { color: '#47e845' },
       warning: { color: '#ffc226' },

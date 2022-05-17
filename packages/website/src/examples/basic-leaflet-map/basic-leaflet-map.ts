@@ -1,4 +1,4 @@
-import { LeafletMap, LeafletMapConfigInterface, LeafletMapRenderer } from '@volterra/vis'
+import { LeafletMap, LeafletMapConfigInterface } from '@volterra/vis'
 
 // Data
 import { MapPointDataRecord, data } from './data'
@@ -9,8 +9,7 @@ import { mapKey } from './key'
 const container = document.getElementById('#vis-container')
 
 const config: LeafletMapConfigInterface<MapPointDataRecord> = {
-  renderer: LeafletMapRenderer.MapLibreGL,
-  rendererSettings: `https://api.maptiler.com/maps/streets/style.json?key=${mapKey}`,
+  style: `https://api.maptiler.com/maps/streets/style.json?key=${mapKey}`,
   pointLatitude: d => d.latitude,
   pointLongitude: d => d.longitude,
   pointBottomLabel: d => d.id,
