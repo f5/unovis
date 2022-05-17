@@ -1,5 +1,4 @@
 import { Component } from '@angular/core'
-import { LeafletMapRenderer } from "@volterra/vis";
 
 // Data
 import { MapPointDataRecord, data } from './data'
@@ -12,8 +11,7 @@ import { mapKey } from './key'
   templateUrl: './basic-leaflet-map.html',
 })
 export class BasicLeafletMapComponent {
-  renderer = LeafletMapRenderer.MapLibreGL
-  rendererSettings = `https://api.maptiler.com/maps/streets/style.json?key=${mapKey}`
+  style = `https://api.maptiler.com/maps/streets/style.json?key=${mapKey}`
   pointLatitude = (d: MapPointDataRecord) => d.latitude
   pointLongitude = (d: MapPointDataRecord) => d.longitude
   pointBottomLabel = (d: MapPointDataRecord) => d.id
