@@ -1,0 +1,33 @@
+.topojson-map, .topojson-map > header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.topojson-map > header {
+  width: max-content;
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.topojson-map > header > h2 {
+  font-weight: 500;
+}
+
+.topojson-map > header > input {
+  width: 75%;
+}
+
+.topojson-map > header > input::before {
+  position: absolute;
+  content: attr(min);
+  left: 0;
+}
+
+.topojson-map > header > input::after {
+  position: absolute;
+  content: attr(max);
+  right: 0;
+}
+

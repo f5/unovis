@@ -15,6 +15,7 @@
     },
   },
   "exclude": [
-    "index.ts"
+    "index.ts",
+    "maps.ts"
   ]
  }
