@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core'
-import { VisBulletLegendModule, VisLineModule, VisXYContainerModule } from '@volterra/vis-angular'
+import { VisBulletLegendModule, VisLineModule, VisXYContainerModule, VisAxisModule } from '@volterra/vis-angular'
 
 import { MultiLineChartComponent } from './multi-line-chart.component'
 
 @NgModule({
-  imports: [VisXYContainerModule, VisLineModule, VisBulletLegendModule],
+  imports: [VisXYContainerModule, VisLineModule, VisBulletLegendModule, VisAxisModule],
   declarations: [MultiLineChartComponent],
   exports: [MultiLineChartComponent],
 })

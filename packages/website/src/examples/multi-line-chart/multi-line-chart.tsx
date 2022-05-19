@@ -8,7 +8,7 @@ export default function MultiLineChart (): JSX.Element {
   return (
     <VisXYContainer data={data} height={300}>
       <VisLine
-        x={useCallback((d: CityTemps) => new Date(d.date), [])}
+        x={useCallback((d: CityTemps) => +(new Date(d.date)), [])}
         y={[
           useCallback((d: CityTemps) => d.austin, []),
           useCallback((d: CityTemps) => d.ny, []),

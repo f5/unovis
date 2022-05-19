@@ -1,4 +1,6 @@
 /* This file is for the Angular Gallery Viewer only. See package.json -> scripts -> gallery:angular */
+import 'zone.js'
+
 import { NgModule, Component } from '@angular/core'
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic'
 import { BrowserModule } from '@angular/platform-browser'
@@ -39,4 +41,4 @@ export class AppModule {
   constructor () {}
 }
 
-platformBrowserDynamic().bootstrapModule(AppModule, { ngZone: 'noop' })
+platformBrowserDynamic().bootstrapModule(AppModule)

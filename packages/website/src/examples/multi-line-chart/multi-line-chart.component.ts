@@ -8,7 +8,7 @@ import { data, labels, CityTemps } from './data'
 })
 export class MultiLineChartComponent {
   data = data
-  x = (d: CityTemps) => new Date(d.date)
+  x = (d: CityTemps) => Number(new Date(d.date))
   y = [
     (d: CityTemps) => d.austin,
     (d: CityTemps) => d.ny,
@@ -21,5 +21,5 @@ export class MultiLineChartComponent {
     })
   )
 
-  formatTick = (d: Date) => Intl.DateTimeFormat().format(d)
+  formatTick = (d: Date) => Intl.DateTimeFormat().format(new Date(d))
 }

@@ -1,7 +1,7 @@
-<vis-xy-container [data]="data" yDirection="south">
+<vis-xy-container [data]="data" [height]="700" yDirection="south">
     <vis-tooltip [triggers]="tooltipTriggers"></vis-tooltip>
     <vis-bullet-legend [items]="legendLabels"></vis-bullet-legend>
     <vis-stacked-bar [x]="x" [y]="y" orientation="horizontal"></vis-stacked-bar>
     <vis-axis type="x" label="% of population aged 25 or above"></vis-axis>
-    <vis-axis type="y" label="Country" label="Country" [tickFormat]="i => data[i].country" [numTicks]="data.length"></vis-axis>
+    <vis-axis type="y" label="Country" label="Country" [tickFormat]="tickFormat" [numTicks]="data.length"></vis-axis>
 </vis-xy-container>

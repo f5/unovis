@@ -4,7 +4,7 @@ import { data, labels, CityTemps } from './data'
 const container = document.getElementById('#vis-container')
 
 const line = new Line<CityTemps>({
-  x: (d: CityTemps) => new Date(d.date),
+  x: (d: CityTemps) => +(new Date(d.date)),
   y: [
     (d: CityTemps) => d.austin,
     (d: CityTemps) => d.ny,
@@ -21,7 +21,7 @@ const chart = new XYContainer(container, {
   xAxis: new Axis({
     label: 'Date',
     numTicks: 5,
-    tickFormat: Intl.DateTimeFormat().format,
+    tickFormat: d => Intl.DateTimeFormat().format(new Date(d)),
   }),
   yAxis: new Axis({
     label: 'Temperature (celsuis)',

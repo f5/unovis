@@ -8,7 +8,7 @@ import { mapKey } from './key'
 
 @Component({
   selector: 'basic-leaflet-map',
-  templateUrl: './basic-leaflet-map.html',
+  templateUrl: './basic-leaflet-map.component.html',
 })
 export class BasicLeafletMapComponent {
   style = `https://api.maptiler.com/maps/streets/style.json?key=${mapKey}`

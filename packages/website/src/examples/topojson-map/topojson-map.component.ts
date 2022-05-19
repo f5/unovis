@@ -10,12 +10,13 @@ const yearIndex = Scale.scaleLinear()
 
 @Component({
   selector: 'topojson-map',
-  templateUrl: './topojson-map.html',
+  templateUrl: './topojson-map.component.html',
   styleUrls: ['./styles.css'],
 })
 export class TopojsonMapComponent {
   topojson = WorldMapTopoJSON
   color = Scale.scaleSequential(palette).domain(ageRange)
+  colorDomain = this.color.domain()
   currentYear = 2019
   mapData = { areas: data }
   tooltipTriggers = {
@@ -31,7 +32,12 @@ export class TopojsonMapComponent {
   // input config
   min: number = yearRange[0]
   max: number = yearRange[1]
-  setYear = (e: Event) => this.currentYear = +(e.target as HTMLInputElement).value
+  setYear = (e: Event) => {
+    this.currentYear = +(e.target as HTMLInputElement).value
+
+    // Updating the accessor function to trigger the component update
+    this.getAreaColor = (d: AreaDatum) => this.color(this.getExpectancy(d))
+  }
 
   // legend config
   getGradientColor = (_, i: number): string => this.color(i)
