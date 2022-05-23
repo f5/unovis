@@ -73,6 +73,7 @@ export function updateNodes<N extends SankeyInputNode, L extends SankeyInputLink
     .attr('width', config.nodeWidth)
     .attr('height', (d: SankeyNode<N, L>) => d.y1 - d.y0)
     .style('cursor', (d: SankeyNode<N, L>) => getString(d, config.nodeCursor))
+    .style('fill', (d: SankeyNode<N, L>) => getColor(d, config.nodeColor))
 
   // Label Rendering
   // eslint-disable-next-line @typescript-eslint/no-use-before-define
