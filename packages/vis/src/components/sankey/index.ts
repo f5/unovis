@@ -11,6 +11,7 @@ import { GraphDataModel } from 'data-models/graph'
 import { ExtendedSizeComponent, Sizing } from 'types/component'
 import { Position } from 'types/position'
 import { Spacing } from 'types/spacing'
+import { VerticalAlign } from 'types/text'
 
 // Utils
 import { getNumber, getString, groupBy, isNumber } from 'utils/data'
@@ -36,7 +37,6 @@ export class Sankey<N extends SankeyInputNode, L extends SankeyInputLink> extend
   private _extendedWidth = undefined
   private _extendedHeight = undefined
   private _extendedHeightIncreased = undefined
-  private _extendedSizeMinHeight = 300
   private _linksGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
   private _nodesGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
   private _backgroundRect: Selection<SVGRectElement, unknown, SVGGElement, unknown>
@@ -67,8 +67,8 @@ export class Sankey<N extends SankeyInputNode, L extends SankeyInputLink> extend
   }
 
   get bleed (): Spacing {
-    const { config: { labelMaxWidth, labelFontSize, labelPosition }, datamodel: { nodes, links } } = this
-    const labelSize = requiredLabelSpace(labelMaxWidth, labelFontSize)
+    const { config, datamodel: { nodes, links } } = this
+    const labelSize = requiredLabelSpace(config.labelMaxWidth, config.labelFontSize)
 
     let left = 0
     let right = 0
@@ -77,17 +77,26 @@ export class Sankey<N extends SankeyInputNode, L extends SankeyInputLink> extend
     // Potentially it can be a performance bottleneck for large layouts, but generally rendering of such layouts is much more computationally heavy
     if (nodes.length) {
       const sankeyProbeSize = 1000
+      this._populateLinkAndNodeValues()
       this._sankey.size([sankeyProbeSize, sankeyProbeSize])
       this._sankey({ nodes, links })
       const maxDepth = max(nodes, d => d.depth)
       const zeroDepthNodes = nodes.filter(d => d.depth === 0)
       const maxDepthNodes = nodes.filter(d => d.depth === maxDepth)
 
-      left = zeroDepthNodes.some(d => getLabelOrientation(d, sankeyProbeSize, labelPosition) === Position.Left) ? labelSize.width : 0
-      right = maxDepthNodes.some(d => getLabelOrientation(d, sankeyProbeSize, labelPosition) === Position.Right) ? labelSize.width : 0
+      left = zeroDepthNodes.some(d => getLabelOrientation(d, sankeyProbeSize, config.labelPosition) === Position.Left) ? labelSize.width : 0
+      right = maxDepthNodes.some(d => getLabelOrientation(d, sankeyProbeSize, config.labelPosition) === Position.Right) ? labelSize.width : 0
     }
 
-    return { top: labelSize.height / 2, bottom: labelSize.height / 2, left, right }
+    const top = config.labelVerticalAlign === VerticalAlign.Top ? 0
+      : config.labelVerticalAlign === VerticalAlign.Bottom ? labelSize.height
+        : labelSize.height / 2
+
+    const bottom = config.labelVerticalAlign === VerticalAlign.Top ? labelSize.height
+      : config.labelVerticalAlign === VerticalAlign.Bottom ? 0
+        : labelSize.height / 2
+
+    return { top, bottom, left, right }
   }
 
   setData (data: { nodes: N[]; links?: L[] }): void {
@@ -156,39 +165,65 @@ export class Sankey<N extends SankeyInputNode, L extends SankeyInputLink> extend
       .attr('opacity', 0)
   }
 
-  private _preCalculateComponentSize (): void {
-    const { bleed, config: { nodePadding, nodeWidth, nodeMinHeight, nodeMaxHeight, nodeHorizontalSpacing }, datamodel } = this
+  private _populateLinkAndNodeValues (): void {
+    const { config, datamodel } = this
 
-    if (datamodel.nodes.length) this._sankey(datamodel)
     const nodes = datamodel.nodes
-    const extentValue = extent(nodes, d => d.value || undefined)
-    const scale = scaleLinear().domain(extentValue).range([nodeMinHeight, nodeMaxHeight]).clamp(true)
-    const groupByColumn = groupBy(nodes, d => d.layer)
-    const values = Object.values(groupByColumn).map((d: any[]) => sum(d.map(n => scale(n.value) + nodePadding)))
-    const height = max(values) ?? 0
-    this._extendedHeight = Math.max(height, this._extendedSizeMinHeight) + bleed.top + bleed.bottom
-    this._extendedWidth = (nodeWidth + nodeHorizontalSpacing) * Object.keys(groupByColumn).length - nodeHorizontalSpacing + bleed.left + bleed.right
+    const links = datamodel.links
+
+    // For d3-sankey each link must be an object with the `value` property
+    links.forEach((link, i) => {
+      link.value = getNumber(link, d => getNumber(d, config.linkValue, i))
+    })
+
+    // Populating node.fixedValue for d3-sankey
+    nodes.forEach((node, i) => {
+      node.fixedValue = getNumber(node, config.nodeFixedValue, i)
+    })
+  }
+
+  private _preCalculateComponentSize (): void {
+    const { bleed, config, datamodel } = this
+    const nodes = datamodel.nodes
+
+
+    if (nodes.length) {
+      this._populateLinkAndNodeValues()
+      this._sankey(datamodel)
+    }
+
+    const scaleExtent = extent(nodes, d => d.value || undefined)
+    const scale = scaleLinear().domain(scaleExtent).range([config.nodeMinHeight, config.nodeMaxHeight]).clamp(true)
+    nodes.forEach(n => { n._state.precalculatedHeight = scale(n.value) || config.nodeMinHeight })
+
+    const groupedByColumn: { [key: string]: SankeyNode<N, L>[] } = groupBy(nodes, d => d.layer)
+    const values = Object.values(groupedByColumn)
+      .map((group) =>
+        sum(group.map(n => n._state.precalculatedHeight + config.nodePadding)) - config.nodePadding
+      )
+
+    const height = max(values) || config.nodeMinHeight
+    this._extendedHeight = height + bleed.top + bleed.bottom
+    this._extendedWidth = (config.nodeWidth + config.nodeHorizontalSpacing) * Object.keys(groupedByColumn).length - config.nodeHorizontalSpacing + bleed.left + bleed.right
   }
 
   private _prepareLayout (): void {
     const { config, bleed, datamodel } = this
-    const sankeyHeight = this.sizing === Sizing.Fit ? this._height : this._extendedHeight
-    const sankeyWidth = this.sizing === Sizing.Fit ? this._width : this._extendedWidth
+    const isExtendedSize = this.sizing === Sizing.Extend
+    const sankeyHeight = isExtendedSize ? this._extendedHeight : this._height
+    const sankeyWidth = isExtendedSize ? this._extendedWidth : this._width
     this._sankey
       .size([sankeyWidth - bleed.left - bleed.right, sankeyHeight - bleed.top - bleed.bottom])
 
     const nodes = datamodel.nodes
     const links = datamodel.links
 
-    const hasLinks = links.length > 0
     // If there are no links we manually calculate the visualization layout
+    const hasLinks = links.length > 0
     if (!hasLinks) {
-      const sumValue = sum(nodes, n => n.fixedValue ?? 1)
       let y = 0
       for (const node of nodes) {
-        const nodeValue = node.fixedValue ?? 1
-        const ySpace = sankeyHeight - bleed.top - bleed.bottom
-        const nodeHeight = ySpace * nodeValue / sumValue - config.nodePadding * (nodes.length - 1)
+        const nodeHeight = node._state.precalculatedHeight
 
         node.width = Math.max(10, config.nodeWidth)
         node.x0 = 0
@@ -204,26 +239,22 @@ export class Sankey<N extends SankeyInputNode, L extends SankeyInputLink> extend
       return
     }
 
-    // For d3 sankey function each link must be an object with the `value` property
-    links.forEach(link => {
-      link.value = getNumber(link, d => getNumber(d, config.linkValue))
-    })
-
     // Calculate sankey
+    this._populateLinkAndNodeValues()
     this._sankey({ nodes, links })
 
     // Setting minimum node height
     //   Default: 1px
     //   Extended size nodes that have no links: config.nodeMinHeight
     for (const node of nodes) {
-      const singleExtendedSize = this.sizing === Sizing.Extend && !node.sourceLinks?.length && !node.targetLinks?.length
+      const singleExtendedSize = isExtendedSize && !node.sourceLinks?.length && !node.targetLinks?.length
       const h = Math.max(singleExtendedSize ? config.nodeMinHeight : 1, node.y1 - node.y0)
       const y = (node.y0 + node.y1) / 2
       node.y0 = y - h / 2
       node.y1 = y + h / 2
     }
 
-    if (this.sizing === Sizing.Extend) {
+    if (isExtendedSize) {
       const height = max(nodes, d => d.y1)
       this._extendedHeightIncreased = height + bleed.top + bleed.bottom
     }
@@ -235,6 +266,14 @@ export class Sankey<N extends SankeyInputNode, L extends SankeyInputLink> extend
 
   getHeight (): number {
     return Math.max(this._extendedHeightIncreased || 0, this._extendedHeight || 0, this._height)
+  }
+
+  getLayoutWidth (): number {
+    return this.sizing === Sizing.Extend ? this._extendedWidth : this._width
+  }
+
+  getLayoutHeight (): number {
+    return this.sizing === Sizing.Extend ? this._extendedHeightIncreased || this._extendedHeight : this._height
   }
 
   getColumnCenters (): number[] {

@@ -40,6 +40,8 @@ export type SankeyNode<N extends SankeyInputNode, L extends SankeyInputLink> = G
   /** internal ui state */
   _state?: {
     greyout?: boolean;
+    /* Pre-calculated node height value in pixels that will be used to manually generate the layout when data has no links */
+    precalculatedHeight?: number;
   };
 }
 
