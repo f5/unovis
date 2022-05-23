@@ -69,7 +69,6 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
     // iconColor: 'white',
     exitTransitionType: SankeyExitTransitionType.ToAncestor,
     enterTransitionType: SankeyEnterTransitionType.FromAncestor,
-    singleNodePosition: Position.Left,
     highlightSubtreeOnHover: true,
     nodeSort: (a, b) => {
       const aParent = a.targetLinks[0]?.source
@@ -132,7 +131,7 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
         this.controlItems = [...this.controlItems]
 
         this.fitToWidthScale = this.fitToWidth ? Math.min(this.sankey.getFitWidthScale(), 1) : 1
-        const legendFullWidth = this.sankeyFullWidth - NODE_HORIZONTAL_SPACE + NODE_WIDTH / 2
+        const legendFullWidth = (this.fitToWidth ? this.sankey.component.getWidth() : this.sankey.component.getLayoutWidth()) - NODE_HORIZONTAL_SPACE + NODE_WIDTH / 2
         this.flowlegendWidth = legendFullWidth * this.fitToWidthScale
       },
     },
@@ -142,7 +141,6 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
 
   collapsedItems: { [key: string]: boolean } = {}
   sankeyData: { nodes: any[]; links: any[] } = this.process(apiData)
-  sankeyFullWidth: number
   maxDepth = max(this.sankeyData.nodes, n => n.depth) + 1
   // eslint-disable-next-line no-irregular-whitespace
   flowlegendItems = _times(this.maxDepth, i => `Segment ${i + 1}`)
@@ -154,8 +152,7 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
 
     this.sankey = new SingleContainer(this.chart.nativeElement, this.containerConfig, this.sankeyData)
     setTimeout(() => {
-      this.sankeyFullWidth = this.sankey.component.getWidth()
-      this.flowlegendWidth = this.sankeyFullWidth - NODE_HORIZONTAL_SPACE + NODE_WIDTH / 2
+      this.flowlegendWidth = this.sankey.component.getLayoutWidth() - NODE_HORIZONTAL_SPACE + NODE_WIDTH / 2
     }, 50)
   }
 
