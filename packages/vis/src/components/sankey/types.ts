@@ -71,10 +71,17 @@ export enum SankeySubLabelPlacement {
 }
 
 export enum SankeyNodeAlign {
-  Left = sankeyLeft,
-  Right = sankeyRight,
-  Center = sankeyCenter,
-  Justify = sankeyJustify,
+  Left = 'left',
+  Right = 'right',
+  Center = 'center',
+  Justify = 'justify',
+}
+
+export const SankeyLayout = {
+  [SankeyNodeAlign.Left]: sankeyLeft,
+  [SankeyNodeAlign.Right]: sankeyRight,
+  [SankeyNodeAlign.Center]: sankeyCenter,
+  [SankeyNodeAlign.Justify]: sankeyJustify,
 }
 
 export enum SankeyExitTransitionType {

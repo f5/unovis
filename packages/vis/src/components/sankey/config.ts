@@ -69,8 +69,6 @@ export interface SankeyConfigInterface<N extends SankeyInputNode, L extends Sank
   nodePadding?: number;
   /** Display the graph when data has just one element */
   showSingleNode?: boolean;
-  /** Single node position. Default: `Position.CENTER` */
-  singleNodePosition?: Position.Center | Position.Left | string;
   /** Node cursor on hover. Default: `undefined` */
   nodeCursor?: StringAccessor<L>;
   /** Node icon accessor function or value. Default: `undefined` */
@@ -162,7 +160,6 @@ export class SankeyConfig<N extends SankeyInputNode, L extends SankeyInputLink> 
   nodeColor = (d: N): string => d['color']
   nodeFixedValue = (d: N): number => d['fixedValue']
   showSingleNode = true
-  singleNodePosition = Position.Center
   nodeCursor = undefined
   nodeIcon = undefined
   iconColor = undefined

@@ -23,7 +23,7 @@ import { SankeyConfig, SankeyConfigInterface } from './config'
 import * as s from './style'
 
 // Local Types
-import { SankeyInputLink, SankeyInputNode, SankeyLink, SankeyNode } from './types'
+import { SankeyInputLink, SankeyInputNode, SankeyLayout, SankeyLink, SankeyNode } from './types'
 
 // Modules
 import { createLinks, removeLinks, updateLinks } from './modules/link'
@@ -103,22 +103,24 @@ export class Sankey<N extends SankeyInputNode, L extends SankeyInputLink> extend
     super.setData(data)
 
     // Pre-calculate component size for Sizing.EXTEND
-    if (this.sizing !== Sizing.Fit) this._preCalculateComponentSize()
+    if ((this.sizing !== Sizing.Fit) || !this._hasLinks()) this._preCalculateComponentSize()
   }
 
   setConfig (config: SankeyConfigInterface<N, L>): void {
     super.setConfig(config)
 
     // Pre-calculate component size for Sizing.EXTEND
-    if (this.sizing !== Sizing.Fit) this._preCalculateComponentSize()
+    if ((this.sizing !== Sizing.Fit) || !this._hasLinks()) this._preCalculateComponentSize()
 
+    // Using "as any" because typings are not full ("@types/d3-sankey": "^0.11.2")
+    const nodeId = ((d, i) => getString(d, this.config.id, i)) as any;
+    (this._sankey as any).linkSort(this.config.linkSort)
     this._sankey
-      .nodeId((d, i) => getString(d, this.config.id, i))
+      .nodeId(nodeId)
       .nodeWidth(this.config.nodeWidth)
       .nodePadding(this.config.nodePadding)
-      .nodeAlign(this.config.nodeAlign)
+      .nodeAlign(SankeyLayout[this.config.nodeAlign])
       .nodeSort(this.config.nodeSort)
-      .linkSort(this.config.linkSort)
       .iterations(this.config.iterations)
   }
 
@@ -153,7 +155,7 @@ export class Sankey<N extends SankeyInputNode, L extends SankeyInputLink> extend
     const nodeSelection = this._nodesGroup.selectAll(`.${s.gNode}`).data(nodes, config.id)
     const nodeSelectionEnter = nodeSelection.enter().append('g').attr('class', s.gNode)
     nodeSelectionEnter.call(createNodes, this.config, this._width, bleed)
-    nodeSelection.merge(nodeSelectionEnter).call(updateNodes, config, this._width, bleed, duration)
+    nodeSelection.merge(nodeSelectionEnter).call(updateNodes, config, this._width, bleed, this._hasLinks(), duration)
     nodeSelection.exit()
       .attr('class', s.nodeExit)
       .call(removeNodes, config, duration)
@@ -193,7 +195,8 @@ export class Sankey<N extends SankeyInputNode, L extends SankeyInputLink> extend
     }
 
     const scaleExtent = extent(nodes, d => d.value || undefined)
-    const scale = scaleLinear().domain(scaleExtent).range([config.nodeMinHeight, config.nodeMaxHeight]).clamp(true)
+    const scaleRange = [config.nodeMinHeight, config.nodeMaxHeight]
+    const scale = scaleLinear().domain(scaleExtent).range(scaleRange).clamp(true)
     nodes.forEach(n => { n._state.precalculatedHeight = scale(n.value) || config.nodeMinHeight })
 
     const groupedByColumn: { [key: string]: SankeyNode<N, L>[] } = groupBy(nodes, d => d.layer)
@@ -210,8 +213,8 @@ export class Sankey<N extends SankeyInputNode, L extends SankeyInputLink> extend
   private _prepareLayout (): void {
     const { config, bleed, datamodel } = this
     const isExtendedSize = this.sizing === Sizing.Extend
-    const sankeyHeight = isExtendedSize ? this._extendedHeight : this._height
-    const sankeyWidth = isExtendedSize ? this._extendedWidth : this._width
+    const sankeyHeight = this.sizing === Sizing.Fit ? this._height : this._extendedHeight
+    const sankeyWidth = this.sizing === Sizing.Fit ? this._width : this._extendedWidth
     this._sankey
       .size([sankeyWidth - bleed.left - bleed.right, sankeyHeight - bleed.top - bleed.bottom])
 
@@ -219,17 +222,19 @@ export class Sankey<N extends SankeyInputNode, L extends SankeyInputLink> extend
     const links = datamodel.links
 
     // If there are no links we manually calculate the visualization layout
-    const hasLinks = links.length > 0
-    if (!hasLinks) {
+    if (!this._hasLinks()) {
       let y = 0
+      const nodesTotalHeight = sum(nodes, n => n._state.precalculatedHeight || 1)
       for (const node of nodes) {
-        const nodeHeight = node._state.precalculatedHeight
+        const sankeyHeight = this.getHeight() - bleed.top - bleed.bottom
+        const nodeHeight = node._state.precalculatedHeight || 1
+        const h = isExtendedSize ? nodeHeight : (sankeyHeight - config.nodePadding * (nodes.length - 1)) * nodeHeight / nodesTotalHeight
 
         node.width = Math.max(10, config.nodeWidth)
         node.x0 = 0
         node.x1 = node.width
         node.y0 = y
-        node.y1 = y + Math.max(1, nodeHeight)
+        node.y1 = y + Math.max(1, h)
         node.layer = 0
 
         y = node.y1 + config.nodePadding
@@ -325,6 +330,11 @@ export class Sankey<N extends SankeyInputNode, L extends SankeyInputLink> extend
       for (const l of datamodel.links) l._state.greyout = false
       this._render(config.highlightDuration)
     }
+  }
+
+  private _hasLinks (): boolean {
+    const { datamodel } = this
+    return datamodel.links.length > 0
   }
 
   private _onNodeMouseOver (d: SankeyNode<N, L>, event: MouseEvent): void {

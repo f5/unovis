@@ -6,11 +6,10 @@ import { getString } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 
 // Types
-import { Position } from 'types/position'
 import { Spacing } from 'types/spacing'
 
 // Local Types
-import { SankeyEnterTransitionType, SankeyExitTransitionType, SankeyInputLink, SankeyInputNode, SankeyNode } from '../types'
+import { SankeyEnterTransitionType, SankeyExitTransitionType, SankeyInputLink, SankeyInputNode, SankeyNode, SankeyNodeAlign } from '../types'
 
 // Config
 import { SankeyConfig } from '../config'
@@ -55,18 +54,35 @@ export function createNodes<N extends SankeyInputNode, L extends SankeyInputLink
     .style('opacity', 0)
 }
 
+function getNodeXPos<N extends SankeyInputNode, L extends SankeyInputLink> (
+  d: SankeyNode<N, L>,
+  config: SankeyConfig<N, L>,
+  width: number,
+  bleed: Spacing,
+  hasLinks: boolean
+): number {
+  if (hasLinks) return d.x0
+
+  switch (config.nodeAlign) {
+    case SankeyNodeAlign.Left: return d.x0
+    case SankeyNodeAlign.Right: return width - bleed.right
+    case SankeyNodeAlign.Center:
+    case SankeyNodeAlign.Justify:
+    default: return width * 0.5 - bleed.left
+  }
+}
+
 export function updateNodes<N extends SankeyInputNode, L extends SankeyInputLink> (
   sel: Selection<SVGGElement, SankeyNode<N, L>, SVGGElement, unknown>,
   config: SankeyConfig<N, L>,
   width: number,
   bleed: Spacing,
+  hasLinks: boolean,
   duration: number
 ): void {
   smartTransition(sel, duration)
-    .attr('transform', (d: SankeyNode<N, L>) => `translate(${
-      (sel.size() === 1 && config.singleNodePosition === Position.Center) ? width * 0.5 - bleed.left : d.x0
-    },${d.y0})`)
-    .style('opacity', (d: SankeyNode<N, L>) => d._state.greyout ? 0.2 : 1)
+    .attr('transform', d => `translate(${getNodeXPos(d, config, width, bleed, hasLinks)},${d.y0})`)
+    .style('opacity', d => d._state.greyout ? 0.2 : 1)
 
   // Node
   smartTransition(sel.select(`.${s.node}`), duration)
