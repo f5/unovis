@@ -5,6 +5,10 @@
   align-items: center;
 }
 
+vis-single-container {
+  width: 100%;
+}
+
 .topojson-map > header {
   width: max-content;
   position: relative;

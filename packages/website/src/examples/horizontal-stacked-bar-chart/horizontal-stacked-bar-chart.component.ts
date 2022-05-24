@@ -3,13 +3,13 @@ import { StackedBar } from '@volterra/vis'
 import { data, labels, EducationDatum } from './data'
 
 @Component({
-  selector: 'stacked-bar-chart',
-  templateUrl: './stacked-bar-chart.html',
+  selector: 'horizontal-stacked-bar-chart',
+  templateUrl: './horizontal-stacked-bar-chart.component.html',
 })
 export class StackedBarChartComponent {
   dataKeys = Object.keys(labels)
   data: EducationDatum[] = data
- 
+
   x = (d: EducationDatum): number => this.data.indexOf(d)
   y = this.dataKeys.map(k => (d: EducationDatum) => d[k])
 
@@ -26,5 +26,6 @@ export class StackedBarChartComponent {
       return `<div style="font-size: 12px">${title}${total}${stats}</div>`
     }
   }
-  
+
+  tickFormat = i => data[i].country
 }

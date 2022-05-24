@@ -1,5 +1,8 @@
 name                                       license period  license type  installed version  author
 ----                                       --------------  ------------  -----------------  ------
+@angular/core                              perpetual       MIT           12.0.3             angular
+@angular/platform-browser                  perpetual       MIT           12.0.3             angular
+@angular/platform-browser-dynamic          perpetual       MIT           12.0.3             angular
 @docusaurus/core                           perpetual       MIT           2.0.0-beta.17      n/a
 @docusaurus/plugin-debug                   perpetual       MIT           2.0.0-beta.17      n/a
 @docusaurus/plugin-sitemap                 perpetual       MIT           2.0.0-beta.17      n/a
@@ -12,6 +15,8 @@ react                                      perpetual       MIT           17.0.1 
 react-docgen-typescript                    perpetual       MIT           1.2.0              n/a
 react-dom                                  perpetual       MIT           17.0.1             n/a
 react-markdown                             perpetual       MIT           8.0.1              Espen Hovlandsdal
+nodemon                                    perpetual       MIT           2.0.16             Remy Sharp
 @docusaurus/module-type-aliases            perpetual       MIT           2.0.0-beta.16      n/a
 @tsconfig/docusaurus                       perpetual       MIT           1.0.4              n/a
+ngc-esbuild                                perpetual       ISC           0.0.75             Joe Cserko
 typescript                                 perpetual       Apache-2.0    4.2.4              Microsoft Corp.

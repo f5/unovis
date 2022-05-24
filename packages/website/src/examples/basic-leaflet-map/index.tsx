@@ -17,7 +17,7 @@ const example: Example = {
   codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,
   codeTs: require(`!!raw-loader!./${pathname}.tsx`).default,
   codeAngular: {
-    html: require(`!!raw-loader!./${pathname}.html`).default,
+    html: require(`!!raw-loader!./${pathname}.component.html`).default,
     component: require(`!!raw-loader!./${pathname}.component.ts`).default,
     module: require(`!!raw-loader!./${pathname}.module.ts`).default,
   },

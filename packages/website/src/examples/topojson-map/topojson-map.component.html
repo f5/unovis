@@ -9,7 +9,7 @@
     <vis-tooltip [triggers]="tooltipTriggers"></vis-tooltip>
   </vis-single-container>
 
-  <vis-xy-container [data]="[{}]" [height]="70" [width]="500" [xDomain]="color.range()">
+  <vis-xy-container [data]="[{}]" [height]="70" [width]="500" [xDomain]="colorDomain">
     <vis-axis type="x" position="top" label="Life expectancy (years)" [numTicks]="numLabels" [tickPadding]="0"></vis-axis>
     <vis-stacked-bar [x]="0.5" orientation="horizontal" [y]="gradientSteps" [color]="getGradientColor"></vis-stacked-bar>
   </vis-xy-container>

@@ -3,7 +3,7 @@ import { data, colors, ElectionDatum } from './data'
 
 @Component({
   selector: 'basic-grouped-bar',
-  templateUrl: './basic-grouped-bar.html',
+  templateUrl: './basic-grouped-bar.component.html',
 })
 export class BasicGroupedBarComponent {
   x = (d: ElectionDatum): number => d.year
@@ -21,5 +21,5 @@ export class BasicGroupedBarComponent {
   }))
 
   color = (d : ElectionDatum, i: number) => this.legendItems[i].color
-  
+
 }
