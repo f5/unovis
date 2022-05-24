@@ -1,0 +1,29 @@
+import { Component } from '@angular/core'
+import { Scale, Scatter, StringAccessor } from '@volterra/vis'
+import { data, DataRecord, palette } from './data'
+
+const categories = [...new Set(data.map((d: DataRecord) => d.category))].sort()
+const colorScale = Scale.scaleOrdinal(palette).domain(categories)
+const formatNumber = Intl.NumberFormat('en', { notation: 'compact' }).format
+
+@Component({
+  selector: 'basic-scatter-chart',
+  templateUrl: './basic-scatter-chart.component.html',
+})
+export class BasicScatterChartComponent {
+  data = data
+
+  getX = (d: DataRecord): number => d.medianSalary
+  getY = (d: DataRecord): number => d.employmentRate
+  getColor = (d: DataRecord): string => colorScale(d.category)
+  getSize = (d: DataRecord): number => d.total
+  getLabel = (d: DataRecord): string => formatNumber(d.total)
+
+  legendItems = categories.map(v => ({ name: v, color: colorScale(v) }))
+  tooltipTriggers = {
+    [Scatter.selectors.point]: (d: DataRecord) => `
+      ${d.major}<br/>Number of graduates: ${d.total.toLocaleString()}
+    `,
+  }
+  xTicks: StringAccessor<number> = formatNumber
+}
