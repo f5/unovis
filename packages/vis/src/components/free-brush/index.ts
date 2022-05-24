@@ -91,8 +91,8 @@ export class FreeBrush<Datum> extends XYComponentCore<Datum> {
     let selectedDomain: FreeBrushSelection
     switch (config.mode) {
       case FreeBrushMode.XY: {
-        const xSelection = this._pixelRangeToDataRange([s[0][0], s[1][0]], this.xScale, config.selectionMinLength[0] ?? config.selectionMinLength)
-        const ySelection = this._pixelRangeToDataRange([s[0][1], s[1][1]], this.yScale, config.selectionMinLength[1] ?? config.selectionMinLength, true)
+        const xSelection = this._pixelRangeToDataRange([s[0][0], s[1][0]], this.xScale, config.selectionMinLength?.[0] ?? config.selectionMinLength)
+        const ySelection = this._pixelRangeToDataRange([s[0][1], s[1][1]], this.yScale, config.selectionMinLength?.[1] ?? config.selectionMinLength, true)
         selectedDomain = (xSelection && ySelection) ? [
           [xSelection?.[0], xSelection?.[1]],
           [ySelection?.[0], ySelection?.[1]],
@@ -128,7 +128,7 @@ export class FreeBrush<Datum> extends XYComponentCore<Datum> {
     const selectionLength = Math.abs(selectedDomain[1] - selectedDomain[0])
 
     if (constraint >= domainLength) {
-      console.warn('Configured domain constraint is bigger than the brush domain')
+      console.warn('Unovis | FreeBrush: Configured domain constraint is bigger than the brush domain')
     }
 
     if ((selectionLength < constraint) && (constraint < domainLength)) return null
