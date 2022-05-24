@@ -40,12 +40,6 @@ Each callback has the following parameters:
   {() => {
     const { Tooltip } = require('@volterra/vis')
     const tooltip = new Tooltip({})
-    function updateTooltip(selection, event, userDriven) {
-      if (userDriven) {
-        console.log(event)
-        tooltip.show('hi', { x: 0, y: 0 })
-      }
-    }
     const action = (i) => `(selection, event, userDriven) => {\n    if (userDriven) {\n      ${i}\n    }\n  }`
     return (
       <XYWrapper {...defaultProps()}
@@ -78,12 +72,12 @@ You can set a constraint for the minimum `selection` value with the `selectionMi
 
 ### Draggable
 By default, setting the desired the range relies on moving both start and end _Brush_ handles. You can adjust the entire range with one click by enabling the `draggable` proprerty:
-<XYWrapper {...defaultProps()} draggable={true}/>
+<XYWrapper {...defaultProps()} height={200} selectionMinLength={2} selection={[3,6]} draggable={true}/>
 
 ## Brush Appearance
 ### Handle Position
 `handlePosition` changes the placement of the _Brush_ handle with respect to the _XYChart_.
-<XYWrapperWithInput {...defaultProps()} property="handlePosition" inputType="select" options={['outside', 'inside']}/>
+<XYWrapperWithInput {...defaultProps()} containerProps={{ margin: { top: 0, bottom: 0, left: 10, right: 10 }}} property="handlePosition" inputType="select" options={['outside', 'inside']}/>
 
 ### Handle Width
 `handleWidth` sets the width in pixels of the _Brush_'s handle:

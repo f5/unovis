@@ -93,6 +93,11 @@ function getTypescriptStrings (config: CodeConfig, mainComponent: string): strin
         dataType))
     }
     containerConfig[main.key] = [name]
+  } else {
+    Object.keys(declarations).forEach(d => {
+      lines.push(`const ${d} = ${declarations[d]}`)
+    })
+    lines.push('')
   }
 
   if (container) {
