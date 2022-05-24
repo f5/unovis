@@ -40,6 +40,8 @@ export type SankeyNode<N extends SankeyInputNode, L extends SankeyInputLink> = G
   /** internal ui state */
   _state?: {
     greyout?: boolean;
+    /* Pre-calculated node height value in pixels that will be used to manually generate the layout when data has no links */
+    precalculatedHeight?: number;
   };
 }
 
@@ -69,10 +71,17 @@ export enum SankeySubLabelPlacement {
 }
 
 export enum SankeyNodeAlign {
-  Left = sankeyLeft,
-  Right = sankeyRight,
-  Center = sankeyCenter,
-  Justify = sankeyJustify,
+  Left = 'left',
+  Right = 'right',
+  Center = 'center',
+  Justify = 'justify',
+}
+
+export const SankeyLayout = {
+  [SankeyNodeAlign.Left]: sankeyLeft,
+  [SankeyNodeAlign.Right]: sankeyRight,
+  [SankeyNodeAlign.Center]: sankeyCenter,
+  [SankeyNodeAlign.Justify]: sankeyJustify,
 }
 
 export enum SankeyExitTransitionType {

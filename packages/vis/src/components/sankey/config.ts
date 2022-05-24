@@ -69,14 +69,17 @@ export interface SankeyConfigInterface<N extends SankeyInputNode, L extends Sank
   nodePadding?: number;
   /** Display the graph when data has just one element */
   showSingleNode?: boolean;
-  /** Single node position. Default: `Position.CENTER` */
-  singleNodePosition?: Position.Center | Position.Left | string;
   /** Node cursor on hover. Default: `undefined` */
   nodeCursor?: StringAccessor<L>;
   /** Node icon accessor function or value. Default: `undefined` */
   nodeIcon?: StringAccessor<N>;
   /** Node color accessor function or value. Default: `undefined` */
   nodeColor?: ColorAccessor<N>;
+  /** Node `fixedValue` accessor function or constant. It defines the node value that will be used to calculate
+   * the height of the nodes by d3-sankey (by default the height will be based on aggregated `linkValue`).
+   * Default: `n => n.fixedValue`
+  */
+  nodeFixedValue?: NumericAccessor<N>;
   /** Icon color accessor function or value. Default: `undefined` */
   iconColor?: ColorAccessor<N>;
 
@@ -155,8 +158,8 @@ export class SankeyConfig<N extends SankeyInputNode, L extends SankeyInputLink> 
   nodeMaxHeight = 100
   nodePadding = 2
   nodeColor = (d: N): string => d['color']
+  nodeFixedValue = (d: N): number => d['fixedValue']
   showSingleNode = true
-  singleNodePosition = Position.Center
   nodeCursor = undefined
   nodeIcon = undefined
   iconColor = undefined

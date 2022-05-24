@@ -11,11 +11,11 @@ import {
   SankeyExitTransitionType,
   SankeyEnterTransitionType,
   SankeyNodeAlign,
-  Position,
   StringAccessor,
   ColorAccessor,
   NumericAccessor,
   GenericAccessor,
+  Position,
   VerticalAlign,
   FitMode,
   TrimMode,
@@ -139,9 +139,6 @@ export class VisSankeyComponent<N extends SankeyInputNode, L extends SankeyInput
   /** Display the graph when data has just one element */
   @Input() showSingleNode?: boolean
 
-  /** Single node position. Default: `Position.CENTER` */
-  @Input() singleNodePosition?: Position.Center | Position.Left | string
-
   /** Node cursor on hover. Default: `undefined` */
   @Input() nodeCursor?: StringAccessor<L>
 
@@ -150,6 +147,11 @@ export class VisSankeyComponent<N extends SankeyInputNode, L extends SankeyInput
 
   /** Node color accessor function or value. Default: `undefined` */
   @Input() nodeColor?: ColorAccessor<N>
+
+  /** Node `fixedValue` accessor function or constant. It defines the node value that will be used to calculate
+   * the height of the nodes by d3-sankey (by default the height will be based on aggregated `linkValue`).
+   * Default: `n => n.fixedValue` */
+  @Input() nodeFixedValue?: NumericAccessor<N>
 
   /** Icon color accessor function or value. Default: `undefined` */
   @Input() iconColor?: ColorAccessor<N>
@@ -246,8 +248,8 @@ export class VisSankeyComponent<N extends SankeyInputNode, L extends SankeyInput
   }
 
   private getConfig (): SankeyConfigInterface<N, L> {
-    const { duration, events, attributes, id, heightNormalizationCoeff, exitTransitionType, enterTransitionType, highlightSubtreeOnHover, highlightDuration, highlightDelay, iterations, nodeSort, linkSort, nodeWidth, nodeAlign, nodeHorizontalSpacing, nodeMinHeight, nodeMaxHeight, nodePadding, showSingleNode, singleNodePosition, nodeCursor, nodeIcon, nodeColor, iconColor, linkColor, linkValue, linkCursor, label, subLabel, labelPosition, labelVerticalAlign, labelBackground, labelFit, labelMaxWidth, labelExpandTrimmedOnHover, labelTrimMode, labelFontSize, labelTextSeparator, labelForceWordBreak, labelColor, labelCursor, labelVisibility, subLabelFontSize, subLabelColor, subLabelPlacement, subLabelToLabelInlineWidthRatio } = this
-    const config = { duration, events, attributes, id, heightNormalizationCoeff, exitTransitionType, enterTransitionType, highlightSubtreeOnHover, highlightDuration, highlightDelay, iterations, nodeSort, linkSort, nodeWidth, nodeAlign, nodeHorizontalSpacing, nodeMinHeight, nodeMaxHeight, nodePadding, showSingleNode, singleNodePosition, nodeCursor, nodeIcon, nodeColor, iconColor, linkColor, linkValue, linkCursor, label, subLabel, labelPosition, labelVerticalAlign, labelBackground, labelFit, labelMaxWidth, labelExpandTrimmedOnHover, labelTrimMode, labelFontSize, labelTextSeparator, labelForceWordBreak, labelColor, labelCursor, labelVisibility, subLabelFontSize, subLabelColor, subLabelPlacement, subLabelToLabelInlineWidthRatio }
+    const { duration, events, attributes, id, heightNormalizationCoeff, exitTransitionType, enterTransitionType, highlightSubtreeOnHover, highlightDuration, highlightDelay, iterations, nodeSort, linkSort, nodeWidth, nodeAlign, nodeHorizontalSpacing, nodeMinHeight, nodeMaxHeight, nodePadding, showSingleNode, nodeCursor, nodeIcon, nodeColor, nodeFixedValue, iconColor, linkColor, linkValue, linkCursor, label, subLabel, labelPosition, labelVerticalAlign, labelBackground, labelFit, labelMaxWidth, labelExpandTrimmedOnHover, labelTrimMode, labelFontSize, labelTextSeparator, labelForceWordBreak, labelColor, labelCursor, labelVisibility, subLabelFontSize, subLabelColor, subLabelPlacement, subLabelToLabelInlineWidthRatio } = this
+    const config = { duration, events, attributes, id, heightNormalizationCoeff, exitTransitionType, enterTransitionType, highlightSubtreeOnHover, highlightDuration, highlightDelay, iterations, nodeSort, linkSort, nodeWidth, nodeAlign, nodeHorizontalSpacing, nodeMinHeight, nodeMaxHeight, nodePadding, showSingleNode, nodeCursor, nodeIcon, nodeColor, nodeFixedValue, iconColor, linkColor, linkValue, linkCursor, label, subLabel, labelPosition, labelVerticalAlign, labelBackground, labelFit, labelMaxWidth, labelExpandTrimmedOnHover, labelTrimMode, labelFontSize, labelTextSeparator, labelForceWordBreak, labelColor, labelCursor, labelVisibility, subLabelFontSize, subLabelColor, subLabelPlacement, subLabelToLabelInlineWidthRatio }
     const keys = Object.keys(config) as (keyof SankeyConfigInterface<N, L>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
