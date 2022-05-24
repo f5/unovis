@@ -20,6 +20,13 @@ export const examples: ExampleCollection[] = [
     ],
   },
   {
+    title: 'Scatter Plots',
+    description: '',
+    examples: [
+      require('./basic-scatter-chart').default,
+    ],
+  },
+  {
     title: 'Maps',
     description: <div>
         Simple maps using <a href="https://github.com/topojson/topojson" target="_blank">TopoJSON</a> geometry and fully
