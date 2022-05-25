@@ -12,6 +12,7 @@ import { MultiLineChartModule } from './examples/multi-line-chart/multi-line-cha
 import { TopojsonMapModule } from './examples/topojson-map/topojson-map.module'
 import { StackedBarChartModule } from './examples/horizontal-stacked-bar-chart/horizontal-stacked-bar-chart.module'
 import { BasicScatterChartModule } from './examples/basic-scatter-chart/basic-scatter-chart.module'
+import { FreeBrushScattersModule } from './examples/free-brush-scatters/free-brush-scatters.module'
 
 @Component({
   selector: 'app-component',
@@ -23,6 +24,7 @@ import { BasicScatterChartModule } from './examples/basic-scatter-chart/basic-sc
     <topojson-map></topojson-map>
     <horizontal-stacked-bar-chart></horizontal-stacked-bar-chart>
     <basic-scatter-chart></basic-scatter-chart>
+    <free-brush-scatters ></free-brush-scatters>
   `,
 })
 export class AppComponent {
@@ -34,7 +36,7 @@ export class AppComponent {
   declarations: [AppComponent],
   imports: [
     BrowserModule, BasicGroupedBarModule, BasicLeafletMapModule, BasicLineChartModule, MultiLineChartModule,
-    TopojsonMapModule, StackedBarChartModule, BasicScatterChartModule,
+    TopojsonMapModule, StackedBarChartModule, BasicScatterChartModule, FreeBrushScattersModule,
   ],
   bootstrap: [AppComponent],
 })
