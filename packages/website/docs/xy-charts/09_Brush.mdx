@@ -1,0 +1,97 @@
+import CodeBlock from '@theme/CodeBlock'
+import BrowserOnly from '@docusaurus/BrowserOnly'
+import { PropTable } from '../components/props-table'
+import { generateDataRecords } from '../utils/data'
+import { XYWrapper, XYWrapperWithInput, axis } from './wrapper.tsx'
+
+export const defaultProps = (showAxis = true) => ({
+    name: "Brush",
+    height: 75,
+    componentProps: [{
+        name: showAxis ? 'StackedBar' : 'Area',
+        props: {
+          x: d => d.x,
+          y: d => d.y,
+        },
+        key: "components",
+      },
+    ].concat(showAxis ? axis('x') : []),
+    data: generateDataRecords()
+})
+
+## Basic Configuration
+_Brush_ is designed to work inside of an _XYContainer_ alongside an _XYChart_. The basic configuration looks like:
+<XYWrapper {...defaultProps(false)} showContext="full"/>
+
+## Usage
+The _Brush_ component has four event listener properties:
+
+- `onBrushStart`
+- `onBrushMove`
+- `onBrushEnd`
+- `onBrush`, which encapsulates all of the above.
+
+Each callback has the following parameters:
+- _selection_: type `[number, number]`, the range of data current being displayed
+- _event_ - the brush event instance
+- _userDriven_: type `boolean`, to indicate whether the event was triggered by the user
+
+<BrowserOnly>
+  {() => {
+    const { Tooltip } = require('@volterra/vis')
+    const tooltip = new Tooltip({})
+    const action = (i) => `(selection, event, userDriven) => {\n    if (userDriven) {\n      ${i}\n    }\n  }`
+    return (
+      <XYWrapper {...defaultProps()}
+        height={150}
+        containerProps={{ tooltip }}
+        onBrushStart={(selection, event, userDriven) => userDriven && tooltip.place({ x: 0, y: 0 })}
+        onBrushMove={(selection, event, userDriven) => userDriven && tooltip.show(selection)}
+        onBrushEnd={(selection, event, userDriven) => userDriven && tooltip.hide()}
+        showContext="container"
+        declarations={{
+          tooltip: 'new Tooltip({})',
+          onBrushStart: action('tooltip.place({ x: 0, y: 0 }}'),
+          onBrushMove: action('tooltip.show(selection)'),
+          onBrushEnd: action('tooltip.hide()')
+        }}
+        visImports={["Tooltip"]}
+      />
+    )
+  }}
+</BrowserOnly>
+
+## Selections
+### Manual Selection
+You can explicity define the default selection range using the `selection` property:
+<XYWrapper {...defaultProps()} selection={[3,6]}/>
+
+### Selection Min Length
+You can set a constraint for the minimum `selection` value with the `selectionMinLength` property:
+<XYWrapper {...defaultProps()} selectionMinLength={5}/>
+
+### Draggable
+By default, setting the desired the range relies on moving both start and end _Brush_ handles. You can adjust the entire range with one click by enabling the `draggable` proprerty:
+<XYWrapper {...defaultProps()} height={200} selectionMinLength={2} selection={[3,6]} draggable={true}/>
+
+## Brush Appearance
+### Handle Position
+`handlePosition` changes the placement of the _Brush_ handle with respect to the _XYChart_.
+<XYWrapperWithInput {...defaultProps()} containerProps={{ margin: { top: 0, bottom: 0, left: 10, right: 10 }}} property="handlePosition" inputType="select" options={['outside', 'inside']}/>
+
+### Handle Width
+`handleWidth` sets the width in pixels of the _Brush_'s handle:
+<XYWrapperWithInput {...defaultProps()} property="handleWidth" inputType="range" defaultValue={10}/>
+
+### CSS Variables
+<details open>
+  <summary open>All supported CSS variables</summary>
+  <CodeBlock language="css">
+{`--vis-brush-selection-fill
+--vis-brush-selection-stroke
+--vis-brush-handle-fill
+--vis-brush-handle-stroke
+`}</CodeBlock>
+</details>
+
+<PropTable name='VisBrush'></PropTable>

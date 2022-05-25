@@ -58,7 +58,7 @@ function getReactStrings ({ components, container, dataType, declarations, impor
     containerString = `${parse.react(container, true, indentLevel)}`
     indentLevel++
   }
-  const componentString = `${components.map(c => parse.react(c, false, indentLevel)).join(`\n${tab(indentLevel)}`)}`
+  const componentString = `${components.map(c => parse.react(c, false, indentLevel)).join('\n')}`
   lines.push(containerString?.replace('><', `>\n${componentString}\n${tab(--indentLevel)}<`) || componentString)
 
   if (indentLevel) {
@@ -93,6 +93,11 @@ function getTypescriptStrings (config: CodeConfig, mainComponent: string): strin
         dataType))
     }
     containerConfig[main.key] = [name]
+  } else {
+    Object.keys(declarations).forEach(d => {
+      lines.push(`const ${d} = ${declarations[d]}`)
+    })
+    lines.push('')
   }
 
   if (container) {
@@ -110,7 +115,7 @@ function getTypescriptStrings (config: CodeConfig, mainComponent: string): strin
       lines.push(`${t}${containerProps.join(`,\n${t}`)},`)
     }
     Object.entries(containerConfig).forEach(([k, v]) => {
-      const val = k === 'components' ? (v?.length > 1 ? `[\n${v.join(`\n${t}`)}\n]` : `[${v.join(',')}]`) : v
+      const val = k === 'components' ? (v?.length > 1 ? `[\n${tab(2)}${v.join(`\n${tab(2)}`)}\n${t}]` : `[${v.join(',')}]`) : v
       lines.push(`${t}${[k, val].join(': ')},`)
     })
     lines.push('}, data)\n')

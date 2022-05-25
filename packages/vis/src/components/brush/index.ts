@@ -178,8 +178,6 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
       const xScaleRange = xScale.range()
       xScale.range(xRange)
       const selectedDomain = s.map(n => +xScale.invert(n)) as [number, number]
-      // Restore the X scale range
-      xScale.range(xScaleRange)
 
       if (userDriven) {
         // Constraint the selection if configured
@@ -188,15 +186,20 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
         const selectionLength = Math.abs(selectedDomain[1] - selectedDomain[0])
 
         if (config.selectionMinLength >= xDomainLength) {
-          console.warn('Configured `selectionMinLength` is bigger than the brush domain')
+          console.warn('Unovis | Brush: Configured `selectionMinLength` is bigger than the brush domain')
         }
 
         if ((selectionLength < config.selectionMinLength) && (config.selectionMinLength < xDomainLength)) {
-          const range = [xScale(config.selection[0]), xScale(config.selection[1])] as [number, number]
+          const selection = config.selection ?? this._selection
+          const range = [xScale(selection[0]), xScale(selection[1])] as [number, number]
           this.brush.call(this.brushBehaviour.move, range) // Will trigger the 'brush end' callback with `range`
+          // Restore the X scale range
+          xScale.range(xScaleRange)
           return
         } else {
           this._selection = selectedDomain
+          // Restore the X scale range
+          xScale.range(xScaleRange)
         }
       }
 

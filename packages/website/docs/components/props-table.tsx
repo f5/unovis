@@ -35,7 +35,9 @@ export const PropTable = ({ name }): JSX.Element => {
           )
         })}
       </tbody>
-      <div style={{ float: 'right' }}>* required property</div>
+      <tfoot>
+        <tr>* required property</tr>
+      </tfoot>
     </table>
   )
 }

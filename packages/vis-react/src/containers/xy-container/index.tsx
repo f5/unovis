@@ -33,8 +33,8 @@ export function VisXYContainerFC<Datum> (props: PropsWithChildren<VisXYContainer
       .from(container.current?.querySelectorAll<VisComponentElement<Axis<Datum>>>('vis-axis') ?? [])
       .map(c => c.__component__)
       .find(c => c.config.type === AxisType.Y),
-    ...props,
     margin: { top: 5, left: 5, right: 5, bottom: 5 },
+    ...props,
   })
 
   // On Mount

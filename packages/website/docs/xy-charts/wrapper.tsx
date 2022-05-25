@@ -1,6 +1,6 @@
-
 import React from 'react'
 import { DocWrapper, DocWrapperProps, DynamicWrapper, InputWrapper } from '../wrappers'
+import { DocComponent } from '../wrappers/base'
 
 const defaultProps: Partial<DocWrapperProps> = {
   containerName: 'XYContainer',
@@ -12,11 +12,13 @@ type XYWrapperProps = DocWrapperProps & {
   showAxes?: boolean;
 }
 
-const axes = ['x', 'y'].map(t => ({ name: 'Axis', props: { type: t }, key: `${t}Axis` }))
+export const axis = (t: 'x' | 'y'): DocComponent => ({ name: 'Axis', props: { type: t }, key: `${t}Axis` })
 
 const getProps = ({ showAxes, ...rest }: XYWrapperProps): DocWrapperProps => {
-  const props = { ...defaultProps, ...rest }
-  return showAxes ? { ...props, componentProps: [...(rest.componentProps ?? []), ...axes] } : props
+  if (showAxes) {
+    rest.componentProps?.push(axis('x'), axis('y'))
+  }
+  return { ...defaultProps, ...rest }
 }
 
 export const XYWrapper = (props: XYWrapperProps): JSX.Element => <DocWrapper {...getProps(props)}/>
