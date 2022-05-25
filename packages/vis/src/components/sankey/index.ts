@@ -274,11 +274,11 @@ export class Sankey<N extends SankeyInputNode, L extends SankeyInputLink> extend
   }
 
   getLayoutWidth (): number {
-    return this.sizing === Sizing.Extend ? this._extendedWidth : this._width
+    return this.sizing === Sizing.Fit ? this._width : this._extendedWidth
   }
 
   getLayoutHeight (): number {
-    return this.sizing === Sizing.Extend ? this._extendedHeightIncreased || this._extendedHeight : this._height
+    return this.sizing === Sizing.Fit ? this._height : (this._extendedHeightIncreased || this._extendedHeight)
   }
 
   getColumnCenters (): number[] {
