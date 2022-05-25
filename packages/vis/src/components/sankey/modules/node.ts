@@ -178,18 +178,18 @@ export function removeNodes<N extends SankeyInputNode, L extends SankeyInputLink
   duration: number
 ): void {
   const { exitTransitionType } = config
-  const transitionSelection = smartTransition(selection, duration)
-  if (exitTransitionType === SankeyExitTransitionType.ToAncestor) {
-    transitionSelection.attr('transform', (d: SankeyNode<N, L>) => {
-      if (d.targetLinks?.[0]) {
-        return `translate(${d.targetLinks[0].source.x0},${d.y0})`
-      } else return null
-    })
-  }
 
-  transitionSelection
-    .style('opacity', 0)
-    .remove()
+  selection.each((d, i, els) => {
+    const node = select(els[i])
+    const transition = smartTransition(node, duration)
+    if ((exitTransitionType === SankeyExitTransitionType.ToAncestor) && d.targetLinks?.[0]) {
+      transition.attr('transform', `translate(${d.targetLinks[0].source.x0},${d.y0})`)
+    }
+
+    transition
+      .style('opacity', 0)
+      .remove()
+  })
 }
 
 export function onNodeMouseOver<N extends SankeyInputNode, L extends SankeyInputLink> (
