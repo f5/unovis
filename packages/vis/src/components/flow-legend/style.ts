@@ -65,8 +65,8 @@ export const clickable = css`
 export const label = (labelFontSize: number, labelColor: string): string => css`
   label: label;
 
-  position: absolute;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, 0%);
+  margin-left: 7px;
   background-color: var(--vis-flow-legend-label-background);
   padding: 5px 15px;
   font-size: ${labelFontSize}px;

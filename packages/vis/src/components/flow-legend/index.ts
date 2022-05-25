@@ -53,7 +53,7 @@ export class FlowLegend {
         type: FlowLegendItemType.Label,
       })
 
-      if (arrowSymbol && acc.length !== items.length * 2 - 1) {
+      if (arrowSymbol && (acc.length !== items.length * 2 - 1)) {
         acc.push({
           text: arrowSymbol,
           index: i,
@@ -86,7 +86,9 @@ export class FlowLegend {
 
     legendItems.exit().remove()
 
-    this.line.attr('class', s.line(lineColor))
+    this.line
+      .attr('class', s.line(lineColor))
+      .style('opacity', items.length > 1 ? 1 : 0)
   }
 
   _onItemClick (event: MouseEvent, d: FlowLegendItem): void {
