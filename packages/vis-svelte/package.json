@@ -1,6 +1,6 @@
 {
   "name": "@volterra/vis-svelte",
-  "version": "0.9.24-beta.0",
+  "version": "0.9.25",
   "description": "Svelte wrapper for @volterra/vis",
   "main": "./index.js",
   "types": "./index.d.ts",
@@ -16,7 +16,7 @@
     "@volterra:registry": "https://artifactory.f5net.com/artifactory/api/npm/f5-volterra-vis-npm/"
   },
   "peerDependencies": {
-    "@volterra/vis": "0.9.24",
+    "@volterra/vis": "0.9.25-beta.2",
     "svelte": "^3.48.0"
   },
   "devDependencies": {

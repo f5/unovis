@@ -40,8 +40,8 @@
     "typescript": "~4.2.4"
   },
   "peerDependencies": {
-    "@volterra/vis": "0.9.24",
-    "@volterra/vis-react": "0.9.24"
+    "@volterra/vis": "0.9.25",
+    "@volterra/vis-react": "0.9.25"
   },
   "browserslist": {
     "production": [
