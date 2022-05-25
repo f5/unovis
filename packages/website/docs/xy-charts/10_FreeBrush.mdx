@@ -1,0 +1,52 @@
+---
+title: Free Brush
+sidebar_label: Free Brush
+---
+
+import CodeBlock from '@theme/CodeBlock'
+import BrowserOnly from '@docusaurus/BrowserOnly'
+import { PropTable } from '../components/props-table'
+import { generateScatterDataRecords } from '../utils/data'
+import { XYWrapper, XYWrapperWithInput } from './wrapper.tsx'
+
+export const defaultProps = (showAxes = true) => ({
+    name: "FreeBrush",
+    height: 100,
+    componentProps: [{
+        name: "Scatter",
+        props: {
+          x: d => d.x,
+          y: d => d.y,
+        },
+        key: "components",
+      },
+    ],
+    showAxes: showAxes,
+    data: generateScatterDataRecords()
+})
+
+## Basic Configuration
+_Free Brush_ is an extention of _Brush_, an interactive component that is designed to work inside an _XYContainer_.
+See [brush docs](/docs/xy-charts/brush) to learn about basic configuration and usage.
+
+## Mode
+You can change the axis alignment of your _Free Brush_ by setting the `mode` property to `"x"`, `"y"` or `"xy"`:
+<XYWrapperWithInput {...defaultProps()} height={300} property="mode" inputType="select" defaultValue="y" options={["x", "y", "xy"]}/>
+
+## Auto Hide
+Disabling the `autoHide` property will keep the _Free Brush_ selection visible after the [`onBrushEnd`](/docs/xy-charts/brush#usage) event has triggered:
+<XYWrapper { ...defaultProps()} autoHide={false}/>
+
+## CSS Variables
+<details open>
+  <summary open>All supported CSS variables</summary>
+  <CodeBlock language="css">
+{`--vis-free-brush-selection-fill
+--vis-free-brush-selection-fill-opacity
+--vis-free-brush-selection-stroke
+--vis-free-brush-handle-fill
+--vis-free-brush-handle-stroke`}
+  </CodeBlock>
+</details>
+
+<PropTable name="VisFreeBrush"/>
