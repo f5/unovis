@@ -3,7 +3,7 @@
 import _ from 'lodash'
 import { Component, ViewChild, ViewEncapsulation } from '@angular/core'
 import { StyleSpecification } from 'maplibre-gl'
-import { LeafletMap, LeafletMapConfigInterface, Position, Tooltip, TooltipConfigInterface } from '@volterra/vis'
+import { LeafletMap, LeafletMapConfigInterface, LeafletMapPoint, Position, Tooltip, TooltipConfigInterface } from '@volterra/vis'
 import { MapLeafletComponent } from '../../app/components/map-leaflet/map-leaflet.component'
 
 // Configuration
@@ -46,7 +46,7 @@ function getTooltipConfig (): TooltipConfigInterface {
     verticalPlacement: Position.Center,
     horizontalShift: 10,
     triggers: {
-      [LeafletMap.selectors.point]: (d: MapPoint) => `<div>${d.id}</div>`,
+      [LeafletMap.selectors.point]: (d: LeafletMapPoint<MapPoint>) => `<div>${d.id}</div>`,
     },
   }
 }
@@ -81,7 +81,7 @@ export class MapComponent {
     ],
     pointBottomLabel: d => d.cluster ? `${d.point_count} sites` : d.id,
     pointCursor: 'crosshair',
-    // selectedNodeId: 'nc72965236',
+    // selectedPointId: 'nc72965236',
     initialBounds: { northEast: { lat: 77, lng: -172 }, southWest: { lat: -50, lng: 72 } },
     onMapMoveZoom: ({ mapCenter, zoomLevel, bounds }) => { /* console.log(mapCenter, zoomLevel, bounds) */ },
     onMapMoveStart: ({ mapCenter, zoomLevel, bounds, userDriven }) => { console.log('onMapMoveStart', mapCenter, zoomLevel, bounds, userDriven) },
