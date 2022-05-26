@@ -1,0 +1,9 @@
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.main > *:nth-child(2) {
+  flex-grow: 1;
+}

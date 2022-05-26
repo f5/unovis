@@ -24,6 +24,7 @@ export const examples: ExampleCollection[] = [
     description: '',
     examples: [
       require('./basic-scatter-chart').default,
+      require('./free-brush-scatters').default,
     ],
   },
   {
