@@ -80,6 +80,7 @@ export class SingleContainer<Data> extends ContainerCore {
 
   _render (customDuration?: number): void {
     const { config, component } = this
+    super._render()
     component.setSize(this.width, this.height)
 
     component.g
