@@ -5,7 +5,7 @@ import { getCSSColorVariable } from 'styles/colors'
 import { getString, isNumber } from 'utils/data'
 import { ColorAccessor, StringAccessor } from 'types/accessor'
 
-/** Retrieves color from data if available, fallbacks to a css variable in an index has been passed */
+/** Retrieves color from the data if provided, fallbacks to CSS variables if the index was passed */
 export function getColor<T> (d: T, accessor: ColorAccessor<T>, index?: number): string {
   if (Array.isArray(accessor) && isFinite(index)) return accessor[index % accessor.length]
 
