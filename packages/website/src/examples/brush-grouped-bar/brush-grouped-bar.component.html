@@ -1,0 +1,11 @@
+<vis-bullet-legend [items]="legendItems" [onLegendItemClick]="updateItems"></vis-bullet-legend>
+<vis-xy-container [data]="data" [height]="400" [xDomain]="domain" scaleByDomain="true">
+  <vis-grouped-bar [x]="x" [y]="y" [groupPadding]="0.2" roundedCorners [barMinHeight]="0"></vis-grouped-bar>
+  <vis-axis type="x" label="Year" [numTicks]="domain[1] - domain[0]" [gridLine]="false"></vis-axis>
+  <vis-axis type="y" label="Cereal Production (metric tons, millions)"></vis-axis>
+</vis-xy-container>
+<vis-xy-container [data]="data" height="75" [margin]="margin">
+  <vis-grouped-bar [x]="x" [y]="y" roundedCorners></vis-grouped-bar>
+  <vis-brush [selection]="domain" [onBrushMove]="updateDomain" [draggable]="true"></vis-brush>
+  <vis-axis type="x" numTicks="15"></vis-axis>
+</vis-xy-container>
