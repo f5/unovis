@@ -19,10 +19,10 @@
     "@angular/core": "^12.0.3",
     "@angular/platform-browser": "^12.0.3",
     "@angular/platform-browser-dynamic": "^12.0.3",
-    "@docusaurus/core": "2.0.0-beta.17",
-    "@docusaurus/plugin-debug": "2.0.0-beta.17",
-    "@docusaurus/plugin-sitemap": "2.0.0-beta.17",
-    "@docusaurus/preset-classic": "2.0.0-beta.17",
+    "@docusaurus/core": "2.0.0-beta.21",
+    "@docusaurus/plugin-debug": "2.0.0-beta.21",
+    "@docusaurus/plugin-sitemap": "2.0.0-beta.21",
+    "@docusaurus/preset-classic": "2.0.0-beta.21",
     "@mdx-js/react": "^1.6.21",
     "clsx": "^1.1.1",
     "docusaurus-plugin-react-docgen-typescript": "^0.1.0",
@@ -34,7 +34,7 @@
     "react-markdown": "^8.0.1"
   },
   "devDependencies": {
-    "@docusaurus/module-type-aliases": "2.0.0-beta.16",
+    "@docusaurus/module-type-aliases": "2.0.0-beta.21",
     "@tsconfig/docusaurus": "^1.0.4",
     "ngc-esbuild": "^0.0.75",
     "typescript": "~4.2.4"
