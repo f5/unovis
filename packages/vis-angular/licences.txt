@@ -11,7 +11,7 @@ karma                          perpetual       MIT           6.3.0              
 karma-chrome-launcher          perpetual       MIT           3.1.0              Vojta Jina
 karma-coverage                 perpetual       MIT           2.0.3              SATO taichi
 karma-jasmine                  perpetual       MIT           4.0.0              Vojta Jina
-karma-jasmine-html-reporter    perpetual       MIT           1.5.0              n/a
+karma-jasmine-html-reporter    perpetual       MIT           1.5.0              David Federman
 ng-packagr                     perpetual       MIT           12.0.0             David Herges
 rollup                         perpetual       MIT           2.61.1             Rich Harris
 rollup-plugin-typescript2      perpetual       MIT           0.31.1             @ezolenko
