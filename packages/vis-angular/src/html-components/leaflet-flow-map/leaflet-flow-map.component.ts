@@ -156,8 +156,8 @@ export class VisLeafletFlowMapComponent<PointDatum, FlowDatum> implements Leafle
   /** Point cursor value or accessor function. Default: `null` */
   @Input() pointCursor?: StringAccessor<LeafletMapPointDatum<PointDatum>>
 
-  /** Set selected node by its unique id. Default: `undefined` */
-  @Input() selectedNodeId?: string
+  /** Set selected point by its unique id. Default: `undefined` */
+  @Input() selectedPointId?: string
 
   /** The width of the cluster point outline. Default: `1.25` */
   @Input() clusterOutlineWidth?: number
@@ -251,8 +251,8 @@ export class VisLeafletFlowMapComponent<PointDatum, FlowDatum> implements Leafle
   }
 
   private getConfig (): LeafletFlowMapConfigInterface<PointDatum, FlowDatum> {
-    const { width, height, duration, events, attributes, flyToDuration, fitViewPadding, zoomDuration, initialBounds, bounds, accessToken, style, styleDarkTheme, attribution, onMapInitialized, onMapMoveZoom, onMapMoveStart, onMapMoveEnd, onMapZoomStart, onMapZoomEnd, onMapClick, pointLongitude, pointLatitude, pointId, pointShape, pointColor, pointRadius, pointLabel, pointBottomLabel, pointCursor, selectedNodeId, clusterOutlineWidth, clusterBackground, clusterExpandOnClick, clusterRadius, valuesMap, topoJSONLayer, tooltip, sourceLongitude, sourceLatitude, targetLongitude, targetLatitude, sourcePointRadius, sourcePointColor, flowParticleColor, flowParticleRadius, flowParticleSpeed, flowParticleDensity, onSourcePointClick, onSourcePointMouseEnter, onSourcePointMouseLeave } = this
-    const config = { width, height, duration, events, attributes, flyToDuration, fitViewPadding, zoomDuration, initialBounds, bounds, accessToken, style, styleDarkTheme, attribution, onMapInitialized, onMapMoveZoom, onMapMoveStart, onMapMoveEnd, onMapZoomStart, onMapZoomEnd, onMapClick, pointLongitude, pointLatitude, pointId, pointShape, pointColor, pointRadius, pointLabel, pointBottomLabel, pointCursor, selectedNodeId, clusterOutlineWidth, clusterBackground, clusterExpandOnClick, clusterRadius, valuesMap, topoJSONLayer, tooltip, sourceLongitude, sourceLatitude, targetLongitude, targetLatitude, sourcePointRadius, sourcePointColor, flowParticleColor, flowParticleRadius, flowParticleSpeed, flowParticleDensity, onSourcePointClick, onSourcePointMouseEnter, onSourcePointMouseLeave }
+    const { width, height, duration, events, attributes, flyToDuration, fitViewPadding, zoomDuration, initialBounds, bounds, accessToken, style, styleDarkTheme, attribution, onMapInitialized, onMapMoveZoom, onMapMoveStart, onMapMoveEnd, onMapZoomStart, onMapZoomEnd, onMapClick, pointLongitude, pointLatitude, pointId, pointShape, pointColor, pointRadius, pointLabel, pointBottomLabel, pointCursor, selectedPointId, clusterOutlineWidth, clusterBackground, clusterExpandOnClick, clusterRadius, valuesMap, topoJSONLayer, tooltip, sourceLongitude, sourceLatitude, targetLongitude, targetLatitude, sourcePointRadius, sourcePointColor, flowParticleColor, flowParticleRadius, flowParticleSpeed, flowParticleDensity, onSourcePointClick, onSourcePointMouseEnter, onSourcePointMouseLeave } = this
+    const config = { width, height, duration, events, attributes, flyToDuration, fitViewPadding, zoomDuration, initialBounds, bounds, accessToken, style, styleDarkTheme, attribution, onMapInitialized, onMapMoveZoom, onMapMoveStart, onMapMoveEnd, onMapZoomStart, onMapZoomEnd, onMapClick, pointLongitude, pointLatitude, pointId, pointShape, pointColor, pointRadius, pointLabel, pointBottomLabel, pointCursor, selectedPointId, clusterOutlineWidth, clusterBackground, clusterExpandOnClick, clusterRadius, valuesMap, topoJSONLayer, tooltip, sourceLongitude, sourceLatitude, targetLongitude, targetLatitude, sourcePointRadius, sourcePointColor, flowParticleColor, flowParticleRadius, flowParticleSpeed, flowParticleDensity, onSourcePointClick, onSourcePointMouseEnter, onSourcePointMouseLeave }
     const keys = Object.keys(config) as (keyof LeafletFlowMapConfigInterface<PointDatum, FlowDatum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

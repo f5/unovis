@@ -156,8 +156,8 @@ export class VisLeafletMapComponent<Datum> implements LeafletMapConfigInterface<
   /** Point cursor value or accessor function. Default: `null` */
   @Input() pointCursor?: StringAccessor<LeafletMapPointDatum<Datum>>
 
-  /** Set selected node by its unique id. Default: `undefined` */
-  @Input() selectedNodeId?: string
+  /** Set selected point by its unique id. Default: `undefined` */
+  @Input() selectedPointId?: string
 
   /** The width of the cluster point outline. Default: `1.25` */
   @Input() clusterOutlineWidth?: number
@@ -222,8 +222,8 @@ export class VisLeafletMapComponent<Datum> implements LeafletMapConfigInterface<
   }
 
   private getConfig (): LeafletMapConfigInterface<Datum> {
-    const { width, height, duration, events, attributes, flyToDuration, fitViewPadding, zoomDuration, initialBounds, bounds, accessToken, style, styleDarkTheme, attribution, onMapInitialized, onMapMoveZoom, onMapMoveStart, onMapMoveEnd, onMapZoomStart, onMapZoomEnd, onMapClick, pointLongitude, pointLatitude, pointId, pointShape, pointColor, pointRadius, pointLabel, pointBottomLabel, pointCursor, selectedNodeId, clusterOutlineWidth, clusterBackground, clusterExpandOnClick, clusterRadius, valuesMap, topoJSONLayer, tooltip } = this
-    const config = { width, height, duration, events, attributes, flyToDuration, fitViewPadding, zoomDuration, initialBounds, bounds, accessToken, style, styleDarkTheme, attribution, onMapInitialized, onMapMoveZoom, onMapMoveStart, onMapMoveEnd, onMapZoomStart, onMapZoomEnd, onMapClick, pointLongitude, pointLatitude, pointId, pointShape, pointColor, pointRadius, pointLabel, pointBottomLabel, pointCursor, selectedNodeId, clusterOutlineWidth, clusterBackground, clusterExpandOnClick, clusterRadius, valuesMap, topoJSONLayer, tooltip }
+    const { width, height, duration, events, attributes, flyToDuration, fitViewPadding, zoomDuration, initialBounds, bounds, accessToken, style, styleDarkTheme, attribution, onMapInitialized, onMapMoveZoom, onMapMoveStart, onMapMoveEnd, onMapZoomStart, onMapZoomEnd, onMapClick, pointLongitude, pointLatitude, pointId, pointShape, pointColor, pointRadius, pointLabel, pointBottomLabel, pointCursor, selectedPointId, clusterOutlineWidth, clusterBackground, clusterExpandOnClick, clusterRadius, valuesMap, topoJSONLayer, tooltip } = this
+    const config = { width, height, duration, events, attributes, flyToDuration, fitViewPadding, zoomDuration, initialBounds, bounds, accessToken, style, styleDarkTheme, attribution, onMapInitialized, onMapMoveZoom, onMapMoveStart, onMapMoveEnd, onMapZoomStart, onMapZoomEnd, onMapClick, pointLongitude, pointLatitude, pointId, pointShape, pointColor, pointRadius, pointLabel, pointBottomLabel, pointCursor, selectedPointId, clusterOutlineWidth, clusterBackground, clusterExpandOnClick, clusterRadius, valuesMap, topoJSONLayer, tooltip }
     const keys = Object.keys(config) as (keyof LeafletMapConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

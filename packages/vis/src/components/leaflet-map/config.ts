@@ -75,8 +75,8 @@ export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterfa
   pointCursor?: StringAccessor<LeafletMapPointDatum<Datum>>;
   /** The width of the ring when a point has a `LeafletMapPointShape.Ring` shape. Default: `1.25` */
   pointRingWidth?: number;
-  /** Set selected node by its unique id. Default: `undefined` */
-  selectedNodeId?: string;
+  /** Set selected point by its unique id. Default: `undefined` */
+  selectedPointId?: string;
 
   // Cluster
   /** The width of the cluster point ring. Default: `1.25` */
@@ -165,7 +165,7 @@ export class LeafletMapConfig<Datum> extends ComponentConfig implements LeafletM
   pointBottomLabel = ''
   pointCursor = null
   pointRingWidth = 1.25
-  selectedNodeId = undefined
+  selectedPointId = undefined
 
   // Cluster
   clusterRingWidth = 1.25

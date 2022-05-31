@@ -208,20 +208,27 @@ export function shouldClusterExpand<D> (cluster: LeafletMapPoint<D>, zoomLevel: 
     (zoomLevel >= midLevel && cluster && cluster.properties.point_count < 20)
 }
 
-export function findNodeAndClusterInPointsById<D> (points: LeafletMapPoint<D>[], id: string, pointId: StringAccessor<D>): { node: null | LeafletMapPoint<D>; cluster: null | LeafletMapPoint<D> } {
-  let node = null
-  let cluster = null
-  points.forEach(point => {
-    if (point.isCluster) {
-      const leaves = point.clusterPoints ?? []
-      const foundNode = leaves.find(d => getString(d, pointId) === id)
-      if (foundNode) {
-        node = foundNode
-        cluster = point
+export function findPointAndClusterByPointId<D> (
+  points: LeafletMapPoint<D>[],
+  id: string,
+  pointId: StringAccessor<D>
+): {
+    point: PointFeature<D> | undefined;
+    cluster: LeafletMapPoint<D> | undefined;
+  } {
+  let point
+  let cluster
+  points.forEach(p => {
+    if (p.isCluster) {
+      const leaves = p.clusterIndex.getLeaves(p.properties.cluster_id as number, Infinity) ?? []
+      const foundPoint = leaves.find(d => getString(d.properties, pointId) === id)
+      if (foundPoint) {
+        point = foundPoint
+        cluster = p
       }
     }
   })
-  return { node, cluster }
+  return { point, cluster }
 }
 
 export function getNodeRelativePosition<D> (d: LeafletMapPoint<D>, leafletMap: L.Map): { x: number; y: number } {
