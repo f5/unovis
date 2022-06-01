@@ -12,14 +12,14 @@ export function arePropsEqual<PropTypes extends { children?: ReactNode }> (prevP
     if (prevChildren.length !== nextChildren.length) return false
 
     for (let i = 0; i < nextChildren.length; i += 1) {
-      if (_isEqual(prevChildren[i].props, nextChildren[i].props)) return false
+      if (!_isEqual(prevChildren[i].props, nextChildren[i].props)) return false
     }
   }
 
   const propKeys = Array.from(new Set([...Object.keys(prevProps), ...Object.keys(nextProps)])) as (keyof PropTypes)[]
   for (const key of propKeys) {
     if (key === 'children') continue
-    if (!(_isEqual(prevProps, nextProps))) return false
+    if (!(_isEqual(prevProps[key], nextProps[key]))) return false
   }
 
   return true
