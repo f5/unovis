@@ -8,11 +8,12 @@ export * from './components/crosshair/'
 export * from './components/donut/'
 export * from './components/grouped-bar/'
 export * from './components/scatter/'
+export * from './components/sankey'
 export * from './components/stacked-bar/'
 export * from './components/tooltip/'
 export * from './components/timeline/'
 export * from './components/topojson-map/'
-export * from './components/sankey'
+export * from './components/xy-labels'
 
 // HTML Components
 export * from './html-components/bullet-legend'
