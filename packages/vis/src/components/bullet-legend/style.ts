@@ -33,10 +33,10 @@ export const item = css`
   white-space: nowrap;
   cursor: default;
   user-select: none;
+`
 
-  &.clickable {
-    cursor: pointer;
-  }
+export const clickable = css`
+  cursor: pointer;
 `
 
 export const label = css`

@@ -44,14 +44,12 @@ export class BulletLegend {
 
   render (): void {
     const { config } = this
-
     const legendItems = this.div.selectAll(`.${s.item}`)
       .data(config.items) as Selection<HTMLDivElement, any, HTMLDivElement, any>
 
     const legendItemsEnter = legendItems.enter()
       .append('div')
       .attr('class', s.item)
-      .classed('clickable', d => !!config.onLegendItemClick && this._isItemClickable(d))
       .on('click', this._onItemClick.bind(this))
 
     legendItemsEnter.append('span')
@@ -66,7 +64,9 @@ export class BulletLegend {
       .style('font-size', config.labelFontSize)
 
     const legendItemsMerged = legendItemsEnter.merge(legendItems)
-    legendItemsMerged.style('display', (d: BulletLegendItemInterface) => d.hidden ? 'none' : null)
+    legendItemsMerged
+      .classed(s.clickable, d => !!config.onLegendItemClick && this._isItemClickable(d))
+      .style('display', (d: BulletLegendItemInterface) => d.hidden ? 'none' : null)
     const legendBulletsToUpdate = legendItemsMerged.select(`.${s.bullet}`)
     legendBulletsToUpdate.style('background-color', (d: BulletLegendItemInterface, i) => getColor(d, this._colorAccessor, i))
       .style('border-color', (d: BulletLegendItemInterface, i) => getColor(d, this._colorAccessor, i))
