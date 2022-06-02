@@ -1,9 +1,16 @@
-export const formats = ['vinyl', 'cassette', 'cd', 'download', 'streaming']
+import { maxIndex } from 'd3-array'
 
-export type DataRecord = {
-  [k: typeof formats[number]]: number;
-  year: number;
-};
+enum Format {
+  Vinyl = 'vinyl',
+  Cassette = 'cassette',
+  Cd = 'cd',
+  Download = 'download',
+  Streaming = 'streaming',
+}
+
+export const formats: Format[] = [Format.Vinyl, Format.Cassette, Format.Cd, Format.Download, Format.Streaming]
+
+export type DataRecord = Record<Format, number> & { year: number };
 
 export const data: DataRecord[] = [
   {
@@ -384,10 +391,14 @@ export const data: DataRecord[] = [
   },
 ]
 
-//
-export const peakItems = data.slice(0, data.length - 2).reduce((obj, d) => {
-  formats.forEach(k => {
-    obj[k] = d[k] > obj[k][k] ? d : obj[k]
-  })
-  return obj
-}, Object.fromEntries(formats.map(k => [k, data[0]])))
+export function getMaxItems<T extends Record<string, number>> (
+  array: T[],
+  keys: (keyof T)[]
+): { [key in keyof T]?: T } {
+  const entries = keys.map(key => [
+    key,
+    array[maxIndex(array, d => d[key])],
+  ])
+
+  return Object.fromEntries(entries)
+}

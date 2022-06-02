@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import { VisXYContainer, VisAxis, VisArea, VisXYLabels } from '@volterra/vis-react'
-import { data, formats, DataRecord } from './data'
+import { data, formats, DataRecord, getMaxItems } from './data'
 
 type Label = {
   color: string;
@@ -9,12 +9,7 @@ type Label = {
 }
 
 // map formats to their maximum data records
-const peakItems = data.slice(0, data.length - 2).reduce((obj, d) => {
-  formats.forEach(k => {
-    obj[k] = d[k] > obj[k][k] ? d : obj[k]
-  })
-  return obj
-}, Object.fromEntries(formats.map(k => [k, data[0]])))
+const peakItems = getMaxItems(data.slice(0, data.length - 2), formats)
 
 // place labels at [x,y] where x = peak year and y = area midpoint
 const labelItems: Record<number, Label> = formats.reduce((obj, k, i) => {

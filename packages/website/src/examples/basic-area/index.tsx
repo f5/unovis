@@ -13,6 +13,7 @@ const example: Example = {
   pathname,
   title: 'Area Chart with XYLabels',
   description: <div>
+    U.S. recorded music revenues by format.
     Data source: <a href="https://www.riaa.com/u-s-sales-database/" target="_blank">RIAA</a>
   </div>,
   preview: require('./preview.png').default,
