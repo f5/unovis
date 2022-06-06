@@ -7,24 +7,41 @@ sidebar_label: TopoJSON Map
 import BrowserOnly from '@docusaurus/BrowserOnly'
 import CodeBlock from '@theme/CodeBlock'
 import { PropTable } from '../components/props-table.tsx'
+import { FrameworkTabs } from '../components/framework-tabs.tsx'
 import { DocWrapper, InputWrapper } from '../wrappers'
-import { data, pointData, heatmapData } from './data'
+import { data, pointData, heatmapData, franceRegions } from './data'
 
 export const defaultProps = (showData = true) => ({
   name: "TopoJSONMap",
   configKey: "component",
   containerName: "SingleContainer",
-  visImports: showData ? ["WorldMapTopoJSON", "MapData"] : ["WorldMapTopoJSON"],
   topojson: "WorldMapTopoJSON",
   height: 400,
   dataType: "MapPoint, MapLink, MapArea",
+  showContext: "minimal"
 })
 
-## Basic Configuration
-The _TopoJSONMap_ is a map that uses [TopoJSON](https://github.com/topojson/topojson) as its underlying data. The basic configuration is:
-<DocWrapper {...defaultProps(false)} showContext="container"/>
+export const wiki = (url) => <a href={`https://en.wikipedia.org/wiki/${url}`}>{link}</a>
 
-Currently the following TopoJSONs available to import directly from `@volterra/vis`: `WorldMapTopoJSON`, `WorldMapSimplestTopoJSON`, and `WorldMap110mAlphaTopoJSON`.
+export const TopoDoc = (props) => (
+  <BrowserOnly>
+  {() =>  {
+      const lib = require('@volterra/vis/maps')
+      const imports = {
+        "@volterra/vis/maps": [props.topojson],
+      }
+      if (props.showData) imports['@volterra/vis'] = ["MapData"]
+      return (
+        <DocWrapper { ...props } imports={imports} hiddenProps={{ topojson: lib[props.topojson] }}/>
+      )
+    }}
+  </BrowserOnly>
+)
+
+## Basic Configuration
+The _TopoJSONMap_ is a map that uses [TopoJSON](https://github.com/topojson/topojson) as its
+underlying data. The basic configuration is:
+<TopoDoc {...defaultProps(false)} showContext="container"/>
 
 ## Map Data
 There are three main building blocks that can make up the data supplied to _TopoJSONMap_:
@@ -32,7 +49,8 @@ There are three main building blocks that can make up the data supplied to _Topo
 * **link**, a graph edge that connects two _points_
 * **area**, a geographical area
 
-The container for _TopoJSONMap_ accepts data in the form of an `Object` with these three building blocks as keys mapped to their data arrays, like so:
+The container for _TopoJSONMap_ accepts data in the form of an `Object` with these three building
+blocks as keys mapped to their data arrays, like so:
 
 ```ts
 type MapData = {
@@ -42,9 +60,10 @@ type MapData = {
 }
 ```
 
-<DocWrapper {...defaultProps()} data={data} showContext="full"/>
+<TopoDoc {...defaultProps()} data={data} showContext="full"/>
 
-where `MapArea`, `MapPoint`, and `MapLink` are custom types that that represent map data. Keep reading to learn more about the minimum configurations for these types.
+where `MapArea`, `MapPoint`, and `MapLink` are custom types that that represent map data. Keep
+reading to learn more about the minimum configurations for these types.
 
 ## Points
 A minimum viable datatype of the objects provided to the `points` attribute is:
@@ -55,27 +74,35 @@ type MapPoint = {
   longitute: NumericAccessor;
 }
 ```
-Or, you can simply provide these values through the `latitude` and `longitute` properties of your _TopoJSONMap_ directly.
+Or, you can simply provide these values through the `latitude` and `longitute` properties of your
+_TopoJSONMap_ directly.
 
-<DocWrapper {...defaultProps()} data={pointData} topojson="WorldMapTopoJSON" dataType="MapPoint,undefined,undefined" showContext="container"/>
-
-### mapFitToPoints
-<DocWrapper
+<TopoDoc
   {...defaultProps()}
   data={pointData}
-  mapFitToPoints={true}
-/>
+  dataType="MapPoint,undefined,undefined"
+  showContext="container"/>
+
+### mapFitToPoints
+<TopoDoc {...defaultProps()} data={pointData} mapFitToPoints={true}/>
 
 ### Point Customization
-The following _TopoJSONMap_ properties accept accessor functions to customize the appearance of your points:
+The following _TopoJSONMap_ properties accept accessor functions to customize the appearance of your
+points:
 * `pointColor`
 * `pointCursor`
 * `pointRadius`
 * `pointStrokeWidth`
 
 ### Point Labels
-You can provide labels with the `pointLabel` attribute, which accepts a `StringAccessor` function to be called on each `MapPoint` datum.
-<DocWrapper {...defaultProps()} data={{ points: data.points }} dataType="MapPoint,undefined,undefined" pointLabel={d => d.city} showContext="minimal"/>
+You can provide labels with the `pointLabel` attribute, which accepts a `StringAccessor` function to
+be called on each `MapPoint` datum.
+
+<TopoDoc
+  {...defaultProps()}
+  data={{ points: data.points }}
+  dataType="MapPoint,undefined,undefined"
+  pointLabel={d => d.city}/>
 
 ### Custom Point Labels
 The following _TopoJSONMap_ properties can further customize your Point Label.
@@ -102,7 +129,7 @@ export const colorLegendItems = [
 {() => {
   const { TopoJSONMap } = require('@volterra/vis')
   return (
-    <DocWrapper
+    <TopoDoc
       {...defaultProps()}
       data={customData}
       mapFitToPoints={true}
@@ -128,8 +155,9 @@ export const colorLegendItems = [
 </BrowserOnly>
 
 ## Links
-A minimum viable data type of the objects provided to the `links` attribute contains the keys `source` and `target`, which correspond
-to the points the link will connect. Most commonly, the `pointId`.
+A minimum viable data type of the objects provided to the `links` attribute contains the keys
+`source` and `target`, which correspond to the points the link will connect. Most commonly, the
+`pointId`.
 
 ```ts
 type MapLink = {
@@ -139,7 +167,12 @@ type MapLink = {
 ```
 Or, you can simply provide these values through the `linkSource` and `linkTarget` properties.
 
-<DocWrapper {...defaultProps()} topojson="WorldMapTopoJSON" dataType="MapPoint,MapLink,undefined"  data={{...data, areas: [] }} showContext="container"/>
+<TopoDoc
+  {...defaultProps()}
+  dataType="MapPoint,MapLink,undefined"
+  data={{...data, areas: [] }}
+  showContext="container"
+/>
 
 ### Link customization
 You can further customize the map _Links_ with the following properties:
@@ -148,17 +181,24 @@ You can further customize the map _Links_ with the following properties:
 * `linkWidth`
 
 ## Areas
-To work with features in the _TopoJSONMap_, all you need is a unique `id` which is defined in the chart's _topojson_ definition.
-For example, in our `WorldMapTopoJSON` _topojson_, ever country has a unique id that corresponds to the
-[ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2) country code.
+To work with features in the _TopoJSONMap_, all you need is a unique `id` which is defined in the
+chart's _topojson_ definition. For example, in our `WorldMapTopoJSON` _topojson_, every country has
+a unique id that corresponds to the [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
+country code.
+
 ```ts
 type MapArea = {
   id: string;
 }
 ```
-<DocWrapper {...defaultProps()} data={{
-  areas: data.areas
-}} dataType="MapArea,undefined,undefined" pointId={d => d.id} topojson="WorldMapTopoJSON" showContext="minimal"/>
+
+<TopoDoc
+  {...defaultProps()}
+  data={{ areas: data.areas }}
+  dataType="MapArea,undefined,undefined"
+  pointId={d => d.id}
+  showContext="minimal"
+/>
 
 ### Area customization
 You can further customize the map _Area_ with the following properties:
@@ -166,25 +206,39 @@ You can further customize the map _Area_ with the following properties:
 * `areaCursor`
 
 ## Projection
-You can provide a projection for your _TopoJSONMap_ with a `MapProjection` instance. See D3's [geo projections](https://github.com/d3/d3-geo) for more information.
+You can provide a projection for your _TopoJSONMap_ with a `MapProjection` instance. See D3's
+[geo projections](https://github.com/d3/d3-geo) for more information.
 
 <BrowserOnly>
 {() => {
-  const { MapProjectionKind } = require('@volterra/vis')
+  const { MapProjectionKind, MapProjection } = require('@volterra/vis')
+  const { WorldMapTopoJSON } = require('@volterra/vis/maps')
+  const imports = {
+    "@volterra/vis": ["MapData", "MapProjection"],
+    "@volterra/vis/maps": ["WorldMapTopoJSON"],
+  }
+  const [curr, setCurr] = React.useState(MapProjection.Mercator)
   return (
-  <InputWrapper {...defaultProps()}
-    inputType="select"
-    property="projection"
-    visImports={["WorldMapTopoJSON", "MapProjection"]}
-    defaultValue={'MapProjection.Mercator()'}
-    options={Object.values(MapProjectionKind)}
-    inputProps={{onChange: e => `MapProjection.${e}()`}}
-    showContext="minimal"/>
+    <InputWrapper {...defaultProps()}
+      hiddenProps={{ topojson: WorldMapTopoJSON, projection: curr }}
+      inputType="select"
+      property="projection"
+      imports={imports}
+      defaultValue="MapProjection.Mercator()"
+      options={Object.values(MapProjectionKind)}
+      inputProps={{
+        onChange: e => {
+          setCurr(MapProjection[e])
+          return `MapProjection.${e}()`
+        }
+      }}
+      showContext="minimal"/>
   )}}
 </BrowserOnly>
 
 ## Zoom
-By default, zooming is enabled for a _TopoJSONMap_ component. You can disable it by setting the `disableZoom` property to `true`.
+By default, zooming is enabled for a _TopoJSONMap_ component. You can disable it by setting the
+`disableZoom` property to `true`.
 
 For further customization, you can configure the following zoom properties:
 
@@ -192,25 +246,28 @@ For further customization, you can configure the following zoom properties:
 To set the initial zoom factor.
 
 ### zoomExtent
-`zoomExtent` represents the range `[a,b]` which your map can zoom in and out, where `[a, b]` are the minimum and maximum zoom factors, respectively.
+`zoomExtent` represents the range `[a,b]` which your map can zoom in and out, where `[a, b]` are the
+minimum and maximum zoom factors, respectively.
 
-<DocWrapper {...defaultProps()} zoomFactor={5} zoomExtent={[1,5]}/>
+<TopoDoc {...defaultProps()} zoomFactor={5} zoomExtent={[1,5]}/>
 
 ### zoomDuration
 `zoomDuration` is the duration of the animation on when zooming in on your _TopoJSONMap_.
 
 ## Heatmap Mode
 For datasets with a lot of points, you can enable `heatmapMode`
-<DocWrapper {...defaultProps()} data={heatmapData} heatmapMode={true}/>
+<TopoDoc {...defaultProps()} data={heatmapData} heatmapMode={true}/>
 
 You can customize the appearance of your heat map blur with the `heatmapModeBlurStdDeviation` property.
 
 ### heatmapModeZoomLevelThreshold
-To lower or raise the threshold hat will disable the blur effect of your heat map, use the the `heatmapModeZoomLevelThreshold` property.
-You can provide a zoom level, (i.e. `2` for _2x_ zoom), that once reached, that will no longer display the blur effect.
+To lower or raise the threshold hat will disable the blur effect of your heat map, use the the
+`heatmapModeZoomLevelThreshold` property. You can provide a zoom level, (i.e. `2` for _2x_ zoom),
+that once reached, that will no longer display the blur effect.
 
 ## Additional Styling: CSS Variables
-The _TopoJSONMap_ component supports additional styling via CSS variables that you can define for your visualization container.
+The _TopoJSONMap_ component supports additional styling via CSS variables that you can define for
+your visualization container.
 
 <details open>
   <summary>All supported CSS variables</summary>
@@ -225,7 +282,6 @@ The _TopoJSONMap_ component supports additional styling via CSS variables that y
 `}
   </CodeBlock>
 </details>
-
 
 ## Component Props
 <PropTable name="VisTopoJSONMap"/>

@@ -1,8 +1,3 @@
-import _times from 'lodash/times'
-import _sampleSize from 'lodash/sampleSize'
-import _sample from 'lodash/sample'
-import _random from 'lodash/random'
-
 import areas from './areas.json'
 import cities from './cities.json'
 import citiesBig from './cities_big.json'
@@ -30,6 +25,7 @@ type MapLink = {
   cursor: string;
 }
 
+const _sample = (arr: any[]): any => arr[Math.floor(Math.random() * arr.length)]
 
 export const data = {
   points: cities as MapPoint[],
@@ -39,16 +35,16 @@ export const data = {
     color: '#ef8f73',
     cursor: 'pointer',
   })) as MapArea[],
-  links: _times(10).map(i => ({
+  links: Array(10).fill(0).map(i => ({
     source: _sample(cities).id,
     target: _sample(cities).id,
-    width: _random(1, 5),
+    width: Math.floor(Math.random() * 5) + 1,
     cursor: 'crosshair',
   })) as MapLink[],
 }
 
 export const pointData = {
-  points: _sampleSize(citiesBig, 25),
+  points: Array(25).fill(0).map(() => _sample(citiesBig)),
 }
 
 export const heatmapData = {

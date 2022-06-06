@@ -13,7 +13,6 @@ export type DocComponent = {
 export type DocCompositeProps = {
   containerProps: DocComponent;
   componentProps: DocComponent[];
-  visImports: string[]; // list of @volterra/vis imports required for component
 }
 
 export type DocTabsProps = {
@@ -23,9 +22,9 @@ export type DocTabsProps = {
   mainComponent: DocComponent;
   dataType: string;
   declarations?: Record<string, string>;
-  showData?: boolean;
   hideTabLabels?: boolean;
-  imports?: string[];
+  imports: Record<string, string[]>;
+  showData?: boolean;
 }
 
 export type DocWrapperProps = DocTabsProps & DocCompositeProps & {
