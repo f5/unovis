@@ -14,6 +14,7 @@ import { StackedBarChartModule } from './examples/horizontal-stacked-bar-chart/h
 import { BasicScatterChartModule } from './examples/basic-scatter-chart/basic-scatter-chart.module'
 import { FreeBrushScattersModule } from './examples/free-brush-scatters/free-brush-scatters.module'
 import { BrushGroupedBarModule } from './examples/brush-grouped-bar/brush-grouped-bar.module'
+import { BasicAreaModule } from './examples/basic-area/basic-area.module'
 
 @Component({
   selector: 'app-component',
@@ -27,6 +28,7 @@ import { BrushGroupedBarModule } from './examples/brush-grouped-bar/brush-groupe
     <basic-scatter-chart></basic-scatter-chart>
     <free-brush-scatters ></free-brush-scatters>
     <brush-grouped-bar></brush-grouped-bar>
+    <basic-area-chart></basic-area-chart>
   `,
 })
 export class AppComponent {
@@ -39,6 +41,7 @@ export class AppComponent {
   imports: [
     BrowserModule, BasicGroupedBarModule, BasicLeafletMapModule, BasicLineChartModule, MultiLineChartModule,
     TopojsonMapModule, StackedBarChartModule, BasicScatterChartModule, FreeBrushScattersModule, BrushGroupedBarModule,
+    TopojsonMapModule, StackedBarChartModule, BasicScatterChartModule, FreeBrushScattersModule, BasicAreaModule,
   ],
   bootstrap: [AppComponent],
   providers: [BrowserModule],

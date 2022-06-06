@@ -1,0 +1,13 @@
+<vis-xy-container [data]="data" [height]="500">
+  <vis-area [x]="x" [y]="y"></vis-area>
+  <vis-axis type="x" label="Year" [domainLine]="false" [gridLine]="false"></vis-axis>
+  <vis-axis type="y" label="Number of Votes(millions)" [numTicks]="10"></vis-axis>
+  <vis-xy-labels
+    [x]="x"
+    [y]="labelY"
+    [label]="labelText"
+    [backgroundColor]="labelColor"
+    [clusterLabel]="noLabel"
+    clusterBackgroundColor="none"
+   ></vis-xy-labels>
+</vis-xy-container>
