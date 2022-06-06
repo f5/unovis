@@ -25,7 +25,7 @@ type MapLink = {
   cursor: string;
 }
 
-const _sample = (arr: any[]): any => arr[Math.floor(Math.random() * arr.length)]
+const _sample = <T>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)]
 
 export const data = {
   points: cities as MapPoint[],
