@@ -5,11 +5,13 @@ import Link from '@docusaurus/Link'
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext'
 import styles from './index.module.css'
 import HomepageFeatures from '../components/HomepageFeatures'
+import Background from './background'
 
 export function HomepageHeader (): JSX.Element {
   const { siteConfig } = useDocusaurusContext()
   return (
     <header className={clsx('hero hero--primary', styles.heroBanner)}>
+      <div className={styles.background}><Background /></div>
       <div>
         {/* <h1 className="hero__title">{siteConfig.title}</h1> */}
         <img style={{ maxWidth: '95%' }} src="img/unovis-logo.svg"/>
