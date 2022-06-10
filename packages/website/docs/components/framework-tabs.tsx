@@ -5,7 +5,7 @@ import TabItem from '@theme/TabItem'
 import CodeBlock from '@theme/CodeBlock'
 
 export type FrameworkTabProps = {
-  angular: { html: string; ts?: string };
+  angular: { html: string; ts: string };
   react: string;
   typescript: string;
   hideTabLabels?: boolean;
@@ -31,9 +31,11 @@ export const FrameworkTabs = ({
           {angular.ts}
         </CodeBlock>
       }
-      <CodeBlock language="html" title={showTitles && 'template.html'}>
-        {angular.html}
-      </CodeBlock>
+      {angular.html !== undefined &&
+        <CodeBlock language="html" title={showTitles && 'template.html'}>
+          {angular.html}
+        </CodeBlock>
+      }
     </TabItem>
     <TabItem value="ts" label="Typescript">
       <CodeBlock language="ts" title={showTitles && 'component.ts'}>

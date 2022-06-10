@@ -19,7 +19,7 @@ export function DocWrapper ({
   configKey,
   containerProps,
   componentProps = [],
-  visImports,
+  imports,
   ...rest
 }: DocWrapperProps): JSX.Element {
   const mainComponent = name && { name: name, props: rest, key: configKey }
@@ -31,7 +31,7 @@ export function DocWrapper ({
     <>
       {!excludeTabs &&
       <DocFrameworkTabs
-        imports={visImports}
+        imports={imports}
         container={{
           name: containerName,
           props: data ? { data, ...containerProps } : containerProps,
@@ -53,7 +53,7 @@ export function DocWrapper ({
           componentProps={name && !name.endsWith('Container')
             ? [...componentProps, { name: name, props: { ...rest, ...hiddenProps } }]
             : componentProps}
-          visImports={visImports}/>
+          imports={imports}/>
       }
     </>
   )
