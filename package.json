@@ -7,7 +7,8 @@
     "packages/dev-demo",
     "packages/vis",
     "packages/vis-angular",
-    "packages/vis-react"
+    "packages/vis-react",
+    "packages/vis-svelte"
   ],
   "engines": {
     "node": ">=12.0.0",
@@ -17,32 +18,35 @@
     "postinstall": "sh postinstall.sh",
     "dev": "cd packages/dev-demo && npm run dev",
     "website": "cd packages/website && npm run start",
-    "build": "npm run build:lib && npm run build:vis-react-lib && npm run build:vis-angular-lib && npm run build:dev-demo && npm run build:website",
+    "build": "npm run build:lib && npm run build:vis-react-lib && npm run build:vis-angular-lib && npm run build:dev-demo && npm run build:website && npm run build:vis-svelte-lib",
     "build:lib": "cd packages/vis && npm run build",
     "build:dev-demo": "cd packages/dev-demo && npm run build",
     "build:vis-angular-lib": "cd packages/vis-angular && npm run build",
     "build:vis-react-lib": "cd packages/vis-react && npm run build",
+    "build:vis-svelte-lib": "cd packages/vis-svelte && npm run build",
     "build:website": "cd packages/website && npm run build",
     "publish:lib": "cd packages/vis && npm run build && npm run publish-dist",
     "publish:vis-angular-lib": "cd packages/vis-angular && npm run build && npm publish",
     "publish:vis-react-lib": "cd packages/vis-react && npm run build && npm run publish-dist",
+    "publish:vis-svelte-lib": "cd packages/vis-svelte && npm run build && npm run publish-dist",
     "publish:all": "sh prepublish.sh && sh publish.sh",
-    "lint": "eslint ./ --ext .js,.jsx,.ts,.tsx --ignore-path .gitignore",
-    "lint:fix": "eslint ./ --ext .js,.jsx,.ts,.tsx --fix --ignore-path .gitignore",
+    "lint": "eslint ./ --ext .js,.jsx,.ts,.tsx,.svelte --ignore-path .gitignore",
+    "lint:fix": "eslint ./ --ext .js,.jsx,.ts,.tsx,.svelte --fix --ignore-path .gitignore",
     "gather-licenses": "for p in packages/*; do npx license-report --package=$p/package.json --config license-report-config.json --output=table > $p/licences.txt; done",
     "install:clean": "for p in packages/*; do rm -f $p/package-lock.json; rm -rf $p/node_modules; done; rm -rf node_modules; npm i"
   },
   "devDependencies": {
+    "@ota-meshi/eslint-plugin-svelte": "^0.34.0",
     "@types/node": "^16.11.14",
-    "@typescript-eslint/eslint-plugin": "^5.8.0",
-    "@typescript-eslint/parser": "^5.8.0",
-    "eslint": "^7.32.0",
+    "@typescript-eslint/eslint-plugin": "^5.27.0",
+    "@typescript-eslint/parser": "^5.27.0",
+    "eslint": "^8.16.0",
     "eslint-config-standard": "^16.0.3",
-    "eslint-import-resolver-typescript": "^2.5.0",
-    "eslint-plugin-import": "^2.25.3",
-    "eslint-plugin-import-newlines": "^1.1.6",
+    "eslint-import-resolver-typescript": "^2.7.1",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-import-newlines": "^1.2.2",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-promise": "^6.0.0",
     "eslint-plugin-standard": "^5.0.0",
     "husky": "^7.0.4",
     "license-report": "^4.5.0",
@@ -50,6 +54,6 @@
     "typescript": "~4.2.4"
   },
   "lint-staged": {
-    "*.{js,ts,jsx,tsx}": "eslint --quiet --cache --fix"
+    "*.{js,ts,jsx,tsx,svelte}": "eslint --quiet --cache --fix"
   }
 }
