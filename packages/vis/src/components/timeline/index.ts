@@ -133,7 +133,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
 
     labelsEnter.merge(labels)
       .attr('x', xRange[0] - maxLineWidth / 2 - this._labelMargin)
-      .attr('y', (_, i) => yStart + (i + 0.5) * config.rowHeight)
+      .attr('y', (label, i) => yStart + (ordinalScale(label) + 0.5) * config.rowHeight)
       .text(label => label)
       .each((label, i, els) => {
         trimSVGText(select(els[i]), config.labelWidth || config.maxLabelWidth)
