@@ -7,9 +7,11 @@ import { SeriesDataModel } from 'data-models/series'
 
 // Utils
 import { isNumber, clamp, getNumber } from 'utils/data'
+import { wrapSVGText } from 'utils/text'
 
 // Types
 import { Spacing } from 'types/spacing'
+import { VerticalAlign } from 'types/text'
 
 // Local Types
 import { DonutArcDatum, DonutArcAnimState } from './types'
@@ -29,7 +31,8 @@ export class Donut<Datum> extends ComponentCore<Datum[]> {
   datamodel: SeriesDataModel<Datum> = new SeriesDataModel()
 
   arcGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
-  centralLabel: Selection<SVGGElement, unknown, SVGGElement, unknown>
+  centralLabel: Selection<SVGTextElement, unknown, SVGGElement, unknown>
+  centralSubLabel: Selection<SVGTextElement, unknown, SVGGElement, unknown>
   arcGen = arc<DonutArcAnimState>()
 
   events = {
@@ -41,6 +44,8 @@ export class Donut<Datum> extends ComponentCore<Datum[]> {
     this.arcGroup = this.g.append('g')
     this.centralLabel = this.g.append('text')
       .attr('class', s.centralLabel)
+    this.centralSubLabel = this.g.append('text')
+      .attr('class', s.centralSubLabel)
   }
 
   get bleed (): Spacing {
@@ -52,7 +57,8 @@ export class Donut<Datum> extends ComponentCore<Datum[]> {
     const data = datamodel.data
     const duration = isNumber(customDuration) ? customDuration : config.duration
 
-    const radius = config.radius || Math.min(this._width - bleed.left - bleed.right, this._height - bleed.top - bleed.bottom) / 2
+    const outerRadius = config.radius || Math.min(this._width - bleed.left - bleed.right, this._height - bleed.top - bleed.bottom) / 2
+    const innerRadius = config.arcWidth === 0 ? 0 : clamp(outerRadius - config.arcWidth, 0, outerRadius - 1)
 
     this.arcGen
       .startAngle(d => d.startAngle)
@@ -72,8 +78,8 @@ export class Donut<Datum> extends ComponentCore<Datum[]> {
     this.arcGroup.attr('transform', `translate(${this._width / 2},${this._height / 2})`)
     const arcData = pieGen(data) as DonutArcDatum<Datum>[]
     arcData.forEach(d => {
-      d.innerRadius = config.arcWidth === 0 ? 0 : clamp(radius - config.arcWidth, 0, radius - 1)
-      d.outerRadius = radius
+      d.innerRadius = innerRadius
+      d.outerRadius = outerRadius
     })
 
     // Arc segments
@@ -95,6 +101,14 @@ export class Donut<Datum> extends ComponentCore<Datum[]> {
     // Label
     this.centralLabel
       .attr('transform', `translate(${this._width / 2},${this._height / 2})`)
+      .attr('dy', config.centralSubLabel ? '-0.55em' : null)
       .text(config.centralLabel ?? null)
+
+    this.centralSubLabel
+      .attr('transform', `translate(${this._width / 2},${this._height / 2})`)
+      .attr('dy', config.centralLabel ? '0.55em' : null)
+      .text(config.centralSubLabel ?? null)
+
+    if (config.centralSubLabelWrap) wrapSVGText(this.centralSubLabel, { width: innerRadius * 1.9, verticalAlign: VerticalAlign.Top })
   }
 }

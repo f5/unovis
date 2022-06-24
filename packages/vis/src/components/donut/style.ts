@@ -11,11 +11,18 @@ export const variables = injectGlobal`
     --vis-donut-central-label-font-family: var(--vis-font-family);
     --vis-donut-central-label-font-weight: 600;
 
+    --vis-donut-central-sub-label-font-size: 12px;
+    --vis-donut-central-sub-label-text-color: #5b5f6d;
+    --vis-donut-central-sub-label-font-family: var(--vis-font-family);
+    --vis-donut-central-sub-label-font-weight: 500;
+
     --vis-dark-donut-central-label-text-color: #C2BECE;
+    --vis-dark-donut-central-sub-label-text-color: #C2BECE;
   }
 
   body.theme-dark ${`.${root}`} {
     --vis-donut-central-label-text-color: var(--vis-dark-donut-central-label-text-color);
+    --vis-donut-central-sub-label-text-color: var(--vis-dark-donut-central-sub-label-text-color);
   }
 `
 
@@ -35,4 +42,14 @@ export const centralLabel = css`
   font-family: var(--vis-donut-central-label-font-family);
   font-weight: var(--vis-donut-central-label-font-weight);
   fill: var(--vis-donut-central-label-text-color);
+`
+
+export const centralSubLabel = css`
+  label: central-label;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  font-size: var(--vis-donut-central-sub-label-font-size);
+  font-family: var(--vis-donut-central-sub-label-font-family);
+  font-weight: var(--vis-donut-central-sub-label-font-weight);
+  fill: var(--vis-donut-central-sub-label-text-color);
 `
