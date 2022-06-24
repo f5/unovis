@@ -121,13 +121,14 @@ export class Line<Datum> extends XYComponentCore<Datum> {
         .style('stroke-dasharray', dashArray?.join(' ') ?? null) // We use `.style` because there's also a default CSS-variable for stroke-dasharray
 
       const hasUndefinedSegments = d.values.some(d => !d.defined)
-      const svgPathD = this.lineGen(d.values) || this._emptyPath()
+      const svgPathD = this.lineGen(d.values)
+
       if (duration && !hasUndefinedSegments) {
-        const previous = linePath.attr('d')
-        const next = svgPathD
+        const previous = linePath.attr('d') || this._emptyPath()
+        const next = svgPathD || this._emptyPath()
         const t = transition as Transition<SVGPathElement, LineData, SVGGElement, LineData>
         t.attrTween('d', () => interpolatePath(previous, next))
-      } else {
+      } else if (d.visible) {
         transition.attr('d', svgPathD)
       }
 
@@ -136,7 +137,9 @@ export class Line<Datum> extends XYComponentCore<Datum> {
         .attr('visibility', isLineVisible ? null : 'hidden')
     })
 
-    lines.exit().remove()
+    smartTransition(lines.exit(), duration)
+      .style('opacity', 0)
+      .remove()
   }
 
   private _emptyPath (): string {
