@@ -4,6 +4,7 @@
   "description": "Svelte wrapper for @volterra/vis",
   "main": "./index.js",
   "types": "./index.d.ts",
+  "svelte": "./index.js",
   "scripts": {
     "dev": "rm -rf build; rollup -c --watch",
     "build": "npm run check && rm -rf dist; rollup -c",
@@ -16,7 +17,7 @@
     "@volterra:registry": "https://artifactory.f5net.com/artifactory/api/npm/f5-volterra-vis-npm/"
   },
   "peerDependencies": {
-    "@volterra/vis": "0.9.25-beta.2",
+    "@volterra/vis": "0.9.25",
     "svelte": "^3.48.0"
   },
   "devDependencies": {
