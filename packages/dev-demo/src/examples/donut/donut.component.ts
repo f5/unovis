@@ -31,6 +31,7 @@ export class DonutChartComponent implements AfterViewInit {
       id: (d, i) => i,
       value: d => d.y,
       centralLabel: `${sum.toFixed(2)}K`,
+      centralSubLabel: 'Total Events',
       radius: this.radiusScale(sum),
       duration: 1000,
       arcWidth: 25,

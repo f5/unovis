@@ -90,7 +90,13 @@ export class VisDonutComponent<Datum> implements DonutConfigInterface<Datum>, Af
   /** Central label accessor function or text. Default: `undefined` */
   @Input() centralLabel?: string
 
-  /** Prevent having empty segments when the segment value is 0. Default: `false` */
+  /** Central sub-label accessor function or text. Default: `undefined` */
+  @Input() centralSubLabel?: string
+
+  /** Enables wrapping for the sub-label. Default: `true` */
+  @Input() centralSubLabelWrap?: boolean
+
+  /** Draw segment as a thin line when its value is 0. Default: `false` */
   @Input() preventEmptySegments?: boolean
   @Input() data: Datum[]
 
@@ -113,8 +119,8 @@ export class VisDonutComponent<Datum> implements DonutConfigInterface<Datum>, Af
   }
 
   private getConfig (): DonutConfigInterface<Datum> {
-    const { duration, events, attributes, id, value, angleRange, padAngle, sortFunction, cornerRadius, color, radius, arcWidth, centralLabel, preventEmptySegments } = this
-    const config = { duration, events, attributes, id, value, angleRange, padAngle, sortFunction, cornerRadius, color, radius, arcWidth, centralLabel, preventEmptySegments }
+    const { duration, events, attributes, id, value, angleRange, padAngle, sortFunction, cornerRadius, color, radius, arcWidth, centralLabel, centralSubLabel, centralSubLabelWrap, preventEmptySegments } = this
+    const config = { duration, events, attributes, id, value, angleRange, padAngle, sortFunction, cornerRadius, color, radius, arcWidth, centralLabel, centralSubLabel, centralSubLabelWrap, preventEmptySegments }
     const keys = Object.keys(config) as (keyof DonutConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
