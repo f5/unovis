@@ -1,6 +1,6 @@
 {
   "root": true,
-  "ignorePatterns": ["packages/website/src/examples/**/*.component.ts", "packages/website/src/examples/**/*.module.ts"],
+  "ignorePatterns": ["packages/website/src/examples/**/*.component.ts", "packages/website/src/examples/**/*.module.ts", "packages/website/src/examples/**/*.svelte"],
   "parserOptions": {
     "project": "./tsconfig.json",
     "ecmaFeatures": {
