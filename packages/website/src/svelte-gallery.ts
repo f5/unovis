@@ -1,5 +1,4 @@
-import App from './App.svelte'
-
+import App from './svelte-gallery.svelte'
 
 const index = new App({
   target: document.body,

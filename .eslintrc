@@ -1,6 +1,11 @@
 {
   "root": true,
-  "ignorePatterns": ["packages/website/src/examples/**/*.component.ts", "packages/website/src/examples/**/*.module.ts", "packages/website/src/examples/**/*.svelte"],
+  "ignorePatterns": [
+    "packages/website/src/examples/**/*.component.ts",
+    "packages/website/src/examples/**/*.module.ts",
+    "packages/website/src/examples/**/*.svelte",
+    "packages/website/src/svelte-gallery.svelte"
+  ],
   "parserOptions": {
     "project": "./tsconfig.json",
     "ecmaFeatures": {
@@ -96,7 +101,7 @@
       ],
       "parser": "svelte-eslint-parser",
       "parserOptions": {
-        "parser": "@typescript-eslint/parser",
+        "parser": "@typescript-eslint/parser"
       },
       "rules": {
         "@ota-meshi/svelte/indent": ["error"],
