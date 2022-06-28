@@ -7,6 +7,8 @@ import { getImportStatements, getConfigProperties, kebabCase, getTSStatements } 
 import { ComponentInput, ConfigProperty, GenericParameter } from './types'
 import { getComponentCode } from './component'
 
+const htmlElements = ['BulletLegend', 'LeafletMap', 'LeafletFlowMap']
+const containsExports = ['LeafletMap', 'LeafletFlowMap', 'TopoJSONMap', 'Graph']
 const volterraVisBasePath = '../vis/src'
 const configFileName = '/config.ts'
 const coreComponentConfigPath = '/core/component'
@@ -29,16 +31,17 @@ const components: ComponentInput[] = [
   // Single components
   { name: 'Donut', sources: [coreComponentConfigPath, '/components/donut'], dataType: 'Datum[]' },
   { name: 'TopoJSONMap', kebabCaseName: 'topojson-map', sources: [coreComponentConfigPath, '/components/topojson-map'], dataType: '{areas?: AreaDatum[]; points?: PointDatum[]; links?: LinkDatum[]}' },
-  { name: 'Sankey', sources: [coreComponentConfigPath, '/components/sankey'] },
-  { name: 'Graph', sources: [coreComponentConfigPath, '/components/graph'] },
+  { name: 'Sankey', sources: [coreComponentConfigPath, '/components/sankey'], dataType: '{ nodes: N[]; links?: L[] }' },
+  { name: 'Graph', sources: [coreComponentConfigPath, '/components/graph'], dataType: '{ nodes: N[]; links?: L[] }' },
   { name: 'ChordDiagram', sources: [coreComponentConfigPath, '/components/chord-diagram'], dataType: '{ nodes: N[]; links?: L[] }' },
 
   // Ancillary components
   { name: 'Tooltip', sources: ['/components/tooltip'], dataType: null, elementSuffix: 'tooltip' },
 
   // Unique cases (you can still generate a wrapper for these components, but most likely it will require some changes)
-  // { name: 'LeafletMap', sources: [coreComponentConfigPath, '/components/leaflet-map'], provide: 'VisCoreComponent' },
-  // { name: 'BulletLegend', sources: ['/components/bullet-legend'], dataType: null },
+  { name: 'LeafletMap', sources: [coreComponentConfigPath, '/components/leaflet-map'], dataType: 'Datum[]' },
+  // { name: 'LeafletFlowMap', sources: [coreComponentConfigPath, '/components/leaflet-flow-map'], dataType: '{ points: PointDatum[]; flows?: FlowDatum[] }' },
+  { name: 'BulletLegend', sources: ['/components/bullet-legend'], dataType: null },
 ]
 const exports: string[] = []
 
@@ -86,6 +89,7 @@ for (const component of components) {
 
   const importStatements = getImportStatements(component.name, statements, configInterfaceMembers, generics)
   const configProperties = Array.from(configPropertiesMap.values())
+  const isStandAlone = htmlElements.includes(component.name)
 
   const componentCode = getComponentCode(
     component.name,
@@ -93,12 +97,14 @@ for (const component of components) {
     configProperties,
     importStatements,
     component.dataType,
-    component.elementSuffix
+    isStandAlone ? kebabCase(component.name) : component.elementSuffix,
+    isStandAlone,
+    containsExports.includes(component.name)
   )
 
   const nameKebabCase = component.kebabCaseName ?? kebabCase(component.name)
   const file = `${nameKebabCase}.svelte`
-  const path = `components/${nameKebabCase}`
+  const path = `${isStandAlone ? 'html-' : ''}components/${nameKebabCase}`
   const pathComponentBase = `src/${path}`
   const pathComponent = `${pathComponentBase}/${file}`
 

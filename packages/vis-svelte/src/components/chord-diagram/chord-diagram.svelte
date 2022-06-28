@@ -4,26 +4,26 @@
   import { getContext, onMount } from 'svelte'
   import { getActions } from '../../utils/actions'
 
+  // type defs
   type N = $$Generic<ChordInputNode>
   type L = $$Generic<ChordInputLink>
-
-  // data and required props
-  export let data: { nodes: N[]; links?: L[] }
-
 
   let config: ChordDiagramConfigInterface<N, L>
   $: config = { ...$$restProps }
 
-  const component = new ChordDiagram<N, L>()
-
+  // component declaration
+  const component = new ChordDiagram<N, L>(config)
   const { setComponent, removeComponent } = getContext('container')
   const { setConfig, setData } = getActions.apply(component)
 
+  // data and required props
+  export let data: { nodes: N[]; links?: L[] }
+
   onMount(() => {
     setComponent(component)
-
     return () => removeComponent(component) as void
   })
+
 </script>
 
 <vis-component use:setData={data} use:setConfig={config} />

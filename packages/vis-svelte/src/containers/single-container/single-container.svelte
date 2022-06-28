@@ -36,7 +36,7 @@
 
 </script>
 
-<vis-single-container style='display: block' class='unovis-single-container' bind:this={ref}>
+<vis-single-container class='unovis-single-container' bind:this={ref}>
   {#if chart}
     <slot/>
   {/if}
@@ -44,6 +44,7 @@
 
 <style>
   .unovis-single-container {
+    display: block;
     position: relative;
     width: 100%;
     height: 100%;

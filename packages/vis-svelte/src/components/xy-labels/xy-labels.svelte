@@ -4,26 +4,27 @@
   import { getContext, onMount } from 'svelte'
   import { getActions } from '../../utils/actions'
 
+  // type defs
   type Datum = $$Generic
+
+  let config: XYLabelsConfigInterface<Datum>
+  $: config = { x, y, ...$$restProps }
+
+  // component declaration
+  const component = new XYLabels<Datum>(config)
+  const { setComponent, removeComponent } = getContext('container')
+  const { setConfig, setData } = getActions.apply(component)
 
   // data and required props
   export let data: Datum[]
   export let x: NumericAccessor<Datum>
   export let y: NumericAccessor<Datum>
 
-  let config: XYLabelsConfigInterface<Datum>
-  $: config = { x, y, ...$$restProps }
-
-  const component = new XYLabels<Datum>()
-
-  const { setComponent, removeComponent } = getContext('container')
-  const { setConfig, setData } = getActions.apply(component)
-
   onMount(() => {
     setComponent(component)
-
     return () => removeComponent(component) as void
   })
+
 </script>
 
 <vis-component use:setData={data} use:setConfig={config} />
