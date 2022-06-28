@@ -13,7 +13,8 @@
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
     "typecheck": "tsc",
-    "gallery:angular": "nodemon -e ts,html,css --watch ./src/examples --exec \"npx ngc-esbuild --port 9500\""
+    "gallery:angular": "nodemon -e ts,html,css --watch ./src/examples --exec \"npx ngc-esbuild --port 9500\"",
+    "gallery:svelte": "rm -rf dist-demo; rollup -c --watch"
   },
   "dependencies": {
     "@angular/core": "^12.0.3",
@@ -31,17 +32,27 @@
     "react": "^17.0.1",
     "react-docgen-typescript": "^1.2.0",
     "react-dom": "^17.0.1",
-    "react-markdown": "^8.0.1"
+    "react-markdown": "^8.0.1",
+    "svelte": "^3.48.0"
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "2.0.0-beta.21",
     "@tsconfig/docusaurus": "^1.0.4",
+    "@tsconfig/svelte": "^2.0.0",
     "ngc-esbuild": "^0.0.75",
+    "rollup": "^2.61.1",
+    "rollup-plugin-copy": "^3.4.0",
+    "rollup-plugin-dev": "^2.0.4",
+    "rollup-plugin-svelte": "^7.1.0",
+    "rollup-plugin-terser": "^7.0.2",
+    "rollup-plugin-postcss": "^4.0.1",
+    "rollup-plugin-typescript2": "^0.31.1",
+    "svelte-preprocess": "^4.10.6",
     "typescript": "~4.2.4"
   },
   "peerDependencies": {
-    "@volterra/vis": "0.9.25",
-    "@volterra/vis-react": "0.9.25"
+    "@volterra/vis": "*",
+    "@volterra/vis-react": "*"
   },
   "browserslist": {
     "production": [

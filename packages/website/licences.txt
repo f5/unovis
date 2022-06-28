@@ -16,7 +16,17 @@ react                                      perpetual       MIT           17.0.1 
 react-docgen-typescript                    perpetual       MIT           1.2.0              n/a
 react-dom                                  perpetual       MIT           17.0.1             n/a
 react-markdown                             perpetual       MIT           8.0.1              Espen Hovlandsdal
+svelte                                     perpetual       MIT           3.48.0             Rich Harris
 @docusaurus/module-type-aliases            perpetual       MIT           2.0.0-beta.21      n/a
 @tsconfig/docusaurus                       perpetual       MIT           1.0.4              n/a
+@tsconfig/svelte                           perpetual       MIT           2.0.0              n/a
 ngc-esbuild                                perpetual       ISC           0.0.75             Joe Cserko
+rollup                                     perpetual       MIT           2.61.1             Rich Harris
+rollup-plugin-copy                         perpetual       MIT           3.4.0              Vlad Shcherbin
+rollup-plugin-dev                          perpetual       MIT           2.0.4              Dave Honneffer
+rollup-plugin-svelte                       perpetual       MIT           7.1.0              Rich Harris
+rollup-plugin-terser                       perpetual       MIT           7.0.2              Bogdan Chadkin
+rollup-plugin-postcss                      perpetual       MIT           4.0.1              EGOIST
+rollup-plugin-typescript2                  perpetual       MIT           0.31.1             @ezolenko
+svelte-preprocess                          perpetual       MIT           4.10.6             Christian Kaisermann
 typescript                                 perpetual       Apache-2.0    4.2.4              Microsoft Corp.
