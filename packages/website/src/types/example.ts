@@ -11,6 +11,7 @@ export type Example = {
     component: string;
     html: string;
   };
+  codeSvelte?: string;
   data: string;
 }
 

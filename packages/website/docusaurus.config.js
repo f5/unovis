@@ -145,7 +145,7 @@ const config = {
           module: {
             rules: [
               {
-                test: /\.module.ts|component.ts$/,
+                test: /\.module.ts|component.ts|.svelte$/,
                 loader: 'file-loader',
               },
             ],

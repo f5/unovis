@@ -30,7 +30,7 @@ export function GalleryViewer ({ example, useTypescriptCode }: GalleryViewerProp
     <div className={s.codeBlock}>
       <Tabs>
         <TabItem value="react" label="React">
-          <CodeBlock language="jsx">
+          <CodeBlock language="tsx">
             {example.codeReact}
           </CodeBlock>
         </TabItem>
@@ -45,8 +45,13 @@ export function GalleryViewer ({ example, useTypescriptCode }: GalleryViewerProp
             {example.codeAngular.module}
           </CodeBlock>
         </TabItem>
+        <TabItem value="svelte" label="Svelte">
+          <CodeBlock language="html">
+            {example.codeSvelte}
+          </CodeBlock>
+        </TabItem>
         <TabItem value="typescript" label="TypeScript">
-          <CodeBlock language="typescript">
+          <CodeBlock language="tsx">
             {example.codeTs}
           </CodeBlock>
         </TabItem>
