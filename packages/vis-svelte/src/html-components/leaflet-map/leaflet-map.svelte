@@ -1,5 +1,4 @@
 <script lang="ts">
-  // !!! This code was automatically generated. You should not change it !!!
   import { LeafletMap, LeafletMapConfigInterface, MapLibreStyleSpecs } from '@volterra/vis'
   import { onMount } from 'svelte'
   import { getActions } from '../../utils/actions'
@@ -36,4 +35,11 @@
 
 </script>
 
-<vis-leaflet-map bind:this={ref} style:display='block' use:setData={data} use:setConfig={config} />
+<vis-leaflet-map bind:this={ref} class='unovis-leaflet' use:setData={data} use:setConfig={config} />
+
+<style>
+  .unovis-leaflet {
+    display: block;
+    position: relative;
+  }
+</style>

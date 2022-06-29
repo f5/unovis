@@ -20,7 +20,6 @@
       ${d.major}<br/>Number of graduates: ${d.total.toLocaleString()}
     `,
   }
-  
 </script>
 
 <VisXYContainer {data} height={600} scaleByDomain={true}>

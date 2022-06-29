@@ -35,4 +35,11 @@
 
 </script>
 
-<vis-leaflet-flow-map bind:this={ref} use:setData={data} use:setConfig={config} />
+<vis-leaflet-flow-map bind:this={ref} class='unovis-leaflet' use:setData={data} use:setConfig={config} />
+
+<style>
+  .unovis-leaflet {
+    display: block;
+    position: relative;
+  }
+</style>
