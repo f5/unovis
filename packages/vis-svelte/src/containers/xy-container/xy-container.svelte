@@ -43,7 +43,7 @@
   })
 </script>
 
-<vis-xy-container style='display: block' class='unovis-xy-container' bind:this={ref}>
+<vis-xy-container class='unovis-xy-container' bind:this={ref}>
   {#if chart}
     <slot />
   {/if}
@@ -52,6 +52,7 @@
 
 <style>
   .unovis-xy-container {
+    display: block;
     position: relative;
     width: 100%;
     height: 100%;

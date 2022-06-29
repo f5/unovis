@@ -4,26 +4,27 @@
   import { getContext, onMount } from 'svelte'
   import { getActions } from '../../utils/actions'
 
+  // type defs
   type Datum = $$Generic
+
+  let config: AxisConfigInterface<Datum>
+  $: config = { x, y, ...$$restProps }
+
+  // component declaration
+  const component = new Axis<Datum>(config)
+  const { setAxis } = getContext('container')
+  const { setConfig, setData } = getActions.apply(component)
 
   // data and required props
   export let data: Datum[]
   export let x: NumericAccessor<Datum>
   export let y: NumericAccessor<Datum> | NumericAccessor<Datum>[]
 
-  let config: AxisConfigInterface<Datum>
-  $: config = { x, y, ...$$restProps }
-
-  const component = new Axis<Datum>()
-
-  const { setAxis } = getContext('container')
-  const { setConfig, setData } = getActions.apply(component)
-
   onMount(() => {
     setAxis(component)
-
     return () => setAxis(undefined) as void
   })
+
 </script>
 
 <vis-axis use:setData={data} use:setConfig={config} />
