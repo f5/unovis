@@ -1,4 +1,4 @@
-import { ScaleLinear } from 'd3-scale'
+import { ScalePower } from 'd3-scale'
 // Core
 import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component/config'
 
@@ -11,11 +11,16 @@ import { Position } from 'types/position'
 export interface ScatterConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
   /** Single Y accessor function. Default: `undefined` */
   y: NumericAccessor<Datum>;
-  /** Size accessor function or constant value in relative units. Default: `1` */
+  /**
+   * Size of the scatter plot marker (e.g. diameter if `SymbolType.Circle` is used for `shape`) in pixels.
+   * Can be a constant value or an accessor function. But if `sizeRange` is set, then the values will be treated
+   * as an input to `sizeScale`, and the resulting size will be different.
+   * Default: `5`
+  */
   size?: NumericAccessor<Datum>;
-  /** Size scale. Default: `Scale.scaleLinear()` */
+  /** Size scale to be used if the `sizeRange` was set. Default: `Scale.scaleSqrt()` */
   sizeScale?: ContinuousScale;
-  /** Size Range, [number, number]. Default: `[5, 20]` */
+  /** Size range in the format of `[number, number]` to rescale the input values. Default: `undefined` */
   sizeRange?: [number, number];
   /** Shape of the scatter point. Accessor function or constant value: `SymbolType.Circle`, `SymbolType.Cross`, `SymbolType.Diamond`, `SymbolType.Square`,
    * `SymbolType.Star`, `SymbolType.Triangle` or `SymbolType.Wye`.
@@ -34,9 +39,9 @@ export interface ScatterConfigInterface<Datum> extends XYComponentConfigInterfac
 }
 
 export class ScatterConfig<Datum> extends XYComponentConfig<Datum> implements ScatterConfigInterface<Datum> {
-  size = 1
-  sizeScale: ScaleLinear<number, number> = Scale.scaleLinear()
-  sizeRange: [number, number] = [5, 20]
+  size = 5
+  sizeScale: ScalePower<number, number> = Scale.scaleSqrt()
+  sizeRange = undefined
   shape = SymbolType.Circle
   label = undefined
   labelColor = undefined

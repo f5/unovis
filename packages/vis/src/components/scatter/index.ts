@@ -71,11 +71,11 @@ export class Scatter<Datum> extends XYComponentCore<Datum> {
 
     config.sizeScale
       .domain(getExtent(datamodel.data, config.size))
-      .range(config.sizeRange)
+      .range(config.sizeRange ?? [0, 0])
   }
 
   private _getOnScreenData (): ScatterPoint<Datum>[] {
-    const { config: { size, sizeScale, x, y, shape, label, labelColor, color, cursor }, datamodel: { data } } = this
+    const { config: { size, sizeScale, sizeRange, x, y, shape, label, labelColor, color, cursor }, datamodel: { data } } = this
 
     const maxR = this._getMaxPointRadius()
     const xRange = this.xScale.range()
@@ -83,15 +83,16 @@ export class Scatter<Datum> extends XYComponentCore<Datum> {
     return data?.reduce<ScatterPoint<Datum>[]>((acc, d, i) => {
       const posX = this.xScale(getNumber(d, x, i))
       const posY = this.yScale(getNumber(d, y, i))
-      const pointSize = sizeScale(getNumber(d, size, i))
+      const pointSize = getNumber(d, size, i)
+      const pointSizeScaled = sizeRange ? sizeScale(pointSize) : pointSize
 
-      if ((posX + pointSize >= (xRange[0] - maxR)) && (posX - pointSize <= (xRange[1] + maxR))) {
+      if ((posX + pointSizeScaled >= (xRange[0] - maxR)) && (posX - pointSizeScaled <= (xRange[1] + maxR))) {
         acc.push({
           ...d,
           _screen: {
             x: posX,
             y: posY,
-            size: pointSize,
+            size: pointSizeScaled,
             color: getColor(d, color),
             shape: getString(d, shape, i) as SymbolType,
             label: getString(d, label, i),

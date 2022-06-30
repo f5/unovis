@@ -41,7 +41,7 @@ export function updateNodes<Datum> (selection: Selection<SVGGElement, ScatterPoi
     const pointColor = d._screen.color
     path.attr('d', () => {
       const svgPath = d._screen.shape ? symbolGenerator
-        .size(pointDiameter * pointDiameter)
+        .size(Math.PI * pointDiameter * pointDiameter / 4)
         .type(Symbol[d._screen.shape])() : null
       return svgPath
     })
