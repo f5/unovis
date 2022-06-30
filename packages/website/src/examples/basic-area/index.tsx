@@ -24,6 +24,7 @@ const example: Example = {
     component: require(`!!raw-loader!./${pathname}.component.ts`).default,
     module: require(`!!raw-loader!./${pathname}.module.ts`).default,
   },
+  codeSvelte: require(`!!raw-loader!./${pathname}.svelte`).default,
   data: require('!!raw-loader!./data').default,
 }
 

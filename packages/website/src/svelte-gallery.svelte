@@ -1,18 +1,29 @@
-<script lang="ts">
-  import BasicLine from './examples/basic-line-chart/basic-line-chart.svelte'
-  import BasicLeaflet from './examples/basic-leaflet-map/basic-leaflet-map.svelte'
+<script>
+  const imports = [
+    () => import('./examples/basic-area/basic-area.svelte'),
+    () => import('./examples/basic-grouped-bar/basic-grouped-bar.svelte'),
+    () => import('./examples/basic-leaflet-map/basic-leaflet-map.svelte'),
+    () => import('./examples/basic-line-chart/basic-line-chart.svelte'),
+    () => import('./examples/basic-scatter-chart/basic-scatter-chart.svelte'),
+    () => import('./examples/brush-grouped-bar/brush-grouped-bar.svelte'),
+    () => import('./examples/free-brush-scatters/free-brush-scatters.svelte'),
+    () => import('./examples/horizontal-stacked-bar-chart/horizontal-stacked-bar-chart.svelte'),
+    () => import('./examples/multi-line-chart/multi-line-chart.svelte'),
+    () => import('./examples/topojson-map/topojson-map.svelte')
+  ]
 </script>
 
 <div class='container'>
-  <BasicLine/>
-  <BasicLeaflet/>
+  {#each imports as example}
+    {#await example() then module}
+      <svelte:component this={module.default}/>
+    {/await}
+  {/each}
 </div>
-
 
 <style>
   .container {
-    width: 75vw;
-    margin: 0 auto;
+    margin-top: 25px;
     position: relative;
   }
 </style>
