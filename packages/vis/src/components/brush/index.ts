@@ -9,11 +9,13 @@ import { isNumber, clamp } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 
 // Types
-import { Direction } from 'types/direction'
 import { Arrangement } from 'types/position'
 
 // Config
 import { BrushConfig, BrushConfigInterface } from './config'
+
+// Local Types
+import { BrushDirection, BrushHandleType } from './types'
 
 // Styles
 import * as s from './style'
@@ -22,10 +24,10 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
   static selectors = s
   clippable = false // Don't apply clipping path to this component. See XYContainer
   config: BrushConfig<Datum> = new BrushConfig()
-  brush: Selection<SVGGElement, any, SVGGElement, any>
-  unselectedRange: Selection<SVGRectElement, any, SVGGElement, any>
-  handleLines: Selection<SVGLineElement, any, SVGGElement, any>
-  brushBehaviour: BrushBehavior<any> = brushX()
+  brush: Selection<SVGGElement, unknown, SVGGElement, unknown>
+  unselectedRange: Selection<SVGRectElement, BrushHandleType, SVGGElement, unknown>
+  handleLines: Selection<SVGLineElement, BrushHandleType, SVGGElement, unknown>
+  brushBehaviour: BrushBehavior<unknown> = brushX()
   events = {
     [Brush.selectors.brush]: {},
   }
@@ -41,7 +43,7 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
       .append('g')
       .attr('class', s.brush)
 
-    const directions = [{ type: 'w' }, { type: 'e' }]
+    const directions: BrushHandleType[] = [{ type: BrushDirection.West }, { type: BrushDirection.East }]
     this.unselectedRange = this.g
       .selectAll(`.${s.unselected}`)
       .data(directions)
@@ -107,9 +109,9 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
   _updateSelection (s: [number, number]): void {
     const xRange = [0, this._width]
     this.unselectedRange
-      .attr('x', d => d.type === Direction.West ? xRange[0] : s[1])
+      .attr('x', d => d.type === BrushDirection.West ? xRange[0] : s[1])
       .attr('width', d => {
-        const length = d.type === Direction.West ? s[0] - xRange[0] : xRange[1] - s[1]
+        const length = d.type === BrushDirection.West ? s[0] - xRange[0] : xRange[1] - s[1]
         const lengthClamped = clamp(length, 0, xRange[1] - xRange[0])
         return lengthClamped
       })
@@ -127,11 +129,11 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
   private _positionHandles (s: [number, number]): void {
     const { config } = this
 
-    this.brush.selectAll('.handle')
+    this.brush.selectAll<SVGRectElement, BrushHandleType>('.handle')
       .attr('width', config.handleWidth)
       .attr('x', d => {
         if (!s) return 0
-        const west = (d as any).type === Direction.West
+        const west = d.type === BrushDirection.West
         const inside = config.handlePosition === Arrangement.Inside
 
         if (west) return s[0] + (inside ? 0 : -config.handleWidth)
@@ -141,7 +143,7 @@ export class Brush<Datum> extends XYComponentCore<Datum> {
     this.handleLines
       .attr('transform', d => {
         if (!s) return null
-        const west = (d as any).type === Direction.West
+        const west = d.type === BrushDirection.West
         const inside = config.handlePosition === Arrangement.Inside
         return `translate(${west
           ? s[0] - (-1) ** Number(inside) * config.handleWidth / 2
