@@ -286,7 +286,10 @@ export class XYContainer<Datum> extends ContainerCore {
         clamp(domainMax, configuredDomainMaxConstraint?.[0] ?? Number.NEGATIVE_INFINITY, configuredDomainMaxConstraint?.[1] ?? Number.POSITIVE_INFINITY),
       ]
 
-      if (config.preventEmptyDomain && (domain[0] === domain[1]) && isFinite(domain[0])) domain[1] = domain[0] + 1
+      if (config.preventEmptyDomain && (domain[0] === domain[1]) && isFinite(domain[0])) {
+        domain[1] = domain[0] + 1
+        domain[0] = domain[0] - 1
+      }
 
       components.forEach(c => c.setScaleDomain(dimension, domain))
     })
@@ -296,20 +299,36 @@ export class XYContainer<Datum> extends ContainerCore {
     const { config } = this
     if (!components) return
 
-    for (const c of components) c.setSize(this.width, this.height)
+    // Set initial scale range
+    const isYDirectionSouth = config.yDirection === Direction.South
+    const xRange: [number, number] = [config.padding.left ?? 0, this.width - config.padding.right ?? 0]
+    const yRange: [number, number] = [this.height - config.padding.bottom ?? 0, config.padding.top ?? 0]
+    if (isYDirectionSouth) yRange.reverse()
 
-    Object.values(ScaleDimension).forEach((dimension: ScaleDimension) => {
-      const range = components.map(c => c.getScreenRange(dimension, config.padding)).reduce((res, r) => {
-        if (r[0] > res[0]) res[0] = r[0]
-        if (r[1] < res[1]) res[1] = r[1]
-        return res
-      }, [Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY])
-      const scaleRange = ((dimension === ScaleDimension.Y) && (config.yDirection !== Direction.South))
-        ? [range[1], range[0]]
-        : range
-      const configuredRange = dimension === ScaleDimension.Y ? config.yRange : config.xRange
-      components.forEach(c => c.setScaleRange(dimension, configuredRange ?? scaleRange))
-    })
+    for (const c of components) {
+      c.setSize(this.width, this.height)
+      c.setScaleRange(ScaleDimension.X, config.xRange ?? xRange)
+      c.setScaleRange(ScaleDimension.Y, config.yRange ?? yRange)
+    }
+
+    // Get and combine bleed
+    const bleed = components.map(c => c.bleed).reduce((bleed, b) => {
+      for (const key of Object.keys(bleed)) {
+        if (bleed[key] < b[key]) bleed[key] = b[key]
+      }
+      return bleed
+    }, { top: 0, bottom: 0, left: 0, right: 0 })
+
+    // Update scale range
+    for (const c of components) {
+      c.setScaleRange(ScaleDimension.X, [xRange[0] + bleed.left, xRange[1] - bleed.right])
+      c.setScaleRange(
+        ScaleDimension.Y,
+        isYDirectionSouth
+          ? [yRange[0] + bleed.top, yRange[1] - bleed.bottom] // if Y axis is directed downwards
+          : [yRange[0] - bleed.bottom, yRange[1] + bleed.top] // if Y axis is directed upwards
+      )
+    }
   }
 
   _renderAxes (duration: number): void {
@@ -354,7 +373,7 @@ export class XYContainer<Datum> extends ContainerCore {
     }
   }
 
-  _getMargin (): Spacing {
+  private _getMargin (): Spacing {
     const { config: { margin } } = this
 
     return {
