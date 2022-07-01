@@ -131,7 +131,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
       this.datumIndex = datamodel.data.indexOf(this.datum)
       if (!this.datum) return
 
-      this.x = clamp(Math.round(scaleX(getNumber(this.datum, this.accessors.x))), 0, this._width)
+      this.x = clamp(Math.round(scaleX(getNumber(this.datum, this.accessors.x, this.datumIndex))), 0, this._width)
 
       // Show the crosshair only if it's in the chart range and not far from mouse pointer (if configured)
       this.show = (this.x >= 0) && (this.x <= this._width) && (!config.hideWhenFarFromPointer || (Math.abs(this.x - x) < config.hideWhenFarFromPointerDistance))
