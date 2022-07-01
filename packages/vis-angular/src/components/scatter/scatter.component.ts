@@ -11,6 +11,8 @@ import {
   ContinuousScale,
   SymbolType,
   StringAccessor,
+  GenericAccessor,
+  Position,
 } from '@volterra/vis'
 import { VisXYComponent } from '../../core'
 
@@ -74,8 +76,8 @@ export class VisScatterComponent<Datum> implements ScatterConfigInterface<Datum>
   /** Accessor function for getting the values along the X axis. Default: `undefined` */
   @Input() x: NumericAccessor<Datum>
 
-  /** Single Y accessor function. Default: `undefined` */
-  @Input() y: NumericAccessor<Datum>
+  /** A single of multiple accessor functions for getting the values along the Y axis. Default: `undefined` */
+  @Input() y: NumericAccessor<Datum> | NumericAccessor<Datum>[]
 
   /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */
   @Input() id?: ((d: Datum, i?: number, ...rest) => string)
@@ -99,13 +101,16 @@ export class VisScatterComponent<Datum> implements ScatterConfigInterface<Datum>
    * Default: `false` */
   @Input() excludeFromDomainCalculation?: boolean
 
-  /** Size accessor function or constant value in relative units. Default: `1` */
+  /** Size of the scatter plot marker (e.g. diameter if `SymbolType.Circle` is used for `shape`) in pixels.
+   * Can be a constant value or an accessor function. But if `sizeRange` is set, then the values will be treated
+   * as an input to `sizeScale`, and the resulting size will be different.
+   * Default: `10` */
   @Input() size?: NumericAccessor<Datum>
 
-  /** Size scale. Default: `Scale.scaleLinear()` */
+  /** Size scale to be used if the `sizeRange` was set. Default: `Scale.scaleSqrt()` */
   @Input() sizeScale?: ContinuousScale
 
-  /** Size Range, [number, number]. Default: `[5, 20]` */
+  /** Size range in the format of `[number, number]` to rescale the input values. Default: `undefined` */
   @Input() sizeRange?: [number, number]
 
   /** Shape of the scatter point. Accessor function or constant value: `SymbolType.Circle`, `SymbolType.Cross`, `SymbolType.Diamond`, `SymbolType.Square`,
@@ -124,6 +129,9 @@ export class VisScatterComponent<Datum> implements ScatterConfigInterface<Datum>
 
   /** Point color brightness ratio for switching between dark and light text label color. Default: `0.65` */
   @Input() labelTextBrightnessRatio?: number
+
+  /** Label position. Default: `Position.Center` */
+  @Input() labelPosition?: GenericAccessor<Position | any, Datum>
   @Input() data: Datum[]
 
   component: Scatter<Datum> | undefined
@@ -145,8 +153,8 @@ export class VisScatterComponent<Datum> implements ScatterConfigInterface<Datum>
   }
 
   private getConfig (): ScatterConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, size, sizeScale, sizeRange, shape, label, labelColor, cursor, labelTextBrightnessRatio } = this
-    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, size, sizeScale, sizeRange, shape, label, labelColor, cursor, labelTextBrightnessRatio }
+    const { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, size, sizeScale, sizeRange, shape, label, labelColor, cursor, labelTextBrightnessRatio, labelPosition } = this
+    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, size, sizeScale, sizeRange, shape, label, labelColor, cursor, labelTextBrightnessRatio, labelPosition }
     const keys = Object.keys(config) as (keyof ScatterConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
