@@ -20,6 +20,14 @@ export const root = css`
   label: scatter-component;
 `
 
+export const pointGroup = css`
+  label: point-group;
+`
+
+export const pointGroupExit = css`
+  label: point-group-exit;
+`
+
 export const point = css`
   label: point;
 

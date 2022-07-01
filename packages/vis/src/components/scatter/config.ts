@@ -9,13 +9,11 @@ import { ColorAccessor, GenericAccessor, NumericAccessor, StringAccessor } from 
 import { Position } from 'types/position'
 
 export interface ScatterConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
-  /** Single Y accessor function. Default: `undefined` */
-  y: NumericAccessor<Datum>;
   /**
    * Size of the scatter plot marker (e.g. diameter if `SymbolType.Circle` is used for `shape`) in pixels.
    * Can be a constant value or an accessor function. But if `sizeRange` is set, then the values will be treated
    * as an input to `sizeScale`, and the resulting size will be different.
-   * Default: `5`
+   * Default: `10`
   */
   size?: NumericAccessor<Datum>;
   /** Size scale to be used if the `sizeRange` was set. Default: `Scale.scaleSqrt()` */
@@ -39,7 +37,7 @@ export interface ScatterConfigInterface<Datum> extends XYComponentConfigInterfac
 }
 
 export class ScatterConfig<Datum> extends XYComponentConfig<Datum> implements ScatterConfigInterface<Datum> {
-  size = 5
+  size = 10
   sizeScale: ScalePower<number, number> = Scale.scaleSqrt()
   sizeRange = undefined
   shape = SymbolType.Circle
