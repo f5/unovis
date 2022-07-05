@@ -8,7 +8,7 @@ type CodeConfig = {
   container?: ComponentInfo;
   components: ComponentInfo[];
   dataType: string;
-  declarations?: Record<string, string>;
+  declarations: Record<string, string>;
   importString?: string | undefined;
 }
 
@@ -24,7 +24,11 @@ function getAngularStrings (config: CodeConfig, importedProps: string[], inlineT
     ? parse.angular(container).replace('><', `>\n${t}${components.map(c => parse.angular(c)).join(`\n${t}`)}\n<`)
     : components.map(c => parse.angular(c)).join('\n')
 
-  const tsLines = []
+  importedProps.forEach(i => {
+    if (html.includes(i)) rest[i] = i
+  })
+
+  const tsLines: string[] = []
   if (importString || Object.values(declarations).length) {
     if (importString) tsLines.push(importString)
 
@@ -51,8 +55,7 @@ function getAngularStrings (config: CodeConfig, importedProps: string[], inlineT
 }
 
 function getReactStrings ({ components, container, dataType, declarations, importString }: CodeConfig): string {
-  const lines = []
-
+  const lines: string[] = []
   let indentLevel = 0
   let containerString: string
 
@@ -86,15 +89,33 @@ function getReactStrings ({ components, container, dataType, declarations, impor
   return lines.join('\n')
 }
 
+function getSvelteStrings (config: CodeConfig): string {
+  const { components, container, declarations, importString } = config
+
+  const lines: string[] = []
+  const imports = (container ? [container, ...components] : components).map(c => `Vis${c.name}`).join(', ')
+  lines.push(`${t}import { ${imports} } from '@volterra/vis-svelte'`)
+  if (importString) lines.push(`${t}${importString}`)
+
+  const { data, ...rest } = declarations
+  if (data) lines.push(`${t}export let ${data}`)
+  Object.entries(rest).forEach(d => lines.push(`${t}const ${d.join(' = ')}`))
+
+  const html = container
+    ? parse.svelte(container, true).replace('><', `>\n${t}${components.map(c => parse.svelte(c)).join(`\n${t}`)}\n<`)
+    : components.map(c => parse.svelte(c)).join('\n')
+  return `<script lang='ts'>\n${lines.join('\n')}\n</script>\n\n${html}`
+}
+
 function getTypescriptStrings (config: CodeConfig, mainComponent: string): string {
   const { components, container, dataType, declarations, importString } = config
   const { data, ...rest } = declarations
-  const lines = []
+  const lines: string[] = []
 
   if (importString) lines.push(importString)
   if (data) {
     lines.push(`const ${data} = getData()\n`)
-    container.props = container.props.filter(d => d.key !== 'data')
+    if (container) container.props = container.props.filter(d => d.key !== 'data')
   }
 
   const mainIsContainer = mainComponent && mainComponent.endsWith('Container')
@@ -148,19 +169,20 @@ export function DocFrameworkTabs ({
   components,
   container,
   context,
+  dataType,
   declarations = {},
   hideTabLabels,
-  mainComponent,
-  dataType,
   imports,
+  mainComponent,
+  showData,
 }: DocTabsProps): JSX.Element {
-  const children = mainComponent && !mainComponent?.name.endsWith('Container')
-    ? (
-      !context || context === ContextLevel.Minimal
-        ? [mainComponent]
-        : [mainComponent, ...components]
-    )
-    : components
+  const children = !context || context === ContextLevel.Minimal
+    ? [mainComponent]
+    : [mainComponent, ...components]
+
+  if (showData) {
+    declarations.data = `data: ${dataType.includes(',') ? `${dataType.split(/(?=[A-Z])/)[0]}Data` : `${dataType}[]`}`
+  }
 
   const importedProps = imports ? Object.values(imports).flatMap(i => i) : []
   const tabConfig = {
@@ -174,17 +196,14 @@ export function DocFrameworkTabs ({
     })),
     dataType: dataType,
     declarations: context ? declarations : {},
-    importString: imports && `${Object.keys(imports).map(i => `import { ${imports[i].join(', ')}  } from '${i}'`).join('\n')}\n`,
-  }
-
-  if (context && declarations.data) {
-    declarations.data = `data: ${dataType.startsWith('Map') ? 'MapData' : `${dataType}[]`}`
+    importString: imports && `${Object.keys(imports).map(i => `import { ${imports[i].join(', ')} } from '${i}'`).join('\n')}\n`,
   }
 
   return (
     <FrameworkTabs
       angular={getAngularStrings(tabConfig, importedProps, context === ContextLevel.Minimal)}
       react={getReactStrings(tabConfig)}
+      svelte={getSvelteStrings(tabConfig)}
       typescript={getTypescriptStrings(tabConfig, mainComponent && context !== ContextLevel.Container && mainComponent.name)}
       hideTabLabels={hideTabLabels}
       showTitles={context !== undefined}

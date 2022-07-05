@@ -7,12 +7,7 @@ export enum ContextLevel {
 export type DocComponent = {
   name: string;
   props: Record<string, any>;
-  key?: string; // key in ts chart config
-}
-
-export type DocCompositeProps = {
-  containerProps: DocComponent;
-  componentProps: DocComponent[];
+  key: string; // key in ts chart config
 }
 
 export type DocTabsProps = {
@@ -27,7 +22,7 @@ export type DocTabsProps = {
   showData?: boolean;
 }
 
-export type DocWrapperProps = DocTabsProps & DocCompositeProps & {
+export type DocWrapperProps = DocTabsProps & {
   data: any[];
   name: string; // name of main component to render, i.e. "Line" will import VisLine */
   configKey: string; // specify the key for the chartConfig in typescript files

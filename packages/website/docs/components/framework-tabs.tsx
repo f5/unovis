@@ -7,6 +7,7 @@ import CodeBlock from '@theme/CodeBlock'
 export type FrameworkTabProps = {
   angular: { html: string; ts: string };
   react: string;
+  svelte: string;
   typescript: string;
   hideTabLabels?: boolean;
   showTitles?: boolean;
@@ -15,6 +16,7 @@ export type FrameworkTabProps = {
 export const FrameworkTabs = ({
   angular,
   react,
+  svelte,
   typescript,
   hideTabLabels,
   showTitles,
@@ -36,6 +38,11 @@ export const FrameworkTabs = ({
           {angular.html}
         </CodeBlock>
       }
+    </TabItem>
+    <TabItem value="svelte" label="Svelte">
+      <CodeBlock language="html" title={showTitles && 'component.svelte'}>
+        {svelte}
+      </CodeBlock>
     </TabItem>
     <TabItem value="ts" label="Typescript">
       <CodeBlock language="ts" title={showTitles && 'component.ts'}>
