@@ -183,6 +183,10 @@ export function DocFrameworkTabs ({
     declarations.data = `data: ${dataType.includes(',') ? `${dataType.split(/(?=[A-Z])/)[0]}Data` : `${dataType}[]`}`
   }
 
+  if (showData) {
+    declarations.data = `data: ${dataType.includes(',') ? `${dataType.split(/(?=[A-Z])/)[0]}Data` : `${dataType}[]`}`
+  }
+
   const importedProps = imports ? Object.values(imports).flatMap(i => i) : []
   const tabConfig = {
     container: (context === ContextLevel.Container || context === ContextLevel.Full) && {
