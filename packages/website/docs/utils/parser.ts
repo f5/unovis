@@ -46,11 +46,17 @@ export function parseObject (value: any, type: string, level = 1): string {
   if (useIsBrowser() && value instanceof HTMLBodyElement) {
     return 'document.body'
   }
+  if (typeof value === 'string') {
+    return `\`${value}\``
+  }
   if (typeof value !== 'object') {
     return String(value)
   }
   if (typeof value[Symbol.iterator] === 'function') {
-    return `[${value.map(v => parseObject(v, type, level + 1)).join(', ')}]`
+    const items = value.map(v => parseObject(v, type, level + 1)).join(', ')
+    return `[${items.length > 50
+      ? `\n${tab(level + 1)}${items.replaceAll(', ', `,\n${tab(level + 1)}`)}\n${tab(level)}`
+      : items}]`
   }
   const objectProps = Object.entries(value).map(([k, v]) => `${tab(level + 1)}${[k, parseObject(v, type, level + 1)].join(': ')}`)
   return objectProps.length && `{\n${objectProps.join(',\n')}\n${tab(level)}}`

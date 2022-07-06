@@ -27,7 +27,8 @@ export function DocWrapper ({
   const mainComponent = { name: name, props: rest, key: configKey }
   const components = name === containerName ? componentProps : [mainComponent, ...componentProps]
 
-  if (!containerName) {
+
+  if (!containerName && data) {
     mainComponent.props.data = data
   }
 
