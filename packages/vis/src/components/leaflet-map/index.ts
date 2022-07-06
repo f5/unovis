@@ -154,10 +154,13 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
           .call(createNodeSelectionRing)
 
         this._map.leaflet.setView(initialMapCenter, initialMapZoom)
+
         if (document.body.classList.contains('theme-dark') && config.styleDarkTheme) {
           this.setTheme(config.styleDarkTheme)
         }
+
         if (data) this.setData(data)
+
         this.config.onMapInitialized?.()
         resolve(this._map.leaflet)
       })
@@ -238,10 +241,12 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
 
     this._renderData()
     if (this._firstRender) {
-      if (config.initialBounds && !config.bounds) this.fitToBounds(config.initialBounds)
+      if (config.fitViewOnInit) this.fitToPoints(0, config.fitViewPadding)
+      else if (config.fitBoundsOnUpdate || config.initialBounds) this.fitToBounds(config.fitBoundsOnUpdate ?? config.initialBounds)
+    } else {
+      if (config.fitViewOnUpdate) this.fitToPoints(0, config.fitViewPadding)
+      else if (config.fitBoundsOnUpdate) this.fitToBounds(config.fitBoundsOnUpdate)
     }
-
-    if (config.bounds) this.fitToBounds(config.bounds)
 
     this._firstRender = false
   }

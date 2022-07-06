@@ -27,8 +27,12 @@ export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterfa
   zoomDuration?: number;
   /** Default bounds that will be applied on the first map render if the bounds property is not set. Default: `undefined` */
   initialBounds?: Bounds;
-  /** Force set map bounds on config update. Default: `undefined` */
-  bounds?: Bounds;
+  /** Force set map bounds on config and data updates. Default: `undefined` */
+  fitBoundsOnUpdate?: Bounds;
+  /** Fit the view to contain the data points on map initialization. Default: `true` */
+  fitViewOnInit?: boolean;
+  /** Fit the view to contain the data points on map config and data updates. Default: `false` */
+  fitViewOnUpdate?: boolean;
   /** MapLibre `StyleSpecification` settings, or a URL to it. Default: `undefined` */
   style: MapLibreStyleSpecs | string;
   /** MapLibre `StyleSpecification` settings for dark theme. Default: `undefined` */
@@ -51,7 +55,7 @@ export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterfa
   onMapZoomStart?: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => void);
   /** Move Zoom End callback function. Default: `undefined` */
   onMapZoomEnd?: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => void);
-  /** Move Zoom End callback function. Default: `undefined` */
+  /** Move Zoom Click callback function. Default: `undefined` */
   onMapClick?: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => void);
 
   // Point
@@ -81,7 +85,7 @@ export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterfa
   // Cluster
   /** The width of the cluster point ring. Default: `1.25` */
   clusterRingWidth?: number;
-  /** When cluster is expanded, show a background circle to netter separate points from the base map. Default: `true` */
+  /** When cluster is expanded, show a background circle to better separate points from the base map. Default: `true` */
   clusterBackground?: boolean;
   /** Defines whether the cluster should expand on click or not. Default: `true` */
   clusterExpandOnClick?: boolean;
@@ -111,7 +115,7 @@ export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterfa
   /** A TopoJSON Geometry layer to be displayed on top of the map. Supports fill and stroke */
   topoJSONLayer?: {
     /** The TopoJSON.Topology object. Default: `undefined` */
-    sources?: any;
+    sources: any;
     /** Name of the geometry feature to be displayed. Default: `undefined` */
     featureName?: string;
     /** Name of the property to be used for defining the fill color of the geometry. Default: `undefined` */
@@ -139,7 +143,9 @@ export class LeafletMapConfig<Datum> extends ComponentConfig implements LeafletM
   fitViewPadding = [150, 150] as [number, number]
   zoomDuration = 800
   initialBounds = undefined
-  bounds = undefined
+  fitBoundsOnUpdate = undefined
+  fitViewOnInit = true
+  fitViewOnUpdate = false
   attribution = ['<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a>']
   accessToken = ''
   style = undefined
@@ -170,7 +176,7 @@ export class LeafletMapConfig<Datum> extends ComponentConfig implements LeafletM
   // Cluster
   clusterRingWidth = 1.25
   clusterBackground = true
-  clusterExpandOnClick = true;
+  clusterExpandOnClick = true
   clusterRadius = 55
   valuesMap = {} as LeafletMapPointStyles<Datum>
 
