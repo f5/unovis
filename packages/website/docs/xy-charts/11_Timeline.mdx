@@ -1,9 +1,155 @@
 ---
 sidebar_position: 6
-title: Timeline
-sidebar_label: Timeline ✍️
 ---
+import CodeBlock from "@theme/CodeBlock";
+import { PropTable } from '../components/props-table'
+import { data, generateTimeSeries } from '../utils/data'
+import { XYWrapper, XYWrapperWithInput, axis } from './wrapper.tsx';
 
-import { PropTable } from '../components/props-table.tsx'
+export const xAxis = {...axis('x'), props: { type: 'x', tickFormat: Intl.DateTimeFormat().format }}
+export const defaultProps = (n = 5, rows=n) => ({
+  name: "Timeline",
+  height: 150,
+  dataType: 'TimeDataRecord',
+  data: generateTimeSeries(n, rows),
+  x: d => d.timestamp,
+});
+
+## Basic Configuration
+The _Timeline_ component has been designed to work together with _XY Container_.
+The minimal _Timeline_ configuration looks like:
+
+<XYWrapper {...defaultProps(6)} showContext="full"/>
+
+where `TimeDataRecord` has at least the following properties:
+
+```ts
+type TimeDataRecord = {
+  timestamp: Date; // position on the X axis
+  length: number; // length of the line
+  type: any; // the row it will be displayed in
+}
+```
+
+:::note
+
+By default, if the records in your data array contain `length` and `type` properties (as shown above),
+_Timeline_ will only need the `x` accessor provided to display the data. 
+Otherwise, you can explicitly define accessor functions for `length` and `type`.
+
+:::
+
+## Labels
+Enable the `showLabels` property to display row types along the **vertical** axis. You can alter the
+appearance of these labels with the `labelWidth` and `maxLabelWidth` properties.
+
+Like other XY components, labeling data along the **horizontal** axis can be accomplished
+by adding an _Axis_ component to your container. See following example which displays labeled
+_Timeline_ alongside a labeled _X Axis_:
+
+<XYWrapper {...defaultProps()}
+  componentProps={[xAxis]}
+  declarations={{ tickFormat: 'Intl.DateTimeFormat().format'}}
+  showLabels
+  showContext="container"/>
+
+<br/>
+
+:::caution Note
+
+Since *Timeline* groups vertical data in an ordinal fashion, adding a Y axis here is not recommended.
+
+:::
+
+
+## Row Configuration
+### Alternating row colors
+For easier readability, each row's background color alternates among two colors by default. To display a single
+background color across all rows, disable the `alternatingRowColors` property:
+<XYWrapperWithInput {...defaultProps(20, 5)} property="alternatingRowColors" defaultValue={true} inputType="checkbox"/>
+
+### Row Height
+Use the `rowHeight` property to adjust the size of each row.
+<XYWrapper {...defaultProps(20, 5)} rowHeight={50} hideTabLabels/>
+
+## Line Configuration
+### Line Cap
+The line's end shape can be changed with the `lineCap` property, which accepts a string that corresponds
+to SVG's [stroke-linecap](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-linecap)
+property: `"round"` (default), `"butt"`, `"square"`.
+
+### Line Width
+You can also change the line thickness with the `lineWidth` property, which determines how much
+vertical space each _Timeline_ item occupies.
+
+### Example: Custom timeline lines
+<XYWrapperWithInput {...defaultProps(3)} height={320} lineCap="square" rowHeight={100} property="lineWidth" inputType="range" defaultValue={10}/>
+
+## Events
+### Scrolling
+You can provide a callback to the `onScroll` property, which accepts a function of type:
+
+```ts
+type onScroll = (n: number) => void
+```
+
+where _n_ is equal to the distance scrolled from the top of the timeline (in pixels).
+
+See the following example, where `onScroll` updates the xAxis label:
+
+export function ScrollExample() {
+  const [dist, setDist] = React.useState(0)
+  return (
+    <>
+      <XYWrapper {...defaultProps(50, 20)}
+        onScroll={setDist}
+        showContext="minimal"
+        componentProps={[{...xAxis, props: { type: 'x', label: () => `${dist}px from the top`, tickValues: [] }}]}
+        declarations={{ onScroll: '(n: number) => setAxisLabel(`${n}px from the top`)'}}
+        />
+    </>
+  )
+}
+
+<ScrollExample/>
+
+### Custom cursor for hover events
+<XYWrapper {...defaultProps(20, 5)} cursor="cell"/>
+
+### More Events
+```ts
+import { Timeline } from '@volterra/vis'
+
+const events = {
+  [Timeline.selectors.background]: {
+      wheel: () => ...
+  },
+}
+```
+
+## Additional Styling: CSS Variables
+The _Timeline_ component supports additional styling via CSS variables:
+
+<details open>
+  <summary>All supported CSS variables</summary>
+  <CodeBlock language="css">{
+`--vis-timeline-row-even-fill
+--vis-timeline-row-odd-fill
+--vis-timeline-row-background-opa
+--vis-timeline-scrollbar-background-color
+--vis-timeline-scrollbar-colo
+--vis-timeline-label-font-s
+--vis-timeline-label-colo
+--vis-timeline-cursor
+--vis-timeline-line-color
+--vis-timeline-line-cap
+--vis-dark-timeline-row-even-fill
+--vis-dark-timeline-row-odd-fill
+--vis-dark-timeline-scrollbar-background-color
+--vis-dark-timeline-scrollbar-color
+--vis-dark-timeline-label-color`}
+  </CodeBlock>
+</details>
+
 
 <PropTable name="VisTimeline"/>
