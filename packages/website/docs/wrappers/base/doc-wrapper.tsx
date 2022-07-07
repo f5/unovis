@@ -1,12 +1,14 @@
+/* eslint-disable @typescript-eslint/naming-convention, @typescript-eslint/no-var-requires */
 import * as React from 'react'
-import { VisComposite } from './doc-components'
-import { DocFrameworkTabs } from './doc-tabs'
+import BrowserOnly from '@docusaurus/BrowserOnly'
 import { DocWrapperProps } from './types'
+import { DocFrameworkTabs } from './doc-tabs'
 
 /* XYWrapper by default displays code snippet tabs and a Vis component with custom props */
 export function DocWrapper ({
   data,
   name,
+  className,
   dataType,
   declarations,
   containerName,
@@ -17,14 +19,31 @@ export function DocWrapper ({
   excludeGraph,
   hiddenProps,
   configKey,
-  containerProps,
+  containerProps = {},
   componentProps = [],
   imports,
   ...rest
 }: DocWrapperProps): JSX.Element {
   const mainComponent = name && { name: name, props: rest, key: configKey }
-  if (name.endsWith('Container')) {
+  const standAlone = ['XYContainer'].includes(name)
+
+  if (standAlone) {
+    containerName = name
     containerProps = rest
+    if (data) mainComponent.props = { data, ...mainComponent.props }
+  }
+  const containerConfig = {
+    data,
+    height,
+    className,
+  }
+
+
+  if (data !== undefined) {
+    if (containerName !== undefined) containerProps.data = data
+    else {
+      mainComponent.props.data = data
+    }
   }
 
   return (
@@ -32,28 +51,42 @@ export function DocWrapper ({
       {!excludeTabs &&
       <DocFrameworkTabs
         imports={imports}
-        container={{
+        container={containerName && {
           name: containerName,
           props: data ? { data, ...containerProps } : containerProps,
         }}
+        showData={data !== undefined && showContext}
         components={componentProps}
         mainComponent={mainComponent}
         context={showContext}
         {...{ hideTabLabels, dataType, declarations }}/>
       }
       {!excludeGraph &&
-        <VisComposite
-          containerProps={{
-            data,
-            name: containerName,
-            height: height,
-            className: rest.className,
-            ...containerProps,
+        <BrowserOnly fallback={<div>Loading...</div>}>
+          {() => {
+            const lib = require('@volterra/vis-react')
+            const { [`Vis${name}`]: MainComponent } = lib
+            const Components = (config?: Partial<DocWrapperProps>): JSX.Element => (
+              <>
+                <MainComponent {...config} {...rest} {...hiddenProps}/>
+                {componentProps.map((c, i) => {
+                  const { [`Vis${c.name}`]: Component } = lib
+                  const props = c.props
+                  return <Component key={`${c.name}-${i}`} {...props}/>
+                })}
+              </>
+            )
+            if (!containerName) {
+              return <MainComponent {...containerConfig} {...rest} {...hiddenProps}/>
+            }
+            const { [`Vis${containerName}`]: VisContainer } = lib
+            return (
+              <VisContainer {...containerConfig} {...containerProps}>
+                <Components/>
+              </VisContainer>
+            )
           }}
-          componentProps={name && !name.endsWith('Container')
-            ? [...componentProps, { name: name, props: { ...rest, ...hiddenProps } }]
-            : componentProps}
-          imports={imports}/>
+        </BrowserOnly>
       }
     </>
   )

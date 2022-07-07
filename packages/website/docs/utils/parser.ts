@@ -1,4 +1,5 @@
 import useIsBrowser from '@docusaurus/useIsBrowser'
+import { ContextLevel } from '../wrappers/base'
 
 export type PropInfo = {
   key: string;
@@ -71,11 +72,7 @@ export function parseProps (props: Record<string, any>, dataType: string, import
         v = k
       }
     }
-    return ({
-      key: k,
-      value: String(v),
-      stringLiteral: isStringLiteral,
-    })
+    return ({ key: k, value: String(v), stringLiteral: isStringLiteral })
   })
 }
 
@@ -101,6 +98,15 @@ function parseReact ({ name, props }: ComponentInfo, closing = false, indent?: n
   return formatElement(`${tab(indent)}<${tag}`, attrs, endLine, ' ', `${tab(indent)}${endLine}`)
 }
 
+function parseSvelte ({ name, props }: ComponentInfo, closing = false): string {
+  const attrs = props?.map(({ key, value, stringLiteral }) =>
+    key === value ? `{${key}}` : [key, stringLiteral ? `"${value}"` : `{${value}}`].join('=')
+  )
+  const tag = `Vis${name}`
+  const endLine = closing ? `></${tag}>` : '/>'
+  return formatElement(`<${tag}`, attrs, endLine)
+}
+
 function parseTypescript (prefix: string, { name, props }: ComponentInfo, type?: string): string {
   const attrs = props?.map(({ key, value, stringLiteral }) =>
     key === value ? key : [key, stringLiteral ? `"${value}"` : `${value}`].join(': ')
@@ -111,5 +117,6 @@ function parseTypescript (prefix: string, { name, props }: ComponentInfo, type?:
 export const parseComponent = {
   angular: parseAngular,
   react: parseReact,
+  svelte: parseSvelte,
   typescript: parseTypescript,
 }
