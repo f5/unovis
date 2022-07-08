@@ -164,6 +164,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
         }
 
         if (data) this.setData(data)
+        else this.render()
 
         this.config.onMapInitialized?.()
         resolve(this._map.leaflet)
