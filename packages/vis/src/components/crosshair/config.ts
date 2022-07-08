@@ -3,6 +3,7 @@ import { Tooltip } from 'components/tooltip'
 
 // Types
 import { NumericAccessor } from 'types/accessor'
+import { ContinuousScale } from 'types/scale'
 import { CrosshairCircle } from './types'
 
 // We extend partial XY config interface because x and y properties are optional for Crosshair
@@ -26,11 +27,12 @@ export interface CrosshairConfigInterface<Datum> extends Partial<XYComponentConf
   */
   snapToData?: boolean;
   /** Custom function for setting up the crosshair circles, usually needed when `snapToData` is set to `false`.
-   * The function receives the horizontal position of the crosshair (in the data space, not in pixels) and the data array.
+   * The function receives the horizontal position of the crosshair (in the data space, not in pixels), the data array
+   * and the `yScale` instance to help you calculate the correct vertical position of the circles.
    * It has to return an array of the CrosshairCircle objects: `{ y: number; color: string; opacity?: number }[]`.
    * Default: `undefined`
   */
-  getCircles?: (x: number, data: Datum[]) => CrosshairCircle[];
+  getCircles?: (x: number, data: Datum[], yScale: ContinuousScale) => CrosshairCircle[];
 }
 
 export class CrosshairConfig<Datum> extends XYComponentConfig<Datum> implements CrosshairConfigInterface<Datum> {

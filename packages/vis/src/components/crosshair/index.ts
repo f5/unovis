@@ -184,7 +184,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum> {
   private getCircleData (): CrosshairCircle[] {
     const { config, datamodel: { data } } = this
 
-    if (isFunction(config.getCircles)) return config.getCircles(this.xScale.invert(this.x), data)
+    if (isFunction(config.getCircles)) return config.getCircles(this.xScale.invert(this.x), data, this.yScale)
 
     if (config.snapToData && this.datum) {
       const yAccessors = this.accessors.y ?? []
