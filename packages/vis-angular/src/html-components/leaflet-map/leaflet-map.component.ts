@@ -12,6 +12,7 @@ import {
   LeafletMapPointDatum,
   LeafletMapPointStyles,
   Tooltip,
+  LeafletMapClusterDatum,
 } from '@volterra/vis'
 import { StyleSpecification } from 'maplibre-gl'
 import { VisCoreComponent } from '../../core'
@@ -27,9 +28,9 @@ export class VisLeafletMapComponent<Datum> implements LeafletMapConfigInterface<
   @ViewChild('container', { static: false }) containerRef: ElementRef
 
   /** Width in pixels or in CSS units. By default, the map will automatically fit to the size of the parent element. Default: `undefined`. */
-  @Input() width?: number | string;
+  @Input() width?: number | string
   /** Height in pixels or in CSS units. By default, the map will automatically fit to the size of the parent element. Default: `undefined`. */
-  @Input() height?: number | string;
+  @Input() height?: number | string
 
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */
   @Input() duration?: number
@@ -93,14 +94,20 @@ export class VisLeafletMapComponent<Datum> implements LeafletMapConfigInterface<
   /** Default bounds that will be applied on the first map render if the bounds property is not set. Default: `undefined` */
   @Input() initialBounds?: Bounds
 
-  /** Force set map bounds on config update. Default: `undefined` */
-  @Input() bounds?: Bounds
+  /** Force set map bounds on config and data updates. Default: `undefined` */
+  @Input() fitBoundsOnUpdate?: Bounds
+
+  /** Fit the view to contain the data points on map initialization. Default: `true` */
+  @Input() fitViewOnInit?: boolean
+
+  /** Fit the view to contain the data points on map config and data updates. Default: `false` */
+  @Input() fitViewOnUpdate?: boolean
 
   /** MapLibre StyleSpecification settings. Default: `MapLibreArcticLight` */
   @Input() style: StyleSpecification | string
 
   /** MapLibre StyleSpecification settings for dark theme. Default: `undefined` */
-  @Input() styleDarkTheme: StyleSpecification | string
+  @Input() styleDarkTheme?: StyleSpecification | string
 
   /** Tile server access token or API key. Default: `''` */
   @Input() accessToken?: string
@@ -108,25 +115,25 @@ export class VisLeafletMapComponent<Datum> implements LeafletMapConfigInterface<
   /** Array of attribution labels. Default: `['<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a>']` */
   @Input() attribution?: string[]
 
-  /** Function to be called after Map async initialization is done. Default: `undefined` */
+  /** Function to be called after the map's async initialization is done. Default: `undefined` */
   @Input() onMapInitialized?: (() => void)
 
-  /** Map Move / Zoom joint callback function. Default: `undefined` */
+  /** Map Move / Zoom unified callback function. Default: `undefined` */
   @Input() onMapMoveZoom?: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => void)
 
-  /** Move Move Start callback function. Default: `undefined` */
+  /** Map Move Start callback function. Default: `undefined` */
   @Input() onMapMoveStart?: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => void)
 
-  /** Move Move End callback function. Default: `undefined` */
+  /** Map Move End callback function. Default: `undefined` */
   @Input() onMapMoveEnd?: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => void)
 
-  /** Move Zoom Start callback function. Default: `undefined` */
+  /** Map Zoom Start callback function. Default: `undefined` */
   @Input() onMapZoomStart?: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => void)
 
-  /** Move Zoom End callback function. Default: `undefined` */
+  /** Map Zoom End callback function. Default: `undefined` */
   @Input() onMapZoomEnd?: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => void)
 
-  /** Move Zoom End callback function. Default: `undefined` */
+  /** Map Zoom End callback function. Default: `undefined` */
   @Input() onMapClick?: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => void)
 
   /** Point longitude accessor function. Default: `d => d.longitude` */
@@ -159,20 +166,32 @@ export class VisLeafletMapComponent<Datum> implements LeafletMapConfigInterface<
   /** Set selected point by its unique id. Default: `undefined` */
   @Input() selectedPointId?: string
 
-  /** The width of the cluster point outline. Default: `1.25` */
-  @Input() clusterOutlineWidth?: number
+  /** Cluster color accessor function or constant value. Default: `undefined`  */
+  @Input() clusterColor?: ColorAccessor<Datum>
 
-  /** When cluster is expanded, show a background circle to netter separate points from the base map. Default: `true` */
+  /** Cluster radius accessor function or constant value. Default: `undefined`  */
+  @Input() clusterRadius?: NumericAccessor<LeafletMapClusterDatum<Datum>>
+
+  /** Cluster inner label accessor function. Default: `d => d.point_count`  */
+  @Input() clusterLabel?: StringAccessor<LeafletMapClusterDatum<Datum>>
+
+  /** Cluster bottom label accessor function. Default: `''` */
+  @Input() clusterBottomLabel?: StringAccessor<LeafletMapClusterDatum<Datum>>
+
+  /** The width of the cluster point outline. Default: `1.25` */
+  @Input() clusterRingWidth?: number
+
+  /** When cluster is expanded, show a background circle to better separate points from the base map. Default: `true` */
   @Input() clusterBackground?: boolean
 
   /** Defines whether the cluster should expand on click or not. Default: `true` */
   @Input() clusterExpandOnClick?: boolean
 
-  /** Clustering radius in pixels. This value will be passed to Supercluster https://github.com/mapbox/supercluster. Default: `55` */
-  @Input() clusterRadius?: number
+  /** Clustering distance in pixels. This value will be passed to Supercluster as the `radius` property https://github.com/mapbox/supercluster. Default: `55` */
+  @Input() clusteringDistance?: number
 
   /** A single map point can have multiple properties displayed as a small pie chart (or a donut chart for a cluster of points).
-   * By setting the valuesMap configuration you can specify data properties that should be mapped to various pie / donut segments.
+   * By setting the colorMap configuration you can specify data properties that should be mapped to various pie / donut segments.
    *
    * ```
    * {
@@ -188,11 +207,11 @@ export class VisLeafletMapComponent<Datum> implements LeafletMapConfigInterface<
    * }
    * ```
    * where every data point has the `healthy`, `warning` and `danger` numerical or boolean property. */
-  @Input() valuesMap?: LeafletMapPointStyles<Datum>
+  @Input() colorMap?: LeafletMapPointStyles<Datum>
 
   /** A TopoJSON Geometry layer to be displayed on top of the map. Supports fill and stroke */
   @Input() topoJSONLayer?: {
-    sources?: any;
+    sources: any;
     featureName?: string;
     fillProperty?: string;
     strokeProperty?: string;
@@ -222,8 +241,8 @@ export class VisLeafletMapComponent<Datum> implements LeafletMapConfigInterface<
   }
 
   private getConfig (): LeafletMapConfigInterface<Datum> {
-    const { width, height, duration, events, attributes, flyToDuration, fitViewPadding, zoomDuration, initialBounds, bounds, accessToken, style, styleDarkTheme, attribution, onMapInitialized, onMapMoveZoom, onMapMoveStart, onMapMoveEnd, onMapZoomStart, onMapZoomEnd, onMapClick, pointLongitude, pointLatitude, pointId, pointShape, pointColor, pointRadius, pointLabel, pointBottomLabel, pointCursor, selectedPointId, clusterOutlineWidth, clusterBackground, clusterExpandOnClick, clusterRadius, valuesMap, topoJSONLayer, tooltip } = this
-    const config = { width, height, duration, events, attributes, flyToDuration, fitViewPadding, zoomDuration, initialBounds, bounds, accessToken, style, styleDarkTheme, attribution, onMapInitialized, onMapMoveZoom, onMapMoveStart, onMapMoveEnd, onMapZoomStart, onMapZoomEnd, onMapClick, pointLongitude, pointLatitude, pointId, pointShape, pointColor, pointRadius, pointLabel, pointBottomLabel, pointCursor, selectedPointId, clusterOutlineWidth, clusterBackground, clusterExpandOnClick, clusterRadius, valuesMap, topoJSONLayer, tooltip }
+    const { width, height, duration, events, attributes, flyToDuration, fitViewPadding, zoomDuration, initialBounds, fitBoundsOnUpdate, fitViewOnInit, fitViewOnUpdate, accessToken, style, styleDarkTheme, attribution, onMapInitialized, onMapMoveZoom, onMapMoveStart, onMapMoveEnd, onMapZoomStart, onMapZoomEnd, onMapClick, pointLongitude, pointLatitude, pointId, pointShape, pointColor, pointRadius, pointLabel, pointBottomLabel, pointCursor, selectedPointId, clusterColor, clusterRadius, clusterLabel, clusterBottomLabel, clusterRingWidth, clusterBackground, clusterExpandOnClick, clusteringDistance, colorMap, topoJSONLayer, tooltip } = this
+    const config = { width, height, duration, events, attributes, flyToDuration, fitViewPadding, zoomDuration, initialBounds, fitBoundsOnUpdate, fitViewOnInit, fitViewOnUpdate, accessToken, style, styleDarkTheme, attribution, onMapInitialized, onMapMoveZoom, onMapMoveStart, onMapMoveEnd, onMapZoomStart, onMapZoomEnd, onMapClick, pointLongitude, pointLatitude, pointId, pointShape, pointColor, pointRadius, pointLabel, pointBottomLabel, pointCursor, selectedPointId, clusterColor, clusterRadius, clusterLabel, clusterBottomLabel, clusterRingWidth, clusterBackground, clusterExpandOnClick, clusteringDistance, colorMap, topoJSONLayer, tooltip }
     const keys = Object.keys(config) as (keyof LeafletMapConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

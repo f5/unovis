@@ -12,6 +12,7 @@ import {
   LeafletMapPointDatum,
   LeafletMapPointStyles,
   Tooltip,
+  LeafletMapClusterDatum,
 } from '@volterra/vis'
 import { StyleSpecification } from 'maplibre-gl'
 import { VisCoreComponent } from '../../core'
@@ -27,9 +28,9 @@ export class VisLeafletFlowMapComponent<PointDatum, FlowDatum> implements Leafle
   @ViewChild('container', { static: false }) containerRef: ElementRef
 
   /** Width in pixels or in CSS units. By default, the map will automatically fit to the size of the parent element. Default: `undefined`. */
-  @Input() width?: number | string;
+  @Input() width?: number | string
   /** Height in pixels or in CSS units. By default, the map will automatically fit to the size of the parent element. Default: `undefined`. */
-  @Input() height?: number | string;
+  @Input() height?: number | string
 
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */
   @Input() duration?: number
@@ -93,8 +94,14 @@ export class VisLeafletFlowMapComponent<PointDatum, FlowDatum> implements Leafle
   /** Default bounds that will be applied on the first map render if the bounds property is not set. Default: `undefined` */
   @Input() initialBounds?: Bounds
 
-  /** Force set map bounds on config update. Default: `undefined` */
-  @Input() bounds?: Bounds
+  /** Force set map bounds on config and data updates. Default: `undefined` */
+  @Input() fitBoundsOnUpdate?: Bounds
+
+  /** Fit the view to contain the data points on map initialization. Default: `true` */
+  @Input() fitViewOnInit?: boolean
+
+  /** Fit the view to contain the data points on map config and data updates. Default: `false` */
+  @Input() fitViewOnUpdate?: boolean
 
   /** MapLibre StyleSpecification settings. Default: `MapLibreArcticLight` */
   @Input() style: StyleSpecification | string
@@ -108,25 +115,25 @@ export class VisLeafletFlowMapComponent<PointDatum, FlowDatum> implements Leafle
   /** Array of attribution labels. Default: `['<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a>']` */
   @Input() attribution?: string[]
 
-  /** Function to be called after Map async initialization is done. Default: `undefined` */
+  /** Function to be called after the map's async initialization is done. Default: `undefined` */
   @Input() onMapInitialized?: (() => void)
 
-  /** Map Move / Zoom joint callback function. Default: `undefined` */
+  /** Map Move / Zoom unified callback function. Default: `undefined` */
   @Input() onMapMoveZoom?: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => void)
 
-  /** Move Move Start callback function. Default: `undefined` */
+  /** Map Move Start callback function. Default: `undefined` */
   @Input() onMapMoveStart?: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => void)
 
-  /** Move Move End callback function. Default: `undefined` */
+  /** Map Move End callback function. Default: `undefined` */
   @Input() onMapMoveEnd?: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => void)
 
-  /** Move Zoom Start callback function. Default: `undefined` */
+  /** Map Zoom Start callback function. Default: `undefined` */
   @Input() onMapZoomStart?: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => void)
 
-  /** Move Zoom End callback function. Default: `undefined` */
+  /** Map Zoom End callback function. Default: `undefined` */
   @Input() onMapZoomEnd?: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => void)
 
-  /** Move Zoom End callback function. Default: `undefined` */
+  /** Map Zoom End callback function. Default: `undefined` */
   @Input() onMapClick?: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => void)
 
   /** Point longitude accessor function. Default: `d => d.longitude` */
@@ -159,17 +166,30 @@ export class VisLeafletFlowMapComponent<PointDatum, FlowDatum> implements Leafle
   /** Set selected point by its unique id. Default: `undefined` */
   @Input() selectedPointId?: string
 
-  /** The width of the cluster point outline. Default: `1.25` */
-  @Input() clusterOutlineWidth?: number
+  /** Cluster color accessor function or constant value. Default: `undefined`  */
+  @Input() clusterColor?: ColorAccessor<PointDatum>
 
-  /** When cluster is expanded, show a background circle to netter separate points from the base map. Default: `true` */
+  /** Cluster radius accessor function or constant value. Default: `undefined`  */
+  @Input() clusterRadius?: NumericAccessor<LeafletMapClusterDatum<PointDatum>>
+
+  /** Cluster inner label accessor function. Default: `d => d.point_count`  */
+  @Input() clusterLabel?: StringAccessor<LeafletMapClusterDatum<PointDatum>>
+
+  /** Cluster bottom label accessor function. Default: `''` */
+  @Input() clusterBottomLabel?: StringAccessor<LeafletMapClusterDatum<PointDatum>>
+
+
+  /** The width of the cluster point outline. Default: `1.25` */
+  @Input() clusterRingWidth?: number
+
+  /** When cluster is expanded, show a background circle to better separate points from the base map. Default: `true` */
   @Input() clusterBackground?: boolean
 
   /** Defines whether the cluster should expand on click or not. Default: `true` */
   @Input() clusterExpandOnClick?: boolean
 
-  /** Clustering radius in pixels. This value will be passed to Supercluster https://github.com/mapbox/supercluster. Default: `55` */
-  @Input() clusterRadius?: number
+  /** Clustering distance in pixels. This value will be passed to Supercluster as the `radius` property https://github.com/mapbox/supercluster. Default: `55` */
+  @Input() clusteringDistance?: number
 
   /** A single map point can have multiple properties displayed as a small pie chart (or a donut chart for a cluster of points).
    * By setting the valuesMap configuration you can specify data properties that should be mapped to various pie / donut segments.
@@ -192,7 +212,7 @@ export class VisLeafletFlowMapComponent<PointDatum, FlowDatum> implements Leafle
 
   /** A TopoJSON Geometry layer to be displayed on top of the map. Supports fill and stroke */
   @Input() topoJSONLayer?: {
-    sources?: any;
+    sources: any;
     featureName?: string;
     fillProperty?: string;
     strokeProperty?: string;
@@ -205,33 +225,33 @@ export class VisLeafletFlowMapComponent<PointDatum, FlowDatum> implements Leafle
   @Input() tooltip?: Tooltip
 
   /** Flow source point longitude accessor function or value. Default:.`f => f.sourceLongitude` */
-  @Input() sourceLongitude?: NumericAccessor<FlowDatum>;
+  @Input() sourceLongitude?: NumericAccessor<FlowDatum>
   /** Flow source point latitude accessor function or value. Default: `f => f.sourceLatitude` */
-  @Input() sourceLatitude?: NumericAccessor<FlowDatum>;
+  @Input() sourceLatitude?: NumericAccessor<FlowDatum>
   /** Flow target point longitude accessor function or value. Default: `f => f.targetLongitude` */
-  @Input() targetLongitude?: NumericAccessor<FlowDatum>;
+  @Input() targetLongitude?: NumericAccessor<FlowDatum>
   /** Flow target point latitude accessor function or value. Default: `f => f.targetLatitude` */
-  @Input() targetLatitude?: NumericAccessor<FlowDatum>;
+  @Input() targetLatitude?: NumericAccessor<FlowDatum>
   /** Flow source point radius accessor function or value. Default: `3` */
-  @Input() sourcePointRadius?: NumericAccessor<FlowDatum>;
+  @Input() sourcePointRadius?: NumericAccessor<FlowDatum>
   /** Source point color accessor function or value. Default: `'#88919f'` */
-  @Input() sourcePointColor?: ColorAccessor<FlowDatum>;
+  @Input() sourcePointColor?: ColorAccessor<FlowDatum>
   /** Flow particle color accessor function or value. Default: `'#949dad'` */
-  @Input() flowParticleColor?: ColorAccessor<FlowDatum>;
+  @Input() flowParticleColor?: ColorAccessor<FlowDatum>
   /** Flow particle radius accessor function or value. Default: `1.1` */
-  @Input() flowParticleRadius?: NumericAccessor<FlowDatum>;
+  @Input() flowParticleRadius?: NumericAccessor<FlowDatum>
   /** Flow particle speed accessor function or value in angular degrees. Default: `0.07` */
-  @Input() flowParticleSpeed?: NumericAccessor<FlowDatum>;
+  @Input() flowParticleSpeed?: NumericAccessor<FlowDatum>
   /** Flow particle density accessor function or value on the range of [0, 1]. Default: `0.6` */
-  @Input() flowParticleDensity?: NumericAccessor<FlowDatum>;
+  @Input() flowParticleDensity?: NumericAccessor<FlowDatum>
 
   // Events
   /** Flow source point click callback function. Default: `undefined` */
-  @Input() onSourcePointClick?: ((f: FlowDatum, x: number, y: number, event: MouseEvent) => unknown);
+  @Input() onSourcePointClick?: ((f: FlowDatum, x: number, y: number, event: MouseEvent) => unknown)
   /** Flow source point mouse over callback function. Default: `undefined` */
-  @Input() onSourcePointMouseEnter?: ((f: FlowDatum, x: number, y: number, event: MouseEvent) => unknown);
+  @Input() onSourcePointMouseEnter?: ((f: FlowDatum, x: number, y: number, event: MouseEvent) => unknown)
   /** Flow source point mouse leave callback function. Default: `undefined` */
-  @Input() onSourcePointMouseLeave?: ((f: FlowDatum, event: MouseEvent) => unknown);
+  @Input() onSourcePointMouseLeave?: ((f: FlowDatum, event: MouseEvent) => unknown)
 
   /** Data */
   @Input() data?: { points: PointDatum[]; flows: FlowDatum[] }
@@ -251,8 +271,8 @@ export class VisLeafletFlowMapComponent<PointDatum, FlowDatum> implements Leafle
   }
 
   private getConfig (): LeafletFlowMapConfigInterface<PointDatum, FlowDatum> {
-    const { width, height, duration, events, attributes, flyToDuration, fitViewPadding, zoomDuration, initialBounds, bounds, accessToken, style, styleDarkTheme, attribution, onMapInitialized, onMapMoveZoom, onMapMoveStart, onMapMoveEnd, onMapZoomStart, onMapZoomEnd, onMapClick, pointLongitude, pointLatitude, pointId, pointShape, pointColor, pointRadius, pointLabel, pointBottomLabel, pointCursor, selectedPointId, clusterOutlineWidth, clusterBackground, clusterExpandOnClick, clusterRadius, valuesMap, topoJSONLayer, tooltip, sourceLongitude, sourceLatitude, targetLongitude, targetLatitude, sourcePointRadius, sourcePointColor, flowParticleColor, flowParticleRadius, flowParticleSpeed, flowParticleDensity, onSourcePointClick, onSourcePointMouseEnter, onSourcePointMouseLeave } = this
-    const config = { width, height, duration, events, attributes, flyToDuration, fitViewPadding, zoomDuration, initialBounds, bounds, accessToken, style, styleDarkTheme, attribution, onMapInitialized, onMapMoveZoom, onMapMoveStart, onMapMoveEnd, onMapZoomStart, onMapZoomEnd, onMapClick, pointLongitude, pointLatitude, pointId, pointShape, pointColor, pointRadius, pointLabel, pointBottomLabel, pointCursor, selectedPointId, clusterOutlineWidth, clusterBackground, clusterExpandOnClick, clusterRadius, valuesMap, topoJSONLayer, tooltip, sourceLongitude, sourceLatitude, targetLongitude, targetLatitude, sourcePointRadius, sourcePointColor, flowParticleColor, flowParticleRadius, flowParticleSpeed, flowParticleDensity, onSourcePointClick, onSourcePointMouseEnter, onSourcePointMouseLeave }
+    const { width, height, duration, events, attributes, flyToDuration, fitViewPadding, zoomDuration, initialBounds, fitBoundsOnUpdate, fitViewOnInit, fitViewOnUpdate, accessToken, style, styleDarkTheme, attribution, onMapInitialized, onMapMoveZoom, onMapMoveStart, onMapMoveEnd, onMapZoomStart, onMapZoomEnd, onMapClick, pointLongitude, pointLatitude, pointId, pointShape, pointColor, pointRadius, pointLabel, pointBottomLabel, pointCursor, selectedPointId, clusterColor, clusterRadius, clusterLabel, clusterBottomLabel, clusterRingWidth, clusterBackground, clusterExpandOnClick, clusteringDistance, valuesMap, topoJSONLayer, tooltip, sourceLongitude, sourceLatitude, targetLongitude, targetLatitude, sourcePointRadius, sourcePointColor, flowParticleColor, flowParticleRadius, flowParticleSpeed, flowParticleDensity, onSourcePointClick, onSourcePointMouseEnter, onSourcePointMouseLeave } = this
+    const config = { width, height, duration, events, attributes, flyToDuration, fitViewPadding, zoomDuration, initialBounds, fitBoundsOnUpdate, fitViewOnInit, fitViewOnUpdate, accessToken, style, styleDarkTheme, attribution, onMapInitialized, onMapMoveZoom, onMapMoveStart, onMapMoveEnd, onMapZoomStart, onMapZoomEnd, onMapClick, pointLongitude, pointLatitude, pointId, pointShape, pointColor, pointRadius, pointLabel, pointBottomLabel, pointCursor, selectedPointId, clusterColor, clusterRadius, clusterLabel, clusterBottomLabel, clusterRingWidth, clusterBackground, clusterExpandOnClick, clusteringDistance, valuesMap, topoJSONLayer, tooltip, sourceLongitude, sourceLatitude, targetLongitude, targetLatitude, sourcePointRadius, sourcePointColor, flowParticleColor, flowParticleRadius, flowParticleSpeed, flowParticleDensity, onSourcePointClick, onSourcePointMouseEnter, onSourcePointMouseLeave }
     const keys = Object.keys(config) as (keyof LeafletFlowMapConfigInterface<PointDatum, FlowDatum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
