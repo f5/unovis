@@ -67,7 +67,7 @@ export class MapComponent {
     style: lightTheme as StyleSpecification,
     styleDarkTheme: darkTheme as StyleSpecification,
     accessToken: '',
-    valuesMap: {
+    colorMap: {
       healthy: { color: '#47e845' },
       warning: { color: '#ffc226' },
       alert: { color: '#f8442d' },
@@ -79,9 +79,10 @@ export class MapComponent {
     attribution: [
       '<a href="https://www.maptiler.com/copyright/" target="_blank">MapTiler</a>',
     ],
-    pointBottomLabel: d => d.cluster ? `${d.point_count} sites` : d.id,
+    pointBottomLabel: d => d.id,
+    clusterBottomLabel: d => `${d.point_count} sites`,
     pointCursor: 'crosshair',
-    // selectedPointId: 'nc72965236',
+    selectedPointId: 'nc72965236',
     initialBounds: { northEast: { lat: 77, lng: -172 }, southWest: { lat: -50, lng: 72 } },
     onMapMoveZoom: ({ mapCenter, zoomLevel, bounds }) => { /* console.log(mapCenter, zoomLevel, bounds) */ },
     onMapMoveStart: ({ mapCenter, zoomLevel, bounds, userDriven }) => { console.log('onMapMoveStart', mapCenter, zoomLevel, bounds, userDriven) },

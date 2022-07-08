@@ -55,7 +55,7 @@ export class PieMapComponent {
     clusterRingWidth: 2,
     pointRingWidth: 5,
     clusterExpandOnClick: true,
-    valuesMap: {
+    colorMap: {
       blocked: {
         color: '#f8442d',
       },
@@ -63,8 +63,9 @@ export class PieMapComponent {
         color: '#4c7afc',
       },
     },
-    pointBottomLabel: d => d.cluster ? `${d.point_count} sites` : d.name,
-    clusterRadius: 65,
+    pointBottomLabel: d => d.name,
+    clusterBottomLabel: d => `${d.point_count} sites`,
+    clusteringDistance: 65,
     attribution: [
       '<a href="https://www.maptiler.com/copyright/" target="_blank">MapTiler</a>',
     ],
