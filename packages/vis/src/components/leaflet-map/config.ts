@@ -8,7 +8,7 @@ import { Tooltip } from 'components/tooltip'
 import { ColorAccessor, GenericAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
 
 // Local Types
-import { Bounds, LeafletMapPointStyles, MapZoomState, LeafletMapPointDatum, LeafletMapPointShape } from './types'
+import { Bounds, LeafletMapPointStyles, MapZoomState, LeafletMapPointDatum, LeafletMapPointShape, LeafletMapClusterDatum } from './types'
 
 // Renderer settings
 import { MapLibreStyleSpecs } from './renderer/map-style'
@@ -21,7 +21,7 @@ export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterfa
   height?: number | string;
   /** Animation duration when the map is automatically panning or zooming to a point or area. Default: `1500` ms */
   flyToDuration?: number;
-  /** Padding to be used when the `fitView` function has been called. The value is in pixels. Default: `[150, 150]` */
+  /** Padding to be used when the `fitView` function has been called. The value is in pixels, [topLeft, bottomRight]. Default: `[150, 150]` */
   fitViewPadding?: [number, number];
   /** Animation duration for the `setZoom` function. Default: `800` ms */
   zoomDuration?: number;
@@ -71,7 +71,7 @@ export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterfa
   pointColor?: ColorAccessor<Datum>;
   /** Point radius accessor function or constant value. Default: `undefined`  */
   pointRadius?: NumericAccessor<LeafletMapPointDatum<Datum>>;
-  /** Point inner label accessor function. Default: `d => d.point_count ?? ''`  */
+  /** Point inner label accessor function. Default: `undefined`  */
   pointLabel?: StringAccessor<LeafletMapPointDatum<Datum>>;
   /** Point bottom label accessor function. Default: `''` */
   pointBottomLabel?: StringAccessor<LeafletMapPointDatum<Datum>>;
@@ -83,16 +83,24 @@ export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterfa
   selectedPointId?: string;
 
   // Cluster
+  /** Cluster color accessor function or constant value. Default: `undefined`  */
+  clusterColor?: ColorAccessor<Datum>;
+  /** Cluster radius accessor function or constant value. Default: `undefined`  */
+  clusterRadius?: NumericAccessor<LeafletMapClusterDatum<Datum>>;
+  /** Cluster inner label accessor function. Default: `d => d.point_count`  */
+  clusterLabel?: StringAccessor<LeafletMapClusterDatum<Datum>>;
+  /** Cluster bottom label accessor function. Default: `''` */
+  clusterBottomLabel?: StringAccessor<LeafletMapClusterDatum<Datum>>;
   /** The width of the cluster point ring. Default: `1.25` */
   clusterRingWidth?: number;
   /** When cluster is expanded, show a background circle to better separate points from the base map. Default: `true` */
   clusterBackground?: boolean;
   /** Defines whether the cluster should expand on click or not. Default: `true` */
   clusterExpandOnClick?: boolean;
-  /** Clustering radius in pixels. This value will be passed to Supercluster https://github.com/mapbox/supercluster. Default: `55` */
-  clusterRadius?: number;
+  /** Clustering distance in pixels. This value will be passed to Supercluster as the `radius` property https://github.com/mapbox/supercluster. Default: `55` */
+  clusteringDistance?: number;
   /** A single map point can have multiple properties displayed as a small pie chart (or a donut chart for a cluster of points).
-   * By setting the valuesMap configuration you can specify data properties that should be mapped to various pie / donut segments.
+   * By setting the colorMap configuration you can specify data properties that should be mapped to various pie / donut segments.
    *
    * ```
    * {
@@ -109,7 +117,7 @@ export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterfa
    * ```
    * where every data point has the `healthy`, `warning` and `danger` numerical or boolean property.
    */
-  valuesMap?: LeafletMapPointStyles<Datum>;
+  colorMap?: LeafletMapPointStyles<Datum>;
 
   // TopoJSON overlay
   /** A TopoJSON Geometry layer to be displayed on top of the map. Supports fill and stroke */
@@ -167,18 +175,22 @@ export class LeafletMapConfig<Datum> extends ComponentConfig implements LeafletM
   pointShape = (d: Datum): string => d['shape']
   pointColor = (d: Datum): string => d['color']
   pointRadius = undefined
-  pointLabel = (d: LeafletMapPointDatum<Datum>): string => `${d.point_count ?? ''}`
+  pointLabel = undefined
   pointBottomLabel = ''
   pointCursor = null
   pointRingWidth = 1.25
   selectedPointId = undefined
 
   // Cluster
+  clusterColor = undefined
+  clusterRadius = undefined
+  clusterLabel = (d: LeafletMapClusterDatum<Datum>): string => `${d.point_count}`
+  clusterBottomLabel = ''
   clusterRingWidth = 1.25
   clusterBackground = true
   clusterExpandOnClick = true
-  clusterRadius = 55
-  valuesMap = {} as LeafletMapPointStyles<Datum>
+  clusteringDistance = 55
+  colorMap = {} as LeafletMapPointStyles<Datum>
 
   // TopoJSON Overlay
   topoJSONLayer = {

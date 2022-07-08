@@ -1,5 +1,6 @@
 import { select, Selection } from 'd3-selection'
 import L from 'leaflet'
+import { GeoJSONSource, Map } from 'maplibre-gl'
 import { feature } from 'topojson-client'
 
 // Config
@@ -16,63 +17,67 @@ import * as s from '../style'
 export const initialMapCenter: L.LatLngExpression = [36, 14]
 export const initialMapZoom = 1.9
 
-export function updateTopoJson<T> (mapboxMap, config: LeafletMapConfig<T>): void {
+export function updateTopoJson<T> (maplibreMap: Map, config: LeafletMapConfig<T>): void {
   const { topoJSONLayer } = config
 
   if (topoJSONLayer.sources) {
     const featureObject = topoJSONLayer.sources?.objects?.[topoJSONLayer.featureName]
     if (featureObject) {
-      const mapSource = mapboxMap.getSource(topoJSONLayer.featureName)
+      const mapSource = maplibreMap.getSource(topoJSONLayer.featureName) as GeoJSONSource
       const featureCollection = feature(topoJSONLayer.sources, featureObject)
       if (mapSource) {
         mapSource.setData(featureCollection)
       } else {
-        mapboxMap.addSource(topoJSONLayer.featureName, { type: 'geojson', data: featureCollection })
+        maplibreMap.addSource(topoJSONLayer.featureName, { type: 'geojson', data: featureCollection })
       }
     }
   }
 
-  const fillLayer = mapboxMap.getLayer(`${topoJSONLayer.featureName}-area`)
+  const fillLayer = maplibreMap.getLayer(`${topoJSONLayer.featureName}-area`)
   if (topoJSONLayer.fillProperty) {
     if (!fillLayer) {
-      mapboxMap.addLayer({
+      maplibreMap.addLayer({
         id: `${topoJSONLayer.featureName}-area`,
         type: 'fill',
         source: topoJSONLayer.featureName,
         paint: {
+          // eslint-disable-next-line @typescript-eslint/naming-convention
           'fill-antialias': false,
+          // eslint-disable-next-line @typescript-eslint/naming-convention
           'fill-opacity': topoJSONLayer.fillOpacity,
         },
       })
     }
-    mapboxMap.setPaintProperty(`${topoJSONLayer.featureName}-area`, 'fill-color', [
+    maplibreMap.setPaintProperty(`${topoJSONLayer.featureName}-area`, 'fill-color', [
       'case',
       ['!', ['has', topoJSONLayer.fillProperty]],
       'rgba(255, 255, 255, 0)',
       ['get', topoJSONLayer.fillProperty],
     ])
-  } else if (fillLayer) mapboxMap.removeLayer(`${topoJSONLayer.featureName}-area`)
+  } else if (fillLayer) maplibreMap.removeLayer(`${topoJSONLayer.featureName}-area`)
 
-  const strokeLayer = mapboxMap.getLayer(`${topoJSONLayer.featureName}-stroke`)
+  const strokeLayer = maplibreMap.getLayer(`${topoJSONLayer.featureName}-stroke`)
   if (topoJSONLayer.strokeProperty) {
     if (!strokeLayer) {
-      mapboxMap.addLayer({
+      maplibreMap.addLayer({
         id: `${topoJSONLayer.featureName}-stroke`,
         type: 'line',
         source: topoJSONLayer.featureName,
         paint: {
+          // eslint-disable-next-line @typescript-eslint/naming-convention
           'line-opacity': topoJSONLayer.strokeOpacity,
+          // eslint-disable-next-line @typescript-eslint/naming-convention
           'line-width': topoJSONLayer.strokeWidth,
         },
       })
     }
-    mapboxMap.setPaintProperty(`${topoJSONLayer.featureName}-stroke`, 'line-color', [
+    maplibreMap.setPaintProperty(`${topoJSONLayer.featureName}-stroke`, 'line-color', [
       'case',
       ['!', ['has', topoJSONLayer.strokeProperty]],
       'rgba(255, 255, 255, 0)',
       ['get', topoJSONLayer.strokeProperty],
     ])
-  } else if (strokeLayer) { mapboxMap.removeLayer(`${topoJSONLayer.featureName}-stroke`) }
+  } else if (strokeLayer) { maplibreMap.removeLayer(`${topoJSONLayer.featureName}-stroke`) }
 }
 
 export async function setupMap<T> (mapContainer: HTMLElement, config: LeafletMapConfig<T>): Promise<{
@@ -107,7 +112,7 @@ export async function setupMap<T> (mapContainer: HTMLElement, config: LeafletMap
     leaflet.attributionControl.addAttribution(attr)
   }
 
-  const layer = getMapboxglLayer(config) as any // we don't know the type of `layer`
+  const layer = getMapboxglLayer(config)
   layer.addTo(leaflet)
 
   // leaflet-mapbox-gl has a layer positioning issue on far zoom levels which leads to having wrong
@@ -120,16 +125,23 @@ export async function setupMap<T> (mapContainer: HTMLElement, config: LeafletMap
 
 
   if (topoJSONLayer?.sources) {
-    const mapboxmap = layer.getMaplibreMap()
-    const canvas = mapboxmap.getCanvas()
-    select(canvas).classed(s.mapboxglCanvas, true)
-    mapboxmap.on('mousemove', (event) => {
-      const feature = mapboxmap.queryRenderedFeatures(event.point)
-      select(canvas).datum(feature)
-      select(canvas).classed(s.onFeatureHover, Boolean(feature?.length))
+    const maplibreMap = layer.getMaplibreMap()
+    const canvas = maplibreMap.getCanvas()
+    const canvasSelection = select(canvas).classed(s.mapboxglCanvas, true)
+    const tilePaneSelection = select(leaflet.getPanes().tilePane)
+
+    maplibreMap.on('mousemove', (event) => {
+      const layerName = `${topoJSONLayer.featureName}-area`
+      const layer = maplibreMap.getLayer(layerName)
+      if (!layer) return
+
+      const features = maplibreMap.queryRenderedFeatures(event.point, { layers: [layerName] })
+      tilePaneSelection.datum(features[0])
+      canvasSelection.classed(s.onFeatureHover, Boolean(features[0]))
     })
-    mapboxmap.on('load', () => {
-      updateTopoJson(mapboxmap, config)
+
+    maplibreMap.on('load', () => {
+      updateTopoJson(maplibreMap, config)
     })
   }
 

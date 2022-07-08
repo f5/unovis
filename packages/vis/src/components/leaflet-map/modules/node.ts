@@ -14,7 +14,7 @@ import { hexToBrightness } from 'utils/color'
 import { getPointPos } from './utils'
 
 // Local Types
-import { LeafletMapPoint, LeafletMapPointShape } from '../types'
+import { LeafletMapPointDatum, LeafletMapClusterDatum, LeafletMapPoint, LeafletMapPointShape } from '../types'
 
 // Modules
 import { updateDonut } from './donut'
@@ -58,16 +58,18 @@ export function updateNodes<D> (
     const node: Selection<SVGPathElement, any, SVGGElement, any> = group.select(`.${s.pointPath}`)
     const innerLabel: Selection<SVGTextElement, any, SVGElement, any> = group.select(`.${s.innerLabel}`)
     const bottomLabel: Selection<SVGTextElement, any, SVGElement, any> = group.select(`.${s.bottomLabel}`)
-    const innerLabelText = getString(d.properties, config.pointLabel)
-    const bottomLabelText = getString(d.properties, config.pointBottomLabel)
-    const pointCursor = getString(d.properties, config.pointCursor)
-    const pointShape = getString(d.properties, config.pointShape)
-    const fromExpandedCluster = !!d.properties.expandedClusterPoint
+
+    const { x, y } = getPointPos(d, leafletMap)
     const donutData = d.donutData
-    const isCluster = d.properties.cluster
+    const isCluster = (d.properties as LeafletMapClusterDatum<D>).cluster
+    const fromExpandedCluster = !!(d.properties as LeafletMapPointDatum<D>).expandedClusterPoint
+
+    const innerLabelText = getString(d.properties, isCluster ? config.clusterLabel : config.pointLabel) ?? ''
+    const bottomLabelText = getString(d.properties, isCluster ? config.clusterBottomLabel : config.pointBottomLabel) ?? ''
+    const pointCursor = getString(d.properties, config.pointCursor)
+    const pointShape = getString(d.properties as LeafletMapPointDatum<D>, config.pointShape)
     const isRing = pointShape === LeafletMapPointShape.Ring
     const isCircular = (pointShape === LeafletMapPointShape.Circle) || isRing || isCluster || !pointShape
-    const { x, y } = getPointPos(d, leafletMap)
 
     // To get updated on every render call
     const ringWidth = (isCluster && config.clusterRingWidth) || (isRing && config.pointRingWidth) || 0
@@ -78,6 +80,10 @@ export function updateNodes<D> (
     node.attr('d', d.path)
     node.style('cursor', isCluster ? 'pointer' : pointCursor)
     bottomLabel.attr('transform', `translate(0,${d.radius + BOTTOM_LABEL_TOP_MARGIN})`)
+    innerLabel.attr('font-size', () => {
+      const fontSize = d.radius / Math.pow(innerLabelText.length, 0.4)
+      return clamp(fontSize, fontSize, 16)
+    })
 
     if (mapMoveZoomUpdateOnly) return
 
@@ -87,16 +93,11 @@ export function updateNodes<D> (
       .classed(s.pointPathRing, isRing)
       .style('fill', d.color)
       .style('stroke', d.color) // being used for hover
+      .style('stroke-width', ringWidth)
       .style('opacity', 1)
 
     innerLabel
       .text(innerLabelText || null)
-      .attr('font-size', (d: LeafletMapPoint<D>) => {
-        const pointDiameter = 2 * d.radius
-        const textLength = innerLabelText.length
-        const fontSize = 0.5 * pointDiameter / Math.pow(textLength, 0.4)
-        return clamp(fontSize, fontSize, 16)
-      })
       .attr('visibility', innerLabelText ? null : 'hidden')
       .style('fill', () => {
         const c = getComputedStyle(node.node()).fill

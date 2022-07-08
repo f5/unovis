@@ -192,7 +192,9 @@ export const clusterBackground = css`
   }
 `
 
-export const onFeatureHover = css``
+export const onFeatureHover = css`
+  label: feature-hovered;
+`
 
 export const mapboxglCanvas = css`
   pointer-events: all;
@@ -201,4 +203,8 @@ export const mapboxglCanvas = css`
   &${`.${onFeatureHover}`} {
     cursor: default;
   }
+`
+
+export const map = css`
+  label: map;
 `

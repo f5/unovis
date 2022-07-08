@@ -1,4 +1,5 @@
 import L from 'leaflet'
+import { Map } from 'maplibre-gl'
 import '@maplibre/maplibre-gl-leaflet/leaflet-maplibre-gl'
 
 import { injectGlobal } from '@emotion/css'
@@ -15,7 +16,7 @@ import { LeafletMapConfig } from '../config'
 
 injectGlobal(mapboxglCSS)
 
-export function getMapboxglLayer<Datum> (config: LeafletMapConfig<Datum>): unknown {
+export function getMapboxglLayer<Datum> (config: LeafletMapConfig<Datum>): L.Layer & { getMaplibreMap(): Map } {
   const { accessToken, style } = config
 
   if (isObject(style) && !style.glyphs) {

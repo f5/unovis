@@ -1,5 +1,5 @@
 import { LatLng } from 'leaflet'
-import Supercluster from 'supercluster'
+import Supercluster, { ClusterProperties } from 'supercluster'
 
 export enum LeafletMapPointShape {
   Square = 'square',
@@ -31,17 +31,14 @@ export type PointExpandedClusterProperties<D> = {
   dy?: number;
 }
 
+export type LeafletMapClusterDatum<D> = Partial<D> & ClusterProperties & {
+  clusterIndex?: Supercluster<D>;
+  clusterPoints?: D[];
+}
+
 export type LeafletMapPointDatum<D> = D & PointExpandedClusterProperties<D> & {
   id: string | number;
-  clusterIndex?: Supercluster<D>;
   shape: LeafletMapPointShape;
-
-  // Supercluster generated data:
-  cluster: boolean;
-  // eslint-disable-next-line camelcase,@typescript-eslint/naming-convention
-  point_count: number;
-  // eslint-disable-next-line camelcase,@typescript-eslint/naming-convention
-  cluster_id: string | number;
 };
 
 export type LeafletMapPoint<D> = {
@@ -51,7 +48,7 @@ export type LeafletMapPoint<D> = {
   path: string;
   color: string;
   id: number | string;
-  properties: LeafletMapPointDatum<D>;
+  properties: LeafletMapPointDatum<D> | LeafletMapClusterDatum<D>;
   donutData: LeafletMapPieDatum[];
   isCluster: boolean;
   clusterIndex: Supercluster<D, Supercluster.AnyProps>;
