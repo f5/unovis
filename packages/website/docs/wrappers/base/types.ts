@@ -14,7 +14,7 @@ export type DocTabsProps = {
   container: DocComponent;
   context: ContextLevel;
   components: DocComponent[];
-  mainComponent: DocComponent;
+  mainComponent: string;
   dataType: string;
   declarations?: Record<string, string>;
   hideTabLabels?: boolean;

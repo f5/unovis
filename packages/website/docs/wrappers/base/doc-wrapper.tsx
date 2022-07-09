@@ -24,26 +24,11 @@ export function DocWrapper ({
   imports,
   ...rest
 }: DocWrapperProps): JSX.Element {
-  const mainComponent = name && { name: name, props: rest, key: configKey }
-  const standAlone = ['XYContainer'].includes(name)
+  const mainComponent = { name: name, props: rest, key: configKey }
+  const components = name === containerName ? componentProps : [mainComponent, ...componentProps]
 
-  if (standAlone) {
-    containerName = name
-    containerProps = rest
-    if (data) mainComponent.props = { data, ...mainComponent.props }
-  }
-  const containerConfig = {
-    data,
-    height,
-    className,
-  }
-
-
-  if (data !== undefined) {
-    if (containerName !== undefined) containerProps.data = data
-    else {
-      mainComponent.props.data = data
-    }
+  if (!containerName) {
+    mainComponent.props.data = data
   }
 
   return (
@@ -51,38 +36,46 @@ export function DocWrapper ({
       {!excludeTabs &&
       <DocFrameworkTabs
         imports={imports}
-        container={containerName && {
+        container={name === containerName ? mainComponent : {
           name: containerName,
-          props: data ? { data, ...containerProps } : containerProps,
+          props: data && containerName ? { data, ...containerProps } : containerProps,
         }}
         showData={data !== undefined && showContext}
-        components={componentProps}
-        mainComponent={mainComponent}
+        components={components}
         context={showContext}
+        mainComponent={name}
         {...{ hideTabLabels, dataType, declarations }}/>
       }
       {!excludeGraph &&
         <BrowserOnly fallback={<div>Loading...</div>}>
           {() => {
+            const containerConfig = {
+              data,
+              height,
+              className,
+              ...containerProps,
+              ...(name === containerName ? { ...rest, ...hiddenProps } : {}),
+            }
             const lib = require('@volterra/vis-react')
-            const { [`Vis${name}`]: MainComponent } = lib
-            const Components = (config?: Partial<DocWrapperProps>): JSX.Element => (
-              <>
-                <MainComponent {...config} {...rest} {...hiddenProps}/>
-                {componentProps.map((c, i) => {
-                  const { [`Vis${c.name}`]: Component } = lib
-                  const props = c.props
-                  return <Component key={`${c.name}-${i}`} {...props}/>
-                })}
-              </>
-            )
             if (!containerName) {
-              return <MainComponent {...containerConfig} {...rest} {...hiddenProps}/>
+              return (
+                <>
+                  {components.map((c, i) => {
+                    const { [`Vis${c.name}`]: Component } = lib
+                    const props = c.name === name ? { ...containerConfig, ...c.props, ...hiddenProps } : c.props
+                    return <Component key={`${c.name}-${i}`} {...props}/>
+                  })}
+                </>
+              )
             }
             const { [`Vis${containerName}`]: VisContainer } = lib
             return (
-              <VisContainer {...containerConfig} {...containerProps}>
-                <Components/>
+              <VisContainer {...containerConfig}>
+                {components.map((c, i) => {
+                  const { [`Vis${c.name}`]: Component } = lib
+                  const props = c.name === name ? { ...c.props, ...hiddenProps } : c.props
+                  return <Component key={`${c.name}-${i}`} {...props}/>
+                })}
               </VisContainer>
             )
           }}
