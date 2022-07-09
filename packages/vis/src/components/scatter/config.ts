@@ -5,7 +5,8 @@ import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component
 // Types
 import { Scale, ContinuousScale } from 'types/scale'
 import { SymbolType } from 'types/symbol'
-import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
+import { ColorAccessor, GenericAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
+import { Position } from 'types/position'
 
 export interface ScatterConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
   /** Single Y accessor function. Default: `undefined` */
@@ -28,6 +29,8 @@ export interface ScatterConfigInterface<Datum> extends XYComponentConfigInterfac
   cursor?: StringAccessor<Datum>;
   /** Point color brightness ratio for switching between dark and light text label color. Default: `0.65` */
   labelTextBrightnessRatio?: number;
+  /** Label position. Default: `Position.Center` */
+  labelPosition?: GenericAccessor<Position, Datum>;
 }
 
 export class ScatterConfig<Datum> extends XYComponentConfig<Datum> implements ScatterConfigInterface<Datum> {
@@ -37,6 +40,7 @@ export class ScatterConfig<Datum> extends XYComponentConfig<Datum> implements Sc
   shape = SymbolType.Circle
   label = undefined
   labelColor = undefined
+  labelPosition = Position.Center
   cursor = null
   labelTextBrightnessRatio = 0.65
 }

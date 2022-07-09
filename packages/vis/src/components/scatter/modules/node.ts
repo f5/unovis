@@ -1,12 +1,14 @@
 import { Selection, select } from 'd3-selection'
 import { symbol } from 'd3-shape'
 import { color } from 'd3-color'
+import { Position } from 'types/position'
 import { Symbol } from 'types/symbol'
 
 // Utils
 import { smartTransition } from 'utils/d3'
 import { getCSSVariableValue, isStringCSSVariable } from 'utils/misc'
 import { hexToBrightness } from 'utils/color'
+import { getValue } from 'utils/data'
 
 // Config
 import { ScatterConfig } from '../config'
@@ -61,8 +63,27 @@ export function updateNodes<Datum> (selection: Selection<SVGGElement, ScatterPoi
       labelColor = brightness > config.labelTextBrightnessRatio ? 'var(--vis-scatter-point-label-text-color-dark)' : 'var(--vis-scatter-point-label-text-color-light)'
     }
 
-    text.html(pointLabelText)
-      .attr('font-size', pointLabelFontSize)
+    const label = text.html(pointLabelText)
+
+    const getLabelPosition = (): [number, number] => {
+      switch (getValue(d, config.labelPosition, i)) {
+        case Position.Top:
+          return [0, -pointDiameter]
+        case Position.Bottom:
+          return [0, pointDiameter]
+        case Position.Left:
+          return [-pointDiameter, 0]
+        case Position.Right:
+          return [pointDiameter, 0]
+        default:
+          label.attr('font-size', pointLabelFontSize)
+          return [0, 0]
+      }
+    }
+
+    const pos = getLabelPosition()
+    text.attr('x', pos[0])
+    text.attr('y', pos[1])
 
     smartTransition(text, duration)
       .style('fill', labelColor)
