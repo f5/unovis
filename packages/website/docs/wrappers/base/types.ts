@@ -7,14 +7,14 @@ export enum ContextLevel {
 export type DocComponent = {
   name: string;
   props: Record<string, any>;
-  key: string; // key in ts chart config
+  key?: string; // key in ts chart config
 }
 
 export type DocTabsProps = {
   container: DocComponent;
   context: ContextLevel;
   components: DocComponent[];
-  mainComponent: DocComponent;
+  mainComponent: string;
   dataType: string;
   declarations?: Record<string, string>;
   hideTabLabels?: boolean;

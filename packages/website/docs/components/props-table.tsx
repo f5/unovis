@@ -36,7 +36,7 @@ export const PropTable = ({ name }): JSX.Element => {
         })}
       </tbody>
       <tfoot>
-        <tr>* required property</tr>
+        <tr><td>* required property</td></tr>
       </tfoot>
     </table>
   )
