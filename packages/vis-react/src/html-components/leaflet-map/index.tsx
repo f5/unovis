@@ -1,14 +1,18 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { ForwardedRef, Ref, useEffect, useImperativeHandle, useRef, useState } from 'react'
 import { LeafletMap, LeafletMapConfigInterface } from '@volterra/vis'
 import { arePropsEqual } from '../../utils/react'
 
 export type VisLeafletMapProps<Datum> = LeafletMapConfigInterface<Datum> & {
   data?: Datum[];
+  ref?: Ref<VisLeafletMapRef<Datum>>;
   className?: string;
 }
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
-export function VisLeafletMapFC<Datum> (props: VisLeafletMapProps<Datum>): JSX.Element {
+export type VisLeafletMapRef<Datum> = {
+  component: LeafletMap<Datum> | undefined;
+}
+
+export function VisLeafletMapFC<Datum> (props: VisLeafletMapProps<Datum>, ref: ForwardedRef<VisLeafletMapRef<Datum>>): JSX.Element {
   const container = useRef<HTMLDivElement>(null)
   const [component, setComponent] = useState<LeafletMap<Datum>>()
 
@@ -28,10 +32,11 @@ export function VisLeafletMapFC<Datum> (props: VisLeafletMapProps<Datum>): JSX.E
     component?.setConfig(props)
   })
 
+  useImperativeHandle(ref, () => ({ component }))
   return <div ref={container} className={props.className} />
 }
 
 // We export a memoized component to avoid unnecessary re-renders
 //  and define its type explicitly to help react-docgen-typescript to extract information about props
 export const VisLeafletMap: (<Datum>(props: VisLeafletMapProps<Datum>) => JSX.Element | null) =
-  React.memo(VisLeafletMapFC, arePropsEqual)
+  React.memo(React.forwardRef(VisLeafletMapFC), arePropsEqual)
