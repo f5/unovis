@@ -286,7 +286,12 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     ], duration, padding)
   }
 
-  public selectPointById (id: string, centerPoint = false): void {
+  /* Select a point by id and optionally center the map view.
+   * This method was designed to be used mainly with the `[LeafletMap.selectors.point]` click events
+   * (when the user actually clicks on a point) and the specified point is inside one of the collapsed
+   * clusters it won't be selected. You can use the `zoomToPointById` method to achieve that.
+   */
+  public selectPointById (id: string, centerView = false): void {
     const { config } = this
     const pointData = this._getPointData()
     const foundPoint = pointData.find(d => (d.properties as LeafletMapPointDatum<Datum>).id === id)
@@ -306,7 +311,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     const isPointInsideExpandedCluster = this._expandedCluster?.points?.find(d => getString(d.properties, config.pointId) === id)
     if (!isPointInsideExpandedCluster) this._resetExpandedCluster()
 
-    if (centerPoint) {
+    if (centerView) {
       const coordinates = {
         lng: getNumber(foundPoint.properties as LeafletMapPointDatum<Datum>, config.pointLongitude),
         lat: getNumber(foundPoint.properties as LeafletMapPointDatum<Datum>, config.pointLatitude),
@@ -320,16 +325,22 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     }
   }
 
+  /* Get the id of the selected point */
   public getSelectedPointId (): string | number | undefined {
     return this._selectedPoint?.id
   }
 
+  /* Unselect point if it was selected before */
   public unselectPoint (): void {
     this._selectedPoint = null
     this._externallySelectedPoint = null
     this.render()
   }
 
+  /* Zoom to a point by id and optionally select it.
+   * If the point is inside a cluster, it'll be automatically expanded to show the enclosed point.
+   * You can also force set the zoom level by providing the `customZoomLevel` argument.
+   */
   public zoomToPointById (id: string, selectPoint = false, customZoomLevel?: number): void {
     const { config, datamodel } = this
     if (!datamodel.data.length) {

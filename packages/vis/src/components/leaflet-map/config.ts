@@ -43,19 +43,19 @@ export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterfa
   attribution?: string[];
 
   // Map events
-  /** Function to be called after Map async initialization is done. Default: `undefined` */
+  /** Function to be called after the map's async initialization is done. Default: `undefined` */
   onMapInitialized?: (() => void);
-  /** Map Move / Zoom joint callback function. Default: `undefined` */
+  /** Map Move / Zoom unified callback function. Default: `undefined` */
   onMapMoveZoom?: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => void);
-  /** Move Move Start callback function. Default: `undefined` */
+  /** Map Move Start callback function. Default: `undefined` */
   onMapMoveStart?: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => void);
-  /** Move Move End callback function. Default: `undefined` */
+  /** Map Move End callback function. Default: `undefined` */
   onMapMoveEnd?: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => void);
-  /** Move Zoom Start callback function. Default: `undefined` */
+  /** Map Zoom Start callback function. Default: `undefined` */
   onMapZoomStart?: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => void);
-  /** Move Zoom End callback function. Default: `undefined` */
+  /** Map Zoom End callback function. Default: `undefined` */
   onMapZoomEnd?: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => void);
-  /** Move Zoom Click callback function. Default: `undefined` */
+  /** Map Zoom Click callback function. Default: `undefined` */
   onMapClick?: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => void);
 
   // Point
