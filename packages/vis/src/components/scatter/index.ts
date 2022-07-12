@@ -96,7 +96,7 @@ export class Scatter<Datum> extends XYComponentCore<Datum> {
     // Points
     const points = pointGroupsMerged
       .selectAll<SVGPathElement, ScatterPoint<Datum>>(`.${s.point}`)
-      .data((d) => d)
+      .data((d) => d, (d, i) => `${getString(d, config.id, i) ?? i}`)
 
     const pointsEnter = points.enter().append('g')
       .attr('class', s.point)
@@ -120,11 +120,13 @@ export class Scatter<Datum> extends XYComponentCore<Datum> {
     const { config, datamodel: { data } } = this
 
     const xDomain = this.xScale.domain().map(d => +d) // Convert Date to number
+    const yDomain = this.yScale.domain().map(d => +d) // Convert Date to number
     const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
 
     const maxSizeValue = max<number>(flatten(yAccessors.map((y, j) => data?.map(d => getNumber(d, config.size, j)))))
     const maxSizePx = config.sizeRange ? config.sizeScale(maxSizeValue) : maxSizeValue
     const maxSizeXDomain = (this.xScale.invert(maxSizePx) as number) - (this.xScale.invert(0) as number)
+    const maxSizeYDomain = Math.abs((this.yScale.invert(maxSizePx) as number) - (this.yScale.invert(0) as number))
 
     return yAccessors.map((y, j) => {
       return data?.reduce<ScatterPoint<Datum>[]>((acc, d, i) => {
@@ -133,10 +135,13 @@ export class Scatter<Datum> extends XYComponentCore<Datum> {
         const pointSize = getNumber(d, config.size, i)
         const pointSizeScaled = config.sizeRange ? config.sizeScale(pointSize) : pointSize
         const pointSizeXDomain = (this.xScale.invert(pointSizeScaled) as number) - (this.xScale.invert(0) as number)
+        const pointSizeYDomain = Math.abs((this.yScale.invert(pointSizeScaled) as number) - (this.yScale.invert(0) as number))
 
         if (
           ((xValue - pointSizeXDomain / 2) >= (xDomain[0] - maxSizeXDomain / 2)) &&
-          ((xValue + pointSizeXDomain / 2) <= (xDomain[1] + maxSizeXDomain / 2))
+          ((xValue + pointSizeXDomain / 2) <= (xDomain[1] + maxSizeXDomain / 2)) &&
+          ((yValue - pointSizeYDomain / 2) >= (yDomain[0] - maxSizeYDomain / 2)) &&
+          ((yValue + pointSizeYDomain / 2) <= (yDomain[1] + maxSizeYDomain / 2))
         ) {
           acc.push({
             ...d,
