@@ -9,7 +9,8 @@
     () => import('./examples/free-brush-scatters/free-brush-scatters.svelte'),
     () => import('./examples/horizontal-stacked-bar-chart/horizontal-stacked-bar-chart.svelte'),
     () => import('./examples/multi-line-chart/multi-line-chart.svelte'),
-    () => import('./examples/topojson-map/topojson-map.svelte')
+    () => import('./examples/topojson-map/topojson-map.svelte'),
+    () => import('./examples/basic-timeline/basic-timeline.svelte')
   ]
 </script>
 
