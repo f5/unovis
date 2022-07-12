@@ -1,5 +1,4 @@
 import useIsBrowser from '@docusaurus/useIsBrowser'
-import { ContextLevel } from '../wrappers/base'
 
 export type PropInfo = {
   key: string;

@@ -3,6 +3,27 @@ title: Graph
 sidebar_label: Graph ✍️
 ---
 
+import CodeBlock from '@theme/CodeBlock'
 import { PropTable } from '../components/props-table.tsx'
+import { DocWrapper } from '../wrappers'
+import { generateNodeLinkData } from '../utils/data'
+
+export const defaultProps = (showData = true) => ({
+  name: "Graph",
+  configKey: "component",
+  containerName: "SingleContainer",
+  height: 400,
+  dataType: "GraphNode,GraphLink",
+  data: generateNodeLinkData()
+})
+
+export const GraphDoc = (props) => (
+  <DocWrapper {...defaultProps() } {...props}/>
+)
+
+### Basic Configuration
+<GraphDoc showContext="full"/>
+
+<GraphDoc/>
 
 <PropTable name="VisGraph"/>

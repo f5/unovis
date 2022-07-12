@@ -1,3 +1,4 @@
+export const sample = <T>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)]
 export interface DataRecord {
   x: number;
   y: number;
@@ -54,3 +55,26 @@ export function generateScatterDataRecords (n = 10, colored = false): ScatterDat
     label: `${i}`,
   }))
 }
+
+type NodeDatum = {
+  id: string;
+}
+
+export interface NodeLinkData {
+  nodes: NodeDatum[];
+  links: { source: NodeDatum; target: NodeDatum }[];
+}
+
+export function generateNodeLinkData (n = 10): NodeLinkData {
+  const nodes = Array(n).fill(0).map((_, i) => ({ id: (i + 1).toString() }))
+  const options = [...nodes].slice(1)
+  const links = nodes.reduce((arr, n) => {
+    if (options.length) {
+      const num = Math.max(1, Math.random() * options.length)
+      for (let i = 0; i < num; i++) arr.push({ source: n.id, target: options.shift().id })
+    }
+    return arr
+  }, [])
+  return { nodes, links }
+}
+

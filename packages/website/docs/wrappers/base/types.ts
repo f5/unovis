@@ -7,7 +7,7 @@ export enum ContextLevel {
 export type DocComponent = {
   name: string;
   props: Record<string, any>;
-  key: string; // key in ts chart config
+  key?: string; // key in ts chart config
 }
 
 export type DocTabsProps = {
