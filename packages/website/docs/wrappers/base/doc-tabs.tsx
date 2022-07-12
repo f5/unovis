@@ -14,10 +14,6 @@ type CodeConfig = {
 
 function getAngularStrings (config: CodeConfig, importedProps: string[], inlineTemplate: boolean): FrameworkTabProps['angular'] {
   const { components, container, dataType, declarations, importString } = config
-  importedProps.forEach(i => {
-    declarations[i] = i
-  })
-
   const { data, ...rest } = declarations
 
   const html = container
@@ -92,6 +88,13 @@ function getReactStrings ({ components, container, dataType, declarations, impor
 function getSvelteStrings (config: CodeConfig): string {
   const { components, container, declarations, importString } = config
 
+  const html = container
+    ? parse.svelte(container, true).replace('><', `>\n${t}${components.map(c => parse.svelte(c)).join(`\n${t}`)}\n<`)
+    : components.map(c => parse.svelte(c)).join('\n')
+
+  if (!importString && !Object.keys(declarations).length) {
+    return html
+  }
   const lines: string[] = []
   const imports = (container ? [container, ...components] : components).map(c => `Vis${c.name}`).join(', ')
   lines.push(`${t}import { ${imports} } from '@volterra/vis-svelte'`)
@@ -100,10 +103,6 @@ function getSvelteStrings (config: CodeConfig): string {
   const { data, ...rest } = declarations
   if (data) lines.push(`${t}export let ${data}`)
   Object.entries(rest).forEach(d => lines.push(`${t}const ${d.join(' = ')}`))
-
-  const html = container
-    ? parse.svelte(container, true).replace('><', `>\n${t}${components.map(c => parse.svelte(c)).join(`\n${t}`)}\n<`)
-    : components.map(c => parse.svelte(c)).join('\n')
   return `<script lang='ts'>\n${lines.join('\n')}\n</script>\n\n${html}`
 }
 
@@ -177,8 +176,8 @@ export function DocFrameworkTabs ({
   showData,
 }: DocTabsProps): JSX.Element {
   const children = !context || context === ContextLevel.Minimal
-    ? [mainComponent]
-    : [mainComponent, ...components]
+    ? [components.find(c => c.name === mainComponent)]
+    : components
 
   if (showData) {
     declarations.data = `data: ${dataType.includes(',') ? `${dataType.split(/(?=[A-Z])/)[0]}Data` : `${dataType}[]`}`
@@ -190,7 +189,7 @@ export function DocFrameworkTabs ({
       name: container.name,
       props: parseProps(container.props, dataType, importedProps, declarations),
     },
-    components: children.map(c => ({
+    components: children?.map(c => ({
       ...c,
       props: parseProps(c.props, dataType, importedProps, declarations),
     })),
@@ -204,7 +203,7 @@ export function DocFrameworkTabs ({
       angular={getAngularStrings(tabConfig, importedProps, context === ContextLevel.Minimal)}
       react={getReactStrings(tabConfig)}
       svelte={getSvelteStrings(tabConfig)}
-      typescript={getTypescriptStrings(tabConfig, mainComponent && context !== ContextLevel.Container && mainComponent.name)}
+      typescript={getTypescriptStrings(tabConfig, mainComponent && context !== ContextLevel.Container && mainComponent)}
       hideTabLabels={hideTabLabels}
       showTitles={context !== undefined}
     />
