@@ -2,6 +2,25 @@
 sidebar_label: Sankey ✍️
 ---
 
+import CodeBlock from '@theme/CodeBlock'
 import { PropTable } from '../components/props-table.tsx'
+import { DocWrapper } from '../wrappers'
+import { generateNodeLinkData } from '../utils/data'
+
+export const defaultProps = (showData = true) => ({
+  name: "Sankey",
+  configKey: "component",
+  containerName: "SingleContainer",
+  height: 400,
+  dataType: "SankeyNode,SankeyLink",
+  data: generateNodeLinkData()
+})
+
+export const SankeyDoc = (props) => (
+  <DocWrapper {...defaultProps() } {...props} linkValue={d => Math.random()}/>
+)
+
+### Basic Configuration
+<SankeyDoc showContext="full"/>
 
 <PropTable name="VisSankey"/>
