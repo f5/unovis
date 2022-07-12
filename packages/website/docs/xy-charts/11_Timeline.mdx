@@ -2,8 +2,9 @@
 sidebar_position: 6
 ---
 import CodeBlock from "@theme/CodeBlock";
+import BrowserOnly from "@docusaurus/core/lib/client/exports/BrowserOnly";
 import { PropTable } from '../components/props-table'
-import { data, generateTimeSeries } from '../utils/data'
+import { generateTimeSeries } from '../utils/data'
 import { XYWrapper, XYWrapperWithInput, axis } from './wrapper.tsx';
 
 export const xAxis = {...axis('x'), props: { type: 'x', tickFormat: Intl.DateTimeFormat().format }}
@@ -34,7 +35,7 @@ type TimeDataRecord = {
 :::note
 
 By default, if the records in your data array contain `length` and `type` properties (as shown above),
-_Timeline_ will only need the `x` accessor provided to display the data. 
+_Timeline_ will only need the `x` accessor provided to display the data.
 Otherwise, you can explicitly define accessor functions for `length` and `type`.
 
 :::
@@ -114,7 +115,31 @@ export function ScrollExample() {
 <ScrollExample/>
 
 ### Custom cursor for hover events
-<XYWrapper {...defaultProps(20, 5)} cursor="cell"/>
+You can set custom cursor when hovering over a line. However, it'll only be active if you've defined events for `[Timeline.selectors.line]`:
+<BrowserOnly>
+{() => {
+  const { Timeline } = require('@volterra/vis')
+  return <XYWrapper
+      {...defaultProps(20, 5)}
+      showContext="minimal"
+      declarations={{
+        events:
+  `{
+    [Timeline.selectors.line]: {
+        click: (d) => { console.log(d) }
+    }
+  }`
+      }}
+      events={{
+        [Timeline.selectors.line]: {
+            click: (d) => { console.log(d) }
+        },
+      }}
+      cursor="cell"
+    />
+  }
+}
+</BrowserOnly>
 
 ### More Events
 ```ts
