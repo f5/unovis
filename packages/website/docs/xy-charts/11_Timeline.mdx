@@ -25,9 +25,9 @@ where `TimeDataRecord` has at least the following properties:
 
 ```ts
 type TimeDataRecord = {
-  timestamp: Date; // position on the X axis
-  length: number; // length of the line
-  type: any; // the row it will be displayed in
+  timestamp: Date; // Position on the X axis. Can be `number` or `Date`
+  length: number; // Length of the line in X axis values, i.e. milliseconds if you use `Date`
+  type: string; // The row it will be displayed in
 }
 ```
 
