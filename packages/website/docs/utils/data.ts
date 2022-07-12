@@ -11,6 +11,8 @@ export interface DataRecord {
 export interface TimeDataRecord {
   timestamp: number;
   value: number;
+  length?: number;
+  type?: string;
 }
 
 export function generateDataRecords (n = 10): DataRecord[] {
@@ -27,10 +29,13 @@ export function generateDataRecords (n = 10): DataRecord[] {
 
 export const data = generateDataRecords(10)
 
-export function generateTimeSeries (n = 10): TimeDataRecord[] {
+export function generateTimeSeries (n = 10, types = n): TimeDataRecord[] {
+  const groups = Array(types).fill(0).map((_, i) => String.fromCharCode(i + 65))
   return Array(n).fill(0).map((_, i: number) => ({
     timestamp: Date.now() + i * 1000 * 60 * 60 * 24,
     value: i / 10 + Math.sin(i / 5) + Math.cos(i / 3),
+    length: Math.round(1000 * 60 * 60 * 24) * Math.random(),
+    type: i > groups.length ? sample(groups) : groups[i],
   }))
 }
 

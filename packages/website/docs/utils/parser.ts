@@ -49,7 +49,7 @@ export function parseObject (value: any, type: string, level = 1): string {
   if (typeof value !== 'object') {
     return String(value)
   }
-  if (value.length) {
+  if (typeof value[Symbol.iterator] === 'function') {
     return `[${value.map(v => parseObject(v, type, level + 1)).join(', ')}]`
   }
   const objectProps = Object.entries(value).map(([k, v]) => `${tab(level + 1)}${[k, parseObject(v, type, level + 1)].join(': ')}`)
