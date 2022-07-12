@@ -28,13 +28,13 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
     },
   }
 
-  private _background: Selection<SVGRectElement, any, SVGGElement, any>
-  private _rowsGroup: Selection<SVGGElement, any, SVGGElement, any>
-  private _linesGroup: Selection<SVGGElement, any, SVGGElement, any>
-  private _labelsGroup: Selection<SVGGElement, any, SVGGElement, any>
-  private _scrollBarGroup: Selection<SVGGElement, any, SVGGElement, any>
-  private _scrollBarBackground: Selection<SVGRectElement, any, SVGGElement, any>
-  private _scrollBarHandle: Selection<SVGRectElement, any, SVGGElement, any>
+  private _background: Selection<SVGRectElement, unknown, SVGGElement, unknown>
+  private _rowsGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
+  private _linesGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
+  private _labelsGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
+  private _scrollBarGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
+  private _scrollBarBackground: Selection<SVGRectElement, unknown, SVGGElement, unknown>
+  private _scrollBarHandle: Selection<SVGRectElement, unknown, SVGGElement, unknown>
   private _scrollBarWidth = 5
   private _scrollDistance = 0
   private _scrollBarMargin = 5
@@ -144,8 +144,8 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
     // Row background rects
     const xStart = xRange[0]
     const numRows = Math.max(Math.floor(yHeight / config.rowHeight), numUniqueRecords)
-    const rects = this._rowsGroup.selectAll(`.${s.rect}`)
-      .data(Array(numRows).fill(0)) as Selection<SVGRectElement, number, SVGGElement, any>
+    const rects = this._rowsGroup.selectAll<SVGRectElement, number>(`.${s.rect}`)
+      .data(Array(numRows).fill(0))
 
     const rectsEnter = rects.enter().append('rect')
       .attr('class', s.rect)
@@ -160,8 +160,8 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
     rects.exit().remove()
 
     // Lines
-    const lines = this._linesGroup.selectAll(`.${s.line}`)
-      .data(data, (d, i) => `${getString(d, config.id) ?? i}`) as Selection<SVGLineElement, Datum, SVGGElement, any>
+    const lines = this._linesGroup.selectAll<SVGLineElement, Datum>(`.${s.line}`)
+      .data(data, (d: Datum, i) => `${getString(d, config.id, i) ?? i}`)
 
     const linesEnter = lines.enter().append('line')
       .attr('class', s.line)
@@ -171,7 +171,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum> {
     this._positionLines(linesEnter, ordinalScale)
 
     const linesMerged = smartTransition(linesEnter.merge(lines), duration)
-      .style('stroke', (d, i) => getColor(d, config.color, i))
+      .style('stroke', (d, i) => getColor(d, config.color, ordinalScale(this._getRecordType(d, i))))
       .attr('stroke-width', (d, i) => getNumber(d, config.lineWidth, i))
       .attr('transform', 'translate(0, 0)')
       .style('cursor', (d, i) => getString(d, config.cursor, i))
