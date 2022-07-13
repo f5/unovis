@@ -62,7 +62,7 @@ export class DDoSMapComponent implements AfterViewInit {
     flowParticleDensity: f => 0.25 + f.value / 10,
     flowParticleSpeed: f => 0.05 + f.value / 100,
     flowParticleRadius: 1.25,
-    valuesMap: {
+    colorMap: {
       normal: {
         color: '#f6c544',
       },
@@ -89,8 +89,9 @@ export class DDoSMapComponent implements AfterViewInit {
     pointId: d => d.name,
     clusterRingWidth: 2,
     clusterExpandOnClick: true,
-    pointBottomLabel: d => d.cluster ? `${d.point_count} sites` : d.name,
-    clusterRadius: 65,
+    pointBottomLabel: d => d.name,
+    clusterBottomLabel: d => `${d.point_count} sites`,
+    clusteringDistance: 65,
     attribution: [
       '<a href="https://www.maptiler.com/copyright/" target="_blank">MapTiler</a>',
     ],

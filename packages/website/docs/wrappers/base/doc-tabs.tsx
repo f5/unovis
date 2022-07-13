@@ -27,16 +27,18 @@ function getAngularStrings (config: CodeConfig, importedProps: string[], inlineT
   const tsLines: string[] = []
   if (importString || Object.values(declarations).length) {
     if (importString) tsLines.push(importString)
+    importedProps.forEach(i => {
+      rest[i] = i
+    })
 
     tsLines.push('@Component({')
-    if (inlineTemplate) {
-      tsLines.push(`  template: ${html.includes('\n') ? `\`\n    ${html.split('\n').join('\n    ')}\n  \`` : `'${html}'`}`)
-    } else {
-      tsLines.push('  templateUrl: \'template.html\'')
-    }
+    const template = inlineTemplate
+      ? `  template: ${html.includes('\n') ? `\`\n    ${html.split('\n').join('\n    ')}\n  \`` : `'${html}'`}`
+      : '  templateUrl: \'template.html\''
+    tsLines.push(template)
     tsLines.push('})')
 
-    if (Object.values(declarations).length) {
+    if (data || Object.values(rest).length) {
       tsLines.push(`export class Component<${dataType}>{`)
       if (data) tsLines.push(`${t}@Input ${data};`)
       tsLines.push(...Object.entries(rest).map(d => `${t}${d.join(' = ')}`))
@@ -108,7 +110,7 @@ function getSvelteStrings (config: CodeConfig): string {
 
 function getTypescriptStrings (config: CodeConfig, mainComponent: string): string {
   const { components, container, dataType, declarations, importString } = config
-  const { data, ...rest } = declarations
+  const { data, ...vars } = declarations
   const lines: string[] = []
 
   if (importString) lines.push(importString)
@@ -117,45 +119,59 @@ function getTypescriptStrings (config: CodeConfig, mainComponent: string): strin
     if (container) container.props = container.props.filter(d => d.key !== 'data')
   }
 
-  const mainIsContainer = mainComponent && mainComponent.endsWith('Container')
-  const getPropDetails = (props: PropInfo[]): PropInfo[] => props.map(p => ({ ...p, value: declarations[p.key] || p.value }))
+  const getPropDetails = (props: PropInfo[]): PropInfo[] => props?.map(p => ({ ...p, value: declarations[p.key] || p.value }))
 
+  // process config
   const containerConfig: Record<string, string[]> = {}
-  if (mainComponent && !mainIsContainer) {
-    const name = mainComponent.charAt(0).toLowerCase().concat(mainComponent.slice(1))
-    const main = components.find(c => c.name === mainComponent)
-    if (main?.props) {
-      lines.push(parse.typescript(
-        `const ${name} = `, {
-          ...main,
-          props: main.props.map(p => ({ ...p, value: declarations[p.key] || p.value })),
-        },
-        dataType))
+  components.forEach(c => {
+    if (!containerConfig[c.key]) {
+      containerConfig[c.key] = []
     }
-    containerConfig[main.key] = [name]
-  } else if (rest.length) {
-    Object.keys(rest).forEach(d => {
-      lines.push(`const ${d} = ${declarations[d]}`)
+    if (c.name !== mainComponent) {
+      containerConfig[c.key].push(parse.typescript('', c))
+    } else {
+      const name = mainComponent.charAt(0).toLowerCase().concat(mainComponent.slice(1))
+      containerConfig[c.key] = [name, ...containerConfig[c.key]]
+    }
+  })
+
+  // push import string and data declaration
+  if (importString) lines.push(importString)
+  if (data) lines.push(`const ${data} = getData()\n`)
+
+  // process props before adding remaining declarations
+  const main = mainComponent && components.find(c => c.name === mainComponent)
+  const mainProps = getPropDetails(main?.props)
+  const containerProps = getPropDetails(container?.props)
+  if (Object.keys(vars).length) {
+    Object.keys(vars).forEach(d => {
+      lines.push(`const ${d} = ${vars[d]}`)
     })
     lines.push('')
   }
 
+  // add main component declaration
+  if (main) {
+    const name = mainComponent.charAt(0).toLowerCase().concat(mainComponent.slice(1))
+    lines.push(parse.typescript(
+      `const ${name} = `, {
+        ...main,
+        props: mainProps,
+      },
+      dataType))
+    containerConfig[main.key] = [name]
+  }
+
+  // add container component declaration
   if (container) {
-    components.forEach(c => {
-      if (!containerConfig[c.key]) {
-        containerConfig[c.key] = []
-      }
-      if (c.name !== mainComponent) {
-        containerConfig[c.key].push(parse.typescript('', c))
-      }
-    })
     lines.push(`const chart = new ${container.name}(containerNode, {`)
-    if (container.props?.length) {
-      const containerProps = getPropDetails(container.props).map(p => [p.key, p.value].join(': '))
-      lines.push(`${t}${containerProps.join(`,\n${t}`)},`)
+    if (containerProps.length) {
+      lines.push(`${t}${containerProps.map(p => [p.key, p.value].join(': ')).join(`,\n${t}`)},`)
     }
     Object.entries(containerConfig).forEach(([k, v]) => {
-      const val = k === 'components' ? (v?.length > 1 ? `[\n${tab(2)}${v.join(`\n${tab(2)}`)}\n${t}]` : `[${v.join(',')}]`) : v
+      const val = k === 'components'
+        ? (v?.length > 1 ? `[\n${tab(2)}${v.join(`\n${tab(2)}`)}\n${t}]`
+          : `[${v.join(',')}]`) : v
       lines.push(`${t}${[k, val].join(': ')},`)
     })
     lines.push('}, data)\n')
@@ -183,7 +199,7 @@ export function DocFrameworkTabs ({
     declarations.data = `data: ${dataType.includes(',') ? `${dataType.split(/(?=[A-Z])/)[0]}Data` : `${dataType}[]`}`
   }
 
-  const importedProps = imports ? Object.values(imports).flatMap(i => i) : []
+  const importedProps = []// imports ? Object.values(imports).flatMap(i => i) : []
   const tabConfig = {
     container: (context === ContextLevel.Container || context === ContextLevel.Full) && {
       name: container.name,

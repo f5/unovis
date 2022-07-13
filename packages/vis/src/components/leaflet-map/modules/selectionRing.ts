@@ -1,17 +1,18 @@
 import L from 'leaflet'
 import { Selection } from 'd3-selection'
 
-// Local Types
-import { LeafletMapPoint } from 'components/leaflet-map/types'
-
 // Utils
 import { getString } from 'utils/data'
 import { getPointPos } from './utils'
+
+// Local Types
+import { LeafletMapPoint, LeafletMapPointDatum } from '../types'
 
 // Config
 import { LeafletMapConfigInterface } from '../config'
 
 import * as s from '../style'
+
 
 export function createNodeSelectionRing (selection: Selection<SVGGElement, Record<string, unknown>[], SVGElement, Record<string, unknown>[]>): void {
   selection.datum({ _zIndex: 3 })
@@ -29,18 +30,18 @@ export function updateNodeSelectionRing<D> (
   const pointSelection = selection.select(`.${s.pointSelection}`)
   if (selectedPoint) {
     const isCluster = selectedPoint.isCluster
-    const selectedPointId: string | undefined = getString(selectedPoint.properties, config.pointId)
+    const selectedPointId: string | undefined = getString(selectedPoint.properties as LeafletMapPointDatum<D>, config.pointId)
     const foundPoint = pointData.find(d =>
       isCluster
         ? (d.id === selectedPoint.id)
-        : (selectedPointId && (getString(d.properties, config.pointId) === selectedPointId))
+        : (selectedPointId && (getString(d.properties as LeafletMapPointDatum<D>, config.pointId) === selectedPointId))
     )
     selection
       .attr('transform', d => {
         const { x, y } = getPointPos<D>(foundPoint ?? selectedPoint, leafletMap)
         return `translate(${x},${y})`
       })
-      .classed(`${selectedPoint.properties.shape}`, true)
+      .classed(`${(selectedPoint.properties as LeafletMapPointDatum<D>).shape}`, true)
 
     pointSelection
       .classed('active', Boolean(foundPoint))

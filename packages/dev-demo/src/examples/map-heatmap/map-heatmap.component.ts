@@ -86,13 +86,9 @@ export class MapHeatmapComponent implements AfterViewInit {
   ngAfterViewInit (): void {
     this.config.tooltip = new Tooltip({
       triggers: {
-        [LeafletMap.selectors.mapboxglCanvas]: (features: Feature[]) => {
-          let name
-          if (features?.length) {
-            name = features[0].properties.name
-          }
-
-          return name && `<span>${name}</span>`
+        [LeafletMap.selectors.map]: (feature: Feature | undefined) => {
+          const name = feature?.properties?.name
+          return name ? `<span>${name}</span>` : null
         },
       },
     })

@@ -83,7 +83,7 @@ LeafletFlowMapConfigInterface<PointDatum, FlowDatum>
   }
 
   setConfig (config: LeafletFlowMapConfigInterface<PointDatum, FlowDatum>): void {
-    config.clusterRadius = 0
+    config.clusteringDistance = 0
     super.setConfig(config)
     this.leafletMap.setConfig(config)
   }

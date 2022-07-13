@@ -2,7 +2,34 @@
 sidebar_position: 2
 sidebar_label: Leaflet Flow Map ✍️
 ---
-
+import BrowserOnly from '@docusaurus/BrowserOnly'
 import { PropTable } from '../components/props-table.tsx'
+import { DocWrapper } from '../wrappers'
+import { ContextLevel } from '../wrappers/base/types'
+import { mapKey } from '@site/src/examples/basic-leaflet-map/key'
+import data from './data/us_cities.json'
+import topojson from './data/topojson_overlay.json'
+import './styles.css'
+
+export const defaultProps = () => ({
+  name: "LeafletFlowMap",
+  height: '300px !important',
+  hiddenProps: { className: 'leaflet-flow-map-doc' },
+  dataType: 'MapDataRecord',
+  declarations: {
+    style: `\`https://api.maptiler.com/maps/positron/style.json?key=\${key}\``,
+  },
+  style: `https://api.maptiler.com/maps/positron/style.json?key=${mapKey}`,
+  attribution: [
+    '<a href="https://www.maptiler.com/copyright/" target="_blank">MapTiler</a>',
+    `<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a>`
+  ]
+})
+
+export const LeafletFlowMapDoc = (props) => (
+  <DocWrapper {...defaultProps() } {...props}/>
+)
+
+<LeafletFlowMapDoc />
 
 <PropTable name="VisLeafletFlowMap"/>

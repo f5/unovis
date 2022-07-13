@@ -19,7 +19,7 @@ import { clamp, isNil, find, getNumber, getString, isString } from 'utils/data'
 import { constraintMapViewThrottled } from './renderer/mapboxgl-utils'
 
 // Local Types
-import { Bounds, LeafletMapPoint, LeafletMapPointDatum, MapZoomState, PointExpandedClusterProperties } from './types'
+import { Bounds, LeafletMapClusterDatum, LeafletMapPoint, LeafletMapPointDatum, MapZoomState, PointExpandedClusterProperties } from './types'
 
 // Config
 import { LeafletMapConfig, LeafletMapConfigInterface } from './config'
@@ -37,7 +37,7 @@ import {
   calculateClusterIndex,
   getNextZoomLevelOnClusterClick,
   findPointAndClusterByPointId,
-  geoJSONPointToScreenPoint,
+  geoJsonPointToScreenPoint,
   getClusterRadius,
   getClustersAndPoints,
   getNodeRelativePosition,
@@ -75,6 +75,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
   private _currentZoomLevel: number | null = null
   private _firstRender = true
   private _renderDataAnimationFrame: number
+  private _isDarkThemeActive = false
   private resizeObserver: ResizeObserver
   private themeObserver: MutationObserver
   readonly _leafletInitializationPromise: Promise<L.Map>
@@ -112,6 +113,8 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
 
     this._leafletInitializationPromise = new Promise((resolve) => {
       setupMap(this.element, this.config).then(map => {
+        // Apply the `s.map` class to `tilePane` to allow tooltip interactions
+        select(map.leaflet.getPanes().tilePane).classed(s.map, true)
         if (config) this.setConfig(config)
 
         this._map = map
@@ -154,10 +157,15 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
           .call(createNodeSelectionRing)
 
         this._map.leaflet.setView(initialMapCenter, initialMapZoom)
+
         if (document.body.classList.contains('theme-dark') && config.styleDarkTheme) {
+          this._isDarkThemeActive = true
           this.setTheme(config.styleDarkTheme)
         }
+
         if (data) this.setData(data)
+        else this.render()
+
         this.config.onMapInitialized?.()
         resolve(this._map.leaflet)
       })
@@ -175,10 +183,11 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
       this.themeObserver = new MutationObserver((mutations) => {
         mutations.forEach(change => {
           if (change.attributeName === 'class') {
-            this.setTheme((change.target as HTMLElement).classList.contains('theme-dark')
-              ? this.config.styleDarkTheme
-              : this.config.style
-            )
+            const isDarkTheme = (change.target as HTMLElement).classList.contains('theme-dark')
+            if (this._isDarkThemeActive !== isDarkTheme) {
+              this.setTheme(isDarkTheme ? this.config.styleDarkTheme : this.config.style)
+              this._isDarkThemeActive = isDarkTheme
+            }
           }
         })
       })
@@ -194,13 +203,14 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
 
     if (this._map) {
       const layer = this._map.layer as any // Using any because the typings are not full
-      const mapboxMap = layer.getMaplibreMap()
-      if (mapboxMap.isStyleLoaded()) updateTopoJson(mapboxMap, this.config)
+      const maplibreMap = layer.getMaplibreMap()
+      if (maplibreMap.isStyleLoaded()) updateTopoJson(maplibreMap, this.config)
     }
 
     if (this.config.tooltip) {
       this.config.tooltip.setContainer(this._container)
       this.config.tooltip.setComponents([this])
+      this.config.tooltip.update()
     }
   }
 
@@ -228,6 +238,9 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
   setTheme (theme: StyleSpecification | string): void {
     const layer = this._map.layer as any // Using any because the typings are not full
     layer.getMaplibreMap().setStyle(theme)
+
+    const maplibreMap = layer.getMaplibreMap()
+    updateTopoJson(maplibreMap, this.config)
   }
 
   // We redefine the ComponentCore render function to bind event to newly created elements in this._renderData(),
@@ -238,10 +251,12 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
 
     this._renderData()
     if (this._firstRender) {
-      if (config.initialBounds && !config.bounds) this.fitToBounds(config.initialBounds)
+      if (config.initialBounds) this.fitToBounds(config.initialBounds)
+      else if (config.fitViewOnInit) this.fitToPoints(0, config.fitViewPadding)
+    } else {
+      if (config.fitViewOnUpdate) this.fitToPoints(0, config.fitViewPadding)
+      else if (config.fitBoundsOnUpdate) this.fitToBounds(config.fitBoundsOnUpdate)
     }
-
-    if (config.bounds) this.fitToBounds(config.bounds)
 
     this._firstRender = false
   }
@@ -271,17 +286,22 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     ], duration, padding)
   }
 
-  public selectPointById (id: string, centerPoint = false): void {
+  /* Select a point by id and optionally center the map view.
+   * This method was designed to be used mainly with the `[LeafletMap.selectors.point]` click events
+   * (when the user actually clicks on a point) and the specified point is inside one of the collapsed
+   * clusters it won't be selected. You can use the `zoomToPointById` method to achieve that.
+   */
+  public selectPointById (id: string, centerView = false): void {
     const { config } = this
     const pointData = this._getPointData()
-    const foundPoint = pointData.find(d => d.properties.id === id)
+    const foundPoint = pointData.find(d => (d.properties as LeafletMapPointDatum<Datum>).id === id)
 
     if (!foundPoint) {
       console.warn(`Unovis | Leaflet Map: Node with id ${id} can not be found`)
       return
     }
 
-    if (foundPoint.properties?.cluster) {
+    if ((foundPoint.properties as LeafletMapClusterDatum<Datum>)?.cluster) {
       console.warn('Unovis | Leaflet Map: Cluster can\'t be selected')
       return
     }
@@ -291,10 +311,10 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     const isPointInsideExpandedCluster = this._expandedCluster?.points?.find(d => getString(d.properties, config.pointId) === id)
     if (!isPointInsideExpandedCluster) this._resetExpandedCluster()
 
-    if (centerPoint) {
+    if (centerView) {
       const coordinates = {
-        lng: getNumber(foundPoint.properties, config.pointLongitude),
-        lat: getNumber(foundPoint.properties, config.pointLatitude),
+        lng: getNumber(foundPoint.properties as LeafletMapPointDatum<Datum>, config.pointLongitude),
+        lat: getNumber(foundPoint.properties as LeafletMapPointDatum<Datum>, config.pointLatitude),
       }
 
       const zoomLevel = this._map.leaflet.getZoom()
@@ -305,16 +325,22 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     }
   }
 
+  /* Get the id of the selected point */
   public getSelectedPointId (): string | number | undefined {
     return this._selectedPoint?.id
   }
 
+  /* Unselect point if it was selected before */
   public unselectPoint (): void {
     this._selectedPoint = null
     this._externallySelectedPoint = null
     this.render()
   }
 
+  /* Zoom to a point by id and optionally select it.
+   * If the point is inside a cluster, it'll be automatically expanded to show the enclosed point.
+   * You can also force set the zoom level by providing the `customZoomLevel` argument.
+   */
   public zoomToPointById (id: string, selectPoint = false, customZoomLevel?: number): void {
     const { config, datamodel } = this
     if (!datamodel.data.length) {
@@ -326,10 +352,10 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     const pointDataAll = this._getPointData(bounds)
 
     let foundPoint: LeafletMapPoint<Datum> | PointFeature<Datum> = pointDataAll
-      .find((d: LeafletMapPoint<Datum>) => getString(d.properties, config.pointId) === id)
+      .find((d: LeafletMapPoint<Datum>) => getString(d.properties as LeafletMapPointDatum<Datum>, config.pointId) === id)
 
     // If point was found and it's a cluster -> do nothing
-    if (foundPoint?.properties?.cluster) {
+    if ((foundPoint?.properties as LeafletMapClusterDatum<Datum>)?.cluster) {
       console.warn('Unovis | Leaflet Map: Cluster can\'t be zoomed in')
       return
     }
@@ -423,7 +449,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
 
     // Render content
     const points = this._pointGroup.selectAll(`.${s.point}:not(.exit)`)
-      .data(pointData, (d: LeafletMapPoint<Datum>) => d.id.toString())
+      .data(pointData, (d: LeafletMapPoint<Datum>, i) => `${d.id || d.geometry.coordinates.join('')}`)
 
     points.exit().classed('exit', true).call(removeNodes)
     const pointsEnter = points.enter().append('g').attr('class', s.point)
@@ -436,7 +462,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
 
     this._clusterBackground.call(updateBackgroundNode, this._expandedCluster, config, this._map.leaflet, this._clusterBackgroundRadius)
     if (this._expandedCluster && config.clusterBackground) {
-      pointData.forEach((d, i) => { d._zIndex = d.properties?.expandedClusterPoint ? 2 : 0 })
+      pointData.forEach((d, i) => { d._zIndex = (d.properties as LeafletMapPointDatum<Datum>)?.expandedClusterPoint ? 2 : 0 })
       this._pointGroup
         .selectAll(`.${s.point}, .${s.clusterBackground}, .${s.pointSelectionRing}`)
         .sort((a: LeafletMapPoint<Datum>, b: LeafletMapPoint<Datum>) => a._zIndex - b._zIndex)
@@ -445,7 +471,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     // Show selection border and hide it when the node
     // is out of visible box
     if (config.selectedPointId) {
-      const foundPoint = pointData.find(d => getString(d.properties, config.pointId) === config.selectedPointId)
+      const foundPoint = pointData.find(d => getString(d.properties as LeafletMapPointDatum<Datum>, config.pointId) === config.selectedPointId)
       const { cluster } = findPointAndClusterByPointId(pointData, config.selectedPointId, config.pointId)
       if (foundPoint) this._selectedPoint = foundPoint
       else this._selectedPoint = cluster
@@ -453,7 +479,6 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     this._pointSelectionRing.call(updateNodeSelectionRing, this._selectedPoint, pointData, config, this._map.leaflet)
 
     // Set up events
-    // this.setUpEvents()
     this._setUpComponentEventsThrottled()
 
     // Tooltip
@@ -506,7 +531,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     this._forceExpandCluster = false
     if (clusterPoint) {
       const points: PointFeature<PointExpandedClusterProperties<Datum>>[] =
-        clusterPoint.clusterIndex.getLeaves(clusterPoint.properties.cluster_id as number, Infinity)
+        clusterPoint.clusterIndex.getLeaves((clusterPoint.properties as LeafletMapClusterDatum<Datum>).cluster_id as number, Infinity)
       const packPoints: {x: number; y: number; r: number }[] = points.map(p => ({
         x: null,
         y: null,
@@ -542,24 +567,23 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
 
   private _getPointData (customBounds?: [number, number, number, number]): LeafletMapPoint<Datum>[] {
     const { config, datamodel: { data } } = this
-    const { pointRadius, pointColor, pointShape, pointId, valuesMap } = config
 
     if (!data || !this._clusterIndex) return []
 
-    let geoJSONPoints: (ClusterFeature<Datum> | PointFeature<PointExpandedClusterProperties<Datum>>)[] =
+    let geoJSONPoints: (ClusterFeature<LeafletMapClusterDatum<Datum>> | PointFeature<PointExpandedClusterProperties<Datum>>)[] =
       getClustersAndPoints<Datum>(this._clusterIndex, this._map.leaflet, customBounds)
 
     if (this._expandedCluster) {
       // Remove expanded cluster from the data
-      geoJSONPoints = geoJSONPoints.filter(c => (c as ClusterFeature<Datum>).properties.cluster_id !== this._expandedCluster.cluster.properties.cluster_id)
+      geoJSONPoints = geoJSONPoints.filter(c => (c as ClusterFeature<LeafletMapClusterDatum<Datum>>).properties.cluster_id !== (this._expandedCluster.cluster.properties as LeafletMapClusterDatum<Datum>).cluster_id)
       // Add points from the expanded cluster
       geoJSONPoints = geoJSONPoints.concat(this._expandedCluster.points)
     }
 
     const pointData = geoJSONPoints
       // Todo: Remove explicitly set ClusterFeature<LeafletMapPointDatum<Datum>> type
-      .map((d: ClusterFeature<LeafletMapPointDatum<Datum>>) => geoJSONPointToScreenPoint(d, this._map.leaflet, pointRadius, pointColor, pointShape, pointId, valuesMap))
-      // .sort((a, b) => getPointDisplayOrder(a, config.pointStatus, config.valuesMap) - getPointDisplayOrder(b, config.pointStatus, config.valuesMap))
+      .map((d: ClusterFeature<LeafletMapPointDatum<Datum>>, i: number) => geoJsonPointToScreenPoint(d, i, this._map.leaflet, config))
+      // .sort((a, b) => getPointDisplayOrder(a, config.pointStatus, config.colorMap) - getPointDisplayOrder(b, config.pointStatus, config.colorMap))
 
     return pointData
   }
@@ -666,7 +690,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     this._externallySelectedPoint = null
     event.stopPropagation()
 
-    if (d.properties.cluster) {
+    if ((d.properties as LeafletMapClusterDatum<Datum>).cluster) {
       const zoomLevel = this._map.leaflet.getZoom()
       const coordinates = { lng: d.geometry.coordinates[0], lat: d.geometry.coordinates[1] }
 
