@@ -68,6 +68,12 @@ Note that setting this property overrides `labelTextBrightnessRatio`.
 
 <XYWrapper {...defaultProps(15, true)} label={d => d.label} labelColor={'yellow'}/>
 
+### Label Position
+You can change a point's label position with the `labelPosition` property, which accepts a  _Position_ or _Position_ accessor
+function. Supported values are `Position.Center` (default), `Position.Bottom`, `Position.Left`, `Position.Right` and `Position.Top`
+
+<XYWrapperWithInput {...defaultProps(15, true)} hiddenProps={{ size: d => d.size, label: d => d.label, labelColor: 'var(--vis-axis-label-color)'}} property='labelPosition' inputType="select" options={['center', 'left', 'right', 'top', 'bottom']}/>
+
 ### Custom Cursor
 _Scatter_ also allows to set a [custom](https://developer.mozilla.org/en-US/docs/Web/CSS/cursor) `cursor` when hovering
 over a point by providing a `cursor` accessor function.
