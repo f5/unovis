@@ -4,7 +4,7 @@ export type DataRecord = {
   name: string;
   startDate: number;
   endDate: number;
-  type: ProductType[keyof ProductType];
+  type: ProductType | `${ProductType}`;
   description?: string;
 }
 export enum ProductType { App = 'app', Hardware = 'hardware', Service = 'service' }
@@ -15,7 +15,7 @@ export const colorMap: Record<ProductType, string> = {
   [ProductType.Service]: colors[2],
 }
 
-export const data: DataRecord[] = [
+export const data = [
   {
     endDate: 1645056000000,
     startDate: 1534636800000,
@@ -1897,4 +1897,4 @@ export const data: DataRecord[] = [
     description: 'Google Cloud Prediction API was a PaaS for machine learning (ML) functionality to help developers build ML models to create application features such as recommendation systems, spam detection, and purchase prediction.',
     type: 'service',
   },
-].sort((p1, p2) => p1.startDate - p2.startDate)
+].sort((p1, p2) => p1.startDate - p2.startDate) as DataRecord[]
