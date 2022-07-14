@@ -10,6 +10,7 @@ export const examples: ExampleCollection[] = [
       require('./basic-line-chart').default,
       require('./multi-line-chart').default,
       require('./basic-area').default,
+      require('./basic-timeline').default,
     ],
   },
   {
