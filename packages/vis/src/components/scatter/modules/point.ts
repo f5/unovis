@@ -1,4 +1,4 @@
-import { Selection, select } from 'd3-selection'
+import { select, Selection } from 'd3-selection'
 import { symbol } from 'd3-shape'
 import { color } from 'd3-color'
 import { Position } from 'types/position'
@@ -27,9 +27,6 @@ export function createPoints<Datum> (
   selection.attr('transform', d => `translate(${d._point.xValue},${d._point.yValue})`)
   selection.append('path').style('fill', d => d._point.color)
   selection.append('text')
-    .style('text-anchor', 'middle')
-    .style('dominant-baseline', 'central')
-    .style('fill', d => d._point.color)
     .style('pointer-events', 'none')
 
   selection.attr('transform', d => `translate(${xScale(d._point.xValue)},${yScale(d._point.yValue)}) scale(0)`)
@@ -46,7 +43,7 @@ export function updatePoints<Datum> (
 
   selection.each((d, i, elements) => {
     const group: Selection<SVGGElement, ScatterPoint<Datum>, SVGGElement, ScatterPoint<Datum>[]> = select(elements[i])
-    const text = group.select('text')
+    const label = group.select('text')
     const path = group.select('path')
 
     // Shape
@@ -64,42 +61,59 @@ export function updatePoints<Datum> (
       .style('stroke', pointColor)
 
     // Label
+    const labelPosition = getValue(d, config.labelPosition, i) as `${Position}`
+    const isLabelPositionCenter = (labelPosition !== Position.Top) && (labelPosition !== Position.Bottom) &&
+      (labelPosition !== Position.Left) && (labelPosition !== Position.Right)
     const pointLabelText = d._point.label ?? ''
     const textLength = pointLabelText.length
     const pointLabelFontSize = 0.7 * pointDiameter / Math.pow(textLength, 0.4)
 
     let labelColor = d._point.labelColor
-    if (!labelColor) {
+    if (!labelColor && isLabelPositionCenter) {
       const c = pointColor || 'var(--vis-scatter-fill)'
       const hex = color(isStringCSSVariable(c) ? getCSSVariableValue(c, group.node()) : c)?.hex()
       const brightness = hexToBrightness(hex)
       labelColor = brightness > config.labelTextBrightnessRatio ? 'var(--vis-scatter-point-label-text-color-dark)' : 'var(--vis-scatter-point-label-text-color-light)'
     }
 
-    const label = text.html(pointLabelText)
-
-    const getLabelPosition = (): [number, number] => {
-      switch (getValue(d, config.labelPosition, i)) {
+    const getPos = (labelPosition: `${Position}`, labelPadding = 5): [number, number] => {
+      switch (labelPosition) {
         case Position.Top:
-          return [0, -pointDiameter]
+          return [0, -pointDiameter / 2 - labelPadding]
         case Position.Bottom:
-          return [0, pointDiameter]
+          return [0, pointDiameter / 2 + labelPadding]
         case Position.Left:
-          return [-pointDiameter, 0]
+          return [-pointDiameter / 2 - labelPadding, 0]
         case Position.Right:
-          return [pointDiameter, 0]
+          return [pointDiameter / 2 + labelPadding, 0]
         default:
-          label.attr('font-size', pointLabelFontSize)
           return [0, 0]
       }
     }
 
-    const pos = getLabelPosition()
-    text.attr('x', pos[0])
-    text.attr('y', pos[1])
+    const pos = getPos(labelPosition)
+    label.html(pointLabelText)
+      .attr('x', pos[0])
+      .attr('y', pos[1])
+      .style('font-size', isLabelPositionCenter ? pointLabelFontSize : null)
+      .style('text-anchor', () => {
+        switch (labelPosition) {
+          case Position.Right: return null
+          case Position.Left: return 'end'
+          default: return 'middle'
+        }
+      })
+      .style('dominant-baseline', () => {
+        switch (labelPosition) {
+          case Position.Top: return null
+          case Position.Bottom: return 'hanging'
+          default: return 'central'
+        }
+      })
 
-    smartTransition(text, duration)
+    smartTransition(label, duration)
       .style('fill', labelColor)
+
 
     path.style('cursor', d._point.cursor)
   })
