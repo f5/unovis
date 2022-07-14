@@ -1,5 +1,5 @@
 <script lang='ts'>
-  import { FreeBrushMode, Scale } from '@volterra/vis'
+  import { FreeBrushMode, Scale, Position } from '@volterra/vis'
   import { VisXYContainer, VisScatter, VisAxis, VisBulletLegend, VisFreeBrush } from '@volterra/vis-svelte'
   import { palette, data, DataRecord } from './data'
 
@@ -19,46 +19,56 @@
     color: (d: DataRecord) => colorScale(d.category),
     size: (d: DataRecord) => d.total,
     label: (d: DataRecord) => d.major,
+    id: (d: DataRecord) => d.major,
   }
 
 </script>
 
 <h2>American College Graduates, 2010-2012</h2>
 <VisBulletLegend items={legendItems} />
-<div class='main'>
-  <VisXYContainer data={data} height={600}>
-    <VisScatter {...scatterProps}/>
-    <VisFreeBrush
-    selectionMinLength={[0, 0]}
-    autoHide={false}
-    x={scatterProps.x}
-    y={scatterProps.y}
-    {onBrushEnd}
-    mode={FreeBrushMode.XY}/>
-  </VisXYContainer>
+<div class="scatter-with-minimap">
   <div>
     <VisXYContainer
-    data={selection ? data : []}
-    xDomain={selection?.[0]}
-    yDomain={selection?.[1]}
-    height={600}
-    scaleByDomain={true}>
-    <VisScatter {...scatterProps} sizeRange={[20, 80]}/>
-    <VisAxis type='x' label='Median Salary ($)' tickFormat={formatNumber} gridLine={false}/>
-    <VisAxis type='y' label='Employment Rate' tickPadding={0} gridLine={false}/>
+      data={data}
+      xDomain={selection?.[0]}
+      yDomain={selection?.[1]}
+      height={600}
+      scaleByDomain={true}
+    >
+      <VisScatter {...scatterProps} sizeRange={[20, 80]} labelPosition={Position.Bottom} />
+      <VisAxis type='x' label='Median Salary ($)' tickFormat={formatNumber} gridLine={false}/>
+      <VisAxis type='y' label='Employment Rate' tickPadding={0} gridLine={false}/>
+    </VisXYContainer>
+  </div>
+  <div class="minimap">
+    <VisXYContainer data={data} height={150}>
+      <VisScatter {...scatterProps} sizeRange={[3, 10]} label={undefined}/>
+      <VisFreeBrush
+        selectionMinLength={[0, 0]}
+        autoHide={false}
+        x={scatterProps.x}
+        y={scatterProps.y}
+        {onBrushEnd}
+        mode={FreeBrushMode.XY}
+      />
     </VisXYContainer>
   </div>
 </div>
 
 <style>
-  .main {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  .scatter-with-minimap {
+    position: relative;
   }
 
-  .main > *:nth-child(2) {
-    flex-grow: 1;
+  .minimap {
+    position: absolute;
+    display: block;
+    background-color: white;
+    bottom: 60px;
+    right: 20px;
+    width: 200px;
+    height: 150px;
+    border: 1px solid grey;
   }
 </style>
 

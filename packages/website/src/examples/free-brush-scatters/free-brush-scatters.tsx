@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react'
-import { FreeBrushMode, Scale } from '@volterra/vis'
+import { FreeBrushMode, Scale, Position } from '@volterra/vis'
 import { VisXYContainer, VisScatter, VisAxis, VisBulletLegend, VisFreeBrush } from '@volterra/vis-react'
 import { palette, data, DataRecord } from './data'
 
@@ -17,36 +17,34 @@ export default function FreeBrushScatter (): JSX.Element {
     color: useCallback((d: DataRecord) => colorScale(d.category), []),
     size: useCallback((d: DataRecord) => d.total, []),
     label: useCallback((d: DataRecord) => d.major, []),
+    id: useCallback((d: DataRecord) => d.major, []),
   }
 
   return (
     <>
       <h2>American College Graduates, 2010-2012</h2>
       <VisBulletLegend items={legendItems} />
-      <div className="main">
-        <VisXYContainer data={data} height={600}>
-          <VisScatter {...scatterProps}/>
-          <VisFreeBrush
-            selectionMinLength={[0, 0]}
-            autoHide={false}
-            x={scatterProps.x}
-            y={scatterProps.y}
-            onBrushEnd={useCallback(setSelection, [])}
-            mode={FreeBrushMode.XY}/>
-        </VisXYContainer>
-        <div style={{ flexGrow: 1 }}>
-          <VisXYContainer
-            data={selection ? data : []}
-            xDomain={selection?.[0]}
-            yDomain={selection?.[1]}
-            height={600}
-            scaleByDomain={true}>
-            <VisScatter {...scatterProps} sizeRange={[20, 80]}/>
-            <VisAxis type='x' label='Median Salary ($)' tickFormat={formatNumber} gridLine={false}/>
-            <VisAxis type='y' label='Employment Rate' tickPadding={0} gridLine={false}/>
-          </VisXYContainer>
-        </div>
-      </div>
+      <VisXYContainer className="minimap" data={data} height={150}>
+        <VisScatter {...scatterProps} sizeRange={[3, 10]} label={undefined}/>
+        <VisFreeBrush
+          selectionMinLength={[0, 0]}
+          autoHide={false}
+          x={scatterProps.x}
+          y={scatterProps.y}
+          onBrushEnd={useCallback(setSelection, [])}
+          mode={FreeBrushMode.XY}/>
+      </VisXYContainer>
+      <VisXYContainer
+        data={data}
+        xDomain={selection?.[0]}
+        yDomain={selection?.[1]}
+        height={600}
+        scaleByDomain={true}
+      >
+        <VisScatter {...scatterProps} sizeRange={[20, 80]} labelPosition={Position.Center} />
+        <VisAxis type='x' label='Median Salary ($)' tickFormat={formatNumber} gridLine={false}/>
+        <VisAxis type='y' label='Employment Rate' tickPadding={0} gridLine={false}/>
+      </VisXYContainer>
     </>
   )
 }
