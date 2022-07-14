@@ -8,7 +8,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula')
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'Unovis',
-  tagline: 'A modular data visualization framework for React, Angular and vanilla TypeScript',
+  tagline: 'A modular data visualization framework for React, Angular, Svelte, and vanilla TypeScript',
   url: 'https://f5.com',
   baseUrl: '/unovis/',
   onBrokenLinks: 'throw',
