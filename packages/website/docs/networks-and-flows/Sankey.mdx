@@ -1,26 +1,234 @@
 ---
-sidebar_label: Sankey ✍️
+sidebar_label: Sankey
 ---
 
 import CodeBlock from '@theme/CodeBlock'
 import { PropTable } from '../components/props-table.tsx'
-import { DocWrapper } from '../wrappers'
-import { generateNodeLinkData } from '../utils/data'
+import { DocWrapper, InputWrapper, DynamicWrapper } from '../wrappers'
+import { generateNodeLinkData, sankeyData } from '../utils/data'
 
-export const defaultProps = (showData = true) => ({
+export const defaultProps = (edges = [[1,2], [], [3,4,5]], colors) => ({
   name: "Sankey",
   configKey: "component",
   containerName: "SingleContainer",
-  height: 400,
-  dataType: "SankeyNode,SankeyLink",
-  data: generateNodeLinkData()
+  height: 150,
+  dataType: "SankeyNode, SankeyLink",
+  data: sankeyData(100, edges, colors),
+  hiddenProps: {
+    label: d => d.id,
+    nodePadding: 10,
+  }
 })
 
+export const labelProps = {
+  ...defaultProps([[1]]),
+  label: d => `Long node name: ${d.id}`,
+  hiddenProps: {},
+  height: 75,
+}
+
 export const SankeyDoc = (props) => (
-  <DocWrapper {...defaultProps() } {...props} linkValue={d => Math.random()}/>
+  <DocWrapper {...defaultProps()} {...props}/>
 )
 
-### Basic Configuration
-<SankeyDoc showContext="full"/>
+## Basic Configuration
+_Sankey_ is a component that renders collection of _Nodes_ and _Links_.
 
+<SankeyDoc showContext='full'/>
+
+Specifically, _Sankey_ accepts data in the following form:
+
+```ts
+type SankeyData<NodeDatum, LinkDatum> = {
+  nodes: NodeDatum[];
+  links: LinkDatum[];
+}
+```
+
+### Links
+The minimal configuration for a _Link_ datum contains `source` and `target` properties, which
+correspond to the starting and ending nodes of the link, and a numerical `value`.
+
+```ts
+type SankeyLink = {
+  source: string | number | SankeyNode;
+  target: string | number | SankeyNode;
+  value?: number;
+}
+```
+
+Note that the `value` is not required, but recommended since by default _Sankey_ will use
+this property to calculate the width of each link. Altnernatively, you can provide a numeric accessor function
+to the `linkValue` property.
+
+### Nodes
+While there are no explicitly required properties for `NodeDatum`, a common configuration looks like:
+
+```ts
+type SankeyNode = {
+  id: string;
+  color: string;
+  label: string;
+}
+```
+
+Alternatively, you can provide accessor functions to `id`, `nodeColor`, `nodeLabel` properties
+to achieve the same effect.
+
+## Labels
+The following customization options are available for _Node_ labels:
+
+### Background
+For a chart with many nodes, it might be useful to add a background by setting the `labelBackground` property to `true`:
+<SankeyDoc {...defaultProps([[1,2,3,4,5],[6,7,8],[9,10]])} labelBackground={true}/>
+
+### Label Fitting
+By default, node labels that exceed the width constraint will be trimmed to exclude the middle.
+For the following properties, the default configuration for _Sankey_ looks like:
+
+```ts
+{
+  labelFit: FitMode.Trim,
+  labelMaxWidth: 70,
+  labelTrimMode: TrimMode.Middle,
+  labelExpandTrimmedOnHover: true,
+}
+```
+
+For overflowing labels, the default configuration renders as:
+<SankeyDoc {...labelProps} excludeTabs/>
+
+#### `FitMode.Wrap`
+You can disable trimming by setting `labelFit` to `FitMode.Wrap` or `'wrap'`, which forces line breaking:
+<SankeyDoc {...labelProps} labelFit="wrap" showContext="full"/>
+
+:::tip
+When `labelFit` is set to `FitMode.Wrap`, you can change which characters to denote a new line
+with the `labelTextSeparator` property.
+(default: `[' ', '-'']`).
+:::
+
+#### `FitMode.Trim`
+You can the `labelTrimMode` property to change which portion of the labels you want to trim:
+
+<InputWrapper
+  {...labelProps}
+  height={100}
+  property="labelTrimMode"
+  inputType="select"
+  options={['start', 'middle', 'end']}
+/>
+
+### Label Placement
+The following properties deal with node label placement:
+- `labelPosition`, which corresponds to the **horizontal** placement relative to the node (default: `Position.Auto`)
+- `labelVerticalAlign`, for **vertical** alignment. (default: `VerticalAlign.Middle`)
+- `labelVisibiility`, which accepts a custom function that when returns false, the label will be hidden altogether
+
+### Sub-labels
+Add a secondary label with the `subLabel` property:
+<SankeyDoc label={d => d.id} subLabel={d => d.val} showContext="minimal"/>
+
+## Node Customization
+### Alignment
+You can override the default node alignment with the `nodeAlign` property. Accepted values are
+ `SankeyNodeAlign.Left`,  `SankeyNodeAlign.Right`,  `SankeyNodeAlign.Center` and  `SankeyNodeAlign.Justify` (default)
+
+<InputWrapper
+  {...defaultProps()}
+  height={100}
+  property="nodeAlign"
+  inputType="select"
+  options={["left", 'right', 'center', 'justify']}
+/>
+
+
+### Node Sizing
+The default configuration for properties that deal with node sizing (measurement is in pixels):
+
+```ts
+{
+  nodeWidth: 25, 
+  nodeMinHeight: 20,
+  nodeMaxHeight: 100,
+}
+```
+
+<InputWrapper
+  {...defaultProps()}
+  height={100}
+  property="nodeWidth"
+  defaultValue={100}
+  inputType="range"
+  inputProps={{ min: 1, max: 300}}
+/>
+
+### Node Icons
+Provide an accessor function to `nodeIcon` to add a label/symbol over the node itself. Customize the
+icon's color with `iconColor`:
+<SankeyDoc declarations={{'nodeIcon': '(d: NodeDatum) => d.currencySymbol'}} nodeIcon={d => ['$', ' €'][d.x % 2]} iconColor="white" showContext="minimal"/>
+
+## Sorting
+By default, _Sankey_ will sort the links in descending order from top to bottom.
+To change the order of the links or nodes, provide custom sorting functions to `linkSort` or
+`nodeSort`.
+
+See the following example, where nodes are sorted by property `x`, a number in the range `[0,4]`,
+which also configures the node's color:
+
+<SankeyDoc {...defaultProps([[1,2,3,4,5],[6,7,8],[9,10]])}
+  height={200}
+  nodeColor={d => `var(--vis-color${d.x})`}
+  declarations={{
+    nodeSort: '(node1: NodeDatum, node2: NodeDatum) => node1.x - node2.x',
+  }}
+  nodeSort={(l1, l2) => l1.x - l2.x}
+  showContext="minimal"/>
+
+## Events
+The following selectors are available for events:
+```ts
+import { Sankey } from '@volterra/vis'
+
+const events = {
+  [Sankey.selectors.gNode]: { ... }
+  [Sankey.selectors.node]: { ... }
+  [Sankey.selectors.link]: { ... },
+}
+```
+
+## CSS Variables
+<details open>
+  <summary>All supported CSS variables</summary>
+  <CodeBlock language="css">
+  {`/* Links */
+--vis-sankey-link-cursor
+--vis-sankey-link-color
+--vis-sankey-link-opacity
+--vis-sankey-link-hover-opacity
+/* Nodes */
+--vis-sankey-node-cursor
+--vis-sankey-node-color
+--vis-sankey-node-label-color
+--vis-sankey-node-opacity
+--vis-sankey-node-hover-opacity
+--vis-sankey-node-label-color
+--vis-sankey-node-label-background-fill-color
+--vis-sankey-node-label-background-stroke-color
+--vis-sankey-node-label-background-opacity
+--vis-sankey-node-label-text-decoration
+--vis-sankey-node-label-font-weight
+--vis-sankey-node-sublabel-font-weight
+--vis-sankey-node-label-cursor
+--vis-sankey-label-font-family
+/* Icons */
+--vis-sankey-icon-size
+--vis-sankey-icon-color
+--vis-sankey-icon-stroke-opacity
+--vis-sankey-icon-font-family
+`}
+  </CodeBlock>
+</details>
+
+## Component Props
 <PropTable name="VisSankey"/>

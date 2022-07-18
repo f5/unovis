@@ -5,7 +5,7 @@ import TabItem from '@theme/TabItem'
 import CodeBlock from '@theme/CodeBlock'
 
 export type FrameworkTabProps = {
-  angular: { html: string; ts: string };
+  angular: { html?: string; ts?: string };
   react: string;
   svelte: string;
   typescript: string;

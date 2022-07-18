@@ -27,9 +27,6 @@ function getAngularStrings (config: CodeConfig, importedProps: string[], inlineT
   const tsLines: string[] = []
   if (importString || Object.values(declarations).length) {
     if (importString) tsLines.push(importString)
-    importedProps.forEach(i => {
-      rest[i] = i
-    })
 
     tsLines.push('@Component({')
     const template = inlineTemplate
