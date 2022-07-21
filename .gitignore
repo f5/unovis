@@ -59,6 +59,7 @@ packages/vis-angular/.autogen.js
 packages/**/package-lock.json
 yarn.lock
 .srcsha
+licences.temp
 
 # System Files
 .DS_Store

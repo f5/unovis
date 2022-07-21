@@ -15,5 +15,5 @@ npm i --silent
 rm -rf node_modules/react
 rm -rf node_modules/react-dom
 
-echo "Updating licenses"
-npm run gather-licenses
+echo "📄 Updating licenses (will be done in the background)"
+npm run gather-licenses > /dev/null 2>&1 &
