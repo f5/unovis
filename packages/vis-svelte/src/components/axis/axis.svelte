@@ -14,12 +14,10 @@
   const component = new Axis<Datum>(config)
   const { setAxis } = getContext('container')
   const { setConfig, setData } = getActions.apply(component)
-
   // data and required props
   export let data: Datum[]
   export let x: NumericAccessor<Datum>
   export let y: NumericAccessor<Datum> | NumericAccessor<Datum>[]
-
   onMount(() => {
     setAxis(component)
     return () => setAxis(undefined) as void

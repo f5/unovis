@@ -32,7 +32,7 @@
     "publish:all": "sh prepublish.sh && sh publish.sh",
     "lint": "eslint ./ --ext .js,.jsx,.ts,.tsx,.svelte --ignore-path .gitignore",
     "lint:fix": "eslint ./ --ext .js,.jsx,.ts,.tsx,.svelte --fix --ignore-path .gitignore",
-    "gather-licenses": "for p in packages/*; do npx license-report --package=$p/package.json --config license-report-config.json --output=table > $p/licences.txt; done",
+    "gather-licenses": "for p in packages/*; do echo \"  📄 Checking licenses for $p\"; npx license-report --package=$p/package.json --config license-report-config.json --output=table > $p/licences.temp; mv -f $p/licences.temp $p/licences.txt; done",
     "install:clean": "for p in packages/*; do rm -f $p/package-lock.json; rm -rf $p/node_modules; done; rm -rf node_modules; npm i"
   },
   "devDependencies": {

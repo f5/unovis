@@ -1,6 +1,6 @@
 {
   "name": "@volterra/vis",
-  "version": "0.9.25",
+  "version": "0.9.26",
   "license": "MIT",
   "main": "./index.js",
   "module": "./index.js",
@@ -12,7 +12,7 @@
   },
   "publishConfig": {
     "cache": ".cache/.npm",
-    "@volterra:registry": "https://artifactory.f5net.com/artifactory/api/npm/f5-volterra-vis-npm/"
+    "@volterra:registry": "https://gitlab.com/api/v4/projects/13430565/packages/npm/"
   },
   "devDependencies": {
     "@rollup/plugin-json": "^4.1.0",

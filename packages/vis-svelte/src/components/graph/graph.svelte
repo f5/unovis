@@ -15,10 +15,8 @@
   const component = new Graph<N, L>(config)
   const { setComponent, removeComponent } = getContext('container')
   const { setConfig, setData } = getActions.apply(component)
-
   // data and required props
   export let data: { nodes: N[]; links?: L[] }
-
   // public methods
   export function zoomIn (increment = 1): void { component.zoomIn(increment) }
   export function zoomOut (increment = 1): void { component.zoomOut(increment) }

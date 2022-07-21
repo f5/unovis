@@ -15,10 +15,8 @@
     setConfig: (c: BulletLegendConfigInterface) => component?.update(c),
     render: () => component?.render()
   })
-
   // data and required props
   export let items: BulletLegendItemInterface[]
-
   onMount(() => {
     component = new BulletLegend(ref, config)
     return () => component.destroy()

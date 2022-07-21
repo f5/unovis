@@ -14,11 +14,9 @@
   const component = new Donut<Datum>(config)
   const { setComponent, removeComponent } = getContext('container')
   const { setConfig, setData } = getActions.apply(component)
-
   // data and required props
   export let data: Datum[]
   export let value: NumericAccessor<Datum>
-
   onMount(() => {
     setComponent(component)
     return () => removeComponent(component) as void

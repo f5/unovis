@@ -14,12 +14,10 @@
   const component = new Area<Datum>(config)
   const { setComponent, removeComponent } = getContext('container')
   const { setConfig, setData } = getActions.apply(component)
-
   // data and required props
   export let data: Datum[]
   export let x: NumericAccessor<Datum>
   export let y: NumericAccessor<Datum> | NumericAccessor<Datum>[]
-
   onMount(() => {
     setComponent(component)
     return () => removeComponent(component) as void
