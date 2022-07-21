@@ -13,7 +13,6 @@
   const { setTooltip } = getContext('container')
   const { setConfig } = getActions.apply(component)
 
-
   onMount(() => {
     setTooltip(component)
     return () => setTooltip(undefined) as void
