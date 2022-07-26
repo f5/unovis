@@ -24,18 +24,18 @@ export interface LeafletFlowMapConfigInterface<PointDatum, FlowDatum> extends Le
   flowParticleColor?: ColorAccessor<FlowDatum>;
   /** Flow particle radius accessor function or value. Default: `1.1` */
   flowParticleRadius?: NumericAccessor<FlowDatum>;
-  /** Flow particle speed accessor function or value in angular degrees. Default: `0.07` */
+  /** Flow particle speed accessor function or value. The unit is arbitrary, recommended range is 0 – 0.2. Default: `0.07` */
   flowParticleSpeed?: NumericAccessor<FlowDatum>;
   /** Flow particle density accessor function or value on the range of [0, 1]. Default: `0.6` */
   flowParticleDensity?: NumericAccessor<FlowDatum>;
 
   // Events
   /** Flow source point click callback function. Default: `undefined` */
-  onSourcePointClick?: ((f: FlowDatum, x: number, y: number, event: MouseEvent) => unknown);
+  onSourcePointClick?: (f: FlowDatum, x: number, y: number, event: MouseEvent) => void;
   /** Flow source point mouse over callback function. Default: `undefined` */
-  onSourcePointMouseEnter?: ((f: FlowDatum, x: number, y: number, event: MouseEvent) => unknown);
+  onSourcePointMouseEnter?: (f: FlowDatum, x: number, y: number, event: MouseEvent) => void;
   /** Flow source point mouse leave callback function. Default: `undefined` */
-  onSourcePointMouseLeave?: ((f: FlowDatum, event: MouseEvent) => unknown);
+  onSourcePointMouseLeave?: (f: FlowDatum, event: MouseEvent) => void;
 }
 
 export class LeafletFlowMapConfig<
