@@ -80,7 +80,8 @@ export class SingleContainer<Data> extends ContainerCore {
 
   _render (customDuration?: number): void {
     const { config, component } = this
-    super._render()
+    super._render(null, true)
+
     component.setSize(this.width, this.height)
 
     component.g
@@ -101,6 +102,7 @@ export class SingleContainer<Data> extends ContainerCore {
       const scaledWidth = componentWidth * scale
       const scaledHeight = componentHeight * scale
       const animated = currentWidth || currentHeight
+
       smartTransition(this.svg, animated ? (customDuration ?? component.config.duration) : 0)
         .attr('width', scaledWidth)
         .attr('height', scaledHeight)
