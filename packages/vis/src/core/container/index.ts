@@ -62,10 +62,12 @@ export class ContainerCore {
     this.config = new ConfigModel().init(config)
   }
 
-  _render (duration?): void {
-    this.svg
-      .attr('width', this.containerWidth)
-      .attr('height', this.containerHeight)
+  _render (duration?: number, dontSizeToContainer?: boolean): void {
+    if (!dontSizeToContainer) {
+      this.svg
+        .attr('width', this.containerWidth)
+        .attr('height', this.containerHeight)
+    }
 
     if (this.config.svgDefs) {
       this.svg.select('.svgDefs').remove()
