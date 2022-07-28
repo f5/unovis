@@ -26,7 +26,7 @@ export const data = {
   flows: Array(20).fill(null).map(() => getSampleFlow(points[Math.floor(numPoints * Math.random())]))
 }
 
-export const defaultProps = () => ({
+export const defaultProps = (flowParticleDensity = 1) => ({
   name: "LeafletFlowMap",
   height: '300px !important',
   style: `https://api.maptiler.com/maps/positron/style.json?key=${mapKey}`,
@@ -35,6 +35,7 @@ export const defaultProps = () => ({
     className: 'leaflet-doc',
     fitViewPadding: [30,30],
     pointRadius: 5,
+    flowParticleDensity,
     height: 300
   },
   // define or override variables as they appear in the code snippets
@@ -45,7 +46,7 @@ export const defaultProps = () => ({
 })
 
 export const LeafletFlowMapDoc = (props) => (
-  <DocWrapper {...defaultProps() } {...props}/>
+  <DocWrapper {...defaultProps(props.flowParticleDensity) } {...props}/>
 )
 
 _LeafletFlowMap_ is an extension of _LeafletMap_ that can display flying particles between two points on the map.
@@ -110,7 +111,7 @@ The color of the flow source can be customized by using the `sourcePointColor` c
 
 ### Radius
 The `sourcePointRadius` property sets the radius of the source point:
-<LeafletFlowMapDoc data={data} sourcePointRadius={5}/>
+<LeafletFlowMapDoc data={data} sourcePointRadius={5} />
 
 ### Events
 The flow source points have the following configurable callback functions for mouse events:
