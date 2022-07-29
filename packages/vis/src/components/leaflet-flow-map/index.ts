@@ -83,9 +83,8 @@ LeafletFlowMapConfigInterface<PointDatum, FlowDatum>
   }
 
   setConfig (config: LeafletFlowMapConfigInterface<PointDatum, FlowDatum>): void {
-    config.clusteringDistance = 0
     super.setConfig(config)
-    this.leafletMap.setConfig(config)
+    this.leafletMap.setConfig({ ...config, clusteringDistance: 0 })
   }
 
   setData (data: { points: PointDatum[]; flows?: FlowDatum[] }): void {
@@ -134,7 +133,7 @@ LeafletFlowMapConfigInterface<PointDatum, FlowDatum>
       }
     }
 
-    this.renderer.update(this.particles)
+    this.renderer?.update(this.particles)
   }
 
   private addParticle (source: LatLon, target: LatLon, location = source, velocity = 0.05, r = 0.75, color?: string): void {

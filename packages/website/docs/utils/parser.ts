@@ -1,4 +1,5 @@
 import useIsBrowser from '@docusaurus/useIsBrowser'
+import { kebabCase } from '@site/src/utils/text'
 
 export type PropInfo = {
   key: string;
@@ -82,15 +83,10 @@ export function parseProps (props: Record<string, any>, dataType: string, import
 }
 
 function parseAngular ({ name, props }: ComponentInfo): string {
-  const hasUpper = name.match(/.+[A-Z]/)
-  if (hasUpper) {
-    const ch = name[hasUpper[0].length - 1]
-    name = name.split(ch).join('-'.concat(ch))
-  }
   const attrs = props?.map(({ key, value, stringLiteral }) =>
     [stringLiteral ? key : `[${key}]`, `"${value}"`].join('=')
   )
-  const tag = `vis-${name.toLowerCase()}`
+  const tag = `vis-${kebabCase(name)}`
   return formatElement(`<${tag}`, attrs, `></${tag}>`)
 }
 

@@ -19,3 +19,4 @@ export * from './components/xy-labels'
 // HTML Components
 export * from './html-components/bullet-legend'
 export * from './html-components/leaflet-map'
+export * from './html-components/leaflet-flow-map'
