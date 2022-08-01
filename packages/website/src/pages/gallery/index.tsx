@@ -21,11 +21,13 @@ export default function Home (): JSX.Element {
         { examples.map(collection => <div key={collection.title}>
           <div className={s.collectionTitle}>{collection.title}</div>
           <div className={s.collectionDescription}>{collection.description}</div>
-          { collection.examples.map(example =>
-            <Link className={s.linkedCard} to={`/gallery/view?title=${example.title}`} key={example.title}>
-              <GalleryCard title={example.title} imageUrl={example.preview}/>
-            </Link>
-          )}
+          <div className={s.collectionItems}>
+            { collection.examples.map(example =>
+              <Link className={s.linkedCard} to={`/gallery/view?title=${example.title}`} key={example.title}>
+                <GalleryCard title={example.title} imageUrl={example.preview}/>
+              </Link>
+            )}
+          </div>
         </div>
         )}
       </div>
