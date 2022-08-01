@@ -12,6 +12,43 @@ export const formats: Format[] = [Format.Vinyl, Format.Cassette, Format.Cd, Form
 
 export type DataRecord = Record<Format, number> & { year: number };
 
+export type Label = {
+  label: string;
+  value: number;
+  color: string;
+}
+
+export function getMaxItems<T extends Record<string, number>> (
+  array: T[],
+  keys: (keyof T)[]
+): { [key in keyof T]?: T } {
+  const entries = keys.map(key => [
+    key,
+    array[maxIndex(array, d => d[key])],
+  ])
+
+  return Object.fromEntries(entries)
+}
+
+export function getLabels (data: DataRecord[]): Record<number, Label> {
+  // map formats to their maximum data records
+  const peakItems = getMaxItems(data.slice(0, data.length - 3), formats)
+
+  // place labels at [x,y] where x = peak year and y = area midpoint
+  return formats.reduce((obj, format, i) => {
+    const offset = Array(i).fill(0).reduce((sum, _, j) => sum + peakItems[format][formats[j]], 0)
+    const [x, y] = [peakItems[format].year, offset + peakItems[format][format] / 2]
+
+    obj[x] = {
+      label: format === 'cd' ? format.toUpperCase() : format.charAt(0).toUpperCase() + format.slice(1),
+      value: y,
+      color: 'none',
+    }
+
+    return obj
+  }, {})
+}
+
 export const data: DataRecord[] = [
   {
     year: 1973,
@@ -390,15 +427,3 @@ export const data: DataRecord[] = [
     download: 0.8326,
   },
 ]
-
-export function getMaxItems<T extends Record<string, number>> (
-  array: T[],
-  keys: (keyof T)[]
-): { [key in keyof T]?: T } {
-  const entries = keys.map(key => [
-    key,
-    array[maxIndex(array, d => d[key])],
-  ])
-
-  return Object.fromEntries(entries)
-}
