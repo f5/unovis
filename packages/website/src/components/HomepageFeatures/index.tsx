@@ -1,6 +1,8 @@
 import React from 'react'
 import clsx from 'clsx'
-import styles from './HomepageFeatures.module.css'
+
+// Style
+import styles from './index.module.css'
 
 type FeatureItem = {
   title: string;
@@ -64,11 +66,11 @@ export function Feature ({ title, image, description }: FeatureItem): JSX.Elemen
   )
 }
 
-export default function HomepageFeatures (): JSX.Element {
+export function HomepageFeatures (): JSX.Element {
   return (
     <section className={styles.features}>
-      <div className="container">
-        <div className="row">
+      <div className="container" >
+        <div className="row" >
           {FeatureList.map((props, idx) => (
             <Feature key={idx} {...props} />
           ))}

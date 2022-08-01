@@ -15,6 +15,7 @@
   --ifm-color-primary-light: rgb(70, 203, 174);
   --ifm-color-primary-lighter: rgb(102, 212, 189);
   --ifm-color-primary-lightest: rgb(146, 224, 208);
+  --ifm-container-width-xl: 1620px;
   --ifm-code-font-size: 95%;
 
   --ifm-heading-font-family: Inter;
@@ -32,6 +33,7 @@
   --unovis-color-yellow: #FED651;
   --unovis-color-grey: #8E8D95;
   --unovis-color-beige: #BEB18B;
+  --unovis-color-red: #E2203A;
 
   --ifm-heading-color: var(--unovis-color-deep-blue);
 }
