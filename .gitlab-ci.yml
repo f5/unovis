@@ -4,7 +4,7 @@ stages:
   - publish-demo
 
 build:
-  image: node:16
+  image: artifactory.f5net.com/dockerhub-remote/node:16
   stage: build
   script:
     - export NODE_OPTIONS=--max-old-space-size=4096
