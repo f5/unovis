@@ -118,7 +118,7 @@ export const customData = ({
   points: data.points.map(d => ({
     ...d,
     serverName: `server-${d.city.substring(0,1)}${Math.floor(Math.random() * 10)}`,
-    userCount: Math.floor(Math.random() * 100),
+    userCount: Math.floor(Math.random() * 80) + 20,
     threatLevel: Math.floor(Math.random() * 4)
   }))
 });
