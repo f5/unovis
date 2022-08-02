@@ -14,7 +14,7 @@
   "license": "MIT",
   "publishConfig": {
     "cache": ".cache/.npm",
-    "@volterra:registry": "https://gitlab.com/api/v4/projects/13430565/packages/npm/"
+    "@volterra:registry": "https://artifactory.f5net.com/artifactory/api/npm/f5-volterra-vis-npm/"
   },
   "peerDependencies": {
     "@emotion/css": "^11.7.1",
