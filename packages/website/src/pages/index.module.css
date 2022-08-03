@@ -1,40 +1,48 @@
-/**
- * CSS files with the .module.css suffix will be treated as CSS modules
- * and scoped locally.
- */
+.example {
+  padding: 5% 5%;
+  background-color: rgba(218,197,187,0.1);
 
-.heroBanner {
-  height: 800px;
-  padding: var(--unovis-content-padding);
-  text-align: left;
-  position: relative;
-  overflow: hidden;
-  align-items: flex-start;
-  --ifm-hero-background-color: none;
-
-  color: #171329;
+  --vis-color0: #f45a6d;
+  --vis-color1: #2780eb;
+  --vis-color2: #ffc180;
+  --vis-color3: var(--unovis-color-pale-pink);
+  --vis-color4: var(--unovis-color-red);
 }
 
-.heroBanner p {
-  max-width: 500px;
-  font-weight: 500;
-}
-
-.heroBanner h1 {
-  font-size: 5rem;
-}
-
-.buttons {
+.example > .visContainer {
   display: flex;
-  align-items: start;
-  justify-content: flex-start;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 50px;
 }
 
-.background {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
+.example > .visContainer .visualization {
+  flex: 0 0 40%;
+  min-width: 0;
+  display: inline-block;
+}
+
+.example > .visContainer .link {
+  margin-top: 15px;
+  display: inline-block;
+}
+
+.example > .visContainer .code {
+  flex: 2 2 auto;
+  min-width: 0;
+}
+
+.example > .visContainer .limitHeight {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+@media screen and (max-width: 966px) {
+  .example > .visContainer {
+    flex-flow: row wrap;
+  }
+  .example > .visContainer .visualization, .example > .visContainer .code {
+    flex: 1 1 100%;
+  }
+
 }
