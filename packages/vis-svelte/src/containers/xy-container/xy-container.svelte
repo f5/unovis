@@ -33,7 +33,7 @@
       [axis.config.type === AxisType.Y ? 'yAxis' : 'xAxis']: axis
     }),
     setComponent: (c: XYComponentCore<Datum>) => {
-      components = [c, ...components]
+      components = [...components, c]
       updateConfig({ components })
     },
     removeComponent: (c: XYComponentCore<Datum>) => {
