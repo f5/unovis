@@ -248,12 +248,13 @@ For further customization, you can configure the following zoom properties:
 
 ### zoomFactor
 To set the initial zoom factor.
+<TopoDoc {...defaultProps()} zoomFactor={5}/>
 
 ### zoomExtent
 `zoomExtent` represents the range `[a,b]` which your map can zoom in and out, where `[a, b]` are the
 minimum and maximum zoom factors, respectively.
 
-<TopoDoc {...defaultProps()} zoomFactor={5} zoomExtent={[1,5]}/>
+<TopoDoc {...defaultProps()} zoomFactor={15} zoomExtent={[10,25]}/>
 
 ### zoomDuration
 `zoomDuration` is the duration of the animation on when zooming in on your _TopoJSONMap_.
