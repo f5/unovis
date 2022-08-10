@@ -12,6 +12,7 @@
     () => import('./examples/topojson-map/topojson-map.svelte'),
     () => import('./examples/basic-timeline/basic-timeline.svelte'),
     () => import('./examples/basic-sankey/basic-sankey.svelte'),
+    () => import('./examples/expandable-sankey/expandable-sankey.svelte'),
   ]
 </script>
 

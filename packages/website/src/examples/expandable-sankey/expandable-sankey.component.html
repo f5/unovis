@@ -1,0 +1,16 @@
+<vis-single-container [data]="data" [height]="600">
+  <vis-sankey
+    labelFit="wrap"
+    labelVerticalAlign="middle"
+    nodeCursor='pointer'
+    subLabelPlacement="inline"
+    [events]="events"
+    [labelForceWordBreak]="false"
+    [labelMaxWidth]="150"
+    [linkColor]="linkColor"
+    [nodeColor]="nodeColor"
+    [nodeIcon]="getNodeIcon"
+    [nodePadding]="20"
+    [subLabel]="subLabel"
+  />
+</vis-single-container>

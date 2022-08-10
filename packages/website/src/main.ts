@@ -17,6 +17,7 @@ import { BrushGroupedBarModule } from './examples/brush-grouped-bar/brush-groupe
 import { BasicAreaModule } from './examples/basic-area/basic-area.module'
 import { BasicTimelineModule } from './examples/basic-timeline/basic-timeline.module'
 import { BasicSankeyModule } from './examples/basic-sankey/basic-sankey.module'
+import { ExpandableSankeyModule } from './examples/expandable-sankey/expandable-sankey.module'
 
 @Component({
   selector: 'app-component',
@@ -33,6 +34,7 @@ import { BasicSankeyModule } from './examples/basic-sankey/basic-sankey.module'
     <basic-area-chart></basic-area-chart>
     <basic-timeline></basic-timeline>
     <basic-sankey></basic-sankey>
+    <expandable-sankey></expandable-sankey>
   `,
 })
 export class AppComponent {
@@ -46,7 +48,7 @@ export class AppComponent {
     BrowserModule, BasicGroupedBarModule, BasicLeafletMapModule, BasicLineChartModule, MultiLineChartModule,
     TopojsonMapModule, StackedBarChartModule, BasicScatterChartModule, FreeBrushScattersModule, BrushGroupedBarModule,
     TopojsonMapModule, StackedBarChartModule, BasicScatterChartModule, FreeBrushScattersModule, BasicAreaModule,
-    BasicTimelineModule, BasicSankeyModule,
+    BasicTimelineModule, BasicSankeyModule, ExpandableSankeyModule,
   ],
   bootstrap: [AppComponent],
   providers: [BrowserModule],

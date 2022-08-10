@@ -48,6 +48,7 @@ export const examples: ExampleCollection[] = [
     description: '',
     examples: [
       require('./basic-sankey').default,
+      require('./expandable-sankey').default,
     ],
   },
   /* {} */
