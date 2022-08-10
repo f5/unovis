@@ -1,4 +1,4 @@
-import { SingleContainer, Sankey, FitMode, SankeyNode, SankeySubLabelPlacement, VerticalAlign } from '@volterra/vis'
+import { SingleContainer, Sankey, FitMode, SankeyNode, SankeySubLabelPlacement, VerticalAlign, SankeyLink } from '@volterra/vis'
 import { getColor, getChildren, LinkDatum, NodeDatum, sankeyData, sourceNode } from './data'
 
 // initial data
@@ -35,12 +35,12 @@ const sankey = new Sankey<NodeDatum, LinkDatum>({
   labelForceWordBreak: false,
   labelMaxWidth: 150,
   labelVerticalAlign: VerticalAlign.Middle,
-  nodeCursor: 'pointer',
+  nodeCursor: (d: SankeyNode<NodeDatum, LinkDatum>) => d.expandable ? 'pointer' : null,
   nodePadding: 20,
   nodeColor: getColor,
-  linkColor: (d: LinkDatum) => getColor(d.source),
+  linkColor: (d: SankeyLink<NodeDatum, LinkDatum>) => getColor(d.source),
   nodeIcon: (d: NodeDatum) => d.expandable ? (d.expanded ? '-' : '+') : '',
-  subLabel: (d: NodeDatum): string => d.expanded ? '' : `${((d.value / sourceNode.value) * 100).toFixed(1)}%`,
+  subLabel: (d: SankeyNode<NodeDatum, LinkDatum>): string => ((d.depth === 0) || d.expanded) ? '' : `${((d.value / sourceNode.value) * 100).toFixed(1)}%`,
   subLabelPlacement: SankeySubLabelPlacement.Inline,
   events: {
     [Sankey.selectors.node]: {

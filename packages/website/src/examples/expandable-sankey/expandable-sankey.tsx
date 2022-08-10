@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import { FitMode, Sankey, SankeyNode, SankeySubLabelPlacement, VerticalAlign } from '@volterra/vis'
+import { FitMode, Sankey, SankeyLink, SankeyNode, SankeySubLabelPlacement, VerticalAlign } from '@volterra/vis'
 import { VisSingleContainer, VisSankey } from '@volterra/vis-react'
 
 import { getColor, getChildren, LinkDatum, NodeDatum, sankeyData, sourceNode } from './data'
@@ -36,11 +36,11 @@ export default function ExpandableSankey (): JSX.Element {
         labelVerticalAlign={VerticalAlign.Middle}
         nodeColor={useCallback(getColor, [])}
         nodeIcon={useCallback((d: NodeDatum) => d.expandable ? (d.expanded ? '-' : '+') : '', [])}
-        nodeCursor='pointer'
+        nodeCursor={useCallback((d: SankeyNode<NodeDatum, LinkDatum>) => d.expandable ? 'pointer' : null, [])}
         nodePadding={20}
-        linkColor={useCallback((d: LinkDatum) => getColor(d.source), [])}
+        linkColor={useCallback((d: SankeyLink<NodeDatum, LinkDatum>) => getColor(d.source), [])}
         subLabelPlacement={SankeySubLabelPlacement.Inline}
-        subLabel={useCallback((d: NodeDatum) => d.expanded
+        subLabel={useCallback((d: SankeyNode<NodeDatum, LinkDatum>) => ((d.depth === 0) || d.expanded)
           ? ''
           : `${((d.value / sourceNode.value) * 100).toFixed(1)}%`
         , [])}

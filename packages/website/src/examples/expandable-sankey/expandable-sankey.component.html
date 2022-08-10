@@ -2,15 +2,15 @@
   <vis-sankey
     labelFit="wrap"
     labelVerticalAlign="middle"
-    nodeCursor='pointer'
     subLabelPlacement="inline"
+    [nodeCursor]="nodeCursor"
     [events]="events"
     [labelForceWordBreak]="false"
     [labelMaxWidth]="150"
     [linkColor]="linkColor"
     [nodeColor]="nodeColor"
-    [nodeIcon]="getNodeIcon"
+    [nodeIcon]="nodeIcon"
     [nodePadding]="20"
     [subLabel]="subLabel"
-  />
+  ></vis-sankey>
 </vis-single-container>

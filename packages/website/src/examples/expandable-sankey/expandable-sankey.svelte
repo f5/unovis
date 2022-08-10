@@ -15,7 +15,7 @@
     n.sourceLinks.forEach(d => {
       nodes[d.index].expanded = false
     })
-  
+
     data = {
       nodes: n.expanded
         ? nodes.filter(d => !d.id.startsWith(n.id) || d.level <= n.layer)
@@ -28,7 +28,8 @@
     linkColor: (d: LinkDatum): string => d.source,
     nodeColor: getColor,
     nodeIcon: (d: NodeDatum): string =>  d.expandable ? (d.expanded ? '-' : '+') : '',
-    subLabel: (d: NodeDatum): string =>  d.expanded ? '' : `${((d.value / sourceNode.value) * 100).toFixed(1)}%`,
+    nodeCursor: (d: SankeyNode<NodeDatum, LinkDatum>) => d.expandable ? 'pointer' : null,
+    subLabel: (d: SankeyNode<NodeDatum, LinkDatum>): string =>  ((d.depth === 0) || d.expanded) ? '' : `${((d.value / sourceNode.value) * 100).toFixed(1)}%`,
     events: {
       [Sankey.selectors.node]: {
         click: toggleGroup,
@@ -45,7 +46,6 @@
     labelMaxWidth={150}
     labelVerticalAlign={VerticalAlign.Middle}
     nodePadding={20}
-    nodeCursor='pointer'
     subLabelPlacement={SankeySubLabelPlacement.Inline}
   />
 </VisSingleContainer>

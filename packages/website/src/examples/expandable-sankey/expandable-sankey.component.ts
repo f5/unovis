@@ -1,5 +1,5 @@
 import { Component } from '@angular/core'
-import { Sankey, SankeyNode } from '@volterra/vis'
+import {Sankey, SankeyLink, SankeyNode} from '@volterra/vis'
 
 import { getColor, getChildren, LinkDatum, NodeDatum, sankeyData, sourceNode } from './data'
 
@@ -15,17 +15,18 @@ export class ExpandableSankeyComponent {
 
   nodeColor = getColor
   nodeIcon = (d: NodeDatum): string => !d.expandable ? '' : (d.expanded ? '-' : '+')
-  subLabel = (d: NodeDatum): string => {
-    if (d.expanded) return ''
+  nodeCursor = (d: SankeyNode<NodeDatum, LinkDatum>) => d.expandable ? 'pointer' : null
+  subLabel = (d: SankeyNode<NodeDatum, LinkDatum>): string => {
+    if (d.expanded || d.depth === 0) return ''
     return `${((d.value / sourceNode.value) * 100).toFixed(1)}%`
   }
-  linkColor = (d: LinkDatum) => getColor(d.source)
+  linkColor = (d: SankeyLink<NodeDatum, LinkDatum>) => getColor(d.source)
 
-  events = () => ({
+  events = {
     [Sankey.selectors.node]: {
-      click: this.toggleGroup,
+      click: this.toggleGroup.bind(this),
     }
-  })
+  }
 
   toggleGroup (n: SankeyNode<NodeDatum, LinkDatum>): void {
     if (!n.expandable) return

@@ -6,6 +6,6 @@ import { ExpandableSankeyComponent } from './expandable-sankey.component'
 @NgModule({
   imports: [VisSingleContainerModule, VisSankeyModule],
   declarations: [ExpandableSankeyComponent],
-  exports: [BasicSankeyComponent],
+  exports: [ExpandableSankeyComponent],
 })
 export class ExpandableSankeyModule { }
