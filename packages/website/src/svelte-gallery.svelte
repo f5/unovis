@@ -2,7 +2,7 @@
   const imports = [
     () => import('./examples/basic-area/basic-area.svelte'),
     () => import('./examples/basic-grouped-bar/basic-grouped-bar.svelte'),
-    () => import('./examples/basic-leaflet-map/basic-leaflet-map.svelte'),
+    //() => import('./examples/basic-leaflet-map/basic-leaflet-map.svelte'),
     () => import('./examples/basic-line-chart/basic-line-chart.svelte'),
     () => import('./examples/basic-scatter-chart/basic-scatter-chart.svelte'),
     () => import('./examples/brush-grouped-bar/brush-grouped-bar.svelte'),
@@ -10,7 +10,8 @@
     () => import('./examples/horizontal-stacked-bar-chart/horizontal-stacked-bar-chart.svelte'),
     () => import('./examples/multi-line-chart/multi-line-chart.svelte'),
     () => import('./examples/topojson-map/topojson-map.svelte'),
-    () => import('./examples/basic-timeline/basic-timeline.svelte')
+    () => import('./examples/basic-timeline/basic-timeline.svelte'),
+    () => import('./examples/basic-sankey/basic-sankey.svelte'),
   ]
 </script>
 
