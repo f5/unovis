@@ -17,6 +17,8 @@ import {
   SankeySubLabelPlacement,
   SankeyExitTransitionType,
   SankeyEnterTransitionType,
+  SankeyLink,
+  SankeyNode,
 } from './types'
 
 export interface SankeyConfigInterface<N extends SankeyInputNode, L extends SankeyInputLink> extends ComponentConfigInterface {
@@ -70,7 +72,7 @@ export interface SankeyConfigInterface<N extends SankeyInputNode, L extends Sank
   /** Display the graph when data has just one element */
   showSingleNode?: boolean;
   /** Node cursor on hover. Default: `undefined` */
-  nodeCursor?: StringAccessor<L>;
+  nodeCursor?: StringAccessor<SankeyNode<N, L>>;
   /** Node icon accessor function or value. Default: `undefined` */
   nodeIcon?: StringAccessor<N>;
   /** Node color accessor function or value. Default: `undefined` */
@@ -89,15 +91,15 @@ export interface SankeyConfigInterface<N extends SankeyInputNode, L extends Sank
   /** Link flow accessor function or value. Default: `l => l.value` */
   linkValue?: NumericAccessor<L>;
   /** Link cursor on hover. Default: `undefined` */
-  linkCursor?: StringAccessor<L>;
+  linkCursor?: StringAccessor<SankeyLink<N, L>>;
 
   // Labels
   /** Node label accessor function or value. Default: `n => n.label` */
-  label?: StringAccessor<N>;
+  label?: StringAccessor<SankeyNode<N, L>>;
   /** Node sub-label accessor function or value. Default: `undefined` */
-  subLabel?: StringAccessor<N>;
+  subLabel?: StringAccessor<SankeyNode<N, L>>;
   /** Label position relative to the Node. Default: `Position.AUTO` */
-  labelPosition?: GenericAccessor<Position.Auto | Position.Left | Position.Right | string, N>;
+  labelPosition?: GenericAccessor<Position.Auto | Position.Left | Position.Right | string, SankeyNode<N, L>>;
   /** Label vertical alignment */
   labelVerticalAlign?: VerticalAlign | string;
   /** Label background */
@@ -177,7 +179,7 @@ export class SankeyConfig<N extends SankeyInputNode, L extends SankeyInputLink> 
   labelCursor = undefined
   labelColor = undefined
   labelMaxWidth = 70
-  labelExpandTrimmedOnHover = true;
+  labelExpandTrimmedOnHover = true
   labelLength = undefined
   labelVisibility = undefined
   subLabel = undefined
