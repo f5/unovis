@@ -43,5 +43,13 @@ export const examples: ExampleCollection[] = [
       require('./topojson-map').default,
     ],
   },
+  {
+    title: 'Networks and Flows',
+    description: '',
+    examples: [
+      require('./basic-sankey').default,
+      require('./expandable-sankey').default,
+    ],
+  },
   /* {} */
 ]

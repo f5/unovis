@@ -167,6 +167,7 @@ export const nodeIcon = css`
   stroke: var(--vis-sankey-node-color);
   stroke-opacity: var(--vis-sankey-icon-stroke-opacity);
   user-select: none;
+  pointer-events: none;
 `
 
 export const nodeExit = css`

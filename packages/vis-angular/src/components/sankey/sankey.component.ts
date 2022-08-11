@@ -12,8 +12,10 @@ import {
   SankeyEnterTransitionType,
   SankeyNodeAlign,
   StringAccessor,
+  SankeyNode,
   ColorAccessor,
   NumericAccessor,
+  SankeyLink,
   GenericAccessor,
   Position,
   VerticalAlign,
@@ -140,7 +142,7 @@ export class VisSankeyComponent<N extends SankeyInputNode, L extends SankeyInput
   @Input() showSingleNode?: boolean
 
   /** Node cursor on hover. Default: `undefined` */
-  @Input() nodeCursor?: StringAccessor<L>
+  @Input() nodeCursor?: StringAccessor<SankeyNode<N, L>>
 
   /** Node icon accessor function or value. Default: `undefined` */
   @Input() nodeIcon?: StringAccessor<N>
@@ -163,16 +165,16 @@ export class VisSankeyComponent<N extends SankeyInputNode, L extends SankeyInput
   @Input() linkValue?: NumericAccessor<L>
 
   /** Link cursor on hover. Default: `undefined` */
-  @Input() linkCursor?: StringAccessor<L>
+  @Input() linkCursor?: StringAccessor<SankeyLink<N, L>>
 
   /** Node label accessor function or value. Default: `n => n.label` */
-  @Input() label?: StringAccessor<N>
+  @Input() label?: StringAccessor<SankeyNode<N, L>>
 
   /** Node sub-label accessor function or value. Default: `undefined` */
-  @Input() subLabel?: StringAccessor<N>
+  @Input() subLabel?: StringAccessor<SankeyNode<N, L>>
 
   /** Label position relative to the Node. Default: `Position.AUTO` */
-  @Input() labelPosition?: GenericAccessor<Position.Auto | Position.Left | Position.Right | string, N>
+  @Input() labelPosition?: GenericAccessor<Position.Auto | Position.Left | Position.Right | string, SankeyNode<N, L>>
 
   /** Label vertical alignment */
   @Input() labelVerticalAlign?: VerticalAlign | string

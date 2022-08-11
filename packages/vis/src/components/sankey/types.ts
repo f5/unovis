@@ -17,9 +17,9 @@ export type SankeyNode<N extends SankeyInputNode, L extends SankeyInputLink> = G
   layer: number;
   /** */
   isConnected: boolean;
-  /** the array of incoming links which have this node as their target */
+  /** the array of incoming links which have this node as their source */
   sourceLinks?: SankeyLink<N, L>[];
-  /** the array of outgoing links which have this node as their source */
+  /** the array of outgoing links which have this node as their target */
   targetLinks: SankeyLink<N, L>[];
   /** the node’s zero-based index within the array of nodes */
   index: number;
