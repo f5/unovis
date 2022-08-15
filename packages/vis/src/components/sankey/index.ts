@@ -44,7 +44,7 @@ export class Sankey<N extends SankeyInputNode, L extends SankeyInputLink> extend
   private _highlightTimeoutId = null
   private _highlightActive = false
   events = {
-    [Sankey.selectors.gNode]: {
+    [Sankey.selectors.nodeGroup]: {
       mouseenter: this._onNodeMouseOver.bind(this),
       mouseleave: this._onNodeMouseOut.bind(this),
     },
@@ -135,7 +135,7 @@ export class Sankey<N extends SankeyInputNode, L extends SankeyInputLink> extend
       (nodes.length > 1 && links.length === 0)
     ) {
       this._linksGroup.selectAll(`.${s.link}`).call(removeLinks, duration)
-      this._nodesGroup.selectAll(`.${s.gNode}`).call(removeNodes, config, duration)
+      this._nodesGroup.selectAll(`.${s.nodeGroup}`).call(removeNodes, config, duration)
     }
 
     // Prepare Layout
@@ -143,17 +143,19 @@ export class Sankey<N extends SankeyInputNode, L extends SankeyInputLink> extend
 
     // Links
     this._linksGroup.attr('transform', `translate(${bleed.left},${bleed.top})`)
-    const linkSelection = this._linksGroup.selectAll(`.${s.link}`).data(links, config.id)
+    const linkSelection = this._linksGroup.selectAll<SVGGElement, SankeyLink<N, L>>(`.${s.link}`)
+      .data(links, (d, i) => config.id(d, i) ?? i)
     const linkSelectionEnter = linkSelection.enter().append('g').attr('class', s.link)
     linkSelectionEnter.call(createLinks)
     linkSelection.merge(linkSelectionEnter).call(updateLinks, config, duration)
-    linkSelection.exit().call(removeLinks, duration)
+    linkSelection.exit().call(removeLinks)
 
     // Nodes
     this._nodesGroup.attr('transform', `translate(${bleed.left},${bleed.top})`)
 
-    const nodeSelection = this._nodesGroup.selectAll(`.${s.gNode}`).data(nodes, config.id)
-    const nodeSelectionEnter = nodeSelection.enter().append('g').attr('class', s.gNode)
+    const nodeSelection = this._nodesGroup.selectAll<SVGGElement, SankeyNode<N, L>>(`.${s.nodeGroup}`)
+      .data(nodes, (d, i) => config.id(d, i) ?? i)
+    const nodeSelectionEnter = nodeSelection.enter().append('g').attr('class', s.nodeGroup)
     nodeSelectionEnter.call(createNodes, this.config, this._width, bleed)
     nodeSelection.merge(nodeSelectionEnter).call(updateNodes, config, this._width, bleed, this._hasLinks(), duration)
     nodeSelection.exit()

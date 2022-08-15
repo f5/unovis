@@ -141,8 +141,8 @@ export const forceShow = css`
   visibility: visible;
 `
 
-export const gNode = css`
-  label: g-node;
+export const nodeGroup = css`
+  label: node-group;
 `
 
 export const node = css`

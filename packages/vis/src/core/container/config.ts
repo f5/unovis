@@ -12,7 +12,7 @@ export interface ContainerConfigInterface {
   margin?: Spacing;
   /** Padding. Default: `{ top: 0, bottom: 0, left: 0, right: 0 }` */
   padding?: Spacing;
-  /** Defines whether components should fit into the container or the container should expand to fit to the component's size. Default: `Sizing.FIT` */
+  /** Defines whether components should fit into the container or the container should expand to fit to the component's size. Default: `Sizing.Fit` */
   sizing?: Sizing | string;
   /** Width in pixels. By default, Container automatically fits to the size of the parent element. Default: `undefined`. */
   width?: number;
