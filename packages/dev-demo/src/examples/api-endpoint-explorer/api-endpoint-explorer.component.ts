@@ -50,7 +50,7 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
     nodeHorizontalSpacing: NODE_HORIZONTAL_SPACE,
     nodeWidth: NODE_WIDTH,
     nodeAlign: SankeyNodeAlign.Left,
-    iconColor: '#e9edfe',
+    nodeIconColor: '#e9edfe',
     nodePadding: 50,
     nodeMinHeight: 6,
     // labelColor: d => '#0D1C5B', // d.dynExamples.length ? '#4c52ca' : null,
@@ -90,7 +90,7 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
         // eslint-disable-next-line no-console
         click: () => { console.log('Background click!') },
       },
-      [Sankey.selectors.gNode]: {
+      [Sankey.selectors.nodeGroup]: {
         click: (d: any) => {
           if (!d.targetLinks?.[0] || (!this.collapsedItems[d.id] && !d.sourceLinks?.[0])) return
           this.collapsedItems[d.id] = !this.collapsedItems[d.id]
@@ -144,7 +144,7 @@ export class ApiEndpointExplorerComponent implements AfterViewInit {
   maxDepth = max(this.sankeyData.nodes, n => n.depth) + 1
   // eslint-disable-next-line no-irregular-whitespace
   flowlegendItems = _times(this.maxDepth, i => `Segment ${i + 1}`)
-  flowlegendWidth = 0;
+  flowlegendWidth = 0
 
   ngAfterViewInit (): void {
     // eslint-disable-next-line no-console
