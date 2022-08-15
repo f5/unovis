@@ -36,9 +36,11 @@ export class TopoJSONMap<AreaDatum, PointDatum = unknown, LinkDatum = unknown> e
   datamodel: MapGraphDataModel<AreaDatum, PointDatum, LinkDatum> = new MapGraphDataModel()
   g: Selection<SVGGElement, unknown, null, undefined>
   private _firstRender = true
+  private _isResizing = false
   private _initialScale = undefined
   private _center: [number, number]
   private _currentZoomLevel = undefined
+  private _transform: ZoomTransform
   private _path = geoPath()
   private _projection: GeoProjection
   private _prevWidth: number
@@ -98,6 +100,7 @@ export class TopoJSONMap<AreaDatum, PointDatum = unknown, LinkDatum = unknown> e
 
     this._renderBackground()
     this._renderMap(duration)
+    this._renderGroups(duration)
     this._renderLinks(duration)
     this._renderPoints(duration)
 
@@ -121,6 +124,19 @@ export class TopoJSONMap<AreaDatum, PointDatum = unknown, LinkDatum = unknown> e
       .attr('transform', `translate(${-this.bleed.left}, ${-this.bleed.top})`)
   }
 
+  _renderGroups (duration: number): void {
+    const transformString = this._transform.toString()
+    smartTransition(this._featuresGroup, duration)
+      .attr('transform', transformString)
+      .attr('stroke-width', 1 / this._currentZoomLevel)
+
+    smartTransition(this._linksGroup, duration)
+      .attr('transform', transformString)
+
+    smartTransition(this._pointsGroup, duration)
+      .attr('transform', transformString)
+  }
+
   _renderMap (duration: number): void {
     const { bleed, config, datamodel } = this
 
@@ -137,23 +153,15 @@ export class TopoJSONMap<AreaDatum, PointDatum = unknown, LinkDatum = unknown> e
       // Rendering the map for the first time.
       this._projection.fitExtent([[0, 0], [this._width, this._height]], this._featureCollection)
       this._initialScale = this._projection.scale()
-      this._currentZoomLevel = 1
+      this._center = this._projection.translate()
 
-      const zoomFactor = config.zoomFactor
-      if (zoomFactor) {
-        this._projection
-          .scale(zoomFactor)
-          .translate([this._width / 2, this._height / 2])
-      } else {
-        if (config.mapFitToPoints) {
-          this._fitToPoints()
-        } else {
-          this._projection.fitExtent([[0, 0], [this._width, this._height]], this._featureCollection)
-        }
+      if (config.mapFitToPoints) {
+        this._fitToPoints()
       }
 
       const zoomExtent = config.zoomExtent
       this._zoomBehavior.scaleExtent([zoomExtent[0] * this._initialScale, zoomExtent[1] * this._initialScale])
+      this.setZoom(config.zoomFactor || 1)
 
       if (!config.disableZoom) {
         this.g.call(this._zoomBehavior)
@@ -334,21 +342,26 @@ export class TopoJSONMap<AreaDatum, PointDatum = unknown, LinkDatum = unknown> e
   }
 
   _onResize (): void {
-    const { _prevWidth, _prevHeight, _projection } = this
-    const translatePrev = _projection.translate()
-    _projection.translate([
-      translatePrev[0] * (1 + (this._width - _prevWidth) / _prevWidth),
-      translatePrev[1] * (1 + (this._height - _prevHeight) / _prevHeight),
-    ])
+    this._isResizing = true
+    const prevTranslate = this._projection.translate()
+
+    this._projection.fitExtent([[0, 0], [this._width, this._height]], this._featureCollection)
+    this._initialScale = this._projection.scale()
+    this._center = [
+      this._projection.translate()[0] * this._center[0] / prevTranslate[0],
+      this._projection.translate()[1] * this._center[1] / prevTranslate[1],
+    ]
     this._applyZoom()
+
+    this._isResizing = false
     this._prevWidth = this._width
     this._prevHeight = this._height
   }
 
   _onZoom (event: D3ZoomEvent<any, any>): void {
     if (this._firstRender) return // To prevent double render because of binding zoom behaviour
-    const isMouseEvent = event.sourceEvent instanceof WheelEvent || event.sourceEvent instanceof MouseEvent
-    const isExternalEvent = !event?.sourceEvent
+    const isMouseEvent = event.sourceEvent !== undefined
+    const isExternalEvent = !event?.sourceEvent && !this._isResizing
 
     window.cancelAnimationFrame(this._animFrameId)
     this._animFrameId = window.requestAnimationFrame(this._onZoomHandler.bind(this, event.transform, isMouseEvent, isExternalEvent))
@@ -362,33 +375,21 @@ export class TopoJSONMap<AreaDatum, PointDatum = unknown, LinkDatum = unknown> e
   }
 
   _onZoomHandler (transform: ZoomTransform, isMouseEvent: boolean, isExternalEvent: boolean): void {
-    const { config } = this
     const scale = transform.k / this._initialScale
     const center = this._projection.translate()
 
-    const transformString = zoomIdentity
+    this._transform = zoomIdentity
       .translate(transform.x - center[0] * scale, transform.y - center[1] * scale)
       .scale(scale)
-      .toString()
 
-    // We are assuming that click events correspond to Zoom Controls button clicks,
-    // so we're triggering render with specific animation duration in that case
     const customDuration = isExternalEvent
-      ? config.zoomDuration
+      ? this.config.zoomDuration
       : (isMouseEvent ? 0 : null)
 
-    smartTransition(this._featuresGroup, customDuration)
-      .attr('transform', transformString)
-      .attr('stroke-width', 1 / scale)
-
-    smartTransition(this._linksGroup, customDuration)
-      .attr('transform', transformString)
-
-    smartTransition(this._pointsGroup, customDuration)
-      .attr('transform', transformString)
-
-    this._renderPoints(customDuration)
+    // Call render functions that depend on this._transform
+    this._renderGroups(customDuration)
     this._renderLinks(customDuration)
+    this._renderPoints(customDuration)
   }
 
   public zoomIn (increment = 0.5): void {
@@ -402,6 +403,9 @@ export class TopoJSONMap<AreaDatum, PointDatum = unknown, LinkDatum = unknown> e
   public setZoom (zoomLevel: number): void {
     const { config } = this
     this._currentZoomLevel = clamp(zoomLevel, config.zoomExtent[0], config.zoomExtent[1])
+    this._transform = zoomIdentity
+      .translate(this._center[0] * (1 - this._currentZoomLevel), this._center[1] * (1 - this._currentZoomLevel))
+      .scale(this._currentZoomLevel)
     // We are using this._applyZoom() instead of directly calling this._render(config.zoomDuration) because
     // we've to "attach" new transform to the map group element. Otherwise zoomBehavior  will not know
     // that the zoom state has changed
