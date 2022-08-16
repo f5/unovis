@@ -82,7 +82,7 @@ export class VisSankeyComponent<N extends SankeyInputNode, L extends SankeyInput
     };
   }
 
-  /** Node / Link id accessor function. Used for mapping of data updates to corresponding SVG objects. Default: `(d, i) => (d._id ?? i).toString()` */
+  /** Node / Link id accessor function. Used for mapping of data updates to corresponding SVG objects. Default: `(d, i) => d.id ?? i.toString()` */
   @Input() id?: (d: SankeyInputNode | SankeyInputLink, i?: number, ...rest) => string
 
   /** Coefficient to scale the height of the diagram when the amount of links is low: `C * links.length`, clamped to `[height / 2, height]`. Default: `1/16` */
@@ -94,7 +94,7 @@ export class VisSankeyComponent<N extends SankeyInputNode, L extends SankeyInput
   /** Type of animation on creating nodes. Default: `EnterTransitionType.Default` */
   @Input() enterTransitionType?: SankeyEnterTransitionType
 
-  /** Highight the corresponding subtree on node / link hover. Default: `false` */
+  /** Highlight the corresponding subtree on node / link hover. Default: `false` */
   @Input() highlightSubtreeOnHover?: boolean
 
   /** Highlight animation duration, ms. Default: `400` */
@@ -145,10 +145,10 @@ export class VisSankeyComponent<N extends SankeyInputNode, L extends SankeyInput
   @Input() nodeCursor?: StringAccessor<SankeyNode<N, L>>
 
   /** Node icon accessor function or value. Default: `undefined` */
-  @Input() nodeIcon?: StringAccessor<N>
+  @Input() nodeIcon?: StringAccessor<SankeyNode<N, L>>
 
   /** Node color accessor function or value. Default: `undefined` */
-  @Input() nodeColor?: ColorAccessor<N>
+  @Input() nodeColor?: ColorAccessor<SankeyNode<N, L>>
 
   /** Node `fixedValue` accessor function or constant. It defines the node value that will be used to calculate
    * the height of the nodes by d3-sankey (by default the height will be based on aggregated `linkValue`).
@@ -156,10 +156,10 @@ export class VisSankeyComponent<N extends SankeyInputNode, L extends SankeyInput
   @Input() nodeFixedValue?: NumericAccessor<N>
 
   /** Icon color accessor function or value. Default: `undefined` */
-  @Input() iconColor?: ColorAccessor<N>
+  @Input() nodeIconColor?: ColorAccessor<SankeyNode<N, L>>
 
   /** Link color accessor function or value. Default: `l => l.color` */
-  @Input() linkColor?: StringAccessor<L>
+  @Input() linkColor?: StringAccessor<SankeyLink<N, L>>
 
   /** Link flow accessor function or value. Default: `l => l.value` */
   @Input() linkValue?: NumericAccessor<L>
@@ -191,7 +191,6 @@ export class VisSankeyComponent<N extends SankeyInputNode, L extends SankeyInput
   /** Expand trimmed label on hover. Default: `true` */
   @Input() labelExpandTrimmedOnHover?: boolean
 
-  /** Maximum label length (in characters number) for wrapping. Default: `undefined` */
   /** Label trimming mode. Default: `TrimMode.MIDDLE` */
   @Input() labelTrimMode?: TrimMode
 
@@ -205,13 +204,13 @@ export class VisSankeyComponent<N extends SankeyInputNode, L extends SankeyInput
   @Input() labelForceWordBreak?: boolean
 
   /** Label color. Default: `undefined` */
-  @Input() labelColor?: ColorAccessor<N>
+  @Input() labelColor?: ColorAccessor<SankeyNode<N, L>>
 
   /** Label cursor on hover. Default: `undefined` */
-  @Input() labelCursor?: StringAccessor<L>
+  @Input() labelCursor?: StringAccessor<SankeyNode<N, L>>
 
   /** Custom function to set the label visibility. Default: `undefined` */
-  @Input() labelVisibility?: ((d: N, bbox: {
+  @Input() labelVisibility?: ((d: SankeyNode<N, L>, bbox: {
     x: number;
     y: number;
     width: number;
@@ -222,12 +221,13 @@ export class VisSankeyComponent<N extends SankeyInputNode, L extends SankeyInput
   @Input() subLabelFontSize?: number
 
   /** Sub-label color. Default: `undefined` */
-  @Input() subLabelColor?: ColorAccessor<N>
+  @Input() subLabelColor?: ColorAccessor<SankeyNode<N, L>>
 
-  /** Sub-label position. Default: `SankeySubLabelPlacement.Inline` */
+  /** Sub-label position. Default: `SankeySubLabelPlacement.Below` */
   @Input() subLabelPlacement?: SankeySubLabelPlacement | string
 
-  /** Sub-label to label width ration when `subLabelPlacement` is set to `SankeySubLabelPlacement.Inline`. Default: `0.4` */
+  /** Sub-label to label width ratio when `subLabelPlacement` is set to `SankeySubLabelPlacement.Inline`
+   * Default: `0.4`, which means that 40% of `labelMaxWidth` will be given to sub-label, and 60% to the main label. */
   @Input() subLabelToLabelInlineWidthRatio?: number
   @Input() data: any
 
@@ -250,8 +250,8 @@ export class VisSankeyComponent<N extends SankeyInputNode, L extends SankeyInput
   }
 
   private getConfig (): SankeyConfigInterface<N, L> {
-    const { duration, events, attributes, id, heightNormalizationCoeff, exitTransitionType, enterTransitionType, highlightSubtreeOnHover, highlightDuration, highlightDelay, iterations, nodeSort, linkSort, nodeWidth, nodeAlign, nodeHorizontalSpacing, nodeMinHeight, nodeMaxHeight, nodePadding, showSingleNode, nodeCursor, nodeIcon, nodeColor, nodeFixedValue, iconColor, linkColor, linkValue, linkCursor, label, subLabel, labelPosition, labelVerticalAlign, labelBackground, labelFit, labelMaxWidth, labelExpandTrimmedOnHover, labelTrimMode, labelFontSize, labelTextSeparator, labelForceWordBreak, labelColor, labelCursor, labelVisibility, subLabelFontSize, subLabelColor, subLabelPlacement, subLabelToLabelInlineWidthRatio } = this
-    const config = { duration, events, attributes, id, heightNormalizationCoeff, exitTransitionType, enterTransitionType, highlightSubtreeOnHover, highlightDuration, highlightDelay, iterations, nodeSort, linkSort, nodeWidth, nodeAlign, nodeHorizontalSpacing, nodeMinHeight, nodeMaxHeight, nodePadding, showSingleNode, nodeCursor, nodeIcon, nodeColor, nodeFixedValue, iconColor, linkColor, linkValue, linkCursor, label, subLabel, labelPosition, labelVerticalAlign, labelBackground, labelFit, labelMaxWidth, labelExpandTrimmedOnHover, labelTrimMode, labelFontSize, labelTextSeparator, labelForceWordBreak, labelColor, labelCursor, labelVisibility, subLabelFontSize, subLabelColor, subLabelPlacement, subLabelToLabelInlineWidthRatio }
+    const { duration, events, attributes, id, heightNormalizationCoeff, exitTransitionType, enterTransitionType, highlightSubtreeOnHover, highlightDuration, highlightDelay, iterations, nodeSort, linkSort, nodeWidth, nodeAlign, nodeHorizontalSpacing, nodeMinHeight, nodeMaxHeight, nodePadding, showSingleNode, nodeCursor, nodeIcon, nodeColor, nodeFixedValue, nodeIconColor, linkColor, linkValue, linkCursor, label, subLabel, labelPosition, labelVerticalAlign, labelBackground, labelFit, labelMaxWidth, labelExpandTrimmedOnHover, labelTrimMode, labelFontSize, labelTextSeparator, labelForceWordBreak, labelColor, labelCursor, labelVisibility, subLabelFontSize, subLabelColor, subLabelPlacement, subLabelToLabelInlineWidthRatio } = this
+    const config = { duration, events, attributes, id, heightNormalizationCoeff, exitTransitionType, enterTransitionType, highlightSubtreeOnHover, highlightDuration, highlightDelay, iterations, nodeSort, linkSort, nodeWidth, nodeAlign, nodeHorizontalSpacing, nodeMinHeight, nodeMaxHeight, nodePadding, showSingleNode, nodeCursor, nodeIcon, nodeColor, nodeFixedValue, nodeIconColor, linkColor, linkValue, linkCursor, label, subLabel, labelPosition, labelVerticalAlign, labelBackground, labelFit, labelMaxWidth, labelExpandTrimmedOnHover, labelTrimMode, labelFontSize, labelTextSeparator, labelForceWordBreak, labelColor, labelCursor, labelVisibility, subLabelFontSize, subLabelColor, subLabelPlacement, subLabelToLabelInlineWidthRatio }
     const keys = Object.keys(config) as (keyof SankeyConfigInterface<N, L>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

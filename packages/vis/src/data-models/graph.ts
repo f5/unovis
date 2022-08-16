@@ -18,8 +18,8 @@ export class GraphDataModel<
   private _links: OutLink[] = []
 
   // Model configuration
-  public nodeId: ((n: N) => string) = n => `${n.id}`
-  public linkId: ((n: L) => string) = l => `${l.id}`
+  public nodeId: ((n: N) => string | undefined) = n => (isString(n.id) || isFinite(n.id as number)) ? `${n.id}` : undefined
+  public linkId: ((n: L) => string | undefined) = l => (isString(l.id) || isFinite(l.id as number)) ? `${l.id}` : undefined
   public nodeSort: ((a: N, b: N) => number)
 
   // eslint-disable-next-line accessor-pairs

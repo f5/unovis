@@ -32,17 +32,24 @@ function formatElement (prefix: string, attributes: string[] = [], suffix: strin
   return [prefix, content, breakLine ? lineBreakSuffix : suffix].join(breakLine ? '\n' : '')
 }
 
+function parseFunction (str: string, type: string): string {
+  const types = type.split(',')
+  const params = {
+    i: 'number',
+    d: types[0],
+    ...Object.fromEntries(types.map((d, i) => [`d${i + 1}`, d])),
+  }
+  const fn = str.split('=>')
+  const args = fn[0].match(/([di]\d*)/gm)?.map(a => [a.charAt(0), params[a]].join(': ')).join(', ')
+  const body = fn[1].replace(/[+>:?/]/gm, m => m && ` ${m} `).replace(/d\d+/gm, 'd')
+  return `(${args}) => ${body}`
+}
+
 export function parseObject (value: any, type: string, level = 1): string {
   if (!value) return ''
   if (typeof value === 'function') {
-    let str = String(value)
-    str = str.replace(/d=>/gm, `(d: ${type}) => `)
-    str = str.replace(/\(d,i\)=>/gm, `(d: ${type}, i: number) => `)
-    str = str.replace(/d.y>/gm, 'd.y > ')
-    str = str.replace(/\?/gm, ' ? ')
-    str = str.replace(/\+/gm, ' + ')
-    str = str.replace(/,undefined/gm, '')
-    return str
+    const str = String(value)
+    return parseFunction(str, type)
   }
   if (useIsBrowser() && value instanceof HTMLBodyElement) {
     return 'document.body'
@@ -53,6 +60,7 @@ export function parseObject (value: any, type: string, level = 1): string {
   if (typeof value !== 'object') {
     return String(value)
   }
+
   if (typeof value[Symbol.iterator] === 'function') {
     const items = value.map(v => parseObject(v, type, level + 1)).join(', ')
     return `[${items.length > 50
@@ -60,10 +68,10 @@ export function parseObject (value: any, type: string, level = 1): string {
       : items}]`
   }
   const objectProps = Object.entries(value).map(([k, v]) => `${tab(level + 1)}${[k, parseObject(v, type, level + 1)].join(': ')}`)
-  return objectProps.length && `{\n${objectProps.join(',\n')}\n${tab(level)}}`
+  return `{\n${objectProps.join(',\n')}\n${tab(level)}}`
 }
 
-export function parseProps (props: Record<string, any>, dataType: string, imports?: string[], declarations?: Record<string, string>): PropInfo[] {
+export function parseProps (props: Record<string, any>, dataType: string, imports: string[], declarations: Record<string, string>): PropInfo[] {
   return props && Object.entries(props).map(([k, v]) => {
     const isStringLiteral = typeof v === 'string' && !declarations[k] && (
       imports === undefined || imports.findIndex(i => v?.startsWith(i)) === -1

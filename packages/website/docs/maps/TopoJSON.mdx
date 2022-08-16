@@ -16,7 +16,7 @@ export const defaultProps = (showData = true) => ({
   containerName: "SingleContainer",
   topojson: "WorldMapTopoJSON",
   height: 400,
-  dataType: "MapPoint, MapLink, MapArea",
+  dataType: "MapPoint,MapLink,MapArea",
   showContext: "minimal"
 })
 
@@ -105,7 +105,6 @@ be called on each `MapPoint` datum.
 <TopoDoc
   {...defaultProps()}
   data={{ points: data.points }}
-  dataType="MapPoint,undefined,undefined"
   pointLabel={d => d.city}/>
 
 ### Custom Point Labels
@@ -141,7 +140,6 @@ export const colorLegendItems = [
       pointRadius={d => d.userCount / 10}
       pointColor={d => ['green', 'yellow', 'orange', 'red'][d.threatLevel]}
       showContext="minimal"
-      dataType="MapPoint,undefined,undefined"
       componentProps={[
         {name: "BulletLegend", props: { items: colorLegendItems }, key: 'components'},
         {
@@ -173,7 +171,6 @@ Or, you can simply provide these values through the `linkSource` and `linkTarget
 
 <TopoDoc
   {...defaultProps()}
-  dataType="MapPoint,MapLink,undefined"
   data={{...data, areas: [] }}
   showContext="container"
 />
@@ -199,8 +196,7 @@ type MapArea = {
 <TopoDoc
   {...defaultProps()}
   data={{ areas: data.areas }}
-  dataType="MapArea,undefined,undefined"
-  pointId={d => d.id}
+  pointId={d3 => d3.id}
   showContext="minimal"
 />
 

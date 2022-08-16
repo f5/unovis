@@ -27,9 +27,6 @@ function getAngularStrings (config: CodeConfig, importedProps: string[], inlineT
   const tsLines: string[] = []
   if (importString || Object.values(declarations).length) {
     if (importString) tsLines.push(importString)
-    importedProps.forEach(i => {
-      rest[i] = i
-    })
 
     tsLines.push('@Component({')
     const template = inlineTemplate
@@ -119,7 +116,10 @@ function getTypescriptStrings (config: CodeConfig, mainComponent: string): strin
     if (container) container.props = container.props.filter(d => d.key !== 'data')
   }
 
-  const getPropDetails = (props: PropInfo[]): PropInfo[] => props?.map(p => ({ ...p, value: declarations[p.key] || p.value }))
+  const getPropDetails = (props: PropInfo[]): PropInfo[] => props?.map(p => {
+    delete vars[p.key]
+    return { ...p, value: declarations[p.key] || p.value }
+  })
 
   // process config
   const containerConfig: Record<string, string[]> = {}
@@ -134,10 +134,6 @@ function getTypescriptStrings (config: CodeConfig, mainComponent: string): strin
       containerConfig[c.key] = [name, ...containerConfig[c.key]]
     }
   })
-
-  // push import string and data declaration
-  if (importString) lines.push(importString)
-  if (data) lines.push(`const ${data} = getData()\n`)
 
   // process props before adding remaining declarations
   const main = mainComponent && components.find(c => c.name === mainComponent)

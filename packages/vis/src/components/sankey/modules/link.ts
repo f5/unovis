@@ -39,7 +39,9 @@ export function linkPath ({ x0, x1, y0, y1, width }): string {
   `
 }
 
-export function createLinks<N extends SankeyInputNode, L extends SankeyInputLink> (sel: Selection<SVGGElement, SankeyLink<N, L>, SVGGElement, any>): void {
+export function createLinks<N extends SankeyInputNode, L extends SankeyInputLink> (
+  sel: Selection<SVGGElement, SankeyLink<N, L>, SVGGElement, unknown>
+): void {
   sel.append('path').attr('class', s.linkPath)
     .attr('d', (d: SankeyLink<N, L>, i, el) => {
     // eslint-disable-next-line dot-notation
@@ -57,7 +59,11 @@ export function createLinks<N extends SankeyInputNode, L extends SankeyInputLink
   sel.style('opacity', 0)
 }
 
-export function updateLinks<N extends SankeyInputNode, L extends SankeyInputLink> (sel: Selection<SVGGElement, SankeyLink<N, L>, SVGGElement, any>, config: SankeyConfig<N, L>, duration): void {
+export function updateLinks<N extends SankeyInputNode, L extends SankeyInputLink> (
+  sel: Selection<SVGGElement, SankeyLink<N, L>, SVGGElement, unknown>,
+  config: SankeyConfig<N, L>,
+  duration: number
+): void {
   smartTransition(sel, duration)
     .style('opacity', (d: SankeyLink<N, L>) => d._state.greyout ? 0.2 : 1)
 
@@ -120,6 +126,8 @@ export function updateLinks<N extends SankeyInputNode, L extends SankeyInputLink
     .style('cursor', d => getString(d, config.linkCursor))
 }
 
-export function removeLinks (sel): void {
+export function removeLinks<N extends SankeyInputNode, L extends SankeyInputLink> (
+  sel: Selection<SVGGElement, SankeyLink<N, L>, SVGGElement, unknown>
+): void {
   sel.remove()
 }

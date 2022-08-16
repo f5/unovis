@@ -63,11 +63,17 @@ export function generateScatterDataRecords (n = 10, colored = false): ScatterDat
 
 type NodeDatum = {
   id: string;
+  label?: string;
 }
 
+type LinkDatum = {
+  source: NodeDatum | string;
+  target: NodeDatum | string;
+  value?: number;
+}
 export interface NodeLinkData {
   nodes: NodeDatum[];
-  links: { source: NodeDatum; target: NodeDatum }[];
+  links: LinkDatum[];
 }
 
 export function generateNodeLinkData (n = 10): NodeLinkData {
@@ -76,10 +82,44 @@ export function generateNodeLinkData (n = 10): NodeLinkData {
   const links = nodes.reduce((arr, n) => {
     if (options.length) {
       const num = Math.max(1, Math.random() * options.length)
-      for (let i = 0; i < num; i++) arr.push({ source: n.id, target: options.shift().id })
+      for (let i = 0; i < num; i++) {
+        arr.push({
+          source: n.id,
+          target: options.shift().id,
+          value: Math.random(),
+        })
+      }
     }
     return arr
   }, [])
+  return { nodes, links }
+}
+
+
+function generateLinks (n: number, count: number): number[] {
+  if (count === 0) {
+    return []
+  }
+  const val = count === 1 ? n : (n / 2) + (Math.random() < 0.5 ? -1 : 1) * Math.floor(Math.random() * (n / 3))
+  return [val, ...generateLinks(n - val, count - 1)]
+}
+
+export const sankeyData = (src: number, edges: [[number, number]], subDataCount = 4): NodeLinkData => {
+  const nodes = [{ id: 'A', val: src, x: 0 }]
+  const links = []
+  for (let i = 0; i < edges.length; i++) {
+    const vals = generateLinks(nodes[i].val, edges[i].length)
+    for (let j = 0; j < edges[i].length; j++) {
+      if (edges[i][j] >= nodes.length) {
+        nodes.push({
+          id: String.fromCharCode(65 + nodes.length),
+          val: vals[j],
+          x: Math.floor(Math.random() * subDataCount),
+        })
+      }
+      links.push({ source: nodes[i].id, target: nodes[edges[i][j]].id, value: vals[j] })
+    }
+  }
   return { nodes, links }
 }
 

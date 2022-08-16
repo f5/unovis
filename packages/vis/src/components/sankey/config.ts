@@ -23,7 +23,7 @@ import {
 
 export interface SankeyConfigInterface<N extends SankeyInputNode, L extends SankeyInputLink> extends ComponentConfigInterface {
   // General
-  /** Node / Link id accessor function. Used for mapping of data updates to corresponding SVG objects. Default: `(d, i) => (d._id ?? i).toString()` */
+  /** Node / Link id accessor function. Used for mapping of data updates to corresponding SVG objects. Default: `(d, i) => d.id ?? i.toString()` */
   id?: (d: SankeyInputNode | SankeyInputLink, i?: number, ...any) => string;
   /** Coefficient to scale the height of the diagram when the amount of links is low: `C * links.length`, clamped to `[height / 2, height]`. Default: `1/16` */
   heightNormalizationCoeff?: number;
@@ -31,7 +31,7 @@ export interface SankeyConfigInterface<N extends SankeyInputNode, L extends Sank
   exitTransitionType?: SankeyExitTransitionType;
   /** Type of animation on creating nodes. Default: `EnterTransitionType.Default` */
   enterTransitionType?: SankeyEnterTransitionType;
-  /** Highight the corresponding subtree on node / link hover. Default: `false` */
+  /** Highlight the corresponding subtree on node / link hover. Default: `false` */
   highlightSubtreeOnHover?: boolean;
   /** Highlight animation duration, ms. Default: `400` */
   highlightDuration?: number;
@@ -74,20 +74,20 @@ export interface SankeyConfigInterface<N extends SankeyInputNode, L extends Sank
   /** Node cursor on hover. Default: `undefined` */
   nodeCursor?: StringAccessor<SankeyNode<N, L>>;
   /** Node icon accessor function or value. Default: `undefined` */
-  nodeIcon?: StringAccessor<N>;
+  nodeIcon?: StringAccessor<SankeyNode<N, L>>;
   /** Node color accessor function or value. Default: `undefined` */
-  nodeColor?: ColorAccessor<N>;
+  nodeColor?: ColorAccessor<SankeyNode<N, L>>;
   /** Node `fixedValue` accessor function or constant. It defines the node value that will be used to calculate
    * the height of the nodes by d3-sankey (by default the height will be based on aggregated `linkValue`).
    * Default: `n => n.fixedValue`
   */
   nodeFixedValue?: NumericAccessor<N>;
   /** Icon color accessor function or value. Default: `undefined` */
-  iconColor?: ColorAccessor<N>;
+  nodeIconColor?: ColorAccessor<SankeyNode<N, L>>;
 
   // Links
   /** Link color accessor function or value. Default: `l => l.color` */
-  linkColor?: StringAccessor<L>;
+  linkColor?: StringAccessor<SankeyLink<N, L>>;
   /** Link flow accessor function or value. Default: `l => l.value` */
   linkValue?: NumericAccessor<L>;
   /** Link cursor on hover. Default: `undefined` */
@@ -110,8 +110,6 @@ export interface SankeyConfigInterface<N extends SankeyInputNode, L extends Sank
   labelMaxWidth?: number;
   /** Expand trimmed label on hover. Default: `true` */
   labelExpandTrimmedOnHover?: boolean;
-  /** Maximum label length (in characters number) for wrapping. Default: `undefined` */
-  // labelLength?: number;
   /** Label trimming mode. Default: `TrimMode.MIDDLE` */
   labelTrimMode?: TrimMode;
   /** Label font size in pixel. Default: `12` */
@@ -121,18 +119,21 @@ export interface SankeyConfigInterface<N extends SankeyInputNode, L extends Sank
   /** Force break words to fit long labels. Default: `true` */
   labelForceWordBreak?: boolean;
   /** Label color. Default: `undefined` */
-  labelColor?: ColorAccessor<N>;
+  labelColor?: ColorAccessor<SankeyNode<N, L>>;
   /** Label cursor on hover. Default: `undefined` */
-  labelCursor?: StringAccessor<L>;
+  labelCursor?: StringAccessor<SankeyNode<N, L>>;
   /** Custom function to set the label visibility. Default: `undefined` */
-  labelVisibility?: ((d: N, bbox: { x: number; y: number; width: number; height: number }, hovered: boolean) => boolean) | undefined;
+  labelVisibility?: ((d: SankeyNode<N, L>, bbox: { x: number; y: number; width: number; height: number }, hovered: boolean) => boolean) | undefined;
   /** Sub-label font size in pixel. Default: `10` */
   subLabelFontSize?: number;
   /** Sub-label color. Default: `undefined` */
-  subLabelColor?: ColorAccessor<N>;
-  /** Sub-label position. Default: `SankeySubLabelPlacement.Inline` */
+  subLabelColor?: ColorAccessor<SankeyNode<N, L>>;
+  /** Sub-label position. Default: `SankeySubLabelPlacement.Below` */
   subLabelPlacement?: SankeySubLabelPlacement | string;
-  /** Sub-label to label width ration when `subLabelPlacement` is set to `SankeySubLabelPlacement.Inline`. Default: `0.4` */
+  /**
+   * Sub-label to label width ratio when `subLabelPlacement` is set to `SankeySubLabelPlacement.Inline`
+   * Default: `0.4`, which means that 40% of `labelMaxWidth` will be given to sub-label, and 60% to the main label.
+  */
   subLabelToLabelInlineWidthRatio?: number;
 }
 
@@ -142,7 +143,7 @@ export class SankeyConfig<N extends SankeyInputNode, L extends SankeyInputLink> 
   exitTransitionType = SankeyExitTransitionType.Default
   enterTransitionType = SankeyEnterTransitionType.Default
   // eslint-disable-next-line dot-notation
-  id = (d: SankeyInputNode | SankeyInputLink, i: number): string => (d['_id'] ?? i).toString()
+  id = (d: SankeyInputNode | SankeyInputLink, i: number): string => d['_id'] ?? `${i}`
   highlightSubtreeOnHover = false
   highlightDuration = 300
   highlightDelay = 1000
@@ -159,15 +160,15 @@ export class SankeyConfig<N extends SankeyInputNode, L extends SankeyInputLink> 
   nodeMinHeight = 20
   nodeMaxHeight = 100
   nodePadding = 2
-  nodeColor = (d: N): string => d['color']
+  nodeColor = (d: SankeyNode<N, L>): string => d['color']
   nodeFixedValue = (d: N): number => d['fixedValue']
   showSingleNode = true
   nodeCursor = undefined
   nodeIcon = undefined
-  iconColor = undefined
+  nodeIconColor = undefined
 
   // Labels
-  label = (d: N): string => d['label']
+  label = (d: SankeyNode<N, L>): string => d['label']
   labelPosition = Position.Auto
   labelVerticalAlign = VerticalAlign.Middle
   labelBackground = false
@@ -180,7 +181,6 @@ export class SankeyConfig<N extends SankeyInputNode, L extends SankeyInputLink> 
   labelColor = undefined
   labelMaxWidth = 70
   labelExpandTrimmedOnHover = true
-  labelLength = undefined
   labelVisibility = undefined
   subLabel = undefined
   subLabelFontSize = 10
@@ -190,6 +190,6 @@ export class SankeyConfig<N extends SankeyInputNode, L extends SankeyInputLink> 
 
   // Links
   linkValue = (d: L): number => d['value']
-  linkColor = (d: L): string => d['color']
+  linkColor = (d: SankeyLink<N, L>): string => d['color']
   linkCursor = undefined
 }

@@ -22,7 +22,7 @@ export function InputWrapper ({ property, inputType: type, defaultValue, inputPr
         <code>{property}: </code>
         {type === 'select'
           ? <select defaultValue={defaultValue} onChange={updateAttr}>
-            {options.map(o => (
+            {options?.map(o => (
               <option value={o} key={o}>{o}</option>
             ))}
           </select>

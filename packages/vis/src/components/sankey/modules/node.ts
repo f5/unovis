@@ -102,8 +102,8 @@ export function updateNodes<N extends SankeyInputNode, L extends SankeyInputLink
       .attr('visibility', null)
       .attr('text-anchor', 'middle')
       .attr('alignment-baseline', 'middle')
-      .style('stroke', (d: SankeyNode<N, L>) => getColor(d, config.iconColor))
-      .style('fill', (d: SankeyNode<N, L>) => getColor(d, config.iconColor))
+      .style('stroke', (d: SankeyNode<N, L>) => getColor(d, config.nodeIconColor))
+      .style('fill', (d: SankeyNode<N, L>) => getColor(d, config.nodeIconColor))
       .style('font-size', (d: SankeyNode<N, L>) => {
         const nodeHeight = d.y1 - d.y0
         return nodeHeight < s.SANKEY_ICON_SIZE ? `${nodeHeight * 0.65}px` : null
@@ -139,7 +139,7 @@ export function renderNodeLabels<N extends SankeyInputNode, L extends SankeyInpu
 
   if (config.labelVisibility) {
     for (const b of labelGroupBBoxes) {
-      const datum = b.selection.datum()
+      const datum = b.selection.datum() as SankeyNode<N, L>
       const box = { x: b.x, y: b.y, width: b.width, height: b.height }
       b.hidden = !config.labelVisibility(datum, box, enforceNodeVisibility === datum)
     }
