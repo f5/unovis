@@ -38,7 +38,7 @@ import { ZoomLevel } from '../zoom-levels'
 import * as generalSelectors from '../../style'
 import * as nodeSelectors from './style'
 
-const SIDE_LABEL_SIZE = 10
+const SIDE_LABEL_DEFAULT_RADIUS = 10
 
 export function createNodes<N extends GraphInputNode, L extends GraphInputLink> (
   selection: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, GraphNode<N, L>>,
@@ -204,39 +204,39 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
 
     // Update Node Icon
     icon
-      .style('font-size', d => `${getNumber(d, nodeIconSize) ?? 2.5 * Math.sqrt(getNodeSize(d, nodeSize))}px`)
+      .style('font-size', d => `${getNumber(d, nodeIconSize, i) ?? 2.5 * Math.sqrt(getNodeSize(d, nodeSize))}px`)
       .attr('dy', 1)
       .style('fill', d => getNodeIconColor(d, nodeFill))
-      .html(d => getString(d, nodeIcon))
+      .html(d => getString(d, nodeIcon, i))
 
     // Side Labels
-    const sideLabelsData = getValue<GraphNode<N, L>, GraphCircleLabel[]>(d, nodeSideLabels) || []
-    const sideLabels = sideLabelsGroup.selectAll('g').data(sideLabelsData as GraphCircleLabel[])
+    const sideLabelsData = getValue<GraphNode<N, L>, GraphCircleLabel[]>(d, nodeSideLabels, i) || []
+    const sideLabels = sideLabelsGroup.selectAll<SVGGElement, GraphCircleLabel>('g').data(sideLabelsData)
     const sideLabelsEnter = sideLabels.enter().append('g')
       .attr('class', nodeSelectors.sideLabelGroup)
     sideLabelsEnter.append('circle')
       .attr('class', nodeSelectors.sideLabelBackground)
-      .attr('r', SIDE_LABEL_SIZE)
+      .attr('r', l => l.radius ?? SIDE_LABEL_DEFAULT_RADIUS)
     sideLabelsEnter.append('text')
       .attr('class', nodeSelectors.sideLabel)
 
     const sideLabelsUpdate = sideLabels.merge(sideLabelsEnter)
-      .style('cursor', (d: GraphCircleLabel) => d.cursor ?? null)
+      .style('cursor', l => l.cursor ?? null)
 
     // Side label text
     sideLabelsUpdate.select(`.${nodeSelectors.sideLabel}`).html(d => d.text)
       .attr('dy', '1px')
       .style('fill', l => getSideTexLabelColor(l))
-      .style('font-size', d => d.fontSize ?? `${11 / Math.pow(d.text.toString().length, 0.3)}px`)
+      .style('font-size', l => l.fontSize ?? `${(2 + l.radius ?? SIDE_LABEL_DEFAULT_RADIUS) / Math.pow(l.text.toString().length, 0.3)}px`)
       // Side label circle background
     sideLabelsUpdate.select(`.${nodeSelectors.sideLabelBackground}`)
-      .style('fill', d => d.color)
+      .style('fill', l => l.color)
 
     sideLabelsUpdate.attr('transform', (l, i) => {
       if (sideLabelsData.length === 1) return `translate(${getNodeSize(d, nodeSize) / 2.5}, ${-getNodeSize(d, nodeSize) / 2.5})`
       const r = 1.05 * getNodeSize(d, nodeSize) / 2
       // const angle = i * Math.PI / 4 - Math.PI / 2
-      const angle = i * 1.15 * 2 * Math.atan2(SIDE_LABEL_SIZE, r) - Math.PI / 3
+      const angle = i * 1.15 * 2 * Math.atan2(l.radius ?? SIDE_LABEL_DEFAULT_RADIUS, r) - Math.PI / 3
       return `translate(${r * Math.cos(angle)}, ${r * Math.sin(angle)})`
     })
 
