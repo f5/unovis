@@ -288,7 +288,6 @@ export class XYContainer<Datum> extends ContainerCore {
 
       if (config.preventEmptyDomain && (domain[0] === domain[1]) && isFinite(domain[0])) {
         domain[1] = domain[0] + 1
-        domain[0] = domain[0] - 1
       }
 
       components.forEach(c => c.setScaleDomain(dimension, domain))
