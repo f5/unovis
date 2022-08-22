@@ -1,13 +1,14 @@
 // Utils
 import { getNumber, getString, getValue } from 'utils/data'
 import { stringToHtmlId } from 'utils/misc'
-import { getColor } from 'utils/color'
+import { getColor, hexToBrightness } from 'utils/color'
+import { color } from 'd3-color'
 
 // Types
 import { GraphInputLink, GraphInputNode } from 'types/graph'
 
 // Local Types
-import { GraphLink, GraphLinkArrow } from '../../types'
+import { GraphLink, GraphLinkArrow, GraphCircleLabel } from '../../types'
 
 // Config
 import { GraphConfig } from '../../config'
@@ -50,29 +51,29 @@ export function getLinkLabelShift (link: GraphLink, linkSpacing: number, shiftFr
 }
 
 export function getLinkStrokeWidth (d: GraphLink, scale: number, config: GraphConfig<GraphInputNode, GraphInputLink>): number {
-  const m = getNumber(d, config.linkWidth)
+  const m = getNumber(d, config.linkWidth, d._indexGlobal)
   return m / Math.pow(scale, 0.5)
 }
 
 export function getLinkBandWidth (d: GraphLink, scale: number, config: GraphConfig<GraphInputNode, GraphInputLink>): number {
   const { nodeSize, linkBandWidth } = config
-  const sourceNodeSize = getNumber(d.source, nodeSize)
-  const targetNodeSize = getNumber(d.target, nodeSize)
+  const sourceNodeSize = getNumber(d.source, nodeSize, d.source._index)
+  const targetNodeSize = getNumber(d.target, nodeSize, d.target._index)
   const minNodeSize = Math.min(sourceNodeSize, targetNodeSize)
-  return Math.min(minNodeSize, getNumber(d, linkBandWidth) / Math.pow(scale || 1, 0.5)) || 0
+  return Math.min(minNodeSize, getNumber(d, linkBandWidth, d._indexGlobal) / Math.pow(scale || 1, 0.5)) || 0
 }
 
 export function getLinkColor (link: GraphLink, config: GraphConfig<GraphInputNode, GraphInputLink>): string {
   const { linkStroke } = config
-  const c = getColor(link, linkStroke) ?? 'var(--vis-graph-link-stroke-color)'
+  const c = getColor(link, linkStroke, link._indexGlobal, true) ?? 'var(--vis-graph-link-stroke-color)'
   return c || null
 }
 
 export function getMarker (d: GraphLink, scale: number, config: GraphConfig<GraphInputNode, GraphInputLink>): string {
   const { linkArrow } = config
-  if ((scale > ZoomLevel.Level2) && getString(d, linkArrow)) {
+  if ((scale > ZoomLevel.Level2) && getString(d, linkArrow, d._indexGlobal)) {
     const color = getLinkColor(d, config)
-    return `url(#${stringToHtmlId(color)}-${getValue<GraphLink, GraphLinkArrow>(d, linkArrow)})`
+    return `url(#${stringToHtmlId(color)}-${getValue<GraphLink, GraphLinkArrow>(d, linkArrow, d._indexGlobal)})`
   } else {
     return null
   }
@@ -84,4 +85,12 @@ export function getArrowPath (): string {
 
 export function getDoubleArrowPath (): string {
   return `M0,${LINK_MARKER_HEIGHT / 2} L${LINK_MARKER_WIDTH},0 L${LINK_MARKER_WIDTH * 2},${LINK_MARKER_HEIGHT / 2} L${LINK_MARKER_WIDTH},${LINK_MARKER_HEIGHT} Z`
+}
+
+export function getLinkLabelTextColor (label: GraphCircleLabel): string {
+  if (!label.color) return null
+
+  const hex = color(label.color).hex()
+  const brightness = hexToBrightness(hex)
+  return brightness > 0.65 ? 'var(--vis-graph-link-label-text-color-dark)' : 'var(--vis-graph-link-label-text-color-bright)'
 }

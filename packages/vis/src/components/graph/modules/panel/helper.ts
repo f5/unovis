@@ -59,9 +59,10 @@ export function setPanelBBox<N extends GraphInputNode, L extends GraphInputLink>
   const labelApprxHeight = 40
   const labelApprxWidth = 110
   const labelMargin = 10
-  let box
-  selection.each(d => {
-    const nodeSize = getNodeSize(d, nodeSizeAccessor)
+  let box: { x1: number; x2: number; y1: number; y2: number }
+
+  selection.each((d, i) => {
+    const nodeSize = getNodeSize(d, nodeSizeAccessor, i)
     const w = Math.max(nodeSize, labelApprxWidth)
     const h = nodeSize + labelMargin + labelApprxHeight
     // const nodeBBox = node.getBBox()

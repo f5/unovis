@@ -118,6 +118,7 @@ export interface GraphPanelConfigInterface<
 
 export type GraphNodeAnimationState = {
   endAngle: number;
+  nodeIndex: number;
   nodeSize?: number;
   borderWidth?: number;
 }

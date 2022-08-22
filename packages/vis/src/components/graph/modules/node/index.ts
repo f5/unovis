@@ -25,7 +25,7 @@ import {
   setLabelRect,
   getX,
   getY,
-  getSideTexLabelColor,
+  getSideLabelTextColor,
   getNodeColor,
   getNodeIconColor,
   getNodeSize,
@@ -48,23 +48,23 @@ export function createNodes<N extends GraphInputNode, L extends GraphInputLink> 
 
   selection.each((d, i, elements) => {
     const element = elements[i]
-    const group = select(element)
+    const group = select<SVGGElement, GraphNode<N, L>>(element)
     group
-      .attr('transform', (d: GraphNode<N, L>) => {
-        const configuredPosition = getValue<GraphNode<N, L>, [number, number] | undefined>(d, config.nodeEnterPosition)
-        const scale = getNumber(d, config.nodeEnterScale) ?? 0
+      .attr('transform', (d: GraphNode<N, L>, i) => {
+        const configuredPosition = getValue<GraphNode<N, L>, [number, number] | undefined>(d, config.nodeEnterPosition, i)
+        const scale = getNumber(d, config.nodeEnterScale, i) ?? 0
         const x = configuredPosition?.[0] ?? getX(d)
         const y = configuredPosition?.[1] ?? getY(d)
         return `translate(${x}, ${y}) scale(${scale})`
       })
       .attr('opacity', 0)
 
-    const shape = getString(d, nodeShape)
+    const shape = getString(d, nodeShape, d._index)
     /** Todo: The 'nodeShape' storing logic below it a temporary fix, needs a cleaner implementation */
     // eslint-disable-next-line dot-notation
     element['nodeShape'] = shape
-    group.call(appendShape, shape, nodeSelectors.node, nodeSelectors.customNode)
-    group.call(appendShape, shape, nodeSelectors.nodeSelection)
+    appendShape(group, shape, nodeSelectors.node, nodeSelectors.customNode, d._index)
+    appendShape(group, shape, nodeSelectors.nodeSelection, nodeSelectors.customNode, d._index)
     group.append('path').attr('class', nodeSelectors.nodeArc)
     group.append('text').attr('class', nodeSelectors.nodeIcon)
 
@@ -95,17 +95,17 @@ export function updateSelectedNodes<N extends GraphInputNode, L extends GraphInp
   const { nodeDisabled } = config
 
   selection.each((d, i, elements) => {
-    const group: Selection<SVGGElement, N, SVGGElement, N> = select(elements[i])
-    const isGreyout = getBoolean(d, nodeDisabled, i) || d._state.greyout
+    const group: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, GraphNode<N, L>> = select(elements[i])
+    const isGreyout = getBoolean(d, nodeDisabled, d._index) || d._state.greyout
 
     group.classed(nodeSelectors.greyoutNode, isGreyout)
       .classed(nodeSelectors.draggable, !config.disableDrag)
 
-    const nodeSelection: Selection<SVGGElement, N, SVGGElement, N> = group.selectAll(`.${nodeSelectors.nodeSelection}`)
-    nodeSelection.classed(nodeSelectors.nodeSelectionActive, d._state.selected)
+    const nodeSelectionOutline = group.selectAll<SVGGElement, GraphNode<N, L>>(`.${nodeSelectors.nodeSelection}`)
+    nodeSelectionOutline.classed(nodeSelectors.nodeSelectionActive, d._state.selected)
 
     group.selectAll(`.${nodeSelectors.sideLabel}`)
-      .style('fill', (l: GraphCircleLabel) => isGreyout ? null : getSideTexLabelColor(l))
+      .style('fill', (l: GraphCircleLabel) => isGreyout ? null : getSideLabelTextColor(l))
 
     group.selectAll(`.${nodeSelectors.sideLabelBackground}`)
       .style('fill', (l: GraphCircleLabel) => isGreyout ? null : l.color)
@@ -123,15 +123,15 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
   // Re-create nodes to update shapes if they were changes
   selection.each((d, i, elements) => {
     const element = elements[i]
-    const group = select(element)
-    const shape = getString(d, nodeShape)
+    const group = select<SVGGElement, GraphNode<N, L>>(element)
+    const shape = getString(d, nodeShape, d._index)
 
     // eslint-disable-next-line dot-notation
     if (element['nodeShape'] !== shape) {
       group.select(`.${nodeSelectors.node}`).remove()
-      group.call(appendShape, nodeShape, nodeSelectors.node, nodeSelectors.customNode, `.${nodeSelectors.nodeSelection}`)
+      appendShape(group, nodeShape, nodeSelectors.node, nodeSelectors.customNode, d._index, `.${nodeSelectors.nodeSelection}`)
       group.select(`.${nodeSelectors.nodeSelection}`).remove()
-      group.call(appendShape, shape, nodeSelectors.nodeSelection, null, `.${nodeSelectors.nodeArc}`)
+      appendShape(group, shape, nodeSelectors.nodeSelection, null, d._index, `.${nodeSelectors.nodeArc}`)
       // eslint-disable-next-line dot-notation
       element['nodeShape'] = shape
     }
@@ -149,7 +149,14 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
     const labelTextContent = label.select(`.${nodeSelectors.labelTextContent}`)
     const sublabelTextContent = label.select(`.${nodeSelectors.subLabelTextContent}`)
     const bottomIcon = group.select(`.${nodeSelectors.nodeBottomIcon}`)
-    const nodeSelection = group.select(`.${nodeSelectors.nodeSelection}`)
+    const nodeSelectionOutline = group.select<SVGGElement>(`.${nodeSelectors.nodeSelection}`)
+    const nodeSizeValue = getNodeSize(d, nodeSize, d._index)
+    const arcGenerator = arc<GraphNodeAnimationState>()
+      .innerRadius(state => getNodeSize(state, nodeSize, state.nodeIndex) / 2 - (getNumber(state, nodeBorderWidth, state.nodeIndex) / 2))
+      .outerRadius(state => getNodeSize(state, nodeSize, state.nodeIndex) / 2 + (getNumber(state, nodeBorderWidth, state.nodeIndex) / 2))
+      .startAngle(0 * (Math.PI / 180))
+      // eslint-disable-next-line dot-notation
+      .endAngle(a => a['endAngle'])
 
     group
       .classed(generalSelectors.zoomOutLevel2, scale < ZoomLevel.Level2)
@@ -157,60 +164,52 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
 
     // Update Group
     group
-      .classed(nodeSelectors.nodePolygon, d => {
-        const shape = getString(d, nodeShape)
+      .classed(nodeSelectors.nodePolygon, () => {
+        const shape = getString(d, nodeShape, d._index)
         return shape === Shape.Triangle || shape === Shape.Hexagon || shape === Shape.Square
       })
 
     // Update Node
     node
-      .call(updateShape, nodeShape, nodeSize)
-      .attr('stroke-width', d => getNumber(d, nodeBorderWidth) ?? 0)
-      .style('fill', d => getNodeColor(d, nodeFill))
-      .style('stroke', d => getString(d, nodeStroke) ?? null)
+      .call(updateShape, nodeShape, nodeSize, d._index)
+      .attr('stroke-width', getNumber(d, nodeBorderWidth, d._index) ?? 0)
+      .style('fill', getNodeColor(d, nodeFill, d._index))
+      .style('stroke', getString(d, nodeStroke, d._index) ?? null)
 
     const nodeBBox = (node.node() as SVGGraphicsElement).getBBox()
 
-    const arcGenerator = arc<GraphNodeAnimationState>()
-      .innerRadius(d => getNodeSize(d, nodeSize) / 2 - (getNumber(d, nodeBorderWidth) / 2))
-      .outerRadius(d => getNodeSize(d, nodeSize) / 2 + (getNumber(d, nodeBorderWidth) / 2))
-      .startAngle(0 * (Math.PI / 180))
-      // eslint-disable-next-line dot-notation
-      .endAngle(a => a['endAngle'])
-
     nodeArc
-      .attr('stroke-width', d => getNumber(d, nodeBorderWidth))
-      .style('display', d => !getNumber(d, nodeStrokeSegmentValue) ? 'none' : null)
-      .style('fill', getNodeColor(d, nodeStrokeSegmentFill))
-      .style('stroke', getNodeColor(d, nodeStrokeSegmentFill))
-      .style('stroke-opacity', d => getString(d, nodeShape) === Shape.Circle ? 0 : null)
+      .attr('stroke-width', getNumber(d, nodeBorderWidth, d._index))
+      .style('display', !getNumber(d, nodeStrokeSegmentValue, d._index) ? 'none' : null)
+      .style('fill', getNodeColor(d, nodeStrokeSegmentFill, d._index))
+      .style('stroke', getNodeColor(d, nodeStrokeSegmentFill, d._index))
+      .style('stroke-opacity', d => getString(d, nodeShape, d._index) === Shape.Circle ? 0 : null)
 
     nodeArc
       .transition()
       .duration(scoreAnimDuration)
-      .attrTween('d', (d, i, arr: GraphNodeAnimatedElement<SVGElement>[]) => {
-        switch (getString(d, nodeShape)) {
-          case Shape.Circle: return arcTween(d, config, arcGenerator, arr[i])
-          case Shape.Hexagon: return polyTween(d, config, polygon, arr[i])
-          case Shape.Square: return polyTween(d, config, polygon, arr[i])
-          case Shape.Triangle: return polyTween(d, config, polygon, arr[i])
+      .attrTween('d', (d, j, arr: GraphNodeAnimatedElement<SVGElement>[]) => {
+        switch (getString(d, nodeShape, d._index)) {
+          case Shape.Circle: return arcTween(d, config, arcGenerator, arr[j])
+          case Shape.Hexagon: return polyTween(d, config, polygon, arr[j])
+          case Shape.Square: return polyTween(d, config, polygon, arr[j])
+          case Shape.Triangle: return polyTween(d, config, polygon, arr[j])
           default: return null
         }
       })
 
     // Set Node Selection
-    nodeSelection
-      .call(updateShape, nodeShape, nodeSize)
+    updateShape(nodeSelectionOutline, nodeShape, nodeSize, d._index)
 
     // Update Node Icon
     icon
-      .style('font-size', d => `${getNumber(d, nodeIconSize, i) ?? 2.5 * Math.sqrt(getNodeSize(d, nodeSize))}px`)
+      .style('font-size', `${getNumber(d, nodeIconSize, d._index) ?? 2.5 * Math.sqrt(nodeSizeValue)}px`)
       .attr('dy', 1)
-      .style('fill', d => getNodeIconColor(d, nodeFill))
-      .html(d => getString(d, nodeIcon, i))
+      .style('fill', getNodeIconColor(d, nodeFill, d._index))
+      .html(getString(d, nodeIcon, d._index))
 
     // Side Labels
-    const sideLabelsData = getValue<GraphNode<N, L>, GraphCircleLabel[]>(d, nodeSideLabels, i) || []
+    const sideLabelsData = getValue<GraphNode<N, L>, GraphCircleLabel[]>(d, nodeSideLabels, d._index) || []
     const sideLabels = sideLabelsGroup.selectAll<SVGGElement, GraphCircleLabel>('g').data(sideLabelsData)
     const sideLabelsEnter = sideLabels.enter().append('g')
       .attr('class', nodeSelectors.sideLabelGroup)
@@ -226,27 +225,26 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
     // Side label text
     sideLabelsUpdate.select(`.${nodeSelectors.sideLabel}`).html(d => d.text)
       .attr('dy', '1px')
-      .style('fill', l => getSideTexLabelColor(l))
-      .style('font-size', l => l.fontSize ?? `${(2 + l.radius ?? SIDE_LABEL_DEFAULT_RADIUS) / Math.pow(l.text.toString().length, 0.3)}px`)
+      .style('fill', l => getSideLabelTextColor(l))
+      .style('font-size', l => l.fontSize ?? `${(2 + (l.radius ?? SIDE_LABEL_DEFAULT_RADIUS)) / Math.pow(l.text.toString().length, 0.3)}px`)
       // Side label circle background
     sideLabelsUpdate.select(`.${nodeSelectors.sideLabelBackground}`)
       .style('fill', l => l.color)
 
-    sideLabelsUpdate.attr('transform', (l, i) => {
-      if (sideLabelsData.length === 1) return `translate(${getNodeSize(d, nodeSize) / 2.5}, ${-getNodeSize(d, nodeSize) / 2.5})`
-      const r = 1.05 * getNodeSize(d, nodeSize) / 2
-      // const angle = i * Math.PI / 4 - Math.PI / 2
-      const angle = i * 1.15 * 2 * Math.atan2(l.radius ?? SIDE_LABEL_DEFAULT_RADIUS, r) - Math.PI / 3
+    sideLabelsUpdate.attr('transform', (l, j) => {
+      if (sideLabelsData.length === 1) return `translate(${nodeSizeValue / 2.5}, ${-nodeSizeValue / 2.5})`
+      const r = 1.05 * nodeSizeValue / 2
+      const angle = j * 1.15 * 2 * Math.atan2(l.radius ?? SIDE_LABEL_DEFAULT_RADIUS, r) - Math.PI / 3
       return `translate(${r * Math.cos(angle)}, ${r * Math.sin(angle)})`
     })
 
     sideLabels.exit().remove()
 
-    // Set Label and Sublabel text
-    const labelText = getString(d, nodeLabel)
-    const sublabelText = getString(d, nodeSubLabel)
-    const labelTextTrimmed = trimText(getString(d, nodeLabel))
-    const sublabelTextTrimmed = trimText(getString(d, nodeSubLabel))
+    // Set label and sub-label text
+    const labelText = getString(d, nodeLabel, d._index)
+    const sublabelText = getString(d, nodeSubLabel, d._index)
+    const labelTextTrimmed = trimText(labelText)
+    const sublabelTextTrimmed = trimText(sublabelText)
 
     labelTextContent.text(labelTextTrimmed)
     sublabelTextContent.text(sublabelTextTrimmed)
@@ -266,14 +264,12 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
     // Position label
     const labelFontSize = parseFloat(window.getComputedStyle(groupElement).getPropertyValue('--vis-graph-node-label-font-size')) || 12
     const labelMargin = LABEL_RECT_VERTICAL_PADDING + 1.25 * labelFontSize ** 1.03
-    const nodeHeight = isCustomXml((getString(d, nodeShape)) as Shape) ? nodeBBox.height : getNodeSize(d, nodeSize)
+    const nodeHeight = isCustomXml((getString(d, nodeShape, d._index)) as Shape) ? nodeBBox.height : nodeSizeValue
     label.attr('transform', `translate(0, ${nodeHeight / 2 + labelMargin})`)
-    if (scale >= ZoomLevel.Level3) setLabelRect(label, getString(d, nodeLabel), nodeSelectors.labelText)
+    if (scale >= ZoomLevel.Level3) setLabelRect(label, getString(d, nodeLabel, d._index), nodeSelectors.labelText)
 
     // Bottom Icon
-    bottomIcon.html(d => {
-      return getString(d, nodeBottomIcon)
-    })
+    bottomIcon.html(getString(d, nodeBottomIcon, d._index))
       .attr('transform', `translate(0, ${nodeHeight / 2})`)
   })
 
@@ -291,9 +287,9 @@ export function removeNodes<N extends GraphInputNode, L extends GraphInputLink> 
 ): void {
   smartTransition(selection, duration / 2)
     .attr('opacity', 0)
-    .attr('transform', d => {
-      const configuredPosition = getValue<GraphNode<N, L>, [number, number] | undefined>(d, config.nodeExitPosition)
-      const scale = getNumber(d, config.nodeExitScale) ?? 0
+    .attr('transform', (d, i) => {
+      const configuredPosition = getValue<GraphNode<N, L>, [number, number] | undefined>(d, config.nodeExitPosition, i)
+      const scale = getNumber(d, config.nodeExitScale, i) ?? 0
       const x = configuredPosition?.[0] ?? getX(d)
       const y = configuredPosition?.[1] ?? getY(d)
       return `translate(${x}, ${y}) scale(${scale})`
@@ -310,7 +306,7 @@ function setLabelBackgroundRect<N extends GraphInputNode, L extends GraphInputLi
   selection.each((d, i, elements) => {
     const group: Selection<SVGGElement, N, SVGGElement, N> = select(elements[i])
     const label: Selection<SVGGElement, N, SVGGElement, N> = group.select(`.${nodeSelectors.label}`)
-    setLabelRect(label, getString(d, nodeLabel), nodeSelectors.labelText)
+    setLabelRect(label, getString(d, nodeLabel, i), nodeSelectors.labelText)
   })
 }
 

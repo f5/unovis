@@ -1,4 +1,4 @@
-import { select } from 'd3-selection'
+import { Selection, select } from 'd3-selection'
 
 // Types
 import { NumericAccessor, StringAccessor } from 'types/accessor'
@@ -8,6 +8,12 @@ import { Shape } from 'types/shape'
 import { polygon } from 'utils/path'
 import { getString } from 'utils/data'
 
+// Types
+import { GraphInputLink, GraphInputNode } from 'types/graph'
+
+// Local Types
+import { GraphNode, GraphPanelConfigInterface } from '../types'
+
 // Helpers
 import { getNodeSize } from './node/helper'
 
@@ -15,10 +21,17 @@ export function isCustomXml (shape: Shape): boolean {
   return /<[a-z][\s\S]*>/i.test(shape)
 }
 
-export function appendShape<T> (selection, shapeAccessor: StringAccessor<T>, shapeSelector: string, customShapeSelector: string, insertSelector = ':last-child'): void {
+export function appendShape<N extends GraphInputNode, L extends GraphInputLink, P extends GraphPanelConfigInterface> (
+  selection: Selection<SVGGElement, GraphNode<N, L> | P, SVGGElement, unknown>,
+  shapeAccessor: StringAccessor<GraphNode<N, L> | P>,
+  shapeSelector: string,
+  customShapeSelector: string,
+  index?: number,
+  insertSelector = ':last-child'
+): void {
   selection.each((d, i, elements) => {
     const element = select(elements[i])
-    const shape = getString(d, shapeAccessor) as Shape
+    const shape = getString(d, shapeAccessor, index) as Shape
 
     let shapeElement
     const isCustomXmlShape = isCustomXml(shape)
@@ -47,24 +60,29 @@ export function appendShape<T> (selection, shapeAccessor: StringAccessor<T>, sha
   })
 }
 
-export function updateShape<T> (selection, shape: StringAccessor<T>, size: NumericAccessor<T>): void {
+export function updateShape<N extends GraphInputNode, L extends GraphInputLink, P extends GraphPanelConfigInterface> (
+  selection: Selection<SVGGElement, GraphNode<N, L> | P, SVGGElement, unknown>,
+  shape: StringAccessor<GraphNode<N, L> | P>,
+  size: NumericAccessor<GraphNode<N, L> | P>,
+  index: number
+): void {
   if (selection.size() === 0) return
 
-  const d: T = selection.datum()
-  const nodeSize = getNodeSize(d, size)
+  const d: GraphNode<N, L> | P = selection.datum()
+  const nodeSize = getNodeSize(d, size, index)
   selection.filter('circle')
-    .attr('r', (d: T) => nodeSize / 2)
+    .attr('r', nodeSize / 2)
 
   selection.filter('rect')
-    .attr('width', (d: T) => nodeSize)
-    .attr('height', (d: T) => nodeSize)
-    .attr('x', (d: T) => -nodeSize / 2)
-    .attr('y', (d: T) => -nodeSize / 2)
+    .attr('width', nodeSize)
+    .attr('height', nodeSize)
+    .attr('x', -nodeSize / 2)
+    .attr('y', -nodeSize / 2)
 
   selection.filter('path')
-    .attr('d', (d: T) => {
+    .attr('d', () => {
       let n
-      switch (getString(d, shape)) {
+      switch (getString(d, shape, index)) {
         case Shape.Square:
           n = 4
           break
@@ -80,8 +98,8 @@ export function updateShape<T> (selection, shape: StringAccessor<T>, size: Numer
     })
 
   selection.filter('g')
-    .filter((d: T) => !isCustomXml(getString(d, shape) as Shape))
-    .html((d: T) => getString(d, shape))
+    .filter(() => !isCustomXml(getString(d, shape, index) as Shape))
+    .html(getString(d, shape, index))
 
   selection.filter('g')
     .each((d, i, elements) => {

@@ -22,7 +22,10 @@ import { getLabelTranslateTransform, OUTLINE_SELECTION_PADDING, DEFAULT_PADDING,
 import * as panelSelectors from './style'
 import { appendShape, updateShape } from '../shape'
 
-export function createPanels<N extends GraphNode, P extends GraphPanelConfigInterface> (selection: Selection<SVGGElement, P, SVGGElement, P[]>, nodesSelection: Selection<SVGGElement, N, SVGGElement, N>): void {
+export function createPanels<N extends GraphNode, P extends GraphPanelConfigInterface> (
+  selection: Selection<SVGGElement, P, SVGGElement, P[]>,
+  nodesSelection: Selection<SVGGElement, N, SVGGElement, N>
+): void {
   selection
     .attr('transform', d => `translate(${d._x}, ${d._y})`)
     .style('opacity', 0)
@@ -52,13 +55,17 @@ export function createPanels<N extends GraphNode, P extends GraphPanelConfigInte
       const dy = (d.padding || DEFAULT_PADDING) - OUTLINE_SELECTION_PADDING
       return `translate(${d._width + dx}, ${-dy})`
     })
-  sideLabel.call(appendShape, (d: P) => d.sideLabelShape, panelSelectors.sideLabel, panelSelectors.customSideLabel)
+  appendShape(sideLabel, (d: P) => d.sideLabelShape, panelSelectors.sideLabel, panelSelectors.customSideLabel)
   sideLabel.append('text').attr('class', panelSelectors.sideLabelIcon)
 }
 
-export function updatePanels<N extends GraphNode, L extends GraphLink, P extends GraphPanelConfigInterface> (selection: Selection<SVGGElement, P, SVGGElement, P>, config: GraphConfig<GraphInputNode, GraphInputLink>, duration: number): void {
+export function updatePanels<N extends GraphNode, L extends GraphLink, P extends GraphPanelConfigInterface> (
+  selection: Selection<SVGGElement, P, SVGGElement, P>,
+  config: GraphConfig<GraphInputNode, GraphInputLink>,
+  duration: number
+): void {
   const { nodeDisabled } = config
-  selection.classed(panelSelectors.greyout, d => d._data.map((node, i) => getBoolean(node, nodeDisabled, i) || node._state.greyout).every(d => d))
+  selection.classed(panelSelectors.greyout, d => d._data.map((node, i) => getBoolean(node, nodeDisabled, node._index) || node._state.greyout).every(d => d))
 
   smartTransition(selection, duration)
     .attr('transform', d => `translate(${d._x}, ${d._y})`)
@@ -86,7 +93,7 @@ export function updatePanels<N extends GraphNode, L extends GraphLink, P extends
   const sideLabels = selection.selectAll(`.${panelSelectors.sideLabelGroup}`)
     .data(d => [d])
 
-  sideLabels.select(`.${panelSelectors.sideLabel}`)
+  sideLabels.select<SVGGElement>(`.${panelSelectors.sideLabel}`)
     .call(updateShape, (d: P) => d.sideLabelShape, (d: P) => d.sideLabelSize ?? DEFAULT_SIDE_LABEL_SIZE)
     .style('stroke', d => d.sideLabelColor)
     .style('cursor', d => d.sideLabelCursor ?? null)
@@ -128,7 +135,11 @@ export function updatePanels<N extends GraphNode, L extends GraphLink, P extends
     })
 }
 
-export function removePanels<N extends GraphNode, L extends GraphLink, P extends GraphPanelConfigInterface> (selection: Selection<SVGGElement, P, SVGGElement, P[]>, config: GraphConfig<GraphInputNode, GraphInputLink>, duration: number): void {
+export function removePanels<N extends GraphNode, L extends GraphLink, P extends GraphPanelConfigInterface> (
+  selection: Selection<SVGGElement, P, SVGGElement, P[]>,
+  config: GraphConfig<GraphInputNode, GraphInputLink>,
+  duration: number
+): void {
   smartTransition(selection, duration / 2)
     .style('opacity', 0)
     .remove()

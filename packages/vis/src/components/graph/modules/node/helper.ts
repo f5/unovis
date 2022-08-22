@@ -5,7 +5,7 @@ import { Arc } from 'd3-shape'
 import { color } from 'd3-color'
 
 // Types
-import { NumericAccessor } from 'types/accessor'
+import { ColorAccessor, NumericAccessor } from 'types/accessor'
 import { Shape } from 'types/shape'
 import { GraphInputLink, GraphInputNode } from 'types/graph'
 
@@ -24,13 +24,14 @@ export const NODE_SIZE = 30
 export const LABEL_RECT_HORIZONTAL_PADDING = 10
 export const LABEL_RECT_VERTICAL_PADDING = 4
 
-export function getNodeSize<T> (d: T, nodeSizeAccessor: NumericAccessor<T>): number {
-  return getNumber(d, nodeSizeAccessor) || NODE_SIZE
+export function getNodeSize<T> (d: T, nodeSizeAccessor: NumericAccessor<T>, index: number): number {
+  return getNumber(d, nodeSizeAccessor, index) || NODE_SIZE
 }
 
-function _setInitialAnimState (el: GraphNodeAnimatedElement<SVGElement>): void {
+function _setInitialAnimState (el: GraphNodeAnimatedElement<SVGElement>, index: number): void {
   el._animState = {
     endAngle: 0,
+    nodeIndex: index,
   }
 }
 
@@ -43,12 +44,13 @@ export function arcTween<N extends GraphInputNode, L extends GraphInputLink> (
   el: GraphNodeAnimatedElement<SVGElement>
 ): (t: number) => string {
   const { nodeBorderWidth, nodeSize, nodeStrokeSegmentValue } = config
-  if (!el._animState) _setInitialAnimState(el)
+  if (!el._animState) _setInitialAnimState(el, d._index)
 
   const i = interpolate(el._animState, {
-    endAngle: 2 * Math.PI * (getNumber(d, nodeStrokeSegmentValue) ?? 0) / 100,
-    nodeSize: getNodeSize(d, nodeSize),
-    borderWidth: getNumber(d, nodeBorderWidth),
+    endAngle: 2 * Math.PI * (getNumber(d, nodeStrokeSegmentValue, d._index) ?? 0) / 100,
+    nodeIndex: d._index,
+    nodeSize: getNodeSize(d, nodeSize, d._index),
+    borderWidth: getNumber(d, nodeBorderWidth, d._index),
   })
   el._animState = i(0)
 
@@ -64,9 +66,9 @@ export function polyTween<N extends GraphInputNode, L extends GraphInputLink> (
   el: GraphNodeAnimatedElement<SVGElement>
 ): (t: number) => string {
   const { nodeShape, nodeStrokeSegmentValue } = config
-  const nodeSize = getNodeSize(d, config.nodeSize)
+  const nodeSize = getNodeSize(d, config.nodeSize, d._index)
   let n: number
-  switch (getString(d, nodeShape)) {
+  switch (getString(d, nodeShape, d._index)) {
     case Shape.Square:
       n = 4
       break
@@ -78,15 +80,23 @@ export function polyTween<N extends GraphInputNode, L extends GraphInputLink> (
       n = 6
   }
 
-  if (!el._animState) _setInitialAnimState(el)
+  if (!el._animState) _setInitialAnimState(el, d._index)
   const i = interpolate(el._animState, {
-    endAngle: 2 * Math.PI * (getNumber(d, nodeStrokeSegmentValue) ?? 0) / 100,
+    endAngle: 2 * Math.PI * (getNumber(d, nodeStrokeSegmentValue, d._index) ?? 0) / 100,
+    nodeIndex: d._index,
   })
   el._animState = i(0)
 
   return (t: number): string => {
     el._animState = i(t)
-    return n === 4 ? scoreRectPath({ x: -nodeSize / 2, y: -nodeSize / 2, w: nodeSize, h: nodeSize, r: 5, score: el._animState.endAngle / (2 * Math.PI) }) : polygonConstructor(nodeSize, n, el._animState.endAngle, true)
+    return n === 4 ? scoreRectPath({
+      x: -nodeSize / 2,
+      y: -nodeSize / 2,
+      w: nodeSize,
+      h: nodeSize,
+      r: 5,
+      score: el._animState.endAngle / (2 * Math.PI),
+    }) : polygonConstructor(nodeSize, n, el._animState.endAngle, true)
   }
 }
 
@@ -125,14 +135,14 @@ export function configuredNodeSize<T> (nodeSizeAccessor: NumericAccessor<T>): nu
 }
 
 export function getMaxNodeSize<T> (data: T[], nodeSize: NumericAccessor<T>): number {
-  return max(data || [], d => getNodeSize(d, nodeSize)) || NODE_SIZE
+  return max(data || [], (d, i) => getNodeSize(d, nodeSize, i)) || NODE_SIZE
 }
 
 export function getAverageNodeSize<T> (data: T[], nodeSize: NumericAccessor<T>): number {
-  return mean(data || [], d => getNodeSize(d, nodeSize)) || NODE_SIZE
+  return mean(data || [], (d, i) => getNodeSize(d, nodeSize, i)) || NODE_SIZE
 }
 
-export function getSideTexLabelColor (label: GraphCircleLabel): string {
+export function getSideLabelTextColor (label: GraphCircleLabel): string {
   if (!label.color) return null
 
   const hex = color(label.color).hex()
@@ -140,12 +150,12 @@ export function getSideTexLabelColor (label: GraphCircleLabel): string {
   return brightness > 0.65 ? 'var(--vis-graph-node-side-label-fill-color-dark)' : 'var(--vis-graph-node-side-label-fill-color-bright)'
 }
 
-export function getNodeColor<T> (d: T, colorAccessor): string {
-  return getColor(d, colorAccessor) ?? null
+export function getNodeColor<T> (d: T, colorAccessor: ColorAccessor<T>, index: number): string {
+  return getColor(d, colorAccessor, index, true) ?? null
 }
 
-export function getNodeIconColor<T> (d: T, colorAccessor): string {
-  const nodeColor = getNodeColor(d, colorAccessor)
+export function getNodeIconColor<T> (d: T, colorAccessor: ColorAccessor<T>, index: number): string {
+  const nodeColor = getNodeColor(d, colorAccessor, index)
   if (!nodeColor) return null
 
   const hex = color(nodeColor).hex()

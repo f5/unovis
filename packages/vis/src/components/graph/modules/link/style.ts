@@ -1,4 +1,4 @@
-import { css, injectGlobal, keyframes } from '@emotion/css'
+import { css, injectGlobal } from '@emotion/css'
 
 export const links = css`
   label: links;
@@ -11,16 +11,18 @@ export const variables = injectGlobal`
     --vis-graph-link-dashed-stroke-dasharray: 6 6;
 
     --vis-graph-link-label-stroke-color: #fff;
-    --vis-graph-link-label-text-color: #fff;
     --vis-graph-link-label-fill-color: #e6e9f3;
+    --vis-graph-link-label-text-color-dark: #494b56;
+    --vis-graph-link-label-text-color-bright: #fff;
+    --vis-graph-link-label-text-color: var(--vis-graph-link-label-text-color-dark);
 
     --vis-graph-link-band-opacity: 0.35;
     --vis-graph-link-support-stroke-width: 10px;
 
     --vis-dark-graph-link-stroke-color: #494b56;
-    --vis-dark-graph-link-label-stroke-color: #000;
-    --vis-dark-graph-link-label-text-color:#e6e9f3;
+    --vis-dark-graph-link-label-stroke-color: #222;
     --vis-dark-graph-link-label-fill-color: var(--vis-color-gray);
+    --vis-dark-graph-link-label-text-color: var(--vis-graph-link-label-text-color-bright)
   }
 
   body.theme-dark ${`.${links}`} {
@@ -53,17 +55,10 @@ export const link = css`
   pointer-events: none;
 `
 
-const dash = keyframes`
-  to {
-    stroke-dashoffset: -300;
-  }
-`
-
 export const linkDashed = css`
   label: dashed;
 
-  ${`.${link}`}, ${`.${linkSupport}`} {
-    animation: ${dash} 15s linear infinite;
+  ${`.${link}`} {
     stroke-dasharray: var(--vis-graph-link-dashed-stroke-dasharray);
   }
 `

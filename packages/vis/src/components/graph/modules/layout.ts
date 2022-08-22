@@ -80,12 +80,12 @@ export function applyLayoutParallel<N extends GraphInputNode, L extends GraphInp
 
   // Handle connected nodes
   const layoutNodes = layoutNonConnectedAside ? connectedNodes : nodes
-  const groupNames = unique(layoutNodes.map(d => getString(d, nodeGroup)))
+  const groupNames = unique(layoutNodes.map(d => getString(d, nodeGroup, d._index)))
   const groupNamesSorted: string[] = sortBy(groupNames, d => layoutGroupOrder.indexOf(d))
 
   const groups = groupNamesSorted.map(groupName => {
-    const groupNodes = layoutNodes.filter(d => getString(d, nodeGroup) === groupName)
-    const groupedBySubgroup = groupBy(groupNodes, d => getString(d, nodeSubGroup))
+    const groupNodes = layoutNodes.filter(d => getString(d, nodeGroup, d._index) === groupName)
+    const groupedBySubgroup = groupBy(groupNodes, d => getString(d, nodeSubGroup, d._index))
     const subgroups = Object.keys(groupedBySubgroup).map(name => ({
       nodes: groupedBySubgroup[name],
       name,
@@ -293,9 +293,9 @@ export function applyLayoutDagre<N extends GraphInputNode, L extends GraphInputL
   const nds = (layoutNonConnectedAside ? connectedNodes : nodes)
   nds.forEach(node => {
     dagreGraph.setNode(node._index, {
-      label: getString(node, nodeLabel),
-      width: getNumber(node, nodeSize) * 1.5 + getNumber(node, nodeBorderWidth),
-      height: labelApprxHeight + getNumber(node, nodeSize) * 1.5,
+      label: getString(node, nodeLabel, node._index),
+      width: getNumber(node, nodeSize, node._index) * 1.5 + getNumber(node, nodeBorderWidth, node._index),
+      height: labelApprxHeight + getNumber(node, nodeSize, node._index) * 1.5,
       originalNode: node,
     })
   })
@@ -337,12 +337,12 @@ export function applyLayoutConcentric<N extends GraphInputNode, L extends GraphI
 
   const layoutNodes = layoutNonConnectedAside ? connectedNodes : nodes
 
-  const groupNames: string[] = unique(layoutNodes.map(d => getString(d, nodeGroup)))
+  const groupNames: string[] = unique(layoutNodes.map(d => getString(d, nodeGroup, d._index)))
   const groupNamesSorted: string[] = sortBy(groupNames, d => layoutGroupOrder.indexOf(d))
 
   const groups = groupNamesSorted.map(groupName => ({
     name: groupName,
-    nodes: layoutNodes.filter(d => getString(d, nodeGroup) === groupName),
+    nodes: layoutNodes.filter(d => getString(d, nodeGroup, d._index) === groupName),
   }))
 
   // Handle connected nodes
@@ -400,7 +400,7 @@ export function applyLayoutForce<N extends GraphInputNode, L extends GraphInputL
     }))
     .force('x', forceX().strength(forceXStrength))
     .force('y', forceY().strength(forceYStrength))
-    .force('collide', forceCollide().radius(d => getNodeSize(d, nodeSize)).iterations(1))
+    .force('collide', forceCollide().radius((d, i) => getNodeSize(d, nodeSize, i)).iterations(1))
     .stop()
 
   // See https://bl.ocks.org/mbostock/1667139, https://github.com/d3/d3-force/blob/master/README.md#simulation_tick

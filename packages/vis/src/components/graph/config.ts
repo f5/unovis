@@ -109,7 +109,7 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   linkDisabled?: BooleanAccessor<L>;
   /** Link flow animation accessor function or constant value. Default: `false` */
   linkFlow?: BooleanAccessor<L>;
-  /** Link  abel accessor function or constant value. Default: `undefined` */
+  /** Link label accessor function or constant value. Default: `undefined` */
   linkLabel?: GenericAccessor<GraphCircleLabel, L> | undefined;
   /** Shift label along the link center a little bit to avoid overlap with the link arrow. Default: `true` */
   linkLabelShiftFromCenter?: BooleanAccessor<L>;

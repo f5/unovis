@@ -1,7 +1,7 @@
 import { min, extent } from 'd3-array'
 import { Transition } from 'd3-transition'
 import { select, Selection, pointer, BaseType } from 'd3-selection'
-import { zoom, zoomTransform, zoomIdentity, ZoomTransform, D3ZoomEvent } from 'd3-zoom'
+import { zoom, zoomTransform, zoomIdentity, ZoomTransform, D3ZoomEvent, ZoomBehavior } from 'd3-zoom'
 import { drag, D3DragEvent } from 'd3-drag'
 import { interval, Timer } from 'd3-timer'
 
@@ -65,15 +65,16 @@ export class Graph<
   }
 
   static nodeSelectors = nodeSelectors
-  g: Selection<SVGGElement, unknown, null, undefined>
+  g: Selection<SVGGElement, undefined, null, undefined>
   config: GraphConfig<N, L> = new GraphConfig()
   datamodel: GraphDataModel<N, L, GraphNode<N, L>, GraphLink<N, L>> = new GraphDataModel()
-  private _selectedNode: GraphNode<N>;
-  private _selectedLink: GraphLink<N, L>;
+  private _selectedNode: GraphNode<N>
+  private _selectedLink: GraphLink<N, L>
 
-  private _panelsGroup: Selection<SVGGElement, P[], SVGGElement, P>
-  private _linksGroup: Selection<SVGGElement, GraphLink<N, L>, SVGGElement, GraphLink<N, L>[]>
-  private _nodesGroup: Selection<SVGGElement, GraphNode<N>, SVGGElement, GraphNode<N>[]>
+  private _graphGroup: Selection<SVGGElement, undefined, SVGGElement, undefined>
+  private _panelsGroup: Selection<SVGGElement, undefined, SVGGElement, undefined>
+  private _linksGroup: Selection<SVGGElement, undefined, SVGGElement, undefined>
+  private _nodesGroup: Selection<SVGGElement, undefined, SVGGElement, undefined>
   private _timer: Timer
 
   private _firstRender = true
@@ -81,15 +82,13 @@ export class Graph<
   private _prevHeight: number
   private _recalculateLayout = false
 
-  private _fitLayout
+  private _fitLayout: boolean
   private _setPanels = false
   private _panels: P[]
 
-  // private _panelsGroup
-  private _defs
-  private _backgroundRect
-  private _graphGroup
-  private _zoomBehavior
+  private _defs: Selection<SVGDefsElement, unknown, SVGGElement, undefined>
+  private _backgroundRect: Selection<SVGRectElement, unknown, SVGGElement, undefined>
+  private _zoomBehavior: ZoomBehavior<SVGGElement, unknown>
   private _disableAutoFit = false
   private _scale: number
   private _initialTransform
@@ -126,9 +125,9 @@ export class Graph<
     this._backgroundRect = this.g.append('rect').attr('class', generalSelectors.background)
     this._graphGroup = this.g.append('g').attr('class', generalSelectors.graphGroup)
 
-    this._zoomBehavior = zoom()
+    this._zoomBehavior = zoom<SVGGElement, unknown>()
       .scaleExtent(this.config.zoomScaleExtent)
-      .on('zoom', (e: D3ZoomEvent<any, any>) => this._onZoom(e.transform, e))
+      .on('zoom', (e: D3ZoomEvent<SVGGElement, unknown>) => this._onZoom(e.transform, e))
 
     this._panelsGroup = this._graphGroup.append('g').attr('class', panelSelectors.panels)
     this._linksGroup = this._graphGroup.append('g').attr('class', linkSelectors.links)
@@ -256,8 +255,8 @@ export class Graph<
 
     const nodes: GraphNode<N>[] = datamodel.nodes
     const nodeGroups = this._nodesGroup
-      .selectAll(`.${nodeSelectors.gNode}:not(.${nodeSelectors.gNodeExit})`)
-      .data(nodes, (d: GraphNode<N>) => String(d._id))
+      .selectAll<SVGGElement, GraphNode<N>>(`.${nodeSelectors.gNode}:not(.${nodeSelectors.gNodeExit})`)
+      .data(nodes, d => String(d._id))
 
     const nodeGroupsEnter = nodeGroups.enter().append('g')
       .attr('class', nodeSelectors.gNode)
@@ -289,7 +288,7 @@ export class Graph<
     const { config, datamodel: { links } } = this
 
     const linkGroups = this._linksGroup
-      .selectAll(`.${linkSelectors.gLink}`)
+      .selectAll<SVGGElement, GraphLink<N, L>>(`.${linkSelectors.gLink}`)
       .data(links, (d: GraphLink<N, L>) => String(d._id))
 
     const linkGroupsEnter = linkGroups.enter().append('g')
@@ -306,16 +305,16 @@ export class Graph<
   }
 
   _drawPanels (
-    nodeUpdateSelection: Selection<BaseType, GraphNode<N>, SVGGElement, GraphNode<N>> |
+    nodeUpdateSelection: Selection<SVGGElement, GraphNode<N>, SVGGElement, GraphNode<N>> |
     Transition<BaseType, GraphNode<N>, SVGGElement, GraphNode<N>[]>,
     duration: number
   ): void {
     const { config } = this
     if (!this._panels) return
 
-    const selection = ((nodeUpdateSelection as Transition<BaseType, GraphNode<N>, SVGGElement, GraphNode<N>>).duration)
-      ? (nodeUpdateSelection as Transition<BaseType, GraphNode<N>, SVGGElement, GraphNode<N>>).selection()
-      : nodeUpdateSelection as Selection<BaseType, GraphNode<N>, SVGGElement, GraphNode<N>>
+    const selection = ((nodeUpdateSelection as Transition<SVGGElement, GraphNode<N>, SVGGElement, GraphNode<N>>).duration)
+      ? (nodeUpdateSelection as Transition<SVGGElement, GraphNode<N>, SVGGElement, GraphNode<N>>).selection()
+      : nodeUpdateSelection as Selection<SVGGElement, GraphNode<N>, SVGGElement, GraphNode<N>>
 
     updatePanelNumNodes(selection, this._panels, config)
     updatePanelBBoxSize(selection, this._panels, config)
@@ -482,7 +481,7 @@ export class Graph<
     this._selectedNode = undefined
     this._selectedLink = undefined
 
-    // Disable Greyout
+    // Disable Grayout
     nodes.forEach(n => {
       delete n._state.selected
       delete n._state.greyout
@@ -543,13 +542,13 @@ export class Graph<
 
   _onLinkFlowTimerFrame (elapsed = 0): void {
     const { config: { linkFlow, flowAnimDuration }, datamodel: { links } } = this
-    // this._elapsed = elapsed
 
-    const hasLinksWithFlow = links.some(d => getBoolean(d, linkFlow))
+    const hasLinksWithFlow = links.some((d, i) => getBoolean(d, linkFlow, i))
     if (!hasLinksWithFlow) return
+
     const t = (elapsed % flowAnimDuration) / flowAnimDuration
-    const linkElements: Selection<SVGGElement, GraphLink<N, L>, SVGGElement, GraphLink<N, L>> =
-      this._linksGroup.selectAll(`.${linkSelectors.gLink}`)
+    const linkElements = this._linksGroup.selectAll<SVGGElement, GraphLink<N, L>>(`.${linkSelectors.gLink}`)
+
     const linksToAnimate = linkElements.filter(d => !d._state.greyout)
     linksToAnimate.each(d => { d._state.flowAnimTime = t })
     animateLinkFlow(linksToAnimate, this.config, this._scale)
@@ -655,10 +654,6 @@ export class Graph<
     linksToUpdate.call(updateLinks, config, 0, scale)
     const linksToAnimate = linksToUpdate.filter(d => d._state.greyout)
     if (linksToAnimate.size()) animateLinkFlow(linksToAnimate, config, this._scale)
-
-    // if (this._timer && this._elapsed) {
-    //   this._onTimerFrame(this._elapsed)
-    // }
   }
 
   _onDragEnded (d: GraphNode<N>, event: D3DragEvent<any, any, any>, nodeSelection: Selection<SVGGElement, GraphNode<N>, any, any>): void {
