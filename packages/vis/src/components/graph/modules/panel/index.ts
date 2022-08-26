@@ -23,7 +23,7 @@ import * as panelSelectors from './style'
 import { appendShape, updateShape } from '../shape'
 
 export function createPanels<N extends GraphNode, P extends GraphPanelConfigInterface> (
-  selection: Selection<SVGGElement, P, SVGGElement, P[]>,
+  selection: Selection<SVGGElement, P, SVGGElement, unknown>,
   nodesSelection: Selection<SVGGElement, N, SVGGElement, N>
 ): void {
   selection
@@ -60,17 +60,22 @@ export function createPanels<N extends GraphNode, P extends GraphPanelConfigInte
 }
 
 export function updatePanels<N extends GraphNode, L extends GraphLink, P extends GraphPanelConfigInterface> (
-  selection: Selection<SVGGElement, P, SVGGElement, P>,
+  selection: Selection<SVGGElement, P, SVGGElement, unknown>,
   config: GraphConfig<GraphInputNode, GraphInputLink>,
   duration: number
 ): void {
   const { nodeDisabled } = config
-  selection.classed(panelSelectors.greyout, d => d._data.map((node, i) => getBoolean(node, nodeDisabled, node._index) || node._state.greyout).every(d => d))
+  selection
+    .classed(
+      panelSelectors.greyout,
+      d => d._data
+        .map((node, i) => getBoolean(node, nodeDisabled, node._index) || node._state.greyout)
+        .every(d => d)
+    )
 
   smartTransition(selection, duration)
     .attr('transform', d => `translate(${d._x}, ${d._y})`)
     .style('opacity', duration === 0 ? null : 1)
-    .style('stroke', (d: P) => d.color)
 
   const panels = selection.selectAll(`.${panelSelectors.panel}`).data(d => [d])
   smartTransition(panels, duration)
@@ -78,6 +83,7 @@ export function updatePanels<N extends GraphNode, L extends GraphLink, P extends
     .attr('y', d => -(d.padding || DEFAULT_PADDING))
     .attr('width', d => d._width + (d.padding || DEFAULT_PADDING) * 2)
     .attr('height', d => d._height + (d.padding || DEFAULT_PADDING) * 2)
+    .style('stroke', d => d.color)
     .style('stroke-width', d => d.borderWidth)
 
   const panelSelectionOutlines = selection.selectAll(`.${panelSelectors.panelSelection}`)
@@ -136,7 +142,7 @@ export function updatePanels<N extends GraphNode, L extends GraphLink, P extends
 }
 
 export function removePanels<N extends GraphNode, L extends GraphLink, P extends GraphPanelConfigInterface> (
-  selection: Selection<SVGGElement, P, SVGGElement, P[]>,
+  selection: Selection<SVGGElement, P, SVGGElement, unknown>,
   config: GraphConfig<GraphInputNode, GraphInputLink>,
   duration: number
 ): void {

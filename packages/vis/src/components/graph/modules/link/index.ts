@@ -237,7 +237,7 @@ export function removeLinks<N extends GraphInputNode, L extends GraphInputLink> 
 }
 
 export function animateLinkFlow<N extends GraphInputNode, L extends GraphInputLink> (
-  selection: Selection<SVGGElement, GraphLink<N, L>, SVGGElement, GraphLink<N, L>>,
+  selection: Selection<SVGGElement, GraphLink<N, L>, SVGGElement, unknown>,
   config: GraphConfig<N, L>,
   scale: number
 ): void {

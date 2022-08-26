@@ -50,7 +50,7 @@ export function setPanelForNodes<N extends GraphInputNode, L extends GraphInputL
 
 export function setPanelBBox<N extends GraphInputNode, L extends GraphInputLink> (
   panelConfig: GraphPanelConfigInterface,
-  panelNodes: Selection<BaseType, GraphNode<N, L>, SVGGElement, GraphNode<N, L>>,
+  panelNodes: Selection<BaseType, GraphNode<N, L>, SVGGElement, unknown>,
   nodeSizeAccessor: NumericAccessor<N>
 ): void {
   const selection = panelNodes.select(`.${nodeSelectors.node}`)
@@ -96,13 +96,13 @@ export function setPanelBBox<N extends GraphInputNode, L extends GraphInputLink>
 
 export function setPanelNumNodes<N extends GraphInputNode, L extends GraphInputLink> (
   panelConfig: GraphPanelConfigInterface,
-  panelNodes: Selection<BaseType, GraphNode<N, L>, SVGGElement, GraphNode<N, L>>
+  panelNodes: Selection<BaseType, GraphNode<N, L>, SVGGElement, unknown>
 ): void {
   panelConfig._numNodes = panelNodes.size()
 }
 
 export function updatePanelBBoxSize<N extends GraphInputNode, L extends GraphInputLink> (
-  nodesSelection: Selection<BaseType, GraphNode<N, L>, SVGGElement, GraphNode<N, L>>,
+  nodesSelection: Selection<BaseType, GraphNode<N, L>, SVGGElement, unknown>,
   panels: GraphPanelConfigInterface[],
   config: GraphConfig<N, L>
 ): void {
@@ -118,7 +118,7 @@ export function updatePanelBBoxSize<N extends GraphInputNode, L extends GraphInp
 }
 
 export function updatePanelNumNodes<N extends GraphInputNode, L extends GraphInputLink> (
-  nodesSelection: Selection<BaseType, GraphNode<N, L>, SVGGElement, GraphNode<N, L>>,
+  nodesSelection: Selection<BaseType, GraphNode<N, L>, SVGGElement, unknown>,
   panels: GraphPanelConfigInterface[],
   config: GraphConfig<N, L>
 ): void {
@@ -134,7 +134,7 @@ export function updatePanelNumNodes<N extends GraphInputNode, L extends GraphInp
 }
 
 export function getMaxPanelPadding<P extends GraphPanelConfigInterface> (panels: P[]): number {
-  return panels?.length ? DEFAULT_PADDING + max(panels.map(d => d.padding)) : 0
+  return panels?.length ? DEFAULT_PADDING + max(panels.map(d => d.padding ?? 0)) : 0
 }
 
 export function getLabelTranslateTransform<P extends GraphPanelConfigInterface> (panel: P): string {

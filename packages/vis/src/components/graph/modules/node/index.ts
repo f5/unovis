@@ -89,7 +89,7 @@ export function createNodes<N extends GraphInputNode, L extends GraphInputLink> 
 }
 
 export function updateSelectedNodes<N extends GraphInputNode, L extends GraphInputLink> (
-  selection: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, GraphNode<N, L>>,
+  selection: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, unknown>,
   config: GraphConfig<N, L>
 ): void {
   const { nodeDisabled } = config
@@ -113,12 +113,15 @@ export function updateSelectedNodes<N extends GraphInputNode, L extends GraphInp
 }
 
 export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> (
-  selection: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, GraphNode<N, L>>,
+  selection: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, unknown>,
   config: GraphConfig<N, L>,
   duration: number,
   scale = 1
-): Selection<SVGGElement, GraphNode<N, L>, SVGGElement, GraphNode<N, L>> | Transition<SVGGElement, GraphNode<N, L>, SVGGElement, GraphNode<N, L>> {
-  const { scoreAnimDuration, nodeBorderWidth, nodeShape, nodeSize, nodeStrokeSegmentValue, nodeStrokeSegmentFill, nodeIcon, nodeIconSize, nodeLabel, nodeSubLabel, nodeSideLabels, nodeStroke, nodeFill, nodeBottomIcon } = config
+): Selection<SVGGElement, GraphNode<N, L>, SVGGElement, unknown> | Transition<SVGGElement, GraphNode<N, L>, SVGGElement, unknown> {
+  const {
+    scoreAnimDuration, nodeBorderWidth, nodeShape, nodeSize, nodeStrokeSegmentValue, nodeStrokeSegmentFill,
+    nodeIcon, nodeIconSize, nodeLabel, nodeSubLabel, nodeSideLabels, nodeStroke, nodeFill, nodeBottomIcon,
+  } = config
 
   // Re-create nodes to update shapes if they were changes
   selection.each((d, i, elements) => {
@@ -281,7 +284,7 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
 }
 
 export function removeNodes<N extends GraphInputNode, L extends GraphInputLink> (
-  selection: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, GraphNode<N, L>>,
+  selection: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, unknown>,
   config: GraphConfig<N, L>,
   duration: number
 ): void {
@@ -298,7 +301,7 @@ export function removeNodes<N extends GraphInputNode, L extends GraphInputLink> 
 }
 
 function setLabelBackgroundRect<N extends GraphInputNode, L extends GraphInputLink> (
-  selection: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, GraphNode<N, L>>,
+  selection: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, unknown>,
   config: GraphConfig<N, L>
 ): void {
   const { nodeLabel } = config
@@ -313,7 +316,7 @@ function setLabelBackgroundRect<N extends GraphInputNode, L extends GraphInputLi
 const setLabelBackgroundRectThrottled = throttle(setLabelBackgroundRect, 1000)
 
 export function zoomNodes<N extends GraphInputNode, L extends GraphInputLink> (
-  selection: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, GraphNode<N, L>>,
+  selection: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, unknown>,
   config: GraphConfig<N, L>,
   scale: number
 ): void {

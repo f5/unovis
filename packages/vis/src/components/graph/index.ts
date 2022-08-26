@@ -65,16 +65,16 @@ export class Graph<
   }
 
   static nodeSelectors = nodeSelectors
-  g: Selection<SVGGElement, undefined, null, undefined>
+  g: Selection<SVGGElement, unknown, null, undefined>
   config: GraphConfig<N, L> = new GraphConfig()
   datamodel: GraphDataModel<N, L, GraphNode<N, L>, GraphLink<N, L>> = new GraphDataModel()
   private _selectedNode: GraphNode<N>
   private _selectedLink: GraphLink<N, L>
 
-  private _graphGroup: Selection<SVGGElement, undefined, SVGGElement, undefined>
-  private _panelsGroup: Selection<SVGGElement, undefined, SVGGElement, undefined>
-  private _linksGroup: Selection<SVGGElement, undefined, SVGGElement, undefined>
-  private _nodesGroup: Selection<SVGGElement, undefined, SVGGElement, undefined>
+  private _graphGroup: Selection<SVGGElement, unknown, SVGGElement, undefined>
+  private _panelsGroup: Selection<SVGGElement, unknown, SVGGElement, undefined>
+  private _linksGroup: Selection<SVGGElement, unknown, SVGGElement, undefined>
+  private _nodesGroup: Selection<SVGGElement, unknown, SVGGElement, undefined>
   private _timer: Timer
 
   private _firstRender = true
@@ -250,7 +250,7 @@ export class Graph<
     this._firstRender = false
   }
 
-  _drawNodes (duration: number): void {
+  private _drawNodes (duration: number): void {
     const { config, datamodel } = this
 
     const nodes: GraphNode<N>[] = datamodel.nodes
@@ -262,11 +262,11 @@ export class Graph<
       .attr('class', nodeSelectors.gNode)
       .call(createNodes, config, duration)
 
-    const nodeGroupsMerged = nodeGroups.merge(nodeGroupsEnter) as Selection<SVGGElement, GraphNode<N>, SVGGElement, GraphNode<N>>
+    const nodeGroupsMerged = nodeGroups.merge(nodeGroupsEnter)
     const nodeUpdateSelection = updateNodes(nodeGroupsMerged, config, duration, this._scale)
     this._drawPanels(nodeUpdateSelection, duration)
 
-    const nodesGroupExit: Selection<BaseType, GraphNode<N>, SVGGElement, GraphNode<N>> = nodeGroups.exit()
+    const nodesGroupExit = nodeGroups.exit()
     nodesGroupExit
       .classed(nodeSelectors.gNodeExit, true)
       .call(removeNodes, config, duration)
@@ -284,7 +284,7 @@ export class Graph<
     }
   }
 
-  _drawLinks (duration: number): void {
+  private _drawLinks (duration: number): void {
     const { config, datamodel: { links } } = this
 
     const linkGroups = this._linksGroup
@@ -298,32 +298,32 @@ export class Graph<
     const linkGroupsMerged = linkGroups.merge(linkGroupsEnter)
     linkGroupsMerged.call(updateLinks, config, duration, this._scale)
 
-    const linkGroupsExit: Selection<BaseType, GraphLink<N, L>, SVGGElement, GraphLink<N, L>> = linkGroups.exit()
+    const linkGroupsExit = linkGroups.exit()
     linkGroupsExit
       .attr('class', linkSelectors.gLinkExit)
       .call(removeLinks, config, duration)
   }
 
-  _drawPanels (
-    nodeUpdateSelection: Selection<SVGGElement, GraphNode<N>, SVGGElement, GraphNode<N>> |
-    Transition<BaseType, GraphNode<N>, SVGGElement, GraphNode<N>[]>,
+  private _drawPanels (
+    nodeUpdateSelection: Selection<SVGGElement, GraphNode<N>, SVGGElement, unknown> |
+    Transition<BaseType, GraphNode<N>, SVGGElement, unknown>,
     duration: number
   ): void {
     const { config } = this
     if (!this._panels) return
 
-    const selection = ((nodeUpdateSelection as Transition<SVGGElement, GraphNode<N>, SVGGElement, GraphNode<N>>).duration)
-      ? (nodeUpdateSelection as Transition<SVGGElement, GraphNode<N>, SVGGElement, GraphNode<N>>).selection()
-      : nodeUpdateSelection as Selection<SVGGElement, GraphNode<N>, SVGGElement, GraphNode<N>>
+    const selection = ((nodeUpdateSelection as Transition<SVGGElement, GraphNode<N>, SVGGElement, unknown>).duration)
+      ? (nodeUpdateSelection as Transition<SVGGElement, GraphNode<N>, SVGGElement, unknown>).selection()
+      : nodeUpdateSelection as Selection<SVGGElement, GraphNode<N>, SVGGElement, unknown>
 
     updatePanelNumNodes(selection, this._panels, config)
     updatePanelBBoxSize(selection, this._panels, config)
     const panelData = this._panels.filter(p => p._numNodes)
     const panelGroup = this._panelsGroup
-      .selectAll(`.${panelSelectors.gPanel}`)
+      .selectAll<SVGGElement, P>(`.${panelSelectors.gPanel}`)
       .data(panelData, (d: P) => d.label)
 
-    const panelGroupExit: Selection<BaseType, P, SVGGElement, P[]> = panelGroup.exit()
+    const panelGroupExit = panelGroup.exit()
     panelGroupExit.call(removePanels, config, duration)
 
     const panelGroupEnter = panelGroup.enter().append('g')
@@ -334,14 +334,14 @@ export class Graph<
     this._updatePanels(panelGroupMerged, duration)
   }
 
-  _updatePanels (panelToUpdate, duration: number): void {
+  private _updatePanels (panelToUpdate: Selection<SVGGElement, P, SVGGElement, unknown>, duration: number): void {
     const { config } = this
     if (!this._panels) return
 
     panelToUpdate.call(updatePanels, config, duration)
   }
 
-  _calculateLayout (): void {
+  private _calculateLayout (): void {
     const { config, datamodel } = this
     switch (config.layoutType) {
       case GraphLayoutType.Parallel:
@@ -366,7 +366,7 @@ export class Graph<
     }
   }
 
-  _fit (duration = 0): void {
+  private _fit (duration = 0): void {
     const { datamodel: { nodes } } = this
     if (nodes?.length && this.g?.size()) {
       const transform = this._getTransform(nodes)
@@ -378,7 +378,7 @@ export class Graph<
     }
   }
 
-  _getTransform (nodes: GraphNode<N>[]): ZoomTransform {
+  private _getTransform (nodes: GraphNode<N>[]): ZoomTransform {
     const { nodeSize, zoomScaleExtent } = this.config
     const { left, top, right, bottom } = this.bleed
 
@@ -404,7 +404,7 @@ export class Graph<
     return transform
   }
 
-  _selectNode (node: GraphNode<N>): void {
+  private _selectNode (node: GraphNode<N>): void {
     const { datamodel: { nodes, links } } = this
     if (!node) console.warn('Graph | Select Node: Not found')
     this._selectedNode = node
@@ -440,7 +440,7 @@ export class Graph<
     this._updateSelectedElements()
   }
 
-  _selectLink (link: GraphLink<N, L>): void {
+  private _selectLink (link: GraphLink<N, L>): void {
     const { datamodel: { nodes, links } } = this
     if (!link) console.warn('Graph | Select Link: Not found')
     this._selectedLink = link
@@ -476,7 +476,7 @@ export class Graph<
     this._updateSelectedElements()
   }
 
-  _resetSelection (): void {
+  private _resetSelection (): void {
     const { datamodel: { nodes, links } } = this
     this._selectedNode = undefined
     this._selectedLink = undefined
@@ -494,53 +494,53 @@ export class Graph<
     this._updateSelectedElements()
   }
 
-  _updateSelectedElements (): void {
+  private _updateSelectedElements (): void {
     const { config } = this
 
-    const linkElements: Selection<SVGGElement, GraphLink<N, L>, SVGGElement, GraphLink<N, L>> = this._linksGroup.selectAll(`.${linkSelectors.gLink}`)
+    const linkElements = this._linksGroup.selectAll<SVGGElement, GraphLink<N, L>>(`.${linkSelectors.gLink}`)
     linkElements.call(updateSelectedLinks, config, this._scale)
 
-    const nodeElements: Selection<SVGGElement, GraphNode<N>, SVGGElement, GraphNode<N>> = this._nodesGroup.selectAll(`.${nodeSelectors.gNode}`)
+    const nodeElements = this._nodesGroup.selectAll<SVGGElement, GraphNode<N>>(`.${nodeSelectors.gNode}`)
     nodeElements.call(updateSelectedNodes, config)
 
     // this._drawPanels(nodeElements, 0)
   }
 
-  _onBackgroundClick (): void {
+  private _onBackgroundClick (): void {
     this._resetSelection()
   }
 
-  _onNodeClick (d: GraphNode<N>): void {
-    // this._selectNode(d)
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  private _onNodeClick (d: GraphNode<N>): void {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  _onNodeMouseOut (d: GraphNode<N>): void {
+  private _onNodeMouseOut (d: GraphNode<N>): void {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  _onNodeMouseOver (d: GraphNode<N>): void {
+  private _onNodeMouseOver (d: GraphNode<N>): void {
   }
 
-  _onLinkClick (d: GraphLink<N, L>): void {
-    // this._selectLink(d)
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  private _onLinkClick (d: GraphLink<N, L>): void {
   }
 
-  _onLinkMouseOver (d: GraphLink<N, L>): void {
+  private _onLinkMouseOver (d: GraphLink<N, L>): void {
     if (this._isDragging) return
 
     d._state.hovered = true
     this._updateSelectedElements()
   }
 
-  _onLinkMouseOut (d: GraphLink<N, L>): void {
+  private _onLinkMouseOut (d: GraphLink<N, L>): void {
     if (this._isDragging) return
 
     delete d._state.hovered
     this._updateSelectedElements()
   }
 
-  _onLinkFlowTimerFrame (elapsed = 0): void {
+  private _onLinkFlowTimerFrame (elapsed = 0): void {
     const { config: { linkFlow, flowAnimDuration }, datamodel: { links } } = this
 
     const hasLinksWithFlow = links.some((d, i) => getBoolean(d, linkFlow, i))
@@ -554,11 +554,11 @@ export class Graph<
     animateLinkFlow(linksToAnimate, this.config, this._scale)
   }
 
-  _onZoom (t, event?: D3ZoomEvent<any, any>): void {
+  private _onZoom (t: ZoomTransform, event?: D3ZoomEvent<SVGGElement, unknown>): void {
     const { config, datamodel: { nodes } } = this
     const transform = t || event.transform
     this._scale = transform.k
-    this._graphGroup.attr('transform', transform)
+    this._graphGroup.attr('transform', transform.toString())
     if (isFunction(config.onZoom)) config.onZoom(this._scale, config.zoomScaleExtent)
 
     if (!this._initialTransform) this._initialTransform = transform
@@ -582,14 +582,22 @@ export class Graph<
       .call(nodes.length > config.zoomThrottledUpdateNodeThreshold ? zoomLinksThrottled : zoomLinks, config, this._scale)
   }
 
-  _onDragStarted (d: GraphNode<N>, event: D3DragEvent<any, any, any>, nodeSelection: Selection<SVGGElement, GraphNode<N>, any, any>): void {
+  private _onDragStarted (
+    d: GraphNode<N>,
+    event: D3DragEvent<SVGGElement, GraphNode<N>, unknown>,
+    nodeSelection: Selection<SVGGElement, GraphNode<N>, SVGGElement, unknown>
+  ): void {
     const { config } = this
     this._isDragging = true
     d._state.isDragged = true
     nodeSelection.call(updateNodes, config, 0, this._scale)
   }
 
-  _onDragged (d: GraphNode<N>, event: D3DragEvent<any, any, any>, allNodesSelection: Selection<SVGGElement, GraphNode<N>, any, any>): void {
+  private _onDragged (
+    d: GraphNode<N>,
+    event: D3DragEvent<SVGGElement, GraphNode<N>, unknown>,
+    allNodesSelection: Selection<SVGGElement, GraphNode<N>, SVGGElement, unknown>
+  ): void {
     const { config } = this
     const transform = zoomTransform(this.g.node())
     const scale = transform.k
@@ -637,15 +645,15 @@ export class Graph<
     panelNodesToUpdate
       .call(updateNodes, config, 0, scale)
       .call(zoomNodes, config, scale)
-    const panelToUpdate: Selection<SVGGElement, P, SVGGElement, P[]> = this._panelsGroup.selectAll(`.${panelSelectors.gPanel}`)
+    const panelToUpdate = this._panelsGroup.selectAll<SVGGElement, P>(`.${panelSelectors.gPanel}`)
     updatePanelBBoxSize(panelNodesToUpdate, this._panels, config)
     this._updatePanels(panelToUpdate, 0)
 
-    const nodeElements: Selection<SVGGElement, GraphNode<N>, SVGGElement, GraphNode<N>> = this._nodesGroup.selectAll(`.${nodeSelectors.gNode}`)
+    const nodeElements = this._nodesGroup.selectAll<SVGGElement, GraphNode<N>>(`.${nodeSelectors.gNode}`)
     const nodesToUpdate = nodeElements.filter((n: GraphNode<N>) => n._id === d._id)
     nodesToUpdate.call(updateNodes, config, 0, scale)
 
-    const linkElements: Selection<SVGGElement, GraphLink<N, L>, SVGGElement, GraphLink<N, L>> = this._linksGroup.selectAll(`.${linkSelectors.gLink}`)
+    const linkElements = this._linksGroup.selectAll<SVGGElement, GraphLink<N, L>>(`.${linkSelectors.gLink}`)
     const linksToUpdate = linkElements.filter((l: L) => {
       const source = l.source as GraphNode<N>
       const target = l.target as GraphNode<N>
@@ -656,14 +664,18 @@ export class Graph<
     if (linksToAnimate.size()) animateLinkFlow(linksToAnimate, config, this._scale)
   }
 
-  _onDragEnded (d: GraphNode<N>, event: D3DragEvent<any, any, any>, nodeSelection: Selection<SVGGElement, GraphNode<N>, any, any>): void {
+  private _onDragEnded (
+    d: GraphNode<N>,
+    event: D3DragEvent<SVGGElement, GraphNode<N>, unknown>,
+    nodeSelection: Selection<SVGGElement, GraphNode<N>, SVGGElement, unknown>
+  ): void {
     const { config } = this
     this._isDragging = false
     d._state.isDragged = false
     nodeSelection.call(updateNodes, config, 0, this._scale)
   }
 
-  _shouldLayoutRecalculate (nextConfig: GraphConfigInterface<N, L>): boolean {
+  private _shouldLayoutRecalculate (nextConfig: GraphConfigInterface<N, L>): boolean {
     const { config } = this
     if (config.layoutType !== nextConfig.layoutType) return true
     if (config.layoutNonConnectedAside !== nextConfig.layoutNonConnectedAside) return true
@@ -678,7 +690,11 @@ export class Graph<
       if (Object.keys(dagreSettingsDiff).length) return true
     }
 
-    if (config.layoutType === GraphLayoutType.Parallel || config.layoutType === GraphLayoutType.ParallelHorizontal || config.layoutType === GraphLayoutType.Concentric) {
+    if (
+      config.layoutType === GraphLayoutType.Parallel ||
+      config.layoutType === GraphLayoutType.ParallelHorizontal ||
+      config.layoutType === GraphLayoutType.Concentric
+    ) {
       if (config.layoutGroupOrder !== nextConfig.layoutGroupOrder) return true
       if (config.layoutSubgroupMaxNodes !== nextConfig.layoutSubgroupMaxNodes) return true
       if (config.layoutSortConnectionsByGroup !== nextConfig.layoutSortConnectionsByGroup) return true
@@ -687,7 +703,7 @@ export class Graph<
     return false
   }
 
-  _addSVGDefs (): void {
+  private _addSVGDefs (): void {
     const { datamodel: { links } } = this
 
     // Clean up old defs
