@@ -1,5 +1,4 @@
 // Types
-import { Shape } from 'types/shape'
 import { Position } from 'types/position'
 import { GraphInputLink, GraphInputNode, GraphNodeCore, GraphLinkCore } from 'types/graph'
 
@@ -72,6 +71,13 @@ export enum GraphLinkArrow {
   Double = 'double',
 }
 
+export enum GraphNodeShape {
+  Circle = 'circle',
+  Square = 'square',
+  Hexagon = 'hexagon',
+  Triangle = 'triangle',
+}
+
 export interface GraphPanelConfigInterface<
   N extends GraphInputNode = GraphInputNode,
   L extends GraphInputLink = GraphInputLink,
@@ -95,7 +101,7 @@ export interface GraphPanelConfigInterface<
   /** Size of the label icon as a CSS string. e.g.: `12pt` or `12px` */
   sideLabelIconFontSize?: string;
   /** Shape of the side label */
-  sideLabelShape?: Shape;
+  sideLabelShape?: GraphNodeShape;
   /** Color of the side label */
   sideLabelColor?: string;
   /** Cursor of when hovering over the side label */
@@ -125,4 +131,17 @@ export type GraphNodeAnimationState = {
 
 export type GraphNodeAnimatedElement<T = SVGElement> = T & {
   _animState: GraphNodeAnimationState;
+}
+
+export type GraphForceLayoutSettings = {
+  /** Preferred Link Distance. Default: `60` */
+  linkDistance?: number;
+  /** Link Strength [0:1]. Default: `0.45` */
+  linkStrength?: number;
+  /** Charge Force (<0 repulsion, >0 attraction). Default: `-500` */
+  charge?: number;
+  /** X-centring force. Default: `0.15` */
+  forceXStrength?: number;
+  /** Y-centring force. Default: `0.25` */
+  forceYStrength?: number;
 }

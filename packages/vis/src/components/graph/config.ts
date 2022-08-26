@@ -5,10 +5,17 @@ import { ComponentConfigInterface, ComponentConfig } from 'core/component/config
 // Types
 import { GraphInputLink, GraphInputNode } from 'types/graph'
 import { BooleanAccessor, ColorAccessor, NumericAccessor, StringAccessor, GenericAccessor } from 'types/accessor'
-import { Shape } from 'types/shape'
 
 // Local Types
-import { GraphLayoutType, GraphCircleLabel, GraphLinkStyle, GraphLinkArrow, GraphPanelConfigInterface } from './types'
+import {
+  GraphLayoutType,
+  GraphCircleLabel,
+  GraphLinkStyle,
+  GraphLinkArrow,
+  GraphPanelConfigInterface,
+  GraphForceLayoutSettings,
+  GraphNodeShape,
+} from './types'
 
 export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphInputLink> extends ComponentConfigInterface {
   // Zoom and drag
@@ -65,18 +72,7 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   nodeSubGroup?: StringAccessor<N>;
 
   /** Force Layout settings, see the `d3-force` package for more details */
-  forceLayoutSettings?: {
-    /** Preferred Link Distance. Default: `60` */
-    linkDistance?: number;
-    /** Link Strength [0:1]. Default: `0.45` */
-    linkStrength?: number;
-    /** Charge Force (<0 repulsion, >0 attraction). Default: `-500` */
-    charge?: number;
-    /** X-centring force. Default: `0.15` */
-    forceXStrength?: number;
-    /** Y-centring force. Default: `0.25` */
-    forceYStrength?: number;
-  };
+  forceLayoutSettings?: GraphForceLayoutSettings;
 
   /** Darge Layout settings, see the `dagrejs` package fore more details */
   dagreLayoutSettings?: {
@@ -126,7 +122,7 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   /** Node border width accessor function or constant value. Default: `3` */
   nodeBorderWidth?: NumericAccessor<N>;
   /** Node shape accessor function or constant value. Default: `Shape.Circle` */
-  nodeShape?: GenericAccessor<Shape | string, N>;
+  nodeShape?: GenericAccessor<GraphNodeShape | `${GraphNodeShape}`, N>;
   /** Node score outline accessor function or constant value in the range [0,100]. Default: `0` */
   nodeStrokeSegmentValue?: NumericAccessor<N>;
   /** Node central icon accessor function or constant value. Default: `node => node.icon` */
@@ -216,7 +212,7 @@ export class GraphConfig<N extends GraphInputNode, L extends GraphInputLink> ext
 
   nodeSize = 30
   nodeBorderWidth = 3
-  nodeShape = Shape.Circle
+  nodeShape = GraphNodeShape.Circle
   nodeStrokeSegmentValue = 0
   nodeIcon = (n: N): string => n['icon']
   nodeIconSize = undefined

@@ -3,7 +3,6 @@ import { Transition } from 'd3-transition'
 import { arc } from 'd3-shape'
 
 // Types
-import { Shape } from 'types/shape'
 import { GraphInputLink, GraphInputNode } from 'types/graph'
 
 // Utils
@@ -13,7 +12,7 @@ import { smartTransition } from 'utils/d3'
 import { getBoolean, getNumber, getString, getValue, throttle } from 'utils/data'
 
 // Local Types
-import { GraphNode, GraphCircleLabel, GraphNodeAnimationState, GraphNodeAnimatedElement } from '../../types'
+import { GraphNode, GraphCircleLabel, GraphNodeAnimationState, GraphNodeAnimatedElement, GraphNodeShape } from '../../types'
 
 // Config
 import { GraphConfig } from '../../config'
@@ -169,7 +168,7 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
     group
       .classed(nodeSelectors.nodePolygon, () => {
         const shape = getString(d, nodeShape, d._index)
-        return shape === Shape.Triangle || shape === Shape.Hexagon || shape === Shape.Square
+        return shape === GraphNodeShape.Triangle || shape === GraphNodeShape.Hexagon || shape === GraphNodeShape.Square
       })
 
     // Update Node
@@ -186,17 +185,17 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
       .style('display', !getNumber(d, nodeStrokeSegmentValue, d._index) ? 'none' : null)
       .style('fill', getNodeColor(d, nodeStrokeSegmentFill, d._index))
       .style('stroke', getNodeColor(d, nodeStrokeSegmentFill, d._index))
-      .style('stroke-opacity', d => getString(d, nodeShape, d._index) === Shape.Circle ? 0 : null)
+      .style('stroke-opacity', d => getString(d, nodeShape, d._index) === GraphNodeShape.Circle ? 0 : null)
 
     nodeArc
       .transition()
       .duration(scoreAnimDuration)
       .attrTween('d', (d, j, arr: GraphNodeAnimatedElement<SVGElement>[]) => {
         switch (getString(d, nodeShape, d._index)) {
-          case Shape.Circle: return arcTween(d, config, arcGenerator, arr[j])
-          case Shape.Hexagon: return polyTween(d, config, polygon, arr[j])
-          case Shape.Square: return polyTween(d, config, polygon, arr[j])
-          case Shape.Triangle: return polyTween(d, config, polygon, arr[j])
+          case GraphNodeShape.Circle: return arcTween(d, config, arcGenerator, arr[j])
+          case GraphNodeShape.Hexagon: return polyTween(d, config, polygon, arr[j])
+          case GraphNodeShape.Square: return polyTween(d, config, polygon, arr[j])
+          case GraphNodeShape.Triangle: return polyTween(d, config, polygon, arr[j])
           default: return null
         }
       })
@@ -267,7 +266,7 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
     // Position label
     const labelFontSize = parseFloat(window.getComputedStyle(groupElement).getPropertyValue('--vis-graph-node-label-font-size')) || 12
     const labelMargin = LABEL_RECT_VERTICAL_PADDING + 1.25 * labelFontSize ** 1.03
-    const nodeHeight = isCustomXml((getString(d, nodeShape, d._index)) as Shape) ? nodeBBox.height : nodeSizeValue
+    const nodeHeight = isCustomXml((getString(d, nodeShape, d._index)) as GraphNodeShape) ? nodeBBox.height : nodeSizeValue
     label.attr('transform', `translate(0, ${nodeHeight / 2 + labelMargin})`)
     if (scale >= ZoomLevel.Level3) setLabelRect(label, getString(d, nodeLabel, d._index), nodeSelectors.labelText)
 

@@ -2,7 +2,6 @@ import { Selection, select } from 'd3-selection'
 
 // Types
 import { NumericAccessor, StringAccessor } from 'types/accessor'
-import { Shape } from 'types/shape'
 
 // Utils
 import { polygon } from 'utils/path'
@@ -12,12 +11,12 @@ import { getString } from 'utils/data'
 import { GraphInputLink, GraphInputNode } from 'types/graph'
 
 // Local Types
-import { GraphNode, GraphPanelConfigInterface } from '../types'
+import { GraphNode, GraphPanelConfigInterface, GraphNodeShape } from '../types'
 
 // Helpers
 import { getNodeSize } from './node/helper'
 
-export function isCustomXml (shape: Shape): boolean {
+export function isCustomXml (shape: GraphNodeShape): boolean {
   return /<[a-z][\s\S]*>/i.test(shape)
 }
 
@@ -31,7 +30,7 @@ export function appendShape<N extends GraphInputNode, L extends GraphInputLink, 
 ): void {
   selection.each((d, i, elements) => {
     const element = select(elements[i])
-    const shape = getString(d, shapeAccessor, index) as Shape
+    const shape = getString(d, shapeAccessor, index) as GraphNodeShape
 
     let shapeElement
     const isCustomXmlShape = isCustomXml(shape)
@@ -40,16 +39,16 @@ export function appendShape<N extends GraphInputNode, L extends GraphInputLink, 
         .html(shape)
     } else {
       switch (shape) {
-        case Shape.Square:
+        case GraphNodeShape.Square:
           shapeElement = element.insert('rect', insertSelector)
             .attr('rx', 5)
             .attr('ry', 5)
           break
-        case Shape.Hexagon:
-        case Shape.Triangle:
+        case GraphNodeShape.Hexagon:
+        case GraphNodeShape.Triangle:
           shapeElement = element.insert('path', insertSelector)
           break
-        case Shape.Circle:
+        case GraphNodeShape.Circle:
         default:
           shapeElement = element.insert('circle', insertSelector)
       }
@@ -83,13 +82,13 @@ export function updateShape<N extends GraphInputNode, L extends GraphInputLink, 
     .attr('d', () => {
       let n
       switch (getString(d, shape, index)) {
-        case Shape.Square:
+        case GraphNodeShape.Square:
           n = 4
           break
-        case Shape.Triangle:
+        case GraphNodeShape.Triangle:
           n = 3
           break
-        case Shape.Hexagon:
+        case GraphNodeShape.Hexagon:
         default:
           n = 6
       }
@@ -98,7 +97,7 @@ export function updateShape<N extends GraphInputNode, L extends GraphInputLink, 
     })
 
   selection.filter('g')
-    .filter(() => !isCustomXml(getString(d, shape, index) as Shape))
+    .filter(() => !isCustomXml(getString(d, shape, index) as GraphNodeShape))
     .html(getString(d, shape, index))
 
   selection.filter('g')

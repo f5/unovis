@@ -6,7 +6,6 @@ import { color } from 'd3-color'
 
 // Types
 import { ColorAccessor, NumericAccessor } from 'types/accessor'
-import { Shape } from 'types/shape'
 import { GraphInputLink, GraphInputNode } from 'types/graph'
 
 // Utils
@@ -15,7 +14,7 @@ import { isEmpty, isNil, getNumber, getString } from 'utils/data'
 import { getColor, hexToBrightness } from 'utils/color'
 
 // Local Types
-import { GraphNode, GraphCircleLabel, GraphNodeAnimatedElement, GraphNodeAnimationState } from '../../types'
+import { GraphNode, GraphCircleLabel, GraphNodeAnimatedElement, GraphNodeAnimationState, GraphNodeShape } from '../../types'
 
 // Config
 import { GraphConfigInterface } from '../../config'
@@ -69,13 +68,13 @@ export function polyTween<N extends GraphInputNode, L extends GraphInputLink> (
   const nodeSize = getNodeSize(d, config.nodeSize, d._index)
   let n: number
   switch (getString(d, nodeShape, d._index)) {
-    case Shape.Square:
+    case GraphNodeShape.Square:
       n = 4
       break
-    case Shape.Triangle:
+    case GraphNodeShape.Triangle:
       n = 3
       break
-    case Shape.Hexagon:
+    case GraphNodeShape.Hexagon:
     default:
       n = 6
   }
