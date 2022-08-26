@@ -8,7 +8,7 @@ import { color } from 'd3-color'
 import { GraphInputLink, GraphInputNode } from 'types/graph'
 
 // Local Types
-import { GraphLink, GraphLinkArrow, GraphCircleLabel } from '../../types'
+import { GraphLink, GraphLinkArrowStyle, GraphCircleLabel } from '../../types'
 
 // Config
 import { GraphConfig } from '../../config'
@@ -73,7 +73,7 @@ export function getMarker (d: GraphLink, scale: number, config: GraphConfig<Grap
   const { linkArrow } = config
   if ((scale > ZoomLevel.Level2) && getString(d, linkArrow, d._indexGlobal)) {
     const color = getLinkColor(d, config)
-    return `url(#${stringToHtmlId(color)}-${getValue<GraphLink, GraphLinkArrow>(d, linkArrow, d._indexGlobal)})`
+    return `url(#${stringToHtmlId(color)}-${getValue<GraphLink, GraphLinkArrowStyle>(d, linkArrow, d._indexGlobal)})`
   } else {
     return null
   }

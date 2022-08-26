@@ -19,7 +19,7 @@ import { stringToHtmlId } from 'utils/misc'
 import { smartTransition } from 'utils/d3'
 
 // Local Types
-import { GraphNode, GraphLink, GraphLayoutType, GraphLinkArrow, GraphPanelConfigInterface } from './types'
+import { GraphNode, GraphLink, GraphLayoutType, GraphLinkArrowStyle, GraphPanelConfigInterface } from './types'
 
 // Config
 import { GraphConfig, GraphConfigInterface } from './config'
@@ -541,12 +541,12 @@ export class Graph<
   }
 
   private _onLinkFlowTimerFrame (elapsed = 0): void {
-    const { config: { linkFlow, flowAnimDuration }, datamodel: { links } } = this
+    const { config: { linkFlow, linkFlowAnimDuration }, datamodel: { links } } = this
 
     const hasLinksWithFlow = links.some((d, i) => getBoolean(d, linkFlow, i))
     if (!hasLinksWithFlow) return
 
-    const t = (elapsed % flowAnimDuration) / flowAnimDuration
+    const t = (elapsed % linkFlowAnimDuration) / linkFlowAnimDuration
     const linkElements = this._linksGroup.selectAll<SVGGElement, GraphLink<N, L>>(`.${linkSelectors.gLink}`)
 
     const linksToAnimate = linkElements.filter(d => !d._state.greyout)
@@ -696,8 +696,8 @@ export class Graph<
       config.layoutType === GraphLayoutType.Concentric
     ) {
       if (config.layoutGroupOrder !== nextConfig.layoutGroupOrder) return true
-      if (config.layoutSubgroupMaxNodes !== nextConfig.layoutSubgroupMaxNodes) return true
-      if (config.layoutSortConnectionsByGroup !== nextConfig.layoutSortConnectionsByGroup) return true
+      if (config.layoutParallelNodesPerColumn !== nextConfig.layoutParallelNodesPerColumn) return true
+      if (config.layoutParallelSortConnectionsByGroup !== nextConfig.layoutParallelSortConnectionsByGroup) return true
     }
 
     return false
@@ -716,21 +716,21 @@ export class Graph<
 
     this._defs.selectAll('marker')
       .data([
-        ...linkColors.map(d => ({ color: d, arrow: GraphLinkArrow.Single })), // Single-sided arrows
-        ...linkColors.map(d => ({ color: d, arrow: GraphLinkArrow.Double })), // Double-sided arrows
+        ...linkColors.map(d => ({ color: d, arrow: GraphLinkArrowStyle.Single })), // Single-sided arrows
+        ...linkColors.map(d => ({ color: d, arrow: GraphLinkArrowStyle.Double })), // Double-sided arrows
       ]).enter()
       .append('marker')
       .attr('id', d => `${stringToHtmlId(d.color)}-${d.arrow}`)
       .attr('orient', 'auto')
-      .attr('markerWidth', d => d.arrow === GraphLinkArrow.Double ? LINK_MARKER_WIDTH * 2 : LINK_MARKER_WIDTH)
-      .attr('markerHeight', d => d.arrow === GraphLinkArrow.Double ? LINK_MARKER_HEIGHT * 2 : LINK_MARKER_HEIGHT)
+      .attr('markerWidth', d => d.arrow === GraphLinkArrowStyle.Double ? LINK_MARKER_WIDTH * 2 : LINK_MARKER_WIDTH)
+      .attr('markerHeight', d => d.arrow === GraphLinkArrowStyle.Double ? LINK_MARKER_HEIGHT * 2 : LINK_MARKER_HEIGHT)
       .attr('markerUnits', 'userSpaceOnUse')
       .attr('refX', LINK_MARKER_WIDTH - LINK_MARKER_HEIGHT / 2)
       .attr('refY', LINK_MARKER_HEIGHT - LINK_MARKER_HEIGHT / 2)
       .html(d => {
         return `
           <path
-            d="${d.arrow === GraphLinkArrow.Double ? getDoubleArrowPath() : getArrowPath()}"
+            d="${d.arrow === GraphLinkArrowStyle.Double ? getDoubleArrowPath() : getArrowPath()}"
             fill="${d.color ?? null}"
           />
         `

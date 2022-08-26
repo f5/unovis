@@ -11,7 +11,7 @@ import {
   GraphLayoutType,
   GraphCircleLabel,
   GraphLinkStyle,
-  GraphLinkArrow,
+  GraphLinkArrowStyle,
   GraphPanelConfigInterface,
   GraphForceLayoutSettings,
   GraphNodeShape,
@@ -30,7 +30,7 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   /** Zoom event callback. Default: `undefined` */
   onZoom?: (zoomScale: number, zoomScaleExtent: number) => void;
 
-  // Layout
+  // Layout general settings
   /** Type of the graph layout. Default: `GraphLayoutType.Force` */
   layoutType?: GraphLayoutType | string;
   /** Fit the graph to container on data or config updates, or on container resize. Default: `true` */
@@ -39,42 +39,52 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
    * (on data or config update, or container resize) after a zoom / pan interaction or not.
    * `0` — Stop fitting after any pan or zoom
    * `Number.POSITIVE_INFINITY` — Always fit
-   * Default: `8.0`
-  */
+   * Default: `8.0` */
   layoutAutofitTolerance?: number;
-  /** Place non-connected nodes to the bottom of the graph. Default: `false` */
+  /** Place non-connected nodes at the bottom of the graph. Default: `false` */
   layoutNonConnectedAside?: boolean;
 
-  // Settings for Parallel and Concentric Layouts
+  // Settings for Parallel and Concentric layouts
+  /** Node group accessor function.
+   * Only for `GraphLayoutType.Parallel`, `GraphLayoutType.ParallelHorizontal` and `GraphLayoutType.Concentric` layouts.
+   * Default: `node => node.group` */
+  layoutNodeGroup?: StringAccessor<N>;
   /** Order of the layout groups.
    * Only for `GraphLayoutType.Parallel`, `GraphLayoutType.ParallelHorizontal` and `GraphLayoutType.Concentric` layouts.
    * Default: `[]` */
   layoutGroupOrder?: string[];
-  /** Number of rows per group.
-   * Only for `GraphLayoutType.Parallel` and `GraphLayoutType.ParallelHorizontal` layouts.
-   * Default: `1` */
-  layoutGroupRows?: number;
-  /** Set the number of nodes in a sub-group after which they'll continue from the next line or column.
+
+  // Setting for Parallel layouts only
+  /** Sets the number of nodes in a sub-group after which they'll continue on the next column (or row if `layoutType` is
+   * `GraphLayoutType.ParallelHorizontal`).
    * Only for `GraphLayoutType.Parallel` and `GraphLayoutType.ParallelHorizontal` layouts.
    * Default: `6` */
-  layoutSubgroupMaxNodes?: number;
-  /** Set the spacing between the groups.
+  layoutParallelNodesPerColumn?: number;
+  /** Node sub-group accessor function.
+   * Only for `GraphLayoutType.Parallel` and `GraphLayoutType.ParallelHorizontal` layouts.
+   * Default: `node => node.subgroup` */
+  layoutParallelNodeSubGroup?: StringAccessor<N>;
+  /** Number of sub-groups per row (or column if `layoutType` is `GraphLayoutType.ParallelHorizontal`) in a group.
+   * Only for `GraphLayoutType.Parallel` and `GraphLayoutType.ParallelHorizontal` layouts.
+   * Default: `1` */
+  layoutParallelSubGroupsPerRow?: number;
+  /** Spacing between groups.
    * Only for `GraphLayoutType.Parallel` and `GraphLayoutType.ParallelHorizontal` layouts.
    * Default: `undefined` */
-  layoutGroupSpacing?: number;
+  layoutParallelGroupSpacing?: number;
   /** Set a group by name to have priority in sorting the graph links.
    * Only for `GraphLayoutType.Parallel` and `GraphLayoutType.ParallelHorizontal` layouts.
    * Default: `undefined` */
-  layoutSortConnectionsByGroup?: string;
-  /** Node group accessor function. Default: `node => node.group` */
-  nodeGroup?: StringAccessor<N>;
-  /** Node sub-group accessor function. Default: `node => node.subgroup` */
-  nodeSubGroup?: StringAccessor<N>;
+  layoutParallelSortConnectionsByGroup?: string;
 
+  // Force layout
   /** Force Layout settings, see the `d3-force` package for more details */
   forceLayoutSettings?: GraphForceLayoutSettings;
 
-  /** Darge Layout settings, see the `dagrejs` package fore more details */
+  // Dagre layout
+  /** Darge Layout settings, see the `dagrejs` package
+   * for more details: https://github.com/dagrejs/dagre/wiki#configuring-the-layout
+  */
   dagreLayoutSettings?: {
     /** Direction for rank node. `TB`, `BT`, `LR`, or `RL`. Default: `BT` */
     rankdir: string;
@@ -87,10 +97,6 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   };
 
   // Links
-  /** Animation duration of the flow (traffic) circles. Default: `20000` */
-  flowAnimDuration?: number;
-  /** Size of the moving circles that represent traffic flow. Default: `2` */
-  flowCircleSize?: number;
   /** Link width accessor function ot constant value. Default: `1` */
   linkWidth?: NumericAccessor<L>;
   /** Link style accessor function or constant value. Default: `GraphLinkStyle.Solid`  */
@@ -98,13 +104,17 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   /** Link band width accessor function or constant value. Default: `0` */
   linkBandWidth?: NumericAccessor<L>;
   /** Link arrow accessor function or constant value. Default: `undefined` */
-  linkArrow?: GenericAccessor<GraphLinkArrow, L> | undefined;
+  linkArrow?: GenericAccessor<GraphLinkArrowStyle, L> | undefined;
   /** Link stroke color accessor function or constant value. Default: `undefined` */
   linkStroke?: ColorAccessor<L>;
   /** Link disabled state accessor function or constant value. Default: `false` */
   linkDisabled?: BooleanAccessor<L>;
   /** Link flow animation accessor function or constant value. Default: `false` */
   linkFlow?: BooleanAccessor<L>;
+  /** Animation duration of the flow (traffic) circles. Default: `20000` */
+  linkFlowAnimDuration?: number;
+  /** Size of the moving particles that represent traffic flow. Default: `2` */
+  linkFlowParticleSize?: number;
   /** Link label accessor function or constant value. Default: `undefined` */
   linkLabel?: GenericAccessor<GraphCircleLabel, L> | undefined;
   /** Shift label along the link center a little bit to avoid overlap with the link arrow. Default: `true` */
@@ -115,16 +125,18 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   selectedLinkId?: number | string;
 
   // Nodes
-  /** Animation duration of the node score outline. Default: `1500` */
-  scoreAnimDuration?: number;
   /** Node size accessor function or constant value. Default: `30` */
   nodeSize?: NumericAccessor<N>;
-  /** Node border width accessor function or constant value. Default: `3` */
-  nodeBorderWidth?: NumericAccessor<N>;
-  /** Node shape accessor function or constant value. Default: `Shape.Circle` */
+  /** Node stroke width accessor function or constant value. Default: `3` */
+  nodeStrokeWidth?: NumericAccessor<N>;
+  /** Node shape accessor function or constant value. Default: `GraphNodeShape.Circle` */
   nodeShape?: GenericAccessor<GraphNodeShape | `${GraphNodeShape}`, N>;
-  /** Node score outline accessor function or constant value in the range [0,100]. Default: `0` */
-  nodeStrokeSegmentValue?: NumericAccessor<N>;
+  /** Node gauge outline accessor function or constant value in the range [0,100]. Default: `0` */
+  nodeGaugeValue?: NumericAccessor<N>;
+  /** Node gauge outline fill color accessor function or constant value. Default: `undefined` */
+  nodeGaugeFill?: ColorAccessor<N>;
+  /** Animation duration of the node gauge outline. Default: `1500` */
+  nodeGaugeAnimDuration?: number;
   /** Node central icon accessor function or constant value. Default: `node => node.icon` */
   nodeIcon?: StringAccessor<N>;
   /** Node central icon size accessor function or constant value. Default: `undefined` */
@@ -141,8 +153,6 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   nodeDisabled?: BooleanAccessor<N>;
   /** Node fill color accessor function or constant value. Default: `node => node.fill` */
   nodeFill?: ColorAccessor<N>;
-  /** Node score outline fill color accessor function or constant value. Default: `undefined` */
-  nodeStrokeSegmentFill?: ColorAccessor<N>;
   /** Node stroke color accessor function or constant value. Default: `node => node.stroke` */
   nodeStroke?: ColorAccessor<N>;
   /** Sorting function to determine node placement. Default: `undefined` */
@@ -175,12 +185,12 @@ export class GraphConfig<N extends GraphInputNode, L extends GraphInputLink> ext
   layoutNonConnectedAside = false
 
   layoutGroupOrder = []
-  layoutGroupRows = 1
-  layoutSubgroupMaxNodes = 6
-  layoutGroupSpacing = undefined
-  layoutSortConnectionsByGroup = undefined
-  nodeGroup = (n: N): string => n['group']
-  nodeSubGroup = (n: N): string => n['subgroup']
+  layoutParallelSubGroupsPerRow = 1
+  layoutParallelNodesPerColumn = 6
+  layoutParallelGroupSpacing = undefined
+  layoutParallelSortConnectionsByGroup = undefined
+  layoutNodeGroup = (n: N): string => n['group']
+  layoutParallelNodeSubGroup = (n: N): string => n['subgroup']
 
   forceLayoutSettings = {
     linkDistance: 60,
@@ -195,8 +205,8 @@ export class GraphConfig<N extends GraphInputNode, L extends GraphInputLink> ext
     ranker: 'longest-path',
   }
 
-  flowAnimDuration = 20000
-  flowCircleSize = 2
+  linkFlowAnimDuration = 20000
+  linkFlowParticleSize = 2
   linkWidth = 1
   linkStyle = GraphLinkStyle.Solid
   linkBandWidth = 0
@@ -208,12 +218,12 @@ export class GraphConfig<N extends GraphInputNode, L extends GraphInputLink> ext
   linkNeighborSpacing = 8
   linkDisabled = false
   selectedLinkId = undefined
-  scoreAnimDuration = 1500
+  nodeGaugeAnimDuration = 1500
 
   nodeSize = 30
-  nodeBorderWidth = 3
+  nodeStrokeWidth = 3
   nodeShape = GraphNodeShape.Circle
-  nodeStrokeSegmentValue = 0
+  nodeGaugeValue = 0
   nodeIcon = (n: N): string => n['icon']
   nodeIconSize = undefined
   nodeLabel = (n: N): string => n['label']
@@ -222,7 +232,7 @@ export class GraphConfig<N extends GraphInputNode, L extends GraphInputLink> ext
   nodeBottomIcon = undefined
   nodeDisabled = false
   nodeFill = (n: N): string => n['fill']
-  nodeStrokeSegmentFill = undefined
+  nodeGaugeFill = undefined
   nodeStroke = (n: N): string => n['stroke']
   nodeEnterPosition = undefined
   nodeEnterScale = 0.75

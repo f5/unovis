@@ -66,7 +66,7 @@ export enum GraphLinkStyle {
   Solid = 'solid',
 }
 
-export enum GraphLinkArrow {
+export enum GraphLinkArrowStyle {
   Single = 'single',
   Double = 'double',
 }

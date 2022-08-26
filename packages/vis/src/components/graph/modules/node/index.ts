@@ -118,7 +118,7 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
   scale = 1
 ): Selection<SVGGElement, GraphNode<N, L>, SVGGElement, unknown> | Transition<SVGGElement, GraphNode<N, L>, SVGGElement, unknown> {
   const {
-    scoreAnimDuration, nodeBorderWidth, nodeShape, nodeSize, nodeStrokeSegmentValue, nodeStrokeSegmentFill,
+    nodeGaugeAnimDuration, nodeStrokeWidth, nodeShape, nodeSize, nodeGaugeValue, nodeGaugeFill,
     nodeIcon, nodeIconSize, nodeLabel, nodeSubLabel, nodeSideLabels, nodeStroke, nodeFill, nodeBottomIcon,
   } = config
 
@@ -154,8 +154,8 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
     const nodeSelectionOutline = group.select<SVGGElement>(`.${nodeSelectors.nodeSelection}`)
     const nodeSizeValue = getNodeSize(d, nodeSize, d._index)
     const arcGenerator = arc<GraphNodeAnimationState>()
-      .innerRadius(state => getNodeSize(state, nodeSize, state.nodeIndex) / 2 - (getNumber(state, nodeBorderWidth, state.nodeIndex) / 2))
-      .outerRadius(state => getNodeSize(state, nodeSize, state.nodeIndex) / 2 + (getNumber(state, nodeBorderWidth, state.nodeIndex) / 2))
+      .innerRadius(state => getNodeSize(state, nodeSize, state.nodeIndex) / 2 - (getNumber(state, nodeStrokeWidth, state.nodeIndex) / 2))
+      .outerRadius(state => getNodeSize(state, nodeSize, state.nodeIndex) / 2 + (getNumber(state, nodeStrokeWidth, state.nodeIndex) / 2))
       .startAngle(0 * (Math.PI / 180))
       // eslint-disable-next-line dot-notation
       .endAngle(a => a['endAngle'])
@@ -174,22 +174,22 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
     // Update Node
     node
       .call(updateShape, nodeShape, nodeSize, d._index)
-      .attr('stroke-width', getNumber(d, nodeBorderWidth, d._index) ?? 0)
+      .attr('stroke-width', getNumber(d, nodeStrokeWidth, d._index) ?? 0)
       .style('fill', getNodeColor(d, nodeFill, d._index))
       .style('stroke', getString(d, nodeStroke, d._index) ?? null)
 
     const nodeBBox = (node.node() as SVGGraphicsElement).getBBox()
 
     nodeArc
-      .attr('stroke-width', getNumber(d, nodeBorderWidth, d._index))
-      .style('display', !getNumber(d, nodeStrokeSegmentValue, d._index) ? 'none' : null)
-      .style('fill', getNodeColor(d, nodeStrokeSegmentFill, d._index))
-      .style('stroke', getNodeColor(d, nodeStrokeSegmentFill, d._index))
+      .attr('stroke-width', getNumber(d, nodeStrokeWidth, d._index))
+      .style('display', !getNumber(d, nodeGaugeValue, d._index) ? 'none' : null)
+      .style('fill', getNodeColor(d, nodeGaugeFill, d._index))
+      .style('stroke', getNodeColor(d, nodeGaugeFill, d._index))
       .style('stroke-opacity', d => getString(d, nodeShape, d._index) === GraphNodeShape.Circle ? 0 : null)
 
     nodeArc
       .transition()
-      .duration(scoreAnimDuration)
+      .duration(nodeGaugeAnimDuration)
       .attrTween('d', (d, j, arr: GraphNodeAnimatedElement<SVGElement>[]) => {
         switch (getString(d, nodeShape, d._index)) {
           case GraphNodeShape.Circle: return arcTween(d, config, arcGenerator, arr[j])

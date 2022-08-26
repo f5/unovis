@@ -9,7 +9,7 @@ import { smartTransition } from 'utils/d3'
 import { GraphInputLink, GraphInputNode } from 'types/graph'
 
 // Local Types
-import { GraphCircleLabel, GraphLink, GraphLinkArrow, GraphLinkStyle } from '../../types'
+import { GraphCircleLabel, GraphLink, GraphLinkArrowStyle, GraphLinkStyle } from '../../types'
 
 // Config
 import { GraphConfig } from '../../config'
@@ -95,7 +95,7 @@ export function updateLinks<N extends GraphInputNode, L extends GraphInputLink> 
   duration: number,
   scale = 1
 ): void {
-  const { flowCircleSize, linkStyle, linkFlow, linkArrow, linkLabel, linkLabelShiftFromCenter } = config
+  const { linkFlowParticleSize, linkStyle, linkFlow, linkArrow, linkLabel, linkLabelShiftFromCenter } = config
   if (!selection.size()) return
 
   selection
@@ -154,7 +154,7 @@ export function updateLinks<N extends GraphInputNode, L extends GraphInputLink> 
 
     flowGroup
       .selectAll(`.${linkSelectors.flowCircle}`)
-      .attr('r', flowCircleSize / scale)
+      .attr('r', linkFlowParticleSize / scale)
       .style('fill', getLinkColor(d, config))
 
     smartTransition(flowGroup, duration)
@@ -163,7 +163,7 @@ export function updateLinks<N extends GraphInputNode, L extends GraphInputLink> 
     // Labels
     const labelGroups = linkGroup.selectAll(`.${linkSelectors.labelGroups}`)
     const labelDatum = getValue<GraphLink<N, L>, GraphCircleLabel>(d, linkLabel, d._indexGlobal)
-    const markerWidth = getValue<GraphLink<N, L>, GraphLinkArrow>(d, linkArrow, d._indexGlobal) ? LINK_MARKER_WIDTH * 2 : 0
+    const markerWidth = getValue<GraphLink<N, L>, GraphLinkArrowStyle>(d, linkArrow, d._indexGlobal) ? LINK_MARKER_WIDTH * 2 : 0
     const labelShift = getBoolean(d, linkLabelShiftFromCenter, d._indexGlobal) ? -markerWidth + 4 : 0
     const labelTranslate = getLinkLabelShift(d, config.linkNeighborSpacing, labelShift)
 
@@ -273,11 +273,11 @@ export function zoomLinks<N extends GraphInputNode, L extends GraphInputLink> (
   config: GraphConfig<N, L>,
   scale: number
 ): void {
-  const { flowCircleSize } = config
+  const { linkFlowParticleSize } = config
 
   selection.classed(generalSelectors.zoomOutLevel2, scale < ZoomLevel.Level2)
   selection.selectAll(`.${linkSelectors.flowCircle}`)
-    .attr('r', flowCircleSize / scale)
+    .attr('r', linkFlowParticleSize / scale)
 
   const linkElements = selection.selectAll<SVGGElement, GraphLink<N, L>>(`.${linkSelectors.link}`)
   linkElements

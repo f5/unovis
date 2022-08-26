@@ -42,14 +42,14 @@ export function arcTween<N extends GraphInputNode, L extends GraphInputLink> (
   arcConstructor: Arc<any, GraphNodeAnimationState>,
   el: GraphNodeAnimatedElement<SVGElement>
 ): (t: number) => string {
-  const { nodeBorderWidth, nodeSize, nodeStrokeSegmentValue } = config
+  const { nodeStrokeWidth, nodeSize, nodeGaugeValue } = config
   if (!el._animState) _setInitialAnimState(el, d._index)
 
   const i = interpolate(el._animState, {
-    endAngle: 2 * Math.PI * (getNumber(d, nodeStrokeSegmentValue, d._index) ?? 0) / 100,
+    endAngle: 2 * Math.PI * (getNumber(d, nodeGaugeValue, d._index) ?? 0) / 100,
     nodeIndex: d._index,
     nodeSize: getNodeSize(d, nodeSize, d._index),
-    borderWidth: getNumber(d, nodeBorderWidth, d._index),
+    borderWidth: getNumber(d, nodeStrokeWidth, d._index),
   })
   el._animState = i(0)
 
@@ -64,7 +64,7 @@ export function polyTween<N extends GraphInputNode, L extends GraphInputLink> (
   config: GraphConfigInterface<N, L>, polygonConstructor,
   el: GraphNodeAnimatedElement<SVGElement>
 ): (t: number) => string {
-  const { nodeShape, nodeStrokeSegmentValue } = config
+  const { nodeShape, nodeGaugeValue } = config
   const nodeSize = getNodeSize(d, config.nodeSize, d._index)
   let n: number
   switch (getString(d, nodeShape, d._index)) {
@@ -81,7 +81,7 @@ export function polyTween<N extends GraphInputNode, L extends GraphInputLink> (
 
   if (!el._animState) _setInitialAnimState(el, d._index)
   const i = interpolate(el._animState, {
-    endAngle: 2 * Math.PI * (getNumber(d, nodeStrokeSegmentValue, d._index) ?? 0) / 100,
+    endAngle: 2 * Math.PI * (getNumber(d, nodeGaugeValue, d._index) ?? 0) / 100,
     nodeIndex: d._index,
   })
   el._animState = i(0)
