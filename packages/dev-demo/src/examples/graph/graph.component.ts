@@ -20,14 +20,16 @@ export class GraphComponent implements OnInit, AfterViewInit {
   chart: any
   data: {}
   config: GraphConfigInterface<any, any> = {
-    layoutType: GraphLayoutType.Dagre,
+    layoutType: GraphLayoutType.Parallel,
     nodeSize: d => d.nodeSize,
     nodeShape: d => d.shape,
-    nodeStrokeSegmentValue: d => d.score,
+    layoutParallelSubGroupsPerRow: 3,
+    nodeGaugeValue: d => d.score,
     nodeIcon: d => d.icon,
     nodeLabel: d => d.label,
     nodeSubLabel: d => d.sublabel,
-    nodeGroup: d => d.group,
+    layoutNodeGroup: d => d.group,
+    layoutParallelNodeSubGroup: (d, i) => `${i % 4}`,
     nodeSideLabels: d => d.sideLabels,
     nodeDisabled: d => d.disabled,
     nodeFill: d => d.fill,

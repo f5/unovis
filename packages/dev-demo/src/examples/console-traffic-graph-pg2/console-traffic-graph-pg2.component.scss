@@ -33,7 +33,7 @@
   height: 100%;
   position: absolute;
 
-  --vis-graph-node-icon-font: voltuiicons;
+  --vis-graph-icon-font-family: voltuiicons;
 
   ::ng-deep {
     rect[ves-graph-panel-selection] { transition: opacity 400ms; }

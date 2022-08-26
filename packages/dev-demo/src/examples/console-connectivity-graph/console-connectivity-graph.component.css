@@ -13,5 +13,5 @@
   height: 100%;
   position: relative;
 
-  --vis-graph-node-icon-font: voltuiicons;
+  --vis-graph-icon-font-family: voltuiicons;
 }
