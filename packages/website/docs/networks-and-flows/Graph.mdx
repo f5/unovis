@@ -96,9 +96,9 @@ zoom level at initialization to fit to the size of the container.
 
 ### Fill and Stroke
 Use the `nodeFill` and `nodeStroke` properties to set node's fill and stroke color. A custom stroke width can be
-provided to `nodeBorderWidth`.
+provided to `nodeStrokeWidth`.
 
-<GraphDoc nodeFill={getRandomColor} nodeStroke={getRandomColor} nodeBorderWidth={(d, i) => 1 + i * 3}/>
+<GraphDoc nodeFill={getRandomColor} nodeStroke={getRandomColor} nodeStrokeWidth={(d, i) => 1 + i * 3}/>
 
 ### Icons and Labels
 #### In the center
@@ -110,8 +110,7 @@ The component will automatically choose the icon color (dark or light) based on 
 the dark and light colors with the `--vis-graph-node-icon-fill-color-bright` and `--vis-graph-node-icon-fill-color-dark`
 CSS variables.
 
-The icon font can be set via the `--vis-graph-node-icon-font` CSS variable.
-
+The icon font can be set via the `--vis-graph-icon-font-family` CSS variable.
 
 <GraphDoc nodeIcon={(n, i) => nodeIcons[i % nodeIcons.length]} nodeIconSize={(n, i) => 10 + i} nodeFill={(n, i) => getColorByIndex(i) }/>
 
@@ -161,7 +160,6 @@ You can configure the default appearance of the side labels with the following C
 --vis-graph-node-side-label-background-stroke-color: #ffffff;
 --vis-graph-node-side-label-fill-color-bright: #ffffff;
 --vis-graph-node-side-label-fill-color-dark: #494b56;
---vis-graph-node-side-label-font-family: var(--vis-font-family);
 
 // Dark Theme
 --vis-dark-graph-node-side-label-background-fill-color: #989aa3;
@@ -170,14 +168,15 @@ You can configure the default appearance of the side labels with the following C
 --vis-dark-graph-node-side-label-fill-color-dark: var(--vis-color-gray);
 ```
 
-### Gauge Outline
-Nodes can also have a gauge outline on top of stroke, if you provide an accessor function to `nodeStrokeSegmentValue`
-returning a number in the range of [0, 1].
 
-You can set the color of the gauge with `nodeStrokeSegmentFill`. The default gauge color is configurable via the
+### Gauge Outline
+Nodes can also have a gauge outline on top of stroke, if you provide an accessor function to `nodeGaugeValue`
+returning a number in the range of [0, 1]. The width of the gauge is linked to the `nodeStrokeWidth` value.
+
+You can set the color of the gauge with `nodeGaugeFill`. The default gauge color is configurable via the
 `--vis-graph-node-stroke-segment-color` CSS variable.
 
-<GraphDoc nodeStrokeSegmentFill={(d, i) => gradient(i * 10)} nodeStrokeSegmentValue={(d, i) => i * 10} />
+<GraphDoc nodeGaugeFill={(d, i) => gradient(i * 10)} nodeGaugeValue={(d, i) => i * 10} />
 
 ### Disabled State
 Nodes can have a disabled (grayed out) state configured by the `nodeDisabled` property.
@@ -207,7 +206,7 @@ changed with the `--vis-graph-link-dashed-stroke-dasharray` CSS variable.
 
 ### Arrows
 Providing an accessor function to `linkArrow` will turn on arrows display on links. The function should return
-`GraphLinkArrow.Single` (`"single"`) or `GraphLinkArrow.Double` (`"double"`) or `null`.
+`GraphLinkArrowStyle.Single` (`"single"`) or `GraphLinkArrowStyle.Double` (`"double"`) or `null`.
 <GraphDoc hiddenProps={linkHiddenProps} linkArrow={() => _sample([undefined, 'single', 'double'])} />
 
 ### Labels
@@ -238,8 +237,8 @@ to `linkBandWidth`. The opacity of the band can be changed with the `--vis-graph
 
 ### Flying Particles
 Set `linkFlow` to `true` (or provide an accessor function) to turn on flying particles along the links. Configure the
-size of the particles with `flowCircleSize` and `flowAnimDuration` properties.
-<GraphDoc hiddenProps={linkHiddenProps} linkFlow={(l ,i) => i%2} flowCircleSize={3} flowAnimDuration={10000} />
+size of the particles with `linkFlowParticleSize` and `linkFlowAnimDuration` properties.
+<GraphDoc hiddenProps={linkHiddenProps} linkFlow={(l ,i) => i%2} linkFlowParticleSize={3} linkFlowAnimDuration={10000} />
 
 ### Multiple Links
 If there are multiple links between two nodes, all of them will be displayed. You can control the spacing between the
@@ -275,56 +274,56 @@ type GraphForceLayoutSettings = {
 ### Parallel
 If your nodes can be separated into multiple groups and you want them to be organized by columns or rows, set
 `layoutType` to `GraphLayoutType.Parallel` (`"parallel"`) or `GraphLayoutType.ParallelHorizontal` (`"parallel horizontal"`)
-and provide the `nodeGroup` accessor function.
+and provide the `layoutNodeGroup` accessor function.
 
 <GraphDoc
   layoutType="parallel"
   data={generateNodeLinkData(15)}
-  nodeGroup={(d, i) => (i+1) % 4}
+  layoutNodeGroup={(d, i) => (i+1) % 4}
 />
 
-You can control the group spacing with the `layoutGroupSpacing` property. By default, group spacing will be calculated
+You can control the group spacing with the `layoutParallelGroupSpacing` property. By default, group spacing will be calculated
 automatically based on the size of the container.
 
-Every group can also have sub-groups, which can be defined by providing the `nodeSubGroup` accessor function.
-When there are too many nodes inside one sub-group you can make them wrap and go onto the next column or row by
-specifying the `layoutSubgroupMaxNodes` value.
+Every group can also have sub-groups, which can be defined by providing the `layoutParallelNodeSubGroup` accessor function.
+When there are too many nodes inside one sub-group you can make them wrap and go onto the next column (or row in case of
+`GraphLayoutType.ParallelHorizontal`) by specifying the `layoutParallelNodesPerColumn` value.
 
 <GraphDoc
   layoutType="parallel"
   data={generateNodeLinkData(80, () => 0)}
-  nodeGroup={(d, i) => (i+1) % 4}
-  nodeSubGroup={(d, i) => i % 12}
-  layoutSubgroupMaxNodes={2}
+  layoutNodeGroup={(d, i) => (i+1) % 4}
+  layoutParallelNodeSubGroup={(d, i) => i % 12}
+  layoutParallelNodesPerColumn={2}
 />
 
 The sub-groups will be placed on one column (or row in case of `GraphLayoutType.ParallelHorizontal`) by default. You can
-make them wrap and form more columns and rows by providing a `layoutGroupRows` value.
+make them wrap and form more columns and rows by providing a `layoutParallelSubGroupsPerRow` value.
 
 <GraphDoc
   layoutType="parallel"
   data={generateNodeLinkData(120, () => 0)}
-  nodeGroup={(d, i) => (i+1) % 4}
-  nodeSubGroup={(d, i) => i % 24}
-  layoutSubgroupMaxNodes={2}
-  layoutGroupRows={2}
+  layoutNodeGroup={(d, i) => (i+1) % 4}
+  layoutParallelNodeSubGroup={(d, i) => i % 24}
+  layoutParallelNodesPerColumn={2}
+  layoutParallelSubGroupsPerRow={2}
 />
 
 ### Circular and Concentric
 There are two circular layout types available: `GraphLayoutType.Circular` (`"circular"`) and `GraphLayoutType.Concentric`
 (`"concentric"`). The first one just places all the nodes along one circle, the second one allows you to define
-multiple concentric circles with the `nodeGroup` accessor function.
+multiple concentric circles with the `layoutNodeGroup` accessor function.
 
 <GraphDoc
   layoutType="circular"
   data={generateNodeLinkData(25, () => 0)}
-  nodeGroup={(d, i) => (i+1) % 4}
+  layoutNodeGroup={(d, i) => (i+1) % 4}
 />
 
 <GraphDoc
   layoutType="concentric"
   data={generateNodeLinkData(75, () => 0)}
-  nodeGroup={(d, i) => i % 3}
+  layoutNodeGroup={(d, i) => i % 3}
 />
 
 ### Dagre
@@ -356,36 +355,38 @@ You can disable the autofit behavior completely by setting `layoutAutofit` to `f
 
 ## Panels
 When you use one of the parallel layouts, it can be useful to draw panels around groups and sub-groups. You can define
-your set of panels by providing an array of `GraphPanelConfigInterface` to the `panels` configuration property.
+your set of panels by providing an array of `GraphPanelConfig` to the `panels` configuration property.
 
 ```ts
-type GraphPanelConfigInterface = {
-  /** Array of node ids to draw the panel around */
-  nodes: string[];
+type GraphPanelConfig = {
+  /** Panel nodes references by unique ids */
+  nodes: (string|number)[];
   /** Panel label */
   label?: string;
   /** Position of the label */
   labelPosition?: Position.Top | Position.Bottom;
-  /** Color of the panel */
-  color?: string;
+  /** Color of the panel's border */
+  borderColor?: string;
   /** Border width of the panel in pixels */
   borderWidth?: number;
   /** Inner padding */
   padding?: number;
   /** Dashed outline showing that the panel is selected */
-  selectionOutline?: boolean;
-  /** Icon of the side label */
-  sideLabelIcon?: string;
-  /** Size of the label icon as a CSS string. e.g.: `12pt` or `12px` */
-  sideLabelIconFontSize?: string;
-  /** Shape of the side label */
-  sideLabelShape?: Shape;
-  /** Color of the side label */
-  sideLabelColor?: string;
-  /** Cursor of when hovering over the side label */
-  sideLabelCursor?: string;
-  /** Custom size for the node panel side label in pixels */
-  sideLabelSize?: number;
+  dashedOutline?: boolean;
+  /** Side icon symbol */
+  sideIconSymbol?: string;
+  /** Size of the icon as a CSS string. e.g.: `12pt` or `12px` */
+  sideIconFontSize?: string;
+  /** Color of the icon */
+  sideIconSymbolColor?: string;
+  /** Shape of the icon's background */
+  sideIconShape?: GraphNodeShape;
+  /** Size of the icon's background shape */
+  sideIconShapeSize?: number;
+  /** Stroke color of the icon's background shape */
+  sideIconShapeStroke?: string;
+  /** Cursor, when hovering over the icon */
+  sideIconCursor?: string;
 }
 ```
 
@@ -398,56 +399,64 @@ const panels = [{
   label: 'Group 1',
   color: '#E3116C',
   padding: 1,
-  selectionOutline: true,
-  sideLabelIcon: '⚾',
-  sideLabelShape: 'circle',
-  sideLabelColor: '#777',
-  sideLabelCursor: 'pointer',
-  sideLabelIconFontSize: '24pt',
-  sideLabelSize: 58,
+  dashedOutline: true,
+  sideIconSymbol: '⚾',
+  sideIconShape: 'circle',
+  sideIconShapeStroke: '#777',
+  sideIconCursor: 'pointer',
+  sideIconFontSize: '24pt',
+  sideIconShapeSize: 58,
 }]
 ```
 <GraphDoc
   layoutType="parallel"
   data={generateNodeLinkData(40, () => 0)}
-  nodeGroup={(d, i) => (i + 1) % 2}
-  nodeSubGroup={(d, i) => i % 2}
-  layoutSubgroupMaxNodes={5}
+  layoutNodeGroup={(d, i) => (i + 1) % 2}
+  layoutParallelNodeSubGroup={(d, i) => i % 2}
+  layoutParallelNodesPerColumn={5}
   panels={[{
     label: 'Group 1',
     color: '#E3116C',
     padding: 1,
     nodes: Array(40).fill(null).map((_, i) => i % 2 ? `${i}` : null).filter(id => id),
-    selectionOutline: true,
-    sideLabelIcon: '⚾',
-    sideLabelShape: 'circle',
-    sideLabelColor: '#777',
-    sideLabelCursor: 'pointer',
-    sideLabelIconFontSize: '24pt',
-    sideLabelSize: 58,
+    dashedOutline: true,
+    sideIconSymbol: '⚾',
+    sideIconShape: 'circle',
+    sideIconShapeStroke: '#777',
+    sideIconCursor: 'pointer',
+    sideIconFontSize: '24pt',
+    sideIconShapeSize: 58,
   }]}
 />
 
 The default panel appearance can be controlled with these CSS variables:
 ```css
---vis-graph-panel-border-color: #E6E9F3;
---vis-graph-panel-border-opacity: 0.9;
---vis-graph-panel-fill-color: #ffffff;
---vis-graph-panel-label-color: #6c778c;
---vis-graph-panel-label-background: #ffffff;
---vis-graph-panel-label-font-family: var(--vis-font-family);
---vis-graph-panel-side-label-fill: #ffffff;
---vis-graph-panel-selection-outline-color: #b7b7b7;
---vis-graph-panel-label-font-size: 10pt;
---vis-graph-panel-label-font-weight: 300;
+    --vis-graph-panel-border-color: #E6E9F3;
+    --vis-graph-panel-border-opacity: 0.9;
+    --vis-graph-panel-fill-color: #ffffff;
 
---vis-dark-graph-panel-border-color: var(--vis-color-gray);
---vis-dark-graph-panel-fill-color: #292b34;
---vis-dark-graph-panel-label-color: #E6E9F3;
---vis-dark-graph-panel-label-background: var(--vis-color-gray);
---vis-dark-graph-panel-side-label-fill: #6c778c;
---vis-dark-graph-panel-border-color: #a0a6ad;
+    --vis-graph-panel-label-color: #6c778c;
+    --vis-graph-panel-label-background: #ffffff;
+    --vis-graph-panel-label-font-family: var(--vis-font-family);
+    --vis-graph-panel-label-font-size: 10pt;
+    --vis-graph-panel-label-font-weight: 300;
+
+    --vis-graph-panel-dashed-outline-color: #b7b7b7;
+
+    --vis-graph-panel-side-icon-symbol-color: #9ea7b8;
+    --vis-graph-panel-side-icon-shape-fill-color: #ffffff;
+
+    // Dark Theme
+    --vis-dark-graph-panel-border-color: var(--vis-color-gray);
+    --vis-dark-graph-panel-fill-color: #292b34;
+    --vis-dark-graph-panel-label-color: #E6E9F3;
+    --vis-dark-graph-panel-label-background: var(--vis-color-gray);
+    --vis-dark-graph-panel-side-icon-symbol-color: #ffffff;
+    --vis-dark-graph-panel-side-icon-shape-fill-color: #6c778c;
+    --vis-dark-graph-panel-border-color: #a0a6ad;
 ```
+
+The side icon font family can be set with the `--vis-graph-icon-font-family` CSS variable.
 
 ## Selecting nodes and links
 Node and link selection can be set via the config of the graph, which has two dedicated properties for that:
