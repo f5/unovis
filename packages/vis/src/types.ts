@@ -24,7 +24,7 @@ export { MapProjection, MapProjectionKind, MapFeature, MapPointLabelPosition, Ma
 export { Hierarchy } from 'components/radial-dendrogram/types'
 export { Bounds, MapZoomState, LeafletMapPoint, LeafletMapPointDatum, LeafletMapClusterDatum, LeafletMapPointStyles, LeafletMapPointStyle, LeafletMapPointShape } from 'components/leaflet-map/types'
 export { MapLibreStyleSpecs } from 'components/leaflet-map/renderer/map-style'
-export { GraphLayoutType, GraphLinkStyle, GraphLinkArrowStyle, GraphNode, GraphLink, GraphCircleLabel, GraphPanelConfigInterface, GraphNodeShape, GraphForceLayoutSettings } from 'components/graph/types'
+export { GraphLayoutType, GraphLinkStyle, GraphLinkArrowStyle, GraphNode, GraphLink, GraphCircleLabel, GraphPanelConfig, GraphNodeShape, GraphForceLayoutSettings } from 'components/graph/types'
 export { SankeyInputNode, SankeyInputLink, SankeyNode, SankeyLink, SankeyNodeAlign, SankeySubLabelPlacement, SankeyEnterTransitionType, SankeyExitTransitionType } from 'components/sankey/types'
 export { VisControlItemInterface, VisControlsOrientation } from 'components/vis-controls/types'
 export { FreeBrushMode, FreeBrushSelection } from 'components/free-brush/types'

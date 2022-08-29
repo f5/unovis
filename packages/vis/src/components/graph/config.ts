@@ -12,7 +12,7 @@ import {
   GraphCircleLabel,
   GraphLinkStyle,
   GraphLinkArrowStyle,
-  GraphPanelConfigInterface,
+  GraphPanelConfig,
   GraphForceLayoutSettings,
   GraphNodeShape,
 } from './types'
@@ -168,8 +168,8 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   /** Set selected node by unique id. Default: `undefined` */
   selectedNodeId?: number | string;
 
-  /** Panels configuration. An array of GraphPanelConfigInterface objects. Default: `[]` */
-  panels?: GraphPanelConfigInterface[];
+  /** Panels configuration. An array of `GraphPanelConfig` objects. Default: `[]` */
+  panels?: GraphPanelConfig[] | undefined;
 }
 
 export class GraphConfig<N extends GraphInputNode, L extends GraphInputLink> extends ComponentConfig implements GraphConfigInterface<N, L> {
@@ -241,5 +241,5 @@ export class GraphConfig<N extends GraphInputNode, L extends GraphInputLink> ext
   nodeSort = undefined
 
   selectedNodeId = undefined
-  panels = undefined
+  panels: GraphPanelConfig[] | undefined = undefined
 }

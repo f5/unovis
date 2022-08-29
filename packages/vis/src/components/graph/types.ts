@@ -78,48 +78,47 @@ export enum GraphNodeShape {
   Triangle = 'triangle',
 }
 
-export interface GraphPanelConfigInterface<
-  N extends GraphInputNode = GraphInputNode,
-  L extends GraphInputLink = GraphInputLink,
-> {
+export type GraphPanelConfig = {
   /** Panel nodes references by unique ids */
   nodes: (string|number)[];
   /** Panel label */
   label?: string;
   /** Position of the label */
   labelPosition?: Position.Top | Position.Bottom;
-  /** Color of the panel */
-  color?: string;
+  /** Color of the panel's border */
+  borderColor?: string;
   /** Border width of the panel in pixels */
   borderWidth?: number;
   /** Inner padding */
   padding?: number;
   /** Dashed outline showing that the panel is selected */
-  selectionOutline?: boolean;
-  /** Icon of the side label */
-  sideLabelIcon?: string;
-  /** Size of the label icon as a CSS string. e.g.: `12pt` or `12px` */
-  sideLabelIconFontSize?: string;
-  /** Shape of the side label */
-  sideLabelShape?: GraphNodeShape;
-  /** Color of the side label */
-  sideLabelColor?: string;
-  /** Cursor of when hovering over the side label */
-  sideLabelCursor?: string;
-  /** Custom size for the node panel side label in pixels */
-  sideLabelSize?: number;
-  /** Private property */
+  dashedOutline?: boolean;
+  /** Side icon symbol */
+  sideIconSymbol?: string;
+  /** Size of the icon as a CSS string. e.g.: `12pt` or `12px` */
+  sideIconFontSize?: string;
+  /** Color of the icon */
+  sideIconSymbolColor?: string;
+  /** Shape of the icon's background */
+  sideIconShape?: GraphNodeShape;
+  /** Size of the icon's background shape */
+  sideIconShapeSize?: number;
+  /** Stroke color of the icon's background shape */
+  sideIconShapeStroke?: string;
+  /** Cursor, when hovering over the icon */
+  sideIconCursor?: string;
+}
+
+export type GraphPanel<
+  N extends GraphInputNode = GraphInputNode,
+  L extends GraphInputLink = GraphInputLink,
+> = GraphPanelConfig & {
   _numNodes?: number;
-  /** Private property */
   _x?: number;
-  /** Private property */
   _y?: number;
-  /** Private property */
   _width?: number;
-  /** Private property */
   _height?: number;
-  /** Private property */
-  _data?: GraphNode<N, L>[];
+  _disabled?: boolean;
 }
 
 export type GraphNodeAnimationState = {

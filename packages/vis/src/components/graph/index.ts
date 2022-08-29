@@ -19,7 +19,7 @@ import { stringToHtmlId } from 'utils/misc'
 import { smartTransition } from 'utils/d3'
 
 // Local Types
-import { GraphNode, GraphLink, GraphLayoutType, GraphLinkArrowStyle, GraphPanelConfigInterface } from './types'
+import { GraphNode, GraphLink, GraphLayoutType, GraphLinkArrowStyle, GraphPanel } from './types'
 
 // Config
 import { GraphConfig, GraphConfigInterface } from './config'
@@ -42,7 +42,6 @@ import { applyLayoutCircular, applyLayoutParallel, applyLayoutDagre, applyLayout
 export class Graph<
   N extends GraphInputNode,
   L extends GraphInputLink,
-  P extends GraphPanelConfigInterface = GraphPanelConfigInterface,
 > extends ComponentCore<{nodes: N[]; links?: L[]}> {
   static selectors = {
     root: generalSelectors.root,
@@ -59,9 +58,9 @@ export class Graph<
     panelSelection: panelSelectors.panelSelection,
     panelLabel: panelSelectors.label,
     panelLabelText: panelSelectors.labelText,
-    panelSideLabel: panelSelectors.sideLabelGroup,
-    panelSideLabelShape: panelSelectors.sideLabel,
-    panelSideLabelIcon: panelSelectors.sideLabelIcon,
+    panelSideIcon: panelSelectors.sideIconGroup,
+    panelSideIconShape: panelSelectors.sideIconShape,
+    panelSideIconSymbol: panelSelectors.sideIconSymbol,
   }
 
   static nodeSelectors = nodeSelectors
@@ -84,7 +83,7 @@ export class Graph<
 
   private _fitLayout: boolean
   private _setPanels = false
-  private _panels: P[]
+  private _panels: GraphPanel[]
 
   private _defs: Selection<SVGDefsElement, unknown, SVGGElement, undefined>
   private _backgroundRect: Selection<SVGRectElement, unknown, SVGGElement, undefined>
@@ -194,7 +193,7 @@ export class Graph<
       smartTransition(this._panelsGroup, duration / 2)
         .style('opacity', panels?.length ? 1 : 0)
 
-      this._panels = cloneDeep(panels)
+      this._panels = cloneDeep(panels) as GraphPanel[]
       setPanelForNodes(this._panels, datamodel.nodes, this.config)
       this._setPanels = false
     }
@@ -320,8 +319,8 @@ export class Graph<
     updatePanelBBoxSize(selection, this._panels, config)
     const panelData = this._panels.filter(p => p._numNodes)
     const panelGroup = this._panelsGroup
-      .selectAll<SVGGElement, P>(`.${panelSelectors.gPanel}`)
-      .data(panelData, (d: P) => d.label)
+      .selectAll<SVGGElement, GraphPanel>(`.${panelSelectors.gPanel}`)
+      .data(panelData, p => p.label)
 
     const panelGroupExit = panelGroup.exit()
     panelGroupExit.call(removePanels, config, duration)
@@ -334,7 +333,7 @@ export class Graph<
     this._updatePanels(panelGroupMerged, duration)
   }
 
-  private _updatePanels (panelToUpdate: Selection<SVGGElement, P, SVGGElement, unknown>, duration: number): void {
+  private _updatePanels (panelToUpdate: Selection<SVGGElement, GraphPanel, SVGGElement, unknown>, duration: number): void {
     const { config } = this
     if (!this._panels) return
 
@@ -645,7 +644,7 @@ export class Graph<
     panelNodesToUpdate
       .call(updateNodes, config, 0, scale)
       .call(zoomNodes, config, scale)
-    const panelToUpdate = this._panelsGroup.selectAll<SVGGElement, P>(`.${panelSelectors.gPanel}`)
+    const panelToUpdate = this._panelsGroup.selectAll<SVGGElement, GraphPanel>(`.${panelSelectors.gPanel}`)
     updatePanelBBoxSize(panelNodesToUpdate, this._panels, config)
     this._updatePanels(panelToUpdate, 0)
 

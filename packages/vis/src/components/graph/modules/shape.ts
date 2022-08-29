@@ -11,7 +11,7 @@ import { getString } from 'utils/data'
 import { GraphInputLink, GraphInputNode } from 'types/graph'
 
 // Local Types
-import { GraphNode, GraphPanelConfigInterface, GraphNodeShape } from '../types'
+import { GraphNode, GraphPanel, GraphNodeShape } from '../types'
 
 // Helpers
 import { getNodeSize } from './node/helper'
@@ -20,9 +20,9 @@ export function isCustomXml (shape: GraphNodeShape): boolean {
   return /<[a-z][\s\S]*>/i.test(shape)
 }
 
-export function appendShape<N extends GraphInputNode, L extends GraphInputLink, P extends GraphPanelConfigInterface> (
-  selection: Selection<SVGGElement, GraphNode<N, L> | P, SVGGElement, unknown>,
-  shapeAccessor: StringAccessor<GraphNode<N, L> | P>,
+export function appendShape<N extends GraphInputNode, L extends GraphInputLink> (
+  selection: Selection<SVGGElement, GraphNode<N, L> | GraphPanel, SVGGElement, unknown>,
+  shapeAccessor: StringAccessor<GraphNode<N, L> | GraphPanel>,
   shapeSelector: string,
   customShapeSelector: string,
   index?: number,
@@ -59,15 +59,15 @@ export function appendShape<N extends GraphInputNode, L extends GraphInputLink, 
   })
 }
 
-export function updateShape<N extends GraphInputNode, L extends GraphInputLink, P extends GraphPanelConfigInterface> (
-  selection: Selection<SVGGElement, GraphNode<N, L> | P, SVGGElement, unknown>,
-  shape: StringAccessor<GraphNode<N, L> | P>,
-  size: NumericAccessor<GraphNode<N, L> | P>,
+export function updateShape<N extends GraphInputNode, L extends GraphInputLink> (
+  selection: Selection<SVGGElement, GraphNode<N, L> | GraphPanel, SVGGElement, unknown>,
+  shape: StringAccessor<GraphNode<N, L> | GraphPanel>,
+  size: NumericAccessor<GraphNode<N, L> | GraphPanel>,
   index: number
 ): void {
   if (selection.size() === 0) return
 
-  const d: GraphNode<N, L> | P = selection.datum()
+  const d: GraphNode<N, L> | GraphPanel = selection.datum()
   const nodeSize = getNodeSize(d, size, index)
   selection.filter('circle')
     .attr('r', nodeSize / 2)
@@ -80,7 +80,7 @@ export function updateShape<N extends GraphInputNode, L extends GraphInputLink, 
 
   selection.filter('path')
     .attr('d', () => {
-      let n
+      let n: number
       switch (getString(d, shape, index)) {
         case GraphNodeShape.Square:
           n = 4

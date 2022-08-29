@@ -2,15 +2,15 @@ import { Selection, BaseType } from 'd3-selection'
 import { max } from 'd3-array'
 
 // Types
-import { NumericAccessor } from 'types/accessor'
+import { NumericAccessor, BooleanAccessor } from 'types/accessor'
 import { Position } from 'types/position'
 import { GraphInputLink, GraphInputNode } from 'types/graph'
 
 // Utils
-import { find } from 'utils/data'
+import { find, getBoolean } from 'utils/data'
 
 // Local Types
-import { GraphNode, GraphPanelConfigInterface } from '../../types'
+import { GraphNode, GraphPanel } from '../../types'
 
 // Config
 import { GraphConfig } from '../../config'
@@ -27,7 +27,8 @@ export const OUTLINE_SELECTION_PADDING = 5
 export const DEFAULT_SIDE_LABEL_SIZE = 25
 
 export function setPanelForNodes<N extends GraphInputNode, L extends GraphInputLink> (
-  panels: GraphPanelConfigInterface[], nodes: GraphNode<N, L>[],
+  panels: GraphPanel[],
+  nodes: GraphNode<N, L>[],
   config: GraphConfig<N, L>
 ): void {
   const { layoutNonConnectedAside } = config
@@ -49,9 +50,10 @@ export function setPanelForNodes<N extends GraphInputNode, L extends GraphInputL
 }
 
 export function setPanelBBox<N extends GraphInputNode, L extends GraphInputLink> (
-  panelConfig: GraphPanelConfigInterface,
+  panelConfig: GraphPanel,
   panelNodes: Selection<BaseType, GraphNode<N, L>, SVGGElement, unknown>,
-  nodeSizeAccessor: NumericAccessor<N>
+  nodeSizeAccessor: NumericAccessor<N>,
+  nodeDisabledAccessor: BooleanAccessor<N>
 ): void {
   const selection = panelNodes.select(`.${nodeSelectors.node}`)
   if (selection.empty()) return
@@ -91,11 +93,13 @@ export function setPanelBBox<N extends GraphInputNode, L extends GraphInputLink>
   panelConfig._y = box.y1
   panelConfig._width = box.x2 - box.x1
   panelConfig._height = box.y2 - box.y1
-  panelConfig._data = selection.data()
+  panelConfig._disabled = selection.data()
+    .map((node, i) => getBoolean(node, nodeDisabledAccessor, node._index) || node._state.greyout)
+    .every(d => d)
 }
 
 export function setPanelNumNodes<N extends GraphInputNode, L extends GraphInputLink> (
-  panelConfig: GraphPanelConfigInterface,
+  panelConfig: GraphPanel,
   panelNodes: Selection<BaseType, GraphNode<N, L>, SVGGElement, unknown>
 ): void {
   panelConfig._numNodes = panelNodes.size()
@@ -103,7 +107,7 @@ export function setPanelNumNodes<N extends GraphInputNode, L extends GraphInputL
 
 export function updatePanelBBoxSize<N extends GraphInputNode, L extends GraphInputLink> (
   nodesSelection: Selection<BaseType, GraphNode<N, L>, SVGGElement, unknown>,
-  panels: GraphPanelConfigInterface[],
+  panels: GraphPanel[],
   config: GraphConfig<N, L>
 ): void {
   const { layoutNonConnectedAside } = config
@@ -113,13 +117,13 @@ export function updatePanelBBoxSize<N extends GraphInputNode, L extends GraphInp
     const panelNodes = nodesSelection.filter(node => {
       return (!layoutNonConnectedAside || node._isConnected) && panelConfig.nodes.includes(node._id)
     })
-    setPanelBBox(panelConfig, panelNodes, config.nodeSize)
+    setPanelBBox(panelConfig, panelNodes, config.nodeSize, config.nodeDisabled)
   })
 }
 
 export function updatePanelNumNodes<N extends GraphInputNode, L extends GraphInputLink> (
   nodesSelection: Selection<BaseType, GraphNode<N, L>, SVGGElement, unknown>,
-  panels: GraphPanelConfigInterface[],
+  panels: GraphPanel[],
   config: GraphConfig<N, L>
 ): void {
   const { layoutNonConnectedAside } = config
@@ -133,13 +137,13 @@ export function updatePanelNumNodes<N extends GraphInputNode, L extends GraphInp
   })
 }
 
-export function getMaxPanelPadding<P extends GraphPanelConfigInterface> (panels: P[]): number {
+export function getMaxPanelPadding<N extends GraphInputNode, L extends GraphInputLink> (panels: GraphPanel[]): number {
   return panels?.length ? DEFAULT_PADDING + max(panels.map(d => d.padding ?? 0)) : 0
 }
 
-export function getLabelTranslateTransform<P extends GraphPanelConfigInterface> (panel: P): string {
+export function getLabelTranslateTransform<N extends GraphInputNode, L extends GraphInputLink> (panel: GraphPanel): string {
   const x = panel._width / 2
-  const dy = (panel.padding ?? DEFAULT_PADDING) + DEFAULT_LABEL_MARGIN + (panel.selectionOutline ? OUTLINE_SELECTION_PADDING : 0)
+  const dy = (panel.padding ?? DEFAULT_PADDING) + DEFAULT_LABEL_MARGIN + (panel.dashedOutline ? OUTLINE_SELECTION_PADDING : 0)
   const y = panel.labelPosition === Position.Bottom
     ? panel._height + dy
     : -dy
