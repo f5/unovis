@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import React, { useState, useMemo } from 'react'
 import { cx } from '@emotion/css'
 import { Spacing, TextAlign, Scale } from '@volterra/vis'
 import { VisXYContainer } from '@volterra/vis-react/containers/xy-container'
