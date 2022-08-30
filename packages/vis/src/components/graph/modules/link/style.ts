@@ -116,6 +116,7 @@ export const labelCircle = css`
 export const labelContent = css`
   label: label-content;
 
+  font-family: var(--vis-graph-icon-font-family), var(--vis-font-family);
   fill: var(--vis-graph-link-label-text-color);
   text-anchor: middle;
   dominant-baseline: middle;

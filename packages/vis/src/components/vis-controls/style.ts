@@ -1,4 +1,5 @@
 import { css, injectGlobal } from '@emotion/css'
+import { DEFAULT_ICON_FONT_FAMILY } from 'styles/css-variables'
 
 export const root = css`
   label: vis-controls-component;
@@ -9,7 +10,7 @@ export const variables = injectGlobal`
     --vis-controls-buttons-border-color: rgba(108, 119, 140, 0.15);
     --vis-controls-buttons-background-color: rgba(255, 255, 255, 1);
     --vis-controls-button-color: #6c778c;
-    --vis-controls-button-icon-font: FontAwesome;
+    --vis-controls-button-icon-font: ${DEFAULT_ICON_FONT_FAMILY};
 
     --vis-dark-controls-buttons-border-color:  #6c778c;
     --vis-dark-controls-buttons-background-color: var(--vis-color-gray);

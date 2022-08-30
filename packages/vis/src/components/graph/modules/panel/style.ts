@@ -18,7 +18,6 @@ export const variables = injectGlobal`
 
     --vis-graph-panel-dashed-outline-color: #b7b7b7;
 
-    --vis-graph-panel-side-icon-font-family: var(--vis-icon-font-family);
     --vis-graph-panel-side-icon-symbol-color: #9ea7b8;
     --vis-graph-panel-side-icon-shape-fill-color: #ffffff;
 
@@ -124,7 +123,7 @@ export const customSideIcon = css`
 
 export const sideIconSymbol = css`
   label: side-label-icon-text;
-  font-family: var(--vis-graph-panel-side-icon-font-family), var(--vis-graph-node-icon-font);
+  font-family: var(--vis-graph-icon-font-family), var(--vis-font-family);
   fill: var(--vis-graph-panel-side-icon-symbol-color);
   stroke: none;
   dominant-baseline: middle;

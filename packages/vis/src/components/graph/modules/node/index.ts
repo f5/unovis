@@ -64,7 +64,7 @@ export function createNodes<N extends GraphInputNode, L extends GraphInputLink> 
     element['nodeShape'] = shape
     appendShape(group, shape, nodeSelectors.node, nodeSelectors.customNode, d._index)
     appendShape(group, shape, nodeSelectors.nodeSelection, nodeSelectors.customNode, d._index)
-    group.append('path').attr('class', nodeSelectors.nodeArc)
+    group.append('path').attr('class', nodeSelectors.nodeGauge)
     group.append('text').attr('class', nodeSelectors.nodeIcon)
 
     const label = group.append('g').attr('class', nodeSelectors.label)
@@ -133,7 +133,7 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
       group.select(`.${nodeSelectors.node}`).remove()
       appendShape(group, nodeShape, nodeSelectors.node, nodeSelectors.customNode, d._index, `.${nodeSelectors.nodeSelection}`)
       group.select(`.${nodeSelectors.nodeSelection}`).remove()
-      appendShape(group, shape, nodeSelectors.nodeSelection, null, d._index, `.${nodeSelectors.nodeArc}`)
+      appendShape(group, shape, nodeSelectors.nodeSelection, null, d._index, `.${nodeSelectors.nodeGauge}`)
       // eslint-disable-next-line dot-notation
       element['nodeShape'] = shape
     }
@@ -144,7 +144,7 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
     const groupElement = elements[i]
     const group: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, GraphNode<N, L>> = select(groupElement)
     const node: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, GraphNode<N, L>> = group.select(`.${nodeSelectors.node}`)
-    const nodeArc = group.select(`.${nodeSelectors.nodeArc}`)
+    const nodeArc = group.select(`.${nodeSelectors.nodeGauge}`)
     const icon = group.select(`.${nodeSelectors.nodeIcon}`)
     const sideLabelsGroup = group.select(`.${nodeSelectors.sideLabelsGroup}`)
     const label: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, GraphNode<N, L>> = group.select(`.${nodeSelectors.label}`)
