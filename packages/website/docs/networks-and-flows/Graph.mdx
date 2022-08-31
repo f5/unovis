@@ -4,10 +4,11 @@ sidebar_label: Graph
 ---
 
 import CodeBlock from '@theme/CodeBlock'
+import BrowserOnly from '@docusaurus/BrowserOnly'
 import { scaleLinear } from 'd3-scale'
 import _sample from 'lodash/sample'
 import { PropTable } from '../components/props-table.tsx'
-import { DocWrapper } from '../wrappers'
+import { DocWrapper, InputWrapper } from '../wrappers'
 import { generateNodeLinkData } from '../utils/data'
 
 export const defaultProps = () => ({
@@ -29,9 +30,9 @@ export const linkHiddenProps = {
     linkStroke: '#737E92  ',
   }
 
-export const GraphDoc = (props) => (
-  <DocWrapper {...defaultProps() } {...props}/>
-)
+export const GraphDoc = (props) => props.inputType
+  ? <InputWrapper {...defaultProps()} {...props}/>
+  : <DocWrapper {...defaultProps() } {...props}/>
 
 export const nodeIcons = ['☁︎', '☂︎', '☀︎', '✤', '❃', '✻', '☎︎']
 export const getNodeSideLabels = (d, i) => i === 5
@@ -151,7 +152,7 @@ type GraphCircleLabel = {
 }
 ```
 
-<GraphDoc nodeSideLabels={getNodeSideLabels} />
+<GraphDoc nodeSideLabels={getNodeSideLabels}/>
 
 You can configure the default appearance of the side labels with the following CSS variables:
 
@@ -176,11 +177,13 @@ returning a number in the range of [0, 1]. The width of the gauge is linked to t
 You can set the color of the gauge with `nodeGaugeFill`. The default gauge color is configurable via the
 `--vis-graph-node-stroke-segment-color` CSS variable.
 
-<GraphDoc nodeGaugeFill={(d, i) => gradient(i * 10)} nodeGaugeValue={(d, i) => i * 10} />
+<GraphDoc showContext="minimal" nodeGaugeFill={(n, i) => gradient(i * 10)} nodeGaugeValue={(n, i) => i * 10} nodeLabel={(n, i) => `${i * 10}%`}/>
+
+<GraphDoc inputType='range' property='nodeGaugeValue' nodeGaugeFill={(d, i) => gradient(i * 10)} defaultValue={10}/>
 
 ### Disabled State
 Nodes can have a disabled (grayed out) state configured by the `nodeDisabled` property.
-<GraphDoc nodeDisabled={(d, i) => d.value < 50} />
+<GraphDoc showContext='minimal' nodeDisabled={(n, i) => n.value < 50} nodeLabel={n => n.value.toFixed(0)}/>
 
 The disabled state appearance can be redefined with these CSS variables:
 ```css
@@ -463,7 +466,23 @@ Node and link selection can be set via the config of the graph, which has two de
 `selectedNodeId` and `selectedLinkId`. When a node or link is selected, the graph will highlight it as well as the
 nodes it is connected to.
 
-<GraphDoc data={generateNodeLinkData(40)} selectedNodeId={'2'}/>
+<BrowserOnly>
+{() => {
+  const [selectedNodeId, setSelectedNode] = React.useState('2')
+  const { Graph } = require('@volterra/vis')
+  const events = {
+   [Graph.selectors.node]: {
+        'click': d => setSelectedNode(d.id)
+      },
+    [Graph.selectors.background]: {
+      'click': () => setSelectedNode(undefined)
+    },
+  }
+  return (
+    <GraphDoc data={generateNodeLinkData(40)} nodeLabel={n => n.id} events={events} selectedNodeId={selectedNodeId}/>
+  )
+}}
+</BrowserOnly>
 
 If you want to be able to select a node or a link by clicking on them, you can achieve that by setting up an event that
 will update `selectedNodeId` or `selectedLinkId` configuration property of your _Graph_ component.
