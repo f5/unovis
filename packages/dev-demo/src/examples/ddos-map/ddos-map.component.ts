@@ -39,7 +39,7 @@ export class DDoSMapComponent implements AfterViewInit {
   title = 'DDoS Map'
 
   flows = _flatten(sites.map((s: SitePoint) => {
-    const flows = []
+    const flows: DDoSFlow[] = []
     flows.push(this.getSampleFlow(s))
     return flows
   }))
@@ -109,7 +109,7 @@ export class DDoSMapComponent implements AfterViewInit {
 
   constructor () {
     setInterval(() => {
-      const site = _sample(sites)
+      const site = _sample(sites) as SitePoint
       this.flows.splice(0, 1)
       this.flows.push(this.getSampleFlow(site))
 

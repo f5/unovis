@@ -13,18 +13,19 @@ import { isObject } from 'utils/data'
 
 // Config
 import { LeafletMapConfig } from '../config'
+import { MapLibreStyleSpecs } from './map-style'
 
 injectGlobal(mapboxglCSS)
 
 export function getMapboxglLayer<Datum> (config: LeafletMapConfig<Datum>): L.Layer & { getMaplibreMap(): Map } {
   const { accessToken, style } = config
 
-  if (isObject(style) && !style.glyphs) {
+  if (isObject(style) && !(style as MapLibreStyleSpecs).glyphs) {
     console.warn('Unovis | Leaflet Map: Glyphs URL is required in order to show the map. Set `mapboxglGlyphs` URL in the style settings')
     return
   }
 
-  if (isObject(style) && !style.sources) {
+  if (isObject(style) && !(style as MapLibreStyleSpecs).sources) {
     console.warn('Unovis | Leaflet Map: Sources settings are required in order to show map. Set the `sources` property in the style settings')
     return
   }

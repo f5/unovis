@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import _uniq from 'lodash/uniq'
 import { Graph, GraphLayoutType, GraphConfigInterface, Shape, GraphPanelConfigInterface } from '@volterra/vis'
 
@@ -61,14 +62,13 @@ export const overviewConfig = (data, onNodeClick): GraphConfigInterface<any, any
   panels: [],
 })
 
-export const getPanels = (data): GraphPanelConfigInterface[] => _uniq(data.nodes.map(d => d.site)).map(label => ({
+export const getPanels = (data): GraphPanelConfigInterface[] => _uniq<string>(data.nodes.map(d => d.site)).map(label => ({
   label,
   nodes: data.nodes.filter(d => d.site === label).map(d => d.id),
   color: '#333',
   borderWidth: 1,
   padding: 15,
   selectionOutline: label === 'ce01-ashburn-aws',
-
   sideLabelIcon: label === 'ce01-ashburn-aws' ? '&#xe9a0;'
     : label === 'ce02-paris-azure' ? '&#xe9a2;'
       : '&#xe946;',

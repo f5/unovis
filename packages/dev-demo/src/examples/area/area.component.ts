@@ -10,6 +10,7 @@ import { SampleDatum } from '../../utils/data'
 function sampleAreaData (n: number): SampleDatum[] {
   const data = _times(30).map((i) => ({
     x: i,
+    y: Math.random(),
   }))
   data.forEach(d => {
     for (let i = 0; i < n; i++) {

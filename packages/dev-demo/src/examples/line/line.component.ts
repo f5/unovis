@@ -5,10 +5,12 @@ import { AfterViewInit, Component } from '@angular/core'
 import { Line, Axis } from '@volterra/vis'
 
 import _times from 'lodash/times'
+import { SampleDatum } from '../../utils/data'
 
-function sampleLineData (n: number): [] {
+function sampleLineData (n: number): SampleDatum[] {
   const data = _times(30).map((i) => ({
     x: i,
+    y: Math.random(),
   }))
   data.forEach(d => {
     for (let i = 0; i < n; i++) {

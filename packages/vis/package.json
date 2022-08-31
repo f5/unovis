@@ -39,6 +39,7 @@
     "@juggle/resize-observer": "^3.3.1",
     "@maplibre/maplibre-gl-leaflet": "0.0.15",
     "@types/geojson": "^7946.0.8",
+    "@types/lodash": "^4.14.184",
     "@types/topojson": "^3.2.3",
     "@types/topojson-specification": "^1.0.2",
     "d3": "^7.2.1",
