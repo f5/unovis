@@ -28,8 +28,8 @@ export class GraphDataModel<
     const prevNodes = this.nodes
     const prevLinks = this.links
 
-    const nodes: OutNode[] = cloneDeep(inputData?.nodes ?? [])
-    const links: OutLink[] = cloneDeep(inputData?.links ?? [])
+    const nodes = cloneDeep(inputData?.nodes ?? []) as OutNode[]
+    const links = cloneDeep(inputData?.links ?? []) as OutLink[]
 
     // Every node or link can have a private state used for rendering needs
     // On data update we transfer state between objects with same ids

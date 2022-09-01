@@ -493,7 +493,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
     const pointData = this._getPointData()
     const foundPoint: LeafletMapPoint<Datum> = find(
       pointData,
-      d => getString(d.properties, config.pointId) === externallySelectedPointId
+      d => getString(d.properties as Datum, config.pointId) === externallySelectedPointId
     )
 
     if (foundPoint) {

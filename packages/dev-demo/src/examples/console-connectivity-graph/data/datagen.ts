@@ -65,7 +65,7 @@ export function randomLink (node1: NodeDatum, node2: NodeDatum): LinkDatum {
     linkStyle: GraphLinkStyle.Solid,
     linkFlow: true, // _sample([false, true, true, true, true]),
     linkLabel: _sample([undefined, {
-      text: _random(1, 50),
+      text: _random(1, 50).toString(),
       color: _sample(['#2186d1', '#fdc739', '#fb3715', null]),
     }]),
   }
@@ -113,7 +113,7 @@ export function randomNode (): NodeDatum {
     icon: nodeShape === 'square' ? 'RE' : _sample(glyphs),
     iconSize: nodeShape === 'square' ? 28 : 70 / 2.5 * 2,
     sideLabels: _times(Math.random() < 0.3 ? _random(0, 3) : 0, n => ({
-      text: _random(1, 50),
+      text: _random(1, 50).toString(),
       color: _sample(['#2186d1', '#fdc739', '#fb3715', null]),
     })),
     fill: statusMap[nodeStatus].color,

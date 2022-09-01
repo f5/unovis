@@ -27,7 +27,7 @@ type MapArea = {
 
 type MapLink = {
   source: string,
-  target: number,
+  target: string,
   width: number,
   cursor: string,
 }

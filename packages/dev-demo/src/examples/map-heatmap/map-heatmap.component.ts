@@ -2,7 +2,7 @@ import _ from 'lodash'
 import { Feature } from 'geojson'
 import { StyleSpecification } from 'maplibre-gl'
 // eslint-disable-next-line import/no-unresolved
-import { Topology } from 'topojson-specification'
+import { Topology, Properties } from 'topojson-specification'
 
 import { scaleLinear, max } from 'd3'
 import { Component, ViewEncapsulation, AfterViewInit } from '@angular/core'
@@ -45,7 +45,7 @@ function getTopo (): Topology {
   const geometries = topo.objects.countries.geometries
   const newGeometries = []
   countries.forEach((country, id) => {
-    const geometry = _.find(geometries, g => g.properties.name === country.name)
+    const geometry = _.find(geometries, g => (g.properties as Properties).name === country.name)
     geometry.properties[STROKE_PROPERTY] = '#3E5FFF'
     geometry.properties[FILL_PROPERTY] = colorScale(country.value)
     newGeometries.push(geometry)

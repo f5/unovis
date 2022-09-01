@@ -26,15 +26,13 @@ export class MapGraphDataModel<AreaDatum, PointDatum, LinkDatum> extends CoreDat
 
     this._areas = cloneDeep(data?.areas ?? [])
     this._points = cloneDeep(data?.points ?? [])
-    const links: MapLink<PointDatum, LinkDatum>[] = cloneDeep(data?.links ?? [])
 
-    // Fill link source and target
-    links.forEach((link) => {
-      link.source = this.findPoint(this.points, this.linkSource(link))
-      link.target = this.findPoint(this.points, this.linkTarget(link))
-    })
-
-    this._links = links.filter(l => l.source && l.target)
+    this._links = cloneDeep(data?.links ?? []).reduce((arr, link) => {
+      const source = this.findPoint(this.points, this.linkSource(link))
+      const target = this.findPoint(this.points, this.linkTarget(link))
+      if (source && target) arr.push({ source, target })
+      return arr
+    }, [])
   }
 
   get areas (): AreaDatum[] {
