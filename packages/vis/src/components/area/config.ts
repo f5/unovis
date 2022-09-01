@@ -13,6 +13,11 @@ export interface AreaConfigInterface<Datum> extends XYComponentConfigInterface<D
   opacity?: NumericAccessor<Datum>;
   /** Optional area cursor. String or accessor function. Default: `null` */
   cursor?: StringAccessor<Datum[]>;
+  /** If an area is smaller than 1px, extend it to have 1px height.
+   * This setting is useful when some of the area values are zeros or very small so visually they become
+   * practically invisible, but you want to show that the data behind them exists and they're not just empty segments.
+   * Default: `false` */
+  minHeight1Px?: boolean;
 }
 
 export class AreaConfig<Datum> extends XYComponentConfig<Datum> implements AreaConfigInterface<Datum> {
@@ -20,4 +25,5 @@ export class AreaConfig<Datum> extends XYComponentConfig<Datum> implements AreaC
   baseline = (): number => 0
   opacity = 1
   cursor = null
+  minHeight1Px = false
 }

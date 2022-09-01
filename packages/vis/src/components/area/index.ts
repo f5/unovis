@@ -51,7 +51,7 @@ export class Area<Datum> extends XYComponentCore<Datum> {
       .y0(d => d.y0)
       .y1(d => {
         const isSmallerThanPixel = Math.abs(d.y1 - d.y0) < 1
-        return d.y1 - (isSmallerThanPixel ? 1 : 0)
+        return d.y1 - ((isSmallerThanPixel && config.minHeight1Px) ? 1 : 0)
       })
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
