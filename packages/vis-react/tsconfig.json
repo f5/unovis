@@ -15,7 +15,7 @@
     "lib": ["es5", "es6", "dom", "dom.iterable"],
     "types": [],
     "allowJs": false,
-    "jsx": "react-jsx",
+    "jsx": "react",
     "declaration": true,
     "sourceMap": true,
     "outDir": "dist",
