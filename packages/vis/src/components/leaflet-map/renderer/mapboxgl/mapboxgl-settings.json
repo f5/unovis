@@ -3716,7 +3716,7 @@
       "id": "water_name_line",
       "layout": {
         "symbol-placement": "line",
-        "text-field": "{name:latin}\n{name:nonlatin}",
+        "text-field": "{name_en}",
         "text-font": [
           "Open Sans Regular"
         ],
@@ -3750,7 +3750,7 @@
       ],
       "id": "water_name_point",
       "layout": {
-        "text-field": "{name:latin}\n{name:nonlatin}",
+        "text-field": "{name_en}",
         "text-font": [
           "Open Sans Regular"
         ],
@@ -3785,7 +3785,7 @@
       ],
       "id": "water_ocean_name_point",
       "layout": {
-        "text-field": "{name:latin}\n{name:nonlatin}",
+        "text-field": "{name_en}",
         "text-font": [
           "Open Sans Regular"
         ],
@@ -3853,7 +3853,7 @@
       "id": "poi_z16_subclass",
       "layout": {
         "text-anchor": "top",
-        "text-field": "{name:latin}\n{name:nonlatin}",
+        "text-field": "{name_en}",
         "text-font": [
           "Open Sans Italic"
         ],
@@ -3928,7 +3928,7 @@
       "id": "poi_z16",
       "layout": {
         "text-anchor": "top",
-        "text-field": "{name:latin}\n{name:nonlatin}",
+        "text-field": "{name_en}",
         "text-font": [
           "Open Sans Italic"
         ],
@@ -3987,7 +3987,7 @@
       "id": "poi_z15",
       "layout": {
         "text-anchor": "top",
-        "text-field": "{name:latin}\n{name:nonlatin}",
+        "text-field": "{name_en}",
         "text-font": [
           "Open Sans Italic"
         ],
@@ -4045,7 +4045,7 @@
       "layout": {
         "icon-size": 0.9,
         "text-anchor": "top",
-        "text-field": "{name:latin}\n{name:nonlatin}",
+        "text-field": "{name_en}",
         "text-font": [
           "Open Sans Italic"
         ],
@@ -4090,7 +4090,7 @@
       "layout": {
         "icon-size": 0.9,
         "text-anchor": "left",
-        "text-field": "{name:latin}\n{name:nonlatin}",
+        "text-field": "{name_en}",
         "text-font": [
           "Open Sans Italic"
         ],
@@ -4219,7 +4219,7 @@
       "layout": {
         "symbol-placement": "line",
         "text-anchor": "center",
-        "text-field": "{name:latin} {name:nonlatin}",
+        "text-field": "{name_en} ",
         "text-font": [
           "Open Sans Regular"
         ],
@@ -4436,7 +4436,7 @@
       ],
       "id": "place_other",
       "layout": {
-        "text-field": "{name:latin}\n{name:nonlatin}",
+        "text-field": "{name_en}",
         "text-font": [
           "Open Sans Italic"
         ],
@@ -4479,7 +4479,7 @@
       ],
       "id": "place_village",
       "layout": {
-        "text-field": "{name:latin}\n{name:nonlatin}",
+        "text-field": "{name_en}",
         "text-font": [
           "Open Sans Regular"
         ],
@@ -4521,7 +4521,7 @@
       "id": "place_town",
       "layout": {
         "text-anchor": "bottom",
-        "text-field": "{name:latin}\n{name:nonlatin}",
+        "text-field": "{name_en}",
         "text-font": [
           "Open Sans Regular"
         ],
@@ -4568,7 +4568,7 @@
         "icon-allow-overlap": true,
         "icon-optional": false,
         "text-anchor": "bottom",
-        "text-field": "{name:latin}\n{name:nonlatin}",
+        "text-field": "{name_en}",
         "text-font": [
           "Open Sans Semibold"
         ],
@@ -4613,7 +4613,7 @@
       ],
       "id": "state",
       "layout": {
-        "text-field": "{name:latin}\n{name:nonlatin}",
+        "text-field": "{name_en}",
         "text-font": [
           "Open Sans Semibold"
         ],
@@ -4660,7 +4660,7 @@
       ],
       "id": "country_other",
       "layout": {
-        "text-field": "{name:latin}",
+        "text-field": "{name_en}",
         "text-font": [
           "Open Sans Italic"
         ],
@@ -4710,7 +4710,7 @@
       ],
       "id": "country_3",
       "layout": {
-        "text-field": "{name:latin}",
+        "text-field": "{name_en}",
         "text-font": [
           "Open Sans Italic"
         ],
@@ -4761,7 +4761,7 @@
       ],
       "id": "country_2",
       "layout": {
-        "text-field": "{name:latin}",
+        "text-field": "{name_en}",
         "text-font": [
           "Open Sans Italic"
         ],
@@ -4812,7 +4812,7 @@
       ],
       "id": "country_1",
       "layout": {
-        "text-field": "{name:latin}",
+        "text-field": "{name_en}",
         "text-font": [
           "Open Sans Italic"
         ],
@@ -4854,7 +4854,7 @@
       ],
       "id": "continent",
       "layout": {
-        "text-field": "{name:latin}",
+        "text-field": "{name_en}",
         "text-font": [
           "Open Sans Italic"
         ],
