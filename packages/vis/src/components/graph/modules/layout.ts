@@ -71,8 +71,8 @@ export function applyLayoutParallel<N extends GraphInputNode, L extends GraphInp
 ): void {
   const { nonConnectedNodes, connectedNodes, nodes } = datamodel
   const {
-    layoutNonConnectedAside, layoutGroupOrder, layoutSortConnectionsByGroup, layoutSubgroupMaxNodes,
-    layoutGroupRows, nodeSize, nodeGroup, nodeSubGroup, layoutGroupSpacing,
+    layoutNonConnectedAside, layoutGroupOrder, layoutParallelSortConnectionsByGroup, layoutParallelNodesPerColumn,
+    layoutParallelSubGroupsPerRow, nodeSize, layoutNodeGroup, layoutParallelNodeSubGroup, layoutParallelGroupSpacing,
   } = config
 
   const activeWidth = width - configuredNodeSize(nodeSize)
@@ -80,12 +80,12 @@ export function applyLayoutParallel<N extends GraphInputNode, L extends GraphInp
 
   // Handle connected nodes
   const layoutNodes = layoutNonConnectedAside ? connectedNodes : nodes
-  const groupNames = unique(layoutNodes.map(d => getString(d, nodeGroup)))
+  const groupNames = unique(layoutNodes.map(d => getString(d, layoutNodeGroup, d._index)))
   const groupNamesSorted: string[] = sortBy(groupNames, d => layoutGroupOrder.indexOf(d))
 
   const groups = groupNamesSorted.map(groupName => {
-    const groupNodes = layoutNodes.filter(d => getString(d, nodeGroup) === groupName)
-    const groupedBySubgroup = groupBy(groupNodes, d => getString(d, nodeSubGroup))
+    const groupNodes = layoutNodes.filter(d => getString(d, layoutNodeGroup, d._index) === groupName)
+    const groupedBySubgroup = groupBy(groupNodes, d => getString(d, layoutParallelNodeSubGroup, d._index))
     const subgroups = Object.keys(groupedBySubgroup).map(name => ({
       nodes: groupedBySubgroup[name],
       name,
@@ -99,7 +99,7 @@ export function applyLayoutParallel<N extends GraphInputNode, L extends GraphInp
   })
 
   // Sort
-  const group = groups.find(g => g.name === layoutSortConnectionsByGroup)
+  const group = groups.find(g => g.name === layoutParallelSortConnectionsByGroup)
   if (group) {
     const sortMap = {}
     let idx = 0
@@ -135,7 +135,7 @@ export function applyLayoutParallel<N extends GraphInputNode, L extends GraphInp
 
     const maxVerticalStep = maxNodeSize * 4 + labelApprxHeight
     const minVerticalStep = maxNodeSize * 1.5 + labelApprxHeight
-    const verticalStep = (maxNodeSize + layoutGroupSpacing) || clamp(activeHeight / (groups.length - 1), minVerticalStep, maxVerticalStep)
+    const verticalStep = (maxNodeSize + layoutParallelGroupSpacing) || clamp(activeHeight / (groups.length - 1), minVerticalStep, maxVerticalStep)
     const subgroupNodeStep = maxNodeSize + labelApprxHeight + labelMargin
 
     let y0 = (groups.length < 2) ? height / 2 : 0
@@ -147,7 +147,7 @@ export function applyLayoutParallel<N extends GraphInputNode, L extends GraphInp
       let groupHeight = 0
       let k = 0
       group.subgroups.forEach(subgroup => {
-        const subgroupRows = Math.ceil(subgroup.nodes.length / layoutSubgroupMaxNodes)
+        const subgroupRows = Math.ceil(subgroup.nodes.length / layoutParallelNodesPerColumn)
         let n = 0
         let x = x0
         let y = y0 + dy
@@ -158,19 +158,19 @@ export function applyLayoutParallel<N extends GraphInputNode, L extends GraphInp
           groupWidth = Math.max(groupWidth, x)
 
           n = n + 1
-          if (n >= layoutSubgroupMaxNodes) {
+          if (n >= layoutParallelNodesPerColumn) {
             n = 0
             y += subgroupNodeStep
             x = x0
           }
         })
 
-        const subgroupWidth = Math.min(subgroup.nodes.length, layoutSubgroupMaxNodes) * horizontalStep
+        const subgroupWidth = Math.min(subgroup.nodes.length, layoutParallelNodesPerColumn) * horizontalStep
         const subgroupHeight = subgroupRows * subgroupNodeStep
         subgroupMaxWidth = Math.max(subgroupMaxWidth, subgroupWidth)
         dy = dy + subgroupHeight + subgroupMargin
         k = k + 1
-        if (k >= layoutGroupRows) {
+        if (k >= layoutParallelSubGroupsPerRow) {
           k = 0
           dy = 0
           x0 = x0 + subgroupMaxWidth + subgroupMargin
@@ -178,7 +178,7 @@ export function applyLayoutParallel<N extends GraphInputNode, L extends GraphInp
         }
 
         groupHeight = Math.max(groupHeight, y)
-        // x0 += Math.min(subgroup.nodes.length, layoutSubgroupMaxNodes) * horizontalStep + subgroupMargin
+        // x0 += Math.min(subgroup.nodes.length, layoutParallelNodesPerColumn) * horizontalStep + subgroupMargin
       })
 
       // Center group horizontally
@@ -195,7 +195,7 @@ export function applyLayoutParallel<N extends GraphInputNode, L extends GraphInp
   } else {
     const minHorizontalStep = 6 * maxNodeSize + labelMargin
     const maxHorizontalStep = 10 * maxNodeSize + labelMargin
-    const horizontalStep = (maxNodeSize + layoutGroupSpacing) || clamp(activeWidth / (maxN - 1), minHorizontalStep, maxHorizontalStep)
+    const horizontalStep = (maxNodeSize + layoutParallelGroupSpacing) || clamp(activeWidth / (maxN - 1), minHorizontalStep, maxHorizontalStep)
 
     const maxVerticalStep = maxNodeSize * 2.0 + labelApprxHeight
     const minVerticalStep = maxNodeSize * 1.5 + labelApprxHeight
@@ -212,7 +212,7 @@ export function applyLayoutParallel<N extends GraphInputNode, L extends GraphInp
 
       let k = 0
       group.subgroups.forEach(subgroup => {
-        const subgroupColumns = Math.ceil(subgroup.nodes.length / layoutSubgroupMaxNodes)
+        const subgroupColumns = Math.ceil(subgroup.nodes.length / layoutParallelNodesPerColumn)
         let n = 0
         let y = y0
         let x = x0 + dx
@@ -223,19 +223,19 @@ export function applyLayoutParallel<N extends GraphInputNode, L extends GraphInp
           groupHeight = Math.max(groupHeight, y)
 
           n = n + 1
-          if (n >= layoutSubgroupMaxNodes) {
+          if (n >= layoutParallelNodesPerColumn) {
             n = 0
             x += subgroupNodeStep
             y = y0
           }
         })
 
-        const subgroupHeight = Math.min(subgroup.nodes.length, layoutSubgroupMaxNodes) * verticalStep
+        const subgroupHeight = Math.min(subgroup.nodes.length, layoutParallelNodesPerColumn) * verticalStep
         const subgroupWidth = subgroupColumns * subgroupNodeStep
         subgroupMaxHeight = Math.max(subgroupMaxHeight, subgroupHeight)
         dx = dx + subgroupWidth + subgroupMargin
         k = k + 1
-        if (k >= layoutGroupRows) {
+        if (k >= layoutParallelSubGroupsPerRow) {
           k = 0
           dx = 0
           y0 = y0 + subgroupMaxHeight + subgroupMargin
@@ -275,7 +275,7 @@ export function applyLayoutDagre<N extends GraphInputNode, L extends GraphInputL
   width: number
 ): void {
   const { nonConnectedNodes, connectedNodes, nodes, links } = datamodel
-  const { nodeSize, layoutNonConnectedAside, dagreLayoutSettings, nodeBorderWidth, nodeLabel } = config
+  const { nodeSize, layoutNonConnectedAside, dagreLayoutSettings, nodeStrokeWidth, nodeLabel } = config
 
   // https://github.com/dagrejs/dagre/wiki
   const dagreGraph = new Graph()
@@ -293,9 +293,9 @@ export function applyLayoutDagre<N extends GraphInputNode, L extends GraphInputL
   const nds = (layoutNonConnectedAside ? connectedNodes : nodes)
   nds.forEach(node => {
     dagreGraph.setNode(node._index, {
-      label: getString(node, nodeLabel),
-      width: getNumber(node, nodeSize) * 1.5 + getNumber(node, nodeBorderWidth),
-      height: labelApprxHeight + getNumber(node, nodeSize) * 1.5,
+      label: getString(node, nodeLabel, node._index),
+      width: getNumber(node, nodeSize, node._index) * 1.5 + getNumber(node, nodeStrokeWidth, node._index),
+      height: labelApprxHeight + getNumber(node, nodeSize, node._index) * 1.5,
       originalNode: node,
     })
   })
@@ -333,16 +333,16 @@ export function applyLayoutConcentric<N extends GraphInputNode, L extends GraphI
   height: number
 ): void {
   const { nonConnectedNodes, connectedNodes, nodes } = datamodel
-  const { layoutNonConnectedAside, layoutGroupOrder, nodeSize, nodeGroup } = config
+  const { layoutNonConnectedAside, layoutGroupOrder, nodeSize, layoutNodeGroup } = config
 
   const layoutNodes = layoutNonConnectedAside ? connectedNodes : nodes
 
-  const groupNames: string[] = unique(layoutNodes.map(d => getString(d, nodeGroup)))
+  const groupNames: string[] = unique(layoutNodes.map(d => getString(d, layoutNodeGroup, d._index)))
   const groupNamesSorted: string[] = sortBy(groupNames, d => layoutGroupOrder.indexOf(d))
 
   const groups = groupNamesSorted.map(groupName => ({
     name: groupName,
-    nodes: layoutNodes.filter(d => getString(d, nodeGroup) === groupName),
+    nodes: layoutNodes.filter(d => getString(d, layoutNodeGroup, d._index) === groupName),
   }))
 
   // Handle connected nodes
@@ -400,7 +400,7 @@ export function applyLayoutForce<N extends GraphInputNode, L extends GraphInputL
     }))
     .force('x', forceX().strength(forceXStrength))
     .force('y', forceY().strength(forceYStrength))
-    .force('collide', forceCollide().radius(d => getNodeSize(d, nodeSize)).iterations(1))
+    .force('collide', forceCollide().radius((d, i) => getNodeSize(d, nodeSize, i)).iterations(1))
     .stop()
 
   // See https://bl.ocks.org/mbostock/1667139, https://github.com/d3/d3-force/blob/master/README.md#simulation_tick

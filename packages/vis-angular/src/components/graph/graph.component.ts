@@ -10,15 +10,16 @@ import {
   VisEventCallback,
   GraphLayoutType,
   StringAccessor,
+  GraphForceLayoutSettings,
   NumericAccessor,
   GenericAccessor,
   GraphLinkStyle,
-  GraphLinkArrow,
+  GraphLinkArrowStyle,
   ColorAccessor,
   BooleanAccessor,
   GraphCircleLabel,
-  Shape,
-  GraphPanelConfigInterface,
+  GraphNodeShape,
+  GraphPanelConfig,
 } from '@volterra/vis'
 import { VisCoreComponent } from '../../core'
 
@@ -107,61 +108,55 @@ export class VisGraphComponent<N extends GraphInputNode, L extends GraphInputLin
    * Default: `8.0` */
   @Input() layoutAutofitTolerance?: number
 
-  /** Place non-connected nodes to the bottom of the graph. Default: `false` */
+  /** Place non-connected nodes at the bottom of the graph. Default: `false` */
   @Input() layoutNonConnectedAside?: boolean
+
+  /** Node group accessor function.
+   * Only for `GraphLayoutType.Parallel`, `GraphLayoutType.ParallelHorizontal` and `GraphLayoutType.Concentric` layouts.
+   * Default: `node => node.group` */
+  @Input() layoutNodeGroup?: StringAccessor<N>
 
   /** Order of the layout groups.
    * Only for `GraphLayoutType.Parallel`, `GraphLayoutType.ParallelHorizontal` and `GraphLayoutType.Concentric` layouts.
    * Default: `[]` */
   @Input() layoutGroupOrder?: string[]
 
-  /** Number of rows per group.
-   * Only for `GraphLayoutType.Parallel` and `GraphLayoutType.ParallelHorizontal` layouts.
-   * Default: `1` */
-  @Input() layoutGroupRows?: number
-
-  /** Set the number of nodes in a sub-group after which they'll continue from the next line or column.
+  /** Sets the number of nodes in a sub-group after which they'll continue on the next column (or row if `layoutType` is
+   * `GraphLayoutType.ParallelHorizontal`).
    * Only for `GraphLayoutType.Parallel` and `GraphLayoutType.ParallelHorizontal` layouts.
    * Default: `6` */
-  @Input() layoutSubgroupMaxNodes?: number
+  @Input() layoutParallelNodesPerColumn?: number
 
-  /** Set the spacing between the groups.
+  /** Node sub-group accessor function.
+   * Only for `GraphLayoutType.Parallel` and `GraphLayoutType.ParallelHorizontal` layouts.
+   * Default: `node => node.subgroup` */
+  @Input() layoutParallelNodeSubGroup?: StringAccessor<N>
+
+  /** Number of sub-groups per row (or column if `layoutType` is `GraphLayoutType.ParallelHorizontal`) in a group.
+   * Only for `GraphLayoutType.Parallel` and `GraphLayoutType.ParallelHorizontal` layouts.
+   * Default: `1` */
+  @Input() layoutParallelSubGroupsPerRow?: number
+
+  /** Spacing between groups.
    * Only for `GraphLayoutType.Parallel` and `GraphLayoutType.ParallelHorizontal` layouts.
    * Default: `undefined` */
-  @Input() layoutGroupSpacing?: number
+  @Input() layoutParallelGroupSpacing?: number
 
   /** Set a group by name to have priority in sorting the graph links.
    * Only for `GraphLayoutType.Parallel` and `GraphLayoutType.ParallelHorizontal` layouts.
    * Default: `undefined` */
-  @Input() layoutSortConnectionsByGroup?: string
-
-  /** Node group accessor function. Default: `node => node.group` */
-  @Input() nodeGroup?: StringAccessor<N>
-
-  /** Node sub-group accessor function. Default: `node => node.subgroup` */
-  @Input() nodeSubGroup?: StringAccessor<N>
+  @Input() layoutParallelSortConnectionsByGroup?: string
 
   /** Force Layout settings, see the `d3-force` package for more details */
-  @Input() forceLayoutSettings?: {
-    linkDistance?: number;
-    linkStrength?: number;
-    charge?: number;
-    forceXStrength?: number;
-    forceYStrength?: number;
-  }
+  @Input() forceLayoutSettings?: GraphForceLayoutSettings
 
-  /** Darge Layout settings, see the `dagrejs` package fore more details */
+  /** Darge Layout settings, see the `dagrejs` package
+   * for more details: https://github.com/dagrejs/dagre/wiki#configuring-the-layout */
   @Input() dagreLayoutSettings?: {
     rankdir: string;
     ranker: string;
     [key: string]: any;
   }
-
-  /** Animation duration of the flow (traffic) circles. Default: `20000` */
-  @Input() flowAnimDuration?: number
-
-  /** Size of the moving circles that represent traffic flow. Default: `2` */
-  @Input() flowCircleSize?: number
 
   /** Link width accessor function ot constant value. Default: `1` */
   @Input() linkWidth?: NumericAccessor<L>
@@ -173,7 +168,7 @@ export class VisGraphComponent<N extends GraphInputNode, L extends GraphInputLin
   @Input() linkBandWidth?: NumericAccessor<L>
 
   /** Link arrow accessor function or constant value. Default: `undefined` */
-  @Input() linkArrow?: GenericAccessor<GraphLinkArrow, L> | undefined
+  @Input() linkArrow?: GenericAccessor<GraphLinkArrowStyle, L> | undefined
 
   /** Link stroke color accessor function or constant value. Default: `undefined` */
   @Input() linkStroke?: ColorAccessor<L>
@@ -184,7 +179,13 @@ export class VisGraphComponent<N extends GraphInputNode, L extends GraphInputLin
   /** Link flow animation accessor function or constant value. Default: `false` */
   @Input() linkFlow?: BooleanAccessor<L>
 
-  /** Link  abel accessor function or constant value. Default: `undefined` */
+  /** Animation duration of the flow (traffic) circles. Default: `20000` */
+  @Input() linkFlowAnimDuration?: number
+
+  /** Size of the moving particles that represent traffic flow. Default: `2` */
+  @Input() linkFlowParticleSize?: number
+
+  /** Link label accessor function or constant value. Default: `undefined` */
   @Input() linkLabel?: GenericAccessor<GraphCircleLabel, L> | undefined
 
   /** Shift label along the link center a little bit to avoid overlap with the link arrow. Default: `true` */
@@ -196,20 +197,23 @@ export class VisGraphComponent<N extends GraphInputNode, L extends GraphInputLin
   /** Set selected link by its unique id. Default: `undefined` */
   @Input() selectedLinkId?: number | string
 
-  /** Animation duration of the node score outline. Default: `1500` */
-  @Input() scoreAnimDuration?: number
-
   /** Node size accessor function or constant value. Default: `30` */
   @Input() nodeSize?: NumericAccessor<N>
 
-  /** Node border width accessor function or constant value. Default: `3` */
-  @Input() nodeBorderWidth?: NumericAccessor<N>
+  /** Node stroke width accessor function or constant value. Default: `3` */
+  @Input() nodeStrokeWidth?: NumericAccessor<N>
 
-  /** Node shape accessor function or constant value. Default: `Shape.Circle` */
-  @Input() nodeShape?: GenericAccessor<Shape | string, N>
+  /** Node shape accessor function or constant value. Default: `GraphNodeShape.Circle` */
+  @Input() nodeShape?: GenericAccessor<GraphNodeShape | any, N>
 
-  /** Node score outline accessor function or constant value in the range [0,100]. Default: `0` */
-  @Input() nodeStrokeSegmentValue?: NumericAccessor<N>
+  /** Node gauge outline accessor function or constant value in the range [0,100]. Default: `0` */
+  @Input() nodeGaugeValue?: NumericAccessor<N>
+
+  /** Node gauge outline fill color accessor function or constant value. Default: `undefined` */
+  @Input() nodeGaugeFill?: ColorAccessor<N>
+
+  /** Animation duration of the node gauge outline. Default: `1500` */
+  @Input() nodeGaugeAnimDuration?: number
 
   /** Node central icon accessor function or constant value. Default: `node => node.icon` */
   @Input() nodeIcon?: StringAccessor<N>
@@ -235,9 +239,6 @@ export class VisGraphComponent<N extends GraphInputNode, L extends GraphInputLin
   /** Node fill color accessor function or constant value. Default: `node => node.fill` */
   @Input() nodeFill?: ColorAccessor<N>
 
-  /** Node score outline fill color accessor function or constant value. Default: `undefined` */
-  @Input() nodeStrokeSegmentFill?: ColorAccessor<N>
-
   /** Node stroke color accessor function or constant value. Default: `node => node.stroke` */
   @Input() nodeStroke?: ColorAccessor<N>
 
@@ -259,8 +260,8 @@ export class VisGraphComponent<N extends GraphInputNode, L extends GraphInputLin
   /** Set selected node by unique id. Default: `undefined` */
   @Input() selectedNodeId?: number | string
 
-  /** Panels configuration. An array of GraphPanelConfigInterface objects. Default: `[]` */
-  @Input() panels?: GraphPanelConfigInterface[]
+  /** Panels configuration. An array of `GraphPanelConfig` objects. Default: `[]` */
+  @Input() panels?: GraphPanelConfig[] | undefined
   @Input() data: any
 
   component: Graph<N, L> | undefined
@@ -282,8 +283,8 @@ export class VisGraphComponent<N extends GraphInputNode, L extends GraphInputLin
   }
 
   private getConfig (): GraphConfigInterface<N, L> {
-    const { duration, events, attributes, zoomScaleExtent, disableZoom, disableDrag, zoomThrottledUpdateNodeThreshold, onZoom, layoutType, layoutAutofit, layoutAutofitTolerance, layoutNonConnectedAside, layoutGroupOrder, layoutGroupRows, layoutSubgroupMaxNodes, layoutGroupSpacing, layoutSortConnectionsByGroup, nodeGroup, nodeSubGroup, forceLayoutSettings, dagreLayoutSettings, flowAnimDuration, flowCircleSize, linkWidth, linkStyle, linkBandWidth, linkArrow, linkStroke, linkDisabled, linkFlow, linkLabel, linkLabelShiftFromCenter, linkNeighborSpacing, selectedLinkId, scoreAnimDuration, nodeSize, nodeBorderWidth, nodeShape, nodeStrokeSegmentValue, nodeIcon, nodeIconSize, nodeLabel, nodeSubLabel, nodeSideLabels, nodeBottomIcon, nodeDisabled, nodeFill, nodeStrokeSegmentFill, nodeStroke, nodeSort, nodeEnterPosition, nodeEnterScale, nodeExitPosition, nodeExitScale, selectedNodeId, panels } = this
-    const config = { duration, events, attributes, zoomScaleExtent, disableZoom, disableDrag, zoomThrottledUpdateNodeThreshold, onZoom, layoutType, layoutAutofit, layoutAutofitTolerance, layoutNonConnectedAside, layoutGroupOrder, layoutGroupRows, layoutSubgroupMaxNodes, layoutGroupSpacing, layoutSortConnectionsByGroup, nodeGroup, nodeSubGroup, forceLayoutSettings, dagreLayoutSettings, flowAnimDuration, flowCircleSize, linkWidth, linkStyle, linkBandWidth, linkArrow, linkStroke, linkDisabled, linkFlow, linkLabel, linkLabelShiftFromCenter, linkNeighborSpacing, selectedLinkId, scoreAnimDuration, nodeSize, nodeBorderWidth, nodeShape, nodeStrokeSegmentValue, nodeIcon, nodeIconSize, nodeLabel, nodeSubLabel, nodeSideLabels, nodeBottomIcon, nodeDisabled, nodeFill, nodeStrokeSegmentFill, nodeStroke, nodeSort, nodeEnterPosition, nodeEnterScale, nodeExitPosition, nodeExitScale, selectedNodeId, panels }
+    const { duration, events, attributes, zoomScaleExtent, disableZoom, disableDrag, zoomThrottledUpdateNodeThreshold, onZoom, layoutType, layoutAutofit, layoutAutofitTolerance, layoutNonConnectedAside, layoutNodeGroup, layoutGroupOrder, layoutParallelNodesPerColumn, layoutParallelNodeSubGroup, layoutParallelSubGroupsPerRow, layoutParallelGroupSpacing, layoutParallelSortConnectionsByGroup, forceLayoutSettings, dagreLayoutSettings, linkWidth, linkStyle, linkBandWidth, linkArrow, linkStroke, linkDisabled, linkFlow, linkFlowAnimDuration, linkFlowParticleSize, linkLabel, linkLabelShiftFromCenter, linkNeighborSpacing, selectedLinkId, nodeSize, nodeStrokeWidth, nodeShape, nodeGaugeValue, nodeGaugeFill, nodeGaugeAnimDuration, nodeIcon, nodeIconSize, nodeLabel, nodeSubLabel, nodeSideLabels, nodeBottomIcon, nodeDisabled, nodeFill, nodeStroke, nodeSort, nodeEnterPosition, nodeEnterScale, nodeExitPosition, nodeExitScale, selectedNodeId, panels } = this
+    const config = { duration, events, attributes, zoomScaleExtent, disableZoom, disableDrag, zoomThrottledUpdateNodeThreshold, onZoom, layoutType, layoutAutofit, layoutAutofitTolerance, layoutNonConnectedAside, layoutNodeGroup, layoutGroupOrder, layoutParallelNodesPerColumn, layoutParallelNodeSubGroup, layoutParallelSubGroupsPerRow, layoutParallelGroupSpacing, layoutParallelSortConnectionsByGroup, forceLayoutSettings, dagreLayoutSettings, linkWidth, linkStyle, linkBandWidth, linkArrow, linkStroke, linkDisabled, linkFlow, linkFlowAnimDuration, linkFlowParticleSize, linkLabel, linkLabelShiftFromCenter, linkNeighborSpacing, selectedLinkId, nodeSize, nodeStrokeWidth, nodeShape, nodeGaugeValue, nodeGaugeFill, nodeGaugeAnimDuration, nodeIcon, nodeIconSize, nodeLabel, nodeSubLabel, nodeSideLabels, nodeBottomIcon, nodeDisabled, nodeFill, nodeStroke, nodeSort, nodeEnterPosition, nodeEnterScale, nodeExitPosition, nodeExitScale, selectedNodeId, panels }
     const keys = Object.keys(config) as (keyof GraphConfigInterface<N, L>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

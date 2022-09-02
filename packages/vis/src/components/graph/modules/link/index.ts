@@ -9,13 +9,13 @@ import { smartTransition } from 'utils/d3'
 import { GraphInputLink, GraphInputNode } from 'types/graph'
 
 // Local Types
-import { GraphCircleLabel, GraphLink, GraphLinkArrow, GraphLinkStyle } from '../../types'
+import { GraphCircleLabel, GraphLink, GraphLinkArrowStyle, GraphLinkStyle } from '../../types'
 
 // Config
 import { GraphConfig } from '../../config'
 
 // Helpers
-import { getX, getY, getSideTexLabelColor } from '../node/helper'
+import { getX, getY } from '../node/helper'
 import {
   getPolylineData,
   getLinkShiftTransform,
@@ -24,6 +24,7 @@ import {
   getLinkBandWidth,
   getMarker,
   getLinkColor,
+  getLinkLabelTextColor,
   LINK_LABEL_RADIUS,
   LINK_MARKER_WIDTH,
 } from './helper'
@@ -67,19 +68,25 @@ export function updateSelectedLinks<N extends GraphInputNode, L extends GraphInp
   config: GraphConfig<N, L>,
   scale: number
 ): void {
-  const isGreyout = (d, i): boolean => getBoolean(d, config.linkDisabled, i) || d._state.greyout
-
-  selection.select(`.${linkSelectors.link}`)
-  selection.select(`.${linkSelectors.linkBand}`)
-  selection.select(`.${linkSelectors.linkSupport}`)
-    .style('stroke-opacity', d => (d._state.hovered || d._state.selected) ? 0.2 : 0)
-    .style('stroke-width', d => {
-      return d._state.selected ? getLinkBandWidth(d, scale, config) + 5
-        : d._state.hovered ? getLinkBandWidth(d, scale, config) + 10 : null
-    })
-
+  const isGreyedOut = (d, i): boolean => getBoolean(d, config.linkDisabled, i) || d._state.greyout
   selection
-    .classed(linkSelectors.greyout, (d, i) => isGreyout(d, i))
+    .classed(linkSelectors.greyout, (d, i) => isGreyedOut(d, i))
+
+  selection.each((d, i, elements) => {
+    const element = elements[i]
+    const group = select(element)
+    group.select(`.${linkSelectors.link}`)
+    group.select(`.${linkSelectors.linkBand}`)
+    const linkSupport = group.select(`.${linkSelectors.linkSupport}`)
+
+    linkSupport
+      .style('stroke-opacity', (d._state.hovered || d._state.selected) ? 0.2 : 0)
+      .style('stroke-width',
+        d._state.selected
+          ? getLinkBandWidth(d, scale, config) + 5
+          : d._state.hovered ? getLinkBandWidth(d, scale, config) + 10 : null
+      )
+  })
 }
 
 export function updateLinks<N extends GraphInputNode, L extends GraphInputLink> (
@@ -88,109 +95,116 @@ export function updateLinks<N extends GraphInputNode, L extends GraphInputLink> 
   duration: number,
   scale = 1
 ): void {
-  const { flowCircleSize, linkStyle, linkFlow, linkArrow, linkLabel, linkLabelShiftFromCenter } = config
+  const { linkFlowParticleSize, linkStyle, linkFlow, linkArrow, linkLabel, linkLabelShiftFromCenter } = config
   if (!selection.size()) return
 
   selection
-    .classed(linkSelectors.linkDashed, d => getValue<GraphLink<N, L>, GraphLinkStyle>(d, linkStyle) === GraphLinkStyle.Dashed)
+    .classed(
+      linkSelectors.linkDashed,
+      d => getValue<GraphLink<N, L>, GraphLinkStyle>(d, linkStyle, d._indexGlobal) === GraphLinkStyle.Dashed
+    )
 
-  selection.select(`.${linkSelectors.link}`)
-    .attr('class', linkSelectors.link)
-    .attr('marker-mid', d => getMarker(d, scale, config))
-    .style('stroke-width', d => getLinkStrokeWidth(d, scale, config))
-    .style('stroke', d => getLinkColor(d, config))
-    .attr('transform', d => getLinkShiftTransform(d, config.linkNeighborSpacing))
-    .each((d, i, elements) => {
-      const el = select(elements[i])
-      const x1 = getX(d.source)
-      const y1 = getY(d.source)
-      const x2 = getX(d.target)
-      const y2 = getY(d.target)
-      smartTransition(el, duration).attr('points', getPolylineData({ x1, y1, x2, y2 }))
-    })
+  selection.each((d, i, elements) => {
+    const element = elements[i]
+    const linkGroup = select(element)
+    const link = linkGroup.select(`.${linkSelectors.link}`)
+    const linkBand = linkGroup.select(`.${linkSelectors.linkBand}`)
+    const linkSupport = linkGroup.select(`.${linkSelectors.linkSupport}`)
+    const flowGroup = linkGroup.select(`.${linkSelectors.flowGroup}`)
 
-  const linkBand = selection.select(`.${linkSelectors.linkBand}`)
-  linkBand
-    .attr('class', linkSelectors.linkBand)
-    .attr('transform', d => getLinkShiftTransform(d, config.linkNeighborSpacing))
-    .style('stroke-width', d => getLinkBandWidth(d, scale, config))
-    .style('stroke', d => getLinkColor(d, config))
+    const x1 = getX(d.source)
+    const y1 = getY(d.source)
+    const x2 = getX(d.target)
+    const y2 = getY(d.target)
 
-  smartTransition(linkBand, duration)
-    .attr('x1', d => getX(d.source))
-    .attr('y1', d => getY(d.source))
-    .attr('x2', d => getX(d.target))
-    .attr('y2', d => getY(d.target))
+    link
+      .attr('class', linkSelectors.link)
+      .attr('marker-mid', getMarker(d, scale, config))
+      .style('stroke-width', getLinkStrokeWidth(d, scale, config))
+      .style('stroke', getLinkColor(d, config))
+      .attr('transform', getLinkShiftTransform(d, config.linkNeighborSpacing))
 
-  const linkSupport = selection.select(`.${linkSelectors.linkSupport}`)
-    .style('stroke', d => getLinkColor(d, config))
+    smartTransition(link, duration)
+      .attr('points', getPolylineData({ x1, y1, x2, y2 }))
 
-  smartTransition(linkSupport, duration)
-    .attr('transform', d => getLinkShiftTransform(d, config.linkNeighborSpacing))
-    .attr('x1', d => getX(d.source))
-    .attr('y1', d => getY(d.source))
-    .attr('x2', d => getX(d.target))
-    .attr('y2', d => getY(d.target))
+    linkBand
+      .attr('class', linkSelectors.linkBand)
+      .attr('transform', getLinkShiftTransform(d, config.linkNeighborSpacing))
+      .style('stroke-width', getLinkBandWidth(d, scale, config))
+      .style('stroke', getLinkColor(d, config))
 
-  const flowGroup = selection.select(`.${linkSelectors.flowGroup}`)
-  flowGroup
-    .attr('transform', d => getLinkShiftTransform(d, config.linkNeighborSpacing))
-    .style('display', d => getBoolean(d, linkFlow) ? null : 'none')
-    .style('opacity', 0)
-    .each((d, i, els) => {
-      select(els[i]).selectAll(`.${linkSelectors.flowCircle}`)
-        .attr('r', flowCircleSize / scale)
-        .style('fill', getLinkColor(d, config))
-    })
+    smartTransition(linkBand, duration)
+      .attr('x1', x1)
+      .attr('y1', y1)
+      .attr('x2', x2)
+      .attr('y2', y2)
 
-  smartTransition(flowGroup, duration).style('opacity', scale < ZoomLevel.Level2 ? 0 : 1)
+    linkSupport
+      .style('stroke', getLinkColor(d, config))
+      .attr('transform', getLinkShiftTransform(d, config.linkNeighborSpacing))
+      .attr('x1', x1)
+      .attr('y1', y1)
+      .attr('x2', x2)
+      .attr('y2', y2)
 
-  // Labels
-  selection.each((l, i, elements) => {
-    const linkGroup = select(elements[i])
+    flowGroup
+      .attr('transform', getLinkShiftTransform(d, config.linkNeighborSpacing))
+      .style('display', getBoolean(d, linkFlow, d._indexGlobal) ? null : 'none')
+      .style('opacity', 0)
+
+    flowGroup
+      .selectAll(`.${linkSelectors.flowCircle}`)
+      .attr('r', linkFlowParticleSize / scale)
+      .style('fill', getLinkColor(d, config))
+
+    smartTransition(flowGroup, duration)
+      .style('opacity', scale < ZoomLevel.Level2 ? 0 : 1)
+
+    // Labels
     const labelGroups = linkGroup.selectAll(`.${linkSelectors.labelGroups}`)
-    const sideLabelDatum = getValue<GraphLink<N, L>, GraphCircleLabel>(l, linkLabel)
-    const markerWidth = getValue<GraphLink<N, L>, GraphLinkArrow>(l, linkArrow) ? LINK_MARKER_WIDTH * 2 : 0
-    const labelShift = getBoolean(l, linkLabelShiftFromCenter) ? -markerWidth + 4 : 0
-    const labelTranslate = getLinkLabelShift(l, config.linkNeighborSpacing, labelShift)
+    const labelDatum = getValue<GraphLink<N, L>, GraphCircleLabel>(d, linkLabel, d._indexGlobal)
+    const markerWidth = getValue<GraphLink<N, L>, GraphLinkArrowStyle>(d, linkArrow, d._indexGlobal) ? LINK_MARKER_WIDTH * 2 : 0
+    const labelShift = getBoolean(d, linkLabelShiftFromCenter, d._indexGlobal) ? -markerWidth + 4 : 0
+    const labelTranslate = getLinkLabelShift(d, config.linkNeighborSpacing, labelShift)
 
-    const sideLabels = labelGroups.selectAll(`.${linkSelectors.labelGroup}`).data(sideLabelDatum ? [sideLabelDatum] : [])
+    const labels = labelGroups.selectAll(`.${linkSelectors.labelGroup}`).data(labelDatum ? [labelDatum] : [])
+
     // Enter
-    const sideLabelsEnter = sideLabels.enter().append('g')
+    const labelsEnter = labels.enter().append('g')
       .attr('class', linkSelectors.labelGroup)
       .attr('transform', labelTranslate)
       .style('opacity', 0)
 
-    sideLabelsEnter.append('circle')
+    labelsEnter.append('circle')
       .attr('class', linkSelectors.labelCircle)
       .attr('r', 0)
 
-    sideLabelsEnter.append('text')
+    labelsEnter.append('text')
       .attr('class', linkSelectors.labelContent)
       .attr('dy', 1)
 
     // Update
-    const sideLabelsUpdate = sideLabels.merge(sideLabelsEnter)
+    const labelsUpdate = labels.merge(labelsEnter)
 
-    smartTransition(sideLabelsUpdate.select(`.${linkSelectors.labelCircle}`), duration)
+    smartTransition(labelsUpdate.select(`.${linkSelectors.labelCircle}`), duration)
       .attr('r', LINK_LABEL_RADIUS)
-      .style('fill', d => d.color)
+      .style('fill', label => label.color)
 
-    sideLabelsUpdate.select(`.${linkSelectors.labelContent}`)
-      .text(d => d.text)
-      .style('fill', d => getSideTexLabelColor(d))
-      .style('font-size', d => `${10 / Math.pow(d.text.toString().length, 0.3)}px`)
+    labelsUpdate.select(`.${linkSelectors.labelContent}`)
+      .text(label => label.text)
+      .style('fill', label => getLinkLabelTextColor(label))
+      .style('font-size', label => `${10 / Math.pow(label.text.toString().length, 0.3)}px`)
 
-    smartTransition(sideLabelsUpdate, duration)
+    smartTransition(labelsUpdate, duration)
       .attr('transform', labelTranslate)
       .style('opacity', 1)
 
     // Exit
-    const sideLabelsExit = sideLabels.exit()
-    smartTransition(sideLabelsExit.select(`.${linkSelectors.labelCircle}`), duration)
+    const labelsExit = labels.exit()
+    smartTransition(labelsExit.select(`.${linkSelectors.labelCircle}`), duration)
       .attr('r', 0)
 
-    smartTransition(sideLabelsExit, duration)
+    smartTransition(labelsExit, duration)
       .style('opacity', 0)
       .remove()
   })
@@ -223,33 +237,35 @@ export function removeLinks<N extends GraphInputNode, L extends GraphInputLink> 
 }
 
 export function animateLinkFlow<N extends GraphInputNode, L extends GraphInputLink> (
-  selection: Selection<SVGGElement, GraphLink<N, L>, SVGGElement, GraphLink<N, L>>,
+  selection: Selection<SVGGElement, GraphLink<N, L>, SVGGElement, unknown>,
   config: GraphConfig<N, L>,
   scale: number
 ): void {
   const { linkFlow } = config
   if (scale < ZoomLevel.Level2) return
 
-  selection.selectAll(`.${linkSelectors.flowGroup}`)
-    .each((link: GraphLink, i, elements) => {
-      if (!getBoolean(link, linkFlow)) return
-      const t = link._state.flowAnimTime
-      const el = select(elements[i])
-      const circles = el.selectAll(`.${linkSelectors.flowCircle}`)
+  selection.each((d, i, elements) => {
+    const element = elements[i]
+    const linkGroup = select(element)
+    const flowGroup = linkGroup.select(`.${linkSelectors.flowGroup}`)
 
-      circles
-        .attr('transform', index => {
-          const tt = (t + (+index) / (circles.size() - 1)) % 1
-          const x1 = getX(link.source)
-          const y1 = getY(link.source)
-          const x2 = getX(link.target)
-          const y2 = getY(link.target)
+    if (!getBoolean(d, linkFlow, d._indexGlobal)) return
+    const t = d._state.flowAnimTime
+    const circles = flowGroup.selectAll(`.${linkSelectors.flowCircle}`)
 
-          const x = x1 + tt * (x2 - x1)
-          const y = y1 + tt * (y2 - y1)
-          return `translate(${x}, ${y})`
-        })
-    })
+    circles
+      .attr('transform', index => {
+        const tt = (t + (+index) / (circles.size() - 1)) % 1
+        const x1 = getX(d.source)
+        const y1 = getY(d.source)
+        const x2 = getX(d.target)
+        const y2 = getY(d.target)
+
+        const x = x1 + tt * (x2 - x1)
+        const y = y1 + tt * (y2 - y1)
+        return `translate(${x}, ${y})`
+      })
+  })
 }
 
 export function zoomLinks<N extends GraphInputNode, L extends GraphInputLink> (
@@ -257,18 +273,18 @@ export function zoomLinks<N extends GraphInputNode, L extends GraphInputLink> (
   config: GraphConfig<N, L>,
   scale: number
 ): void {
-  const { flowCircleSize } = config
+  const { linkFlowParticleSize } = config
 
   selection.classed(generalSelectors.zoomOutLevel2, scale < ZoomLevel.Level2)
   selection.selectAll(`.${linkSelectors.flowCircle}`)
-    .attr('r', flowCircleSize / scale)
+    .attr('r', linkFlowParticleSize / scale)
 
-  const linkElements: Selection<SVGGElement, GraphLink<N, L>, SVGGElement, GraphLink<N, L>> = selection.selectAll(`.${linkSelectors.link}`)
+  const linkElements = selection.selectAll<SVGGElement, GraphLink<N, L>>(`.${linkSelectors.link}`)
   linkElements
     .attr('marker-mid', d => getMarker(d, scale, config))
     .style('stroke-width', d => getLinkStrokeWidth(d, scale, config))
 
-  const linkBandElements: Selection<SVGGElement, GraphLink<N, L>, SVGGElement, GraphLink<N, L>> = selection.selectAll(`.${linkSelectors.linkBand}`)
+  const linkBandElements = selection.selectAll<SVGGElement, GraphLink<N, L>>(`.${linkSelectors.linkBand}`)
   linkBandElements
     .style('stroke-width', d => getLinkBandWidth(d, scale, config))
 }

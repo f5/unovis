@@ -47,6 +47,7 @@ export class GraphDataModel<
 
     // Fill link source and target
     links.forEach((link, i) => {
+      link._indexGlobal = i
       link.source = this.findNode(nodes, link.source)
       link.target = this.findNode(nodes, link.target)
     })

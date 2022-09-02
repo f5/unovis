@@ -1,5 +1,4 @@
 // Types
-import { Shape } from 'types/shape'
 import { Position } from 'types/position'
 import { GraphInputLink, GraphInputNode, GraphNodeCore, GraphLinkCore } from 'types/graph'
 
@@ -59,6 +58,7 @@ export type GraphCircleLabel = {
   color?: string | null;
   cursor?: string | null;
   fontSize?: string;
+  radius?: number;
 }
 
 export enum GraphLinkStyle {
@@ -66,61 +66,81 @@ export enum GraphLinkStyle {
   Solid = 'solid',
 }
 
-export enum GraphLinkArrow {
+export enum GraphLinkArrowStyle {
   Single = 'single',
   Double = 'double',
 }
 
-export interface GraphPanelConfigInterface<
-  N extends GraphInputNode = GraphInputNode,
-  L extends GraphInputLink = GraphInputLink,
-> {
+export enum GraphNodeShape {
+  Circle = 'circle',
+  Square = 'square',
+  Hexagon = 'hexagon',
+  Triangle = 'triangle',
+}
+
+export type GraphPanelConfig = {
   /** Panel nodes references by unique ids */
   nodes: (string|number)[];
   /** Panel label */
   label?: string;
   /** Position of the label */
   labelPosition?: Position.Top | Position.Bottom;
-  /** Color of the panel */
-  color?: string;
+  /** Color of the panel's border */
+  borderColor?: string;
   /** Border width of the panel in pixels */
   borderWidth?: number;
   /** Inner padding */
   padding?: number;
   /** Dashed outline showing that the panel is selected */
-  selectionOutline?: boolean;
-  /** Icon of the side label */
-  sideLabelIcon?: string;
-  /** Size of the label icon as a CSS string. e.g.: `12pt` or `12px` */
-  sideLabelIconFontSize?: string;
-  /** Shape of the side label */
-  sideLabelShape?: Shape;
-  /** Color of the side label */
-  sideLabelColor?: string;
-  /** Cursor of when hovering over the side label */
-  sideLabelCursor?: string;
-  /** Custom size for the node panel side label in pixels */
-  sideLabelSize?: number;
-  /** Private property */
+  dashedOutline?: boolean;
+  /** Side icon symbol */
+  sideIconSymbol?: string;
+  /** Size of the icon as a CSS string. e.g.: `12pt` or `12px` */
+  sideIconFontSize?: string;
+  /** Color of the icon */
+  sideIconSymbolColor?: string;
+  /** Shape of the icon's background */
+  sideIconShape?: GraphNodeShape;
+  /** Size of the icon's background shape */
+  sideIconShapeSize?: number;
+  /** Stroke color of the icon's background shape */
+  sideIconShapeStroke?: string;
+  /** Cursor, when hovering over the icon */
+  sideIconCursor?: string;
+}
+
+export type GraphPanel<
+  N extends GraphInputNode = GraphInputNode,
+  L extends GraphInputLink = GraphInputLink,
+> = GraphPanelConfig & {
   _numNodes?: number;
-  /** Private property */
   _x?: number;
-  /** Private property */
   _y?: number;
-  /** Private property */
   _width?: number;
-  /** Private property */
   _height?: number;
-  /** Private property */
-  _data?: GraphNode<N, L>[];
+  _disabled?: boolean;
 }
 
 export type GraphNodeAnimationState = {
   endAngle: number;
+  nodeIndex: number;
   nodeSize?: number;
   borderWidth?: number;
 }
 
 export type GraphNodeAnimatedElement<T = SVGElement> = T & {
   _animState: GraphNodeAnimationState;
+}
+
+export type GraphForceLayoutSettings = {
+  /** Preferred Link Distance. Default: `60` */
+  linkDistance?: number;
+  /** Link Strength [0:1]. Default: `0.45` */
+  linkStrength?: number;
+  /** Charge Force (<0 repulsion, >0 attraction). Default: `-500` */
+  charge?: number;
+  /** X-centring force. Default: `0.15` */
+  forceXStrength?: number;
+  /** Y-centring force. Default: `0.25` */
+  forceYStrength?: number;
 }

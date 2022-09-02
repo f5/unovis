@@ -2,7 +2,7 @@ import _random from 'lodash/random'
 import _sample from 'lodash/sample'
 import _times from 'lodash/times'
 import _uniqueId from 'lodash/uniqueId'
-import { GraphLinkStyle, GraphLinkArrow, GraphInputNode, GraphInputLink, GraphCircleLabel } from '@volterra/vis'
+import { GraphLinkStyle, GraphLinkArrowStyle, GraphInputNode, GraphInputLink, GraphCircleLabel } from '@volterra/vis'
 
 interface NodeDatum extends GraphInputNode {
   shape: string;
@@ -25,7 +25,7 @@ interface NodeDatum extends GraphInputNode {
 interface LinkDatum extends GraphInputLink {
   alerts: string[];
   status: string;
-  linkArrow: GraphLinkArrow;
+  linkArrow: GraphLinkArrowStyle;
   label: string;
   linkWidth: number;
   bandWidth: number;
@@ -58,7 +58,7 @@ export function randomLink (node1: NodeDatum, node2: NodeDatum): LinkDatum {
     alerts: ['This is a link'],
     target: node2.id,
     status: _sample(status),
-    linkArrow: _sample([GraphLinkArrow.Single, GraphLinkArrow.Double]),
+    linkArrow: _sample([GraphLinkArrowStyle.Single, GraphLinkArrowStyle.Double]),
     label: `link ${node1.id} ${node2.id}`,
     linkWidth: _sample([null, 1, 2]),
     bandWidth: _sample([null, 5, 7, 10, 12, 15]),

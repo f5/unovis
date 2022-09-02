@@ -33,15 +33,15 @@ function formatElement (prefix: string, attributes: string[] = [], suffix: strin
 }
 
 function parseFunction (str: string, type: string): string {
-  const types = type.split(',')
+  const types = type.split(', ')
   const params = {
     i: 'number',
     d: types[0],
-    ...Object.fromEntries(types.map((d, i) => [`d${i + 1}`, d])),
+    ...Object.fromEntries(types.map(t => [t.toLowerCase().charAt(0), t])),
   }
   const fn = str.split('=>')
-  const args = fn[0].match(/([di]\d*)/gm)?.map(a => [a.charAt(0), params[a]].join(': ')).join(', ')
-  const body = fn[1].replace(/[+>:?/]/gm, m => m && ` ${m} `).replace(/d\d+/gm, 'd')
+  const args = fn[0].match(/[a-z]/gm)?.map(p => params[p] ? [p, params[p]].join(': ') : '_').join(', ') || ''
+  const body = fn[1].replace(/[+*/<>:?/]/gm, m => m && ` ${m} `).replace(/d\d+/gm, 'd')
   return `(${args}) => ${body}`
 }
 

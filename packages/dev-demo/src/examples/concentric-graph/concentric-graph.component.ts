@@ -20,8 +20,8 @@ export class ConcentricGraphComponent implements AfterViewInit {
     nodeShape: Shape.Square,
     nodeIcon: d => d.label,
     nodeLabel: d => d.label,
-    nodeGroup: d => d.group,
-    nodeBorderWidth: 1,
+    layoutNodeGroup: d => d.group,
+    nodeStrokeWidth: 1,
     linkWidth: 1,
   })
 

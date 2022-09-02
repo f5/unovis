@@ -1,24 +1,36 @@
-import { select } from 'd3-selection'
+import { Selection, select } from 'd3-selection'
 
 // Types
 import { NumericAccessor, StringAccessor } from 'types/accessor'
-import { Shape } from 'types/shape'
 
 // Utils
 import { polygon } from 'utils/path'
 import { getString } from 'utils/data'
 
+// Types
+import { GraphInputLink, GraphInputNode } from 'types/graph'
+
+// Local Types
+import { GraphNode, GraphPanel, GraphNodeShape } from '../types'
+
 // Helpers
 import { getNodeSize } from './node/helper'
 
-export function isCustomXml (shape: Shape): boolean {
+export function isCustomXml (shape: GraphNodeShape): boolean {
   return /<[a-z][\s\S]*>/i.test(shape)
 }
 
-export function appendShape<T> (selection, shapeAccessor: StringAccessor<T>, shapeSelector: string, customShapeSelector: string, insertSelector = ':last-child'): void {
+export function appendShape<N extends GraphInputNode, L extends GraphInputLink> (
+  selection: Selection<SVGGElement, GraphNode<N, L> | GraphPanel, SVGGElement, unknown>,
+  shapeAccessor: StringAccessor<GraphNode<N, L> | GraphPanel>,
+  shapeSelector: string,
+  customShapeSelector: string,
+  index?: number,
+  insertSelector = ':last-child'
+): void {
   selection.each((d, i, elements) => {
     const element = select(elements[i])
-    const shape = getString(d, shapeAccessor) as Shape
+    const shape = getString(d, shapeAccessor, index) as GraphNodeShape
 
     let shapeElement
     const isCustomXmlShape = isCustomXml(shape)
@@ -27,16 +39,16 @@ export function appendShape<T> (selection, shapeAccessor: StringAccessor<T>, sha
         .html(shape)
     } else {
       switch (shape) {
-        case Shape.Square:
+        case GraphNodeShape.Square:
           shapeElement = element.insert('rect', insertSelector)
             .attr('rx', 5)
             .attr('ry', 5)
           break
-        case Shape.Hexagon:
-        case Shape.Triangle:
+        case GraphNodeShape.Hexagon:
+        case GraphNodeShape.Triangle:
           shapeElement = element.insert('path', insertSelector)
           break
-        case Shape.Circle:
+        case GraphNodeShape.Circle:
         default:
           shapeElement = element.insert('circle', insertSelector)
       }
@@ -47,31 +59,36 @@ export function appendShape<T> (selection, shapeAccessor: StringAccessor<T>, sha
   })
 }
 
-export function updateShape<T> (selection, shape: StringAccessor<T>, size: NumericAccessor<T>): void {
+export function updateShape<N extends GraphInputNode, L extends GraphInputLink> (
+  selection: Selection<SVGGElement, GraphNode<N, L> | GraphPanel, SVGGElement, unknown>,
+  shape: StringAccessor<GraphNode<N, L> | GraphPanel>,
+  size: NumericAccessor<GraphNode<N, L> | GraphPanel>,
+  index: number
+): void {
   if (selection.size() === 0) return
 
-  const d: T = selection.datum()
-  const nodeSize = getNodeSize(d, size)
+  const d: GraphNode<N, L> | GraphPanel = selection.datum()
+  const nodeSize = getNodeSize(d, size, index)
   selection.filter('circle')
-    .attr('r', (d: T) => nodeSize / 2)
+    .attr('r', nodeSize / 2)
 
   selection.filter('rect')
-    .attr('width', (d: T) => nodeSize)
-    .attr('height', (d: T) => nodeSize)
-    .attr('x', (d: T) => -nodeSize / 2)
-    .attr('y', (d: T) => -nodeSize / 2)
+    .attr('width', nodeSize)
+    .attr('height', nodeSize)
+    .attr('x', -nodeSize / 2)
+    .attr('y', -nodeSize / 2)
 
   selection.filter('path')
-    .attr('d', (d: T) => {
-      let n
-      switch (getString(d, shape)) {
-        case Shape.Square:
+    .attr('d', () => {
+      let n: number
+      switch (getString(d, shape, index)) {
+        case GraphNodeShape.Square:
           n = 4
           break
-        case Shape.Triangle:
+        case GraphNodeShape.Triangle:
           n = 3
           break
-        case Shape.Hexagon:
+        case GraphNodeShape.Hexagon:
         default:
           n = 6
       }
@@ -80,8 +97,8 @@ export function updateShape<T> (selection, shape: StringAccessor<T>, size: Numer
     })
 
   selection.filter('g')
-    .filter((d: T) => !isCustomXml(getString(d, shape) as Shape))
-    .html((d: T) => getString(d, shape))
+    .filter(() => !isCustomXml(getString(d, shape, index) as GraphNodeShape))
+    .html(getString(d, shape, index))
 
   selection.filter('g')
     .each((d, i, elements) => {

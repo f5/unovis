@@ -64,9 +64,11 @@ export function generateScatterDataRecords (n = 10, colored = false): ScatterDat
 type NodeDatum = {
   id: string;
   label?: string;
+  value?: number;
 }
 
 type LinkDatum = {
+  id?: string;
   source: NodeDatum | string;
   target: NodeDatum | string;
   value?: number;
@@ -76,18 +78,22 @@ export interface NodeLinkData {
   links: LinkDatum[];
 }
 
-export function generateNodeLinkData (n = 10): NodeLinkData {
-  const nodes = Array(n).fill(0).map((_, i) => ({ id: (i + 1).toString() }))
+export function generateNodeLinkData (n = 10, numNeighbourLinks = () => 1): NodeLinkData {
+  const nodes = Array(n).fill(0).map((_, i) => ({ id: (i + 1).toString(), value: 100 * Math.random() }))
   const options = [...nodes].slice(1)
   const links = nodes.reduce((arr, n) => {
     if (options.length) {
       const num = Math.max(1, Math.random() * options.length)
       for (let i = 0; i < num; i++) {
-        arr.push({
-          source: n.id,
-          target: options.shift().id,
-          value: Math.random(),
-        })
+        const targetId = options.shift().id
+        for (let k = 0; k < numNeighbourLinks(); k++) {
+          arr.push({
+            id: `${i}-${k}`,
+            source: n.id,
+            target: targetId,
+            value: Math.random(),
+          })
+        }
       }
     }
     return arr

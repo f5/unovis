@@ -1,6 +1,8 @@
 import { injectGlobal } from '@emotion/css'
 import { colors, getCSSColorVariable } from './colors'
 
+export const DEFAULT_ICON_FONT_FAMILY = globalThis?.UNOVIS_ICON_FONT_FAMILY || 'FontAwesome'
+
 export const variables = injectGlobal`
   :root {
     label: vis-root-styles;
@@ -10,3 +12,4 @@ export const variables = injectGlobal`
     ${colors.map((c, i) => `${getCSSColorVariable(i)}: ${c};`)}
   }
 `
+

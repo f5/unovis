@@ -1,10 +1,17 @@
-import { css } from '@emotion/css'
+import { css, injectGlobal } from '@emotion/css'
+import { DEFAULT_ICON_FONT_FAMILY } from 'styles/css-variables'
 
 // Nodes
 import * as nodeSelectors from './modules/node/style'
 
 // Links
 import * as linkSelectors from './modules/link/style'
+
+export const variables = injectGlobal`
+  :root {
+    --vis-graph-icon-font-family: ${DEFAULT_ICON_FONT_FAMILY};
+  }
+`
 
 // General
 export const root = css`
@@ -36,7 +43,7 @@ export const zoomOutLevel2 = css`
     visibility: visible;
   }
 
-  ${`.${nodeSelectors.nodeArc}`} {
+  ${`.${nodeSelectors.nodeGauge}`} {
     visibility: visible;
   }
 
