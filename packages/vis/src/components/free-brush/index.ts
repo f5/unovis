@@ -16,10 +16,10 @@ import * as s from './style'
 
 export class FreeBrush<Datum> extends XYComponentCore<Datum> {
   static selectors = s
-  config: FreeBrushConfig<Datum> = new FreeBrushConfig();
+  config: FreeBrushConfig<Datum> = new FreeBrushConfig()
   private brush: Selection<SVGGElement, unknown, SVGGElement, unknown>
-  private brushBehaviour: BrushBehavior<unknown>;
-  private _firstRender = true;
+  private brushBehaviour: BrushBehavior<unknown>
+  private _firstRender = true
 
   constructor (config: FreeBrushConfigInterface<Datum>) {
     super()
@@ -37,6 +37,21 @@ export class FreeBrush<Datum> extends XYComponentCore<Datum> {
     const duration = isNumber(customDuration) ? customDuration : config.duration
 
     if (this._firstRender) this.brush.classed(s.hide, this._firstRender && config.autoHide)
+
+    // Sometimes Brush stops emitting 'start' and 'end' events. Possible explanation:
+    // "... mouseup will only fire when performed within the browser, which can lead to losing track of the button state."
+    // https://stackoverflow.com/a/48970682
+    //
+    // D3 code related to the problem:
+    // https://github.com/d3/d3-brush/blob/ec2bce6f15074a9ead7f9a84c61335be51c123a3/src/brush.js#L301
+    //
+    // We're clearing brush's event emitter state to force it to get re-initialized
+    // Caveat of this solution: If you're doing a brush selection and a render happens
+    // (e.g. due to a data or config update), it'll reset the brush.
+    //
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    this.brush.node().__brush?.emitter = undefined
 
     this.brushBehaviour = this._getBrushBehaviour(config.mode)
 
@@ -172,14 +187,14 @@ export class FreeBrush<Datum> extends XYComponentCore<Datum> {
     const userDriven = !!event?.sourceEvent
     this._onBrush(event)
     if (config.autoHide && userDriven) this.brush.classed(s.hide, false)
-    if (!this._firstRender) config.onBrushStart(config.selection, event, userDriven)
+    if (!this._firstRender) config.onBrushStart?.(config.selection, event, userDriven)
   }
 
   private _onBrushMove (event: D3BrushEvent<Datum>): void {
     const { config } = this
 
     this._onBrush(event)
-    if (!this._firstRender) config.onBrushMove(config.selection, event, !!event?.sourceEvent)
+    if (!this._firstRender) config.onBrushMove?.(config.selection, event, !!event?.sourceEvent)
   }
 
   private _onBrushEnd (event: D3BrushEvent<Datum>): void {
@@ -187,6 +202,6 @@ export class FreeBrush<Datum> extends XYComponentCore<Datum> {
 
     this._onBrush(event)
     if (config.autoHide) this.brush.classed(s.hide, true)
-    if (!this._firstRender) config.onBrushEnd(config.selection, event, !!event?.sourceEvent)
+    if (!this._firstRender) config.onBrushEnd?.(config.selection, event, !!event?.sourceEvent)
   }
 }
