@@ -35,6 +35,7 @@ export const GraphDoc = (props) => props.inputType
   : <DocWrapper {...defaultProps() } {...props}/>
 
 export const nodeIcons = ['☁︎', '☂︎', '☀︎', '✤', '❃', '✻', '☎︎']
+export const getNodeIconByIndex = (i) => nodeIcons[i % nodeIcons.length]
 export const getNodeSideLabels = (d, i) => i === 5
   ? [{ text: '🏈', color: '#eee'}, { text: '⚾️', color: '#FF351D' }]
   : [{ text: i*2/*nodeIcons[Math.floor(nodeIcons.length * Math.random())]*/, color: '#eee', radius: 8 }]
@@ -93,13 +94,22 @@ The following node shapes are supported: `Shape.Circle` (`"circle"`),
 `nodeSize` sets the diameter of the node in pixels at zoom level `1`. Keep in mind that _Graph_ will automatically choose
 zoom level at initialization to fit to the size of the container.
 
-<GraphDoc nodeShape={() => _sample(['square', 'circle', 'hexagon', 'triangle'])} nodeSize={50}/>
+<GraphDoc
+  showContext="minimal"
+  nodeShape={(n, i) => (['square', 'circle', 'hexagon', 'triangle'])[i % 4]}
+  nodeSize={50}
+/>
 
 ### Fill and Stroke
 Use the `nodeFill` and `nodeStroke` properties to set node's fill and stroke color. A custom stroke width can be
 provided to `nodeStrokeWidth`.
 
-<GraphDoc nodeFill={getRandomColor} nodeStroke={getRandomColor} nodeStrokeWidth={(d, i) => 1 + i * 3}/>
+<GraphDoc
+  showContext="minimal"
+  nodeFill={(n, i) => getColorByIndex(i)}
+  nodeStroke={(n, i) => getColorByIndex(i + 1)}
+  nodeStrokeWidth={(d, i) => 1 + i * 3}
+/>
 
 ### Icons and Labels
 #### In the center
@@ -113,7 +123,12 @@ CSS variables.
 
 The icon font can be set via the `--vis-graph-icon-font-family` CSS variable.
 
-<GraphDoc nodeIcon={(n, i) => nodeIcons[i % nodeIcons.length]} nodeIconSize={(n, i) => 10 + i} nodeFill={(n, i) => getColorByIndex(i) }/>
+<GraphDoc
+  showContext="minimal"
+  nodeIcon={(n, i) => getNodeIconByIndex(i)}
+  nodeIconSize={(n, i) => 10 + i}
+  nodeFill={(n, i) => getColorByIndex(i) }
+/>
 
 #### At the bottom
 Node label and sub-label can be set by providing the `nodeLabel` and `nodeSubLabel` accessor functions.
@@ -142,7 +157,7 @@ The third option to add labels to the nodes is `nodeSideLabels`. Side labels are
 corner of the node. One node can have multiple side labels at once. You can configure them by providing an accessor
 function to `nodeSideLabels` that returns an array of `GraphCircleLabel` objects:
 
-```
+```ts
 type GraphCircleLabel = {
   text: string;
   color?: string | null; // Optional color
@@ -178,8 +193,6 @@ You can set the color of the gauge with `nodeGaugeFill`. The default gauge color
 `--vis-graph-node-stroke-segment-color` CSS variable.
 
 <GraphDoc showContext="minimal" nodeGaugeFill={(n, i) => gradient(i * 10)} nodeGaugeValue={(n, i) => i * 10} nodeLabel={(n, i) => `${i * 10}%`}/>
-
-<GraphDoc inputType='range' property='nodeGaugeValue' nodeGaugeFill={(d, i) => gradient(i * 10)} defaultValue={10}/>
 
 ### Disabled State
 Nodes can have a disabled (grayed out) state configured by the `nodeDisabled` property.
@@ -275,15 +288,19 @@ type GraphForceLayoutSettings = {
 ```
 
 ### Parallel
-If your nodes can be separated into multiple groups and you want them to be organized by columns or rows, set
+If your nodes can be separated into multiple groups, and you want them to be organized by columns or rows, set
 `layoutType` to `GraphLayoutType.Parallel` (`"parallel"`) or `GraphLayoutType.ParallelHorizontal` (`"parallel horizontal"`)
-and provide the `layoutNodeGroup` accessor function.
+respectively.
+
+You can define the node's group (i.e. column or row) by providing a `layoutNodeGroup` accessor function.
 
 <GraphDoc
+  showContext="minimal"
   layoutType="parallel"
   data={generateNodeLinkData(15)}
   layoutNodeGroup={(d, i) => (i+1) % 4}
 />
+
 
 You can control the group spacing with the `layoutParallelGroupSpacing` property. By default, group spacing will be calculated
 automatically based on the size of the container.
@@ -311,6 +328,10 @@ make them wrap and form more columns and rows by providing a `layoutParallelSubG
   layoutParallelNodesPerColumn={2}
   layoutParallelSubGroupsPerRow={2}
 />
+
+
+Here's a diagram showing the anatomy of the parallel layouts and their configuration properties:
+![Parallel Layout](./assets/graph-layout-parallel.svg)
 
 ### Circular and Concentric
 There are two circular layout types available: `GraphLayoutType.Circular` (`"circular"`) and `GraphLayoutType.Concentric`
@@ -510,4 +531,31 @@ panned or zoomed.
 onZoom: (zoomScale: number, zoomScaleExtent: number) => void;
 ```
 
+## Events
+The following selectors are available for events:
+```ts
+import { Graph } from '@volterra/vis'
+
+const events = {
+    [Graph.selectors.root]: { ... },
+    [Graph.selectors.background]: { ... },
+    [Graph.selectors.node]: { ... },
+    [Graph.selectors.nodeShape]: { ... },
+    [Graph.selectors.nodeGauge]: { ... },
+    [Graph.selectors.nodeSideLabel]: { ... },
+    [Graph.selectors.nodeLabel]: { ... },
+    [Graph.selectors.link]: { ... },
+    [Graph.selectors.linkLine]: { ... },
+    [Graph.selectors.panel]: { ... },
+    [Graph.selectors.panelRect]: { ... },
+    [Graph.selectors.panelSelection]: { ... },
+    [Graph.selectors.panelLabel]: { ... },
+    [Graph.selectors.panelLabelText]: { ... },
+    [Graph.selectors.panelSideIcon]: { ... },
+    [Graph.selectors.panelSideIconShape]: { ... },
+    [Graph.selectors.panelSideIconSymbol]: { ... },
+}
+```
+
+## Component Props
 <PropTable name="VisGraph"/>
