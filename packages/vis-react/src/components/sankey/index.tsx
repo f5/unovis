@@ -1,5 +1,5 @@
 // !!! This code was automatically generated. You should not change it !!!
-import React, { useEffect, useRef, useState } from 'react'
+import React, { ForwardedRef, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
 import { Sankey, SankeyConfigInterface, SankeyInputNode, SankeyInputLink } from '@volterra/vis'
 
 // Utils
@@ -8,10 +8,17 @@ import { arePropsEqual } from 'src/utils/react'
 // Types
 import { VisComponentElement } from 'src/types/dom'
 
-export type VisSankeyProps<N extends SankeyInputNode, L extends SankeyInputLink> = SankeyConfigInterface<N, L> & { data?: any }
+export type VisSankeyRef<N extends SankeyInputNode, L extends SankeyInputLink> = {
+  component: Sankey<N, L>;
+}
+
+export type VisSankeyProps<N extends SankeyInputNode, L extends SankeyInputLink> = SankeyConfigInterface<N, L> & {
+  data?: any;
+  ref?: Ref<VisSankeyRef<N, L>>;
+}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-function VisSankeyFC<N extends SankeyInputNode, L extends SankeyInputLink> (props: VisSankeyProps<N, L>): JSX.Element {
+function VisSankeyFC<N extends SankeyInputNode, L extends SankeyInputLink> (props: VisSankeyProps<N, L>, fRef: ForwardedRef<VisSankeyRef<N, L>>): JSX.Element {
   const ref = useRef<VisComponentElement<Sankey<N, L>>>(null)
   const [component] = useState<Sankey<N, L>>(new Sankey(props))
 
@@ -26,9 +33,10 @@ function VisSankeyFC<N extends SankeyInputNode, L extends SankeyInputLink> (prop
     component?.setConfig(props)
   })
 
+  useImperativeHandle(fRef, () => ({ component }))
   return <vis-component ref={ref} />
 }
 
 // We export a memoized component to avoid unnecessary re-renders
 //  and define its type explicitly to help react-docgen-typescript to extract information about props
-export const VisSankey: (<N extends SankeyInputNode, L extends SankeyInputLink>(props: VisSankeyProps<N, L>) => JSX.Element | null) = React.memo(VisSankeyFC, arePropsEqual)
+export const VisSankey: (<N extends SankeyInputNode, L extends SankeyInputLink>(props: VisSankeyProps<N, L>) => JSX.Element | null) = React.memo(React.forwardRef(VisSankeyFC), arePropsEqual)

@@ -1,5 +1,5 @@
 // !!! This code was automatically generated. You should not change it !!!
-import React, { useEffect, useRef, useState } from 'react'
+import React, { ForwardedRef, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
 import { Timeline, TimelineConfigInterface } from '@volterra/vis'
 
 // Utils
@@ -8,10 +8,17 @@ import { arePropsEqual } from 'src/utils/react'
 // Types
 import { VisComponentElement } from 'src/types/dom'
 
-export type VisTimelineProps<Datum> = TimelineConfigInterface<Datum> & { data?: Datum[] }
+export type VisTimelineRef<Datum> = {
+  component: Timeline<Datum>;
+}
+
+export type VisTimelineProps<Datum> = TimelineConfigInterface<Datum> & {
+  data?: Datum[];
+  ref?: Ref<VisTimelineRef<Datum>>;
+}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-function VisTimelineFC<Datum> (props: VisTimelineProps<Datum>): JSX.Element {
+function VisTimelineFC<Datum> (props: VisTimelineProps<Datum>, fRef: ForwardedRef<VisTimelineRef<Datum>>): JSX.Element {
   const ref = useRef<VisComponentElement<Timeline<Datum>>>(null)
   const [component] = useState<Timeline<Datum>>(new Timeline(props))
 
@@ -26,9 +33,10 @@ function VisTimelineFC<Datum> (props: VisTimelineProps<Datum>): JSX.Element {
     component?.setConfig(props)
   })
 
+  useImperativeHandle(fRef, () => ({ component }))
   return <vis-component ref={ref} />
 }
 
 // We export a memoized component to avoid unnecessary re-renders
 //  and define its type explicitly to help react-docgen-typescript to extract information about props
-export const VisTimeline: (<Datum>(props: VisTimelineProps<Datum>) => JSX.Element | null) = React.memo(VisTimelineFC, arePropsEqual)
+export const VisTimeline: (<Datum>(props: VisTimelineProps<Datum>) => JSX.Element | null) = React.memo(React.forwardRef(VisTimelineFC), arePropsEqual)
