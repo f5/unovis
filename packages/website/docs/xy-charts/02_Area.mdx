@@ -37,6 +37,13 @@ described in the base configuration:
 
 <XYWrapper {...defaultProps()} showContext="minimal" y={[(d) => d.y, (d) => d.y1, (d) => d.y2]} color={(d, i) => ['#6A9DFF', '#1acb9a', '#f88080'][i]}/>
 
+### Dealing with small values
+If your data has small or zero values leading to some parts of the area to become invisible, you can force those area segments to have 1px height
+despite their actual value by setting `minHeight1Px` to `true`. This can be useful if you want to visually emphasize that the data behind the chart
+is defined but just very small.
+
+<XYWrapperWithInput {...defaultProps()}  y={[(d) => d.y < 9 ? 0 : d.y]} property="minHeight1Px" inputType="checkbox" defaultValue={true} showAxes/>
+
 ### Additional Styling: CSS Variables
 The _Area_ component supports additional styling via CSS variables that you can define for your visualization container. For example:
 

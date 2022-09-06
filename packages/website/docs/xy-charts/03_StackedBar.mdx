@@ -44,11 +44,11 @@ Another way to control the bar's width is by changing the barPadding property, w
 
 ### Bar Height Limit
 When you have highly scattered data with very low and high values, the bars corresponding to the lower values can be so small, so they become invisible.
-If you want to prevent that you can set the minimum bar height to 1 pixel using the `barMinHeight` boolean property.
+If you want to prevent that you can set the minimum bar height to 1 pixel using the `barMinHeight1Px` boolean property.
 <XYWrapperWithInput name="StackedBar"
     {...defaultProps()}
     data={generateDataRecords(10).map((d, i)=> ({ x: d.x, y: i % 2 === 1 ? d.y * 20 : Math.random() }))}
-    property="barMinHeight"  inputType="checkbox" showAxes/>
+    property="barMinHeight1Px"  inputType="checkbox" showAxes/>
 
 ### Dealing With Inconsisent Data
 When your data has gaps, it's impossible to do calculate of the bar width automatically. The visualization will still try to do that, but most likely the result will be wrong,
