@@ -1,5 +1,5 @@
 // !!! This code was automatically generated. You should not change it !!!
-import React, { useEffect, useRef, useState } from 'react'
+import React, { ForwardedRef, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
 import { Tooltip, TooltipConfigInterface } from '@volterra/vis'
 
 // Utils
@@ -8,10 +8,17 @@ import { arePropsEqual } from 'src/utils/react'
 // Types
 import { VisComponentElement } from 'src/types/dom'
 
-export type VisTooltipProps = TooltipConfigInterface & { data?: null }
+export type VisTooltipRef = {
+  component: Tooltip;
+}
+
+export type VisTooltipProps = TooltipConfigInterface & {
+  data?: null;
+  ref?: Ref<VisTooltipRef>;
+}
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-function VisTooltipFC (props: VisTooltipProps): JSX.Element {
+function VisTooltipFC (props: VisTooltipProps, fRef: ForwardedRef<VisTooltipRef>): JSX.Element {
   const ref = useRef<VisComponentElement<Tooltip>>(null)
   const [component] = useState<Tooltip>(new Tooltip(props))
 
@@ -25,9 +32,10 @@ function VisTooltipFC (props: VisTooltipProps): JSX.Element {
     component?.setConfig(props)
   })
 
+  useImperativeHandle(fRef, () => ({ component }))
   return <vis-tooltip ref={ref} />
 }
 
 // We export a memoized component to avoid unnecessary re-renders
 //  and define its type explicitly to help react-docgen-typescript to extract information about props
-export const VisTooltip: ((props: VisTooltipProps) => JSX.Element | null) = React.memo(VisTooltipFC, arePropsEqual)
+export const VisTooltip: ((props: VisTooltipProps) => JSX.Element | null) = React.memo(React.forwardRef(VisTooltipFC), arePropsEqual)
