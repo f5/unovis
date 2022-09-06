@@ -11,7 +11,7 @@
     "publish-dist": "cp ./{.npmrc,package.json} ./dist; cp ../../LICENSE ./dist; cd ./dist; npm publish; rm -rf .cache"
   },
   "author": "Nikita Rokotyan",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "publishConfig": {
     "cache": ".cache/.npm",
     "@volterra:registry": "https://artifactory.f5net.com/artifactory/api/npm/f5-volterra-vis-npm/"

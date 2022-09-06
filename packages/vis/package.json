@@ -1,7 +1,7 @@
 {
   "name": "@volterra/vis",
   "version": "0.9.26",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "main": "./index.js",
   "module": "./index.js",
   "typings": "./index.d.ts",

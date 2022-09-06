@@ -2,6 +2,7 @@
   "name": "@volterra/vis-svelte",
   "version": "0.9.26",
   "description": "Svelte wrapper for @volterra/vis",
+  "license": "Apache-2.0",
   "main": "./index.js",
   "types": "./index.d.ts",
   "svelte": "./index.js",

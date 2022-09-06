@@ -1,7 +1,7 @@
 {
   "name": "@volterra/vis-angular",
   "version": "0.9.26",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "scripts": {
     "ng": "npx ng",
     "build": "npx ng build",
