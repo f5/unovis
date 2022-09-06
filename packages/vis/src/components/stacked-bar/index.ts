@@ -188,10 +188,10 @@ export class StackedBar<Datum> extends XYComponentCore<Datum> {
     const value = getNumber(d, yAccessors[accessorIndex])
 
     const height = isEntering ? 0 : Math.abs(this.valueScale(d._stacked[0]) - this.valueScale(d._stacked[1]))
-    const h = !isEntering && config.barMinHeight && (height < 1) && isFinite(value) && (value !== config.barMinHeightZeroValue) ? 1 : height
+    const h = !isEntering && config.barMinHeight1Px && (height < 1) && isFinite(value) && (value !== config.barMinHeightZeroValue) ? 1 : height
     const y = isEntering
       ? this.valueScale(0)
-      : this.valueScale(isNegative ? d._stacked[0] : d._stacked[1]) - (height < 1 && config.barMinHeight ? 1 : 0)
+      : this.valueScale(isNegative ? d._stacked[0] : d._stacked[1]) - (height < 1 && config.barMinHeight1Px ? 1 : 0)
 
     const x = -barWidth / 2
     const width = barWidth
