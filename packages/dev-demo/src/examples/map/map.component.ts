@@ -3,7 +3,7 @@
 import _ from 'lodash'
 import { Component, ViewChild, ViewEncapsulation } from '@angular/core'
 import { StyleSpecification } from 'maplibre-gl'
-import { LeafletMap, LeafletMapConfigInterface, LeafletMapPoint, Position, Tooltip, TooltipConfigInterface } from '@volterra/vis'
+import { LeafletMap, LeafletMapConfigInterface, LeafletMapPoint, Position, Tooltip, TooltipConfigInterface } from '@unovis/ts'
 import { MapLeafletComponent } from '../../app/components/map-leaflet/map-leaflet.component'
 
 // Configuration

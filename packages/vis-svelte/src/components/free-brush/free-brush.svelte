@@ -1,6 +1,6 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { FreeBrush, FreeBrushConfigInterface, NumericAccessor } from '@volterra/vis'
+  import { FreeBrush, FreeBrushConfigInterface, NumericAccessor } from '@unovis/ts'
   import { getContext, onMount } from 'svelte'
   import { getActions } from '../../utils/actions'
 

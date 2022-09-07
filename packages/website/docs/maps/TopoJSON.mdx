@@ -25,11 +25,11 @@ export const wiki = (url) => <a href={`https://en.wikipedia.org/wiki/${url}`}>{l
 export const TopoDoc = (props) => (
   <BrowserOnly>
   {() =>  {
-      const lib = require('@volterra/vis/maps')
+      const lib = require('@unovis/ts/maps')
       const imports = {
-        "@volterra/vis/maps": [props.topojson],
+        "@unovis/ts/maps": [props.topojson],
       }
-      if (props.showData) imports['@volterra/vis'] = ["MapData"]
+      if (props.showData) imports['@unovis/ts'] = ["MapData"]
       return (
         <DocWrapper { ...props } imports={imports} hiddenProps={{ topojson: lib[props.topojson] }}/>
       )
@@ -130,7 +130,7 @@ export const colorLegendItems = [
 
 <BrowserOnly>
 {() => {
-  const { TopoJSONMap } = require('@volterra/vis')
+  const { TopoJSONMap } = require('@unovis/ts')
   return (
     <TopoDoc
       {...defaultProps()}
@@ -211,11 +211,11 @@ You can provide a projection for your _TopoJSONMap_ with a `MapProjection` insta
 
 <BrowserOnly>
 {() => {
-  const { MapProjectionKind, MapProjection } = require('@volterra/vis')
-  const { WorldMapTopoJSON } = require('@volterra/vis/maps')
+  const { MapProjectionKind, MapProjection } = require('@unovis/ts')
+  const { WorldMapTopoJSON } = require('@unovis/ts/maps')
   const imports = {
-    "@volterra/vis": ["MapData", "MapProjection"],
-    "@volterra/vis/maps": ["WorldMapTopoJSON"],
+    "@unovis/ts": ["MapData", "MapProjection"],
+    "@unovis/ts/maps": ["WorldMapTopoJSON"],
   }
   const [curr, setCurr] = React.useState(MapProjection.Mercator)
   return (
@@ -313,7 +313,7 @@ TopoJSONs currently available in `@voltera/vis/maps`:
 
 ## Events
 ```ts
-import { TopoJSONMap } from '@volterra/vis'
+import { TopoJSONMap } from '@unovis/ts'
 
 const events = {
   [TopoJSONMap.selectors.point]: {},

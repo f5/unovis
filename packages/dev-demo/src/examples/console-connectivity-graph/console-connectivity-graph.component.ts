@@ -1,7 +1,7 @@
 import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core'
 import _flatten from 'lodash/flatten'
 
-import { Graph, SingleContainer, GraphConfigInterface } from '@volterra/vis'
+import { Graph, SingleContainer, GraphConfigInterface } from '@unovis/ts'
 
 import { overviewConfig, drilldownConfig } from './configuration/graph-config'
 import consoleData from './data/connectivity.json'

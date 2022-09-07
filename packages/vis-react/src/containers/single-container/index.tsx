@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-use-before-define
 import React, { ReactNode, useEffect, useRef, useState, PropsWithChildren } from 'react'
-import { SingleContainer, SingleContainerConfigInterface, ComponentCore, Tooltip } from '@volterra/vis'
+import { SingleContainer, SingleContainerConfigInterface, ComponentCore, Tooltip } from '@unovis/ts'
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'

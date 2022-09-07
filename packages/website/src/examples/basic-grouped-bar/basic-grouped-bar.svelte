@@ -1,5 +1,5 @@
 <script lang='ts'>
-  import { VisXYContainer, VisGroupedBar, VisAxis } from '@volterra/vis-svelte'
+  import { VisXYContainer, VisGroupedBar, VisAxis } from '@unovis/svelte'
   import { data, colors } from './data'
 
   const items = Object.entries(colors).map(([n, c]) => ({

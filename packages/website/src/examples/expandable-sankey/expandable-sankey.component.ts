@@ -1,5 +1,5 @@
 import { Component } from '@angular/core'
-import {Sankey, SankeyLink, SankeyNode} from '@volterra/vis'
+import {Sankey, SankeyLink, SankeyNode} from '@unovis/ts'
 
 import { getColor, getChildren, LinkDatum, NodeDatum, sankeyData, sourceNode } from './data'
 

@@ -1,6 +1,6 @@
 // !!! This code was automatically generated. You should not change it !!!
 import React, { ForwardedRef, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
-import { Axis, AxisConfigInterface } from '@volterra/vis'
+import { Axis, AxisConfigInterface } from '@unovis/ts'
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'

@@ -37,7 +37,7 @@ pages:
     - npm run build
     - mv packages/website/build public
     - cp public/index.html public/404.html
-    - mv packages/dev-demo/lib/volterra-vis-examples public/showcase
+    - mv packages/dev-demo/lib/unovis-examples public/showcase
   artifacts:
     paths:
       - public

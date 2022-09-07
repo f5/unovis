@@ -1,6 +1,6 @@
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import { Donut, DonutConfigInterface, ContainerCore, VisEventType, VisEventCallback, NumericAccessor, ColorAccessor } from '@volterra/vis'
+import { Donut, DonutConfigInterface, ContainerCore, VisEventType, VisEventCallback, NumericAccessor, ColorAccessor } from '@unovis/ts'
 import { VisCoreComponent } from '../../core'
 
 @Component({

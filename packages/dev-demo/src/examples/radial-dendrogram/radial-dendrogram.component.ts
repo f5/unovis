@@ -1,7 +1,7 @@
 import { AfterViewInit, OnDestroy, Component } from '@angular/core'
 
 // Vis
-import { RadialDendrogram, RadialDendrogramConfigInterface, Hierarchy } from '@volterra/vis'
+import { RadialDendrogram, RadialDendrogramConfigInterface, Hierarchy } from '@unovis/ts'
 
 // Helpers
 import { getHierarchyData } from '../../utils/data'

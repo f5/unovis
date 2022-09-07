@@ -1,5 +1,5 @@
 import { Component } from '@angular/core'
-import { Timeline } from '@volterra/vis'
+import { Timeline } from '@unovis/ts'
 import { colorMap, data, DataRecord, ProductType } from './data'
 
 @Component({

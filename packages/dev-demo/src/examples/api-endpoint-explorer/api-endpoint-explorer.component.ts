@@ -19,7 +19,7 @@ import {
   Position,
   VerticalAlign,
   SankeySubLabelPlacement,
-} from '@volterra/vis'
+} from '@unovis/ts'
 
 import data from './data/apieplist_ves-prod.json'
 

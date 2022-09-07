@@ -11,7 +11,7 @@ import {
   ContinuousScale,
   CurveType,
   StringAccessor,
-} from '@volterra/vis'
+} from '@unovis/ts'
 import { VisXYComponent } from '../../core'
 
 @Component({

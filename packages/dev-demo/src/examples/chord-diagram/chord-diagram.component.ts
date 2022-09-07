@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core'
 
 // Vis
-import { ChordDiagram, ChordDiagramConfigInterface, ChordLabelAlignment } from '@volterra/vis'
+import { ChordDiagram, ChordDiagramConfigInterface, ChordLabelAlignment } from '@unovis/ts'
 
 import trafficData from './data/traffic.json'
 

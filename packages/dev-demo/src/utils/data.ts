@@ -3,7 +3,7 @@ import _uniqueId from 'lodash/uniqueId'
 import _sample from 'lodash/sample'
 import { nest as d3Nest } from 'd3-collection'
 import { sum } from 'd3-array'
-import { Hierarchy } from '@volterra/vis'
+import { Hierarchy } from '@unovis/ts'
 
 export interface SampleDatum {
   id?: string;

@@ -1,4 +1,4 @@
-import { SingleContainer, Sankey, FitMode } from '@volterra/vis'
+import { SingleContainer, Sankey, FitMode } from '@unovis/ts'
 import { data, NodeDatum, LinkDatum } from './data'
 
 const container = document.getElementById('#vis-container')

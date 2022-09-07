@@ -1,4 +1,4 @@
-import { colors } from '@volterra/vis'
+import { colors } from '@unovis/ts'
 
 export type DataRecord = {
   name: string;

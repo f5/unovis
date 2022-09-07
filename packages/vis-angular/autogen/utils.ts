@@ -177,12 +177,12 @@ export function getImportStatements (
 ): { source: string; elements: string[] }[] {
   const importSources = {}
 
-  // We assume that all extend types in generics come from volterra/vis
+  // We assume that all extend types in generics come from unovis/ts
   const genericExtends = generics.map(g => g.extends).filter(g => g)
   const genericDefaults = generics.map(g => g.default).filter(g => g)
   const componentTypes = [componentName, `${componentName}ConfigInterface`, 'ContainerCore']
   for (const typeName of [...componentTypes, ...genericExtends, ...genericDefaults]) {
-    importSources[typeName] = '@volterra/vis'
+    importSources[typeName] = '@unovis/ts'
   }
 
   const importDeclarations: any[] = statements.filter(node => node.kind === ts.SyntaxKind.ImportDeclaration)
@@ -192,7 +192,7 @@ export function getImportStatements (
       if (!importSource || importSource.startsWith('./') || importSource.startsWith('core/') ||
         importSource.startsWith('types/') || importSource.startsWith('utils/') || importSource.startsWith('components/') ||
         importSource.startsWith('styles/') || importSource.startsWith('data-models/') || importSource.startsWith('data/')
-      ) importSource = '@volterra/vis'
+      ) importSource = '@unovis/ts'
 
       importSources[importEl.name.escapedText] = importSource
     }

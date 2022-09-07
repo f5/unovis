@@ -1,5 +1,5 @@
 import { Component } from '@angular/core'
-import { Scale, Scatter, StringAccessor } from '@volterra/vis'
+import { Scale, Scatter, StringAccessor } from '@unovis/ts'
 import { data, DataRecord, palette } from './data'
 
 const categories = [...new Set(data.map((d: DataRecord) => d.category))].sort()

@@ -1,6 +1,6 @@
 // !!! This code was automatically generated. You should not change it !!!
 import React, { ForwardedRef, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
-import { Sankey, SankeyConfigInterface, SankeyInputNode, SankeyInputLink } from '@volterra/vis'
+import { Sankey, SankeyConfigInterface, SankeyInputNode, SankeyInputLink } from '@unovis/ts'
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'

@@ -4,7 +4,7 @@ import _times from 'lodash/times'
 import _random from 'lodash/random'
 
 // Vis
-import { Donut, DonutConfigInterface } from '@volterra/vis'
+import { Donut, DonutConfigInterface } from '@unovis/ts'
 
 // Helpers
 import { sampleSeriesData, SampleDatum } from '../../utils/data'

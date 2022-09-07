@@ -1,7 +1,7 @@
 {
-  "name": "@volterra/vis-react",
+  "name": "@unovis/react",
   "version": "0.9.27",
-  "description": "React wrapper for @volterra/vis",
+  "description": "React wrapper for Unovis",
   "main": "./index.js",
   "types": "./index.d.ts",
   "scripts": {
@@ -14,11 +14,11 @@
   "license": "Apache-2.0",
   "publishConfig": {
     "cache": ".cache/.npm",
-    "@volterra:registry": "https://artifactory.f5net.com/artifactory/api/npm/f5-volterra-vis-npm/"
+    "@volterra:registry": "https://artifactory.f5net.com/artifactory/api/npm/f5-unovis-npm/"
   },
   "peerDependencies": {
     "@emotion/css": "^11.7.1",
-    "@volterra/vis": "0.9.27",
+    "@unovis/ts": "0.9.27",
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0"
   },

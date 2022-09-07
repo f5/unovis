@@ -4,10 +4,10 @@
     "outDir": "./out-tsc/app",
     "types": [ "node" ],
     "paths": {
-      // @volterra/vis
-      "@volterra/vis": ["packages/vis/src"],
-      "@volterra/vis/*": ["packages/vis/src/*"],
-      "@volterra/vis/maps/*": ["packages/vis/src/maps/*"],
+      // @unovis/ts
+      "@unovis/ts": ["packages/vis/src"],
+      "@unovis/ts/*": ["packages/vis/src/*"],
+      "@unovis/ts/maps/*": ["packages/vis/src/maps/*"],
       "types/*": ["packages/vis/src/types/*"],
       "utils/*": ["packages/vis/src/utils/*"],
       "core/*": ["packages/vis/src/core/*"],
@@ -16,8 +16,8 @@
       "data-models/*": ["packages/vis/src/data-models/*"],
       "data/*": ["packages/vis/src/data/*"],
 
-      // @volterra/vis-angular
-      "@volterra/vis-angular": ["packages/vis-angular/src/public-api"],
+      // @unovis/angular
+      "@unovis/angular": ["packages/vis-angular/src/public-api"],
 
       // Local paths
       "examples/*": ["packages/dev-demo/src/examples/*"]

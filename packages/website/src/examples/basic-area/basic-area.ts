@@ -1,4 +1,4 @@
-import { Area, Axis, XYContainer, XYLabels } from '@volterra/vis'
+import { Area, Axis, XYContainer, XYLabels } from '@unovis/ts'
 import { data, formats, DataRecord, getLabels } from './data'
 
 const labels = getLabels(data)

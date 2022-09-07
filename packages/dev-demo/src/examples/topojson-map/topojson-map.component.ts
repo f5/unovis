@@ -4,8 +4,8 @@ import _times from 'lodash/times'
 import _sample from 'lodash/sample'
 import _random from 'lodash/random'
 
-import { SingleContainer, TopoJSONMap, Tooltip } from '@volterra/vis'
-import { WorldMapTopoJSON } from '@volterra/vis/maps'
+import { SingleContainer, TopoJSONMap, Tooltip } from '@unovis/ts'
+import { WorldMapTopoJSON } from '@unovis/ts/maps'
 
 import cities from './data/cities.json'
 import areas from './data/areas.json'

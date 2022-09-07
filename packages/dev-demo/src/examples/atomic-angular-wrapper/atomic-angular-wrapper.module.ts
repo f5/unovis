@@ -11,7 +11,7 @@ import {
   VisFreeBrushModule,
   VisXYLabelsModule,
   VisBulletLegendModule,
-} from '@volterra/vis-angular'
+} from '@unovis/angular'
 
 @NgModule({
   imports: [VisXYContainerModule, VisAreaModule, VisLineModule, VisAxisModule, VisCrosshairModule, VisTooltipModule, VisFreeBrushModule, VisXYLabelsModule, VisBulletLegendModule],

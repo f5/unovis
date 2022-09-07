@@ -56,7 +56,7 @@ function getReactStrings ({ components, container, dataType, declarations, impor
 
   if (importString) {
     const reactImports = (container ? [container, ...components] : components).map(c => `Vis${c.name}`).join(', ')
-    lines.push(`import { ${reactImports} } from '@volterra/vis-react'\n${importString}`)
+    lines.push(`import { ${reactImports} } from '@unovis/react'\n${importString}`)
   }
   if (Object.values(declarations).length) {
     const { data, ...rest } = declarations
@@ -96,7 +96,7 @@ function getSvelteStrings (config: CodeConfig): string {
   }
   const lines: string[] = []
   const imports = (container ? [container, ...components] : components).map(c => `Vis${c.name}`).join(', ')
-  lines.push(`${t}import { ${imports} } from '@volterra/vis-svelte'`)
+  lines.push(`${t}import { ${imports} } from '@unovis/svelte'`)
   if (importString) lines.push(`${t}${importString}`)
 
   const { data, ...rest } = declarations

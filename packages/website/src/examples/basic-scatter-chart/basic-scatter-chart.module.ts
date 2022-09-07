@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core'
-import { VisXYContainerModule, VisScatterModule, VisAxisModule, VisTooltipModule, VisBulletLegendModule } from '@volterra/vis-angular'
+import { VisXYContainerModule, VisScatterModule, VisAxisModule, VisTooltipModule, VisBulletLegendModule } from '@unovis/angular'
 
 import { BasicScatterChartComponent } from './basic-scatter-chart.component'
 

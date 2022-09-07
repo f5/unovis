@@ -1,5 +1,5 @@
 <script lang='ts'>
-  import { VisXYContainer, VisAxis, VisArea, VisXYLabels } from '@volterra/vis-svelte'
+  import { VisXYContainer, VisAxis, VisArea, VisXYLabels } from '@unovis/svelte'
   import { data, formats, DataRecord, getLabels } from './data'
 
   const labels = getLabels(data)

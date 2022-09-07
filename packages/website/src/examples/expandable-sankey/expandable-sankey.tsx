@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
-import { FitMode, Sankey, SankeyLink, SankeyNode, SankeySubLabelPlacement, VerticalAlign } from '@volterra/vis'
-import { VisSingleContainer, VisSankey } from '@volterra/vis-react'
+import { FitMode, Sankey, SankeyLink, SankeyNode, SankeySubLabelPlacement, VerticalAlign } from '@unovis/ts'
+import { VisSingleContainer, VisSankey } from '@unovis/react'
 
 import { getColor, getChildren, LinkDatum, NodeDatum, sankeyData, sourceNode } from './data'
 

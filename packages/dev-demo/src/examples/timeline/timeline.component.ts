@@ -2,7 +2,7 @@
 import { AfterViewInit, Component } from '@angular/core'
 
 // Vis
-import { Axis, Timeline, TimelineConfigInterface } from '@volterra/vis'
+import { Axis, Timeline, TimelineConfigInterface } from '@unovis/ts'
 
 // Helpers
 import { sampleTimelineData, SampleTimelineDatum } from '../../utils/data'

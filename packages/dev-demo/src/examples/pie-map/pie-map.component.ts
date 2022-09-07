@@ -3,7 +3,7 @@ import mean from 'lodash/mean'
 import sample from 'lodash/sample'
 import { StyleSpecification } from 'maplibre-gl'
 import { Component, ViewChild, ViewEncapsulation } from '@angular/core'
-import { LeafletMap, LeafletMapConfigInterface, LeafletMapPointShape } from '@volterra/vis'
+import { LeafletMap, LeafletMapConfigInterface, LeafletMapPointShape } from '@unovis/ts'
 import { MapLeafletComponent } from '../../app/components/map-leaflet/map-leaflet.component'
 
 // Configuration

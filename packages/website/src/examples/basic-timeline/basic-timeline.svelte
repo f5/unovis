@@ -1,6 +1,6 @@
 <script lang='ts'>
-  import { Timeline } from '@volterra/vis'
-  import { VisXYContainer, VisBulletLegend, VisTooltip, VisTimeline, VisAxis } from '@volterra/vis-svelte'
+  import { Timeline } from '@unovis/ts'
+  import { VisXYContainer, VisBulletLegend, VisTooltip, VisTimeline, VisAxis } from '@unovis/svelte'
   import { colorMap, data, DataRecord, ProductType } from './data'
 
   const labelWidth = 220

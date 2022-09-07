@@ -1,7 +1,7 @@
 import { Component, ViewChild, ElementRef, AfterViewInit, Input, OnDestroy, SimpleChanges, ContentChild } from '@angular/core'
 
 // Vis
-import { ComponentCore, SingleContainer, SingleContainerConfigInterface, Tooltip, Spacing } from '@volterra/vis'
+import { ComponentCore, SingleContainer, SingleContainerConfigInterface, Tooltip, Spacing } from '@unovis/ts'
 import { VisCoreComponent } from '../../core'
 import { VisTooltipComponent } from '../../components/tooltip/tooltip.component'
 
@@ -18,9 +18,9 @@ export class VisSingleContainerComponent<Data = unknown, C extends ComponentCore
   @ContentChild(VisTooltipComponent) tooltipComponent: VisTooltipComponent
 
   /** Width in pixels. By default, Container automatically fits to the size of the parent element. Default: `undefined`. */
-  @Input() width?: number;
+  @Input() width?: number
   /** Height in pixels. By default, Container automatically fits to the size of the parent element. Default: `undefined`. */
-  @Input() height?: number;
+  @Input() height?: number
 
   /** Margins. Default: `{ top: 0, bottom: 0, left: 0, right: 0 }` */
   @Input() margin?: Spacing = { top: 10, bottom: 10, left: 10, right: 10 }

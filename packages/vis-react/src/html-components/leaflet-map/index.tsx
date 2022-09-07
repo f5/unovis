@@ -1,5 +1,5 @@
 import React, { ForwardedRef, Ref, useEffect, useImperativeHandle, useRef, useState } from 'react'
-import { LeafletMap, LeafletMapConfigInterface } from '@volterra/vis'
+import { LeafletMap, LeafletMapConfigInterface } from '@unovis/ts'
 import { arePropsEqual } from '../../utils/react'
 
 export type VisLeafletMapProps<Datum> = LeafletMapConfigInterface<Datum> & {

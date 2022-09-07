@@ -490,7 +490,7 @@ nodes it is connected to.
 <BrowserOnly>
 {() => {
   const [selectedNodeId, setSelectedNode] = React.useState('2')
-  const { Graph } = require('@volterra/vis')
+  const { Graph } = require('@unovis/ts')
   const events = {
    [Graph.selectors.node]: {
         'click': d => setSelectedNode(d.id)
@@ -534,7 +534,7 @@ onZoom: (zoomScale: number, zoomScaleExtent: number) => void;
 ## Events
 The following selectors are available for events:
 ```ts
-import { Graph } from '@volterra/vis'
+import { Graph } from '@unovis/ts'
 
 const events = {
     [Graph.selectors.root]: { ... },

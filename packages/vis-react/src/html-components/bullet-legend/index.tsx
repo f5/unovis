@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { BulletLegend, BulletLegendConfigInterface } from '@volterra/vis'
+import { BulletLegend, BulletLegendConfigInterface } from '@unovis/ts'
 
 export type VisBulletLegendProps = BulletLegendConfigInterface
 

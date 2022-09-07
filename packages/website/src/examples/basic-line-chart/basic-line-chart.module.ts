@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core'
-import { VisXYContainerModule, VisLineModule, VisAxisModule } from '@volterra/vis-angular'
+import { VisXYContainerModule, VisLineModule, VisAxisModule } from '@unovis/angular'
 
 import { BasicLineChartComponent } from './basic-line-chart.component'
 

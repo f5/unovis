@@ -1,6 +1,6 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { BulletLegend, BulletLegendConfigInterface, BulletLegendItemInterface } from '@volterra/vis'
+  import { BulletLegend, BulletLegendConfigInterface, BulletLegendItemInterface } from '@unovis/ts'
   import { onMount } from 'svelte'
   import { getActions } from '../../utils/actions'
 

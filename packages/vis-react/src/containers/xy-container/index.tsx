@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import React, { ReactNode, useEffect, useRef, useState, PropsWithChildren } from 'react'
-import { XYContainer, XYContainerConfigInterface, XYComponentCore, Tooltip, Crosshair, Axis, AxisType } from '@volterra/vis'
+import { XYContainer, XYContainerConfigInterface, XYComponentCore, Tooltip, Crosshair, Axis, AxisType } from '@unovis/ts'
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'

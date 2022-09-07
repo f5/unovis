@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
-import { Scale, Scatter } from '@volterra/vis'
-import { VisXYContainer, VisScatter, VisAxis, VisBulletLegend, VisTooltip } from '@volterra/vis-react'
+import { Scale, Scatter } from '@unovis/ts'
+import { VisXYContainer, VisScatter, VisAxis, VisBulletLegend, VisTooltip } from '@unovis/react'
 import { palette, data, DataRecord } from './data'
 
 const categories = [...new Set(data.map((d: DataRecord) => d.category))].sort()

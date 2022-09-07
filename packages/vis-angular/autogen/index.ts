@@ -8,7 +8,7 @@ import { getComponentCode } from './component'
 import { getModuleCode } from './module'
 import { ComponentInput, ConfigProperty, GenericParameter } from './types'
 
-const volterraVisBasePath = '../vis/src'
+const unovisBasePath = '../vis/src'
 const configFileName = '/config.ts'
 const coreComponentConfigPath = '/core/component'
 const xyComponentConfigPath = '/core/xy-component'
@@ -49,7 +49,7 @@ for (const component of components) {
   let generics: GenericParameter[] = [] // Generics
 
   for (const [i, path] of component.sources.entries()) {
-    const fullPath = `${volterraVisBasePath}${path}${configFileName}`
+    const fullPath = `${unovisBasePath}${path}${configFileName}`
 
     const sourceStatements = getTSStatements(fullPath)
     const configInterface = sourceStatements.find(node => ts.isInterfaceDeclaration(node)) as ts.InterfaceDeclaration

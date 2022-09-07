@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import { VisXYContainer, VisGroupedBar, VisAxis, VisBulletLegend } from '@volterra/vis-react'
+import { VisXYContainer, VisGroupedBar, VisAxis, VisBulletLegend } from '@unovis/react'
 
 import { data, colors } from './data'
 

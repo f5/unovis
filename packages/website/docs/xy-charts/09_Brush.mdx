@@ -38,7 +38,7 @@ Each callback has the following parameters:
 
 <BrowserOnly>
   {() => {
-    const { Tooltip } = require('@volterra/vis')
+    const { Tooltip } = require('@unovis/ts')
     const tooltip = new Tooltip({})
     const action = (i) => `(selection, event, userDriven) => {\n    if (userDriven) {\n      ${i}\n    }\n  }`
     return (
@@ -55,7 +55,7 @@ Each callback has the following parameters:
           onBrushMove: action('tooltip.show(selection)'),
           onBrushEnd: action('tooltip.hide()')
         }}
-        imports={{"volterra/vis": ["Tooltip"]}}
+        imports={{"unovis/ts": ["Tooltip"]}}
       />
     )
   }}

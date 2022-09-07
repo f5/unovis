@@ -19,17 +19,17 @@ The documentation is currently under development, contributions are welcome!
 This documentation will help you to get comfortable with *Unovis* — a modular and platform-agnostic library for charts, maps and graphs.
 
 ### Installation
-Unovis is available on F5 Artifactory as an NPM package. The core package `@volterra/vis` is written in TypeScript,
+Unovis is available on F5 Artifactory as an NPM package. The core package `@unovis/ts` is written in TypeScript,
 and compiled to JavaScript. So you can use it in any TypeScript or JavaScript project.
 
 Before installing Unovis you'll probably need to set its registry explicitly:
 ```bash
-npm config set @volterra:registry https://artifactory.f5net.com/artifactory/api/npm/f5-volterra-vis-npm/
+npm config set @volterra:registry https://artifactory.f5net.com/artifactory/api/npm/f5-unovis-npm/
 ```
 
 After that you can run the command below to install the library:
 ```bash
-npm install -P @volterra/vis
+npm install -P @unovis/ts
 ```
 
 If you're using a UI framework, we recommend installing a dedicated adaptor as well, it will make your work with
@@ -39,21 +39,21 @@ Unovis much more enjoyable:
   <TabItem value="react" label="React" default>
 
 ```bash
-npm install -P @volterra/vis @volterra/vis-react
+npm install -P @unovis/ts @unovis/react
 ```
 
   </TabItem>
   <TabItem value="angular" label="Angular">
 
 ```bash
-npm install -P @volterra/vis @volterra/vis-angular
+npm install -P @unovis/ts @unovis/angular
 ```
 
   </TabItem>
   <TabItem value="svelte" label="Svelte">
 
 ```bash
-npm install -P @volterra/vis @volterra/vis-svelte
+npm install -P @unovis/ts @unovis/svelte
 ```
   </TabItem>
 </Tabs>

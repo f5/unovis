@@ -1,6 +1,6 @@
 
   <script lang="ts">
-    import { VisLeafletMap } from '@volterra/vis-svelte'
+    import { VisLeafletMap } from '@unovis/svelte'
     // Data
     import { MapPointDataRecord, data } from './data'
 
@@ -13,7 +13,7 @@
     const pointBottomLabel = (d: MapPointDataRecord) => d.id
     const pointColor = '#286e47'
   </script>
-  
+
 
 <VisLeafletMap
   height="50vh"
@@ -28,6 +28,6 @@
     '<a href="https://www.maptiler.com/copyright/" target="_blank">MapTiler</a>',
     '<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a>',
   ]}/>
-  
-  
-  
+
+
+

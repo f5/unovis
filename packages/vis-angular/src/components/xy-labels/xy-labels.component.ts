@@ -13,7 +13,7 @@ import {
   XYLabelPositioning,
   StringAccessor,
   XYLabel,
-} from '@volterra/vis'
+} from '@unovis/ts'
 import { VisXYComponent } from '../../core'
 
 @Component({

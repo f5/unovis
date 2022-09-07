@@ -1,5 +1,5 @@
-import { Axis, Orientation, Scale, SingleContainer, StackedBar, Tooltip, TopoJSONMap, XYContainer } from '@volterra/vis'
-import { WorldMapTopoJSON } from '@volterra/vis/maps'
+import { Axis, Orientation, Scale, SingleContainer, StackedBar, Tooltip, TopoJSONMap, XYContainer } from '@unovis/ts'
+import { WorldMapTopoJSON } from '@unovis/ts/maps'
 import { AreaDatum, data, palette, yearRange, ageRange } from './data'
 
 import './styles.css'

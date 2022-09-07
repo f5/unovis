@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import _uniq from 'lodash/uniq'
-import { Graph, GraphLayoutType, GraphConfigInterface, GraphPanelConfig, GraphNodeShape } from '@volterra/vis'
+import { Graph, GraphLayoutType, GraphConfigInterface, GraphPanelConfig, GraphNodeShape } from '@unovis/ts'
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const StatusMap = {

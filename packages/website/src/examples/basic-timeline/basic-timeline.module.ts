@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core'
-import { VisXYContainerModule, VisTimelineModule, VisAxisModule, VisBulletLegendModule, VisTooltipModule } from '@volterra/vis-angular'
+import { VisXYContainerModule, VisTimelineModule, VisAxisModule, VisBulletLegendModule, VisTooltipModule } from '@unovis/angular'
 
 import { BasicTimelineComponent } from './basic-timeline.component'
 

@@ -10,7 +10,7 @@ import {
   ColorAccessor,
   ContinuousScale,
   StringAccessor,
-} from '@volterra/vis'
+} from '@unovis/ts'
 import { VisXYComponent } from '../../core'
 
 @Component({

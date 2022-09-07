@@ -1,7 +1,7 @@
 {
-  "name": "@volterra/vis-svelte",
+  "name": "@unovis/svelte",
   "version": "0.9.27",
-  "description": "Svelte wrapper for @volterra/vis",
+  "description": "Svelte wrapper for Unovis",
   "license": "Apache-2.0",
   "main": "./index.js",
   "types": "./index.d.ts",
@@ -18,7 +18,7 @@
     "@volterra:registry": "https://artifactory.f5net.com/artifactory/api/npm/f5-volterra-vis-npm/"
   },
   "peerDependencies": {
-    "@volterra/vis": "0.9.27",
+    "@unovis/ts": "0.9.27",
     "svelte": "^3.48.0"
   },
   "devDependencies": {

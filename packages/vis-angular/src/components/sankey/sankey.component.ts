@@ -22,7 +22,7 @@ import {
   FitMode,
   TrimMode,
   SankeySubLabelPlacement,
-} from '@volterra/vis'
+} from '@unovis/ts'
 import { VisCoreComponent } from '../../core'
 
 @Component({

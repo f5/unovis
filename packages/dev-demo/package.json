@@ -1,5 +1,5 @@
 {
-  "name": "@volterra/vis-demo",
+  "name": "@unovis/demo",
   "version": "0.9.27",
   "private": true,
   "main": "lib/demo.js",

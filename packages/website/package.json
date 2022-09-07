@@ -1,5 +1,5 @@
 {
-  "name": "@volterra/vis-website",
+  "name": "@unovis/website",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -51,8 +51,8 @@
     "typescript": "~4.2.4"
   },
   "peerDependencies": {
-    "@volterra/vis": "*",
-    "@volterra/vis-react": "*"
+    "@unovis/ts": "*",
+    "@unovis/react": "*"
   },
   "browserslist": {
     "production": [

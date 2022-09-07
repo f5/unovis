@@ -8,7 +8,7 @@ import {
   LeafletFlowMapConfigInterface,
   VisControlItemInterface,
   VisControlsOrientation,
-} from '@volterra/vis'
+} from '@unovis/ts'
 
 type FlowMapData<P, L> = {
   points: P[];
@@ -44,9 +44,9 @@ export class MapLeafletComponent<PointDatum, FlowDatum = any> implements AfterVi
       icon: '&#xe934',
       callback: (): void => { this.map?.zoomOut() },
     },
-  ];
+  ]
 
-  controlsOrientation = VisControlsOrientation.Vertical;
+  controlsOrientation = VisControlsOrientation.Vertical
 
   ngAfterViewInit (): void {
     this.map = this.ddos

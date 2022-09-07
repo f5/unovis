@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { LeafletMap, LeafletMapConfigInterface, MapLibreStyleSpecs } from '@volterra/vis'
+  import { LeafletMap, LeafletMapConfigInterface, MapLibreStyleSpecs } from '@unovis/ts'
   import { onMount } from 'svelte'
   import { getActions } from '../../utils/actions'
 

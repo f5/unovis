@@ -1,7 +1,7 @@
 import { Component, ViewChild, ElementRef, AfterViewInit, Input, OnDestroy } from '@angular/core'
 
 // Vis
-import { SingleContainer, SingleContainerConfigInterface } from '@volterra/vis'
+import { SingleContainer, SingleContainerConfigInterface } from '@unovis/ts'
 
 @Component({
   selector: 'vis-singlechart',

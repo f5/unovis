@@ -1,6 +1,6 @@
 // !!! This code was automatically generated. You should not change it !!!
 import React, { ForwardedRef, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
-import { Graph, GraphConfigInterface, GraphInputNode, GraphInputLink } from '@volterra/vis'
+import { Graph, GraphConfigInterface, GraphInputNode, GraphInputLink } from '@unovis/ts'
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'

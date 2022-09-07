@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
-import { FitMode } from '@volterra/vis'
-import { VisSingleContainer, VisSankey } from '@volterra/vis-react'
+import { FitMode } from '@unovis/ts'
+import { VisSingleContainer, VisSankey } from '@unovis/react'
 
 import { data, NodeDatum } from './data'
 

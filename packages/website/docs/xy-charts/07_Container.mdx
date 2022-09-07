@@ -36,7 +36,7 @@ export const MarginDoc = () => (
     <BrowserOnly fallback={<div>Loading...</div>}>
       {() => {
         // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-var-requires
-        const { VisXYContainer, VisStackedBar, VisAxis } = require('@volterra/vis-react')
+        const { VisXYContainer, VisStackedBar, VisAxis } = require('@unovis/react')
         return (
           <div style={{display: "flex", alignItems: "center", justifyContent: "center"}}>
           <p style={{backgroundColor: "gray", color: "white"}}>Left</p>
@@ -123,13 +123,13 @@ Currently, only continuous scales are supported. See d3-scale for more informati
 
 export const ScaleDoc = ({x,y}) => {
   const [scale, setScale] = React.useState("scaleLinear")
-  const scaleDeclaration = [`${x ? 'x' : 'y'}Scale`, `Scale.${scale}()`];     
+  const scaleDeclaration = [`${x ? 'x' : 'y'}Scale`, `Scale.${scale}()`];
   return (
   <BrowserOnly fallback={<div>Loading...</div>}>
       {() => {
         // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-var-requires
-        const { VisXYContainer, VisScatter, VisLine, VisAxis } = require('@volterra/vis-react')
-        const { Scale } = require('@volterra/vis')
+        const { VisXYContainer, VisScatter, VisLine, VisAxis } = require('@unovis/react')
+        const { Scale } = require('@unovis/ts')
         const scaleProp = () => x ? { xScale: Scale[scale]()} : { yScale: Scale[scale]()}
         return (
           <>
@@ -142,7 +142,7 @@ export const ScaleDoc = ({x,y}) => {
            <Tabs groupId="framework">
             <TabItem value="react" label="React">
               <CodeBlock language="jsx">
-                {['import { Scale } from "@volterra/vis"','',
+                {['import { Scale } from "@unovis/ts"','',
                   'function Component(props) {',
                 '  const data: DataRecord[] = props.data',
                 '',
@@ -155,7 +155,7 @@ export const ScaleDoc = ({x,y}) => {
             </TabItem>
             <TabItem value="angular" label="Angular">
               <CodeBlock language="ts">
-                {['import { Scale } from "@volterra/vis"','',
+                {['import { Scale } from "@unovis/ts"','',
                   '@Component({...})',
                   'class Component {',
                   '  @Input() dataArray: DataRecord[]',
@@ -169,7 +169,7 @@ export const ScaleDoc = ({x,y}) => {
             </TabItem>
             <TabItem value="typescript" label="TypeScript">
               <CodeBlock language="ts">
-                {['import { Scale } from "@volterra/vis"','',
+                {['import { Scale } from "@unovis/ts"','',
                   'const config: XYContainerConfigInterface<DataRecord> = {',
                   '  components: [/* your vis components here */]',
                   `  ${scaleDeclaration.join(': ')}`,

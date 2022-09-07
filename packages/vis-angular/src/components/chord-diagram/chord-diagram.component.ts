@@ -14,7 +14,7 @@ import {
   StringAccessor,
   ChordLabelAlignment,
   CurveType,
-} from '@volterra/vis'
+} from '@unovis/ts'
 import { VisCoreComponent } from '../../core'
 
 @Component({

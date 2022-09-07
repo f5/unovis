@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import { VisLeafletMap } from '@volterra/vis-react'
+import { VisLeafletMap } from '@unovis/react'
 
 // Data
 import { MapPointDataRecord, data } from './data'

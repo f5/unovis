@@ -1,4 +1,4 @@
-import { LeafletMap, LeafletMapConfigInterface } from '@volterra/vis'
+import { LeafletMap, LeafletMapConfigInterface } from '@unovis/ts'
 
 // Data
 import { MapPointDataRecord, data } from './data'

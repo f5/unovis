@@ -3,7 +3,7 @@ import _times from 'lodash/times'
 import _random from 'lodash/random'
 
 // Vis
-import { XYContainer, XYContainerConfigInterface, Axis, Area, AreaConfigInterface, Tooltip, Crosshair, FreeBrush, FreeBrushMode } from '@volterra/vis'
+import { XYContainer, XYContainerConfigInterface, Axis, Area, AreaConfigInterface, Tooltip, Crosshair, FreeBrush, FreeBrushMode } from '@unovis/ts'
 
 // Helpers
 import { SampleDatum } from '../../utils/data'

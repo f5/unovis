@@ -1,5 +1,5 @@
 {
-  "name": "@volterra/vis",
+  "name": "@unovis/ts",
   "version": "0.9.27",
   "license": "Apache-2.0",
   "main": "./index.js",

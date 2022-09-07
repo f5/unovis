@@ -1,5 +1,5 @@
 import { Component, AfterViewInit, Input, SimpleChanges, ViewChild, ElementRef } from '@angular/core'
-import { BulletLegend, BulletLegendConfigInterface, BulletLegendItemInterface } from '@volterra/vis'
+import { BulletLegend, BulletLegendConfigInterface, BulletLegendItemInterface } from '@unovis/ts'
 import { VisGenericComponent } from '../../core'
 
 @Component({

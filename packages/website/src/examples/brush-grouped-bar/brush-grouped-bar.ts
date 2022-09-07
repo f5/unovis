@@ -8,7 +8,7 @@ import {
   BulletLegendConfigInterface,
   GroupedBarConfigInterface,
   XYContainerConfigInterface,
-} from '@volterra/vis'
+} from '@unovis/ts'
 import { data, groups, GroupItem, DataRecord } from './data'
 
 type LegendItem = BulletLegendItemInterface & GroupItem

@@ -13,7 +13,7 @@ import {
   LeafletMapPointStyles,
   Tooltip,
   LeafletMapClusterDatum,
-} from '@volterra/vis'
+} from '@unovis/ts'
 import { StyleSpecification } from 'maplibre-gl'
 import { VisCoreComponent } from '../../core'
 

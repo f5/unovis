@@ -1,6 +1,6 @@
 <script lang='ts'>
-  import { FitMode, Sankey, SankeyNode, SankeySubLabelPlacement, VerticalAlign } from '@volterra/vis'
-  import { VisSingleContainer, VisSankey } from '@volterra/vis-svelte'
+  import { FitMode, Sankey, SankeyNode, SankeySubLabelPlacement, VerticalAlign } from '@unovis/ts'
+  import { VisSingleContainer, VisSankey } from '@unovis/svelte'
   import { getColor, getChildren, LinkDatum, NodeDatum, sankeyData, sourceNode } from './data'
 
   let data = {
