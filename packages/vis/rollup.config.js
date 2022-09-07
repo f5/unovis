@@ -4,6 +4,7 @@ import transformPaths from '@zerollup/ts-transform-paths'
 import resolve from 'rollup-plugin-node-resolve'
 import commonjs from 'rollup-plugin-commonjs'
 import postcss from 'rollup-plugin-postcss'
+import renameNodeModules from 'rollup-plugin-rename-node-modules'
 // import visualizer from 'rollup-plugin-visualizer'
 import pkg from './package.json'
 
@@ -51,6 +52,7 @@ const plugins = [
     typescript: require('typescript'),
     transformers: [(service) => transformPaths(service.getProgram())],
   }),
+  renameNodeModules(),
   // visualizer({ sourcemap: true, template: 'network' }),
 ]
 
