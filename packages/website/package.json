@@ -40,6 +40,7 @@
     "@tsconfig/docusaurus": "^1.0.4",
     "@tsconfig/svelte": "^2.0.0",
     "ngc-esbuild": "^0.0.75",
+    "raw-loader": "^4.0.2",
     "rollup": "^2.61.1",
     "rollup-plugin-copy": "^3.4.0",
     "rollup-plugin-dev": "^2.0.4",

@@ -3,7 +3,10 @@ name                           license period  license type  installed version  
 tslib                          perpetual       0BSD          2.3.1              Microsoft Corp.
 @angular-devkit/build-angular  perpetual       MIT           12.0.3             Angular Authors
 @angular/cli                   perpetual       MIT           12.0.3             Angular Authors
+@angular/common                perpetual       MIT           12.0.3             angular
+@angular/compiler              perpetual       MIT           12.0.3             angular
 @angular/compiler-cli          perpetual       MIT           12.0.3             n/a
+@angular/core                  perpetual       MIT           12.0.3             angular
 @types/jasmine                 perpetual       MIT           3.6.0              n/a
 @types/node                    perpetual       MIT           12.11.1            n/a
 jasmine-core                   perpetual       MIT           3.7.0              n/a
