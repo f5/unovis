@@ -2,6 +2,7 @@
   "name": "@unovis/angular",
   "version": "1.0.0-beta.0",
   "license": "Apache-2.0",
+  "description": "Angular wrapper for Unovis",
   "scripts": {
     "ng": "npx ng",
     "build": "npx ng build",
@@ -15,10 +16,6 @@
   "files": [
     "dist"
   ],
-  "publishConfig": {
-    "cache": ".cache/.npm",
-    "@volterra:registry": "https://artifactory.f5net.com/artifactory/api/npm/f5-unovis-npm/"
-  },
   "dependencies": {
     "tslib": "^2.3.1"
   },

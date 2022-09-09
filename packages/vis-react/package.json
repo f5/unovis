@@ -12,10 +12,6 @@
   },
   "author": "Nikita Rokotyan",
   "license": "Apache-2.0",
-  "publishConfig": {
-    "cache": ".cache/.npm",
-    "@volterra:registry": "https://artifactory.f5net.com/artifactory/api/npm/f5-unovis-npm/"
-  },
   "peerDependencies": {
     "@emotion/css": "^11.7.1",
     "@unovis/ts": "1.0.0-beta.0",

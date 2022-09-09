@@ -10,10 +10,6 @@
     "forcebuild": "rimraf lib; rollup -c",
     "publish-dist": "cp ./{.npmrc,package.json} ./lib; cp ../../LICENSE ./lib; cd ./lib; npm publish; rm -rf .cache"
   },
-  "publishConfig": {
-    "cache": ".cache/.npm",
-    "@volterra:registry": "https://artifactory.f5net.com/artifactory/api/npm/f5-volterra-vis-npm/"
-  },
   "devDependencies": {
     "@rollup/plugin-json": "^4.1.0",
     "@types/d3": "^7.1.0",
