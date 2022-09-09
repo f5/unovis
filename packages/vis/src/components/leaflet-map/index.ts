@@ -632,7 +632,7 @@ export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
 
     const events = this._map.layer.getEvents()
     const zoomEndEvent = events.zoomend.bind(this._map.layer)
-    zoomEndEvent()
+    zoomEndEvent(null)
 
     if (this._externallySelectedPoint || this._zoomingToExternallySelectedPoint) {
       this._zoomToExternallySelectedPoint()

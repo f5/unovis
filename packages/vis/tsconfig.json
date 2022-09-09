@@ -11,8 +11,16 @@
       "core/*": ["./core/*"],
       "components/*": ["./components/*"],
       "styles/*": ["./styles/*"],
-      "data-models/*": ["./data-models/*"],
+      "data-models/*": ["./data-models/*"]
     },
+    // To be enabled:
+    // "noImplicitAny": true,
+    // "alwaysStrict": true,
+    // "strictNullChecks": true,
+    // "strictPropertyInitialization": true,
+    // "strictFunctionTypes": true,
+    "noImplicitThis": true,
+    "strictBindCallApply": true
   },
   "exclude": [
     "index.ts",

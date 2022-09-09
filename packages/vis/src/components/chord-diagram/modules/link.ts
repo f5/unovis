@@ -25,7 +25,7 @@ export function createLink<N extends ChordInputNode> (
   areaGen: Area<ChordRibbonPoint>
 ): void {
   selection
-    .attr('d', d => areaGen(d.points) || this._emptyPath())
+    .attr('d', d => areaGen(d.points) || emptyPath())
     .style('opacity', 0)
 }
 
@@ -40,7 +40,7 @@ export function updateLink<N extends ChordInputNode> (
     const transition = selTransition as Transition<SVGElement, ChordRibbon<N>, SVGGElement, unknown>
     transition.attrTween('d', (d, i, el) => {
       const previous = select(el[i]).attr('d')
-      const next = areaGen(d.points) || this._emptyPath()
+      const next = areaGen(d.points) || emptyPath()
       return interpolatePath(previous, next)
     })
   } else {
