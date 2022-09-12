@@ -8,7 +8,7 @@
   "scripts": {
     "build": "sha=$(tar cf - ./src | shasum); if [[ $(echo $sha) == $(< .srcsha) ]] && [[ -d \"./lib\" ]]; then echo \"Lib Build Exists\"; else npm run forcebuild; echo $sha > .srcsha; fi",
     "forcebuild": "rimraf lib; rollup -c",
-    "publish-dist": "cp ./{.npmrc,package.json} ./lib; cp ../../LICENSE ./lib; cd ./lib; npm publish; rm -rf .cache"
+    "publish-dist": "cp ./package.json ./lib; cp ../../LICENSE ./lib; cd ./lib; npm publish; rm -rf .cache"
   },
   "devDependencies": {
     "@rollup/plugin-json": "^4.1.0",

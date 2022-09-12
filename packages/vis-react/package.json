@@ -8,7 +8,7 @@
     "build": "rimraf dist && tsc --project tsconfig.lib.json --emitDeclarationOnly && rollup --config",
     "tsc": "tsc",
     "generate": "rollup -c ./autogen/rollup.config.js; node .autogen.js; rm .autogen.js",
-    "publish-dist": "cp ./{.npmrc,package.json} ./dist; cp ../../LICENSE ./dist; cd ./dist; npm publish; rm -rf .cache"
+    "publish-dist": "cp ./package.json ./dist; cp ../../LICENSE ./dist; cd ./dist; npm publish; rm -rf .cache"
   },
   "author": "Nikita Rokotyan",
   "license": "Apache-2.0",
