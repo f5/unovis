@@ -1,6 +1,6 @@
 import { css, injectGlobal } from '@emotion/css'
 
-export const global = injectGlobal`
+export const globalStyles = injectGlobal`
   :root {
     --vis-area-cursor: default;
     --vis-area-fill-opacity: 1;

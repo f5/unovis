@@ -1,6 +1,6 @@
 import { css, injectGlobal } from '@emotion/css'
 
-export const global = injectGlobal`
+export const globalStyles = injectGlobal`
   :root {
     --vis-scatter-cursor: default;
     --vis-scatter-fill: var(--vis-color-main);

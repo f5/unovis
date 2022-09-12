@@ -1,6 +1,6 @@
 import { css, injectGlobal } from '@emotion/css'
 
-export const global = injectGlobal`
+export const globalStyles = injectGlobal`
   :root {
     --vis-grouped-bar-cursor: default;
     --vis-grouped-bar-fill: var(--vis-color-main);

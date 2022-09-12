@@ -1,6 +1,6 @@
 import { css, injectGlobal } from '@emotion/css'
 
-export const global = injectGlobal`
+export const globalStyles = injectGlobal`
   :root {
     --vis-crosshair-line-stroke: #888;
     --vis-crosshair-circle-stroke: #fff;

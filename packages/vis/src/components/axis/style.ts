@@ -4,7 +4,7 @@ export const root = css`
   label: axis-component;
 `
 
-export const global = injectGlobal`
+export const globalStyles = injectGlobal`
   :root {
     --vis-axis-font-family: var(--vis-font-family);
     --vis-axis-tick-color: #e8e9ef;
