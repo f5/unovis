@@ -10,11 +10,10 @@ export function VisBulletLegend (props: VisBulletLegendProps): JSX.Element {
 
   // On Mount
   useEffect(() => {
-    setComponent(
-      new BulletLegend(container.current as HTMLDivElement, props)
-    )
+    const c = new BulletLegend(container.current as HTMLDivElement, props)
+    setComponent(c)
 
-    return () => component?.destroy()
+    return () => c?.destroy()
   }, [])
 
   // On Props Update
