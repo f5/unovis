@@ -29,10 +29,9 @@ function VisSingleContainerFC<Data> (props: PropsWithChildren<VisSingleContainer
   // On Mount
   useEffect(() => {
     setData(props.data)
-    setChart(
-      new SingleContainer<Data>(container.current as HTMLDivElement, getConfig(), props.data)
-    )
-    return () => chart?.destroy()
+    const c = new SingleContainer<Data>(container.current as HTMLDivElement, getConfig(), props.data)
+    setChart(c)
+    return () => c.destroy()
   }, [])
 
   // On Props Update

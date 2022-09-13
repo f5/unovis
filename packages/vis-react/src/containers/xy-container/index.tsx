@@ -40,11 +40,10 @@ export function VisXYContainerFC<Datum> (props: PropsWithChildren<VisXYContainer
   // On Mount
   useEffect(() => {
     setData(props.data)
-    setChart(
-      new XYContainer<Datum>(container.current as HTMLDivElement, getConfig(), props.data)
-    )
+    const c = new XYContainer<Datum>(container.current as HTMLDivElement, getConfig(), props.data)
+    setChart(c)
 
-    return () => chart?.destroy()
+    return () => c.destroy()
   }, [])
 
   // On Props Update
