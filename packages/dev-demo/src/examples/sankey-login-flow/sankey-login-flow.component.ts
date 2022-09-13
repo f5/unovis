@@ -1,5 +1,5 @@
 import { Component } from '@angular/core'
-import { SankeyConfigInterface, SankeyNodeAlign, FitMode } from '@volterra/vis'
+import { SankeyConfigInterface, SankeyNodeAlign, FitMode } from '@unovis/ts'
 
 import { loginFlowData, SankeyLink, SankeyNode } from './sankey-login-flow.data'
 
@@ -22,7 +22,7 @@ export class SankeyLoginFlowComponent {
     nodeAlign: SankeyNodeAlign.Left,
     labelFit: FitMode.Wrap,
     labelPosition: d => d.orientation,
-  };
+  }
 
-  sankeyData = loginFlowData;
+  sankeyData = loginFlowData
 }

@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ViewChild, ViewEncapsulation } from '@angular
 import _sample from 'lodash/sample'
 import _flatten from 'lodash/flatten'
 import { StyleSpecification } from 'maplibre-gl'
-import { LeafletFlowMap, LeafletFlowMapConfigInterface, Position, Tooltip } from '@volterra/vis'
+import { LeafletFlowMap, LeafletFlowMapConfigInterface, Position, Tooltip } from '@unovis/ts'
 import { MapLeafletComponent } from '../../app/components/map-leaflet/map-leaflet.component'
 
 // Configuration

@@ -1,4 +1,4 @@
-import type { ComponentCore, ComponentConfigInterface } from '@volterra/vis'
+import type { ComponentCore, ComponentConfigInterface } from '@unovis/ts'
 
 type Actions<Datum, ConfigInterface> = {
   setConfig: (e: HTMLElement, config: ComponentConfigInterface) => { update: (c: ConfigInterface) => void };

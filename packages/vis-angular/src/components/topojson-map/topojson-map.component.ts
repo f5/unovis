@@ -10,7 +10,7 @@ import {
   ColorAccessor,
   StringAccessor,
   MapPointLabelPosition,
-} from '@volterra/vis'
+} from '@unovis/ts'
 import { GeoProjection } from 'd3-geo'
 import { VisCoreComponent } from '../../core'
 

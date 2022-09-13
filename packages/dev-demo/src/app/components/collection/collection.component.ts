@@ -3,7 +3,7 @@
 import { OnInit, OnDestroy, Component, Input } from '@angular/core'
 
 // Vis
-import { Sankey } from '@volterra/vis'
+import { Sankey } from '@unovis/ts'
 
 @Component({
   selector: 'collection',

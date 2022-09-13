@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core'
-import { CrosshairCircle } from '@volterra/vis'
-import { VisXYComponent } from '@volterra/vis-angular'
+import { CrosshairCircle } from '@unovis/ts'
+import { VisXYComponent } from '@unovis/angular'
 
 // Helpers
 import { SampleTimelineDatum } from '../../utils/data'

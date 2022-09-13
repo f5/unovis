@@ -1,6 +1,6 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { ChordDiagram, ChordDiagramConfigInterface, ChordInputNode, ChordInputLink } from '@volterra/vis'
+  import { ChordDiagram, ChordDiagramConfigInterface, ChordInputNode, ChordInputLink } from '@unovis/ts'
   import { getContext, onMount } from 'svelte'
   import { getActions } from '../../utils/actions'
 

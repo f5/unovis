@@ -18,4 +18,5 @@ zone.js                            perpetual       MIT           0.11.4         
 @angular/cli                       perpetual       MIT           12.0.3             Angular Authors
 @angular/compiler-cli              perpetual       MIT           12.0.3             n/a
 @angular/language-service          perpetual       MIT           12.0.3             angular
+@jridgewell/gen-mapping            perpetual       MIT           0.3.2              Justin Ridgewell
 @types/d3                          perpetual       MIT           7.1.0              n/a

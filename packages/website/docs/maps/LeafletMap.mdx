@@ -354,7 +354,7 @@ you can use the `[LeafletMap.selectors.point]` selector in your _Tooltip_ config
 
 <BrowserOnly>
 {() => {
-  const { LeafletMap, Tooltip } = require('@volterra/vis')
+  const { LeafletMap, Tooltip } = require('@unovis/ts')
   const tooltipPoints = new Tooltip({
     triggers: {
       [LeafletMap.selectors.point]: (d) => {
@@ -376,7 +376,7 @@ you can use the `[LeafletMap.selectors.point]` selector in your _Tooltip_ config
     tooltip={tooltipPoints}
     declarations={{ ...defaultProps().declarations, tooltip: declaration }}
     showContext={ContextLevel.Minimal}
-    imports={{ '@volterra/vis': ['Tooltip', "LeafletMap"] }}
+    imports={{ '@unovis/ts': ['Tooltip', "LeafletMap"] }}
     />
   )
 }}
@@ -389,7 +389,7 @@ be passed only when the mouse is above a `topoJSONLayer.featureName` feature.
 
 <BrowserOnly>
 {() => {
-  const { LeafletMap, Tooltip } = require('@volterra/vis')
+  const { LeafletMap, Tooltip } = require('@unovis/ts')
   const tooltipAreas = new Tooltip({
     triggers: {
       [LeafletMap.selectors.map]: (feature) => {
@@ -421,7 +421,7 @@ be passed only when the mouse is above a `topoJSONLayer.featureName` feature.
         }
       }}
       showContext={ContextLevel.Minimal}
-      imports={{ '@volterra/vis': ['Tooltip', "LeafletMap"]}}
+      imports={{ '@unovis/ts': ['Tooltip', "LeafletMap"]}}
     />
   )
 }}
@@ -430,7 +430,7 @@ be passed only when the mouse is above a `topoJSONLayer.featureName` feature.
 ## Events
 The following selectors are available for events:
 ```ts
-import { LeafletMap } from '@volterra/vis'
+import { LeafletMap } from '@unovis/ts'
 ...
 events = {
     [LeafletMap.selectors.point]: {},

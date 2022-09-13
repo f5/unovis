@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core'
-import { VisSingleContainerModule, VisSankeyModule } from '@volterra/vis-angular'
+import { VisSingleContainerModule, VisSankeyModule } from '@unovis/angular'
 
 import { BasicSankeyComponent } from './basic-sankey.component'
 

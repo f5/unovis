@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react'
-import { BulletLegendItemInterface } from '@volterra/vis'
-import { VisXYContainer, VisAxis, VisBrush, VisGroupedBar, VisBulletLegend } from '@volterra/vis-react'
+import { BulletLegendItemInterface } from '@unovis/ts'
+import { VisXYContainer, VisAxis, VisBrush, VisGroupedBar, VisBulletLegend } from '@unovis/react'
 import { data, groups, GroupItem, DataRecord } from './data'
 
 type LegendItem = BulletLegendItemInterface & GroupItem

@@ -1,6 +1,6 @@
 <script lang='ts'>
-  import { FitMode } from '@volterra/vis'
-  import { VisSingleContainer, VisSankey } from '@volterra/vis-svelte'
+  import { FitMode } from '@unovis/ts'
+  import { VisSingleContainer, VisSankey } from '@unovis/svelte'
   import { data, NodeDatum } from './data'
 
   const subLabel = (d: NodeDatum) => `£${d.value.toFixed(2)}`

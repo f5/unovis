@@ -1,4 +1,4 @@
-import { BulletLegend, Orientation, StackedBar, Tooltip, XYContainer } from '@volterra/vis'
+import { BulletLegend, Orientation, StackedBar, Tooltip, XYContainer } from '@unovis/ts'
 import { data, labels, EducationDatum } from './data'
 
 const container = document.getElementById('#vis-container')

@@ -1,7 +1,7 @@
 import { Component, ViewChild, ElementRef, AfterViewInit, Input } from '@angular/core'
 
 // Vis
-import { VisControls, VisControlsConfigInterface, VisControlItemInterface, VisControlsOrientation } from '@volterra/vis'
+import { VisControls, VisControlsConfigInterface, VisControlItemInterface, VisControlsOrientation } from '@unovis/ts'
 
 @Component({
   selector: 'vis-controls',
@@ -10,7 +10,7 @@ import { VisControls, VisControlsConfigInterface, VisControlItemInterface, VisCo
 })
 export class VisControlsComponent implements AfterViewInit {
   @ViewChild('controls', { static: false }) controlsRef: ElementRef
-  @Input() items: VisControlItemInterface[] = [];
+  @Input() items: VisControlItemInterface[] = []
   @Input() orientation: VisControlsOrientation = VisControlsOrientation.Vertical
 
   config: VisControlsConfigInterface = {}

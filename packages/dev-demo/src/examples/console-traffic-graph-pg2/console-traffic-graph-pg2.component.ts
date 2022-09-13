@@ -6,7 +6,7 @@ import _random from 'lodash/random'
 import _cloneDeep from 'lodash/cloneDeep'
 import _uniq from 'lodash/uniq'
 
-import { Graph, SingleContainer, GraphConfigInterface } from '@volterra/vis'
+import { Graph, SingleContainer, GraphConfigInterface } from '@unovis/ts'
 
 import { overviewConfig, getPanels } from './configuration/graph-config'
 import consoleData from './data/traffic.json'

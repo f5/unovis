@@ -39,7 +39,7 @@ export const Tooltip = (props) => (
       const { showTriggers, inputWrapper, triggers, ...rest } = props
       const triggerConfig = Object.keys(triggers).reduce((obj,k) => {
         const [component, _, selector] = k.substring(1, k.length-1).split('.')
-        const { [component]: comp } = require('@volterra/vis')
+        const { [component]: comp } = require('@unovis/ts')
         obj[comp.selectors[selector]] = props.triggers[k]
         if (!props.componentProps.find(d => d.name === component)) {
           props.componentProps.push(newComponent(component))
@@ -158,8 +158,8 @@ export const ButtonTooltip = (props) => {
   <>
     <BrowserOnly fallback={<div>Loading...</div>}>
       {() => {
-        const { Tooltip } = require('@volterra/vis')
-        const { VisXYContainer, VisLine, VisTooltip } = require('@volterra/vis-react')
+        const { Tooltip } = require('@unovis/ts')
+        const { VisXYContainer, VisLine, VisTooltip } = require('@unovis/react')
         const tooltip = new Tooltip({})
         let toggled = false
         function toggleTooltip() {
@@ -200,7 +200,7 @@ export const tooltipFn = `${[
     ts: `@ElementRef('tooltip') tooltip\ntoggled = false\n${tooltipFn.replace('function ', '')}\n`
   }}
   react={[
-    'import { Tooltip } from \'@volterra/vis\'\n',
+    'import { Tooltip } from \'@unovis/ts\'\n',
     'const tooltip = new Tooltip({})',
     'const [toggled, setToggled] = useState(true)\n',
     `${tooltipFn.replace('toggled != toggled', 'setToggled(!toggled)')}`,

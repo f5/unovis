@@ -1,8 +1,8 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import { ScaleSequential } from 'd3-scale'
-import { Orientation, Scale, TopoJSONMap } from '@volterra/vis'
-import { WorldMapTopoJSON } from '@volterra/vis/maps'
-import { VisSingleContainer, VisTopoJSONMap, VisTooltip, VisAxis, VisXYContainer, VisStackedBar } from '@volterra/vis-react'
+import { Orientation, Scale, TopoJSONMap } from '@unovis/ts'
+import { WorldMapTopoJSON } from '@unovis/ts/maps'
+import { VisSingleContainer, VisTopoJSONMap, VisTooltip, VisAxis, VisXYContainer, VisStackedBar } from '@unovis/react'
 import { palette, data, ageRange, yearRange, AreaDatum } from './data'
 
 import './styles.css'

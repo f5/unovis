@@ -2,7 +2,7 @@
 
 import { Component, ViewChild, ElementRef, OnInit, AfterViewInit } from '@angular/core'
 
-import { Graph, GraphConfigInterface, SingleContainer, GraphLayoutType, GraphNode, GraphLink } from '@volterra/vis'
+import { Graph, GraphConfigInterface, SingleContainer, GraphLayoutType, GraphNode, GraphLink } from '@unovis/ts'
 
 import graphData from './data/ves-io-service-graph.json'
 

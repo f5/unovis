@@ -1,4 +1,4 @@
-import { Line, XYContainer } from '@volterra/vis'
+import { Line, XYContainer } from '@unovis/ts'
 import { data, DataRecord } from './data'
 
 const container = document.getElementById('#vis-container')

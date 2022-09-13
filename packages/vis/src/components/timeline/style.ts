@@ -4,7 +4,7 @@ export const root = css`
   label: timeline-component;
 `
 
-export const global = injectGlobal`
+export const globalStyles = injectGlobal`
   :root {
     --vis-timeline-row-even-fill: #fff;
     --vis-timeline-row-odd-fill: #EFF5F8;

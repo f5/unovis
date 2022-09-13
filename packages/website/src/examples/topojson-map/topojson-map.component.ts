@@ -1,6 +1,6 @@
 import { Component } from '@angular/core'
-import { Scale, TopoJSONMap } from '@volterra/vis'
-import { WorldMapTopoJSON } from '@volterra/vis/maps'
+import { Scale, TopoJSONMap } from '@unovis/ts'
+import { WorldMapTopoJSON } from '@unovis/ts/maps'
 
 import { palette, data, ageRange, yearRange, AreaDatum } from './data'
 

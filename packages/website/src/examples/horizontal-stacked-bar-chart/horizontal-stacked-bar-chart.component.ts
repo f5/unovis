@@ -1,5 +1,5 @@
 import { Component } from '@angular/core'
-import { StackedBar } from '@volterra/vis'
+import { StackedBar } from '@unovis/ts'
 import { data, labels, EducationDatum } from './data'
 
 @Component({

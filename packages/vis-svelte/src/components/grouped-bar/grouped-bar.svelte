@@ -1,6 +1,6 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { GroupedBar, GroupedBarConfigInterface, NumericAccessor } from '@volterra/vis'
+  import { GroupedBar, GroupedBarConfigInterface, NumericAccessor } from '@unovis/ts'
   import { getContext, onMount } from 'svelte'
   import { getActions } from '../../utils/actions'
 

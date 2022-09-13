@@ -1,5 +1,5 @@
 import { Component } from '@angular/core'
-import { BulletLegendItemInterface } from '@volterra/vis'
+import { BulletLegendItemInterface } from '@unovis/ts'
 import { data, labels, CityTemps } from './data'
 
 @Component({

@@ -1,7 +1,7 @@
 import { AfterViewInit, Component } from '@angular/core'
 
 // Vis
-import { GroupedBar, GroupedBarConfigInterface, Axis } from '@volterra/vis'
+import { GroupedBar, GroupedBarConfigInterface, Axis } from '@unovis/ts'
 
 // Helpers
 import { SampleDatum, sampleSeriesData } from '../../utils/data'

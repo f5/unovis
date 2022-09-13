@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core'
-import { VisXYContainerModule, VisAreaModule, VisXYLabelsModule, VisAxisModule } from '@volterra/vis-angular'
+import { VisXYContainerModule, VisAreaModule, VisXYLabelsModule, VisAxisModule } from '@unovis/angular'
 
 import { BasicAreaComponent } from './basic-area.component'
 

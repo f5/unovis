@@ -1,7 +1,7 @@
 import { Component, ViewChild, ElementRef, AfterViewInit, Input, EventEmitter, Output } from '@angular/core'
 
 // Vis
-import { FlowLegend, FlowLegendConfigInterface } from '@volterra/vis'
+import { FlowLegend, FlowLegendConfigInterface } from '@unovis/ts'
 
 @Component({
   selector: 'vis-flow-legend',
@@ -10,10 +10,10 @@ import { FlowLegend, FlowLegendConfigInterface } from '@volterra/vis'
 })
 export class FlowLegendComponent implements AfterViewInit {
   @ViewChild('legend', { static: false }) legendRef: ElementRef
-  @Input() items: any[] = [];
-  @Input() margin: { left?: number; right?: number } = {};
+  @Input() items: any[] = []
+  @Input() margin: { left?: number; right?: number } = {}
   @Output() itemClick = new EventEmitter()
-  @Input() width: number;
+  @Input() width: number
 
   legend = null
   config: FlowLegendConfigInterface = {}

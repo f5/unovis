@@ -1,6 +1,6 @@
 <script lang='ts'>
-  import { BulletLegendItemInterface } from '@volterra/vis'
-  import { VisXYContainer, VisAxis, VisBrush, VisGroupedBar, VisBulletLegend } from '@volterra/vis-svelte'
+  import { BulletLegendItemInterface } from '@unovis/ts'
+  import { VisXYContainer, VisAxis, VisBrush, VisGroupedBar, VisBulletLegend } from '@unovis/svelte'
   import { data, groups, GroupItem, DataRecord } from './data'
 
   type LegendItem = BulletLegendItemInterface & GroupItem
@@ -8,7 +8,7 @@
   let items: LegendItem[] = groups.map(g => ({ ...g, inactive: false }))
   let selection = [1980, 1990]
   let duration = 0
-  
+
   const x = (d: DataRecord) => d.year
   $: y = items.map(i => (d: DataRecord) => i.inactive ? null : d[i.key])
   $: xDomain = selection
@@ -16,7 +16,7 @@
   function updateDomain (selection: [number, number], _, userDriven: boolean) {
     if (userDriven) {
       // We set duration to 0 to update the main chart immediately (without animation) after the brush event
-      duration = 0 
+      duration = 0
       xDomain = selection
     }
   }

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { XYComponentCore, XYContainerConfigInterface, XYContainer, Tooltip, Axis, AxisType, Crosshair } from '@volterra/vis'
+  import { XYComponentCore, XYContainerConfigInterface, XYContainer, Tooltip, Axis, AxisType, Crosshair } from '@unovis/ts'
   import { onMount, onDestroy, setContext } from 'svelte'
 
   type Datum = $$Generic

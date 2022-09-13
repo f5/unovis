@@ -12,7 +12,7 @@ import {
   VisXYLabelsModule,
   VisBulletLegendModule,
   VisTimelineModule,
-} from '@volterra/vis-angular'
+} from '@unovis/angular'
 
 import { TimelineLabelsComponent } from './timeline-labels.component'
 

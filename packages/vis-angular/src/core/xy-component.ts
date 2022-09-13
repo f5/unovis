@@ -1,4 +1,4 @@
-import { XYComponentCore, XYContainer } from '@volterra/vis'
+import { XYComponentCore, XYContainer } from '@unovis/ts'
 import { VisCoreComponent } from './core-component'
 
 export class VisXYComponent extends VisCoreComponent {

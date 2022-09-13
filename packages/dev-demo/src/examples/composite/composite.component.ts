@@ -9,7 +9,7 @@ import {
   Tooltip,
   Crosshair,
   TextAlign,
-} from '@volterra/vis'
+} from '@unovis/ts'
 
 // Helpers
 import { sampleSeriesData, SampleDatum } from '../../utils/data'

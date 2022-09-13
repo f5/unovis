@@ -1,6 +1,6 @@
 import React from 'react'
-import { VisXYContainer, VisStackedBar, VisAxis, VisBulletLegend, VisTooltip } from '@volterra/vis-react'
-import { Direction, Orientation, StackedBar } from '@volterra/vis'
+import { VisXYContainer, VisStackedBar, VisAxis, VisBulletLegend, VisTooltip } from '@unovis/react'
+import { Direction, Orientation, StackedBar } from '@unovis/ts'
 import { data, labels, EducationDatum } from './data'
 
 const chartLabels = Object.entries(labels).map(([k, v], i) => ({

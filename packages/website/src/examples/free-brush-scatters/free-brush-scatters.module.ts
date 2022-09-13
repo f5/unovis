@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core'
-import { VisAxisModule, VisBulletLegendModule, VisFreeBrushModule, VisScatterModule, VisXYContainerModule } from '@volterra/vis-angular'
+import { VisAxisModule, VisBulletLegendModule, VisFreeBrushModule, VisScatterModule, VisXYContainerModule } from '@unovis/angular'
 import { FreeBrushScattersComponent } from './free-brush-scatters.component'
 
 @NgModule({

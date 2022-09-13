@@ -1,6 +1,6 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { Graph, GraphConfigInterface, GraphInputNode, GraphInputLink } from '@volterra/vis'
+  import { Graph, GraphConfigInterface, GraphInputNode, GraphInputLink } from '@unovis/ts'
   import { getContext, onMount } from 'svelte'
   import { getActions } from '../../utils/actions'
 

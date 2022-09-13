@@ -2,7 +2,7 @@ import { AfterViewInit, OnDestroy, Component } from '@angular/core'
 import { format } from 'date-fns'
 
 // Vis
-import { Axis, Brush, GroupedBar, Tooltip, Crosshair, Scale } from '@volterra/vis'
+import { Axis, Brush, GroupedBar, Tooltip, Crosshair, Scale } from '@unovis/ts'
 
 // Helpers
 import { sampleSeriesData, SampleDatum } from '../../utils/data'

@@ -1,5 +1,5 @@
 <script lang='ts'>
-  import { Area, Donut, Line } from '@volterra/vis'
+  import { Area, Donut, Line } from '@unovis/ts'
   /* eslint-disable import-newlines/enforce */
   import {
     VisSingleContainer,

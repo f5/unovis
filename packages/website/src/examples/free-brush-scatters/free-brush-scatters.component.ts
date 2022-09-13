@@ -1,5 +1,5 @@
 import { Component } from '@angular/core'
-import { FreeBrushMode, Scale } from '@volterra/vis'
+import { FreeBrushMode, Scale } from '@unovis/ts'
 import { data, palette, DataRecord } from './data'
 
 @Component({

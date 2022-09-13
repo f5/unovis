@@ -1,6 +1,6 @@
 <script lang='ts'>
-  import { Scale, Scatter } from '@volterra/vis'
-  import { VisXYContainer, VisScatter, VisAxis, VisTooltip } from '@volterra/vis-svelte'
+  import { Scale, Scatter } from '@unovis/ts'
+  import { VisXYContainer, VisScatter, VisAxis, VisTooltip } from '@unovis/svelte'
   import { palette, data, DataRecord } from './data'
 
   const categories = [...new Set(data.map((d: DataRecord) => d.category))].sort()

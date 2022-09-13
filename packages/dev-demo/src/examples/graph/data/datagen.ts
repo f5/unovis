@@ -1,7 +1,7 @@
 import _random from 'lodash/random'
 import _sample from 'lodash/sample'
 import _times from 'lodash/times'
-import { GraphLinkStyle, GraphLinkArrowStyle, GraphInputNode, GraphInputLink, GraphCircleLabel } from '@volterra/vis'
+import { GraphLinkStyle, GraphLinkArrowStyle, GraphInputNode, GraphInputLink, GraphCircleLabel } from '@unovis/ts'
 
 interface NodeDatum extends GraphInputNode {
   shape: string;

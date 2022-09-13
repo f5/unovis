@@ -1,6 +1,6 @@
 {
-  "name": "volterra-vis",
-  "version": "0.0.0",
+  "name": "unovis",
+  "version": "1.0.0-beta.2",
   "license": "Apache-2.0",
   "private": true,
   "workspaces": [

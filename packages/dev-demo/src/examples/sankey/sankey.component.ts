@@ -2,7 +2,7 @@ import { AfterViewInit, Component } from '@angular/core'
 import _times from 'lodash/times'
 
 // Vis
-import { Sankey, SankeyConfigInterface } from '@volterra/vis'
+import { Sankey, SankeyConfigInterface } from '@unovis/ts'
 
 import { sankeySampleData } from './data/datagen'
 

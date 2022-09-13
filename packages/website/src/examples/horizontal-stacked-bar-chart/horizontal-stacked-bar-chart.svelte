@@ -1,6 +1,6 @@
 <script lang='ts'>
-  import { VisXYContainer, VisStackedBar, VisAxis, VisBulletLegend, VisTooltip } from '@volterra/vis-svelte'
-  import { Direction, Orientation, StackedBar } from '@volterra/vis'
+  import { VisXYContainer, VisStackedBar, VisAxis, VisBulletLegend, VisTooltip } from '@unovis/svelte'
+  import { Direction, Orientation, StackedBar } from '@unovis/ts'
   import { data, labels, EducationDatum } from './data'
 
   const chartLabels = Object.entries(labels).map(([k, v], i) => ({
@@ -23,7 +23,7 @@
     return `<div style="font-size: 12px">${title}${total}${stats}</div>`
   }
 
-  
+
 </script>
 
 <VisXYContainer height={800} yDirection={Direction.South}>

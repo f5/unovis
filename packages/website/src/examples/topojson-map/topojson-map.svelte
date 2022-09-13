@@ -1,12 +1,12 @@
 <script lang='ts'>
-  import { Orientation, Scale, TopoJSONMap } from '@volterra/vis'
-  import { WorldMapTopoJSON } from '@volterra/vis/maps'
-  import { VisSingleContainer, VisTopoJSONMap, VisTooltip, VisAxis, VisXYContainer, VisStackedBar } from '@volterra/vis-svelte'
-  import { palette, data, ageRange, yearRange, AreaDatum } from './data'  
+  import { Orientation, Scale, TopoJSONMap } from '@unovis/ts'
+  import { WorldMapTopoJSON } from '@unovis/ts/maps'
+  import { VisSingleContainer, VisTopoJSONMap, VisTooltip, VisAxis, VisXYContainer, VisStackedBar } from '@unovis/svelte'
+  import { palette, data, ageRange, yearRange, AreaDatum } from './data'
 
   const mapData = { areas: data }
   const range = yearRange[1] - yearRange[0]
- 
+
   // scale functions
   const yearScale = Scale.scaleLinear()
     .domain(yearRange)
@@ -33,7 +33,7 @@
   <header class='year-slider'>
     <h2>Life expectancy by Country, <em>{year}</em></h2>
     <input type="range" bind:value={year} min={yearRange[0]} max={yearRange[1]}/>
-  </header> 
+  </header>
   <!-- topojson map -->
   <VisSingleContainer data={mapData} height={550} duration={0}>
     <VisTopoJSONMap topojson={WorldMapTopoJSON} areaColor={getAreaColor} disableZoom/>

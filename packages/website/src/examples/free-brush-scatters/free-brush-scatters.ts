@@ -1,4 +1,4 @@
-import { Axis, BulletLegend, FreeBrush, FreeBrushMode, Position, Scale, Scatter, XYContainer } from '@volterra/vis'
+import { Axis, BulletLegend, FreeBrush, FreeBrushMode, Position, Scale, Scatter, XYContainer } from '@unovis/ts'
 import { data, palette, DataRecord } from './data'
 
 // constants/helpers

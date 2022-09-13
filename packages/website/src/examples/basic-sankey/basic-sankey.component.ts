@@ -1,5 +1,5 @@
 import { Component } from '@angular/core'
-import { FitMode } from '@volterra/vis'
+import { FitMode } from '@unovis/ts'
 
 import { data, NodeDatum } from './data'
 

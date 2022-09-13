@@ -4,7 +4,7 @@ import _times from 'lodash/times'
 import _sample from 'lodash/sample'
 import _random from 'lodash/random'
 
-import { Graph, SingleContainer, GraphLayoutType, GraphConfigInterface, VisControlItemInterface, VisControlsOrientation } from '@volterra/vis'
+import { Graph, SingleContainer, GraphLayoutType, GraphConfigInterface, VisControlItemInterface, VisControlsOrientation } from '@unovis/ts'
 
 import { dataGenerator } from './data/datagen'
 

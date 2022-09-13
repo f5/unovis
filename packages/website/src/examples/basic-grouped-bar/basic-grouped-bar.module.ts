@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core'
-import { VisXYContainerModule, VisGroupedBarModule, VisAxisModule, VisBulletLegendModule } from '@volterra/vis-angular'
+import { VisXYContainerModule, VisGroupedBarModule, VisAxisModule, VisBulletLegendModule } from '@unovis/angular'
 
 import { BasicGroupedBarComponent } from './basic-grouped-bar.component'
 

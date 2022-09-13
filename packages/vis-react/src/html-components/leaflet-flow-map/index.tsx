@@ -1,5 +1,5 @@
 import React, { ForwardedRef, Ref, useEffect, useImperativeHandle, useRef, useState } from 'react'
-import { LeafletFlowMap, LeafletFlowMapConfigInterface } from '@volterra/vis'
+import { LeafletFlowMap, LeafletFlowMapConfigInterface } from '@unovis/ts'
 import { arePropsEqual } from '../../utils/react'
 
 export type VisLeafletFlowMapProps<PointDatum, FlowDatum> = LeafletFlowMapConfigInterface<PointDatum, FlowDatum> & {
@@ -22,11 +22,10 @@ export function VisLeafletFlowMapFC<PointDatum, FlowDatum> (
 
   // On Mount
   useEffect(() => {
-    setComponent(
-      new LeafletFlowMap(container.current as HTMLDivElement, props, props.data)
-    )
+    const c = new LeafletFlowMap(container.current as HTMLDivElement, props, props.data)
+    setComponent(c)
 
-    return () => component?.destroy()
+    return () => c?.destroy()
   }, [])
 
   // On Props Update

@@ -1,6 +1,6 @@
 import { SankeyLoginFlowComponent } from 'examples/sankey-login-flow/sankey-login-flow.component'
 import { NgModule } from '@angular/core'
-import { VisSingleContainerModule, VisSankeyModule } from '@volterra/vis-angular'
+import { VisSingleContainerModule, VisSankeyModule } from '@unovis/angular'
 
 @NgModule({
   imports: [VisSingleContainerModule, VisSankeyModule],

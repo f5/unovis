@@ -1,4 +1,4 @@
-import { Axis, BulletLegend, Timeline, Tooltip, XYContainer, colors } from '@volterra/vis'
+import { Axis, BulletLegend, Timeline, Tooltip, XYContainer, colors } from '@unovis/ts'
 import { colorMap, data, DataRecord, ProductType } from './data'
 
 const labelWidth = 220

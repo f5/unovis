@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import React, { ReactNode, useEffect, useRef, useState, PropsWithChildren } from 'react'
-import { XYContainer, XYContainerConfigInterface, XYComponentCore, Tooltip, Crosshair, Axis, AxisType } from '@volterra/vis'
+import { XYContainer, XYContainerConfigInterface, XYComponentCore, Tooltip, Crosshair, Axis, AxisType } from '@unovis/ts'
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'
@@ -40,11 +40,10 @@ export function VisXYContainerFC<Datum> (props: PropsWithChildren<VisXYContainer
   // On Mount
   useEffect(() => {
     setData(props.data)
-    setChart(
-      new XYContainer<Datum>(container.current as HTMLDivElement, getConfig(), props.data)
-    )
+    const c = new XYContainer<Datum>(container.current as HTMLDivElement, getConfig(), props.data)
+    setChart(c)
 
-    return () => chart?.destroy()
+    return () => c.destroy()
   }, [])
 
   // On Props Update

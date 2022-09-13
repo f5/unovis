@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-use-before-define
 import React, { ReactNode, useEffect, useRef, useState, PropsWithChildren } from 'react'
-import { SingleContainer, SingleContainerConfigInterface, ComponentCore, Tooltip } from '@volterra/vis'
+import { SingleContainer, SingleContainerConfigInterface, ComponentCore, Tooltip } from '@unovis/ts'
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'
@@ -29,10 +29,9 @@ function VisSingleContainerFC<Data> (props: PropsWithChildren<VisSingleContainer
   // On Mount
   useEffect(() => {
     setData(props.data)
-    setChart(
-      new SingleContainer<Data>(container.current as HTMLDivElement, getConfig(), props.data)
-    )
-    return () => chart?.destroy()
+    const c = new SingleContainer<Data>(container.current as HTMLDivElement, getConfig(), props.data)
+    setChart(c)
+    return () => c.destroy()
   }, [])
 
   // On Props Update

@@ -16,7 +16,7 @@ import {
   NumericAccessor,
   Direction,
   GroupedBar,
-} from '@volterra/vis'
+} from '@unovis/ts'
 
 // Helpers
 import { SampleDatum } from '../../utils/data'
@@ -51,9 +51,9 @@ export class HorizontalBarComponent implements AfterViewInit, OnDestroy {
     name: string;
     inactive?: boolean;
   }[] = this.yAccessors.map((d, i) => ({
-    name: `Stream ${i + 1}`,
-    hidden: !d,
-  }))
+      name: `Stream ${i + 1}`,
+      hidden: !d,
+    }))
 
   chartConfig: XYContainerConfigInterface<SampleDatum>
   groupedBarChart: XYContainer<SampleDatum>

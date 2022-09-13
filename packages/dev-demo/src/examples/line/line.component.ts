@@ -2,7 +2,7 @@
 import { AfterViewInit, Component } from '@angular/core'
 
 // Vis
-import { Line, Axis } from '@volterra/vis'
+import { Line, Axis } from '@unovis/ts'
 
 import _times from 'lodash/times'
 import { SampleDatum } from '../../utils/data'

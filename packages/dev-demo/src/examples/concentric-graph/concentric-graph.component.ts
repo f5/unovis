@@ -1,7 +1,7 @@
 /* eslint-disable dot-notation */
 
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core'
-import { Graph, GraphLayoutType, Shape, SingleContainer } from '@volterra/vis'
+import { Graph, GraphLayoutType, Shape, SingleContainer } from '@unovis/ts'
 
 type GraphNode = { id: string; label: string; group: string }
 type GraphLink = { source: string; target: string }

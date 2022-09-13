@@ -11,7 +11,7 @@ import {
   ContinuousScale,
   Tooltip,
   CrosshairCircle,
-} from '@volterra/vis'
+} from '@unovis/ts'
 import { VisXYComponent } from '../../core'
 
 @Component({

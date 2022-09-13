@@ -1,7 +1,7 @@
 import { Component, ViewChild, EventEmitter, ElementRef, AfterViewInit, Input, Output } from '@angular/core'
 
 // Vis
-import { BulletLegend, BulletLegendConfigInterface } from '@volterra/vis'
+import { BulletLegend, BulletLegendConfigInterface } from '@unovis/ts'
 
 @Component({
   selector: 'vis-bullet-legend',
@@ -10,10 +10,10 @@ import { BulletLegend, BulletLegendConfigInterface } from '@volterra/vis'
 })
 export class BulletLegendComponent implements AfterViewInit {
   @ViewChild('legend', { static: false }) legendRef: ElementRef
-  @Input() items: any[] = [];
-  @Input() bulletSize: string = null;
-  @Input() labelFontSize: string = null;
-  @Input() labelMaxWidth: string = null;
+  @Input() items: any[] = []
+  @Input() bulletSize: string = null
+  @Input() labelFontSize: string = null
+  @Input() labelMaxWidth: string = null
   @Output() itemClick = new EventEmitter()
 
   legend = null

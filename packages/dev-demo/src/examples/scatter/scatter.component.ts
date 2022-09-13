@@ -2,7 +2,7 @@ import { AfterViewInit, Component } from '@angular/core'
 import _random from 'lodash/random'
 import _sample from 'lodash/sample'
 
-import { Scatter, Axis, SymbolType, ScatterConfigInterface } from '@volterra/vis'
+import { Scatter, Axis, SymbolType, ScatterConfigInterface } from '@unovis/ts'
 
 // Helpers
 import { SampleDatum } from '../../utils/data'

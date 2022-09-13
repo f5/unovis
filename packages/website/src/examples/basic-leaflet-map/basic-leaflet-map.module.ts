@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core'
-import { VisLeafletMapModule } from '@volterra/vis-angular'
+import { VisLeafletMapModule } from '@unovis/angular'
 
 import { BasicLeafletMapComponent } from './basic-leaflet-map.component'
 

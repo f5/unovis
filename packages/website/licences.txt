@@ -21,6 +21,7 @@ svelte                                     perpetual       MIT           3.48.0 
 @tsconfig/docusaurus                       perpetual       MIT           1.0.4              n/a
 @tsconfig/svelte                           perpetual       MIT           2.0.0              n/a
 ngc-esbuild                                perpetual       ISC           0.0.75             Joe Cserko
+raw-loader                                 perpetual       MIT           4.0.2              Tobias Koppers @sokra
 rollup                                     perpetual       MIT           2.61.1             Rich Harris
 rollup-plugin-copy                         perpetual       MIT           3.4.0              Vlad Shcherbin
 rollup-plugin-dev                          perpetual       MIT           2.0.4              Dave Honneffer

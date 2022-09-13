@@ -1,4 +1,4 @@
-import { SingleContainer, Sankey, FitMode, SankeyNode, SankeySubLabelPlacement, VerticalAlign, SankeyLink } from '@volterra/vis'
+import { SingleContainer, Sankey, FitMode, SankeyNode, SankeySubLabelPlacement, VerticalAlign, SankeyLink } from '@unovis/ts'
 import { getColor, getChildren, LinkDatum, NodeDatum, sankeyData, sourceNode } from './data'
 
 // initial data

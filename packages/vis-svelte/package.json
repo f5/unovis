@@ -1,7 +1,7 @@
 {
-  "name": "@volterra/vis-svelte",
-  "version": "0.9.27",
-  "description": "Svelte wrapper for @volterra/vis",
+  "name": "@unovis/svelte",
+  "version": "1.0.0-beta.2",
+  "description": "Svelte wrapper for Unovis",
   "license": "Apache-2.0",
   "main": "./index.js",
   "types": "./index.d.ts",
@@ -11,14 +11,10 @@
     "build": "npm run check && rm -rf dist; rollup -c",
     "check": "svelte-check --ignore \"src-demo\" --tsconfig ./tsconfig.json",
     "generate": "rollup -c ./autogen/rollup.config.js; node .autogen.js; rm .autogen.js",
-    "publish-dist": "cp ./{.npmrc,package.json} ./dist; cp ../../LICENSE ./dist; cd ./dist; npm publish; rm -rf .cache"
-  },
-  "publishConfig": {
-    "cache": ".cache/.npm",
-    "@volterra:registry": "https://artifactory.f5net.com/artifactory/api/npm/f5-volterra-vis-npm/"
+    "publish-dist": "cp ./package.json ./dist; cp ../../LICENSE ./dist; cd ./dist; npm publish; rm -rf .cache"
   },
   "peerDependencies": {
-    "@volterra/vis": "0.9.27",
+    "@unovis/ts": "1.0.0-beta.2",
     "svelte": "^3.48.0"
   },
   "devDependencies": {

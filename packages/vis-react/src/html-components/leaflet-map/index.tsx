@@ -1,5 +1,5 @@
 import React, { ForwardedRef, Ref, useEffect, useImperativeHandle, useRef, useState } from 'react'
-import { LeafletMap, LeafletMapConfigInterface } from '@volterra/vis'
+import { LeafletMap, LeafletMapConfigInterface } from '@unovis/ts'
 import { arePropsEqual } from '../../utils/react'
 
 export type VisLeafletMapProps<Datum> = LeafletMapConfigInterface<Datum> & {
@@ -18,11 +18,10 @@ export function VisLeafletMapFC<Datum> (props: VisLeafletMapProps<Datum>, ref: F
 
   // On Mount
   useEffect(() => {
-    setComponent(
-      new LeafletMap(container.current as HTMLDivElement, props, props.data)
-    )
+    const c = new LeafletMap(container.current as HTMLDivElement, props, props.data)
+    setComponent(c)
 
-    return () => component?.destroy()
+    return () => c?.destroy()
   }, [])
 
   // On Props Update

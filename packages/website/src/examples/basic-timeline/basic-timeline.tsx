@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
-import { Timeline } from '@volterra/vis'
-import { VisXYContainer, VisBulletLegend, VisTooltip, VisTimeline, VisAxis } from '@volterra/vis-react'
+import { Timeline } from '@unovis/ts'
+import { VisXYContainer, VisBulletLegend, VisTooltip, VisTimeline, VisAxis } from '@unovis/react'
 
 import { colorMap, data, DataRecord, ProductType } from './data'
 

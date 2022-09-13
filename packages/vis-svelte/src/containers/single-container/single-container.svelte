@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ComponentCore, SingleContainer, SingleContainerConfigInterface, Tooltip } from '@volterra/vis'
+  import { ComponentCore, SingleContainer, SingleContainerConfigInterface, Tooltip } from '@unovis/ts'
   import { onMount, onDestroy, setContext } from 'svelte'
 
   type Data = $$Generic

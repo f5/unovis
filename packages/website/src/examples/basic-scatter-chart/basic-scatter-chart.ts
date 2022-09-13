@@ -1,4 +1,4 @@
-import { Axis, BulletLegend, Scale, Scatter, Tooltip, XYContainer } from '@volterra/vis'
+import { Axis, BulletLegend, Scale, Scatter, Tooltip, XYContainer } from '@unovis/ts'
 import { data, palette, DataRecord } from './data'
 
 const categories = [...new Set(data.map((d: DataRecord) => d.category))].sort()

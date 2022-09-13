@@ -1,4 +1,4 @@
-import { XYContainer, Axis, GroupedBar, BulletLegend } from '@volterra/vis'
+import { XYContainer, Axis, GroupedBar, BulletLegend } from '@unovis/ts'
 import { data, colors, ElectionDatum } from './data'
 
 const container = document.getElementById('#vis-container')

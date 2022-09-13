@@ -1,6 +1,6 @@
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import { Tooltip, TooltipConfigInterface, ContainerCore, ComponentCore, Position } from '@volterra/vis'
+import { Tooltip, TooltipConfigInterface, ContainerCore, ComponentCore, Position } from '@unovis/ts'
 import { VisGenericComponent } from '../../core'
 
 @Component({

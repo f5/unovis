@@ -1,5 +1,5 @@
 <script lang='ts'>
-  import { VisXYContainer, VisLine, VisAxis } from '@volterra/vis-svelte'
+  import { VisXYContainer, VisLine, VisAxis } from '@unovis/svelte'
   import { data } from './data'
 </script>
 

@@ -1,6 +1,6 @@
 {
-  "name": "@volterra/vis",
-  "version": "0.9.27",
+  "name": "@unovis/ts",
+  "version": "1.0.0-beta.2",
   "license": "Apache-2.0",
   "main": "./index.js",
   "module": "./index.js",
@@ -8,11 +8,7 @@
   "scripts": {
     "build": "sha=$(tar cf - ./src | shasum); if [[ $(echo $sha) == $(< .srcsha) ]] && [[ -d \"./lib\" ]]; then echo \"Lib Build Exists\"; else npm run forcebuild; echo $sha > .srcsha; fi",
     "forcebuild": "rimraf lib; rollup -c",
-    "publish-dist": "cp ./{.npmrc,package.json} ./lib; cp ../../LICENSE ./lib; cd ./lib; npm publish; rm -rf .cache"
-  },
-  "publishConfig": {
-    "cache": ".cache/.npm",
-    "@volterra:registry": "https://artifactory.f5net.com/artifactory/api/npm/f5-volterra-vis-npm/"
+    "publish-dist": "cp ./package.json ./lib; cp ../../LICENSE ./lib; cd ./lib; npm publish; rm -rf .cache"
   },
   "devDependencies": {
     "@rollup/plugin-json": "^4.1.0",

@@ -57,7 +57,7 @@ export function DocWrapper ({
               ...containerProps,
               ...(name === containerName ? { ...rest, ...hiddenProps } : {}),
             }
-            const lib = require('@volterra/vis-react')
+            const lib = require('@unovis/react')
             if (!containerName) {
               return (
                 <>

@@ -20,7 +20,7 @@ import {
   GraphCircleLabel,
   GraphNodeShape,
   GraphPanelConfig,
-} from '@volterra/vis'
+} from '@unovis/ts'
 import { VisCoreComponent } from '../../core'
 
 @Component({

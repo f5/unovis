@@ -1,5 +1,5 @@
-import { MapData, MapProjection, TopoJSONMapConfigInterface, Scale } from '@volterra/vis'
-import { ChinaTopoJSON, FranceTopoJSON, GermanyTopoJSON, IndiaTopoJSON, UKTopoJSON, USATopoJSON } from '@volterra/vis/maps'
+import { MapData, MapProjection, TopoJSONMapConfigInterface, Scale } from '@unovis/ts'
+import { ChinaTopoJSON, FranceTopoJSON, GermanyTopoJSON, IndiaTopoJSON, UKTopoJSON, USATopoJSON } from '@unovis/ts/maps'
 
 
 export type Area = { id: string; color: string }

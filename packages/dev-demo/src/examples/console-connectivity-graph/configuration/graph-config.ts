@@ -1,5 +1,5 @@
 import _sample from 'lodash/sample'
-import { Graph, GraphLayoutType, GraphConfigInterface } from '@volterra/vis'
+import { Graph, GraphLayoutType, GraphConfigInterface } from '@unovis/ts'
 
 // const StatusMap = {
 //   healthy: { color: '#47e845' },

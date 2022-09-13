@@ -11,7 +11,7 @@ import {
   ContinuousScale,
   FreeBrushMode,
   FreeBrushSelection,
-} from '@volterra/vis'
+} from '@unovis/ts'
 import { D3BrushEvent } from 'd3-brush'
 import { VisXYComponent } from '../../core'
 

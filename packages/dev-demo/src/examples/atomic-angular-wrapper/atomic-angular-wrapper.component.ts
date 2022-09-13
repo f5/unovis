@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core'
-import { VisCrosshairComponent, VisTooltipComponent } from '@volterra/vis-angular'
-import { XYLabels, XYLabelCluster, BulletLegendItemInterface } from '@volterra/vis'
+import { VisCrosshairComponent, VisTooltipComponent } from '@unovis/angular'
+import { XYLabels, XYLabelCluster, BulletLegendItemInterface } from '@unovis/ts'
 
 // Helpers
 import { sampleSeriesData, SampleDatum } from '../../utils/data'

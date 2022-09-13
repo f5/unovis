@@ -67,7 +67,7 @@ Pad each segment with the `padAngle` property.
 ## Events
 The following selectors are available for events:
 ```ts
-import { Donut } from '@volterra/vis'
+import { Donut } from '@unovis/ts'
 ...
 events = {
     [Donut.selectors.segment]: { }
@@ -76,22 +76,21 @@ events = {
 <DocWrapper {...defaultProps()} excludeGraph events={{}}/>
 
 ## CSS Variables
-<details>
-  <summary>All supported CSS variables</summary>
-  <CodeBlock language="css">
-  {`--vis-donut-central-label-font-size
+All supported CSS variables
+
+```css
+--vis-donut-central-label-font-size
 --vis-donut-central-label-text-color
 --vis-donut-central-label-font-family
 --vis-donut-central-label-font-weight
 --vis-dark-donut-central-label-text-color
-  
+
 --vis-donut-central-sub-label-font-size
 --vis-donut-central-sub-label-text-color
 --vis-donut-central-sub-label-font-family
 --vis-donut-central-sub-label-font-weight
---vis-dark-donut-central-sub-label-text-color`}
-  </CodeBlock>
-</details>
+--vis-dark-donut-central-sub-label-text-color`
+```
 
 ## Component Props
 <PropTable name="VisDonut"/>

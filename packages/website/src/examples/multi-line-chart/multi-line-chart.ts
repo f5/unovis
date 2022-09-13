@@ -1,4 +1,4 @@
-import { Axis, BulletLegend, Line, XYContainer } from '@volterra/vis'
+import { Axis, BulletLegend, Line, XYContainer } from '@unovis/ts'
 import { data, labels, CityTemps } from './data'
 
 const container = document.getElementById('#vis-container')

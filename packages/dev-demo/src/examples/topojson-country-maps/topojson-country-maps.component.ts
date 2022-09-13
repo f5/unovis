@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core'
-import { TopoJSONMap, Tooltip, MapData, SingleContainer } from '@volterra/vis'
-import { WorldMapTopoJSON } from '@volterra/vis/maps'
+import { TopoJSONMap, Tooltip, MapData, SingleContainer } from '@unovis/ts'
+import { WorldMapTopoJSON } from '@unovis/ts/maps'
 
 import { maps, Country, Area } from './data'
 

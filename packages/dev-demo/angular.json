@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "volterra-vis-examples": {
+    "unovis-examples": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:class": {
@@ -34,7 +34,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "lib/volterra-vis-examples",
+            "outputPath": "lib/unovis-examples",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -90,20 +90,20 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "volterra-vis-examples:build",
+            "browserTarget": "unovis-examples:build",
             "sourceMap": true,
             "optimization": false
           },
           "configurations": {
             "production": {
-              "browserTarget": "volterra-vis-examples:build:production"
+              "browserTarget": "unovis-examples:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "volterra-vis-examples:build"
+            "browserTarget": "unovis-examples:build"
           }
         },
         "test": {
@@ -140,16 +140,16 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "volterra-vis-examples:serve"
+            "devServerTarget": "unovis-examples:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "volterra-vis-examples:serve:production"
+              "devServerTarget": "unovis-examples:serve:production"
             }
           }
         }
       }
     }
   },
-  "defaultProject": "volterra-vis-examples"
+  "defaultProject": "unovis-examples"
 }

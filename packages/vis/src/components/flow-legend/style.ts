@@ -7,7 +7,7 @@ export const root = css`
   user-select: none;
 `
 
-export const global = injectGlobal`
+export const globalStyles = injectGlobal`
   :root {
     --vis-flow-legend-label-background: #ffffff;
     --vis-flow-legend-label-color: #71788a;

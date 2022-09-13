@@ -1,7 +1,7 @@
 import { AfterViewInit, Component } from '@angular/core'
 
 // Vis
-import { StackedBar, StackedBarConfigInterface, Axis } from '@volterra/vis'
+import { StackedBar, StackedBarConfigInterface, Axis } from '@unovis/ts'
 
 // Helpers
 import { SampleDatum, sampleSeriesData } from '../../utils/data'
