@@ -1,5 +1,5 @@
 // !!! This code was automatically generated. You should not change it !!!
-import React, { ForwardedRef, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
+import React, { ForwardedRef, Ref, useImperativeHandle, useEffect, useRef } from 'react'
 import { Donut, DonutConfigInterface } from '@unovis/ts'
 
 // Utils
@@ -20,20 +20,23 @@ export type VisDonutProps<Datum> = DonutConfigInterface<Datum> & {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 function VisDonutFC<Datum> (props: VisDonutProps<Datum>, fRef: ForwardedRef<VisDonutRef<Datum>>): JSX.Element {
   const ref = useRef<VisComponentElement<Donut<Datum>>>(null)
-  const [component] = useState<Donut<Datum>>(new Donut(props))
 
   // On Mount
   useEffect(() => {
-    (ref.current as VisComponentElement<Donut<Datum>>).__component__ = component
+    const element = (ref.current as VisComponentElement<Donut<Datum>>)
+    element.__component__?.destroy() // Destroy component if exists already (to comply with React 18 strict mode, which renders components twice in dev mode)
+    element.__component__ = new Donut(props)
+    // We don't have a clean up function because the component will be destroyed by its container (e.g. XYContainer or SingleContainer)
   }, [])
 
   // On Props Update
   useEffect(() => {
+    const component = (ref.current as VisComponentElement<Donut<Datum>>).__component__
     if (props.data) component?.setData(props.data)
     component?.setConfig(props)
   })
 
-  useImperativeHandle(fRef, () => ({ component }))
+  useImperativeHandle(fRef, () => ({ component: (ref.current as VisComponentElement<Donut<Datum>>).__component__ }))
   return <vis-component ref={ref} />
 }
 
