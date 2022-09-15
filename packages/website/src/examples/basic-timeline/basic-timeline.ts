@@ -4,7 +4,7 @@ import { colorMap, data, DataRecord, ProductType } from './data'
 const labelWidth = 220
 const dateFormatter = Intl.DateTimeFormat().format
 
-const container = document.getElementById('#vis-container')
+const container = document.getElementById('vis-container')
 container.innerHTML = '<h3>A Timeline of Abandoned Google Products, 1997 - 2022</h3>'
 
 const legend = new BulletLegend(container, {

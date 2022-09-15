@@ -1,7 +1,7 @@
 import { XYContainer, Axis, GroupedBar, BulletLegend } from '@unovis/ts'
 import { data, colors, ElectionDatum } from './data'
 
-const container = document.getElementById('#vis-container')
+const container = document.getElementById('vis-container')
 
 const legendItems = Object.entries(colors).map(([n, c]) => ({
   name: n.toUpperCase(),

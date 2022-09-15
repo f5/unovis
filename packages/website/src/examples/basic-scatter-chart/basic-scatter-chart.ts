@@ -5,7 +5,7 @@ const categories = [...new Set(data.map((d: DataRecord) => d.category))].sort()
 const colorScale = Scale.scaleOrdinal(palette).domain(categories)
 const formatNumber = Intl.NumberFormat('en', { notation: 'compact' }).format
 
-const container = document.getElementById('#vis-container')
+const container = document.getElementById('vis-container')
 
 const title = document.createElement('h2')
 title.innerText = 'American College Graduates, 2010-2012'

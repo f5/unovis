@@ -3,7 +3,7 @@ import { data, formats, DataRecord, getLabels } from './data'
 
 const labels = getLabels(data)
 
-const container = document.getElementById('#vis-container')
+const container = document.getElementById('vis-container')
 
 const chart = new XYContainer(container, {
   height: 500,

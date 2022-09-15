@@ -14,7 +14,7 @@ import { data, groups, GroupItem, DataRecord } from './data'
 type LegendItem = BulletLegendItemInterface & GroupItem
 const items: LegendItem[] = groups.map(g => ({ ...g, inactive: false }))
 
-const container = document.getElementById('#vis-container')
+const container = document.getElementById('vis-container')
 let chart: XYContainer<DataRecord> | null = null
 let legend: BulletLegend | null = null
 

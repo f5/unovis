@@ -12,7 +12,7 @@ function add (parent: HTMLElement, tag: string, options = {}): HTMLElement {
 }
 
 // initialize title, legend and containers
-const container = document.getElementById('#vis-container')
+const container = document.getElementById('vis-container')
 const title = add(container, 'h2', { innerText: 'American College Graduates, 2010-2012' })
 const legend = new BulletLegend(container, { items: legendItems })
 const vis = add(container, 'div')

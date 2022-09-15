@@ -23,7 +23,7 @@ export function GalleryViewer ({ example, useTypescriptCode }: GalleryViewerProp
 
   return (<div className={s.root}>
     <div className={s.title}><h1>{example.title}</h1></div>
-    <div className={s.example} id="#vis-container">
+    <div className={s.example} id="vis-container">
       {!useTypescriptCode && example.component()}
     </div>
     <div className={s.description}>{example.description}</div>
