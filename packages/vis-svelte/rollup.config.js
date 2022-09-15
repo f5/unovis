@@ -9,17 +9,13 @@ import sveld from 'sveld'
 import devServer from 'rollup-plugin-dev'
 import copy from 'rollup-plugin-copy'
 import commonjs from 'rollup-plugin-commonjs'
-import postcss from 'rollup-plugin-postcss'
 
 import pkg from './package.json'
 
 const dev = process.env.ROLLUP_WATCH
 
 // Excluded dependencies
-const externals = [
-  ...Object.keys(pkg.devDependencies),
-  'lodash/isEqual',
-]
+const externals = Object.keys(pkg.devDependencies)
 
 const regexesOfPackages = externals // To prevent having node_modules in the build files
   .map(packageName => new RegExp(`^${packageName}(/.*)?`))
@@ -37,11 +33,6 @@ export default {
     preserveModulesRoot: dev ? './src-demo' : './src',
   },
   plugins: [
-    postcss({
-      plugins: [],
-      inject: true,
-      minimize: true,
-    }),
     commonjs(),
     resolve({
       browser: true,
@@ -50,6 +41,7 @@ export default {
       dedupe: ['svelte'],
     }),
     svelte({
+      emitCss: false,
       preprocess: sveltePreprocess({ sourceMap: dev }),
       compilerOptions: {
         dev: dev,
