@@ -18,6 +18,8 @@ import { BasicAreaModule } from './examples/basic-area/basic-area.module'
 import { BasicTimelineModule } from './examples/basic-timeline/basic-timeline.module'
 import { BasicSankeyModule } from './examples/basic-sankey/basic-sankey.module'
 import { ExpandableSankeyModule } from './examples/expandable-sankey/expandable-sankey.module'
+import { BasicGraphModule } from './examples/dagre-graph/dagre-graph.module'
+
 
 @Component({
   selector: 'app-component',
@@ -35,6 +37,7 @@ import { ExpandableSankeyModule } from './examples/expandable-sankey/expandable-
     <basic-timeline></basic-timeline>
     <basic-sankey></basic-sankey>
     <expandable-sankey></expandable-sankey>
+    <dagre-graph></dagre-graph>
   `,
 })
 export class AppComponent {
@@ -48,7 +51,7 @@ export class AppComponent {
     BrowserModule, BasicGroupedBarModule, BasicLeafletMapModule, BasicLineChartModule, MultiLineChartModule,
     TopojsonMapModule, StackedBarChartModule, BasicScatterChartModule, FreeBrushScattersModule, BrushGroupedBarModule,
     TopojsonMapModule, StackedBarChartModule, BasicScatterChartModule, FreeBrushScattersModule, BasicAreaModule,
-    BasicTimelineModule, BasicSankeyModule, ExpandableSankeyModule,
+    BasicTimelineModule, BasicSankeyModule, ExpandableSankeyModule, BasicGraphModule,
   ],
   bootstrap: [AppComponent],
   providers: [BrowserModule],
