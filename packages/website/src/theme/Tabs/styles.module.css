@@ -1,0 +1,10 @@
+.container {
+  position: relative;
+}
+
+.button {
+  position: absolute;
+  right: 0;
+  top: var(--ifm-tabs-padding-vertical);
+  cursor: pointer;
+}

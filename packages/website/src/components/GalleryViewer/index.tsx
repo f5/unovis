@@ -6,6 +6,7 @@ import CodeBlock from '@theme/CodeBlock'
 // Internal Deps
 import { kebabCase } from '@site/src/utils/text'
 import { Example } from '@site/src/types/example'
+import { Framework } from '@site/src/types/code'
 
 // Styles
 import s from './styles.module.css'
@@ -28,13 +29,13 @@ export function GalleryViewer ({ example, useTypescriptCode }: GalleryViewerProp
     </div>
     <div className={s.description}>{example.description}</div>
     <div className={s.codeBlock}>
-      <Tabs>
-        <TabItem value="react" label="React">
+      <Tabs groupId='framework' example={example}>
+        <TabItem value={Framework.React} label="React">
           <CodeBlock language="tsx">
             {example.codeReact}
           </CodeBlock>
         </TabItem>
-        <TabItem value="angular" label="Angular">
+        <TabItem value={Framework.Angular} label="Angular">
           <CodeBlock language="html" title={`${kebabCase(example.title)}.html`}>
             {example.codeAngular.html}
           </CodeBlock>
@@ -45,13 +46,13 @@ export function GalleryViewer ({ example, useTypescriptCode }: GalleryViewerProp
             {example.codeAngular.module}
           </CodeBlock>
         </TabItem>
-        <TabItem value="svelte" label="Svelte">
+        <TabItem value={Framework.Svelte} label="Svelte">
           <CodeBlock language="html">
             {example.codeSvelte}
           </CodeBlock>
         </TabItem>
-        <TabItem value="typescript" label="TypeScript">
-          <CodeBlock language="tsx">
+        <TabItem value={Framework.TypeScript} label="TypeScript">
+          <CodeBlock language="ts">
             {example.codeTs}
           </CodeBlock>
         </TabItem>
