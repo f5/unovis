@@ -7,9 +7,8 @@
   "types": "./index.d.ts",
   "svelte": "./index.js",
   "scripts": {
-    "dev": "rm -rf build; rollup -c --watch",
     "build": "npm run check && rm -rf dist; rollup -c",
-    "check": "svelte-check --ignore \"src-demo\" --tsconfig ./tsconfig.json",
+    "check": "svelte-check --tsconfig ./tsconfig.json",
     "generate": "rollup -c ./autogen/rollup.config.js; node .autogen.js; rm .autogen.js",
     "publish-dist": "cp ./package.json ./dist; cp ../../LICENSE ./dist; cd ./dist; npm publish; rm -rf .cache"
   },
