@@ -1,7 +1,7 @@
 import { BulletLegend, Orientation, StackedBar, Tooltip, XYContainer } from '@unovis/ts'
 import { data, labels, EducationDatum } from './data'
 
-const container = document.getElementById('#vis-container')
+const container = document.getElementById('vis-container')
 
 const bar = new StackedBar<EducationDatum>({
   x: (d, i) => i,
@@ -9,7 +9,7 @@ const bar = new StackedBar<EducationDatum>({
   orientation: Orientation.Vertical,
 })
 
-const legend = new BulletLegend(document.getElementById('#vis-legend'), {
+const legend = new BulletLegend(document.getElementById('vis-legend'), {
   items: Object.values(labels).map(v => ({ name: v })),
 })
 

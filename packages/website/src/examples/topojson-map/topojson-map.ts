@@ -16,7 +16,7 @@ const year = {
   },
 }
 
-const container = document.getElementById('#vis-container')
+const container = document.getElementById('vis-container')
 
 const slider = container.appendChild(document.createElement('header'))
 const chart = container.appendChild(document.createElement('div'))

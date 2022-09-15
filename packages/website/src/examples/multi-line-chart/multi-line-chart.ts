@@ -1,7 +1,7 @@
 import { Axis, BulletLegend, Line, XYContainer } from '@unovis/ts'
 import { data, labels, CityTemps } from './data'
 
-const container = document.getElementById('#vis-container')
+const container = document.getElementById('vis-container')
 
 const line = new Line<CityTemps>({
   x: (d: CityTemps) => +(new Date(d.date)),

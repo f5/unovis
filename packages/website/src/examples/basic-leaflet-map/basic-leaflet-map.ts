@@ -6,7 +6,7 @@ import { MapPointDataRecord, data } from './data'
 // !!! Get your own access key from https://maptiler.com
 import { mapKey } from './key'
 
-const container = document.getElementById('#vis-container')
+const container = document.getElementById('vis-container')
 
 const config: LeafletMapConfigInterface<MapPointDataRecord> = {
   style: `https://api.maptiler.com/maps/streets/style.json?key=${mapKey}`,

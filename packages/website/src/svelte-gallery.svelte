@@ -13,6 +13,7 @@
     () => import('./examples/basic-timeline/basic-timeline.svelte'),
     () => import('./examples/basic-sankey/basic-sankey.svelte'),
     () => import('./examples/expandable-sankey/expandable-sankey.svelte'),
+    () => import('./examples/dagre-graph/dagre-graph.svelte'),
   ]
 </script>
 

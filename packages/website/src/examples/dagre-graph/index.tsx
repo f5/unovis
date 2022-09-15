@@ -3,7 +3,7 @@ import React from 'react'
 import BrowserOnly from '@docusaurus/BrowserOnly'
 import { Example } from '@site/src/types/example'
 
-const pathname = 'basic-line-chart'
+const pathname = 'dagre-graph'
 const example: Example = {
   component: () => <BrowserOnly>{() => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -11,8 +11,10 @@ const example: Example = {
     return <Component />
   }}</BrowserOnly>,
   pathname,
-  title: 'Basic Line Chart',
-  description: '',
+  title: 'Darge Layout Graph',
+  description: <p>Service Mesh
+    (source: <a href='https://cloud.google.com/service-mesh/docs/onlineboutique-install-kpt' target="_blank">Online Boutique sample application</a>)
+  </p>,
   preview: require('./preview.png').default,
   codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,
   codeTs: require(`!!raw-loader!./${pathname}.ts`).default,

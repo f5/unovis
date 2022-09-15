@@ -1,7 +1,7 @@
-import { Line, XYContainer } from '@unovis/ts'
+import { Axis, Line, XYContainer } from '@unovis/ts'
 import { data, DataRecord } from './data'
 
-const container = document.getElementById('#vis-container')
+const container = document.getElementById('vis-container')
 
 const line = new Line<DataRecord>({
   x: d => d.x,
@@ -10,4 +10,6 @@ const line = new Line<DataRecord>({
 
 const chart = new XYContainer(container, {
   components: [line],
+  xAxis: new Axis(),
+  yAxis: new Axis(),
 }, data)

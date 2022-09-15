@@ -8,7 +8,7 @@ let data = {
 }
 
 // initialize chart
-const container = document.getElementById('#vis-container')
+const container = document.getElementById('vis-container')
 const chart = new SingleContainer(container)
 
 // node click event listener
