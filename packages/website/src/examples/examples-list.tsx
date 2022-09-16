@@ -40,6 +40,7 @@ export const examples: ExampleCollection[] = [
     </div>,
     examples: [
       require('./basic-leaflet-map').default,
+      require('./leaflet-flow-map').default,
       require('./topojson-map').default,
     ],
   },
