@@ -23,6 +23,7 @@ import { BasicGraphModule } from './examples/dagre-graph/dagre-graph.module'
 import { LeafletFlowMapModule } from './examples/leaflet-flow-map/leaflet-flow-map.module'
 import { ForceLayoutGraphModule } from './examples/force-graph/force-graph.module'
 import { AdvancedLeafletMapModule } from './examples/advanced-leaflet-map/advanced-leaflet-map.module'
+import { ParallelGraphModule } from './examples/parallel-graph/parallel-graph.module'
 
 @Component({
   selector: 'app-component',
@@ -44,7 +45,15 @@ import { AdvancedLeafletMapModule } from './examples/advanced-leaflet-map/advanc
     <basic-sankey></basic-sankey>
     <expandable-sankey></expandable-sankey>
     <dagre-graph></dagre-graph>
+<<<<<<< HEAD
     <force-graph></force-graph>
+=======
+<<<<<<< HEAD
+    <force-layout-graph></force-layout-graph>
+=======
+    <parallel-graph></parallel-graph>
+>>>>>>> 9f07a17c (Website | Gallery: Graph Parallel Layout example)
+>>>>>>> 3057b5d5 (Website | Gallery: Graph Parallel Layout example)
   `,
 })
 export class AppComponent {
@@ -57,9 +66,20 @@ export class AppComponent {
   imports: [
     BrowserModule, BasicGroupedBarModule, BasicLeafletMapModule, BasicLineChartModule, MultiLineChartModule,
     TopojsonMapModule, StackedBarChartModule, BasicScatterChartModule, FreeBrushScattersModule, BrushGroupedBarModule,
+<<<<<<< HEAD
     TopojsonMapModule, StackedBarChartModule, BasicScatterChartModule, FreeBrushScattersModule, BasicAreaChartModule,
     BasicTimelineModule, BasicSankeyModule, ExpandableSankeyModule, BasicGraphModule, LeafletFlowMapModule,
     ForceLayoutGraphModule, AdvancedLeafletMapModule, StackedAreaModule,
+=======
+    TopojsonMapModule, StackedBarChartModule, BasicScatterChartModule, FreeBrushScattersModule, BasicAreaModule,
+<<<<<<< HEAD
+    BasicTimelineModule, BasicSankeyModule, ExpandableSankeyModule, BasicGraphModule, LeafletFlowMapModule,
+    ForceLayoutGraphModule, AdvancedLeafletMapModule,
+=======
+    BasicTimelineModule, BasicSankeyModule, ExpandableSankeyModule, BasicGraphModule,
+    BasicTimelineModule, BasicSankeyModule, ExpandableSankeyModule, ParallelGraphModule,
+>>>>>>> 9f07a17c (Website | Gallery: Graph Parallel Layout example)
+>>>>>>> 3057b5d5 (Website | Gallery: Graph Parallel Layout example)
   ],
   bootstrap: [AppComponent],
   providers: [BrowserModule],

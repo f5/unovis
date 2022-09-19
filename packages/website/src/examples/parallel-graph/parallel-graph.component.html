@@ -1,0 +1,16 @@
+<link rel="stylesheet" [href]="style">
+<vis-single-container [data]="data" [height]="750" [margin]="margin">
+    <vis-bullet-legend [items]="legendItems"></vis-bullet-legend>
+    <vis-graph
+      [layoutType]="layoutType"
+      [layoutParallelNodeSubGroup]="layoutParallelNodeSubGroup"
+      [layoutParallelNodesPerColumn]="5"
+      [layoutParallelGroupSpacing]="200"
+      [linkArrow]="linkArrow"
+      [linkStroke]="linkStroke"
+      [nodeFill]="getColor"
+      [nodeIcon]="nodeIcon"
+      [panels]="graphPanels"
+    ></vis-graph>
+    <vis-tooltip [triggers]="tooltipTriggers"></vis-tooltip>
+</vis-single-container>
