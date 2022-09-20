@@ -6,7 +6,6 @@ import typescript from 'rollup-plugin-typescript2'
 import devServer from 'rollup-plugin-dev'
 import copy from 'rollup-plugin-copy'
 import commonjs from 'rollup-plugin-commonjs'
-import postcss from 'rollup-plugin-postcss'
 
 export default {
   input: ['src/svelte-gallery.ts'],
@@ -16,11 +15,6 @@ export default {
     format: 'esm',
   },
   plugins: [
-    postcss({
-      plugins: [],
-      inject: true,
-      minimize: true,
-    }),
     commonjs(),
     resolve({
       browser: true,
@@ -28,6 +22,7 @@ export default {
       dedupe: ['svelte'],
     }),
     svelte({
+      emitCss: false,
       preprocess: sveltePreprocess({
         sourceMap: true,
       }),

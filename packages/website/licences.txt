@@ -8,6 +8,7 @@ name                                       license period  license type  install
 @docusaurus/plugin-sitemap                 perpetual       MIT           2.0.0-beta.21      n/a
 @docusaurus/preset-classic                 perpetual       MIT           2.0.0-beta.21      n/a
 @mdx-js/react                              perpetual       MIT           1.6.21             John Otander
+@stackblitz/sdk                            perpetual       MIT           1.8.0              Eric Simons
 clsx                                       perpetual       MIT           1.1.1              Luke Edwards
 docusaurus-plugin-react-docgen-typescript  perpetual       MIT           0.1.0              Dennis Thompson
 nodemon                                    perpetual       MIT           2.0.16             Remy Sharp
@@ -25,9 +26,9 @@ raw-loader                                 perpetual       MIT           4.0.2  
 rollup                                     perpetual       MIT           2.61.1             Rich Harris
 rollup-plugin-copy                         perpetual       MIT           3.4.0              Vlad Shcherbin
 rollup-plugin-dev                          perpetual       MIT           2.0.4              Dave Honneffer
+rollup-plugin-postcss                      perpetual       MIT           4.0.1              EGOIST
 rollup-plugin-svelte                       perpetual       MIT           7.1.0              Rich Harris
 rollup-plugin-terser                       perpetual       MIT           7.0.2              Bogdan Chadkin
-rollup-plugin-postcss                      perpetual       MIT           4.0.1              EGOIST
 rollup-plugin-typescript2                  perpetual       MIT           0.31.1             @ezolenko
 svelte-preprocess                          perpetual       MIT           4.10.6             Christian Kaisermann
 typescript                                 perpetual       Apache-2.0    4.2.4              Microsoft Corp.

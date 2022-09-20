@@ -4,3 +4,9 @@ export function kebabCase (str: string): string {
     .map(x => x.toLowerCase())
     .join('-')
 }
+
+export function trimMultiline (str: string): string {
+  const s = str.substring(str.indexOf('\n') + 1)
+  const indent = ' '.repeat(s.length - s.trim().length)
+  return str.replaceAll(indent, '')
+}

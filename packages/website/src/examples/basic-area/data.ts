@@ -1,5 +1,3 @@
-import { maxIndex } from 'd3-array'
-
 enum Format {
   Vinyl = 'vinyl',
   Cassette = 'cassette',
@@ -22,9 +20,10 @@ export function getMaxItems<T extends Record<string, number>> (
   array: T[],
   keys: (keyof T)[]
 ): { [key in keyof T]?: T } {
+  const maxIndex = (k: keyof T): number => array.reduce((max, curr, i) => curr[k] > array[max][k] ? i : max, 0)
   const entries = keys.map(key => [
     key,
-    array[maxIndex(array, d => d[key])],
+    array[maxIndex(key)],
   ])
 
   return Object.fromEntries(entries)
