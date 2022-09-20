@@ -51,6 +51,7 @@ export const examples: ExampleCollection[] = [
       require('./basic-sankey').default,
       require('./expandable-sankey').default,
       require('./dagre-graph').default,
+      require('./force-layout-graph').default,
     ],
   },
   /* {} */
