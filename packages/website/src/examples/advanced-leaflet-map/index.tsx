@@ -23,7 +23,7 @@ const example: Example = {
   </div>,
   preview: require('./preview.png').default,
   codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,
-  codeTs: require(`!!raw-loader!./${pathname}.tsx`).default,
+  codeTs: require(`!!raw-loader!./${pathname}.ts`).default,
   codeAngular: {
     html: require(`!!raw-loader!./${pathname}.component.html`).default,
     component: require(`!!raw-loader!./${pathname}.component.ts`).default,

@@ -15,7 +15,7 @@ const example: Example = {
   description: <div>Flows between small US airports (synthetic data)</div>,
   preview: require('./preview.jpg').default,
   codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,
-  codeTs: require(`!!raw-loader!./${pathname}.tsx`).default,
+  codeTs: require(`!!raw-loader!./${pathname}.ts`).default,
   codeAngular: {
     html: require(`!!raw-loader!./${pathname}.component.html`).default,
     component: require(`!!raw-loader!./${pathname}.component.ts`).default,
