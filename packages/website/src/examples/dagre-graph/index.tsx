@@ -11,7 +11,7 @@ const example: Example = {
     return <Component />
   }}</BrowserOnly>,
   pathname,
-  title: 'Darge Layout Graph',
+  title: 'Dagre Layout Graph',
   description: <p>Service Mesh
     (source: <a href='https://cloud.google.com/service-mesh/docs/onlineboutique-install-kpt' target="_blank">Online Boutique sample application</a>)
   </p>,
