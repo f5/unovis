@@ -27,6 +27,7 @@
   export function zoomOut (increment = 1): void { component.zoomOut(increment) }
   export function setZoom (zoomLevel: number) { component.setZoom(zoomLevel) }
   export function fitView (): void { component.fitView() }
+  export function getComponent (): LeafletMap<Datum> { return component }
 
   onMount(() => {
     component = new LeafletMap<Datum>(ref, config, data)
