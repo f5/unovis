@@ -1,6 +1,5 @@
 name                          license period  license type  installed version  author
 ----                          --------------  ------------  -----------------  ------
-lodash                        perpetual       MIT           4.17.21            John-David Dalton
 @rollup/plugin-typescript     perpetual       MIT           8.3.2              Oskar Segersvärd
 @rollup/plugin-node-resolve   perpetual       MIT           13.0.4             Rich Harris
 @tsconfig/svelte              perpetual       MIT           2.0.0              n/a
