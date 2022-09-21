@@ -15,6 +15,7 @@
     () => import('./examples/basic-sankey/basic-sankey.svelte'),
     () => import('./examples/expandable-sankey/expandable-sankey.svelte'),
     () => import('./examples/dagre-graph/dagre-graph.svelte'),
+    () => import('./examples/force-layout-graph/force-layout-graph.svelte')
   ]
 </script>
 

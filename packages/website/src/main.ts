@@ -20,7 +20,7 @@ import { BasicSankeyModule } from './examples/basic-sankey/basic-sankey.module'
 import { ExpandableSankeyModule } from './examples/expandable-sankey/expandable-sankey.module'
 import { BasicGraphModule } from './examples/dagre-graph/dagre-graph.module'
 import { LeafletFlowMapModule } from './examples/leaflet-flow-map/leaflet-flow-map.module'
-
+import { ForceLayoutGraphModule } from './examples/force-layout-graph/force-layout-graph.module'
 
 @Component({
   selector: 'app-component',
@@ -40,6 +40,7 @@ import { LeafletFlowMapModule } from './examples/leaflet-flow-map/leaflet-flow-m
     <basic-sankey></basic-sankey>
     <expandable-sankey></expandable-sankey>
     <dagre-graph></dagre-graph>
+    <force-layout-graph></force-layout-graph>
   `,
 })
 export class AppComponent {
@@ -54,6 +55,7 @@ export class AppComponent {
     TopojsonMapModule, StackedBarChartModule, BasicScatterChartModule, FreeBrushScattersModule, BrushGroupedBarModule,
     TopojsonMapModule, StackedBarChartModule, BasicScatterChartModule, FreeBrushScattersModule, BasicAreaModule,
     BasicTimelineModule, BasicSankeyModule, ExpandableSankeyModule, BasicGraphModule, LeafletFlowMapModule,
+    ForceLayoutGraphModule,
   ],
   bootstrap: [AppComponent],
   providers: [BrowserModule],

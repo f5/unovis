@@ -3,7 +3,7 @@ import React from 'react'
 import BrowserOnly from '@docusaurus/BrowserOnly'
 import { Example } from '@site/src/types/example'
 
-const pathname = 'dagre-graph'
+const pathname = 'force-layout-graph'
 const example: Example = {
   component: () => <BrowserOnly>{() => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -11,9 +11,9 @@ const example: Example = {
     return <Component />
   }}</BrowserOnly>,
   pathname,
-  title: 'Dagre Layout Graph',
-  description: <p>Service Mesh
-    (source: <a href='https://cloud.google.com/service-mesh/docs/onlineboutique-install-kpt' target="_blank">Online Boutique sample application</a>)
+  title: 'Force Layout Graph',
+  description: <p>Les Misérables Character Co-occurrence Graph
+    (source: <a href='https://www-cs-faculty.stanford.edu/~knuth/sgb.html' target="_blank">The Stanford GraphBase</a>)
   </p>,
   preview: require('./preview.png').default,
   codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,
