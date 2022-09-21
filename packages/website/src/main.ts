@@ -19,6 +19,7 @@ import { BasicTimelineModule } from './examples/basic-timeline/basic-timeline.mo
 import { BasicSankeyModule } from './examples/basic-sankey/basic-sankey.module'
 import { ExpandableSankeyModule } from './examples/expandable-sankey/expandable-sankey.module'
 import { BasicGraphModule } from './examples/dagre-graph/dagre-graph.module'
+import { LeafletFlowMapModule } from './examples/leaflet-flow-map/leaflet-flow-map.module'
 
 
 @Component({
@@ -27,6 +28,7 @@ import { BasicGraphModule } from './examples/dagre-graph/dagre-graph.module'
     <basic-grouped-bar></basic-grouped-bar>
     <basic-line-chart></basic-line-chart>
     <basic-leaflet-map></basic-leaflet-map>
+    <leaflet-flow-map></leaflet-flow-map>
     <multi-line-chart></multi-line-chart>
     <topojson-map></topojson-map>
     <horizontal-stacked-bar-chart></horizontal-stacked-bar-chart>
@@ -51,7 +53,7 @@ export class AppComponent {
     BrowserModule, BasicGroupedBarModule, BasicLeafletMapModule, BasicLineChartModule, MultiLineChartModule,
     TopojsonMapModule, StackedBarChartModule, BasicScatterChartModule, FreeBrushScattersModule, BrushGroupedBarModule,
     TopojsonMapModule, StackedBarChartModule, BasicScatterChartModule, FreeBrushScattersModule, BasicAreaModule,
-    BasicTimelineModule, BasicSankeyModule, ExpandableSankeyModule, BasicGraphModule,
+    BasicTimelineModule, BasicSankeyModule, ExpandableSankeyModule, BasicGraphModule, LeafletFlowMapModule,
   ],
   bootstrap: [AppComponent],
   providers: [BrowserModule],
