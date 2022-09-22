@@ -23,6 +23,7 @@ const example: Example = {
   },
   codeSvelte: require(`!!raw-loader!./${pathname}.svelte`).default,
   data: require('!!raw-loader!./data').default,
+  constants: require('!!raw-loader!./constants').default,
 }
 
 export default example

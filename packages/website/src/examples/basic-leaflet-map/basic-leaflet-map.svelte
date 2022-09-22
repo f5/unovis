@@ -5,7 +5,7 @@
     import { MapPointDataRecord, data } from './data'
 
     // !!! Get your own access key from https://maptiler.com
-    import { mapKey } from './key'
+    import { mapKey } from './constants'
 
     const style = `https://api.maptiler.com/maps/streets/style.json?key=${mapKey}`
     const pointLatitude = (d: MapPointDataRecord) => d.latitude
