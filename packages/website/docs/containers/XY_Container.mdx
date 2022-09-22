@@ -1,0 +1,155 @@
+---
+title: XY Container
+sidebar_label: XY Container
+---
+
+import BrowserOnly from '@docusaurus/BrowserOnly'
+import Tabs from '@theme/Tabs'
+import TabItem from '@theme/TabItem'
+import CodeBlock from '@theme/CodeBlock'
+import { FrameworkTabs } from '../components/framework-tabs'
+import { PropTable } from '../components/props-table'
+import { generateDataRecords } from '../utils/data'
+import { XYWrapper, XYWrapperWithInput } from '../xy-charts/wrapper'
+import { parseComponent } from '../utils/parser'
+
+export const component = (name, props, override = {}) => ({
+  name,
+  props: { x: d=>d.x, y: d=>d.y, ...props },
+  key: "components",
+  override
+});
+
+export const defaultProps = (chartName='StackedBar', n=10) => ({
+  name: "XYContainer",
+  data: generateDataRecords(n),
+  //excludeTabs: true,
+  showContext: "full",
+  height: 150,
+  components: [
+    component(chartName),
+    { name: 'Axis', props: { type: 'x'}, key: 'xAxis'},
+    { name: 'Axis', props: { type: 'y' }, key: 'yAxis'},
+  ],
+})
+
+export const data = Array(10).fill(0).map((_,i) => ({ x: i, y: Math.random() * 20}))
+export const orderedData = Array(50).fill(0).map((d,i) => ({ x: i, y: i }))
+export const constraintData = generateDataRecords().map(d => ({ x: d.x + 1, y: d.y + 1})).concat([{ x: -5, y: -5}, { x: 15, y: 15}, { x: -5, y: 15}, {x: 15, y: -5 }])
+export const variedData = generateDataRecords(150).map(d => ({...d, y: Math.abs(Math.cos(d.x/(10*Math.PI)))*d.x}))
+
+## Basic Configuration
+The _XY Container_ component is designed as a wrapper to hold other vis elements. Here is an example of a common configuration: one _XYChart_ alongside two _Axis_ components:
+<XYWrapper {...defaultProps()} showContext="container"/>
+
+## Multiple XY Charts
+By providing the container with data, every _XY Chart_ within the container will be able to use it.
+There is no limit to the number of _XY Charts_ your container can have.
+
+<XYWrapper {...defaultProps()}
+  components={[
+    component('StackedBar', { y: d => d.y + (-5), barWidth: 5, color: '#333' }),
+    component('Line', { y: [d => d.y1 + d.y4, d => d.y2 * 3, d => d.y4 * 4]}, { y: { key: 'y', value: 'getYs', stringLiteral: false }}),
+    component('Scatter', { y: d => d.x, shape: d => Math.random() > 0.5 ? 'triangle' : 'circle'}, { y: { key: 'y', value: 'x'}})
+    ]}
+  showContext="container"
+/>
+
+## Domain
+You can change the domain of your data with the `xDomain` and `yDomain` properties to configure which values your `XYChart` should display.
+The result will show all data that is in this range- excluding any values that fall outside of the range, and occupying any missing values with white space.
+See the following example, which looks like this when the domain is not set:
+
+<XYWrapper {...defaultProps()} data={data} height={100} excludeTabs/>
+
+#### `xDomain = [4,8]`
+<XYWrapper {...defaultProps()} data={data} xDomain={[4,8]} height={100} excludeTabs/>
+
+#### `yDomain = [4,8]`
+<XYWrapper {...defaultProps()} data={data} yDomain={[4,8]} height={100} excludeTabs/>
+
+### Domain Constraints
+Customizing your domain is helpful in datasets with outliers. When using dynamic data, you may not know which values to constrain your domain values to.
+With the following constraint properties `xDomainMinConstraint`, `xDomainMaxConstraint`, `yDomainMinConstraint`, and `yDomainMaxConstraint`, you can define partial domains.
+For the following examples, consider the following case where the majority of the data is within the ranges `[0,10]` for all values of x and y.
+These properties accept a number array in the form `[number, number]` or more typically `[number, undefined]` | `[undefined, number]`.
+
+#### Domain Constraints: None
+<XYWrapper {...defaultProps("Scatter")} data={constraintData} excludeTabs/>
+
+#### xDomainMinConstraint: `[1, undefined]`
+<XYWrapper {...defaultProps('Scatter')} data={constraintData} xDomainMaxConstraint={[1, undefined]} excludeTabs/>
+
+#### yDomainMaxConstraint: `[undefined, 1]`
+<XYWrapper {...defaultProps('Scatter')} data={constraintData} yDomainMaxConstraint={[undefined, 10]} excludeTabs/>
+
+## Scale
+To change the scale of one of your axes in your _Container_, use the `xScale` or `yScale` property and a Scale function (i.e. `Scale.scaleLinear()`).
+Currently, only continuous scales are supported. See <a href='https://github.com/d3/d3-scale' target='__blank'>d3-scale</a>
+for more information about the meaning behind these functions.
+
+```ts
+import { Scale } from '@unovis/ts'
+const yScale = Scale.scaleLinear()
+```
+
+<XYWrapper {...defaultProps()} data={orderedData} excludeTabs/>
+
+```ts
+const yScale = Scale.scalePow().exponent(2)
+```
+
+<BrowserOnly>
+{() => {
+  const { Scale } = require('@unovis/ts')
+  console.log(Scale)
+  return (
+    <XYWrapper {...defaultProps()} data={orderedData} yScale={Scale.scalePow().exponent(2)} excludeTabs/>
+  )
+}}
+</BrowserOnly>
+
+### scaleByDomain
+You can also set the `yScale` domain dynamically based on the current `xDomain`, meaning that only visible data will be used in the domain calculation.
+Take a look at the example below. The `xDomain` configuration property there is not set, the chart displays the whole dataset and the Y axis shows ticks from 0 to 150.
+
+<XYWrapper {...defaultProps()} data={variedData} excludeTabs/>
+
+Let's set `xDomain` to `[0, 50]`. The chart now shows only a portion of the original data but the Y axis still displays the whole data range.
+Setting `scaleByDomain` to `true` will tell the chart to dynamically calculate the domain of `yScale` based on the data within `xDomain`.
+It comes in hand when you're updating xDomain programmatically using, for example, the _Brush_ component to provide some navigation capabilities to a chart with lots of data points.
+
+<XYWrapperWithInput
+  {...defaultProps()}
+  data={variedData}
+  xDomain={[0,50]}
+  property="scaleByDomain"
+  defaultValue={true}
+  inputType="checkbox"
+  showContext='container'/>
+
+## Y Direction
+You can set `yDirection` to change the direction of data along the Y axis. Supported values are `Direction.North` and `Direction.South`.
+<XYWrapper {...defaultProps()} yDirection='south' showContext='container'/>
+
+## Range
+The `xRange` and `yRange` determine the screen space your chart contains. By default, an _XY Container_ will
+fit to its container unless configured otherwise by the `sizing` property.
+
+Provide `xRange` with values [`xStart`, `width`] and `yRange` with [`yStart`, `height`].
+
+```ts
+const xRange = [10, 300]
+const yRange = [0, 50]
+```
+
+<div style={{ backgroundColor: '#1acb9a10', width: '100%'}}>
+  <XYWrapper {...defaultProps()} xRange={[10,300]} yRange={[200,20]} excludeTabs/>
+</div>
+
+## Further customization
+_XY Container_ shares many properties with _Single Container_ including `sizing` and `svgDefs`.
+Visit our [Single Container](./Single_Container) doc to learn more.
+
+## Component Props
+<PropTable name="VisXYContainer"/>
