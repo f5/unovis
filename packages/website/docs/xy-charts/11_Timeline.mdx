@@ -49,7 +49,7 @@ by adding an _Axis_ component to your container. See following example which dis
 _Timeline_ alongside a labeled _X Axis_:
 
 <XYWrapper {...defaultProps()}
-  componentProps={[xAxis]}
+  components={[xAxis]}
   declarations={{ tickFormat: 'Intl.DateTimeFormat().format'}}
   showLabels
   showContext="container"/>
@@ -105,7 +105,7 @@ export function ScrollExample() {
       <XYWrapper {...defaultProps(50, 20)}
         onScroll={setDist}
         showContext="minimal"
-        componentProps={[{...xAxis, props: { type: 'x', label: () => `${dist}px from the top`, tickValues: [] }}]}
+        components={[{...xAxis, props: { type: 'x', label: () => `${dist}px from the top`, tickValues: [] }}]}
         declarations={{ onScroll: '(n: number) => setAxisLabel(`${n}px from the top`)'}}
         />
     </>

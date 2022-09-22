@@ -7,21 +7,22 @@ type InputWrapperProps = DocWrapperProps & {
   defaultValue?: any;
   inputProps?: React.InputHTMLAttributes<any>;
   options?: string[]; // options for select type (first one by default)
+  onChange: (v: string) => any;
 }
 
 /* Displays component with an input element that dynamically updates a given property */
-export function InputWrapper ({ property, inputType: type, defaultValue, inputProps, options, ...rest }: InputWrapperProps): JSX.Element {
+export function InputWrapper ({ property, inputType: type, defaultValue, inputProps, options, onChange, ...rest }: InputWrapperProps): JSX.Element {
   const [attr, setAttr] = React.useState(defaultValue || options?.[0])
   function updateAttr (e: BaseSyntheticEvent): void {
-    return inputProps?.onChange ? setAttr(inputProps.onChange(e.target.value)) : setAttr(e.target.value)
+    return onChange ? setAttr(onChange(e.target.value)) : setAttr(e.target.value)
   }
 
   return (
     <div className='input-wrapper'>
-      <label className='prop-input-label'>
+      <label className={`prop-input-label ${rest.excludeTabs ? '' : 'compact'}`}>
         <code>{property}: </code>
         {type === 'select'
-          ? <select defaultValue={defaultValue} onChange={updateAttr}>
+          ? <select defaultValue={options[0]} onChange={updateAttr}>
             {options?.map(o => (
               <option value={o} key={o}>{o}</option>
             ))}

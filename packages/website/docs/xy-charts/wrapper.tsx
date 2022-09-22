@@ -16,7 +16,7 @@ export const axis = (t: 'x' | 'y'): DocComponent => ({ name: 'Axis', props: { ty
 
 const getProps = ({ showAxes, ...rest }: XYWrapperProps): DocWrapperProps => {
   if (showAxes) {
-    rest.componentProps?.push(axis('x'), axis('y'))
+    rest.components?.push(axis('x'), axis('y'))
   }
   return { ...defaultProps, ...rest }
 }

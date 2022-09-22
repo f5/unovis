@@ -20,7 +20,7 @@ export const defaultProps = (n=10) => ({
 export const multiProps = (xProps, yProps) => ({
   ...defaultProps(),
   ...xProps,
-  componentProps: [
+  components: [
     { name: "Axis", key: "yAxis", props: {type: "y", ...yProps } },
   ],
   showContext: "container"
@@ -213,8 +213,8 @@ More commonly, you will want to display both an x and y axis for your graph. You
 ## Displaying Axis with a Chart
 You can include a chart within your _XY Container_ alongside your axes like this:
 <XYWrapper {...multiProps()}
-  componentProps={[
-    ...multiProps().componentProps,
+  components={[
+    ...multiProps().components,
     { name: "Line", key: 'components', props: {x: d=>d.x, y: d=>d.y }}
   ]}/>
 

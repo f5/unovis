@@ -1,5 +1,6 @@
 import useIsBrowser from '@docusaurus/useIsBrowser'
 import { kebabCase } from '@site/src/utils/text'
+import { DocComponent } from '../wrappers/base/types'
 
 export type PropInfo = {
   key: string;
@@ -71,23 +72,27 @@ export function parseObject (value: any, type: string, level = 1): string {
   return `{\n${objectProps.join(',\n')}\n${tab(level)}}`
 }
 
-export function parseProps (props: Record<string, any>, dataType: string, imports: string[], declarations: Record<string, string>): PropInfo[] {
-  return props && Object.entries(props).map(([k, v]) => {
-    const isStringLiteral = typeof v === 'string' && !declarations[k] && (
-      imports === undefined || imports.findIndex(i => v?.startsWith(i)) === -1
-    )
-    if (declarations[k]) {
-      v = k
-    } else if (typeof v === 'object' || typeof v === 'function') {
-      if ((v.length && typeof v[0] === 'number') || !declarations) {
-        v = parseObject(v, dataType) || k
-      } else {
-        declarations[k] = parseObject(v, dataType) || k
+export function parseProps (component: DocComponent, dataType: string, imports: string[], declarations: Record<string, string>): ComponentInfo {
+  return {
+    ...component,
+    props: Object.entries(component.props).map(([k, v]) => {
+      if (component.override?.[k]) return component.override[k]
+      const isStringLiteral = typeof v === 'string' && !declarations[k] && (
+        imports === undefined || imports.findIndex(i => v?.startsWith(i)) === -1
+      )
+      if (declarations[k]) {
         v = k
+      } else if (typeof v === 'object' || typeof v === 'function') {
+        if ((v.length && typeof v[0] === 'number') || !declarations) {
+          v = parseObject(v, dataType) || k
+        } else {
+          declarations[k] = parseObject(v, dataType) || k
+          v = k
+        }
       }
-    }
-    return ({ key: k, value: String(v), stringLiteral: isStringLiteral })
-  })
+      return ({ key: k, value: String(v), stringLiteral: isStringLiteral })
+    }),
+  }
 }
 
 function parseAngular ({ name, props }: ComponentInfo): string {

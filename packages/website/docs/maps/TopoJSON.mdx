@@ -140,7 +140,7 @@ export const colorLegendItems = [
       pointRadius={d => d.userCount / 10}
       pointColor={d => ['green', 'yellow', 'orange', 'red'][d.threatLevel]}
       showContext="minimal"
-      componentProps={[
+      components={[
         {name: "BulletLegend", props: { items: colorLegendItems }, key: 'components'},
         {
           name: "Tooltip",
