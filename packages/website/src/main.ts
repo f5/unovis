@@ -21,6 +21,7 @@ import { ExpandableSankeyModule } from './examples/expandable-sankey/expandable-
 import { BasicGraphModule } from './examples/dagre-graph/dagre-graph.module'
 import { LeafletFlowMapModule } from './examples/leaflet-flow-map/leaflet-flow-map.module'
 import { ForceLayoutGraphModule } from './examples/force-layout-graph/force-layout-graph.module'
+import { AdvancedLeafletMapModule } from './examples/advanced-leaflet-map/advanced-leaflet-map.module'
 
 @Component({
   selector: 'app-component',
@@ -29,6 +30,7 @@ import { ForceLayoutGraphModule } from './examples/force-layout-graph/force-layo
     <basic-line-chart></basic-line-chart>
     <basic-leaflet-map></basic-leaflet-map>
     <leaflet-flow-map></leaflet-flow-map>
+    <advanced-leaflet-map></advanced-leaflet-map>
     <multi-line-chart></multi-line-chart>
     <topojson-map></topojson-map>
     <horizontal-stacked-bar-chart></horizontal-stacked-bar-chart>
@@ -55,7 +57,7 @@ export class AppComponent {
     TopojsonMapModule, StackedBarChartModule, BasicScatterChartModule, FreeBrushScattersModule, BrushGroupedBarModule,
     TopojsonMapModule, StackedBarChartModule, BasicScatterChartModule, FreeBrushScattersModule, BasicAreaModule,
     BasicTimelineModule, BasicSankeyModule, ExpandableSankeyModule, BasicGraphModule, LeafletFlowMapModule,
-    ForceLayoutGraphModule,
+    ForceLayoutGraphModule, AdvancedLeafletMapModule,
   ],
   bootstrap: [AppComponent],
   providers: [BrowserModule],

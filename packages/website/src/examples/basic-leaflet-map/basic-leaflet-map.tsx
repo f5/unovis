@@ -5,7 +5,7 @@ import { VisLeafletMap } from '@unovis/react'
 import { MapPointDataRecord, data } from './data'
 
 // !!! Get your own access key from https://maptiler.com
-import { mapKey } from './key'
+import { mapKey } from './constants'
 
 export default function BasicLeafletMap (): JSX.Element {
   const style = `https://api.maptiler.com/maps/streets/style.json?key=${mapKey}`

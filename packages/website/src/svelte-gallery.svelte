@@ -4,6 +4,7 @@
     () => import('./examples/basic-grouped-bar/basic-grouped-bar.svelte'),
     () => import('./examples/basic-leaflet-map/basic-leaflet-map.svelte'),
     () => import('./examples/leaflet-flow-map/leaflet-flow-map.svelte'),
+    () => import('./examples/advanced-leaflet-map/advanced-leaflet-map.svelte'),
     () => import('./examples/basic-line-chart/basic-line-chart.svelte'),
     () => import('./examples/basic-scatter-chart/basic-scatter-chart.svelte'),
     () => import('./examples/brush-grouped-bar/brush-grouped-bar.svelte'),

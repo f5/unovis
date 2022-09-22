@@ -4,7 +4,7 @@ import { LeafletFlowMap, LeafletFlowMapConfigInterface } from '@unovis/ts'
 import { MapPointDataRecord, MapFlowDataRecord, data } from './data'
 
 // !!! Get your own access key from https://maptiler.com
-import { mapKey } from './key'
+import { mapKey } from './constants'
 
 const container = document.getElementById('vis-container') as HTMLDivElement
 

@@ -4,7 +4,7 @@ import { Component } from '@angular/core'
 import { MapPointDataRecord, data } from './data'
 
 // !!! Get your own access key from https://maptiler.com
-import { mapKey } from './key'
+import { mapKey } from './constants'
 
 @Component({
   selector: 'basic-leaflet-map',

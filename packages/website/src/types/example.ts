@@ -11,8 +11,9 @@ export type Example = {
     component: string;
     html: string;
   };
-  codeSvelte?: string;
+  codeSvelte: string;
   data: string;
+  constants?: string;
 }
 
 export type ExampleCollection = {

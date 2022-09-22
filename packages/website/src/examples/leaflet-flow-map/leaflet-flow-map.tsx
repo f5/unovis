@@ -5,7 +5,7 @@ import { VisLeafletFlowMap } from '@unovis/react'
 import { MapPointDataRecord, MapFlowDataRecord, data } from './data'
 
 // !!! Get your own access key from https://maptiler.com
-import { mapKey } from './key'
+import { mapKey } from './constants'
 
 export default function LeafletFlowMap (): JSX.Element {
   const style = `https://api.maptiler.com/maps/topo/style.json?key=${mapKey}`
