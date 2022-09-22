@@ -1,0 +1,114 @@
+---
+title: Single Container
+sidebar_label: Single Container
+---
+
+import BrowserOnly from '@docusaurus/BrowserOnly'
+import Tabs from '@theme/Tabs'
+import TabItem from '@theme/TabItem'
+import CodeBlock from '@theme/CodeBlock'
+import { FrameworkTabs } from '../components/framework-tabs'
+import { PropTable } from '../components/props-table'
+import { generateDataRecords, orderedData } from '../utils/data'
+import { DocWrapper } from '../wrappers'
+
+export const defaultProps = (n=10) => ({
+  name: "SingleContainer",
+  containerName: "SingleContainer",
+  data: Array(n).fill(25).map(d => Math.floor(d * Math.random())),
+  dataType: 'number',
+  configKey: undefined,
+  showContext: "container",
+  excludeTabs: true,
+  height: 150,
+})
+
+export const donut = (props) => ({
+  name: 'Donut',
+  props: { value: d => d, ...props },
+  key: 'component'
+})
+
+### Basic configuration
+The _SingleContainer_ is a basic wrapper for a Unovis component. It is designed to hold one
+visualization component and an (optional) _Tooltip_. Just wrap the
+component( of your choice in _SingleContainer_ to render it.
+
+<BrowserOnly>
+{() => {
+  const { Donut } = require('@unovis/ts')
+  const tooltip = {
+    name: 'Tooltip',
+    props: {
+      triggers: {
+        [Donut.selectors.segment]: d => {
+          return `Value: ${d.data}`}
+      },
+    },
+    key: 'tooltip'
+  }
+  return <DocWrapper
+    {...defaultProps()}
+    height={150}
+    components={[ donut(), tooltip ]}
+    imports={{ '@unovis/ts': ['Donut'] }}
+    showContext='full'
+    excludeTabs={false}
+    declarations={{ triggers: `{ [Donut.selectors.segment]: d => d.data }`}}
+  />
+}}
+</BrowserOnly>
+
+:::note
+For XY Charts, instead use the <a href="XY_Container">XY Container</a>, which designed to handle
+2D data with X and Y coordinates.
+:::
+
+### Sizing
+The `sizing` property determines whether components should fit into the container
+or the container should expand to fit to the component's size. By default, _Single Container_
+will resize its components to fit. 
+
+`Sizing.FitWidth` will fit by width:
+
+```ts
+import { Sizing } from '@unovis/ts'
+
+const containerConfig = {
+  height: 150,
+  sizing: Sizing.Fit,
+  component: [new Donut({ height: 500})]
+}
+```
+<BrowserOnly>
+{() => {
+  const { Donut } = require('@unovis/ts')
+  console.log(Donut.selectors)
+  return <DocWrapper {...defaultProps()} width={200} components={[
+    donut({ attributes: {
+      [Donut.selectors.root]: {
+        style: 'width: 500px',
+        height: 500
+      }
+    }})]}/>
+}}
+</BrowserOnly>
+
+
+```ts
+const sizing = Sizing.FitWidth
+```
+<DocWrapper {...defaultProps()} sizing='fit_width' components={[donut({ height: 500 })]}/>
+
+```ts
+const sizing = Sizing.Extend
+```
+<DocWrapper {...defaultProps()} sizing='extend' components={[donut({ height: 20 })]}/>
+
+
+### SVG defs
+You can use the `svgDefs` property to define custom fill patterns for your components.
+See our <a href="../extras#custom-fills-with-svg-defs">Tips and Tricks</a> for details.
+
+## Component Props
+<PropTable name="VisSingleContainer"/>
