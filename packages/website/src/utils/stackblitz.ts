@@ -23,7 +23,7 @@ function getOpenFiles (framework: Framework, files: ProjectFiles): OpenFileOptio
     case Framework.Svelte:
       return 'src/App.svelte'
     default:
-      return 'index.ts'
+      return 'src/App.ts'
   }
 }
 function getStarterFiles (framework: Framework, e: Example): ProjectFiles {
@@ -38,7 +38,7 @@ function getStarterFiles (framework: Framework, e: Example): ProjectFiles {
           import { platformBrowserDynamic } from '@angular/platform-browser-dynamic'
           import { BrowserModule } from '@angular/platform-browser'
           import { ComponentModule } from './${comp}'
-          
+
           @Component({
             selector: 'app-component',
             template: '<${comp}></${comp}>'
@@ -58,6 +58,7 @@ function getStarterFiles (framework: Framework, e: Example): ProjectFiles {
         [`${comp}/${comp}.module.ts`]: e.codeAngular.module,
         [`${comp}/index.ts`]: `export { ${e.title.split(' ').join('')}Module as ComponentModule } from './${comp}.module.ts'`,
         [`${comp}/data.ts`]: e.data,
+        ...(e.constants ? { [`${comp}/constants.ts`]: e.constants } : {}),
       }
     case Framework.React:
       return {
@@ -66,18 +67,19 @@ function getStarterFiles (framework: Framework, e: Example): ProjectFiles {
           import React from 'react'
           import ReactDOM from 'react-dom'
           import App from './App'
-            
+
           ReactDOM.render(<App />, document.getElementById('root'))
         `),
         'src/App.tsx': e.codeReact,
         'src/data.ts': e.data,
+        ...(e.constants ? { 'src/constants.ts': e.constants } : {}),
       }
     case Framework.Svelte:
       return {
         'index.html': trimMultiline(`
           <script type="module">
             import App from './src/App.svelte';
-          
+
             export const index = new App({
               target: document.body,
             });
@@ -113,7 +115,7 @@ function getStarterFiles (framework: Framework, e: Example): ProjectFiles {
           import { defineConfig } from 'vite';
           import sveltePreprocess from 'svelte-preprocess';
           import { svelte } from '@sveltejs/vite-plugin-svelte';
-          
+
           export default defineConfig({
             plugins: [
               svelte({
@@ -125,6 +127,7 @@ function getStarterFiles (framework: Framework, e: Example): ProjectFiles {
         'vite.env.d.ts': '/// <reference types="svelte" />\n/// <reference types="vite/client" />',
         'src/data.ts': e.data,
         'src/App.svelte': e.codeSvelte,
+        ...(e.constants ? { 'src/constants.ts': e.constants } : {}),
       }
     default:
       return {
@@ -132,6 +135,7 @@ function getStarterFiles (framework: Framework, e: Example): ProjectFiles {
         'index.ts': 'import \'./src/App.ts\'',
         'src/App.ts': e.codeTs,
         'src/data.ts': e.data,
+        ...(e.constants ? { 'src/constants.ts': e.constants } : {}),
       }
   }
 }
