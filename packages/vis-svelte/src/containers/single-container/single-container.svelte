@@ -31,12 +31,15 @@
     setComponent: (c: ComponentCore<Data>) => {
       updateConfig({ component: c })
       if (data) chart.setData(data)
+    },
+    removeComponent: (_: ComponentCore<Data>) => {
+      updateConfig({ component: undefined })
     }
   })
 
 </script>
 
-<vis-single-container class='unovis-single-container' bind:this={ref}>
+<vis-single-container bind:this={ref} class='unovis-single-container'>
   {#if chart}
     <slot/>
   {/if}

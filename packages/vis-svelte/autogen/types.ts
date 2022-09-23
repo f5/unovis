@@ -20,4 +20,5 @@ export type ComponentInput = {
   elementSuffix?: string;
   kebabCaseName?: string;
   dataType?: string | null;
+  styles?: string[];
 }

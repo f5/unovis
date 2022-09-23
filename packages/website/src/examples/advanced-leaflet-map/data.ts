@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { MapLibreStyleSpecs } from '@unovis/ts'
+import type { MapLibreStyleSpecs } from '@unovis/ts'
 
 export type MapPointDataRecord = {
   name: string;

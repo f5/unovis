@@ -23,6 +23,10 @@
     return () => setCrosshair(undefined) as void
   })
 
+  // component accessor
+  export function getComponent (): Crosshair<Datum> { return component }
+
 </script>
 
 <vis-crosshair use:setData={data} use:setConfig={config} />
+

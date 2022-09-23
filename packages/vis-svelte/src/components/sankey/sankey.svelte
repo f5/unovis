@@ -22,6 +22,10 @@
     return () => removeComponent(component) as void
   })
 
+  // component accessor
+  export function getComponent (): Sankey<N, L> { return component }
+
 </script>
 
 <vis-component use:setData={data} use:setConfig={config} />
+
