@@ -23,6 +23,10 @@
     return () => setAxis(undefined) as void
   })
 
+  // component accessor
+  export function getComponent (): Axis<Datum> { return component }
+
 </script>
 
 <vis-axis use:setData={data} use:setConfig={config} />
+

@@ -1,11 +1,5 @@
 import { ConfigProperty, GenericParameter } from './types'
 
-const exportMethods = `\n  // public methods
-  export function zoomIn (increment = 1): void { component.zoomIn(increment) }
-  export function zoomOut (increment = 1): void { component.zoomOut(increment) }
-  export function setZoom (zoomLevel: number) { component.setZoom(zoomLevel) }
-  export function fitView (): void { component.fitView() }
-`
 export function getComponentCode (
   componentName: string,
   generics: GenericParameter[] | undefined,
@@ -14,7 +8,7 @@ export function getComponentCode (
   dataType: string | null = 'Data',
   elementSuffix = 'component',
   isStandAlone = false,
-  exportsFunctions = false
+  styles?: string[]
 ): string {
   const genericsStr = generics ? `<${generics?.map(g => g.name).join(', ')}>` : ''
   const setterStr = `set${elementSuffix.charAt(0).toUpperCase()}${elementSuffix.substring(1)}`
@@ -41,14 +35,18 @@ export function getComponentCode (
     setData: (d: ${dataType}) => component?.setData(d),` : ''}
     render: () => component?.render()
   }` : 'component'})
-  ${propDefs.length ? `// data and required props\n  ${propDefs.join('\n  ')}` : ''}${exportsFunctions ? exportMethods : ''}
+  ${propDefs.length ? `// data and required props\n  ${propDefs.join('\n  ')}` : ''}
   onMount(() => {
    ${isStandAlone ? `component = new ${componentName}${genericsStr}(ref, config${dataType ? ', data' : ''})` : `${setterStr}(component)`}
    return () => ${isStandAlone ? 'component.destroy()' : onDestroy} as void
   })
-  
+
+  // component accessor
+  export function getComponent (): ${componentName}${genericsStr} { return component }
+
 </script>
 
-<vis-${elementSuffix}${isStandAlone ? ' bind:this={ref} style:display=\'block\'' : ''}${dataType ? ' use:setData={data}' : ''} use:setConfig={config} />
+<vis-${elementSuffix}${isStandAlone ? ' bind:this={ref}' : ''}${dataType ? ' use:setData={data}' : ''} use:setConfig={config} />
+${isStandAlone ? `\n<style>\n  vis-${elementSuffix} {\n    ${styles?.join(';\n    ')};\n  }\n</style>` : ''}
 `
 }

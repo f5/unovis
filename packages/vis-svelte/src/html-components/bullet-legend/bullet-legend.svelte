@@ -22,6 +22,15 @@
     return () => component.destroy()
   })
 
+  // component accessor
+  export function getComponent (): BulletLegend { return component }
+
 </script>
 
-<vis-bullet-legend bind:this={ref} style:display='block' use:setConfig={config} />
+<vis-bullet-legend bind:this={ref} use:setConfig={config} />
+
+<style>
+  vis-bullet-legend {
+    display:block;
+  }
+</style>

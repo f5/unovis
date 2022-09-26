@@ -3,12 +3,11 @@ import { exec } from 'child_process'
 import ts from 'typescript'
 
 // Utils
-import { getImportStatements, getConfigProperties, kebabCase, getTSStatements } from './utils'
+import { getImportStatements, getConfigProperties, kebabCase, getTSStatements, getTypeName } from './utils'
 import { ComponentInput, ConfigProperty, GenericParameter } from './types'
 import { getComponentCode } from './component'
 
 const htmlElements = ['BulletLegend', 'LeafletMap', 'LeafletFlowMap']
-const containsExports = ['LeafletMap', 'LeafletFlowMap', 'TopoJSONMap', 'Graph']
 const unovisBasePath = '../vis/src'
 const configFileName = '/config.ts'
 const coreComponentConfigPath = '/core/component'
@@ -39,9 +38,9 @@ const components: ComponentInput[] = [
   { name: 'Tooltip', sources: ['/components/tooltip'], dataType: null, elementSuffix: 'tooltip' },
 
   // Unique cases (you can still generate a wrapper for these components, but most likely it will require some changes)
-  { name: 'LeafletMap', sources: [coreComponentConfigPath, '/components/leaflet-map'], dataType: 'Datum[]' },
-  // { name: 'LeafletFlowMap', sources: [coreComponentConfigPath, '/components/leaflet-flow-map'], dataType: '{ points: PointDatum[]; flows?: FlowDatum[] }' },
-  { name: 'BulletLegend', sources: ['/components/bullet-legend'], dataType: null },
+  { name: 'LeafletMap', sources: [coreComponentConfigPath, '/components/leaflet-map'], dataType: 'Datum[]', styles: ['display:block', 'position:relative'] },
+  { name: 'LeafletFlowMap', sources: [coreComponentConfigPath, '/components/leaflet-map', '/components/leaflet-flow-map'], dataType: '{ points: PointDatum[]; flows?: FlowDatum[] }', styles: ['display:block', 'position:relative'] },
+  { name: 'BulletLegend', sources: ['/components/bullet-legend'], dataType: null, styles: ['display:block'] },
 ]
 const exports: string[] = []
 
@@ -99,7 +98,7 @@ for (const component of components) {
     component.dataType,
     isStandAlone ? kebabCase(component.name) : component.elementSuffix,
     isStandAlone,
-    containsExports.includes(component.name)
+    component.styles
   )
 
   const nameKebabCase = component.kebabCaseName ?? kebabCase(component.name)

@@ -18,6 +18,10 @@
     return () => setTooltip(undefined) as void
   })
 
+  // component accessor
+  export function getComponent (): Tooltip { return component }
+
 </script>
 
 <vis-tooltip use:setConfig={config} />
+
