@@ -39,12 +39,13 @@ export const constraintData = generateDataRecords().map(d => ({ x: d.x + 1, y: d
 export const variedData = generateDataRecords(150).map(d => ({...d, y: Math.abs(Math.cos(d.x/(10*Math.PI)))*d.x}))
 
 ## Basic Configuration
-The _XY Container_ component is designed as a wrapper to hold other vis elements. Here is an example of a common configuration: one _XYChart_ alongside two _Axis_ components:
+_XY Container_ is designed as a container that manages multiple _XY Components_ at once, along with optional X and Y
+axes, tooltip, and crosshair. Here is an example of a common configuration: one _XY Component_ alongside two _Axis_ components:
 <XYWrapper {...defaultProps()} showContext="container"/>
 
-## Multiple XY Charts
-By providing the container with data, every _XY Chart_ within the container will be able to use it.
-There is no limit to the number of _XY Charts_ your container can have.
+## Multiple XY Components
+By providing the container with data, every _XY Component_ within the container will be able to use it.
+There is no limit to the number of _XY Components_ your container can have.
 
 <XYWrapper {...defaultProps()}
   components={[
@@ -56,7 +57,7 @@ There is no limit to the number of _XY Charts_ your container can have.
 />
 
 ## Domain
-You can change the domain of your data with the `xDomain` and `yDomain` properties to configure which values your `XYChart` should display.
+You can change the domain of your data with the `xDomain` and `yDomain` properties to configure which values your `XY Component` should display.
 The result will show all data that is in this range- excluding any values that fall outside of the range, and occupying any missing values with white space.
 See the following example, which looks like this when the domain is not set:
 
@@ -147,9 +148,9 @@ const yRange = [0, 50]
   <XYWrapper {...defaultProps()} xRange={[10,300]} yRange={[200,20]} excludeTabs/>
 </div>
 
-## Further customization
-_XY Container_ shares many properties with _Single Container_ including `sizing` and `svgDefs`.
-Visit our [Single Container](./Single_Container) doc to learn more.
+### SVG defs
+You can use the `svgDefs` property to define custom fill patterns for your components.
+See our <a href="../extras#custom-fills-with-svg-defs">Tips and Tricks</a> for details.
 
 ## Component Props
 <PropTable name="VisXYContainer"/>

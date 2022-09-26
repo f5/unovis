@@ -30,9 +30,9 @@ export const donut = (props) => ({
 })
 
 ### Basic configuration
-The _SingleContainer_ is a basic wrapper for a Unovis component. It is designed to hold one
+_Single Container_ is a basic container for a Unovis component. It is designed to hold one
 visualization component and an (optional) _Tooltip_. Just wrap the
-component( of your choice in _SingleContainer_ to render it.
+component of your choice in _Single Container_ to render it.
 
 <BrowserOnly>
 {() => {
@@ -60,51 +60,14 @@ component( of your choice in _SingleContainer_ to render it.
 </BrowserOnly>
 
 :::note
-For XY Charts, instead use the <a href="XY_Container">XY Container</a>, which designed to handle
+For XY Components, instead use the <a href="XY_Container">XY Container</a>, which designed to handle
 2D data with X and Y coordinates.
 :::
 
 ### Sizing
 The `sizing` property determines whether components should fit into the container
-or the container should expand to fit to the component's size. By default, _Single Container_
-will resize its components to fit. 
-
-`Sizing.FitWidth` will fit by width:
-
-```ts
-import { Sizing } from '@unovis/ts'
-
-const containerConfig = {
-  height: 150,
-  sizing: Sizing.Fit,
-  component: [new Donut({ height: 500})]
-}
-```
-<BrowserOnly>
-{() => {
-  const { Donut } = require('@unovis/ts')
-  console.log(Donut.selectors)
-  return <DocWrapper {...defaultProps()} width={200} components={[
-    donut({ attributes: {
-      [Donut.selectors.root]: {
-        style: 'width: 500px',
-        height: 500
-      }
-    }})]}/>
-}}
-</BrowserOnly>
-
-
-```ts
-const sizing = Sizing.FitWidth
-```
-<DocWrapper {...defaultProps()} sizing='fit_width' components={[donut({ height: 500 })]}/>
-
-```ts
-const sizing = Sizing.Extend
-```
-<DocWrapper {...defaultProps()} sizing='extend' components={[donut({ height: 20 })]}/>
-
+or the container should expand to fit to the component's size. Currently, only <a href="../networks-and-flows/Sankey#component-sizing">
+Sankey</a> supports the `sizing` option. By default, all components will fit to the size of _Single Container_.
 
 ### SVG defs
 You can use the `svgDefs` property to define custom fill patterns for your components.
