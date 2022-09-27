@@ -4,14 +4,10 @@ sidebar_label: XY Container
 ---
 
 import BrowserOnly from '@docusaurus/BrowserOnly'
-import Tabs from '@theme/Tabs'
-import TabItem from '@theme/TabItem'
-import CodeBlock from '@theme/CodeBlock'
-import { FrameworkTabs } from '../components/framework-tabs'
 import { PropTable } from '../components/props-table'
 import { generateDataRecords } from '../utils/data'
 import { XYWrapper, XYWrapperWithInput } from '../xy-charts/wrapper'
-import { parseComponent } from '../utils/parser'
+import './styles.css'
 
 export const component = (name, props, override = {}) => ({
   name,
@@ -23,7 +19,6 @@ export const component = (name, props, override = {}) => ({
 export const defaultProps = (chartName='StackedBar', n=10) => ({
   name: "XYContainer",
   data: generateDataRecords(n),
-  //excludeTabs: true,
   showContext: "full",
   height: 150,
   components: [
@@ -56,6 +51,77 @@ There is no limit to the number of _XY Components_ your container can have.
   showContext="container"
 />
 
+## Chart Sizing
+### Width and Height
+By default, _XY Container_ will try to fit within the bounds of its parent HTML element. If the parent
+height isn't defined, the defaul height of `300px` will be applied. You can also explicitly define the container's
+size with the `width` and `height` properties, which accepts numeric values.
+
+```ts
+const width = 200;
+const height = 100;
+```
+
+<div className='center'>
+  <XYWrapper {...defaultProps()} containerProps={{ width: 200, height: 100}} excludeTabs/>
+</div>
+
+### Margin
+You can set _XY Container_'s `margin` to control the spacing between the container and adjacent
+elements. The `margin` property accepts a value of type `Sizing`, where each value represents the
+corresponding margin size in pixels.
+
+#### Sizing
+```ts
+type Sizing = {
+  top: number;
+  bottom: number;
+  left: number;
+  right: number;
+}
+```
+
+Note that the chart's size is affected by this property. Notice how the following chart is affected
+after setting the margin accordingly.
+
+```ts
+const margin = { left: 100, right: 100 }
+```
+
+#### Before:
+<div className='flex'>
+  <div className='block'/>
+  <XYWrapper {...defaultProps()} containerProps={{ height: 100 }} excludeTabs/>
+  <div className='block'/>
+</div>
+
+#### After:
+<div className='flex'>
+  <div className='block'/>
+  <XYWrapper {...defaultProps()} containerProps={{ height: 100, margin: { left: 100, right: 100 }}} excludeTabs/>
+  <div className='block'/>
+</div>
+
+### Padding
+You can configure the `padding` property of _XY Container_ to change how its children
+are spaced apart. This property also accepts value of type <a href='#sizing'>Sizing</a>.
+In contrast to `margin`, the `padding` property will not affect the overall size of the chart, but
+rather tha size of the individual components. See how this works using the same example as above:
+
+```ts
+const padding = { left: 100, right: 100 }
+```
+<div className='flex'>
+  <div className='block'/>
+  <XYWrapper {...defaultProps()} containerProps={{ height: 100, padding: { left: 100, right: 100 }}} excludeTabs/>
+  <div className='block'/>
+</div>
+
+### Range
+The `xRange` and `yRange` determine the screen space your chart contains. By default, an _XY Container_ will
+fit to its container. Provide `xRange` with values [`xStart`, `width`] and `yRange` with [`yStart`, `height`]
+to override the default configuration.
+
 ## Domain
 You can change the domain of your data with the `xDomain` and `yDomain` properties to configure which values your `XY Component` should display.
 The result will show all data that is in this range- excluding any values that fall outside of the range, and occupying any missing values with white space.
@@ -69,7 +135,7 @@ See the following example, which looks like this when the domain is not set:
 #### `yDomain = [4,8]`
 <XYWrapper {...defaultProps()} data={data} yDomain={[4,8]} height={100} excludeTabs/>
 
-### Domain Constraints
+## Domain Constraints
 Customizing your domain is helpful in datasets with outliers. When using dynamic data, you may not know which values to constrain your domain values to.
 With the following constraint properties `xDomainMinConstraint`, `xDomainMaxConstraint`, `yDomainMinConstraint`, and `yDomainMaxConstraint`, you can define partial domains.
 For the following examples, consider the following case where the majority of the data is within the ranges `[0,10]` for all values of x and y.
@@ -79,9 +145,9 @@ These properties accept a number array in the form `[number, number]` or more ty
 <XYWrapper {...defaultProps("Scatter")} data={constraintData} excludeTabs/>
 
 #### xDomainMinConstraint: `[1, undefined]`
-<XYWrapper {...defaultProps('Scatter')} data={constraintData} xDomainMaxConstraint={[1, undefined]} excludeTabs/>
+<XYWrapper {...defaultProps('Scatter')} data={constraintData} xDomainMinConstraint={[1, undefined]} excludeTabs/>
 
-#### yDomainMaxConstraint: `[undefined, 1]`
+#### yDomainMaxConstraint: `[undefined, 10]`
 <XYWrapper {...defaultProps('Scatter')} data={constraintData} yDomainMaxConstraint={[undefined, 10]} excludeTabs/>
 
 ## Scale
@@ -103,14 +169,13 @@ const yScale = Scale.scalePow().exponent(2)
 <BrowserOnly>
 {() => {
   const { Scale } = require('@unovis/ts')
-  console.log(Scale)
   return (
     <XYWrapper {...defaultProps()} data={orderedData} yScale={Scale.scalePow().exponent(2)} excludeTabs/>
   )
 }}
 </BrowserOnly>
 
-### scaleByDomain
+## scaleByDomain
 You can also set the `yScale` domain dynamically based on the current `xDomain`, meaning that only visible data will be used in the domain calculation.
 Take a look at the example below. The `xDomain` configuration property there is not set, the chart displays the whole dataset and the Y axis shows ticks from 0 to 150.
 
@@ -133,22 +198,7 @@ It comes in hand when you're updating xDomain programmatically using, for exampl
 You can set `yDirection` to change the direction of data along the Y axis. Supported values are `Direction.North` and `Direction.South`.
 <XYWrapper {...defaultProps()} yDirection='south' showContext='container'/>
 
-## Range
-The `xRange` and `yRange` determine the screen space your chart contains. By default, an _XY Container_ will
-fit to its container unless configured otherwise by the `sizing` property.
-
-Provide `xRange` with values [`xStart`, `width`] and `yRange` with [`yStart`, `height`].
-
-```ts
-const xRange = [10, 300]
-const yRange = [0, 50]
-```
-
-<div style={{ backgroundColor: '#1acb9a10', width: '100%'}}>
-  <XYWrapper {...defaultProps()} xRange={[10,300]} yRange={[200,20]} excludeTabs/>
-</div>
-
-### SVG defs
+## SVG Defs
 You can use the `svgDefs` property to define custom fill patterns for your components.
 See our <a href="../extras#custom-fills-with-svg-defs">Tips and Tricks</a> for details.
 
