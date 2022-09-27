@@ -12,15 +12,13 @@
   height: 100px;
 }
 
+.showBorder {
+  border: 1px solid #ccc;
+}
+
 .vert {
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
-.block {
-  background: url('../../static/img//unovis-image-2.svg');
-  background-repeat: no-repeat;
-  width: 100px;
-  height: 100px;
-}
