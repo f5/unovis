@@ -18,12 +18,12 @@ export interface TimeDataRecord {
 export function generateDataRecords (n = 10): DataRecord[] {
   return Array(n).fill(0).map((_, i: number) => ({
     x: i,
-    y: 5 + 5 * Math.random(),
-    y1: 1 + 3 * Math.random(),
-    y2: 2 * Math.random(),
-    y3: -1 - 2 * Math.random(),
-    y4: 3 * Math.random(),
-    baseline: 2 * Math.random() - 0.5,
+    y: 5 + Math.round(5 * Math.random()),
+    y1: 1 + Math.round(3 * Math.random()),
+    y2: Math.round(2 * Math.random()),
+    y3: -1 - Math.round(2 * Math.random()),
+    y4: Math.round(3 * Math.random()),
+    baseline: Math.round(2 * Math.random()) - 0.5,
   }))
 }
 

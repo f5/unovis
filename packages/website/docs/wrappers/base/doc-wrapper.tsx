@@ -20,16 +20,21 @@ export function DocWrapper ({
   hiddenProps,
   configKey,
   containerProps = {},
-  componentProps = [],
+  components = [],
   imports,
   ...rest
 }: DocWrapperProps): JSX.Element {
-  const mainComponent = { name: name, props: rest, key: configKey }
-  const components = name === containerName ? componentProps : [mainComponent, ...componentProps]
-
-
-  if (!containerName && data) {
-    mainComponent.props.data = data
+  if (data) {
+    if (!containerName) {
+      rest.data = data
+    } else {
+      containerProps.data = data
+    }
+  }
+  if (name !== containerName) {
+    components.splice(0, 0, { name, key: configKey, props: rest })
+  } else {
+    containerProps = { ...containerProps, ...rest }
   }
 
   return (
@@ -37,9 +42,9 @@ export function DocWrapper ({
       {!excludeTabs &&
       <DocFrameworkTabs
         imports={imports}
-        container={name === containerName ? mainComponent : {
+        container={{
           name: containerName,
-          props: data && containerName ? { data, ...containerProps } : containerProps,
+          props: containerProps,
         }}
         showData={data !== undefined && showContext}
         components={components}
@@ -55,7 +60,6 @@ export function DocWrapper ({
               height,
               className,
               ...containerProps,
-              ...(name === containerName ? { ...rest, ...hiddenProps } : {}),
             }
             const lib = require('@unovis/react')
             if (!containerName) {

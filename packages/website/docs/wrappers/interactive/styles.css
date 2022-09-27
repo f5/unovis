@@ -2,17 +2,13 @@
   position: relative;
 }
 
-.input-wrapper label {
+.prop-input-label {
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
   margin: var(--ifm-tabs-padding-vertical);
-}
-
-.prop-input-label {
   padding: 5px;
   font-size: smaller;
-  margin-right: 0;
 }
 
 .prop-input-label code {
@@ -50,6 +46,21 @@
   border-radius: var(--ifm-global-radius);
 }
 
+@media only screen and (min-width: 550px) {
+  .prop-input-label.compact {
+    position: absolute;
+    right: 0;
+    top: -100;
+    max-width: 45%;
+    flex-wrap: wrap;
+    z-index: 999;
+  }
+
+  .prop-input-label input[type="range"] {
+    max-width: calc(100vw / 15);
+  }
+}
+
 .toggle {
   position: absolute;
   right: 0;
@@ -76,21 +87,6 @@ input:checked + .anim-button:after {
 pre > code {
   display: block;
   width: 100%;
-}
-
-@media only screen and (min-width: 550px) {
-  .prop-input-label {
-    position: absolute;
-    right: 0;
-    top: 0;
-    max-width: 45%;
-    flex-wrap: wrap;
-    z-index: 999;
-  }
-
-  .prop-input-label input[type="range"] {
-    max-width: calc(100vw / 15);
-  }
 }
 
 @media only screen and (max-width: 550px) {

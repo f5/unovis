@@ -8,13 +8,13 @@ import { PropTable } from '../components/props-table.tsx'
 import { generateDataRecords } from '../utils/data'
 import { XYWrapperWithInput, XYWrapper } from './wrapper.tsx'
 
-export const defaultProps = (chart="Line", componentProps, n=5) => ({
+export const defaultProps = (chart="Line", components, n=5) => ({
   name: "Crosshair",
   configKey: "crosshair",
   data: generateDataRecords(n),
   showAxes: true,
   height: 150,
-  componentProps: [{ name: chart, props: { x: d=>d.x, y: [d=>d.y, d=>d.y1, d=>d.y2], ...componentProps}, key: "components" }]
+  components: [{ name: chart, props: { x: d=>d.x, y: [d=>d.y, d=>d.y1, d=>d.y2], ...components}, key: "components" }]
 })
 
 ### Basic configuration
@@ -58,7 +58,7 @@ You can render text content for your _Crosshair_ component by providing it with 
 <XYWrapper {...defaultProps()}
   data={generateDataRecords().map(d => ({...d, y: Math.floor(d.y)}))}
   template={ d => [d.x, d.y].join(', ')}
-  componentProps={defaultProps("Scatter", { y: d => d.y}).componentProps.concat({
+  components={defaultProps("Scatter", { y: d => d.y}).components.concat({
     name: "Tooltip",
     key: "tooltip",
     props: {},
