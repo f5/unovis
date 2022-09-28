@@ -1,6 +1,6 @@
 <script>
   const imports = [
-    () => import('./examples/basic-area/basic-area.svelte'),
+    () => import('./examples/stacked-area-chart/stacked-area-chart.svelte'),
     () => import('./examples/basic-grouped-bar/basic-grouped-bar.svelte'),
     () => import('./examples/basic-leaflet-map/basic-leaflet-map.svelte'),
     () => import('./examples/leaflet-flow-map/leaflet-flow-map.svelte'),
@@ -16,7 +16,7 @@
     () => import('./examples/basic-sankey/basic-sankey.svelte'),
     () => import('./examples/expandable-sankey/expandable-sankey.svelte'),
     () => import('./examples/dagre-graph/dagre-graph.svelte'),
-    () => import('./examples/force-layout-graph/force-layout-graph.svelte')
+    () => import('./examples/force-graph/force-graph.svelte')
   ]
 </script>
 

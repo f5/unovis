@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core'
 import { VisSingleContainerModule, VisGraphModule } from '@unovis/angular'
 
-import { ForceLayoutGraphComponent } from './force-layout-graph.component'
+import { ForceLayoutGraphComponent } from './force-graph.component'
 
 @NgModule({
   imports: [VisSingleContainerModule, VisGraphModule],

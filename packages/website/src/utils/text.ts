@@ -6,7 +6,8 @@ export function kebabCase (str: string): string {
 }
 
 export function trimMultiline (str: string): string {
-  const s = str.substring(str.indexOf('\n') + 1)
+  const s = str.substring(str.indexOf('\n') + 1).trimEnd()
   const indent = ' '.repeat(s.length - s.trim().length)
-  return str.replaceAll(indent, '')
+  const re = new RegExp(indent, 'g')
+  return str.replace(re, '')
 }

@@ -10,7 +10,7 @@ import CodeBlock from '@theme/CodeBlock'
 import { kebabCase } from '@site/src/utils/text'
 import { HomepageFeatures } from '@site/src/components/HomepageFeatures'
 import { HomepageHeader } from '@site/src/components/HomepageHeader'
-import ChartExample from '@site/src/examples/basic-area'
+import ChartExample from '@site/src/examples/stacked-area-chart'
 
 // Styles
 import s from './index.module.css'

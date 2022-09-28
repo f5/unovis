@@ -4,8 +4,8 @@ import { GraphForceLayoutSettings, GraphLayoutType } from '@unovis/ts'
 import { data, NodeDatum, LinkDatum } from './data'
 
 @Component({
-  selector: 'force-layout-graph',
-  templateUrl: './force-layout-graph.component.html'
+  selector: 'force-graph',
+  templateUrl: './force-graph.component.html'
 })
 export class ForceLayoutGraphComponent {
   data = data
