@@ -14,6 +14,7 @@ import { StackedBarChartModule } from './examples/horizontal-stacked-bar-chart/h
 import { BasicScatterChartModule } from './examples/basic-scatter-chart/basic-scatter-chart.module'
 import { FreeBrushScattersModule } from './examples/free-brush-scatters/free-brush-scatters.module'
 import { BrushGroupedBarModule } from './examples/brush-grouped-bar/brush-grouped-bar.module'
+import { BasicAreaChartModule } from './examples/basic-area-chart/basic-area-chart.module'
 import { StackedAreaModule } from './examples/stacked-area-chart/stacked-area-chart.module'
 import { BasicTimelineModule } from './examples/basic-timeline/basic-timeline.module'
 import { BasicSankeyModule } from './examples/basic-sankey/basic-sankey.module'
@@ -36,7 +37,8 @@ import { AdvancedLeafletMapModule } from './examples/advanced-leaflet-map/advanc
     <horizontal-stacked-bar-chart></horizontal-stacked-bar-chart>
     <basic-scatter-chart></basic-scatter-chart>
     <free-brush-scatters ></free-brush-scatters>
-    <brush-grouped-bar></brush-grouped-bar
+    <brush-grouped-bar></brush-grouped-bar>
+    <basic-area-chart></basic-area-chart>
     <stacked-area-chart></stacked-area-chart>
     <basic-timeline></basic-timeline>
     <basic-sankey></basic-sankey>
@@ -55,7 +57,7 @@ export class AppComponent {
   imports: [
     BrowserModule, BasicGroupedBarModule, BasicLeafletMapModule, BasicLineChartModule, MultiLineChartModule,
     TopojsonMapModule, StackedBarChartModule, BasicScatterChartModule, FreeBrushScattersModule, BrushGroupedBarModule,
-    TopojsonMapModule, StackedBarChartModule, BasicScatterChartModule, FreeBrushScattersModule,
+    TopojsonMapModule, StackedBarChartModule, BasicScatterChartModule, FreeBrushScattersModule, BasicAreaChartModule,
     BasicTimelineModule, BasicSankeyModule, ExpandableSankeyModule, BasicGraphModule, LeafletFlowMapModule,
     ForceLayoutGraphModule, AdvancedLeafletMapModule, StackedAreaModule,
   ],
