@@ -22,10 +22,6 @@ const lodashLibs = ['lodash/isUndefined', 'lodash/isArray', 'lodash/isEmpty', 'l
   'lodash/omit', 'lodash/extend', 'lodash/groupBy', 'lodash/uniq', 'lodash/sortBy', 'lodash/range',
   'lodash/findIndex']
 
-// Removing maplibre-gl from the externals because Angular 14 doesn't know how to import *.css files directly
-// and we want `postcss` to convert them to `css.js`
-delete pkg.dependencies['maplibre-gl']
-
 const externals = [
   ...Object.keys(pkg.dependencies || {}),
   ...Object.keys(pkg.peerDependencies || {}),

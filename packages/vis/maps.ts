@@ -1,1 +1,1 @@
-export * from './lib/maps.js'
+export * from './lib/maps'

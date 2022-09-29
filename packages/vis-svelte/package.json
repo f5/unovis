@@ -6,10 +6,11 @@
   "main": "./index.js",
   "types": "./index.d.ts",
   "svelte": "./index.js",
+  "type": "module",
   "scripts": {
     "build": "npm run check && rm -rf dist; rollup -c",
     "check": "svelte-check --tsconfig ./tsconfig.json",
-    "generate": "rollup -c ./autogen/rollup.config.js; node .autogen.js; rm .autogen.js",
+    "generate": "rollup -c ./autogen/rollup.config.js; node .autogen.cjs; rm .autogen.cjs",
     "publish-dist": "cp ./package.json ./dist; cp ../../LICENSE ./dist; cd ./dist; npm publish; rm -rf .cache"
   },
   "peerDependencies": {

@@ -1,7 +1,7 @@
 import { ReactElement, ReactNode, ReactChild, ReactFragment } from 'react'
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import _isEqual from 'lodash/isEqual'
+import _isEqual from 'lodash/isEqual.js'
 
 export function arePropsEqual<PropTypes extends { children?: ReactNode }> (prevProps: PropTypes, nextProps: PropTypes): boolean {
   if (typeof prevProps.children !== typeof nextProps.children) return false

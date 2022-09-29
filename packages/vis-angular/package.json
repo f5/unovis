@@ -8,11 +8,12 @@
     "build": "npx ng build",
     "watch": "npx ng build --watch --configuration development",
     "test": "npx ng test",
-    "generate": "rollup -c; node .autogen.js; rm .autogen.js"
+    "generate": "rollup -c; node .autogen.cjs; rm .autogen.cjs"
   },
   "main": "dist/lib/bundles/unovis-angular.umd.js",
   "module": "dist/lib/esm2015/public-api.js",
   "typings": "dist/lib/public-api.d.ts",
+  "type": "module",
   "files": [
     "dist"
   ],

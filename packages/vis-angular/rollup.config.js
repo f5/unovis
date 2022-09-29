@@ -13,7 +13,7 @@ export default [
     input: './autogen/index.ts',
     output: [
       {
-        file: '.autogen.js',
+        file: '.autogen.cjs',
         format: 'cjs',
       },
     ],
