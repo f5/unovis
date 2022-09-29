@@ -3,6 +3,9 @@
   "files": ["src/svelte-gallery.ts"],
   "types": ["node", "svelte"],
   "include": ["src/examples/**/*.svelte", "src/examples/**/data.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
+  "compilerOptions": {
+    "importsNotUsedAsValues": "preserve"
+  }
 }
 

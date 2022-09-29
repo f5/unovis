@@ -3,7 +3,7 @@ import { VisXYContainer, VisAxis, VisArea, VisXYLabels } from '@unovis/react'
 import { data, formats, DataRecord, getLabels } from './data'
 
 
-export default function BasicArea (): JSX.Element {
+export default function StackedArea (): JSX.Element {
   const labels = getLabels(data)
   return (
     <>

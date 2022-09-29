@@ -9,8 +9,9 @@ export const examples: ExampleCollection[] = [
     examples: [
       require('./basic-line-chart').default,
       require('./multi-line-chart').default,
-      require('./basic-area').default,
       require('./basic-timeline').default,
+      require('./non-stacked-area-chart').default,
+      require('./stacked-area-chart').default,
     ],
   },
   {
@@ -52,7 +53,7 @@ export const examples: ExampleCollection[] = [
       require('./basic-sankey').default,
       require('./expandable-sankey').default,
       require('./dagre-graph').default,
-      require('./force-layout-graph').default,
+      require('./force-graph').default,
     ],
   },
   /* {} */

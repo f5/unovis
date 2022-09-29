@@ -3,7 +3,7 @@ import React from 'react'
 import BrowserOnly from '@docusaurus/BrowserOnly'
 import { Example } from '@site/src/types/example'
 
-const pathname = 'basic-area'
+const pathname = 'stacked-area-chart'
 const example: Example = {
   component: () => <BrowserOnly>{() => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -11,7 +11,7 @@ const example: Example = {
     return <Component />
   }}</BrowserOnly>,
   pathname,
-  title: 'Area Chart with XYLabels',
+  title: 'Stacked Area Chart with XYLabels',
   description: <div>
     U.S. recorded music revenues by format.
     Data source: <a href="https://www.riaa.com/u-s-sales-database/" target="_blank">RIAA</a>

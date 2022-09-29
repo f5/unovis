@@ -4,7 +4,6 @@ import TabItem from '@theme/TabItem'
 import CodeBlock from '@theme/CodeBlock'
 
 // Internal Deps
-import { kebabCase } from '@site/src/utils/text'
 import { Example } from '@site/src/types/example'
 import { Framework } from '@site/src/types/code'
 
@@ -36,13 +35,13 @@ export function GalleryViewer ({ example, useTypescriptCode }: GalleryViewerProp
           </CodeBlock>
         </TabItem>
         <TabItem value={Framework.Angular} label="Angular">
-          <CodeBlock language="html" title={`${kebabCase(example.title)}.html`}>
+          <CodeBlock language="html" title={`${example.pathname}.html`}>
             {example.codeAngular.html}
           </CodeBlock>
-          <CodeBlock language="ts" title={`${kebabCase(example.title)}.component.ts`}>
+          <CodeBlock language="ts" title={`${example.pathname}.component.ts`}>
             {example.codeAngular.component}
           </CodeBlock>
-          <CodeBlock language="ts" title={`${kebabCase(example.title)}.module.ts`}>
+          <CodeBlock language="ts" title={`${example.pathname}.module.ts`}>
             {example.codeAngular.module}
           </CodeBlock>
         </TabItem>

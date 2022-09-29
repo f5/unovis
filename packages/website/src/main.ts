@@ -14,13 +14,14 @@ import { StackedBarChartModule } from './examples/horizontal-stacked-bar-chart/h
 import { BasicScatterChartModule } from './examples/basic-scatter-chart/basic-scatter-chart.module'
 import { FreeBrushScattersModule } from './examples/free-brush-scatters/free-brush-scatters.module'
 import { BrushGroupedBarModule } from './examples/brush-grouped-bar/brush-grouped-bar.module'
-import { BasicAreaModule } from './examples/basic-area/basic-area.module'
+import { BasicAreaChartModule } from './examples/non-stacked-area-chart/non-stacked-area-chart.module'
+import { StackedAreaModule } from './examples/stacked-area-chart/stacked-area-chart.module'
 import { BasicTimelineModule } from './examples/basic-timeline/basic-timeline.module'
 import { BasicSankeyModule } from './examples/basic-sankey/basic-sankey.module'
 import { ExpandableSankeyModule } from './examples/expandable-sankey/expandable-sankey.module'
 import { BasicGraphModule } from './examples/dagre-graph/dagre-graph.module'
 import { LeafletFlowMapModule } from './examples/leaflet-flow-map/leaflet-flow-map.module'
-import { ForceLayoutGraphModule } from './examples/force-layout-graph/force-layout-graph.module'
+import { ForceLayoutGraphModule } from './examples/force-graph/force-graph.module'
 import { AdvancedLeafletMapModule } from './examples/advanced-leaflet-map/advanced-leaflet-map.module'
 
 @Component({
@@ -37,12 +38,13 @@ import { AdvancedLeafletMapModule } from './examples/advanced-leaflet-map/advanc
     <basic-scatter-chart></basic-scatter-chart>
     <free-brush-scatters ></free-brush-scatters>
     <brush-grouped-bar></brush-grouped-bar>
-    <basic-area-chart></basic-area-chart>
+    <non-stacked-area-chart></non-stacked-area-chart>
+    <stacked-area-chart></stacked-area-chart>
     <basic-timeline></basic-timeline>
     <basic-sankey></basic-sankey>
     <expandable-sankey></expandable-sankey>
     <dagre-graph></dagre-graph>
-    <force-layout-graph></force-layout-graph>
+    <force-graph></force-graph>
   `,
 })
 export class AppComponent {
@@ -55,9 +57,9 @@ export class AppComponent {
   imports: [
     BrowserModule, BasicGroupedBarModule, BasicLeafletMapModule, BasicLineChartModule, MultiLineChartModule,
     TopojsonMapModule, StackedBarChartModule, BasicScatterChartModule, FreeBrushScattersModule, BrushGroupedBarModule,
-    TopojsonMapModule, StackedBarChartModule, BasicScatterChartModule, FreeBrushScattersModule, BasicAreaModule,
+    TopojsonMapModule, StackedBarChartModule, BasicScatterChartModule, FreeBrushScattersModule, BasicAreaChartModule,
     BasicTimelineModule, BasicSankeyModule, ExpandableSankeyModule, BasicGraphModule, LeafletFlowMapModule,
-    ForceLayoutGraphModule, AdvancedLeafletMapModule,
+    ForceLayoutGraphModule, AdvancedLeafletMapModule, StackedAreaModule,
   ],
   bootstrap: [AppComponent],
   providers: [BrowserModule],

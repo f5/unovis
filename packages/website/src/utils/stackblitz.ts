@@ -27,7 +27,6 @@ function getOpenFiles (framework: Framework, files: ProjectFiles): OpenFileOptio
   }
 }
 function getStarterFiles (framework: Framework, e: Example): ProjectFiles {
-  const comp = kebabCase(e.title)
   switch (framework) {
     case Framework.Angular:
       return {
@@ -37,11 +36,11 @@ function getStarterFiles (framework: Framework, e: Example): ProjectFiles {
           import { NgModule, Component } from '@angular/core'
           import { platformBrowserDynamic } from '@angular/platform-browser-dynamic'
           import { BrowserModule } from '@angular/platform-browser'
-          import { ComponentModule } from './${comp}'
+          import { ComponentModule } from './${e.pathname}'
 
           @Component({
             selector: 'app-component',
-            template: '<${comp}></${comp}>'
+            template: '<${e.pathname}></${e.pathname}>'
           }) export class AppComponent { }
 
           @NgModule({
@@ -53,12 +52,12 @@ function getStarterFiles (framework: Framework, e: Example): ProjectFiles {
 
           platformBrowserDynamic().bootstrapModule(AppModule)
         `),
-        [`${comp}/${comp}.component.ts`]: e.codeAngular.component,
-        [`${comp}/${comp}.component.html`]: e.codeAngular.html,
-        [`${comp}/${comp}.module.ts`]: e.codeAngular.module,
-        [`${comp}/index.ts`]: `export { ${e.title.split(' ').join('')}Module as ComponentModule } from './${comp}.module.ts'`,
-        [`${comp}/data.ts`]: e.data,
-        ...(e.constants ? { [`${comp}/constants.ts`]: e.constants } : {}),
+        [`${e.pathname}/${e.pathname}.component.ts`]: e.codeAngular.component,
+        [`${e.pathname}/${e.pathname}.component.html`]: e.codeAngular.html,
+        [`${e.pathname}/${e.pathname}.module.ts`]: e.codeAngular.module,
+        [`${e.pathname}/index.ts`]: `export { ${e.title.split(/[\s,-]+/).join('')}Module as ComponentModule } from './${e.pathname}.module.ts'`,
+        [`${e.pathname}/data.ts`]: e.data,
+        ...(e.constants ? { [`${e.pathname}/constants.ts`]: e.constants } : {}),
       }
     case Framework.React:
       return {

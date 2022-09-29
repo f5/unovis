@@ -2,10 +2,10 @@ import { Component } from '@angular/core'
 import {data, formats, DataRecord, getLabels} from './data'
 
 @Component({
-  selector: 'basic-area-chart',
-  templateUrl: './basic-area.component.html',
+  selector: 'stacked-area-chart',
+  templateUrl: './stacked-area-chart.component.html',
 })
-export class BasicAreaComponent {
+export class StackedAreaComponent {
   data = data
   x = (d: DataRecord) => d.year
   y = formats.map(f => (d: DataRecord) => d[f])

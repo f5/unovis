@@ -3,7 +3,7 @@ import React from 'react'
 import BrowserOnly from '@docusaurus/BrowserOnly'
 import { Example } from '@site/src/types/example'
 
-const pathname = 'force-layout-graph'
+const pathname = 'force-graph'
 const example: Example = {
   component: () => <BrowserOnly>{() => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
