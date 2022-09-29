@@ -2,7 +2,7 @@
   // !!! This code was automatically generated. You should not change it !!!
   import { TopoJSONMap, TopoJSONMapConfigInterface } from '@unovis/ts'
   import { getContext, onMount } from 'svelte'
-  import { getActions } from '../../utils/actions'
+  import { emptyCallback, getActions } from '../../utils/actions'
 
   // type defs
   type AreaDatum = $$Generic
@@ -13,14 +13,24 @@
   $: config = { ...$$restProps }
 
   // component declaration
-  const component = new TopoJSONMap<AreaDatum, PointDatum, LinkDatum>(config)
+  let component: TopoJSONMap<AreaDatum, PointDatum, LinkDatum>
   const { setComponent, removeComponent } = getContext('container')
-  const { setConfig, setData } = getActions.apply(component)
+
+  let setConfig = emptyCallback
+  let setData = emptyCallback
+
   // data and required props
-  export let data: {areas?: AreaDatum[]; points?: PointDatum[]; links?: LinkDatum[]}
+  // eslint-disable-next-line no-undef-init
+  export let data: {areas?: AreaDatum[]; points?: PointDatum[]; links?: LinkDatum[]} = undefined
+
   onMount(() => {
+    component = new TopoJSONMap<AreaDatum, PointDatum, LinkDatum>(config)
+    const actions = getActions.apply(component)
+    setConfig = actions.setConfig
+    setData = actions.setData
     setComponent(component)
-    return () => removeComponent(component) as void
+
+    return () => { removeComponent(component) as void }
   })
 
   // component accessor

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { XYComponentCore, XYContainerConfigInterface, XYContainer, Tooltip, Axis, AxisType, Crosshair } from '@unovis/ts'
+  import { XYContainer, XYComponentCore, XYContainerConfigInterface, Tooltip, Axis, AxisType, Crosshair } from '@unovis/ts'
   import { onMount, onDestroy, setContext } from 'svelte'
 
   type Datum = $$Generic
@@ -15,11 +15,11 @@
   $: chart?.updateContainer({ ...config, ...($$restProps as XYContainerConfigInterface<Datum>) })
 
   onMount(() => {
-    chart = new XYContainer<Datum>(ref)
+    chart = new XYContainer(ref)
   })
 
   onDestroy(() => {
-    chart.destroy()
+    chart?.destroy()
   })
 
   const updateConfig = (c: XYContainerConfigInterface<Datum>) => {

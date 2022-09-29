@@ -2,7 +2,7 @@
   // !!! This code was automatically generated. You should not change it !!!
   import { Sankey, SankeyConfigInterface, SankeyInputNode, SankeyInputLink } from '@unovis/ts'
   import { getContext, onMount } from 'svelte'
-  import { getActions } from '../../utils/actions'
+  import { emptyCallback, getActions } from '../../utils/actions'
 
   // type defs
   type N = $$Generic<SankeyInputNode>
@@ -12,14 +12,24 @@
   $: config = { ...$$restProps }
 
   // component declaration
-  const component = new Sankey<N, L>(config)
+  let component: Sankey<N, L>
   const { setComponent, removeComponent } = getContext('container')
-  const { setConfig, setData } = getActions.apply(component)
+
+  let setConfig = emptyCallback
+  let setData = emptyCallback
+
   // data and required props
-  export let data: { nodes: N[]; links?: L[] }
+  // eslint-disable-next-line no-undef-init
+  export let data: { nodes: N[]; links?: L[] } = undefined
+
   onMount(() => {
+    component = new Sankey<N, L>(config)
+    const actions = getActions.apply(component)
+    setConfig = actions.setConfig
+    setData = actions.setData
     setComponent(component)
-    return () => removeComponent(component) as void
+
+    return () => { removeComponent(component) as void }
   })
 
   // component accessor

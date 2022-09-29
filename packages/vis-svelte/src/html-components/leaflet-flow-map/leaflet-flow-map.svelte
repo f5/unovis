@@ -2,7 +2,7 @@
   // !!! This code was automatically generated. You should not change it !!!
   import { LeafletFlowMap, LeafletFlowMapConfigInterface, MapLibreStyleSpecs } from '@unovis/ts'
   import { onMount } from 'svelte'
-  import { getActions } from '../../utils/actions'
+  import { emptyCallback, getActions } from '../../utils/actions'
 
   // type defs
   type PointDatum = $$Generic
@@ -14,17 +14,27 @@
   // component declaration
   let component: LeafletFlowMap<PointDatum, FlowDatum>
   let ref: HTMLDivElement
-  const { setConfig, setData } = getActions.apply({
-    setConfig: (c: LeafletFlowMapConfigInterface<PointDatum, FlowDatum>) => component?.setConfig(c),
-    setData: (d: { points: PointDatum[]; flows?: FlowDatum[] }) => component?.setData(d),
-    render: () => component?.render()
-  })
+
+  let setConfig = emptyCallback
+  let setData = emptyCallback
+
   // data and required props
-  export let data: { points: PointDatum[]; flows?: FlowDatum[] }
+  // eslint-disable-next-line no-undef-init
+  export let data: { points: PointDatum[]; flows?: FlowDatum[] } = undefined
   export let style: MapLibreStyleSpecs | string
+
   onMount(() => {
     component = new LeafletFlowMap<PointDatum, FlowDatum>(ref, config, data)
-    return () => component.destroy()
+    const actions = getActions.apply({
+      setConfig: (c: LeafletFlowMapConfigInterface<PointDatum, FlowDatum>) => { component?.setConfig(c) },
+      setData: (d: { points: PointDatum[]; flows?: FlowDatum[] }) => { component?.setData(d) },
+      render: () => { component?.render() }
+    })
+    setConfig = actions.setConfig
+    setData = actions.setData
+
+
+    return () => { component.destroy() }
   })
 
   // component accessor

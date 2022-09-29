@@ -21,24 +21,35 @@ export function getComponentCode (
   // !!! This code was automatically generated. You should not change it !!!
   ${importStatements.map(s => `import { ${s.elements.join(', ')} } from '${s.source}'`).join('\n  ')}
   import { ${!isStandAlone ? 'getContext, ' : ''}onMount } from 'svelte'
-  import { getActions } from '../../utils/actions'
+  import { emptyCallback, getActions } from '../../utils/actions'
   ${typeDefs.length ? `\n  // type defs\n  ${typeDefs.join('\n  ')}` : ''}
 
   let config: ${configType}
   $: config = {${requiredProps.map(c => ` ${c.name},`).join(' ')} ...$$restProps }
 
   // component declaration
-  ${isStandAlone ? 'let' : 'const'} component${isStandAlone ? ': ' : ' = new '}${componentName}${genericsStr}${!isStandAlone ? '(config)' : ''}
+  let component: ${componentName}${genericsStr}
   ${isStandAlone ? 'let ref: HTMLDivElement' : `const { ${setterStr}${elementSuffix === 'component' ? ', removeComponent' : ''} } = getContext('container')`}
-  const { setConfig${dataType ? ', setData' : ''} } = getActions.apply(${isStandAlone ? `{
-    setConfig: (c: ${configType}) => component?.${dataType ? 'setConfig' : 'update'}(c),${dataType ? `
-    setData: (d: ${dataType}) => component?.setData(d),` : ''}
-    render: () => component?.render()
-  }` : 'component'})
-  ${propDefs.length ? `// data and required props\n  ${propDefs.join('\n  ')}` : ''}
+
+  let setConfig = emptyCallback
+  ${dataType ? 'let setData = emptyCallback' : ''}
+  ${propDefs.length ? `
+   // data and required props
+  // eslint-disable-next-line no-undef-init
+   ${propDefs.join('\n  ')}
+  ` : ''}
   onMount(() => {
-   ${isStandAlone ? `component = new ${componentName}${genericsStr}(ref, config${dataType ? ', data' : ''})` : `${setterStr}(component)`}
-   return () => ${isStandAlone ? 'component.destroy()' : onDestroy} as void
+    component = new ${componentName}${genericsStr}(${isStandAlone ? `ref, config${dataType ? ', data' : ''}` : 'config'})
+    const actions = getActions.apply(${isStandAlone ? `{
+      setConfig: (c: ${configType}) => { component?.${dataType ? 'setConfig' : 'update'}(c) },${dataType ? `
+      setData: (d: ${dataType}) => { component?.setData(d) },` : ''}
+      render: () => { component?.render() }
+    }` : 'component'})
+    setConfig = actions.setConfig
+    ${dataType ? 'setData = actions.setData' : ''}
+    ${isStandAlone ? '' : `${setterStr}(component)`}
+
+    return () => { ${isStandAlone ? 'component.destroy() ' : onDestroy} as void }
   })
 
   // component accessor

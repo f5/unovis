@@ -2,7 +2,7 @@
   // !!! This code was automatically generated. You should not change it !!!
   import { LeafletMap, LeafletMapConfigInterface, MapLibreStyleSpecs } from '@unovis/ts'
   import { onMount } from 'svelte'
-  import { getActions } from '../../utils/actions'
+  import { emptyCallback, getActions } from '../../utils/actions'
 
   // type defs
   type Datum = $$Generic
@@ -13,17 +13,27 @@
   // component declaration
   let component: LeafletMap<Datum>
   let ref: HTMLDivElement
-  const { setConfig, setData } = getActions.apply({
-    setConfig: (c: LeafletMapConfigInterface<Datum>) => component?.setConfig(c),
-    setData: (d: Datum[]) => component?.setData(d),
-    render: () => component?.render()
-  })
+
+  let setConfig = emptyCallback
+  let setData = emptyCallback
+
   // data and required props
-  export let data: Datum[]
+  // eslint-disable-next-line no-undef-init
+  export let data: Datum[] = undefined
   export let style: MapLibreStyleSpecs | string
+
   onMount(() => {
     component = new LeafletMap<Datum>(ref, config, data)
-    return () => component.destroy()
+    const actions = getActions.apply({
+      setConfig: (c: LeafletMapConfigInterface<Datum>) => { component?.setConfig(c) },
+      setData: (d: Datum[]) => { component?.setData(d) },
+      render: () => { component?.render() }
+    })
+    setConfig = actions.setConfig
+    setData = actions.setData
+
+
+    return () => { component.destroy() }
   })
 
   // component accessor

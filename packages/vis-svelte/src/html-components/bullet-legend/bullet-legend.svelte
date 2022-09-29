@@ -2,7 +2,7 @@
   // !!! This code was automatically generated. You should not change it !!!
   import { BulletLegend, BulletLegendConfigInterface, BulletLegendItemInterface } from '@unovis/ts'
   import { onMount } from 'svelte'
-  import { getActions } from '../../utils/actions'
+  import { emptyCallback, getActions } from '../../utils/actions'
 
 
   let config: BulletLegendConfigInterface
@@ -11,15 +11,24 @@
   // component declaration
   let component: BulletLegend
   let ref: HTMLDivElement
-  const { setConfig } = getActions.apply({
-    setConfig: (c: BulletLegendConfigInterface) => component?.update(c),
-    render: () => component?.render()
-  })
+
+  let setConfig = emptyCallback
+
+
   // data and required props
+  // eslint-disable-next-line no-undef-init
   export let items: BulletLegendItemInterface[]
+
   onMount(() => {
     component = new BulletLegend(ref, config)
-    return () => component.destroy()
+    const actions = getActions.apply({
+      setConfig: (c: BulletLegendConfigInterface) => { component?.update(c) },
+      render: () => { component?.render() }
+    })
+    setConfig = actions.setConfig
+
+
+    return () => { component.destroy() }
   })
 
   // component accessor

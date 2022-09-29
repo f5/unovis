@@ -2,7 +2,7 @@
   // !!! This code was automatically generated. You should not change it !!!
   import { Donut, DonutConfigInterface, NumericAccessor } from '@unovis/ts'
   import { getContext, onMount } from 'svelte'
-  import { getActions } from '../../utils/actions'
+  import { emptyCallback, getActions } from '../../utils/actions'
 
   // type defs
   type Datum = $$Generic
@@ -11,15 +11,25 @@
   $: config = { value, ...$$restProps }
 
   // component declaration
-  const component = new Donut<Datum>(config)
+  let component: Donut<Datum>
   const { setComponent, removeComponent } = getContext('container')
-  const { setConfig, setData } = getActions.apply(component)
+
+  let setConfig = emptyCallback
+  let setData = emptyCallback
+
   // data and required props
-  export let data: Datum[]
+  // eslint-disable-next-line no-undef-init
+  export let data: Datum[] = undefined
   export let value: NumericAccessor<Datum>
+
   onMount(() => {
+    component = new Donut<Datum>(config)
+    const actions = getActions.apply(component)
+    setConfig = actions.setConfig
+    setData = actions.setData
     setComponent(component)
-    return () => removeComponent(component) as void
+
+    return () => { removeComponent(component) as void }
   })
 
   // component accessor

@@ -28,3 +28,6 @@ export function getActions<Datum, ConfigInterface> (
     },
   }
 }
+
+// eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
+export const emptyCallback = (..._: unknown[]): void => {}

@@ -2,20 +2,27 @@
   // !!! This code was automatically generated. You should not change it !!!
   import { Tooltip, TooltipConfigInterface } from '@unovis/ts'
   import { getContext, onMount } from 'svelte'
-  import { getActions } from '../../utils/actions'
+  import { emptyCallback, getActions } from '../../utils/actions'
 
 
   let config: TooltipConfigInterface
   $: config = { ...$$restProps }
 
   // component declaration
-  const component = new Tooltip(config)
+  let component: Tooltip
   const { setTooltip } = getContext('container')
-  const { setConfig } = getActions.apply(component)
+
+  let setConfig = emptyCallback
+
 
   onMount(() => {
+    component = new Tooltip(config)
+    const actions = getActions.apply(component)
+    setConfig = actions.setConfig
+
     setTooltip(component)
-    return () => setTooltip(undefined) as void
+
+    return () => { setTooltip(undefined) as void }
   })
 
   // component accessor

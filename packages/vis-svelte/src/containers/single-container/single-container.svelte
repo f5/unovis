@@ -18,7 +18,7 @@
   })
 
   onDestroy(() => {
-    chart.destroy()
+    chart?.destroy()
   })
 
   const updateConfig = (c: SingleContainerConfigInterface<Data>) => {
