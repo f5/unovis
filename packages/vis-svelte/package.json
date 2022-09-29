@@ -8,7 +8,8 @@
   "svelte": "./index.js",
   "type": "module",
   "scripts": {
-    "build": "npm run check && rm -rf dist; rollup -c",
+    "build": "npm run check && sh prepare-dist.sh",
+    "compile": "npm run check && rm -rf dist; rollup -c",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "generate": "rollup -c ./autogen/rollup.config.js; node .autogen.cjs; rm .autogen.cjs",
     "publish-dist": "cp ./package.json ./dist; cp ../../LICENSE ./dist; cd ./dist; npm publish; rm -rf .cache"
