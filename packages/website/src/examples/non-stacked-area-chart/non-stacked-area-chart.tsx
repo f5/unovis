@@ -3,7 +3,7 @@ import { NumericAccessor } from '@unovis/ts'
 import { VisXYContainer, VisAxis, VisArea, VisBulletLegend } from '@unovis/react'
 import { countries, Country, data, DataRecord } from './data'
 
-export default function BasicArea (): JSX.Element {
+export default function NonStackedArea (): JSX.Element {
   const x = useCallback((_: DataRecord, i: number) => i, [])
   const accessors = (id: Country): { y: NumericAccessor<DataRecord>; color: string } => ({
     y: useCallback((d: DataRecord) => d.cases[id], []),

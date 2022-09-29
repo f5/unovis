@@ -3,7 +3,7 @@ import React from 'react'
 import BrowserOnly from '@docusaurus/BrowserOnly'
 import { Example } from '@site/src/types/example'
 
-const pathname = 'basic-area-chart'
+const pathname = 'non-stacked-area-chart'
 const example: Example = {
   component: () => <BrowserOnly>{() => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -11,7 +11,7 @@ const example: Example = {
     return <Component />
   }}</BrowserOnly>,
   pathname,
-  title: 'Basic Area Chart',
+  title: 'Non-Stacked Area Chart',
   description: <div>
     Monthly Covid-19 Cases by Country
     (Source: <a href="https://github.com/owid/covid-19-data" target="_blank">Our World in Data</a>)

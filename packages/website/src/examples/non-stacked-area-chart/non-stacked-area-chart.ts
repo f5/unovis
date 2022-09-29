@@ -3,7 +3,7 @@ import { countries, Country, data, DataRecord } from './data'
 
 const container = document.getElementById('vis-container')
 
-// Accesor functions
+// Accessor functions
 const x = (_: DataRecord, i: number): number => i
 const accessors = (id: Country): { y: NumericAccessor<DataRecord>; color: string } => ({
   y: (d: DataRecord) => d.cases[id],

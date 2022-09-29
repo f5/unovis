@@ -2,10 +2,10 @@ import { Component } from '@angular/core'
 import { data, countries, Country, DataRecord } from './data'
 
 @Component({
-  selector: 'basic-area-chart',
-  templateUrl: './basic-area-chart.component.html',
+  selector: 'non-stacked-area-chart',
+  templateUrl: './non-stacked-area-chart.component.html',
 })
-export class BasicAreaComponent {
+export class NonStackedAreaComponent {
   data = data
   legendItems = Object.values(countries)
 
