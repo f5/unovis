@@ -1,5 +1,4 @@
 import { select } from 'd3-selection'
-import L from 'leaflet'
 import { ResizeObserver } from '@juggle/resize-observer'
 
 import { ComponentCore } from 'core/component'
@@ -166,7 +165,7 @@ LeafletFlowMapConfigInterface<PointDatum, FlowDatum>
           p.location.lon = p.source.lon
         }
 
-        const pos = map?.latLngToLayerPoint(new L.LatLng(p.location.lat, p.location.lon))
+        const pos = map?.latLngToLayerPoint([p.location.lat, p.location.lon])
         const orthogonalArcShift = -(zoomLevel ** 2 * fullDist / 8) * Math.cos(Math.PI / 2 * (fullDist / 2 - remainedDist) / (fullDist / 2)) || 0
         p.x = pos?.x - this.panningOffset.x
         p.y = pos?.y + orthogonalArcShift - this.panningOffset.y
@@ -185,7 +184,7 @@ LeafletFlowMapConfigInterface<PointDatum, FlowDatum>
       const lat = getNumber(flow, this.config.sourceLatitude)
       const lon = getNumber(flow, this.config.sourceLongitude)
       const r = getNumber(flow, this.config.sourcePointRadius)
-      const pos = map?.latLngToLayerPoint(new L.LatLng(lat, lon))
+      const pos = map?.latLngToLayerPoint([lat, lon])
       const posX = pos.x - this.panningOffset.x
       const posY = pos.y - this.panningOffset.y
 

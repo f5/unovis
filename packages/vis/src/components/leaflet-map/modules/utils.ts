@@ -1,4 +1,4 @@
-import L from 'leaflet'
+import type L from 'leaflet'
 import { min, max } from 'd3-array'
 import Supercluster, { ClusterFeature, PointFeature } from 'supercluster'
 
@@ -53,7 +53,7 @@ export const getNextZoomLevelOnClusterClick = (level: number): number => clamp(1
 export function projectPoint (geoJSONPoint, leafletMap: L.Map): { x: number; y: number } {
   const lat = geoJSONPoint.geometry.coordinates[1]
   const lon = geoJSONPoint.geometry.coordinates[0]
-  const projected = leafletMap.latLngToLayerPoint(new L.LatLng(lat, lon))
+  const projected = leafletMap.latLngToLayerPoint([lat, lon])
   return projected
 }
 

@@ -1,4 +1,4 @@
-import { Color } from 'three/src/math/Color'
+import { Color } from 'three/src/math/Color.js'
 
 export const DEFAULT_POINT_RADIUS = 1
 export const DEFAULT_POINT_COLOR = 'rgba(255, 113, 111, 1.000)'

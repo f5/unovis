@@ -1,4 +1,4 @@
-import L from 'leaflet'
+import type L from 'leaflet'
 
 // Utils
 import { cloneDeep } from 'utils/data'

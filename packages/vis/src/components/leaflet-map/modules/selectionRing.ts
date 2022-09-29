@@ -1,4 +1,4 @@
-import L from 'leaflet'
+import type L from 'leaflet'
 import { Selection } from 'd3-selection'
 
 // Utils
