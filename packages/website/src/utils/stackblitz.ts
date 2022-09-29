@@ -55,7 +55,7 @@ function getStarterFiles (framework: Framework, e: Example): ProjectFiles {
         [`${e.pathname}/${e.pathname}.component.ts`]: e.codeAngular.component,
         [`${e.pathname}/${e.pathname}.component.html`]: e.codeAngular.html,
         [`${e.pathname}/${e.pathname}.module.ts`]: e.codeAngular.module,
-        [`${e.pathname}/index.ts`]: `export { ${e.title.split(' ').join('')}Module as ComponentModule } from './${e.pathname}.module.ts'`,
+        [`${e.pathname}/index.ts`]: `export { ${e.title.split(/[\s,-]+/).join('')}Module as ComponentModule } from './${e.pathname}.module.ts'`,
         [`${e.pathname}/data.ts`]: e.data,
         ...(e.constants ? { [`${e.pathname}/constants.ts`]: e.constants } : {}),
       }
