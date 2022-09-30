@@ -1,20 +1,14 @@
 name                          license period  license type  installed version  author
 ----                          --------------  ------------  -----------------  ------
-@rollup/plugin-typescript     perpetual       MIT           8.3.2              Oskar Segersvärd
 @rollup/plugin-node-resolve   perpetual       MIT           13.0.4             Rich Harris
+@sveltejs/package             perpetual       MIT           1.0.0-next.5       n/a
 @tsconfig/svelte              perpetual       MIT           2.0.0              n/a
 @zerollup/ts-transform-paths  perpetual       MIT           1.7.18             Stefan Zerkalica
-sveld                         perpetual       Apache-2.0    0.15.1             n/a
-svelte                        perpetual       MIT           3.48.0             Rich Harris
 rollup                        perpetual       MIT           2.61.1             Rich Harris
-rollup-plugin-copy            perpetual       MIT           3.4.0              Vlad Shcherbin
-rollup-plugin-dev             perpetual       MIT           2.0.4              Dave Honneffer
-rollup-plugin-svelte          perpetual       MIT           7.1.0              Rich Harris
-rollup-plugin-terser          perpetual       MIT           7.0.2              Bogdan Chadkin
-svelte-check                  perpetual       MIT           2.7.0              The Svelte Community
-svelte-preprocess             perpetual       MIT           4.10.6             Christian Kaisermann
-rollup-plugin-postcss         perpetual       MIT           4.0.1              EGOIST
 rollup-plugin-typescript2     perpetual       MIT           0.31.1             @ezolenko
+svelte                        perpetual       MIT           3.48.0             Rich Harris
+svelte-check                  perpetual       MIT           2.7.0              The Svelte Community
+svelte-preprocess             perpetual       MIT           4.10.7             Christian Kaisermann
 tslib                         perpetual       0BSD          2.3.1              Microsoft Corp.
 ttypescript                   perpetual       MIT           1.5.13             cevek
 typescript                    perpetual       Apache-2.0    4.2.4              Microsoft Corp.
