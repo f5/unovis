@@ -5,6 +5,7 @@
   "main": "./index.js",
   "types": "./index.d.ts",
   "type": "module",
+  "sideEffects": false,
   "scripts": {
     "build": "rimraf dist && tsc --project tsconfig.lib.json --emitDeclarationOnly && rollup --config",
     "tsc": "tsc",
