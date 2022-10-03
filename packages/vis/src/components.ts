@@ -1,5 +1,3 @@
-import './styles/css-variables'
-
 // Core
 export { ComponentCore } from 'core/component'
 export { ComponentConfigInterface } from 'core/component/config'
