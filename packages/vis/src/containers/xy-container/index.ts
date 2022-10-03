@@ -3,7 +3,7 @@ import { extent, merge as mergeArrays } from 'd3-array'
 import { Selection } from 'd3-selection'
 
 // Global CSS variables (side effects import)
-import 'styles/css-variables'
+import 'styles/index'
 
 // Core
 import { ContainerCore } from 'core/container'

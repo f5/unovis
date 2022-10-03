@@ -1,5 +1,5 @@
 // Global CSS variables (side effects import)
-import 'styles/css-variables'
+import 'styles/index'
 
 // Core
 import { ContainerCore } from 'core/container'
