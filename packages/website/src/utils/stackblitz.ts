@@ -58,6 +58,7 @@ function getStarterFiles (framework: Framework, e: Example): ProjectFiles {
         [`${e.pathname}/index.ts`]: `export { ${e.title.split(/[\s,-]+/).join('')}Module as ComponentModule } from './${e.pathname}.module.ts'`,
         [`${e.pathname}/data.ts`]: e.data,
         ...(e.constants ? { [`${e.pathname}/constants.ts`]: e.constants } : {}),
+        ...(e.styles ? { [`${e.pathname}/styles.css`]: e.styles } : {}),
       }
     case Framework.React:
       return {
@@ -72,6 +73,7 @@ function getStarterFiles (framework: Framework, e: Example): ProjectFiles {
         'src/App.tsx': e.codeReact,
         'src/data.ts': e.data,
         ...(e.constants ? { 'src/constants.ts': e.constants } : {}),
+        ...(e.styles ? { 'src/styles.css': e.styles } : {}),
       }
     case Framework.Svelte:
       return {
@@ -135,6 +137,7 @@ function getStarterFiles (framework: Framework, e: Example): ProjectFiles {
         'src/App.ts': e.codeTs,
         'src/data.ts': e.data,
         ...(e.constants ? { 'src/constants.ts': e.constants } : {}),
+        ...(e.styles ? { 'src/styles.css': e.styles } : {}),
       }
   }
 }
