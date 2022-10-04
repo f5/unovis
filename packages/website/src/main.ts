@@ -14,7 +14,7 @@ import { StackedBarChartModule } from './examples/horizontal-stacked-bar-chart/h
 import { BasicScatterChartModule } from './examples/basic-scatter-chart/basic-scatter-chart.module'
 import { FreeBrushScattersModule } from './examples/free-brush-scatters/free-brush-scatters.module'
 import { BrushGroupedBarModule } from './examples/brush-grouped-bar/brush-grouped-bar.module'
-import { BasicAreaChartModule } from './examples/non-stacked-area-chart/non-stacked-area-chart.module'
+import { NonStackedAreaChartModule } from './examples/non-stacked-area-chart/non-stacked-area-chart.module'
 import { StackedAreaModule } from './examples/stacked-area-chart/stacked-area-chart.module'
 import { BasicTimelineModule } from './examples/basic-timeline/basic-timeline.module'
 import { BasicSankeyModule } from './examples/basic-sankey/basic-sankey.module'
@@ -45,16 +45,8 @@ import { ParallelGraphModule } from './examples/parallel-graph/parallel-graph.mo
     <basic-sankey></basic-sankey>
     <expandable-sankey></expandable-sankey>
     <dagre-graph></dagre-graph>
-<<<<<<< HEAD
     <force-graph></force-graph>
-=======
-<<<<<<< HEAD
-    <force-layout-graph></force-layout-graph>
-=======
-    <parallel-graph></parallel-graph>
->>>>>>> 9f07a17c (Website | Gallery: Graph Parallel Layout example)
->>>>>>> 3057b5d5 (Website | Gallery: Graph Parallel Layout example)
-  `,
+    <parallel-graph></parallel-graph>`,
 })
 export class AppComponent {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -65,21 +57,9 @@ export class AppComponent {
   declarations: [AppComponent],
   imports: [
     BrowserModule, BasicGroupedBarModule, BasicLeafletMapModule, BasicLineChartModule, MultiLineChartModule,
-    TopojsonMapModule, StackedBarChartModule, BasicScatterChartModule, FreeBrushScattersModule, BrushGroupedBarModule,
-<<<<<<< HEAD
-    TopojsonMapModule, StackedBarChartModule, BasicScatterChartModule, FreeBrushScattersModule, BasicAreaChartModule,
+    TopojsonMapModule, StackedBarChartModule, BrushGroupedBarModule, BasicScatterChartModule, FreeBrushScattersModule, NonStackedAreaChartModule,
     BasicTimelineModule, BasicSankeyModule, ExpandableSankeyModule, BasicGraphModule, LeafletFlowMapModule,
-    ForceLayoutGraphModule, AdvancedLeafletMapModule, StackedAreaModule,
-=======
-    TopojsonMapModule, StackedBarChartModule, BasicScatterChartModule, FreeBrushScattersModule, BasicAreaModule,
-<<<<<<< HEAD
-    BasicTimelineModule, BasicSankeyModule, ExpandableSankeyModule, BasicGraphModule, LeafletFlowMapModule,
-    ForceLayoutGraphModule, AdvancedLeafletMapModule,
-=======
-    BasicTimelineModule, BasicSankeyModule, ExpandableSankeyModule, BasicGraphModule,
-    BasicTimelineModule, BasicSankeyModule, ExpandableSankeyModule, ParallelGraphModule,
->>>>>>> 9f07a17c (Website | Gallery: Graph Parallel Layout example)
->>>>>>> 3057b5d5 (Website | Gallery: Graph Parallel Layout example)
+    ForceLayoutGraphModule, AdvancedLeafletMapModule, StackedAreaModule, ParallelGraphModule,
   ],
   bootstrap: [AppComponent],
   providers: [BrowserModule],

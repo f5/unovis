@@ -17,7 +17,7 @@
     () => import('./examples/basic-sankey/basic-sankey.svelte'),
     () => import('./examples/expandable-sankey/expandable-sankey.svelte'),
     () => import('./examples/dagre-graph/dagre-graph.svelte'),
-    () => import('./examples/force-graph/force-graph.svelte')
+    () => import('./examples/force-graph/force-graph.svelte'),
     () => import('./examples/parallel-graph/parallel-graph.svelte')
   ]
 </script>

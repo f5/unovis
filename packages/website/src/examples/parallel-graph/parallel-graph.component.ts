@@ -1,52 +1,60 @@
 import { Component } from '@angular/core'
-import { colors, Graph, GraphLayoutType,   GraphLinkArrowStyle, GraphNode, Position, Scale } from '@unovis/ts'
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser'
-
-import { data, groups, styleUrl, getFlag, NodeDatum, LinkDatum } from './data'
-
-const colorScale = Scale.scaleOrdinal<string>(colors).domain(groups)
+import { Graph, GraphPanelConfig, GraphLayoutType } from '@unovis/ts'
+import { nodes, links, sites, StatusMap, NodeDatum, LinkDatum } from './data'
 
 @Component({
   selector: 'parallel-graph',
-  templateUrl: './parallel-graph.component.html'
+  templateUrl: './parallel-graph.component.html',
+  styleUrls: ['./styles.css'],
 })
 export class ParallelGraphComponent {
-  data = data
-  style: SafeResourceUrl
-  margin = { top: 20, bottom: 20, left: 20, right: 20 }
+  mainSite: string  = nodes[0].site
 
-  constructor(sanitizer: DomSanitizer) {
-    this.style = sanitizer.bypassSecurityTrustResourceUrl(styleUrl)
+  data: { nodes: NodeDatum[], links: LinkDatum }
+  panels: GraphPanelConfig[]
+
+  setExpanded (site: string) {
+    const expanded = site === this.mainSite ? [this.mainSite] : [site, this.mainSite]
+    this.panels = expanded.map(site => sites[site].panel)
+    this.data = {
+      nodes: nodes.flatMap<NodeDatum>(n => expanded.includes(n.site) ? n.children : n),
+      links: links.map(l => ({
+        ...l,
+        source: expanded.includes(l.sourceGroup) ? l.source : sites[l.sourceGroup].groupNodeId,
+        target: expanded.includes(l.targetGroup) ? l.target : sites[l.targetGroup].groupNodeId,
+      })),
+    }
   }
 
-  getColor = (d: NodeDatum | LinkDatum['airline']): string => colorScale(d.continent)
+  constructor() {
+    this.setExpanded(this.mainSite)
+  }
 
+  // layout and events
   layoutType = GraphLayoutType.Parallel
-  layoutParallelNodeSubGroup = (n: NodeDatum) => n.continent
-  linkArrow=GraphLinkArrowStyle.Single
-  linkStroke = (l: LinkDatum) => this.getColor(l.airline)
-  nodeIcon = (n: GraphNode<NodeDatum,LinkDatum>) => n.links.length.toString()
-  graphPanels = groups.map(c => ({
-    nodes: data.nodes.reduce((arr, n) => n.continent === c ? [...arr, n.id] : arr, []),
-    label: c,
-    borderColor: colorScale(c),
-    dashedOutline: true,
-    labelPosition: c === 'North America' || c === 'Asia' || c === 'Africa'
-      ? Position.Top
-      : Position.Bottom
-    ,
-  }))
-
-  legendItems = groups.map(d => ({ name: d, color: colorScale(d) }))
-  tooltipTriggers = {
-    [Graph.selectors.link]: l => `
-        <div style="color:#333">
-          <div>${l.source.label} -> ${l.target.label}</div>
-          <div style="font-size:12px">
-            ${getFlag(l.airline.countryCode)}${l.airline.name} |
-            <span style="font-variant:all-small-caps">${[l.airline.country, l.airline.continent].join(', ')}
-          </div>
-        </div>`
-    ,
+  layoutGroupOrder = ['west', this.mainSite, 'east']
+  events = {
+    [Graph.selectors.node]: {
+        click: (d: NodeDatum) => this.setExpanded(d.site)
+    }
   }
+  
+  // node config
+  nodeSize = (n: NodeDatum) => n.children ? 75 : 50
+  nodeShape = (n: NodeDatum) => n.shape
+  nodeGaugeValue = (n: NodeDatum) => n.score
+  nodeGaugeFill = (n: NodeDatum) => StatusMap[n.status]?.color
+  nodeSubLabel = (n: NodeDatum) => n.score && `${n.score}/100`
+  nodeSideLabels = (n: NodeDatum) => [{
+    radius: 16,
+    fontSize: 12,
+    ...(n.children ? { text: n.children.length } : StatusMap[n.status]),
+  }]
+
+  // link config
+  linkFlow = (l: LinkDatum) => l.showTraffic
+  linkStroke = (l: LinkDatum) => `${StatusMap[l.status]?.color}aa`
+  linkBandWidth = (l: LinkDatum) => l.showTraffic ? 12 : 6
+
+ 
 }

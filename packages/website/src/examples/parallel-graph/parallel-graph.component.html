@@ -1,16 +1,20 @@
-<link rel="stylesheet" [href]="style">
-<vis-single-container [data]="data" [height]="750" [margin]="margin">
-    <vis-bullet-legend [items]="legendItems"></vis-bullet-legend>
+<div class="chart">
+  <vis-single-container [data]="data" [height]="650">
     <vis-graph
+      [events]="events"
       [layoutType]="layoutType"
-      [layoutParallelNodeSubGroup]="layoutParallelNodeSubGroup"
-      [layoutParallelNodesPerColumn]="5"
-      [layoutParallelGroupSpacing]="200"
-      [linkArrow]="linkArrow"
-      [linkStroke]="linkStroke"
-      [nodeFill]="getColor"
+      [layoutGroupOrder]="layoutGroupOrder"
+      [nodeGaugeFill]="nodeGaugeFill"
+      [nodeGaugeValue]="nodeGaugeValue"
       [nodeIcon]="nodeIcon"
-      [panels]="graphPanels"
+      [nodeShape]="nodeShape"
+      [nodeSideLabels]="nodeSideLabels"
+      [nodeSize]="nodeSize"
+      [nodeSubLabel]="nodeSubLabel"
+      [linkBandWidth]="linkBandWidth"
+      [linkFlow]="linkFlow"
+      [linkStroke]="linkStroke"
+      [panels]="panels"
     ></vis-graph>
-    <vis-tooltip [triggers]="tooltipTriggers"></vis-tooltip>
-</vis-single-container>
+  </vis-single-container>
+</div>

@@ -1,51 +1,60 @@
-import React, { useCallback } from 'react'
-import { VisSingleContainer, VisGraph, VisTooltip, VisBulletLegend } from '@unovis/react'
-import { Graph, GraphLayoutType, Scale, colors, GraphLinkArrowStyle, Position } from '@unovis/ts'
+import React, { useCallback, useMemo } from 'react'
+import { VisSingleContainer, VisGraph } from '@unovis/react'
+import { Graph, GraphLayoutType } from '@unovis/ts'
 
-import { data, groups, styleUrl, getFlag, NodeDatum, LinkDatum } from './data'
+import { nodes, links, sites, StatusMap, NodeDatum, LinkDatum } from './data'
 
-const colorScale = Scale.scaleOrdinal<string>(colors).domain(groups)
-const graphPanels = groups.map(c => ({
-  nodes: data.nodes.reduce((arr, n) => n.continent === c ? [...arr, n.id] : arr, []),
-  label: c,
-  borderColor: colorScale(c),
-  dashedOutline: true,
-  labelPosition: c === 'North America' || c === 'Asia' || c === 'Africa'
-    ? Position.Top
-    : Position.Bottom
-  ,
-}))
-const legendItems = groups.map(d => ({ name: d, color: colorScale(d) }))
+import './styles.css'
 
-export default function BasicGraph (): JSX.Element {
-  const getColor = useCallback((d: NodeDatum | LinkDatum['airline']): string => colorScale(d.continent), [])
+const mainSite = nodes[0].site
+
+export default function ParallelGraph (): JSX.Element {
+  const [expanded, setExpanded] = React.useState([mainSite])
+
+  const data = useMemo(() => ({
+    nodes: nodes.flatMap<NodeDatum>(n => expanded.includes(n.site) ? n.children : n),
+    links: links.map(l => ({
+      ...l,
+      source: expanded.includes(l.sourceGroup) ? l.source : sites[l.sourceGroup].groupNodeId,
+      target: expanded.includes(l.targetGroup) ? l.target : sites[l.targetGroup].groupNodeId,
+    })),
+  }), [expanded])
+
+  const panels = useMemo(() => expanded.map(site => sites[site].panel), [expanded])
+
   return (
-    <VisSingleContainer data={data} height={750} margin={{ top: 20, bottom: 20, left: 20, right: 20 }}>
-      <link rel="stylesheet" href={styleUrl}/>
-      <VisTooltip triggers={{
-        [Graph.selectors.link]: l => `
-            <div style="color:#333">
-              <div>${l.source.label} -> ${l.target.label}</div>
-              <div style="font-size:12px">
-                ${getFlag(l.airline.countryCode)}${l.airline.name} |
-                <span style="font-variant:all-small-caps">${[l.airline.country, l.airline.continent].join(', ')}
-              </div>
-            </div>`
-        ,
-      }}/>
-      <VisBulletLegend items={legendItems}/>
-      <VisGraph<NodeDatum, LinkDatum>
-        layoutType={GraphLayoutType.Parallel}
-        layoutParallelNodeSubGroup={useCallback(n => n.continent, [])}
-        layoutParallelNodesPerColumn={5}
-        layoutParallelGroupSpacing={200}
-        linkArrow={GraphLinkArrowStyle.Single}
-        linkStroke={d => getColor(d.airline)}
-        nodeFill={getColor}
-        nodeIcon={useCallback(n => n.links.length, [])}
-        panels={graphPanels}
-      />
-    </VisSingleContainer>
+    <div className='chart'>
+      <VisSingleContainer data={data} height={650}>
+        <VisGraph
+          events={{
+            [Graph.selectors.node]: {
+              click: (d: NodeDatum) => d.site === mainSite
+                ? setExpanded([mainSite])
+                : setExpanded([mainSite, d.site]),
+            },
+          }}
+          layoutType={GraphLayoutType.Parallel}
+          layoutGroupOrder={['west', mainSite, 'east']}
+          layoutNonConnectedAside={false}
+          nodeStrokeWidth={2}
+          nodeIconSize={20}
+          nodeSize={useCallback((n: NodeDatum) => n.children ? 75 : 50, [])}
+          nodeShape={useCallback((n: NodeDatum) => n.shape, [])}
+          nodeGaugeValue={useCallback((n: NodeDatum) => n.score, [])}
+          nodeGaugeFill={useCallback((n: NodeDatum) => StatusMap[n.status]?.color, [])}
+          nodeSubLabel={useCallback((n: NodeDatum) => n.score && `${n.score}/100`, [])}
+          nodeSideLabels={useCallback((n: NodeDatum) => [{
+            radius: 16,
+            fontSize: 12,
+            ...(n.children ? { text: n.children.length } : StatusMap[n.status]),
+          }], [])}
+          linkFlow={useCallback((l: LinkDatum) => l.showTraffic, [])}
+          linkStroke={useCallback((l: LinkDatum) => `${StatusMap[l.status]?.color}aa`, [])}
+          linkBandWidth={useCallback((l: LinkDatum) => l.showTraffic ? 12 : 6, [])}
+          panels={panels}
+        />
+      </VisSingleContainer>
+    </div>
   )
 }
 

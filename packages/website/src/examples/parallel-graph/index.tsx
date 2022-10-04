@@ -13,8 +13,7 @@ const example: Example = {
   pathname,
   title: 'Parallel Layout Graph',
   description: <p>
-    Transcontinental Routes and Airlines on the Boeing 737
-    (source: <a href='https://openflights.org/data.html' target="_blank">OpenFlights.org</a>)
+    Traffic Graph
   </p>,
   preview: require('./preview.png').default,
   codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,
@@ -26,6 +25,7 @@ const example: Example = {
   },
   codeSvelte: require(`!!raw-loader!./${pathname}.svelte`).default,
   data: require('!!raw-loader!./data').default,
+  styles: require('!!raw-loader!./styles.css').default,
 }
 
 export default example
