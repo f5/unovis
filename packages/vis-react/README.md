@@ -1,0 +1,46 @@
+🟨 **Unovis** is a modular data visualization framework for React, Angular, Svelte, and vanilla TypeScript or JavaScript.
+
+`@unovis/react` provides React components for `@unovis/ts`, which makes Unovis integration into a React
+app much easier.
+
+Learn more about **Unovis** on our website [unovis.dev](https://unovis.dev)
+
+## Installation
+```bash
+npm install -P @unovis/ts @unovis/react
+```
+
+## Quick Start
+```typescript jsx
+import React, { useCallback } from 'react'
+import { VisXYContainer, VisLine, VisAxis } from '@unovis/react'
+
+export type DataRecord = { x: number; y: number }
+export const data: DataRecord[] = [
+  { x: 0, y: 0 },
+  { x: 1, y: 2 },
+  { x: 2, y: 1 },
+]
+
+export function BasicLineChart (): JSX.Element {
+  return (
+    <VisXYContainer data={data} height={600}>
+      <VisLine<DataRecord>
+        x={useCallback(d => d.x, [])}
+        y={useCallback(d => d.y, [])}
+      ></VisLine>
+      <VisAxis type="x"></VisAxis>
+      <VisAxis type="y"></VisAxis>
+    </VisXYContainer>
+  )
+}
+```
+
+## Documentation
+https://unovis.dev/docs
+
+## Examples
+https://unovis.dev/gallery
+
+## License
+Apache-2.0
