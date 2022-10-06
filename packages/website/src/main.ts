@@ -14,7 +14,7 @@ import { StackedBarChartModule } from './examples/horizontal-stacked-bar-chart/h
 import { BasicScatterChartModule } from './examples/basic-scatter-chart/basic-scatter-chart.module'
 import { FreeBrushScattersModule } from './examples/free-brush-scatters/free-brush-scatters.module'
 import { BrushGroupedBarModule } from './examples/brush-grouped-bar/brush-grouped-bar.module'
-import { BasicAreaChartModule } from './examples/non-stacked-area-chart/non-stacked-area-chart.module'
+import { NonStackedAreaChartModule } from './examples/non-stacked-area-chart/non-stacked-area-chart.module'
 import { StackedAreaModule } from './examples/stacked-area-chart/stacked-area-chart.module'
 import { BasicTimelineModule } from './examples/basic-timeline/basic-timeline.module'
 import { BasicSankeyModule } from './examples/basic-sankey/basic-sankey.module'
@@ -23,6 +23,7 @@ import { BasicGraphModule } from './examples/dagre-graph/dagre-graph.module'
 import { LeafletFlowMapModule } from './examples/leaflet-flow-map/leaflet-flow-map.module'
 import { ForceLayoutGraphModule } from './examples/force-graph/force-graph.module'
 import { AdvancedLeafletMapModule } from './examples/advanced-leaflet-map/advanced-leaflet-map.module'
+import { ParallelGraphModule } from './examples/parallel-graph/parallel-graph.module'
 
 @Component({
   selector: 'app-component',
@@ -45,7 +46,7 @@ import { AdvancedLeafletMapModule } from './examples/advanced-leaflet-map/advanc
     <expandable-sankey></expandable-sankey>
     <dagre-graph></dagre-graph>
     <force-graph></force-graph>
-  `,
+    <parallel-graph></parallel-graph>`,
 })
 export class AppComponent {
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -56,10 +57,9 @@ export class AppComponent {
   declarations: [AppComponent],
   imports: [
     BrowserModule, BasicGroupedBarModule, BasicLeafletMapModule, BasicLineChartModule, MultiLineChartModule,
-    TopojsonMapModule, StackedBarChartModule, BasicScatterChartModule, FreeBrushScattersModule, BrushGroupedBarModule,
-    TopojsonMapModule, StackedBarChartModule, BasicScatterChartModule, FreeBrushScattersModule, BasicAreaChartModule,
+    TopojsonMapModule, StackedBarChartModule, BrushGroupedBarModule, BasicScatterChartModule, FreeBrushScattersModule, NonStackedAreaChartModule,
     BasicTimelineModule, BasicSankeyModule, ExpandableSankeyModule, BasicGraphModule, LeafletFlowMapModule,
-    ForceLayoutGraphModule, AdvancedLeafletMapModule, StackedAreaModule,
+    ForceLayoutGraphModule, AdvancedLeafletMapModule, StackedAreaModule, ParallelGraphModule,
   ],
   bootstrap: [AppComponent],
   providers: [BrowserModule],

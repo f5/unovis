@@ -7,6 +7,7 @@ export const links = css`
 export const variables = injectGlobal`
   :root {
     --vis-graph-link-stroke-color: #e6e9f3;
+    --vis-graph-link-stroke-opacity: 1.0;
     --vis-graph-link-greyout-opacity: 0.3;
     --vis-graph-link-dashed-stroke-dasharray: 6 6;
 
@@ -50,6 +51,7 @@ export const link = css`
 
   fill: none;
   stroke: var(--vis-graph-link-stroke-color);
+  stroke-opacity: var(--vis-graph-link-stroke-opacity);
   transition: stroke 800ms;
   stroke-linecap: round;
   pointer-events: none;

@@ -14,6 +14,7 @@ export type Example = {
   codeSvelte: string;
   data: string;
   constants?: string;
+  styles?: string;
 }
 
 export type ExampleCollection = {

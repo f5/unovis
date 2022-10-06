@@ -5,5 +5,11 @@
     "baseUrl": ".",
     "experimentalDecorators": true,
     "jsx": "react-jsx"
-  }
+  },
+  "exclude": [
+    "node_modules",
+    "build",
+    "dist",
+    "dist-demo",
+  ]
 }
