@@ -12,7 +12,7 @@ export default function ParallelGraph (): JSX.Element {
   const [expanded, setExpanded] = React.useState([mainSite])
 
   const data = useMemo(() => ({
-    nodes: nodes.flatMap<NodeDatum>(n => expanded.includes(n.site) ? n.children : n),
+    nodes: nodes.flatMap<NodeDatum>(n => expanded.includes(n.site) ? (n.children as NodeDatum[]) : n),
     links: links.map(l => ({
       ...l,
       source: expanded.includes(l.sourceGroup) ? l.source : sites[l.sourceGroup].groupNodeId,
@@ -25,7 +25,7 @@ export default function ParallelGraph (): JSX.Element {
   return (
     <div className='chart'>
       <VisSingleContainer data={data} height={650}>
-        <VisGraph
+        <VisGraph<NodeDatum, LinkDatum>
           events={{
             [Graph.selectors.node]: {
               click: (d: NodeDatum) => d.site === mainSite
@@ -33,23 +33,26 @@ export default function ParallelGraph (): JSX.Element {
                 : setExpanded([mainSite, d.site]),
             },
           }}
+          disableZoom={true}
           layoutType={GraphLayoutType.Parallel}
           layoutGroupOrder={['west', mainSite, 'east']}
           layoutNonConnectedAside={false}
-          nodeStrokeWidth={2}
+          layoutParallelNodesPerColumn={4}
+          nodeStrokeWidth={3}
           nodeIconSize={20}
           nodeSize={useCallback((n: NodeDatum) => n.children ? 75 : 50, [])}
           nodeShape={useCallback((n: NodeDatum) => n.shape, [])}
-          nodeGaugeValue={useCallback((n: NodeDatum) => n.score, [])}
-          nodeGaugeFill={useCallback((n: NodeDatum) => StatusMap[n.status]?.color, [])}
-          nodeSubLabel={useCallback((n: NodeDatum) => n.score && `${n.score}/100`, [])}
+          nodeGaugeValue={useCallback((n: NodeDatum) => n.score || null, [])}
+          nodeGaugeFill={useCallback((n: NodeDatum) => n.status ? StatusMap[n.status]?.color : null, [])}
+          nodeSubLabel={useCallback((n: NodeDatum) => n.score ? `${n.score}/100` : '', [])}
           nodeSideLabels={useCallback((n: NodeDatum) => [{
             radius: 16,
             fontSize: 12,
-            ...(n.children ? { text: n.children.length } : StatusMap[n.status]),
+            ...(n.children ? { text: n.children.length } : {}),
+            ...(n.status ? StatusMap[n.status] : {}),
           }], [])}
           linkFlow={useCallback((l: LinkDatum) => l.showTraffic, [])}
-          linkStroke={useCallback((l: LinkDatum) => `${StatusMap[l.status]?.color}aa`, [])}
+          linkStroke={useCallback((l: LinkDatum) => StatusMap[l.status]?.color || null, [])}
           linkBandWidth={useCallback((l: LinkDatum) => l.showTraffic ? 12 : 6, [])}
           panels={panels}
         />

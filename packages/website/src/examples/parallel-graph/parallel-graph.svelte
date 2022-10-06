@@ -3,7 +3,7 @@
   import { Graph, GraphLayoutType } from '@unovis/ts'
 
   import { nodes, links, sites, StatusMap, NodeDatum, LinkDatum } from './data'
-  
+
   const mainSite = nodes[0].site
 
   // Reactive statments
@@ -38,9 +38,9 @@
     }],
     nodeSize: (n: NodeDatum) => n.children ? 75 : 50,
     nodeSubLabel: (n: NodeDatum) => n.score && `${n.score}/100`,
-    nodeStrokeWidth: 2,
+    nodeStrokeWidth: 3,
     linkFlow: (l: LinkDatum) => l.showTraffic,
-    linkStroke: (l: LinkDatum) => `${StatusMap[l.status]?.color}aa`,
+    linkStroke: (l: LinkDatum) => StatusMap[l.status]?.color || null,
     linkBandWidth: (l: LinkDatum) => l.showTraffic ? 12 : 6,
   }
 </script>
@@ -51,6 +51,7 @@
       {...graphConfig}
       layoutType="{GraphLayoutType.Parallel}"
       layoutGroupOrder="{[ 'west', mainSite, 'east']}"
+      layoutParallelNodesPerColumn={4},
       {panels}
     />
   </VisSingleContainer>
@@ -59,6 +60,8 @@
 <style>
   .chart {
     --vis-graph-icon-font-family: 'Font Awesome 6 Free';
+    --vis-graph-link-stroke-opacity: 0.8;
+    --vis-graph-link-band-opacity: 0.2;
     font-family: 'Font Awesome 6 Free';
   }
   @font-face {

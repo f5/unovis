@@ -13,7 +13,8 @@ const chart = new SingleContainer(container, {
   component: new Graph<NodeDatum, LinkDatum>({
     layoutType: GraphLayoutType.Parallel,
     layoutGroupOrder: ['west', mainSite, 'east'],
-    nodeStrokeWidth: 2,
+    layoutParallelNodesPerColumn: 4,
+    nodeStrokeWidth: 3,
     nodeIconSize: 20,
     nodeSize: (n: NodeDatum) => n.children ? 75 : 50,
     nodeShape: (n: NodeDatum) => n.shape,
@@ -26,7 +27,7 @@ const chart = new SingleContainer(container, {
       ...(n.children ? { text: n.children.length } : StatusMap[n.status]),
     }],
     linkFlow: (l: LinkDatum) => l.showTraffic,
-    linkStroke: (l: LinkDatum) => `${StatusMap[l.status]?.color}aa`,
+    linkStroke: (l: LinkDatum) => StatusMap[l.status]?.color || null,
     linkBandWidth: (l: LinkDatum) => l.showTraffic ? 12 : 6,
   }),
 })

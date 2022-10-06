@@ -7,5 +7,7 @@
 
 .chart {
   --vis-graph-icon-font-family: 'Font Awesome 6 Free';
+  --vis-graph-link-stroke-opacity: 0.8;
+  --vis-graph-link-band-opacity: 0.2;
   font-family: 'Font Awesome 6 Free';
 }

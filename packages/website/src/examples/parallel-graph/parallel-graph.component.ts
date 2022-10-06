@@ -10,7 +10,7 @@ import { nodes, links, sites, StatusMap, NodeDatum, LinkDatum } from './data'
 export class ParallelGraphComponent {
   mainSite: string  = nodes[0].site
 
-  data: { nodes: NodeDatum[], links: LinkDatum }
+  data: { nodes: NodeDatum[], links: LinkDatum[] }
   panels: GraphPanelConfig[]
 
   setExpanded (site: string) {
@@ -33,15 +33,17 @@ export class ParallelGraphComponent {
   // layout and events
   layoutType = GraphLayoutType.Parallel
   layoutGroupOrder = ['west', this.mainSite, 'east']
+  layoutParallelNodesPerColumn = 4
   events = {
     [Graph.selectors.node]: {
         click: (d: NodeDatum) => this.setExpanded(d.site)
     }
   }
-  
+
   // node config
   nodeSize = (n: NodeDatum) => n.children ? 75 : 50
   nodeShape = (n: NodeDatum) => n.shape
+  nodeStrokeWidth = 3
   nodeGaugeValue = (n: NodeDatum) => n.score
   nodeGaugeFill = (n: NodeDatum) => StatusMap[n.status]?.color
   nodeSubLabel = (n: NodeDatum) => n.score && `${n.score}/100`
@@ -53,8 +55,6 @@ export class ParallelGraphComponent {
 
   // link config
   linkFlow = (l: LinkDatum) => l.showTraffic
-  linkStroke = (l: LinkDatum) => `${StatusMap[l.status]?.color}aa`
+  linkStroke = (l: LinkDatum) => StatusMap[l.status]?.color || null
   linkBandWidth = (l: LinkDatum) => l.showTraffic ? 12 : 6
-
- 
 }

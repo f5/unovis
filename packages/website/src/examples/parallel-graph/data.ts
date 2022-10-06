@@ -37,7 +37,7 @@ type SiteConfig = {
   panel: GraphPanelConfig;
 }
 
-export const nodes = [
+export const nodes: NodeDatum[] = [
   {
     id: 'us01-casper-node',
     site: 'us01-casper',
@@ -358,16 +358,16 @@ export const nodes = [
   },
 ]
 
-export const links = [
+export const links: LinkDatum[] = [
   {
     target: 'S:cartservice,ca01-van',
     source: 'N:site-local-vn,us01-casper',
-    status: Status.Healthy,
+    status: Status.Inactive,
   },
   {
     target: 'S:cartservice,ca01-van',
     source: 'S:NAME-UNAVAILABLE,us01-casper',
-    status: Status.Healthy,
+    status: Status.Inactive,
   },
   {
     target: 'S:shippingservice,us01-casper',
@@ -423,7 +423,7 @@ export const links = [
   {
     target: 'S:cartservice,us01-casper',
     source: 'S:frontend,us01-casper',
-    status: Status.Healthy,
+    status: Status.Warning,
   },
   {
     target: 'S:currencyservice,us01-casper',
@@ -443,7 +443,7 @@ export const links = [
   {
     target: 'S:cartservice,ca01-van',
     source: 'S:cartservice,us01-casper',
-    status: Status.Warning,
+    status: Status.Inactive,
   },
   {
     target: 'S:frontend,us01-casper',
@@ -477,7 +477,7 @@ export const links = [
   },
 ].map(l => ({
   ...l,
-  showTraffic: l.status !== 'alert',
+  showTraffic: (l.status !== Status.Alert) && (l.status !== Status.Inactive),
   sourceGroup: nodes.find(n => n.children.map(c => c.id).includes(l.source))?.site,
   targetGroup: nodes.find(n => n.children.map(c => c.id).includes(l.target))?.site,
 }))

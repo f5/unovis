@@ -13,7 +13,7 @@ const example: Example = {
   pathname,
   title: 'Parallel Layout Graph',
   description: <p>
-    Traffic Graph
+    Traffic flow between services. Synthetic data.
   </p>,
   preview: require('./preview.png').default,
   codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,
