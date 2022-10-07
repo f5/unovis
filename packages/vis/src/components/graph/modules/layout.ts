@@ -1,7 +1,4 @@
-import dagre from 'dagre-layout'
 import { min, max } from 'd3-array'
-import { forceSimulation, forceLink, forceManyBody, forceX, forceY, forceCollide } from 'd3-force'
-import { Graph } from 'graphlibrary'
 
 // Core
 import { GraphDataModel } from 'data-models/graph'
@@ -269,13 +266,17 @@ export function applyLayoutParallel<N extends GraphInputNode, L extends GraphInp
   }
 }
 
-export function applyLayoutDagre<N extends GraphInputNode, L extends GraphInputLink> (
+export async function applyLayoutDagre<N extends GraphInputNode, L extends GraphInputLink> (
   datamodel: GraphDataModel<N, L, GraphNode<N, L>, GraphLink<N, L>>,
   config: GraphConfig<GraphInputNode, GraphInputLink>,
   width: number
-): void {
+): Promise<void> {
   const { nonConnectedNodes, connectedNodes, nodes, links } = datamodel
   const { nodeSize, layoutNonConnectedAside, dagreLayoutSettings, nodeStrokeWidth, nodeLabel } = config
+
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  const { Graph } = await import('@unovis/graphlibrary')
+  const { layout } = await import('@unovis/dagre-layout')
 
   // https://github.com/dagrejs/dagre/wiki
   const dagreGraph = new Graph()
@@ -306,7 +307,7 @@ export function applyLayoutDagre<N extends GraphInputNode, L extends GraphInputL
   })
 
   // Calculate the layout
-  dagre.layout(dagreGraph)
+  layout(dagreGraph)
 
   // Apply coordinates to the graph
   dagreGraph.nodes().forEach(d => {
@@ -384,12 +385,14 @@ export function applyLayoutConcentric<N extends GraphInputNode, L extends GraphI
   }
 }
 
-export function applyLayoutForce<N extends GraphInputNode, L extends GraphInputLink> (
+export async function applyLayoutForce<N extends GraphInputNode, L extends GraphInputLink> (
   datamodel: GraphDataModel<N, L, GraphNode<N, L>, GraphLink<N, L>>,
   config: GraphConfig<GraphInputNode, GraphInputLink>,
   width: number
-): void {
+): Promise<void> {
   const { layoutNonConnectedAside, forceLayoutSettings: { linkDistance, linkStrength, charge, forceXStrength, forceYStrength }, nodeSize } = config
+
+  const { forceSimulation, forceLink, forceManyBody, forceX, forceY, forceCollide } = await import('d3-force')
 
   const { nonConnectedNodes, connectedNodes, nodes, links } = datamodel
   const simulation = forceSimulation(layoutNonConnectedAside ? connectedNodes : nodes)
