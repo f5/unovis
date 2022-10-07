@@ -63,7 +63,7 @@ export const variables = injectGlobal`
 
     --vis-dark-graph-node-greyout-color: #494b56;
     --vis-dark-graph-node-icon-greyout-color: var(--vis-color-gray);
-    --vis-dark-graph-node-side-label-background-greyout-color: #f1f4f7;
+    --vis-dark-graph-node-side-label-background-greyout-color: #494B56;
   }
 
   body.theme-dark ${`.${nodes}`} {
@@ -89,6 +89,7 @@ export const variables = injectGlobal`
     --vis-graph-node-greyout-color: var(--vis-dark-graph-node-greyout-color);
     --vis-graph-node-icon-greyout-color: var(--vis-dark-graph-node-icon-greyout-color);
     --vis-graph-node-side-label-background-greyout-color: var(--vis-dark-graph-node-side-label-background-greyout-color);
+  }
 `
 
 export const node = css`
