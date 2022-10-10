@@ -13,7 +13,7 @@ const example: Example = {
   pathname,
   title: 'Line Chart with Data Gaps',
   description: <div>
-    National Cereal Prouction in metric tons (millions)
+    National Cereal Production in metric tons (millions)
     (Source: <a href="https://data.worldbank.org">World Bank Open Data</a>)
   </div>,
   preview: require('./preview.png').default,
@@ -26,6 +26,7 @@ const example: Example = {
   },
   codeSvelte: require(`!!raw-loader!./${pathname}.svelte`).default,
   data: require('!!raw-loader!./data').default,
+  styles: require('!!raw-loader!./styles.css').default,
 }
 
 export default example

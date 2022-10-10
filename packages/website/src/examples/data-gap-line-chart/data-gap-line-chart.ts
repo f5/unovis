@@ -7,9 +7,12 @@ function yAccessor (c: Country): (d: DataRecord) => number {
   return (d: DataRecord) => d[c.id]
 }
 
-// Legend
-container.innerHTML = 'Select a fallback value for missing data points: '
-const legend = new BulletLegend(container)
+// Fallback Value Switch
+const div = document.createElement('div')
+div.className = 'fallbackValueSwitch'
+container.appendChild(div)
+div.innerHTML = 'Select a fallback value for missing data points: '
+const legend = new BulletLegend(div)
 
 // Line chart
 const line = new Line<DataRecord>({
@@ -30,9 +33,14 @@ labels.setData(countries)
 const chart = new XYContainer(container, {
   height: 300,
   xDomain: [1961, 2022],
+  yDomain: [0, 650],
   components: [line, labels],
   xAxis: new Axis({ numTicks: 10 }),
-  yAxis: new Axis({ tickValues: [300, 600] }),
+  yAxis: new Axis({
+    label: 'National Cereal Production, tons',
+    tickFormat: (d: number) => `${d}${d ? 'M' : ''}`,
+    tickValues: [0, 200, 400, 600],
+  }),
 }, data)
 
 function setFallbackValue (index: number): void {

@@ -1,8 +1,16 @@
-<vis-xy-container [height]="300" [xDomain]="[1961,2022]">
-    Select a fallback value for missing data points:
-    <vis-bullet-legend [items]="legendItems" [onLegendItemClick]="legendItemClick"></vis-bullet-legend>
+<div class="fallbackValueSwitch">
+  Select a fallback value for missing data points:
+  <vis-bullet-legend [items]="legendItems" [onLegendItemClick]="legendItemClick"></vis-bullet-legend>
+</div>
+
+<vis-xy-container [height]="300" [xDomain]="[1961,2022]" [yDomain]="[0, 650]" ]>
     <vis-line [data]="data" [x]="x" [y]="y" [fallbackValue]="fallbackValue"></vis-line>
     <vis-xy-labels [data]="labels.data" [x]="2019.5" [y]="labels.y" [label]="labels.label" backgroundColor="none"></vis-xy-labels>
     <vis-axis type="x" [numTicks]="10"></vis-axis>
-    <vis-axis type="y" [tickValues]="[fallbackValue, 600]"></vis-axis>
+    <vis-axis
+      type="y"
+      label="National Cereal Production, tons"
+      [tickFormat]="tikFormat",
+      [tickValues]="[0, 200, 400, fallbackValue, 600]"
+    ></vis-axis>
 </vis-xy-container>

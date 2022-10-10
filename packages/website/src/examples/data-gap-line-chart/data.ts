@@ -22,8 +22,8 @@ export const countries: Country[] = [{
 
 export const legendItems = [
   { name: 'undefined', value: undefined },
-  { name: 'null', value: null },
-  { name: 300, value: 300 },
+  { name: '0 or null', value: null },
+  { name: '300M', value: 300 },
 ]
 
 export const data = [

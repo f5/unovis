@@ -4,7 +4,8 @@ import { data, countries, legendItems, Country, DataRecord } from './data'
 
 @Component({
   selector: 'data-gap-line-chart',
-  templateUrl: './data-gap-line-chart.component.html'
+  templateUrl: './data-gap-line-chart.component.html',
+  styleUrls: ['./styles.css'],
 })
 export class DataGapLineChartComponent {
   // shared y accessor
@@ -30,8 +31,10 @@ export class DataGapLineChartComponent {
     label: (c: Country) => c.label,
   })
 
+  tikFormat = (d: number) => `${d}${d ? 'M' : ''}`
+
   // legend config
-  legendItemClick = (_, i: number): void => this._curr = i
+  legendItemClick = (_, i: number): void => { this._curr = i }
   get legendItems (): BulletLegendItemInterface[] {
     return legendItems.map((o, i) => ({
       name: o.name,
