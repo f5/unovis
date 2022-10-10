@@ -31,7 +31,7 @@ export class DataGapLineChartComponent {
     label: (c: Country) => c.label,
   })
 
-  tikFormat = (d: number) => `${d}${d ? 'M' : ''}`
+  tickFormat = (d: number) => `${d}${d ? 'M' : ''}`
 
   // legend config
   legendItemClick = (_, i: number): void => { this._curr = i }
