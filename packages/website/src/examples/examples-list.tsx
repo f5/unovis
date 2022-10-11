@@ -21,7 +21,6 @@ export const examples: ExampleCollection[] = [
     examples: [
       require('./basic-grouped-bar').default,
       require('./horizontal-stacked-bar-chart').default,
-      require('./brush-grouped-bar').default,
     ],
   },
   {
@@ -29,7 +28,6 @@ export const examples: ExampleCollection[] = [
     description: '',
     examples: [
       require('./basic-scatter-chart').default,
-      require('./free-brush-scatters').default,
     ],
   },
   {
@@ -56,6 +54,15 @@ export const examples: ExampleCollection[] = [
       require('./dagre-graph').default,
       require('./force-graph').default,
       require('./parallel-graph').default,
+    ],
+  },
+  {
+    title: ' Auxiliary Components',
+    description: 'Examples using Brush, Crosshair, and Tooltip',
+    examples: [
+      require('./crosshair-stacked-bar').default,
+      require('./brush-grouped-bar').default,
+      require('./free-brush-scatters').default,
     ],
   },
   /* {} */

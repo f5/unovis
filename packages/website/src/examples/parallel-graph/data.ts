@@ -21,6 +21,7 @@ export type NodeDatum = {
   score?: number;
   status?: string;
   sublabel?: string;
+  groupLabel?: string;
 }
 
 export type LinkDatum = {
