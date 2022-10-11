@@ -6,7 +6,7 @@
 
   const mainSite = nodes[0].site
 
-  // Reactive statments
+  // Reactive statements
   let expanded = [mainSite]
   $: panels = expanded.map(site => sites[site].panel)
   $: data = {
@@ -49,9 +49,9 @@
   <VisSingleContainer {data}>
     <VisGraph
       {...graphConfig}
-      layoutType="{GraphLayoutType.Parallel}"
-      layoutGroupOrder="{[ 'west', mainSite, 'east']}"
-      layoutParallelNodesPerColumn={4},
+      layoutType={GraphLayoutType.Parallel}
+      layoutGroupOrder={[ 'west', mainSite, 'east']}
+      layoutParallelNodesPerColumn={4}
       {panels}
     />
   </VisSingleContainer>

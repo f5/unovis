@@ -3,6 +3,7 @@
   "extends": "@tsconfig/docusaurus/tsconfig.json",
   "compilerOptions": {
     "baseUrl": ".",
+    "target": "es6",
     "experimentalDecorators": true,
     "jsx": "react-jsx"
   },

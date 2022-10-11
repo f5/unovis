@@ -9,6 +9,7 @@ export const examples: ExampleCollection[] = [
     examples: [
       require('./basic-line-chart').default,
       require('./multi-line-chart').default,
+      require('./data-gap-line-chart').default,
       require('./basic-timeline').default,
       require('./non-stacked-area-chart').default,
       require('./stacked-area-chart').default,
