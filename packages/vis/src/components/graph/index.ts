@@ -183,50 +183,47 @@ export class Graph<
       this._prevHeight = this._height
     }
 
-    // Apply layout
-    if (this._recalculateLayout) {
-      this._calculateLayout()
-      this._recalculateLayout = false
-    }
+    // Apply layout and render
+    this._calculateLayout().then((isFirstRender) => {
+      if (this._setPanels) {
+        smartTransition(this._panelsGroup, duration / 2)
+          .style('opacity', panels?.length ? 1 : 0)
 
-    if (this._setPanels) {
-      smartTransition(this._panelsGroup, duration / 2)
-        .style('opacity', panels?.length ? 1 : 0)
+        this._panels = cloneDeep(panels) as GraphPanel[]
+        setPanelForNodes(this._panels, datamodel.nodes, this.config)
+        this._setPanels = false
+      }
 
-      this._panels = cloneDeep(panels) as GraphPanel[]
-      setPanelForNodes(this._panels, datamodel.nodes, this.config)
-      this._setPanels = false
-    }
+      if (isFirstRender) {
+        this._fit()
+        this._fitLayout = false
+      } else if (this._fitLayout && !this._disableAutoFit) {
+        this._fit(duration)
+        this._fitLayout = false
+      }
 
-    if (this._firstRender) {
-      this._fit()
-      this._fitLayout = false
-    } else if (this._fitLayout && !this._disableAutoFit) {
-      this._fit(duration)
-      this._fitLayout = false
-    }
+      // Draw
+      this._drawNodes(animDuration)
+      this._drawLinks(animDuration)
 
-    // Draw
-    this._drawNodes(animDuration)
-    this._drawLinks(animDuration)
+      // Select Links / Nodes
+      this._resetSelection()
+      if (this.config.selectedNodeId) {
+        const selectedNode = find(datamodel.nodes, node => node.id === this.config.selectedNodeId)
+        this._selectNode(selectedNode)
+      }
 
-    // Select Links / Nodes
-    this._resetSelection()
-    if (this.config.selectedNodeId) {
-      const selectedNode = find(datamodel.nodes, node => node.id === this.config.selectedNodeId)
-      this._selectNode(selectedNode)
-    }
+      if (this.config.selectedLinkId) {
+        const selectedLink = find(datamodel.links, link => link.id === this.config.selectedLinkId)
+        this._selectLink(selectedLink)
+      }
 
-    if (this.config.selectedLinkId) {
-      const selectedLink = find(datamodel.links, link => link.id === this.config.selectedLinkId)
-      this._selectLink(selectedLink)
-    }
-
-    // Link flow animation timer
-    if (!this._timer) {
-      const refreshRateMs = 35
-      this._timer = interval(this._onLinkFlowTimerFrame.bind(this), refreshRateMs)
-    }
+      // Link flow animation timer
+      if (!this._timer) {
+        const refreshRateMs = 35
+        this._timer = interval(this._onLinkFlowTimerFrame.bind(this), refreshRateMs)
+      }
+    })
 
     // Zoom
     if (disableZoom) this.g.on('.zoom', null)
@@ -238,9 +235,7 @@ export class Graph<
     }
 
     // While the graph is animating we disable pointer events on the graph group
-    if (animDuration) {
-      this._graphGroup.attr('pointer-events', 'none')
-    }
+    if (animDuration) { this._graphGroup.attr('pointer-events', 'none') }
     smartTransition(this._graphGroup, animDuration)
       .on('end interrupt', () => {
         this._graphGroup.attr('pointer-events', null)
@@ -340,29 +335,37 @@ export class Graph<
     panelToUpdate.call(updatePanels, config, duration)
   }
 
-  private _calculateLayout (): void {
+  private async _calculateLayout (): Promise<boolean> {
     const { config, datamodel } = this
-    switch (config.layoutType) {
-      case GraphLayoutType.Parallel:
-        applyLayoutParallel(datamodel, config, this._width, this._height)
-        break
-      case GraphLayoutType.ParallelHorizontal:
-        applyLayoutParallel(datamodel, config, this._width, this._height, 'horizontal')
-        break
-      case GraphLayoutType.Dagre:
-        applyLayoutDagre(datamodel, config, this._width)
-        break
-      case GraphLayoutType.Force:
-        applyLayoutForce(datamodel, config, this._width)
-        break
-      case GraphLayoutType.Concentric:
-        applyLayoutConcentric(datamodel, config, this._width, this._height)
-        break
-      case GraphLayoutType.Circular:
-      default:
-        applyLayoutCircular(datamodel, config, this._width, this._height)
-        break
+
+    const firstRender = this._firstRender
+    if (this._recalculateLayout) {
+      switch (config.layoutType) {
+        case GraphLayoutType.Parallel:
+          applyLayoutParallel(datamodel, config, this._width, this._height)
+          break
+        case GraphLayoutType.ParallelHorizontal:
+          applyLayoutParallel(datamodel, config, this._width, this._height, 'horizontal')
+          break
+        case GraphLayoutType.Dagre:
+          await applyLayoutDagre(datamodel, config, this._width)
+          break
+        case GraphLayoutType.Force:
+          await applyLayoutForce(datamodel, config, this._width)
+          break
+        case GraphLayoutType.Concentric:
+          applyLayoutConcentric(datamodel, config, this._width, this._height)
+          break
+        case GraphLayoutType.Circular:
+        default:
+          applyLayoutCircular(datamodel, config, this._width, this._height)
+          break
+      }
+
+      this._recalculateLayout = false
     }
+
+    return firstRender
   }
 
   private _fit (duration = 0): void {

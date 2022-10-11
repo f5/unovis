@@ -20,7 +20,7 @@ export class GraphComponent implements OnInit, AfterViewInit {
   chart: any
   data: {}
   config: GraphConfigInterface<any, any> = {
-    layoutType: GraphLayoutType.Parallel,
+    layoutType: GraphLayoutType.Dagre,
     nodeSize: d => d.nodeSize,
     nodeShape: d => d.shape,
     layoutParallelSubGroupsPerRow: 3,
