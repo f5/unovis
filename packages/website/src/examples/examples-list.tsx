@@ -13,6 +13,7 @@ export const examples: ExampleCollection[] = [
       require('./basic-timeline').default,
       require('./non-stacked-area-chart').default,
       require('./stacked-area-chart').default,
+      require('./baseline-area-chart').default,
     ],
   },
   {

@@ -1,5 +1,6 @@
 <script>
   const imports = [
+    () => import('./examples/baseline-area-chart/baseline-area-chart.svelte'),
     () => import('./examples/non-stacked-area-chart/non-stacked-area-chart.svelte'),
     () => import('./examples/stacked-area-chart/stacked-area-chart.svelte'),
     () => import('./examples/basic-grouped-bar/basic-grouped-bar.svelte'),
