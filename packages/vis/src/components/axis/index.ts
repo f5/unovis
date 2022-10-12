@@ -25,7 +25,7 @@ import { wrapTickText, getWrapOptions } from './modules/tick'
 // Styles
 import * as s from './style'
 
-export class Axis<Datum> extends XYComponentCore<Datum> {
+export class Axis<Datum> extends XYComponentCore<Datum, AxisConfig<Datum>, AxisConfigInterface<Datum>> {
   static selectors = s
   config: AxisConfig<Datum> = new AxisConfig<Datum>()
   axisGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>

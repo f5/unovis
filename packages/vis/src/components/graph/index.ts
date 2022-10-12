@@ -42,7 +42,11 @@ import { applyLayoutCircular, applyLayoutParallel, applyLayoutDagre, applyLayout
 export class Graph<
   N extends GraphInputNode,
   L extends GraphInputLink,
-> extends ComponentCore<{nodes: N[]; links?: L[]}> {
+> extends ComponentCore<
+  {nodes: N[]; links?: L[]},
+  GraphConfig<N, L>,
+  GraphConfigInterface<N, L>
+  > {
   static selectors = {
     root: generalSelectors.root,
     background: generalSelectors.background,

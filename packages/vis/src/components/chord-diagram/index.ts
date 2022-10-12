@@ -18,7 +18,17 @@ import { Spacing } from 'types/spacing'
 import { Curve } from 'types/curve'
 
 // Local Types
-import { ChordInputNode, ChordInputLink, ChordHierarchy, ChordNode, ChordRibbon, ChordLabelAlignment, ChordLeafNode, ChordRibbonPoint } from './types'
+import {
+  ChordInputNode,
+  ChordInputLink,
+  ChordDiagramData,
+  ChordHierarchy,
+  ChordNode,
+  ChordRibbon,
+  ChordLabelAlignment,
+  ChordLeafNode,
+  ChordRibbonPoint,
+} from './types'
 
 // Config
 import { ChordDiagramConfig, ChordDiagramConfigInterface } from './config'
@@ -31,7 +41,14 @@ import { createLink, updateLink, removeLink } from './modules/link'
 // Styles
 import * as s from './style'
 
-export class ChordDiagram<N extends ChordInputNode, L extends ChordInputLink> extends ComponentCore<{ nodes: N[]; links?: L[] }> {
+export class ChordDiagram<
+  N extends ChordInputNode,
+  L extends ChordInputLink,
+> extends ComponentCore<
+  ChordDiagramData<N, L>,
+  ChordDiagramConfig<N, L>,
+  ChordDiagramConfigInterface<N, L>
+  > {
   static selectors = s
   config: ChordDiagramConfig<N, L> = new ChordDiagramConfig()
   datamodel: GraphDataModel<N, L> = new GraphDataModel()

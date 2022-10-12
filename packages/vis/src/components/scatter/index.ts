@@ -25,7 +25,7 @@ import { createPoints, updatePoints, removePoints } from './modules/point'
 // Styles
 import * as s from './style'
 
-export class Scatter<Datum> extends XYComponentCore<Datum> {
+export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfig<Datum>, ScatterConfigInterface<Datum>> {
   static selectors = s
   config: ScatterConfig<Datum> = new ScatterConfig()
   events = {

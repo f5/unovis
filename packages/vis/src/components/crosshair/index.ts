@@ -19,7 +19,7 @@ import { CrosshairConfig, CrosshairConfigInterface } from './config'
 // Styles
 import * as s from './style'
 
-export class Crosshair<Datum> extends XYComponentCore<Datum> {
+export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfig<Datum>, CrosshairConfigInterface<Datum>> {
   static selectors = s
   clippable = true // Don't apply clipping path to this component. See XYContainer
   config: CrosshairConfig<Datum> = new CrosshairConfig()

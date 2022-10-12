@@ -23,7 +23,7 @@ import { GroupedBarConfig, GroupedBarConfigInterface } from './config'
 
 // Styles
 import * as s from './style'
-export class GroupedBar<Datum> extends XYComponentCore<Datum> {
+export class GroupedBar<Datum> extends XYComponentCore<Datum, GroupedBarConfig<Datum>, GroupedBarConfigInterface<Datum>> {
   static selectors = s
   config: GroupedBarConfig<Datum> = new GroupedBarConfig()
   getAccessors = (): NumericAccessor<Datum>[] =>

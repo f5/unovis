@@ -1,5 +1,6 @@
 import { HierarchyRectangularNode } from 'd3-hierarchy'
 
+
 // Node data flow in the component:
 // Input data (N extends ChordInputNode, L extends ChordInputLink)
 //   => GraphNodeCore<N>[] (we reference it only in a few places when it's needed, to make the code easier to read)
@@ -14,6 +15,14 @@ export interface ChordInputLink {
   id?: string;
   source: number | string | ChordInputNode;
   target: number | string | ChordInputNode;
+}
+
+export type ChordDiagramData<
+  N extends ChordInputNode,
+  L extends ChordInputLink,
+> = {
+  nodes: N[];
+  links?: L[];
 }
 
 export interface ChordHierarchy<N> {

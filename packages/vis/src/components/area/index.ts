@@ -24,7 +24,7 @@ import { AreaConfig, AreaConfigInterface } from './config'
 // Styles
 import * as s from './style'
 
-export class Area<Datum> extends XYComponentCore<Datum> {
+export class Area<Datum> extends XYComponentCore<Datum, AreaConfig<Datum>, AreaConfigInterface<Datum>> {
   static selectors = s
   stacked = true
   config: AreaConfig<Datum> = new AreaConfig()

@@ -19,7 +19,7 @@ import { TimelineConfig, TimelineConfigInterface } from './config'
 // Styles
 import * as s from './style'
 
-export class Timeline<Datum> extends XYComponentCore<Datum> {
+export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfig<Datum>, TimelineConfigInterface<Datum>> {
   static selectors = s
   config: TimelineConfig<Datum> = new TimelineConfig()
   events = {
