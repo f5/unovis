@@ -28,7 +28,7 @@ export class ComponentCore<
   config: ConfigClass
   prevConfig: ConfigClass
   datamodel: CoreDataModel<CoreDatum> = new CoreDataModel()
-  sizing: Sizing | string = Sizing.Fit
+  sizing: Sizing | string = Sizing.Fit // Supported by SingleContainer and a subset of components only (Sankey)
 
   events: {
     [selector: string]: {
@@ -61,13 +61,7 @@ export class ComponentCore<
   setConfig (config: ConfigInterface): void {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const ConfigModel = (this.config.constructor as typeof ComponentConfig)
-    this.prevConfig = this.config
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    if (this.prevConfig?.xScale) config.xScale = this.prevConfig.xScale
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    if (this.prevConfig?.yScale) config.yScale = this.prevConfig.yScale
+    this.prevConfig = this.config // Store the previous config instance
     this.config = new ConfigModel().init(config) as ConfigClass
   }
 
@@ -83,6 +77,7 @@ export class ComponentCore<
   render (duration = this.config.duration): void {
     this._render(duration)
 
+    // While transition is in progress, we add the 'animating' attribute to the component's SVG group
     const ANIMATING_ATTR = 'animating'
     if (duration) {
       this.g.attr(ANIMATING_ATTR, '')
