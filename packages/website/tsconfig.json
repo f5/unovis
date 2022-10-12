@@ -5,7 +5,8 @@
     "baseUrl": ".",
     "target": "es6",
     "experimentalDecorators": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "moduleResolution": "Node"
   },
   "exclude": [
     "node_modules",
