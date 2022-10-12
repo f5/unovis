@@ -171,7 +171,6 @@ export class XYContainer<Datum> extends ContainerCore {
     this.components.forEach((c, i) => {
       const componentConfig = componentConfigs[i]
       if (componentConfig) {
-        c.prevConfig = c.config
         c.setConfig(componentConfigs[i])
       }
     })

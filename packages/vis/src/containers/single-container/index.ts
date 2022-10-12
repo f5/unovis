@@ -56,7 +56,6 @@ export class SingleContainer<Data> extends ContainerCore {
   }
 
   public updateComponent (componentConfig: ComponentConfigInterface, preventRender?: boolean): void {
-    this.component.prevConfig = this.component.config
     this.component.setConfig(componentConfig)
     if (!preventRender) this.render()
   }
