@@ -51,7 +51,8 @@ export function updateArc<Datum> (
 
   if (duration) {
     const transition = smartTransition(selection, duration)
-      .style('opacity', 1) as Transition<SVGElement, DonutArcDatum<Datum>, SVGGElement, DonutArcDatum<Datum>[]>
+      .style('opacity', d => d.value ? 1 : 0) as Transition<SVGElement, DonutArcDatum<Datum>, SVGGElement, DonutArcDatum<Datum>[]>
+
 
     transition.attrTween('d', (d, i, els) => {
       const arcNode: ArcNode = els[i]

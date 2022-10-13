@@ -29,7 +29,10 @@ export interface DonutConfigInterface<Datum> extends ComponentConfigInterface {
   centralSubLabel?: string;
   /** Enables wrapping for the sub-label. Default: `true` */
   centralSubLabelWrap?: boolean;
-  /** Draw segment as a thin line when its value is 0. Default: `false` */
+  /** When true, the component will treat `0` values as `Number.EPSILON`. Which, in most cases, will result in
+   * drawing an empty segment as a thin line.
+   * Default: `false`
+  */
   preventEmptySegments?: boolean;
 }
 
