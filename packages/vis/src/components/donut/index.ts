@@ -6,6 +6,7 @@ import { ComponentCore } from 'core/component'
 import { SeriesDataModel } from 'data-models/series'
 
 // Utils
+import { smartTransition } from 'utils/d3'
 import { isNumber, clamp, getNumber } from 'utils/data'
 import { wrapSVGText } from 'utils/text'
 
@@ -30,6 +31,7 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfig<Datum>, Don
   config: DonutConfig<Datum> = new DonutConfig()
   datamodel: SeriesDataModel<Datum> = new SeriesDataModel()
 
+  arcBackground: Selection<SVGPathElement, unknown, SVGGElement, unknown>
   arcGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
   centralLabel: Selection<SVGTextElement, unknown, SVGGElement, unknown>
   centralSubLabel: Selection<SVGTextElement, unknown, SVGGElement, unknown>
@@ -41,6 +43,7 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfig<Datum>, Don
   constructor (config?: DonutConfigInterface<Datum>) {
     super()
     if (config) this.config.init(config)
+    this.arcBackground = this.g.append('path')
     this.arcGroup = this.g.append('g')
     this.centralLabel = this.g.append('text')
       .attr('class', s.centralLabel)
@@ -110,5 +113,18 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfig<Datum>, Don
       .text(config.centralSubLabel ?? null)
 
     if (config.centralSubLabelWrap) wrapSVGText(this.centralSubLabel, { width: innerRadius * 1.9, verticalAlign: VerticalAlign.Top })
+
+    // Background
+    this.arcBackground.attr('class', s.background)
+      .attr('visibility', config.showBackground ? null : 'hidden')
+      .attr('transform', `translate(${this._width / 2},${this._height / 2})`)
+
+    smartTransition(this.arcBackground, duration)
+      .attr('d', this.arcGen({
+        startAngle: 0,
+        endAngle: 2 * Math.PI,
+        innerRadius,
+        outerRadius
+      }))
   }
 }

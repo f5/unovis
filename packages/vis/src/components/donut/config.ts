@@ -34,6 +34,11 @@ export interface DonutConfigInterface<Datum> extends ComponentConfigInterface {
    * Default: `false`
   */
   preventEmptySegments?: boolean;
+  /** Show donut background. The color is configurable via
+   * the `--vis-donut-background-color` and `--vis-dark-donut-background-color` CSS variables.
+   * Default: `true`
+  */
+  showBackground?: boolean;
 }
 
 export class DonutConfig<Datum> extends ComponentConfig implements DonutConfigInterface<Datum> {
@@ -51,4 +56,5 @@ export class DonutConfig<Datum> extends ComponentConfig implements DonutConfigIn
   centralSubLabel = undefined
   centralSubLabelWrap = true
   preventEmptySegments = false
+  showBackground = true
 }
