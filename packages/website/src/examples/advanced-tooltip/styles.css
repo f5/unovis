@@ -1,0 +1,15 @@
+.sparkline-chart {
+  position: relative;
+  --vis-area-fill-opacity: 0.1 !important;
+  --vis-area-stroke-width: 5 !important;
+}
+
+.label {
+  position: absolute;
+  width:max-content;
+  right: calc(0 - 100%);
+  bottom: 0;
+  text-align: right;
+  font-size: 10px;
+  color: var(--vis-axis-label-color);
+}
