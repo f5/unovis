@@ -5,6 +5,7 @@
   "main": "./index.js",
   "module": "./index.js",
   "typings": "./index.d.ts",
+  "type": "module",
   "scripts": {
     "build": "sha=$(tar cf - ./src | shasum); if [[ $(echo $sha) == $(< .srcsha) ]] && [[ -d \"./lib\" ]]; then echo \"Lib Build Exists\"; else npm run forcebuild; echo $sha > .srcsha; fi",
     "forcebuild": "rimraf lib; rollup -c",

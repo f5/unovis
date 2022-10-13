@@ -1,12 +1,8 @@
-import L from 'leaflet'
-import { Map } from 'maplibre-gl'
-import '@maplibre/maplibre-gl-leaflet/leaflet-maplibre-gl'
+import type L from 'leaflet'
+import type Maplibre from 'maplibre-gl'
+import type { Map } from 'maplibre-gl'
 
 import { injectGlobal } from '@emotion/css'
-
-// Inject MapLibreGL global style
-// eslint-disable-next-line
-import mapboxglCSS from 'maplibre-gl/dist/maplibre-gl.css'
 
 // Utils
 import { isObject } from 'utils/data'
@@ -14,10 +10,13 @@ import { isObject } from 'utils/data'
 // Config
 import { LeafletMapConfig } from '../config'
 import { MapLibreStyleSpecs } from './map-style'
+import { MaplibreGLLayer } from './leaflet-maplibre-gl'
 
-injectGlobal(mapboxglCSS)
+// Inject MapLibreGL global style
+import mapLibreStyles from './maplibre-gl.css.js'
+injectGlobal(mapLibreStyles)
 
-export function getMapboxglLayer<Datum> (config: LeafletMapConfig<Datum>): L.Layer & { getMaplibreMap(): Map } {
+export function getMaplibreGLLayer<Datum> (config: LeafletMapConfig<Datum>, leaflet: typeof L, maplibre: typeof Maplibre): L.Layer & { getMaplibreMap(): Map } {
   const { accessToken, style } = config
 
   if (isObject(style) && !(style as MapLibreStyleSpecs).glyphs) {
@@ -32,10 +31,10 @@ export function getMapboxglLayer<Datum> (config: LeafletMapConfig<Datum>): L.Lay
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  const glLayer = L.maplibreGL({
+  const layer = MaplibreGLLayer(leaflet, maplibre, {
     style: style,
     accessToken: accessToken || 'not-needed',
   })
 
-  return glLayer
+  return layer
 }

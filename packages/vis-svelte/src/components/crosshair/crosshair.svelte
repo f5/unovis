@@ -2,31 +2,42 @@
   // !!! This code was automatically generated. You should not change it !!!
   import { Crosshair, CrosshairConfigInterface, NumericAccessor } from '@unovis/ts'
   import { getContext, onMount } from 'svelte'
-  import { getActions } from '../../utils/actions'
+  import { arePropsEqual } from '../../utils/props'
 
   // type defs
   type Datum = $$Generic
 
+  // data and required props
+  // eslint-disable-next-line no-undef-init
+  export let data: Datum[] = undefined
+  export let x: NumericAccessor<Datum>
+  export let y: NumericAccessor<Datum> | NumericAccessor<Datum>[]
+
+  // config
+  let prevConfig: CrosshairConfigInterface<Datum>
   let config: CrosshairConfigInterface<Datum>
   $: config = { x, y, ...$$restProps }
 
   // component declaration
-  const component = new Crosshair<Datum>(config)
+  let component: Crosshair<Datum>
   const { setCrosshair } = getContext('container')
-  const { setConfig, setData } = getActions.apply(component)
-  // data and required props
-  export let data: Datum[]
-  export let x: NumericAccessor<Datum>
-  export let y: NumericAccessor<Datum> | NumericAccessor<Datum>[]
+
   onMount(() => {
+    component = new Crosshair<Datum>(config)
     setCrosshair(component)
-    return () => setCrosshair(undefined) as void
+    return () => { setCrosshair(undefined) as void }
   })
+
+  $: component?.setData(data)
+  $: if (!arePropsEqual(prevConfig, config)) {
+    component?.setConfig(config)
+    prevConfig = config
+  }
 
   // component accessor
   export function getComponent (): Crosshair<Datum> { return component }
 
 </script>
 
-<vis-crosshair use:setData={data} use:setConfig={config} />
+<vis-crosshair/>
 

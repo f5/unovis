@@ -4,10 +4,11 @@
   "description": "React wrapper for Unovis",
   "main": "./index.js",
   "types": "./index.d.ts",
+  "type": "module",
   "scripts": {
     "build": "rimraf dist && tsc --project tsconfig.lib.json --emitDeclarationOnly && rollup --config",
     "tsc": "tsc",
-    "generate": "rollup -c ./autogen/rollup.config.js; node .autogen.js; rm .autogen.js",
+    "generate": "rollup -c ./autogen/rollup.config.js; node .autogen.cjs; rm .autogen.cjs",
     "publish-dist": "cp ./package.json ./dist; cp ../../LICENSE ./dist; cd ./dist; npm publish; rm -rf .cache"
   },
   "author": "Nikita Rokotyan",

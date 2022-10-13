@@ -1,6 +1,6 @@
 import { select, Selection } from 'd3-selection'
 import { color } from 'd3-color'
-import L from 'leaflet'
+import type L from 'leaflet'
 
 // Types
 import { Rect } from 'types/misc'

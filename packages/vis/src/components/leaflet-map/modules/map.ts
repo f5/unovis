@@ -1,5 +1,5 @@
+import type L from 'leaflet'
 import { select, Selection } from 'd3-selection'
-import L from 'leaflet'
 import { GeoJSONSource, Map } from 'maplibre-gl'
 import { feature } from 'topojson-client'
 
@@ -87,14 +87,18 @@ export async function setupMap<T> (mapContainer: HTMLElement, config: LeafletMap
   svgGroup: Selection<SVGGElement, any, SVGElement, any>;
 }> {
   const { style, topoJSONLayer } = config
-  const { getMapboxglLayer } = await import('../renderer/mapboxgl-layer')
+  const leaflet = await import('leaflet')
+  const L = leaflet.default
+  const maplibre = await import('maplibre-gl')
+  const { getMaplibreGLLayer } = await import('../renderer/mapboxgl-layer')
+
 
   if (!style) {
     console.error('Unovis | Leaflet Map: Please provide style settings in the map configuration object')
     return
   }
 
-  const leaflet = L.map(mapContainer, {
+  const leafletMap = L.map(mapContainer, {
     scrollWheelZoom: false, // We define custom scroll event for MapboxGL to enabling smooth zooming
     zoomControl: false,
     zoomDelta: 0.5,
@@ -104,23 +108,28 @@ export async function setupMap<T> (mapContainer: HTMLElement, config: LeafletMap
     zoom: initialMapZoom,
     minZoom: Math.sqrt(mapContainer.offsetWidth) / 17,
     maxZoom: 23,
-    maxBounds: L.latLngBounds(L.latLng(-75, -290), L.latLng(85, 290)),
+    maxBounds: L.latLngBounds(
+      [-75, -290],
+      [85, 290]
+    ),
     maxBoundsViscosity: 1,
   })
 
   for (const attr of config.attribution) {
-    leaflet.attributionControl.addAttribution(attr)
+    leafletMap.attributionControl.addAttribution(attr)
   }
 
-  const layer = getMapboxglLayer(config)
-  layer.addTo(leaflet)
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const layer = getMaplibreGLLayer(config, L, maplibre.default)
+  layer.addTo(leafletMap)
 
   // leaflet-mapbox-gl has a layer positioning issue on far zoom levels which leads to having wrong
   //   map points projection. We constraint the view to prevent that.
-  constraintMapView(leaflet)
+  constraintMapView(leafletMap)
   select(mapContainer).on('wheel', (event: WheelEvent) => {
     event.preventDefault()
-    mapboxglWheelEventThrottled(leaflet, layer, event)
+    mapboxglWheelEventThrottled(leafletMap, layer, event)
   })
 
 
@@ -128,7 +137,7 @@ export async function setupMap<T> (mapContainer: HTMLElement, config: LeafletMap
     const maplibreMap = layer.getMaplibreMap()
     const canvas = maplibreMap.getCanvas()
     const canvasSelection = select(canvas).classed(s.mapboxglCanvas, true)
-    const tilePaneSelection = select(leaflet.getPanes().tilePane)
+    const tilePaneSelection = select(leafletMap.getPanes().tilePane)
 
     maplibreMap.on('mousemove', (event) => {
       const layerName = `${topoJSONLayer.featureName}-area`
@@ -145,11 +154,11 @@ export async function setupMap<T> (mapContainer: HTMLElement, config: LeafletMap
     })
   }
 
-  const svgOverlay = select(leaflet.getPanes().overlayPane).append('svg')
+  const svgOverlay = select(leafletMap.getPanes().overlayPane).append('svg')
   const svgGroup = svgOverlay.append('g')
 
   return {
-    leaflet,
+    leaflet: leafletMap,
     layer,
     svgOverlay,
     svgGroup,

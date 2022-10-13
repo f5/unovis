@@ -1,6 +1,6 @@
 import { select, Selection } from 'd3-selection'
 import { packSiblings } from 'd3-hierarchy'
-import L from 'leaflet'
+import type L from 'leaflet'
 import Supercluster, { ClusterFeature, PointFeature } from 'supercluster'
 import { ResizeObserver } from '@juggle/resize-observer'
 import { StyleSpecification } from 'maplibre-gl'
