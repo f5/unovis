@@ -8,6 +8,7 @@ import { BrowserModule } from '@angular/platform-browser'
 // Area
 import { NonStackedAreaChartModule } from './examples/non-stacked-area-chart/non-stacked-area-chart.module'
 import { StackedAreaModule } from './examples/stacked-area-chart/stacked-area-chart.module'
+import { StepAreaChartModule } from './examples/step-area-chart/step-area-chart.module'
 
 // Bars
 import { BasicGroupedBarModule } from './examples/basic-grouped-bar/basic-grouped-bar.module'
@@ -52,6 +53,7 @@ import { BaselineAreaChartModule } from './examples/baseline-area-chart/baseline
     <stacked-area-chart></stacked-area-chart>
     <non-stacked-area-chart></non-stacked-area-chart>
     <baseline-area-chart></baseline-area-chart>
+    <step-area-chart></step-area-chart>
 
     <!-- Bars -->
     <basic-grouped-bar></basic-grouped-bar>
@@ -101,7 +103,7 @@ export class AppComponent {
     TopojsonMapModule, StackedBarChartModule, BrushGroupedBarModule, BasicScatterChartModule, FreeBrushScattersModule, NonStackedAreaChartModule,
     BasicTimelineModule, BasicSankeyModule, ExpandableSankeyModule, BasicGraphModule, LeafletFlowMapModule,
     ForceLayoutGraphModule, AdvancedLeafletMapModule, StackedAreaModule, ParallelLayoutGraphModule,
-    DataGapLineChartModule, CrosshairStackedBarModule, BaselineAreaChartModule,
+    DataGapLineChartModule, CrosshairStackedBarModule, BaselineAreaChartModule, StepAreaChartModule,
   ],
   bootstrap: [AppComponent],
   providers: [BrowserModule],

@@ -1,0 +1,15 @@
+<div class="panel">
+  <vis-bullet-legend [items]="legendItems"></vis-bullet-legend>
+  <div class="legendSwitch">
+    <vis-bullet-legend [items]="candidates" [onLegendItemClick]="setCandidate"></vis-bullet-legend>
+  </div>
+</div>
+
+<vis-xy-container [data]="data" [height]="400" [yDomain]="[0, 42]">
+    <vis-area [x]="x" [y]="y" [curveType]="curveType"></vis-area>
+    <vis-axis type="x" label="Year"></vis-axis>
+    <vis-axis type="y" label="Number of Mentions"></vis-axis>
+</vis-xy-container>
+
+
+

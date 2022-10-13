@@ -14,6 +14,7 @@ export const examples: ExampleCollection[] = [
       require('./non-stacked-area-chart').default,
       require('./stacked-area-chart').default,
       require('./baseline-area-chart').default,
+      require('./step-area-chart').default,
     ],
   },
   {
