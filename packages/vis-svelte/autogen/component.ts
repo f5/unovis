@@ -17,13 +17,18 @@ export function getComponentCode (
   const onDestroy = elementSuffix === 'component' ? 'removeComponent(component)' : `${setterStr}(undefined)`
   const props = requiredProps.map(c => `export let ${c.name}: ${c.type}`)
   const propDefs = dataType ? [`export let data: ${dataType} = undefined`, ...props] : props
+
   return `<script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
   ${importStatements.map(s => `import { ${s.elements.join(', ')} } from '${s.source}'`).join('\n  ')}
   import { ${!isStandAlone ? 'getContext, ' : ''}onMount } from 'svelte'
-  import { emptyCallback, getActions } from '../../utils/actions'
+  import { arePropsEqual } from '../../utils/props'
   ${typeDefs.length ? `\n  // type defs\n  ${typeDefs.join('\n  ')}` : ''}
-
+  ${propDefs.length ? `
+   // data and required props
+  // eslint-disable-next-line no-undef-init\n${propDefs.join('\n  ')}\n` : ''}
+  // config
+  let prevConfig: ${configType}
   let config: ${configType}
   $: config = {${requiredProps.map(c => ` ${c.name},`).join(' ')} ...$$restProps }
 
@@ -31,33 +36,23 @@ export function getComponentCode (
   let component: ${componentName}${genericsStr}
   ${isStandAlone ? 'let ref: HTMLDivElement' : `const { ${setterStr}${elementSuffix === 'component' ? ', removeComponent' : ''} } = getContext('container')`}
 
-  let setConfig = emptyCallback
-  ${dataType ? 'let setData = emptyCallback' : ''}
-  ${propDefs.length ? `
-   // data and required props
-  // eslint-disable-next-line no-undef-init
-   ${propDefs.join('\n  ')}
-  ` : ''}
   onMount(() => {
     component = new ${componentName}${genericsStr}(${isStandAlone ? `ref, config${dataType ? ', data' : ''}` : 'config'})
-    const actions = getActions.apply(${isStandAlone ? `{
-      setConfig: (c: ${configType}) => { component?.${dataType ? 'setConfig' : 'update'}(c) },${dataType ? `
-      setData: (d: ${dataType}) => { component?.setData(d) },` : ''}
-      render: () => { component?.render() }
-    }` : 'component'})
-    setConfig = actions.setConfig
-    ${dataType ? 'setData = actions.setData' : ''}
     ${isStandAlone ? '' : `${setterStr}(component)`}
-
     return () => { ${isStandAlone ? 'component.destroy() ' : onDestroy} as void }
   })
+  ${dataType ? '\n  $: component?.setData(data)' : ''}
+  $: if(!arePropsEqual(prevConfig, config)) {
+    component?.${componentName === 'BulletLegend' ? 'update' : 'setConfig'}(config)
+    prevConfig = config
+  }
 
   // component accessor
   export function getComponent (): ${componentName}${genericsStr} { return component }
 
 </script>
 
-<vis-${elementSuffix}${isStandAlone ? ' bind:this={ref}' : ''}${dataType ? ' use:setData={data}' : ''} use:setConfig={config} />
+<vis-${elementSuffix}${isStandAlone ? ' bind:this={ref}' : ''}/>
 ${isStandAlone ? `\n<style>\n  vis-${elementSuffix} {\n    ${styles?.join(';\n    ')};\n  }\n</style>` : ''}
 `
 }

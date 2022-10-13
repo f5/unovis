@@ -2,20 +2,10 @@
   // !!! This code was automatically generated. You should not change it !!!
   import { Scatter, ScatterConfigInterface, NumericAccessor } from '@unovis/ts'
   import { getContext, onMount } from 'svelte'
-  import { emptyCallback, getActions } from '../../utils/actions'
+  import { arePropsEqual } from '../../utils/props'
 
   // type defs
   type Datum = $$Generic
-
-  let config: ScatterConfigInterface<Datum>
-  $: config = { x, y, ...$$restProps }
-
-  // component declaration
-  let component: Scatter<Datum>
-  const { setComponent, removeComponent } = getContext('container')
-
-  let setConfig = emptyCallback
-  let setData = emptyCallback
 
   // data and required props
   // eslint-disable-next-line no-undef-init
@@ -23,20 +13,31 @@
   export let x: NumericAccessor<Datum>
   export let y: NumericAccessor<Datum> | NumericAccessor<Datum>[]
 
+  // config
+  let prevConfig: ScatterConfigInterface<Datum>
+  let config: ScatterConfigInterface<Datum>
+  $: config = { x, y, ...$$restProps }
+
+  // component declaration
+  let component: Scatter<Datum>
+  const { setComponent, removeComponent } = getContext('container')
+
   onMount(() => {
     component = new Scatter<Datum>(config)
-    const actions = getActions.apply(component)
-    setConfig = actions.setConfig
-    setData = actions.setData
     setComponent(component)
-
     return () => { removeComponent(component) as void }
   })
+
+  $: component?.setData(data)
+  $: if (!arePropsEqual(prevConfig, config)) {
+    component?.setConfig(config)
+    prevConfig = config
+  }
 
   // component accessor
   export function getComponent (): Scatter<Datum> { return component }
 
 </script>
 
-<vis-component use:setData={data} use:setConfig={config} />
+<vis-component/>
 

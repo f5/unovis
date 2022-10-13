@@ -2,9 +2,11 @@
   // !!! This code was automatically generated. You should not change it !!!
   import { Tooltip, TooltipConfigInterface } from '@unovis/ts'
   import { getContext, onMount } from 'svelte'
-  import { emptyCallback, getActions } from '../../utils/actions'
+  import { arePropsEqual } from '../../utils/props'
 
 
+  // config
+  let prevConfig: TooltipConfigInterface
   let config: TooltipConfigInterface
   $: config = { ...$$restProps }
 
@@ -12,23 +14,21 @@
   let component: Tooltip
   const { setTooltip } = getContext('container')
 
-  let setConfig = emptyCallback
-
-
   onMount(() => {
     component = new Tooltip(config)
-    const actions = getActions.apply(component)
-    setConfig = actions.setConfig
-
     setTooltip(component)
-
     return () => { setTooltip(undefined) as void }
   })
+
+  $: if (!arePropsEqual(prevConfig, config)) {
+    component?.setConfig(config)
+    prevConfig = config
+  }
 
   // component accessor
   export function getComponent (): Tooltip { return component }
 
 </script>
 
-<vis-tooltip use:setConfig={config} />
+<vis-tooltip/>
 

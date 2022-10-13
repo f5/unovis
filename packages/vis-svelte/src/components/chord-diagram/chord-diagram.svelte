@@ -2,12 +2,18 @@
   // !!! This code was automatically generated. You should not change it !!!
   import { ChordDiagram, ChordDiagramConfigInterface, ChordInputNode, ChordInputLink } from '@unovis/ts'
   import { getContext, onMount } from 'svelte'
-  import { emptyCallback, getActions } from '../../utils/actions'
+  import { arePropsEqual } from '../../utils/props'
 
   // type defs
   type N = $$Generic<ChordInputNode>
   type L = $$Generic<ChordInputLink>
 
+  // data and required props
+  // eslint-disable-next-line no-undef-init
+  export let data: { nodes: N[]; links?: L[] } = undefined
+
+  // config
+  let prevConfig: ChordDiagramConfigInterface<N, L>
   let config: ChordDiagramConfigInterface<N, L>
   $: config = { ...$$restProps }
 
@@ -15,27 +21,22 @@
   let component: ChordDiagram<N, L>
   const { setComponent, removeComponent } = getContext('container')
 
-  let setConfig = emptyCallback
-  let setData = emptyCallback
-
-  // data and required props
-  // eslint-disable-next-line no-undef-init
-  export let data: { nodes: N[]; links?: L[] } = undefined
-
   onMount(() => {
     component = new ChordDiagram<N, L>(config)
-    const actions = getActions.apply(component)
-    setConfig = actions.setConfig
-    setData = actions.setData
     setComponent(component)
-
     return () => { removeComponent(component) as void }
   })
+
+  $: component?.setData(data)
+  $: if (!arePropsEqual(prevConfig, config)) {
+    component?.setConfig(config)
+    prevConfig = config
+  }
 
   // component accessor
   export function getComponent (): ChordDiagram<N, L> { return component }
 
 </script>
 
-<vis-component use:setData={data} use:setConfig={config} />
+<vis-component/>
 
