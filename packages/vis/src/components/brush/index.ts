@@ -20,7 +20,7 @@ import { BrushDirection, BrushHandleType } from './types'
 // Styles
 import * as s from './style'
 
-export class Brush<Datum> extends XYComponentCore<Datum> {
+export class Brush<Datum> extends XYComponentCore<Datum, BrushConfig<Datum>, BrushConfigInterface<Datum>> {
   static selectors = s
   clippable = false // Don't apply clipping path to this component. See XYContainer
   config: BrushConfig<Datum> = new BrushConfig()

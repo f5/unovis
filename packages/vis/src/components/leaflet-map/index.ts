@@ -45,7 +45,7 @@ import {
   shouldClusterExpand,
 } from './modules/utils'
 
-export class LeafletMap<Datum> extends ComponentCore<Datum[]> {
+export class LeafletMap<Datum> extends ComponentCore<Datum[], LeafletMapConfig<Datum>, LeafletMapConfigInterface<Datum>> {
   static selectors = s
   type = ComponentType.HTML
   element: HTMLElement

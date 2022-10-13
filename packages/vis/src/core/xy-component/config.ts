@@ -34,8 +34,8 @@ export interface XYComponentConfigInterface<Datum> extends ComponentConfigInterf
 }
 
 export class XYComponentConfig<Datum> extends ComponentConfig implements XYComponentConfigInterface<Datum> {
-  x = undefined;
-  y = undefined;
+  x = undefined
+  y = undefined
   // eslint-disable-next-line dot-notation
   id = (d: Datum, i: number): string => d['id'] ?? `${i}`
   // eslint-disable-next-line dot-notation

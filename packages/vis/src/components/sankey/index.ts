@@ -30,7 +30,14 @@ import { createLinks, removeLinks, updateLinks } from './modules/link'
 import { createNodes, onNodeMouseOut, onNodeMouseOver, removeNodes, updateNodes } from './modules/node'
 import { getLabelOrientation, requiredLabelSpace } from './modules/label'
 
-export class Sankey<N extends SankeyInputNode, L extends SankeyInputLink> extends ComponentCore<{nodes: N[]; links?: L[]}> implements ExtendedSizeComponent {
+export class Sankey<
+  N extends SankeyInputNode,
+  L extends SankeyInputLink,
+> extends ComponentCore<
+  {nodes: N[]; links?: L[]},
+  SankeyConfig<N, L>,
+  SankeyConfigInterface<N, L>
+  > implements ExtendedSizeComponent {
   static selectors = s
   config: SankeyConfig<N, L> = new SankeyConfig()
   datamodel: GraphDataModel<N, L, SankeyNode<N, L>, SankeyLink<N, L>> = new GraphDataModel()

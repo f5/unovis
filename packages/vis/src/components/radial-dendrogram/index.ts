@@ -25,7 +25,11 @@ import { createLink, updateLink, removeLink } from './modules/link'
 // Styles
 import * as s from './style'
 
-export class RadialDendrogram<H extends Hierarchy> extends ComponentCore<H> {
+export class RadialDendrogram<H extends Hierarchy> extends ComponentCore<
+H,
+RadialDendrogramConfig<H>,
+RadialDendrogramConfigInterface<H>
+> {
   static selectors = s
   config: RadialDendrogramConfig<H> = new RadialDendrogramConfig()
   nodeGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>

@@ -25,7 +25,7 @@ import { LineConfig, LineConfigInterface } from './config'
 // Styles
 import * as s from './style'
 
-export class Line<Datum> extends XYComponentCore<Datum> {
+export class Line<Datum> extends XYComponentCore<Datum, LineConfig<Datum>, LineConfigInterface<Datum>> {
   static selectors = s
   config: LineConfig<Datum> = new LineConfig()
   lineGen: LineGenInterface<{ x: number; y: number; defined: boolean }>

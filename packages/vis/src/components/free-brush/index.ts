@@ -14,7 +14,7 @@ import { FreeBrushConfig, FreeBrushConfigInterface } from './config'
 // Styles
 import * as s from './style'
 
-export class FreeBrush<Datum> extends XYComponentCore<Datum> {
+export class FreeBrush<Datum> extends XYComponentCore<Datum, FreeBrushConfig<Datum>, FreeBrushConfigInterface<Datum>> {
   static selectors = s
   config: FreeBrushConfig<Datum> = new FreeBrushConfig()
   private brush: Selection<SVGGElement, unknown, SVGGElement, unknown>

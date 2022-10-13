@@ -17,7 +17,7 @@ import { createLabels, updateLabels, removeLabels, getLabelRenderProps } from '.
 // Styles
 import * as s from './style'
 
-export class XYLabels<Datum> extends XYComponentCore<Datum> {
+export class XYLabels<Datum> extends XYComponentCore<Datum, XYLabelsConfig<Datum>, XYLabelsConfigInterface<Datum>> {
   static selectors = s
   clippable = false
   config: XYLabelsConfig<Datum> = new XYLabelsConfig()

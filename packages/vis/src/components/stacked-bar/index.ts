@@ -24,7 +24,7 @@ import { StackedBarConfig, StackedBarConfigInterface } from './config'
 // Styles
 import * as s from './style'
 
-export class StackedBar<Datum> extends XYComponentCore<Datum> {
+export class StackedBar<Datum> extends XYComponentCore<Datum, StackedBarConfig<Datum>, StackedBarConfigInterface<Datum>> {
   static selectors = s
   config: StackedBarConfig<Datum> = new StackedBarConfig()
   getAccessors = (): NumericAccessor<Datum>[] => (isArray(this.config.y) ? this.config.y : [this.config.y])
