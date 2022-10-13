@@ -33,7 +33,7 @@ export interface DonutConfigInterface<Datum> extends ComponentConfigInterface {
    * drawing an empty segment as a thin line.
    * Default: `false`
   */
-  preventEmptySegments?: boolean;
+  showEmptySegments?: boolean;
   /** Show donut background. The color is configurable via
    * the `--vis-donut-background-color` and `--vis-dark-donut-background-color` CSS variables.
    * Default: `true`
@@ -55,6 +55,6 @@ export class DonutConfig<Datum> extends ComponentConfig implements DonutConfigIn
   centralLabel = undefined
   centralSubLabel = undefined
   centralSubLabelWrap = true
-  preventEmptySegments = false
+  showEmptySegments = false
   showBackground = true
 }
