@@ -35,14 +35,17 @@ export class DonutChartComponent implements AfterViewInit {
       radius: this.radiusScale(sum),
       duration: 1000,
       arcWidth: 25,
-      preventEmptySegments: true,
+      showEmptySegments: true,
+      showBackground: true,
+      angleRange: [0, 2 * Math.PI * Math.random()],
+      backgroundAngleRange: [0, 2 * Math.PI],
       // color: 'grey',
     }
 
     return {
       config,
+      data,
       component: new Donut(config),
-      data: sampleSeriesData(_random(1, 10)),
     }
   })
 
