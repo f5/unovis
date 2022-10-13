@@ -2,6 +2,9 @@ import { css } from '@emotion/css'
 import { extent, merge as mergeArrays } from 'd3-array'
 import { Selection } from 'd3-selection'
 
+// Global CSS variables (side effects import)
+import 'styles/index'
+
 // Core
 import { ContainerCore } from 'core/container'
 import { XYComponentCore } from 'core/xy-component'

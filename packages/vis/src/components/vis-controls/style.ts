@@ -1,5 +1,5 @@
 import { css, injectGlobal } from '@emotion/css'
-import { DEFAULT_ICON_FONT_FAMILY } from 'styles/css-variables'
+import { DEFAULT_ICON_FONT_FAMILY } from 'styles/index'
 
 export const root = css`
   label: vis-controls-component;

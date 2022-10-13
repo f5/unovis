@@ -1,3 +1,6 @@
+// Global CSS variables (side effects import)
+import 'styles/index'
+
 // Core
 import { ContainerCore } from 'core/container'
 import { ComponentCore } from 'core/component'
