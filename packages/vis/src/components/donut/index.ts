@@ -80,7 +80,8 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfig<Datum>, Don
 
     this.arcGroup.attr('transform', `translate(${this._width / 2},${this._height / 2})`)
     const arcData = pieGen(data) as DonutArcDatum<Datum>[]
-    arcData.forEach(d => {
+    arcData.forEach((d, i) => {
+      d.index = i
       d.innerRadius = innerRadius
       d.outerRadius = outerRadius
     })
@@ -88,7 +89,7 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfig<Datum>, Don
     // Arc segments
     const arcsSelection = this.arcGroup
       .selectAll(`.${s.segment}`)
-      .data(arcData, (d: DonutArcDatum<Datum>, i) => config.id(d.data, i))
+      .data(arcData, (d: DonutArcDatum<Datum>) => config.id(d.data, d.index))
 
     const arcsEnter = arcsSelection.enter().append('path')
       .attr('class', s.segment)
@@ -96,6 +97,7 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfig<Datum>, Don
 
     const arcsMerged = arcsSelection.merge(arcsEnter)
     arcsMerged.call(updateArc, config, this.arcGen, duration)
+    arcsMerged.sort((a, b) => b.value - a.value)
 
     arcsSelection.exit()
       .attr('class', s.segmentExit)
