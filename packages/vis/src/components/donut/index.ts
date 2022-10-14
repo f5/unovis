@@ -72,8 +72,8 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfig<Datum>, Don
       .cornerRadius(d => config.cornerRadius)
 
     const pieGen = pie<Datum>()
-      .startAngle(config.angleRange[0] ?? 0)
-      .endAngle(config.angleRange[1] ?? 2 * Math.PI)
+      .startAngle(config.angleRange?.[0] ?? 0)
+      .endAngle(config.angleRange?.[1] ?? 2 * Math.PI)
       .padAngle(config.padAngle)
       .value((d, i) => getNumber(d, config.value, i) || (config.showEmptySegments && Number.EPSILON) || 0)
       .sort(config.sortFunction)
@@ -123,8 +123,8 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfig<Datum>, Don
 
     smartTransition(this.arcBackground, duration)
       .attr('d', this.arcGen({
-        startAngle: 0,
-        endAngle: 2 * Math.PI,
+        startAngle: config.backgroundAngleRange?.[0] ?? config.angleRange?.[0] ?? 0,
+        endAngle: config.backgroundAngleRange?.[1] ?? config.angleRange?.[1] ?? 2 * Math.PI,
         innerRadius,
         outerRadius
       }))

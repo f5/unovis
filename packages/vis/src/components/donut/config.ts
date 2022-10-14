@@ -39,6 +39,8 @@ export interface DonutConfigInterface<Datum> extends ComponentConfigInterface {
    * Default: `true`
   */
   showBackground?: boolean;
+  /** Background angle range. When undefined, the value will be taken from `angleRange`. Default: `undefined` */
+  backgroundAngleRange?: [number, number];
 }
 
 export class DonutConfig<Datum> extends ComponentConfig implements DonutConfigInterface<Datum> {
@@ -57,4 +59,5 @@ export class DonutConfig<Datum> extends ComponentConfig implements DonutConfigIn
   centralSubLabelWrap = true
   showEmptySegments = false
   showBackground = true
+  backgroundAngleRange = undefined
 }
