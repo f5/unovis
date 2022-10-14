@@ -23,7 +23,7 @@ const clickableLegend = new BulletLegend(legendSwitch)
 const area = new Area<DataRecord>({
   x: d => d.year,
   y: [],
-  curveType: CurveType.Step,
+  curveType: CurveType.StepAfter,
 })
 
 const chart = new XYContainer(container, {
@@ -34,17 +34,17 @@ const chart = new XYContainer(container, {
   yAxis: new Axis({ label: 'Number of Mentions' }),
 }, data)
 
-function setCandidate(curr: string): void {
+function setCandidate (curr: string): void {
   // update legend
   clickableLegend.update({
     labelClassName: 'legendLabel',
     items: candidates.map(c => ({ ...c, inactive: curr !== c.name })),
     onLegendItemClick: (i: BulletLegendItemInterface) => setCandidate(i.name),
   })
-  //update area y accessors
+  // update area y accessors
   area.setConfig({
     ...area.config,
-    y: items.map((i: BulletLegendItemInterface) => (d: DataRecord) => d[curr][i.name])
+    y: items.map((i: BulletLegendItemInterface) => (d: DataRecord) => d[curr][i.name]),
   })
   area.render()
 }

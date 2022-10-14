@@ -26,6 +26,7 @@ const example: Example = {
   },
   codeSvelte: require(`!!raw-loader!./${pathname}.svelte`).default,
   data: require('!!raw-loader!./data').default,
+  styles: require('!!raw-loader!./styles.css').default,
 }
 
 export default example

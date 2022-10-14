@@ -9,7 +9,7 @@ import { candidates, data, DataRecord } from './data'
 })
 export class StepAreaChartComponent {
   candidates: BulletLegendItemInterface[]
-  curveType = CurveType.Step
+  curveType = CurveType.StepAfter
   data = data
   legendItems = Object.keys(data[0][candidates[0].name]).map(c => ({ name: c as string }))
   x = (d: DataRecord): number => d.year
