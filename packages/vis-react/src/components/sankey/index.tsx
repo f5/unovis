@@ -1,5 +1,5 @@
 // !!! This code was automatically generated. You should not change it !!!
-import React, { ForwardedRef, Ref, useImperativeHandle, useEffect, useRef } from 'react'
+import React, { ForwardedRef, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
 import { Sankey, SankeyConfigInterface, SankeyInputNode, SankeyInputLink } from '@unovis/ts'
 
 // Utils
@@ -9,7 +9,7 @@ import { arePropsEqual } from 'src/utils/react'
 import { VisComponentElement } from 'src/types/dom'
 
 export type VisSankeyRef<N extends SankeyInputNode, L extends SankeyInputLink> = {
-  component: Sankey<N, L>;
+  component?: Sankey<N, L>;
 }
 
 export type VisSankeyProps<N extends SankeyInputNode, L extends SankeyInputLink> = SankeyConfigInterface<N, L> & {
@@ -20,23 +20,30 @@ export type VisSankeyProps<N extends SankeyInputNode, L extends SankeyInputLink>
 // eslint-disable-next-line @typescript-eslint/naming-convention
 function VisSankeyFC<N extends SankeyInputNode, L extends SankeyInputLink> (props: VisSankeyProps<N, L>, fRef: ForwardedRef<VisSankeyRef<N, L>>): JSX.Element {
   const ref = useRef<VisComponentElement<Sankey<N, L>>>(null)
+  const [component, setComponent] = useState<Sankey<N, L>>()
 
   // On Mount
   useEffect(() => {
     const element = (ref.current as VisComponentElement<Sankey<N, L>>)
-    element.__component__?.destroy() // Destroy component if exists already (to comply with React 18 strict mode, which renders components twice in dev mode)
-    element.__component__ = new Sankey(props)
-    // We don't have a clean up function because the component will be destroyed by its container (e.g. XYContainer or SingleContainer)
+
+    // React 18 in Strict Mode renders components twice. At the same time, a Container that contains this component
+    // (e.g. XYContainer) will be updated only after the first render. So we need to make sure that the component will
+    // be initialized only once and won't get destroyed after the first render
+    const hasAlreadyBeenInitialized = element.__component__
+    const c = element.__component__ || new Sankey<N, L>(props)
+    setComponent(c)
+    element.__component__ = c
+
+    return () => hasAlreadyBeenInitialized && c.destroy()
   }, [])
 
   // On Props Update
   useEffect(() => {
-    const component = (ref.current as VisComponentElement<Sankey<N, L>>).__component__
     if (props.data) component?.setData(props.data)
     component?.setConfig(props)
   })
 
-  useImperativeHandle(fRef, () => ({ component: (ref.current as VisComponentElement<Sankey<N, L>>).__component__ }))
+  useImperativeHandle(fRef, () => ({ component }), [component])
   return <vis-component ref={ref} />
 }
 

@@ -1,5 +1,5 @@
 // !!! This code was automatically generated. You should not change it !!!
-import React, { ForwardedRef, Ref, useImperativeHandle, useEffect, useRef } from 'react'
+import React, { ForwardedRef, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
 import { Line, LineConfigInterface } from '@unovis/ts'
 
 // Utils
@@ -9,7 +9,7 @@ import { arePropsEqual } from 'src/utils/react'
 import { VisComponentElement } from 'src/types/dom'
 
 export type VisLineRef<Datum> = {
-  component: Line<Datum>;
+  component?: Line<Datum>;
 }
 
 export type VisLineProps<Datum> = LineConfigInterface<Datum> & {
@@ -20,23 +20,30 @@ export type VisLineProps<Datum> = LineConfigInterface<Datum> & {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 function VisLineFC<Datum> (props: VisLineProps<Datum>, fRef: ForwardedRef<VisLineRef<Datum>>): JSX.Element {
   const ref = useRef<VisComponentElement<Line<Datum>>>(null)
+  const [component, setComponent] = useState<Line<Datum>>()
 
   // On Mount
   useEffect(() => {
     const element = (ref.current as VisComponentElement<Line<Datum>>)
-    element.__component__?.destroy() // Destroy component if exists already (to comply with React 18 strict mode, which renders components twice in dev mode)
-    element.__component__ = new Line(props)
-    // We don't have a clean up function because the component will be destroyed by its container (e.g. XYContainer or SingleContainer)
+
+    // React 18 in Strict Mode renders components twice. At the same time, a Container that contains this component
+    // (e.g. XYContainer) will be updated only after the first render. So we need to make sure that the component will
+    // be initialized only once and won't get destroyed after the first render
+    const hasAlreadyBeenInitialized = element.__component__
+    const c = element.__component__ || new Line<Datum>(props)
+    setComponent(c)
+    element.__component__ = c
+
+    return () => hasAlreadyBeenInitialized && c.destroy()
   }, [])
 
   // On Props Update
   useEffect(() => {
-    const component = (ref.current as VisComponentElement<Line<Datum>>).__component__
     if (props.data) component?.setData(props.data)
     component?.setConfig(props)
   })
 
-  useImperativeHandle(fRef, () => ({ component: (ref.current as VisComponentElement<Line<Datum>>).__component__ }))
+  useImperativeHandle(fRef, () => ({ component }), [component])
   return <vis-component ref={ref} />
 }
 
