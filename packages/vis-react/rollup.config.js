@@ -33,6 +33,7 @@ export default {
     }),
     typescript({
       typescript: require('typescript'),
+      tsconfig: './tsconfig.lib.json',
       transformers: [(service) => transformPaths(service.getProgram())],
     }),
   ],
