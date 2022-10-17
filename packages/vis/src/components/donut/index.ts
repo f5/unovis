@@ -6,6 +6,7 @@ import { ComponentCore } from 'core/component'
 import { SeriesDataModel } from 'data-models/series'
 
 // Utils
+import { smartTransition } from 'utils/d3'
 import { isNumber, clamp, getNumber } from 'utils/data'
 import { wrapSVGText } from 'utils/text'
 
@@ -30,6 +31,7 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfig<Datum>, Don
   config: DonutConfig<Datum> = new DonutConfig()
   datamodel: SeriesDataModel<Datum> = new SeriesDataModel()
 
+  arcBackground: Selection<SVGPathElement, unknown, SVGGElement, unknown>
   arcGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
   centralLabel: Selection<SVGTextElement, unknown, SVGGElement, unknown>
   centralSubLabel: Selection<SVGTextElement, unknown, SVGGElement, unknown>
@@ -41,6 +43,7 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfig<Datum>, Don
   constructor (config?: DonutConfigInterface<Datum>) {
     super()
     if (config) this.config.init(config)
+    this.arcBackground = this.g.append('path')
     this.arcGroup = this.g.append('g')
     this.centralLabel = this.g.append('text')
       .attr('class', s.centralLabel)
@@ -69,15 +72,16 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfig<Datum>, Don
       .cornerRadius(d => config.cornerRadius)
 
     const pieGen = pie<Datum>()
-      .startAngle(config.angleRange[0] ?? 0)
-      .endAngle(config.angleRange[1] ?? 2 * Math.PI)
+      .startAngle(config.angleRange?.[0] ?? 0)
+      .endAngle(config.angleRange?.[1] ?? 2 * Math.PI)
       .padAngle(config.padAngle)
-      .value((d, i) => getNumber(d, config.value, i) || (config.preventEmptySegments && Number.EPSILON) || 0)
+      .value((d, i) => getNumber(d, config.value, i) || 0)
       .sort(config.sortFunction)
 
     this.arcGroup.attr('transform', `translate(${this._width / 2},${this._height / 2})`)
     const arcData = pieGen(data) as DonutArcDatum<Datum>[]
-    arcData.forEach(d => {
+    arcData.forEach((d, i) => {
+      d.index = i
       d.innerRadius = innerRadius
       d.outerRadius = outerRadius
     })
@@ -85,7 +89,7 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfig<Datum>, Don
     // Arc segments
     const arcsSelection = this.arcGroup
       .selectAll(`.${s.segment}`)
-      .data(arcData, (d: DonutArcDatum<Datum>, i) => config.id(d.data, i))
+      .data(arcData, (d: DonutArcDatum<Datum>) => config.id(d.data, d.index))
 
     const arcsEnter = arcsSelection.enter().append('path')
       .attr('class', s.segment)
@@ -93,6 +97,7 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfig<Datum>, Don
 
     const arcsMerged = arcsSelection.merge(arcsEnter)
     arcsMerged.call(updateArc, config, this.arcGen, duration)
+    arcsMerged.sort((a, b) => b.value - a.value)
 
     arcsSelection.exit()
       .attr('class', s.segmentExit)
@@ -110,5 +115,18 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfig<Datum>, Don
       .text(config.centralSubLabel ?? null)
 
     if (config.centralSubLabelWrap) wrapSVGText(this.centralSubLabel, { width: innerRadius * 1.9, verticalAlign: VerticalAlign.Top })
+
+    // Background
+    this.arcBackground.attr('class', s.background)
+      .attr('visibility', config.showBackground ? null : 'hidden')
+      .attr('transform', `translate(${this._width / 2},${this._height / 2})`)
+
+    smartTransition(this.arcBackground, duration)
+      .attr('d', this.arcGen({
+        startAngle: config.backgroundAngleRange?.[0] ?? config.angleRange?.[0] ?? 0,
+        endAngle: config.backgroundAngleRange?.[1] ?? config.angleRange?.[1] ?? 2 * Math.PI,
+        innerRadius,
+        outerRadius,
+      }))
   }
 }

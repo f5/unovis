@@ -64,32 +64,58 @@ Providing a value to the `cornerRadius` property adds rounded corners to your _D
 Pad each segment with the `padAngle` property.
 <DocWrapper {...defaultProps()} padAngle={0.1}/>
 
+## Show Empty Segments
+When some segments of the donut are empty (i.e. they have 0 values), you can still show them as thin lines by setting
+`showEmptySegments` to `true`;
+<InputWrapper {...defaultProps()} data={[1,2,3,0,4,0,5]} property="showEmptySegments" inputType="checkbox" defaultValue={true}/>
+
+## Background
+By default, _Donut_ has a background underneath the segments, which is useful when your chart is empty. You can turn it off by setting
+`showBackground` to `false`.
+<InputWrapper {...defaultProps()} data={[0]} angleRange={[-Math.PI / 2, Math.PI / 2]} property="showBackground" inputType="checkbox" defaultValue={true}/>
+
+Also, you can change the angular range of the background by providing a `[number, number]` value (in radians) to `backgroundAngleRange`.
+By default, the background angular range will be the same as `angleRange`.
+<DocWrapper {...defaultProps()} data={[1,2,3]} showBackground angleRange={[0, Math.PI / 3]} backgroundAngleRange={[0, 2 * Math.PI]} />
+
+<br />
+
+The color of the background can be changed via the `--vis-donut-background-color` and
+`--vis-dark-donut-background-color` CSS variables.
+
 ## Events
 The following selectors are available for events:
 ```ts
 import { Donut } from '@unovis/ts'
 ...
 events = {
-    [Donut.selectors.segment]: { }
+    [Donut.selectors.segment]: { },
+    [Donut.selectors.background]: { },
+    [Donut.selectors.centralLabel]: { },
+    [Donut.selectors.centralSubLabel]: { },
 }
 ```
 <DocWrapper {...defaultProps()} excludeGraph events={{}}/>
 
 ## CSS Variables
-All supported CSS variables
+All supported CSS variables and their default values
 
 ```css
---vis-donut-central-label-font-size
---vis-donut-central-label-text-color
---vis-donut-central-label-font-family
---vis-donut-central-label-font-weight
---vis-dark-donut-central-label-text-color
+--vis-donut-central-label-font-size: 16px;
+--vis-donut-central-label-text-color: #5b5f6d;
+--vis-donut-central-label-font-family: var(--vis-font-family);
+--vis-donut-central-label-font-weight: 600;
 
---vis-donut-central-sub-label-font-size
---vis-donut-central-sub-label-text-color
---vis-donut-central-sub-label-font-family
---vis-donut-central-sub-label-font-weight
---vis-dark-donut-central-sub-label-text-color`
+--vis-donut-central-sub-label-font-size: 12px;
+--vis-donut-central-sub-label-text-color: #5b5f6d;
+--vis-donut-central-sub-label-font-family: var(--vis-font-family);
+--vis-donut-central-sub-label-font-weight: 500;
+
+--vis-donut-background-color: #E7E9F3;
+
+--vis-dark-donut-central-label-text-color: #C2BECE;
+--vis-dark-donut-central-sub-label-text-color: #C2BECE;
+--vis-dark-donut-background-color: #18160C;
 ```
 
 ## Component Props

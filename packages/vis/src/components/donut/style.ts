@@ -16,14 +16,22 @@ export const variables = injectGlobal`
     --vis-donut-central-sub-label-font-family: var(--vis-font-family);
     --vis-donut-central-sub-label-font-weight: 500;
 
+    --vis-donut-background-color: #E7E9F3;
+
     --vis-dark-donut-central-label-text-color: #C2BECE;
     --vis-dark-donut-central-sub-label-text-color: #C2BECE;
+    --vis-dark-donut-background-color: #18160C;
   }
 
   body.theme-dark ${`.${root}`} {
     --vis-donut-central-label-text-color: var(--vis-dark-donut-central-label-text-color);
     --vis-donut-central-sub-label-text-color: var(--vis-dark-donut-central-sub-label-text-color);
+    --vis-donut-background-color: var(--vis-dark-donut-background-color);
   }
+`
+export const background = css`
+  label: background;
+  fill: var(--vis-donut-background-color);
 `
 
 export const segment = css`

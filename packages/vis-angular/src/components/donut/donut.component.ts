@@ -96,8 +96,15 @@ export class VisDonutComponent<Datum> implements DonutConfigInterface<Datum>, Af
   /** Enables wrapping for the sub-label. Default: `true` */
   @Input() centralSubLabelWrap?: boolean
 
-  /** Draw segment as a thin line when its value is 0. Default: `false` */
-  @Input() preventEmptySegments?: boolean
+  /** When true, the component will treat `0` values as `Number.EPSILON`. Which, in most cases, will result in
+   * drawing an empty segment as a thin line.
+   * Default: `false` */
+  @Input() showEmptySegments?: boolean
+
+  /** Show donut background. The color is configurable via
+   * the `--vis-donut-background-color` and `--vis-dark-donut-background-color` CSS variables.
+   * Default: `true` */
+  @Input() showBackground?: boolean
   @Input() data: Datum[]
 
   component: Donut<Datum> | undefined
@@ -119,8 +126,8 @@ export class VisDonutComponent<Datum> implements DonutConfigInterface<Datum>, Af
   }
 
   private getConfig (): DonutConfigInterface<Datum> {
-    const { duration, events, attributes, id, value, angleRange, padAngle, sortFunction, cornerRadius, color, radius, arcWidth, centralLabel, centralSubLabel, centralSubLabelWrap, preventEmptySegments } = this
-    const config = { duration, events, attributes, id, value, angleRange, padAngle, sortFunction, cornerRadius, color, radius, arcWidth, centralLabel, centralSubLabel, centralSubLabelWrap, preventEmptySegments }
+    const { duration, events, attributes, id, value, angleRange, padAngle, sortFunction, cornerRadius, color, radius, arcWidth, centralLabel, centralSubLabel, centralSubLabelWrap, showEmptySegments, showBackground } = this
+    const config = { duration, events, attributes, id, value, angleRange, padAngle, sortFunction, cornerRadius, color, radius, arcWidth, centralLabel, centralSubLabel, centralSubLabelWrap, showEmptySegments, showBackground }
     const keys = Object.keys(config) as (keyof DonutConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

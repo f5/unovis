@@ -49,9 +49,10 @@ export function updateArc<Datum> (
     .style('fill', (d, i) => getColor(d.data, config.color, i))
     .style('stroke', (d, i) => getColor(d.data, config.color, i))
 
+  const setOpacity = (d: DonutArcDatum<Datum>): number => (config.showEmptySegments || d.value) ? 1 : 0
   if (duration) {
     const transition = smartTransition(selection, duration)
-      .style('opacity', 1) as Transition<SVGElement, DonutArcDatum<Datum>, SVGGElement, DonutArcDatum<Datum>[]>
+      .style('opacity', setOpacity) as Transition<SVGElement, DonutArcDatum<Datum>, SVGGElement, DonutArcDatum<Datum>[]>
 
     transition.attrTween('d', (d, i, els) => {
       const arcNode: ArcNode = els[i]
@@ -66,7 +67,7 @@ export function updateArc<Datum> (
   } else {
     selection
       .attr('d', arcGen)
-      .style('opacity', 1)
+      .style('opacity', setOpacity)
   }
 }
 
