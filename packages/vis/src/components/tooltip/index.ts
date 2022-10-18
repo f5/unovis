@@ -43,6 +43,8 @@ export class Tooltip {
     if (this.config.container && (this.config.container !== this.prevConfig?.container)) {
       this.setContainer(this.config.container)
     }
+
+    this._setUpAttributes()
   }
 
   public setContainer (container: HTMLElement): void {
@@ -173,6 +175,15 @@ export class Tooltip {
             this.hide()
           })
       })
+    })
+  }
+
+  private _setUpAttributes (): void {
+    const attributesMap = this.config.attributes
+    if (!attributesMap) return
+
+    Object.keys(attributesMap).forEach(attr => {
+      this.div.attr(attr, attributesMap[attr])
     })
   }
 
