@@ -46,6 +46,25 @@ export class VisTooltipComponent implements TooltipConfigInterface, AfterViewIni
     [selector: string]: (data: any, i: number, elements: (HTMLElement | SVGElement)[]) => string | HTMLElement | undefined | null;
   }
 
+  /** Custom DOM attributes for the tooltip. Useful when you need to refer to a specific tooltip instance
+   * by using a CSS selector. Attributes configuration object has the following structure:
+   *
+   * ```
+   * {
+   * \[attributeName]: attribute value
+   * }
+   * ```
+   * e.g.:
+   * ```
+   * {
+   * \'type': 'area-tooltip',
+   * \'value': 42
+   * }
+   * ``` */
+  @Input() attributes?: {
+    [attr: string]: string | number | boolean;
+  }
+
 
   component: Tooltip | undefined
   public componentContainer: ContainerCore | undefined
@@ -60,8 +79,8 @@ export class VisTooltipComponent implements TooltipConfigInterface, AfterViewIni
   }
 
   private getConfig (): TooltipConfigInterface {
-    const { components, container, horizontalPlacement, horizontalShift, verticalPlacement, verticalShift, triggers } = this
-    const config = { components, container, horizontalPlacement, horizontalShift, verticalPlacement, verticalShift, triggers }
+    const { components, container, horizontalPlacement, horizontalShift, verticalPlacement, verticalShift, triggers, attributes } = this
+    const config = { components, container, horizontalPlacement, horizontalShift, verticalPlacement, verticalShift, triggers, attributes }
     const keys = Object.keys(config) as (keyof TooltipConfigInterface)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

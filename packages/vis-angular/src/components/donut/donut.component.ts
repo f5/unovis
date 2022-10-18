@@ -96,8 +96,7 @@ export class VisDonutComponent<Datum> implements DonutConfigInterface<Datum>, Af
   /** Enables wrapping for the sub-label. Default: `true` */
   @Input() centralSubLabelWrap?: boolean
 
-  /** When true, the component will treat `0` values as `Number.EPSILON`. Which, in most cases, will result in
-   * drawing an empty segment as a thin line.
+  /** When true, the component will display empty segments (the ones that have `0` values) as thin lines.
    * Default: `false` */
   @Input() showEmptySegments?: boolean
 
@@ -105,6 +104,9 @@ export class VisDonutComponent<Datum> implements DonutConfigInterface<Datum>, Af
    * the `--vis-donut-background-color` and `--vis-dark-donut-background-color` CSS variables.
    * Default: `true` */
   @Input() showBackground?: boolean
+
+  /** Background angle range. When undefined, the value will be taken from `angleRange`. Default: `undefined` */
+  @Input() backgroundAngleRange?: [number, number]
   @Input() data: Datum[]
 
   component: Donut<Datum> | undefined
@@ -126,8 +128,8 @@ export class VisDonutComponent<Datum> implements DonutConfigInterface<Datum>, Af
   }
 
   private getConfig (): DonutConfigInterface<Datum> {
-    const { duration, events, attributes, id, value, angleRange, padAngle, sortFunction, cornerRadius, color, radius, arcWidth, centralLabel, centralSubLabel, centralSubLabelWrap, showEmptySegments, showBackground } = this
-    const config = { duration, events, attributes, id, value, angleRange, padAngle, sortFunction, cornerRadius, color, radius, arcWidth, centralLabel, centralSubLabel, centralSubLabelWrap, showEmptySegments, showBackground }
+    const { duration, events, attributes, id, value, angleRange, padAngle, sortFunction, cornerRadius, color, radius, arcWidth, centralLabel, centralSubLabel, centralSubLabelWrap, showEmptySegments, showBackground, backgroundAngleRange } = this
+    const config = { duration, events, attributes, id, value, angleRange, padAngle, sortFunction, cornerRadius, color, radius, arcWidth, centralLabel, centralSubLabel, centralSubLabelWrap, showEmptySegments, showBackground, backgroundAngleRange }
     const keys = Object.keys(config) as (keyof DonutConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
