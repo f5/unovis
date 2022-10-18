@@ -17,6 +17,7 @@ function VisSingleContainerFC<Data> (props: PropsWithChildren<VisSingleContainer
   const container = useRef<HTMLDivElement>(null)
   const [chart, setChart] = useState<SingleContainer<Data>>()
   const [data, setData] = useState<Data | undefined>(undefined)
+  const animationFrameRef = useRef<number | null>(null)
 
   const getConfig = (): SingleContainerConfigInterface<Data> => ({
     ...props,
@@ -44,8 +45,15 @@ function VisSingleContainerFC<Data> (props: PropsWithChildren<VisSingleContainer
       setData(props.data)
     }
 
-    // Update Container and render
-    chart?.updateContainer(getConfig())
+    // Update and render
+    // ! Experimental: we use `requestAnimationFrame` to make the wrapper compatible with React 18 Strict Mode.
+    // React 18 in Strict Mode renders components twice. At the same time, this container will get updated only after
+    // the first render of its children (VisSankey, VisGraph, ...) meaning that their wrong instances (the ones
+    // that will be destroyed soon) are stored in the `__component__` property of their elements at that moment.
+    // So we delay the container update with `requestAnimationFrame` to wait till the new instances of children
+    // components are available at `__component__`.
+    if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current)
+    animationFrameRef.current = requestAnimationFrame(() => chart?.updateContainer(getConfig()))
   })
 
   return (
