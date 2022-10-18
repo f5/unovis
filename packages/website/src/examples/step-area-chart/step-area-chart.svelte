@@ -19,20 +19,22 @@
   }
 </script>
 
-<div class='panel'>
-  <VisBulletLegend items={Object.keys(data[0][curr]).map(d => ({ name: d }))}/>
-  <div class='legendSwitch'>
-    <VisBulletLegend labelClassName='legendLabel' {items} {onLegendItemClick}/>
+<step-area-chart>
+  <div class='panel'>
+    <VisBulletLegend items={Object.keys(data[0][curr]).map(d => ({ name: d }))}/>
+    <div class='legendSwitch'>
+      <VisBulletLegend labelClassName='legendLabel' {items} {onLegendItemClick}/>
+    </div>
   </div>
-</div>
-<VisXYContainer data={data} height={400} yDomain={[0, 42]}>
-  <VisArea {x} {y} curveType='stepAfter'/>
-  <VisAxis type='x' label='Year'/>
-  <VisAxis type='y' label='Number of Mentions'/>
-</VisXYContainer>
+  <VisXYContainer data={data} height={400} yDomain={[0, 42]}>
+    <VisArea {x} {y} curveType='stepAfter'/>
+    <VisAxis type='x' label='Year'/>
+    <VisAxis type='y' label='Number of Mentions'/>
+  </VisXYContainer>
+</step-area-chart>
 
 <style>
-  div {
+  step-area-chart {
     --vis-area-stroke-width: 3;
     --vis-area-stroke-opacity: 1;
     --vis-area-fill-opacity: 0.75;

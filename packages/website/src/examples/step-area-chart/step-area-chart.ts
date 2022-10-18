@@ -6,6 +6,7 @@ import './styles.css'
 const items = Object.keys(data[0][candidates[0].name]).map(c => ({ name: c }))
 
 const container = document.getElementById('vis-container')
+container?.classList.add('step-area-chart')
 
 // Basic legend
 const panel = document.createElement('div')
