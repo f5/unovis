@@ -91,6 +91,10 @@ export class Tooltip {
   }
 
   public place (pos: { x: number; y: number }): void {
+    if (!this.hasContainer()) {
+      console.warn('Unovis | Tooltip: Container was not set or is not initialized yet')
+      return
+    }
     const { config } = this
     const isContainerBody = this.isContainerBody()
     const width = this.element.offsetWidth
