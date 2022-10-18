@@ -28,19 +28,21 @@ export class Tooltip {
   private _container: HTMLElement
 
   constructor (config: TooltipConfigInterface = {}) {
-    this.config = new TooltipConfig().init(config)
-    this.components = this.config.components
-
     this.element = document.createElement('div')
     this.div = select(this.element)
       .attr('class', s.tooltip)
 
-    if (this.config.container) this.setContainer(this.config.container)
+    this.setConfig(config)
+    this.components = this.config.components
   }
 
   public setConfig (config: TooltipConfigInterface): void {
     this.prevConfig = this.config
     this.config = new TooltipConfig().init(config)
+
+    if (this.config.container && (this.config.container !== this.prevConfig?.container)) {
+      this.setContainer(this.config.container)
+    }
   }
 
   public setContainer (container: HTMLElement): void {
