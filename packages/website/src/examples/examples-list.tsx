@@ -13,6 +13,8 @@ export const examples: ExampleCollection[] = [
       require('./basic-timeline').default,
       require('./non-stacked-area-chart').default,
       require('./stacked-area-chart').default,
+      require('./baseline-area-chart').default,
+      require('./step-area-chart').default,
     ],
   },
   {
@@ -63,6 +65,7 @@ export const examples: ExampleCollection[] = [
       require('./crosshair-stacked-bar').default,
       require('./brush-grouped-bar').default,
       require('./free-brush-scatters').default,
+      require('./advanced-tooltip').default,
     ],
   },
   /* {} */

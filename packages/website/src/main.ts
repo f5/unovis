@@ -8,6 +8,7 @@ import { BrowserModule } from '@angular/platform-browser'
 // Area
 import { NonStackedAreaChartModule } from './examples/non-stacked-area-chart/non-stacked-area-chart.module'
 import { StackedAreaModule } from './examples/stacked-area-chart/stacked-area-chart.module'
+import { StepAreaChartModule } from './examples/step-area-chart/step-area-chart.module'
 
 // Bars
 import { BasicGroupedBarModule } from './examples/basic-grouped-bar/basic-grouped-bar.module'
@@ -43,6 +44,7 @@ import { ParallelLayoutGraphModule } from './examples/parallel-graph/parallel-gr
 import { CrosshairStackedBarModule } from './examples/crosshair-stacked-bar/crosshair-stacked-bar.module'
 import { BrushGroupedBarModule } from './examples/brush-grouped-bar/brush-grouped-bar.module'
 import { FreeBrushScattersModule } from './examples/free-brush-scatters/free-brush-scatters.module'
+import { BaselineAreaChartModule } from './examples/baseline-area-chart/baseline-area-chart.module'
 
 @Component({
   selector: 'app-component',
@@ -50,6 +52,8 @@ import { FreeBrushScattersModule } from './examples/free-brush-scatters/free-bru
     <!-- Area -->
     <stacked-area-chart></stacked-area-chart>
     <non-stacked-area-chart></non-stacked-area-chart>
+    <baseline-area-chart></baseline-area-chart>
+    <step-area-chart></step-area-chart>
 
     <!-- Bars -->
     <basic-grouped-bar></basic-grouped-bar>
@@ -95,46 +99,11 @@ export class AppComponent {
 @NgModule({
   declarations: [AppComponent],
   imports: [
-    BrowserModule,
-
-    // Area
-    NonStackedAreaChartModule,
-    StackedAreaModule,
-
-    // Bars
-    BasicGroupedBarModule,
-    StackedBarChartModule,
-
-    // Line
-    BasicLineChartModule,
-    MultiLineChartModule,
-    DataGapLineChartModule,
-
-    // Timeline
-    BasicTimelineModule,
-
-    // Scatter
-    BasicScatterChartModule,
-
-    // Maps
-    BasicLeafletMapModule,
-    LeafletFlowMapModule,
-    AdvancedLeafletMapModule,
-    TopojsonMapModule,
-
-    // Sankey
-    BasicSankeyModule,
-    ExpandableSankeyModule,
-
-    // Graph
-    BasicGraphModule,
-    ForceLayoutGraphModule,
-    ParallelLayoutGraphModule,
-
-    // Auxiliary
-    CrosshairStackedBarModule,
-    BrushGroupedBarModule,
-    FreeBrushScattersModule,
+    BrowserModule, BasicGroupedBarModule, BasicLeafletMapModule, BasicLineChartModule, MultiLineChartModule,
+    TopojsonMapModule, StackedBarChartModule, BrushGroupedBarModule, BasicScatterChartModule, FreeBrushScattersModule, NonStackedAreaChartModule,
+    BasicTimelineModule, BasicSankeyModule, ExpandableSankeyModule, BasicGraphModule, LeafletFlowMapModule,
+    ForceLayoutGraphModule, AdvancedLeafletMapModule, StackedAreaModule, ParallelLayoutGraphModule,
+    DataGapLineChartModule, CrosshairStackedBarModule, BaselineAreaChartModule, StepAreaChartModule,
   ],
   bootstrap: [AppComponent],
   providers: [BrowserModule],
