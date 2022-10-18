@@ -1,5 +1,5 @@
 // !!! This code was automatically generated. You should not change it !!!
-import React, { ForwardedRef, Ref, useImperativeHandle, useEffect, useRef } from 'react'
+import React, { ForwardedRef, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
 import { TopoJSONMap, TopoJSONMapConfigInterface } from '@unovis/ts'
 
 // Utils
@@ -9,7 +9,7 @@ import { arePropsEqual } from 'src/utils/react'
 import { VisComponentElement } from 'src/types/dom'
 
 export type VisTopoJSONMapRef<AreaDatum, PointDatum, LinkDatum> = {
-  component: TopoJSONMap<AreaDatum, PointDatum, LinkDatum>;
+  component?: TopoJSONMap<AreaDatum, PointDatum, LinkDatum>;
 }
 
 export type VisTopoJSONMapProps<AreaDatum, PointDatum, LinkDatum> = TopoJSONMapConfigInterface<AreaDatum, PointDatum, LinkDatum> & {
@@ -20,23 +20,26 @@ export type VisTopoJSONMapProps<AreaDatum, PointDatum, LinkDatum> = TopoJSONMapC
 // eslint-disable-next-line @typescript-eslint/naming-convention
 function VisTopoJSONMapFC<AreaDatum, PointDatum, LinkDatum> (props: VisTopoJSONMapProps<AreaDatum, PointDatum, LinkDatum>, fRef: ForwardedRef<VisTopoJSONMapRef<AreaDatum, PointDatum, LinkDatum>>): JSX.Element {
   const ref = useRef<VisComponentElement<TopoJSONMap<AreaDatum, PointDatum, LinkDatum>>>(null)
+  const [component, setComponent] = useState<TopoJSONMap<AreaDatum, PointDatum, LinkDatum>>()
 
   // On Mount
   useEffect(() => {
     const element = (ref.current as VisComponentElement<TopoJSONMap<AreaDatum, PointDatum, LinkDatum>>)
-    element.__component__?.destroy() // Destroy component if exists already (to comply with React 18 strict mode, which renders components twice in dev mode)
-    element.__component__ = new TopoJSONMap(props)
-    // We don't have a clean up function because the component will be destroyed by its container (e.g. XYContainer or SingleContainer)
+
+    const c = new TopoJSONMap<AreaDatum, PointDatum, LinkDatum>(props)
+    setComponent(c)
+    element.__component__ = c
+
+    return () => c.destroy()
   }, [])
 
   // On Props Update
   useEffect(() => {
-    const component = (ref.current as VisComponentElement<TopoJSONMap<AreaDatum, PointDatum, LinkDatum>>).__component__
     if (props.data) component?.setData(props.data)
     component?.setConfig(props)
   })
 
-  useImperativeHandle(fRef, () => ({ component: (ref.current as VisComponentElement<TopoJSONMap<AreaDatum, PointDatum, LinkDatum>>).__component__ }))
+  useImperativeHandle(fRef, () => ({ component }), [component])
   return <vis-component ref={ref} />
 }
 

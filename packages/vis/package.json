@@ -1,12 +1,12 @@
 {
   "name": "@unovis/ts",
-  "version": "1.0.0-beta.3",
+  "version": "1.0.0-beta.4",
   "license": "Apache-2.0",
   "main": "./index.js",
   "module": "./index.js",
   "typings": "./index.d.ts",
   "type": "module",
-  "sideEffects": ["styles/index.js"],
+  "sideEffects": ["styles/index.js", "lib/styles/index.js"],
   "scripts": {
     "build": "sha=$(tar cf - ./src | shasum); if [[ $(echo $sha) == $(< .srcsha) ]] && [[ -d \"./lib\" ]]; then echo \"Lib Build Exists\"; else npm run forcebuild; echo $sha > .srcsha; fi",
     "forcebuild": "rimraf lib; rollup -c",

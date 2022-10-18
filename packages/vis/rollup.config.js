@@ -56,6 +56,7 @@ export default [
   {
     input: 'src/index.ts',
     external: regexesOfPackages,
+    treeshake: false,
     output: {
       dir: 'lib',
       sourcemap: true,
