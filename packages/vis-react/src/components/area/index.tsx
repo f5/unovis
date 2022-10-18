@@ -26,15 +26,11 @@ function VisAreaFC<Datum> (props: VisAreaProps<Datum>, fRef: ForwardedRef<VisAre
   useEffect(() => {
     const element = (ref.current as VisComponentElement<Area<Datum>>)
 
-    // React 18 in Strict Mode renders components twice. At the same time, a Container that contains this component
-    // (e.g. XYContainer) will be updated only after the first render. So we need to make sure that the component will
-    // be initialized only once and won't get destroyed after the first render
-    const hasAlreadyBeenInitialized = element.__component__
-    const c = element.__component__ || new Area<Datum>(props)
+    const c = new Area<Datum>(props)
     setComponent(c)
     element.__component__ = c
 
-    return () => hasAlreadyBeenInitialized && c.destroy()
+    return () => c.destroy()
   }, [])
 
   // On Props Update

@@ -26,15 +26,11 @@ function VisSankeyFC<N extends SankeyInputNode, L extends SankeyInputLink> (prop
   useEffect(() => {
     const element = (ref.current as VisComponentElement<Sankey<N, L>>)
 
-    // React 18 in Strict Mode renders components twice. At the same time, a Container that contains this component
-    // (e.g. XYContainer) will be updated only after the first render. So we need to make sure that the component will
-    // be initialized only once and won't get destroyed after the first render
-    const hasAlreadyBeenInitialized = element.__component__
-    const c = element.__component__ || new Sankey<N, L>(props)
+    const c = new Sankey<N, L>(props)
     setComponent(c)
     element.__component__ = c
 
-    return () => hasAlreadyBeenInitialized && c.destroy()
+    return () => c.destroy()
   }, [])
 
   // On Props Update
