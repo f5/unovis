@@ -36,6 +36,8 @@ export class CompositeComponent implements AfterViewInit {
   navStackedBarConfig: StackedBarConfigInterface<SampleDatum>
   composite: XYContainer<SampleDatum>
   navigation: XYContainer<SampleDatum>
+  tooltip = new Tooltip()
+
   @ViewChild('chart', { static: false }) chartRef: ElementRef
   @ViewChild('navigation', { static: false }) navigationRef: ElementRef
   @ViewChild('legendRef', { static: false }) legendRef: ElementRef
@@ -72,11 +74,7 @@ export class CompositeComponent implements AfterViewInit {
         tickTextAlign: TextAlign.Left,
         tickTextWidth: 80,
       }),
-      tooltip: new Tooltip({
-        triggers: {
-          [StackedBar.selectors.bar]: (d) => '<span>Bar Chart</span>',
-        },
-      }),
+      tooltip: this.tooltip,
       crosshair: new Crosshair({
         template: (d) => '<span>Crosshair</span>',
       }),
@@ -100,6 +98,17 @@ export class CompositeComponent implements AfterViewInit {
     }
 
     this.navigation = new XYContainer<SampleDatum>(this.navigationRef.nativeElement, navConfig, data)
+
+    // Tooltip
+    this.tooltip.setConfig({
+      container: document.body,
+      triggers: {
+        [StackedBar.selectors.bar]: (d) => '<span>Bar Chart</span>',
+      },
+      attributes: {
+        type: 'stacked-bar-tooltip',
+      },
+    })
   }
 
   onLegendItemClick (event): void {
