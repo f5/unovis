@@ -14,7 +14,7 @@ const example: Example = {
   title: 'Area with Baseline',
   description: <div>
     Works acquired by Museum of Modern Art categorized by department
-    (source : <a href="https://github.com/MuseumofModernArt/collection" target="_blank">MoMA collection</a>)
+    (source: <a href="https://github.com/MuseumofModernArt/collection" target="_blank">MoMA collection</a>)
   </div>,
   preview: require('./preview.png').default,
   codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,

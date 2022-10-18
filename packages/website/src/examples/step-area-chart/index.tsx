@@ -14,7 +14,7 @@ const example: Example = {
   title: 'Step Area Chart',
   description: <div>
     <p>Mentions of 2016 US Presidential Candidates in Hip Hop Lyrics from 2007 - 2016</p>
-    Data obtained from <a href="https://github.com/fivethirtyeight/data/tree/master/hip-hop-candidate-lyrics" target="_blank">FiveThirtyEight</a> (source : <a href="https://genius.com/" target="_blank">Genius</a>)
+    Data obtained from <a href="https://github.com/fivethirtyeight/data/tree/master/hip-hop-candidate-lyrics" target="_blank">FiveThirtyEight</a> (source: <a href="https://genius.com/" target="_blank">Genius</a>)
   </div>,
   preview: require('./preview.png').default,
   codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,
