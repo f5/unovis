@@ -117,3 +117,20 @@ a {
     }
   }
 }
+
+.with-border-lines {
+  --stroke: #fff;
+  --stroke-dark: #292b34;
+
+  --vis-area-stroke-width: 1px;
+  --vis-area-stroke: var(--stroke);
+  --vis-area-stroke-dark: var(--stroke-dark);
+
+  --vis-donut-segment-stroke-width: 1px;
+
+  --vis-stacked-bar-stroke-width: 1px;
+  --vis-stacked-bar-stroke: var(--stroke);
+  --vis-stacked-bar-stroke-dark: var(--stroke-dark);
+
+  --vis-timeline-stroke-width: 1px;
+}

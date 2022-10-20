@@ -160,23 +160,22 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfig<Datum
     rects.exit().remove()
 
     // Lines
-    const lines = this._linesGroup.selectAll<SVGLineElement, Datum>(`.${s.line}`)
+    const lines = this._linesGroup.selectAll<SVGRectElement, Datum>(`.${s.line}`)
       .data(data, (d: Datum, i) => `${getString(d, config.id, i) ?? i}`)
-
-    const linesEnter = lines.enter().append('line')
+    const linesEnter = lines.enter().append('rect')
       .attr('class', s.line)
-      .style('stroke', (d, i) => getColor(d, config.color, i))
+      .classed('odd', config.alternatingRowColors ? (_, i) => !(i % 2) : null)
+      .style('fill', (d, i) => getColor(d, config.color, i))
       .attr('transform', 'translate(0, 10)')
       .style('opacity', 0)
     this._positionLines(linesEnter, ordinalScale)
 
     const linesMerged = smartTransition(linesEnter.merge(lines), duration)
-      .style('stroke', (d, i) => getColor(d, config.color, ordinalScale(this._getRecordType(d, i))))
-      .attr('stroke-width', (d, i) => getNumber(d, config.lineWidth, i))
+      .style('fill', (d, i) => getColor(d, config.color, ordinalScale(this._getRecordType(d, i))))
       .attr('transform', 'translate(0, 0)')
       .style('cursor', (d, i) => getString(d, config.cursor, i))
-      .style('stroke-linecap', (d, i) => getString(d, config.lineCap, i))
       .style('opacity', 1)
+
     this._positionLines(linesMerged, ordinalScale)
 
     smartTransition(lines.exit(), duration)
@@ -210,19 +209,26 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfig<Datum
   }
 
   private _positionLines (
-    selection: Selection<SVGLineElement, Datum, SVGGElement, unknown> | Transition<SVGLineElement, Datum, SVGGElement, unknown>,
+    selection: Selection<SVGRectElement, Datum, SVGGElement, unknown> | Transition<SVGRectElement, Datum, SVGGElement, unknown>,
     ordinalScale: ScaleOrdinal<string, number>
-  ): typeof selection {
+  ): void {
     const { config, xScale, yScale } = this
     const yRange = yScale.range()
     const yStart = Math.min(...yRange)
 
-    return selection
-      .attr('x1', (d, i) => xScale(getNumber(d, config.x, i)))
-      .attr('x2', (d, i) => xScale(getNumber(d, config.x, i) + getNumber(d, config.length, i)))
-      .attr('y1', (d, i) => yStart + (ordinalScale(this._getRecordType(d, i)) + 0.5) * config.rowHeight)
-      .attr('y2', (d, i) => yStart + (ordinalScale(this._getRecordType(d, i)) + 0.5) * config.rowHeight)
-      .style('opacity', 1)
+    selection.each((d, i, elements) => {
+      const x = getNumber(d, config.x, i)
+      const y = ordinalScale(this._getRecordType(d, i)) * config.rowHeight
+      const length = getNumber(d, config.length, i)
+      const height = getNumber(d, config.lineWidth, i)
+      select(elements[i])
+        .attr('x', xScale(x))
+        .attr('y', yStart + y + (config.rowHeight - height) / 2)
+        .attr('width', xScale(x + length) - xScale(x))
+        .attr('height', height)
+        .attr('rx', config.lineCap ? height / 2 : null)
+        .style('opacity', 1)
+    })
   }
 
   private _onScrollbarDrag (event: D3DragEvent<any, any, any>): void {

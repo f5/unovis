@@ -101,10 +101,8 @@ export class VisTimelineComponent<Datum> implements TimelineConfigInterface<Datu
   /** Width of the timeline items. Default: `8` */
   @Input() lineWidth?: NumericAccessor<Datum>
 
-  /** Line cap: 'butt', 'round' or 'square'.
-   * Default appearance is `round` and comes from the `--vis-timeline-line-cap`` CSS variable.
-   * Default configuration object value: `undefined` */
-  @Input() lineCap?: StringAccessor<Datum>
+  /** Display rounded ends for timeline items. Default: `true` */
+  @Input() lineCap?: boolean
 
   /** Timeline row height. Default: `22` */
   @Input() rowHeight?: number

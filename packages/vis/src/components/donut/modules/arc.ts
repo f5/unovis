@@ -23,7 +23,6 @@ export function createArc<Datum> (
 ): void {
   selection
     .style('fill', (d, i) => getColor(d.data, config.color, i))
-    .style('stroke', (d, i) => getColor(d.data, config.color, i))
     .style('opacity', 0)
     .each((d, i, els) => {
       const arcNode: ArcNode = els[i]
@@ -47,7 +46,6 @@ export function updateArc<Datum> (
   selection
     .style('transition', `fill ${duration}ms`) // Animate color with CSS because we're using CSS-variables
     .style('fill', (d, i) => getColor(d.data, config.color, i))
-    .style('stroke', (d, i) => getColor(d.data, config.color, i))
 
   const setOpacity = (d: DonutArcDatum<Datum>): number => (config.showEmptySegments || d.value) ? 1 : 0
   if (duration) {

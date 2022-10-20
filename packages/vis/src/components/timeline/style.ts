@@ -17,7 +17,7 @@ export const globalStyles = injectGlobal`
 
     --vis-timeline-cursor: default;
     --vis-timeline-line-color: var(--vis-color-main);
-    --vis-timeline-line-cap: round;
+    --vis-timeline-stroke-width: 0px;
 
     --vis-dark-timeline-row-even-fill: #292B34;
     --vis-dark-timeline-row-odd-fill: #6C778C;
@@ -45,10 +45,14 @@ export const lines = css`
 
 export const line = css`
   label: line;
-  fill: none;
-  stroke: var(--vis-timeline-line-color);
+  fill: var(--vis-timeline-line-color);
   cursor: var(--vis-timeline-cursor);
-  stroke-linecap: var(--vis-timeline-line-cap);
+  stroke: var(--vis-timeline-row-even-fill);
+  stroke-width: var(--vis-timeline-stroke-width);
+
+  &.odd {
+    stroke: var(--vis-timeline-row-odd-fill);
+  }
 `
 
 export const rows = css`
