@@ -227,23 +227,29 @@ export class Graph<
         const refreshRateMs = 35
         this._timer = interval(this._onLinkFlowTimerFrame.bind(this), refreshRateMs)
       }
+
+      // Zoom
+      if (disableZoom) this.g.on('.zoom', null)
+      else this.g.call(this._zoomBehavior).on('dblclick.zoom', null)
+
+      if (!this._firstRender && !disableZoom) {
+        const transform = zoomTransform(this.g.node())
+        this._onZoom(transform)
+      }
+
+      // While the graph is animating we disable pointer events on the graph group
+      if (animDuration) { this._graphGroup.attr('pointer-events', 'none') }
+      smartTransition(this._graphGroup, animDuration)
+        .on('end interrupt', () => {
+          this._graphGroup.attr('pointer-events', null)
+        })
+
+      // We need to set up events and attributes again because the rendering might have been delayed by the layout
+      // calculation and they were not set up properly (see the render function of `ComponentCore`)
+      this._setUpComponentEventsThrottled()
+      this._setCustomAttributesThrottled()
     })
 
-    // Zoom
-    if (disableZoom) this.g.on('.zoom', null)
-    else this.g.call(this._zoomBehavior).on('dblclick.zoom', null)
-
-    if (!this._firstRender && !disableZoom) {
-      const transform = zoomTransform(this.g.node())
-      this._onZoom(transform)
-    }
-
-    // While the graph is animating we disable pointer events on the graph group
-    if (animDuration) { this._graphGroup.attr('pointer-events', 'none') }
-    smartTransition(this._graphGroup, animDuration)
-      .on('end interrupt', () => {
-        this._graphGroup.attr('pointer-events', null)
-      })
 
     this._firstRender = false
   }
@@ -380,7 +386,7 @@ export class Graph<
         .call(this._zoomBehavior.transform, transform)
       this._onZoom(transform)
     } else {
-      console.warn('Graph | Node data is not defined. Check if the component has been initialized.')
+      console.warn('Unovis | Graph: Node data is not defined. Check if the component has been initialized.')
     }
   }
 
@@ -412,7 +418,7 @@ export class Graph<
 
   private _selectNode (node: GraphNode<N>): void {
     const { datamodel: { nodes, links } } = this
-    if (!node) console.warn('Graph | Select Node: Not found')
+    if (!node) console.warn('Unovis | Graph: Select Node: Not found')
     this._selectedNode = node
 
     // Apply grey out
@@ -448,7 +454,7 @@ export class Graph<
 
   private _selectLink (link: GraphLink<N, L>): void {
     const { datamodel: { nodes, links } } = this
-    if (!link) console.warn('Graph | Select Link: Not found')
+    if (!link) console.warn('Unovis: Graph: Select Link: Not found')
     this._selectedLink = link
     const selectedLinkSource = link?.source as GraphNode<N>
     const selectedLinkTarget = link?.target as GraphNode<N>
@@ -570,7 +576,7 @@ export class Graph<
     if (!this._initialTransform) this._initialTransform = transform
 
     // If the event was triggered by a mouse interaction (pan or zoom) we don't
-    //   refit the layout after recalculation (eg. on container resize)
+    //   refit the layout after recalculation (e.g. on container resize)
     if (event?.sourceEvent) {
       const diff = Object.keys(transform).reduce((acc, prop) => {
         const val = transform[prop]
@@ -785,7 +791,7 @@ export class Graph<
     const node = nodes.find(n => n._id === id)
 
     if (!node) {
-      console.warn(`Graph | Node ${id} not found`)
+      console.warn(`Unovis | Graph: Node ${id} not found`)
       return undefined
     } else {
       return {
