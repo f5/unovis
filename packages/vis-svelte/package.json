@@ -1,6 +1,6 @@
 {
   "name": "@unovis/svelte",
-  "version": "1.0.0-beta.5",
+  "version": "1.0.0-beta.6",
   "description": "Svelte wrapper for Unovis",
   "license": "Apache-2.0",
   "main": "./index.js",
@@ -15,7 +15,7 @@
     "publish-dist": "cp ./package.json ./dist; cp ../../LICENSE ./dist; cd ./dist; npm publish; rm -rf .cache"
   },
   "peerDependencies": {
-    "@unovis/ts": "1.0.0-beta.5",
+    "@unovis/ts": "1.0.0-beta.6",
     "svelte": "^3.48.0"
   },
   "devDependencies": {

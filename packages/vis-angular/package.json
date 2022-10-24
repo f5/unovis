@@ -1,6 +1,6 @@
 {
   "name": "@unovis/angular",
-  "version": "1.0.0-beta.5",
+  "version": "1.0.0-beta.6",
   "license": "Apache-2.0",
   "description": "Angular wrapper for Unovis",
   "scripts": {
@@ -25,7 +25,7 @@
     "@angular/common": "^12.0.3",
     "@angular/compiler": "^12.0.3",
     "@angular/core": "^12.0.3",
-    "@unovis/ts": "1.0.0-beta.5"
+    "@unovis/ts": "1.0.0-beta.6"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^12.0.3",
