@@ -13,15 +13,15 @@ export const globalStyles = injectGlobal`
     --vis-area-stroke-width: 0px;
     --vis-area-stroke-dasharray: none;
     --vis-area-stroke-opacity: 1;
-    --vis-area-hover-fill-opacity: var(--vis-area-fill-opacity);
-    --vis-area-hover-stroke-width: var(--vis-area-stroke-width);
+    --vis-area-hover-fill-opacity: none;
+    --vis-area-hover-stroke-width: none;
 
-    --vis-area-stroke-dark: var(--vis-color-main);
+    --vis-dark-area-stroke: var(--vis-color-main);
 
   }
 
   body.theme-dark ${`.${root}`} {
-   --vis-area-stroke: var(--vis-area-stroke-dark);
+   --vis-area-stroke: var(--vis-dark-area-stroke);
   }
 
 `
