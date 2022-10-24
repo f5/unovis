@@ -164,7 +164,9 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfig<Datum
       .data(data, (d: Datum, i) => `${getString(d, config.id, i) ?? i}`)
     const linesEnter = lines.enter().append('rect')
       .attr('class', s.line)
-      .classed('odd', config.alternatingRowColors ? (_, i) => !(i % 2) : null)
+      .classed('odd', config.alternatingRowColors
+        ? (d, i) => !(recordLabelsUnique.indexOf(this._getRecordType(d, i)) % 2)
+        : null)
       .style('fill', (d, i) => getColor(d, config.color, i))
       .attr('transform', 'translate(0, 10)')
       .style('opacity', 0)
