@@ -8,15 +8,16 @@
 
   // Reactive statements
   let expanded = [mainSite]
+  console.log('test')
   $: panels = expanded.map(site => sites[site].panel)
   $: data = {
-      nodes: nodes.flatMap<NodeDatum>(n => expanded.includes(n.site) ? n.children : n),
-      links: links.map(l => ({
-        ...l,
-        source: expanded.includes(l.sourceGroup) ? l.source : sites[l.sourceGroup].groupNodeId,
-        target: expanded.includes(l.targetGroup) ? l.target : sites[l.targetGroup].groupNodeId,
-      })),
-    }
+    nodes: nodes.flatMap<NodeDatum>(n => expanded.includes(n.site) ? n.children : n),
+    links: links.map(l => ({
+      ...l,
+      source: expanded.includes(l.sourceGroup) ? l.source : sites[l.sourceGroup].groupNodeId,
+      target: expanded.includes(l.targetGroup) ? l.target : sites[l.targetGroup].groupNodeId,
+    })),
+  }
 
   // Graph config
   const graphConfig = {
@@ -24,8 +25,8 @@
       [Graph.selectors.node]: {
         click: (d: NodeDatum) => {
           expanded = d.site === mainSite ? [mainSite] : [mainSite, d.site]
-        }
-      }
+        },
+      },
     },
     nodeGaugeValue: (n: NodeDatum) => n.score,
     nodeGaugeFill: (n: NodeDatum) => StatusMap[n.status]?.color,
@@ -50,7 +51,7 @@
     <VisGraph
       {...graphConfig}
       layoutType={GraphLayoutType.Parallel}
-      layoutGroupOrder={[ 'west', mainSite, 'east']}
+      layoutGroupOrder={['west', mainSite, 'east']}
       layoutParallelNodesPerColumn={4}
       {panels}
     />

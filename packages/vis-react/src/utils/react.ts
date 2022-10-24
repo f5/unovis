@@ -1,4 +1,4 @@
-import { ReactElement, ReactNode, ReactChild, ReactFragment } from 'react'
+import { ReactElement, ReactNode } from 'react'
 import _isEqual from 'lodash/isEqual.js'
 
 export function arePropsEqual<PropTypes extends { children?: ReactNode }> (prevProps: PropTypes, nextProps: PropTypes): boolean {

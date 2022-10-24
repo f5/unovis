@@ -21,5 +21,6 @@ export class BasicLeafletMapComponent {
     '<a href="https://www.maptiler.com/copyright/" target="_blank">MapTiler</a>',
     '<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a>',
   ]
+
   data = data
 }

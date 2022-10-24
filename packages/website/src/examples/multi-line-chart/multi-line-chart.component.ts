@@ -17,7 +17,7 @@ export class MultiLineChartComponent {
 
   legendItems: BulletLegendItemInterface[] = ['austin', 'ny', 'sf'].map(
     city => ({
-      name: labels[city]
+      name: labels[city],
     })
   )
 

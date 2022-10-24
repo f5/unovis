@@ -25,5 +25,6 @@ export class BasicScatterChartComponent {
       ${d.major}<br/>Number of graduates: ${d.total.toLocaleString()}
     `,
   }
+
   xTicks: StringAccessor<number> = formatNumber
 }

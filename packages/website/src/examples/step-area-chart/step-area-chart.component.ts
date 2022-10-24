@@ -1,5 +1,5 @@
 import { Component } from '@angular/core'
-import { BulletLegendItemInterface, CurveType} from '@unovis/ts'
+import { BulletLegendItemInterface, CurveType } from '@unovis/ts'
 import { candidates, data, DataRecord } from './data'
 
 @Component({
@@ -13,9 +13,9 @@ export class StepAreaChartComponent {
   data = data
   legendItems = Object.keys(data[0][candidates[0].name]).map(c => ({ name: c as string }))
   x = (d: DataRecord): number => d.year
-  y: ((d: DataRecord)=> number)[]
+  y: ((d: DataRecord) => number)[]
 
-  constructor() {
+  constructor () {
     this.setCandidate(candidates[0])
   }
 

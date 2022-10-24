@@ -11,7 +11,7 @@ type LegendItem = BulletLegendItemInterface & GroupItem
 export class BrushGroupedBarComponent {
   data = data
   domain = [1980, 1990]
-  margin: { top: 20, left: 60 }
+  margin: { top: 20; left: 60 }
   duration: number | undefined
   numTicks = 10
 

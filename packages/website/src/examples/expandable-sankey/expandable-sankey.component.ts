@@ -1,16 +1,16 @@
 import { Component } from '@angular/core'
-import {Sankey, SankeyLink, SankeyNode} from '@unovis/ts'
+import { Sankey, SankeyLink, SankeyNode } from '@unovis/ts'
 
 import { getColor, getChildren, LinkDatum, NodeDatum, sankeyData, sourceNode } from './data'
 
 @Component({
   selector: 'expandable-sankey',
-  templateUrl: './expandable-sankey.component.html'
+  templateUrl: './expandable-sankey.component.html',
 })
 export class ExpandableSankeyComponent {
   data = {
     nodes: [sourceNode, ...getChildren(sourceNode)],
-    links: sankeyData.links
+    links: sankeyData.links,
   }
 
   nodeColor = getColor
@@ -20,12 +20,13 @@ export class ExpandableSankeyComponent {
     if (d.expanded || d.depth === 0) return ''
     return `${((d.value / sourceNode.value) * 100).toFixed(1)}%`
   }
+
   linkColor = (d: SankeyLink<NodeDatum, LinkDatum>) => getColor(d.source)
 
   events = {
     [Sankey.selectors.node]: {
       click: this.toggleGroup.bind(this),
-    }
+    },
   }
 
   toggleGroup (n: SankeyNode<NodeDatum, LinkDatum>): void {

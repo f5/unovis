@@ -24,5 +24,5 @@ export class FlowLegendConfig extends Config implements FlowLegendConfigInterfac
   arrowSymbol = '▶'
   lineColor = undefined
   labelColor = undefined
-  onLegendItemClick = undefined;
+  onLegendItemClick = undefined
 }

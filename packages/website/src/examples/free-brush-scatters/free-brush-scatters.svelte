@@ -9,7 +9,7 @@
 
   const legendItems = categories.map(v => ({ name: v, color: colorScale(v) }))
   let selection
-  function onBrushEnd(s: [[number, number], [number, number]] | null)  {
+  function onBrushEnd (s: [[number, number], [number, number]] | null) {
     selection = s
   }
 

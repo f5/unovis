@@ -319,7 +319,13 @@ export class Sankey<
     }, config.highlightDelay)
   }
 
-  recursiveSetSubtreeState (node: SankeyNode<N, L>, linksKey: 'sourceLinks' | 'targetLinks', nodeKey: 'source' | 'target', key: string, value: any): void {
+  recursiveSetSubtreeState (
+    node: SankeyNode<N, L>,
+    linksKey: 'sourceLinks' | 'targetLinks',
+    nodeKey: 'source' | 'target',
+    key: string,
+    value: unknown
+  ): void {
     node._state[key] = value
 
     for (const l of node[linksKey]) {

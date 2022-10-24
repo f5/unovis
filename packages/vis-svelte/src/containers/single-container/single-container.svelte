@@ -34,7 +34,7 @@
     },
     removeComponent: (_: ComponentCore<Data>) => {
       updateConfig({ component: undefined })
-    }
+    },
   })
 
 </script>

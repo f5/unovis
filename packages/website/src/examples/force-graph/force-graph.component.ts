@@ -5,7 +5,7 @@ import { data, NodeDatum, LinkDatum } from './data'
 
 @Component({
   selector: 'force-graph',
-  templateUrl: './force-graph.component.html'
+  templateUrl: './force-graph.component.html',
 })
 export class ForceLayoutGraphComponent {
   data = data

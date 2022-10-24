@@ -21,6 +21,7 @@ svelte                                     perpetual       MIT           3.48.0 
 @docusaurus/module-type-aliases            perpetual       MIT           2.0.0-beta.21      n/a
 @tsconfig/docusaurus                       perpetual       MIT           1.0.4              n/a
 @tsconfig/svelte                           perpetual       MIT           2.0.0              n/a
+eslint-plugin-svelte                       perpetual       MIT           2.10.0             Yosuke Ota
 ngc-esbuild                                perpetual       ISC           0.0.75             Joe Cserko
 raw-loader                                 perpetual       MIT           4.0.2              Tobias Koppers @sokra
 rollup                                     perpetual       MIT           2.61.1             Rich Harris

@@ -47,8 +47,8 @@ export class FreeBrushConfig<Datum> extends XYComponentConfig<Datum> implements 
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function */
   onBrushEnd = (s: FreeBrushSelection, e: D3BrushEvent<Datum>, userDriven: boolean): void => {}
   handleWidth = 1
-  selection: FreeBrushSelection = undefined;
-  selectionMinLength = undefined;
-  mode: FreeBrushMode = FreeBrushMode.X;
-  autoHide = true;
+  selection: FreeBrushSelection = undefined
+  selectionMinLength = undefined
+  mode: FreeBrushMode = FreeBrushMode.X
+  autoHide = true
 }

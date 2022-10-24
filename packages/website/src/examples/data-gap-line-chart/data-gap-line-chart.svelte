@@ -3,7 +3,7 @@
   import type { DataRecord, Country } from './data'
   import { countries, data, legendItems } from './data'
 
-  function getY (c: Country): (d: DataRecord) => number{
+  function getY (c: Country): (d: DataRecord) => number {
     return (d: DataRecord) => d[c.id]
   }
 
@@ -19,9 +19,9 @@
   let curr = 0
   $: fallbackValue = legendItems[curr].value
   $: items = legendItems.map((o, i) => ({
-      name: o.name,
-      inactive: curr !== i,
-      color: countries[0].color,
+    name: o.name,
+    inactive: curr !== i,
+    color: countries[0].color,
   }))
 
   function onLegendItemClick (_, i: number): void {

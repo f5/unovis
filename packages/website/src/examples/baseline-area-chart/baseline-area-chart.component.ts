@@ -3,7 +3,7 @@ import { data, categories, Category, DataRecord } from './data'
 
 @Component({
   selector: 'baseline-area-chart',
-  templateUrl: './baseline-area-chart.component.html'
+  templateUrl: './baseline-area-chart.component.html',
 })
 export class BaselineAreaChartComponent {
   data = data
@@ -22,5 +22,6 @@ export class BaselineAreaChartComponent {
     const dir = i % 2 === 1 ? -(i - 1) : i
     return this.max / 2 + dir * 1000
   })
+
   tickFormat = (i: number) => `${Math.abs(i - this.max / 2)}`
 }

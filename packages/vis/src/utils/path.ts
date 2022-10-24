@@ -3,6 +3,19 @@ import { line, curveCardinal, curveCardinalClosed } from 'd3-shape'
 
 // Utils
 import { clamp } from 'utils/data'
+
+export type RoundedRectPathOptions = {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  r: number;
+  tl: boolean;
+  tr: boolean;
+  bl: boolean;
+  br: boolean;
+}
+
 /*
  * Generate SVG path for rectangle with rounded corners
  *
@@ -18,7 +31,17 @@ import { clamp } from 'utils/data'
  * @param {Number} [props.r=0] - Corner Radius
  * @return {String} Path string for the `d` attribute
  */
-export function roundedRectPath ({ x, y, w, h, tl = false, tr = false, bl = false, br = false, r = 0 }): string {
+export function roundedRectPath ({
+  x,
+  y,
+  w,
+  h,
+  tl = false,
+  tr = false,
+  bl = false,
+  br = false,
+  r = 0,
+}: RoundedRectPathOptions): string {
   let path
   path = `M${x + r},${y}h${w - 2 * r}`
 
@@ -111,7 +134,16 @@ export function circlePath (cx: number, cy: number, r: number): string {
     a ${r},${r} 0 1,1 ${-r * 2},0`
 }
 
-export function scoreRectPath ({ x, y, w, h, r = 0, score = 1 }): string {
+export type ScoreRectPathOptions = {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  r: number;
+  score: number;
+}
+
+export function scoreRectPath ({ x, y, w, h, r = 0, score = 1 }: ScoreRectPathOptions): string {
   let path
   const side = 1 / 4
   const halfSide = side / 2

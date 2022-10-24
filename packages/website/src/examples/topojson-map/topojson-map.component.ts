@@ -5,8 +5,8 @@ import { WorldMapTopoJSON } from '@unovis/ts/maps'
 import { palette, data, ageRange, yearRange, AreaDatum } from './data'
 
 const yearIndex = Scale.scaleLinear()
-    .domain(yearRange)
-    .rangeRound([0, yearRange[1] - yearRange[0]])
+  .domain(yearRange)
+  .rangeRound([0, yearRange[1] - yearRange[0]])
 
 @Component({
   selector: 'topojson-map',

@@ -1,7 +1,8 @@
 import { select } from 'd3-selection'
 
-export function getHTMLTransform (el): number[] {
+export function getHTMLTransform (el: HTMLElement): number[] {
   const results = select(el).style('transform')
+    // eslint-disable-next-line max-len
     .match(/matrix(?:(3d)\(-{0,1}\d+\.?\d*(?:, -{0,1}\d+\.?\d*)*(?:, (-{0,1}\d+\.?\d*))(?:, (-{0,1}\d+\.?\d*))(?:, (-{0,1}\d+\.?\d*)), -{0,1}\d+\.?\d*\)|\(-{0,1}\d+\.?\d*(?:, -{0,1}\d+\.?\d*)*(?:, (-{0,1}\d+\.?\d*))(?:, (-{0,1}\d+\.?\d*))\))/)
 
   if (!results) return [0, 0, 0]

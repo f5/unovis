@@ -4,7 +4,7 @@ import { colorMap, data, DataRecord, ProductType } from './data'
 
 @Component({
   selector: 'basic-timeline',
-  templateUrl: './basic-timeline.component.html'
+  templateUrl: './basic-timeline.component.html',
 })
 export class BasicTimelineComponent {
   labelWidth = 220

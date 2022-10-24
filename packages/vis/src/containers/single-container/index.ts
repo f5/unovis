@@ -4,7 +4,6 @@ import 'styles/index'
 // Core
 import { ContainerCore } from 'core/container'
 import { ComponentCore } from 'core/component'
-
 import { ComponentConfigInterface } from 'core/component/config'
 
 // Utils
@@ -63,7 +62,11 @@ export class SingleContainer<Data> extends ContainerCore {
     if (!preventRender) this.render()
   }
 
-  public update (containerConfig: SingleContainerConfigInterface<Data>, componentConfig?, data?: Data): void {
+  public update (
+    containerConfig: SingleContainerConfigInterface<Data>,
+    componentConfig?: ComponentConfigInterface,
+    data?: Data
+  ): void {
     if (containerConfig) this.updateContainer(containerConfig, true)
     if (componentConfig) this.updateComponent(componentConfig, true)
     if (data) this.setData(data, true)

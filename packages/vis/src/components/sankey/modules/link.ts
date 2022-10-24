@@ -16,7 +16,15 @@ import { SankeyConfig } from '../config'
 // Styles
 import * as s from '../style'
 
-export function linkPath ({ x0, x1, y0, y1, width }): string {
+export type LinkPathOptions = {
+  x0: number;
+  x1: number;
+  y0: number;
+  y1: number;
+  width: number;
+}
+
+export function linkPath ({ x0, x1, y0, y1, width }: LinkPathOptions): string {
   const top0 = y0 - width / 2
   const top1 = y1 - width / 2
   const bottom0 = y0 + width / 2

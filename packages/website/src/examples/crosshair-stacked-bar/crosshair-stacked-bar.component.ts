@@ -14,7 +14,7 @@ export class CrosshairStackedBarComponent {
 
   legendHTML: SafeHtml
 
-  constructor(private sanitizer: DomSanitizer) {
+  constructor (private sanitizer: DomSanitizer) {
     this.legendHTML = sanitizer.bypassSecurityTrustHtml(
       labels.map(l => `<span style="margin-right: 10px;">${this.getIcon(l)}</span>`).join('')
     )
@@ -32,7 +32,7 @@ export class CrosshairStackedBarComponent {
     }).format
     const dataLegend = labels.filter(f => d[f.format] > 0)
       .reverse()
-      .map(f => `<span>${this.getIcon({ ...f, label: numberFormat(d[f.format] * Math.pow(10, 10) ) })}`)
+      .map(f => `<span>${this.getIcon({ ...f, label: numberFormat(d[f.format] * Math.pow(10, 10)) })}`)
       .join('</span>')
     return `<div><b>${d.year}</b>: ${dataLegend}</div>`
   }

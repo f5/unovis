@@ -26,7 +26,11 @@ export function trimText (str = '', length = 15, type = TrimMode.Middle): string
   return result
 }
 
-export function trimSVGTextToPixel (svgTextSelection: Selection<SVGTextElement, any, SVGElement, any>, minWidth = 50, trimType = TrimMode.Middle): void {
+export function trimSVGTextToPixel (
+  svgTextSelection: Selection<SVGTextElement, any, SVGElement, any>,
+  minWidth = 50,
+  trimType = TrimMode.Middle
+): void {
   let i = 0
   let textBBox = svgTextSelection.node().getBBox()
   const text = svgTextSelection.text()
@@ -200,7 +204,14 @@ export function wrapSVGText (textElement: Selection<SVGTextElement, any, SVGElem
   })
 }
 
-export function trimSVGText (svgTextSelection: Selection<SVGTextElement, any, SVGElement, any>, maxWidth = 50, trimType = TrimMode.Middle, fastMode?: boolean, fontSize?: number, widthToHeightRatio?: number): boolean {
+export function trimSVGText (
+  svgTextSelection: Selection<SVGTextElement, any, SVGElement, any>,
+  maxWidth = 50,
+  trimType = TrimMode.Middle,
+  fastMode?: boolean,
+  fontSize?: number,
+  widthToHeightRatio?: number
+): boolean {
   const text = svgTextSelection.text()
   const textLength = text.length
 
