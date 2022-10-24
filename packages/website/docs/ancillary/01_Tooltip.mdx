@@ -6,7 +6,6 @@ import CodeBlock from '@theme/CodeBlock'
 import { FrameworkTabs } from '../components/framework-tabs'
 import { PropTable } from '../components/props-table'
 import { generateDataRecords } from '../utils/data'
-import { t } from '../utils/parser.ts'
 import { XYWrapper, XYWrapperWithInput } from '../xy-charts/wrapper'
 
 export const newComponent = (name, props) => ({
@@ -153,56 +152,74 @@ You can manually define the behavior of your _Tooltip_ with the following method
 - `show(content: HTMLElement | string, pos: {x: number, y: number})`
    show the value of `content` at the coordinate `(x,y)`
 
-export const ButtonTooltip = (props) => {
+export const ButtonTooltip = () => {
   return (
   <>
     <BrowserOnly fallback={<div>Loading...</div>}>
       {() => {
         const { Tooltip } = require('@unovis/ts')
         const { VisXYContainer, VisLine, VisTooltip } = require('@unovis/react')
-        const tooltip = new Tooltip({})
+        const tooltip = new Tooltip({ container: document.body })
         let toggled = false
-        function toggleTooltip() {
+        function toggleTooltip(e) {
           if (toggled) {
             tooltip.hide()
           } else {
-            tooltip.show("👋 I'm a tooltip", { x: 0, y: 0})
+            tooltip.show("👋 I'm a tooltip", { x: e.clientX, y: e.clientY})
           }
           toggled = !toggled
         }
-        return (
-        <>
-          <button onClick={() => toggleTooltip()}>Toggle</button>
-          <VisXYContainer data={props.data} height={150} tooltip={tooltip}>
-            <VisLine x={d=>d.x} y={d=>d.y}/>
-          </VisXYContainer>
-        </>
-      )}}
+        return <button onClick={toggleTooltip}>Toggle</button>
+      }}
     </BrowserOnly>
   </>
 )}
 
-export const tooltipFn = `${[
-  'toggleTooltip() {',
-  'if (toggled) {', `${t}tooltip.hide()`,
-  '} else {',
-  `${t}tooltip.show("👋 I\'m a tooltip", { x: 0, y: 0 })`,
-  '}',
-  'toggled != toggled']
-.join(`\n${t}`)}\n}`
+export const tooltipFn = (indent = 1) => {
+  const t = ' '.repeat(indent * 2)
+  return `\n${t.substring(2)}${['function toggleTooltip() {',
+    'if (toggled) {',
+    `${t}tooltip.hide()`,
+    '} else {',
+    `${t}tooltip.show("👋 I\'m a tooltip", { x: 0, y: 0 })`,
+    '}',
+    'toggled = !toggled',
+  ].join(`\n${t}`)}\n${t.substring(2)}}`
+}
 
 <FrameworkTabs
   angular={{
     html: '<vis-tooltip #tooltip></vis-tooltip>\n<button (click)="toggleTooltip">Toggle</button>',
-    ts: `@ElementRef('tooltip') tooltip\ntoggled = false\n${tooltipFn.replace('function ', '')}\n`
+    ts: `@ElementRef(\'tooltip\') tooltip\ntoggled = false\n${tooltipFn().replace('function ', '')}`
   }}
   react={[
-    'import { Tooltip } from \'@unovis/ts\'\n',
-    'const tooltip = new Tooltip({})',
-    'const [toggled, setToggled] = useState(true)\n',
-    `${tooltipFn.replace('toggled != toggled', 'setToggled(!toggled)')}`,
-    '\nreturn (', `${t}<>`, `${t}${t}<VisContainer tooltip={tooltip}/>`, `${t}${t}<button onClick={toggleTooltip}/>`, `${t}</>`, ')'].join('\n')}
-  typescript={`const tooltip = new Tooltip({})\nlet toggled = true\n${tooltipFn}\ndocument.getElementById("btn").addEventListener('click', toggleTooltip)}`}
+    'import { VisTooltip, VisTooltipRef } from \'@unovis/react\'',
+    '',
+    'function Tooltip() {',
+    '  const [toggled, setToggled] = React.useState(false)',
+    '  const tooltip = React.useRef<VisTooltipRef>(null)',
+    `  ${tooltipFn(2).replace('toggled = !toggled', 'setToggled(!toggled)')}`,
+    '  return (<>',
+    '    <button onClick={toggleTooltip}>Toggle</button>',
+    '    <VisTooltip ref={tooltip}/>',
+    '  </>)',
+    '}'].join('\n')}
+  svelte={[
+    '<script lang=\'ts\'>',
+    '  import { VisTooltip } from \'@unovis/svelte\'\n',
+    '  let toggled',
+    `  ${tooltipFn(2)}`,
+    '</script>',
+    '',
+    '<button onClick={toggleTooltip}>Toggle</button>',
+    '<VisTooltip bind:this={tooltip}/>',
+  ].join('\n')}
+  typescript={[
+    'const tooltip = new Tooltip()',
+    'let toggled = false',
+      tooltipFn(),
+    'document.getElementById("btn").addEventListener(\'click\', toggleTooltip)'
+  ].join('\n')}
 />
 <ButtonTooltip {...defaultProps()} toggle/>
 
