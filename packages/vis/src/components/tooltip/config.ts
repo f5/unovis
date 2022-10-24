@@ -36,6 +36,23 @@ export interface TooltipConfigInterface {
   triggers?: {
     [selector: string]: (data: any, i: number, elements: (HTMLElement | SVGElement)[]) => string | HTMLElement | undefined | null;
   };
+  /** Custom DOM attributes for the tooltip. Useful when you need to refer to a specific tooltip instance
+   * by using a CSS selector. Attributes configuration object has the following structure:
+   *
+   * ```
+   * {
+   *   [attributeName]: attribute value
+   * }
+   * ```
+   * e.g.:
+   * ```
+   * {
+   *   'type': 'area-tooltip',
+   *   'value': 42
+   * }
+   * ```
+   */
+  attributes?: { [attr: string]: string | number | boolean };
 }
 
 export class TooltipConfig extends Config implements TooltipConfigInterface {
@@ -45,6 +62,7 @@ export class TooltipConfig extends Config implements TooltipConfigInterface {
   horizontalShift = 0
   verticalPlacement = Position.Top
   verticalShift = 0
+  attributes: { [attr: string]: string | number | boolean } = {}
   triggers: {
     [selector: string]: (data: any, i: number, elements: (HTMLElement | SVGElement)[]) => string | HTMLElement | undefined | null;
   } = {}

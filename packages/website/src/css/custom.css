@@ -17,7 +17,6 @@
   --ifm-color-primary-lightest: rgb(146, 224, 208);
   --ifm-container-width-xl: 1620px;
   --ifm-code-font-size: 95%;
-
   --ifm-heading-font-family: Inter;
   --ifm-heading-font-weight: 900;
 
@@ -25,6 +24,8 @@
 
   --doc-sidebar-width: 200px !important;
   --ifm-table-cell-padding: 0.2rem;
+
+  --docusaurus-highlighted-code-line-bg: #FFD651;
 
   --unovis-content-padding: 4rem 5rem;
   --unovis-color-blue: #4580C0;
@@ -41,6 +42,7 @@
 
 html[data-theme="dark"] {
   --ifm-heading-color: white;
+  --docusaurus-highlighted-code-line-bg: #cea31a;
 }
 
 @media screen and (max-width: 966px) {

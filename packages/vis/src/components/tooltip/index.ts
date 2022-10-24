@@ -28,19 +28,23 @@ export class Tooltip {
   private _container: HTMLElement
 
   constructor (config: TooltipConfigInterface = {}) {
-    this.config = new TooltipConfig().init(config)
-    this.components = this.config.components
-
     this.element = document.createElement('div')
     this.div = select(this.element)
       .attr('class', s.tooltip)
 
-    if (this.config.container) this.setContainer(this.config.container)
+    this.setConfig(config)
+    this.components = this.config.components
   }
 
   public setConfig (config: TooltipConfigInterface): void {
     this.prevConfig = this.config
     this.config = new TooltipConfig().init(config)
+
+    if (this.config.container && (this.config.container !== this.prevConfig?.container)) {
+      this.setContainer(this.config.container)
+    }
+
+    this._setUpAttributes()
   }
 
   public setContainer (container: HTMLElement): void {
@@ -87,6 +91,10 @@ export class Tooltip {
   }
 
   public place (pos: { x: number; y: number }): void {
+    if (!this.hasContainer()) {
+      console.warn('Unovis | Tooltip: Container was not set or is not initialized yet')
+      return
+    }
     const { config } = this
     const isContainerBody = this.isContainerBody()
     const width = this.element.offsetWidth
@@ -171,6 +179,15 @@ export class Tooltip {
             this.hide()
           })
       })
+    })
+  }
+
+  private _setUpAttributes (): void {
+    const attributesMap = this.config.attributes
+    if (!attributesMap) return
+
+    Object.keys(attributesMap).forEach(attr => {
+      this.div.attr(attr, attributesMap[attr])
     })
   }
 
