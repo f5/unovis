@@ -34,7 +34,11 @@ export function createLabel<H extends Hierarchy> (selection: Selection<SVGGEleme
     .style('fill', d => getColor(d.data, config.nodeColor, d.depth))
 }
 
-export function updateLabel<H extends Hierarchy> (selection: Selection<SVGGElement, HierarchyRectangularNode<H>, SVGGElement, HierarchyRectangularNode<H>[]>, config: RadialDendrogramConfig<H>, width: number, duration: number): void {
+export function updateLabel<H extends Hierarchy> (
+  selection: Selection<SVGGElement, HierarchyRectangularNode<H>, SVGGElement, HierarchyRectangularNode<H>[]>,
+  config: RadialDendrogramConfig<H>,
+  width: number,
+  duration: number): void {
   const { nodeLabel } = config
   selection.style('opacity', 0)
   smartTransition(selection, duration)

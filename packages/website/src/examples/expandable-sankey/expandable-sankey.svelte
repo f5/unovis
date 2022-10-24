@@ -5,7 +5,7 @@
 
   let data = {
     nodes: [sourceNode, ...sankeyData.nodes.filter(d => sourceNode.subgroups.includes(d.id))],
-    links: sankeyData.links
+    links: sankeyData.links,
   }
 
   function toggleGroup (n: SankeyNode<NodeDatum, LinkDatum>): void {
@@ -27,14 +27,14 @@
   const callbacks = {
     linkColor: (d: LinkDatum): string => d.source,
     nodeColor: getColor,
-    nodeIcon: (d: NodeDatum): string =>  d.expandable ? (d.expanded ? '-' : '+') : '',
+    nodeIcon: (d: NodeDatum): string => d.expandable ? (d.expanded ? '-' : '+') : '',
     nodeCursor: (d: SankeyNode<NodeDatum, LinkDatum>) => d.expandable ? 'pointer' : null,
-    subLabel: (d: SankeyNode<NodeDatum, LinkDatum>): string =>  ((d.depth === 0) || d.expanded) ? '' : `${((d.value / sourceNode.value) * 100).toFixed(1)}%`,
+    subLabel: (d: SankeyNode<NodeDatum, LinkDatum>): string => ((d.depth === 0) || d.expanded) ? '' : `${((d.value / sourceNode.value) * 100).toFixed(1)}%`,
     events: {
       [Sankey.selectors.node]: {
         click: toggleGroup,
       },
-    }
+    },
   }
 </script>
 

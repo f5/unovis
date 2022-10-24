@@ -34,10 +34,10 @@ export interface TimelineConfigInterface<Datum> extends WithOptional<XYComponent
 
 export class TimelineConfig<Datum> extends XYComponentConfig<Datum> implements TimelineConfigInterface<Datum> {
   lineWidth = 8
-  lineCap = undefined;
-  rowHeight = 22;
+  lineCap = undefined
+  rowHeight = 22
   // eslint-disable-next-line dot-notation
-  length: NumericAccessor<Datum> = d => d['length'];
+  length: NumericAccessor<Datum> = d => d['length']
   // eslint-disable-next-line dot-notation
   type: StringAccessor<Datum> = d => d['type']
   cursor = null

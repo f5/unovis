@@ -12,8 +12,9 @@ export class NonStackedAreaComponent {
   x = (_: DataRecord, i: number) => i
   accessors = (id: Country) => ({
     y: (d: DataRecord) => d.cases[id],
-    color: countries[id].color
+    color: countries[id].color,
   })
+
   xTicks = (i: number): string => `${data[i].month} ${data[i].year}`
   yTicks = Intl.NumberFormat(navigator.language, { notation: 'compact' }).format
 

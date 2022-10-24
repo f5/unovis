@@ -8,7 +8,11 @@ import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
 // Local Types
 import { MapProjection, MapPointLabelPosition } from './types'
 
-export interface TopoJSONMapConfigInterface<AreaDatum, PointDatum = unknown, LinkDatum = unknown> extends ComponentConfigInterface {
+export interface TopoJSONMapConfigInterface<
+  AreaDatum,
+  PointDatum = unknown,
+  LinkDatum = unknown,
+> extends ComponentConfigInterface {
   // General
   /** MapProjection (or D3's GeoProjection) instance. Default: `MapProjection.Mercator()` */
   projection?: GeoProjection;
@@ -76,7 +80,11 @@ export interface TopoJSONMapConfigInterface<AreaDatum, PointDatum = unknown, Lin
   heatmapModeZoomLevelThreshold?: number;
 }
 
-export class TopoJSONMapConfig<AreaDatum, PointDatum = unknown, LinkDatum = unknown> extends ComponentConfig implements TopoJSONMapConfigInterface<AreaDatum, PointDatum, LinkDatum> {
+export class TopoJSONMapConfig<
+  AreaDatum,
+  PointDatum = unknown,
+  LinkDatum = unknown,
+> extends ComponentConfig implements TopoJSONMapConfigInterface<AreaDatum, PointDatum, LinkDatum> {
   projection = MapProjection.Mercator()
   duration = 1500
   topojson = undefined

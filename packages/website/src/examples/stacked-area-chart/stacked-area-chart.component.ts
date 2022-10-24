@@ -1,5 +1,5 @@
 import { Component } from '@angular/core'
-import {data, formats, DataRecord, getLabels} from './data'
+import { data, formats, DataRecord, getLabels } from './data'
 
 @Component({
   selector: 'stacked-area-chart',
@@ -11,7 +11,7 @@ export class StackedAreaComponent {
   y = formats.map(f => (d: DataRecord) => d[f])
 
   labelItems = getLabels(this.data)
-  labelY = (d: DataRecord): number=> this.labelItems[d.year]?.value ?? 0
+  labelY = (d: DataRecord): number => this.labelItems[d.year]?.value ?? 0
   labelText = (d: DataRecord) => this.labelItems[d.year]?.label ?? ''
   labelColor = (d: DataRecord) => this.labelItems[d.year]?.color ?? 'none'
   noLabel = () => ''

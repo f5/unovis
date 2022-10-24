@@ -118,12 +118,16 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfig<Dat
 
   _onMouseMove (event: MouseEvent): void {
     const { config, datamodel, element } = this
-    if (!this.accessors.x && datamodel.data?.length) console.warn('Crosshair: X accessor function has not been configured. Please check if it\'s present in the configuration object')
+    if (!this.accessors.x && datamodel.data?.length) {
+      console.warn('Unovis | Crosshair: X accessor function has not been configured. Please check if it\'s present in the configuration object')
+    }
     const [x] = pointer(event, element)
     const xRange = this.xScale.range()
 
     if (config.snapToData) {
-      if (!this.accessors.y && !this.accessors.yStacked && datamodel.data?.length) console.warn('Crosshair: Y accessors have not been configured. Please check if they\'re present in the configuration object')
+      if (!this.accessors.y && !this.accessors.yStacked && datamodel.data?.length) {
+        console.warn('Unovis | Crosshair: Y accessors have not been configured. Please check if they\'re present in the configuration object')
+      }
       const scaleX = this.xScale
       const valueX = scaleX.invert(x) as number
 

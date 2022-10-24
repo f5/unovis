@@ -8,9 +8,9 @@ import { nodes, links, sites, StatusMap, NodeDatum, LinkDatum } from './data'
   styleUrls: ['./styles.css'],
 })
 export class ParallelGraphComponent {
-  mainSite: string  = nodes[0].site
+  mainSite: string = nodes[0].site
 
-  data: { nodes: NodeDatum[], links: LinkDatum[] }
+  data: { nodes: NodeDatum[]; links: LinkDatum[] }
   panels: GraphPanelConfig[]
 
   setExpanded (site: string) {
@@ -26,7 +26,7 @@ export class ParallelGraphComponent {
     }
   }
 
-  constructor() {
+  constructor () {
     this.setExpanded(this.mainSite)
   }
 
@@ -36,8 +36,8 @@ export class ParallelGraphComponent {
   layoutParallelNodesPerColumn = 4
   events = {
     [Graph.selectors.node]: {
-        click: (d: NodeDatum) => this.setExpanded(d.site)
-    }
+      click: (d: NodeDatum) => this.setExpanded(d.site),
+    },
   }
 
   // node config

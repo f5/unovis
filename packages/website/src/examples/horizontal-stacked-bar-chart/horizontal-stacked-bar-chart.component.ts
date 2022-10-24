@@ -19,12 +19,12 @@ export class StackedBarChartComponent {
     [StackedBar.selectors.bar]: (d: EducationDatum) => {
       const title = `<div style="color: #666; text-align: center">${d.country}</div>`
       const total = `Total: <b>${d.total}%</b> of population</br>`
-      const stats = this.dataKeys.map((k,i) => [
+      const stats = this.dataKeys.map((k, i) => [
         labels[k].split(' ')[0],
-        `<span style="color: var(--vis-color${i}); font-weight: 800">${d[k]}%</span>`
+        `<span style="color: var(--vis-color${i}); font-weight: 800">${d[k]}%</span>`,
       ]).join(' | ')
       return `<div style="font-size: 12px">${title}${total}${stats}</div>`
-    }
+    },
   }
 
   tickFormat = i => data[i].country

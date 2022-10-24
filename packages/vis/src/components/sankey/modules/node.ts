@@ -209,11 +209,11 @@ export function onNodeMouseOver<N extends SankeyInputNode, L extends SankeyInput
 
 export function onNodeMouseOut<N extends SankeyInputNode, L extends SankeyInputLink> (
   d: SankeyNode<N, L>,
-  nodeSelection,
+  nodeSelection: Selection<SVGGElement, SankeyNode<N, L>, SVGGElement, unknown>,
   config: SankeyConfig<N, L>,
   width: number
 ): void {
-  const labelGroup = nodeSelection.select(`.${s.labelGroup}`)
+  const labelGroup = nodeSelection.select<SVGGElement>(`.${s.labelGroup}`)
   if (config.labelExpandTrimmedOnHover || labelGroup.classed(s.hidden)) {
     renderLabel(labelGroup, d, config, width, 0)
   }

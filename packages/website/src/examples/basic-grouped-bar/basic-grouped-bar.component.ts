@@ -11,8 +11,9 @@ export class BasicGroupedBarComponent {
     (d: ElectionDatum) => d.republican,
     (d: ElectionDatum) => d.democrat,
     (d: ElectionDatum) => d.other,
-    (d: ElectionDatum) => d.libertarian
+    (d: ElectionDatum) => d.libertarian,
   ]
+
   data = data
 
   legendItems = Object.entries(colors).map(([n, c]) => ({
@@ -20,6 +21,5 @@ export class BasicGroupedBarComponent {
     color: c,
   }))
 
-  color = (d : ElectionDatum, i: number) => this.legendItems[i].color
-
+  color = (d: ElectionDatum, i: number) => this.legendItems[i].color
 }

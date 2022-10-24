@@ -22,7 +22,7 @@
   $: getAreaColor = (d: AreaDatum) => colorScale(getExpectancy(d))
 
   const tooltipTriggers = {
-    [TopoJSONMap.selectors.feature]: d => `${d.properties.name}: ${d.data ? getExpectancy(d.data) : 'no data'}`
+    [TopoJSONMap.selectors.feature]: d => `${d.properties.name}: ${d.data ? getExpectancy(d.data) : 'no data'}`,
   }
 
   const gradientSteps = Array(100).fill(1)

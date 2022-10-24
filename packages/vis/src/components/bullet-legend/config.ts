@@ -21,8 +21,8 @@ export interface BulletLegendConfigInterface {
 export class BulletLegendConfig extends Config implements BulletLegendConfigInterface {
   items: BulletLegendItemInterface[] = []
   labelClassName = ''
-  onLegendItemClick = undefined;
-  labelFontSize = null;
-  labelMaxWidth = null;
-  bulletSize = null;
+  onLegendItemClick = undefined
+  labelFontSize = null
+  labelMaxWidth = null
+  bulletSize = null
 }

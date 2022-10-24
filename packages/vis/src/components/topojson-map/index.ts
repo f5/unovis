@@ -309,7 +309,7 @@ export class TopoJSONMap<
     this._pointsGroup.selectAll(`.${s.pointLabel}`).style('display', (config.heatmapMode && (this._currentZoomLevel < config.heatmapModeZoomLevelThreshold)) ? 'none' : null)
   }
 
-  _fitToPoints (points?, pad = 0.1): void {
+  _fitToPoints (points?: PointDatum[], pad = 0.1): void {
     const { config, datamodel } = this
     const pointData = points || datamodel.points
     if (pointData.length === 0) return

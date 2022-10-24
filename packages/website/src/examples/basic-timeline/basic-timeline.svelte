@@ -6,7 +6,7 @@
   const labelWidth = 220
   const dateFormatter = Intl.DateTimeFormat().format
 
-  function getTooltipText(_: string, i: number): string {
+  function getTooltipText (_: string, i: number): string {
     const { startDate, endDate, description } = data[i]
     return `
       <div style="width:${labelWidth}px">

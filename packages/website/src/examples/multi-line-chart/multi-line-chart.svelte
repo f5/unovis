@@ -2,7 +2,7 @@
   import { VisXYContainer, VisLine, VisAxis, VisBulletLegend } from '@unovis/svelte'
   import { data, labels, CityTemps } from './data'
 
-  const x= (d: CityTemps) => +(new Date(d.date))
+  const x = (d: CityTemps) => +(new Date(d.date))
   const y = [
     (d: CityTemps) => d.austin,
     (d: CityTemps) => d.ny,

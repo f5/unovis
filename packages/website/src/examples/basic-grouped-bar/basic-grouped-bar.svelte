@@ -13,10 +13,10 @@
   <h2>U.S. Election Popular Vote Results by Political Party</h2>
   <VisGroupedBar {data} x={d => d.year}
     y={[
-    d => d.republican,
-    d => d.democrat,
-    d => d.other,
-    d => d.libertarian,
+      d => d.republican,
+      d => d.democrat,
+      d => d.other,
+      d => d.libertarian,
     ]}
     color={(_, i) => items[i].color}
   />

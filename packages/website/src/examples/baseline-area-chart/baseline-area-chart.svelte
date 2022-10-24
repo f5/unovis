@@ -19,7 +19,7 @@
       const dir = i % 2 === 1 ? -(i - 1) : i
       return max / 2 + dir * 1000
     }),
-    tickFormat: (i: number) => `${Math.abs(i - max / 2)}`
+    tickFormat: (i: number) => `${Math.abs(i - max / 2)}`,
   }
 </script>
 

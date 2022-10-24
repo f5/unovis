@@ -30,7 +30,7 @@
     setCrosshair: (c: Crosshair<Datum>) => updateConfig({ crosshair: c }),
     setTooltip: (t: Tooltip) => updateConfig({ tooltip: t }),
     setAxis: (axis: Axis<Datum>) => updateConfig({
-      [axis.config.type === AxisType.Y ? 'yAxis' : 'xAxis']: axis
+      [axis.config.type === AxisType.Y ? 'yAxis' : 'xAxis']: axis,
     }),
     setComponent: (c: XYComponentCore<Datum>) => {
       components = [...components, c]
@@ -39,7 +39,7 @@
     removeComponent: (c: XYComponentCore<Datum>) => {
       components = components.filter(comp => c !== comp)
       updateConfig({ components })
-    }
+    },
   })
 </script>
 

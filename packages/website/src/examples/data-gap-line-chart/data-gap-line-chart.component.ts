@@ -14,7 +14,7 @@ export class DataGapLineChartComponent {
   }
 
   // index for current fallback value
-  private _curr: number = 0
+  private _curr = 0
 
   // line config
   data = data

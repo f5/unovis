@@ -5,7 +5,7 @@ import { data, NodeDatum } from './data'
 
 @Component({
   selector: 'basic-sankey',
-  templateUrl: './basic-sankey.component.html'
+  templateUrl: './basic-sankey.component.html',
 })
 export class BasicSankeyComponent {
   data = data

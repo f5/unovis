@@ -61,7 +61,7 @@ export class AxisConfig<Datum> extends XYComponentConfig<Datum> implements AxisC
   gridLine = true
   tickLine = true
   domainLine = true
-  numTicks = undefined;
+  numTicks = undefined
   minMaxTicksOnly = false
   tickTextLength = undefined
   tickTextWidth = undefined
