@@ -2,10 +2,11 @@
   "extends": "@tsconfig/svelte/tsconfig.json",
   "files": ["src/svelte-gallery.ts"],
   "types": ["node", "svelte"],
-  "include": ["src/examples/**/*.svelte", "src/examples/**/data.ts"],
+  "include": ["src/examples/**/*.svelte", "src/*.svelte", "src/examples/**/data.ts"],
   "exclude": ["node_modules"],
   "compilerOptions": {
-    "importsNotUsedAsValues": "preserve"
-  }
+    "importsNotUsedAsValues": "preserve",
+    "target": "es6",
+  },
 }
 

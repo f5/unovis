@@ -36,11 +36,10 @@
     "install:clean": "for p in packages/*; do rm -f $p/package-lock.json; rm -rf $p/node_modules; done; rm -rf node_modules; npm i"
   },
   "devDependencies": {
-    "@ota-meshi/eslint-plugin-svelte": "^0.34.0",
     "@types/node": "^16.11.14",
-    "@typescript-eslint/eslint-plugin": "^5.27.0",
-    "@typescript-eslint/parser": "^5.27.0",
-    "eslint": "^8.16.0",
+    "@typescript-eslint/eslint-plugin": "^5.41.0",
+    "@typescript-eslint/parser": "^5.41.0",
+    "eslint": "^8.26.0",
     "eslint-config-standard": "^16.0.3",
     "eslint-import-resolver-typescript": "^2.7.1",
     "eslint-plugin-import": "^2.26.0",
@@ -48,6 +47,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.0.0",
     "eslint-plugin-standard": "^5.0.0",
+    "eslint-plugin-svelte": "^2.10.0",
     "husky": "^7.0.4",
     "license-report": "^4.5.0",
     "lint-staged": "^12.1.3",
