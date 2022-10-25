@@ -9,10 +9,12 @@ export const globalStyles = injectGlobal`
     --vis-stacked-bar-cursor: default;
     --vis-stacked-bar-fill: var(--vis-color-main);
     --vis-stacked-bar-stroke: none;
-    --vis-dark-stacked-bar-stroke: none;
     --vis-stacked-bar-stroke-width: 0px;
     --vis-stacked-bar-hover-stroke-width: none;
     --vis-stacked-bar-hover-stroke: none;
+
+    /* Dark Theme */
+    --vis-dark-stacked-bar-stroke: none;
   }
 
   body.theme-dark ${`.${root}`} {

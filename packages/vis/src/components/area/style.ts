@@ -9,19 +9,19 @@ export const globalStyles = injectGlobal`
   :root {
     --vis-area-cursor: default;
     --vis-area-fill-opacity: 1;
-    --vis-area-stroke: var(--vis-color-main);
+    --vis-area-stroke: none;
     --vis-area-stroke-width: 0px;
     --vis-area-stroke-dasharray: none;
     --vis-area-stroke-opacity: 1;
     --vis-area-hover-fill-opacity: none;
     --vis-area-hover-stroke-width: none;
 
-    --vis-dark-area-stroke: var(--vis-color-main);
-
+    /* Dark Theme */
+    --vis-dark-area-stroke: none;
   }
 
   body.theme-dark ${`.${root}`} {
-   --vis-area-stroke: var(--vis-dark-area-stroke);
+    --vis-area-stroke: var(--vis-dark-area-stroke);
   }
 
 `
