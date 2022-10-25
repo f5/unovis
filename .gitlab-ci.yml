@@ -21,7 +21,7 @@ build:
 
 pages:
   stage: publish-demo
-  image: node:16
+  image: artifactory.f5net.com/dockerhub-remote/node:16
   cache:
     key: "$CI_COMMIT_REF_SLUG"
     policy: pull
