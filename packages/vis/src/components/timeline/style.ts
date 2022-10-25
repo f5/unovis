@@ -17,7 +17,10 @@ export const globalStyles = injectGlobal`
 
     --vis-timeline-cursor: default;
     --vis-timeline-line-color: var(--vis-color-main);
-    --vis-timeline-stroke-width: 0px;
+    --vis-timeline-line-stroke-width: none;
+    // The line stroke color variable is not defined by default
+    // to allow it to fallback to the corresponding row background color
+    /* --vis-timeline-line-stroke-color: none; */
 
     --vis-dark-timeline-row-even-fill: #292B34;
     --vis-dark-timeline-row-odd-fill: #6C778C;
@@ -47,11 +50,12 @@ export const line = css`
   label: line;
   fill: var(--vis-timeline-line-color);
   cursor: var(--vis-timeline-cursor);
-  stroke: var(--vis-timeline-row-even-fill);
-  stroke-width: var(--vis-timeline-stroke-width);
+
+  stroke: var(--vis-timeline-line-stroke-color, var(--vis-timeline-row-even-fill));
+  stroke-width: var(--vis-timeline-line-stroke-width);
 
   &.odd {
-    stroke: var(--vis-timeline-row-odd-fill);
+    stroke: var(--vis-timeline-line-stroke-color, var(--vis-timeline-row-odd-fill));
   }
 `
 
