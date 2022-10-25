@@ -7,11 +7,8 @@ import { NumericAccessor, StringAccessor } from 'types/accessor'
 export interface TimelineConfigInterface<Datum> extends WithOptional<XYComponentConfigInterface<Datum>, 'y'> {
   /** Width of the timeline items. Default: `8` */
   lineWidth?: NumericAccessor<Datum>;
-  /** Line cap: 'butt', 'round' or 'square'.
-   * Default appearance is `round` and comes from the `--vis-timeline-line-cap`` CSS variable.
-   * Default configuration object value: `undefined`
-  */
-  lineCap?: StringAccessor<Datum>;
+  /** Display rounded ends for timeline items. Default: `true` */
+  lineCap?: boolean;
   /** Timeline row height. Default: `22` */
   rowHeight?: number;
   /** Timeline item length accessor function. Default: `d => d.length` */
@@ -34,7 +31,7 @@ export interface TimelineConfigInterface<Datum> extends WithOptional<XYComponent
 
 export class TimelineConfig<Datum> extends XYComponentConfig<Datum> implements TimelineConfigInterface<Datum> {
   lineWidth = 8
-  lineCap = undefined
+  lineCap = true
   rowHeight = 22
   // eslint-disable-next-line dot-notation
   length: NumericAccessor<Datum> = d => d['length']

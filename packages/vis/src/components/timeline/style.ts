@@ -6,9 +6,9 @@ export const root = css`
 
 export const globalStyles = injectGlobal`
   :root {
-    --vis-timeline-row-even-fill: #fff;
-    --vis-timeline-row-odd-fill: #EFF5F8;
-    --vis-timeline-row-background-opacity: 0.5;
+    --vis-timeline-row-even-fill: #FFFFFF;
+    --vis-timeline-row-odd-fill: #F7FAFC;
+    --vis-timeline-row-background-opacity: 1;
     --vis-timeline-scrollbar-background-color: #E6E9F3;
     --vis-timeline-scrollbar-color: #9EA7B8;
 
@@ -17,10 +17,13 @@ export const globalStyles = injectGlobal`
 
     --vis-timeline-cursor: default;
     --vis-timeline-line-color: var(--vis-color-main);
-    --vis-timeline-line-cap: round;
+    --vis-timeline-line-stroke-width: none;
+    // The line stroke color variable is not defined by default
+    // to allow it to fallback to the corresponding row background color
+    /* --vis-timeline-line-stroke-color: none; */
 
     --vis-dark-timeline-row-even-fill: #292B34;
-    --vis-dark-timeline-row-odd-fill: #6C778C;
+    --vis-dark-timeline-row-odd-fill: #333742;
     --vis-dark-timeline-scrollbar-background-color: #292B34;
     --vis-dark-timeline-scrollbar-color: #6C778C;
     --vis-dark-timeline-label-color: #EFF5F8;
@@ -45,10 +48,15 @@ export const lines = css`
 
 export const line = css`
   label: line;
-  fill: none;
-  stroke: var(--vis-timeline-line-color);
+  fill: var(--vis-timeline-line-color);
   cursor: var(--vis-timeline-cursor);
-  stroke-linecap: var(--vis-timeline-line-cap);
+
+  stroke: var(--vis-timeline-line-stroke-color, var(--vis-timeline-row-even-fill));
+  stroke-width: var(--vis-timeline-line-stroke-width);
+
+  &.odd {
+    stroke: var(--vis-timeline-line-stroke-color, var(--vis-timeline-row-odd-fill));
+  }
 `
 
 export const rows = css`

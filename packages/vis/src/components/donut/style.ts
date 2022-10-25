@@ -17,6 +17,10 @@ export const variables = injectGlobal`
     --vis-donut-central-sub-label-font-weight: 500;
 
     --vis-donut-background-color: #E7E9F3;
+    --vis-donut-segment-stroke-width: none;
+    // The line segment color variable is not defined by default
+    // to allow it to fallback to the donut background color
+    /* --vis-donut-segment-stroke-color: none; */
 
     --vis-dark-donut-central-label-text-color: #C2BECE;
     --vis-dark-donut-central-sub-label-text-color: #C2BECE;
@@ -36,6 +40,8 @@ export const background = css`
 
 export const segment = css`
   label: segment;
+  stroke-width: var(--vis-donut-segment-stroke-width);
+  stroke: var(--vis-donut-segment-stroke-color, var(--vis-donut-background-color));
 `
 
 export const segmentExit = css`
