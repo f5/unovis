@@ -126,11 +126,13 @@ a {
   --vis-area-stroke: var(--stroke);
   --vis-dark-area-stroke: var(--stroke-dark);
 
+  /* --vis-donut-segment-stroke-color: none; */
   --vis-donut-segment-stroke-width: 1px;
 
   --vis-stacked-bar-stroke-width: 1px;
   --vis-stacked-bar-stroke: var(--stroke);
   --vis-dark-stacked-bar-stroke: var(--stroke-dark);
 
-  --vis-timeline-stroke-width: 1px;
+  /*--vis-timeline-line-stroke-color: none; */
+  --vis-timeline-line-stroke-width: 1px;
 }
