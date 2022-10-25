@@ -6,9 +6,9 @@ export const root = css`
 
 export const globalStyles = injectGlobal`
   :root {
-    --vis-timeline-row-even-fill: #fff;
-    --vis-timeline-row-odd-fill: #EFF5F8;
-    --vis-timeline-row-background-opacity: 0.5;
+    --vis-timeline-row-even-fill: #FFFFFF;
+    --vis-timeline-row-odd-fill: #F7FAFC;
+    --vis-timeline-row-background-opacity: 1;
     --vis-timeline-scrollbar-background-color: #E6E9F3;
     --vis-timeline-scrollbar-color: #9EA7B8;
 
@@ -23,7 +23,7 @@ export const globalStyles = injectGlobal`
     /* --vis-timeline-line-stroke-color: none; */
 
     --vis-dark-timeline-row-even-fill: #292B34;
-    --vis-dark-timeline-row-odd-fill: #6C778C;
+    --vis-dark-timeline-row-odd-fill: #333742;
     --vis-dark-timeline-scrollbar-background-color: #292B34;
     --vis-dark-timeline-scrollbar-color: #6C778C;
     --vis-dark-timeline-label-color: #EFF5F8;
