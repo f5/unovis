@@ -5,7 +5,7 @@
   "scripts": {
     "docusaurus": "docusaurus",
     "start": "docusaurus start --port 9300",
-    "build": "docusaurus build --no-minify && node minify-build.js",
+    "build": "docusaurus build --no-minify",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
     "clear": "docusaurus clear",
