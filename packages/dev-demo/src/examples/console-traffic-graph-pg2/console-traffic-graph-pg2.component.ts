@@ -1,10 +1,10 @@
 /* eslint-disable */
 import { Component, ViewChild, ElementRef, OnInit, AfterViewInit } from '@angular/core'
-import _times from 'lodash/times'
-import _sample from 'lodash/sample'
-import _random from 'lodash/random'
-import _cloneDeep from 'lodash/cloneDeep'
-import _uniq from 'lodash/uniq'
+import _times from 'lodash-es/times'
+import _sample from 'lodash-es/sample'
+import _random from 'lodash-es/random'
+import _cloneDeep from 'lodash-es/cloneDeep'
+import _uniq from 'lodash-es/uniq'
 
 import { Graph, SingleContainer, GraphConfigInterface } from '@unovis/ts'
 

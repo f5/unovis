@@ -1,8 +1,8 @@
-import _sample from 'lodash/sample'
-import _flatten from 'lodash/flatten'
-import _findKey from 'lodash/findKey'
-import _times from 'lodash/times'
-import _groupBy from 'lodash/groupBy'
+import _sample from 'lodash-es/sample'
+import _flatten from 'lodash-es/flatten'
+import _findKey from 'lodash-es/findKey'
+import _times from 'lodash-es/times'
+import _groupBy from 'lodash-es/groupBy'
 
 interface SankeyRecord {
   src: string;

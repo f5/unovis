@@ -1,6 +1,6 @@
 import { AfterViewInit, Component } from '@angular/core'
-import _random from 'lodash/random'
-import _sample from 'lodash/sample'
+import _random from 'lodash-es/random'
+import _sample from 'lodash-es/sample'
 
 import { Scatter, Axis, SymbolType, ScatterConfigInterface } from '@unovis/ts'
 

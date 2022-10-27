@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ViewChild, ViewEncapsulation } from '@angular/core'
-import _sample from 'lodash/sample'
-import _flatten from 'lodash/flatten'
+import _sample from 'lodash-es/sample'
+import _flatten from 'lodash-es/flatten'
 import { StyleSpecification } from 'maplibre-gl'
 import { LeafletFlowMap, LeafletFlowMapConfigInterface, Position, Tooltip } from '@unovis/ts'
 import { MapLeafletComponent } from '../../app/components/map-leaflet/map-leaflet.component'

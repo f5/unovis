@@ -1,4 +1,4 @@
-import _sample from 'lodash/sample'
+import _sample from 'lodash-es/sample'
 import { Graph, GraphLayoutType, GraphConfigInterface } from '@unovis/ts'
 
 // const StatusMap = {

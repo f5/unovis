@@ -1,5 +1,5 @@
 import { ReactElement, ReactNode } from 'react'
-import _isEqual from 'lodash/isEqual.js'
+import _isEqual from 'lodash-es/isEqual.js'
 
 export function arePropsEqual<PropTypes extends { children?: ReactNode }> (prevProps: PropTypes, nextProps: PropTypes): boolean {
   if (typeof prevProps.children !== typeof nextProps.children) return false

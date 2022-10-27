@@ -1,5 +1,5 @@
 import { AfterViewInit, Component } from '@angular/core'
-import _times from 'lodash/times'
+import _times from 'lodash-es/times'
 
 // Vis
 import { Sankey, SankeyConfigInterface } from '@unovis/ts'

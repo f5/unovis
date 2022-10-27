@@ -1,6 +1,6 @@
 name                          license period  license type  installed version  author
 ----                          --------------  ------------  -----------------  ------
-lodash                        perpetual       MIT           4.17.21            John-David Dalton
+lodash-es                     perpetual       MIT           4.17.21            John-David Dalton
 @rollup/plugin-node-resolve   perpetual       MIT           13.0.4             Rich Harris
 @sveltejs/package             perpetual       MIT           1.0.0-next.5       n/a
 @tsconfig/svelte              perpetual       MIT           2.0.0              n/a
