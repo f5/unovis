@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import _uniq from 'lodash/uniq'
+import _uniq from 'lodash-es/uniq'
 import { Graph, GraphLayoutType, GraphConfigInterface, GraphPanelConfig, GraphNodeShape } from '@unovis/ts'
 
 // eslint-disable-next-line @typescript-eslint/naming-convention

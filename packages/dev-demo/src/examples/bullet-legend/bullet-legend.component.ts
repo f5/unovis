@@ -1,6 +1,6 @@
 import { AfterViewInit, OnDestroy, Component, ElementRef, ViewChild } from '@angular/core'
-import _times from 'lodash/times'
-import _random from 'lodash/random'
+import _times from 'lodash-es/times'
+import _random from 'lodash-es/random'
 
 // Vis
 import { XYContainer, XYContainerConfigInterface, Axis, Area, AreaConfigInterface, Tooltip, Crosshair, FreeBrush, FreeBrushMode } from '@unovis/ts'

@@ -1,8 +1,8 @@
 import { AfterViewInit, Component, ViewChild, ElementRef } from '@angular/core'
 import { sum, max } from 'd3-array'
-import _groupBy from 'lodash/groupBy'
-import _times from 'lodash/times'
-import _sample from 'lodash/sample'
+import _groupBy from 'lodash-es/groupBy'
+import _times from 'lodash-es/times'
+import _sample from 'lodash-es/sample'
 
 // Vis
 import {

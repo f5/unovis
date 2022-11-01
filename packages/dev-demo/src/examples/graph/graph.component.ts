@@ -1,8 +1,8 @@
 /* eslint-disable */
 import { Component, ViewChild, ElementRef, OnInit, AfterViewInit } from '@angular/core'
-import _times from 'lodash/times'
-import _sample from 'lodash/sample'
-import _random from 'lodash/random'
+import _times from 'lodash-es/times'
+import _sample from 'lodash-es/sample'
+import _random from 'lodash-es/random'
 
 import { Graph, SingleContainer, GraphLayoutType, GraphConfigInterface, VisControlItemInterface, VisControlsOrientation } from '@unovis/ts'
 

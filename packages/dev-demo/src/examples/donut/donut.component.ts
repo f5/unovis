@@ -1,7 +1,7 @@
 import { AfterViewInit, Component } from '@angular/core'
 import { scaleSqrt } from 'd3-scale'
-import _times from 'lodash/times'
-import _random from 'lodash/random'
+import _times from 'lodash-es/times'
+import _random from 'lodash-es/random'
 
 // Vis
 import { Donut, DonutConfigInterface } from '@unovis/ts'

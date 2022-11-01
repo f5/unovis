@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef, AfterViewInit } from '@angular/core'
-import _flatten from 'lodash/flatten'
+import _flatten from 'lodash-es/flatten'
 
 import { Graph, SingleContainer, GraphConfigInterface } from '@unovis/ts'
 

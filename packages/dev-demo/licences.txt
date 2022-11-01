@@ -10,7 +10,7 @@ name                               license period  license type  installed versi
 @angular/router                    perpetual       MIT           12.0.3             angular
 d3                                 perpetual       ISC           7.2.1              Mike Bostock
 date-fns                           perpetual       MIT           2.27.0             n/a
-lodash                             perpetual       MIT           4.17.21            John-David Dalton
+lodash-es                          perpetual       MIT           4.17.21            John-David Dalton
 rxjs                               perpetual       Apache-2.0    7.1.0              Ben Lesh
 tslib                              perpetual       0BSD          2.3.1              Microsoft Corp.
 zone.js                            perpetual       MIT           0.11.4             Brian Ford
