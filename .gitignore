@@ -56,7 +56,11 @@ docs-html/
 stats.html
 .cache/
 packages/vis-angular/.autogen.js
-packages/**/package-lock.json
+packages/dev-demo/package-lock.json
+packages/vis/package-lock.json
+packages/vis-angular/package-lock.json
+packages/vis-react/package-lock.json
+packages/vis-svelte/package-lock.json
 yarn.lock
 .srcsha
 licences.temp
