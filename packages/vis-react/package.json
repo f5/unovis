@@ -1,7 +1,29 @@
 {
   "name": "@unovis/react",
+  "description": "Modular data visualization framework for React, Angular, Svelte, and vanilla TypeScript or JavaScript",
   "version": "1.0.0-beta.6",
-  "description": "React wrapper for Unovis",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/f5/unovis.git",
+    "directory": "packages/react"
+  },
+  "homepage": "https://unovis.dev",
+  "bugs": {
+    "url": "https://github.com/f5/unovis/issues"
+  },
+  "keywords": [
+    "react",
+    "data visualization",
+    "maps",
+    "charts",
+    "graphs"
+  ],
+  "author": "Nikita Rokotyan, F5 Inc. <nikita@f5.com> (https://rokotyan.com)",
+  "maintainers": [
+    "Nikita Rokotyan <nikita@f5.com> (https://rokotyan.com)",
+    "Rebecca Bol <r.bol@f5.com>"
+  ],
+  "license": "Apache-2.0",
   "main": "./index.js",
   "types": "./index.d.ts",
   "type": "module",
@@ -10,10 +32,8 @@
     "build": "rimraf dist && tsc --project tsconfig.lib.json --emitDeclarationOnly && rollup --config",
     "tsc": "tsc",
     "generate": "rollup -c ./autogen/rollup.config.js; node .autogen.cjs; rm .autogen.cjs",
-    "publish-dist": "cp ./package.json ./dist; cp ../../LICENSE ./dist; cd ./dist; npm publish; rm -rf .cache"
+    "publish-dist": "cp ./{LICENSE,README.md,package.json} ./dist; cd ./dist; npm publish; rm -rf .cache"
   },
-  "author": "Nikita Rokotyan",
-  "license": "Apache-2.0",
   "peerDependencies": {
     "@emotion/css": "^11.7.1",
     "@unovis/ts": "1.0.0-beta.6",

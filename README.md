@@ -40,10 +40,10 @@ Svelte and TypeScript; and a growing [gallery](https://unovis.dev/gallery) of ex
 
 ## Repository structure
 
-* `packages/vis` Core TypeScript package
-* `packages/vis-angular` Angular components
-* `packages/vis-react` React components
-* `packages/vis-svelte` Svelte components
+* `packages/ts` Core TypeScript package
+* `packages/angular` Angular components
+* `packages/react` React components
+* `packages/svelte` Svelte components
 * `packages/website` Website, docs and examples
 
 ## Contributing
@@ -52,7 +52,7 @@ Coming soon
 ## Code of Conduct
 Coming soon
 
-## Authors
+## Maintainers
 [<img alt="Nikita Rokotyan" src="https://avatars.githubusercontent.com/u/755708" width="80"/>](https://github.com/rokotyan)
 [<img alt="Rebecca Bol" src="https://avatars.githubusercontent.com/u/52078477" width="80"/>](https://github.com/reb-dev)
 

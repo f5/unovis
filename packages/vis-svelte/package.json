@@ -1,7 +1,28 @@
 {
   "name": "@unovis/svelte",
+  "description": "Modular data visualization framework for React, Angular, Svelte, and vanilla TypeScript or JavaScript",
   "version": "1.0.0-beta.6",
-  "description": "Svelte wrapper for Unovis",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/f5/unovis.git",
+    "directory": "packages/svelte"
+  },
+  "homepage": "https://unovis.dev",
+  "bugs": {
+    "url": "https://github.com/f5/unovis/issues"
+  },
+  "keywords": [
+    "svelte",
+    "data visualization",
+    "maps",
+    "charts",
+    "graphs"
+  ],
+  "author": "Rebecca Bol, F5 Inc. <r.bol@f5.com>",
+  "maintainers": [
+    "Nikita Rokotyan <nikita@f5.com> (https://rokotyan.com)",
+    "Rebecca Bol <r.bol@f5.com>"
+  ],
   "license": "Apache-2.0",
   "main": "./index.js",
   "types": "./index.d.ts",
@@ -12,7 +33,7 @@
     "build": "npm run check && npx svelte-package",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "generate": "rollup -c ./autogen/rollup.config.js; node .autogen.cjs; rm .autogen.cjs",
-    "publish-dist": "cp ./package.json ./dist; cp ../../LICENSE ./dist; cd ./dist; npm publish; rm -rf .cache"
+    "publish-dist": "cp ./{LICENSE,README.md,package.json} ./dist; cd ./dist; npm publish; rm -rf .cache"
   },
   "peerDependencies": {
     "@unovis/ts": "1.0.0-beta.6",
