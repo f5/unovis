@@ -1,0 +1,144 @@
+/**
+ * Any CSS included here will be global. The classic template
+ * bundles Infima by default. Infima is a CSS framework designed to
+ * work well for content-centric websites.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
+
+/* You can override the default Infima variables here. */
+:root {
+  /*--ifm-color-primary: #4580C0;*/
+  --ifm-color-primary: #2780EB;
+  --ifm-hover-overlay: #f6f8fa;
+  --ifm-color-primary-dark: rgb(33, 175, 144);
+  --ifm-color-primary-darker: rgb(31, 165, 136);
+  --ifm-color-primary-darkest: rgb(26, 136, 112);
+  --ifm-color-primary-light: rgb(70, 203, 174);
+  --ifm-color-primary-lighter: rgb(102, 212, 189);
+  --ifm-color-primary-lightest: rgb(146, 224, 208);
+  --ifm-container-width-xl: 1620px;
+  --ifm-code-font-size: 95%;
+  --ifm-heading-font-family: Inter;
+  --ifm-heading-font-weight: 900;
+  --ifm-font-family-base: Inter;
+  --ifm-table-cell-padding: 0.2rem;
+  --ifm-heading-color: var(--unovis-color-deep-blue);
+  --ifm-table-head-background: #f6f8fa;
+  --ifm-table-stripe-background: #f6f8fa;
+  --ifm-container-width-xl: 1920px;
+  --docusaurus-highlighted-code-line-bg: #FFD651;
+
+  --unovis-content-padding: 4rem 5rem;
+  --unovis-color-blue: #4580C0;
+  --unovis-color-pale-pink: #D9C6BB;
+  --unovis-color-deep-blue: #171329;
+  --unovis-color-yellow: #FED651;
+  --unovis-color-grey: #8E8D95;
+  --unovis-color-beige: #BEB18B;
+  --unovis-color-red: #E2203A;
+}
+
+table thead tr {
+  border-top: none;
+  border-bottom: none;
+}
+
+table tr {
+  border-top: none;
+  border-bottom: none;
+}
+
+
+html[data-theme="dark"] {
+  --ifm-heading-color: white;
+  --docusaurus-highlighted-code-line-bg: #cea31a;
+}
+
+@media screen and (max-width: 966px) {
+  :root {
+    --unovis-content-padding: 2rem;
+  }
+}
+
+@media screen and (min-width: 1680px) {
+  :root { --ifm-font-size-base: 110%; }
+}
+
+@media screen and (min-width: 1920px) {
+  :root { --ifm-font-size-base: 115%; }
+}
+
+@media screen and (min-width: 2560px) {
+  :root { --ifm-font-size-base: 130%; }
+}
+
+.docusaurus-highlight-code-line {
+  background-color: rgba(0, 0, 0, 0.1);
+  display: block;
+  margin: 0 calc(-1 * var(--ifm-pre-padding));
+  padding: 0 var(--ifm-pre-padding);
+}
+
+html[data-theme='dark'] .docusaurus-highlight-code-line {
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.navbar__logo {
+  height: 1rem;
+  margin-right: 0;
+}
+
+.navbar__logo > img {
+  display: block !important;
+}
+
+.hidden {
+  display: none;
+}
+
+.table {
+  font-size: smaller;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+.table > thead,
+.table > tbody,
+.table > tfoot {
+  display: block;
+  width: 100% !important;
+}
+
+.table > tfoot > tr {
+  display: block;
+  text-align: end;
+}
+
+.table tr {
+  display: grid;
+  width: 100%;
+  grid-template-columns: 25% 25% 50%;
+}
+
+.table td {
+  display: block;
+  width: 100%;
+}
+
+.table td > pre {
+  display: block;
+  width: 100%;
+}
+
+.table pre {
+  font-size: smaller;
+  padding: 5px;
+  width: min-content;
+  margin: 0;
+}
+
+.main-wrapper {
+  position: relative;
+}
+

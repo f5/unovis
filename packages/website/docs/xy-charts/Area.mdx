@@ -1,0 +1,91 @@
+---
+description: Learn how to configure an Area chart
+---
+
+import CodeBlock from "@theme/CodeBlock";
+import { PropTable } from "../components/props-table";
+import { generateDataRecords } from "../utils/data";
+import { XYWrapper, XYWrapperWithInput } from '../wrappers/xy-wrapper'
+
+export const defaultProps = (n=10) => ({
+  name: "Area",
+  data: generateDataRecords(n),
+  x: d=>d.x,
+  y: d=>d.y
+});
+
+### Basic configuration
+<XYWrapper {...defaultProps()} showContext="full"/>
+
+### Multiple Areas
+_Area_ can accept an array of `y` accessors to display multiple areas at once:
+<XYWrapper {...defaultProps()} y={[(d) => d.y, (d) => d.y1, (d) => d.y2]} showContext="full"/>
+
+### Curve Types
+Using the `curveType: CurveType` property you can set various curve type options. For example:
+<XYWrapperWithInput {...defaultProps(25)} inputType="select" options={["basis", "linear", "step"]} defaultValue="basis" property="curveType"/>
+
+Learn more about configurable curves from D3's [documentation](https://github.com/d3/d3-shape#curves)
+
+### Color
+Setting color for a single _Area_ component is simple, you can achieve that just by setting the `color` property of the component to a hex string.
+
+<XYWrapperWithInput {...defaultProps(50)} property="color" inputType="color" defaultValue="#19cb9a"/>
+
+#### Multiple Colors
+If you want to configure multiple colors for your _Area_ component, you'll have to create a color accessor function, similar to `x` and `y` accessors
+described in the base configuration:
+
+<XYWrapper {...defaultProps()} showContext="minimal" y={[(d) => d.y, (d) => d.y1, (d) => d.y2]} color={(d, i) => ['#6A9DFF', '#1acb9a', '#f88080'][i]}/>
+
+### Dealing with small values
+If your data has small or zero values leading to some parts of the area to become invisible, you can force those area segments to have 1px height
+despite their actual value by setting `minHeight1Px` to `true`. This can be useful if you want to visually emphasize that the data behind the chart
+is defined but just very small.
+
+<XYWrapperWithInput {...defaultProps()}  y={[(d) => d.y < 9 ? 0 : d.y]} property="minHeight1Px" inputType="checkbox" defaultValue={true} showAxes/>
+
+### Additional Styling: CSS Variables
+The _Area_ component supports additional styling via CSS variables that you can define for your visualization container. For example:
+
+```css title="styles.css"
+.custom-area {
+  --vis-area-fill-opacity: 0.5;
+  --vis-area-hover-fill-opacity: 1;
+  --vis-area-stroke-width: 1px;
+```
+<XYWrapper {...defaultProps()} y={[(d) => d.y, (d) => d.y1, (d) => d.y2]} className="custom-area"/>
+
+<details open>
+  <summary>Supported CSS variables and their default values</summary>
+  <CodeBlock language="css">
+    {`--vis-area-cursor: default;
+--vis-area-fill-opacity: 1;
+--vis-area-stroke-color: none;
+--vis-area-stroke-width: 0px;
+--vis-area-stroke-dasharray: none;
+--vis-area-stroke-opacity: 1;
+--vis-area-hover-fill-opacity: none;
+--vis-area-hover-stroke-width: none;
+ 
+/* Dark Theme */
+--vis-dark-area-stroke-color: none;`}
+  </CodeBlock>
+</details>
+
+### Events
+
+The _Area_ component supports the following events:
+```ts
+import { Area } from '@unovis/ts'
+
+events = [Area.selectors.area]: {
+  click: (data: DataRecord[]) => {},
+  mouseover: (data: DataRecord[]) => {},
+  mouseleave: (data: DataRecord[]) => {}
+}
+```
+<XYWrapper {...defaultProps()} excludeGraph events={{}}/>
+
+## Component Props
+<PropTable name="VisArea"></PropTable>

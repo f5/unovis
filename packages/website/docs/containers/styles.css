@@ -1,0 +1,24 @@
+.center {
+  margin: 0 auto;
+  width: min-content;
+  --vis-map-feature-color: var(--vis-color-main);
+}
+
+.flex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100px;
+}
+
+.showBorder {
+  border: 1px solid #ccc;
+}
+
+.vert {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+

@@ -1,0 +1,22 @@
+.root {
+  width: 100%;
+}
+
+.title {
+}
+
+.description {
+  font-size: 1.2em;
+  margin-top: 5px;
+  margin-bottom: 10px;
+}
+
+.example {
+  position: relative;
+  width: 100%;
+}
+
+.codeBlock {
+  margin-top: 10px;
+}
+

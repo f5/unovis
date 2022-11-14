@@ -1,0 +1,6 @@
+.leaflet-doc {
+  position: relative;
+  height: 450px;
+
+  --vis-map-point-default-fill-color: #0085ff;
+}

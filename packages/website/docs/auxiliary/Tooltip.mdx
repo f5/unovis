@@ -1,0 +1,265 @@
+import BrowserOnly from '@docusaurus/BrowserOnly'
+import CodeBlock from '@theme/CodeBlock'
+import { FrameworkTabs } from '../components/framework-tabs'
+import { PropTable } from '../components/props-table'
+import { generateDataRecords } from '../utils/data'
+import { XYWrapper, XYWrapperWithInput } from '../wrappers'
+
+export const newComponent = (name, props) => ({
+  name: name,
+  props: { x: d=>d.x, y: d => d.y, ...props},
+  key: "components"
+})
+
+export const classnames = {
+  "StackedBar": "[StackedBar.selectors.bar]",
+  "Line": "[Line.selectors.line]",
+  "Scatter": "[Scatter.selectors.point]"
+}
+
+export const defaultProps = (chart="StackedBar", components, n=10) => ({
+  name: "Tooltip",
+  configKey: "tooltip",
+  data: generateDataRecords(n).map(d => ({...d, y: Math.floor(d.y)})),
+  height: 150,
+  components: [newComponent(chart, components)],
+  triggers: {
+    [classnames[chart]]: d=> `<span>x: ${d.x}<br/>y: ${d.y}</span>`
+  },
+  showTriggers: false,
+})
+
+export const Tooltip = (props) => (
+  <BrowserOnly fallback={<div>Loading...</div>}>
+    {() => {
+      const { showTriggers, inputWrapper, triggers, ...rest } = props
+      const triggerConfig = Object.keys(triggers).reduce((obj,k) => {
+        const [component, _, selector] = k.substring(1, k.length-1).split('.')
+        const { [component]: comp } = require('@unovis/ts')
+        obj[comp.selectors[selector]] = props.triggers[k]
+        if (!props.components.find(d => d.name === component)) {
+          props.components.push(newComponent(component))
+        }
+        return obj
+      }, {})
+      const wrapperProps = showTriggers ? { ...rest, triggers } : rest
+      return (
+        inputWrapper ?
+        <XYWrapperWithInput {...wrapperProps} hiddenProps={{ triggers: triggerConfig}}/> :
+        <XYWrapper {...wrapperProps} hiddenProps={{ triggers: triggerConfig}}/>
+      )
+    }}
+  </BrowserOnly>
+)
+
+### Basic configuration
+The _Tooltip_ component has been designed to work alongside XY charts. The minimal _Tooltip_ configuration looks like:
+
+<Tooltip {...defaultProps()} showContext="full" showTriggers/>
+
+### Triggers
+The `triggers` property allows a _Tooltip_ component to display custom content for a given CSS selector.
+
+<Tooltip {...defaultProps("StackedBar", { x: d=> d.x - 0.25, y: [d=>d.y, d=>d.y1, d => d.y3], barWidth: 20})}
+  showContext="minimal"
+  showTriggers
+  triggers={{
+    "[StackedBar.selectors.bar]": d => `Bar`,
+    "[Line.selectors.line]": d => `Line`,
+    "[Scatter.selectors.point]": d=> `Scatter`,
+  }}
+/>
+
+## Position
+### Horizontal Placement
+<Tooltip {...defaultProps("Scatter")} horizontalPlacement="left" containerProps={{ padding: { left: 100, right: 100 }}}/>
+
+<Tooltip {...defaultProps("Scatter")} horizontalPlacement="right" containerProps={{ padding: { left: 100, right: 100 }}}/>
+
+### Vertical Placement
+<Tooltip {...defaultProps("Scatter")}
+  verticalPlacement="top"
+  containerProps={{ padding: { top: 50, bottom: 50 }}}
+  triggers={{
+    "[Scatter.selectors.point]": d => `<span>x: ${d.x}, y: ${d.y}</span>`
+  }}/>
+
+<Tooltip {...defaultProps("Scatter")}
+  verticalPlacement="bottom"
+  containerProps={{ padding: { bottom: 50, top: 50}}}
+  triggers={{
+    "[Scatter.selectors.point]": d => `<span>x: ${d.x}, y: ${d.y}</span>`
+  }}/>
+
+### Horizontal Shift
+<Tooltip {...defaultProps("StackedBar", {barWidth: 20})}
+  inputWrapper
+  property="horizontalShift"
+  inputType="range"
+  inputProps={{min: 0, max: 100}}
+  defaultValue={50}
+  containerProps={{ padding: { right: 100, left: 100 }}}
+  triggers={ {"[StackedBar.selectors.bar]": d=> `<span>x: ${d.x}<br/>y: ${d.y}</span>`}}/>
+
+### Vertical Shift
+<Tooltip {...defaultProps("Line", {lineWidth: 10})}
+  data={generateDataRecords(10).map(d => ({ x: d.x, y: Math.cos(d.x)}))}
+  height={250}
+  inputWrapper
+  property="verticalShift"
+  inputType="range"
+  triggers= {{
+    [classnames["Line"]]: () => 'y: cos(x)'
+  }}
+  inputProps={{min: 0, max: 100}}
+  defaultValue={50}
+  containerProps={{ padding: { top: 100 }}}/>
+
+## Manual Configuration
+
+### Container
+By default the _Tooltip_ will be added to the same DOM element where your chart is located. It will also be constrained
+to stay within the dimensions of that element. That's not always convenient (for example when you have a sparkline chart
+and you need the tooltip to be displayed above it) so there's a way to set the container element manually by using the
+`container` property. In the most cases you might want to set `container` to `document.body`.
+
+<BrowserOnly fallback={<div>Loading...</div>}>
+  {() => <Tooltip {...defaultProps("StackedBar", {}, 50)} container={document.body} height={40} />}
+</BrowserOnly>
+
+### Components
+Similarly, you can manually define the components a _Tooltip_ interacts with using the `components` property. By default
+they will be passed from your chart's container (like _XYContainer_), but if you want to use _Tooltip_ independently
+you can do that!
+```ts
+const tooltip = new Tooltip({
+  //highlight-next-line
+  components: [components],
+  ...tooltipConfig,
+})
+```
+
+### Controls
+You can manually define the behavior of your _Tooltip_ with the following methods:
+
+- `hide()`:
+   hides the tooltip from view
+- `place({x: number, y: number})`:
+   anchors the tooltip to the coordinate `(x,y)`
+- `show(content: HTMLElement | string, pos: {x: number, y: number})`
+   show the value of `content` at the coordinate `(x,y)`
+
+export const ButtonTooltip = () => {
+  return (
+  <>
+    <BrowserOnly fallback={<div>Loading...</div>}>
+      {() => {
+        const { Tooltip } = require('@unovis/ts')
+        const { VisXYContainer, VisLine, VisTooltip } = require('@unovis/react')
+        const tooltip = new Tooltip({ container: document.body })
+        let toggled = false
+        function toggleTooltip(e) {
+          if (toggled) {
+            tooltip.hide()
+          } else {
+            tooltip.show("👋 I'm a tooltip", { x: e.clientX, y: e.clientY})
+          }
+          toggled = !toggled
+        }
+        return <button onClick={toggleTooltip}>Toggle</button>
+      }}
+    </BrowserOnly>
+  </>
+)}
+
+export const tooltipFn = (indent = 1) => {
+  const t = ' '.repeat(indent * 2)
+  return `\n${t.substring(2)}${['function toggleTooltip() {',
+    'if (toggled) {',
+    `${t}tooltip.hide()`,
+    '} else {',
+    `${t}tooltip.show("👋 I\'m a tooltip", { x: 0, y: 0 })`,
+    '}',
+    'toggled = !toggled',
+  ].join(`\n${t}`)}\n${t.substring(2)}}`
+}
+
+<FrameworkTabs
+  angular={{
+    html: '<vis-tooltip #tooltip></vis-tooltip>\n<button (click)="toggleTooltip">Toggle</button>',
+    ts: `@ElementRef(\'tooltip\') tooltip\ntoggled = false\n${tooltipFn().replace('function ', '')}`
+  }}
+  react={[
+    'import { VisTooltip, VisTooltipRef } from \'@unovis/react\'',
+    '',
+    'function Tooltip() {',
+    '  const [toggled, setToggled] = React.useState(false)',
+    '  const tooltip = React.useRef<VisTooltipRef>(null)',
+    `  ${tooltipFn(2).replace('toggled = !toggled', 'setToggled(!toggled)')}`,
+    '  return (<>',
+    '    <button onClick={toggleTooltip}>Toggle</button>',
+    '    <VisTooltip ref={tooltip}/>',
+    '  </>)',
+    '}'].join('\n')}
+  svelte={[
+    '<script lang=\'ts\'>',
+    '  import { VisTooltip } from \'@unovis/svelte\'\n',
+    '  let toggled',
+    `  ${tooltipFn(2)}`,
+    '</script>',
+    '',
+    '<button onClick={toggleTooltip}>Toggle</button>',
+    '<VisTooltip bind:this={tooltip}/>',
+  ].join('\n')}
+  typescript={[
+    'const tooltip = new Tooltip()',
+    'let toggled = false',
+      tooltipFn(),
+    'document.getElementById("btn").addEventListener(\'click\', toggleTooltip)'
+  ].join('\n')}
+/>
+<ButtonTooltip {...defaultProps()} toggle/>
+
+## Attributes
+The `attributes` property allows you to set custom DOM attributes to _Tooltip_'s _div_ element. It can be useful when
+you need to refer to your tooltip by using a CSS selector.
+
+<Tooltip {...defaultProps("StackedBar", { x: d=> d.x - 0.25, y: [d=>d.y, d=>d.y1]})}
+  showContext="minimal"
+  excludeGraph
+  attributes={{
+    'type': 'sample-tooltip',
+  }}
+/>
+
+## Additional Styling: CSS Variables
+The _Tooltip_ component supports additional styling via CSS variables that you can define for your visualization container. For example:
+
+```css title="styles.css"
+.visualization-container-div {
+  --vis-tooltip-background-color: '#3f3f3f';
+  --vis-tooltip-text-color: '#fefefe';
+}
+```
+<Tooltip {...defaultProps()} className="custom-tooltip" excludeTabs/>
+
+<details open>
+  <summary open>All supported CSS variables</summary>
+  <CodeBlock language="css">{
+`--vis-tooltip-background-color: rgba(255, 255, 255, 0.95);
+--vis-tooltip-border-color: #e5e9f7;
+--vis-tooltip-text-color: #000;
+--vis-tooltip-shadow-color: rgba(172, 179, 184, 0.35);
+--vis-tooltip-backdrop-filter: none;
+--vis-tooltip-padding: 10px 15px;
+ 
+/* Dark Theme */
+--vis-dark-tooltip-background-color: rgba(30,30,30, 0.95);
+--vis-dark-tooltip-text-color: #e5e9f7;
+--vis-dark-tooltip-border-color: var(--vis-color-grey);
+--vis-dark-tooltip-shadow-color: rgba(0,0,0, 0.95);`
+}</CodeBlock>
+</details>
+
+## Component Props
+<PropTable name="VisTooltip"/>

@@ -1,0 +1,49 @@
+.example {
+  padding: 5% 5%;
+  background-color: rgba(218,197,187,0.1);
+
+  --vis-color0: #f45a6d;
+  --vis-color1: #2780eb;
+  --vis-color2: #ffc180;
+  --vis-color3: var(--unovis-color-pale-pink);
+  --vis-color4: var(--unovis-color-red);
+}
+
+.example > .visContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 50px;
+}
+
+.example > .visContainer .visualization {
+  flex: 0 0 40%;
+  min-width: 0;
+  display: inline-block;
+}
+
+.example > .visContainer .link {
+  margin-top: 15px;
+  display: inline-block;
+}
+
+.example > .visContainer .code {
+  flex: 2 2 auto;
+  min-width: 0;
+}
+
+.example > .visContainer .limitHeight {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+@media screen and (max-width: 966px) {
+  .example > .visContainer {
+    flex-flow: row wrap;
+  }
+  .example > .visContainer .visualization, .example > .visContainer .code {
+    flex: 1 1 100%;
+  }
+}
+
+

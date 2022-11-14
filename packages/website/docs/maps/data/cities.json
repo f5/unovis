@@ -1,0 +1,87 @@
+[
+  {
+    "id": "AUMEL",
+    "latitude": -37.814,
+    "longitude": 144.96332,
+    "city": "Melbourne"
+  },
+  {
+    "id": "BRSAO",
+    "latitude": -23.5475,
+    "longitude": -46.63611,
+    "city": "Sao Paulo"
+  },
+  {
+    "id": "CNBEI",
+    "latitude": 39.9075,
+    "longitude": 116.39723,
+    "city": "Beijing"
+  },
+  {
+    "id": "EGCAI",
+    "latitude": 30.06263,
+    "longitude": 31.24967,
+    "city": "Cairo"
+  },
+  { "id": "FRPAR", "latitude": 48.85341, "longitude": 2.3488, "city": "Paris" },
+  {
+    "id": "INMUM",
+    "latitude": 19.07283,
+    "longitude": 72.88261,
+    "city": "Mumbai"
+  },
+  {
+    "id": "JPTOK",
+    "latitude": 35.6895,
+    "longitude": 139.69171,
+    "city": "Tokyo"
+  },
+  {
+    "id": "MXMEX",
+    "latitude": 19.42847,
+    "longitude": -99.12766,
+    "city": "Mexico City"
+  },
+  {
+    "id": "NOOSL",
+    "latitude": 59.91273,
+    "longitude": 10.74609,
+    "city": "Oslo"
+  },
+  {
+    "id": "PELIM",
+    "latitude": -12.04318,
+    "longitude": -77.02824,
+    "city": "Lima"
+  },
+  {
+    "id": "PHMAN",
+    "latitude": 14.6042,
+    "longitude": 120.9822,
+    "city": "Manila"
+  },
+  {
+    "id": "RUMOS",
+    "latitude": 55.75222,
+    "longitude": 37.61556,
+    "city": "Moscow"
+  },
+  {
+    "id": "TZDAR",
+    "latitude": -6.82349,
+    "longitude": 39.26951,
+    "city": "Dar es Salaam"
+  },
+  {
+    "id": "USNEW",
+    "latitude": 40.71427,
+    "longitude": -74.00597,
+    "city": "New York City"
+  },
+  {
+    "id": "USSAN",
+    "latitude": 37.77493,
+    "longitude": -122.41942,
+    "city": "San Francisco"
+  }
+]

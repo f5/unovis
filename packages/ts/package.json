@@ -1,0 +1,86 @@
+{
+  "name": "@unovis/ts",
+  "description": "Modular data visualization framework for React, Angular, Svelte, and vanilla TypeScript or JavaScript",
+  "version": "1.0.0-beta.9",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/f5/unovis.git",
+    "directory": "packages/ts"
+  },
+  "homepage": "https://unovis.dev",
+  "bugs": {
+    "url": "https://github.com/f5/unovis/issues"
+  },
+  "keywords": [
+    "typescript",
+    "data visualization",
+    "maps",
+    "charts",
+    "graphs"
+  ],
+  "author": "Nikita Rokotyan, F5 Inc. <nikita@f5.com> (https://rokotyan.com)",
+  "maintainers": [
+    "Nikita Rokotyan <nikita@f5.com> (https://rokotyan.com)",
+    "Rebecca Bol <r.bol@f5.com>"
+  ],
+  "license": "Apache-2.0",
+  "main": "./index.js",
+  "module": "./index.js",
+  "typings": "./index.d.ts",
+  "type": "module",
+  "sideEffects": [
+    "styles/index.js",
+    "lib/styles/index.js"
+  ],
+  "scripts": {
+    "build": "sha=$(tar cf - ./src | shasum); if [[ $(echo $sha) == $(< .srcsha) ]] && [[ -d \"./lib\" ]]; then echo \"Lib Build Exists\"; else npm run forcebuild; echo $sha > .srcsha; fi",
+    "forcebuild": "rimraf lib; rollup -c",
+    "publish-dist": "cp ./{LICENSE,README.md,package.json} ./lib; cd ./lib; npm publish; rm -rf .cache"
+  },
+  "devDependencies": {
+    "@rollup/plugin-json": "^4.1.0",
+    "@types/d3": "^7.1.0",
+    "@types/d3-collection": "^1.0.10",
+    "@types/d3-sankey": "^0.11.2",
+    "@types/leaflet": "1.7.6",
+    "@types/lodash-es": "^4.17.6",
+    "@types/mapbox-gl-leaflet": "^0.0.1",
+    "@types/supercluster": "^5.0.2",
+    "@types/three": "^0.135.0",
+    "@types/topojson-client": "^3.0.0",
+    "@zerollup/ts-transform-paths": "^1.7.18",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.61.1",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-postcss": "^4.0.1",
+    "rollup-plugin-rename-node-modules": "^1.3.1",
+    "rollup-plugin-terser": "^7.0.2",
+    "rollup-plugin-typescript2": "^0.31.1",
+    "rollup-plugin-visualizer": "^4.2.2"
+  },
+  "dependencies": {
+    "@emotion/css": "^11.7.1",
+    "@juggle/resize-observer": "^3.3.1",
+    "@maplibre/maplibre-gl-leaflet": "0.0.15",
+    "@types/geojson": "^7946.0.8",
+    "@types/topojson": "^3.2.3",
+    "@types/topojson-specification": "^1.0.2",
+    "@unovis/dagre-layout": "0.8.8-1",
+    "@unovis/graphlibrary": "2.2.0-1",
+    "d3": "^7.2.1",
+    "d3-collection": "^1.0.7",
+    "d3-geo-projection": "^4.0.0",
+    "d3-interpolate-path": "^2.2.3",
+    "d3-sankey": "^0.12.3",
+    "geojson": "^0.5.0",
+    "leaflet": "1.7.1",
+    "lodash-es": "^4.17.21",
+    "maplibre-gl": "^2.1.9",
+    "supercluster": "^7.1.5",
+    "three": "^0.135.0",
+    "to-px": "^1.1.0",
+    "topojson-client": "^3.1.0",
+    "tslib": "^2.3.1"
+  }
+}

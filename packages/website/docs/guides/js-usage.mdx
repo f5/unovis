@@ -1,0 +1,52 @@
+---
+description: Use with JavaScript
+---
+
+import { FrameworkTabs } from '../components/framework-tabs.tsx'
+import {
+  angularLineChartCode,
+  reactLineChartCode,
+  svelteLineChartCode,
+  tsLineChartCode,
+  BasicLineChartExample
+} from '../quick-start.snippets'
+
+# JavaScript Usage
+
+export const removeTypes = (component) => component.props.children
+   .replace(/type D.*\n\s*/gm, '')
+    .replace(': JSX.Element ', '')
+    .replace(': DataRecord[]', '')
+    .replace('<DataRecord>', '')
+
+
+Even though our library is built with TypeScript, you can still use _Unovis_ with plain JavaScript by
+dropping the corresponding syntax related to types in your code. See the example code below to compare between
+TypeScript and JavaScript syntax.
+
+### Using with TypeScript
+
+<FrameworkTabs
+  showTitles={true}
+  angular={{
+    html: angularLineChartCode.props.children.find(c => c.props.title.endsWith('html')).props.children,
+    ts: angularLineChartCode.props.children.find(c => c.props.title.endsWith('component.ts')).props.children,
+  }}
+  react={reactLineChartCode.props.children}
+  svelte={svelteLineChartCode.props.children}
+  typescript={tsLineChartCode.props.children}
+/>
+
+### Using with JavaScript
+
+<FrameworkTabs
+  showTitles={true}
+  angular={{
+    ts: removeTypes(angularLineChartCode.props.children.find(c => c.props.title.endsWith('component.ts')))
+      .replaceAll('(d: DataRecord): number', 'd'),
+    html: angularLineChartCode.props.children.find(c => c.props.title.endsWith('html')).props.children,
+  }}
+  react={removeTypes(reactLineChartCode).replace(': JSX.Element ', '')}
+  svelte={removeTypes(svelteLineChartCode).replace(' lang=\"ts\"', '')}
+  javascript={removeTypes(tsLineChartCode)}
+/>

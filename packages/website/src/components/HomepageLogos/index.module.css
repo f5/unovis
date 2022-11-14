@@ -1,0 +1,21 @@
+.root {
+  width: 100%;
+  padding: 5% 5%;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.logo {
+  height: 10em;
+  /*width: 100%;*/
+  padding: 2% 5%;
+}
+
+.logo > img {
+  height: 100%;
+}

@@ -1,0 +1,8 @@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+<div [innerHTML]="legendHTML"></div>
+<vis-xy-container [data]="data" [height]="height">
+    <vis-stacked-bar [x]="x" [y]="y"></vis-stacked-bar>
+    <vis-crosshair [template]="tooltipTemplate"></vis-crosshair>
+    <vis-tooltip [verticalShift]="height" horizontalPlacement="center"></vis-tooltip>
+    <vis-axis type="x"></vis-axis>
+</vis-xy-container>

@@ -1,0 +1,71 @@
+{
+  "name": "@unovis/angular",
+  "description": "Modular data visualization framework for React, Angular, Svelte, and vanilla TypeScript or JavaScript",
+  "version": "1.0.0-beta.9",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/f5/unovis.git",
+    "directory": "packages/angular"
+  },
+  "homepage": "https://unovis.dev",
+  "bugs": {
+    "url": "https://github.com/f5/unovis/issues"
+  },
+  "keywords": [
+    "angular",
+    "data visualization",
+    "maps",
+    "charts",
+    "graphs"
+  ],
+  "author": "Nikita Rokotyan, F5 Inc. <nikita@f5.com> (https://rokotyan.com)",
+  "maintainers": [
+    "Nikita Rokotyan <nikita@f5.com> (https://rokotyan.com)",
+    "Rebecca Bol <r.bol@f5.com>"
+  ],
+  "license": "Apache-2.0",
+  "scripts": {
+    "ng": "npx ng",
+    "build": "npx ng build",
+    "watch": "npx ng build --watch --configuration development",
+    "test": "npx ng test",
+    "generate": "rollup -c; node .autogen.cjs; rm .autogen.cjs"
+  },
+  "main": "dist/lib/bundles/unovis-angular.umd.js",
+  "module": "dist/lib/esm2015/public-api.js",
+  "typings": "dist/lib/public-api.d.ts",
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "dependencies": {
+    "tslib": "^2.3.1"
+  },
+  "peerDependencies": {
+    "@angular/common": "^12.0.3",
+    "@angular/compiler": "^12.0.3",
+    "@angular/core": "^12.0.3",
+    "@unovis/ts": "1.0.0-beta.9"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^12.0.3",
+    "@angular/cli": "^12.0.3",
+    "@angular/common": "^12.0.3",
+    "@angular/compiler": "^12.0.3",
+    "@angular/compiler-cli": "^12.0.3",
+    "@angular/core": "^12.0.3",
+    "@types/jasmine": "~3.6.0",
+    "@types/node": "^12.11.1",
+    "jasmine-core": "~3.7.0",
+    "karma": "~6.3.0",
+    "karma-chrome-launcher": "~3.1.0",
+    "karma-coverage": "~2.0.3",
+    "karma-jasmine": "~4.0.0",
+    "karma-jasmine-html-reporter": "^1.5.0",
+    "ng-packagr": "^12.0.0",
+    "rollup": "^2.61.1",
+    "rollup-plugin-typescript2": "^0.31.1",
+    "ttypescript": "^1.5.13"
+  }
+}

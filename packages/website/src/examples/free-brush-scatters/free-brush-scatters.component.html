@@ -1,0 +1,29 @@
+<h2>American College Graduates, 2010-2012</h2>
+<vis-bullet-legend [items]="legendItems"></vis-bullet-legend>
+
+<div class="scatter-with-minimap">
+  <vis-xy-container [data]="data" [height]="'55vh'" [xDomain]="xDomain" [yDomain]="yDomain">
+    <vis-scatter [id]="id" [x]="x" [y]="y" [color]="color" [size]="size" [label]="label" [sizeRange]="[20, 80]"></vis-scatter>
+    <vis-axis type="x" label="Median Salary ($)" [tickFormat]="formatNumber"></vis-axis>
+    <vis-axis type="y" label="Employment Rate"></vis-axis>
+  </vis-xy-container>
+  <vis-xy-container class="minimap" [data]="data" [height]="125">
+    <vis-scatter
+      [id]="id"
+      [x]="x"
+      [y]="y"
+      [color]="color"
+      [size]="size"
+      [sizeRange]="[3, 10]"
+      [label]="undefined">
+    </vis-scatter>
+    <vis-free-brush
+      [autoHide]="false"
+      [mode]="brushMode"
+      [onBrushEnd]="setSelection"
+      [selectionMinLength]="[0, 0]"
+      [x]="x"
+      [y]="y">
+    </vis-free-brush>
+  </vis-xy-container>
+</div>

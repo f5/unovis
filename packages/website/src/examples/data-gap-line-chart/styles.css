@@ -1,0 +1,9 @@
+.fallbackValueSwitch {
+  width: min(415px, 90vw);
+  background-color: var(--ifm-code-background);
+  padding: 10px 20px;
+  display: inline-block;
+  border-radius: 5px;
+  border: 1px solid var(--ifm-code-background);
+  margin-bottom: 10px;
+}
