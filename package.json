@@ -1,0 +1,56 @@
+{
+  "name": "unovis",
+  "version": "1.0.0",
+  "license": "Apache-2.0",
+  "private": true,
+  "workspaces": [
+    "packages/ts",
+    "packages/angular",
+    "packages/react",
+    "packages/svelte"
+  ],
+  "engines": {
+    "node": ">=12.0.0",
+    "npm": ">=7.0.0"
+  },
+  "scripts": {
+    "postinstall": "sh postinstall.sh",
+    "website": "cd packages/website && npm run start",
+    "build": "npm run build:lib && npm run build:lib-react && npm run build:lib-angular && npm run build:lib-svelte && npm run build:website",
+    "build:lib": "cd packages/ts && npm run build",
+    "build:lib-angular": "cd packages/angular && npm run build",
+    "build:lib-react": "cd packages/react && npm run build",
+    "build:lib-svelte": "cd packages/svelte && npm run build",
+    "build:website": "cd packages/website && npm run build",
+    "publish:lib": "cd packages/ts && npm run build && npm run publish-dist",
+    "publish:lib-angular": "cd packages/angular && npm run build && npm publish",
+    "publish:lib-react": "cd packages/react && npm run build && npm run publish-dist",
+    "publish:lib-svelte": "cd packages/svelte && npm run build && npm run publish-dist",
+    "publish:all": "sh prepublish.sh && sh publish.sh",
+    "lint": "eslint ./ --ext .js,.jsx,.ts,.tsx,.svelte --ignore-path .gitignore",
+    "lint:fix": "eslint ./ --ext .js,.jsx,.ts,.tsx,.svelte --fix --ignore-path .gitignore",
+    "gather-licenses": "for p in packages/*; do echo \"  📄 Checking licenses for $p\"; npx license-report --package=$p/package.json --config lic-report-config.json --output=table > $p/licences.temp; mv -f $p/licences.temp $p/licences.txt; done",
+    "install:clean": "for p in packages/*; do rm -f $p/package-lock.json; rm -rf $p/node_modules; done; rm -rf node_modules; npm i"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.14",
+    "@typescript-eslint/eslint-plugin": "^5.41.0",
+    "@typescript-eslint/parser": "^5.41.0",
+    "eslint": "^8.26.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-import-resolver-typescript": "^2.7.1",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-import-newlines": "^1.2.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^6.0.0",
+    "eslint-plugin-standard": "^5.0.0",
+    "eslint-plugin-svelte": "^2.10.0",
+    "husky": "^7.0.4",
+    "license-report": "^4.5.0",
+    "lint-staged": "^12.1.3",
+    "typescript": "~4.2.4"
+  },
+  "lint-staged": {
+    "*.{js,ts,jsx,tsx,svelte}": "eslint --quiet --cache --fix"
+  }
+}

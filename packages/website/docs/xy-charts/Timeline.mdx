@@ -1,0 +1,209 @@
+---
+description: Learn how to configure a Timeline chart
+---
+
+import CodeBlock from "@theme/CodeBlock"
+import BrowserOnly from "@docusaurus/core/lib/client/exports/BrowserOnly"
+import { XYWrapper, XYWrapperWithInput, axis } from '../wrappers/xy-wrapper'
+import { PropTable } from '../components/props-table'
+import { generateTimeSeries } from '../utils/data'
+
+export const xAxis = ({
+  ...axis('x'),
+  props: { type: 'x', tickFormat: Intl.DateTimeFormat.format }
+})
+
+export const defaultProps = (n = 5, rows=n) => ({
+  name: "Timeline",
+  height: 150,
+  dataType: 'TimeDataRecord',
+  data: generateTimeSeries(n, rows),
+  x: d => d.timestamp,
+})
+
+export const emptyProps = {
+  ...defaultProps(),
+  data: Array(4).fill(0).map((_, i) => ({ type: 'a', timestamp: i * 10, length: i % 2 === 1 ? 8 : 0 })),
+  height: 50,
+}
+
+## Basic Configuration
+The _Timeline_ component has been designed to work together with _XY Container_.
+The minimal _Timeline_ configuration looks like:
+
+<XYWrapper {...defaultProps(6)} showContext="full"/>
+
+where `TimeDataRecord` has at least the following properties:
+
+```ts
+type TimeDataRecord = {
+  timestamp: Date; // Position on the X axis. Can be `number` or `Date`
+  length: number; // Length of the line in X axis values, i.e. milliseconds if you use `Date`
+  type: string; // The row it will be displayed in
+}
+```
+
+:::note
+
+By default, if the records in your data array contain `length` and `type` properties (as shown above),
+_Timeline_ will only need the `x` accessor provided to display the data.
+Otherwise, you can explicitly define accessor functions for `length` and `type`.
+
+:::
+
+## Labels
+Enable the `showLabels` property to display row types along the **vertical** axis. You can alter the
+appearance of these labels with the `labelWidth` and `maxLabelWidth` properties.
+
+Like other XY components, labeling data along the **horizontal** axis can be accomplished
+by adding an _Axis_ component to your container. See following example which displays labeled
+_Timeline_ alongside a labeled _X Axis_:
+
+<XYWrapper {...defaultProps()}
+  components={[xAxis]}
+  declarations={{ tickFormat: 'Intl.DateTimeFormat().format'}}
+  showLabels
+  showContext="container"/>
+
+<br/>
+
+:::caution Note
+
+Since *Timeline* groups vertical data in an ordinal fashion, adding a Y axis here is not recommended.
+
+:::
+
+
+## Row Configuration
+### Alternating row colors
+For easier readability, each row's background color alternates among two colors by default. To display a single
+background color across all rows, disable the `alternatingRowColors` property:
+<XYWrapperWithInput {...defaultProps(20, 5)} property="alternatingRowColors" defaultValue={true} inputType="checkbox"/>
+
+### Row Height
+Use the `rowHeight` property to adjust the size of each row.
+<XYWrapper {...defaultProps(20, 5)} rowHeight={50} hideTabLabels/>
+
+## Line Configuration
+### Line Cap
+By default, lines have squared ends. You can give your lines a rounded appearance by setting `lineCap` property to `true`.
+<XYWrapper {...defaultProps()} lineCap/>
+
+### Showing empty segments
+Set `showEmptySegments` to `true` if you want to display lines that are `undefined` or too small to see.
+
+<XYWrapperWithInput {...emptyProps} lineCap={true} property="showEmptySegments" inputType="checkbox" defaultValue={true}/>
+
+### Line Width
+You can also change the line thickness with the `lineWidth` property, which determines how much
+vertical space each _Timeline_ item occupies.
+
+### Example: Custom timeline lines
+<XYWrapperWithInput {...defaultProps(3)} height={320} rowHeight={100} property="lineWidth" inputType="range" defaultValue={10}/>
+
+## Events
+### Scrolling
+You can provide a callback to the `onScroll` property, which accepts a function of type:
+
+```ts
+type onScroll = (n: number) => void
+```
+
+where _n_ is equal to the distance scrolled from the top of the timeline (in pixels).
+
+See the following example, where `onScroll` updates the xAxis label:
+
+export function ScrollExample() {
+  const [dist, setDist] = React.useState(0)
+  return (
+    <>
+      <XYWrapper {...defaultProps(50, 20)}
+        onScroll={setDist}
+        showContext="minimal"
+        components={[{...xAxis, props: { type: 'x', label: () => `${dist}px from the top`, tickValues: [] }}]}
+        declarations={{ onScroll: '(n: number) => setAxisLabel(`${n}px from the top`)'}}
+        />
+    </>
+  )
+}
+
+<ScrollExample/>
+
+### Custom cursor for hover events
+You can set custom cursor when hovering over a line. However, it'll only be active if you've defined events for `[Timeline.selectors.line]`:
+<BrowserOnly>
+{() => {
+  const { Timeline } = require('@unovis/ts')
+  return <XYWrapper
+      {...defaultProps(20, 5)}
+      showContext="minimal"
+      declarations={{
+        events:
+  `{
+    [Timeline.selectors.line]: {
+        click: (d) => { console.log(d) }
+    }
+  }`
+      }}
+      events={{
+        [Timeline.selectors.line]: {
+            click: (d) => { console.log(d) }
+        },
+      }}
+      cursor="cell"
+    />
+  }
+}
+</BrowserOnly>
+
+### More Events
+```ts
+import { Timeline } from '@unovis/ts'
+
+const events = {
+  [Timeline.selectors.background]: {
+    wheel: () => { ... },
+  },
+  [Timeline.selectors.line]: {
+    click: () => { ... },
+  }
+  [Timeline.selectors.label]: {
+    mouseover: () => { ... }
+  }
+}
+```
+
+## Additional Styling: CSS Variables
+The _Timeline_ component supports additional styling via CSS variables:
+
+
+<details open>
+  <summary>All supported CSS variables</summary>
+  <CodeBlock language="css">{
+`--vis-timeline-row-even-fill-color: #FFFFFF;
+--vis-timeline-row-odd-fill-color: #F7FAFC;
+--vis-timeline-row-background-opacity: 1;
+--vis-timeline-scrollbar-background-color: #E6E9F3;
+--vis-timeline-scrollbar-color: #9EA7B8;
+ 
+--vis-timeline-label-font-size: 12px;
+--vis-timeline-label-color: #6C778C;
+ 
+--vis-timeline-cursor: default;
+--vis-timeline-line-color: var(--vis-color-main);
+--vis-timeline-line-stroke-width: 0;
+ 
+/* The line stroke color variable is not defined by default */
+/* to allow it to fallback to the corresponding row background color */
+/* --vis-timeline-line-stroke-color: none; */
+ 
+/* Dark Theme */
+--vis-dark-timeline-row-even-fill-color: #292B34;
+--vis-dark-timeline-row-odd-fill-color: #333742;
+--vis-dark-timeline-scrollbar-background-color: #292B34;
+--vis-dark-timeline-scrollbar-color: #6C778C;
+--vis-dark-timeline-label-color: #EFF5F8;`}
+  </CodeBlock>
+</details>
+
+<PropTable name="VisTimeline"/>

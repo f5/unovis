@@ -1,0 +1,72 @@
+---
+sidebar_position: 0
+---
+
+import Link from '@docusaurus/Link';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Introduction
+
+## 👋 Welcome to Unovis
+
+This documentation will help you to get comfortable with *Unovis* — a modular and platform-agnostic library for charts,
+maps and network graphs.
+
+## 🏗 Install
+Unovis is available on NPM in several packages, each for the UI framework of your choice (_React_, _Angular_ or _Svelte_).
+The core package `@unovis/ts` can be used without a UI framework, and if you use one you'll need to install `@unovis/ts`
+along with the framework specific package:
+
+<Tabs>
+  <TabItem value="react" label="React" default>
+
+```bash
+npm install -P @unovis/ts @unovis/react
+```
+
+  </TabItem>
+  <TabItem value="angular" label="Angular">
+
+```bash
+npm install -P @unovis/ts @unovis/angular
+```
+
+  </TabItem>
+  <TabItem value="svelte" label="Svelte">
+
+```bash
+npm install -P @unovis/ts @unovis/svelte
+```
+  </TabItem>
+  <TabItem value="typescript" label="TypeScript">
+
+```bash
+npm install -P @unovis/ts
+```
+  </TabItem>
+</Tabs>
+
+## 🧑‍💻 Create your first chart
+Most of _Unovis_ components require a _Container_ to get rendered. There are two types of containers
+available:
+
+* [_XY Container_](/docs/containers/XY_Container). Designed to manage multiple _XY Components_ (e.g. [_Line_](/docs/xy-charts/Line),
+[_GroupedBar_](/docs/xy-charts/GroupedBar), [_Scatter_](/docs/xy-charts/Scatter), ...), along with optional
+[_Axes_](/docs/auxiliary/Axis), [_Tooltip_](/docs/auxiliary/Tooltip) and [_Crosshair_](/docs/auxiliary/Crosshair);
+
+* [_Single Container_](/docs/containers/Single_Container). Works only with a single components, like [_Graph_](/docs/networks-and-flows/Graph),
+[_Sankey_](/docs/networks-and-flows/Sankey), or [_TopoJSONMap_](/docs/maps/TopoJSONMap). It also supports
+[_Tooltip_](/docs/auxiliary/Tooltip).
+
+Some of the components are stand-alone and don't need a container: [_LeafletMap_](/docs/maps/LeafletMap),
+[_LeafletFlowMap_](/docs/maps/LeafletFlowMap) and legends.
+
+Go to the 👟 [Quick Start](/docs/quick-start) section to learn how to quickly build a simple Line Chart.
+
+## 🔭 Explore the docs
+Pick a component from the sidebar to learn how to configure it. Start with 📈 [_Line_](/docs/xy-charts/Line) or
+📊 [_Bar_](/docs/xy-charts/GroupedBar) if you want something simple.
+Don't forget to check out our 🖼 [Gallery](/gallery) to see what the library is capable of!
+
+

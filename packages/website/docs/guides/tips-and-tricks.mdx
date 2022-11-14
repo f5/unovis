@@ -1,0 +1,98 @@
+---
+description: Power user tricks
+---
+
+import BrowserOnly from '@docusaurus/BrowserOnly'
+import { generateDataRecords } from '../utils/data.ts'
+import { XYWrapper, axis } from '../wrappers/xy-wrapper'
+import { FrameworkTabs } from '../components/framework-tabs.tsx'
+
+import './styles.css'
+
+# Tips and Tricks
+
+## Custom Fills with SVG `defs`
+If you want to custom SVG definitions available for your components, you can use the `svgDefs` property on the container, like this:
+
+export const defs = `
+    <linearGradient id="gradient" gradientTransform="rotate(90)">
+      <stop offset="20%" stop-color="#051937" />
+      <stop offset="40%" stop-color="#004d7a" />
+      <stop offset="60%" stop-color="#008793" />
+      <stop offset="80%" stop-color="#00bf72" />
+    </linearGradient>`
+
+<XYWrapper name="Area"
+  data={generateDataRecords(10)}
+  x={d=>d.x} y={d=>d.y}
+  showContext="container"
+  color="url(#gradient)"
+  declarations={{ svgDefs: `\`${defs}\n  \`` }}
+  containerProps={{
+    svgDefs: defs
+  }}/>
+
+export const svg = `\n<svg>\n  <defs>   ${defs}\n  </defs>\n</svg>`
+
+:::note
+
+Alternatively, you can define any defs you want to use in an SVG element on the same page.
+
+<FrameworkTabs
+  angular={{html: `<vis-area ... color="url(#gradient)"></vis-area>\n${svg}`}}
+  react={`<VisArea ... color="url(#gradient)"/>\n${svg}`}
+  typescript={`const chart = new Area({... color: "url(#gradient)"})\n\ndocument.getElementById('container').insertAdjacentHTML(\`${svg}\`\n)`}/>
+
+:::
+
+## Displaying Ordinal Values
+We don't natively support the ordinal scale for XY components, but it can still be achieved with some
+small tweaks.
+
+- In your _XY Component_, provide the `x` property _NumericAccessor_ that returns the data index.
+
+<div className='indent'>
+
+```ts
+const x = (d: DataRecord, i: number) => i
+```
+
+</div>
+
+- In your _Axis_ component, provide the `tickFormat` property with a _StringAccessor_ that returns
+your value. Two common configurations are:
+
+<div className='indent'>
+
+  **Case 1**: When your data is an array of objects containing your ordinal property:
+
+```ts
+const tickFormat = (tick: number) => data[tick].category
+```
+  **Case 2**: Your ordinal values are explicitly defined as an array of strings:
+
+```ts
+const categories = ['A', 'B', 'C', 'D', 'E']
+const tickFormat = (tick: number) => categories[tick]
+```
+</div>
+
+When we apply these adjustments to a basic _Stacked Bar_ chart with an _X Axis_ component, the result
+looks like:
+
+<XYWrapper
+  name='StackedBar'
+  data={generateDataRecords(5)}
+  x={(d, i) => i}
+  y={d => d.y}
+  showContext='container'
+  components={[
+    axis('x', { tickFormat: d => ['A', 'B', 'C', 'D', 'E'][d] })
+  ]}
+/>
+
+
+
+
+
+

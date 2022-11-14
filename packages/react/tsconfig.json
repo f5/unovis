@@ -1,0 +1,40 @@
+{
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "storybook/**/*.ts",
+    "storybook/**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ],
+  "compilerOptions": {
+    "target": "es2017",
+    "module": "esnext",
+    "lib": ["es5", "es6", "dom", "dom.iterable"],
+    "types": [],
+    "allowJs": false,
+    "jsx": "react",
+    "declaration": true,
+    "sourceMap": true,
+    "outDir": "dist",
+    "rootDir": "./",
+    "baseUrl": "./",
+    "paths": {
+      "@unovis/react": ["src/"],
+      "@unovis/react/*": ["src/*"],
+    },
+    "removeComments": true,
+    "strict": true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "downlevelIteration": true,
+    "importHelpers": true,
+    "strictFunctionTypes": false
+  }
+}

@@ -1,0 +1,20 @@
+.scatter-with-minimap {
+  position: relative;
+}
+
+.minimap {
+  height: 150px;
+  border: 1px solid grey;
+  background-color: var(--ifm-code-background);
+  margin: 0 auto;
+}
+
+@media screen and (min-width: 600px) {
+  .minimap {
+    width: 200px;
+    position: absolute;
+    display: block;
+    bottom: 60px;
+    right: 20px;
+  }
+}

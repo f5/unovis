@@ -1,0 +1,279 @@
+---
+sidebar_position: 0
+---
+import CodeBlock from '@theme/CodeBlock';
+import BrowserOnly from '@docusaurus/BrowserOnly'
+import { FrameworkTabs } from '../components/framework-tabs'
+import { PropTable } from '../components/props-table'
+import { generateDataRecords, generateTimeSeries } from '../utils/data'
+import { XYWrapper, XYWrapperWithInput } from '../wrappers'
+
+export const defaultProps = (n=10) => ({
+  name: "Axis",
+  data: generateDataRecords(n),
+  type: "x",
+  height: 100,
+  hiddenProps: { gridLine: false },
+  configKey: "xAxis",
+});
+
+export const multiProps = (xProps, yProps) => ({
+  ...defaultProps(),
+  ...xProps,
+  components: [
+    { name: "Axis", key: "yAxis", props: {type: "y", ...yProps } },
+  ],
+  showContext: "container"
+})
+
+### Basic configuration
+The _Axis_ component has been designed to work together with _XY Container_. The minimal _Axis_ configuration looks like:
+<XYWrapper {...defaultProps()}/>
+
+### Axis Types
+_Axis_ supports two `AxisType` properties to bind to your data: `AxisType.X` and `AxisType.Y`. You can also simply provide the string `"x"` or `"y"`.
+
+#### AxisType.X
+<XYWrapper {...defaultProps()}/>
+
+#### AxisType.Y
+<XYWrapper {...defaultProps()} type="y" configKey="yAxis"/>
+
+### Axis Position
+You can change the position of your axis with a `Position` type or a string equivalent: `"top"`, `"right"`, `"bottom"`, or `"left"`.
+
+<XYWrapper {...multiProps({ position: 'top', label: 'X'}, {position: "right", label: "Y"})}/>
+
+:::note
+
+Note: An X _Axis_ can only accept the values `Position.Bottom` (default) and `Position.Top` and a Y _Axis_ can only accept `Position.Left` (default) and `Position.Right`.
+The default will be used in the case of an invalid position argument.
+
+:::
+
+## Labeling
+### Axis Label
+You can provide a string to label your axes with the `label` property:
+<XYWrapperWithInput {...defaultProps()} height={75} inputType="text" defaultValue="Label" property="label"/>
+
+### Label Font Size
+Change the label size (in pixels) with the `labelFontSize` property.
+<XYWrapperWithInput {...defaultProps()} inputType="range" label="Label" defaultValue={30} property="labelFontSize"/>
+
+### Label Margin
+The spacing between the label and the axis itself can be set with the `labelMargin` property:
+<XYWrapperWithInput {...defaultProps()} label="Label" inputType="range" inputProps={{ min: 0, max: 50, step: 1}} defaultValue={5} property="labelMargin"/>
+
+### Grid Line
+You can enable or disable the visibility of the _Axis_ grid line with the `gridLine` property.
+<XYWrapperWithInput
+  {...defaultProps()}
+  inputType="checkbox"
+  defaultValue={true}
+  property="gridLine"
+  hiddenProps={{}}
+/>
+
+### Axis Domain Line
+You can enable or disable the visibility of the axis domain line with the `domainLine` property.
+<XYWrapperWithInput {...defaultProps()} label="Label" inputType="checkbox" defaultValue={true} property="domainLine"/>
+
+### Providing Data to _Axis_
+If you use the _Axis_ component alone, without other xy-components, you'll need to provide an `x` accessor or `y` accessors to populate the axis values.
+Consider the following example with a single axis and a data array with x values in the range `0 < x < 10`:
+
+<XYWrapper {...defaultProps()} x={d => d.x} showContext="full"/>
+Another example:
+
+```ts
+const x = (d: DataRecord) => d.x * 100
+```
+<XYWrapper {...defaultProps()} x={d => d.x * 100} excludeTabs/>
+
+## Tick Configuration
+The _Axis_ component supports a wide variety of tick customization options
+
+### Tick Line
+You can remove tick labels from your axis by setting the `tickLine` property to false:
+<XYWrapperWithInput {...defaultProps()} inputType="checkbox" defaultValue={false} property="tickLine"/>
+
+### Tick Text Font Size
+To change the font size for the tick labels, you provide the `tickTextFontSize` property with a CSS string.
+<XYWrapperWithInput {...defaultProps()} inputType="text" defaultValue={'50px'} property="tickTextFontSize"/>
+
+### Tick Format
+You can customize how ticks are formatted using the `tickFormat` property and a label formatter function.
+The following example uses Javascript's built-in Date formatter function `toDateString()`.
+<XYWrapper {...defaultProps()} data={generateTimeSeries(10)} x={d => d.timestamp} tickFormat={d=> new Date(d).toDateString()}/>
+
+### Text Alignment
+Change the tick's label alignment with respect to the tick marker using `tickTextAlign` property with a TextAlign value: `TextAlign.Left`, `TextAlign.Right` or `TextAlign.Center`.
+<XYWrapperWithInput
+  {...defaultProps()}
+  inputType="select"
+  data={generateTimeSeries(10)}
+  hiddenProps={{gridLine: false, x: d => d.timestamp, tickFormat: d=> new Date(d).toDateString()}}
+  options={['right', 'center', 'left']}
+  property="tickTextAlign"/>
+
+### Text Length
+To limit the string length of the tick labels, use the `tickTextLength` property:
+<XYWrapperWithInput
+  {...defaultProps()}
+  inputType="range"
+  defaultValue={10}
+  inputProps={{min: 1, max: 20}}
+  property="tickTextLength"
+  data={generateTimeSeries(10)}
+  hiddenProps={{gridLine: false, x: d => d.timestamp, tickFormat: d=> new Date(d).toDateString()}}
+/>
+
+### Text Trim Type
+When a tick label becomes too long, you can customize the trimming method with the `tickTextLength` property.
+_Axis_ accepts a `TrimMode` or a string. When we provide the previous example with `TrimMode.End` property, we can see the end of the label gets cut off instead of the middle.
+<XYWrapperWithInput inputType="select"
+  {...defaultProps()}
+  tickTextLength={10}
+  data={generateTimeSeries(10)}
+  hiddenProps={{gridLine: false, x: d => d.timestamp, tickFormat: d=> new Date(d).toDateString()}}
+  options={['start', 'middle', 'end']}
+  property="tickTextTrimType"/>
+
+### Text Width
+To limit the width of the tick labels (in pixels), you can use the `tickTextWidth` property.
+<XYWrapperWithInput
+  {...defaultProps()}
+  inputType="number"
+  defaultValue={50}
+  property="tickTextWidth"
+  data={generateTimeSeries(10)}
+  hiddenProps={{gridLine: false, x: d => d.timestamp, tickFormat: d=> new Date(d).toDateString()}}
+/>
+
+### Text Fit Mode
+_Axis_ accepts the following values for the tickTextFitMode property: `FitMode.Wrap` or `FitMode.Trim`. This determines how the axis will
+handle tick text overflow. The following example showcases the previous example using `"trim"` instead of `"wrap"`.
+<XYWrapperWithInput inputType="select"
+  {...defaultProps()}
+  tickTextWidth={10}
+  data={generateTimeSeries(10)}
+  hiddenProps={{gridLine: false, x: d => d.timestamp, tickFormat: d=> new Date(d).toDateString(), tickTextTrimType:"end"}}
+  options={['trim', 'wrap']}
+  property="tickTextFitMode"/>
+
+### Force Word Break
+In addition, you can enable a forced word break for overflowing tick labels with the `tickTextForceWordBreak` property.
+<XYWrapperWithInput
+  {...defaultProps()}
+  inputType="checkbox"
+  tickTextWidth={10}
+  data={generateTimeSeries(10)}
+  hiddenProps={{gridLine: false, x: d => d.timestamp, tickFormat: d=> new Date(d).toDateString(), tickTextTrimType:"end"}}
+  defaultValue={true}
+  property="tickTextForceWordBreak"/>
+
+### Text Separator
+_Axis_ accepts a `string` or `string[]` value for `tickTextSeparator` property. This will allow tick labels to be separated by custom values in the case of overflow.
+Note: this only takes effect when `FitMode.Wrap` is enabled and `tickTextWidth` is defined.
+<XYWrapperWithInput
+  {...defaultProps()}
+  inputType="text"
+  tickTextWidth={10}
+  data={generateTimeSeries(3)}
+  hiddenProps={{gridLine: false, x: d => d.timestamp, tickFormat: (d,i)=> new Date(d).toUTCString()}}
+  defaultValue=","
+  property="tickTextSeparator"/>
+
+### Custom Number of Ticks
+By default, the _Axis_ component provides an optimal number of ticks displayed based on the component's size. You can alter the tick count to your liking using the `numTicks` property.
+
+:::note
+
+The specified count is only a hint, the axis can have more or fewer ticks depending on the data
+
+:::
+
+<XYWrapperWithInput
+  {...defaultProps()}
+  inputType="range"
+  inputProps={{ min: 1, max: 30}}
+  defaultValue={20}
+  property="numTicks"/>
+
+### Display Only Minimum and Maximum Ticks
+Set the `minMaxTicksOnly` property to `true` if you only want to see the two end ticks on the axis:
+<XYWrapperWithInput
+  {...defaultProps()}
+  inputType="checkbox"
+  defaultValue={true}
+  property="minMaxTicksOnly"/>
+
+### Custom Values
+You can customize the ticks displayed by providing the _Axis_ component with a number array.
+The following example only shows even values for x after getting the `tickValue` array from a filter function.
+```ts
+function tickValues() {
+  return data.filter(d => d.x % 2 == 0)
+})
+```
+<XYWrapper {...defaultProps()} tickValues={[0,2,4,6,8]} hiddenProps={{x:d=>d.x}}/>
+
+## Displaying Multiple Axes
+More commonly, you will want to display both an x and y axis for your graph. You can display multiple axes in an _XY Container_ like so:
+<XYWrapper {...multiProps()}/>
+
+## Displaying Axis with a Chart
+You can include a chart within your _XY Container_ alongside your axes like this:
+<XYWrapper {...multiProps()}
+  components={[
+    ...multiProps().components,
+    { name: "Line", key: 'components', props: {x: d=>d.x, y: d=>d.y }}
+  ]}/>
+
+## Additional Styling: CSS Variables
+The _Axis_ component supports additional styling via CSS variables that you can define for your visualization container. For example:
+
+```css title="styles.css"
+.container {
+  --vis-axis-tick-label-font-size: 20px;
+  --vis-axis-label-color: #1acb9a;
+  --vis-axis-font-family: monospace;
+  --vis-axis-tick-label-color:  #8777d9;
+}
+```
+<XYWrapper {...defaultProps()} gridLine height={150} label="Label" excludeTabs className="custom-axis"/>
+
+<details open>
+  <summary>All supported CSS variables and their default values</summary>
+  <CodeBlock language="css">
+    {`--vis-axis-font-family
+--vis-axis-tick-color: #e8e9ef;
+--vis-axis-tick-label-color: #6c778c;
+--vis-axis-grid-color: #e8e9ef;
+--vis-axis-label-color: #6c778c;
+--vis-axis-tick-label-font-size: 12px;
+--vis-axis-label-font-size: 14px;
+ 
+/* Dark Theme */
+--vis-dark-axis-tick-color: #6c778c;
+--vis-dark-axis-tick-label-color: #e8e9ef;
+--vis-dark-axis-grid-color: #6c778c;
+--vis-dark-axis-label-color:#fefefe;`}
+  </CodeBlock>
+</details>
+
+## Events
+```ts
+import { Axis } from '@unovis/ts`
+
+events = {
+  [Axis.selectors.tick]: {
+    mouseover: (d: number | Date) => {},
+    mouseout: (d: number | Date) => {}
+  }
+}
+```
+<XYWrapper {...defaultProps()} excludeGraph events={{}}/>
+
+## Component Props
+<PropTable name="VisAxis"></PropTable>

@@ -1,0 +1,63 @@
+{
+  "name": "@unovis/react",
+  "description": "Modular data visualization framework for React, Angular, Svelte, and vanilla TypeScript or JavaScript",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/f5/unovis.git",
+    "directory": "packages/react"
+  },
+  "homepage": "https://unovis.dev",
+  "bugs": {
+    "url": "https://github.com/f5/unovis/issues"
+  },
+  "keywords": [
+    "react",
+    "data visualization",
+    "maps",
+    "charts",
+    "graphs"
+  ],
+  "author": "Nikita Rokotyan, F5 Inc. <nikita@f5.com> (https://rokotyan.com)",
+  "maintainers": [
+    "Nikita Rokotyan <nikita@f5.com> (https://rokotyan.com)",
+    "Rebecca Bol <r.bol@f5.com>"
+  ],
+  "license": "Apache-2.0",
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "type": "module",
+  "sideEffects": false,
+  "scripts": {
+    "build": "rimraf dist && tsc --project tsconfig.lib.json --emitDeclarationOnly && rollup --config",
+    "tsc": "tsc",
+    "generate": "rollup -c ./autogen/rollup.config.js; node .autogen.cjs; rm .autogen.cjs",
+    "publish-dist": "cp ./{LICENSE,README.md,package.json} ./dist; cd ./dist; npm publish; rm -rf .cache"
+  },
+  "peerDependencies": {
+    "@emotion/css": "^11.7.1",
+    "@unovis/ts": "1.0.0",
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0"
+  },
+  "devDependencies": {
+    "@emotion/css": "^11.7.1",
+    "@rollup/plugin-node-resolve": "^13.0.4",
+    "@types/react": ">=16.8.0",
+    "@types/node": "^16.11.17",
+    "@zerollup/ts-transform-paths": "^1.7.18",
+    "react": ">=16.8.0",
+    "react-dom": ">=16.8.0",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.61.1",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "rollup-plugin-typescript2": "^0.31.1",
+    "tsconfig-paths-webpack-plugin": "^3.5.2",
+    "tslib": "^2.3.1",
+    "ttypescript": "^1.5.13",
+    "typescript": "~4.2.4"
+  },
+  "dependencies": {
+    "lodash-es": "^4.17.21"
+  }
+}

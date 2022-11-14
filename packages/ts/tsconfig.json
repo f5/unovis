@@ -1,0 +1,29 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "./src",
+    "baseUrl": "./src",
+    "outDir": "./lib",
+    "declaration": true,
+    "paths": {
+      "types/*": ["./types/*"],
+      "utils/*": ["./utils/*"],
+      "core/*": ["./core/*"],
+      "components/*": ["./components/*"],
+      "styles/*": ["./styles/*"],
+      "data-models/*": ["./data-models/*"]
+    },
+    // To be enabled:
+    // "noImplicitAny": true,
+    // "alwaysStrict": true,
+    // "strictNullChecks": true,
+    // "strictPropertyInitialization": true,
+    // "strictFunctionTypes": true,
+    "noImplicitThis": true,
+    "strictBindCallApply": true
+  },
+  "exclude": [
+    "index.ts",
+    "maps.ts"
+  ]
+ }

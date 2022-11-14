@@ -1,0 +1,287 @@
+---
+description: Create a data visualization theme for your project
+---
+
+import BrowserOnly from '@docusaurus/BrowserOnly'
+import CodeBlock from '@theme/CodeBlock'
+import ColorModeToggle from '@theme/ColorModeToggle'
+import Tabs from '@theme/Tabs'
+import TabItem from '@theme/TabItem'
+import { CSSVariables } from '../components/css-variables'
+import { data, generateScatterDataRecords, generateTimeSeries } from '../utils/data.ts'
+import { DocWrapper } from '../wrappers'
+import { XYWrapper, axis } from '../wrappers/xy-wrapper'
+import { defaultProps as sankeyProps } from '../networks-and-flows/Sankey.mdx'
+import { defaultProps as donutProps } from '../misc/Donut.mdx'
+import { component } from '../containers/XY_Container.mdx'
+
+import './styles.css'
+
+# Theming
+
+export const xyProps = (n) => ({
+  data: data.map(d => ({
+    ...d,
+    values: Array(10).fill(0).map(() => Math.random())
+  })),
+  x: d => d.x,
+  y: Array(n).fill(0).map((_, i) => d => d.values[i]),
+  excludeTabs: true,
+})
+
+export const borderLineProps = {
+  ...xyProps(7),
+  height: 150,
+}
+
+## Overview
+In addition to configuration properties, our components also rely on
+[CSS variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties)
+to supply the values of various SVG attributes such as `fill`, `stroke`, `opacity`, etc. You can override
+these variables to further customize your _Unovis_ components.
+
+Every variable has the following naming convention: `--vis` + _label_ + _attribute_. For example, the variable named
+`--vis-area-cursor` would apply to the [Area](../xy-charts/Area) component's cursor property.
+
+Note that while our variables follow this convention, it does not guarantee that the value you wish
+to override is available. Be sure to check the corresponding doc page of the component you want to customize
+to see the available CSS variables.
+
+## Basic Example
+Variables can be overridden in your CSS style declarations. Consider the default configuration for sankey, which looks like this:
+
+<DocWrapper {...sankeyProps()} subLabel={d => Math.random()} excludeTabs/>
+
+Now consider the following style declaration. After adding `custom-sankey` to the container element of the
+_Sankey_ component, we will see the following result:
+
+<CSSVariables selector='.custom-sankey'
+    vars={[
+  '--vis-sankey-node-sublabel-font-weight',
+  '--vis-sankey-node-color',
+  '--vis-sankey-link-color',
+  '--vis-sankey-link-opacity'
+]}/>
+
+
+<div className='custom-sankey'>
+   <DocWrapper {...sankeyProps()} subLabel={d => Math.random()} excludeTabs/>
+</div>
+
+## Dark Theme
+Our library offers dark theme support which takes effect when the class `theme-dark` is added to the
+document's `body` element. Every component has a dark version of each color variable labeled with the
+prefix `--vis-dark`. You can opt not to override these if you want to use our default dark theme values,
+or override them like so:
+
+<CSSVariables selector='.custom-sankey'
+    vars={[
+  '--vis-sankey-node-color',
+  '--vis-dark-sankey-node-color',
+  '--vis-sankey-link-color',
+  '--vis-dark-sankey-link-color',
+]}/>
+
+## Large Size
+A common theming scenario is the "large size" theme, for when you want larger font sizes for the
+labels in your charts. We have a built-in class selector, `largeSize` that you can import directly
+from `@unovis/ts`. Just add it to your container's class list to see the effects:
+
+<BrowserOnly>{() => {
+  const { largeSize } = require('@unovis/ts')
+  return (
+    <div className={largeSize}>
+    <XYWrapper
+      name='XYContainer'
+      imports={{ '@unovis/ts': ['largeSize'] }}
+      data={[5,10,6,3,8,9,4,7,5,6].map((d, i) => ({
+        x: i,
+        y: d,
+        label: `D${i + 1}`,
+        color: `var(--vis-color${[0,0,0,1,2,3,2,0,1,1][i]})`
+      }))}
+      showContext='full'
+      containerProps={{ className: 'largeSize'}}
+      components={[
+        axis('x', { label: 'X Axis'}),
+        axis('y', { label: 'Y Axis' }),
+        component('Scatter', { label: d => d.label }),
+      ]}
+    />
+    </div>
+  )
+}}
+</BrowserOnly>
+
+
+
+:::note
+When using this theme, the following components have caveats:
+
+- [**Scatter**](../xy-charts/Scatter):
+If the [`labelPosition`](../xy-charts/Scatter#label-position) property is set to `Position.Center`,
+point labels will try fit to the point's size. In this case, you will instead need to update the
+[`pointSize`](../xy-charts/Scatter#point-size-and-size-range) property to render larger labels.
+
+- [**Timeline**](../xy-charts/Timeline)
+Additionally, you may need to adjust the [`rowHeight`](../xy-charts/Timeline#row-height) property to
+accommodate larger labels.
+:::
+
+## Global Variables
+The majority of our variables exist on a component level,  but there are a few global CSS variables:
+
+<CSSVariables selector=':root' vars={[
+  '--vis-font-family',
+  '--vis-color-main',
+  '--vis-color-main-light',
+  '--vis-color-main-dark',
+  '--vis-color-grey',
+]}/>
+
+:::note
+Unless overridden explicitly, `--vis-color-main` corresponds to the first color in the default [color palette](#color-palette)
+:::
+
+## Font
+The font for labels across all of our components is defined by the `--vis-font-family` variable. The default font,
+[Inter](https://rsms.me/inter/), is not imported by default, but you can easily import it yourself from
+[Google Fonts](https://fonts.google.com/specimen/Inter).
+
+To use a different font, simply redefine the `--vis-font-family` CSS variable:
+
+<div className='custom-font'>
+  <CSSVariables vars={['--vis-font-family']} selector='.custom-font'/>
+  <XYWrapper
+    name='Scatter'
+    labelPosition='center'
+    data={generateScatterDataRecords(10)}
+    x={d => d.x}
+    y={d => d.y}
+    sizeRange={[40,60]}
+    excludeTabs={true}
+    label={d => d.label}
+    components={[
+      axis('x', { label: 'X Axis'}),
+      axis('y', { label: 'Y Axis'}),
+    ]}
+  />
+</div>
+
+
+## Color Palette
+Many of our components use the default color palette for visualizations. You can import the array of hex values directly
+from `unovis/ts`:
+```ts
+import { colors, colorsDark } from '@unovis/ts'
+```
+
+The dark theme palette is slightly different from the regular one. These colors are also defined directly in our CSS variables, labeled `--vis-color0`, `--vis-dark-color0`, `--vis-color1`, `--vis-dark-color1`, etc.
+The full palette looks like this:
+#### Light
+<CSSVariables className='color-vars' selector=':root' vars={Array(6).fill(0).map((_, i) => `--vis-color${i}`)} />
+
+#### Dark
+<CSSVariables className='color-vars-dark' selector=':root' vars={Array(6).fill(0).map((_, i) => `--vis-dark-color${i}`)} />
+
+#### Palette Editor
+You can tweak and preview your desired palette using the example _StackedBar_ component below.
+If you like the result, just copy and paste the corresponding style declaration in the dropdown below.
+
+<BrowserOnly>
+{() => {
+  const ref = React.useRef(null)
+  const { colors } = require('@unovis/ts')
+  const colorMap = Object.fromEntries(colors.map((c, i) => [`--vis-color${i}`, c]))
+  const [variables, setVariables] = React.useState(colorMap)
+  function update(event, key) {
+    setVariables({...variables, [key]: event.target.value})
+    ref.current.style.setProperty(key, event.target.value)
+  }
+  return (
+    <div id='custom-vis' ref={ref}>
+      <div className='side-by-side'>
+        <table>
+          <thead>
+            <tr>
+              <th>Variable</th>
+              <th>Color</th>
+              <th>Hex</th>
+            </tr>
+          </thead>
+          <tbody>
+          {Object.keys(variables).map(c => (
+            <tr key={c}>
+              <td>{c}</td>
+              <td><input type='color' value={variables[c]} onChange={e => update(e, c)}/></td>
+              <td><input type='text' value={variables[c]} onChange={e => update(e, c)}/></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <XYWrapper name='StackedBar' className='custom-vis' {...xyProps(colors.length)}/>
+    </div>
+    <details>
+      <summary>styles.css</summary>
+        <CodeBlock language='css'>
+        {`:root {\n  ${Object.entries(variables).map(([k, v]) => [k, v].join(': ')).join(';\n  ')};\n}`}
+      </CodeBlock>
+    </details>
+  </div>
+  )
+}}
+</BrowserOnly>
+
+:::tip
+Alternatively, you can provide a custom color palette in *global scope* using the `UNOVIS_COLORS` variable:
+```javascript
+window.UNOVIS_COLORS = [...]
+// or
+globalThis.UNOVIS_COLORS = [...]
+```
+This needs to be done before the library is imported, i.e. in your top level JS file or HTML.
+:::
+
+## Bordered Segments
+For charts with multiple data layers, it might be preferable to have a visual separation of elements.
+You can do this by manipulating the `stroke` and `stroke-width` variables to create a bordered segment
+effect.
+
+For the following components, the `stroke` property by default is either `none` or the same color
+as its fill. You can tweak the variables accordingly to create the desired effect:
+
+```css
+:root  {
+  --stroke: #fff;
+  --stroke-dark: #292b34;
+
+  /* Area */
+  --vis-area-stroke-width: 1px;
+  --vis-area-stroke: var(--stroke);
+  --vis-dark-area-stroke: var(--stroke-dark);
+
+  /* Donut */
+  --vis-donut-segment-stroke-width: 1px;
+
+  /* StackedBar */
+  --vis-stacked-bar-stroke-width: 1px;
+  --vis-stacked-bar-stroke: var(--stroke);
+  --vis-dark-stacked-bar-stroke: var(--stroke-dark);
+
+  /* Timeline */
+  --vis-timeline-line-stroke-width: 1px;
+}
+```
+
+<div className='border-lines'>
+  <h4>Area</h4>
+  <XYWrapper name='Area' {...borderLineProps} width={500}/>
+  <h4>Donut</h4>
+  <DocWrapper {...donutProps()} {...borderLineProps} value={d => Math.random()} arcWidth={50}/>
+  <h4>Stacked Bar</h4>
+  <XYWrapper name='StackedBar' {...borderLineProps}/>
+  <h4>Timeline</h4>
+  <XYWrapper name='Timeline' data={generateTimeSeries(50, 6)} height={200} x={d => d.timestamp} length={d => d.length * 10} type={d => d.type} lineCap excludeTabs/>
+</div>
+
+

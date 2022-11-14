@@ -1,0 +1,17 @@
+<h2>American College Graduates, 2010-2012</h2>
+<vis-bullet-legend [items]="legendItems"></vis-bullet-legend>
+<vis-xy-container [data]="data" [height]="600">
+  <vis-scatter
+    [x]="getX"
+    [y]="getY"
+    [color]="getColor"
+    [size]="getSize"
+    [label]="getLabel"
+    [labelPosition]="'bottom'"
+    [sizeRange]="[10, 50]"
+    cursor="pointer"
+  ></vis-scatter>
+  <vis-axis type="x" label="Median Salary ($)" [tickFormat]="xTicks"></vis-axis>
+  <vis-axis type="y" label="Employment Rate"></vis-axis>
+  <vis-tooltip [triggers]="tooltipTriggers"></vis-tooltip>
+</vis-xy-container>

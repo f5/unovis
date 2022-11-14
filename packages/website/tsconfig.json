@@ -1,0 +1,17 @@
+{
+  // This file is not used in compilation. It is here just for a nice editor experience.
+  "extends": "@tsconfig/docusaurus/tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "target": "es6",
+    "experimentalDecorators": true,
+    "jsx": "react-jsx",
+    "moduleResolution": "Node"
+  },
+  "exclude": [
+    "node_modules",
+    "build",
+    "dist",
+    "dist-demo",
+  ]
+}
