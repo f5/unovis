@@ -1,0 +1,15 @@
+
+<div #chart class="chart">
+  <vis-bullet-legend #legendRef
+    [items]="legendItems"
+    (itemClick)="onLegendItemClick($event)"
+  ></vis-bullet-legend>
+  <vis-singlechart
+    [margin]="margin"
+    [component]="component"
+    [config]="config"
+    [data]="data"
+  ></vis-singlechart>
+</div>
+
+

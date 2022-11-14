@@ -1,0 +1,7 @@
+<div class="button-group">
+  <a [ngClass]="{active: layoutType === 'parallel'}" (click)="onClick('parallel')">Block Layout</a>
+  <a [ngClass]="{active: layoutType === 'force'}" (click)="onClick('force')">Force Layout</a>
+</div>
+
+<div #graph class="chart">
+</div>

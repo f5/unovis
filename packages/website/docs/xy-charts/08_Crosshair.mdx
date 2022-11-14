@@ -1,0 +1,87 @@
+---
+sidebar_position: 8
+title: Crosshair
+sidebar_label: Crosshair
+---
+import CodeBlock from '@theme/CodeBlock'
+import { PropTable } from '../components/props-table.tsx'
+import { generateDataRecords } from '../utils/data'
+import { XYWrapperWithInput, XYWrapper } from './wrapper.tsx'
+
+export const defaultProps = (chart="Line", components, n=5) => ({
+  name: "Crosshair",
+  configKey: "crosshair",
+  data: generateDataRecords(n),
+  showAxes: true,
+  height: 150,
+  components: [{ name: chart, props: { x: d=>d.x, y: [d=>d.y, d=>d.y1, d=>d.y2], ...components}, key: "components" }]
+})
+
+### Basic configuration
+The _Crosshair_ component is a special tooltip designed to work in an _XYContainer_.
+When a user is interacting with the _XYContainer_ and a crosshair is provided, the _Crosshair_ will appear as a vertical line and render circles on the corresponding `y` values in the dataset.
+
+<XYWrapper {...defaultProps('Line', {}, 10)} showContext="full"/>
+
+### X and Y accessors
+Like other components in you can supply `x` and `y` accessors to the _Crosshair_ component to control where it appears in your container.
+There's also a dedicated `yStacked` property for dealing with stacked values.
+
+By default, _Crosshair_ automatically takes the `x`, `y` and `yStacked` settings from _XYContainer_.
+But as soon as you manually specify any of them, the component will expect the rest to be provided as well. For example, if you supply
+the `x` accessor function to your crosshair you'll also have to supply the `y` or `yStacked` settings depending on your chart configuration.
+
+See the following example which moves the position of the crosshair line to the right of each bar.
+
+```ts
+const x: ((d: DataRecord) => number) = d.x + 0.5
+const yStacked: ((d: DataRecord) => number)[] = [d => d.y, d => d.y1, d => d.y2]
+```
+<XYWrapper {...defaultProps("StackedBar", { barWith: 50})} height={200} x={d => d.x + 0.5} yStacked={[d=>d.y, d=>d.y1, d=>d.y2]}/>
+
+### Hiding the crosshair
+By default, the _Crosshair_ component will render if the cursor is within a certain distance in pixels from a valid `x` value.
+You can disable this feature using the `hideWhenFarFromPointer` attribute.
+<XYWrapperWithInput {...defaultProps("StackedBar", { barWidth: 10})} property="hideWhenFarFromPointer" defaultValue={true} inputType="checkbox"/>
+
+### hideWhenFarFromPointerDistance
+Use the `hideWhenFarFromPointerDistance` attribute with a length (in pixels) that represents the minimum horizontal distance the cursor must be from a datapoint before hiding.
+<XYWrapperWithInput {...defaultProps("StackedBar", { barWidth: 10})} data={generateDataRecords(10).filter(d => d.x % 2 == 0)} property="hideWhenFarFromPointerDistance" defaultValue={50} inputType="range"/>
+
+### Custom Color
+Provide a `string` or color accessor function to the `color` attribute to customize the crosshair's point color:
+<XYWrapper {...defaultProps()} color={(d, i) => ['red', 'green', 'blue'][i]} showContext="minimal"/>
+
+### Displaying Custom Content
+You can render text content for your _Crosshair_ component by providing it with a `template` property and a _Tooltip_ component within the same container.
+
+<XYWrapper {...defaultProps()}
+  data={generateDataRecords().map(d => ({...d, y: Math.floor(d.y)}))}
+  template={ d => [d.x, d.y].join(', ')}
+  components={defaultProps("Scatter", { y: d => d.y}).components.concat({
+    name: "Tooltip",
+    key: "tooltip",
+    props: {},
+  })}
+  showContext="full"/>
+
+### Additional Styling: CSS Variables
+The _Crosshair_ component supports additional styling via CSS variables that you can define for your visualization container. For example:
+
+```css title="styles.css"
+.visualization-container-div {
+  --vis-crosshair-line-stroke: #f88080;
+  --vis-crosshair-circle-stroke: #000000;
+}
+```
+<XYWrapper {...defaultProps()} excludeTabs className="custom-crosshair"/>
+
+<details open>
+  <summary open>All supported CSS variables</summary>
+  <CodeBlock language="css">{
+`--vis-crosshair-line-stroke
+--vis-crosshair-circle-stroke`
+}</CodeBlock>
+</details>
+
+<PropTable name="VisCrosshair"/>

@@ -1,0 +1,129 @@
+---
+title: Single Container
+sidebar_label: Single Container
+---
+
+import BrowserOnly from '@docusaurus/BrowserOnly'
+import { PropTable } from '../components/props-table'
+import { sankeyData, orderedData } from '../utils/data'
+import { DocWrapper } from '../wrappers'
+import './styles.css'
+
+export const defaultProps = (n=10) => ({
+  name: "SingleContainer",
+  containerName: "SingleContainer",
+  data: Array(n).fill(25).map(d => Math.floor(d * Math.random())),
+  dataType: 'number',
+  configKey: undefined,
+  showContext: "container",
+  excludeTabs: true,
+  height: 150,
+})
+
+export const sankeyProps = {
+  ...defaultProps(),
+  data: sankeyData(100, [[1,2], [], [3,4,5]]),
+  components: [{ name: 'Sankey', props: {}, key: 'component'}],
+}
+
+### Basic configuration
+_Single Container_ is a basic container for a Unovis component. It is designed to hold one
+visualization component and an (optional) _Tooltip_. Just wrap the
+component of your choice in _Single Container_ to render it.
+
+<BrowserOnly>
+{() => {
+  const { Donut } = require('@unovis/ts')
+  const components = [
+    {
+      name: 'Tooltip',
+      props: {
+        triggers: {
+          [Donut.selectors.segment]: d => {
+            return `Value: ${d.data}`}
+        },
+      },
+      key: 'tooltip'
+    },
+    { name: 'Donut', props: { value: d => d }, key: 'component' }
+  ]
+  return <DocWrapper {...defaultProps()}
+    height={150}
+    components={components}
+    imports={{ '@unovis/ts': ['Donut'] }}
+    showContext='full'
+    excludeTabs={false}
+    declarations={{ triggers: `{ [Donut.selectors.segment]: d => d.data }`}}
+  />
+}}
+</BrowserOnly>
+
+:::note
+For XY Components, instead use the <a href="XY_Container">XY Container</a>, which designed to handle
+2D data with X and Y coordinates.
+:::
+
+### Width and Height
+By default, _Single Container_ will try to fit within the bounds of its parent HTML element. If the parent
+height isn't defined, the default height of `300px` will be applied. You can also explicitly define the container's
+size with the `width` and `height` properties, which accepts numeric values.
+
+```ts
+const width = 200;
+const height = 100;
+```
+
+<div className='center'>
+  <BrowserOnly>
+  {() => {
+    const { VisSingleContainer, VisTopoJSONMap } = require('@unovis/react')
+    const { WorldMapTopoJSON } = require('@unovis/ts/maps')
+    const topojson = { name: 'TopoJSONMap',
+      props: { topojson: WorldMapTopoJSON, },
+      key: 'component'
+    }
+    return (
+      <DocWrapper {...defaultProps()} containerProps={{ height: 100, width: 200 }} components={[topojson]}/>
+    )
+  }}
+  </BrowserOnly>
+</div>
+
+### Margin
+You can set _Single Container_'s `margin` to control the spacing between the container and adjacent
+elements. The `margin` property accepts a value of type `Sizing`, where each value represents the
+corresponding margin size in pixels.
+
+#### Sizing
+```ts
+type Sizing = {
+  top: number;
+  bottom: number;
+  left: number;
+  right: number;
+}
+```
+Note that the chart's size is affected by this property. Notice how the following chart is affected
+after setting the margin accordingly.
+
+```ts
+const margin = { left: 100, right: 100 }
+```
+
+#### Before:
+<DocWrapper {...sankeyProps}/>
+
+#### After:
+<DocWrapper {...sankeyProps} margin={{ left: 100, right: 100 }}/>
+
+### Sizing
+The `sizing` property determines whether components should fit into the container
+or the container should expand to fit to the component's size. Currently, only <a href="../networks-and-flows/Sankey#component-sizing">
+Sankey</a> supports the `sizing` option. By default, all components will fit to the size of _Single Container_.
+
+### SVG Defs
+You can use the `svgDefs` property to define custom fill patterns for your components.
+See our <a href="../extras#custom-fills-with-svg-defs">Tips and Tricks</a> for details.
+
+## Component Props
+<PropTable name="VisSingleContainer"/>

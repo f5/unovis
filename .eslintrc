@@ -1,0 +1,126 @@
+{
+  "root": true,
+  "extends": [
+    "standard",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "env": {
+    "browser": true,
+    "jasmine": true
+  },
+  "plugins": [
+    "import",
+    "import-newlines"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "settings": {
+    "import/resolver": {
+      "typescript": {
+        "project": [
+          "packages/*/tsconfig.json"
+        ]
+      }
+    }
+  },
+  "rules": {
+    "indent": ["error", 2],
+    "comma-dangle": ["error", {
+        "arrays": "always-multiline",
+        "objects": "always-multiline",
+        "imports": "always-multiline",
+        "exports": "always-multiline",
+        "functions": "never"
+    }],
+    "object-curly-spacing": ["error", "always"],
+    "prefer-template": "error",
+    "no-useless-constructor": "off",
+    "no-multiple-empty-lines": ["error", { "max": 2, "maxBOF": 0}],
+    "import/extensions": 0,
+    "import/no-unresolved": [2, {"commonjs": true, "amd": true, "ignore": ["^@theme", "^@docusaurus", "^@site"]}],
+    "import/no-extraneous-dependencies": 0,
+    "import/prefer-default-export": 0,
+    "import/first": ["error", "absolute-first"],
+    "no-console": ["error", { "allow": ["warn", "error"] }],
+    "no-undef": 0,
+    "no-unused-vars": 0,
+    "max-len": ["warn", { "code": 200, "tabWidth": 2, "ignoreTrailingComments": true, "ignoreComments": true,  "ignoreUrls": true }],
+    "import-newlines/enforce": ["error", { "items": 12, "max-len": 150, "semi": false }]
+  },
+  "overrides": [{
+    "files": ["*.ts", "*.tsx"],
+    "extends": ["plugin:@typescript-eslint/recommended"],
+    "parser": "@typescript-eslint/parser",
+    "rules": {
+      "indent": "off",
+      "no-unused-expressions": "off",
+      "comma-dangle": "off",
+      "@typescript-eslint/comma-dangle": ["error", {
+          "arrays": "always-multiline",
+          "objects": "always-multiline",
+          "imports": "always-multiline",
+          "exports": "always-multiline",
+          "functions": "never",
+          "enums": "always-multiline",
+          "generics": "always-multiline",
+          "tuples": "always-multiline"
+      }],
+      "no-use-before-define": "off",
+      "@typescript-eslint/no-use-before-define": ["error"],
+      "@typescript-eslint/indent": ["error", 2],
+      "@typescript-eslint/no-unused-expressions": ["error"],
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/explicit-module-boundary-types": ["warn"],
+      "@typescript-eslint/explicit-member-accessibility": "off",
+      "@typescript-eslint/type-annotation-spacing": ["error"],
+      "@typescript-eslint/member-delimiter-style": ["error", {
+        "multiline": {
+          "delimiter": "semi",
+          "requireLast": true
+        },
+        "singleline": {
+          "delimiter": "semi",
+          "requireLast": false
+        }
+      }],
+      "multiline-ternary": "off",
+      "@typescript-eslint/explicit-function-return-type": ["error", {
+        "allowExpressions": true
+      }],
+      "keyword-spacing": "off",
+      "@typescript-eslint/keyword-spacing": ["error"],
+      "@typescript-eslint/naming-convention": [
+        "error",
+        {
+          "selector": "default",
+          "format": ["camelCase"],
+          "leadingUnderscore": "allow",
+          "trailingUnderscore": "allow"
+        },
+        {
+          "selector": "variable",
+          "format": ["camelCase", "UPPER_CASE"],
+          "leadingUnderscore": "allow",
+          "trailingUnderscore": "allow"
+        },
+        {
+          "selector": "variable",
+          "modifiers": ["exported"],
+          "format": ["camelCase", "UPPER_CASE", "PascalCase"]
+        },
+        {
+          "selector": "function",
+          "modifiers": ["exported"],
+          "format": ["camelCase", "PascalCase"]
+        },
+        {
+          "selector": "typeLike",
+          "format": ["PascalCase"]
+        },
+        {
+          "selector": "enumMember",
+          "format": ["PascalCase"]
+        }
+      ]
+    }
+  }]
+}

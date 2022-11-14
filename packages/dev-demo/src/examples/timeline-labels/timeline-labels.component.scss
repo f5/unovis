@@ -1,0 +1,34 @@
+.title {
+  display: block;
+  margin: 20px 30px;
+  height: 20px;
+  width: calc(100% - 60px);
+  text-align: center;
+  color: grey;
+}
+
+.chart {
+  position: relative;
+  padding: 30px;
+  width: 100%;
+}
+
+.separator {
+  display: block;
+  border-top: 1px solid lightgrey;
+  margin: 5px 5px 0px 125px;
+}
+
+::ng-deep {
+  .timeline-tooltip {
+    font-size: 10pt;
+
+    span {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 5px;
+    }
+  }
+}

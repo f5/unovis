@@ -1,0 +1,10 @@
+.chart {
+  display: block;
+  height: 40vh;
+  width: 100%;
+}
+
+h3 {
+  margin: 20px;
+  text-align: center;
+}

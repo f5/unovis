@@ -1,0 +1,59 @@
+{
+  "name": "@unovis/svelte",
+  "description": "Modular data visualization framework for React, Angular, Svelte, and vanilla TypeScript or JavaScript",
+  "version": "1.0.0-beta.8",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/f5/unovis.git",
+    "directory": "packages/svelte"
+  },
+  "homepage": "https://unovis.dev",
+  "bugs": {
+    "url": "https://github.com/f5/unovis/issues"
+  },
+  "keywords": [
+    "svelte",
+    "data visualization",
+    "maps",
+    "charts",
+    "graphs"
+  ],
+  "author": "Rebecca Bol, F5 Inc. <r.bol@f5.com>",
+  "maintainers": [
+    "Nikita Rokotyan <nikita@f5.com> (https://rokotyan.com)",
+    "Rebecca Bol <r.bol@f5.com>"
+  ],
+  "license": "Apache-2.0",
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "svelte": "./index.js",
+  "type": "module",
+  "sideEffects": false,
+  "scripts": {
+    "build": "npm run check && npx svelte-package",
+    "check": "svelte-check --tsconfig ./tsconfig.json",
+    "generate": "rollup -c ./autogen/rollup.config.js; node .autogen.cjs; rm .autogen.cjs",
+    "publish-dist": "cp ./{LICENSE,README.md,package.json} ./dist; cd ./dist; npm publish; rm -rf .cache"
+  },
+  "peerDependencies": {
+    "@unovis/ts": "1.0.0-beta.8",
+    "svelte": "^3.48.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^13.0.4",
+    "@sveltejs/package": "^1.0.0-next.5",
+    "@tsconfig/svelte": "^2.0.0",
+    "@zerollup/ts-transform-paths": "^1.7.18",
+    "rollup": "^2.61.1",
+    "rollup-plugin-typescript2": "^0.31.1",
+    "svelte": "^3.48.0",
+    "svelte-check": "^2.7.0",
+    "svelte-preprocess": "^4.10.7",
+    "tslib": "^2.3.1",
+    "ttypescript": "^1.5.13",
+    "typescript": "~4.2.4"
+  },
+  "dependencies": {
+    "lodash-es": "^4.17.21"
+  }
+}

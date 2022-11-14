@@ -1,0 +1,18 @@
+.chart {
+  position: relative;
+  display: block;
+  height: 400px;
+  width: 100%;
+  padding-top: 40px;
+}
+
+.navigation {
+  position: relative;
+  display: block;
+  height: 150px;
+  width: 100%;
+}
+
+vis-xy-container {
+  height: 400px;
+}

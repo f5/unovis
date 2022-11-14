@@ -1,0 +1,51 @@
+@font-face {
+  font-family: 'voltuiicons';
+  src:
+    url('../../fonts-icons/voltuiicons.ttf?d2c4w5') format('truetype'),
+    url('../../fonts-icons/voltuiicons.woff?d2c4w5') format('woff'),
+    url('../../fonts-icons/voltuiicons.svg?d2c4w5#voltuiicons') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.chart {
+  position: relative;
+  width: 100%;
+
+  --vis-sankey-icon-size: 16px;
+  --vis-sankey-node-label-font-weight: 700;
+  --vis-sankey-node-color: #0D1C5B;
+  --vis-sankey-link-color: #E5E9F4;
+  --vis-sankey-link-opacity: 1.0;
+
+  --vis-dark-sankey-node-color: #2747cc;
+  --vis-dark-sankey-link-color: #3e414b;
+}
+
+.vis-controls {
+  position: fixed;
+  right: 0px;
+  bottom: 0px;
+  --vis-controls-button-icon-font: voltuiicons;
+}
+
+::ng-deep {
+  .item {
+    font-family: Inter;
+    font-size: 10pt;
+    color: #7a858e;
+    margin-bottom: 2px;
+    margin-top: 2px;
+
+    td {
+      padding: 2px 4px;
+
+      &.label {
+        font-weight: 600;
+      }
+
+      &.content {
+      }
+    }
+  }
+}

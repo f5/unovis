@@ -1,0 +1,34 @@
+name                                       license period  license type  installed version  author
+----                                       --------------  ------------  -----------------  ------
+@angular/core                              perpetual       MIT           12.0.3             angular
+@angular/platform-browser                  perpetual       MIT           12.0.3             angular
+@angular/platform-browser-dynamic          perpetual       MIT           12.0.3             angular
+@docusaurus/core                           perpetual       MIT           2.1.0              n/a
+@docusaurus/plugin-debug                   perpetual       MIT           2.1.0              n/a
+@docusaurus/plugin-sitemap                 perpetual       MIT           2.1.0              n/a
+@docusaurus/preset-classic                 perpetual       MIT           2.1.0              n/a
+@mdx-js/react                              perpetual       MIT           1.6.21             John Otander
+@stackblitz/sdk                            perpetual       MIT           1.8.0              Eric Simons
+clsx                                       perpetual       MIT           1.1.1              Luke Edwards
+docusaurus-plugin-react-docgen-typescript  perpetual       MIT           0.1.0              Dennis Thompson
+nodemon                                    perpetual       MIT           2.0.16             Remy Sharp
+prism-react-renderer                       perpetual       MIT           1.2.1              n/a
+react                                      perpetual       MIT           17.0.1             n/a
+react-docgen-typescript                    perpetual       MIT           1.2.0              n/a
+react-dom                                  perpetual       MIT           17.0.1             n/a
+react-markdown                             perpetual       MIT           8.0.1              Espen Hovlandsdal
+svelte                                     perpetual       MIT           3.48.0             Rich Harris
+@docusaurus/module-type-aliases            perpetual       MIT           2.1.0              n/a
+@tsconfig/docusaurus                       perpetual       MIT           1.0.4              n/a
+@tsconfig/svelte                           perpetual       MIT           2.0.0              n/a
+eslint-plugin-svelte                       perpetual       MIT           2.10.0             Yosuke Ota
+ngc-esbuild                                perpetual       ISC           0.0.75             Joe Cserko
+raw-loader                                 perpetual       MIT           4.0.2              Tobias Koppers @sokra
+rollup                                     perpetual       MIT           2.61.1             Rich Harris
+rollup-plugin-copy                         perpetual       MIT           3.4.0              Vlad Shcherbin
+rollup-plugin-dev                          perpetual       MIT           2.0.4              Dave Honneffer
+rollup-plugin-svelte                       perpetual       MIT           7.1.0              Rich Harris
+rollup-plugin-terser                       perpetual       MIT           7.0.2              Bogdan Chadkin
+rollup-plugin-typescript2                  perpetual       MIT           0.31.1             @ezolenko
+svelte-preprocess                          perpetual       MIT           4.10.6             Christian Kaisermann
+typescript                                 perpetual       Apache-2.0    4.2.4              Microsoft Corp.

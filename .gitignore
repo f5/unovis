@@ -1,0 +1,70 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# compiled output
+dist
+demo/dist
+tmp
+out-tsc
+packages/*/lib
+packages/*/build
+packages/*/dist-demo
+# Only exists if Bazel was run
+bazel-out
+
+# dependencies
+node_modules
+
+# profiling files
+chrome-profiler-events*.json
+
+# Storybook
+packages/*/documentation.json
+packages/*/storybook-static
+
+# IDEs and editors
+.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+# misc
+.sass-cache
+connect.lock
+coverage
+libpeerconnection.log
+npm-debug.log
+yarn-error.log
+testem.log
+docs/jsdoc/
+/nbproject/private/
+nbproject/
+*bundle*
+docs-html/
+.git-pack-cache
+.eslintcache
+stats.html
+.cache/
+packages/angular/.autogen.js
+packages/dev-demo/package-lock.json
+packages/ts/package-lock.json
+packages/angular/package-lock.json
+packages/react/package-lock.json
+packages/svelte/package-lock.json
+yarn.lock
+.srcsha
+licences.temp
+
+# System Files
+.DS_Store
+Thumbs.db

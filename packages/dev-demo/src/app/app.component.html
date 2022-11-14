@@ -1,0 +1,53 @@
+<nav class="sidebar">
+  <div class="logo">
+    <div class="logo-image"></div>
+  </div>
+  <div class="block-header">Maps</div>
+  <a routerLink="map">Detailed Map</a>
+  <a routerLink="pie-map">Pie Map</a>
+  <a routerLink="heatmap-map">Heatmap Overlay</a>
+  <a routerLink="ddos-map">Attack Map</a>
+  <a routerLink="topojson-map">TopoJSON Map</a>
+  <a routerLink="topojson-heatmap">TopoJSON Heatmap</a>
+  <a routerLink="topojson-countries">TopoJSON Country Maps</a>
+  <div class="block-header">Networks and Flows</div>
+  <a routerLink="sankey">Sankey</a>
+  <a routerLink="chord-diagram">Chord Diagram</a>
+  <a routerLink="api-endpoint-explorer">API Endpoint Explorer</a>
+  <a routerLink="sankey-login-flow">Login Flow</a>
+  <a routerLink="sankey-threat-campaigns">Threat Campaigns</a>
+  <a routerLink="radial-dendrogram">Radial Dendrogram</a>
+  <a routerLink="graph">Graph</a>
+  <a routerLink="concentric-graph">Concentric Graph</a>
+  <a routerLink="force-graph">Force Graph</a>
+  <a routerLink="connectivity-graph">Connectivity Graph</a>
+  <a routerLink="traffic-graph">Traffic Graph Drilldown</a>
+  <div class="block-header">Traditional Charts</div>
+  <a routerLink="donut">Donut</a>
+  <a routerLink="scatter">Scatter</a>
+  <a routerLink="line">Line</a>
+  <a routerLink="stacked-bar">Stacked Bar</a>
+  <a routerLink="grouped-bar">Grouped Bar</a>
+  <a routerLink="horizontal-bar">Horizontal Bar</a>
+  <a routerLink="area">Area</a>
+  <a routerLink="timeline">Timeline</a>
+  <a routerLink="timeline-with-labels">Timeline with labels</a>
+  <a routerLink="composite">Composite</a>
+  <a routerLink="free-brush">Free Brush</a>
+  <a routerLink="wrapper-usage-example">Angular Wrapper</a>
+  <a routerLink="bullet-legend">Bullet Legend</a>
+  <a routerLink="atomic-angular-wrapper">Atomic Angular Wrapper</a>
+</nav>
+<div class="theme-switcher">
+  <span class="theme-label">{{ darkmode ? "Dark" : "Light"}}</span>
+  <div class="toggle-theme">
+    <label>
+      <input type="checkbox" (change)="toggleTheme()" [(ngModel)]="darkmode">
+      <div class="slider"></div>
+    </label>
+  </div>
+</div>
+<div class="vis-container with-border-lines">
+  <router-outlet></router-outlet>
+</div>
+

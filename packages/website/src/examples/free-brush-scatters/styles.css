@@ -1,0 +1,14 @@
+.scatter-with-minimap {
+  position: relative;
+}
+
+.minimap {
+  position: absolute;
+  display: block;
+  background-color: white;
+  bottom: 60px;
+  right: 20px;
+  width: 200px;
+  height: 150px;
+  border: 1px solid grey;
+}

@@ -1,0 +1,61 @@
+:host {
+  height: 100%;
+  margin: 0 auto;
+  display: grid;
+  grid-template-rows: 90px 60vh calc(40vh - 90px);
+  --vis-timeline-line-stroke-color: none;
+
+  .row {
+    display: flex;
+    align-items: center;
+  }
+
+  .form {
+    width: min-content;
+    margin: 0 auto;
+    height: 10vh;
+    color: gray;
+    .action {
+      justify-content: center;
+
+      label {
+        margin: 10px;
+      }
+    }
+    .dropdown {
+      padding: 10px;
+
+      select {
+        width: 200px;
+      }
+    }
+  }
+
+  .timeline {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    --vis-timeline-line-stroke-color: none;
+
+    .timeline-chart {
+      flex: 1 1;
+      min-height: 0;
+      --vis-timeline-row-background-opacity: 0.65;
+    }
+
+    .date-range {
+      flex: 0 0 10px;
+      display: grid;
+      justify-items: center;
+      height: 25px;
+
+      span {
+        color: var(--vis-timeline-label-color);
+      }
+    }
+
+    .date-selector {
+      flex: 0 0 55px;
+    }
+  }
+}

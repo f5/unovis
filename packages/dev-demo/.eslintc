@@ -1,0 +1,11 @@
+{
+  "settings": {
+    "import/resolver": {
+      "typescript": {
+        "project": [
+          "packages/dev-demo/tsconfig.app.json"
+        ]
+      }
+    }
+  }
+}

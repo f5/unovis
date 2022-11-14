@@ -1,0 +1,129 @@
+---
+sidebar_position: 2
+sidebar_label: Leaflet Flow Map
+---
+import BrowserOnly from '@docusaurus/BrowserOnly'
+import { PropTable } from '../components/props-table.tsx'
+import { DocWrapper } from '../wrappers'
+import { ContextLevel } from '../wrappers/base/types'
+import { mapKey } from '@site/src/examples/basic-leaflet-map/constants'
+import cities from './data/us_cities.json'
+import './styles.css'
+
+export function getSampleFlow (s) {
+  return {
+    sourceLatitude: s.latitude + (Math.random() - 0.5) * 10,
+    sourceLongitude: s.longitude + (Math.random() - 0.5) * 15,
+    targetLatitude: s.latitude,
+    targetLongitude: s.longitude,
+  }
+}
+
+export const numPoints = 5
+const points = cities.slice(0, numPoints)
+export const data = {
+  points: cities.slice(0, numPoints),
+  flows: Array(20).fill(null).map(() => getSampleFlow(points[Math.floor(numPoints * Math.random())]))
+}
+
+export const defaultProps = (flowParticleDensity = 1) => ({
+  name: "LeafletFlowMap",
+  height: '300px !important',
+  style: `https://api.maptiler.com/maps/positron/style.json?key=${mapKey}`,
+  hiddenProps: {
+    // for props we want to exclude from code snippets
+    className: 'leaflet-doc',
+    fitViewPadding: [30,30],
+    pointRadius: 5,
+    flowParticleDensity,
+    height: 300
+  },
+  // define or override variables as they appear in the code snippets
+  declarations: {
+    style: '\`https://api.maptiler.com/maps/positron/style.json?key=\${key}\`',
+  },
+  dataType: 'MapPointRecord, MapFlowRecord',
+})
+
+export const LeafletFlowMapDoc = (props) => (
+  <DocWrapper {...defaultProps(props.flowParticleDensity) } {...props}/>
+)
+
+_LeafletFlowMap_ is an extension of _LeafletMap_ that can display flying particles between two points on the map.
+Particles will be rendered on a separate [three.js](https://threejs.org/) canvas on top of the base map. _LeafletFlowMap_ has the same
+configuration ope as _LeafletMap_ with a few extra properties related to the particles.
+
+<LeafletFlowMapDoc data={data} height={300}/>
+
+## Data
+_LeafletFlowMap_ expects the data to be an object with `points` and `flows` arrays:
+```ts
+type LeafletMapData = {
+  points: MapPointRecord[];
+  flows: MapFlowRecord[];
+}
+```
+
+The `points` array corresponds to [regular _LeafletMap_ points](./LeafletMap#map-data). The `flows` array should contain
+information about source and target coordinates of the flying particles. By default, _LeafletFlowMap_ expects the following
+data format:
+
+```ts
+type MapFlowRecord = {
+  sourceLongitude: number;
+  sourceLatitude: number;
+  targetLongitude: number;
+  targetLatitude: number;
+}
+```
+
+You can also use custom accessor functions to get the source and target coordinates of the particles by providing them to
+the following configuration options: `sourceLatitude`, `sourceLongitude`, `targetLatitude`, `targetLongitude`.
+
+## Particles
+_LeafletFlowMap_ allows to change the appearance of the flying particles by providing either constant values or accessor
+functions (that will be executed per flow) to the configuration attributes specified below.
+
+### Color
+The color of the particles can be set by using the `flowParticleColor` property:
+<LeafletFlowMapDoc data={data} flowParticleColor="#f00"/>
+
+### Radius
+You can chance the radius of the particles with the `flowParticleRadius` property:
+<LeafletFlowMapDoc data={data} flowParticleRadius={10}/>
+
+### Speed
+The speed of the particles can be controlled by using the `flowParticleSpeed` property. The value is in arbitrary angular
+units, we recommend it to be in the range of [0,0.2].
+<LeafletFlowMapDoc data={data} flowParticleSpeed={0.02}/>
+
+### Density
+The `flowParticleDensity` property can be used to set the density / frequency of the flying particles. The recommended
+range is [0, 3].
+<LeafletFlowMapDoc data={data} flowParticleDensity={2}/>
+
+## Flow Source Points
+Similarly, you can change how the source points will look.
+
+### Color
+The color of the flow source can be customized by using the `sourcePointColor` configuration property:
+<LeafletFlowMapDoc data={data} sourcePointColor="#4A46B5"/>
+
+### Radius
+The `sourcePointRadius` property sets the radius of the source point:
+<LeafletFlowMapDoc data={data} sourcePointRadius={5} />
+
+### Events
+The flow source points have the following configurable callback functions for mouse events:
+
+```ts
+/** Flow source point click callback function. Default: `undefined` */
+onSourcePointClick: (f: FlowDatum, x: number, y: number, event: MouseEvent) => void;
+/** Flow source point mouse over callback function. Default: `undefined` */
+onSourcePointMouseEnter: (f: FlowDatum, x: number, y: number, event: MouseEvent) => void;
+/** Flow source point mouse leave callback function. Default: `undefined` */
+onSourcePointMouseLeave: (f: FlowDatum, event: MouseEvent) => void;
+```
+
+## Component Props
+<PropTable name="VisLeafletFlowMap"/>

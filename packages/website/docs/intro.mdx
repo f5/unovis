@@ -1,0 +1,66 @@
+---
+sidebar_position: 0
+---
+
+import Link from '@docusaurus/Link';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Introduction
+
+:::note
+
+The documentation is currently under development, contributions are welcome!
+
+:::
+
+## Welcome to Unovis
+
+This documentation will help you to get comfortable with *Unovis* — a modular and platform-agnostic library for charts, maps and graphs.
+
+### Installation
+Unovis is available on F5 Artifactory as an NPM package. The core package `@unovis/ts` is written in TypeScript,
+and compiled to JavaScript. So you can use it in any TypeScript or JavaScript project.
+
+Before installing Unovis you'll probably need to set its registry explicitly:
+```bash
+npm config set @volterra:registry https://artifactory.f5net.com/artifactory/api/npm/f5-unovis-npm/
+```
+
+After that you can run the command below to install the library:
+```bash
+npm install -P @unovis/ts
+```
+
+If you're using a UI framework, we recommend installing a dedicated adaptor as well, it will make your work with
+Unovis much more enjoyable:
+
+<Tabs>
+  <TabItem value="react" label="React" default>
+
+```bash
+npm install -P @unovis/ts @unovis/react
+```
+
+  </TabItem>
+  <TabItem value="angular" label="Angular">
+
+```bash
+npm install -P @unovis/ts @unovis/angular
+```
+
+  </TabItem>
+  <TabItem value="svelte" label="Svelte">
+
+```bash
+npm install -P @unovis/ts @unovis/svelte
+```
+  </TabItem>
+</Tabs>
+
+### Usage
+Pick a component on the left to learn how to configure it (start with <Link to="/docs/xy-charts/Line">Line</Link> if you
+want a simple example). Or check the <Link to="https://f5-innersourcing.pages.gitswarm.f5net.com/unovis/showcase">Showcase</Link>
+section to see what's the library is capable of.
+
+

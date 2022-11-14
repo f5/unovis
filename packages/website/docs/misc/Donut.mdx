@@ -1,0 +1,122 @@
+import CodeBlock from '@theme/CodeBlock'
+import { PropTable } from '../components/props-table.tsx'
+import { DocWrapper, InputWrapper } from '../wrappers'
+
+export const defaultProps = () => ({
+  name: "Donut",
+  height: 200,
+  containerName: "SingleContainer",
+  configKey: "component",
+  value: d => d,
+  dataType: "number",
+  data: Array(4).fill(25).map(d => Math.floor(d * Math.random()))
+})
+
+## Basic Configuration
+The minimum configuration for the _Donut_ component looks like:
+<DocWrapper {...defaultProps()} showContext="full"/>
+
+## Labels
+_Donut_ can have a label and a smaller sub-label in the center. You can provide them by using the `centralLabel` and
+`centralSubLabel` config properties. The sub-label will automatically wrap onto multiple lines (unless you set
+the `centralSubLabelWrap` property to `false`), while the main label is supposed to be short and doesn't have wrapping
+  implemented.
+<DocWrapper {...defaultProps()} centralLabel="Label" centralSubLabel="Long sub-label wraps onto the next line"/>
+
+
+## Angle Range
+By default, a _Donut_ will populate values in the angle range `[0, 2π]`. You can adjust your _Donut_'s `angleRange` property to a `[a,b]` of type `[number, number]`
+where a[0] = the starting position and a[1] = the ending position (in radians). A common example might be when you want an incomplete/semi circle:
+<DocWrapper {...defaultProps()} angleRange={[1, Math.PI]}/>
+
+## Sorting
+By default, each _segment_ is placed in order of appearance within your `data` array, from
+To change this, provide a sorting function to the `sortFunction` property. The following example displays the segments in descending order:
+<DocWrapper {...defaultProps()} sortFunction={(a, b) => a - b} data={[5,10,2, 7]} showContext="full"/>
+
+## Size
+You can change the size of your _Donut_ with the following properties:
+
+### Radius
+`radius` defines the outer/overall radius:
+<InputWrapper {...defaultProps()} property="radius" defaultValue={50} inputType="range" inputProps={{ min: 1, max: 100}}/>
+
+### Arc Width
+`arcWidth` defines the width of the circle's outer ring in pixels.
+<InputWrapper {...defaultProps()} property="arcWidth" defaultValue={50} inputType="range"/>
+
+<br/>
+
+:::note
+For the appearance of a traditional pie chart, set _Donut_'s `arcWidth` to `0`.
+:::
+
+## Segment Appearance
+### Custom Color
+Customize the colors for each segment with a `colorAccessor` function:
+<DocWrapper {...defaultProps()} color={(d, i) => ['red', 'orange', 'blue', 'green'][i]} showContext="minimal"/>
+
+### Corner Radius
+Providing a value to the `cornerRadius` property adds rounded corners to your _Donut_'s segments proportional to the _Donut_'s `arcWidth`.
+<InputWrapper {...defaultProps()} property="cornerRadius" defaultValue={5} inputType="range" inputProps={{ min: 0, max: 20}}/>
+
+## Pad angle
+Pad each segment with the `padAngle` property.
+<DocWrapper {...defaultProps()} padAngle={0.1}/>
+
+## Show Empty Segments
+When some segments of the donut are empty (i.e. they have 0 values), you can still show them as thin lines by setting
+`showEmptySegments` to `true`;
+<InputWrapper {...defaultProps()} data={[1,2,3,0,4,0,5]} property="showEmptySegments" inputType="checkbox" defaultValue={true}/>
+
+## Background
+By default, _Donut_ has a background underneath the segments, which is useful when your chart is empty. You can turn it off by setting
+`showBackground` to `false`.
+<InputWrapper {...defaultProps()} data={[0]} angleRange={[-Math.PI / 2, Math.PI / 2]} property="showBackground" inputType="checkbox" defaultValue={true}/>
+
+Also, you can change the angular range of the background by providing a `[number, number]` value (in radians) to `backgroundAngleRange`.
+By default, the background angular range will be the same as `angleRange`.
+<DocWrapper {...defaultProps()} data={[1,2,3]} showBackground angleRange={[0, Math.PI / 3]} backgroundAngleRange={[0, 2 * Math.PI]} />
+
+<br />
+
+The color of the background can be changed via the `--vis-donut-background-color` and
+`--vis-dark-donut-background-color` CSS variables.
+
+## Events
+The following selectors are available for events:
+```ts
+import { Donut } from '@unovis/ts'
+...
+events = {
+    [Donut.selectors.segment]: { },
+    [Donut.selectors.background]: { },
+    [Donut.selectors.centralLabel]: { },
+    [Donut.selectors.centralSubLabel]: { },
+}
+```
+<DocWrapper {...defaultProps()} excludeGraph events={{}}/>
+
+## CSS Variables
+All supported CSS variables and their default values
+
+```css
+--vis-donut-central-label-font-size: 16px;
+--vis-donut-central-label-text-color: #5b5f6d;
+--vis-donut-central-label-font-family: var(--vis-font-family);
+--vis-donut-central-label-font-weight: 600;
+
+--vis-donut-central-sub-label-font-size: 12px;
+--vis-donut-central-sub-label-text-color: #5b5f6d;
+--vis-donut-central-sub-label-font-family: var(--vis-font-family);
+--vis-donut-central-sub-label-font-weight: 500;
+
+--vis-donut-background-color: #E7E9F3;
+
+--vis-dark-donut-central-label-text-color: #C2BECE;
+--vis-dark-donut-central-sub-label-text-color: #C2BECE;
+--vis-dark-donut-background-color: #18160C;
+```
+
+## Component Props
+<PropTable name="VisDonut"/>

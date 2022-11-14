@@ -1,0 +1,9 @@
+.chart {
+  position: relative;
+  height: 374px;
+  width: 100%;
+
+  --vis-sankey-node-label-font-weight: 700;
+  --vis-sankey-node-sublabel-font-weight: 400;
+  --vis-sankey-node-opacity: 1;
+}

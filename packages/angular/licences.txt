@@ -1,0 +1,21 @@
+name                           license period  license type  installed version  author
+----                           --------------  ------------  -----------------  ------
+tslib                          perpetual       0BSD          2.3.1              Microsoft Corp.
+@angular-devkit/build-angular  perpetual       MIT           12.0.3             Angular Authors
+@angular/cli                   perpetual       MIT           12.0.3             Angular Authors
+@angular/common                perpetual       MIT           12.0.3             angular
+@angular/compiler              perpetual       MIT           12.0.3             angular
+@angular/compiler-cli          perpetual       MIT           12.0.3             n/a
+@angular/core                  perpetual       MIT           12.0.3             angular
+@types/jasmine                 perpetual       MIT           3.6.0              n/a
+@types/node                    perpetual       MIT           12.11.1            n/a
+jasmine-core                   perpetual       MIT           3.7.0              n/a
+karma                          perpetual       MIT           6.3.0              Vojta Jína
+karma-chrome-launcher          perpetual       MIT           3.1.0              Vojta Jina
+karma-coverage                 perpetual       MIT           2.0.3              SATO taichi
+karma-jasmine                  perpetual       MIT           4.0.0              Vojta Jina
+karma-jasmine-html-reporter    perpetual       MIT           1.5.0              David Federman
+ng-packagr                     perpetual       MIT           12.0.0             David Herges
+rollup                         perpetual       MIT           2.61.1             Rich Harris
+rollup-plugin-typescript2      perpetual       MIT           0.31.1             @ezolenko
+ttypescript                    perpetual       MIT           1.5.13             cevek

@@ -1,0 +1,10 @@
+<div class="donuts-container">
+  <div *ngFor="let donut of donuts" class="chart">
+    <vis-singlechart
+      [margin]="{}"
+      [component]="donut.component"
+      [config]="donut.config"
+      [data]="donut.data"
+    ></vis-singlechart>
+  </div>
+</div>

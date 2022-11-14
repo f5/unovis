@@ -1,0 +1,103 @@
+---
+sidebar_position: 1
+---
+import CodeBlock from "@theme/CodeBlock";
+import { PropTable } from '../components/props-table'
+import { data, generateDataRecords } from '../utils/data'
+import { XYWrapper, XYWrapperWithInput } from './wrapper.tsx';
+
+export const lineProps = (n=10) => ({
+  name: "Line",
+  data: generateDataRecords(n),
+  x: d=>d.x,
+  y: d=>d.y,
+});
+
+### Basic configuration
+The _Line_ component has been designed to work together with _XY Container_. The minimal _Line_ configuration looks like:
+
+<XYWrapper {...lineProps()} showContext="full"/>
+
+### Line Width
+Specify the Line's width in pixels using the `lineWidth` property:
+<XYWrapperWithInput {...lineProps()} property="lineWidth" inputType="number" defaultValue={5}/>
+
+### Curve Types
+Using the `curveType: CurveType` property you can set various curve type options. For example:
+<XYWrapperWithInput {...lineProps(50)} inputType="select" options={["basis", "linear", "step"]} defaultValue="basis" property="curveType"/>
+
+### Colored Line
+<XYWrapperWithInput {...lineProps()} property="color" inputType="color" defaultValue="#a611a5"/>
+
+#### For multiple lines:
+If you want to set color for multiple lines at once, you'll have to define a colors array in your component and reference colors by index in the accessor function:
+<XYWrapper {...lineProps()} showContext={true} y={[d => d.y, d => d.y1, d => d.y2]} color={(d,i) => ['#6A9DFF', '#1acb9a', '#f88080'][i]}/>
+
+### Dashed Line
+You can configure a dashed line with the lineDashArray property and a dash array. See [SVG stroke-dasharray](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray)
+to learn more about this attribute.
+```ts
+const lineDashArray=[5]
+```
+<XYWrapper {...lineProps()} lineDashArray={[5]} />
+
+### Dealing with missing data
+In the case of missing data (when the data values are `undefined`, `NaN`, `''`, etc ...), you can assign a fallback value
+for _Line_ using the `fallbackValue` config property. The default value is `undefined`, which means that the line will
+break in the areas of no data and continue when the data appears again. If you set `fallbackValue` to `null`, the values
+will be treated as numerical `0` values and the line won't break; however if the whole dataset consists of only `null`s,
+the line won't be displayed.
+
+Consider the following example, where the dataset contains `undefined` values over in the following domain:
+`4 <= x <= 6`
+
+<XYWrapperWithInput {...lineProps()}
+  data={generateDataRecords(10).map((d,i) => ({ x: d.x, y: i >= 4 && i <= 6 ? undefined : d.y }))}
+  property="fallbackValue"
+  inputType="range"
+  inputProps={{ min: 0, max: 15, step: 0.5 }}
+  defaultValue={7}
+  showAxes/>
+
+### Multiple Lines
+_Line_ can also accept an array of `y` accessors to display multiple lines:
+<XYWrapper {...lineProps()} showContext="minimal" y={[d => d.y, d => d.y1, d => d.y2]}/>
+
+
+### Additional Styling: CSS Variables
+The _Line_ component supports additional styling via CSS variables that you can define for your visualization container. For example:
+
+```css title="styles.css"
+.custom-line {
+  --vis-line-cursor: cell;
+  --vis-line-stroke-dasharray: 55 15;
+  --vis-line-stroke-dashoffset: 0;
+}
+```
+<XYWrapper {...lineProps()} excludeTabs className="custom-line" lineWidth={5} />
+
+<details open>
+  <summary>All supported CSS variables</summary>
+  <CodeBlock language="css">
+{`--vis-line-stroke
+--vis-line-stroke-dasharray
+--vis-line-stroke-dashoffset`}
+  </CodeBlock>
+</details>
+
+### Events
+```ts
+import { Line } from '@unovis/ts`
+...
+events = {
+  [Line.selectors.line]: {
+    mouseover: (data: DataRecord[]) => {},
+    mouseleave: (data: DataRecord[]) => {},
+    ...
+  }
+}
+```
+<XYWrapper {...lineProps()} excludeGraph events={{}}/>
+
+## Component Props
+<PropTable name="VisLine"></PropTable>

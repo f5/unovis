@@ -1,0 +1,14 @@
+{
+  "extends": "../tsconfig.json",
+  "include": ["./*.ts"],
+  "compilerOptions": {
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    "strictPropertyInitialization": false,
+    "declaration": false,
+    "types": [
+      "node"
+    ],
+    "importsNotUsedAsValues": "preserve",
+  }
+}

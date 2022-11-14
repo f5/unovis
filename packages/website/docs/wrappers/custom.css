@@ -1,0 +1,52 @@
+.custom-area {
+  --vis-area-fill-opacity: 0.5;
+  --vis-area-hover-fill-opacity: 1;
+  --vis-area-stroke-width: 1px;
+}
+
+.custom-line {
+  --vis-line-cursor: cell;
+  --vis-line-stroke-dasharray: 55 15;
+  --vis-line-stroke-dashoffset: 0;
+}
+
+.custom-axis {
+  --vis-axis-tick-label-font-size: 20px;
+  --vis-axis-label-color: #1acb9a;
+  --vis-axis-font-family: monospace;
+  --vis-axis-tick-label-color:  #8777d9;
+}
+
+.custom-stacked-bar {
+  --vis-stacked-bar-stroke: #000;
+  --vis-stacked-bar-stroke-width: 5px;
+  --vis-stacked-bar-hover-stroke-width: 10px;
+  --vis-stacked-bar-hover-stroke: #8777d9;
+}
+
+.custom-grouped-bar {
+  --vis-grouped-bar-stroke-width: 2px;
+  --vis-grouped-bar-stroke: #000;
+  --vis-grouped-bar-cursor: crosshair;
+}
+
+.custom-scatter {
+  --vis-scatter-fill-opacity: 0.5;
+  --vis-scatter-stroke-width: 1;
+  --vis-scatter-hover-stroke-width: 2;
+  --vis-scatter-point-label-text-color-dark: darkblue;
+}
+
+.custom-crosshair {
+  --vis-crosshair-line-stroke: #f88080;
+  --vis-crosshair-circle-stroke: #000000;
+}
+
+.custom-tooltip {
+  --vis-tooltip-background-color: #3f3f3f;
+  --vis-tooltip-text-color: #fefefe;
+}
+
+.timeline-empty-data {
+  --vis-timeline-line-stroke-color: none;
+}

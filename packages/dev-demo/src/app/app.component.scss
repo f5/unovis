@@ -1,0 +1,138 @@
+.theme-switcher {
+  position: fixed;
+  top: 5px;
+  right: 5px;
+  background: rgba(255,255,255, 0.6);
+  border-radius: 15px;
+  width: 115px;
+  height: 45px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  z-index: 1;
+}
+
+.vis-container {
+  position: absolute;
+  left: 200px;
+  right: 0;
+  top: 0;
+  bottom: 0px;
+  overflow-x: visible;
+  width: calc(100% - 200px);
+}
+
+.sidebar {
+  font-size: 14px;
+  width: 200px;
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  /* box-shadow: 3px 0px 20px -10px #e4e4e4; */
+  padding: 10px;
+  backdrop-filter: blur(5px);
+  overflow-y: auto;
+}
+
+.block-header {
+  padding: 16px 8px;
+  color: #333;
+  font-size: 12pt;
+}
+
+::ng-deep body.theme-dark .block-header {
+  color: #eee;
+}
+
+a {
+  display: block;
+
+  padding: 5px 14px;
+  text-decoration: unset;
+  color: #8a8d95;
+
+  &:hover {
+    color: #ff716f;
+  }
+}
+
+.logo {
+  padding: 8px 5px;
+}
+
+.logo-image {
+  background-color: #333;
+  mask: url(../assets/images/unovis-logo.svg) no-repeat left center;
+  height: 25px;
+}
+
+::ng-deep body.theme-dark .logo-image {
+  background-color: #eee;
+}
+
+
+.theme-label {
+  margin-right: 10px;
+  text-align: center;
+  font-family: var(--vis-font-family);
+  color: #444;
+  font-size: small;
+}
+
+.toggle-theme {
+  width: 50px;
+
+  input {
+    display: none;
+
+    &:checked + .slider::after {
+      -webkit-transform: translateX(15px);
+      -ms-transform: translateX(15px);
+      transform: translateX(15px);
+    }
+  }
+  .slider {
+    cursor: pointer;
+    pointer-events: all;
+    position: absolute;
+    height: 10px;
+    width: 25px;
+    top: 18px;
+    border-radius: 5px;
+    background-color: #8a8d95;
+    &::after {
+      position: absolute;
+      content: '';
+      top: -5px;
+      left: -5px;
+      height: 20px;
+      width: 20px;
+      border-radius: 50%;
+      background-color: #5242aa;
+      transition: .2s;
+    }
+  }
+}
+
+.with-border-lines {
+  --stroke: #fff;
+  --stroke-dark: #292b34;
+
+  --vis-area-stroke-width: 1px;
+  --vis-area-stroke: var(--stroke);
+  --vis-dark-area-stroke: var(--stroke-dark);
+
+  /* --vis-donut-segment-stroke-color: none; */
+  --vis-donut-segment-stroke-width: 1px;
+
+  --vis-stacked-bar-stroke-width: 1px;
+  --vis-stacked-bar-stroke: var(--stroke);
+  --vis-dark-stacked-bar-stroke: var(--stroke-dark);
+
+  /*--vis-timeline-line-stroke-color: none; */
+  --vis-timeline-line-stroke-width: 1px;
+}

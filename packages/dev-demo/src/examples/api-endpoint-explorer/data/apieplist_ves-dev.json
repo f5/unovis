@@ -1,0 +1,204 @@
+{
+    "apiep_list": [
+        {
+            "collapsed_url": "/details/0",
+            "method": "GET",
+            "dyn_examples": []
+        },
+        {
+            "collapsed_url": "/productpage",
+            "method": "POST",
+            "dyn_examples": []
+        },
+        {
+            "collapsed_url": "/productpage",
+            "method": "GET",
+            "dyn_examples": []
+        },
+        {
+            "collapsed_url": "/productpage",
+            "method": "GET",
+            "dyn_examples": []
+        },
+        {
+            "collapsed_url": "/productpage",
+            "method": "GET",
+            "dyn_examples": []
+        },
+        {
+            "collapsed_url": "/productpage",
+            "method": "GET",
+            "dyn_examples": []
+        },
+        {
+            "collapsed_url": "/productpage",
+            "method": "GET",
+            "dyn_examples": []
+        },
+        {
+            "collapsed_url": "/productpage",
+            "method": "GET",
+            "dyn_examples": []
+        },
+        {
+            "collapsed_url": "/productpage",
+            "method": "GET",
+            "dyn_examples": []
+        },
+        {
+            "collapsed_url": "/productpage",
+            "method": "GET",
+            "dyn_examples": []
+        },
+        {
+            "collapsed_url": "/productpage",
+            "method": "GET",
+            "dyn_examples": []
+        },
+        {
+            "collapsed_url": "/productpage",
+            "method": "GET",
+            "dyn_examples": []
+        },
+        {
+            "collapsed_url": "/productpage",
+            "method": "GET",
+            "dyn_examples": []
+        },
+        {
+            "collapsed_url": "/productpage",
+            "method": "GET",
+            "dyn_examples": []
+        },
+        {
+            "collapsed_url": "/productpage",
+            "method": "GET",
+            "dyn_examples": []
+        },
+        {
+            "collapsed_url": "/productpage",
+            "method": "GET",
+            "dyn_examples": []
+        },
+        {
+            "collapsed_url": "/productpage",
+            "method": "GET",
+            "dyn_examples": []
+        },
+        {
+            "collapsed_url": "/productpage",
+            "method": "GET",
+            "dyn_examples": []
+        },
+        {
+            "collapsed_url": "/productpage",
+            "method": "GET",
+            "dyn_examples": []
+        },
+        {
+            "collapsed_url": "/productpage",
+            "method": "GET",
+            "dyn_examples": []
+        },
+        {
+            "collapsed_url": "/productpage",
+            "method": "GET",
+            "dyn_examples": []
+        },
+        {
+            "collapsed_url": "/productpage",
+            "method": "GET",
+            "dyn_examples": []
+        },
+        {
+            "collapsed_url": "/productpage",
+            "method": "GET",
+            "dyn_examples": []
+        },
+        {
+            "collapsed_url": "/productpage",
+            "method": "GET",
+            "dyn_examples": []
+        },
+        {
+            "collapsed_url": "/productpage",
+            "method": "GET",
+            "dyn_examples": []
+        },
+        {
+            "collapsed_url": "/productpage",
+            "method": "GET",
+            "dyn_examples": []
+        },
+        {
+            "collapsed_url": "/productpage",
+            "method": "GET",
+            "dyn_examples": []
+        },
+        {
+            "collapsed_url": "/productpage",
+            "method": "GET",
+            "dyn_examples": []
+        },
+        {
+            "collapsed_url": "/productpage",
+            "method": "GET",
+            "dyn_examples": []
+        },
+        {
+            "collapsed_url": "/productpage",
+            "method": "GET",
+            "dyn_examples": []
+        },
+        {
+            "collapsed_url": "/productpage",
+            "method": "GET",
+            "dyn_examples": []
+        },
+        {
+            "collapsed_url": "/productpage",
+            "method": "GET",
+            "dyn_examples": []
+        },
+        {
+            "collapsed_url": "/productpage",
+            "method": "GET",
+            "dyn_examples": []
+        },
+        {
+            "collapsed_url": "/productpage",
+            "method": "GET",
+            "dyn_examples": []
+        },
+        {
+            "collapsed_url": "/productpage",
+            "method": "GET",
+            "dyn_examples": []
+        },
+        {
+            "collapsed_url": "/productpage",
+            "method": "GET",
+            "dyn_examples": []
+        },
+        {
+            "collapsed_url": "/productpage",
+            "method": "GET",
+            "dyn_examples": []
+        },
+        {
+            "collapsed_url": "/productpage",
+            "method": "GET",
+            "dyn_examples": []
+        },
+        {
+            "collapsed_url": "/ratings/0",
+            "method": "GET",
+            "dyn_examples": []
+        },
+        {
+            "collapsed_url": "/reviews/0",
+            "method": "GET",
+            "dyn_examples": []
+        }
+    ]
+}

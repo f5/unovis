@@ -1,0 +1,46 @@
+
+stages:
+  - build
+  - publish-demo
+
+build:
+  image: artifactory.f5net.com/dockerhub-remote/node:16
+  stage: build
+  script:
+    - export NODE_OPTIONS=--max-old-space-size=4096
+    - npm install -g npm@7
+    - npm install
+    - npm run build
+  cache:
+    key: '$CI_COMMIT_REF_SLUG'
+    paths:
+      - node_modules
+      - packages/ts/lib
+      - packages/dev-demo/lib
+      - packages/website/build
+
+pages:
+  stage: publish-demo
+  image: artifactory.f5net.com/dockerhub-remote/node:16
+  cache:
+    key: "$CI_COMMIT_REF_SLUG"
+    policy: pull
+    paths:
+      - node_modules
+      - packages/ts/lib
+      - packages/dev-demo/lib
+      - packages/website/build
+  script:
+    - export NODE_OPTIONS=--max-old-space-size=4096
+    - npm install -g npm@7
+    - npm install
+    - npm run build
+    - mv packages/website/build public
+    - cp public/index.html public/404.html
+    - mv packages/dev-demo/lib/unovis-examples public/showcase
+  artifacts:
+    paths:
+      - public
+    expire_in: 6 hrs
+  only:
+    - main

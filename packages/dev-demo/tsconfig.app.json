@@ -1,0 +1,37 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "./out-tsc/app",
+    "types": [ "node" ],
+    "paths": {
+      // @unovis/ts
+      "@unovis/ts": ["packages/ts/src"],
+      "@unovis/ts/*": ["packages/ts/src/*"],
+      "@unovis/ts/maps/*": ["packages/ts/src/maps/*"],
+      "types/*": ["packages/ts/src/types/*"],
+      "utils/*": ["packages/ts/src/utils/*"],
+      "core/*": ["packages/ts/src/core/*"],
+      "components/*": ["packages/ts/src/components/*"],
+      "styles/*": ["packages/ts/src/styles/*"],
+      "data-models/*": ["packages/ts/src/data-models/*"],
+      "data/*": ["packages/ts/src/data/*"],
+
+      // @unovis/angular
+      "@unovis/angular": ["packages/angular/src/public-api"],
+
+      // Local paths
+      "examples/*": ["packages/dev-demo/src/examples/*"]
+    }
+  },
+  "files": [
+    "src/main.ts",
+    "src/polyfills.ts"
+  ],
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "src/test.ts",
+    "src/**/*.spec.ts"
+  ]
+}

@@ -1,0 +1,97 @@
+.input-wrapper {
+  position: relative;
+}
+
+.prop-input-label {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin: var(--ifm-tabs-padding-vertical);
+  padding: 5px;
+  font-size: smaller;
+}
+
+.prop-input-label code {
+  margin-right: 0.5em;
+}
+
+.prop-input-label input[type="number"]{
+  max-width: 50px;
+}
+
+.prop-input-label input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+}
+
+.prop-input-label input[type="range"]::-webkit-slider-runnable-track {
+  height: 10px;
+  width: calc(100% * .25);
+  background-color: var(--ifm-color-emphasis-300);
+  border-radius: var(--ifm-global-radius);
+}
+
+.prop-input-label input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  border-radius: 50%;
+  background-color: var(--ifm-menu-color);
+  width: 16px;
+  height: 16px;
+  margin-top: -4px;
+  cursor: grab;
+}
+
+.prop-input-label select {
+  height: 24px;
+  border-radius: var(--ifm-global-radius);
+}
+
+@media only screen and (min-width: 550px) {
+  .prop-input-label.compact {
+    position: absolute;
+    right: 0;
+    top: -100;
+    max-width: 45%;
+    flex-wrap: wrap;
+    z-index: 999;
+  }
+
+  .prop-input-label input[type="range"] {
+    max-width: calc(100vw / 15);
+  }
+}
+
+.toggle {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.anim-button {
+  cursor: pointer;
+  font-size: large;
+}
+
+.anim-button:hover::after {
+  border: 1px inset #3f3f3f;
+}
+
+.anim-button::after {
+  content: '▶️';
+}
+
+input:checked + .anim-button:after {
+  content: '⏸';
+}
+
+pre > code {
+  display: block;
+  width: 100%;
+}
+
+@media only screen and (max-width: 550px) {
+  pre > code span {
+    font-size: small;
+  }
+}
+

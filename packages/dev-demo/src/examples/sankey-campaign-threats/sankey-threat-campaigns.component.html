@@ -1,0 +1,50 @@
+<form [formGroup]="form" class="form">
+  <div formGroupName="keys" class="row">
+    <div *ngFor="let c of columns" class="dropdown">
+      <select [formControlName]="c">
+        <option *ngFor="let o of categories" [ngValue]="o">
+          {{ o }}
+        </option>
+      </select>
+    </div>
+  </div>
+  <div formGroupName="vals" class="row">
+    <div *ngFor="let c of keys; index as i" class="dropdown">
+      <select [formControlName]="c">
+        <option value="" [defaultSelected]="">All</option>
+        <option *ngFor="let o of options[i]" [ngValue]="o">
+          {{ o }}
+        </option>
+      </select>
+    </div>
+    <button (click)="clear()">Clear</button>
+  </div>
+  <div formGroupName="filters" class="action">
+    <label *ngFor="let a of actions">
+      <input type="radio" formControlName="action" [value]="a.value">{{ a.label }}
+    </label>
+  </div>
+ </form>
+
+<vis-single-container [data]="sankeyData">
+  <vis-sankey [highlightDelay]="0" [highlightSubtreeOnHover]="true" [labelMaxWidth]="200" [subLabel]="subLabel"></vis-sankey>
+</vis-single-container>
+
+<div class="timeline">
+  <div class="date-range">
+    <span *ngIf="dates">
+      <span class="date">{{ dates[0] | date:'medium' }}</span> - <span class="date">{{ dates[1] | date:'medium' }}</span>
+    </span>
+  </div>
+
+  <vis-xy-container [data]="timelineData" [height]="55" class="date-selector" [margin]="{ left: 125, right: 10 }">
+    <vis-timeline [lineCap]="true" lineWidth="4" [showEmptySegments]="true" [x]="x" [length]="1" [type]="'All'" [showLabels]="true" [color]="'var(--vis-sankey-node-color)'"></vis-timeline>
+    <vis-free-brush [selection]="dates" [onBrushEnd]="onBrush" [autoHide]="false"></vis-free-brush>
+    <vis-axis type="x" [position]="'top'" [gridLine]="false" [tickFormat]="dateTimeFormat" [fullSize]="false"></vis-axis>
+  </vis-xy-container>
+
+  <vis-xy-container [data]="timelineData" class="timeline-chart">
+    <vis-timeline [lineCap]="true" [showEmptySegments]="true" [x]="x" [length]="1" [type]="type" [showLabels]="true" [color]="color"></vis-timeline>
+    <vis-axis type="x" [tickFormat]="dateTimeFormat" [fullSize]="false"></vis-axis>
+  </vis-xy-container>
+</div>

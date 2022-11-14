@@ -1,0 +1,17 @@
+.visContainer {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  height: 80%;
+  width: 99%;
+  padding-top: 40px;
+}
+
+.chartLegend {
+  flex-grow: 0;
+}
+
+.chartMain {
+  flex-grow: 1;
+  overflow: auto;
+}

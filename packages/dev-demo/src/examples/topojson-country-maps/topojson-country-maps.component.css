@@ -1,0 +1,36 @@
+.chart {
+  width: calc(100% + 200px);
+  margin-left: -200px;
+  height: 100%;
+  position: relative;
+}
+
+.menu {
+  position: absolute;
+  top: 10px;
+  z-index: 9999;
+  display: flex;
+  justify-content: space-between;
+  width: calc(100% - 130px);
+}
+
+.title {
+  color: 'var(--vis-color-0)';
+  font-weight: 500;
+  font-size: xx-large;
+}
+
+.title > span {
+  font-weight: 200;
+}
+
+.unavailable {
+  font-style: italic;
+  color: gray;
+}
+
+.btn::before {
+  content: '←';
+  position: absolute;
+  left: 2px;
+}
