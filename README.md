@@ -1,4 +1,4 @@
-![](cover.png)
+![unovis cover](cover.png)
 
 🟨  **Unovis** is a modular data visualization framework for React, Angular, Svelte, and vanilla TypeScript or JavaScript:
 
@@ -11,7 +11,7 @@ See **Unovis**  in action and read the docs on our website [unovis.dev](https://
 ## Installation
 The core of the library is written in TypeScript and published as `@unovis/ts` package.
 
-If you want to use Unovis with React, install both `@unovis/ts` and `@unovis/react`:
+If you want to use _Unovis_ with React, install both `@unovis/ts` and `@unovis/react`:
 ```bash
 npm install -P @unovis/ts @unovis/react
 ```
@@ -34,7 +34,7 @@ npm install -P @unovis/ts
 ## Examples and Documentation
 [![Unovis Examples](examples.png)](https://unovis.dev/gallery)
 
-Unovis has a great [documentation](https://unovis.dev/docs) with code snippets for React, Angular,
+_Unovis_ has a great [documentation](https://unovis.dev/docs) with code snippets for React, Angular,
 Svelte and TypeScript; and a growing [gallery](https://unovis.dev/gallery) of examples for various chart types
 (just pick the one you like and copy the code over to your project).
 
@@ -47,10 +47,9 @@ Svelte and TypeScript; and a growing [gallery](https://unovis.dev/gallery) of ex
 * `packages/website` Website, docs and examples
 
 ## Contributing
-Coming soon
-
-## Code of Conduct
-Coming soon
+Pull requests are welcome. For major changes, please open an issue
+first to discuss what you would like to change. For more information, please
+read [CONTRIBUTING](CONTRIBUTING.md).
 
 ## Maintainers
 [<img alt="Nikita Rokotyan" src="https://avatars.githubusercontent.com/u/755708" width="80"/>](https://github.com/rokotyan)
@@ -64,4 +63,4 @@ Coming soon
 [<img alt="Dmitriy Gutman" src="https://avatars.githubusercontent.com/u/14595706" width="40"/>](https://github.com/DimamoN)
 
 ## License
-Apache-2.0
+_Unovis_ is licensed under Apache-2.0
