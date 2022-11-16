@@ -1,13 +1,13 @@
 import { select } from 'd3-selection'
 import { Transition } from 'd3-transition'
-import { line, Line as LineGenInterface, CurveFactoryLineOnly } from 'd3-shape'
+import { CurveFactoryLineOnly, Line as LineGenInterface, line } from 'd3-shape'
 import { interpolatePath } from 'd3-interpolate-path'
 
 // Core
 import { XYComponentCore } from 'core/xy-component'
 
 // Utils
-import { getValue, isNumber, isArray, getNumber, getString } from 'utils/data'
+import { getNumber, getString, getValue, isArray, isNumber } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
 
@@ -15,6 +15,7 @@ import { getColor } from 'utils/color'
 import { NumericAccessor } from 'types/accessor'
 import { Spacing } from 'types/spacing'
 import { Curve, CurveType } from 'types/curve'
+import { Direction } from 'types/direction'
 
 // Local Types
 import { LineData, LineDatum } from './types'
@@ -44,7 +45,24 @@ export class Line<Datum> extends XYComponentCore<Datum, LineConfig<Datum>, LineC
 
   get bleed (): Spacing {
     const { config: { lineWidth } } = this
-    return { top: lineWidth, bottom: lineWidth, left: lineWidth, right: lineWidth }
+    const yDomain = this.yScale.domain() as [number, number]
+    const yDirection = this.yScale.range()[0] > this.yScale.range()[1]
+      ? Direction.North
+      : Direction.South
+    const isYDirectionSouth = yDirection === Direction.South
+
+    const isLineThick = lineWidth > 3
+    const isLineVeryThick = lineWidth >= 10
+    return {
+      top: !isLineVeryThick && (
+        (!isYDirectionSouth && (yDomain[1] === 0)) || (isYDirectionSouth && (yDomain[0] === 0))
+      ) ? 0 : lineWidth / 2,
+      bottom: !isLineVeryThick && (
+        (!isYDirectionSouth && (yDomain[0] === 0)) || (isYDirectionSouth && (yDomain[1] === 0))
+      ) ? 0 : lineWidth / 2,
+      left: isLineThick ? lineWidth / 2 : 0,
+      right: isLineThick ? lineWidth / 2 : 0,
+    }
   }
 
   _render (customDuration?: number): void {
