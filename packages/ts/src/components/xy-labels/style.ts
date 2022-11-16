@@ -3,8 +3,8 @@ import { css, injectGlobal } from '@emotion/css'
 export const globalStyles = injectGlobal`
   :root {
     --vis-xy-label-cursor: default;
-    --vis-xy-label-fill: var(--vis-color-main);
-    --vis-xy-label-stroke: var(--vis-color-main);
+    --vis-xy-label-fill-color: var(--vis-color-main);
+    --vis-xy-label-stroke-color: var(--vis-color-main);
     --vis-xy-label-stroke-width: 0px;
     --vis-xy-label-fill-opacity: 1;
     --vis-xy-label-stroke-opacity: 1;
@@ -37,7 +37,7 @@ export const labelGroup = css`
 
   > rect {
     stroke-width: var(--vis-xy-label-stroke-width);
-    stroke: var(--vis-xy-label-stroke);
+    stroke: var(--vis-xy-label-stroke-color);
 
     &:hover {
         stroke-width: var(--vis-xy-label-hover-stroke-width);
