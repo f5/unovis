@@ -37,8 +37,8 @@ export const borderLineProps = {
 ## Overview
 In addition to configuration properties, our components also rely on
 [CSS variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties)
-to supply the values of various SVG attributes such as `fill`, `stroke`, `opacity`, etc. You can
-use override these variables to further customize your _Unovis_ components.
+to supply the values of various SVG attributes such as `fill`, `stroke`, `opacity`, etc. You can override
+these variables to further customize your _Unovis_ components.
 
 Every variable has the following naming convention: `--vis` + _label_ + _attribute_. For example, the variable named
 `--vis-area-cursor` would apply to the [Area](../xy-charts/Area) component's cursor property.
@@ -48,7 +48,7 @@ to override is available. Be sure to check the corresponding doc page of the com
 to see the available CSS variables.
 
 ## Basic Example
-Variables can be overriden in your CSS style declarations. Consider the default configuration for sankey, which looks like this:
+Variables can be overridden in your CSS style declarations. Consider the default configuration for sankey, which looks like this:
 
 <DocWrapper {...sankeyProps()} subLabel={d => Math.random()} excludeTabs/>
 
@@ -83,9 +83,9 @@ or override them like so:
 ]}/>
 
 ## Global Variables
-They majority of our variables exist on a component level,  but there are a few global CSS variables:
+The majority of our variables exist on a component level,  but there are a few global CSS variables:
 
-<CSSVariables selector=':root' vars={['--vis-font-family', '--vis-color-main', '--vis-color-gray']}/>
+<CSSVariables selector=':root' vars={['--vis-font-family', '--vis-color-main', '--vis-color-grey']}/>
 
 :::note
 Unless overridden explicitly, `--vis-color-main` corresponds to the first color in the default [color palette](#color-palette)
@@ -120,7 +120,7 @@ import { colors } from '@unovis/ts`
 ```
 
 These values are also defined directly in our CSS variables, labeled `--vis-color0`, `--vis-color1`, etc.
-The full pallete looks like this:
+The full palette looks like this:
 
 <CSSVariables className='color-vars' selector=':root' vars={Array(7).fill(0).map((_, i) => `--vis-color${i}`)}/>
 
@@ -170,9 +170,19 @@ If you like the result, just copy and paste the corresponding style declaration 
 }}
 </BrowserOnly>
 
+:::tip
+Alternatively, you can provide a custom color palette in *global scope* using the `UNOVIS_COLORS` variable:
+```javascript
+window.UNOVIS_COLORS = [...]
+// or
+globalThis.UNOVIS_COLORS = [...]
+```
+This needs to be done before the library is imported, i.e. in your top level JS file or HTML.
+:::
+
 ## Bordered Segments
 For charts with multiple data layers, it might be preferable to have a visual separation of elements.
-You can do this by maniuplating the `stroke` and `stroke-width` variables to create a bordered segment
+You can do this by manipulating the `stroke` and `stroke-width` variables to create a bordered segment
 effect.
 
 For the following components, the `stroke` property by default is either `none` or the same color
