@@ -14,7 +14,7 @@ export const variables = injectGlobal`
     --vis-dark-brush-selection-fill-color:#acb2b9;
     --vis-dark-brush-selection-stroke-color: #0b1640;
     --vis-dark-brush-handle-fill-color: #acb2b9;
-    --vis-dark-brush-handle-stroke-color: var(--vis-color-gray);
+    --vis-dark-brush-handle-stroke-color: var(--vis-color-grey);
   }
 
   body.theme-dark ${`.${root}`} {

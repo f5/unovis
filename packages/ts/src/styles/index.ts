@@ -8,7 +8,7 @@ export const variables = injectGlobal`
     label: vis-root-styles;
     --vis-font-family: Inter, Arial, "Helvetica Neue", Helvetica, sans-serif;
     --vis-color-main: var(${getCSSColorVariable(0)});
-    --vis-color-gray: #2a2a2a;
+    --vis-color-grey: #2a2a2a;
     ${colors.map((c, i) => `${getCSSColorVariable(i)}: ${c};`)}
   }
 `

@@ -21,10 +21,10 @@ export const variables = injectGlobal`
     --vis-graph-panel-side-icon-symbol-color: #9ea7b8;
     --vis-graph-panel-side-icon-shape-fill-color: #ffffff;
 
-    --vis-dark-graph-panel-border-color: var(--vis-color-gray);
+    --vis-dark-graph-panel-border-color: var(--vis-color-grey);
     --vis-dark-graph-panel-fill-color: #292b34;
     --vis-dark-graph-panel-label-color: #E6E9F3;
-    --vis-dark-graph-panel-label-background: var(--vis-color-gray);
+    --vis-dark-graph-panel-label-background: var(--vis-color-grey);
     --vis-dark-graph-panel-side-icon-symbol-color: #ffffff;
     --vis-dark-graph-panel-side-icon-shape-fill-color: #6c778c;
     --vis-dark-graph-panel-border-color: #a0a6ad;

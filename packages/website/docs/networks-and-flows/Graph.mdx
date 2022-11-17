@@ -147,7 +147,7 @@ control the appearance of the node labels, and their default values:
 --vis-graph-node-label-font-family: var(--vis-font-family);
 
 /* Dark Theme */
---vis-dark-graph-node-label-background: var(--vis-color-gray);
+--vis-dark-graph-node-label-background: var(--vis-color-grey);
 --vis-dark-graph-node-label-text-color: #ffffff;
 --vis-dark-graph-node-sublabel-text-color: #989aa3;
 ```
@@ -179,9 +179,9 @@ You can configure the default appearance of the side labels with the following C
 
 // Dark Theme
 --vis-dark-graph-node-side-label-background-fill-color: #989aa3;
---vis-dark-graph-node-side-label-background-stroke-color: var(--vis-color-gray);
+--vis-dark-graph-node-side-label-background-stroke-color: var(--vis-color-grey);
 --vis-dark-graph-node-side-label-fill-color-bright: #f1f4f7;
---vis-dark-graph-node-side-label-fill-color-dark: var(--vis-color-gray);
+--vis-dark-graph-node-side-label-fill-color-dark: var(--vis-color-grey);
 ```
 
 
@@ -195,7 +195,7 @@ You can set the color of the gauge with `nodeGaugeFill`. The default gauge color
 <GraphDoc showContext="minimal" nodeGaugeFill={(n, i) => gradient(i * 10)} nodeGaugeValue={(n, i) => i * 10} nodeLabel={(n, i) => `${i * 10}%`}/>
 
 ### Disabled State
-Nodes can have a disabled (grayed out) state configured by the `nodeDisabled` property.
+Nodes can have a disabled (greyed out) state configured by the `nodeDisabled` property.
 <GraphDoc showContext='minimal' nodeDisabled={(n, i) => n.value < 50} nodeLabel={n => n.value.toFixed(0)}/>
 
 The disabled state appearance can be redefined with these CSS variables:
@@ -206,7 +206,7 @@ The disabled state appearance can be redefined with these CSS variables:
 
 // Dark Theme
 --vis-dark-graph-node-greyout-color: #494b56;
---vis-dark-graph-node-icon-greyout-color: var(--vis-color-gray);
+--vis-dark-graph-node-icon-greyout-color: var(--vis-color-grey);
 --vis-dark-graph-node-side-label-background-greyout-color: #f1f4f7;
 ```
 
@@ -242,7 +242,7 @@ The default appearance of the labels is controlled with the following CSS variab
 
 // Dark Theme
 --vis-dark-graph-link-label-stroke-color: #222;
---vis-dark-graph-link-label-fill-color: var(--vis-color-gray);
+--vis-dark-graph-link-label-fill-color: var(--vis-color-grey);
 --vis-dark-graph-link-label-text-color: var(--vis-graph-link-label-text-color-bright)
 ```
 
@@ -472,10 +472,10 @@ The default panel appearance can be controlled with these CSS variables:
     --vis-graph-panel-side-icon-shape-fill-color: #ffffff;
 
     // Dark Theme
-    --vis-dark-graph-panel-border-color: var(--vis-color-gray);
+    --vis-dark-graph-panel-border-color: var(--vis-color-grey);
     --vis-dark-graph-panel-fill-color: #292b34;
     --vis-dark-graph-panel-label-color: #E6E9F3;
-    --vis-dark-graph-panel-label-background: var(--vis-color-gray);
+    --vis-dark-graph-panel-label-background: var(--vis-color-grey);
     --vis-dark-graph-panel-side-icon-symbol-color: #ffffff;
     --vis-dark-graph-panel-side-icon-shape-fill-color: #6c778c;
     --vis-dark-graph-panel-border-color: #a0a6ad;

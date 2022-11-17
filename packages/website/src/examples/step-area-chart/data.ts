@@ -10,7 +10,7 @@ export type DataRecord = Record<string, Mention> & {
 
 export const candidates = ['Hillary Clinton', 'Donald Trump'].map(c => ({
   name: c,
-  color: 'var(--vis-color-gray)',
+  color: 'var(--vis-color-grey)',
 }))
 
 export const data = [

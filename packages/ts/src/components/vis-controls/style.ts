@@ -13,7 +13,7 @@ export const variables = injectGlobal`
     --vis-controls-button-icon-font: ${DEFAULT_ICON_FONT_FAMILY};
 
     --vis-dark-controls-buttons-border-color:  #6c778c;
-    --vis-dark-controls-buttons-background-color: var(--vis-color-gray);
+    --vis-dark-controls-buttons-background-color: var(--vis-color-grey);
     --vis-dark-controls-button-color: #fff;
   }
 

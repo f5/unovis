@@ -15,7 +15,7 @@ export const variables = injectGlobal`
 
     --vis-dark-tooltip-background-color: rgba(30,30,30, 0.95);
     --vis-dark-tooltip-text-color: #e5e9f7;
-    --vis-dark-tooltip-border-color: var(--vis-color-gray);
+    --vis-dark-tooltip-border-color: var(--vis-color-grey);
     --vis-dark-tooltip-shadow-color: rgba(0,0,0, 0.95);
   }
 
@@ -29,7 +29,7 @@ export const variables = injectGlobal`
   body.theme-dark {
     --vis-tooltip-background-color: rgba(30,30,30, 0.95);
     --vis-tooltip-text-color: #e5e9f7;
-    --vis-tooltip-border-color: var(--vis-color-gray);
+    --vis-tooltip-border-color: var(--vis-color-grey);
     --vis-tooltip-shadow-color: rgba(0,0,0, 0.95);
   }
 `
