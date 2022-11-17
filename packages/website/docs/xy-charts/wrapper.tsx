@@ -12,7 +12,7 @@ type XYWrapperProps = DocWrapperProps & {
   showAxes?: boolean;
 }
 
-export const axis = (t: 'x' | 'y'): DocComponent => ({ name: 'Axis', props: { type: t }, key: `${t}Axis` })
+export const axis = (t: 'x' | 'y', props = {}): DocComponent => ({ name: 'Axis', props: { type: t, ...props }, key: `${t}Axis` })
 
 const getProps = ({ showAxes, ...rest }: XYWrapperProps): DocWrapperProps => {
   if (showAxes) {
