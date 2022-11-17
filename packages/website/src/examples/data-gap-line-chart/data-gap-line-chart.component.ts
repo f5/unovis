@@ -27,11 +27,11 @@ export class DataGapLineChartComponent {
   // label config
   labels = ({
     data: countries,
-    y: (c: Country) => this.yAccessor(c)(data[data.length - 1]),
-    label: (c: Country) => c.label,
+    y: (c: Country): number => this.yAccessor(c)(data[data.length - 1]),
+    label: (c: Country): string => c.label,
   })
 
-  tickFormat = (d: number) => `${d}${d ? 'M' : ''}`
+  tickFormat = (d: number): string => `${d}${d ? 'M' : ''}`
 
   // legend config
   legendItemClick = (_, i: number): void => { this._curr = i }

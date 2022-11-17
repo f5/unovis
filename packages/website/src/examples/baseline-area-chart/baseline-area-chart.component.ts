@@ -12,10 +12,10 @@ export class BaselineAreaChartComponent {
   max: number = Math.max(...this.sums)
 
   // Area
-  x = (d: DataRecord) => d.year
+  x = (d: DataRecord): number => d.year
   y = categories.map((c: Category) => d => d.art[c.id])
   color = categories.map((c: Category): string => c.color)
-  baseline = (_: DataRecord, i: number) => (this.max - this.sums[i]) / 2
+  baseline = (_: DataRecord, i: number): number => (this.max - this.sums[i]) / 2
 
   // Y Axis
   tickValues = Array<number>(Math.round(this.max / 1000)).fill(0).map((_, i) => {
@@ -23,5 +23,5 @@ export class BaselineAreaChartComponent {
     return this.max / 2 + dir * 1000
   })
 
-  tickFormat = (i: number) => `${Math.abs(i - this.max / 2)}`
+  tickFormat = (i: number): string => `${Math.abs(i - this.max / 2)}`
 }

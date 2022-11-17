@@ -1,6 +1,4 @@
 import { NgModule } from '@angular/core'
-
-import { TopojsonMapComponent } from './topojson-map.component'
 import {
   VisSingleContainerModule,
   VisTopoJSONMapModule,
@@ -9,6 +7,7 @@ import {
   VisAxisModule,
   VisTooltipModule,
 } from '@unovis/angular'
+import { TopojsonMapComponent } from './topojson-map.component'
 
 @NgModule({
   imports: [VisSingleContainerModule, VisTopoJSONMapModule, VisXYContainerModule, VisStackedBarModule, VisAxisModule, VisTooltipModule],

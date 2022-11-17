@@ -1,5 +1,3 @@
-//
-import { AtomicAngularWrapperComponent } from 'examples/atomic-angular-wrapper/atomic-angular-wrapper.component'
 import { NgModule } from '@angular/core'
 import {
   VisXYContainerModule,
@@ -12,6 +10,8 @@ import {
   VisXYLabelsModule,
   VisBulletLegendModule,
 } from '@unovis/angular'
+
+import { AtomicAngularWrapperComponent } from './atomic-angular-wrapper.component'
 
 @NgModule({
   imports: [VisXYContainerModule, VisAreaModule, VisLineModule, VisAxisModule, VisCrosshairModule, VisTooltipModule, VisFreeBrushModule, VisXYLabelsModule, VisBulletLegendModule],

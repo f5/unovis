@@ -16,7 +16,7 @@ export class StackedBarChartComponent {
   legendLabels = this.dataKeys.map(k => ({ name: labels[k] }))
 
   tooltipTriggers = {
-    [StackedBar.selectors.bar]: (d: EducationDatum) => {
+    [StackedBar.selectors.bar]: (d: EducationDatum): string => {
       const title = `<div style="color: #666; text-align: center">${d.country}</div>`
       const total = `Total: <b>${d.total}%</b> of population</br>`
       const stats = this.dataKeys.map((k, i) => [
@@ -27,5 +27,5 @@ export class StackedBarChartComponent {
     },
   }
 
-  tickFormat = i => data[i].country
+  tickFormat = (i: number): string => data[i].country
 }

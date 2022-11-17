@@ -1,5 +1,5 @@
 import { Component } from '@angular/core'
-import { GraphLayoutType, GraphNodeShape } from '@unovis/ts'
+import { GraphLayoutType } from '@unovis/ts'
 
 import { data, NodeDatum, LinkDatum } from './data'
 
@@ -10,9 +10,9 @@ import { data, NodeDatum, LinkDatum } from './data'
 export class BasicGraphComponent {
   data = data
   layoutType = GraphLayoutType.Dagre
-  nodeLabel = (n: NodeDatum) => n.label
-  nodeShape = (n: NodeDatum) => n.shape as GraphNodeShape
-  nodeStroke = (l: LinkDatum) => l.color
-  linkFlow = (l: LinkDatum) => l.active
-  linkStroke = (l: LinkDatum) => l.color
+  nodeLabel = (n: NodeDatum): string => n.label
+  nodeShape = (n: NodeDatum): string => n.shape
+  nodeStroke = (l: LinkDatum): string => l.color
+  linkFlow = (l: LinkDatum): boolean => l.active
+  linkStroke = (l: LinkDatum): string => l.color
 }

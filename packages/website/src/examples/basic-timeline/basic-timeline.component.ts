@@ -11,14 +11,14 @@ export class BasicTimelineComponent {
   dateFormatter = Intl.DateTimeFormat().format
 
   data: DataRecord[] = data
-  x = (d: DataRecord) => d.startDate
-  length = (d: DataRecord) => d.endDate - d.startDate
-  type = (d: DataRecord) => d.name
-  color = (d: DataRecord) => colorMap[d.type]
+  x = (d: DataRecord): number => d.startDate
+  length = (d: DataRecord): number => d.endDate - d.startDate
+  type = (d: DataRecord): string => d.name
+  color = (d: DataRecord): string => colorMap[d.type]
 
   legendItems = Object.keys(ProductType).map((name, i) => ({ name, color: colorMap[name] }))
   triggers = {
-    [Timeline.selectors.label]: (_: string, i: number) => {
+    [Timeline.selectors.label]: (_: string, i: number): string => {
       const { startDate, endDate, description } = data[i]
       return `
         <div style="width:${this.labelWidth}px">

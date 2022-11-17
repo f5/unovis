@@ -12,9 +12,9 @@ import { mapKey } from './constants'
 })
 export class BasicLeafletMapComponent {
   style = `https://api.maptiler.com/maps/streets/style.json?key=${mapKey}`
-  pointLatitude = (d: MapPointDataRecord) => d.latitude
-  pointLongitude = (d: MapPointDataRecord) => d.longitude
-  pointBottomLabel = (d: MapPointDataRecord) => d.id
+  pointLatitude = (d: MapPointDataRecord): number => d.latitude
+  pointLongitude = (d: MapPointDataRecord): number => d.longitude
+  pointBottomLabel = (d: MapPointDataRecord): string => d.id
   pointColor = '#286e47'
   clusterExpandOnClick = false
   attribution = [
