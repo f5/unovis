@@ -6,22 +6,22 @@ export const root = css`
 
 export const variables = injectGlobal`
   :root {
-    --vis-brush-selection-fill: #0b1640;
-    --vis-brush-selection-stroke: #acb2b9;
-    --vis-brush-handle-fill: #6d778c;
-    --vis-brush-handle-stroke: #eee;
+    --vis-brush-selection-fill-color: #0b1640;
+    --vis-brush-selection-stroke-color: #acb2b9;
+    --vis-brush-handle-fill-color: #6d778c;
+    --vis-brush-handle-stroke-color: #eee;
 
-    --vis-dark-brush-selection-fill:#acb2b9;
-    --vis-dark-brush-selection-stroke: #0b1640;
-    --vis-dark-brush-handle-fill: #acb2b9;
-    --vis-dark-brush-handle-stroke: var(--vis-color-gray);
+    --vis-dark-brush-selection-fill-color:#acb2b9;
+    --vis-dark-brush-selection-stroke-color: #0b1640;
+    --vis-dark-brush-handle-fill-color: #acb2b9;
+    --vis-dark-brush-handle-stroke-color: var(--vis-color-gray);
   }
 
   body.theme-dark ${`.${root}`} {
-    --vis-brush-selection-fill: var(--vis-dark-brush-selection-fill);
-    --vis-brush-selection-stroke: var(--vis-dark-brush-selection-stroke);
-    --vis-brush-handle-fill: var(--vis-dark-brush-handle-fill);
-    --vis-brush-handle-stroke: var(--vis-dark-brush-handle-stroke);
+    --vis-brush-selection-fill-color: var(--vis-dark-brush-selection-fill);
+    --vis-brush-selection-stroke-color: var(--vis-dark-brush-selection-stroke-color);
+    --vis-brush-handle-fill-color: var(--vis-dark-brush-handle-fill);
+    --vis-brush-handle-stroke-color: var(--vis-dark-brush-handle-stroke-color);
   }
 `
 
@@ -32,7 +32,7 @@ export const brush = css`
 
   .selection {
     fill: none;
-    stroke: var(--vis-brush-selection-stroke);
+    stroke: var(--vis-brush-selection-stroke-color);
     stroke-width: 0;
     stroke-opacity: 0;
   }
@@ -57,7 +57,7 @@ export const unselected = css`
 
 export const handleLine = css`
   label: handle-line;
-  stroke: var(--vis-brush-handle-stroke);
+  stroke: var(--vis-brush-handle-stroke-color);
   stroke-width: 1;
   fill: none;
   pointer-events: none;

@@ -37,7 +37,7 @@ export const variables = injectGlobal`
     --vis-map-point-label-text-color-dark: #5b5f6d;
     --vis-map-point-label-text-color-light: #fff;
 
-    --vis-map-cluster-expanded-background-fill: #fff;
+    --vis-map-cluster-expanded-background-fill-color: #fff;
 
     --vis-dark-map-container-background-color: #dfe5eb;
     --vis-dark-map-point-default-fill-color: #B9BEC3;
@@ -51,7 +51,7 @@ export const variables = injectGlobal`
     --vis-dark-map-point-label-text-color-dark: #fff;
     --vis-dark-map-point-label-text-color-light: #fff;
 
-    --vis-dark-map-cluster-expanded-background-fill: #fff;
+    --vis-dark-map-cluster-expanded-background-fill-color: #fff;
   }
 
   body.theme-dark ${`.${root}`} {
@@ -66,7 +66,7 @@ export const variables = injectGlobal`
 
     --vis-map-point-label-text-color-dark: var(--vis-dark-map-point-label-text-color-dark);
     --vis-map-point-label-text-color-light: var(--vis-dark-map-point-label-text-color-light);
-    --vis-map-cluster-expanded-background-fill: var(--vis-dark-map-cluster-expanded-background-fill);
+    --vis-map-cluster-expanded-background-fill-color: var(--vis-dark-map-cluster-expanded-background-fill);
   }
 `
 

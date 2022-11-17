@@ -3,8 +3,8 @@ import { css, injectGlobal } from '@emotion/css'
 export const globalStyles = injectGlobal`
   :root {
     --vis-scatter-cursor: default;
-    --vis-scatter-fill: var(--vis-color-main);
-    --vis-scatter-stroke: var(--vis-color-main);
+    --vis-scatter-fill-color: var(--vis-color-main);
+    --vis-scatter-stroke-color: var(--vis-color-main);
     --vis-scatter-stroke-width: 0px;
     --vis-scatter-fill-opacity: 1;
     --vis-scatter-stroke-opacity: 1;
@@ -38,7 +38,7 @@ export const point = css`
     fill-opacity: var(--vis-scatter-fill-opacity);
     stroke-opacity: var(--vis-scatter-stroke-opacity);
     stroke-width: var(--vis-scatter-stroke-width);
-    stroke: var(--vis-scatter-stroke);
+    stroke: var(--vis-scatter-stroke-color);
 
     &:hover {
         stroke-width: var(--vis-scatter-hover-stroke-width);

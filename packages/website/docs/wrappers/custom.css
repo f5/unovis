@@ -18,15 +18,15 @@
 }
 
 .custom-stacked-bar {
-  --vis-stacked-bar-stroke: #000;
+  --vis-stacked-bar-stroke-color: #000;
   --vis-stacked-bar-stroke-width: 5px;
   --vis-stacked-bar-hover-stroke-width: 10px;
-  --vis-stacked-bar-hover-stroke: #8777d9;
+  --vis-stacked-bar-hover-stroke-color: #8777d9;
 }
 
 .custom-grouped-bar {
   --vis-grouped-bar-stroke-width: 2px;
-  --vis-grouped-bar-stroke: #000;
+  --vis-grouped-bar-stroke-color: #000;
   --vis-grouped-bar-cursor: crosshair;
 }
 
@@ -38,8 +38,8 @@
 }
 
 .custom-crosshair {
-  --vis-crosshair-line-stroke: #f88080;
-  --vis-crosshair-circle-stroke: #000000;
+  --vis-crosshair-line-stroke-color: #f88080;
+  --vis-crosshair-circle-stroke-color: #000000;
 }
 
 .custom-tooltip {
