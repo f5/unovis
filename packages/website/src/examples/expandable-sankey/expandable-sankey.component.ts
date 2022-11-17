@@ -15,13 +15,13 @@ export class ExpandableSankeyComponent {
 
   nodeColor = getColor
   nodeIcon = (d: NodeDatum): string => !d.expandable ? '' : (d.expanded ? '-' : '+')
-  nodeCursor = (d: SankeyNode<NodeDatum, LinkDatum>) => d.expandable ? 'pointer' : null
+  nodeCursor = (d: SankeyNode<NodeDatum, LinkDatum>): string => d.expandable ? 'pointer' : null
   subLabel = (d: SankeyNode<NodeDatum, LinkDatum>): string => {
     if (d.expanded || d.depth === 0) return ''
     return `${((d.value / sourceNode.value) * 100).toFixed(1)}%`
   }
 
-  linkColor = (d: SankeyLink<NodeDatum, LinkDatum>) => getColor(d.source)
+  linkColor = (d: SankeyLink<NodeDatum, LinkDatum>): string => getColor(d.source)
 
   events = {
     [Sankey.selectors.node]: {

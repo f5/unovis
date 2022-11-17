@@ -14,16 +14,16 @@ export class LeafletFlowMapComponent {
   style = `https://api.maptiler.com/maps/topo/style.json?key=${mapKey}`
   fitViewPadding = [20, 20]
 
-  pointLatitude = (d: MapPointDataRecord) => d.lat
-  pointLongitude = (d: MapPointDataRecord) => d.lon
-  pointBottomLabel = (d: MapPointDataRecord) => d.id
+  pointLatitude = (d: MapPointDataRecord): number => d.lat
+  pointLongitude = (d: MapPointDataRecord): number => d.lon
+  pointBottomLabel = (d: MapPointDataRecord): string => d.id
 
-  sourceLatitude = (d: MapFlowDataRecord) => d.sourceLat
-  sourceLongitude = (d: MapFlowDataRecord) => d.sourceLon
-  targetLatitude = (d: MapFlowDataRecord) => d.targetLat
-  targetLongitude = (d: MapFlowDataRecord) => d.targetLon
+  sourceLatitude = (d: MapFlowDataRecord): number => d.sourceLat
+  sourceLongitude = (d: MapFlowDataRecord): number => d.sourceLon
+  targetLatitude = (d: MapFlowDataRecord): number => d.targetLat
+  targetLongitude = (d: MapFlowDataRecord): number => d.targetLon
 
-  flowParticleDensity = (d: MapFlowDataRecord) => d.particleDensity
+  flowParticleDensity = (d: MapFlowDataRecord): number => d.particleDensity
   flowParticleRadius = 1.0
   flowParticleColor = '#435647'
   pointRadius = 3

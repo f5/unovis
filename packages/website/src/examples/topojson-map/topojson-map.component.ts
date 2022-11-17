@@ -26,13 +26,13 @@ export class TopojsonMapComponent {
   }
 
   // accessors
-  getExpectancy = (d: AreaDatum) => d.age[yearIndex(this.currentYear)]
-  getAreaColor = (d: AreaDatum) => this.color(this.getExpectancy(d))
+  getExpectancy = (d: AreaDatum): number => d.age[yearIndex(this.currentYear)]
+  getAreaColor = (d: AreaDatum): string => this.color(this.getExpectancy(d))
 
   // input config
   min: number = yearRange[0]
   max: number = yearRange[1]
-  setYear = (e: Event) => {
+  setYear = (e: Event): void => {
     this.currentYear = +(e.target as HTMLInputElement).value
 
     // Updating the accessor function to trigger the component update

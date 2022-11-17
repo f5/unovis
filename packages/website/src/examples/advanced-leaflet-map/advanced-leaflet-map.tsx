@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useRef } from 'react'
-import { LeafletMap, LeafletMapClusterDatum, MapLibreStyleSpecs } from '@unovis/ts'
+import { LeafletMap, LeafletMapClusterDatum } from '@unovis/ts'
 import { VisLeafletMap, VisLeafletMapRef } from '@unovis/react'
 
 // Data

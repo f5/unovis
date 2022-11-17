@@ -4,7 +4,6 @@
   import { candidates, data, DataRecord } from './data'
 
   let curr = candidates[0].name
-  let items, y
 
   const keys = Object.keys(data[0][curr]).map(d => ({ name: d }))
   const x = (d: DataRecord) => d.year
@@ -13,10 +12,8 @@
     curr = i.name as string
   }
 
-  $: {
-    y = keys.map(i => (d: DataRecord) => d[curr][i.name])
-    items = candidates.map(c => ({ ...c, inactive: curr !== c.name }))
-  }
+  $: y = keys.map(i => (d: DataRecord) => d[curr][i.name])
+  $: items = candidates.map(c => ({ ...c, inactive: curr !== c.name }))
 </script>
 
 <step-area-chart>
@@ -56,7 +53,7 @@
     border: 1px solid #f4f4f4;
   }
 
-  .legendLabel:hover {
+  :is(.legendLabel:hover) {
     text-decoration: underline;
   }
 </style>

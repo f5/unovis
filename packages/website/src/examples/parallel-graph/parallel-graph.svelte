@@ -8,7 +8,6 @@
 
   // Reactive statements
   let expanded = [mainSite]
-  console.log('test')
   $: panels = expanded.map(site => sites[site].panel)
   $: data = {
     nodes: nodes.flatMap<NodeDatum>(n => expanded.includes(n.site) ? n.children : n),
