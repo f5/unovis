@@ -1,4 +1,4 @@
-import { Axis, BulletLegend, Scale, Scatter, Tooltip, XYContainer } from '@unovis/ts'
+import { Axis, BulletLegend, Position, Scale, Scatter, Tooltip, XYContainer } from '@unovis/ts'
 import { data, palette, DataRecord } from './data'
 
 const categories = [...new Set(data.map((d: DataRecord) => d.category))].sort()
@@ -21,6 +21,7 @@ const scatter = new Scatter<DataRecord>({
   color: (d: DataRecord) => colorScale(d.category),
   size: (d: DataRecord) => d.total,
   label: (d: DataRecord) => formatNumber(d.total),
+  labelPosition: Position.Bottom,
   sizeRange: [10, 50],
   cursor: 'pointer',
 })
