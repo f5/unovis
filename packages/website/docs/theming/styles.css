@@ -1,0 +1,65 @@
+.border-lines {
+  --stroke: #fff;
+  --stroke-dark: #292b34;
+  --vis-area-stroke-width: 1px;
+  --vis-area-stroke: var(--stroke);
+  --vis-dark-area-stroke: var(--stroke-dark);
+  --vis-donut-segment-stroke-width: 1px;
+  --vis-stacked-bar-stroke-width: 1px;
+  --vis-stacked-bar-stroke: var(--stroke);
+  --vis-dark-stacked-bar-stroke: var(--stroke-dark);
+  --vis-timeline-line-stroke-width: 1px;
+}
+
+.border-lines > h4 {
+  margin-top: 20px;
+}
+
+.color-picker {
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.custom-font {
+  --vis-font-family: 'Courier', monospace;
+  font-family: 'Courier New', Courier, monospace;
+}
+
+.custom-sankey {
+  --vis-sankey-node-sublabel-font-weight: 800;
+  --vis-sankey-node-color: var(--vis-color0);
+  --vis-sankey-link-color: lightgray;
+  --vis-sankey-link-opacity: 1;
+  --vis-dark-sankey-node-color: var(--vis-color1);
+  --vis-dark-sankey-link-color:#212;
+}
+
+
+.with-border-lines {
+
+}
+
+
+.color-vars .token-line:nth-child(2) > .hexcode {
+  background-color: var(--vis-color0);
+}
+.color-vars .token-line:nth-child(3) > .hexcode {
+  background-color: var(--vis-color1);
+}
+.color-vars .token-line:nth-child(4) > .hexcode {
+  background-color: var(--vis-color2);
+}
+.color-vars .token-line:nth-child(5) > .hexcode {
+  background-color: var(--vis-color3);
+}
+.color-vars .token-line:nth-child(6) > .hexcode {
+  background-color: var(--vis-color4);
+}
+.color-vars .token-line:nth-child(7) > .hexcode {
+  background-color: var(--vis-color5);
+}
+.color-vars .token-line:nth-child(8) > .hexcode {
+  background-color: var(--vis-color6);
+}
+
