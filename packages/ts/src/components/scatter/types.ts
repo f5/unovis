@@ -10,5 +10,12 @@ export type ScatterPoint<D> = D & {
     label: string | null;
     labelColor: string | null;
     cursor: string | null;
+    groupIndex: number;
+    pointIndex: number;
   };
+}
+
+export type ScatterPointGroupNode = SVGGElement & {
+  _labelVisible: boolean;
+  _forceShowLabel?: boolean;
 }

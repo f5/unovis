@@ -226,7 +226,17 @@ export function trimSVGText (
   return false
 }
 
-export function estimateTextSize (svgTextSelection: Selection<SVGTextElement, any, SVGElement, any>, fontSize: number, dy = 0.32, fastMode = true, widthToHeightRatio = 0.52): { width: number; height: number } {
+export function estimateStringPixelLength (str: string, fontSize: number, widthToHeightRatio = 0.52): number {
+  return str.length * fontSize * widthToHeightRatio
+}
+
+export function estimateTextSize (
+  svgTextSelection: Selection<SVGTextElement, any, SVGElement, any>,
+  fontSize: number,
+  dy = 0.32,
+  fastMode = true,
+  widthToHeightRatio = 0.52
+): { width: number; height: number } {
   const tspanSelection = svgTextSelection.selectAll('tspan')
 
   const lines = tspanSelection.size() || 1
