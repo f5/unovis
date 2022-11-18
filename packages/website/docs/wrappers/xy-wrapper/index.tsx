@@ -1,6 +1,8 @@
 import React from 'react'
-import { DocWrapper, DocWrapperProps, DynamicWrapper, InputWrapper } from '../wrappers'
-import { DocComponent } from '../wrappers/base'
+import { DocWrapper } from '../base'
+import { InputWrapper, DynamicWrapper } from '../interactive'
+import { DocComponent, DocWrapperProps } from '../types'
+import './custom.css'
 
 const defaultProps: Partial<DocWrapperProps> = {
   containerName: 'XYContainer',

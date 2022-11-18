@@ -7,7 +7,6 @@ export const PropTable = ({ name }): JSX.Element => {
   const props: Record<string, PropItem> = useDynamicImport(name)
   const propsArray = Object.entries(props || {})
     .sort((a, b) => Number(b[1].required) - Number(a[1].required))
-
   return (
     <table className="table">
       <thead>

@@ -1,6 +1,6 @@
 import useIsBrowser from '@docusaurus/useIsBrowser'
 import { kebabCase } from '@site/src/utils/text'
-import { DocComponent } from '../wrappers/base/types'
+import { DocComponent } from '../wrappers/types'
 
 export type PropInfo = {
   key: string;

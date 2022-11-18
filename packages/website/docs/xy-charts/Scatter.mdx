@@ -1,13 +1,8 @@
----
-sidebar_position: 5
-title: Scatter
-sidebar_label: Scatter
----
-import CodeBlock from '@theme/CodeBlock';
-import Details from "@theme/Details";
+import CodeBlock from '@theme/CodeBlock'
+import Details from "@theme/Details"
 import { PropTable } from '../components/props-table'
 import { generateScatterDataRecords } from '../utils/data'
-import { XYWrapper, XYWrapperWithInput } from './wrapper.tsx';
+import { XYWrapper, XYWrapperWithInput } from '../wrappers/xy-wrapper'
 
 export const defaultProps = (n = 10, colored = false) => ({
   name: "Scatter",

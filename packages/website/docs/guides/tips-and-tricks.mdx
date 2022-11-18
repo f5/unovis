@@ -1,13 +1,9 @@
----
-sidebar_position: 10
-title: Tips and Tricks
-sidebar_label: Tips and Tricks
----
 import BrowserOnly from '@docusaurus/BrowserOnly'
-import { generateDataRecords } from './utils/data.ts'
-import { XYWrapper } from './xy-charts/wrapper'
-import { FrameworkTabs } from './components/framework-tabs.tsx'
+import { generateDataRecords } from '../utils/data.ts'
+import { XYWrapper } from '../wrappers'
+import { FrameworkTabs } from '../components/framework-tabs.tsx'
 
+# Tips and Tricks
 
 ## Custom Fills with SVG `defs`
 If you want to custom SVG definitions available for your components, you can use the `svgDefs` property on the container, like this:
