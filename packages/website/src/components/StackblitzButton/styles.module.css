@@ -6,5 +6,9 @@
   position: absolute;
   right: 0;
   top: var(--ifm-tabs-padding-vertical);
-  cursor: pointer;
+}
+
+input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
