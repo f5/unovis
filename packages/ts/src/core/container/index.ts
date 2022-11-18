@@ -62,8 +62,8 @@ export class ContainerCore {
     this.config = new ConfigModel().init(config)
   }
 
-  _render (duration?: number, dontSizeToContainer?: boolean): void {
-    if (!dontSizeToContainer) {
+  _render (duration?: number, dontApplySize?: boolean): void {
+    if (!dontApplySize) {
       this.svg
         .attr('width', this.config.width || this.containerWidth)
         .attr('height', this.config.height || this.containerHeight)
@@ -89,11 +89,15 @@ export class ContainerCore {
   }
 
   get containerWidth (): number {
-    return clamp(this._container.clientWidth || this._container.getBoundingClientRect().width, 0, Number.POSITIVE_INFINITY)
+    return this.config.width
+      ? this.element.clientWidth
+      : clamp(this._container.clientWidth || this._container.getBoundingClientRect().width, 0, Number.POSITIVE_INFINITY)
   }
 
   get containerHeight (): number {
-    return clamp(this._container.clientHeight || this._container.getBoundingClientRect().height, 0, Number.POSITIVE_INFINITY)
+    return this.config.height
+      ? this.element.clientHeight
+      : clamp(this._container.clientHeight || this._container.getBoundingClientRect().height, 0, Number.POSITIVE_INFINITY)
   }
 
   get width (): number {
