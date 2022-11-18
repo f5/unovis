@@ -22,7 +22,7 @@ export const variables = injectGlobal`
 
     --vis-dark-graph-link-stroke-color: #494b56;
     --vis-dark-graph-link-label-stroke-color: #222;
-    --vis-dark-graph-link-label-fill-color: var(--vis-color-gray);
+    --vis-dark-graph-link-label-fill-color: var(--vis-color-grey);
     --vis-dark-graph-link-label-text-color: var(--vis-graph-link-label-text-color-bright)
   }
 

@@ -19,7 +19,7 @@ export const variables = injectGlobal`
 
     /* Node Central Icon */
     --vis-graph-node-icon-fill-color-bright: #ffffff;
-    --vis-graph-node-icon-fill-color-dark: var(--vis-color-gray);
+    --vis-graph-node-icon-fill-color-dark: var(--vis-color-grey);
     --vis-graph-node-icon-fill-color: #9ea7b8;
 
     --vis-dark-graph-node-icon-fill-color: var(--vis-graph-node-icon-fill-color-bright);
@@ -41,7 +41,7 @@ export const variables = injectGlobal`
     --vis-graph-node-sublabel-font-size: 8pt;
     --vis-graph-node-label-font-family: var(--vis-font-family);
 
-    --vis-dark-graph-node-label-background: var(--vis-color-gray);
+    --vis-dark-graph-node-label-background: var(--vis-color-grey);
     --vis-dark-graph-node-label-text-color: #ffffff;
     --vis-dark-graph-node-sublabel-text-color: #989aa3;
 
@@ -52,9 +52,9 @@ export const variables = injectGlobal`
     --vis-graph-node-side-label-fill-color-dark: #494b56;
 
     --vis-dark-graph-node-side-label-background-fill-color: #989aa3;
-    --vis-dark-graph-node-side-label-background-stroke-color: var(--vis-color-gray);
+    --vis-dark-graph-node-side-label-background-stroke-color: var(--vis-color-grey);
     --vis-dark-graph-node-side-label-fill-color-bright: #f1f4f7;
-    --vis-dark-graph-node-side-label-fill-color-dark: var(--vis-color-gray);
+    --vis-dark-graph-node-side-label-fill-color-dark: var(--vis-color-grey);
 
     /* Greyout */
     --vis-graph-node-greyout-color: #ebeff7;
@@ -62,7 +62,7 @@ export const variables = injectGlobal`
     --vis-graph-node-side-label-background-greyout-color: #f1f4f7;
 
     --vis-dark-graph-node-greyout-color: #494b56;
-    --vis-dark-graph-node-icon-greyout-color: var(--vis-color-gray);
+    --vis-dark-graph-node-icon-greyout-color: var(--vis-color-grey);
     --vis-dark-graph-node-side-label-background-greyout-color: #494B56;
   }
 
