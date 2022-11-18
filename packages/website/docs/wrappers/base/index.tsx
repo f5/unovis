@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention, @typescript-eslint/no-var-requires */
 import * as React from 'react'
 import BrowserOnly from '@docusaurus/BrowserOnly'
-import { DocWrapperProps } from './types'
+import { DocWrapperProps } from '../types'
 import { DocFrameworkTabs } from './doc-tabs'
 
 /* XYWrapper by default displays code snippet tabs and a Vis component with custom props */

@@ -3,7 +3,7 @@ import React from 'react'
 import { FrameworkTabs } from '../../components/framework-tabs'
 import { getAngularStrings, getReactStrings, getSvelteStrings, getTypescriptStrings } from '../../utils/code'
 import { parseProps } from '../../utils/parser'
-import { DocTabsProps, ContextLevel } from './types'
+import { DocTabsProps, ContextLevel } from '../types'
 
 /* Displays code snippets with framework tabs */
 export function DocFrameworkTabs ({

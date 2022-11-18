@@ -1,11 +1,8 @@
----
-sidebar_position: 6
----
-import CodeBlock from "@theme/CodeBlock";
-import BrowserOnly from "@docusaurus/core/lib/client/exports/BrowserOnly";
+import CodeBlock from "@theme/CodeBlock"
+import BrowserOnly from "@docusaurus/core/lib/client/exports/BrowserOnly"
+import { XYWrapper, XYWrapperWithInput, axis } from '../wrappers/xy-wrapper'
 import { PropTable } from '../components/props-table'
 import { generateTimeSeries } from '../utils/data'
-import { XYWrapper, XYWrapperWithInput, axis } from './wrapper.tsx';
 
 export const xAxis = ({
   ...axis('x'),
@@ -175,6 +172,7 @@ const events = {
 ## Additional Styling: CSS Variables
 The _Timeline_ component supports additional styling via CSS variables:
 
+
 <details open>
   <summary>All supported CSS variables</summary>
   <CodeBlock language="css">{
@@ -203,6 +201,5 @@ The _Timeline_ component supports additional styling via CSS variables:
 --vis-dark-timeline-label-color: #EFF5F8;`}
   </CodeBlock>
 </details>
-
 
 <PropTable name="VisTimeline"/>

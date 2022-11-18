@@ -1,14 +1,12 @@
 ---
-sidebar_position: 3
-title: Stacked Bar
 sidebar_label: Stacked Bar
+title: Stacked Bar
 ---
 import BrowserOnly from '@docusaurus/BrowserOnly'
 import CodeBlock from '@theme/CodeBlock'
-
 import { PropTable } from '../components/props-table'
 import { data, generateDataRecords } from '../utils/data'
-import { XYWrapper, XYWrapperWithInput, DynamicXYWrapper } from './wrapper.tsx'
+import { XYWrapper, XYWrapperWithInput, DynamicXYWrapper } from '../wrappers/xy-wrapper'
 
 export const defaultProps = (n=10) => ({
   name: "StackedBar",
