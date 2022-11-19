@@ -35,12 +35,6 @@
   --vis-dark-sankey-link-color:#212;
 }
 
-
-.with-border-lines {
-
-}
-
-
 .color-vars .token-line:nth-child(2) > .hexcode {
   background-color: var(--vis-color0);
 }

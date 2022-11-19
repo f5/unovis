@@ -33,7 +33,7 @@ export function getAngularStrings (config: CodeConfig, importedProps: string[], 
     tsLines.push('})')
 
     if (data || Object.values(rest).length) {
-      tsLines.push(`export class Component<${dataType}>{`)
+      tsLines.push('export class Component {')
       if (data) tsLines.push(`${t}@Input ${data};`)
       tsLines.push(...Object.entries(rest).map(d => `${t}${d.join(' = ')}`))
       tsLines.push('}')

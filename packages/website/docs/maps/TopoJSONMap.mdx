@@ -15,7 +15,10 @@ export const defaultProps = (showData = true) => ({
   topojson: "WorldMapTopoJSON",
   height: 400,
   dataType: "MapPoint,MapLink,MapArea",
-  showContext: "minimal"
+  showContext: "minimal",
+  hiddenProps: {
+    disableZoom: true,
+  }
 })
 
 export const wiki = (url) => <a href={`https://en.wikipedia.org/wiki/${url}`}>{link}</a>
@@ -224,11 +227,9 @@ You can provide a projection for your _TopoJSONMap_ with a `MapProjection` insta
       imports={imports}
       defaultValue="MapProjection.Mercator()"
       options={Object.values(MapProjectionKind)}
-      inputProps={{
-        onChange: e => {
-          setCurr(MapProjection[e])
-          return `MapProjection.${e}()`
-        }
+      onChange={e => {
+        setCurr(MapProjection[e])
+        return `MapProjection.${e}()`
       }}
       showContext="minimal"/>
   )}}
