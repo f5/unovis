@@ -17,7 +17,7 @@ export const variables = injectGlobal`
     --vis-donut-central-sub-label-font-weight: 500;
 
     --vis-donut-background-color: #E7E9F3;
-    --vis-donut-segment-stroke-width: none;
+    --vis-donut-segment-stroke-width: 0;
     // The line segment color variable is not defined by default
     // to allow it to fallback to the donut background color
     /* --vis-donut-segment-stroke-color: none; */
