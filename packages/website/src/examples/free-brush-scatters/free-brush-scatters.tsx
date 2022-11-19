@@ -41,7 +41,7 @@ export default function FreeBrushScatter (): JSX.Element {
         height={'55vh'}
         scaleByDomain={true}
       >
-        <VisScatter {...scatterProps} sizeRange={[20, 80]} labelPosition={Position.Center} />
+        <VisScatter {...scatterProps} sizeRange={[20, 80]} labelPosition={Position.Bottom} />
         <VisAxis type='x' label='Median Salary ($)' tickFormat={formatNumber} gridLine={false}/>
         <VisAxis type='y' label='Employment Rate' tickPadding={0} gridLine={false}/>
       </VisXYContainer>

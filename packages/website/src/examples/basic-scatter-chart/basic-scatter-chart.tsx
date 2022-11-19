@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
-import { Scale, Scatter } from '@unovis/ts'
-import { VisXYContainer, VisScatter, VisAxis, VisBulletLegend, VisTooltip } from '@unovis/react'
-import { palette, data, DataRecord } from './data'
+import { Position, Scale, Scatter } from '@unovis/ts'
+import { VisAxis, VisBulletLegend, VisScatter, VisTooltip, VisXYContainer } from '@unovis/react'
+import { data, DataRecord, palette } from './data'
 
 const categories = [...new Set(data.map((d: DataRecord) => d.category))].sort()
 const colorScale = Scale.scaleOrdinal(palette).domain(categories)
@@ -25,6 +25,7 @@ export default function BasicScatterChart (): JSX.Element {
           color={useCallback((d: DataRecord) => colorScale(d.category), [])}
           size={useCallback((d: DataRecord) => d.total, [])}
           label={useCallback((d: DataRecord) => formatNumber(d.total), [])}
+          labelPosition={Position.Bottom}
           sizeRange={[10, 50]}
           cursor='pointer'
         />

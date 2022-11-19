@@ -1,4 +1,6 @@
+import { Selection, select } from 'd3-selection'
 import { max, min } from 'd3-array'
+import toPx from 'to-px'
 
 // Core
 import { XYComponentCore } from 'core/xy-component'
@@ -7,6 +9,7 @@ import { XYComponentCore } from 'core/xy-component'
 import { isNumber, getExtent, getNumber, getString, isArray, flatten, getValue } from 'utils/data'
 import { getColor } from 'utils/color'
 import { smartTransition } from 'utils/d3'
+import { getCSSVariableValue } from 'utils/misc'
 
 // Types
 import { Spacing } from 'types/spacing'
@@ -14,13 +17,14 @@ import { SymbolType } from 'types/symbol'
 import { NumericAccessor } from 'types/accessor'
 
 // Local Types
-import { ScatterPoint } from './types'
+import { ScatterPointGroupNode, ScatterPoint } from './types'
 
 // Config
 import { ScatterConfig, ScatterConfigInterface } from './config'
 
 // Modules
 import { createPoints, updatePoints, removePoints } from './modules/point'
+import { collideLabels, getEstimatedLabelBBox } from './modules/utils'
 
 // Styles
 import * as s from './style'
@@ -29,10 +33,15 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfig<Datum>,
   static selectors = s
   config: ScatterConfig<Datum> = new ScatterConfig()
   events = {
-    [Scatter.selectors.point]: {},
+    [Scatter.selectors.point]: {
+      mouseenter: this._onPointMouseOver.bind(this),
+      mouseleave: this._onPointMouseOut.bind(this),
+    },
   }
 
   private _pointData: ScatterPoint<Datum>[][] = []
+  private _points: Selection<SVGGElement, ScatterPoint<Datum>, SVGGElement, ScatterPoint<Datum>[]>
+  private _collideLabelsAnimFrameId: ReturnType<typeof requestAnimationFrame>
 
   constructor (config?: ScatterConfigInterface<Datum>) {
     super()
@@ -58,16 +67,33 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfig<Datum>,
     const xRangeStart = this.xScale.range()[0]
     const xRangeEnd = this.xScale.range()[1]
 
-    const minY = min(pointDataFlat, d => this.yScale(d._point.yValue) - d._point.sizePx / 2)
-    const maxY = max(pointDataFlat, d => this.yScale(d._point.yValue) + d._point.sizePx / 2)
-    const minX = min(pointDataFlat, d => this.xScale(d._point.xValue) - d._point.sizePx / 2)
-    const maxX = max(pointDataFlat, d => this.xScale(d._point.xValue) + d._point.sizePx / 2)
+    const fontSize = getCSSVariableValue('var(--vis-scatter-point-label-text-font-size)', this.element)
+    const fontSizePx = toPx(fontSize, this.element)
 
-    const coeff = 1.25 // Multiplier to take into account subsequent scale range changes and shape irregularities
-    const top = minY < yRangeStart ? coeff * (yRangeStart - minY) : 0
-    const bottom = maxY > yRangeEnd ? coeff * (maxY - yRangeEnd) : 0
-    const left = minX < xRangeStart ? coeff * (xRangeStart - minX) : 0
-    const right = maxX > xRangeEnd ? coeff * (maxX - xRangeEnd) : 0
+    const extent = pointDataFlat.reduce((ext, d) => {
+      const labelPosition = getValue(d, this.config.labelPosition, d._point.pointIndex)
+      const labelBBox = getEstimatedLabelBBox(d, labelPosition, this.xScale, this.yScale, fontSizePx)
+      const x = this.xScale(d._point.xValue)
+      const y = this.yScale(d._point.yValue)
+      const r = d._point.sizePx / 2
+
+      ext.minX = Math.min(ext.minX, x - r, labelBBox.x)
+      ext.maxX = Math.max(ext.maxX, x + r, labelBBox.x + labelBBox.width)
+      ext.minY = Math.min(ext.minY, y - r, labelBBox.y)
+      ext.maxY = Math.max(ext.maxY, y + r, labelBBox.y + labelBBox.height)
+      return ext
+    }, {
+      minX: Number.POSITIVE_INFINITY,
+      maxX: Number.NEGATIVE_INFINITY,
+      minY: Number.POSITIVE_INFINITY,
+      maxY: Number.NEGATIVE_INFINITY,
+    })
+
+    const coeff = 1.2 // Multiplier to take into account subsequent scale range changes and shape irregularities
+    const top = extent.minY < yRangeStart ? coeff * (yRangeStart - extent.minY) : 0
+    const bottom = extent.maxY > yRangeEnd ? coeff * (extent.maxY - yRangeEnd) : 0
+    const left = extent.minX < xRangeStart ? coeff * (xRangeStart - extent.minX) : 0
+    const right = extent.maxX > xRangeEnd ? coeff * (extent.maxX - xRangeEnd) : 0
 
     return { top, bottom, left, right }
   }
@@ -96,16 +122,29 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfig<Datum>,
     // Points
     const points = pointGroupsMerged
       .selectAll<SVGPathElement, ScatterPoint<Datum>>(`.${s.point}`)
-      .data((d) => d, (d, i) => `${getString(d, config.id, i) ?? i}`)
+      .data(
+        d => d,
+        d => `${getString(d, config.id, d._point.pointIndex) ?? d._point.pointIndex}`
+      )
 
     const pointsEnter = points.enter().append('g')
       .attr('class', s.point)
     createPoints(pointsEnter, this.xScale, this.yScale)
 
-    const pointsMerged = pointsEnter.merge(points)
-    updatePoints(pointsMerged, config, this.xScale, this.yScale, duration)
+    this._points = pointsEnter.merge(points)
+    updatePoints(this._points, config, this.xScale, this.yScale, duration)
 
     removePoints(points.exit(), this.xScale, this.yScale, duration)
+
+    // Take care of overlapping labels
+    this._collideLabels()
+  }
+
+  private _collideLabels (): void {
+    cancelAnimationFrame(this._collideLabelsAnimFrameId)
+    this._collideLabelsAnimFrameId = requestAnimationFrame(() => {
+      collideLabels(this._points, this.config, this.xScale, this.yScale)
+    })
   }
 
   private _updateSizeScale (): void {
@@ -154,6 +193,8 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfig<Datum>,
               label: getString(d, config.label, j),
               labelColor: getValue(d, config.labelColor, j),
               cursor: getString(d, config.cursor, j),
+              groupIndex: j,
+              pointIndex: i,
             },
           })
         }
@@ -161,5 +202,21 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfig<Datum>,
         return acc
       }, []) ?? []
     })
+  }
+
+  private _onPointMouseOver (d: ScatterPoint<Datum>, event: MouseEvent): void {
+    const point = select(event.target as SVGGElement)
+    const pointNode = point.node() as ScatterPointGroupNode | null
+    if (pointNode) pointNode._forceShowLabel = true
+
+    point.raise()
+    this._collideLabels()
+  }
+
+  private _onPointMouseOut (d: ScatterPoint<Datum>, event: MouseEvent): void {
+    const pointNode = select(event.target as SVGGElement).node() as ScatterPointGroupNode | null
+    if (pointNode) delete pointNode._forceShowLabel
+
+    this._collideLabels()
   }
 }

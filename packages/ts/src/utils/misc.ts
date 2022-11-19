@@ -24,24 +24,24 @@ export function isStringCSSVariable (s: string): boolean {
   return isString(s) ? (s.substring(0, 6) === 'var(--') : false
 }
 
-export function getCSSVariableValue (s: string, context: HTMLElement | SVGGElement): string {
+export function getCSSVariableValue (s: string, context: HTMLElement | SVGElement): string {
   if (!isString(s)) return ''
   const variableName = s.substr(4, s.length - 5)
   return getComputedStyle(context).getPropertyValue(variableName)
 }
 
-export function rectIntersect (rect1: Rect, rect2: Rect, tolerance = 0): boolean {
+export function rectIntersect (rect1: Rect, rect2: Rect, tolerancePx = 0): boolean {
   const [left1, top1, right1, bottom1] = [
-    rect1.x + tolerance,
-    rect1.y + rect1.height - 2 * tolerance,
-    rect1.x + rect1.width - 2 * tolerance,
-    rect1.y + tolerance,
+    rect1.x + tolerancePx,
+    rect1.y + rect1.height - 2 * tolerancePx,
+    rect1.x + rect1.width - 2 * tolerancePx,
+    rect1.y + tolerancePx,
   ]
   const [left2, top2, right2, bottom2] = [
-    rect2.x + tolerance,
-    rect2.y + rect2.height - 2 * tolerance,
-    rect2.x + rect2.width - 2 * tolerance,
-    rect2.y + tolerance,
+    rect2.x + tolerancePx,
+    rect2.y + rect2.height - 2 * tolerancePx,
+    rect2.x + rect2.width - 2 * tolerancePx,
+    rect2.y + tolerancePx,
   ]
 
   return !(top1 < bottom2 || top2 < bottom1 || right1 < left2 || right2 < left1)
