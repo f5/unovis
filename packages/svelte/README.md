@@ -13,6 +13,29 @@ npm install -P @unovis/ts @unovis/svelte
 ```
 
 ## Quick Start
+#### TypeScript
+```sveltehtml
+<script lang="ts">
+  import { VisXYContainer, VisLine, VisAxis } from '@unovis/svelte'
+
+  type DataRecord = { x: number; y: number }
+  export let data = [
+    { x: 0, y: 0 },
+    { x: 1, y: 2 },
+    { x: 2, y: 1 },
+  ]
+  const x = (d: DataRecord) => d.x
+  const y = (d: DataRecord) => d.y
+</script>
+
+<VisXYContainer height={600}>
+  <VisLine {data} {x} {y}/>
+  <VisAxis type="x"/>
+  <VisAxis type="y"/>
+</VisXYContainer>
+```
+
+#### JavaScript
 ```sveltehtml
 <script>
   import { VisXYContainer, VisLine, VisAxis } from '@unovis/svelte'
@@ -22,10 +45,12 @@ npm install -P @unovis/ts @unovis/svelte
     { x: 1, y: 2 },
     { x: 2, y: 1 },
   ]
+  const x = d => d.x
+  const y = d => d.y
 </script>
 
 <VisXYContainer height={600}>
-  <VisLine {data} x={d => d.x} y={d => d.y}/>
+  <VisLine {data} {x} {y}/>
   <VisAxis type="x"/>
   <VisAxis type="y"/>
 </VisXYContainer>

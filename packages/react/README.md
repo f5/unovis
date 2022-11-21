@@ -13,6 +13,7 @@ npm install -P @unovis/ts @unovis/react
 ```
 
 ## Quick Start
+#### TypeScript
 ```typescript jsx
 import React, { useCallback } from 'react'
 import { VisXYContainer, VisLine, VisAxis } from '@unovis/react'
@@ -28,6 +29,31 @@ export function BasicLineChart (): JSX.Element {
   return (
     <VisXYContainer data={data} height={600}>
       <VisLine<DataRecord>
+        x={useCallback(d => d.x, [])}
+        y={useCallback(d => d.y, [])}
+      ></VisLine>
+      <VisAxis type="x"></VisAxis>
+      <VisAxis type="y"></VisAxis>
+    </VisXYContainer>
+  )
+}
+```
+
+#### JavaScript
+```jsx
+import React, { useCallback } from 'react'
+import { VisXYContainer, VisLine, VisAxis } from '@unovis/react'
+
+export const data = [
+  { x: 0, y: 0 },
+  { x: 1, y: 2 },
+  { x: 2, y: 1 },
+]
+
+export function BasicLineChart () {
+  return (
+    <VisXYContainer data={data} height={600}>
+      <VisLine
         x={useCallback(d => d.x, [])}
         y={useCallback(d => d.y, [])}
       ></VisLine>

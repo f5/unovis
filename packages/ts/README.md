@@ -13,6 +13,7 @@ npm install -P @unovis/ts
 ```
 
 ## Quick Start
+#### TypeScript
 ```ts
 import { Axis, Line, XYContainer } from '@unovis/ts'
 
@@ -25,6 +26,29 @@ const data: DataRecord[] = [
 ]
 
 const line = new Line<DataRecord>({
+  x: d => d.x,
+  y: d => d.y,
+})
+
+const container = document.getElementById('vis-container')
+const chart = new XYContainer(container, {
+  components: [line],
+  xAxis: new Axis(),
+  yAxis: new Axis(),
+}, data)
+```
+
+#### JavaScript
+```javascript
+import { Axis, Line, XYContainer } from '@unovis/ts'
+
+const data = [
+  { x: 0, y: 0 },
+  { x: 1, y: 2 },
+  { x: 2, y: 1 },
+]
+
+const line = new Line({
   x: d => d.x,
   y: d => d.y,
 })
