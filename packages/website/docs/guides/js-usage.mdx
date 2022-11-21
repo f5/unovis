@@ -1,0 +1,34 @@
+import { tsLineChartCode } from '../quick-start.snippets'
+
+# JavaScript Usage
+
+Even though our library is built with TypeScript, you can still use _Unovis_ with plain JavaScript by
+dropping the corresponding syntax related to types in your code.
+
+##### TypeScript:
+
+<div>{tsLineChartCode}</div>
+
+##### JavaScript:
+
+```js
+import { Axis, Line, XYContainer } from '@unovis/ts'
+
+const data = [
+  { x: 0, y: 0 },
+  { x: 1, y: 2 },
+  { x: 2, y: 1 },
+]
+
+const line = new Line({
+  x: d => d.x,
+  y: d => d.y,
+})
+
+const container = document.getElementById('vis-container')
+const chart = new XYContainer(container, {
+  components: [line],
+  xAxis: new Axis(),
+  yAxis: new Axis(),
+}, data)
+```
