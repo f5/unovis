@@ -75,11 +75,11 @@ The _Line_ component supports additional styling via CSS variables that you can 
 <XYWrapper {...lineProps()} excludeTabs className="custom-line" lineWidth={5} />
 
 <details open>
-  <summary>All supported CSS variables</summary>
+  <summary>Supported CSS variables and their default values</summary>
   <CodeBlock language="css">
-{`--vis-line-stroke
---vis-line-stroke-dasharray
---vis-line-stroke-dashoffset`}
+{`--vis-line-cursor: default;
+--vis-line-stroke-dasharray: none;
+--vis-line-stroke-dashoffset: 0;`}
   </CodeBlock>
 </details>
 

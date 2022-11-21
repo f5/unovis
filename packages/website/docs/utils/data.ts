@@ -55,7 +55,7 @@ export function generateScatterDataRecords (n = 10, colored = false): ScatterDat
   return Array(n).fill(0).map((_, i: number) => ({
     x: i,
     y: 5 + 5 * Math.random(),
-    size: 1 + 3 * Math.random(),
+    size: 10 + 15 * Math.random(),
     color: colored ? colors[i % colors.length] : undefined,
     label: `${i}`,
   }))

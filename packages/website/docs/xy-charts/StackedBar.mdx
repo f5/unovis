@@ -103,14 +103,17 @@ The _Stacked Bar_ component supports additional styling via CSS variables that y
 <XYWrapper {...defaultProps()} excludeTabs className="custom-stacked-bar"/>
 
 <details open>
-  <summary open>All supported CSS variables</summary>
+  <summary>Supported CSS variables and their default values</summary>
   <CodeBlock language="css">
-{`--vis-stacked-bar-cursor
---vis-stacked-bar-fill
---vis-stacked-bar-stroke
---vis-stacked-bar-stroke-width
---vis-stacked-bar-hover-stroke-width
---vis-stacked-bar-hover-stroke
+{`--vis-stacked-bar-cursor: default;
+--vis-stacked-bar-fill-color: var(--vis-color-main);
+--vis-stacked-bar-stroke-color: none;
+--vis-stacked-bar-stroke-width: 0px;
+--vis-stacked-bar-hover-stroke-width: none;
+--vis-stacked-bar-hover-stroke-color: none;
+ 
+/* Dark Theme */
+--vis-dark-stacked-bar-stroke-color: none;
 `}</CodeBlock>
 </details>
 

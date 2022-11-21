@@ -101,14 +101,14 @@ The _Grouped Bar_ component supports additional styling via CSS variables that y
 <XYWrapper {...defaultProps(5)} excludeTabs className="custom-grouped-bar"/>
 
 <details open>
-  <summary open>All supported CSS variables</summary>
+  <summary>Supported CSS variables and their default values</summary>
   <CodeBlock language="css">
-{`--vis-grouped-bar-cursor
---vis-grouped-bar-fill
---vis-grouped-bar-stroke
---vis-grouped-bar-stroke-width
---vis-grouped-bar-hover-stroke-width
---vis-grouped-bar-hover-stroke`
+{`--vis-grouped-bar-cursor: default;
+--vis-grouped-bar-fill-color: var(--vis-color-main);
+--vis-grouped-bar-stroke-color: none;
+--vis-grouped-bar-stroke-width: 0px;
+--vis-grouped-bar-hover-stroke-width: 1px;
+--vis-grouped-bar-hover-stroke-color: none;`
 }</CodeBlock>
 </details>
 

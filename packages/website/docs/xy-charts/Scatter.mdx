@@ -59,7 +59,7 @@ Note that setting this property overrides `labelTextBrightnessRatio`.
 You can change a point's label position with the `labelPosition` property, which accepts a  _Position_ or _Position_ accessor
 function. Supported values are `Position.Center` (default), `Position.Bottom`, `Position.Left`, `Position.Right` and `Position.Top`
 
-<XYWrapperWithInput {...defaultProps(15, true)} hiddenProps={{ size: d => d.size, label: d => d.label, labelColor: 'var(--vis-axis-label-color)'}} property='labelPosition' inputType="select" options={['center', 'left', 'right', 'top', 'bottom']}/>
+<XYWrapperWithInput {...defaultProps(15, true)} hiddenProps={{ size: d => d.size, label: d => d.label}} property='labelPosition' inputType="select" options={['bottom', 'center', 'left', 'right', 'top']}/>
 
 ### Custom Cursor
 _Scatter_ also allows to set a [custom](https://developer.mozilla.org/en-US/docs/Web/CSS/cursor) `cursor` when hovering
@@ -93,21 +93,24 @@ The _Scatter_ component supports additional styling via CSS variables that you c
 }
 </CodeBlock>
 
-<XYWrapper {...defaultProps(50)} showAxes={true} height={250} excludeTabs label={d => d.label} labelTextBrightnessRatio={0.5} className="custom-scatter"/>
+<XYWrapper {...defaultProps(50)} showAxes={true} height={250} excludeTabs label={d => d.label} size={20} labelTextBrightnessRatio={0.5} className="custom-scatter"/>
 
-<details>
-  <summary>All supported CSS variables</summary>
+<details open>
+  <summary>Supported CSS variables and their default values</summary>
   <CodeBlock language="css">
-  {`--vis-scatter-cursor
-  --vis-scatter-fill
-  --vis-scatter-stroke
-  --vis-scatter-stroke-width
-  --vis-scatter-fill-opacity
-  --vis-scatter-stroke-opacity
-  --vis-scatter-hover-stroke-width
-  --vis-scatter-point-label-text-color-dark
-  --vis-scatter-point-label-text-color-light
-  --vis-scatter-point-label-text-font-weight`}
+  {`--vis-scatter-cursor: default;
+--vis-scatter-fill-color: var(--vis-color-main);
+--vis-scatter-stroke-color: var(--vis-color-main);
+--vis-scatter-stroke-width: 0px;
+--vis-scatter-fill-opacity: 1;
+--vis-scatter-stroke-opacity: 1;
+--vis-scatter-hover-stroke-width: 2px;
+ 
+/* Dark Theme */
+--vis-scatter-point-label-text-color-dark: #5b5f6d;
+--vis-scatter-point-label-text-color-light: #fff;
+--vis-scatter-point-label-text-font-weight: 500;
+--vis-scatter-point-label-text-font-size: 12px;`}
   </CodeBlock>
 </details>
 
