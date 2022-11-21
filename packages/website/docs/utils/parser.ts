@@ -76,7 +76,6 @@ export function parseProps (component: DocComponent, dataType: string, imports: 
   return {
     ...component,
     props: Object.entries(component.props).map(([k, v]) => {
-      if (component.override?.[k]) return component.override[k]
       const isStringLiteral = typeof v === 'string' && !declarations[k] && (
         imports === undefined || imports.findIndex(i => v?.startsWith(i)) === -1
       )

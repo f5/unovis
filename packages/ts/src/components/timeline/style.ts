@@ -30,8 +30,8 @@ export const globalStyles = injectGlobal`
   }
 
   body.theme-dark ${`.${root}`} {
-    --vis-timeline-row-even-fill-color: var(--vis-dark-timeline-row-even-fill);
-    --vis-timeline-row-odd-fill-color: var(--vis-dark-timeline-row-odd-fill);
+    --vis-timeline-row-even-fill-color: var(--vis-dark-timeline-row-even-fill-color);
+    --vis-timeline-row-odd-fill-color: var(--vis-dark-timeline-row-odd-fill-color);
     --vis-timeline-scrollbar-background-color: var(--vis-dark-timeline-scrollbar-background-color);
     --vis-timeline-scrollbar-color: var(--vis-dark-timeline-scrollbar-color);
     --vis-timeline-label-color: var(--vis-dark-timeline-label-color);
@@ -51,11 +51,11 @@ export const line = css`
   fill: var(--vis-timeline-line-color);
   cursor: var(--vis-timeline-cursor);
 
-  stroke: var(--vis-timeline-line-stroke-color, var(--vis-timeline-row-even-fill));
+  stroke: var(--vis-timeline-line-stroke-color, var(--vis-timeline-row-even-fill-color));
   stroke-width: var(--vis-timeline-line-stroke-width);
 
   &.odd {
-    stroke: var(--vis-timeline-line-stroke-color, var(--vis-timeline-row-odd-fill));
+    stroke: var(--vis-timeline-line-stroke-color, var(--vis-timeline-row-odd-fill-color));
   }
 `
 

@@ -32,7 +32,7 @@ export function DocWrapper ({
     }
   }
   if (name !== containerName) {
-    components.splice(0, 0, { name, key: configKey, props: rest })
+    components = [{ name, key: configKey, props: rest }, ...components]
   } else {
     containerProps = { ...containerProps, ...rest }
   }

@@ -1,5 +1,6 @@
 import React, { BaseSyntheticEvent } from 'react'
-import { DocWrapper, DocWrapperProps } from '../base'
+import { DocWrapper } from '../base'
+import { DocWrapperProps } from '../types'
 
 type InputWrapperProps = DocWrapperProps & {
   inputType: React.HTMLInputTypeAttribute;

@@ -65,7 +65,12 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfig<Datum>, Don
 
     this.arcGen
       .startAngle(d => d.startAngle)
-      .endAngle(d => d.endAngle)
+      .endAngle(d =>
+        // Add 0.5 degree for empty segments
+        config.showEmptySegments && d.startAngle === d.endAngle
+          ? d.startAngle + 0.5 * Math.PI / 180
+          : d.endAngle
+      )
       .innerRadius(d => d.innerRadius)
       .outerRadius(d => d.outerRadius)
       .padAngle(config.padAngle)
