@@ -5,10 +5,10 @@ export enum Framework {
   TypeScript = 'typescript',
 }
 
-export type Extention = 'ts' | 'html' | 'tsx'
+export type Extension = 'ts' | 'html' | 'tsx'
 
 export type CodeBlockContent = {
-  language: Extention;
+  language: Extension;
   children: string;
   title?: string;
 }
