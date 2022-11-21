@@ -20,7 +20,7 @@ export const defaultProps = (showAxis = true) => ({
 })
 
 ## Basic Configuration
-_Brush_ is designed to work inside of an _XYContainer_ alongside an _XYChart_. The basic configuration looks like:
+_Brush_ is designed to work inside an _XYContainer_ alongside an _XYChart_. The basic configuration looks like:
 <XYWrapper {...defaultProps(false)} showContext="full"/>
 
 ## Usage
@@ -29,7 +29,7 @@ The _Brush_ component has four event listener properties:
 - `onBrushStart`
 - `onBrushMove`
 - `onBrushEnd`
-- `onBrush`, which encapsulates all of the above.
+- `onBrush`, which encapsulates all the above.
 
 Each callback has the following parameters:
 - _selection_: type `[number, number]`, the range of data current being displayed
@@ -63,7 +63,7 @@ Each callback has the following parameters:
 
 ## Selections
 ### Manual Selection
-You can explicity define the default selection range using the `selection` property:
+You can explicitly define the default selection range using the `selection` property:
 <XYWrapper {...defaultProps()} selection={[3,6]}/>
 
 ### Selection Min Length
@@ -85,12 +85,18 @@ By default, setting the desired the range relies on moving both start and end _B
 
 ### CSS Variables
 <details open>
-  <summary open>All supported CSS variables</summary>
+  <summary>Supported CSS variables and their default values</summary>
   <CodeBlock language="css">
-{`--vis-brush-selection-fill
---vis-brush-selection-stroke
---vis-brush-handle-fill
---vis-brush-handle-stroke
+{`--vis-brush-selection-fill-color: #0b1640;
+--vis-brush-selection-stroke-color: #acb2b9;
+--vis-brush-handle-fill-color: #6d778c;
+--vis-brush-handle-stroke-color: #eee;
+ 
+/* Dark Theme */
+--vis-dark-brush-selection-fill-color:#acb2b9;
+--vis-dark-brush-selection-stroke-color: #0b1640;
+--vis-dark-brush-handle-fill-color: #acb2b9;
+--vis-dark-brush-handle-stroke-color: var(--vis-color-grey);
 `}</CodeBlock>
 </details>
 
