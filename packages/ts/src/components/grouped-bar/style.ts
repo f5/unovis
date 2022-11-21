@@ -17,7 +17,7 @@ export const root = css`
 
 export const bar = css`
   label: bar;
-  fill: var(--vis-grouped-bar-fill);
+  fill: var(--vis-grouped-bar-fill-color);
   stroke: var(--vis-grouped-bar-stroke-color);
   stroke-width: var(--vis-grouped-bar-stroke-width);
   cursor: var(--vis-grouped-bar-cursor);

@@ -18,9 +18,9 @@ export const variables = injectGlobal`
   }
 
   body.theme-dark ${`.${root}`} {
-    --vis-free-brush-selection-fill-color: var(--vis-dark-free-brush-selection-fill);
+    --vis-free-brush-selection-fill-color: var(--vis-dark-free-brush-selection-fill-color);
     --vis-free-brush-selection-stroke-color: var(--vis-dark-free-brush-selection-stroke-color);
-    --vis-free-brush-handle-fill-color: var(--vis-dark-free-brush-selection-fill);
+    --vis-free-brush-handle-fill-color: var(--vis-dark-free-brush-selection-fill-color);
   }
 `
 
@@ -30,7 +30,7 @@ export const brush = css`
   stroke: none;
 
   .selection {
-    fill: var(--vis-free-brush-selection-fill);
+    fill: var(--vis-free-brush-selection-fill-color);
     fill-opacity: var(--vis-free-brush-selection-fill-opacity);
     stroke: var(--vis-free-brush-selection-stroke-color);
     stroke-width: 0;
@@ -38,7 +38,7 @@ export const brush = css`
   }
 
   .handle {
-    fill: var(--vis-free-brush-handle-fill);
+    fill: var(--vis-free-brush-handle-fill-color);
     stroke: var(--vis-free-brush-handle-stroke-color);
   }
 `

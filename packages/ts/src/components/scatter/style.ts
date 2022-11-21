@@ -34,7 +34,7 @@ export const point = css`
 
   > path {
     cursor: var(--vis-scatter-cursor);
-    fill: var(--vis-scatter-fill);
+    fill: var(--vis-scatter-fill-color);
     fill-opacity: var(--vis-scatter-fill-opacity);
     stroke-opacity: var(--vis-scatter-stroke-opacity);
     stroke-width: var(--vis-scatter-stroke-width);

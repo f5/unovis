@@ -18,9 +18,9 @@ export const variables = injectGlobal`
   }
 
   body.theme-dark ${`.${root}`} {
-    --vis-brush-selection-fill-color: var(--vis-dark-brush-selection-fill);
+    --vis-brush-selection-fill-color: var(--vis-dark-brush-selection-fill-color);
     --vis-brush-selection-stroke-color: var(--vis-dark-brush-selection-stroke-color);
-    --vis-brush-handle-fill-color: var(--vis-dark-brush-handle-fill);
+    --vis-brush-handle-fill-color: var(--vis-dark-brush-handle-fill-color);
     --vis-brush-handle-stroke-color: var(--vis-dark-brush-handle-stroke-color);
   }
 `
@@ -38,7 +38,7 @@ export const brush = css`
   }
 
   .handle {
-    fill: var(--vis-brush-handle-fill);
+    fill: var(--vis-brush-handle-fill-color);
   }
 
   &.non-draggable {
@@ -50,7 +50,7 @@ export const brush = css`
 
 export const unselected = css`
   label: unselected;
-  fill: var(--vis-brush-selection-fill);
+  fill: var(--vis-brush-selection-fill-color);
   opacity: 0.4;
   pointer-events: none;
 `

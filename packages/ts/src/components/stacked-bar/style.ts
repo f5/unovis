@@ -24,7 +24,7 @@ export const globalStyles = injectGlobal`
 
 export const bar = css`
   label: bar;
-  fill: var(--vis-stacked-bar-fill);
+  fill: var(--vis-stacked-bar-fill-color);
   stroke: var(--vis-stacked-bar-stroke-color);
   stroke-width: var(--vis-stacked-bar-stroke-width);
   cursor: var(--vis-stacked-bar-cursor);

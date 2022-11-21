@@ -25,7 +25,7 @@ export const labelGroup = css`
 
   > rect, text {
     cursor: var(--vis-xy-label-cursor);
-    fill: var(--vis-xy-label-fill);
+    fill: var(--vis-xy-label-fill-color);
     fill-opacity: var(--vis-xy-label-fill-opacity);
     stroke-opacity: var(--vis-xy-label-stroke-opacity);
   }

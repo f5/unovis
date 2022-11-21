@@ -74,7 +74,7 @@ export function updatePoints<Datum> (
 
     let labelColor = d._point.labelColor
     if (!labelColor && isLabelPositionCenter) {
-      const c = pointColor || 'var(--vis-scatter-fill)'
+      const c = pointColor || 'var(--vis-scatter-fill-color)'
       const hex = color(isStringCSSVariable(c) ? getCSSVariableValue(c, group.node()) : c)?.hex()
       const brightness = hexToBrightness(hex)
       labelColor = brightness > config.labelTextBrightnessRatio ? 'var(--vis-scatter-point-label-text-color-dark)' : 'var(--vis-scatter-point-label-text-color-light)'

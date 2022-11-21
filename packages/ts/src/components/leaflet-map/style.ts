@@ -66,7 +66,7 @@ export const variables = injectGlobal`
 
     --vis-map-point-label-text-color-dark: var(--vis-dark-map-point-label-text-color-dark);
     --vis-map-point-label-text-color-light: var(--vis-dark-map-point-label-text-color-light);
-    --vis-map-cluster-expanded-background-fill-color: var(--vis-dark-map-cluster-expanded-background-fill);
+    --vis-map-cluster-expanded-background-fill-color: var(--vis-dark-map-cluster-expanded-background-fill-color);
   }
 `
 
@@ -183,7 +183,7 @@ export const backgroundRect = css`
 export const clusterBackground = css`
   label: cluster-background;
 
-  fill: var(--vis-map-cluster-expanded-background-fill);
+  fill: var(--vis-map-cluster-expanded-background-fill-color);
   opacity: 0.6;
   visibility: hidden;
 

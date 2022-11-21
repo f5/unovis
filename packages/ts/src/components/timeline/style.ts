@@ -66,11 +66,11 @@ export const rows = css`
 export const rect = css`
   label: rect;
   pointer-events: none;
-  fill: var(--vis-timeline-row-even-fill);
+  fill: var(--vis-timeline-row-even-fill-color);
   opacity: var(--vis-timeline-row-background-opacity);
 
   &.odd {
-    fill: var(--vis-timeline-row-odd-fill);
+    fill: var(--vis-timeline-row-odd-fill-color);
   }
 `
 
