@@ -24,7 +24,9 @@ export default function Home (): JSX.Element {
       description="A modular data visualization framework for React, Angular and vanilla TypeScript"
     >
       <div className={s.root}>
-        <Link to="/gallery">❮ Back to Gallery</Link>
+        <Link isNavLink={true} to={`/gallery${query.has('category') ? `#${query.get('category')}` : ''}`}>
+          ❮ Back to Gallery
+        </Link>
         {
           example
             ? <GalleryViewer example={example} useTypescriptCode={useTypescriptCode}/>

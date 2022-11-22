@@ -1,4 +1,5 @@
 import React from 'react'
+import Heading from '@theme/Heading'
 import Layout from '@theme/Layout'
 import Link from '@docusaurus/Link'
 
@@ -18,12 +19,12 @@ export default function Home (): JSX.Element {
     >
       <div className={s.root}>
         <h1>Gallery</h1>
-        { examples.map(collection => <div key={collection.title}>
-          <div className={s.collectionTitle}>{collection.title}</div>
+        { examples.map(collection => <div key={collection.title} className={s.collectionTitle}>
+          <Heading as='h2' id={collection.title}>{collection.title}</Heading>
           <div className={s.collectionDescription}>{collection.description}</div>
           <div className={s.collectionItems}>
             { collection.examples.map(example =>
-              <Link className={s.linkedCard} to={`/gallery/view?title=${example.title}`} key={example.title}>
+              <Link className={s.linkedCard} key={example.title} to={`gallery/view?collection=${collection.title}&title=${example.title}`}>
                 <GalleryCard title={example.title} imageUrl={example.preview}/>
               </Link>
             )}
