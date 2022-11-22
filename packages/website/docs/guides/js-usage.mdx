@@ -17,9 +17,10 @@ export const removeTypes = (component) => component.props.children
 
 
 Even though our library is built with TypeScript, you can still use _Unovis_ with plain JavaScript by
-dropping the corresponding syntax related to types in your code.
+dropping the corresponding syntax related to types in your code. See the example code below to compare between
+TypeScript and JavaScript syntax.
 
-##### TypeScript:
+### Using with TypeScript:
 
 <FrameworkTabs
   showTitles={true}
@@ -32,7 +33,7 @@ dropping the corresponding syntax related to types in your code.
   typescript={tsLineChartCode.props.children}
 />
 
-##### JavaScript:
+### Using with JavaScript:
 
 <FrameworkTabs
   showTitles={true}
@@ -42,8 +43,6 @@ dropping the corresponding syntax related to types in your code.
     html: angularLineChartCode.props.children.find(c => c.props.title.endsWith('html')).props.children,
   }}
   react={removeTypes(reactLineChartCode).replace(': JSX.Element ', '')}
-  svelte={removeTypes(svelteLineChartCode).replace('lang=\'ts\'', '')}
-  typescript={removeTypes(tsLineChartCode)}
+  svelte={removeTypes(svelteLineChartCode).replace(' lang=\"ts\"', '')}
+  javascript={removeTypes(tsLineChartCode)}
 />
-
-<BasicLineChartExample />
