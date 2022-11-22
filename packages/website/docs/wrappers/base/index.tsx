@@ -32,11 +32,10 @@ export function DocWrapper ({
     }
   }
   if (name !== containerName) {
-    components = [{ name, key: configKey, props: rest }, ...components]
+    components = [...components, { name, key: configKey, props: rest }]
   } else {
     containerProps = { ...containerProps, ...rest }
   }
-
   return (
     <>
       {!excludeTabs &&
