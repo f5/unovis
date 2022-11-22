@@ -46,8 +46,8 @@ export const reactLineChartCode = <CodeBlock language="tsx">
   {`import React, { useCallback } from 'react'
 import { VisXYContainer, VisLine, VisAxis } from '@unovis/react'
 
-export type DataRecord = { x: number; y: number }
-export const data: DataRecord[] = [
+type DataRecord = { x: number; y: number }
+const data: DataRecord[] = [
   { x: 0, y: 0 },
   { x: 1, y: 2 },
   { x: 2, y: 1 },
@@ -115,7 +115,7 @@ export const svelteLineChartCode = <CodeBlock language="ts">
   {`<script lang="ts">
   import { VisXYContainer, VisLine, VisAxis } from '@unovis/svelte'
 
-  type DataRecord = { x: number; y: number }
+  type DataRecord = { x: number, y: number }
   export let data: DataRecord[] = [
     { x: 0, y: 0 },
     { x: 1, y: 2 },
@@ -133,7 +133,6 @@ export const svelteLineChartCode = <CodeBlock language="ts">
 
 export const tsLineChartCode = <CodeBlock language="ts">
   {`import { Axis, Line, XYContainer } from '@unovis/ts'
-import { data, DataRecord } from './data'
 
 type DataRecord = { x: number; y: number }
 

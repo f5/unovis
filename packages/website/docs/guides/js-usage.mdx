@@ -1,34 +1,49 @@
-import { tsLineChartCode } from '../quick-start.snippets'
+import { FrameworkTabs } from '../components/framework-tabs.tsx'
+import {
+  angularLineChartCode,
+  reactLineChartCode,
+  svelteLineChartCode,
+  tsLineChartCode,
+  BasicLineChartExample
+} from '../quick-start.snippets'
 
 # JavaScript Usage
+
+export const removeTypes = (component) => component.props.children
+   .replace(/type D.*\n\s*/gm, '')
+    .replace(': JSX.Element ', '')
+    .replace(': DataRecord[]', '')
+    .replace('<DataRecord>', '')
+
 
 Even though our library is built with TypeScript, you can still use _Unovis_ with plain JavaScript by
 dropping the corresponding syntax related to types in your code.
 
 ##### TypeScript:
 
-<div>{tsLineChartCode}</div>
+<FrameworkTabs
+  showTitles={true}
+  angular={{
+    html: angularLineChartCode.props.children.find(c => c.props.title.endsWith('html')).props.children,
+    ts: angularLineChartCode.props.children.find(c => c.props.title.endsWith('component.ts')).props.children,
+  }}
+  react={reactLineChartCode.props.children}
+  svelte={svelteLineChartCode.props.children}
+  typescript={tsLineChartCode.props.children}
+/>
 
 ##### JavaScript:
 
-```js
-import { Axis, Line, XYContainer } from '@unovis/ts'
+<FrameworkTabs
+  showTitles={true}
+  angular={{
+    ts: removeTypes(angularLineChartCode.props.children.find(c => c.props.title.endsWith('component.ts')))
+      .replaceAll('(d: DataRecord): number', 'd'),
+    html: angularLineChartCode.props.children.find(c => c.props.title.endsWith('html')).props.children,
+  }}
+  react={removeTypes(reactLineChartCode).replace(': JSX.Element ', '')}
+  svelte={removeTypes(svelteLineChartCode).replace('lang=\'ts\'', '')}
+  typescript={removeTypes(tsLineChartCode)}
+/>
 
-const data = [
-  { x: 0, y: 0 },
-  { x: 1, y: 2 },
-  { x: 2, y: 1 },
-]
-
-const line = new Line({
-  x: d => d.x,
-  y: d => d.y,
-})
-
-const container = document.getElementById('vis-container')
-const chart = new XYContainer(container, {
-  components: [line],
-  xAxis: new Axis(),
-  yAxis: new Axis(),
-}, data)
-```
+<BasicLineChartExample />
