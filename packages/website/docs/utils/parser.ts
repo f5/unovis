@@ -34,15 +34,15 @@ function formatElement (prefix: string, attributes: string[] = [], suffix: strin
 }
 
 function parseFunction (str: string, type: string): string {
-  const types = type.split(', ')
+  const types = type.split(',')
   const params = {
     i: 'number',
     d: types[0],
     ...Object.fromEntries(types.map(t => [t.toLowerCase().charAt(0), t])),
   }
   const fn = str.split('=>')
-  const args = fn[0].match(/[a-z]/gm)?.map(p => params[p] ? [p, params[p]].join(': ') : '_').join(', ') || ''
-  const body = fn[1].replace(/[+*/<>:?/]/gm, m => m && ` ${m} `).replace(/d\d+/gm, 'd')
+  const args = fn[0].match(/[a-z]/gm)?.map(p => params[p] ? [p, params[p]].join(': ') : p).join(', ') || ''
+  const body = fn[1]
   return `(${args}) => ${body}`
 }
 
@@ -83,7 +83,7 @@ export function parseProps (component: DocComponent, dataType: string, imports: 
         v = k
       } else if (typeof v === 'object' || typeof v === 'function') {
         if ((v.length && typeof v[0] === 'number') || !declarations) {
-          v = parseObject(v, dataType) || k
+          v = JSON.stringify(v)
         } else {
           declarations[k] = parseObject(v, dataType) || k
           v = k
