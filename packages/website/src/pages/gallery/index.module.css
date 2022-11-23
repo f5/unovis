@@ -3,9 +3,8 @@
 }
 
 .collectionTitle {
-  font-size: 18pt;
-  font-weight: bold;
-  margin-top: 40px;
+  margin-bottom: 40px;
+  --ifm-heading-margin-bottom: 0;
 }
 
 .collectionDescription {
