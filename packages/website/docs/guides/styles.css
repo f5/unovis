@@ -57,3 +57,6 @@
   background-color: var(--vis-color6);
 }
 
+.indent {
+  margin: 0 var(--ifm-list-left-padding);
+}
