@@ -42,7 +42,7 @@ Alternatively, you can define any defs you want to use in an SVG element on the 
 :::
 
 ## Displaying Ordinal Values
-We don't natively support the ordinal scale for XY components, but it can still be acheived with some
+We don't natively support the ordinal scale for XY components, but it can still be achieved with some
 small tweaks.
 
 - In your _XY Component_, provide the `x` property _NumericAccessor_ that returns the data index.
@@ -65,7 +65,7 @@ your value. Two common configurations are:
 ```ts
 const tickFormat = (tick: number) => data[tick].category
 ```
-  **Case 2**: Your ordinal values are explitly defined as an array of strings:
+  **Case 2**: Your ordinal values are explicitly defined as an array of strings:
 
 ```ts
 const categories = ['A', 'B', 'C', 'D', 'E']
