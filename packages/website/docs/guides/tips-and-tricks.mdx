@@ -1,7 +1,9 @@
 import BrowserOnly from '@docusaurus/BrowserOnly'
 import { generateDataRecords } from '../utils/data.ts'
-import { XYWrapper } from '../wrappers'
+import { XYWrapper, axis } from '../wrappers/xy-wrapper'
 import { FrameworkTabs } from '../components/framework-tabs.tsx'
+
+import './styles.css'
 
 # Tips and Tricks
 
@@ -38,6 +40,54 @@ Alternatively, you can define any defs you want to use in an SVG element on the 
   typescript={`const chart = new Area({... color: "url(#gradient)"})\n\ndocument.getElementById('container').insertAdjacentHTML(\`${svg}\`\n)`}/>
 
 :::
+
+## Displaying Ordinal Values
+We don't natively support the ordinal scale for XY components, but it can still be achieved with some
+small tweaks.
+
+- In your _XY Component_, provide the `x` property _NumericAccessor_ that returns the data index.
+
+<div className='indent'>
+
+```ts
+const x = (d: DataRecord, i: number) => i
+```
+
+</div>
+
+- In your _Axis_ component, provide the `tickFormat` property with a _StringAccessor_ that returns
+your value. Two common configurations are:
+
+<div className='indent'>
+
+  **Case 1**: When your data is an array of objects containing your ordinal property:
+
+```ts
+const tickFormat = (tick: number) => data[tick].category
+```
+  **Case 2**: Your ordinal values are explicitly defined as an array of strings:
+
+```ts
+const categories = ['A', 'B', 'C', 'D', 'E']
+const tickFormat = (tick: number) => categories[tick]
+```
+</div>
+
+When we apply these adjustments to a basic _Stacked Bar_ chart with an _X Axis_ component, the result
+looks like:
+
+<XYWrapper
+  name='StackedBar'
+  data={generateDataRecords(5)}
+  x={(d, i) => i}
+  y={d => d.y}
+  showContext='container'
+  components={[
+    axis('x', { tickFormat: d => ['A', 'B', 'C', 'D', 'E'][d] })
+  ]}
+/>
+
+
 
 
 
