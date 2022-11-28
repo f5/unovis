@@ -1,5 +1,9 @@
 import { css, injectGlobal } from '@emotion/css'
 
+export const root = css`
+  label: grouped-bar-component;
+`
+
 export const globalStyles = injectGlobal`
   :root {
     --vis-grouped-bar-cursor: default;
@@ -8,11 +12,15 @@ export const globalStyles = injectGlobal`
     --vis-grouped-bar-stroke-width: 0px;
     --vis-grouped-bar-hover-stroke-width: 1px;
     --vis-grouped-bar-hover-stroke-color: none;
-  }
-`
 
-export const root = css`
-  label: grouped-bar-component;
+
+    /* Dark Theme */
+    --vis-dark-grouped-bar-stroke-color: none;
+  }
+
+  body.theme-dark ${`.${root}`} {
+    --vis-grouped-bar-stroke-color: var(--vis-dark-grouped-bar-stroke-color);
+  }
 `
 
 export const bar = css`
