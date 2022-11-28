@@ -176,14 +176,14 @@ export class SankeyConfig<N extends SankeyInputNode, L extends SankeyInputLink> 
   labelFit = FitMode.Trim
   labelTrimMode = TrimMode.Middle
   labelForceWordBreak = true
-  labelFontSize = 12
+  labelFontSize = undefined
   labelCursor = undefined
   labelColor = undefined
   labelMaxWidth = 70
   labelExpandTrimmedOnHover = true
   labelVisibility = undefined
   subLabel = undefined
-  subLabelFontSize = 10
+  subLabelFontSize = undefined
   subLabelColor = undefined
   subLabelPlacement = SankeySubLabelPlacement.Below
   subLabelToLabelInlineWidthRatio = 0.4

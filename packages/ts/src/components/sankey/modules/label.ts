@@ -5,6 +5,7 @@ import { estimateTextSize, trimSVGText, wrapSVGText } from 'utils/text'
 import { smartTransition } from 'utils/d3'
 import { getString, getValue } from 'utils/data'
 import { getColor } from 'utils/color'
+import { getCSSVariablePixels } from 'utils/misc'
 
 // Types
 import { GenericAccessor } from 'types/accessor'
@@ -19,6 +20,7 @@ import { SankeyConfig } from '../config'
 
 // Styles
 import * as s from '../style'
+
 
 const NODE_LABEL_SPACING = 10
 const LABEL_BLOCK_PADDING = 6.5
@@ -156,21 +158,24 @@ export function renderLabel<N extends SankeyInputNode, L extends SankeyInputLink
   const sublabelText = getString(d, config.subLabel)
   let wasTrimmed = false
 
+  const labelFontSize = config.labelFontSize ?? getCSSVariablePixels('var(--vis-sankey-node-label-font-size)', labelGroup.node())
+  const subLabelFontSize = config.subLabelFontSize ?? getCSSVariablePixels('var(--vis-sankey-node-sublabel-font-size)', labelGroup.node())
+
   // Render the main label, wrap / trim it and estimate its size
-  const labelsFontSizeDifference = sublabelText ? config.labelFontSize - config.subLabelFontSize : 0
+  const labelsFontSizeDifference = sublabelText ? labelFontSize - subLabelFontSize : 0
   const labelTranslateY = labelPadding + ((isSublabelInline && labelsFontSizeDifference < 0) ? -0.6 * labelsFontSizeDifference : 0)
   labelTextSelection
     .text(labelText)
-    .attr('font-size', config.labelFontSize)
+    .attr('font-size', labelFontSize)
     .style('fill', getColor(d, config.labelColor))
     .attr('transform', `translate(${labelOrientationMult * labelPadding},${labelTranslateY})`)
     .style('cursor', (d: SankeyNode<N, L>) => getString(d, config.labelCursor))
 
   const labelMaxWidth = isSublabelInline ? config.labelMaxWidth * (1 - (sublabelText ? config.subLabelToLabelInlineWidthRatio : 0)) : config.labelMaxWidth
   if (config.labelFit === FitMode.Wrap || forceExpand) wrapSVGText(labelTextSelection, { width: labelMaxWidth, separator, verticalAlign: VerticalAlign.Top })
-  else wasTrimmed = trimSVGText(labelTextSelection, labelMaxWidth, config.labelTrimMode, fastEstimatesMode, config.labelFontSize, fontWidthToHeightRatio)
+  else wasTrimmed = trimSVGText(labelTextSelection, labelMaxWidth, config.labelTrimMode, fastEstimatesMode, labelFontSize, fontWidthToHeightRatio)
 
-  const labelSize = estimateTextSize(labelTextSelection, config.labelFontSize, dy, fastEstimatesMode, fontWidthToHeightRatio)
+  const labelSize = estimateTextSize(labelTextSelection, labelFontSize, dy, fastEstimatesMode, fontWidthToHeightRatio)
 
   // Render the sub-label, wrap / trim it and estimate its size
   const sublabelTranslateX = labelOrientationMult * (labelPadding + (isSublabelInline ? config.labelMaxWidth : 0))
@@ -180,17 +185,17 @@ export function renderLabel<N extends SankeyInputNode, L extends SankeyInputLink
     : labelSize.height + sublabelMarginTop)
   sublabelTextSelection
     .text(sublabelText)
-    .attr('font-size', config.subLabelFontSize)
+    .attr('font-size', subLabelFontSize)
     .style('fill', getColor(d, config.subLabelColor))
     .attr('transform', `translate(${sublabelTranslateX},${sublabelTranslateY})`)
     .style('cursor', (d: SankeyNode<N, L>) => getString(d, config.labelCursor))
 
   const sublabelMaxWidth = isSublabelInline ? config.labelMaxWidth * config.subLabelToLabelInlineWidthRatio : config.labelMaxWidth
   if (config.labelFit === FitMode.Wrap || forceExpand) wrapSVGText(sublabelTextSelection, { width: sublabelMaxWidth, separator, verticalAlign: VerticalAlign.Top })
-  else wasTrimmed = wasTrimmed || trimSVGText(sublabelTextSelection, sublabelMaxWidth, config.labelTrimMode, fastEstimatesMode, config.subLabelFontSize, fontWidthToHeightRatio)
+  else wasTrimmed = wasTrimmed || trimSVGText(sublabelTextSelection, sublabelMaxWidth, config.labelTrimMode, fastEstimatesMode, subLabelFontSize, fontWidthToHeightRatio)
 
   labelGroup.classed(s.labelTrimmed, wasTrimmed)
-  const sublabelSize = estimateTextSize(sublabelTextSelection, config.subLabelFontSize, dy, fastEstimatesMode, fontWidthToHeightRatio)
+  const sublabelSize = estimateTextSize(sublabelTextSelection, subLabelFontSize, dy, fastEstimatesMode, fontWidthToHeightRatio)
 
   // Draw the background if needed
   const labelGroupHeight = (isSublabelInline ? Math.max(labelSize.height, sublabelSize.height) : (labelSize.height + sublabelSize.height)) + 2 * labelPadding

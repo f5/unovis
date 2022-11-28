@@ -1,5 +1,6 @@
 import { Rect } from 'types/misc'
 import { isString } from 'utils/data'
+import toPx from 'to-px'
 
 export const getBoundingClientRectObject = (element: HTMLElement):
 { top: number; right: number; bottom: number; left: number; width: number; height: number; x: number; y: number } => {
@@ -28,6 +29,11 @@ export function getCSSVariableValue (s: string, context: HTMLElement | SVGElemen
   if (!isString(s)) return ''
   const variableName = s.substr(4, s.length - 5)
   return getComputedStyle(context).getPropertyValue(variableName)
+}
+
+export function getCSSVariablePixels (s: string, context: HTMLElement | SVGElement): number {
+  const val = getCSSVariableValue(s, context)
+  return toPx(val)
 }
 
 export function rectIntersect (rect1: Rect, rect2: Rect, tolerancePx = 0): boolean {

@@ -43,7 +43,7 @@ export class ScatterConfig<Datum> extends XYComponentConfig<Datum> implements Sc
   shape = SymbolType.Circle
   label = undefined
   labelColor = undefined
-  labelPosition = Position.Center
+  labelPosition = Position.Bottom
   cursor = null
   labelTextBrightnessRatio = 0.65
 }
