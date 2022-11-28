@@ -33,7 +33,7 @@
   Select a fallback value for missing data points:
   <VisBulletLegend {items} {onLegendItemClick}/>
 </div>
-<VisXYContainer height={300} xDomain={[1961, 2022]} yDomain={[0, 650]}>
+<VisXYContainer duration={0} height={300} xDomain={[1961, 2022]} yDomain={[0, 650]}>
   <VisLine {data} {x} {y} {fallbackValue}/>
   <VisXYLabels backgroundColor='none' {...labelConfig}/>
   <VisAxis type='x' numTicks={10}/>

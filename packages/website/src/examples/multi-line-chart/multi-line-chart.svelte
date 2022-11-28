@@ -12,9 +12,9 @@
   const xScale = Scale.scaleTime()
 </script>
 
+<VisBulletLegend {items}/>
 <VisXYContainer data={data} height={300} {xScale}>
   <VisLine {x} {y}/>
   <VisAxis type="x" label="Date" numTicks={6} tickFormat={(value) => Intl.DateTimeFormat().format(value)}/>
   <VisAxis type="y" label="Temperature (celsius)"/>
-  <VisBulletLegend {items}/>
 </VisXYContainer>

@@ -7,7 +7,7 @@ export enum Country {
 
 export const countries: Record<Country, BulletLegendItemInterface> = {
   [Country.UnitedStates]: { name: 'United States', color: '#192f7e' },
-  [Country.India]: { name: 'India', color: '#f93' },
+  [Country.India]: { name: 'India', color: '#D9C6BB' },
 }
 
 export type DataRecord = {

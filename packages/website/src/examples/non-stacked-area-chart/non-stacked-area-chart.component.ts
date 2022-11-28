@@ -1,5 +1,5 @@
 import { Component } from '@angular/core'
-import { ColorAccessor, NumericAccessor } from '@unovis/ts'
+import { ColorAccessor, NumericAccessor, CurveType } from '@unovis/ts'
 import { data, countries, Country, DataRecord } from './data'
 
 @Component({
@@ -10,6 +10,7 @@ export class NonStackedAreaComponent {
   data = data
   legendItems = Object.values(countries)
 
+  curveType: CurveType.Basis
   x: NumericAccessor<DataRecord> = (_, i) => i
   accessors = (id: Country): {
     y: NumericAccessor<DataRecord>;

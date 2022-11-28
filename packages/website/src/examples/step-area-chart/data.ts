@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 type Mention = {
-  positive: number;
-  negative: number;
   neutral: number;
+  negative: number;
+  positive: number;
 }
 export type DataRecord = Record<string, Mention> & {
   year: number;
@@ -17,221 +17,221 @@ export const data = [
   {
     year: 2007,
     'Jeb Bush': {
-      positive: 0,
-      negative: 1,
       neutral: 0,
+      negative: 1,
+      positive: 0,
     },
     'Hillary Clinton': {
-      positive: 3,
-      negative: 0,
       neutral: 1,
+      negative: 0,
+      positive: 3,
     },
     'Donald Trump': {
-      positive: 3,
-      negative: 0,
       neutral: 4,
+      negative: 0,
+      positive: 3,
     },
     Total: {
-      positive: 6,
       negative: 1,
+      positive: 6,
     },
   },
   {
     year: 2008,
     'Hillary Clinton': {
-      positive: 0,
-      negative: 10,
       neutral: 7,
+      negative: 10,
+      positive: 0,
     },
     'Donald Trump': {
-      positive: 6,
-      negative: 0,
       neutral: 3,
+      negative: 0,
+      positive: 6,
     },
     Total: {
-      positive: 6,
       negative: 10,
+      positive: 6,
     },
   },
   {
     year: 2009,
     'Hillary Clinton': {
-      positive: 1,
-      negative: 1,
       neutral: 3,
+      negative: 1,
+      positive: 1,
     },
     'Donald Trump': {
-      positive: 4,
-      negative: 1,
       neutral: 2,
+      negative: 1,
+      positive: 4,
     },
     Total: {
-      positive: 5,
       negative: 2,
+      positive: 5,
     },
   },
   {
     year: 2010,
     'Hillary Clinton': {
-      positive: 3,
-      negative: 1,
       neutral: 1,
+      negative: 1,
+      positive: 3,
     },
     'Donald Trump': {
-      positive: 7,
-      negative: 0,
       neutral: 5,
+      negative: 0,
+      positive: 7,
     },
     Total: {
-      positive: 10,
       negative: 1,
+      positive: 10,
     },
   },
   {
     year: 2011,
     'Mike Huckabee': {
-      positive: 0,
-      negative: 0,
       neutral: 1,
+      negative: 0,
+      positive: 0,
     },
     'Ben Carson': {
-      positive: 1,
-      negative: 0,
       neutral: 0,
+      negative: 0,
+      positive: 1,
     },
     'Hillary Clinton': {
-      positive: 1,
-      negative: 1,
       neutral: 2,
+      negative: 1,
+      positive: 1,
     },
     'Donald Trump': {
-      positive: 8,
-      negative: 1,
       neutral: 7,
+      negative: 1,
+      positive: 8,
     },
     Total: {
-      positive: 10,
       negative: 2,
+      positive: 10,
     },
   },
   {
     year: 2012,
     'Mike Huckabee': {
-      positive: 0,
-      negative: 1,
       neutral: 0,
+      negative: 1,
+      positive: 0,
     },
     'Jeb Bush': {
-      positive: 0,
-      negative: 1,
       neutral: 0,
+      negative: 1,
+      positive: 0,
     },
     'Hillary Clinton': {
-      positive: 1,
-      negative: 3,
       neutral: 7,
+      negative: 3,
+      positive: 1,
     },
     'Donald Trump': {
-      positive: 14,
-      negative: 0,
       neutral: 3,
+      negative: 0,
+      positive: 14,
     },
     Total: {
-      positive: 15,
       negative: 5,
+      positive: 15,
     },
   },
   {
     year: 2013,
     'Jeb Bush': {
-      positive: 0,
-      negative: 1,
       neutral: 0,
+      negative: 1,
+      positive: 0,
     },
     'Hillary Clinton': {
-      positive: 0,
-      negative: 2,
       neutral: 6,
+      negative: 2,
+      positive: 0,
     },
     'Donald Trump': {
-      positive: 19,
-      negative: 2,
       neutral: 12,
+      negative: 2,
+      positive: 19,
     },
     Total: {
-      positive: 19,
       negative: 5,
+      positive: 19,
     },
   },
   {
     year: 2014,
     'Chris Christie': {
-      positive: 0,
-      negative: 0,
       neutral: 1,
+      negative: 0,
+      positive: 0,
     },
     'Hillary Clinton': {
-      positive: 2,
-      negative: 0,
       neutral: 2,
+      negative: 0,
+      positive: 2,
     },
     'Donald Trump': {
-      positive: 16,
-      negative: 1,
       neutral: 5,
+      negative: 1,
+      positive: 16,
     },
     Total: {
-      positive: 18,
       negative: 1,
+      positive: 18,
     },
   },
   {
     year: 2015,
     'Ted Cruz': {
-      positive: 0,
-      negative: 1,
       neutral: 0,
+      negative: 1,
+      positive: 0,
     },
     'Hillary Clinton': {
-      positive: 3,
-      negative: 1,
       neutral: 2,
+      negative: 1,
+      positive: 3,
     },
     'Bernie Sanders': {
-      positive: 1,
-      negative: 1,
       neutral: 0,
+      negative: 1,
+      positive: 1,
     },
     'Donald Trump': {
-      positive: 12,
-      negative: 11,
       neutral: 9,
+      negative: 11,
+      positive: 12,
     },
     Total: {
-      positive: 16,
       negative: 14,
+      positive: 16,
     },
   },
   {
     year: 2016,
     'Chris Christie': {
-      positive: 0,
-      negative: 0,
       neutral: 1,
+      negative: 0,
+      positive: 0,
     },
     'Hillary Clinton': {
-      positive: 1,
-      negative: 0,
       neutral: 2,
+      negative: 0,
+      positive: 1,
     },
     'Donald Trump': {
-      positive: 4,
-      negative: 15,
       neutral: 8,
+      negative: 15,
+      positive: 4,
     },
     Total: {
-      positive: 5,
       negative: 15,
+      positive: 5,
     },
   },
 ]

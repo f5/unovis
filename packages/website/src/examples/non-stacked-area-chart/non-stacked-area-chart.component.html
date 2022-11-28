@@ -1,7 +1,7 @@
 <vis-xy-container [data]="data" [height]="400">
   <vis-bullet-legend [items]="legendItems"></vis-bullet-legend>
-  <vis-area [x]="x" [y]="usa.y" [color]="usa.color" [opacity]="0.7"></vis-area>
-  <vis-area [x]="x" [y]="ind.y" [color]="ind.color" [opacity]="0.6"></vis-area>
+  <vis-area [x]="x" [y]="usa.y" [color]="usa.color" [opacity]="0.7" [curveType]="curveType"></vis-area>
+  <vis-area [x]="x" [y]="ind.y" [color]="ind.color" [opacity]="0.7" [curveType]="curveType"></vis-area>
   <vis-axis type="x" [tickFormat]="xTicks"></vis-axis>
   <vis-axis type="y" [tickFormat]="yTicks"></vis-axis>
 </vis-xy-container>

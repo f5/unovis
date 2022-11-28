@@ -1,4 +1,4 @@
-import { Area, Axis, BulletLegend, NumericAccessor, XYContainer } from '@unovis/ts'
+import { Area, Axis, BulletLegend, CurveType, NumericAccessor, XYContainer } from '@unovis/ts'
 import { countries, Country, data, DataRecord } from './data'
 
 const container = document.getElementById('vis-container')
@@ -19,8 +19,8 @@ const legend = new BulletLegend(container, { items: Object.values(countries) })
 const chart = new XYContainer(container, {
   height: 400,
   components: [
-    new Area<DataRecord>({ x, opacity: 0.7, ...accessors(Country.UnitedStates) }),
-    new Area<DataRecord>({ x, opacity: 0.6, ...accessors(Country.India) }),
+    new Area<DataRecord>({ x, opacity: 0.7, curveType: CurveType.Basis, ...accessors(Country.UnitedStates) }),
+    new Area<DataRecord>({ x, opacity: 0.7, curveType: CurveType.Basis, ...accessors(Country.India) }),
   ],
   xAxis: new Axis({ tickFormat: xTicks }),
   yAxis: new Axis({ tickFormat: yTicks }),

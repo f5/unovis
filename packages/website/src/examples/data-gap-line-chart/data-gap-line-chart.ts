@@ -31,6 +31,7 @@ labels.setData(countries)
 
 // Container
 const chart = new XYContainer(container, {
+  duration: 0,
   height: 300,
   xDomain: [1961, 2022],
   yDomain: [0, 650],

@@ -1,7 +1,8 @@
 import React, { useCallback, useMemo } from 'react'
-import { VisXYContainer, VisArea, VisAxis, VisBulletLegend } from '@unovis/react'
+import { VisArea, VisAxis, VisBulletLegend, VisXYContainer } from '@unovis/react'
+import { CurveType } from '@unovis/ts'
 
-import { data, categories, Category, DataRecord } from './data'
+import { categories, Category, data, DataRecord } from './data'
 
 export default function BaselineAreaChart (): JSX.Element {
   const sums = data.map(d => d.art.reduce((t, i) => t + i, 0))
@@ -26,6 +27,7 @@ export default function BaselineAreaChart (): JSX.Element {
           y={useMemo(() => categories.map(y), [])}
           color={useMemo(() => categories.map(color), [])}
           baseline={baseline}
+          curveType={CurveType.Basis}
         />
         <VisAxis type="x" label="Year"/>
         <VisAxis

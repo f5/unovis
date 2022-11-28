@@ -1,4 +1,4 @@
-import { Area, Axis, BulletLegend, XYContainer } from '@unovis/ts'
+import { Area, Axis, BulletLegend, CurveType, XYContainer } from '@unovis/ts'
 
 import { data, categories, Category, DataRecord } from './data'
 
@@ -21,6 +21,7 @@ const area = new Area<DataRecord>({
   y: categories.map((c: Category) => d => d.art[c.id]),
   color: categories.map((c: Category): string => c.color),
   baseline: (_: DataRecord, i: number) => (max - sums[i]) / 2,
+  curveType: CurveType.Basis,
 })
 
 // Container

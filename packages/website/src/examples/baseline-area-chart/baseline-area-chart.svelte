@@ -1,4 +1,5 @@
 <script lang='ts'>
+  import { CurveType } from '@unovis/ts'
   import { VisXYContainer, VisArea, VisAxis, VisBulletLegend } from '@unovis/svelte'
   import type { Category, DataRecord } from './data'
   import { data, categories } from './data'
@@ -25,7 +26,7 @@
 
 <VisBulletLegend items={categories}/>
 <VisXYContainer {data} height={500}>
-  <VisArea {x} {y} {color} {baseline}/>
+  <VisArea {x} {y} {color} {baseline} curveType={CurveType.Basis}/>
   <VisAxis type='x' label='Year'/>
   <VisAxis type='y' label='Number of Works Acquired' {...yAxisConfig}/>
 </VisXYContainer>
