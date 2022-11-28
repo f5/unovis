@@ -11,18 +11,18 @@ import { data, generateScatterDataRecords, generateTimeSeries } from '../utils/d
 import { DocWrapper } from '../wrappers'
 import { XYWrapper, axis } from '../wrappers/xy-wrapper'
 import { defaultProps as sankeyProps } from '../networks-and-flows/Sankey.mdx'
+import { defaultProps as donutProps } from '../misc/Donut.mdx'
+import { component } from '../containers/XY_Container.mdx'
 
 import './styles.css'
 
 # Theming
 
-export const paletteData = data.map(d => ({
-  ...d,
-  values: Array(10).fill(0).map(() => Math.random())
-}))
-
 export const xyProps = (n) => ({
-  data: paletteData,
+  data: data.map(d => ({
+    ...d,
+    values: Array(10).fill(0).map(() => Math.random())
+  })),
   x: d => d.x,
   y: Array(n).fill(0).map((_, i) => d => d.values[i]),
   excludeTabs: true,
@@ -32,7 +32,6 @@ export const borderLineProps = {
   ...xyProps(7),
   height: 150,
 }
-
 
 ## Overview
 In addition to configuration properties, our components also rely on
@@ -82,6 +81,50 @@ or override them like so:
   '--vis-dark-sankey-link-color',
 ]}/>
 
+## Large Size
+A common theming scenario is the "large size" theme, for when you want larger font sizes for the
+labels in your charts. We have a built-in class selector, `largeSize` that you can import directly
+from `@unovis/ts`. Just add it to your container's class list to see the effects:
+
+<BrowserOnly>{() => {
+  const { largeSize } = require('@unovis/ts')
+  return (
+    <div className={largeSize}>
+    <XYWrapper
+      name='XYContainer'
+      imports={{ '@unovis/ts': ['largeSize'] }}
+      data={[5,10,6,3,8,9,4,7,5,6].map((d, i) => ({
+        x: i,
+        y: d,
+        label: `D${i + 1}`,
+        color: `var(--vis-color${[0,0,0,1,2,3,2,0,1,1][i]})`
+      }))}
+      showContext='full'
+      containerProps={{ className: 'largeSize'}}
+      components={[
+        axis('x', { label: 'X Axis'}),
+        axis('y', { label: 'Y Axis' }),
+        component('Scatter', { label: d => d.label }),
+      ]}
+    />
+    </div>
+  )
+}}
+</BrowserOnly>
+
+
+**Note**: When using this theme, the following components have a caveats:
+:::note [Scatter](../xy-charts/Scatter)
+If the [`labelPosition`](../xy-charts/Scatter#label-position) property is set to `Position.Center`,
+point labels will try fit to the point's size. In this case, you will instead need to update the
+[`pointSize`](../xy-charts/Scatter#point-size-and-size-range) property to render larger labels.
+:::
+
+:::note [Timeline](../xy-charts/Timeline)
+Additionally, you may need to adjust the [`rowHeight`](../xy-charts/Timeline#row-height) property to
+accomodate larger labels.
+:::å
+
 ## Global Variables
 The majority of our variables exist on a component level,  but there are a few global CSS variables:
 
@@ -98,6 +141,7 @@ The font for labels across all of our components is defined by the `--vis-font-f
   <CSSVariables vars={['--vis-font-family']} selector='.custom-font'/>
   <XYWrapper
     name='Scatter'
+    labelPosition='center'
     data={generateScatterDataRecords(10)}
     x={d => d.x}
     y={d => d.y}
@@ -116,7 +160,7 @@ The font for labels across all of our components is defined by the `--vis-font-f
 Many of our components use a default color palette for visualizations. You can import the array of hex values directly
 from `unovis/ts`:
 ```ts
-import { colors } from '@unovis/ts`
+import { colors } from '@unovis/ts'
 ```
 
 These values are also defined directly in our CSS variables, labeled `--vis-color0`, `--vis-color1`, etc.
@@ -140,7 +184,7 @@ If you like the result, just copy and paste the corresponding style declaration 
   }
   return (
     <div id='custom-vis' ref={ref}>
-      <div className='color-picker'>
+      <div className='side-by-side'>
         <table>
           <thead>
             <th>Variable</th>
@@ -215,7 +259,7 @@ as its fill. You can tweak the variables accordingly to create the desired effec
   <h4>Area</h4>
   <XYWrapper name='Area' {...borderLineProps} width={500}/>
   <h4>Donut</h4>
-  <DocWrapper name='Donut' containerName='SingleContainer' {...borderLineProps} data={Array(10).fill(0)} value={() => Math.random()} arcWidth={50}/>
+  <DocWrapper {...donutProps()} {...borderLineProps} value={d => Math.random()} arcWidth={50}/>
   <h4>Stacked Bar</h4>
   <XYWrapper name='StackedBar' {...borderLineProps}/>
   <h4>Timeline</h4>
