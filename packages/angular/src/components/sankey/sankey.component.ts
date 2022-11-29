@@ -194,7 +194,7 @@ export class VisSankeyComponent<N extends SankeyInputNode, L extends SankeyInput
   /** Label trimming mode. Default: `TrimMode.MIDDLE` */
   @Input() labelTrimMode?: TrimMode
 
-  /** Label font size in pixel. Default: `12` */
+  /** Label font size in pixels. If not provided, the value of CSS variable `--vis-sankey-node-label-font-size` will be used. Default: `undefined` */
   @Input() labelFontSize?: number
 
   /** Label text separators for wrapping. Default: `[' ', '-']` */
@@ -217,7 +217,7 @@ export class VisSankeyComponent<N extends SankeyInputNode, L extends SankeyInput
     height: number;
   }, hovered: boolean) => boolean) | undefined
 
-  /** Sub-label font size in pixel. Default: `10` */
+  /** Sub-label font size in pixels. If not provided, the value of CSS variable `--vis-sankey-node-sublabel-font-size` will be used. Default: `undefined` */
   @Input() subLabelFontSize?: number
 
   /** Sub-label color. Default: `undefined` */
