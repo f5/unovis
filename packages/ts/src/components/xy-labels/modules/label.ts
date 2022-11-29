@@ -4,7 +4,7 @@ import { color } from 'd3-color'
 
 // Utils
 import { smartTransition } from 'utils/d3'
-import { getCSSVariableValue, isStringCSSVariable } from 'utils/misc'
+import { getCSSVariableValueInPixels, getCSSVariableValue, isStringCSSVariable } from 'utils/misc'
 import { getColor, hexToBrightness } from 'utils/color'
 import { getNumber, getString, getValue } from 'utils/data'
 
@@ -104,13 +104,16 @@ export function getLabelPosition (value: number, positioning: XYLabelPositioning
 
 export function getLabelRenderProps<Datum> (
   data: Datum | XYLabel<Datum>[],
+  el: SVGGraphicsElement,
   config: XYLabelsConfig<Datum>,
   xScale: ContinuousScale,
   yScale: ContinuousScale
 ): XYLabelRenderProps {
   const isCluster = Array.isArray(data)
+  const fontSize = isCluster
+    ? (getNumber(data, config.clusterFontSize) ?? getCSSVariableValueInPixels('var(--vis-xy-label-cluster-font-size)', el))
+    : (getNumber(data, config.labelFontSize) ?? getCSSVariableValueInPixels('var(--vis-xy-label-font-size)', el))
 
-  const fontSize = isCluster ? getNumber(data, config.clusterFontSize) : getNumber(data, config.labelFontSize)
   const labelText = (isCluster ? config.clusterLabel(data as XYLabel<Datum>[]) : getString(data, config.label)) || ''
   const backgroundHeight = fontSize * 1.7
   let backgroundWidth = fontSize * labelText.length * 0.7

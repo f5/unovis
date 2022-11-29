@@ -9,7 +9,7 @@ import { Rect } from 'types/misc'
 import { smartTransition } from 'utils/d3'
 import { estimateTextSize, trimTextMiddle } from 'utils/text'
 import { clamp, getString } from 'utils/data'
-import { rectIntersect } from 'utils/misc'
+import { getCSSVariableValueInPixels, rectIntersect } from 'utils/misc'
 import { hexToBrightness } from 'utils/color'
 import { getPointPos } from './utils'
 
@@ -25,7 +25,6 @@ import { LeafletMapConfigInterface } from '../config'
 import * as s from '../style'
 
 const BOTTOM_LABEL_TOP_MARGIN = 10
-const BOTTOM_LABEL_FONT_SIZE = 10
 
 export function createNodes<D> (selection: Selection<SVGGElement, LeafletMapPoint<D>, SVGGElement, Record<string, unknown>[]>): void {
   selection.append('path')
@@ -111,7 +110,7 @@ export function updateNodes<D> (
     const bottomLabelTextTrimmed = trimTextMiddle(bottomLabelText, 15)
     bottomLabel
       .text(bottomLabelTextTrimmed)
-      .attr('font-size', BOTTOM_LABEL_FONT_SIZE)
+      .attr('font-size', getCSSVariableValueInPixels('var(--vis-map-point-bottom-label-font-size)', selection.node()))
       .attr('visibility', fromExpandedCluster ? 'hidden' : null)
   })
 }
@@ -128,8 +127,9 @@ export function collideLabels<D> (
     group1HTMLNode['labelVisible'] = true
 
     // Calculate bounding rect of point's bottom label
+    const bottomLabelFontSizePx = getCSSVariableValueInPixels('var(--vis-map-point-bottom-label-font-size)', selection.node())
     const p1Pos = getPointPos(datum1, leafletMap)
-    const label1Size = estimateTextSize(label1, BOTTOM_LABEL_FONT_SIZE, 0.32, true, 0.6)
+    const label1Size = estimateTextSize(label1, bottomLabelFontSizePx, 0.32, true, 0.6)
     const label1BoundingRect: Rect = {
       x: p1Pos.x - label1Size.width / 2,
       y: p1Pos.y - label1Size.height / 2 + datum1.radius + BOTTOM_LABEL_TOP_MARGIN,
@@ -159,7 +159,7 @@ export function collideLabels<D> (
       // eslint-disable-next-line dot-notation
       const label2Visible = group2HTMLNode['labelVisible']
       if (!intersect && label2Visible) {
-        const label2Size = estimateTextSize(label2, BOTTOM_LABEL_FONT_SIZE, 0.32, true, 0.6)
+        const label2Size = estimateTextSize(label2, bottomLabelFontSizePx, 0.32, true, 0.6)
         intersect = rectIntersect(label1BoundingRect, {
           x: p2Pos.x - label2Size.width / 2,
           y: p2Pos.y + datum2.radius + BOTTOM_LABEL_TOP_MARGIN - label2Size.height / 2,

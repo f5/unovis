@@ -31,7 +31,7 @@ export function getCSSVariableValue (s: string, context: HTMLElement | SVGElemen
   return getComputedStyle(context).getPropertyValue(variableName)
 }
 
-export function getCSSVariablePixels (s: string, context: HTMLElement | SVGElement): number {
+export function getCSSVariableValueInPixels (s: string, context: HTMLElement | SVGElement): number {
   const val = getCSSVariableValue(s, context)
   return toPx(val)
 }

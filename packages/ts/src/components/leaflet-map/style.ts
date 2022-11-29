@@ -36,7 +36,7 @@ export const variables = injectGlobal`
 
     --vis-map-point-label-text-color-dark: #5b5f6d;
     --vis-map-point-label-text-color-light: #fff;
-
+    --vis-map-point-bottom-label-font-size: 10px;
     --vis-map-cluster-expanded-background-fill-color: #fff;
 
     --vis-dark-map-container-background-color: #dfe5eb;

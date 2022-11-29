@@ -20,6 +20,9 @@ export const largeSize = css`
   --vis-graph-node-sublabel-font-size: 16pt;
   --vis-graph-panel-label-font-size: 20pt;
 
+  /* LeafletMap */
+  --vis-map-point-bottom-label-font-size: 20px;
+
   /* Legend */
   --vis-legend-label-font-size: 24px;
   --vis-legend-bullet-label-spacing: 16px;
@@ -38,6 +41,23 @@ export const largeSize = css`
 
   /* TopoJSONMap */
   --vis-map-point-label-font-size: 24px;
+
+  /* XYLabels */
+  --vis-xy-label-font-size: 24px;
+  --vis-xy-label-cluster-font-size: 28px;
+
+  /* Override leaflet.css */
+  .leaflet-touch .leaflet-control-zoom-in, .leaflet-touch .leaflet-control-zoom-out  {
+    font-size: 44px;
+  }
+  .leaflet-control-attribution a {
+    font-size: 14pt;
+  }
+  .leaflet-container .leaflet-control-attribution,
+  .leaflet-container .leaflet-control-scale,
+  .leaflet-control-scale-line {
+    font-size: 22px;
+  }
 `
 
 export const variables = injectGlobal`

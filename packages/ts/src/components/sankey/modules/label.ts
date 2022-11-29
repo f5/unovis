@@ -5,7 +5,7 @@ import { estimateTextSize, trimSVGText, wrapSVGText } from 'utils/text'
 import { smartTransition } from 'utils/d3'
 import { getString, getValue } from 'utils/data'
 import { getColor } from 'utils/color'
-import { getCSSVariablePixels } from 'utils/misc'
+import { getCSSVariableValueInPixels } from 'utils/misc'
 
 // Types
 import { GenericAccessor } from 'types/accessor'
@@ -158,8 +158,8 @@ export function renderLabel<N extends SankeyInputNode, L extends SankeyInputLink
   const sublabelText = getString(d, config.subLabel)
   let wasTrimmed = false
 
-  const labelFontSize = config.labelFontSize ?? getCSSVariablePixels('var(--vis-sankey-node-label-font-size)', labelGroup.node())
-  const subLabelFontSize = config.subLabelFontSize ?? getCSSVariablePixels('var(--vis-sankey-node-sublabel-font-size)', labelGroup.node())
+  const labelFontSize = config.labelFontSize ?? getCSSVariableValueInPixels('var(--vis-sankey-node-label-font-size)', labelGroup.node())
+  const subLabelFontSize = config.subLabelFontSize ?? getCSSVariableValueInPixels('var(--vis-sankey-node-sublabel-font-size)', labelGroup.node())
 
   // Render the main label, wrap / trim it and estimate its size
   const labelsFontSizeDifference = sublabelText ? labelFontSize - subLabelFontSize : 0
