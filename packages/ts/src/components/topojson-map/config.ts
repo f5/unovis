@@ -17,7 +17,7 @@ export interface TopoJSONMapConfigInterface<
   /** MapProjection (aka D3's GeoProjection) instance. Default: `MapProjection.Kavrayskiy7()` */
   projection?: GeoProjection;
   /** Map data in the TopoJSON topology format. Default: `undefined` */
-  topojson?: TopoJSON.Topology; // TopoJSON typings have troubles with being bundled so we're temporary disabling them
+  topojson?: TopoJSON.Topology;
   /** Name of the map features to be displayed, e.g. 'countries' or 'counties'. Default: `countries` */
   mapFeatureName?: string;
   /** Set initial map fit to points instead of topojson features. Default: `false` */
@@ -26,7 +26,7 @@ export interface TopoJSONMapConfigInterface<
   zoomFactor?: number;
   /** Disable pan / zoom interactions. Default: `false` */
   disableZoom?: boolean;
-  /** Zoom extent. Default: `[1, 6]` */
+  /** Zoom extent. Default: `[0.5, 6]` */
   zoomExtent?: number[];
   /** Zoom animation duration. Default: `400` */
   zoomDuration?: number;
@@ -91,7 +91,7 @@ export class TopoJSONMapConfig<
   mapFeatureName = 'countries'
   mapFitToPoints = false
 
-  zoomExtent = [1, 6]
+  zoomExtent = [0.5, 6]
   zoomDuration = 400
   disableZoom = false
   zoomFactor = undefined

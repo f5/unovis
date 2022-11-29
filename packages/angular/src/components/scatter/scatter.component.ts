@@ -131,7 +131,7 @@ export class VisScatterComponent<Datum> implements ScatterConfigInterface<Datum>
   @Input() labelTextBrightnessRatio?: number
 
   /** Label position. Default: `Position.Center` */
-  @Input() labelPosition?: GenericAccessor<Position | any, Datum>
+  @Input() labelPosition?: GenericAccessor<Position | string, Datum>
   @Input() data: Datum[]
 
   component: Scatter<Datum> | undefined
