@@ -67,7 +67,7 @@ export default function Background (): JSX.Element {
           <rect x={430 - dx / 5} y={866 + dy / 5} width="788" height="77" style={{ fill: 'rgb(226,32,58)' }}/>
         </g>
         <g transform="matrix(1.03374,0,0,1.03374,578.127,12.5196)">
-          <circle cx={400.25 + dx / 5} cy={702.75 - dy / 5} r={140.25 + dy / 10} style={{ fill: 'rgb(23,19,41)' }}/>
+          <circle cx={400.25 + dx / 5} cy={702.75 - dy / 5} r={Math.abs(140.25 + dy / 10)} style={{ fill: 'rgb(23,19,41)' }}/>
         </g>
         <g transform="matrix(0.322661,-0.0812596,0.210244,0.834827,736.738,-458.268)">
           <rect x={430 + dx / 5} y={866 - dy / 5} width="788" height="77" style={{ fill: 'rgb(23,19,41)' }}/>
