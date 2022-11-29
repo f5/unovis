@@ -7,7 +7,7 @@ import { getImportStatements, getConfigProperties, kebabCase, getTSStatements } 
 import { ComponentInput, ConfigProperty, GenericParameter } from './types'
 import { getComponentCode } from './component'
 
-const unovisBasePath = '../vis/src'
+const unovisBasePath = '../ts/src'
 const configFileName = '/config.ts'
 const coreComponentConfigPath = '/core/component'
 const xyComponentConfigPath = '/core/xy-component'
