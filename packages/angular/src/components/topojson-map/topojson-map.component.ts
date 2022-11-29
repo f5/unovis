@@ -89,7 +89,7 @@ export class VisTopoJSONMapComponent<AreaDatum, PointDatum, LinkDatum> implement
   /** Disable pan / zoom interactions. Default: `false` */
   @Input() disableZoom?: boolean
 
-  /** Zoom extent. Default: `[1, 6]` */
+  /** Zoom extent. Default: `[0.5, 6]` */
   @Input() zoomExtent?: number[]
 
   /** Zoom animation duration. Default: `400` */

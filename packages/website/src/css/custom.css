@@ -8,7 +8,9 @@
 
 /* You can override the default Infima variables here. */
 :root {
-  --ifm-color-primary: #4580C0;
+  /*--ifm-color-primary: #4580C0;*/
+  --ifm-color-primary: #2780EB;
+  --ifm-hover-overlay: #f6f8fa;
   --ifm-color-primary-dark: rgb(33, 175, 144);
   --ifm-color-primary-darker: rgb(31, 165, 136);
   --ifm-color-primary-darkest: rgb(26, 136, 112);
@@ -19,11 +21,11 @@
   --ifm-code-font-size: 95%;
   --ifm-heading-font-family: Inter;
   --ifm-heading-font-weight: 900;
-
   --ifm-font-family-base: Inter;
-
   --ifm-table-cell-padding: 0.2rem;
-
+  --ifm-heading-color: var(--unovis-color-deep-blue);
+  --ifm-table-head-background: #f6f8fa;
+  --ifm-table-stripe-background: #f6f8fa;
   --docusaurus-highlighted-code-line-bg: #FFD651;
 
   --unovis-content-padding: 4rem 5rem;
@@ -34,8 +36,16 @@
   --unovis-color-grey: #8E8D95;
   --unovis-color-beige: #BEB18B;
   --unovis-color-red: #E2203A;
+}
 
-  --ifm-heading-color: var(--unovis-color-deep-blue);
+table thead tr {
+  border-top: none;
+  border-bottom: none;
+}
+
+table tr {
+  border-top: none;
+  border-bottom: none;
 }
 
 

@@ -130,7 +130,7 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   /** Node stroke width accessor function or constant value. Default: `3` */
   nodeStrokeWidth?: NumericAccessor<N>;
   /** Node shape accessor function or constant value. Default: `GraphNodeShape.Circle` */
-  nodeShape?: GenericAccessor<GraphNodeShape | `${GraphNodeShape}` | string, N>;
+  nodeShape?: GenericAccessor<GraphNodeShape | string, N>;
   /** Node gauge outline accessor function or constant value in the range [0,100]. Default: `0` */
   nodeGaugeValue?: NumericAccessor<N>;
   /** Node gauge outline fill color accessor function or constant value. Default: `undefined` */
