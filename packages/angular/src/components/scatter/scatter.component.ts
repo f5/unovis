@@ -130,7 +130,7 @@ export class VisScatterComponent<Datum> implements ScatterConfigInterface<Datum>
   /** Point color brightness ratio for switching between dark and light text label color. Default: `0.65` */
   @Input() labelTextBrightnessRatio?: number
 
-  /** Label position. Default: `Position.Center` */
+  /** Label position. Default: `Position.Bottom` */
   @Input() labelPosition?: GenericAccessor<Position | string, Datum>
   @Input() data: Datum[]
 
