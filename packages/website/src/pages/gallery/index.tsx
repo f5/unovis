@@ -25,7 +25,7 @@ export default function Home (): JSX.Element {
           <div className={s.collectionItems}>
             { collection.examples.map(example =>
               <Link className={s.linkedCard} key={example.title} to={`gallery/view?collection=${collection.title}&title=${example.title}`}>
-                <GalleryCard title={example.title} imageUrl={example.preview}/>
+                <GalleryCard title={example.title} src={example.preview} srcDark={example.previewDark}/>
               </Link>
             )}
           </div>

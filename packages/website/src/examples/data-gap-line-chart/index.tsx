@@ -16,7 +16,6 @@ const example: Example = {
     National Cereal Production in metric tons (millions)
     (Source: <a href="https://data.worldbank.org">World Bank Open Data</a>)
   </div>,
-  preview: require('./preview.png').default,
   codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,
   codeTs: require(`!!raw-loader!./${pathname}.ts`).default,
   codeAngular: {
@@ -26,6 +25,8 @@ const example: Example = {
   },
   codeSvelte: require(`!!raw-loader!./${pathname}.svelte`).default,
   data: require('!!raw-loader!./data').default,
+  preview: require(`../_previews/${pathname}.png`).default,
+  previewDark: require(`../_previews/${pathname}-dark.png`).default,
   styles: require('!!raw-loader!./styles.css').default,
 }
 

@@ -2,6 +2,7 @@ import React, { SyntheticEvent } from 'react'
 import ColorModeToggle from '@theme-original/ColorModeToggle'
 import useIsBrowser from '@docusaurus/useIsBrowser'
 
+
 type ColorModeToggleProps = {
   checked: boolean;
   onChange: (e: SyntheticEvent) => void;
@@ -13,8 +14,10 @@ export default function ColorModeToggleWrapper (props: ColorModeToggleProps): JS
   if (isBrowser && props.value === 'dark') {
     document.body.classList.add('theme-dark')
   }
+
   return (
     <ColorModeToggle {...props}
+      className=''
       onChange={e => {
         props.onChange(e)
         if (isBrowser) {

@@ -10,12 +10,12 @@ export type DataRecord = {
 }
 
 export const categories: Category[] = [
-  { id: 0, name: 'Drawings & Prints', color: '#0F6ACC' },
-  { id: 1, name: 'Painting & Sculpture', color: '#E2203A' },
-  { id: 2, name: 'Photography', color: '#1acb9a' },
-  { id: 3, name: 'Architecture & Design', color: '#8777d9' },
-  { id: 4, name: 'Film', color: '#171329' },
-  { id: 5, name: 'Media and Performance', color: '#FED651' },
+  { id: 0, name: 'Drawings & Prints' },
+  { id: 1, name: 'Painting & Sculpture' },
+  { id: 2, name: 'Photography' },
+  { id: 3, name: 'Architecture & Design' },
+  { id: 4, name: 'Film' },
+  { id: 5, name: 'Media and Performance' },
 ]
 
 export const data = [

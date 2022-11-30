@@ -16,7 +16,6 @@ const example: Example = {
     U.S. recorded music revenues by format. (source: <a href="https://www.riaa.com/u-s-sales-database/" target="_blank">RIAA</a>)
     Icons: <a href="https://icons.getbootstrap.com/#install" target="_blank">Bootstrap Icons</a>
   </div>,
-  preview: require('./preview.png').default,
   codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,
   codeTs: require(`!!raw-loader!./${pathname}.ts`).default,
   codeAngular: {
@@ -26,6 +25,8 @@ const example: Example = {
   },
   codeSvelte: require(`!!raw-loader!./${pathname}.svelte`).default,
   data: require('!!raw-loader!./data').default,
+  preview: require(`../_previews/${pathname}.png`).default,
+  previewDark: require(`../_previews/${pathname}-dark.png`).default,
 }
 
 export default example

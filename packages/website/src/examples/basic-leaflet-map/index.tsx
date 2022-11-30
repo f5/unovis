@@ -13,7 +13,6 @@ const example: Example = {
   pathname,
   title: 'Basic Leaflet Map',
   description: <div>Mapping earthquakes from <a href="https://earthquake.usgs.gov" target="_blank">https://earthquake.usgs.gov</a></div>,
-  preview: require('./preview.png').default,
   codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,
   codeTs: require(`!!raw-loader!./${pathname}.ts`).default,
   codeAngular: {
@@ -24,6 +23,8 @@ const example: Example = {
   codeSvelte: require(`!!raw-loader!./${pathname}.svelte`).default,
   data: require('!!raw-loader!./data').default,
   constants: require('!!raw-loader!./constants').default,
+  preview: require(`../_previews/${pathname}.png`).default,
+  previewDark: require(`../_previews/${pathname}-dark.png`).default,
 }
 
 export default example

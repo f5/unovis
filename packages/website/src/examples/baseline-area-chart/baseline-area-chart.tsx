@@ -15,7 +15,6 @@ export default function BaselineAreaChart (): JSX.Element {
 
   const x = useCallback((d: DataRecord) => d.year, [])
   const y = useCallback((c: Category) => (d: DataRecord) => d.art[c.id], [])
-  const color = useCallback((c: Category) => c.color, [])
   const baseline = useCallback((_: DataRecord, i: number) => (max - sums[i]) / 2, [])
 
   return (
@@ -25,7 +24,6 @@ export default function BaselineAreaChart (): JSX.Element {
         <VisArea
           x={x}
           y={useMemo(() => categories.map(y), [])}
-          color={useMemo(() => categories.map(color), [])}
           baseline={baseline}
           curveType={CurveType.Basis}
         />

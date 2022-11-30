@@ -5,7 +5,7 @@
 .minimap {
   position: absolute;
   display: block;
-  background-color: white;
+  background-color: var(--ifm-code-background);
   bottom: 60px;
   right: 20px;
   width: 200px;

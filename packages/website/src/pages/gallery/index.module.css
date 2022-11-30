@@ -27,12 +27,12 @@
 .linkedCard {
   display: inline-block;
   flex: 0 1 calc(100% / var(--unovis-gallery-items) - var(--unovis-gallery-gap-horizontal) * (var(--unovis-gallery-items) - 1) / var(--unovis-gallery-items));
-  color: var(--unovis-color-deep-blue);
+  color: var(--ifm-heading-color);
   height: 220px;
 }
 
 .linkedCard:hover {
-  color: var(--unovis-color-deep-blue);
+  color: var(--ifm-heading-color);
 }
 
 .exampleNotFound {
