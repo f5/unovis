@@ -32,7 +32,7 @@ export interface ScatterConfigInterface<Datum> extends XYComponentConfigInterfac
   cursor?: StringAccessor<Datum>;
   /** Point color brightness ratio for switching between dark and light text label color. Default: `0.65` */
   labelTextBrightnessRatio?: number;
-  /** Label position. Default: `Position.Center` */
+  /** Label position. Default: `Position.Bottom` */
   labelPosition?: GenericAccessor<Position | string, Datum>;
 }
 
@@ -43,7 +43,7 @@ export class ScatterConfig<Datum> extends XYComponentConfig<Datum> implements Sc
   shape = SymbolType.Circle
   label = undefined
   labelColor = undefined
-  labelPosition = Position.Center
+  labelPosition = Position.Bottom
   cursor = null
   labelTextBrightnessRatio = 0.65
 }

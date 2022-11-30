@@ -20,21 +20,22 @@ export const variables = injectGlobal`
     --vis-sankey-node-opacity: 0.9;
     --vis-sankey-node-hover-opacity: 1.0;
 
-    --vis-sankey-node-label-color: #575c65;
     --vis-sankey-node-label-background-fill-color: #ffffff;
     --vis-sankey-node-label-background-stroke-color: #eaeaea;
     --vis-sankey-node-label-background-opacity: 0.9;
-    --vis-sankey-node-label-text-decoration: none;
-    --vis-sankey-node-label-font-weight: 600;
-    --vis-sankey-node-sublabel-font-weight: 500;
+    --vis-sankey-node-label-color: #575c65;
     --vis-sankey-node-label-cursor: default;
+    --vis-sankey-node-label-font-weight: 600;
+    --vis-sankey-node-label-font-size: 12px;
+    --vis-sankey-node-label-text-decoration: none;
+
+    --vis-sankey-node-sublabel-font-size: 10px;
+    --vis-sankey-node-sublabel-font-weight: 500;
 
     --vis-sankey-icon-size: ${SANKEY_ICON_SIZE}px;
     --vis-sankey-icon-color: #ffffff;
     --vis-sankey-icon-stroke-opacity: 0.6;
     --vis-sankey-icon-font-family: ${DEFAULT_ICON_FONT_FAMILY};
-
-    --vis-sankey-label-font-family: var(--vis-font-family);
 
     --vis-dark-sankey-link-color: #555d75;
     --vis-dark-sankey-node-color: #6b69ff;

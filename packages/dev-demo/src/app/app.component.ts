@@ -1,4 +1,5 @@
 import { Component } from '@angular/core'
+import { largeSize } from '@unovis/ts'
 
 @Component({
   selector: 'app-root',
@@ -7,6 +8,8 @@ import { Component } from '@angular/core'
 })
 export class AppComponent {
   title = 'Unovis'
+  classList = ['vis-container', 'with-border-lines', largeSize]
+
   get darkmode (): boolean {
     return document.body.classList.contains('theme-dark')
   }

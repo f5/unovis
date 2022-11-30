@@ -1,6 +1,5 @@
 import { Selection, select } from 'd3-selection'
 import { max, min } from 'd3-array'
-import toPx from 'to-px'
 
 // Core
 import { XYComponentCore } from 'core/xy-component'
@@ -9,7 +8,7 @@ import { XYComponentCore } from 'core/xy-component'
 import { isNumber, getExtent, getNumber, getString, isArray, flatten, getValue } from 'utils/data'
 import { getColor } from 'utils/color'
 import { smartTransition } from 'utils/d3'
-import { getCSSVariableValue } from 'utils/misc'
+import { getCSSVariableValueInPixels } from 'utils/misc'
 
 // Types
 import { Spacing } from 'types/spacing'
@@ -67,8 +66,7 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfig<Datum>,
     const xRangeStart = this.xScale.range()[0]
     const xRangeEnd = this.xScale.range()[1]
 
-    const fontSize = getCSSVariableValue('var(--vis-scatter-point-label-text-font-size)', this.element)
-    const fontSizePx = toPx(fontSize, this.element)
+    const fontSizePx = getCSSVariableValueInPixels('var(--vis-scatter-point-label-text-font-size)', this.element)
 
     const extent = pointDataFlat.reduce((ext, d) => {
       const labelPosition = getValue(d, this.config.labelPosition, d._point.pointIndex)

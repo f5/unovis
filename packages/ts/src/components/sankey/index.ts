@@ -15,6 +15,7 @@ import { VerticalAlign } from 'types/text'
 
 // Utils
 import { getNumber, getString, groupBy, isNumber } from 'utils/data'
+import { getCSSVariableValueInPixels } from 'utils/misc'
 
 // Config
 import { SankeyConfig, SankeyConfigInterface } from './config'
@@ -75,7 +76,8 @@ export class Sankey<
 
   get bleed (): Spacing {
     const { config, datamodel: { nodes, links } } = this
-    const labelSize = requiredLabelSpace(config.labelMaxWidth, config.labelFontSize)
+    const labelFontSize = config.labelFontSize ?? getCSSVariableValueInPixels('var(--vis-sankey-label-font-size)', this.element)
+    const labelSize = requiredLabelSpace(config.labelMaxWidth, labelFontSize)
 
     let left = 0
     let right = 0

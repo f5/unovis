@@ -14,7 +14,7 @@ export interface XYLabelsConfigInterface<Datum> extends XYComponentConfigInterfa
   xPositioning?: GenericAccessor<XYLabelPositioning, Datum>;
   /** Defines how to position the label vertically: in data space or in screen space. Default: `LabelPositioning.DataSpace` */
   yPositioning?: GenericAccessor<XYLabelPositioning, Datum>;
-  /** Font size accessor function or constant value in pixels. Default: `12` */
+  /** Font size accessor function or constant value in pixels. If not provided, the value of CSS variable `--vis-xy-label-font-size` will be used. Default: `undefined` */
   labelFontSize?: NumericAccessor<Datum>;
   /** Label accessor function or string. Default: `undefined` */
   label?: StringAccessor<Datum>;
@@ -28,7 +28,7 @@ export interface XYLabelsConfigInterface<Datum> extends XYComponentConfigInterfa
   clustering?: boolean;
   /** Label accessor for clusters. Default: `undefined` */
   clusterLabel?: StringAccessor<XYLabel<Datum>[]>;
-  /** Font size accessor for clusters, the value is in pixels. Default: `14` */
+  /** Font size accessor for clusters, the value is in pixels. If not provided, the value of CSS variable `--vis-xy-label-cluster-font-size` will be used. Default: `undefined` */
   clusterFontSize?: NumericAccessor<XYLabel<Datum>[]>;
   /** Background color accessor for clusters. Default: `undefined` */
   clusterBackgroundColor?: ColorAccessor<XYLabel<Datum>[]>;
@@ -41,7 +41,7 @@ export interface XYLabelsConfigInterface<Datum> extends XYComponentConfigInterfa
 export class XYLabelsConfig<Datum> extends XYComponentConfig<Datum> implements XYLabelsConfigInterface<Datum> {
   xPositioning = XYLabelPositioning.DataSpace
   yPositioning = XYLabelPositioning.DataSpace
-  labelFontSize = 12
+  labelFontSize = undefined
   label = undefined
   backgroundColor = undefined
   cursor = null
@@ -49,7 +49,7 @@ export class XYLabelsConfig<Datum> extends XYComponentConfig<Datum> implements X
 
   clustering = true
   clusterLabel = (records: XYLabel<Datum>[]): string => records.length.toString()
-  clusterFontSize = 14
+  clusterFontSize = undefined
   clusterBackgroundColor = undefined
   clusterCursor = undefined
   clusterLabelColor = null

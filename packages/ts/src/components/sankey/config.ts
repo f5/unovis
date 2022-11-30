@@ -112,7 +112,7 @@ export interface SankeyConfigInterface<N extends SankeyInputNode, L extends Sank
   labelExpandTrimmedOnHover?: boolean;
   /** Label trimming mode. Default: `TrimMode.MIDDLE` */
   labelTrimMode?: TrimMode;
-  /** Label font size in pixel. Default: `12` */
+  /** Label font size in pixels. If not provided, the value of CSS variable `--vis-sankey-node-label-font-size` will be used. Default: `undefined` */
   labelFontSize?: number;
   /** Label text separators for wrapping. Default: `[' ', '-']` */
   labelTextSeparator?: string[];
@@ -124,7 +124,7 @@ export interface SankeyConfigInterface<N extends SankeyInputNode, L extends Sank
   labelCursor?: StringAccessor<SankeyNode<N, L>>;
   /** Custom function to set the label visibility. Default: `undefined` */
   labelVisibility?: ((d: SankeyNode<N, L>, bbox: { x: number; y: number; width: number; height: number }, hovered: boolean) => boolean) | undefined;
-  /** Sub-label font size in pixel. Default: `10` */
+  /** Sub-label font size in pixels. If not provided, the value of CSS variable `--vis-sankey-node-sublabel-font-size` will be used. Default: `undefined` */
   subLabelFontSize?: number;
   /** Sub-label color. Default: `undefined` */
   subLabelColor?: ColorAccessor<SankeyNode<N, L>>;
@@ -176,14 +176,14 @@ export class SankeyConfig<N extends SankeyInputNode, L extends SankeyInputLink> 
   labelFit = FitMode.Trim
   labelTrimMode = TrimMode.Middle
   labelForceWordBreak = true
-  labelFontSize = 12
+  labelFontSize = undefined
   labelCursor = undefined
   labelColor = undefined
   labelMaxWidth = 70
   labelExpandTrimmedOnHover = true
   labelVisibility = undefined
   subLabel = undefined
-  subLabelFontSize = 10
+  subLabelFontSize = undefined
   subLabelColor = undefined
   subLabelPlacement = SankeySubLabelPlacement.Below
   subLabelToLabelInlineWidthRatio = 0.4

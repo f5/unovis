@@ -107,7 +107,7 @@ export class VisXYLabelsComponent<Datum> implements XYLabelsConfigInterface<Datu
   /** Defines how to position the label vertically: in data space or in screen space. Default: `LabelPositioning.DataSpace` */
   @Input() yPositioning?: GenericAccessor<XYLabelPositioning, Datum>
 
-  /** Font size accessor function or constant value in pixels. Default: `12` */
+  /** Font size accessor function or constant value in pixels. If not provided, the value of CSS variable `--vis-xy-label-font-size` will be used. Default: `undefined` */
   @Input() labelFontSize?: NumericAccessor<Datum>
 
   /** Label accessor function or string. Default: `undefined` */
@@ -128,7 +128,7 @@ export class VisXYLabelsComponent<Datum> implements XYLabelsConfigInterface<Datu
   /** Label accessor for clusters. Default: `undefined` */
   @Input() clusterLabel?: StringAccessor<XYLabel<Datum>[]>
 
-  /** Font size accessor for clusters, the value is in pixels. Default: `14` */
+  /** Font size accessor for clusters, the value is in pixels. If not provided, the value of CSS variable `--vis-xy-label-cluster-font-size` will be used. Default: `undefined` */
   @Input() clusterFontSize?: NumericAccessor<XYLabel<Datum>[]>
 
   /** Background color accessor for clusters. Default: `undefined` */
