@@ -33,9 +33,26 @@
 .color-vars .token-line:nth-child(7) > .hexcode {
   background-color: var(--vis-color5);
 }
-.color-vars .token-line:nth-child(8) > .hexcode {
-  background-color: var(--vis-color6);
+
+.color-vars-dark .token-line:nth-child(2) > .hexcode {
+  background-color: var(--vis-dark-color0);
 }
+.color-vars-dark .token-line:nth-child(3) > .hexcode {
+  background-color: var(--vis-dark-color1);
+}
+.color-vars-dark .token-line:nth-child(4) > .hexcode {
+  background-color: var(--vis-dark-color2);
+}
+.color-vars-dark .token-line:nth-child(5) > .hexcode {
+  background-color: var(--vis-dark-color3);
+}
+.color-vars-dark .token-line:nth-child(6) > .hexcode {
+  background-color: var(--vis-dark-color4);
+}
+.color-vars-dark .token-line:nth-child(7) > .hexcode {
+  background-color: var(--vis-dark-color5);
+}
+
 
 .custom-font {
   --vis-font-family: 'Courier New', Courier, monospace;

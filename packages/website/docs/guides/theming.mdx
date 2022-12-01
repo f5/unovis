@@ -122,20 +122,30 @@ point labels will try fit to the point's size. In this case, you will instead ne
 
 :::note [Timeline](../xy-charts/Timeline)
 Additionally, you may need to adjust the [`rowHeight`](../xy-charts/Timeline#row-height) property to
-accomodate larger labels.
+accommodate larger labels.
 :::å
 
 ## Global Variables
 The majority of our variables exist on a component level,  but there are a few global CSS variables:
 
-<CSSVariables selector=':root' vars={['--vis-font-family', '--vis-color-main', '--vis-color-grey']}/>
+<CSSVariables selector=':root' vars={[
+  '--vis-font-family',
+  '--vis-color-main',
+  '--vis-color-main-light',
+  '--vis-color-main-dark',
+  '--vis-color-grey',
+]}/>
 
 :::note
 Unless overridden explicitly, `--vis-color-main` corresponds to the first color in the default [color palette](#color-palette)
 :::
 
 ## Font
-The font for labels across all of our components is defined by the `--vis-font-family` variable.
+The font for labels across all of our components is defined by the `--vis-font-family` variable. The default font,
+[Inter](https://rsms.me/inter/), is not imported by default, but you can easily import it yourself from
+[Google Fonts](https://fonts.google.com/specimen/Inter).
+
+To use a different font, simply redefine the `--vis-font-family` CSS variable:
 
 <div className='custom-font'>
   <CSSVariables vars={['--vis-font-family']} selector='.custom-font'/>
@@ -157,16 +167,19 @@ The font for labels across all of our components is defined by the `--vis-font-f
 
 
 ## Color Palette
-Many of our components use a default color palette for visualizations. You can import the array of hex values directly
+Many of our components use the default color palette for visualizations. You can import the array of hex values directly
 from `unovis/ts`:
 ```ts
-import { colors } from '@unovis/ts'
+import { colors, colorsDark } from '@unovis/ts'
 ```
 
-These values are also defined directly in our CSS variables, labeled `--vis-color0`, `--vis-color1`, etc.
+The dark theme palette is slightly different from the regular one. These colors are also defined directly in our CSS variables, labeled `--vis-color0`, `--vis-dark-color0`, `--vis-color1`, `--vis-dark-color1`, etc.
 The full palette looks like this:
+#### Light
+<CSSVariables className='color-vars' selector=':root' vars={Array(6).fill(0).map((_, i) => `--vis-color${i}`)} />
 
-<CSSVariables className='color-vars' selector=':root' vars={Array(7).fill(0).map((_, i) => `--vis-color${i}`)}/>
+#### Dark
+<CSSVariables className='color-vars-dark' selector=':root' vars={Array(6).fill(0).map((_, i) => `--vis-dark-color${i}`)} />
 
 #### Palette Editor
 You can tweak and preview your desired palette using the example _StackedBar_ component below.
