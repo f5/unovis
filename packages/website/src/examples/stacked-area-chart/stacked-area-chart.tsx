@@ -7,7 +7,7 @@ export default function StackedArea (): JSX.Element {
   const labels = getLabels(data)
   return (
     <>
-      <VisXYContainer data={data} height={500}>
+      <VisXYContainer data={data} height={'50vh'}>
         <VisArea x={useCallback((d: DataRecord) => d.year, [])} y={formats.map(g => useCallback((d: DataRecord) => d[g], []))}/>
         <VisAxis type='x' label='Year' numTicks={10} gridLine={false} domainLine={false}/>
         <VisAxis type='y' label='Revenue (USD, billions)' numTicks={10}/>

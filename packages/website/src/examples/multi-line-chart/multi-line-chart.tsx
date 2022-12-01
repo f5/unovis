@@ -10,7 +10,7 @@ export default function MultiLineChart (): JSX.Element {
   return (
     <>
       <VisBulletLegend items={legendItems}/>
-      <VisXYContainer data={data} height={300} xScale={xScale}>
+      <VisXYContainer data={data} height={'50vh'} xScale={xScale}>
         <VisLine
           x={useCallback((d: CityTemps) => +(new Date(d.date)), [])}
           y={[

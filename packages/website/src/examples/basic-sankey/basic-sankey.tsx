@@ -6,7 +6,7 @@ import { data, NodeDatum } from './data'
 
 export default function BasicSankey (): JSX.Element {
   return (
-    <VisSingleContainer data={data} height={400}>
+    <VisSingleContainer data={data} height={'60vh'}>
       <VisSankey
         labelFit={FitMode.Wrap}
         labelForceWordBreak={false}

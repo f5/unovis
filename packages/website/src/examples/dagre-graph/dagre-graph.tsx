@@ -6,7 +6,7 @@ import { data, NodeDatum, LinkDatum } from './data'
 
 export default function BasicGraph (): JSX.Element {
   return (
-    <VisSingleContainer data={data} height={600}>
+    <VisSingleContainer data={data} height={'60vh'}>
       <VisGraph<NodeDatum, LinkDatum>
         layoutType={GraphLayoutType.Dagre}
         nodeLabel={useCallback(n => n.label, [])}

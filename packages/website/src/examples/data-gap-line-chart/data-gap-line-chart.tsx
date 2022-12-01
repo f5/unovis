@@ -29,7 +29,7 @@ export default function BasicLineChart (): JSX.Element {
       Select a fallback value for missing data points
       <VisBulletLegend items={items} onLegendItemClick={useCallback((_, i: number) => setCurrent(i), [])}/>
     </div>
-    <VisXYContainer duration={0} height={300} xDomain={[1961, 2022]} yDomain={[0, 650]}>
+    <VisXYContainer duration={0} height={'50vh'} xDomain={[1961, 2022]} yDomain={[0, 650]}>
       <VisLine
         data={data}
         x={useCallback((d: DataRecord) => d.year, [])}

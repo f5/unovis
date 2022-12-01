@@ -5,7 +5,7 @@ import { data } from './data'
 
 export default function BasicLineChart (): JSX.Element {
   return (
-    <VisXYContainer>
+    <VisXYContainer height={'50vh'}>
       <VisLine
         data={data}
         x={useCallback(d => d.x, [])}

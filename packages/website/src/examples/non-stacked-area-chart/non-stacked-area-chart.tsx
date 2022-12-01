@@ -12,7 +12,7 @@ export default function NonStackedArea (): JSX.Element {
   const xTicks = useCallback((i: number) => [data[i].month, data[i].year].join(''), [])
   const yTicks = Intl.NumberFormat(navigator.language, { notation: 'compact' }).format
   return (
-    <VisXYContainer data={data} height={400}>
+    <VisXYContainer data={data} height={'50vh'}>
       <VisBulletLegend items={Object.values(countries)}/>
       <VisArea {...accessors(Country.UnitedStates)} x={x} opacity={0.7} curveType={CurveType.Basis}/>
       <VisArea {...accessors(Country.India)} x={x} opacity={0.7} curveType={CurveType.Basis}/>

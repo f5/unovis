@@ -21,7 +21,7 @@ export default function BaselineAreaChart (): JSX.Element {
   return (
     <div>
       <VisBulletLegend items={categories}/>
-      <VisXYContainer data={data} height={500}>
+      <VisXYContainer data={data} height={'50vh'}>
         <VisArea
           x={x}
           y={useMemo(() => categories.map(y), [])}

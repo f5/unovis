@@ -33,7 +33,7 @@ export default function BrushGroupedBar (): JSX.Element {
   return (
     <>
       <VisBulletLegend items={items} onLegendItemClick={updateItems} />
-      <VisXYContainer duration={duration} data={data} height={300} xDomain={domain} scaleByDomain={true}>
+      <VisXYContainer duration={duration} data={data} height={'50vh'} xDomain={domain} scaleByDomain={true}>
         <VisGroupedBar x={x} y={y} groupPadding={0.2} roundedCorners barMinHeight={0} />
         <VisAxis type='x' label='Year' numTicks={Math.min(15, domain[1] - domain[0])} gridLine={false}/>
         <VisAxis type='y' label='Cereal Production (metric tons, millions)'/>

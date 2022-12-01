@@ -17,7 +17,7 @@ export default function StepAreaChart (): JSX.Element {
           <VisBulletLegend items={items} onLegendItemClick={(i) => setCurr(i.name)}/>
         </div>
       </div>
-      <VisXYContainer data={data} height={400} yDomain={[0, 42]} >
+      <VisXYContainer data={data} height={'50vh'} yDomain={[0, 42]} >
         <VisArea
           x={useCallback((d: DataRecord) => d.year, [])}
           y={[
