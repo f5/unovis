@@ -9,17 +9,18 @@ export const root = css`
 
 export const variables = injectGlobal`
   :root {
+     /* Links */
     --vis-sankey-link-cursor: default;
     --vis-sankey-link-color: var(--vis-color-main-light);
     --vis-sankey-link-opacity: 0.5;
     --vis-sankey-link-hover-opacity: 1.0;
-
+    /* Nodes */
     --vis-sankey-node-cursor: default;
     --vis-sankey-node-color: var(--vis-color-main);
     --vis-sankey-node-label-color: #575c65;
     --vis-sankey-node-opacity: 0.9;
     --vis-sankey-node-hover-opacity: 1.0;
-
+    /* Node Labels */
     --vis-sankey-node-label-background-fill-color: #ffffff;
     --vis-sankey-node-label-background-stroke-color: #eaeaea;
     --vis-sankey-node-label-background-opacity: 0.9;
@@ -32,6 +33,7 @@ export const variables = injectGlobal`
     --vis-sankey-node-sublabel-font-size: 10px;
     --vis-sankey-node-sublabel-font-weight: 500;
 
+    /* Icons */
     --vis-sankey-icon-size: ${SANKEY_ICON_SIZE}px;
     --vis-sankey-icon-color: #ffffff;
     --vis-sankey-icon-stroke-opacity: 0.6;
@@ -39,6 +41,7 @@ export const variables = injectGlobal`
 
     --vis-sankey-label-font-family: var(--vis-font-family);
 
+    /* Dark Theme */
     --vis-dark-sankey-link-color: var(--vis-color-main-dark);
     --vis-dark-sankey-node-color: var(--vis-color-main);
     --vis-dark-sankey-node-label-color: #eaeaea;

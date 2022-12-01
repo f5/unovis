@@ -23,6 +23,7 @@ export const variables = injectGlobal`
     --vis-map-point-label-font-weight: 600;
     --vis-map-point-label-font-size: 12px;
 
+    /* Dark Theme */
     --vis-dark-map-feature-color: #5b5f6d;
     --vis-dark-map-boundary-color: #2a2a2a;
     --vis-dark-map-point-label-text-color-dark: #fff;

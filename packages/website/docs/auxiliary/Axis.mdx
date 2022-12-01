@@ -244,15 +244,21 @@ The _Axis_ component supports additional styling via CSS variables that you can 
 <XYWrapper {...defaultProps()} gridLine height={150} label="Label" excludeTabs className="custom-axis"/>
 
 <details open>
-  <summary>All supported CSS variables</summary>
+  <summary>All supported CSS variables and their default values</summary>
   <CodeBlock language="css">
     {`--vis-axis-font-family
---vis-axis-tick-color
---vis-axis-tick-label-color
---vis-axis-grid-color
---vis-axis-label-color
---vis-axis-tick-label-font-size
---vis-axis-label-font-size`}
+--vis-axis-tick-color: #e8e9ef;
+--vis-axis-tick-label-color: #6c778c;
+--vis-axis-grid-color: #e8e9ef;
+--vis-axis-label-color: #6c778c;
+--vis-axis-tick-label-font-size: 12px;
+--vis-axis-label-font-size: 14px;
+ 
+/* Dark Theme */
+--vis-dark-axis-tick-color: #6c778c;
+--vis-dark-axis-tick-label-color: #e8e9ef;
+--vis-dark-axis-grid-color: #6c778c;
+--vis-dark-axis-label-color:#fefefe;`}
   </CodeBlock>
 </details>
 

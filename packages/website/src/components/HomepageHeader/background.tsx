@@ -55,7 +55,7 @@ export default function Background (): JSX.Element {
         strokeMiterlimit: 2,
       }}
     >
-      <rect x="0" y="0" width="2436" height="1125" style={{ fill: 'rgb(218,197,187)' }}/>
+      <rect x="0" y="0" width="2436" height="1125" style={{ fill: '#D9C6BB' }}/>
       <g transform={`rotate(${(dx + dy) / 300} ${window?.innerWidth / 2 || 0} ${window?.innerHeight / 2 || 0})`}>
         <g transform="matrix(0.251313,-0.0632911,0.108076,0.429143,625.985,411.389)">
           <rect x={430 + dx / 5} y={866 + dy / 5} width="788" height="77" style={{ fill: 'rgb(255,214,81)' }}/>
@@ -89,7 +89,7 @@ export default function Background (): JSX.Element {
             transform={`rotate(${(dx + dy) / 300})`}
             // transform={`translate(${-dx / 35}, ${-dy / 30})`}
             d="M1771.16,15.199C1730.01,-53.294 1677.18,-114.058 1615.08,-164.345L1567.78,-105.926C1623.06,-61.158 1670.09,-7.062 1706.73,53.915L1771.16,15.199Z"
-            style={{ fill: 'rgb(69,128,192)' }}
+            style={{ fill: '#4D8CFD' }}
           />
         </g>
         <g transform="matrix(0.264764,0.964313,-0.964313,0.264764,929.239,-1307.99)">
@@ -112,7 +112,7 @@ export default function Background (): JSX.Element {
           <rect x={810 - dx / 5} y={354 - dy / 5} width={477 + dy / 5} height={477 + dy / 5} style={{ fill: 'rgb(190,178,139)' }}/>
         </g>
         <g transform="matrix(0.901886,-0.225997,0.225997,0.901886,45.3694,186.384)">
-          <rect x={810 - dx / 5} y={354 - dy / 5} width={477 - dy / 4} height={477 - dy / 4} style={{ fill: 'rgb(69,128,192)' }}/>
+          <rect x={810 - dx / 5} y={354 - dy / 5} width={477 - dy / 4} height={477 - dy / 4} style={{ fill: '#4D8CFD' }}/>
         </g>
         <g transform="matrix(0.918438,-0.231301,0.339428,1.34778,-304.873,-400.661)">
           <rect x={430 - dx / 2} y={866 - dy / 2} width="788" height="77" style={{ fill: 'rgb(226,32,58)' }}/>

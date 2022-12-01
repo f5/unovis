@@ -231,35 +231,39 @@ const events = {
 <details open>
   <summary>All supported CSS variables and their default values</summary>
   <CodeBlock language="css">
-  {`/* Links */
+  {`
+ /* Links */
 --vis-sankey-link-cursor: default;
---vis-sankey-link-color: #cad5f6;
+--vis-sankey-link-color: var(--vis-color-main-light);
 --vis-sankey-link-opacity: 0.5;
 --vis-sankey-link-hover-opacity: 1.0;
 /* Nodes */
 --vis-sankey-node-cursor: default;
---vis-sankey-node-color: #4e4dd1;
+--vis-sankey-node-color: var(--vis-color-main);
 --vis-sankey-node-label-color: #575c65;
 --vis-sankey-node-opacity: 0.9;
 --vis-sankey-node-hover-opacity: 1.0;
 /* Node Labels */
---vis-sankey-node-label-color: #575c65;
 --vis-sankey-node-label-background-fill-color: #ffffff;
 --vis-sankey-node-label-background-stroke-color: #eaeaea;
 --vis-sankey-node-label-background-opacity: 0.9;
---vis-sankey-node-label-text-decoration: none;
---vis-sankey-node-label-font-weight: 600;
---vis-sankey-node-sublabel-font-weight: 500;
+--vis-sankey-node-label-color: #575c65;
 --vis-sankey-node-label-cursor: default;
---vis-sankey-label-font-family: var(--vis-font-family);
+--vis-sankey-node-label-font-weight: 600;
+--vis-sankey-node-label-font-size: 12px;
+--vis-sankey-node-label-text-decoration: none;
+--vis-sankey-node-sublabel-font-size: 10px;
+--vis-sankey-node-sublabel-font-weight: 500;
 /* Icons */
 --vis-sankey-icon-size: 22px;
 --vis-sankey-icon-color: #ffffff;
 --vis-sankey-icon-stroke-opacity: 0.6;
 --vis-sankey-icon-font-family: FontAwesome;
+/* --vis-sankey-label-font-family: */ // Undefined by default to allow proper fallback to var(--vis-font-family)
+ 
 /* Dark Theme */
---vis-dark-sankey-link-color: #555d75;
---vis-dark-sankey-node-color: #6b69ff;
+--vis-dark-sankey-link-color: var(--vis-color-main-dark);
+--vis-dark-sankey-node-color: var(--vis-color-main);
 --vis-dark-sankey-node-label-color: #eaeaea;
 --vis-dark-sankey-node-label-background-fill-color: #292b34;
 --vis-dark-sankey-node-label-background-stroke-color: #575c65;
