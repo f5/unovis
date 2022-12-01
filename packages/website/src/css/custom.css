@@ -26,6 +26,7 @@
   --ifm-heading-color: var(--unovis-color-deep-blue);
   --ifm-table-head-background: #f6f8fa;
   --ifm-table-stripe-background: #f6f8fa;
+  --ifm-container-width-xl: 1920px;
   --docusaurus-highlighted-code-line-bg: #FFD651;
 
   --unovis-content-padding: 4rem 5rem;
@@ -58,6 +59,18 @@ html[data-theme="dark"] {
   :root {
     --unovis-content-padding: 2rem;
   }
+}
+
+@media screen and (min-width: 1680px) {
+  :root { --ifm-font-size-base: 110%; }
+}
+
+@media screen and (min-width: 1920px) {
+  :root { --ifm-font-size-base: 115%; }
+}
+
+@media screen and (min-width: 2560px) {
+  :root { --ifm-font-size-base: 130%; }
 }
 
 .docusaurus-highlight-code-line {
