@@ -4,7 +4,7 @@
  */
 
 .heroBanner {
-  height: 800px;
+  height: 95vh;
   padding: var(--unovis-content-padding);
   text-align: left;
   position: relative;
@@ -22,6 +22,18 @@
 
 .heroBanner h1 {
   font-size: 5rem;
+}
+
+@media screen and (min-width: 1680px) {
+  .heroBanner p { max-width: 550px; }
+}
+
+@media screen and (min-width: 1920px) {
+  .heroBanner p { max-width: 600px; }
+}
+
+@media screen and (min-width: 2560px) {
+  .heroBanner p { max-width: 700px; }
 }
 
 .buttons {
