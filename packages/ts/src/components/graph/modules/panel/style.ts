@@ -12,7 +12,9 @@ export const variables = injectGlobal`
 
     --vis-graph-panel-label-color: #6c778c;
     --vis-graph-panel-label-background: #ffffff;
-    --vis-graph-panel-label-font-family: var(--vis-font-family);
+
+    // Undefined by default to allow proper fallback to var(--vis-font-family)
+    /* --vis-graph-panel-label-font-family: */
     --vis-graph-panel-label-font-size: 10pt;
     --vis-graph-panel-label-font-weight: 300;
 
@@ -77,7 +79,7 @@ export const labelText = css`
   font-weight: var(--vis-graph-panel-label-font-weight);;
   cursor: default;
   stroke: none;
-  font-family: var(--vis-graph-panel-label-font-family);
+  font-family: var(--vis-graph-panel-label-font-family, var(--vis-font-family));
 `
 
 export const panelSelectionActive = css`

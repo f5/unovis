@@ -19,7 +19,9 @@ export const variables = injectGlobal`
 
     --vis-map-point-label-text-color-dark: #5b5f6d;
     --vis-map-point-label-text-color-light: #fff;
-    --vis-map-point-label-font-family: var(--vis-font-family);
+
+    // Undefined by default to allow proper fallback to var(--vis-font-family)
+    /* --vis-map-point-label-font-family: */
     --vis-map-point-label-font-weight: 600;
     --vis-map-point-label-font-size: 12px;
 
@@ -82,7 +84,7 @@ export const pointLabel = css`
   pointer-events:none;
 
   font-size: var(--vis-map-point-label-font-size);
-  font-family: var(--vis-map-point-label-font-family);
+  font-family: var(--vis-map-point-label-font-family, var(--vis-font-family));
   font-weight: var(--vis-map-point-label-font-weight);
   fill: var(--vis-map-point-label-text-color-dark);
 `

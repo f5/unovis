@@ -21,7 +21,8 @@ export const root = css`
 export const variables = injectGlobal`
   :root {
     --vis-map-container-background-color: #dfe5eb;
-    --vis-map-label-font-family: var(--vis-font-family);
+    // Undefined by default to allow proper fallback to var(--vis-font-family)
+    /* --vis-map-label-font-family, var(--vis-font-family): */
 
     --vis-map-point-default-fill-color: #B9BEC3;
     --vis-map-point-ring-fill-color: #ffffff;
@@ -138,7 +139,7 @@ export const innerLabel = css`
 
   text-anchor: middle;
   fill: var(--vis-map-point-label-text-color-dark);
-  font-family: var(--vis-map-label-font-family);
+  font-family: var(--vis-map-label-font-family, var(--vis-font-family));
   pointer-events: none;
   font-weight: 600;
 `
@@ -148,7 +149,7 @@ export const bottomLabel = css`
 
   text-anchor: middle;
   fill: var(--vis-map-point-label-text-color-dark);
-  font-family: var(--vis-map-label-font-family);
+  font-family: var(--vis-map-label-font-family, var(--vis-font-family));
   pointer-events: none;
   font-weight: 600;
 `

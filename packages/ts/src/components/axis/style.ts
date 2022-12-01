@@ -6,7 +6,8 @@ export const root = css`
 
 export const globalStyles = injectGlobal`
   :root {
-    --vis-axis-font-family: var(--vis-font-family);
+    // Undefined by default to allow proper fallback to var(--vis-font-family)
+    /* --vis-axis-font-family: */
     --vis-axis-tick-color: #e8e9ef;
     --vis-axis-tick-label-color: #6c778c;
     --vis-axis-grid-color: #e8e9ef;
@@ -82,7 +83,7 @@ export const tick = css`
 
   text, tspan {
     fill: var(--vis-axis-tick-label-color);
-    font-family: var(--vis-axis-font-family);
+    font-family: var(--vis-axis-font-family, var(--vis-font-family));
     stroke: none;
   }
 `
@@ -91,7 +92,7 @@ export const label = css`
   label: label;
   fill: var(--vis-axis-label-color);
   font-size: var(--vis-axis-label-font-size);
-  font-family: var(--vis-axis-font-family);
+  font-family: var(--vis-axis-font-family, var(--vis-font-family));
   text-anchor: middle;
 `
 

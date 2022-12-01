@@ -37,7 +37,8 @@ export const variables = injectGlobal`
     --vis-sankey-icon-stroke-opacity: 0.6;
     --vis-sankey-icon-font-family: ${DEFAULT_ICON_FONT_FAMILY};
 
-    --vis-sankey-label-font-family: var(--vis-font-family);
+    // Undefined by default to allow proper fallback to var(--vis-font-family)
+    /* --vis-sankey-label-font-family: */
 
     --vis-dark-sankey-link-color: var(--vis-color-main-dark);
     --vis-dark-sankey-node-color: var(--vis-color-main);
@@ -109,7 +110,7 @@ export const label = css`
   user-select: none;
 
   &, tspan {
-    font-family: var(--vis-sankey-label-font-family);
+    font-family: var(--vis-sankey-label-font-family, var(--vis-font-family));
     dominant-baseline: hanging;
   }
 `
@@ -122,7 +123,7 @@ export const sublabel = css`
   user-select: none;
 
   &, tspan {
-    font-family: var(--vis-sankey-label-font-family);
+    font-family: var(--vis-sankey-label-font-family, var(--vis-font-family));
     font-weight: var(--vis-sankey-node-sublabel-font-weight);
     dominant-baseline: hanging;
   }
