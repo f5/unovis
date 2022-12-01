@@ -18,10 +18,10 @@ const logos: Logo[] = [
 export function HomepageLogos (): JSX.Element {
   return (
     <section className={s.root}>
-      <h3 className={s.heading}>Who's using Unovis?</h3>
+      <h1>Companies using Unovis</h1>
       <div className={s.container}>
         {logos.map(logo => (
-          <Link to={logo.url} className={s.logo}>
+          <Link key={logo.url} to={logo.url} className={s.logo}>
             <ThemedImage
               sources={{ light: logo.src, dark: logo.srcDark || logo.src }}
               alt={logo.alt}
