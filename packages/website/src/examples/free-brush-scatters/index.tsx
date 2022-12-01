@@ -18,7 +18,6 @@ const example: Example = {
     FiveThirtyEight
     </a> (source: <em>American Community Survey 2010-2012</em>)
   </div>,
-  preview: require('./preview.png').default,
   codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,
   codeTs: require(`!!raw-loader!./${pathname}.ts`).default,
   codeAngular: {
@@ -28,6 +27,8 @@ const example: Example = {
   },
   codeSvelte: require(`!!raw-loader!./${pathname}.svelte`).default,
   data: require('!!raw-loader!./../basic-scatter-chart/data.ts').default,
+  preview: require(`../_previews/${pathname}.png`).default,
+  previewDark: require(`../_previews/${pathname}-dark.png`).default,
 }
 
 export default example

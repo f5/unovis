@@ -15,7 +15,6 @@ const example: Example = {
   description: <p>Les Misérables Character Co-occurrence Graph
     (source: <a href='https://www-cs-faculty.stanford.edu/~knuth/sgb.html' target="_blank">The Stanford GraphBase</a>)
   </p>,
-  preview: require('./preview.png').default,
   codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,
   codeTs: require(`!!raw-loader!./${pathname}.ts`).default,
   codeAngular: {
@@ -25,6 +24,8 @@ const example: Example = {
   },
   codeSvelte: require(`!!raw-loader!./${pathname}.svelte`).default,
   data: require('!!raw-loader!./data').default,
+  preview: require(`../_previews/${pathname}.png`).default,
+  previewDark: require(`../_previews/${pathname}-dark.png`).default,
 }
 
 export default example

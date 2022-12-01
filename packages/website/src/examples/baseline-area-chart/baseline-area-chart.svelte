@@ -11,7 +11,6 @@
   // Area
   const x = d => d.year
   const y = categories.map((c: Category) => d => d.art[c.id])
-  const color = categories.map((c: Category): string => c.color)
   const baseline = (_: DataRecord, i: number) => (max - sums[i]) / 2
 
   // Y Axis
@@ -26,7 +25,7 @@
 
 <VisBulletLegend items={categories}/>
 <VisXYContainer {data} height={500}>
-  <VisArea {x} {y} {color} {baseline} curveType={CurveType.Basis}/>
+  <VisArea {x} {y} {baseline} curveType={CurveType.Basis}/>
   <VisAxis type='x' label='Year'/>
   <VisAxis type='y' label='Number of Works Acquired' {...yAxisConfig}/>
 </VisXYContainer>

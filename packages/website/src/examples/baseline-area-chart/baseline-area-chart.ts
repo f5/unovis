@@ -19,7 +19,6 @@ const legend = new BulletLegend(container, { items: categories })
 const area = new Area<DataRecord>({
   x: d => d.year,
   y: categories.map((c: Category) => d => d.art[c.id]),
-  color: categories.map((c: Category): string => c.color),
   baseline: (_: DataRecord, i: number) => (max - sums[i]) / 2,
   curveType: CurveType.Basis,
 })

@@ -14,11 +14,11 @@
 
 .legendSwitch {
   width: max-content;
-  background-color: #f8f8f8;
+  background-color: var(--ifm-code-background);
   padding: 10px 20px;
   display: inline-block;
   border-radius: 5px;
-  border: 1px solid #f4f4f4;
+  border: 1px solid var(--ifm-code-background);
 }
 
 .legendLabel:hover {

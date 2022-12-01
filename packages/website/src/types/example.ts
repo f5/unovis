@@ -3,7 +3,6 @@ export type Example = {
   pathname: string;
   description: string | JSX.Element;
   component: () => JSX.Element;
-  preview: string;
   codeReact: string;
   codeTs: string;
   codeAngular: {
@@ -13,6 +12,8 @@ export type Example = {
   };
   codeSvelte: string;
   data: string;
+  preview: string;
+  previewDark?: string;
   constants?: string;
   styles?: string;
 }
