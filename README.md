@@ -1,5 +1,4 @@
-![unovis](https://user-images.githubusercontent.com/755708/204618891-1bb3294e-4bb5-4d26-937e-b8caf2bfe77d.gif)
-
+[![unovis](https://user-images.githubusercontent.com/755708/204618891-1bb3294e-4bb5-4d26-937e-b8caf2bfe77d.gif)](https://unovis.dev)
 
 🟨  **Unovis** is a modular data visualization framework for React, Angular, Svelte, and vanilla TypeScript or JavaScript:
 
