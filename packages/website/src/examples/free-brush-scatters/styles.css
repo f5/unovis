@@ -3,12 +3,20 @@
 }
 
 .minimap {
-  position: absolute;
-  display: block;
-  background-color: var(--ifm-code-background);
-  bottom: 60px;
-  right: 20px;
-  width: 200px;
   height: 150px;
   border: 1px solid grey;
+  background-color: var(--ifm-code-background);
+  margin: 0 auto;
+}
+
+@media screen and (min-width: 600px) {
+  .minimap {
+    width: 200px;
+    position: absolute;
+    display: block;
+    bottom: 60px;
+    right: 20px;
+
+
+  }
 }
