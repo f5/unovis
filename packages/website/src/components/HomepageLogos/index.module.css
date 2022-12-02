@@ -11,8 +11,9 @@
 }
 
 .logo {
-  height: 12em;
-  padding: 3em 5em;
+  height: 10em;
+  /*width: 100%;*/
+  padding: 2% 5%;
 }
 
 .logo > img {
