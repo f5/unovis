@@ -276,10 +276,12 @@ TopoJSONs currently available in `@voltera/vis/maps`:
 
 <table style={{ display: 'table', margin: '0 auto', width: '100%' }}>
   <thead>
-      <th><code>topojson</code></th>
-      <th><code>mapFeatureName</code></th>
-      <th>unique <code>MapArea</code> id</th>
-      <th>AreaDatum example</th>
+      <tr>
+        <th><code>topojson</code></th>
+        <th><code>mapFeatureName</code></th>
+        <th>unique <code>MapArea</code> id</th>
+        <th>AreaDatum example</th>
+      </tr>
     </thead>
   <tbody>
     {[
@@ -297,13 +299,14 @@ TopoJSONs currently available in `@voltera/vis/maps`:
       ['UKTopoJSON','regions','ONS_coding_system','UK ONS/GSS geocode', 'E15000002'],
       ['USATopoJSON','states','FIPS_state_code#FIPS_state_codes','FIPS 2-digit state code','51'],
       ['USCountiesTopoJSON','counties','List_of_United_States_FIPS_codes_by_county','FIPS 5-digit county code', '53033']
-    ].map(([name, feature, url, link, example]) => (
-      <tr>
-      <td>{name}</td><td>{feature}</td>
-      <td>
-        <a href={`https://en.wikipedia.org/wiki/${url}`}>{link}</a>
-      </td>
-      <td><code>{`{ id: '${example}' }`}</code></td>
+    ].map(([name, feature, url, link, example], i) => (
+      <tr key={`row${i}`}>
+        <td>{name}</td>
+        <td>{feature}</td>
+        <td>
+          <a href={`https://en.wikipedia.org/wiki/${url}`}>{link}</a>
+        </td>
+        <td><code>{`{ id: '${example}' }`}</code></td>
       </tr>
     ))
   }

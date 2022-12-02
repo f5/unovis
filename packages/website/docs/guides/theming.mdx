@@ -113,17 +113,19 @@ from `@unovis/ts`. Just add it to your container's class list to see the effects
 </BrowserOnly>
 
 
-**Note**: When using this theme, the following components have a caveats:
-:::note [Scatter](../xy-charts/Scatter)
+
+:::note
+When using this theme, the following components have caveats:
+
+- [**Scatter**](../xy-charts/Scatter):
 If the [`labelPosition`](../xy-charts/Scatter#label-position) property is set to `Position.Center`,
 point labels will try fit to the point's size. In this case, you will instead need to update the
 [`pointSize`](../xy-charts/Scatter#point-size-and-size-range) property to render larger labels.
-:::
 
-:::note [Timeline](../xy-charts/Timeline)
+- [**Timeline**](../xy-charts/Timeline)
 Additionally, you may need to adjust the [`rowHeight`](../xy-charts/Timeline#row-height) property to
 accommodate larger labels.
-:::å
+:::
 
 ## Global Variables
 The majority of our variables exist on a component level,  but there are a few global CSS variables:
@@ -200,13 +202,15 @@ If you like the result, just copy and paste the corresponding style declaration 
       <div className='side-by-side'>
         <table>
           <thead>
-            <th>Variable</th>
-            <th>Color</th>
-            <th>Hex</th>
+            <tr>
+              <th>Variable</th>
+              <th>Color</th>
+              <th>Hex</th>
+            </tr>
           </thead>
           <tbody>
           {Object.keys(variables).map(c => (
-            <tr>
+            <tr key={c}>
               <td>{c}</td>
               <td><input type='color' value={variables[c]} onChange={e => update(e, c)}/></td>
               <td><input type='text' value={variables[c]} onChange={e => update(e, c)}/></td>
