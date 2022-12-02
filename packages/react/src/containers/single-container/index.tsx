@@ -32,7 +32,10 @@ function VisSingleContainerFC<Data> (props: PropsWithChildren<VisSingleContainer
     setData(props.data)
     const c = new SingleContainer<Data>(container.current as HTMLDivElement, getConfig(), props.data)
     setChart(c)
-    return () => c.destroy()
+    return () => {
+      if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current)
+      c.destroy()
+    }
   }, [])
 
   // On Props Update

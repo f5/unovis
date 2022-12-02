@@ -44,7 +44,10 @@ export function VisXYContainerFC<Datum> (props: PropsWithChildren<VisXYContainer
     const c = new XYContainer<Datum>(container.current as HTMLDivElement, getConfig(), props.data)
     setChart(c)
 
-    return () => c.destroy()
+    return () => {
+      if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current)
+      c.destroy()
+    }
   }, [])
 
   // On Props Update
