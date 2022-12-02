@@ -3,7 +3,7 @@ import { exec } from 'child_process'
 import ts from 'typescript'
 
 // Utils
-import { getImportStatements, getConfigProperties, kebabCase, getTSStatements, getTypeName } from './utils'
+import { getImportStatements, getConfigProperties, kebabCase, getTSStatements, getTypeName, gatherTypeReferences } from './utils'
 import { ComponentInput, ConfigProperty, GenericParameter } from './types'
 import { getComponentCode } from './component'
 
@@ -33,10 +33,8 @@ const components: ComponentInput[] = [
   { name: 'Sankey', sources: [coreComponentConfigPath, '/components/sankey'], dataType: '{ nodes: N[]; links?: L[] }' },
   { name: 'Graph', sources: [coreComponentConfigPath, '/components/graph'], dataType: '{ nodes: N[]; links?: L[] }' },
   { name: 'ChordDiagram', sources: [coreComponentConfigPath, '/components/chord-diagram'], dataType: '{ nodes: N[]; links?: L[] }' },
-
   // Ancillary components
   { name: 'Tooltip', sources: ['/components/tooltip'], dataType: null, elementSuffix: 'tooltip' },
-
   // Unique cases (you can still generate a wrapper for these components, but most likely it will require some changes)
   { name: 'LeafletMap', sources: [coreComponentConfigPath, '/components/leaflet-map'], dataType: 'Datum[]', styles: ['display:block', 'position:relative'] },
   { name: 'LeafletFlowMap', sources: [coreComponentConfigPath, '/components/leaflet-map', '/components/leaflet-flow-map'], dataType: '{ points: PointDatum[]; flows?: FlowDatum[] }', styles: ['display:block', 'position:relative'] },
@@ -45,6 +43,7 @@ const components: ComponentInput[] = [
 const exports: string[] = []
 
 for (const component of components) {
+  const requiredProps = new Map<string, string[]>() // maps interface to required props
   const configPropertiesMap = new Map<string, ConfigProperty>() // The map of all config properties
   let statements: ts.Statement[] = [] // Statements and ...
   let configInterfaceMembers: ts.TypeElement[] = [] // config interface members to resolve imports of custom types
@@ -60,10 +59,14 @@ for (const component of components) {
       continue
     }
 
+    const interfaceName = getTypeName(configInterface.name)
+    requiredProps.set(interfaceName, [])
+
     const props = getConfigProperties(configInterface)
     props.forEach((p: ConfigProperty) => {
       if (!skipProperties.includes(p.name) && p.required) {
         configPropertiesMap.set(p.name, p)
+        requiredProps.set(interfaceName, [...requiredProps.get(interfaceName), p.name])
         const member = configInterface.members.find(m => (m.name as ts.Identifier)?.escapedText === p.name)
         if (member) {
           configInterfaceMembers = [
@@ -73,6 +76,26 @@ for (const component of components) {
         }
       }
     })
+
+    if (configInterface.heritageClauses) {
+      const heritageClauses = Array.from(configInterface.heritageClauses)
+      const utilityTypes = heritageClauses.flatMap(hc => hc.types.filter(t => t.typeArguments))
+      utilityTypes.forEach(t => {
+        const expression = (t.expression as ts.Identifier).escapedText
+        const types = Array.from(t.typeArguments)
+        if (expression === 'Partial') {
+          // If partial, required members from the inherited interface are now optional
+          const partialInterfaceName = getTypeName((types.at(0) as ts.TypeReferenceNode).typeName)
+          requiredProps.get(partialInterfaceName).forEach(p => {
+            configPropertiesMap.delete(p)
+          })
+        } else if (expression === 'WithOptional') {
+          // If WithOptional, only delete the provided property from required props
+          const token = (types.at(1) as ts.LiteralTypeNode).literal as ts.LiteralToken
+          configPropertiesMap.delete(token.text)
+        }
+      })
+    }
 
     statements = [...statements, ...sourceStatements]
     if (i === component.sources.length - 1) {

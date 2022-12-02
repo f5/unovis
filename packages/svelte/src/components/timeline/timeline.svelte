@@ -11,12 +11,11 @@
   // eslint-disable-next-line no-undef-init
   export let data: Datum[] = undefined
   export let x: NumericAccessor<Datum>
-  export let y: NumericAccessor<Datum> | NumericAccessor<Datum>[]
 
   // config
   let prevConfig: TimelineConfigInterface<Datum>
   let config: TimelineConfigInterface<Datum>
-  $: config = { x, y, ...$$restProps }
+  $: config = { x, ...$$restProps }
 
   // component declaration
   let component: Timeline<Datum>

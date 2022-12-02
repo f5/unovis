@@ -10,13 +10,11 @@
   // data and required props
   // eslint-disable-next-line no-undef-init
   export let data: Datum[] = undefined
-  export let x: NumericAccessor<Datum>
-  export let y: NumericAccessor<Datum> | NumericAccessor<Datum>[]
 
   // config
   let prevConfig: FreeBrushConfigInterface<Datum>
   let config: FreeBrushConfigInterface<Datum>
-  $: config = { x, y, ...$$restProps }
+  $: config = { ...$$restProps }
 
   // component declaration
   let component: FreeBrush<Datum>
