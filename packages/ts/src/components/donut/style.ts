@@ -8,12 +8,14 @@ export const variables = injectGlobal`
   :root {
     --vis-donut-central-label-font-size: 16px;
     --vis-donut-central-label-text-color: #5b5f6d;
-    --vis-donut-central-label-font-family: var(--vis-font-family);
+    // Undefined by default to allow proper fallback to var(--vis-font-family)
+    /* --vis-donut-central-label-font-family: */
     --vis-donut-central-label-font-weight: 600;
 
     --vis-donut-central-sub-label-font-size: 12px;
     --vis-donut-central-sub-label-text-color: #5b5f6d;
-    --vis-donut-central-sub-label-font-family: var(--vis-font-family);
+    // Undefined by default to allow proper fallback to var(--vis-font-family)
+    /* --vis-donut-central-sub-label-font-family: */
     --vis-donut-central-sub-label-font-weight: 500;
 
     --vis-donut-background-color: #E7E9F3;
@@ -53,7 +55,7 @@ export const centralLabel = css`
   text-anchor: middle;
   dominant-baseline: middle;
   font-size: var(--vis-donut-central-label-font-size);
-  font-family: var(--vis-donut-central-label-font-family);
+  font-family: var(--vis-donut-central-label-font-family, var(--vis-font-family));
   font-weight: var(--vis-donut-central-label-font-weight);
   fill: var(--vis-donut-central-label-text-color);
 `
@@ -63,7 +65,7 @@ export const centralSubLabel = css`
   text-anchor: middle;
   dominant-baseline: middle;
   font-size: var(--vis-donut-central-sub-label-font-size);
-  font-family: var(--vis-donut-central-sub-label-font-family);
+  font-family: var(--vis-donut-central-sub-label-font-family, var(--vis-font-family));
   font-weight: var(--vis-donut-central-sub-label-font-weight);
   fill: var(--vis-donut-central-sub-label-text-color);
 `

@@ -39,7 +39,8 @@ export const variables = injectGlobal`
     --vis-graph-node-label-text-color: #0F1E57;
     --vis-graph-node-sublabel-text-color: #989aa3;
     --vis-graph-node-sublabel-font-size: 8pt;
-    --vis-graph-node-label-font-family: var(--vis-font-family);
+    // Undefined by default to allow proper fallback to var(--vis-font-family)
+    /* --vis-graph-node-label-font-family: */
 
     --vis-dark-graph-node-label-background: var(--vis-color-grey);
     --vis-dark-graph-node-label-text-color: #ffffff;
@@ -153,14 +154,14 @@ export const labelTextContent = css`
   label: label-text-content;
 
   fill: var(--vis-graph-node-label-text-color);
-  font-family: var(--vis-graph-node-label-font-family);
+  font-family: var(--vis-graph-node-label-font-family, var(--vis-font-family));
 `
 
 export const subLabelTextContent = css`
   label: sublabel-text-content;
 
   fill: var(--vis-graph-node-sublabel-text-color);
-  font-family: var(--vis-graph-node-label-font-family);
+  font-family: var(--vis-graph-node-label-font-family, var(--vis-font-family));
   font-size: var(--vis-graph-node-sublabel-font-size);
 `
 

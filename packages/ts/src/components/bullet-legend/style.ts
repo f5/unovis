@@ -6,7 +6,9 @@ export const root = css`
 
 export const variables = injectGlobal`
   :root {
-    --vis-legend-font-family: var(--vis-font-family);
+    // Undefined by default to allow proper fallback to var(--vis-font-family)
+    /* --vis-legend-font-family: */
+
     --vis-legend-label-color: #6c778c;
     --vis-legend-label-max-width: 300px;
     --vis-legend-label-font-size: 12px;
@@ -28,7 +30,7 @@ export const variables = injectGlobal`
 export const item = css`
   label: legendItem;
   display: inline;
-  font-family: var(--vis-legend-font-family);
+  font-family: var(--vis-legend-font-family, var(--vis-font-family));
   margin-right: var(--vis-legend-item-spacing);
   white-space: nowrap;
   cursor: default;
