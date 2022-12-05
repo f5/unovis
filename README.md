@@ -1,4 +1,4 @@
-[![unovis](https://user-images.githubusercontent.com/755708/204618891-1bb3294e-4bb5-4d26-937e-b8caf2bfe77d.gif)](https://unovis.dev)
+https://user-images.githubusercontent.com/755708/205744216-5e9efd10-794b-4ce1-9aca-580c34fad193.mp4
 
 🟨  **Unovis** is a modular data visualization framework for React, Angular, Svelte, and vanilla TypeScript or JavaScript:
 
@@ -34,7 +34,7 @@ npm install -P @unovis/ts
 ## Examples and Documentation
 [![Unovis Examples](examples.png)](https://unovis.dev/gallery)
 
-_Unovis_ has a great [documentation](https://unovis.dev/docs) with code snippets for React, Angular,
+_Unovis_ has a great [documentation](https://unovis.dev/docs/intro) with code snippets for React, Angular,
 Svelte and TypeScript; and a growing [gallery](https://unovis.dev/gallery) of examples for various chart types
 (just pick the one you like and copy the code over to your project).
 
