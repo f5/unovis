@@ -9,15 +9,12 @@ const legendItems = Object.entries(colors).map(([n, c]) => ({
 }))
 
 export default function BasicGroupedBar (): JSX.Element {
-  const years = data.map(d => d.year)
-
   return (
     <>
       <h2>U.S. Election Popular Vote Results by Political Party</h2>
       <VisBulletLegend items={legendItems}/>
-      <VisXYContainer height={'55vh'}>
+      <VisXYContainer height={'50vh'} data={data}>
         <VisGroupedBar
-          data={data}
           x={useCallback(d => d.year, [])}
           y={[
             useCallback(d => d.republican, []),
@@ -27,7 +24,7 @@ export default function BasicGroupedBar (): JSX.Element {
           ]}
           color={useCallback((_, i) => legendItems[i].color, [])}
         />
-        <VisAxis type="x" label="Election Year" tickValues={years}/>
+        <VisAxis type="x" label="Election Year" numTicks={data.length}/>
         <VisAxis
           type="y"
           tickFormat={useCallback((value: number) => (value / 10 ** 6).toFixed(1), [])}

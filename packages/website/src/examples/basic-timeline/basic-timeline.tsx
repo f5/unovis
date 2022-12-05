@@ -4,7 +4,7 @@ import { VisXYContainer, VisBulletLegend, VisTooltip, VisTimeline, VisAxis } fro
 
 import { colorMap, data, DataRecord, ProductType } from './data'
 
-const labelWidth = 220
+const labelWidth = 160
 const dateFormatter = Intl.DateTimeFormat().format
 
 export default function BasicTimeline (): JSX.Element {
@@ -28,13 +28,13 @@ export default function BasicTimeline (): JSX.Element {
         length={useCallback((d: DataRecord) => d.endDate - d.startDate, [])}
         type={useCallback((d: DataRecord) => d.name, [])}
         color={useCallback((d: DataRecord) => colorMap[d.type], [])}
-        labelWidth={labelWidth}
+        maxLabelWidth={labelWidth}
         showLabels={true}
       />
       <VisTooltip triggers={{
         [Timeline.selectors.label]: getTooltipText,
       }}/>
-      <VisAxis type="x" tickFormat={dateFormatter} numTicks={10}/>
+      <VisAxis type="x" tickFormat={dateFormatter}/>
     </VisXYContainer>
   )
 }

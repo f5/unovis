@@ -21,7 +21,7 @@ const chart = new XYContainer(container, {
   xAxis: new Axis({
     type: 'x',
     label: 'Election Year',
-    tickValues: data.map(d => d.year),
+    numTicks: data.length,
   }),
   yAxis: new Axis({
     type: 'y',

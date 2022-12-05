@@ -1,5 +1,5 @@
 .fallbackValueSwitch {
-  width: 415px;
+  width: min(415px, 90vw);
   background-color: var(--ifm-code-background);
   padding: 10px 20px;
   display: inline-block;
