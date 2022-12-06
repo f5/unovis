@@ -17,6 +17,7 @@ const config = {
   organizationName: 'f5', // Usually your GitHub org/user name.
   projectName: 'unovis', // Usually your repo name.
 
+
   presets: [
     [
       'classic',
@@ -43,6 +44,7 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
+      image: 'img/unovis-social.png',
       navbar: {
         title: '',
         logo: {

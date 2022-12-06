@@ -1,7 +1,6 @@
 import React from 'react'
 import Layout from '@theme/Layout'
 import Link from '@docusaurus/Link'
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext'
 import Tabs from '@theme/Tabs'
 import TabItem from '@theme/TabItem'
 import CodeBlock from '@theme/CodeBlock'
@@ -18,12 +17,10 @@ import s from './index.module.css'
 
 
 export default function Home (): JSX.Element {
-  const { siteConfig } = useDocusaurusContext()
   const example = ChartExample
   return (
     <Layout
-      title={`${siteConfig.title}`}
-      description="A modular data visualization framework for React, Angular, Svelte and vanilla TypeScript">
+      description="A framework agnostic data vis library">
       <HomepageHeader />
       <main>
         <HomepageFeatures />

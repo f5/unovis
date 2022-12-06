@@ -16,6 +16,7 @@ export default function Home (): JSX.Element {
   return (
     <Layout
       title="Gallery"
+      description="Explore the gallery of Unovis examples"
     >
       <div className={s.root}>
         <h1>Gallery</h1>
