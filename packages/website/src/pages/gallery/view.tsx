@@ -17,7 +17,7 @@ export default function Home (): JSX.Element {
   return (
     <Layout
       title="Gallery"
-      description="A modular data visualization framework for React, Angular and vanilla TypeScript"
+      description="A modular data visualization framework for React, Angular, Svelte, and vanilla TypeScript or JavaScript"
     >
       <BrowserOnly>{() => {
         const location = useLocation()
