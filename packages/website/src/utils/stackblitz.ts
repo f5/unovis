@@ -2,7 +2,7 @@
 import sdk, { OpenFileOption, Project, ProjectFiles, ProjectTemplate } from '@stackblitz/sdk'
 import { Framework } from '../types/code'
 import { Example } from '../types/example'
-import { kebabCase, trimMultiline } from './text'
+import { trimMultiline } from './text'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const ver = require('../../../../package.json').version
@@ -55,7 +55,7 @@ function getStarterFiles (framework: Framework, e: Example): ProjectFiles {
         [`${e.pathname}/${e.pathname}.component.ts`]: e.codeAngular.component,
         [`${e.pathname}/${e.pathname}.component.html`]: e.codeAngular.html,
         [`${e.pathname}/${e.pathname}.module.ts`]: e.codeAngular.module,
-        [`${e.pathname}/index.ts`]: `export { ${e.title.split(/[\s,-]+/).join('')}Module as ComponentModule } from './${e.pathname}.module.ts'`,
+        [`${e.pathname}/index.ts`]: `${e.codeAngular.module.match(/export class\s*\S+/gm).pop().replace('class', '{')} as ComponentModule } from './${e.pathname}.module.ts'`,
         [`${e.pathname}/data.ts`]: e.data,
         ...(e.constants ? { [`${e.pathname}/constants.ts`]: e.constants } : {}),
         ...(e.styles ? { [`${e.pathname}/styles.css`]: e.styles } : {}),
