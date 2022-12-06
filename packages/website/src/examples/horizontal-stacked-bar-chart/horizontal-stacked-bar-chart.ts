@@ -1,12 +1,13 @@
-import { BulletLegend, Orientation, StackedBar, Tooltip, XYContainer } from '@unovis/ts'
-import { data, labels, EducationDatum } from './data'
+import { Axis, AxisType, BulletLegend, FitMode, Orientation, StackedBar, Tooltip, XYContainer } from '@unovis/ts'
+import { data, EducationDatum, labels } from './data'
 
+const isSmallScreen = window?.innerWidth < 768
 const container = document.getElementById('vis-container')
 
 const bar = new StackedBar<EducationDatum>({
   x: (d, i) => i,
   y: [d => d.bachelors, d => d.masters, d => d.doctoral],
-  orientation: Orientation.Vertical,
+  orientation: Orientation.Horizontal,
 })
 
 const legend = new BulletLegend(document.getElementById('vis-legend'), {
@@ -15,6 +16,17 @@ const legend = new BulletLegend(document.getElementById('vis-legend'), {
 
 const chart = new XYContainer(container, {
   components: [bar],
+  height: isSmallScreen ? 600 : 800,
+  xAxis: new Axis({
+    label: '% of population aged 25 or above',
+  }),
+  yAxis: new Axis({
+    tickTextWidth: isSmallScreen ? 75 : null,
+    tickTextFitMode: FitMode.Trim,
+    tickFormat: (_, i: number) => data[i].country,
+    label: isSmallScreen ? null : 'Country',
+    numTicks: data.length,
+  }),
   tooltip: new Tooltip({
     triggers: {
       [StackedBar.selectors.bar]: d => {

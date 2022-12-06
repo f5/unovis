@@ -1,6 +1,6 @@
 <script lang='ts'>
   import { VisXYContainer, VisStackedBar, VisAxis, VisBulletLegend, VisTooltip } from '@unovis/svelte'
-  import { Direction, Orientation, StackedBar } from '@unovis/ts'
+  import { FitMode, Direction, Orientation, StackedBar } from '@unovis/ts'
   import { data, labels, EducationDatum } from './data'
 
   const chartLabels = Object.entries(labels).map(([k, v], i) => ({
@@ -12,6 +12,7 @@
     ].join(': '),
   }))
 
+  const isSmallScreen = window?.innerWidth < 768
   const x = (d: EducationDatum, i: number) => i
   const y = chartLabels.map(i => (d: EducationDatum) => d[i.key])
   const tickFormat = (_, i: number) => data[i].country
@@ -28,10 +29,17 @@
 
 <h3>Highest Degree Earned across Country Populations as of 2020</h3>
 <VisBulletLegend items={chartLabels.map(d => ({ name: d.legend }))}/>
-<VisXYContainer height={800} yDirection={Direction.South}>
+<VisXYContainer height={isSmallScreen ? 600 : 800} yDirection={Direction.South}>
   <VisStackedBar {data} {x} {y} orientation={Orientation.Horizontal}/>
   <VisTooltip triggers={{ [StackedBar.selectors.bar]: tooltipTemplate }}/>
   <VisAxis type="x" label="% of population aged 25 or above"/>
-  <VisAxis type="y" {tickFormat} {y} label="Country" numTicks={data.length}/>
+  <VisAxis
+    type="y"
+    tickTextWidth={isSmallScreen ? 75 : null}
+    tickTextFitMode={FitMode.Trim}
+    label={isSmallScreen ? null : 'Country'}
+    numTicks={data.length}
+    {tickFormat}
+  />
 </VisXYContainer>
 
