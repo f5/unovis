@@ -15,13 +15,6 @@ export const colors = {
 
 export const data: ElectionDatum[] = [
   {
-    year: 1976,
-    democrat: 40680446,
-    republican: 38870893,
-    other: 1954379,
-    libertarian: 95626,
-  },
-  {
     year: 1980,
     republican: 43642639,
     democrat: 35480948,

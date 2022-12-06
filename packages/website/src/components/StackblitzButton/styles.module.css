@@ -1,14 +1,23 @@
 .container {
   position: relative;
+  width: 100%;
 }
 
 .button {
-  position: absolute;
-  right: 0;
-  top: var(--ifm-tabs-padding-vertical);
+  display: block;
+  margin: 0 auto;
+  padding-bottom: 1em;
 }
 
 input:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+@media screen and (min-width: 700px) {
+  .button {
+    position: absolute;
+    right: 0;
+    top: var(--ifm-tabs-padding-vertical);
+  }
 }

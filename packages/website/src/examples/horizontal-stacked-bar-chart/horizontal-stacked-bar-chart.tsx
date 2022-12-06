@@ -1,7 +1,7 @@
 import React from 'react'
-import { VisXYContainer, VisStackedBar, VisAxis, VisBulletLegend, VisTooltip } from '@unovis/react'
-import { Direction, Orientation, StackedBar } from '@unovis/ts'
-import { data, labels, EducationDatum } from './data'
+import { VisAxis, VisBulletLegend, VisStackedBar, VisTooltip, VisXYContainer } from '@unovis/react'
+import { Direction, FitMode, Orientation, StackedBar } from '@unovis/ts'
+import { data, EducationDatum, labels } from './data'
 
 const chartLabels = Object.entries(labels).map(([k, v], i) => ({
   key: k,
@@ -20,11 +20,12 @@ function tooltipTemplate (d: EducationDatum): string {
 }
 
 export default function StackedBarChart (): JSX.Element {
+  const isSmallScreen = window?.innerWidth < 768
   return (
     <>
       <h3>Highest Degree Earned across Country Populations as of 2020</h3>
       <VisBulletLegend items={chartLabels.map(d => ({ name: d.legend }))}/>
-      <VisXYContainer height={800} yDirection={Direction.South}>
+      <VisXYContainer height={isSmallScreen ? 600 : 800} yDirection={Direction.South}>
         <VisStackedBar
           data={data}
           x={(d: EducationDatum, i: number) => i}
@@ -35,7 +36,14 @@ export default function StackedBarChart (): JSX.Element {
           [StackedBar.selectors.bar]: tooltipTemplate,
         }}/>
         <VisAxis type="x" label="% of population aged 25 or above"/>
-        <VisAxis type="y" tickFormat={(_, i: number) => data[i].country} label="Country" numTicks={data.length}/>
+        <VisAxis
+          tickTextWidth={isSmallScreen ? 75 : null}
+          tickTextFitMode={FitMode.Trim}
+          type="y"
+          tickFormat={(_, i: number) => data[i].country}
+          label={isSmallScreen ? null : 'Country'}
+          numTicks={data.length}
+        />
       </VisXYContainer>
     </>
   )

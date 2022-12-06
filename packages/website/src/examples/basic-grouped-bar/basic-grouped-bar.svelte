@@ -6,7 +6,6 @@
     name: n.toUpperCase(),
     color: c,
   }))
-  const tickValues = data.map(d => d.year)
   const x = (d: ElectionDatum) => d.year
   const y = [
     (d: ElectionDatum) => d.republican,
@@ -21,7 +20,7 @@
 <VisBulletLegend {items}/>
 <VisXYContainer height={500}>
   <VisGroupedBar {data} {x} {y} {color} />
-  <VisAxis type="x" label="Election Year" {tickValues}/>
+  <VisAxis type="x" label="Election Year" numTicks={data.length}/>
   <VisAxis
     type="y"
     tickFormat={(value) => (value / 10 ** 6).toFixed(1)}

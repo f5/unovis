@@ -5,6 +5,7 @@ import { VisSingleContainer, VisSankey } from '@unovis/react'
 import { getColor, getChildren, LinkDatum, NodeDatum, sankeyData, sourceNode } from './data'
 
 export default function ExpandableSankey (): JSX.Element {
+  const subLabelPlacement = window.innerHeight > window.innerWidth ? SankeySubLabelPlacement.Below : SankeySubLabelPlacement.Inline
   const [data, setData] = React.useState({
     nodes: [sourceNode, ...getChildren(sourceNode)],
     links: sankeyData.links,
@@ -28,18 +29,18 @@ export default function ExpandableSankey (): JSX.Element {
   }, [data])
 
   return (
-    <VisSingleContainer data={data} height={'60vh'}>
+    <VisSingleContainer data={data} height={'min(60vh,75vw)'}>
       <VisSankey
         labelFit={FitMode.Wrap}
         labelForceWordBreak={false}
-        labelMaxWidth={150}
+        labelMaxWidth={window.innerWidth * 0.12}
         labelVerticalAlign={VerticalAlign.Middle}
         nodeColor={useCallback(getColor, [])}
         nodeIcon={useCallback((d: NodeDatum) => d.expandable ? (d.expanded ? '-' : '+') : '', [])}
         nodeCursor={useCallback((d: SankeyNode<NodeDatum, LinkDatum>) => d.expandable ? 'pointer' : null, [])}
         nodePadding={20}
         linkColor={useCallback((d: SankeyLink<NodeDatum, LinkDatum>) => getColor(d.source), [])}
-        subLabelPlacement={SankeySubLabelPlacement.Inline}
+        subLabelPlacement={subLabelPlacement}
         subLabel={useCallback((d: SankeyNode<NodeDatum, LinkDatum>) => ((d.depth === 0) || d.expanded)
           ? ''
           : `${((d.value / sourceNode.value) * 100).toFixed(1)}%`

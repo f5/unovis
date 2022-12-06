@@ -10,6 +10,8 @@ export class StackedBarChartComponent {
   dataKeys = Object.keys(labels)
   data: EducationDatum[] = data
 
+  isSmallScreen = window?.innerWidth < 768
+
   x = (d: EducationDatum): number => this.data.indexOf(d)
   y = this.dataKeys.map(k => (d: EducationDatum) => d[k])
 
