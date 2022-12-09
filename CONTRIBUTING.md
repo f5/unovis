@@ -35,7 +35,7 @@ In order to accept your pull request, we need you to submit a CLA, if you
 haven’t submitted one before for this project. You only need to do this
 once and you’re good to go.
 
-Complete your [CLA here](F5%20Contributor%20License%20Agreement.rtf) and email
+Complete your [CLA here](F5%20Contributor%20License%20Agreement.docx) and email
 the filled out form to _opensource@f5.com_.
 
 ## License
