@@ -20,7 +20,7 @@ export default function Home (): JSX.Element {
   const example = ChartExample
   return (
     <Layout
-      description="A framework agnostic data vis library">
+      description="A framework-independent data vis library for the web">
       <HomepageHeader />
       <main>
         <HomepageFeatures />
