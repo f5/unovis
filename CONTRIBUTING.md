@@ -36,7 +36,7 @@ haven’t submitted one before for this project. You only need to do this
 once and you’re good to go.
 
 Complete your [CLA here](F5%20Contributor%20License%20Agreement.docx) and email
-the filled out form to _opensource@f5.com_.
+the filled out form to _cla@f5.com_.
 
 ## License
 By contributing to _Unovis_, you agree that your contributions will be licensed
