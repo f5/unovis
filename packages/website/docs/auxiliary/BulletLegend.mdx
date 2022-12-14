@@ -1,0 +1,243 @@
+---
+title: Bullet Legend
+sidebar_title: Bullet Legend
+---
+import BrowserOnly from '@docusaurus/BrowserOnly'
+import { PropTable } from '../components/props-table'
+import { FrameworkTabs } from '../components/framework-tabs.tsx'
+import { generateDataRecords } from '../utils/data'
+import { DocWrapper, InputWrapper, XYWrapper } from '../wrappers'
+import { parseComponent } from '../utils/parser.ts'
+import { trimMultiline } from '@site/src/utils/text'
+import '../styles.css'
+
+export const BulletLegendDoc = (props) => (
+  <div className='padded-doc'>
+    <DocWrapper
+      name='BulletLegend'
+      items={Array(6).fill(0).map((_, i) => ({ name: `Item ${i}` }))}
+      {...props}/>
+  </div>
+)
+
+export const barData = generateDataRecords(10)
+
+## Overview
+_BulletLegend_ is a stand-alone component that can be used alongside your visualization to label colored
+data.
+
+## Legend Items
+_BulletLegend_ requires the `items` property, an array of items that will be displayed in the legend.
+Each item has type `BulletLegendItemInterface`:
+
+```ts
+interface BulletLegendItemInterface {
+  name: string | number;
+  color?: string;
+  inactive?: boolean;
+  hidden?: boolean;
+  pointer?: boolean;
+}
+```
+
+Note that the only requred property, `name` corresponds to the legend items' label.
+Here is an example of a basic configuration, where `labels` is an array of strings:
+
+<BulletLegendDoc
+  showContext='minimal'
+  declarations={{
+    'items': `labels.map(label => ({ name: label }))`
+  }}
+  imports={{
+    './data': ['labels']
+  }}
+/>
+
+### Custom Colors
+By default, our [color palette](docs/guides/theming#color-palette) will be used to color each legend item, but
+but you can provide your own colors in the legend item array.
+```ts
+const colors = ['red', 'blue', 'green']
+const items = labels.map((label, i) => ({ name: label, colors[i] }))
+```
+
+or manually:
+```ts
+const items = [
+  { name: 'A', color: 'red' },
+  { name: 'B', color: 'blue' },
+  { name: 'C', color: 'green' }
+]
+```
+Either will produce the following result:
+<BulletLegendDoc excludeTabs items={[
+  { name: 'A', color: 'red' },
+  { name: 'B', color: 'blue' },
+  { name: 'C', color: 'green' },
+]}/>
+
+### Inactive Items
+In some cases you may want to have some legend items look _inactive_, which reduces the opacity of the bullet.
+See how the initial legend looks when all of the items are inactive:
+```ts
+const items = labels.map(label => ({ name: label, inactive: true }))
+```
+<BulletLegendDoc excludeTabs items={Array(6).fill(0).map((item, i) => ({ name: `Item ${i}`, inactive: true }))}/>
+
+### Pointer
+The `pointer` property in the _BulletLegendItemInterface_ refers to the [cursor CSS property](https://developer.mozilla.org/en-US/docs/Web/CSS/cursor).
+Note that there is no specified default value unless `onLegendItemCilck` property is provided, in which case the
+cursor will be `pointer`.
+
+## Label Configuration
+### Font Size
+The label's font size can be changed with a valid [font-size CSS](https://developer.mozilla.org/en-US/docs/Web/CSS/font-size)
+string provided to the `labelMaxWidth` property.
+
+<BulletLegendDoc labelFontSize={'x-large'}/>
+
+### Max Width
+Limit the label lengths with the `labelMaxWidth` property, which corresponds to the
+[max-width CSS](https://developer.mozilla.org/en-US/docs/Web/CSS/max-width) property. For example,
+
+<BulletLegendDoc
+  excludeTabs
+  items={Array(6).fill(0).map((n, i) => ({ name: i === 3 ? `Extra Long Label Name` : 'Label' }))}/>
+
+providing `labelMaxWidth` will trim the contents of the item that exceeds the width.
+
+<BulletLegendDoc
+  labelMaxWidth='50px'
+  items={Array(6).fill(0).map((n, i) => ({ name: i === 3 ? `Extra Long Label Name` : 'Label' }))}/>
+
+### Custom Class
+You can also add any further configuration for your labels by providing `labelClassName` with your
+custom css class.
+
+## `onLegendItemClick`
+You can provide an event listener to `onLegendItemClick` to create interactive legends for your graph.
+It accepts a function that has the following signature:
+```ts
+function (item: BulletLegendItemInterface, index: number): void
+```
+where the parameters correspond to the clicked item.
+
+One common configuration is when you want to filter a data in your chart based on the "active" legend items.
+Consider the following `StackedBar` chart example, where `onLegendItemClick` updates the _yAccessors_
+to return `0` when the corresponding legend item is inactive. Try clicking to see the result:
+
+export function InteractiveLegend() {
+  const labels = ['Class A', 'Class B', 'Class C'].map(c => ({ name: c, inactive: false }))
+  const [items, setItems] = React.useState(labels)
+  const toggleClass = React.useCallback((item, i) => {
+    const legendItems = [...items]
+    legendItems[i].inactive = !legendItems[i].inactive
+    setItems(legendItems)
+  }, [items])
+  const yAccessors = [d => d.y, d => d.y2, d => d.y1]
+  return (
+    <BrowserOnly>{() => {
+      const { VisXYContainer, VisStackedBar, VisAxis, VisBulletLegend } = require('@unovis/react')
+      return (<>
+        <div style={{ margin: '20px'}}>
+          <VisBulletLegend items={items} bulletSize='25px' onLegendItemClick={toggleClass}/>
+        </div>
+        <VisXYContainer data={barData}>
+          <VisStackedBar x={d => d.x} y={yAccessors.map((y, i) => items[i].inactive ? 0 : y)}/>
+          <VisAxis type='y'/>
+        </VisXYContainer>
+      </>)
+    }}
+  </BrowserOnly>
+  )
+}
+
+
+
+<div className='padded-doc'>
+<InteractiveLegend/>
+<FrameworkTabs
+  angular={{
+    html: `
+<vis-bullet-legend [items]="items" [onLegendItemClick]="toggleItem"></vis-bullet-legend>
+<vis-xy-container [data]="data">
+  <vis-stacked-bar [x]="x" [y]="y"></vis-stacked-bar>
+  <vis-axis type="y"></vis-axis>
+</vis-xy-container>`.trim(),
+    ts: `
+data: DataRecord[]
+x: NumericAccessor<DataRecord>
+y: NumericAccessor<DataRecord>[]
+items: BulletLegendItemInterface[] = [
+  { name: \'Class A\', inactive: false },
+  { name: \'Class B\', inactive: false },
+  { name: \'Class C\', inactive: false },
+]\n
+toggleItem (item: BulletLegendItemInterface, i: number): void {
+  const itemsCopy = [...items]
+  itemsCopy[i].active = !itemsCopy[i].active
+  this.items = itemsCopy
+  this.y = items.map((y, i) => item.inactive ? 0 : y[i])
+}`.trim()}}
+  react={`
+export function Chart({ data, x, y }): JSX.Element {
+  const [items, setItems] = useState([
+    { name: \'Class A\', inactive: false },
+    { name: \'Class B\', inactive: false },
+    { name: \'Class C\', inactive: false },
+  ])\n
+  const toggleItem = useCallback((item: BulletLegendItemInterface, i: number) => {
+    const itemsCopy = [...items]
+    itemsCopy[i].active = !itemsCopy[i].active
+    setItems(itemsCopy)
+  }, [items])\n
+  return (<>
+    <VisBulletLegend items={items} onLegendItemClick={toggleItem}/>
+    <VisXYContainer data={data}>
+      <VisStackedBar x={x} y={useMemo(() => items.map((item, i) => item.inactive ? 0 : y[i]), [items])}/>
+      <VisAxis type='y'/>
+    </VisXYContainer>
+  </>)\n}`.trim()}
+  svelte={`<script lang='ts'>
+  let data: DataRecord[]
+  let x: NumericAccessor<DataRecord>
+  let y: NumericAccessor<DataRecord>[]\n
+  let items = [
+    { name: \'Class A\', inactive: false },
+    { name: \'Class B\', inactive: false },
+    { name: \'Class C\', inactive: false },
+  ])\n
+  function toggleItem (item: BulletLegendItemInterface, i: number): void {
+    items[i].inactive = !items[i].inactive
+    y = items.map((item, i) => item.inactive ? 0 : y[i])
+  }
+</script>\n
+<VisBulletLegend {items} onLegendItemClick={toggleItem}/>
+<VisXYContainer data={data}>
+  <VisStackedBar x={x} y={y}/>
+  <VisAxis type='y'/>
+</VisXYContainer>`}
+  typescript={`
+const items = [
+  { name: \'Class A\', inactive: false },
+  { name: \'Class B\', inactive: false },
+  { name: \'Class C\', inactive: false },
+]\n
+const legend = new BulletLegend(container)
+const chart = new XYContainer<DataRecord>(container, {
+  components: [new StackedBar({ x, y })],
+  xAxis: new Axis()
+}, data)\n
+function toggleItem (item: BulletLegendItemInterface, i: index): void {
+  const items = legend.config.items
+  items[i].active = !items[i].active
+  legend.update({ ...legend.config, items: itemsCopy })
+  chart.updateComponents([{ x, y: items.map((item, i) => item.inactive ? 0 : y[i]) }])
+}\n
+legend.update({ items, onLegendItemClick: toggleItem })`.trim()}
+  showTitles={true}
+/>
+</div>
+
+## Component Props
+<PropTable name="VisBulletLegend"/>
