@@ -51,7 +51,7 @@ export class FreeBrush<Datum> extends XYComponentCore<Datum, FreeBrushConfig<Dat
     //
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    this.brush.node().__brush?.emitter = undefined
+    if (this.brush.node().__brush) this.brush.node().__brush.emitter = undefined
 
     this.brushBehaviour = this._getBrushBehaviour(config.mode)
 
