@@ -231,7 +231,7 @@ const chart = new XYContainer<DataRecord>(container, {
 function toggleItem (item: BulletLegendItemInterface, i: index): void {
   const items = legend.config.items
   items[i].active = !items[i].active
-  legend.update({ ...legend.config, items: itemsCopy })
+  legend.update({ ...legend.config, items: items })
   chart.updateComponents([{ x, y: items.map((item, i) => item.inactive ? 0 : y[i]) }])
 }\n
 legend.update({ items, onLegendItemClick: toggleItem })`.trim()}
