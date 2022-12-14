@@ -4,16 +4,13 @@ description: Create a data visualization theme for your project
 
 import BrowserOnly from '@docusaurus/BrowserOnly'
 import CodeBlock from '@theme/CodeBlock'
-import ColorModeToggle from '@theme/ColorModeToggle'
-import Tabs from '@theme/Tabs'
-import TabItem from '@theme/TabItem'
+
 import { CSSVariables } from '../components/css-variables'
 import { data, generateScatterDataRecords, generateTimeSeries } from '../utils/data.ts'
 import { DocWrapper } from '../wrappers'
 import { XYWrapper, axis } from '../wrappers/xy-wrapper'
 import { defaultProps as sankeyProps } from '../networks-and-flows/Sankey.mdx'
 import { defaultProps as donutProps } from '../misc/Donut.mdx'
-import { component } from '../containers/XY_Container.mdx'
 
 import './styles.css'
 
@@ -32,6 +29,36 @@ export const xyProps = (n) => ({
 export const borderLineProps = {
   ...xyProps(7),
   height: 150,
+}
+
+export const scatterProps = {
+  name: 'Scatter',
+  x: d => d.x,
+  y: d => d.y,
+  label: d => d.label,
+  excludeTabs: true,
+  components: [
+    axis('x', { label: 'X Axis'}),
+    axis('y', { label: 'Y Axis'}),
+  ]
+}
+
+export function SizedScatter (props) {
+  const data = [6,8,4,6,5].map((d,i) => ({
+    x: i,
+    y: d,
+    color: `var(--vis-color${i})`,
+    label: `Point ${String.fromCharCode(65 + i)}`
+  }))
+  return (
+    <BrowserOnly>{() =>
+     <XYWrapper
+      {...scatterProps}
+      data={data}
+      className={props.containerClass ? require('@unovis/ts')[props.containerClass] : ''}
+    />
+    }</BrowserOnly>
+  )
 }
 
 ## Overview
@@ -82,38 +109,26 @@ or override them like so:
   '--vis-dark-sankey-link-color',
 ]}/>
 
-## Large Size
+## Label Sizing
 A common theming scenario is the "large size" theme, for when you want larger font sizes for the
-labels in your charts. We have a built-in class selector, `largeSize` that you can import directly
-from `@unovis/ts`. Just add it to your container's class list to see the effects:
+labels in your charts. We offer two variations in the form of css classes that you can import directly
+from `@unovis/ts`:
 
-<BrowserOnly>{() => {
-  const { largeSize } = require('@unovis/ts')
-  return (
-    <div className={largeSize}>
-    <XYWrapper
-      name='XYContainer'
-      imports={{ '@unovis/ts': ['largeSize'] }}
-      data={[5,10,6,3,8,9,4,7,5,6].map((d, i) => ({
-        x: i,
-        y: d,
-        label: `D${i + 1}`,
-        color: `var(--vis-color${[0,0,0,1,2,3,2,0,1,1][i]})`
-      }))}
-      showContext='full'
-      containerProps={{ className: 'largeSize'}}
-      components={[
-        axis('x', { label: 'X Axis'}),
-        axis('y', { label: 'Y Axis' }),
-        component('Scatter', { label: d => d.label }),
-      ]}
-    />
-    </div>
-  )
-}}
-</BrowserOnly>
+```ts
+import { styleLargeTheme } from '@unovis/ts' // ~1.3x larger
+import { styleExtraLargeSize } from '@unovis/ts' // 2x larger
+```
 
+Just add either one to your container's class list to the effects. Consider the following example
+of a labeled _Scatter_ chart:
 
+<SizedScatter/>
+
+#### `className: styleLargeSize`
+<SizedScatter containerClass={'styleLargeSize'}/>
+
+#### `className: styleExtraLargeSize`
+<SizedScatter containerClass={'styleExtraLargeSize'}/>
 
 :::note
 When using this theme, the following components have caveats:
@@ -153,18 +168,10 @@ To use a different font, simply redefine the `--vis-font-family` CSS variable:
 <div className='custom-font'>
   <CSSVariables vars={['--vis-font-family']} selector='.custom-font'/>
   <XYWrapper
-    name='Scatter'
+    {...scatterProps}
     labelPosition='center'
     data={generateScatterDataRecords(10)}
-    x={d => d.x}
-    y={d => d.y}
     sizeRange={[40,60]}
-    excludeTabs={true}
-    label={d => d.label}
-    components={[
-      axis('x', { label: 'X Axis'}),
-      axis('y', { label: 'Y Axis'}),
-    ]}
   />
 </div>
 
@@ -283,5 +290,3 @@ as its fill. You can tweak the variables accordingly to create the desired effec
   <h4>Timeline</h4>
   <XYWrapper name='Timeline' data={generateTimeSeries(50, 6)} height={200} x={d => d.timestamp} length={d => d.length * 10} type={d => d.type} lineCap excludeTabs/>
 </div>
-
-
