@@ -1,6 +1,6 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { Crosshair, CrosshairConfigInterface, NumericAccessor } from '@unovis/ts'
+  import { Crosshair, CrosshairConfigInterface } from '@unovis/ts'
   import { getContext, onMount } from 'svelte'
   import { arePropsEqual } from '../../utils/props'
 

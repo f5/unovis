@@ -3,7 +3,7 @@ import { exec } from 'child_process'
 import ts from 'typescript'
 
 // Utils
-import { getImportStatements, getConfigProperties, kebabCase, getTSStatements, getTypeName, gatherTypeReferences } from './utils'
+import { getImportStatements, getConfigProperties, kebabCase, getTSStatements, getTypeName } from './utils'
 import { ComponentInput, ConfigProperty, GenericParameter } from './types'
 import { getComponentCode } from './component'
 
@@ -83,17 +83,20 @@ for (const component of components) {
       utilityTypes.forEach(t => {
         const expression = (t.expression as ts.Identifier).escapedText
         const types = Array.from(t.typeArguments)
+        const optionalProps: string[] = []
         if (expression === 'Partial') {
           // If partial, required members from the inherited interface are now optional
           const partialInterfaceName = getTypeName((types.at(0) as ts.TypeReferenceNode).typeName)
-          requiredProps.get(partialInterfaceName).forEach(p => {
-            configPropertiesMap.delete(p)
-          })
+          optionalProps.push(...requiredProps.get(partialInterfaceName))
         } else if (expression === 'WithOptional') {
           // If WithOptional, only delete the provided property from required props
           const token = (types.at(1) as ts.LiteralTypeNode).literal as ts.LiteralToken
-          configPropertiesMap.delete(token.text)
+          optionalProps.push(token.text)
         }
+        optionalProps.forEach(p => {
+          configPropertiesMap.delete(p)
+          configInterfaceMembers = configInterfaceMembers.filter(m => (m.name as ts.Identifier)?.escapedText !== p)
+        })
       })
     }
 
