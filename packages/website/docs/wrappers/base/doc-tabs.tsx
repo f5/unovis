@@ -13,7 +13,7 @@ export function DocFrameworkTabs ({
   dataType,
   declarations = {},
   hideTabLabels,
-  imports,
+  imports = {},
   mainComponent,
   showData,
 }: DocTabsProps): JSX.Element {
@@ -25,13 +25,14 @@ export function DocFrameworkTabs ({
     declarations.data = `data: ${dataType.includes(',') ? `${dataType.split(/(?=[A-Z])/)[0]}Data` : `${dataType}[]`}`
   }
 
-  const importedProps = imports ? Object.values(imports).flatMap(i => i) : []
+  const importedProps = Object.values(imports).flatMap(i => i)
   const tabConfig = {
     container: context && context !== ContextLevel.Minimal && parseProps(container, dataType, importedProps, declarations),
     components: children?.map(c => parseProps(c, dataType, importedProps, declarations)),
     dataType: dataType,
     declarations: context && context !== ContextLevel.Container ? declarations : {},
-    importString: imports && `${Object.keys(imports).map(i => `import { ${imports[i].join(', ')} } from '${i}'`).join('\n')}\n`,
+    imports: (importedProps.length || context === ContextLevel.Full) && imports,
+    visImports: (container.name ? [container, ...children] : children).map(c => `Vis${c.name}`),
   }
 
   return (
@@ -39,7 +40,7 @@ export function DocFrameworkTabs ({
       angular={getAngularStrings(tabConfig, importedProps, context === ContextLevel.Minimal)}
       react={getReactStrings(tabConfig)}
       svelte={getSvelteStrings(tabConfig)}
-      typescript={getTypescriptStrings(tabConfig, mainComponent && context !== ContextLevel.Container && mainComponent)}
+      typescript={getTypescriptStrings(tabConfig, mainComponent && context !== ContextLevel.Container && mainComponent, !container.name)}
       hideTabLabels={hideTabLabels}
       showTitles={context !== undefined}
     />
