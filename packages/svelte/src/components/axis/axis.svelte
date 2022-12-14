@@ -1,6 +1,6 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { Axis, AxisConfigInterface, NumericAccessor } from '@unovis/ts'
+  import { Axis, AxisConfigInterface } from '@unovis/ts'
   import { getContext, onMount } from 'svelte'
   import { arePropsEqual } from '../../utils/props'
 
