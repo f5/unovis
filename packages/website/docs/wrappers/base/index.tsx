@@ -45,7 +45,7 @@ export function DocWrapper ({
           name: containerName,
           props: containerProps,
         }}
-        showData={data !== undefined && showContext}
+        showData={data !== undefined}
         components={components}
         context={showContext}
         mainComponent={name}

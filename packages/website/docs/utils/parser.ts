@@ -120,11 +120,13 @@ function parseSvelte ({ name, props }: ComponentInfo, closing = false): string {
   return formatElement(`<${tag}`, attrs, endLine)
 }
 
-function parseTypescript (prefix: string, { name, props }: ComponentInfo, type?: string): string {
+function parseTypescript (name: string, props: PropInfo[], type?: string, el?: boolean, data?: boolean): string {
   const attrs = props?.map(({ key, value, stringLiteral }) =>
     key === value ? key : [key, stringLiteral ? `"${value}"` : `${value}`].join(': ')
   )
-  return formatElement(`${prefix}new ${name}${type ? `<${type}>` : ''}({`, attrs, ' })', ', ', '})')
+  const prefix = `new ${name}${type ? `<${type}>` : ''}(${el ? 'node, ' : ''}{`
+  const suffix = data ? ' }, data)' : ' })'
+  return formatElement(prefix, attrs, suffix, ', ', suffix.trim())
 }
 
 export const parseComponent = {
