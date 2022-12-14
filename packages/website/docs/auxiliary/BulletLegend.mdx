@@ -40,7 +40,7 @@ interface BulletLegendItemInterface {
 }
 ```
 
-Note that the only requred property, `name` corresponds to the legend items' label.
+Note that the only required property, `name` corresponds to the legend items' label.
 Here is an example of a basic configuration, where `labels` is an array of strings:
 
 <BulletLegendDoc
@@ -54,11 +54,11 @@ Here is an example of a basic configuration, where `labels` is an array of strin
 />
 
 ### Custom Colors
-By default, our [color palette](docs/guides/theming#color-palette) will be used to color each legend item, but
+By default, our [color palette](/docs/guides/theming#color-palette) will be used to color each legend item,
 but you can provide your own colors in the legend item array.
 ```ts
 const colors = ['red', 'blue', 'green']
-const items = labels.map((label, i) => ({ name: label, colors[i] }))
+const items = labels.map((label, i) => ({ name: label, color: colors[i] }))
 ```
 
 or manually:
@@ -114,7 +114,7 @@ providing `labelMaxWidth` will trim the contents of the item that exceeds the wi
 You can also add any further configuration for your labels by providing `labelClassName` with your
 custom css class.
 
-## `onLegendItemClick`
+## Interactive Legend
 You can provide an event listener to `onLegendItemClick` to create interactive legends for your graph.
 It accepts a function that has the following signature:
 ```ts
