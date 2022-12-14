@@ -1,0 +1,24 @@
+.navItem {
+  padding: 6px 8px;
+  margin-bottom: 0px;
+  cursor: pointer;
+}
+
+.navItem  a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.navItem:hover {
+  background-color: #f4f4f4;
+}
+
+.navItemTitle {
+  font-weight: 400;
+  font-size: 10pt;
+}
+
+.navItemSubTitle {
+  font-size: 8pt;
+  color: var(--color-grey);
+}

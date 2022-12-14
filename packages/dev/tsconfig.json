@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "jsx": "react",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": false,
+    "skipLibCheck": false,
+    "paths": {
+      "@src/*": ["packages/dev/src/*"],
+    },
+    "plugins": [{ "name": "typescript-plugin-css-modules" }]
+  }
+}

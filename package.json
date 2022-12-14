@@ -14,6 +14,7 @@
     "npm": ">=7.0.0"
   },
   "scripts": {
+    "dev": "cd packages/dev && npm run dev",
     "postinstall": "sh postinstall.sh",
     "website": "cd packages/website && npm run start",
     "build": "npm run build:lib && npm run build:lib-react && npm run build:lib-angular && npm run build:lib-svelte && npm run build:website",

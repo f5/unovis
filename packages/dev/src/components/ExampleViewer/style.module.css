@@ -1,0 +1,14 @@
+.exampleViewer {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.nothingSelected {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  font-weight: 400;
+  font-size: 12pt;
+  color: var(--color-black);
+}
