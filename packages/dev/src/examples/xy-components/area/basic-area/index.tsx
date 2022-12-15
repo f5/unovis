@@ -3,7 +3,10 @@ import { VisXYContainer, VisArea, VisAxis, VisTooltip, VisCrosshair } from '@uno
 
 import { XYDataRecord, generateXYDataRecords } from '@src/utils/data'
 
-export const BasicLine = (): JSX.Element => {
+export const title = 'Basic Area Chart'
+export const subTitle = 'Generated Data'
+export const category = 'Area'
+export const component = (): JSX.Element => {
   const tooltipRef = useRef(null)
   const accessors = [
     (d: XYDataRecord) => d.y,

@@ -3,7 +3,10 @@ import { VisXYContainer, VisStackedBar, VisAxis, VisTooltip, VisCrosshair } from
 
 import { XYDataRecord, generateXYDataRecords } from '@src/utils/data'
 
-export const BasicStackedBar = (): JSX.Element => {
+export const title = 'Basic Stacked Bar Chart'
+export const subTitle = 'Generated Data'
+export const category = 'Stacked Bar'
+export const component = (): JSX.Element => {
   const tooltipRef = useRef(null)
   const accessors = [
     (d: XYDataRecord) => d.y,

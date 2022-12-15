@@ -42,7 +42,7 @@ export function NavigationSideBar (props: NavigationSideBarProps): JSX.Element {
         <input ref={inputRef} onChange={filterExamples} type='text' placeholder="Find examples"/>
       </div>
       {groups.map(group => <>
-        <div className={s.navItemGroup}>{group.title}</div>
+        <div key={group.title} className={s.navItemGroup}>{group.title}</div>
         {group.items.map(item => (
           <NavigationItem key={item.title} group={group.title} {...item} />)
         )}

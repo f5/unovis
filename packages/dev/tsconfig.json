@@ -11,6 +11,10 @@
     "paths": {
       "@src/*": ["packages/dev/src/*"],
     },
+    "types": [
+      "node",
+      "webpack-env",
+    ],
     "plugins": [{ "name": "typescript-plugin-css-modules" }]
   }
 }
