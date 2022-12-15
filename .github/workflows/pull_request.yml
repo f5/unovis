@@ -12,4 +12,4 @@ jobs:
         node-version: '16.x'
     - run: npm install -g npm@8
     - run: npm ci
-    - run: npm run build
+    - run: npm run build && npm run build:dev

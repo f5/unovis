@@ -23,6 +23,7 @@
     "build:lib-react": "cd packages/react && npm run build",
     "build:lib-svelte": "cd packages/svelte && npm run build",
     "build:website": "cd packages/website && npm run build",
+    "build:dev": "cd packages/dev && npm run build",
     "publish:lib": "cd packages/ts && npm run build && npm run publish-dist",
     "publish:lib-angular": "cd packages/angular && npm run build && npm publish",
     "publish:lib-react": "cd packages/react && npm run build && npm run publish-dist",
