@@ -5,7 +5,8 @@
   "license": "Apache-2.0",
   "scripts": {
     "build": "webpack",
-    "dev": "webpack-dev-server --host 0.0.0.0"
+    "dev": "webpack-dev-server --host 0.0.0.0",
+    "check": "tsc --noEmit"
   },
   "devDependencies": {
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.10",

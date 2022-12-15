@@ -24,14 +24,14 @@ export function NavigationSideBar (props: NavigationSideBarProps): JSX.Element {
 
   const fuse = new Fuse(props.exampleGroups, fuseOptions)
   const filterExamples = (): void => {
-    const searchTerm = inputRef.current.value
+    const searchTerm = inputRef.current?.value
     if (!searchTerm) {
       setGroups(props.exampleGroups)
     } else {
       const result = fuse.search(searchTerm)
       setGroups(result.map(d => ({
         title: d.item.title,
-        items: d.matches.map(match => d.item.items[match.refIndex]),
+        items: d.matches?.map(match => d.item.items[match.refIndex as number]) ?? [],
       })))
     }
   }
