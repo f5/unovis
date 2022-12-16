@@ -15,6 +15,11 @@ npm i --silent
 rm -rf node_modules/react
 rm -rf node_modules/react-dom
 
+# Same for the dev app
+echo "🏗 Installing @unovis/dev dependencies"
+cd ../dev
+npm i --silent
+
 echo "📄 Updating licenses (will be done in the background)"
 cd ../../
 npm run gather-licenses > /dev/null 2>&1 &

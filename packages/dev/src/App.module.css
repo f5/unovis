@@ -1,0 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
+
+:root {
+  font-family: Inter;
+  --color-light-grey: #ccc;
+  --color-grey: #777;
+  --color-black: #222;
+}
+
+textarea:focus, input:focus, input[type]:focus, .uneditable-input:focus {
+  border-color: var(--vis-color0);
+  box-shadow: none;
+  outline: 0 none;
+}
+
+.root {
+  display: flex;
+  flex-direction: row;
+  color: var(--color-black)
+}

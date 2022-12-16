@@ -1,0 +1,29 @@
+.navSideBar {
+  flex: 0 0 200px;
+  max-width: 200px;
+  height: 100%;
+}
+
+.navItemGroup {
+  font-weight: 600;
+  margin-top: 12px;
+  padding: 0px 8px;
+}
+
+.navSideBarInput {
+  padding: 2px 8px;
+}
+
+.navSideBarInput input {
+  padding: 4px 2px;
+  border: none;
+  border-bottom: 1px solid var(--color-light-grey);
+  width: 80%;
+}
+
+.navNotFound {
+  padding: 10px 8px;
+  font-size: 9pt;
+  color: var(--color-grey);
+  width: 80%;
+}
