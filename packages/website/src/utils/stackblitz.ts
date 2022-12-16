@@ -26,17 +26,18 @@ function getOpenFiles (framework: Framework, files: ProjectFiles): OpenFileOptio
       return 'src/App.ts'
   }
 }
+
 function getStarterFiles (framework: Framework, e: Example): ProjectFiles {
   switch (framework) {
     case Framework.Angular:
       return {
-        'index.html': '<app-component></app-component>',
-        'main.ts': trimMultiline(`
-          import 'zone.js'
+        'src/index.html': '<app-component></app-component>',
+        'src/main.ts': trimMultiline(`
+          import 'zone.js/dist/zone'
           import { NgModule, Component } from '@angular/core'
           import { platformBrowserDynamic } from '@angular/platform-browser-dynamic'
           import { BrowserModule } from '@angular/platform-browser'
-          import { ComponentModule } from './${e.pathname}'
+          import { ${e.codeAngular.module.match(/export class\s*(?<name>\S+)/).groups.name} as ComponentModule } from './${e.pathname}/${e.pathname}.module'
 
           @Component({
             selector: 'app-component',
@@ -52,13 +53,12 @@ function getStarterFiles (framework: Framework, e: Example): ProjectFiles {
 
           platformBrowserDynamic().bootstrapModule(AppModule)
         `),
-        [`${e.pathname}/${e.pathname}.component.ts`]: e.codeAngular.component,
-        [`${e.pathname}/${e.pathname}.component.html`]: e.codeAngular.html,
-        [`${e.pathname}/${e.pathname}.module.ts`]: e.codeAngular.module,
-        [`${e.pathname}/index.ts`]: `${e.codeAngular.module.match(/export class\s*\S+/gm).pop().replace('class', '{')} as ComponentModule } from './${e.pathname}.module.ts'`,
-        [`${e.pathname}/data.ts`]: e.data,
-        ...(e.constants ? { [`${e.pathname}/constants.ts`]: e.constants } : {}),
-        ...(e.styles ? { [`${e.pathname}/styles.css`]: e.styles } : {}),
+        [`src/${e.pathname}/${e.pathname}.component.ts`]: e.codeAngular.component,
+        [`src/${e.pathname}/${e.pathname}.component.html`]: e.codeAngular.html,
+        [`src/${e.pathname}/${e.pathname}.module.ts`]: e.codeAngular.module,
+        [`src/${e.pathname}/data.ts`]: e.data,
+        ...(e.constants ? { [`src/${e.pathname}/constants.ts`]: e.constants } : {}),
+        ...(e.styles ? { [`src/${e.pathname}/styles.css`]: e.styles } : {}),
       }
     case Framework.React:
       return {
