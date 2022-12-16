@@ -227,12 +227,16 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfig<Datum
       const height = getNumber(d, config.lineWidth, i)
       const width = xScale(x + length) - xScale(x)
 
+      if (width < 0) {
+        console.warn('Unovis | Timeline: Line segments should not have negative lengths. Setting to 0.')
+      }
+
       select(elements[i])
         .attr('x', xScale(x))
         .attr('y', yStart + y + (config.rowHeight - height) / 2)
         .attr('width', config.showEmptySegments
           ? Math.max(config.lineCap ? height : 1, width)
-          : width)
+          : Math.max(0, width))
         .attr('height', height)
         .attr('rx', config.lineCap ? height / 2 : null)
         .style('opacity', 1)
