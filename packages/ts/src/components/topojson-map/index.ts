@@ -45,9 +45,9 @@ export class TopoJSONMap<
   g: Selection<SVGGElement, unknown, null, undefined>
   private _firstRender = true
   private _isResizing = false
-  private _initialScale = undefined
+  private _initialScale: number = undefined
   private _center: [number, number]
-  private _currentZoomLevel = undefined
+  private _currentZoomLevel: number = undefined
   private _transform: ZoomTransform
   private _path = geoPath()
   private _projection: GeoProjection
@@ -56,7 +56,7 @@ export class TopoJSONMap<
   private _animFrameId: number
 
   private _featureCollection: GeoJSON.FeatureCollection
-  private _zoomBehavior: ZoomBehavior<SVGGElement, any> = zoom()
+  private _zoomBehavior: ZoomBehavior<SVGGElement, unknown> = zoom()
   private _backgroundRect = this.g.append('rect').attr('class', s.background)
   private _featuresGroup = this.g.append('g').attr('class', s.features)
   private _linksGroup = this.g.append('g').attr('class', s.links)
@@ -383,7 +383,7 @@ export class TopoJSONMap<
   }
 
   _onZoomHandler (transform: ZoomTransform, isMouseEvent: boolean, isExternalEvent: boolean): void {
-    const scale = transform.k / this._initialScale
+    const scale = transform.k / this._initialScale || 1
     const center = this._projection.translate()
 
     this._transform = zoomIdentity
