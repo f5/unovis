@@ -41,12 +41,13 @@ export function NavigationSideBar (props: NavigationSideBarProps): JSX.Element {
       <div className={s.navSideBarInput}>
         <input ref={inputRef} onChange={filterExamples} type='text' placeholder="Find examples"/>
       </div>
-      {groups.map(group => <>
-        <div key={group.title} className={s.navItemGroup}>{group.title}</div>
+      {groups.map(group => <div key={group.title}>
+        <div className={s.navItemGroup}>{group.title}</div>
         {group.items.map(item => (
           <NavigationItem key={item.title} group={group.title} {...item} />)
         )}
-      </>)}
+      </div>
+      )}
       {!groups.length && <div className={s.navNotFound}>
         🔎 No results for "{inputRef.current?.value}"
       </div>}
