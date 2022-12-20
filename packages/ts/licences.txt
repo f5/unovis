@@ -2,9 +2,16 @@ name                               license period  license type  installed versi
 ----                               --------------  ------------  -----------------  ------
 @emotion/css                       perpetual       MIT           11.7.1             Kye Hohenberger
 @juggle/resize-observer            perpetual       Apache-2.0    3.3.1              Juggle
-@maplibre/maplibre-gl-leaflet      perpetual       ISC           0.0.15             n/a
+@types/d3                          perpetual       MIT           7.4.0              n/a
+@types/d3-collection               perpetual       MIT           1.0.10             n/a
+@types/d3-sankey                   perpetual       MIT           0.11.2             n/a
 @types/geojson                     perpetual       MIT           7946.0.8           n/a
+@types/leaflet                     perpetual       MIT           1.7.6              n/a
+@types/lodash-es                   perpetual       MIT           4.17.6             n/a
+@types/supercluster                perpetual       MIT           5.0.2              n/a
+@types/three                       perpetual       MIT           0.135.0            n/a
 @types/topojson                    perpetual       MIT           3.2.3              n/a
+@types/topojson-client             perpetual       MIT           3.0.0              n/a
 @types/topojson-specification      perpetual       MIT           1.0.2              n/a
 @unovis/dagre-layout               perpetual       MIT           0.8.8-1            Nikita Rokotyan
 @unovis/graphlibrary               perpetual       MIT           2.2.0-1            Nikita Rokotyan
@@ -23,15 +30,6 @@ to-px                              perpetual       MIT           1.1.0          
 topojson-client                    perpetual       ISC           3.1.0              Mike Bostock
 tslib                              perpetual       0BSD          2.3.1              Microsoft Corp.
 @rollup/plugin-json                perpetual       MIT           4.1.0              rollup
-@types/d3                          perpetual       MIT           7.1.0              n/a
-@types/d3-collection               perpetual       MIT           1.0.10             n/a
-@types/d3-sankey                   perpetual       MIT           0.11.2             n/a
-@types/leaflet                     perpetual       MIT           1.7.6              n/a
-@types/lodash-es                   perpetual       MIT           4.17.6             n/a
-@types/mapbox-gl-leaflet           perpetual       MIT           0.0.1              n/a
-@types/supercluster                perpetual       MIT           5.0.2              n/a
-@types/three                       perpetual       MIT           0.135.0            n/a
-@types/topojson-client             perpetual       MIT           3.0.0              n/a
 @zerollup/ts-transform-paths       perpetual       MIT           1.7.18             Stefan Zerkalica
 rimraf                             perpetual       ISC           3.0.2              Isaac Z. Schlueter
 rollup                             perpetual       MIT           2.61.1             Rich Harris

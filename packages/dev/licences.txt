@@ -9,6 +9,7 @@ react-router-dom                      perpetual       MIT           6.4.5       
 @types/react                          perpetual       MIT           18.0.26            n/a
 @types/react-dom                      perpetual       MIT           18.0.9             n/a
 @types/react-router                   perpetual       MIT           5.1.19             n/a
+@types/webpack-env                    perpetual       MIT           1.18.0             n/a
 html-webpack-plugin                   perpetual       MIT           5.5.0              Jan Nicklas
 react-refresh                         perpetual       MIT           0.14.0             n/a
 react-refresh-typescript              perpetual       MIT           2.0.7              n/a
