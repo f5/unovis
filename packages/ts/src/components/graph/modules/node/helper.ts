@@ -2,7 +2,6 @@ import { Selection, BaseType } from 'd3-selection'
 import { interpolate } from 'd3-interpolate'
 import { max, mean } from 'd3-array'
 import { Arc } from 'd3-shape'
-import { color } from 'd3-color'
 
 // Types
 import { ColorAccessor, NumericAccessor } from 'types/accessor'
@@ -11,7 +10,7 @@ import { GraphInputLink, GraphInputNode } from 'types/graph'
 // Utils
 import { scoreRectPath } from 'utils/path'
 import { isEmpty, isNil, getNumber, getString } from 'utils/data'
-import { getColor, hexToBrightness } from 'utils/color'
+import { getColor, getHexValue, hexToBrightness } from 'utils/color'
 
 // Local Types
 import { GraphNode, GraphCircleLabel, GraphNodeAnimatedElement, GraphNodeAnimationState, GraphNodeShape } from '../../types'
@@ -141,10 +140,10 @@ export function getAverageNodeSize<T> (data: T[], nodeSize: NumericAccessor<T>):
   return mean(data || [], (d, i) => getNodeSize(d, nodeSize, i)) || NODE_SIZE
 }
 
-export function getSideLabelTextColor (label: GraphCircleLabel): string {
+export function getSideLabelTextColor (label: GraphCircleLabel, context: SVGElement): string {
   if (!label.color) return null
 
-  const hex = color(label.color).hex()
+  const hex = getHexValue(label.color, context)
   const brightness = hexToBrightness(hex)
   return brightness > 0.65 ? 'var(--vis-graph-node-side-label-fill-color-dark)' : 'var(--vis-graph-node-side-label-fill-color-bright)'
 }
@@ -153,11 +152,11 @@ export function getNodeColor<T> (d: T, colorAccessor: ColorAccessor<T>, index: n
   return getColor(d, colorAccessor, index, true) ?? null
 }
 
-export function getNodeIconColor<T> (d: T, colorAccessor: ColorAccessor<T>, index: number): string {
+export function getNodeIconColor<T> (d: T, colorAccessor: ColorAccessor<T>, index: number, context: SVGElement): string {
   const nodeColor = getNodeColor(d, colorAccessor, index)
   if (!nodeColor) return null
 
-  const hex = color(nodeColor).hex()
+  const hex = getHexValue(nodeColor, context)
   const brightness = hexToBrightness(hex)
   return brightness > 0.65 ? 'var(--vis-graph-node-icon-fill-color-dark)' : 'var(--vis-graph-node-icon-fill-color-bright)'
 }

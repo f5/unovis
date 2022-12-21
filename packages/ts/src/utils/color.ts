@@ -1,9 +1,12 @@
+import { color } from 'd3-color'
+
 // Core
 import { getCSSColorVariable } from 'styles/colors'
 
 // Utils
-import { getString, isNumber } from 'utils/data'
 import { ColorAccessor, StringAccessor } from 'types/accessor'
+import { getString, isNumber } from 'utils/data'
+import { isStringCSSVariable, getCSSVariableValue } from 'utils/misc'
 
 /** Retrieves color from the data if provided, fallbacks to CSS variables if the index was passed */
 export function getColor<T> (
@@ -30,4 +33,14 @@ export function hexToRgb (hex: string): { r: number; g: number; b: number } {
 export function hexToBrightness (hex: string): number {
   const rgb = hexToRgb(hex)
   return (0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b) / 255
+}
+
+export function getHexString (s: string, context: HTMLElement | SVGElement): string {
+  if (s.match(/^#([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i)) return s
+  if (isStringCSSVariable(s)) return getCSSVariableValue(s, context)
+}
+
+export function getHexValue (s: string, context: HTMLElement | SVGElement): string {
+  const hex = getHexString(s, context)
+  return color(hex)?.formatHex()
 }
