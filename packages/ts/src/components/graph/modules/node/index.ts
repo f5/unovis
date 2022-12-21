@@ -104,7 +104,7 @@ export function updateSelectedNodes<N extends GraphInputNode, L extends GraphInp
     nodeSelectionOutline.classed(nodeSelectors.nodeSelectionActive, d._state.selected)
 
     group.selectAll(`.${nodeSelectors.sideLabel}`)
-      .style('fill', (l: GraphCircleLabel) => isGreyout ? null : getSideLabelTextColor(l))
+      .style('fill', (l: GraphCircleLabel) => isGreyout ? null : getSideLabelTextColor(l, selection.node()))
 
     group.selectAll(`.${nodeSelectors.sideLabelBackground}`)
       .style('fill', (l: GraphCircleLabel) => isGreyout ? null : l.color)
@@ -207,7 +207,7 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
     icon
       .style('font-size', `${getNumber(d, nodeIconSize, d._index) ?? 2.5 * Math.sqrt(nodeSizeValue)}px`)
       .attr('dy', 1)
-      .style('fill', getNodeIconColor(d, nodeFill, d._index))
+      .style('fill', getNodeIconColor(d, nodeFill, d._index, selection.node()))
       .html(getString(d, nodeIcon, d._index))
 
     // Side Labels
@@ -227,7 +227,7 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
     // Side label text
     sideLabelsUpdate.select(`.${nodeSelectors.sideLabel}`).html(d => d.text)
       .attr('dy', '1px')
-      .style('fill', l => getSideLabelTextColor(l))
+      .style('fill', l => getSideLabelTextColor(l, selection.node()))
       .style('font-size', l => l.fontSize ?? `${(2 + (l.radius ?? SIDE_LABEL_DEFAULT_RADIUS)) / Math.pow(l.text.toString().length, 0.3)}px`)
       // Side label circle background
     sideLabelsUpdate.select(`.${nodeSelectors.sideLabelBackground}`)
