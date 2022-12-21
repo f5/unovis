@@ -1,5 +1,6 @@
 import { LatLng } from 'leaflet'
 import Supercluster, { ClusterProperties } from 'supercluster'
+import { GenericDataRecord } from 'types/data'
 
 export enum LeafletMapRenderer {
   Raster = 'raster',
@@ -27,7 +28,7 @@ export interface LeafletMapPointStyle {
 
 export type LeafletMapPointStyles<D> = { [key in keyof D]?: LeafletMapPointStyle }
 
-export type PointExpandedClusterProperties<D> = {
+export type PointExpandedClusterProperties<D extends GenericDataRecord> = {
   // Expanded cluster related data:
   // eslint-disable-next-line no-use-before-define
   expandedClusterPoint?: LeafletMapPoint<D>;
@@ -36,17 +37,17 @@ export type PointExpandedClusterProperties<D> = {
   dy?: number;
 }
 
-export type LeafletMapClusterDatum<D> = Partial<D> & ClusterProperties & {
+export type LeafletMapClusterDatum<D extends GenericDataRecord> = Partial<D> & ClusterProperties & {
   clusterIndex?: Supercluster<D>;
   clusterPoints?: D[];
 }
 
-export type LeafletMapPointDatum<D> = D & PointExpandedClusterProperties<D> & {
+export type LeafletMapPointDatum<D extends GenericDataRecord> = D & PointExpandedClusterProperties<D> & {
   id: string | number;
   shape: LeafletMapPointShape;
 };
 
-export type LeafletMapPoint<D> = {
+export type LeafletMapPoint<D extends GenericDataRecord> = {
   geometry: GeoJSON.Point;
   bbox: { x1: number; x2: number; y1: number; y2: number };
   radius: number;

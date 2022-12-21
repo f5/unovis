@@ -99,7 +99,7 @@ export class TopoJSONMapConfig<
   linkWidth = (d: LinkDatum): number => d['width'] ?? 1
   linkColor = (d: LinkDatum): string => d['color'] ?? null
   linkCursor = null
-  linkId = (d: LinkDatum, i: number): string => `${d['id'] ?? i}`
+  linkId = (d: LinkDatum, i: number | undefined): string => `${d['id'] ?? i}`
   linkSource = (d: LinkDatum): (number | string | PointDatum) => d['source']
   linkTarget = (d: LinkDatum): (number | string | PointDatum) => d['target']
 

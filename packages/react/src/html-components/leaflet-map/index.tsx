@@ -2,17 +2,17 @@ import React, { ForwardedRef, Ref, useEffect, useImperativeHandle, useRef, useSt
 import { LeafletMap, LeafletMapConfigInterface } from '@unovis/ts'
 import { arePropsEqual } from '../../utils/react'
 
-export type VisLeafletMapProps<Datum> = LeafletMapConfigInterface<Datum> & {
+export type VisLeafletMapProps<Datum extends Record<string, unknown>> = LeafletMapConfigInterface<Datum> & {
   data?: Datum[];
   ref?: Ref<VisLeafletMapRef<Datum>>;
   className?: string;
 }
 
-export type VisLeafletMapRef<Datum> = {
+export type VisLeafletMapRef<Datum extends Record<string, unknown>> = {
   component: LeafletMap<Datum> | undefined;
 }
 
-export function VisLeafletMapFC<Datum> (props: VisLeafletMapProps<Datum>, ref: ForwardedRef<VisLeafletMapRef<Datum>>): JSX.Element {
+export function VisLeafletMapFC<Datum extends Record<string, unknown>> (props: VisLeafletMapProps<Datum>, ref: ForwardedRef<VisLeafletMapRef<Datum>>): JSX.Element {
   const container = useRef<HTMLDivElement>(null)
   const [component, setComponent] = useState<LeafletMap<Datum>>()
 
@@ -37,5 +37,5 @@ export function VisLeafletMapFC<Datum> (props: VisLeafletMapProps<Datum>, ref: F
 
 // We export a memoized component to avoid unnecessary re-renders
 //  and define its type explicitly to help react-docgen-typescript to extract information about props
-export const VisLeafletMap: (<Datum>(props: VisLeafletMapProps<Datum>) => JSX.Element | null) =
+export const VisLeafletMap: (<Datum extends Record<string, unknown>>(props: VisLeafletMapProps<Datum>) => JSX.Element | null) =
   React.memo(React.forwardRef(VisLeafletMapFC), arePropsEqual)

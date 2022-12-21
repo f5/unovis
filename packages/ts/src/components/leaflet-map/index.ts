@@ -13,6 +13,7 @@ import { MapDataModel } from 'data-models/map'
 
 // Types
 import { ComponentType } from 'types/component'
+import { GenericDataRecord } from 'types/data'
 
 // Utils
 import { clamp, isNil, find, getNumber, getString, isString } from 'utils/data'
@@ -53,7 +54,7 @@ import {
   shouldClusterExpand,
 } from './modules/utils'
 
-export class LeafletMap<Datum> extends ComponentCore<Datum[], LeafletMapConfig<Datum>, LeafletMapConfigInterface<Datum>> {
+export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<Datum[], LeafletMapConfig<Datum>, LeafletMapConfigInterface<Datum>> {
   static selectors = s
   type = ComponentType.HTML
   element: HTMLElement

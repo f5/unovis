@@ -7,6 +7,9 @@ import { injectGlobal } from '@emotion/css'
 // Utils
 import { isObject } from 'utils/data'
 
+// Types
+import { GenericDataRecord } from 'types/data'
+
 // Config
 import { LeafletMapConfig } from '../config'
 import { MapLibreStyleSpecs } from './map-style'
@@ -16,7 +19,7 @@ import { MaplibreGLLayer } from './leaflet-maplibre-gl'
 import mapLibreStyles from './maplibre-gl.css.js'
 injectGlobal(mapLibreStyles)
 
-export function getMaplibreGLLayer<Datum> (config: LeafletMapConfig<Datum>, leaflet: typeof L, maplibre: typeof Maplibre): L.Layer & { getMaplibreMap(): Map } {
+export function getMaplibreGLLayer<Datum extends GenericDataRecord> (config: LeafletMapConfig<Datum>, leaflet: typeof L, maplibre: typeof Maplibre): L.Layer & { getMaplibreMap(): Map } {
   const { accessToken, style } = config
 
   if (isObject(style) && !(style as MapLibreStyleSpecs).glyphs) {

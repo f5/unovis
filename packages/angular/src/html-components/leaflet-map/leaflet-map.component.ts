@@ -14,6 +14,7 @@ import {
   Tooltip,
   LeafletMapClusterDatum,
   LeafletMapRenderer,
+  GenericDataRecord,
 } from '@unovis/ts'
 import { StyleSpecification } from 'maplibre-gl'
 import { VisCoreComponent } from '../../core'
@@ -25,7 +26,7 @@ import { VisCoreComponent } from '../../core'
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisCoreComponent, useExisting: VisLeafletMapComponent }],
 })
-export class VisLeafletMapComponent<Datum> implements LeafletMapConfigInterface<Datum>, AfterViewInit {
+export class VisLeafletMapComponent<Datum extends GenericDataRecord> implements LeafletMapConfigInterface<Datum>, AfterViewInit {
   @ViewChild('container', { static: false }) containerRef: ElementRef
 
   /** Width in pixels or in CSS units. By default, the map will automatically fit to the size of the parent element. Default: `undefined`. */
@@ -105,10 +106,10 @@ export class VisLeafletMapComponent<Datum> implements LeafletMapConfigInterface<
   @Input() fitViewOnUpdate?: boolean
 
   /** MapLibre StyleSpecification settings. Default: `MapLibreArcticLight` */
-  @Input() style: StyleSpecification | string
+  @Input() style: StyleSpecification | string | undefined
 
   /** MapLibre StyleSpecification settings for dark theme. Default: `undefined` */
-  @Input() styleDarkTheme?: StyleSpecification | string
+  @Input() styleDarkTheme?: StyleSpecification | string | undefined
 
   /** Tile server access token or API key. Default: `''` */
   @Input() accessToken?: string

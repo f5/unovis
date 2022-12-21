@@ -1,16 +1,16 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { LeafletMap, LeafletMapConfigInterface, MapLibreStyleSpecs } from '@unovis/ts'
+  import { LeafletMap, LeafletMapConfigInterface, GenericDataRecord, MapLibreStyleSpecs } from '@unovis/ts'
   import { onMount } from 'svelte'
   import { arePropsEqual } from '../../utils/props'
 
   // type defs
-  type Datum = $$Generic
+  type Datum = $$Generic<GenericDataRecord>
 
   // data and required props
   // eslint-disable-next-line no-undef-init
   export let data: Datum[] = undefined
-  export let style: MapLibreStyleSpecs | string
+  export let style: MapLibreStyleSpecs | string | undefined
 
   // config
   let prevConfig: LeafletMapConfigInterface<Datum>

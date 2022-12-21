@@ -7,7 +7,7 @@ import { LeafletMapConfig, LeafletMapConfigInterface } from 'components/leaflet-
 import { ColorAccessor, NumericAccessor } from 'types/accessor'
 import { GenericDataRecord } from 'types/data'
 
-export interface LeafletFlowMapConfigInterface<PointDatum, FlowDatum> extends LeafletMapConfigInterface<PointDatum> {
+export interface LeafletFlowMapConfigInterface<PointDatum extends GenericDataRecord, FlowDatum> extends LeafletMapConfigInterface<PointDatum> {
   /** Flow source point longitude accessor function or value. Default:.`f => f.sourceLongitude` */
   sourceLongitude?: NumericAccessor<FlowDatum>;
   /** Flow source point latitude accessor function or value. Default: `f => f.sourceLatitude` */
@@ -39,13 +39,13 @@ export interface LeafletFlowMapConfigInterface<PointDatum, FlowDatum> extends Le
 }
 
 export class LeafletFlowMapConfig<
-  PointDatum = GenericDataRecord,
-  FlowDatum = GenericDataRecord,
+  PointDatum extends GenericDataRecord = GenericDataRecord,
+  FlowDatum extends GenericDataRecord = GenericDataRecord,
 > extends LeafletMapConfig<PointDatum> implements LeafletFlowMapConfigInterface<PointDatum, FlowDatum> {
-  sourceLongitude = (f: FlowDatum): number => f['sourceLongitude']
-  sourceLatitude = (f: FlowDatum): number => f['sourceLatitude']
-  targetLongitude = (f: FlowDatum): number => f['targetLongitude']
-  targetLatitude = (f: FlowDatum): number => f['targetLatitude']
+  sourceLongitude = (f: FlowDatum): number => f['sourceLongitude'] as number
+  sourceLatitude = (f: FlowDatum): number => f['sourceLatitude'] as number
+  targetLongitude = (f: FlowDatum): number => f['targetLongitude'] as number
+  targetLatitude = (f: FlowDatum): number => f['targetLatitude'] as number
   sourcePointRadius = 3
   sourcePointColor = '#88919f'
   flowParticleColor = '#949dad'

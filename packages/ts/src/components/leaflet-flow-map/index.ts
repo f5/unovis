@@ -14,6 +14,7 @@ import { LeafletMap } from 'components/leaflet-map'
 
 // Types
 import { Bounds } from 'components/leaflet-map/types'
+import { GenericDataRecord } from 'types/data'
 
 // Config
 import { LeafletFlowMapConfig, LeafletFlowMapConfigInterface } from './config'
@@ -24,11 +25,14 @@ import { LatLon, Particle } from './types'
 // Renderer
 import { PointRenderer as PointRendererType } from './renderer'
 
-export class LeafletFlowMap<PointDatum, FlowDatum> extends ComponentCore<
-{ points: PointDatum[]; flows?: FlowDatum[] },
-LeafletFlowMapConfig<PointDatum, FlowDatum>,
-LeafletFlowMapConfigInterface<PointDatum, FlowDatum>
-> {
+export class LeafletFlowMap<
+  PointDatum extends GenericDataRecord,
+  FlowDatum extends GenericDataRecord,
+> extends ComponentCore<
+  { points: PointDatum[]; flows?: FlowDatum[] },
+  LeafletFlowMapConfig<PointDatum, FlowDatum>,
+  LeafletFlowMapConfigInterface<PointDatum, FlowDatum>
+  > {
   static selectors = LeafletMap.selectors
   type = ComponentType.HTML
   private leafletMap: LeafletMap<PointDatum>
