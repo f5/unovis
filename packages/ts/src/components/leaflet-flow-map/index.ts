@@ -38,12 +38,12 @@ LeafletFlowMapConfigInterface<PointDatum, FlowDatum>
   private hoveredSourcePoint: FlowDatum | undefined
   private onCanvasMouseMoveBound = throttle(this.onCanvasMouseMove.bind(this), 60)
   private onCanvasClickBound = this.onCanvasClick.bind(this)
-  private canvasElement: HTMLCanvasElement
+  private canvasElement: HTMLCanvasElement | undefined
   config: LeafletFlowMapConfig<PointDatum, FlowDatum> = new LeafletFlowMapConfig()
   private panningOffset = { x: 0, y: 0 }
 
-  private resizeObserver: ResizeObserver
-  private renderer: PointRendererType
+  private resizeObserver: ResizeObserver | undefined
+  private renderer: PointRendererType | undefined
   particles: Particle[] = []
 
   constructor (container: HTMLDivElement, config?: LeafletFlowMapConfigInterface<PointDatum, FlowDatum>, data?: { points: PointDatum[]; flows?: FlowDatum[] }) {
@@ -225,10 +225,10 @@ LeafletFlowMapConfigInterface<PointDatum, FlowDatum>
   }
 
   public destroy (): void {
-    this.resizeObserver.disconnect()
-    this.renderer.destroy()
-    this.canvasElement.removeEventListener('mousemove', this.onCanvasMouseMoveBound)
-    this.canvasElement.removeEventListener('click', this.onCanvasClickBound)
+    this.resizeObserver?.disconnect()
+    this.renderer?.destroy()
+    this.canvasElement?.removeEventListener('mousemove', this.onCanvasMouseMoveBound)
+    this.canvasElement?.removeEventListener('click', this.onCanvasClickBound)
     super.destroy()
   }
 
