@@ -1,5 +1,8 @@
 import type L from 'leaflet'
 
+// Types
+import { GenericDataRecord } from 'types/data'
+
 // Utils
 import { cloneDeep } from 'utils/data'
 import { getPointPos, getNodePathData } from './utils'
@@ -15,7 +18,7 @@ export function createBackgroundNode (selection): void {
   selection.append('path')
 }
 
-export function updateBackgroundNode<T> (selection, expandedCluster, config: LeafletMapConfigInterface<T>, leafletMap: L.Map, clusterBackgroundRadius): void {
+export function updateBackgroundNode<T extends GenericDataRecord> (selection, expandedCluster, config: LeafletMapConfigInterface<T>, leafletMap: L.Map, clusterBackgroundRadius): void {
   const { clusterBackground } = config
   if (expandedCluster && clusterBackground) {
     const node = cloneDeep(expandedCluster.cluster)

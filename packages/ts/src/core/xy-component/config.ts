@@ -12,7 +12,7 @@ export interface XYComponentConfigInterface<Datum> extends ComponentConfigInterf
   /** A single of multiple accessor functions for getting the values along the Y axis. Default: `undefined` */
   y: NumericAccessor<Datum> | NumericAccessor<Datum>[];
   /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */
-  id?: ((d: Datum, i?: number, ...any) => string);
+  id?: ((d: Datum, i: number, ...any: any[]) => string);
   /** Component color accessor function. Default: `d => d.color` */
   color?: ColorAccessor<Datum> | ColorAccessor<Datum[]>;
   /** Scale for X dimension, e.g. Scale.scaleLinear(). If you set xScale you'll be responsible for setting it's `domain` and `range` as well.

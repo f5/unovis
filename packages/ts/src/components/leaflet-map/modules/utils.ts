@@ -10,6 +10,7 @@ import { getHTMLTransform } from 'utils/html'
 
 // Types
 import { NumericAccessor, StringAccessor } from 'types/accessor'
+import { GenericDataRecord } from 'types/data'
 
 // Local Types
 import {
@@ -57,7 +58,7 @@ export function projectPoint (geoJSONPoint, leafletMap: L.Map): { x: number; y: 
   return projected
 }
 
-export function getPointRadius<D> (
+export function getPointRadius<D extends GenericDataRecord> (
   geoPoint: ClusterFeature<LeafletMapClusterDatum<D>> | PointFeature<LeafletMapPointDatum<D>> | PointFeature<PointExpandedClusterProperties<D>>,
   pointRadius: NumericAccessor<D>,
   zoomLevel: number
@@ -71,7 +72,7 @@ export function getPointRadius<D> (
     : radius
 }
 
-export function getPointPos<D> (point: LeafletMapPoint<D> | ClusterFeature<LeafletMapClusterDatum<D>> | PointFeature<LeafletMapPointDatum<D>>, leafletMap: L.Map): { x: number; y: number } {
+export function getPointPos<D extends GenericDataRecord> (point: LeafletMapPoint<D> | ClusterFeature<LeafletMapClusterDatum<D>> | PointFeature<LeafletMapPointDatum<D>>, leafletMap: L.Map): { x: number; y: number } {
   const properties = point.properties as LeafletMapPointDatum<D>
   const isFromCluster = !!(properties).expandedClusterPoint
 
@@ -86,7 +87,7 @@ export function getPointPos<D> (point: LeafletMapPoint<D> | ClusterFeature<Leafl
   }
 }
 
-export function getPointDisplayOrder<D> (
+export function getPointDisplayOrder<D extends GenericDataRecord> (
   d: LeafletMapPoint<D>,
   pointStatus: StringAccessor<LeafletMapPointDatum<D> | LeafletMapClusterDatum<D>>,
   colorMap: LeafletMapPointStyles<D>
@@ -96,7 +97,7 @@ export function getPointDisplayOrder<D> (
   return Object.keys(statusList).indexOf(status)
 }
 
-export function toGeoJSONPoint<D> (d: D, pointLatitude: NumericAccessor<D>, pointLongitude: NumericAccessor<D>): PointFeature<D> {
+export function toGeoJSONPoint<D extends GenericDataRecord> (d: D, pointLatitude: NumericAccessor<D>, pointLongitude: NumericAccessor<D>): PointFeature<D> {
   const lat = getNumber(d, pointLatitude) as number
   const lon = getNumber(d, pointLongitude) as number
 
@@ -112,7 +113,7 @@ export function toGeoJSONPoint<D> (d: D, pointLatitude: NumericAccessor<D>, poin
   }
 }
 
-export function calculateClusterIndex<D> (data: D[], config: LeafletMapConfig<D>, maxClusterZoomLevel = 23): Supercluster<D> {
+export function calculateClusterIndex<D extends GenericDataRecord> (data: D[], config: LeafletMapConfig<D>, maxClusterZoomLevel = 23): Supercluster<D> {
   const { colorMap, pointShape, pointLatitude, pointLongitude, clusteringDistance } = config
   return new Supercluster<D, Supercluster.AnyProps>({
     radius: clusteringDistance,
@@ -151,19 +152,19 @@ export function getNodePathData ({ x, y }: { x: number; y: number }, radius: num
   }
 }
 
-export function getDonutData<D> (
+export function getDonutData<D extends GenericDataRecord> (
   d: LeafletMapClusterDatum<D> | LeafletMapPointDatum<D>,
   colorMap: LeafletMapPointStyles<D>
 ): LeafletMapPieDatum[] {
   return Object.keys(colorMap).map(key => ({
     name: key,
-    value: d[key],
+    value: d[key] as number,
     color: colorMap[key].color,
     className: colorMap[key].className,
   }))
 }
 
-export function geoJsonPointToScreenPoint<D> (
+export function geoJsonPointToScreenPoint<D extends GenericDataRecord> (
   geoPoint: ClusterFeature<LeafletMapClusterDatum<D>> | PointFeature<LeafletMapPointDatum<D>>,
   i: number,
   leafletMap: L.Map,
@@ -209,7 +210,7 @@ export function geoJsonPointToScreenPoint<D> (
   return screenPoint
 }
 
-export function shouldClusterExpand<D> (
+export function shouldClusterExpand<D extends GenericDataRecord> (
   cluster: LeafletMapPoint<D>,
   zoomLevel: number,
   midLevel = 4,
@@ -224,7 +225,7 @@ export function shouldClusterExpand<D> (
     (zoomLevel >= midLevel && cluster && (cluster.properties as LeafletMapClusterDatum<D>).point_count < 20)
 }
 
-export function findPointAndClusterByPointId<D> (
+export function findPointAndClusterByPointId<D extends GenericDataRecord> (
   points: LeafletMapPoint<D>[],
   id: string,
   pointId: StringAccessor<D>
@@ -247,13 +248,13 @@ export function findPointAndClusterByPointId<D> (
   return { point, cluster }
 }
 
-export function getNodeRelativePosition<D> (d: LeafletMapPoint<D>, leafletMap: L.Map): { x: number; y: number } {
+export function getNodeRelativePosition<D extends GenericDataRecord> (d: LeafletMapPoint<D>, leafletMap: L.Map): { x: number; y: number } {
   const paneTransform = getHTMLTransform(leafletMap.getPane('mapPane'))
   const { x, y } = getPointPos(d, leafletMap)
   return { x: x + paneTransform[0], y: y + paneTransform[1] }
 }
 
-export function getClusterRadius<D> (cluster: { points: PointFeature<PointExpandedClusterProperties<D>>[]; cluster: LeafletMapPoint<D> }): number {
+export function getClusterRadius<D extends GenericDataRecord> (cluster: { points: PointFeature<PointExpandedClusterProperties<D>>[]; cluster: LeafletMapPoint<D> }): number {
   const { points } = cluster
   const minX = min<number>(points.map(d => d.properties.dx - d.properties.r))
   const maxX = max<number>(points.map(d => d.properties.dx + d.properties.r))
@@ -262,7 +263,7 @@ export function getClusterRadius<D> (cluster: { points: PointFeature<PointExpand
   return Math.sqrt((maxX - minX) ** 2 + (maxY - minY) ** 2) * 0.5
 }
 
-export function getClustersAndPoints<D> (
+export function getClustersAndPoints<D extends GenericDataRecord> (
   clusterIndex: Supercluster<D>,
   leafletMap: L.Map,
   customBounds?: [number, number, number, number]

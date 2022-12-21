@@ -1,17 +1,17 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { LeafletFlowMap, LeafletFlowMapConfigInterface, MapLibreStyleSpecs } from '@unovis/ts'
+  import { LeafletFlowMap, LeafletFlowMapConfigInterface, GenericDataRecord, MapLibreStyleSpecs } from '@unovis/ts'
   import { onMount } from 'svelte'
   import { arePropsEqual } from '../../utils/props'
 
   // type defs
-  type PointDatum = $$Generic
-  type FlowDatum = $$Generic
+  type PointDatum = $$Generic<GenericDataRecord>
+  type FlowDatum = $$Generic<GenericDataRecord>
 
   // data and required props
   // eslint-disable-next-line no-undef-init
   export let data: { points: PointDatum[]; flows?: FlowDatum[] } = undefined
-  export let style: MapLibreStyleSpecs | string
+  export let style: MapLibreStyleSpecs | string | undefined
 
   // config
   let prevConfig: LeafletFlowMapConfigInterface<PointDatum, FlowDatum>

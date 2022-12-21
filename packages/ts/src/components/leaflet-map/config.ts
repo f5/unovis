@@ -6,6 +6,7 @@ import { Tooltip } from 'components/tooltip'
 
 // Types
 import { ColorAccessor, GenericAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
+import { GenericDataRecord } from 'types/data'
 
 // Local Types
 import {
@@ -21,7 +22,7 @@ import {
 // Renderer settings
 import { MapLibreStyleSpecs } from './renderer/map-style'
 
-export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterface {
+export interface LeafletMapConfigInterface<Datum extends GenericDataRecord> extends ComponentConfigInterface {
   // General
   /** Width in pixels or in CSS units. By default, the map will automatically fit to the size of the parent element. Default: `undefined`. */
   width?: number | string;
@@ -42,9 +43,9 @@ export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterfa
   /** Fit the view to contain the data points on map config and data updates. Default: `false` */
   fitViewOnUpdate?: boolean;
   /** MapLibre `StyleSpecification` settings, or a URL to it. When renderer is set to`LeafletMapRenderer.Raster`, provide a template URL. Default: `undefined` */
-  style: MapLibreStyleSpecs | string;
+  style: MapLibreStyleSpecs | string | undefined;
   /** MapLibre `StyleSpecification` settings or URL for dark theme. Default: `undefined` */
-  styleDarkTheme?: MapLibreStyleSpecs | string;
+  styleDarkTheme?: MapLibreStyleSpecs | string | undefined;
   /** Tile server access token or API key. Default: `''` */
   accessToken?: string;
   /** Array of attribution labels. Default: `['<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a>']` */
@@ -153,7 +154,7 @@ export interface LeafletMapConfigInterface<Datum> extends ComponentConfigInterfa
   tooltip?: Tooltip;
 }
 
-export class LeafletMapConfig<Datum> extends ComponentConfig implements LeafletMapConfigInterface<Datum> {
+export class LeafletMapConfig<Datum extends GenericDataRecord> extends ComponentConfig implements LeafletMapConfigInterface<Datum> {
   // General
   width = undefined
   height = undefined
@@ -180,11 +181,11 @@ export class LeafletMapConfig<Datum> extends ComponentConfig implements LeafletM
   onMapClick = undefined
 
   // Point
-  pointLongitude = (d: Datum): number => d['longitude']
-  pointLatitude = (d: Datum): number => d['latitude']
-  pointId = (d: Datum): string => d['id']
-  pointShape = (d: Datum): string => d['shape']
-  pointColor = (d: Datum): string => d['color']
+  pointLongitude = (d: Datum): number => d['longitude'] as number
+  pointLatitude = (d: Datum): number => d['latitude'] as number
+  pointId = (d: Datum): string => d['id'] as string
+  pointShape = (d: Datum): string => d['shape'] as string
+  pointColor = (d: Datum): string => d['color'] as string
   pointRadius = undefined
   pointLabel = undefined
   pointBottomLabel = ''

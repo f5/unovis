@@ -24,7 +24,7 @@ import {
 export interface SankeyConfigInterface<N extends SankeyInputNode, L extends SankeyInputLink> extends ComponentConfigInterface {
   // General
   /** Node / Link id accessor function. Used for mapping of data updates to corresponding SVG objects. Default: `(d, i) => d.id ?? i.toString()` */
-  id?: (d: SankeyInputNode | SankeyInputLink, i?: number, ...any) => string;
+  id?: (d: SankeyInputNode | SankeyInputLink, i: number, ...any) => string;
   /** Coefficient to scale the height of the diagram when the amount of links is low: `C * links.length`, clamped to `[height / 2, height]`. Default: `1/16` */
   heightNormalizationCoeff?: number;
   /** Type of animation on removing nodes. Default: `ExitTransitionType.Default` */

@@ -9,19 +9,19 @@ export interface BrushConfigInterface<Datum> extends Partial<XYComponentConfigIn
   /** Callback function to be called on any Brush event.
    * Default: `(selection: [number, number], event: D3BrushEvent<Datum>, userDriven: boolean): void => {}`
   */
-  onBrush?: ((selection?: [number, number], event?: D3BrushEvent<Datum>, userDriven?: boolean) => void);
+  onBrush?: ((selection: [number, number] | undefined, event: D3BrushEvent<Datum>, userDriven: boolean) => void);
   /** Callback function to be called on the Brush start event.
    * Default: `(selection: [number, number], event: D3BrushEvent<Datum>, userDriven: boolean): void => {}`
   */
-  onBrushStart?: ((selection?: [number, number], event?: D3BrushEvent<Datum>, userDriven?: boolean) => void);
+  onBrushStart?: ((selection: [number, number] | undefined, event: D3BrushEvent<Datum>, userDriven: boolean) => void);
   /** Callback function to be called on the Brush move event.
    * Default: `(selection: [number, number], event: D3BrushEvent<Datum>, userDriven: boolean): void => {}`
   */
-  onBrushMove?: ((selection?: [number, number], event?: D3BrushEvent<Datum>, userDriven?: boolean) => void);
+  onBrushMove?: ((selection: [number, number] | undefined, event: D3BrushEvent<Datum>, userDriven: boolean) => void);
   /** Callback function to be called on the Brush end event.
    * Default: `(selection: [number, number], event: D3BrushEvent<Datum>, userDriven: boolean): void => {}`
   */
-  onBrushEnd?: ((selection?: [number, number], event?: D3BrushEvent<Datum>, userDriven?: boolean) => void);
+  onBrushEnd?: ((selection: [number, number] | undefined, event: D3BrushEvent<Datum>, userDriven: boolean) => void);
   /** Width of the Brush handle. Default: `1` */
   handleWidth?: number;
   /** Brush selection in the data space coordinates, can be used to control the selection. Default: `undefined` */
@@ -36,13 +36,13 @@ export interface BrushConfigInterface<Datum> extends Partial<XYComponentConfigIn
 
 export class BrushConfig<Datum> extends XYComponentConfig<Datum> implements BrushConfigInterface<Datum> {
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function */
-  onBrush = (s: [number, number], e: D3BrushEvent<Datum>, userDriven: boolean): void => {}
+  onBrush = (s: [number, number] | undefined, e: D3BrushEvent<Datum>, userDriven: boolean): void => {}
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function */
-  onBrushStart = (s: [number, number], e: D3BrushEvent<Datum>, userDriven: boolean): void => {}
+  onBrushStart = (s: [number, number] | undefined, e: D3BrushEvent<Datum>, userDriven: boolean): void => {}
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function */
-  onBrushMove = (s: [number, number], e: D3BrushEvent<Datum>, userDriven: boolean): void => {}
+  onBrushMove = (s: [number, number] | undefined, e: D3BrushEvent<Datum>, userDriven: boolean): void => {}
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function */
-  onBrushEnd = (s: [number, number], e: D3BrushEvent<Datum>, userDriven: boolean): void => {}
+  onBrushEnd = (s: [number, number] | undefined, e: D3BrushEvent<Datum>, userDriven: boolean): void => {}
   handleWidth = 9
   selection = null
   draggable = false

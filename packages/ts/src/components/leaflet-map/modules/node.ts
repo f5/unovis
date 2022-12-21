@@ -4,6 +4,7 @@ import type L from 'leaflet'
 
 // Types
 import { Rect } from 'types/misc'
+import { GenericDataRecord } from 'types/data'
 
 // Utils
 import { smartTransition } from 'utils/d3'
@@ -26,7 +27,7 @@ import * as s from '../style'
 
 const BOTTOM_LABEL_TOP_MARGIN = 10
 
-export function createNodes<D> (selection: Selection<SVGGElement, LeafletMapPoint<D>, SVGGElement, Record<string, unknown>[]>): void {
+export function createNodes<D extends GenericDataRecord> (selection: Selection<SVGGElement, LeafletMapPoint<D>, SVGGElement, Record<string, unknown>[]>): void {
   selection.append('path')
     .attr('class', s.pointPath)
     .attr('id', d => `point-${d.id}`)
@@ -46,7 +47,7 @@ export function createNodes<D> (selection: Selection<SVGGElement, LeafletMapPoin
     .attr('opacity', 1)
 }
 
-export function updateNodes<D> (
+export function updateNodes<D extends GenericDataRecord> (
   selection: Selection<SVGGElement, LeafletMapPoint<D>, SVGGElement, Record<string, unknown>[]>,
   config: LeafletMapConfigInterface<D>,
   leafletMap: L.Map,
@@ -115,7 +116,7 @@ export function updateNodes<D> (
   })
 }
 
-export function collideLabels<D> (
+export function collideLabels<D extends GenericDataRecord> (
   selection: Selection<SVGGElement, LeafletMapPoint<D>, SVGGElement, Record<string, unknown>[]>,
   leafletMap: L.Map
 ): void {
@@ -180,6 +181,6 @@ export function collideLabels<D> (
   })
 }
 
-export function removeNodes<D> (selection: Selection<SVGGElement, LeafletMapPoint<D>, SVGGElement, Record<string, unknown>[]>): void {
+export function removeNodes<D extends GenericDataRecord> (selection: Selection<SVGGElement, LeafletMapPoint<D>, SVGGElement, Record<string, unknown>[]>): void {
   selection.remove()
 }

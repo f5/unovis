@@ -3,6 +3,9 @@ import { select, Selection } from 'd3-selection'
 import { GeoJSONSource, Map } from 'maplibre-gl'
 import { feature } from 'topojson-client'
 
+// Types
+import { GenericDataRecord } from 'types/data'
+
 // Config
 import { LeafletMapConfig } from '../config'
 
@@ -18,7 +21,7 @@ import { LeafletMapRenderer } from '../types'
 export const initialMapCenter: L.LatLngExpression = [36, 14]
 export const initialMapZoom = 1.9
 
-export function updateTopoJson<T> (maplibreMap: Map, config: LeafletMapConfig<T>): void {
+export function updateTopoJson<T extends GenericDataRecord> (maplibreMap: Map, config: LeafletMapConfig<T>): void {
   const { topoJSONLayer } = config
 
   if (topoJSONLayer.sources) {
@@ -81,7 +84,7 @@ export function updateTopoJson<T> (maplibreMap: Map, config: LeafletMapConfig<T>
   } else if (strokeLayer) { maplibreMap.removeLayer(`${topoJSONLayer.featureName}-stroke`) }
 }
 
-export async function setupMap<T> (mapContainer: HTMLElement, config: LeafletMapConfig<T>): Promise<{
+export async function setupMap<T extends GenericDataRecord> (mapContainer: HTMLElement, config: LeafletMapConfig<T>): Promise<{
   leaflet: L.Map;
   layer: L.Layer;
   svgOverlay: Selection<SVGElement, any, HTMLElement, any>;

@@ -1,6 +1,9 @@
 import type L from 'leaflet'
 import { Selection } from 'd3-selection'
 
+// Types
+import { GenericDataRecord } from 'types/data'
+
 // Utils
 import { getString } from 'utils/data'
 import { getPointPos } from './utils'
@@ -19,7 +22,7 @@ export function createNodeSelectionRing (selection: Selection<SVGGElement, Recor
   selection.append('path').attr('class', s.pointSelection)
 }
 
-export function updateNodeSelectionRing<D> (
+export function updateNodeSelectionRing<D extends GenericDataRecord> (
   selection: Selection<SVGGElement, Record<string, unknown>[], SVGElement, Record<string, unknown>[]>,
   selectedPoint: LeafletMapPoint<D>,
   pointData: LeafletMapPoint<D>[],
