@@ -33,11 +33,14 @@ export const GraphDoc = (props) => props.inputType
   ? <InputWrapper {...defaultProps()} {...props}/>
   : <DocWrapper {...defaultProps() } {...props}/>
 
+
+export const nodeShapeData = generateNodeLinkData(10)
+
 export const nodeIcons = ['☁︎', '☂︎', '☀︎', '✤', '❃', '✻', '☎︎']
 export const getNodeIconByIndex = (i) => nodeIcons[i % nodeIcons.length]
 export const getNodeSideLabels = (d, i) => i === 5
   ? [{ text: '🏈', color: '#eee'}, { text: '⚾️', color: '#FF351D' }]
-  : [{ text: i*2/*nodeIcons[Math.floor(nodeIcons.length * Math.random())]*/, color: '#eee', radius: 8 }]
+  : [{ text: i*2, color: '#eee', radius: 8 }]
 
 export const palette = ['#4580C0', '#D9C6BB', '#FED651', '#8E8D95', '#BEB18B', '#E2203A']
 export const getColorByIndex = (i) => palette[i % palette.length]
@@ -97,6 +100,58 @@ zoom level at initialization to fit to the size of the container.
   showContext="minimal"
   nodeShape={(n, i) => (['square', 'circle', 'hexagon', 'triangle'])[i % 4]}
   nodeSize={50}
+/>
+
+### Custom SVG Nodes
+Alternatively, you can provide `nodeShape` property with custom SVGs to get the exact shape you want.
+You can either provide it directly as a string in your _StringAccessor_ or for better control over the
+element, put the shape(s) definition in the container's `svgDefs` property and reference it with
+[`use`](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/use) tag. For more information on
+providing custom `svgDefs`, visit our [doc](/docs/guides/tips-and-tricks#custom-fills-with-svg-defs) about it.
+
+Here is an example using the `svgDefs` approach and where every _node_ has the following type:
+
+```ts
+type NodeDatum = {
+  id: string;
+  shape: 'blob' | 'cloud' | 'diamond' | 'house'
+}
+```
+
+<GraphDoc
+  showContext='full'
+  containerProps={{
+    svgDefs: `
+    <polygon id="house" points="4,18 4,30 13,30 13,24 17,24 17,30 26,30 26,18 30,18 15,0 0,18"/>
+    <path id="blob" d="M 19.415 1.0564 C 20.585 2.47 20.225 5.89 21.665 8.2612 C 23.06 10.678 26.345 12.046 28.325 14.554 C 30.305 17.1076 31.025 20.8012 28.865 21.9412 C 26.75 23.1268 21.755 21.7588 18.605 23.3092 C 15.455 24.8596 14.105 29.3284 12.485 29.8756 C 10.865 30.3772 8.93 27.0028 6.41 25.042 C 3.89 23.1268 0.83 22.6708 0.38 20.9836 C -0.07 19.2964 2.135 16.378 2.54 13.642 C 2.945 10.9516 1.55 8.4892 2.135 7.03 C 2.72 5.5708 5.285 5.1148 7.355 4.294 C 9.47 3.4276 11.135 2.1964 13.34 1.2388 C 15.545 0.3268 18.245 -0.3116 19.415 1.0564 Z"/>
+    <path id="cloud" d="M 14 -1 A 9 9 90 0 0 5 8 A 9 9 90 0 0 5.1055 9.3125 A 6 6 90 0 0 1 15 A 6 6 90 0 0 7 21 L 22 21 A 7 7 90 0 0 29 14 A 7 7 90 0 0 22.9414 7.0703 A 9 9 90 0 0 14 -1 z"/>
+    <polygon id="diamond" points="2,15 15,0 28,15 15,30"/>
+  `}}
+  declarations={{
+    svgDefs: `\`
+    <path id="blob" d="M 19.415 1.0564 C 20.585 2.47 20.225 5.89 21.665 8.2612 C 23.06 10.678 26.345 12.046 28.325 14.554 C 30.305 17.1076 31.025 20.8012 28.865 21.9412 C 26.75 23.1268 21.755 21.7588 18.605 23.3092 C 15.455 24.8596 14.105 29.3284 12.485 29.8756 C 10.865 30.3772 8.93 27.0028 6.41 25.042 C 3.89 23.1268 0.83 22.6708 0.38 20.9836 C -0.07 19.2964 2.135 16.378 2.54 13.642 C 2.945 10.9516 1.55 8.4892 2.135 7.03 C 2.72 5.5708 5.285 5.1148 7.355 4.294 C 9.47 3.4276 11.135 2.1964 13.34 1.2388 C 15.545 0.3268 18.245 -0.3116 19.415 1.0564 Z"/>
+    <path id="cloud" d="M 14 -1 A 9 9 90 0 0 5 8 A 9 9 90 0 0 5.1055 9.3125 A 6 6 90 0 0 1 15 A 6 6 90 0 0 7 21 L 22 21 A 7 7 90 0 0 29 14 A 7 7 90 0 0 22.9414 7.0703 A 9 9 90 0 0 14 -1 z"/>
+    <polygon id="diamond" points="0,15 15,0 30,15 15,30"/>
+    <polygon id="house" points="4,18 4,30 13,30 13,24 17,24 17,30 26,30 26,18 30,18 15,0 0,18"/>
+  \``}}
+  data={{
+    nodes: nodeShapeData.nodes.map((n, i) => ({ ...n, shape: ['blob', 'cloud', 'diamond', 'house'][i % 4]})),
+    links: nodeShapeData.links,
+  }}
+  height={300}
+  nodeLabel={n => n.shape}
+  nodeShape={n => `<use href="#${n.shape}" stroke-width="3"/>`}
+/>
+
+Note that depending on your SVG, it may require some additional tweaking to get the appearance you want.
+For example, custom nodes would require `stroke-width`, or `fill` attributes if not already defined.
+It may also be necessary to tweak your shape size to fit into the bounds of your configured `nodeSize`,
+like this example:
+
+<GraphDoc
+  hideTabLabels
+  nodeSize={50}
+  nodeShape={`<image width='50' height='50' href='https://upload.wikimedia.org/wikipedia/commons/7/7e/Sphere_-_monochrome_simple.svg'/>`}
 />
 
 ### Fill and Stroke
