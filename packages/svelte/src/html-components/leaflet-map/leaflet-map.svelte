@@ -2,8 +2,8 @@
   // !!! This code was automatically generated. You should not change it !!!
   import { LeafletMap, LeafletMapConfigInterface, GenericDataRecord, MapLibreStyleSpecs } from '@unovis/ts'
   import { onMount } from 'svelte'
-  import { arePropsEqual } from '../../utils/props'
 
+  import { arePropsEqual } from '../../utils/props'
   // type defs
   type Datum = $$Generic<GenericDataRecord>
 
@@ -23,10 +23,8 @@
 
   onMount(() => {
     component = new LeafletMap<Datum>(ref, config, data)
-
-    return () => { component.destroy() }
+    return () => component.destroy()
   })
-
   $: component?.setData(data)
   $: if (!arePropsEqual(prevConfig, config)) {
     component?.setConfig(config)

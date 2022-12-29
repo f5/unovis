@@ -1,9 +1,10 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
   import { Crosshair, CrosshairConfigInterface } from '@unovis/ts'
-  import { getContext, onMount } from 'svelte'
-  import { arePropsEqual } from '../../utils/props'
+  import { getContext, onDestroy } from 'svelte'
 
+  import type { Lifecycle } from '../../utils/context'
+  import { arePropsEqual } from '../../utils/props'
   // type defs
   type Datum = $$Generic
 
@@ -17,15 +18,10 @@
   $: config = { ...$$restProps }
 
   // component declaration
-  let component: Crosshair<Datum>
-  const { setCrosshair } = getContext('container')
+  const component = new Crosshair<Datum>(config)
+  const lifecycle = getContext<Lifecycle>('container')
 
-  onMount(() => {
-    component = new Crosshair<Datum>(config)
-    setCrosshair(component)
-    return () => { setCrosshair(undefined) as void }
-  })
-
+  onDestroy(() => component.destroy())
   $: component?.setData(data)
   $: if (!arePropsEqual(prevConfig, config)) {
     component?.setConfig(config)
@@ -37,5 +33,5 @@
 
 </script>
 
-<vis-crosshair/>
+<vis-crosshair use:lifecycle={component}/>
 

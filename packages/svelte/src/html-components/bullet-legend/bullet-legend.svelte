@@ -2,6 +2,7 @@
   // !!! This code was automatically generated. You should not change it !!!
   import { BulletLegend, BulletLegendConfigInterface, BulletLegendItemInterface } from '@unovis/ts'
   import { onMount } from 'svelte'
+
   import { arePropsEqual } from '../../utils/props'
 
 
@@ -20,10 +21,8 @@
 
   onMount(() => {
     component = new BulletLegend(ref, config)
-
-    return () => { component.destroy() }
+    return () => component.destroy()
   })
-
   $: if (!arePropsEqual(prevConfig, config)) {
     component?.update(config)
     prevConfig = config
