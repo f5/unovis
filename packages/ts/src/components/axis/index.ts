@@ -144,6 +144,9 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfig<Datum>, AxisC
     if (config.gridLine) {
       const gridGen = this._buildGrid().tickFormat(() => '')
       gridGen.tickValues(this._getConfiguredTickValues())
+      // Interrupting all active transitions first to prevent them from being stuck.
+      // Somehow we see it happening in in Angular apps.
+      this.gridGroup.selectAll('*').interrupt()
       smartTransition(this.gridGroup, duration).call(gridGen).style('opacity', 1)
     } else {
       smartTransition(this.gridGroup, duration).style('opacity', 0)
@@ -194,6 +197,9 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfig<Datum>, AxisC
     const axisGen = this._buildAxis()
     axisGen.tickValues(this._getConfiguredTickValues())
 
+    // Interrupting all active transitions first to prevent them from being stuck.
+    // Somehow we see it happening in in Angular apps.
+    selection.selectAll('*').interrupt()
     smartTransition(selection, duration).call(axisGen)
 
     const ticks = selection.selectAll<SVGGElement, unknown>('g.tick')
