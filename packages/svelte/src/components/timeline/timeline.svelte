@@ -1,9 +1,10 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
   import { Timeline, TimelineConfigInterface, NumericAccessor } from '@unovis/ts'
-  import { getContext, onMount } from 'svelte'
-  import { arePropsEqual } from '../../utils/props'
+  import { getContext, onDestroy } from 'svelte'
 
+  import type { Lifecycle } from '../../utils/context'
+  import { arePropsEqual } from '../../utils/props'
   // type defs
   type Datum = $$Generic
 
@@ -18,15 +19,10 @@
   $: config = { x, ...$$restProps }
 
   // component declaration
-  let component: Timeline<Datum>
-  const { setComponent, removeComponent } = getContext('container')
+  const component = new Timeline<Datum>(config)
+  const lifecycle = getContext<Lifecycle>('container')
 
-  onMount(() => {
-    component = new Timeline<Datum>(config)
-    setComponent(component)
-    return () => { removeComponent(component) as void }
-  })
-
+  onDestroy(() => component.destroy())
   $: component?.setData(data)
   $: if (!arePropsEqual(prevConfig, config)) {
     component?.setConfig(config)
@@ -38,5 +34,5 @@
 
 </script>
 
-<vis-component/>
+<vis-component use:lifecycle={component}/>
 

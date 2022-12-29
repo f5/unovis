@@ -1,48 +1,42 @@
 <script lang="ts">
   import { ComponentCore, SingleContainer, SingleContainerConfigInterface, Tooltip } from '@unovis/ts'
-  import { onMount, onDestroy, setContext } from 'svelte'
+  import { onMount, setContext } from 'svelte'
+  import { getConfigKey, Lifecycle } from '../../utils/context'
 
   type Data = $$Generic
 
   export let data: Data
 
   let chart: SingleContainer<Data>
-  let config: SingleContainerConfigInterface<Data> = {}
+  const config: SingleContainerConfigInterface<Data> = {
+    component: undefined,
+    tooltip: undefined,
+  }
   let ref: HTMLDivElement
 
   $: chart?.setData(data, true)
-  $: if (chart?.component) chart.updateContainer({ ...config, ...($$restProps as SingleContainerConfigInterface<Data>) })
+  $: chart?.updateContainer({ ...config, ...($$restProps as SingleContainerConfigInterface<Data>) })
 
   onMount(() => {
-    chart = new SingleContainer<Data>(ref)
+    chart = new SingleContainer<Data>(ref, config, data)
+    return () => chart.destroy()
   })
 
-  onDestroy(() => {
-    chart?.destroy()
+  setContext<Lifecycle>('container', (_, c: ComponentCore<Data> | Tooltip) => {
+    const key = getConfigKey(c)
+    if (key && key in config) {
+      config[key] = c
+      return {
+        destroy: () => {
+          config[key] = undefined
+        },
+      }
+    }
   })
-
-  const updateConfig = (c: SingleContainerConfigInterface<Data>) => {
-    config = { ...config, ...c }
-    chart?.update(config)
-  }
-
-  setContext('container', {
-    setTooltip: (t: Tooltip) => updateConfig({ tooltip: t }),
-    setComponent: (c: ComponentCore<Data>) => {
-      updateConfig({ component: c })
-      if (data) chart.setData(data)
-    },
-    removeComponent: (_: ComponentCore<Data>) => {
-      updateConfig({ component: undefined })
-    },
-  })
-
 </script>
 
 <vis-single-container bind:this={ref} class='unovis-single-container'>
-  {#if chart}
-    <slot/>
-  {/if}
+  <slot/>
 </vis-single-container>
 
 <style>
@@ -50,6 +44,5 @@
     display: block;
     position: relative;
     width: 100%;
-    height: 100%;
   }
 </style>
