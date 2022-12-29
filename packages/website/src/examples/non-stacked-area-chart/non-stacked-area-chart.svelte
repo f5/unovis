@@ -1,6 +1,7 @@
 <script lang='ts'>
   import type { NumericAccessor } from '@unovis/ts'
-  import { VisXYContainer, VisAxis, VisArea, VisBulletLegend, CurveType } from '@unovis/svelte'
+  import { CurveType } from '@unovis/ts'
+  import { VisXYContainer, VisAxis, VisArea, VisBulletLegend } from '@unovis/svelte'
   import { countries, Country, data, DataRecord } from './data'
 
   const x = (_: DataRecord, i: number) => i
