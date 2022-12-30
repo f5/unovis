@@ -11,8 +11,8 @@ type CodeConfig = {
   visImports: string[];
 }
 
-function getImportString (imports: Record<string, string[]>): string {
-  return `${Object.keys(imports).map(i => `import { ${imports[i].join(', ')} } from '${i}'`).join('\n')}\n`
+function getImportString (imports: Record<string, string[]>, indent?: boolean): string {
+  return `${Object.keys(imports).map(i => `${indent ? t : ''}import { ${imports[i].join(', ')} } from '${i}'`).join('\n')}\n`
 }
 
 export function getAngularStrings (config: CodeConfig, importedProps: string[], inlineTemplate: boolean): FrameworkTabProps['angular'] {
@@ -29,7 +29,7 @@ export function getAngularStrings (config: CodeConfig, importedProps: string[], 
   })
 
   if (imports || Object.values(declarations).length) {
-    if (imports) tsLines.push(getImportString(imports))
+    if (importedProps.length) tsLines.push(getImportString(imports))
 
     tsLines.push('@Component({')
     const template = inlineTemplate
@@ -99,7 +99,7 @@ export function getSvelteStrings (config: CodeConfig): string {
     return html
   }
 
-  lines.push(getImportString({ '@unovis/svelte': visImports, ...imports }))
+  lines.push(getImportString({ '@unovis/svelte': visImports, ...imports }, true))
   if (data) lines.push(`${t}export let ${data}`)
   Object.entries(rest).forEach(d => lines.push(`${t}const ${d.join(' = ')}`))
   return `<script lang='ts'>\n${lines.join('\n')}\n</script>\n\n${html}`
