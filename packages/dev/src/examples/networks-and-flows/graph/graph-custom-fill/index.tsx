@@ -1,6 +1,5 @@
 import React from 'react'
 import { VisSingleContainer, VisGraph } from '@unovis/react'
-
 import { generateNodeLinkData, NodeDatum } from '@src/utils/data'
 
 export const title = 'Graph: Custom Node Fills'
@@ -18,10 +17,13 @@ export const component = (): JSX.Element => {
   const colors = [
     { type: 'String', value: 'slategrey', symbol: '"' },
     { type: 'Hex', value: '#00C19A', symbol: '#' },
+    { type: 'Short hex', value: '#eff', symbol: '#' },
+    { type: 'RGB', value: 'rgb(255,255,255)', symbol: '()' },
+    { type: 'None', value: undefined, symbol: '&#0;' },
     { type: 'CSS Variable', value: 'var(--vis-color0)', symbol: '--' },
     { type: 'SVG Def', value: 'url(#gradient)', symbol: '<>' },
   ]
-  const data = generateNodeLinkData(colors.length * 2)
+  const data = generateNodeLinkData(colors.length)
   return (
     <VisSingleContainer svgDefs={svgDefs} height={600}>
       <VisGraph

@@ -35,12 +35,7 @@ export function hexToBrightness (hex: string): number {
   return (0.2126 * rgb.r + 0.7152 * rgb.g + 0.0722 * rgb.b) / 255
 }
 
-export function getHexString (s: string, context: HTMLElement | SVGElement): string {
-  if (s.match(/^#([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i)) return s
-  if (isStringCSSVariable(s)) return getCSSVariableValue(s, context)
-}
-
 export function getHexValue (s: string, context: HTMLElement | SVGElement): string {
-  const hex = getHexString(s, context)
+  const hex = isStringCSSVariable(s) ? getCSSVariableValue(s, context) : s
   return color(hex)?.formatHex()
 }
