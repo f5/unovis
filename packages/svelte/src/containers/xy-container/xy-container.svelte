@@ -28,11 +28,11 @@
   setContext<Lifecycle>('container', (_, c: XYComponentCore<Datum> | Tooltip) => {
     const key = getConfigKey(c)
     if (key && key in config) {
-      const coreComponent = key === 'components'
-      config[key] = coreComponent ? [...config.components, c] : c
+      const isCoreComponent = key === 'components'
+      config[key] = isCoreComponent ? [...config.components, c] : c
       return {
         destroy: () => {
-          config[key] = coreComponent ? config.components.filter(comp => comp !== c) : undefined
+          config[key] = isCoreComponent ? config.components.filter(comp => comp !== c) : undefined
         },
       }
     }
