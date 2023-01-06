@@ -48,8 +48,11 @@ npm install -P @unovis/ts
 </Tabs>
 
 :::info
-If you use TypeScript, you'll also need to enable the  [`allowSyntheticDefaultImports`](https://www.typescriptlang.org/tsconfig#allowSyntheticDefaultImports)
+If you use TypeScript, you'll need to enable the  [`allowSyntheticDefaultImports`](https://www.typescriptlang.org/tsconfig#allowSyntheticDefaultImports)
 option in the `compilerOptions` section of your `tsconfig.json`, because some of _Unovis_'s dependencies need it.
+
+Also if you have [`types`](https://www.typescriptlang.org/tsconfig#types) specified in `tsconfig.json` explicitly, you might need to add `"topojson-client"` to the list.
+Otherwise, the TypeScript compiler won't find the required TopoJSON types.
 :::
 
 ## 🧑‍💻 Create your first chart
