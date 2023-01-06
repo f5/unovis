@@ -189,6 +189,10 @@ export class Graph<
 
     // Apply layout and render
     this._calculateLayout().then((isFirstRender) => {
+      // If the component has been destroyed while the layout calculation
+      // was in progress, we cancel the render
+      if (this.isDestroyed()) return
+
       if (this._setPanels) {
         smartTransition(this._panelsGroup, duration / 2)
           .style('opacity', panels?.length ? 1 : 0)
