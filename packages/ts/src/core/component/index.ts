@@ -136,5 +136,10 @@ export class ComponentCore<
 
   public destroy (): void {
     this.g?.remove()
+    this.element = undefined
+  }
+
+  public isDestroyed (): boolean {
+    return !this.element
   }
 }
