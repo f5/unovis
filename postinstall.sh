@@ -2,10 +2,10 @@ echo "Activating git hooks"
 npx husky install
 
 echo "Building @unovis"
-npm run build:lib
-npm run build:lib-angular
-npm run build:lib-react
-npm run build:lib-svelte
+npm run build:ts
+npm run build:angular
+npm run build:react
+npm run build:svelte
 
 
 # We need to install @unovis/website dependencies separately otherwise it won't run and build
