@@ -3,23 +3,28 @@ import ReactMarkdown from 'react-markdown'
 import { PropItem } from 'react-docgen-typescript'
 import { useDynamicImport } from 'docusaurus-plugin-react-docgen-typescript/pkg/dist-src/hooks/useDynamicImport'
 
-export const PropTable = ({ name }): JSX.Element => {
+import s from './styles.module.css'
+
+export type PropTableProps = {
+  name: string;
+}
+export default function PropTable ({ name }: PropTableProps): JSX.Element {
   const props: Record<string, PropItem> = useDynamicImport(name)
   const propsArray = Object.entries(props || {})
     .sort((a, b) => Number(b[1].required) - Number(a[1].required))
   return (
-    <table className="table">
-      <thead>
+    <table className={s.root}>
+      <thead className={s.header}>
         <tr>
           <th>Name</th>
           <th>Type</th>
           <th>Description</th>
         </tr>
       </thead>
-      <tbody>
+      <tbody className={s.body}>
         {propsArray.map(([key, prop]) => {
           return (
-            <tr key={key}>
+            <tr key={key} className={s.row}>
               <td>
                 <code>{key}</code>
                 {prop.required && '*'}
@@ -34,8 +39,8 @@ export const PropTable = ({ name }): JSX.Element => {
           )
         })}
       </tbody>
-      <tfoot>
-        <tr><td>* required property</td></tr>
+      <tfoot className={s.footer}>
+        <tr className={s.row}><td>* required property</td></tr>
       </tfoot>
     </table>
   )

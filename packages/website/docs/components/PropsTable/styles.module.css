@@ -1,0 +1,37 @@
+.root {
+  font-size: smaller;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.root td {
+  display: block;
+  width: 100%;
+}
+
+.root pre {
+  display: block;
+  width: 100%;
+  font-size: smaller;
+  padding: 5px;
+  width: min-content;
+  margin: 0;
+}
+
+
+.header, .body, .footer {
+  display: block;
+  width: 100% !important;
+}
+
+.row {
+  display: grid;
+  width: 100%;
+  grid-template-columns: 25% 25% 50%;
+}
+
+.footer .row {
+  display: block;
+  text-align: end;
+}

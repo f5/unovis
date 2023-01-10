@@ -8,14 +8,14 @@ type CSSVariablesProps = {
   className?: string;
 }
 
-export function CSSVariables ({ selector, vars, className }: CSSVariablesProps): JSX.Element {
-  if (useIsBrowser() && document.querySelector(selector)) {
-    const el = document.querySelector(selector) ?? document.documentElement
+export default function CSSVariables ({ selector, vars, className }: CSSVariablesProps): JSX.Element {
+  const el = document.querySelector(selector) ?? document.documentElement
+  if (useIsBrowser() && el) {
     const getValue = (v: string): string => getComputedStyle(el)?.getPropertyValue(v)
     const variables = vars.map(v => `${v}: ${getValue(v)};`)
     return (
       <CodeBlock language='css' className={className}>
-        {`${selector} {\n  ${variables.join('\n  ')}\n}`}
+        {selector ? `${selector} {\n  ${variables.join('\n  ')}\n}` : variables.join('\n')}
       </CodeBlock>
     )
   }

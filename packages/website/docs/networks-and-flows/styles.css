@@ -1,0 +1,8 @@
+@font-face {
+  font-family: FontAwesome;
+  src: url(https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css);
+}
+
+.custom-icons {
+  --vis-graph-font-icon-family: FontAwesome;
+}

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { FrameworkTabs } from '../../components/framework-tabs'
+import FrameworkTabs from '../../components/FrameworkTabs'
 import { getAngularStrings, getReactStrings, getSvelteStrings, getTypescriptStrings } from '../../utils/code'
 import { parseProps } from '../../utils/parser'
 import { DocTabsProps, ContextLevel } from '../types'
