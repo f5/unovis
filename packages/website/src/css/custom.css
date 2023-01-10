@@ -6,6 +6,14 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
 
+@font-face {
+  font-family: 'VisIcons';
+  src:
+    url(../fonts/voltuiicons.ttf) format('ttf'),
+    url(../fonts/voltuiicons.woff) format('woff'),
+    url(../fonts/voltuiicons.svg#voltuiicons) format('svg');
+}
+
 /* You can override the default Infima variables here. */
 :root {
   /*--ifm-color-primary: #4580C0;*/
@@ -100,3 +108,36 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
 .main-wrapper {
   position: relative;
 }
+
+.menu__list-item[class*=vis-icon__] > a.menu__link::before {
+  font-family: 'VisIcons';
+  display: block;
+  margin-right: 0.75em;
+}
+
+/* Sidebar Icons */
+.vis-icon__single-container > a::before { content:'\e9a3'; }
+.vis-icon__xy-container > a::before { content: '\e90b'; }
+
+.vis-icon__line > a::before { content: '\e917'; }
+.vis-icon__area > a::before { content:'\e905'; }
+.vis-icon__grouped-bar > a::before { content:'\e90c'; }
+.vis-icon__scatter > a::before { content:'\e914'; }
+.vis-icon__stacked-bar > a::before { content:'\e906'; }
+.vis-icon__timeline > a::before { content:'\e91a'; }
+
+.vis-icon__graph > a::before { content: '\e961'; }
+.vis-icon__sankey > a::before { content: '\e913'; }
+
+.vis-icon__leaflet > a::before { content:'\e90f'; }
+.vis-icon__leaflet-flow > a::before { content:'\e90f'; }
+.vis-icon__topojson-map > a::before { content:'\e90f'; }
+
+.vis-icon__donut > a::before { content:'\e90a'; }
+
+.vis-icon__axis > a::before { content:'\e936'; }
+.vis-icon__brush > a::before { content:'\e939'; }
+.vis-icon__bullet-legend > a::before { content:'\e90d'; }
+.vis-icon__crosshair > a::before { content:'\e94a'; }
+.vis-icon__free-brush > a::before { content:'\e960'; }
+.vis-icon__tooltip > a::before { content:'\e91b'; }
