@@ -58,7 +58,6 @@ export function updateLabels<Datum> (
       .attr('rx', labelFontSize)
       .attr('ry', labelFontSize)
       .style('fill', backgroundColor)
-      .style('stroke', backgroundColor)
 
     // Label
     if (!labelColor) {

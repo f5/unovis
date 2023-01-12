@@ -3,12 +3,13 @@ import { css, injectGlobal } from '@emotion/css'
 export const globalStyles = injectGlobal`
   :root {
     --vis-xy-label-cursor: default;
-    --vis-xy-label-fill-color: var(--vis-color-main);
-    --vis-xy-label-stroke-color: var(--vis-color-main);
+    // Undefined by default to allow proper fallback to var(--vis-color-main)
+    /* --vis-xy-label-fill-color */
+    --vis-xy-label-stroke-color: none;
     --vis-xy-label-stroke-width: 0px;
     --vis-xy-label-fill-opacity: 1;
     --vis-xy-label-stroke-opacity: 1;
-    --vis-xy-label-hover-stroke-width: 2px;
+    --vis-xy-label-hover-stroke-width: 1px;
     --vis-xy-label-font-size: 12px;
     --vis-xy-label-cluster-font-size: 14px;
 
@@ -27,7 +28,7 @@ export const labelGroup = css`
 
   > rect, text {
     cursor: var(--vis-xy-label-cursor);
-    fill: var(--vis-xy-label-fill-color);
+    fill: var(--vis-xy-label-fill-color, var(--vis-color-main));
     fill-opacity: var(--vis-xy-label-fill-opacity);
     stroke-opacity: var(--vis-xy-label-stroke-opacity);
   }

@@ -11,9 +11,9 @@ export interface XYLabelsConfigInterface<Datum> extends XYComponentConfigInterfa
   /** Single Y accessor function. Default: `undefined` */
   y: NumericAccessor<Datum>;
   /** Defines how to position the label horizontally: in data space or in screen space. Default: `LabelPositioning.DataSpace` */
-  xPositioning?: GenericAccessor<XYLabelPositioning, Datum>;
+  xPositioning?: GenericAccessor<XYLabelPositioning | string, Datum>;
   /** Defines how to position the label vertically: in data space or in screen space. Default: `LabelPositioning.DataSpace` */
-  yPositioning?: GenericAccessor<XYLabelPositioning, Datum>;
+  yPositioning?: GenericAccessor<XYLabelPositioning | string, Datum>;
   /** Font size accessor function or constant value in pixels. If not provided, the value of CSS variable `--vis-xy-label-font-size` will be used. Default: `undefined` */
   labelFontSize?: NumericAccessor<Datum>;
   /** Label accessor function or string. Default: `undefined` */
