@@ -1,0 +1,8 @@
+.stackBarLabels g[alert] {
+  --vis-xy-label-stroke-color: white;
+  --vis-xy-label-stroke-width: 1px;
+}
+
+.stackBarLabels g[alert][cluster] {
+  --vis-xy-label-stroke-width: 2px;
+}
