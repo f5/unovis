@@ -16,7 +16,7 @@ import { ComponentType } from 'types/component'
 import { GenericDataRecord } from 'types/data'
 
 // Utils
-import { clamp, isNil, find, getNumber, getString, isString } from 'utils/data'
+import { clamp, isNil, getNumber, getString, isString } from 'utils/data'
 import { constraintMapViewThrottled } from './renderer/mapboxgl-utils'
 
 // Local Types
@@ -509,8 +509,7 @@ export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<D
 
     const externallySelectedPointId = getString(this._externallySelectedPoint.properties, config.pointId)
     const pointData = this._getPointData()
-    const foundPoint: LeafletMapPoint<Datum> = find(
-      pointData,
+    const foundPoint: LeafletMapPoint<Datum> = pointData.find(
       d => getString(d.properties as Datum, config.pointId) === externallySelectedPointId
     )
 

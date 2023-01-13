@@ -10,6 +10,7 @@ name                               license period  license type  installed versi
 @types/lodash-es                   perpetual       MIT           4.17.6             n/a
 @types/supercluster                perpetual       MIT           5.0.2              n/a
 @types/three                       perpetual       MIT           0.135.0            n/a
+@types/throttle-debounce           perpetual       MIT           5.0.0              n/a
 @types/topojson                    perpetual       MIT           3.2.3              n/a
 @types/topojson-client             perpetual       MIT           3.0.0              n/a
 @types/topojson-specification      perpetual       MIT           1.0.2              n/a
@@ -22,10 +23,10 @@ d3-interpolate-path                perpetual       BSD-3-Clause  2.2.3          
 d3-sankey                          perpetual       BSD-3-Clause  0.12.3             Mike Bostock
 geojson                            perpetual       MIT           0.5.0              Casey Cesari
 leaflet                            perpetual       BSD-2-Clause  1.7.1              n/a
-lodash-es                          perpetual       MIT           4.17.21            John-David Dalton
 maplibre-gl                        perpetual       BSD-3-Clause  2.1.9              n/a
 supercluster                       perpetual       ISC           7.1.5              Vladimir Agafonkin
 three                              perpetual       MIT           0.135.0            mrdoob
+throttle-debounce                  perpetual       MIT           5.0.0              Ivan Nikolić
 to-px                              perpetual       MIT           1.1.0              Mikola Lysenko
 topojson-client                    perpetual       ISC           3.1.0              Mike Bostock
 tslib                              perpetual       0BSD          2.3.1              Microsoft Corp.

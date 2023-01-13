@@ -15,18 +15,10 @@ const d3Libs = ['d3-array', 'd3-axis', 'd3-brush', 'd3-chord', 'd3-collection', 
   'd3-selection', 'd3-shape', 'd3-time', 'd3-time-format', 'd3-timer', 'd3-transition',
   'd3-voronoi', 'd3-zoom']
 
-const lodashLibs = ['lodash-es/isUndefined', 'lodash-es/isArray', 'lodash-es/isEmpty', 'lodash-es/isEqual',
-  'lodash-es/isNil', 'lodash-es/cloneDeep', 'lodash-es/throttle', 'lodash-es/each', 'lodash-es/filter',
-  'lodash-es/get', 'lodash-es/without', 'lodash-es/find', 'lodash-es/isString', 'lodash-es/isObject',
-  'lodash-es/isFunction', 'lodash-es/isNumber', 'lodash-es/merge', 'lodash-es/isPlainObject', 'lodash-es/flatten',
-  'lodash-es/omit', 'lodash-es/extend', 'lodash-es/groupBy', 'lodash-es/uniq', 'lodash-es/sortBy', 'lodash-es/range',
-  'lodash-es/findIndex']
-
 const externals = [
   ...Object.keys(pkg.dependencies || {}),
   ...Object.keys(pkg.peerDependencies || {}),
   ...d3Libs,
-  ...lodashLibs,
 ]
 
 const regexesOfPackages = externals // To prevent having node_modules in the build files
