@@ -1,5 +1,5 @@
-import _isEqual from 'lodash-es/isEqual.js'
+import { isEqual } from '@unovis/ts'
 
 export function arePropsEqual<PropTypes> (prevProps: PropTypes, nextProps: PropTypes): boolean {
-  return _isEqual(prevProps, nextProps)
+  return isEqual(prevProps, nextProps)
 }
