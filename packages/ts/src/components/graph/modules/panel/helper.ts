@@ -7,7 +7,7 @@ import { Position } from 'types/position'
 import { GraphInputLink, GraphInputNode } from 'types/graph'
 
 // Utils
-import { find, getBoolean } from 'utils/data'
+import { getBoolean } from 'utils/data'
 
 // Local Types
 import { GraphNode, GraphPanel } from '../../types'
@@ -42,7 +42,7 @@ export function setPanelForNodes<N extends GraphInputNode, L extends GraphInputL
     if (!layoutNonConnectedAside || node._isConnected) {
       // Find and put neighbour Nodes to each panel
       node._panels = nodePanels.map(panel => {
-        const panelNodes = panel.nodes.map((panelNodeId): GraphNode<N, L> => find(nodes, (n: GraphNode<N, L>) => panelNodeId === n._id))
+        const panelNodes = panel.nodes.map((panelNodeId): GraphNode<N, L> => nodes.find((n: GraphNode<N, L>) => panelNodeId === n._id))
         return layoutNonConnectedAside ? panelNodes.filter((n: GraphNode<N, L>) => n._isConnected) : panelNodes
       })
     }

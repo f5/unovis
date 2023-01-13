@@ -1,61 +1,130 @@
-import _isUndefined from 'lodash-es/isUndefined.js'
-import _isArray from 'lodash-es/isArray.js'
-import _isEmpty from 'lodash-es/isEmpty.js'
-import _isEqual from 'lodash-es/isEqual.js'
-import _isNil from 'lodash-es/isNil.js'
-import _cloneDeep from 'lodash-es/cloneDeep.js'
-import _throttle from 'lodash-es/throttle.js'
-import _each from 'lodash-es/each.js'
-import _filter from 'lodash-es/filter.js'
-import _get from 'lodash-es/get.js'
-import _without from 'lodash-es/without.js'
-import _find from 'lodash-es/find.js'
-import _findIndex from 'lodash-es/findIndex.js'
-import _isString from 'lodash-es/isString.js'
-import _isObject from 'lodash-es/isObject.js'
-import _isFunction from 'lodash-es/isFunction.js'
-import _isNumber from 'lodash-es/isNumber.js'
-import _merge from 'lodash-es/merge.js'
-import _isPlainObject from 'lodash-es/isPlainObject.js'
-import _flatten from 'lodash-es/flatten.js'
-import _omit from 'lodash-es/omit.js'
-import _extend from 'lodash-es/extend.js'
-import _groupBy from 'lodash-es/groupBy.js'
-import _sortBy from 'lodash-es/sortBy.js'
-import _range from 'lodash-es/range.js'
-// !!! If you add a new lodash import here, please specify it in rollup.config.js as well
-
 import { max, min, mean, bisector } from 'd3-array'
+import { throttle as _throttle } from 'throttle-debounce'
 
 // Types
 import { NumericAccessor, StringAccessor, BooleanAccessor, ColorAccessor, GenericAccessor } from 'types/accessor'
 import { StackValuesRecord } from 'types/data'
 
-export const isNumber = _isNumber
-export const isEqual = _isEqual
-export const isFunction = _isFunction
-export const merge = _merge
-export const isPlainObject = _isPlainObject
-export const isUndefined = _isUndefined
-export const isArray = _isArray
-export const isEmpty = _isEmpty
-export const isNil = _isNil
-export const cloneDeep = _cloneDeep
-export const each = _each
-export const filter = _filter
-export const get = _get
-export const without = _without
-export const find = _find
-export const findIndex = _findIndex
-export const isString = _isString
-export const isObject = _isObject
-export const throttle = _throttle
-export const flatten = _flatten
-export const omit = _omit
-export const extend = _extend
-export const groupBy = _groupBy
-export const sortBy = _sortBy
-export const range = _range
+export const isNumber = <T>(a: T): boolean => typeof a === 'number'
+export const isFunction = <T>(a: T): boolean => typeof a === 'function'
+export const isUndefined = <T>(a: T): boolean => a === undefined
+export const isNil = <T>(a: T): boolean => a == null
+export const isString = <T>(a: T): boolean => typeof a === 'string'
+export const isArray = <T>(a: T): boolean => Array.isArray(a)
+export const isObject = <T>(a: T): boolean => (a instanceof Object)
+export const isPlainObject = <T>(a: T): boolean => isObject(a) && !isArray(a) && !isFunction(a)
+
+export const isAClassInstance = <T>(a: T): boolean => {
+  return a.constructor.name !== 'Function' && a.constructor.name !== 'Object'
+}
+
+export const isEmpty = <T>(obj: T): boolean => {
+  return [Object, Array].includes((obj || {}).constructor as ArrayConstructor | ObjectConstructor) &&
+    !Object.entries((obj || {})).length
+}
+
+// isEqual: https://github.com/maplibre/maplibre-gl-js/blob/e78ad7944ef768e67416daa4af86b0464bd0f617/src/style-spec/util/deep_equal.ts, 3-Clause BSD license
+export const isEqual = (a?: unknown | null, b?: unknown | null): boolean => {
+  if (Array.isArray(a)) {
+    if (!Array.isArray(b) || a.length !== b.length) return false
+    for (let i = 0; i < a.length; i++) {
+      if (!isEqual(a[i], b[i])) return false
+    }
+    return true
+  }
+  if (typeof a === 'object' && a !== null && b !== null) {
+    if (!(typeof b === 'object')) return false
+    const keys = Object.keys(a)
+    if (keys.length !== Object.keys(b).length) return false
+    for (const key in a) {
+      if (!isEqual(a[key], b[key])) return false
+    }
+    return true
+  }
+  return a === b
+}
+
+export const without = <T>(arr: Array<T>, ...args: T[]): Array<T> => arr.filter(item => !args.includes(item))
+export const flatten = <T>(arr: Array<T | T[]>): Array<T> => arr.flat() as T[]
+export const cloneDeep = <T>(obj: T, stack: Map<any, any> = new Map()): T => {
+  if (typeof obj !== 'object' || obj === null) {
+    return obj
+  }
+
+  if (obj instanceof Date) {
+    return new Date(obj.getTime()) as unknown as T
+  }
+
+  if (obj instanceof Array) {
+    const clone = []
+    stack.set(obj, clone)
+    for (const item of obj) {
+      clone.push(stack.has(item) ? stack.get(item) : cloneDeep(item, stack))
+    }
+    return obj
+  }
+
+  // Class instances will be copied without cloning
+  if (isAClassInstance(obj)) {
+    const clone = obj
+    return clone
+  }
+
+  if (obj instanceof Object) {
+    const clone = {} as T
+    stack.set(obj, clone)
+    Object.keys(obj)
+      .reduce((newObj: T, key: string | number): T => {
+        newObj[key] = stack.has(obj[key]) ? stack.get(obj[key]) : cloneDeep(obj[key], stack)
+        return newObj
+      }, clone)
+
+    return clone
+  }
+}
+
+export const merge = <T, K>(obj1: T, obj2: K): T & K => {
+  const newObj = cloneDeep(obj1) as T & K
+  Object.keys(obj2).forEach(key => {
+    if (isPlainObject(obj1[key]) && isPlainObject(obj2[key])) {
+      newObj[key] = merge(obj1[key], obj2[key])
+    } else {
+      newObj[key] = cloneDeep(obj2[key])
+    }
+  })
+
+  return newObj
+}
+
+export const omit = <T extends Record<string | number | symbol, unknown>>(obj: T, props: Array<keyof T>): Partial<T> => {
+  obj = { ...obj }
+  props.forEach(prop => delete obj[prop])
+  return obj
+}
+
+export const groupBy = <T extends Record<string | number, any>> (arr: T[], accessor: (a: T) => string | number): Record<string | number, T[]> => {
+  return arr.reduce(
+    (grouped, v, i, a, k = accessor(v)) => (((grouped[k] || (grouped[k] = [])).push(v), grouped)),
+    {} as Record<string | number, T[]>
+  )
+}
+
+export const sortBy = <T>(arr: Array<T>, accessor: (a: T) => string | number): Array<T> => {
+  return arr.concat() // The native sort method modifies the array in place. We use `.concat()` to copy the array first
+    .sort((a, b): number => {
+      return (accessor(a) > accessor(b)) ? 1 : ((accessor(b) > accessor(a)) ? -1 : 0)
+    })
+}
+
+export const throttle = <T extends (...args: any[]) => any>(
+  f: T,
+  delay: number,
+  options?: {
+    noTrailing?: boolean;
+    noLeading?: boolean;
+    debounceMode?: boolean;
+  }
+): _throttle<T> => _throttle(delay, f, options)
 
 export function getValue<T, ReturnType> (
   d: T,

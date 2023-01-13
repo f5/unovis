@@ -1,8 +1,9 @@
 import { select, Selection } from 'd3-selection'
+import { range } from 'd3-array'
 import { Transition } from 'd3-transition'
 
 // Utils
-import { range, throttle, getValue, getBoolean } from 'utils/data'
+import { throttle, getValue, getBoolean } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 
 // Types
@@ -55,7 +56,7 @@ export function createLinks<N extends GraphInputNode, L extends GraphInputLink> 
   selection.append('g')
     .attr('class', linkSelectors.flowGroup)
     .selectAll(`.${linkSelectors.flowCircle}`)
-    .data(range(6)).enter()
+    .data(range(0, 6)).enter()
     .append('circle')
     .attr('class', linkSelectors.flowCircle)
 

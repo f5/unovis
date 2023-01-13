@@ -14,7 +14,7 @@ import { GraphInputLink, GraphInputNode } from 'types/graph'
 import { Spacing } from 'types/spacing'
 
 // Utils
-import { isNumber, clamp, find, cloneDeep, flatten, findIndex, clean, unique, shallowDiff, isFunction, getBoolean } from 'utils/data'
+import { isNumber, clamp, cloneDeep, flatten, clean, unique, shallowDiff, isFunction, getBoolean } from 'utils/data'
 import { stringToHtmlId } from 'utils/misc'
 import { smartTransition } from 'utils/d3'
 
@@ -217,12 +217,12 @@ export class Graph<
       // Select Links / Nodes
       this._resetSelection()
       if (this.config.selectedNodeId) {
-        const selectedNode = find(datamodel.nodes, node => node.id === this.config.selectedNodeId)
+        const selectedNode = datamodel.nodes.find(node => node.id === this.config.selectedNodeId)
         this._selectNode(selectedNode)
       }
 
       if (this.config.selectedLinkId) {
-        const selectedLink = find(datamodel.links, link => link.id === this.config.selectedLinkId)
+        const selectedLink = datamodel.links.find(link => link.id === this.config.selectedLinkId)
         this._selectLink(selectedLink)
       }
 
@@ -655,7 +655,7 @@ export class Graph<
     }
 
     const panelNodesToUpdate = allNodesSelection.filter((node: GraphNode<N>) => {
-      return node._id === d._id || findIndex(panelNeighbourNodes, (n: GraphNode<N>) => node._id === n._id) !== -1
+      return node._id === d._id || panelNeighbourNodes.findIndex((n: GraphNode<N>) => node._id === n._id) !== -1
     })
 
     panelNodesToUpdate
@@ -673,7 +673,7 @@ export class Graph<
     const linksToUpdate = linkElements.filter((l: L) => {
       const source = l.source as GraphNode<N>
       const target = l.target as GraphNode<N>
-      return source._id === d._id || target._id === d._id || findIndex(panelNeighbourNodes, (n: GraphNode<N>) => source._id === n._id) !== -1 || findIndex(panelNeighbourNodes, (n: GraphNode<N>) => target._id === n._id) !== -1
+      return source._id === d._id || target._id === d._id || panelNeighbourNodes.findIndex((n: GraphNode<N>) => source._id === n._id) !== -1 || panelNeighbourNodes.findIndex((n: GraphNode<N>) => target._id === n._id) !== -1
     })
     linksToUpdate.call(updateLinks, config, 0, scale)
     const linksToAnimate = linksToUpdate.filter(d => d._state.greyout)
