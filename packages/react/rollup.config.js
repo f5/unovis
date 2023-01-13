@@ -11,7 +11,6 @@ const extensions = ['.ts', '.tsx']
 // Excluded dependencies
 const externals = [
   ...Object.keys(pkg.devDependencies),
-  'lodash-es/isEqual',
 ]
 
 const regexesOfPackages = externals // To prevent having node_modules in the build files
