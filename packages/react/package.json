@@ -58,6 +58,5 @@
     "typescript": "~4.2.4"
   },
   "dependencies": {
-    "lodash-es": "^4.17.21"
   }
 }

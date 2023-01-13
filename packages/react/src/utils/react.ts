@@ -1,5 +1,5 @@
 import { Children, ReactElement, ReactNode } from 'react'
-import _isEqual from 'lodash-es/isEqual.js'
+import { isEqual } from '@unovis/ts'
 
 export function arePropsEqual<PropTypes extends { children?: ReactNode }> (prevProps: PropTypes, nextProps: PropTypes): boolean {
   if (typeof prevProps.children !== typeof nextProps.children) return false
@@ -10,14 +10,15 @@ export function arePropsEqual<PropTypes extends { children?: ReactNode }> (prevP
     if (prevChildren.length !== nextChildren.length) return false
 
     for (let i = 0; i < nextChildren.length; i += 1) {
-      if (!_isEqual(prevChildren[i]?.props, nextChildren[i]?.props)) return false
+      if (!isEqual(prevChildren[i]?.props, nextChildren[i]?.props)) return false
+      if (!isEqual(prevChildren[i].props, nextChildren[i].props)) return false
     }
   }
 
   const propKeys = Array.from(new Set([...Object.keys(prevProps), ...Object.keys(nextProps)])) as (keyof PropTypes)[]
   for (const key of propKeys) {
     if (key === 'children') continue
-    if (!(_isEqual(prevProps[key], nextProps[key]))) return false
+    if (!(isEqual(prevProps[key], nextProps[key]))) return false
   }
 
   return true
