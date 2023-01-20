@@ -1,12 +1,12 @@
-import { ReactElement, ReactNode } from 'react'
+import { Children, ReactElement, ReactNode } from 'react'
 import _isEqual from 'lodash-es/isEqual.js'
 
 export function arePropsEqual<PropTypes extends { children?: ReactNode }> (prevProps: PropTypes, nextProps: PropTypes): boolean {
   if (typeof prevProps.children !== typeof nextProps.children) return false
 
-  if (Array.isArray(prevProps.children) && Array.isArray(nextProps.children)) {
-    const prevChildren = prevProps.children as ReactElement[]
-    const nextChildren = nextProps.children as ReactElement[]
+  if (prevProps.children && nextProps.children) {
+    const prevChildren = Children.toArray(prevProps.children) as ReactElement[]
+    const nextChildren = Children.toArray(nextProps.children) as ReactElement[]
     if (prevChildren.length !== nextChildren.length) return false
 
     for (let i = 0; i < nextChildren.length; i += 1) {
