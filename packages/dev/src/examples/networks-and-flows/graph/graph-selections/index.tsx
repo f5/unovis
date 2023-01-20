@@ -4,7 +4,7 @@ import { Graph } from '@unovis/ts'
 import { generateNodeLinkData, NodeDatum, LinkDatum } from '@src/utils/data'
 
 export const title = 'Basic Graph'
-export const subTitle = 'Generated Data'
+export const subTitle = 'Select Node on Click'
 export const category = 'Graph'
 
 export const component = (): JSX.Element => {
