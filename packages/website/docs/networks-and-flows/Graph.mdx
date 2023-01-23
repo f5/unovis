@@ -5,7 +5,7 @@ description: Learn how to configure a Network Graph
 import CodeBlock from '@theme/CodeBlock'
 import BrowserOnly from '@docusaurus/BrowserOnly'
 import { scaleLinear } from 'd3-scale'
-import _sample from 'lodash/sample'
+import { sample} from "../utils/data";
 import { PropTable } from '../components/props-table.tsx'
 import { DocWrapper, InputWrapper } from '../wrappers'
 import { generateNodeLinkData } from '../utils/data'
@@ -44,7 +44,7 @@ export const getNodeSideLabels = (d, i) => i === 5
 
 export const palette = ['#4580C0', '#D9C6BB', '#FED651', '#8E8D95', '#BEB18B', '#E2203A']
 export const getColorByIndex = (i) => palette[i % palette.length]
-export const getRandomColor = () => _sample(palette)
+export const getRandomColor = () => sample(palette)
 export const gradient = scaleLinear().range(['#E2203A', '#FED651', '#3ECC5F']).domain([0, 50, 100])
 
 The _Graph_ component has been designed to visualize network graphs with a relatively low number of nodes and links, but
@@ -285,12 +285,12 @@ Use the `--vis-graph-link-stroke-opacity` variable to set link opacity.
 If you want a link to be dashed, you can achieve that by providing an accessor function to `linkStyle` returning
 either `GraphLinkStyle.Dashed` (`"dashed"`) or `GraphLinkStyle.Solid` (`"solid"`). The dashes length and spacing can be
 changed with the `--vis-graph-link-dashed-stroke-dasharray` CSS variable.
-<GraphDoc hiddenProps={linkHiddenProps} linkStroke={getRandomColor} linkStyle={() => _sample(['dashed', 'solid'])} linkWidth={(d, i) => 2 + i / 2} />
+<GraphDoc hiddenProps={linkHiddenProps} linkStroke={getRandomColor} linkStyle={() => sample(['dashed', 'solid'])} linkWidth={(d, i) => 2 + i / 2} />
 
 ### Arrows
 Providing an accessor function to `linkArrow` will turn on arrows display on links. The function should return
 `GraphLinkArrowStyle.Single` (`"single"`) or `GraphLinkArrowStyle.Double` (`"double"`) or `null`.
-<GraphDoc hiddenProps={linkHiddenProps} linkArrow={() => _sample([undefined, 'single', 'double'])} />
+<GraphDoc hiddenProps={linkHiddenProps} linkArrow={() => sample([undefined, 'single', 'double'])} />
 
 ### Labels
 Links can have one small circular labels similar to node's [side labels](Graph#on-the-side). Provide a function to
