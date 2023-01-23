@@ -12,35 +12,46 @@ export const isNil = <T>(a: T): boolean => a == null
 export const isString = <T>(a: T): boolean => typeof a === 'string'
 export const isArray = <T>(a: T): boolean => Array.isArray(a)
 export const isObject = <T>(a: T): boolean => (a instanceof Object)
-export const isPlainObject = <T>(a: T): boolean => isObject(a) && !isArray(a) && !isFunction(a)
-
-export const isAClassInstance = <T>(a: T): boolean => {
-  return a.constructor.name !== 'Function' && a.constructor.name !== 'Object'
-}
+export const isAClassInstance = <T>(a: T): boolean => a.constructor.name !== 'Function' && a.constructor.name !== 'Object'
+export const isPlainObject = <T>(a: T): boolean => isObject(a) && !isArray(a) && !isFunction(a) && !isAClassInstance(a)
 
 export const isEmpty = <T>(obj: T): boolean => {
   return [Object, Array].includes((obj || {}).constructor as ArrayConstructor | ObjectConstructor) &&
     !Object.entries((obj || {})).length
 }
 
-// isEqual: https://github.com/maplibre/maplibre-gl-js/blob/e78ad7944ef768e67416daa4af86b0464bd0f617/src/style-spec/util/deep_equal.ts, 3-Clause BSD license
-export const isEqual = (a?: unknown | null, b?: unknown | null): boolean => {
+// Based on https://github.com/maplibre/maplibre-gl-js/blob/e78ad7944ef768e67416daa4af86b0464bd0f617/src/style-spec/util/deep_equal.ts, 3-Clause BSD license
+export const isEqual = (a?: unknown | null, b?: unknown | null, visited: Set<any> = new Set()): boolean => {
   if (Array.isArray(a)) {
     if (!Array.isArray(b) || a.length !== b.length) return false
+
+    if (visited.has(a)) return true
+    else visited.add(a)
+
     for (let i = 0; i < a.length; i++) {
-      if (!isEqual(a[i], b[i])) return false
+      if (!isEqual(a[i], b[i], visited)) return false
     }
+
     return true
   }
+
   if (typeof a === 'object' && a !== null && b !== null) {
     if (!(typeof b === 'object')) return false
+    if (a === b) return true
+
     const keys = Object.keys(a)
     if (keys.length !== Object.keys(b).length) return false
+
+    if (visited.has(a)) return true
+    else visited.add(a)
+
     for (const key in a) {
-      if (!isEqual(a[key], b[key])) return false
+      if (!isEqual(a[key], b[key], visited)) return false
     }
+
     return true
   }
+
   return a === b
 }
 
@@ -83,11 +94,19 @@ export const cloneDeep = <T>(obj: T, stack: Map<any, any> = new Map()): T => {
   }
 }
 
-export const merge = <T, K>(obj1: T, obj2: K): T & K => {
-  const newObj = cloneDeep(obj1) as T & K
+export const merge = <T, K>(obj1: T, obj2: K, visited: Map<any, any> = new Map()): T & K => {
+  const newObj = (isAClassInstance(obj1) ? obj1 : cloneDeep(obj1)) as T & K
+  if ((obj1 as unknown) === (obj2 as unknown)) return obj1 as T & K
+
+  // Taking care of recursive structures
+  if (visited.has(obj2)) return visited.get(obj2)
+  else visited.set(obj2, newObj)
+
   Object.keys(obj2).forEach(key => {
     if (isPlainObject(obj1[key]) && isPlainObject(obj2[key])) {
-      newObj[key] = merge(obj1[key], obj2[key])
+      newObj[key] = merge(obj1[key], obj2[key], visited)
+    } else if (isAClassInstance(obj2)) {
+      newObj[key] = obj2
     } else {
       newObj[key] = cloneDeep(obj2[key])
     }
