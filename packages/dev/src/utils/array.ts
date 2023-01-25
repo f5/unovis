@@ -4,3 +4,5 @@ export function groupBy<T extends Record<string, any>> (arr: T[], key: string): 
     {} as Record<string, T[]>
   )
 }
+
+export const sample = <T>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)]
