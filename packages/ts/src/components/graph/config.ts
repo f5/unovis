@@ -143,8 +143,12 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   nodeIconSize?: NumericAccessor<N>;
   /** Node label accessor function or constant value. Default: `node => node.label` */
   nodeLabel?: StringAccessor<N>;
+  /** Defines whether to trim the node labels or not. Default: `true` */
+  nodeLabelTrim?: BooleanAccessor<N>;
   /** Node sub-label accessor function or constant value: Default: `''` */
   nodeSubLabel?: StringAccessor<N>;
+  /** Defines whether to trim the node sub-labels or not. Default: `true` */
+  nodeSubLabelTrim?: BooleanAccessor<N>;
   /** Node circular side labels accessor function. The function should return an array of GraphCircleLabel objects. Default: `undefined` */
   nodeSideLabels?: GenericAccessor<GraphCircleLabel[], N>;
   /** Node bottom icon accessor function. Default: `undefined` */
@@ -227,7 +231,9 @@ export class GraphConfig<N extends GraphInputNode, L extends GraphInputLink> ext
   nodeIcon = (n: N): string => n['icon']
   nodeIconSize = undefined
   nodeLabel = (n: N): string => n['label']
+  nodeLabelTrim = true
   nodeSubLabel = ''
+  nodeSubLabelTrim = true
   nodeSideLabels = undefined
   nodeBottomIcon = undefined
   nodeDisabled = false
