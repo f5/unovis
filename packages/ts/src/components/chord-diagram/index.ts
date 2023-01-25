@@ -1,7 +1,7 @@
 import { Selection } from 'd3-selection'
 import { nest } from 'd3-collection'
 import { hierarchy, partition } from 'd3-hierarchy'
-import { arc, area, CurveCatmullRomFactory, CurveFactory } from 'd3-shape'
+import { arc, line } from 'd3-shape'
 import { scalePow, ScalePower } from 'd3-scale'
 import { max } from 'd3-array'
 
@@ -18,17 +18,7 @@ import { Spacing } from 'types/spacing'
 import { Curve } from 'types/curve'
 
 // Local Types
-import {
-  ChordInputNode,
-  ChordInputLink,
-  ChordDiagramData,
-  ChordHierarchy,
-  ChordNode,
-  ChordRibbon,
-  ChordLabelAlignment,
-  ChordLeafNode,
-  ChordRibbonPoint,
-} from './types'
+import { ChordInputNode, ChordInputLink, ChordDiagramData, ChordHierarchy, ChordNode, ChordRibbon, ChordLabelAlignment, ChordLeafNode } from './types'
 
 // Config
 import { ChordDiagramConfig, ChordDiagramConfigInterface } from './config'
@@ -58,11 +48,9 @@ export class ChordDiagram<
   labelGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
   arcGen = arc<ChordNode<N>>()
   radiusScale: ScalePower<number, number> = scalePow()
-  linkAreaGen = area<ChordRibbonPoint>()
   private _nodes: ChordNode<N>[] = []
   private _links: ChordRibbon<N>[] = []
   private _rootNode: ChordNode<N>
-  private _hierarchyNodes: ChordHierarchy<GraphNodeCore<N, L>>
 
   events = {
     [ChordDiagram.selectors.node]: {
@@ -78,19 +66,9 @@ export class ChordDiagram<
   constructor (config?: ChordDiagramConfigInterface<N, L>) {
     super()
     if (config) this.config.init(config)
-    this.linkGroup = this.g.append('g').attr('class', s.nodes)
-    this.nodeGroup = this.g.append('g').attr('class', s.links)
+    this.linkGroup = this.g.append('g').attr('class', s.links)
+    this.nodeGroup = this.g.append('g').attr('class', s.nodes)
     this.labelGroup = this.g.append('g').attr('class', s.labels)
-  }
-
-  setData (data: { nodes: N[]; links?: L[] }): void {
-    this.datamodel.data = data
-    this._hierarchyNodes = this._getHierarchyNodes()
-  }
-
-  setConfig (config: ChordDiagramConfigInterface<N, L>): void {
-    super.setConfig(config)
-    this._hierarchyNodes = this._getHierarchyNodes()
   }
 
   get bleed (): Spacing {
@@ -100,7 +78,7 @@ export class ChordDiagram<
   _render (customDuration?: number): void {
     super._render(customDuration)
     const { config, config: { nodeLabelAlignment, radiusScaleExponent }, radiusScale } = this
-    const nodes = this._hierarchyNodes
+    const nodes = this._getHierarchyNodes()
     const duration = isNumber(customDuration) ? customDuration : config.duration
 
     this.arcGen
@@ -110,14 +88,7 @@ export class ChordDiagram<
       .innerRadius(d => this.radiusScale(d.y1) - getNumber(d, config.nodeWidth))
       .outerRadius(d => this.radiusScale(d.y1))
 
-    const curveGen = Curve[config.curveType]
-    if ('alpha' in curveGen) (curveGen as CurveCatmullRomFactory).alpha?.(0.25)
-    this.linkAreaGen
-      .x0(d => d.x0)
-      .x1(d => d.x1)
-      .y0(d => d.y0)
-      .y1(d => d.y1)
-      .curve(curveGen as CurveFactory)
+    const linkLineGen = line().curve(Curve.catmullRom.alpha(0.25))
 
     const hierarchyData = hierarchy(nodes, (d: ChordHierarchy<GraphNodeCore<N, L>>) => d.values)
     hierarchyData.sum((d) => {
@@ -154,10 +125,10 @@ export class ChordDiagram<
 
     const linksEnter = linksSelection.enter().append('path')
       .attr('class', s.link)
-      .call(createLink, this.linkAreaGen)
+      .call(createLink, linkLineGen)
 
     const linksMerged = linksSelection.merge(linksEnter)
-    linksMerged.call(updateLink, this.linkAreaGen, duration)
+    linksMerged.call(updateLink, linkLineGen, duration)
 
     linksSelection.exit()
       .call(removeLink, duration)
@@ -255,12 +226,13 @@ export class ChordDiagram<
         const x1 = x0 + len * getNumber(link, config.linkValue) / currNode.value
         currNode._prevX1 = x1
 
-        const converted = this._convertRadialToCartesian(
-          type === 'out' ? x0 : x1,
-          type === 'out' ? x1 : x0,
-          currNode.y1, 0)
         const pointIdx = type === 'out' ? depth : partitionData.height * 2 - 1 - depth
-        link._state.points[pointIdx] = { x0: converted.x0, x1: converted.x1, y0: converted.y0, y1: converted.y1 }
+        link._state.points[pointIdx] = this._convertRadialToCartesian(
+          Math.min(x0, x1),
+          Math.max(x0, x1),
+          currNode.y1,
+          config.nodeWidth
+        )
       })
     }
 
@@ -288,17 +260,19 @@ export class ChordDiagram<
     return ribbons
   }
 
-  private _convertRadialToCartesian (x0: number, x1: number, y: number, nodeWidth: number): { x0: number; x1: number; y0: number; y1: number } {
-    const r0 = this.radiusScale(y) - nodeWidth / 2
+  private _convertRadialToCartesian (x0: number, x1: number, y: number, nodeWidth: number): ChordRibbonPoint {
+    const r = Math.max(this.radiusScale(y) - nodeWidth, 0)
     const a0 = x0 - Math.PI / 2
-    const r1 = this.radiusScale(y) - nodeWidth / 2
     const a1 = x1 - Math.PI / 2
 
     return {
-      x0: r0 * Math.cos(a0),
-      x1: r1 * Math.cos(a1),
-      y0: r0 * Math.sin(a0),
-      y1: r1 * Math.sin(a1),
+      a0,
+      a1,
+      r,
+      x0: r * Math.cos(a0),
+      x1: r * Math.cos(a1),
+      y0: r * Math.sin(a0),
+      y1: r * Math.sin(a1),
     }
   }
 

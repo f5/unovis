@@ -41,7 +41,7 @@ export type ChordNodeState = {
 export type ChordNode<N extends ChordInputNode> = HierarchyRectangularNode<N | ChordHierarchy<N>> & ChordNodeState
 export type ChordLeafNode<N extends ChordInputNode> = HierarchyRectangularNode<N> & ChordNodeState
 
-export type ChordRibbonPoint = { x0: number; x1: number; y0: number; y1: number }
+export type ChordRibbonPoint = { x0: number; x1: number; y0: number; y1: number; a0: number; a1: number; r: number }
 export interface ChordRibbon<N extends ChordInputNode> {
   source: ChordLeafNode<N>;
   target: ChordLeafNode<N>;

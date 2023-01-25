@@ -8,6 +8,7 @@ export const variables = injectGlobal`
   :root {
     --vis-chord-diagram-link-fill-color: #cad5f6;
     --vis-chord-diagram-link-stroke-color: #777777;
+    --vis-chord-diagram-link-opacity: 0.5;
     --vis-chord-diagram-link-stroke-opacity: 0.15;
 
     --vis-chord-diagram-label-text-fill-color-bright: #ffffff;
