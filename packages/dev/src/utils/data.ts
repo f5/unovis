@@ -38,12 +38,12 @@ export function generateXYDataRecords (n = 10): XYDataRecord[] {
   }))
 }
 
-export function generateTimeSeries (n = 10, types = n): TimeDataRecord[] {
+export function generateTimeSeries (n = 10, types = n, lengthMultiplier = 1): TimeDataRecord[] {
   const groups = Array(types).fill(0).map((_, i) => String.fromCharCode(i + 65))
   return Array(n).fill(0).map((_, i: number) => ({
-    timestamp: Date.now() + i * 1000 * 60 * 60 * 24,
+    timestamp: Date.now() + i * 1000 * 60 * 60 * 24 + (Math.random() - 0.5) * 5 * 1000 * 60 * 60 * 24,
     value: i / 10 + Math.sin(i / 5) + Math.cos(i / 3),
-    length: Math.round(1000 * 60 * 60 * 24) * Math.random(),
+    length: Math.round(lengthMultiplier * 1000 * 60 * 60 * 24) * (0.2 + Math.random()),
     type: groups[i % groups.length],
   }))
 }

@@ -187,7 +187,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfig<Datum
     // Scroll Bar
     const contentBBox = this._rowsGroup.node().getBBox() // We determine content size using the rects group because lines are animated
     const absoluteContentHeight = contentBBox.height
-    this._scrollbarHeight = yHeight * yHeight / absoluteContentHeight
+    this._scrollbarHeight = yHeight * yHeight / absoluteContentHeight || 0
     this._maxScroll = Math.max(absoluteContentHeight - yHeight, 0)
 
     this._scrollBarGroup
@@ -207,7 +207,6 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfig<Datum
       .attr('ry', this._scrollBarWidth / 2)
 
     this._updateScrollPosition(0)
-    this._setPointerEvents()
   }
 
   private _positionLines (
@@ -260,16 +259,8 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfig<Datum
     this._linesGroup.attr('pointer-events', 'none')
     clearTimeout(this._scrollTimeoutId)
     this._scrollTimeoutId = setTimeout(() => {
-      this._setPointerEvents()
+      this._linesGroup.attr('pointer-events', null)
     }, 300)
-  }
-
-  private _setPointerEvents (): void {
-    const { config } = this
-
-    const hasLineEvents = Object.keys(config.events).includes(s.line)
-    const hasLinesGroupEvents = Object.keys(config.events).includes(s.lines)
-    this._linesGroup.attr('pointer-events', (hasLineEvents || hasLinesGroupEvents) ? null : 'none')
   }
 
   private _updateScrollPosition (diff: number): void {
