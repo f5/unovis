@@ -206,7 +206,7 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
     // Update Node Icon
     icon
       .style('font-size', `${getNumber(d, nodeIconSize, d._index) ?? 2.5 * Math.sqrt(nodeSizeValue)}px`)
-      .attr('dy', 1)
+      .attr('dy', '0.1em')
       .style('fill', getNodeIconColor(d, nodeFill, d._index, selection.node()))
       .html(getString(d, nodeIcon, d._index))
 
@@ -226,8 +226,8 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
 
     // Side label text
     sideLabelsUpdate.select(`.${nodeSelectors.sideLabel}`).html(d => d.text)
-      .attr('dy', '1px')
-      .style('fill', l => getSideLabelTextColor(l, selection.node()))
+      .attr('dy', '0.1em')
+      .style('fill', l => l.textColor ?? getSideLabelTextColor(l, selection.node()))
       .style('font-size', l => l.fontSize ?? `${(2 + (l.radius ?? SIDE_LABEL_DEFAULT_RADIUS)) / Math.pow(l.text.toString().length, 0.3)}px`)
       // Side label circle background
     sideLabelsUpdate.select(`.${nodeSelectors.sideLabelBackground}`)

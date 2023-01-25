@@ -55,9 +55,10 @@ export enum GraphLayoutType {
 
 export type GraphCircleLabel = {
   text: string;
+  textColor?: string | null;
   color?: string | null;
   cursor?: string | null;
-  fontSize?: string;
+  fontSize?: string | null;
   radius?: number;
 }
 
