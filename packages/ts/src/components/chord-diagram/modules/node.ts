@@ -48,7 +48,7 @@ export function updateNode<N extends ChordInputNode, L extends ChordInputLink> (
   selection
     .attr('id', (d, i) => `chord-node-${i}`)
     .style('transition', `fill ${duration}ms`) // Animate color with CSS because we're using CSS-variables
-    .style('fill', d => getColor(d, config.nodeColor, d.depth))
+    .style('fill', d => getColor(d.data, config.nodeColor, d.depth))
     .style('stroke', d => getColor(d, config.nodeColor, d.depth))
 
   if (duration) {

@@ -5,7 +5,6 @@ import { ComponentConfigInterface, ComponentConfig } from 'core/component/config
 
 // Types
 import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
-import { CurveType } from 'types/curve'
 
 // Local Types
 import { ChordInputLink, ChordInputNode, ChordLabelAlignment, ChordNode } from './types'
@@ -29,8 +28,6 @@ export interface ChordDiagramConfigInterface<N extends ChordInputNode, L extends
   cornerRadius?: NumericAccessor<N>;
   /** Angular range of the diagram. Default: `[0, 2 * Math.PI]` */
   angleRange?: [number, number];
-  /** Curve type. Default: `CurveType.CatmullRom` */
-  curveType?: CurveType;
   /** The exponent property of the radius scale. Default: `2` */
   radiusScaleExponent?: number;
 }
@@ -46,6 +43,5 @@ export class ChordDiagramConfig<N extends ChordInputNode, L extends ChordInputLi
   padAngle = 0.02
   cornerRadius = 2
   angleRange: [number, number] = [0, 2 * Math.PI]
-  curveType = CurveType.CatmullRom
   radiusScaleExponent = 2
 }
