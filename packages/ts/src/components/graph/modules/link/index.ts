@@ -181,22 +181,27 @@ export function updateLinks<N extends GraphInputNode, L extends GraphInputLink> 
 
     labelsEnter.append('text')
       .attr('class', linkSelectors.labelContent)
-      .attr('dy', 1)
 
     // Update
     const labelsUpdate = labels.merge(labelsEnter)
 
     smartTransition(labelsUpdate.select(`.${linkSelectors.labelCircle}`), duration)
-      .attr('r', LINK_LABEL_RADIUS)
+      .attr('r', label => label.radius ?? LINK_LABEL_RADIUS)
       .style('fill', label => label.color)
 
     labelsUpdate.select(`.${linkSelectors.labelContent}`)
       .text(label => label.text)
-      .style('fill', label => getLinkLabelTextColor(label))
-      .style('font-size', label => `${10 / Math.pow(label.text.toString().length, 0.3)}px`)
+      .attr('dy', '0.1em')
+      .style('fill', label => label.textColor ?? getLinkLabelTextColor(label))
+      .style('font-size', label => {
+        if (label.fontSize) return label.fontSize
+        const radius = label.radius ?? LINK_LABEL_RADIUS
+        return `${radius / Math.pow(label.text.toString().length, 0.4)}px`
+      })
 
     smartTransition(labelsUpdate, duration)
       .attr('transform', labelTranslate)
+      .style('cursor', label => label.cursor)
       .style('opacity', 1)
 
     // Exit

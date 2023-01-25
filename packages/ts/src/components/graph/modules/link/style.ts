@@ -105,7 +105,7 @@ export const labelGroups = css`
 
 export const labelGroup = css`
   label: label-group;
-  pointer-events: none;
+  pointer-events: all;
 `
 
 export const labelCircle = css`
