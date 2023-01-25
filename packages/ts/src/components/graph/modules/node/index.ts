@@ -119,7 +119,8 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
 ): Selection<SVGGElement, GraphNode<N, L>, SVGGElement, unknown> | Transition<SVGGElement, GraphNode<N, L>, SVGGElement, unknown> {
   const {
     nodeGaugeAnimDuration, nodeStrokeWidth, nodeShape, nodeSize, nodeGaugeValue, nodeGaugeFill,
-    nodeIcon, nodeIconSize, nodeLabel, nodeSubLabel, nodeSideLabels, nodeStroke, nodeFill, nodeBottomIcon,
+    nodeIcon, nodeIconSize, nodeLabel, nodeLabelTrim, nodeSubLabel, nodeSubLabelTrim, nodeSideLabels,
+    nodeStroke, nodeFill, nodeBottomIcon,
   } = config
 
   // Re-create nodes to update shapes if they were changes
@@ -245,8 +246,8 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
     // Set label and sub-label text
     const labelText = getString(d, nodeLabel, d._index)
     const sublabelText = getString(d, nodeSubLabel, d._index)
-    const labelTextTrimmed = trimText(labelText)
-    const sublabelTextTrimmed = trimText(sublabelText)
+    const labelTextTrimmed = getBoolean(d, nodeLabelTrim, d._index) ? trimText(labelText) : labelText
+    const sublabelTextTrimmed = getBoolean(d, nodeSubLabelTrim, d._index) ? trimText(sublabelText) : sublabelText
 
     labelTextContent.text(labelTextTrimmed)
     sublabelTextContent.text(sublabelTextTrimmed)
