@@ -214,9 +214,10 @@ function to `nodeSideLabels` that returns an array of `GraphCircleLabel` objects
 ```ts
 type GraphCircleLabel = {
   text: string;
+  textColor?: string; // Optional text color. By default, the text color will depend on the brightness of the circle color.
   color?: string | null; // Optional color
   cursor?: string | null; // Optional cursor on hover
-  fontSize?: string; // Optional font size as a CSS string
+  fontSize?: string | null; // Optional font size as a CSS string
   radius?: number; // Circle radius in pixels
 }
 ```
