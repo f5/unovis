@@ -1,7 +1,7 @@
 {
   "name": "@unovis/react",
   "description": "Modular data visualization framework for React, Angular, Svelte, and vanilla TypeScript or JavaScript",
-  "version": "1.0.3-beta.0",
+  "version": "1.0.3-beta.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/f5/unovis.git",
@@ -36,7 +36,7 @@
   },
   "peerDependencies": {
     "@emotion/css": "^11.7.1",
-    "@unovis/ts": "1.0.3-beta.0",
+    "@unovis/ts": "1.0.3-beta.1",
     "react": ">=16.8.0 || ^17 || ^18",
     "react-dom": ">=16.8.0 || ^17 || ^18"
   },
