@@ -65,6 +65,8 @@ module.exports = {
       core: path.resolve(__dirname, '../ts/src/core/'),
       styles: path.resolve(__dirname, '../ts/src/styles/'),
       'data-models': path.resolve(__dirname, '../ts/src/data-models/'),
+
+      react: path.resolve('./node_modules/react'),
     },
   },
   devServer: {
