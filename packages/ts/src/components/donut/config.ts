@@ -29,10 +29,12 @@ export interface DonutConfigInterface<Datum> extends ComponentConfigInterface {
   centralSubLabel?: string;
   /** Enables wrapping for the sub-label. Default: `true` */
   centralSubLabelWrap?: boolean;
-  /** When true, the component will display empty segments (the ones that have `0` values) as thin lines.
+  /** When true, the component will display empty segments (the ones that have `0` values) as tiny slices.
    * Default: `false`
   */
   showEmptySegments?: boolean;
+  /** Angular size for empty segments in radians. Default: `0.5 * Math.PI / 180` */
+  emptySegmentAngle?: number;
   /** Show donut background. The color is configurable via
    * the `--vis-donut-background-color` and `--vis-dark-donut-background-color` CSS variables.
    * Default: `true`
@@ -57,6 +59,7 @@ export class DonutConfig<Datum> extends ComponentConfig implements DonutConfigIn
   centralSubLabel = undefined
   centralSubLabelWrap = true
   showEmptySegments = false
+  emptySegmentAngle = 0.5 * Math.PI / 180
   showBackground = true
   backgroundAngleRange = undefined
 }
