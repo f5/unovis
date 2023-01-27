@@ -15,7 +15,7 @@ import { Spacing } from 'types/spacing'
 import { VerticalAlign } from 'types/text'
 
 // Local Types
-import { DonutArcDatum, DonutArcAnimState } from './types'
+import { DonutArcDatum, DonutArcAnimState, DonutDatum } from './types'
 
 // Config
 import { DonutConfig, DonutConfigInterface } from './config'
@@ -57,38 +57,50 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfig<Datum>, Don
 
   _render (customDuration?: number): void {
     const { config, datamodel, bleed } = this
-    const data = datamodel.data
-    const duration = isNumber(customDuration) ? customDuration : config.duration
 
+    // Wrap data to preserve original indices
+    const data: DonutDatum<Datum>[] = datamodel.data
+      .map((d, i) => ({
+        index: i,
+        datum: d,
+      }))
+      .filter(d => config.showEmptySegments || getNumber(d.datum, config.value, d.index))
+
+    const duration = isNumber(customDuration) ? customDuration : config.duration
     const outerRadius = config.radius || Math.min(this._width - bleed.left - bleed.right, this._height - bleed.top - bleed.bottom) / 2
     const innerRadius = config.arcWidth === 0 ? 0 : clamp(outerRadius - config.arcWidth, 0, outerRadius - 1)
 
     this.arcGen
       .startAngle(d => d.startAngle)
-      .endAngle(d =>
-        // Add 0.5 degree for empty segments
-        config.showEmptySegments && d.startAngle === d.endAngle
-          ? d.startAngle + 0.5 * Math.PI / 180
-          : d.endAngle
-      )
+      .endAngle(d => d.endAngle)
       .innerRadius(d => d.innerRadius)
       .outerRadius(d => d.outerRadius)
-      .padAngle(config.padAngle)
-      .cornerRadius(d => config.cornerRadius)
+      .padAngle(d => d.padAngle)
+      .cornerRadius(config.cornerRadius)
 
-    const pieGen = pie<Datum>()
+    const pieGen = pie<DonutDatum<Datum>>()
       .startAngle(config.angleRange?.[0] ?? 0)
       .endAngle(config.angleRange?.[1] ?? 2 * Math.PI)
       .padAngle(config.padAngle)
-      .value((d, i) => getNumber(d, config.value, i) || 0)
+      .value(d => getNumber(d.datum, config.value, d.index) || 0)
       .sort(config.sortFunction)
 
     this.arcGroup.attr('transform', `translate(${this._width / 2},${this._height / 2})`)
-    const arcData = pieGen(data) as DonutArcDatum<Datum>[]
-    arcData.forEach((d, i) => {
-      d.index = i
-      d.innerRadius = innerRadius
-      d.outerRadius = outerRadius
+
+    const arcData: DonutArcDatum<Datum>[] = pieGen(data).map(d => {
+      const arc = {
+        ...d,
+        data: d.data.datum,
+        index: d.data.index,
+        innerRadius,
+        outerRadius,
+      }
+
+      if (config.showEmptySegments && d.endAngle - d.startAngle - d.padAngle <= Number.EPSILON) {
+        arc.endAngle = d.startAngle + Math.max(config.emptySegmentAngle, config.padAngle)
+        arc.padAngle = d.padAngle / 2
+      }
+      return arc
     })
 
     // Arc segments
