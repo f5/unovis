@@ -64,14 +64,26 @@ Customize the colors for each segment with a `colorAccessor` function:
 Providing a value to the `cornerRadius` property adds rounded corners to your _Donut_'s segments proportional to the _Donut_'s `arcWidth`.
 <InputWrapper {...defaultProps()} property="cornerRadius" defaultValue={5} inputType="range" inputProps={{ min: 0, max: 20}}/>
 
-## Pad angle
+### Pad angle
 Pad each segment with the `padAngle` property.
 <DocWrapper {...defaultProps()} padAngle={0.1}/>
 
-## Show Empty Segments
-When some segments of the donut are empty (i.e. they have 0 values), you can still show them as thin lines by setting
-`showEmptySegments` to `true`;
-<InputWrapper {...defaultProps()} data={[1,2,3,0,4,0,5]} property="showEmptySegments" inputType="checkbox" defaultValue={true}/>
+### Empty Segments
+When segments are empty (i.e. when their values are 0), you may still want them displayed in your _Donut_ as thin slices.
+To do this, set `showEmptySegments` to `true`:
+
+<InputWrapper {...defaultProps()} data={[1, 2, 0, 4, 0, 6]} property="showEmptySegments" inputType="checkbox" defaultValue={true}/>
+
+
+#### Customizing empty segment size
+When `showEmptySegments` is enabled, the default size for empty segments is `0.5 * π / 180` radians. You can tweak this to your
+liking with the `emptySegmentAngle` property which accepts a `number` in radians.
+For example, setting `emptySegmentAngle` to `Math.PI / 12` looks like:
+
+<DocWrapper {...defaultProps()} data={[1, 2, 0, 4, 0, 6]} emptySegmentAngle={Math.PI / 12} showEmptySegments excludeTabs/>
+
+####
+Note that this property will have no effect if `showEmptySegments` is `false`.
 
 ## Background
 By default, _Donut_ has a background underneath the segments, which is useful when your chart is empty. You can turn it off by setting

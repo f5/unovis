@@ -22,7 +22,7 @@ export function createArc<Datum> (
   config: DonutConfig<Datum>
 ): void {
   selection
-    .style('fill', (d, i) => getColor(d.data, config.color, i))
+    .style('fill', d => getColor(d.data, config.color, d.index))
     .style('opacity', 0)
     .each((d, i, els) => {
       const arcNode: ArcNode = els[i]
@@ -33,6 +33,7 @@ export function createArc<Datum> (
         endAngle: angleCenter + angleHalfWidth,
         innerRadius: d.innerRadius,
         outerRadius: d.outerRadius,
+        padAngle: d.padAngle,
       }
     })
 }
@@ -45,7 +46,7 @@ export function updateArc<Datum> (
 ): void {
   selection
     .style('transition', `fill ${duration}ms`) // Animate color with CSS because we're using CSS-variables
-    .style('fill', (d, i) => getColor(d.data, config.color, i))
+    .style('fill', d => getColor(d.data, config.color, d.index))
 
   const setOpacity = (d: DonutArcDatum<Datum>): number => (config.showEmptySegments || d.value) ? 1 : 0
   if (duration) {
@@ -54,7 +55,13 @@ export function updateArc<Datum> (
 
     transition.attrTween('d', (d, i, els) => {
       const arcNode: ArcNode = els[i]
-      const nextAnimState: DonutArcAnimState = { startAngle: d.startAngle, endAngle: d.endAngle, innerRadius: d.innerRadius, outerRadius: d.outerRadius }
+      const nextAnimState: DonutArcAnimState = {
+        startAngle: d.startAngle,
+        endAngle: d.endAngle,
+        innerRadius: d.innerRadius,
+        outerRadius: d.outerRadius,
+        padAngle: d.padAngle,
+      }
       const datum = interpolate(arcNode._animState, nextAnimState)
 
       return (t: number): string => {
