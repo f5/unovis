@@ -110,7 +110,7 @@ export interface SankeyConfigInterface<N extends SankeyInputNode, L extends Sank
   labelMaxWidth?: number;
   /** Expand trimmed label on hover. Default: `true` */
   labelExpandTrimmedOnHover?: boolean;
-  /** Label trimming mode. Default: `TrimMode.MIDDLE` */
+  /** Label trimming mode. Default: `TrimMode.Middle` */
   labelTrimMode?: TrimMode;
   /** Label font size in pixels. If not provided, the value of CSS variable `--vis-sankey-node-label-font-size` will be used. Default: `undefined` */
   labelFontSize?: number;

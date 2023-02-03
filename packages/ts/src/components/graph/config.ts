@@ -3,6 +3,7 @@
 import { ComponentConfigInterface, ComponentConfig } from 'core/component/config'
 
 // Types
+import { TrimMode } from 'types/text'
 import { GraphInputLink, GraphInputNode } from 'types/graph'
 import { BooleanAccessor, ColorAccessor, NumericAccessor, StringAccessor, GenericAccessor } from 'types/accessor'
 
@@ -145,10 +146,18 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   nodeLabel?: StringAccessor<N>;
   /** Defines whether to trim the node labels or not. Default: `true` */
   nodeLabelTrim?: BooleanAccessor<N>;
+  /** Node label trimming mode. Default: `TrimMode.Middle` */
+  nodeLabelTrimMode?: GenericAccessor<TrimMode | string, N>;
+  /** Node label maximum allowed text length above which the label will be trimmed. Default: `15` */
+  nodeLabelTrimLength?: NumericAccessor<N>;
   /** Node sub-label accessor function or constant value: Default: `''` */
   nodeSubLabel?: StringAccessor<N>;
   /** Defines whether to trim the node sub-labels or not. Default: `true` */
   nodeSubLabelTrim?: BooleanAccessor<N>;
+  /** Node sub-label trimming mode. Default: `TrimMode.Middle` */
+  nodeSubLabelTrimMode?: GenericAccessor<TrimMode | string, N>;
+  /** Node sub-label maximum allowed text length above which the label will be trimmed. Default: `15` */
+  nodeSubLabelTrimLength?: NumericAccessor<N>;
   /** Node circular side labels accessor function. The function should return an array of GraphCircleLabel objects. Default: `undefined` */
   nodeSideLabels?: GenericAccessor<GraphCircleLabel[], N>;
   /** Node bottom icon accessor function. Default: `undefined` */
@@ -232,8 +241,12 @@ export class GraphConfig<N extends GraphInputNode, L extends GraphInputLink> ext
   nodeIconSize = undefined
   nodeLabel = (n: N): string => n['label']
   nodeLabelTrim = true
+  nodeLabelTrimLength = 15
+  nodeLabelTrimMode = TrimMode.Middle
   nodeSubLabel = ''
   nodeSubLabelTrim = true
+  nodeSubLabelTrimLength = 15
+  nodeSubLabelTrimMode = TrimMode.Middle
   nodeSideLabels = undefined
   nodeBottomIcon = undefined
   nodeDisabled = false
