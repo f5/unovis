@@ -7,7 +7,7 @@ import { TrimMode, VerticalAlign, WrapMode, WrapTextOptions } from 'types/text'
 import { isArray, flatten } from 'utils/data'
 
 export function trimTextStart (str = '', maxLength = 15): string {
-  return str.length > maxLength ? `…${str.substr(0, maxLength)}` : str
+  return str.length > maxLength ? `…${str.substr(str.length - maxLength, maxLength)}` : str
 }
 
 export function trimTextMiddle (str = '', maxLength = 15): string {
