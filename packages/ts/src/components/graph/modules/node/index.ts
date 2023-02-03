@@ -119,8 +119,9 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
 ): Selection<SVGGElement, GraphNode<N, L>, SVGGElement, unknown> | Transition<SVGGElement, GraphNode<N, L>, SVGGElement, unknown> {
   const {
     nodeGaugeAnimDuration, nodeStrokeWidth, nodeShape, nodeSize, nodeGaugeValue, nodeGaugeFill,
-    nodeIcon, nodeIconSize, nodeLabel, nodeLabelTrim, nodeSubLabel, nodeSubLabelTrim, nodeSideLabels,
-    nodeStroke, nodeFill, nodeBottomIcon,
+    nodeIcon, nodeIconSize, nodeLabel, nodeLabelTrim, nodeLabelTrimMode, nodeLabelTrimLength,
+    nodeSubLabel, nodeSubLabelTrim, nodeSubLabelTrimMode, nodeSubLabelTrimLength,
+    nodeSideLabels, nodeStroke, nodeFill, nodeBottomIcon,
   } = config
 
   // Re-create nodes to update shapes if they were changes
@@ -246,8 +247,12 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
     // Set label and sub-label text
     const labelText = getString(d, nodeLabel, d._index)
     const sublabelText = getString(d, nodeSubLabel, d._index)
-    const labelTextTrimmed = getBoolean(d, nodeLabelTrim, d._index) ? trimText(labelText) : labelText
-    const sublabelTextTrimmed = getBoolean(d, nodeSubLabelTrim, d._index) ? trimText(sublabelText) : sublabelText
+    const labelTextTrimmed = getBoolean(d, nodeLabelTrim, d._index)
+      ? trimText(labelText, getNumber(d, nodeLabelTrimLength, d._index), getValue(d, nodeLabelTrimMode, d._index))
+      : labelText
+    const sublabelTextTrimmed = getBoolean(d, nodeSubLabelTrim, d._index)
+      ? trimText(sublabelText, getNumber(d, nodeSubLabelTrimLength, d._index), getValue(d, nodeSubLabelTrimMode, d._index))
+      : sublabelText
 
     labelTextContent.text(labelTextTrimmed)
     sublabelTextContent.text(sublabelTextTrimmed)
