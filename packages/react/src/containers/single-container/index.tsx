@@ -15,8 +15,9 @@ export type VisSingleContainerProps<Data> = SingleContainerConfigInterface<Data>
 // eslint-disable-next-line @typescript-eslint/naming-convention
 function VisSingleContainerFC<Data> (props: PropsWithChildren<VisSingleContainerProps<Data>>): JSX.Element {
   const container = useRef<HTMLDivElement>(null)
-  const [chart, setChart] = useState<SingleContainer<Data>>()
-  const [data, setData] = useState<Data | undefined>(undefined)
+  const prevPropsRef = useRef<PropsWithChildren<VisSingleContainerProps<Data>>>({})
+  const chartRef = useRef<SingleContainer<Data> | undefined>(undefined)
+  const dataRef = useRef<Data | undefined>(undefined)
   const animationFrameRef = useRef<number | null>(null)
 
   const getConfig = (): SingleContainerConfigInterface<Data> => ({
@@ -29,11 +30,16 @@ function VisSingleContainerFC<Data> (props: PropsWithChildren<VisSingleContainer
 
   // On Mount
   useEffect(() => {
-    setData(props.data)
     const c = new SingleContainer<Data>(container.current as HTMLDivElement, getConfig(), props.data)
-    setChart(c)
+    chartRef.current = c
+    dataRef.current = props.data
+
     return () => {
-      if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current)
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current)
+        animationFrameRef.current = null
+        prevPropsRef.current = {}
+      }
       c.destroy()
     }
   }, [])
@@ -43,9 +49,9 @@ function VisSingleContainerFC<Data> (props: PropsWithChildren<VisSingleContainer
     const preventRender = true
 
     // Set new Data without re-render
-    if (props.data && (props.data !== data)) {
-      chart?.setData(props.data, preventRender)
-      setData(props.data)
+    if (props.data && (props.data !== dataRef.current)) {
+      chartRef.current?.setData(props.data, preventRender)
+      dataRef.current = props.data
     }
 
     // Update and render
@@ -55,8 +61,13 @@ function VisSingleContainerFC<Data> (props: PropsWithChildren<VisSingleContainer
     // that will be destroyed soon) are stored in the `__component__` property of their elements at that moment.
     // So we delay the container update with `requestAnimationFrame` to wait till the new instances of children
     // components are available at `__component__`.
-    if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current)
-    animationFrameRef.current = requestAnimationFrame(() => chart?.updateContainer(getConfig()))
+    if (!arePropsEqual(prevPropsRef.current, props)) { // Checking whether the props have changed do avoid multiple renders
+      prevPropsRef.current = props
+      if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current)
+      animationFrameRef.current = requestAnimationFrame(() => {
+        chartRef.current?.updateContainer(getConfig())
+      })
+    }
   })
 
   return (
