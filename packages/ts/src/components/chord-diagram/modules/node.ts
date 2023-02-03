@@ -40,7 +40,7 @@ export function createNode<N extends ChordInputNode, L extends ChordInputLink> (
 }
 
 export function updateNode<N extends ChordInputNode, L extends ChordInputLink> (
-  selection: Selection<SVGElement, ChordNode<N>, SVGGElement, ChordNode<N>[]>,
+  selection: Selection<SVGElement, ChordNode<N>, SVGGElement, unknown>,
   config: ChordDiagramConfig<N, L>,
   arcGen: Arc<unknown, AnimState>,
   duration: number
@@ -53,7 +53,7 @@ export function updateNode<N extends ChordInputNode, L extends ChordInputLink> (
 
   if (duration) {
     const transition = smartTransition(selection, duration)
-      .style('opacity', 1) as Transition<SVGElement, ChordNode<N>, SVGGElement, ChordNode<N>[]>
+      .style('opacity', 1) as Transition<SVGElement, ChordNode<N>, SVGGElement, ChordNode<N>>
 
     transition.attrTween('d', (d, i, els) => {
       const arcNode: ArcNode = els[i]
@@ -70,8 +70,8 @@ export function updateNode<N extends ChordInputNode, L extends ChordInputLink> (
   }
 }
 
-export function removeNode<N extends ChordInputNode, L extends ChordInputLink> (
-  selection: Selection<SVGElement, ChordNode<N>, SVGGElement, unknown>,
+export function removeNode<N extends ChordInputNode> (
+  selection: Selection<SVGElement, unknown, SVGGElement, unknown>,
   duration: number
 ): void {
   smartTransition(selection, duration)

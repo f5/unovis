@@ -120,8 +120,8 @@ export class ChordDiagram<
 
     // Links
     const linksSelection = this.linkGroup
-      .selectAll(`.${s.link}`)
-      .data(this._links)
+      .selectAll<SVGGElement, ChordRibbon<N>>(`.${s.link}`)
+      .data(this._links, d => String(d.data._id))
 
     const linksEnter = linksSelection.enter().append('path')
       .attr('class', s.link)
@@ -135,8 +135,8 @@ export class ChordDiagram<
 
     // Nodes
     const nodesSelection = this.nodeGroup
-      .selectAll(`.${s.node}`)
-      .data(this._nodes)
+      .selectAll<SVGGElement, ChordNode<N>>(`.${s.node}`)
+      .data(this._nodes, d => String(d.uid))
 
     const nodesEnter = nodesSelection.enter().append('path')
       .attr('class', s.node)
@@ -150,8 +150,8 @@ export class ChordDiagram<
 
     // Labels
     const labels = this.labelGroup
-      .selectAll(`.${s.gLabel}`)
-      .data(this._nodes)
+      .selectAll<SVGGElement, ChordNode<N>>(`.${s.gLabel}`)
+      .data(this._nodes, d => String(d.uid))
 
     const labelEnter = labels.enter().append('g')
       .attr('class', s.gLabel)

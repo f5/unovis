@@ -159,8 +159,8 @@ export function updateLabel<N extends ChordInputNode, L extends ChordInputLink> 
   }
 }
 
-export function removeLabel<N extends ChordInputNode, L extends ChordInputLink> (
-  selection: Selection<SVGElement, ChordNode<N>, SVGGElement, unknown>,
+export function removeLabel (
+  selection: Selection<SVGElement, unknown, SVGGElement, unknown>,
   duration: number
 ): void {
   smartTransition(selection, duration)

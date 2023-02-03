@@ -1,4 +1,5 @@
 import { HierarchyRectangularNode } from 'd3-hierarchy'
+import { GraphLinkCore } from 'types'
 
 
 // Node data flow in the component:
@@ -46,7 +47,7 @@ export interface ChordRibbon<N extends ChordInputNode> {
   source: ChordLeafNode<N>;
   target: ChordLeafNode<N>;
   points: ChordRibbonPoint[];
-  data: ChordInputLink;
+  data: GraphLinkCore<N, ChordInputLink>;
   _state: {
     hovered?: boolean;
   };
