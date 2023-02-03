@@ -46,6 +46,7 @@ export interface ChordRibbon<N extends ChordInputNode> {
   source: ChordLeafNode<N>;
   target: ChordLeafNode<N>;
   points: ChordRibbonPoint[];
+  data: ChordInputLink;
   _state: {
     hovered?: boolean;
   };
