@@ -40,7 +40,7 @@ export class FlowLegend {
   }
 
   render (): void {
-    const { config: { items, lineColor, labelFontSize, labelColor, arrowSymbol, customWidth, onLegendItemClick } } = this
+    const { config: { items, lineColor, labelFontSize, labelColor, arrowSymbol, arrowColor, customWidth, onLegendItemClick } } = this
     if (!items.length) return
 
     if (customWidth) this.div.style('width', `${customWidth}px`)
@@ -76,7 +76,7 @@ export class FlowLegend {
       .on('click', this._onItemClick.bind(this))
 
     legendItemsEnter.append('span')
-      .attr('class', d => d.type === FlowLegendItemType.Symbol ? s.arrow(lineColor) : s.label(labelFontSize, labelColor))
+      .attr('class', d => d.type === FlowLegendItemType.Symbol ? s.arrow(arrowColor) : s.label(labelFontSize, labelColor))
       .classed(s.clickable, d => d.type === FlowLegendItemType.Label && !!onLegendItemClick)
 
     const legendItemsMerged = legendItemsEnter.merge(legendItems)
