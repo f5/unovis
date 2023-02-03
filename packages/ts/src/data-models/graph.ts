@@ -1,10 +1,11 @@
-import { isNumber, isUndefined, cloneDeep, isFunction, without, isString, isObject } from 'utils/data'
+import { isNumber, isUndefined, cloneDeep, isFunction, without, isString, isObject, isEqual } from 'utils/data'
 
 // Types
 import { GraphInputLink, GraphInputNode, GraphLinkCore, GraphNodeCore } from 'types/graph'
 
 // Core Data Model
 import { CoreDataModel } from './core'
+
 
 export class GraphDataModel<
   N extends GraphInputNode,
@@ -16,6 +17,7 @@ export class GraphDataModel<
   private _connectedNodes: OutNode[]
   private _nodes: OutNode[] = []
   private _links: OutLink[] = []
+  private _inputNodesMap = new Map<OutNode, N>()
 
   // Model configuration
   public nodeId: ((n: N) => string | undefined) = n => (isString(n.id) || isFinite(n.id as number)) ? `${n.id}` : undefined
@@ -28,6 +30,7 @@ export class GraphDataModel<
     const prevNodes = this.nodes
     const prevLinks = this.links
 
+    this._inputNodesMap.clear()
     const nodes = cloneDeep(inputData?.nodes ?? []) as OutNode[]
     const links = cloneDeep(inputData?.links ?? []) as OutLink[]
 
@@ -40,6 +43,7 @@ export class GraphDataModel<
     nodes.forEach((node, i) => {
       node._index = i
       node._id = this.nodeId(node) || `${i}`
+      this._inputNodesMap.set(node, inputData.nodes[i])
     })
 
     // Sort nodes
@@ -69,8 +73,8 @@ export class GraphDataModel<
       })
     })
 
-    // Determine if a node is connected or not and store it as a property
     nodes.forEach(d => {
+      // Determine if a node is connected or not and store it as a property
       d.links = links.filter(l => (l.source === d) || (l.target === d))
       d._isConnected = d.links.length !== 0
     })
@@ -100,9 +104,10 @@ export class GraphDataModel<
 
   private findNode (nodes: OutNode[], nodeIdentifier: number | string | N): OutNode | undefined {
     let foundNode: OutNode | undefined
+
     if (isNumber(nodeIdentifier)) foundNode = nodes[nodeIdentifier as number]
     else if (isString(nodeIdentifier)) foundNode = nodes.find(node => this.nodeId(node) === nodeIdentifier)
-    else if (isObject(nodeIdentifier)) foundNode = nodes.find(node => node === nodeIdentifier)
+    else if (isObject(nodeIdentifier)) foundNode = nodes.find(node => isEqual(this._inputNodesMap.get(node), nodeIdentifier))
 
     if (!foundNode) {
       console.warn(`Node ${nodeIdentifier} is missing from the nodes list`)

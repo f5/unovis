@@ -81,8 +81,8 @@ export function updateLink<N extends ChordInputNode, L extends ChordInputLink> (
   }
 }
 
-export function removeLink<N extends ChordInputNode> (
-  selection: Selection<SVGElement, ChordRibbon<N>, SVGGElement, unknown>,
+export function removeLink (
+  selection: Selection<SVGElement, unknown, SVGGElement, unknown>,
   duration: number
 ): void {
   smartTransition(selection, duration)
