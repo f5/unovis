@@ -52,6 +52,9 @@ module.exports = {
   resolve: {
     extensions: ['.ts', '.js', '.json', '.tsx'],
     alias: {
+      // React
+      react: path.resolve('./node_modules/react'),
+
       // Project's src
       '@src': path.resolve(__dirname, './src/'),
 
@@ -66,7 +69,9 @@ module.exports = {
       styles: path.resolve(__dirname, '../ts/src/styles/'),
       'data-models': path.resolve(__dirname, '../ts/src/data-models/'),
 
-      react: path.resolve('./node_modules/react'),
+      // Unovis React
+      '@unovis/react': path.resolve(__dirname, '../react/src/'),
+      'src/utils/react': path.resolve(__dirname, '../react/src/utils/react'),
     },
   },
   devServer: {
