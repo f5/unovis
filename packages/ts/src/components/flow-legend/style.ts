@@ -12,16 +12,19 @@ export const globalStyles = injectGlobal`
     --vis-flow-legend-label-background: #ffffff;
     --vis-flow-legend-label-color: #71788a;
     --vis-flow-legend-link-color: #E5E9F7;
+    --vis-flow-legend-arrow-color: #E5E9F7;
 
     --vis-dark-flow-legend-label-background: #292b34;
     --vis-dark-flow-legend-label-color: #E5E9F7;
     --vis-dark-flow-legend-link-color: #71788a;
+    --vis-dark-flow-legend-arrow-color: #71788a;
   }
 
   body.theme-dark ${`.${root}`} {
     --vis-flow-legend-label-background: var(--vis-dark-flow-legend-label-background);
     --vis-flow-legend-label-color: var(--vis-dark-flow-legend-label-color);
     --vis-flow-legend-link-color: var(--vis-dark-flow-legend-link-color);
+    --vis-flow-legend-arrow-color: var(--vis-dark-flow-legend-arrow-color);
   }
 `
 
@@ -75,10 +78,10 @@ export const label = (labelFontSize: number, labelColor: string): string => css`
   text-align: center;
 `
 
-export const arrow = (lineColor: string): string => css`
+export const arrow = (arrowColor: string): string => css`
   label: arrow;
 
   font-size: 9px;
   vertical-align: middle;
-  color: ${lineColor || 'var(--vis-flow-legend-link-color)'};
+  color: ${arrowColor || 'var(--vis-flow-legend-arrow-color)'};
 `
