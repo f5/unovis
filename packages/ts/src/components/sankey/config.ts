@@ -47,14 +47,14 @@ export interface SankeyConfigInterface<N extends SankeyInputNode, L extends Sank
    *           `null` - the order is fixed by the input;
    *           sort function - the order is determined by the function.
   */
-  nodeSort?: ((node1: N, node2: N) => number) | null | undefined;
+  nodeSort?: ((node1: SankeyNode<N, L>, node2: SankeyNode<N, L>) => number) | null | undefined;
   /** Sankey link sorting function. Default: `(link2, link1) => link1.value - link2.value`.
    *  Link sorting is applied to the source (exiting) links within one node.
    *  Options: `undefined` - the order is determined by the layout;
    *           `null` - the order is fixed by the input;
    *           sort function - the order is determined by the function.
   */
-  linkSort?: ((link1: L, link2: L) => number) | null | undefined;
+  linkSort?: ((link1: SankeyLink<N, L>, link2: SankeyLink<N, L>) => number) | null | undefined;
 
   // Nodes
   /** Sankey node width in pixels */

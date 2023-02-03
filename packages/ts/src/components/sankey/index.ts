@@ -14,6 +14,7 @@ import { Spacing } from 'types/spacing'
 import { VerticalAlign } from 'types/text'
 
 // Utils
+import { smartTransition } from 'utils/d3'
 import { getNumber, getString, groupBy, isNumber } from 'utils/data'
 import { getCSSVariableValueInPixels } from 'utils/misc'
 
@@ -151,7 +152,7 @@ export class Sankey<
     this._prepareLayout()
 
     // Links
-    this._linksGroup.attr('transform', `translate(${bleed.left},${bleed.top})`)
+    smartTransition(this._linksGroup, duration).attr('transform', `translate(${bleed.left},${bleed.top})`)
     const linkSelection = this._linksGroup.selectAll<SVGGElement, SankeyLink<N, L>>(`.${s.link}`)
       .data(links, (d, i) => config.id(d, i) ?? i)
     const linkSelectionEnter = linkSelection.enter().append('g').attr('class', s.link)
@@ -160,7 +161,7 @@ export class Sankey<
     linkSelection.exit().call(removeLinks)
 
     // Nodes
-    this._nodesGroup.attr('transform', `translate(${bleed.left},${bleed.top})`)
+    smartTransition(this._nodesGroup, duration).attr('transform', `translate(${bleed.left},${bleed.top})`)
 
     const nodeSelection = this._nodesGroup.selectAll<SVGGElement, SankeyNode<N, L>>(`.${s.nodeGroup}`)
       .data(nodes, (d, i) => config.id(d, i) ?? i)
@@ -227,7 +228,10 @@ export class Sankey<
     const sankeyHeight = this.sizing === Sizing.Fit ? this._height : this._extendedHeight
     const sankeyWidth = this.sizing === Sizing.Fit ? this._width : this._extendedWidth
     this._sankey
-      .size([sankeyWidth - bleed.left - bleed.right, sankeyHeight - bleed.top - bleed.bottom])
+      .size([
+        Math.max(sankeyWidth - bleed.left - bleed.right, 0),
+        Math.max(sankeyHeight - bleed.top - bleed.bottom, 0),
+      ])
 
     const nodes = datamodel.nodes
     const links = datamodel.links
@@ -277,11 +281,11 @@ export class Sankey<
   }
 
   getWidth (): number {
-    return Math.max(this._extendedWidth || 0, this._width)
+    return this.sizing === Sizing.Fit ? this._width : (this._extendedWidth || 0)
   }
 
   getHeight (): number {
-    return Math.max(this._extendedHeightIncreased || 0, this._extendedHeight || 0, this._height)
+    return this.sizing === Sizing.Fit ? this._height : Math.max(this._extendedHeightIncreased || 0, this._extendedHeight || 0)
   }
 
   getLayoutWidth (): number {
