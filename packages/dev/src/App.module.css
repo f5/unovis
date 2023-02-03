@@ -1,10 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
 
+* {
+  box-sizing: border-box;
+}
+
 :root {
   font-family: Inter;
   --color-light-grey: #ccc;
   --color-grey: #777;
   --color-black: #222;
+}
+
+body {
+  margin: 0;
 }
 
 textarea:focus, input:focus, input[type]:focus, .uneditable-input:focus {
@@ -14,7 +22,11 @@ textarea:focus, input:focus, input[type]:focus, .uneditable-input:focus {
 }
 
 .root {
+  position: absolute;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: row;
-  color: var(--color-black)
+  color: var(--color-black);
+  padding: 8px 0 0 8px;
 }

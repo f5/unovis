@@ -1,16 +1,14 @@
 .navSideBar {
+  position: relative;
   flex: 0 0 200px;
+  flex-direction: column;
+  display: flex;
   max-width: 200px;
   height: 100%;
 }
 
-.navItemGroup {
-  font-weight: 600;
-  margin-top: 12px;
-  padding: 0px 8px;
-}
-
 .navSideBarInput {
+  flex: 0 0 auto;
   padding: 2px 8px;
 }
 
@@ -20,6 +18,18 @@
   border-bottom: 1px solid var(--color-light-grey);
   width: 80%;
 }
+
+.navItems {
+  flex: 1 1 auto;
+  overflow: auto;
+}
+
+.navItemGroup {
+  font-weight: 600;
+  margin-top: 12px;
+  padding: 0px 8px;
+}
+
 
 .navNotFound {
   padding: 10px 8px;
