@@ -5,11 +5,12 @@ import { Transition } from 'd3-transition'
 import { interpolatePath } from 'd3-interpolate-path'
 
 // Utils
+import { getColor } from 'utils/color'
 import { smartTransition } from 'utils/d3'
 
 // Local Types
-import { ChordInputNode, ChordRibbon, ChordRibbonPoint } from '../types'
-
+import { ChordInputLink, ChordInputNode, ChordRibbon, ChordRibbonPoint } from '../types'
+import { ChordDiagramConfig } from '../config'
 
 export interface ArcLink extends SVGElement {
   _animState?: {
@@ -57,13 +58,15 @@ export function createLink<N extends ChordInputNode> (
     .style('opacity', 0)
 }
 
-export function updateLink<N extends ChordInputNode> (
+export function updateLink<N extends ChordInputNode, L extends ChordInputLink> (
   selection: Selection<SVGElement, ChordRibbon<N>, SVGGElement, unknown>,
-  lineGen?: Line<[number, number]>,
-  duration?: number
+  config: ChordDiagramConfig<N, L>,
+  lineGen: Line<[number, number]>,
+  duration: number
 ): void {
   const selTransition = smartTransition(selection, duration)
-    .style('opacity', 0.7)
+    .style('fill', d => getColor(d.data, config.linkColor))
+    .style('stroke', d => getColor(d.data, config.linkColor))
     .style('opacity', 'var(--vis-chord-diagram-link-opacity)')
 
   if (duration) {
@@ -74,7 +77,7 @@ export function updateLink<N extends ChordInputNode> (
       return interpolatePath(previous, next)
     })
   } else {
-    selTransition.attr('d', d => linkGen(d.points, lineGen))
+    selTransition.attr('d', d => linkGen(d.points, lineGen) || emptyPath())
   }
 }
 

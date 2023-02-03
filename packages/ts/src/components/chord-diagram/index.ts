@@ -128,7 +128,7 @@ export class ChordDiagram<
       .call(createLink, linkLineGen)
 
     const linksMerged = linksSelection.merge(linksEnter)
-    linksMerged.call(updateLink, linkLineGen, duration)
+    linksMerged.call(updateLink, config, linkLineGen, duration)
 
     linksSelection.exit()
       .call(removeLink, duration)
@@ -252,6 +252,7 @@ export class ChordDiagram<
       return {
         source: sourceNode,
         target: targetNode,
+        data: l,
         points: l._state.points,
         _state: {},
       }

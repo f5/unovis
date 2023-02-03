@@ -10,6 +10,8 @@ import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
 import { ChordInputLink, ChordInputNode, ChordLabelAlignment, ChordNode } from './types'
 
 export interface ChordDiagramConfigInterface<N extends ChordInputNode, L extends ChordInputLink> extends ComponentConfigInterface {
+  /** Link color accessor function. Default: `var(--vis-chord-diagram-link-fill-color)` */
+  linkColor?: ColorAccessor<L>;
   /** Link value accessor function. Default: `l => l.value` */
   linkValue?: NumericAccessor<L>;
   /** Array of node hierarchy levels. Data records are supposed to have corresponding properties, e.g. ['level1', 'level2']. Default: `[]` */
@@ -34,6 +36,7 @@ export interface ChordDiagramConfigInterface<N extends ChordInputNode, L extends
 
 export class ChordDiagramConfig<N extends ChordInputNode, L extends ChordInputLink> extends ComponentConfig implements ChordDiagramConfigInterface<N, L> {
   duration = 800
+  linkColor = undefined
   linkValue = (d: L): number => d['value']
   nodeLevels = []
   nodeWidth = 15
