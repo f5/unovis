@@ -40,22 +40,22 @@ export class FlowLegend {
   }
 
   render (): void {
-    const { config: { items, lineColor, labelFontSize, labelColor, arrowSymbol, arrowColor, customWidth, onLegendItemClick } } = this
-    if (!items.length) return
+    const { config } = this
+    if (!config.items.length) return
 
-    if (customWidth) this.div.style('width', `${customWidth}px`)
+    if (config.customWidth) this.div.style('width', `${config.customWidth}px`)
 
     // Prepare Data
-    const legendData: FlowLegendItem[] = items.reduce((acc, label, i) => {
+    const legendData: FlowLegendItem[] = config.items.reduce((acc, label, i) => {
       acc.push({
         text: label,
         index: i,
         type: FlowLegendItemType.Label,
       })
 
-      if (arrowSymbol && (acc.length !== items.length * 2 - 1)) {
+      if (config.arrowSymbol && (acc.length !== config.items.length * 2 - 1)) {
         acc.push({
-          text: arrowSymbol,
+          text: config.arrowSymbol,
           index: i,
           type: FlowLegendItemType.Symbol,
         })
@@ -76,8 +76,12 @@ export class FlowLegend {
       .on('click', this._onItemClick.bind(this))
 
     legendItemsEnter.append('span')
-      .attr('class', d => d.type === FlowLegendItemType.Symbol ? s.arrow(arrowColor) : s.label(labelFontSize, labelColor))
-      .classed(s.clickable, d => d.type === FlowLegendItemType.Label && !!onLegendItemClick)
+      .attr('class',
+        d => d.type === FlowLegendItemType.Symbol
+          ? s.arrow(config.arrowColor)
+          : s.label(config.labelFontSize, config.labelColor)
+      )
+      .classed(s.clickable, d => d.type === FlowLegendItemType.Label && !!config.onLegendItemClick)
 
     const legendItemsMerged = legendItemsEnter.merge(legendItems)
     smartTransition(legendItemsMerged, 500)
@@ -87,13 +91,13 @@ export class FlowLegend {
     legendItems.exit().remove()
 
     this.line
-      .attr('class', s.line(lineColor))
-      .style('opacity', items.length > 1 ? 1 : 0)
+      .attr('class', s.line(config.lineColor))
+      .style('opacity', config.items.length > 1 ? 1 : 0)
   }
 
   _onItemClick (event: MouseEvent, d: FlowLegendItem): void {
-    const { config: { onLegendItemClick } } = this
+    const { config } = this
 
-    if (onLegendItemClick) onLegendItemClick(d.text, d.index)
+    if (config.onLegendItemClick) config.onLegendItemClick(d.text, d.index)
   }
 }
