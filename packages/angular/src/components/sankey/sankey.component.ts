@@ -83,7 +83,7 @@ export class VisSankeyComponent<N extends SankeyInputNode, L extends SankeyInput
   }
 
   /** Node / Link id accessor function. Used for mapping of data updates to corresponding SVG objects. Default: `(d, i) => d.id ?? i.toString()` */
-  @Input() id?: (d: SankeyInputNode | SankeyInputLink, i?: number, ...rest) => string
+  @Input() id?: (d: SankeyInputNode | SankeyInputLink, i: number, ...rest) => string
 
   /** Coefficient to scale the height of the diagram when the amount of links is low: `C * links.length`, clamped to `[height / 2, height]`. Default: `1/16` */
   @Input() heightNormalizationCoeff?: number

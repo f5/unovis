@@ -79,7 +79,7 @@ export class VisLineComponent<Datum> implements LineConfigInterface<Datum>, Afte
   @Input() y: NumericAccessor<Datum> | NumericAccessor<Datum>[]
 
   /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */
-  @Input() id?: ((d: Datum, i?: number, ...rest) => string)
+  @Input() id?: ((d: Datum, i: number, ...rest) => string)
 
   /** Component color accessor function. Default: `d => d.color` */
   @Input() color?: ColorAccessor<Datum> | ColorAccessor<Datum[]>

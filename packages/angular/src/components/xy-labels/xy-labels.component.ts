@@ -80,7 +80,7 @@ export class VisXYLabelsComponent<Datum> implements XYLabelsConfigInterface<Datu
   @Input() y: NumericAccessor<Datum>
 
   /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */
-  @Input() id?: ((d: Datum, i?: number, ...rest) => string)
+  @Input() id?: ((d: Datum, i: number, ...rest) => string)
 
   /** Component color accessor function. Default: `d => d.color` */
   @Input() color?: ColorAccessor<Datum> | ColorAccessor<Datum[]>
@@ -102,10 +102,10 @@ export class VisXYLabelsComponent<Datum> implements XYLabelsConfigInterface<Datu
   @Input() excludeFromDomainCalculation?: boolean
 
   /** Defines how to position the label horizontally: in data space or in screen space. Default: `LabelPositioning.DataSpace` */
-  @Input() xPositioning?: GenericAccessor<XYLabelPositioning, Datum>
+  @Input() xPositioning?: GenericAccessor<XYLabelPositioning | string, Datum>
 
   /** Defines how to position the label vertically: in data space or in screen space. Default: `LabelPositioning.DataSpace` */
-  @Input() yPositioning?: GenericAccessor<XYLabelPositioning, Datum>
+  @Input() yPositioning?: GenericAccessor<XYLabelPositioning | string, Datum>
 
   /** Font size accessor function or constant value in pixels. If not provided, the value of CSS variable `--vis-xy-label-font-size` will be used. Default: `undefined` */
   @Input() labelFontSize?: NumericAccessor<Datum>

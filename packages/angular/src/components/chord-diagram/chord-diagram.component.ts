@@ -8,9 +8,8 @@ import {
   ChordInputLink,
   VisEventType,
   VisEventCallback,
-  NumericAccessor,
   ColorAccessor,
-  ChordNode,
+  NumericAccessor,
   StringAccessor,
   ChordLabelAlignment,
   CurveType,
@@ -74,6 +73,9 @@ export class VisChordDiagramComponent<N extends ChordInputNode, L extends ChordI
     };
   }
 
+  /** Link color accessor function. Default: `var(--vis-chord-diagram-link-fill-color)` */
+  @Input() linkColor?: ColorAccessor<L>
+
   /** Link value accessor function. Default: `l => l.value` */
   @Input() linkValue?: NumericAccessor<L>
 
@@ -84,7 +86,7 @@ export class VisChordDiagramComponent<N extends ChordInputNode, L extends ChordI
   @Input() nodeWidth?: number
 
   /** Node color accessor function ot constant value. Default: `d => d.color` */
-  @Input() nodeColor?: ColorAccessor<ChordNode<N>>
+  @Input() nodeColor?: ColorAccessor<N>
 
   /** Node label accessor function. Default: `d => d.label ?? d.key` */
   @Input() nodeLabel?: StringAccessor<N>
@@ -127,8 +129,8 @@ export class VisChordDiagramComponent<N extends ChordInputNode, L extends ChordI
   }
 
   private getConfig (): ChordDiagramConfigInterface<N, L> {
-    const { duration, events, attributes, linkValue, nodeLevels, nodeWidth, nodeColor, nodeLabel, nodeLabelAlignment, padAngle, cornerRadius, angleRange, curveType, radiusScaleExponent } = this
-    const config = { duration, events, attributes, linkValue, nodeLevels, nodeWidth, nodeColor, nodeLabel, nodeLabelAlignment, padAngle, cornerRadius, angleRange, curveType, radiusScaleExponent }
+    const { duration, events, attributes, linkColor, linkValue, nodeLevels, nodeWidth, nodeColor, nodeLabel, nodeLabelAlignment, padAngle, cornerRadius, angleRange, curveType, radiusScaleExponent } = this
+    const config = { duration, events, attributes, linkColor, linkValue, nodeLevels, nodeWidth, nodeColor, nodeLabel, nodeLabelAlignment, padAngle, cornerRadius, angleRange, curveType, radiusScaleExponent }
     const keys = Object.keys(config) as (keyof ChordDiagramConfigInterface<N, L>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
