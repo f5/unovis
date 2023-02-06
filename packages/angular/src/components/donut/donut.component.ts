@@ -61,7 +61,7 @@ export class VisDonutComponent<Datum> implements DonutConfigInterface<Datum>, Af
   }
 
   /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */
-  @Input() id?: ((d: Datum, i?: number, ...rest) => string | number)
+  @Input() id?: ((d: Datum, i: number, ...rest) => string | number)
 
   /** Value accessor function. Default: `undefined` */
   @Input() value: NumericAccessor<Datum>

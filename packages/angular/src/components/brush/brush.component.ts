@@ -78,7 +78,7 @@ export class VisBrushComponent<Datum> implements BrushConfigInterface<Datum>, Af
   @Input() y: NumericAccessor<Datum> | NumericAccessor<Datum>[]
 
   /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */
-  @Input() id?: ((d: Datum, i?: number, ...rest) => string)
+  @Input() id?: ((d: Datum, i: number, ...rest) => string)
 
   /** Component color accessor function. Default: `d => d.color` */
   @Input() color?: ColorAccessor<Datum> | ColorAccessor<Datum[]>
@@ -101,19 +101,19 @@ export class VisBrushComponent<Datum> implements BrushConfigInterface<Datum>, Af
 
   /** Callback function to be called on any Brush event.
    * Default: `(selection: [number, number], event: D3BrushEvent<Datum>, userDriven: boolean): void => {}` */
-  @Input() onBrush?: ((selection?: [number, number], event?: D3BrushEvent<Datum>, userDriven?: boolean) => void)
+  @Input() onBrush?: ((selection: [number, number] | undefined, event: D3BrushEvent<Datum>, userDriven: boolean) => void)
 
   /** Callback function to be called on the Brush start event.
    * Default: `(selection: [number, number], event: D3BrushEvent<Datum>, userDriven: boolean): void => {}` */
-  @Input() onBrushStart?: ((selection?: [number, number], event?: D3BrushEvent<Datum>, userDriven?: boolean) => void)
+  @Input() onBrushStart?: ((selection: [number, number] | undefined, event: D3BrushEvent<Datum>, userDriven: boolean) => void)
 
   /** Callback function to be called on the Brush move event.
    * Default: `(selection: [number, number], event: D3BrushEvent<Datum>, userDriven: boolean): void => {}` */
-  @Input() onBrushMove?: ((selection?: [number, number], event?: D3BrushEvent<Datum>, userDriven?: boolean) => void)
+  @Input() onBrushMove?: ((selection: [number, number] | undefined, event: D3BrushEvent<Datum>, userDriven: boolean) => void)
 
   /** Callback function to be called on the Brush end event.
    * Default: `(selection: [number, number], event: D3BrushEvent<Datum>, userDriven: boolean): void => {}` */
-  @Input() onBrushEnd?: ((selection?: [number, number], event?: D3BrushEvent<Datum>, userDriven?: boolean) => void)
+  @Input() onBrushEnd?: ((selection: [number, number] | undefined, event: D3BrushEvent<Datum>, userDriven: boolean) => void)
 
   /** Width of the Brush handle. Default: `1` */
   @Input() handleWidth?: number

@@ -79,7 +79,7 @@ export class VisFreeBrushComponent<Datum> implements FreeBrushConfigInterface<Da
   @Input() y: NumericAccessor<Datum> | NumericAccessor<Datum>[]
 
   /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */
-  @Input() id?: ((d: Datum, i?: number, ...rest) => string)
+  @Input() id?: ((d: Datum, i: number, ...rest) => string)
 
   /** Component color accessor function. Default: `d => d.color` */
   @Input() color?: ColorAccessor<Datum> | ColorAccessor<Datum[]>
@@ -105,19 +105,19 @@ export class VisFreeBrushComponent<Datum> implements FreeBrushConfigInterface<Da
 
   /** Callback function to be called on any Brush event.
    * Default: `(selection: FreeBrushSelection, event: D3BrushEvent<Datum>, userDriven: boolean): void => {}` */
-  @Input() onBrush?: ((selection?: FreeBrushSelection, event?: D3BrushEvent<Datum>, userDriven?: boolean) => void)
+  @Input() onBrush?: ((selection: FreeBrushSelection | undefined, event: D3BrushEvent<Datum>, userDriven: boolean) => void)
 
   /** Callback function to be called on the Brush start event.
    * Default: `(selection: FreeBrushSelection, event: D3BrushEvent<Datum>, userDriven: boolean): void => {}` */
-  @Input() onBrushStart?: ((selection?: FreeBrushSelection, event?: D3BrushEvent<Datum>, userDriven?: boolean) => void)
+  @Input() onBrushStart?: ((selection: FreeBrushSelection | undefined, event: D3BrushEvent<Datum>, userDriven: boolean) => void)
 
   /** Callback function to be called on the Brush move event.
    * Default: `(selection: FreeBrushSelection, event: D3BrushEvent<Datum>, userDriven: boolean): void => {}` */
-  @Input() onBrushMove?: ((selection?: FreeBrushSelection, event?: D3BrushEvent<Datum>, userDriven?: boolean) => void)
+  @Input() onBrushMove?: ((selection: FreeBrushSelection | undefined, event: D3BrushEvent<Datum>, userDriven: boolean) => void)
 
   /** Callback function to be called on the Brush end event.
    * Default: `(selection: FreeBrushSelection, event: D3BrushEvent<Datum>, userDriven: boolean)L void => {}` */
-  @Input() onBrushEnd?: ((selection?: FreeBrushSelection, event?: D3BrushEvent<Datum>, userDriven?: boolean) => void)
+  @Input() onBrushEnd?: ((selection: FreeBrushSelection | undefined, event: D3BrushEvent<Datum>, userDriven: boolean) => void)
 
   /** Width of the Brush handle. Default: `1` */
   @Input() handleWidth?: number
@@ -125,7 +125,7 @@ export class VisFreeBrushComponent<Datum> implements FreeBrushConfigInterface<Da
   /** Brush selection in data space, can be used to force set the selection from outside.
    * In case of two dimensional mode, the selection has the following format: `[[xMin, xMax], [yMin, yMax]]`.
    * This config property gets updated on internal brush events. Default: `undefined` */
-  @Input() selection?: FreeBrushSelection | null
+  @Input() selection?: FreeBrushSelection | null | undefined
 
   /** Constraint Brush selection to a minimal length in data units. Default: `undefined` */
   @Input() selectionMinLength?: number | [number, number]
