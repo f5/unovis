@@ -212,7 +212,7 @@ export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<D
     if (config.width) this._containerSelection.style('width', isString(config.width) ? config.width : `${config.width}px`)
     if (config.height) this._containerSelection.style('height', isString(config.height) ? config.height : `${config.height}px`)
 
-    if (this._map) {
+    if (this._map && config.renderer === LeafletMapRenderer.MapLibre) {
       const layer = this._map.layer as any // Using any because the typings are not full
       const maplibreMap = layer.getMaplibreMap()
       if (maplibreMap.isStyleLoaded()) updateTopoJson(maplibreMap, this.config)
