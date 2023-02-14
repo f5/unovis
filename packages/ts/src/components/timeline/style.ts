@@ -63,15 +63,18 @@ export const rows = css`
   label: rows;
 `
 
-export const rect = css`
-  label: rect;
-  pointer-events: none;
+export const row = css`
+  label: row;
   fill: var(--vis-timeline-row-even-fill-color);
   opacity: var(--vis-timeline-row-background-opacity);
 
   &.odd {
     fill: var(--vis-timeline-row-odd-fill-color);
   }
+`
+
+export const rowOdd = css`
+  label: row-odd;
 `
 
 export const scrollbar = css`
