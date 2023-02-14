@@ -1,4 +1,5 @@
 import { css, injectGlobal } from '@emotion/css'
+import { DEFAULT_ICON_FONT_FAMILY } from 'styles/index'
 
 export const root = css`
   label: flow-legend-component;
@@ -15,6 +16,7 @@ export const globalStyles = injectGlobal`
     --vis-flow-legend-arrow-color: #E5E9F7;
     --vis-flow-legend-label-padding: '5px 15px';
     --vis-flow-legend-arrow-padding: '0 10px';
+    /* --vis-flow-legend-arrow-font-family: Undefined by default to allow proper fallback to var(DEFAULT_ICON_FONT_FAMILY)*/
 
     --vis-dark-flow-legend-label-background: #292b34;
     --vis-dark-flow-legend-label-color: #E5E9F7;
@@ -83,6 +85,7 @@ export const label = (labelFontSize: number, labelColor: string): string => css`
 export const arrow = (arrowColor: string): string => css`
   label: arrow;
 
+  font-family: var(--vis-flow-legend-arrow-font-family, ${DEFAULT_ICON_FONT_FAMILY});
   font-size: 9px;
   vertical-align: middle;
   color: ${arrowColor || 'var(--vis-flow-legend-arrow-color)'};
