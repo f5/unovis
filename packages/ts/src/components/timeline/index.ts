@@ -23,7 +23,10 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfig<Datum
   static selectors = s
   config: TimelineConfig<Datum> = new TimelineConfig()
   events = {
-    [Timeline.selectors.background]: {
+    [Timeline.selectors.rows]: {
+      wheel: this._onMouseWheel.bind(this),
+    },
+    [Timeline.selectors.line]: {
       wheel: this._onMouseWheel.bind(this),
     },
   }
@@ -40,7 +43,6 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfig<Datum
   private _scrollBarMargin = 5
   private _maxScroll = 0
   private _scrollbarHeight = 0
-  private _scrollTimeoutId = null
   private _labelMargin = 5
 
   constructor (config?: TimelineConfigInterface<Datum>) {
@@ -144,14 +146,15 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfig<Datum
     // Row background rects
     const xStart = xRange[0]
     const numRows = Math.max(Math.floor(yHeight / config.rowHeight), numUniqueRecords)
-    const rects = this._rowsGroup.selectAll<SVGRectElement, number>(`.${s.rect}`)
-      .data(Array(numRows).fill(0))
+    const recordTypes: (string | undefined)[] = Array(numRows).fill(null).map((_, i) => recordLabelsUnique[i])
+    const rects = this._rowsGroup.selectAll<SVGRectElement, number>(`.${s.row}`)
+      .data(recordTypes)
 
     const rectsEnter = rects.enter().append('rect')
-      .attr('class', s.rect)
+      .attr('class', s.row)
 
     rectsEnter.merge(rects)
-      .classed('odd', config.alternatingRowColors ? (_, i) => !(i % 2) : null)
+      .classed(s.rowOdd, config.alternatingRowColors ? (_, i) => !(i % 2) : null)
       .attr('x', xStart - maxLineWidth / 2)
       .attr('width', xRange[1] - xStart + maxLineWidth)
       .attr('y', (_, i) => yStart + i * config.rowHeight)
@@ -164,7 +167,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfig<Datum
       .data(data, (d: Datum, i) => `${getString(d, config.id, i) ?? i}`)
     const linesEnter = lines.enter().append('rect')
       .attr('class', s.line)
-      .classed('odd', config.alternatingRowColors
+      .classed(s.rowOdd, config.alternatingRowColors
         ? (d, i) => !(recordLabelsUnique.indexOf(this._getRecordType(d, i)) % 2)
         : null)
       .style('fill', (d, i) => getColor(d, config.color, i))
@@ -255,12 +258,10 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfig<Datum
     if (this._scrollDistance > 0 && this._scrollDistance < this._maxScroll) event?.preventDefault()
 
     config.onScroll?.(this._scrollDistance)
-    // Temporarily disable pointer events on lines to prevent scrolling from being interrupted
-    this._linesGroup.attr('pointer-events', 'none')
-    clearTimeout(this._scrollTimeoutId)
-    this._scrollTimeoutId = setTimeout(() => {
-      this._linesGroup.attr('pointer-events', null)
-    }, 300)
+
+    // Programmatically trigger a mousemove event to update Tooltip or Crosshair if they were set up
+    const e = new Event('mousemove')
+    this.element.dispatchEvent(e)
   }
 
   private _updateScrollPosition (diff: number): void {
