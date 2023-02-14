@@ -19,6 +19,7 @@ export const component = (): JSX.Element => {
       <VisTooltip triggers={{
         [Timeline.selectors.line]: (d: TimeDataRecord) =>
           `${(new Date(d.timestamp)).toDateString()} — ${(new Date(d.timestamp + d.length)).toDateString()}`,
+        [Timeline.selectors.row]: (label: string) => `Timeline Row ${label}`,
       }}/>
     </VisXYContainer>
   </>
