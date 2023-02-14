@@ -86,7 +86,7 @@ export class FlowLegend {
     const legendItemsMerged = legendItemsEnter.merge(legendItems)
     smartTransition(legendItemsMerged, 500)
       .attr('opacity', 1)
-    legendItemsMerged.select('span').text(d => d.text)
+    legendItemsMerged.select('span').html(d => d.text)
 
     legendItems.exit().remove()
 
