@@ -1,3 +1,5 @@
+import { sample } from './array'
+
 export type XYDataRecord = {
   x: number;
   y: number;
@@ -11,18 +13,14 @@ export interface TimeDataRecord {
   type?: string;
 }
 
-export interface NodeDatum {
+export type NodeDatum = Record<string, any> & {
   id: string;
-  i: number;
-  label?: string;
-  value?: number;
 }
 
 export interface LinkDatum {
-  id?: string;
-  source: string;
-  target: string;
-  value?: number;
+  source: string | number | NodeDatum;
+  target: string | number | NodeDatum;
+  value: number;
 }
 export interface NodeLinkData {
   nodes: NodeDatum[];
@@ -71,4 +69,28 @@ export function generateNodeLinkData (n = 10, numNeighbourLinks = () => 1): Node
     return arr
   }, Array(0))
   return { nodes, links }
+}
+
+export function generateHierarchyData (n: number, levels: Record<string, number>): NodeLinkData {
+  const groupData = Object.entries(levels).reduce((groups, [label, count]) => {
+    const d = Object.keys(Array(count).fill(0))
+    groups.set(label, d)
+    return groups
+  }, new Map<string, string[]>())
+
+  const nodes = Array(n).fill(0).map((_, i) => {
+    const obj: NodeDatum = { id: i.toString(), label: `N${i}` }
+    groupData.forEach((data, key) => {
+      obj[key] = `${key}-${data[i % data.length]}`
+    })
+    return obj
+  })
+  return {
+    nodes,
+    links: Array(n / 2).fill(0).map(() => ({
+      source: sample(nodes),
+      target: sample(nodes),
+      value: Math.random(),
+    })),
+  }
 }
