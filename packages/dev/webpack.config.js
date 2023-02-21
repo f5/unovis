@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
+const { DefinePlugin } = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
 const ReactRefreshTypeScript = require('react-refresh-typescript')
 const path = require('path')
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
-
 module.exports = {
   entry: './src/index.tsx',
   devtool: 'source-map',
@@ -41,7 +41,8 @@ module.exports = {
             options: {
               importLoaders: 1,
               modules: {
-                localIdentName: '[local]__[hash:base64:5]',
+                localIdentName: '[local]', // Using '[local]' for importing Leaflet's global styles correctly. See `ts/src/components/leaflet-map/leaflet.css`.
+                exportLocalsConvention: 'camelCaseOnly',
               },
             },
           },
@@ -85,6 +86,10 @@ module.exports = {
       template: 'public/index.html',
       hash: true,
       filename: '../dist/index.html',
+    }),
+    new DefinePlugin({
+      UNOVIS_MAP_TILE_SERVER_API_KEY: JSON.stringify(process.env.UNOVIS_MAP_TILE_SERVER_API_KEY),
+      UNOVIS_MAP_TILE_SERVER_URL: JSON.stringify(process.env.UNOVIS_MAP_TILE_SERVER_URL),
     }),
     isDevelopment && new ReactRefreshWebpackPlugin(),
   ].filter(Boolean),
