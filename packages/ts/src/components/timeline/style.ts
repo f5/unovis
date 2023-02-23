@@ -67,14 +67,11 @@ export const row = css`
   label: row;
   fill: var(--vis-timeline-row-even-fill-color);
   opacity: var(--vis-timeline-row-background-opacity);
-
-  &.odd {
-    fill: var(--vis-timeline-row-odd-fill-color);
-  }
 `
 
 export const rowOdd = css`
   label: row-odd;
+  fill: var(--vis-timeline-row-odd-fill-color);
 `
 
 export const scrollbar = css`
