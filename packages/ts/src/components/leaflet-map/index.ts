@@ -83,10 +83,11 @@ export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<D
   private _selectedPoint: LeafletMapPoint<Datum> = null
   private _currentZoomLevel: number | null = null
   private _firstRender = true
-  private _renderDataAnimationFrame: number
   private _isDarkThemeActive = false
   private resizeObserver: ResizeObserver
   private themeObserver: MutationObserver
+  private _renderDataAnimationFrameId: number | null = null
+  private _flyToBoundsAnimationFrameId: number | null = null
   readonly _leafletInitializationPromise: Promise<L.Map>
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -289,7 +290,7 @@ export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<D
     if (!this._map || !this._map.leaflet) return
     if (!data?.length) return
     const bounds = datamodel.getDataLatLngBounds(config.pointLatitude, config.pointLongitude)
-    this._flyToBounds(bounds, duration, padding)
+    this._flyToBoundsAnimationFrameId = requestAnimationFrame(() => this._flyToBounds(bounds, duration, padding))
   }
 
   public fitToBounds (bounds: Bounds, duration = this.config.flyToDuration, padding = this.config.fitViewPadding): void {
@@ -298,10 +299,10 @@ export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<D
     if (isNil(northEast.lat) || isNil(northEast.lng)) return
     if (isNil(southWest.lat) || isNil(southWest.lng)) return
     if (!this._map || !this._map.leaflet) return
-    this._flyToBounds([
+    this._flyToBoundsAnimationFrameId = requestAnimationFrame(() => this._flyToBounds([
       [northEast.lat, southWest.lng],
       [southWest.lat, northEast.lng],
-    ], duration, padding)
+    ], duration, padding))
   }
 
   /* Select a point by id and optionally center the map view.
@@ -626,7 +627,7 @@ export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<D
     const { config } = this
     if (!this._map) return
     this._hasBeenMoved = true
-    this._renderDataAnimationFrame = requestAnimationFrame(() => {
+    this._renderDataAnimationFrameId = requestAnimationFrame(() => {
       this._renderData(true)
     })
     config.onMapMoveZoom?.(this._getMapZoomState())
@@ -758,7 +759,8 @@ export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<D
 
   public destroy (): void {
     constraintMapViewThrottled.cancel()
-    cancelAnimationFrame(this._renderDataAnimationFrame)
+    cancelAnimationFrame(this._renderDataAnimationFrameId)
+    cancelAnimationFrame(this._flyToBoundsAnimationFrameId)
     const map = this._map?.leaflet
     this._map = undefined
 
