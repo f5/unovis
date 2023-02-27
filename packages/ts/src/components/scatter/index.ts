@@ -100,6 +100,37 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfig<Datum>,
     const { config } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
 
+    const pointsFlat = flatten(this._pointData)
+    console.log('pointsFlat', pointsFlat.length)
+    for (let k = 0; k < 15; k++) {
+      for (let i = 0; i < pointsFlat.length; i += 1) {
+        const p1 = pointsFlat[i]
+        const p1x = this.xScale(p1._point.xValue)
+        const p1y = this.yScale(p1._point.yValue) + 0.001// Number.EPSILON
+        const p1r = p1._point.sizePx / 2
+        for (let j = i + 1; j < pointsFlat.length; j += 1) {
+          const p2 = pointsFlat[j]
+          const p2x = this.xScale(p2._point.xValue)
+          const p2y = this.yScale(p2._point.yValue) - 0.001// Number.EPSILON
+          const p2r = p2._point.sizePx / 2
+
+          const dx = p2x - p1x
+          const dy = p2y - p1y
+          const overlap = (p1r + p2r) - Math.sqrt(dx * dx + dy * dy)
+          if (overlap > 0) {
+            const angle = Math.atan2(dy, dx)
+            // p1._point.xValue = this.xScale.invert(p1x - overlap / 2 * Math.cos(angle * 1.05))
+            // p2._point.xValue = this.xScale.invert(p2x + overlap / 2 * Math.cos(angle * 1.05))
+
+            const oy = (p1r + p2r) - (p2y - p1y)
+            p1._point.yValue = this.yScale.invert(p1y + oy / 2)
+            p2._point.yValue = this.yScale.invert(p2y - oy / 2)
+          }
+        }
+      }
+    }
+
+
     // Groups
     const pointGroups = this.g
       .selectAll<SVGGElement, ScatterPoint<Datum>[]>(`.${s.pointGroup}`)
@@ -165,7 +196,7 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfig<Datum>,
     const maxSizeXDomain = (this.xScale.invert(maxSizePx) as number) - (this.xScale.invert(0) as number)
     const maxSizeYDomain = Math.abs((this.yScale.invert(maxSizePx) as number) - (this.yScale.invert(0) as number))
 
-    return yAccessors.map((y, j) => {
+    const points = yAccessors.map((y, j) => {
       return data?.reduce<ScatterPoint<Datum>[]>((acc, d, i) => {
         const xValue = getNumber(d, config.x, i)
         const yValue = getNumber(d, y, j)
@@ -185,6 +216,9 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfig<Datum>,
             _point: {
               xValue: xValue,
               yValue: yValue,
+              xValuePx: this.xScale(xValue),
+              yValuePx: this.yScale(yValue),
+              size: pointSize,
               sizePx: pointSizeScaled,
               color: getColor(d, config.color, j),
               shape: getString(d, config.shape, j) as SymbolType,
@@ -200,6 +234,8 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfig<Datum>,
         return acc
       }, []) ?? []
     })
+
+    return points
   }
 
   private _onPointMouseOver (d: ScatterPoint<Datum>, event: MouseEvent): void {

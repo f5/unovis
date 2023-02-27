@@ -26,7 +26,7 @@ export function isStringCSSVariable (s: string): boolean {
 }
 
 export function getCSSVariableValue (s: string, context: HTMLElement | SVGElement): string {
-  if (!isString(s)) return ''
+  if (!isString(s) || !context) return ''
   const variableName = s.substr(4, s.length - 5)
   return getComputedStyle(context).getPropertyValue(variableName)
 }
