@@ -1,0 +1,14 @@
+.container {
+  min-height: 0;
+  position: relative;
+}
+
+.hidden {
+  overflow: hidden;
+  visibility: hidden;
+}
+
+.contents {
+  width: 100%;
+  height: 20vh;
+}
