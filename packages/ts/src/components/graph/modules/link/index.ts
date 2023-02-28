@@ -167,7 +167,8 @@ export function updateLinks<N extends GraphInputNode, L extends GraphInputLink> 
     const labelShift = getBoolean(d, linkLabelShiftFromCenter, d._indexGlobal) ? -markerWidth + 4 : 0
     const labelTranslate = getLinkLabelShift(d, config.linkNeighborSpacing, labelShift)
 
-    const labels = labelGroups.selectAll(`.${linkSelectors.labelGroup}`).data(labelDatum ? [labelDatum] : [])
+    const labels = labelGroups.selectAll(`.${linkSelectors.labelGroup}`)
+      .data(labelDatum && labelDatum.text ? [labelDatum] : [])
 
     // Enter
     const labelsEnter = labels.enter().append('g')
