@@ -34,7 +34,7 @@ import * as panelSelectors from './modules/panel/style'
 import { createNodes, updateNodes, removeNodes, zoomNodesThrottled, zoomNodes, updateSelectedNodes } from './modules/node'
 import { getMaxNodeSize, getX, getY } from './modules/node/helper'
 import { createLinks, updateLinks, removeLinks, zoomLinksThrottled, zoomLinks, animateLinkFlow, updateSelectedLinks } from './modules/link'
-import { LINK_MARKER_WIDTH, LINK_MARKER_HEIGHT, getDoubleArrowPath, getArrowPath, getLinkColor } from './modules/link/helper'
+import { LINK_MARKER_WIDTH, LINK_MARKER_HEIGHT, getDoubleArrowPath, getArrowPath, getLinkColor, getLinkArrow } from './modules/link/helper'
 import { createPanels, updatePanels, removePanels } from './modules/panel'
 import { setPanelForNodes, updatePanelBBoxSize, updatePanelNumNodes, getMaxPanelPadding } from './modules/panel/helper'
 import { applyLayoutCircular, applyLayoutParallel, applyLayoutDagre, applyLayoutConcentric, applyLayoutForce } from './modules/layout'
@@ -137,6 +137,8 @@ export class Graph<
     this._nodesGroup = this._graphGroup.append('g').attr('class', nodeSelectors.nodes)
 
     this._defs = this._graphGroup.append('defs')
+
+    this._getMarkerId = this._getMarkerId.bind(this)
   }
 
   setData (data: {nodes: N[]; links?: L[]}): void {
@@ -304,7 +306,7 @@ export class Graph<
       .call(createLinks, config, duration)
 
     const linkGroupsMerged = linkGroups.merge(linkGroupsEnter)
-    linkGroupsMerged.call(updateLinks, config, duration, this._scale)
+    linkGroupsMerged.call(updateLinks, config, duration, this._scale, this._getMarkerId)
 
     const linkGroupsExit = linkGroups.exit()
     linkGroupsExit
@@ -595,7 +597,7 @@ export class Graph<
     this._nodesGroup.selectAll(`.${nodeSelectors.gNode}`)
       .call(nodes.length > config.zoomThrottledUpdateNodeThreshold ? zoomNodesThrottled : zoomNodes, config, this._scale)
     this._linksGroup.selectAll(`.${linkSelectors.gLink}`)
-      .call(nodes.length > config.zoomThrottledUpdateNodeThreshold ? zoomLinksThrottled : zoomLinks, config, this._scale)
+      .call(nodes.length > config.zoomThrottledUpdateNodeThreshold ? zoomLinksThrottled : zoomLinks, config, this._scale, this._getMarkerId)
   }
 
   private _onDragStarted (
@@ -675,7 +677,7 @@ export class Graph<
       const target = l.target as GraphNode<N>
       return source._id === d._id || target._id === d._id || panelNeighbourNodes.findIndex((n: GraphNode<N>) => source._id === n._id) !== -1 || panelNeighbourNodes.findIndex((n: GraphNode<N>) => target._id === n._id) !== -1
     })
-    linksToUpdate.call(updateLinks, config, 0, scale)
+    linksToUpdate.call(updateLinks, config, 0, scale, this._getMarkerId)
     const linksToAnimate = linksToUpdate.filter(d => d._state.greyout)
     if (linksToAnimate.size()) animateLinkFlow(linksToAnimate, config, this._scale)
   }
@@ -719,6 +721,13 @@ export class Graph<
     return false
   }
 
+  private _getMarkerId (d: GraphLink, color?: string, arrow?: GraphLinkArrowStyle): string {
+    const { config } = this
+    const c = color ?? getLinkColor(d, config)
+    const a = arrow ?? getLinkArrow(d, this._scale, config)
+    return a && c ? `${this.uid}-${stringToHtmlId(c)}-${a}` : null
+  }
+
   private _addSVGDefs (): void {
     const { datamodel: { links } } = this
 
@@ -736,7 +745,7 @@ export class Graph<
         ...linkColors.map(d => ({ color: d, arrow: GraphLinkArrowStyle.Double })), // Double-sided arrows
       ]).enter()
       .append('marker')
-      .attr('id', d => `${stringToHtmlId(d.color)}-${d.arrow}`)
+      .attr('id', d => this._getMarkerId(null, d.color, d.arrow))
       .attr('orient', 'auto')
       .attr('markerWidth', d => d.arrow === GraphLinkArrowStyle.Double ? LINK_MARKER_WIDTH * 2 : LINK_MARKER_WIDTH)
       .attr('markerHeight', d => d.arrow === GraphLinkArrowStyle.Double ? LINK_MARKER_HEIGHT * 2 : LINK_MARKER_HEIGHT)

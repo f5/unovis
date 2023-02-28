@@ -1,6 +1,5 @@
 // Utils
 import { getNumber, getString, getValue } from 'utils/data'
-import { stringToHtmlId } from 'utils/misc'
 import { getColor, hexToBrightness } from 'utils/color'
 import { color } from 'd3-color'
 
@@ -69,14 +68,12 @@ export function getLinkColor (link: GraphLink, config: GraphConfig<GraphInputNod
   return c || null
 }
 
-export function getMarker (d: GraphLink, scale: number, config: GraphConfig<GraphInputNode, GraphInputLink>): string {
+export function getLinkArrow (d: GraphLink, scale: number, config: GraphConfig<GraphInputNode, GraphInputLink>): string {
   const { linkArrow } = config
-  if ((scale > ZoomLevel.Level2) && getString(d, linkArrow, d._indexGlobal)) {
-    const color = getLinkColor(d, config)
-    return `url(#${stringToHtmlId(color)}-${getValue<GraphLink, GraphLinkArrowStyle>(d, linkArrow, d._indexGlobal)})`
-  } else {
-    return null
+  if (scale > ZoomLevel.Level2 && getString(d, linkArrow, d._indexGlobal)) {
+    return getValue<GraphLink, GraphLinkArrowStyle>(d, linkArrow, d._indexGlobal)
   }
+  return null
 }
 
 export function getArrowPath (): string {
