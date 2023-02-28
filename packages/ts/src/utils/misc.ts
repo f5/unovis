@@ -1,5 +1,6 @@
+import { StringAccessor } from 'types/accessor'
 import { Rect } from 'types/misc'
-import { isString } from 'utils/data'
+import { getString, isString } from 'utils/data'
 import toPx from 'to-px'
 
 export const getBoundingClientRectObject = (element: HTMLElement):
@@ -51,4 +52,9 @@ export function rectIntersect (rect1: Rect, rect2: Rect, tolerancePx = 0): boole
   ]
 
   return !(top1 < bottom2 || top2 < bottom1 || right1 < left2 || right2 < left1)
+}
+
+export function getHref<T> (d: T, identifier: StringAccessor<T>): string {
+  const id = getString(d, identifier)
+  return id ? `url(#${id})` : null
 }

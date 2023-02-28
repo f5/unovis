@@ -4,6 +4,7 @@ import { Transition } from 'd3-transition'
 // Utils
 import { range, throttle, getValue, getBoolean } from 'utils/data'
 import { smartTransition } from 'utils/d3'
+import { getHref } from 'utils/misc'
 
 // Types
 import { GraphInputLink, GraphInputNode } from 'types/graph'
@@ -22,7 +23,6 @@ import {
   getLinkLabelShift,
   getLinkStrokeWidth,
   getLinkBandWidth,
-  getMarker,
   getLinkColor,
   getLinkLabelTextColor,
   LINK_LABEL_RADIUS,
@@ -93,7 +93,8 @@ export function updateLinks<N extends GraphInputNode, L extends GraphInputLink> 
   selection: Selection<SVGGElement, GraphLink<N, L>, SVGGElement, GraphLink<N, L>>,
   config: GraphConfig<N, L>,
   duration: number,
-  scale = 1
+  scale = 1,
+  getMarkerId: (d: GraphLink) => string
 ): void {
   const { linkFlowParticleSize, linkStyle, linkFlow, linkArrow, linkLabel, linkLabelShiftFromCenter } = config
   if (!selection.size()) return
@@ -119,7 +120,7 @@ export function updateLinks<N extends GraphInputNode, L extends GraphInputLink> 
 
     link
       .attr('class', linkSelectors.link)
-      .attr('marker-mid', getMarker(d, scale, config))
+      .attr('marker-mid', getHref(d, getMarkerId))
       .style('stroke-width', getLinkStrokeWidth(d, scale, config))
       .style('stroke', getLinkColor(d, config))
       .attr('transform', getLinkShiftTransform(d, config.linkNeighborSpacing))
@@ -277,7 +278,8 @@ export function animateLinkFlow<N extends GraphInputNode, L extends GraphInputLi
 export function zoomLinks<N extends GraphInputNode, L extends GraphInputLink> (
   selection: Selection<SVGGElement, GraphLink<N, L>, SVGGElement, GraphLink<N, L>>,
   config: GraphConfig<N, L>,
-  scale: number
+  scale: number,
+  getMarkerId: (d: GraphLink) => string
 ): void {
   const { linkFlowParticleSize } = config
 
@@ -287,7 +289,7 @@ export function zoomLinks<N extends GraphInputNode, L extends GraphInputLink> (
 
   const linkElements = selection.selectAll<SVGGElement, GraphLink<N, L>>(`.${linkSelectors.link}`)
   linkElements
-    .attr('marker-mid', d => getMarker(d, scale, config))
+    .attr('marker-mid', d => getHref(d, getMarkerId))
     .style('stroke-width', d => getLinkStrokeWidth(d, scale, config))
 
   const linkBandElements = selection.selectAll<SVGGElement, GraphLink<N, L>>(`.${linkSelectors.linkBand}`)
