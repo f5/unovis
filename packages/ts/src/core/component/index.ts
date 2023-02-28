@@ -6,6 +6,7 @@ import { CoreDataModel } from 'data-models/core'
 
 // Utils
 import { throttle } from 'utils/data'
+import { guid } from 'utils/misc'
 
 // Types
 import { ComponentType, Sizing } from 'types/component'
@@ -29,6 +30,7 @@ export class ComponentCore<
   prevConfig: ConfigClass
   datamodel: CoreDataModel<CoreDatum> = new CoreDataModel()
   sizing: Sizing | string = Sizing.Fit // Supported by SingleContainer and a subset of components only (Sankey)
+  uid: string
 
   events: {
     [selector: string]: {
@@ -50,6 +52,7 @@ export class ComponentCore<
     } else {
       this.element = document.createElement('div')
     }
+    this.uid = guid()
     this.g = select(this.element) as Selection<SVGGElement, unknown, null, undefined> | Selection<HTMLElement, unknown, null, undefined>
 
     // Setting the root class if available
