@@ -37,7 +37,7 @@ import { createLinks, updateLinks, removeLinks, zoomLinksThrottled, zoomLinks, a
 import { LINK_MARKER_WIDTH, LINK_MARKER_HEIGHT, getDoubleArrowPath, getArrowPath, getLinkColor, getLinkArrow } from './modules/link/helper'
 import { createPanels, updatePanels, removePanels } from './modules/panel'
 import { setPanelForNodes, updatePanelBBoxSize, updatePanelNumNodes, getMaxPanelPadding } from './modules/panel/helper'
-import { applyLayoutCircular, applyLayoutParallel, applyLayoutDagre, applyLayoutConcentric, applyLayoutForce } from './modules/layout'
+import { applyLayoutCircular, applyLayoutParallel, applyLayoutDagre, applyLayoutConcentric, applyLayoutForce, applyELKLayout } from './modules/layout'
 
 export class Graph<
   N extends GraphInputNode,
@@ -370,6 +370,9 @@ export class Graph<
           break
         case GraphLayoutType.Concentric:
           applyLayoutConcentric(datamodel, config, this._width, this._height)
+          break
+        case GraphLayoutType.Elk:
+          await applyELKLayout(datamodel, config, this._width)
           break
         case GraphLayoutType.Circular:
         default:

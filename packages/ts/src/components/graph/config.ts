@@ -1,4 +1,4 @@
-/* eslint-disable dot-notation */
+/* eslint-disable dot-notation, @typescript-eslint/naming-convention */
 // Config
 import { ComponentConfigInterface, ComponentConfig } from 'core/component/config'
 
@@ -17,6 +17,7 @@ import {
   GraphForceLayoutSettings,
   GraphNodeShape,
 } from './types'
+import { GraphElkLayoutOptions } from './modules/layout-helpers'
 
 export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphInputLink> extends ComponentConfigInterface {
   // Zoom and drag
@@ -96,6 +97,18 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
     /** Other configurable Dagre settings. https://github.com/dagrejs/dagre/wiki */
     [key: string]: any;
   };
+
+  // ELK layout
+  /** ELK layout options, see the `elkjs` package for more details: https://github.com/kieler/elkjs.
+   * If you want to specify custom layout option for each node group, you can provide an accessor function that
+   * receives group name ('root' for the top-level configuration) as the first argument and returns an object containing
+   * layout options.
+  */
+  layoutElkSettings?: GenericAccessor<GraphElkLayoutOptions, string> | undefined;
+  /** Array of accessor functions to define nested node groups for the ELK Layered layout.
+   * E.g.: `[n => n.group, n => n.subGroup]`.
+   * Default: `undefined` */
+  layoutElkNodeGroups?: StringAccessor<N>[];
 
   // Links
   /** Link width accessor function ot constant value. Default: `1` */
@@ -217,6 +230,22 @@ export class GraphConfig<N extends GraphInputNode, L extends GraphInputLink> ext
     rankdir: 'BT',
     ranker: 'longest-path',
   }
+
+  layoutElkSettings = {
+    'layered.crossingMinimization.forceNodeModelOrder': 'true',
+    direction: 'RIGHT',
+    'nodePlacement.strategy': 'NETWORK_SIMPLEX',
+    hierarchyHandling: 'INCLUDE_CHILDREN',
+    'elk.padding': '[top=20.0,left=0.0,bottom=20.0,right=0.0]',
+    'spacing.nodeNodeBetweenLayers': '150',
+    'spacing.edgeNodeBetweenLayers': '0',
+    'spacing.edgeEdgeBetweenLayers': '0',
+    'spacing.nodeNode': '40',
+    'spacing.edgeNode': '50',
+    'spacing.edgeEdge': '60',
+  }
+
+  layoutElkNodeGroups: StringAccessor<N>[] | undefined = undefined
 
   linkFlowAnimDuration = 20000
   linkFlowParticleSize = 2
