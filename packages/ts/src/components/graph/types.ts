@@ -51,6 +51,7 @@ export enum GraphLayoutType {
   ParallelHorizontal = 'parallel horizontal',
   Dagre = 'dagre',
   Force = 'force',
+  Elk = 'elk',
 }
 
 export type GraphCircleLabel = {

@@ -1,10 +1,11 @@
-import { min, max } from 'd3-array'
+import { min, max, group } from 'd3-array'
+import type { ElkNode } from 'elkjs/lib/elk.bundled.js'
 
 // Core
 import { GraphDataModel } from 'data-models/graph'
 
 // Utils
-import { without, clamp, groupBy, unique, sortBy, getString, getNumber } from 'utils/data'
+import { without, clamp, groupBy, unique, sortBy, getString, getNumber, getValue } from 'utils/data'
 
 // Types
 import { GraphInputLink, GraphInputNode } from 'types/graph'
@@ -17,7 +18,7 @@ import { GraphConfig } from '../config'
 
 // Helpers
 import { getMaxNodeSize, configuredNodeSize, getNodeSize, getAverageNodeSize } from './node/helper'
-import { positionNonConnectedNodes } from './layout-helpers'
+import { adjustElkHierarchyCoordinates, positionNonConnectedNodes, toElkHierarchy } from './layout-helpers'
 
 export function applyLayoutCircular<N extends GraphInputNode, L extends GraphInputLink> (
   datamodel: GraphDataModel<N, L, GraphNode<N, L>, GraphLink<N, L>>,
@@ -431,5 +432,59 @@ export async function applyLayoutForce<N extends GraphInputNode, L extends Graph
     const minX = min<number>(connectedNodes.map(d => d.x))
     const graphWidth = maxX - minX
     positionNonConnectedNodes(nonConnectedNodes, maxY + maxSize * 6, maxSize * 2.25, Math.max(graphWidth, width), minX)
+  }
+}
+
+export async function applyELKLayout<N extends GraphInputNode, L extends GraphInputLink> (
+  datamodel: GraphDataModel<N, L, GraphNode<N, L>, GraphLink<N, L>>,
+  config: GraphConfig<N, L>,
+  width: number
+): Promise<void> {
+  const ELK = (await import('elkjs/lib/elk.bundled.js')).default
+  const elk = new ELK()
+
+  const nodes = datamodel.nodes.map(n => ({
+    ...n,
+    id: n._id,
+    width: getNumber(n, config.nodeSize, n._index) + getNumber(n, config.nodeStrokeWidth, n._index),
+    height: getNumber(n, config.nodeSize, n._index),
+  }))
+
+  const groupingFunctions = config.layoutElkNodeGroups
+    .map(accessor => (d: GraphNode<N, L>) => getString(d, accessor, d._index)) as [(d: GraphNode<N, L>) => string]
+  const grouped = group(nodes, ...groupingFunctions)
+  const hierarchyNodes = toElkHierarchy(grouped, config.layoutElkSettings)
+
+  const rootNodeId = 'root'
+  const elkGraph: ElkNode = {
+    id: rootNodeId,
+    layoutOptions: getValue(rootNodeId, config.layoutElkSettings),
+    children: hierarchyNodes as ElkNode[],
+    edges: datamodel.links.map(l => ({
+      id: l._id,
+      sources: [l.source._id],
+      targets: [l.target._id],
+    })),
+  }
+
+  const layout = await elk.layout(elkGraph)
+  adjustElkHierarchyCoordinates(layout)
+
+  nodes.forEach((node, i) => {
+    const found = datamodel.nodes.find(n => n._id === node.id)
+    if (!found) return
+
+    found.x = node.x
+    found.y = node.y
+  })
+
+  // Handle non-connected nodes
+  if (config.layoutNonConnectedAside) {
+    const maxSize = getMaxNodeSize(datamodel.nonConnectedNodes, config.nodeSize)
+    const maxY = max<number>(datamodel.connectedNodes.map(d => d.y)) || 0
+    const maxX = max<number>(datamodel.connectedNodes.map(d => d.x)) || 0
+    const minX = min<number>(datamodel.connectedNodes.map(d => d.x)) || 0
+    const graphWidth = (maxX - minX) || width
+    positionNonConnectedNodes(datamodel.nonConnectedNodes, maxY + maxSize * 3, maxSize * 2.25, Math.max(graphWidth, width))
   }
 }
