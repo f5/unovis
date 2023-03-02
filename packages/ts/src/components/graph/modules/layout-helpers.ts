@@ -1,13 +1,26 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 // Types
 import type { ElkNode } from 'elkjs/lib/elk.bundled.js'
 import { GraphInputLink, GraphInputNode } from 'types/graph'
 import { GenericAccessor } from 'types/accessor'
 
 // Utils
-import { getValue } from 'utils/data'
+import { getValue, merge } from 'utils/data'
 
 // Local Types
-import { GraphNode } from '../types'
+import { GraphNode, GraphElkLayoutSettings } from '../types'
+
+export const DEFAULT_ELK_SETTINGS = {
+  hierarchyHandling: 'INCLUDE_CHILDREN',
+  'nodePlacement.strategy': 'NETWORK_SIMPLEX',
+  'elk.padding': '[top=15.0,left=15.0,bottom=15.0,right=15.0]',
+  'spacing.nodeNodeBetweenLayers': '150',
+  'spacing.edgeNodeBetweenLayers': '50',
+  'spacing.edgeEdgeBetweenLayers': '50',
+  'spacing.nodeNode': '40',
+  'spacing.edgeNode': '50',
+  'spacing.edgeEdge': '60',
+}
 
 export function positionNonConnectedNodes<N extends GraphInputNode, L extends GraphInputLink> (
   nodes: GraphNode<N, L>[],
@@ -27,25 +40,23 @@ export function positionNonConnectedNodes<N extends GraphInputNode, L extends Gr
 export type GraphElkHierarchyNode<N extends GraphInputNode, L extends GraphInputLink> = {
   id: string;
   children: GraphNode<N, L>[] | GraphElkHierarchyNode<N, L>;
-  layoutOptions: GraphElkLayoutOptions;
+  layoutOptions: GraphElkLayoutSettings;
 }
 
 export type GraphElkHierarchyNodeMap<N extends GraphInputNode, L extends GraphInputLink>
   = Map<string | undefined | null, GraphNode<N, L>[] | GraphElkHierarchyNodeMap<N, L>>
 
-export type GraphElkLayoutOptions = Record<string, string>
 
 export function toElkHierarchy<N extends GraphInputNode, L extends GraphInputLink> (
   d: GraphElkHierarchyNodeMap<N, L> | GraphNode<N, L>[],
-  layoutOptions: GenericAccessor<GraphElkLayoutOptions, string> | undefined
+  layoutOptions: GenericAccessor<GraphElkLayoutSettings, string> | undefined
 ): (GraphElkHierarchyNode<N, L> | GraphNode<N, L>)[] {
   if (!(d instanceof Map)) return d
 
   const hierarchyNode = Array.from(d.entries()).map(([key, value]) => {
     const children = toElkHierarchy(value, layoutOptions)
     if (key) {
-      const layoutOps = getValue(key, layoutOptions)
-
+      const layoutOps = merge(DEFAULT_ELK_SETTINGS, getValue(key, layoutOptions))
       return {
         id: key,
         layoutOptions: layoutOps,

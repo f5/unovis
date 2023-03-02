@@ -1,4 +1,4 @@
-/* eslint-disable dot-notation, @typescript-eslint/naming-convention */
+/* eslint-disable dot-notation */
 // Config
 import { ComponentConfigInterface, ComponentConfig } from 'core/component/config'
 
@@ -15,9 +15,12 @@ import {
   GraphLinkArrowStyle,
   GraphPanelConfig,
   GraphForceLayoutSettings,
+  GraphElkLayoutSettings,
   GraphNodeShape,
 } from './types'
-import { GraphElkLayoutOptions } from './modules/layout-helpers'
+
+// Defaults
+import { DEFAULT_ELK_SETTINGS } from './modules/layout-helpers'
 
 export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphInputLink> extends ComponentConfigInterface {
   // Zoom and drag
@@ -104,7 +107,7 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
    * receives group name ('root' for the top-level configuration) as the first argument and returns an object containing
    * layout options.
   */
-  layoutElkSettings?: GenericAccessor<GraphElkLayoutOptions, string> | undefined;
+  layoutElkSettings?: GenericAccessor<GraphElkLayoutSettings, string> | undefined;
   /** Array of accessor functions to define nested node groups for the ELK Layered layout.
    * E.g.: `[n => n.group, n => n.subGroup]`.
    * Default: `undefined` */
@@ -231,20 +234,7 @@ export class GraphConfig<N extends GraphInputNode, L extends GraphInputLink> ext
     ranker: 'longest-path',
   }
 
-  layoutElkSettings = {
-    'layered.crossingMinimization.forceNodeModelOrder': 'true',
-    direction: 'RIGHT',
-    'nodePlacement.strategy': 'NETWORK_SIMPLEX',
-    hierarchyHandling: 'INCLUDE_CHILDREN',
-    'elk.padding': '[top=20.0,left=0.0,bottom=20.0,right=0.0]',
-    'spacing.nodeNodeBetweenLayers': '150',
-    'spacing.edgeNodeBetweenLayers': '0',
-    'spacing.edgeEdgeBetweenLayers': '0',
-    'spacing.nodeNode': '40',
-    'spacing.edgeNode': '50',
-    'spacing.edgeEdge': '60',
-  }
-
+  layoutElkSettings = DEFAULT_ELK_SETTINGS
   layoutElkNodeGroups: StringAccessor<N>[] | undefined = undefined
 
   linkFlowAnimDuration = 20000

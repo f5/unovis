@@ -1,16 +1,16 @@
 import { Selection } from 'd3-selection'
-import { max } from 'd3-array'
 
 // Types
 import { NumericAccessor, BooleanAccessor } from 'types/accessor'
 import { Position } from 'types/position'
 import { GraphInputLink, GraphInputNode } from 'types/graph'
+import { Spacing } from 'types/spacing'
 
 // Utils
-import { getBoolean } from 'utils/data'
+import { getBoolean, isPlainObject } from 'utils/data'
 
 // Local Types
-import { GraphNode, GraphPanel } from '../../types'
+import { GraphNode, GraphPanel, GraphPanelConfig } from '../../types'
 
 // Config
 import { GraphConfig } from '../../config'
@@ -26,26 +26,37 @@ export const DEFAULT_LABEL_MARGIN = 16
 export const OUTLINE_SELECTION_PADDING = 5
 export const DEFAULT_SIDE_LABEL_SIZE = 25
 
+export function getPanelPadding (padding: number | Spacing | undefined): Spacing {
+  const isPaddingAnObject = isPlainObject(padding)
+  return {
+    left: (isPaddingAnObject ? (padding as Spacing).left : (padding as number)) ?? DEFAULT_PADDING,
+    right: (isPaddingAnObject ? (padding as Spacing).right : (padding as number)) ?? DEFAULT_PADDING,
+    top: (isPaddingAnObject ? (padding as Spacing).top : (padding as number)) ?? DEFAULT_PADDING,
+    bottom: (isPaddingAnObject ? (padding as Spacing).bottom : (padding as number)) ?? DEFAULT_PADDING,
+  }
+}
+
+export function initPanels (panelsConfig: GraphPanelConfig[] | undefined): GraphPanel[] {
+  const panels = (panelsConfig ?? []).map(p => ({
+    ...p,
+    _padding: getPanelPadding(p.padding),
+  })) as GraphPanel[]
+
+  return panels
+}
+
 export function setPanelForNodes<N extends GraphInputNode, L extends GraphInputLink> (
   panels: GraphPanel[],
   nodes: GraphNode<N, L>[],
   config: GraphConfig<N, L>
 ): void {
-  const { layoutNonConnectedAside } = config
   if (!panels) return
 
-  // For each Node create Panels to which node belongs
-  // Then for each Panel create an array of neighbouring Nodes
+  // For each node store its related panels
   nodes.forEach(node => {
-    // Find all panels to which node is belong
+    // Find all panels to which node belong
     const nodePanels = panels.filter(panel => panel.nodes && panel.nodes.includes(node._id))
-    if (!layoutNonConnectedAside || node._isConnected) {
-      // Find and put neighbour Nodes to each panel
-      node._panels = nodePanels.map(panel => {
-        const panelNodes = panel.nodes.map((panelNodeId): GraphNode<N, L> => nodes.find((n: GraphNode<N, L>) => panelNodeId === n._id))
-        return layoutNonConnectedAside ? panelNodes.filter((n: GraphNode<N, L>) => n._isConnected) : panelNodes
-      })
-    }
+    node._panels = nodePanels
   })
 }
 
@@ -68,13 +79,13 @@ export function setPanelBBox<N extends GraphInputNode, L extends GraphInputLink>
     const w = Math.max(nodeSize, labelApprxWidth)
     const h = nodeSize + labelMargin + labelApprxHeight
     // const nodeBBox = node.getBBox()
-    const yShift = 10 // This is hard to calculate so we just using an approximation
+    const yShift = 10 // This is hard to calculate, so we just use an approximation
 
     const coords = {
-      x1: getX(d) - w / 2 - DEFAULT_PADDING, // We use d.x and d.y instead of bBox values here because gBBox contains initial ...
-      y1: getY(d) - h / 2 + yShift - DEFAULT_PADDING, // ... coordinates (before transition starts), not target coordinates
-      x2: getX(d) + w / 2 + DEFAULT_PADDING,
-      y2: getY(d) + h / 2 + yShift + DEFAULT_PADDING,
+      x1: getX(d) - w / 2, // We use d.x and d.y instead of bBox values here because `gBBox` contains initial ...
+      y1: getY(d) - h / 2 + yShift, // ... coordinates (before transition starts), not target coordinates
+      x2: getX(d) + w / 2,
+      y2: getY(d) + h / 2 + yShift,
     }
 
     if (!box) {
@@ -89,10 +100,10 @@ export function setPanelBBox<N extends GraphInputNode, L extends GraphInputLink>
     }
   })
 
-  panelConfig._x = box.x1
-  panelConfig._y = box.y1
-  panelConfig._width = box.x2 - box.x1
-  panelConfig._height = box.y2 - box.y1
+  panelConfig._x = box.x1 - panelConfig._padding.left
+  panelConfig._y = box.y1 - panelConfig._padding.top
+  panelConfig._width = box.x2 - box.x1 + panelConfig._padding.left + panelConfig._padding.right
+  panelConfig._height = box.y2 - box.y1 + panelConfig._padding.top + panelConfig._padding.bottom
   panelConfig._disabled = selection.data()
     .map((node, i) => getBoolean(node, nodeDisabledAccessor, node._index) || node._state.greyout)
     .every(d => d)
@@ -137,16 +148,13 @@ export function updatePanelNumNodes<N extends GraphInputNode, L extends GraphInp
   })
 }
 
-export function getMaxPanelPadding<N extends GraphInputNode, L extends GraphInputLink> (panels: GraphPanel[]): number {
-  return panels?.length ? DEFAULT_PADDING + max(panels.map(d => d.padding ?? 0)) : 0
-}
-
 export function getLabelTranslateTransform<N extends GraphInputNode, L extends GraphInputLink> (panel: GraphPanel): string {
   const x = panel._width / 2
-  const dy = (panel.padding ?? DEFAULT_PADDING) + DEFAULT_LABEL_MARGIN + (panel.dashedOutline ? OUTLINE_SELECTION_PADDING : 0)
+  const dy = DEFAULT_LABEL_MARGIN + (panel.dashedOutline ? OUTLINE_SELECTION_PADDING : 0)
   const y = panel.labelPosition === Position.Bottom
     ? panel._height + dy
     : -dy
 
   return `translate(${x}, ${y})`
 }
+
