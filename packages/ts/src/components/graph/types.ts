@@ -1,6 +1,7 @@
 // Types
 import { Position } from 'types/position'
 import { GraphInputLink, GraphInputNode, GraphNodeCore, GraphLinkCore } from 'types/graph'
+import { Spacing } from 'types/spacing'
 
 export type GraphNode<
   N extends GraphInputNode = GraphInputNode,
@@ -19,7 +20,7 @@ export type GraphNode<
     greyout?: boolean;
   };
 
-  _panels?: GraphNode<N>[][];
+  _panels?: GraphPanel<N, L>[];
   _isConnected?: boolean;
 }
 
@@ -92,7 +93,7 @@ export type GraphPanelConfig = {
   /** Border width of the panel in pixels */
   borderWidth?: number;
   /** Inner padding */
-  padding?: number;
+  padding?: number | Spacing;
   /** Dashed outline showing that the panel is selected */
   dashedOutline?: boolean;
   /** Side icon symbol */
@@ -102,7 +103,7 @@ export type GraphPanelConfig = {
   /** Color of the icon */
   sideIconSymbolColor?: string;
   /** Shape of the icon's background */
-  sideIconShape?: GraphNodeShape;
+  sideIconShape?: GraphNodeShape | string;
   /** Size of the icon's background shape */
   sideIconShapeSize?: number;
   /** Stroke color of the icon's background shape */
@@ -121,6 +122,7 @@ export type GraphPanel<
   _width?: number;
   _height?: number;
   _disabled?: boolean;
+  _padding?: Spacing;
 }
 
 export type GraphNodeAnimationState = {
@@ -146,3 +148,5 @@ export type GraphForceLayoutSettings = {
   /** Y-centring force. Default: `0.25` */
   forceYStrength?: number;
 }
+
+export type GraphElkLayoutSettings = Record<string, string>

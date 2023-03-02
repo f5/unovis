@@ -5,7 +5,7 @@ import type { ElkNode } from 'elkjs/lib/elk.bundled.js'
 import { GraphDataModel } from 'data-models/graph'
 
 // Utils
-import { without, clamp, groupBy, unique, sortBy, getString, getNumber, getValue } from 'utils/data'
+import { without, clamp, groupBy, unique, sortBy, getString, getNumber, getValue, merge } from 'utils/data'
 
 // Types
 import { GraphInputLink, GraphInputNode } from 'types/graph'
@@ -18,7 +18,7 @@ import { GraphConfig } from '../config'
 
 // Helpers
 import { getMaxNodeSize, configuredNodeSize, getNodeSize, getAverageNodeSize } from './node/helper'
-import { adjustElkHierarchyCoordinates, positionNonConnectedNodes, toElkHierarchy } from './layout-helpers'
+import { DEFAULT_ELK_SETTINGS, adjustElkHierarchyCoordinates, positionNonConnectedNodes, toElkHierarchy } from './layout-helpers'
 
 export function applyLayoutCircular<N extends GraphInputNode, L extends GraphInputLink> (
   datamodel: GraphDataModel<N, L, GraphNode<N, L>, GraphLink<N, L>>,
@@ -454,11 +454,10 @@ export async function applyELKLayout<N extends GraphInputNode, L extends GraphIn
     .map(accessor => (d: GraphNode<N, L>) => getString(d, accessor, d._index)) as [(d: GraphNode<N, L>) => string]
   const grouped = group(nodes, ...groupingFunctions)
   const hierarchyNodes = toElkHierarchy(grouped, config.layoutElkSettings)
-
   const rootNodeId = 'root'
   const elkGraph: ElkNode = {
     id: rootNodeId,
-    layoutOptions: getValue(rootNodeId, config.layoutElkSettings),
+    layoutOptions: merge(DEFAULT_ELK_SETTINGS, getValue(rootNodeId, config.layoutElkSettings)),
     children: hierarchyNodes as ElkNode[],
     edges: datamodel.links.map(l => ({
       id: l._id,

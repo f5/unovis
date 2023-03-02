@@ -1,4 +1,4 @@
-import { min, extent } from 'd3-array'
+import { min, max } from 'd3-array'
 import { Transition } from 'd3-transition'
 import { select, Selection, pointer } from 'd3-selection'
 import { zoom, zoomTransform, zoomIdentity, ZoomTransform, D3ZoomEvent, ZoomBehavior } from 'd3-zoom'
@@ -14,7 +14,7 @@ import { GraphInputLink, GraphInputNode } from 'types/graph'
 import { Spacing } from 'types/spacing'
 
 // Utils
-import { isNumber, clamp, cloneDeep, flatten, clean, unique, shallowDiff, isFunction, getBoolean } from 'utils/data'
+import { isNumber, clamp, clean, unique, shallowDiff, isFunction, getBoolean } from 'utils/data'
 import { stringToHtmlId } from 'utils/misc'
 import { smartTransition } from 'utils/d3'
 
@@ -32,11 +32,11 @@ import * as panelSelectors from './modules/panel/style'
 
 // Modules
 import { createNodes, updateNodes, removeNodes, zoomNodesThrottled, zoomNodes, updateSelectedNodes } from './modules/node'
-import { getMaxNodeSize, getX, getY } from './modules/node/helper'
+import { getMaxNodeSize, getNodeSize, getX, getY } from './modules/node/helper'
 import { createLinks, updateLinks, removeLinks, zoomLinksThrottled, zoomLinks, animateLinkFlow, updateSelectedLinks } from './modules/link'
 import { LINK_MARKER_WIDTH, LINK_MARKER_HEIGHT, getDoubleArrowPath, getArrowPath, getLinkColor, getLinkArrow } from './modules/link/helper'
 import { createPanels, updatePanels, removePanels } from './modules/panel'
-import { setPanelForNodes, updatePanelBBoxSize, updatePanelNumNodes, getMaxPanelPadding } from './modules/panel/helper'
+import { setPanelForNodes, updatePanelBBoxSize, updatePanelNumNodes, initPanels } from './modules/panel/helper'
 import { applyLayoutCircular, applyLayoutParallel, applyLayoutDagre, applyLayoutConcentric, applyLayoutForce, applyELKLayout } from './modules/layout'
 
 export class Graph<
@@ -80,19 +80,19 @@ export class Graph<
   private _nodesGroup: Selection<SVGGElement, unknown, SVGGElement, undefined>
   private _timer: Timer
 
-  private _firstRender = true
+  private _isFirstRender = true
   private _prevWidth: number
   private _prevHeight: number
-  private _recalculateLayout = false
+  private _shouldRecalculateLayout = false
 
-  private _fitLayout: boolean
-  private _setPanels = false
+  private _shouldFitLayout: boolean
+  private _shouldSetPanels = false
   private _panels: GraphPanel[]
 
   private _defs: Selection<SVGDefsElement, unknown, SVGGElement, undefined>
   private _backgroundRect: Selection<SVGRectElement, unknown, SVGGElement, undefined>
   private _zoomBehavior: ZoomBehavior<SVGGElement, unknown>
-  private _disableAutoFit = false
+  private _isAutoFitDisabled = false
   private _scale: number
   private _initialTransform
   private _isDragging = false
@@ -146,30 +146,24 @@ export class Graph<
 
     this.datamodel.nodeSort = config.nodeSort
     this.datamodel.data = data
-    this._recalculateLayout = true
-    if (config.layoutAutofit) this._fitLayout = true
-    this._setPanels = true
+    this._shouldRecalculateLayout = true
+    if (config.layoutAutofit) this._shouldFitLayout = true
+    this._shouldSetPanels = true
 
     this._addSVGDefs()
   }
 
   setConfig (config: GraphConfigInterface<N, L>): void {
-    this._fitLayout = this._fitLayout || this.config.layoutType !== config.layoutType
-    this._recalculateLayout = this._recalculateLayout || this._shouldLayoutRecalculate(config)
+    this._shouldFitLayout = this._shouldFitLayout || this.config.layoutType !== config.layoutType
+    this._shouldRecalculateLayout = this._shouldRecalculateLayout || this._shouldLayoutRecalculate(config)
 
     super.setConfig(config)
-    this._setPanels = true
+    this._shouldSetPanels = true
   }
 
   get bleed (): Spacing {
-    const { datamodel: { nodes }, config: { nodeSize } } = this
-    const maxPanelPadding = getMaxPanelPadding(this._panels)
-    const maxNodeSize = getMaxNodeSize(nodes, nodeSize)
-    const extra = 20 // Extra padding to take into account labels
-    const padding = maxNodeSize * 0.5 + maxPanelPadding + extra
-    const panelLabelHeight = this._panels?.length ? 50 : 0
-
-    return { top: padding + panelLabelHeight, bottom: padding, left: padding, right: padding }
+    const extraPadding = 50 // Extra padding to take into account labels and selection outlines
+    return { top: extraPadding, bottom: extraPadding, left: extraPadding, right: extraPadding }
   }
 
   _render (customDuration?: number): void {
@@ -184,7 +178,7 @@ export class Graph<
 
     if ((this._prevWidth !== this._width || this._prevHeight !== this._height) && layoutAutofit) {
       // Fit layout on resize
-      this._fitLayout = true
+      this._shouldFitLayout = true
       this._prevWidth = this._width
       this._prevHeight = this._height
     }
@@ -195,21 +189,21 @@ export class Graph<
       // was in progress, we cancel the render
       if (this.isDestroyed()) return
 
-      if (this._setPanels) {
+      if (this._shouldSetPanels) {
         smartTransition(this._panelsGroup, duration / 2)
           .style('opacity', panels?.length ? 1 : 0)
 
-        this._panels = cloneDeep(panels) as GraphPanel[]
+        this._panels = initPanels(panels)
         setPanelForNodes(this._panels, datamodel.nodes, this.config)
-        this._setPanels = false
+        this._shouldSetPanels = false
       }
 
       if (isFirstRender) {
         this._fit()
-        this._fitLayout = false
-      } else if (this._fitLayout && !this._disableAutoFit) {
+        this._shouldFitLayout = false
+      } else if (this._shouldFitLayout && !this._isAutoFitDisabled) {
         this._fit(duration)
-        this._fitLayout = false
+        this._shouldFitLayout = false
       }
 
       // Draw
@@ -238,7 +232,7 @@ export class Graph<
       if (disableZoom) this.g.on('.zoom', null)
       else this.g.call(this._zoomBehavior).on('dblclick.zoom', null)
 
-      if (!this._firstRender && !disableZoom) {
+      if (!this._isFirstRender && !disableZoom) {
         const transform = zoomTransform(this.g.node())
         this._onZoom(transform)
       }
@@ -257,7 +251,7 @@ export class Graph<
     })
 
 
-    this._firstRender = false
+    this._isFirstRender = false
   }
 
   private _drawNodes (duration: number): void {
@@ -353,8 +347,8 @@ export class Graph<
   private async _calculateLayout (): Promise<boolean> {
     const { config, datamodel } = this
 
-    const firstRender = this._firstRender
-    if (this._recalculateLayout) {
+    const firstRender = this._isFirstRender
+    if (this._shouldRecalculateLayout) {
       switch (config.layoutType) {
         case GraphLayoutType.Parallel:
           applyLayoutParallel(datamodel, config, this._width, this._height)
@@ -380,7 +374,7 @@ export class Graph<
           break
       }
 
-      this._recalculateLayout = false
+      this._shouldRecalculateLayout = false
     }
 
     return firstRender
@@ -405,16 +399,22 @@ export class Graph<
     const maxNodeSize = getMaxNodeSize(nodes, nodeSize)
     const w = this._width
     const h = this._height
-    const xExtent = extent(nodes, d => getX(d)) as number[]
-    const yExtent = extent(nodes, d => getY(d)) as number[]
+    const xExtent = [
+      min(nodes, d => getX(d) - maxNodeSize / 2 - (max(d._panels?.map(p => p._padding.left)) || 0)),
+      max(nodes, d => getX(d) + maxNodeSize / 2 + (max(d._panels?.map(p => p._padding.right)) || 0)),
+    ]
+    const yExtent = [
+      min(nodes, d => getY(d) - maxNodeSize / 2 - (max(d._panels?.map(p => p._padding.top)) || 0)),
+      max(nodes, d => getY(d) + maxNodeSize / 2 + (max(d._panels?.map(p => p._padding.bottom)) || 0)),
+    ]
 
     const xScale = w / (xExtent[1] - xExtent[0] + left + right)
-    const yScale = h / (yExtent[1] - yExtent[0] + maxNodeSize + top + bottom)
+    const yScale = h / (yExtent[1] - yExtent[0] + top + bottom)
 
     const clampedScale = clamp(min([xScale, yScale]), zoomScaleExtent[0], zoomScaleExtent[1])
 
     const xCenter = (xExtent[1] + xExtent[0]) / 2
-    const yCenter = (yExtent[1] + yExtent[0] + maxNodeSize) / 2
+    const yCenter = (yExtent[1] + yExtent[0]) / 2
     const translateX = this._width / 2 - xCenter * clampedScale
     const translateY = this._height / 2 - yCenter * clampedScale
     const transform = zoomIdentity
@@ -592,8 +592,8 @@ export class Graph<
         return prop === 'k' ? 2 * dVal : dVal / 50
       }, 0)
 
-      if (diff > config.layoutAutofitTolerance) this._disableAutoFit = true
-      else this._disableAutoFit = false
+      if (diff > config.layoutAutofitTolerance) this._isAutoFitDisabled = true
+      else this._isAutoFitDisabled = false
     }
 
     this._nodesGroup.selectAll<SVGGElement, GraphNode<N, L>>(`.${nodeSelectors.gNode}`)
@@ -632,11 +632,14 @@ export class Graph<
     const transform = zoomTransform(this.g.node())
     const scale = transform.k
 
-    // Prevent from dragging outside
-    const maxY = (this._height - transform.y) / scale
-    const maxX = (this._width - transform.x) / scale
-    const minY = -transform.y / scale
-    const minX = -transform.x / scale
+    // Prevent the node from being dragged offscreen or outside its panel
+    const panels = this._panels?.filter(p => p.nodes.includes(d._id)) ?? []
+    const nodeSizeValue = getNodeSize(d, config.nodeSize, d._index)
+    const maxY = min([(this._height - transform.y) / scale, ...panels.map(p => p._y + p._height)]) - nodeSizeValue / 2
+    const maxX = min([(this._width - transform.x) / scale, ...panels.map(p => p._x + p._width)]) - nodeSizeValue / 2
+    const minY = max([-transform.y / scale, ...panels.map(p => p._y)]) + nodeSizeValue / 2
+    const minX = max([-transform.x / scale, ...panels.map(p => p._x)]) + nodeSizeValue / 2
+
     let [x, y] = pointer(event, this._graphGroup.node())
     if (y < minY) y = minY
     else if (y > maxY) y = maxY
@@ -649,45 +652,22 @@ export class Graph<
       y = d.y
     }
 
-    const panelNeighbourNodes = flatten(d._panels)
-    if (panelNeighbourNodes.length > 0) {
-      const prevX = getX(d)
-      const prevY = getY(d)
-      panelNeighbourNodes.forEach(node => {
-        const dx = getX(node) - prevX
-        const dy = getY(node) - prevY
-        node._state.fx = x + dx
-        node._state.fy = y + dy
-        if (node._state.fx === node.x) delete node._state.fx
-        if (node._state.fy === node.y) delete node._state.fy
-      })
-    } else {
-      d._state.fx = x
-      d._state.fy = y
-      if (d._state.fx === d.x) delete d._state.fx
-      if (d._state.fy === d.y) delete d._state.fy
-    }
+    // Assign coordinates
+    d._state.fx = x
+    d._state.fy = y
+    if (d._state.fx === d.x) delete d._state.fx
+    if (d._state.fy === d.y) delete d._state.fy
 
-    const panelNodesToUpdate = allNodesSelection.filter((node: GraphNode<N>) => {
-      return node._id === d._id || panelNeighbourNodes.findIndex((n: GraphNode<N>) => node._id === n._id) !== -1
-    })
+    // Update affected DOM elements
+    const nodeSelection = this._nodesGroup.selectAll<SVGGElement, GraphNode<N>>(`.${nodeSelectors.gNode}`)
+    const nodeToUpdate = nodeSelection.filter((n: GraphNode<N>) => n._id === d._id)
+    nodeToUpdate.call(updateNodes, config, 0, scale)
 
-    panelNodesToUpdate
-      .call(updateNodes, config, 0, scale)
-      .call(zoomNodes, config, scale)
-    const panelToUpdate = this._panelsGroup.selectAll<SVGGElement, GraphPanel>(`.${panelSelectors.gPanel}`)
-    updatePanelBBoxSize(panelNodesToUpdate, this._panels, config)
-    this._updatePanels(panelToUpdate, 0)
-
-    const nodeElements = this._nodesGroup.selectAll<SVGGElement, GraphNode<N>>(`.${nodeSelectors.gNode}`)
-    const nodesToUpdate = nodeElements.filter((n: GraphNode<N>) => n._id === d._id)
-    nodesToUpdate.call(updateNodes, config, 0, scale)
-
-    const linkElements = this._linksGroup.selectAll<SVGGElement, GraphLink<N, L>>(`.${linkSelectors.gLink}`)
-    const linksToUpdate = linkElements.filter((l: L) => {
+    const linkSelection = this._linksGroup.selectAll<SVGGElement, GraphLink<N, L>>(`.${linkSelectors.gLink}`)
+    const linksToUpdate = linkSelection.filter((l: L) => {
       const source = l.source as GraphNode<N>
       const target = l.target as GraphNode<N>
-      return source._id === d._id || target._id === d._id || panelNeighbourNodes.findIndex((n: GraphNode<N>) => source._id === n._id) !== -1 || panelNeighbourNodes.findIndex((n: GraphNode<N>) => target._id === n._id) !== -1
+      return source._id === d._id || target._id === d._id
     })
     linksToUpdate.call(updateLinks, config, 0, scale, this._getMarkerId)
     const linksToAnimate = linksToUpdate.filter(d => d._state.greyout)
@@ -797,7 +777,7 @@ export class Graph<
 
   /** Enable automatic fitting to container if it was disabled due to previous zoom / pan interactions */
   public resetAutofitState (): void {
-    this._disableAutoFit = false
+    this._isAutoFitDisabled = false
   }
 
   /** Get current coordinates of the nodes as an array of { id: string; x: number; y: number } objects */
