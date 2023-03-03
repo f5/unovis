@@ -19,12 +19,9 @@ export interface ArcNode extends SVGElement {
 }
 
 export function createNode<N extends ChordInputNode, L extends ChordInputLink> (
-  selection: Selection<SVGPathElement, ChordNode<N>, SVGGElement, unknown>,
-  config: ChordDiagramConfig<N, L>
+  selection: Selection<SVGPathElement, ChordNode<N>, SVGGElement, unknown>
 ): void {
   selection
-    .style('fill', d => getColor(d, config.nodeColor, d.height))
-    .style('stroke', d => getColor(d, config.nodeColor, d.height))
     .style('opacity', 0)
     .each((d, i, els) => {
       const arcNode: ArcNode = els[i]
@@ -45,11 +42,13 @@ export function updateNode<N extends ChordInputNode, L extends ChordInputLink> (
   arcGen: Arc<unknown, AnimState>,
   duration: number
 ): void {
+  const nodeColor = (d: ChordNode<N>): string => getColor(d.data, config.nodeColor, d.height)
+
   selection
-    .attr('id', (d, i) => `chord-node-${i}`)
+    .attr('id', d => d.uid)
     .style('transition', `fill ${duration}ms`) // Animate color with CSS because we're using CSS-variables
-    .style('fill', d => getColor(d.data, config.nodeColor, d.depth))
-    .style('stroke', d => getColor(d, config.nodeColor, d.depth))
+    .style('fill', nodeColor)
+    .style('stroke', nodeColor)
 
   if (duration) {
     const transition = smartTransition(selection, duration)

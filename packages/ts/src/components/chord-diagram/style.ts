@@ -63,7 +63,7 @@ export const label = css`
   pointer-events: none;
 
   > textPath {
-    dominant-baseline: middle;
+    dominant-baseline: central;
   }
 `
 
@@ -75,7 +75,7 @@ export const link = css`
   label: link;
 
   fill: var(--vis-chord-diagram-link-fill-color);
-  stroke:  var(--vis-chord-diagram-link-stroke-color);
+  stroke: var(--vis-chord-diagram-link-stroke-color);
   stroke-opacity:  var(--vis-chord-diagram-link-stroke-opacity);
   transition: .1s fill-opacity;
 
