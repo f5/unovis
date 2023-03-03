@@ -7,7 +7,7 @@ import { ComponentConfigInterface, ComponentConfig } from 'core/component/config
 import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
 
 // Local Types
-import { ChordInputLink, ChordInputNode, ChordLabelAlignment, ChordNode } from './types'
+import { ChordInputLink, ChordInputNode, ChordLabelAlignment } from './types'
 
 export interface ChordDiagramConfigInterface<N extends ChordInputNode, L extends ChordInputLink> extends ComponentConfigInterface {
   /** Link color accessor function. Default: `var(--vis-chord-diagram-link-fill-color)` */
@@ -19,7 +19,7 @@ export interface ChordDiagramConfigInterface<N extends ChordInputNode, L extends
   /** Node width in pixels. Default: `15` */
   nodeWidth?: number;
   /** Node color accessor function ot constant value. Default: `d => d.color` */
-  nodeColor?: ColorAccessor<ChordNode<N>>;
+  nodeColor?: ColorAccessor<N>;
   /** Node label accessor function. Default: `d => d.label ?? d.key` */
   nodeLabel?: StringAccessor<N>;
   /** Node label alignment. Default: `ChordLabelAlignment.Along` */
@@ -40,7 +40,7 @@ export class ChordDiagramConfig<N extends ChordInputNode, L extends ChordInputLi
   linkValue = (d: L): number => d['value']
   nodeLevels = []
   nodeWidth = 15
-  nodeColor = undefined
+  nodeColor = (d: N): string => d['color']
   nodeLabel = (d: N): string => d['label'] ?? d['key']
   nodeLabelAlignment = ChordLabelAlignment.Along
   padAngle = 0.02

@@ -10,7 +10,8 @@ import { ComponentCore } from 'core/component'
 import { GraphDataModel } from 'data-models/graph'
 
 // Utils
-import { getNumber, isNumber, groupBy } from 'utils/data'
+import { getNumber, isNumber, groupBy, getString } from 'utils/data'
+import { estimateStringPixelLength } from 'utils/text'
 
 // Types
 import { GraphNodeCore } from 'types/graph'
@@ -18,18 +19,29 @@ import { Spacing } from 'types/spacing'
 import { Curve } from 'types/curve'
 
 // Local Types
-import { ChordInputNode, ChordInputLink, ChordDiagramData, ChordHierarchy, ChordNode, ChordRibbon, ChordLabelAlignment, ChordLeafNode } from './types'
+import {
+  ChordInputNode,
+  ChordInputLink,
+  ChordDiagramData,
+  ChordHierarchy,
+  ChordNode,
+  ChordRibbon,
+  ChordLabelAlignment,
+  ChordLeafNode,
+  ChordRibbonPoint,
+} from './types'
 
 // Config
 import { ChordDiagramConfig, ChordDiagramConfigInterface } from './config'
 
 // Modules
 import { createNode, updateNode, removeNode } from './modules/node'
-import { createLabel, updateLabel, removeLabel } from './modules/label'
+import { createLabel, updateLabel, removeLabel, LABEL_PADDING } from './modules/label'
 import { createLink, updateLink, removeLink } from './modules/link'
 
 // Styles
 import * as s from './style'
+
 
 export class ChordDiagram<
   N extends ChordInputNode,
@@ -72,7 +84,26 @@ export class ChordDiagram<
   }
 
   get bleed (): Spacing {
-    return { top: 4, bottom: 4, left: 4, right: 4 }
+    const { config } = this
+    let top = 4; let bottom = 4; let left = 4; let right = 4
+    if (config.nodeLabelAlignment === ChordLabelAlignment.Perpendicular) {
+      const padding = 4 + LABEL_PADDING * 2
+      this._nodes.forEach(n => {
+        const labelWidth = estimateStringPixelLength(getString(n.data, config.nodeLabel) ?? '', 16)
+        const [x, y] = this.arcGen.centroid(n)
+
+        if (x < 0) left = Math.max(left, labelWidth)
+        else right = Math.max(right, labelWidth)
+
+        if (y < 0) top = Math.max(top, labelWidth)
+        else bottom = Math.max(bottom, labelWidth)
+      })
+      left += padding
+      right += padding
+      bottom += padding
+      top += padding
+    }
+    return { top, bottom, left, right }
   }
 
   _render (customDuration?: number): void {
@@ -91,20 +122,18 @@ export class ChordDiagram<
     const linkLineGen = line().curve(Curve.catmullRom.alpha(0.25))
 
     const hierarchyData = hierarchy(nodes, (d: ChordHierarchy<GraphNodeCore<N, L>>) => d.values)
-    hierarchyData.sum((d) => {
-      return (d as GraphNodeCore<N, L>)._state?.value
-    })
-
-    let radius = Math.min(this._width, this._height) / 2 - max([this.bleed.top, this.bleed.bottom, this.bleed.left, this.bleed.right])
-    let labelWidth = nodeLabelAlignment === ChordLabelAlignment.Perpendicular ? radius / (hierarchyData.height + 1) - config.nodeWidth : 0
-    radius = radius - labelWidth
-    radiusScale
-      .exponent(radiusScaleExponent)
-      .range([0, radius])
-    labelWidth -= labelWidth / (hierarchyData.height + 1)
+      .sum((d) => (d as GraphNodeCore<N, L>)._state?.value)
 
     const partitionData = partition<N | ChordHierarchy<GraphNodeCore<N, L>>>().size([config.angleRange[1], 1])(hierarchyData) as ChordNode<N>
     this._calculateRadialPosition(partitionData)
+
+    const size = Math.min(this._width, this._height)
+    const radius = size / 2 - max([this.bleed.top, this.bleed.bottom, this.bleed.left, this.bleed.right])
+    const labelWidth = nodeLabelAlignment === ChordLabelAlignment.Perpendicular ? size - radius - config.nodeWidth : 0
+
+    radiusScale
+      .exponent(radiusScaleExponent)
+      .range([0, radius])
 
     const partitionDataWithRoot = partitionData.descendants()
     this._rootNode = partitionDataWithRoot.find(d => d.depth === 0)
@@ -112,7 +141,10 @@ export class ChordDiagram<
     this._links = this._getRibbons(partitionData)
 
     // Create Node and Link state objects
-    this._nodes.forEach(node => { node._state = {} })
+    this._nodes.forEach((node, i) => {
+      node.uid = `${this.uid}-n${i}`
+      node._state = {}
+    })
     this._links.forEach(link => { link._state = {} })
 
     // Center the view
@@ -188,12 +220,12 @@ export class ChordDiagram<
     const findNode = (
       nodes: ChordLeafNode<N>[],
       id: string
-    ): ChordLeafNode<N> => nodes.find(n => n.data.id === id)
+    ): ChordLeafNode<N> => nodes.find(n => n.data._id === id)
     const leafNodes = partitionData.leaves() as ChordLeafNode<N>[]
 
     type LinksArrayType = typeof links
-    const groupedBySource: Record<string, LinksArrayType> = groupBy(links, d => d.source.id)
-    const groupedByTarget: Record<string, LinksArrayType> = groupBy(links, d => d.target.id)
+    const groupedBySource: Record<string, LinksArrayType> = groupBy(links, d => d.source._id)
+    const groupedByTarget: Record<string, LinksArrayType> = groupBy(links, d => d.target._id)
 
     const getNodesInRibbon = (
       source: ChordLeafNode<N>,
@@ -214,8 +246,8 @@ export class ChordDiagram<
     ): void => {
       links.forEach(link => {
         if (!link._state.points) link._state.points = []
-        const sourceLeaf = findNode(leafNodes, link.source.id)
-        const targetLeaf = findNode(leafNodes, link.target.id)
+        const sourceLeaf = findNode(leafNodes, link.source._id)
+        const targetLeaf = findNode(leafNodes, link.target._id)
         const nodesInRibbon = getNodesInRibbon(
           type === 'out' ? sourceLeaf : targetLeaf,
           type === 'out' ? targetLeaf : sourceLeaf,
@@ -237,17 +269,17 @@ export class ChordDiagram<
     }
 
     leafNodes.forEach(leafNode => {
-      const outLinks = groupedBySource[leafNode.data.id] || []
-      const inLinks = groupedByTarget[leafNode.data.id] || []
+      const outLinks = groupedBySource[leafNode.data._id] || []
+      const inLinks = groupedByTarget[leafNode.data._id] || []
       for (let depth = 0; depth < partitionData.height; depth += 1) {
         calculatePoints(outLinks, 'out', depth)
         calculatePoints(inLinks, 'in', depth)
       }
     })
 
-    const ribbons = links.map((l) => {
-      const sourceNode = findNode(leafNodes, l.source.id)
-      const targetNode = findNode(leafNodes, l.target.id)
+    const ribbons = links.map(l => {
+      const sourceNode = findNode(leafNodes, l.source._id)
+      const targetNode = findNode(leafNodes, l.target._id)
 
       return {
         source: sourceNode,
