@@ -76,10 +76,10 @@ export class ContainerCore {
   }
 
   render (duration = this.config.duration): Promise<number> {
-    window.cancelAnimationFrame(this._requestedAnimationFrame)
+    cancelAnimationFrame(this._requestedAnimationFrame)
 
     this._animationFramePromise = new Promise((resolve, reject) => {
-      this._requestedAnimationFrame = window.requestAnimationFrame(() => {
+      this._requestedAnimationFrame = requestAnimationFrame(() => {
         this._render(duration)
         resolve(this._requestedAnimationFrame)
       })
@@ -122,6 +122,7 @@ export class ContainerCore {
   }
 
   destroy (): void {
+    cancelAnimationFrame(this._requestedAnimationFrame)
     this._resizeObserver.disconnect()
     this.svg.remove()
   }
