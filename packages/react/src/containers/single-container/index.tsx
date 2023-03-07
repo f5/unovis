@@ -32,6 +32,7 @@ function VisSingleContainerFC<Data> (props: PropsWithChildren<VisSingleContainer
   useEffect(() => {
     const c = new SingleContainer<Data>(container.current as HTMLDivElement, getConfig(), props.data)
     chartRef.current = c
+    prevPropsRef.current = props
     dataRef.current = props.data
 
     return () => {

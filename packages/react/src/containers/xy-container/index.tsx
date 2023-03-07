@@ -43,6 +43,7 @@ export function VisXYContainerFC<Datum> (props: PropsWithChildren<VisXYContainer
   useEffect(() => {
     const c = new XYContainer<Datum>(container.current as HTMLDivElement, getConfig(), props.data)
     chartRef.current = c
+    prevPropsRef.current = props
     dataRef.current = props.data
 
     return () => {
