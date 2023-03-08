@@ -113,8 +113,8 @@ export class ChordDiagram<
     const duration = isNumber(customDuration) ? customDuration : config.duration
 
     this.arcGen
-      .startAngle(d => d.x0)
-      .endAngle(d => d.x1)
+      .startAngle(d => Number.isNaN(d.x0) ? 0 : d.x0)
+      .endAngle(d => Number.isNaN(d.x1) ? 0 : d.x1)
       .cornerRadius(d => getNumber(d, config.cornerRadius))
       .innerRadius(d => this.radiusScale(d.y1) - getNumber(d, config.nodeWidth))
       .outerRadius(d => this.radiusScale(d.y1))
