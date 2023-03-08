@@ -40,6 +40,7 @@ export function createNodes<D extends GenericDataRecord> (
 
   selection.append('text')
     .attr('class', s.innerLabel)
+    .classed(s.innerLabelCluster, d => (d.properties as LeafletMapClusterDatum<D>).cluster)
     .attr('id', d => `label-${d.id}`)
     .attr('dy', '0.32em')
 
@@ -70,6 +71,10 @@ export function updateNodes<D extends GenericDataRecord> (
       ? getString(d.properties as LeafletMapClusterDatum<D>, config.clusterLabel)
       : getString(d.properties as LeafletMapPointDatum<D>, config.pointLabel)
     ) ?? ''
+    const innerLabelColor = (isCluster
+      ? getString(d.properties as LeafletMapClusterDatum<D>, config.clusterLabelColor)
+      : getString(d.properties as LeafletMapPointDatum<D>, config.pointLabelColor)
+    ) ?? null
     const bottomLabelText = (isCluster
       ? getString(d.properties as LeafletMapClusterDatum<D>, config.clusterBottomLabel)
       : getString(d.properties as LeafletMapPointDatum<D>, config.pointBottomLabel)
@@ -108,12 +113,17 @@ export function updateNodes<D extends GenericDataRecord> (
       .text(innerLabelText || null)
       .attr('visibility', innerLabelText ? null : 'hidden')
       .style('fill', () => {
+        if (innerLabelColor) return innerLabelColor
+
+        // Determine the label color based on the point brightness
         const c = getComputedStyle(node.node()).fill
         const hex = color(c)?.hex()
         if (!hex) return null
 
         const brightness = hexToBrightness(hex)
-        return brightness > 0.5 ? 'var(--vis-map-point-label-text-color-dark)' : 'var(--vis-map-point-label-text-color-light)'
+        return brightness > 0.5
+          ? (isCluster ? 'var(--vis-map-cluster-inner-label-text-color-dark)' : 'var(--vis-map-point-inner-label-text-color-dark)')
+          : (isCluster ? 'var(--vis-map-cluster-inner-label-text-color-light)' : 'var(--vis-map-point-inner-label-text-color-light)')
       })
 
     const bottomLabelTextTrimmed = trimTextMiddle(bottomLabelText, 15)
