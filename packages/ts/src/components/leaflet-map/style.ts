@@ -35,11 +35,18 @@ export const variables = injectGlobal`
     --vis-map-cluster-default-stroke-width: 1.5px;
     --vis-map-cluster-donut-fill-color: #959da3;
 
-    --vis-map-point-label-text-color-dark: #5b5f6d;
-    --vis-map-point-label-text-color-light: #fff;
+    --vis-map-cluster-inner-label-text-color-dark: #5b5f6d;
+    --vis-map-cluster-inner-label-text-color-light: #fff;
+
+    --vis-map-point-inner-label-text-color-dark: #5b5f6d;
+    --vis-map-point-inner-label-text-color-light: #fff;
+
+    --vis-map-point-bottom-label-text-color: #5b5f6d;
     --vis-map-point-bottom-label-font-size: 10px;
+
     --vis-map-cluster-expanded-background-fill-color: #fff;
 
+    /* Dark Theme */
     --vis-dark-map-container-background-color: #dfe5eb;
     --vis-dark-map-point-default-fill-color: #B9BEC3;
     --vis-dark-map-point-default-stroke-color: #959da3;
@@ -49,8 +56,13 @@ export const variables = injectGlobal`
     --vis-dark-map-cluster-default-stroke-color: #B9BEC3;
     --vis-dark-map-cluster-donut-fill-color: #959da3;
 
-    --vis-dark-map-point-label-text-color-dark: #fff;
-    --vis-dark-map-point-label-text-color-light: #fff;
+    --vis-dark-map-cluster-inner-label-text-color-dark: #5b5f6d;
+    --vis-dark-map-cluster-inner-label-text-color-light: #fff;
+
+    --vis-dark-map-point-inner-label-text-color-dark: #5b5f6d;
+    --vis-dark-map-point-inner-label-text-color-light: #fff;
+
+    --vis-dark-map-point-bottom-label-text-color: #eee;
 
     --vis-dark-map-cluster-expanded-background-fill-color: #fff;
   }
@@ -65,8 +77,14 @@ export const variables = injectGlobal`
     --vis-map-cluster-default-stroke-color: var(--vis-dark-map-cluster-default-stroke-color);
     --vis-map-cluster-donut-fill-color: var(--vis-dark-map-cluster-donut-fill-color);
 
-    --vis-map-point-label-text-color-dark: var(--vis-dark-map-point-label-text-color-dark);
-    --vis-map-point-label-text-color-light: var(--vis-dark-map-point-label-text-color-light);
+    --vis-map-cluster-inner-label-text-color-dark: var(--vis-dark-map-cluster-inner-label-text-color-dark);
+    --vis-map-cluster-inner-label-text-color-light: var(--vis-dark-map-cluster-inner-label-text-color-light);
+
+    --vis-map-point-inner-label-text-color-dark: var(--vis-dark-map-point-inner-label-text-color-dark);
+    --vis-map-point-inner-label-text-color-light: var(--vis-dark-map-point-inner-label-text-color-light);
+
+    --vis-map-point-bottom-label-text-color: var(--vis-dark-map-point-bottom-label-text-color);
+
     --vis-map-cluster-expanded-background-fill-color: var(--vis-dark-map-cluster-expanded-background-fill-color);
   }
 `
@@ -138,17 +156,22 @@ export const innerLabel = css`
   label: inner-label;
 
   text-anchor: middle;
-  fill: var(--vis-map-point-label-text-color-dark);
+  fill: var(--vis-map-point-inner-label-text-color-dark);
   font-family: var(--vis-map-label-font-family, var(--vis-font-family));
   pointer-events: none;
   font-weight: 600;
+`
+
+export const innerLabelCluster = css`
+  label: inner-label-cluster;
+  fill: var(--vis-map-point-inner-label-text-color-dark);
 `
 
 export const bottomLabel = css`
   label: bottom-label;
 
   text-anchor: middle;
-  fill: var(--vis-map-point-label-text-color-dark);
+  fill: var(--vis-map-point-bottom-label-text-color);
   font-family: var(--vis-map-label-font-family, var(--vis-font-family));
   pointer-events: none;
   font-weight: 600;

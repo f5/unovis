@@ -84,6 +84,12 @@ export interface LeafletMapConfigInterface<Datum extends GenericDataRecord> exte
   pointRadius?: NumericAccessor<LeafletMapPointDatum<Datum>>;
   /** Point inner label accessor function. Default: `undefined`  */
   pointLabel?: StringAccessor<LeafletMapPointDatum<Datum>>;
+  /** Point inner label color accessor function or constant value.
+   * By default, the label color will be set, depending on the point brightness, either to
+   * `--vis-map-point-inner-label-text-color-light` or to `--vis-map-point-inner-label-text-color-dark` CSS variable.
+   * Default: `undefined`
+  */
+  pointLabelColor?: StringAccessor<LeafletMapPointDatum<Datum>>;
   /** Point bottom label accessor function. Default: `''` */
   pointBottomLabel?: StringAccessor<LeafletMapPointDatum<Datum>>;
   /** Point cursor value or accessor function. Default: `null` */
@@ -100,6 +106,12 @@ export interface LeafletMapConfigInterface<Datum extends GenericDataRecord> exte
   clusterRadius?: NumericAccessor<LeafletMapClusterDatum<Datum>>;
   /** Cluster inner label accessor function. Default: `d => d.point_count`  */
   clusterLabel?: StringAccessor<LeafletMapClusterDatum<Datum>>;
+  /** Cluster inner label color accessor function or constant value.
+   * By default, the label color will be set, depending on the point brightness, either to
+   * `--vis-map-cluster-inner-label-text-color-light` or to `--vis-map-cluster-inner-label-text-color-dark` CSS variable.
+   * Default: `undefined`
+  */
+  clusterLabelColor?: StringAccessor<LeafletMapClusterDatum<Datum>>;
   /** Cluster bottom label accessor function. Default: `''` */
   clusterBottomLabel?: StringAccessor<LeafletMapClusterDatum<Datum>>;
   /** The width of the cluster point ring. Default: `1.25` */
@@ -188,6 +200,7 @@ export class LeafletMapConfig<Datum extends GenericDataRecord> extends Component
   pointColor = (d: Datum): string => d['color'] as string
   pointRadius = undefined
   pointLabel = undefined
+  pointLabelColor = undefined
   pointBottomLabel = ''
   pointCursor = null
   pointRingWidth = 1.25
@@ -197,6 +210,7 @@ export class LeafletMapConfig<Datum extends GenericDataRecord> extends Component
   clusterColor = undefined
   clusterRadius = undefined
   clusterLabel = (d: LeafletMapClusterDatum<Datum>): string => `${d.point_count}`
+  clusterLabelColor = undefined
   clusterBottomLabel = ''
   clusterRingWidth = 1.25
   clusterBackground = true
