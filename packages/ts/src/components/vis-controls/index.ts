@@ -10,11 +10,11 @@ import { VisControlsConfig, VisControlsConfigInterface } from './config'
 import * as s from './style'
 
 export class VisControls {
-  div: Selection<HTMLElement, any, HTMLElement, any>
-  element: HTMLElement
+  div: Selection<HTMLDivElement, unknown, null, undefined>
+  element: HTMLDivElement
   config: VisControlsConfig
   protected _container: HTMLElement
-  protected _items: Selection<HTMLElement, any, HTMLElement, any>
+  protected _items: Selection<HTMLDivElement, unknown, null, undefined>
 
   constructor (element: HTMLElement, config?: VisControlsConfigInterface) {
     this._container = element
@@ -38,8 +38,8 @@ export class VisControls {
     const { config: { items, orientation } } = this
     this._items
       .classed(s.horizontalItems, orientation === VisControlsOrientation.Horizontal)
-    const controlItems = this._items.selectAll(`.${s.item}`)
-      .data(items) as Selection<HTMLDivElement, any, HTMLDivElement, any>
+    const controlItems = this._items.selectAll<HTMLDivElement, VisControlItemInterface>(`.${s.item}`)
+      .data(items)
 
     const controlItemsEnter = controlItems.enter()
       .append('div')

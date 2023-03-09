@@ -36,7 +36,7 @@ import * as generalSelectors from '../../style'
 import * as linkSelectors from './style'
 
 export function createLinks<N extends GraphInputNode, L extends GraphInputLink> (
-  selection: Selection<SVGGElement, GraphLink<N, L>, SVGGElement, GraphLink<N, L>>
+  selection: Selection<SVGGElement, GraphLink<N, L>, SVGGElement, unknown>
 ): void {
   selection.attr('opacity', 0)
 
@@ -65,7 +65,7 @@ export function createLinks<N extends GraphInputNode, L extends GraphInputLink> 
 }
 
 export function updateSelectedLinks<N extends GraphInputNode, L extends GraphInputLink> (
-  selection: Selection<SVGGElement, GraphLink<N, L>, SVGGElement, GraphLink<N, L>>,
+  selection: Selection<SVGGElement, GraphLink<N, L>, SVGGElement, unknown>,
   config: GraphConfig<N, L>,
   scale: number
 ): void {
@@ -91,7 +91,7 @@ export function updateSelectedLinks<N extends GraphInputNode, L extends GraphInp
 }
 
 export function updateLinks<N extends GraphInputNode, L extends GraphInputLink> (
-  selection: Selection<SVGGElement, GraphLink<N, L>, SVGGElement, GraphLink<N, L>>,
+  selection: Selection<SVGGElement, GraphLink<N, L>, SVGGElement, unknown>,
   config: GraphConfig<N, L>,
   duration: number,
   scale = 1,
@@ -169,7 +169,8 @@ export function updateLinks<N extends GraphInputNode, L extends GraphInputLink> 
     const labelShift = getBoolean(d, linkLabelShiftFromCenter, d._indexGlobal) ? -markerWidth + 4 : 0
     const labelTranslate = getLinkLabelShift(d, config.linkNeighborSpacing, labelShift)
 
-    const labels = labelGroups.selectAll(`.${linkSelectors.labelGroup}`)
+    const labels = labelGroups
+      .selectAll<SVGGElement, GraphLink<N, L>>(`.${linkSelectors.labelGroup}`)
       .data(labelDatum && labelDatum.text ? [labelDatum] : [])
 
     // Enter
@@ -235,7 +236,7 @@ export function updateLinks<N extends GraphInputNode, L extends GraphInputLink> 
 }
 
 export function removeLinks<N extends GraphInputNode, L extends GraphInputLink> (
-  selection: Selection<SVGGElement, GraphLink<N, L>, SVGGElement, GraphLink<N, L>>,
+  selection: Selection<SVGGElement, GraphLink<N, L>, SVGGElement, unknown>,
   config: GraphConfig<N, L>,
   duration: number
 ): void {
@@ -277,7 +278,7 @@ export function animateLinkFlow<N extends GraphInputNode, L extends GraphInputLi
 }
 
 export function zoomLinks<N extends GraphInputNode, L extends GraphInputLink> (
-  selection: Selection<SVGGElement, GraphLink<N, L>, SVGGElement, GraphLink<N, L>>,
+  selection: Selection<SVGGElement, GraphLink<N, L>, SVGGElement, unknown>,
   config: GraphConfig<N, L>,
   scale: number,
   getMarkerId: (d: GraphLink) => string

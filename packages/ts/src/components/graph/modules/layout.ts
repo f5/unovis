@@ -21,7 +21,7 @@ import { positionNonConnectedNodes } from './layout-helpers'
 
 export function applyLayoutCircular<N extends GraphInputNode, L extends GraphInputLink> (
   datamodel: GraphDataModel<N, L, GraphNode<N, L>, GraphLink<N, L>>,
-  config: GraphConfig<GraphInputNode, GraphInputLink>,
+  config: GraphConfig<N, L>,
   width: number,
   height: number
 ): void {
@@ -61,7 +61,7 @@ export function applyLayoutCircular<N extends GraphInputNode, L extends GraphInp
 
 export function applyLayoutParallel<N extends GraphInputNode, L extends GraphInputLink> (
   datamodel: GraphDataModel<N, L, GraphNode<N, L>, GraphLink<N, L>>,
-  config: GraphConfig<GraphInputNode, GraphInputLink>,
+  config: GraphConfig<N, L>,
   width: number,
   height: number,
   orientation?: string
@@ -268,7 +268,7 @@ export function applyLayoutParallel<N extends GraphInputNode, L extends GraphInp
 
 export async function applyLayoutDagre<N extends GraphInputNode, L extends GraphInputLink> (
   datamodel: GraphDataModel<N, L, GraphNode<N, L>, GraphLink<N, L>>,
-  config: GraphConfig<GraphInputNode, GraphInputLink>,
+  config: GraphConfig<N, L>,
   width: number
 ): Promise<void> {
   const { nonConnectedNodes, connectedNodes, nodes, links } = datamodel
@@ -329,7 +329,7 @@ export async function applyLayoutDagre<N extends GraphInputNode, L extends Graph
 
 export function applyLayoutConcentric<N extends GraphInputNode, L extends GraphInputLink> (
   datamodel: GraphDataModel<N, L, GraphNode<N, L>, GraphLink<N, L>>,
-  config: GraphConfig<GraphInputNode, GraphInputLink>,
+  config: GraphConfig<N, L>,
   width: number,
   height: number
 ): void {
@@ -387,7 +387,7 @@ export function applyLayoutConcentric<N extends GraphInputNode, L extends GraphI
 
 export async function applyLayoutForce<N extends GraphInputNode, L extends GraphInputLink> (
   datamodel: GraphDataModel<N, L, GraphNode<N, L>, GraphLink<N, L>>,
-  config: GraphConfig<GraphInputNode, GraphInputLink>,
+  config: GraphConfig<N, L>,
   width: number
 ): Promise<void> {
   const { layoutNonConnectedAside, forceLayoutSettings: { linkDistance, linkStrength, charge, forceXStrength, forceYStrength }, nodeSize } = config
@@ -396,7 +396,11 @@ export async function applyLayoutForce<N extends GraphInputNode, L extends Graph
 
   const { nonConnectedNodes, connectedNodes, nodes, links } = datamodel
   const simulation = forceSimulation(layoutNonConnectedAside ? connectedNodes : nodes)
-    .force('link', forceLink(links).id((d: GraphNode<N, L>) => String(d._id)).distance(linkDistance).strength(linkStrength))
+    .force('link', forceLink(links)
+      .id((d) => String((d as GraphNode<N, L>)._id))
+      .distance(linkDistance)
+      .strength(linkStrength)
+    )
     .force('charge', forceManyBody().strength(d => {
       const linkCount = links.reduce((count, l) => count + Number((l.source === d) || (l.target === d)), 0)
       return charge * Math.sqrt(linkCount)

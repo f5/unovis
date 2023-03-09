@@ -127,7 +127,7 @@ export class Line<Datum> extends XYComponentCore<Datum, LineConfig<Datum>, LineC
     linesMerged.style('cursor', (d, i) => getString(data, config.cursor, i))
     linesMerged.each((d, i, elements) => {
       const group = select(elements[i])
-      const linePath = group.select(`.${s.linePath}`)
+      const linePath = group.select<SVGPathElement>(`.${s.linePath}`)
       const lineSelectionHelper = group.select(`.${s.lineSelectionHelper}`)
 
       const isLineVisible = d.visible

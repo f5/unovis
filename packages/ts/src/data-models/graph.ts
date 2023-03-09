@@ -116,13 +116,13 @@ export class GraphDataModel<
     return foundNode
   }
 
-  private transferState (
-    items: (OutNode | OutLink)[],
-    itemsPrev: (OutNode | OutLink)[],
-    getId: ((d: unknown) => string)
+  private transferState<T extends { _state: Record<string, any>}> (
+    items: T[],
+    itemsPrev: T[],
+    getId: (d: T) => string
   ): void {
     for (const item of items) {
-      const dPrev = itemsPrev.find((dp: OutNode | OutLink) => getId(dp) === getId(item))
+      const dPrev = itemsPrev.find((dp) => getId(dp) === getId(item))
       if (dPrev) item._state = { ...dPrev._state }
       else item._state = {}
     }

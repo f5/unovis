@@ -63,7 +63,13 @@ export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<D
   protected _container: HTMLElement
   protected _containerSelection: Selection<HTMLElement, unknown, null, undefined>
   public _onMapMoveEndInternal: (leaflet: L.Map) => void // Internal callback needed by Leaflet Flow Map
-  private _map: { leaflet: L.Map; layer: L.Layer; svgOverlay: Selection<SVGElement, any, HTMLElement, any>; svgGroup: Selection<SVGGElement, any, SVGElement, any> }
+  private _map: {
+    leaflet: L.Map;
+    layer: L.Layer;
+    svgOverlay: Selection<SVGSVGElement, unknown, null, undefined>;
+    svgGroup: Selection<SVGGElement, unknown, SVGElement, undefined>;
+  }
+
   private _clusterIndex: Supercluster<Datum>
   private _expandedCluster: { points: PointFeature<PointExpandedClusterProperties<Datum>>[]; cluster: LeafletMapPoint<Datum> } = null
   private _cancelBackgroundClick = false
@@ -76,9 +82,9 @@ export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<D
   private _externallySelectedPoint: LeafletMapPoint<Datum> | PointFeature<Datum> | null = null
   private _zoomingToExternallySelectedPoint = false
   private _forceExpandCluster = false
-  private _pointGroup: Selection<SVGGElement, Record<string, unknown>[], SVGElement, Record<string, unknown>[]>
-  private _pointSelectionRing: Selection<SVGGElement, Record<string, unknown>[], SVGElement, Record<string, unknown>[]>
-  private _clusterBackground: Selection<SVGGElement, Record<string, unknown>[], SVGElement, Record<string, unknown>[]>
+  private _pointGroup: Selection<SVGGElement, unknown, SVGElement, undefined>
+  private _pointSelectionRing: Selection<SVGGElement, unknown, SVGElement, undefined>
+  private _clusterBackground: Selection<SVGGElement, unknown, SVGElement, undefined>
   private _clusterBackgroundRadius = 0
   private _selectedPoint: LeafletMapPoint<Datum> = null
   private _currentZoomLevel: number | null = null
@@ -402,9 +408,10 @@ export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<D
       if (selectPoint) this._selectedPoint = foundPoint as LeafletMapPoint<Datum>
 
       const zoomLevel = isNil(customZoomLevel) ? this._map.leaflet.getZoom() : customZoomLevel
+      const pointDatum = foundPoint.properties as LeafletMapPointDatum<Datum>
       const coordinates = {
-        lng: getNumber(foundPoint.properties, config.pointLongitude),
-        lat: getNumber(foundPoint.properties, config.pointLatitude),
+        lng: getNumber(pointDatum, config.pointLongitude),
+        lat: getNumber(pointDatum, config.pointLatitude),
       }
       this._eventInitiatedByComponent = true
       this._map.leaflet.flyTo(coordinates, zoomLevel, { duration: 0 })
@@ -467,10 +474,10 @@ export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<D
       .attr('transform', `translate(${-dx},${-dy})`)
 
     // Render content
-    const points = this._pointGroup.selectAll(`.${s.point}:not(.exit)`)
+    const points = this._pointGroup.selectAll<SVGGElement, LeafletMapPoint<Datum>>(`.${s.point}:not(.exit)`)
       .data(pointData, (d: LeafletMapPoint<Datum>, i) => `${d.id || d.geometry.coordinates.join('')}`)
 
-    points.exit().classed('exit', true).call(removeNodes)
+    points.exit<LeafletMapPoint<Datum>>().classed('exit', true).call(removeNodes)
     const pointsEnter = points.enter().append('g').attr('class', s.point)
       .call(createNodes)
 
@@ -483,7 +490,7 @@ export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<D
     if (this._expandedCluster && config.clusterBackground) {
       pointData.forEach((d, i) => { d._zIndex = (d.properties as LeafletMapPointDatum<Datum>)?.expandedClusterPoint ? 2 : 0 })
       this._pointGroup
-        .selectAll(`.${s.point}, .${s.clusterBackground}, .${s.pointSelectionRing}`)
+        .selectAll<SVGGElement, LeafletMapPoint<Datum>>(`.${s.point}, .${s.clusterBackground}, .${s.pointSelectionRing}`)
         .sort((a: LeafletMapPoint<Datum>, b: LeafletMapPoint<Datum>) => a._zIndex - b._zIndex)
     }
 
@@ -508,7 +515,8 @@ export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<D
     const { config } = this
     if (!this._externallySelectedPoint) return
 
-    const externallySelectedPointId = getString(this._externallySelectedPoint.properties, config.pointId)
+    const externallySelectedPointDatum = this._externallySelectedPoint.properties as LeafletMapPointDatum<Datum>
+    const externallySelectedPointId = getString(externallySelectedPointDatum, config.pointId)
     const pointData = this._getPointData()
     const foundPoint: LeafletMapPoint<Datum> = pointData.find(
       d => getString(d.properties as Datum, config.pointId) === externallySelectedPointId
@@ -528,8 +536,8 @@ export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<D
       } else {
         const newZoomLevel = getNextZoomLevelOnClusterClick(zoomLevel)
         const coordinates = {
-          lng: getNumber(this._externallySelectedPoint.properties, config.pointLongitude),
-          lat: getNumber(this._externallySelectedPoint.properties, config.pointLatitude),
+          lng: getNumber(externallySelectedPointDatum, config.pointLongitude),
+          lat: getNumber(externallySelectedPointDatum, config.pointLatitude),
         }
         if (this._currentZoomLevel !== newZoomLevel) {
           this._currentZoomLevel = newZoomLevel
@@ -600,7 +608,9 @@ export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<D
 
     const pointData = geoJSONPoints
       // Todo: Remove explicitly set ClusterFeature<LeafletMapPointDatum<Datum>> type
-      .map((d: ClusterFeature<LeafletMapPointDatum<Datum>>, i: number) => geoJsonPointToScreenPoint(d, i, this._map.leaflet, config))
+      .map((d, i: number) => {
+        return geoJsonPointToScreenPoint(d as ClusterFeature<LeafletMapPointDatum<Datum>>, i, this._map.leaflet, config)
+      })
       // .sort((a, b) => getPointDisplayOrder(a, config.pointStatus, config.colorMap) - getPointDisplayOrder(b, config.pointStatus, config.colorMap))
 
     return pointData

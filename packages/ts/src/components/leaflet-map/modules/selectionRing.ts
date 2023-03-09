@@ -17,13 +17,15 @@ import { LeafletMapConfigInterface } from '../config'
 import * as s from '../style'
 
 
-export function createNodeSelectionRing (selection: Selection<SVGGElement, Record<string, unknown>[], SVGElement, Record<string, unknown>[]>): void {
+export function createNodeSelectionRing (
+  selection: Selection<SVGGElement, unknown, SVGElement, undefined>
+): void {
   selection.datum({ _zIndex: 3 })
   selection.append('path').attr('class', s.pointSelection)
 }
 
 export function updateNodeSelectionRing<D extends GenericDataRecord> (
-  selection: Selection<SVGGElement, Record<string, unknown>[], SVGElement, Record<string, unknown>[]>,
+  selection: Selection<SVGGElement, unknown, SVGElement, undefined>,
   selectedPoint: LeafletMapPoint<D>,
   pointData: LeafletMapPoint<D>[],
   config: LeafletMapConfigInterface<D>,

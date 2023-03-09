@@ -1,6 +1,6 @@
 import { min, extent } from 'd3-array'
 import { Transition } from 'd3-transition'
-import { select, Selection, pointer, BaseType } from 'd3-selection'
+import { select, Selection, pointer } from 'd3-selection'
 import { zoom, zoomTransform, zoomIdentity, ZoomTransform, D3ZoomEvent, ZoomBehavior } from 'd3-zoom'
 import { drag, D3DragEvent } from 'd3-drag'
 import { interval, Timer } from 'd3-timer'
@@ -276,7 +276,7 @@ export class Graph<
     const nodeUpdateSelection = updateNodes(nodeGroupsMerged, config, duration, this._scale)
     this._drawPanels(nodeUpdateSelection, duration)
 
-    const nodesGroupExit = nodeGroups.exit()
+    const nodesGroupExit = nodeGroups.exit<GraphNode<N>>()
     nodesGroupExit
       .classed(nodeSelectors.gNodeExit, true)
       .call(removeNodes, config, duration)
@@ -308,15 +308,14 @@ export class Graph<
     const linkGroupsMerged = linkGroups.merge(linkGroupsEnter)
     linkGroupsMerged.call(updateLinks, config, duration, this._scale, this._getMarkerId)
 
-    const linkGroupsExit = linkGroups.exit()
+    const linkGroupsExit = linkGroups.exit<GraphLink<N, L>>()
     linkGroupsExit
       .attr('class', linkSelectors.gLinkExit)
       .call(removeLinks, config, duration)
   }
 
   private _drawPanels (
-    nodeUpdateSelection: Selection<SVGGElement, GraphNode<N>, SVGGElement, unknown> |
-    Transition<BaseType, GraphNode<N>, SVGGElement, unknown>,
+    nodeUpdateSelection: Selection<SVGGElement, GraphNode<N>, SVGGElement, unknown> | Transition<SVGGElement, GraphNode<N>, SVGGElement, unknown>,
     duration: number
   ): void {
     const { config } = this
@@ -333,7 +332,7 @@ export class Graph<
       .selectAll<SVGGElement, GraphPanel>(`.${panelSelectors.gPanel}`)
       .data(panelData, p => p.label)
 
-    const panelGroupExit = panelGroup.exit()
+    const panelGroupExit = panelGroup.exit<GraphPanel<N, L>>()
     panelGroupExit.call(removePanels, config, duration)
 
     const panelGroupEnter = panelGroup.enter().append('g')
@@ -594,10 +593,20 @@ export class Graph<
       else this._disableAutoFit = false
     }
 
-    this._nodesGroup.selectAll(`.${nodeSelectors.gNode}`)
-      .call(nodes.length > config.zoomThrottledUpdateNodeThreshold ? zoomNodesThrottled : zoomNodes, config, this._scale)
-    this._linksGroup.selectAll(`.${linkSelectors.gLink}`)
-      .call(nodes.length > config.zoomThrottledUpdateNodeThreshold ? zoomLinksThrottled : zoomLinks, config, this._scale, this._getMarkerId)
+    this._nodesGroup.selectAll<SVGGElement, GraphNode<N, L>>(`.${nodeSelectors.gNode}`)
+      .call(
+        (nodes.length > config.zoomThrottledUpdateNodeThreshold ? zoomNodesThrottled : zoomNodes) as typeof zoomNodes,
+        config,
+        this._scale
+      )
+
+    this._linksGroup.selectAll<SVGGElement, GraphLink<N, L>>(`.${linkSelectors.gLink}`)
+      .call(
+        (nodes.length > config.zoomThrottledUpdateNodeThreshold ? zoomLinksThrottled : zoomLinks) as typeof zoomLinks,
+        config,
+        this._scale,
+        this._getMarkerId
+      )
   }
 
   private _onDragStarted (

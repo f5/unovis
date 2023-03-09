@@ -119,7 +119,7 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfig<Datum>,
 
     // Points
     const points = pointGroupsMerged
-      .selectAll<SVGPathElement, ScatterPoint<Datum>>(`.${s.point}`)
+      .selectAll<SVGGElement, ScatterPoint<Datum>>(`.${s.point}`)
       .data(
         d => d,
         d => `${getString(d, config.id, d._point.pointIndex) ?? d._point.pointIndex}`
@@ -132,7 +132,7 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfig<Datum>,
     this._points = pointsEnter.merge(points)
     updatePoints(this._points, config, this.xScale, this.yScale, duration)
 
-    removePoints(points.exit(), this.xScale, this.yScale, duration)
+    removePoints(points.exit<ScatterPoint<Datum>>(), this.xScale, this.yScale, duration)
 
     // Take care of overlapping labels
     this._collideLabels()

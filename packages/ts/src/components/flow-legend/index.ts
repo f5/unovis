@@ -13,10 +13,10 @@ import { FlowLegendItem, FlowLegendItemType } from './types'
 import * as s from './style'
 
 export class FlowLegend {
-  div: Selection<HTMLElement, any, HTMLElement, any>
+  div: Selection<HTMLDivElement, unknown, null, undefined>
   element: HTMLElement
-  line: Selection<HTMLElement, any, HTMLElement, any>
-  labels: Selection<HTMLElement, any, HTMLElement, any>
+  line: Selection<HTMLDivElement, unknown, null, undefined>
+  labels: Selection<HTMLDivElement, unknown, null, undefined>
   prevConfig: FlowLegendConfig
   config: FlowLegendConfig
   protected _container: HTMLElement
@@ -64,8 +64,8 @@ export class FlowLegend {
     }, [])
 
     // Draw
-    const legendItems = this.labels.selectAll(`.${s.item}`)
-      .data(legendData) as Selection<HTMLDivElement, FlowLegendItem, HTMLDivElement, FlowLegendItem>
+    const legendItems = this.labels.selectAll<HTMLDivElement, FlowLegendItem>(`.${s.item}`)
+      .data(legendData)
 
     const legendItemsEnter = legendItems.enter()
       .append('div')

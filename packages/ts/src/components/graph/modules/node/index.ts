@@ -40,7 +40,7 @@ import * as nodeSelectors from './style'
 const SIDE_LABEL_DEFAULT_RADIUS = 10
 
 export function createNodes<N extends GraphInputNode, L extends GraphInputLink> (
-  selection: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, GraphNode<N, L>>,
+  selection: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, unknown>,
   config: GraphConfig<N, L>
 ): void {
   const { nodeShape } = config
@@ -94,7 +94,7 @@ export function updateSelectedNodes<N extends GraphInputNode, L extends GraphInp
   const { nodeDisabled } = config
 
   selection.each((d, i, elements) => {
-    const group: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, GraphNode<N, L>> = select(elements[i])
+    const group: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, unknown> = select(elements[i])
     const isGreyout = getBoolean(d, nodeDisabled, d._index) || d._state.greyout
 
     group.classed(nodeSelectors.greyoutNode, isGreyout)
@@ -103,11 +103,11 @@ export function updateSelectedNodes<N extends GraphInputNode, L extends GraphInp
     const nodeSelectionOutline = group.selectAll<SVGGElement, GraphNode<N, L>>(`.${nodeSelectors.nodeSelection}`)
     nodeSelectionOutline.classed(nodeSelectors.nodeSelectionActive, d._state.selected)
 
-    group.selectAll(`.${nodeSelectors.sideLabel}`)
-      .style('fill', (l: GraphCircleLabel) => isGreyout ? null : getSideLabelTextColor(l, selection.node()))
+    group.selectAll<SVGTextElement, GraphCircleLabel>(`.${nodeSelectors.sideLabel}`)
+      .style('fill', (l) => isGreyout ? null : getSideLabelTextColor(l, selection.node()))
 
-    group.selectAll(`.${nodeSelectors.sideLabelBackground}`)
-      .style('fill', (l: GraphCircleLabel) => isGreyout ? null : l.color)
+    group.selectAll<SVGRectElement, GraphCircleLabel>(`.${nodeSelectors.sideLabelBackground}`)
+      .style('fill', (l) => isGreyout ? null : l.color)
   })
 }
 
@@ -144,15 +144,15 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
   // Update nodes themselves
   selection.each((d, i, elements) => {
     const groupElement = elements[i]
-    const group: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, GraphNode<N, L>> = select(groupElement)
-    const node: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, GraphNode<N, L>> = group.select(`.${nodeSelectors.node}`)
-    const nodeArc = group.select(`.${nodeSelectors.nodeGauge}`)
-    const icon = group.select(`.${nodeSelectors.nodeIcon}`)
-    const sideLabelsGroup = group.select(`.${nodeSelectors.sideLabelsGroup}`)
-    const label: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, GraphNode<N, L>> = group.select(`.${nodeSelectors.label}`)
-    const labelTextContent = label.select(`.${nodeSelectors.labelTextContent}`)
-    const sublabelTextContent = label.select(`.${nodeSelectors.subLabelTextContent}`)
-    const bottomIcon = group.select(`.${nodeSelectors.nodeBottomIcon}`)
+    const group: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, unknown> = select(groupElement)
+    const node: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, unknown> = group.select(`.${nodeSelectors.node}`)
+    const nodeArc = group.select<GraphNodeAnimatedElement<SVGElement>>(`.${nodeSelectors.nodeGauge}`)
+    const icon = group.select<SVGTextElement>(`.${nodeSelectors.nodeIcon}`)
+    const sideLabelsGroup = group.select<SVGGElement>(`.${nodeSelectors.sideLabelsGroup}`)
+    const label = group.select<SVGGElement>(`.${nodeSelectors.label}`)
+    const labelTextContent = label.select<SVGTextElement>(`.${nodeSelectors.labelTextContent}`)
+    const sublabelTextContent = label.select<SVGTextElement>(`.${nodeSelectors.subLabelTextContent}`)
+    const bottomIcon = group.select<SVGTextElement>(`.${nodeSelectors.nodeBottomIcon}`)
     const nodeSelectionOutline = group.select<SVGGElement>(`.${nodeSelectors.nodeSelection}`)
     const nodeSizeValue = getNodeSize(d, nodeSize, d._index)
     const arcGenerator = arc<GraphNodeAnimationState>()
@@ -192,7 +192,11 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
     nodeArc
       .transition()
       .duration(nodeGaugeAnimDuration)
-      .attrTween('d', (d, j, arr: GraphNodeAnimatedElement<SVGElement>[]) => {
+      .attrTween('d', (
+        d,
+        j,
+        arr
+      ) => {
         switch (getString(d, nodeShape, d._index)) {
           case GraphNodeShape.Circle: return arcTween(d, config, arcGenerator, arr[j])
           case GraphNodeShape.Hexagon: return polyTween(d, config, polygon, arr[j])
@@ -318,7 +322,7 @@ function setLabelBackgroundRect<N extends GraphInputNode, L extends GraphInputLi
   })
 }
 
-const setLabelBackgroundRectThrottled = throttle(setLabelBackgroundRect, 1000)
+const setLabelBackgroundRectThrottled = throttle(setLabelBackgroundRect, 1000) as typeof setLabelBackgroundRect
 
 export function zoomNodes<N extends GraphInputNode, L extends GraphInputLink> (
   selection: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, unknown>,

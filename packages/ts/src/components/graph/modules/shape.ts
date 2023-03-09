@@ -8,10 +8,9 @@ import { polygon } from 'utils/path'
 import { getString } from 'utils/data'
 
 // Types
-import { GraphInputLink, GraphInputNode } from 'types/graph'
 
 // Local Types
-import { GraphNode, GraphPanel, GraphNodeShape } from '../types'
+import { GraphNodeShape } from '../types'
 
 // Helpers
 import { getNodeSize } from './node/helper'
@@ -20,9 +19,9 @@ export function isCustomXml (shape: GraphNodeShape): boolean {
   return /<[a-z][\s\S]*>/i.test(shape)
 }
 
-export function appendShape<N extends GraphInputNode, L extends GraphInputLink> (
-  selection: Selection<SVGGElement, GraphNode<N, L> | GraphPanel, SVGGElement, unknown>,
-  shapeAccessor: StringAccessor<GraphNode<N, L> | GraphPanel>,
+export function appendShape<T> (
+  selection: Selection<SVGGElement, T, SVGGElement, unknown>,
+  shapeAccessor: StringAccessor<T>,
   shapeSelector: string,
   customShapeSelector: string,
   index?: number,
@@ -59,15 +58,15 @@ export function appendShape<N extends GraphInputNode, L extends GraphInputLink> 
   })
 }
 
-export function updateShape<N extends GraphInputNode, L extends GraphInputLink> (
-  selection: Selection<SVGGElement, GraphNode<N, L> | GraphPanel, SVGGElement, unknown>,
-  shape: StringAccessor<GraphNode<N, L> | GraphPanel>,
-  size: NumericAccessor<GraphNode<N, L> | GraphPanel>,
+export function updateShape<T> (
+  selection: Selection<SVGGElement, T, SVGGElement, unknown>,
+  shape: StringAccessor<T>,
+  size: NumericAccessor<T>,
   index: number
 ): void {
   if (selection.size() === 0) return
 
-  const d: GraphNode<N, L> | GraphPanel = selection.datum()
+  const d: T = selection.datum()
   const nodeSize = getNodeSize(d, size, index)
   selection.filter('circle')
     .attr('r', nodeSize / 2)

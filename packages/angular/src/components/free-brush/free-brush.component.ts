@@ -105,19 +105,19 @@ export class VisFreeBrushComponent<Datum> implements FreeBrushConfigInterface<Da
 
   /** Callback function to be called on any Brush event.
    * Default: `(selection: FreeBrushSelection, event: D3BrushEvent<Datum>, userDriven: boolean): void => {}` */
-  @Input() onBrush?: ((selection: FreeBrushSelection | undefined, event: D3BrushEvent<Datum>, userDriven: boolean) => void)
+  @Input() onBrush?: ((selection: FreeBrushSelection | undefined, event: D3BrushEvent<unknown>, userDriven: boolean) => void)
 
   /** Callback function to be called on the Brush start event.
-   * Default: `(selection: FreeBrushSelection, event: D3BrushEvent<Datum>, userDriven: boolean): void => {}` */
-  @Input() onBrushStart?: ((selection: FreeBrushSelection | undefined, event: D3BrushEvent<Datum>, userDriven: boolean) => void)
+   * Default: `(selection: FreeBrushSelection, event: D3BrushEvent<unknown>, userDriven: boolean): void => {}` */
+  @Input() onBrushStart?: ((selection: FreeBrushSelection | undefined, event: D3BrushEvent<unknown>, userDriven: boolean) => void)
 
   /** Callback function to be called on the Brush move event.
-   * Default: `(selection: FreeBrushSelection, event: D3BrushEvent<Datum>, userDriven: boolean): void => {}` */
-  @Input() onBrushMove?: ((selection: FreeBrushSelection | undefined, event: D3BrushEvent<Datum>, userDriven: boolean) => void)
+   * Default: `(selection: FreeBrushSelection, event: D3BrushEvent<unknown>, userDriven: boolean): void => {}` */
+  @Input() onBrushMove?: ((selection: FreeBrushSelection | undefined, event: D3BrushEvent<unknown>, userDriven: boolean) => void)
 
   /** Callback function to be called on the Brush end event.
-   * Default: `(selection: FreeBrushSelection, event: D3BrushEvent<Datum>, userDriven: boolean)L void => {}` */
-  @Input() onBrushEnd?: ((selection: FreeBrushSelection | undefined, event: D3BrushEvent<Datum>, userDriven: boolean) => void)
+   * Default: `(selection: FreeBrushSelection, event: D3BrushEvent<unknown>, userDriven: boolean)L void => {}` */
+  @Input() onBrushEnd?: ((selection: FreeBrushSelection | undefined, event: D3BrushEvent<unknown>, userDriven: boolean) => void)
 
   /** Width of the Brush handle. Default: `1` */
   @Input() handleWidth?: number

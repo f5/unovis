@@ -144,8 +144,8 @@ export class Sankey<
       (nodes.length === 1 && !config.showSingleNode) ||
       (nodes.length > 1 && links.length === 0)
     ) {
-      this._linksGroup.selectAll(`.${s.link}`).call(removeLinks, duration)
-      this._nodesGroup.selectAll(`.${s.nodeGroup}`).call(removeNodes, config, duration)
+      this._linksGroup.selectAll<SVGGElement, SankeyLink<N, L>>(`.${s.link}`).call(removeLinks, duration)
+      this._nodesGroup.selectAll<SVGGElement, SankeyNode<N, L>>(`.${s.nodeGroup}`).call(removeNodes, config, duration)
     }
 
     // Prepare Layout
@@ -158,7 +158,7 @@ export class Sankey<
     const linkSelectionEnter = linkSelection.enter().append('g').attr('class', s.link)
     linkSelectionEnter.call(createLinks)
     linkSelection.merge(linkSelectionEnter).call(updateLinks, config, duration)
-    linkSelection.exit().call(removeLinks)
+    linkSelection.exit<SankeyLink<N, L>>().call(removeLinks)
 
     // Nodes
     smartTransition(this._nodesGroup, duration).attr('transform', `translate(${bleed.left},${bleed.top})`)
@@ -168,7 +168,7 @@ export class Sankey<
     const nodeSelectionEnter = nodeSelection.enter().append('g').attr('class', s.nodeGroup)
     nodeSelectionEnter.call(createNodes, this.config, this._width, bleed)
     nodeSelection.merge(nodeSelectionEnter).call(updateNodes, config, this._width, bleed, this._hasLinks(), duration)
-    nodeSelection.exit()
+    nodeSelection.exit<SankeyNode<N, L>>()
       .attr('class', s.nodeExit)
       .call(removeNodes, config, duration)
 

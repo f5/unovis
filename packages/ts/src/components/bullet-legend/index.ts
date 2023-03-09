@@ -15,7 +15,7 @@ import * as s from './style'
 
 export class BulletLegend {
   static selectors = s
-  div: Selection<HTMLElement, any, HTMLElement, any>
+  div: Selection<HTMLDivElement, unknown, null, undefined>
   element: HTMLElement
   prevConfig: BulletLegendConfig
   config: BulletLegendConfig
@@ -44,8 +44,8 @@ export class BulletLegend {
 
   render (): void {
     const { config } = this
-    const legendItems = this.div.selectAll(`.${s.item}`)
-      .data(config.items) as Selection<HTMLDivElement, any, HTMLDivElement, any>
+    const legendItems = this.div.selectAll<HTMLDivElement, unknown>(`.${s.item}`)
+      .data(config.items)
 
     const legendItemsEnter = legendItems.enter()
       .append('div')
