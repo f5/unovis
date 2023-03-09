@@ -119,13 +119,13 @@ export function updatePanels<N extends GraphNode, L extends GraphLink> (
 
   labels
     .on('mouseover', (event: MouseEvent, d) => {
-      const label = select(event.currentTarget as SVGTextElement)
+      const label = select<SVGGElement, GraphPanel<N, L>>(event.currentTarget as SVGGElement)
       const labelContent = d.label
       label.select('text').text(labelContent)
       setLabelRect(label, labelContent, panelSelectors.labelText)
     })
     .on('mouseleave', (event: MouseEvent, d) => {
-      const label = select(event.currentTarget as SVGTextElement)
+      const label = select<SVGGElement, GraphPanel<N, L>>(event.currentTarget as SVGGElement)
       const labelContent = trimText(d.label)
       label.select('text').text(labelContent)
       setLabelRect(label, labelContent, panelSelectors.labelText)

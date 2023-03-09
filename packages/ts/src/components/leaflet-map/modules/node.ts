@@ -27,7 +27,9 @@ import * as s from '../style'
 
 const BOTTOM_LABEL_TOP_MARGIN = 10
 
-export function createNodes<D extends GenericDataRecord> (selection: Selection<SVGGElement, LeafletMapPoint<D>, SVGGElement, Record<string, unknown>[]>): void {
+export function createNodes<D extends GenericDataRecord> (
+  selection: Selection<SVGGElement, LeafletMapPoint<D>, SVGGElement, unknown>
+): void {
   selection.append('path')
     .attr('class', s.pointPath)
     .attr('id', d => `point-${d.id}`)
@@ -48,12 +50,12 @@ export function createNodes<D extends GenericDataRecord> (selection: Selection<S
 }
 
 export function updateNodes<D extends GenericDataRecord> (
-  selection: Selection<SVGGElement, LeafletMapPoint<D>, SVGGElement, Record<string, unknown>[]>,
+  selection: Selection<SVGGElement, LeafletMapPoint<D>, SVGGElement, unknown>,
   config: LeafletMapConfigInterface<D>,
   leafletMap: L.Map,
   mapMoveZoomUpdateOnly: boolean
 ): void {
-  selection.each((d: LeafletMapPoint<D>, i: number, elements: SVGGElement[]) => {
+  selection.each((d, i, elements) => {
     const group = select(elements[i])
     const node: Selection<SVGPathElement, any, SVGGElement, any> = group.select(`.${s.pointPath}`)
     const innerLabel: Selection<SVGTextElement, any, SVGElement, any> = group.select(`.${s.innerLabel}`)
@@ -64,9 +66,15 @@ export function updateNodes<D extends GenericDataRecord> (
     const isCluster = (d.properties as LeafletMapClusterDatum<D>).cluster
     const fromExpandedCluster = !!(d.properties as LeafletMapPointDatum<D>).expandedClusterPoint
 
-    const innerLabelText = getString(d.properties, isCluster ? config.clusterLabel : config.pointLabel) ?? ''
-    const bottomLabelText = getString(d.properties, isCluster ? config.clusterBottomLabel : config.pointBottomLabel) ?? ''
-    const pointCursor = getString(d.properties, config.pointCursor)
+    const innerLabelText = (isCluster
+      ? getString(d.properties as LeafletMapClusterDatum<D>, config.clusterLabel)
+      : getString(d.properties as LeafletMapPointDatum<D>, config.pointLabel)
+    ) ?? ''
+    const bottomLabelText = (isCluster
+      ? getString(d.properties as LeafletMapClusterDatum<D>, config.clusterBottomLabel)
+      : getString(d.properties as LeafletMapPointDatum<D>, config.pointBottomLabel)
+    ) ?? ''
+    const pointCursor = getString(d.properties as LeafletMapPointDatum<D>, config.pointCursor)
     const pointShape = getString(d.properties as LeafletMapPointDatum<D>, config.pointShape)
     const isRing = pointShape === LeafletMapPointShape.Ring
     const isCircular = (pointShape === LeafletMapPointShape.Circle) || isRing || isCluster || !pointShape
@@ -74,7 +82,7 @@ export function updateNodes<D extends GenericDataRecord> (
     // To get updated on every render call
     const ringWidth = (isCluster && config.clusterRingWidth) || (isRing && config.pointRingWidth) || 0
     group.attr('transform', `translate(${x},${y})`)
-    group.select(`.${s.donutCluster}`)
+    group.select<SVGGElement>(`.${s.donutCluster}`)
       .call(updateDonut, donutData, isCircular ? d.radius : 0, ringWidth)
 
     node.attr('d', d.path)
@@ -117,7 +125,7 @@ export function updateNodes<D extends GenericDataRecord> (
 }
 
 export function collideLabels<D extends GenericDataRecord> (
-  selection: Selection<SVGGElement, LeafletMapPoint<D>, SVGGElement, Record<string, unknown>[]>,
+  selection: Selection<SVGGElement, LeafletMapPoint<D>, SVGGElement, unknown>,
   leafletMap: L.Map
 ): void {
   selection.each((datum1: LeafletMapPoint<D>, i, elements) => {
@@ -181,6 +189,8 @@ export function collideLabels<D extends GenericDataRecord> (
   })
 }
 
-export function removeNodes<D extends GenericDataRecord> (selection: Selection<SVGGElement, LeafletMapPoint<D>, SVGGElement, Record<string, unknown>[]>): void {
+export function removeNodes<D extends GenericDataRecord> (
+  selection: Selection<SVGGElement, LeafletMapPoint<D>, SVGGElement, unknown>
+): void {
   selection.remove()
 }

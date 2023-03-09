@@ -1,4 +1,4 @@
-import { Selection, BaseType } from 'd3-selection'
+import { BaseType, Selection } from 'd3-selection'
 import { interpolate } from 'd3-interpolate'
 import { max, mean } from 'd3-array'
 import { Arc } from 'd3-shape'
@@ -98,16 +98,16 @@ export function polyTween<N extends GraphInputNode, L extends GraphInputLink> (
   }
 }
 
-export function setLabelRect<A> (
-  labelSelection: Selection<BaseType, A, SVGGElement, A>,
+export function setLabelRect<T, K extends BaseType, L> (
+  labelSelection: Selection<SVGGElement, T, K, L>,
   label: string,
   selector: string
-): Selection<BaseType, A, SVGGElement, A> {
+): Selection<SVGRectElement, T, K, L> {
   // Set label background rectangle size by text size
   const labelIsEmpty = isEmpty(label)
-  const labelTextSelection = labelSelection.select(`.${selector}`)
+  const labelTextSelection = labelSelection.select<SVGTextElement>(`.${selector}`)
   const labelTextBBox = (labelTextSelection.node() as SVGGraphicsElement).getBBox()
-  const backgroundRect = labelSelection.select('rect')
+  const backgroundRect = labelSelection.select<SVGRectElement>('rect')
     .attr('visibility', labelIsEmpty ? 'hidden' : null)
     .attr('rx', 4)
     .attr('ry', 4)

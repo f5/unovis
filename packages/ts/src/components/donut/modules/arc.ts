@@ -18,7 +18,7 @@ export interface ArcNode extends SVGElement {
 }
 
 export function createArc<Datum> (
-  selection: Selection<SVGPathElement, DonutArcDatum<Datum>, SVGGElement, DonutArcDatum<Datum>[]>,
+  selection: Selection<SVGPathElement, DonutArcDatum<Datum>, SVGGElement, unknown>,
   config: DonutConfig<Datum>
 ): void {
   selection
@@ -39,7 +39,7 @@ export function createArc<Datum> (
 }
 
 export function updateArc<Datum> (
-  selection: Selection<SVGElement, DonutArcDatum<Datum>, SVGGElement, DonutArcDatum<Datum>[]>,
+  selection: Selection<SVGPathElement, DonutArcDatum<Datum>, SVGGElement, unknown>,
   config: DonutConfig<Datum>,
   arcGen: Arc<any, DonutArcAnimState>,
   duration: number
@@ -51,7 +51,7 @@ export function updateArc<Datum> (
   const setOpacity = (d: DonutArcDatum<Datum>): number => (config.showEmptySegments || d.value) ? 1 : 0
   if (duration) {
     const transition = smartTransition(selection, duration)
-      .style('opacity', setOpacity) as Transition<SVGElement, DonutArcDatum<Datum>, SVGGElement, DonutArcDatum<Datum>[]>
+      .style('opacity', setOpacity) as Transition<SVGPathElement, DonutArcDatum<Datum>, SVGGElement, unknown>
 
     transition.attrTween('d', (d, i, els) => {
       const arcNode: ArcNode = els[i]
@@ -77,7 +77,7 @@ export function updateArc<Datum> (
 }
 
 export function removeArc<Datum> (
-  selection: Selection<SVGElement, DonutArcDatum<Datum>, SVGGElement, DonutArcDatum<Datum>[]>,
+  selection: Selection<SVGPathElement, DonutArcDatum<Datum>, SVGGElement, unknown>,
   duration: number
 ): void {
   smartTransition(selection, duration)

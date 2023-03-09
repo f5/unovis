@@ -38,7 +38,8 @@ export class XYLabels<Datum> extends XYComponentCore<Datum, XYLabelsConfig<Datum
       .selectAll<SVGGElement, XYLabel<Datum> | XYLabelCluster<Datum>>(`.${s.labelGroup}`)
       .data(this._getDataToRender())
 
-    labelGroups.exit().call(removeLabels, duration)
+    const labelGroupsExit = labelGroups.exit<XYLabel<Datum> | XYLabelCluster<Datum>>()
+    removeLabels(labelGroupsExit, duration)
 
     const labelGroupsEnter = labelGroups.enter().append('g')
       .attr('class', s.labelGroup)

@@ -96,9 +96,12 @@ export class VisDonutComponent<Datum> implements DonutConfigInterface<Datum>, Af
   /** Enables wrapping for the sub-label. Default: `true` */
   @Input() centralSubLabelWrap?: boolean
 
-  /** When true, the component will display empty segments (the ones that have `0` values) as thin lines.
+  /** When true, the component will display empty segments (the ones that have `0` values) as tiny slices.
    * Default: `false` */
   @Input() showEmptySegments?: boolean
+
+  /** Angular size for empty segments in radians. Default: `0.5 * Math.PI / 180` */
+  @Input() emptySegmentAngle?: number
 
   /** Show donut background. The color is configurable via
    * the `--vis-donut-background-color` and `--vis-dark-donut-background-color` CSS variables.
@@ -128,8 +131,8 @@ export class VisDonutComponent<Datum> implements DonutConfigInterface<Datum>, Af
   }
 
   private getConfig (): DonutConfigInterface<Datum> {
-    const { duration, events, attributes, id, value, angleRange, padAngle, sortFunction, cornerRadius, color, radius, arcWidth, centralLabel, centralSubLabel, centralSubLabelWrap, showEmptySegments, showBackground, backgroundAngleRange } = this
-    const config = { duration, events, attributes, id, value, angleRange, padAngle, sortFunction, cornerRadius, color, radius, arcWidth, centralLabel, centralSubLabel, centralSubLabelWrap, showEmptySegments, showBackground, backgroundAngleRange }
+    const { duration, events, attributes, id, value, angleRange, padAngle, sortFunction, cornerRadius, color, radius, arcWidth, centralLabel, centralSubLabel, centralSubLabelWrap, showEmptySegments, emptySegmentAngle, showBackground, backgroundAngleRange } = this
+    const config = { duration, events, attributes, id, value, angleRange, padAngle, sortFunction, cornerRadius, color, radius, arcWidth, centralLabel, centralSubLabel, centralSubLabelWrap, showEmptySegments, emptySegmentAngle, showBackground, backgroundAngleRange }
     const keys = Object.keys(config) as (keyof DonutConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

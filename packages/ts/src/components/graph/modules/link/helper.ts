@@ -49,12 +49,20 @@ export function getLinkLabelShift (link: GraphLink, linkSpacing: number, shiftFr
   return `translate(${x}, ${y})`
 }
 
-export function getLinkStrokeWidth (d: GraphLink, scale: number, config: GraphConfig<GraphInputNode, GraphInputLink>): number {
+export function getLinkStrokeWidth<N extends GraphInputNode, L extends GraphInputLink> (
+  d: GraphLink,
+  scale: number,
+  config: GraphConfig<N, L>
+): number {
   const m = getNumber(d, config.linkWidth, d._indexGlobal)
   return m / Math.pow(scale, 0.5)
 }
 
-export function getLinkBandWidth (d: GraphLink, scale: number, config: GraphConfig<GraphInputNode, GraphInputLink>): number {
+export function getLinkBandWidth<N extends GraphInputNode, L extends GraphInputLink> (
+  d: GraphLink,
+  scale: number,
+  config: GraphConfig<N, L>
+): number {
   const { nodeSize, linkBandWidth } = config
   const sourceNodeSize = getNumber(d.source, nodeSize, d.source._index)
   const targetNodeSize = getNumber(d.target, nodeSize, d.target._index)
@@ -62,13 +70,17 @@ export function getLinkBandWidth (d: GraphLink, scale: number, config: GraphConf
   return Math.min(minNodeSize, getNumber(d, linkBandWidth, d._indexGlobal) / Math.pow(scale || 1, 0.5)) || 0
 }
 
-export function getLinkColor (link: GraphLink, config: GraphConfig<GraphInputNode, GraphInputLink>): string {
+export function getLinkColor<N extends GraphInputNode, L extends GraphInputLink> (link: GraphLink, config: GraphConfig<N, L>): string {
   const { linkStroke } = config
   const c = getColor(link, linkStroke, link._indexGlobal, true) ?? 'var(--vis-graph-link-stroke-color)'
   return c || null
 }
 
-export function getLinkArrow (d: GraphLink, scale: number, config: GraphConfig<GraphInputNode, GraphInputLink>): string {
+export function getLinkArrow<N extends GraphInputNode, L extends GraphInputLink> (
+  d: GraphLink,
+  scale: number,
+  config: GraphConfig<N, L>
+): string {
   const { linkArrow } = config
   if (scale > ZoomLevel.Level2 && getString(d, linkArrow, d._indexGlobal)) {
     return getValue<GraphLink, GraphLinkArrowStyle>(d, linkArrow, d._indexGlobal)

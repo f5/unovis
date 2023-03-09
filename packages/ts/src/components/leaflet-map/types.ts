@@ -28,7 +28,7 @@ export interface LeafletMapPointStyle {
 
 export type LeafletMapPointStyles<D> = { [key in keyof D]?: LeafletMapPointStyle }
 
-export type PointExpandedClusterProperties<D extends GenericDataRecord> = {
+export type PointExpandedClusterProperties<D extends GenericDataRecord> = D & {
   // Expanded cluster related data:
   // eslint-disable-next-line no-use-before-define
   expandedClusterPoint?: LeafletMapPoint<D>;

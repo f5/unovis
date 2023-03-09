@@ -89,7 +89,7 @@ export class FreeBrush<Datum> extends XYComponentCore<Datum, FreeBrushConfig<Dat
     if (!duration) this._firstRender = false
   }
 
-  private _onBrush (event: D3BrushEvent<Datum>): void {
+  private _onBrush (event: D3BrushEvent<unknown>): void {
     const { config } = this
     const userDriven = !!event?.sourceEvent
 
@@ -174,7 +174,7 @@ export class FreeBrush<Datum> extends XYComponentCore<Datum, FreeBrushConfig<Dat
     }
   }
 
-  private _getBrushBehaviour (mode: FreeBrushMode): BrushBehavior<Datum> {
+  private _getBrushBehaviour (mode: FreeBrushMode): BrushBehavior<unknown> {
     switch (mode) {
       case FreeBrushMode.X: return brushX()
       case FreeBrushMode.Y: return brushY()
@@ -182,7 +182,7 @@ export class FreeBrush<Datum> extends XYComponentCore<Datum, FreeBrushConfig<Dat
     }
   }
 
-  private _onBrushStart (event: D3BrushEvent<Datum>): void {
+  private _onBrushStart (event: D3BrushEvent<unknown>): void {
     const { config } = this
     const userDriven = !!event?.sourceEvent
     this._onBrush(event)
@@ -190,14 +190,14 @@ export class FreeBrush<Datum> extends XYComponentCore<Datum, FreeBrushConfig<Dat
     if (!this._firstRender) config.onBrushStart?.(config.selection, event, userDriven)
   }
 
-  private _onBrushMove (event: D3BrushEvent<Datum>): void {
+  private _onBrushMove (event: D3BrushEvent<unknown>): void {
     const { config } = this
 
     this._onBrush(event)
     if (!this._firstRender) config.onBrushMove?.(config.selection, event, !!event?.sourceEvent)
   }
 
-  private _onBrushEnd (event: D3BrushEvent<Datum>): void {
+  private _onBrushEnd (event: D3BrushEvent<unknown>): void {
     const { config } = this
 
     this._onBrush(event)

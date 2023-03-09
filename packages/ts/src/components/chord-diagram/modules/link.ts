@@ -59,7 +59,7 @@ export function createLink<N extends ChordInputNode> (
 }
 
 export function updateLink<N extends ChordInputNode, L extends ChordInputLink> (
-  selection: Selection<SVGElement, ChordRibbon<N>, SVGGElement, unknown>,
+  selection: Selection<SVGPathElement, ChordRibbon<N>, SVGGElement, unknown>,
   config: ChordDiagramConfig<N, L>,
   lineGen: Line<[number, number]>,
   duration: number
@@ -70,7 +70,7 @@ export function updateLink<N extends ChordInputNode, L extends ChordInputLink> (
     .style('opacity', 'var(--vis-chord-diagram-link-opacity)')
 
   if (duration) {
-    const transition = selTransition as Transition<SVGElement, ChordRibbon<N>, SVGGElement, unknown>
+    const transition = selTransition as Transition<SVGPathElement, ChordRibbon<N>, SVGGElement, unknown>
     transition.attrTween('d', (d, i, el) => {
       const previous = select(el[i]).attr('d')
       const next = linkGen(d.points, lineGen) || emptyPath()
@@ -82,7 +82,7 @@ export function updateLink<N extends ChordInputNode, L extends ChordInputLink> (
 }
 
 export function removeLink (
-  selection: Selection<SVGElement, unknown, SVGGElement, unknown>,
+  selection: Selection<SVGPathElement, unknown, SVGGElement, unknown>,
   duration: number
 ): void {
   smartTransition(selection, duration)

@@ -88,7 +88,7 @@ export function createLabel<N extends ChordInputNode, L extends ChordInputLink> 
 }
 
 export function updateLabel<N extends ChordInputNode, L extends ChordInputLink> (
-  selection: Selection<SVGElement, ChordNode<N>, SVGGElement, unknown>,
+  selection: Selection<SVGGElement, ChordNode<N>, SVGGElement, unknown>,
   config: ChordDiagramConfig<N, L>,
   width: number,
   radiusScale: ScaleContinuousNumeric<number, number>,
@@ -141,7 +141,7 @@ export function updateLabel<N extends ChordInputNode, L extends ChordInputLink> 
 }
 
 export function removeLabel (
-  selection: Selection<SVGElement, unknown, SVGGElement, unknown>,
+  selection: Selection<SVGGElement, unknown, SVGGElement, unknown>,
   duration: number
 ): void {
   smartTransition(selection, duration)

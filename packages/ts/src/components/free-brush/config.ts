@@ -11,19 +11,19 @@ export interface FreeBrushConfigInterface<Datum> extends Partial<XYComponentConf
   /** Callback function to be called on any Brush event.
    * Default: `(selection: FreeBrushSelection, event: D3BrushEvent<Datum>, userDriven: boolean): void => {}`
   */
-  onBrush?: ((selection: FreeBrushSelection | undefined, event: D3BrushEvent<Datum>, userDriven: boolean) => void);
+  onBrush?: ((selection: FreeBrushSelection | undefined, event: D3BrushEvent<unknown>, userDriven: boolean) => void);
   /** Callback function to be called on the Brush start event.
-   * Default: `(selection: FreeBrushSelection, event: D3BrushEvent<Datum>, userDriven: boolean): void => {}`
+   * Default: `(selection: FreeBrushSelection, event: D3BrushEvent<unknown>, userDriven: boolean): void => {}`
   */
-  onBrushStart?: ((selection: FreeBrushSelection | undefined, event: D3BrushEvent<Datum>, userDriven: boolean) => void);
+  onBrushStart?: ((selection: FreeBrushSelection | undefined, event: D3BrushEvent<unknown>, userDriven: boolean) => void);
   /** Callback function to be called on the Brush move event.
-   * Default: `(selection: FreeBrushSelection, event: D3BrushEvent<Datum>, userDriven: boolean): void => {}`
+   * Default: `(selection: FreeBrushSelection, event: D3BrushEvent<unknown>, userDriven: boolean): void => {}`
   */
-  onBrushMove?: ((selection: FreeBrushSelection | undefined, event: D3BrushEvent<Datum>, userDriven: boolean) => void);
+  onBrushMove?: ((selection: FreeBrushSelection | undefined, event: D3BrushEvent<unknown>, userDriven: boolean) => void);
   /** Callback function to be called on the Brush end event.
-   * Default: `(selection: FreeBrushSelection, event: D3BrushEvent<Datum>, userDriven: boolean)L void => {}`
+   * Default: `(selection: FreeBrushSelection, event: D3BrushEvent<unknown>, userDriven: boolean)L void => {}`
   */
-  onBrushEnd?: ((selection: FreeBrushSelection | undefined, event: D3BrushEvent<Datum>, userDriven: boolean) => void);
+  onBrushEnd?: ((selection: FreeBrushSelection | undefined, event: D3BrushEvent<unknown>, userDriven: boolean) => void);
   /** Width of the Brush handle. Default: `1` */
   handleWidth?: number;
   /** Brush selection in data space, can be used to force set the selection from outside.
@@ -39,13 +39,13 @@ export interface FreeBrushConfigInterface<Datum> extends Partial<XYComponentConf
 
 export class FreeBrushConfig<Datum> extends XYComponentConfig<Datum> implements FreeBrushConfigInterface<Datum> {
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function */
-  onBrush = (s: FreeBrushSelection | undefined, e: D3BrushEvent<Datum>, userDriven: boolean): void => {}
+  onBrush = (s: FreeBrushSelection | undefined, e: D3BrushEvent<unknown>, userDriven: boolean): void => {}
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function */
-  onBrushStart = (s: FreeBrushSelection | undefined, e: D3BrushEvent<Datum>, userDriven: boolean): void => {}
+  onBrushStart = (s: FreeBrushSelection | undefined, e: D3BrushEvent<unknown>, userDriven: boolean): void => {}
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function */
-  onBrushMove = (s: FreeBrushSelection | undefined, e: D3BrushEvent<Datum>, userDriven: boolean): void => {}
+  onBrushMove = (s: FreeBrushSelection | undefined, e: D3BrushEvent<unknown>, userDriven: boolean): void => {}
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function */
-  onBrushEnd = (s: FreeBrushSelection | undefined, e: D3BrushEvent<Datum>, userDriven: boolean): void => {}
+  onBrushEnd = (s: FreeBrushSelection | undefined, e: D3BrushEvent<unknown>, userDriven: boolean): void => {}
   handleWidth = 1
   selection: FreeBrushSelection | null | undefined = undefined
   selectionMinLength = undefined

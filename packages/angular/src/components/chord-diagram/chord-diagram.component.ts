@@ -12,7 +12,6 @@ import {
   NumericAccessor,
   StringAccessor,
   ChordLabelAlignment,
-  CurveType,
 } from '@unovis/ts'
 import { VisCoreComponent } from '../../core'
 
@@ -103,9 +102,6 @@ export class VisChordDiagramComponent<N extends ChordInputNode, L extends ChordI
   /** Angular range of the diagram. Default: `[0, 2 * Math.PI]` */
   @Input() angleRange?: [number, number]
 
-  /** Curve type. Default: `CurveType.CatmullRom` */
-  @Input() curveType?: CurveType
-
   /** The exponent property of the radius scale. Default: `2` */
   @Input() radiusScaleExponent?: number
   @Input() data: { nodes: N[]; links?: L[] }
@@ -129,8 +125,8 @@ export class VisChordDiagramComponent<N extends ChordInputNode, L extends ChordI
   }
 
   private getConfig (): ChordDiagramConfigInterface<N, L> {
-    const { duration, events, attributes, linkColor, linkValue, nodeLevels, nodeWidth, nodeColor, nodeLabel, nodeLabelAlignment, padAngle, cornerRadius, angleRange, curveType, radiusScaleExponent } = this
-    const config = { duration, events, attributes, linkColor, linkValue, nodeLevels, nodeWidth, nodeColor, nodeLabel, nodeLabelAlignment, padAngle, cornerRadius, angleRange, curveType, radiusScaleExponent }
+    const { duration, events, attributes, linkColor, linkValue, nodeLevels, nodeWidth, nodeColor, nodeLabel, nodeLabelAlignment, padAngle, cornerRadius, angleRange, radiusScaleExponent } = this
+    const config = { duration, events, attributes, linkColor, linkValue, nodeLevels, nodeWidth, nodeColor, nodeLabel, nodeLabelAlignment, padAngle, cornerRadius, angleRange, radiusScaleExponent }
     const keys = Object.keys(config) as (keyof ChordDiagramConfigInterface<N, L>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

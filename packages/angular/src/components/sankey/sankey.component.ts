@@ -10,12 +10,12 @@ import {
   VisEventCallback,
   SankeyExitTransitionType,
   SankeyEnterTransitionType,
+  SankeyNode,
+  SankeyLink,
   SankeyNodeAlign,
   StringAccessor,
-  SankeyNode,
   ColorAccessor,
   NumericAccessor,
-  SankeyLink,
   GenericAccessor,
   Position,
   VerticalAlign,
@@ -111,14 +111,14 @@ export class VisSankeyComponent<N extends SankeyInputNode, L extends SankeyInput
    * Options: `undefined` - the order is determined by the layout;
    *          `null` - the order is fixed by the input;
    *          sort function - the order is determined by the function. */
-  @Input() nodeSort?: ((node1: N, node2: N) => number) | null | undefined
+  @Input() nodeSort?: ((node1: SankeyNode<N, L>, node2: SankeyNode<N, L>) => number) | null | undefined
 
   /** Sankey link sorting function. Default: `(link2, link1) => link1.value - link2.value`.
    * Link sorting is applied to the source (exiting) links within one node.
    * Options: `undefined` - the order is determined by the layout;
    *          `null` - the order is fixed by the input;
    *          sort function - the order is determined by the function. */
-  @Input() linkSort?: ((link1: L, link2: L) => number) | null | undefined
+  @Input() linkSort?: ((link1: SankeyLink<N, L>, link2: SankeyLink<N, L>) => number) | null | undefined
 
   /** Sankey node width in pixels */
   @Input() nodeWidth?: number
@@ -191,7 +191,7 @@ export class VisSankeyComponent<N extends SankeyInputNode, L extends SankeyInput
   /** Expand trimmed label on hover. Default: `true` */
   @Input() labelExpandTrimmedOnHover?: boolean
 
-  /** Label trimming mode. Default: `TrimMode.MIDDLE` */
+  /** Label trimming mode. Default: `TrimMode.Middle` */
   @Input() labelTrimMode?: TrimMode
 
   /** Label font size in pixels. If not provided, the value of CSS variable `--vis-sankey-node-label-font-size` will be used. Default: `undefined` */

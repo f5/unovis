@@ -87,8 +87,8 @@ export function updateTopoJson<T extends GenericDataRecord> (maplibreMap: Map, c
 export async function setupMap<T extends GenericDataRecord> (mapContainer: HTMLElement, config: LeafletMapConfig<T>): Promise<{
   leaflet: L.Map;
   layer: L.Layer;
-  svgOverlay: Selection<SVGElement, any, HTMLElement, any>;
-  svgGroup: Selection<SVGGElement, any, SVGElement, any>;
+  svgOverlay: Selection<SVGSVGElement, unknown, null, undefined>;
+  svgGroup: Selection<SVGGElement, unknown, SVGElement, undefined>;
 }> {
   const { style, renderer, topoJSONLayer } = config
   const leaflet = await import('leaflet')

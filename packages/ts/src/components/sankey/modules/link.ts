@@ -75,14 +75,14 @@ export function updateLinks<N extends SankeyInputNode, L extends SankeyInputLink
   smartTransition(sel, duration)
     .style('opacity', (d: SankeyLink<N, L>) => d._state.greyout ? 0.2 : 1)
 
-  const linkSelection = sel.select(`.${s.linkPath}`)
+  const linkSelection = sel.select<SVGPathElement>(`.${s.linkPath}`)
     .style('cursor', (d: SankeyLink<N, L>) => getString(d, config.linkCursor))
 
   const selectionTransition = smartTransition(linkSelection, duration)
     .style('fill', (link: SankeyLink<N, L>) => getColor(link, config.linkColor))
 
   if (duration) {
-    (selectionTransition as Transition<SVGGElement, SankeyLink<N, L>, SVGGElement, any>)
+    (selectionTransition as Transition<SVGPathElement, SankeyLink<N, L>, SVGGElement, unknown>)
       .attrTween('d', (d: SankeyLink<N, L>, i, el) => {
       // eslint-disable-next-line dot-notation
         const previous = el[i]['_animState']

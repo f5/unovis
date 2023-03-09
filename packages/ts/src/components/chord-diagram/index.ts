@@ -121,7 +121,10 @@ export class ChordDiagram<
 
     const linkLineGen = line().curve(Curve.catmullRom.alpha(0.25))
 
-    const hierarchyData = hierarchy(nodes, (d: ChordHierarchy<GraphNodeCore<N, L>>) => d.values)
+    const hierarchyData = hierarchy<ChordHierarchy<GraphNodeCore<N, L>> | GraphNodeCore<N, L>>(
+      nodes,
+      d => (d as ChordHierarchy<GraphNodeCore<N, L>>).values
+    )
       .sum((d) => (d as GraphNodeCore<N, L>)._state?.value)
 
     const partitionData = partition<N | ChordHierarchy<GraphNodeCore<N, L>>>().size([config.angleRange[1], 1])(hierarchyData) as ChordNode<N>
@@ -152,7 +155,7 @@ export class ChordDiagram<
 
     // Links
     const linksSelection = this.linkGroup
-      .selectAll<SVGGElement, ChordRibbon<N>>(`.${s.link}`)
+      .selectAll<SVGPathElement, ChordRibbon<N>>(`.${s.link}`)
       .data(this._links, d => String(d.data._id))
 
     const linksEnter = linksSelection.enter().append('path')
@@ -167,7 +170,7 @@ export class ChordDiagram<
 
     // Nodes
     const nodesSelection = this.nodeGroup
-      .selectAll<SVGGElement, ChordNode<N>>(`.${s.node}`)
+      .selectAll<SVGPathElement, ChordNode<N>>(`.${s.node}`)
       .data(this._nodes, d => String(d.uid))
 
     const nodesEnter = nodesSelection.enter().append('path')
@@ -206,7 +209,7 @@ export class ChordDiagram<
       l.target._state.value = (l.target._state.value || 0) + getNumber(l, config.linkValue)
     })
 
-    // Todo: replace with d3 group
+    // TODO: Replace with d3-group
     const nestGen = nest<N>()
     config.nodeLevels.forEach(levelAccessor => {
       nestGen.key(d => d[levelAccessor])
@@ -377,8 +380,11 @@ export class ChordDiagram<
       this._links.forEach(l => { delete l._state.hovered })
     }
 
-    this.nodeGroup.selectAll(`.${s.node}`).classed(s.hoveredNode, (d: ChordNode<N>) => d._state.hovered)
-    this.linkGroup.selectAll(`.${s.link}`).classed(s.hoveredLink, (d: ChordRibbon<N>) => d._state.hovered)
+    this.nodeGroup.selectAll<SVGPathElement, ChordNode<N>>(`.${s.node}`)
+      .classed(s.hoveredNode, d => d._state.hovered)
+    this.linkGroup.selectAll<SVGPathElement, ChordRibbon<N>>(`.${s.link}`)
+      .classed(s.hoveredLink, d => d._state.hovered)
+
     this.g.classed(s.transparent, !!links)
   }
 }

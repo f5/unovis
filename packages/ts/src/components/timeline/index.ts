@@ -66,7 +66,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfig<Datum
       .attr('class', s.scrollbarHandle)
 
     // Set up scrollbar drag event
-    const dragBehaviour = drag()
+    const dragBehaviour = drag<SVGRectElement, unknown>()
       .on('drag', this._onScrollbarDrag.bind(this))
 
     this._scrollBarHandle.call(dragBehaviour)
@@ -127,8 +127,8 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfig<Datum
       .attr('opacity', 0)
 
     // Labels
-    const labels = this._labelsGroup.selectAll(`.${s.label}`)
-      .data(config.showLabels ? recordLabelsUnique : []) as Selection<SVGTextElement, string, SVGGElement, any>
+    const labels = this._labelsGroup.selectAll<SVGTextElement, string>(`.${s.label}`)
+      .data(config.showLabels ? recordLabelsUnique : [])
 
     const labelsEnter = labels.enter().append('text')
       .attr('class', s.label)

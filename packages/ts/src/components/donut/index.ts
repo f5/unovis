@@ -105,7 +105,7 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfig<Datum>, Don
 
     // Arc segments
     const arcsSelection = this.arcGroup
-      .selectAll(`.${s.segment}`)
+      .selectAll<SVGPathElement, DonutArcDatum<Datum>>(`.${s.segment}`)
       .data(arcData, (d: DonutArcDatum<Datum>) => config.id(d.data, d.index))
 
     const arcsEnter = arcsSelection.enter().append('path')
@@ -116,7 +116,7 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfig<Datum>, Don
     arcsMerged.call(updateArc, config, this.arcGen, duration)
     arcsMerged.sort((a, b) => b.value - a.value)
 
-    arcsSelection.exit()
+    arcsSelection.exit<DonutArcDatum<Datum>>()
       .attr('class', s.segmentExit)
       .call(removeArc, duration)
 

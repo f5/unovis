@@ -85,7 +85,7 @@ export type GraphPanelConfig = {
   /** Panel label */
   label?: string;
   /** Position of the label */
-  labelPosition?: Position.Top | Position.Bottom;
+  labelPosition?: Position.Top | Position.Bottom | string;
   /** Color of the panel's border */
   borderColor?: string;
   /** Border width of the panel in pixels */
