@@ -432,6 +432,80 @@ object to `dagreLayoutSettings`.
   }}
 />
 
+### ELK `New in 1.1.0`
+Starting from Unovis version 1.1.0 _Graph_ supports [The Eclipse Layout Kernel](https://www.eclipse.org/elk/) which has
+[several layout algorithms](https://www.eclipse.org/elk/reference/algorithms.html) available.
+You can enable ELK by setting `layoutType` to `GraphLayoutType.Elk` (or `"elk"`) and providing the layout configuration via
+the `layoutElkSettings` property.
+
+The default configuration is provided for the [ELK Layered](https://www.eclipse.org/elk/reference/algorithms/org-eclipse-elk-layered.html)
+algorithm which works with hierarchical nodes structure. Since _Graph's_ data model doesn't support hierarchy, we allow
+specifying it externally via the `layoutElkNodeGroups` property as an array of grouping function. For example, if your
+nodes have `group` and `subGroup` properties, you can set `layoutElkNodeGroups` to `[d => d.group, d => d.subGroup]` and
+_Graph_ will automatically generate hierarchical data structure for ELK.
+
+Additionally, you can specify individual layout configuration for each group (or layer in the ELK's terms) by providing
+a function to `layoutElkSettings` that receives group name as its only argument, and returns an ELK layout configuration
+object:
+```ts
+layoutElkSettings: layer => {
+  switch (layer) {
+    case 'root': return { ... }
+    case 'group1': return { ... }
+    ...
+  }
+}
+```
+
+The ELK Layered algorithm works best when combined with [panels](#panels), allowing you to highlight the hierarchical
+nature of your graph data. Check out the [ELK example](/gallery/view?collection=Networks%20and%20Flows&title=ELK%20Layered%20Graph%20Layout)
+in the gallery to learn more.
+
+<GraphDoc
+  layoutType="elk"
+  data={{
+    nodes: [
+      { id: 'node-0' },
+      { id: 'node-1', group: 'group', subGroup: 'sub-group-1' },
+      { id: 'node-2', group: 'group', subGroup: 'sub-group-1' },
+      { id: 'node-3', group: 'group', subGroup: 'sub-group-1' },
+      { id: 'node-4', group: 'group', subGroup: 'sub-group-2' },
+      { id: 'node-5', group: 'group', subGroup: 'sub-group-2' },
+    ],
+    links: [
+      { source: 'node-0', target: 'node-1' },
+      { source: 'node-0', target: 'node-2' },
+      { source: 'node-0', target: 'node-3' },
+      { source: 'node-1', target: 'node-4' },
+      { source: 'node-2', target: 'node-4' },
+      { source: 'node-3', target: 'node-5' },
+    ],
+  }}
+  layoutElkNodeGroups={[
+    d => d.group ?? null,
+    d => d.subGroup ?? null,
+  ]}
+  nodeLabel={n => n.id}
+  panels={[
+    {
+      nodes: ['node-1', 'node-2', 'node-3', 'node-4', 'node-5'],
+      label: 'group',
+      dashedOutline: true,
+      padding: { top: 45, right: 30, bottom: 30, left: 30 },
+    },
+    {
+      nodes: ['node-1', 'node-2', 'node-3'],
+      label: 'sub-group-1',
+      padding: { top: 5 },
+    },
+    {
+      nodes: ['node-4', 'node-5'],
+      label: 'sub-group-2',
+      padding: { top: 5 },
+    },
+  ]}
+/>
+
 ### Non-connected nodes aside
 If you want non-connected graph nodes to be placed below the layout, set `layoutNonConnectedAside` to `true`.
 
