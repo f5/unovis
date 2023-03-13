@@ -5,7 +5,7 @@ import { color } from 'd3-color'
 // Utils
 import { wrapTextElement } from 'utils/text'
 import { smartTransition } from 'utils/d3'
-import { getNumber, getString } from 'utils/data'
+import { getNumber, getString, getValue } from 'utils/data'
 import { getColor, hexToBrightness } from 'utils/color'
 
 // Config
@@ -23,13 +23,13 @@ function getLabelFillColor<N extends ChordInputNode, L extends ChordInputLink> (
   d: ChordNode<N>,
   config: ChordDiagramConfig<N, L>
 ): string {
-  const { nodeLabelAlignment, nodeColor } = config
+  const nodeLabelAlignment = getValue(d.data, config.nodeLabelAlignment) ?? ChordLabelAlignment.Along
   switch (nodeLabelAlignment) {
     case ChordLabelAlignment.Perpendicular: {
-      return getColor(d.data, nodeColor, d.height)
+      return getColor(d.data, config.nodeColor, d.height)
     }
     case ChordLabelAlignment.Along: {
-      const c = getColor(d.data, nodeColor, d.height)
+      const c = getColor(d.data, config.nodeColor, d.height)
       const colorParsed = color(c)
       const brightness = colorParsed ? hexToBrightness(colorParsed.hex()) : 0
       return brightness > 0.65 ? 'var(--vis-chord-diagram-label-text-fill-color-dark)' : 'var(--vis-chord-diagram-label-text-fill-color-bright)'
@@ -41,7 +41,7 @@ function getLabelTextAnchor<N extends ChordInputNode, L extends ChordInputLink> 
   d: ChordNode<N>,
   config: ChordDiagramConfig<N, L>
 ): string | null {
-  const { nodeLabelAlignment } = config
+  const nodeLabelAlignment = getValue(d.data, config.nodeLabelAlignment) ?? ChordLabelAlignment.Along
   switch (nodeLabelAlignment) {
     case ChordLabelAlignment.Perpendicular: {
       const angleCenter = (d.x0 + d.x1) / 2
@@ -59,7 +59,7 @@ function getLabelTransform<N extends ChordInputNode, L extends ChordInputLink> (
   config: ChordDiagramConfig<N, L>,
   radiusScale: ScaleContinuousNumeric<number, number>
 ): string | null {
-  const { nodeLabelAlignment } = config
+  const nodeLabelAlignment = getValue(d.data, config.nodeLabelAlignment) ?? ChordLabelAlignment.Along
   switch (nodeLabelAlignment) {
     case ChordLabelAlignment.Perpendicular: {
       const r = radiusScale(d.y1) + LABEL_PADDING
@@ -94,7 +94,7 @@ export function updateLabel<N extends ChordInputNode, L extends ChordInputLink> 
   radiusScale: ScaleContinuousNumeric<number, number>,
   duration: number
 ): void {
-  const { nodeLabel, nodeWidth, nodeLabelAlignment } = config
+  const { nodeLabel, nodeWidth } = config
 
   smartTransition(selection, duration)
     .attr('transform', d => getLabelTransform(d, config, radiusScale))
@@ -108,12 +108,15 @@ export function updateLabel<N extends ChordInputNode, L extends ChordInputLink> 
     .style('text-anchor', d => getLabelTextAnchor(d, config))
 
   label.each((d: ChordNode<N>, i: number, elements) => {
+    const nodeLabelAlignment = getValue(d.data, config.nodeLabelAlignment) ?? ChordLabelAlignment.Along
     const radianArcLength = d.x1 - d.x0 - getNumber(d, config.padAngle) * 2
     const radius = radiusScale(d.y1) - getNumber(d, config.nodeWidth) / 2
     const arcLength = radius * radianArcLength
     const maxWidth = (nodeLabelAlignment === ChordLabelAlignment.Along ? arcLength : width) - LABEL_PADDING * 2
 
     select(elements[i]).call(wrapTextElement, { width: maxWidth, trimOnly: true })
+      .attr('dx', nodeLabelAlignment === ChordLabelAlignment.Along ? LABEL_PADDING : null)
+      .attr('dy', nodeLabelAlignment === ChordLabelAlignment.Along ? nodeWidth / 2 : null)
 
     if (nodeLabelAlignment === ChordLabelAlignment.Along) {
       const textElement = select(elements[i])
@@ -122,22 +125,21 @@ export function updateLabel<N extends ChordInputNode, L extends ChordInputLink> 
 
       select(elements[i])
         .text('')
-        .attr('dx', LABEL_PADDING)
-        .attr('dy', getNumber(d.data, nodeWidth) / 2)
         .style('display', textWidth > maxWidth && 'none')
-
-      select(elements[i]).append('textPath')
+        .append('textPath')
         .attr('href', `#${d.uid}`)
         .text(labelText)
-    } else {
-      smartTransition(label, duration)
-        .attr('transform', d => {
-          const angleCenter = (d.x0 + d.x1) / 2
-          const angleDegree = angleCenter * 180 / Math.PI
-          return `rotate(${angleDegree < 180 ? angleDegree - 90 : angleDegree + 90})`
-        })
     }
   })
+
+  smartTransition(label, duration)
+    .attr('transform', d => {
+      const nodeLabelAlignment = getValue(d.data, config.nodeLabelAlignment)
+      if (nodeLabelAlignment !== ChordLabelAlignment.Perpendicular) return null
+      const angleCenter = (d.x0 + d.x1) / 2
+      const angleDegree = angleCenter * 180 / Math.PI
+      return `rotate(${angleDegree < 180 ? angleDegree - 90 : angleDegree + 90})`
+    })
 }
 
 export function removeLabel (
