@@ -67,7 +67,7 @@ export const cloneDeep = <T>(obj: T, stack: Map<any, any> = new Map()): T => {
   }
 
   if (obj instanceof Array) {
-    const clone = []
+    const clone: unknown[] = []
     stack.set(obj, clone)
     for (const item of obj) {
       clone.push(stack.has(item) ? stack.get(item) : cloneDeep(item, stack))
@@ -84,31 +84,39 @@ export const cloneDeep = <T>(obj: T, stack: Map<any, any> = new Map()): T => {
   if (obj instanceof Object) {
     const clone = {} as T
     stack.set(obj, clone)
+    const objAsRecord = obj as Record<string | number, unknown>
     Object.keys(obj)
-      .reduce((newObj: T, key: string | number): T => {
-        newObj[key] = stack.has(obj[key]) ? stack.get(obj[key]) : cloneDeep(obj[key], stack)
+      .reduce((newObj: typeof objAsRecord, key: string | number): typeof objAsRecord => {
+        newObj[key] = stack.has(objAsRecord[key]) ? stack.get(objAsRecord[key]) : cloneDeep(objAsRecord[key], stack)
         return newObj
-      }, clone)
+      }, clone as typeof objAsRecord)
 
     return clone
   }
+
+  return obj
 }
 
+
 export const merge = <T, K>(obj1: T, obj2: K, visited: Map<any, any> = new Map()): T & K => {
-  const newObj = (isAClassInstance(obj1) ? obj1 : cloneDeep(obj1)) as T & K
+  type Rec = Record<string | number, unknown>
+
+  if (!obj1 || !obj2) return obj1 as T & K
   if ((obj1 as unknown) === (obj2 as unknown)) return obj1 as T & K
+
+  const newObj = (isAClassInstance(obj1 as Rec) ? obj1 : cloneDeep(obj1)) as T & K
 
   // Taking care of recursive structures
   if (visited.has(obj2)) return visited.get(obj2)
   else visited.set(obj2, newObj)
 
-  Object.keys(obj2).forEach(key => {
-    if (isPlainObject(obj1[key]) && isPlainObject(obj2[key])) {
-      newObj[key] = merge(obj1[key], obj2[key], visited)
-    } else if (isAClassInstance(obj2)) {
-      newObj[key] = obj2
+  Object.keys(obj2 as Rec).forEach(key => {
+    if (isPlainObject((obj1 as Rec)[key]) && isPlainObject((obj2 as Rec)[key])) {
+      (newObj as Rec)[key] = merge((obj1 as Rec)[key], (obj2 as Rec)[key], visited)
+    } else if (isAClassInstance(obj2 as Rec)) {
+      (newObj as Rec)[key] = obj2
     } else {
-      newObj[key] = cloneDeep(obj2[key])
+      (newObj as Rec)[key] = cloneDeep((obj2 as Rec)[key])
     }
   })
 
