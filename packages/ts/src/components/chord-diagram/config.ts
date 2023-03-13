@@ -4,7 +4,7 @@
 import { ComponentConfigInterface, ComponentConfig } from 'core/component/config'
 
 // Types
-import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
+import { ColorAccessor, GenericAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
 
 // Local Types
 import { ChordInputLink, ChordInputNode, ChordLabelAlignment } from './types'
@@ -23,7 +23,7 @@ export interface ChordDiagramConfigInterface<N extends ChordInputNode, L extends
   /** Node label accessor function. Default: `d => d.label ?? d.key` */
   nodeLabel?: StringAccessor<N>;
   /** Node label alignment. Default: `ChordLabelAlignment.Along` */
-  nodeLabelAlignment?: ChordLabelAlignment | string;
+  nodeLabelAlignment?: GenericAccessor<ChordLabelAlignment | string, N>;
   /** Pad angle in radians. Constant value or accessor function. Default: `0.02` */
   padAngle?: NumericAccessor<N>;
   /** Corner radius constant value or accessor function. Default: `2` */

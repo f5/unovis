@@ -10,7 +10,7 @@ import { ComponentCore } from 'core/component'
 import { GraphDataModel } from 'data-models/graph'
 
 // Utils
-import { getNumber, isNumber, groupBy, getString } from 'utils/data'
+import { getNumber, isNumber, groupBy, getString, getValue } from 'utils/data'
 import { estimateStringPixelLength } from 'utils/text'
 
 // Types
@@ -85,10 +85,11 @@ export class ChordDiagram<
 
   get bleed (): Spacing {
     const { config } = this
-    let top = 4; let bottom = 4; let left = 4; let right = 4
-    if (config.nodeLabelAlignment === ChordLabelAlignment.Perpendicular) {
-      const padding = 4 + LABEL_PADDING * 2
-      this._nodes.forEach(n => {
+    let top = 0; let bottom = 0; let right = 0; let left = 0
+    const padding = 4 + LABEL_PADDING * 2
+    this._nodes.forEach(n => {
+      const nodeLabelAlignment = getValue(n.data, config.nodeLabelAlignment)
+      if (n.height === 0 && nodeLabelAlignment === ChordLabelAlignment.Perpendicular) {
         const labelWidth = estimateStringPixelLength(getString(n.data, config.nodeLabel) ?? '', 16)
         const [x, y] = this.arcGen.centroid(n)
 
@@ -97,18 +98,18 @@ export class ChordDiagram<
 
         if (y < 0) top = Math.max(top, labelWidth)
         else bottom = Math.max(bottom, labelWidth)
-      })
-      left += padding
-      right += padding
-      bottom += padding
-      top += padding
-    }
+      }
+    })
+    left += padding
+    right += padding
+    bottom += padding
+    top += padding
     return { top, bottom, left, right }
   }
 
   _render (customDuration?: number): void {
     super._render(customDuration)
-    const { config, config: { nodeLabelAlignment, radiusScaleExponent }, radiusScale } = this
+    const { config, config: { radiusScaleExponent }, radiusScale } = this
     const nodes = this._getHierarchyNodes()
     const duration = isNumber(customDuration) ? customDuration : config.duration
 
@@ -132,7 +133,7 @@ export class ChordDiagram<
 
     const size = Math.min(this._width, this._height)
     const radius = size / 2 - max([this.bleed.top, this.bleed.bottom, this.bleed.left, this.bleed.right])
-    const labelWidth = nodeLabelAlignment === ChordLabelAlignment.Perpendicular ? size - radius - config.nodeWidth : 0
+    const labelWidth = size - radius - config.nodeWidth
 
     radiusScale
       .exponent(radiusScaleExponent)
