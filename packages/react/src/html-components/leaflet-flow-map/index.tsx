@@ -9,6 +9,7 @@ export type VisLeafletFlowMapProps<
   data?: { points: PointDatum[]; flows: FlowDatum[] };
   ref?: Ref<VisLeafletFlowMapRef<PointDatum, FlowDatum>>;
   className?: string;
+  style?: React.CSSProperties;
 }
 
 export type VisLeafletFlowMapRef<
@@ -45,7 +46,7 @@ export function VisLeafletFlowMapFC<
   })
 
   useImperativeHandle(ref, () => ({ component }))
-  return <div ref={container} className={props.className} />
+  return <div ref={container} className={props.className} style={props.style}/>
 }
 
 // We export a memoized component to avoid unnecessary re-renders

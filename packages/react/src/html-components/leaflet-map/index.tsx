@@ -6,6 +6,7 @@ export type VisLeafletMapProps<Datum extends Record<string, unknown>> = LeafletM
   data?: Datum[];
   ref?: Ref<VisLeafletMapRef<Datum>>;
   className?: string;
+  style?: React.CSSProperties;
 }
 
 export type VisLeafletMapRef<Datum extends Record<string, unknown>> = {
@@ -32,7 +33,7 @@ export function VisLeafletMapFC<Datum extends Record<string, unknown>> (props: V
   })
 
   useImperativeHandle(ref, () => ({ component }))
-  return <div ref={container} className={props.className} />
+  return <div ref={container} className={props.className} style={props.style}/>
 }
 
 // We export a memoized component to avoid unnecessary re-renders

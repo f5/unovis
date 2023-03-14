@@ -10,6 +10,8 @@ import { VisComponentElement } from 'src/types/dom'
 
 export type VisSingleContainerProps<Data> = SingleContainerConfigInterface<Data> & {
   data?: Data;
+  className?: string;
+  style?: React.CSSProperties;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -72,7 +74,7 @@ function VisSingleContainerFC<Data> (props: PropsWithChildren<VisSingleContainer
   })
 
   return (
-    <div ref={container} style={{ width: '100%', height: '100%', position: 'relative' }}>
+    <div ref={container} className={props.className} style={props.style}>
       {props.children}
     </div>
   )
