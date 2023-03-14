@@ -27,8 +27,8 @@ const data = {
 
 export const component = (): JSX.Element => {
   return (
-    <div style={{ display: 'flex', height: '600px' }}>
-      <VisSingleContainer data={data}>
+    <div style={{ display: 'flex', height: '600px', justifyContent: 'space-evenly' }}>
+      <VisSingleContainer data={data} >
         <VisChordDiagram/>
       </VisSingleContainer>
       <VisSingleContainer data={data}>
