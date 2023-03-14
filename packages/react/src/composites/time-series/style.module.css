@@ -1,20 +1,18 @@
-import { css } from '@emotion/css'
-
-export const timeSeriesContainer = css`
+.timeSeriesContainer {
   position: relative;
   height: 400px;
   width: 100%;
   font-family: sans-serif;
-`
+}
 
-export const timeSeriesModule = css`
+.timeSeriesModule {
   width: 100%;
   height: 70%;
   position: relative;
-`
+}
 
-export const navigationModule = css`
+.navigationModule {
   width: 100%;
   height: 30%;
   position: relative;
-`
+}

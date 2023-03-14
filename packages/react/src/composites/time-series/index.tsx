@@ -1,5 +1,4 @@
 import React, { useState, useMemo } from 'react'
-import { cx } from '@emotion/css'
 import { Spacing, TextAlign, Scale } from '@unovis/ts'
 import { VisXYContainer } from '@unovis/react/containers/xy-container'
 import { VisArea } from '@unovis/react/components/area'
@@ -8,7 +7,7 @@ import { VisCrosshair } from '@unovis/react/components/crosshair'
 import { VisTooltip } from '@unovis/react/components/tooltip'
 import { VisBrush } from '@unovis/react/components/brush'
 
-import * as s from './style'
+import s from './style.module.css'
 
 export type VisTimeSeriesDatum = {
   timestamp: number;
@@ -76,7 +75,7 @@ export function VisTimeSeries<Datum> (props: VisTimeSeriesProps<Datum>): JSX.Ele
   }, [])
 
   return (
-    <div className={cx(s.timeSeriesContainer, props.className)} style={{ height: props.height }}>
+    <div className={`${s.timeSeriesContainer}${props.className ? `.${props.className}` : ''}`} style={{ height: props.height }}>
       <VisXYContainer
         className={s.timeSeriesModule}
         data={props.data}
