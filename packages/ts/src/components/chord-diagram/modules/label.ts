@@ -112,11 +112,11 @@ export function updateLabel<N extends ChordInputNode, L extends ChordInputLink> 
     const radianArcLength = d.x1 - d.x0 - getNumber(d, config.padAngle) * 2
     const radius = radiusScale(d.y1) - getNumber(d, config.nodeWidth) / 2
     const arcLength = radius * radianArcLength
-    const maxWidth = (nodeLabelAlignment === ChordLabelAlignment.Along ? arcLength : width) - LABEL_PADDING * 2
+    const maxWidth = (nodeLabelAlignment === ChordLabelAlignment.Along || arcLength === 0 ? arcLength : width) - LABEL_PADDING * 2
 
     select(elements[i]).call(wrapTextElement, { width: maxWidth, trimOnly: true })
       .attr('dx', nodeLabelAlignment === ChordLabelAlignment.Along ? LABEL_PADDING : null)
-      .attr('dy', nodeLabelAlignment === ChordLabelAlignment.Along ? nodeWidth / 2 : null)
+      .attr('dy', nodeLabelAlignment === ChordLabelAlignment.Along ? getNumber(d.data, nodeWidth) / 2 : null)
 
     if (nodeLabelAlignment === ChordLabelAlignment.Along) {
       const textElement = select(elements[i])
@@ -126,7 +126,8 @@ export function updateLabel<N extends ChordInputNode, L extends ChordInputLink> 
       select(elements[i])
         .text('')
         .style('display', textWidth > maxWidth && 'none')
-        .append('textPath')
+
+      select(elements[i]).append('textPath')
         .attr('href', `#${d.uid}`)
         .text(labelText)
     }
