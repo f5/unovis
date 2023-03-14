@@ -23,7 +23,7 @@ import {
   ChordInputNode,
   ChordInputLink,
   ChordDiagramData,
-  ChordHierarchy,
+  ChordHierarchyNode,
   ChordNode,
   ChordRibbon,
   ChordLabelAlignment,
@@ -41,7 +41,6 @@ import { createLink, updateLink, removeLink } from './modules/link'
 
 // Styles
 import * as s from './style'
-
 
 export class ChordDiagram<
   N extends ChordInputNode,
@@ -122,13 +121,13 @@ export class ChordDiagram<
 
     const linkLineGen = line().curve(Curve.catmullRom.alpha(0.25))
 
-    const hierarchyData = hierarchy<ChordHierarchy<GraphNodeCore<N, L>> | GraphNodeCore<N, L>>(
+    const hierarchyData = hierarchy<ChordHierarchyNode<GraphNodeCore<N, L>> | GraphNodeCore<N, L>>(
       nodes,
-      d => (d as ChordHierarchy<GraphNodeCore<N, L>>).values
+      d => (d as ChordHierarchyNode<GraphNodeCore<N, L>>).values
     )
       .sum((d) => (d as GraphNodeCore<N, L>)._state?.value)
 
-    const partitionData = partition<N | ChordHierarchy<GraphNodeCore<N, L>>>().size([config.angleRange[1], 1])(hierarchyData) as ChordNode<N>
+    const partitionData = partition<N | ChordHierarchyNode<N>>().size([config.angleRange[1], 1])(hierarchyData) as ChordNode<N>
     this._calculateRadialPosition(partitionData)
 
     const size = Math.min(this._width, this._height)
@@ -146,6 +145,15 @@ export class ChordDiagram<
 
     // Create Node and Link state objects
     this._nodes.forEach((node, i) => {
+      // Add hierarchy data for non leaf nodes
+      if (node.children) {
+        node.data = Object.assign(node.data, {
+          depth: node.depth,
+          height: node.height,
+          value: node.value,
+          ancestors: node.ancestors().map(d => (d.data as ChordHierarchyNode<N>).key),
+        })
+      }
       node.uid = `${this.uid}-n${i}`
       node._state = {}
     })
@@ -201,7 +209,7 @@ export class ChordDiagram<
       .call(removeLabel, duration)
   }
 
-  private _getHierarchyNodes (): ChordHierarchy<GraphNodeCore<N, L>> {
+  private _getHierarchyNodes (): ChordHierarchyNode<GraphNodeCore<N, L>> {
     const { config, datamodel: { nodes, links } } = this
     nodes.forEach(n => { delete n._state.value })
     links.forEach(l => {

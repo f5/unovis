@@ -1,11 +1,10 @@
 import { HierarchyRectangularNode } from 'd3-hierarchy'
 import { GraphLinkCore, GraphNodeCore } from 'types'
 
-
 // Node data flow in the component:
 // Input data (N extends ChordInputNode, L extends ChordInputLink)
 //   => GraphNodeCore<N>[] (we reference it only in a few places when it's needed, to make the code easier to read)
-//   => ChordHierarchy (nested object representing node hierarchy)
+//   => ChordHierarchyNode (nested object representing node hierarchy)
 //   => ChordNode[] and ChordLeafNode[] (HierarchyRectangularNode[] from D3 partition)
 
 export interface ChordInputNode {
@@ -26,9 +25,13 @@ export type ChordDiagramData<
   links?: L[];
 }
 
-export interface ChordHierarchy<N> {
+export interface ChordHierarchyNode<N> {
   key: string;
-  values: (ChordHierarchy<N> | N)[];
+  values: (ChordHierarchyNode<N> | N)[];
+  depth?: number;
+  height?: number;
+  value?: number;
+  ancestors?: string[];
 }
 
 export type ChordNodeState = {
@@ -39,13 +42,13 @@ export type ChordNodeState = {
   _prevX1?: number;
 }
 
-export type ChordNodeCore<N extends ChordInputNode> = ChordNodeState & {
-  data: GraphNodeCore<N, ChordInputLink>;
+export type ChordNodeCore<N> = HierarchyRectangularNode<N> & ChordNodeState & {
+  data: N;
   uid: string; // Unique id for textPath href
 }
 
-export type ChordNode<N extends ChordInputNode> = HierarchyRectangularNode<N | ChordHierarchy<N>> & ChordNodeCore<N>
-export type ChordLeafNode<N extends ChordInputNode> = HierarchyRectangularNode<N> & ChordNodeCore<N>
+export type ChordNode<N extends ChordInputNode> = ChordNodeCore<N | ChordHierarchyNode<N>>
+export type ChordLeafNode<N extends ChordInputNode> = ChordNodeCore<GraphNodeCore<N, ChordInputLink>>
 
 export type ChordRibbonPoint = { x0: number; x1: number; y0: number; y1: number; a0: number; a1: number; r: number }
 export interface ChordRibbon<N extends ChordInputNode> {
