@@ -113,8 +113,8 @@ export class ChordDiagram<
     const duration = isNumber(customDuration) ? customDuration : config.duration
 
     this.arcGen
-      .startAngle(d => Number.isNaN(d.x0) ? 0 : d.x0)
-      .endAngle(d => Number.isNaN(d.x1) ? 0 : d.x1)
+      .startAngle(d => d.x0)
+      .endAngle(d => d.x1)
       .cornerRadius(d => getNumber(d, config.cornerRadius))
       .innerRadius(d => this.radiusScale(d.y1) - getNumber(d, config.nodeWidth))
       .outerRadius(d => this.radiusScale(d.y1))
@@ -154,6 +154,8 @@ export class ChordDiagram<
           ancestors: node.ancestors().map(d => (d.data as ChordHierarchyNode<N>).key),
         })
       }
+      node.x0 = Number.isNaN(node.x0) ? 0 : node.x0
+      node.x1 = Number.isNaN(node.x1) ? 0 : node.x1
       node.uid = `${this.uid}-n${i}`
       node._state = {}
     })
