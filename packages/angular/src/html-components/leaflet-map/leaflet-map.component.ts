@@ -162,6 +162,13 @@ export class VisLeafletMapComponent<Datum extends GenericDataRecord> implements 
   /** Point inner label accessor function. Default: `d => d.point_count ?? ''` */
   @Input() pointLabel?: StringAccessor<LeafletMapPointDatum<Datum>>
 
+  /** Point inner label color accessor function or constant value.
+   * By default, the label color will be set, depending on the point brightness, either to
+   * `--vis-map-point-inner-label-text-color-light` or to `--vis-map-point-inner-label-text-color-dark` CSS variable.
+   * Default: `undefined`
+  */
+  @Input() pointLabelColor?: StringAccessor<LeafletMapPointDatum<Datum>>
+
   /** Point bottom label accessor function. Default: `''` */
   @Input() pointBottomLabel?: StringAccessor<LeafletMapPointDatum<Datum>>
 
@@ -179,6 +186,13 @@ export class VisLeafletMapComponent<Datum extends GenericDataRecord> implements 
 
   /** Cluster inner label accessor function. Default: `d => d.point_count`  */
   @Input() clusterLabel?: StringAccessor<LeafletMapClusterDatum<Datum>>
+
+  /** Cluster inner label color accessor function or constant value.
+   * By default, the label color will be set, depending on the point brightness, either to
+   * `--vis-map-cluster-inner-label-text-color-light` or to `--vis-map-cluster-inner-label-text-color-dark` CSS variable.
+   * Default: `undefined`
+  */
+  @Input() clusterLabelColor?: StringAccessor<LeafletMapClusterDatum<Datum>>
 
   /** Cluster bottom label accessor function. Default: `''` */
   @Input() clusterBottomLabel?: StringAccessor<LeafletMapClusterDatum<Datum>>
@@ -246,8 +260,8 @@ export class VisLeafletMapComponent<Datum extends GenericDataRecord> implements 
   }
 
   private getConfig (): LeafletMapConfigInterface<Datum> {
-    const { width, height, duration, events, attributes, flyToDuration, fitViewPadding, zoomDuration, initialBounds, fitBoundsOnUpdate, fitViewOnInit, fitViewOnUpdate, accessToken, style, styleDarkTheme, attribution, onMapInitialized, onMapMoveZoom, onMapMoveStart, onMapMoveEnd, onMapZoomStart, onMapZoomEnd, onMapClick, pointLongitude, pointLatitude, pointId, pointShape, pointColor, pointRadius, pointLabel, pointBottomLabel, pointCursor, selectedPointId, clusterColor, clusterRadius, clusterLabel, clusterBottomLabel, clusterRingWidth, clusterBackground, clusterExpandOnClick, clusteringDistance, colorMap, topoJSONLayer, tooltip } = this
-    const config = { width, height, duration, events, attributes, flyToDuration, fitViewPadding, zoomDuration, initialBounds, fitBoundsOnUpdate, fitViewOnInit, fitViewOnUpdate, accessToken, style, styleDarkTheme, attribution, onMapInitialized, onMapMoveZoom, onMapMoveStart, onMapMoveEnd, onMapZoomStart, onMapZoomEnd, onMapClick, pointLongitude, pointLatitude, pointId, pointShape, pointColor, pointRadius, pointLabel, pointBottomLabel, pointCursor, selectedPointId, clusterColor, clusterRadius, clusterLabel, clusterBottomLabel, clusterRingWidth, clusterBackground, clusterExpandOnClick, clusteringDistance, colorMap, topoJSONLayer, tooltip }
+    const { width, height, duration, events, attributes, flyToDuration, fitViewPadding, zoomDuration, initialBounds, fitBoundsOnUpdate, fitViewOnInit, fitViewOnUpdate, accessToken, style, styleDarkTheme, attribution, onMapInitialized, onMapMoveZoom, onMapMoveStart, onMapMoveEnd, onMapZoomStart, onMapZoomEnd, onMapClick, pointLongitude, pointLatitude, pointId, pointShape, pointColor, pointRadius, pointLabel, pointLabelColor, pointBottomLabel, pointCursor, selectedPointId, clusterColor, clusterRadius, clusterLabel, clusterLabelColor, clusterBottomLabel, clusterRingWidth, clusterBackground, clusterExpandOnClick, clusteringDistance, colorMap, topoJSONLayer, tooltip } = this
+    const config = { width, height, duration, events, attributes, flyToDuration, fitViewPadding, zoomDuration, initialBounds, fitBoundsOnUpdate, fitViewOnInit, fitViewOnUpdate, accessToken, style, styleDarkTheme, attribution, onMapInitialized, onMapMoveZoom, onMapMoveStart, onMapMoveEnd, onMapZoomStart, onMapZoomEnd, onMapClick, pointLongitude, pointLatitude, pointId, pointShape, pointColor, pointRadius, pointLabel, pointLabelColor, pointBottomLabel, pointCursor, selectedPointId, clusterColor, clusterRadius, clusterLabel, clusterLabelColor, clusterBottomLabel, clusterRingWidth, clusterBackground, clusterExpandOnClick, clusteringDistance, colorMap, topoJSONLayer, tooltip }
     const keys = Object.keys(config) as (keyof LeafletMapConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
