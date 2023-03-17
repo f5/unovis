@@ -72,16 +72,10 @@ export function generateNodeLinkData (n = 10, numNeighbourLinks = () => 1): Node
 }
 
 export function generateHierarchyData (n: number, levels: Record<string, number>): NodeLinkData {
-  const groupData = Object.entries(levels).reduce((groups, [label, count]) => {
-    const d = Object.keys(Array(count).fill(0))
-    groups.set(label, d)
-    return groups
-  }, new Map<string, string[]>())
-
   const nodes = Array(n).fill(0).map((_, i) => {
     const obj: NodeDatum = { id: i.toString(), label: `N${i}` }
-    groupData.forEach((data, key) => {
-      obj[key] = `${key}-${data[i % data.length]}`
+    Object.keys(levels).forEach(key => {
+      obj[key] = `${key}${Math.floor(Math.random() * levels[key])}`
     })
     return obj
   })
