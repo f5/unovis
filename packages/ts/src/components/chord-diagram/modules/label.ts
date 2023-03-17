@@ -94,7 +94,7 @@ export function updateLabel<N extends ChordInputNode, L extends ChordInputLink> 
   radiusScale: ScaleContinuousNumeric<number, number>,
   duration: number
 ): void {
-  const { nodeLabel, nodeWidth } = config
+  const { nodeLabel, nodeLabelColor, nodeWidth } = config
 
   smartTransition(selection, duration)
     .attr('transform', d => getLabelTransform(d, config, radiusScale))
@@ -104,7 +104,7 @@ export function updateLabel<N extends ChordInputNode, L extends ChordInputLink> 
   label.select('textPath').remove()
   label
     .text(d => getString(d.data, nodeLabel))
-    .style('fill', d => getLabelFillColor(d, config))
+    .style('fill', d => getColor(d.data, nodeLabelColor) ?? getLabelFillColor(d, config))
     .style('text-anchor', d => getLabelTextAnchor(d, config))
 
   label.each((d: ChordNode<N>, i: number, elements) => {
@@ -112,7 +112,7 @@ export function updateLabel<N extends ChordInputNode, L extends ChordInputLink> 
     const radianArcLength = d.x1 - d.x0 - getNumber(d, config.padAngle) * 2
     const radius = radiusScale(d.y1) - getNumber(d, config.nodeWidth) / 2
     const arcLength = radius * radianArcLength
-    const maxWidth = (nodeLabelAlignment === ChordLabelAlignment.Along || arcLength === 0 ? arcLength : width) - LABEL_PADDING * 2
+    const maxWidth = (nodeLabelAlignment === ChordLabelAlignment.Along ? arcLength : width) - LABEL_PADDING * 2
 
     select(elements[i]).call(wrapTextElement, { width: maxWidth, trimOnly: true })
       .attr('dx', nodeLabelAlignment === ChordLabelAlignment.Along ? LABEL_PADDING : null)

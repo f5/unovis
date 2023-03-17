@@ -22,6 +22,8 @@ export interface ChordDiagramConfigInterface<N extends ChordInputNode, L extends
   nodeColor?: ColorAccessor<N>;
   /** Node label accessor function. Default: `d => d.label ?? d.key` */
   nodeLabel?: StringAccessor<N>;
+  /** Node label color accessor function. Default: `undefined` */
+  nodeLabelColor?: StringAccessor<N>;
   /** Node label alignment. Default: `ChordLabelAlignment.Along` */
   nodeLabelAlignment?: GenericAccessor<ChordLabelAlignment | string, N>;
   /** Pad angle in radians. Constant value or accessor function. Default: `0.02` */
@@ -42,6 +44,7 @@ export class ChordDiagramConfig<N extends ChordInputNode, L extends ChordInputLi
   nodeWidth = 15
   nodeColor = (d: N): string => d['color']
   nodeLabel = (d: N): string => d['label'] ?? d['key']
+  nodeLabelColor = undefined
   nodeLabelAlignment = ChordLabelAlignment.Along
   padAngle = 0.02
   cornerRadius = 2
