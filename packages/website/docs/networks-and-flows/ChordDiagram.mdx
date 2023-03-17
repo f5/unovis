@@ -14,7 +14,7 @@ export const defaultProps = (n = 10) => ({
   containerName: "SingleContainer",
   configKey: "component",
   height: 300,
-  dataType: 'ChordInputNode,ChordInputLink',
+  dataType: 'ChordInputNode,ChordLinkDatum',
   data: generateNodeLinkData(n),
 })
 export const getNodeColor = (n) => ['#6A9DFF', '#1acb9a', '#8777d9'][Number(n.id) % 3]
@@ -23,8 +23,8 @@ export const hierarchyData = {
     Array(4).fill(0).map((_, j) => ({
       id: [g, j].join(''),
       label: [g, j].join(''),
-      group: `Group ${g}`,
-      level: j % 2 ? 'Moderate' : 'Severe',
+      group: `Level ${j % 2 ? '1' : '2'}`,
+      subgroup: `${g}`,
     }))
   ),
   links: [
@@ -37,6 +37,7 @@ export const hierarchyData = {
      { source: 'C2', target: 'B1' },
   ].map((l) => ({ ...l, value: Math.random() })),
 }
+export const colorMap = {'A': 'lightgreen', 'B': 'cornflowerblue', 'C': 'indigo'}
 
 ## Basic Configuration
 The _Chord Diagram_ component is a variation of a network graph where nodes and links are displayed
@@ -50,54 +51,110 @@ type ChordInputNode = {
 }
 
 type ChordInputLink = {
-    id?: string;
     source: number | string | ChordInputNode;
     target: number | string | ChordInputNode;
+    value: number;
 }
 
-type GraphData<ChordInputNode, ChordInputLink> = {
+type ChordData<ChordInputNode, ChordInputLink> = {
   nodes: ChordInputNode[];
   links: ChordInputLink[];
 }
 ```
 
-### Node Label
+## Node Label
 You can supply node labels through that data as a property of `ChordInputNode`, or by using a `StringAccessor` function in the component:
 <DocWrapper {...defaultProps()} showContext="minimal" nodeLabel={d => `${d.id}`}/>
 
-### Node Label Alignment
+## Node Label Alignment
 By default, the labels will be placed inside the node with respect to the curve. Alternatively, you can set `nodeLabelAlignment` to _perpendicular_:
 <DocWrapper {...defaultProps()} nodeLabel={d => `${d.id}`} nodeLabelAlignment="perpendicular"/>
 
-### Node and Link Colors
+## Node and Link Colors
 You can provide color accessors for the nodes, and links to customize the color of your chart.
 <DocWrapper {...defaultProps()} nodeColor={getNodeColor} linkColor={d => getNodeColor(d.source)}/>
 
-### Circle Customization
+## Circle Customization
 You can change the appearance of your circular chart with the following related properties from [_Donut_](/docs/misc/donut):
 - [`angleRange`](/docs/misc/Donut/#angle-range)
 - [`cornerRadius`](/docs/misc/Donut/#corner-radius)
 - [`padAngle`](/docs/misc/Donut/#pad-angle)
 
-## Hierarchial Data
-The _ChordDiagram_ supports hierarchal data. You can provide set `nodeLevels` to the list of
-properities you want to group your data by. Consider data with the following properties:
+## Hierarchical data
+_ChordDiagram_ supports hierarchical data. When you provide `nodeLevels` with a list of properties,
+nodes will be displayed as `n` distinct layers, where `n` is the number of properties provided.
+
+Consider the following example, where data has the following type:
 
 ```ts
 const data = {
   nodes: [
-    { id: 'A', level: 'Moderate', group: 'Group A', ... },
-    { id: 'B', level: 'Severe', group: 'Group B', ...},
+    { id: 'A1', group: 'Level 1', subgroup: 'A'},
+    { id: 'B1', group: 'Level 1', subgroup: 'B' },
     ...
   ],
   links: [...]
 }
 ```
-
 Then, by providing this list we can see three distinct layers in the visualization:
-<DocWrapper {...defaultProps()} data={hierarchyData} height={450} nodeLevels={['level', 'group']}/>
+<DocWrapper {...defaultProps()} data={hierarchyData} height={450} nodeLevels={['group', 'subgroup']} showContext='full'/>
 
-## Radius Scale Exponent
+
+### Accessor functions with hierarchical nodes
+Because internal nodes are generated and not provided as apart of the original data, the accessor functions
+for nodes in _ChordDiagram_ will have a different parameter type of `N | ChordHierarchyNode<N>`.
+Leaf nodes will still have the input datum type, `N` and non-leaf nodes have the following type:
+
+```ts
+type ChordHierarchyNode<N> = {
+  /* The property name (i.e. 'A') */
+  key: string;
+  /*  Array of descendant nodes */
+  values: (N | ChordHierarchyNode<N>)[];
+  /* Zero for the root node, and increasing by one for each descendant generation */
+  depth: number;
+  /* Zero for leaf nodes, and the greatest distance from any descendant leaf for internal nodes */
+  height: number;
+  /* Aggregated value calcualted from link data */
+  value: number;
+  /* Key values for the ancestor nodes. i.e ['A', 'Level 1', 'root'] */
+  ancestors: string[];
+}
+```
+In cases where you want to customize the appearance of internal nodes you can refer to this type.
+
+For example, consider the following case where you want a 2-level chart grouped by the key provided in `nodeLevels`.
+We can adjust the accessor functions to change the label and color configuration for inner nodes like so:
+
+```ts
+// Node datum
+type N = {
+  label: string;
+  group: 'A' | 'B' | 'C'
+}
+
+const colors =  { A: 'lightgreen', B: 'cornflowerblue', C: 'indigo'}
+
+// Configuration
+const nodeLevels = ['group']
+const nodeLabel = (d: N | ChordHierarchyNode<N>) => (d as N).label ?? `${d.key}: ${colors[d.key]}`
+const nodeColor = (d: N | ChordHierarchyNode<N>) => colors[d.key ?? d.group]
+const nodeLabelAlignment = (d: N | ChordHierarchyNode<N>) => d.height > 0 ? 'along' : 'perpendicular'
+```
+
+The result gives us a _Chord Diagram_ with color-coded group data:
+
+<DocWrapper {...defaultProps()}
+    height={600}
+    data={hierarchyData}
+    nodeLevels={['subgroup']}
+    nodeColor={d => colorMap[d.key ?? d.subgroup]}
+    nodeLabel={d => d.label ?? [d.key, colorMap[d.key]].join(': ')}
+    nodeLabelAlignment={d => d.height > 0 ? 'along' : 'perpendicular'}
+  />
+
+
+### Radius Scale Exponent
 The `radiusScaleExponent` property affects how the radii scale with each hierarchy level. Increasing this value will result in more distance
 between each level, while decreasing results in the opposite. Default = `2`.
 <InputWrapper {...defaultProps()} data={hierarchyData} height={450} nodeLevels={['level', 'group']} inputType="range" defaultValue={0.75} property="radiusScaleExponent" inputProps={{ min: 0.25, max: 3, step: 0.25 }}/>
