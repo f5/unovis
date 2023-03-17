@@ -7,7 +7,7 @@ import { ComponentConfigInterface, ComponentConfig } from 'core/component/config
 import { ColorAccessor, GenericAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
 
 // Local Types
-import { ChordInputLink, ChordInputNode, ChordLabelAlignment } from './types'
+import { ChordInputLink, ChordInputNode, ChordLabelAlignment, ChordNodeDatum } from './types'
 
 export interface ChordDiagramConfigInterface<N extends ChordInputNode, L extends ChordInputLink> extends ComponentConfigInterface {
   /** Link color accessor function. Default: `var(--vis-chord-diagram-link-fill-color)` */
@@ -19,13 +19,13 @@ export interface ChordDiagramConfigInterface<N extends ChordInputNode, L extends
   /** Node width in pixels. Default: `15` */
   nodeWidth?: number;
   /** Node color accessor function ot constant value. Default: `d => d.color` */
-  nodeColor?: ColorAccessor<N>;
+  nodeColor?: ColorAccessor<ChordNodeDatum<N>>;
   /** Node label accessor function. Default: `d => d.label ?? d.key` */
-  nodeLabel?: StringAccessor<N>;
+  nodeLabel?: StringAccessor<ChordNodeDatum<N>>;
   /** Node label color accessor function. Default: `undefined` */
-  nodeLabelColor?: StringAccessor<N>;
+  nodeLabelColor?: StringAccessor<ChordNodeDatum<N>>;
   /** Node label alignment. Default: `ChordLabelAlignment.Along` */
-  nodeLabelAlignment?: GenericAccessor<ChordLabelAlignment | string, N>;
+  nodeLabelAlignment?: GenericAccessor<ChordLabelAlignment | string, ChordNodeDatum<N>>;
   /** Pad angle in radians. Constant value or accessor function. Default: `0.02` */
   padAngle?: NumericAccessor<N>;
   /** Corner radius constant value or accessor function. Default: `2` */
@@ -42,8 +42,8 @@ export class ChordDiagramConfig<N extends ChordInputNode, L extends ChordInputLi
   linkValue = (d: L): number => d['value']
   nodeLevels = []
   nodeWidth = 15
-  nodeColor = (d: N): string => d['color']
-  nodeLabel = (d: N): string => d['label'] ?? d['key']
+  nodeColor = (d: ChordNodeDatum<N>): string => d['color']
+  nodeLabel = (d: ChordNodeDatum<N>): string => d['label'] ?? d['key']
   nodeLabelColor = undefined
   nodeLabelAlignment = ChordLabelAlignment.Along
   padAngle = 0.02
