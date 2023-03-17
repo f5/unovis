@@ -57,6 +57,7 @@ export const examples: ExampleCollection[] = [
       require('./parallel-graph').default,
       require('./single-level-chord-diagram').default,
       require('./elk-layered-graph').default,
+      require('./hierarchical-chord-diagram').default,
     ],
   },
   {

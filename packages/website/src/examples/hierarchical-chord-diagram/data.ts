@@ -1,8 +1,6 @@
-import { colors as _colors } from '@unovis/ts'
-
 export type NodeDatum = {
   id: string;
-  color: string;
+  country: string;
 }
 
 export type LinkDatum = {
@@ -12,7 +10,17 @@ export type LinkDatum = {
 }
 
 const names = ['Apple', 'HTC', 'Huawei', 'LG', 'Nokia', 'Samsung', 'Sony', 'Other']
-const colors = [..._colors, '#b6128c', '#737373']
+const countries = ['US', 'Taiwan', 'China', 'South Korea', 'Finland', 'South Korea', 'Japan', 'unknown']
+const colors = [
+  '#4D8CFD',
+  '#FF6B7E',
+  '#F4B83E',
+  '#A6CC74',
+  '#00C19A',
+  '#6859BE',
+  '#b6128c',
+  '#737373',
+]
 
 const values = [
   [0.096899, 0.008859, 0.000554, 0.004430, 0.025471, 0.024363, 0.005537, 0.025471],
@@ -24,5 +32,10 @@ const values = [
   [0.000554, 0.004983, 0.000000, 0.003322, 0.004430, 0.008859, 0.017719, 0.004430],
   [0.002215, 0.007198, 0.000000, 0.003322, 0.016611, 0.014950, 0.001107, 0.054264],
 ]
-export const nodes = Array.from(names, (name, i) => ({ id: name, color: colors[i] }))
+
+export const nodes = Array.from(names, (name, i) => ({ id: name, country: countries[i] }))
 export const links = values.flatMap((arr, i) => arr.map((value, j) => ({ source: nodes[i], target: nodes[j], value })))
+export const colorMap: Map<string, string> = countries.reduce((acc, curr) => {
+  if (!acc.has(curr)) acc.set(curr, colors[acc.size])
+  return acc
+}, new Map<string, string>())
