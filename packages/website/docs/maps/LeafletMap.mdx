@@ -92,6 +92,7 @@ Point radius can be set by providing a constant value or a function to the `poin
 <LeafletDoc data={data} height={400} pointRadius={(d) => (Math.sqrt(d.population) / 250) || 10}/>
 
 ### Point Labels
+#### Central
 Points can have two kinds of labels: central and bottom. The label at the center of the point can be set by using
 the `pointLabel` property. This label will fit into the point, so it is supposed to be short.
 <LeafletDoc
@@ -102,8 +103,13 @@ the `pointLabel` property. This label will fit into the point, so it is supposed
 />
 
 ####
-The bottom label is configurable via the `pointBottomLabel` property. Both label properties can accept an accessor
-function as their value. In the example below we set `pointBottomLabel` to `d => d.id`.
+You can control the color of central labels with the `pointLabelColor` and `clusterLabelColor` config properties.
+By default, the label color will be set to a CSS variable, depending on the point brightness, either to
+`--vis-map-point-inner-label-text-color-light` or to `--vis-map-point-inner-label-text-color-dark`.
+
+#### Bottom
+The bottom label is configurable via the `pointBottomLabel` property. All label properties can accept accessor
+functions as their value. In the example below we set `pointBottomLabel` to `d => d.id`.
 <LeafletDoc data={data.slice(0, 20)} height={200} pointBottomLabel={(d) => d.city}/>
 
 ## Clusters
@@ -129,6 +135,11 @@ By default, clusters display the number of contained points in the center. That 
   clusterLabel={d => `${(sum(d.clusterPoints, d => d.population) / 1000000).toFixed(0)}M`}
   clusterBottomLabel={d => `${d.clusterPoints.length} cities`}
 />
+
+
+Similar to regular point labels, you can set the color of central labels with the `clusterLabelColor` config property,
+and use the `--vis-map-cluster-inner-label-text-color-light` and `--vis-map-cluster-inner-label-text-color-dark` CSS
+variables to change the default behaviour.
 
 ### Expand on Click
 If you want clusters to never expand on click, you can set `clusterExpandOnClick` to `false`. In that case when you
