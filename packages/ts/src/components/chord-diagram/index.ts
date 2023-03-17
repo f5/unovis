@@ -1,6 +1,6 @@
 import { Selection } from 'd3-selection'
 import { nest } from 'd3-collection'
-import { hierarchy, partition } from 'd3-hierarchy'
+import { HierarchyNode, hierarchy, partition } from 'd3-hierarchy'
 import { arc, line } from 'd3-shape'
 import { scalePow, ScalePower } from 'd3-scale'
 import { max } from 'd3-array'
@@ -29,6 +29,7 @@ import {
   ChordLabelAlignment,
   ChordLeafNode,
   ChordRibbonPoint,
+  ChordNodeDatum,
 } from './types'
 
 // Config
@@ -89,7 +90,7 @@ export class ChordDiagram<
     this._nodes.forEach(n => {
       const nodeLabelAlignment = getValue(n.data, config.nodeLabelAlignment)
       if (n.height === 0 && nodeLabelAlignment === ChordLabelAlignment.Perpendicular) {
-        const labelWidth = estimateStringPixelLength(getString(n.data, config.nodeLabel) ?? '', 16)
+        const labelWidth = estimateStringPixelLength(getString(n.data as N, config.nodeLabel) ?? '', 16)
         const [x, y] = this.arcGen.centroid(n)
 
         if (x < 0) left = Math.max(left, labelWidth)
@@ -121,11 +122,7 @@ export class ChordDiagram<
 
     const linkLineGen = line().curve(Curve.catmullRom.alpha(0.25))
 
-    const hierarchyData = hierarchy<ChordHierarchyNode<GraphNodeCore<N, L>> | GraphNodeCore<N, L>>(
-      nodes,
-      d => (d as ChordHierarchyNode<GraphNodeCore<N, L>>).values
-    )
-      .sum((d) => (d as GraphNodeCore<N, L>)._state?.value)
+    const hierarchyData = nodes
 
     const partitionData = partition<N | ChordHierarchyNode<N>>().size([config.angleRange[1], 1])(hierarchyData) as ChordNode<N>
     this._calculateRadialPosition(partitionData)
@@ -211,7 +208,7 @@ export class ChordDiagram<
       .call(removeLabel, duration)
   }
 
-  private _getHierarchyNodes (): ChordHierarchyNode<GraphNodeCore<N, L>> {
+  private _getHierarchyNodes (): HierarchyNode<ChordNodeDatum<N>> {
     const { config, datamodel: { nodes, links } } = this
     nodes.forEach(n => { delete n._state.value })
     links.forEach(l => {
@@ -225,8 +222,11 @@ export class ChordDiagram<
     config.nodeLevels.forEach(levelAccessor => {
       nestGen.key(d => d[levelAccessor])
     })
+    const root = { key: 'root', values: nestGen.entries(nodes) }
+    const hierarchyNodes = hierarchy(root, d => d.values)
+      .sum((d) => (d as unknown as GraphNodeCore<N, L>)._state?.value)
 
-    return { key: 'root', values: nestGen.entries(nodes) }
+    return hierarchyNodes
   }
 
   private _getRibbons (partitionData: ChordNode<N>): ChordRibbon<N>[] {

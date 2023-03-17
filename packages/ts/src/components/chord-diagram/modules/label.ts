@@ -84,7 +84,7 @@ export function createLabel<N extends ChordInputNode, L extends ChordInputLink> 
 
   selection.append('text')
     .attr('class', s.label)
-    .style('fill', d => getColor(d.data, config.nodeColor, d.depth))
+    .style('fill', d => getColor(d.data, config.nodeColor, d.height))
 }
 
 export function updateLabel<N extends ChordInputNode, L extends ChordInputLink> (
