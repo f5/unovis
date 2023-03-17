@@ -3,7 +3,7 @@ import React from 'react'
 import BrowserOnly from '@docusaurus/BrowserOnly'
 import { Example } from '@site/src/types/example'
 
-const pathname = 'single-level-chord-diagram'
+const pathname = 'hierarchical-chord-diagram'
 const example: Example = {
   component: () => <BrowserOnly>{() => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -11,9 +11,9 @@ const example: Example = {
     return <Component />
   }}</BrowserOnly>,
   pathname,
-  title: 'Single Level Chord Diagram',
+  title: 'Hierarchical Chord Diagram',
   description: <p>
-    Switching behavior between phone brands
+    Switching behavior between phone brands, grouped by HQ country
     Source:
     <a href='https://observablehq.com/@d3/chord-diagram#data' target="_blank">
       2014 Mobile Consumer Survey Data
