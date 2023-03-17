@@ -4,6 +4,11 @@
   "longitude": 2.3444,
   "city": "Paris"
   }, {
+  "id": "NLAMS",
+  "latitude": 52.370216,
+  "longitude": 4.895168,
+  "city": "Amsterdam"
+  },{
   "id": "USNYC",
   "latitude": 40.667,
   "longitude": -73.833,
