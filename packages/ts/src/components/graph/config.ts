@@ -19,9 +19,6 @@ import {
   GraphNodeShape,
 } from './types'
 
-// Defaults
-import { DEFAULT_ELK_SETTINGS } from './modules/layout-helpers'
-
 export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphInputLink> extends ComponentConfigInterface {
   // Zoom and drag
   /** Zoom level constraints. Default: [0.35, 1.25] */
@@ -105,7 +102,7 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   /** ELK layout options, see the `elkjs` package for more details: https://github.com/kieler/elkjs.
    * If you want to specify custom layout option for each node group, you can provide an accessor function that
    * receives group name ('root' for the top-level configuration) as the first argument and returns an object containing
-   * layout options.
+   * layout options. Default: `undefined`
   */
   layoutElkSettings?: GenericAccessor<GraphElkLayoutSettings, string> | undefined;
   /** Array of accessor functions to define nested node groups for the ELK Layered layout.
@@ -234,7 +231,7 @@ export class GraphConfig<N extends GraphInputNode, L extends GraphInputLink> ext
     ranker: 'longest-path',
   }
 
-  layoutElkSettings = DEFAULT_ELK_SETTINGS
+  layoutElkSettings: GenericAccessor<GraphElkLayoutSettings, string> | undefined = undefined
   layoutElkNodeGroups: StringAccessor<N>[] | undefined = undefined
 
   linkFlowAnimDuration = 20000

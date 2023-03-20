@@ -18,7 +18,13 @@ import { GraphConfig } from '../config'
 
 // Helpers
 import { getMaxNodeSize, configuredNodeSize, getNodeSize, getAverageNodeSize } from './node/helper'
-import { DEFAULT_ELK_SETTINGS, adjustElkHierarchyCoordinates, positionNonConnectedNodes, toElkHierarchy } from './layout-helpers'
+import {
+  DEFAULT_ELK_SETTINGS,
+  adjustElkHierarchyCoordinates,
+  positionNonConnectedNodes,
+  toElkHierarchy,
+  GraphElkHierarchyNode,
+} from './layout-helpers'
 
 export function applyLayoutCircular<N extends GraphInputNode, L extends GraphInputLink> (
   datamodel: GraphDataModel<N, L, GraphNode<N, L>, GraphLink<N, L>>,
@@ -443,22 +449,29 @@ export async function applyELKLayout<N extends GraphInputNode, L extends GraphIn
   const ELK = (await import('elkjs/lib/elk.bundled.js')).default
   const elk = new ELK()
 
+  const labelApprxHeight = 30
   const nodes = datamodel.nodes.map(n => ({
     ...n,
     id: n._id,
     width: getNumber(n, config.nodeSize, n._index) + getNumber(n, config.nodeStrokeWidth, n._index),
-    height: getNumber(n, config.nodeSize, n._index),
+    height: getNumber(n, config.nodeSize, n._index) + labelApprxHeight,
   }))
 
-  const groupingFunctions = config.layoutElkNodeGroups
-    .map(accessor => (d: GraphNode<N, L>) => getString(d, accessor, d._index)) as [(d: GraphNode<N, L>) => string]
-  const grouped = group(nodes, ...groupingFunctions)
-  const hierarchyNodes = toElkHierarchy(grouped, config.layoutElkSettings)
+  let elkNodes: (GraphNode<N, L> | GraphElkHierarchyNode<N, L>)[]
+  if (config.layoutElkNodeGroups) {
+    const groupingFunctions = config.layoutElkNodeGroups
+      .map(accessor => (d: GraphNode<N, L>) => getString(d, accessor, d._index)) as [(d: GraphNode<N, L>) => string]
+    const grouped = group(nodes, ...groupingFunctions)
+    elkNodes = toElkHierarchy(grouped, config.layoutElkSettings)
+  } else {
+    elkNodes = nodes
+  }
+
   const rootNodeId = 'root'
   const elkGraph: ElkNode = {
     id: rootNodeId,
     layoutOptions: merge(DEFAULT_ELK_SETTINGS, getValue(rootNodeId, config.layoutElkSettings)),
-    children: hierarchyNodes as ElkNode[],
+    children: elkNodes as ElkNode[],
     edges: datamodel.links.map(l => ({
       id: l._id,
       sources: [l.source._id],
