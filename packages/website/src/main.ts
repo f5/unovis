@@ -39,6 +39,7 @@ import { ExpandableSankeyModule } from './examples/expandable-sankey/expandable-
 import { BasicGraphModule } from './examples/dagre-graph/dagre-graph.module'
 import { ForceLayoutGraphModule } from './examples/force-graph/force-graph.module'
 import { ParallelLayoutGraphModule } from './examples/parallel-graph/parallel-graph.module'
+import { ElkLayeredGraphModule } from './examples/elk-layered-graph/elk-layered-graph.module'
 
 // Auxiliary
 import { CrosshairStackedBarModule } from './examples/crosshair-stacked-bar/crosshair-stacked-bar.module'
@@ -84,6 +85,7 @@ import { BaselineAreaChartModule } from './examples/baseline-area-chart/baseline
     <dagre-graph></dagre-graph>
     <force-graph></force-graph>
     <parallel-graph></parallel-graph>
+    <elk-graph></elk-graph>
 
     <!-- Auxiliary -->
     <crosshair-stacked-bar></crosshair-stacked-bar>
@@ -102,7 +104,7 @@ export class AppComponent {
     BrowserModule, BasicGroupedBarModule, BasicLeafletMapModule, BasicLineChartModule, MultiLineChartModule,
     TopojsonMapModule, StackedBarChartModule, BrushGroupedBarModule, BasicScatterChartModule, FreeBrushScattersModule, NonStackedAreaChartModule,
     BasicTimelineModule, BasicSankeyModule, ExpandableSankeyModule, BasicGraphModule, LeafletFlowMapModule,
-    ForceLayoutGraphModule, AdvancedLeafletMapModule, StackedAreaModule, ParallelLayoutGraphModule,
+    ForceLayoutGraphModule, AdvancedLeafletMapModule, StackedAreaModule, ParallelLayoutGraphModule, ElkLayeredGraphModule,
     DataGapLineChartModule, CrosshairStackedBarModule, BaselineAreaChartModule, StepAreaChartModule,
   ],
   bootstrap: [AppComponent],

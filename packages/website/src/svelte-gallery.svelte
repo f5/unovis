@@ -23,6 +23,7 @@
     () => import('./examples/parallel-graph/parallel-graph.svelte'),
     () => import('./examples/data-gap-line-chart/data-gap-line-chart.svelte'),
     () => import('./examples/crosshair-stacked-bar/crosshair-stacked-bar.svelte'),
+    () => import('./examples/elk-layered-graph/elk-layered-graph.svelte'),
   ]
 </script>
 

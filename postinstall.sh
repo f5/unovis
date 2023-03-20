@@ -11,7 +11,7 @@ npm run build:svelte
 # We need to install @unovis/website dependencies separately otherwise it won't run and build
 echo "🟡 Installing @unovis/website dependencies"
 cd packages/website
-npm i --silent
+npm i --silent --force
 rm -rf node_modules/react
 rm -rf node_modules/react-dom
 
