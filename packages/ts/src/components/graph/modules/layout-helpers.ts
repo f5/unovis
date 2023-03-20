@@ -1,11 +1,10 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 // Types
 import type { ElkNode } from 'elkjs/lib/elk.bundled.js'
 import { GraphInputLink, GraphInputNode } from 'types/graph'
 import { GenericAccessor } from 'types/accessor'
 
 // Utils
-import { getValue, merge } from 'utils/data'
+import { getValue, isPlainObject, merge } from 'utils/data'
 
 // Local Types
 import { GraphNode, GraphElkLayoutSettings } from '../types'
@@ -14,12 +13,9 @@ export const DEFAULT_ELK_SETTINGS = {
   hierarchyHandling: 'INCLUDE_CHILDREN',
   'nodePlacement.strategy': 'NETWORK_SIMPLEX',
   'elk.padding': '[top=15.0,left=15.0,bottom=15.0,right=15.0]',
-  'spacing.nodeNodeBetweenLayers': '150',
+  'spacing.nodeNodeBetweenLayers': '50',
   'spacing.edgeNodeBetweenLayers': '50',
-  'spacing.edgeEdgeBetweenLayers': '50',
-  'spacing.nodeNode': '40',
-  'spacing.edgeNode': '50',
-  'spacing.edgeEdge': '60',
+  'spacing.nodeNode': '10',
 }
 
 export function positionNonConnectedNodes<N extends GraphInputNode, L extends GraphInputLink> (
@@ -56,7 +52,7 @@ export function toElkHierarchy<N extends GraphInputNode, L extends GraphInputLin
   const hierarchyNode = Array.from(d.entries()).map(([key, value]) => {
     const children = toElkHierarchy(value, layoutOptions)
     if (key) {
-      const layoutOps = merge(DEFAULT_ELK_SETTINGS, getValue(key, layoutOptions))
+      const layoutOps = isPlainObject(layoutOptions) ? DEFAULT_ELK_SETTINGS : merge(DEFAULT_ELK_SETTINGS, getValue(key, layoutOptions))
       return {
         id: key,
         layoutOptions: layoutOps,
