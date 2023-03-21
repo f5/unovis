@@ -33,26 +33,30 @@ export type Vis${componentName}Props${genericsDefStr} = ${componentName}ConfigIn
 // eslint-disable-next-line @typescript-eslint/naming-convention
 function Vis${componentName}FC${genericsDefStr} (props: Vis${componentName}Props${genericsStr}, fRef: ForwardedRef<Vis${componentName}Ref${genericsStr}>): JSX.Element {
   const ref = useRef<VisComponentElement<${componentName}${genericsStr}>>(null)
-  const [component, setComponent] = useState<${componentName}${genericsStr}>()
+  const componentRef = useRef<${componentName}${genericsStr} | undefined>(undefined)
 
   // On Mount
   useEffect(() => {
     const element = (ref.current as VisComponentElement<${componentName}${genericsStr}>)
 
     const c = new ${componentName}${genericsStr}(props)
-    setComponent(c)
+    componentRef.current = c
     element.__component__ = c
 
-    return () => c.destroy()
+    return () => {
+        componentRef.current = undefined
+        c.destroy()
+    }
   }, [])
 
   // On Props Update
   useEffect(() => {
+    const component = componentRef.current
     ${dataType ? 'if (props.data) component?.setData(props.data)' : ''}
     component?.setConfig(props)
   })
 
-  useImperativeHandle(fRef, () => ({ component }), [component])
+  useImperativeHandle(fRef, () => ({ component: componentRef.current }), [componentRef.current])
   return <vis-${elementSuffix} ref={ref} />
 }
 
