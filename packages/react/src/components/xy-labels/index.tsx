@@ -20,26 +20,30 @@ export type VisXYLabelsProps<Datum> = XYLabelsConfigInterface<Datum> & {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 function VisXYLabelsFC<Datum> (props: VisXYLabelsProps<Datum>, fRef: ForwardedRef<VisXYLabelsRef<Datum>>): JSX.Element {
   const ref = useRef<VisComponentElement<XYLabels<Datum>>>(null)
-  const [component, setComponent] = useState<XYLabels<Datum>>()
+  const componentRef = useRef<XYLabels<Datum> | undefined>(undefined)
 
   // On Mount
   useEffect(() => {
     const element = (ref.current as VisComponentElement<XYLabels<Datum>>)
 
     const c = new XYLabels<Datum>(props)
-    setComponent(c)
+    componentRef.current = c
     element.__component__ = c
 
-    return () => c.destroy()
+    return () => {
+      componentRef.current = undefined
+      c.destroy()
+    }
   }, [])
 
   // On Props Update
   useEffect(() => {
+    const component = componentRef.current
     if (props.data) component?.setData(props.data)
     component?.setConfig(props)
   })
 
-  useImperativeHandle(fRef, () => ({ component }), [component])
+  useImperativeHandle(fRef, () => ({ component: componentRef.current }), [componentRef.current])
   return <vis-component ref={ref} />
 }
 

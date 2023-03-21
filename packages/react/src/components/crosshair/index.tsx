@@ -20,26 +20,30 @@ export type VisCrosshairProps<Datum> = CrosshairConfigInterface<Datum> & {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 function VisCrosshairFC<Datum> (props: VisCrosshairProps<Datum>, fRef: ForwardedRef<VisCrosshairRef<Datum>>): JSX.Element {
   const ref = useRef<VisComponentElement<Crosshair<Datum>>>(null)
-  const [component, setComponent] = useState<Crosshair<Datum>>()
+  const componentRef = useRef<Crosshair<Datum> | undefined>(undefined)
 
   // On Mount
   useEffect(() => {
     const element = (ref.current as VisComponentElement<Crosshair<Datum>>)
 
     const c = new Crosshair<Datum>(props)
-    setComponent(c)
+    componentRef.current = c
     element.__component__ = c
 
-    return () => c.destroy()
+    return () => {
+      componentRef.current = undefined
+      c.destroy()
+    }
   }, [])
 
   // On Props Update
   useEffect(() => {
+    const component = componentRef.current
     if (props.data) component?.setData(props.data)
     component?.setConfig(props)
   })
 
-  useImperativeHandle(fRef, () => ({ component }), [component])
+  useImperativeHandle(fRef, () => ({ component: componentRef.current }), [componentRef.current])
   return <vis-crosshair ref={ref} />
 }
 

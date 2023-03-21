@@ -20,26 +20,30 @@ export type VisChordDiagramProps<N extends ChordInputNode, L extends ChordInputL
 // eslint-disable-next-line @typescript-eslint/naming-convention
 function VisChordDiagramFC<N extends ChordInputNode, L extends ChordInputLink> (props: VisChordDiagramProps<N, L>, fRef: ForwardedRef<VisChordDiagramRef<N, L>>): JSX.Element {
   const ref = useRef<VisComponentElement<ChordDiagram<N, L>>>(null)
-  const [component, setComponent] = useState<ChordDiagram<N, L>>()
+  const componentRef = useRef<ChordDiagram<N, L> | undefined>(undefined)
 
   // On Mount
   useEffect(() => {
     const element = (ref.current as VisComponentElement<ChordDiagram<N, L>>)
 
     const c = new ChordDiagram<N, L>(props)
-    setComponent(c)
+    componentRef.current = c
     element.__component__ = c
 
-    return () => c.destroy()
+    return () => {
+      componentRef.current = undefined
+      c.destroy()
+    }
   }, [])
 
   // On Props Update
   useEffect(() => {
+    const component = componentRef.current
     if (props.data) component?.setData(props.data)
     component?.setConfig(props)
   })
 
-  useImperativeHandle(fRef, () => ({ component }), [component])
+  useImperativeHandle(fRef, () => ({ component: componentRef.current }), [componentRef.current])
   return <vis-component ref={ref} />
 }
 
