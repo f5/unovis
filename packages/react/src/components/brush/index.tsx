@@ -20,26 +20,30 @@ export type VisBrushProps<Datum> = BrushConfigInterface<Datum> & {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 function VisBrushFC<Datum> (props: VisBrushProps<Datum>, fRef: ForwardedRef<VisBrushRef<Datum>>): JSX.Element {
   const ref = useRef<VisComponentElement<Brush<Datum>>>(null)
-  const [component, setComponent] = useState<Brush<Datum>>()
+  const componentRef = useRef<Brush<Datum> | undefined>(undefined)
 
   // On Mount
   useEffect(() => {
     const element = (ref.current as VisComponentElement<Brush<Datum>>)
 
     const c = new Brush<Datum>(props)
-    setComponent(c)
+    componentRef.current = c
     element.__component__ = c
 
-    return () => c.destroy()
+    return () => {
+      componentRef.current = undefined
+      c.destroy()
+    }
   }, [])
 
   // On Props Update
   useEffect(() => {
+    const component = componentRef.current
     if (props.data) component?.setData(props.data)
     component?.setConfig(props)
   })
 
-  useImperativeHandle(fRef, () => ({ component }), [component])
+  useImperativeHandle(fRef, () => ({ component: componentRef.current }), [componentRef.current])
   return <vis-component ref={ref} />
 }
 

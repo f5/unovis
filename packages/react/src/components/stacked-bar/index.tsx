@@ -20,26 +20,30 @@ export type VisStackedBarProps<Datum> = StackedBarConfigInterface<Datum> & {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 function VisStackedBarFC<Datum> (props: VisStackedBarProps<Datum>, fRef: ForwardedRef<VisStackedBarRef<Datum>>): JSX.Element {
   const ref = useRef<VisComponentElement<StackedBar<Datum>>>(null)
-  const [component, setComponent] = useState<StackedBar<Datum>>()
+  const componentRef = useRef<StackedBar<Datum> | undefined>(undefined)
 
   // On Mount
   useEffect(() => {
     const element = (ref.current as VisComponentElement<StackedBar<Datum>>)
 
     const c = new StackedBar<Datum>(props)
-    setComponent(c)
+    componentRef.current = c
     element.__component__ = c
 
-    return () => c.destroy()
+    return () => {
+      componentRef.current = undefined
+      c.destroy()
+    }
   }, [])
 
   // On Props Update
   useEffect(() => {
+    const component = componentRef.current
     if (props.data) component?.setData(props.data)
     component?.setConfig(props)
   })
 
-  useImperativeHandle(fRef, () => ({ component }), [component])
+  useImperativeHandle(fRef, () => ({ component: componentRef.current }), [componentRef.current])
   return <vis-component ref={ref} />
 }
 

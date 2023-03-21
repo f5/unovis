@@ -20,25 +20,30 @@ export type VisTooltipProps = TooltipConfigInterface & {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 function VisTooltipFC (props: VisTooltipProps, fRef: ForwardedRef<VisTooltipRef>): JSX.Element {
   const ref = useRef<VisComponentElement<Tooltip>>(null)
-  const [component, setComponent] = useState<Tooltip>()
+  const componentRef = useRef<Tooltip | undefined>(undefined)
 
   // On Mount
   useEffect(() => {
     const element = (ref.current as VisComponentElement<Tooltip>)
 
     const c = new Tooltip(props)
-    setComponent(c)
+    componentRef.current = c
     element.__component__ = c
 
-    return () => c.destroy()
+    return () => {
+      componentRef.current = undefined
+      c.destroy()
+    }
   }, [])
 
   // On Props Update
   useEffect(() => {
+    const component = componentRef.current
+
     component?.setConfig(props)
   })
 
-  useImperativeHandle(fRef, () => ({ component }), [component])
+  useImperativeHandle(fRef, () => ({ component: componentRef.current }), [componentRef.current])
   return <vis-tooltip ref={ref} />
 }
 
