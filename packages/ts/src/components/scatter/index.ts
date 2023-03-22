@@ -41,10 +41,17 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfig<Datum>,
   private _pointData: ScatterPoint<Datum>[][] = []
   private _points: Selection<SVGGElement, ScatterPoint<Datum>, SVGGElement, ScatterPoint<Datum>[]>
   private _collideLabelsAnimFrameId: ReturnType<typeof requestAnimationFrame>
+  private _firstRender = true
 
   constructor (config?: ScatterConfigInterface<Datum>) {
     super()
     if (config) this.setConfig(config)
+
+    window.addEventListener('keypress', (event) => {
+      console.log(event)
+      this.collide()
+      this._render()
+    })
   }
 
   setConfig (config: ScatterConfigInterface<Datum>): void {
@@ -96,13 +103,60 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfig<Datum>,
     return { top, bottom, left, right }
   }
 
-  _render (customDuration?: number): void {
-    const { config } = this
-    const duration = isNumber(customDuration) ? customDuration : config.duration
-
+  collide (): void {
     const pointsFlat = flatten(this._pointData)
-    console.log('pointsFlat', pointsFlat.length)
-    for (let k = 0; k < 15; k++) {
+
+    pointsFlat.forEach(p => p._point.color = null)
+    for (let k = 0; k < 200; k++) {
+      // for (let i = 0; i < pointsFlat.length; i += 1) {
+      //   const p = pointsFlat[i]
+      //   const dx = p._point.xValue - p._point.xValueInitial
+      //   const dy = p._point.yValue - p._point.yValueInitial
+      //   const dist = Math.sqrt(dx * dx + dy * dy)
+      //   const angle = Math.atan2(dy, dx)
+      //   // p._point.xValue -= dist / 25 * Math.cos(angle)
+      //   p._point.yValue -= dist / 100 * Math.sin(angle)
+      // }
+
+      for (let i = 0; i < pointsFlat.length; i += 1) {
+        const p = pointsFlat[i]
+        const py = this.yScale(p._point.yValue)
+        const pr = p._point.sizePx / 2
+
+        if (py < pr) p._point.yValue = this.yScale.invert(pr)
+        else if (py + pr >= this._height) p._point.yValue = this.yScale.invert(this._height - pr)
+      }
+
+      for (let i = 0; i < pointsFlat.length; i += 1) {
+        const p1 = pointsFlat[i]
+        const p1x = this.xScale(p1._point.xValue)
+        const p1y = this.yScale(p1._point.yValue)// + Math.random()// Number.EPSILON
+        const p1r = p1._point.sizePx / 2
+        for (let j = i + 1; j < pointsFlat.length; j += 1) {
+          const p2 = pointsFlat[j]
+          const p2x = this.xScale(p2._point.xValue)
+          const p2y = this.yScale(p2._point.yValue)// - Math.random()// Number.EPSILON
+          const p2r = p2._point.sizePx / 2
+
+          const dx = p2x - p1x
+          const dy = p2y - p1y
+          // const dist = Math.sqrt(dx * dx + dy * dy)
+
+          const rSum = (p1r + p2r)
+          const overlapX = dx - rSum
+          const overlapY = dy - rSum
+          if (overlapX < 0) {
+            let step = rSum / dy / 5
+            if (Math.abs(step) > 20) step = Math.sign(step) * 20
+
+            p1._point.yValue = this.yScale.invert(p1y - step * p2r / rSum)// * p2r * p2r / (p1r * p1r + p2r * p2r))
+            p2._point.yValue = this.yScale.invert(p2y + step * p1r / rSum)// * p1r * p1r / (p1r * p1r + p2r * p2r))
+          }
+        }
+      }
+    }
+
+    for (let k = 0; k < 2; k++) {
       for (let i = 0; i < pointsFlat.length; i += 1) {
         const p1 = pointsFlat[i]
         const p1x = this.xScale(p1._point.xValue)
@@ -118,18 +172,41 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfig<Datum>,
           const dy = p2y - p1y
           const overlap = (p1r + p2r) - Math.sqrt(dx * dx + dy * dy)
           if (overlap > 0) {
+            if (overlap > 1) {
+              // p1._point.color = 'red'
+              // p2._point.color = 'red'
+            }
+
             const angle = Math.atan2(dy, dx)
+            // p1._point.xValuePx = p1x - overlap / 2 * Math.cos(angle)
+            // p2._point.xValuePx = p2x + overlap / 2 * Math.cos(angle)
+            //
+            // p1._point.yValuePx = p1y - overlap / 2 * Math.sin(angle)
+            // p2._point.yValuePx = p2y + overlap / 2 * Math.sin(angle)
+
+            // p1._point.xValue = this.xScale.invert(p1x - overlap / 2 * Math.cos(angle))
+            // p2._point.xValue = this.xScale.invert(p2x + overlap / 2 * Math.cos(angle))
+
+            p1._point.yValue = this.yScale.invert(p1y - overlap / 3 * Math.sin(angle) * p2r * p2r / (p1r * p1r + p2r * p2r))
+            p2._point.yValue = this.yScale.invert(p2y + overlap / 3 * Math.sin(angle) * p1r * p1r / (p1r * p1r + p2r * p2r))
+
             // p1._point.xValue = this.xScale.invert(p1x - overlap / 2 * Math.cos(angle * 1.05))
             // p2._point.xValue = this.xScale.invert(p2x + overlap / 2 * Math.cos(angle * 1.05))
 
-            const oy = (p1r + p2r) - (p2y - p1y)
-            p1._point.yValue = this.yScale.invert(p1y + oy / 2)
-            p2._point.yValue = this.yScale.invert(p2y - oy / 2)
+            // const oy = (p1r + p2r) - (p2y - p1y)
+            // p1._point.yValue = this.yScale.invert(p1y + oy / 2)
+            // p2._point.yValue = this.yScale.invert(p2y - oy / 2)
           }
         }
       }
     }
+  }
 
+  _render (customDuration?: number): void {
+    const { config } = this
+    const duration = isNumber(customDuration) ? customDuration : config.duration
+
+    if (this._firstRender) this._pointData = this._getOnScreenData()
 
     // Groups
     const pointGroups = this.g
@@ -167,6 +244,8 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfig<Datum>,
 
     // Take care of overlapping labels
     this._collideLabels()
+
+    this._firstRender = false
   }
 
   private _collideLabels (): void {
@@ -216,6 +295,8 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfig<Datum>,
             _point: {
               xValue: xValue,
               yValue: yValue,
+              xValueInitial: xValue,
+              yValueInitial: yValue,
               xValuePx: this.xScale(xValue),
               yValuePx: this.yScale(yValue),
               size: pointSize,

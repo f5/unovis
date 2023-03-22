@@ -22,7 +22,7 @@ type BlockchainHackDatum = {
 
 export const component = (): JSX.Element => {
   return (
-    <VisXYContainer data={data.slice(0, 25)} margin={{ top: 5, left: 5 }}>
+    <VisXYContainer data={data} margin={{ top: 5, left: 5 }} yDomain={[-10, 10]} height={'10vh'}>
       <VisScatter<BlockchainHackDatum>
         x={d => Date.parse(d.dateYYYYMMDD)}
         y={d => 0}

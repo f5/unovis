@@ -6,7 +6,7 @@ export const globalStyles = injectGlobal`
     --vis-scatter-fill-color: var(--vis-color-main);
     --vis-scatter-stroke-color: var(--vis-color-main);
     --vis-scatter-stroke-width: 0px;
-    --vis-scatter-fill-opacity: 1;
+    --vis-scatter-fill-opacity: 0.5;
     --vis-scatter-stroke-opacity: 1;
     --vis-scatter-hover-stroke-width: 2px;
 

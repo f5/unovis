@@ -27,7 +27,7 @@ export function createPoints<Datum> (
   xScale: ContinuousScale,
   yScale: ContinuousScale
 ): void {
-  selection.attr('transform', d => `translate(${d._point.xValue},${d._point.yValue})`)
+  // selection.attr('transform', d => `translate(${d._point.xValue},${d._point.yValue})`)
   selection.append('path').style('fill', d => d._point.color)
   selection.append('text')
     .style('pointer-events', 'none')
