@@ -48,7 +48,7 @@ export interface AxisConfigInterface<Datum> extends Partial<XYComponentConfigInt
   /** Font size of the tick text as CSS string. Default: `null` */
   tickTextFontSize?: string | null;
   /** Text alignment for ticks: `TextAlign.Left`, `TextAlign.Center` or `TextAlign.Right`. Default: `undefined` */
-  tickTextAlign?: TextAlign;
+  tickTextAlign?: TextAlign | string;
   /** The spacing in pixels between the tick and it's label. Default: `8` */
   tickPadding?: number;
 }

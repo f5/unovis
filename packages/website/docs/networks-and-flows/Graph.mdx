@@ -442,7 +442,10 @@ value can be tweaked with the `layoutAutofitTolerance` property (default value i
 * `0` — Stop fitting after any pan or zoom;
 * `Number.POSITIVE_INFINITY` — Always fit;
 
-You can disable the autofit behavior completely by setting `layoutAutofit` to `false`.
+If you need to re-enable autofit after the graph has been panned or zoomed, you can do so by calling the public
+`resetAutofitState()` method of the component instance.
+
+To disable the autofit behavior completely set `layoutAutofit` to `false`.
 
 ## Panels
 When you use one of the parallel layouts, it can be useful to draw panels around groups and sub-groups. You can define
@@ -591,6 +594,15 @@ By default, you can pan / zoom the graph and drag its nodes around. That behavio
 `disableZoom` and `disableDrag` properties to `false` respectively.
 
 The maximum and minimum zoom levels can be set with the `zoomScaleExtent` property (default is [0.35, 1.25]).
+
+_Graph_ implements a set of public methods to allow you controlling the view externally:
+```ts
+public zoomIn (increment: number)
+public zoomOut (increment: number)
+public setZoom (zoomLevel: number)
+public fitView ()
+```
+
 You can also provide a callback function to `onZoom` if you want to have some custom reaction when the graph is being
 panned or zoomed.
 
