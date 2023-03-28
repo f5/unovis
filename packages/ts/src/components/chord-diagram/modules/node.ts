@@ -66,6 +66,7 @@ export function updateNode<N extends ChordInputNode, L extends ChordInputLink> (
     })
   } else {
     selection.attr('d', d => arcGen(d))
+      .style('opacity', 1)
   }
 }
 
