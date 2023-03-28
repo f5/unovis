@@ -10,7 +10,9 @@ import {
   VisEventCallback,
   ColorAccessor,
   NumericAccessor,
+  ChordNodeDatum,
   StringAccessor,
+  GenericAccessor,
   ChordLabelAlignment,
 } from '@unovis/ts'
 import { VisCoreComponent } from '../../core'
@@ -85,13 +87,16 @@ export class VisChordDiagramComponent<N extends ChordInputNode, L extends ChordI
   @Input() nodeWidth?: number
 
   /** Node color accessor function ot constant value. Default: `d => d.color` */
-  @Input() nodeColor?: ColorAccessor<N>
+  @Input() nodeColor?: ColorAccessor<ChordNodeDatum<N>>
 
   /** Node label accessor function. Default: `d => d.label ?? d.key` */
-  @Input() nodeLabel?: StringAccessor<N>
+  @Input() nodeLabel?: StringAccessor<ChordNodeDatum<N>>
+
+  /** Node label color accessor function. Default: `undefined` */
+  @Input() nodeLabelColor?: StringAccessor<ChordNodeDatum<N>>
 
   /** Node label alignment. Default: `ChordLabelAlignment.Along` */
-  @Input() nodeLabelAlignment?: ChordLabelAlignment | string
+  @Input() nodeLabelAlignment?: GenericAccessor<ChordLabelAlignment | string, ChordNodeDatum<N>>
 
   /** Pad angle in radians. Constant value or accessor function. Default: `0.02` */
   @Input() padAngle?: NumericAccessor<N>
@@ -125,8 +130,8 @@ export class VisChordDiagramComponent<N extends ChordInputNode, L extends ChordI
   }
 
   private getConfig (): ChordDiagramConfigInterface<N, L> {
-    const { duration, events, attributes, linkColor, linkValue, nodeLevels, nodeWidth, nodeColor, nodeLabel, nodeLabelAlignment, padAngle, cornerRadius, angleRange, radiusScaleExponent } = this
-    const config = { duration, events, attributes, linkColor, linkValue, nodeLevels, nodeWidth, nodeColor, nodeLabel, nodeLabelAlignment, padAngle, cornerRadius, angleRange, radiusScaleExponent }
+    const { duration, events, attributes, linkColor, linkValue, nodeLevels, nodeWidth, nodeColor, nodeLabel, nodeLabelColor, nodeLabelAlignment, padAngle, cornerRadius, angleRange, radiusScaleExponent } = this
+    const config = { duration, events, attributes, linkColor, linkValue, nodeLevels, nodeWidth, nodeColor, nodeLabel, nodeLabelColor, nodeLabelAlignment, padAngle, cornerRadius, angleRange, radiusScaleExponent }
     const keys = Object.keys(config) as (keyof ChordDiagramConfigInterface<N, L>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

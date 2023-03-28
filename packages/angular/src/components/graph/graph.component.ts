@@ -163,7 +163,7 @@ export class VisGraphComponent<N extends GraphInputNode, L extends GraphInputLin
   /** ELK layout options, see the `elkjs` package for more details: https://github.com/kieler/elkjs.
    * If you want to specify custom layout option for each node group, you can provide an accessor function that
    * receives group name ('root' for the top-level configuration) as the first argument and returns an object containing
-   * layout options. */
+   * layout options. Default: `undefined` */
   @Input() layoutElkSettings?: GenericAccessor<GraphElkLayoutSettings, string> | undefined
 
   /** Array of accessor functions to define nested node groups for the ELK Layered layout.
