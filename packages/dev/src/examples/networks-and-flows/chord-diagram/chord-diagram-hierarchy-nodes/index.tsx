@@ -21,7 +21,7 @@ export const component = (): JSX.Element => {
   const getLabelAlignment = useCallback((n: NodeDatum | ChordHierarchyNode<NodeDatum>) => n.height > 0 ? 'perpendicular' : 'along', [])
   const getLabel = useCallback((n: NodeDatum | ChordHierarchyNode<NodeDatum>) => (n as NodeDatum).label ?? `${n.key} (${n.depth})`, [])
   return (
-    <VisSingleContainer data={data}>
+    <VisSingleContainer data={data} style={{ width: '100%', height: '100%' }}>
       <VisChordDiagram
         nodeLevels={Object.keys(levels)}
         nodeColor={getColor}
