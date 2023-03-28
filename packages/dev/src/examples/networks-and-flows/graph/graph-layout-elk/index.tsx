@@ -44,7 +44,7 @@ const data = {
 export const component = (): JSX.Element => {
   return (
     <>
-      <VisSingleContainer data={data}>
+      <VisSingleContainer data={data} height={'100vh'}>
         <VisGraph<NodeDatum, LinkDatum>
           nodeLabel={(n: NodeDatum) => n.id}
           nodeShape={GraphNodeShape.Square}
