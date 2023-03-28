@@ -97,16 +97,16 @@ The _Axis_ component supports a wide variety of tick customization options
 You can remove tick labels from your axis by setting the `tickLine` property to false:
 <XYWrapperWithInput {...defaultProps()} inputType="checkbox" defaultValue={false} property="tickLine"/>
 
-### Tick Text Font Size
+### Tick Label Font Size
 To change the font size for the tick labels, you provide the `tickTextFontSize` property with a CSS string.
 <XYWrapperWithInput {...defaultProps()} inputType="text" defaultValue={'50px'} property="tickTextFontSize"/>
 
-### Tick Format
+### Tick Label Format
 You can customize how ticks are formatted using the `tickFormat` property and a label formatter function.
 The following example uses Javascript's built-in Date formatter function `toDateString()`.
 <XYWrapper {...defaultProps()} data={generateTimeSeries(10)} x={d => d.timestamp} tickFormat={d=> new Date(d).toDateString()}/>
 
-### Text Alignment
+### Label Alignment
 Change the tick's label alignment with respect to the tick marker using `tickTextAlign` property with a TextAlign value: `TextAlign.Left`, `TextAlign.Right` or `TextAlign.Center`.
 <XYWrapperWithInput
   {...defaultProps()}
@@ -116,7 +116,7 @@ Change the tick's label alignment with respect to the tick marker using `tickTex
   options={['right', 'center', 'left']}
   property="tickTextAlign"/>
 
-### Text Length
+### Label Length
 To limit the string length of the tick labels, use the `tickTextLength` property:
 <XYWrapperWithInput
   {...defaultProps()}
@@ -128,7 +128,7 @@ To limit the string length of the tick labels, use the `tickTextLength` property
   hiddenProps={{gridLine: false, x: d => d.timestamp, tickFormat: d=> new Date(d).toDateString()}}
 />
 
-### Text Trim Type
+### Label Trim Type
 When a tick label becomes too long, you can customize the trimming method with the `tickTextLength` property.
 _Axis_ accepts a `TrimMode` or a string. When we provide the previous example with `TrimMode.End` property, we can see the end of the label gets cut off instead of the middle.
 <XYWrapperWithInput inputType="select"
@@ -139,7 +139,7 @@ _Axis_ accepts a `TrimMode` or a string. When we provide the previous example wi
   options={['start', 'middle', 'end']}
   property="tickTextTrimType"/>
 
-### Text Width
+### Label Width
 To limit the width of the tick labels (in pixels), you can use the `tickTextWidth` property.
 <XYWrapperWithInput
   {...defaultProps()}
@@ -150,7 +150,7 @@ To limit the width of the tick labels (in pixels), you can use the `tickTextWidt
   hiddenProps={{gridLine: false, x: d => d.timestamp, tickFormat: d=> new Date(d).toDateString()}}
 />
 
-### Text Fit Mode
+### Label Fit Mode
 _Axis_ accepts the following values for the tickTextFitMode property: `FitMode.Wrap` or `FitMode.Trim`. This determines how the axis will
 handle tick text overflow. The following example showcases the previous example using `"trim"` instead of `"wrap"`.
 <XYWrapperWithInput inputType="select"
@@ -208,7 +208,7 @@ Set the `minMaxTicksOnly` property to `true` if you only want to see the two end
   defaultValue={true}
   property="minMaxTicksOnly"/>
 
-### Custom Values
+### Set Ticks Explicitly
 You can customize the ticks displayed by providing the _Axis_ component with a number array.
 The following example only shows even values for x after getting the `tickValue` array from a filter function.
 ```ts
