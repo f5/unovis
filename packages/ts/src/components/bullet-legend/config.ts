@@ -4,7 +4,17 @@ import { Config } from 'core/config'
 import { BulletLegendItemInterface } from './types'
 
 export interface BulletLegendConfigInterface {
-  /** Legend items array BulletLegendItemInterface[]. Default: `[]` */
+  /** Legend items. Array of `BulletLegendItemInterface`:
+   * ```
+   * {
+   *   name: string | number;
+   *   color?: string;
+   *   inactive?: boolean;
+   *   hidden?: boolean;
+   *   pointer?: boolean;
+   * }
+   * ```
+  * Default: `[]` */
   items: BulletLegendItemInterface[];
   /** Apply a specific class to the labels. Default: `''` */
   labelClassName?: string;

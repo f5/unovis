@@ -11,7 +11,17 @@ import { VisGenericComponent } from '../../core'
 export class VisBulletLegendComponent implements BulletLegendConfigInterface, AfterViewInit {
   @ViewChild('container', { static: false }) containerRef: ElementRef
 
-  /** Legend items array BulletLegendItemInterface[]. Default: `[]` */
+  /** Legend items. Array of `BulletLegendItemInterface`:
+   * ```
+   * {
+   *   name: string | number;
+   *   color?: string;
+   *   inactive?: boolean;
+   *   hidden?: boolean;
+   *   pointer?: boolean;
+   * }
+   * ```
+  * Default: `[]` */
   @Input() items: BulletLegendItemInterface[]
 
   /** Apply a specific class to the labels. Default: `''` */
