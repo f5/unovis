@@ -163,7 +163,7 @@ export class VisAxisComponent<Datum> implements AxisConfigInterface<Datum>, Afte
   @Input() tickTextFontSize?: string | null
 
   /** Text alignment for ticks: `TextAlign.Left`, `TextAlign.Center` or `TextAlign.Right`. Default: `undefined` */
-  @Input() tickTextAlign?: TextAlign
+  @Input() tickTextAlign?: TextAlign | string
 
   /** The spacing in pixels between the tick and it's label. Default: `8` */
   @Input() tickPadding?: number
