@@ -56,6 +56,7 @@ import {
 
 export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<Datum[], LeafletMapConfig<Datum>, LeafletMapConfigInterface<Datum>> {
   static selectors = s
+  static cssVariables = s.variables
   type = ComponentType.HTML
   element: HTMLElement
   config: LeafletMapConfig<Datum> = new LeafletMapConfig()
