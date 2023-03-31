@@ -83,16 +83,21 @@ export class SingleContainer<Data> extends ContainerCore {
     return this.width / componentWidth
   }
 
-  _render (customDuration?: number): void {
+  _render (duration?: number): void {
     const { config, component } = this
-    super._render(null, true)
+    super._render(duration)
 
     component.setSize(this.width, this.height)
+    component.g.attr('transform', `translate(${config.margin.left},${config.margin.top})`)
+    component.render(duration)
 
-    component.g
-      .attr('transform', `translate(${config.margin.left},${config.margin.top})`)
+    if (config.tooltip) config.tooltip.update()
+  }
 
-    component.render(customDuration)
+  // Re-defining the `render()` function to handle different sizing techniques (`Sizing.Extend` and `Sizing.FitWidth`)
+  // Not calling `super.render()` because we don't want it to interfere with setting the SVG size here.
+  render (duration = this.config.duration): void {
+    const { config, component } = this
 
     if (config.sizing === Sizing.Extend || config.sizing === Sizing.FitWidth) {
       const fitToWidth = config.sizing === Sizing.FitWidth
@@ -108,7 +113,7 @@ export class SingleContainer<Data> extends ContainerCore {
       const scaledHeight = componentHeight * scale
       const animated = currentWidth || currentHeight
 
-      smartTransition(this.svg, animated ? (customDuration ?? component.config.duration) : 0)
+      smartTransition(this.svg, animated ? duration : 0)
         .attr('width', scaledWidth)
         .attr('height', scaledHeight)
         .attr('viewBox', `${0} ${0} ${componentWidth} ${fitToWidth ? scaledHeight : componentHeight}`)
@@ -119,7 +124,11 @@ export class SingleContainer<Data> extends ContainerCore {
         .attr('height', this.config.height || this.containerHeight)
     }
 
-    if (config.tooltip) config.tooltip.update()
+    // Schedule the actual rendering in the next frame
+    cancelAnimationFrame(this._requestedAnimationFrame)
+    this._requestedAnimationFrame = requestAnimationFrame(() => {
+      this._render(duration)
+    })
   }
 
   _onResize (): void {
