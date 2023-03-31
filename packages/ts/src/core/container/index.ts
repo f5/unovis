@@ -6,7 +6,6 @@ import { Sizing } from 'types/component'
 
 // Utils
 import { isEqual, clamp } from 'utils/data'
-import { getBoundingClientRectObject } from 'utils/misc'
 
 // Config
 import { ContainerConfig, ContainerConfigInterface } from './config'
@@ -18,10 +17,10 @@ export class ContainerCore {
   config: ContainerConfig
 
   protected _container: HTMLElement
-  private _requestedAnimationFrame: number
-  private _animationFramePromise: Promise<number>
-  private _containerRect
-  private _resizeObserver
+  protected _requestedAnimationFrame: number
+  private _isFirstRender = true
+  private _containerSize: { width: number; height: number }
+  private _resizeObserver: ResizeObserver | undefined
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
   static DEFAULT_CONTAINER_HEIGHT = 300
@@ -39,20 +38,6 @@ export class ContainerCore {
       .attr('height', ContainerCore.DEFAULT_CONTAINER_HEIGHT)
 
     this.element = this.svg.node()
-
-    // ResizeObserver: Re-render on container resize
-    this._containerRect = getBoundingClientRectObject(this._container)
-    this._resizeObserver = new ResizeObserver((entries, observer) => {
-      const resizedContainerRect = getBoundingClientRectObject(this._container)
-      const hasSizeChanged = !isEqual(this._containerRect, resizedContainerRect)
-      // do resize only if element is attached to the DOM
-      // will come in useful when some ancestor of container becomes detached
-      if (hasSizeChanged && resizedContainerRect.width && resizedContainerRect.height) {
-        this._containerRect = resizedContainerRect
-        this._onResize()
-      }
-    })
-    this._resizeObserver.observe(this._container)
   }
 
   updateContainer<T extends ContainerConfigInterface> (config: T): void {
@@ -62,11 +47,10 @@ export class ContainerCore {
     this.config = new ConfigModel().init(config)
   }
 
-  _render (duration?: number, dontApplySize?: boolean): void {
-    if (!dontApplySize) {
-      this.svg
-        .attr('width', this.config.width || this.containerWidth)
-        .attr('height', this.config.height || this.containerHeight)
+  _render (duration?: number): void {
+    if (this._isFirstRender) {
+      this._setUpResizeObserver()
+      this._isFirstRender = false
     }
 
     if (this.config.svgDefs) {
@@ -75,17 +59,22 @@ export class ContainerCore {
     }
   }
 
-  render (duration = this.config.duration): Promise<number> {
+  render (duration = this.config.duration): void {
+    const width = this.config.width || this.containerWidth
+    const height = this.config.height || this.containerHeight
+
+    // We set SVG size in `render()` instead of `_render()`, because the size values in pixels will become
+    // available only in the next animation when being accessed via `element.clientWidth` and `element.clientHeight`,
+    // and we rely on those values when setting width and size of the components.
+    this.svg
+      .attr('width', width)
+      .attr('height', height)
+
+    // Schedule the actual rendering in the next frame
     cancelAnimationFrame(this._requestedAnimationFrame)
-
-    this._animationFramePromise = new Promise((resolve, reject) => {
-      this._requestedAnimationFrame = requestAnimationFrame(() => {
-        this._render(duration)
-        resolve(this._requestedAnimationFrame)
-      })
+    this._requestedAnimationFrame = requestAnimationFrame(() => {
+      this._render(duration)
     })
-
-    return this._animationFramePromise
   }
 
   get containerWidth (): number {
@@ -117,13 +106,30 @@ export class ContainerCore {
   _onResize (): void {
     const { config } = this
     const redrawOnResize = config.sizing === Sizing.Fit || config.sizing === Sizing.FitWidth
-
     if (redrawOnResize) this.render(0)
+  }
+
+  _setUpResizeObserver (): void {
+    const containerRect = this._container.getBoundingClientRect()
+    this._containerSize = { width: containerRect.width, height: containerRect.height }
+
+    this._resizeObserver = new ResizeObserver((entries, observer) => {
+      const resizedContainerRect = this._container.getBoundingClientRect()
+      const resizedContainerSize = { width: resizedContainerRect.width, height: resizedContainerRect.height }
+      const hasSizeChanged = !isEqual(this._containerSize, resizedContainerSize)
+      // Do resize only if element is attached to the DOM
+      // will come in useful when some ancestor of container becomes detached
+      if (hasSizeChanged && resizedContainerSize.width && resizedContainerSize.height) {
+        this._containerSize = resizedContainerSize
+        this._onResize()
+      }
+    })
+    this._resizeObserver.observe(this._container)
   }
 
   destroy (): void {
     cancelAnimationFrame(this._requestedAnimationFrame)
-    this._resizeObserver.disconnect()
+    this._resizeObserver?.disconnect()
     this.svg.remove()
   }
 }

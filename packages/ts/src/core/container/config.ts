@@ -15,11 +15,15 @@ export interface ContainerConfigInterface {
   /** Defines whether components should fit into the container or the container should expand to fit to the component's size. Default: `Sizing.Fit` */
   sizing?: Sizing | string;
   /** Width in pixels or in CSS units.
+   * Percentage units `"%"` are not supported here. If you want to set `width` as a percentage, do it via `style`
+   * of the corresponding DOM element.
    * By default, Container automatically fits to the size of the parent element.
    * Default: `undefined`
   */
   width?: number | string;
   /** Height in pixels or in CSS units.
+   * Percentage units `"%"` are not supported here. If you want to set `height` as a percentage, do it via `style`
+   * of the corresponding DOM element.
    * By default, Container automatically fits to the size of the parent element.
    * Default: `undefined`
   */
