@@ -6,7 +6,7 @@
     "target": "es6",
     "experimentalDecorators": true,
     "jsx": "react-jsx",
-    "moduleResolution": "Node"
+    "moduleResolution": "node"
   },
   "exclude": [
     "node_modules",

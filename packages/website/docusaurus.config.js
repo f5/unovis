@@ -26,13 +26,13 @@ const config = {
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
-          editUrl: 'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+          editUrl: 'https://github.com/f5/unovis/tree/main/packages/website',
         },
         blog: {
           showReadingTime: true,
           // Please change this to your repo.
           editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+            'https://github.com/f5/unovis/tree/main/packages/website',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
@@ -140,7 +140,6 @@ const config = {
       {
         // pass in a single string or an array of strings
         src: ['src/**/*.tsx', '../react/src/**/*.tsx'],
-        tsConfig: 'tsconfig.json',
         // global: true,
         parserOptions: {
           // pass parserOptions to react-docgen-typescript
