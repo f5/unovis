@@ -29,8 +29,9 @@ export class StackedBar<Datum> extends XYComponentCore<Datum, StackedBarConfig<D
   config: StackedBarConfig<Datum> = new StackedBarConfig()
   getAccessors = (): NumericAccessor<Datum>[] => (isArray(this.config.y) ? this.config.y : [this.config.y])
   stacked = true
-  private _prevNegative: boolean[] | undefined // To help guessing the bar direction when an accessor was set to null or 0
   events = {}
+  private _prevNegative: boolean[] | undefined // To help guessing the bar direction when an accessor was set to null or 0
+  private _barData: Datum[] = []
 
   constructor (config?: StackedBarConfigInterface<Datum>) {
     super()
@@ -38,13 +39,29 @@ export class StackedBar<Datum> extends XYComponentCore<Datum, StackedBarConfig<D
   }
 
   get bleed (): Spacing {
-    const hw = this._getBarWidth() / 2
+    this._barData = this._getVisibleData()
+    if (this._barData.length === 0) return { top: 0, bottom: 0, left: 0, right: 0 }
+
+    // By default, horizontal orientation is "flipped", i.e. the `yDirection` of `XYContainer` is set to `Direction.North`
+    const isHorizontalAndFlipped = !this.isVertical() && (this.dataScale.range()[0] > this.dataScale.range()[1])
+    const dataDomain = this.dataScale.domain()
+    const halfGroupWidth = this._getBarWidth() / 2
+
+    const firstDataValue = getNumber(this._barData[0], this.config.x, 0)
+    const lastDataValue = getNumber(this._barData[this._barData.length - 1], this.config.x, this._barData.length - 1)
+    const firstValuePx = this.dataScale(firstDataValue)
+    const lastValuePx = this.dataScale(lastDataValue)
+
+    const dataDomainRequiredStart = this.dataScale.invert(firstValuePx + (isHorizontalAndFlipped ? halfGroupWidth : -halfGroupWidth))
+    const dataDomainRequiredEnd = this.dataScale.invert(lastValuePx + (isHorizontalAndFlipped ? -halfGroupWidth : halfGroupWidth))
+    const bleedPxStart = dataDomainRequiredStart <= dataDomain[0] ? this.dataScale(dataDomain[0]) - this.dataScale(dataDomainRequiredStart) : 0
+    const bleedPxEnd = dataDomainRequiredEnd > dataDomain[1] ? this.dataScale(dataDomainRequiredEnd) - this.dataScale(dataDomain[1]) : 0
 
     return {
-      top: this.isVertical() ? 0 : hw,
-      bottom: this.isVertical() ? 0 : hw,
-      left: this.isVertical() ? hw : 0,
-      right: this.isVertical() ? hw : 0,
+      top: this.isVertical() ? 0 : (isHorizontalAndFlipped ? -bleedPxEnd : bleedPxStart),
+      bottom: this.isVertical() ? 0 : (isHorizontalAndFlipped ? -bleedPxStart : bleedPxEnd),
+      left: this.isVertical() ? bleedPxStart : 0,
+      right: this.isVertical() ? bleedPxEnd : 0,
     }
   }
 
@@ -63,15 +80,14 @@ export class StackedBar<Datum> extends XYComponentCore<Datum, StackedBarConfig<D
   _render (customDuration?: number): void {
     const { config } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
-    const visibleData = this._getVisibleData()
 
     const yAccessors = this.getAccessors()
-    const stacked = getStackedData(visibleData, 0, yAccessors, this._prevNegative)
+    const stacked = getStackedData(this._barData, 0, yAccessors, this._prevNegative)
     this._prevNegative = stacked.map(s => !!s.negative)
 
     const barGroups = this.g
       .selectAll<SVGGElement, Datum>(`.${s.barGroup}`)
-      .data(visibleData, (d, i) => `${getString(d, config.id, i) ?? i}`)
+      .data(this._barData, (d, i) => `${getString(d, config.id, i) ?? i}`)
 
     const getBarGroupsTransform = (d: Datum, i: number): string => {
       const v = this.dataScale(getNumber(d, config.x, i))

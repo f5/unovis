@@ -6,7 +6,7 @@ import { select } from 'd3'
 import { XYComponentCore } from 'core/xy-component'
 
 // Utils
-import { clamp, getMax, getMin, getNumber, getString, isArray, isEmpty, isNumber, getExtent } from 'utils/data'
+import { clamp, getExtent, getMax, getMin, getNumber, getString, isArray, isEmpty, isNumber } from 'utils/data'
 import { roundedRectPath } from 'utils/path'
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
@@ -23,6 +23,7 @@ import { GroupedBarConfig, GroupedBarConfigInterface } from './config'
 
 // Styles
 import * as s from './style'
+
 export class GroupedBar<Datum> extends XYComponentCore<Datum, GroupedBarConfig<Datum>, GroupedBarConfigInterface<Datum>> {
   static selectors = s
   config: GroupedBarConfig<Datum> = new GroupedBarConfig()
@@ -38,19 +39,37 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum, GroupedBarConfig<D
     },
   }
 
+  private _barData: Datum[] = []
+
   constructor (config?: GroupedBarConfigInterface<Datum>) {
     super()
     if (config) this.config.init(config)
   }
 
   get bleed (): Spacing {
-    const hw = this._getGroupWidth() / 2
+    this._barData = this._getVisibleData()
+    if (this._barData.length === 0) return { top: 0, bottom: 0, left: 0, right: 0 }
+
+    // By default, horizontal orientation is "flipped", i.e. the `yDirection` of `XYContainer` is set to `Direction.North`
+    const isHorizontalAndFlipped = !this.isVertical() && (this.dataScale.range()[0] > this.dataScale.range()[1])
+    const dataDomain = this.dataScale.domain()
+    const halfGroupWidth = this._getGroupWidth() / 2
+
+    const firstDataValue = getNumber(this._barData[0], this.config.x, 0)
+    const lastDataValue = getNumber(this._barData[this._barData.length - 1], this.config.x, this._barData.length - 1)
+    const firstValuePx = this.dataScale(firstDataValue)
+    const lastValuePx = this.dataScale(lastDataValue)
+
+    const dataDomainRequiredStart = this.dataScale.invert(firstValuePx + (isHorizontalAndFlipped ? halfGroupWidth : -halfGroupWidth))
+    const dataDomainRequiredEnd = this.dataScale.invert(lastValuePx + (isHorizontalAndFlipped ? -halfGroupWidth : halfGroupWidth))
+    const bleedPxStart = dataDomainRequiredStart <= dataDomain[0] ? this.dataScale(dataDomain[0]) - this.dataScale(dataDomainRequiredStart) : 0
+    const bleedPxEnd = dataDomainRequiredEnd > dataDomain[1] ? this.dataScale(dataDomainRequiredEnd) - this.dataScale(dataDomain[1]) : 0
 
     return {
-      top: this.isVertical() ? 0 : hw,
-      bottom: this.isVertical() ? 0 : hw,
-      left: this.isVertical() ? hw : 0,
-      right: this.isVertical() ? hw : 0,
+      top: this.isVertical() ? 0 : (isHorizontalAndFlipped ? -bleedPxEnd : bleedPxStart),
+      bottom: this.isVertical() ? 0 : (isHorizontalAndFlipped ? -bleedPxStart : bleedPxEnd),
+      left: this.isVertical() ? bleedPxStart : 0,
+      right: this.isVertical() ? bleedPxEnd : 0,
     }
   }
 
@@ -84,10 +103,9 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum, GroupedBarConfig<D
       .paddingInner(config.barPadding)
       .paddingOuter(config.barPadding)
 
-    const visibleData = this._getVisibleData()
     const barGroups = this.g
       .selectAll<SVGGElement, Datum>(`.${s.barGroup}`)
-      .data(visibleData, (d, i) => `${getString(d, config.id, i) ?? i}`)
+      .data(this._barData, (d, i) => `${getString(d, config.id, i) ?? i}`)
 
     const getBarGroupsTransform = (d: Datum, i: number): string => {
       const v = this.dataScale(getNumber(d, config.x, i))
@@ -124,9 +142,7 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum, GroupedBarConfig<D
       .selectAll<SVGPathElement, Datum>(`.${s.bar}`)
       .data((d) => yAccessors.map(() => d))
 
-    const yDirection = this.valueScale.range()[0] > this.valueScale.range()[1]
-      ? Direction.North
-      : Direction.South
+    const valueAxisDirection = this._getValueAxisDirection()
     const barsEnter = bars
       .enter()
       .append('path')
@@ -136,7 +152,7 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum, GroupedBarConfig<D
         const y = this.valueScale(0)
         const width = barWidth
         const height = 0
-        return this._getBarPath(x, y, width, height, false, yDirection)
+        return this._getBarPath(x, y, width, height, false, valueAxisDirection)
       })
       .style('fill', (d, i) => getColor(d, config.color, i))
 
@@ -154,11 +170,11 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum, GroupedBarConfig<D
 
         // Optionally set minimum bar height
         if (height < config.barMinHeight) {
-          const dir = yDirection === Direction.North ? -1 : 1
+          const dir = valueAxisDirection === Direction.North ? -1 : 1
           y = this.valueScale(0) + dir * config.barMinHeight
           height = config.barMinHeight
         }
-        return this._getBarPath(x, y, width, height, isNegative, yDirection)
+        return this._getBarPath(x, y, width, height, isNegative, valueAxisDirection)
       })
       .style('fill', (d, i) => getColor(d, config.color, i))
       .style('cursor', (d, i) => getString(d, config.cursor, i))
@@ -166,12 +182,17 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum, GroupedBarConfig<D
     smartTransition(bars.exit(), duration).remove()
   }
 
+  _getValueAxisDirection (): Direction.North | Direction.South {
+    return this.valueScale.range()[0] > this.valueScale.range()[1]
+      ? Direction.North
+      : Direction.South
+  }
+
   _getVisibleData (): Datum[] {
     const {
       config,
       datamodel: { data },
     } = this
-
     const groupWidth = this._getGroupWidth()
     const halfGroupWidth = data.length < 2 ? 0 : groupWidth / 2
 
