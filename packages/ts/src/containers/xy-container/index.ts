@@ -221,9 +221,13 @@ export class XYContainer<Datum> extends ContainerCore {
     this._renderAxes(this._firstRender ? 0 : customDuration)
 
     // Clip Rect
+    // Extending the clipping path to allow small overflow (e.g. Line will looks better that way when it touches the edges)
+    const clipPathExtension = 2
     this._clipPath.select('rect')
-      .attr('width', this.width)
-      .attr('height', this.height)
+      .attr('x', -clipPathExtension)
+      .attr('y', -clipPathExtension)
+      .attr('width', this.width + 2 * clipPathExtension)
+      .attr('height', this.height + 2 * clipPathExtension)
 
     // Tooltip
     config.tooltip?.update() // Re-bind events
