@@ -26,7 +26,7 @@ export interface StackedBarConfigInterface<Datum> extends XYComponentConfigInter
    * Default: `null` */
   barMinHeightZeroValue?: any;
   /** Chart orientation: `Orientation.Vertical` or `Orientation.Horizontal`. Default `Orientation.Vertical` */
-  orientation?: Orientation;
+  orientation?: Orientation | string;
 }
 
 export class StackedBarConfig<Datum> extends XYComponentConfig<Datum> implements StackedBarConfigInterface<Datum> {
