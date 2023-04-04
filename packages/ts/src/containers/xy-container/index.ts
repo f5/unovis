@@ -74,11 +74,16 @@ export class XYContainer<Datum> extends ContainerCore {
       .html('<feColorMatrix type="saturate" in="SourceGraphic" values="1.35"/>')
 
     if (config) {
-      this.updateContainer(config)
+      this.updateContainer(config, true)
     }
 
     if (data) {
-      this.setData(data)
+      this.setData(data, true)
+    }
+
+    // Render if components are present and have data
+    if (this.components?.some(c => c.datamodel.data)) {
+      this.render()
     }
 
     // Force re-render axes when fonts are loaded

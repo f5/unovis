@@ -7,7 +7,13 @@ import { CoreDataModel } from 'data-models/core'
 // Types
 import { MapLink } from 'types/map'
 
-export class MapGraphDataModel<AreaDatum, PointDatum, LinkDatum> extends CoreDataModel<{ areas?: AreaDatum[]; points?: PointDatum[]; links?: LinkDatum[] }> {
+export type MapGraphData<AreaDatum, PointDatum, LinkDatum> = {
+  areas?: AreaDatum[];
+  points?: PointDatum[];
+  links?: LinkDatum[];
+}
+
+export class MapGraphDataModel<AreaDatum, PointDatum, LinkDatum> extends CoreDataModel<MapGraphData<AreaDatum, PointDatum, LinkDatum>> {
   private _areas: AreaDatum[] = []
   private _points: PointDatum[] = []
   private _links: MapLink<PointDatum, LinkDatum>[] = []
@@ -20,9 +26,13 @@ export class MapGraphDataModel<AreaDatum, PointDatum, LinkDatum> extends CoreDat
   /* eslint-disable-next-line dot-notation */
   public linkTarget: ((l: LinkDatum) => number | string | PointDatum) = l => l['target']
 
-  // eslint-disable-next-line accessor-pairs
-  set data (data: { areas?: AreaDatum[]; points?: PointDatum[]; links?: LinkDatum[] }) {
+  get data (): MapGraphData<AreaDatum, PointDatum, LinkDatum> {
+    return this._data
+  }
+
+  set data (data: MapGraphData<AreaDatum, PointDatum, LinkDatum>) {
     if (!data) return
+    this._data = data
 
     this._areas = cloneDeep(data?.areas ?? [])
     this._points = cloneDeep(data?.points ?? [])
