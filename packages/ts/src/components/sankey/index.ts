@@ -219,7 +219,7 @@ export class Sankey<
 
     const height = max(values) || config.nodeMinHeight
     this._extendedHeight = height + bleed.top + bleed.bottom
-    this._extendedWidth = (config.nodeWidth + config.nodeHorizontalSpacing) * Object.keys(groupedByColumn).length - config.nodeHorizontalSpacing + bleed.left + bleed.right
+    this._extendedWidth = Math.max(0, (config.nodeWidth + config.nodeHorizontalSpacing) * Object.keys(groupedByColumn).length - config.nodeHorizontalSpacing + bleed.left + bleed.right)
   }
 
   private _prepareLayout (): void {
