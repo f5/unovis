@@ -6,13 +6,17 @@ import { GraphInputLink, GraphInputNode, GraphLinkCore, GraphNodeCore } from 'ty
 // Core Data Model
 import { CoreDataModel } from './core'
 
+export type GraphData<N extends GraphInputNode, L extends GraphInputLink> = {
+  nodes: N[];
+  links?: L[];
+}
 
 export class GraphDataModel<
   N extends GraphInputNode,
   L extends GraphInputLink,
   OutNode extends GraphNodeCore<N, L> = GraphNodeCore<N, L>,
   OutLink extends GraphLinkCore<N, L> = GraphLinkCore<N, L>,
-> extends CoreDataModel<{nodes: N[]; links?: L[]}> {
+> extends CoreDataModel<GraphData<N, L>> {
   private _nonConnectedNodes: OutNode[]
   private _connectedNodes: OutNode[]
   private _nodes: OutNode[] = []
@@ -24,9 +28,13 @@ export class GraphDataModel<
   public linkId: ((n: L) => string | undefined) = l => (isString(l.id) || isFinite(l.id as number)) ? `${l.id}` : undefined
   public nodeSort: ((a: N, b: N) => number)
 
-  // eslint-disable-next-line accessor-pairs
-  set data (inputData: { nodes: N[]; links?: L[]}) {
+  get data (): GraphData<N, L> {
+    return this._data
+  }
+
+  set data (inputData: GraphData<N, L>) {
     if (!inputData) return
+    this._data = inputData
     const prevNodes = this.nodes
     const prevLinks = this.links
 

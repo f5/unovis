@@ -23,13 +23,16 @@ export class SingleContainer<Data> extends ContainerCore {
     super(element)
 
     if (config) {
-      this.updateContainer(config)
+      this.updateContainer(config, true)
       this.component = config.component
     }
 
     if (data) {
-      this.setData(data)
+      this.setData(data, true)
     }
+
+    // Render if component exists and has data
+    if (this.component?.datamodel.data) this.render()
   }
 
   public setData (data: Data, preventRender?: boolean): void {
