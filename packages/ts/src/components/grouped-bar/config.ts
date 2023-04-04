@@ -24,7 +24,7 @@ export interface GroupedBarConfigInterface<Datum> extends XYComponentConfigInter
   /** Configurable bar cursor when hovering over. Default: `null` */
   cursor?: StringAccessor<Datum>;
   /** Chart orientation: `Orientation.Vertical` or `Orientation.Horizontal`. Default `Orientation.Vertical` */
-  orientation?: Orientation;
+  orientation?: Orientation | string;
 }
 
 export class GroupedBarConfig<Datum> extends XYComponentConfig<Datum> implements GroupedBarConfigInterface<Datum> {
