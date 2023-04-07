@@ -1,5 +1,5 @@
 import { scaleBand } from 'd3-scale'
-import { min, range } from 'd3-array'
+import { min, max, range } from 'd3-array'
 import { select } from 'd3'
 
 // Core
@@ -55,8 +55,9 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum, GroupedBarConfig<D
     const dataDomain = this.dataScale.domain()
     const halfGroupWidth = this._getGroupWidth() / 2
 
-    const firstDataValue = getNumber(this._barData[0], this.config.x, 0)
-    const lastDataValue = getNumber(this._barData[this._barData.length - 1], this.config.x, this._barData.length - 1)
+    const dataScaleValues = this._barData.map((d, i) => getNumber(d, this.config.x, i))
+    const firstDataValue = min(dataScaleValues)
+    const lastDataValue = max(dataScaleValues)
     const firstValuePx = this.dataScale(firstDataValue)
     const lastValuePx = this.dataScale(lastDataValue)
 
