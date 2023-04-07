@@ -1,4 +1,4 @@
-import { min } from 'd3-array'
+import { min, max } from 'd3-array'
 
 // Core
 import { XYComponentCore } from 'core/xy-component'
@@ -47,8 +47,9 @@ export class StackedBar<Datum> extends XYComponentCore<Datum, StackedBarConfig<D
     const dataDomain = this.dataScale.domain()
     const halfGroupWidth = this._getBarWidth() / 2
 
-    const firstDataValue = getNumber(this._barData[0], this.config.x, 0)
-    const lastDataValue = getNumber(this._barData[this._barData.length - 1], this.config.x, this._barData.length - 1)
+    const dataScaleValues = this._barData.map((d, i) => getNumber(d, this.config.x, i))
+    const firstDataValue = min(dataScaleValues)
+    const lastDataValue = max(dataScaleValues)
     const firstValuePx = this.dataScale(firstDataValue)
     const lastValuePx = this.dataScale(lastDataValue)
 
