@@ -1,7 +1,7 @@
 import { select, Selection } from 'd3-selection'
 
 // Utils
-import { trimText } from 'utils/text'
+import { trimString } from 'utils/text'
 import { smartTransition } from 'utils/d3'
 
 // Types
@@ -106,7 +106,7 @@ export function updatePanels<N extends GraphNode, L extends GraphLink> (
   const panelLabel = selection.select<SVGGElement>(`.${panelSelectors.label}`)
 
   panelLabel.select<SVGTextElement>(`.${panelSelectors.labelText}`)
-    .text(d => trimText(d.label))
+    .text(d => trimString(d.label))
 
   smartTransition(panelLabel, duration)
     .attr('transform', getLabelTranslateTransform)
@@ -120,7 +120,7 @@ export function updatePanels<N extends GraphNode, L extends GraphLink> (
     })
     .on('mouseleave', (event: MouseEvent, d) => {
       const label = select<SVGGElement, GraphPanel<N, L>>(event.currentTarget as SVGGElement)
-      const labelContent = trimText(d.label)
+      const labelContent = trimString(d.label)
       label.select('text').text(labelContent)
       setLabelRect(label, labelContent, panelSelectors.labelText)
     })

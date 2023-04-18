@@ -12,7 +12,6 @@ import { wrapSVGText } from 'utils/text'
 
 // Types
 import { Spacing } from 'types/spacing'
-import { VerticalAlign } from 'types/text'
 
 // Local Types
 import { DonutArcDatum, DonutArcAnimState, DonutDatum } from './types'
@@ -131,7 +130,7 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfig<Datum>, Don
       .attr('dy', config.centralLabel ? '0.55em' : null)
       .text(config.centralSubLabel ?? null)
 
-    if (config.centralSubLabelWrap) wrapSVGText(this.centralSubLabel, { width: innerRadius * 1.9, verticalAlign: VerticalAlign.Top })
+    if (config.centralSubLabelWrap) wrapSVGText(this.centralSubLabel, innerRadius * 1.9)
 
     // Background
     this.arcBackground.attr('class', s.background)

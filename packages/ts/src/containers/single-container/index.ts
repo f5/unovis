@@ -90,7 +90,7 @@ export class SingleContainer<Data> extends ContainerCore {
     const { config, component } = this
     super._render(duration)
 
-    component.setSize(this.width, this.height)
+    component.setSize(this.width, this.height, this.containerWidth, this.containerHeight)
     component.g.attr('transform', `translate(${config.margin.left},${config.margin.top})`)
     component.render(duration)
 

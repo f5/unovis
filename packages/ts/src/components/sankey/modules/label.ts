@@ -172,7 +172,7 @@ export function renderLabel<N extends SankeyInputNode, L extends SankeyInputLink
     .style('cursor', (d: SankeyNode<N, L>) => getString(d, config.labelCursor))
 
   const labelMaxWidth = isSublabelInline ? config.labelMaxWidth * (1 - (sublabelText ? config.subLabelToLabelInlineWidthRatio : 0)) : config.labelMaxWidth
-  if (config.labelFit === FitMode.Wrap || forceExpand) wrapSVGText(labelTextSelection, { width: labelMaxWidth, separator, verticalAlign: VerticalAlign.Top })
+  if (config.labelFit === FitMode.Wrap || forceExpand) wrapSVGText(labelTextSelection, labelMaxWidth, separator)
   else wasTrimmed = trimSVGText(labelTextSelection, labelMaxWidth, config.labelTrimMode, fastEstimatesMode, labelFontSize, fontWidthToHeightRatio)
 
   const labelSize = estimateTextSize(labelTextSelection, labelFontSize, dy, fastEstimatesMode, fontWidthToHeightRatio)
@@ -191,7 +191,7 @@ export function renderLabel<N extends SankeyInputNode, L extends SankeyInputLink
     .style('cursor', (d: SankeyNode<N, L>) => getString(d, config.labelCursor))
 
   const sublabelMaxWidth = isSublabelInline ? config.labelMaxWidth * config.subLabelToLabelInlineWidthRatio : config.labelMaxWidth
-  if (config.labelFit === FitMode.Wrap || forceExpand) wrapSVGText(sublabelTextSelection, { width: sublabelMaxWidth, separator, verticalAlign: VerticalAlign.Top })
+  if (config.labelFit === FitMode.Wrap || forceExpand) wrapSVGText(sublabelTextSelection, sublabelMaxWidth, separator)
   else wasTrimmed = wasTrimmed || trimSVGText(sublabelTextSelection, sublabelMaxWidth, config.labelTrimMode, fastEstimatesMode, subLabelFontSize, fontWidthToHeightRatio)
 
   labelGroup.classed(s.labelTrimmed, wasTrimmed)

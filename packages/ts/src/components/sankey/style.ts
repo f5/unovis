@@ -1,5 +1,5 @@
 import { css, injectGlobal } from '@emotion/css'
-import { DEFAULT_ICON_FONT_FAMILY } from 'styles/index'
+import { UNOVIS_ICON_FONT_FAMILY_DEFAULT } from 'styles/index'
 
 export const SANKEY_ICON_SIZE = 22
 
@@ -37,7 +37,7 @@ export const variables = injectGlobal`
     --vis-sankey-icon-size: ${SANKEY_ICON_SIZE}px;
     --vis-sankey-icon-color: #ffffff;
     --vis-sankey-icon-stroke-opacity: 0.6;
-    --vis-sankey-icon-font-family: ${DEFAULT_ICON_FONT_FAMILY};
+    --vis-sankey-icon-font-family: ${UNOVIS_ICON_FONT_FAMILY_DEFAULT};
 
     // Undefined by default to allow proper fallback to var(--vis-font-family)
     /* --vis-sankey-label-font-family: */

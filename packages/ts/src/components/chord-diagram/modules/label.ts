@@ -3,7 +3,7 @@ import { ScaleContinuousNumeric } from 'd3-scale'
 import { color } from 'd3-color'
 
 // Utils
-import { wrapTextElement } from 'utils/text'
+import { trimSVGText } from 'utils/text'
 import { smartTransition } from 'utils/d3'
 import { getNumber, getString, getValue } from 'utils/data'
 import { getColor, hexToBrightness } from 'utils/color'
@@ -114,7 +114,9 @@ export function updateLabel<N extends ChordInputNode, L extends ChordInputLink> 
     const arcLength = radius * radianArcLength
     const maxWidth = (nodeLabelAlignment === ChordLabelAlignment.Along ? arcLength : width) - LABEL_PADDING * 2
 
-    select(elements[i]).call(wrapTextElement, { width: maxWidth, trimOnly: true })
+    const textElementSelection = select(elements[i])
+    trimSVGText(textElementSelection, maxWidth)
+    textElementSelection
       .attr('dx', nodeLabelAlignment === ChordLabelAlignment.Along ? LABEL_PADDING : null)
       .attr('dy', nodeLabelAlignment === ChordLabelAlignment.Along ? getNumber(d.data, nodeWidth) / 2 : null)
 
