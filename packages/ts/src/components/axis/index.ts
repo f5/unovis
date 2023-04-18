@@ -1,6 +1,6 @@
-import { Selection } from 'd3-selection'
+import { select, Selection } from 'd3-selection'
 import { interrupt } from 'd3-transition'
-import { axisLeft, axisTop, axisRight, axisBottom, Axis as D3Axis } from 'd3-axis'
+import { Axis as D3Axis, axisBottom, axisLeft, axisRight, axisTop } from 'd3-axis'
 
 // Core
 import { XYComponentCore } from 'core/xy-component'
@@ -8,19 +8,17 @@ import { XYComponentCore } from 'core/xy-component'
 // Types
 import { Position } from 'types/position'
 import { Spacing } from 'types/spacing'
-import { TextAlign } from 'types/text'
+import { FitMode, TextAlign, UnovisText, UnovisTextOptions, VerticalAlign } from 'types/text'
 
 // Utils
 import { smartTransition } from 'utils/d3'
+import { renderTextToSvgTextElement, trimSVGText } from 'utils/text'
 
 // Local Types
 import { AxisType } from './types'
 
 // Config
 import { AxisConfig, AxisConfigInterface } from './config'
-
-// Modules
-import { wrapTickText, getWrapOptions } from './modules/tick'
 
 // Styles
 import * as s from './style'
@@ -37,12 +35,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfig<Datum>, AxisC
   private _defaultNumTicks = 3
   private _minMaxTicksOnlyEnforceWidth = 250
 
-  events = {
-    [Axis.selectors.tick]: {
-      mouseover: this._onTickMouseOver.bind(this),
-      mouseout: this._onTickMouseOut.bind(this),
-    },
-  }
+  events = {}
 
   constructor (config?: AxisConfigInterface<Datum>) {
     super()
@@ -145,7 +138,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfig<Datum>, AxisC
       const gridGen = this._buildGrid().tickFormat(() => '')
       gridGen.tickValues(this._getConfiguredTickValues())
       // Interrupting all active transitions first to prevent them from being stuck.
-      // Somehow we see it happening in in Angular apps.
+      // Somehow we see it happening in Angular apps.
       this.gridGroup.selectAll('*').interrupt()
       smartTransition(this.gridGroup, duration).call(gridGen).style('opacity', 1)
     } else {
@@ -198,11 +191,11 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfig<Datum>, AxisC
     axisGen.tickValues(this._getConfiguredTickValues())
 
     // Interrupting all active transitions first to prevent them from being stuck.
-    // Somehow we see it happening in in Angular apps.
+    // Somehow we see it happening in Angular apps.
     selection.selectAll('*').interrupt()
     smartTransition(selection, duration).call(axisGen)
 
-    const ticks = selection.selectAll<SVGGElement, unknown>('g.tick')
+    const ticks = selection.selectAll<SVGGElement, number | Date>('g.tick')
     const tickValues = ticks.data()
 
     ticks
@@ -210,11 +203,29 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfig<Datum>, AxisC
       .style('font-size', config.tickTextFontSize)
 
     // We interrupt transition on tick Text to make it 'wrappable'
-    const tickText = selection.selectAll<SVGTextElement, unknown>('g.tick > text')
+    const tickText = selection.selectAll<SVGTextElement, number | Date>('g.tick > text')
     tickText.nodes().forEach(node => interrupt(node))
-    tickText.text((value, i) => config.tickFormat?.(value, i, tickValues) ?? value)
-    tickText
-      .call(wrapTickText, getWrapOptions(ticks, config, this._width))
+
+    tickText.each((value, i, elements) => {
+      const text = config.tickFormat?.(value, i, tickValues) ?? `${value}`
+      const textElement = elements[i]
+      const textMaxWidth = config.tickTextWidth || (config.type === AxisType.X ? this._containerWidth / (ticks.size() + 1) : this._containerWidth / 5)
+      const styleDeclaration = getComputedStyle(textElement)
+      const fontSize = Number.parseFloat(styleDeclaration.fontSize)
+      const fontFamily = styleDeclaration.fontFamily
+
+      if (config.tickTextFitMode === FitMode.Trim) {
+        const textElementSelection = select(textElement).text(text)
+        trimSVGText(textElementSelection, textMaxWidth, config.tickTextTrimType, true, fontSize, 0.58)
+      } else {
+        const textBlock: UnovisText = { text, fontFamily, fontSize }
+        const textOptions: UnovisTextOptions = {
+          verticalAlign: config.type === AxisType.X ? VerticalAlign.Top : VerticalAlign.Middle,
+          width: textMaxWidth,
+        }
+        renderTextToSvgTextElement(textElement, textBlock, textOptions)
+      }
+    })
 
     selection
       .classed(s.axis, true)
@@ -348,13 +359,5 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfig<Datum>, AxisC
       case TextAlign.Center: return axisPosition === Position.Left ? width * (-0.5) : width * 0.5
       default: return 0
     }
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  _onTickMouseOver (d: any, event: MouseEvent): void {
-  }
-
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  _onTickMouseOut (d: any, event: MouseEvent): void {
   }
 }

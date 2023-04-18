@@ -6,7 +6,7 @@ import { arc } from 'd3-shape'
 import { GraphInputLink, GraphInputNode } from 'types/graph'
 
 // Utils
-import { trimText } from 'utils/text'
+import { trimString } from 'utils/text'
 import { polygon } from 'utils/path'
 import { smartTransition } from 'utils/d3'
 import { getBoolean, getNumber, getString, getValue, throttle } from 'utils/data'
@@ -252,10 +252,10 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
     const labelText = getString(d, nodeLabel, d._index)
     const sublabelText = getString(d, nodeSubLabel, d._index)
     const labelTextTrimmed = getBoolean(d, nodeLabelTrim, d._index)
-      ? trimText(labelText, getNumber(d, nodeLabelTrimLength, d._index), getValue(d, nodeLabelTrimMode, d._index))
+      ? trimString(labelText, getNumber(d, nodeLabelTrimLength, d._index), getValue(d, nodeLabelTrimMode, d._index))
       : labelText
     const sublabelTextTrimmed = getBoolean(d, nodeSubLabelTrim, d._index)
-      ? trimText(sublabelText, getNumber(d, nodeSubLabelTrimLength, d._index), getValue(d, nodeSubLabelTrimMode, d._index))
+      ? trimString(sublabelText, getNumber(d, nodeSubLabelTrimLength, d._index), getValue(d, nodeSubLabelTrimMode, d._index))
       : sublabelText
 
     labelTextContent.text(labelTextTrimmed)

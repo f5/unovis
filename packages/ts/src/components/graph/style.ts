@@ -1,5 +1,5 @@
 import { css, injectGlobal } from '@emotion/css'
-import { DEFAULT_ICON_FONT_FAMILY } from 'styles/index'
+import { UNOVIS_ICON_FONT_FAMILY_DEFAULT } from 'styles/index'
 
 // Nodes
 import * as nodeSelectors from './modules/node/style'
@@ -9,7 +9,7 @@ import * as linkSelectors from './modules/link/style'
 
 export const variables = injectGlobal`
   :root {
-    --vis-graph-icon-font-family: ${DEFAULT_ICON_FONT_FAMILY};
+    --vis-graph-icon-font-family: ${UNOVIS_ICON_FONT_FAMILY_DEFAULT};
   }
 `
 

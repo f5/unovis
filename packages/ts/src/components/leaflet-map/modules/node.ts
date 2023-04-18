@@ -8,7 +8,7 @@ import { GenericDataRecord } from 'types/data'
 
 // Utils
 import { smartTransition } from 'utils/d3'
-import { estimateTextSize, trimTextMiddle } from 'utils/text'
+import { estimateTextSize, trimStringMiddle } from 'utils/text'
 import { clamp, getString } from 'utils/data'
 import { getCSSVariableValueInPixels, rectIntersect } from 'utils/misc'
 import { hexToBrightness } from 'utils/color'
@@ -128,7 +128,7 @@ export function updateNodes<D extends GenericDataRecord> (
           : (isCluster ? cssvar(s.variables.mapClusterInnerLabelTextColorLight) : cssvar(s.variables.mapPointInnerLabelTextColorLight))
       })
 
-    const bottomLabelTextTrimmed = trimTextMiddle(bottomLabelText, 15)
+    const bottomLabelTextTrimmed = trimStringMiddle(bottomLabelText, 15)
     bottomLabel
       .text(bottomLabelTextTrimmed)
       .attr('font-size', getCSSVariableValueInPixels(cssvar(s.variables.mapPointBottomLabelFontSize), selection.node()))

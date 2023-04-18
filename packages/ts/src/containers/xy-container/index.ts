@@ -316,7 +316,7 @@ export class XYContainer<Datum> extends ContainerCore {
     if (isYDirectionSouth) yRange.reverse()
 
     for (const c of components) {
-      c.setSize(this.width, this.height)
+      c.setSize(this.width, this.height, this.containerWidth, this.containerHeight)
       c.setScaleRange(ScaleDimension.X, config.xRange ?? xRange)
       c.setScaleRange(ScaleDimension.Y, config.yRange ?? yRange)
     }
