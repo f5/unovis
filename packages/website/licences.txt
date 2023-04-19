@@ -3,10 +3,10 @@ name                                       license period  license type  install
 @angular/core                              perpetual       MIT           12.0.3             angular
 @angular/platform-browser                  perpetual       MIT           12.0.3             angular
 @angular/platform-browser-dynamic          perpetual       MIT           12.0.3             angular
-@docusaurus/core                           perpetual       MIT           2.3.0              n/a
-@docusaurus/plugin-debug                   perpetual       MIT           2.3.1              n/a
-@docusaurus/plugin-sitemap                 perpetual       MIT           2.3.1              n/a
-@docusaurus/preset-classic                 perpetual       MIT           2.3.1              n/a
+@docusaurus/core                           perpetual       MIT           2.4.0              n/a
+@docusaurus/plugin-debug                   perpetual       MIT           2.4.0              n/a
+@docusaurus/plugin-sitemap                 perpetual       MIT           2.4.0              n/a
+@docusaurus/preset-classic                 perpetual       MIT           2.4.0              n/a
 @mdx-js/react                              perpetual       MIT           1.6.21             John Otander
 @stackblitz/sdk                            perpetual       MIT           1.8.0              Eric Simons
 clsx                                       perpetual       MIT           1.1.1              Luke Edwards
@@ -18,8 +18,8 @@ react-docgen-typescript                    perpetual       MIT           1.2.0  
 react-dom                                  perpetual       MIT           17.0.1             n/a
 react-markdown                             perpetual       MIT           8.0.1              Espen Hovlandsdal
 svelte                                     perpetual       MIT           3.48.0             Rich Harris
-@docusaurus/module-type-aliases            perpetual       MIT           2.1.0              n/a
-@tsconfig/docusaurus                       perpetual       MIT           1.0.4              n/a
+@docusaurus/module-type-aliases            perpetual       MIT           2.4.0              n/a
+@tsconfig/docusaurus                       perpetual       MIT           1.0.7              n/a
 @tsconfig/svelte                           perpetual       MIT           2.0.0              n/a
 eslint-plugin-svelte                       perpetual       MIT           2.10.0             Yosuke Ota
 ngc-esbuild                                perpetual       ISC           0.0.75             Joe Cserko
