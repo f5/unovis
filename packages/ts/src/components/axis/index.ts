@@ -7,12 +7,14 @@ import { XYComponentCore } from 'core/xy-component'
 
 // Types
 import { Position } from 'types/position'
+import { ContinuousScale } from 'types/scale'
 import { Spacing } from 'types/spacing'
 import { FitMode, TextAlign, UnovisText, UnovisTextOptions, VerticalAlign } from 'types/text'
 
 // Utils
 import { smartTransition } from 'utils/d3'
 import { renderTextToSvgTextElement, trimSVGText } from 'utils/text'
+import { isEqual } from 'utils/data'
 
 // Local Types
 import { AxisType } from './types'
@@ -196,14 +198,18 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfig<Datum>, AxisC
     smartTransition(selection, duration).call(axisGen)
 
     const ticks = selection.selectAll<SVGGElement, number | Date>('g.tick')
-    const tickValues = ticks.data()
 
     ticks
       .classed(s.tick, true)
       .style('font-size', config.tickTextFontSize)
 
-    // We interrupt transition on tick Text to make it 'wrappable'
+    // Selecting the <text> elements of the ticks to apply formatting. By default, this selection
+    // will include exiting elements, so we're filtering them out.
+    const tickValues: (number | Date)[] = axisGen.scale<ContinuousScale>().ticks(this._getNumTicks())
     const tickText = selection.selectAll<SVGTextElement, number | Date>('g.tick > text')
+      .filter(tickValue => tickValues.some(t => isEqual(tickValue, t))) // We use isEqual to compare Dates
+
+    // We interrupt the transition on tick's <text> to make it 'wrappable'
     tickText.nodes().forEach(node => interrupt(node))
 
     tickText.each((value, i, elements) => {
@@ -215,7 +221,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfig<Datum>, AxisC
       const fontFamily = styleDeclaration.fontFamily
 
       if (config.tickTextFitMode === FitMode.Trim) {
-        const textElementSelection = select(textElement).text(text)
+        const textElementSelection = select<SVGTextElement, string>(textElement).text(text)
         trimSVGText(textElementSelection, textMaxWidth, config.tickTextTrimType, true, fontSize, 0.58)
       } else {
         const textBlock: UnovisText = { text, fontFamily, fontSize }
