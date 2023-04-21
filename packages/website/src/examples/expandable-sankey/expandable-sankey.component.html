@@ -1,14 +1,13 @@
-<vis-single-container [data]="data" [height]="'60vh'">
+<vis-single-container #vis [data]="data" [height]="'60vh'">
   <vis-sankey
     labelFit="wrap"
     labelVerticalAlign="middle"
     subLabelPlacement="inline"
-    [nodeCursor]="nodeCursor"
     [events]="events"
     [labelForceWordBreak]="false"
     [labelMaxWidth]="150"
     [linkColor]="linkColor"
-    [nodeColor]="nodeColor"
+    [nodeCursor]="nodeCursor"
     [nodeIcon]="nodeIcon"
     [nodePadding]="20"
     [subLabel]="subLabel"

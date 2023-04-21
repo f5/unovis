@@ -1,57 +1,50 @@
 import { SingleContainer, Sankey, FitMode, SankeyNode, SankeySubLabelPlacement, VerticalAlign, SankeyLink } from '@unovis/ts'
-import { getColor, getChildren, LinkDatum, NodeDatum, sankeyData, sourceNode } from './data'
-
-// initial data
-let data = {
-  nodes: [sourceNode, ...getChildren(sourceNode)],
-  links: sankeyData.links,
-}
+import { sankeyData, root, Node, Link } from './data'
 
 // initialize chart
 const container = document.getElementById('vis-container')
 const chart = new SingleContainer(container)
 
 // node click event listener
-function toggleGroup (n: SankeyNode<NodeDatum, LinkDatum>): void {
-  if (!n.expandable) return
-  const nodes = [...data.nodes]
-  nodes[n.index].expanded = !nodes[n.index].expanded
-  n.sourceLinks.forEach(d => {
-    nodes[d.index].expanded = false
-  })
-
-  data = {
-    nodes: n.expanded
-      ? nodes.filter(d => !d.id.startsWith(n.id) || d.level <= n.layer)
-      : [...nodes, ...getChildren(n)],
-    links: data.links,
+function toggleGroup (n: Node): void {
+  if (n.expandable) {
+    if (n.expanded) {
+      sankeyData.collapse(n)
+    } else {
+      sankeyData.expand(n)
+    }
+    n.expanded = !n.expanded
+    chart.setData({ nodes: sankeyData.nodes, links: sankeyData.links })
   }
-  chart.setData(data)
 }
 
 // main component
-const sankey = new Sankey<NodeDatum, LinkDatum>({
-  labelFit: FitMode.Wrap,
-  labelForceWordBreak: false,
-  labelMaxWidth: 150,
-  labelVerticalAlign: VerticalAlign.Middle,
-  nodeCursor: (d: SankeyNode<NodeDatum, LinkDatum>) => d.expandable ? 'pointer' : null,
-  nodePadding: 20,
-  nodeColor: getColor,
-  linkColor: (d: SankeyLink<NodeDatum, LinkDatum>) => getColor(d.source),
-  nodeIcon: (d: NodeDatum) => d.expandable ? (d.expanded ? '-' : '+') : '',
-  subLabel: (d: SankeyNode<NodeDatum, LinkDatum>): string => ((d.depth === 0) || d.expanded) ? '' : `${((d.value / sourceNode.value) * 100).toFixed(1)}%`,
-  subLabelPlacement: SankeySubLabelPlacement.Inline,
+const sankey = new Sankey<Node, Link>({
   events: {
     [Sankey.selectors.node]: {
       click: toggleGroup,
     },
   },
+  labelFit: FitMode.Wrap,
+  labelForceWordBreak: false,
+  labelMaxWidth: 150,
+  labelVerticalAlign: VerticalAlign.Middle,
+  linkColor: (d: SankeyLink<Node, Link>) => d.source.color ?? null,
+  nodeCursor: (d: Node) => d.expandable ? 'pointer' : null,
+  nodeIcon: (d: Node) => d.expandable ? (d.expanded ? '-' : '+') : '',
+  nodePadding: 20,
+  subLabel: (d: SankeyNode<Node, Link>): string => ((d.depth === 0) || d.expanded)
+    ? ''
+    : `${((d.value / root.value) * 100).toFixed(1)}%`,
+  subLabelPlacement: window.innerHeight > window.innerWidth
+    ? SankeySubLabelPlacement.Below
+    : SankeySubLabelPlacement.Inline,
 })
+
 
 chart.update({
   component: sankey,
-  height: '60vh',
-}, sankey.config, data)
+  height: 'min(60vh,75vw)',
+}, sankey.config, sankeyData)
 
 

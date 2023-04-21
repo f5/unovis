@@ -1,260 +1,132 @@
-export type NodeDatum = {
+export type Node = {
   id: string;
   label: string;
-  subgroups: string[];
   value: number;
+  subgroups: Node[];
+  color?: string;
   expandable?: boolean;
   expanded?: boolean;
-  level?: number;
-};
+}
+export type Link = { source: string; target: string; value: number }
 
-export type LinkDatum = {
-  source: string;
-  target: string;
-  value: number;
-};
-
-export type SankeyData = {
-  nodes: NodeDatum[];
-  links: LinkDatum[];
-};
-
-export function getColor (n: NodeDatum): string | undefined {
-  const colorMap = Object.fromEntries([
-    ['1', '#1acb9a'],
-    ['3', '#6A9DFF'],
-    ['4', '#8ee422'],
-    ['5', '#a611a5'],
-    ['6', '#f88080'],
-  ])
-  return colorMap[n.id.charAt(0)]
+export type Sankey = {
+  readonly nodes: Node[];
+  readonly links: Link[];
+  collapse: (n: Node) => void;
+  expand: (n: Node) => void;
 }
 
-const expenditureData = [
+const categories = [
   {
-    id: '',
-    label: 'Average Weekly Expenditure',
-    value: 414.6,
-    color: '#d4d4d4',
-    subgroups: ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
-  },
-  {
-    id: '1',
     label: 'Consumables',
+    color: '#1acb9a',
     value: 83.3,
-    subgroups: ['1A', '1B', '1C'],
+    subgroups: [
+      { label: 'Food', value: 63.3 },
+      {
+        label: 'Drinks',
+        value: 17.2,
+        subgroups: [
+          { label: 'Non-alcoholic', value: 5.9 },
+          { label: 'Alcoholic', value: 11.3 },
+        ],
+      },
+      { label: 'Tobacco/narcotics', value: 2.8 },
+    ],
   },
+  { label: 'Apparel', value: 14.5 },
   {
-    id: '1A',
-    label: 'Food',
-    value: 63.3,
-    subgroups: [],
-  },
-  {
-    id: '1B',
-    label: 'Drinks',
-    value: 17.2,
-    subgroups: ['1Ba', '1Bb'],
-  },
-  {
-    id: '1Ba',
-    label: 'Non-alcoholic',
-    value: 5.9,
-    subgroups: [],
-  },
-  {
-    id: '1Bb',
-    label: 'Alcoholic',
-    value: 11.3,
-    subgroups: [],
-  },
-  {
-    id: '1C',
-    label: 'Tobacco/narcotics',
-    value: 2.8,
-    subgroups: [],
-  },
-  {
-    id: '2',
-    label: 'Apparel',
-    value: 14.5,
-    subgroups: [],
-  },
-  {
-    id: '3',
     label: 'Household expenses',
+    color: '#6A9DFF',
     value: 131.4,
-    subgroups: ['3A', '3B', '3C', '3D', '3E'],
+    subgroups: [
+      { label: 'Rent', value: 51.2 },
+      {
+        label: 'Utilities',
+        value: 34.3,
+        subgroups: [
+          { label: 'Water', value: 9.9 },
+          { label: 'Power', value: 23.2 },
+          { label: 'Other', value: 1.2 },
+        ],
+      },
+      { label: 'Goods & Furninshings', value: 15.0 },
+      { label: 'Repair', value: 10 },
+      { label: 'Phone/Internet', value: 20.9 },
+    ],
   },
   {
-    id: '3A',
-    label: 'Rent',
-    value: 51.2,
-    subgroups: [],
-  },
-  {
-    id: '3B',
-    label: 'Utilities',
-    value: 34.3,
-    subgroups: ['3B1', '3B2', '3B3'],
-  },
-  {
-    id: '3B1',
-    label: 'Water',
-    value: 9.9,
-    subgroups: [],
-  },
-  {
-    id: '3B2',
-    label: 'Power',
-    value: 23.2,
-    subgroups: [],
-  },
-  {
-    id: '3B3',
-    label: 'Other',
-    value: 1.2,
-    subgroups: [],
-  },
-  {
-    id: '3C',
-    label: 'Goods & Furninshings',
-    value: 15.0,
-    subgroups: [],
-  },
-  {
-    id: '3D',
-    label: 'Repair',
-    value: 10,
-    subgroups: [],
-  },
-  {
-    id: '3E',
-    label: 'Phone/Internet',
-    value: 20.9,
-    subgroups: [],
-  },
-  {
-    id: '4',
     label: 'Transport',
+    color: '#8ee422',
     value: 60.8,
-    subgroups: ['4A', '4B'],
+    subgroups: [
+      { label: 'Personal transport', value: 51.2 },
+      { label: 'Public transport', value: 9.6 },
+    ],
   },
   {
-    id: '4A',
-    label: 'Personal transport',
-    value: 51.2,
-    subgroups: [],
-  },
-  {
-    id: '4B',
-    label: 'Public transport',
-    value: 9.6,
-    subgroups: [],
-  },
-  {
-    id: '5',
     label: 'Individual expenses',
+    color: '#a611a5',
     value: 37.0,
-    subgroups: ['5A', '5B', '5C'],
+    subgroups: [
+      { label: 'Insurance', value: 20.4 },
+      { label: 'Healthcare', value: 6.7 },
+      { label: 'Personal care', value: 9.9 },
+    ],
   },
   {
-    id: '5A',
-    label: 'Insurance',
-    value: 20.4,
-    subgroups: [],
-  },
-  {
-    id: '5B',
-    label: 'Healthcare',
-    value: 6.7,
-    subgroups: [],
-  },
-  {
-    id: '5C',
-    label: 'Personal care',
-    value: 9.9,
-    subgroups: [],
-  },
-  {
-    id: '6',
     label: 'Recreation & Culture',
+    color: '#f88080',
     value: 45.5,
-    subgroups: ['6A', '6B', '6C', '6D', '6E'],
+    subgroups: [
+      { label: 'Electronics', value: 5.0 },
+      { label: 'Events & Activities', value: 11.3 },
+      { label: 'Pets', value: 6.7 },
+      { label: 'Hobbies', value: 16.3 },
+      { label: 'Other', value: 6.2 },
+    ],
   },
-  {
-    id: '6A',
-    label: 'Electronics',
-    value: 5.0,
-    subgroups: [],
-  },
-  {
-    id: '6B',
-    label: 'Events & Activities',
-    value: 11.3,
-    subgroups: [],
-  },
-  {
-    id: '6C',
-    label: 'Pets',
-    value: 6.7,
-    subgroups: [],
-  },
-  {
-    id: '6D',
-    label: 'Hobbies',
-    value: 16.3,
-    subgroups: [],
-  },
-  {
-    id: '6E',
-    label: 'Other',
-    value: 6.2,
-    subgroups: [],
-  },
-  {
-    id: '7',
-    label: 'Education',
-    value: 8.3,
-    subgroups: [],
-  },
-  {
-    id: '8',
-    label: 'Restaurant & Hotels',
-    value: 18.8,
-    subgroups: [],
-  },
-  {
-    id: '9',
-    label: 'Miscellaneous',
-    value: 15.0,
-    subgroups: [],
-  },
+  { label: 'Education', value: 8.3 },
+  { label: 'Restaurant & Hotels', value: 18.8 },
+  { label: 'Miscellaneous', value: 15.0 },
 ]
 
-const getNode = (id: string): NodeDatum => expenditureData.find((d) => d.id === id)
 
-export const sankeyData: SankeyData = {
-  nodes: expenditureData.map(d => ({
-    ...d,
-    level: d.id.length,
-    expandable: d.subgroups.length !== 0,
-    expanded: false,
-  })),
-  links: expenditureData.flatMap((d) =>
-    d.subgroups.map((id) => ({
-      source: d.id,
-      target: id,
-      value: getNode(id).value,
-    }))
-  ),
-}
+const getNodes = (n: Node): Node[] => n.subgroups?.map((child, i) => ({
+  ...child,
+  id: [n.id, i].join(''),
+  color: child.color ?? n.color,
+  expanded: false,
+  expandable: child.subgroups?.length > 0,
+}))
 
-export const sourceNode = {
-  ...sankeyData.nodes[0],
-  expandable: false,
-}
+const getLinks = (n: Node): Link[] => n.subgroups.map(target => ({
+  source: n.id,
+  target: target.id,
+  value: target.value,
+}))
 
-export function getChildren (n: NodeDatum): NodeDatum[] {
-  return sankeyData.nodes.filter(d => n.subgroups?.includes(d.id))
+const generate = (n: Node): Node => ({ ...n, subgroups: getNodes(n) })
+
+export const root: Node = generate({
+  id: 'root',
+  label: 'Average Weekly Expenditure',
+  value: 414.7,
+  expanded: true,
+  expandable: true,
+  subgroups: categories as Node[],
+})
+
+export const sankeyData: Sankey = {
+  nodes: [root, ...root.subgroups],
+  links: getLinks(root),
+  expand: function (n: Node): void {
+    n.subgroups = getNodes(n)
+    this.nodes = this.nodes.concat(n.subgroups)
+    this.links = this.links.concat(getLinks(n))
+  },
+  collapse: function (n: Node): void {
+    this.nodes = this.nodes.filter(d => d.id === n.id || !d.id.startsWith(n.id))
+    this.links = this.links.filter(d => !d.source.id.startsWith(n.id))
+  },
 }

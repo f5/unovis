@@ -1,30 +1,25 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { FitMode, Sankey, SankeyLink, SankeyNode, SankeySubLabelPlacement, VerticalAlign } from '@unovis/ts'
 import { VisSingleContainer, VisSankey } from '@unovis/react'
 
-import { getColor, getChildren, LinkDatum, NodeDatum, sankeyData, sourceNode } from './data'
+import { sankeyData, root, Node, Link } from './data'
 
 export default function ExpandableSankey (): JSX.Element {
-  const subLabelPlacement = window.innerHeight > window.innerWidth ? SankeySubLabelPlacement.Below : SankeySubLabelPlacement.Inline
-  const [data, setData] = React.useState({
-    nodes: [sourceNode, ...getChildren(sourceNode)],
-    links: sankeyData.links,
-  })
+  const subLabelPlacement = window.innerHeight > window.innerWidth
+    ? SankeySubLabelPlacement.Below
+    : SankeySubLabelPlacement.Inline
 
-  const toggleGroup = useCallback((n: SankeyNode<NodeDatum, LinkDatum>): void => {
+  const [data, setData] = useState<{ nodes: Node[]; links: Link[] }>(sankeyData)
+
+  const toggleGroup = useCallback((n: Node): void => {
     if (n.expandable) {
-      const nodes = [...data.nodes]
-      nodes[n.index].expanded = !nodes[n.index].expanded
-      n.sourceLinks.forEach(d => {
-        nodes[d.index].expanded = false
-      })
-
-      setData({
-        nodes: n.expanded
-          ? nodes.filter(d => !d.id.startsWith(n.id) || d.level <= n.layer)
-          : [...nodes, ...getChildren(n)],
-        links: data.links,
-      })
+      if (n.expanded) {
+        sankeyData.collapse(n)
+      } else {
+        sankeyData.expand(n)
+      }
+      n.expanded = !n.expanded
+      setData({ nodes: sankeyData.nodes, links: sankeyData.links })
     }
   }, [data])
 
@@ -35,15 +30,14 @@ export default function ExpandableSankey (): JSX.Element {
         labelForceWordBreak={false}
         labelMaxWidth={window.innerWidth * 0.12}
         labelVerticalAlign={VerticalAlign.Middle}
-        nodeColor={useCallback(getColor, [])}
-        nodeIcon={useCallback((d: NodeDatum) => d.expandable ? (d.expanded ? '-' : '+') : '', [])}
-        nodeCursor={useCallback((d: SankeyNode<NodeDatum, LinkDatum>) => d.expandable ? 'pointer' : null, [])}
+        nodeIcon={useCallback((d: Node) => d.expandable ? (d.expanded ? '-' : '+') : '', [])}
+        nodeCursor={useCallback((d: Node) => d.expandable ? 'pointer' : null, [])}
         nodePadding={20}
-        linkColor={useCallback((d: SankeyLink<NodeDatum, LinkDatum>) => getColor(d.source), [])}
+        linkColor={useCallback((d: SankeyLink<Node, Link>) => d.source.color ?? null, [])}
         subLabelPlacement={subLabelPlacement}
-        subLabel={useCallback((d: SankeyNode<NodeDatum, LinkDatum>) => ((d.depth === 0) || d.expanded)
+        subLabel={useCallback((d: SankeyNode<Node, Link>) => ((d.depth === 0) || d.expanded)
           ? ''
-          : `${((d.value / sourceNode.value) * 100).toFixed(1)}%`
+          : `${((d.value / root.value) * 100).toFixed(1)}%`
         , [])}
         events={{
           [Sankey.selectors.node]: {
