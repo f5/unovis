@@ -51,7 +51,10 @@ export function bBoxMerge (
 
 export const getNextZoomLevelOnClusterClick = (level: number): number => clamp(1 + level * 1.5, level, 12)
 
-export function projectPoint (geoJSONPoint, leafletMap: L.Map): { x: number; y: number } {
+export function projectPoint<D extends GenericDataRecord> (
+  geoJSONPoint: LeafletMapPoint<D> | ClusterFeature<LeafletMapClusterDatum<D>> | PointFeature<LeafletMapPointDatum<D>>,
+  leafletMap: L.Map
+): { x: number; y: number } {
   const lat = geoJSONPoint.geometry.coordinates[1]
   const lon = geoJSONPoint.geometry.coordinates[0]
   const projected = leafletMap.latLngToLayerPoint([lat, lon])
@@ -214,15 +217,14 @@ export function shouldClusterExpand<D extends GenericDataRecord> (
   cluster: LeafletMapPoint<D>,
   zoomLevel: number,
   midLevel = 4,
-  maxLevel = 11,
+  maxLevel = 8,
   maxClusterZoomLevel = 23
 ): boolean {
   if (!cluster) return false
 
-  const clusterExpansionZoomLevel: number = cluster.clusterIndex.getClusterExpansionZoom(cluster.id as number)
-  return clusterExpansionZoomLevel >= maxClusterZoomLevel ||
-    zoomLevel >= maxLevel ||
-    (zoomLevel >= midLevel && cluster && (cluster.properties as LeafletMapClusterDatum<D>).point_count < 20)
+  const clusterExpansionZoomLevel = cluster.clusterIndex.getClusterExpansionZoom(cluster.properties.cluster_id as number)
+  return zoomLevel >= maxLevel ||
+        (zoomLevel >= midLevel && (cluster.properties.point_count < 20 || clusterExpansionZoomLevel >= maxClusterZoomLevel))
 }
 
 export function findPointAndClusterByPointId<D extends GenericDataRecord> (

@@ -18,6 +18,19 @@ import { GenericDataRecord } from 'types/data'
 // Utils
 import { clamp, isNil, getNumber, getString, isString } from 'utils/data'
 import { constraintMapViewThrottled } from './renderer/mapboxgl-utils'
+import {
+  projectPoint,
+  bBoxMerge,
+  calculateClusterIndex,
+  getNextZoomLevelOnClusterClick,
+  findPointAndClusterByPointId,
+  geoJsonPointToScreenPoint,
+  getClusterRadius,
+  getClustersAndPoints,
+  getNodeRelativePosition,
+  getPointRadius,
+  shouldClusterExpand,
+} from './modules/utils'
 
 // Local Types
 import {
@@ -41,18 +54,6 @@ import { initialMapCenter, initialMapZoom, setupMap, updateTopoJson } from './mo
 import { collideLabels, createNodes, removeNodes, updateNodes } from './modules/node'
 import { createNodeSelectionRing, updateNodeSelectionRing } from './modules/selectionRing'
 import { createBackgroundNode, updateBackgroundNode } from './modules/clusterBackground'
-import {
-  bBoxMerge,
-  calculateClusterIndex,
-  getNextZoomLevelOnClusterClick,
-  findPointAndClusterByPointId,
-  geoJsonPointToScreenPoint,
-  getClusterRadius,
-  getClustersAndPoints,
-  getNodeRelativePosition,
-  getPointRadius,
-  shouldClusterExpand,
-} from './modules/utils'
 
 export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<Datum[], LeafletMapConfig<Datum>, LeafletMapConfigInterface<Datum>> {
   static selectors = s
@@ -215,7 +216,7 @@ export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<D
   }
 
   setConfig (config: LeafletMapConfigInterface<Datum>): void {
-    this.config.init(config)
+    this.config = new LeafletMapConfig<Datum>().init(config)
 
     if (config.width) this._containerSelection.style('width', isString(config.width) ? config.width : `${config.width}px`)
     if (config.height) this._containerSelection.style('height', isString(config.height) ? config.height : `${config.height}px`)
@@ -248,7 +249,29 @@ export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<D
     datamodel.data = dataValid
 
     // We use Supercluster for real-time node clustering
-    this._clusterIndex = calculateClusterIndex<Datum>(data, this.config)
+    this._clusterIndex = calculateClusterIndex<Datum>(dataValid, this.config)
+
+    // If there was an expanded cluster, try to find its successor and expand it too
+    if (this._expandedCluster && this._map.leaflet) {
+      // Reset expanded cluster before calling `_getPointData()` to get data with all clusters collapsed
+      const expandedCluster = this._expandedCluster
+      this._resetExpandedCluster()
+      const pointData = this._getPointData()
+
+      const expandedClusterCenterPx = projectPoint(expandedCluster.cluster, this._map.leaflet)
+      const expandedClusterRadiusPx = expandedCluster.cluster.radius
+      const cluster = pointData.find((c) => {
+        if (!c.isCluster) return false
+        const pos = projectPoint(c, this._map.leaflet)
+        const r = c.radius
+        const distance = Math.sqrt((expandedClusterCenterPx.x - pos.x) ** 2 + (expandedClusterCenterPx.y - pos.y) ** 2)
+        return distance < (expandedClusterRadiusPx + r)
+      })
+
+      if (cluster) this._expandCluster(cluster, true)
+    }
+
+    // Render
     this._leafletInitializationPromise.then(() => {
       this.render()
     })
@@ -505,8 +528,9 @@ export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<D
     }
     this._pointSelectionRing.call(updateNodeSelectionRing, this._selectedPoint, pointData, config, this._map.leaflet)
 
-    // Set up events
+    // Set up events and attributes for the rendered points
     this._setUpComponentEventsThrottled()
+    this._setCustomAttributesThrottled()
 
     // Tooltip
     config.tooltip?.update()
@@ -549,7 +573,7 @@ export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<D
     }
   }
 
-  private _expandCluster (clusterPoint: LeafletMapPoint<Datum>): void {
+  private _expandCluster (clusterPoint: LeafletMapPoint<Datum>, preventRender?: boolean): void {
     const { config, config: { clusterBackground } } = this
     const padding = 1
 
@@ -581,7 +605,7 @@ export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<D
 
       if (clusterBackground) this._clusterBackgroundRadius = getClusterRadius(this._expandedCluster)
 
-      this._renderData()
+      if (!preventRender) this._renderData()
     }
 
     this._zoomingToExternallySelectedPoint = false
