@@ -12,7 +12,9 @@ import { estimateTextSize, trimTextMiddle } from 'utils/text'
 import { clamp, getString } from 'utils/data'
 import { getCSSVariableValueInPixels, rectIntersect } from 'utils/misc'
 import { hexToBrightness } from 'utils/color'
+import { cssvar } from 'utils/style'
 import { getPointPos } from './utils'
+
 
 // Local Types
 import { LeafletMapPointDatum, LeafletMapClusterDatum, LeafletMapPoint, LeafletMapPointShape } from '../types'
@@ -122,14 +124,14 @@ export function updateNodes<D extends GenericDataRecord> (
 
         const brightness = hexToBrightness(hex)
         return brightness > 0.5
-          ? (isCluster ? 'var(--vis-map-cluster-inner-label-text-color-dark)' : 'var(--vis-map-point-inner-label-text-color-dark)')
-          : (isCluster ? 'var(--vis-map-cluster-inner-label-text-color-light)' : 'var(--vis-map-point-inner-label-text-color-light)')
+          ? (isCluster ? cssvar(s.variables.mapClusterInnerLabelTextColorDark) : cssvar(s.variables.mapPointInnerLabelTextColorDark))
+          : (isCluster ? cssvar(s.variables.mapClusterInnerLabelTextColorLight) : cssvar(s.variables.mapPointInnerLabelTextColorLight))
       })
 
     const bottomLabelTextTrimmed = trimTextMiddle(bottomLabelText, 15)
     bottomLabel
       .text(bottomLabelTextTrimmed)
-      .attr('font-size', getCSSVariableValueInPixels('var(--vis-map-point-bottom-label-font-size)', selection.node()))
+      .attr('font-size', getCSSVariableValueInPixels(cssvar(s.variables.mapPointBottomLabelFontSize), selection.node()))
       .attr('visibility', fromExpandedCluster ? 'hidden' : null)
   })
 }
@@ -146,7 +148,7 @@ export function collideLabels<D extends GenericDataRecord> (
     group1HTMLNode['labelVisible'] = true
 
     // Calculate bounding rect of point's bottom label
-    const bottomLabelFontSizePx = getCSSVariableValueInPixels('var(--vis-map-point-bottom-label-font-size)', selection.node())
+    const bottomLabelFontSizePx = getCSSVariableValueInPixels(cssvar(s.variables.mapPointBottomLabelFontSize), selection.node())
     const p1Pos = getPointPos(datum1, leafletMap)
     const label1Size = estimateTextSize(label1, bottomLabelFontSizePx, 0.32, true, 0.6)
     const label1BoundingRect: Rect = {

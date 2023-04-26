@@ -6,6 +6,17 @@ import { TrimMode, VerticalAlign, WrapMode, WrapTextOptions } from 'types/text'
 // Utils
 import { isArray, flatten } from 'utils/data'
 
+export function kebabCaseToCamel (str: string): string {
+  return str.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase())
+}
+
+export function kebabCase (str: string): string {
+  return str.match(/[A-Z]{2,}(?=[A-Z][a-z0-9]*|\b)|[A-Z]?[a-z0-9]*|[A-Z]|[0-9]+/g)
+    ?.filter(Boolean)
+    .map(x => x.toLowerCase())
+    .join('-')
+}
+
 export function trimTextStart (str = '', maxLength = 15): string {
   return str.length > maxLength ? `…${str.substr(str.length - maxLength, maxLength)}` : str
 }
