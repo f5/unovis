@@ -1,0 +1,268 @@
+import { PropTable } from '../components/props-table.tsx'
+import { sample } from '../utils/data.ts'
+import { DocWrapper, InputWrapper } from '../wrappers'
+
+export const data = Array(100)
+  .fill(0)
+  .map(() => {
+    const group = sample(['A', 'B', 'C'])
+    return {
+      group,
+      subgroup: group + Math.floor(Math.random() * 3),
+      value: sample([10, 20, 30]),
+    }
+  })
+
+export const groupColors = { A: 'red', B: 'green', C: 'blue' }
+
+export const defaultProps = () => ({
+  name: 'NestedDonut',
+  containerName: 'SingleContainer',
+  configKey: 'component',
+  dataType: 'Datum',
+  layers: [(d) => d.group, (d) => d.subgroup],
+  data,
+})
+
+# Nested Donut
+
+_Nested Donut_ is a variation of our [_Donut_](./donut) component that supports hierarchial data. Similar to a traditional _Sunburst_
+chart, _Nested Donut_ displays hierarchies through a series of a rings or **layers** containing categorical nodes or **segments**.
+
+## Data and Layer Configuration
+
+_Nested Donut_ expects an array of generic data records, the properties of which will be used to define the layers. Each layer
+will contain nodes or _segments_ that represent their corresponding quantity in the data array.
+
+For the following examples, assume data is of type `Datum[]`.
+
+```ts
+type Datum = {
+  group: string
+  subgroup: string
+  value: number
+}
+```
+
+### Layer Accessors
+
+The `layers` property accepts an array of string accessor functions based on the `Datum` provided.
+The first accessor will define the outermost layer of the chart, the second will provide the next, and so on.
+We can provide `layers` with accessors such the `group` property defines parent nodes with `subgroup` children.
+
+<DocWrapper {...defaultProps()} showContext='full' />
+
+#### Adding additional layers
+
+We can add another layer by adding another accessor:
+
+```ts
+layers = [
+  (d: Datum) => d.group,
+  (d: Datum) => d.subgroup,
+  (d: Datum) => d.value,
+]
+```
+
+<DocWrapper
+  {...defaultProps()}
+  height={400}
+  layers={[(d) => d.group, (d) => d.subgroup, (d) => d.value]}
+  excludeTabs
+/>
+
+#### Layers with missing/undefined data
+
+Now consider data where `value` is optional and only groups `A` and `B` have corresponding value properties.
+We see the hierarchial data is as expected, where the `C` group does not have child segments in the inner layer:
+
+```ts
+layers = [(d: Datum) => d.group, (d: Datum) => d.value]
+```
+
+<DocWrapper
+  {...defaultProps()}
+  data={data.map((d) => ({ ...d, value: d.group === 'C' ? null : d.value }))}
+  layers={[(d) => d.group, (d) => d.value]}
+  excludeTabs
+/>
+
+### Layer Padding
+
+You can provide a constant numeric value to `layerPadding` to set the spacing between each layer in pixels.
+
+<DocWrapper
+  {...defaultProps()}
+  showContext='minimal'
+  layerPadding={10}
+  layers={[(d) => d.group, (d) => d.subgroup, (d) => d.value]}
+/>
+
+### Layer Settings
+
+There are custom settings you can set for each individual layer. Just provide `layerSettings` property
+with an accessor that returns the following type based on the layer's depth:
+
+```typescript
+type NestedDonutLayerSettings = {
+  width: number // The layer's width in pixels
+  rotateLabels: boolean // Set to true if you want the labels in this layer to be rotated with respect to its radial position
+}
+```
+
+#### Example: Constant layer settings
+
+You can customize all the layers at once by simply providing a `NestedDonutLayerSettings` object:
+
+<DocWrapper
+  {...defaultProps()}
+  showContext='minimal'
+  layerSettings={{
+    width: 20,
+    rotateLabels: true,
+  }}
+/>
+
+#### Example: Variable layer settings
+
+To set different layer settings depending on the layer, provide an `NestedDonutLayerSettings` accessor function with a numeric parameter.
+The number refers to the layer's index in the provided `layers` property.
+
+```ts
+layers = [(d: Datum) => d.group, (d: Datum) => d.subgroup]
+
+// The accessor function that takes a layer index* and returns a `NestedDonutLayerSettings` object:
+layerSettings = (layer: number) => ({ width: i === 0 ? 100 : 50 })
+```
+
+<DocWrapper
+  {...defaultProps()}
+  layers={[(d) => d.group, (d) => d.subgroup]}
+  layerSettings={(i) => (i === 0 ? { width: 100 } : { width: 50 })}
+/>
+
+:::\*note
+Note that regardless of [direction](#Direction), this number will always correspond to the layer's index within the `layers` accessor property.
+:::
+
+## Segments
+
+### Segment Data
+
+Unlike our non-hierarchial components, the data type used by accessors to customize segments will not resemble the `Datum` type because the segments
+are generated based on the collection of `Datum` objects provided.
+
+So for certain properties that customize segments, accessors will deal with the following type:
+
+```ts
+type NestedDonutSegmentDatum<Datum> = {
+  key: Datum[keyof Datum] // the category based on the current layer
+  root: Datum[keyof Datum] // the highest parent node
+}
+
+type NestedDonutSegment<Datum> = {
+  data: NestedDonutSegmentDatum<Datum>
+  depth: number
+  height: number
+}
+```
+
+### Segment Color
+
+As an example, we can provide `color` property with an accessor that returns the color based on the segment's `root`:
+
+```ts
+export const groupColors = {
+  A: 'red',
+  B: 'green',
+  C: 'blue',
+}
+segmentColor = (d: NestedDonutSegment<Datum>) => groupColors[d.data.root]
+```
+
+This gives us the appearance of three distinct colors based on the segment's group instead of the default shading:
+
+<DocWrapper
+  {...defaultProps()}
+  segmentColor={d => groupColors[d.data.root]}
+/>
+
+### Segment Labels
+
+You can customize a _segment_'s labels with the following properties: `segmentLabel` and `segmenLabelColor`:
+
+```ts
+const segmentColor = '#ddd'
+const segmentLabel = (d: Datum) => {
+  switch (d.data.key) {
+    case 'A':
+      return 'Alpha'
+    case 'B':
+      return 'Beta'
+    case 'C':
+      return 'Charlie'
+      return d.data.key
+  }
+}
+const segmentLabelColor = (d: Datum) => groupColors[d.data.root]
+```
+
+<DocWrapper
+  {...defaultProps()}
+  segmentColor='#ddd'
+  segmentLabel={d =>
+    d.depth === 1
+      ? { A: 'Alpha', B: 'Beta', C: 'Charlie' }[d.data.key]
+      : d.data.key
+  }
+  segmentLabelColor={d => groupColors[d.data.root]}
+/>
+
+## Direction
+
+By default, _Nested Donut_ will form layers starting with the outermost layer and work inward towards the center. You can use the `NestedDonutDirection.OUTWARDS` or
+`'outwards'` to the `direction` property to get a _Nested Donut_ that resembles a traditional _Sunburst_ diagram:
+
+<DocWrapper {...defaultProps()} direction='outwards' />
+
+## Further configuration
+
+_Nested Donut_ shares the following properties with our traditional _Donut_ chart.
+Read Donut's [doc page](./donut) to learn more.
+
+- `angleRange`
+- `centralLabel`
+- `centralSubLabel`
+- `showBackground`
+
+## CSS Variables
+
+_Nested Donut_ supports the following CSS variables:
+
+```css
+--vis-nested-donut-background-color: #e7e9f3
+/* Undefined by default to allow proper fallback to var(--vis-font-family) */
+--vis-nested-donut-font-family: undefined
+
+/* Central label */
+--vis-nested-donut-central-label-font-size: 16px
+--vis-nested-donut-central-label-font-weight: 600
+--vis-nested-donut-central-label-text-color: #5b5f6d
+
+/* Central sub-label */
+--vis-nested-donut-central-sublabel-font-size: 12px
+--vis-nested-donut-central-sublabel-font-weight: 500
+--vis-nested-donut-central-sublabel-text-color: #5b5f6d
+
+/* Segments */
+--vis-nested-donut-segment-stroke-width: 1px
+
+/* Dark theme */
+--vis-dark-nested-donut-background-color: #18160c
+--vis-dark-nested-donut-central-label-text-color: #fff
+--vis-dark-nested-donut-central-sublabel-text-color: #fff
+```
+
+## Component Props
+
+<PropTable name='VisNestedDonut' />
