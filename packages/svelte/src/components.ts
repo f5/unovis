@@ -14,6 +14,7 @@ export { default as VisTopoJSONMap } from './components/topojson-map/topojson-ma
 export { default as VisSankey } from './components/sankey/sankey.svelte'
 export { default as VisGraph } from './components/graph/graph.svelte'
 export { default as VisChordDiagram } from './components/chord-diagram/chord-diagram.svelte'
+export { default as VisNestedDonut } from './components/nested-donut/nested-donut.svelte'
 export { default as VisTooltip } from './components/tooltip/tooltip.svelte'
 export { default as VisLeafletMap } from './html-components/leaflet-map/leaflet-map.svelte'
 export { default as VisLeafletFlowMap } from './html-components/leaflet-flow-map/leaflet-flow-map.svelte'
