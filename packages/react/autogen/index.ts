@@ -28,6 +28,7 @@ const components: ComponentInput[] = [
 
   // Single components
   { name: 'Donut', sources: [coreComponentConfigPath, '/components/donut'], dataType: 'Datum[]' },
+  { name: 'NestedDonut', sources: [coreComponentConfigPath, '/components/nested-donut'], dataType: 'Datum[]' },
   { name: 'TopoJSONMap', kebabCaseName: 'topojson-map', sources: [coreComponentConfigPath, '/components/topojson-map'], dataType: '{areas?: AreaDatum[]; points?: PointDatum[]; links?: LinkDatum[]}' },
   { name: 'Sankey', sources: [coreComponentConfigPath, '/components/sankey'] },
   { name: 'Graph', sources: [coreComponentConfigPath, '/components/graph'] },
