@@ -6,7 +6,6 @@ import { TimeDataRecord, generateTimeSeries } from '@src/utils/data'
 
 export const title = 'Tooltip and Scrolling'
 export const subTitle = 'Generated Data'
-export const category = 'Timeline'
 
 export const component = (): JSX.Element => {
   const data = generateTimeSeries(25, 10, 10).map((d, i) => ({

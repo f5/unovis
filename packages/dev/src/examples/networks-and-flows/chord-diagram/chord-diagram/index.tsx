@@ -3,7 +3,7 @@ import { VisSingleContainer, VisChordDiagram } from '@unovis/react'
 
 export const title = 'Node Levels'
 export const subTitle = 'Side by side comparison'
-export const category = 'Chord Diagram'
+
 
 const groups = ['A', 'B', 'C']
 const data = {
@@ -24,7 +24,6 @@ const data = {
     { source: 'C0', target: 'A2' },
   ].map((l) => ({ ...l, value: Math.random() })),
 }
-
 export const component = (): JSX.Element => {
   return (
     <div style={{ display: 'flex', height: '600px', justifyContent: 'space-evenly' }}>

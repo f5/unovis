@@ -5,7 +5,6 @@ import { TimeDataRecord, generateTimeSeries } from '@src/utils/data'
 
 export const title = 'Timeline: Negative Lengths'
 export const subTitle = 'Generated Data'
-export const category = 'Timeline'
 
 export const component = (): JSX.Element => {
   const [showEmptySegments, toggleEmptySegments] = React.useState(true)

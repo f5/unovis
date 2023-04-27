@@ -4,11 +4,10 @@ import { generateHierarchyData } from '@src/utils/data'
 
 export const title = 'Labels and Radius Scale Exponent'
 export const subTitle = 'Select value from range'
-export const category = 'Chord Diagram'
+
 
 const levels = { a: 3, b: 2 }
 const data = generateHierarchyData(12, levels)
-
 export const component = (): JSX.Element => {
   const [radiusScaleExponent, setRadiusScaleExponent] = useState(2)
   return (

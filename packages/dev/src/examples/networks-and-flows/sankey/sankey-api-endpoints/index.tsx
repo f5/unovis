@@ -18,7 +18,6 @@ import { getSankeyData, ApiEndpointNode, ApiEndpointLink } from './data'
 
 export const title = 'API Endpoints Tree'
 export const subTitle = 'Collapsible nodes'
-export const category = 'Sankey'
 
 export const component = (): JSX.Element => {
   const collapsedStateRef = useRef<{ [key: string]: boolean }>({})

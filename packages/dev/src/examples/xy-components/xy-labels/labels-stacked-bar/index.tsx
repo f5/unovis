@@ -9,7 +9,6 @@ import s from './style.module.css'
 
 export const title = 'Stacked Bar with Labels'
 export const subTitle = 'Alerts and Data Labels'
-export const category = 'XY Labels'
 export const component = (): JSX.Element => {
   const tooltipRef = useRef(null)
   const accessors = [

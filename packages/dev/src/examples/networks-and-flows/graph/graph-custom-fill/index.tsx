@@ -4,7 +4,6 @@ import { generateNodeLinkData, NodeDatum } from '@src/utils/data'
 
 export const title = 'Graph: Custom Node Fills'
 export const subTitle = 'Generated Data'
-export const category = 'Graph'
 
 export const component = (): JSX.Element => {
   const svgDefs = `
