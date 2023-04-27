@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
+import { TransitionComponent } from '@src/components/TransitionComponent'
 import { groupBy } from '@src/utils/array'
+import { kebabToTitleCase } from '@src/utils/text'
 
 const imports = require.context('@src/examples/', true, /index\.tsx$/)
 
@@ -17,12 +19,19 @@ export type ExampleItem = {
 
 export const examplesFlat: ExampleItem[] = imports.keys().map(key => {
   const module = imports(key)
-  return {
-    title: module.title,
-    subTitle: module.subTitle,
-    category: module.category,
-    component: module.component,
+  const category = key.match(/\.\/[\w-]+\/([\w-]+)\//)?.[1] as string
+
+  const exampleItem = {
+    ...module,
+    category: kebabToTitleCase(category),
   }
+
+  if (module.transitionComponent) {
+    exampleItem.title = `${exampleItem.category} Data Transitions`
+    exampleItem.subTitle = 'Generated Data'
+    exampleItem.component = () => TransitionComponent(module.transitionComponent)
+  }
+  return exampleItem
 })
 
 export const examples: ExampleGroup[] = Object.entries(groupBy(examplesFlat, 'category'))

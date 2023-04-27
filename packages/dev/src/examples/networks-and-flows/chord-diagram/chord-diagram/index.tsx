@@ -10,7 +10,7 @@ const data = {
   nodes: groups.flatMap((g, i) =>
     Array(4).fill(0).map((_, j) => ({
       id: [g, j].join(''),
-      label: [g, i].join(''),
+      label: [g, j].join(''),
       group: groups[i],
       level: j % 2 ? 'even' : 'odd',
     }))
@@ -35,7 +35,7 @@ export const component = (): JSX.Element => {
         <VisChordDiagram nodeLevels={['group']}/>
       </VisSingleContainer>
       <VisSingleContainer data={data}>
-        <VisChordDiagram nodeLevels={['group', 'level']}/>
+        <VisChordDiagram nodeLevels={['level', 'group']}/>
       </VisSingleContainer>
     </div>
   )
