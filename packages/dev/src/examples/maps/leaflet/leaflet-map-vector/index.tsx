@@ -11,10 +11,9 @@ import s from './style.module.css'
 
 export const title = 'Vector Map'
 export const subTitle = 'Vector rendering with MapLibre'
-export const category = 'Leaflet Map'
+
 
 type MapPointDatum = typeof cities[0]
-
 export const component = (): JSX.Element => {
   const mapRef = useRef<VisLeafletMapRef<MapPointDatum> | null>(null)
   const [isMapVisible, setMapVisible] = useState(true)

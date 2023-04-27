@@ -9,10 +9,9 @@ import s from './style.module.css'
 
 export const title = 'Light and Dark Theme'
 export const subTitle = 'CSS Variables Configuration'
-export const category = 'Leaflet Map'
+
 
 type MapPointDatum = typeof cities[0]
-
 export const component = (): JSX.Element => {
   const mapKey = 'LNln6dGJDxyBa7F3c7Gd'
   const mapRef = useRef<VisLeafletMapRef<MapPointDatum> | null>(null)

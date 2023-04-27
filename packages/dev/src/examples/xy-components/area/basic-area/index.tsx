@@ -5,7 +5,6 @@ import { XYDataRecord, generateXYDataRecords } from '@src/utils/data'
 
 export const title = 'Basic Area Chart'
 export const subTitle = 'Generated Data'
-export const category = 'Area'
 export const component = (): JSX.Element => {
   const tooltipRef = useRef(null)
   const accessors = [

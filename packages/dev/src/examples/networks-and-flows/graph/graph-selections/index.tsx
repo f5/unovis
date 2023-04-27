@@ -5,7 +5,6 @@ import { generateNodeLinkData, NodeDatum, LinkDatum } from '@src/utils/data'
 
 export const title = 'Basic Graph'
 export const subTitle = 'Select Node on Click'
-export const category = 'Graph'
 
 export const component = (): JSX.Element => {
   const data = generateNodeLinkData()

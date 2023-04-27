@@ -6,7 +6,6 @@ import { sample } from '@src/utils/array'
 
 export const title = 'Node Labels and Sub-labels'
 export const subTitle = 'Trimming'
-export const category = 'Graph'
 
 export const component = (): JSX.Element => {
   const data = generateNodeLinkData(15)

@@ -5,7 +5,7 @@ import { GraphElkLayoutSettings, GraphNodeShape } from '@unovis/ts'
 
 export const title = 'Layout: ELK'
 export const subTitle = 'Layered hierarchical layout'
-export const category = 'Graph'
+
 
 export type NodeDatum = {
   id: string;

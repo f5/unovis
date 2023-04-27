@@ -8,10 +8,9 @@ import s from './index.module.css'
 
 export const title = 'Link Arrows'
 export const subTitle = 'with varied styles and undefined labels'
-export const category = 'Graph'
+
 
 const d = generateNodeLinkData()
-
 export const component = (): JSX.Element => {
   // Types
   type LinkStyle = { type: string; direction?: GraphLinkArrowStyle; style: GraphLinkStyle; label: string }

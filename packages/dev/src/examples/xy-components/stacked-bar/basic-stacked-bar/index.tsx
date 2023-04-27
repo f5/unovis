@@ -5,7 +5,6 @@ import { XYDataRecord, generateXYDataRecords } from '@src/utils/data'
 
 export const title = 'Basic Stacked Bar Chart'
 export const subTitle = 'Generated Data'
-export const category = 'Stacked Bar'
 export const component = (): JSX.Element => {
   const tooltipRef = useRef(null)
   const accessors = [

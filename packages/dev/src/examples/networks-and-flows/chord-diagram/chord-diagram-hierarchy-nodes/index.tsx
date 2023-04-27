@@ -5,12 +5,11 @@ import { generateHierarchyData } from '@src/utils/data'
 
 export const title = 'Chord Diagram Hierarchy Nodes'
 export const subTitle = 'With various accessors'
-export const category = 'Chord Diagram'
+
 
 const levels = { a: 3, b: 5, c: 7 }
 const data = generateHierarchyData(50, levels)
 type NodeDatum = typeof data.nodes[0]
-
 export const component = (): JSX.Element => {
   const getColor = useCallback((n: NodeDatum | ChordHierarchyNode<NodeDatum>) => {
     const a = (n as NodeDatum).a
