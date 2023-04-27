@@ -1,0 +1,21 @@
+.controller {
+  position: absolute;
+  right: 0;
+  cursor: pointer;
+  font-size: larger;
+  font-family: 'Font Awesome';
+}
+
+.controller > i {
+  margin: 10px;
+  color: lightslategray;
+}
+
+span {
+  margin-inline: 5px;
+  position: relative;
+}
+
+span:not(.focus) {
+  color: lightgrey;
+}

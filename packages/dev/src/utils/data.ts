@@ -3,8 +3,8 @@ import { sample } from './array'
 export type XYDataRecord = {
   x: number;
   y: number;
-  y1: number;
-  y2: number;
+  y1?: number;
+  y2?: number;
 }
 export interface TimeDataRecord {
   timestamp: number;
