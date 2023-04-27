@@ -28,6 +28,7 @@ export { VisControls } from './components/vis-controls'
 export { Donut } from './components/donut'
 export { FreeBrush } from './components/free-brush'
 export { XYLabels } from './components/xy-labels'
+export { NestedDonut } from './components/nested-donut'
 
 // Config Interfaces
 export type { LineConfigInterface } from './components/line/config'
@@ -52,3 +53,4 @@ export type { VisControlsConfigInterface } from './components/vis-controls/confi
 export type { DonutConfigInterface } from './components/donut/config'
 export type { FreeBrushConfigInterface } from './components/free-brush/config'
 export type { XYLabelsConfigInterface } from './components/xy-labels/config'
+export type { NestedDonutConfigInterface } from './components/nested-donut/config'

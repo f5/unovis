@@ -18,7 +18,7 @@ export function getCssVarNames<
   }
 }
 
-export function injectGlobalCssVariables<T extends Record<string, string | undefined>> (
+export function injectGlobalCssVariables<T extends Record<string, string | number | undefined>> (
   cssVarsObject: T,
   componentRootClassName: string
 ): void {

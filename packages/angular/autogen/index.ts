@@ -33,6 +33,7 @@ const components: ComponentInput[] = [
   { name: 'Sankey', sources: [coreComponentConfigPath, '/components/sankey'], provide: 'VisCoreComponent' },
   { name: 'Graph', sources: [coreComponentConfigPath, '/components/graph'], provide: 'VisCoreComponent' },
   { name: 'ChordDiagram', sources: [coreComponentConfigPath, '/components/chord-diagram'], dataType: '{ nodes: N[]; links?: L[] }', provide: 'VisCoreComponent' },
+  { name: 'NestedDonut', sources: [coreComponentConfigPath, '/components/nested-donut'], dataType: 'Datum[]', provide: 'VisCoreComponent' },
 
   // Ancillary components
   { name: 'Tooltip', sources: ['/components/tooltip'], dataType: null, provide: 'VisGenericComponent' },
