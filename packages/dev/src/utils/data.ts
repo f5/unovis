@@ -27,6 +27,12 @@ export interface NodeLinkData {
   links: LinkDatum[];
 }
 
+export type NestedDatum = {
+  group: string;
+  subgroup: string;
+  value?: number;
+}
+
 export function generateXYDataRecords (n = 10): XYDataRecord[] {
   return Array(n).fill(0).map((_, i) => ({
     x: i,
@@ -69,6 +75,20 @@ export function generateNodeLinkData (n = 10, numNeighbourLinks = () => 1): Node
     return arr
   }, Array(0))
   return { nodes, links }
+}
+
+export function generateNestedData (n: number, numGroups: number, excludeValues?: string[]): NestedDatum[] {
+  const groups = Array(numGroups).fill(0).map((_, i) => String.fromCharCode(i + 65))
+  const subgroups = Object.fromEntries(groups.map((g, i) => [g, Array(Math.floor(numGroups * 1.5)).fill(0).map((_, j) => `${g}${j}`)]))
+  return Array(n).fill(0).map(() => {
+    const group = sample(groups)
+    const subgroup = sample(subgroups[group])
+    return {
+      group,
+      subgroup,
+      value: excludeValues?.includes(subgroup) ? undefined : sample([10, 20, 30]),
+    }
+  })
 }
 
 export function generateHierarchyData (n: number, levels: Record<string, number>): NodeLinkData {
