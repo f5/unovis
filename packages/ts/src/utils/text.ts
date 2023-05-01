@@ -283,7 +283,7 @@ function breakTextIntoLines (
       const textLengthPx = fastMode
         ? estimateStringPixelLength(line + words[i], textBlock.fontSize, textBlock.fontWidthToHeightRatio)
         : getPreciseStringLengthPx(line + words[i], textBlock.fontFamily, textBlock.fontSize)
-      if (textLengthPx < width) {
+      if (textLengthPx < width || i === 0) {
         line += words[i]
       } else {
         lines.push(line.trim())
