@@ -72,7 +72,7 @@ export const cloneDeep = <T>(obj: T, stack: Map<any, any> = new Map()): T => {
     for (const item of obj) {
       clone.push(stack.has(item) ? stack.get(item) : cloneDeep(item, stack))
     }
-    return obj
+    return clone as unknown as T
   }
 
   // Class instances will be copied without cloning
