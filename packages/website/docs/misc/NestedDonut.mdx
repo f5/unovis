@@ -26,7 +26,7 @@ export const defaultProps = () => ({
 
 # Nested Donut
 
-_Nested Donut_ is a variation of our [_Donut_](./donut) component that supports hierarchial data. Similar to a traditional _Sunburst_
+_Nested Donut_ is a variation of our [_Donut_](./donut) component that supports hierarchical data. Similar to a traditional _Sunburst_
 chart, _Nested Donut_ displays hierarchies through a series of a rings or **layers** containing categorical nodes or **segments**.
 
 ## Data and Layer Configuration
@@ -74,7 +74,7 @@ layers = [
 #### Layers with missing/undefined data
 
 Now consider data where `value` is optional and only groups `A` and `B` have corresponding value properties.
-We see the hierarchial data is as expected, where the `C` group does not have child segments in the inner layer:
+We see the hierarchical data is as expected, where the `C` group does not have child segments in the inner layer:
 
 ```ts
 layers = [(d: Datum) => d.group, (d: Datum) => d.value]
@@ -149,7 +149,7 @@ Note that regardless of [direction](#Direction), this number will always corresp
 
 ### Segment Data
 
-Unlike our non-hierarchial components, the data type used by accessors to customize segments will not resemble the `Datum` type because the segments
+Unlike our non-hierarchical components, the data type used by accessors to customize segments will not resemble the `Datum` type because the segments
 are generated based on the collection of `Datum` objects provided.
 
 So for certain properties that customize segments, accessors will deal with the following type:
@@ -220,7 +220,7 @@ const segmentLabelColor = (d: Datum) => groupColors[d.data.root]
 
 ## Direction
 
-By default, _Nested Donut_ will form layers starting with the outermost layer and work inward towards the center. You can use the `NestedDonutDirection.OUTWARDS` or
+By default, _Nested Donut_ will form layers starting with the outermost layer and work inward towards the center. You can use the `NestedDonutDirection.Outwards` or
 `'outwards'` to the `direction` property to get a _Nested Donut_ that resembles a traditional _Sunburst_ diagram:
 
 <DocWrapper {...defaultProps()} direction='outwards' />

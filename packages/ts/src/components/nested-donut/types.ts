@@ -16,8 +16,8 @@ export type NestedDonutSegment<Datum> = HierarchyRectangularNode<NestedDonutSegm
 }
 
 export enum NestedDonutDirection {
-  INWARDS = 'inwards',
-  OUTWARDS = 'outwards',
+  Inwards = 'inwards',
+  Outwards = 'outwards',
 }
 
 export type NestedDonutLayerSettings = {

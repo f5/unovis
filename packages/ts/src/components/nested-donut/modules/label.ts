@@ -6,6 +6,7 @@ import { Arc } from 'd3-shape'
 import { getColor, hexToBrightness } from 'utils/color'
 import { smartTransition } from 'utils/d3'
 import { getString } from 'utils/data'
+import { cssvar } from 'utils/style'
 
 // Config
 import { NestedDonutConfig } from '../config'
@@ -14,7 +15,7 @@ import { NestedDonutConfig } from '../config'
 import { NestedDonutSegment } from '../types'
 
 // Styles
-import { labelColors } from '../style'
+import { variables } from '../style'
 
 function getLabelFillColor<Datum> (
   d: NestedDonutSegment<Datum>,
@@ -23,7 +24,7 @@ function getLabelFillColor<Datum> (
   const c = getColor(d, config.segmentColor, d._index, true)
   const colorParsed = color(c)
   const brightness = colorParsed ? hexToBrightness(colorParsed.hex()) : 0
-  return brightness > 0.65 ? labelColors.dark : labelColors.light
+  return cssvar(brightness > 0.65 ? variables.nestedDonutSegmentLabelTextColorLight : variables.nestedDonutSegmentLabelTextColorDark)
 }
 
 function getLabelTransform<Datum> (

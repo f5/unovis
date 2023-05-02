@@ -3,11 +3,6 @@ import { css } from '@emotion/css'
 // Utils
 import { getCssVarNames, injectGlobalCssVariables } from 'utils/style'
 
-export const labelColors = {
-  dark: '#5b5f6d',
-  light: '#fff',
-}
-
 const cssVarDefaults = {
   '--vis-nested-donut-background-color': '#E7E9F3',
   // Undefined by default to allow proper fallback to var(--vis-font-family)
@@ -16,21 +11,23 @@ const cssVarDefaults = {
   // Central label
   '--vis-nested-donut-central-label-font-size': '16px',
   '--vis-nested-donut-central-label-font-weight': 600,
-  '--vis-nested-donut-central-label-text-color': labelColors.dark,
+  '--vis-nested-donut-central-label-text-color': '#5b5f6d',
 
   // Central sub-label
   '--vis-nested-donut-central-sublabel-font-size': '12px;',
   '--vis-nested-donut-central-sublabel-font-weight': 500,
-  '--vis-nested-donut-central-sublabel-text-color': labelColors.dark,
+  '--vis-nested-donut-central-sublabel-text-color': '#5b5f6d',
 
   // Segments
   '--vis-nested-donut-segment-stroke-width': '1px',
-  '--vis-nested-donut-segment-stroke-color': '',
+  '--vis-nested-donut-segment-stroke-color': undefined,
+  '--vis-nested-donut-segment-label-text-color-light': '#5b5f6d',
+  '--vis-nested-donut-segment-label-text-color-dark': '#fff',
 
   /* Dark theme */
   '--vis-dark-nested-donut-background-color': '#18160C',
-  '--vis-dark-nested-donut-central-label-text-color': labelColors.light,
-  '--vis-dark-nested-donut-central-sublabel-text-color': labelColors.light,
+  '--vis-dark-nested-donut-central-label-text-color': '#fff',
+  '--vis-dark-nested-donut-central-sublabel-text-color': '#fff',
 }
 
 export const root = css`
