@@ -118,7 +118,7 @@
         },
         {
           "selector": "enumMember",
-          "format": ["PascalCase"]
+          "format": ["StrictPascalCase"]
         },
         {
           "selector": "objectLiteralProperty",

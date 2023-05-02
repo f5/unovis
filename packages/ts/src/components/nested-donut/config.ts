@@ -9,9 +9,9 @@ export interface NestedDonutConfigInterface<Datum> extends ComponentConfigInterf
   /** Diagram angle range. Default: `[0, 2 * Math.PI]` */
   angleRange?: [number, number];
   /** Direction of hierarchy flow from root to leaf.
-   * `NestedDonutDirection.INWARDS` starts from the outer most radius and works towards center
-   * `NestedDonutDirection.OUTWARDS` starts from the inner most radius the consecutive layers outward.
-   *  Default: `NestedDonutDirection.INWARDS`
+   * `NestedDonutDirection.Inwards` starts from the outer most radius and works towards center
+   * `NestedDonutDirection.Outwards` starts from the inner most radius the consecutive layers outward.
+   *  Default: `NestedDonutDirection.Inwards`
   */
   direction?: NestedDonutDirection | string;
 
@@ -53,7 +53,7 @@ export class NestedDonutConfig<Datum> extends ComponentConfig implements NestedD
   centralSubLabel = undefined
   centralSubLabelWrap = true
   cornerRadius = 0
-  direction = NestedDonutDirection.INWARDS
+  direction = NestedDonutDirection.Inwards
   layers: StringAccessor<Datum>[]
   layerPadding = 0
   layerSettings = undefined
