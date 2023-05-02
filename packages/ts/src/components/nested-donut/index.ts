@@ -61,66 +61,12 @@ NestedDonutConfigInterface<Datum>
       .attr('class', s.centralSubLabel)
   }
 
-  private getHierarchyData (layers: NestedDonutLayer[]): NestedDonutSegment<Datum>[] {
-    const { config, datamodel } = this
-
-    const layerAccessors = config.layers?.map(layerAccessor => (d: Datum, i: number) => getString(d, layerAccessor, i))
-    const nestedData = group(datamodel.data, ...layerAccessors as [(d: Datum) => string])
-    const rootNode = hierarchy(nestedData).count()
-    const partitionData = partition().size([config.angleRange[1], 1])(rootNode) as NestedDonutSegment<Datum>
-
-    partitionData.eachBefore((node, index) => {
-      const scale = this.colorScale.domain([-1, node.children?.length])
-      node._id = this.uid + index
-
-      if (isNumberWithinRange(node.depth - 1, [0, layers.length - 1])) {
-        node._layer = layers[node.depth - 1]
-        node.y0 = node._layer._innerRadius
-        node.y1 = node._layer._outerRadius
-      }
-      const key = node.data[0] as Datum[keyof Datum]
-      node.data = { key: key, root: node.parent?.data.root ?? key }
-
-      node.children?.forEach((child, i) => {
-        child._index = i
-        child._state = {
-          fill:
-            getColor(child, config.segmentColor, i, child.depth !== 1) ??
-            scale.range(['#fff', getHexValue(node._state.fill, this.element)])(i),
-        }
-      })
-    })
-    const segments = partitionData.descendants().filter(d => d.parent && d.children && d.data.key)
-    return segments
-  }
-
-  private getLayerSettings (): NestedDonutLayer[] {
-    const { direction, layers, layerPadding, layerSettings } = this.config
-
-    const outerRadius = Math.min(this._width, this._height) / 2
-
-    const layerItems = layers.reduceRight((arr, _, i) => {
-      const layerId = direction === NestedDonutDirection.OUTWARDS ? i : arr.length
-      const layerConfig = getValue(layerId, layerSettings) ?? defaultLayerSettings
-      const radius = arr.length ? arr[0]._innerRadius - layerPadding : outerRadius
-      arr.unshift({
-        ...layerConfig,
-        _id: layerId,
-        _outerRadius: radius,
-        _innerRadius: radius - layerConfig.width,
-      })
-      return arr
-    }, new Array<NestedDonutLayer>())
-
-    return direction === NestedDonutDirection.INWARDS ? layerItems.reverse() : layerItems
-  }
-
   _render (customDuration?: number): void {
     const { config } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
 
-    const layers = this.getLayerSettings()
-    const data = this.getHierarchyData(layers)
+    const layers = this._getLayerSettings()
+    const data = this._getHierarchyData(layers)
 
     this.arcGen
       .startAngle(d => d.x0)
@@ -196,26 +142,24 @@ NestedDonutConfigInterface<Datum>
   }
 
   private _getHierarchyData (layers: NestedDonutLayer[]): NestedDonutSegment<Datum>[] {
-    const { config, datamodel: { data } } = this
+    const { config, datamodel } = this
 
-    const layerAccessors = config.layers?.map(layerAccessor => (i: number) => getString(data[i], layerAccessor, i))
-    const nestedData = group(data.keys(), ...layerAccessors as [(i: number) => string])
-    const rootNode = config.value
-      ? hierarchy(nestedData).sum(index => typeof index === 'number' && getNumber(data[index], config.value, index))
-      : hierarchy(nestedData).count()
+    const layerAccessors = config.layers?.map(layerAccessor => (d: Datum, i: number) => getString(d, layerAccessor, i))
+    const nestedData = group(datamodel.data, ...layerAccessors as [(d: Datum) => string])
+    const rootNode = hierarchy(nestedData).count()
     const partitionData = partition().size([config.angleRange[1], 1])(rootNode) as NestedDonutSegment<Datum>
 
-    partitionData.eachBefore(node => {
+    partitionData.eachBefore((node, index) => {
       const scale = this.colorScale.domain([-1, node.children?.length])
+      node._id = this.uid + index
 
       if (isNumberWithinRange(node.depth - 1, [0, layers.length - 1])) {
         node._layer = layers[node.depth - 1]
-        node._id = [node._layer._id, node._index].join('-')
         node.y0 = node._layer._innerRadius
         node.y1 = node._layer._outerRadius
       }
       const key = node.data[0] as string
-      node.data = { key: node.data[0], root: node.parent?.data.root ?? key }
+      node.data = { key: key, root: node.parent?.data.root ?? key }
 
       node.children?.forEach((child, i) => {
         child._index = i
