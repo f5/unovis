@@ -266,14 +266,15 @@ function breakTextIntoLines (
   textBlock: UnovisText,
   width: number | undefined = undefined,
   fastMode = true,
-  separator: string | string[] = UNOVIS_TEXT_SEPARATOR_DEFAULT
+  separator: string | string[] = UNOVIS_TEXT_SEPARATOR_DEFAULT,
+  wordBreak = false
 ): string[] {
   const text = `${textBlock.text}`
   if (!text) return []
   const separators = Array.isArray(separator) ? separator : [separator]
 
   const splitByNewLine = text.split('\n')
-  return splitByNewLine.map(str => {
+  return splitByNewLine.map((str) => {
     const lines: string[] = []
     if (!width) return [str]
 
@@ -283,11 +284,40 @@ function breakTextIntoLines (
       const textLengthPx = fastMode
         ? estimateStringPixelLength(line + words[i], textBlock.fontSize, textBlock.fontWidthToHeightRatio)
         : getPreciseStringLengthPx(line + words[i], textBlock.fontFamily, textBlock.fontSize)
+
       if (textLengthPx < width || i === 0) {
         line += words[i]
       } else {
         lines.push(line.trim())
         line = words[i]
+      }
+
+      // Word break functionality
+      if (wordBreak) {
+        while (line.length > 0) {
+          const subLineLengthPx = fastMode
+            ? estimateStringPixelLength(line, textBlock.fontSize, textBlock.fontWidthToHeightRatio)
+            : getPreciseStringLengthPx(line, textBlock.fontFamily, textBlock.fontSize)
+
+          if (subLineLengthPx > width) {
+            let breakIndex = (line.trim()).length - 2 // Place at least 2 characters onto the next line
+            while (breakIndex > 0) {
+              const subLine = `${line.substring(0, breakIndex)}-` // Use hyphen when force breaking words
+              const subLinePx = fastMode
+                ? estimateStringPixelLength(subLine, textBlock.fontSize, textBlock.fontWidthToHeightRatio)
+                : getPreciseStringLengthPx(subLine, textBlock.fontFamily, textBlock.fontSize)
+
+              if (subLinePx <= width) {
+                lines.push(subLine.trim())
+                line = line.substring(breakIndex)
+                break
+              }
+              breakIndex--
+            }
+          } else {
+            break
+          }
+        }
       }
 
       if (i === words.length - 1) lines.push(line.trim())
@@ -312,13 +342,14 @@ export function getWrappedText (
   width: number | undefined = undefined,
   height: number | undefined = undefined,
   fastMode = true,
-  separator: string | string[] = UNOVIS_TEXT_SEPARATOR_DEFAULT
+  separator: string | string[] = UNOVIS_TEXT_SEPARATOR_DEFAULT,
+  wordBreak = false
 ): UnovisWrappedText[] {
   // Merge input text with default values and convert it to an array if it's not already
   const textArrays = Array.isArray(text) ? text.map(t => merge(UNOVIS_TEXT_DEFAULT, t)) : [merge(UNOVIS_TEXT_DEFAULT, text)]
 
   // Break input text into lines based on width and separator
-  const textWrapped: Array<string[]> = textArrays.map(block => breakTextIntoLines(block, width, fastMode, separator))
+  const textWrapped: Array<string[]> = textArrays.map(block => breakTextIntoLines(block, width, fastMode, separator, wordBreak))
 
   const firstBlock = textArrays[0]
   let h = -firstBlock.fontSize * (firstBlock.lineHeight - 1)
@@ -340,7 +371,7 @@ export function getWrappedText (
       const line = lines[k]
       h += dh
 
-      if (height && (h + dh) > height) {
+      if (height && (h + dh) > height && (k !== lines.length - 1)) {
         const textLengthPx = fastMode
           ? estimateStringPixelLength(line, text.fontSize, text.fontWidthToHeightRatio)
           : getPreciseStringLengthPx(line, text.fontFamily, text.fontSize)
@@ -426,7 +457,7 @@ export function renderTextToSvgTextElement (
   text: UnovisText | UnovisText[],
   options: UnovisTextOptions
 ): void {
-  const wrappedText = getWrappedText(text, options.width, undefined, options.fastMode, options.separator)
+  const wrappedText = getWrappedText(text, options.width, undefined, options.fastMode, options.separator, options.wordBreak)
   const textElementX = +textElement.getAttribute('x')
   const textElementY = +textElement.getAttribute('y')
   const x = textElementX ?? 0
@@ -463,7 +494,7 @@ export function renderTextIntoFrame (
   text: UnovisText | UnovisText[],
   frameOptions: UnovisTextFrameOptions
 ): void {
-  const wrappedText = getWrappedText(text, frameOptions.width, frameOptions.height, frameOptions.fastMode, frameOptions.separator)
+  const wrappedText = getWrappedText(text, frameOptions.width, frameOptions.height, frameOptions.fastMode, frameOptions.separator, frameOptions.wordBreak)
 
   const x = frameOptions.textAlign === TextAlign.Center ? frameOptions.width / 2
     : frameOptions.textAlign === TextAlign.Right ? frameOptions.width : 0
