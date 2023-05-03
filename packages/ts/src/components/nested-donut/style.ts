@@ -52,6 +52,7 @@ export const segmentLabel = css`
   label: segment-label;
   text-anchor: middle;
   dominant-baseline: middle;
+  user-select: none;
 `
 
 export const segmentExit = css`
