@@ -58,6 +58,8 @@ export type UnovisTextOptions = {
   textAlign?: TextAlign | string;
   // Whether to use a fast estimation method or a more accurate one for text calculations.
   fastMode?: boolean;
+  // Force word break if they don't fit into the width
+  wordBreak?: boolean;
 }
 
 export type UnovisTextFrameOptions = UnovisTextOptions & {
