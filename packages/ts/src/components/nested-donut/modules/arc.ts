@@ -56,7 +56,6 @@ export function updateArc<Datum> (
       const arcNode: ArcNode = els[i]
       const nextAnimState = { x0: d.x0, x1: d.x1, y0: d.y0, y1: d.y1 }
       const datum = interpolate(arcNode._animState, nextAnimState)
-
       return (t: number): string => {
         arcNode._animState = datum(t)
         return arcGen(arcNode._animState)
