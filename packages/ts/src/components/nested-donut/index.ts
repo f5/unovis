@@ -96,13 +96,27 @@ NestedDonutConfigInterface<Datum>
         y1: d._outerRadius,
       }))
 
-    // Arcs
-    const arcs = this.arcGroup
-      .selectAll<SVGPathElement, NestedDonutSegment<Datum>>(`.${s.segment}`)
+    // Segments
+    const segments = this.arcGroup.selectAll<SVGGElement, NestedDonutSegment<Datum>>('g')
       .data(data, d => d._id)
 
-    const arcsEnter = arcs.enter().append('path')
+    const segmentsEnter = segments.enter()
+      .append('g')
       .attr('class', s.segment)
+
+    segments.merge(segmentsEnter)
+    smartTransition(segments.exit(), duration)
+      .attr('class', s.segmentExit)
+      .style('opacity', 0)
+      .remove()
+
+    // Segment arcs
+    const arcs = this.arcGroup
+      .selectAll<SVGPathElement, NestedDonutSegment<Datum>>(`.${s.segmentArc}`)
+      .data(data, d => d._id)
+
+    const arcsEnter = segmentsEnter.append('path')
+      .attr('class', s.segmentArc)
       .call(createArc, config)
 
     arcs.merge(arcsEnter)
@@ -113,18 +127,18 @@ NestedDonutConfigInterface<Datum>
       .call(removeArc, duration)
 
     // Segment labels
-    const arcLabels = this.arcGroup
+    const labels = this.arcGroup
       .selectAll<SVGTextElement, NestedDonutSegment<Datum>>(`.${s.segmentLabel}`)
       .data(data, d => d._id)
 
-    const arcLabelsEnter = arcLabels.enter().append('text')
+    const labelsEnter = segmentsEnter.append('text')
       .attr('class', s.segmentLabel)
-      .call(createLabel, config)
+      .call(createLabel, this.arcGen)
 
-    arcLabels.merge(arcLabelsEnter)
-      .call(updateLabel, config, this.arcGen, layers, duration)
+    labels.merge(labelsEnter)
+      .call(updateLabel, config, this.arcGen, duration)
 
-    arcLabels.exit<NestedDonutSegment<Datum>>()
+    labels.exit<NestedDonutSegment<Datum>>()
       .call(removeLabel, duration)
 
     // Chart labels
@@ -149,12 +163,12 @@ NestedDonutConfigInterface<Datum>
     const rootNode = hierarchy(nestedData).count()
     const partitionData = partition().size([config.angleRange[1], 1])(rootNode) as NestedDonutSegment<Datum>
 
-    partitionData.eachBefore((node, index) => {
+    partitionData.eachBefore(node => {
       const scale = this.colorScale.domain([-1, node.children?.length])
-      node._id = this.uid + index
 
       if (isNumberWithinRange(node.depth - 1, [0, layers.length - 1])) {
         node._layer = layers[node.depth - 1]
+        node._id = [node._layer._id, node._index].join('-')
         node.y0 = node._layer._innerRadius
         node.y1 = node._layer._outerRadius
       }

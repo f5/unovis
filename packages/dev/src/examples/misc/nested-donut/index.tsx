@@ -8,6 +8,7 @@ export const transitionComponent: GeneratedComponent<NestedDatum[]> = {
   dataSeries: {
     noData: () => [],
     singleLayer: data => data.map(d => ({ group: d.group })),
+    twoRoots: data => data.filter(d => d.group !== 'A'),
   },
   component: (props) => (
     <VisSingleContainer data={props.data}>
