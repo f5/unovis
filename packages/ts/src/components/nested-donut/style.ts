@@ -44,6 +44,14 @@ export const background = css`
 
 export const segment = css`
   label: segment;
+ `
+
+export const segmentExit = css`
+  label: segment-exit;
+`
+
+export const segmentArc = css`
+  label: segment-arc;
   stroke-width: var(--vis-nested-donut-segment-stroke-width);
   stroke: var(--vis-nested-donut-segment-stroke-color, var(--vis-donut-background-color));
 `
@@ -53,10 +61,6 @@ export const segmentLabel = css`
   text-anchor: middle;
   dominant-baseline: middle;
   user-select: none;
-`
-
-export const segmentExit = css`
-  label: segment-exit;
 `
 
 export const centralLabel = css`

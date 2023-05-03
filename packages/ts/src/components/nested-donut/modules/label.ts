@@ -41,10 +41,11 @@ function getLabelTransform<Datum> (
 
 export function createLabel<Datum> (
   selection: Selection<SVGTextElement, NestedDonutSegment<Datum>, SVGGElement, unknown>,
-  config: NestedDonutConfig<Datum>
+  arcGen: Arc<unknown, NestedDonutSegment<Datum>>
 ): void {
   selection
-    .text(d => getString(d, config.segmentLabel) ?? d.data.key.toString())
+    .attr('transform', d => getLabelTransform(d, arcGen))
+    .style('visibility', null)
     .style('opacity', 0)
 }
 
@@ -54,18 +55,22 @@ export function updateLabel<Datum> (
   arcGen: Arc<unknown, NestedDonutSegment<Datum>>,
   duration: number
 ): void {
+  selection
+    .text(d => getString(d, config.segmentLabel) ?? d.data.key.toString())
+    .style('visibility', (d, i, els) => {
+      const { width, height } = estimateTextSize(select(els[i]), UNOVIS_TEXT_DEFAULT.fontSize)
+      const diff = (d.x1 - d.x0) * 180 / Math.PI
+      const outOfBounds = d._layer.rotateLabels
+        ? height < diff && width < (d.y1 - d.y0)
+        : width >= diff
+      return outOfBounds ? 'hidden' : null
+    })
+    .style('transition', `fill ${duration}ms`)
+    .style('fill', d => getColor(d, config.segmentLabelColor) ?? getLabelFillColor(d, config))
+
   smartTransition(selection, duration)
     .attr('transform', d => getLabelTransform(d, arcGen))
-    .style('fill', d => getColor(d, config.segmentLabelColor) ?? getLabelFillColor(d, config))
     .style('opacity', 1)
-
-  selection.attr('visibility', (d, i, els) => {
-    const label = select(els[i])
-    const diff = (d.x1 - d.x0) * 180 / Math.PI
-    const { width, height } = estimateTextSize(label, UNOVIS_TEXT_DEFAULT.fontSize)
-    const inBounds = d._layer.rotateLabels ? (height < diff && width < (d.y1 - d.y0)) : width < diff
-    return inBounds ? null : 'hidden'
-  })
 }
 
 export function removeLabel<Datum> (
@@ -76,5 +81,3 @@ export function removeLabel<Datum> (
     .style('opacity', 0)
     .remove()
 }
-
-
