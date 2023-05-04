@@ -35,7 +35,7 @@ export class ContainerCore {
       //   inline space that adds 4px to the height of the container
       .style('display', 'block')
       .attr('xmlns', 'http://www.w3.org/2000/svg')
-      .attr('height', ContainerCore.DEFAULT_CONTAINER_HEIGHT)
+      .attr('height', ContainerCore.DEFAULT_CONTAINER_HEIGHT) // Overriding default SVG height of 150
 
     this.element = this.svg.node()
   }
@@ -80,13 +80,13 @@ export class ContainerCore {
   get containerWidth (): number {
     return this.config.width
       ? this.element.clientWidth
-      : clamp(this._container.clientWidth || this._container.getBoundingClientRect().width, 0, Number.POSITIVE_INFINITY)
+      : (this._container.clientWidth || this._container.getBoundingClientRect().width)
   }
 
   get containerHeight (): number {
     return this.config.height
       ? this.element.clientHeight
-      : clamp(this._container.clientHeight || this._container.getBoundingClientRect().height, 0, Number.POSITIVE_INFINITY)
+      : (this._container.clientHeight || this._container.getBoundingClientRect().height || ContainerCore.DEFAULT_CONTAINER_HEIGHT)
   }
 
   get width (): number {
