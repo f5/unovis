@@ -18,9 +18,9 @@ export class ContainerCore {
 
   protected _container: HTMLElement
   protected _requestedAnimationFrame: number
-  private _isFirstRender = true
+  protected _isFirstRender = true
+  protected _resizeObserver: ResizeObserver | undefined
   private _containerSize: { width: number; height: number }
-  private _resizeObserver: ResizeObserver | undefined
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
   static DEFAULT_CONTAINER_HEIGHT = 300
@@ -48,17 +48,16 @@ export class ContainerCore {
   }
 
   _render (duration?: number): void {
-    if (this._isFirstRender) {
-      this._setUpResizeObserver()
-      this._isFirstRender = false
-    }
-
     if (this.config.svgDefs) {
       this.svg.select('.svgDefs').remove()
       this.svg.append('defs').attr('class', 'svgDefs').html(this.config.svgDefs)
     }
+
+    this._isFirstRender = false
   }
 
+  // Warning: Some Containers (i.e. Single Container) may override this method, so if you introduce any changes here,
+  // make sure to check that other containers didn't break after them.
   render (duration = this.config.duration): void {
     const width = this.config.width || this.containerWidth
     const height = this.config.height || this.containerHeight
@@ -69,6 +68,10 @@ export class ContainerCore {
     this.svg
       .attr('width', width)
       .attr('height', height)
+
+    // Set up Resize Observer. We do it in `render()` to capture container size change if it happened
+    // in the next animation frame after the initial `render` was called.
+    if (!this._resizeObserver) this._setUpResizeObserver()
 
     // Schedule the actual rendering in the next frame
     cancelAnimationFrame(this._requestedAnimationFrame)
@@ -110,6 +113,7 @@ export class ContainerCore {
   }
 
   _setUpResizeObserver (): void {
+    if (this._resizeObserver) return
     const containerRect = this._container.getBoundingClientRect()
     this._containerSize = { width: containerRect.width, height: containerRect.height }
 

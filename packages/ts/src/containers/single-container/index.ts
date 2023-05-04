@@ -127,6 +127,9 @@ export class SingleContainer<Data> extends ContainerCore {
         .attr('height', this.config.height || this.containerHeight)
     }
 
+    // Set up Resize Observer
+    if (!this._resizeObserver) this._setUpResizeObserver()
+
     // Schedule the actual rendering in the next frame
     cancelAnimationFrame(this._requestedAnimationFrame)
     this._requestedAnimationFrame = requestAnimationFrame(() => {
