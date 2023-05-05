@@ -2,7 +2,7 @@
 import { ComponentConfigInterface, ComponentConfig } from 'core/component/config'
 
 // Types
-import { ColorAccessor, GenericAccessor, StringAccessor } from 'types/accessor'
+import { ColorAccessor, GenericAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
 import { NestedDonutDirection, NestedDonutLayerSettings, NestedDonutSegment } from './types'
 
 export interface NestedDonutConfigInterface<Datum> extends ComponentConfigInterface {
@@ -14,6 +14,8 @@ export interface NestedDonutConfigInterface<Datum> extends ComponentConfigInterf
    *  Default: `NestedDonutDirection.Inwards`
   */
   direction?: NestedDonutDirection | string;
+  /* Numeric accessor for segment size value. Default: `undefined`. */
+  value?: NumericAccessor<Datum>;
 
   /** Central label text. Default: `undefined` */
   centralLabel?: string;
@@ -61,4 +63,5 @@ export class NestedDonutConfig<Datum> extends ComponentConfig implements NestedD
   segmentLabel = undefined
   segmentLabelColor = undefined
   showBackground = false
+  value = undefined
 }
