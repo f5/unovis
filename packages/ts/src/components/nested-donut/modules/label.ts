@@ -8,7 +8,7 @@ import { getColor, hexToBrightness } from 'utils/color'
 import { smartTransition } from 'utils/d3'
 import { getString } from 'utils/data'
 import { cssvar } from 'utils/style'
-import { estimateTextSize } from 'utils/text'
+import { estimateTextSize, wrapSVGText } from 'utils/text'
 
 // Config
 import { NestedDonutConfig } from '../config'
@@ -60,6 +60,10 @@ export function updateLabel<Datum> (
     .style('visibility', (d, i, els) => {
       const { width, height } = estimateTextSize(select(els[i]), UNOVIS_TEXT_DEFAULT.fontSize)
       const diff = (d.x1 - d.x0) * 180 / Math.PI
+      if (!config.hideSegmentLabels) {
+        wrapSVGText(select(els[i]), diff)
+        return
+      }
       const outOfBounds = d._layer.rotateLabels
         ? height < diff && width < (d.y1 - d.y0)
         : width >= diff
