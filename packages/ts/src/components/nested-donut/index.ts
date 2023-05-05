@@ -13,7 +13,7 @@ import { VerticalAlign } from 'types/text'
 
 // Utils
 import { getColor, getHexValue } from 'utils/color'
-import { getString, getValue, isNumber, isNumberWithinRange } from 'utils/data'
+import { getNumber, getString, getValue, isNumber, isNumberWithinRange } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { wrapSVGText } from 'utils/text'
 
@@ -156,11 +156,13 @@ NestedDonutConfigInterface<Datum>
   }
 
   private _getHierarchyData (layers: NestedDonutLayer[]): NestedDonutSegment<Datum>[] {
-    const { config, datamodel } = this
+    const { config, datamodel: { data } } = this
 
-    const layerAccessors = config.layers?.map(layerAccessor => (d: Datum, i: number) => getString(d, layerAccessor, i))
-    const nestedData = group(datamodel.data, ...layerAccessors as [(d: Datum) => string])
-    const rootNode = hierarchy(nestedData).count()
+    const layerAccessors = config.layers?.map(layerAccessor => (i: number) => getString(data[i], layerAccessor, i))
+    const nestedData = group(data.keys(), ...layerAccessors as [(i: number) => string])
+    const rootNode = config.value
+      ? hierarchy(nestedData).sum(index => typeof index === 'number' && getNumber(data[index], config.value, index))
+      : hierarchy(nestedData).count()
     const partitionData = partition().size([config.angleRange[1], 1])(rootNode) as NestedDonutSegment<Datum>
 
     partitionData.eachBefore(node => {
