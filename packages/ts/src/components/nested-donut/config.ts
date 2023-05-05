@@ -26,7 +26,7 @@ export interface NestedDonutConfigInterface<Datum> extends ComponentConfigInterf
   /**
    * Show donut background. The color is configurable via
    * the `--vis-nested-donut-background-color` and `--vis-dark-nested-donut-background-color` CSS variables.
-   * Default: `true`
+   * Default: `false`
   */
   showBackground?: boolean;
 
@@ -41,6 +41,8 @@ export interface NestedDonutConfigInterface<Datum> extends ComponentConfigInterf
   // Segments
   /** Corner Radius. Default: `0` */
   cornerRadius?: number;
+  /** Hide segment labels when they don't fit. Default: `true` */
+  hideSegmentLabels?: boolean;
   /** Color accessor function for segments. Default: `undefined` */
   segmentColor?: ColorAccessor<NestedDonutSegment<Datum>>;
   /** Segment label accessor function. Default `undefined` */
@@ -56,6 +58,7 @@ export class NestedDonutConfig<Datum> extends ComponentConfig implements NestedD
   centralSubLabelWrap = true
   cornerRadius = 0
   direction = NestedDonutDirection.Inwards
+  hideSegmentLabels = true
   layers: StringAccessor<Datum>[]
   layerPadding = 0
   layerSettings = undefined
