@@ -41,6 +41,10 @@ import { ForceLayoutGraphModule } from './examples/force-graph/force-graph.modul
 import { ParallelLayoutGraphModule } from './examples/parallel-graph/parallel-graph.module'
 import { ElkLayeredGraphModule } from './examples/elk-layered-graph/elk-layered-graph.module'
 
+
+// Nested Donut
+import { SunburstChartModule } from './examples/sunburst-nested-donut/sunburst-nested-donut.module'
+
 // Auxiliary
 import { CrosshairStackedBarModule } from './examples/crosshair-stacked-bar/crosshair-stacked-bar.module'
 import { BrushGroupedBarModule } from './examples/brush-grouped-bar/brush-grouped-bar.module'
@@ -87,6 +91,9 @@ import { BaselineAreaChartModule } from './examples/baseline-area-chart/baseline
     <parallel-graph></parallel-graph>
     <elk-graph></elk-graph>
 
+    <!-- Nested Donut -->
+    <sunburst-nested-donut></sunburst-nested-donut>
+
     <!-- Auxiliary -->
     <crosshair-stacked-bar></crosshair-stacked-bar>
     <brush-grouped-bar></brush-grouped-bar>
@@ -105,7 +112,7 @@ export class AppComponent {
     TopojsonMapModule, StackedBarChartModule, BrushGroupedBarModule, BasicScatterChartModule, FreeBrushScattersModule, NonStackedAreaChartModule,
     BasicTimelineModule, BasicSankeyModule, ExpandableSankeyModule, BasicGraphModule, LeafletFlowMapModule,
     ForceLayoutGraphModule, AdvancedLeafletMapModule, StackedAreaModule, ParallelLayoutGraphModule, ElkLayeredGraphModule,
-    DataGapLineChartModule, CrosshairStackedBarModule, BaselineAreaChartModule, StepAreaChartModule,
+    DataGapLineChartModule, CrosshairStackedBarModule, BaselineAreaChartModule, StepAreaChartModule, SunburstChartModule,
   ],
   bootstrap: [AppComponent],
   providers: [BrowserModule],

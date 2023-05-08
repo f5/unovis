@@ -25,6 +25,7 @@
     () => import('./examples/crosshair-stacked-bar/crosshair-stacked-bar.svelte'),
     () => import('./examples/elk-layered-graph/elk-layered-graph.svelte'),
     () => import('./examples/hierarchical-chord-diagram/hierarchical-chord-diagram.svelte'),
+    () => import('./examples/sunburst-nested-donut/sunburst-nested-donut.svelte'),
   ]
 </script>
 
