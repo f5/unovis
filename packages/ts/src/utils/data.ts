@@ -35,6 +35,10 @@ export const isEqual = (a?: unknown | null, b?: unknown | null, visited: Set<any
     return true
   }
 
+  if (a instanceof Date && b instanceof Date) {
+    return a.getTime() === b.getTime()
+  }
+
   if (typeof a === 'object' && a !== null && b !== null) {
     if (!(typeof b === 'object')) return false
     if (a === b) return true
