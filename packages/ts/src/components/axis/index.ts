@@ -190,7 +190,8 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfig<Datum>, AxisC
     const { config } = this
 
     const axisGen = this._buildAxis()
-    axisGen.tickValues(this._getConfiguredTickValues())
+    const tickValues: (number | Date)[] = this._getConfiguredTickValues() || axisGen.scale<ContinuousScale>().ticks(this._getNumTicks())
+    axisGen.tickValues(tickValues)
 
     // Interrupting all active transitions first to prevent them from being stuck.
     // Somehow we see it happening in Angular apps.
@@ -205,7 +206,6 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfig<Datum>, AxisC
 
     // Selecting the <text> elements of the ticks to apply formatting. By default, this selection
     // will include exiting elements, so we're filtering them out.
-    const tickValues: (number | Date)[] = axisGen.scale<ContinuousScale>().ticks(this._getNumTicks())
     const tickText = selection.selectAll<SVGTextElement, number | Date>('g.tick > text')
       .filter(tickValue => tickValues.some(t => isEqual(tickValue, t))) // We use isEqual to compare Dates
 
