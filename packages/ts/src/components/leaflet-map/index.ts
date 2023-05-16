@@ -386,6 +386,14 @@ export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<D
     this.render()
   }
 
+  /** Get the currently expanded cluster */
+  public getExpandedCluster (): { id: string; points: Datum[] } {
+    if (!this._expandedCluster) return
+    const id = this._expandedCluster.cluster?.id as string
+    const points = this._expandedCluster.cluster?.clusterPoints.map(d => this.datamodel.data[(d as LeafletMapPointDatum<Datum>)._index])
+    return { id, points }
+  }
+
   /* Zoom to a point by id and optionally select it.
    * If the point is inside a cluster, it'll be automatically expanded to show the enclosed point.
    * You can also force set the zoom level by providing the `customZoomLevel` argument.
@@ -463,6 +471,7 @@ export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<D
   public isMoving (): boolean {
     return this._isMoving
   }
+
 
   private _flyToBounds (bounds: [[number, number], [number, number]], durationMs: number, paddingPx?: [number, number]): void {
     this._eventInitiatedByComponent = true
