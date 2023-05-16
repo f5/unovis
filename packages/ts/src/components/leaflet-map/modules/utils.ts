@@ -100,7 +100,7 @@ export function getPointDisplayOrder<D extends GenericDataRecord> (
   return Object.keys(statusList).indexOf(status)
 }
 
-export function toGeoJSONPoint<D extends GenericDataRecord> (d: D, pointLatitude: NumericAccessor<D>, pointLongitude: NumericAccessor<D>): PointFeature<D> {
+export function toGeoJSONPoint<D extends GenericDataRecord> (d: D, i: number, pointLatitude: NumericAccessor<D>, pointLongitude: NumericAccessor<D>): PointFeature<D> {
   const lat = getNumber(d, pointLatitude) as number
   const lon = getNumber(d, pointLongitude) as number
 
@@ -108,6 +108,7 @@ export function toGeoJSONPoint<D extends GenericDataRecord> (d: D, pointLatitude
     type: 'Feature',
     properties: {
       ...d,
+      _index: i,
     },
     geometry: {
       type: 'Point',
@@ -139,7 +140,7 @@ export function calculateClusterIndex<D extends GenericDataRecord> (data: D[], c
         acc[key] += clusterPoint[key]
       }
     },
-  }).load(data.map(d => toGeoJSONPoint(d, pointLatitude, pointLongitude)))
+  }).load(data.map((d, i) => toGeoJSONPoint(d, i, pointLatitude, pointLongitude)))
 }
 
 export function getNodePathData ({ x, y }: { x: number; y: number }, radius: number, shape: LeafletMapPointShape): string {

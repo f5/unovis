@@ -45,6 +45,7 @@ export type LeafletMapClusterDatum<D extends GenericDataRecord> = Partial<D> & C
 export type LeafletMapPointDatum<D extends GenericDataRecord> = D & PointExpandedClusterProperties<D> & {
   id: string | number;
   shape: LeafletMapPointShape;
+  _index: number;
 };
 
 export type LeafletMapPoint<D extends GenericDataRecord> = {

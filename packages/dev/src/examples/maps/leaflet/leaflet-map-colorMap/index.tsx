@@ -64,6 +64,11 @@ export const component = (): JSX.Element => {
       clusterBottomLabel={useCallback(clusterBottomLabel, [])}
       clusteringDistance={85}
       clusterExpandOnClick={true}
+      events={{
+        [LeafletMap.selectors.point]: {
+          // mouseover: () => console.log(mapRef.current?.component?.getExpandedCluster()),
+        },
+      }}
       attributes={{
         [LeafletMap.selectors.point]: {
           cluster: (p: LeafletMapPoint<MapPointDataRecord>) => p.isCluster,
