@@ -14,6 +14,8 @@ export const globalStyles = injectGlobal`
     --vis-axis-label-color: #6c778c;
     --vis-axis-tick-label-font-size: 12px;
     --vis-axis-label-font-size: 14px;
+    --vis-axis-tick-line-width: 1px;
+    --vis-axis-grid-line-width: 1px;
 
     --vis-dark-axis-tick-color: #6c778c;
     --vis-dark-axis-tick-label-color: #e8e9ef;
@@ -44,6 +46,7 @@ export const axis = css`
 
   .domain {
     stroke: var(--vis-axis-tick-color);
+    stroke-width: var(--vis-axis-grid-line-width);
   }
 
   &${`.${hideTickLine}`} {
@@ -68,6 +71,7 @@ export const grid = css`
 
   line {
     stroke: var(--vis-axis-grid-color);
+    stroke-width: var(--vis-axis-grid-line-width);
   }
 `
 
@@ -79,6 +83,7 @@ export const tick = css`
 
   line {
     stroke: var(--vis-axis-tick-color);
+    stroke-width: var(--vis-axis-tick-line-width);
   }
 
   text, tspan {
