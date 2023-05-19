@@ -9,7 +9,7 @@ import { flatten, isArray, merge } from 'utils/data'
 import { getTextAnchorFromTextAlign } from 'types/svg'
 
 // Styles
-import { getFontWidthToHeightRatio, UNOVIS_TEXT_DEFAULT, UNOVIS_TEXT_SEPARATOR_DEFAULT } from 'styles/index'
+import { getFontWidthToHeightRatio, UNOVIS_TEXT_DEFAULT, UNOVIS_TEXT_SEPARATOR_DEFAULT, UNOVIS_TEXT_HYPHEN_CHARACTER_DEFAULT } from 'styles/index'
 
 /**
  * Converts a kebab-case string to camelCase.
@@ -302,7 +302,7 @@ function breakTextIntoLines (
           if (subLineLengthPx > width) {
             let breakIndex = (line.trim()).length - 2 // Place at least 2 characters onto the next line
             while (breakIndex > 0) {
-              const subLine = `${line.substring(0, breakIndex)}-` // Use hyphen when force breaking words
+              const subLine = `${line.substring(0, breakIndex)}${UNOVIS_TEXT_HYPHEN_CHARACTER_DEFAULT}` // Use hyphen when force breaking words
               const subLinePx = fastMode
                 ? estimateStringPixelLength(subLine, textBlock.fontSize, textBlock.fontWidthToHeightRatio)
                 : getPreciseStringLengthPx(subLine, textBlock.fontFamily, textBlock.fontSize)
@@ -368,16 +368,23 @@ export function getWrappedText (
     const dh = text.fontSize * text.lineHeight
     // Iterate over lines and handle text overflow based on the height limit if provided
     for (let k = 0; k < lines.length; k += 1) {
-      const line = lines[k]
+      let line = lines[k]
       h += dh
 
       if (height && (h + dh) > height && (k !== lines.length - 1)) {
+        // Remove hyphen character from the end of the line if it's there
+        const lastCharacter = line.charAt(line.length - 1)
+        if (lastCharacter === UNOVIS_TEXT_HYPHEN_CHARACTER_DEFAULT) {
+          line = line.substr(0, lines[k].length - 1)
+        }
+
+        const lineWithEllipsis = `${line} …`
         const textLengthPx = fastMode
-          ? estimateStringPixelLength(line, text.fontSize, text.fontWidthToHeightRatio)
-          : getPreciseStringLengthPx(line, text.fontFamily, text.fontSize)
+          ? estimateStringPixelLength(lineWithEllipsis, text.fontSize, text.fontWidthToHeightRatio)
+          : getPreciseStringLengthPx(lineWithEllipsis, text.fontFamily, text.fontSize)
 
         if (textLengthPx < width) {
-          lines[k] += ' …'
+          lines[k] = lineWithEllipsis
         } else {
           lines[k] = `${lines[k].substr(0, lines[k].length - 2)}…`
         }
