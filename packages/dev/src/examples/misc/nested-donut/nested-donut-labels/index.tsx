@@ -1,32 +1,37 @@
-import React from 'react'
+import React, { useCallback, useState } from 'react'
+import { NestedDonutSegmentLabelAlignment } from '@unovis/ts'
 import { VisSingleContainer, VisNestedDonut } from '@unovis/react'
-import { generateNestedData, NestedDatum } from '@src/utils/data'
 
-export const title = 'Nested Donut Layer Configuration'
-export const subTitle = 'with inward/outward direction'
+import s from './styles.module.css'
+
+export const title = 'Segment labels'
+export const subTitle = 'Alignment and hiding'
+
+const lengths = ['Short', 'Medium length', `L${'o'.repeat(10)}ng`]
+const data = Array(15).fill(0).map((_, i) => ({
+  type: lengths[Math.floor(i / 5)],
+  label: Array(i % 5 + 1).fill(lengths[Math.floor(i / 5)].split(' ')[0]).join(' '),
+}))
 
 export const component = (): JSX.Element => {
-  const config = {
-    data: generateNestedData(100, 5),
-    layers: [
-      (d: NestedDatum) => d.group,
-      (d: NestedDatum) => d.subgroup,
-      (d: NestedDatum) => d.value,
-    ],
-    layerPadding: 10,
-    layerSettings: (i: number) => [
-      { width: 100 },
-      { width: 50, rotateLabels: true },
-      { width: 20 },
-    ][i],
-  }
+  const [hideLabels, setHideLabels] = useState(false)
+  const toggleHiddenLabels = useCallback(() => setHideLabels(!hideLabels), [hideLabels])
+
   return (<>
-    <VisSingleContainer height={500}>
-      <VisNestedDonut {...config} direction={'outwards'}/>
-    </VisSingleContainer>
-    <VisSingleContainer height={500}>
-      <VisNestedDonut {...config}/>
-    </VisSingleContainer>
+    <button onClick={toggleHiddenLabels}>{hideLabels ? 'Show' : 'Hide'} Labels</button>
+    <div className={s.flex}>
+      {Object.values(NestedDonutSegmentLabelAlignment).map(labelAlignment =>
+        <VisSingleContainer height={500} width={500} data={data}>
+          <VisNestedDonut
+            direction='outwards'
+            hideOverflowingSegmentLabels={hideLabels}
+            layers={[d => d.type, d => d.label]}
+            centralLabel={labelAlignment}
+            layerSettings={{ width: 75, labelAlignment }}
+          />
+        </VisSingleContainer>
+      )}
+    </div>
   </>
   )
 }

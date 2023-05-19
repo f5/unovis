@@ -13,7 +13,7 @@ import { VerticalAlign } from 'types/text'
 
 // Utils
 import { getColor, getHexValue } from 'utils/color'
-import { getNumber, getString, getValue, isNumber, isNumberWithinRange } from 'utils/data'
+import { getNumber, getString, getValue, isNumber, isNumberWithinRange, merge } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { wrapSVGText } from 'utils/text'
 
@@ -55,6 +55,7 @@ NestedDonutConfigInterface<Datum>
     if (config) this.config.init(config)
     this.arcBackground = this.g.append('g')
     this.arcGroup = this.g.append('g')
+      .attr('class', s.segmentsGroup)
     this.centralLabel = this.g.append('text')
       .attr('class', s.centralLabel)
     this.centralSubLabel = this.g.append('text')
@@ -75,7 +76,7 @@ NestedDonutConfigInterface<Datum>
       .outerRadius(d => d.y1)
       .cornerRadius(config.cornerRadius)
 
-    this.arcGroup.attr('transform', `translate(${this._width / 2},${this._height / 2})`)
+    this.g.attr('transform', `translate(${this._width / 2},${this._height / 2})`)
 
     // Layer backgrounds
     const backgrounds = this.arcBackground
@@ -85,7 +86,6 @@ NestedDonutConfigInterface<Datum>
     const backgroundsEnter = backgrounds.enter().append('path')
       .attr('class', s.background)
       .attr('visibility', config.showBackground ? null : 'hidden')
-      .attr('transform', `translate(${this._width / 2},${this._height / 2})`)
 
     const backgroundsMerged = backgrounds.merge(backgroundsEnter)
     smartTransition(backgroundsMerged, duration)
@@ -97,7 +97,7 @@ NestedDonutConfigInterface<Datum>
       }))
 
     // Segments
-    const segments = this.arcGroup.selectAll<SVGGElement, NestedDonutSegment<Datum>>('g')
+    const segments = this.arcGroup.selectAll<SVGGElement, NestedDonutSegment<Datum>>(`${s.segment}`)
       .data(data, d => d._id)
 
     const segmentsEnter = segments.enter()
@@ -143,12 +143,10 @@ NestedDonutConfigInterface<Datum>
 
     // Chart labels
     this.centralLabel
-      .attr('transform', `translate(${this._width / 2},${this._height / 2})`)
       .attr('dy', config.centralSubLabel ? '-0.55em' : null)
       .text(config.centralLabel ?? null)
 
     this.centralSubLabel
-      .attr('transform', `translate(${this._width / 2},${this._height / 2})`)
       .attr('dy', config.centralLabel ? '0.55em' : null)
       .text(config.centralSubLabel ?? null)
 
@@ -170,7 +168,7 @@ NestedDonutConfigInterface<Datum>
 
       if (isNumberWithinRange(node.depth - 1, [0, layers.length - 1])) {
         node._layer = layers[node.depth - 1]
-        node._id = [node._layer._id, node._index].join('-')
+        node._id = [this.uid, node._layer._id, node._index].join('-')
         node.y0 = node._layer._innerRadius
         node.y1 = node._layer._outerRadius
       }
@@ -197,7 +195,7 @@ NestedDonutConfigInterface<Datum>
 
     const layerItems = layers.reduceRight((arr, _, i) => {
       const layerId = direction === NestedDonutDirection.Outwards ? i : arr.length
-      const layerConfig = getValue(layerId, layerSettings) ?? defaultLayerSettings
+      const layerConfig = merge(defaultLayerSettings, getValue(layerId, layerSettings))
       const radius = arr.length ? arr[0]._innerRadius - layerPadding : outerRadius
       arr.unshift({
         ...layerConfig,
