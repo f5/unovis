@@ -20,8 +20,14 @@ export enum NestedDonutDirection {
   Outwards = 'outwards',
 }
 
+export enum NestedDonutSegmentLabelAlignment {
+  Along = 'along',
+  Perpendicular = 'perpendicular',
+  Straight = 'straight',
+}
+
 export type NestedDonutLayerSettings = {
-  rotateLabels?: boolean;
+  labelAlignment?: NestedDonutSegmentLabelAlignment;
   width?: number;
 }
 
@@ -32,7 +38,7 @@ export type NestedDonutLayer = NestedDonutLayerSettings & {
 }
 
 export const defaultLayerSettings: NestedDonutLayerSettings = {
-  rotateLabels: false,
+  labelAlignment: NestedDonutSegmentLabelAlignment.Perpendicular,
   width: 50,
 }
 

@@ -8,13 +8,13 @@ import { getColor, hexToBrightness } from 'utils/color'
 import { smartTransition } from 'utils/d3'
 import { getString } from 'utils/data'
 import { cssvar } from 'utils/style'
-import { estimateTextSize, wrapSVGText } from 'utils/text'
+import { wrapSVGText } from 'utils/text'
 
 // Config
 import { NestedDonutConfig } from '../config'
 
 // Local Types
-import { NestedDonutSegment } from '../types'
+import { NestedDonutSegment, NestedDonutSegmentLabelAlignment } from '../types'
 
 // Styles
 import { variables } from '../style'
@@ -34,9 +34,31 @@ function getLabelTransform<Datum> (
   arcGen: Arc<unknown, NestedDonutSegment<Datum>>
 ): string {
   const translate = `translate(${arcGen.centroid(d)})`
-  if (!d._layer.rotateLabels) return translate
   const degree = 180 / Math.PI * (arcGen.startAngle()(d) + arcGen.endAngle()(d)) / 2 - 90
-  return `${translate} rotate(${degree > 90 ? degree - 180 : degree})`
+  switch (d._layer.labelAlignment) {
+    case NestedDonutSegmentLabelAlignment.Along:
+      return `${translate} rotate(${degree + 90})`
+    case NestedDonutSegmentLabelAlignment.Perpendicular:
+      return `${translate} rotate(${degree > 90 ? degree - 180 : degree})`
+    default:
+      return `${translate}`
+  }
+}
+
+function getLabelBounds<Datum> (
+  d: NestedDonutSegment<Datum>
+): { width: number; height: number } {
+  const arcWidth = d.y1 - d.y0
+  const arcLength = d._layer._innerRadius * (d.x1 - d.x0)
+  const bandwidth = Math.max(Math.abs(Math.cos(d.x0 + (d.x1 - d.x0) / 2 - Math.PI / 2) * d._layer.width), arcWidth)
+  switch (d._layer.labelAlignment) {
+    case NestedDonutSegmentLabelAlignment.Perpendicular:
+      return { width: arcWidth, height: arcLength }
+    case NestedDonutSegmentLabelAlignment.Along:
+      return { width: arcLength, height: arcWidth }
+    case NestedDonutSegmentLabelAlignment.Straight:
+      return { width: bandwidth, height: bandwidth }
+  }
 }
 
 export function createLabel<Datum> (
@@ -49,6 +71,7 @@ export function createLabel<Datum> (
     .style('opacity', 0)
 }
 
+
 export function updateLabel<Datum> (
   selection: Selection<SVGTextElement, NestedDonutSegment<Datum>, SVGGElement, unknown>,
   config: NestedDonutConfig<Datum>,
@@ -56,21 +79,18 @@ export function updateLabel<Datum> (
   duration: number
 ): void {
   selection
-    .text(d => getString(d, config.segmentLabel) ?? d.data.key.toString())
-    .style('visibility', (d, i, els) => {
-      const { width, height } = estimateTextSize(select(els[i]), UNOVIS_TEXT_DEFAULT.fontSize)
-      const diff = (d.x1 - d.x0) * 180 / Math.PI
-      if (!config.hideSegmentLabels) {
-        wrapSVGText(select(els[i]), diff)
-        return
-      }
-      const outOfBounds = d._layer.rotateLabels
-        ? height < diff && width < (d.y1 - d.y0)
-        : width >= diff
-      return outOfBounds ? 'hidden' : null
-    })
+    .text(d => getString(d, config.segmentLabel) ?? d.data.key)
     .style('transition', `fill ${duration}ms`)
     .style('fill', d => getColor(d, config.segmentLabelColor) ?? getLabelFillColor(d, config))
+    .each((d, i, els) => {
+      const bounds = getLabelBounds(d)
+      const label = select(els[i]).call(wrapSVGText, bounds.width)
+      const offset = label.selectChildren().size() - 1
+      const { width, height } = label.node().getBBox()
+
+      label.attr('dy', -offset * UNOVIS_TEXT_DEFAULT.fontSize + (2 * offset))
+        .attr('visibility', config.hideOverflowingSegmentLabels && (width > bounds.width || height > bounds.height) && 'hidden')
+    })
 
   smartTransition(selection, duration)
     .attr('transform', d => getLabelTransform(d, arcGen))

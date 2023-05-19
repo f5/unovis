@@ -42,7 +42,7 @@ export interface NestedDonutConfigInterface<Datum> extends ComponentConfigInterf
   /** Corner Radius. Default: `0` */
   cornerRadius?: number;
   /** Hide segment labels when they don't fit. Default: `true` */
-  hideSegmentLabels?: boolean;
+  hideOverflowingSegmentLabels?: boolean;
   /** Color accessor function for segments. Default: `undefined` */
   segmentColor?: ColorAccessor<NestedDonutSegment<Datum>>;
   /** Segment label accessor function. Default `undefined` */
@@ -58,7 +58,7 @@ export class NestedDonutConfig<Datum> extends ComponentConfig implements NestedD
   centralSubLabelWrap = true
   cornerRadius = 0
   direction = NestedDonutDirection.Inwards
-  hideSegmentLabels = true
+  hideOverflowingSegmentLabels = true
   layers: StringAccessor<Datum>[]
   layerPadding = 0
   layerSettings = undefined
