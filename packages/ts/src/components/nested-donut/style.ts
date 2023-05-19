@@ -34,6 +34,10 @@ export const root = css`
   label: nested-donut-component;
 `
 
+export const segmentsGroup = css`
+  label: nested-donut-segments-group;
+`
+
 export const variables = getCssVarNames(cssVarDefaults)
 injectGlobalCssVariables(cssVarDefaults, root)
 
