@@ -1,11 +1,11 @@
 import { select, Selection } from 'd3-selection'
-import { ResizeObserver } from '@juggle/resize-observer'
 
 // Types
 import { Sizing } from 'types/component'
 
 // Utils
 import { isEqual, clamp } from 'utils/data'
+import { ResizeObserver } from 'utils/resize-observer'
 
 // Config
 import { ContainerConfig, ContainerConfigInterface } from './config'

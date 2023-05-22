@@ -1,10 +1,10 @@
 import { select } from 'd3-selection'
-import { ResizeObserver } from '@juggle/resize-observer'
 
 import { ComponentCore } from 'core/component'
 import { ComponentType } from 'types/component'
 
 // Utils
+import { ResizeObserver } from 'utils/resize-observer'
 import { getNumber, throttle } from 'utils/data'
 import { getDataLatLngBounds } from 'utils/map'
 import { getColor } from 'utils/color'
