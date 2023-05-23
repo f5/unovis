@@ -42,7 +42,7 @@ function parseFunction (str: string, type: string): string {
   }
   const fn = str.split('=>')
   const args = fn[0].match(/[a-z]/gm)?.map(p => params[p] ? [p, params[p]].join(': ') : p).join(', ') || ''
-  const body = fn[1]
+  const body = fn[1].replace(/(\+|-|\*|\/|=|&|\||\?|:)+/gm, s => ` ${s} `)
   return `(${args}) => ${body}`
 }
 
