@@ -22,7 +22,7 @@
           "es2015",
           "dom"
       ],
-      "target": "es2015",
+      "target": "es2017",
   },
   "exclude": [
       "node_modules",
