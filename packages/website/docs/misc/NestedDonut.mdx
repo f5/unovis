@@ -1,6 +1,9 @@
+---
+title: Nested Donut
+---
 import { PropTable } from '../components/props-table.tsx'
 import { sample } from '../utils/data.ts'
-import { DocWrapper, InputWrapper } from '../wrappers'
+import { DocWrapper } from '../wrappers'
 
 export const data = Array(100)
   .fill(0)
@@ -14,62 +17,40 @@ export const data = Array(100)
   })
 
 export const groupColors = { A: 'red', B: 'green', C: 'blue' }
+export const labelAlignments = ['along', 'perpendicular', 'straight']
 
 export const defaultProps = () => ({
   name: 'NestedDonut',
   containerName: 'SingleContainer',
   configKey: 'component',
+  data,
   dataType: 'Datum',
   layers: [(d) => d.group, (d) => d.subgroup],
-  data,
 })
 
 # Nested Donut
-
 _Nested Donut_ is a variation of our [_Donut_](./donut) component that supports hierarchical data. Similar to a traditional _Sunburst_
 chart, _Nested Donut_ displays hierarchies through a series of a rings or **layers** containing categorical nodes or **segments**.
 
-## Data and Layer Configuration
-
-_Nested Donut_ expects an array of generic data records, the properties of which will be used to define the layers. Each layer
+## Data
+_Nested Donut_ expects an array of generic data records, the properties of which will be used to define the _layers_. Each layer
 will contain nodes or _segments_ that represent their corresponding quantity in the data array.
 
 For the following examples, assume data is of type `Datum[]`.
 
 ```ts
 type Datum = {
-  group: string
-  subgroup: string
-  value: number
-}
+  group: string;
+  subgroup: string;
+};
 ```
 
-### Layer Accessors
-
+### Defining Layers
 The `layers` property accepts an array of string accessor functions based on the `Datum` provided.
 The first accessor will define the outermost layer of the chart, the second will provide the next, and so on.
 We can provide `layers` with accessors such the `group` property defines parent nodes with `subgroup` children.
 
 <DocWrapper {...defaultProps()} showContext='full' />
-
-#### Adding additional layers
-
-We can add another layer by adding another accessor:
-
-```ts
-layers = [
-  (d: Datum) => d.group,
-  (d: Datum) => d.subgroup,
-  (d: Datum) => d.value,
-]
-```
-
-<DocWrapper
-  {...defaultProps()}
-  height={400}
-  layers={[(d) => d.group, (d) => d.subgroup, (d) => d.value]}
-  excludeTabs
-/>
 
 #### Layers with missing/undefined data
 
@@ -87,67 +68,99 @@ layers = [(d: Datum) => d.group, (d: Datum) => d.value]
   excludeTabs
 />
 
-### Layer Padding
+### Segment Values
+By default, segment lengths are assigned based on the number of occurrences within the data array.
+For example, consider the following data provided to a single layer:
 
-You can provide a constant numeric value to `layerPadding` to set the spacing between each layer in pixels.
-
-<DocWrapper
-  {...defaultProps()}
-  showContext='minimal'
-  layerPadding={10}
-  layers={[(d) => d.group, (d) => d.subgroup, (d) => d.value]}
+```ts
+const data = ['A', 'A', 'A', 'B', 'B', 'C']
+```
+We would expect the values of A, B, and C to be proportional to their counts within in the array, i.e. 3, 2, and 1, respectively.
+<DocWrapper {...defaultProps()} data={[
+  ...Array(3).fill('A'),
+  ...Array(2).fill('B'),
+  ...Array(1).fill('C'),
+  ]}
+  layerSettings={{ labelAlignment: 'along' }}
+  layers={[d => d]}
+  excludeTabs
 />
 
-### Layer Settings
+### Custom `value` Accessor
+Alternatively, you can override the default way _Nested Donut_ calculates values by providing your own `value` accessor function.
+For example, f your data is shaped like:
+```ts
+const data = [{ label: 'A', value: 3 }, { label: 'B', value: 2 }, { label: 'C', value: 1 }]
+```
 
-There are custom settings you can set for each individual layer. Just provide `layerSettings` property
-with an accessor that returns the following type based on the layer's depth:
+you can provide `value` with `(d: Datum) => d.value` to achieve the same effect.
+
+## Layer Settings
+You can customize the appearance for each individual layer with the `layerSettings` property,
+which accepts an accessor that returns the following type based on the layer's depth:
 
 ```typescript
 type NestedDonutLayerSettings = {
-  width: number // The layer's width in pixels
-  rotateLabels: boolean // Set to true if you want the labels in this layer to be rotated with respect to its radial position
+  width: number; // The layer's width in pixels
+  labelAlignment: NestedDonutSegmentLabelAlignment; // Alignment of the layer's segment labels
 }
 ```
 
-#### Example: Constant layer settings
+### Default Values
+By default, each layer has the same `NestedDonutLayerSettings` object with the following values:
+```ts
+{
+  width: 50,
+  labelAlignment: NestedDonutSegmentLabelAlignment.Perpendicular;
+}
+```
 
-You can customize all the layers at once by simply providing a `NestedDonutLayerSettings` object:
+### Label Alignment
+The `labelAlignment` property specifies how the segment labels will align based on their radial position. The possible values are:
+- `NestedDonutSegmentLabelAlignment.Along` - label is rotated with respect to the segment angle
+- `NestedDonutSegmentLabelAlignment.Perpendicular` - label is rotated perpendicular to the segment angle (**default**)
+- `NestedDonutSegmentLabelAlignment.Straight` - no rotation is applied
 
-<DocWrapper
-  {...defaultProps()}
-  showContext='minimal'
-  layerSettings={{
-    width: 20,
-    rotateLabels: true,
-  }}
-/>
+<div style={{ display: 'flex', padding: '10px', flexWrap: 'wrap', justifyContent: 'space-evenly' }}>
+{['along', 'perpendicular', 'straight'].map((d, i) => <DocWrapper {...defaultProps()} containerProps={{ width: 300 }} layerSettings={{ labelAlignment: d }} excludeTabs centralSubLabel={d}/>)}
+</div>
 
-#### Example: Variable layer settings
-
+### Variable Layer Settings
 To set different layer settings depending on the layer, provide an `NestedDonutLayerSettings` accessor function with a numeric parameter.
 The number refers to the layer's index in the provided `layers` property.
 
 ```ts
 layers = [(d: Datum) => d.group, (d: Datum) => d.subgroup]
 
-// The accessor function that takes a layer index* and returns a `NestedDonutLayerSettings` object:
-layerSettings = (layer: number) => ({ width: i === 0 ? 100 : 50 })
+// The accessor function that takes a layer index and returns a `NestedDonutLayerSettings` object:
+layerSettings = (layer: number) => {
+  if (i === 0) {
+    return { width: 25 }
+  }
+}
 ```
 
 <DocWrapper
   {...defaultProps()}
+  showContext='full'
   layers={[(d) => d.group, (d) => d.subgroup]}
-  layerSettings={(i) => (i === 0 ? { width: 100 } : { width: 50 })}
+  layerSettings={(i) => i === 0 && { width: 25 } }
 />
 
-:::\*note
-Note that regardless of [direction](#Direction), this number will always correspond to the layer's index within the `layers` accessor property.
-:::
+## Layer Padding
+
+You can provide a constant numeric value to `layerPadding` to set the spacing between each layer in pixels.
+
+<DocWrapper
+  {...defaultProps()}
+  height={350}
+  layerPadding={10}
+  layers={[(d) => d.group, (d) => d.subgroup, (d) => d.value]}
+/>
 
 ## Segments
 
-### Segment Data
+### Segment Datum
 
 Unlike our non-hierarchical components, the data type used by accessors to customize segments will not resemble the `Datum` type because the segments
 are generated based on the collection of `Datum` objects provided.
@@ -161,9 +174,10 @@ type NestedDonutSegmentDatum<Datum> = {
 }
 
 type NestedDonutSegment<Datum> = {
-  data: NestedDonutSegmentDatum<Datum>
-  depth: number
-  height: number
+  data: NestedDonutSegmentDatum<Datum>;
+  depth: number;
+  height: number;
+  value: number;
 }
 ```
 
@@ -189,7 +203,7 @@ This gives us the appearance of three distinct colors based on the segment's gro
 
 ### Segment Labels
 
-You can customize a _segment_'s labels with the following properties: `segmentLabel` and `segmenLabelColor`:
+You can customize a _segment_'s labels with the following properties: `segmentLabel` and `segmentLabelColor`:
 
 ```ts
 const segmentColor = '#ddd'
