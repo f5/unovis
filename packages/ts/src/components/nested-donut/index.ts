@@ -96,6 +96,10 @@ NestedDonutConfigInterface<Datum>
         y1: d._outerRadius,
       }))
 
+    smartTransition(backgrounds.exit(), duration)
+      .style('opacity', 0)
+      .remove()
+
     // Segments
     const segments = this.arcGroup.selectAll<SVGGElement, NestedDonutSegment<Datum>>(`${s.segment}`)
       .data(data, d => d._id)
@@ -166,14 +170,15 @@ NestedDonutConfigInterface<Datum>
     partitionData.eachBefore(node => {
       const scale = this.colorScale.domain([-1, node.children?.length])
 
+      const key = node.data[0] as string
+      node.data = { key: key, root: node.parent?.data.root ?? key }
+
       if (isNumberWithinRange(node.depth - 1, [0, layers.length - 1])) {
         node._layer = layers[node.depth - 1]
-        node._id = [this.uid, node._layer._id, node._index].join('-')
+        node._id = this.uid.replace(/-.*/gm, `-${key}`)
         node.y0 = node._layer._innerRadius
         node.y1 = node._layer._outerRadius
       }
-      const key = node.data[0] as string
-      node.data = { key: key, root: node.parent?.data.root ?? key }
 
       node.children?.forEach((child, i) => {
         child._index = i
