@@ -81,8 +81,12 @@ export class XYContainer<Datum> extends ContainerCore {
       this.setData(data, true)
     }
 
-    // Render if components are present and have data
-    if (this.components?.some(c => c.datamodel.data)) {
+    // Render if there are axes or components with data
+    if (
+      this.config.xAxis ||
+      this.config.yAxis ||
+      this.components?.some(c => c.datamodel.data)
+    ) {
       this.render()
     }
 
