@@ -1,5 +1,5 @@
 import { Selection } from 'd3-selection'
-import { arc } from 'd3-shape'
+import { arc, pie } from 'd3-shape'
 import { hierarchy, partition } from 'd3-hierarchy'
 import { scaleLinear, ScaleLinear } from 'd3-scale'
 import { group } from 'd3-array'
@@ -162,34 +162,45 @@ NestedDonutConfigInterface<Datum>
 
     const layerAccessors = config.layers?.map(layerAccessor => (i: number) => getString(data[i], layerAccessor, i))
     const nestedData = group(data.keys(), ...layerAccessors as [(i: number) => string])
-    const rootNode = config.value
+    const rootNode = config.value !== undefined
       ? hierarchy(nestedData).sum(index => typeof index === 'number' && getNumber(data[index], config.value, index))
       : hierarchy(nestedData).count()
+
     const partitionData = partition().size([config.angleRange[1], 1])(rootNode) as NestedDonutSegment<Datum>
 
     partitionData.eachBefore(node => {
-      const scale = this.colorScale.domain([-1, node.children?.length])
-
       const key = node.data[0] as string
-      node.data = { key: key, root: node.parent?.data.root ?? key }
+      node.data = { key, root: node.parent?.data.root ?? key }
 
       if (isNumberWithinRange(node.depth - 1, [0, layers.length - 1])) {
-        node._layer = layers[node.depth - 1]
         node._id = this.uid.replace(/-.*/gm, `-${key}`)
+        node._layer = layers[node.depth - 1]
         node.y0 = node._layer._innerRadius
         node.y1 = node._layer._outerRadius
       }
 
-      node.children?.forEach((child, i) => {
-        child._index = i
-        child._state = {
-          fill:
-            getColor(child, config.segmentColor, i, child.depth !== 1) ??
-            scale.range(['#fff', getHexValue(node._state.fill, this.element)])(i),
-        }
-      })
+      if (node.children) {
+        const colors = this.colorScale
+          .domain([-1, node.children.length])
+          .range(['#fff', getHexValue(node._state?.fill, this.element)])
+
+        const positions = pie<NestedDonutSegment<Datum>>()
+          .startAngle(node.parent ? node.x0 : config.angleRange?.[0])
+          .endAngle(node.parent ? node.x1 : config.angleRange?.[1])
+          .value(d => config.showEmptySegments && d.value === 0 ? config.emptySegmentAngle : (d.x1 - d.x0))
+          .sort(d => d._index)(node.children)
+
+        node.children.forEach((child, i) => {
+          child._index = i
+          child.x0 = positions[i].startAngle
+          child.x1 = positions[i].endAngle
+          child._state = {
+            fill: getColor(child, config.segmentColor, i, child.depth !== 1) ?? colors(i),
+          }
+        })
+      }
     })
-    const segments = partitionData.descendants().filter(d => d.parent && d.children && d.data.key)
+    const segments = partitionData.descendants().filter(d => d.parent?.value && d.data.key)
     return segments
   }
 

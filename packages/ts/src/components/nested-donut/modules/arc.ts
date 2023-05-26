@@ -23,7 +23,7 @@ export function createArc<Datum> (
   config: NestedDonutConfig<Datum>
 ): void {
   selection
-    .style('fill', d => getColor(d, config.segmentColor) ?? d._state.fill)
+    .style('fill', d => getColor(d, config.segmentColor) ?? d._state?.fill)
     .style('opacity', 0)
     .each((d, i, els) => {
       const arcNode: ArcNode = els[i]
@@ -46,7 +46,7 @@ export function updateArc<Datum> (
 ): void {
   selection
     .style('transition', `fill ${duration}ms`) // Animate color with CSS because we're using CSS-variables
-    .style('fill', d => getColor(d, config.segmentColor) ?? d._state.fill)
+    .style('fill', d => getColor(d, config.segmentColor) ?? d._state?.fill)
 
   if (duration) {
     const transition = smartTransition(selection, duration)

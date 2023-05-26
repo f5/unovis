@@ -41,6 +41,8 @@ export interface NestedDonutConfigInterface<Datum> extends ComponentConfigInterf
   // Segments
   /** Corner Radius. Default: `0` */
   cornerRadius?: number;
+  /** Angular size for empty segments in radians. Default: `Math.PI / 180` */
+  emptySegmentAngle?: number;
   /** Hide segment labels when they don't fit. Default: `true` */
   hideOverflowingSegmentLabels?: boolean;
   /** Color accessor function for segments. Default: `undefined` */
@@ -49,6 +51,10 @@ export interface NestedDonutConfigInterface<Datum> extends ComponentConfigInterf
   segmentLabel?: StringAccessor<NestedDonutSegment<Datum>>;
   /** Color accessor function for segment labels */
   segmentLabelColor?: ColorAccessor<NestedDonutSegment<Datum>>;
+  /** When true, the component will display empty segments (the ones that have `0` values) as tiny slices.
+   * Default: `false`
+  */
+  showEmptySegments?: boolean;
 }
 
 export class NestedDonutConfig<Datum> extends ComponentConfig implements NestedDonutConfigInterface<Datum> {
@@ -58,6 +64,7 @@ export class NestedDonutConfig<Datum> extends ComponentConfig implements NestedD
   centralSubLabelWrap = true
   cornerRadius = 0
   direction = NestedDonutDirection.Inwards
+  emptySegmentAngle = Math.PI / 180
   hideOverflowingSegmentLabels = true
   layers: StringAccessor<Datum>[]
   layerPadding = 0
@@ -66,5 +73,6 @@ export class NestedDonutConfig<Datum> extends ComponentConfig implements NestedD
   segmentLabel = undefined
   segmentLabelColor = undefined
   showBackground = false
+  showEmptySegments = false
   value = undefined
 }
