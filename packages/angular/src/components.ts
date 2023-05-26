@@ -47,6 +47,9 @@ export { VisSankeyModule } from './components/sankey/sankey.module'
 export { VisGraphComponent } from './components/graph/graph.component'
 export { VisGraphModule } from './components/graph/graph.module'
 
+export { VisNestedDonutComponent } from './components/nested-donut/nested-donut.component'
+export { VisNestedDonutModule } from './components/nested-donut/nested-donut.module'
+
 // HTML Components
 export { VisLeafletMapComponent } from './html-components/leaflet-map/leaflet-map.component'
 export { VisLeafletMapModule } from './html-components/leaflet-map/leaflet-map.module'
