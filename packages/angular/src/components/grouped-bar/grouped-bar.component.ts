@@ -126,7 +126,7 @@ export class VisGroupedBarComponent<Datum> implements GroupedBarConfigInterface<
   @Input() cursor?: StringAccessor<Datum>
 
   /** Chart orientation: `Orientation.Vertical` or `Orientation.Horizontal`. Default `Orientation.Vertical` */
-  @Input() orientation?: Orientation
+  @Input() orientation?: Orientation | string
   @Input() data: Datum[]
 
   component: GroupedBar<Datum> | undefined

@@ -101,10 +101,10 @@ export class VisXYLabelsComponent<Datum> implements XYLabelsConfigInterface<Datu
    * Default: `false` */
   @Input() excludeFromDomainCalculation?: boolean
 
-  /** Defines how to position the label horizontally: in data space or in screen space. Default: `LabelPositioning.DataSpace` */
+  /** Defines how to position the label horizontally: in data space or in screen space. Default: `XYLabelPositioning.DataSpace` */
   @Input() xPositioning?: GenericAccessor<XYLabelPositioning | string, Datum>
 
-  /** Defines how to position the label vertically: in data space or in screen space. Default: `LabelPositioning.DataSpace` */
+  /** Defines how to position the label vertically: in data space or in screen space. Default: `XYLabelPositioning.DataSpace` */
   @Input() yPositioning?: GenericAccessor<XYLabelPositioning | string, Datum>
 
   /** Font size accessor function or constant value in pixels. If not provided, the value of CSS variable `--vis-xy-label-font-size` will be used. Default: `undefined` */

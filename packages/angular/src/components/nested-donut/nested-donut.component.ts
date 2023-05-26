@@ -7,6 +7,7 @@ import {
   VisEventType,
   VisEventCallback,
   NestedDonutDirection,
+  NumericAccessor,
   StringAccessor,
   GenericAccessor,
   NestedDonutLayerSettings,
@@ -76,10 +77,13 @@ export class VisNestedDonutComponent<Datum> implements NestedDonutConfigInterfac
   @Input() angleRange?: [number, number]
 
   /** Direction of hierarchy flow from root to leaf.
-   * `NestedDonutDirection.INWARDS` starts from the outer most radius and works towards center
-   * `NestedDonutDirection.OUTWARDS` starts from the inner most radius the consecutive layers outward.
-   * Default: `NestedDonutDirection.INWARDS` */
+   * `NestedDonutDirection.Inwards` starts from the outer most radius and works towards center
+   * `NestedDonutDirection.Outwards` starts from the inner most radius the consecutive layers outward.
+   * Default: `NestedDonutDirection.Inwards` */
   @Input() direction?: NestedDonutDirection | string
+
+
+  @Input() value?: NumericAccessor<Datum>
 
   /** Central label text. Default: `undefined` */
   @Input() centralLabel?: string
@@ -92,20 +96,26 @@ export class VisNestedDonutComponent<Datum> implements NestedDonutConfigInterfac
 
   /** Show donut background. The color is configurable via
    * the `--vis-nested-donut-background-color` and `--vis-dark-nested-donut-background-color` CSS variables.
-   * Default: `true` */
+   * Default: `false` */
   @Input() showBackground?: boolean
 
   /** Array of accessor functions to defined the nested groups */
   @Input() layers: StringAccessor<Datum>[]
 
 
-  @Input() layerSettings?: GenericAccessor<NestedDonutLayerSettings, string>
+  @Input() layerSettings?: GenericAccessor<NestedDonutLayerSettings, number>
 
 
   @Input() layerPadding?: number
 
   /** Corner Radius. Default: `0` */
   @Input() cornerRadius?: number
+
+  /** Angular size for empty segments in radians. Default: `Math.PI / 180` */
+  @Input() emptySegmentAngle?: number
+
+  /** Hide segment labels when they don't fit. Default: `true` */
+  @Input() hideOverflowingSegmentLabels?: boolean
 
   /** Color accessor function for segments. Default: `undefined` */
   @Input() segmentColor?: ColorAccessor<NestedDonutSegment<Datum>>
@@ -115,6 +125,10 @@ export class VisNestedDonutComponent<Datum> implements NestedDonutConfigInterfac
 
   /** Color accessor function for segment labels */
   @Input() segmentLabelColor?: ColorAccessor<NestedDonutSegment<Datum>>
+
+  /** When true, the component will display empty segments (the ones that have `0` values) as tiny slices.
+   * Default: `false` */
+  @Input() showEmptySegments?: boolean
   @Input() data: Datum[]
 
   component: NestedDonut<Datum> | undefined
@@ -136,8 +150,8 @@ export class VisNestedDonutComponent<Datum> implements NestedDonutConfigInterfac
   }
 
   private getConfig (): NestedDonutConfigInterface<Datum> {
-    const { duration, events, attributes, angleRange, direction, centralLabel, centralSubLabel, centralSubLabelWrap, showBackground, layers, layerConfig, layerPadding, cornerRadius, segmentColor, segmentLabel, segmentLabelColor } = this
-    const config = { duration, events, attributes, angleRange, direction, centralLabel, centralSubLabel, centralSubLabelWrap, showBackground, layers, layerConfig, layerPadding, cornerRadius, segmentColor, segmentLabel, segmentLabelColor }
+    const { duration, events, attributes, angleRange, direction, value, centralLabel, centralSubLabel, centralSubLabelWrap, showBackground, layers, layerSettings, layerPadding, cornerRadius, emptySegmentAngle, hideOverflowingSegmentLabels, segmentColor, segmentLabel, segmentLabelColor, showEmptySegments } = this
+    const config = { duration, events, attributes, angleRange, direction, value, centralLabel, centralSubLabel, centralSubLabelWrap, showBackground, layers, layerSettings, layerPadding, cornerRadius, emptySegmentAngle, hideOverflowingSegmentLabels, segmentColor, segmentLabel, segmentLabelColor, showEmptySegments }
     const keys = Object.keys(config) as (keyof NestedDonutConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
