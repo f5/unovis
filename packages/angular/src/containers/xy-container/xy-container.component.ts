@@ -91,6 +91,11 @@ export class VisXYContainerComponent<Datum> implements AfterViewInit, AfterConte
   /** Enables automatic calculation of chart margins based on the size of the axes. Default: `true` */
   @Input() autoMargin?: boolean = true
 
+  /** Alternative text description of the chart for accessibility purposes. It will be applied as an
+   * `aria-label` attribute to the div element containing your chart. Default: `undefined`.
+  */
+  @Input() ariaLabel?: string | null | undefined
+
   /** Data to be passed to all child components. But if `data` is `undefined` it'll to be passed allowing components to
    * have their individual data. Default: `undefined` */
   @Input() data?: Datum[] | undefined = undefined
@@ -127,7 +132,8 @@ export class VisXYContainerComponent<Datum> implements AfterViewInit, AfterConte
     const {
       duration, margin, padding, scaleByDomain, autoMargin, width, height,
       xScale, xDomain, xDomainMinConstraint, xDomainMaxConstraint, xRange,
-      yScale, yDomain, yDomainMinConstraint, yDomainMaxConstraint, yRange, yDirection,
+      yScale, yDomain, yDomainMinConstraint, yDomainMaxConstraint, yRange,
+      yDirection, ariaLabel,
     } = this
     const visComponents = this.visComponents.toArray().map(d => d.component)
 
@@ -162,6 +168,7 @@ export class VisXYContainerComponent<Datum> implements AfterViewInit, AfterConte
       yDomainMaxConstraint,
       yRange,
       yDirection,
+      ariaLabel,
     }
   }
 

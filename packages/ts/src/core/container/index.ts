@@ -29,13 +29,18 @@ export class ContainerCore {
     this._requestedAnimationFrame = null
     this._container = element
 
+    // Setting `role` attribute to `image` to make the container accessible
+    const container = select(this._container)
+    container.attr('role', 'figure')
+
     // Create SVG element for visualizations
-    this.svg = select(this._container).append('svg')
+    this.svg = container.append('svg')
       // We set `display` to `block` because inline elements have an invisible
       //   inline space that adds 4px to the height of the container
       .style('display', 'block')
       .attr('xmlns', 'http://www.w3.org/2000/svg')
       .attr('height', ContainerCore.DEFAULT_CONTAINER_HEIGHT) // Overriding default SVG height of 150
+      .attr('aria-hidden', true)
 
     this.element = this.svg.node()
   }
@@ -48,10 +53,17 @@ export class ContainerCore {
   }
 
   _render (duration?: number): void {
-    if (this.config.svgDefs) {
+    const { config } = this
+
+    // Add `svgDefs` if provided in the config
+    if (config.svgDefs) {
       this.svg.select('.svgDefs').remove()
-      this.svg.append('defs').attr('class', 'svgDefs').html(this.config.svgDefs)
+      this.svg.append('defs').attr('class', 'svgDefs').html(config.svgDefs)
     }
+
+    // Apply the `aria-label` attribute
+    select(this._container)
+      .attr('aria-label', config.ariaLabel)
 
     this._isFirstRender = false
   }
