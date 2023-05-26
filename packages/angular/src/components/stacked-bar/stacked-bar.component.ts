@@ -128,7 +128,7 @@ export class VisStackedBarComponent<Datum> implements StackedBarConfigInterface<
   @Input() barMinHeightZeroValue?: any
 
   /** Chart orientation: `Orientation.Vertical` or `Orientation.Horizontal`. Default `Orientation.Vertical` */
-  @Input() orientation?: Orientation
+  @Input() orientation?: Orientation | string
   @Input() data: Datum[]
 
   component: StackedBar<Datum> | undefined
