@@ -26,6 +26,11 @@ export class VisSingleContainerComponent<Data = unknown, C extends ComponentCore
   @Input() margin?: Spacing = { top: 10, bottom: 10, left: 10, right: 10 }
   /** Animation duration of all the components within the container. Default: `undefined` */
   @Input() duration?: number
+  /** Alternative text description of the chart for accessibility purposes. It will be applied as an
+   * `aria-label` attribute to the div element containing your chart. Default: `undefined`.
+  */
+  @Input() ariaLabel?: string | null | undefined
+  /** Data to be passed to the component. Default: `undefined`. */
   @Input() data?: Data
 
   chart: SingleContainer<Data>
@@ -48,12 +53,12 @@ export class VisSingleContainerComponent<Data = unknown, C extends ComponentCore
   }
 
   getConfig (): SingleContainerConfigInterface<Data> {
-    const { width, height, duration, margin } = this
+    const { width, height, duration, margin, ariaLabel } = this
 
     const component = this.visComponent?.component as C
     const tooltip = this.tooltipComponent?.component as Tooltip
 
-    return { width, height, duration, margin, component, tooltip }
+    return { width, height, duration, margin, component, tooltip, ariaLabel }
   }
 
   ngOnDestroy (): void {

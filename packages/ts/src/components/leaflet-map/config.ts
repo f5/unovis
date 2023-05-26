@@ -164,6 +164,11 @@ export interface LeafletMapConfigInterface<Datum extends GenericDataRecord> exte
   // Misc
   /** Tooltip component. Default: `undefined` */
   tooltip?: Tooltip;
+
+  /** Alternative text description of the chart for accessibility purposes. It will be applied as an
+   * `aria-label` attribute to the div element containing your chart. Default: `undefined`.
+  */
+  ariaLabel?: string | null | undefined;
 }
 
 export class LeafletMapConfig<Datum extends GenericDataRecord> extends ComponentConfig implements LeafletMapConfigInterface<Datum> {
@@ -231,4 +236,5 @@ export class LeafletMapConfig<Datum extends GenericDataRecord> extends Component
 
   // Misc
   tooltip = undefined
+  ariaLabel = undefined
 }

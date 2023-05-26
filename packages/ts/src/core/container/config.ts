@@ -30,6 +30,10 @@ export interface ContainerConfigInterface {
   height?: number | string;
   /** Custom SVG defs available to all the components within the container. Default: `undefined`. */
   svgDefs?: string;
+  /** Alternative text description of the chart for accessibility purposes. It will be applied as an
+   * `aria-label` attribute to the div element containing your chart. Default: `undefined`.
+  */
+  ariaLabel?: string | null | undefined;
 }
 
 export class ContainerConfig extends Config implements ContainerConfigInterface {
@@ -53,4 +57,5 @@ export class ContainerConfig extends Config implements ContainerConfigInterface 
   height = undefined
 
   svgDefs = undefined
+  ariaLabel = undefined
 }

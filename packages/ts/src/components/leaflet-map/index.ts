@@ -58,6 +58,7 @@ import { createBackgroundNode, updateBackgroundNode } from './modules/clusterBac
 export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<Datum[], LeafletMapConfig<Datum>, LeafletMapConfigInterface<Datum>> {
   static selectors = s
   static cssVariables = s.variables
+  g: Selection<HTMLElement, unknown, null, undefined>
   type = ComponentType.HTML
   element: HTMLElement
   config: LeafletMapConfig<Datum> = new LeafletMapConfig()
@@ -112,10 +113,12 @@ export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<D
   constructor (container: HTMLElement, config?: LeafletMapConfigInterface<Datum>, data?: Datum[]) {
     super(ComponentType.HTML)
     this._container = container
-    this._containerSelection = select(this._container)
+    this._containerSelection = select(this._container).attr('role', 'figure')
 
     this._container.appendChild(this.element)
-    this.g.attr('class', s.root)
+    this.g
+      .attr('class', s.root)
+      .attr('aria-hidden', true)
 
     if (config) this.setConfig(config)
 
@@ -232,6 +235,9 @@ export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<D
       this.config.tooltip.setComponents([this])
       this.config.tooltip.update()
     }
+
+    // Apply the `aria-label` attribute
+    this._containerSelection.attr('aria-label', config.ariaLabel)
   }
 
   setData (data: Datum[]): void {
