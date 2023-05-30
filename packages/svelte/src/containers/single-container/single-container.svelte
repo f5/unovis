@@ -1,7 +1,6 @@
 <script lang="ts">
   import { ComponentCore, SingleContainer, SingleContainerConfigInterface, Tooltip } from '@unovis/ts'
   import { onMount, setContext } from 'svelte'
-  import { getConfigKey, Lifecycle } from '../../utils/context'
 
   type Data = $$Generic
 
@@ -22,17 +21,14 @@
     return () => chart.destroy()
   })
 
-  setContext<Lifecycle>('container', (_, c: ComponentCore<Data> | Tooltip) => {
-    const key = getConfigKey(c)
-    if (key && key in config) {
-      config[key] = c
-      return {
-        destroy: () => {
-          config[key] = undefined
-        },
-      }
-    }
-  })
+  setContext('tooltip', () => ({
+    update: (t: Tooltip) => { config.tooltip = t },
+    destroy: () => { config.tooltip = undefined },
+  }))
+  setContext('component', () => ({
+    update: (c: ComponentCore<Data>) => { config.component = c },
+    destroy: () => { config.component = undefined },
+  }))
 </script>
 
 <vis-single-container bind:this={ref} class='unovis-single-container'>

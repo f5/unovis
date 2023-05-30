@@ -1,9 +1,9 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
   import { Sankey, SankeyConfigInterface, SankeyInputNode, SankeyInputLink } from '@unovis/ts'
-  import { getContext, onDestroy } from 'svelte'
+  import { onMount, getContext } from 'svelte'
 
-  import type { Lifecycle } from '../../utils/context'
+  import type { Lifecycle } from '../../types/context'
   import { arePropsEqual } from '../../utils/props'
   // type defs
   type N = $$Generic<SankeyInputNode>
@@ -19,10 +19,13 @@
   $: config = { ...$$restProps }
 
   // component declaration
-  const component = new Sankey<N, L>(config)
-  const lifecycle = getContext<Lifecycle>('container')
+  let component: Sankey<N, L>
+  const lifecycle = getContext<Lifecycle>('component')
 
-  onDestroy(() => component.destroy())
+  onMount(() => {
+    component = new Sankey<N, L>(config)
+    return () => component?.destroy()
+  })
   $: component?.setData(data)
   $: if (!arePropsEqual(prevConfig, config)) {
     component?.setConfig(config)
