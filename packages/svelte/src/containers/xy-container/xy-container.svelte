@@ -1,7 +1,6 @@
 <script lang="ts">
-  import { XYContainer, XYComponentCore, XYContainerConfigInterface, Tooltip } from '@unovis/ts'
+  import { XYContainer, XYComponentCore, XYContainerConfigInterface, Tooltip, Crosshair, Axis } from '@unovis/ts'
   import { onMount, setContext } from 'svelte'
-  import { Lifecycle, getConfigKey } from '../../utils/context'
 
   type Datum = $$Generic
 
@@ -25,18 +24,25 @@
     return () => chart.destroy()
   })
 
-  setContext<Lifecycle>('container', (_, c: XYComponentCore<Datum> | Tooltip) => {
-    const key = getConfigKey(c)
-    if (key && key in config) {
-      const isCoreComponent = key === 'components'
-      config[key] = isCoreComponent ? [...config.components, c] : c
-      return {
-        destroy: () => {
-          config[key] = isCoreComponent ? config.components.filter(comp => comp !== c) : undefined
-        },
-      }
-    }
-  })
+  setContext('component', () => ({
+    update: (c: XYComponentCore<Datum>) => { config.components = [...config.components, c] },
+    destroy: () => { config.components = config.components.filter(c => !c.isDestroyed()) },
+  }))
+  setContext('axis', (e: HTMLElement & { __type__?: 'x' | 'y'}) => ({
+    update: (c: Axis<Datum>) => {
+      e.__type__ = c.config.type
+      config[`${e.__type__}Axis`] = c
+    },
+    destroy: () => { config[`${e.__type__}Axis`] = undefined },
+  }))
+  setContext('crosshair', () => ({
+    update: (c: Crosshair<Datum>) => { config.crosshair = c },
+    destroy: () => { config.crosshair = undefined },
+  }))
+  setContext('tooltip', () => ({
+    update: (t: Tooltip) => { config.tooltip = t },
+    destroy: () => { config.tooltip = undefined },
+  }))
 </script>
 
 <vis-xy-container bind:this={ref} class='unovis-xy-container'>

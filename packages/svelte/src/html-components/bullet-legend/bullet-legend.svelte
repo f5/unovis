@@ -21,7 +21,7 @@
 
   onMount(() => {
     component = new BulletLegend(ref, config)
-    return () => component.destroy()
+    return () => component?.destroy()
   })
   $: if (!arePropsEqual(prevConfig, config)) {
     component?.update(config)

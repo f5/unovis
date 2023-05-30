@@ -23,7 +23,7 @@
 
   onMount(() => {
     component = new LeafletMap<Datum>(ref, config, data)
-    return () => component.destroy()
+    return () => component?.destroy()
   })
   $: component?.setData(data)
   $: if (!arePropsEqual(prevConfig, config)) {

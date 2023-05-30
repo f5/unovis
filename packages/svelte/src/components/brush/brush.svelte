@@ -1,9 +1,9 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
   import { Brush, BrushConfigInterface } from '@unovis/ts'
-  import { getContext, onDestroy } from 'svelte'
+  import { onMount, getContext } from 'svelte'
 
-  import type { Lifecycle } from '../../utils/context'
+  import type { Lifecycle } from '../../types/context'
   import { arePropsEqual } from '../../utils/props'
   // type defs
   type Datum = $$Generic
@@ -18,10 +18,13 @@
   $: config = { ...$$restProps }
 
   // component declaration
-  const component = new Brush<Datum>(config)
-  const lifecycle = getContext<Lifecycle>('container')
+  let component: Brush<Datum>
+  const lifecycle = getContext<Lifecycle>('component')
 
-  onDestroy(() => component.destroy())
+  onMount(() => {
+    component = new Brush<Datum>(config)
+    return () => component?.destroy()
+  })
   $: component?.setData(data)
   $: if (!arePropsEqual(prevConfig, config)) {
     component?.setConfig(config)

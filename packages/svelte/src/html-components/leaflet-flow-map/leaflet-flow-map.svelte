@@ -24,7 +24,7 @@
 
   onMount(() => {
     component = new LeafletFlowMap<PointDatum, FlowDatum>(ref, config, data)
-    return () => component.destroy()
+    return () => component?.destroy()
   })
   $: component?.setData(data)
   $: if (!arePropsEqual(prevConfig, config)) {
