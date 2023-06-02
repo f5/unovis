@@ -116,28 +116,6 @@ Change the tick's label alignment with respect to the tick marker using `tickTex
   options={['right', 'center', 'left']}
   property="tickTextAlign"/>
 
-### Label Length
-To limit the string length of the tick labels, use the `tickTextLength` property:
-<XYWrapperWithInput
-  {...defaultProps()}
-  inputType="range"
-  defaultValue={10}
-  inputProps={{min: 1, max: 20}}
-  property="tickTextLength"
-  data={generateTimeSeries(10)}
-  hiddenProps={{gridLine: false, x: d => d.timestamp, tickFormat: d=> new Date(d).toDateString()}}
-/>
-
-### Label Trim Type
-When a tick label becomes too long, you can customize the trimming method with the `tickTextLength` property.
-_Axis_ accepts a `TrimMode` or a string. When we provide the previous example with `TrimMode.End` property, we can see the end of the label gets cut off instead of the middle.
-<XYWrapperWithInput inputType="select"
-  {...defaultProps()}
-  tickTextLength={10}
-  data={generateTimeSeries(10)}
-  hiddenProps={{gridLine: false, x: d => d.timestamp, tickFormat: d=> new Date(d).toDateString()}}
-  options={['start', 'middle', 'end']}
-  property="tickTextTrimType"/>
 
 ### Label Width
 To limit the width of the tick labels (in pixels), you can use the `tickTextWidth` property.
@@ -151,7 +129,7 @@ To limit the width of the tick labels (in pixels), you can use the `tickTextWidt
 />
 
 ### Label Fit Mode
-_Axis_ accepts the following values for the tickTextFitMode property: `FitMode.Wrap` or `FitMode.Trim`. This determines how the axis will
+_Axis_ accepts the following values for the `tickTextFitMode` property: `FitMode.Wrap` or `FitMode.Trim`. This determines how the axis will
 handle tick text overflow. The following example showcases the previous example using `"trim"` instead of `"wrap"`.
 <XYWrapperWithInput inputType="select"
   {...defaultProps()}
@@ -160,6 +138,18 @@ handle tick text overflow. The following example showcases the previous example 
   hiddenProps={{gridLine: false, x: d => d.timestamp, tickFormat: d=> new Date(d).toDateString(), tickTextTrimType:"end"}}
   options={['trim', 'wrap']}
   property="tickTextFitMode"/>
+
+### Label Trim Type
+When a tick label becomes too long, and you want to trim it, you can customize the trimming method with the `tickTextTrimType` property.
+_Axis_ accepts a `TrimMode` or a string. For example, when we configure `tickTextTrimType` to `TrimMode.Start`, we can see the start of the label gets cut off instead of the middle.
+<XYWrapperWithInput inputType="select"
+  {...defaultProps()}
+  tickTextFitMode="trim"
+  tickTextWidth={30}
+  data={generateTimeSeries(10)}
+  hiddenProps={{gridLine: false, x: d => d.timestamp, tickFormat: d=> new Date(d).toDateString()}}
+  options={['start', 'middle', 'end']}
+  property="tickTextTrimType"/>
 
 ### Force Word Break
 In addition, you can enable a forced word break for overflowing tick labels with the `tickTextForceWordBreak` property.
@@ -253,6 +243,8 @@ The _Axis_ component supports additional styling via CSS variables that you can 
 --vis-axis-grid-color: #e8e9ef;
 --vis-axis-label-color: #6c778c;
 --vis-axis-tick-label-font-size: 12px;
+--vis-axis-tick-label-cursor: default;
+--vis-axis-tick-label-text-decoration: none;
 --vis-axis-label-font-size: 14px;
 --vis-axis-tick-line-width: 1px;
 --vis-axis-grid-line-width: 1px;

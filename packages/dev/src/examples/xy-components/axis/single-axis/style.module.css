@@ -1,0 +1,5 @@
+.axis {
+    --vis-axis-tick-label-cursor: pointer;
+    --vis-axis-tick-label-text-decoration: underline;
+    --vis-axis-tick-label-color: #366ACE;
+}
