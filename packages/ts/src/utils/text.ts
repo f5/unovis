@@ -293,21 +293,23 @@ function breakTextIntoLines (
       }
 
       // Word break functionality
+      const minCharactersOnLine = 2
       if (wordBreak) {
-        while (line.length > 0) {
+        while (line.length > minCharactersOnLine) {
           const subLineLengthPx = fastMode
             ? estimateStringPixelLength(line, textBlock.fontSize, textBlock.fontWidthToHeightRatio)
             : getPreciseStringLengthPx(line, textBlock.fontFamily, textBlock.fontSize)
 
           if (subLineLengthPx > width) {
-            let breakIndex = (line.trim()).length - 2 // Place at least 2 characters onto the next line
+            let breakIndex = (line.trim()).length - minCharactersOnLine // Place at least `minCharactersOnLine` characters onto the next line
             while (breakIndex > 0) {
               const subLine = `${line.substring(0, breakIndex)}${UNOVIS_TEXT_HYPHEN_CHARACTER_DEFAULT}` // Use hyphen when force breaking words
               const subLinePx = fastMode
                 ? estimateStringPixelLength(subLine, textBlock.fontSize, textBlock.fontWidthToHeightRatio)
                 : getPreciseStringLengthPx(subLine, textBlock.fontFamily, textBlock.fontSize)
 
-              if (subLinePx <= width) {
+              // If the subline is less than the width, or just one character left, break the line
+              if (subLinePx <= width || breakIndex === 1) {
                 lines.push(subLine.trim())
                 line = line.substring(breakIndex)
                 break
