@@ -10,10 +10,12 @@ export const globalStyles = injectGlobal`
     /* --vis-axis-font-family: */
     --vis-axis-tick-color: #e8e9ef;
     /* --vis-axis-domain-color: // Undefined by default to allow fallback to var(--vis-axis-tick-color) */
-    --vis-axis-tick-label-color: #6c778c;
     --vis-axis-grid-color: #e8e9ef;
     --vis-axis-label-color: #6c778c;
+    --vis-axis-tick-label-color: #6c778c;
     --vis-axis-tick-label-font-size: 12px;
+    --vis-axis-tick-label-cursor: default;
+    --vis-axis-tick-label-text-decoration: none;
     --vis-axis-label-font-size: 14px;
     --vis-axis-tick-line-width: 1px;
     --vis-axis-grid-line-width: 1px;
@@ -93,6 +95,8 @@ export const tick = css`
   text, tspan {
     fill: var(--vis-axis-tick-label-color);
     font-family: var(--vis-axis-font-family, var(--vis-font-family));
+    cursor: var(--vis-axis-tick-label-cursor);
+    text-decoration: var(--vis-axis-tick-label-text-decoration);
     stroke: none;
   }
 `
@@ -105,6 +109,6 @@ export const label = css`
   text-anchor: middle;
 `
 
-export const tickText = css`
-  label: tick-text;
+export const tickLabel = css`
+  label: tick-label;
 `

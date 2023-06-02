@@ -147,7 +147,7 @@ export class VisAxisComponent<Datum> implements AxisConfigInterface<Datum>, Afte
   /** Maximum width in pixels for the tick text to be wrapped or trimmed. Default: `undefined` */
   @Input() tickTextWidth?: number
 
-  /** Tick text wrapping separator. String or array of strings. Default: `' '` */
+  /** Tick text wrapping separator. String or array of strings. Default: `undefined` */
   @Input() tickTextSeparator?: string | string[]
 
   /** Force word break for ticks when they don't fit. Default: `false` */
