@@ -208,6 +208,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfig<Datum>, AxisC
     // will include exiting elements, so we're filtering them out.
     const tickText = selection.selectAll<SVGTextElement, number | Date>('g.tick > text')
       .filter(tickValue => tickValues.some(t => isEqual(tickValue, t))) // We use isEqual to compare Dates
+      .classed(s.tickLabel, true)
 
     // We interrupt the transition on tick's <text> to make it 'wrappable'
     tickText.nodes().forEach(node => interrupt(node))
@@ -228,6 +229,8 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfig<Datum>, AxisC
         const textOptions: UnovisTextOptions = {
           verticalAlign: config.type === AxisType.X ? VerticalAlign.Top : VerticalAlign.Middle,
           width: textMaxWidth,
+          separator: config.tickTextSeparator,
+          wordBreak: config.tickTextForceWordBreak,
         }
         renderTextToSvgTextElement(textElement, textBlock, textOptions)
       }
