@@ -47,7 +47,7 @@ Looking for Angular, Svelte, or TypeScript examples? Check out the [Quick Start]
 [![Unovis Examples](examples.png)](https://unovis.dev/gallery)
 
 📖 _Unovis_ has an extensive [documentation](https://unovis.dev/docs/intro) with code snippets for React, Angular,
-Svelte and TypeScript. 
+Svelte and TypeScript.
 
 🖼 Also there's a growing [gallery](https://unovis.dev/gallery) of examples, from where you can copy the code over to your project or try it live on StackBlitz.
 
@@ -67,13 +67,6 @@ read [CONTRIBUTING](CONTRIBUTING.md).
 ## Maintainers
 [<img alt="Nikita Rokotyan" src="https://avatars.githubusercontent.com/u/755708" width="80"/>](https://github.com/rokotyan)
 [<img alt="Rebecca Bol" src="https://avatars.githubusercontent.com/u/52078477" width="80"/>](https://github.com/reb-dev)
-
-## Contributors
-[<img alt="Olga Stukova" src="https://avatars.githubusercontent.com/u/8654114" width="40"/>](https://github.com/stukova)
-[<img alt="Sumit Kumar" src="https://avatars.githubusercontent.com/u/5867393" width="40"/>](https://github.com/sumitkumar25)
-[<img alt="Gaurav Mukherjee" src="https://avatars.githubusercontent.com/u/6323787" width="40"/>](https://github.com/gmfun)
-[<img alt="Beverly Ackah" src="https://avatars.githubusercontent.com/u/32556434" width="40"/>](https://github.com/beverlyckh)
-[<img alt="Dmitriy Gutman" src="https://avatars.githubusercontent.com/u/14595706" width="40"/>](https://github.com/DimamoN)
 
 ## License
 _Unovis_ is licensed under Apache-2.0
