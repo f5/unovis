@@ -37,7 +37,7 @@ export interface AxisConfigInterface<Datum> extends Partial<XYComponentConfigInt
   tickTextFitMode?: FitMode | string;
   /** Maximum width in pixels for the tick text to be wrapped or trimmed. Default: `undefined` */
   tickTextWidth?: number;
-  /** Tick text wrapping separator. String or array of strings. Default: `' '` */
+  /** Tick text wrapping separator. String or array of strings. Default: `undefined` */
   tickTextSeparator?: string | string[];
   /** Force word break for ticks when they don't fit. Default: `false` */
   tickTextForceWordBreak?: boolean;
@@ -62,7 +62,7 @@ export class AxisConfig<Datum> extends XYComponentConfig<Datum> implements AxisC
   numTicks = undefined
   minMaxTicksOnly = false
   tickTextWidth = undefined
-  tickTextSeparator = ' '
+  tickTextSeparator = undefined
   tickTextForceWordBreak = false
   tickTextTrimType = TrimMode.Middle
   tickTextFitMode = FitMode.Wrap
