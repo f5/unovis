@@ -3,7 +3,7 @@ import { HierarchyRectangularNode } from 'd3-hierarchy'
 export type NestedDonutSegmentDatum<Datum> = {
   key: string;
   root: string;
-  values?: Datum[];
+  values: Datum[];
 }
 
 export type NestedDonutSegment<Datum> = HierarchyRectangularNode<NestedDonutSegmentDatum<Datum>> & {
@@ -27,6 +27,7 @@ export enum NestedDonutSegmentLabelAlignment {
 }
 
 export type NestedDonutLayerSettings = {
+  backgroundColor?: string;
   labelAlignment?: NestedDonutSegmentLabelAlignment;
   width?: number;
 }
@@ -35,10 +36,5 @@ export type NestedDonutLayer = NestedDonutLayerSettings & {
   _id: number;
   _innerRadius: number;
   _outerRadius: number;
-}
-
-export const defaultLayerSettings: NestedDonutLayerSettings = {
-  labelAlignment: NestedDonutSegmentLabelAlignment.Perpendicular,
-  width: 50,
 }
 

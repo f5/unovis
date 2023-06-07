@@ -13,12 +13,14 @@ import { VerticalAlign } from 'types/text'
 
 // Utils
 import { getColor, getHexValue } from 'utils/color'
-import { getNumber, getString, getValue, isNumber, isNumberWithinRange, merge } from 'utils/data'
 import { smartTransition } from 'utils/d3'
+import { getNumber, getString, getValue, isNumber, isNumberWithinRange, merge } from 'utils/data'
+import { getCSSVariableValueInPixels } from 'utils/misc'
+import { cssvar } from 'utils/style'
 import { wrapSVGText } from 'utils/text'
 
 // Local Types
-import { NestedDonutDirection, NestedDonutSegment, defaultLayerSettings, NestedDonutLayer } from './types'
+import { NestedDonutDirection, NestedDonutSegment, NestedDonutLayer, NestedDonutSegmentLabelAlignment } from './types'
 
 // Config
 import { NestedDonutConfig, NestedDonutConfigInterface } from './config'
@@ -88,10 +90,13 @@ NestedDonutConfigInterface<Datum>
       .attr('visibility', config.showBackground ? null : 'hidden')
 
     const backgroundsMerged = backgrounds.merge(backgroundsEnter)
+      .style('transition', `fill ${duration}ms`)
+      .style('fill', d => d.backgroundColor)
+
     smartTransition(backgroundsMerged, duration)
       .attr('d', d => this.arcGen({
-        x0: config.angleRange?.[0] ?? config.angleRange?.[0] ?? 0,
-        x1: config.angleRange?.[1] ?? config.angleRange?.[1] ?? 2 * Math.PI,
+        x0: config.angleRange?.[0] ?? 0,
+        x1: config.angleRange?.[1] ?? 2 * Math.PI,
         y0: d._innerRadius,
         y1: d._outerRadius,
       }))
@@ -162,27 +167,34 @@ NestedDonutConfigInterface<Datum>
 
     const layerAccessors = config.layers?.map(layerAccessor => (i: number) => getString(data[i], layerAccessor, i))
     const nestedData = group(data.keys(), ...layerAccessors as [(i: number) => string])
+
     const rootNode = config.value !== undefined
       ? hierarchy(nestedData).sum(index => typeof index === 'number' && getNumber(data[index], config.value, index))
       : hierarchy(nestedData).count()
 
     const partitionData = partition().size([config.angleRange[1], 1])(rootNode) as NestedDonutSegment<Datum>
 
-    partitionData.eachBefore(node => {
-      const key = node.data[0] as string
-      node.data = { key, root: node.parent?.data.root ?? key }
+    partitionData
+      .each(node => {
+        node.data = {
+          key: node.data[0] as string,
+          values: (node.data[1])?.length ? node.data[1].map((index: number) => data[index]) : [],
+          root: node.parent?.data.root ?? node.data[0],
+        }
+        node._id = `root${partitionData.path(node).map(d => d.data.key).join('->')}`
+        if (isNumberWithinRange(node.depth - 1, [0, layers.length - 1])) {
+          node._layer = layers[node.depth - 1]
+          node.y0 = node._layer._innerRadius
+          node.y1 = node._layer._outerRadius
+        }
+      })
+      .eachAfter(node => node.children?.forEach(ch => node.data.values.push(...ch.data.values)))
+      .eachBefore(node => {
+        if (!node.children || node.depth === rootNode.height - 1) return
 
-      if (isNumberWithinRange(node.depth - 1, [0, layers.length - 1])) {
-        node._id = this.uid.replace(/-.*/gm, `-${key}`)
-        node._layer = layers[node.depth - 1]
-        node.y0 = node._layer._innerRadius
-        node.y1 = node._layer._outerRadius
-      }
-
-      if (node.children) {
         const colors = this.colorScale
           .domain([-1, node.children.length])
-          .range(['#fff', getHexValue(node._state?.fill, this.element)])
+          .range([getHexValue(node._state?.fill, this.element), '#fff'])
 
         const positions = pie<NestedDonutSegment<Datum>>()
           .startAngle(node.parent ? node.x0 : config.angleRange?.[0])
@@ -195,11 +207,13 @@ NestedDonutConfigInterface<Datum>
           child.x0 = positions[i].startAngle
           child.x1 = positions[i].endAngle
           child._state = {
-            fill: getColor(child, config.segmentColor, i, child.depth !== 1) ?? colors(i),
+            fill:
+              getColor(child, config.segmentColor, positions[i].index, child.depth !== 1) ??
+              colors(positions[i].index),
           }
         })
-      }
-    })
+      })
+
     const segments = partitionData.descendants().filter(d => d.parent?.value && d.data.key)
     return segments
   }
@@ -207,7 +221,14 @@ NestedDonutConfigInterface<Datum>
   private _getLayerSettings (): NestedDonutLayer[] {
     const { direction, layers, layerPadding, layerSettings } = this.config
 
-    const outerRadius = Math.min(this._width, this._height) / 2
+    const strokeWidth = getCSSVariableValueInPixels(cssvar(s.variables.nestedDonutSegmentStrokeWidth), this.element)
+    const outerRadius = (Math.min(this._width, this._height) - strokeWidth) / 2
+
+    const defaultLayerSettings = {
+      backgroundColor: cssvar(s.variables.nestedDonutBackgroundColor),
+      labelAlignment: NestedDonutSegmentLabelAlignment.Perpendicular,
+      width: outerRadius * 0.75 / layers.length,
+    }
 
     const layerItems = layers.reduceRight((arr, _, i) => {
       const layerId = direction === NestedDonutDirection.Outwards ? i : arr.length
