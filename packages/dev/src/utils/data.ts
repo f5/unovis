@@ -30,7 +30,7 @@ export interface NodeLinkData {
 export type NestedDatum = {
   group: string;
   subgroup: string;
-  value?: number;
+  value?: string;
 }
 
 export function generateXYDataRecords (n = 10): XYDataRecord[] {
@@ -86,7 +86,7 @@ export function generateNestedData (n: number, numGroups: number, excludeValues?
     return {
       group,
       subgroup,
-      value: excludeValues?.includes(subgroup) ? undefined : sample([10, 20, 30]),
+      value: excludeValues?.includes(subgroup) ? undefined : `${subgroup}${sample(groups.map(g => g.toLowerCase()))}`,
     }
   })
 }
