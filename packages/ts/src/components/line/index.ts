@@ -113,7 +113,6 @@ export class Line<Datum> extends XYComponentCore<Datum, LineConfig<Datum>, LineC
     linesEnter
       .append('path')
       .attr('class', s.linePath)
-      .attr('d', this._emptyPath())
       .attr('stroke', (d, i) => getColor(data, config.color, i))
       .attr('stroke-opacity', 0)
       .attr('stroke-width', config.lineWidth)
