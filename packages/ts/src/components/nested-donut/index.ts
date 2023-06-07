@@ -199,8 +199,10 @@ NestedDonutConfigInterface<Datum>
         const positions = pie<NestedDonutSegment<Datum>>()
           .startAngle(node.parent ? node.x0 : config.angleRange?.[0])
           .endAngle(node.parent ? node.x1 : config.angleRange?.[1])
-          .value(d => config.showEmptySegments && d.value === 0 ? config.emptySegmentAngle : (d.x1 - d.x0))
-          .sort(d => d._index)(node.children)
+          .value(d => config.showEmptySegments && d.value === 0
+            ? config.emptySegmentAngle
+            : (d.x1 - d.x0))
+          .sort(config.sort)(node.children)
 
         node.children.forEach((child, i) => {
           child._index = i
