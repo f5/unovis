@@ -4,9 +4,11 @@ import { css } from '@emotion/css'
 import { getCssVarNames, injectGlobalCssVariables } from 'utils/style'
 
 const cssVarDefaults = {
-  '--vis-nested-donut-background-color': '#E7E9F3',
   // Undefined by default to allow proper fallback to var(--vis-font-family)
   '--vis-nested-donut-font-family': undefined,
+
+  // Background
+  '--vis-nested-donut-background-color': '#E7E9F3',
 
   // Central label
   '--vis-nested-donut-central-label-font-size': '16px',
@@ -20,7 +22,7 @@ const cssVarDefaults = {
 
   // Segments
   '--vis-nested-donut-segment-stroke-width': '1px',
-  '--vis-nested-donut-segment-stroke-color': undefined,
+  '--vis-nested-donut-segment-stroke-color': 'var(--vis-nested-donut-background-color)',
   '--vis-nested-donut-segment-label-text-color-light': '#5b5f6d',
   '--vis-nested-donut-segment-label-text-color-dark': '#fff',
 
@@ -43,7 +45,9 @@ injectGlobalCssVariables(cssVarDefaults, root)
 
 export const background = css`
   label: background;
-  fill: var(--vis-donut-background-color);
+  fill: var(--vis-nested-donut-background-color);
+  stroke-width: var(--vis-nested-donut-segment-stroke-width);
+  stroke: var(--vis-nested-donut-segment-stroke-color);
 `
 
 export const segment = css`
@@ -57,7 +61,7 @@ export const segmentExit = css`
 export const segmentArc = css`
   label: segment-arc;
   stroke-width: var(--vis-nested-donut-segment-stroke-width);
-  stroke: var(--vis-nested-donut-segment-stroke-color, var(--vis-donut-background-color));
+  stroke: var(--vis-nested-donut-segment-stroke-color);
 `
 
 export const segmentLabel = css`

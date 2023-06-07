@@ -1,22 +1,45 @@
 import React, { useCallback, useState } from 'react'
-import { NestedDonut, NestedDonutSegment, StringAccessor } from '@unovis/ts'
+import { NestedDonut, NestedDonutSegment } from '@unovis/ts'
 import { VisSingleContainer, VisNestedDonut, VisTooltip } from '@unovis/react'
 
-export const title = 'Segment values'
-export const subTitle = 'Configuration with custom value accessor'
+import s from './styles.module.css'
 
-type Datum = { group: string; subgroup?: string; value: number }
+export const title = 'Segment values'
+export const subTitle = 'Custom value accessor + sort function'
+
+type Datum = { group: string; subgroup?: string; status?: string; value: number }
+type SortFn<T> = { label: string; compare?: (a: T, b: T) => number }
 
 const nestedDonutData: Datum[] = [
   {
     group: 'risky',
     subgroup: 'challenge',
+    status: 'A',
     value: 106,
   },
   {
     group: 'risky',
+    subgroup: 'challenge',
+    status: 'B',
+    value: 50,
+  },
+  {
+    group: 'risky',
     subgroup: 'review',
-    value: 54,
+    status: 'A',
+    value: 20,
+  },
+  {
+    group: 'risky',
+    subgroup: 'review',
+    status: 'B',
+    value: 12,
+  },
+  {
+    group: 'risky',
+    subgroup: 'review',
+    status: 'C',
+    value: 10,
   },
   {
     group: 'risky',
@@ -29,30 +52,36 @@ const nestedDonutData: Datum[] = [
   },
 ]
 
+const sortFns: SortFn<NestedDonutSegment<Datum>>[] = [
+  { label: 'Default' },
+  { label: 'Alphabetic (by Key)', compare: (a, b) => a.data.key.localeCompare(b.data.key) },
+  { label: 'By Value (ascending)', compare: (a, b) => a.value - b.value },
+  { label: 'By Value (descending)', compare: (a, b) => b.value - a.value },
+  { label: 'By Child Count', compare: (a, b) => b.children.length - a.children.length },
+]
 export const component = (): JSX.Element => {
-  const [layers, setLayers] = useState<StringAccessor<Datum>[]>([(d: Datum) => d.subgroup || null])
-  const toggleLayers = useCallback(() => {
-    setLayers(layers.length === 1 ? [d => d.group, layers[0]] : [layers[1]])
-  }, [layers])
-
+  const [sort, setSort] = useState<SortFn<NestedDonutSegment<Datum>>>()
   return (
-    <VisSingleContainer data={nestedDonutData} height={500}>
-      <VisTooltip triggers={{
-        [NestedDonut.selectors.segment]: d => [d.data.key, d.value].join(': '),
-      }}/>
-      <VisNestedDonut
-        layers={layers}
-        events={{
-          [NestedDonut.selectors.centralLabel]: {
-            click: toggleLayers,
-          },
-        }}
-        centralLabel='Click'
-        segmentLabel={useCallback((d: NestedDonutSegment<Datum>) => [d.data.key, d.value].join(' '), [layers])}
-        value={useCallback((d: Datum) => d.value, [layers])}
-        showBackground={true}
-      />
-    </VisSingleContainer>
+    <div className={s.chart}>
+      Sort: <select onChange={e => setSort(sortFns[Number(e.target.value)])}>
+        {sortFns.map(({ label }, i) => <option key={label} value={i} label={label}/>)}
+      </select>
+      <VisSingleContainer data={nestedDonutData} height={600}>
+        <VisTooltip triggers={{
+          [NestedDonut.selectors.segment]: d => [d.data.key, d.value].join(': '),
+        }} />
+        <VisNestedDonut
+          layers={[
+            (d: Datum) => d.group,
+            (d: Datum) => d.subgroup,
+            (d: Datum) => d.status,
+          ]}
+          value={useCallback((d: Datum) => d.value, [])}
+          showBackground={true}
+          sort={sort?.compare}
+        />
+      </VisSingleContainer>
+    </div>
   )
 }
 
