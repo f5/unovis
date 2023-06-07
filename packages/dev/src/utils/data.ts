@@ -2,7 +2,7 @@ import { sample } from './array'
 
 export type XYDataRecord = {
   x: number;
-  y: number;
+  y: number | undefined;
   y1?: number;
   y2?: number;
 }
