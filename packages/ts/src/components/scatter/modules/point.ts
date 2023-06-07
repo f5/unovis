@@ -46,7 +46,7 @@ export function updatePoints<Datum> (
 
   selection.each((d, index, elements) => {
     const i = d._point.pointIndex
-    const group: Selection<SVGGElement, ScatterPoint<Datum>, SVGGElement, ScatterPoint<Datum>[]> = select(elements[i])
+    const group: Selection<SVGGElement, ScatterPoint<Datum>, SVGGElement, ScatterPoint<Datum>[]> = select(elements[index])
     const label = group.select('text')
     const path = group.select('path')
 
