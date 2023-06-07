@@ -29,6 +29,8 @@ export interface NestedDonutConfigInterface<Datum> extends ComponentConfigInterf
    * Default: `false`
   */
   showBackground?: boolean;
+  /** Sort function for segments. Default `undefined` */
+  sort?: (a: NestedDonutSegment<Datum>, b: NestedDonutSegment<Datum>) => number;
 
   // Layers
   /** Array of accessor functions to defined the nested groups  */
@@ -74,5 +76,6 @@ export class NestedDonutConfig<Datum> extends ComponentConfig implements NestedD
   segmentLabelColor = undefined
   showBackground = false
   showEmptySegments = false
+  sort = undefined
   value = undefined
 }
