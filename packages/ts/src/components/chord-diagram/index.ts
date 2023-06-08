@@ -1,13 +1,13 @@
 import { Selection } from 'd3-selection'
 import { nest } from 'd3-collection'
 import { HierarchyNode, hierarchy, partition } from 'd3-hierarchy'
-import { arc, line } from 'd3-shape'
+import { arc } from 'd3-shape'
 import { scalePow, ScalePower } from 'd3-scale'
 import { max } from 'd3-array'
 
 // Core
 import { ComponentCore } from 'core/component'
-import { GraphDataModel } from 'data-models/graph'
+import { GraphData, GraphDataModel } from 'data-models/graph'
 
 // Utils
 import { getNumber, isNumber, groupBy, getString, getValue } from 'utils/data'
@@ -16,7 +16,6 @@ import { estimateStringPixelLength } from 'utils/text'
 // Types
 import { GraphNodeCore } from 'types/graph'
 import { Spacing } from 'types/spacing'
-import { Curve } from 'types/curve'
 
 // Local Types
 import {
@@ -60,6 +59,7 @@ export class ChordDiagram<
   labelGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
   arcGen = arc<ChordNode<N>>()
   radiusScale: ScalePower<number, number> = scalePow()
+
   private _nodes: ChordNode<N>[] = []
   private _links: ChordRibbon<N>[] = []
   private _rootNode: ChordNode<N>
@@ -85,8 +85,8 @@ export class ChordDiagram<
 
   get bleed (): Spacing {
     const { config } = this
-    let top = 0; let bottom = 0; let right = 0; let left = 0
     const padding = 4 + LABEL_PADDING * 2
+    let top = 0; let bottom = 0; let right = 0; let left = 0
     this._nodes.forEach(n => {
       const nodeLabelAlignment = getValue(n.data, config.nodeLabelAlignment)
       if (n.height === 0 && nodeLabelAlignment === ChordLabelAlignment.Perpendicular) {
@@ -107,11 +107,37 @@ export class ChordDiagram<
     return { top, bottom, left, right }
   }
 
+  setSize (width: number, height: number, containerWidth: number, containerHeight: number): void {
+    super.setSize(width, height, containerWidth, containerHeight)
+
+    // Setting radius for initial bleed calculation. This ensures the correct radius is set when render is called
+    this.radiusScale
+      .exponent(this.config.radiusScaleExponent)
+      .range([0, Math.min(width, height) / 2])
+  }
+
+  setData (data: GraphData<N, L>): void {
+    super.setData(data)
+    const hierarchyData = this._getHierarchyNodes()
+
+    const partitionData = partition<N | ChordHierarchyNode<N>>().size([this.config.angleRange[1], 1])(hierarchyData) as ChordNode<N>
+    this._calculateRadialPosition(partitionData)
+
+    const partitionDataWithRoot = partitionData.descendants()
+    this._rootNode = partitionDataWithRoot.find(d => d.depth === 0)
+    this._nodes = partitionDataWithRoot.filter(d => d.depth !== 0) // Filter out the root node
+  }
+
   _render (customDuration?: number): void {
     super._render(customDuration)
-    const { config, config: { radiusScaleExponent }, radiusScale } = this
-    const nodes = this._getHierarchyNodes()
+    const { config, bleed } = this
+
     const duration = isNumber(customDuration) ? customDuration : config.duration
+
+    const size = Math.min(this._width, this._height)
+    const radius = size / 2 - max([bleed.top, bleed.bottom, bleed.left, bleed.right])
+
+    this.radiusScale.range([0, radius])
 
     this.arcGen
       .startAngle(d => d.x0)
@@ -119,26 +145,6 @@ export class ChordDiagram<
       .cornerRadius(d => getNumber(d, config.cornerRadius))
       .innerRadius(d => this.radiusScale(d.y1) - getNumber(d, config.nodeWidth))
       .outerRadius(d => this.radiusScale(d.y1))
-
-    const linkLineGen = line().curve(Curve.catmullRom.alpha(0.25))
-
-    const hierarchyData = nodes
-
-    const partitionData = partition<N | ChordHierarchyNode<N>>().size([config.angleRange[1], 1])(hierarchyData) as ChordNode<N>
-    this._calculateRadialPosition(partitionData)
-
-    const size = Math.min(this._width, this._height)
-    const radius = size / 2 - max([this.bleed.top, this.bleed.bottom, this.bleed.left, this.bleed.right])
-    const labelWidth = size - radius - config.nodeWidth
-
-    radiusScale
-      .exponent(radiusScaleExponent)
-      .range([0, radius])
-
-    const partitionDataWithRoot = partitionData.descendants()
-    this._rootNode = partitionDataWithRoot.find(d => d.depth === 0)
-    this._nodes = partitionDataWithRoot.filter(d => d.depth !== 0) // Filter out the root node
-    this._links = this._getRibbons(partitionData)
 
     // Create Node and Link state objects
     this._nodes.forEach((node, i) => {
@@ -156,7 +162,7 @@ export class ChordDiagram<
       node.uid = `${this.uid}-n${i}`
       node._state = {}
     })
-    this._links.forEach(link => { link._state = {} })
+    this._links = this._getRibbons(this._rootNode)
 
     // Center the view
     this.g.attr('transform', `translate(${this._width / 2},${this._height / 2})`)
@@ -168,10 +174,10 @@ export class ChordDiagram<
 
     const linksEnter = linksSelection.enter().append('path')
       .attr('class', s.link)
-      .call(createLink, linkLineGen)
+      .call(createLink)
 
     const linksMerged = linksSelection.merge(linksEnter)
-    linksMerged.call(updateLink, config, linkLineGen, duration)
+    linksMerged.call(updateLink, config, duration)
 
     linksSelection.exit()
       .call(removeLink, duration)
@@ -186,22 +192,23 @@ export class ChordDiagram<
       .call(createNode, config)
 
     const nodesMerged = nodesSelection.merge(nodesEnter)
-    nodesMerged.call(updateNode, config, this.arcGen, duration)
+    nodesMerged.call(updateNode, config, this.arcGen, duration, this.bleed)
 
     nodesSelection.exit()
       .call(removeNode, duration)
 
     // Labels
+    const labelWidth = size - radius - config.nodeWidth
     const labels = this.labelGroup
       .selectAll<SVGGElement, ChordNode<N>>(`.${s.gLabel}`)
       .data(this._nodes, d => String(d.uid))
 
     const labelEnter = labels.enter().append('g')
       .attr('class', s.gLabel)
-      .call(createLabel, config, radiusScale)
+      .call(createLabel, config, this.radiusScale)
 
     const labelsMerged = labels.merge(labelEnter)
-    labelsMerged.call(updateLabel, config, labelWidth, radiusScale, duration)
+    labelsMerged.call(updateLabel, config, labelWidth, this.radiusScale, duration)
 
     labels.exit()
       .attr('class', s.labelExit)
