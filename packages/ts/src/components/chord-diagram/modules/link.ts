@@ -1,8 +1,11 @@
 import { Selection, select } from 'd3-selection'
 import { path } from 'd3-path'
-import { Line } from 'd3-shape'
+import { line } from 'd3-shape'
 import { Transition } from 'd3-transition'
 import { interpolatePath } from 'd3-interpolate-path'
+
+// Types
+import { Curve } from 'types/curve'
 
 // Utils
 import { getColor } from 'utils/color'
@@ -23,8 +26,10 @@ export function emptyPath (): string {
   return 'M0,0 L0,0'
 }
 
+const lineGen = line().curve(Curve.catmullRom.alpha(0.25))
+
 // Creates a path consisting of the inner source arc, node arcs and connecting curves
-function linkGen (points: ChordRibbonPoint[], lineGen: Line<[number, number]>): string {
+function linkGen (points: ChordRibbonPoint[]): string {
   const p = path()
   const sourceArc = points[0]
   const targetArc = points[points.length - 1]
@@ -50,18 +55,16 @@ function linkGen (points: ChordRibbonPoint[], lineGen: Line<[number, number]>): 
 }
 
 export function createLink<N extends ChordInputNode> (
-  selection: Selection<SVGPathElement, ChordRibbon<N>, SVGGElement, unknown>,
-  lineGen: Line<[number, number]>
+  selection: Selection<SVGPathElement, ChordRibbon<N>, SVGGElement, unknown>
 ): void {
   selection
-    .attr('d', d => linkGen(d.points, lineGen) || emptyPath())
+    .attr('d', d => linkGen(d.points) || emptyPath())
     .style('opacity', 0)
 }
 
 export function updateLink<N extends ChordInputNode, L extends ChordInputLink> (
   selection: Selection<SVGPathElement, ChordRibbon<N>, SVGGElement, unknown>,
   config: ChordDiagramConfig<N, L>,
-  lineGen: Line<[number, number]>,
   duration: number
 ): void {
   const selTransition = smartTransition(selection, duration)
@@ -73,11 +76,11 @@ export function updateLink<N extends ChordInputNode, L extends ChordInputLink> (
     const transition = selTransition as Transition<SVGPathElement, ChordRibbon<N>, SVGGElement, unknown>
     transition.attrTween('d', (d, i, el) => {
       const previous = select(el[i]).attr('d')
-      const next = linkGen(d.points, lineGen) || emptyPath()
+      const next = linkGen(d.points) || emptyPath()
       return interpolatePath(previous, next)
     })
   } else {
-    selTransition.attr('d', d => linkGen(d.points, lineGen) || emptyPath())
+    selTransition.attr('d', d => linkGen(d.points) || emptyPath())
   }
 }
 
