@@ -3,10 +3,10 @@ import { color } from 'd3-color'
 import { Arc } from 'd3-shape'
 
 // Utils
-import { UNOVIS_TEXT_DEFAULT } from 'styles'
 import { getColor, hexToBrightness } from 'utils/color'
 import { smartTransition } from 'utils/d3'
 import { getString } from 'utils/data'
+import { getCSSVariableValueInPixels } from 'utils/misc'
 import { cssvar } from 'utils/style'
 import { wrapSVGText } from 'utils/text'
 
@@ -85,11 +85,16 @@ export function updateLabel<Datum> (
     .each((d, i, els) => {
       const bounds = getLabelBounds(d)
       const label = select(els[i]).call(wrapSVGText, bounds.width)
-      const offset = label.selectChildren().size() - 1
+
       const { width, height } = label.node().getBBox()
 
-      label.attr('dy', -offset * UNOVIS_TEXT_DEFAULT.fontSize + (2 * offset))
-        .attr('visibility', config.hideOverflowingSegmentLabels && (width > bounds.width || height > bounds.height) && 'hidden')
+      if (config.hideOverflowingSegmentLabels && (width > bounds.width || height > bounds.height) && 'hidden') {
+        label.attr('visibility', 'hidden')
+      } else {
+        const fontSize = getCSSVariableValueInPixels(cssvar(variables.nestedDonutSegmentLabelFontSize), els[i])
+        const len = label.selectChildren().size() - 1
+        label.attr('dy', -fontSize / 2 * len)
+      }
     })
 
   smartTransition(selection, duration)
