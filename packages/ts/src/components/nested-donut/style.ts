@@ -25,6 +25,7 @@ const cssVarDefaults = {
   '--vis-nested-donut-segment-stroke-color': 'var(--vis-nested-donut-background-color)',
   '--vis-nested-donut-segment-label-text-color-light': '#5b5f6d',
   '--vis-nested-donut-segment-label-text-color-dark': '#fff',
+  '--vis-nested-donut-segment-label-font-size': '1em',
 
   /* Dark theme */
   '--vis-dark-nested-donut-background-color': '#18160C',
@@ -69,6 +70,7 @@ export const segmentLabel = css`
   text-anchor: middle;
   dominant-baseline: middle;
   user-select: none;
+  font-size: var(--vis-nested-donut-segment-label-font-size);
 `
 
 export const centralLabel = css`
