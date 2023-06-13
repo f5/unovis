@@ -34,6 +34,10 @@ export interface ScatterConfigInterface<Datum> extends XYComponentConfigInterfac
   labelTextBrightnessRatio?: number;
   /** Label position. Default: `Position.Bottom` */
   labelPosition?: GenericAccessor<Position | string, Datum>;
+  /** Point stroke color. Default: `undefined` */
+  strokeColor?: ColorAccessor<Datum>;
+  /** Point stroke width. Default: `undefined` */
+  strokeWidth?: NumericAccessor<Datum>;
 }
 
 export class ScatterConfig<Datum> extends XYComponentConfig<Datum> implements ScatterConfigInterface<Datum> {
@@ -46,4 +50,6 @@ export class ScatterConfig<Datum> extends XYComponentConfig<Datum> implements Sc
   labelPosition = Position.Bottom
   cursor = null
   labelTextBrightnessRatio = 0.65
+  strokeColor: ScatterConfigInterface<Datum>['strokeColor'] = undefined
+  strokeWidth: ScatterConfigInterface<Datum>['strokeWidth'] = undefined
 }
