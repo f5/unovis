@@ -132,6 +132,12 @@ export class VisScatterComponent<Datum> implements ScatterConfigInterface<Datum>
 
   /** Label position. Default: `Position.Bottom` */
   @Input() labelPosition?: GenericAccessor<Position | string, Datum>
+
+  /** Point stroke color. Default: `undefined` */
+  @Input() strokeColor?: ColorAccessor<Datum>
+
+  /** Point stroke width. Default: `undefined` */
+  @Input() strokeWidth?: NumericAccessor<Datum>
   @Input() data: Datum[]
 
   component: Scatter<Datum> | undefined
@@ -153,8 +159,8 @@ export class VisScatterComponent<Datum> implements ScatterConfigInterface<Datum>
   }
 
   private getConfig (): ScatterConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, size, sizeScale, sizeRange, shape, label, labelColor, cursor, labelTextBrightnessRatio, labelPosition } = this
-    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, size, sizeScale, sizeRange, shape, label, labelColor, cursor, labelTextBrightnessRatio, labelPosition }
+    const { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, size, sizeScale, sizeRange, shape, label, labelColor, cursor, labelTextBrightnessRatio, labelPosition, strokeColor, strokeWidth } = this
+    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, size, sizeScale, sizeRange, shape, label, labelColor, cursor, labelTextBrightnessRatio, labelPosition, strokeColor, strokeWidth }
     const keys = Object.keys(config) as (keyof ScatterConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
