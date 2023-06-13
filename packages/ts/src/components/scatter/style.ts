@@ -4,8 +4,8 @@ export const globalStyles = injectGlobal`
   :root {
     --vis-scatter-cursor: default;
     --vis-scatter-fill-color: var(--vis-color-main);
-    --vis-scatter-stroke-color: var(--vis-color-main);
-    --vis-scatter-stroke-width: 0px;
+    --vis-scatter-stroke-color: 'none';
+    --vis-scatter-stroke-width: 1px;
     --vis-scatter-fill-opacity: 1;
     --vis-scatter-stroke-opacity: 1;
     --vis-scatter-hover-stroke-width: 2px;

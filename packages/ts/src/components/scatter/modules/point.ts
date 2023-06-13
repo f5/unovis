@@ -53,6 +53,8 @@ export function updatePoints<Datum> (
     // Shape
     const pointDiameter = d._point.sizePx
     const pointColor = d._point.color
+    const pointStrokeColor = d._point.strokeColor ?? null
+    const pointStrokeWidth = d._point.strokeWidthPx ?? null
     path.attr('d', () => {
       const svgPath = d._point.shape ? symbolGenerator
         .size(Math.PI * pointDiameter * pointDiameter / 4)
@@ -62,7 +64,8 @@ export function updatePoints<Datum> (
 
     smartTransition(path, duration)
       .style('fill', pointColor)
-      .style('stroke', pointColor)
+      .style('stroke', pointStrokeColor)
+      .style('stroke-width', `${pointStrokeWidth}px`)
 
     // Label
     const labelPosition = getValue(d, config.labelPosition, i) as `${Position}`

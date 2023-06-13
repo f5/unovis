@@ -6,6 +6,8 @@ export type ScatterPoint<D> = D & {
     yValue: number;
     sizePx: number;
     color: string | null;
+    strokeColor: string | null;
+    strokeWidthPx: number | null;
     shape: SymbolType | string;
     label: string | null;
     labelColor: string | null;
