@@ -28,6 +28,14 @@ You can change the point's symbol using the `symbol` attribute, which accepts a 
 You can provide _Scatter_ with a single `color` hex value or a `color` accessor function.
 <XYWrapper {...defaultProps(15)} color={'#DA348F'}/>
 
+### Point Stroke Color
+You can also set a stroke color for your points by providing a `strokeColor` hex value or a `strokeColor` accessor function.
+<XYWrapper {...defaultProps(15)} color="none" strokeColor={'#DA348F'}/>
+
+### Point Stroke Width
+If you want to change the stroke width, you can use the `strokeWidth` property, which accepts a constant value or an accessor function.
+<XYWrapper {...defaultProps(15)} color="none" strokeColor={'#DA348F'} strokeWidth={5}/>
+
 ### Point Size and Size Range
 You can use the `size` property to set the point size (i.e. point diameter if `shape` is set to `SymbolType.Circle`) in pixels
 by providing a constant value or an accessor function, e.g.: `d => d.size`.
@@ -105,8 +113,8 @@ The _Scatter_ component supports additional styling via CSS variables that you c
   {`
 --vis-scatter-cursor: default;
 --vis-scatter-fill-color: var(--vis-color-main);
---vis-scatter-stroke-color: var(--vis-color-main);
---vis-scatter-stroke-width: 0px;
+--vis-scatter-stroke-color: 'none';
+--vis-scatter-stroke-width: 1px;
 --vis-scatter-fill-opacity: 1;
 --vis-scatter-stroke-opacity: 1;
 --vis-scatter-hover-stroke-width: 2px;
