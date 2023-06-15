@@ -29,7 +29,7 @@ export enum NestedDonutSegmentLabelAlignment {
 export type NestedDonutLayerSettings = {
   backgroundColor?: string;
   labelAlignment?: NestedDonutSegmentLabelAlignment;
-  width?: number;
+  width?: number | string;
 }
 
 export type NestedDonutLayer = NestedDonutLayerSettings & {
