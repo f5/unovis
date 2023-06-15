@@ -101,7 +101,7 @@ which accepts an accessor that returns the following type based on the layer's d
 
 ```typescript
 type NestedDonutLayerSettings = {
-  width: number; // The layer's width in pixels
+  width: number | string; // The layer's width in pixels or css string to be converted to pixels
   labelAlignment: NestedDonutSegmentLabelAlignment; // Alignment of the layer's segment labels
 }
 ```

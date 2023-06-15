@@ -50,7 +50,7 @@ function getLabelBounds<Datum> (
 ): { width: number; height: number } {
   const arcWidth = d.y1 - d.y0
   const arcLength = d._layer._innerRadius * (d.x1 - d.x0)
-  const bandwidth = Math.max(Math.abs(Math.cos(d.x0 + (d.x1 - d.x0) / 2 - Math.PI / 2) * d._layer.width), arcWidth)
+  const bandwidth = Math.max(Math.abs(Math.cos(d.x0 + (d.x1 - d.x0) / 2 - Math.PI / 2) * arcWidth), arcWidth)
   switch (d._layer.labelAlignment) {
     case NestedDonutSegmentLabelAlignment.Perpendicular:
       return { width: arcWidth, height: arcLength }

@@ -31,6 +31,10 @@ export function getCSSVariableValueInPixels (s: string, context: HTMLElement | S
   return toPx(val)
 }
 
+export function getPixelValue (v: string | number): number | null {
+  return typeof v === 'number' ? v : toPx(v)
+}
+
 export function rectIntersect (rect1: Rect, rect2: Rect, tolerancePx = 0): boolean {
   const [left1, top1, right1, bottom1] = [
     rect1.x + tolerancePx,

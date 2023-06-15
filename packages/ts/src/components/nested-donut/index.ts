@@ -15,7 +15,7 @@ import { VerticalAlign } from 'types/text'
 import { getColor, getHexValue } from 'utils/color'
 import { smartTransition } from 'utils/d3'
 import { getNumber, getString, getValue, isNumber, isNumberWithinRange, merge } from 'utils/data'
-import { getCSSVariableValueInPixels } from 'utils/misc'
+import { getPixelValue } from 'utils/misc'
 import { cssvar } from 'utils/style'
 import { wrapSVGText } from 'utils/text'
 
@@ -223,24 +223,26 @@ NestedDonutConfigInterface<Datum>
   private _getLayerSettings (): NestedDonutLayer[] {
     const { direction, layers, layerPadding, layerSettings } = this.config
 
-    const strokeWidth = getCSSVariableValueInPixels(cssvar(s.variables.nestedDonutSegmentStrokeWidth), this.element)
-    const outerRadius = (Math.min(this._width, this._height) - strokeWidth) / 2
+    const outerRadius = Math.min(this._width, this._height) / 2
 
     const defaultLayerSettings = {
       backgroundColor: cssvar(s.variables.nestedDonutBackgroundColor),
       labelAlignment: NestedDonutSegmentLabelAlignment.Perpendicular,
       width: outerRadius * 0.75 / layers.length,
     }
-
     const layerItems = layers.reduceRight((arr, _, i) => {
       const layerId = direction === NestedDonutDirection.Outwards ? i : arr.length
       const layerConfig = merge(defaultLayerSettings, getValue(layerId, layerSettings))
       const radius = arr.length ? arr[0]._innerRadius - layerPadding : outerRadius
+      const layerWidth = getPixelValue(layerConfig.width)
+      if (layerWidth === null) {
+        console.warn(`Unovis | Nested Donut: Could not parse width ${layerConfig.width}. Setting to default.`)
+      }
       arr.unshift({
         ...layerConfig,
         _id: layerId,
         _outerRadius: radius,
-        _innerRadius: radius - layerConfig.width,
+        _innerRadius: radius - (layerWidth ?? defaultLayerSettings.width),
       })
       return arr
     }, new Array<NestedDonutLayer>())
