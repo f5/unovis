@@ -1,7 +1,7 @@
-<vis-single-container [data]="data" [height]="1000">
+<vis-single-container [data]="data" class="sunburst">
     <vis-nested-donut
         [direction]="direction"
-        [hideSegmentLabels]="true"
+        [hideOverflowingSegmentLabels]="false"
         [layers]="layers"
         [layerSettings]="layerSettings"
         [segmentColor]="segmentColor"

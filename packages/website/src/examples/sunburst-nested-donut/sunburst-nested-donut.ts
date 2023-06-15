@@ -1,11 +1,15 @@
 import { SingleContainer, NestedDonut, NestedDonutSegment } from '@unovis/ts'
 import { colors, data, Datum } from './data'
 
+import './styles.css'
+
 const container = document.getElementById('vis-container')
+container.classList.add('sunburst')
+
 const chart = new SingleContainer(container, {
   component: new NestedDonut<Datum>({
     direction: 'outwards',
-    hideSegmentLabels: false,
+    hideOverflowingSegmentLabels: false,
     layers: [
       (d: Datum) => d.type,
       (d: Datum) => d.group,
@@ -13,8 +17,7 @@ const chart = new SingleContainer(container, {
       (d: Datum) => d.description,
       (d: Datum) => d.item,
     ],
-    layerSettings: { width: 100, rotateLabels: true },
+    layerSettings: { width: '6vmin' },
     segmentColor: (d: NestedDonutSegment<Datum>) => colors.get(d.data.key),
   }),
-  height: 1000,
 }, data)

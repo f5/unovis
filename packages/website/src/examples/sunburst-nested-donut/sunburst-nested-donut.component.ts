@@ -5,6 +5,7 @@ import { colors, data, Datum } from './data'
 @Component({
   selector: 'sunburst-nested-donut',
   templateUrl: './sunburst-nested-donut.component.html',
+  styleUrls: ['./styles.css'],
 })
 export class SunburstChartComponent {
   data = data
@@ -17,10 +18,7 @@ export class SunburstChartComponent {
     (d: Datum) => d.item,
   ]
 
-  layerSettings = {
-    width: 100,
-    rotateLabels: true,
-  }
+  layerSettings = { width: '6vmin' }
 
   segmentColor = (d: NestedDonutSegment<Datum>): string => colors.get(d.data.key)
 }

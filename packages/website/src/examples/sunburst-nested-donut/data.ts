@@ -56,7 +56,7 @@ export const colors = new Map([
   ['Resinous', 'rgb(126, 106, 158)'],
   ['Turpeny', 'rgb(126, 106, 158)'],
   ['Piney', '#72659d'],
-  ['Blackcurrant', '#8a6e9e'],
+  ['Black Currant', '#8a6e9e'],
   ['Medicinal', 'rgb(145, 84, 136)'],
   ['Camphoric', '#8f5c85'],
   ['Cineolic', '#934b8b'],
@@ -285,7 +285,7 @@ export const data = [
     group: 'Dry Distillation',
     subgroup: 'Resinous',
     description: 'Turpeny',
-    item: 'Blackcurrant',
+    item: 'Black Currant',
   },
   {
     type: 'Aromas',
