@@ -1,0 +1,4 @@
+.sunburst {
+    height: 60vmin;
+    --vis-nested-donut-segment-label-font-size: 1vmin;
+}

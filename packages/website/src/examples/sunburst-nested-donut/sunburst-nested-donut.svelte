@@ -13,14 +13,18 @@
   const segmentColor = (d: NestedDonutSegment<Datum>) => colors.get(d.data.key)
 </script>
 
-<VisSingleContainer data={data} height={1000}>
+<VisSingleContainer data={data} class='sunburst'>
   <VisNestedDonut
     direction='outwards'
-    hideSegmentLabels={false}
-    layerSettings={{
-      width: 100,
-      rotateLabels: true,
-    }}
+    hideOverflowingSegmentLabels={false}
+    layerSettings={{ width: '6vmin' }}
     {layers}
     {segmentColor}/>
 </VisSingleContainer>
+
+<style>
+  .sunburst {
+    height: 60vmin;
+    --vis-nested-donut-segment-label-font-size: 1vmin;
+  }
+</style>
