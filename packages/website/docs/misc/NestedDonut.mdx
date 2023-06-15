@@ -256,27 +256,33 @@ Read Donut's [doc page](./donut) to learn more.
 _Nested Donut_ supports the following CSS variables:
 
 ```css
---vis-nested-donut-background-color: #e7e9f3
 /* Undefined by default to allow proper fallback to var(--vis-font-family) */
---vis-nested-donut-font-family: undefined
+--vis-nested-donut-font-family: undefined;
+
+/* Background */
+--vis-nested-donut-background-color: #e7e9f3
 
 /* Central label */
---vis-nested-donut-central-label-font-size: 16px
---vis-nested-donut-central-label-font-weight: 600
---vis-nested-donut-central-label-text-color: #5b5f6d
+--vis-nested-donut-central-label-font-size: 16px;
+--vis-nested-donut-central-label-font-weight: 600;
+--vis-nested-donut-central-label-text-color: #5b5f6d;
 
 /* Central sub-label */
---vis-nested-donut-central-sublabel-font-size: 12px
---vis-nested-donut-central-sublabel-font-weight: 500
---vis-nested-donut-central-sublabel-text-color: #5b5f6d
+--vis-nested-donut-central-sublabel-font-size: 12px;
+--vis-nested-donut-central-sublabel-font-weight: 500;
+--vis-nested-donut-central-sublabel-text-color: #5b5f6d;
 
 /* Segments */
---vis-nested-donut-segment-stroke-width: 1px
+--vis-nested-donut-segment-stroke-width: 1px;
+--vis-nested-donut-segment-stroke-color: var(--vis-nested-donut-background-color);
+--vis-nested-donut-segment-label-text-color-light: #5b5f6d;
+--vis-nested-donut-segment-label-text-color-dark: #fff;
+--vis-nested-donut-segment-label-font-size: 1em;
 
 /* Dark theme */
---vis-dark-nested-donut-background-color: #18160c
---vis-dark-nested-donut-central-label-text-color: #fff
---vis-dark-nested-donut-central-sublabel-text-color: #fff
+--vis-dark-nested-donut-background-color: #18160c;
+--vis-dark-nested-donut-central-label-text-color: #fff;
+--vis-dark-nested-donut-central-sublabel-text-color: #fff;
 ```
 
 ## Component Props
