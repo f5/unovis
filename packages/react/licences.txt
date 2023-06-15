@@ -1,18 +1,21 @@
 name                               license period  license type  installed version  author
 ----                               --------------  ------------  -----------------  ------
-@rollup/plugin-node-resolve        perpetual       MIT           13.0.4             Rich Harris
-@types/react                       perpetual       MIT           >=16.8.0           n/a
+@rollup/plugin-node-resolve        perpetual       MIT           13.3.0             Rich Harris <richard.a.harris@gmail.com>
+@types/react                       perpetual       MIT           17.0.22            n/a
 @types/node                        perpetual       MIT           16.11.17           n/a
-@zerollup/ts-transform-paths       perpetual       MIT           1.7.18             Stefan Zerkalica
-react                              perpetual       MIT           >=16.8.0           n/a
-react-dom                          perpetual       MIT           >=16.8.0           n/a
-rimraf                             perpetual       ISC           3.0.2              Isaac Z. Schlueter
-rollup                             perpetual       MIT           2.61.1             Rich Harris
+@zerollup/ts-transform-paths       perpetual       MIT           1.7.18             Stefan Zerkalica zerkalica@gmail.com
+react                              perpetual       MIT           16.14.0            n/a
+react-dom                          perpetual       MIT           16.14.0            n/a
+rimraf                             perpetual       ISC           3.0.2              Isaac Z. Schlueter <i@izs.me> (http://blog.izs.me/)
+rollup                             perpetual       MIT           2.75.5             Rich Harris
 rollup-plugin-peer-deps-external   perpetual       MIT           2.2.4              n/a
-rollup-plugin-postcss              perpetual       MIT           4.0.2              EGOIST
+rollup-plugin-postcss              perpetual       MIT           4.0.2              EGOIST <0x142857@gmail.com>
 rollup-plugin-rename-node-modules  perpetual       MIT           1.3.1              Lazyuki
 rollup-plugin-typescript2          perpetual       MIT           0.31.1             @ezolenko
 tsconfig-paths-webpack-plugin      perpetual       MIT           3.5.2              Jonas Kello
-tslib                              perpetual       0BSD          2.3.1              Microsoft Corp.
+tslib                              perpetual       0BSD          2.4.1              Microsoft Corp.
 ttypescript                        perpetual       MIT           1.5.13             cevek
 typescript                         perpetual       Apache-2.0    4.2.4              Microsoft Corp.
+@unovis/ts                         perpetual       Apache-2.0    1.1.1              Nikita Rokotyan, F5 Inc. <nikita@f5.com> (https://rokotyan.com)
+react                              perpetual       MIT           16.14.0            n/a
+react-dom                          perpetual       MIT           16.14.0            n/a
