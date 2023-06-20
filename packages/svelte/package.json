@@ -37,7 +37,7 @@
   },
   "peerDependencies": {
     "@unovis/ts": "1.1.1",
-    "svelte": "^3.48.0"
+    "svelte": "^3.48.0 || ^4.0.0"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^13.0.4",
