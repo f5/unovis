@@ -1,5 +1,6 @@
 import { range, min, max } from 'd3-array'
 import { line, curveCardinal, curveCardinalClosed } from 'd3-shape'
+import { Path } from 'd3-path'
 
 // Utils
 import { clamp } from 'utils/data'
@@ -193,4 +194,14 @@ export function scoreRectPath ({ x, y, w, h, r = 0, score = 1 }: ScoreRectPathOp
   }
 
   return path
+}
+
+/*
+ * Replace L path command with arc with specified radius
+ * @param {String} path - the path string
+ * @param {number} r - radius in pixels
+ * @returns {String} new path string
+ */
+export function convertLineToArc (path: Path | string, r: number): string {
+  return path.toString().replace(/L(?<x>-?\d*\.?\d*),(?<y>-?\d+\.?\d*)/gm, (_, x, y) => `A ${r} ${r} 0 0 0 ${x} ${y}`)
 }

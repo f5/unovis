@@ -1,9 +1,9 @@
-import { Selection } from 'd3-selection'
+import { max } from 'd3-array'
 import { nest } from 'd3-collection'
 import { HierarchyNode, hierarchy, partition } from 'd3-hierarchy'
-import { arc } from 'd3-shape'
+import { Selection } from 'd3-selection'
 import { scalePow, ScalePower } from 'd3-scale'
-import { max } from 'd3-array'
+import { arc } from 'd3-shape'
 
 // Core
 import { ComponentCore } from 'core/component'
@@ -27,7 +27,6 @@ import {
   ChordRibbon,
   ChordLabelAlignment,
   ChordLeafNode,
-  ChordRibbonPoint,
   ChordNodeDatum,
 } from './types'
 
@@ -123,10 +122,28 @@ export class ChordDiagram<
     const partitionData = partition<N | ChordHierarchyNode<N>>().size([this.config.angleRange[1], 1])(hierarchyData) as ChordNode<N>
     this._calculateRadialPosition(partitionData)
 
+    partitionData.each((node, i) => {
+      // Add hierarchy data for non leaf nodes
+      if (node.children) {
+        node.data = Object.assign(node.data, {
+          depth: node.depth,
+          height: node.height,
+          value: node.value,
+          ancestors: node.ancestors().map(d => (d.data as ChordHierarchyNode<N>).key),
+        })
+      }
+      node.x0 = Number.isNaN(node.x0) ? 0 : node.x0
+      node.x1 = Number.isNaN(node.x1) ? 0 : node.x1
+      node.uid = `${this.uid}-n${i}`
+      node._state = {}
+    })
+
     const partitionDataWithRoot = partitionData.descendants()
     this._rootNode = partitionDataWithRoot.find(d => d.depth === 0)
     this._nodes = partitionDataWithRoot.filter(d => d.depth !== 0) // Filter out the root node
+    this._links = this._getRibbons(partitionData)
   }
+
 
   _render (customDuration?: number): void {
     super._render(customDuration)
@@ -146,24 +163,6 @@ export class ChordDiagram<
       .innerRadius(d => this.radiusScale(d.y1) - getNumber(d, config.nodeWidth))
       .outerRadius(d => this.radiusScale(d.y1))
 
-    // Create Node and Link state objects
-    this._nodes.forEach((node, i) => {
-      // Add hierarchy data for non leaf nodes
-      if (node.children) {
-        node.data = Object.assign(node.data, {
-          depth: node.depth,
-          height: node.height,
-          value: node.value,
-          ancestors: node.ancestors().map(d => (d.data as ChordHierarchyNode<N>).key),
-        })
-      }
-      node.x0 = Number.isNaN(node.x0) ? 0 : node.x0
-      node.x1 = Number.isNaN(node.x1) ? 0 : node.x1
-      node.uid = `${this.uid}-n${i}`
-      node._state = {}
-    })
-    this._links = this._getRibbons(this._rootNode)
-
     // Center the view
     this.g.attr('transform', `translate(${this._width / 2},${this._height / 2})`)
 
@@ -174,10 +173,10 @@ export class ChordDiagram<
 
     const linksEnter = linksSelection.enter().append('path')
       .attr('class', s.link)
-      .call(createLink)
+      .call(createLink, this.radiusScale)
 
     const linksMerged = linksSelection.merge(linksEnter)
-    linksMerged.call(updateLink, config, duration)
+    linksMerged.call(updateLink, config, this.radiusScale, duration)
 
     linksSelection.exit()
       .call(removeLink, duration)
@@ -280,12 +279,11 @@ export class ChordDiagram<
         currNode._prevX1 = x1
 
         const pointIdx = type === 'out' ? depth : partitionData.height * 2 - 1 - depth
-        link._state.points[pointIdx] = this._convertRadialToCartesian(
-          Math.min(x0, x1),
-          Math.max(x0, x1),
-          currNode.y1,
-          config.nodeWidth
-        )
+        link._state.points[pointIdx] = {
+          a0: Math.min(x0, x1), // - Math.PI / 2,
+          a1: Math.max(x0, x1), // - Math.PI / 2,
+          r: currNode.y1,
+        }
       })
     }
 
@@ -312,22 +310,6 @@ export class ChordDiagram<
     })
 
     return ribbons
-  }
-
-  private _convertRadialToCartesian (x0: number, x1: number, y: number, nodeWidth: number): ChordRibbonPoint {
-    const r = Math.max(this.radiusScale(y) - nodeWidth, 0)
-    const a0 = x0 - Math.PI / 2
-    const a1 = x1 - Math.PI / 2
-
-    return {
-      a0,
-      a1,
-      r,
-      x0: r * Math.cos(a0),
-      x1: r * Math.cos(a1),
-      y0: r * Math.sin(a0),
-      y1: r * Math.sin(a1),
-    }
   }
 
   private _calculateRadialPosition (

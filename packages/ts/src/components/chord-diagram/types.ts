@@ -51,7 +51,7 @@ export type ChordNodeDatum<N> = ChordHierarchyNode<N> | N;
 export type ChordNode<N extends ChordInputNode> = ChordNodeCore<ChordNodeDatum<N>>
 export type ChordLeafNode<N extends ChordInputNode> = ChordNodeCore<GraphNodeCore<N, ChordInputLink>>
 
-export type ChordRibbonPoint = { x0: number; x1: number; y0: number; y1: number; a0: number; a1: number; r: number }
+export type ChordRibbonPoint = { a0: number; a1: number; r: number }
 export interface ChordRibbon<N extends ChordInputNode> {
   source: ChordLeafNode<N>;
   target: ChordLeafNode<N>;
