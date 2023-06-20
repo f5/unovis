@@ -1,6 +1,8 @@
 import { Selection, select } from 'd3-selection'
+import { ribbon } from 'd3-chord'
 import { path } from 'd3-path'
-import { line } from 'd3-shape'
+import { ScalePower } from 'd3-scale'
+import { areaRadial } from 'd3-shape'
 import { Transition } from 'd3-transition'
 import { interpolatePath } from 'd3-interpolate-path'
 
@@ -10,61 +12,62 @@ import { Curve } from 'types/curve'
 // Utils
 import { getColor } from 'utils/color'
 import { smartTransition } from 'utils/d3'
+import { convertLineToArc } from 'utils/path'
 
 // Local Types
 import { ChordInputLink, ChordInputNode, ChordRibbon, ChordRibbonPoint } from '../types'
 import { ChordDiagramConfig } from '../config'
 
-export interface ArcLink extends SVGElement {
-  _animState?: {
-    source: { y0: number; y1: number };
-    target: { x0: number; x1: number; y1: number };
-  };
-}
-
+// Generators
 export function emptyPath (): string {
   return 'M0,0 L0,0'
 }
 
-const lineGen = line().curve(Curve.catmullRom.alpha(0.25))
+// Generators
+const ribbonGen = ribbon<ChordRibbonPoint[], ChordRibbonPoint>()
+  .source(d => d[0])
+  .target(d => d[d.length - 1])
+  .startAngle(d => d.a0)
+  .endAngle(d => d.a1)
 
-// Creates a path consisting of the inner source arc, node arcs and connecting curves
-function linkGen (points: ChordRibbonPoint[]): string {
-  const p = path()
-  const sourceArc = points[0]
-  const targetArc = points[points.length - 1]
+const areaGen = areaRadial<ChordRibbonPoint>()
+  .curve(Curve.catmullRom.alpha(0.5))
+  .startAngle((d, i, points) => i < points.length / 2 ? d.a1 : d.a0)
+  .endAngle((d, i, points) => i < points.length / 2 ? d.a0 : d.a1)
+
+
+// Creates a path from set of points
+function linkGen (points: ChordRibbonPoint[], radiusScale: ScalePower<number, number>): string {
+  const link = (points.length === 2 ? ribbonGen : areaGen)
+  link.radius(d => radiusScale(d.r))
 
   if (points.length === 2) {
-    // Writing a custom curve here since generators won't produce a curved line from only two points
-    p.moveTo(sourceArc.x1, sourceArc.y1)
-    p.quadraticCurveTo(0, 0, targetArc.x0, targetArc.y0)
-    p.arc(0, 0, targetArc.r, targetArc.a0, targetArc.a1)
-    p.quadraticCurveTo(0, 0, sourceArc.x0, sourceArc.y0)
-    p.arc(0, 0, sourceArc.r, sourceArc.a0, sourceArc.a1)
-  } else {
-    const inner: [number, number][] = points.map((d, i) => i < points.length / 2 ? [d.x1, d.y1] : [d.x0, d.y0])
-    const outer: [number, number][] = points.map((d, i) => i < points.length / 2 ? [d.x0, d.y0] : [d.x1, d.y1])
-
-    lineGen.context(p as CanvasRenderingContext2D)
-    lineGen(inner)
-    p.arc(0, 0, targetArc.r, targetArc.a0, targetArc.a1)
-    lineGen(outer.reverse())
-    p.arc(0, 0, sourceArc.r, sourceArc.a0, sourceArc.a1)
+    return link(points) as string
   }
-  return p.toString()
+  const p = path()
+  const src = points[0]
+  const radius = Math.max(radiusScale(src.r), 0)
+
+  link.context(p as CanvasRenderingContext2D)
+  link(points)
+  p.arc(0, 0, radius, src.a0 - Math.PI / 2, src.a1 - Math.PI / 2, src.a1 - src.a0 <= Number.EPSILON)
+
+  return convertLineToArc(p, radius)
 }
 
 export function createLink<N extends ChordInputNode> (
-  selection: Selection<SVGPathElement, ChordRibbon<N>, SVGGElement, unknown>
+  selection: Selection<SVGPathElement, ChordRibbon<N>, SVGGElement, unknown>,
+  radiusScale: ScalePower<number, number>
 ): void {
   selection
-    .attr('d', d => linkGen(d.points) || emptyPath())
+    .attr('d', d => linkGen(d.points, radiusScale) || emptyPath())
     .style('opacity', 0)
 }
 
 export function updateLink<N extends ChordInputNode, L extends ChordInputLink> (
   selection: Selection<SVGPathElement, ChordRibbon<N>, SVGGElement, unknown>,
   config: ChordDiagramConfig<N, L>,
+  radiusScale: ScalePower<number, number>,
   duration: number
 ): void {
   const selTransition = smartTransition(selection, duration)
@@ -76,11 +79,11 @@ export function updateLink<N extends ChordInputNode, L extends ChordInputLink> (
     const transition = selTransition as Transition<SVGPathElement, ChordRibbon<N>, SVGGElement, unknown>
     transition.attrTween('d', (d, i, el) => {
       const previous = select(el[i]).attr('d')
-      const next = linkGen(d.points) || emptyPath()
+      const next = linkGen(d.points, radiusScale) || emptyPath()
       return interpolatePath(previous, next)
     })
   } else {
-    selTransition.attr('d', d => linkGen(d.points) || emptyPath())
+    selTransition.attr('d', d => linkGen(d.points, radiusScale) || emptyPath())
   }
 }
 

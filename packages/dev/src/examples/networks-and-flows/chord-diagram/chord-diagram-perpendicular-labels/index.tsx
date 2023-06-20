@@ -10,6 +10,7 @@ export const component = (): JSX.Element => {
     <VisSingleContainer data={data} style={{ width: '100%', height: '100%' }}>
       <VisChordDiagram
         linkValue={1}
+        nodeLevels={['group']}
         nodeLabel={useCallback((n: NodeDatum) => n.id, [])}
         nodeLabelAlignment='perpendicular'
       />
