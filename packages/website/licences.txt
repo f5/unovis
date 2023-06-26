@@ -32,7 +32,7 @@ rollup-plugin-terser                       perpetual       MIT           7.0.2  
 rollup-plugin-typescript2                  perpetual       MIT           0.31.2             @ezolenko
 svelte-preprocess                          perpetual       MIT           4.10.7             Christian Kaisermann <christian@kaisermann.me>
 typescript                                 perpetual       Apache-2.0    4.2.4              Microsoft Corp.
-@unovis/angular                            perpetual       Apache-2.0    1.1.1              Nikita Rokotyan, F5 Inc. <nikita@f5.com> (https://rokotyan.com)
-@unovis/react                              perpetual       Apache-2.0    1.1.1              Nikita Rokotyan, F5 Inc. <nikita@f5.com> (https://rokotyan.com)
-@unovis/svelte                             perpetual       Apache-2.0    1.1.1              Rebecca Bol, F5 Inc. <r.bol@f5.com>
-@unovis/ts                                 perpetual       Apache-2.0    1.1.1              Nikita Rokotyan, F5 Inc. <nikita@f5.com> (https://rokotyan.com)
+@unovis/angular                            perpetual       Apache-2.0    1.2.0              Nikita Rokotyan, F5 Inc. <nikita@f5.com> (https://rokotyan.com)
+@unovis/react                              perpetual       Apache-2.0    1.2.0              Nikita Rokotyan, F5 Inc. <nikita@f5.com> (https://rokotyan.com)
+@unovis/svelte                             perpetual       Apache-2.0    1.2.0              Rebecca Bol, F5 Inc. <r.bol@f5.com>
+@unovis/ts                                 perpetual       Apache-2.0    1.2.0              Nikita Rokotyan, F5 Inc. <nikita@f5.com> (https://rokotyan.com)
