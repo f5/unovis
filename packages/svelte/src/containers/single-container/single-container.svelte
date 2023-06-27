@@ -6,25 +6,31 @@
 
   export let data: Data
 
-  let chart: SingleContainer<Data>
+  let chart: SingleContainer<Data> | undefined
   const config: SingleContainerConfigInterface<Data> = {
     component: undefined,
     tooltip: undefined,
   }
   let ref: HTMLDivElement
 
-  $: chart?.setData(data, true)
-  $: chart?.updateContainer({ ...config, ...($$restProps as SingleContainerConfigInterface<Data>) })
+  const initChart = () => {
+    if (data && config.component && ref) {
+      chart = new SingleContainer<Data>(ref, config, data)
+    }
+  }
+  $: chart ? chart.setData(data, true) : initChart()
+  $: chart ? chart.updateContainer({ ...config, ...($$restProps as SingleContainerConfigInterface<Data>) }) : initChart()
 
   onMount(() => {
-    chart = new SingleContainer<Data>(ref, config, data)
-    return () => chart.destroy()
+    initChart()
+    return () => chart?.destroy()
   })
 
   setContext('tooltip', () => ({
     update: (t: Tooltip) => { config.tooltip = t },
     destroy: () => { config.tooltip = undefined },
   }))
+
   setContext('component', () => ({
     update: (c: ComponentCore<Data>) => { config.component = c },
     destroy: () => { config.component = undefined },
