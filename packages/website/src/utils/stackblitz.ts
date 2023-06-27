@@ -109,7 +109,8 @@ function getStarterFiles (framework: Framework, e: Example): ProjectFiles {
             "svelte-preprocess": "^4.10.7",
             "tslib": "^2.4.0",
             "typescript": "^4.6.4",
-            "vite": "^3.1.0"
+            "vite": "^3.1.0",
+            "web-worker": "^1.2.0"
           }
         }`),
         'vite.config.ts': trimMultiline(`
