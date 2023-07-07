@@ -1,5 +1,7 @@
 import useIsBrowser from '@docusaurus/useIsBrowser'
 import { kebabCase } from '@site/src/utils/text'
+import { useDynamicImport } from 'docusaurus-plugin-react-docgen-typescript/pkg/dist-src/hooks/useDynamicImport'
+
 import { DocComponent } from '../wrappers/types'
 
 export type PropInfo = {
@@ -21,7 +23,6 @@ const indentLength = 2
 export const tab = (level = 1): string => ' '.repeat(indentLength * level)
 export const t = tab()
 
-
 function formatElement (prefix: string, attributes: string[] = [], suffix: string, sep = ' ', lineBreakSuffix = suffix): string {
   const breakLine = prefix.length + attributes.join(sep).length + suffix.length > lineMaxLength
   const indent = tab(1 + (prefix.length - prefix.trimStart().length) / 2)
@@ -34,11 +35,10 @@ function formatElement (prefix: string, attributes: string[] = [], suffix: strin
 }
 
 function parseFunction (str: string, type: string): string {
-  const types = type.split(',')
+  const types = type.match(/Accessor<(?<t>[a-zA-Z]*)>/)
   const params = {
     i: 'number',
-    d: types[0],
-    ...Object.fromEntries(types.map(t => [t.toLowerCase().charAt(0), t])),
+    d: types?.[1],
   }
   const fn = str.split('=>')
   const args = fn[0].match(/[a-z]/gm)?.map(p => params[p] ? [p, params[p]].join(': ') : p).join(', ') || ''
@@ -72,7 +72,8 @@ export function parseObject (value: any, type: string, level = 1): string {
   return `{\n${objectProps.join(',\n')}\n${tab(level)}}`
 }
 
-export function parseProps (component: DocComponent, dataType: string, imports: string[], declarations: Record<string, string>): ComponentInfo {
+export function parseProps (component: DocComponent, imports: string[], declarations: Record<string, string>): ComponentInfo {
+  const propTypes = useDynamicImport(`Vis${component.name}`)
   return {
     ...component,
     props: Object.entries(component.props).map(([k, v]) => {
@@ -85,7 +86,7 @@ export function parseProps (component: DocComponent, dataType: string, imports: 
         if ((v.length && typeof v[0] === 'number') || !declarations) {
           v = JSON.stringify(v)
         } else {
-          declarations[k] = parseObject(v, dataType) || k
+          declarations[k] = propTypes ? parseObject(v, propTypes?.[k]?.type?.name) : k
           v = k
         }
       }

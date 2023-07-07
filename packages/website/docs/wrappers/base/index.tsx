@@ -1,8 +1,11 @@
 /* eslint-disable @typescript-eslint/naming-convention, @typescript-eslint/no-var-requires */
 import * as React from 'react'
 import BrowserOnly from '@docusaurus/BrowserOnly'
+import { CodeSnippet } from '@site/src/components/CodeSnippet'
+import { generateSnippets } from '@site/src/utils/snippet-generator'
 import { DocWrapperProps } from '../types'
 import { DocFrameworkTabs } from './doc-tabs'
+
 
 /* XYWrapper by default displays code snippet tabs and a Vis component with custom props */
 export function DocWrapper ({
@@ -36,20 +39,22 @@ export function DocWrapper ({
   } else {
     containerProps = { ...containerProps, ...rest }
   }
+  const container = { name: containerName, props: containerProps }
   return (
     <>
       {!excludeTabs &&
-      <DocFrameworkTabs
-        imports={imports}
-        container={{
-          name: containerName,
-          props: containerProps,
-        }}
-        showData={data !== undefined}
-        components={components}
-        context={showContext}
-        mainComponent={name}
-        {...{ hideTabLabels, dataType, declarations }}/>
+      // <DocFrameworkTabs
+      //   imports={imports}
+      //   container={{
+      //     name: containerName,
+      //     props: containerProps,
+      //   }}
+      //   showData={data !== undefined}
+      //   components={components}
+      //   context={showContext}
+      //   mainComponent={name}
+      //   {...{ hideTabLabels, dataType, declarations }}/>
+      <CodeSnippet {...generateSnippets(data, components, container)}/>
       }
       {!excludeGraph &&
         <BrowserOnly fallback={<div>Loading...</div>}>

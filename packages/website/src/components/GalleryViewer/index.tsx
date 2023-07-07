@@ -1,14 +1,12 @@
 import React, { useEffect } from 'react'
-import Tabs from '@theme/Tabs'
-import TabItem from '@theme/TabItem'
-import CodeBlock from '@theme/CodeBlock'
 
 // Internal Deps
 import { Example } from '@site/src/types/example'
-import { Framework } from '@site/src/types/code'
 
 // Styles
 import s from './styles.module.css'
+
+import { CodeSnippet } from '../CodeSnippet'
 
 export type GalleryViewerProps = {
   example: Example;
@@ -30,39 +28,17 @@ export function GalleryViewer ({ example, useTypescriptCode }: GalleryViewerProp
     </div>
     <div className={s.description}>{example.description}</div>
     <div className={s.codeBlock}>
-      <Tabs groupId='framework' example={example}>
-        <TabItem value={Framework.React} label="React">
-          <CodeBlock language="tsx">
-            {example.codeReact}
-          </CodeBlock>
-        </TabItem>
-        <TabItem value={Framework.Angular} label="Angular">
-          <CodeBlock language="html" title={`${example.pathname}.html`}>
-            {example.codeAngular.html}
-          </CodeBlock>
-          <CodeBlock language="ts" title={`${example.pathname}.component.ts`}>
-            {example.codeAngular.component}
-          </CodeBlock>
-          <CodeBlock language="ts" title={`${example.pathname}.module.ts`}>
-            {example.codeAngular.module}
-          </CodeBlock>
-        </TabItem>
-        <TabItem value={Framework.Svelte} label="Svelte">
-          <CodeBlock language="html">
-            {example.codeSvelte}
-          </CodeBlock>
-        </TabItem>
-        <TabItem value={Framework.TypeScript} label="TypeScript">
-          <CodeBlock language="ts">
-            {example.codeTs}
-          </CodeBlock>
-        </TabItem>
-        <TabItem value="data" label="Data">
-          <CodeBlock language="typescript">
-            {example.data}
-          </CodeBlock>
-        </TabItem>
-      </Tabs>
+      <CodeSnippet
+        angular={{
+          module: example.codeAngular.module,
+          component: example.codeAngular.component,
+          template: example.codeAngular.html,
+        }}
+        react={example.codeReact}
+        svelte={example.codeSvelte}
+        typescript={example.codeTs}
+        data={example.data}
+      />
     </div>
   </div>)
 }

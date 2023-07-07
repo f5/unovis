@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { FrameworkTabProps } from '../components/framework-tabs'
+import { CodeSnippetProps } from '@site/src/components/CodeSnippet'
 import { ComponentInfo, PropInfo, parseComponent as parse, tab, t } from './parser'
 
 type CodeConfig = {
@@ -15,8 +15,8 @@ function getImportString (imports: Record<string, string[]>, indent?: boolean): 
   return `${Object.keys(imports).map(i => `${indent ? t : ''}import { ${imports[i].join(', ')} } from '${i}'`).join('\n')}\n`
 }
 
-export function getAngularStrings (config: CodeConfig, importedProps: string[], inlineTemplate: boolean): FrameworkTabProps['angular'] {
-  const { components, container, declarations, imports } = config
+export function getAngularStrings (config: CodeConfig, importedProps: string[], inlineTemplate = false): CodeSnippetProps['angular'] {
+  const { components, container, declarations, imports, visImports } = config
   const { data, ...rest } = declarations
   const tsLines: string[] = []
 
@@ -24,12 +24,15 @@ export function getAngularStrings (config: CodeConfig, importedProps: string[], 
     ? parse.angular(container).replace('><', `>\n${t}${components.map(c => parse.angular(c)).join(`\n${t}`)}\n<`)
     : components.map(c => parse.angular(c)).join('\n')
 
-  importedProps.forEach(i => {
+  importedProps?.forEach(i => {
     if (html.includes(i)) rest[i] = i
   })
 
+  // TODO: make this variable so we can use with gallery examples
+  const componentName = 'Chart'
+
   if (imports || Object.values(declarations).length) {
-    if (importedProps.length) tsLines.push(getImportString(imports))
+    tsLines.push(getImportString(imports))
 
     tsLines.push('@Component({')
     const template = inlineTemplate
@@ -39,22 +42,34 @@ export function getAngularStrings (config: CodeConfig, importedProps: string[], 
     tsLines.push('})')
 
     if (data || Object.values(rest).length) {
-      tsLines.push('export class Component {')
-      if (data) tsLines.push(`${t}@Input ${data};`)
+      tsLines.push(`export class ${componentName} {`)
+      // if (data) tsLines.push(`${t}@Input ${data};`)
       tsLines.push(...Object.entries(rest).map(d => `${t}${d.join(' = ')}`))
       tsLines.push('}')
     }
   }
+  const modules = visImports.map(v => `${v}Module`)
 
   return {
-    html: inlineTemplate ? undefined : html,
-    ts: tsLines.length ? tsLines.join('\n') : undefined,
+    template: inlineTemplate ? undefined : html,
+    component: tsLines.length ? tsLines.join('\n') : undefined,
+    module: [
+      'import { NgModule } from \'@angular/core\'',
+      getImportString({ '@unovis/angular': modules }),
+      `import { ${componentName}Component from './component'`,
+      '',
+      '@NgModule({',
+      `${t}imports: [${modules}],`,
+      `${t}declarations: [${componentName}Component]`,
+      `${t}exports: [${componentName}Component],`,
+      '})',
+      `export class ${componentName}Module {}`,
+    ].join('\n'),
   }
 }
 
 export function getReactStrings (config: CodeConfig): string {
   const { components, container, declarations, imports, visImports } = config
-  const { data, ...rest } = declarations
   const lines: string[] = []
 
   let indentLevel = 0
@@ -66,8 +81,8 @@ export function getReactStrings (config: CodeConfig): string {
     }
 
     lines.push('function Component(props) {')
-    if (data) lines.push(`${t}const ${data} = props.data`)
-    lines.push(...Object.entries(rest).map(d => `${t}const ${d.join(' = ')}`))
+    // if (data) lines.push(`${t}const ${data} = props.data`)
+    lines.push(...Object.entries(declarations).map(d => `${t}const ${d.join(' = ')}`))
     lines.push(`\n${t}return (`)
     indentLevel += 2
   }
@@ -88,7 +103,6 @@ export function getReactStrings (config: CodeConfig): string {
 
 export function getSvelteStrings (config: CodeConfig): string {
   const { components, container, declarations, imports, visImports } = config
-  const { data, ...rest } = declarations
   const lines: string[] = []
 
   const html = container
@@ -100,12 +114,12 @@ export function getSvelteStrings (config: CodeConfig): string {
   }
 
   lines.push(getImportString({ '@unovis/svelte': visImports, ...imports }, true))
-  if (data) lines.push(`${t}export let ${data}`)
-  Object.entries(rest).forEach(d => lines.push(`${t}const ${d.join(' = ')}`))
+  // if (data) lines.push(`${t}export let ${data}`)
+  Object.entries(declarations).forEach(d => lines.push(`${t}const ${d.join(' = ')}`))
   return `<script lang='ts'>\n${lines.join('\n')}\n</script>\n\n${html}`
 }
 
-export function getTypescriptStrings (config: CodeConfig, mainComponentName: string, isStandAlone: boolean): string {
+export function getTypescriptStrings (config: CodeConfig, mainComponentName?: string, isStandAlone = false): string {
   const { components, container, dataType, declarations, imports, visImports } = config
   const { data, ...vars } = declarations
   const lines: string[] = []
@@ -115,7 +129,7 @@ export function getTypescriptStrings (config: CodeConfig, mainComponentName: str
     return { ...p, value: declarations[p.key] || p.value }
   }).filter(d => d.key !== 'data')
 
-  const mainComponent = components.find(c => c.name === mainComponentName)
+  const mainComponent = mainComponentName && components.find(c => c.name === mainComponentName)
 
   // Import statements
   if (imports) {
@@ -126,9 +140,9 @@ export function getTypescriptStrings (config: CodeConfig, mainComponentName: str
     // Local data
     const customType = dataType !== undefined && !['number', 'string', 'MapData'].includes(dataType)
     if (data || customType) {
-      items['./data'] = []
-      if (data) items['./data'].push('data')
-      if (customType) items['./data'].push(...dataType.split(','))
+      // items['./data'] = []
+      // if (data) items['./data'].push('data')
+      // if (customType) items['./data'].push(...dataType.split(','))
     }
     lines.push(getImportString(items))
   }
@@ -136,7 +150,6 @@ export function getTypescriptStrings (config: CodeConfig, mainComponentName: str
   // Remove relevant props from declarations
   const containerConfig: Record<string, string[]> = {}
   const containerProps = getPropDetails(container?.props)
-  const mainProps = getPropDetails(mainComponent?.props)
 
   // Add declarations
   if (Object.keys(vars).length) {
@@ -150,7 +163,7 @@ export function getTypescriptStrings (config: CodeConfig, mainComponentName: str
     if (!containerConfig[c.key]) containerConfig[c.key] = []
     if (c.name === mainComponentName) {
       const varName = c.name.charAt(0).toLowerCase().concat(mainComponentName.slice(1))
-      const varDef = parse.typescript(c.name, mainProps, dataType, isStandAlone, isStandAlone && mainComponent.props.find(p => p.key === 'data') !== undefined)
+      const varDef = parse.typescript(c.name, mainComponent.props, dataType, isStandAlone, isStandAlone && mainComponent.props.find(p => p.key === 'data') !== undefined)
       if (!Object.keys(vars).length && imports && !isStandAlone) {
         containerConfig[c.key] = [varDef.replace(/\n/gm, '\n  '), ...containerConfig[c.key]]
       } else {
@@ -165,7 +178,7 @@ export function getTypescriptStrings (config: CodeConfig, mainComponentName: str
   if (container) {
     const items = Object.entries(containerConfig).map(([k, v]) => ({
       key: k,
-      value: k === 'components' ? `[${v.toString().length > 70 ? `\n${tab(2)}${v.join(`\n${tab(2)}`)}\n${t}` : v.join(', ')}]` : v.join(','),
+      value: k === 'components' ? `[${v.toString().length > 10 ? `\n${tab(2)}${v.join(`\n${tab(2)}`)}\n${t}` : v.join(', ')}]` : v.join(','),
       stringLiteral: false,
     }))
     lines.push(`const container = ${
