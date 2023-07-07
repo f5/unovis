@@ -1,0 +1,46 @@
+.loaderContainer {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+  width: 100%;
+}
+
+.message {
+  width: 100px;
+  height: 20px;
+  margin-top: 10px;
+  background: linear-gradient(
+    to right,
+    #eee 0%,
+    #ddd 50%,
+    #eee 100%
+  );
+  animation: loadingAnimation 10s linear infinite;
+}
+
+
+.message:nth-child(1) {
+  width: 100%;
+  animation: loadingAnimation 10s linear infinite;
+}
+
+.message:nth-child(2) {
+  width: 75%;
+  animation: loadingAnimation 8s linear infinite;
+}
+
+.message:nth-child(3) {
+  width: 80%;
+  animation: loadingAnimation 7s linear infinite;
+}
+
+
+@keyframes loadingAnimation {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}

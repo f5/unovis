@@ -1,0 +1,48 @@
+/* reset */
+button {
+  all: unset;
+}
+
+.ToggleGroup {
+  margin-top: 5px;
+  display: inline-flex;
+  background-color: #FAFAFA;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.ToggleGroupItem {
+  background-color: #FAFAFA;
+  color: #3a3a3a;
+  height: 35px;
+  display: flex;
+  font-size: 15px;
+  line-height: 1;
+  align-items: center;
+  justify-content: center;
+  margin-left: 1px;
+  padding: 0 10px;
+  cursor: pointer;
+}
+
+.ToggleGroupItem:first-child {
+  margin-left: 0;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+}
+.ToggleGroupItem:last-child {
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+.ToggleGroupItem:hover {
+  background-color: rgba(39, 128, 235, 0.68);
+  color: white;
+}
+.ToggleGroupItem[data-state='on'] {
+  background-color: #2780EB;
+  color: white;
+}
+.ToggleGroupItem:focus {
+  position: relative;
+  box-shadow: 0 0 0 1px #e8e0dc;
+}

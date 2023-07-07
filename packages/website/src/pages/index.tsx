@@ -11,10 +11,10 @@ import { HomepageFeatures } from '@site/src/components/HomepageFeatures'
 import { HomepageHeader } from '@site/src/components/HomepageHeader'
 import { HomepageLogos } from '@site/src/components/HomepageLogos'
 import ChartExample from '@site/src/examples/stacked-area-chart'
+import { UnovisAssistant } from '@site/src/assistant'
 
 // Styles
 import s from './index.module.css'
-
 
 export default function Home (): JSX.Element {
   const example = ChartExample
@@ -70,6 +70,7 @@ export default function Home (): JSX.Element {
         </div>
         <HomepageLogos/>
       </main>
+      <UnovisAssistant />
     </Layout>
   )
 }

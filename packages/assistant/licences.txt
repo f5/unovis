@@ -1,0 +1,31 @@
+name                       license period  license type  installed version  author
+----                       --------------  ------------  -----------------  ------
+@supabase/supabase-js      perpetual       MIT           2.26.0             Supabase
+common-tags                perpetual       MIT           1.8.2              Declan de Wet <declandewet@me.com>
+express                    perpetual       MIT           4.18.2             TJ Holowaychuk <tj@vision-media.ca>
+openai                     perpetual       MIT           3.3.0              OpenAI
+request                    perpetual       Apache-2.0    2.88.2             Mikeal Rogers <mikeal.rogers@gmail.com>
+@swc/core                  perpetual       Apache-2.0    1.3.66             강동윤 <kdy1997.dev@gmail.com>
+@swc/helpers               perpetual       Apache-2.0    0.5.1              강동윤 <kdy1997.dev@gmail.com>
+@types/common-tags         perpetual       MIT           1.8.1              n/a
+@types/estree              perpetual       MIT           1.0.1              n/a
+@types/express             perpetual       MIT           4.17.17            n/a
+@types/mdast               perpetual       MIT           3.0.11             n/a
+@types/node                perpetual       MIT           18.16.18           n/a
+@types/request             perpetual       MIT           2.48.8             n/a
+@types/yargs               perpetual       MIT           17.0.24            n/a
+crypto                     perpetual       ISC           1.0.1
+github-slugger             perpetual       ISC           2.0.0              Dan Flettre <flettre@gmail.com>
+langchain                  perpetual       MIT           0.0.97             LangChain
+mdast                      perpetual       MIT           3.0.0              Titus Wormer <tituswormer@gmail.com>
+mdast-util-from-markdown   perpetual       MIT           1.3.1              Titus Wormer <tituswormer@gmail.com> (https://wooorm.com)
+mdast-util-mdx             perpetual       MIT           2.0.1              Titus Wormer <tituswormer@gmail.com> (https://wooorm.com)
+mdast-util-to-markdown     perpetual       MIT           1.5.0              Titus Wormer <tituswormer@gmail.com> (https://wooorm.com)
+mdast-util-to-string       perpetual       MIT           3.2.0              Titus Wormer <tituswormer@gmail.com> (https://wooorm.com)
+micromark-extension-mdxjs  perpetual       MIT           2.0.0              Titus Wormer <tituswormer@gmail.com> (https://wooorm.com)
+regenerator-runtime        perpetual       MIT           0.13.11            Ben Newman <bn@cs.stanford.edu>
+ts-node                    perpetual       MIT           10.9.1             Blake Embrey hello@blakeembrey.com http://blakeembrey.me
+tslib                      perpetual       0BSD          2.6.0              Microsoft Corp.
+typescript                 perpetual       Apache-2.0    4.9.5              Microsoft Corp.
+unist-builder              perpetual       MIT           3.0.1              Eugene Sharygin <eush77@gmail.com>
+unist-util-filter          perpetual       MIT           4.0.1              Eugene Sharygin <eush77@gmail.com>
