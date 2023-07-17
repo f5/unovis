@@ -1,13 +1,23 @@
 import { select } from 'd3-selection'
 
 export function getHTMLTransform (el: HTMLElement): number[] {
-  const results = select(el).style('transform')
-    // eslint-disable-next-line max-len
-    .match(/matrix(?:(3d)\(-{0,1}\d+\.?\d*(?:, -{0,1}\d+\.?\d*)*(?:, (-{0,1}\d+\.?\d*))(?:, (-{0,1}\d+\.?\d*))(?:, (-{0,1}\d+\.?\d*)), -{0,1}\d+\.?\d*\)|\(-{0,1}\d+\.?\d*(?:, -{0,1}\d+\.?\d*)*(?:, (-{0,1}\d+\.?\d*))(?:, (-{0,1}\d+\.?\d*))\))/)
+  const styleTransform = select(el).style('transform')
 
-  if (!results) return [0, 0, 0]
-  if (results[1] === '3d') return results.slice(2, 5).map(d => +d)
+  // Create a regular expression to match the transform values
+  const match3D = styleTransform.match(/matrix3d\((.*?)\)/)
+  const match2D = styleTransform.match(/matrix\((.*?)\)/)
 
-  results.push('0')
-  return results.slice(5, 8).map(d => +d)
+  // If neither regex matched, return [0, 0, 0]
+  if (!match3D && !match2D) return [0, 0, 0]
+
+  // If matrix3d matched, parse the values and return them
+  if (match3D) {
+    const values = match3D[1].split(',').map(d => parseFloat(d.trim()))
+    return values.slice(0, 3)
+  }
+
+  // If matrix matched, parse the values and return them, with 0 as the third value
+  const values = match2D[1].split(',').map(d => parseFloat(d.trim()))
+  values.push(0)
+  return values.slice(0, 3)
 }

@@ -115,6 +115,9 @@ export const merge = <T, K>(obj1: T, obj2: K, visited: Map<any, any> = new Map()
   else visited.set(obj2, newObj)
 
   Object.keys(obj2 as Rec).forEach(key => {
+    // Preventing prototype pollution
+    if (key === '__proto__' || key === 'constructor') return
+
     if (isPlainObject((obj1 as Rec)[key]) && isPlainObject((obj2 as Rec)[key])) {
       (newObj as Rec)[key] = merge((obj1 as Rec)[key], (obj2 as Rec)[key], visited)
     } else if (isAClassInstance(obj2 as Rec)) {
