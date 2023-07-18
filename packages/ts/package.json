@@ -75,6 +75,7 @@
     "geojson": "^0.5.0",
     "leaflet": "1.7.1",
     "maplibre-gl": "^2.1.9",
+    "striptags": "^3.2.0",
     "supercluster": "^7.1.5",
     "three": "^0.135.0",
     "throttle-debounce": "^5.0.0",
