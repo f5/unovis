@@ -11,11 +11,11 @@ name                                       license period  license type  install
 @stackblitz/sdk                            perpetual       MIT           1.8.0              Eric Simons
 clsx                                       perpetual       MIT           1.2.1              Luke Edwards luke.edwards05@gmail.com https://lukeed.com
 docusaurus-plugin-react-docgen-typescript  perpetual       MIT           0.1.0              Dennis Thompson
-nodemon                                    perpetual       MIT           2.0.20             Remy Sharp https://github.com/remy
+nodemon                                    perpetual       MIT           2.0.22             Remy Sharp https://github.com/remy
 prism-react-renderer                       perpetual       MIT           1.3.5              n/a
-react                                      perpetual       n/a           n/a                n/a
+react                                      perpetual       MIT           17.0.2             n/a
 react-docgen-typescript                    perpetual       MIT           1.22.0             n/a
-react-dom                                  perpetual       n/a           n/a                n/a
+react-dom                                  perpetual       MIT           17.0.2             n/a
 react-markdown                             perpetual       MIT           8.0.5              Espen Hovlandsdal <espen@hovlandsdal.com>
 svelte                                     perpetual       MIT           3.55.1             Rich Harris
 @docusaurus/module-type-aliases            perpetual       MIT           2.4.1              n/a
