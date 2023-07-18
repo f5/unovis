@@ -1,5 +1,6 @@
 import { Selection } from 'd3-selection'
 import { sum } from 'd3-array'
+import { sanitize } from 'dompurify'
 
 // Types
 import { TextAlign, TrimMode, UnovisText, UnovisTextFrameOptions, UnovisTextOptions, UnovisWrappedText, VerticalAlign } from 'types/text'
@@ -485,7 +486,8 @@ export function renderTextToSvgTextElement (
   textElement.textContent = ''
   wrappedText.forEach(block => {
     const svgCode = renderTextToTspanStrings([block], x, y).join('')
-    const parsedSvgCode = parser.parseFromString(svgCode, 'image/svg+xml').firstChild
+    const svgCodeSanitized = sanitize(svgCode)
+    const parsedSvgCode = parser.parseFromString(svgCodeSanitized, 'image/svg+xml').firstChild
     textElement.appendChild(parsedSvgCode)
   })
 }
@@ -532,7 +534,8 @@ export function renderTextIntoFrame (
   </text>`
 
   const parser = new DOMParser()
-  const parsedSvgCode = parser.parseFromString(svgCode, 'image/svg+xml').firstChild
+  const svgCodeSanitized = sanitize(svgCode)
+  const parsedSvgCode = parser.parseFromString(svgCodeSanitized, 'image/svg+xml').firstChild
 
   group.textContent = ''
   group.appendChild(parsedSvgCode)
