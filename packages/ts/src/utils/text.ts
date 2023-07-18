@@ -1,5 +1,6 @@
 import { Selection } from 'd3-selection'
 import { sum } from 'd3-array'
+import striptags from 'striptags'
 
 // Types
 import { TextAlign, TrimMode, UnovisText, UnovisTextFrameOptions, UnovisTextOptions, UnovisWrappedText, VerticalAlign } from 'types/text'
@@ -453,6 +454,7 @@ export function estimateWrappedTextHeight (blocks: UnovisWrappedText[]): number 
   return sum(blocks, b => b._estimatedHeight)
 }
 
+export const allowedSvgTextTags = ['text', 'tspan', 'textPath', 'altGlyph', 'altGlyphDef', 'altGlyphItem', 'glyphRef', 'textRef', 'textArea']
 /**
  * Renders a text or array of texts to an SVG text element.
  * Calling this function will replace the contents of the specified SVG text element.
@@ -485,7 +487,8 @@ export function renderTextToSvgTextElement (
   textElement.textContent = ''
   wrappedText.forEach(block => {
     const svgCode = renderTextToTspanStrings([block], x, y).join('')
-    const parsedSvgCode = parser.parseFromString(svgCode, 'image/svg+xml').firstChild
+    const svgCodeSanitized = striptags(svgCode, allowedSvgTextTags)
+    const parsedSvgCode = parser.parseFromString(svgCodeSanitized, 'image/svg+xml').firstChild
     textElement.appendChild(parsedSvgCode)
   })
 }
@@ -532,7 +535,8 @@ export function renderTextIntoFrame (
   </text>`
 
   const parser = new DOMParser()
-  const parsedSvgCode = parser.parseFromString(svgCode, 'image/svg+xml').firstChild
+  const svgCodeSanitized = striptags(svgCode, allowedSvgTextTags)
+  const parsedSvgCode = parser.parseFromString(svgCodeSanitized, 'image/svg+xml').firstChild
 
   group.textContent = ''
   group.appendChild(parsedSvgCode)
