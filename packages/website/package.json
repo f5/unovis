@@ -79,6 +79,9 @@
     "@unovis/svelte": "*",
     "@unovis/ts": "*"
   },
+  "overrides": {
+    "trim": "0.0.3"
+  },
   "browserslist": {
     "production": [
       ">0.5%",

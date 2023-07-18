@@ -67,5 +67,9 @@
     "rollup": "^2.61.1",
     "rollup-plugin-typescript2": "^0.31.1",
     "ttypescript": "^1.5.13"
+  },
+  "overrides": {
+    "minimatch": "3.0.5",
+    "webpack": "5.76.0"
   }
 }
