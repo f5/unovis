@@ -62,7 +62,7 @@
     "@tsconfig/docusaurus": "^1.0.7",
     "@tsconfig/svelte": "^2.0.0",
     "eslint-plugin-svelte": "^2.10.0",
-    "ngc-esbuild": "^0.0.75",
+    "ngc-esbuild": "^0.0.83",
     "raw-loader": "^4.0.2",
     "rollup": "^2.61.1",
     "rollup-plugin-copy": "^3.4.0",
