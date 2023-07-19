@@ -5,7 +5,7 @@ name                          license period  license type  installed version  a
 @tsconfig/svelte              perpetual       MIT           2.0.1              n/a
 @zerollup/ts-transform-paths  perpetual       MIT           1.7.18             Stefan Zerkalica zerkalica@gmail.com
 rollup                        perpetual       MIT           2.75.5             Rich Harris
-rollup-plugin-typescript2     perpetual       MIT           0.31.1             @ezolenko
+rollup-plugin-typescript2     perpetual       MIT           0.31.2             @ezolenko
 svelte                        perpetual       MIT           3.50.1             Rich Harris
 svelte-check                  perpetual       MIT           2.7.1              The Svelte Community
 svelte-preprocess             perpetual       MIT           4.10.7             Christian Kaisermann <christian@kaisermann.me>
