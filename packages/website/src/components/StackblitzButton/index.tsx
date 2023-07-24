@@ -1,7 +1,8 @@
 import React from 'react'
 import { Framework } from '@site/src/types/code'
 import { Example } from '@site/src/types/example'
-import { launchStackBlitz } from '@site/src/utils/stackblitz'
+
+import { launchStackBlitz } from './launcher'
 
 import s from './styles.module.css'
 

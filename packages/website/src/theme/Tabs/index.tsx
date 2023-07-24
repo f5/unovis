@@ -1,25 +1,16 @@
-/* eslint-disable @typescript-eslint/naming-convention,import/no-absolute-path,@typescript-eslint/ban-ts-comment */
-import React from 'react'
-
-// @ts-ignore
-import { useTabs } from '/node_modules/@docusaurus/theme-common/lib/utils/tabsUtils'
-import { StackblitzButton } from '@site/src/components/StackblitzButton'
-import { Example } from '@site/src/types/example'
+import React, { createContext, useContext, useEffect, useRef } from 'react'
 import Tabs from '@theme-original/Tabs'
+import { useTabs, TabsProps } from '@docusaurus/theme-common/internal'
 
-type TabProps = {
-  children: JSX.Element[];
-  groupId?: string;
-  example?: Example;
+export type TabWrapperProps = TabsProps & {
+  onChange?: (value: string) => void;
 }
 
-export default function TabsWrapper (props: TabProps): JSX.Element {
-  const groups = useTabs(props)
-  const current = groups.selectedValue
-
+export default function TabsWrapper (props: TabsProps): JSX.Element {
+  const tabs = useTabs(props)
+  useEffect(() => props.onChange?.(tabs.selectedValue), [tabs])
   return (
     <>
-      {props.groupId === 'framework' && props.example && <StackblitzButton example={props.example} framework={current}/>}
       <Tabs {...props}/>
     </>
   )

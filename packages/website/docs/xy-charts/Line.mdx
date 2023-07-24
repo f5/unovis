@@ -5,7 +5,7 @@ description: Learn how to configure a Line chart
 import CodeBlock from "@theme/CodeBlock";
 import { PropTable } from '../components/props-table'
 import { data, generateDataRecords } from '../utils/data'
-import { XYWrapper, XYWrapperWithInput } from '../wrappers'
+import { XYWrapperWithInput } from '../wrappers'
 
 export const lineProps = (n=10) => ({
   name: "Line",
@@ -17,7 +17,7 @@ export const lineProps = (n=10) => ({
 ### Basic configuration
 The _Line_ component has been designed to work together with _XY Container_. The minimal _Line_ configuration looks like:
 
-<XYWrapper {...lineProps()} showContext="full"/>
+<XYWrapper {...lineProps()} showFullContext/>
 
 ### Line Width
 Specify the Line's width in pixels using the `lineWidth` property:

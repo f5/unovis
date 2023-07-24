@@ -8,7 +8,13 @@ const Loader = (): JSX.Element => {
       <div className={s.message}></div>
       <div className={s.message}></div>
       <div className={s.message}></div>
+      <div
+        className="fldsfjdalskfjaslkfjsadlkf;jasdlkfjasdlk;fdsa"
+      >
+        <p></p>
+      </div>
     </div>
+
   )
 }
 

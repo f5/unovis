@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import sdk, { OpenFileOption, Project, ProjectFiles, ProjectTemplate } from '@stackblitz/sdk'
-import { Framework } from '../types/code'
-import { Example } from '../types/example'
-import { trimMultiline } from './text'
+import { Framework } from '../../types/code'
+import { Example } from '../../types/example'
+import { trimMultiline } from '../../utils/text'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const ver = require('../../../../package.json').version
+const ver = require('../../../../../package.json').version
 
 const templates: Record<Framework, ProjectTemplate> = {
   [Framework.Angular]: 'angular-cli',

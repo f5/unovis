@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react'
 
 // Internal Deps
+import { FrameworkTabs } from '@site/src/components/FrameworkTabs'
 import { Example } from '@site/src/types/example'
 
 // Styles
 import s from './styles.module.css'
 
-import { CodeSnippet } from '../CodeSnippet'
 
 export type GalleryViewerProps = {
   example: Example;
@@ -28,7 +28,7 @@ export function GalleryViewer ({ example, useTypescriptCode }: GalleryViewerProp
     </div>
     <div className={s.description}>{example.description}</div>
     <div className={s.codeBlock}>
-      <CodeSnippet
+      <FrameworkTabs
         angular={{
           module: example.codeAngular.module,
           component: example.codeAngular.component,
@@ -38,6 +38,7 @@ export function GalleryViewer ({ example, useTypescriptCode }: GalleryViewerProp
         svelte={example.codeSvelte}
         typescript={example.codeTs}
         data={example.data}
+        showStackblitzButton={true}
       />
     </div>
   </div>)
