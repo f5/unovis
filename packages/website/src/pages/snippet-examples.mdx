@@ -1,0 +1,52 @@
+import { FrameworkTabs } from '@site/src/components/FrameworkTabs'
+import { generateXYSnippets, generateNodeLinkSnippets } from '@site/src/utils/snippets'
+import { generateDataRecords, generateNodeLinkData } from '@site/docs/utils/data'
+
+export const xyData = generateDataRecords(10)
+export const line = { name: 'Line', x: d => d.x, y: d => d.y }
+export const area = { name: 'Area', x: d => d.x, y: [d => d.y, d => d.y1, d => d.y2]}
+export const xAxis = { name: 'Axis', type: 'x' }
+export const yAxis = { name: 'Axis', type: 'y' }
+
+export const sankeyData = generateNodeLinkData(10)
+export const sankey = { name: 'Sankey', nodeColor: (d, i) => ['red', 'green', 'blue'][i % 3] }
+
+# XYSnippets
+## Basic
+### Full
+<BrowserOnly>
+  <FrameworkTabs {...generateXYSnippets(xyData, line).full}/>
+</BrowserOnly>
+
+### Compact
+<BrowserOnly>
+  <FrameworkTabs {...generateXYSnippets(xyData, line).compact}/>
+</BrowserOnly>
+
+### With axes
+<BrowserOnly>
+  <FrameworkTabs {...generateXYSnippets(xyData, line, xAxis, yAxis).full}/>
+</BrowserOnly>
+
+### With stacked accessors
+### Full
+<BrowserOnly>
+  <FrameworkTabs {...generateXYSnippets(xyData, area).full}/>
+</BrowserOnly>
+
+### Compact
+<BrowserOnly>
+  <FrameworkTabs {...generateXYSnippets(xyData, area).compact}/>
+</BrowserOnly>
+
+# Sankey
+### Full
+<BrowserOnly>
+  <FrameworkTabs {...generateNodeLinkSnippets(sankeyData, sankey).full}/>
+</BrowserOnly>
+
+### Compact
+<BrowserOnly>
+  <FrameworkTabs {...generateNodeLinkSnippets(sankeyData, sankey).compact}/>
+</BrowserOnly>
+
