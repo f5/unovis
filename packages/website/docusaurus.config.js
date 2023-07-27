@@ -71,7 +71,7 @@ const config = {
           },
           {
             href: 'https://github.com/f5/unovis',
-            label: 'GitHub',
+            className: 'header-github-link',
             position: 'right',
           },
         ],
