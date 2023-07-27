@@ -1,0 +1,77 @@
+---
+title: Contributing
+---
+
+## Adding a new component
+
+### Intro
+First, it is essentiaSVG vs HTML components
+  - Consider generics/expected data types
+
+### Make the skeleton files in `@unovis/ts`
+  - Create the files in a newly created `<component-name>` directory
+  - Base/minimum files needed: `index`, `config`, and `style`
+    - Description of each + how they interact with each other (i.e `index` extends class def in `config` uses static selectors field `s` from `style`)
+  - Any custom types should go in `types`
+  - Extraneous logic/functions should go in a `modules` directory
+  
+### Writing the rest of the component code
+  - The render function
+    - Brief description of enter/merge/exit transitions
+  - Adding a dev example
+  - General style guide/other recommendations
+
+- Update the `@unovis/angular`, `@unovis/react` and `@unovis/svelte` wrappers
+  - Add component to `autogen` and run `generate` command
+
+- Write a doc page
+  - General outline of doc:
+    - Basic configuration
+    - More detailed explanations of properties
+    - Events
+    - CSS Variables
+    - Prop Table
+  - Relevant components
+    - DocWrapper
+    - PropsTable
+
+- Make a gallery example
+  - Description of required files
+  - Add to examples list to test
+  - Don't forget screenshots for the gallery thumbnail
+  - Verify  the example works in each framework
+
+- Final step: complete the CLA and create a pull request
+
+# Decide on the type of component
+Architecture overview/diagram (maybe this should have its own section in the docs?)
+SVG vs HTML components
+Consider generics/expected data types
+
+# Make the skeleton files in `@unovis/ts`
+Create the files in a newly created `<component-name>` directory
+Base/minimum files needed: `index`, `config`, and `style`
+  Description of each + how they interact with each other (i.e `index` extends class def in `config` uses static selectors field `s` from `style`)
+Any custom types should go in `types`
+Extraneous logic/functions should go in a `modules` directory
+  
+# Writing the rest of the component code
+The render function
+  Brief description of enter/merge/exit transitions
+Adding a dev example
+General style guide/other recommendations
+
+# Update the `@unovis/angular`, `@unovis/react` and `@unovis/svelte` wrappers
+Add component to `autogen` and run `generate` command
+
+# Write a doc page
+General outline of doc: Basic configuration, more detailed explanations of properties, events, CSS variables, prop table
+Relevant components: DocWrapper, PropsTable
+
+# Make a gallery example
+Description of required files
+Add to examples list to test
+Don't forget screenshots for the gallery thumbnail
+Verify  the example works in each framework
+
+# Final step: complete the CLA and create a pull request
