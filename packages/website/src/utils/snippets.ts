@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { CodeSnippet, SnippetContext, UiFramework, AngularSnippet, ReactSnippet, SvelteSnippet, TypescriptSnippet } from '@site/src/snippets'
+import { CodeSnippet, SnippetContext, UiFramework, AngularSnippet, ReactSnippet, SvelteSnippet, TypescriptSnippet } from '../../src/snippets'
 
 import { useDynamicImport } from 'docusaurus-plugin-react-docgen-typescript/pkg/dist-src/hooks/useDynamicImport'
 import { FrameworkTabsProps } from '../components/FrameworkTabs'
@@ -40,6 +40,7 @@ export function generateSnippets<T> (data: T, context: SnippetContextInput<T>): 
     dataType: Object.keys(dataTypes).join(','),
   }
 
+  console.log(config)
   const snippets: Record<UiFramework, CodeSnippet<UiFramework>> = {
     react: new ReactSnippet(config),
     angular: new AngularSnippet(config),

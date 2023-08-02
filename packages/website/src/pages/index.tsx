@@ -15,9 +15,20 @@ import { UnovisAssistant } from '@site/src/assistant'
 
 // Styles
 import s from './index.module.css'
+import { generateXYSnippets } from '../utils/snippets'
 
+//
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const test = require(`!!raw-loader!../../../ts/licences.txt`).default
+
+const all = require.context('!!raw-loader!../../../ts/src', true, /config\.ts$/)
+console.log(all.keys())
 export default function Home (): JSX.Element {
   const example = ChartExample
+
+  const snip = generateXYSnippets([], { name: 'Line', x: d => d.x, y: d => d.y})
+  console.log(snip)
+  console.log(test)
   return (
     <Layout
       description="A framework-independent data vis library for the web">

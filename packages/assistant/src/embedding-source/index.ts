@@ -9,6 +9,10 @@ import { mdxjs } from 'micromark-extension-mdxjs'
 import { u } from 'unist-builder'
 import { filter } from 'unist-util-filter'
 
+import pkg from '../../../website/src/utils/snippets.js';
+const { generateXYSnippets } = pkg;
+// import { generateXYSnippets } from '../../../website/src/utils/snippets.js'
+
 // Types
 import type { ObjectExpression } from 'estree'
 import type { Content, Root } from 'mdast'
@@ -135,14 +139,26 @@ export function processMdxForSearch (content: string): ProcessedMdx {
   // Remove all MDX elements from markdown
   const mdTree = filter(
     mdxTree,
-    (node) =>
-      ![
+    (node) => {
+      if (node.type === 'mdxjsEsm' && (node.value as string).includes('const defaultProps')) {
+        console.log(node)
+        // const defaultProps = eval(node.value.replace('export const defaultProps = ', ''))
+        // console.log(defaultProps)
+        const snip = generateXYSnippets([], { name: 'line', x: d => d.x, y: d => d.y})
+        console.log(snip)
+      }
+
+      // if (node.type === 'mdxJsxFlowElement' && node.name === 'XYWrapper') {
+      //   console.log(node)//, JSON.stringify(node))
+      // }
+      return ![
         'mdxjsEsm',
         'mdxJsxFlowElement',
         'mdxJsxTextElement',
         'mdxFlowExpression',
         'mdxTextExpression',
       ].includes(node.type)
+    }
   )
 
   if (!mdTree) {

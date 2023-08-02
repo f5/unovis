@@ -41,7 +41,7 @@ async function storeEmbedding (title: string, body: string, embedding: number[])
 }
 
 
-walk('../website/docs').then(async (entries) => {
+walk('../website/docs/xy-charts').then(async (entries) => {
   const filteredEntries = entries.filter(({ path }) => /\.mdx?$/.test(path))
   const embeddingSources = filteredEntries.map((entry) => new MarkdownEmbeddingSource('guide', entry.path))
   for (const embeddingSource of embeddingSources) {
@@ -54,9 +54,9 @@ walk('../website/docs').then(async (entries) => {
       const input = content.replace(/\n/g, ' ')
 
       // eslint-disable-next-line no-console
-      console.log('📄', input)
-      const embedding = await getEmbedding(input)
-      await storeEmbedding(path, input, embedding)
+      // console.log('📄', input)
+      // const embedding = await getEmbedding(input)
+      // await storeEmbedding(path, input, embedding)
     }
 
     // eslint-disable-next-line no-console

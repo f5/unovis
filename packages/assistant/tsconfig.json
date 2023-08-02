@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "rootDir": "./",
+    "rootDir": "../../",
     "baseUrl": "./",
     "target": "es2019",
     "module": "nodenext",

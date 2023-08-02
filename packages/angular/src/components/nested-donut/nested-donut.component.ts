@@ -8,11 +8,11 @@ import {
   VisEventCallback,
   NestedDonutDirection,
   NumericAccessor,
+  NestedDonutSegment,
   StringAccessor,
   GenericAccessor,
   NestedDonutLayerSettings,
   ColorAccessor,
-  NestedDonutSegment,
 } from '@unovis/ts'
 import { VisCoreComponent } from '../../core'
 
@@ -99,6 +99,9 @@ export class VisNestedDonutComponent<Datum> implements NestedDonutConfigInterfac
    * Default: `false` */
   @Input() showBackground?: boolean
 
+  /** Sort function for segments. Default `undefined` */
+  @Input() sort?: (a: NestedDonutSegment<Datum>, b: NestedDonutSegment<Datum>) => number
+
   /** Array of accessor functions to defined the nested groups */
   @Input() layers: StringAccessor<Datum>[]
 
@@ -150,8 +153,8 @@ export class VisNestedDonutComponent<Datum> implements NestedDonutConfigInterfac
   }
 
   private getConfig (): NestedDonutConfigInterface<Datum> {
-    const { duration, events, attributes, angleRange, direction, value, centralLabel, centralSubLabel, centralSubLabelWrap, showBackground, layers, layerSettings, layerPadding, cornerRadius, emptySegmentAngle, hideOverflowingSegmentLabels, segmentColor, segmentLabel, segmentLabelColor, showEmptySegments } = this
-    const config = { duration, events, attributes, angleRange, direction, value, centralLabel, centralSubLabel, centralSubLabelWrap, showBackground, layers, layerSettings, layerPadding, cornerRadius, emptySegmentAngle, hideOverflowingSegmentLabels, segmentColor, segmentLabel, segmentLabelColor, showEmptySegments }
+    const { duration, events, attributes, angleRange, direction, value, centralLabel, centralSubLabel, centralSubLabelWrap, showBackground, sort, layers, layerSettings, layerPadding, cornerRadius, emptySegmentAngle, hideOverflowingSegmentLabels, segmentColor, segmentLabel, segmentLabelColor, showEmptySegments } = this
+    const config = { duration, events, attributes, angleRange, direction, value, centralLabel, centralSubLabel, centralSubLabelWrap, showBackground, sort, layers, layerSettings, layerPadding, cornerRadius, emptySegmentAngle, hideOverflowingSegmentLabels, segmentColor, segmentLabel, segmentLabelColor, showEmptySegments }
     const keys = Object.keys(config) as (keyof NestedDonutConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

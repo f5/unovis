@@ -1,5 +1,5 @@
 import { AxisConfigInterface, SingleContainerConfigInterface } from '@unovis/ts'
-import { FrameworkTabsProps } from '@site/src/components/FrameworkTabs'
+import { FrameworkTabsProps } from '../../src/components/FrameworkTabs'
 import { getComponentString, getDeclarationStrings, getImportStrings, indentLines, nestElement, parseProps } from './helpers'
 import { kebabCase } from '../utils/text'
 

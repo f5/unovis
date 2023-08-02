@@ -81,6 +81,7 @@ for (const component of components) {
   const configProperties = Array.from(configPropertiesMap.values())
   const importStatements = getImportStatements(component.name, statements, configInterfaceMembers, generics)
 
+  console.log(configProperties)
   const componentCode = getComponentCode(
     component.name,
     generics,
