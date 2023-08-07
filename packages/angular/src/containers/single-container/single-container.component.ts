@@ -23,7 +23,7 @@ export class VisSingleContainerComponent<Data = unknown, C extends ComponentCore
   @Input() height?: number
 
   /** Margins. Default: `{ top: 0, bottom: 0, left: 0, right: 0 }` */
-  @Input() margin?: Spacing = { top: 10, bottom: 10, left: 10, right: 10 }
+  @Input() margin?: Spacing = { top: 0, bottom: 0, left: 0, right: 0 }
   /** Animation duration of all the components within the container. Default: `undefined` */
   @Input() duration?: number
   /** Alternative text description of the chart for accessibility purposes. It will be applied as an
