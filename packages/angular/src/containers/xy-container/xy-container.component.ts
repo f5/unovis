@@ -83,7 +83,7 @@ export class VisXYContainerComponent<Datum> implements AfterViewInit, AfterConte
   /** Animation duration of all the components within the container. Default: `undefined` */
   @Input() duration?: number = undefined
   /** Margins. Default: `{ top: 0, bottom: 0, left: 0, right: 0 }` */
-  @Input() margin?: Spacing = { top: 10, bottom: 10, left: 10, right: 10 }
+  @Input() margin?: Spacing = { top: 0, bottom: 0, left: 0, right: 0 }
   /** Padding. Default: `{ top: 0, bottom: 0, left: 0, right: 0 }` */
   @Input() padding?: Spacing = {}
   /** Sets the Y scale domain based on the current X scale domain (not the whole dataset). Default: `false` */
