@@ -78,7 +78,10 @@ NestedDonutConfigInterface<Datum>
       .outerRadius(d => d.y1)
       .cornerRadius(config.cornerRadius)
 
-    this.g.attr('transform', `translate(${this._width / 2},${this._height / 2})`)
+    this.arcGroup.attr('transform', `translate(${this._width / 2},${this._height / 2})`)
+    this.arcBackground.attr('transform', `translate(${this._width / 2},${this._height / 2})`)
+    this.centralLabel.attr('transform', `translate(${this._width / 2},${this._height / 2})`)
+    this.centralSubLabel.attr('transform', `translate(${this._width / 2},${this._height / 2})`)
 
     // Layer backgrounds
     const backgrounds = this.arcBackground
