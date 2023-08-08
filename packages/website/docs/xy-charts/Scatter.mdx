@@ -53,25 +53,30 @@ Fox example, if `sizeRange` is set to `[10,50]`, that will make the default size
 You can also place labels on _Scatter's_ points by passing a string accessor function to the `label` property.
 <XYWrapper {...defaultProps(15, true)} size={20} label={d => d.label}/>
 
-### Label Text Brightness Ratio
-By default, the _Scatter_ component will assign label color based on the point's shade with the `labelTextBrightnessRatio` property.
-It accepts any value between `0` and `1` (inclusive).
-
-The default setting `0.65` creates darker text on light backgrounds and light text on dark backgrounds.
-See how the contrast differs in the following examples, when we assign more extreme values to the `labelTextBrightnessRatio` property:
-<XYWrapperWithInput {...defaultProps(10, true)} size={20} color={d => d.color} label={d => d.label} property="labelTextBrightnessRatio" inputType="range" inputProps={{ min: 0.5, max: 0.7, step: 0.01}} defaultValue={0.65}/>
-
 ### Label Color
 You can also configure a custom color for your labels by providing the `labelColor` attribute with a color accessor method or string.
 Note that setting this property overrides `labelTextBrightnessRatio`.
 
-<XYWrapper {...defaultProps(15, true)} size={20} label={d => d.label} labelColor={'yellow'}/>
+<XYWrapper {...defaultProps(15, true)} size={20} label={d => d.label} labelColor={'red'}/>
 
 ### Label Position
 You can change a point's label position with the `labelPosition` property, which accepts a  _Position_ or _Position_ accessor
 function. Supported values are `Position.Center`, `Position.Bottom` (default), `Position.Left`, `Position.Right` and `Position.Top`
 
 <XYWrapperWithInput {...defaultProps(15, true)} hiddenProps={{ size: d => d.size, label: d => d.label}} property='labelPosition' inputType="select" options={['bottom', 'center', 'left', 'right', 'top']}/>
+
+### Label Text Brightness Ratio
+By default, labels with `Position.Center` will be assigned a color based on the point's shade with the `labelTextBrightnessRatio` property.
+It accepts any value between `0` and `1` (inclusive).
+
+The default setting `0.65` creates darker text on light backgrounds and light text on dark backgrounds.
+See how the contrast differs in the following examples, when we assign more extreme values to the `labelTextBrightnessRatio` property:
+<XYWrapperWithInput {...defaultProps(10, true)} size={20} color={d => d.color} label={d => d.label} labelPosition="center" property="labelTextBrightnessRatio" inputType="range" inputProps={{ min: 0.5, max: 0.7, step: 0.01}} defaultValue={0.65}/>
+
+### Overlapping Labels
+When there're overlapping labels, _Scatter_ will hide some of them to avoid cluttering. You can see hidden labels by hobvering over the points.
+If you want to disable hiding overlapping labels, you can set the `labelHideOverlapping` property to `false`.
+<XYWrapperWithInput {...defaultProps(45, true)} size={10} color={d => d.color} label={d => `Point ${d.label}`} property="labelHideOverlapping" inputType="checkbox" defaultValue={true}/>
 
 ### Custom Cursor
 _Scatter_ also allows to set a [custom](https://developer.mozilla.org/en-US/docs/Web/CSS/cursor) `cursor` when hovering
