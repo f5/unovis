@@ -28,6 +28,8 @@ export interface ScatterConfigInterface<Datum> extends XYComponentConfigInterfac
   label?: StringAccessor<Datum>;
   /** Label color. Default: `undefined` */
   labelColor?: ColorAccessor<Datum>;
+  /** Hide overlapping labels. Default: `true` */
+  labelHideOverlapping?: boolean;
   /** Optional point cursor. Default: `null` */
   cursor?: StringAccessor<Datum>;
   /** Point color brightness ratio for switching between dark and light text label color. Default: `0.65` */
@@ -48,6 +50,7 @@ export class ScatterConfig<Datum> extends XYComponentConfig<Datum> implements Sc
   label = undefined
   labelColor = undefined
   labelPosition = Position.Bottom
+  labelHideOverlapping = true
   cursor = null
   labelTextBrightnessRatio = 0.65
   strokeColor: ScatterConfigInterface<Datum>['strokeColor'] = undefined
