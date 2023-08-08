@@ -124,6 +124,9 @@ export class VisScatterComponent<Datum> implements ScatterConfigInterface<Datum>
   /** Label color. Default: `undefined` */
   @Input() labelColor?: ColorAccessor<Datum>
 
+  /** Hide overlapping labels. Default: `true` */
+  @Input() labelHideOverlapping?: boolean
+
   /** Optional point cursor. Default: `null` */
   @Input() cursor?: StringAccessor<Datum>
 
@@ -159,8 +162,8 @@ export class VisScatterComponent<Datum> implements ScatterConfigInterface<Datum>
   }
 
   private getConfig (): ScatterConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, size, sizeScale, sizeRange, shape, label, labelColor, cursor, labelTextBrightnessRatio, labelPosition, strokeColor, strokeWidth } = this
-    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, size, sizeScale, sizeRange, shape, label, labelColor, cursor, labelTextBrightnessRatio, labelPosition, strokeColor, strokeWidth }
+    const { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, size, sizeScale, sizeRange, shape, label, labelColor, labelHideOverlapping, cursor, labelTextBrightnessRatio, labelPosition, strokeColor, strokeWidth } = this
+    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, size, sizeScale, sizeRange, shape, label, labelColor, labelHideOverlapping, cursor, labelTextBrightnessRatio, labelPosition, strokeColor, strokeWidth }
     const keys = Object.keys(config) as (keyof ScatterConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
