@@ -135,10 +135,16 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfig<Datum>,
     removePoints(points.exit<ScatterPoint<Datum>>(), this.xScale, this.yScale, duration)
 
     // Take care of overlapping labels
-    this._collideLabels()
+    this._resolveLabelOverlap()
   }
 
-  private _collideLabels (): void {
+  private _resolveLabelOverlap (): void {
+    if (!this.config.labelHideOverlapping) {
+      const label = this._points.selectAll<SVGTextElement, ScatterPoint<Datum>>('text')
+      label.attr('opacity', null)
+      return
+    }
+
     cancelAnimationFrame(this._collideLabelsAnimFrameId)
     this._collideLabelsAnimFrameId = requestAnimationFrame(() => {
       collideLabels(this._points, this.config, this.xScale, this.yScale)
@@ -210,13 +216,13 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfig<Datum>,
     if (pointNode) pointNode._forceShowLabel = true
 
     point.raise()
-    this._collideLabels()
+    this._resolveLabelOverlap()
   }
 
   private _onPointMouseOut (d: ScatterPoint<Datum>, event: MouseEvent): void {
     const pointNode = select(event.target as SVGGElement).node() as ScatterPointGroupNode | null
     if (pointNode) delete pointNode._forceShowLabel
 
-    this._collideLabels()
+    this._resolveLabelOverlap()
   }
 }
