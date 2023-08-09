@@ -119,10 +119,12 @@ export class ChordDiagram<
     super.setData(data)
     const hierarchyData = this._getHierarchyNodes()
 
-    const partitionData = partition<N | ChordHierarchyNode<N>>().size([this.config.angleRange[1], 1])(hierarchyData) as ChordNode<N>
-    this._calculateRadialPosition(partitionData)
+    const partitionData = partition<N | ChordHierarchyNode<N>>()
+      .size([this.config.angleRange[1], 1])(hierarchyData) as ChordNode<N>
 
     partitionData.each((node, i) => {
+      this._calculateRadialPosition(node, this.config.padAngle)
+
       // Add hierarchy data for non leaf nodes
       if (node.children) {
         node.data = Object.assign(node.data, {
@@ -314,8 +316,8 @@ export class ChordDiagram<
 
   private _calculateRadialPosition (
     hierarchyNode: ChordNode<N>,
-    scalingCoeff = 0.95,
-    nodePadding = 0.02
+    nodePadding = 0.02,
+    scalingCoeff = 0.95
   ): void {
     if (!hierarchyNode.children) return
 
@@ -333,10 +335,6 @@ export class ChordDiagram<
       node.x0 = childX0 + childDelta / 2
       node.x1 = node.x0 + scaledChildNodeLength
       x0 = childX1 + nodePadding / 2 + childDelta / 2
-    }
-    // Go deeper in the hierarchy
-    for (const node of hierarchyNode.children) {
-      this._calculateRadialPosition(node, scalingCoeff, nodePadding)
     }
   }
 
