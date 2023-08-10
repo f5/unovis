@@ -43,13 +43,14 @@ export type ChordNodeState = {
 }
 
 export type ChordNodeCore<N> = HierarchyRectangularNode<N> & ChordNodeState & {
-  data: N;
+  data: GraphNodeCore<N, ChordInputLink>;
   uid: string; // Unique id for textPath href
 }
 
-export type ChordNodeDatum<N> = ChordHierarchyNode<N> | N;
+export type ChordNodeDatum<N> = ChordHierarchyNode<N> | N
+
 export type ChordNode<N extends ChordInputNode> = ChordNodeCore<ChordNodeDatum<N>>
-export type ChordLeafNode<N extends ChordInputNode> = ChordNodeCore<GraphNodeCore<N, ChordInputLink>>
+export type ChordLeafNode<N extends ChordInputNode> = ChordNodeCore<N>
 
 export type ChordRibbonPoint = { a0: number; a1: number; r: number }
 export interface ChordRibbon<N extends ChordInputNode> {

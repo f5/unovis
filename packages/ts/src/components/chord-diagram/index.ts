@@ -27,7 +27,6 @@ import {
   ChordRibbon,
   ChordLabelAlignment,
   ChordLeafNode,
-  ChordNodeDatum,
 } from './types'
 
 // Config
@@ -216,7 +215,7 @@ export class ChordDiagram<
       .call(removeLabel, duration)
   }
 
-  private _getHierarchyNodes (): HierarchyNode<ChordNodeDatum<N>> {
+  private _getHierarchyNodes (): HierarchyNode<ChordHierarchyNode<N>> {
     const { config, datamodel: { nodes, links } } = this
     nodes.forEach(n => { delete n._state.value })
     links.forEach(l => {
