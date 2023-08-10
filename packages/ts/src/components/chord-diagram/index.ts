@@ -73,6 +73,10 @@ export class ChordDiagram<
     },
   }
 
+  private get _forceHighlight (): boolean {
+    return this.config.highlightedNodeId !== undefined || this.config.highlightedLinkIds?.length > 0
+  }
+
   constructor (config?: ChordDiagramConfigInterface<N, L>) {
     super()
     if (config) this.config.init(config)
@@ -145,13 +149,11 @@ export class ChordDiagram<
     this._links = this._getRibbons(partitionData)
   }
 
-
   _render (customDuration?: number): void {
     super._render(customDuration)
     const { config, bleed } = this
 
     const duration = isNumber(customDuration) ? customDuration : config.duration
-
     const size = Math.min(this._width, this._height)
     const radius = size / 2 - max([bleed.top, bleed.bottom, bleed.left, bleed.right])
 
@@ -166,11 +168,16 @@ export class ChordDiagram<
 
     // Center the view
     this.g.attr('transform', `translate(${this._width / 2},${this._height / 2})`)
+    this.g.classed(s.transparent, this._forceHighlight)
 
     // Links
     const linksSelection = this.linkGroup
       .selectAll<SVGPathElement, ChordRibbon<N>>(`.${s.link}`)
       .data(this._links, d => String(d.data._id))
+      .classed(s.highlightedLink, l => {
+        const linkId = l.data.id ?? l.data._indexGlobal
+        return config.highlightedLinkIds?.includes(linkId)
+      })
 
     const linksEnter = linksSelection.enter().append('path')
       .attr('class', s.link)
@@ -186,6 +193,7 @@ export class ChordDiagram<
     const nodesSelection = this.nodeGroup
       .selectAll<SVGPathElement, ChordNode<N>>(`.${s.node}`)
       .data(this._nodes, d => String(d.uid))
+      .classed(s.highlightedNode, d => config.highlightedNodeId === d.data._id)
 
     const nodesEnter = nodesSelection.enter().append('path')
       .attr('class', s.node)
@@ -364,6 +372,7 @@ export class ChordDiagram<
   }
 
   private _highlightOnHover (links?: ChordRibbon<N>[]): void {
+    if (this._forceHighlight) return
     if (links) {
       links.forEach(l => {
         l._state.hovered = true
@@ -378,9 +387,9 @@ export class ChordDiagram<
     }
 
     this.nodeGroup.selectAll<SVGPathElement, ChordNode<N>>(`.${s.node}`)
-      .classed(s.hoveredNode, d => d._state.hovered)
+      .classed(s.highlightedNode, d => d._state.hovered)
     this.linkGroup.selectAll<SVGPathElement, ChordRibbon<N>>(`.${s.link}`)
-      .classed(s.hoveredLink, d => d._state.hovered)
+      .classed(s.highlightedLink, d => d._state.hovered)
 
     this.g.classed(s.transparent, !!links)
   }

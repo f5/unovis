@@ -10,6 +10,10 @@ import { ColorAccessor, GenericAccessor, NumericAccessor, StringAccessor } from 
 import { ChordInputLink, ChordInputNode, ChordLabelAlignment, ChordNodeDatum } from './types'
 
 export interface ChordDiagramConfigInterface<N extends ChordInputNode, L extends ChordInputLink> extends ComponentConfigInterface {
+  /** Node id or index to highlight. Overrides default hover behavior if supplied. Default: `undefined` */
+  highlightedNodeId?: number | string;
+  /** Link ids or index values to highlight. Overrides default hover behavior if supplied. Default: [] */
+  highlightedLinkIds?: (number | string)[];
   /** Link color accessor function. Default: `var(--vis-chord-diagram-link-fill-color)` */
   linkColor?: ColorAccessor<L>;
   /** Link value accessor function. Default: `l => l.value` */
@@ -38,6 +42,8 @@ export interface ChordDiagramConfigInterface<N extends ChordInputNode, L extends
 
 export class ChordDiagramConfig<N extends ChordInputNode, L extends ChordInputLink> extends ComponentConfig implements ChordDiagramConfigInterface<N, L> {
   duration = 800
+  highlightedNodeId = undefined
+  highlightedLinkIds = []
   linkColor = undefined
   linkValue = (d: L): number => d['value']
   nodeLevels = []

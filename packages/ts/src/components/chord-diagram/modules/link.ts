@@ -70,20 +70,22 @@ export function updateLink<N extends ChordInputNode, L extends ChordInputLink> (
   radiusScale: ScalePower<number, number>,
   duration: number
 ): void {
-  const selTransition = smartTransition(selection, duration)
+  selection
+    .style('transition', `fill-opacity: ${duration}ms`)
     .style('fill', d => getColor(d.data, config.linkColor))
     .style('stroke', d => getColor(d.data, config.linkColor))
-    .style('opacity', 'var(--vis-chord-diagram-link-opacity)')
+
+  const transition = smartTransition(selection, duration)
+    .style('opacity', 1) as Transition<SVGPathElement, ChordRibbon<N>, SVGGElement, unknown>
 
   if (duration) {
-    const transition = selTransition as Transition<SVGPathElement, ChordRibbon<N>, SVGGElement, unknown>
     transition.attrTween('d', (d, i, el) => {
       const previous = select(el[i]).attr('d')
       const next = linkGen(d.points, radiusScale) || emptyPath()
       return interpolatePath(previous, next)
     })
   } else {
-    selTransition.attr('d', d => linkGen(d.points, radiusScale) || emptyPath())
+    transition.attr('d', d => linkGen(d.points, radiusScale) || emptyPath())
   }
 }
 
