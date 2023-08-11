@@ -2,27 +2,23 @@ import React, { SyntheticEvent } from 'react'
 import ColorModeToggle from '@theme-original/ColorModeToggle'
 import useIsBrowser from '@docusaurus/useIsBrowser'
 
-
 type ColorModeToggleProps = {
-  checked: boolean;
   onChange: (e: SyntheticEvent) => void;
   value: 'light' | 'dark';
-  rest: any;
 }
 export default function ColorModeToggleWrapper (props: ColorModeToggleProps): JSX.Element {
   const isBrowser = useIsBrowser()
-  if (isBrowser && props.value === 'dark') {
-    document.body.classList.add('theme-dark')
-  }
+  const updateTheme = React.useCallback(() => document.body.classList.toggle('theme-dark'), [])
 
+  React.useEffect(() => {
+    if (isBrowser && document.documentElement.getAttribute('data-theme') === 'dark') {
+      updateTheme()
+    }
+  }, [isBrowser])
   return (
-    <ColorModeToggle {...props}
-      className=''
-      onChange={e => {
-        props.onChange(e)
-        if (isBrowser) {
-          document.body.classList.toggle('theme-dark')
-        }
-      }} />
+    <ColorModeToggle {...props} onChange={e => {
+      props.onChange(e)
+      updateTheme()
+    }}/>
   )
 }
