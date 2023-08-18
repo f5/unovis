@@ -1,29 +1,25 @@
-import { scaleBand } from 'd3-scale'
-import { min, max, range } from 'd3-array'
-import { select } from 'd3'
-
-// Core
 import { XYComponentCore } from 'core/xy-component'
-
-// Utils
-import { clamp, getExtent, getMax, getMin, getNumber, getString, isArray, isEmpty, isNumber } from 'utils/data'
-import { roundedRectPath } from 'utils/path'
-import { smartTransition } from 'utils/d3'
-import { getColor } from 'utils/color'
-
-// Types
+import { select } from 'd3'
+import { max, min, range } from 'd3-array'
+import { scaleBand } from 'd3-scale'
 import { NumericAccessor } from 'types/accessor'
-import { Spacing } from 'types/spacing'
 import { Direction } from 'types/direction'
 import { Orientation } from 'types/position'
 import { ContinuousScale } from 'types/scale'
+import { Spacing } from 'types/spacing'
+import { getColor } from 'utils/color'
+import { smartTransition } from 'utils/d3'
+import { clamp, getExtent, getMax, getMin, getNumber, getString, isArray, isEmpty, isNumber } from 'utils/data'
+import { roundedRectPath } from 'utils/path'
 
-// Config
 import { GroupedBarConfig, GroupedBarConfigInterface } from './config'
-
-// Styles
 import * as s from './style'
 
+// Core
+// Utils
+// Types
+// Config
+// Styles
 export class GroupedBar<Datum> extends XYComponentCore<Datum, GroupedBarConfig<Datum>, GroupedBarConfigInterface<Datum>> {
   static selectors = s
   config: GroupedBarConfig<Datum> = new GroupedBarConfig()
@@ -321,5 +317,10 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum, GroupedBarConfig<D
     return this.isVertical()
       ? this.getDataScaleExtent()
       : this.getValueScaleExtent(false)
+  }
+
+  getAriaDescription (): string {
+    const description = super.getAriaDescription() || ''
+    return `Grouped Bar Chart with ${description}`
   }
 }

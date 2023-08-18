@@ -1,15 +1,13 @@
 import { select, Selection } from 'd3-selection'
-
-// Types
 import { Sizing } from 'types/component'
-
-// Utils
-import { isEqual, clamp } from 'utils/data'
+import { clamp, isEqual } from 'utils/data'
 import { ResizeObserver } from 'utils/resize-observer'
 
-// Config
 import { ContainerConfig, ContainerConfigInterface } from './config'
 
+// Types
+// Utils
+// Config
 export class ContainerCore {
   svg: Selection<SVGSVGElement, unknown, null, undefined>
   element: SVGSVGElement
@@ -61,9 +59,13 @@ export class ContainerCore {
       this.svg.append('defs').attr('class', 'svgDefs').html(config.svgDefs)
     }
 
-    // Apply the `aria-label` attribute
-    select(this._container)
-      .attr('aria-label', config.ariaLabel)
+    // use setTimout to allow _render to complete in the derived class
+    setTimeout(() => {
+      // Apply the `aria-label` attribute
+      select(this._container)
+        .attr('aria-label', this.getAriaDescription())
+        .attr('tabindex', '0')
+    }, 0)
 
     this._isFirstRender = false
   }
@@ -147,5 +149,11 @@ export class ContainerCore {
     cancelAnimationFrame(this._requestedAnimationFrame)
     this._resizeObserver?.disconnect()
     this.svg.remove()
+  }
+
+  getAriaDescription (): string {
+    if (this.config.ariaLabel) {
+      return this.config.ariaLabel
+    }
   }
 }

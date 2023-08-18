@@ -1,19 +1,16 @@
-import { Selection } from 'd3-selection'
-
-// Core
 import { ComponentCore } from 'core/component'
+import { Selection } from 'd3-selection'
 import { SeriesDataModel } from 'data-models/series'
-
-// Utils
-import { filterDataByRange, getExtent, isArray } from 'utils/data'
-
-// Types
 import { NumericAccessor } from 'types/accessor'
 import { ContinuousScale, Scale, ScaleDimension } from 'types/scale'
+import { filterDataByRange, getExtent, isArray } from 'utils/data'
 
-// Config
 import { XYComponentConfig, XYComponentConfigInterface } from './config'
 
+// Core
+// Utils
+// Types
+// Config
 export class XYComponentCore<
   Datum,
   ConfigClass extends XYComponentConfig<Datum> = XYComponentConfig<Datum>,
@@ -86,5 +83,13 @@ export class XYComponentCore<
     const data = scaleByVisibleData ? filterDataByRange(datamodel.data, this.xScale.domain() as [number, number], config.x) : datamodel.data
     const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
     return getExtent(data, ...yAccessors)
+  }
+
+  getAriaDescription (): string {
+    const xDataExtent = this.getXDataExtent()
+    const yDataExtent = this.getYDataExtent(true)
+    let description = `Extent of ${ScaleDimension.X} is ${xDataExtent[0]?.toFixed(2)} to ${xDataExtent[1]?.toFixed(2)} `
+    description += `Extent of ${ScaleDimension.Y} is ${yDataExtent[0]?.toFixed(2)} to ${yDataExtent[1]?.toFixed(2)}`
+    return description
   }
 }

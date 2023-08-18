@@ -1,10 +1,9 @@
 // Core
 import { Config } from 'core/config'
-
-// Types
 import { Sizing } from 'types/component'
 import { Spacing } from 'types/spacing'
 
+// Types
 export interface ContainerConfigInterface {
   /** Animation duration of all the components within the container. Default: `undefined` */
   duration?: number;
@@ -34,6 +33,8 @@ export interface ContainerConfigInterface {
    * `aria-label` attribute to the div element containing your chart. Default: `undefined`.
   */
   ariaLabel?: string | null | undefined;
+
+  ariaAutoLabel?: boolean;
 }
 
 export class ContainerConfig extends Config implements ContainerConfigInterface {
@@ -58,4 +59,5 @@ export class ContainerConfig extends Config implements ContainerConfigInterface 
 
   svgDefs = undefined
   ariaLabel = undefined
+  ariaAutoLabel = false
 }

@@ -1,30 +1,19 @@
+import 'styles'
+
 import { css } from '@emotion/css'
-import { extent, merge as mergeArrays } from 'd3-array'
-import { Selection } from 'd3-selection'
-
-// Global CSS variables (side effects import)
-import 'styles/index'
-
-// Core
+import { AxisType } from 'components/axis/types'
 import { ContainerCore } from 'core/container'
 import { XYComponentCore } from 'core/xy-component'
 import { XYComponentConfigInterface } from 'core/xy-component/config'
-
-// Data Model
+import { extent, merge as mergeArrays } from 'd3-array'
+import { Selection } from 'd3-selection'
 import { CoreDataModel } from 'data-models/core'
-
-// Types
-import { Spacing } from 'types/spacing'
-import { AxisType } from 'components/axis/types'
-import { ScaleDimension } from 'types/scale'
 import { Direction } from 'types/direction'
-
-// Utils
+import { ScaleDimension } from 'types/scale'
+import { Spacing } from 'types/spacing'
 import { clamp, clean, flatten } from 'utils/data'
 import { guid } from 'utils/misc'
 
-// Config
-import { XYContainerConfig, XYContainerConfigInterface } from './config'
 import {
   AreaConfigInterface,
   BrushConfigInterface,
@@ -33,7 +22,14 @@ import {
   StackedBarConfigInterface,
   TimelineConfigInterface,
 } from '../../components'
+import { XYContainerConfig, XYContainerConfigInterface } from './config'
 
+// Global CSS variables (side effects import)
+// Core
+// Data Model
+// Types
+// Utils
+// Config
 export type XYConfigInterface<Datum> = XYComponentConfigInterface<Datum>
 | StackedBarConfigInterface<Datum>
 | LineConfigInterface<Datum>
@@ -50,6 +46,7 @@ export class XYContainer<Datum> extends ContainerCore {
   private _clipPathId = guid()
   private _axisMargin: Spacing = { top: 0, bottom: 0, left: 0, right: 0 }
   private _firstRender = true
+  private xyDomain = new Map<ScaleDimension, number[]>()
 
   constructor (element: HTMLElement, config?: XYContainerConfigInterface<Datum>, data?: Datum[]) {
     super(element)
@@ -304,6 +301,7 @@ export class XYContainer<Datum> extends ContainerCore {
       if (config.preventEmptyDomain && (domain[0] === domain[1]) && isFinite(domain[0])) {
         domain[1] = domain[0] + 1
       }
+      this.xyDomain[dimension] = domain
 
       components.forEach(c => c.setScaleDomain(dimension, domain))
     })
@@ -407,5 +405,23 @@ export class XYContainer<Datum> extends ContainerCore {
     crosshair?.destroy()
     xAxis?.destroy()
     yAxis?.destroy()
+  }
+
+  getAriaDescription (): string {
+    const ariaLabel = super.getAriaDescription()
+    if (this.config.ariaAutoLabel) {
+      let description = ''
+      // Get X and Y Domain
+      Object.values(ScaleDimension).forEach((dimension: ScaleDimension) => {
+        const domain = this.xyDomain[dimension]
+        description += `${dimension} domain ${domain?.[0]?.toFixed(2)} to ${domain?.[1]?.toFixed(2)} `
+      })
+      // Get Description From Each Component
+      for (const c of this.components) {
+        description += `${c.getAriaDescription()} `
+      }
+      return description
+    }
+    return ariaLabel
   }
 }
