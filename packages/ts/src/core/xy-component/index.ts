@@ -1,16 +1,19 @@
-import { ComponentCore } from 'core/component'
 import { Selection } from 'd3-selection'
-import { SeriesDataModel } from 'data-models/series'
-import { NumericAccessor } from 'types/accessor'
-import { ContinuousScale, Scale, ScaleDimension } from 'types/scale'
-import { filterDataByRange, getExtent, isArray } from 'utils/data'
-
-import { XYComponentConfig, XYComponentConfigInterface } from './config'
 
 // Core
+import { ComponentCore } from 'core/component'
+import { SeriesDataModel } from 'data-models/series'
+
 // Utils
+import { filterDataByRange, getExtent, isArray } from 'utils/data'
+
 // Types
+import { NumericAccessor } from 'types/accessor'
+import { ContinuousScale, Scale, ScaleDimension } from 'types/scale'
+
 // Config
+import { XYComponentConfig, XYComponentConfigInterface } from './config'
+
 export class XYComponentCore<
   Datum,
   ConfigClass extends XYComponentConfig<Datum> = XYComponentConfig<Datum>,
@@ -88,8 +91,19 @@ export class XYComponentCore<
   getAriaDescription (): string {
     const xDataExtent = this.getXDataExtent()
     const yDataExtent = this.getYDataExtent(true)
-    let description = `Extent of ${ScaleDimension.X} is ${xDataExtent[0]?.toFixed(2)} to ${xDataExtent[1]?.toFixed(2)} `
-    description += `Extent of ${ScaleDimension.Y} is ${yDataExtent[0]?.toFixed(2)} to ${yDataExtent[1]?.toFixed(2)}`
+    let description
+    if (xDataExtent[0] === undefined && xDataExtent[1] === undefined) {
+      description = 'The extent of the X dimension is undefined '
+    } else {
+      description = `Extent of the ${ScaleDimension.X} dimension spans from ${xDataExtent[0]?.toFixed(2)} to ${xDataExtent[1]?.toFixed(2)} `
+    }
+
+    if (yDataExtent[0] === undefined && yDataExtent[1] === undefined) {
+      description += 'The extent of the Y dimension is undefined'
+    } else {
+      description += `Extent of the ${ScaleDimension.Y} dimension spans from ${yDataExtent[0]?.toFixed(2)} to ${yDataExtent[1]?.toFixed(2)}`
+    }
+
     return description
   }
 }

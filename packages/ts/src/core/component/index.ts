@@ -1,19 +1,23 @@
 import { select, Selection } from 'd3-selection'
 import { Transition } from 'd3-transition'
+
+// Core
 import { CoreDataModel } from 'data-models/core'
-import { ComponentType, Sizing } from 'types/component'
-import { Spacing } from 'types/spacing'
+
+// Utils
 import { throttle } from 'utils/data'
 import { guid } from 'utils/misc'
 
-import { ComponentConfig, ComponentConfigInterface } from './config'
+// Types
+import { ComponentType, Sizing } from 'types/component'
+import { Spacing } from 'types/spacing'
+
+// Local Types
 import { VisEventCallback, VisEventType } from './types'
 
-// Core
-// Utils
-// Types
-// Local Types
 // Config
+import { ComponentConfig, ComponentConfigInterface } from './config'
+
 export class ComponentCore<
   CoreDatum,
   ConfigClass extends ComponentConfig = ComponentConfig,
@@ -148,7 +152,8 @@ export class ComponentCore<
     return !this.element
   }
 
-  public getAriaDescription (): string {
+  // base class abstract method
+  getAriaDescription (): string {
     return ''
   }
 }
