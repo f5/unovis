@@ -50,7 +50,7 @@ export class XYContainer<Datum> extends ContainerCore {
   private _clipPathId = guid()
   private _axisMargin: Spacing = { top: 0, bottom: 0, left: 0, right: 0 }
   private _firstRender = true
-  private _xyDomain = new Map<ScaleDimension, number[]>()
+  private _scaleDomains = new Map<ScaleDimension, number[]>()
 
   constructor (element: HTMLElement, config?: XYContainerConfigInterface<Datum>, data?: Datum[]) {
     super(element)
@@ -310,7 +310,7 @@ export class XYContainer<Datum> extends ContainerCore {
       if (config.preventEmptyDomain && (domain[0] === domain[1]) && isFinite(domain[0])) {
         domain[1] = domain[0] + 1
       }
-      this._xyDomain[dimension] = domain
+      this._scaleDomains[dimension] = domain
 
       components.forEach(c => c.setScaleDomain(dimension, domain))
     })
@@ -420,7 +420,7 @@ export class XYContainer<Datum> extends ContainerCore {
     let description = ''
     // Get X and Y Domain
     Object.values(ScaleDimension).forEach((dimension: ScaleDimension) => {
-      const domain = this._xyDomain[dimension]
+      const domain = this._scaleDomains[dimension]
       description += `${dimension} scale domain is from ${domain?.[0]?.toFixed(2)} to ${domain?.[1]?.toFixed(2)} `
     })
     // Get Description From Each Component
