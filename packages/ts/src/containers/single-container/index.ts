@@ -45,7 +45,7 @@ export class SingleContainer<Data> extends ContainerCore {
 
   public updateContainer (containerConfig: SingleContainerConfigInterface<Data>, preventRender?: boolean): void {
     super.updateContainer(containerConfig)
-    this.removeAllChildren()
+    this._removeAllChildren()
 
     this.component = containerConfig.component
     if (containerConfig.sizing) this.component.sizing = containerConfig.sizing
@@ -86,11 +86,15 @@ export class SingleContainer<Data> extends ContainerCore {
     return this.width / componentWidth
   }
 
-  _render (duration?: number): void {
+  protected _preRender (): void {
+    super._preRender()
+    this.component.setSize(this.width, this.height, this.containerWidth, this.containerHeight)
+  }
+
+  protected _render (duration?: number): void {
     const { config, component } = this
     super._render(duration)
 
-    component.setSize(this.width, this.height, this.containerWidth, this.containerHeight)
     component.g.attr('transform', `translate(${config.margin.left},${config.margin.top})`)
     component.render(duration)
 
@@ -99,7 +103,7 @@ export class SingleContainer<Data> extends ContainerCore {
 
   // Re-defining the `render()` function to handle different sizing techniques (`Sizing.Extend` and `Sizing.FitWidth`)
   // Not calling `super.render()` because we don't want it to interfere with setting the SVG size here.
-  render (duration = this.config.duration): void {
+  public render (duration = this.config.duration): void {
     const { config, component } = this
 
     if (config.sizing === Sizing.Extend || config.sizing === Sizing.FitWidth) {
@@ -133,11 +137,12 @@ export class SingleContainer<Data> extends ContainerCore {
     // Schedule the actual rendering in the next frame
     cancelAnimationFrame(this._requestedAnimationFrame)
     this._requestedAnimationFrame = requestAnimationFrame(() => {
+      this._preRender()
       this._render(duration)
     })
   }
 
-  _onResize (): void {
+  protected _onResize (): void {
     const { config } = this
     super._onResize()
     config.tooltip?.hide()
