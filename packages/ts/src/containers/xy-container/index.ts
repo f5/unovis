@@ -113,7 +113,7 @@ export class XYContainer<Datum> extends ContainerCore {
     return clamp(this.containerHeight - margin.top - margin.bottom, 0, Number.POSITIVE_INFINITY)
   }
 
-  setData (data: Datum[], preventRender?: boolean): void {
+  public setData (data: Datum[], preventRender?: boolean): void {
     const { components, config } = this
     if (!data) return
     this.datamodel.data = data
@@ -129,9 +129,9 @@ export class XYContainer<Datum> extends ContainerCore {
     if (!preventRender) this.render()
   }
 
-  updateContainer (containerConfig: XYContainerConfigInterface<Datum>, preventRender?: boolean): void {
+  public updateContainer (containerConfig: XYContainerConfigInterface<Datum>, preventRender?: boolean): void {
     super.updateContainer(containerConfig)
-    this.removeAllChildren()
+    this._removeAllChildren()
 
     // If there were any new components added we need to pass them data
     this.setData(this.datamodel.data, true)
@@ -177,7 +177,7 @@ export class XYContainer<Datum> extends ContainerCore {
     if (!preventRender) this.render()
   }
 
-  updateComponents (componentConfigs: XYConfigInterface<Datum>[], preventRender?: boolean): void {
+  public updateComponents (componentConfigs: XYConfigInterface<Datum>[], preventRender?: boolean): void {
     const { config } = this
 
     this.components.forEach((c, i) => {
@@ -187,31 +187,36 @@ export class XYContainer<Datum> extends ContainerCore {
       }
     })
 
-    this.updateScales(...this.components, config.xAxis, config.yAxis, config.crosshair)
+    this._updateScales(...this.components, config.xAxis, config.yAxis, config.crosshair)
     if (!preventRender) this.render()
   }
 
-  update (containerConfig: XYContainerConfigInterface<Datum>, componentConfigs?: XYComponentConfigInterface<Datum>[], data?: Datum[]): void {
+  public update (containerConfig: XYContainerConfigInterface<Datum>, componentConfigs?: XYComponentConfigInterface<Datum>[], data?: Datum[]): void {
     if (data) this.datamodel.data = data // Just updating the data model because the `updateContainer` method has the `setData` step inside
     if (containerConfig) this.updateContainer(containerConfig, true)
     if (componentConfigs) this.updateComponents(componentConfigs, true)
     this.render()
   }
 
-  _render (customDuration?: number): void {
+  protected _preRender (): void {
     const { config } = this
-    super._render()
+    super._preRender()
 
     // Calculate extra margin required to fit the axes
     if (config.autoMargin) {
       this._setAutoMargin()
     }
 
+    // Update Scales of all the components at once to calculate required paddings and sync them
+    this._updateScales(...this.components, config.xAxis, config.yAxis, config.crosshair)
+  }
+
+  protected _render (customDuration?: number): void {
+    const { config } = this
+    super._render()
+
     // Get chart total margin after auto margin calculations
     const margin = this._getMargin()
-
-    // Update Scales of all the components at once to calculate required paddings and sync them
-    this.updateScales(...this.components, config.xAxis, config.yAxis, config.crosshair)
 
     // Render components
     for (const c of this.components) {
@@ -261,14 +266,14 @@ export class XYContainer<Datum> extends ContainerCore {
     this._firstRender = false
   }
 
-  updateScales<T extends XYComponentCore<Datum>> (...components: T[]): void {
+  private _updateScales<T extends XYComponentCore<Datum>> (...components: T[]): void {
     const c = clean(components || this.components)
     this._setScales(...c)
     this._updateScalesDomain(...c)
     this._updateScalesRange(...c)
   }
 
-  _setScales<T extends XYComponentCore<Datum>> (...components: T[]): void {
+  private _setScales<T extends XYComponentCore<Datum>> (...components: T[]): void {
     const { config } = this
     if (!components) return
 
@@ -277,7 +282,7 @@ export class XYContainer<Datum> extends ContainerCore {
     if (config.yScale) components.forEach(c => c.setScale(ScaleDimension.Y, config.yScale))
   }
 
-  _updateScalesDomain<T extends XYComponentCore<Datum>> (...components: T[]): void {
+  private _updateScalesDomain<T extends XYComponentCore<Datum>> (...components: T[]): void {
     const { config } = this
     if (!components) return
 
@@ -309,7 +314,7 @@ export class XYContainer<Datum> extends ContainerCore {
     })
   }
 
-  _updateScalesRange<T extends XYComponentCore<Datum>> (...components: T[]): void {
+  private _updateScalesRange<T extends XYComponentCore<Datum>> (...components: T[]): void {
     const { config } = this
     if (!components) return
 
@@ -345,7 +350,7 @@ export class XYContainer<Datum> extends ContainerCore {
     }
   }
 
-  _renderAxes (duration: number): void {
+  private _renderAxes (duration: number): void {
     const { config: { xAxis, yAxis } } = this
     const margin = this._getMargin()
 
@@ -357,7 +362,7 @@ export class XYContainer<Datum> extends ContainerCore {
     })
   }
 
-  _setAutoMargin (): void {
+  private _setAutoMargin (): void {
     const { config: { xAxis, yAxis } } = this
 
     // At first we need to set the domain to the scales
