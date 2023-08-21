@@ -67,15 +67,11 @@ export class ContainerCore {
       this.svg.append('defs').attr('class', 'svgDefs').html(config.svgDefs)
     }
 
-
-    // use setTimout to allow _render to complete in the derived class
-    setTimeout(() => {
-      const description = config.ariaAutoLabel ? this._getAriaDescription() : config.ariaLabel
-      // Apply the `aria-label` attribute
-      select(this._container)
-        .attr('aria-label', description)
-        .attr('tabindex', '0')
-    }, 0)
+    // Apply the `aria-label` attribute
+    const description = config.ariaAutoLabel ? this._getAriaDescription() : config.ariaLabel
+    select(this._container)
+      .attr('aria-label', description)
+      .attr('tabindex', '0')
 
     this._isFirstRender = false
   }
