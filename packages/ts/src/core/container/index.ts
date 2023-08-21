@@ -45,14 +45,20 @@ export class ContainerCore {
     this.element = this.svg.node()
   }
 
-  updateContainer<T extends ContainerConfigInterface> (config: T): void {
+  public updateContainer<T extends ContainerConfigInterface> (config: T): void {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const ConfigModel = (this.config.constructor as typeof ContainerConfig)
     this.prevConfig = this.config
     this.config = new ConfigModel().init(config)
   }
 
-  _render (duration?: number): void {
+  // The `_preRender` step should be used to perform some actions before rendering.
+  // For example, calculating scales, setting component sizes, etc ...
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  protected _preRender (): void {}
+
+  // The `_render` step should be used to perform the actual rendering
+  protected _render (duration?: number): void {
     const { config } = this
 
     // Add `svgDefs` if provided in the config
@@ -70,7 +76,7 @@ export class ContainerCore {
 
   // Warning: Some Containers (i.e. Single Container) may override this method, so if you introduce any changes here,
   // make sure to check that other containers didn't break after them.
-  render (duration = this.config.duration): void {
+  public render (duration = this.config.duration): void {
     const width = this.config.width || this.containerWidth
     const height = this.config.height || this.containerHeight
 
@@ -88,6 +94,7 @@ export class ContainerCore {
     // Schedule the actual rendering in the next frame
     cancelAnimationFrame(this._requestedAnimationFrame)
     this._requestedAnimationFrame = requestAnimationFrame(() => {
+      this._preRender()
       this._render(duration)
     })
   }
@@ -112,19 +119,19 @@ export class ContainerCore {
     return clamp(this.containerHeight - this.config.margin.top - this.config.margin.bottom, 0, Number.POSITIVE_INFINITY)
   }
 
-  removeAllChildren (): void {
+  protected _removeAllChildren (): void {
     while (this.element.firstChild) {
       this.element.removeChild(this.element.firstChild)
     }
   }
 
-  _onResize (): void {
+  protected _onResize (): void {
     const { config } = this
     const redrawOnResize = config.sizing === Sizing.Fit || config.sizing === Sizing.FitWidth
     if (redrawOnResize) this.render(0)
   }
 
-  _setUpResizeObserver (): void {
+  protected _setUpResizeObserver (): void {
     if (this._resizeObserver) return
     const containerRect = this._container.getBoundingClientRect()
     this._containerSize = { width: containerRect.width, height: containerRect.height }
@@ -143,7 +150,7 @@ export class ContainerCore {
     this._resizeObserver.observe(this._container)
   }
 
-  destroy (): void {
+  public destroy (): void {
     cancelAnimationFrame(this._requestedAnimationFrame)
     this._resizeObserver?.disconnect()
     this.svg.remove()
