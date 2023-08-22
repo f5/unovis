@@ -153,7 +153,7 @@ export class ComponentCore<
   }
 
   // base class abstract method
-  getAriaDescription (): string {
+  public getAriaDescription (): string {
     return ''
   }
 }

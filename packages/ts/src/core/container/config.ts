@@ -36,7 +36,7 @@ export interface ContainerConfigInterface {
   ariaLabel?: string | null | undefined;
 
   /**
-   * Set to true to generate automated description for aria-label in containers
+   * Set to true to generate automated description for aria-label in containers. Default: true
    */
   ariaAutoLabel?: boolean;
 }

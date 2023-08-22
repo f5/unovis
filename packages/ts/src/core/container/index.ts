@@ -68,10 +68,17 @@ export class ContainerCore {
     }
 
     // Apply the `aria-label` attribute
-    const description = config.ariaAutoLabel ? this._getAriaDescription() : config.ariaLabel
-    select(this._container)
-      .attr('aria-label', description)
-      .attr('tabindex', '0')
+    let description = ''
+    if (config.ariaLabel) {
+      description = config.ariaLabel
+    } else if (config.ariaAutoLabel) {
+      description = this._getAriaDescription().trim()
+    }
+    if (description) {
+      select(this._container)
+        .attr('aria-label', description)
+        .attr('tabindex', '0')
+    }
 
     this._isFirstRender = false
   }

@@ -421,7 +421,9 @@ export class XYContainer<Datum> extends ContainerCore {
     // Get X and Y Domain
     Object.values(ScaleDimension).forEach((dimension: ScaleDimension) => {
       const domain = this._scaleDomains[dimension]
-      description += `${dimension} scale domain is from ${domain?.[0]?.toFixed(2)} to ${domain?.[1]?.toFixed(2)} `
+      const axisLabel = this.config[`${dimension}Axis`].config.label
+      description += axisLabel ? `The label of ${dimension.toUpperCase()} dimension is ${axisLabel}. ` : ''
+      description += `${dimension.toUpperCase()} scale domain is from ${domain?.[0]?.toFixed(2)} to ${domain?.[1]?.toFixed(2)}. `
     })
     // Get Description From Each Component
     for (const c of this.components) {

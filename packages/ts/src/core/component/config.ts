@@ -52,10 +52,13 @@ export interface ComponentConfigInterface {
       [attr: string]: string | number | boolean | ((datum: any) => string | number | boolean);
     };
   };
+
+  configureAriaLabel?: boolean;
 }
 
 export class ComponentConfig extends Config implements ComponentConfigInterface {
   duration = 600
   events = {}
   attributes = {}
+  configureAriaLabel = true
 }

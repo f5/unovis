@@ -87,23 +87,4 @@ export class XYComponentCore<
     const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
     return getExtent(data, ...yAccessors)
   }
-
-  getAriaDescription (): string {
-    const xDataExtent = this.getXDataExtent()
-    const yDataExtent = this.getYDataExtent(true)
-    let description
-    if (xDataExtent[0] === undefined && xDataExtent[1] === undefined) {
-      description = 'The extent of the X dimension is undefined '
-    } else {
-      description = `Extent of the ${ScaleDimension.X} dimension spans from ${xDataExtent[0]?.toFixed(2)} to ${xDataExtent[1]?.toFixed(2)} `
-    }
-
-    if (yDataExtent[0] === undefined && yDataExtent[1] === undefined) {
-      description += 'The extent of the Y dimension is undefined'
-    } else {
-      description += `Extent of the ${ScaleDimension.Y} dimension spans from ${yDataExtent[0]?.toFixed(2)} to ${yDataExtent[1]?.toFixed(2)}`
-    }
-
-    return description
-  }
 }

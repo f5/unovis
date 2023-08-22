@@ -11,6 +11,7 @@ import { getTextAnchorFromTextAlign } from 'types/svg'
 
 // Styles
 import { getFontWidthToHeightRatio, UNOVIS_TEXT_DEFAULT, UNOVIS_TEXT_SEPARATOR_DEFAULT, UNOVIS_TEXT_HYPHEN_CHARACTER_DEFAULT } from 'styles/index'
+import { ScaleDimension } from '../../lib'
 
 /**
  * Converts a kebab-case string to camelCase.
@@ -540,4 +541,20 @@ export function renderTextIntoFrame (
 
   group.textContent = ''
   group.appendChild(parsedSvgCode)
+}
+
+export function getAriaDescriptionForXYChart (xDataExtent: number[], yDataExtent: number[], accessorLength: number): string {
+  let description
+  if (xDataExtent[0] === undefined && xDataExtent[1] === undefined) {
+    description = 'The extent of its X dimension is undefined. '
+  } else {
+    description = `Extent of its ${ScaleDimension.X.toUpperCase()} dimension spans from ${xDataExtent[0]?.toFixed(2)} to ${xDataExtent[1]?.toFixed(2)}. `
+  }
+
+  if (yDataExtent[0] === undefined && yDataExtent[1] === undefined) {
+    description += 'The extent of its Y dimension is undefined. '
+  } else {
+    description += `Extent of its ${ScaleDimension.Y.toUpperCase()} dimension spans from ${yDataExtent[0]?.toFixed(2)} to ${yDataExtent[1]?.toFixed(2)}. `
+  }
+  return `has ${accessorLength} ${accessorLength === 1 ? 'accessor' : 'accessors'}. ${description}`
 }
