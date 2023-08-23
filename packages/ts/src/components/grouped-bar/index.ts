@@ -328,7 +328,7 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum, GroupedBarConfig<D
     if (!this.config.configureAriaLabel) {
       return ''
     }
-    const description = getAriaDescriptionForXYChart(this.getXDataExtent(), this.getYDataExtent(true), this.getAccessors().length)
-    return `Grouped Bar Chart ${description}`
+    const description = getAriaDescriptionForXYChart(this.getXDataExtent(), this.getYDataExtent(true))
+    return `Each group of the Grouped Bar Chart has ${this.getAccessors().length} items. ${description}`
   }
 }

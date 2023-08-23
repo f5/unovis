@@ -543,7 +543,7 @@ export function renderTextIntoFrame (
   group.appendChild(parsedSvgCode)
 }
 
-export function getAriaDescriptionForXYChart (xDataExtent: number[], yDataExtent: number[], accessorLength: number): string {
+export function getAriaDescriptionForXYChart (xDataExtent: number[], yDataExtent: number[]): string {
   let description
   if (xDataExtent[0] === undefined && xDataExtent[1] === undefined) {
     description = 'The extent of its X dimension is undefined. '
@@ -556,5 +556,5 @@ export function getAriaDescriptionForXYChart (xDataExtent: number[], yDataExtent
   } else {
     description += `Extent of its ${ScaleDimension.Y.toUpperCase()} dimension spans from ${yDataExtent[0]?.toFixed(2)} to ${yDataExtent[1]?.toFixed(2)}. `
   }
-  return `has ${accessorLength} ${accessorLength === 1 ? 'accessor' : 'accessors'}. ${description}`
+  return `${description}`
 }
