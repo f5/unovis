@@ -120,6 +120,9 @@ export class VisAxisComponent<Datum> implements AxisConfigInterface<Datum>, Afte
   /** Distance between the axis and the label in pixels. Default: `8` */
   @Input() labelMargin?: number
 
+  /** Font color of the axis label as CSS string. Default: `null` */
+  @Input() labelColor?: string | null
+
   /** Sets whether to draw the grid lines or not. Default: `true` */
   @Input() gridLine?: boolean
 
@@ -162,6 +165,9 @@ export class VisAxisComponent<Datum> implements AxisConfigInterface<Datum>, Afte
   /** Text alignment for ticks: `TextAlign.Left`, `TextAlign.Center` or `TextAlign.Right`. Default: `undefined` */
   @Input() tickTextAlign?: TextAlign | string
 
+  /** Font color of the tick text as CSS string. Default: `null` */
+  @Input() tickTextColor?: string | null
+
   /** The spacing in pixels between the tick and it's label. Default: `8` */
   @Input() tickPadding?: number
   @Input() data: Datum[]
@@ -185,8 +191,8 @@ export class VisAxisComponent<Datum> implements AxisConfigInterface<Datum>, Afte
   }
 
   private getConfig (): AxisConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, position, type, fullSize, label, labelFontSize, labelMargin, gridLine, tickLine, domainLine, minMaxTicksOnly, tickFormat, tickValues, numTicks, tickTextFitMode, tickTextWidth, tickTextSeparator, tickTextForceWordBreak, tickTextTrimType, tickTextFontSize, tickTextAlign, tickPadding } = this
-    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, position, type, fullSize, label, labelFontSize, labelMargin, gridLine, tickLine, domainLine, minMaxTicksOnly, tickFormat, tickValues, numTicks, tickTextFitMode, tickTextWidth, tickTextSeparator, tickTextForceWordBreak, tickTextTrimType, tickTextFontSize, tickTextAlign, tickPadding }
+    const { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, position, type, fullSize, label, labelFontSize, labelMargin, labelColor, gridLine, tickLine, domainLine, minMaxTicksOnly, tickFormat, tickValues, numTicks, tickTextFitMode, tickTextWidth, tickTextSeparator, tickTextForceWordBreak, tickTextTrimType, tickTextFontSize, tickTextAlign, tickTextColor, tickPadding } = this
+    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, position, type, fullSize, label, labelFontSize, labelMargin, labelColor, gridLine, tickLine, domainLine, minMaxTicksOnly, tickFormat, tickValues, numTicks, tickTextFitMode, tickTextWidth, tickTextSeparator, tickTextForceWordBreak, tickTextTrimType, tickTextFontSize, tickTextAlign, tickTextColor, tickPadding }
     const keys = Object.keys(config) as (keyof AxisConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
