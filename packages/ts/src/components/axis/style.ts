@@ -92,13 +92,14 @@ export const tick = css`
     stroke-width: var(--vis-axis-tick-line-width);
   }
 
-  text, tspan {
+  text {
     fill: var(--vis-axis-tick-label-color);
-    font-family: var(--vis-axis-font-family, var(--vis-font-family));
     cursor: var(--vis-axis-tick-label-cursor);
+    font-family: var(--vis-axis-font-family, var(--vis-font-family));
     text-decoration: var(--vis-axis-tick-label-text-decoration);
     stroke: none;
   }
+
 `
 
 export const label = css`

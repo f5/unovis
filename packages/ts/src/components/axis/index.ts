@@ -209,6 +209,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfig<Datum>, AxisC
     const tickText = selection.selectAll<SVGTextElement, number | Date>('g.tick > text')
       .filter(tickValue => tickValues.some(t => isEqual(tickValue, t))) // We use isEqual to compare Dates
       .classed(s.tickLabel, true)
+      .style('fill', config.tickTextColor)
 
     // We interrupt the transition on tick's <text> to make it 'wrappable'
     tickText.nodes().forEach(node => interrupt(node))
@@ -316,9 +317,10 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfig<Datum>, AxisC
       .append('text')
       .attr('class', s.label)
       .text(label)
-      .style('font-size', labelFontSize)
       .attr('dy', `${this._getLabelDY()}em`)
       .attr('transform', `translate(${offsetX + marginX},${offsetY + marginY}) rotate(${rotation})`)
+      .style('font-size', labelFontSize)
+      .style('fill', this.config.labelColor)
   }
 
   _getLabelDY (): number {

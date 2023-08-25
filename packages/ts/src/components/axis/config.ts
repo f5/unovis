@@ -19,6 +19,8 @@ export interface AxisConfigInterface<Datum> extends Partial<XYComponentConfigInt
   labelFontSize?: string | null;
   /** Distance between the axis and the label in pixels. Default: `8` */
   labelMargin?: number;
+  /** Font color of the axis label as CSS string. Default: `null` */
+  labelColor?: string | null;
   /** Sets whether to draw the grid lines or not. Default: `true` */
   gridLine?: boolean;
   /** Sets whether to draw the tick lines or not. Default: `true` */
@@ -47,6 +49,8 @@ export interface AxisConfigInterface<Datum> extends Partial<XYComponentConfigInt
   tickTextFontSize?: string | null;
   /** Text alignment for ticks: `TextAlign.Left`, `TextAlign.Center` or `TextAlign.Right`. Default: `undefined` */
   tickTextAlign?: TextAlign | string;
+  /** Font color of the tick text as CSS string. Default: `null` */
+  tickTextColor?: string | null;
   /** The spacing in pixels between the tick and it's label. Default: `8` */
   tickPadding?: number;
 }
@@ -68,7 +72,9 @@ export class AxisConfig<Datum> extends XYComponentConfig<Datum> implements AxisC
   tickTextFitMode = FitMode.Wrap
   tickTextFontSize = null
   tickTextAlign = undefined
+  tickTextColor = null
   labelMargin = 8
+  labelColor = null
   tickFormat = undefined
   tickValues = undefined
   fullSize = true
