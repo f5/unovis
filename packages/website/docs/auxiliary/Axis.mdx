@@ -60,6 +60,10 @@ You can provide a string to label your axes with the `label` property:
 Change the label size (in pixels) with the `labelFontSize` property.
 <XYWrapperWithInput {...defaultProps()} inputType="range" label="Label" defaultValue={30} property="labelFontSize"/>
 
+### Label Color
+Change the label color with the `labelColor` property.
+<XYWrapperWithInput {...defaultProps()} inputType="color" label="Label" defaultValue={'#1acb9a'} property="labelColor"/>
+
 ### Label Margin
 The spacing between the label and the axis itself can be set with the `labelMargin` property:
 <XYWrapperWithInput {...defaultProps()} label="Label" inputType="range" inputProps={{ min: 0, max: 50, step: 1}} defaultValue={5} property="labelMargin"/>
@@ -100,6 +104,10 @@ You can remove tick labels from your axis by setting the `tickLine` property to 
 ### Tick Label Font Size
 To change the font size for the tick labels, you provide the `tickTextFontSize` property with a CSS string.
 <XYWrapperWithInput {...defaultProps()} inputType="text" defaultValue={'50px'} property="tickTextFontSize"/>
+
+### Tick Label Color
+You can change the color of the tick labels with the `tickTextColor` property.
+<XYWrapperWithInput {...defaultProps()} inputType="color" defaultValue={'#1acb9a'} property="tickTextColor"/>
 
 ### Tick Label Format
 You can customize how ticks are formatted using the `tickFormat` property and a label formatter function.
