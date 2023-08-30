@@ -10,6 +10,7 @@ import { XYComponentCore } from 'core/xy-component'
 import { getNumber, getString, getValue, isArray, isNumber } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
+import { getAriaDescriptionForXYChart } from 'utils/text'
 
 // Types
 import { NumericAccessor } from 'types/accessor'
@@ -183,5 +184,26 @@ export class Line<Datum> extends XYComponentCore<Datum, LineConfig<Datum>, LineC
         .selectAll(`.${s.line}`)
         .classed(s.dim, false)
     }
+  }
+
+  public getAriaDescription (tickFormat: any): string {
+    const yAccessors = (
+      isArray(this.config.y) ? this.config.y : [this.config.y]
+    ) as NumericAccessor<Datum>[]
+
+    if (!this.config.configureAriaLabel || !yAccessors.length) {
+      return ''
+    }
+
+    const description = getAriaDescriptionForXYChart(
+      this.getXDataExtent(),
+      this.getYDataExtent(true),
+      'lines',
+      tickFormat
+    )
+
+    return `There ${yAccessors.length > 1 ? 'are' : 'is'} ${yAccessors.length} ${
+      yAccessors.length > 1 ? 'lines' : 'line'
+    } in the line chart. ${description}`
   }
 }

@@ -153,7 +153,7 @@ export class ComponentCore<
   }
 
   // base class abstract method
-  public getAriaDescription (): string {
+  public getAriaDescription (tickFormat: any): string {
     return ''
   }
 }

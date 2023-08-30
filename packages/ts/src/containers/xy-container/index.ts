@@ -418,6 +418,7 @@ export class XYContainer<Datum> extends ContainerCore {
 
   protected _getAriaDescription (): string {
     let description = ''
+    const tickFormat = this.config.xAxis.getTickFormat() ?? (_ => _)
     // Get X and Y Domain
     Object.values(ScaleDimension).forEach((dimension: ScaleDimension) => {
       const domain = this._scaleDomains[dimension]
@@ -425,13 +426,13 @@ export class XYContainer<Datum> extends ContainerCore {
       description += axisLabel
         ? `The ${
           dimension === ScaleDimension.X ? 'Horizontal Axis' : 'Vertical Axis'
-        } is labeled as ${axisLabel}. `
+        } is labeled as ${axisLabel} `
         : ''
-      description += `${dimension.toUpperCase()} scale domain is from ${domain?.[0]?.toFixed(2)} to ${domain?.[1]?.toFixed(2)}. `
+      description += `and ranges from ${dimension === ScaleDimension.X ? tickFormat(domain?.[0]?.toFixed(2)) : domain?.[0]?.toFixed(2)} to ${dimension === ScaleDimension.X ? tickFormat(domain?.[1]?.toFixed(2)) : domain?.[1]?.toFixed(2)}. `
     })
     // Get Description From Each Component
     for (const c of this.components) {
-      description += `${c.getAriaDescription()} `
+      description += `${c.getAriaDescription(tickFormat)} `
     }
     return description
   }

@@ -369,4 +369,8 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfig<Datum>, AxisC
       default: return 0
     }
   }
+
+  getTickFormat (): any {
+    return this.config.tickFormat
+  }
 }

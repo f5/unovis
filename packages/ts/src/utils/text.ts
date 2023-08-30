@@ -543,18 +543,13 @@ export function renderTextIntoFrame (
   group.appendChild(parsedSvgCode)
 }
 
-export function getAriaDescriptionForXYChart (xDataExtent: number[], yDataExtent: number[]): string {
-  let description
-  if (xDataExtent[0] === undefined && xDataExtent[1] === undefined) {
-    description = 'The extent of its X dimension is undefined. '
-  } else {
-    description = `Extent of its ${ScaleDimension.X.toUpperCase()} dimension spans from ${xDataExtent[0]?.toFixed(2)} to ${xDataExtent[1]?.toFixed(2)}. `
-  }
+export function getAriaDescriptionForXYChart (xDataExtent: number[], yDataExtent: number[] = [], chartType: string, tickFormat = _ => _): string {
+  let description = ''
 
   if (yDataExtent[0] === undefined && yDataExtent[1] === undefined) {
     description += 'The extent of its Y dimension is undefined. '
   } else {
-    description += `Extent of its ${ScaleDimension.Y.toUpperCase()} dimension spans from ${yDataExtent[0]?.toFixed(2)} to ${yDataExtent[1]?.toFixed(2)}. `
+    description += `The smallest value among the ${chartType} is ${yDataExtent[0]?.toFixed(2)}, the largest ${yDataExtent[1]?.toFixed(2)}. `
   }
   return `${description}`
 }
