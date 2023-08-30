@@ -74,6 +74,12 @@ export class VisChordDiagramComponent<N extends ChordInputNode, L extends ChordI
     };
   }
 
+  /** Node id or index to highlight. Overrides default hover behavior if supplied. Default: `undefined` */
+  @Input() highlightedNodeId?: number | string
+
+  /** Link ids or index values to highlight. Overrides default hover behavior if supplied. Default: [] */
+  @Input() highlightedLinkIds?: (number | string)[]
+
   /** Link color accessor function. Default: `var(--vis-chord-diagram-link-fill-color)` */
   @Input() linkColor?: ColorAccessor<L>
 
@@ -130,8 +136,8 @@ export class VisChordDiagramComponent<N extends ChordInputNode, L extends ChordI
   }
 
   private getConfig (): ChordDiagramConfigInterface<N, L> {
-    const { duration, events, attributes, linkColor, linkValue, nodeLevels, nodeWidth, nodeColor, nodeLabel, nodeLabelColor, nodeLabelAlignment, padAngle, cornerRadius, angleRange, radiusScaleExponent } = this
-    const config = { duration, events, attributes, linkColor, linkValue, nodeLevels, nodeWidth, nodeColor, nodeLabel, nodeLabelColor, nodeLabelAlignment, padAngle, cornerRadius, angleRange, radiusScaleExponent }
+    const { duration, events, attributes, highlightedNodeId, highlightedLinkIds, linkColor, linkValue, nodeLevels, nodeWidth, nodeColor, nodeLabel, nodeLabelColor, nodeLabelAlignment, padAngle, cornerRadius, angleRange, radiusScaleExponent } = this
+    const config = { duration, events, attributes, highlightedNodeId, highlightedLinkIds, linkColor, linkValue, nodeLevels, nodeWidth, nodeColor, nodeLabel, nodeLabelColor, nodeLabelAlignment, padAngle, cornerRadius, angleRange, radiusScaleExponent }
     const keys = Object.keys(config) as (keyof ChordDiagramConfigInterface<N, L>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

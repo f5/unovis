@@ -78,10 +78,12 @@ export interface XYContainerConfigInterface<Datum> extends ContainerConfigInterf
   /** Crosshair component. Default: `undefined` */
   crosshair?: Crosshair<Datum> | undefined;
   /** Prevents the chart domain from being empty (when domain's min and max values are equal).
-   *  That usually happens when all the data values are the same.
-   *  Setting to `true` will automatically extend the domain by `+1` when needed.
-   *  Default: `true` */
-  preventEmptyDomain?: boolean;
+   *  That usually happens when all the data values are equal or when there's no data.
+   *  Setting to `true` will automatically extend the domain by `+1` when the domain is empty (domain start equals domain end).
+   *  Setting to `null` will extend the empty domain, but only when there's no data.
+   *  Setting to `false` will keep the domain as is.
+   *  Default: `null` */
+  preventEmptyDomain?: boolean | null;
   /** Sets the Y scale domain based on the current X scale domain (not the whole dataset). Default: `false` */
   scaleByDomain?: boolean;
 }
@@ -107,6 +109,6 @@ export class XYContainerConfig<Datum> extends ContainerConfig implements XYConta
   yRange = undefined
   yDirection = Direction.North
 
-  preventEmptyDomain = true
+  preventEmptyDomain = null
   scaleByDomain = false
 }
