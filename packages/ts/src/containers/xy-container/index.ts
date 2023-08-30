@@ -286,13 +286,13 @@ export class XYContainer<Datum> extends ContainerCore {
     const { config } = this
     if (!components) return
 
+    const componentsWithDomain = components.filter(c => !c.config.excludeFromDomainCalculation)
+
     // Loop over all the dimensions
     Object.values(ScaleDimension).forEach((dimension: ScaleDimension) => {
       const [min, max] = extent(
         mergeArrays(
-          components
-            .filter(c => !c.config.excludeFromDomainCalculation)
-            .map(c => c.getDataExtent(dimension, config.scaleByDomain))
+          componentsWithDomain.map(c => c.getDataExtent(dimension, config.scaleByDomain))
         ) as number[]
       ) // Components with undefined dimension accessors will return [undefined, undefined] but d3.extent will take care of that
 
@@ -306,8 +306,12 @@ export class XYContainer<Datum> extends ContainerCore {
         clamp(domainMax, configuredDomainMaxConstraint?.[0] ?? Number.NEGATIVE_INFINITY, configuredDomainMaxConstraint?.[1] ?? Number.POSITIVE_INFINITY),
       ]
 
-      if (config.preventEmptyDomain && (domain[0] === domain[1]) && isFinite(domain[0])) {
-        domain[1] = domain[0] + 1
+      // Extend the domain if there is no data provided or preventEmptyDomain was explicitly set to `true`
+      if (domain[0] === domain[1]) {
+        const hasDataProvided = componentsWithDomain.some(c => c.datamodel.data?.length > 0)
+        if (config.preventEmptyDomain || (config.preventEmptyDomain === null && !hasDataProvided)) {
+          domain[1] = domain[0] + 1
+        }
       }
 
       components.forEach(c => c.setScaleDomain(dimension, domain))

@@ -79,6 +79,13 @@ export class VisXYContainerComponent<Datum> implements AfterViewInit, AfterConte
   @Input() yRange?: [number, number]
   /** Y Axis direction. Default: `Direction.North` */
   @Input() yDirection?: Direction.South | Direction.North | string = Direction.North
+  /** Prevents the chart domain from being empty (when domain's min and max values are equal).
+   *  That usually happens when all the data values are the same or when there's no data.
+   *  Setting to `true` will automatically extend the domain by `+1` when needed.
+   *  Setting to `null` will extend the domain only when there's no data.
+   *  Setting to `false` will keep the domain as is.
+   *  Default: `null` */
+  @Input() preventEmptyDomain?: boolean | null = null
 
   /** Animation duration of all the components within the container. Default: `undefined` */
   @Input() duration?: number = undefined
