@@ -137,7 +137,7 @@ See the following example, which looks like this when the domain is not set:
 #### `yDomain = [0,100]`
 <XYWrapper {...defaultProps()} data={data} yDomain={[0,100]} height={100} excludeTabs/>
 
-## Domain Constraints
+### Domain Constraints
 Customizing your domain is helpful in datasets with outliers. When using dynamic data, you may not know which values to constrain your domain values to.
 With the following constraint properties `xDomainMinConstraint`, `xDomainMaxConstraint`, `yDomainMinConstraint`, and `yDomainMaxConstraint`, you can define partial domains.
 For the following examples, consider the following case where the majority of the data is within the ranges `[0,10]` for all values of x and y.
@@ -151,6 +151,26 @@ These properties accept a number array in the form `[number, number]` or more ty
 
 #### yDomainMaxConstraint: `[undefined, 10]`
 <XYWrapper {...defaultProps('Scatter')} data={constraintData} yDomainMaxConstraint={[undefined, 15]} excludeTabs/>
+
+### `preventEmptyDomain`
+When the calculated domain is empty (when domain's min and max values are equal), use the `preventEmptyDomain`
+property to extend it by `+1`. This may be useful when you have no data or a single data point and you
+want to show the empty space. The possible values are:
+*  `true`: automatically extend the domain by `+1` when the domain is empty (domain start equals domain end);
+*  `null`: extend the domain, but only when there's no data (default);
+*  `false`: keep the domain as is.
+
+For example, a grouped bar with a single data point at `x=1`:
+<XYWrapperWithInput
+  {...defaultProps('GroupedBar')}
+  components={[
+    component('GroupedBar', { x: 1, y: [1,4,2], barWidth: 40 }),
+    { name: 'Axis', props: { type: 'x' }, key: 'xAxis'},
+    { name: 'Axis', props: { type: 'y' }, key: 'yAxis'},
+  ]}
+  excludeTabs
+  property="preventEmptyDomain"
+  inputType="checkbox"/>
 
 ## Scale
 To change the scale of one of your axes in your _Container_, use the `xScale` or `yScale` property and a Scale function (i.e. `Scale.scaleLinear()`).
