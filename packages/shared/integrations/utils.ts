@@ -1,6 +1,6 @@
 import { readFileSync } from 'fs'
 import ts from 'typescript'
-import { ConfigProperty, GenericParameter } from '../../react/autogen/types'
+import { ComponentInput, ConfigProperty, GenericParameter } from './types'
 
 export function getTypeName (type: ts.Node | undefined): string {
   switch (type.kind) {
@@ -173,14 +173,15 @@ export function getImportStatements (
   componentName: string,
   statements: ts.Statement[],
   configInterfaceMembers: ts.TypeElement[],
-  generics: GenericParameter[] = []
+  generics: GenericParameter[] = [],
+  additionalComponentTypes: string[] = []
 ): { source: string; elements: string[] }[] {
   const importSources = {}
 
   // We assume that all extend types in generics come from unovis/ts
   const genericExtends = generics.map(g => g.extends).filter(g => g)
   const genericDefaults = generics.map(g => g.default).filter(g => g)
-  const componentTypes = [componentName, `${componentName}ConfigInterface`]
+  const componentTypes = [componentName, `${componentName}ConfigInterface`, ...additionalComponentTypes]
   for (const typeName of [...componentTypes, ...genericExtends, ...genericDefaults]) {
     importSources[typeName] = '@unovis/ts'
   }
@@ -226,9 +227,95 @@ export function getTSStatements (path: string): ts.NodeArray<ts.Statement> {
 
   return parsed.statements
 }
+
 export function kebabCase (str: string): string {
   return str.match(/[A-Z]{2,}(?=[A-Z][a-z0-9]*|\b)|[A-Z]?[a-z0-9]*|[A-Z]|[0-9]+/g)
     ?.filter(Boolean)
     .map(x => x.toLowerCase())
     .join('-')
+}
+
+export function getConfigSummary (
+  component: ComponentInput,
+  skipProperties = ['width', 'height'],
+  keepOnlyRequiredProperties = true,
+  unovisBasePath = '../ts/src',
+  configFileName = '/config.ts'
+): { configProperties: ConfigProperty[]; configInterfaceMembers: ts.TypeElement[]; generics: GenericParameter[]; statements: ts.Statement[] } {
+  const requiredProps = new Map<string, string[]>() // maps interface to required props
+  const configPropertiesMap = new Map<string, ConfigProperty>() // The map of all config properties
+  let statements: ts.Statement[] = [] // Statements and ...
+  let configInterfaceMembers: ts.TypeElement[] = [] // config interface members to resolve imports of custom types
+  let generics: GenericParameter[] | undefined = [] // Generics
+
+  for (const [i, path] of component.sources.entries()) {
+    const fullPath = `${unovisBasePath}${path}${configFileName}`
+
+    const sourceStatements = getTSStatements(fullPath)
+    const configInterface = sourceStatements.find(node => ts.isInterfaceDeclaration(node)) as ts.InterfaceDeclaration
+    if (!configInterface) {
+      console.error('Config Interface was not found, ', path)
+      continue
+    }
+
+    const interfaceName = getTypeName(configInterface.name)
+    requiredProps.set(interfaceName, [])
+
+    const props = getConfigProperties(configInterface)
+    props.forEach((p: ConfigProperty) => {
+      if (skipProperties.includes(p.name)) return
+      if (keepOnlyRequiredProperties && !p.required) return
+
+      configPropertiesMap.set(p.name, p)
+      requiredProps.set(interfaceName, [...requiredProps.get(interfaceName), p.name])
+
+      const member = configInterface.members.find(m => (m.name as ts.Identifier)?.escapedText === p.name)
+      if (member) configInterfaceMembers.push(member)
+    })
+
+
+    if (configInterface.heritageClauses) {
+      const heritageClauses = Array.from(configInterface.heritageClauses)
+      const utilityTypes = heritageClauses.flatMap(hc => hc.types.filter(t => t.typeArguments))
+      utilityTypes.forEach(t => {
+        const expression = (t.expression as ts.Identifier).escapedText
+        const types = Array.from(t.typeArguments)
+        const optionalProps: string[] = []
+        if (expression === 'Partial') {
+        // If partial, required members from the inherited interface are now optional
+          const partialInterfaceName = getTypeName((types[0] as ts.TypeReferenceNode).typeName)
+          optionalProps.push(...requiredProps.get(partialInterfaceName))
+        } else if (expression === 'WithOptional') {
+        // If WithOptional, only delete the provided property from required props
+          const token = (types[1] as ts.LiteralTypeNode).literal as ts.LiteralToken
+          optionalProps.push(token.text)
+        }
+        optionalProps.forEach(p => {
+          configPropertiesMap.delete(p)
+          configInterfaceMembers = configInterfaceMembers.filter(m => (m.name as ts.Identifier)?.escapedText !== p)
+        })
+      })
+    }
+
+    statements = [...statements, ...sourceStatements]
+    if (i === component.sources.length - 1) {
+      generics = configInterface.typeParameters?.map((t: ts.TypeParameterDeclaration) => {
+        const name = t.name.escapedText as string
+        const constraint = t.constraint as ts.TypeReferenceNode
+        const constraintTypeName = (constraint?.typeName as ts.Identifier)?.escapedText as string
+        const defaultValue = ((t.default as ts.TypeReferenceNode)?.typeName as ts.Identifier)?.escapedText as string
+        return { name, extends: constraintTypeName, default: defaultValue }
+      })
+    }
+  }
+
+  const configProperties = Array.from(configPropertiesMap.values())
+
+
+  return {
+    configProperties,
+    configInterfaceMembers,
+    generics,
+    statements,
+  }
 }

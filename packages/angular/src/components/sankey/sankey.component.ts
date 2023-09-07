@@ -229,7 +229,7 @@ export class VisSankeyComponent<N extends SankeyInputNode, L extends SankeyInput
   /** Sub-label to label width ratio when `subLabelPlacement` is set to `SankeySubLabelPlacement.Inline`
    * Default: `0.4`, which means that 40% of `labelMaxWidth` will be given to sub-label, and 60% to the main label. */
   @Input() subLabelToLabelInlineWidthRatio?: number
-  @Input() data: any
+  @Input() data: { nodes: N[]; links?: L[] }
 
   component: Sankey<N, L> | undefined
   public componentContainer: ContainerCore | undefined

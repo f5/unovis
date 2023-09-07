@@ -13,7 +13,7 @@ export type VisGraphRef<N extends GraphInputNode, L extends GraphInputLink> = {
 }
 
 export type VisGraphProps<N extends GraphInputNode, L extends GraphInputLink> = GraphConfigInterface<N, L> & {
-  data?: any;
+  data?: { nodes: N[]; links?: L[] };
   ref?: Ref<VisGraphRef<N, L>>;
 }
 

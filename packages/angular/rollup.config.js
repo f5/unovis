@@ -1,4 +1,3 @@
-// Copyright (c) Volterra, Inc. All rights reserved.
 import typescript from 'rollup-plugin-typescript2'
 import ttypescript from 'ttypescript'
 

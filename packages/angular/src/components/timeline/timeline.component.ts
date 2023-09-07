@@ -73,9 +73,6 @@ export class VisTimelineComponent<Datum> implements TimelineConfigInterface<Datu
   /** Accessor function for getting the values along the X axis. Default: `undefined` */
   @Input() x: NumericAccessor<Datum>
 
-  /** A single of multiple accessor functions for getting the values along the Y axis. Default: `undefined` */
-  @Input() y: NumericAccessor<Datum> | NumericAccessor<Datum>[]
-
   /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */
   @Input() id?: ((d: Datum, i: number, ...rest) => string)
 
@@ -154,8 +151,8 @@ export class VisTimelineComponent<Datum> implements TimelineConfigInterface<Datu
   }
 
   private getConfig (): TimelineConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, lineWidth, lineCap, rowHeight, length, type, cursor, showLabels, labelWidth, maxLabelWidth, alternatingRowColors, onScroll, showEmptySegments } = this
-    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, lineWidth, lineCap, rowHeight, length, type, cursor, showLabels, labelWidth, maxLabelWidth, alternatingRowColors, onScroll, showEmptySegments }
+    const { duration, events, attributes, x, id, color, xScale, yScale, excludeFromDomainCalculation, lineWidth, lineCap, rowHeight, length, type, cursor, showLabels, labelWidth, maxLabelWidth, alternatingRowColors, onScroll, showEmptySegments } = this
+    const config = { duration, events, attributes, x, id, color, xScale, yScale, excludeFromDomainCalculation, lineWidth, lineCap, rowHeight, length, type, cursor, showLabels, labelWidth, maxLabelWidth, alternatingRowColors, onScroll, showEmptySegments }
     const keys = Object.keys(config) as (keyof TimelineConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

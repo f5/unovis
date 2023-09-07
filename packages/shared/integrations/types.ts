@@ -17,8 +17,17 @@ export type GenericParameter = {
 export type ComponentInput = {
   name: string;
   sources: string[];
-  elementSuffix?: string;
   kebabCaseName?: string;
-  dataType?: string | null;
-  styles?: string[];
+  dataType?: string;
+  elementSuffix?: string;
+}
+
+export type ReactComponentInput = ComponentInput
+
+export type AngularComponentInput = ComponentInput & {
+  angularProvide: string;
+}
+
+export type SvelteComponentInput = ComponentInput & {
+  svelteStyles?: string[];
 }

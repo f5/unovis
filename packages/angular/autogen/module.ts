@@ -1,4 +1,4 @@
-import { kebabCase } from './utils'
+import { kebabCase } from '@unovis/shared/integrations/utils'
 
 export function getModuleCode (componentName: string, kebabCaseName?: string): string {
   return `// !!! This code was automatically generated. You should not change it !!!

@@ -28,7 +28,7 @@
     "target": "es2017",
     "module": "esnext",
     "lib": [
-      "es2018",
+      "es2019",
       "dom"
     ],
     "plugins": [
