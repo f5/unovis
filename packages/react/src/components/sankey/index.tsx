@@ -13,7 +13,7 @@ export type VisSankeyRef<N extends SankeyInputNode, L extends SankeyInputLink> =
 }
 
 export type VisSankeyProps<N extends SankeyInputNode, L extends SankeyInputLink> = SankeyConfigInterface<N, L> & {
-  data?: any;
+  data?: { nodes: N[]; links?: L[] };
   ref?: Ref<VisSankeyRef<N, L>>;
 }
 

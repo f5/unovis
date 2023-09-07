@@ -7,9 +7,8 @@ import {
   VisEventType,
   VisEventCallback,
   NumericAccessor,
-  ColorAccessor,
-  ContinuousScale,
   Tooltip,
+  ContinuousScale,
   CrosshairCircle,
 } from '@unovis/ts'
 import { VisXYComponent } from '../../core'
@@ -71,34 +70,6 @@ export class VisCrosshairComponent<Datum> implements CrosshairConfigInterface<Da
     };
   }
 
-  /** Accessor function for getting the values along the X axis. Default: `undefined` */
-  @Input() x: NumericAccessor<Datum>
-
-  /** A single of multiple accessor functions for getting the values along the Y axis. Default: `undefined` */
-  @Input() y: NumericAccessor<Datum> | NumericAccessor<Datum>[]
-
-  /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */
-  @Input() id?: ((d: Datum, i: number, ...rest) => string)
-
-  /** Component color accessor function. Default: `d => d.color` */
-  @Input() color?: ColorAccessor<Datum> | ColorAccessor<Datum[]>
-
-  /** Scale for X dimension, e.g. Scale.scaleLinear(). If you set xScale you'll be responsible for setting it's `domain` and `range` as well.
-   * Only continuous scales are supported.
-   * Default: `undefined` */
-  @Input() xScale?: ContinuousScale
-
-  /** Scale for Y dimension, e.g. Scale.scaleLinear(). If you set yScale you'll be responsible for setting it's `domain` and `range` as well.
-   * Only continuous scales are supported.
-   * Default: `undefined` */
-  @Input() yScale?: ContinuousScale
-
-  /** Identifies whether the component should be excluded from overall X and Y domain calculations or not.
-   * This property can be useful when you want pass individual data to a component and you don't want it to affect
-   * the scales of the chart.
-   * Default: `false` */
-  @Input() excludeFromDomainCalculation?: boolean
-
   /** Separate array of accessors for stacked components (eg StackedBar, Area). Default: `undefined` */
   @Input() yStacked?: NumericAccessor<Datum>[]
 
@@ -150,8 +121,8 @@ export class VisCrosshairComponent<Datum> implements CrosshairConfigInterface<Da
   }
 
   private getConfig (): CrosshairConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, yStacked, baseline, tooltip, template, hideWhenFarFromPointer, hideWhenFarFromPointerDistance, snapToData, getCircles } = this
-    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, yStacked, baseline, tooltip, template, hideWhenFarFromPointer, hideWhenFarFromPointerDistance, snapToData, getCircles }
+    const { duration, events, attributes, yStacked, baseline, tooltip, template, hideWhenFarFromPointer, hideWhenFarFromPointerDistance, snapToData, getCircles } = this
+    const config = { duration, events, attributes, yStacked, baseline, tooltip, template, hideWhenFarFromPointer, hideWhenFarFromPointerDistance, snapToData, getCircles }
     const keys = Object.keys(config) as (keyof CrosshairConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

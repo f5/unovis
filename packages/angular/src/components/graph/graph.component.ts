@@ -293,7 +293,7 @@ export class VisGraphComponent<N extends GraphInputNode, L extends GraphInputLin
 
   /** Panels configuration. An array of `GraphPanelConfig` objects. Default: `[]` */
   @Input() panels?: GraphPanelConfig[] | undefined
-  @Input() data: any
+  @Input() data: { nodes: N[]; links?: L[] }
 
   component: Graph<N, L> | undefined
   public componentContainer: ContainerCore | undefined

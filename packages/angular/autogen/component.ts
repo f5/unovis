@@ -1,5 +1,6 @@
-import { kebabCase } from './utils'
-import { ConfigProperty, GenericParameter } from './types'
+import { kebabCase } from '@unovis/shared/integrations/utils'
+import { ConfigProperty, GenericParameter } from '@unovis/shared/integrations/types'
+
 
 function getJSDocComments (jsdocStringArray: string[]): string {
   return jsdocStringArray.map(jsdoc => {
@@ -45,7 +46,7 @@ ${
   configProps
     .map((p: ConfigProperty) => `
       ${getJSDocComments(p.doc ?? [])}
-      @Input() ${p.name}${p.optional ? '?' : ''}: ${p.type}`)
+      @Input() ${p.name}${p.required ? '' : '?'}: ${p.type}`)
     .join('\n')
 }
   ${dataType ? `@Input() data: ${dataType}` : ''}

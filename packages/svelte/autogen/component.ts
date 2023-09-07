@@ -1,4 +1,4 @@
-import { ConfigProperty, GenericParameter } from './types'
+import { ConfigProperty, GenericParameter } from '@unovis/shared/integrations/types'
 
 export function getComponentCode (
   componentName: string,

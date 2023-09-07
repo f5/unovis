@@ -1,17 +1,6 @@
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import {
-  FreeBrush,
-  FreeBrushConfigInterface,
-  ContainerCore,
-  VisEventType,
-  VisEventCallback,
-  NumericAccessor,
-  ColorAccessor,
-  ContinuousScale,
-  FreeBrushMode,
-  FreeBrushSelection,
-} from '@unovis/ts'
+import { FreeBrush, FreeBrushConfigInterface, ContainerCore, VisEventType, VisEventCallback, FreeBrushMode, FreeBrushSelection } from '@unovis/ts'
 import { D3BrushEvent } from 'd3-brush'
 import { VisXYComponent } from '../../core'
 
@@ -72,34 +61,6 @@ export class VisFreeBrushComponent<Datum> implements FreeBrushConfigInterface<Da
     };
   }
 
-  /** Accessor function for getting the values along the X axis. Default: `undefined` */
-  @Input() x: NumericAccessor<Datum>
-
-  /** A single of multiple accessor functions for getting the values along the Y axis. Default: `undefined` */
-  @Input() y: NumericAccessor<Datum> | NumericAccessor<Datum>[]
-
-  /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */
-  @Input() id?: ((d: Datum, i: number, ...rest) => string)
-
-  /** Component color accessor function. Default: `d => d.color` */
-  @Input() color?: ColorAccessor<Datum> | ColorAccessor<Datum[]>
-
-  /** Scale for X dimension, e.g. Scale.scaleLinear(). If you set xScale you'll be responsible for setting it's `domain` and `range` as well.
-   * Only continuous scales are supported.
-   * Default: `undefined` */
-  @Input() xScale?: ContinuousScale
-
-  /** Scale for Y dimension, e.g. Scale.scaleLinear(). If you set yScale you'll be responsible for setting it's `domain` and `range` as well.
-   * Only continuous scales are supported.
-   * Default: `undefined` */
-  @Input() yScale?: ContinuousScale
-
-  /** Identifies whether the component should be excluded from overall X and Y domain calculations or not.
-   * This property can be useful when you want pass individual data to a component and you don't want it to affect
-   * the scales of the chart.
-   * Default: `false` */
-  @Input() excludeFromDomainCalculation?: boolean
-
   /** Brush selection mode. X - horizontal, Y - vertical, XY - both. Default: `FreeBrushMode.X` */
   @Input() mode?: FreeBrushMode
 
@@ -153,8 +114,8 @@ export class VisFreeBrushComponent<Datum> implements FreeBrushConfigInterface<Da
   }
 
   private getConfig (): FreeBrushConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, mode, onBrush, onBrushStart, onBrushMove, onBrushEnd, handleWidth, selection, selectionMinLength, autoHide } = this
-    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, mode, onBrush, onBrushStart, onBrushMove, onBrushEnd, handleWidth, selection, selectionMinLength, autoHide }
+    const { duration, events, attributes, mode, onBrush, onBrushStart, onBrushMove, onBrushEnd, handleWidth, selection, selectionMinLength, autoHide } = this
+    const config = { duration, events, attributes, mode, onBrush, onBrushStart, onBrushMove, onBrushEnd, handleWidth, selection, selectionMinLength, autoHide }
     const keys = Object.keys(config) as (keyof FreeBrushConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

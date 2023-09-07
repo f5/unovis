@@ -1,0 +1,3 @@
+name        license period  license type  installed version  author
+----        --------------  ------------  -----------------  ------
+typescript  perpetual       Apache-2.0    4.2.4              Microsoft Corp.
