@@ -42,7 +42,7 @@ export const component = (): JSX.Element => {
         normal: { color: '#26BDA4' },
         blocked: { color: '#9876AA' },
       })
-    }, 5000)
+    }, 1500)
   }, [])
 
 

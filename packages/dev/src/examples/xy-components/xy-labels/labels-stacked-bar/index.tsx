@@ -2,6 +2,7 @@ import React, { useRef } from 'react'
 import { XYLabels } from '@unovis/ts'
 import { VisXYContainer, VisStackedBar, VisAxis, VisTooltip, VisCrosshair, VisXYLabels } from '@unovis/react'
 
+import { random } from '@src/utils/random'
 import { XYDataRecord, generateXYDataRecords } from '@src/utils/data'
 
 // Style
@@ -21,7 +22,7 @@ export const component = (): JSX.Element => {
 
   type AlertDataRecord = { x: number; label: string }
   const alerts: AlertDataRecord[] = Array(10).fill(null).map(() => ({
-    x: data[Math.floor(Math.random() * data.length)].x,
+    x: data[Math.floor(random.float() * data.length)].x,
     label: '❕',
   }))
 
