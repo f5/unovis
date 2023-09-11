@@ -167,6 +167,12 @@ export class XYContainer<Datum> extends ContainerCore {
       this.element.appendChild(crosshair.element)
     }
 
+    // Set up annotations
+    const annotations = containerConfig.annotations
+    if (annotations) {
+      this.element.appendChild(annotations.element)
+    }
+
     // Clipping path
     this.element.appendChild(this._clipPath.node())
 
@@ -208,7 +214,7 @@ export class XYContainer<Datum> extends ContainerCore {
     }
 
     // Update Scales of all the components at once to calculate required paddings and sync them
-    this._updateScales(...this.components, config.xAxis, config.yAxis, config.crosshair)
+    this._updateScales(...this.components, config.xAxis, config.yAxis, config.crosshair, config.annotations)
   }
 
   protected _render (customDuration?: number): void {
@@ -262,6 +268,9 @@ export class XYContainer<Datum> extends ContainerCore {
         .style('-webkit-clip-path', `url(#${this._clipPathId})`)
       crosshair.hide()
     }
+
+    config.annotations?.g.attr('transform', `translate(${margin.left},${margin.top})`)
+    config.annotations?.render()
 
     this._firstRender = false
   }
@@ -408,12 +417,13 @@ export class XYContainer<Datum> extends ContainerCore {
   }
 
   public destroy (): void {
-    const { components, config: { tooltip, crosshair, xAxis, yAxis } } = this
+    const { components, config: { tooltip, crosshair, annotations, xAxis, yAxis } } = this
     super.destroy()
 
     for (const c of components) c?.destroy()
     tooltip?.destroy()
     crosshair?.destroy()
+    annotations?.destroy()
     xAxis?.destroy()
     yAxis?.destroy()
   }

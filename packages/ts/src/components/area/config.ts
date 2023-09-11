@@ -6,7 +6,7 @@ import { NumericAccessor, StringAccessor } from 'types/accessor'
 
 export interface AreaConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
   /** Curve type from the CurveType enum. Default: `CurveType.MonotoneX` */
-  curveType?: CurveType;
+  curveType?: CurveType | string;
   /** Baseline value or accessor function. Default: `undefined` */
   baseline?: NumericAccessor<Datum>;
   /** Opacity value or accessor function. Default: `1` */

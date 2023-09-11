@@ -203,7 +203,6 @@ export class StackedBar<Datum> extends XYComponentCore<Datum, StackedBarConfig<D
     const isEnding = d._ending // The most top bar or, if the value is negative, the most bottom bar
     // Todo: Find a way to pass the datum index to `getNumber` below
     const value = getNumber(d, yAccessors[accessorIndex])
-
     const height = isEntering ? 0 : Math.abs(this.valueScale(d._stacked[0]) - this.valueScale(d._stacked[1]))
     const h = !isEntering && config.barMinHeight1Px && (height < 1) && isFinite(value) && (value !== config.barMinHeightZeroValue) ? 1 : height
     const y = isEntering

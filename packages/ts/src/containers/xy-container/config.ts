@@ -1,9 +1,10 @@
 // Core
 import { XYComponentCore } from 'core/xy-component'
 import { ContainerConfig, ContainerConfigInterface } from 'core/container/config'
-import { Tooltip } from 'components/tooltip'
 
 // Components
+import { Annotations } from 'components/annotations'
+import { Tooltip } from 'components/tooltip'
 import { Axis } from 'components/axis'
 import { Crosshair } from 'components/crosshair'
 
@@ -86,6 +87,8 @@ export interface XYContainerConfigInterface<Datum> extends ContainerConfigInterf
   preventEmptyDomain?: boolean | null;
   /** Sets the Y scale domain based on the current X scale domain (not the whole dataset). Default: `false` */
   scaleByDomain?: boolean;
+  /** Annotations component. Default: `undefined` */
+  annotations?: Annotations<any> | undefined;
 }
 
 export class XYContainerConfig<Datum> extends ContainerConfig implements XYContainerConfigInterface<Datum> {
@@ -111,4 +114,6 @@ export class XYContainerConfig<Datum> extends ContainerConfig implements XYConta
 
   preventEmptyDomain = null
   scaleByDomain = false
+
+  annotations = undefined
 }
