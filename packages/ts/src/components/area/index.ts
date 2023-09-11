@@ -12,7 +12,7 @@ import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
 
 // Types
-import { Curve } from 'types/curve'
+import { Curve, CurveType } from 'types/curve'
 import { NumericAccessor } from 'types/accessor'
 
 // Local Types
@@ -46,7 +46,7 @@ export class Area<Datum> extends XYComponentCore<Datum, AreaConfigInterface<Datu
     const { config, datamodel: { data } } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
 
-    const curveGen = Curve[config.curveType]
+    const curveGen = Curve[config.curveType as CurveType]
     this._areaGen = area<AreaDatum>()
       .x(d => d.x)
       .y0(d => d.y0)
