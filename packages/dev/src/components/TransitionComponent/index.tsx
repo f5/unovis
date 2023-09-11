@@ -44,10 +44,10 @@ export function TransitionComponent<T> (props: TransitionComponentProps<T>): JSX
     </div>
     {Object.keys(dataSeries).map((key) => (
       <div key={key}>
-        <p>
-          <span className={usingDefaultData ? s.focus : ''}>Default</span>
-          ⇔
-          <span className={!usingDefaultData ? s.focus : ''}>{
+        <p className='label'>
+          <span className={usingDefaultData ? s.inactive : ''}>Default</span>
+          <span className='fa fa-arrows-left-right'></span>
+          <span className={!usingDefaultData ? s.inactive : ''}>{
             key.replace(/([A-Z])/g, ' $1').replace(/^./, (match) => match.toUpperCase())
           }</span>
         </p>

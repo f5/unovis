@@ -15,19 +15,8 @@ type MapPointDatum = typeof cities[0]
 export const component = (): JSX.Element => {
   const mapKey = 'LNln6dGJDxyBa7F3c7Gd'
   const mapRef = useRef<VisLeafletMapRef<MapPointDatum> | null>(null)
-  const [isDarkTheme, toggleTheme] = useState(false)
-
-  useEffect(() => {
-    return () => document.body.classList.remove('theme-dark')
-  }, [])
-
-  const handleClick = (): void => {
-    toggleTheme(!isDarkTheme)
-    document.body.classList.toggle('theme-dark')
-  }
 
   return (<>
-    <button className={s.toggleThemeButton} onClick={handleClick}>{isDarkTheme ? 'Light' : 'Dark'} Theme</button>
     <div className={s.map}>
       <VisLeafletMap<MapPointDatum>
         ref={mapRef}
