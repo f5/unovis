@@ -28,6 +28,8 @@ export type UnovisText = {
   fontSize: number;
   // The font family of the text (optional). Default: `'var(--vis-font-family)'`.
   fontFamily?: string;
+  // The font weight of the text (optional)`.
+  fontWeight?: number;
   // The color of the text (optional).
   color?: string;
   // The line height scaling factor for the text (optional).
@@ -48,6 +50,10 @@ export type UnovisWrappedText = UnovisText & {
 }
 
 export type UnovisTextOptions = {
+  // Optional X coordinates of the text.
+  x?: number;
+  // Optional Y coordinates of the text.
+  y?: number;
   // The maximum width of the text in pixels.
   width?: number;
   // The word separator(s) used to split the text into words.
@@ -63,9 +69,6 @@ export type UnovisTextOptions = {
 }
 
 export type UnovisTextFrameOptions = UnovisTextOptions & {
-  width: number;
   height?: number;
-  x?: number;
-  y?: number;
 }
 
