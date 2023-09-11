@@ -34,6 +34,18 @@ export function kebabCase (str: string): string {
     .join('-')
 }
 
+export function escapeStringKeepHash (str: string): string {
+  return str
+    .replace(/['"]/g, '&#39;') // Escapes quotes with &#39;
+    // eslint-disable-next-line no-control-regex
+    .replace(/\u0000/g, '\\0') // Escapes null characters
+    .replace(/\n/g, '\\n') // Escapes new lines
+    .replace(/\r/g, '\\r') // Escapes carriage returns
+    .replace(/\v/g, '\\v') // Escapes vertical tabs
+    .replace(/\t/g, '\\t') // Escapes horizontal tabs
+    .replace(/\f/g, '\\f') // Escapes form feeds
+}
+
 /**
  * Trims the input string from the start, leaving only the specified maximum length.
  * @param {string} [str=''] - The input string to be trimmed.
@@ -423,13 +435,14 @@ function renderTextToTspanStrings (blocks: UnovisWrappedText[], x = 0, y?: numbe
     const attributes = {
       fontSize: b.fontSize,
       fontFamily: b.fontFamily,
+      fontWeight: b.fontWeight,
       fill: b.color,
       y: (i === 0) && y,
     }
 
     const attributesString = Object.entries(attributes)
       .filter(([_, value]) => value)
-      .map(([key, value]) => `${kebabCase(key)}="${escape(value.toString())}"`)
+      .map(([key, value]) => `${kebabCase(key)}="${escapeStringKeepHash(value.toString())}"`)
       .join(' ')
 
     return `<tspan xmlns="http://www.w3.org/2000/svg" ${attributesString}>${b._lines.map((line, k) => {
@@ -470,8 +483,8 @@ export function renderTextToSvgTextElement (
   options: UnovisTextOptions
 ): void {
   const wrappedText = getWrappedText(text, options.width, undefined, options.fastMode, options.separator, options.wordBreak)
-  const textElementX = +textElement.getAttribute('x')
-  const textElementY = +textElement.getAttribute('y')
+  const textElementX = options.x ?? +textElement.getAttribute('x')
+  const textElementY = options.y ?? +textElement.getAttribute('y')
   const x = textElementX ?? 0
   let y = textElementY ?? 0
   if (options.textAlign) textElement.setAttribute('text-anchor', getTextAnchorFromTextAlign(options.textAlign))
@@ -514,12 +527,13 @@ export function renderTextIntoFrame (
 
   let y = 0
   const height = estimateWrappedTextHeight(wrappedText)
-  if (frameOptions.height && height < frameOptions.height) {
-    const height = estimateWrappedTextHeight(wrappedText)
-    const dh = frameOptions.height - height
-    y = frameOptions.verticalAlign === VerticalAlign.Middle ? dh / 2
-      : frameOptions.verticalAlign === VerticalAlign.Bottom ? dh : 0
-  }
+
+  // If the frame has height, the text will be vertically aligned within the frame.
+  // If not, the text will be aligned against the `y` position of the frame.
+  const dh = frameOptions.height - height
+  y = frameOptions.verticalAlign === VerticalAlign.Middle ? dh / 2
+    : frameOptions.verticalAlign === VerticalAlign.Bottom ? dh : 0
+
 
   const translate = (frameOptions.x || frameOptions.y)
     ? `transform="translate(${frameOptions.x ?? 0},${frameOptions.y ?? 0})"`
