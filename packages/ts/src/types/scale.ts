@@ -3,6 +3,7 @@ import {
   scalePow,
   scaleSqrt,
   scaleLog,
+  scaleSymlog,
   scaleIdentity,
   scaleTime,
   scaleUtc,
@@ -17,17 +18,19 @@ import {
   ScaleLinear,
   ScalePower,
   ScaleLogarithmic,
+  ScaleSymLog,
   ScaleTime,
 } from 'd3-scale'
 // Todo Ordinal Scales: ScaleOrdinal, ScaleBand, ScalePoint, ScaleThreshold, ScaleQuantile, ScaleQuantize, ScaleDiverging, ScaleSequential
 
-export type ContinuousScale = ScaleLinear<number, number> | ScalePower<number, number> | ScaleLogarithmic<number, number> | ScaleTime<number, number>
+export type ContinuousScale = ScaleLinear<number, number> | ScalePower<number, number> | ScaleLogarithmic<number, number> | ScaleSymLog<number, number> | ScaleTime<number, number>
 
 export const Scale = {
   scaleLinear,
   scalePow,
   scaleSqrt,
   scaleLog,
+  scaleSymlog,
   scaleIdentity,
   scaleTime,
   scaleUtc,

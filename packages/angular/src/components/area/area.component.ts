@@ -100,7 +100,7 @@ export class VisAreaComponent<Datum> implements AreaConfigInterface<Datum>, Afte
   @Input() excludeFromDomainCalculation?: boolean
 
   /** Curve type from the CurveType enum. Default: `CurveType.MonotoneX` */
-  @Input() curveType?: CurveType
+  @Input() curveType?: CurveType | string
 
   /** Baseline value or accessor function. Default: `undefined` */
   @Input() baseline?: NumericAccessor<Datum>

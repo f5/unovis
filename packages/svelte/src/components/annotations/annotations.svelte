@@ -1,30 +1,28 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { Crosshair, CrosshairConfigInterface, NumericAccessor } from '@unovis/ts'
+  import { Annotations, AnnotationsConfigInterface, AnnotationItem } from '@unovis/ts'
   import { onMount, getContext } from 'svelte'
 
   import type { Lifecycle } from '../../types/context'
   import { arePropsEqual } from '../../utils/props'
-  // type defs
-  type Datum = $$Generic
+
 
   // data and required props
   // eslint-disable-next-line no-undef-init
   export let data: Datum[] = undefined
-  export let x: NumericAccessor<Datum>
-  export let y: NumericAccessor<Datum> | NumericAccessor<Datum>[]
+  export let items: AnnotationItem[] | undefined
 
   // config
-  let prevConfig: CrosshairConfigInterface<Datum>
-  let config: CrosshairConfigInterface<Datum>
-  $: config = { x, y, ...$$restProps }
+  let prevConfig: AnnotationsConfigInterface
+  let config: AnnotationsConfigInterface
+  $: config = { items, ...$$restProps }
 
   // component declaration
-  let component: Crosshair<Datum>
-  const lifecycle = getContext<Lifecycle>('crosshair')
+  let component: Annotations
+  const lifecycle = getContext<Lifecycle>('annotations')
 
   onMount(() => {
-    component = new Crosshair<Datum>(config)
+    component = new Annotations(config)
     return () => component?.destroy()
   })
   $: component?.setData(data)
@@ -34,9 +32,9 @@
   }
 
   // component accessor
-  export function getComponent (): Crosshair<Datum> { return component }
+  export function getComponent (): Annotations { return component }
 
 </script>
 
-<vis-crosshair use:lifecycle={component}/>
+<vis-annotations use:lifecycle={component}/>
 
