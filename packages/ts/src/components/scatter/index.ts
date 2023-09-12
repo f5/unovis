@@ -225,4 +225,11 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfig<Datum>,
 
     this._resolveLabelOverlap()
   }
+
+  public getAriaDescription (tickFormat: any): string {
+    const yAccessors = (isArray(this.config.y) ? this.config.y : [this.config.y]) as NumericAccessor<Datum>[]
+    const numyAccessors = yAccessors.length
+    const points = this.datamodel.data.length
+    return `There ${points > 1 ? 'are' : 'is'} ${points} ${points > 1 ? 'points' : 'point'} in the scatter plot. Each point has ${numyAccessors} markers. `
+  }
 }
