@@ -45,7 +45,6 @@ export type XYConfigInterface<Datum> = XYComponentConfigInterface<Datum>
 export class XYContainer<Datum> extends ContainerCore {
   config: XYContainerConfig<Datum> = new XYContainerConfig()
   datamodel: CoreDataModel<Datum[]> = new CoreDataModel()
-  private _svgDefs: Selection<SVGDefsElement, unknown, null, undefined>
   private _clipPath: Selection<SVGClipPathElement, unknown, null, undefined>
   private _clipPathId = guid()
   private _axisMargin: Spacing = { top: 0, bottom: 0, left: 0, right: 0 }
@@ -67,7 +66,6 @@ export class XYContainer<Datum> extends ContainerCore {
       --highlight-filter-id: url(${baseUrl}#${highlightFilterId}); // defining a css variable
     `)
 
-    this._svgDefs = this.svg.append('defs')
     this._svgDefs.append('filter')
       .attr('id', highlightFilterId)
       .attr('filterUnits', 'objectBoundingBox')

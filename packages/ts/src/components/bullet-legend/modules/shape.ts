@@ -7,18 +7,21 @@ import { ColorAccessor } from 'types/accessor'
 import { getColor } from 'utils/color'
 import { circlePath } from 'utils/path'
 
+// Constants
+import { PATTERN_SIZE_PX } from 'styles/patterns'
+
 // Local types
 import { BulletLegendConfigInterface } from '../config'
 import { BulletShape, BulletLegendItemInterface } from '../types'
 
 // Size with respect to the viewBox. We use this to compute path data which is independent of the
 // the configured size.
-const BULLET_SIZE = 20
+const BULLET_SIZE = PATTERN_SIZE_PX * 3
 
-function getWidth (shape: BulletShape): number {
+function getHeight (shape: BulletShape): number {
   switch (shape) {
     case BulletShape.Line:
-      return BULLET_SIZE * 2.5
+      return BULLET_SIZE / 2.5
     default:
       return BULLET_SIZE
   }
@@ -43,7 +46,7 @@ export function createBullets (
     .attr('width', '100%')
     .attr('height', '100%')
     .append('path')
-    .attr('d', getPath(config.bulletShape, getWidth(config.bulletShape), BULLET_SIZE))
+    .attr('d', getPath(config.bulletShape, BULLET_SIZE, getHeight(config.bulletShape)))
 }
 
 export function updateBullets (
@@ -51,8 +54,8 @@ export function updateBullets (
   config: BulletLegendConfigInterface,
   colorAccessor: ColorAccessor<BulletLegendItemInterface>
 ): void {
-  const height = BULLET_SIZE
-  const width = getWidth(config.bulletShape)
+  const width = BULLET_SIZE
+  const height = getHeight(config.bulletShape)
 
   const getOpacity = (d: BulletLegendItemInterface): number => d.inactive ? 0.4 : 1
 

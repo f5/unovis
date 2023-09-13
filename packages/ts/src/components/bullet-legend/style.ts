@@ -25,6 +25,10 @@ export const variables = injectGlobal`
     --vis-legend-label-color: var(--vis-dark-legend-label-color);
     --vis-legend-bullet-inactive-color: var(--vis-dark-legend-bullet-inactive-color);
   }
+
+  body.theme-patterns {
+    --vis-legend-bullet-size: 14px;
+  }
 `
 
 export const item = css`
