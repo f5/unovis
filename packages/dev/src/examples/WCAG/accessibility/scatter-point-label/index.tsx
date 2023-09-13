@@ -3,7 +3,7 @@ import { VisXYContainer, VisScatter, VisAxis } from '@unovis/react'
 
 import { generateXYDataRecords, XYDataRecord } from '@src/utils/data'
 
-export const title = 'Points with labels'
+export const title = 'Scatter Plot'
 export const subTitle = 'Multi-accessor'
 export const component = (): JSX.Element => {
   const accessors = [

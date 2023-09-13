@@ -227,6 +227,9 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfig<Datum>,
   }
 
   public getAriaDescription (tickFormat: any): string {
+    if (!this.config.configureAriaLabel) {
+      return ''
+    }
     const yAccessors = (isArray(this.config.y) ? this.config.y : [this.config.y]) as NumericAccessor<Datum>[]
     const numyAccessors = yAccessors.length
     const points = this.datamodel.data.length

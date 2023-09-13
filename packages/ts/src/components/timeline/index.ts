@@ -313,6 +313,9 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfig<Datum
   }
 
   public getAriaDescription (tickFormat: any): string {
+    if (!this.config.configureAriaLabel) {
+      return ''
+    }
     const segments = this.datamodel.data.length
     const { datamodel: { data } } = this
     const numRows = this._getNumRows(data)
