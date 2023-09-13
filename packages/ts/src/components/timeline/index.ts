@@ -44,6 +44,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfig<Datum
   private _maxScroll = 0
   private _scrollbarHeight = 0
   private _labelMargin = 5
+  private _numRows
 
   constructor (config?: TimelineConfigInterface<Datum>) {
     super()
@@ -103,6 +104,17 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfig<Datum
     }
   }
 
+  _getNumRows (data): number {
+    const { config } = this
+    const yRange = this.yScale.range()
+    const yHeight = Math.abs(yRange[1] - yRange[0])
+    const recordLabels = this._getRecordLabels(data)
+    const recordLabelsUnique = unique(recordLabels)
+    const numUniqueRecords = recordLabelsUnique.length
+    const numRows = Math.max(Math.floor(yHeight / config.rowHeight), numUniqueRecords)
+    return numRows
+  }
+
   _render (customDuration?: number): void {
     super._render(customDuration)
     const { config, datamodel: { data } } = this
@@ -145,7 +157,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfig<Datum
 
     // Row background rects
     const xStart = xRange[0]
-    const numRows = Math.max(Math.floor(yHeight / config.rowHeight), numUniqueRecords)
+    const numRows = this._getNumRows(data)
     const recordTypes: (string | undefined)[] = Array(numRows).fill(null).map((_, i) => recordLabelsUnique[i])
     const rects = this._rowsGroup.selectAll<SVGRectElement, number>(`.${s.row}`)
       .data(recordTypes)
@@ -298,5 +310,12 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfig<Datum
     const min = getMin(datamodel.data, config.x)
     const max = getMax(datamodel.data, (d, i) => getNumber(d, config.x, i) + (getNumber(d, config.length, i) ?? 0))
     return [min, max]
+  }
+
+  public getAriaDescription (tickFormat: any): string {
+    const segments = this.datamodel.data.length
+    const { datamodel: { data } } = this
+    const numRows = this._getNumRows(data)
+    return `There are ${numRows > 1 ? 'are' : 'is'} ${numRows} ${numRows > 1 ? 'rows' : 'row'} in the timeline plot with a total of ${segments} ${segments > 1 ? 'segments' : 'segment'}.`
   }
 }
