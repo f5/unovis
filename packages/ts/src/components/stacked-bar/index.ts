@@ -8,6 +8,7 @@ import { isNumber, isArray, isEmpty, clamp, getStackedExtent, getString, getNumb
 import { roundedRectPath } from 'utils/path'
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
+import { getAriaDescriptionForXYChart } from 'utils/text'
 
 // Types
 import { ContinuousScale } from 'types/scale'
@@ -263,5 +264,14 @@ export class StackedBar<Datum> extends XYComponentCore<Datum, StackedBarConfig<D
 
   getXDataExtent (): number[] {
     return this.isVertical() ? this.getDataScaleExtent() : this.getValueScaleExtent(false)
+  }
+
+  public getAriaDescription (): string {
+    if (!this.config.configureAriaLabel) {
+      return ''
+    }
+    const description = getAriaDescriptionForXYChart(this.getXDataExtent(), this.getYDataExtent(true), 'grouped bar chart')
+    const yAccessors = this.getAccessors()
+    return `There are ${yAccessors.length} stacked bars in the stacked bar chart with ${this._barData.length} points. ${description}`
   }
 }
