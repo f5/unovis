@@ -57,6 +57,9 @@ export class SingleContainer<Data> extends ContainerCore {
       tooltip.setComponents([this.component])
     }
 
+    // Defs
+    this.element.appendChild(this._svgDefs.node())
+
     if (!preventRender) this.render()
   }
 

@@ -20,6 +20,7 @@ export class ContainerCore {
   protected _requestedAnimationFrame: number
   protected _isFirstRender = true
   protected _resizeObserver: ResizeObserver | undefined
+  protected _svgDefs: Selection<SVGDefsElement, unknown, null, undefined>
   private _containerSize: { width: number; height: number }
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -42,6 +43,7 @@ export class ContainerCore {
       .attr('height', ContainerCore.DEFAULT_CONTAINER_HEIGHT) // Overriding default SVG height of 150
       .attr('aria-hidden', true)
 
+    this._svgDefs = this.svg.append('defs')
     this.element = this.svg.node()
   }
 

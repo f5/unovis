@@ -61,7 +61,8 @@ export function SizedScatter (props) {
   )
 }
 
-## Overview
+## CSS Variables
+### Overview
 In addition to configuration properties, our components also rely on
 [CSS variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties)
 to supply the values of various SVG attributes such as `fill`, `stroke`, `opacity`, etc. You can override
@@ -74,7 +75,7 @@ Note that while our variables follow this convention, it does not guarantee that
 to override is available. Be sure to check the corresponding doc page of the component you want to customize
 to see the available CSS variables.
 
-## Basic Example
+### Basic Example
 Variables can be overridden in your CSS style declarations. Consider the default configuration for sankey, which looks like this:
 
 <DocWrapper {...sankeyProps()} subLabel={d => Math.random()} excludeTabs/>
@@ -95,7 +96,7 @@ _Sankey_ component, we will see the following result:
    <DocWrapper {...sankeyProps()} subLabel={d => Math.random()} excludeTabs/>
 </div>
 
-## Dark Theme
+### Dark Theme Usage
 Our library offers dark theme support which takes effect when the class `theme-dark` is added to the
 document's `body` element. Every component has a dark version of each color variable labeled with the
 prefix `--vis-dark`. You can opt not to override these if you want to use our default dark theme values,
@@ -109,13 +110,46 @@ or override them like so:
   '--vis-dark-sankey-link-color',
 ]}/>
 
-## Label Sizing
+## Global Variables
+The majority of our variables exist on a component level,  but there are a few global CSS variables:
+
+<CSSVariables selector=':root' vars={[
+  '--vis-font-family',
+  '--vis-color-main',
+  '--vis-color-main-light',
+  '--vis-color-main-dark',
+  '--vis-color-grey',
+]}/>
+
+:::note
+Unless overridden explicitly, `--vis-color-main` corresponds to the first color in the default [color palette](#color-palette)
+:::
+
+## Label Styling
+### Font
+The font for labels across all of our components is defined by the `--vis-font-family` variable. The default font,
+[Inter](https://rsms.me/inter/), is not imported by default, but you can easily import it yourself from
+[Google Fonts](https://fonts.google.com/specimen/Inter).
+
+To use a different font, simply redefine the `--vis-font-family` CSS variable:
+
+<div className='custom-font'>
+  <CSSVariables vars={['--vis-font-family']} selector='.custom-font'/>
+  <XYWrapper
+    {...scatterProps}
+    labelPosition='center'
+    data={generateScatterDataRecords(10)}
+    sizeRange={[40,60]}
+  />
+</div>
+
+### Large Sizing
 A common theming scenario is the "large size" theme, for when you want larger font sizes for the
 labels in your charts. We offer two variations in the form of css classes that you can import directly
 from `@unovis/ts`:
 
 ```ts
-import { styleLargeTheme } from '@unovis/ts' // ~1.3x larger
+import { styleLargeSize } from '@unovis/ts' // ~1.3x larger
 import { styleExtraLargeSize } from '@unovis/ts' // 2x larger
 ```
 
@@ -142,39 +176,6 @@ point labels will try fit to the point's size. In this case, you will instead ne
 Additionally, you may need to adjust the [`rowHeight`](../xy-charts/Timeline#row-height) property to
 accommodate larger labels.
 :::
-
-## Global Variables
-The majority of our variables exist on a component level,  but there are a few global CSS variables:
-
-<CSSVariables selector=':root' vars={[
-  '--vis-font-family',
-  '--vis-color-main',
-  '--vis-color-main-light',
-  '--vis-color-main-dark',
-  '--vis-color-grey',
-]}/>
-
-:::note
-Unless overridden explicitly, `--vis-color-main` corresponds to the first color in the default [color palette](#color-palette)
-:::
-
-## Font
-The font for labels across all of our components is defined by the `--vis-font-family` variable. The default font,
-[Inter](https://rsms.me/inter/), is not imported by default, but you can easily import it yourself from
-[Google Fonts](https://fonts.google.com/specimen/Inter).
-
-To use a different font, simply redefine the `--vis-font-family` CSS variable:
-
-<div className='custom-font'>
-  <CSSVariables vars={['--vis-font-family']} selector='.custom-font'/>
-  <XYWrapper
-    {...scatterProps}
-    labelPosition='center'
-    data={generateScatterDataRecords(10)}
-    sizeRange={[40,60]}
-  />
-</div>
-
 
 ## Color Palette
 Many of our components use the default color palette for visualizations. You can import the array of hex values directly
@@ -248,6 +249,98 @@ globalThis.UNOVIS_COLORS = [...]
 ```
 This needs to be done before the library is imported, i.e. in your top level JS file or HTML.
 :::
+
+## Applying Patterns
+When `document.body` has the class `theme-patterns` we automatically apply patterns of two types:
+
+### Fill Patterns
+For solid shapes (most cases). You can customize fill patterns by assigning the corresponding CSS
+to a SVG [`mask`](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/mask) reference.
+
+The fill pattern palette looks like:
+
+<body class='theme-patterns' style={{ marginBottom: '20px'}}>
+  <XYWrapper
+    name='StackedBar'
+    data={Array(6).fill(0).map((_, i) => ({ x: i, y: 1 + Math.random(), color: `var(--vis-color${i})` }))}
+    x={d => d.x}
+    y={d => d.y}
+    color={d => d.color}
+    height={100}
+    components={[axis('x', { numTicks: 6, tickFormat: i => `Fill Pattern #${i}`})]}
+    excludeTabs
+  />
+</body>
+
+<details open>
+<summary>Default CSS Variables:</summary>
+
+```css
+--vis-pattern-fill0: var(--vis-pattern-fill-stripes-diagonal);
+--vis-pattern-fill1: var(--vis-pattern-fill-dots);
+--vis-pattern-fill2: var(--vis-pattern-fill-stripes-vertical);
+--vis-pattern-fill3: var(--vis-pattern-fill-crosshatch);
+--vis-pattern-fill4: var(--vis-pattern-fill-waves);
+--vis-pattern-fill5: var(--vis-pattern-fill-circles);
+```
+
+</details>
+
+### Line Patterns
+For the _Line_ component and when _BulletLegend_'s `bulletShape` property is set to `"line"`.
+You can customize these patterns by assigning any combination of the following variable types:
+- Prefixed `--vis-pattern-marker`: accepts SVG defs containings
+[`marker`](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/marker) elements
+- Variables with the prefix `--vis-pattern-dasharray` to a valid value for the
+[stroke-dasharray](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray) property. The default palette looks like:
+  
+<body class='theme-patterns' style={{ marginBottom: '20px'}}>
+  <XYWrapper
+    name='Line'
+    {...xyProps(6)}
+    y={Array(6).fill(0).map((_, i) => (d, j) => i + (j === 0 ? 0.5 : d.values[i]))}
+    components={[axis('y', {
+      tickValues: Array(6).fill(0).map((_, i) => i + 0.5),
+      tickFormat: i => `Line Pattern #${Math.floor(i)}`
+    })]}
+    excludeTabs
+  />
+</body>
+
+  
+<details>
+<summary>Default CSS Variables:</summary>
+
+```css
+--vis-pattern-marker0: var(--vis-pattern-marker-circle);
+
+--vis-pattern-marker1: var(--vis-pattern-marker-triangle);
+--vis-pattern-dasharray1: 9 1;
+
+--vis-pattern-marker2: var(--vis-pattern-marker-diamond);
+--vis-pattern-dasharray2: 2;
+
+--vis-pattern-marker3: var(--vis-pattern-marker-arrow);
+--vis-pattern-dasharray3: 2 3 8 3;
+
+--vis-pattern-marker4: var(--vis-pattern-marker-square);
+--vis-pattern-dasharray4: 6;
+
+--vis-pattern-marker5: var(--vis-pattern-marker-star);
+--vis-pattern-dasharray5: 1 6;
+```
+
+</details>
+
+### Summary
+To override default patterns use the following table for reference.
+
+| CSS Variable Prefix       | Type | Accepted Value | Example |
+| ------------------------- | -----| ----------- | --------------- |
+| `--vis-pattern-fill`      | Fill | SVG [`mask`](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/mask) from a `<defs>` element | `url(#my-pattern-fill)` |
+| `--vis-pattern-marker`    | Line | SVG [`marker`](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/marker) from a `<defs>` element | `url(#my-line-marker)` |
+| `--vis-pattern-dasharray` | Line | CSS [stroke-dasharray](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray) property | `5 10` |
+
 
 ## Bordered Segments
 For charts with multiple data layers, it might be preferable to have a visual separation of elements.
