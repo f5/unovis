@@ -137,8 +137,8 @@ export class Area<Datum> extends XYComponentCore<Datum, AreaConfig<Datum>, AreaC
       return ''
     }
     const { config, datamodel: { data } } = this
-    const description = getAriaDescriptionForXYChart(this.getXDataExtent(), this.getYDataExtent(true), 'grouped bar chart')
+    const description = getAriaDescriptionForXYChart(this.getXDataExtent(), this.getYDataExtent(true), 'stacked area chart')
     const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
-    return `There are ${yAccessors.length} stacked area charts with ${data.length} points. ${description}`
+    return `Stacked area chart. There are ${yAccessors.length} stacked area with ${data.length} points. ${description}`
   }
 }

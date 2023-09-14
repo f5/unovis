@@ -319,6 +319,6 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfig<Datum
     const segments = this.datamodel.data.length
     const { datamodel: { data } } = this
     const numRows = this._getNumRows(data)
-    return `There are ${numRows > 1 ? 'are' : 'is'} ${numRows} ${numRows > 1 ? 'rows' : 'row'} in the timeline plot with a total of ${segments} ${segments > 1 ? 'segments' : 'segment'}.`
+    return `Timeline chart. There ${numRows > 1 ? 'are' : 'is'} ${numRows} ${numRows > 1 ? 'rows' : 'row'} with a total of ${segments} ${segments > 1 ? 'segments' : 'segment'}.`
   }
 }

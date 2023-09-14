@@ -549,7 +549,13 @@ export function getAriaDescriptionForXYChart (xDataExtent: number[], yDataExtent
   if (yDataExtent[0] === undefined && yDataExtent[1] === undefined) {
     description += 'The extent of its Y dimension is undefined. '
   } else {
-    description += `The smallest value among the ${chartType} is ${yDataExtent[0]?.toFixed(2)}, the largest ${yDataExtent[1]?.toFixed(2)}. `
+    const min = yDataExtent[0]?.toFixed(2)
+    const max = yDataExtent[1]?.toFixed(2)
+    if (min !== '0.00') {
+      description += `The smallest value among the ${chartType} is ${min}, the largest ${max}. `
+    } else {
+      description += `The largest value among the ${chartType} is ${max}. `
+    }
   }
   return `${description}`
 }

@@ -270,8 +270,8 @@ export class StackedBar<Datum> extends XYComponentCore<Datum, StackedBarConfig<D
     if (!this.config.configureAriaLabel) {
       return ''
     }
-    const description = getAriaDescriptionForXYChart(this.getXDataExtent(), this.getYDataExtent(true), 'grouped bar chart')
+    const description = getAriaDescriptionForXYChart(this.getXDataExtent(), this.getYDataExtent(true), 'stacked bar chart')
     const yAccessors = this.getAccessors()
-    return `There are ${yAccessors.length} stacked bars in the stacked bar chart with ${this._barData.length} points. ${description}`
+    return `Stacked bar chart. There are ${yAccessors.length} stacked bars with ${this._barData.length} points. ${description}`
   }
 }

@@ -420,11 +420,18 @@ export class XYContainer<Datum> extends ContainerCore {
   protected _getAriaDescription (): string {
     let description = ''
     const tickFormat = this.config?.xAxis?.getTickFormat() ?? (_ => _)
+
+    // Get Description From Each Component
+    for (const c of this.components) {
+      description += `${c.getAriaDescription(tickFormat)} `
+    }
+
     // Get X and Y Domain
     Object.values(ScaleDimension).forEach((dimension: ScaleDimension) => {
       if (this.components.some((c) => c instanceof Timeline && dimension === ScaleDimension.Y)) {
         return
       }
+
       const domain = this._scaleDomains[dimension]
       const axisLabel = this.config?.[`${dimension}Axis`]?.config.label
       description += axisLabel
@@ -435,10 +442,7 @@ export class XYContainer<Datum> extends ContainerCore {
           dimension === ScaleDimension.X ? 'Horizontal Axis' : 'Vertical Axis'} `
       description += `ranges from ${dimension === ScaleDimension.X ? tickFormat(+domain?.[0]?.toFixed(2)) : domain?.[0]?.toFixed(2)} to ${dimension === ScaleDimension.X ? tickFormat(+domain?.[1]?.toFixed(2)) : domain?.[1]?.toFixed(2)}. `
     })
-    // Get Description From Each Component
-    for (const c of this.components) {
-      description += `${c.getAriaDescription(tickFormat)} `
-    }
+
     return description
   }
 }

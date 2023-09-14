@@ -202,8 +202,8 @@ export class Line<Datum> extends XYComponentCore<Datum, LineConfig<Datum>, LineC
       tickFormat
     )
 
-    return `There ${yAccessors.length > 1 ? 'are' : 'is'} ${yAccessors.length} ${
+    return `Line chart. There ${yAccessors.length > 1 ? 'are' : 'is'} ${yAccessors.length} ${
       yAccessors.length > 1 ? 'lines' : 'line'
-    } in the line chart. ${description}`
+    }. ${description}`
   }
 }
