@@ -33,6 +33,7 @@
     "build": "npm run check && npx svelte-package",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "generate": "rollup -c ./autogen/rollup.config.js; node .autogen.cjs; rm .autogen.cjs",
+    "gallery": "rm -rf dist-gallery; rollup -c gallery.rollup.config.js --watch",
     "publish:dist": "rm -rf dist/.cache; cp ./{LICENSE,README.md,package.json} ./dist; cd ./dist; npm publish"
   },
   "peerDependencies": {
@@ -44,7 +45,11 @@
     "@sveltejs/package": "^1.0.0-next.5",
     "@tsconfig/svelte": "^2.0.0",
     "@zerollup/ts-transform-paths": "^1.7.18",
+    "eslint-plugin-svelte": "^2.10.0",
     "rollup": "^2.61.1",
+    "rollup-plugin-copy": "^3.4.0",
+    "rollup-plugin-dev": "^2.0.4",
+    "rollup-plugin-svelte": "^7.1.0",
     "rollup-plugin-typescript2": "^0.31.1",
     "svelte": "^3.48.0",
     "svelte-check": "^2.7.0",

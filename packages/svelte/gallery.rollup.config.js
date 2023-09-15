@@ -8,7 +8,7 @@ import copy from 'rollup-plugin-copy'
 import commonjs from 'rollup-plugin-commonjs'
 
 export default {
-  input: ['src/svelte-gallery.ts'],
+  input: ['src-demo/svelte-gallery.ts'],
   output: {
     dir: 'dist-demo',
     sourcemap: true,
@@ -21,6 +21,12 @@ export default {
       extensions: ['.js', '.ts', '.svelte'],
       dedupe: ['svelte'],
     }),
+    typescript({
+      typescript: require('typescript'),
+      tsconfig: 'tsconfig.json',
+      abortOnError: false,
+      transformers: [(service) => transformPaths(service.getProgram())],
+    }),
     svelte({
       emitCss: false,
       preprocess: sveltePreprocess({
@@ -30,16 +36,10 @@ export default {
         dev: true,
       },
     }),
-    typescript({
-      typescript: require('typescript'),
-      tsconfig: 'tsconfig.svelte.json',
-      abortOnError: false,
-      transformers: [(service) => transformPaths(service.getProgram())],
-    }),
     devServer({ dirs: ['dist-demo'], port: 9200 }),
     copy({
       targets: [
-        { src: 'src/svelte-gallery.html', dest: 'dist-demo', rename: '/index.html' },
+        { src: 'src-demo/svelte-gallery.html', dest: 'dist-demo', rename: '/index.html' },
       ],
     }),
   ],
