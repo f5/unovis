@@ -4,7 +4,7 @@ import React from 'react'
 // @ts-ignore
 import { useTabs } from '/node_modules/@docusaurus/theme-common/lib/utils/tabsUtils'
 import { StackblitzButton } from '@site/src/components/StackblitzButton'
-import { Example } from '@site/src/types/example'
+import type { Example } from '@unovis/shared/examples/types'
 import Tabs from '@theme-original/Tabs'
 
 type TabProps = {

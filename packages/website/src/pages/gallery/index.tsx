@@ -7,7 +7,7 @@ import Link from '@docusaurus/Link'
 import { GalleryCard } from '@site/src/components/GalleryCard'
 
 // Examples
-import { examples } from '@site/src/examples/examples-list'
+import { examples } from '@unovis/shared/examples/examples-list'
 
 // Styles
 import s from './index.module.css'

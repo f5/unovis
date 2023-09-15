@@ -2,9 +2,9 @@ import React, { useEffect } from 'react'
 import Tabs from '@theme/Tabs'
 import TabItem from '@theme/TabItem'
 import CodeBlock from '@theme/CodeBlock'
+import type { Example } from '@unovis/shared/examples/types'
 
 // Internal Deps
-import { Example } from '@site/src/types/example'
 import { Framework } from '@site/src/types/code'
 
 // Styles
@@ -18,7 +18,7 @@ export type GalleryViewerProps = {
 export function GalleryViewer ({ example, useTypescriptCode }: GalleryViewerProps): JSX.Element {
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    if (useTypescriptCode) require(`../../examples/${example.pathname}/${example.pathname}.ts`)
+    if (useTypescriptCode) require(`../../../../shared/examples/${example.pathname}/${example.pathname}.ts`)
   })
 
   return (<div className={s.root}>

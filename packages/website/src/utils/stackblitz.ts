@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import sdk, { OpenFileOption, Project, ProjectFiles, ProjectTemplate } from '@stackblitz/sdk'
+import type { Example } from '@unovis/shared/examples/types'
+
 import { Framework } from '../types/code'
-import { Example } from '../types/example'
 import { trimMultiline } from './text'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
