@@ -1,0 +1,11 @@
+{
+  "extends": "@tsconfig/svelte/tsconfig.json",
+  "types": ["node", "svelte"],
+  "include": ["examples/**/*.svelte", "examples/**/data.ts"],
+  "exclude": ["node_modules"],
+  "compilerOptions": {
+    "importsNotUsedAsValues": "preserve",
+    "target": "es6",
+  },
+}
+
