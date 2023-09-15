@@ -1,5 +1,12 @@
 {
   "extends": "@tsconfig/svelte/tsconfig.json",
-  "include": ["src/**/*", "src-demo/**/*"],
-  "exclude": ["node_modules/*"]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules/*"],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "target": "es6",
+    "experimentalDecorators": true,
+    "jsx": "preserve",
+    "moduleResolution": "node"
+  }
 }
