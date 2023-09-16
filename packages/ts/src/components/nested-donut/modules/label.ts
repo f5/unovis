@@ -3,7 +3,7 @@ import { color } from 'd3-color'
 import { Arc } from 'd3-shape'
 
 // Utils
-import { getColor, hexToBrightness } from 'utils/color'
+import { getColor, getHexValue, rgbaToRgb, rgbToBrightness } from 'utils/color'
 import { smartTransition } from 'utils/d3'
 import { getString } from 'utils/data'
 import { getCSSVariableValueInPixels } from 'utils/misc'
@@ -21,11 +21,19 @@ import { variables } from '../style'
 
 function getLabelFillColor<Datum> (
   d: NestedDonutSegment<Datum>,
-  config: NestedDonutConfig<Datum>
+  element: SVGElement
 ): string {
-  const c = getColor(d, config.segmentColor) ?? d._state.fill
-  const colorParsed = color(c)
-  const brightness = colorParsed ? hexToBrightness(colorParsed.hex()) : 0
+  const c = color(d._state.fill) ?? color(getHexValue(d._state.fill, element))
+  const rgb = c?.rgb()
+
+  // If shading, we adjust segment color before calculating brightness ratio
+  const colorParsed = rgb && d._state.fillOpacity
+    ? rgbaToRgb(
+      `rgba(${rgb.r},${rgb.g},${rgb.b},${d._state.fillOpacity})`,
+      getHexValue(cssvar(variables.nestedDonutBackgroundColor), element)
+    ) : rgb
+
+  const brightness = colorParsed ? rgbToBrightness(colorParsed) : 0
   return cssvar(brightness > 0.65 ? variables.nestedDonutSegmentLabelTextColorLight : variables.nestedDonutSegmentLabelTextColorDark)
 }
 
@@ -81,7 +89,7 @@ export function updateLabel<Datum> (
   selection
     .text(d => getString(d, config.segmentLabel) ?? d.data.key)
     .style('transition', `fill ${duration}ms`)
-    .style('fill', d => getColor(d, config.segmentLabelColor) ?? getLabelFillColor(d, config))
+    .style('fill', (d, i, els) => getColor(d, config.segmentLabelColor) ?? getLabelFillColor(d, els[i]))
     .each((d, i, els) => {
       const bounds = getLabelBounds(d)
       const label = select(els[i]).call(wrapSVGText, bounds.width)

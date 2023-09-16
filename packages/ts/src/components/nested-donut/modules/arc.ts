@@ -46,7 +46,8 @@ export function updateArc<Datum> (
 ): void {
   selection
     .style('transition', `fill ${duration}ms`) // Animate color with CSS because we're using CSS-variables
-    .style('fill', d => getColor(d, config.segmentColor) ?? d._state?.fill)
+    .style('fill', d => d._state.fill)
+    .style('fill-opacity', d => d._state.fillOpacity)
 
   if (duration) {
     const transition = smartTransition(selection, duration)
