@@ -12,7 +12,7 @@ import { SeriesDataModel } from 'data-models/series'
 import { VerticalAlign } from 'types/text'
 
 // Utils
-import { getColor, getHexValue } from 'utils/color'
+import { getColor } from 'utils/color'
 import { smartTransition } from 'utils/d3'
 import { getNumber, getString, getValue, isNumber, isNumberWithinRange, merge } from 'utils/data'
 import { getPixelValue } from 'utils/misc'
@@ -195,10 +195,6 @@ NestedDonutConfigInterface<Datum>
       .eachBefore(node => {
         if (!node.children || node.depth === rootNode.height - 1) return
 
-        const colors = this.colorScale
-          .domain([-1, node.children.length])
-          .range([getHexValue(node._state?.fill, this.element), '#fff'])
-
         const positions = pie<NestedDonutSegment<Datum>>()
           .startAngle(node.parent ? node.x0 : config.angleRange?.[0])
           .endAngle(node.parent ? node.x1 : config.angleRange?.[1])
@@ -207,14 +203,20 @@ NestedDonutConfigInterface<Datum>
             : (d.x1 - d.x0))
           .sort(config.sort)(node.children)
 
+        const opacity = scaleLinear()
+          .domain([-1, node.children.length])
+          .range([node._state?.fillOpacity ?? 1, 0])
+
         node.children.forEach((child, i) => {
           child._index = i
           child.x0 = positions[i].startAngle
           child.x1 = positions[i].endAngle
+
+          // Default to parent's fill if segmentColor accessor is not provided
+          const color = getColor(child, config.segmentColor, positions[i].index, child.depth !== 1)
           child._state = {
-            fill:
-              getColor(child, config.segmentColor, positions[i].index, child.depth !== 1) ??
-              colors(positions[i].index),
+            fill: color ?? node._state.fill,
+            fillOpacity: color === null ? opacity(positions[i].index) : null,
           }
         })
       })

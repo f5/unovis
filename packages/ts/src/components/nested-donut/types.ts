@@ -12,6 +12,7 @@ export type NestedDonutSegment<Datum> = HierarchyRectangularNode<NestedDonutSegm
   _index?: number;
   _state?: {
     fill?: string;
+    fillOpacity?: number | null;
   };
 }
 
