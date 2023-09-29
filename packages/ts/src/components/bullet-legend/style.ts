@@ -29,7 +29,8 @@ export const variables = injectGlobal`
 
 export const item = css`
   label: legendItem;
-  display: inline;
+  display: inline-flex;
+  align-items: center;
   font-family: var(--vis-legend-font-family, var(--vis-font-family));
   margin-right: var(--vis-legend-item-spacing);
   white-space: nowrap;
@@ -55,16 +56,12 @@ export const label = css`
 
 export const bullet = css`
   label: legendItemBullet;
-  border-radius: 100%;
-  background-color: var(--vis-legend-bullet-inactive-color);
-  border: 1px solid;
-  display: inline-block;
   margin-right: var(--vis-legend-bullet-label-spacing);
-  width: var(--vis-legend-bullet-size);
+  min-width: var(--vis-legend-bullet-size);
   height: var(--vis-legend-bullet-size);
-  vertical-align: middle;
 
-  .inactive {
-
+  > svg {
+    display: block;
   }
+}
 `

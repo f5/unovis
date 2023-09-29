@@ -1,7 +1,7 @@
 import { Config } from 'core/config'
 
 // Local Types
-import { BulletLegendItemInterface } from './types'
+import { BulletLegendItemInterface, BulletShape } from './types'
 
 export interface BulletLegendConfigInterface {
   /** Legend items. Array of `BulletLegendItemInterface`:
@@ -24,8 +24,10 @@ export interface BulletLegendConfigInterface {
   labelFontSize?: string | null;
   /** Label text (<span> element) max-width CSS property. Default: `null` */
   labelMaxWidth?: string | null;
-  /** Bullet circle size, mapped to the width and height CSS properties. Default: `null` */
+  /** Bullet shape size, mapped to the width and height CSS properties. Default: `null` */
   bulletSize?: string | null;
+  /** Bullet shape: `BulletShape.Circle`, `BulletShape.Line` or `BulletShape.Square`. Default: `BulletShape.Circle` */
+  bulletShape?: BulletShape;
 }
 
 export class BulletLegendConfig extends Config implements BulletLegendConfigInterface {
@@ -35,4 +37,5 @@ export class BulletLegendConfig extends Config implements BulletLegendConfigInte
   labelFontSize = null
   labelMaxWidth = null
   bulletSize = null
+  bulletShape = BulletShape.Circle
 }
