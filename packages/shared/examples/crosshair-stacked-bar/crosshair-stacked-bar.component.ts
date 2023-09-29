@@ -15,7 +15,7 @@ export class CrosshairStackedBarComponent {
   legendHTML: SafeHtml
 
   constructor (private sanitizer: DomSanitizer) {
-    this.legendHTML = sanitizer.bypassSecurityTrustHtml(
+    this.legendHTML = this.sanitizer.bypassSecurityTrustHtml(
       labels.map(l => `<span style="margin-right: 10px;">${this.getIcon(l)}</span>`).join('')
     )
   }
@@ -28,7 +28,6 @@ export class CrosshairStackedBarComponent {
     const numberFormat = Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: 'USD',
-      notation: 'compact',
     }).format
     const dataLegend = labels.filter(f => d[f.format] > 0)
       .reverse()

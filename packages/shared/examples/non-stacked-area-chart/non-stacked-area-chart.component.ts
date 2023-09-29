@@ -18,7 +18,7 @@ export class NonStackedAreaComponent {
   } => ({ y: d => d.cases[id], color: countries[id].color })
 
   xTicks = (i: number): string => `${data[i].month} ${data[i].year}`
-  yTicks = Intl.NumberFormat(navigator.language, { notation: 'compact' }).format
+  yTicks = Intl.NumberFormat(navigator.language).format
 
   ind = this.accessors(Country.India)
   usa = this.accessors(Country.UnitedStates)

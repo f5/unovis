@@ -4,7 +4,7 @@ import { data, DataRecord, palette } from './data'
 
 const categories = [...new Set(data.map((d: DataRecord) => d.category))].sort()
 const colorScale = Scale.scaleOrdinal(palette).domain(categories)
-const formatNumber = Intl.NumberFormat('en', { notation: 'compact' }).format
+const formatNumber = Intl.NumberFormat('en').format
 
 @Component({
   selector: 'basic-scatter-chart',

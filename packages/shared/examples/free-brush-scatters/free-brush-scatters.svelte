@@ -46,8 +46,6 @@
       <VisFreeBrush
         selectionMinLength={[0, 0]}
         autoHide={false}
-        x={scatterProps.x}
-        y={scatterProps.y}
         {onBrushEnd}
         mode={FreeBrushMode.XY}
       />

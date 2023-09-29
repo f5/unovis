@@ -23,6 +23,7 @@ const example: Example = {
   data: require('!!raw-loader!./data').default,
   preview: require(`../_previews/${pathname}.png`).default,
   previewDark: require(`../_previews/${pathname}-dark.png`).default,
+  styles: require('!!raw-loader!./styles.css').default,
 }
 
 export default example

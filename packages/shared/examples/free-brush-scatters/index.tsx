@@ -28,6 +28,7 @@ const example: Example = {
   data: require('!!raw-loader!./../basic-scatter-chart/data.ts').default,
   preview: require(`../_previews/${pathname}.png`).default,
   previewDark: require(`../_previews/${pathname}-dark.png`).default,
+  styles: require('!!raw-loader!./styles.css').default,
 }
 
 export default example
