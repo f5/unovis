@@ -1,14 +1,13 @@
 import { select, Selection } from 'd3-selection'
-import { color } from 'd3-color'
-
-// Utils
-import { getColor } from 'utils/color'
 
 // Config
 import { BulletLegendConfig, BulletLegendConfigInterface } from './config'
 
 // Local Types
 import { BulletLegendItemInterface } from './types'
+
+// Modules
+import { createBullets, updateBullets } from './modules/shape'
 
 // Styles
 import * as s from './style'
@@ -54,8 +53,7 @@ export class BulletLegend {
 
     legendItemsEnter.append('span')
       .attr('class', s.bullet)
-      .style('width', config.bulletSize)
-      .style('height', config.bulletSize)
+      .call(createBullets, config)
 
     legendItemsEnter.append('span')
       .attr('class', s.label)
@@ -67,18 +65,11 @@ export class BulletLegend {
     legendItemsMerged
       .classed(s.clickable, d => !!config.onLegendItemClick && this._isItemClickable(d))
       .style('display', (d: BulletLegendItemInterface) => d.hidden ? 'none' : null)
-    const legendBulletsToUpdate = legendItemsMerged.select(`.${s.bullet}`)
-    legendBulletsToUpdate.style('background-color', (d: BulletLegendItemInterface, i) => getColor(d, this._colorAccessor, i))
-      .style('border-color', (d: BulletLegendItemInterface, i) => getColor(d, this._colorAccessor, i))
-    legendBulletsToUpdate.each((d, i, elements) => {
-      if (d.inactive) {
-        const bulletColor = window.getComputedStyle(elements[i] as Element).getPropertyValue('background-color')
-        const transparentColor = color(bulletColor)
-        transparentColor.opacity = 0.4
-        select(elements[i])
-          .style('background-color', transparentColor.toString())
-      }
-    })
+
+    legendItemsMerged.select<HTMLSpanElement>(`.${s.bullet}`)
+      .style('min-width', config.bulletSize)
+      .style('height', config.bulletSize)
+      .call(updateBullets, this.config, this._colorAccessor)
 
     legendItemsMerged.select(`.${s.label}`)
       .text((d: BulletLegendItemInterface) => d.name)

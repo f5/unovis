@@ -5,3 +5,9 @@ export interface BulletLegendItemInterface {
   hidden?: boolean;
   pointer?: boolean;
 }
+
+export enum BulletShape {
+  Circle = 'circle',
+  Line = 'line',
+  Square = 'square',
+}

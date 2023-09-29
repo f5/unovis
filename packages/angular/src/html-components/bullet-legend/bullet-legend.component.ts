@@ -1,5 +1,5 @@
 import { Component, AfterViewInit, Input, SimpleChanges, ViewChild, ElementRef } from '@angular/core'
-import { BulletLegend, BulletLegendConfigInterface, BulletLegendItemInterface } from '@unovis/ts'
+import { BulletLegend, BulletLegendConfigInterface, BulletLegendItemInterface, BulletShape } from '@unovis/ts'
 import { VisGenericComponent } from '../../core'
 
 @Component({
@@ -38,6 +38,9 @@ export class VisBulletLegendComponent implements BulletLegendConfigInterface, Af
 
   /** Bullet circle size, mapped to the width and height CSS properties. Default: `null` */
   @Input() bulletSize?: string | null
+
+  /** Bullet shape: `BulletShape.Circle`, `BulletShape.Line` or `BulletShape.Square`. Default: `BulletShape.Circle` */
+  @Input() bulletShape?: BulletShape
 
   component: BulletLegend | undefined
 
