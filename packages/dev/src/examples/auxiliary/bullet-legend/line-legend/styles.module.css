@@ -1,0 +1,20 @@
+.legends *[stroke="var(--vis-color1)"]:not([style*="fill"]) {
+    stroke-dasharray: 5;
+}
+
+.legends *[stroke="var(--vis-color2)"]:not([style*="fill"]) {
+    marker: url('#circle-marker');
+  }
+  
+.legends *[stroke="var(--vis-color3)"]:not([style*="fill"]) {
+    stroke-dasharray: 2;
+  }
+  
+.legends *[stroke="var(--vis-color4)"]:not([style*="fill"]) {
+  marker: url('#square-marker');
+}
+
+.legends *[stroke="var(--vis-color5)"]:not([style*="fill"]) {
+  marker: url('#arrow-marker');
+  stroke-dasharray: 2 7;
+}
