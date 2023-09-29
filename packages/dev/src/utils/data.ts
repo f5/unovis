@@ -6,6 +6,11 @@ export type XYDataRecord = {
   y1?: number;
   y2?: number;
 }
+
+export type StackedDataRecord = {
+  x: number;
+  ys: number[];
+}
 export interface TimeDataRecord {
   timestamp: number;
   value: number;
@@ -39,6 +44,13 @@ export function generateXYDataRecords (n = 10): XYDataRecord[] {
     y: 5 + 5 * Math.random(),
     y1: 1 + 3 * Math.random(),
     y2: 2 * Math.random(),
+  }))
+}
+
+export function generateStackedDataRecords (n = 10, count = 6): StackedDataRecord[] {
+  return Array(n).fill(0).map((_, i) => ({
+    x: i,
+    ys: Array(count).fill(0).map((_, i) => (i * count / 3) + (count * Math.random())),
   }))
 }
 
