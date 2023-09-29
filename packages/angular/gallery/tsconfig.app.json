@@ -1,0 +1,45 @@
+/* To learn more about this file see: https://angular.io/config/tsconfig. */
+{
+  "extends": "../../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../out-tsc/app",
+    "paths": {
+     "@unovis/ts": ["../../ts/lib/index.js"],
+     "@unovis/shared/*": ["../../shared/*"]
+    },
+    "baseUrl": ".",
+    "downlevelIteration": true,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    "declaration": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "noUnusedLocals": true,
+    "importHelpers": true,
+    "typeRoots": [
+        "node_modules/@types"
+    ],
+    "lib": [
+        "ES2019",
+        "es2017",
+        "es2016",
+        "es2015",
+        "dom"
+    ],
+    "target": "es2015",
+
+  },
+  "resolveJsonModule": true,
+  "allowSyntheticDefaultImports": true,
+  "importHelpers": true,
+  "files": [
+    "src/main.ts",
+    "src/polyfills.ts"
+  ],
+  "include": [
+    "src/**/*.d.ts",
+  ],
+}

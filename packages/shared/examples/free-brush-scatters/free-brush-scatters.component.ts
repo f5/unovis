@@ -12,7 +12,7 @@ export class FreeBrushScattersComponent {
   data = data
   categories = [...new Set(this.data.map((d: DataRecord) => d.category))].sort()
   colorScale = Scale.scaleOrdinal(palette).domain(this.categories)
-  formatNumber = Intl.NumberFormat('en', { notation: 'compact' }).format
+  formatNumber = Intl.NumberFormat('en').format
   legendItems = this.categories.map(v => ({ name: v, color: this.colorScale(v) }))
 
   id = (d: DataRecord): string => d.major

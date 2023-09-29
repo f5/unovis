@@ -29,8 +29,6 @@ export default function FreeBrushScatter (): JSX.Element {
         <VisFreeBrush
           selectionMinLength={[0, 0]}
           autoHide={false}
-          x={scatterProps.x}
-          y={scatterProps.y}
           onBrushEnd={useCallback(setSelection, [])}
           mode={FreeBrushMode.XY}/>
       </VisXYContainer>

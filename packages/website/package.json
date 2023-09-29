@@ -33,13 +33,9 @@
     "serve": "docusaurus serve",
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
-    "typecheck": "tsc",
-    "gallery:angular": "nodemon -e ts,html,css --watch ./src/examples --exec \"npx ngc-esbuild --port 9500\""
+    "typecheck": "tsc"
   },
   "dependencies": {
-    "@angular/core": "^12.0.3",
-    "@angular/platform-browser": "^12.0.3",
-    "@angular/platform-browser-dynamic": "^12.0.3",
     "@docusaurus/core": "^2.4.1",
     "@docusaurus/plugin-debug": "^2.4.1",
     "@docusaurus/plugin-sitemap": "^2.4.1",
@@ -58,7 +54,6 @@
   "devDependencies": {
     "@docusaurus/module-type-aliases": "^2.4.1",
     "@tsconfig/docusaurus": "^1.0.7",
-    "ngc-esbuild": "^0.0.83",
     "raw-loader": "^4.0.2",
     "typescript": "~4.2.4"
   },

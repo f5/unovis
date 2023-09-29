@@ -1,9 +1,0 @@
-{
-  "compilerOptions": {
-    "baseUrl": ".",
-    "rootDir": "src/examples",
-    "experimentalDecorators": true,
-    "resolveJsonModule": true,
-    "esModuleInterop": true
-  },
-}
