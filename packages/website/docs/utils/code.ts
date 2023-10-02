@@ -105,6 +105,26 @@ export function getSvelteStrings (config: CodeConfig): string {
   return `<script lang='ts'>\n${lines.join('\n')}\n</script>\n\n${html}`
 }
 
+export function getVueStrings (config: CodeConfig): string {
+  const { components, container, declarations, imports, visImports } = config
+  const { data, ...rest } = declarations
+  const lines: string[] = []
+  const indent = imports || Object.keys(declarations).length
+  const html = container
+    ? parse.vue(container, true, indent ? 1 : 0)
+      .replace('><', `>\n${components.map(c => parse.vue(c, false, indent ? 2 : 1))
+        .join('\n')}\n${indent ? t : ''}<`)
+    : components.map(c => parse.vue(c, false, indent ? 1 : 0)).join('\n')
+
+  if (!imports && !Object.keys(declarations).length) {
+    return html
+  }
+  lines.push(getImportString({ '@unovis/vue': visImports, ...imports }))
+  if (data) lines.push(`const props = defineProps<{ ${data} }>()`)
+  Object.entries(rest).forEach(d => lines.push(`const ${d.join(' = ')}`))
+  return `<script setup lang="ts">>\n${lines.join('\n')}\n</script>\n\n<template>\n${html}\n</template>`
+}
+
 export function getTypescriptStrings (config: CodeConfig, mainComponentName: string, isStandAlone: boolean): string {
   const { components, container, dataType, declarations, imports, visImports } = config
   const { data, ...vars } = declarations

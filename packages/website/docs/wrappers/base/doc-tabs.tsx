@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { FrameworkTabs } from '../../components/framework-tabs'
-import { getAngularStrings, getReactStrings, getSvelteStrings, getTypescriptStrings } from '../../utils/code'
+import { getAngularStrings, getReactStrings, getSvelteStrings, getVueStrings, getTypescriptStrings } from '../../utils/code'
 import { parseProps } from '../../utils/parser'
 import { DocTabsProps, ContextLevel } from '../types'
 
@@ -40,6 +40,7 @@ export function DocFrameworkTabs ({
       angular={getAngularStrings(tabConfig, importedProps, context === ContextLevel.Minimal)}
       react={getReactStrings(tabConfig)}
       svelte={getSvelteStrings(tabConfig)}
+      vue={getVueStrings(tabConfig)}
       typescript={getTypescriptStrings(tabConfig, mainComponent && context !== ContextLevel.Container && mainComponent, !container.name)}
       hideTabLabels={hideTabLabels}
       showTitles={context !== undefined}

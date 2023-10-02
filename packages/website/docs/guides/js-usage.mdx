@@ -7,6 +7,7 @@ import {
   angularLineChartCode,
   reactLineChartCode,
   svelteLineChartCode,
+  vueLineChartCode,
   tsLineChartCode,
   BasicLineChartExample
 } from '../quick-start.snippets'
@@ -17,6 +18,7 @@ export const removeTypes = (component) => component.props.children
    .replace(/type D.*\n\s*/gm, '')
     .replace(': JSX.Element ', '')
     .replace(': DataRecord[]', '')
+    .replace('<DataRecord[]>', '')
     .replace('<DataRecord>', '')
 
 
@@ -34,6 +36,7 @@ TypeScript and JavaScript syntax.
   }}
   react={reactLineChartCode.props.children}
   svelte={svelteLineChartCode.props.children}
+  vue={vueLineChartCode.props.children}
   typescript={tsLineChartCode.props.children}
 />
 
@@ -48,5 +51,6 @@ TypeScript and JavaScript syntax.
   }}
   react={removeTypes(reactLineChartCode).replace(': JSX.Element ', '')}
   svelte={removeTypes(svelteLineChartCode).replace(' lang=\"ts\"', '')}
+  vue={removeTypes(vueLineChartCode).replace(' lang=\"ts\"', '')}
   javascript={removeTypes(tsLineChartCode)}
 />

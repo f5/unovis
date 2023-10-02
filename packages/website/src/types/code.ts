@@ -2,6 +2,7 @@ export enum Framework {
   Angular = 'angular',
   React = 'react',
   Svelte = 'svelte',
+  Vue = 'vue',
   TypeScript = 'typescript',
 }
 
