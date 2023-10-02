@@ -12,6 +12,7 @@ const templates: Record<Framework, ProjectTemplate> = {
   [Framework.Angular]: 'angular-cli',
   [Framework.React]: 'create-react-app',
   [Framework.Svelte]: 'node',
+  [Framework.Vue]: 'node',
   [Framework.TypeScript]: 'typescript',
 }
 
@@ -23,6 +24,8 @@ function getOpenFiles (framework: Framework, files: ProjectFiles): OpenFileOptio
       return 'src/App.tsx'
     case Framework.Svelte:
       return 'src/App.svelte'
+    case Framework.Vue:
+      return 'src/App.vue'
     default:
       return 'src/App.ts'
   }
@@ -130,6 +133,51 @@ function getStarterFiles (framework: Framework, e: Example): ProjectFiles {
         'vite.env.d.ts': '/// <reference types="svelte" />\n/// <reference types="vite/client" />',
         'src/data.ts': e.data,
         'src/App.svelte': e.codeSvelte,
+        ...(e.constants ? { 'src/constants.ts': e.constants } : {}),
+      }
+    case Framework.Vue:
+      return {
+        'index.html': trimMultiline(`
+          <div id="app"></div>
+          <script type="module">
+          import { createApp } from 'vue'
+          import App from './src/App.vue'
+
+          createApp(App).mount('#app')
+          </script>
+        `),
+        'package.json': trimMultiline(`{
+          "name": "unovis-demo",
+          "private": true,
+          "version": "0.0.0",
+          "type": "module",
+          "scripts": {
+            "dev": "vite",
+            "build": "vue-tsc && vite build",
+            "preview": "vite preview"
+          },
+          "dependencies": {
+            "@unovis/ts": "${ver}",
+            "@unovis/vue": "${ver}"
+          },
+          "devDependencies": {
+            "@vitejs/plugin-vue": "^4.2.3", 
+            "vue": "^3.3.4", 
+            "typescript": "^5.0.2",
+            "vite": "^4.4.9",
+            "vue-tsc": "^1.8.8"
+          }}`),
+        'vite.config.ts': trimMultiline(`
+          import { defineConfig } from 'vite';
+          import vue from '@vitejs/plugin-vue'
+
+          export default defineConfig({
+            plugins: [vue()],
+          });
+        `),
+        'vite.env.d.ts': '/// <reference types="vite/client" />',
+        'src/data.ts': e.data,
+        'src/App.vue': e.codeVue,
         ...(e.constants ? { 'src/constants.ts': e.constants } : {}),
       }
     default:

@@ -1,0 +1,17 @@
+{
+  "extends": "../tsconfig.json",
+  "exclude": ["node_modules", "node_modules/*"],
+  "include": ["./*.ts", "./*.vue"],
+  "compilerOptions": {
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    "strictPropertyInitialization": false,
+    "allowSyntheticDefaultImports": true,
+    "downlevelIteration": true,
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "declaration": false,
+    "types": ["node"],
+    "target": "esnext"
+  }
+}

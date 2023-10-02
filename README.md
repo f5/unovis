@@ -1,6 +1,6 @@
 https://user-images.githubusercontent.com/755708/205744216-5e9efd10-794b-4ce1-9aca-580c34fad193.mp4
 
-🟨  **Unovis** is a modular data visualization framework for React, Angular, Svelte, and vanilla TypeScript or JavaScript:
+🟨  **Unovis** is a modular data visualization framework for React, Angular, Svelte, Vue, and vanilla TypeScript or JavaScript:
 
 * 📈 🗺 It has charts, maps, network graphs, and more!
 * 🌳 Tree-shakable and supports individual component imports to reduce your bundle size;
@@ -12,7 +12,7 @@ Learn more about _Unovis_ on [unovis.dev](https://unovis.dev)
 You can install the core of the library `@unovis/ts` and framework-specific packages (if you use React, Angular, or Svelte) from NPM:
 
 ```bash
-npm install -P @unovis/ts @unovis/<react|angular|svelte>
+npm install -P @unovis/ts @unovis/<react|angular|svelte|vue>
 ```
 
 Now you can import components and create your first chart! Here's how to build a simple line chart uising Unovis and React:
@@ -41,13 +41,13 @@ export function BasicLineChart (): JSX.Element {
   )
 }
 ```
-Looking for Angular, Svelte, or TypeScript examples? Check out the [Quick Start](https://unovis.dev/docs/quick-start) page on our website.
+Looking for Angular, Svelte, Vue, or TypeScript examples? Check out the [Quick Start](https://unovis.dev/docs/quick-start) page on our website.
 
 ## Examples and Documentation
 [![Unovis Examples](examples.png)](https://unovis.dev/gallery)
 
 📖 _Unovis_ has an extensive [documentation](https://unovis.dev/docs/intro) with code snippets for React, Angular,
-Svelte and TypeScript. 
+Svelte and TypeScript.
 
 🖼 Also there's a growing [gallery](https://unovis.dev/gallery) of examples, from where you can copy the code over to your project or try it live on StackBlitz.
 
@@ -57,6 +57,7 @@ Svelte and TypeScript.
 * `packages/angular` Angular components
 * `packages/react` React components
 * `packages/svelte` Svelte components
+* `packages/vue` Vue components
 * `packages/website` Website, docs and examples
 
 ## Contributing

@@ -1,9 +1,9 @@
-import type { AngularComponentInput, ReactComponentInput, SvelteComponentInput } from './types'
+import type { AngularComponentInput, ReactComponentInput, SvelteComponentInput, VueComponentInput } from './types'
 
 export function getComponentList (
   coreComponentConfigPath = '/core/component',
   xyComponentConfigPath = '/core/xy-component'
-): (AngularComponentInput | ReactComponentInput | SvelteComponentInput)[] {
+): (AngularComponentInput | ReactComponentInput | SvelteComponentInput | VueComponentInput)[] {
   return [
     // XY Components
     { name: 'Line', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/line'], dataType: 'Datum[]', angularProvide: 'VisXYComponent' },

@@ -14,6 +14,10 @@ export const svelteImport = <CodeBlock language="ts">
   {'import { VisXYContainer, VisLine, VisAxis } from \'@unovis/svelte\''}
 </CodeBlock>
 
+export const vueImport = <CodeBlock language="ts">
+  {'import { VisXYContainer, VisLine, VisAxis } from \'@unovis/vue\''}
+</CodeBlock>
+
 export const tsImport = <CodeBlock language="ts">
   {'import { XYContainer, Line, Axis } from \'@unovis/ts\''}
 </CodeBlock>
@@ -34,6 +38,12 @@ export const svelteIndividualImport = <CodeBlock language="ts">
   {`import { VisXYContainer } from '@unovis/svelte/containers/xy-container'
 import { VisLine } from '@unovis/svelte/components/line'
 import { VisAxis } from '@unovis/svelte/components/axis'`}
+</CodeBlock>
+
+export const vueIndividualImport = <CodeBlock language="ts">
+  {`import { VisXYContainer } from '@unovis/vue/containers/xy-container'
+import { VisLine } from '@unovis/vue/components/line'
+import { VisAxis } from '@unovis/vue/components/axis'`}
 </CodeBlock>
 
 export const tsIndividualImport = <CodeBlock language="ts">
@@ -127,6 +137,26 @@ export const svelteLineChartCode = <CodeBlock language="ts">
   <VisLine {data} x={d => d.x} y={d => d.y}/>
   <VisAxis type="x"/>
   <VisAxis type="y"/>
+</VisXYContainer>`}
+</CodeBlock>
+
+export const vueLineChartCode = <CodeBlock language="ts">
+  {`<script setup lang="ts">
+  import { VisXYContainer, VisLine, VisAxis } from '@unovis/vue'
+  import { ref } from 'vue'
+
+  type DataRecord = { x: number, y: number }
+  const data = ref<DataRecord[]>([
+    { x: 0, y: 0 },
+    { x: 1, y: 2 },
+    { x: 2, y: 1 },
+  ])
+</script>
+
+<VisXYContainer>
+  <VisLine :data="data" :x="d => d.x" :y="d => d.y" />
+  <VisAxis type="x" />
+  <VisAxis type="y" />
 </VisXYContainer>`}
 </CodeBlock>
 

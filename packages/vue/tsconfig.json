@@ -1,0 +1,12 @@
+{
+  // "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "include": ["src/**/*.vue", "src/**/*.ts"],
+  "compilerOptions": {
+    "moduleResolution": "Node",
+    "declaration": true,
+    "skipLibCheck": true,
+    "outDir": "dist",
+    "resolveJsonModule": true
+  },
+  "exclude": ["node_modules/*"]
+}

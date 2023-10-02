@@ -25,6 +25,7 @@ const example: Example = {
     module: require(`!!raw-loader!./${pathname}.module.ts`).default,
   },
   codeSvelte: require(`!!raw-loader!./${pathname}.svelte`).default,
+  codeVue: require(`!!raw-loader!./${pathname}.vue`).default,
   data: require('!!raw-loader!./../basic-scatter-chart/data.ts').default,
   preview: require(`../_previews/${pathname}.png`).default,
   previewDark: require(`../_previews/${pathname}-dark.png`).default,

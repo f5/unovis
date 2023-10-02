@@ -21,6 +21,7 @@ const example: Example = {
     module: require(`!!raw-loader!./${pathname}.module.ts`).default,
   },
   codeSvelte: require(`!!raw-loader!./${pathname}.svelte`).default,
+  codeVue: require(`!!raw-loader!./${pathname}.vue`).default,
   data: require('!!raw-loader!./data').default,
   constants: require('!!raw-loader!./constants').default,
 }
