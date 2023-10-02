@@ -120,6 +120,13 @@ function parseSvelte ({ name, props }: ComponentInfo, closing = false): string {
   return formatElement(`<${tag}`, attrs, endLine)
 }
 
+function parseVue ({ name, props }: ComponentInfo, closing = false, indent = 0): string {
+  const attrs = props?.map(({ key, value, stringLiteral }) => [stringLiteral ? `${key}` : `:${key}`, `"${value}"`].join('='))
+  const tag = `Vis${name}`
+  const endLine = closing ? `></${tag}>` : ' />'
+  return formatElement(`${tab(indent)}<${tag}`, attrs, endLine, ' ', `${tab(indent)}${endLine}`)
+}
+
 function parseTypescript (name: string, props: PropInfo[], type?: string, el?: boolean, data?: boolean): string {
   const attrs = props?.map(({ key, value, stringLiteral }) =>
     key === value ? key : [key, stringLiteral ? `"${value}"` : `${value}`].join(': ')
@@ -133,5 +140,6 @@ export const parseComponent = {
   angular: parseAngular,
   react: parseReact,
   svelte: parseSvelte,
+  vue: parseVue,
   typescript: parseTypescript,
 }

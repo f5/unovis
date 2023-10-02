@@ -17,29 +17,41 @@ export default function Home (): JSX.Element {
   return (
     <Layout
       title="Gallery"
-      description="A modular data visualization framework for React, Angular, Svelte, and vanilla TypeScript or JavaScript"
+      description="A modular data visualization framework for React, Angular, Svelte, Vue and vanilla TypeScript or JavaScript"
     >
-      <BrowserOnly>{() => {
-        const location = useLocation()
-        const query = new URLSearchParams(location.search)
-        const exampleTitle = query.get('title')
-        const useTypescriptCode = query.get('ts') !== null
-        const example = (examples.map(c => c.examples)).flat().find(e => e.title === exampleTitle)
-        return (
-          <div className={s.root}>
-            <Link isNavLink={true} to={`/gallery${query.has('category') ? `#${query.get('category')}` : ''}`}>
-            ❮ Back to Gallery
-            </Link>
-            {
-              example
-                ? <GalleryViewer example={example} useTypescriptCode={useTypescriptCode}/>
-                : <div className={s.exampleNotFound}>
+      <BrowserOnly>
+        {() => {
+          const location = useLocation()
+          const query = new URLSearchParams(location.search)
+          const exampleTitle = query.get('title')
+          const useTypescriptCode = query.get('ts') !== null
+          const example = examples
+            .map((c) => c.examples)
+            .flat()
+            .find((e) => e.title === exampleTitle)
+          return (
+            <div className={s.root}>
+              <Link
+                isNavLink={true}
+                to={`/gallery${
+                  query.has('category') ? `#${query.get('category')}` : ''
+                }`}
+              >
+                ❮ Back to Gallery
+              </Link>
+              {example ? (
+                <GalleryViewer
+                  example={example}
+                  useTypescriptCode={useTypescriptCode}
+                />
+              ) : (
+                <div className={s.exampleNotFound}>
                   <h1>Example not found 😢</h1>
                 </div>
-            }
-          </div>
-        )
-      }}
+              )}
+            </div>
+          )
+        }}
       </BrowserOnly>
     </Layout>
   )

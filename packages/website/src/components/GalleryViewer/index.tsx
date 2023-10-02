@@ -53,6 +53,11 @@ export function GalleryViewer ({ example, useTypescriptCode }: GalleryViewerProp
             {example.codeSvelte}
           </CodeBlock>
         </TabItem>
+        <TabItem value={Framework.Vue} label="Vue">
+          <CodeBlock language="html">
+            {example.codeVue}
+          </CodeBlock>
+        </TabItem>
         <TabItem value={Framework.TypeScript} label="TypeScript">
           <CodeBlock language="ts">
             {example.codeTs}
