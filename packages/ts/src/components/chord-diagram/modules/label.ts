@@ -9,7 +9,7 @@ import { getNumber, getString, getValue } from 'utils/data'
 import { getColor, hexToBrightness } from 'utils/color'
 
 // Config
-import { ChordDiagramConfig } from '../config'
+import { ChordDiagramConfigInterface } from '../config'
 
 // Local Types
 import { ChordInputLink, ChordInputNode, ChordLabelAlignment, ChordNode } from '../types'
@@ -21,7 +21,7 @@ export const LABEL_PADDING = 3
 
 function getLabelFillColor<N extends ChordInputNode, L extends ChordInputLink> (
   d: ChordNode<N>,
-  config: ChordDiagramConfig<N, L>
+  config: ChordDiagramConfigInterface<N, L>
 ): string {
   const nodeLabelAlignment = getValue(d.data, config.nodeLabelAlignment) ?? ChordLabelAlignment.Along
   switch (nodeLabelAlignment) {
@@ -39,7 +39,7 @@ function getLabelFillColor<N extends ChordInputNode, L extends ChordInputLink> (
 
 function getLabelTextAnchor<N extends ChordInputNode, L extends ChordInputLink> (
   d: ChordNode<N>,
-  config: ChordDiagramConfig<N, L>
+  config: ChordDiagramConfigInterface<N, L>
 ): string | null {
   const nodeLabelAlignment = getValue(d.data, config.nodeLabelAlignment) ?? ChordLabelAlignment.Along
   switch (nodeLabelAlignment) {
@@ -56,7 +56,7 @@ function getLabelTextAnchor<N extends ChordInputNode, L extends ChordInputLink> 
 
 function getLabelTransform<N extends ChordInputNode, L extends ChordInputLink> (
   d: ChordNode<N>,
-  config: ChordDiagramConfig<N, L>,
+  config: ChordDiagramConfigInterface<N, L>,
   radiusScale: ScaleContinuousNumeric<number, number>
 ): string | null {
   const nodeLabelAlignment = getValue(d.data, config.nodeLabelAlignment) ?? ChordLabelAlignment.Along
@@ -76,7 +76,7 @@ function getLabelTransform<N extends ChordInputNode, L extends ChordInputLink> (
 
 export function createLabel<N extends ChordInputNode, L extends ChordInputLink> (
   selection: Selection<SVGGElement, ChordNode<N>, SVGGElement, unknown>,
-  config: ChordDiagramConfig<N, L>,
+  config: ChordDiagramConfigInterface<N, L>,
   radiusScale: ScaleContinuousNumeric<number, number>
 ): void {
   selection.style('opacity', 0)
@@ -89,7 +89,7 @@ export function createLabel<N extends ChordInputNode, L extends ChordInputLink> 
 
 export function updateLabel<N extends ChordInputNode, L extends ChordInputLink> (
   selection: Selection<SVGGElement, ChordNode<N>, SVGGElement, unknown>,
-  config: ChordDiagramConfig<N, L>,
+  config: ChordDiagramConfigInterface<N, L>,
   width: number,
   radiusScale: ScaleContinuousNumeric<number, number>,
   duration: number
@@ -109,7 +109,7 @@ export function updateLabel<N extends ChordInputNode, L extends ChordInputLink> 
 
   label.each((d: ChordNode<N>, i: number, elements) => {
     const nodeLabelAlignment = getValue(d.data, config.nodeLabelAlignment) ?? ChordLabelAlignment.Along
-    const radianArcLength = d.x1 - d.x0 - getNumber(d, config.padAngle) * 2
+    const radianArcLength = d.x1 - d.x0 - getNumber(d.data, config.padAngle) * 2
     const radius = radiusScale(d.y1) - getNumber(d, config.nodeWidth) / 2
     const arcLength = radius * radianArcLength
     const maxWidth = (nodeLabelAlignment === ChordLabelAlignment.Along ? arcLength : width) - LABEL_PADDING * 2

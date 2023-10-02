@@ -1,11 +1,11 @@
-import { select, Selection } from 'd3-selection'
+import { select, Selection, ValueFn } from 'd3-selection'
 import { Transition } from 'd3-transition'
 
 // Core
 import { CoreDataModel } from 'data-models/core'
 
 // Utils
-import { throttle } from 'utils/data'
+import { merge, throttle } from 'utils/data'
 import { guid } from 'utils/misc'
 
 // Types
@@ -16,28 +16,29 @@ import { Spacing } from 'types/spacing'
 import { VisEventCallback, VisEventType } from './types'
 
 // Config
-import { ComponentConfig, ComponentConfigInterface } from './config'
+import { ComponentDefaultConfig, ComponentConfigInterface } from './config'
 
 export class ComponentCore<
   CoreDatum,
-  ConfigClass extends ComponentConfig = ComponentConfig,
   ConfigInterface extends ComponentConfigInterface = ComponentConfigInterface,
 > {
-  element: SVGGElement | HTMLElement
-  type: ComponentType = ComponentType.SVG
-  g: Selection<SVGGElement, unknown, null, undefined> | Selection<HTMLElement, unknown, null, undefined>
-  config: ConfigClass
-  prevConfig: ConfigClass
-  datamodel: CoreDataModel<CoreDatum> = new CoreDataModel()
-  sizing: Sizing | string = Sizing.Fit // Supported by SingleContainer and a subset of components only (Sankey)
-  uid: string
+  public element: SVGGElement | HTMLElement
+  public type: ComponentType = ComponentType.SVG
+  public g: Selection<SVGGElement, unknown, null, undefined> | Selection<HTMLElement, unknown, null, undefined>
+  public config: ComponentConfigInterface
+  public prevConfig: ComponentConfigInterface
+  public datamodel: CoreDataModel<CoreDatum> = new CoreDataModel()
+  public sizing: Sizing | string = Sizing.Fit // Supported by SingleContainer and a subset of components only (Sankey)
+  public uid: string
 
-  events: {
+  protected events: {
     [selector: string]: {
       [eventType in VisEventType]?: VisEventCallback;
     };
   } = {}
 
+  /** Default configuration */
+  protected _defaultConfig: ComponentConfigInterface = ComponentDefaultConfig
   /** Component width in pixels. This property is set automatically by the container. */
   protected _width = 400
   /** Component height in pixels. This property is set automatically by the container. */
@@ -66,10 +67,8 @@ export class ComponentCore<
   }
 
   setConfig (config: ConfigInterface): void {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const ConfigModel = (this.config.constructor as typeof ComponentConfig)
     this.prevConfig = this.config // Store the previous config instance
-    this.config = new ConfigModel().init(config) as ConfigClass
+    this.config = merge(this._defaultConfig, config)
   }
 
   setData (data: CoreDatum): void {
@@ -115,9 +114,10 @@ export class ComponentCore<
 
     Object.keys(attributeMap).forEach(className => {
       Object.keys(attributeMap[className]).forEach(attr => {
-        (this.g as Selection<SVGGElement | HTMLElement, unknown, null, undefined>)
-          .selectAll(`.${className}`)
-          .attr(attr, attributeMap[className][attr])
+        const selection = (this.g as Selection<SVGGElement | HTMLElement, unknown, null, undefined>)
+          .selectAll<SVGGElement | HTMLElement, unknown>(`.${className}`)
+
+        selection.attr(attr, attributeMap[className][attr] as ValueFn<SVGGElement | HTMLElement, unknown, string | number | boolean>)
       })
     })
   }

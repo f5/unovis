@@ -1,4 +1,4 @@
-import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component/config'
+import { XYComponentConfigInterface, XYComponentDefaultConfig } from 'core/xy-component/config'
 import { Tooltip } from 'components/tooltip'
 
 // Types
@@ -14,7 +14,7 @@ export interface CrosshairConfigInterface<Datum> extends WithOptional<XYComponen
   /** Optional single of multiple accessor functions for getting the values along the Y axis. Default: `undefined` */
   y?: NumericAccessor<Datum> | NumericAccessor<Datum>[];
   /** Optional color array or color accessor function for crosshair circles. Default: `d => d.color` */
-  color?: ColorAccessor<Datum> | ColorAccessor<Datum[]>;
+  color?: ColorAccessor<Datum>;
   /** Separate array of accessors for stacked components (eg StackedBar, Area). Default: `undefined` */
   yStacked?: NumericAccessor<Datum>[];
   /** Baseline accessor function for stacked values, useful with stacked areas. Default: `null` */
@@ -39,17 +39,20 @@ export interface CrosshairConfigInterface<Datum> extends WithOptional<XYComponen
    * It has to return an array of the CrosshairCircle objects: `{ y: number; color: string; opacity?: number }[]`.
    * Default: `undefined`
   */
-  getCircles?: (x: number, data: Datum[], yScale: ContinuousScale) => CrosshairCircle[];
+  getCircles?: (x: number | Date | Date, data: Datum[], yScale: ContinuousScale) => CrosshairCircle[];
 }
 
-export class CrosshairConfig<Datum> extends XYComponentConfig<Datum> implements CrosshairConfigInterface<Datum> {
-  yStacked = undefined
-  baseline = null
-  duration = 100
-  tooltip: Tooltip = undefined
-  template: ((data: Datum, x: number | Date) => string | HTMLElement) = (d: Datum): string => ''
-  hideWhenFarFromPointer = true
-  hideWhenFarFromPointerDistance = 100
-  snapToData = true
-  getCircles = undefined
+export const CrosshairDefaultConfig: CrosshairConfigInterface<unknown> = {
+  ...XYComponentDefaultConfig,
+  yStacked: undefined,
+  baseline: null,
+  duration: 100,
+  tooltip: undefined,
+  template: <Datum>(d: Datum, x: number | Date): string => '',
+  hideWhenFarFromPointer: true,
+  hideWhenFarFromPointerDistance: 100,
+  snapToData: true,
+  getCircles: undefined,
+  color: undefined,
 }
+

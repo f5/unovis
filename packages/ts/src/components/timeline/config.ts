@@ -1,10 +1,12 @@
-import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component/config'
+import { XYComponentConfigInterface, XYComponentDefaultConfig } from 'core/xy-component/config'
 
 // Types
 import { WithOptional } from 'types/misc'
-import { NumericAccessor, StringAccessor } from 'types/accessor'
+import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
 
 export interface TimelineConfigInterface<Datum> extends WithOptional<XYComponentConfigInterface<Datum>, 'y'> {
+  /** Timeline item color accessor function. Default: `d => d.color` */
+  color?: ColorAccessor<Datum>;
   /** Width of the timeline items. Default: `8` */
   lineWidth?: NumericAccessor<Datum>;
   /** Display rounded ends for timeline items. Default: `true` */
@@ -31,19 +33,22 @@ export interface TimelineConfigInterface<Datum> extends WithOptional<XYComponent
   showEmptySegments?: boolean;
 }
 
-export class TimelineConfig<Datum> extends XYComponentConfig<Datum> implements TimelineConfigInterface<Datum> {
-  lineWidth = 8
-  lineCap = false
-  rowHeight = 22
+export const TimelineDefaultConfig: TimelineConfigInterface<unknown> = {
+  ...XYComponentDefaultConfig,
   // eslint-disable-next-line dot-notation
-  length: NumericAccessor<Datum> = d => d['length']
+  color: (d: unknown): string => d['color'],
+  lineWidth: 8,
+  lineCap: false,
+  rowHeight: 22,
   // eslint-disable-next-line dot-notation
-  type: StringAccessor<Datum> = d => d['type']
-  cursor = null
-  labelWidth = undefined
-  showLabels = false
-  maxLabelWidth = 120
-  alternatingRowColors = true
-  onScroll = undefined
-  showEmptySegments = false
+  length: <Datum>(d: Datum): number => d['length'],
+  // eslint-disable-next-line dot-notation
+  type: <Datum>(d: Datum): string => d['type'],
+  cursor: null,
+  labelWidth: undefined,
+  showLabels: false,
+  maxLabelWidth: 120,
+  alternatingRowColors: true,
+  onScroll: undefined,
+  showEmptySegments: false,
 }

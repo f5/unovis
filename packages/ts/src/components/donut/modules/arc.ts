@@ -11,7 +11,7 @@ import { smartTransition } from 'utils/d3'
 import { DonutArcDatum, DonutArcAnimState } from '../types'
 
 // Config
-import { DonutConfig } from '../config'
+import { DonutConfigInterface } from '../config'
 
 export interface ArcNode extends SVGElement {
   _animState?: DonutArcAnimState;
@@ -19,7 +19,7 @@ export interface ArcNode extends SVGElement {
 
 export function createArc<Datum> (
   selection: Selection<SVGPathElement, DonutArcDatum<Datum>, SVGGElement, unknown>,
-  config: DonutConfig<Datum>
+  config: DonutConfigInterface<Datum>
 ): void {
   selection
     .style('fill', d => getColor(d.data, config.color, d.index))
@@ -40,7 +40,7 @@ export function createArc<Datum> (
 
 export function updateArc<Datum> (
   selection: Selection<SVGPathElement, DonutArcDatum<Datum>, SVGGElement, unknown>,
-  config: DonutConfig<Datum>,
+  config: DonutConfigInterface<Datum>,
   arcGen: Arc<any, DonutArcAnimState>,
   duration: number
 ): void {

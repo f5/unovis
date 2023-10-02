@@ -30,7 +30,7 @@ import {
 } from './types'
 
 // Config
-import { ChordDiagramConfig, ChordDiagramConfigInterface } from './config'
+import { ChordDiagramDefaultConfig, ChordDiagramConfigInterface } from './config'
 
 // Modules
 import { createNode, updateNode, removeNode } from './modules/node'
@@ -45,11 +45,11 @@ export class ChordDiagram<
   L extends ChordInputLink,
 > extends ComponentCore<
   ChordDiagramData<N, L>,
-  ChordDiagramConfig<N, L>,
   ChordDiagramConfigInterface<N, L>
   > {
   static selectors = s
-  config: ChordDiagramConfig<N, L> = new ChordDiagramConfig()
+  protected _defaultConfig = ChordDiagramDefaultConfig as ChordDiagramConfigInterface<N, L>
+  public config: ChordDiagramConfigInterface<N, L> = this._defaultConfig
   datamodel: GraphDataModel<N, L> = new GraphDataModel()
 
   nodeGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
@@ -79,7 +79,7 @@ export class ChordDiagram<
 
   constructor (config?: ChordDiagramConfigInterface<N, L>) {
     super()
-    if (config) this.config.init(config)
+    if (config) this.setConfig(config)
     this.linkGroup = this.g.append('g').attr('class', s.links)
     this.nodeGroup = this.g.append('g').attr('class', s.nodes)
     this.labelGroup = this.g.append('g').attr('class', s.labels)
@@ -126,7 +126,7 @@ export class ChordDiagram<
       .size([this.config.angleRange[1], 1])(hierarchyData) as ChordNode<N>
 
     partitionData.each((node, i) => {
-      this._calculateRadialPosition(node, this.config.padAngle)
+      this._calculateRadialPosition(node, getNumber(node.data, this.config.padAngle))
 
       // Add hierarchy data for non leaf nodes
       if (node.children) {
@@ -162,7 +162,7 @@ export class ChordDiagram<
     this.arcGen
       .startAngle(d => d.x0)
       .endAngle(d => d.x1)
-      .cornerRadius(d => getNumber(d, config.cornerRadius))
+      .cornerRadius(d => getNumber(d.data, config.cornerRadius))
       .innerRadius(d => this.radiusScale(d.y1) - getNumber(d, config.nodeWidth))
       .outerRadius(d => this.radiusScale(d.y1))
 

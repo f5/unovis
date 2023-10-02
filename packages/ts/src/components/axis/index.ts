@@ -9,7 +9,7 @@ import { XYComponentCore } from 'core/xy-component'
 import { Position } from 'types/position'
 import { ContinuousScale } from 'types/scale'
 import { Spacing } from 'types/spacing'
-import { FitMode, TextAlign, UnovisText, UnovisTextOptions, VerticalAlign } from 'types/text'
+import { FitMode, TextAlign, TrimMode, UnovisText, UnovisTextOptions, VerticalAlign } from 'types/text'
 
 // Utils
 import { smartTransition } from 'utils/d3'
@@ -20,14 +20,15 @@ import { isEqual } from 'utils/data'
 import { AxisType } from './types'
 
 // Config
-import { AxisConfig, AxisConfigInterface } from './config'
+import { AxisDefaultConfig, AxisConfigInterface } from './config'
 
 // Styles
 import * as s from './style'
 
-export class Axis<Datum> extends XYComponentCore<Datum, AxisConfig<Datum>, AxisConfigInterface<Datum>> {
+export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datum>> {
   static selectors = s
-  config: AxisConfig<Datum> = new AxisConfig<Datum>()
+  protected _defaultConfig: AxisConfigInterface<Datum> = AxisDefaultConfig
+  public config: AxisConfigInterface<Datum> = this._defaultConfig
   axisGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
   gridGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
 
@@ -41,7 +42,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfig<Datum>, AxisC
 
   constructor (config?: AxisConfigInterface<Datum>) {
     super()
-    if (config) this.config.init(config)
+    if (config) this.setConfig(config)
 
     this.axisGroup = this.g.append('g')
     this.gridGroup = this.g.append('g')
@@ -190,7 +191,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfig<Datum>, AxisC
     const { config } = this
 
     const axisGen = this._buildAxis()
-    const tickValues: (number | Date)[] = this._getConfiguredTickValues() || axisGen.scale<ContinuousScale>().ticks(this._getNumTicks())
+    const tickValues: (number[] | Date[]) = this._getConfiguredTickValues() || axisGen.scale<ContinuousScale>().ticks(this._getNumTicks())
     axisGen.tickValues(tickValues)
 
     // Interrupting all active transitions first to prevent them from being stuck.
@@ -209,14 +210,15 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfig<Datum>, AxisC
     const tickText = selection.selectAll<SVGTextElement, number | Date>('g.tick > text')
       .filter(tickValue => tickValues.some(t => isEqual(tickValue, t))) // We use isEqual to compare Dates
       .classed(s.tickLabel, true)
-      .style('fill', config.tickTextColor)
+      .style('fill', config.tickTextColor) as Selection<SVGTextElement, number, SVGGElement, unknown> | Selection<SVGTextElement, Date, SVGGElement, unknown>
+
 
     // We interrupt the transition on tick's <text> to make it 'wrappable'
     tickText.nodes().forEach(node => interrupt(node))
 
     tickText.each((value, i, elements) => {
       const text = config.tickFormat?.(value, i, tickValues) ?? `${value}`
-      const textElement = elements[i]
+      const textElement = elements[i] as SVGTextElement
       const textMaxWidth = config.tickTextWidth || (config.type === AxisType.X ? this._containerWidth / (ticks.size() + 1) : this._containerWidth / 5)
       const styleDeclaration = getComputedStyle(textElement)
       const fontSize = Number.parseFloat(styleDeclaration.fontSize)
@@ -224,7 +226,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfig<Datum>, AxisC
 
       if (config.tickTextFitMode === FitMode.Trim) {
         const textElementSelection = select<SVGTextElement, string>(textElement).text(text)
-        trimSVGText(textElementSelection, textMaxWidth, config.tickTextTrimType, true, fontSize, 0.58)
+        trimSVGText(textElementSelection, textMaxWidth, config.tickTextTrimType as TrimMode, true, fontSize, 0.58)
       } else {
         const textBlock: UnovisText = { text, fontFamily, fontSize }
         const textOptions: UnovisTextOptions = {
@@ -271,7 +273,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfig<Datum>, AxisC
   _getConfiguredTickValues (): number[] | null {
     const { config: { tickValues, type, minMaxTicksOnly } } = this
     const scale = type === AxisType.X ? this.xScale : this.yScale
-    const scaleDomain = scale?.domain()
+    const scaleDomain = scale?.domain() as [number, number]
 
     if (tickValues) {
       return tickValues.filter(v => (v >= scaleDomain[0]) && (v <= scaleDomain[1]))
@@ -343,8 +345,10 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfig<Datum>, AxisC
     const { config: { type, tickTextAlign, position } } = this
 
     const tickText = this.g.selectAll('g.tick > text')
-    const textAnchor = this._getTickTextAnchor(tickTextAlign)
-    const translateX = type === AxisType.X ? 0 : this._getYTickTextTranslate(tickTextAlign, position)
+    const textAnchor = this._getTickTextAnchor(tickTextAlign as TextAlign)
+    const translateX = type === AxisType.X
+      ? 0
+      : this._getYTickTextTranslate(tickTextAlign as TextAlign, position as Position)
 
     tickText
       .attr('text-anchor', textAnchor)

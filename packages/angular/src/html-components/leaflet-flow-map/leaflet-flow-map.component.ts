@@ -154,7 +154,7 @@ export class VisLeafletFlowMapComponent<
   @Input() pointShape?: StringAccessor<PointDatum>
 
   /** Point color accessor function or constant value. Default: `d => d.color` */
-  @Input() pointColor?: ColorAccessor<PointDatum>
+  @Input() pointColor?: ColorAccessor<LeafletMapPointDatum<PointDatum>>
 
   /** Point radius accessor function or constant value. Default: `undefined` */
   @Input() pointRadius?: NumericAccessor<LeafletMapPointDatum<PointDatum>>
@@ -179,7 +179,7 @@ export class VisLeafletFlowMapComponent<
   @Input() selectedPointId?: string
 
   /** Cluster color accessor function or constant value. Default: `undefined`  */
-  @Input() clusterColor?: ColorAccessor<PointDatum>
+  @Input() clusterColor?: ColorAccessor<LeafletMapClusterDatum<PointDatum>>
 
   /** Cluster radius accessor function or constant value. Default: `undefined`  */
   @Input() clusterRadius?: NumericAccessor<LeafletMapClusterDatum<PointDatum>>

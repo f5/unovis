@@ -7,10 +7,10 @@ import { ComponentCore } from 'core/component'
 import { Position } from 'types/position'
 
 // Utils
-import { throttle } from 'utils/data'
+import { merge, throttle } from 'utils/data'
 
 // Config
-import { TooltipConfig, TooltipConfigInterface } from './config'
+import { TooltipDefaultConfig, TooltipConfigInterface } from './config'
 
 // Style
 import * as s from './style'
@@ -18,8 +18,9 @@ import * as s from './style'
 export class Tooltip {
   element: HTMLElement
   div: Selection<HTMLElement, unknown, null, undefined>
-  config: TooltipConfig
-  prevConfig: TooltipConfig
+  protected _defaultConfig = TooltipDefaultConfig as TooltipConfigInterface
+  public config: TooltipConfigInterface = this._defaultConfig
+  prevConfig: TooltipConfigInterface
   components: ComponentCore<unknown>[]
   static selectors = s
   private _setUpEventsThrottled = throttle(this._setUpEvents, 500)
@@ -38,7 +39,7 @@ export class Tooltip {
 
   public setConfig (config: TooltipConfigInterface): void {
     this.prevConfig = this.config
-    this.config = new TooltipConfig().init(config)
+    this.config = merge(this._defaultConfig, config)
 
     if (this.config.container && (this.config.container !== this.prevConfig?.container)) {
       this.setContainer(this.config.container)

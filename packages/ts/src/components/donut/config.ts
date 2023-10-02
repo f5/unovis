@@ -1,5 +1,5 @@
 // Core
-import { ComponentConfigInterface, ComponentConfig } from 'core/component/config'
+import { ComponentConfigInterface, ComponentDefaultConfig } from 'core/component/config'
 
 // Types
 import { ColorAccessor, NumericAccessor } from 'types/accessor'
@@ -44,22 +44,23 @@ export interface DonutConfigInterface<Datum> extends ComponentConfigInterface {
   backgroundAngleRange?: [number, number];
 }
 
-export class DonutConfig<Datum> extends ComponentConfig implements DonutConfigInterface<Datum> {
+export const DonutDefaultConfig: DonutConfigInterface<unknown> = {
+  ...ComponentDefaultConfig,
   // eslint-disable-next-line dot-notation
-  id = (d: Datum, i: number): string | number => d['id'] ?? i
-  value = undefined
-  angleRange: [number, number] = [0, 2 * Math.PI]
-  padAngle = 0
-  sortFunction = undefined
-  cornerRadius = 0
-  color = undefined
-  radius = undefined
-  arcWidth = 20
-  centralLabel = undefined
-  centralSubLabel = undefined
-  centralSubLabelWrap = true
-  showEmptySegments = false
-  emptySegmentAngle = 0.5 * Math.PI / 180
-  showBackground = true
-  backgroundAngleRange = undefined
+  id: <Datum>(d: Datum, i: number): string | number => d['id'] ?? i,
+  value: undefined,
+  angleRange: [0, 2 * Math.PI],
+  padAngle: 0,
+  sortFunction: undefined,
+  cornerRadius: 0,
+  color: undefined,
+  radius: undefined,
+  arcWidth: 20,
+  centralLabel: undefined,
+  centralSubLabel: undefined,
+  centralSubLabelWrap: true,
+  showEmptySegments: false,
+  emptySegmentAngle: 0.5 * Math.PI / 180,
+  showBackground: true,
+  backgroundAngleRange: undefined,
 }

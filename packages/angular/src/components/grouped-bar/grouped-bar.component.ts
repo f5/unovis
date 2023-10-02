@@ -80,8 +80,8 @@ export class VisGroupedBarComponent<Datum> implements GroupedBarConfigInterface<
   /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */
   @Input() id?: ((d: Datum, i: number, ...rest) => string)
 
-  /** Component color accessor function. Default: `d => d.color` */
-  @Input() color?: ColorAccessor<Datum> | ColorAccessor<Datum[]>
+  /** Bar color accessor function. Default: `d => d.color` */
+  @Input() color?: ColorAccessor<Datum>
 
   /** Scale for X dimension, e.g. Scale.scaleLinear(). If you set xScale you'll be responsible for setting it's `domain` and `range` as well.
    * Only continuous scales are supported.

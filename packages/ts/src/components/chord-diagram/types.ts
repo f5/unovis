@@ -48,16 +48,17 @@ export type ChordNodeCore<N> = HierarchyRectangularNode<N> & ChordNodeState & {
 }
 
 export type ChordNodeDatum<N> = ChordHierarchyNode<N> | N
+export type ChordLinkDatum<N extends ChordInputNode, L extends ChordInputLink = ChordInputLink> = GraphLinkCore<N, L>;
 
 export type ChordNode<N extends ChordInputNode> = ChordNodeCore<ChordNodeDatum<N>>
 export type ChordLeafNode<N extends ChordInputNode> = ChordNodeCore<N>
 
 export type ChordRibbonPoint = { a0: number; a1: number; r: number }
-export interface ChordRibbon<N extends ChordInputNode> {
+export interface ChordRibbon<N extends ChordInputNode, L extends ChordInputLink = ChordInputLink> {
   source: ChordLeafNode<N>;
   target: ChordLeafNode<N>;
   points: ChordRibbonPoint[];
-  data: GraphLinkCore<N, ChordInputLink>;
+  data: ChordLinkDatum<N, L>;
   _state: {
     hovered?: boolean;
   };

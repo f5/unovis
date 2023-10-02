@@ -1,5 +1,4 @@
 /* eslint-disable no-irregular-whitespace */
-import { Config } from 'core/config'
 import { VisEventCallback, VisEventType } from 'core/component/types'
 
 export interface ComponentConfigInterface {
@@ -54,8 +53,8 @@ export interface ComponentConfigInterface {
   };
 }
 
-export class ComponentConfig extends Config implements ComponentConfigInterface {
-  duration = 600
-  events = {}
-  attributes = {}
+export const ComponentDefaultConfig: ComponentConfigInterface = {
+  duration: 600,
+  events: {},
+  attributes: {},
 }

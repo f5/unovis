@@ -81,7 +81,7 @@ export class VisCrosshairComponent<Datum> implements CrosshairConfigInterface<Da
   @Input() id?: ((d: Datum, i: number, ...rest) => string)
 
   /** Optional color array or color accessor function for crosshair circles. Default: `d => d.color` */
-  @Input() color?: ColorAccessor<Datum> | ColorAccessor<Datum[]>
+  @Input() color?: ColorAccessor<Datum>
 
   /** Scale for X dimension, e.g. Scale.scaleLinear(). If you set xScale you'll be responsible for setting it's `domain` and `range` as well.
    * Only continuous scales are supported.
@@ -128,7 +128,7 @@ export class VisCrosshairComponent<Datum> implements CrosshairConfigInterface<Da
    * and the `yScale` instance to help you calculate the correct vertical position of the circles.
    * It has to return an array of the CrosshairCircle objects: `{ y: number; color: string; opacity?: number }[]`.
    * Default: `undefined` */
-  @Input() getCircles?: (x: number, data: Datum[], yScale: ContinuousScale) => CrosshairCircle[]
+  @Input() getCircles?: (x: number | Date | Date, data: Datum[], yScale: ContinuousScale) => CrosshairCircle[]
   @Input() data: Datum[]
 
   component: Crosshair<Datum> | undefined

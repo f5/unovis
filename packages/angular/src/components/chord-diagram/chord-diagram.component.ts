@@ -9,6 +9,7 @@ import {
   VisEventType,
   VisEventCallback,
   ColorAccessor,
+  ChordLinkDatum,
   NumericAccessor,
   ChordNodeDatum,
   StringAccessor,
@@ -81,10 +82,10 @@ export class VisChordDiagramComponent<N extends ChordInputNode, L extends ChordI
   @Input() highlightedLinkIds?: (number | string)[]
 
   /** Link color accessor function. Default: `var(--vis-chord-diagram-link-fill-color)` */
-  @Input() linkColor?: ColorAccessor<L>
+  @Input() linkColor?: ColorAccessor<ChordLinkDatum<N, L>>
 
   /** Link value accessor function. Default: `l => l.value` */
-  @Input() linkValue?: NumericAccessor<L>
+  @Input() linkValue?: NumericAccessor<ChordLinkDatum<N, L>>
 
   /** Array of node hierarchy levels. Data records are supposed to have corresponding properties, e.g. ['level1', 'level2']. Default: `[]` */
   @Input() nodeLevels?: string[]
@@ -105,10 +106,10 @@ export class VisChordDiagramComponent<N extends ChordInputNode, L extends ChordI
   @Input() nodeLabelAlignment?: GenericAccessor<ChordLabelAlignment | string, ChordNodeDatum<N>>
 
   /** Pad angle in radians. Constant value or accessor function. Default: `0.02` */
-  @Input() padAngle?: NumericAccessor<N>
+  @Input() padAngle?: NumericAccessor<ChordNodeDatum<N>>
 
   /** Corner radius constant value or accessor function. Default: `2` */
-  @Input() cornerRadius?: NumericAccessor<N>
+  @Input() cornerRadius?: NumericAccessor<ChordNodeDatum<N>>
 
   /** Angular range of the diagram. Default: `[0, 2 * Math.PI]` */
   @Input() angleRange?: [number, number]

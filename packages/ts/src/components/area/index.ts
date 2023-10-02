@@ -19,16 +19,17 @@ import { NumericAccessor } from 'types/accessor'
 import { AreaDatum } from './types'
 
 // Config
-import { AreaConfig, AreaConfigInterface } from './config'
+import { AreaDefaultConfig, AreaConfigInterface } from './config'
 
 // Styles
 import * as s from './style'
 
-export class Area<Datum> extends XYComponentCore<Datum, AreaConfig<Datum>, AreaConfigInterface<Datum>> {
+export class Area<Datum> extends XYComponentCore<Datum, AreaConfigInterface<Datum>> {
   static selectors = s
-  stacked = true
-  config: AreaConfig<Datum> = new AreaConfig()
-  areaGen: AreaInterface<AreaDatum>
+  protected _defaultConfig = AreaDefaultConfig as AreaConfigInterface<Datum>
+  public config: AreaConfigInterface<Datum> = this._defaultConfig
+  public stacked = true
+  private _areaGen: AreaInterface<AreaDatum>
   private _prevNegative: boolean[] | undefined // To help guessing the stack direction when an accessor was set to null or 0
 
   events = {
@@ -37,7 +38,7 @@ export class Area<Datum> extends XYComponentCore<Datum, AreaConfig<Datum>, AreaC
 
   constructor (config?: AreaConfigInterface<Datum>) {
     super()
-    if (config) this.config.init(config)
+    if (config) this.setConfig(config)
   }
 
   _render (customDuration?: number): void {
@@ -46,7 +47,7 @@ export class Area<Datum> extends XYComponentCore<Datum, AreaConfig<Datum>, AreaC
     const duration = isNumber(customDuration) ? customDuration : config.duration
 
     const curveGen = Curve[config.curveType]
-    this.areaGen = area<AreaDatum>()
+    this._areaGen = area<AreaDatum>()
       .x(d => d.x)
       .y0(d => d.y0)
       .y1(d => {
@@ -82,14 +83,14 @@ export class Area<Datum> extends XYComponentCore<Datum, AreaConfig<Datum>, AreaC
 
     const areasEnter = areas.enter().append('path')
       .attr('class', s.area)
-      .attr('d', d => this.areaGen(d) || this._emptyPath())
+      .attr('d', d => this._areaGen(d) || this._emptyPath())
       .style('opacity', 0)
       .style('fill', (d, i) => getColor(data, config.color, areaMaxIdx - i))
 
     const areasMerged = smartTransition(areasEnter.merge(areas), duration)
       .style('opacity', (d, i) => {
         const isDefined = d.some(p => (p.y0 - p.y1) !== 0)
-        return isDefined ? getNumber(d, config.opacity, areaMaxIdx - i) : 0
+        return isDefined ? getNumber(data, config.opacity, areaMaxIdx - i) : 0
       })
       .style('fill', (d, i) => getColor(data, config.color, areaMaxIdx - i))
       .style('cursor', (d, i) => getString(data, config.cursor, areaMaxIdx - i))
@@ -98,11 +99,11 @@ export class Area<Datum> extends XYComponentCore<Datum, AreaConfig<Datum>, AreaC
       const transition = areasMerged as Transition<SVGPathElement, AreaDatum[], SVGGElement, AreaDatum[]>
       transition.attrTween('d', (d, i, el) => {
         const previous = select(el[i]).attr('d')
-        const next = this.areaGen(d) || this._emptyPath()
+        const next = this._areaGen(d) || this._emptyPath()
         return interpolatePath(previous, next)
       })
     } else {
-      areasMerged.attr('d', d => this.areaGen(d) || this._emptyPath())
+      areasMerged.attr('d', d => this._areaGen(d) || this._emptyPath())
     }
 
     smartTransition(areas.exit(), duration)
@@ -125,7 +126,7 @@ export class Area<Datum> extends XYComponentCore<Datum, AreaConfig<Datum>, AreaC
     const y0 = this.yScale((yDomain[0] + yDomain[1]) / 2)
     const y1 = y0
 
-    return this.areaGen([
+    return this._areaGen([
       { y0, y1, x: xRange[0] },
       { y0, y1, x: xRange[1] },
     ])

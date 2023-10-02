@@ -1,7 +1,10 @@
 import { select, Selection } from 'd3-selection'
 
+// Utils
+import { merge } from 'utils/data'
+
 // Config
-import { BulletLegendConfig, BulletLegendConfigInterface } from './config'
+import { BulletLegendDefaultConfig, BulletLegendConfigInterface } from './config'
 
 // Local Types
 import { BulletLegendItemInterface } from './types'
@@ -14,10 +17,12 @@ import * as s from './style'
 
 export class BulletLegend {
   static selectors = s
+  protected _defaultConfig = BulletLegendDefaultConfig as BulletLegendConfigInterface
+  public config: BulletLegendConfigInterface = this._defaultConfig
+
   div: Selection<HTMLDivElement, unknown, null, undefined>
   element: HTMLElement
-  prevConfig: BulletLegendConfig
-  config: BulletLegendConfig
+  prevConfig: BulletLegendConfigInterface
   protected _container: HTMLElement
 
   private _colorAccessor = (d: BulletLegendItemInterface): string => d.color
@@ -37,7 +42,7 @@ export class BulletLegend {
 
   update (config: BulletLegendConfigInterface): void {
     this.prevConfig = this.config
-    this.config = new BulletLegendConfig().init(config)
+    this.config = merge(this._defaultConfig, config)
     this.render()
   }
 

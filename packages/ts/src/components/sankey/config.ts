@@ -1,7 +1,7 @@
 /* eslint-disable dot-notation */
 
 // Config
-import { ComponentConfigInterface, ComponentConfig } from 'core/component/config'
+import { ComponentConfigInterface, ComponentDefaultConfig } from 'core/component/config'
 
 // Utils
 import { getNumber } from 'utils/data'
@@ -137,59 +137,58 @@ export interface SankeyConfigInterface<N extends SankeyInputNode, L extends Sank
   subLabelToLabelInlineWidthRatio?: number;
 }
 
-export class SankeyConfig<N extends SankeyInputNode, L extends SankeyInputLink> extends ComponentConfig implements SankeyConfigInterface<N, L> {
-  // General
-  heightNormalizationCoeff = 1 / 16
-  exitTransitionType = SankeyExitTransitionType.Default
-  enterTransitionType = SankeyEnterTransitionType.Default
-  // eslint-disable-next-line dot-notation
-  id = (d: SankeyInputNode | SankeyInputLink, i: number): string => d['_id'] ?? `${i}`
-  highlightSubtreeOnHover = false
-  highlightDuration = 300
-  highlightDelay = 1000
-  iterations = 32
+export const SankeyDefaultConfig: SankeyConfigInterface<SankeyInputNode, SankeyInputLink> = ({
+  ...ComponentDefaultConfig,
+  heightNormalizationCoeff: 1 / 16,
+  exitTransitionType: SankeyExitTransitionType.Default,
+  enterTransitionType: SankeyEnterTransitionType.Default,
+  id: (d, i) => d['_id'] ?? `${i}`,
+  highlightSubtreeOnHover: false,
+  highlightDuration: 300,
+  highlightDelay: 1000,
+  iterations: 32,
+  nodeSort: undefined,
+  nodeWidth: 25,
+  nodeAlign: SankeyNodeAlign.Justify,
+  nodeHorizontalSpacing: 150,
+  nodeMinHeight: 20,
+  nodeMaxHeight: 100,
+  nodePadding: 2,
+  nodeColor: d => d['color'],
+  nodeFixedValue: d => d['fixedValue'],
+  showSingleNode: true,
+  nodeCursor: undefined,
+  nodeIcon: undefined,
+  nodeIconColor: undefined,
+  label: d => d['label'],
+  labelPosition: Position.Auto,
+  labelVerticalAlign: VerticalAlign.Middle,
+  labelBackground: false,
+  labelTextSeparator: [' ', '-'],
+  labelFit: FitMode.Trim,
+  labelTrimMode: TrimMode.Middle,
+  labelForceWordBreak: true,
+  labelFontSize: undefined,
+  labelCursor: undefined,
+  labelColor: undefined,
+  labelMaxWidth: 70,
+  labelExpandTrimmedOnHover: true,
+  labelVisibility: undefined,
+  subLabel: undefined,
+  subLabelFontSize: undefined,
+  subLabelColor: undefined,
+  subLabelPlacement: SankeySubLabelPlacement.Below,
+  subLabelToLabelInlineWidthRatio: 0.4,
+  linkValue: d => d['value'],
+  linkColor: d => d['color'],
+  linkCursor: undefined,
 
-  // Sorting
-  linkSort = (link2: L, link1: L): number => getNumber(link1, this.linkValue) - getNumber(link2, this.linkValue)
-  nodeSort = undefined
+  // https://stackoverflow.com/a/21648197/2040291
+  init: function () {
+    (this as SankeyConfigInterface<SankeyInputNode, SankeyInputLink>).linkSort =
+      (link2, link1) => getNumber(link1, this.linkValue) - getNumber(link2, this.linkValue)
+    delete this.init
+    return this
+  },
+}).init()
 
-  // Nodes
-  nodeWidth = 25
-  nodeAlign = SankeyNodeAlign.Justify
-  nodeHorizontalSpacing = 150
-  nodeMinHeight = 20
-  nodeMaxHeight = 100
-  nodePadding = 2
-  nodeColor = (d: SankeyNode<N, L>): string => d['color']
-  nodeFixedValue = (d: N): number => d['fixedValue']
-  showSingleNode = true
-  nodeCursor = undefined
-  nodeIcon = undefined
-  nodeIconColor = undefined
-
-  // Labels
-  label = (d: SankeyNode<N, L>): string => d['label']
-  labelPosition = Position.Auto
-  labelVerticalAlign = VerticalAlign.Middle
-  labelBackground = false
-  labelTextSeparator = [' ', '-']
-  labelFit = FitMode.Trim
-  labelTrimMode = TrimMode.Middle
-  labelForceWordBreak = true
-  labelFontSize = undefined
-  labelCursor = undefined
-  labelColor = undefined
-  labelMaxWidth = 70
-  labelExpandTrimmedOnHover = true
-  labelVisibility = undefined
-  subLabel = undefined
-  subLabelFontSize = undefined
-  subLabelColor = undefined
-  subLabelPlacement = SankeySubLabelPlacement.Below
-  subLabelToLabelInlineWidthRatio = 0.4
-
-  // Links
-  linkValue = (d: L): number => d['value']
-  linkColor = (d: SankeyLink<N, L>): string => d['color']
-  linkCursor = undefined
-}

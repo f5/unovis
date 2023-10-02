@@ -95,7 +95,7 @@ export class VisGraphComponent<N extends GraphInputNode, L extends GraphInputLin
   @Input() zoomThrottledUpdateNodeThreshold?: number
 
   /** Zoom event callback. Default: `undefined` */
-  @Input() onZoom?: (zoomScale: number, zoomScaleExtent: number) => void
+  @Input() onZoom?: (zoomScale: number, zoomScaleExtent: [number, number]) => void
 
   /** Type of the graph layout. Default: `GraphLayoutType.Force` */
   @Input() layoutType?: GraphLayoutType | string

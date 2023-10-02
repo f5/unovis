@@ -22,7 +22,7 @@ import { MapLink } from 'types/map'
 import { MapData, MapFeature, MapPointLabelPosition } from './types'
 
 // Config
-import { TopoJSONMapConfig, TopoJSONMapConfigInterface } from './config'
+import { TopoJSONMapDefaultConfig, TopoJSONMapConfigInterface } from './config'
 
 // Modules
 import { arc, getLonLat } from './utils'
@@ -36,11 +36,12 @@ export class TopoJSONMap<
   LinkDatum = unknown,
 > extends ComponentCore<
   MapData<AreaDatum, PointDatum, LinkDatum>,
-  TopoJSONMapConfig<AreaDatum, PointDatum, LinkDatum>,
   TopoJSONMapConfigInterface<AreaDatum, PointDatum, LinkDatum>
   > {
   static selectors = s
-  config: TopoJSONMapConfig<AreaDatum, PointDatum, LinkDatum> = new TopoJSONMapConfig()
+  protected _defaultConfig = TopoJSONMapDefaultConfig as TopoJSONMapConfigInterface<AreaDatum, PointDatum, LinkDatum>
+  public config: TopoJSONMapConfigInterface<AreaDatum, PointDatum, LinkDatum> = this._defaultConfig
+
   datamodel: MapGraphDataModel<AreaDatum, PointDatum, LinkDatum> = new MapGraphDataModel()
   g: Selection<SVGGElement, unknown, null, undefined>
   private _firstRender = true
@@ -269,7 +270,7 @@ export class TopoJSONMap<
 
     const pointLabelsMerged = pointsMerged.select(`.${s.pointLabel}`)
     pointLabelsMerged
-      .text(config.pointLabel ?? '')
+      .text(d => getString(d, config.pointLabel) ?? '')
       .style('font-size', d => {
         if (config.pointLabelPosition === MapPointLabelPosition.Bottom) {
           return `calc(var(--vis-map-point-label-font-size) / ${this._currentZoomLevel}`

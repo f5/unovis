@@ -105,7 +105,7 @@ export class VisAxisComponent<Datum> implements AxisConfigInterface<Datum>, Afte
   @Input() minMaxTicksOnly?: boolean
 
   /** Tick label formatter function. Default: `undefined` */
-  @Input() tickFormat?: ((tick: number, i: number, ticks: number[]) => string) | ((tick: Date, i: number, ticks: Date[]) => string)
+  @Input() tickFormat?: ((tick: number, i: number, ticks: number[] | Date[]) => string)
 
   /** Explicitly set tick values. Default: `undefined` */
   @Input() tickValues?: number[]

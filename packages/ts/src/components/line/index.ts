@@ -21,14 +21,15 @@ import { Direction } from 'types/direction'
 import { LineData, LineDatum } from './types'
 
 // Config
-import { LineConfig, LineConfigInterface } from './config'
+import { LineDefaultConfig, LineConfigInterface } from './config'
 
 // Styles
 import * as s from './style'
 
-export class Line<Datum> extends XYComponentCore<Datum, LineConfig<Datum>, LineConfigInterface<Datum>> {
+export class Line<Datum> extends XYComponentCore<Datum, LineConfigInterface<Datum>> {
   static selectors = s
-  config: LineConfig<Datum> = new LineConfig()
+  protected _defaultConfig = LineDefaultConfig as LineConfigInterface<Datum>
+  public config: LineConfigInterface<Datum> = this._defaultConfig
   lineGen: LineGenInterface<{ x: number; y: number; defined: boolean }>
   curve: CurveFactoryLineOnly = Curve[CurveType.MonotoneX]
   events = {
@@ -40,7 +41,7 @@ export class Line<Datum> extends XYComponentCore<Datum, LineConfig<Datum>, LineC
 
   constructor (config?: LineConfigInterface<Datum>) {
     super()
-    if (config) this.config.init(config)
+    if (config) this.setConfig(config)
   }
 
   get bleed (): Spacing {
@@ -130,7 +131,7 @@ export class Line<Datum> extends XYComponentCore<Datum, LineConfig<Datum>, LineC
       const lineSelectionHelper = group.select(`.${s.lineSelectionHelper}`)
 
       const isLineVisible = d.visible
-      const dashArray = getValue<LineData, number[]>(d, config.lineDashArray, i)
+      const dashArray = getValue<Datum[], number[]>(data, config.lineDashArray, i)
       const transition = smartTransition(linePath, duration)
         .attr('stroke', getColor(data, config.color, i))
         .attr('stroke-width', config.lineWidth)

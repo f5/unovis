@@ -1,4 +1,4 @@
-import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component/config'
+import { XYComponentConfigInterface, XYComponentDefaultConfig } from 'core/xy-component/config'
 
 // Types
 import { AxisType } from 'components/axis/types'
@@ -30,7 +30,7 @@ export interface AxisConfigInterface<Datum> extends Partial<XYComponentConfigInt
   /** Draw the min and max axis ticks only. Default: `false` */
   minMaxTicksOnly?: boolean;
   /** Tick label formatter function. Default: `undefined` */
-  tickFormat?: ((tick: number, i: number, ticks: number[]) => string) | ((tick: Date, i: number, ticks: Date[]) => string);
+  tickFormat?: ((tick: number, i: number, ticks: number[] | Date[]) => string);
   /** Explicitly set tick values. Default: `undefined` */
   tickValues?: number[];
   /** Set the approximate number of axis ticks (will be passed to D3's axis constructor). Default: `undefined` */
@@ -55,28 +55,29 @@ export interface AxisConfigInterface<Datum> extends Partial<XYComponentConfigInt
   tickPadding?: number;
 }
 
-export class AxisConfig<Datum> extends XYComponentConfig<Datum> implements AxisConfigInterface<Datum> {
-  position = undefined
-  type = undefined
-  label = undefined
-  labelFontSize = null
-  gridLine = true
-  tickLine = true
-  domainLine = true
-  numTicks = undefined
-  minMaxTicksOnly = false
-  tickTextWidth = undefined
-  tickTextSeparator = undefined
-  tickTextForceWordBreak = false
-  tickTextTrimType = TrimMode.Middle
-  tickTextFitMode = FitMode.Wrap
-  tickTextFontSize = null
-  tickTextAlign = undefined
-  tickTextColor = null
-  labelMargin = 8
-  labelColor = null
-  tickFormat = undefined
-  tickValues = undefined
-  fullSize = true
-  tickPadding = 8
+export const AxisDefaultConfig: AxisConfigInterface<unknown> = {
+  ...XYComponentDefaultConfig,
+  position: undefined,
+  type: undefined,
+  label: undefined,
+  labelFontSize: null,
+  gridLine: true,
+  tickLine: true,
+  domainLine: true,
+  numTicks: undefined,
+  minMaxTicksOnly: false,
+  tickTextWidth: undefined,
+  tickTextSeparator: undefined,
+  tickTextForceWordBreak: false,
+  tickTextTrimType: TrimMode.Middle,
+  tickTextFitMode: FitMode.Wrap,
+  tickTextFontSize: null,
+  tickTextAlign: undefined,
+  tickTextColor: null,
+  labelMargin: 8,
+  labelColor: null,
+  tickFormat: undefined,
+  tickValues: undefined,
+  fullSize: true,
+  tickPadding: 8,
 }

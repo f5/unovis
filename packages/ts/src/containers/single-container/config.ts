@@ -1,5 +1,5 @@
 // Core
-import { ContainerConfig, ContainerConfigInterface } from 'core/container/config'
+import { ContainerDefaultConfig, ContainerConfigInterface } from 'core/container/config'
 import { ComponentCore } from 'core/component'
 import { Tooltip } from 'components/tooltip'
 
@@ -10,6 +10,7 @@ export interface SingleContainerConfigInterface<Datum> extends ContainerConfigIn
   tooltip?: Tooltip;
 }
 
-export class SingleContainerConfig<Datum> extends ContainerConfig implements SingleContainerConfigInterface<Datum> {
-  tooltip = undefined
+export const SingleContainerDefaultConfig: SingleContainerConfigInterface<unknown> = {
+  ...ContainerDefaultConfig,
+  tooltip: undefined,
 }

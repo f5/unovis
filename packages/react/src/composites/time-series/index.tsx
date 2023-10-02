@@ -24,7 +24,7 @@ export type VisTimeSeriesProps<Datum> = {
   x: (d: Datum, i: number) => number;
   y: (d: Datum, i: number) => number;
   id: (d: Datum, i: number) => string;
-  color: (d: Datum, i: number) => string;
+  color: (d: Datum[], i: number) => string | null;
   cursor: string | ((d: Datum, i: number) => string);
   formatXTicks?: (timestamp: number) => string;
   formatYTicks?: (timestamp: number) => string;
@@ -112,7 +112,7 @@ VisTimeSeries.defaultProps = {
   x: (d: VisTimeSeriesDatum) => d.timestamp,
   y: (d: VisTimeSeriesDatum) => d.value,
   id: (d: VisTimeSeriesDatum) => d.id,
-  color: (d: VisTimeSeriesDatum) => d.color,
+  color: (d: VisTimeSeriesDatum[]) => null,
 
   formatYTicks: (d: number) => d.toFixed(1),
 

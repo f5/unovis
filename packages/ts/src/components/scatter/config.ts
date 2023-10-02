@@ -1,6 +1,5 @@
-import { ScalePower } from 'd3-scale'
 // Core
-import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component/config'
+import { XYComponentConfigInterface, XYComponentDefaultConfig } from 'core/xy-component/config'
 
 // Types
 import { Scale, ContinuousScale } from 'types/scale'
@@ -9,6 +8,8 @@ import { ColorAccessor, GenericAccessor, NumericAccessor, StringAccessor } from 
 import { Position } from 'types/position'
 
 export interface ScatterConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
+  /** Point color accessor function. Default: `d => d.color` */
+  color?: ColorAccessor<Datum>;
   /**
    * Size of the scatter plot marker (e.g. diameter if `SymbolType.Circle` is used for `shape`) in pixels.
    * Can be a constant value or an accessor function. But if `sizeRange` is set, then the values will be treated
@@ -42,17 +43,21 @@ export interface ScatterConfigInterface<Datum> extends XYComponentConfigInterfac
   strokeWidth?: NumericAccessor<Datum>;
 }
 
-export class ScatterConfig<Datum> extends XYComponentConfig<Datum> implements ScatterConfigInterface<Datum> {
-  size = 10
-  sizeScale: ScalePower<number, number> = Scale.scaleSqrt()
-  sizeRange = undefined
-  shape = SymbolType.Circle
-  label = undefined
-  labelColor = undefined
-  labelPosition = Position.Bottom
-  labelHideOverlapping = true
-  cursor = null
-  labelTextBrightnessRatio = 0.65
-  strokeColor: ScatterConfigInterface<Datum>['strokeColor'] = undefined
-  strokeWidth: ScatterConfigInterface<Datum>['strokeWidth'] = undefined
+export const ScatterDefaultConfig: ScatterConfigInterface<unknown> = {
+  ...XYComponentDefaultConfig,
+  // eslint-disable-next-line dot-notation
+  color: (d: unknown): string => d['color'],
+  size: 10,
+  sizeScale: Scale.scaleSqrt(),
+  sizeRange: undefined,
+  shape: SymbolType.Circle,
+  label: undefined,
+  labelColor: undefined,
+  labelPosition: Position.Bottom,
+  labelHideOverlapping: true,
+  cursor: null,
+  labelTextBrightnessRatio: 0.65,
+  strokeColor: undefined,
+  strokeWidth: undefined,
 }
+

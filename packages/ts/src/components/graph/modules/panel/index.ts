@@ -11,7 +11,7 @@ import { GraphInputLink, GraphInputNode } from 'types/graph'
 import { GraphNode, GraphLink, GraphPanel } from '../../types'
 
 // Config
-import { GraphConfig } from '../../config'
+import { GraphConfigInterface } from '../../config'
 
 // Helpers
 import { setLabelRect } from '../node/helper'
@@ -59,7 +59,7 @@ export function createPanels<N extends GraphNode, L extends GraphLink> (
 
 export function updatePanels<N extends GraphNode, L extends GraphLink> (
   selection: Selection<SVGGElement, GraphPanel, SVGGElement, unknown>,
-  config: GraphConfig<GraphInputNode, GraphInputLink>,
+  config: GraphConfigInterface<GraphInputNode, GraphInputLink>,
   duration: number
 ): void {
   smartTransition(selection, duration)
@@ -128,7 +128,7 @@ export function updatePanels<N extends GraphNode, L extends GraphLink> (
 
 export function removePanels<N extends GraphNode, L extends GraphLink> (
   selection: Selection<SVGGElement, GraphPanel, SVGGElement, unknown>,
-  config: GraphConfig<GraphInputNode, GraphInputLink>,
+  config: GraphConfigInterface<GraphInputNode, GraphInputLink>,
   duration: number
 ): void {
   smartTransition(selection, duration / 2)

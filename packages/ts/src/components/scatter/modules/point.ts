@@ -14,7 +14,7 @@ import { getValue } from 'utils/data'
 import { ContinuousScale } from 'types/scale'
 
 // Config
-import { ScatterConfig } from '../config'
+import { ScatterConfigInterface } from '../config'
 
 // Local Types
 import { ScatterPoint } from '../types'
@@ -37,7 +37,7 @@ export function createPoints<Datum> (
 
 export function updatePoints<Datum> (
   selection: Selection<SVGGElement, ScatterPoint<Datum>, SVGGElement, ScatterPoint<Datum>[]>,
-  config: ScatterConfig<Datum>,
+  config: ScatterConfigInterface<Datum>,
   xScale: ContinuousScale,
   yScale: ContinuousScale,
   duration: number

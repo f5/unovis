@@ -1,7 +1,7 @@
 /* eslint-disable dot-notation */
 
 // Config
-import { LeafletMapConfig, LeafletMapConfigInterface } from 'components/leaflet-map/config'
+import { LeafletMapDefaultConfig, LeafletMapConfigInterface } from 'components/leaflet-map/config'
 
 // Types
 import { ColorAccessor, NumericAccessor } from 'types/accessor'
@@ -38,23 +38,19 @@ export interface LeafletFlowMapConfigInterface<PointDatum extends GenericDataRec
   onSourcePointMouseLeave?: (f: FlowDatum, event: MouseEvent) => void;
 }
 
-export class LeafletFlowMapConfig<
-  PointDatum extends GenericDataRecord = GenericDataRecord,
-  FlowDatum extends GenericDataRecord = GenericDataRecord,
-> extends LeafletMapConfig<PointDatum> implements LeafletFlowMapConfigInterface<PointDatum, FlowDatum> {
-  sourceLongitude = (f: FlowDatum): number => f['sourceLongitude'] as number
-  sourceLatitude = (f: FlowDatum): number => f['sourceLatitude'] as number
-  targetLongitude = (f: FlowDatum): number => f['targetLongitude'] as number
-  targetLatitude = (f: FlowDatum): number => f['targetLatitude'] as number
-  sourcePointRadius = 3
-  sourcePointColor = '#88919f'
-  flowParticleColor = '#949dad'
-  flowParticleRadius = 1.1
-  flowParticleSpeed = 0.07
-  flowParticleDensity = 0.6
-
-  // Events
-  onSourcePointClick = undefined
-  onSourcePointMouseEnter = undefined
-  onSourcePointMouseLeave = undefined
+export const LeafletFlowMapDefaultConfig: LeafletFlowMapConfigInterface<GenericDataRecord, GenericDataRecord> = {
+  ...LeafletMapDefaultConfig,
+  sourceLongitude: <FlowDatum>(f: FlowDatum): number => f['sourceLongitude'] as number,
+  sourceLatitude: <FlowDatum>(f: FlowDatum): number => f['sourceLatitude'] as number,
+  targetLongitude: <FlowDatum>(f: FlowDatum): number => f['targetLongitude'] as number,
+  targetLatitude: <FlowDatum>(f: FlowDatum): number => f['targetLatitude'] as number,
+  sourcePointRadius: 3,
+  sourcePointColor: '#88919f',
+  flowParticleColor: '#949dad',
+  flowParticleRadius: 1.1,
+  flowParticleSpeed: 0.07,
+  flowParticleDensity: 0.6,
+  onSourcePointClick: undefined,
+  onSourcePointMouseEnter: undefined,
+  onSourcePointMouseLeave: undefined,
 }

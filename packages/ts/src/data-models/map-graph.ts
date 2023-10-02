@@ -20,7 +20,7 @@ export class MapGraphDataModel<AreaDatum, PointDatum, LinkDatum> extends CoreDat
 
   // Model configuration
   /* eslint-disable-next-line dot-notation */
-  public pointId: ((n: PointDatum) => string) = n => n['id']
+  public pointId: ((n: PointDatum, i: number) => string) = n => n['id']
   /* eslint-disable-next-line dot-notation */
   public linkSource: ((l: LinkDatum) => number | string | PointDatum) = l => l['source']
   /* eslint-disable-next-line dot-notation */
@@ -60,7 +60,7 @@ export class MapGraphDataModel<AreaDatum, PointDatum, LinkDatum> extends CoreDat
   private findPoint (points: PointDatum[], pointIdentifier: number | string | PointDatum): PointDatum | undefined {
     let foundPoint: PointDatum | undefined
     if (isNumber(pointIdentifier)) foundPoint = points[pointIdentifier as number]
-    else if (isString(pointIdentifier)) foundPoint = points.find(node => this.pointId(node) === pointIdentifier)
+    else if (isString(pointIdentifier)) foundPoint = points.find((node, i) => this.pointId(node, i) === pointIdentifier)
     else if (isObject(pointIdentifier)) foundPoint = points.find(node => node === pointIdentifier)
 
     if (!foundPoint) {

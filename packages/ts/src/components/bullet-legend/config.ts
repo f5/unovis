@@ -1,5 +1,3 @@
-import { Config } from 'core/config'
-
 // Local Types
 import { BulletLegendItemInterface, BulletShape } from './types'
 
@@ -30,12 +28,12 @@ export interface BulletLegendConfigInterface {
   bulletShape?: BulletShape;
 }
 
-export class BulletLegendConfig extends Config implements BulletLegendConfigInterface {
-  items: BulletLegendItemInterface[] = []
-  labelClassName = ''
-  onLegendItemClick = undefined
-  labelFontSize = null
-  labelMaxWidth = null
-  bulletSize = null
-  bulletShape = BulletShape.Circle
+export const BulletLegendDefaultConfig: BulletLegendConfigInterface = {
+  items: [],
+  labelClassName: '',
+  onLegendItemClick: undefined,
+  labelFontSize: null,
+  labelMaxWidth: null,
+  bulletSize: null,
+  bulletShape: BulletShape.Circle,
 }

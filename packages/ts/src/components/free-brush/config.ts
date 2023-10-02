@@ -1,5 +1,5 @@
 import { D3BrushEvent } from 'd3-brush'
-import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component/config'
+import { XYComponentConfigInterface, XYComponentDefaultConfig } from 'core/xy-component/config'
 
 // Types
 import { FreeBrushMode, FreeBrushSelection } from './types'
@@ -37,18 +37,19 @@ export interface FreeBrushConfigInterface<Datum> extends Partial<XYComponentConf
   autoHide?: boolean;
 }
 
-export class FreeBrushConfig<Datum> extends XYComponentConfig<Datum> implements FreeBrushConfigInterface<Datum> {
+export const FreeBrushDefaultConfig: FreeBrushConfigInterface<unknown> = {
+  ...XYComponentDefaultConfig,
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function */
-  onBrush = (s: FreeBrushSelection | undefined, e: D3BrushEvent<unknown>, userDriven: boolean): void => {}
+  onBrush: (s: FreeBrushSelection | undefined, e: D3BrushEvent<unknown>, userDriven: boolean): void => {},
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function */
-  onBrushStart = (s: FreeBrushSelection | undefined, e: D3BrushEvent<unknown>, userDriven: boolean): void => {}
+  onBrushStart: (s: FreeBrushSelection | undefined, e: D3BrushEvent<unknown>, userDriven: boolean): void => {},
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function */
-  onBrushMove = (s: FreeBrushSelection | undefined, e: D3BrushEvent<unknown>, userDriven: boolean): void => {}
+  onBrushMove: (s: FreeBrushSelection | undefined, e: D3BrushEvent<unknown>, userDriven: boolean): void => {},
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function */
-  onBrushEnd = (s: FreeBrushSelection | undefined, e: D3BrushEvent<unknown>, userDriven: boolean): void => {}
-  handleWidth = 1
-  selection: FreeBrushSelection | null | undefined = undefined
-  selectionMinLength = undefined
-  mode: FreeBrushMode = FreeBrushMode.X
-  autoHide = true
+  onBrushEnd: (s: FreeBrushSelection | undefined, e: D3BrushEvent<unknown>, userDriven: boolean): void => {},
+  handleWidth: 1,
+  selection: undefined,
+  selectionMinLength: undefined,
+  mode: FreeBrushMode.X,
+  autoHide: true,
 }

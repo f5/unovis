@@ -30,7 +30,7 @@
   }))
   setContext('axis', (e: HTMLElement & { __type__?: 'x' | 'y'}) => ({
     update: (c: Axis<Datum>) => {
-      e.__type__ = c.config.type
+      e.__type__ = c.config.type as 'x' | 'y'
       config[`${e.__type__}Axis`] = c
     },
     destroy: () => { config[`${e.__type__}Axis`] = undefined },

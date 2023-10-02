@@ -1,5 +1,5 @@
 // Core
-import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component/config'
+import { XYComponentConfigInterface, XYComponentDefaultConfig } from 'core/xy-component/config'
 
 // Types
 import { ColorAccessor, GenericAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
@@ -8,6 +8,8 @@ import { ColorAccessor, GenericAccessor, NumericAccessor, StringAccessor } from 
 import { XYLabel, XYLabelPositioning } from './types'
 
 export interface XYLabelsConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
+  /** Label color accessor function. Default: `d => d.color` */
+  color?: ColorAccessor<Datum>;
   /** Single Y accessor function. Default: `undefined` */
   y: NumericAccessor<Datum>;
   /** Defines how to position the label horizontally: in data space or in screen space. Default: `XYLabelPositioning.DataSpace` */
@@ -37,20 +39,24 @@ export interface XYLabelsConfigInterface<Datum> extends XYComponentConfigInterfa
   /** Cluster label color accessor function. Default: `null` */
   clusterLabelColor?: ColorAccessor<XYLabel<Datum>[]>;
 }
+export const XYLabelsDefaultConfig: XYLabelsConfigInterface<unknown> = {
+  ...XYComponentDefaultConfig,
+  // eslint-disable-next-line dot-notation
+  color: (d: unknown): string => d['color'],
+  y: undefined,
+  xPositioning: XYLabelPositioning.DataSpace,
+  yPositioning: XYLabelPositioning.DataSpace,
+  labelFontSize: undefined,
+  label: undefined,
+  backgroundColor: undefined,
+  cursor: null,
+  labelTextBrightnessRatio: 0.65,
 
-export class XYLabelsConfig<Datum> extends XYComponentConfig<Datum> implements XYLabelsConfigInterface<Datum> {
-  xPositioning = XYLabelPositioning.DataSpace
-  yPositioning = XYLabelPositioning.DataSpace
-  labelFontSize = undefined
-  label = undefined
-  backgroundColor = undefined
-  cursor = null
-  labelTextBrightnessRatio = 0.65
-
-  clustering = true
-  clusterLabel = (records: XYLabel<Datum>[]): string => records.length.toString()
-  clusterFontSize = undefined
-  clusterBackgroundColor = undefined
-  clusterCursor = undefined
-  clusterLabelColor = null
+  clustering: true,
+  clusterLabel: <Datum>(records: XYLabel<Datum>[]): string => records.length.toString(),
+  clusterFontSize: undefined,
+  clusterBackgroundColor: undefined,
+  clusterCursor: undefined,
+  clusterLabelColor: null,
 }
+

@@ -1,5 +1,3 @@
-import { Config } from 'core/config'
-
 export interface FlowLegendConfigInterface {
   /** Custom width of the component.  Default: `undefined` */
   customWidth?: number;
@@ -19,13 +17,13 @@ export interface FlowLegendConfigInterface {
   onLegendItemClick?: ((label?: string, i?: number) => void);
 }
 
-export class FlowLegendConfig extends Config implements FlowLegendConfigInterface {
-  customWidth = undefined
-  items = []
-  labelFontSize = 12
-  lineColor = undefined
-  labelColor = undefined
-  arrowSymbol = '▶'
-  arrowColor = undefined
-  onLegendItemClick = undefined
+export const FlowLegendDefaultConfig: FlowLegendConfigInterface = {
+  customWidth: undefined,
+  items: [],
+  labelFontSize: 12,
+  lineColor: undefined,
+  labelColor: undefined,
+  arrowSymbol: '▶',
+  arrowColor: undefined,
+  onLegendItemClick: undefined,
 }

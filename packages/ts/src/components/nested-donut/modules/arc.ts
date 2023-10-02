@@ -11,7 +11,7 @@ import { smartTransition } from 'utils/d3'
 import { NestedDonutSegment } from '../types'
 
 // Config
-import { NestedDonutConfig } from '../config'
+import { NestedDonutConfigInterface } from '../config'
 
 type AnimState = { x0: number; x1: number; y0: number; y1: number }
 export interface ArcNode extends SVGElement {
@@ -20,7 +20,7 @@ export interface ArcNode extends SVGElement {
 
 export function createArc<Datum> (
   selection: Selection<SVGPathElement, NestedDonutSegment<Datum>, SVGGElement, unknown>,
-  config: NestedDonutConfig<Datum>
+  config: NestedDonutConfigInterface<Datum>
 ): void {
   selection
     .style('fill', d => getColor(d, config.segmentColor) ?? d._state?.fill)
@@ -40,7 +40,7 @@ export function createArc<Datum> (
 
 export function updateArc<Datum> (
   selection: Selection<SVGPathElement, NestedDonutSegment<Datum>, SVGGElement, unknown>,
-  config: NestedDonutConfig<Datum>,
+  config: NestedDonutConfigInterface<Datum>,
   arcGen: Arc<any, AnimState>,
   duration: number
 ): void {

@@ -14,14 +14,16 @@ import { getColor } from 'utils/color'
 import { trimSVGText } from 'utils/text'
 
 // Config
-import { TimelineConfig, TimelineConfigInterface } from './config'
+import { TimelineDefaultConfig, TimelineConfigInterface } from './config'
 
 // Styles
 import * as s from './style'
 
-export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfig<Datum>, TimelineConfigInterface<Datum>> {
+export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterface<Datum>> {
   static selectors = s
-  config: TimelineConfig<Datum> = new TimelineConfig()
+  protected _defaultConfig = TimelineDefaultConfig as TimelineConfigInterface<Datum>
+  public config: TimelineConfigInterface<Datum> = this._defaultConfig
+
   events = {
     [Timeline.selectors.rows]: {
       wheel: this._onMouseWheel.bind(this),
@@ -47,7 +49,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfig<Datum
 
   constructor (config?: TimelineConfigInterface<Datum>) {
     super()
-    if (config) this.config.init(config)
+    if (config) this.setConfig(config)
 
     // Invisible background rect to track events
     this._background = this.g.append('rect').attr('class', s.background)

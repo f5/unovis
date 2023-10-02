@@ -13,7 +13,7 @@ import { getBoolean, isPlainObject } from 'utils/data'
 import { GraphNode, GraphPanel, GraphPanelConfig } from '../../types'
 
 // Config
-import { GraphConfig } from '../../config'
+import { GraphConfigInterface } from '../../config'
 
 // Helpers
 import { getX, getY, getNodeSize } from '../node/helper'
@@ -48,7 +48,7 @@ export function initPanels (panelsConfig: GraphPanelConfig[] | undefined): Graph
 export function setPanelForNodes<N extends GraphInputNode, L extends GraphInputLink> (
   panels: GraphPanel[],
   nodes: GraphNode<N, L>[],
-  config: GraphConfig<N, L>
+  config: GraphConfigInterface<N, L>
 ): void {
   if (!panels) return
 
@@ -119,7 +119,7 @@ export function setPanelNumNodes<N extends GraphInputNode, L extends GraphInputL
 export function updatePanelBBoxSize<N extends GraphInputNode, L extends GraphInputLink> (
   nodesSelection: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, unknown>,
   panels: GraphPanel[],
-  config: GraphConfig<N, L>
+  config: GraphConfigInterface<N, L>
 ): void {
   const { layoutNonConnectedAside } = config
   if (!panels) return
@@ -135,7 +135,7 @@ export function updatePanelBBoxSize<N extends GraphInputNode, L extends GraphInp
 export function updatePanelNumNodes<N extends GraphInputNode, L extends GraphInputLink> (
   nodesSelection: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, unknown>,
   panels: GraphPanel[],
-  config: GraphConfig<N, L>
+  config: GraphConfigInterface<N, L>
 ): void {
   const { layoutNonConnectedAside } = config
   if (!panels) return

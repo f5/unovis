@@ -44,7 +44,7 @@ import {
 } from './types'
 
 // Config
-import { LeafletMapConfig, LeafletMapConfigInterface } from './config'
+import { LeafletMapDefaultConfig, LeafletMapConfigInterface } from './config'
 
 // Styles
 import * as s from './style'
@@ -55,13 +55,15 @@ import { collideLabels, createNodes, removeNodes, updateNodes } from './modules/
 import { createNodeSelectionRing, updateNodeSelectionRing } from './modules/selectionRing'
 import { createBackgroundNode, updateBackgroundNode } from './modules/clusterBackground'
 
-export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<Datum[], LeafletMapConfig<Datum>, LeafletMapConfigInterface<Datum>> {
+export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<Datum[], LeafletMapConfigInterface<Datum>> {
   static selectors = s
   static cssVariables = s.variables
+  protected _defaultConfig = LeafletMapDefaultConfig as LeafletMapConfigInterface<Datum>
+  public config: LeafletMapConfigInterface<Datum> = this._defaultConfig
+
   g: Selection<HTMLElement, unknown, null, undefined>
   type = ComponentType.HTML
   element: HTMLElement
-  config: LeafletMapConfig<Datum> = new LeafletMapConfig()
   datamodel: MapDataModel<Datum> = new MapDataModel()
   protected _container: HTMLElement
   protected _containerSelection: Selection<HTMLElement, unknown, null, undefined>
@@ -219,7 +221,7 @@ export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<D
   }
 
   setConfig (config: LeafletMapConfigInterface<Datum>): void {
-    this.config = new LeafletMapConfig<Datum>().init(config)
+    super.setConfig(config)
 
     if (config.width) this._containerSelection.style('width', isString(config.width) ? config.width : `${config.width}px`)
     if (config.height) this._containerSelection.style('height', isString(config.height) ? config.height : `${config.height}px`)
