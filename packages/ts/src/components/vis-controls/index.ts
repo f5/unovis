@@ -1,10 +1,13 @@
 import { Selection, select } from 'd3-selection'
 
+// Utils
+import { merge } from 'utils/data'
+
 // Local Types
 import { VisControlItemInterface, VisControlsOrientation } from './types'
 
 // Config
-import { VisControlsConfig, VisControlsConfigInterface } from './config'
+import { VisControlsDefaultConfig, VisControlsConfigInterface } from './config'
 
 // Style
 import * as s from './style'
@@ -12,7 +15,9 @@ import * as s from './style'
 export class VisControls {
   div: Selection<HTMLDivElement, unknown, null, undefined>
   element: HTMLDivElement
-  config: VisControlsConfig
+  protected _defaultConfig = VisControlsDefaultConfig as VisControlsConfigInterface
+  public config: VisControlsConfigInterface = this._defaultConfig
+
   protected _container: HTMLElement
   protected _items: Selection<HTMLDivElement, unknown, null, undefined>
 
@@ -30,7 +35,7 @@ export class VisControls {
   }
 
   update (config: VisControlsConfigInterface): void {
-    this.config = new VisControlsConfig().init(config)
+    this.config = merge(this._defaultConfig, config)
     this.render()
   }
 

@@ -80,8 +80,8 @@ export class VisAreaComponent<Datum> implements AreaConfigInterface<Datum>, Afte
   /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */
   @Input() id?: ((d: Datum, i: number, ...rest) => string)
 
-  /** Component color accessor function. Default: `d => d.color` */
-  @Input() color?: ColorAccessor<Datum> | ColorAccessor<Datum[]>
+  /** Area color accessor function. The whole data array will be passed as the first argument. Default: `undefined` */
+  @Input() color?: ColorAccessor<Datum[]>
 
   /** Scale for X dimension, e.g. Scale.scaleLinear(). If you set xScale you'll be responsible for setting it's `domain` and `range` as well.
    * Only continuous scales are supported.
@@ -106,7 +106,7 @@ export class VisAreaComponent<Datum> implements AreaConfigInterface<Datum>, Afte
   @Input() baseline?: NumericAccessor<Datum>
 
   /** Opacity value or accessor function. Default: `1` */
-  @Input() opacity?: NumericAccessor<Datum>
+  @Input() opacity?: NumericAccessor<Datum[]>
 
   /** Optional area cursor. String or accessor function. Default: `null` */
   @Input() cursor?: StringAccessor<Datum[]>

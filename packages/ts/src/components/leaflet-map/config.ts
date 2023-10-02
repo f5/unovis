@@ -1,7 +1,7 @@
 /* eslint-disable dot-notation, no-irregular-whitespace */
 
 // Core
-import { ComponentConfig, ComponentConfigInterface } from 'core/component/config'
+import { ComponentDefaultConfig, ComponentConfigInterface } from 'core/component/config'
 import { Tooltip } from 'components/tooltip'
 
 // Types
@@ -79,7 +79,7 @@ export interface LeafletMapConfigInterface<Datum extends GenericDataRecord> exte
   /** Point shape accessor function or constant value. Default: `d => d.shape`  */
   pointShape?: GenericAccessor<LeafletMapPointShape | string, Datum>;
   /** Point color accessor function or constant value. Default: `d => d.color`  */
-  pointColor?: ColorAccessor<Datum>;
+  pointColor?: ColorAccessor<LeafletMapPointDatum<Datum>>;
   /** Point radius accessor function or constant value. Default: `undefined`  */
   pointRadius?: NumericAccessor<LeafletMapPointDatum<Datum>>;
   /** Point inner label accessor function. Default: `undefined`  */
@@ -101,7 +101,7 @@ export interface LeafletMapConfigInterface<Datum extends GenericDataRecord> exte
 
   // Cluster
   /** Cluster color accessor function or constant value. Default: `undefined`  */
-  clusterColor?: ColorAccessor<Datum>;
+  clusterColor?: ColorAccessor<LeafletMapClusterDatum<Datum>>;
   /** Cluster radius accessor function or constant value. Default: `undefined`  */
   clusterRadius?: NumericAccessor<LeafletMapClusterDatum<Datum>>;
   /** Cluster inner label accessor function. Default: `d => d.point_count`  */
@@ -171,60 +171,61 @@ export interface LeafletMapConfigInterface<Datum extends GenericDataRecord> exte
   ariaLabel?: string | null | undefined;
 }
 
-export class LeafletMapConfig<Datum extends GenericDataRecord> extends ComponentConfig implements LeafletMapConfigInterface<Datum> {
+export const LeafletMapDefaultConfig: LeafletMapConfigInterface<GenericDataRecord> = {
+  ...ComponentDefaultConfig,
   // General
-  width = undefined
-  height = undefined
-  flyToDuration = 1500
-  fitViewPadding = [150, 150] as [number, number]
-  zoomDuration = 800
-  initialBounds = undefined
-  fitBoundsOnUpdate = undefined
-  fitViewOnInit = true
-  fitViewOnUpdate = false
-  attribution = ['<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a>']
-  accessToken = ''
-  style = undefined
-  styleDarkTheme = undefined
-  renderer = LeafletMapRenderer.MapLibre
+  width: undefined,
+  height: undefined,
+  flyToDuration: 1500,
+  fitViewPadding: [150, 150],
+  zoomDuration: 800,
+  initialBounds: undefined,
+  fitBoundsOnUpdate: undefined,
+  fitViewOnInit: true,
+  fitViewOnUpdate: false,
+  attribution: ['<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a>'],
+  accessToken: '',
+  style: undefined,
+  styleDarkTheme: undefined,
+  renderer: LeafletMapRenderer.MapLibre,
 
   // Map events
-  onMapInitialized = undefined
-  onMapMoveZoom = undefined
-  onMapMoveStart = undefined
-  onMapMoveEnd = undefined
-  onMapZoomStart = undefined
-  onMapZoomEnd = undefined
-  onMapClick = undefined
+  onMapInitialized: undefined,
+  onMapMoveZoom: undefined,
+  onMapMoveStart: undefined,
+  onMapMoveEnd: undefined,
+  onMapZoomStart: undefined,
+  onMapZoomEnd: undefined,
+  onMapClick: undefined,
 
   // Point
-  pointLongitude = (d: Datum): number => d['longitude'] as number
-  pointLatitude = (d: Datum): number => d['latitude'] as number
-  pointId = (d: Datum): string => d['id'] as string
-  pointShape = (d: Datum): string => d['shape'] as string
-  pointColor = (d: Datum): string => d['color'] as string
-  pointRadius = undefined
-  pointLabel = undefined
-  pointLabelColor = undefined
-  pointBottomLabel = ''
-  pointCursor = null
-  pointRingWidth = 1.25
-  selectedPointId = undefined
+  pointLongitude: <Datum>(d: Datum): number => d['longitude'] as number,
+  pointLatitude: <Datum>(d: Datum): number => d['latitude'] as number,
+  pointId: <Datum>(d: Datum): string => d['id'] as string,
+  pointShape: <Datum>(d: Datum): string => d['shape'] as string,
+  pointColor: <Datum>(d: Datum): string => d['color'] as string,
+  pointRadius: undefined,
+  pointLabel: undefined,
+  pointLabelColor: undefined,
+  pointBottomLabel: '',
+  pointCursor: null,
+  pointRingWidth: 1.25,
+  selectedPointId: undefined,
 
   // Cluster
-  clusterColor = undefined
-  clusterRadius = undefined
-  clusterLabel = (d: LeafletMapClusterDatum<Datum>): string => `${d.point_count}`
-  clusterLabelColor = undefined
-  clusterBottomLabel = ''
-  clusterRingWidth = 1.25
-  clusterBackground = true
-  clusterExpandOnClick = true
-  clusteringDistance = 55
-  colorMap = {} as LeafletMapPointStyles<Datum>
+  clusterColor: undefined,
+  clusterRadius: undefined,
+  clusterLabel: <Datum extends GenericDataRecord>(d: LeafletMapClusterDatum<Datum>): string => `${d.point_count}`,
+  clusterLabelColor: undefined,
+  clusterBottomLabel: '',
+  clusterRingWidth: 1.25,
+  clusterBackground: true,
+  clusterExpandOnClick: true,
+  clusteringDistance: 55,
+  colorMap: {},
 
   // TopoJSON Overlay
-  topoJSONLayer = {
+  topoJSONLayer: {
     sources: undefined,
     fillOpacity: 0.6,
     strokeOpacity: 0.8,
@@ -232,9 +233,9 @@ export class LeafletMapConfig<Datum extends GenericDataRecord> extends Component
     featureName: undefined,
     fillProperty: undefined,
     strokeProperty: undefined,
-  }
+  },
 
   // Misc
-  tooltip = undefined
-  ariaLabel = undefined
+  tooltip: undefined,
+  ariaLabel: undefined,
 }

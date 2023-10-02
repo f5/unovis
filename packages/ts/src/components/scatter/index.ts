@@ -14,12 +14,13 @@ import { getCSSVariableValueInPixels } from 'utils/misc'
 import { Spacing } from 'types/spacing'
 import { SymbolType } from 'types/symbol'
 import { NumericAccessor } from 'types/accessor'
+import { Position } from 'types/position'
 
 // Local Types
 import { ScatterPointGroupNode, ScatterPoint } from './types'
 
 // Config
-import { ScatterConfig, ScatterConfigInterface } from './config'
+import { ScatterDefaultConfig, ScatterConfigInterface } from './config'
 
 // Modules
 import { createPoints, updatePoints, removePoints } from './modules/point'
@@ -28,9 +29,11 @@ import { collideLabels, getEstimatedLabelBBox } from './modules/utils'
 // Styles
 import * as s from './style'
 
-export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfig<Datum>, ScatterConfigInterface<Datum>> {
+export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfigInterface<Datum>> {
   static selectors = s
-  config: ScatterConfig<Datum> = new ScatterConfig()
+  protected _defaultConfig = ScatterDefaultConfig as ScatterConfigInterface<Datum>
+  public config: ScatterConfigInterface<Datum> = this._defaultConfig
+
   events = {
     [Scatter.selectors.point]: {
       mouseenter: this._onPointMouseOver.bind(this),
@@ -70,7 +73,7 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfig<Datum>,
 
     const extent = pointDataFlat.reduce((ext, d) => {
       const labelPosition = getValue(d, this.config.labelPosition, d._point.pointIndex)
-      const labelBBox = getEstimatedLabelBBox(d, labelPosition, this.xScale, this.yScale, fontSizePx)
+      const labelBBox = getEstimatedLabelBBox(d, labelPosition as Position, this.xScale, this.yScale, fontSizePx)
       const x = this.xScale(d._point.xValue)
       const y = this.yScale(d._point.yValue)
       const r = d._point.sizePx / 2
@@ -154,9 +157,8 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfig<Datum>,
   private _updateSizeScale (): void {
     const { config, datamodel } = this
 
-    config.sizeScale
-      .domain(getExtent(datamodel.data, config.size))
-      .range(config.sizeRange ?? [0, 0])
+    config.sizeScale.domain(getExtent(datamodel.data, config.size))
+    config.sizeScale.range(config.sizeRange ?? [0, 0])
   }
 
   private _getOnScreenData (): ScatterPoint<Datum>[][] {

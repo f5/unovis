@@ -16,7 +16,7 @@ import { convertLineToArc } from 'utils/path'
 
 // Local Types
 import { ChordInputLink, ChordInputNode, ChordRibbon, ChordRibbonPoint } from '../types'
-import { ChordDiagramConfig } from '../config'
+import { ChordDiagramConfigInterface } from '../config'
 
 // Generators
 export function emptyPath (): string {
@@ -65,8 +65,8 @@ export function createLink<N extends ChordInputNode> (
 }
 
 export function updateLink<N extends ChordInputNode, L extends ChordInputLink> (
-  selection: Selection<SVGPathElement, ChordRibbon<N>, SVGGElement, unknown>,
-  config: ChordDiagramConfig<N, L>,
+  selection: Selection<SVGPathElement, ChordRibbon<N, L>, SVGGElement, unknown>,
+  config: ChordDiagramConfigInterface<N, L>,
   radiusScale: ScalePower<number, number>,
   duration: number
 ): void {
@@ -76,7 +76,7 @@ export function updateLink<N extends ChordInputNode, L extends ChordInputLink> (
     .style('stroke', d => getColor(d.data, config.linkColor))
 
   const transition = smartTransition(selection, duration)
-    .style('opacity', 1) as Transition<SVGPathElement, ChordRibbon<N>, SVGGElement, unknown>
+    .style('opacity', 1) as Transition<SVGPathElement, ChordRibbon<N, L>, SVGGElement, unknown>
 
   if (duration) {
     transition.attrTween('d', (d, i, el) => {

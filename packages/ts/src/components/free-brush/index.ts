@@ -9,21 +9,23 @@ import { ContinuousScale } from 'types/scale'
 import { FreeBrushMode, FreeBrushSelection, FreeBrushSelectionInPixels } from './types'
 
 // Config
-import { FreeBrushConfig, FreeBrushConfigInterface } from './config'
+import { FreeBrushDefaultConfig, FreeBrushConfigInterface } from './config'
 
 // Styles
 import * as s from './style'
 
-export class FreeBrush<Datum> extends XYComponentCore<Datum, FreeBrushConfig<Datum>, FreeBrushConfigInterface<Datum>> {
+export class FreeBrush<Datum> extends XYComponentCore<Datum, FreeBrushConfigInterface<Datum>> {
   static selectors = s
-  config: FreeBrushConfig<Datum> = new FreeBrushConfig()
+  protected _defaultConfig = FreeBrushDefaultConfig as FreeBrushConfigInterface<Datum>
+  public config: FreeBrushConfigInterface<Datum> = this._defaultConfig
+
   private brush: Selection<SVGGElement, unknown, SVGGElement, unknown>
   private brushBehaviour: BrushBehavior<unknown>
   private _firstRender = true
 
   constructor (config: FreeBrushConfigInterface<Datum>) {
     super()
-    if (config) this.config.init(config)
+    if (config) this.setConfig(config)
 
     this.brush = this.g
       .append('g')
@@ -115,12 +117,12 @@ export class FreeBrush<Datum> extends XYComponentCore<Datum, FreeBrushConfig<Dat
         break
       }
       case FreeBrushMode.Y: {
-        selectedDomain = this._pixelRangeToDataRange(s as [number, number], this.yScale, config.selectionMinLength, true)
+        selectedDomain = this._pixelRangeToDataRange(s as [number, number], this.yScale, config.selectionMinLength[0], true)
         break
       }
       case FreeBrushMode.X:
       default: {
-        selectedDomain = this._pixelRangeToDataRange(s as [number, number], this.xScale, config.selectionMinLength)
+        selectedDomain = this._pixelRangeToDataRange(s as [number, number], this.xScale, config.selectionMinLength[1])
         break
       }
     }

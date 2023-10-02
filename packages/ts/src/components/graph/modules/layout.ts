@@ -1,4 +1,5 @@
 import { min, max, group } from 'd3-array'
+import type { SimulationNodeDatum } from 'd3-force'
 import type { ElkNode } from 'elkjs/lib/elk.bundled.js'
 
 // Core
@@ -14,7 +15,7 @@ import { GraphInputLink, GraphInputNode } from 'types/graph'
 import { GraphNode, GraphLink } from '../types'
 
 // Config
-import { GraphConfig } from '../config'
+import { GraphConfigInterface } from '../config'
 
 // Helpers
 import { getMaxNodeSize, configuredNodeSize, getNodeSize, getAverageNodeSize } from './node/helper'
@@ -28,7 +29,7 @@ import {
 
 export function applyLayoutCircular<N extends GraphInputNode, L extends GraphInputLink> (
   datamodel: GraphDataModel<N, L, GraphNode<N, L>, GraphLink<N, L>>,
-  config: GraphConfig<N, L>,
+  config: GraphConfigInterface<N, L>,
   width: number,
   height: number
 ): void {
@@ -68,7 +69,7 @@ export function applyLayoutCircular<N extends GraphInputNode, L extends GraphInp
 
 export function applyLayoutParallel<N extends GraphInputNode, L extends GraphInputLink> (
   datamodel: GraphDataModel<N, L, GraphNode<N, L>, GraphLink<N, L>>,
-  config: GraphConfig<N, L>,
+  config: GraphConfigInterface<N, L>,
   width: number,
   height: number,
   orientation?: string
@@ -275,7 +276,7 @@ export function applyLayoutParallel<N extends GraphInputNode, L extends GraphInp
 
 export async function applyLayoutDagre<N extends GraphInputNode, L extends GraphInputLink> (
   datamodel: GraphDataModel<N, L, GraphNode<N, L>, GraphLink<N, L>>,
-  config: GraphConfig<N, L>,
+  config: GraphConfigInterface<N, L>,
   width: number
 ): Promise<void> {
   const { nonConnectedNodes, connectedNodes, nodes, links } = datamodel
@@ -336,7 +337,7 @@ export async function applyLayoutDagre<N extends GraphInputNode, L extends Graph
 
 export function applyLayoutConcentric<N extends GraphInputNode, L extends GraphInputLink> (
   datamodel: GraphDataModel<N, L, GraphNode<N, L>, GraphLink<N, L>>,
-  config: GraphConfig<N, L>,
+  config: GraphConfigInterface<N, L>,
   width: number,
   height: number
 ): void {
@@ -394,7 +395,7 @@ export function applyLayoutConcentric<N extends GraphInputNode, L extends GraphI
 
 export async function applyLayoutForce<N extends GraphInputNode, L extends GraphInputLink> (
   datamodel: GraphDataModel<N, L, GraphNode<N, L>, GraphLink<N, L>>,
-  config: GraphConfig<N, L>,
+  config: GraphConfigInterface<N, L>,
   width: number
 ): Promise<void> {
   const { layoutNonConnectedAside, forceLayoutSettings: { linkDistance, linkStrength, charge, forceXStrength, forceYStrength }, nodeSize } = config
@@ -414,7 +415,7 @@ export async function applyLayoutForce<N extends GraphInputNode, L extends Graph
     }))
     .force('x', forceX().strength(forceXStrength))
     .force('y', forceY().strength(forceYStrength))
-    .force('collide', forceCollide().radius((d, i) => getNodeSize(d, nodeSize, i)).iterations(1))
+    .force('collide', forceCollide<SimulationNodeDatum & N>().radius((d, i) => getNodeSize(d, nodeSize, i)).iterations(1))
     .stop()
 
   // See https://bl.ocks.org/mbostock/1667139, https://github.com/d3/d3-force/blob/master/README.md#simulation_tick
@@ -443,7 +444,7 @@ export async function applyLayoutForce<N extends GraphInputNode, L extends Graph
 
 export async function applyELKLayout<N extends GraphInputNode, L extends GraphInputLink> (
   datamodel: GraphDataModel<N, L, GraphNode<N, L>, GraphLink<N, L>>,
-  config: GraphConfig<N, L>,
+  config: GraphConfigInterface<N, L>,
   width: number
 ): Promise<void> {
   const ELK = (await import('elkjs/lib/elk.bundled.js')).default

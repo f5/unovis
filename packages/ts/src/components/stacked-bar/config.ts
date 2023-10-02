@@ -1,10 +1,12 @@
-import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component/config'
+import { XYComponentConfigInterface, XYComponentDefaultConfig } from 'core/xy-component/config'
 
 // Types
-import { StringAccessor } from 'types/accessor'
+import { ColorAccessor, StringAccessor } from 'types/accessor'
 import { Orientation } from 'types/position'
 
 export interface StackedBarConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
+  /** Bar color accessor function. Default: `d => d.color` */
+  color?: ColorAccessor<Datum>;
   /** Force set bar width in pixels. Default: `undefined` */
   barWidth?: number;
   /** Maximum bar width for dynamic sizing. Default: `undefined` */
@@ -29,14 +31,17 @@ export interface StackedBarConfigInterface<Datum> extends XYComponentConfigInter
   orientation?: Orientation | string;
 }
 
-export class StackedBarConfig<Datum> extends XYComponentConfig<Datum> implements StackedBarConfigInterface<Datum> {
-  barMaxWidth = undefined
-  barWidth = undefined
-  dataStep = undefined
-  barPadding = 0.0
-  roundedCorners = 2
-  cursor = null
-  barMinHeight1Px = false
-  barMinHeightZeroValue = null
-  orientation = Orientation.Vertical
+export const StackedBarDefaultConfig: StackedBarConfigInterface<unknown> = {
+  ...XYComponentDefaultConfig,
+  color: undefined,
+  barMaxWidth: undefined,
+  barWidth: undefined,
+  dataStep: undefined,
+  barPadding: 0.0,
+  roundedCorners: 2,
+  cursor: null,
+  barMinHeight1Px: false,
+  barMinHeightZeroValue: null,
+  orientation: Orientation.Vertical,
 }
+

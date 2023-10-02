@@ -1,5 +1,4 @@
 /* eslint-disable no-irregular-whitespace */
-import { Config } from 'core/config'
 import { ComponentCore } from 'core/component'
 
 // Types
@@ -55,15 +54,14 @@ export interface TooltipConfigInterface {
   attributes?: { [attr: string]: string | number | boolean };
 }
 
-export class TooltipConfig extends Config implements TooltipConfigInterface {
-  components: ComponentCore<unknown>[] = []
-  container = undefined
-  horizontalPlacement = Position.Auto
-  horizontalShift = 0
-  verticalPlacement = Position.Top
-  verticalShift = 0
-  attributes: { [attr: string]: string | number | boolean } = {}
-  triggers: {
-    [selector: string]: (data: any, i: number, elements: (HTMLElement | SVGElement)[]) => string | HTMLElement | undefined | null;
-  } = {}
+export const TooltipDefaultConfig: TooltipConfigInterface = {
+  components: [],
+  container: undefined,
+  horizontalPlacement: Position.Auto,
+  horizontalShift: 0,
+  verticalPlacement: Position.Top,
+  verticalShift: 0,
+  attributes: {},
+  triggers: {},
 }
+

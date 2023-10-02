@@ -4,6 +4,7 @@ import { arc } from 'd3-shape'
 
 // Types
 import { GraphInputLink, GraphInputNode } from 'types/graph'
+import { TrimMode } from 'types/text'
 
 // Utils
 import { trimString } from 'utils/text'
@@ -15,7 +16,7 @@ import { getBoolean, getNumber, getString, getValue, throttle } from 'utils/data
 import { GraphNode, GraphCircleLabel, GraphNodeAnimationState, GraphNodeAnimatedElement, GraphNodeShape } from '../../types'
 
 // Config
-import { GraphConfig } from '../../config'
+import { GraphConfigInterface } from '../../config'
 
 // Helpers
 import {
@@ -41,7 +42,7 @@ const SIDE_LABEL_DEFAULT_RADIUS = 10
 
 export function createNodes<N extends GraphInputNode, L extends GraphInputLink> (
   selection: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, unknown>,
-  config: GraphConfig<N, L>
+  config: GraphConfigInterface<N, L>
 ): void {
   const { nodeShape } = config
 
@@ -89,7 +90,7 @@ export function createNodes<N extends GraphInputNode, L extends GraphInputLink> 
 
 export function updateSelectedNodes<N extends GraphInputNode, L extends GraphInputLink> (
   selection: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, unknown>,
-  config: GraphConfig<N, L>
+  config: GraphConfigInterface<N, L>
 ): void {
   const { nodeDisabled } = config
 
@@ -113,7 +114,7 @@ export function updateSelectedNodes<N extends GraphInputNode, L extends GraphInp
 
 export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> (
   selection: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, unknown>,
-  config: GraphConfig<N, L>,
+  config: GraphConfigInterface<N, L>,
   duration: number,
   scale = 1
 ): Selection<SVGGElement, GraphNode<N, L>, SVGGElement, unknown> | Transition<SVGGElement, GraphNode<N, L>, SVGGElement, unknown> {
@@ -156,8 +157,8 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
     const nodeSelectionOutline = group.select<SVGGElement>(`.${nodeSelectors.nodeSelection}`)
     const nodeSizeValue = getNodeSize(d, nodeSize, d._index)
     const arcGenerator = arc<GraphNodeAnimationState>()
-      .innerRadius(state => getNodeSize(state, nodeSize, state.nodeIndex) / 2 - (getNumber(state, nodeStrokeWidth, state.nodeIndex) / 2))
-      .outerRadius(state => getNodeSize(state, nodeSize, state.nodeIndex) / 2 + (getNumber(state, nodeStrokeWidth, state.nodeIndex) / 2))
+      .innerRadius(state => state.nodeSize / 2 - state.borderWidth / 2)
+      .outerRadius(state => state.nodeSize / 2 + state.borderWidth / 2)
       .startAngle(0 * (Math.PI / 180))
       // eslint-disable-next-line dot-notation
       .endAngle(a => a['endAngle'])
@@ -252,10 +253,10 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
     const labelText = getString(d, nodeLabel, d._index)
     const sublabelText = getString(d, nodeSubLabel, d._index)
     const labelTextTrimmed = getBoolean(d, nodeLabelTrim, d._index)
-      ? trimString(labelText, getNumber(d, nodeLabelTrimLength, d._index), getValue(d, nodeLabelTrimMode, d._index))
+      ? trimString(labelText, getNumber(d, nodeLabelTrimLength, d._index), getValue(d, nodeLabelTrimMode as TrimMode, d._index))
       : labelText
     const sublabelTextTrimmed = getBoolean(d, nodeSubLabelTrim, d._index)
-      ? trimString(sublabelText, getNumber(d, nodeSubLabelTrimLength, d._index), getValue(d, nodeSubLabelTrimMode, d._index))
+      ? trimString(sublabelText, getNumber(d, nodeSubLabelTrimLength, d._index), getValue(d, nodeSubLabelTrimMode as TrimMode, d._index))
       : sublabelText
 
     labelTextContent.text(labelTextTrimmed)
@@ -294,7 +295,7 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
 
 export function removeNodes<N extends GraphInputNode, L extends GraphInputLink> (
   selection: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, unknown>,
-  config: GraphConfig<N, L>,
+  config: GraphConfigInterface<N, L>,
   duration: number
 ): void {
   smartTransition(selection, duration / 2)
@@ -311,7 +312,7 @@ export function removeNodes<N extends GraphInputNode, L extends GraphInputLink> 
 
 function setLabelBackgroundRect<N extends GraphInputNode, L extends GraphInputLink> (
   selection: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, unknown>,
-  config: GraphConfig<N, L>
+  config: GraphConfigInterface<N, L>
 ): void {
   const { nodeLabel } = config
 
@@ -326,7 +327,7 @@ const setLabelBackgroundRectThrottled = throttle(setLabelBackgroundRect, 1000) a
 
 export function zoomNodes<N extends GraphInputNode, L extends GraphInputLink> (
   selection: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, unknown>,
-  config: GraphConfig<N, L>,
+  config: GraphConfigInterface<N, L>,
   scale: number
 ): void {
   selection.classed(generalSelectors.zoomOutLevel1, scale < ZoomLevel.Level1)

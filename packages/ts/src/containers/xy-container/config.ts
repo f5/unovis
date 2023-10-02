@@ -1,6 +1,6 @@
 // Core
 import { XYComponentCore } from 'core/xy-component'
-import { ContainerConfig, ContainerConfigInterface } from 'core/container/config'
+import { ContainerDefaultConfig, ContainerConfigInterface } from 'core/container/config'
 import { Tooltip } from 'components/tooltip'
 
 // Components
@@ -88,27 +88,29 @@ export interface XYContainerConfigInterface<Datum> extends ContainerConfigInterf
   scaleByDomain?: boolean;
 }
 
-export class XYContainerConfig<Datum> extends ContainerConfig implements XYContainerConfigInterface<Datum> {
-  components = []
-  tooltip: Tooltip = undefined
-  crosshair: Crosshair<Datum> = undefined
-  xAxis: Axis<Datum> = undefined
-  yAxis: Axis<Datum> = undefined
-  autoMargin = true
+export const XYContainerDefaultConfig: XYContainerConfigInterface<unknown> = {
+  ...ContainerDefaultConfig,
+  components: [],
+  tooltip: undefined,
+  crosshair: undefined,
+  xAxis: undefined,
+  yAxis: undefined,
+  autoMargin: true,
 
-  xScale = undefined
-  xDomain = undefined
-  xDomainMinConstraint = undefined
-  xDomainMaxConstraint = undefined
-  xRange = undefined
+  xScale: undefined,
+  xDomain: undefined,
+  xDomainMinConstraint: undefined,
+  xDomainMaxConstraint: undefined,
+  xRange: undefined,
 
-  yScale = undefined
-  yDomain = undefined
-  yDomainMinConstraint = undefined
-  yDomainMaxConstraint = undefined
-  yRange = undefined
-  yDirection = Direction.North
+  yScale: undefined,
+  yDomain: undefined,
+  yDomainMinConstraint: undefined,
+  yDomainMaxConstraint: undefined,
+  yRange: undefined,
+  yDirection: Direction.North,
 
-  preventEmptyDomain = null
-  scaleByDomain = false
+  preventEmptyDomain: null,
+  scaleByDomain: false,
 }
+

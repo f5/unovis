@@ -19,14 +19,16 @@ import { Orientation } from 'types/position'
 import { ContinuousScale } from 'types/scale'
 
 // Config
-import { GroupedBarConfig, GroupedBarConfigInterface } from './config'
+import { GroupedBarDefaultConfig, GroupedBarConfigInterface } from './config'
 
 // Styles
 import * as s from './style'
 
-export class GroupedBar<Datum> extends XYComponentCore<Datum, GroupedBarConfig<Datum>, GroupedBarConfigInterface<Datum>> {
+export class GroupedBar<Datum> extends XYComponentCore<Datum, GroupedBarConfigInterface<Datum>> {
   static selectors = s
-  config: GroupedBarConfig<Datum> = new GroupedBarConfig()
+  protected _defaultConfig = GroupedBarDefaultConfig as GroupedBarConfigInterface<Datum>
+  public config: GroupedBarConfigInterface<Datum> = this._defaultConfig
+
   getAccessors = (): NumericAccessor<Datum>[] =>
     isArray(this.config.y) ? this.config.y : [this.config.y]
 
@@ -43,7 +45,7 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum, GroupedBarConfig<D
 
   constructor (config?: GroupedBarConfigInterface<Datum>) {
     super()
-    if (config) this.config.init(config)
+    if (config) this.setConfig(config)
   }
 
   get bleed (): Spacing {

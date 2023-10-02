@@ -19,14 +19,16 @@ import { Orientation } from 'types/position'
 import { StackedBarDataRecord } from './types'
 
 // Config
-import { StackedBarConfig, StackedBarConfigInterface } from './config'
+import { StackedBarDefaultConfig, StackedBarConfigInterface } from './config'
 
 // Styles
 import * as s from './style'
 
-export class StackedBar<Datum> extends XYComponentCore<Datum, StackedBarConfig<Datum>, StackedBarConfigInterface<Datum>> {
+export class StackedBar<Datum> extends XYComponentCore<Datum, StackedBarConfigInterface<Datum>> {
   static selectors = s
-  config: StackedBarConfig<Datum> = new StackedBarConfig()
+  protected _defaultConfig = StackedBarDefaultConfig as StackedBarConfigInterface<Datum>
+  public config: StackedBarConfigInterface<Datum> = this._defaultConfig
+
   getAccessors = (): NumericAccessor<Datum>[] => (isArray(this.config.y) ? this.config.y : [this.config.y])
   stacked = true
   events = {}
@@ -35,7 +37,7 @@ export class StackedBar<Datum> extends XYComponentCore<Datum, StackedBarConfig<D
 
   constructor (config?: StackedBarConfigInterface<Datum>) {
     super()
-    if (config) this.config.init(config)
+    if (config) this.setConfig(config)
   }
 
   get bleed (): Spacing {

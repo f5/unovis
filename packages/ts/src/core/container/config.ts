@@ -1,5 +1,4 @@
 // Core
-import { Config } from 'core/config'
 
 // Types
 import { Sizing } from 'types/component'
@@ -36,26 +35,26 @@ export interface ContainerConfigInterface {
   ariaLabel?: string | null | undefined;
 }
 
-export class ContainerConfig extends Config implements ContainerConfigInterface {
-  duration = undefined
-  margin = {
+export const ContainerDefaultConfig: ContainerConfigInterface = {
+  duration: undefined,
+  margin: {
     top: 0,
     bottom: 0,
     left: 0,
     right: 0,
-  }
+  },
 
-  padding = {
+  padding: {
     top: 0,
     bottom: 0,
     left: 0,
     right: 0,
-  }
+  },
 
-  sizing = Sizing.Fit
-  width = undefined
-  height = undefined
+  sizing: Sizing.Fit,
+  width: undefined,
+  height: undefined,
 
-  svgDefs = undefined
-  ariaLabel = undefined
+  svgDefs: undefined,
+  ariaLabel: undefined,
 }

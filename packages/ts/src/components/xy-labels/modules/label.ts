@@ -12,7 +12,7 @@ import { getNumber, getString, getValue } from 'utils/data'
 import { ContinuousScale } from 'types/scale'
 
 // Config
-import { XYLabelsConfig } from '../config'
+import { XYLabelsConfigInterface } from '../config'
 
 // Local Types
 import { XYLabel, XYLabelCluster, XYLabelPositioning, XYLabelRenderProps } from '../types'
@@ -33,7 +33,7 @@ export function createLabels<Datum> (
 
 export function updateLabels<Datum> (
   selection: Selection<SVGGElement, XYLabel<Datum> | XYLabelCluster<Datum>, any, any>,
-  config: XYLabelsConfig<Datum>,
+  config: XYLabelsConfigInterface<Datum>,
   duration: number
 ): void {
   selection.each((d, i, elements) => {
@@ -104,36 +104,36 @@ export function getLabelPosition (value: number, positioning: XYLabelPositioning
 export function getLabelRenderProps<Datum> (
   data: Datum | XYLabel<Datum>[],
   el: SVGGraphicsElement,
-  config: XYLabelsConfig<Datum>,
+  config: XYLabelsConfigInterface<Datum>,
   xScale: ContinuousScale,
   yScale: ContinuousScale
 ): XYLabelRenderProps {
   const isCluster = Array.isArray(data)
   const fontSize = isCluster
-    ? (getNumber(data, config.clusterFontSize) ?? getCSSVariableValueInPixels('var(--vis-xy-label-cluster-font-size)', el))
-    : (getNumber(data, config.labelFontSize) ?? getCSSVariableValueInPixels('var(--vis-xy-label-font-size)', el))
+    ? (getNumber(data as XYLabel<Datum>[], config.clusterFontSize) ?? getCSSVariableValueInPixels('var(--vis-xy-label-cluster-font-size)', el))
+    : (getNumber(data as Datum, config.labelFontSize) ?? getCSSVariableValueInPixels('var(--vis-xy-label-font-size)', el))
 
-  const labelText = (isCluster ? config.clusterLabel(data as XYLabel<Datum>[]) : getString(data, config.label)) || ''
+  const labelText = (isCluster ? getString(data as XYLabel<Datum>[], config.clusterLabel) : getString(data as Datum, config.label)) || ''
   const backgroundHeight = fontSize * 1.7
   let backgroundWidth = fontSize * labelText.length * 0.7
   if (backgroundWidth < backgroundHeight) backgroundWidth = backgroundHeight
 
   const x = isCluster
     ? mean(data as XYLabel<Datum>[], d => d._screen.x)
-    : getLabelPosition(getNumber(data, config.x), getValue(data, config.xPositioning), xScale)
+    : getLabelPosition(getNumber(data as Datum, config.x), getValue<Datum, XYLabelPositioning>(data as Datum, config.xPositioning), xScale)
 
   const y = isCluster
     ? mean(data as XYLabel<Datum>[], d => d._screen.y)
-    : getLabelPosition(getNumber(data, config.y), getValue(data, config.yPositioning), yScale)
+    : getLabelPosition(getNumber(data as Datum, config.y), getValue<Datum, XYLabelPositioning>(data as Datum, config.yPositioning), yScale)
 
   return {
     x,
     y,
     fontSize,
     labelText,
-    labelColor: isCluster ? getColor(data, config.clusterLabelColor) : getColor(data, config.color),
-    backgroundColor: isCluster ? getColor(data, config.clusterBackgroundColor) : getColor(data, config.backgroundColor),
-    cursor: isCluster ? getString(data, config.clusterCursor) : getString(data, config.cursor),
+    labelColor: isCluster ? getColor(data as XYLabel<Datum>[], config.clusterLabelColor) : getColor(data as Datum, config.color),
+    backgroundColor: isCluster ? getColor(data as XYLabel<Datum>[], config.clusterBackgroundColor) : getColor(data as Datum, config.backgroundColor),
+    cursor: isCluster ? getString(data as XYLabel<Datum>[], config.clusterCursor) : getString(data as Datum, config.cursor),
     width: backgroundWidth,
     height: backgroundHeight,
   }

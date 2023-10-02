@@ -1,6 +1,6 @@
 /* eslint-disable dot-notation */
 import { GeoProjection } from 'd3-geo'
-import { ComponentConfigInterface, ComponentConfig } from 'core/component/config'
+import { ComponentConfigInterface, ComponentDefaultConfig } from 'core/component/config'
 
 // Types
 import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
@@ -36,7 +36,7 @@ export interface TopoJSONMapConfigInterface<
   /** Link color value or accessor function. Default: `d => d.color ?? null` */
   linkColor?: ColorAccessor<LinkDatum>;
   /** Link cursor value or accessor function. Default: `null` */
-  linkCursor?: StringAccessor<AreaDatum>;
+  linkCursor?: StringAccessor<LinkDatum>;
   /** Link id accessor function. Default: `d => d.id` */
   linkId?: StringAccessor<LinkDatum>;
   /** Link source accessor function. Default: `d => d.source` */
@@ -58,7 +58,7 @@ export interface TopoJSONMapConfigInterface<
   /** Point stroke width accessor. Default: `d => d.strokeWidth ?? null` */
   pointStrokeWidth?: NumericAccessor<PointDatum>;
   /** Point cursor constant value or accessor function. Default: `null` */
-  pointCursor?: StringAccessor<AreaDatum>;
+  pointCursor?: StringAccessor<PointDatum>;
   /** Point longitude accessor function. Default: `d => d.longitude ?? null` */
   longitude?: NumericAccessor<PointDatum>;
   /** Point latitude accessor function. Default: `d => d.latitude ?? null` */
@@ -80,45 +80,43 @@ export interface TopoJSONMapConfigInterface<
   heatmapModeZoomLevelThreshold?: number;
 }
 
-export class TopoJSONMapConfig<
-  AreaDatum,
-  PointDatum = unknown,
-  LinkDatum = unknown,
-> extends ComponentConfig implements TopoJSONMapConfigInterface<AreaDatum, PointDatum, LinkDatum> {
-  projection = MapProjection.Kavrayskiy7()
-  duration = 1500
-  topojson = undefined
-  mapFeatureName = 'countries'
-  mapFitToPoints = false
+export const TopoJSONMapDefaultConfig: TopoJSONMapConfigInterface<unknown, unknown, unknown> = {
+  ...ComponentDefaultConfig,
+  projection: MapProjection.Kavrayskiy7(),
+  duration: 1500,
+  topojson: undefined,
+  mapFeatureName: 'countries',
+  mapFitToPoints: false,
 
-  zoomExtent = [0.5, 6]
-  zoomDuration = 400
-  disableZoom = false
-  zoomFactor = undefined
+  zoomExtent: [0.5, 6],
+  zoomDuration: 400,
+  disableZoom: false,
+  zoomFactor: undefined,
 
-  linkWidth = (d: LinkDatum): number => d['width'] ?? 1
-  linkColor = (d: LinkDatum): string => d['color'] ?? null
-  linkCursor = null
-  linkId = (d: LinkDatum, i: number | undefined): string => `${d['id'] ?? i}`
-  linkSource = (d: LinkDatum): (number | string | PointDatum) => d['source']
-  linkTarget = (d: LinkDatum): (number | string | PointDatum) => d['target']
+  linkWidth: <LinkDatum>(d: LinkDatum): number => d['width'] ?? 1,
+  linkColor: <LinkDatum>(d: LinkDatum): string => d['color'] ?? null,
+  linkCursor: null,
+  linkId: <LinkDatum>(d: LinkDatum, i: number | undefined): string => `${d['id'] ?? i}`,
+  linkSource: <LinkDatum>(d: LinkDatum): (number | string | unknown) => d['source'],
+  linkTarget: <LinkDatum>(d: LinkDatum): (number | string | unknown) => d['target'],
 
-  areaId = (d: AreaDatum): string => d['id'] ?? ''
-  areaColor = (d: AreaDatum): string => d['color'] ?? null
-  areaCursor = null
+  areaId: <AreaDatum>(d: AreaDatum): string => d['id'] ?? '',
+  areaColor: <AreaDatum>(d: AreaDatum): string => d['color'] ?? null,
+  areaCursor: null,
 
-  longitude = (d: PointDatum): number => d['longitude']
-  latitude = (d: PointDatum): number => d['latitude']
-  pointColor = (d: PointDatum): string => d['color'] ?? null
-  pointRadius = (d: PointDatum): number => d['radius'] ?? 8
-  pointStrokeWidth = (d: PointDatum): number => d['strokeWidth'] ?? 0
-  pointCursor = null
-  pointLabel = undefined
-  pointLabelPosition = MapPointLabelPosition.Bottom
-  pointLabelTextBrightnessRatio = 0.65
-  pointId = (d: PointDatum): string => d['id']
+  longitude: <PointDatum>(d: PointDatum): number => d['longitude'],
+  latitude: <PointDatum>(d: PointDatum): number => d['latitude'],
+  pointColor: <PointDatum>(d: PointDatum): string => d['color'] ?? null,
+  pointRadius: <PointDatum>(d: PointDatum): number => d['radius'] ?? 8,
+  pointStrokeWidth: <PointDatum>(d: PointDatum): number => d['strokeWidth'] ?? 0,
+  pointCursor: null,
+  pointLabel: undefined,
+  pointLabelPosition: MapPointLabelPosition.Bottom,
+  pointLabelTextBrightnessRatio: 0.65,
+  pointId: <PointDatum>(d: PointDatum): string => d['id'],
 
-  heatmapMode = false
-  heatmapModeBlurStdDeviation = 8
-  heatmapModeZoomLevelThreshold = 2.5
+  heatmapMode: false,
+  heatmapModeBlurStdDeviation: 8,
+  heatmapModeZoomLevelThreshold: 2.5,
 }
+

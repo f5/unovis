@@ -7,7 +7,7 @@ import { feature } from 'topojson-client'
 import { GenericDataRecord } from 'types/data'
 
 // Config
-import { LeafletMapConfig } from '../config'
+import { LeafletMapConfigInterface } from '../config'
 
 // Local Types
 
@@ -21,7 +21,7 @@ import { LeafletMapRenderer } from '../types'
 export const initialMapCenter: L.LatLngExpression = [36, 14]
 export const initialMapZoom = 1.9
 
-export function updateTopoJson<T extends GenericDataRecord> (maplibreMap: Map, config: LeafletMapConfig<T>): void {
+export function updateTopoJson<T extends GenericDataRecord> (maplibreMap: Map, config: LeafletMapConfigInterface<T>): void {
   const { topoJSONLayer } = config
 
   if (topoJSONLayer.sources) {
@@ -84,7 +84,7 @@ export function updateTopoJson<T extends GenericDataRecord> (maplibreMap: Map, c
   } else if (strokeLayer) { maplibreMap.removeLayer(`${topoJSONLayer.featureName}-stroke`) }
 }
 
-export async function setupMap<T extends GenericDataRecord> (mapContainer: HTMLElement, config: LeafletMapConfig<T>): Promise<{
+export async function setupMap<T extends GenericDataRecord> (mapContainer: HTMLElement, config: LeafletMapConfigInterface<T>): Promise<{
   leaflet: L.Map;
   layer: L.Layer;
   svgOverlay: Selection<SVGSVGElement, unknown, null, undefined>;
@@ -133,7 +133,7 @@ export async function setupMap<T extends GenericDataRecord> (mapContainer: HTMLE
       maplibreMap = (layer as ReturnType<typeof getMaplibreGLLayer>).getMaplibreMap?.()
       break
     case LeafletMapRenderer.Raster:
-      layer = L.tileLayer(style)
+      layer = L.tileLayer(style as string)
       break
   }
   layer.addTo(leafletMap)

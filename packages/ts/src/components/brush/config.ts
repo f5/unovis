@@ -1,5 +1,5 @@
 import { D3BrushEvent } from 'd3-brush'
-import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component/config'
+import { XYComponentConfigInterface, XYComponentDefaultConfig } from 'core/xy-component/config'
 
 // Types
 import { Arrangement } from 'types/position'
@@ -34,18 +34,19 @@ export interface BrushConfigInterface<Datum> extends Partial<XYComponentConfigIn
   selectionMinLength?: number;
 }
 
-export class BrushConfig<Datum> extends XYComponentConfig<Datum> implements BrushConfigInterface<Datum> {
+export const BrushDefaultConfig: BrushConfigInterface<unknown> = {
+  ...XYComponentDefaultConfig,
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function */
-  onBrush = (s: [number, number] | undefined, e: D3BrushEvent<Datum>, userDriven: boolean): void => {}
+  onBrush: <Datum>(s: [number, number] | undefined, e: D3BrushEvent<Datum>, userDriven: boolean): void => {},
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function */
-  onBrushStart = (s: [number, number] | undefined, e: D3BrushEvent<Datum>, userDriven: boolean): void => {}
+  onBrushStart: <Datum>(s: [number, number] | undefined, e: D3BrushEvent<Datum>, userDriven: boolean): void => {},
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function */
-  onBrushMove = (s: [number, number] | undefined, e: D3BrushEvent<Datum>, userDriven: boolean): void => {}
+  onBrushMove: <Datum>(s: [number, number] | undefined, e: D3BrushEvent<Datum>, userDriven: boolean): void => {},
   /* eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function */
-  onBrushEnd = (s: [number, number] | undefined, e: D3BrushEvent<Datum>, userDriven: boolean): void => {}
-  handleWidth = 9
-  selection = null
-  draggable = false
-  handlePosition: Arrangement | string = Arrangement.Inside
-  selectionMinLength = undefined
+  onBrushEnd: <Datum>(s: [number, number] | undefined, e: D3BrushEvent<Datum>, userDriven: boolean): void => {},
+  handleWidth: 9,
+  selection: null,
+  draggable: false,
+  handlePosition: Arrangement.Inside,
+  selectionMinLength: undefined,
 }

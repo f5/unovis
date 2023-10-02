@@ -23,7 +23,7 @@ import { wrapSVGText } from 'utils/text'
 import { NestedDonutDirection, NestedDonutSegment, NestedDonutLayer, NestedDonutSegmentLabelAlignment } from './types'
 
 // Config
-import { NestedDonutConfig, NestedDonutConfigInterface } from './config'
+import { NestedDonutDefaultConfig, NestedDonutConfigInterface } from './config'
 
 // Modules
 import { createArc, updateArc, removeArc } from './modules/arc'
@@ -34,12 +34,12 @@ import * as s from './style'
 
 export class NestedDonut<Datum> extends ComponentCore<
 Datum[],
-NestedDonutConfig<Datum>,
 NestedDonutConfigInterface<Datum>
 > {
   static selectors = s
   static cssVariables = s.variables
-  config: NestedDonutConfig<Datum> = new NestedDonutConfig()
+  protected _defaultConfig = NestedDonutDefaultConfig as NestedDonutConfigInterface<Datum>
+  public config: NestedDonutConfigInterface<Datum> = this._defaultConfig
   datamodel: SeriesDataModel<Datum> = new SeriesDataModel()
 
   arcBackground: Selection<SVGGElement, unknown, SVGGElement, unknown>
@@ -54,7 +54,7 @@ NestedDonutConfigInterface<Datum>
 
   constructor (config?: NestedDonutConfigInterface<Datum>) {
     super()
-    if (config) this.config.init(config)
+    if (config) this.setConfig(config)
     this.arcBackground = this.g.append('g')
     this.arcGroup = this.g.append('g')
       .attr('class', s.segmentsGroup)

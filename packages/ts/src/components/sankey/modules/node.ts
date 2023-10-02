@@ -12,7 +12,7 @@ import { Spacing } from 'types/spacing'
 import { SankeyEnterTransitionType, SankeyExitTransitionType, SankeyInputLink, SankeyInputNode, SankeyNode, SankeyNodeAlign } from '../types'
 
 // Config
-import { SankeyConfig } from '../config'
+import { SankeyConfigInterface } from '../config'
 
 // Helpers
 import { renderLabel } from './label'
@@ -22,7 +22,7 @@ import * as s from '../style'
 
 export function createNodes<N extends SankeyInputNode, L extends SankeyInputLink> (
   sel: Selection<SVGGElement, SankeyNode<N, L>, SVGGElement, unknown>,
-  config: SankeyConfig<N, L>,
+  config: SankeyConfigInterface<N, L>,
   width: number,
   bleed: Spacing
 ): void {
@@ -56,7 +56,7 @@ export function createNodes<N extends SankeyInputNode, L extends SankeyInputLink
 
 function getNodeXPos<N extends SankeyInputNode, L extends SankeyInputLink> (
   d: SankeyNode<N, L>,
-  config: SankeyConfig<N, L>,
+  config: SankeyConfigInterface<N, L>,
   width: number,
   bleed: Spacing,
   hasLinks: boolean
@@ -74,7 +74,7 @@ function getNodeXPos<N extends SankeyInputNode, L extends SankeyInputLink> (
 
 export function updateNodes<N extends SankeyInputNode, L extends SankeyInputLink> (
   sel: Selection<SVGGElement, SankeyNode<N, L>, SVGGElement, unknown>,
-  config: SankeyConfig<N, L>,
+  config: SankeyConfigInterface<N, L>,
   width: number,
   bleed: Spacing,
   hasLinks: boolean,
@@ -108,7 +108,7 @@ export function updateNodes<N extends SankeyInputNode, L extends SankeyInputLink
         const nodeHeight = d.y1 - d.y0
         return nodeHeight < s.SANKEY_ICON_SIZE ? `${nodeHeight * 0.65}px` : null
       })
-      .html(config.nodeIcon)
+      .html((d: SankeyNode<N, L>) => getString(d, config.nodeIcon))
 
     smartTransition(nodeIcon, duration)
       .attr('x', config.nodeWidth / 2)
@@ -121,7 +121,7 @@ export function updateNodes<N extends SankeyInputNode, L extends SankeyInputLink
 
 export function renderNodeLabels<N extends SankeyInputNode, L extends SankeyInputLink> (
   sel: Selection<SVGGElement, SankeyNode<N, L>, SVGGElement, unknown>,
-  config: SankeyConfig<N, L>,
+  config: SankeyConfigInterface<N, L>,
   width: number,
   duration: number,
   enforceNodeVisibility?: SankeyNode<N, L>
@@ -174,7 +174,7 @@ export function renderNodeLabels<N extends SankeyInputNode, L extends SankeyInpu
 
 export function removeNodes<N extends SankeyInputNode, L extends SankeyInputLink> (
   selection: Selection<SVGGElement, SankeyNode<N, L>, SVGGElement, unknown>,
-  config: SankeyConfig<N, L>,
+  config: SankeyConfigInterface<N, L>,
   duration: number
 ): void {
   const { exitTransitionType } = config
@@ -195,7 +195,7 @@ export function removeNodes<N extends SankeyInputNode, L extends SankeyInputLink
 export function onNodeMouseOver<N extends SankeyInputNode, L extends SankeyInputLink> (
   d: SankeyNode<N, L>,
   nodeSelection: Selection<SVGGElement, SankeyNode<N, L>, SVGGElement, unknown>,
-  config: SankeyConfig<N, L>,
+  config: SankeyConfigInterface<N, L>,
   width: number
 ): void {
   const labelGroup = nodeSelection.raise()
@@ -210,7 +210,7 @@ export function onNodeMouseOver<N extends SankeyInputNode, L extends SankeyInput
 export function onNodeMouseOut<N extends SankeyInputNode, L extends SankeyInputLink> (
   d: SankeyNode<N, L>,
   nodeSelection: Selection<SVGGElement, SankeyNode<N, L>, SVGGElement, unknown>,
-  config: SankeyConfig<N, L>,
+  config: SankeyConfigInterface<N, L>,
   width: number
 ): void {
   const labelGroup = nodeSelection.select<SVGGElement>(`.${s.labelGroup}`)

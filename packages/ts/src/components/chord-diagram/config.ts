@@ -1,13 +1,13 @@
 /* eslint-disable dot-notation */
 
 // Core
-import { ComponentConfigInterface, ComponentConfig } from 'core/component/config'
+import { ComponentConfigInterface, ComponentDefaultConfig } from 'core/component/config'
 
 // Types
 import { ColorAccessor, GenericAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
 
 // Local Types
-import { ChordInputLink, ChordInputNode, ChordLabelAlignment, ChordNodeDatum } from './types'
+import { ChordInputLink, ChordInputNode, ChordLabelAlignment, ChordLinkDatum, ChordNodeDatum } from './types'
 
 export interface ChordDiagramConfigInterface<N extends ChordInputNode, L extends ChordInputLink> extends ComponentConfigInterface {
   /** Node id or index to highlight. Overrides default hover behavior if supplied. Default: `undefined` */
@@ -15,9 +15,9 @@ export interface ChordDiagramConfigInterface<N extends ChordInputNode, L extends
   /** Link ids or index values to highlight. Overrides default hover behavior if supplied. Default: [] */
   highlightedLinkIds?: (number | string)[];
   /** Link color accessor function. Default: `var(--vis-chord-diagram-link-fill-color)` */
-  linkColor?: ColorAccessor<L>;
+  linkColor?: ColorAccessor<ChordLinkDatum<N, L>>;
   /** Link value accessor function. Default: `l => l.value` */
-  linkValue?: NumericAccessor<L>;
+  linkValue?: NumericAccessor<ChordLinkDatum<N, L>>;
   /** Array of node hierarchy levels. Data records are supposed to have corresponding properties, e.g. ['level1', 'level2']. Default: `[]` */
   nodeLevels?: string[];
   /** Node width in pixels. Default: `15` */
@@ -31,29 +31,30 @@ export interface ChordDiagramConfigInterface<N extends ChordInputNode, L extends
   /** Node label alignment. Default: `ChordLabelAlignment.Along` */
   nodeLabelAlignment?: GenericAccessor<ChordLabelAlignment | string, ChordNodeDatum<N>>;
   /** Pad angle in radians. Constant value or accessor function. Default: `0.02` */
-  padAngle?: NumericAccessor<N>;
+  padAngle?: NumericAccessor<ChordNodeDatum<N>>;
   /** Corner radius constant value or accessor function. Default: `2` */
-  cornerRadius?: NumericAccessor<N>;
+  cornerRadius?: NumericAccessor<ChordNodeDatum<N>>;
   /** Angular range of the diagram. Default: `[0, 2 * Math.PI]` */
   angleRange?: [number, number];
   /** The exponent property of the radius scale. Default: `2` */
   radiusScaleExponent?: number;
 }
 
-export class ChordDiagramConfig<N extends ChordInputNode, L extends ChordInputLink> extends ComponentConfig implements ChordDiagramConfigInterface<N, L> {
-  duration = 800
-  highlightedNodeId = undefined
-  highlightedLinkIds = []
-  linkColor = undefined
-  linkValue = (d: L): number => d['value']
-  nodeLevels = []
-  nodeWidth = 15
-  nodeColor = (d: ChordNodeDatum<N>): string => d['color']
-  nodeLabel = (d: ChordNodeDatum<N>): string => d['label'] ?? d['key']
-  nodeLabelColor = undefined
-  nodeLabelAlignment = ChordLabelAlignment.Along
-  padAngle = 0.02
-  cornerRadius = 2
-  angleRange: [number, number] = [0, 2 * Math.PI]
-  radiusScaleExponent = 2
+export const ChordDiagramDefaultConfig: ChordDiagramConfigInterface<ChordInputNode, ChordInputLink> = {
+  ...ComponentDefaultConfig,
+  duration: 800,
+  highlightedNodeId: undefined,
+  highlightedLinkIds: [],
+  linkColor: undefined,
+  linkValue: <L>(d: L): number => d['value'],
+  nodeLevels: [],
+  nodeWidth: 15,
+  nodeColor: <N>(d: ChordNodeDatum<N>): string => d['color'],
+  nodeLabel: <N>(d: ChordNodeDatum<N>): string => d['label'] ?? d['key'],
+  nodeLabelColor: undefined,
+  nodeLabelAlignment: ChordLabelAlignment.Along,
+  padAngle: 0.02,
+  cornerRadius: 2,
+  angleRange: [0, 2 * Math.PI],
+  radiusScaleExponent: 2,
 }

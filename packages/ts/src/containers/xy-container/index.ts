@@ -24,7 +24,7 @@ import { clamp, clean, flatten } from 'utils/data'
 import { guid } from 'utils/misc'
 
 // Config
-import { XYContainerConfig, XYContainerConfigInterface } from './config'
+import { XYContainerDefaultConfig, XYContainerConfigInterface } from './config'
 import {
   AreaConfigInterface,
   BrushConfigInterface,
@@ -43,8 +43,10 @@ export type XYConfigInterface<Datum> = XYComponentConfigInterface<Datum>
 | AreaConfigInterface<Datum>
 
 export class XYContainer<Datum> extends ContainerCore {
-  config: XYContainerConfig<Datum> = new XYContainerConfig()
-  datamodel: CoreDataModel<Datum[]> = new CoreDataModel()
+  public datamodel: CoreDataModel<Datum[]> = new CoreDataModel()
+  public config: XYContainerConfigInterface<Datum>
+  protected _defaultConfig = XYContainerDefaultConfig as XYContainerConfigInterface<Datum>
+  protected _svgDefs: Selection<SVGDefsElement, unknown, null, undefined>
   private _clipPath: Selection<SVGClipPathElement, unknown, null, undefined>
   private _clipPathId = guid()
   private _axisMargin: Spacing = { top: 0, bottom: 0, left: 0, right: 0 }

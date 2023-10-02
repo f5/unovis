@@ -81,8 +81,8 @@ export class VisLineComponent<Datum> implements LineConfigInterface<Datum>, Afte
   /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */
   @Input() id?: ((d: Datum, i: number, ...rest) => string)
 
-  /** Component color accessor function. Default: `d => d.color` */
-  @Input() color?: ColorAccessor<Datum> | ColorAccessor<Datum[]>
+  /** Line color accessor function. The whole data array will be passed as the first argument. Default: `undefined` */
+  @Input() color?: ColorAccessor<Datum[]>
 
   /** Scale for X dimension, e.g. Scale.scaleLinear(). If you set xScale you'll be responsible for setting it's `domain` and `range` as well.
    * Only continuous scales are supported.
@@ -107,7 +107,7 @@ export class VisLineComponent<Datum> implements LineConfigInterface<Datum>, Afte
   @Input() lineWidth?: number
 
   /** Line dash array, see SVG's stroke-dasharray. Default: `undefined` */
-  @Input() lineDashArray?: GenericAccessor<number[], Datum>
+  @Input() lineDashArray?: GenericAccessor<number[], Datum[]>
 
   /** When a data point has an `undefined`, `NaN`, or other no-data value, they'll be replaced with a value specified here.
    * Setting this property to `undefined` will lead to having the line break when there's no data, and continue when

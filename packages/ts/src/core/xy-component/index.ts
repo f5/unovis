@@ -12,24 +12,25 @@ import { NumericAccessor } from 'types/accessor'
 import { ContinuousScale, Scale, ScaleDimension } from 'types/scale'
 
 // Config
-import { XYComponentConfig, XYComponentConfigInterface } from './config'
+import { XYComponentDefaultConfig, XYComponentConfigInterface } from './config'
 
 export class XYComponentCore<
   Datum,
-  ConfigClass extends XYComponentConfig<Datum> = XYComponentConfig<Datum>,
   ConfigInterface extends Partial<XYComponentConfigInterface<Datum>> = Partial<XYComponentConfigInterface<Datum>>,
-> extends ComponentCore<Datum[], ConfigClass, ConfigInterface> {
-  element: SVGGraphicsElement
-  g: Selection<SVGGElement, unknown, null, undefined>
-  config: ConfigClass
-  prevConfig: ConfigClass
-  datamodel: SeriesDataModel<Datum> = new SeriesDataModel()
+> extends ComponentCore<Datum[], ConfigInterface> {
+  public element: SVGGraphicsElement
+  public g: Selection<SVGGElement, unknown, null, undefined>
+  public config: ConfigInterface
+  public prevConfig: ConfigInterface
+  public datamodel: SeriesDataModel<Datum> = new SeriesDataModel()
 
   /** Clippable components can be affected by a clipping path (set up in the container) */
-  clippable = true
+  public clippable = true
 
   /** Identifies whether the component displayed stacked data (eg StackedBar, Area) */
-  stacked = false
+  public stacked = false
+
+  protected _defaultConfig: ConfigInterface = XYComponentDefaultConfig as ConfigInterface
 
   private _xScale: ContinuousScale = Scale.scaleLinear()
   private _yScale: ContinuousScale = Scale.scaleLinear()

@@ -9,7 +9,7 @@ import { polygon, circlePath } from 'utils/path'
 import { getHTMLTransform } from 'utils/html'
 
 // Types
-import { NumericAccessor, StringAccessor } from 'types/accessor'
+import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
 import { GenericDataRecord } from 'types/data'
 
 // Local Types
@@ -24,7 +24,7 @@ import {
 } from '../types'
 
 // Config
-import { LeafletMapConfig } from '../config'
+import { LeafletMapConfigInterface } from '../config'
 
 export function bBoxMerge (
   bBoxArray: ({x1: number; x2: number; y1: number; y2: number})[]):
@@ -63,11 +63,14 @@ export function projectPoint<D extends GenericDataRecord> (
 
 export function getPointRadius<D extends GenericDataRecord> (
   geoPoint: ClusterFeature<LeafletMapClusterDatum<D>> | PointFeature<LeafletMapPointDatum<D>> | PointFeature<PointExpandedClusterProperties<D>>,
-  pointRadius: NumericAccessor<D>,
+  pointRadius: NumericAccessor<LeafletMapPointDatum<D>> | NumericAccessor<LeafletMapClusterDatum<D>>,
   zoomLevel: number
 ): number {
   const isDynamic = !pointRadius
-  const radius = isDynamic ? 1 + 2 * Math.pow(zoomLevel, 0.80) : getNumber((geoPoint.properties as LeafletMapPointDatum<D>), pointRadius)
+  const radius = isDynamic
+    ? 1 + 2 * Math.pow(zoomLevel, 0.80)
+    // Todo: Needs a better typings handling
+    : getNumber((geoPoint.properties as LeafletMapPointDatum<D>), pointRadius as NumericAccessor<LeafletMapPointDatum<D>>)
 
   const isCluster = (geoPoint as ClusterFeature<D>).properties.cluster
   return (isCluster && isDynamic)
@@ -117,7 +120,7 @@ export function toGeoJSONPoint<D extends GenericDataRecord> (d: D, i: number, po
   }
 }
 
-export function calculateClusterIndex<D extends GenericDataRecord> (data: D[], config: LeafletMapConfig<D>, maxClusterZoomLevel = 23): Supercluster<D> {
+export function calculateClusterIndex<D extends GenericDataRecord> (data: D[], config: LeafletMapConfigInterface<D>, maxClusterZoomLevel = 23): Supercluster<D> {
   const { colorMap, pointShape, pointLatitude, pointLongitude, clusteringDistance } = config
   return new Supercluster<D, Supercluster.AnyProps>({
     radius: clusteringDistance,
@@ -172,7 +175,7 @@ export function geoJsonPointToScreenPoint<D extends GenericDataRecord> (
   geoPoint: ClusterFeature<LeafletMapClusterDatum<D>> | PointFeature<LeafletMapPointDatum<D>>,
   i: number,
   leafletMap: L.Map,
-  config: LeafletMapConfig<D>
+  config: LeafletMapConfigInterface<D>
 ): LeafletMapPoint<D> {
   const zoomLevel = leafletMap.getZoom()
   const isCluster = (geoPoint.properties as LeafletMapClusterDatum<D>).cluster
@@ -181,7 +184,8 @@ export function geoJsonPointToScreenPoint<D extends GenericDataRecord> (
   const { x, y } = getPointPos(geoPoint, leafletMap)
 
   const id = isCluster ? `cluster-${geoPoint.id}` : (getString(geoPoint.properties as LeafletMapPointDatum<D>, config.pointId) ?? geoPoint.geometry.coordinates.join(''))
-  const pointColor = getColor(geoPoint.properties, isCluster ? config.clusterColor : config.pointColor)
+  // Todo: Needs a better typings handling
+  const pointColor = getColor(geoPoint.properties as LeafletMapPointDatum<D>, (isCluster ? config.clusterColor : config.pointColor) as ColorAccessor<LeafletMapPointDatum<D>>)
   const radius = getPointRadius(geoPoint, isCluster ? config.clusterRadius : config.pointRadius, zoomLevel)
   const shape = isCluster ? LeafletMapPointShape.Circle : getString(geoPoint.properties as LeafletMapPointDatum<D>, config.pointShape) as LeafletMapPointShape
   const isRing = shape === LeafletMapPointShape.Ring

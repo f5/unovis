@@ -17,7 +17,7 @@ import { Spacing } from 'types/spacing'
 import { DonutArcDatum, DonutArcAnimState, DonutDatum } from './types'
 
 // Config
-import { DonutConfig, DonutConfigInterface } from './config'
+import { DonutDefaultConfig, DonutConfigInterface } from './config'
 
 // Modules
 import { createArc, updateArc, removeArc } from './modules/arc'
@@ -25,9 +25,11 @@ import { createArc, updateArc, removeArc } from './modules/arc'
 // Styles
 import * as s from './style'
 
-export class Donut<Datum> extends ComponentCore<Datum[], DonutConfig<Datum>, DonutConfigInterface<Datum>> {
+export class Donut<Datum> extends ComponentCore<Datum[], DonutConfigInterface<Datum>> {
   static selectors = s
-  config: DonutConfig<Datum> = new DonutConfig()
+  protected _defaultConfig = DonutDefaultConfig as DonutConfigInterface<Datum>
+  public config: DonutConfigInterface<Datum> = this._defaultConfig
+
   datamodel: SeriesDataModel<Datum> = new SeriesDataModel()
 
   arcBackground: Selection<SVGPathElement, unknown, SVGGElement, unknown>
@@ -41,7 +43,7 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfig<Datum>, Don
 
   constructor (config?: DonutConfigInterface<Datum>) {
     super()
-    if (config) this.config.init(config)
+    if (config) this.setConfig(config)
     this.arcBackground = this.g.append('path')
     this.arcGroup = this.g.append('g')
     this.centralLabel = this.g.append('text')
@@ -82,7 +84,7 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfig<Datum>, Don
       .endAngle(config.angleRange?.[1] ?? 2 * Math.PI)
       .padAngle(config.padAngle)
       .value(d => getNumber(d.datum, config.value, d.index) || 0)
-      .sort(config.sortFunction)
+      .sort((a, b) => config.sortFunction(a.datum, b.datum))
 
     this.arcGroup.attr('transform', `translate(${this._width / 2},${this._height / 2})`)
 

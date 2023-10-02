@@ -4,18 +4,19 @@ import { select, Selection } from 'd3-selection'
 import { Sizing } from 'types/component'
 
 // Utils
-import { isEqual, clamp } from 'utils/data'
+import { isEqual, clamp, merge } from 'utils/data'
 import { ResizeObserver } from 'utils/resize-observer'
 
 // Config
-import { ContainerConfig, ContainerConfigInterface } from './config'
+import { ContainerDefaultConfig, ContainerConfigInterface } from './config'
 
 export class ContainerCore {
-  svg: Selection<SVGSVGElement, unknown, null, undefined>
-  element: SVGSVGElement
-  prevConfig: ContainerConfig
-  config: ContainerConfig
+  public svg: Selection<SVGSVGElement, unknown, null, undefined>
+  public element: SVGSVGElement
+  public prevConfig: ContainerConfigInterface
+  public config: ContainerConfigInterface
 
+  protected _defaultConfig: ContainerConfigInterface = ContainerDefaultConfig
   protected _container: HTMLElement
   protected _requestedAnimationFrame: number
   protected _isFirstRender = true
@@ -49,9 +50,8 @@ export class ContainerCore {
 
   public updateContainer<T extends ContainerConfigInterface> (config: T): void {
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    const ConfigModel = (this.config.constructor as typeof ContainerConfig)
     this.prevConfig = this.config
-    this.config = new ConfigModel().init(config)
+    this.config = merge(this._defaultConfig, config)
   }
 
   // The `_preRender` step should be used to perform some actions before rendering.

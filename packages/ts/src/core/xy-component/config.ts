@@ -4,7 +4,7 @@ import { ContinuousScale } from 'types/scale'
 import { ColorAccessor, NumericAccessor } from 'types/accessor'
 
 // Config
-import { ComponentConfig, ComponentConfigInterface } from '../component/config'
+import { ComponentDefaultConfig, ComponentConfigInterface } from '../component/config'
 
 export interface XYComponentConfigInterface<Datum> extends ComponentConfigInterface {
   /** Accessor function for getting the values along the X axis. Default: `undefined` */
@@ -33,14 +33,15 @@ export interface XYComponentConfigInterface<Datum> extends ComponentConfigInterf
   excludeFromDomainCalculation?: boolean;
 }
 
-export class XYComponentConfig<Datum> extends ComponentConfig implements XYComponentConfigInterface<Datum> {
-  x = undefined
-  y = undefined
+export const XYComponentDefaultConfig: XYComponentConfigInterface<unknown> = {
+  ...ComponentDefaultConfig,
+  x: undefined,
+  y: undefined,
   // eslint-disable-next-line dot-notation
-  id = (d: Datum, i: number): string => d['id'] ?? `${i}`
+  id: <Datum>(d: Datum, i: number): string => d['id'] ?? `${i}`,
   // eslint-disable-next-line dot-notation
-  color = (d: Datum | Datum[]): string => d['color']
-  xScale = undefined
-  yScale = undefined
-  excludeFromDomainCalculation = false
+  color: <Datum>(d: Datum | Datum[]): string => d['color'],
+  xScale: undefined,
+  yScale: undefined,
+  excludeFromDomainCalculation: false,
 }

@@ -17,7 +17,7 @@ import { Bounds } from 'components/leaflet-map/types'
 import { GenericDataRecord } from 'types/data'
 
 // Config
-import { LeafletFlowMapConfig, LeafletFlowMapConfigInterface } from './config'
+import { LeafletFlowMapDefaultConfig, LeafletFlowMapConfigInterface } from './config'
 
 // Local Types
 import { LatLon, Particle } from './types'
@@ -30,10 +30,12 @@ export class LeafletFlowMap<
   FlowDatum extends GenericDataRecord,
 > extends ComponentCore<
   { points: PointDatum[]; flows?: FlowDatum[] },
-  LeafletFlowMapConfig<PointDatum, FlowDatum>,
   LeafletFlowMapConfigInterface<PointDatum, FlowDatum>
   > {
   static selectors = LeafletMap.selectors
+  protected _defaultConfig = LeafletFlowMapDefaultConfig as LeafletFlowMapConfigInterface<PointDatum, FlowDatum>
+  public config: LeafletFlowMapConfigInterface<PointDatum, FlowDatum> = this._defaultConfig
+
   type = ComponentType.HTML
   private leafletMap: LeafletMap<PointDatum>
   private leafletMapInstance: L.Map
@@ -43,7 +45,6 @@ export class LeafletFlowMap<
   private onCanvasMouseMoveBound = throttle(this.onCanvasMouseMove.bind(this), 60)
   private onCanvasClickBound = this.onCanvasClick.bind(this)
   private canvasElement: HTMLCanvasElement | undefined
-  config: LeafletFlowMapConfig<PointDatum, FlowDatum> = new LeafletFlowMapConfig()
   private panningOffset = { x: 0, y: 0 }
 
   private resizeObserver: ResizeObserver | undefined

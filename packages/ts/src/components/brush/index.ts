@@ -12,7 +12,7 @@ import { smartTransition } from 'utils/d3'
 import { Arrangement } from 'types/position'
 
 // Config
-import { BrushConfig, BrushConfigInterface } from './config'
+import { BrushDefaultConfig, BrushConfigInterface } from './config'
 
 // Local Types
 import { BrushDirection, BrushHandleType } from './types'
@@ -20,10 +20,11 @@ import { BrushDirection, BrushHandleType } from './types'
 // Styles
 import * as s from './style'
 
-export class Brush<Datum> extends XYComponentCore<Datum, BrushConfig<Datum>, BrushConfigInterface<Datum>> {
+export class Brush<Datum> extends XYComponentCore<Datum, BrushConfigInterface<Datum>> {
   static selectors = s
+  protected _defaultConfig = BrushDefaultConfig as BrushConfigInterface<Datum>
   clippable = false // Don't apply clipping path to this component. See XYContainer
-  config: BrushConfig<Datum> = new BrushConfig()
+  public config: BrushConfigInterface<Datum> = this._defaultConfig
   brush: Selection<SVGGElement, unknown, SVGGElement, unknown>
   unselectedRange: Selection<SVGRectElement, BrushHandleType, SVGGElement, unknown>
   handleLines: Selection<SVGLineElement, BrushHandleType, SVGGElement, unknown>
@@ -37,7 +38,7 @@ export class Brush<Datum> extends XYComponentCore<Datum, BrushConfig<Datum>, Bru
 
   constructor (config?: BrushConfigInterface<Datum>) {
     super()
-    if (config) this.config.init(config)
+    if (config) this.setConfig(config)
 
     this.brush = this.g
       .append('g')

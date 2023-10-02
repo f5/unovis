@@ -2,9 +2,10 @@ import { select, Selection } from 'd3-selection'
 
 // Utils
 import { smartTransition } from 'utils/d3'
+import { merge } from 'utils/data'
 
 // Config
-import { FlowLegendConfig, FlowLegendConfigInterface } from './config'
+import { FlowLegendDefaultConfig, FlowLegendConfigInterface } from './config'
 
 // Local Types
 import { FlowLegendItem, FlowLegendItemType } from './types'
@@ -17,8 +18,9 @@ export class FlowLegend {
   element: HTMLElement
   line: Selection<HTMLDivElement, unknown, null, undefined>
   labels: Selection<HTMLDivElement, unknown, null, undefined>
-  prevConfig: FlowLegendConfig
-  config: FlowLegendConfig
+  protected _defaultConfig = FlowLegendDefaultConfig as FlowLegendConfigInterface
+  public config: FlowLegendConfigInterface = this._defaultConfig
+  prevConfig: FlowLegendConfigInterface
   protected _container: HTMLElement
 
   constructor (element: HTMLElement, config?: FlowLegendConfigInterface) {
@@ -35,7 +37,7 @@ export class FlowLegend {
 
   update (config: FlowLegendConfigInterface): void {
     this.prevConfig = this.config
-    this.config = new FlowLegendConfig().init(config)
+    this.config = merge(this._defaultConfig, config)
     this.render()
   }
 

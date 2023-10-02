@@ -102,7 +102,7 @@ export class VisTopoJSONMapComponent<AreaDatum, PointDatum, LinkDatum> implement
   @Input() linkColor?: ColorAccessor<LinkDatum>
 
   /** Link cursor value or accessor function. Default: `null` */
-  @Input() linkCursor?: StringAccessor<AreaDatum>
+  @Input() linkCursor?: StringAccessor<LinkDatum>
 
   /** Link id accessor function. Default: `d => d.id` */
   @Input() linkId?: StringAccessor<LinkDatum>
@@ -132,7 +132,7 @@ export class VisTopoJSONMapComponent<AreaDatum, PointDatum, LinkDatum> implement
   @Input() pointStrokeWidth?: NumericAccessor<PointDatum>
 
   /** Point cursor constant value or accessor function. Default: `null` */
-  @Input() pointCursor?: StringAccessor<AreaDatum>
+  @Input() pointCursor?: StringAccessor<PointDatum>
 
   /** Point longitude accessor function. Default: `d => d.longitude ?? null` */
   @Input() longitude?: NumericAccessor<PointDatum>

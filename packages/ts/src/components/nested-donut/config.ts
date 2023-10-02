@@ -1,5 +1,5 @@
 // Core
-import { ComponentConfigInterface, ComponentConfig } from 'core/component/config'
+import { ComponentConfigInterface, ComponentDefaultConfig } from 'core/component/config'
 
 // Types
 import { ColorAccessor, GenericAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
@@ -59,23 +59,24 @@ export interface NestedDonutConfigInterface<Datum> extends ComponentConfigInterf
   showEmptySegments?: boolean;
 }
 
-export class NestedDonutConfig<Datum> extends ComponentConfig implements NestedDonutConfigInterface<Datum> {
-  angleRange = [0, 2 * Math.PI] as [number, number]
-  centralLabel = undefined
-  centralSubLabel = undefined
-  centralSubLabelWrap = true
-  cornerRadius = 0
-  direction = NestedDonutDirection.Inwards
-  emptySegmentAngle = Math.PI / 180
-  hideOverflowingSegmentLabels = true
-  layers: StringAccessor<Datum>[]
-  layerPadding = 0
-  layerSettings = undefined
-  segmentColor = undefined
-  segmentLabel = undefined
-  segmentLabelColor = undefined
-  showBackground = false
-  showEmptySegments = false
-  sort = undefined
-  value = undefined
+export const NestedDonutDefaultConfig: NestedDonutConfigInterface<unknown> = {
+  ...ComponentDefaultConfig,
+  angleRange: [0, 2 * Math.PI],
+  centralLabel: undefined,
+  centralSubLabel: undefined,
+  centralSubLabelWrap: true,
+  cornerRadius: 0,
+  direction: NestedDonutDirection.Inwards,
+  emptySegmentAngle: Math.PI / 180,
+  hideOverflowingSegmentLabels: true,
+  layers: [],
+  layerPadding: 0,
+  layerSettings: undefined,
+  segmentColor: undefined,
+  segmentLabel: undefined,
+  segmentLabelColor: undefined,
+  showBackground: false,
+  showEmptySegments: false,
+  sort: undefined,
+  value: undefined,
 }

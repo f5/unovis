@@ -14,15 +14,16 @@ import { getColor } from 'utils/color'
 import { CrosshairAccessors, CrosshairCircle } from './types'
 
 // Config
-import { CrosshairConfig, CrosshairConfigInterface } from './config'
+import { CrosshairDefaultConfig, CrosshairConfigInterface } from './config'
 
 // Styles
 import * as s from './style'
 
-export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfig<Datum>, CrosshairConfigInterface<Datum>> {
+export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInterface<Datum>> {
   static selectors = s
   clippable = true // Don't apply clipping path to this component. See XYContainer
-  config: CrosshairConfig<Datum> = new CrosshairConfig()
+  protected _defaultConfig = CrosshairDefaultConfig as CrosshairConfigInterface<Datum>
+  public config: CrosshairConfigInterface<Datum> = this._defaultConfig
   container: Selection<SVGSVGElement, any, SVGSVGElement, any>
   line: Selection<SVGLineElement, any, SVGElement, any>
   x = 0
@@ -59,7 +60,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfig<Dat
 
   constructor (config?: CrosshairConfigInterface<Datum>) {
     super()
-    if (config) this.config.init(config)
+    if (config) this.setConfig(config)
 
     this.g.style('opacity', this.show ? 1 : 0)
     this.line = this.g.append('line')

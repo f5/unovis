@@ -1,10 +1,12 @@
-import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component/config'
+import { XYComponentConfigInterface, XYComponentDefaultConfig } from 'core/xy-component/config'
 
 // Types
-import { StringAccessor } from 'types/accessor'
+import { ColorAccessor, StringAccessor } from 'types/accessor'
 import { Orientation } from 'types/position'
 
 export interface GroupedBarConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
+  /** Bar color accessor function. Default: `d => d.color` */
+  color?: ColorAccessor<Datum>;
   /** Force set the group width in pixels. Default: `undefined` */
   groupWidth?: number;
   /** Maximum group width for dynamic sizing. Limits the groupWidth property from the top. Default: `undefined` */
@@ -27,14 +29,16 @@ export interface GroupedBarConfigInterface<Datum> extends XYComponentConfigInter
   orientation?: Orientation | string;
 }
 
-export class GroupedBarConfig<Datum> extends XYComponentConfig<Datum> implements GroupedBarConfigInterface<Datum> {
-  groupMaxWidth = undefined
-  groupWidth = undefined
-  dataStep = undefined
-  groupPadding = 0.05
-  barPadding = 0.0
-  roundedCorners = 2
-  barMinHeight = 2
-  cursor = null
-  orientation = Orientation.Vertical
+export const GroupedBarDefaultConfig: GroupedBarConfigInterface<unknown> = {
+  ...XYComponentDefaultConfig,
+  color: undefined,
+  groupMaxWidth: undefined,
+  groupWidth: undefined,
+  dataStep: undefined,
+  groupPadding: 0.05,
+  barPadding: 0.0,
+  roundedCorners: 2,
+  barMinHeight: 2,
+  cursor: null,
+  orientation: Orientation.Vertical,
 }

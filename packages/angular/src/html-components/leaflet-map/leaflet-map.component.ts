@@ -154,7 +154,7 @@ export class VisLeafletMapComponent<Datum extends GenericDataRecord> implements 
   @Input() pointShape?: StringAccessor<Datum>
 
   /** Point color accessor function or constant value. Default: `d => d.color` */
-  @Input() pointColor?: ColorAccessor<Datum>
+  @Input() pointColor?: ColorAccessor<LeafletMapPointDatum<Datum>>
 
   /** Point radius accessor function or constant value. Default: `undefined` */
   @Input() pointRadius?: NumericAccessor<LeafletMapPointDatum<Datum>>
@@ -179,7 +179,7 @@ export class VisLeafletMapComponent<Datum extends GenericDataRecord> implements 
   @Input() selectedPointId?: string
 
   /** Cluster color accessor function or constant value. Default: `undefined`  */
-  @Input() clusterColor?: ColorAccessor<Datum>
+  @Input() clusterColor?: ColorAccessor<LeafletMapClusterDatum<Datum>>
 
   /** Cluster radius accessor function or constant value. Default: `undefined`  */
   @Input() clusterRadius?: NumericAccessor<LeafletMapClusterDatum<Datum>>

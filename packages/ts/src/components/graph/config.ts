@@ -1,6 +1,6 @@
 /* eslint-disable dot-notation */
 // Config
-import { ComponentConfigInterface, ComponentConfig } from 'core/component/config'
+import { ComponentConfigInterface, ComponentDefaultConfig } from 'core/component/config'
 
 // Types
 import { TrimMode } from 'types/text'
@@ -30,7 +30,7 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   /** Interval to re-render the graph when zooming. Default: `100` */
   zoomThrottledUpdateNodeThreshold?: number;
   /** Zoom event callback. Default: `undefined` */
-  onZoom?: (zoomScale: number, zoomScaleExtent: number) => void;
+  onZoom?: (zoomScale: number, zoomScaleExtent: [number, number]) => void;
 
   // Layout general settings
   /** Type of the graph layout. Default: `GraphLayoutType.Force` */
@@ -198,83 +198,84 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   panels?: GraphPanelConfig[] | undefined;
 }
 
-export class GraphConfig<N extends GraphInputNode, L extends GraphInputLink> extends ComponentConfig implements GraphConfigInterface<N, L> {
-  duration = 1000
-  zoomScaleExtent: [number, number] = [0.35, 1.25]
-  disableZoom = false
-  disableDrag = false
-  zoomThrottledUpdateNodeThreshold = 100
-  onZoom = undefined
-  layoutType = GraphLayoutType.Force
-  layoutAutofit = true
-  layoutAutofitTolerance = 8.0
-  layoutNonConnectedAside = false
+export const GraphDefaultConfig: GraphConfigInterface<GraphInputNode, GraphInputLink> = {
+  ...ComponentDefaultConfig,
+  duration: 1000,
+  zoomScaleExtent: [0.35, 1.25],
+  disableZoom: false,
+  disableDrag: false,
+  zoomThrottledUpdateNodeThreshold: 100,
+  onZoom: undefined,
+  layoutType: GraphLayoutType.Force,
+  layoutAutofit: true,
+  layoutAutofitTolerance: 8.0,
+  layoutNonConnectedAside: false,
 
-  layoutGroupOrder = []
-  layoutParallelSubGroupsPerRow = 1
-  layoutParallelNodesPerColumn = 6
-  layoutParallelGroupSpacing = undefined
-  layoutParallelSortConnectionsByGroup = undefined
-  layoutNodeGroup = (n: N): string => n['group']
-  layoutParallelNodeSubGroup = (n: N): string => n['subgroup']
+  layoutGroupOrder: [],
+  layoutParallelSubGroupsPerRow: 1,
+  layoutParallelNodesPerColumn: 6,
+  layoutParallelGroupSpacing: undefined,
+  layoutParallelSortConnectionsByGroup: undefined,
+  layoutNodeGroup: (n: GraphInputNode): string => n['group'],
+  layoutParallelNodeSubGroup: (n: GraphInputNode): string => n['subgroup'],
 
-  forceLayoutSettings = {
+  forceLayoutSettings: {
     linkDistance: 60,
     linkStrength: 0.45,
     charge: -500,
     forceXStrength: 0.15,
     forceYStrength: 0.25,
-  }
+  },
 
-  dagreLayoutSettings = {
+  dagreLayoutSettings: {
     rankdir: 'BT',
     ranker: 'longest-path',
-  }
+  },
 
-  layoutElkSettings: GenericAccessor<GraphElkLayoutSettings, string> | undefined = undefined
-  layoutElkNodeGroups: StringAccessor<N>[] | undefined = undefined
+  layoutElkSettings: undefined,
+  layoutElkNodeGroups: undefined,
 
-  linkFlowAnimDuration = 20000
-  linkFlowParticleSize = 2
-  linkWidth = 1
-  linkStyle = GraphLinkStyle.Solid
-  linkBandWidth = 0
-  linkArrow = undefined
-  linkStroke = undefined
-  linkFlow = false
-  linkLabel = undefined
-  linkLabelShiftFromCenter = true
-  linkNeighborSpacing = 8
-  linkDisabled = false
-  selectedLinkId = undefined
-  nodeGaugeAnimDuration = 1500
+  linkFlowAnimDuration: 20000,
+  linkFlowParticleSize: 2,
+  linkWidth: 1,
+  linkStyle: GraphLinkStyle.Solid,
+  linkBandWidth: 0,
+  linkArrow: undefined,
+  linkStroke: undefined,
+  linkFlow: false,
+  linkLabel: undefined,
+  linkLabelShiftFromCenter: true,
+  linkNeighborSpacing: 8,
+  linkDisabled: false,
+  selectedLinkId: undefined,
+  nodeGaugeAnimDuration: 1500,
 
-  nodeSize = 30
-  nodeStrokeWidth = 3
-  nodeShape = GraphNodeShape.Circle
-  nodeGaugeValue = 0
-  nodeIcon = (n: N): string => n['icon']
-  nodeIconSize = undefined
-  nodeLabel = (n: N): string => n['label']
-  nodeLabelTrim = true
-  nodeLabelTrimLength = 15
-  nodeLabelTrimMode = TrimMode.Middle
-  nodeSubLabel = ''
-  nodeSubLabelTrim = true
-  nodeSubLabelTrimLength = 15
-  nodeSubLabelTrimMode = TrimMode.Middle
-  nodeSideLabels = undefined
-  nodeBottomIcon = undefined
-  nodeDisabled = false
-  nodeFill = (n: N): string => n['fill']
-  nodeGaugeFill = undefined
-  nodeStroke = (n: N): string => n['stroke']
-  nodeEnterPosition = undefined
-  nodeEnterScale = 0.75
-  nodeExitPosition = undefined
-  nodeExitScale = 0.75
-  nodeSort = undefined
+  nodeSize: 30,
+  nodeStrokeWidth: 3,
+  nodeShape: GraphNodeShape.Circle,
+  nodeGaugeValue: 0,
+  nodeIcon: (n: GraphInputNode): string => n['icon'],
+  nodeIconSize: undefined,
+  nodeLabel: (n: GraphInputNode): string => n['label'],
+  nodeLabelTrim: true,
+  nodeLabelTrimLength: 15,
+  nodeLabelTrimMode: TrimMode.Middle,
+  nodeSubLabel: '',
+  nodeSubLabelTrim: true,
+  nodeSubLabelTrimLength: 15,
+  nodeSubLabelTrimMode: TrimMode.Middle,
+  nodeSideLabels: undefined,
+  nodeBottomIcon: undefined,
+  nodeDisabled: false,
+  nodeFill: (n: GraphInputNode): string => n['fill'],
+  nodeGaugeFill: undefined,
+  nodeStroke: (n: GraphInputNode): string => n['stroke'],
+  nodeEnterPosition: undefined,
+  nodeEnterScale: 0.75,
+  nodeExitPosition: undefined,
+  nodeExitScale: 0.75,
+  nodeSort: undefined,
 
-  selectedNodeId = undefined
-  panels: GraphPanelConfig[] | undefined = undefined
+  selectedNodeId: undefined,
+  panels: undefined,
 }

@@ -1,5 +1,5 @@
 import { select, Selection } from 'd3-selection'
-import { sankey } from 'd3-sankey'
+import { sankey, SankeyGraph } from 'd3-sankey'
 import { extent, max, sum } from 'd3-array'
 import { scaleLinear } from 'd3-scale'
 
@@ -19,7 +19,7 @@ import { getNumber, getString, groupBy, isNumber } from 'utils/data'
 import { getCSSVariableValueInPixels } from 'utils/misc'
 
 // Config
-import { SankeyConfig, SankeyConfigInterface } from './config'
+import { SankeyDefaultConfig, SankeyConfigInterface } from './config'
 
 // Styles
 import * as s from './style'
@@ -37,11 +37,11 @@ export class Sankey<
   L extends SankeyInputLink,
 > extends ComponentCore<
   {nodes: N[]; links?: L[]},
-  SankeyConfig<N, L>,
   SankeyConfigInterface<N, L>
   > implements ExtendedSizeComponent {
   static selectors = s
-  config: SankeyConfig<N, L> = new SankeyConfig()
+  protected _defaultConfig = SankeyDefaultConfig as SankeyConfigInterface<N, L>
+  public config: SankeyConfigInterface<N, L> = this._defaultConfig
   datamodel: GraphDataModel<N, L, SankeyNode<N, L>, SankeyLink<N, L>> = new GraphDataModel()
   private _extendedWidth = undefined
   private _extendedHeight = undefined
@@ -49,7 +49,7 @@ export class Sankey<
   private _linksGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
   private _nodesGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
   private _backgroundRect: Selection<SVGRectElement, unknown, SVGGElement, unknown>
-  private _sankey = sankey()
+  private _sankey = sankey<SankeyGraph<N, L>, SankeyNode<N, L>, SankeyLink<N, L>>()
   private _highlightTimeoutId = null
   private _highlightActive = false
   events = {

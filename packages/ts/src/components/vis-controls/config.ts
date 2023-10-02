@@ -1,5 +1,3 @@
-import { Config } from 'core/config'
-
 // Local Types
 import { VisControlItemInterface, VisControlsOrientation } from './types'
 
@@ -10,7 +8,8 @@ export interface VisControlsConfigInterface {
   orientation?: VisControlsOrientation;
 }
 
-export class VisControlsConfig extends Config implements VisControlsConfigInterface {
-  items: VisControlItemInterface[] = []
-  orientation = VisControlsOrientation.Horizontal
+export const VisControlsDefaultConfig: VisControlsConfigInterface = {
+  items: [],
+  orientation: VisControlsOrientation.Horizontal,
 }
+
