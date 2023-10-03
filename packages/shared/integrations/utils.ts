@@ -7,6 +7,7 @@ export function getTypeName (type: ts.Node | undefined): string {
     case (ts.SyntaxKind.UnionType): return (type as ts.UnionTypeNode).types.map(getTypeName).join(' | ')
     case (ts.SyntaxKind.IntersectionType): return (type as ts.IntersectionTypeNode).types.map(getTypeName).join(' & ')
     case (ts.SyntaxKind.LiteralType): return getTypeName((type as ts.LiteralTypeNode).literal)
+    case (ts.SyntaxKind.StringLiteral): return (type as ts.LiteralExpression).text
     case (ts.SyntaxKind.BooleanKeyword): return 'boolean'
     case (ts.SyntaxKind.NumberKeyword): return 'number'
     case (ts.SyntaxKind.StringKeyword): return 'string'
@@ -286,9 +287,9 @@ export function getConfigSummary (
           const partialInterfaceName = getTypeName((types[0] as ts.TypeReferenceNode).typeName)
           optionalProps.push(...requiredProps.get(partialInterfaceName))
         } else if (expression === 'WithOptional') {
-        // If WithOptional, only delete the provided property from required props
-          const token = (types[1] as ts.LiteralTypeNode).literal as ts.LiteralToken
-          optionalProps.push(token.text)
+          // If WithOptional, only delete the provided property from required props
+          const text = getTypeName(types[1])
+          optionalProps.push(text)
         }
         optionalProps.forEach(p => {
           configPropertiesMap.delete(p)

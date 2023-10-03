@@ -21,7 +21,7 @@ ng-packagr                         perpetual       MIT           12.2.7         
 rollup                             perpetual       MIT           2.75.5             Rich Harris
 rollup-plugin-typescript2          perpetual       MIT           0.31.2             @ezolenko
 ttypescript                        perpetual       MIT           1.5.13             cevek
-webpack                            perpetual       MIT           5.88.2             Tobias Koppers @sokra
+webpack                            perpetual       MIT           5.76.0             Tobias Koppers @sokra
 zone.js                            perpetual       MIT           0.14.0             Brian Ford
 @unovis/shared                     perpetual       Apache-2.0    1.2.1              Nikita Rokotyan, F5 Inc. <nikita@f5.com> (https://rokotyan.com)
 @unovis/ts                         perpetual       Apache-2.0    1.2.1              Nikita Rokotyan, F5 Inc. <nikita@f5.com> (https://rokotyan.com)
