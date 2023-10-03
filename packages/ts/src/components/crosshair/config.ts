@@ -2,12 +2,19 @@ import { XYComponentConfigInterface, XYComponentConfig } from 'core/xy-component
 import { Tooltip } from 'components/tooltip'
 
 // Types
-import { NumericAccessor } from 'types/accessor'
+import { NumericAccessor, ColorAccessor } from 'types/accessor'
 import { ContinuousScale } from 'types/scale'
+import { WithOptional } from 'types/misc'
 import { CrosshairCircle } from './types'
 
 // We extend partial XY config interface because x and y properties are optional for Crosshair
-export interface CrosshairConfigInterface<Datum> extends Partial<XYComponentConfigInterface<Datum>> {
+export interface CrosshairConfigInterface<Datum> extends WithOptional<XYComponentConfigInterface<Datum>, 'x' | 'y'> {
+  /** Optional accessor function for getting the values along the X axis. Default: `undefined` */
+  x?: NumericAccessor<Datum>;
+  /** Optional single of multiple accessor functions for getting the values along the Y axis. Default: `undefined` */
+  y?: NumericAccessor<Datum> | NumericAccessor<Datum>[];
+  /** Optional color array or color accessor function for crosshair circles. Default: `d => d.color` */
+  color?: ColorAccessor<Datum> | ColorAccessor<Datum[]>;
   /** Separate array of accessors for stacked components (eg StackedBar, Area). Default: `undefined` */
   yStacked?: NumericAccessor<Datum>[];
   /** Baseline accessor function for stacked values, useful with stacked areas. Default: `null` */
