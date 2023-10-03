@@ -71,7 +71,7 @@
     "rollup": "^2.61.1",
     "rollup-plugin-typescript2": "^0.31.1",
     "ttypescript": "^1.5.13",
-    "webpack": "^5.88.2",
+    "webpack": "5.76.0",
     "zone.js": "^0.14.0"
   },
   "overrides": {
