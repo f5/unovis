@@ -19,6 +19,7 @@ export function GalleryViewer ({ example, useTypescriptCode }: GalleryViewerProp
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     if (useTypescriptCode) require(`../../../../shared/examples/${example.pathname}/${example.pathname}.ts`)
+    if (example.styles) require(`../../../../shared/examples/${example.pathname}/styles.css`)
   })
 
   return (<div className={s.root}>
