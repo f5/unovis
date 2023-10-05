@@ -154,8 +154,8 @@ export class Graph<
   }
 
   setConfig (config: GraphConfigInterface<N, L>): void {
-    this._shouldFitLayout = this._shouldFitLayout || this.config.layoutType !== config.layoutType
     this._shouldRecalculateLayout = this._shouldRecalculateLayout || this._shouldLayoutRecalculate(config)
+    this._shouldFitLayout = this._shouldFitLayout || this._shouldRecalculateLayout
 
     super.setConfig(config)
     this._shouldSetPanels = true
