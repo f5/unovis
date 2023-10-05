@@ -80,7 +80,7 @@ export interface XYContainerConfigInterface<Datum> extends ContainerConfigInterf
   /** Prevents the chart domain from being empty (when domain's min and max values are equal).
    *  That usually happens when all the data values are equal or when there's no data.
    *  Setting to `true` will automatically extend the domain by `+1` when the domain is empty (domain start equals domain end).
-   *  Setting to `null` will extend the empty domain, but only when there's no data.
+   *  Setting to `null` will extend the empty X domain, but only when there's no data.
    *  Setting to `false` will keep the domain as is.
    *  Default: `null` */
   preventEmptyDomain?: boolean | null;

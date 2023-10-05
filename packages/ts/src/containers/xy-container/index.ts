@@ -306,10 +306,11 @@ export class XYContainer<Datum> extends ContainerCore {
         clamp(domainMax, configuredDomainMaxConstraint?.[0] ?? Number.NEGATIVE_INFINITY, configuredDomainMaxConstraint?.[1] ?? Number.POSITIVE_INFINITY),
       ]
 
-      // Extend the domain if there is no data provided or preventEmptyDomain was explicitly set to `true`
+      // Extend the X and Y domains if they're empty and `preventEmptyDomain` was explicitly set to `true`
+      // or just the X domain if there is no data provided and `preventEmptyDomain` set to `null`
       if (domain[0] === domain[1]) {
         const hasDataProvided = componentsWithDomain.some(c => c.datamodel.data?.length > 0)
-        if (config.preventEmptyDomain || (config.preventEmptyDomain === null && !hasDataProvided)) {
+        if (config.preventEmptyDomain || (config.preventEmptyDomain === null && (!hasDataProvided || dimension === ScaleDimension.Y))) {
           domain[1] = domain[0] + 1
         }
       }
