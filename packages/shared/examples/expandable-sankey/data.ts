@@ -1,3 +1,5 @@
+import { SankeyNode } from '@unovis/ts'
+
 export type Node = {
   id: string;
   label: string;
@@ -7,13 +9,14 @@ export type Node = {
   expandable?: boolean;
   expanded?: boolean;
 }
+
 export type Link = { source: string; target: string; value: number }
 
-export type Sankey = {
-  readonly nodes: Node[];
-  readonly links: Link[];
-  collapse: (n: Node) => void;
-  expand: (n: Node) => void;
+export type Sankey<N, L extends Link> = {
+  nodes: N[];
+  links: L[];
+  expand: (n: SankeyNode<N, L>) => void;
+  collapse: (n: SankeyNode<N, L>) => void;
 }
 
 const categories = [
@@ -117,16 +120,18 @@ export const root: Node = generate({
   subgroups: categories as Node[],
 })
 
-export const sankeyData: Sankey = {
+export const sankeyData: Sankey<Node, Link> = {
   nodes: [root, ...root.subgroups],
   links: getLinks(root),
-  expand: function (n: Node): void {
+  expand: function (n: SankeyNode<Node, Link>): void {
     n.subgroups = getNodes(n)
+    this.nodes[n.index].expanded = true
     this.nodes = this.nodes.concat(n.subgroups)
     this.links = this.links.concat(getLinks(n))
   },
-  collapse: function (n: Node): void {
+  collapse: function (n: SankeyNode<Node, Link>): void {
+    this.nodes[n.index].expanded = false
     this.nodes = this.nodes.filter(d => d.id === n.id || !d.id.startsWith(n.id))
-    this.links = this.links.filter(d => !d.source.id.startsWith(n.id))
+    this.links = this.links.filter(d => !d.source.startsWith(n.id))
   },
 }

@@ -29,15 +29,18 @@ type GradientLegendProps = {
 }
 
 export function GradientLegend ({ colors, range, title }: GradientLegendProps): JSX.Element {
-  const y = useMemo(() => Array(100).fill(1), [])
+  const y = Array(range[1] - range[0]).fill(1)
+  const color = useCallback((_: number, i: number): string => colors(i + range[0]), [])
   return (
-    <VisXYContainer data={[{}]} height={70} width={500} xDomain={range}>
-      <VisStackedBar
-        orientation={Orientation.Horizontal}
-        x={0.5}
-        y={y}
-        color={useCallback((_, i: number) => colors(i), [])}/>
-      <VisAxis type="x" position="top" numTicks={(range[1] - range[0]) / 5} label={title} tickPadding={0}/>
+    <VisXYContainer data={[{}]} height={70} width={500}>
+      <VisStackedBar orientation={Orientation.Horizontal} x={0} y={y} color={color}/>
+      <VisAxis
+        type="x"
+        label={title}
+        position="top"
+        numTicks={(range[1] - range[0]) / 5}
+        tickFormat={useCallback((i: number) => `${range[0] + i}`, [])}
+      />
     </VisXYContainer>
   )
 }
@@ -46,7 +49,7 @@ export default function TopojsonMap (): JSX.Element {
   const mapData = useMemo(() => ({ areas: data }), [])
 
   // current year being viewed
-  const [year, setYear] = React.useState(2019)
+  const [year, setYear] = useState(2019)
 
   // scale functions
   const colorScale = Scale.scaleSequential(palette).domain(ageRange)

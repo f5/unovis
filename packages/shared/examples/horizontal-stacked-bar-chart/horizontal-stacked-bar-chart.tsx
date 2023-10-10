@@ -1,3 +1,4 @@
+import React from 'react'
 import { VisAxis, VisBulletLegend, VisStackedBar, VisTooltip, VisXYContainer } from '@unovis/react'
 import { Direction, FitMode, Orientation, StackedBar } from '@unovis/ts'
 import { data, EducationDatum, labels } from './data'

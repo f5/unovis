@@ -12,7 +12,6 @@
       } else {
         sankeyData.expand(n)
       }
-      n.expanded = !n.expanded
       data = sankeyData
     }
   }

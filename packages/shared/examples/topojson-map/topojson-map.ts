@@ -64,17 +64,16 @@ yearSlider.addEventListener('change', function () {
 const gradientLegend = new XYContainer(legend, {
   height: 70,
   width: 500,
-  xDomain: ageRange,
   components: [new StackedBar({
-    x: 0.5,
-    y: Array(100).fill(1),
-    color: (_, i: number) => colorScale(i),
+    x: 0,
+    y: Array(ageRange[1] - ageRange[0]).fill(1),
+    color: (_, i: number) => colorScale(ageRange[0] + i),
     orientation: Orientation.Horizontal,
   })],
   xAxis: new Axis({
     position: 'top',
     numTicks: (ageRange[1] - ageRange[0]) / 5,
+    tickFormat: (i: number) => `${ageRange[0] + i}`,
     label: 'Life expectancy (years)',
-    tickPadding: 0,
   }),
 }, [{}])

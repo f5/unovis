@@ -17,7 +17,7 @@
   let year = 2019
 
   // accessor functions
-  const color = (_, i: number) => colorScale(i)
+  const color = (_, i: number) => colorScale(i + ageRange[0])
   $: getExpectancy = (d: AreaDatum) => d.age[yearScale(year)]
   $: getAreaColor = (d: AreaDatum) => colorScale(getExpectancy(d))
 
@@ -25,7 +25,8 @@
     [TopoJSONMap.selectors.feature]: d => `${d.properties.name}: ${d.data ? getExpectancy(d.data) : 'no data'}`,
   }
 
-  const gradientSteps = Array(100).fill(1)
+  const gradientSteps = Array(ageRange[1] - ageRange[0]).fill(1)
+  const tickFormat = (i: number) => `${i + ageRange[0]}`
 </script>
 
 <div class="topojson-map">
@@ -41,8 +42,14 @@
   </VisSingleContainer>
   <!-- gradient legend-->
   <VisXYContainer data={[0]} height={70} width={500}>
-    <VisStackedBar x={0.5} y={gradientSteps} {color} orientation={Orientation.Horizontal}/>
-    <VisAxis type="x" position="top" numTicks={range / 5} label='Life Expectancy (years)' tickPadding={0}/>
+    <VisStackedBar x={0} y={gradientSteps} {color} orientation={Orientation.Horizontal}/>
+    <VisAxis
+      type="x"
+      position="top"
+      label='Life Expectancy (years)'
+      numTicks={gradientSteps.length / 5}
+      {tickFormat}
+    />
   </VisXYContainer>
 </div>
 
