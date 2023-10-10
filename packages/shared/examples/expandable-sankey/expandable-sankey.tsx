@@ -11,14 +11,13 @@ export default function ExpandableSankey (): JSX.Element {
 
   const [data, setData] = useState<{ nodes: Node[]; links: Link[] }>(sankeyData)
 
-  const toggleGroup = useCallback((n: Node): void => {
+  const toggleGroup = useCallback((n: SankeyNode<Node, Link>): void => {
     if (n.expandable) {
       if (n.expanded) {
         sankeyData.collapse(n)
       } else {
         sankeyData.expand(n)
       }
-      n.expanded = !n.expanded
       setData({ nodes: sankeyData.nodes, links: sankeyData.links })
     }
   }, [data])

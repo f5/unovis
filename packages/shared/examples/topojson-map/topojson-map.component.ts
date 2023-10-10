@@ -40,7 +40,8 @@ export class TopojsonMapComponent {
   }
 
   // legend config
-  getGradientColor = (_, i: number): string => this.color(i)
-  gradientSteps: number[] = Array(100).fill(1)
+  getGradientColor = (_, i: number): string => this.color(i + ageRange[0])
+  gradientSteps: number[] = Array(ageRange[1] - ageRange[0]).fill(1)
   numLabels: number = (ageRange[1] - ageRange[0]) / 5
+  tickFormat = (i: number): number => ageRange[0] + i
 }

@@ -6,14 +6,13 @@ const container = document.getElementById('vis-container')
 const chart = new SingleContainer(container)
 
 // node click event listener
-function toggleGroup (n: Node): void {
+function toggleGroup (n: SankeyNode<Node, Link>): void {
   if (n.expandable) {
     if (n.expanded) {
       sankeyData.collapse(n)
     } else {
       sankeyData.expand(n)
     }
-    n.expanded = !n.expanded
     chart.setData({ nodes: sankeyData.nodes, links: sankeyData.links })
   }
 }

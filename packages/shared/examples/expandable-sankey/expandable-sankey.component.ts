@@ -34,7 +34,6 @@ export class ExpandableSankeyComponent {
       } else {
         sankeyData.expand(n)
       }
-      n.expanded = !n.expanded
       this.vis.chart.setData(sankeyData)
     }
   }
