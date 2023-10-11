@@ -151,4 +151,9 @@ export class ComponentCore<
   public isDestroyed (): boolean {
     return !this.element
   }
+
+  // base class abstract method
+  public getAriaDescription (tickFormat: any): string {
+    return ''
+  }
 }

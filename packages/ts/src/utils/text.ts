@@ -11,6 +11,7 @@ import { getTextAnchorFromTextAlign } from 'types/svg'
 
 // Styles
 import { getFontWidthToHeightRatio, UNOVIS_TEXT_DEFAULT, UNOVIS_TEXT_SEPARATOR_DEFAULT, UNOVIS_TEXT_HYPHEN_CHARACTER_DEFAULT } from 'styles/index'
+import { ScaleDimension } from '../../lib'
 
 /**
  * Converts a kebab-case string to camelCase.
@@ -554,4 +555,21 @@ export function renderTextIntoFrame (
 
   group.textContent = ''
   group.appendChild(parsedSvgCode)
+}
+
+export function getAriaDescriptionForXYChart (xDataExtent: number[], yDataExtent: number[] = [], chartType: string, tickFormat = _ => _): string {
+  let description = ''
+
+  if (yDataExtent[0] === undefined && yDataExtent[1] === undefined) {
+    description += 'The extent of its Y dimension is undefined. '
+  } else {
+    const min = yDataExtent[0]?.toFixed(2)
+    const max = yDataExtent[1]?.toFixed(2)
+    if (min !== '0.00') {
+      description += `The smallest value among the ${chartType} is ${min}, the largest ${max}. `
+    } else {
+      description += `The largest value among the ${chartType} is ${max}. `
+    }
+  }
+  return `${description}`
 }

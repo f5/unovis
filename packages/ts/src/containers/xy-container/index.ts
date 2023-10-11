@@ -31,6 +31,7 @@ import {
   LineConfigInterface,
   ScatterConfigInterface,
   StackedBarConfigInterface,
+  Timeline,
   TimelineConfigInterface,
 } from '../../components'
 
@@ -49,6 +50,7 @@ export class XYContainer<Datum> extends ContainerCore {
   private _clipPathId = guid()
   private _axisMargin: Spacing = { top: 0, bottom: 0, left: 0, right: 0 }
   private _firstRender = true
+  private _scaleDomains = new Map<ScaleDimension, number[]>()
 
   constructor (element: HTMLElement, config?: XYContainerConfigInterface<Datum>, data?: Datum[]) {
     super(element)
@@ -312,6 +314,7 @@ export class XYContainer<Datum> extends ContainerCore {
           domain[1] = domain[0] + 1
         }
       }
+      this._scaleDomains[dimension] = domain
 
       components.forEach(c => c.setScaleDomain(dimension, domain))
     })
@@ -415,5 +418,34 @@ export class XYContainer<Datum> extends ContainerCore {
     crosshair?.destroy()
     xAxis?.destroy()
     yAxis?.destroy()
+  }
+
+  protected _getAriaDescription (): string {
+    let description = ''
+    const tickFormat = this.config?.xAxis?.getTickFormat() ?? (_ => _)
+
+    // Get Description From Each Component
+    for (const c of this.components) {
+      description += `${c.getAriaDescription(tickFormat)} `
+    }
+
+    // Get X and Y Domain
+    Object.values(ScaleDimension).forEach((dimension: ScaleDimension) => {
+      if (this.components.some((c) => c instanceof Timeline && dimension === ScaleDimension.Y)) {
+        return
+      }
+
+      const domain = this._scaleDomains[dimension]
+      const axisLabel = this.config?.[`${dimension}Axis`]?.config.label
+      description += axisLabel
+        ? `The ${
+          dimension === ScaleDimension.X ? 'Horizontal Axis' : 'Vertical Axis'
+        } is labeled as ${axisLabel} and `
+        : `The ${
+          dimension === ScaleDimension.X ? 'Horizontal Axis' : 'Vertical Axis'} `
+      description += `ranges from ${dimension === ScaleDimension.X ? tickFormat(+domain?.[0]?.toFixed(2)) : domain?.[0]?.toFixed(2)} to ${dimension === ScaleDimension.X ? tickFormat(+domain?.[1]?.toFixed(2)) : domain?.[1]?.toFixed(2)}. `
+    })
+
+    return description
   }
 }

@@ -225,4 +225,12 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfig<Datum>,
 
     this._resolveLabelOverlap()
   }
+
+  public getAriaDescription (tickFormat: any): string {
+    if (!this.config.configureAriaLabel) {
+      return ''
+    }
+    const points = this.datamodel.data.length
+    return `Scatter Plot. There ${points > 1 ? 'are' : 'is'} ${points} ${points > 1 ? 'points' : 'point'} in this plot.`
+  }
 }

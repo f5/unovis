@@ -10,6 +10,7 @@ import { XYComponentCore } from 'core/xy-component'
 import { getNumber, getString, isArray, isNumber, getStackedExtent, getStackedData, filterDataByRange } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
+import { getAriaDescriptionForXYChart } from 'utils/text'
 
 // Types
 import { Curve } from 'types/curve'
@@ -129,5 +130,15 @@ export class Area<Datum> extends XYComponentCore<Datum, AreaConfig<Datum>, AreaC
       { y0, y1, x: xRange[0] },
       { y0, y1, x: xRange[1] },
     ])
+  }
+
+  public getAriaDescription (): string {
+    if (!this.config.configureAriaLabel) {
+      return ''
+    }
+    const { config, datamodel: { data } } = this
+    const description = getAriaDescriptionForXYChart(this.getXDataExtent(), this.getYDataExtent(true), 'stacked area chart')
+    const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
+    return `Stacked area chart. There are ${yAccessors.length} stacked area with ${data.length} points. ${description}`
   }
 }

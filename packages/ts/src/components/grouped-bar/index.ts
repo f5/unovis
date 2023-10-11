@@ -10,6 +10,7 @@ import { clamp, getExtent, getMax, getMin, getNumber, getString, isArray, isEmpt
 import { roundedRectPath } from 'utils/path'
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
+import { getAriaDescriptionForXYChart } from 'utils/text'
 
 // Types
 import { NumericAccessor } from 'types/accessor'
@@ -321,5 +322,13 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum, GroupedBarConfig<D
     return this.isVertical()
       ? this.getDataScaleExtent()
       : this.getValueScaleExtent(false)
+  }
+
+  public getAriaDescription (): string {
+    if (!this.config.configureAriaLabel) {
+      return ''
+    }
+    const description = getAriaDescriptionForXYChart(this.getXDataExtent(), this.getYDataExtent(true), 'grouped bar chart')
+    return `Grouped bar chart. Each group has ${this.getAccessors().length} items. ${description}`
   }
 }

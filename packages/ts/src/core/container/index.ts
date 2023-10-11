@@ -70,8 +70,17 @@ export class ContainerCore {
     }
 
     // Apply the `aria-label` attribute
-    select(this._container)
-      .attr('aria-label', config.ariaLabel)
+    let description = ''
+    if (config.ariaLabel) {
+      description = config.ariaLabel
+    } else if (config.ariaAutoLabel) {
+      description = this._getAriaDescription().trim()
+    }
+    if (description) {
+      select(this._container)
+        .attr('aria-label', description)
+        .attr('tabindex', '0')
+    }
 
     this._isFirstRender = false
   }
@@ -156,5 +165,10 @@ export class ContainerCore {
     cancelAnimationFrame(this._requestedAnimationFrame)
     this._resizeObserver?.disconnect()
     this.svg.remove()
+  }
+
+  // base class abstract method
+  protected _getAriaDescription (): string {
+    return ''
   }
 }

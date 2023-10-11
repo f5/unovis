@@ -34,6 +34,11 @@ export interface ContainerConfigInterface {
    * `aria-label` attribute to the div element containing your chart. Default: `undefined`.
   */
   ariaLabel?: string | null | undefined;
+
+  /**
+   * Set to true to generate automated description for aria-label in containers. Default: true
+   */
+  ariaAutoLabel?: boolean;
 }
 
 export class ContainerConfig extends Config implements ContainerConfigInterface {
@@ -58,4 +63,5 @@ export class ContainerConfig extends Config implements ContainerConfigInterface 
 
   svgDefs = undefined
   ariaLabel = undefined
+  ariaAutoLabel = true
 }
