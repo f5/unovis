@@ -145,9 +145,11 @@ export class SingleContainer<Data> extends ContainerCore {
     })
   }
 
+  // Overriding the `_onResize` method to handle different sizing techniques (`Sizing.Extend` and `Sizing.FitWidth`)
   protected _onResize (): void {
     const { config } = this
-    super._onResize()
+    const redrawOnResize = config.sizing === Sizing.Fit || config.sizing === Sizing.FitWidth
+    if (redrawOnResize) this.render(0)
     config.tooltip?.hide()
   }
 

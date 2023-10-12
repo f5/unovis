@@ -1,7 +1,6 @@
 import { select, Selection } from 'd3-selection'
 
 // Types
-import { Sizing } from 'types/component'
 
 // Utils
 import { isEqual, clamp } from 'utils/data'
@@ -127,11 +126,8 @@ export class ContainerCore {
     }
   }
 
-  protected _onResize (): void {
-    const { config } = this
-    const redrawOnResize = config.sizing === Sizing.Fit || config.sizing === Sizing.FitWidth
-    if (redrawOnResize) this.render(0)
-  }
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  protected _onResize (): void {}
 
   protected _setUpResizeObserver (): void {
     if (this._resizeObserver) return
