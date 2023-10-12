@@ -53,7 +53,7 @@ export class SingleContainer<Data> extends ContainerCore {
 
     const tooltip = containerConfig.tooltip
     if (tooltip) {
-      if (!tooltip.hasContainer()) tooltip.setContainer(this._container)
+      if (!tooltip.hasContainer()) tooltip.setContainer(this._parentElement)
       tooltip.setComponents([this.component])
     }
 
@@ -150,6 +150,7 @@ export class SingleContainer<Data> extends ContainerCore {
     const { config } = this
     const redrawOnResize = config.sizing === Sizing.Fit || config.sizing === Sizing.FitWidth
     if (redrawOnResize) this.render(0)
+
     config.tooltip?.hide()
   }
 

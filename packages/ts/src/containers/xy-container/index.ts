@@ -152,7 +152,7 @@ export class XYContainer<Datum> extends ContainerCore {
     // Set up the tooltip
     const tooltip = containerConfig.tooltip
     if (tooltip) {
-      if (!tooltip.hasContainer()) tooltip.setContainer(this._container)
+      if (!tooltip.hasContainer()) tooltip.setContainer(this._parentElement)
       tooltip.setComponents(this.components)
     }
 

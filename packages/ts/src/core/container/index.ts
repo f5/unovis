@@ -15,22 +15,22 @@ export class ContainerCore {
   prevConfig: ContainerConfig
   config: ContainerConfig
 
-  protected _container: HTMLElement
+  protected _parentElement: HTMLElement
   protected _requestedAnimationFrame: number
   protected _isFirstRender = true
   protected _resizeObserver: ResizeObserver | undefined
   protected _svgDefs: Selection<SVGDefsElement, unknown, null, undefined>
-  private _containerSize: { width: number; height: number }
+  private _parentSize: { width: number; height: number }
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
   static DEFAULT_CONTAINER_HEIGHT = 300
 
   constructor (element: HTMLElement) {
     this._requestedAnimationFrame = null
-    this._container = element
+    this._parentElement = element
 
     // Setting `role` attribute to `image` to make the container accessible
-    const container = select(this._container)
+    const container = select(this._parentElement)
     container.attr('role', 'figure')
 
     // Create SVG element for visualizations
@@ -69,7 +69,7 @@ export class ContainerCore {
     }
 
     // Apply the `aria-label` attribute
-    select(this._container)
+    select(this._parentElement)
       .attr('aria-label', config.ariaLabel)
 
     this._isFirstRender = false
@@ -103,13 +103,13 @@ export class ContainerCore {
   get containerWidth (): number {
     return this.config.width
       ? this.element.clientWidth
-      : (this._container.clientWidth || this._container.getBoundingClientRect().width)
+      : (this._parentElement.clientWidth || this._parentElement.getBoundingClientRect().width)
   }
 
   get containerHeight (): number {
     return this.config.height
       ? this.element.clientHeight
-      : (this._container.clientHeight || this._container.getBoundingClientRect().height || ContainerCore.DEFAULT_CONTAINER_HEIGHT)
+      : (this._parentElement.clientHeight || this._parentElement.getBoundingClientRect().height || ContainerCore.DEFAULT_CONTAINER_HEIGHT)
   }
 
   get width (): number {
@@ -131,21 +131,21 @@ export class ContainerCore {
 
   protected _setUpResizeObserver (): void {
     if (this._resizeObserver) return
-    const containerRect = this._container.getBoundingClientRect()
-    this._containerSize = { width: containerRect.width, height: containerRect.height }
+    const containerRect = this._parentElement.getBoundingClientRect()
+    this._parentSize = { width: containerRect.width, height: containerRect.height }
 
     this._resizeObserver = new ResizeObserver((entries, observer) => {
-      const resizedContainerRect = this._container.getBoundingClientRect()
+      const resizedContainerRect = this._parentElement.getBoundingClientRect()
       const resizedContainerSize = { width: resizedContainerRect.width, height: resizedContainerRect.height }
-      const hasSizeChanged = !isEqual(this._containerSize, resizedContainerSize)
+      const hasSizeChanged = !isEqual(this._parentSize, resizedContainerSize)
       // Do resize only if element is attached to the DOM
       // will come in useful when some ancestor of container becomes detached
       if (hasSizeChanged && resizedContainerSize.width && resizedContainerSize.height) {
-        this._containerSize = resizedContainerSize
+        this._parentSize = resizedContainerSize
         this._onResize()
       }
     })
-    this._resizeObserver.observe(this._container)
+    this._resizeObserver.observe(this._parentElement)
   }
 
   public destroy (): void {
