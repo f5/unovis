@@ -1,6 +1,7 @@
 import { min, max, group } from 'd3-array'
 import type { SimulationNodeDatum } from 'd3-force'
 import type { ElkNode } from 'elkjs/lib/elk.bundled.js'
+import type { graphlib, Node } from 'dagre'
 
 // Core
 import { GraphDataModel } from 'data-models/graph'
@@ -106,7 +107,7 @@ export function applyLayoutParallel<N extends GraphInputNode, L extends GraphInp
   // Sort
   const group = groups.find(g => g.name === layoutParallelSortConnectionsByGroup)
   if (group) {
-    const sortMap = {}
+    const sortMap: Record<string, number> = {}
     let idx = 0
     group.subgroups.forEach(subgroup => {
       subgroup.nodes.forEach(node => {
@@ -282,12 +283,17 @@ export async function applyLayoutDagre<N extends GraphInputNode, L extends Graph
   const { nonConnectedNodes, connectedNodes, nodes, links } = datamodel
   const { nodeSize, layoutNonConnectedAside, dagreLayoutSettings, nodeStrokeWidth, nodeLabel } = config
 
+  // eslint-disable-next-line @typescript-eslint/naming-convention,@typescript-eslint/ban-ts-comment
+  // @ts-ignore
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const { Graph } = await import('@unovis/graphlibrary')
+  // eslint-disable-next-line @typescript-eslint/naming-convention,@typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   const { layout } = await import('@unovis/dagre-layout')
 
   // https://github.com/dagrejs/dagre/wiki
-  const dagreGraph = new Graph()
+  const dagreGraph = new Graph() as graphlib.Graph<GraphNode<N, L>>
 
   // Set an object for the graph label
   dagreGraph.setGraph(dagreLayoutSettings)
@@ -301,7 +307,7 @@ export async function applyLayoutDagre<N extends GraphInputNode, L extends Graph
   const labelApprxHeight = 40
   const nds = (layoutNonConnectedAside ? connectedNodes : nodes)
   nds.forEach(node => {
-    dagreGraph.setNode(node._index, {
+    dagreGraph.setNode(`${node._index}`, {
       label: getString(node, nodeLabel, node._index),
       width: getNumber(node, nodeSize, node._index) * 1.5 + getNumber(node, nodeStrokeWidth, node._index),
       height: labelApprxHeight + getNumber(node, nodeSize, node._index) * 1.5,
@@ -311,7 +317,10 @@ export async function applyLayoutDagre<N extends GraphInputNode, L extends Graph
 
   // Add edges to the graph.
   links.forEach(link => {
-    dagreGraph.setEdge((link.source as GraphNode)._index, (link.target as GraphNode)._index)
+    dagreGraph.setEdge(
+      `${link.source._index}`,
+      `${link.target._index}`
+    )
   })
 
   // Calculate the layout
@@ -319,7 +328,7 @@ export async function applyLayoutDagre<N extends GraphInputNode, L extends Graph
 
   // Apply coordinates to the graph
   dagreGraph.nodes().forEach(d => {
-    const node = dagreGraph.node(d)
+    const node = dagreGraph.node(d) as Node<GraphNode<N, L>> & { originalNode: GraphNode<N, L>}
     node.originalNode.x = node.x // width * d.x / dagreGraph._label.width
     node.originalNode.y = node.y // height * d.y / dagreGraph._label.height
   })

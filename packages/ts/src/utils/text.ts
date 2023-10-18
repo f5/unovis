@@ -98,18 +98,18 @@ export function trimString (str = '', length = 15, type = TrimMode.Middle): stri
  * @returns {string[]} - The array of split words.
  */
 export function splitString (text: string, separators = [' ']): string[] {
-  let result = [text] as any[]
+  let result = [text] as Array<string | string[]>
   for (let i = 0; i < separators.length; i++) {
     const sep = separators[i]
-    result.forEach((d, id) => {
-      const separated = d.split(sep)
+    result.forEach((d, index) => {
+      const separated = (d as string).split(sep)
       const words = separated.map((word, j) => `${word}${j === separated.length - 1 ? '' : sep}`)
-      result[id] = words
+      result[index] = words
     })
     result = flatten(result)
   }
 
-  return result
+  return result as string[]
 }
 
 /**

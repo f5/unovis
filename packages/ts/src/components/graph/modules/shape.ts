@@ -31,7 +31,10 @@ export function appendShape<T> (
     const element = select(elements[i])
     const shape = getString(d, shapeAccessor, index) as GraphNodeShape
 
-    let shapeElement
+    let shapeElement: Selection<SVGPathElement, unknown, null, undefined>
+    | Selection<SVGRectElement, unknown, null, undefined>
+    | Selection<SVGGElement, unknown, null, undefined>
+    | Selection<SVGCircleElement, unknown, null, undefined>
     const isCustomXmlShape = isCustomXml(shape)
     if (isCustomXmlShape) {
       shapeElement = element.insert('g', insertSelector)
@@ -53,8 +56,8 @@ export function appendShape<T> (
       }
     }
 
+    shapeElement.classed(customShapeSelector, isCustomXmlShape)
     return shapeElement.attr('class', shapeSelector)
-      .classed(customShapeSelector, isCustomXmlShape)
   })
 }
 

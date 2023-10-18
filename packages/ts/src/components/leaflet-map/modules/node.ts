@@ -136,16 +136,19 @@ export function updateNodes<D extends GenericDataRecord> (
   })
 }
 
+export interface LabelSVGGElement extends SVGGElement {
+  labelVisible?: boolean;
+}
+
 export function collideLabels<D extends GenericDataRecord> (
   selection: Selection<SVGGElement, LeafletMapPoint<D>, SVGGElement, unknown>,
   leafletMap: L.Map
 ): void {
-  selection.each((datum1: LeafletMapPoint<D>, i, elements) => {
-    const group1HTMLNode = elements[i]
-    const group1 = select(group1HTMLNode)
+  selection.each((datum1: LeafletMapPoint<D>, i, elements: ArrayLike<LabelSVGGElement>) => {
+    const group1LabelElement = elements[i]
+    const group1 = select(group1LabelElement)
     const label1: Selection<SVGTextElement, any, SVGElement, any> = group1.select(`.${s.bottomLabel}`)
-    // eslint-disable-next-line dot-notation
-    group1HTMLNode['labelVisible'] = true
+    group1LabelElement.labelVisible = true
 
     // Calculate bounding rect of point's bottom label
     const bottomLabelFontSizePx = getCSSVariableValueInPixels(cssvar(s.variables.mapPointBottomLabelFontSize), selection.node())
@@ -160,8 +163,8 @@ export function collideLabels<D extends GenericDataRecord> (
 
     for (let j = 0; j < elements.length; j += 1) {
       if (i === j) continue
-      const group2HTMLNode = elements[j]
-      const group2 = select(group2HTMLNode)
+      const group2LabelElement = elements[j]
+      const group2 = select(group2LabelElement)
       const label2: Selection<SVGTextElement, any, SVGElement, any> = group2.select(`.${s.bottomLabel}`)
       const datum2 = group2.datum() as LeafletMapPoint<D>
 
@@ -177,8 +180,7 @@ export function collideLabels<D extends GenericDataRecord> (
       let intersect = rectIntersect(label1BoundingRect, point2BoundingRect)
 
       // If there's not intersection, check a collision with the second point's label
-      // eslint-disable-next-line dot-notation
-      const label2Visible = group2HTMLNode['labelVisible']
+      const label2Visible = group2LabelElement.labelVisible
       if (!intersect && label2Visible) {
         const label2Size = estimateTextSize(label2, bottomLabelFontSizePx, 0.32, true, 0.6)
         intersect = rectIntersect(label1BoundingRect, {
@@ -190,14 +192,12 @@ export function collideLabels<D extends GenericDataRecord> (
       }
 
       if (intersect) {
-        // eslint-disable-next-line dot-notation
-        group1HTMLNode['labelVisible'] = false
+        group1LabelElement.labelVisible = false
         break
       }
     }
 
-    // eslint-disable-next-line dot-notation
-    smartTransition(label1, 0).attr('opacity', group1HTMLNode['labelVisible'] ? 1 : 0)
+    smartTransition(label1, 0).attr('opacity', group1LabelElement.labelVisible ? 1 : 0)
   })
 }
 

@@ -5,7 +5,7 @@ import { getCssVarNames, injectGlobalCssVariables } from 'utils/style'
 
 const cssVarDefaults = {
   // Undefined by default to allow proper fallback to var(--vis-font-family)
-  '--vis-nested-donut-font-family': undefined,
+  '--vis-nested-donut-font-family': undefined as undefined,
 
   // Background
   '--vis-nested-donut-background-color': '#E7E9F3',

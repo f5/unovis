@@ -69,7 +69,7 @@
       "@typescript-eslint/indent": ["error", 2],
       "@typescript-eslint/no-unused-expressions": ["error"],
       "@typescript-eslint/no-explicit-any": "off",
-      "@typescript-eslint/explicit-module-boundary-types": ["warn"],
+      "@typescript-eslint/explicit-module-boundary-types": ["error"],
       "@typescript-eslint/explicit-member-accessibility": "off",
       "@typescript-eslint/type-annotation-spacing": ["error"],
       "@typescript-eslint/member-delimiter-style": ["error", {

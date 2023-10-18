@@ -35,15 +35,12 @@ export interface TimelineConfigInterface<Datum> extends WithOptional<XYComponent
 
 export const TimelineDefaultConfig: TimelineConfigInterface<unknown> = {
   ...XYComponentDefaultConfig,
-  // eslint-disable-next-line dot-notation
-  color: (d: unknown): string => d['color'],
+  color: (d: unknown): string => (d as { color: string }).color,
   lineWidth: 8,
   lineCap: false,
   rowHeight: 22,
-  // eslint-disable-next-line dot-notation
-  length: <Datum>(d: Datum): number => d['length'],
-  // eslint-disable-next-line dot-notation
-  type: <Datum>(d: Datum): string => d['type'],
+  length: (d: unknown): number => (d as { length: number }).length,
+  type: (d: unknown): string => (d as { type: string }).type,
   cursor: null,
   labelWidth: undefined,
   showLabels: false,

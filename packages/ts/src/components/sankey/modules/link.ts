@@ -47,21 +47,25 @@ export function linkPath ({ x0, x1, y0, y1, width }: LinkPathOptions): string {
   `
 }
 
+export type LinkAnimState = { x0: number; x1: number; y0: number; y1: number; width: number }
+
+export interface LinkElement extends SVGPathElement {
+  _animState?: LinkAnimState;
+}
+
 export function createLinks<N extends SankeyInputNode, L extends SankeyInputLink> (
   sel: Selection<SVGGElement, SankeyLink<N, L>, SVGGElement, unknown>
 ): void {
   sel.append('path').attr('class', s.linkPath)
-    .attr('d', (d: SankeyLink<N, L>, i, el) => {
-    // eslint-disable-next-line dot-notation
-      el[i]['_animState'] = {
+    .attr('d', (d: SankeyLink<N, L>, i: number, el: ArrayLike<LinkElement>) => {
+      el[i]._animState = {
         x0: d.source.x1,
         x1: d.target.x0,
         y0: d.y0,
         y1: d.y1,
         width: Math.max(1, d.width),
       }
-      // eslint-disable-next-line dot-notation
-      return linkPath(el[i]['_animState'])
+      return linkPath(el[i]._animState)
     })
   sel.append('path').attr('class', s.linkSelectionHelper)
   sel.style('opacity', 0)
@@ -83,9 +87,8 @@ export function updateLinks<N extends SankeyInputNode, L extends SankeyInputLink
 
   if (duration) {
     (selectionTransition as Transition<SVGPathElement, SankeyLink<N, L>, SVGGElement, unknown>)
-      .attrTween('d', (d: SankeyLink<N, L>, i, el) => {
-      // eslint-disable-next-line dot-notation
-        const previous = el[i]['_animState']
+      .attrTween('d', (d: SankeyLink<N, L>, i: number, el: ArrayLike<LinkElement>) => {
+        const previous = el[i]._animState
         const next = {
           x0: d.source.x1,
           x1: d.target.x0,
@@ -100,8 +103,7 @@ export function updateLinks<N extends SankeyInputNode, L extends SankeyInputLink
           y1: interpolateNumber(previous.y1, next.y1),
           width: interpolateNumber(previous.width, next.width),
         }
-        // eslint-disable-next-line dot-notation
-        el[i]['_animState'] = next
+        el[i]._animState = next
 
         return function (t: number) {
           return linkPath({

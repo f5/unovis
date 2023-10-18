@@ -1,6 +1,6 @@
 import type L from 'leaflet'
 import { select, Selection } from 'd3-selection'
-import { GeoJSONSource, Map } from 'maplibre-gl'
+import type { GeoJSONSource, Map } from 'maplibre-gl'
 import { feature } from 'topojson-client'
 
 // Types
@@ -120,8 +120,8 @@ export async function setupMap<T extends GenericDataRecord> (mapContainer: HTMLE
     leafletMap.attributionControl.addAttribution(attr)
   }
 
-  let layer: L.Layer
-  let maplibreMap = null
+  let layer: L.Layer | (L.Layer & { getMaplibreMap(): Map })
+  let maplibreMap: Map = null
 
   switch (renderer) {
     case LeafletMapRenderer.MapLibre:
@@ -131,6 +131,11 @@ export async function setupMap<T extends GenericDataRecord> (mapContainer: HTMLE
       const { getMaplibreGLLayer } = await import('../renderer/mapboxgl-layer')
       layer = getMaplibreGLLayer(config, L, maplibre.default)
       maplibreMap = (layer as ReturnType<typeof getMaplibreGLLayer>).getMaplibreMap?.()
+
+      select(mapContainer).on('wheel', (event: WheelEvent) => {
+        event.preventDefault()
+        mapboxglWheelEventThrottled(leafletMap, layer as (L.Layer & { getMaplibreMap(): Map }), event)
+      })
       break
     case LeafletMapRenderer.Raster:
       layer = L.tileLayer(style as string)
@@ -139,12 +144,8 @@ export async function setupMap<T extends GenericDataRecord> (mapContainer: HTMLE
   layer.addTo(leafletMap)
 
   // leaflet-mapbox-gl has a layer positioning issue on far zoom levels which leads to having wrong
-  //   map points projection. We constraint the view to prevent that.
+  //   map points projection. We constrain the view to prevent that.
   constraintMapView(leafletMap)
-  select(mapContainer).on('wheel', (event: WheelEvent) => {
-    event.preventDefault()
-    mapboxglWheelEventThrottled(leafletMap, layer, event)
-  })
 
   if (maplibreMap && topoJSONLayer?.sources) {
     const canvas = maplibreMap.getCanvas()

@@ -39,6 +39,7 @@
   },
   "devDependencies": {
     "@rollup/plugin-json": "^4.1.0",
+    "@types/to-px": "^1.1.2",
     "@zerollup/ts-transform-paths": "^1.7.18",
     "rimraf": "^3.0.2",
     "rollup": "^2.61.1",
@@ -56,6 +57,7 @@
     "@types/d3": "^7.4.0",
     "@types/d3-collection": "^1.0.10",
     "@types/d3-sankey": "^0.11.2",
+    "@types/dagre": "^0.7.50",
     "@types/geojson": "^7946.0.8",
     "@types/leaflet": "1.7.6",
     "@types/supercluster": "^5.0.2",

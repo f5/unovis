@@ -1,5 +1,3 @@
-/* eslint-disable dot-notation */
-
 // Core
 import { ComponentConfigInterface, ComponentDefaultConfig } from 'core/component/config'
 
@@ -46,11 +44,11 @@ export const ChordDiagramDefaultConfig: ChordDiagramConfigInterface<ChordInputNo
   highlightedNodeId: undefined,
   highlightedLinkIds: [],
   linkColor: undefined,
-  linkValue: <L>(d: L): number => d['value'],
+  linkValue: (d: ChordInputNode): number => (d as { value: number }).value,
   nodeLevels: [],
   nodeWidth: 15,
-  nodeColor: <N>(d: ChordNodeDatum<N>): string => d['color'],
-  nodeLabel: <N>(d: ChordNodeDatum<N>): string => d['label'] ?? d['key'],
+  nodeColor: (d: unknown): string => (d as { color: string }).color,
+  nodeLabel: (d: unknown): string => (d as { label: string }).label ?? (d as { key: string }).key,
   nodeLabelColor: undefined,
   nodeLabelAlignment: ChordLabelAlignment.Along,
   padAngle: 0.02,

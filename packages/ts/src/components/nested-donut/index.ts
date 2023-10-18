@@ -180,9 +180,9 @@ NestedDonutConfigInterface<Datum>
     partitionData
       .each(node => {
         node.data = {
-          key: node.data[0] as string,
-          values: (node.data[1])?.length ? node.data[1].map((index: number) => data[index]) : [],
-          root: node.parent?.data.root ?? node.data[0],
+          key: (node.data as any)[0] as string,
+          values: ((node.data as any)[1])?.length ? (node.data as any)[1].map((index: number) => data[index]) : [],
+          root: node.parent?.data.root ?? (node.data as any)[0],
         }
         node._id = `root${partitionData.path(node).map(d => d.data.key).join('->')}`
         if (isNumberWithinRange(node.depth - 1, [0, layers.length - 1])) {

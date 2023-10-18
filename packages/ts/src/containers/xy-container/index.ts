@@ -247,8 +247,8 @@ export class XYContainer<Datum> extends ContainerCore {
       // Pass accessors
       const yAccessors = this.components.filter(c => !c.stacked).map(c => c.config.y)
       const yStackedAccessors = this.components.filter(c => c.stacked).map(c => c.config.y)
-      // eslint-disable-next-line dot-notation
-      const baselineAccessor = this.components.find(c => c.config['baseline'])?.config['baseline']
+      const baselineComponentConfig = this.components.find(c => (c.config as AreaConfigInterface<Datum>).baseline).config as AreaConfigInterface<Datum>
+      const baselineAccessor = baselineComponentConfig.baseline
 
       crosshair.accessors = {
         x: this.components[0]?.config.x,
@@ -338,7 +338,8 @@ export class XYContainer<Datum> extends ContainerCore {
     // Get and combine bleed
     const bleed = components.map(c => c.bleed).reduce((bleed, b) => {
       for (const key of Object.keys(bleed)) {
-        if (bleed[key] < b[key]) bleed[key] = b[key]
+        const k = key as keyof Spacing
+        if (bleed[k] < b[k]) bleed[k] = b[k]
       }
       return bleed
     }, { top: 0, bottom: 0, left: 0, right: 0 })

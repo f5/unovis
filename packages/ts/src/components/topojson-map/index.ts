@@ -1,7 +1,7 @@
 import { Selection } from 'd3-selection'
 import { D3ZoomEvent, zoom, ZoomBehavior, zoomIdentity, ZoomTransform } from 'd3-zoom'
 import { timeout } from 'd3-timer'
-import { geoPath, GeoProjection } from 'd3-geo'
+import { geoPath, GeoProjection, ExtendedFeatureCollection } from 'd3-geo'
 import { color } from 'd3-color'
 import { feature } from 'topojson-client'
 
@@ -315,7 +315,7 @@ export class TopoJSONMap<
     const pointData = points || datamodel.points
     if (pointData.length === 0) return
 
-    const featureCollection = {
+    const featureCollection: ExtendedFeatureCollection = {
       type: 'FeatureCollection',
       features: [{
         type: 'Feature',
@@ -330,7 +330,6 @@ export class TopoJSONMap<
           }),
         },
       }],
-      geometries: [],
     }
 
     this._projection.fitExtent([

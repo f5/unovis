@@ -1,5 +1,5 @@
 import { LatLng } from 'leaflet'
-import Supercluster, { ClusterProperties } from 'supercluster'
+import Supercluster, { ClusterProperties, PointFeature } from 'supercluster'
 import { GenericDataRecord } from 'types/data'
 
 export enum LeafletMapRenderer {
@@ -73,4 +73,9 @@ export type MapZoomState = {
   zoomLevel: number;
   bounds: Bounds;
   userDriven: boolean;
+}
+
+export type LeafletMapExpandedCluster<Datum extends GenericDataRecord> = {
+  points: PointFeature<PointExpandedClusterProperties<Datum>>[];
+  cluster: LeafletMapPoint<Datum>;
 }

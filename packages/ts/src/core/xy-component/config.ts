@@ -37,10 +37,8 @@ export const XYComponentDefaultConfig: XYComponentConfigInterface<unknown> = {
   ...ComponentDefaultConfig,
   x: undefined,
   y: undefined,
-  // eslint-disable-next-line dot-notation
-  id: <Datum>(d: Datum, i: number): string => d['id'] ?? `${i}`,
-  // eslint-disable-next-line dot-notation
-  color: <Datum>(d: Datum | Datum[]): string => d['color'],
+  id: (d: unknown, i: number): string => (d as { id: string }).id ?? `${i}`,
+  color: (d: unknown | unknown[]): string => (d as { color: string }).color,
   xScale: undefined,
   yScale: undefined,
   excludeFromDomainCalculation: false,

@@ -1,5 +1,3 @@
-/* eslint-disable dot-notation */
-
 // Config
 import { ComponentConfigInterface, ComponentDefaultConfig } from 'core/component/config'
 
@@ -24,7 +22,7 @@ import {
 export interface SankeyConfigInterface<N extends SankeyInputNode, L extends SankeyInputLink> extends ComponentConfigInterface {
   // General
   /** Node / Link id accessor function. Used for mapping of data updates to corresponding SVG objects. Default: `(d, i) => d.id ?? i.toString()` */
-  id?: (d: SankeyInputNode | SankeyInputLink, i: number, ...any) => string;
+  id?: (d: SankeyInputNode | SankeyInputLink, i: number, ...any: unknown[]) => string;
   /** Coefficient to scale the height of the diagram when the amount of links is low: `C * links.length`, clamped to `[height / 2, height]`. Default: `1/16` */
   heightNormalizationCoeff?: number;
   /** Type of animation on removing nodes. Default: `ExitTransitionType.Default` */
@@ -142,7 +140,7 @@ export const SankeyDefaultConfig: SankeyConfigInterface<SankeyInputNode, SankeyI
   heightNormalizationCoeff: 1 / 16,
   exitTransitionType: SankeyExitTransitionType.Default,
   enterTransitionType: SankeyEnterTransitionType.Default,
-  id: (d, i) => d['_id'] ?? `${i}`,
+  id: (d: SankeyInputNode, i: number) => (d as { _id: string })._id ?? `${i}`,
   highlightSubtreeOnHover: false,
   highlightDuration: 300,
   highlightDelay: 1000,
@@ -154,13 +152,13 @@ export const SankeyDefaultConfig: SankeyConfigInterface<SankeyInputNode, SankeyI
   nodeMinHeight: 20,
   nodeMaxHeight: 100,
   nodePadding: 2,
-  nodeColor: d => d['color'],
-  nodeFixedValue: d => d['fixedValue'],
+  nodeColor: (d: SankeyInputNode) => (d as { color: string }).color,
+  nodeFixedValue: (d: SankeyInputNode) => (d as { fixedValue: number }).fixedValue,
   showSingleNode: true,
   nodeCursor: undefined,
   nodeIcon: undefined,
   nodeIconColor: undefined,
-  label: d => d['label'],
+  label: (d: SankeyInputNode) => (d as { label: string }).label,
   labelPosition: Position.Auto,
   labelVerticalAlign: VerticalAlign.Middle,
   labelBackground: false,
@@ -179,8 +177,8 @@ export const SankeyDefaultConfig: SankeyConfigInterface<SankeyInputNode, SankeyI
   subLabelColor: undefined,
   subLabelPlacement: SankeySubLabelPlacement.Below,
   subLabelToLabelInlineWidthRatio: 0.4,
-  linkValue: d => d['value'],
-  linkColor: d => d['color'],
+  linkValue: (d: SankeyInputNode) => (d as { value: number }).value,
+  linkColor: (d: SankeyInputNode) => (d as { color: string }).color,
   linkCursor: undefined,
 
   // https://stackoverflow.com/a/21648197/2040291

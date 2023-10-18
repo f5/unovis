@@ -58,7 +58,6 @@
     "typescript": "~4.2.4"
   },
   "peerDependencies": {
-    "@unovis/angular": "*",
     "@unovis/react": "*",
     "@unovis/ts": "*"
   },

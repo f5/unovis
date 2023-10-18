@@ -24,7 +24,7 @@ export interface ScatterConfigInterface<Datum> extends XYComponentConfigInterfac
   /** Shape of the scatter point. Accessor function or constant value: `SymbolType.Circle`, `SymbolType.Cross`, `SymbolType.Diamond`, `SymbolType.Square`,
    * `SymbolType.Star`, `SymbolType.Triangle` or `SymbolType.Wye`.
    * Default: `SymbolType.Circle` */
-  shape?: ((d: Datum, i?: number, ...any) => (SymbolType | string)) | SymbolType | string;
+  shape?: ((d: Datum, i?: number, ...any: unknown[]) => (SymbolType | string)) | SymbolType | string;
   /** Label accessor function or string. Default: `undefined` */
   label?: StringAccessor<Datum>;
   /** Label color. Default: `undefined` */
@@ -45,8 +45,7 @@ export interface ScatterConfigInterface<Datum> extends XYComponentConfigInterfac
 
 export const ScatterDefaultConfig: ScatterConfigInterface<unknown> = {
   ...XYComponentDefaultConfig,
-  // eslint-disable-next-line dot-notation
-  color: (d: unknown): string => d['color'],
+  color: (d: unknown): string => (d as { color: string }).color,
   size: 10,
   sizeScale: Scale.scaleSqrt(),
   sizeRange: undefined,

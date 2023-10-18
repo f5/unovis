@@ -60,7 +60,8 @@ export function arcTween<N extends GraphInputNode, L extends GraphInputLink> (
 
 export function polyTween<N extends GraphInputNode, L extends GraphInputLink> (
   d: GraphNode<N, L>,
-  config: GraphConfigInterface<N, L>, polygonConstructor,
+  config: GraphConfigInterface<N, L>,
+  polygonConstructor: (nodeSize: number, nEdges?: number, endAngle?: number, isOpen?: boolean) => string,
   el: GraphNodeAnimatedElement<SVGElement>
 ): (t: number) => string {
   const { nodeShape, nodeGaugeValue } = config

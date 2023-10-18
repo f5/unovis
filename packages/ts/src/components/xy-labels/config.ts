@@ -41,8 +41,7 @@ export interface XYLabelsConfigInterface<Datum> extends XYComponentConfigInterfa
 }
 export const XYLabelsDefaultConfig: XYLabelsConfigInterface<unknown> = {
   ...XYComponentDefaultConfig,
-  // eslint-disable-next-line dot-notation
-  color: (d: unknown): string => d['color'],
+  color: (d: unknown): string => (d as { color: string }).color,
   y: undefined,
   xPositioning: XYLabelPositioning.DataSpace,
   yPositioning: XYLabelPositioning.DataSpace,
