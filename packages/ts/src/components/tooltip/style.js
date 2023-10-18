@@ -67,3 +67,7 @@ export const positionFixed = css`
 export const show = css`
   opacity: 1;
 `
+
+export const hidden = css`
+  display: none;
+`

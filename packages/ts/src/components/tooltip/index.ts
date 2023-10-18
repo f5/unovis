@@ -82,13 +82,22 @@ export class Tooltip {
       this.div.html(html)
     }
 
-    this.div.classed(s.show, true)
+    this.div
+      .classed(s.hidden, false)
+      .classed(s.show, true)
+
     this._isShown = true
     this.place(pos)
   }
 
   public hide (): void {
     this.div.classed(s.show, false)
+      .on('transitionend', () => {
+        // We hide the element once the transition completes
+        // This ensures container overflow will not occur when the window is resized
+        this.div.classed(s.hidden, !this._isShown)
+      })
+
     this._isShown = false
   }
 
