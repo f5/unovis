@@ -43,14 +43,14 @@ export class Sankey<
   protected _defaultConfig = SankeyDefaultConfig as SankeyConfigInterface<N, L>
   public config: SankeyConfigInterface<N, L> = this._defaultConfig
   datamodel: GraphDataModel<N, L, SankeyNode<N, L>, SankeyLink<N, L>> = new GraphDataModel()
-  private _extendedWidth = undefined
-  private _extendedHeight = undefined
-  private _extendedHeightIncreased = undefined
+  private _extendedWidth: number | undefined = undefined
+  private _extendedHeight: number | undefined = undefined
+  private _extendedHeightIncreased: number | undefined = undefined
   private _linksGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
   private _nodesGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
   private _backgroundRect: Selection<SVGRectElement, unknown, SVGGElement, unknown>
   private _sankey = sankey<SankeyGraph<N, L>, SankeyNode<N, L>, SankeyLink<N, L>>()
-  private _highlightTimeoutId = null
+  private _highlightTimeoutId: ReturnType<typeof setTimeout> | null = null
   private _highlightActive = false
   events = {
     [Sankey.selectors.nodeGroup]: {
@@ -123,7 +123,7 @@ export class Sankey<
     if ((this.sizing !== Sizing.Fit) || !this._hasLinks()) this._preCalculateComponentSize()
 
     // Using "as any" because typings are not full ("@types/d3-sankey": "^0.11.2")
-    const nodeId = ((d, i) => getString(d, this.config.id, i)) as any;
+    const nodeId = ((d: SankeyInputNode, i: number) => getString(d, this.config.id, i)) as any;
     (this._sankey as any).linkSort(this.config.linkSort)
     this._sankey
       .nodeId(nodeId)

@@ -5,11 +5,12 @@ import { throttle as _throttle } from 'throttle-debounce'
 import { NumericAccessor, StringAccessor, BooleanAccessor, ColorAccessor, GenericAccessor } from 'types/accessor'
 import { StackValuesRecord } from 'types/data'
 
-export const isNumber = <T>(a: T): boolean => typeof a === 'number'
-export const isFunction = <T>(a: T): boolean => typeof a === 'function'
-export const isUndefined = <T>(a: T): boolean => a === undefined
-export const isNil = <T>(a: T): boolean => a == null
-export const isString = <T>(a: T): boolean => typeof a === 'string'
+export const isNumber = <T>(a: T): a is T extends number ? T : never => typeof a === 'number'
+// eslint-disable-next-line @typescript-eslint/ban-types
+export const isFunction = <T>(a: T): a is T extends Function ? T : never => typeof a === 'function'
+export const isUndefined = <T>(a: T): a is T extends undefined ? T : never => a === undefined
+export const isNil = <T>(a: T): a is null | undefined => a == null
+export const isString = <T>(a: T): a is T extends string ? T : never => typeof a === 'string'
 export const isArray = <T>(a: T): a is T extends any[] ? T : never => Array.isArray(a)
 export const isObject = <T>(a: T): boolean => (a instanceof Object)
 export const isAClassInstance = <T>(a: T): boolean => a.constructor.name !== 'Function' && a.constructor.name !== 'Object'
@@ -50,7 +51,7 @@ export const isEqual = (a?: unknown | null, b?: unknown | null, visited: Set<any
     else visited.add(a)
 
     for (const key in a) {
-      if (!isEqual(a[key], b[key], visited)) return false
+      if (!isEqual((a as Record<string, unknown>)[key], (b as Record<string, unknown>)[key], visited)) return false
     }
 
     return true
@@ -194,7 +195,7 @@ export function unique<T> (array: T[]): T[] {
   return Array.from(new Set(array))
 }
 
-export function countUnique<T> (array: T[], accessor = d => d): number {
+export function countUnique<T> (array: T[], accessor = (d: unknown) => d): number {
   return new Set(array.map(d => accessor(d))).size
 }
 

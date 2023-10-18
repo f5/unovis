@@ -6,4 +6,4 @@ export type VisEventCallback<Datum = any> =
   ((data: Datum, event: MouseEvent, i: number, els: (SVGElement | HTMLElement)[]) => void) |
   ((data: Datum, event: WheelEvent, i: number, els: (SVGElement | HTMLElement)[]) => void) |
   ((data: Datum, event: PointerEvent, i: number, els: (SVGElement | HTMLElement)[]) => void) |
-  ((data: Datum, event: TouchEvent, i: number, els: (SVGElement | HTMLElement)[]) => void);
+  ((data: Datum, event: TouchEvent, i: number, els: (SVGElement | HTMLElement)[]) => void)

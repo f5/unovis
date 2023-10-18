@@ -39,6 +39,7 @@ import {
   LeafletMapPoint,
   LeafletMapPointDatum,
   LeafletMapRenderer,
+  LeafletMapExpandedCluster,
   MapZoomState,
   PointExpandedClusterProperties,
 } from './types'
@@ -76,7 +77,7 @@ export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<D
   }
 
   private _clusterIndex: Supercluster<Datum>
-  private _expandedCluster: { points: PointFeature<PointExpandedClusterProperties<Datum>>[]; cluster: LeafletMapPoint<Datum> } = null
+  private _expandedCluster: LeafletMapExpandedCluster<Datum> = null
   private _cancelBackgroundClick = false
   private _hasBeenMoved = false
   private _hasBeenZoomed = false
@@ -104,7 +105,7 @@ export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<D
   // eslint-disable-next-line @typescript-eslint/naming-convention
   static DEFAULT_CONTAINER_HEIGHT = 600
 
-  events = {
+  protected events = {
     [LeafletMap.selectors.point]: {
       mouseup: this._onPointMouseUp.bind(this),
       mousedown: this._onPointMouseDown.bind(this),

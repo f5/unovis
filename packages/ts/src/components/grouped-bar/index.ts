@@ -1,6 +1,5 @@
 import { scaleBand } from 'd3-scale'
 import { min, max, range } from 'd3-array'
-import { select } from 'd3'
 
 // Core
 import { XYComponentCore } from 'core/xy-component'
@@ -32,13 +31,7 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum, GroupedBarConfigIn
   getAccessors = (): NumericAccessor<Datum>[] =>
     isArray(this.config.y) ? this.config.y : [this.config.y]
 
-  events = {
-    [GroupedBar.selectors.barGroup]: {
-      mouseover: this._raiseSelection,
-    },
-    [GroupedBar.selectors.bar]: {
-      mouseover: this._raiseSelection,
-    },
+  protected events = {
   }
 
   private _barData: Datum[] = []
@@ -304,9 +297,6 @@ export class GroupedBar<Datum> extends XYComponentCore<Datum, GroupedBarConfigIn
     return [min > 0 ? 0 : min, max < 0 ? 0 : max]
   }
 
-  _raiseSelection (d, i, els): void {
-    select(els[i]).raise()
-  }
 
   getDataScaleExtent (): number[] {
     const { config, datamodel } = this

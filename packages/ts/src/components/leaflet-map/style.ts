@@ -11,7 +11,7 @@ injectGlobal(leafletCSS)
 const cssVarDefaults = {
   '--vis-map-container-background-color': '#dfe5eb',
   /* Undefined by default to allow proper fallback to var(--vis-font-family) */
-  '--vis-map-label-font-family': undefined,
+  '--vis-map-label-font-family': undefined as undefined,
 
   '--vis-map-point-default-fill-color': '#B9BEC3',
   '--vis-map-point-ring-fill-color': '#ffffff',

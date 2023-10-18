@@ -1,7 +1,7 @@
 import { Selection } from 'd3-selection'
 import { brush, BrushBehavior, brushX, brushY, D3BrushEvent } from 'd3-brush'
 import { XYComponentCore } from 'core/xy-component'
-import { clamp, isNumber } from 'utils/data'
+import { clamp, isArray, isNumber } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 
 // Types
@@ -71,8 +71,9 @@ export class FreeBrush<Datum> extends XYComponentCore<Datum, FreeBrushConfigInte
     let brushRange: FreeBrushSelectionInPixels
     switch (config.mode) {
       case FreeBrushMode.XY: {
-        const xSelectionRange = this._dataRangeToPixelRange([config.selection?.[0][0], config.selection?.[0][1]], xScale)
-        const ySelectionRange = this._dataRangeToPixelRange([config.selection?.[1][0], config.selection?.[1][1]], yScale, true)
+        const selection = config.selection as [[number, number], [number, number]] | undefined
+        const xSelectionRange = this._dataRangeToPixelRange([selection?.[0][0], selection?.[0][1]], xScale)
+        const ySelectionRange = this._dataRangeToPixelRange([selection?.[1][0], selection?.[1][1]], yScale, true)
         brushRange = (xSelectionRange && ySelectionRange) ? [[xSelectionRange[0], ySelectionRange[0]], [xSelectionRange[1], ySelectionRange[1]]] : null
         break
       }
@@ -108,8 +109,9 @@ export class FreeBrush<Datum> extends XYComponentCore<Datum, FreeBrushConfigInte
     let selectedDomain: FreeBrushSelection
     switch (config.mode) {
       case FreeBrushMode.XY: {
-        const xSelection = this._pixelRangeToDataRange([s[0][0], s[1][0]], this.xScale, config.selectionMinLength?.[0] ?? config.selectionMinLength)
-        const ySelection = this._pixelRangeToDataRange([s[0][1], s[1][1]], this.yScale, config.selectionMinLength?.[1] ?? config.selectionMinLength, true)
+        const selection = s as [[number, number], [number, number]]
+        const xSelection = this._pixelRangeToDataRange([selection[0][0], selection[1][0]], this.xScale, isArray(config.selectionMinLength) ? config.selectionMinLength[0] : config.selectionMinLength)
+        const ySelection = this._pixelRangeToDataRange([selection[0][1], selection[1][1]], this.yScale, isArray(config.selectionMinLength) ? config.selectionMinLength[1] : config.selectionMinLength, true)
         selectedDomain = (xSelection && ySelection) ? [
           [xSelection?.[0], xSelection?.[1]],
           [ySelection?.[0], ySelection?.[1]],
@@ -117,12 +119,12 @@ export class FreeBrush<Datum> extends XYComponentCore<Datum, FreeBrushConfigInte
         break
       }
       case FreeBrushMode.Y: {
-        selectedDomain = this._pixelRangeToDataRange(s as [number, number], this.yScale, config.selectionMinLength[0], true)
+        selectedDomain = this._pixelRangeToDataRange(s as [number, number], this.yScale, isArray(config.selectionMinLength) ? config.selectionMinLength[1] : config.selectionMinLength, true)
         break
       }
       case FreeBrushMode.X:
       default: {
-        selectedDomain = this._pixelRangeToDataRange(s as [number, number], this.xScale, config.selectionMinLength[1])
+        selectedDomain = this._pixelRangeToDataRange(s as [number, number], this.xScale, isArray(config.selectionMinLength) ? config.selectionMinLength[0] : config.selectionMinLength)
         break
       }
     }

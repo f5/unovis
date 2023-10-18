@@ -88,6 +88,7 @@ export interface XYContainerConfigInterface<Datum> extends ContainerConfigInterf
   scaleByDomain?: boolean;
 }
 
+
 export const XYContainerDefaultConfig: XYContainerConfigInterface<unknown> = {
   ...ContainerDefaultConfig,
   components: [],

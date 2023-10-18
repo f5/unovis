@@ -1,4 +1,4 @@
-/* eslint-disable dot-notation, no-irregular-whitespace */
+/* eslint-disable no-irregular-whitespace */
 
 // Core
 import { ComponentDefaultConfig, ComponentConfigInterface } from 'core/component/config'
@@ -199,11 +199,11 @@ export const LeafletMapDefaultConfig: LeafletMapConfigInterface<GenericDataRecor
   onMapClick: undefined,
 
   // Point
-  pointLongitude: <Datum>(d: Datum): number => d['longitude'] as number,
-  pointLatitude: <Datum>(d: Datum): number => d['latitude'] as number,
-  pointId: <Datum>(d: Datum): string => d['id'] as string,
-  pointShape: <Datum>(d: Datum): string => d['shape'] as string,
-  pointColor: <Datum>(d: Datum): string => d['color'] as string,
+  pointLongitude: (d: unknown): number => (d as { longitude: number }).longitude,
+  pointLatitude: (d: unknown): number => (d as { latitude: number }).latitude,
+  pointId: (d: unknown): string => (d as { id: string }).id,
+  pointShape: (d: unknown): string => (d as { shape: string }).shape,
+  pointColor: (d: unknown): string => (d as { color: string }).color,
   pointRadius: undefined,
   pointLabel: undefined,
   pointLabelColor: undefined,

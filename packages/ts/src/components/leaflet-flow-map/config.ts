@@ -40,10 +40,10 @@ export interface LeafletFlowMapConfigInterface<PointDatum extends GenericDataRec
 
 export const LeafletFlowMapDefaultConfig: LeafletFlowMapConfigInterface<GenericDataRecord, GenericDataRecord> = {
   ...LeafletMapDefaultConfig,
-  sourceLongitude: <FlowDatum>(f: FlowDatum): number => f['sourceLongitude'] as number,
-  sourceLatitude: <FlowDatum>(f: FlowDatum): number => f['sourceLatitude'] as number,
-  targetLongitude: <FlowDatum>(f: FlowDatum): number => f['targetLongitude'] as number,
-  targetLatitude: <FlowDatum>(f: FlowDatum): number => f['targetLatitude'] as number,
+  sourceLongitude: (f: unknown): number => (f as { sourceLongitude: number }).sourceLongitude as number,
+  sourceLatitude: (f: unknown): number => (f as { sourceLatitude: number }).sourceLatitude as number,
+  targetLongitude: (f: unknown): number => (f as { targetLongitude: number }).targetLongitude as number,
+  targetLatitude: (f: unknown): number => (f as { targetLatitude: number }).targetLatitude as number,
   sourcePointRadius: 3,
   sourcePointColor: '#88919f',
   flowParticleColor: '#949dad',

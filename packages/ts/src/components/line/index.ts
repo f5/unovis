@@ -166,7 +166,7 @@ export class Line<Datum> extends XYComponentCore<Datum, LineConfigInterface<Datu
     return `M${xRange[0]},${yRange[0]} L${xRange[1]},${yRange[0]}`
   }
 
-  private _highlight (datum, i, els): void {
+  private _highlight (datum: Datum): void {
     const { config } = this
 
     if (config.highlightOnHover) {
@@ -176,7 +176,7 @@ export class Line<Datum> extends XYComponentCore<Datum, LineConfigInterface<Datu
     }
   }
 
-  private _resetHighlight (d, i, els): void {
+  private _resetHighlight (): void {
     const { config } = this
 
     if (config.highlightOnHover) {

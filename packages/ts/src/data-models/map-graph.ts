@@ -19,12 +19,9 @@ export class MapGraphDataModel<AreaDatum, PointDatum, LinkDatum> extends CoreDat
   private _links: MapLink<PointDatum, LinkDatum>[] = []
 
   // Model configuration
-  /* eslint-disable-next-line dot-notation */
-  public pointId: ((n: PointDatum, i: number) => string) = n => n['id']
-  /* eslint-disable-next-line dot-notation */
-  public linkSource: ((l: LinkDatum) => number | string | PointDatum) = l => l['source']
-  /* eslint-disable-next-line dot-notation */
-  public linkTarget: ((l: LinkDatum) => number | string | PointDatum) = l => l['target']
+  public pointId: ((n: PointDatum, i: number) => string) = n => (n as unknown as {id: string}).id
+  public linkSource: ((l: LinkDatum) => number | string | PointDatum) = l => (l as unknown as {source: string}).source
+  public linkTarget: ((l: LinkDatum) => number | string | PointDatum) = l => (l as unknown as {target: string}).target
 
   get data (): MapGraphData<AreaDatum, PointDatum, LinkDatum> {
     return this._data

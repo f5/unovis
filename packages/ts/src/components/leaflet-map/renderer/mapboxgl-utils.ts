@@ -1,3 +1,6 @@
+import type L from 'leaflet'
+import type { Map } from 'maplibre-gl'
+
 // Utils
 import { throttle } from 'utils/data'
 
@@ -14,11 +17,15 @@ export function constraintMapView (map: L.Map, latMin = -75, latMax = 85): void 
   }
 }
 
-export function mapboxglWheelEvent (map, layer, event): void {
-  const { wheelDelta, deltaY } = event
+export function mapboxglWheelEvent (
+  map: L.Map,
+  layer: L.Layer & { getMaplibreMap(): Map },
+  event: WheelEvent
+): void {
+  const { deltaY } = event
   if (!layer || !layer.getMaplibreMap) return
   const mapboxmap = layer.getMaplibreMap()
-  const delta = wheelDelta || deltaY * -1 // We use deltaY for Firefox because wheelDelta is not implemented there
+  const delta = deltaY * -1
 
   // Prevent Map from being zoomed-out too far away
   const bounds = map.getBounds()
@@ -33,7 +40,7 @@ export function mapboxglWheelEvent (map, layer, event): void {
 
   const zoom = mapboxmap.getZoom() + delta * 0.001
   const xy = map.mouseEventToLayerPoint(event)
-  map.setZoomAround(xy, zoom + 1, { animate: false, duration: 0 })
+  map.setZoomAround(xy, zoom + 1, { animate: false })
 }
 
 export const mapboxglWheelEventThrottled = throttle(mapboxglWheelEvent, 32)

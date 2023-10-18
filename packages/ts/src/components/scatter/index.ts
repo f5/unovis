@@ -164,8 +164,8 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfigInterfac
   private _getOnScreenData (): ScatterPoint<Datum>[][] {
     const { config, datamodel: { data } } = this
 
-    const xDomain = this.xScale.domain().map(d => +d) // Convert Date to number
-    const yDomain = this.yScale.domain().map(d => +d) // Convert Date to number
+    const xDomain = this.xScale.domain().map((d: number | Date) => +d) // Convert Date to number
+    const yDomain = this.yScale.domain().map((d: number | Date) => +d) // Convert Date to number
     const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
 
     const maxSizeValue = max<number>(flatten(yAccessors.map((y, j) => data?.map(d => getNumber(d, config.size, j)))))
@@ -199,7 +199,7 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfigInterfac
               strokeWidthPx: getNumber(d, config.strokeWidth, j),
               shape: getString(d, config.shape, j) as SymbolType,
               label: getString(d, config.label, j),
-              labelColor: getValue(d, config.labelColor, j),
+              labelColor: getColor(d, config.labelColor, j),
               cursor: getString(d, config.cursor, j),
               groupIndex: j,
               pointIndex: i,

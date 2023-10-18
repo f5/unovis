@@ -2,7 +2,7 @@ import { select, Selection } from 'd3-selection'
 import { symbol } from 'd3-shape'
 import { color } from 'd3-color'
 import { Position } from 'types/position'
-import { Symbol } from 'types/symbol'
+import { Symbol, SymbolType } from 'types/symbol'
 
 // Utils
 import { smartTransition } from 'utils/d3'
@@ -58,7 +58,7 @@ export function updatePoints<Datum> (
     path.attr('d', () => {
       const svgPath = d._point.shape ? symbolGenerator
         .size(Math.PI * pointDiameter * pointDiameter / 4)
-        .type(Symbol[d._point.shape])() : null
+        .type(Symbol[d._point.shape as SymbolType])() : null
       return svgPath
     })
 

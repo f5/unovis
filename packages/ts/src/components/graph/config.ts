@@ -1,4 +1,3 @@
-/* eslint-disable dot-notation */
 // Config
 import { ComponentConfigInterface, ComponentDefaultConfig } from 'core/component/config'
 
@@ -216,8 +215,8 @@ export const GraphDefaultConfig: GraphConfigInterface<GraphInputNode, GraphInput
   layoutParallelNodesPerColumn: 6,
   layoutParallelGroupSpacing: undefined,
   layoutParallelSortConnectionsByGroup: undefined,
-  layoutNodeGroup: (n: GraphInputNode): string => n['group'],
-  layoutParallelNodeSubGroup: (n: GraphInputNode): string => n['subgroup'],
+  layoutNodeGroup: (n: GraphInputNode): string => (n as { group: string }).group,
+  layoutParallelNodeSubGroup: (n: GraphInputNode): string => (n as { subgroup: string }).subgroup,
 
   forceLayoutSettings: {
     linkDistance: 60,
@@ -254,9 +253,9 @@ export const GraphDefaultConfig: GraphConfigInterface<GraphInputNode, GraphInput
   nodeStrokeWidth: 3,
   nodeShape: GraphNodeShape.Circle,
   nodeGaugeValue: 0,
-  nodeIcon: (n: GraphInputNode): string => n['icon'],
+  nodeIcon: (n: GraphInputNode): string => (n as { icon: string }).icon,
   nodeIconSize: undefined,
-  nodeLabel: (n: GraphInputNode): string => n['label'],
+  nodeLabel: (n: GraphInputNode): string => (n as { label: string }).label,
   nodeLabelTrim: true,
   nodeLabelTrimLength: 15,
   nodeLabelTrimMode: TrimMode.Middle,
@@ -267,9 +266,9 @@ export const GraphDefaultConfig: GraphConfigInterface<GraphInputNode, GraphInput
   nodeSideLabels: undefined,
   nodeBottomIcon: undefined,
   nodeDisabled: false,
-  nodeFill: (n: GraphInputNode): string => n['fill'],
+  nodeFill: (n: GraphInputNode): string => (n as { fill: string }).fill,
   nodeGaugeFill: undefined,
-  nodeStroke: (n: GraphInputNode): string => n['stroke'],
+  nodeStroke: (n: GraphInputNode): string => (n as { stroke: string }).stroke,
   nodeEnterPosition: undefined,
   nodeEnterScale: 0.75,
   nodeExitPosition: undefined,

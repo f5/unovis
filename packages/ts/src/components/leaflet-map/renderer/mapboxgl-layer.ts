@@ -13,13 +13,21 @@ import { GenericDataRecord } from 'types/data'
 // Config
 import { LeafletMapConfigInterface } from '../config'
 import { MapLibreStyleSpecs } from './map-style'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import { MaplibreGLLayer } from './leaflet-maplibre-gl'
 
 // Inject MapLibreGL global style
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import mapLibreStyles from './maplibre-gl.css.js'
 injectGlobal(mapLibreStyles)
 
-export function getMaplibreGLLayer<Datum extends GenericDataRecord> (config: LeafletMapConfigInterface<Datum>, leaflet: typeof L, maplibre: typeof Maplibre): L.Layer & { getMaplibreMap(): Map } {
+export function getMaplibreGLLayer<Datum extends GenericDataRecord> (
+  config: LeafletMapConfigInterface<Datum>,
+  leaflet: typeof L,
+  maplibre: typeof Maplibre
+): L.Layer & { getMaplibreMap(): Map } {
   const { accessToken, style } = config
 
   if (isObject(style) && !(style as MapLibreStyleSpecs).glyphs) {

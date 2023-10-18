@@ -128,7 +128,7 @@ export function calculateClusterIndex<D extends GenericDataRecord> (data: D[], c
     map: (d): Supercluster.AnyProps => {
       const shape = getString(d, pointShape)
 
-      const clusterPoint = { shape }
+      const clusterPoint = { shape } as Supercluster.AnyProps
       for (const key of Object.keys(colorMap)) {
         clusterPoint[key] = d[key] || 0
       }

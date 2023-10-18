@@ -13,9 +13,9 @@
       "styles/*": ["./styles/*"],
       "data-models/*": ["./data-models/*"]
     },
+    "noImplicitAny": true,
+    "alwaysStrict": true,
     // To be enabled:
-    // "noImplicitAny": true,
-    // "alwaysStrict": true,
     // "strictNullChecks": true,
     // "strictPropertyInitialization": true,
     "strictFunctionTypes": true,

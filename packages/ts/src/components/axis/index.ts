@@ -208,7 +208,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     // Selecting the <text> elements of the ticks to apply formatting. By default, this selection
     // will include exiting elements, so we're filtering them out.
     const tickText = selection.selectAll<SVGTextElement, number | Date>('g.tick > text')
-      .filter(tickValue => tickValues.some(t => isEqual(tickValue, t))) // We use isEqual to compare Dates
+      .filter(tickValue => tickValues.some((t: number | Date) => isEqual(tickValue, t))) // We use isEqual to compare Dates
       .classed(s.tickLabel, true)
       .style('fill', config.tickTextColor) as Selection<SVGTextElement, number, SVGGElement, unknown> | Selection<SVGTextElement, Date, SVGGElement, unknown>
 
@@ -216,7 +216,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     // We interrupt the transition on tick's <text> to make it 'wrappable'
     tickText.nodes().forEach(node => interrupt(node))
 
-    tickText.each((value, i, elements) => {
+    tickText.each((value: number | Date, i: number, elements: ArrayLike<SVGTextElement>) => {
       const text = config.tickFormat?.(value, i, tickValues) ?? `${value}`
       const textElement = elements[i] as SVGTextElement
       const textMaxWidth = config.tickTextWidth || (config.type === AxisType.X ? this._containerWidth / (ticks.size() + 1) : this._containerWidth / 5)

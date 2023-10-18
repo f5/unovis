@@ -235,7 +235,7 @@ export class ChordDiagram<
     // TODO: Replace with d3-group
     const nestGen = nest<N>()
     config.nodeLevels.forEach(levelAccessor => {
-      nestGen.key(d => d[levelAccessor])
+      nestGen.key((d) => (d as unknown as Record<string, string>)[levelAccessor])
     })
     const root = { key: 'root', values: nestGen.entries(nodes) }
     const hierarchyNodes = hierarchy(root, d => d.values)

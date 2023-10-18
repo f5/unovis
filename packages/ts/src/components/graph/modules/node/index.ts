@@ -11,6 +11,7 @@ import { trimString } from 'utils/text'
 import { polygon } from 'utils/path'
 import { smartTransition } from 'utils/d3'
 import { getBoolean, getNumber, getString, getValue, throttle } from 'utils/data'
+import { getColor } from 'utils/color'
 
 // Local Types
 import { GraphNode, GraphCircleLabel, GraphNodeAnimationState, GraphNodeAnimatedElement, GraphNodeShape } from '../../types'
@@ -40,6 +41,10 @@ import * as nodeSelectors from './style'
 
 const SIDE_LABEL_DEFAULT_RADIUS = 10
 
+export interface GraphNodeSVGGElement extends SVGGElement {
+  nodeShape?: string;
+}
+
 export function createNodes<N extends GraphInputNode, L extends GraphInputLink> (
   selection: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, unknown>,
   config: GraphConfigInterface<N, L>
@@ -47,7 +52,7 @@ export function createNodes<N extends GraphInputNode, L extends GraphInputLink> 
   const { nodeShape } = config
 
   selection.each((d, i, elements) => {
-    const element = elements[i]
+    const element = elements[i] as GraphNodeSVGGElement
     const group = select<SVGGElement, GraphNode<N, L>>(element)
     group
       .attr('transform', (d: GraphNode<N, L>, i) => {
@@ -61,8 +66,7 @@ export function createNodes<N extends GraphInputNode, L extends GraphInputLink> 
 
     const shape = getString(d, nodeShape, d._index)
     /** Todo: The 'nodeShape' storing logic below it a temporary fix, needs a cleaner implementation */
-    // eslint-disable-next-line dot-notation
-    element['nodeShape'] = shape
+    element.nodeShape = shape
     appendShape(group, shape, nodeSelectors.node, nodeSelectors.customNode, d._index)
     appendShape(group, shape, nodeSelectors.nodeSelection, nodeSelectors.customNode, d._index)
     group.append('path').attr('class', nodeSelectors.nodeGauge)
@@ -127,18 +131,16 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
 
   // Re-create nodes to update shapes if they were changes
   selection.each((d, i, elements) => {
-    const element = elements[i]
+    const element = elements[i] as GraphNodeSVGGElement
     const group = select<SVGGElement, GraphNode<N, L>>(element)
     const shape = getString(d, nodeShape, d._index)
 
-    // eslint-disable-next-line dot-notation
-    if (element['nodeShape'] !== shape) {
+    if (element.nodeShape !== shape) {
       group.select(`.${nodeSelectors.node}`).remove()
       appendShape(group, nodeShape, nodeSelectors.node, nodeSelectors.customNode, d._index, `.${nodeSelectors.nodeSelection}`)
       group.select(`.${nodeSelectors.nodeSelection}`).remove()
       appendShape(group, shape, nodeSelectors.nodeSelection, null, d._index, `.${nodeSelectors.nodeGauge}`)
-      // eslint-disable-next-line dot-notation
-      element['nodeShape'] = shape
+      element.nodeShape = shape
     }
   })
 
@@ -179,7 +181,7 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
       .call(updateShape, nodeShape, nodeSize, d._index)
       .attr('stroke-width', getNumber(d, nodeStrokeWidth, d._index) ?? 0)
       .style('fill', getNodeColor(d, nodeFill, d._index))
-      .style('stroke', getString(d, nodeStroke, d._index) ?? null)
+      .style('stroke', getColor(d, nodeStroke, d._index, true) ?? null)
 
     const nodeBBox = (node.node() as SVGGraphicsElement).getBBox()
 

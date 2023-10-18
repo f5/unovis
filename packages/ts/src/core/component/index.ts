@@ -61,6 +61,8 @@ export class ComponentCore<
     this.g = select(this.element) as Selection<SVGGElement, unknown, null, undefined> | Selection<HTMLElement, unknown, null, undefined>
 
     // Setting the root class if available
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     // eslint-disable-next-line dot-notation
     const rootClass = this.constructor?.['selectors']?.root as string
     if (rootClass) this.g.attr('class', rootClass)
@@ -133,11 +135,13 @@ export class ComponentCore<
   private _bindEvents (events = this.events, suffix = ''): void {
     Object.keys(events).forEach(className => {
       Object.keys(events[className]).forEach(eventType => {
-        const selection = (this.g as Selection<SVGGElement | HTMLElement, unknown, null, undefined>).selectAll(`.${className}`)
-        selection.on(eventType + suffix, (event: Event, d) => {
+        const selection = (this.g as Selection<SVGGElement | HTMLElement, unknown, null, undefined>)
+          .selectAll<SVGGElement | HTMLElement, unknown>(`.${className}`)
+        selection.on(eventType + suffix, (event: MouseEvent & WheelEvent & PointerEvent & TouchEvent, d) => {
           const els = selection.nodes()
           const i = els.indexOf(event.currentTarget as SVGGElement | HTMLElement)
-          return events[className][eventType](d, event, i, els)
+          const eventFunction = events[className][eventType as VisEventType]
+          return eventFunction(d, event, i, els)
         })
       })
     })

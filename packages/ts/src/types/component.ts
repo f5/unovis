@@ -1,5 +1,7 @@
 export enum ComponentType {
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   SVG,
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   HTML,
 }
 

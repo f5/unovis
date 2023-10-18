@@ -1,4 +1,3 @@
-/* eslint-disable dot-notation */
 import { GeoProjection } from 'd3-geo'
 import { ComponentConfigInterface, ComponentDefaultConfig } from 'core/component/config'
 
@@ -93,27 +92,27 @@ export const TopoJSONMapDefaultConfig: TopoJSONMapConfigInterface<unknown, unkno
   disableZoom: false,
   zoomFactor: undefined,
 
-  linkWidth: <LinkDatum>(d: LinkDatum): number => d['width'] ?? 1,
-  linkColor: <LinkDatum>(d: LinkDatum): string => d['color'] ?? null,
+  linkWidth: (d: unknown): number => (d as { width: number }).width ?? 1,
+  linkColor: (d: unknown): string => (d as { color: string }).color ?? null,
   linkCursor: null,
-  linkId: <LinkDatum>(d: LinkDatum, i: number | undefined): string => `${d['id'] ?? i}`,
-  linkSource: <LinkDatum>(d: LinkDatum): (number | string | unknown) => d['source'],
-  linkTarget: <LinkDatum>(d: LinkDatum): (number | string | unknown) => d['target'],
+  linkId: (d: unknown, i: number | undefined): string => `${(d as { id: string }).id ?? i}`,
+  linkSource: (d: unknown): (number | string | unknown) => (d as { source: string }).source,
+  linkTarget: (d: unknown): (number | string | unknown) => (d as { target: string }).target,
 
-  areaId: <AreaDatum>(d: AreaDatum): string => d['id'] ?? '',
-  areaColor: <AreaDatum>(d: AreaDatum): string => d['color'] ?? null,
+  areaId: (d: unknown): string => (d as { id: string }).id ?? '',
+  areaColor: (d: unknown): string => (d as { color: string }).color ?? null,
   areaCursor: null,
 
-  longitude: <PointDatum>(d: PointDatum): number => d['longitude'],
-  latitude: <PointDatum>(d: PointDatum): number => d['latitude'],
-  pointColor: <PointDatum>(d: PointDatum): string => d['color'] ?? null,
-  pointRadius: <PointDatum>(d: PointDatum): number => d['radius'] ?? 8,
-  pointStrokeWidth: <PointDatum>(d: PointDatum): number => d['strokeWidth'] ?? 0,
+  longitude: (d: unknown): number => (d as { longitude: number }).longitude,
+  latitude: (d: unknown): number => (d as { latitude: number }).latitude,
+  pointColor: (d: unknown): string => (d as { color: string }).color ?? null,
+  pointRadius: (d: unknown): number => (d as { radius: number }).radius ?? 8,
+  pointStrokeWidth: (d: unknown): number => (d as { strokeWidth: number }).strokeWidth ?? 0,
   pointCursor: null,
   pointLabel: undefined,
   pointLabelPosition: MapPointLabelPosition.Bottom,
   pointLabelTextBrightnessRatio: 0.65,
-  pointId: <PointDatum>(d: PointDatum): string => d['id'],
+  pointId: (d: unknown): string => (d as { id: string }).id,
 
   heatmapMode: false,
   heatmapModeBlurStdDeviation: 8,

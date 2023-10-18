@@ -94,7 +94,7 @@ export class Graph<
   private _zoomBehavior: ZoomBehavior<SVGGElement, unknown>
   private _isAutoFitDisabled = false
   private _scale: number
-  private _initialTransform
+  private _initialTransform: ZoomTransform
   private _isDragging = false
 
   events = {
@@ -587,8 +587,9 @@ export class Graph<
     //   refit the layout after recalculation (e.g. on container resize)
     if (event?.sourceEvent) {
       const diff = Object.keys(transform).reduce((acc, prop) => {
-        const val = transform[prop]
-        const dVal = Math.abs(val - this._initialTransform[prop])
+        const propVal = transform[prop as keyof ZoomTransform] as number
+        const initialPropVal = this._initialTransform[prop as keyof ZoomTransform] as number
+        const dVal = Math.abs(propVal - initialPropVal)
         return prop === 'k' ? 2 * dVal : dVal / 50
       }, 0)
 
