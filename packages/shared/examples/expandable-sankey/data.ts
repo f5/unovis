@@ -1,4 +1,4 @@
-import { SankeyNode } from '@unovis/ts'
+import type { SankeyNode } from '@unovis/ts'
 
 export type Node = {
   id: string;

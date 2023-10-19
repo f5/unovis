@@ -1,4 +1,4 @@
-import { BulletLegendItemInterface } from '@unovis/ts'
+import type { BulletLegendItemInterface } from '@unovis/ts'
 
 export enum Country {
   UnitedStates = 'us',
