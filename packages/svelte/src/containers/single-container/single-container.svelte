@@ -1,45 +1,57 @@
 <script lang="ts">
   import { ComponentCore, SingleContainer, SingleContainerConfigInterface, Tooltip } from '@unovis/ts'
-  import { onMount, setContext } from 'svelte'
+  import { arePropsEqual } from '../../utils/props'
+  import { onDestroy, setContext } from 'svelte'
 
+  // Generics
   type Data = $$Generic
 
-  export let data: Data
-
+  // Internal variables
   let chart: SingleContainer<Data> | undefined
-  const config: SingleContainerConfigInterface<Data> = {
-    component: undefined,
-    tooltip: undefined,
-  }
   let ref: HTMLDivElement
+  let component: ComponentCore<Data>
+  let tooltip: Tooltip
 
-  const initChart = () => {
-    if (data && config.component && ref) {
-      chart = new SingleContainer<Data>(ref, config, data)
-    }
+  // Props
+  export let data: Data
+  let config: SingleContainerConfigInterface<Data>
+  $: props = $$restProps as SingleContainerConfigInterface<Data>
+  $: config = { component, tooltip, ...props }
+
+  // Helpers
+  function initChart () {
+    chart = new SingleContainer<Data>(ref, config, data)
   }
-  $: chart ? chart.setData(data, true) : initChart()
-  $: chart ? chart.updateContainer({ ...config, ...($$restProps as SingleContainerConfigInterface<Data>) }) : initChart()
+  function updateChart (forceUpdate = false) {
+    if (forceUpdate) chart?.update(config, null, data)
+    else if (shouldUpdate) chart?.updateContainer(config)
+    shouldUpdate = false
+  }
 
-  onMount(() => {
-    initChart()
-    return () => chart?.destroy()
-  })
+  // Reactive statements
+  $: chart?.setData(data)
+  $: shouldUpdate = Object.keys(props).some(k => !arePropsEqual(chart?.config[k], props[k]))
+  $: if (shouldUpdate) updateChart()
+  $: if (component) chart === undefined ? initChart() : updateChart(true)
 
+  // Lifecycle and contexts
   setContext('tooltip', () => ({
-    update: (t: Tooltip) => { config.tooltip = t },
-    destroy: () => { config.tooltip = undefined },
+    update: (t: Tooltip) => { tooltip = t },
+    destroy: () => { tooltip = undefined },
   }))
 
   setContext('component', () => ({
-    update: (c: ComponentCore<Data>) => { config.component = c },
-    destroy: () => { config.component = undefined },
+    update: (c: ComponentCore<Data>) => { component = c },
+    destroy: () => { component = undefined },
   }))
+
+  onDestroy(() => chart?.destroy())
 </script>
 
 <vis-single-container bind:this={ref} class='unovis-single-container'>
   <slot/>
 </vis-single-container>
+
 
 <style>
   .unovis-single-container {
