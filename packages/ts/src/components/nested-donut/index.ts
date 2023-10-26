@@ -1,6 +1,6 @@
 import { Selection } from 'd3-selection'
 import { arc, pie } from 'd3-shape'
-import { hierarchy, partition } from 'd3-hierarchy'
+import { hierarchy, HierarchyNode, partition } from 'd3-hierarchy'
 import { scaleLinear, ScaleLinear } from 'd3-scale'
 import { group } from 'd3-array'
 
@@ -179,10 +179,12 @@ NestedDonutConfigInterface<Datum>
 
     partitionData
       .each(node => {
+        // Starting with the root, we transform the original data returned from d3.hierarchy
+        const n = node as unknown as HierarchyNode<[string, number[]]>
         node.data = {
-          key: (node.data as any)[0] as string,
-          values: ((node.data as any)[1])?.length ? (node.data as any)[1].map((index: number) => data[index]) : [],
-          root: node.parent?.data.root ?? (node.data as any)[0],
+          key: n.data[0],
+          values: Array.isArray(n.data[1]) ? (n.data[1] as number[]).map(i => data[i]) : [],
+          root: node.parent?.data?.root ?? n.data[0],
         }
         node._id = `root${partitionData.path(node).map(d => d.data.key).join('->')}`
         if (isNumberWithinRange(node.depth - 1, [0, layers.length - 1])) {
@@ -191,8 +193,9 @@ NestedDonutConfigInterface<Datum>
           node.y1 = node._layer._outerRadius
         }
       })
-      .eachAfter(node => node.children?.forEach(ch => node.data.values.push(...ch.data.values)))
-      .eachBefore(node => {
+      .eachBefore((node) => {
+        // Once ancestors have been visited, children properties that are
+        // dependent on the parent's data are populated here
         if (!node.children || node.depth === rootNode.height - 1) return
 
         const positions = pie<NestedDonutSegment<Datum>>()
@@ -219,6 +222,11 @@ NestedDonutConfigInterface<Datum>
             fillOpacity: color === null ? opacity(positions[i].index) : null,
           }
         })
+      })
+      .eachAfter(node => {
+        // Once hierarchy has been traversed, we append children data the parent
+        // parent.data serves as a reference to all the original data it represents
+        node.children?.forEach(ch => node.data.values.push(...ch.data.values))
       })
 
     const segments = partitionData.descendants().filter(d => d.parent?.value && d.data.key)
