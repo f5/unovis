@@ -64,7 +64,8 @@ function injectSVGDefs (): void {
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
   svg.setAttribute('height', '100%')
   svg.setAttribute('width', '100%')
-  svg.setAttribute('position', 'absolute')
+  svg.style.position = 'fixed'
+  svg.style.zIndex = '-99999999'
   svg.innerHTML = `<defs>${svgDefs}</defs>`
   document.body.appendChild(svg)
 }
