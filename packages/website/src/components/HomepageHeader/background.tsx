@@ -56,7 +56,7 @@ export default function Background (): JSX.Element {
         strokeMiterlimit: 2,
       }}
     >
-      <rect x="0" y="0" width="2436" height="1125" style={{ fill: '#D9C6BB' }}/>
+      <rect x="0" y="0" width="2436" height="1125" style={{ fill: 'var(--header-banner-background)' }}/>
       <g transform={`translate(0, ${isSmallScreen ? 150 : 0}) rotate(${(dx + dy) / 300} ${window?.innerWidth / 2 || 0} ${window?.innerHeight / 2 || 0})`}>
         <g transform="matrix(0.251313,-0.0632911,0.108076,0.429143,625.985,411.389)">
           <rect x={430 + dx / 5} y={866 + dy / 5} width="788" height="77" style={{ fill: 'rgb(255,214,81)' }}/>
