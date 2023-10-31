@@ -5,6 +5,9 @@
 
   // Generics
   type Data = $$Generic
+  interface $$Props extends SingleContainerConfigInterface<Data> {
+    data?: Data;
+  }
 
   // Internal variables
   let chart: SingleContainer<Data> | undefined
@@ -14,6 +17,22 @@
 
   // Props
   export let data: Data
+  export let className = ''
+  /**
+   * CSS class string. Requires `:global` modifier to take effect. _i.e._
+   * ```css
+   * div :global(.chart) { }
+   * ```
+   * @example
+   * <div>
+   *     <VisSingleContainer class='chart'>
+   *        ...
+   *     </VisSingleContainer>
+   * </div>
+   *
+   * @see {@link https://svelte.dev/docs/svelte-components#styles}
+  */
+  export { className as class }
   let config: SingleContainerConfigInterface<Data>
   $: props = $$restProps as SingleContainerConfigInterface<Data>
   $: config = { component, tooltip, ...props }
@@ -48,7 +67,7 @@
   onDestroy(() => chart?.destroy())
 </script>
 
-<vis-single-container bind:this={ref} class='unovis-single-container'>
+<vis-single-container bind:this={ref} class={`unovis-single-container ${className}`}>
   <slot/>
 </vis-single-container>
 

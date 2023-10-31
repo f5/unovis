@@ -3,8 +3,28 @@
   import { onMount, setContext } from 'svelte'
 
   type Datum = $$Generic
+  interface $$Props extends XYContainerConfigInterface<Datum> {
+    data?: Datum[];
+  }
 
+  // Props
   export let data: Datum[]
+  export let className = ''
+  /**
+   * CSS class string. Requires `:global` modifier to take effect. _i.e._
+   * ```css
+   * div :global(.chart) { }
+   * ```
+   * @example
+   * <div>
+   *     <VisXYContainer class='chart'>
+   *        ...
+   *     <VisXYContainer>
+   * </div>
+   *
+   * @see {@link https://svelte.dev/docs/svelte-components#styles}
+  */
+  export { className as class }
 
   let chart: XYContainer<Datum>
   const config: XYContainerConfigInterface<Datum> = {
@@ -45,7 +65,7 @@
   }))
 </script>
 
-<vis-xy-container bind:this={ref} class='unovis-xy-container'>
+<vis-xy-container bind:this={ref} class={`unovis-xy-container ${className}`}>
   <slot />
 </vis-xy-container>
 
