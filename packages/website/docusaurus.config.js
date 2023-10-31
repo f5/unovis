@@ -65,8 +65,13 @@ const config = {
             label: 'Gallery',
           },
           {
+            to: 'releases',
+            label: 'Releases',
+            position: 'left',
+          },
+          {
             href: 'https://github.com/f5/unovis',
-            label: 'Source Code',
+            label: 'GitHub',
             position: 'right',
           },
         ],
@@ -132,6 +137,14 @@ const config = {
         // Optional: path for search page that enabled by default (`false` to disable it)
         searchPagePath: 'search',
       },
+      announcementBar: {
+        id: 'vue_support',
+        content:
+          '✨ Announcing Vue 3 support in <a rel="noopener noreferrer" href="/releases/1.3">Unovis 1.3</a> ✨',
+        backgroundColor: '#fafbfc',
+        textColor: '#091E42',
+        isCloseable: false,
+      },
     }),
 
   plugins: [
@@ -169,6 +182,24 @@ const config = {
         }
       },
     }),
+    [
+      '@docusaurus/plugin-content-blog',
+      {
+        /**
+         * Required for any multi-instance plugin
+         */
+        id: 'releases',
+        /**
+         * URL route for the blog section of your site.
+         * *DO NOT* include a trailing slash.
+         */
+        routeBasePath: 'releases',
+        /**
+         * Path to data on filesystem relative to site dir.
+         */
+        path: './releases',
+      },
+    ],
   ],
 }
 
