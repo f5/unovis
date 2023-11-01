@@ -8,7 +8,7 @@
   }
 
   // Props
-  export let data: Datum[]
+  export let data: Datum[] = undefined
   export let className = ''
   /**
    * CSS class string. Requires `:global` modifier to take effect. _i.e._

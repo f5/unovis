@@ -21,6 +21,7 @@ module.exports = {
     rules: {
       'svelte/indent': ['error'],
       'no-use-before-define': 'off',
+      'no-undef-init': 'off',
       '@typescript-eslint/no-unsafe-call': 'off',
       '@typescript-eslint/no-unsafe-assignment': 'off',
       '@typescript-eslint/no-unsafe-member-access': 'off',
