@@ -16,7 +16,7 @@
   let tooltip: Tooltip
 
   // Props
-  export let data: Data
+  export let data: Data = undefined
   export let className = ''
   /**
    * CSS class string. Requires `:global` modifier to take effect. _i.e._
