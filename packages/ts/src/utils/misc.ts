@@ -1,5 +1,5 @@
 import { StringAccessor } from 'types/accessor'
-import { Rect } from 'types/misc'
+import { LengthUnit, Rect } from 'types/misc'
 import { getString, isString } from 'utils/data'
 import toPx from 'to-px'
 
@@ -55,4 +55,12 @@ export function rectIntersect (rect1: Rect, rect2: Rect, tolerancePx = 0): boole
 export function getHref<T> (d: T, identifier: StringAccessor<T>): string {
   const id = getString(d, identifier)
   return id ? `url(#${id})` : null
+}
+
+export function parseUnit (value: LengthUnit, basis = 0): number {
+  if (!value) return 0
+  else if (typeof value === 'number') return value
+  else if (value.endsWith('%')) return basis * parseFloat(value) / 100
+  else if (value.endsWith('px')) return parseFloat(value)
+  else return parseFloat(value) || 0
 }

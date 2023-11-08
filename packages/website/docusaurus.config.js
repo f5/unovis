@@ -171,6 +171,7 @@ const config = {
     () => ({
       configureWebpack () {
         return {
+          cache: false, // Disable cache to prevent issues with building after updating Unovis packages
           module: {
             rules: [
               {

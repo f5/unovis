@@ -28,6 +28,7 @@ export function getComponentList (
 
     // Ancillary components
     { name: 'Tooltip', sources: ['/components/tooltip'], dataType: null, angularProvide: 'VisGenericComponent', elementSuffix: 'tooltip' },
+    { name: 'Annotations', sources: ['/components/annotations'], dataType: 'Datum[]', elementSuffix: 'annotations', angularProvide: 'VisXYComponent' },
 
     // Unique cases (you can still generate a wrapper for these components, but most likely it will require some changes)
     // { name: 'LeafletMap', sources: [coreComponentConfigPath, '/components/leaflet-map'], dataType: 'Datum[]', angularProvide: 'VisCoreComponent', svelteStyles: ['display:block', 'position:relative'] },

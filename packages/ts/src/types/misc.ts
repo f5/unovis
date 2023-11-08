@@ -8,3 +8,5 @@ export type Rect = {
   width: number;
   height: number;
 }
+
+export type LengthUnit = number | `${number}%` | `${number}px`
