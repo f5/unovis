@@ -19,4 +19,4 @@ typescript-plugin-css-modules         perpetual       MIT           4.2.3       
 webpack                               perpetual       MIT           5.88.2             Tobias Koppers @sokra
 webpack-cli                           perpetual       MIT           5.0.1              n/a
 webpack-dev-server                    perpetual       MIT           4.11.1             Tobias Koppers @sokra
-@unovis/ts                            perpetual       Apache-2.0    1.2.2              Nikita Rokotyan, F5 Inc. <nikita@f5.com> (https://rokotyan.com)
+@unovis/ts                            perpetual       Apache-2.0    1.3.0              Nikita Rokotyan, F5 Inc. <nikita@f5.com> (https://rokotyan.com)
