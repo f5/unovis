@@ -235,6 +235,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
         console.warn('Unovis | Timeline: Line segments should not have negative lengths. Setting to 0.')
       }
 
+      // Testing
       select(elements[i])
         .attr('x', xScale(x))
         .attr('y', yStart + y + (config.rowHeight - height) / 2)
