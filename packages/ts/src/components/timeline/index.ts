@@ -166,24 +166,28 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
 
     // Lines
     const lines = this._linesGroup.selectAll<SVGRectElement, Datum>(`.${s.line}`)
-      .data(data, (d: Datum, i) => `${getString(d, config.id, i) ?? i}`)
+      .data(data, (d: Datum, i) => getString(d, config.id, i) ?? [
+        this._getRecordType(d, i), getNumber(d, config.x, i),
+      ].join('-'))
+
     const linesEnter = lines.enter().append('rect')
       .attr('class', s.line)
       .classed(s.rowOdd, config.alternatingRowColors
         ? (d, i) => !(recordLabelsUnique.indexOf(this._getRecordType(d, i)) % 2)
         : null)
-      .style('fill', (d, i) => getColor(d, config.color, i))
+      .style('fill', (d, i) => getColor(d, config.color, ordinalScale(this._getRecordType(d, i))))
+      .call(this._positionLines.bind(this), ordinalScale)
       .attr('transform', 'translate(0, 10)')
       .style('opacity', 0)
-    this._positionLines(linesEnter, ordinalScale)
 
-    const linesMerged = smartTransition(linesEnter.merge(lines), duration)
+    const linesMerged = linesEnter.merge(lines)
       .style('fill', (d, i) => getColor(d, config.color, ordinalScale(this._getRecordType(d, i))))
-      .attr('transform', 'translate(0, 0)')
       .style('cursor', (d, i) => getString(d, config.cursor, i))
-      .style('opacity', 1)
+      .call(this._positionLines.bind(this), ordinalScale)
 
-    this._positionLines(linesMerged, ordinalScale)
+    smartTransition(linesMerged, duration)
+      .attr('transform', 'translate(0, 0)')
+      .style('opacity', 1)
 
     smartTransition(lines.exit(), duration)
       .style('opacity', 0)
@@ -243,7 +247,6 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
           : Math.max(0, width))
         .attr('height', height)
         .attr('rx', config.lineCap ? height / 2 : null)
-        .style('opacity', 1)
     })
   }
 

@@ -35,6 +35,7 @@ export interface TimelineConfigInterface<Datum> extends WithOptional<XYComponent
 
 export const TimelineDefaultConfig: TimelineConfigInterface<unknown> = {
   ...XYComponentDefaultConfig,
+  id: undefined,
   color: (d: unknown): string => (d as { color: string }).color,
   lineWidth: 8,
   lineCap: false,
