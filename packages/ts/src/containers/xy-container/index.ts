@@ -247,8 +247,8 @@ export class XYContainer<Datum> extends ContainerCore {
       // Pass accessors
       const yAccessors = this.components.filter(c => !c.stacked).map(c => c.config.y)
       const yStackedAccessors = this.components.filter(c => c.stacked).map(c => c.config.y)
-      const baselineComponentConfig = this.components.find(c => (c.config as AreaConfigInterface<Datum>).baseline).config as AreaConfigInterface<Datum>
-      const baselineAccessor = baselineComponentConfig.baseline
+      const baselineComponentConfig = this.components.find(c => (c.config as AreaConfigInterface<Datum>).baseline)?.config as AreaConfigInterface<Datum>
+      const baselineAccessor = baselineComponentConfig?.baseline
 
       crosshair.accessors = {
         x: this.components[0]?.config.x,
