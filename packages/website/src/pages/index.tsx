@@ -54,6 +54,11 @@ export default function Home (): JSX.Element {
                     {example.codeSvelte}
                   </CodeBlock>
                 </TabItem>
+                <TabItem value="vue" label="Vue">
+                  <CodeBlock language="html">
+                    {example.codeVue}
+                  </CodeBlock>
+                </TabItem>
                 <TabItem value="typescript" label="TypeScript">
                   <CodeBlock language="tsx">
                     {example.codeTs}
