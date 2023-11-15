@@ -84,7 +84,7 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfigInterface<Da
       .endAngle(config.angleRange?.[1] ?? 2 * Math.PI)
       .padAngle(config.padAngle)
       .value(d => getNumber(d.datum, config.value, d.index) || 0)
-      .sort((a, b) => config.sortFunction(a.datum, b.datum))
+      .sort((a, b) => config.sortFunction?.(a.datum, b.datum))
 
     this.arcGroup.attr('transform', `translate(${this._width / 2},${this._height / 2})`)
 
