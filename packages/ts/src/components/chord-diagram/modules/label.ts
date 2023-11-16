@@ -83,7 +83,7 @@ export function createLabel<N extends ChordInputNode, L extends ChordInputLink> 
     .attr('transform', d => getLabelTransform(d, config, radiusScale))
 
   selection.append('text')
-    .attr('class', s.label)
+    .attr('class', s.labelText)
     .style('fill', d => getColor(d.data, config.nodeColor, d.height))
 }
 
@@ -100,7 +100,7 @@ export function updateLabel<N extends ChordInputNode, L extends ChordInputLink> 
     .attr('transform', d => getLabelTransform(d, config, radiusScale))
     .style('opacity', 1)
 
-  const label: Selection<SVGTextElement, ChordNode<N>, SVGElement, unknown> = selection.select(`.${s.label}`)
+  const label: Selection<SVGTextElement, ChordNode<N>, SVGElement, unknown> = selection.select(`.${s.labelText}`)
   label.select('textPath').remove()
   label
     .text(d => getString(d.data, nodeLabel))

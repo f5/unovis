@@ -71,6 +71,10 @@ export class ChordDiagram<
       mouseover: this._onLinkMouseOver.bind(this),
       mouseout: this._onLinkMouseOut.bind(this),
     },
+    [ChordDiagram.selectors.label]: {
+      mouseover: this._onNodeMouseOver.bind(this),
+      mouseout: this._onNodeMouseOut.bind(this),
+    },
   }
 
   private get _forceHighlight (): boolean {
@@ -208,11 +212,11 @@ export class ChordDiagram<
     // Labels
     const labelWidth = size - radius - config.nodeWidth
     const labels = this.labelGroup
-      .selectAll<SVGGElement, ChordNode<N>>(`.${s.gLabel}`)
+      .selectAll<SVGGElement, ChordNode<N>>(`.${s.label}`)
       .data(this._nodes, d => String(d.uid))
 
     const labelEnter = labels.enter().append('g')
-      .attr('class', s.gLabel)
+      .attr('class', s.label)
       .call(createLabel, config, this.radiusScale)
 
     const labelsMerged = labels.merge(labelEnter)
