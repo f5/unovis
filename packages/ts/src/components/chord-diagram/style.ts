@@ -53,16 +53,15 @@ export const highlightedNode = css`
   stroke-width: 1.5;
 `
 
-export const gLabel = css`
-  label: group-label;
-`
-
 export const label = css`
   label: label;
+`
+
+export const labelText = css`
+  label: label-text:
 
   dominant-baseline: middle;
   user-select: none;
-  pointer-events: none;
 
   > textPath {
     dominant-baseline: central;
