@@ -13,6 +13,7 @@ export enum VerticalAlign {
 export enum FitMode {
   Wrap = 'wrap',
   Trim = 'trim',
+  Rotate = 'rotate',
 }
 
 export enum TextAlign {
@@ -45,6 +46,8 @@ export type UnovisText = {
 export type UnovisWrappedText = UnovisText & {
   // An array of text lines, where each element represents a single line of text.
   _lines: string[];
+  // Maximum width of any line of text in this text block
+  _maxWidth: number;
   // Estimated height of this text block
   _estimatedHeight: number;
 }
@@ -62,6 +65,8 @@ export type UnovisTextOptions = {
   verticalAlign?: VerticalAlign | string;
   // The horizontal text alignment ('left', 'center', or 'right').
   textAlign?: TextAlign | string;
+  // The strategy for containing text within the available width.
+  fitMode?: FitMode | string;
   // Whether to use a fast estimation method or a more accurate one for text calculations.
   fastMode?: boolean;
   // Force word break if they don't fit into the width

@@ -232,6 +232,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
         const textOptions: UnovisTextOptions = {
           verticalAlign: config.type === AxisType.X ? VerticalAlign.Top : VerticalAlign.Middle,
           width: textMaxWidth,
+          fitMode: config.tickTextFitMode,
           separator: config.tickTextSeparator,
           wordBreak: config.tickTextForceWordBreak,
         }
