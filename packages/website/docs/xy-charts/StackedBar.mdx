@@ -3,10 +3,10 @@ sidebar_label: Stacked Bar
 title: Stacked Bar
 description: Learn how to configure a Stacked Bar chart
 ---
-import BrowserOnly from '@docusaurus/BrowserOnly'
+
 import CodeBlock from '@theme/CodeBlock'
 import { PropTable } from '../components/props-table'
-import { data, generateDataRecords } from '../utils/data'
+import { generateDataRecords } from '../utils/data'
 import { XYWrapper, XYWrapperWithInput, DynamicXYWrapper } from '../wrappers/xy-wrapper'
 
 export const defaultProps = (n=10) => ({
@@ -16,19 +16,55 @@ export const defaultProps = (n=10) => ({
   y: d=>d.y,
 });
 
-### Basic configuration
+## Basic Configuration
 The _Stacked Bar_ component has been designed to work together with _XY Container_. The minimal _Stacked Bar_ configuration looks like:
 
 <XYWrapper {...defaultProps()} showContext="full"/>
 
-### Multiple Stacked Bars
+## Multiple Stacked Bars
 _Stacked Bar_ can accept an array of y accessors to display values as a stack of bars:
 <XYWrapper {...defaultProps()} showContext="full" y={[d => d.y, d => d.y1, d => d.y2]}/>
 
-### Orientation
+## Orientation
 _Stacked Bar_ supports horizontal and vertical orientation.
-<XYWrapperWithInput {...defaultProps()} y={[d => d.y, d => d.y1, d => d.y2]} height={250} showAxes property="orientation" inputType="select" options={["vertical", "horizontal"]}/>
+<XYWrapperWithInput {...defaultProps()} y={[d => d.y, d => d.y1, d => d.y2]} height={250} showAxes property="orientation" inputType="select" options={["horizontal","vertical"]}/>
 
+## Rounded Corners
+You can apply rounded corners to the top bar in your _Stacked Bar_ component using the `roundedCorners` property, which accepts
+either a `number` (in pixels) or `boolean` argument.
+<XYWrapperWithInput
+    {...defaultProps()}
+    property="roundedCorners"
+    inputType="checkbox"
+    defaultValue={true}
+/>
+
+## Bar Color
+Set the color of each bar by assigning the color property to a color string, a color accessor function
+or an array of color strings.
+
+### Stacked Bars
+For stacked data, use an array of values or a single callback function.
+
+```ts
+// Either of these work
+const colors = ['red', 'green', 'blue']
+const color = (d: DataRecord, i: number) => ['red', 'green', 'blue'][i]
+```
+
+<XYWrapper excludeTabs {...defaultProps()} y={[d => d.y, d => d.y1, d => d.y2]} showContext='container' color={['red', 'green', 'blue']}/>
+
+### Non-Stacked Bars
+If you want non-stacked data (i.e. single bars) to display variable colors, you can use a single
+color accessor. The following sets the color based on the value of y:
+
+```ts
+const color = (d: DataRecord) => d.y > 7 ? '#FF4F4E' : '#1acb9a'}
+```
+<XYWrapper excludeTabs {...defaultProps()} showContext="minimal" showAxes={true} color={(d,i) => d.y > 7 ? '#FF4F4E' : '#1acb9a'}/>
+
+
+## Bar Sizing
 ### Bar Width
 By default, the width of the bars is calculated automatically based on their count. But you can also strictly set the bar's width in pixels using the barWidth property:
 <XYWrapperWithInput {...defaultProps()} property="barWidth" inputType="number" defaultValue={5}/>
@@ -41,7 +77,7 @@ maximum bar width to prevent the bars from being too wide when there are just a 
 Another way to control the bar's width is by changing the barPadding property, which specifies how much of the available sector should be empty, in the range of [0,1).
 <XYWrapperWithInput {...defaultProps()} property="barPadding" inputType="range" inputProps={{ min: 0, max: 1, step: 0.1}} defaultValue={0.5}/>
 
-### Bar Height Limit
+### Minimum Bar Height
 When you have highly scattered data with very low and high values, the bars corresponding to the lower values can be so small, so they become invisible.
 If you want to prevent that you can set the minimum bar height to 1 pixel using the `barMinHeight1Px` boolean property.
 <XYWrapperWithInput name="StackedBar"
@@ -49,34 +85,17 @@ If you want to prevent that you can set the minimum bar height to 1 pixel using 
     data={generateDataRecords(10).map((d, i)=> ({ x: d.x, y: i % 2 === 1 ? d.y * 20 : Math.random() }))}
     property="barMinHeight1Px"  inputType="checkbox" showAxes/>
 
-### Dealing With Inconsisent Data
+## Preventing Overlaps with `dataStep`
 When your data has gaps, it's impossible to do calculate of the bar width automatically. The visualization will still try to do that, but most likely the result will be wrong,
 and you'll see wide overlapping bars. However, you can help the calculation by setting your data step implicitly using the dataStep property.
 Consider the following example, with data mainly clumped in the domain `0 < x < 1`:
 
 <DynamicXYWrapper {...defaultProps()} showAxes secondaryData={generateDataRecords(5)} primaryData={generateDataRecords(10).map((d, i)=> ({ x: i < 5 ? Math.random() : i - 6, y: d.y }))} exampleProps={{dataStep: 0.1}}/>
 
-### Rounded Corners
-You can apply rounded corners to the top bar in your _Stacked Bar_ component using the `roundedCorners` property, which accepts
-either a `number` (in pixels) or `boolean` argument.
-<XYWrapperWithInput
-    {...defaultProps()}
-    property="roundedCorners"
-    inputType="checkbox"
-    defaultValue={true}
-/>
-<XYWrapperWithInput {...defaultProps()} y={d => d.y} property="roundedCorners" inputType="range" inputProps={{ min: 0, max: 30}} defaultValue={5}/>
-
-
-### Bar Color
-Set the color of the bar by assigning the color property to a hex string and/or by assigning the color property to a function evaluated per each bar.
-In this example, each bar's color is assigned based on it's value:
-<XYWrapper {...defaultProps()} showContext="minimal" showAxes color={(d,i) => d.y > 7 ? '#FF4F4E' : '#1acb9a'}/>
-
-### Ordinal Data
+## Ordinal Data
 Read our guide about using ordinal/categorical values with _XY Components_ [here](/docs/guides/tips-and-tricks/#displaying-ordinal-values)
 
-### Events
+## Events
 ```ts
 import { StackedBar } from '@unovis/ts`
 ...
@@ -93,7 +112,7 @@ events = {
 ```
 <XYWrapper {...defaultProps()} excludeGraph events={{}}/>
 
-### Additional Styling: CSS Variables
+## CSS Variables
 The _Stacked Bar_ component supports additional styling via CSS variables that you can define for your visualization container. For example:
 
 ```css title="styles.css"
