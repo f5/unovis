@@ -14,13 +14,11 @@ type XYWrapperProps = DocWrapperProps & {
   showAxes?: boolean;
 }
 
-export const axis = (t: 'x' | 'y', props = {}): DocComponent => ({ name: 'Axis', props: { type: t, ...props }, key: `${t}Axis` })
+export const axis = (t: 'x' | 'y', props = {}): DocComponent => ({ name: 'Axis', props: { type: t, ...props } })
 
-const getProps = ({ showAxes, ...rest }: XYWrapperProps): DocWrapperProps => {
-  if (showAxes) {
-    rest.components?.push(axis('x'), axis('y'))
-  }
-  return { ...defaultProps, ...rest }
+const getProps = ({ showAxes, components = [], ...rest }: XYWrapperProps): DocWrapperProps => {
+  const axes = showAxes ? ['x', 'y'].map(type => axis(type)) : []
+  return { ...defaultProps, components: [...components, ...axes], ...rest }
 }
 
 export const XYWrapper = (props: XYWrapperProps): JSX.Element => <DocWrapper {...getProps(props)}/>
