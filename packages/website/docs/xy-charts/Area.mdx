@@ -14,38 +14,71 @@ export const defaultProps = (n=10) => ({
   y: d=>d.y
 });
 
-### Basic configuration
+## Basic Configuration
 <XYWrapper {...defaultProps()} showContext="full"/>
 
-### Multiple Areas
-_Area_ can accept an array of `y` accessors to display multiple areas at once:
-<XYWrapper {...defaultProps()} y={[(d) => d.y, (d) => d.y1, (d) => d.y2]} showContext="full"/>
-
-### Curve Types
+## Curve Types
 Using the `curveType: CurveType` property you can set various curve type options. For example:
 <XYWrapperWithInput {...defaultProps(25)} inputType="select" options={["basis", "linear", "step"]} defaultValue="basis" property="curveType"/>
 
 Learn more about configurable curves from D3's [documentation](https://github.com/d3/d3-shape#curves)
 
-### Color
+## Color
 Setting color for a single _Area_ component is simple, you can achieve that just by setting the `color` property of the component to a hex string.
 
 <XYWrapperWithInput {...defaultProps(50)} property="color" inputType="color" defaultValue="#19cb9a"/>
 
-#### Multiple Colors
-If you want to configure multiple colors for your _Area_ component, you'll have to create a color accessor function, similar to `x` and `y` accessors
-described in the base configuration:
+## Stacked Areas
+### Y Accessors
+_Area_ can accept an array of `y` accessors to display stacked areas from your provided data.
 
-<XYWrapper {...defaultProps()} showContext="minimal" y={[(d) => d.y, (d) => d.y1, (d) => d.y2]} color={(d, i) => ['#6A9DFF', '#1acb9a', '#f88080'][i]}/>
+ 
+**Note**: It is important that an array of accessors or provided, not a single accessor which returns
+an array. For example, if you wanted to generate a chart with three areas of random data:
 
-### Dealing with small values
+<XYWrapper excludeTabs {...defaultProps()} y={Array(3).fill(Math.random)}/>
+
+
+```ts
+/* ✅ Do this */
+const y = [
+  () => Math.random(),
+  () => Math.random(),
+  () => Math.random(),
+]
+
+/* ⛔ Not this */
+const y = d => [Math.random(), Math.random(), Math.random()]
+```
+
+### Multiple Colors
+If you want to configure multiple colors for your _Area_ component, you'll have to supply a single
+accessor. A common configuration is to utilize the data's index:
+
+<XYWrapper {...defaultProps()} showContext="full" y={[(d) => d.y, (d) => d.y1, (d) => d.y2]} color={(d, i) => ['red', 'green', 'blue'][i]}/>
+
+## Dealing with small values
 If your data has small or zero values leading to some parts of the area to become invisible, you can force those area segments to have 1px height
 despite their actual value by setting `minHeight1Px` to `true`. This can be useful if you want to visually emphasize that the data behind the chart
 is defined but just very small.
 
 <XYWrapperWithInput {...defaultProps()}  y={[(d) => d.y < 9 ? 0 : d.y]} property="minHeight1Px" inputType="checkbox" defaultValue={true} showAxes/>
 
-### Additional Styling: CSS Variables
+## Events
+
+The _Area_ component supports the following events:
+```ts
+import { Area } from '@unovis/ts'
+
+events = [Area.selectors.area]: {
+  click: (data: DataRecord[]) => {},
+  mouseover: (data: DataRecord[]) => {},
+  mouseleave: (data: DataRecord[]) => {}
+}
+```
+<XYWrapper {...defaultProps()} excludeGraph events={{}}/>
+
+## CSS Variables
 The _Area_ component supports additional styling via CSS variables that you can define for your visualization container. For example:
 
 ```css title="styles.css"
@@ -54,7 +87,7 @@ The _Area_ component supports additional styling via CSS variables that you can 
   --vis-area-hover-fill-opacity: 1;
   --vis-area-stroke-width: 1px;
 ```
-<XYWrapper {...defaultProps()} y={[(d) => d.y, (d) => d.y1, (d) => d.y2]} className="custom-area"/>
+<XYWrapper excludeTabs {...defaultProps()} y={[(d) => d.y, (d) => d.y1, (d) => d.y2]} className="custom-area"/>
 
 <details open>
   <summary>Supported CSS variables and their default values</summary>
@@ -73,19 +106,6 @@ The _Area_ component supports additional styling via CSS variables that you can 
   </CodeBlock>
 </details>
 
-### Events
-
-The _Area_ component supports the following events:
-```ts
-import { Area } from '@unovis/ts'
-
-events = [Area.selectors.area]: {
-  click: (data: DataRecord[]) => {},
-  mouseover: (data: DataRecord[]) => {},
-  mouseleave: (data: DataRecord[]) => {}
-}
-```
-<XYWrapper {...defaultProps()} excludeGraph events={{}}/>
 
 ## Component Props
 <PropTable name="VisArea"></PropTable>

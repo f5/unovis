@@ -12,13 +12,13 @@ export const defaultProps = (chart="Line", components, n=5) => ({
   components: [{ name: chart, props: { x: d=>d.x, y: [d=>d.y, d=>d.y1, d=>d.y2], ...components}, key: "components" }]
 })
 
-### Basic configuration
+## Basic Configuration
 The _Crosshair_ component is a special tooltip designed to work in an _XYContainer_.
 When a user is interacting with the _XYContainer_ and a crosshair is provided, the _Crosshair_ will appear as a vertical line and render circles on the corresponding `y` values in the dataset.
 
 <XYWrapper {...defaultProps('Line', {}, 10)} showContext="full"/>
 
-### X and Y accessors
+## X and Y accessors
 Like other components in you can supply `x` and `y` accessors to the _Crosshair_ component to control where it appears in your container.
 There's also a dedicated `yStacked` property for dealing with stacked values.
 
@@ -34,20 +34,20 @@ const yStacked: ((d: DataRecord) => number)[] = [d => d.y, d => d.y1, d => d.y2]
 ```
 <XYWrapper {...defaultProps("StackedBar", { barWith: 50})} height={200} x={d => d.x + 0.5} yStacked={[d=>d.y, d=>d.y1, d=>d.y2]}/>
 
-### Hiding the crosshair
+## Show/Hide Behavior
 By default, the _Crosshair_ component will render if the cursor is within a certain distance in pixels from a valid `x` value.
 You can disable this feature using the `hideWhenFarFromPointer` attribute.
 <XYWrapperWithInput {...defaultProps("StackedBar", { barWidth: 10})} property="hideWhenFarFromPointer" defaultValue={true} inputType="checkbox"/>
 
-### hideWhenFarFromPointerDistance
+#### `hideWhenFarFromPointerDistance`
 Use the `hideWhenFarFromPointerDistance` attribute with a length (in pixels) that represents the minimum horizontal distance the cursor must be from a datapoint before hiding.
 <XYWrapperWithInput {...defaultProps("StackedBar", { barWidth: 10})} data={generateDataRecords(10).filter(d => d.x % 2 == 0)} property="hideWhenFarFromPointerDistance" defaultValue={50} inputType="range"/>
 
-### Custom Color
+## Custom Color
 Provide a `string` or color accessor function to the `color` attribute to customize the crosshair's point color:
 <XYWrapper {...defaultProps()} color={(d, i) => ['red', 'green', 'blue'][i]} showContext="minimal"/>
 
-### Displaying Custom Content
+## Adding a Tooltip
 You can render text content for your _Crosshair_ component by providing it with a `template` property and a _Tooltip_ component within the same container.
 
 <XYWrapper {...defaultProps()}
@@ -60,7 +60,7 @@ You can render text content for your _Crosshair_ component by providing it with 
   })}
   showContext="full"/>
 
-### Additional Styling: CSS Variables
+## CSS Variables
 The _Crosshair_ component supports additional styling via CSS variables that you can define for your visualization container. For example:
 
 ```css title="styles.css"
@@ -81,4 +81,5 @@ The _Crosshair_ component supports additional styling via CSS variables that you
 }</CodeBlock>
 </details>
 
+## Component Props
 <PropTable name="VisCrosshair"/>

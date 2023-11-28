@@ -15,28 +15,29 @@ export const defaultProps = (n = 10, colored = false) => ({
   y: d => d.y,
 });
 
-### Basic configuration
+## Basic Configuration
 The _Scatter_ component has been designed to work together with _XYContainer_. The minimal _Scatter_ configuration looks like:
 <XYWrapper {...defaultProps()} y={d => d.y} showContext="full"/>
 
-### Point Shape
+## Point Appearance
+### Custom Shape
 You can change the point's symbol using the `symbol` attribute, which accepts a `SymbolType` or a corresponding `string`
 (`'circle'`, `'cross'`, `'diamond'`, `'square'`, `'star'`, `'triangle'`, `'wye'` ) or a function (executed per data point) that returns either of them.
 <XYWrapper {...defaultProps(15)} shape={'wye'}/>
 
-### Point Color
+### Custom Color
 You can provide _Scatter_ with a single `color` hex value or a `color` accessor function.
 <XYWrapper {...defaultProps(15)} color={'#DA348F'}/>
 
-### Point Stroke Color
+### Stroke Color
 You can also set a stroke color for your points by providing a `strokeColor` hex value or a `strokeColor` accessor function.
 <XYWrapper {...defaultProps(15)} color="none" strokeColor={'#DA348F'}/>
 
-### Point Stroke Width
+### Stroke Width
 If you want to change the stroke width, you can use the `strokeWidth` property, which accepts a constant value or an accessor function.
 <XYWrapper {...defaultProps(15)} color="none" strokeColor={'#DA348F'} strokeWidth={5}/>
 
-### Point Size and Size Range
+### Size and Size Range
 You can use the `size` property to set the point size (i.e. point diameter if `shape` is set to `SymbolType.Circle`) in pixels
 by providing a constant value or an accessor function, e.g.: `d => d.size`.
 
@@ -47,9 +48,9 @@ property will be treated as relative and all the points will be rescaled accordi
 
 In tha case if you provide a constant value to `size`, every resulting size value will be the median of `sizeRange`.
 Fox example, if `sizeRange` is set to `[10,50]`, that will make the default size equal to 30px (or `(min + max)/2`).
-<XYWrapper {...defaultProps()} size={() => Math.random()} sizeRange={[10, 50]}/>
+<XYWrapper {...defaultProps()} size={() => 10 * Math.random()} sizeRange={[10, 50]}/>
 
-### Point Label
+## Point Labels
 You can also place labels on _Scatter's_ points by passing a string accessor function to the `label` property.
 <XYWrapper {...defaultProps(15, true)} size={20} label={d => d.label}/>
 
@@ -78,12 +79,12 @@ When there're overlapping labels, _Scatter_ will hide some of them to avoid clut
 If you want to disable hiding overlapping labels, you can set the `labelHideOverlapping` property to `false`.
 <XYWrapperWithInput {...defaultProps(45, true)} size={10} color={d => d.color} label={d => `Point ${d.label}`} property="labelHideOverlapping" inputType="checkbox" defaultValue={true}/>
 
-### Custom Cursor
+## Custom Cursor
 _Scatter_ also allows to set a [custom](https://developer.mozilla.org/en-US/docs/Web/CSS/cursor) `cursor` when hovering
 over a point by providing a `cursor` accessor function.
-<XYWrapper {...defaultProps(50, true)} cursor={(_, i) => (['crosshair', 'grab', 'cell'])[i % 3]}/>
+<XYWrapper {...defaultProps(50, true)} cursor='crosshair'/>
 
-### Events
+## Events
 ```ts
 import { Scatter } from '@unovis/ts`
 ...
@@ -97,7 +98,7 @@ events = {
 <XYWrapper {...defaultProps()} excludeGraph events={{}}/>
 
 
-### Additional Styling: CSS Variables
+## CSS Variables
 The _Scatter_ component supports additional styling via CSS variables that you can define for your visualization container. For example:
 
 <CodeBlock language="css" title="styles.css">
