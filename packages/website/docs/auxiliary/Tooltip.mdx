@@ -52,12 +52,12 @@ export const Tooltip = (props) => (
   </BrowserOnly>
 )
 
-### Basic configuration
+## Basic Configuration
 The _Tooltip_ component has been designed to work alongside XY charts. The minimal _Tooltip_ configuration looks like:
 
 <Tooltip {...defaultProps()} showContext="full" showTriggers/>
 
-### Triggers
+## Triggers
 The `triggers` property allows a _Tooltip_ component to display custom content for a given CSS selector.
 
 <Tooltip {...defaultProps("StackedBar", { x: d=> d.x - 0.25, y: [d=>d.y, d=>d.y1, d => d.y3], barWidth: 20})}
@@ -232,7 +232,7 @@ you need to refer to your tooltip by using a CSS selector.
   }}
 />
 
-## Additional Styling: CSS Variables
+## CSS Variables
 The _Tooltip_ component supports additional styling via CSS variables that you can define for your visualization container. For example:
 
 ```css title="styles.css"

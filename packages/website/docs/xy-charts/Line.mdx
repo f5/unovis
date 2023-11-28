@@ -9,38 +9,50 @@ import { XYWrapper, XYWrapperWithInput } from '../wrappers'
 
 export const lineProps = (n=10) => ({
   name: "Line",
+  height: 150,
   data: generateDataRecords(n),
   x: d=>d.x,
   y: d=>d.y,
 });
 
-### Basic configuration
+## Basic Configuration
 The _Line_ component has been designed to work together with _XY Container_. The minimal _Line_ configuration looks like:
 
 <XYWrapper {...lineProps()} showContext="full"/>
 
-### Line Width
+
+## Multiple Lines
+_Line_ can also accept an array of `y` accessors to display multiple lines:
+<XYWrapper {...lineProps()} showContext="minimal" y={[d => d.y, d => d.y1, d => d.y2]}/>
+
+## Line Appearance
+### Width
 Specify the Line's width in pixels using the `lineWidth` property:
 <XYWrapperWithInput {...lineProps()} property="lineWidth" inputType="number" defaultValue={5}/>
 
-### Curve Types
+### Curve Type
 Using the `curveType: CurveType` property you can set various curve type options. For example:
 <XYWrapperWithInput {...lineProps(50)} inputType="select" options={["basis", "linear", "step"]} defaultValue="basis" property="curveType"/>
 
-### Colored Line
+### Color
 <XYWrapperWithInput {...lineProps()} property="color" inputType="color" defaultValue="#a611a5"/>
 
 #### For multiple lines:
 If you want to set color for multiple lines at once, you'll have to define a colors array in your component and reference colors by index in the accessor function:
-<XYWrapper {...lineProps()} showContext={true} y={[d => d.y, d => d.y1, d => d.y2]} color={(d,i) => ['#6A9DFF', '#1acb9a', '#f88080'][i]}/>
+<XYWrapper {...lineProps()} showContext={true} y={[d => d.y, d => d.y1, d => d.y2]} color={(d,i) => ['red', 'green', 'blue'][i]}/>
 
-### Dashed Line
+
+### Dashes
 You can configure a dashed line with the lineDashArray property and a dash array. See [SVG stroke-dasharray](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray)
 to learn more about this attribute.
 
 <XYWrapper {...lineProps()} lineDashArray={[5]} />
 
-### Dealing with missing data
+#### For multiple lines:
+Similar to [mutlti-color configuration](#for-multiple-lines), you can provide an accessor function to
+customize each line.
+
+## Dealing with missing data
 In the case of missing data (when the data values are `undefined`, `NaN`, `''`, etc ...), you can assign a fallback value
 for _Line_ using the `fallbackValue` config property. The default value is `undefined`, which means that the line will
 break in the areas of no data and continue when the data appears again. If you set `fallbackValue` to `null`, the values
@@ -58,12 +70,21 @@ Consider the following example, where the dataset contains `undefined` values ov
   defaultValue={7}
   showAxes/>
 
-### Multiple Lines
-_Line_ can also accept an array of `y` accessors to display multiple lines:
-<XYWrapper {...lineProps()} showContext="minimal" y={[d => d.y, d => d.y1, d => d.y2]}/>
+## Events
+```ts
+import { Line } from '@unovis/ts`
+...
+const events = {
+  [Line.selectors.line]: {
+    mouseover: (data: DataRecord[]) => {},
+    mouseleave: (data: DataRecord[]) => {},
+    ...
+  }
+}
+```
+<XYWrapper hideTabLabels {...lineProps()} events={{}}/>
 
-
-### Additional Styling: CSS Variables
+## CSS Variables
 The _Line_ component supports additional styling via CSS variables that you can define for your visualization container. For example:
 
 ```css title="styles.css"
@@ -84,19 +105,6 @@ The _Line_ component supports additional styling via CSS variables that you can 
   </CodeBlock>
 </details>
 
-### Events
-```ts
-import { Line } from '@unovis/ts`
-...
-events = {
-  [Line.selectors.line]: {
-    mouseover: (data: DataRecord[]) => {},
-    mouseleave: (data: DataRecord[]) => {},
-    ...
-  }
-}
-```
-<XYWrapper {...lineProps()} excludeGraph events={{}}/>
 
 ## Component Props
 <PropTable name="VisLine"></PropTable>

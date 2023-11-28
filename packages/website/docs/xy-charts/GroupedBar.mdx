@@ -15,43 +15,21 @@ export const defaultProps = (n=10) => ({
   y: [d => d.y, d => d.y1, d => d.y2],
 });
 
-### Basic configuration
+## Basic Configuration
 The _Grouped Bar_ component has been designed to work together with _XY Container_. The minimal _Grouped Bar_ configuration looks like:
-<XYWrapper {...defaultProps()} y={d => d.y} showContext="full"/>
-
-### Multiple Bars
-_Grouped Bar_ can accept an array of y accessors to display values as a group of bars:
 <XYWrapper {...defaultProps()} showContext="full"/>
 
-### Group Width
-By default, the width of the bars is calculated automatically based on their count. But you can also strictly set the bar's width in pixels using the barWidth property:
-<XYWrapperWithInput {...defaultProps(5)} property="groupWidth" inputType="number" defaultValue={50}/>
+## Orientation
+_Grouped Bar_ supports horizontal and vertical orientation.
+<XYWrapperWithInput {...defaultProps()} y={[d => d.y, d => d.y1, d => d.y2]} height={250} showAxes inputType="select" property="orientation" defaultValue="horizontal" options={["vertical", "horizontal"]}/>
 
-### Limiting Dynamic Group Bar Width
-When you don't know the number of bars in advance, and you're relying on automatic bar width calculation, you might want to limit the
-maximum bar width to prevent the bars from being too wide when there are just a few of them. That can be achieved by setting the groupMaxWidth property.
-<DynamicXYWrapper {...defaultProps()} primaryData={generateDataRecords(25)} secondaryData={generateDataRecords(10)} exampleProps={{groupMaxWidth: 25}}/>
+## Bar Colors
+Set the color of the bar by assigning the color property to a hex string and/or by assigning the color property to a function evaluated per each bar.
+In this example, each bar's color is assigned based on its index:
+<XYWrapper {...defaultProps()} showContext="minimal" showAxes color={(d,i) => ['#04c0c7', '#5144d3', '#da348f'][i]}/>
 
-### Group Padding
-Another way to control width in a *BarGroup* component is by changing the `groupPadding` argument, which specifies how much of the available sector should be empty, in the range of [0,1).
-<XYWrapperWithInput {...defaultProps()} property="groupPadding" inputType="range" inputProps={{ min: 0, max: 1, step: 0.1}} defaultValue={0.5}/>
 
-### Bar Padding
-Or for individual bars within each bar group, the `barPadding` attribute is available:
-<XYWrapperWithInput {...defaultProps()} property="barPadding" inputType="range" inputProps={{ min: 0, max: 1, step: 0.1}} defaultValue={0.5}/>
-
-### Bar Height Limit
-When you have highly scattered data with very low and high values, the bars corresponding to the lower values can be so small, so they become invisible.
-If you want to prevent that you can set the minimum bar height to 1 pixel using the `barMinHeight` boolean property.
-<XYWrapperWithInput {...defaultProps()} data={generateDataRecords(10).map((d, i)=> ({ x: d.x, y: i % 2 === 1 ? d.y * 100 : Math.random() }))} showAxes property="barMinHeight" inputType="number" defaultValue={1}/>
-
-### Dealing With Inconsistent data
-When your data has gaps, it's impossible to do calculate of the bar width automatically. The visualization will still try to do that, but most likely the result will be wrong,
-and you'll see wide overlapping bars. However, you can help the calculation by setting your data step implicitly using the dataStep property.
-Consider the following example, with data mainly clumped in the domain `0 < x < 1`:
-<DynamicXYWrapper {...defaultProps()} secondaryData={generateDataRecords(5)} primaryData={generateDataRecords(10).map((d, i)=> ({ x: i < 5 ? Math.random() : i - 6, y: d.y }))} showAxes exampleProps={{dataStep: 0.1}}/>
-
-### Rounded Corners
+## Rounded Corners
 You can apply rounded corners to the top bar in your _Grouped Bar_ component using the `roundedCorners` property, which accepts
 either a `number` (in pixels) or `boolean` argument.
 <XYWrapperWithInput
@@ -60,22 +38,44 @@ either a `number` (in pixels) or `boolean` argument.
     inputType="checkbox"
     defaultValue={true}
 />
-<XYWrapperWithInput {...defaultProps(5)} property="roundedCorners" inputType="range" inputProps={{ min: 0, max: 30}} defaultValue={5}/>
 
+## Bar Sizing
+There are multiple configuration properties that contribute to the size of you bars in _Grouped Bar_.
+Some are on the group level while others on the individual.
 
-### Bar Color
-Set the color of the bar by assigning the color property to a hex string and/or by assigning the color property to a function evaluated per each bar.
-In this example, each bar's color is assigned based on its value:
-<XYWrapper {...defaultProps()} showContext="minimal" showAxes color={(d,i) => ['#04c0c7', '#5144d3', '#da348f'][i]}/>
+### Group Width
+By default, the width of the bars is calculated automatically based on their count. But you can also strictly set the bar's width in pixels using the barWidth property:
+<XYWrapperWithInput {...defaultProps(5)} property="groupWidth" inputType="number" defaultValue={50}/>
 
-### Orientation
-_Grouped Bar_ supports horizontal and vertical orientation.
-<XYWrapperWithInput {...defaultProps()} y={[d => d.y, d => d.y1, d => d.y2]} height={250} showAxes inputType="select" property="orientation" defaultValue="horizontal" options={["vertical", "horizontal"]}/>
+### Limiting Dynamic Group Width
+When you don't know the number of bars in advance, and you're relying on automatic bar width calculation, you might want to limit the
+maximum bar width to prevent the bars from being too wide when there are just a few of them. That can be achieved by setting the groupMaxWidth property.
+<DynamicXYWrapper {...defaultProps()} primaryData={generateDataRecords(25)} secondaryData={generateDataRecords(10)} exampleProps={{groupMaxWidth: 25}}/>
 
-### Ordinal Data
+### Group vs. Bar Padding
+Another way to control bar width is by adding padding to bar groups (`groupPadding` property) or
+individual bars (`barPadding). The value which specifies how much of the available sector should be
+empty in the range of [0,1].
+
+<XYWrapperWithInput {...defaultProps()} property="groupPadding" inputType="range" inputProps={{ min: 0, max: 1, step: 0.1}} defaultValue={0.5}/>
+
+<XYWrapperWithInput {...defaultProps()} property="barPadding" inputType="range" inputProps={{ min: 0, max: 1, step: 0.1}} defaultValue={0.5}/>
+
+### Minimum Bar Height
+When you have highly scattered data with very low and high values, the bars corresponding to the lower values can be so small, so they become invisible.
+If you want to prevent that you can set the minimum bar height to 1 pixel using the `barMinHeight` boolean property.
+<XYWrapperWithInput {...defaultProps()} data={generateDataRecords(10).map((d, i)=> ({ x: d.x, y: i % 2 === 1 ? d.y * 100 : Math.random() }))} showAxes property="barMinHeight" inputType="number" defaultValue={1}/>
+
+## Preventing Overlaps with `dataStep`
+When your data has gaps, it's impossible to do calculate of the bar width automatically. The visualization will still try to do that, but most likely the result will be wrong,
+and you'll see wide overlapping bars. However, you can help the calculation by setting your data step implicitly using the dataStep property.
+Consider the following example, with data mainly clumped in the domain `0 < x < 1`:
+<DynamicXYWrapper {...defaultProps()} secondaryData={generateDataRecords(5)} primaryData={generateDataRecords(10).map((d, i)=> ({ x: i < 5 ? Math.random() : i - 6, y: d.y }))} showAxes exampleProps={{dataStep: 0.1}}/>
+
+## Using Ordinal Data
 Read our guide about using ordinal/categorical values with _XY Components_ [here](/docs/guides/tips-and-tricks/#displaying-ordinal-values)
 
-### Events
+## Events
 ```ts
 import { GroupedBar } from '@unovis/ts`
 ...
@@ -92,7 +92,7 @@ events = {
 ```
 <XYWrapper {...defaultProps()} excludeGraph events={{}}/>
 
-### Additional Styling: CSS Variables
+## CSS Variables
 The _Grouped Bar_ component supports additional styling via CSS variables that you can define for your visualization container. For example:
 
 ```css title="styles.css"
