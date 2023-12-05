@@ -52,9 +52,11 @@ export class ChordDiagram<
   public config: ChordDiagramConfigInterface<N, L> = this._defaultConfig
   datamodel: GraphDataModel<N, L> = new GraphDataModel()
 
+  background: Selection<SVGRectElement, unknown, SVGGElement, unknown>
   nodeGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
   linkGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
   labelGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
+
   arcGen = arc<ChordNode<N>>()
   radiusScale: ScalePower<number, number> = scalePow()
 
@@ -84,6 +86,7 @@ export class ChordDiagram<
   constructor (config?: ChordDiagramConfigInterface<N, L>) {
     super()
     if (config) this.setConfig(config)
+    this.background = this.g.append('rect').attr('class', s.background)
     this.linkGroup = this.g.append('g').attr('class', s.links)
     this.nodeGroup = this.g.append('g').attr('class', s.nodes)
     this.labelGroup = this.g.append('g').attr('class', s.labels)
@@ -170,9 +173,16 @@ export class ChordDiagram<
       .innerRadius(d => this.radiusScale(d.y1) - getNumber(d, config.nodeWidth))
       .outerRadius(d => this.radiusScale(d.y1))
 
-    // Center the view
-    this.g.attr('transform', `translate(${this._width / 2},${this._height / 2})`)
     this.g.classed(s.transparent, this._forceHighlight)
+    this.background
+      .attr('width', this._width)
+      .attr('height', this._height)
+      .style('opacity', 0)
+
+    // Center the view
+    this.nodeGroup.attr('transform', `translate(${this._width / 2},${this._height / 2})`)
+    this.labelGroup.attr('transform', `translate(${this._width / 2},${this._height / 2})`)
+    this.linkGroup.attr('transform', `translate(${this._width / 2},${this._height / 2})`)
 
     // Links
     const linksSelection = this.linkGroup

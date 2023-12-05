@@ -27,6 +27,10 @@ export const variables = injectGlobal`
   }
 `
 
+export const background = css`
+  label: background;
+`
+
 export const nodes = css`
   label: nodes;
 `
