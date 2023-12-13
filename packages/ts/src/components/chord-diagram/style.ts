@@ -63,12 +63,12 @@ export const label = css`
 `
 
 export const labelText = css`
-  label: label-text:
+  label: label-text;
 
   dominant-baseline: middle;
   user-select: none;
   font-size: var(--vis-chord-diagram-label-text-font-size);
-
+  
   > textPath {
     dominant-baseline: central;
   }

@@ -1,6 +1,5 @@
 import { Selection, select } from 'd3-selection'
 import { ribbon } from 'd3-chord'
-import { path } from 'd3-path'
 import { ScalePower } from 'd3-scale'
 import { areaRadial } from 'd3-shape'
 import { Transition } from 'd3-transition'
@@ -41,18 +40,17 @@ function linkGen (points: ChordRibbonPoint[], radiusScale: ScalePower<number, nu
   const link = (points.length === 2 ? ribbonGen : areaGen)
   link.radius(d => radiusScale(d.r))
 
-  if (points.length === 2) {
-    return link(points) as string
-  }
-  const p = path()
-  const src = points[0]
-  const radius = Math.max(radiusScale(src.r), 0)
+  const linkPath = link(points) as string
 
-  link.context(p as CanvasRenderingContext2D)
-  link(points)
-  p.arc(0, 0, radius, src.a0 - Math.PI / 2, src.a1 - Math.PI / 2, src.a1 - src.a0 <= Number.EPSILON)
+  if (points.length === 2) return linkPath
 
-  return convertLineToArc(p, radius)
+  // Replace closePath with line to starting point
+  const area = linkPath.slice(0, -1)
+  const path = area.concat(`L${area.match(/M-?\d*\.?\d*[,\s*]-?\d*\.?\d*/)?.[0].slice(1)}`)
+
+  // Convert line edges to arcs
+  const radius = Math.max(radiusScale(points[0].r), 0)
+  return convertLineToArc(path, radius)
 }
 
 export function createLink<N extends ChordInputNode> (
