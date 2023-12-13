@@ -105,8 +105,8 @@ export class VisChordDiagramComponent<N extends ChordInputNode, L extends ChordI
   /** Node label alignment. Default: `ChordLabelAlignment.Along` */
   @Input() nodeLabelAlignment?: GenericAccessor<ChordLabelAlignment | string, ChordNodeDatum<N>>
 
-  /** Pad angle in radians. Constant value or accessor function. Default: `0.02` */
-  @Input() padAngle?: NumericAccessor<ChordNodeDatum<N>>
+  /** Pad angle in radians. Default: `0.02` */
+  @Input() padAngle?: number
 
   /** Corner radius constant value or accessor function. Default: `2` */
   @Input() cornerRadius?: NumericAccessor<ChordNodeDatum<N>>
