@@ -1,6 +1,5 @@
 import { max } from 'd3-array'
-import { nest } from 'd3-collection'
-import { HierarchyNode, hierarchy, partition } from 'd3-hierarchy'
+import { partition } from 'd3-hierarchy'
 import { Selection } from 'd3-selection'
 import { scalePow, ScalePower } from 'd3-scale'
 import { arc } from 'd3-shape'
@@ -10,24 +9,14 @@ import { ComponentCore } from 'core/component'
 import { GraphData, GraphDataModel } from 'data-models/graph'
 
 // Utils
-import { getNumber, isNumber, groupBy, getString, getValue } from 'utils/data'
+import { getNumber, isNumber, getString, getValue } from 'utils/data'
 import { estimateStringPixelLength } from 'utils/text'
 
 // Types
-import { GraphNodeCore } from 'types/graph'
 import { Spacing } from 'types/spacing'
 
 // Local Types
-import {
-  ChordInputNode,
-  ChordInputLink,
-  ChordDiagramData,
-  ChordHierarchyNode,
-  ChordNode,
-  ChordRibbon,
-  ChordLabelAlignment,
-  ChordLeafNode,
-} from './types'
+import { ChordInputNode, ChordInputLink, ChordDiagramData, ChordNode, ChordRibbon, ChordLabelAlignment, ChordLeafNode } from './types'
 
 // Config
 import { ChordDiagramDefaultConfig, ChordDiagramConfigInterface } from './config'
@@ -35,6 +24,7 @@ import { ChordDiagramDefaultConfig, ChordDiagramConfigInterface } from './config
 // Modules
 import { createNode, updateNode, removeNode } from './modules/node'
 import { createLabel, updateLabel, removeLabel, LABEL_PADDING } from './modules/label'
+import { getHierarchyNodes, getRibbons, positionChildren } from './modules/layout'
 import { createLink, updateLink, removeLink } from './modules/link'
 
 // Styles
@@ -127,48 +117,51 @@ export class ChordDiagram<
 
   setData (data: GraphData<N, L>): void {
     super.setData(data)
-    const hierarchyData = this._getHierarchyNodes()
+    this._layoutData()
+  }
 
-    const partitionData = partition<N | ChordHierarchyNode<N>>()
-      .size([this.config.angleRange[1], 1])(hierarchyData) as ChordNode<N>
+  _layoutData (): void {
+    const { nodes, links } = this.datamodel
+    const { padAngle, linkValue, nodeLevels } = this.config
+    nodes.forEach(n => { delete n._state.value })
+    links.forEach(l => {
+      delete l._state.points
+      l._state.value = getNumber(l, linkValue)
+      l.source._state.value = (l.source._state.value || 0) + getNumber(l, linkValue)
+      l.target._state.value = (l.target._state.value || 0) + getNumber(l, linkValue)
+    })
 
-    partitionData.each((node, i) => {
-      this._calculateRadialPosition(node, getNumber(node.data, this.config.padAngle))
+    const root = getHierarchyNodes(nodes, d => d._state?.value, nodeLevels)
 
-      // Add hierarchy data for non leaf nodes
-      if (node.children) {
-        node.data = Object.assign(node.data, {
-          depth: node.depth,
-          height: node.height,
-          value: node.value,
-          ancestors: node.ancestors().map(d => (d.data as ChordHierarchyNode<N>).key),
-        })
-      }
-      node.x0 = Number.isNaN(node.x0) ? 0 : node.x0
-      node.x1 = Number.isNaN(node.x1) ? 0 : node.x1
-      node.uid = `${this.uid}-n${i}`
-      node._state = {}
+    const partitionData = partition().size([this.config.angleRange[1], 1])(root) as ChordNode<N>
+    partitionData.each((n, i) => {
+      positionChildren(n, padAngle)
+      n.uid = `${this.uid.substr(0, 4)}-${i}`
+      n.x0 = Number.isNaN(n.x0) ? 0 : n.x0
+      n.x1 = Number.isNaN(n.x1) ? 0 : n.x1
+      n._state = {}
     })
 
     const partitionDataWithRoot = partitionData.descendants()
     this._rootNode = partitionDataWithRoot.find(d => d.depth === 0)
     this._nodes = partitionDataWithRoot.filter(d => d.depth !== 0) // Filter out the root node
-    this._links = this._getRibbons(partitionData)
+    this._links = getRibbons<N>(partitionData, links, padAngle)
   }
 
   _render (customDuration?: number): void {
     super._render(customDuration)
     const { config, bleed } = this
 
+    this._layoutData()
     const duration = isNumber(customDuration) ? customDuration : config.duration
     const size = Math.min(this._width, this._height)
     const radius = size / 2 - max([bleed.top, bleed.bottom, bleed.left, bleed.right])
 
-    this.radiusScale.range([0, radius])
+    this.radiusScale.range([0, radius - config.nodeWidth])
 
     this.arcGen
-      .startAngle(d => d.x0)
-      .endAngle(d => d.x1)
+      .startAngle(d => d.x0 + config.padAngle / 2 - (d.value ? 0 : Math.PI / 360))
+      .endAngle(d => d.x1 - config.padAngle / 2 + (d.value ? 0 : Math.PI / 360))
       .cornerRadius(d => getNumber(d.data, config.cornerRadius))
       .innerRadius(d => this.radiusScale(d.y1) - getNumber(d, config.nodeWidth))
       .outerRadius(d => this.radiusScale(d.y1))
@@ -237,128 +230,6 @@ export class ChordDiagram<
       .call(removeLabel, duration)
   }
 
-  private _getHierarchyNodes (): HierarchyNode<ChordHierarchyNode<N>> {
-    const { config, datamodel: { nodes, links } } = this
-    nodes.forEach(n => { delete n._state.value })
-    links.forEach(l => {
-      delete l._state.points
-      l.source._state.value = (l.source._state.value || 0) + getNumber(l, config.linkValue)
-      l.target._state.value = (l.target._state.value || 0) + getNumber(l, config.linkValue)
-    })
-
-    // TODO: Replace with d3-group
-    const nestGen = nest<N>()
-    config.nodeLevels.forEach(levelAccessor => {
-      nestGen.key((d) => (d as unknown as Record<string, string>)[levelAccessor])
-    })
-    const root = { key: 'root', values: nestGen.entries(nodes) }
-    const hierarchyNodes = hierarchy(root, d => d.values)
-      .sum((d) => (d as unknown as GraphNodeCore<N, L>)._state?.value)
-
-    return hierarchyNodes
-  }
-
-  private _getRibbons (partitionData: ChordNode<N>): ChordRibbon<N>[] {
-    const { config, datamodel: { links } } = this
-    const findNode = (
-      nodes: ChordLeafNode<N>[],
-      id: string
-    ): ChordLeafNode<N> => nodes.find(n => n.data._id === id)
-    const leafNodes = partitionData.leaves() as ChordLeafNode<N>[]
-
-    type LinksArrayType = typeof links
-    const groupedBySource: Record<string, LinksArrayType> = groupBy(links, d => d.source._id)
-    const groupedByTarget: Record<string, LinksArrayType> = groupBy(links, d => d.target._id)
-
-    const getNodesInRibbon = (
-      source: ChordLeafNode<N>,
-      target: ChordLeafNode<N>,
-      partitionHeight: number,
-      nodes: ChordLeafNode<N>[] = []
-    ): ChordNode<N>[] => {
-      nodes[source.height] = source
-      nodes[partitionHeight * 2 - target.height] = target
-      if (source.parent && target.parent) getNodesInRibbon(source.parent, target.parent, partitionHeight, nodes)
-      return nodes
-    }
-
-    const calculatePoints = (
-      links: LinksArrayType,
-      type: 'in' | 'out',
-      depth: number
-    ): void => {
-      links.forEach(link => {
-        if (!link._state.points) link._state.points = []
-        const sourceLeaf = findNode(leafNodes, link.source._id)
-        const targetLeaf = findNode(leafNodes, link.target._id)
-        const nodesInRibbon = getNodesInRibbon(
-          type === 'out' ? sourceLeaf : targetLeaf,
-          type === 'out' ? targetLeaf : sourceLeaf,
-          partitionData.height)
-        const currNode = nodesInRibbon[depth]
-        const len = currNode.x1 - currNode.x0
-        const x0 = currNode._prevX1 ?? currNode.x0
-        const x1 = x0 + len * getNumber(link, config.linkValue) / currNode.value
-        currNode._prevX1 = x1
-
-        const pointIdx = type === 'out' ? depth : partitionData.height * 2 - 1 - depth
-        link._state.points[pointIdx] = {
-          a0: Math.min(x0, x1), // - Math.PI / 2,
-          a1: Math.max(x0, x1), // - Math.PI / 2,
-          r: currNode.y1,
-        }
-      })
-    }
-
-    leafNodes.forEach(leafNode => {
-      const outLinks = groupedBySource[leafNode.data._id] || []
-      const inLinks = groupedByTarget[leafNode.data._id] || []
-      for (let depth = 0; depth < partitionData.height; depth += 1) {
-        calculatePoints(outLinks, 'out', depth)
-        calculatePoints(inLinks, 'in', depth)
-      }
-    })
-
-    const ribbons = links.map(l => {
-      const sourceNode = findNode(leafNodes, l.source._id)
-      const targetNode = findNode(leafNodes, l.target._id)
-
-      return {
-        source: sourceNode,
-        target: targetNode,
-        data: l,
-        points: l._state.points,
-        _state: {},
-      }
-    })
-
-    return ribbons
-  }
-
-  private _calculateRadialPosition (
-    hierarchyNode: ChordNode<N>,
-    nodePadding = 0.02,
-    scalingCoeff = 0.95
-  ): void {
-    if (!hierarchyNode.children) return
-
-    // Calculate x0 and x1
-    const nodeLength = (hierarchyNode.x1 - hierarchyNode.x0)
-    const scaledNodeLength = nodeLength * scalingCoeff
-    const delta = nodeLength - scaledNodeLength
-    let x0 = hierarchyNode.x0 + delta / 2
-    for (const node of hierarchyNode.children) {
-      const childX0 = x0
-      const childX1 = x0 + (node.value / hierarchyNode.value) * scaledNodeLength - nodePadding / 2
-      const childNodeLength = childX1 - childX0
-      const scaledChildNodeLength = childNodeLength * scalingCoeff
-      const childDelta = childNodeLength - scaledChildNodeLength
-      node.x0 = childX0 + childDelta / 2
-      node.x1 = node.x0 + scaledChildNodeLength
-      x0 = childX1 + nodePadding / 2 + childDelta / 2
-    }
-  }
-
   private _onNodeMouseOver (d: ChordNode<N>): void {
     let ribbons: ChordRibbon<N>[]
     if (d.children) {
@@ -370,6 +241,9 @@ export class ChordDiagram<
       const leaf = d as ChordLeafNode<N>
       ribbons = this._links.filter(l => l.source.data.id === leaf.data.id || l.target.data.id === leaf.data.id)
     }
+
+    // Nodes without links should still be highlighted
+    if (!ribbons.length) d._state.hovered = true
     this._highlightOnHover(ribbons)
   }
 
