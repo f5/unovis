@@ -16,6 +16,7 @@ import {
   GraphForceLayoutSettings,
   GraphElkLayoutSettings,
   GraphNodeShape,
+  GraphDagreLayoutSetting,
 } from './types'
 
 export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphInputLink> extends ComponentConfigInterface {
@@ -86,16 +87,7 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   /** Darge Layout settings, see the `dagrejs` package
    * for more details: https://github.com/dagrejs/dagre/wiki#configuring-the-layout
   */
-  dagreLayoutSettings?: {
-    /** Direction for rank node. `TB`, `BT`, `LR`, or `RL`. Default: `BT` */
-    rankdir: string;
-    /** Type of algorithm to assigns a rank to each node in the input graph.
-     * `network-simplex`, `tight-tree` or `longest-path`.
-     * Default: `longest-path` */
-    ranker: string;
-    /** Other configurable Dagre settings. https://github.com/dagrejs/dagre/wiki */
-    [key: string]: any;
-  };
+  dagreLayoutSettings?: GraphDagreLayoutSetting;
 
   // ELK layout
   /** ELK layout options, see the `elkjs` package for more details: https://github.com/kieler/elkjs.
