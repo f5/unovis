@@ -126,6 +126,12 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   linkLabelShiftFromCenter?: BooleanAccessor<L>;
   /** Spacing between neighboring links. Default: `8` */
   linkNeighborSpacing?: number;
+  /** Curvature of the link. Recommended value range: [0:1.5].
+   * `0` - straight line,
+   * `1` - nice curvature,
+   * `1.5` - very curve.
+   * Default: `0` */
+  linkCurvature?: NumericAccessor<L>;
   /** Set selected link by its unique id. Default: `undefined` */
   selectedLinkId?: number | string;
 
@@ -238,6 +244,7 @@ export const GraphDefaultConfig: GraphConfigInterface<GraphInputNode, GraphInput
   linkLabelShiftFromCenter: true,
   linkNeighborSpacing: 8,
   linkDisabled: false,
+  linkCurvature: 0,
   selectedLinkId: undefined,
   nodeGaugeAnimDuration: 1500,
 
