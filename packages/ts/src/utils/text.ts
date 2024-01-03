@@ -468,6 +468,7 @@ export function estimateWrappedTextHeight (blocks: UnovisWrappedText[]): number 
 }
 
 export const allowedSvgTextTags = ['text', 'tspan', 'textPath', 'altGlyph', 'altGlyphDef', 'altGlyphItem', 'glyphRef', 'textRef', 'textArea']
+
 /**
  * Renders a text or array of texts to an SVG text element.
  * Calling this function will replace the contents of the specified SVG text element.
