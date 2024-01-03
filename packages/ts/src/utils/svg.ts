@@ -1,4 +1,13 @@
 import { TransformValues } from 'types/svg'
+import striptags from 'striptags'
+
+import { allowedSvgTextTags } from './text'
+
+export const allowedSvgTags = [
+  'svg', 'g', 'path', 'rect', 'circle', 'ellipse', 'line', 'polyline', 'polygon',
+  'defs', 'clipPath', 'use', 'symbol', 'image', 'marker', 'style', 'mask',
+  ...allowedSvgTextTags,
+]
 
 export function getTransformValues (svgElement: SVGElement): TransformValues {
   // Get the transform attribute value from the SVG element
@@ -46,4 +55,8 @@ export function transformValuesToString (transformValues: TransformValues): stri
     : translateString
 
   return transformString
+}
+
+export function sanitizeSvgString (svgString: string, allowedTags = allowedSvgTags): string {
+  return striptags(svgString, allowedTags)
 }

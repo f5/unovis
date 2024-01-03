@@ -6,6 +6,7 @@ import { NumericAccessor, StringAccessor } from 'types/accessor'
 // Utils
 import { polygon } from 'utils/path'
 import { getString } from 'utils/data'
+import { sanitizeSvgString } from 'utils/svg'
 
 // Types
 
@@ -15,8 +16,8 @@ import { GraphNodeShape } from '../types'
 // Helpers
 import { getNodeSize } from './node/helper'
 
-export function isCustomXml (shape: GraphNodeShape): boolean {
-  return /<[a-z][\s\S]*>/i.test(shape)
+export function isCustomXml (xml: GraphNodeShape | string): boolean {
+  return /<[a-z][\s\S]*>/i.test(xml)
 }
 
 export function appendShape<T> (
@@ -38,7 +39,7 @@ export function appendShape<T> (
     const isCustomXmlShape = isCustomXml(shape)
     if (isCustomXmlShape) {
       shapeElement = element.insert('g', insertSelector)
-        .html(shape)
+        .html(sanitizeSvgString(shape))
     } else {
       switch (shape) {
         case GraphNodeShape.Square:
