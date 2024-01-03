@@ -3,7 +3,7 @@ import { range } from 'd3-array'
 import { Transition } from 'd3-transition'
 
 // Utils
-import { throttle, getValue, getBoolean } from 'utils/data'
+import { throttle, getValue, getNumber, getBoolean } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { getHref } from 'utils/misc'
 
@@ -19,7 +19,6 @@ import { GraphConfigInterface } from '../../config'
 // Helpers
 import { getX, getY } from '../node/helper'
 import {
-  getPolylineData,
   getLinkShiftTransform,
   getLinkLabelShift,
   getLinkStrokeWidth,
@@ -40,18 +39,14 @@ export function createLinks<N extends GraphInputNode, L extends GraphInputLink> 
 ): void {
   selection.attr('opacity', 0)
 
-  selection.append('line')
+  selection.append('path')
     .attr('class', linkSelectors.linkSupport)
 
-  selection.append('polyline')
+  selection.append('path')
     .attr('class', linkSelectors.link)
 
-  selection.append('line')
+  selection.append('path')
     .attr('class', linkSelectors.linkBand)
-    .attr('x1', d => getX(d.source))
-    .attr('y1', d => getY(d.source))
-    .attr('x2', d => getX(d.target))
-    .attr('y2', d => getY(d.target))
 
   selection.append('g')
     .attr('class', linkSelectors.flowGroup)
@@ -119,6 +114,13 @@ export function updateLinks<N extends GraphInputNode, L extends GraphInputLink> 
     const x2 = getX(d.target)
     const y2 = getY(d.target)
 
+    const curvature = getNumber(d, config.linkCurvature, i) ?? 0
+    const cp1x = x1 + (x2 - x1) * 0.5 * curvature
+    const cp1y = y1 + (y2 - y1) * 0.0 * curvature
+    const cp2x = x1 + (x2 - x1) * 0.5 * curvature
+    const cp2y = y1 + (y2 - y1) * 1.0 * curvature
+
+    const pathData = `M${x1},${y1} C${cp1x},${cp1y} ${cp2x},${cp2y} ${x2},${y2}`
     link
       .attr('class', linkSelectors.link)
       .attr('marker-mid', getHref(d, getMarkerId))
@@ -127,7 +129,7 @@ export function updateLinks<N extends GraphInputNode, L extends GraphInputLink> 
       .attr('transform', getLinkShiftTransform(d, config.linkNeighborSpacing))
 
     smartTransition(link, duration)
-      .attr('points', getPolylineData({ x1, y1, x2, y2 }))
+      .attr('d', pathData)
 
     linkBand
       .attr('class', linkSelectors.linkBand)
@@ -136,18 +138,12 @@ export function updateLinks<N extends GraphInputNode, L extends GraphInputLink> 
       .style('stroke', getLinkColor(d, config))
 
     smartTransition(linkBand, duration)
-      .attr('x1', x1)
-      .attr('y1', y1)
-      .attr('x2', x2)
-      .attr('y2', y2)
+      .attr('d', pathData)
 
     linkSupport
       .style('stroke', getLinkColor(d, config))
       .attr('transform', getLinkShiftTransform(d, config.linkNeighborSpacing))
-      .attr('x1', x1)
-      .attr('y1', y1)
-      .attr('x2', x2)
-      .attr('y2', y2)
+      .attr('d', pathData)
 
     flowGroup
       .attr('transform', getLinkShiftTransform(d, config.linkNeighborSpacing))
@@ -258,6 +254,9 @@ export function animateLinkFlow<N extends GraphInputNode, L extends GraphInputLi
     const linkGroup = select(element)
     const flowGroup = linkGroup.select(`.${linkSelectors.flowGroup}`)
 
+    const linkPathElement = linkGroup.select<SVGPathElement>(`.${linkSelectors.link}`).node()
+    const pathLength = linkPathElement.getTotalLength()
+
     if (!getBoolean(d, linkFlow, d._indexGlobal)) return
     const t = d._state.flowAnimTime
     const circles = flowGroup.selectAll(`.${linkSelectors.flowCircle}`)
@@ -265,14 +264,8 @@ export function animateLinkFlow<N extends GraphInputNode, L extends GraphInputLi
     circles
       .attr('transform', index => {
         const tt = (t + (+index) / (circles.size() - 1)) % 1
-        const x1 = getX(d.source)
-        const y1 = getY(d.source)
-        const x2 = getX(d.target)
-        const y2 = getY(d.target)
-
-        const x = x1 + tt * (x2 - x1)
-        const y = y1 + tt * (y2 - y1)
-        return `translate(${x}, ${y})`
+        const p = linkPathElement.getPointAtLength(tt * pathLength)
+        return `translate(${p.x}, ${p.y})`
       })
   })
 }

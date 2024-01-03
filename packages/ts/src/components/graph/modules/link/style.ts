@@ -85,6 +85,7 @@ export const linkBand = css`
   stroke-opacity: var(--vis-graph-link-band-opacity);
   pointer-events: none;
   stroke: var(--vis-graph-node-stroke-color);
+  fill: none;
 `
 
 export const flowGroup = css`
