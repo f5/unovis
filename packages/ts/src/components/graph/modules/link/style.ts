@@ -43,7 +43,7 @@ export const linkSupport = css`
   stroke-width: var(--vis-graph-link-support-stroke-width);
   stroke-opacity: 0;
   stroke: var(--vis-graph-link-stroke-color);
-  transition: .2s;
+  transition: stroke-opacity 0.2s;
 `
 
 export const link = css`
@@ -63,6 +63,11 @@ export const linkDashed = css`
   ${`.${link}`} {
     stroke-dasharray: var(--vis-graph-link-dashed-stroke-dasharray);
   }
+`
+
+export const linkArrow = css`
+  label: link-arrow;
+  fill: var(--vis-graph-link-stroke-color);
 `
 
 export const gLink = css`

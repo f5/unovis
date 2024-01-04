@@ -5,7 +5,6 @@ import { Transition } from 'd3-transition'
 // Utils
 import { throttle, getValue, getNumber, getBoolean } from 'utils/data'
 import { smartTransition } from 'utils/d3'
-import { getHref } from 'utils/misc'
 
 // Types
 import { GraphInputLink, GraphInputNode } from 'types/graph'
@@ -20,12 +19,12 @@ import { GraphConfigInterface } from '../../config'
 import { getX, getY } from '../node/helper'
 import {
   getLinkShiftTransform,
-  getLinkLabelShift,
   getLinkStrokeWidth,
   getLinkBandWidth,
   getLinkColor,
   getLinkLabelTextColor,
   LINK_LABEL_RADIUS,
+  getLinkArrowStyle,
   LINK_MARKER_WIDTH,
 } from './helper'
 import { ZoomLevel } from '../zoom-levels'
@@ -47,6 +46,9 @@ export function createLinks<N extends GraphInputNode, L extends GraphInputLink> 
 
   selection.append('path')
     .attr('class', linkSelectors.linkBand)
+
+  selection.append('use')
+    .attr('class', linkSelectors.linkArrow)
 
   selection.append('g')
     .attr('class', linkSelectors.flowGroup)
@@ -90,9 +92,9 @@ export function updateLinks<N extends GraphInputNode, L extends GraphInputLink> 
   config: GraphConfigInterface<N, L>,
   duration: number,
   scale = 1,
-  getMarkerId: (d: GraphLink) => string
+  getLinkArrowDefId: (arrow: GraphLinkArrowStyle | undefined) => string
 ): void {
-  const { linkFlowParticleSize, linkStyle, linkFlow, linkArrow, linkLabel, linkLabelShiftFromCenter } = config
+  const { linkFlowParticleSize, linkStyle, linkFlow, linkLabel, linkLabelShiftFromCenter } = config
   if (!selection.size()) return
 
   selection
@@ -104,10 +106,13 @@ export function updateLinks<N extends GraphInputNode, L extends GraphInputLink> 
   selection.each((d, i, elements) => {
     const element = elements[i]
     const linkGroup = select(element)
-    const link = linkGroup.select(`.${linkSelectors.link}`)
-    const linkBand = linkGroup.select(`.${linkSelectors.linkBand}`)
-    const linkSupport = linkGroup.select(`.${linkSelectors.linkSupport}`)
+    const link = linkGroup.select<SVGPathElement>(`.${linkSelectors.link}`)
+    const linkBand = linkGroup.select<SVGPathElement>(`.${linkSelectors.linkBand}`)
+    const linkSupport = linkGroup.select<SVGPathElement>(`.${linkSelectors.linkSupport}`)
+    const linkArrow = linkGroup.select<SVGUseElement>(`.${linkSelectors.linkArrow}`)
     const flowGroup = linkGroup.select(`.${linkSelectors.flowGroup}`)
+    const linkColor = getLinkColor(d, config)
+    const linkShiftTransform = getLinkShiftTransform(d, config.linkNeighborSpacing)
 
     const x1 = getX(d.source)
     const y1 = getY(d.source)
@@ -123,37 +128,56 @@ export function updateLinks<N extends GraphInputNode, L extends GraphInputLink> 
     const pathData = `M${x1},${y1} C${cp1x},${cp1y} ${cp2x},${cp2y} ${x2},${y2}`
     link
       .attr('class', linkSelectors.link)
-      .attr('marker-mid', getHref(d, getMarkerId))
       .style('stroke-width', getLinkStrokeWidth(d, scale, config))
-      .style('stroke', getLinkColor(d, config))
-      .attr('transform', getLinkShiftTransform(d, config.linkNeighborSpacing))
+      .style('stroke', linkColor)
+      .attr('transform', linkShiftTransform)
 
     smartTransition(link, duration)
       .attr('d', pathData)
 
     linkBand
       .attr('class', linkSelectors.linkBand)
-      .attr('transform', getLinkShiftTransform(d, config.linkNeighborSpacing))
+      .attr('transform', linkShiftTransform)
       .style('stroke-width', getLinkBandWidth(d, scale, config))
-      .style('stroke', getLinkColor(d, config))
+      .style('stroke', linkColor)
 
     smartTransition(linkBand, duration)
       .attr('d', pathData)
 
     linkSupport
-      .style('stroke', getLinkColor(d, config))
-      .attr('transform', getLinkShiftTransform(d, config.linkNeighborSpacing))
+      .style('stroke', linkColor)
+      .attr('transform', linkShiftTransform)
       .attr('d', pathData)
 
+    // Arrow
+    const linkArrowStyle = getLinkArrowStyle(d, config)
+    const linkPathElement = linkSupport.node()
+    const pathLength = linkPathElement.getTotalLength()
+    if (linkArrowStyle) {
+      const arrowPos = pathLength * 0.5
+      const p1 = linkPathElement.getPointAtLength(arrowPos)
+      const p2 = linkPathElement.getPointAtLength(arrowPos + 1) // A point very close to p1
+
+      // Calculate the angle for the arrowhead
+      const angle = Math.atan2(p2.y - p1.y, p2.x - p1.x) * (180 / Math.PI)
+      linkArrow
+        .attr('href', `#${getLinkArrowDefId(linkArrowStyle)}`)
+        .attr('fill', linkColor)
+        .attr('transform', `translate(${p1.x}, ${p1.y}) rotate(${angle})`)
+    } else {
+      linkArrow.attr('href', null)
+    }
+
+    // Particle Flow
     flowGroup
-      .attr('transform', getLinkShiftTransform(d, config.linkNeighborSpacing))
+      .attr('transform', linkShiftTransform)
       .style('display', getBoolean(d, linkFlow, d._indexGlobal) ? null : 'none')
       .style('opacity', 0)
 
     flowGroup
       .selectAll(`.${linkSelectors.flowCircle}`)
       .attr('r', linkFlowParticleSize / scale)
-      .style('fill', getLinkColor(d, config))
+      .style('fill', linkColor)
 
     smartTransition(flowGroup, duration)
       .style('opacity', scale < ZoomLevel.Level2 ? 0 : 1)
@@ -161,9 +185,10 @@ export function updateLinks<N extends GraphInputNode, L extends GraphInputLink> 
     // Labels
     const labelGroups = linkGroup.selectAll(`.${linkSelectors.labelGroups}`)
     const labelDatum = getValue<GraphLink<N, L>, GraphCircleLabel>(d, linkLabel, d._indexGlobal)
-    const markerWidth = getValue<GraphLink<N, L>, GraphLinkArrowStyle>(d, linkArrow, d._indexGlobal) ? LINK_MARKER_WIDTH * 2 : 0
+    const markerWidth = linkArrowStyle ? LINK_MARKER_WIDTH * 2 : 0
     const labelShift = getBoolean(d, linkLabelShiftFromCenter, d._indexGlobal) ? -markerWidth + 4 : 0
-    const labelTranslate = getLinkLabelShift(d, config.linkNeighborSpacing, labelShift)
+    const labelPos = linkPathElement.getPointAtLength(pathLength / 2 + labelShift)
+    const labelTranslate = `translate(${labelPos.x}, ${labelPos.y})`
 
     const labels = labelGroups
       .selectAll<SVGGElement, GraphLink<N, L>>(`.${linkSelectors.labelGroup}`)
@@ -273,8 +298,7 @@ export function animateLinkFlow<N extends GraphInputNode, L extends GraphInputLi
 export function zoomLinks<N extends GraphInputNode, L extends GraphInputLink> (
   selection: Selection<SVGGElement, GraphLink<N, L>, SVGGElement, unknown>,
   config: GraphConfigInterface<N, L>,
-  scale: number,
-  getMarkerId: (d: GraphLink) => string
+  scale: number
 ): void {
   const { linkFlowParticleSize } = config
 
@@ -284,7 +308,6 @@ export function zoomLinks<N extends GraphInputNode, L extends GraphInputLink> (
 
   const linkElements = selection.selectAll<SVGGElement, GraphLink<N, L>>(`.${linkSelectors.link}`)
   linkElements
-    .attr('marker-mid', d => getHref(d, getMarkerId))
     .style('stroke-width', d => getLinkStrokeWidth(d, scale, config))
 
   const linkBandElements = selection.selectAll<SVGGElement, GraphLink<N, L>>(`.${linkSelectors.linkBand}`)
