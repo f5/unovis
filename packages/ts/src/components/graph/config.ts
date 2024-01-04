@@ -109,7 +109,7 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   /** Link band width accessor function or constant value. Default: `0` */
   linkBandWidth?: NumericAccessor<L>;
   /** Link arrow accessor function or constant value. Default: `undefined` */
-  linkArrow?: GenericAccessor<GraphLinkArrowStyle, L> | undefined;
+  linkArrow?: GenericAccessor<GraphLinkArrowStyle | string | boolean, L> | undefined;
   /** Link stroke color accessor function or constant value. Default: `undefined` */
   linkStroke?: ColorAccessor<L>;
   /** Link disabled state accessor function or constant value. Default: `false` */

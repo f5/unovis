@@ -1,5 +1,5 @@
 // Utils
-import { getNumber, getString, getValue } from 'utils/data'
+import { getNumber, getValue } from 'utils/data'
 import { getColor, hexToBrightness } from 'utils/color'
 import { color } from 'd3-color'
 
@@ -14,13 +14,12 @@ import { GraphConfigInterface } from '../../config'
 
 // Helpers
 import { getX, getY } from '../node/helper'
-import { ZoomLevel } from '../zoom-levels'
 
 export const getPolylineData = (d: { x1: number; x2: number; y1: number; y2: number}): string => `${d.x1},${d.y1} ${(d.x1 + d.x2) / 2},${(d.y1 + d.y2) / 2} ${d.x2},${d.y2}`
 
 export const LINK_LABEL_RADIUS = 8
-export const LINK_MARKER_WIDTH = 12
-export const LINK_MARKER_HEIGHT = 8
+export const LINK_MARKER_WIDTH = 9
+export const LINK_MARKER_HEIGHT = 7
 
 export function getLinkShift (link: GraphLink, spacing: number): { dx: number; dy: number } {
   const sourceNode = link.source
@@ -34,19 +33,6 @@ export function getLinkShift (link: GraphLink, spacing: number): { dx: number; d
 export function getLinkShiftTransform (link: GraphLink, spacing: number): string {
   const { dx, dy } = getLinkShift(link, spacing)
   return `translate(${dx}, ${dy})`
-}
-
-export function getLinkLabelShift (link: GraphLink, linkSpacing: number, shiftFromCenter = 0): string {
-  const x1 = getX(link.source)
-  const y1 = getY(link.source)
-  const x2 = getX(link.target)
-  const y2 = getY(link.target)
-  const angle = Math.atan2(y2 - y1, x2 - x1)
-  const perpendicularShift = getLinkShift(link, linkSpacing)
-
-  const x = x1 + 0.5 * (x2 - x1) + shiftFromCenter * Math.cos(angle) + perpendicularShift.dx
-  const y = y1 + 0.5 * (y2 - y1) + shiftFromCenter * Math.sin(angle) + perpendicularShift.dy
-  return `translate(${x}, ${y})`
 }
 
 export function getLinkStrokeWidth<N extends GraphInputNode, L extends GraphInputLink> (
@@ -76,24 +62,23 @@ export function getLinkColor<N extends GraphInputNode, L extends GraphInputLink>
   return c || null
 }
 
-export function getLinkArrow<N extends GraphInputNode, L extends GraphInputLink> (
+export function getLinkArrowStyle<N extends GraphInputNode, L extends GraphInputLink> (
   d: GraphLink<N, L>,
-  scale: number,
   config: GraphConfigInterface<N, L>
-): string {
-  const { linkArrow } = config
-  if (scale > ZoomLevel.Level2 && getString(d, linkArrow, d._indexGlobal)) {
-    return getValue<GraphLink<N, L>, GraphLinkArrowStyle>(d, linkArrow, d._indexGlobal)
-  }
-  return null
+): GraphLinkArrowStyle | undefined {
+  const linkArrowValue = getValue<GraphLink<N, L>, GraphLinkArrowStyle | string | boolean>(d, config.linkArrow, d._indexGlobal)
+
+  if (!linkArrowValue) return undefined
+  else if (linkArrowValue === GraphLinkArrowStyle.Double) return linkArrowValue as GraphLinkArrowStyle.Double
+  else return GraphLinkArrowStyle.Single
 }
 
 export function getArrowPath (): string {
-  return `M0,0 V${LINK_MARKER_HEIGHT} L${LINK_MARKER_WIDTH},${LINK_MARKER_HEIGHT / 2} Z`
+  return `M${-LINK_MARKER_WIDTH / 2},${-LINK_MARKER_HEIGHT / 2} V${LINK_MARKER_HEIGHT / 2} L${LINK_MARKER_WIDTH / 2},0 Z`
 }
 
 export function getDoubleArrowPath (): string {
-  return `M0,${LINK_MARKER_HEIGHT / 2} L${LINK_MARKER_WIDTH},0 L${LINK_MARKER_WIDTH * 2},${LINK_MARKER_HEIGHT / 2} L${LINK_MARKER_WIDTH},${LINK_MARKER_HEIGHT} Z`
+  return `M${-LINK_MARKER_WIDTH / 2},0 L${LINK_MARKER_WIDTH / 2},${-LINK_MARKER_HEIGHT / 2} L${LINK_MARKER_WIDTH * 1.5},0 L${LINK_MARKER_WIDTH / 2},${LINK_MARKER_HEIGHT / 2} Z`
 }
 
 export function getLinkLabelTextColor (label: GraphCircleLabel): string {

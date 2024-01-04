@@ -14,8 +14,7 @@ import { GraphInputLink, GraphInputNode } from 'types/graph'
 import { Spacing } from 'types/spacing'
 
 // Utils
-import { isNumber, clamp, clean, unique, shallowDiff, isFunction, getBoolean } from 'utils/data'
-import { stringToHtmlId } from 'utils/misc'
+import { isNumber, clamp, shallowDiff, isFunction, getBoolean } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 
 // Local Types
@@ -34,7 +33,7 @@ import * as panelSelectors from './modules/panel/style'
 import { createNodes, updateNodes, removeNodes, zoomNodesThrottled, zoomNodes, updateSelectedNodes } from './modules/node'
 import { getMaxNodeSize, getNodeSize, getX, getY } from './modules/node/helper'
 import { createLinks, updateLinks, removeLinks, zoomLinksThrottled, zoomLinks, animateLinkFlow, updateSelectedLinks } from './modules/link'
-import { LINK_MARKER_WIDTH, LINK_MARKER_HEIGHT, getDoubleArrowPath, getArrowPath, getLinkColor, getLinkArrow } from './modules/link/helper'
+import { getDoubleArrowPath, getArrowPath } from './modules/link/helper'
 import { createPanels, updatePanels, removePanels } from './modules/panel'
 import { setPanelForNodes, updatePanelBBoxSize, updatePanelNumNodes, initPanels } from './modules/panel/helper'
 import { applyLayoutCircular, applyLayoutParallel, applyLayoutDagre, applyLayoutConcentric, applyLayoutForce, applyELKLayout } from './modules/layout'
@@ -138,7 +137,7 @@ export class Graph<
 
     this._defs = this._graphGroup.append('defs')
 
-    this._getMarkerId = this._getMarkerId.bind(this)
+    this._getLinkArrowDefId = this._getLinkArrowDefId.bind(this)
   }
 
   setData (data: {nodes: N[]; links?: L[]}): void {
@@ -300,7 +299,7 @@ export class Graph<
       .call(createLinks, config, duration)
 
     const linkGroupsMerged = linkGroups.merge(linkGroupsEnter)
-    linkGroupsMerged.call(updateLinks, config, duration, this._scale, this._getMarkerId)
+    linkGroupsMerged.call(updateLinks, config, duration, this._scale, this._getLinkArrowDefId)
 
     const linkGroupsExit = linkGroups.exit<GraphLink<N, L>>()
     linkGroupsExit
@@ -609,7 +608,7 @@ export class Graph<
         (nodes.length > config.zoomThrottledUpdateNodeThreshold ? zoomLinksThrottled : zoomLinks) as typeof zoomLinks,
         config,
         this._scale,
-        this._getMarkerId
+        this._getLinkArrowDefId
       )
   }
 
@@ -670,7 +669,7 @@ export class Graph<
       const target = l.target as GraphNode<N, L>
       return source._id === d._id || target._id === d._id
     })
-    linksToUpdate.call(updateLinks, config, 0, scale, this._getMarkerId)
+    linksToUpdate.call(updateLinks, config, 0, scale, this._getLinkArrowDefId)
     const linksToAnimate = linksToUpdate.filter(d => d._state.greyout)
     if (linksToAnimate.size()) animateLinkFlow(linksToAnimate, config, this._scale)
   }
@@ -714,45 +713,21 @@ export class Graph<
     return false
   }
 
-  private _getMarkerId (d: GraphLink<N, L>, color?: string, arrow?: GraphLinkArrowStyle): string {
-    const { config } = this
-    const c = color ?? getLinkColor(d, config)
-    const a = arrow ?? getLinkArrow(d, this._scale, config)
-    return a && c ? `${this.uid}-${stringToHtmlId(c)}-${a}` : null
+  private _getLinkArrowDefId (arrow: GraphLinkArrowStyle | undefined): string | null {
+    return arrow ? `${this.uid}-${arrow}` : null
   }
 
   private _addSVGDefs (): void {
-    const { datamodel: { links } } = this
-
     // Clean up old defs
     this._defs.selectAll('*').remove()
 
-    // Get all variations of link colors to create markers
-    const linkColors = unique(clean(
-      links.map(d => getLinkColor(d, this.config))
-    ))
+    // Single Arrow
+    this._defs.append('path').attr('d', getArrowPath())
+      .attr('id', this._getLinkArrowDefId(GraphLinkArrowStyle.Single))
 
-    this._defs.selectAll('marker')
-      .data([
-        ...linkColors.map(d => ({ color: d, arrow: GraphLinkArrowStyle.Single })), // Single-sided arrows
-        ...linkColors.map(d => ({ color: d, arrow: GraphLinkArrowStyle.Double })), // Double-sided arrows
-      ]).enter()
-      .append('marker')
-      .attr('id', d => this._getMarkerId(null, d.color, d.arrow))
-      .attr('orient', 'auto')
-      .attr('markerWidth', d => d.arrow === GraphLinkArrowStyle.Double ? LINK_MARKER_WIDTH * 2 : LINK_MARKER_WIDTH)
-      .attr('markerHeight', d => d.arrow === GraphLinkArrowStyle.Double ? LINK_MARKER_HEIGHT * 2 : LINK_MARKER_HEIGHT)
-      .attr('markerUnits', 'userSpaceOnUse')
-      .attr('refX', LINK_MARKER_WIDTH - LINK_MARKER_HEIGHT / 2)
-      .attr('refY', LINK_MARKER_HEIGHT - LINK_MARKER_HEIGHT / 2)
-      .html(d => {
-        return `
-          <path
-            d="${d.arrow === GraphLinkArrowStyle.Double ? getDoubleArrowPath() : getArrowPath()}"
-            fill="${d.color ?? null}"
-          />
-        `
-      })
+    // Double Arrow
+    this._defs.append('path').attr('d', getDoubleArrowPath())
+      .attr('id', this._getLinkArrowDefId(GraphLinkArrowStyle.Double))
   }
 
   public zoomIn (increment = 0.3): void {
