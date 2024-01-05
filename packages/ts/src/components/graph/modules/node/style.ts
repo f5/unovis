@@ -65,6 +65,9 @@ export const variables = injectGlobal`
     --vis-dark-graph-node-greyout-color: #494b56;
     --vis-dark-graph-node-icon-greyout-color: var(--vis-color-grey);
     --vis-dark-graph-node-side-label-background-greyout-color: #494B56;
+
+    /* Misc */
+    --vis-graph-node-dominant-baseline: middle;
   }
 
   body.theme-dark ${`.${nodes}`} {
@@ -105,7 +108,7 @@ export const nodeIcon = css`
   label: icon;
 
   font-family: var(--vis-graph-icon-font-family), var(--vis-font-family);
-  dominant-baseline: middle;
+  dominant-baseline: var(--vis-graph-node-dominant-baseline);
   text-anchor: middle;
   pointer-events: none;
   transition: .4s all;
@@ -116,7 +119,7 @@ export const nodeBottomIcon = css`
   label: node-bottom-icon;
   font-family: var(--vis-graph-icon-font-family), var(--vis-font-family);
   font-size: var(--vis-graph-node-bottom-icon-font-size);
-  dominant-baseline: middle;
+  dominant-baseline: var(--vis-graph-node-dominant-baseline);
   text-anchor: middle;
   pointer-events: none;
   transition: .4s fill;
@@ -181,7 +184,7 @@ export const sideLabel = css`
   label: side-label;
 
   font-family: var(--vis-graph-icon-font-family), var(--vis-font-family);
-  dominant-baseline: middle;
+  dominant-baseline: var(--vis-graph-node-dominant-baseline);
   text-anchor: middle;
   font-size: 16px;
   fill: var(--vis-graph-node-side-label-fill-color-bright);

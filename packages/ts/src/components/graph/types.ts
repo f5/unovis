@@ -64,6 +64,8 @@ export type GraphCircleLabel = {
   radius?: number;
 }
 
+export type GraphLinkLabel = GraphCircleLabel
+
 export enum GraphLinkStyle {
   Dashed = 'dashed',
   Solid = 'solid',
