@@ -216,6 +216,7 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
     // Update Node Icon
     const nodeIconContent = getString(d, nodeIcon, d._index)
     const nodeIconSizeValue = getNumber(d, nodeIconSize, d._index) ?? 2.5 * Math.sqrt(nodeSizeValue)
+    const nodeIconColor = getNodeIconColor(d, nodeFill, d._index, selection.node())
     icon.selectAll('*').remove() // Removing all children first
     if (isInternalHref(nodeIconContent)) { // If the icon is a href, we need to append a <use> element and render the icon with it
       icon.append('use')
@@ -224,12 +225,13 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
         .attr('y', -nodeIconSizeValue / 2)
         .attr('width', nodeIconSizeValue)
         .attr('height', nodeIconSizeValue)
+        .style('fill', nodeIconColor)
     } else { // If the icon is a text, we need to append a <text> element and render the icon as text
       icon
         .append('text')
         .style('font-size', `${nodeIconSizeValue}px`)
         .attr('dy', '0.1em')
-        .style('fill', getNodeIconColor(d, nodeFill, d._index, selection.node()))
+        .style('fill', nodeIconColor)
         .html(nodeIconContent)
     }
 
