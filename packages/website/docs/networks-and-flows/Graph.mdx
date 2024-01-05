@@ -166,15 +166,25 @@ provided to `nodeStrokeWidth`.
 
 ### Icons and Labels
 #### In the center
-Nodes can have icons (when using an icon font) in the center, which you can set by providing the
-`nodeIcon` accessor function in the config. By default, the icon will fit to the size of the node. You can set custom
-icon size in pixels with the `nodeIconSize` property.
+Nodes can have icons in the center, set by providing the `nodeIcon` accessor function, which returns
+either a character (if you're using an icon font) or an internal href (if you're defining your icons as
+[custom SVG defs](http://localhost:9300/docs/containers/Single_Container#svg-defs)). By default,
+the icon will fit to the size of the node. You can set custom icon size in pixels with the `nodeIconSize`
+property.
 
-The component will automatically choose the icon color (dark or light) based on the node's fill color. You can change
-the dark and light colors with the `--vis-graph-node-icon-fill-color-bright` and `--vis-graph-node-icon-fill-color-dark`
+When using an icon font or when your SVG icon `fill` is set to `currentColor`, the component will automatically
+choose the icon color (dark or light) based on the node's fill color. You can change the dark and light colors with the `--vis-graph-node-icon-fill-color-bright` and `--vis-graph-node-icon-fill-color-dark`
 CSS variables.
 
 The icon font can be set via the `--vis-graph-icon-font-family` CSS variable.
+
+:::note
+
+Icon fonts have different baseline values and sometime you might need to specify a custom `dominant-baseline`
+to make the icons be vertically centered. You can achieve that by changing the `--vis-graph-node-dominant-baseline`
+CSS variable value (usually between `middle` and `central`). The default value is `middle`
+
+:::
 
 <GraphDoc
   showContext="minimal"
@@ -182,6 +192,7 @@ The icon font can be set via the `--vis-graph-icon-font-family` CSS variable.
   nodeIconSize={(n, i) => 10 + i}
   nodeFill={(n, i) => getColorByIndex(i) }
 />
+
 
 #### At the bottom
 Node label and sub-label can be set by providing the `nodeLabel` and `nodeSubLabel` accessor functions.
@@ -249,7 +260,6 @@ You can configure the default appearance of the side labels with the following C
 --vis-dark-graph-node-side-label-fill-color-dark: var(--vis-color-grey);
 ```
 
-
 ### Gauge Outline
 Nodes can also have a gauge outline on top of stroke, if you provide an accessor function to `nodeGaugeValue`
 returning a number in the range of [0, 1]. The width of the gauge is linked to the `nodeStrokeWidth` value.
@@ -286,29 +296,33 @@ either `GraphLinkStyle.Dashed` (`"dashed"`) or `GraphLinkStyle.Solid` (`"solid"`
 changed with the `--vis-graph-link-dashed-stroke-dasharray` CSS variable.
 <GraphDoc hiddenProps={linkHiddenProps} linkStroke={getRandomColor} linkStyle={() => sample(['dashed', 'solid'])} linkWidth={(d, i) => 2 + i / 2} />
 
+### Curvature
+You can control link curvature by setting the `linkCurvature` property to a number in the range of [0, 2].
+The default value is 0 which means straight lines.
+<GraphDoc hiddenProps={linkHiddenProps} linkCurvature={1} />
+
 ### Arrows
 Providing an accessor function to `linkArrow` will turn on arrows display on links. The function should return
-`GraphLinkArrowStyle.Single` (`"single"`) or `GraphLinkArrowStyle.Double` (`"double"`) or `null`.
+`GraphLinkArrowStyle.Single` (`"single"` or simply `true`) or `GraphLinkArrowStyle.Double` (`"double"`) or `null`.
 <GraphDoc hiddenProps={linkHiddenProps} linkArrow={() => sample([undefined, 'single', 'double'])} />
 
 ### Labels
-Links can have one small circular labels similar to node's [side labels](Graph#on-the-side). Provide a function to
-`linkLabel` returning a `GraphCircleLabel` object to display the label.
-<GraphDoc hiddenProps={linkHiddenProps} linkLabel={(d, i) => ({ text: i })} />
+Links can have textual label. When the label is short (two characters or less) it'll be rendered with a circular
+background similarly to node's [side labels](Graph#on-the-side). Longer labels will have a rectangular background.
+To enable links labels you'll need to provide a function to `linkLabel` returning a `GraphLinkLabel` object to display.
+<GraphDoc hiddenProps={linkHiddenProps} linkLabel={(d, i) => ({ text: i*i*i })} />
 
 The default appearance of the labels is controlled with the following CSS variables:
 
 ```css
---vis-graph-link-label-stroke-color: #fff;
---vis-graph-link-label-fill-color: #e6e9f3;
---vis-graph-link-label-text-color-dark: #494b56;
---vis-graph-link-label-text-color-bright: #fff;
---vis-graph-link-label-text-color: var(--vis-graph-link-label-text-color-dark);
+--vis-graph-link-label-font-size: 9pt;
+
+--vis-graph-link-label-background: #e6e9f3;
+--vis-graph-link-label-text-color: #18181B;
 
 // Dark Theme
---vis-dark-graph-link-label-stroke-color: #222;
---vis-dark-graph-link-label-fill-color: var(--vis-color-grey);
---vis-dark-graph-link-label-text-color: var(--vis-graph-link-label-text-color-bright)
+--vis-dark-graph-link-label-background: #3f3f45;
+--vis-dark-graph-link-label-text-color: var(--vis-graph-link-label-text-color-bright);
 ```
 
 ### Band
