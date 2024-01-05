@@ -17,7 +17,6 @@ import { getX, getY } from '../node/helper'
 
 export const getPolylineData = (d: { x1: number; x2: number; y1: number; y2: number}): string => `${d.x1},${d.y1} ${(d.x1 + d.x2) / 2},${(d.y1 + d.y2) / 2} ${d.x2},${d.y2}`
 
-export const LINK_LABEL_RADIUS = 8
 export const LINK_MARKER_WIDTH = 9
 export const LINK_MARKER_HEIGHT = 7
 

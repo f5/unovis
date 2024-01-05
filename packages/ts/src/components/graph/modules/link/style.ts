@@ -11,9 +11,9 @@ export const variables = injectGlobal`
     --vis-graph-link-greyout-opacity: 0.3;
     --vis-graph-link-dashed-stroke-dasharray: 6 6;
 
-    --vis-graph-link-label-stroke-color: #fff;
-    --vis-graph-link-label-fill-color: #e6e9f3;
-    --vis-graph-link-label-text-color-dark: #494b56;
+    --vis-graph-link-label-font-size: 9pt;
+    --vis-graph-link-label-background: #e6e9f3;
+    --vis-graph-link-label-text-color-dark: #18181B;
     --vis-graph-link-label-text-color-bright: #fff;
     --vis-graph-link-label-text-color: var(--vis-graph-link-label-text-color-dark);
 
@@ -21,16 +21,17 @@ export const variables = injectGlobal`
     --vis-graph-link-support-stroke-width: 10px;
 
     --vis-dark-graph-link-stroke-color: #494b56;
-    --vis-dark-graph-link-label-stroke-color: #222;
-    --vis-dark-graph-link-label-fill-color: var(--vis-color-grey);
-    --vis-dark-graph-link-label-text-color: var(--vis-graph-link-label-text-color-bright)
+    --vis-dark-graph-link-label-background: #3f3f45;
+    --vis-dark-graph-link-label-text-color: var(--vis-graph-link-label-text-color-bright);
+
+    --vis-graph-link-dominant-baseline: middle;
   }
 
   body.theme-dark ${`.${links}`} {
     --vis-graph-link-stroke-color: var(--vis-dark-graph-link-stroke-color);
     --vis-graph-link-label-stroke-color: var(--vis-dark-graph-link-label-stroke-color);
     --vis-graph-link-label-text-color: var(--vis-dark-graph-link-label-text-color);
-    --vis-graph-link-label-fill-color: var(--vis-dark-graph-link-label-fill-color);
+    --vis-graph-link-label-background: var(--vis-dark-graph-link-label-background);
   }
 `
 
@@ -105,27 +106,24 @@ export const flowCircle = css`
   fill: var(--vis-graph-link-stroke-color);
 `
 
-export const labelGroups = css`
-  label: label-groups;
-`
-
-export const labelGroup = css`
+export const linkLabelGroup = css`
   label: label-group;
   pointer-events: all;
 `
 
-export const labelCircle = css`
-  label: label-circle;
+export const linkLabelBackground = css`
+  label: label-background;
 
-  fill: var(--vis-graph-link-label-fill-color);
-  stroke: var(--vis-graph-link-label-stroke-color);
+  fill: var(--vis-graph-link-label-background);
 `
 
-export const labelContent = css`
+export const linkLabelContent = css`
   label: label-content;
 
-  font-family: var(--vis-graph-icon-font-family), var(--vis-font-family);
+  font-size: var(--vis-graph-link-label-font-size);
+  font-family: var(--vis-font-family);
   fill: var(--vis-graph-link-label-text-color);
   text-anchor: middle;
-  dominant-baseline: middle;
+  dominant-baseline: var(--vis-graph-link-dominant-baseline);
+  user-select: none;
 `
