@@ -161,3 +161,7 @@ export function getNodeIconColor<T> (d: T, colorAccessor: ColorAccessor<T>, inde
   const brightness = hexToBrightness(hex)
   return brightness > 0.65 ? 'var(--vis-graph-node-icon-fill-color-dark)' : 'var(--vis-graph-node-icon-fill-color-bright)'
 }
+
+export function isInternalHref (str: string): boolean {
+  return /^#[^]+/.test(str)
+}
