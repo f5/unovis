@@ -31,6 +31,7 @@ import {
   getNodeIconColor,
   getNodeSize,
   LABEL_RECT_VERTICAL_PADDING,
+  isInternalHref,
 } from './helper'
 import { appendShape, updateShape, isCustomXml } from '../shape'
 import { ZoomLevel } from '../zoom-levels'
@@ -70,7 +71,7 @@ export function createNodes<N extends GraphInputNode, L extends GraphInputLink> 
     appendShape(group, shape, nodeSelectors.node, nodeSelectors.customNode, d._index)
     appendShape(group, shape, nodeSelectors.nodeSelection, nodeSelectors.customNode, d._index)
     group.append('path').attr('class', nodeSelectors.nodeGauge)
-    group.append('text').attr('class', nodeSelectors.nodeIcon)
+    group.append('g').attr('class', nodeSelectors.nodeIcon)
 
     const label = group.append('g').attr('class', nodeSelectors.label)
     label.append('rect').attr('class', nodeSelectors.labelBackground)
@@ -213,11 +214,24 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
     updateShape(nodeSelectionOutline, nodeShape, nodeSize, d._index)
 
     // Update Node Icon
-    icon
-      .style('font-size', `${getNumber(d, nodeIconSize, d._index) ?? 2.5 * Math.sqrt(nodeSizeValue)}px`)
-      .attr('dy', '0.1em')
-      .style('fill', getNodeIconColor(d, nodeFill, d._index, selection.node()))
-      .html(getString(d, nodeIcon, d._index))
+    const nodeIconContent = getString(d, nodeIcon, d._index)
+    const nodeIconSizeValue = getNumber(d, nodeIconSize, d._index) ?? 2.5 * Math.sqrt(nodeSizeValue)
+    icon.selectAll('*').remove() // Removing all children first
+    if (isInternalHref(nodeIconContent)) { // If the icon is a href, we need to append a <use> element and render the icon with it
+      icon.append('use')
+        .attr('href', nodeIconContent)
+        .attr('x', -nodeIconSizeValue / 2)
+        .attr('y', -nodeIconSizeValue / 2)
+        .attr('width', nodeIconSizeValue)
+        .attr('height', nodeIconSizeValue)
+    } else { // If the icon is a text, we need to append a <text> element and render the icon as text
+      icon
+        .append('text')
+        .style('font-size', `${nodeIconSizeValue}px`)
+        .attr('dy', '0.1em')
+        .style('fill', getNodeIconColor(d, nodeFill, d._index, selection.node()))
+        .html(nodeIconContent)
+    }
 
     // Side Labels
     const sideLabelsData = getValue<GraphNode<N, L>, GraphCircleLabel[]>(d, nodeSideLabels, d._index) || []
