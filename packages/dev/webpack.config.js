@@ -48,6 +48,10 @@ module.exports = {
           },
         ],
       },
+      {
+        resourceQuery: /raw/,
+        type: 'asset/source',
+      },
     ],
   },
   resolve: {
