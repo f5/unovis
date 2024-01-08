@@ -60,3 +60,15 @@ export function transformValuesToString (transformValues: TransformValues): stri
 export function sanitizeSvgString (svgString: string, allowedTags = allowedSvgTags): string {
   return striptags(svgString, allowedTags)
 }
+
+
+export function isStringSvg (input: string): boolean {
+  /* Since a general-purpose regex for this can be complex and potentially vulnerable
+  * to ReDoS attacks, we'll create a simpler, safer regex that looks for a few common
+  * SVG elements or attributes.
+  */
+  const svgElementsRegex = new RegExp(`<(${allowedSvgTags.join('|')})\\b`, 'i')
+  const svgAttributesRegex = /\b(d|fill|stroke|transform|viewBox)=/i
+
+  return svgElementsRegex.test(input) || svgAttributesRegex.test(input)
+}
