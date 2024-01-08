@@ -6,7 +6,7 @@ import { NumericAccessor, StringAccessor } from 'types/accessor'
 // Utils
 import { polygon } from 'utils/path'
 import { getString } from 'utils/data'
-import { sanitizeSvgString } from 'utils/svg'
+import { isStringSvg, sanitizeSvgString } from 'utils/svg'
 
 // Types
 
@@ -15,10 +15,6 @@ import { GraphNodeShape } from '../types'
 
 // Helpers
 import { getNodeSize } from './node/helper'
-
-export function isCustomXml (xml: GraphNodeShape | string): boolean {
-  return /<[a-z][\s\S]*>/i.test(xml)
-}
 
 export function appendShape<T> (
   selection: Selection<SVGGElement, T, SVGGElement, unknown>,
@@ -36,8 +32,8 @@ export function appendShape<T> (
     | Selection<SVGRectElement, unknown, null, undefined>
     | Selection<SVGGElement, unknown, null, undefined>
     | Selection<SVGCircleElement, unknown, null, undefined>
-    const isCustomXmlShape = isCustomXml(shape)
-    if (isCustomXmlShape) {
+    const isCustomShape = isStringSvg(shape)
+    if (isCustomShape) {
       shapeElement = element.insert('g', insertSelector)
         .html(sanitizeSvgString(shape))
     } else {
@@ -57,7 +53,7 @@ export function appendShape<T> (
       }
     }
 
-    shapeElement.classed(customShapeSelector, isCustomXmlShape)
+    shapeElement.classed(customShapeSelector, isCustomShape)
     return shapeElement.attr('class', shapeSelector)
   })
 }
@@ -100,7 +96,7 @@ export function updateShape<T> (
     })
 
   selection.filter('g')
-    .filter(() => !isCustomXml(getString(d, shape, index) as GraphNodeShape))
+    .filter(() => !isStringSvg(getString(d, shape, index) as GraphNodeShape))
     .html(getString(d, shape, index))
 
   selection.filter('g')

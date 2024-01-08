@@ -12,6 +12,7 @@ import { polygon } from 'utils/path'
 import { smartTransition } from 'utils/d3'
 import { getBoolean, getNumber, getString, getValue, throttle } from 'utils/data'
 import { getColor } from 'utils/color'
+import { isStringSvg } from 'utils/svg'
 
 // Local Types
 import { GraphNode, GraphCircleLabel, GraphNodeAnimationState, GraphNodeAnimatedElement, GraphNodeShape } from '../../types'
@@ -33,7 +34,7 @@ import {
   LABEL_RECT_VERTICAL_PADDING,
   isInternalHref,
 } from './helper'
-import { appendShape, updateShape, isCustomXml } from '../shape'
+import { appendShape, updateShape } from '../shape'
 import { ZoomLevel } from '../zoom-levels'
 
 // Styles
@@ -295,7 +296,7 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
     // Position label
     const labelFontSize = parseFloat(window.getComputedStyle(groupElement).getPropertyValue('--vis-graph-node-label-font-size')) || 12
     const labelMargin = LABEL_RECT_VERTICAL_PADDING + 1.25 * labelFontSize ** 1.03
-    const nodeHeight = isCustomXml((getString(d, nodeShape, d._index)) as GraphNodeShape) ? nodeBBox.height : nodeSizeValue
+    const nodeHeight = isStringSvg((getString(d, nodeShape, d._index)) as GraphNodeShape) ? nodeBBox.height : nodeSizeValue
     label.attr('transform', `translate(0, ${nodeHeight / 2 + labelMargin})`)
     if (scale >= ZoomLevel.Level3) setLabelRect(label, getString(d, nodeLabel, d._index), nodeSelectors.labelText)
 
