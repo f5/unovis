@@ -9,7 +9,7 @@ import { PropsTable } from '@site/src/components/PropsTable'
 import { DocWrapper, InputWrapper } from '../wrappers'
 import { data, pointData, heatmapData } from './data'
 
-export const defaultProps = (showData = true) => ({
+export const defaultProps = () => ({
   name: "TopoJSONMap",
   configKey: "component",
   containerName: "SingleContainer",
@@ -17,7 +17,6 @@ export const defaultProps = (showData = true) => ({
   height: 400,
   data: {},
   dataType: "MapPoint,MapLink,MapArea",
-  showContext: "minimal",
   hiddenProps: {
     disableZoom: true,
   }
@@ -29,10 +28,11 @@ export const TopoDoc = (props) => (
   <BrowserOnly>
   {() =>  {
       const lib = require('@unovis/ts/maps')
-      const imports = {
+      const imports = props.showContext ? {
         "@unovis/ts/maps": [props.topojson],
-      }
-      if (props.showData) imports['@unovis/ts'] = ["MapData"]
+        "@unovis/ts": ["MapData"]
+      } : undefined
+      
       return (
         <DocWrapper { ...props } imports={imports} hiddenProps={{ topojson: lib[props.topojson] }}/>
       )
@@ -40,15 +40,17 @@ export const TopoDoc = (props) => (
   </BrowserOnly>
 )
 
-## Basic Configuration
-The _TopoJSONMap_ is a map that uses [TopoJSON](https://github.com/topojson/topojson) as its
-underlying data. The basic configuration is:
-<TopoDoc {...defaultProps(false)} showContext="container"/>
+The _TopoJSONMap_ component is a map that is renders topological geo-data from the
+[TopoJSON](https://github.com/topojson/topojson) data format. You can provide your own custom _topojson_
+or use one of the [pre-configured topojson files](#topojson-configuration) provided in `@unovis/ts/maps`.
+In addition to custom topologies, _TopoJSONMap_ supports a variety of features including the
+ability to add points and links, feature customization, zooming, alternate map projections and more.
 
-:::note
-The remaining examples will use `WorldMapTopoJSON` for the topojson configuration.
-Check out [this section](#topojson-configuration) to learn about other available maps.
-:::
+## Basic Configuration
+<TopoDoc
+  {...defaultProps()}
+  showContext="full"
+/>
 
 ## Map Data
 There are three main building blocks that can make up the data supplied to _TopoJSONMap_:
@@ -61,13 +63,11 @@ blocks as keys mapped to their data arrays, like so:
 
 ```ts
 type MapData = {
-  area: MapArea[];
+  areas: MapArea[];
   points: MapPoint[];
   links: MapLink[];
 }
 ```
-
-<TopoDoc {...defaultProps()} data={data} showContext="full"/>
 
 where `MapArea`, `MapPoint`, and `MapLink` are custom types that represent map data. Keep
 reading to learn more about the minimum configurations for these types.
@@ -86,14 +86,14 @@ _TopoJSONMap_ directly.
 
 <TopoDoc
   {...defaultProps()}
+  excludeTabs
   data={pointData}
-  dataType="MapPoint,undefined,undefined"
-  showContext="container"/>
+/>
 
-### mapFitToPoints
+### `mapFitToPoints`
 <TopoDoc {...defaultProps()} data={pointData} mapFitToPoints={true}/>
 
-### Point Customization
+### Point Styling
 The following _TopoJSONMap_ properties accept accessor functions to customize the appearance of your
 points:
 * `pointColor`
@@ -105,12 +105,25 @@ points:
 You can provide labels with the `pointLabel` attribute, which accepts a `StringAccessor` function to
 be called on each `MapPoint` datum.
 
+For example, consider the following type and accessor function:
+```ts
+type MapPoint = {
+  id: string;
+  latitude: number;
+  longitude: number;
+  city: string;
+}
+
+const pointLabel = (d: MapPoint) => d.city
+```
+
 <TopoDoc
   {...defaultProps()}
+  hideTabLabels
   data={{ points: data.points }}
   pointLabel={d => d.city}/>
 
-### Custom Point Labels
+### Point Label Styling
 The following _TopoJSONMap_ properties can further customize your Point Label.
 * `pointLabelPosition`
 * `pointLabelTextBrighnessRatio`
@@ -175,10 +188,10 @@ Or, you can simply provide these values through the `linkSource` and `linkTarget
 <TopoDoc
   {...defaultProps()}
   data={{...data, areas: [] }}
-  showContext="container"
+  excludeTabs
 />
 
-### Link customization
+#### Link customization
 You can further customize the map _Links_ with the following properties:
 * `linkColor`
 * `linkCursor`
@@ -186,8 +199,8 @@ You can further customize the map _Links_ with the following properties:
 
 ## Areas
 To work with features in the _TopoJSONMap_, all you need is a unique `id` which is defined in the
-chart's _topojson_ definition. For example, in our `WorldMapTopoJSON` _topojson_, every country has
-a unique id that corresponds to the [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
+chart's _topojson_ definition or an `areaId` accessor function. For example, in our `WorldMapTopoJSON`
+_topojson_, every country has a unique id that corresponds to the [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
 country code. See our [topojson configuration](#topojson-configuration) section for more details.
 
 ```ts
@@ -196,19 +209,78 @@ type MapArea = {
 }
 ```
 
+As a basic example, let's say you have an array of countries created from ISO codes:
+
+```ts
+const countryCodes = [
+  'AU','BR','CN','EG','FR','IN','JP','MX','NO','PE','PH','RU','TZ','US'
+]
+const areaData = countryCodes.map(id => ({ id }))
+const data = { areas: areaData }
+```
+
+The provided countries will be highlighted according to their color defined in the topojson file:
+
 <TopoDoc
   {...defaultProps()}
-  data={{ areas: data.areas }}
-  pointId={d => d.id}
-  showContext="minimal"
+  data={{ areas: data.points }}
+  areaId={d => d.id.substring(0, 2)}
+  excludeTabs
 />
 
-### Area customization
-You can further customize the map _Area_ with the following properties:
-* `areaColor`
-* `areaCursor`
+### Custom Color
+You can override the default area colors by including a `color` property in `AreaDatum` or by providing
+an `areaColor` accessor function.
 
-## Projection
+```ts
+const data = {
+  areas = [
+    { id: 'AU', color: 'red' },
+    { id: 'BR', color: 'blue' },
+    { id: 'CN', color: 'green' },
+  ]
+}
+```
+
+<TopoDoc
+  {...defaultProps()}
+  data={{ areas:  [
+  { id: 'AU', color: 'red', name: 'Australia' },
+  { id: 'BR', color: 'blue', name: 'Brazil' },
+  { id: 'CN', color: 'green', name: 'China' },
+] }}
+  areaId={d => d.id}
+  areaColor={d => d.color}
+  excludeTabs
+/>
+
+Has the same result as:
+
+```ts
+const areaColor = (d: AreaDatum) => {
+  switch (d.id) {
+    case 'AU': return 'red'
+    case 'BR': return 'blue'
+    case 'CN': return 'green'
+  }
+}
+```
+<TopoDoc
+  {...defaultProps()}
+  data={{ areas:  [
+  { id: 'AU', color: 'red', name: 'Australia' },
+  { id: 'BR', color: 'blue', name: 'Brazil' },
+  { id: 'CN', color: 'green', name: 'China' },
+] }}
+  areaId={d => d.id}
+  areaColor={d => d.color}
+  excludeGraph
+  hideTabLabels
+/>
+
+
+
+## Projections
 You can provide a projection for your _TopoJSONMap_ with a `MapProjection` instance. See D3's
 [geo projections](https://github.com/d3/d3-geo) for more information.
 
@@ -243,17 +315,17 @@ By default, zooming is enabled for a _TopoJSONMap_ component. You can disable it
 
 For further customization, you can configure the following zoom properties:
 
-### zoomFactor
+### `zoomFactor`
 To set the initial zoom factor.
 <TopoDoc {...defaultProps()} zoomFactor={5}/>
 
-### zoomExtent
+### `zoomExtent`
 `zoomExtent` represents the range `[a,b]` which your map can zoom in and out, where `[a, b]` are the
 minimum and maximum zoom factors, respectively.
 
 <TopoDoc {...defaultProps()} zoomFactor={15} zoomExtent={[10,25]}/>
 
-### zoomDuration
+### `zoomDuration`
 `zoomDuration` is the duration of the animation on when zooming in on your _TopoJSONMap_.
 
 ## Heatmap Mode
@@ -262,8 +334,7 @@ For datasets with a lot of points, you can enable `heatmapMode`
 
 You can customize the appearance of your heat map blur with the `heatmapModeBlurStdDeviation` property.
 
-### heatmapModeZoomLevelThreshold
-To lower or raise the threshold hat will disable the blur effect of your heat map, use the the
+To lower or raise the threshold that will disable the blur effect of your heat map, use the the
 `heatmapModeZoomLevelThreshold` property. You can provide a zoom level, (i.e. `2` for _2x_ zoom),
 that once reached, that will no longer display the blur effect.
 
