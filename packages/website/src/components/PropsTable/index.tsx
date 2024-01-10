@@ -3,12 +3,19 @@ import ReactMarkdown from 'react-markdown'
 import { PropItem } from 'react-docgen-typescript'
 import { useDynamicImport } from 'docusaurus-plugin-react-docgen-typescript/pkg/dist-src/hooks/useDynamicImport'
 
-export const PropTable = ({ name }): JSX.Element => {
+import s from './index.module.css'
+
+export type PropsTableProps = {
+  name: string;
+}
+
+export const PropsTable = ({ name }: PropsTableProps): JSX.Element => {
   const props: Record<string, PropItem> = useDynamicImport(name)
   const propsArray = Object.entries(props || {})
     .sort((a, b) => Number(b[1].required) - Number(a[1].required))
+    .filter(p => p[1].name !== 'ref')
   return (
-    <table className="table">
+    <table className={s.table}>
       <thead>
         <tr>
           <th>Name</th>

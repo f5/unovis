@@ -7,7 +7,7 @@ description: Learn how to configure a Leaflet flow map
 import BrowserOnly from '@docusaurus/BrowserOnly'
 import { mapKey } from '@unovis/shared/examples/basic-leaflet-map/constants'
 
-import { PropTable } from '../components/props-table.tsx'
+import { PropsTable } from '@site/src/components/PropsTable'
 import { DocWrapper } from '../wrappers'
 import { ContextLevel } from '../wrappers/types'
 import cities from './data/us_cities.json'
@@ -129,4 +129,4 @@ onSourcePointMouseLeave: (f: FlowDatum, event: MouseEvent) => void;
 ```
 
 ## Component Props
-<PropTable name="VisLeafletFlowMap"/>
+<PropsTable name="VisLeafletFlowMap"/>
