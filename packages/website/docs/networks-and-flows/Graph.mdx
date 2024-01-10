@@ -4,11 +4,10 @@ description: Learn how to configure a Network Graph
 
 import CodeBlock from '@theme/CodeBlock'
 import BrowserOnly from '@docusaurus/BrowserOnly'
+import { PropsTable } from '@site/src/components/PropsTable'
 import { scaleLinear } from 'd3-scale'
-import { sample} from "../utils/data";
-import { PropTable } from '../components/props-table.tsx'
 import { DocWrapper, InputWrapper } from '../wrappers'
-import { generateNodeLinkData } from '../utils/data'
+import { generateNodeLinkData, sample } from '../utils/data'
 
 export const defaultProps = () => ({
   name: "Graph",
@@ -714,4 +713,4 @@ const events = {
 ```
 
 ## Component Props
-<PropTable name="VisGraph"/>
+<PropsTable name="VisGraph"/>
