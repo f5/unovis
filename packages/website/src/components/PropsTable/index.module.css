@@ -1,0 +1,43 @@
+.table {
+  font-size: smaller;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.table > thead,
+.table > tbody,
+.table > tfoot {
+  display: block;
+  width: 100% !important;
+}
+
+.table > tfoot > tr {
+  display: block;
+  text-align: end;
+}
+
+.table tr {
+  display: grid;
+  width: 100%;
+  grid-template-columns: 25% 25% 50%;
+  border-top: none;
+  border-bottom: none;
+}
+
+.table td {
+  display: block;
+  width: 100%;
+}
+
+.table td > pre {
+  display: block;
+  width: 100%;
+}
+
+.table pre {
+  font-size: smaller;
+  padding: 5px;
+  width: min-content;
+  margin: 0;
+}

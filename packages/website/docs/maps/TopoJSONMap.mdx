@@ -5,7 +5,7 @@ description: Learn how to configure a TopoJSON Map
 ---
 import BrowserOnly from '@docusaurus/BrowserOnly'
 import CodeBlock from '@theme/CodeBlock'
-import { PropTable } from '../components/props-table.tsx'
+import { PropsTable } from '@site/src/components/PropsTable'
 import { DocWrapper, InputWrapper } from '../wrappers'
 import { data, pointData, heatmapData } from './data'
 
@@ -15,6 +15,7 @@ export const defaultProps = (showData = true) => ({
   containerName: "SingleContainer",
   topojson: "WorldMapTopoJSON",
   height: 400,
+  data: {},
   dataType: "MapPoint,MapLink,MapArea",
   showContext: "minimal",
   hiddenProps: {
@@ -349,4 +350,4 @@ your visualization container.
 </details>
 
 ## Component Props
-<PropTable name="VisTopoJSONMap"/>
+<PropsTable name="VisTopoJSONMap"/>

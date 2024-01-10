@@ -4,7 +4,7 @@ sidebar_position: 0
 import CodeBlock from '@theme/CodeBlock';
 import BrowserOnly from '@docusaurus/BrowserOnly'
 import { FrameworkTabs } from '../components/framework-tabs'
-import { PropTable } from '../components/props-table'
+import { PropsTable } from '@site/src/components/PropsTable'
 import { generateDataRecords, generateTimeSeries } from '../utils/data'
 import { XYWrapper, XYWrapperWithInput } from '../wrappers'
 
@@ -281,4 +281,4 @@ events = {
 <XYWrapper {...defaultProps()} excludeGraph events={{}}/>
 
 ## Component Props
-<PropTable name="VisAxis"></PropTable>
+<PropsTable name="VisAxis"></PropsTable>

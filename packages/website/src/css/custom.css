@@ -24,7 +24,6 @@
   --ifm-font-family-base: Inter;
   --ifm-table-cell-padding: 0.2rem;
   --ifm-heading-color: var(--unovis-color-deep-blue);
-  --ifm-table-head-background: #f6f8fa;
   --ifm-table-stripe-background: #f6f8fa;
   --ifm-container-width-xl: 1920px;
   --docusaurus-highlighted-code-line-bg: #FFD651;
@@ -37,16 +36,6 @@
   --unovis-color-grey: #8E8D95;
   --unovis-color-beige: #BEB18B;
   --unovis-color-red: #E2203A;
-}
-
-table thead tr {
-  border-top: none;
-  border-bottom: none;
-}
-
-table tr {
-  border-top: none;
-  border-bottom: none;
 }
 
 
@@ -95,47 +84,6 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
 
 .hidden {
   display: none;
-}
-
-.table {
-  font-size: smaller;
-  width: 100%;
-  max-width: 100%;
-  overflow: hidden;
-}
-.table > thead,
-.table > tbody,
-.table > tfoot {
-  display: block;
-  width: 100% !important;
-}
-
-.table > tfoot > tr {
-  display: block;
-  text-align: end;
-}
-
-.table tr {
-  display: grid;
-  width: 100%;
-  grid-template-columns: 25% 25% 50%;
-}
-
-.table td {
-  display: block;
-  width: 100%;
-}
-
-.table td > pre {
-  display: block;
-  width: 100%;
-}
-
-.table pre {
-  font-size: smaller;
-  padding: 5px;
-  width: min-content;
-  margin: 0;
 }
 
 .main-wrapper {
