@@ -77,7 +77,7 @@ export function updateSelectedLinks<N extends GraphInputNode, L extends GraphInp
 ): void {
   const isGreyedOut = (d: GraphLink<N, L>, i: number): boolean => getBoolean(d, config.linkDisabled, i) || d._state.greyout
   selection
-    .classed(linkSelectors.greyout, (d, i) => isGreyedOut(d, i))
+    .classed(linkSelectors.greyedOutLink, (d, i) => isGreyedOut(d, i))
 
   selection.each((d, i, elements) => {
     const element = elements[i]
