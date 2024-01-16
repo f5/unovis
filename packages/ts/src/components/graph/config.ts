@@ -81,7 +81,7 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
 
   // Force layout
   /** Force Layout settings, see the `d3-force` package for more details */
-  forceLayoutSettings?: GraphForceLayoutSettings;
+  forceLayoutSettings?: GraphForceLayoutSettings<N, L>;
 
   // Dagre layout
   /** Darge Layout settings, see the `dagrejs` package
@@ -222,6 +222,8 @@ export const GraphDefaultConfig: GraphConfigInterface<GraphInputNode, GraphInput
     charge: -500,
     forceXStrength: 0.15,
     forceYStrength: 0.25,
+    numIterations: undefined,
+    fixNodePositionAfterSimulation: false,
   },
 
   dagreLayoutSettings: {

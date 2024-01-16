@@ -24,6 +24,14 @@ export type GraphNode<
   _isConnected?: boolean;
 }
 
+export type GraphForceSimulationNode<
+  N extends GraphInputNode = GraphInputNode,
+  L extends GraphInputLink = GraphInputLink,
+> = GraphNode<N, L> & {
+  fx?: number;
+  fy?: number;
+}
+
 export type GraphLink<
   N extends GraphInputNode = GraphInputNode,
   L extends GraphInputLink = GraphInputLink,
@@ -138,17 +146,26 @@ export type GraphNodeAnimatedElement<T = SVGElement> = T & {
   _animState: GraphNodeAnimationState;
 }
 
-export type GraphForceLayoutSettings = {
+export type GraphForceLayoutSettings<
+  N extends GraphInputNode = GraphInputNode,
+  L extends GraphInputLink = GraphInputLink,
+> = {
   /** Preferred Link Distance. Default: `60` */
-  linkDistance?: number;
+  linkDistance?: number | ((l: GraphLink<N, L>, i: number) => number);
   /** Link Strength [0:1]. Default: `0.45` */
-  linkStrength?: number;
+  linkStrength?: number | ((l: GraphLink<N, L>, i: number) => number);
   /** Charge Force (<0 repulsion, >0 attraction). Default: `-500` */
-  charge?: number;
+  charge?: number | ((l: GraphNode<N, L>, i: number) => number);
   /** X-centring force. Default: `0.15` */
   forceXStrength?: number;
   /** Y-centring force. Default: `0.25` */
   forceYStrength?: number;
+  /** Number if simulation iterations. Default: automatic */
+  numIterations?: number;
+  /** Set to true if you want to fix the node positions after the simulation
+   * Helpful when you want to update graph settings without re-calculating the layout.
+   * Default: `false` */
+  fixNodePositionAfterSimulation?: boolean;
 }
 
 export type GraphElkLayoutSettings = Record<string, string>

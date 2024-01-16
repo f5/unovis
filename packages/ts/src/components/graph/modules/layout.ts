@@ -7,19 +7,19 @@ import type { graphlib, Node } from 'dagre'
 import { GraphDataModel } from 'data-models/graph'
 
 // Utils
-import { without, clamp, groupBy, unique, sortBy, getString, getNumber, getValue, merge } from 'utils/data'
+import { without, clamp, groupBy, unique, sortBy, getString, getNumber, getValue, merge, isFunction } from 'utils/data'
 
 // Types
 import { GraphInputLink, GraphInputNode } from 'types/graph'
 
 // Local Types
-import { GraphNode, GraphLink } from '../types'
+import { GraphNode, GraphLink, GraphForceSimulationNode } from '../types'
 
 // Config
 import { GraphConfigInterface } from '../config'
 
 // Helpers
-import { getMaxNodeSize, configuredNodeSize, getNodeSize, getAverageNodeSize } from './node/helper'
+import { getMaxNodeSize, configuredNodeSize, getNodeSize, getAverageNodeSize, getX, getY } from './node/helper'
 import {
   DEFAULT_ELK_SETTINGS,
   adjustElkHierarchyCoordinates,
@@ -407,38 +407,58 @@ export async function applyLayoutForce<N extends GraphInputNode, L extends Graph
   config: GraphConfigInterface<N, L>,
   width: number
 ): Promise<void> {
-  const { layoutNonConnectedAside, forceLayoutSettings: { linkDistance, linkStrength, charge, forceXStrength, forceYStrength }, nodeSize } = config
+  const { layoutNonConnectedAside, forceLayoutSettings, nodeSize } = config
 
   const { forceSimulation, forceLink, forceManyBody, forceX, forceY, forceCollide } = await import('d3-force')
 
   const { nonConnectedNodes, connectedNodes, nodes, links } = datamodel
+
+  // Apply fx and fy to nodes if present before running the simulation
+  nodes.forEach((d: GraphForceSimulationNode<N, L>) => {
+    d.fx = getX(d)
+    d.fy = getY(d)
+  })
+
   const simulation = forceSimulation(layoutNonConnectedAside ? connectedNodes : nodes)
     .force('link', forceLink(links)
       .id((d) => String((d as GraphNode<N, L>)._id))
-      .distance(linkDistance)
-      .strength(linkStrength)
+      .distance((l, i) => isFunction(forceLayoutSettings.linkDistance) ? forceLayoutSettings.linkDistance(l, i) : forceLayoutSettings.linkDistance)
+      .strength((l, i) => isFunction(forceLayoutSettings.linkStrength) ? forceLayoutSettings.linkStrength(l, i) : forceLayoutSettings.linkStrength)
     )
-    .force('charge', forceManyBody().strength(d => {
-      const linkCount = links.reduce((count, l) => count + Number((l.source === d) || (l.target === d)), 0)
-      return charge * Math.sqrt(linkCount)
+    .force('charge', forceManyBody().strength((d, i) => {
+      if (isFunction(forceLayoutSettings.charge)) {
+        return forceLayoutSettings.charge(d as GraphNode<N, L>, i)
+      } else {
+        const linkCount = links.reduce((count, l) => count + Number((l.source === d) || (l.target === d)), 0)
+        return forceLayoutSettings.charge * Math.sqrt(linkCount)
+      }
     }))
-    .force('x', forceX().strength(forceXStrength))
-    .force('y', forceY().strength(forceYStrength))
+    .force('x', forceX().strength(forceLayoutSettings.forceXStrength))
+    .force('y', forceY().strength(forceLayoutSettings.forceYStrength))
     .force('collide', forceCollide<SimulationNodeDatum & N>().radius((d, i) => getNodeSize(d, nodeSize, i)).iterations(1))
     .stop()
 
   // See https://bl.ocks.org/mbostock/1667139, https://github.com/d3/d3-force/blob/master/README.md#simulation_tick
-  for (let i = 0, n = Math.ceil(Math.log(simulation.alphaMin()) / Math.log(1 - simulation.alphaDecay())); i < n; ++i) {
+  const numIterations = forceLayoutSettings.numIterations ?? Math.ceil(Math.log(simulation.alphaMin()) / Math.log(1 - simulation.alphaDecay()))
+  for (let i = 0, n = numIterations; i < n; ++i) {
     simulation.tick()
   }
 
-  // Translate coordinates to values > 0 for better animated transition between layout
+  // Translate coordinates to values > 0 for better animated transition between layouts
   const yMin = min<number>(connectedNodes.map(d => d.y)) ?? 0
   const xMin = min<number>(connectedNodes.map(d => d.x)) ?? 0
   nodes.forEach(d => {
     d.x -= xMin
     d.y -= yMin
   })
+
+  // Fix node positions if requested
+  if (forceLayoutSettings.fixNodePositionAfterSimulation) {
+    nodes.forEach(d => {
+      d._state.fx = d.x
+      d._state.fy = d.y
+    })
+  }
 
   // Handle non-connected nodes
   if (layoutNonConnectedAside) {
