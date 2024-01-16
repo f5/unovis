@@ -589,7 +589,9 @@ export class Graph<
         const propVal = transform[prop as keyof ZoomTransform] as number
         const initialPropVal = this._initialTransform[prop as keyof ZoomTransform] as number
         const dVal = Math.abs(propVal - initialPropVal)
-        return prop === 'k' ? 2 * dVal : dVal / 50
+        const scaledDVal = prop === 'k' ? 20 * dVal : dVal / 15
+        acc += scaledDVal
+        return acc
       }, 0)
 
       if (diff > config.layoutAutofitTolerance) this._isAutoFitDisabled = true
