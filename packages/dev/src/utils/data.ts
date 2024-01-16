@@ -75,7 +75,7 @@ export function generateNodeLinkData (n = 10, numNeighbourLinks = () => 1): Node
         const targetId = options.shift()?.id
         for (let k = 0; k < numNeighbourLinks(); k++) {
           const link = {
-            id: `${i}-${k}`,
+            id: `${n.id}-${targetId}`,
             source: n.id,
             target: targetId,
             value: Math.random(),
