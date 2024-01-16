@@ -80,8 +80,8 @@ export const gLinkExit = css`
   pointer-events: none;
 `
 
-export const greyout = css`
-  label: greyout;
+export const greyedOutLink = css`
+  label: greyed-out;
   opacity: var(--vis-graph-link-greyout-opacity);
 `
 

@@ -58,6 +58,8 @@ export const variables = injectGlobal`
     --vis-dark-graph-node-side-label-fill-color-dark: var(--vis-color-grey);
 
     /* Greyout */
+    --vis-graph-node-greyout-opacity: 0.9;
+    --vis-graph-node-greyout-filter: none;
     --vis-graph-node-greyout-color: #ebeff7;
     --vis-graph-node-icon-greyout-color: #c6cad1;
     --vis-graph-node-side-label-background-greyout-color: #f1f4f7;
@@ -265,8 +267,10 @@ export const customNode = css`
   stroke-width: 0;
 `
 
-export const greyoutNode = css`
-  label: greyout;
+export const greyedOutNode = css`
+  label: greyed-out;
+  opacity: var(--vis-graph-node-greyout-opacity);
+  filter: var(--vis-graph-node-greyout-filter);
 
   ${`.${node}`} {
     fill: var(--vis-graph-node-greyout-color) !important;
