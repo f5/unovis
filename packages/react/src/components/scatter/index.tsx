@@ -17,6 +17,8 @@ export type VisScatterProps<Datum> = ScatterConfigInterface<Datum> & {
   ref?: Ref<VisScatterRef<Datum>>;
 }
 
+export const VisScatterSelectors = Scatter.selectors
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 function VisScatterFC<Datum> (props: VisScatterProps<Datum>, fRef: ForwardedRef<VisScatterRef<Datum>>): JSX.Element {
   const ref = useRef<VisComponentElement<Scatter<Datum>>>(null)

@@ -17,6 +17,8 @@ export type VisXYLabelsProps<Datum> = XYLabelsConfigInterface<Datum> & {
   ref?: Ref<VisXYLabelsRef<Datum>>;
 }
 
+export const VisXYLabelsSelectors = XYLabels.selectors
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 function VisXYLabelsFC<Datum> (props: VisXYLabelsProps<Datum>, fRef: ForwardedRef<VisXYLabelsRef<Datum>>): JSX.Element {
   const ref = useRef<VisComponentElement<XYLabels<Datum>>>(null)

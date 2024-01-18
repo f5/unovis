@@ -17,6 +17,8 @@ export type VisTimelineProps<Datum> = TimelineConfigInterface<Datum> & {
   ref?: Ref<VisTimelineRef<Datum>>;
 }
 
+export const VisTimelineSelectors = Timeline.selectors
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 function VisTimelineFC<Datum> (props: VisTimelineProps<Datum>, fRef: ForwardedRef<VisTimelineRef<Datum>>): JSX.Element {
   const ref = useRef<VisComponentElement<Timeline<Datum>>>(null)

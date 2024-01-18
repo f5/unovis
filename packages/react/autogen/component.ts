@@ -30,6 +30,8 @@ export type Vis${componentName}Props${genericsDefStr} = ${componentName}ConfigIn
   ref?: Ref<Vis${componentName}Ref${genericsStr}>
 }
 
+export const Vis${componentName}Selectors = ${componentName}.selectors
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 function Vis${componentName}FC${genericsDefStr} (props: Vis${componentName}Props${genericsStr}, fRef: ForwardedRef<Vis${componentName}Ref${genericsStr}>): JSX.Element {
   const ref = useRef<VisComponentElement<${componentName}${genericsStr}>>(null)

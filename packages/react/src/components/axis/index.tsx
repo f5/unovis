@@ -17,6 +17,8 @@ export type VisAxisProps<Datum> = AxisConfigInterface<Datum> & {
   ref?: Ref<VisAxisRef<Datum>>;
 }
 
+export const VisAxisSelectors = Axis.selectors
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 function VisAxisFC<Datum> (props: VisAxisProps<Datum>, fRef: ForwardedRef<VisAxisRef<Datum>>): JSX.Element {
   const ref = useRef<VisComponentElement<Axis<Datum>>>(null)
