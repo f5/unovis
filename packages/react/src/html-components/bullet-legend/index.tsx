@@ -3,6 +3,8 @@ import { BulletLegend, BulletLegendConfigInterface } from '@unovis/ts'
 
 export type VisBulletLegendProps = BulletLegendConfigInterface
 
+export const VisBulletLegendSelectors = BulletLegend.selectors
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export function VisBulletLegend (props: VisBulletLegendProps): JSX.Element {
   const container = useRef<HTMLDivElement>(null)

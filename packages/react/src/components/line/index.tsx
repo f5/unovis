@@ -17,6 +17,8 @@ export type VisLineProps<Datum> = LineConfigInterface<Datum> & {
   ref?: Ref<VisLineRef<Datum>>;
 }
 
+export const VisLineSelectors = Line.selectors
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 function VisLineFC<Datum> (props: VisLineProps<Datum>, fRef: ForwardedRef<VisLineRef<Datum>>): JSX.Element {
   const ref = useRef<VisComponentElement<Line<Datum>>>(null)

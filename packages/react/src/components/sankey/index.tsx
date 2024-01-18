@@ -17,6 +17,8 @@ export type VisSankeyProps<N extends SankeyInputNode, L extends SankeyInputLink>
   ref?: Ref<VisSankeyRef<N, L>>;
 }
 
+export const VisSankeySelectors = Sankey.selectors
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 function VisSankeyFC<N extends SankeyInputNode, L extends SankeyInputLink> (props: VisSankeyProps<N, L>, fRef: ForwardedRef<VisSankeyRef<N, L>>): JSX.Element {
   const ref = useRef<VisComponentElement<Sankey<N, L>>>(null)

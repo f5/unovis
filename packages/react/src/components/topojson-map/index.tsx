@@ -17,6 +17,8 @@ export type VisTopoJSONMapProps<AreaDatum, PointDatum, LinkDatum> = TopoJSONMapC
   ref?: Ref<VisTopoJSONMapRef<AreaDatum, PointDatum, LinkDatum>>;
 }
 
+export const VisTopoJSONMapSelectors = TopoJSONMap.selectors
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 function VisTopoJSONMapFC<AreaDatum, PointDatum, LinkDatum> (props: VisTopoJSONMapProps<AreaDatum, PointDatum, LinkDatum>, fRef: ForwardedRef<VisTopoJSONMapRef<AreaDatum, PointDatum, LinkDatum>>): JSX.Element {
   const ref = useRef<VisComponentElement<TopoJSONMap<AreaDatum, PointDatum, LinkDatum>>>(null)

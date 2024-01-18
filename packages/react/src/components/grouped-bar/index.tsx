@@ -17,6 +17,8 @@ export type VisGroupedBarProps<Datum> = GroupedBarConfigInterface<Datum> & {
   ref?: Ref<VisGroupedBarRef<Datum>>;
 }
 
+export const VisGroupedBarSelectors = GroupedBar.selectors
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 function VisGroupedBarFC<Datum> (props: VisGroupedBarProps<Datum>, fRef: ForwardedRef<VisGroupedBarRef<Datum>>): JSX.Element {
   const ref = useRef<VisComponentElement<GroupedBar<Datum>>>(null)

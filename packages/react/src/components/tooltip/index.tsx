@@ -17,6 +17,8 @@ export type VisTooltipProps = TooltipConfigInterface & {
   ref?: Ref<VisTooltipRef>;
 }
 
+export const VisTooltipSelectors = Tooltip.selectors
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 function VisTooltipFC (props: VisTooltipProps, fRef: ForwardedRef<VisTooltipRef>): JSX.Element {
   const ref = useRef<VisComponentElement<Tooltip>>(null)

@@ -17,6 +17,8 @@ export type VisStackedBarProps<Datum> = StackedBarConfigInterface<Datum> & {
   ref?: Ref<VisStackedBarRef<Datum>>;
 }
 
+export const VisStackedBarSelectors = StackedBar.selectors
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 function VisStackedBarFC<Datum> (props: VisStackedBarProps<Datum>, fRef: ForwardedRef<VisStackedBarRef<Datum>>): JSX.Element {
   const ref = useRef<VisComponentElement<StackedBar<Datum>>>(null)
