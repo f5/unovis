@@ -444,14 +444,6 @@ export async function applyLayoutForce<N extends GraphInputNode, L extends Graph
     simulation.tick()
   }
 
-  // Translate coordinates to values > 0 for better animated transition between layouts
-  const yMin = min<number>(connectedNodes.map(d => d.y)) ?? 0
-  const xMin = min<number>(connectedNodes.map(d => d.x)) ?? 0
-  nodes.forEach(d => {
-    d.x -= xMin
-    d.y -= yMin
-  })
-
   // Fix node positions if requested
   if (forceLayoutSettings.fixNodePositionAfterSimulation) {
     nodes.forEach(d => {
