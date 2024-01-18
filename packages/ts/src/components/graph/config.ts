@@ -1,3 +1,6 @@
+import { D3DragEvent } from 'd3-drag'
+import { D3ZoomEvent } from 'd3-zoom'
+
 // Config
 import { ComponentConfigInterface, ComponentDefaultConfig } from 'core/component/config'
 
@@ -17,6 +20,7 @@ import {
   GraphElkLayoutSettings,
   GraphNodeShape,
   GraphDagreLayoutSetting,
+  GraphNode,
 } from './types'
 
 export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphInputLink> extends ComponentConfigInterface {
@@ -29,8 +33,6 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   disableDrag?: boolean;
   /** Interval to re-render the graph when zooming. Default: `100` */
   zoomThrottledUpdateNodeThreshold?: number;
-  /** Zoom event callback. Default: `undefined` */
-  onZoom?: (zoomScale: number, zoomScaleExtent: [number, number]) => void;
 
   // Layout general settings
   /** Type of the graph layout. Default: `GraphLayoutType.Force` */
@@ -193,6 +195,16 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
 
   /** Panels configuration. An array of `GraphPanelConfig` objects. Default: `[]` */
   panels?: GraphPanelConfig[] | undefined;
+
+  // Events
+  /** Graph node drag start callback function. Default: `undefined` */
+  onNodeDragStart?: (n: GraphNode<N, L>, event: D3DragEvent<SVGGElement, GraphNode<N, L>, unknown>) => void | undefined;
+  /** Graph node drag callback function. Default: `undefined` */
+  onNodeDrag?: (n: GraphNode<N, L>, event: D3DragEvent<SVGGElement, GraphNode<N, L>, unknown>) => void | undefined;
+  /** Graph node drag end callback function. Default: `undefined` */
+  onNodeDragEnd?: (n: GraphNode<N, L>, event: D3DragEvent<SVGGElement, GraphNode<N, L>, unknown>) => void | undefined;
+  /** Zoom event callback. Default: `undefined` */
+  onZoom?: (zoomScale: number, zoomScaleExtent: [number, number], event: D3ZoomEvent<SVGGElement, unknown> | undefined) => void;
 }
 
 export const GraphDefaultConfig: GraphConfigInterface<GraphInputNode, GraphInputLink> = {
@@ -202,7 +214,6 @@ export const GraphDefaultConfig: GraphConfigInterface<GraphInputNode, GraphInput
   disableZoom: false,
   disableDrag: false,
   zoomThrottledUpdateNodeThreshold: 100,
-  onZoom: undefined,
   layoutType: GraphLayoutType.Force,
   layoutAutofit: true,
   layoutAutofitTolerance: 8.0,
@@ -278,4 +289,9 @@ export const GraphDefaultConfig: GraphConfigInterface<GraphInputNode, GraphInput
 
   selectedNodeId: undefined,
   panels: undefined,
+
+  onNodeDragStart: undefined,
+  onNodeDrag: undefined,
+  onNodeDragEnd: undefined,
+  onZoom: undefined,
 }
