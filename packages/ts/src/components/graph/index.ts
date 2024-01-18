@@ -351,6 +351,8 @@ export class Graph<
     const firstRender = this._isFirstRender
     if (this._shouldRecalculateLayout) {
       switch (config.layoutType) {
+        case GraphLayoutType.Precalculated:
+          break
         case GraphLayoutType.Parallel:
           applyLayoutParallel(datamodel, config, this._width, this._height)
           break
