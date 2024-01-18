@@ -2,6 +2,8 @@ import React, { ForwardedRef, Ref, useEffect, useImperativeHandle, useRef, useSt
 import { LeafletMap, LeafletMapConfigInterface } from '@unovis/ts'
 import { arePropsEqual } from '../../utils/react'
 
+export const VisLeafletMapSelectors = LeafletMap.selectors
+
 export type VisLeafletMapProps<Datum extends Record<string, unknown>> = LeafletMapConfigInterface<Datum> & {
   data?: Datum[];
   ref?: Ref<VisLeafletMapRef<Datum>>;

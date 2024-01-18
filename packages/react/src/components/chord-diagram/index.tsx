@@ -17,6 +17,8 @@ export type VisChordDiagramProps<N extends ChordInputNode, L extends ChordInputL
   ref?: Ref<VisChordDiagramRef<N, L>>;
 }
 
+export const VisChordDiagramSelectors = ChordDiagram.selectors
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 function VisChordDiagramFC<N extends ChordInputNode, L extends ChordInputLink> (props: VisChordDiagramProps<N, L>, fRef: ForwardedRef<VisChordDiagramRef<N, L>>): JSX.Element {
   const ref = useRef<VisComponentElement<ChordDiagram<N, L>>>(null)

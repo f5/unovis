@@ -17,6 +17,8 @@ export type VisFreeBrushProps<Datum> = FreeBrushConfigInterface<Datum> & {
   ref?: Ref<VisFreeBrushRef<Datum>>;
 }
 
+export const VisFreeBrushSelectors = FreeBrush.selectors
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 function VisFreeBrushFC<Datum> (props: VisFreeBrushProps<Datum>, fRef: ForwardedRef<VisFreeBrushRef<Datum>>): JSX.Element {
   const ref = useRef<VisComponentElement<FreeBrush<Datum>>>(null)

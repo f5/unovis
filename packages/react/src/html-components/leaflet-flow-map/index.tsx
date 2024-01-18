@@ -2,6 +2,8 @@ import React, { ForwardedRef, Ref, useEffect, useImperativeHandle, useRef, useSt
 import { LeafletFlowMap, LeafletFlowMapConfigInterface } from '@unovis/ts'
 import { arePropsEqual } from '../../utils/react'
 
+export const VisLeafletFlowMapSelectors = LeafletFlowMap.selectors
+
 export type VisLeafletFlowMapProps<
   PointDatum extends Record<string, unknown>,
   FlowDatum extends Record<string, unknown>,
