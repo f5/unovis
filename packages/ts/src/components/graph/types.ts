@@ -61,6 +61,7 @@ export enum GraphLayoutType {
   Dagre = 'dagre',
   Force = 'force',
   Elk = 'elk',
+  Precalculated = 'precalculated',
 }
 
 export type GraphCircleLabel = {
