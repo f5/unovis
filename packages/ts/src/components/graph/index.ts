@@ -69,7 +69,7 @@ export class Graph<
 
   static nodeSelectors = nodeSelectors
   g: Selection<SVGGElement, unknown, null, undefined>
-  protected _defaultConfig = GraphDefaultConfig as GraphConfigInterface<N, L>
+  protected _defaultConfig = GraphDefaultConfig as unknown as GraphConfigInterface<N, L>
   public config: GraphConfigInterface<N, L> = this._defaultConfig
   datamodel: GraphDataModel<N, L, GraphNode<N, L>, GraphLink<N, L>> = new GraphDataModel()
   private _selectedNode: GraphNode<N, L>
@@ -582,8 +582,9 @@ export class Graph<
     const transform = t || event.transform
     this._scale = transform.k
     this._graphGroup.attr('transform', transform.toString())
-    if (isFunction(config.onZoom)) config.onZoom(this._scale, config.zoomScaleExtent)
+    if (isFunction(config.onZoom)) config.onZoom(this._scale, config.zoomScaleExtent, event)
 
+    // console.warn('Unovis | Graph: Zoom: ', transform)
     if (!this._initialTransform) this._initialTransform = transform
 
     // If the event was triggered by a mouse interaction (pan or zoom) we don't
@@ -627,6 +628,7 @@ export class Graph<
     this._isDragging = true
     d._state.isDragged = true
     nodeSelection.call(updateNodes, config, 0, this._scale)
+    config.onNodeDragStart?.(d, event)
   }
 
   private _onDragged (
@@ -678,6 +680,8 @@ export class Graph<
     linksToUpdate.call(updateLinks, config, 0, scale, this._getLinkArrowDefId)
     const linksToAnimate = linksToUpdate.filter(d => d._state.greyout)
     if (linksToAnimate.size()) animateLinkFlow(linksToAnimate, config, this._scale)
+
+    config.onNodeDrag?.(d, event)
   }
 
   private _onDragEnded (
@@ -689,6 +693,7 @@ export class Graph<
     this._isDragging = false
     d._state.isDragged = false
     nodeSelection.call(updateNodes, config, 0, this._scale)
+    config.onNodeDragEnd?.(d, event)
   }
 
   private _shouldLayoutRecalculate (nextConfig: GraphConfigInterface<N, L>): boolean {
