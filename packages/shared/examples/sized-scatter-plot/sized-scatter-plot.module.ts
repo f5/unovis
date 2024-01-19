@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core'
 import { VisXYContainerModule, VisScatterModule, VisAxisModule, VisTooltipModule, VisBulletLegendModule } from '@unovis/angular'
 
-import { BasicScatterChartComponent } from './basic-scatter-chart.component'
+import { SizedScatterPlotComponent } from './sized-scatter-plot.component'
 
 @NgModule({
   imports: [VisXYContainerModule, VisScatterModule, VisAxisModule, VisTooltipModule, VisBulletLegendModule],
-  declarations: [BasicScatterChartComponent],
-  exports: [BasicScatterChartComponent],
+  declarations: [SizedScatterPlotComponent],
+  exports: [SizedScatterPlotComponent],
 })
-export class BasicScatterChartModule { }
+export class SizedScatterPlotModule { }
