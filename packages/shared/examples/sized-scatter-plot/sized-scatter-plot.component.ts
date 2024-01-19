@@ -7,10 +7,10 @@ const colorScale = Scale.scaleOrdinal(palette).domain(categories)
 const formatNumber = Intl.NumberFormat('en').format
 
 @Component({
-  selector: 'basic-scatter-chart',
-  templateUrl: './basic-scatter-chart.component.html',
+  selector: 'sized-scatter-plot',
+  templateUrl: './sized-scatter-plot.component.html',
 })
-export class BasicScatterChartComponent {
+export class SizedScatterPlotComponent {
   data = data
 
   getX = (d: DataRecord): number => d.medianSalary

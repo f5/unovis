@@ -2,7 +2,7 @@
 import React from 'react'
 import type { Example } from '../types'
 
-const pathname = 'basic-scatter-chart'
+const pathname = 'sized-scatter-plot'
 const example: Example = {
   component: () => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -10,7 +10,7 @@ const example: Example = {
     return <Component />
   },
   pathname,
-  title: 'Basic Scatter Chart',
+  title: 'Scatter Plot with Varied Size',
   description: <div>
     Data from <a href="https://github.com/fivethirtyeight/data/tree/master/college-majors" target="_blank">
       FiveThirtyEight
