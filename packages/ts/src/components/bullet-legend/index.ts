@@ -72,7 +72,7 @@ export class BulletLegend {
       .style('display', (d: BulletLegendItemInterface) => d.hidden ? 'none' : null)
 
     legendItemsMerged.select<HTMLSpanElement>(`.${s.bullet}`)
-      .style('min-width', config.bulletSize)
+      .style('width', config.bulletSize)
       .style('height', config.bulletSize)
       .call(updateBullets, this.config, this._colorAccessor)
 
