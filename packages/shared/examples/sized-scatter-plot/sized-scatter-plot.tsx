@@ -7,7 +7,7 @@ const categories = [...new Set(data.map((d: DataRecord) => d.category))].sort()
 const colorScale = Scale.scaleOrdinal(palette).domain(categories)
 const formatNumber = (value: number): string => Intl.NumberFormat('en', { notation: 'compact' }).format(value)
 
-export default function BasicScatterChart (): JSX.Element {
+export default function SizedScatterPlot (): JSX.Element {
   const legendItems = categories.map(v => ({ name: v, color: colorScale(v) }))
   const tooltipTriggers = {
     [Scatter.selectors.point]: (d: DataRecord) => `
