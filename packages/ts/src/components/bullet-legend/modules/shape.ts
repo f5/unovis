@@ -1,11 +1,13 @@
-import { Selection } from 'd3-selection'
+import { Selection, select } from 'd3-selection'
+import { symbol } from 'd3-shape'
 
 // Types
 import { ColorAccessor } from 'types/accessor'
+import { Symbol } from 'types/symbol'
 
 // Utils
 import { getColor } from 'utils/color'
-import { circlePath } from 'utils/path'
+import { getString } from 'utils/data'
 
 // Constants
 import { PATTERN_SIZE_PX } from 'styles/patterns'
@@ -18,63 +20,47 @@ import { BulletShape, BulletLegendItemInterface } from '../types'
 // the configured size.
 const BULLET_SIZE = PATTERN_SIZE_PX * 3
 
-function getHeight (shape: BulletShape): number {
-  switch (shape) {
-    case BulletShape.Line:
-      return BULLET_SIZE / 2.5
-    default:
-      return BULLET_SIZE
-  }
-}
-
-function getPath (shape: BulletShape, width: number, height: number): string {
-  switch (shape) {
-    case BulletShape.Line:
-      return `M0,${height / 2} L${width / 2},${height / 2} L${width},${height / 2}`
-    case BulletShape.Square:
-      return `M0,0 L${width},0 L${width},${height} L0,${height}Z`
-    case BulletShape.Circle:
-      return circlePath(height / 2, height / 2, height / 2 - 1)
-  }
-}
-
-export function createBullets (
-  container: Selection<HTMLSpanElement, BulletLegendItemInterface, HTMLDivElement, unknown>,
-  config: BulletLegendConfigInterface
-): void {
-  container.append('svg')
-    .attr('width', '100%')
-    .attr('height', '100%')
-    .append('path')
-    .attr('d', getPath(config.bulletShape, BULLET_SIZE, getHeight(config.bulletShape)))
-}
-
 export function updateBullets (
-  container: Selection<HTMLSpanElement, BulletLegendItemInterface, HTMLDivElement, unknown>,
+  container: Selection<SVGElement, BulletLegendItemInterface, HTMLDivElement, unknown>,
   config: BulletLegendConfigInterface,
   colorAccessor: ColorAccessor<BulletLegendItemInterface>
 ): void {
-  const width = BULLET_SIZE
-  const height = getHeight(config.bulletShape)
+  container.each((d, i, els) => {
+    const shape = getString(d, config.bulletShape, i) as BulletShape
+    const color = getColor(d, colorAccessor, i)
+    const width = BULLET_SIZE
+    const height = shape === BulletShape.Line ? BULLET_SIZE / 2.5 : BULLET_SIZE
 
-  const getOpacity = (d: BulletLegendItemInterface): number => d.inactive ? 0.4 : 1
+    const selection = select(els[i])
+      .attr('viewBox', `0 0 ${width} ${height}`)
+      .select<SVGPathElement>('path')
+      .attr('stroke', color)
 
-  const selection = container.select('svg')
-    .attr('viewBox', `0 0 ${width} ${height}`)
-    .select('path')
-    .attr('d', getPath(config.bulletShape, width, height))
-    .attr('stroke', (d, i) => getColor(d, colorAccessor, i))
-    .style('stroke-width', '1px')
-    .style('fill', (d, i) => getColor(d, colorAccessor, i))
-    .style('fill-opacity', getOpacity)
+    if (shape === BulletShape.Line) {
+      selection
+        .attr('d', `M0,${height / 2} L${width / 2},${height / 2} L${width},${height / 2}`)
+        .attr('transform', null)
+        .style('opacity', d.inactive ? 0.4 : 1)
+        .style('stroke-width', '3px')
+        .style('fill', null)
+        .style('fill-opacity', null)
+        .style('marker-start', 'none')
+        .style('marker-end', 'none')
+    } else {
+      const symbolGen = symbol().type(Symbol[shape])
 
-  if (config.bulletShape === BulletShape.Line) {
-    selection
-      .style('stroke-width', `${height / 5}px`)
-      .style('opacity', getOpacity)
-      .style('fill', null)
-      .style('fill-opacity', null)
-      .style('marker-start', 'none')
-      .style('marker-end', 'none')
-  }
+      selection.attr('d', symbolGen)
+        .attr('transform', `translate(${width / 2},${height / 2})`)
+        .style('stroke-width', '1px')
+        .style('opacity', null)
+        .style('fill', color)
+        .style('fill-opacity', d.inactive ? 0.4 : 1)
+
+      const box = selection.node().getBBox()
+      const scaledSize = Math.min(width / box.width, height / box.height)
+      const scale = Math.floor(scaledSize * 2) / 2
+
+      selection.transition().duration(0).attr('d', symbolGen.size(scale * scale * 64))
+    }
+  })
 }

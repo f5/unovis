@@ -10,7 +10,7 @@ import { BulletLegendDefaultConfig, BulletLegendConfigInterface } from './config
 import { BulletLegendItemInterface } from './types'
 
 // Modules
-import { createBullets, updateBullets } from './modules/shape'
+import { updateBullets } from './modules/shape'
 
 // Styles
 import * as s from './style'
@@ -48,33 +48,32 @@ export class BulletLegend {
 
   render (): void {
     const { config } = this
-    const legendItems = this.div.selectAll<HTMLDivElement, unknown>(`.${s.item}`)
-      .data(config.items)
 
-    const legendItemsEnter = legendItems.enter()
-      .append('div')
+    const legendItems = this.div.selectAll<HTMLDivElement, unknown>(`.${s.item}`).data(config.items)
+
+    const legendItemsEnter = legendItems.enter().append('div')
       .attr('class', s.item)
       .on('click', this._onItemClick.bind(this))
-
-    legendItemsEnter.append('span')
-      .attr('class', s.bullet)
-      .call(createBullets, config)
-
-    legendItemsEnter.append('span')
-      .attr('class', s.label)
-      .classed(config.labelClassName, true)
-      .style('max-width', config.labelMaxWidth)
-      .style('font-size', config.labelFontSize)
 
     const legendItemsMerged = legendItemsEnter.merge(legendItems)
     legendItemsMerged
       .classed(s.clickable, d => !!config.onLegendItemClick && this._isItemClickable(d))
       .style('display', (d: BulletLegendItemInterface) => d.hidden ? 'none' : null)
 
-    legendItemsMerged.select<HTMLSpanElement>(`.${s.bullet}`)
-      .style('width', config.bulletSize)
-      .style('height', config.bulletSize)
+    // Bullet
+    legendItemsEnter.append('svg')
+      .attr('class', s.bullet)
+      .append('path')
+
+    legendItemsMerged.select<SVGElement>(`.${s.bullet}`)
       .call(updateBullets, this.config, this._colorAccessor)
+
+    // Labels
+    legendItemsEnter.append('span')
+      .attr('class', s.label)
+      .classed(config.labelClassName, true)
+      .style('max-width', config.labelMaxWidth)
+      .style('font-size', config.labelFontSize)
 
     legendItemsMerged.select(`.${s.label}`)
       .text((d: BulletLegendItemInterface) => d.name)
