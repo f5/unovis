@@ -3,12 +3,11 @@ title: Bullet Legend
 sidebar_title: Bullet Legend
 ---
 import BrowserOnly from '@docusaurus/BrowserOnly'
+import CodeBlock from '@theme/CodeBlock'
 import { PropsTable } from '@site/src/components/PropsTable'
 import { FrameworkTabs } from '../components/framework-tabs.tsx'
 import { generateDataRecords } from '../utils/data'
-import { DocWrapper, InputWrapper, XYWrapper } from '../wrappers'
-import { parseComponent } from '../utils/parser.ts'
-import { trimMultiline } from '@site/src/utils/text'
+import { DocWrapper } from '../wrappers'
 import '../styles.css'
 
 export const BulletLegendDoc = (props) => (
@@ -34,6 +33,7 @@ Each item has type `BulletLegendItemInterface`:
 interface BulletLegendItemInterface {
   name: string | number;
   color?: string;
+  shape?: BulletShape;
   inactive?: boolean;
   hidden?: boolean;
   pointer?: boolean;
@@ -53,7 +53,7 @@ Here is an example of a basic configuration, where `labels` is an array of strin
   }}
 />
 
-### Custom Colors
+### Color
 By default, our [color palette](/docs/guides/theming#color-palette) will be used to color each legend item,
 but you can provide your own colors in the legend item array.
 ```ts
@@ -76,12 +76,48 @@ Either will produce the following result:
   { name: 'C', color: 'green' },
 ]}/>
 
+### Shape
+You can specify the shape of individual bullets with the `shape` property or with the [`bulletShape`](#bullet-shapes)
+component config property. This is useful when you want to have the legend with a line chart or shaped scatter plot.
+
+The supported shapes are apart of the `BulletShape` enum.
+
+```ts
+import { BulletShape } from '@unovis/ts'
+
+const items = [
+  { name: 'Circle', shape: BulletShape.Circle },
+  { name: 'Square', shape: BulletShape.Square },
+  { name: 'Triangle', shape: BulletShape.Triangle }
+  { name: 'Star', shape: BulletShape.Star }
+]
+```
+
+<BulletLegendDoc excludeTabs items={['Circle', 'Square', 'Triangle', 'Star'].map(name => ({ name, shape: name.toLowerCase() }))}/>
+
+<details href="#supported-shapes">
+<summary>All supported shapes:</summary>
+<ul>
+  <li><code>BulletShape.Circle</code>   or <em>"circle"  </em></li>
+  <li><code>BulletShape.Cross</code>    or <em>"cross"   </em></li>
+  <li><code>BulletShape.Diamond</code>  or <em>"diamond" </em></li>
+  <li><code>BulletShape.Line</code>     or <em>"line"    </em></li>
+  <li><code>BulletShape.Square</code>   or <em>"square"  </em></li>
+  <li><code>BulletShape.Star</code>     or <em>"star"    </em></li>
+  <li><code>BulletShape.Triangle</code> or <em>"triangle"</em></li>
+  <li><code>BulletShape.Wye</code>      or <em>"wye"     </em></li>
+</ul>
+</details>
+
+
 ### Inactive Items
 In some cases you may want to have some legend items look _inactive_, which reduces the opacity of the bullet.
 See how the initial legend looks when all of the items are inactive:
+
 ```ts
 const items = labels.map(label => ({ name: label, inactive: true }))
 ```
+
 <BulletLegendDoc excludeTabs items={Array(6).fill(0).map((item, i) => ({ name: `Item ${i}`, inactive: true }))}/>
 
 ### Pointer
@@ -90,11 +126,28 @@ Note that there is no specified default value unless `onLegendItemCilck` propert
 cursor will be `pointer`.
 
 ## Bullet Shapes
-You can specify the bullet shapes with `bulletShape` property. The supported shapes are:
+You can specify the bullet shapes with `bulletShape` property. By default, the bullet shape is `circle` unless
+an individual item has a configured shape (see [Shape](#shape) section).
 
-`BulletShape.Circle` or  `"circle"`: <BulletLegendDoc excludeTabs/>
-`BulletShape.Line`   or   `"line"` : <BulletLegendDoc excludeTabs bulletShape='line'/>
-`BulletShape.Square` or `"square"` : <BulletLegendDoc excludeTabs bulletShape='square'/>
+
+
+You can provide this property with a `BulletShape` enum value or string. 
+Or a constant value. This might be preferable if you want each shape to be the same. For example:
+
+<BulletLegendDoc bulletShape='line'/>
+
+
+<br/>
+Alteratively, you can provide an accessor function of type:
+
+```ts
+function (d: BulletLegendItemInterface, i: number): BulletShape | string {}
+```
+
+:::note
+If `bulletShape` is supplied, it will take precedence over the `shape` property in the `items` array.
+:::
+
 
 ## Label Configuration
 ### Font Size

@@ -1,4 +1,5 @@
 // Local Types
+import { GenericAccessor } from 'types/accessor'
 import { BulletLegendItemInterface, BulletShape } from './types'
 
 export interface BulletLegendConfigInterface {
@@ -7,6 +8,7 @@ export interface BulletLegendConfigInterface {
    * {
    *   name: string | number;
    *   color?: string;
+   *   shape?: BulletShape;
    *   inactive?: boolean;
    *   hidden?: boolean;
    *   pointer?: boolean;
@@ -24,8 +26,8 @@ export interface BulletLegendConfigInterface {
   labelMaxWidth?: string | null;
   /** Bullet shape size, mapped to the width and height CSS properties. Default: `null` */
   bulletSize?: string | null;
-  /** Bullet shape: `BulletShape.Circle`, `BulletShape.Line` or `BulletShape.Square`. Default: `BulletShape.Circle` */
-  bulletShape?: BulletShape;
+  /** Bullet shape enum value or accessor function. Default: `d => d.shape ?? BulletShape.Circle */
+  bulletShape?: GenericAccessor<BulletShape, BulletLegendItemInterface>;
 }
 
 export const BulletLegendDefaultConfig: BulletLegendConfigInterface = {
@@ -35,5 +37,5 @@ export const BulletLegendDefaultConfig: BulletLegendConfigInterface = {
   labelFontSize: null,
   labelMaxWidth: null,
   bulletSize: null,
-  bulletShape: BulletShape.Circle,
+  bulletShape: d => d.shape ?? BulletShape.Circle,
 }
