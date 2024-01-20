@@ -29,6 +29,7 @@ export const examples: ExampleCollection[] = [
     title: 'Scatter Plots',
     description: '',
     examples: [
+      require('./basic-scatter-plot').default,
       require('./sized-scatter-plot').default,
     ],
   },
