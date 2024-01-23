@@ -4,6 +4,7 @@ import { SymbolType } from 'types/symbol'
 export interface BulletLegendItemInterface {
   name: string | number;
   color?: string;
+  className?: string;
   shape?: BulletShape;
   inactive?: boolean;
   hidden?: boolean;
