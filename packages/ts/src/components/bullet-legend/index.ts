@@ -52,7 +52,7 @@ export class BulletLegend {
     const legendItems = this.div.selectAll<HTMLDivElement, unknown>(`.${s.item}`).data(config.items)
 
     const legendItemsEnter = legendItems.enter().append('div')
-      .attr('class', s.item)
+      .attr('class', d => `${s.item} ${d.className ?? ''}`)
       .on('click', this._onItemClick.bind(this))
 
     const legendItemsMerged = legendItemsEnter.merge(legendItems)
