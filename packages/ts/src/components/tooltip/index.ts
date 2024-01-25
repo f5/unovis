@@ -163,7 +163,7 @@ export class Tooltip {
   private _setContainerPosition (): void {
     // Tooltip position calculation relies on the parent position
     // If it's not set (static), we set it to `relative` (not a good practice)
-    if (getComputedStyle(this._container)?.position === 'static') {
+    if (this._container !== document.body && getComputedStyle(this._container)?.position === 'static') {
       this._container.style.position = 'relative'
     }
   }
