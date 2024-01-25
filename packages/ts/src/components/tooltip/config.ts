@@ -33,7 +33,7 @@ export interface TooltipConfigInterface {
    * ```
    */
   triggers?: {
-    [selector: string]: (data: any, i: number, elements: (HTMLElement | SVGElement)[]) => string | HTMLElement | undefined | null;
+    [selector: string]: ((data: any, i: number, elements: (HTMLElement | SVGElement)[]) => string | HTMLElement | undefined | null) | undefined | null;
   };
   /** Custom DOM attributes for the tooltip. Useful when you need to refer to a specific tooltip instance
    * by using a CSS selector. Attributes configuration object has the following structure:
