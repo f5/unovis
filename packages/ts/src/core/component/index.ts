@@ -141,7 +141,7 @@ export class ComponentCore<
           const els = selection.nodes()
           const i = els.indexOf(event.currentTarget as SVGGElement | HTMLElement)
           const eventFunction = events[className][eventType as VisEventType]
-          return eventFunction(d, event, i, els)
+          return eventFunction?.(d, event, i, els)
         })
       })
     })
