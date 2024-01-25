@@ -171,8 +171,11 @@ export function updateLinks<N extends GraphInputNode, L extends GraphInputLink> 
 
       // Calculate the angle for the arrowhead
       const angle = Math.atan2(p2.y - p1.y, p2.x - p1.x) * (180 / Math.PI)
+      const arrowWasShownBefore = linkArrow.attr('href')
       linkArrow
         .attr('href', `#${getLinkArrowDefId(linkArrowStyle)}`)
+
+      smartTransition(linkArrow, arrowWasShownBefore ? duration : 0)
         .attr('fill', linkColor)
         .attr('transform', `translate(${p1.x}, ${p1.y}) rotate(${angle})`)
     } else {
