@@ -185,6 +185,8 @@ export class Tooltip {
           // Go through all of the configured triggers
           for (const className of Object.keys(triggers)) {
             const template = triggers[className]
+            if (!template) continue // Skip if the trigger is not configured
+
             const els = selection.selectAll<HTMLElement | SVGGElement, unknown>(`.${className}`).nodes()
 
             // Go through all of the elements in the event path (from the deepest element upwards)
