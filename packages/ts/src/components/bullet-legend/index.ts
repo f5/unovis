@@ -10,10 +10,11 @@ import { BulletLegendDefaultConfig, BulletLegendConfigInterface } from './config
 import { BulletLegendItemInterface } from './types'
 
 // Modules
-import { updateBullets } from './modules/shape'
+import { createBullets, updateBullets } from './modules/shape'
 
 // Styles
 import * as s from './style'
+
 
 export class BulletLegend {
   static selectors = s
@@ -61,11 +62,14 @@ export class BulletLegend {
       .style('display', (d: BulletLegendItemInterface) => d.hidden ? 'none' : null)
 
     // Bullet
-    legendItemsEnter.append('svg')
+    legendItemsEnter.append('span')
       .attr('class', s.bullet)
-      .append('path')
+      .call(createBullets)
 
     legendItemsMerged.select<SVGElement>(`.${s.bullet}`)
+      .style('width', config.bulletSize)
+      .style('height', config.bulletSize)
+      .style('box-sizing', 'content-box')
       .call(updateBullets, this.config, this._colorAccessor)
 
     // Labels

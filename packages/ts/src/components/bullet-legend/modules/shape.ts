@@ -3,7 +3,7 @@ import { symbol } from 'd3-shape'
 
 // Types
 import { ColorAccessor } from 'types/accessor'
-import { Symbol } from 'types/symbol'
+import { Symbol, SymbolType } from 'types/symbol'
 
 // Utils
 import { getColor } from 'utils/color'
@@ -20,6 +20,28 @@ import { BulletShape, BulletLegendItemInterface } from '../types'
 // the configured size.
 const BULLET_SIZE = PATTERN_SIZE_PX * 3
 
+// Different shapes need different scaling to fit the full size
+const shapeScale: Record<SymbolType, number> = {
+  [BulletShape.Circle]: Math.PI / 4,
+  [BulletShape.Cross]: 5 / 9,
+  [BulletShape.Diamond]: Math.sqrt(3) / 6,
+  [BulletShape.Square]: 1,
+  [BulletShape.Star]: 0.3,
+  [BulletShape.Triangle]: Math.sqrt(3) / 4,
+  [BulletShape.Wye]: 5 / 11,
+}
+
+export function createBullets (
+  container: Selection<HTMLSpanElement, BulletLegendItemInterface, HTMLDivElement, unknown>
+): void {
+  container.each((d, i, els) => {
+    select(els[i]).append('svg')
+      .attr('width', '100%')
+      .attr('height', '100%')
+      .append('path')
+  })
+}
+
 export function updateBullets (
   container: Selection<SVGElement, BulletLegendItemInterface, HTMLDivElement, unknown>,
   config: BulletLegendConfigInterface,
@@ -31,7 +53,7 @@ export function updateBullets (
     const width = BULLET_SIZE
     const height = shape === BulletShape.Line ? BULLET_SIZE / 2.5 : BULLET_SIZE
 
-    const selection = select(els[i])
+    const selection = select(els[i]).select('svg')
       .attr('viewBox', `0 0 ${width} ${height}`)
       .select<SVGPathElement>('path')
       .attr('stroke', color)
@@ -47,20 +69,30 @@ export function updateBullets (
         .style('marker-start', 'none')
         .style('marker-end', 'none')
     } else {
-      const symbolGen = symbol().type(Symbol[shape])
+      const symbolGen = symbol()
+        .type(Symbol[shape])
+        .size(width * height * shapeScale[shape])
 
-      selection.attr('d', symbolGen)
-        .attr('transform', `translate(${width / 2},${height / 2})`)
+      const scale = (width - 2) / width
+      let dy = height / 2
+      switch (shape) {
+        case BulletShape.Triangle:
+          dy += height / 8
+          break
+        case BulletShape.Star:
+          dy += height / 16
+          break
+        case BulletShape.Wye:
+          dy -= height / 16
+          break
+      }
+      selection
+        .attr('d', symbolGen)
+        .attr('transform', `translate(${width / 2}, ${Math.round(dy)}) scale(${scale})`)
         .style('stroke-width', '1px')
         .style('opacity', null)
         .style('fill', color)
         .style('fill-opacity', d.inactive ? 0.4 : 1)
-
-      const box = selection.node().getBBox()
-      const scaledSize = Math.min(width / box.width, height / box.height)
-      const scale = Math.floor(scaledSize * 2) / 2
-
-      selection.transition().duration(0).attr('d', symbolGen.size(scale * scale * 64))
     }
   })
 }
