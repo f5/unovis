@@ -61,8 +61,11 @@ export const label = css`
 export const bullet = css`
   label: legendItemBullet;
   margin-right: var(--vis-legend-bullet-label-spacing);
-  max-width: calc(var(--vis-legend-bullet-size) * 2);
   height: var(--vis-legend-bullet-size);
-  display: block;
+  width: var(--vis-legend-bullet-size);
+  
+  svg {
+    display: block;
+  }
 }
 `
