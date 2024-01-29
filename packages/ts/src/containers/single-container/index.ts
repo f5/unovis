@@ -16,9 +16,9 @@ import { Sizing, ExtendedSizeComponent } from 'types/component'
 import { SingleContainerDefaultConfig, SingleContainerConfigInterface } from './config'
 
 export class SingleContainer<Data> extends ContainerCore {
-  public component: ComponentCore<Data>
-  public config: SingleContainerConfigInterface<Data>
   protected _defaultConfig = SingleContainerDefaultConfig as SingleContainerConfigInterface<Data>
+  public component: ComponentCore<Data>
+  public config: SingleContainerConfigInterface<Data> = this._defaultConfig
 
   constructor (element: HTMLElement, config?: SingleContainerConfigInterface<Data>, data?: Data) {
     super(element)
