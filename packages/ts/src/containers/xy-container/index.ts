@@ -43,10 +43,10 @@ export type XYConfigInterface<Datum> = XYComponentConfigInterface<Datum>
 | AreaConfigInterface<Datum>
 
 export class XYContainer<Datum> extends ContainerCore {
-  public datamodel: CoreDataModel<Datum[]> = new CoreDataModel()
-  public config: XYContainerConfigInterface<Datum>
   protected _defaultConfig = XYContainerDefaultConfig as XYContainerConfigInterface<Datum>
   protected _svgDefs: Selection<SVGDefsElement, unknown, null, undefined>
+  public datamodel: CoreDataModel<Datum[]> = new CoreDataModel()
+  public config: XYContainerConfigInterface<Datum> = this._defaultConfig
   private _clipPath: Selection<SVGClipPathElement, unknown, null, undefined>
   private _clipPathId = guid()
   private _axisMargin: Spacing = { top: 0, bottom: 0, left: 0, right: 0 }
