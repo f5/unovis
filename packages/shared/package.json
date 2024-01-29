@@ -1,7 +1,7 @@
 {
   "name": "@unovis/shared",
   "description": "Modular data visualization framework for React, Angular, Svelte, and vanilla TypeScript or JavaScript",
-  "version": "1.3.2",
+  "version": "1.3.3",
   "repository": {
     "type": "git",
     "url": "https://github.com/f5/unovis.git",
