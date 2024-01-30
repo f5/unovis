@@ -38,23 +38,28 @@ export function getHierarchyNodes<N> (
 export function positionChildren<N> (node: ChordNode<N>, padding: number, scalingCoeff = 0.95): void {
   if (!node.children) return
 
+  // We need to ensure levels with empty links still take up full space
+  const containsLinks = node.value > 0
+
   const length = node.x1 - node.x0
-  const scaledLength = length * scalingCoeff
+  const scaledLength = length * (node.y0 === 0 ? 1 : scalingCoeff)
   const delta = length - scaledLength
+  const padAngle = containsLinks ? padding : scaledLength / node.children.length
 
   const positions = pie<ChordNode<N>>()
     .startAngle(node.x0 + delta / 2)
     .endAngle(node.x1 - delta / 2)
-    .padAngle(padding)
-    .value(d => d.value)
+    .padAngle(padAngle)
+    .value(d => containsLinks ? d.value : 1)
     .sort((a, b) => node.children.indexOf(a) - node.children.indexOf(b))(node.children)
 
   node.children.forEach((child, i) => {
     const x0 = positions[i].startAngle
     const x1 = positions[i].endAngle
     const childDelta = (x1 - x0) * (1 - scalingCoeff)
-    child.x0 = x0 + childDelta / 2
-    child.x1 = x1 - childDelta / 2
+    const xmid = (x0 + x1) / 2
+    child.x0 = containsLinks ? x0 + childDelta / 2 : xmid - padding / 2
+    child.x1 = containsLinks ? x1 - childDelta / 2 : xmid + padding / 2
   })
 }
 
