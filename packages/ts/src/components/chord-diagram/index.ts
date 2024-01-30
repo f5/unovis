@@ -181,16 +181,17 @@ export class ChordDiagram<
     const linksSelection = this.linkGroup
       .selectAll<SVGPathElement, ChordRibbon<N>>(`.${s.link}`)
       .data(this._links, d => String(d.data._id))
-      .classed(s.highlightedLink, l => {
-        const linkId = l.data.id ?? l.data._indexGlobal
-        return config.highlightedLinkIds?.includes(linkId)
-      })
 
     const linksEnter = linksSelection.enter().append('path')
       .attr('class', s.link)
       .call(createLink, this.radiusScale)
 
-    const linksMerged = linksSelection.merge(linksEnter)
+    const linksMerged = linksSelection
+      .merge(linksEnter)
+      .classed(s.highlightedLink, l => {
+        const linkId = l.data.id ?? l.data._indexGlobal
+        return config.highlightedLinkIds?.includes(linkId)
+      })
     linksMerged.call(updateLink, config, this.radiusScale, duration)
 
     linksSelection.exit()
@@ -200,13 +201,14 @@ export class ChordDiagram<
     const nodesSelection = this.nodeGroup
       .selectAll<SVGPathElement, ChordNode<N>>(`.${s.node}`)
       .data(this._nodes, d => String(d.uid))
-      .classed(s.highlightedNode, d => config.highlightedNodeId === d.data._id)
 
     const nodesEnter = nodesSelection.enter().append('path')
       .attr('class', s.node)
       .call(createNode, config)
 
-    const nodesMerged = nodesSelection.merge(nodesEnter)
+    const nodesMerged = nodesSelection
+      .merge(nodesEnter)
+      .classed(s.highlightedNode, d => config.highlightedNodeId === d.data._id)
     nodesMerged.call(updateNode, config, this.arcGen, duration, this.bleed)
 
     nodesSelection.exit()
