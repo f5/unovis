@@ -21,6 +21,7 @@ import {
   GraphNodeShape,
   GraphDagreLayoutSetting,
   GraphNode,
+  GraphLink,
 } from './types'
 
 export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphInputLink> extends ComponentConfigInterface {
@@ -205,6 +206,8 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   onNodeDragEnd?: (n: GraphNode<N, L>, event: D3DragEvent<SVGGElement, GraphNode<N, L>, unknown>) => void | undefined;
   /** Zoom event callback. Default: `undefined` */
   onZoom?: (zoomScale: number, zoomScaleExtent: [number, number], event: D3ZoomEvent<SVGGElement, unknown> | undefined) => void;
+  /** Callback function to be called when the graph layout is calculated. Default: `undefined` */
+  onLayoutCalculated?: (n: GraphNode<N, L>[], links: GraphLink<N, L>[]) => void;
 }
 
 export const GraphDefaultConfig: GraphConfigInterface<GraphInputNode, GraphInputLink> = {
@@ -294,4 +297,5 @@ export const GraphDefaultConfig: GraphConfigInterface<GraphInputNode, GraphInput
   onNodeDrag: undefined,
   onNodeDragEnd: undefined,
   onZoom: undefined,
+  onLayoutCalculated: undefined,
 }
