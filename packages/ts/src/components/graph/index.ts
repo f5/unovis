@@ -156,10 +156,10 @@ export class Graph<
   }
 
   setConfig (config: GraphConfigInterface<N, L>): void {
-    this._shouldRecalculateLayout = this._shouldRecalculateLayout || this._shouldLayoutRecalculate(config)
-    this._shouldFitLayout = this._shouldFitLayout || this._shouldRecalculateLayout
-
     super.setConfig(config)
+
+    this._shouldRecalculateLayout = this._shouldRecalculateLayout || this._shouldLayoutRecalculate()
+    this._shouldFitLayout = this._shouldFitLayout || this._shouldRecalculateLayout
     this._shouldSetPanels = true
   }
 
@@ -714,29 +714,29 @@ export class Graph<
     config.onNodeDragEnd?.(d, event)
   }
 
-  private _shouldLayoutRecalculate (nextConfig: GraphConfigInterface<N, L>): boolean {
-    const { config } = this
-    if (config.layoutType !== nextConfig.layoutType) return true
-    if (config.layoutNonConnectedAside !== nextConfig.layoutNonConnectedAside) return true
+  private _shouldLayoutRecalculate (): boolean {
+    const { prevConfig, config } = this
+    if (prevConfig.layoutType !== config.layoutType) return true
+    if (prevConfig.layoutNonConnectedAside !== config.layoutNonConnectedAside) return true
 
-    if (config.layoutType === GraphLayoutType.Force) {
-      const forceSettingsDiff = shallowDiff(config.forceLayoutSettings, nextConfig.forceLayoutSettings)
+    if (prevConfig.layoutType === GraphLayoutType.Force) {
+      const forceSettingsDiff = shallowDiff(prevConfig.forceLayoutSettings, config.forceLayoutSettings)
       if (Object.keys(forceSettingsDiff).length) return true
     }
 
-    if (config.layoutType === GraphLayoutType.Dagre) {
-      const dagreSettingsDiff = shallowDiff(config.dagreLayoutSettings, nextConfig.dagreLayoutSettings)
+    if (prevConfig.layoutType === GraphLayoutType.Dagre) {
+      const dagreSettingsDiff = shallowDiff(prevConfig.dagreLayoutSettings, config.dagreLayoutSettings)
       if (Object.keys(dagreSettingsDiff).length) return true
     }
 
     if (
-      config.layoutType === GraphLayoutType.Parallel ||
-      config.layoutType === GraphLayoutType.ParallelHorizontal ||
-      config.layoutType === GraphLayoutType.Concentric
+      prevConfig.layoutType === GraphLayoutType.Parallel ||
+      prevConfig.layoutType === GraphLayoutType.ParallelHorizontal ||
+      prevConfig.layoutType === GraphLayoutType.Concentric
     ) {
-      if (config.layoutGroupOrder !== nextConfig.layoutGroupOrder) return true
-      if (config.layoutParallelNodesPerColumn !== nextConfig.layoutParallelNodesPerColumn) return true
-      if (config.layoutParallelSortConnectionsByGroup !== nextConfig.layoutParallelSortConnectionsByGroup) return true
+      if (prevConfig.layoutGroupOrder !== config.layoutGroupOrder) return true
+      if (prevConfig.layoutParallelNodesPerColumn !== config.layoutParallelNodesPerColumn) return true
+      if (prevConfig.layoutParallelSortConnectionsByGroup !== config.layoutParallelSortConnectionsByGroup) return true
     }
 
     return false
