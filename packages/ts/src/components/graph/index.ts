@@ -758,8 +758,8 @@ export class Graph<
       .call(this._zoomBehavior.scaleTo, zoomLevel)
   }
 
-  public fitView (): void {
-    this._fit(this.config.duration / 2)
+  public fitView (duration = this.config.duration): void {
+    this._fit(duration)
   }
 
   /** Enable automatic fitting to container if it was disabled due to previous zoom / pan interactions */
