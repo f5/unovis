@@ -25,8 +25,8 @@ export class ComponentCore<
   public element: SVGGElement | HTMLElement
   public type: ComponentType = ComponentType.SVG
   public g: Selection<SVGGElement, unknown, null, undefined> | Selection<HTMLElement, unknown, null, undefined>
-  public config: ComponentConfigInterface
-  public prevConfig: ComponentConfigInterface
+  public config: ConfigInterface
+  public prevConfig: ConfigInterface
   public datamodel: CoreDataModel<CoreDatum> = new CoreDataModel()
   public sizing: Sizing | string = Sizing.Fit // Supported by SingleContainer and a subset of components only (Sankey)
   public uid: string
@@ -38,7 +38,7 @@ export class ComponentCore<
   } = {}
 
   /** Default configuration */
-  protected _defaultConfig: ComponentConfigInterface = ComponentDefaultConfig
+  protected _defaultConfig: ConfigInterface = ComponentDefaultConfig as ConfigInterface
   /** Component width in pixels. This property is set automatically by the container. */
   protected _width = 400
   /** Component height in pixels. This property is set automatically by the container. */
