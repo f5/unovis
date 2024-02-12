@@ -68,6 +68,10 @@ NestedDonutConfigInterface<Datum>
     const { config } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
 
+    if (config.layers === undefined || config.layers.length === 0) {
+      console.warn('Unovis | Nested Donut: No layers defined.')
+      return
+    }
     const layers = this._getLayerSettings()
     const data = this._getHierarchyData(layers)
 
@@ -139,19 +143,21 @@ NestedDonutConfigInterface<Datum>
       .call(removeArc, duration)
 
     // Segment labels
-    const labels = this.arcGroup
-      .selectAll<SVGTextElement, NestedDonutSegment<Datum>>(`.${s.segmentLabel}`)
-      .data(data, d => d._id)
+    if (config.showSegmentLabels) {
+      const labels = this.arcGroup
+        .selectAll<SVGTextElement, NestedDonutSegment<Datum>>(`.${s.segmentLabel}`)
+        .data(data, d => d._id)
 
-    const labelsEnter = segmentsEnter.append('text')
-      .attr('class', s.segmentLabel)
-      .call(createLabel, this.arcGen)
+      const labelsEnter = segmentsEnter.append('text')
+        .attr('class', s.segmentLabel)
+        .call(createLabel, this.arcGen)
 
-    labels.merge(labelsEnter)
-      .call(updateLabel, config, this.arcGen, duration)
+      labels.merge(labelsEnter)
+        .call(updateLabel, config, this.arcGen, duration)
 
-    labels.exit<NestedDonutSegment<Datum>>()
-      .call(removeLabel, duration)
+      labels.exit<NestedDonutSegment<Datum>>()
+        .call(removeLabel, duration)
+    }
 
     // Chart labels
     this.centralLabel
