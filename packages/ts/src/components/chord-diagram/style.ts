@@ -18,7 +18,7 @@ export const variables = injectGlobal`
 
     --vis-chord-diagram-label-text-fill-color-bright: #ffffff;
     --vis-chord-diagram-label-text-fill-color-dark: #a5abb2;
-    --vis-chord-diagram-label-text-font-size: 16px;
+    --vis-chord-diagram-label-text-font-size: 1em;
 
     --vis-dark-chord-diagram-link-fill-color: #575c65;
   }

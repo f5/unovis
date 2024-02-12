@@ -11,6 +11,7 @@ import { GraphData, GraphDataModel } from 'data-models/graph'
 // Utils
 import { getNumber, isNumber, getString, getValue } from 'utils/data'
 import { estimateStringPixelLength } from 'utils/text'
+import { getCSSVariableValueInPixels } from 'utils/misc'
 
 // Types
 import { Spacing } from 'types/spacing'
@@ -50,10 +51,6 @@ export class ChordDiagram<
   arcGen = arc<ChordNode<N>>()
   radiusScale: ScalePower<number, number> = scalePow()
 
-  private _nodes: ChordNode<N>[] = []
-  private _links: ChordRibbon<N>[] = []
-  private _rootNode: ChordNode<N>
-
   events = {
     [ChordDiagram.selectors.node]: {
       mouseover: this._onNodeMouseOver.bind(this),
@@ -69,6 +66,10 @@ export class ChordDiagram<
     },
   }
 
+  private _nodes: ChordNode<N>[] = []
+  private _links: ChordRibbon<N>[] = []
+  private _rootNode: ChordNode<N>
+
   private get _forceHighlight (): boolean {
     return this.config.highlightedNodeId !== undefined || this.config.highlightedLinkIds?.length > 0
   }
@@ -76,6 +77,7 @@ export class ChordDiagram<
   constructor (config?: ChordDiagramConfigInterface<N, L>) {
     super()
     if (config) this.setConfig(config)
+
     this.background = this.g.append('rect').attr('class', s.background)
     this.linkGroup = this.g.append('g').attr('class', s.links)
     this.nodeGroup = this.g.append('g').attr('class', s.nodes)
@@ -84,12 +86,15 @@ export class ChordDiagram<
 
   get bleed (): Spacing {
     const { config } = this
-    const padding = 4 + LABEL_PADDING * 2
+    const padding = LABEL_PADDING * 2
     let top = 0; let bottom = 0; let right = 0; let left = 0
     this._nodes.forEach(n => {
       const nodeLabelAlignment = getValue(n.data, config.nodeLabelAlignment)
       if (n.height === 0 && nodeLabelAlignment === ChordLabelAlignment.Perpendicular) {
-        const labelWidth = estimateStringPixelLength(getString(n.data as N, config.nodeLabel) ?? '', 16)
+        const label = getString(n.data as N, config.nodeLabel) ?? ''
+        const fontSize = getCSSVariableValueInPixels('var(--vis-chord-diagram-label-text-font-size)', this.element)
+        const labelWidth = estimateStringPixelLength(label, fontSize)
+
         const [x, y] = this.arcGen.centroid(n)
 
         if (x < 0) left = Math.max(left, labelWidth)
@@ -157,13 +162,17 @@ export class ChordDiagram<
     const size = Math.min(this._width, this._height)
     const radius = size / 2 - max([bleed.top, bleed.bottom, bleed.left, bleed.right])
 
-    this.radiusScale.range([0, radius - config.nodeWidth])
+    const numLevels = 1 + config.nodeLevels?.length
+    const maxSpace = config.nodeWidth * numLevels
+    const nodeWidth = radius > maxSpace ? config.nodeWidth : Math.max(radius / numLevels, 0)
+
+    this.radiusScale.range([0, Math.max(radius, 0)])
 
     this.arcGen
       .startAngle(d => d.x0 + config.padAngle / 2 - (d.value ? 0 : Math.PI / 360))
       .endAngle(d => d.x1 - config.padAngle / 2 + (d.value ? 0 : Math.PI / 360))
       .cornerRadius(d => getNumber(d.data, config.cornerRadius))
-      .innerRadius(d => this.radiusScale(d.y1) - getNumber(d, config.nodeWidth))
+      .innerRadius(d => Math.max(this.radiusScale(d.y1) - nodeWidth, 0))
       .outerRadius(d => this.radiusScale(d.y1))
 
     this.g.classed(s.transparent, this._forceHighlight)
@@ -215,7 +224,7 @@ export class ChordDiagram<
       .call(removeNode, duration)
 
     // Labels
-    const labelWidth = size - radius - config.nodeWidth
+    const labelWidth = size - radius
     const labels = this.labelGroup
       .selectAll<SVGGElement, ChordNode<N>>(`.${s.label}`)
       .data(this._nodes, d => String(d.uid))
