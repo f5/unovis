@@ -132,6 +132,10 @@ export class VisNestedDonutComponent<Datum> implements NestedDonutConfigInterfac
   /** When true, the component will display empty segments (the ones that have `0` values) as tiny slices.
    * Default: `false` */
   @Input() showEmptySegments?: boolean
+
+  /** Show labels for individual segments. Default: `true` */
+  @Input() showSegmentLabels?: boolean
+
   @Input() data: Datum[]
 
   component: NestedDonut<Datum> | undefined

@@ -57,6 +57,7 @@ export interface NestedDonutConfigInterface<Datum> extends ComponentConfigInterf
    * Default: `false`
   */
   showEmptySegments?: boolean;
+  showSegmentLabels?: boolean;
 }
 
 export const NestedDonutDefaultConfig: NestedDonutConfigInterface<unknown> = {
@@ -77,6 +78,7 @@ export const NestedDonutDefaultConfig: NestedDonutConfigInterface<unknown> = {
   segmentLabelColor: undefined,
   showBackground: false,
   showEmptySegments: false,
+  showSegmentLabels: true,
   sort: undefined,
   value: undefined,
 }
