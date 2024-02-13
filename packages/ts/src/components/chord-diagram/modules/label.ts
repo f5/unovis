@@ -101,39 +101,34 @@ export function updateLabel<N extends ChordInputNode, L extends ChordInputLink> 
     .style('opacity', 1)
 
   const label: Selection<SVGTextElement, ChordNode<N>, SVGElement, unknown> = selection.select(`.${s.labelText}`)
-  label.select('textPath').remove()
-  label
-    .text(d => getString(d.data, nodeLabel))
+  label.selectAll('textPath').remove()
+
+  label.text(d => getString(d.data, nodeLabel))
     .style('fill', d => getColor(d.data, nodeLabelColor) ?? getLabelFillColor(d, config))
     .style('text-anchor', d => getLabelTextAnchor(d, config))
+    .each((d: ChordNode<N>, i: number, elements) => {
+      const nodeLabelAlignment = getValue(d.data, config.nodeLabelAlignment) ?? ChordLabelAlignment.Along
+      const radianArcLength = d.x1 - d.x0 - getNumber(d.data, config.padAngle) * 2
+      const radius = radiusScale(d.y1) - getNumber(d, config.nodeWidth) / 2
+      const arcLength = radius * radianArcLength
+      const maxWidth = (nodeLabelAlignment === ChordLabelAlignment.Along ? arcLength : width - LABEL_PADDING * 2)
 
-  label.each((d: ChordNode<N>, i: number, elements) => {
-    const nodeLabelAlignment = getValue(d.data, config.nodeLabelAlignment) ?? ChordLabelAlignment.Along
-    const radianArcLength = d.x1 - d.x0 - getNumber(d.data, config.padAngle) * 2
-    const radius = radiusScale(d.y1) - getNumber(d, config.nodeWidth) / 2
-    const arcLength = radius * radianArcLength
-    const maxWidth = (nodeLabelAlignment === ChordLabelAlignment.Along ? arcLength : width) - LABEL_PADDING * 2
-
-    const textElementSelection = select(elements[i])
-    trimSVGText(textElementSelection, maxWidth)
-    textElementSelection
-      .attr('dx', nodeLabelAlignment === ChordLabelAlignment.Along ? LABEL_PADDING : null)
-      .attr('dy', nodeLabelAlignment === ChordLabelAlignment.Along ? getNumber(d.data, nodeWidth) / 2 : null)
-
-    if (nodeLabelAlignment === ChordLabelAlignment.Along) {
       const textElement = select(elements[i])
-      const textWidth = textElement.node().getBoundingClientRect().width
+        .call(trimSVGText, maxWidth)
+        .attr('dx', nodeLabelAlignment === ChordLabelAlignment.Along ? LABEL_PADDING : null)
+        .attr('dy', nodeLabelAlignment === ChordLabelAlignment.Along ? getNumber(d.data, nodeWidth) / 2 : null)
+
+      const textWidth = textElement.node().getComputedTextLength()
       const labelText = textElement.text()
-
-      select(elements[i])
-        .text('')
-        .style('display', textWidth > maxWidth && 'none')
-
-      select(elements[i]).append('textPath')
-        .attr('href', `#${d.uid}`)
-        .text(labelText)
-    }
-  })
+      if (nodeLabelAlignment === ChordLabelAlignment.Along) {
+        textElement.text('')
+        if (textWidth <= maxWidth) {
+          textElement.append('textPath')
+            .attr('href', `#${d.uid}`)
+            .text(labelText)
+        }
+      }
+    })
 
   smartTransition(label, duration)
     .attr('transform', d => {
