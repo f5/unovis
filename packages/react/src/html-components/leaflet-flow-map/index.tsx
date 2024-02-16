@@ -46,7 +46,7 @@ export function VisLeafletFlowMapFC<
     component?.setConfig(props)
   })
 
-  useImperativeHandle(ref, () => ({ component }))
+  useImperativeHandle(ref, () => ({ get component () { return component } }), [component])
   return <div ref={container} className={props.className} />
 }
 
