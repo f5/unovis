@@ -45,7 +45,7 @@ function VisDonutFC<Datum> (props: VisDonutProps<Datum>, fRef: ForwardedRef<VisD
     component?.setConfig(props)
   })
 
-  useImperativeHandle(fRef, () => ({ component: componentRef.current }), [componentRef.current])
+  useImperativeHandle(fRef, () => ({ get component () { return componentRef.current } }), [])
   return <vis-component ref={ref} />
 }
 

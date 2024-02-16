@@ -45,7 +45,7 @@ function VisTimelineFC<Datum> (props: VisTimelineProps<Datum>, fRef: ForwardedRe
     component?.setConfig(props)
   })
 
-  useImperativeHandle(fRef, () => ({ component: componentRef.current }), [componentRef.current])
+  useImperativeHandle(fRef, () => ({ get component () { return componentRef.current } }), [])
   return <vis-component ref={ref} />
 }
 

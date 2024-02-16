@@ -33,7 +33,7 @@ export function VisLeafletMapFC<Datum extends Record<string, unknown>> (props: V
     component?.setConfig(props)
   })
 
-  useImperativeHandle(ref, () => ({ component }))
+  useImperativeHandle(ref, () => ({ get component () { return component } }), [component])
   return <div ref={container} className={props.className} />
 }
 

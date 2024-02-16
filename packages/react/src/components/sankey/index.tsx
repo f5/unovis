@@ -45,7 +45,7 @@ function VisSankeyFC<N extends SankeyInputNode, L extends SankeyInputLink> (prop
     component?.setConfig(props)
   })
 
-  useImperativeHandle(fRef, () => ({ component: componentRef.current }), [componentRef.current])
+  useImperativeHandle(fRef, () => ({ get component () { return componentRef.current } }), [])
   return <vis-component ref={ref} />
 }
 
