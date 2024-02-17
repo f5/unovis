@@ -27,6 +27,11 @@
   "main": "./index.js",
   "types": "./index.d.ts",
   "svelte": "./index.js",
+  "exports": {
+    ".": {
+      "svelte": "./index.js"
+    }
+  },
   "type": "module",
   "sideEffects": false,
   "scripts": {
