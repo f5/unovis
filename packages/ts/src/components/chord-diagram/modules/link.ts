@@ -69,7 +69,7 @@ export function updateLink<N extends ChordInputNode, L extends ChordInputLink> (
   duration: number
 ): void {
   selection
-    .style('transition', `fill-opacity: ${duration}ms`)
+    .style('transition', `fill ${duration}ms`)
     .style('fill', d => getColor(d.data, config.linkColor))
     .style('stroke', d => getColor(d.data, config.linkColor))
 
