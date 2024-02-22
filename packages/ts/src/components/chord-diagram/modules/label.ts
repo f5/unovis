@@ -104,6 +104,7 @@ export function updateLabel<N extends ChordInputNode, L extends ChordInputLink> 
   label.selectAll('textPath').remove()
 
   label.text(d => getString(d.data, nodeLabel))
+    .style('transition', `fill ${duration}ms`)
     .style('fill', d => getColor(d.data, nodeLabelColor) ?? getLabelFillColor(d, config))
     .style('text-anchor', d => getLabelTextAnchor(d, config))
     .each((d: ChordNode<N>, i: number, elements) => {
