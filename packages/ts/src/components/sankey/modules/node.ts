@@ -101,7 +101,7 @@ export function updateNodes<N extends SankeyInputNode, L extends SankeyInputLink
     nodeIcon
       .attr('visibility', null)
       .attr('text-anchor', 'middle')
-      .attr('alignment-baseline', 'middle')
+      .style('dominant-baseline', 'central')
       .style('stroke', (d: SankeyNode<N, L>) => getColor(d, config.nodeIconColor))
       .style('fill', (d: SankeyNode<N, L>) => getColor(d, config.nodeIconColor))
       .style('font-size', (d: SankeyNode<N, L>) => {
