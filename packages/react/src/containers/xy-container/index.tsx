@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import React, { ReactNode, useEffect, useRef, useState, PropsWithChildren } from 'react'
+import React, { ReactNode, useEffect, useRef, useState, PropsWithChildren, useCallback } from 'react'
 import { XYContainer, XYContainerConfigInterface, XYComponentCore, Tooltip, Crosshair, Axis, AxisType } from '@unovis/ts'
 
 // Utils
@@ -40,12 +40,28 @@ export function VisXYContainerFC<Datum> (props: PropsWithChildren<VisXYContainer
     ...props,
   })
 
+  const update = useCallback(() => {
+    cancelAnimationFrame(animationFrameRef.current as number)
+    animationFrameRef.current = requestAnimationFrame(() => {
+      chartRef.current?.updateContainer(getConfig())
+    })
+  }, [])
+
   // On Mount
   useEffect(() => {
-    const c = new XYContainer<Datum>(container.current as HTMLDivElement, getConfig(), props.data)
+    const config = getConfig()
+    const c = new XYContainer<Datum>(container.current as HTMLDivElement, config, props.data)
     chartRef.current = c
     prevPropsRef.current = props
     dataRef.current = props.data
+
+    if (process.node.NODE_ENV === 'development') {
+      container.current?.querySelectorAll<VisComponentElement<XYComponentCore<Datum>>>('vis-component')
+        ?.forEach(c => {
+          c.removeEventListener('component-update', update)
+          c.addEventListener('component-update', update)
+        })
+    }
 
     return () => {
       if (animationFrameRef.current) {
@@ -82,6 +98,7 @@ export function VisXYContainerFC<Datum> (props: PropsWithChildren<VisXYContainer
       })
     }
   })
+
 
   return (
     <div ref={container} className={props.className} style={props.style}>

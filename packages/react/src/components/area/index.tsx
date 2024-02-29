@@ -22,6 +22,7 @@ export const VisAreaSelectors = Area.selectors
 // eslint-disable-next-line @typescript-eslint/naming-convention
 function VisAreaFC<Datum> (props: VisAreaProps<Datum>, fRef: ForwardedRef<VisAreaRef<Datum>>): JSX.Element {
   const ref = useRef<VisComponentElement<Area<Datum>>>(null)
+  const rndRef = useRef(Math.random().toString(36).substring(7))
   const componentRef = useRef<Area<Datum> | undefined>(undefined)
 
   // On Mount
@@ -40,13 +41,16 @@ function VisAreaFC<Datum> (props: VisAreaProps<Datum>, fRef: ForwardedRef<VisAre
 
   // On Props Update
   useEffect(() => {
+    const event = new CustomEvent('component-update')
+    ref.current?.dispatchEvent(event)
+
     const component = componentRef.current
     if (props.data) component?.setData(props.data)
     component?.setConfig(props)
   })
 
   useImperativeHandle(fRef, () => ({ component: componentRef.current }), [componentRef.current])
-  return <vis-component ref={ref} />
+  return <vis-component ref={ref} id={rndRef.current}/>
 }
 
 // We export a memoized component to avoid unnecessary re-renders
