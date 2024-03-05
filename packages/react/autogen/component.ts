@@ -58,7 +58,7 @@ function Vis${componentName}FC${genericsDefStr} (props: Vis${componentName}Props
     component?.setConfig(props)
   })
 
-  useImperativeHandle(fRef, () => ({ component: componentRef.current }), [componentRef.current])
+  useImperativeHandle(fRef, () => ({ get component () { return componentRef.current } }), [])
   return <vis-${elementSuffix} ref={ref} />
 }
 
