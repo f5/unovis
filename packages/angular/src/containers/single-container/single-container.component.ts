@@ -1,9 +1,10 @@
 import { Component, ViewChild, ElementRef, AfterViewInit, Input, OnDestroy, SimpleChanges, ContentChild } from '@angular/core'
 
 // Vis
-import { ComponentCore, SingleContainer, SingleContainerConfigInterface, Tooltip, Spacing } from '@unovis/ts'
+import { ComponentCore, SingleContainer, SingleContainerConfigInterface, Tooltip, Spacing, Annotations } from '@unovis/ts'
 import { VisCoreComponent } from '../../core'
 import { VisTooltipComponent } from '../../components/tooltip/tooltip.component'
+import { VisAnnotationsComponent } from '../../components/annotations/annotations.component'
 
 @Component({
   selector: 'vis-single-container',
@@ -16,6 +17,7 @@ export class VisSingleContainerComponent<Data = unknown, C extends ComponentCore
   @ViewChild('container', { static: false }) containerRef: ElementRef
   @ContentChild(VisCoreComponent) visComponent: VisCoreComponent
   @ContentChild(VisTooltipComponent) tooltipComponent: VisTooltipComponent
+  @ContentChild(VisAnnotationsComponent) annotationsComponent: VisAnnotationsComponent
 
   /** Width in pixels. By default, Container automatically fits to the size of the parent element. Default: `undefined`. */
   @Input() width?: number
@@ -57,8 +59,9 @@ export class VisSingleContainerComponent<Data = unknown, C extends ComponentCore
 
     const component = this.visComponent?.component as C
     const tooltip = this.tooltipComponent?.component as Tooltip
+    const annotations = this.annotationsComponent?.component as Annotations
 
-    return { width, height, duration, margin, component, tooltip, ariaLabel }
+    return { width, height, duration, margin, component, tooltip, ariaLabel, annotations }
   }
 
   ngOnDestroy (): void {

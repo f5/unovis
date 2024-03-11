@@ -58,6 +58,11 @@ export class SingleContainer<Data> extends ContainerCore {
       tooltip.setComponents([this.component])
     }
 
+    const annotations = containerConfig.annotations
+    if (annotations) {
+      this.element.appendChild(annotations.element)
+    }
+
     // Defs
     this.element.appendChild(this._svgDefs.node())
 
@@ -93,6 +98,7 @@ export class SingleContainer<Data> extends ContainerCore {
   protected _preRender (): void {
     super._preRender()
     this.component.setSize(this.width, this.height, this.containerWidth, this.containerHeight)
+    this.config.annotations?.setSize(this.width, this.height, this.containerWidth, this.containerHeight)
   }
 
   protected _render (duration?: number): void {
@@ -101,6 +107,7 @@ export class SingleContainer<Data> extends ContainerCore {
 
     component.g.attr('transform', `translate(${config.margin.left},${config.margin.top})`)
     component.render(duration)
+    config.annotations?.render(duration)
 
     if (config.tooltip) config.tooltip.update()
   }
@@ -158,5 +165,6 @@ export class SingleContainer<Data> extends ContainerCore {
 
     component?.destroy()
     config.tooltip?.destroy()
+    config.annotations?.destroy()
   }
 }

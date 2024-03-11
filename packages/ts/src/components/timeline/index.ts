@@ -136,6 +136,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
       .attr('class', s.label)
 
     labelsEnter.merge(labels)
+      .classed(config.labelClassName, true)
       .attr('x', xRange[0] - maxLineWidth / 2 - this._labelMargin)
       .attr('y', (label, i) => yStart + (ordinalScale(label) + 0.5) * config.rowHeight)
       .text(label => label)

@@ -11,6 +11,9 @@ const cssVarDefaults = {
   '--vis-annotations-subject-stroke-color': '#444',
   '--vis-annotations-subject-fill-color': 'none',
   '--vis-annotations-subject-stroke-dasharray': 'none',
+
+  '--vis-dark-annotations-conntector-stroke-color': '#fff',
+  '--vis-dark-annotations-subject-stroke-color': '#fff',
 }
 
 export const root = css`

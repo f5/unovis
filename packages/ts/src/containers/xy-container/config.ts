@@ -97,6 +97,7 @@ export const XYContainerDefaultConfig: XYContainerConfigInterface<unknown> = {
   components: [],
   tooltip: undefined,
   crosshair: undefined,
+  annotations: undefined,
   xAxis: undefined,
   yAxis: undefined,
   autoMargin: true,
@@ -116,6 +117,5 @@ export const XYContainerDefaultConfig: XYContainerConfigInterface<unknown> = {
 
   preventEmptyDomain: null,
   scaleByDomain: false,
-  annotations: undefined,
 }
 

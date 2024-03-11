@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { ComponentCore, SingleContainer, SingleContainerConfigInterface, Tooltip } from '@unovis/ts'
+  import { ComponentCore, SingleContainer, SingleContainerConfigInterface, Tooltip, Annotations } from '@unovis/ts'
   import { arePropsEqual } from '../../utils/props'
   import { onDestroy, setContext } from 'svelte'
 
@@ -14,6 +14,7 @@
   let ref: HTMLDivElement
   let component: ComponentCore<Data>
   let tooltip: Tooltip
+  let annotations: Annotations
 
   // Props
   export let data: Data = undefined
@@ -35,7 +36,7 @@
   export { className as class }
   let config: SingleContainerConfigInterface<Data>
   $: props = $$restProps as SingleContainerConfigInterface<Data>
-  $: config = { component, tooltip, ...props }
+  $: config = { component, tooltip, annotations, ...props }
 
   // Helpers
   function initChart () {
@@ -62,6 +63,11 @@
   setContext('component', () => ({
     update: (c: ComponentCore<Data>) => { component = c },
     destroy: () => { component = undefined },
+  }))
+
+  setContext('annotations', () => ({
+    update: (a: Annotations) => { annotations = a },
+    destroy: () => { annotations = undefined },
   }))
 
   onDestroy(() => chart?.destroy())
