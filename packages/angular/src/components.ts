@@ -5,6 +5,9 @@ export * from './core'
 export { VisAreaComponent } from './components/area/area.component'
 export { VisAreaModule } from './components/area/area.module'
 
+export { VisAnnotationsComponent } from './components/annotations/annotations.component'
+export { VisAnnotationsModule } from './components/annotations/annotations.module'
+
 export { VisAxisComponent } from './components/axis/axis.component'
 export { VisAxisModule } from './components/axis/axis.module'
 

@@ -8,6 +8,7 @@ export type AnnotationItem = UnovisTextFrameOptions & {
   y?: LengthUnit;
   width?: LengthUnit;
   height?: LengthUnit;
+  cursor?: string;
 }
 
 export type AnnotationSubjectLocationXY = {
@@ -15,21 +16,8 @@ export type AnnotationSubjectLocationXY = {
   y: LengthUnit | (() => LengthUnit);
 }
 
-export enum AnnotationSubjectType {
-  Circle = 'circle',
-  Rect = 'rect',
-}
-
 export type AnnotationSubjectStyle = {
-  /** Type of the subject: AnnotationSubjectType.Circle or AnnotationSubjectType.Rect
-  * Default: AnnotationSubjectType.Circle
-  */
-  type?: AnnotationSubjectType | string;
-  /** Subject width. Only for `AnnotationSubjectType.Rect` */
-  width?: number;
-  /** Subject height. Only for `AnnotationSubjectType.Rect` */
-  height?: number;
-  /** Subject radius. Only for `AnnotationSubjectType.Circle` */
+  /** Subject radius */
   radius?: number;
   /** Subject fill color */
   fillColor?: string;

@@ -9,9 +9,9 @@ const accessor = inject(annotationsAccessorKey)
 
 // data and required props 
 interface Props extends  AnnotationsConfigInterface { }
-const props = defineProps<Props & { data?: Datum[] }>()
+const props = defineProps<Props & { data?: null }>()
 
-const data = computed(() => accessor.data.value ?? props.data)
+
 // config
 const config = useForwardProps(props)
 
@@ -22,7 +22,7 @@ const component = ref<Annotations>()
 onMounted(() => {
   nextTick(() => {
     component.value = new Annotations(config.value)
-    component.value?.setData(data.value)
+    
     accessor.update(component.value)
   })
 })
@@ -38,9 +38,6 @@ watch(config, (curr, prev) => {
   }
 })
 
-watch(data, () => {
-  component.value?.setData(data.value)
-})
 
 defineExpose({
   component

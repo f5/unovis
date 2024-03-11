@@ -9,7 +9,6 @@
 
   // data and required props
   // eslint-disable-next-line no-undef-init
-  export let data: Datum[] = undefined
   export let items: AnnotationItem[] | undefined
 
   // config
@@ -25,7 +24,6 @@
     component = new Annotations(config)
     return () => component?.destroy()
   })
-  $: component?.setData(data)
   $: if (!arePropsEqual(prevConfig, config)) {
     component?.setConfig(config)
     prevConfig = config

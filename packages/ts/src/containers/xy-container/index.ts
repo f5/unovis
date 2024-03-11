@@ -407,7 +407,6 @@ export class XYContainer<Datum> extends ContainerCore {
         if (axisMargin.left < m.left) axisMargin.left = m.left
         if (axisMargin.right < m.right) axisMargin.right = m.right
       })
-
       this._axisMargin = axisMargin
     }
   }

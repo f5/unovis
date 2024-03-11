@@ -7,7 +7,7 @@ import { generateNestedData, NestedDatum } from '@src/utils/data'
 export const title = 'Interactive Nested Donut'
 export const subTitle = 'Click on node to toggle subchart'
 
-const defaultData = generateNestedData(100, 3, ['A1', 'B0', 'B1', 'B2'])
+const defaultData = generateNestedData(100, 3)//, ['A1', 'B0', 'B1', 'B2'])
 
 export const component = (): JSX.Element => {
   const [data, setData] = useState<NestedDatum[]>(defaultData)

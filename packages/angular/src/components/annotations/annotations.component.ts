@@ -1,15 +1,65 @@
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import { Annotations, AnnotationsConfigInterface, ContainerCore, AnnotationItem } from '@unovis/ts'
-import { VisXYComponent } from '../../core'
+import { Annotations, AnnotationsConfigInterface, ContainerCore, VisEventType, VisEventCallback, AnnotationItem } from '@unovis/ts'
+import { VisGenericComponent } from '../../core'
 
 @Component({
   selector: 'vis-annotations',
   template: '',
   // eslint-disable-next-line no-use-before-define
-  providers: [{ provide: VisXYComponent, useExisting: VisAnnotationsComponent }],
+  providers: [{ provide: VisGenericComponent, useExisting: VisAnnotationsComponent }],
 })
 export class VisAnnotationsComponent implements AnnotationsConfigInterface, AfterViewInit {
+  /** Animation duration of the data update transitions in milliseconds. Default: `600` */
+  @Input() duration?: number
+
+  /** Events configuration. An object containing properties in the following format:
+   *
+   * ```
+   * {
+   * \[selectorString]: {
+   *     \[eventType]: callbackFunction
+   *  }
+   * }
+   * ```
+   * e.g.:
+   * ```
+   * {
+   * \[Area.selectors.area]: {
+   *    click: (d) => console.log("Clicked Area", d)
+   *  }
+   * }
+   * ``` */
+  @Input() events?: {
+    [selector: string]: {
+      [eventType in VisEventType]?: VisEventCallback
+    };
+  }
+
+  /** You can set every SVG and HTML visualization object to have a custom DOM attributes, which is useful
+   * when you want to do unit or end-to-end testing. Attributes configuration object has the following structure:
+   *
+   * ```
+   * {
+   * \[selectorString]: {
+   *     \[attributeName]: attribute constant value or accessor function
+   *  }
+   * }
+   * ```
+   * e.g.:
+   * ```
+   * {
+   * \[Area.selectors.area]: {
+   *    "test-value": d => d.value
+   *  }
+   * }
+   * ``` */
+  @Input() attributes?: {
+    [selector: string]: {
+      [attr: string]: string | number | boolean | ((datum: any) => string | number | boolean);
+    };
+  }
+
   /** Legend items. Array of `AnnotationItem`:
    * ```
    * {
@@ -24,29 +74,22 @@ export class VisAnnotationsComponent implements AnnotationsConfigInterface, Afte
    * To learn more, see our docs https://unovis.dev/docs/auxiliary/Annotations/
    * Default: `[]` */
   @Input() items: AnnotationItem[] | undefined
-  @Input() data: Datum[]
 
   component: Annotations | undefined
   public componentContainer: ContainerCore | undefined
 
   ngAfterViewInit (): void {
     this.component = new Annotations(this.getConfig())
-
-    if (this.data) {
-      this.component.setData(this.data)
-      this.componentContainer?.render()
-    }
   }
 
   ngOnChanges (changes: SimpleChanges): void {
-    if (changes.data) { this.component?.setData(this.data) }
     this.component?.setConfig(this.getConfig())
     this.componentContainer?.render()
   }
 
   private getConfig (): AnnotationsConfigInterface {
-    const { items } = this
-    const config = { items }
+    const { duration, events, attributes, items } = this
+    const config = { duration, events, attributes, items }
     const keys = Object.keys(config) as (keyof AnnotationsConfigInterface)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

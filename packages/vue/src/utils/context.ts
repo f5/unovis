@@ -1,4 +1,4 @@
-import { XYComponentCore, ComponentCore, Tooltip, Crosshair, Axis } from '@unovis/ts'
+import { XYComponentCore, ComponentCore, Tooltip, Crosshair, Axis, Annotations } from '@unovis/ts'
 import { InjectionKey, Ref } from 'vue'
 
 export const componentAccessorKey = Symbol('componentAccessorKey') as InjectionKey<{
@@ -25,3 +25,8 @@ export const axisAccessorKey = Symbol('axisAccessorKey') as InjectionKey< {
   destroy: (c: string) => void;
 }>
 
+export const annotationsAccessorKey = Symbol('annotationsAccessorKey') as InjectionKey<{
+  data: Ref<any>;
+  update: (c: Annotations) => void;
+  destroy: () => void;
+}>

@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-use-before-define
 import React, { ReactNode, useEffect, useRef, useState, PropsWithChildren } from 'react'
-import { SingleContainer, SingleContainerConfigInterface, ComponentCore, Tooltip } from '@unovis/ts'
+import { SingleContainer, SingleContainerConfigInterface, ComponentCore, Tooltip, Annotations } from '@unovis/ts'
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'
@@ -28,6 +28,7 @@ function VisSingleContainerFC<Data> (props: PropsWithChildren<VisSingleContainer
     component: container.current?.querySelector<VisComponentElement<ComponentCore<Data>>>('vis-component')?.__component__,
     // eslint-disable-next-line @typescript-eslint/naming-convention
     tooltip: container.current?.querySelector<VisComponentElement<Tooltip>>('vis-tooltip')?.__component__,
+    annotations: container.current?.querySelector<VisComponentElement<Annotations>>('vis-annotations')?.__component__,
   })
 
   // On Mount

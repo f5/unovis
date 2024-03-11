@@ -13,7 +13,7 @@ export type VisAnnotationsRef = {
 }
 
 export type VisAnnotationsProps = AnnotationsConfigInterface & {
-  data?: Datum[];
+  data?: null;
   ref?: Ref<VisAnnotationsRef>;
 }
 
@@ -39,7 +39,6 @@ function VisAnnotationsFC (props: VisAnnotationsProps, fRef: ForwardedRef<VisAnn
   // On Props Update
   useEffect(() => {
     const component = componentRef.current
-    if (props.data) component?.setData(props.data)
     component?.setConfig(props)
   })
 

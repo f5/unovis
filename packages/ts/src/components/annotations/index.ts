@@ -8,9 +8,7 @@ import { isNumber } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { renderTextIntoFrame } from 'utils/text'
 import { parseUnit } from 'utils/misc'
-
-// Types
-import { Spacing } from 'types/spacing'
+import { UNOVIS_TEXT_DEFAULT } from 'styles'
 
 // Local Types
 import { AnnotationItem, AnnotationSubject } from './types'
@@ -36,61 +34,68 @@ export class Annotations extends ComponentCore<unknown[], AnnotationsConfigInter
     if (config) this.setConfig(config)
   }
 
-  // Todo: implement
-  get bleed (): Spacing {
-    return { top: 0, bottom: 0, left: 0, right: 0 }
-  }
-
   _render (customDuration?: number): void {
     super._render(customDuration)
     const { config } = this
+
     const duration = isNumber(customDuration) ? customDuration : config.duration
 
-    const annotations = this.g
-      .selectAll<SVGGElement, AnnotationItem>(`.${s.annotation}`)
-      .data(config.items ?? [])
+    const annotations = this.g.selectAll<SVGGElement, AnnotationItem[]>(`.${s.annotation}`)
+      .data(config.items, d => JSON.stringify(d))
 
     const annotationsEnter = annotations.enter().append('g')
       .attr('class', s.annotation)
+      .style('opacity', 0)
 
+    // Content
     annotationsEnter.append('g').attr('class', s.annotationContent)
-    const annotationsSubject = annotationsEnter.append('g').attr('class', s.annotationSubject)
-    annotationsSubject.append('circle')
-    annotationsSubject.append('line')
 
-    // Todo: smooth transition
-    annotationsEnter.merge(annotations)
+    // Subject
+    const subject = annotationsEnter.append('g')
+      .attr('class', s.annotationSubject)
+
+    subject.append('circle')
+    subject.append('line')
+
+    const annotationsMerged = annotationsEnter.merge(annotations)
+      .attr('cursor', d => d?.cursor)
       .each((annotation, i, elements) => {
-        // Content rendering
-        const contentGroupElement = elements[i].querySelector<SVGGElement>(`.${s.annotationContent}`)
-        const content = typeof annotation.content === 'string' ? { text: annotation.content, fontSize: 12 } : annotation.content
-        const x = parseUnit(annotation.x, this._width)
-        const y = parseUnit(annotation.y, this._height)
-        const width = parseUnit(annotation.width, this._width)
-        const height = parseUnit(annotation.height, this._height)
-        const options = { ...annotation, x, y, width, height }
-        renderTextIntoFrame(contentGroupElement, content, options)
+        if (annotation.content) {
+          const content = typeof annotation.content === 'string' ? { ...UNOVIS_TEXT_DEFAULT, text: annotation.content } : annotation.content
+          const x = parseUnit(annotation.x, this._width)
+          const y = parseUnit(annotation.y, this._height)
+          const width = parseUnit(annotation.width, this._width)
+          const height = parseUnit(annotation.height, this._height)
+          const options = { ...annotation, x, y, width, height }
 
-        // Subject rendering
-        requestAnimationFrame(() => this._renderSubject(elements[i], annotation.subject, duration))
+          const contentGroupElement = select(elements[i]).select<SVGGElement>(`.${s.annotationContent}`)
+          renderTextIntoFrame(contentGroupElement.node(), content, options)
+        }
+
+        if (annotation.subject) {
+          requestAnimationFrame(() => this._renderSubject(elements[i], annotation.subject))
+        }
       })
+
+    smartTransition(annotationsMerged, duration)
+      .style('opacity', 1)
 
     smartTransition(annotations.exit(), duration)
       .style('opacity', 0)
       .remove()
   }
 
+
   private _renderSubject (
-    annotationGroupElement: SVGGElement,
-    subject: AnnotationSubject | undefined,
-    duration?: number
+    annotationGroupElement: SVGElement,
+    subject: AnnotationSubject | undefined
   ): void {
-    const contentGroupElement = annotationGroupElement.querySelector<SVGGElement>(`.${s.annotationContent}`)
-    const subjectGroupElement = annotationGroupElement.querySelector<SVGGElement>(`.${s.annotationSubject}`)
-    const subjectGroup = select(subjectGroupElement)
+    const contentGroup = select(annotationGroupElement).select<SVGGElement>(`.${s.annotationContent}`)
+    const subjectGroup = select(annotationGroupElement).select<SVGGElement>(`.${s.annotationSubject}`)
 
     const subjectX: number | null = parseUnit(typeof subject?.x === 'function' ? subject.x() : subject?.x, this._width) ?? null
     const subjectY: number | null = parseUnit(typeof subject?.y === 'function' ? subject.y() : subject?.y, this._height) ?? null
+
     const subjectStrokeColor: string | null = subject?.strokeColor ?? null
     const subjectFillColor: string | null = subject?.fillColor ?? null
     const subjectStrokeDasharray: string | null = subject?.strokeDasharray ?? null
@@ -99,7 +104,7 @@ export class Annotations extends ComponentCore<unknown[], AnnotationsConfigInter
     const subjectRadius: number | null = subject?.radius ?? 0
     const padding = subject?.padding ?? 5
 
-    const contentBbox = contentGroupElement.getBBox()
+    const contentBbox = contentGroup.node().getBBox()
     const dy = Math.abs(subjectY - (contentBbox.y + contentBbox.height / 2))
     const dx = Math.abs(subjectX - (contentBbox.x + contentBbox.width / 2))
     const annotationPadding = 5
@@ -115,9 +120,7 @@ export class Annotations extends ComponentCore<unknown[], AnnotationsConfigInter
     const x1 = subjectX + Math.cos(angle * Math.PI / 180) * (subjectRadius + padding)
     const y1 = subjectY + Math.sin(angle * Math.PI / 180) * (subjectRadius + padding)
 
-    const circleSelection = subjectGroup.select('circle')
-    const lineSelection = subjectGroup.select('line')
-    circleSelection
+    subjectGroup.select('circle')
       .attr('visibility', subject ? null : 'hidden')
       .attr('cx', subjectX)
       .attr('cy', subjectY)
@@ -126,14 +129,15 @@ export class Annotations extends ComponentCore<unknown[], AnnotationsConfigInter
       .style('fill', subjectFillColor)
       .style('stroke-dasharray', subjectStrokeDasharray)
 
-    lineSelection
+    subjectGroup.select('line')
       .attr('visibility', subject ? null : 'hidden')
       .attr('x1', x1)
       .attr('y1', y1)
+      .attr('x2', x1)
+      .attr('y2', y1)
       .attr('x2', x2)
       .attr('y2', y2)
       .style('stroke', connectorLineColor)
       .style('stroke-dasharray', connectorLineStrokeDasharray)
-      .style('fill', 'none')
   }
 }

@@ -13,9 +13,10 @@ import {
 } from '@angular/core'
 
 // Vis
-import { Axis, ContinuousScale, Crosshair, Direction, Spacing, Tooltip, XYContainer, XYContainerConfigInterface } from '@unovis/ts'
+import { Annotations, Axis, ContinuousScale, Crosshair, Direction, Spacing, Tooltip, XYContainer, XYContainerConfigInterface } from '@unovis/ts'
 import { VisXYComponent } from '../../core'
 import { VisTooltipComponent } from '../../components/tooltip/tooltip.component'
+import { VisAnnotationsComponent } from '../../components/annotations/annotations.component'
 
 @Component({
   selector: 'vis-xy-container',
@@ -28,6 +29,7 @@ export class VisXYContainerComponent<Datum> implements AfterViewInit, AfterConte
   @ViewChild('container', { static: false }) containerRef: ElementRef
   @ContentChildren(VisXYComponent) visComponents: QueryList<VisXYComponent>
   @ContentChild(VisTooltipComponent) tooltipComponent: VisTooltipComponent
+  @ContentChild(VisAnnotationsComponent) annotationsComponent: VisAnnotationsComponent
 
   /** Width in pixels. By default, Container automatically fits to the size of the parent element. Default: `undefined`. */
   @Input() width?: number
@@ -148,6 +150,7 @@ export class VisXYContainerComponent<Datum> implements AfterViewInit, AfterConte
     const tooltip = this.tooltipComponent?.component as Tooltip
     const xAxis = visComponents.find(c => c instanceof Axis && c?.config?.type === 'x') as Axis<Datum>
     const yAxis = visComponents.find(c => c instanceof Axis && c?.config?.type === 'y') as Axis<Datum>
+    const annotations = this.annotationsComponent?.component as Annotations
 
     const components = visComponents.filter(c => !(c instanceof Crosshair) && !(c instanceof Tooltip) && !(c instanceof Axis))
 
@@ -162,6 +165,7 @@ export class VisXYContainerComponent<Datum> implements AfterViewInit, AfterConte
       yAxis,
       tooltip,
       crosshair,
+      annotations,
       scaleByDomain,
       autoMargin,
       xScale,
