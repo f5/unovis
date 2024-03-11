@@ -4,8 +4,8 @@ import { generateXYDataRecords, XYDataRecord } from '@src/utils/data'
 
 import s from './styles.module.css'
 
-export const title = 'XY Components'
-export const subTitle = 'Stacked vs Non-Stacked data'
+export const title = 'Stacked vs. Non-Stacked'
+export const subTitle = 'XY component comparison'
 
 export const component = (): JSX.Element => {
   const data = generateXYDataRecords(10)
