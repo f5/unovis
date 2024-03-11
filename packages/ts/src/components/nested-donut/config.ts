@@ -8,7 +8,8 @@ import { NestedDonutDirection, NestedDonutLayerSettings, NestedDonutSegment } fr
 export interface NestedDonutConfigInterface<Datum> extends ComponentConfigInterface {
   /** Diagram angle range. Default: `[0, 2 * Math.PI]` */
   angleRange?: [number, number];
-  /** Direction of hierarchy flow from root to leaf.
+  /**
+   * Direction of hierarchy flow from root to leaf.
    * `NestedDonutDirection.Inwards` starts from the outer most radius and works towards center
    * `NestedDonutDirection.Outwards` starts from the inner most radius the consecutive layers outward.
    *  Default: `NestedDonutDirection.Inwards`
@@ -35,7 +36,14 @@ export interface NestedDonutConfigInterface<Datum> extends ComponentConfigInterf
   // Layers
   /** Array of accessor functions to defined the nested groups  */
   layers: StringAccessor<Datum>[];
-  /* Layer settings */
+  /**
+   * Configuration properties for individual layers. Accepts an accessor or constant of type:
+   * {
+   *   backgroundColor?: string;
+   *   labelAlignment?: NestedDonutSegmentLabelAlignment;
+   *   width?: number | string;
+   * }
+  */
   layerSettings?: GenericAccessor<NestedDonutLayerSettings, number>;
   /* Space between layers */
   layerPadding?: number;
@@ -53,10 +61,12 @@ export interface NestedDonutConfigInterface<Datum> extends ComponentConfigInterf
   segmentLabel?: StringAccessor<NestedDonutSegment<Datum>>;
   /** Color accessor function for segment labels */
   segmentLabelColor?: ColorAccessor<NestedDonutSegment<Datum>>;
-  /** When true, the component will display empty segments (the ones that have `0` values) as tiny slices.
+  /**
+   * When true, the component will display empty segments (the ones that have `0` values) as tiny slices.
    * Default: `false`
   */
   showEmptySegments?: boolean;
+  /** Show labels for individual segments. Default: `true` */
   showSegmentLabels?: boolean;
 }
 

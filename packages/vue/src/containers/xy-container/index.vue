@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="T">
-import { XYContainer, XYComponentCore, XYContainerConfigInterface, Tooltip, Crosshair, Axis } from '@unovis/ts'
+import { XYContainer, XYComponentCore, XYContainerConfigInterface, Tooltip, Crosshair, Axis, Annotations } from '@unovis/ts'
 import { onMounted, onUnmounted, ref, provide, watch, toRefs, reactive, watchEffect, toRaw } from 'vue'
-import { componentAccessorKey, tooltipAccessorKey, axisAccessorKey, crosshairAccessorKey } from "../../utils/context"
+import { componentAccessorKey, tooltipAccessorKey, axisAccessorKey, crosshairAccessorKey, annotationsAccessorKey } from "../../utils/context"
 import { useForwardProps } from "../../utils/props"
 
 const props = defineProps<XYContainerConfigInterface<T> & { data?: T[] }>()
@@ -11,6 +11,7 @@ const parsedProps = useForwardProps(props)
 const chart = ref<XYContainer<T> | undefined>()
 const config = reactive({
   components: [],
+  annotations: undefined,
   crosshair: undefined,
   tooltip: undefined,
   xAxis: undefined,
@@ -58,6 +59,12 @@ provide(tooltipAccessorKey, {
   data,
   update: (t: Tooltip) => config.tooltip = t,
   destroy: () => { config.tooltip = undefined },
+})
+
+provide(annotationsAccessorKey, {
+  data,
+  update: (a: Annotations) => config.annotations = a,
+  destroy: () => { config.annotations = undefined },
 })
 
 defineExpose({

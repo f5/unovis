@@ -1,0 +1,312 @@
+import CodeBlock from '@theme/CodeBlock'
+import { PropsTable } from '@site/src/components/PropsTable'
+import { DocWrapper, XYWrapper } from '../wrappers'
+
+export const sampleData = [0, 3, 7, 5, 10, 4, 2, 8, 4, 0].map((d, i) => ({ x: (i + 1), y: d }))
+
+export const defaultProps = () => ({
+  name: 'Annotations',
+  configKey: 'annotations',
+  data: sampleData.slice(0, 4),
+  showContext: 'container',
+  height: 150,
+})
+
+The _Annotations_ component allows you to add informative text to your visualizations.
+It is compatible with both _XY_ and _Single_ containers.
+
+## Basic Configuration
+Include the `Annotations` component in your _Single_ or _XY_ container with an array of **items**.
+A basic example looks like:
+
+<XYWrapper
+  {...defaultProps()}
+  height={300}
+  data={sampleData.slice(1, 9)}
+  containerProps={{
+    yDomain: [0, 15]
+  }}
+  components={[
+    { name: 'Area', props: { x: (d, i) => d.x, y: d => d.y, curveType: 'linear' }, key: 'components' },
+  ]}
+  items={[
+    { x: 10, y: 10, content: { text: 'Chart Title', fontSize: 30 }},
+    { x: 15, y: 50, width: 200, content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam rutrum dignissim lorem, a mollis lacus lacinia eget' },
+    { x: '50%', y: '20%', content: 'Label #1', subject: { x: '42%', y: '38%' }},
+    { x: '70%', y: '40%', content: 'Label #2', subject: { x: '86%', y: '50%' }},
+  ]}
+/>
+
+
+where _items_ has the following definition:
+
+```ts
+let items: AnnotationItem[] = [
+  { x: 10, y: 10, content: { text: 'Chart Title', fontSize: 30 }},
+  { x: 15, y: 50, width: 200, content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam rutrum dignissim lorem, a mollis lacus lacinia eget' },
+  { x: '50%', y: '20%', content: 'Label #1', subject: { x: '42%', y: '38%' }},
+  { x: '70%', y: '40%', content: 'Label #2', subject: { x: '86%', y: '50%' }},
+]
+```
+
+## Items
+The `items` property accepts an array of `AnnotationItem` objects. For minimum configuration,
+include **content** (the text) and an optional **subject** (the highlighted area).
+
+#### `AnnotationItem` Type
+
+```ts
+type AnnotationItem = {
+  // Base properties
+  content: string | UnovisText | UnovisText[];
+  subject?: AnnotationSubject;
+
+  // Position and size properties
+  x?: number | `${number}%` | `${number}px`
+  y?: number | `${number}%` | `${number}px`
+  width?: number | `${number}%` | `${number}px`
+  height?: number | `${number}%` | `${number}px`
+ 
+  // Wrapping and alignment properties
+  separator?: string | string[];
+  verticalAlign?: VerticalAlign | string;
+  textAlign?: TextAlign | string;
+  wordBreak?: boolean;
+  fastMode?: boolean;
+
+  // Miscellaneous
+  cursor: string;
+}
+```
+
+## Text Content
+The `content` property accepts a string, a `UnovisText` object, or an array of `UnovisText` objects.
+
+As a basic example, you can use a string:
+
+```ts
+let items: AnnotationItem[] = [
+  { content: 'Item 1' }
+]
+```
+
+When we place Annotations in an empty chart with the above items array,
+we get the default text appearance:
+
+<XYWrapper {...defaultProps()} excludeTabs showAxes items={[
+  { content: 'Item 1' }
+]}/>
+
+### Styled Text
+To customize font or color of your text, provide `content` with an object of type `UnovisText`. 
+In this case, you put the desired string content to the `text` property,
+and additional properties can be set.
+
+```ts
+items = [{
+  content: { text: 'Item 2', color: 'red' }
+}]
+```
+
+<XYWrapper {...defaultProps()} excludeTabs showAxes items={[
+  { content: { text: 'Item 2', color: 'red' } }
+]}/>
+
+### Multi-Line Text
+You can group a single annotation into multiple lines of text by providing an array of `UnovisText`
+items to the content property.
+
+The following is also a valid input for `items`:
+
+```ts
+items = [{
+  content: [
+    {
+      text: 'Item 3',
+      fontSize: 24,
+      fontWeight: 600
+    },
+    {
+      text: 'contains multiple text blocks lines',
+      fontFamily: 'cursive',
+      fontSize: 16
+    },
+    {
+      text: 'with custom styles',
+      color: 'green',
+      fontWeight: 'bold'
+    },
+  ],
+}]
+```
+
+<XYWrapper {...defaultProps()} excludeTabs showAxes items={[
+{
+  content: [
+    { text: 'Item 3', fontSize: 24, fontWeight: 600 },
+    { text: 'contains multiple text blocks lines', fontFamily: 'cursive', fontSize: 16 },
+    { text: 'with custom styles', color: 'green', fontWeight: 'bold' },
+]}]}/>
+
+### `UnovisText` type
+
+```ts
+type UnovisText = {
+  // The text content to be displayed.
+  text: string;
+  // The font size of the text in pixels.
+  fontSize: number;
+  // The font family of the text.
+  fontFamily?: string;
+  // The font weight of the text.
+  fontWeight?: number;
+  // The color of the text.
+  color?: string;
+  // The line height scaling factor for the text.
+  lineHeight?: number;
+  // The top margin of the text block in pixels
+  marginTop?: number;
+  // The bottom margin of the text block in pixels
+  marginBottom?: number;
+  // The font width-to-height ratio
+  fontWidthToHeightRatio?: number;
+};
+```
+
+## Positioning
+The `x` and `y` properties define the position of the annotation.
+They can be specified in pixels (number or string) or as a percentage of the container size.
+You can also add `textAlign` and `verticalAlign` properties to adjust the alignment of the text.
+
+For example, the following is a valid definition of 
+
+```ts
+const items= [
+  {
+    content: 'Item A',
+    x: 0,
+    y: 10,
+    subject: { x: 50, y: 50 }
+  },
+  {
+    content: 'Item B',
+    x: '150px',
+    y: '20px',
+    textAlign: 'right',
+    subject: { x: '100px', y: '60px' }
+  },
+  {
+    content: 'Item C',
+    x: '50%',
+    y: '100%',
+    textAlign: 'center',
+    verticalAlign: 'bottom',
+    subject: { x: '50%', y: '70%' },
+  },
+]
+```
+
+<div style={{ width: '150px', height: '150px', margin: '0 auto' }}>
+<DocWrapper {...defaultProps()}
+  excludeTabs
+  data={[3, 4, 2]}
+  height={150}
+  containerName='SingleContainer'
+  dataType='DataRecord'
+  components={[
+    { name: 'Donut', props: { value: d => d, radius: 45 }, key: 'component' },
+  ]}
+  items={[
+    { content: 'Item A', x: 0, y: 10, subject: { x: 50, y: 50 }},
+    { content: 'Item B', x: '150px', y: '20px', textAlign: 'right', subject: { x: '100px', y: '60px' } },
+    { content: 'Item C', x: '50%', y: '100%', textAlign: 'center', verticalAlign: 'bottom', subject: { x: '50%', y: '70%' }},
+  ]}
+/>
+</div>
+
+## Subjects
+Subjects are focal points of the annotation. They can be used to highlight a specific area or point.
+The minimum configuration of a `subject` is an `x` and `y` coordinate.
+
+```ts
+items = [{
+  content: 'Item with Subject',
+  subject: { x: '50%', y: 20 }
+}]
+```
+
+<XYWrapper {...defaultProps()}
+  excludeTabs
+  data={sampleData.slice(0, 9)}
+  components={[
+    { name: 'StackedBar', props: { x: d => d.x, y: d => d.y }, key: 'components' },
+    { name: 'Axis', props: { type: 'x', numTicks: 9, tickFormat: d => `${d}0%` }, key: 'xAxis' }
+  ]}
+  items={[{
+  content: 'Item with Subject',
+  subject: { x: '50%', y: 20 }
+}]}/>
+
+### Subject Points
+
+The point corresponds to the center of the subject area. When a radius is provided, the point becomes visible.
+
+```ts
+items = [{
+  content: 'Item with Subject',
+  subject: { x: '50%', y: 2, radius: 4 }
+}]
+```
+
+<XYWrapper {...defaultProps()}
+  excludeTabs
+  data={sampleData.slice(0, 9)}
+  components={[
+    { name: 'Line', props: { x: d => d.x, y: d => d.y }, key: 'components' },
+    { name: 'Axis', props: { type: 'x', numTicks: 9, tickFormat: d => `${d}0%` }, key: 'xAxis' }
+  ]}
+  items={[{
+  content: 'Item with Subject',
+  subject: { x: '50%', y: 2, radius: 4 }
+}]}/>
+
+### `AnnotationSubject` Type
+
+```ts
+export type AnnotationSubject = {
+  x: LengthUnit | (() => LengthUnit);
+  y: LengthUnit | (() => LengthUnit);
+  /** Subject radius */
+  radius?: number;
+  /** Subject fill color */
+  fillColor?: string;
+  /** Subject stroke color */
+  strokeColor?: string;
+  /** Subject stroke-dasharray configuration */
+  strokeDasharray?: string;
+  /** Padding between the subject and the connector line */
+  padding?: number;
+  /** Connector line color */
+  connectorLineColor?: string;
+  /** Connector line stroke-dasharray configuration */
+  connectorLineStrokeDasharray?: string;
+};
+```
+
+## CSS Variables
+
+```css
+--vis-annotations-connector-stroke-color: #444;
+--vis-annotations-connector-stroke-width: 1px;
+--vis-annotations-connector-stroke-dasharray: none;
+
+--vis-annotations-subject-stroke-color: #444;
+--vis-annotations-subject-fill-color: none;
+--vis-annotations-subject-stroke-dasharray: none;
+
+--vis-dark-annotations-conntector-stroke-color: #fff;
+--vis-dark-annotations-subject-stroke-color: #fff;
+```
+
+## Component Props
+<PropsTable name='VisAnnotations'/>

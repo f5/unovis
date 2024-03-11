@@ -1,7 +1,7 @@
 <script setup lang="ts" generic="T">
-import { SingleContainer, ComponentCore, SingleContainerConfigInterface, Tooltip } from '@unovis/ts'
+import { SingleContainer, ComponentCore, SingleContainerConfigInterface, Tooltip, Annotations } from '@unovis/ts'
 import { onUnmounted, ref, provide, watch, toRefs, watchEffect, reactive, toRaw } from 'vue'
-import { componentAccessorKey, tooltipAccessorKey } from "../../utils/context"
+import { annotationsAccessorKey, componentAccessorKey, tooltipAccessorKey,  } from "../../utils/context"
 import { useForwardProps } from "../../utils/props"
 
 const props = defineProps<SingleContainerConfigInterface<T> & { data?: T }>()
@@ -12,6 +12,7 @@ let chart: SingleContainer<T>
 const config = reactive({
   component: undefined,
   tooltip: undefined,
+  annotations: undefined,
 }) as SingleContainerConfigInterface<T>
 const elRef = ref<HTMLDivElement>()
 
@@ -49,6 +50,13 @@ provide(tooltipAccessorKey, {
   update: (t: Tooltip) => config.tooltip = t,
   destroy: () => { config.tooltip = undefined },
 })
+
+provide(annotationsAccessorKey, {
+  data,
+  update: (a: Annotations) => config.annotations = a,
+  destroy: () => { config.annotations = undefined },
+})
+
 
 defineExpose({
   component: chart

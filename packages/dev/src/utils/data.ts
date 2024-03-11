@@ -1,3 +1,4 @@
+import { GenericDataRecord } from '@unovis/ts'
 import { sample } from './array'
 
 export type XYDataRecord = {
@@ -18,7 +19,7 @@ export interface TimeDataRecord {
   type?: string;
 }
 
-export type NodeDatum = Record<string, any> & {
+export type NodeDatum = GenericDataRecord & {
   id: string;
 }
 
@@ -32,10 +33,10 @@ export interface NodeLinkData {
   links: LinkDatum[];
 }
 
-export type NestedDatum = {
+export type NestedDatum = GenericDataRecord & {
   group: string;
-  subgroup: string;
-  value?: string;
+  subgroup?: string;
+  value?: number | string;
 }
 
 export function generateXYDataRecords (n = 10): XYDataRecord[] {

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { XYContainer, XYComponentCore, XYContainerConfigInterface, Tooltip, Crosshair, Axis } from '@unovis/ts'
+  import { XYContainer, XYComponentCore, XYContainerConfigInterface, Tooltip, Crosshair, Axis, Annotations } from '@unovis/ts'
   import { onMount, setContext } from 'svelte'
 
   type Datum = $$Generic
@@ -33,6 +33,7 @@
     tooltip: undefined,
     xAxis: undefined,
     yAxis: undefined,
+    annotations: undefined,
   }
   let ref: HTMLDivElement
 
@@ -62,6 +63,10 @@
   setContext('tooltip', () => ({
     update: (t: Tooltip) => { config.tooltip = t },
     destroy: () => { config.tooltip = undefined },
+  }))
+  setContext('annotations', () => ({
+    update: (a: Annotations) => { config.annotations = a },
+    destroy: () => { config.annotations = undefined },
   }))
 </script>
 

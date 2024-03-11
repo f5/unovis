@@ -133,7 +133,7 @@ export class VisNestedDonutComponent<Datum> implements NestedDonutConfigInterfac
    * Default: `false` */
   @Input() showEmptySegments?: boolean
 
-
+  /** Show labels for individual segments. Default: `true` */
   @Input() showSegmentLabels?: boolean
   @Input() data: Datum[]
 

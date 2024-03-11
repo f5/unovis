@@ -4,6 +4,8 @@ import { css } from '@emotion/css'
 import { getCssVarNames, injectGlobalCssVariables } from 'utils/style'
 
 const cssVarDefaults = {
+  '--vis-annotations-text-color': '#282C34',
+
   '--vis-annotations-connector-stroke-color': '#444',
   '--vis-annotations-connector-stroke-width': '1px',
   '--vis-annotations-connector-stroke-dasharray': 'none',
@@ -11,6 +13,10 @@ const cssVarDefaults = {
   '--vis-annotations-subject-stroke-color': '#444',
   '--vis-annotations-subject-fill-color': 'none',
   '--vis-annotations-subject-stroke-dasharray': 'none',
+
+  '--vis-dark-annotations-text-color': '#e8e9ef',
+  '--vis-dark-annotations-connector-stroke-color': '#fff',
+  '--vis-dark-annotations-subject-stroke-color': '#fff',
 }
 
 export const root = css`
@@ -41,4 +47,7 @@ export const annotationSubject = css`
 
 export const annotationContent = css`
   label: annotationContent;
+  > text {
+    fill: var(--vis-annotations-text-color);
+  }
 `
