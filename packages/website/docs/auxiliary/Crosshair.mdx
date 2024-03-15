@@ -9,6 +9,7 @@ export const defaultProps = (chart="Line", components, n=5) => ({
   data: generateDataRecords(n),
   showAxes: true,
   height: 150,
+  containerProps: { padding: { top: 5, bottom: 5 } },
   components: [{ name: chart, props: { x: d=>d.x, y: [d=>d.y, d=>d.y1, d=>d.y2], ...components}, key: "components" }]
 })
 
@@ -46,6 +47,10 @@ Use the `hideWhenFarFromPointerDistance` attribute with a length (in pixels) tha
 ## Custom Color
 Provide a `string` or color accessor function to the `color` attribute to customize the crosshair's point color:
 <XYWrapper {...defaultProps()} color={(d, i) => ['red', 'green', 'blue'][i]} showContext="minimal"/>
+
+## Custom Stroke Color and Width
+Provide values or accessor functions to the `strokeColor` and `strokeWidth` attributes to customize the crosshair's circle stroke color and width:
+<XYWrapper {...defaultProps()} color='none' strokeColor={(d, i) => ['red', 'green', 'blue'][i]} strokeWidth={(d, i) => [1, 2, 3][i]} showContext="minimal"/>
 
 ## Adding a Tooltip
 You can render text content for your _Crosshair_ component by providing it with a `template` property and a _Tooltip_ component within the same container.

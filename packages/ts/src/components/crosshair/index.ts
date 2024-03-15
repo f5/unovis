@@ -102,6 +102,8 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
       .attr('cx', this.x)
       .attr('cy', d => d.y)
       .style('fill', d => d.color)
+      .style('stroke', d => d.strokeColor)
+      .style('stroke-width', d => d.strokeWidth)
 
     smartTransition(circlesEnter.merge(circles), duration, easeLinear)
       .attr('cx', this.x)
@@ -109,6 +111,8 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
       .attr('r', 4)
       .style('opacity', d => d.opacity)
       .style('fill', d => d.color)
+      .style('stroke', d => d.strokeColor)
+      .style('stroke-width', d => d.strokeWidth)
 
     circles.exit().remove()
   }
@@ -199,8 +203,10 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
       const stackedValues: CrosshairCircle[] = getStackedValues(this.datum, this.datumIndex, ...yStackedAccessors)
         .map((value, index, arr) => ({
           y: this.yScale(value + baselineValue),
-          opacity: getNumber(this.datum, yStackedAccessors[index]) ? 1 : 0,
+          opacity: isNumber(getNumber(this.datum, yStackedAccessors[index])) ? 1 : 0,
           color: getColor(this.datum, config.color, index),
+          strokeColor: config.strokeColor ? getColor(this.datum, config.strokeColor, index) : undefined,
+          strokeWidth: config.strokeWidth ? getNumber(this.datum, config.strokeWidth, index) : undefined,
         }))
 
       const regularValues: CrosshairCircle[] = yAccessors
@@ -208,8 +214,10 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
           const value = getNumber(this.datum, a)
           return {
             y: this.yScale(value),
-            opacity: value ? 1 : 0,
+            opacity: isNumber(value) ? 1 : 0,
             color: getColor(this.datum, config.color, stackedValues.length + index),
+            strokeColor: config.strokeColor ? getColor(this.datum, config.strokeColor, index) : undefined,
+            strokeWidth: config.strokeWidth ? getNumber(this.datum, config.strokeWidth, index) : undefined,
           }
         })
 
