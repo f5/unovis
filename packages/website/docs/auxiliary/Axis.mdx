@@ -124,7 +124,6 @@ Change the tick's label alignment with respect to the tick marker using `tickTex
   options={['right', 'center', 'left']}
   property="tickTextAlign"/>
 
-
 ### Label Width
 To limit the width of the tick labels (in pixels), you can use the `tickTextWidth` property.
 <XYWrapperWithInput
@@ -137,14 +136,14 @@ To limit the width of the tick labels (in pixels), you can use the `tickTextWidt
 />
 
 ### Label Fit Mode
-_Axis_ accepts the following values for the `tickTextFitMode` property: `FitMode.Wrap` or `FitMode.Trim`. This determines how the axis will
+_Axis_ accepts the following values for the `tickTextFitMode` property: `FitMode.Wrap`, `FitMode.Trim` or `FitMode.Rotate`. This determines how the axis will
 handle tick text overflow. The following example showcases the previous example using `"trim"` instead of `"wrap"`.
 <XYWrapperWithInput inputType="select"
   {...defaultProps()}
   tickTextWidth={10}
   data={generateTimeSeries(10)}
   hiddenProps={{gridLine: false, x: d => d.timestamp, tickFormat: d=> new Date(d).toDateString(), tickTextTrimType:"end"}}
-  options={['trim', 'wrap']}
+  options={['trim', 'wrap', 'rotate']}
   property="tickTextFitMode"/>
 
 ### Label Trim Type
