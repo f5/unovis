@@ -203,7 +203,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
       const stackedValues: CrosshairCircle[] = getStackedValues(this.datum, this.datumIndex, ...yStackedAccessors)
         .map((value, index, arr) => ({
           y: this.yScale(value + baselineValue),
-          opacity: getNumber(this.datum, yStackedAccessors[index]) ? 1 : 0,
+          opacity: isNumber(getNumber(this.datum, yStackedAccessors[index])) ? 1 : 0,
           color: getColor(this.datum, config.color, index),
           strokeColor: config.strokeColor ? getColor(this.datum, config.strokeColor, index) : undefined,
           strokeWidth: config.strokeWidth ? getNumber(this.datum, config.strokeWidth, index) : undefined,
@@ -214,7 +214,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
           const value = getNumber(this.datum, a)
           return {
             y: this.yScale(value),
-            opacity: value ? 1 : 0,
+            opacity: isNumber(value) ? 1 : 0,
             color: getColor(this.datum, config.color, stackedValues.length + index),
             strokeColor: config.strokeColor ? getColor(this.datum, config.strokeColor, index) : undefined,
             strokeWidth: config.strokeWidth ? getNumber(this.datum, config.strokeWidth, index) : undefined,
