@@ -15,6 +15,10 @@ export interface CrosshairConfigInterface<Datum> extends WithOptional<XYComponen
   y?: NumericAccessor<Datum> | NumericAccessor<Datum>[];
   /** Optional color array or color accessor function for crosshair circles. Default: `d => d.color` */
   color?: ColorAccessor<Datum>;
+  /** Optional stroke color accessor function for crosshair circles. Default: `undefined` */
+  strokeColor?: ColorAccessor<Datum>;
+  /** Optional stroke width for crosshair circles. Default: `undefined` */
+  strokeWidth?: NumericAccessor<Datum>;
   /** Separate array of accessors for stacked components (eg StackedBar, Area). Default: `undefined` */
   yStacked?: NumericAccessor<Datum>[];
   /** Baseline accessor function for stacked values, useful with stacked areas. Default: `null` */
@@ -54,5 +58,7 @@ export const CrosshairDefaultConfig: CrosshairConfigInterface<unknown> = {
   snapToData: true,
   getCircles: undefined,
   color: undefined,
+  strokeColor: undefined,
+  strokeWidth: undefined,
 }
 

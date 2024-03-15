@@ -5,6 +5,8 @@ export type CrosshairCircle = {
   color: string;
   opacity?: number;
   id?: string;
+  strokeColor?: string;
+  strokeWidth?: number;
 }
 
 export type CrosshairAccessors<Datum> = {
