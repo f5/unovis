@@ -76,7 +76,7 @@ export class XYLabels<Datum> extends XYComponentCore<Datum, XYLabelsConfigInterf
       return acc
     }, []) ?? []
 
-    return this._getClusteredLabels(labels)
+    return config.clustering ? this._getClusteredLabels(labels) : labels
   }
 
   private _getClusteredLabels (labels: XYLabel<Datum>[]): (XYLabel<Datum> | XYLabelCluster<Datum>)[] {
