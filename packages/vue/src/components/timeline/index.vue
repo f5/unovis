@@ -49,6 +49,10 @@ defineExpose({
 })
 </script>
 
+<script lang="ts">
+export const VisTimelineSelectors = Timeline.selectors
+</script>
+
 <template>
   <div data-vis-component />
 </template>

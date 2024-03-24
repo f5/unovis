@@ -8,7 +8,7 @@ import { axisAccessorKey } from '../../utils/context'
 const accessor = inject(axisAccessorKey)
 
 // data and required props 
-interface Props extends  AxisConfigInterface<Datum> { }
+type Props = AxisConfigInterface<Datum>
 const props = defineProps<Props & { data?: Datum[] }>()
 
 const data = computed(() => accessor.data.value ?? props.data)
@@ -45,6 +45,10 @@ watch(data, () => {
 defineExpose({
   component
 })
+</script>
+
+<script lang="ts">
+export const VisAxisSelectors = Axis.selectors
 </script>
 
 <template>

@@ -52,7 +52,7 @@ for (const component of components) {
     exec(`npx eslint ${pathComponent} --fix`)
   })
 
-  exports.push(`export { default as Vis${component.name} } from './${path}/${file}'`)
+  exports.push(`export { default as Vis${component.name}, Vis${component.name}Selectors } from './${path}/${file}'`)
 
   // eslint-disable-next-line no-console
   console.log(`${component.name} generated`)
