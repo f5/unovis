@@ -8,7 +8,7 @@ import { componentAccessorKey } from '../../utils/context'
 const accessor = inject(componentAccessorKey)
 
 // data and required props 
-interface Props extends  NestedDonutConfigInterface<Datum> { }
+type Props = NestedDonutConfigInterface<Datum>
 const props = defineProps<Props & { data?: Datum[] }>()
 
 const data = computed(() => accessor.data.value ?? props.data)
@@ -45,6 +45,10 @@ watch(data, () => {
 defineExpose({
   component
 })
+</script>
+
+<script lang="ts">
+export const VisNestedDonutSelectors = NestedDonut.selectors
 </script>
 
 <template>

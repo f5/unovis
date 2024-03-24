@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script lang="ts">
 import type { NumericAccessor, StringAccessor } from '@unovis/ts'
 import { VisXYContainer, VisScatter, VisAxis, VisBulletLegend } from '@unovis/svelte'
 import { data, DataRecord } from './data'

@@ -1,4 +1,4 @@
-<script  setup lang='ts'>
+<script  setup lang="ts">
 import { Scale } from '@unovis/ts'
 import { VisXYContainer, VisLine, VisAxis, VisBulletLegend } from '@unovis/vue'
 import { data, labels, CityTemps } from './data'

@@ -48,6 +48,10 @@ defineExpose({
 })
 </script>
 
+<script lang="ts">
+export const VisCrosshairSelectors = Crosshair.selectors
+</script>
+
 <template>
   <div data-vis-crosshair />
 </template>

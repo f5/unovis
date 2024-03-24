@@ -8,7 +8,7 @@ import { componentAccessorKey } from '../../utils/context'
 const accessor = inject(componentAccessorKey)
 
 // data and required props 
-interface Props extends  GraphConfigInterface<N, L> { }
+type Props = GraphConfigInterface<N, L>
 const props = defineProps<Props & { data?: { nodes: N[]; links?: L[] } }>()
 
 const data = computed(() => accessor.data.value ?? props.data)
@@ -45,6 +45,10 @@ watch(data, () => {
 defineExpose({
   component
 })
+</script>
+
+<script lang="ts">
+export const VisGraphSelectors = Graph.selectors
 </script>
 
 <template>

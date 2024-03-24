@@ -20,6 +20,7 @@ const outputDefault = (format: ModuleFormat, extension: string): OutputOptions =
   entryFileNames: ({ name }) => {
     return `${name.replace('.vue', '')}.${extension}`
   },
+  exports: 'named',
 })
 
 // https://vitejs.dev/config/
