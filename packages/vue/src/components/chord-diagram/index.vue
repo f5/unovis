@@ -8,7 +8,7 @@ import { componentAccessorKey } from '../../utils/context'
 const accessor = inject(componentAccessorKey)
 
 // data and required props 
-interface Props extends  ChordDiagramConfigInterface<N, L> { }
+type Props = ChordDiagramConfigInterface<N, L>
 const props = defineProps<Props & { data?: { nodes: N[]; links?: L[] } }>()
 
 const data = computed(() => accessor.data.value ?? props.data)
@@ -45,6 +45,10 @@ watch(data, () => {
 defineExpose({
   component
 })
+</script>
+
+<script lang="ts">
+export const VisChordDiagramSelectors = ChordDiagram.selectors
 </script>
 
 <template>

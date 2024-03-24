@@ -8,7 +8,7 @@ import { tooltipAccessorKey } from '../../utils/context'
 const accessor = inject(tooltipAccessorKey)
 
 // data and required props 
-interface Props extends  TooltipConfigInterface { }
+type Props = TooltipConfigInterface
 const props = defineProps<Props & { data?: null }>()
 
 
@@ -42,6 +42,10 @@ watch(config, (curr, prev) => {
 defineExpose({
   component
 })
+</script>
+
+<script lang="ts">
+export const VisTooltipSelectors = Tooltip.selectors
 </script>
 
 <template>

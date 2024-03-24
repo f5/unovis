@@ -30,7 +30,7 @@ import { arePropsEqual, useForwardProps } from '../../utils/props'
 ${isStandAlone ? '' : `import { ${elementSuffix}AccessorKey } from '../../utils/context'\n`}
 ${isStandAlone ? '' : `const accessor = inject(${elementSuffix}AccessorKey)\n`}
 // data and required props ${isComplexPropComponent ? '\n// !!! temporary solution to ignore complex type. related issue: https://github.com/vuejs/core/issues/8412' : ''}
-interface Props extends ${isComplexPropComponent ? '/** @vue-ignore */' : ''} ${componentName}ConfigInterface${genericsStr} { }
+${isComplexPropComponent ? `interface Props extends /** @vue-ignore */ ${componentName}ConfigInterface${genericsStr} { }` : `type Props = ${componentName}ConfigInterface${genericsStr}`}
 const props = defineProps<Props & { data?: ${dataType} }>()
 
 ${propDefs.length && !isStandAlone ? `${propDefs.join('\n')}` : isStandAlone ? 'const data = computed(() => props.data)' : ''}
@@ -66,6 +66,10 @@ ${propDefs?.length && !isStandAlone ? `\nwatch(data, () => {
 defineExpose({
   component
 })
+</script>
+
+<script lang="ts">
+export const Vis${componentName}Selectors = ${componentName}.selectors
 </script>
 
 <template>
