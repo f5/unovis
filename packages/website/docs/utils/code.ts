@@ -122,7 +122,7 @@ export function getVueStrings (config: CodeConfig): string {
   lines.push(getImportString({ '@unovis/vue': visImports, ...imports }))
   if (data) lines.push(`const props = defineProps<{ ${data} }>()`)
   Object.entries(rest).forEach(d => lines.push(`const ${d.join(' = ')}`))
-  return `<script setup lang="ts">>\n${lines.join('\n')}\n</script>\n\n<template>\n${html}\n</template>`
+  return `<script setup lang="ts">\n${lines.join('\n')}\n</script>\n\n<template>\n${html}\n</template>`
 }
 
 export function getTypescriptStrings (config: CodeConfig, mainComponentName: string, isStandAlone: boolean): string {
