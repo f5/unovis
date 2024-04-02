@@ -25,7 +25,7 @@ const example: Example = {
   codeVue: require(`!!raw-loader!./${pathname}.vue`).default,
   data: require('!!raw-loader!./data').default,
   preview: require(`../_previews/${pathname}.png`).default,
-  // previewDark: require(`../_previews/${pathname}-dark.png`).default,
+  previewDark: require(`../_previews/${pathname}-dark.png`).default,
 }
 
 export default example

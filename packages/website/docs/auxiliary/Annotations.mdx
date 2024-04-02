@@ -30,7 +30,7 @@ A basic example looks like:
     { name: 'Area', props: { x: (d, i) => d.x, y: d => d.y, curveType: 'linear' }, key: 'components' },
   ]}
   items={[
-    { x: 10, y: 10, content: { text: 'Chart Title', fontSize: 30 }},
+    { x: 12, y: 10, content: { text: 'Chart Title', fontSize: 30 }},
     { x: 15, y: 50, width: 200, content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam rutrum dignissim lorem, a mollis lacus lacinia eget' },
     { x: '50%', y: '20%', content: 'Label #1', subject: { x: '42%', y: '38%' }},
     { x: '70%', y: '40%', content: 'Label #2', subject: { x: '86%', y: '50%' }},
@@ -42,7 +42,7 @@ where _items_ has the following definition:
 
 ```ts
 let items: AnnotationItem[] = [
-  { x: 10, y: 10, content: { text: 'Chart Title', fontSize: 30 }},
+  { x: 12, y: 10, content: { text: 'Chart Title', fontSize: 30 }},
   { x: 15, y: 50, width: 200, content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam rutrum dignissim lorem, a mollis lacus lacinia eget' },
   { x: '50%', y: '20%', content: 'Label #1', subject: { x: '42%', y: '38%' }},
   { x: '70%', y: '40%', content: 'Label #2', subject: { x: '86%', y: '50%' }},
