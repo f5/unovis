@@ -16,6 +16,6 @@ tsconfig-paths-webpack-plugin      perpetual       MIT           3.5.2          
 tslib                              perpetual       0BSD          2.4.1              Microsoft Corp.
 ttypescript                        perpetual       MIT           1.5.13             cevek
 typescript                         perpetual       Apache-2.0    4.2.4              Microsoft Corp.
-@unovis/ts                         perpetual       Apache-2.0    1.3.4              Nikita Rokotyan, F5 Inc. <nikita@f5.com> (https://rokotyan.com)
+@unovis/ts                         perpetual       Apache-2.0    1.4.0              Nikita Rokotyan, F5 Inc. <nikita@f5.com> (https://rokotyan.com)
 react                              perpetual       MIT           16.14.0            n/a
 react-dom                          perpetual       MIT           16.14.0            n/a

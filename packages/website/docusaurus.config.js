@@ -138,9 +138,9 @@ const config = {
         searchPagePath: 'search',
       },
       announcementBar: {
-        id: 'vue_support',
+        id: 'version-1.4-announcement',
         content:
-          '✨ Announcing Vue 3 support in <a rel="noopener noreferrer" href="/releases/1.3">Unovis 1.3</a> ✨',
+          '✨ Chart Annotations, new Graph features, Bullet Legend shapes and more in <a rel="noopener noreferrer" href="/releases/1.4">Unovis 1.4</a>',
         backgroundColor: '#fafbfc',
         textColor: '#091E42',
         isCloseable: false,
