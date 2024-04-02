@@ -1,4 +1,10 @@
-export const btcWeekly = [
+export type DataRecord = {
+  weekStart: Date;
+  price: number;
+  volume: number;
+}
+
+export const data = [
   // weekStart, price, volume
   [1690786800000, 29198.33, 43516370018],
   [1690182000000, 29273.9, 39605076389],
@@ -683,3 +689,11 @@ export const btcWeekly = [
   [1279522800000, 0.0505, 0],
   [1279350000000, 0.0858, 0],
 ]
+  .sort((a, b) => a[0] - b[0])
+  .map((d) => ({
+    weekStart: new Date(d[0]),
+    price: d[1],
+    volume: d[2],
+  }))
+
+
