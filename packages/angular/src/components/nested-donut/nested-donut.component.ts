@@ -133,9 +133,8 @@ export class VisNestedDonutComponent<Datum> implements NestedDonutConfigInterfac
    * Default: `false` */
   @Input() showEmptySegments?: boolean
 
-  /** Show labels for individual segments. Default: `true` */
-  @Input() showSegmentLabels?: boolean
 
+  @Input() showSegmentLabels?: boolean
   @Input() data: Datum[]
 
   component: NestedDonut<Datum> | undefined
@@ -157,8 +156,8 @@ export class VisNestedDonutComponent<Datum> implements NestedDonutConfigInterfac
   }
 
   private getConfig (): NestedDonutConfigInterface<Datum> {
-    const { duration, events, attributes, angleRange, direction, value, centralLabel, centralSubLabel, centralSubLabelWrap, showBackground, sort, layers, layerSettings, layerPadding, cornerRadius, emptySegmentAngle, hideOverflowingSegmentLabels, segmentColor, segmentLabel, segmentLabelColor, showEmptySegments } = this
-    const config = { duration, events, attributes, angleRange, direction, value, centralLabel, centralSubLabel, centralSubLabelWrap, showBackground, sort, layers, layerSettings, layerPadding, cornerRadius, emptySegmentAngle, hideOverflowingSegmentLabels, segmentColor, segmentLabel, segmentLabelColor, showEmptySegments }
+    const { duration, events, attributes, angleRange, direction, value, centralLabel, centralSubLabel, centralSubLabelWrap, showBackground, sort, layers, layerSettings, layerPadding, cornerRadius, emptySegmentAngle, hideOverflowingSegmentLabels, segmentColor, segmentLabel, segmentLabelColor, showEmptySegments, showSegmentLabels } = this
+    const config = { duration, events, attributes, angleRange, direction, value, centralLabel, centralSubLabel, centralSubLabelWrap, showBackground, sort, layers, layerSettings, layerPadding, cornerRadius, emptySegmentAngle, hideOverflowingSegmentLabels, segmentColor, segmentLabel, segmentLabelColor, showEmptySegments, showSegmentLabels }
     const keys = Object.keys(config) as (keyof NestedDonutConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

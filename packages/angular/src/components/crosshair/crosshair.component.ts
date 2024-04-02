@@ -99,6 +99,12 @@ export class VisCrosshairComponent<Datum> implements CrosshairConfigInterface<Da
    * Default: `false` */
   @Input() excludeFromDomainCalculation?: boolean
 
+  /** Optional stroke color accessor function for crosshair circles. Default: `undefined` */
+  @Input() strokeColor?: ColorAccessor<Datum>
+
+  /** Optional stroke width for crosshair circles. Default: `undefined` */
+  @Input() strokeWidth?: NumericAccessor<Datum>
+
   /** Separate array of accessors for stacked components (eg StackedBar, Area). Default: `undefined` */
   @Input() yStacked?: NumericAccessor<Datum>[]
 
@@ -150,8 +156,8 @@ export class VisCrosshairComponent<Datum> implements CrosshairConfigInterface<Da
   }
 
   private getConfig (): CrosshairConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, yStacked, baseline, tooltip, template, hideWhenFarFromPointer, hideWhenFarFromPointerDistance, snapToData, getCircles } = this
-    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, yStacked, baseline, tooltip, template, hideWhenFarFromPointer, hideWhenFarFromPointerDistance, snapToData, getCircles }
+    const { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, strokeColor, strokeWidth, yStacked, baseline, tooltip, template, hideWhenFarFromPointer, hideWhenFarFromPointerDistance, snapToData, getCircles } = this
+    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, strokeColor, strokeWidth, yStacked, baseline, tooltip, template, hideWhenFarFromPointer, hideWhenFarFromPointerDistance, snapToData, getCircles }
     const keys = Object.keys(config) as (keyof CrosshairConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
