@@ -11,6 +11,7 @@ import {
   GraphLayoutType,
   StringAccessor,
   GraphForceLayoutSettings,
+  GraphDagreLayoutSetting,
   GenericAccessor,
   GraphElkLayoutSettings,
   NumericAccessor,
@@ -22,7 +23,11 @@ import {
   GraphNodeShape,
   TrimMode,
   GraphPanelConfig,
+  GraphNode,
+  GraphLink,
 } from '@unovis/ts'
+import { D3DragEvent } from 'd3-drag'
+import { D3ZoomEvent } from 'd3-zoom'
 import { VisCoreComponent } from '../../core'
 
 @Component({
@@ -94,9 +99,6 @@ export class VisGraphComponent<N extends GraphInputNode, L extends GraphInputLin
   /** Interval to re-render the graph when zooming. Default: `100` */
   @Input() zoomThrottledUpdateNodeThreshold?: number
 
-  /** Zoom event callback. Default: `undefined` */
-  @Input() onZoom?: (zoomScale: number, zoomScaleExtent: [number, number]) => void
-
   /** Type of the graph layout. Default: `GraphLayoutType.Force` */
   @Input() layoutType?: GraphLayoutType | string
 
@@ -150,15 +152,11 @@ export class VisGraphComponent<N extends GraphInputNode, L extends GraphInputLin
   @Input() layoutParallelSortConnectionsByGroup?: string
 
   /** Force Layout settings, see the `d3-force` package for more details */
-  @Input() forceLayoutSettings?: GraphForceLayoutSettings
+  @Input() forceLayoutSettings?: GraphForceLayoutSettings<N, L>
 
   /** Darge Layout settings, see the `dagrejs` package
    * for more details: https://github.com/dagrejs/dagre/wiki#configuring-the-layout */
-  @Input() dagreLayoutSettings?: {
-    rankdir: string;
-    ranker: string;
-    [key: string]: any;
-  }
+  @Input() dagreLayoutSettings?: GraphDagreLayoutSetting
 
   /** ELK layout options, see the `elkjs` package for more details: https://github.com/kieler/elkjs.
    * If you want to specify custom layout option for each node group, you can provide an accessor function that
@@ -181,7 +179,7 @@ export class VisGraphComponent<N extends GraphInputNode, L extends GraphInputLin
   @Input() linkBandWidth?: NumericAccessor<L>
 
   /** Link arrow accessor function or constant value. Default: `undefined` */
-  @Input() linkArrow?: GenericAccessor<GraphLinkArrowStyle, L> | undefined
+  @Input() linkArrow?: GenericAccessor<GraphLinkArrowStyle | string | boolean, L> | undefined
 
   /** Link stroke color accessor function or constant value. Default: `undefined` */
   @Input() linkStroke?: ColorAccessor<L>
@@ -206,6 +204,13 @@ export class VisGraphComponent<N extends GraphInputNode, L extends GraphInputLin
 
   /** Spacing between neighboring links. Default: `8` */
   @Input() linkNeighborSpacing?: number
+
+  /** Curvature of the link. Recommended value range: [0:1.5].
+   * `0` - straight line,
+   * `1` - nice curvature,
+   * `1.5` - very curve.
+   * Default: `0` */
+  @Input() linkCurvature?: NumericAccessor<L>
 
   /** Set selected link by its unique id. Default: `undefined` */
   @Input() selectedLinkId?: number | string
@@ -293,6 +298,21 @@ export class VisGraphComponent<N extends GraphInputNode, L extends GraphInputLin
 
   /** Panels configuration. An array of `GraphPanelConfig` objects. Default: `[]` */
   @Input() panels?: GraphPanelConfig[] | undefined
+
+  /** Graph node drag start callback function. Default: `undefined` */
+  @Input() onNodeDragStart?: (n: GraphNode<N, L>, event: D3DragEvent<SVGGElement, GraphNode<N, L>, unknown>) => void | undefined
+
+  /** Graph node drag callback function. Default: `undefined` */
+  @Input() onNodeDrag?: (n: GraphNode<N, L>, event: D3DragEvent<SVGGElement, GraphNode<N, L>, unknown>) => void | undefined
+
+  /** Graph node drag end callback function. Default: `undefined` */
+  @Input() onNodeDragEnd?: (n: GraphNode<N, L>, event: D3DragEvent<SVGGElement, GraphNode<N, L>, unknown>) => void | undefined
+
+  /** Zoom event callback. Default: `undefined` */
+  @Input() onZoom?: (zoomScale: number, zoomScaleExtent: [number, number], event: D3ZoomEvent<SVGGElement, unknown> | undefined) => void
+
+  /** Callback function to be called when the graph layout is calculated. Default: `undefined` */
+  @Input() onLayoutCalculated?: (n: GraphNode<N, L>[], links: GraphLink<N, L>[]) => void
   @Input() data: { nodes: N[]; links?: L[] }
 
   component: Graph<N, L> | undefined
@@ -314,8 +334,8 @@ export class VisGraphComponent<N extends GraphInputNode, L extends GraphInputLin
   }
 
   private getConfig (): GraphConfigInterface<N, L> {
-    const { duration, events, attributes, zoomScaleExtent, disableZoom, disableDrag, zoomThrottledUpdateNodeThreshold, onZoom, layoutType, layoutAutofit, layoutAutofitTolerance, layoutNonConnectedAside, layoutNodeGroup, layoutGroupOrder, layoutParallelNodesPerColumn, layoutParallelNodeSubGroup, layoutParallelSubGroupsPerRow, layoutParallelGroupSpacing, layoutParallelSortConnectionsByGroup, forceLayoutSettings, dagreLayoutSettings, layoutElkSettings, layoutElkNodeGroups, linkWidth, linkStyle, linkBandWidth, linkArrow, linkStroke, linkDisabled, linkFlow, linkFlowAnimDuration, linkFlowParticleSize, linkLabel, linkLabelShiftFromCenter, linkNeighborSpacing, selectedLinkId, nodeSize, nodeStrokeWidth, nodeShape, nodeGaugeValue, nodeGaugeFill, nodeGaugeAnimDuration, nodeIcon, nodeIconSize, nodeLabel, nodeLabelTrim, nodeLabelTrimMode, nodeLabelTrimLength, nodeSubLabel, nodeSubLabelTrim, nodeSubLabelTrimMode, nodeSubLabelTrimLength, nodeSideLabels, nodeBottomIcon, nodeDisabled, nodeFill, nodeStroke, nodeSort, nodeEnterPosition, nodeEnterScale, nodeExitPosition, nodeExitScale, selectedNodeId, panels } = this
-    const config = { duration, events, attributes, zoomScaleExtent, disableZoom, disableDrag, zoomThrottledUpdateNodeThreshold, onZoom, layoutType, layoutAutofit, layoutAutofitTolerance, layoutNonConnectedAside, layoutNodeGroup, layoutGroupOrder, layoutParallelNodesPerColumn, layoutParallelNodeSubGroup, layoutParallelSubGroupsPerRow, layoutParallelGroupSpacing, layoutParallelSortConnectionsByGroup, forceLayoutSettings, dagreLayoutSettings, layoutElkSettings, layoutElkNodeGroups, linkWidth, linkStyle, linkBandWidth, linkArrow, linkStroke, linkDisabled, linkFlow, linkFlowAnimDuration, linkFlowParticleSize, linkLabel, linkLabelShiftFromCenter, linkNeighborSpacing, selectedLinkId, nodeSize, nodeStrokeWidth, nodeShape, nodeGaugeValue, nodeGaugeFill, nodeGaugeAnimDuration, nodeIcon, nodeIconSize, nodeLabel, nodeLabelTrim, nodeLabelTrimMode, nodeLabelTrimLength, nodeSubLabel, nodeSubLabelTrim, nodeSubLabelTrimMode, nodeSubLabelTrimLength, nodeSideLabels, nodeBottomIcon, nodeDisabled, nodeFill, nodeStroke, nodeSort, nodeEnterPosition, nodeEnterScale, nodeExitPosition, nodeExitScale, selectedNodeId, panels }
+    const { duration, events, attributes, zoomScaleExtent, disableZoom, disableDrag, zoomThrottledUpdateNodeThreshold, layoutType, layoutAutofit, layoutAutofitTolerance, layoutNonConnectedAside, layoutNodeGroup, layoutGroupOrder, layoutParallelNodesPerColumn, layoutParallelNodeSubGroup, layoutParallelSubGroupsPerRow, layoutParallelGroupSpacing, layoutParallelSortConnectionsByGroup, forceLayoutSettings, dagreLayoutSettings, layoutElkSettings, layoutElkNodeGroups, linkWidth, linkStyle, linkBandWidth, linkArrow, linkStroke, linkDisabled, linkFlow, linkFlowAnimDuration, linkFlowParticleSize, linkLabel, linkLabelShiftFromCenter, linkNeighborSpacing, linkCurvature, selectedLinkId, nodeSize, nodeStrokeWidth, nodeShape, nodeGaugeValue, nodeGaugeFill, nodeGaugeAnimDuration, nodeIcon, nodeIconSize, nodeLabel, nodeLabelTrim, nodeLabelTrimMode, nodeLabelTrimLength, nodeSubLabel, nodeSubLabelTrim, nodeSubLabelTrimMode, nodeSubLabelTrimLength, nodeSideLabels, nodeBottomIcon, nodeDisabled, nodeFill, nodeStroke, nodeSort, nodeEnterPosition, nodeEnterScale, nodeExitPosition, nodeExitScale, selectedNodeId, panels, onNodeDragStart, onNodeDrag, onNodeDragEnd, onZoom, onLayoutCalculated } = this
+    const config = { duration, events, attributes, zoomScaleExtent, disableZoom, disableDrag, zoomThrottledUpdateNodeThreshold, layoutType, layoutAutofit, layoutAutofitTolerance, layoutNonConnectedAside, layoutNodeGroup, layoutGroupOrder, layoutParallelNodesPerColumn, layoutParallelNodeSubGroup, layoutParallelSubGroupsPerRow, layoutParallelGroupSpacing, layoutParallelSortConnectionsByGroup, forceLayoutSettings, dagreLayoutSettings, layoutElkSettings, layoutElkNodeGroups, linkWidth, linkStyle, linkBandWidth, linkArrow, linkStroke, linkDisabled, linkFlow, linkFlowAnimDuration, linkFlowParticleSize, linkLabel, linkLabelShiftFromCenter, linkNeighborSpacing, linkCurvature, selectedLinkId, nodeSize, nodeStrokeWidth, nodeShape, nodeGaugeValue, nodeGaugeFill, nodeGaugeAnimDuration, nodeIcon, nodeIconSize, nodeLabel, nodeLabelTrim, nodeLabelTrimMode, nodeLabelTrimLength, nodeSubLabel, nodeSubLabelTrim, nodeSubLabelTrimMode, nodeSubLabelTrimLength, nodeSideLabels, nodeBottomIcon, nodeDisabled, nodeFill, nodeStroke, nodeSort, nodeEnterPosition, nodeEnterScale, nodeExitPosition, nodeExitScale, selectedNodeId, panels, onNodeDragStart, onNodeDrag, onNodeDragEnd, onZoom, onLayoutCalculated }
     const keys = Object.keys(config) as (keyof GraphConfigInterface<N, L>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
