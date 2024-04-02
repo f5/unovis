@@ -4,13 +4,19 @@ import type { ExampleCollection } from './types'
 
 export const examples: ExampleCollection[] = [
   {
-    title: 'Lines and Areas',
-    description: 'Examples of Line and Area charts',
+    title: 'Line Charts',
+    description: '',
     examples: [
       require('./basic-line-chart').default,
       require('./multi-line-chart').default,
       require('./data-gap-line-chart').default,
       require('./basic-timeline').default,
+    ],
+  },
+  {
+    title: 'Area Charts',
+    description: 'Examples of Line and Area charts',
+    examples: [
       require('./non-stacked-area-chart').default,
       require('./stacked-area-chart').default,
       require('./baseline-area-chart').default,
@@ -57,14 +63,21 @@ export const examples: ExampleCollection[] = [
       require('./force-graph').default,
       require('./parallel-graph').default,
       require('./elk-layered-graph').default,
+    ],
+  },
+  {
+    title: 'Circular Charts',
+    description: '',
+    examples: [
       require('./hierarchical-chord-diagram').default,
       require('./sunburst-nested-donut').default,
     ],
   },
   {
-    title: ' Auxiliary Components',
-    description: 'Examples using Brush, Crosshair, and Tooltip',
+    title: 'Auxiliary Components',
+    description: 'Annotations, Brushes, Tooltips and more',
     examples: [
+      require('./basic-annotations').default,
       require('./crosshair-stacked-bar').default,
       require('./brush-grouped-bar').default,
       require('./free-brush-scatters').default,

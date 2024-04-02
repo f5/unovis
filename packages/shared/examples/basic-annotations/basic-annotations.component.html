@@ -1,0 +1,7 @@
+<vis-xy-container [data]="data" [xScale]="xScale" [yScale]="yScale" [yDomain]="[0.05, 100000]" [height]="600">
+  <vis-line [x]="date" [y]="price"></vis-line>
+  <vis-stacked-bar color="#aaa3" [x]="date" [y]="volume"></vis-stacked-bar>
+  <vis-axis type="x" [numTicks]="5" [tickFormat]="yearTickFormat"></vis-axis>
+  <vis-axis type="y" [numTicks]="5" [tickFormat]="priceTickFormat"></vis-axis>
+  <vis-annotations [items]="annotations"></vis-annotations>
+</vis-xy-container>
