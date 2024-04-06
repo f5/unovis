@@ -1,2 +1,2 @@
-export * from './containers'
-export * from './components'
+export * from './containers.js'
+export * from './components.js'
