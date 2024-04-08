@@ -69,6 +69,7 @@ export const examples: ExampleCollection[] = [
     title: 'Circular Charts',
     description: '',
     examples: [
+      require('./basic-donut-chart').default,
       require('./hierarchical-chord-diagram').default,
       require('./sunburst-nested-donut').default,
     ],

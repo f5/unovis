@@ -1,0 +1,12 @@
+
+<h3>Most Common Password Categories</h3>
+<vis-bullet-legend [items]="legendItems"></vis-bullet-legend>
+<vis-single-container [height]="400">
+  <vis-donut
+    [value]="value"
+    [data]="data"
+    [showEmptySegments]="true"
+    [padAngle]="0.01"
+    [arcWidth]="100"
+  />
+</vis-single-container>
