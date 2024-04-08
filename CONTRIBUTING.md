@@ -31,12 +31,12 @@ we can merge your code.
 
 ## Contributor License Agreement ("CLA")
 
-In order to accept your pull request, we need you to submit a CLA, if you
-haven’t submitted one before for this project. You only need to do this
-once and you’re good to go.
+Current F5 legal policy requires that external contributors must first agree to the terms outlined in [F5's CLA](https://github.com/f5/.github/blob/main/CLA/cla-markdown.md),
+before any of their changes can be incorporated into an F5 Open Source project.
 
-Complete your [CLA here](F5%20Contributor%20License%20Agreement.docx) and email
-the filled out form to _cla@f5.com_.
+If you have not yet signed an F5 Open Source CLA before and submit a pull-request to this repository,
+a bot will prompt you to view and agree to the F5 CLA through a comment. Once the prompted action has been taken,
+you have officially agreed to the F5 CLA and your changes can be incorporated into the project at maintainer discretion.
 
 ## License
 By contributing to _Unovis_, you agree that your contributions will be licensed
