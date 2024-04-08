@@ -11,7 +11,7 @@ const imports = [
   defineAsyncComponent(() => import('@unovis/shared/examples/leaflet-flow-map/leaflet-flow-map.vue')),
   defineAsyncComponent(() => import('@unovis/shared/examples/advanced-leaflet-map/advanced-leaflet-map.vue')),
   defineAsyncComponent(() => import('@unovis/shared/examples/basic-line-chart/basic-line-chart.vue')),
-  defineAsyncComponent(() => import('@unovis/shared/examples/basic-scatter-chart/basic-scatter-chart.vue')),
+  defineAsyncComponent(() => import('@unovis/shared/examples/basic-scatter-plot/basic-scatter-plot.vue')),
   defineAsyncComponent(() => import('@unovis/shared/examples/brush-grouped-bar/brush-grouped-bar.vue')),
   defineAsyncComponent(() => import('@unovis/shared/examples/free-brush-scatters/free-brush-scatters.vue')),
   defineAsyncComponent(() => import('@unovis/shared/examples/horizontal-stacked-bar-chart/horizontal-stacked-bar-chart.vue')),
@@ -28,6 +28,7 @@ const imports = [
   defineAsyncComponent(() => import('@unovis/shared/examples/elk-layered-graph/elk-layered-graph.vue')),
   defineAsyncComponent(() => import('@unovis/shared/examples/hierarchical-chord-diagram/hierarchical-chord-diagram.vue')),
   defineAsyncComponent(() => import('@unovis/shared/examples/sunburst-nested-donut/sunburst-nested-donut.vue')),
+  defineAsyncComponent(() => import('@unovis/shared/examples/basic-donut-chart/basic-donut-chart.vue')),
 ]
 </script>
 
