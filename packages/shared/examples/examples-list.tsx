@@ -15,7 +15,7 @@ export const examples: ExampleCollection[] = [
   },
   {
     title: 'Area Charts',
-    description: 'Examples of Line and Area charts',
+    description: '',
     examples: [
       require('./non-stacked-area-chart').default,
       require('./stacked-area-chart').default,
