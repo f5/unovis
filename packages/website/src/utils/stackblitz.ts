@@ -194,11 +194,12 @@ function getStarterFiles (framework: Framework, e: Example): ProjectFiles {
 
 export function launchStackBlitz (framework: Framework, example: Example): void {
   const project: Project = {
-    title: 'Unovis Demo',
+    title: `Unovis Demo (${framework})`,
     description: example.title,
     template: templates[framework],
     files: getStarterFiles(framework, example),
     dependencies: {
+      'web-worker': '^1.3.0',
       '@unovis/ts': ver,
     },
   }
