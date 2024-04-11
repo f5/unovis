@@ -31,4 +31,4 @@ jobs:
           remote-organization-name: 'f5'
           remote-repository-name: 'f5-cla-data'
           # Comma seperated list of usernames for maintainers or any other individuals who should not be prompted for a CLA.
-          allowlist: reb-dev, bot*
+          allowlist: reb-dev, lee00678, bot*
