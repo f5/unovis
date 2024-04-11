@@ -21,7 +21,8 @@ import { DataGapLineChartModule } from '@unovis/shared/examples/data-gap-line-ch
 import { BasicTimelineModule } from '@unovis/shared/examples/basic-timeline/basic-timeline.module'
 
 // Scatter
-import { BasicScatterChartModule } from '@unovis/shared/examples/basic-scatter-chart/basic-scatter-chart.module'
+import { BasicScatterPlotModule } from '@unovis/shared/examples/basic-scatter-plot/basic-scatter-plot.module'
+import { SizedScatterPlotModule } from '@unovis/shared/examples/sized-scatter-plot/sized-scatter-plot.module'
 
 // Maps
 import { BasicLeafletMapModule } from '@unovis/shared/examples/basic-leaflet-map/basic-leaflet-map.module'
@@ -72,7 +73,8 @@ import { BaselineAreaChartModule } from '@unovis/shared/examples/baseline-area-c
     <basic-timeline></basic-timeline>
 
     <!-- Scatter -->
-    <basic-scatter-chart></basic-scatter-chart>
+    <basic-scatter-plot></basic-scatter-plot>
+    <sized-scatter-plot></sized-scatter-plot>
 
     <!-- Maps -->
     <basic-leaflet-map></basic-leaflet-map>
@@ -109,7 +111,7 @@ export class AppComponent {
   declarations: [AppComponent],
   imports: [
     BrowserModule, BasicGroupedBarModule, BasicLeafletMapModule, BasicLineChartModule, MultiLineChartModule,
-    TopojsonMapModule, StackedBarChartModule, BrushGroupedBarModule, BasicScatterChartModule, FreeBrushScattersModule, NonStackedAreaChartModule,
+    TopojsonMapModule, StackedBarChartModule, BrushGroupedBarModule, BasicScatterPlotModule, SizedScatterPlotModule, FreeBrushScattersModule, NonStackedAreaChartModule,
     BasicTimelineModule, BasicSankeyModule, ExpandableSankeyModule, BasicGraphModule, LeafletFlowMapModule,
     ForceLayoutGraphModule, AdvancedLeafletMapModule, StackedAreaModule, ParallelLayoutGraphModule, ElkLayeredGraphModule,
     DataGapLineChartModule, CrosshairStackedBarModule, BaselineAreaChartModule, StepAreaChartModule, SunburstChartModule,
