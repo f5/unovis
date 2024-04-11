@@ -1,4 +1,4 @@
-name: "F5 CLA Workflow"
+name: F5 CLA
 on:
   issue_comment:
     types: [created]
@@ -12,23 +12,28 @@ permissions:
 
 jobs:
   f5-cla:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
-      - name: "F5 CLA Assistant"
+      - name: Run F5 CLA assistant
         if: (github.event.comment.body == 'recheck' || github.event.comment.body == 'I have hereby read the F5 CLA and agree to its terms') || github.event_name == 'pull_request_target'
-        uses: contributor-assistant/github-action@v2.3.0
+        uses: contributor-assistant/github-action@dbc1c64d82d3aad5072007a41fff2828ae6d23ec # v2.3.2
+        with:
+          # Any pull request targeting the following branch will trigger a CLA check
+          branch: 'main'
+          # Path to the CLA document
+          path-to-document: 'https://github.com/f5/.github/blob/main/CLA/cla-markdown.md'
+          # Custom CLA messages
+          custom-notsigned-prcomment: '🎉 Thank you for your contribution. It appears you have not yet signed the F5 Contributor License Agreement (CLA), which is required for your changes to be incorporated into an F5 project. Please kindly read the [F5 CLA](https://github.com/f5/.github/blob/main/CLA/cla-markdown.md) and comment the following to agree:'
+          custom-pr-sign-comment: 'I have hereby read the F5 CLA and agree to its terms'
+          custom-allsigned-prcomment: '✅ All required contributors have signed the F5 CLA for this PR. Thank you!'
+          # Remote repository storing CLA signatures
+          remote-organization-name: 'f5'
+          remote-repository-name: 'f5-cla-data'
+          path-to-signatures: 'signatures/beta/signatures.json'
+          # Comma seperated list of usernames for maintainers or any other individuals who should not be prompted for a CLA.
+          allowlist: reb-dev, lee00678, bot*
+          # Do not lock PRs after a merge
+          lock-pullrequest-aftermerge: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PERSONAL_ACCESS_TOKEN: ${{ secrets.F5_CLA_TOKEN }}
-        with:
-          path-to-signatures: 'signatures/beta/signatures.json'
-          path-to-document: 'https://github.com/f5/.github/blob/main/CLA/cla-markdown.md'
-          # Any pull request targeting the following branch will trigger a CLA check
-          branch: 'main'
-          custom-pr-sign-comment: 'I have hereby read the F5 CLA and agree to its terms'
-          custom-notsigned-prcomment: '🎉 Thank you for your contribution. It appears you have not yet signed the F5 Contributor License Agreement, which is required for your changes to be incorporated into an F5 project. Please kindly read the [F5 CLA](https://github.com/f5/.github/blob/main/CLA/cla-markdown.md) and comment the following to agree:'
-          custom-allsigned-prcomment: 'All required contributors have signed the F5 CLA for this PR  ✅'
-          remote-organization-name: 'f5'
-          remote-repository-name: 'f5-cla-data'
-          # Comma seperated list of usernames for maintainers or any other individuals who should not be prompted for a CLA.
-          allowlist: reb-dev, lee00678, bot*
