@@ -37,25 +37,20 @@ function getStarterFiles (framework: Framework, e: Example): ProjectFiles {
       return {
         'src/index.html': '<app-component></app-component>',
         'src/main.ts': trimMultiline(`
-          import 'zone.js/dist/zone'
-          import { NgModule, Component } from '@angular/core'
-          import { platformBrowserDynamic } from '@angular/platform-browser-dynamic'
-          import { BrowserModule } from '@angular/platform-browser'
+          import 'zone.js'
+          import { Component } from '@angular/core'
+          import { bootstrapApplication } from '@angular/platform-browser'
           import { ${e.codeAngular.module.match(/export class\s*(?<name>\S+)/).groups.name} as ComponentModule } from './${e.pathname}/${e.pathname}.module'
 
           @Component({
             selector: 'app-component',
+            imports: [ ComponentModule ],
+            standalone: true,
             template: '<${e.pathname}></${e.pathname}>'
-          }) export class AppComponent { }
+          }) 
+          export class AppModule {}
 
-          @NgModule({
-            imports:      [ BrowserModule, ComponentModule ],
-            declarations: [ AppComponent ],
-            bootstrap:    [ AppComponent ]
-          })
-          export class AppModule { }
-
-          platformBrowserDynamic().bootstrapModule(AppModule)
+          bootstrapApplication(AppModule)
         `),
         [`src/${e.pathname}/${e.pathname}.component.ts`]: e.codeAngular.component,
         [`src/${e.pathname}/${e.pathname}.component.html`]: e.codeAngular.html,
