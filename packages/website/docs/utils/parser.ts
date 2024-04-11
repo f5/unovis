@@ -46,7 +46,7 @@ function parseFunction (str: string, type: string): string {
   return `(${args}) => ${body}`
 }
 
-export function parseObject (value: any, type: string, level = 1): string {
+export function parseObject (value: unknown, type: string, level = 1): string {
   if (!value) return ''
   if (typeof value === 'function') {
     const str = String(value)
