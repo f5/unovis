@@ -7,7 +7,7 @@ import { merge } from 'utils/data'
 import { BulletLegendDefaultConfig, BulletLegendConfigInterface } from './config'
 
 // Local Types
-import { BulletLegendItemInterface } from './types'
+import { BulletLegendItemInterface, BulletLegendOrientation } from './types'
 
 // Modules
 import { createBullets, updateBullets } from './modules/shape'
@@ -15,13 +15,12 @@ import { createBullets, updateBullets } from './modules/shape'
 // Styles
 import * as s from './style'
 
-
 export class BulletLegend {
   static selectors = s
   protected _defaultConfig = BulletLegendDefaultConfig as BulletLegendConfigInterface
   public config: BulletLegendConfigInterface = this._defaultConfig
 
-  div: Selection<HTMLDivElement, unknown, null, undefined>
+  div: Selection<HTMLElement, unknown, null, undefined>
   element: HTMLElement
   prevConfig: BulletLegendConfigInterface
   protected _container: HTMLElement
@@ -31,10 +30,8 @@ export class BulletLegend {
   constructor (element: HTMLElement, config?: BulletLegendConfigInterface) {
     this._container = element
 
-    // Create SVG element for visualizations
-    this.div = select(this._container)
-      .append('div')
-      .attr('class', s.root)
+    this.div = config?.renderIntoProvidedDomNode ? select(this._container) : select(this._container).append<HTMLElement>('div')
+    this.div.classed(s.root, true)
 
     this.element = this.div.node()
 
@@ -53,12 +50,14 @@ export class BulletLegend {
     const legendItems = this.div.selectAll<HTMLDivElement, unknown>(`.${s.item}`).data(config.items)
 
     const legendItemsEnter = legendItems.enter().append('div')
-      .attr('class', d => `${s.item} ${d.className ?? ''}`)
       .on('click', this._onItemClick.bind(this))
 
     const legendItemsMerged = legendItemsEnter.merge(legendItems)
     legendItemsMerged
+      .attr('class', d => `${s.item} ${d.className ?? ''}`)
+      .classed(s.itemVertical, config.orientation === BulletLegendOrientation.Vertical)
       .classed(s.clickable, d => !!config.onLegendItemClick && this._isItemClickable(d))
+      .attr('title', d => d.name)
       .style('display', (d: BulletLegendItemInterface) => d.hidden ? 'none' : null)
 
     // Bullet
@@ -98,6 +97,6 @@ export class BulletLegend {
   }
 
   public destroy (): void {
-    this.div.remove()
+    if (this.element !== this._container) this.div.remove()
   }
 }

@@ -17,3 +17,8 @@ export const BulletShape = {
 } as const
 
 export type BulletShape = typeof BulletShape[keyof typeof BulletShape]
+
+export enum BulletLegendOrientation {
+  Horizontal = 'horizontal',
+  Vertical = 'vertical',
+}

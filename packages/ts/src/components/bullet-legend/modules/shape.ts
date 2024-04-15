@@ -32,7 +32,7 @@ const shapeScale: Record<SymbolType, number> = {
 }
 
 export function createBullets (
-  container: Selection<HTMLSpanElement, BulletLegendItemInterface, HTMLDivElement, unknown>
+  container: Selection<HTMLSpanElement, BulletLegendItemInterface, HTMLElement, unknown>
 ): void {
   container.each((d, i, els) => {
     select(els[i]).append('svg')
@@ -43,7 +43,7 @@ export function createBullets (
 }
 
 export function updateBullets (
-  container: Selection<SVGElement, BulletLegendItemInterface, HTMLDivElement, unknown>,
+  container: Selection<SVGElement, BulletLegendItemInterface, HTMLElement, unknown>,
   config: BulletLegendConfigInterface,
   colorAccessor: ColorAccessor<BulletLegendItemInterface>
 ): void {
@@ -55,14 +55,16 @@ export function updateBullets (
 
     const selection = select(els[i]).select('svg')
       .attr('viewBox', `0 0 ${width} ${height}`)
-      .select<SVGPathElement>('path')
+
+    const bulletPath = selection.select<SVGPathElement>('path')
       .attr('stroke', color)
 
+    const opacity = d.inactive ? 'var(--vis-legend-bullet-inactive-opacity)' : 1
     if (shape === BulletShape.Line) {
-      selection
+      bulletPath
         .attr('d', `M0,${height / 2} L${width / 2},${height / 2} L${width},${height / 2}`)
         .attr('transform', null)
-        .style('opacity', d.inactive ? 0.4 : 1)
+        .style('opacity', opacity)
         .style('stroke-width', '3px')
         .style('fill', null)
         .style('fill-opacity', null)
@@ -86,13 +88,14 @@ export function updateBullets (
           dy -= height / 16
           break
       }
-      selection
+
+      bulletPath
         .attr('d', symbolGen)
         .attr('transform', `translate(${width / 2}, ${Math.round(dy)}) scale(${scale})`)
         .style('stroke-width', '1px')
         .style('opacity', null)
         .style('fill', color)
-        .style('fill-opacity', d.inactive ? 0.4 : 1)
+        .style('fill-opacity', opacity)
     }
   })
 }

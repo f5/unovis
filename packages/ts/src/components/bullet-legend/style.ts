@@ -13,17 +13,16 @@ export const variables = injectGlobal`
     --vis-legend-label-max-width: 300px;
     --vis-legend-label-font-size: 12px;
     --vis-legend-bullet-size: 9px;
-    --vis-legend-bullet-inactive-color: #eee;
+    --vis-legend-bullet-inactive-opacity: 0.15;
     --vis-legend-item-spacing: 20px;
+    --vis-legend-vertical-item-spacing: 5px;
     --vis-legend-bullet-label-spacing: 8px;
 
     --vis-dark-legend-label-color: #eee;
-    --vis-dark-legend-bullet-inactive-color: #6c778c;
   }
 
   body.theme-dark ${`.${root}`} {
     --vis-legend-label-color: var(--vis-dark-legend-label-color);
-    --vis-legend-bullet-inactive-color: var(--vis-dark-legend-bullet-inactive-color);
   }
 
   body.theme-patterns {
@@ -40,6 +39,13 @@ export const item = css`
   white-space: nowrap;
   cursor: default;
   user-select: none;
+  max-width: min-content;
+`
+
+export const itemVertical = css`
+  label: legendItemVertical;
+  display: flex;
+  margin-top: var(--vis-legend-vertical-item-spacing);
 `
 
 export const clickable = css`
@@ -59,13 +65,13 @@ export const label = css`
 `
 
 export const bullet = css`
+  flex: 0 0 auto;
   label: legendItemBullet;
   margin-right: var(--vis-legend-bullet-label-spacing);
   height: var(--vis-legend-bullet-size);
   width: var(--vis-legend-bullet-size);
-  
+
   svg {
     display: block;
   }
-}
 `
