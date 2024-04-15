@@ -1,6 +1,6 @@
 // Local Types
 import { GenericAccessor } from 'types/accessor'
-import { BulletLegendItemInterface, BulletShape } from './types'
+import { BulletLegendItemInterface, BulletShape, BulletLegendOrientation } from './types'
 
 export interface BulletLegendConfigInterface {
   /** Legend items. Array of `BulletLegendItemInterface`:
@@ -28,6 +28,12 @@ export interface BulletLegendConfigInterface {
   bulletSize?: string | null;
   /** Bullet shape enum value or accessor function. Default: `d => d.shape ?? BulletShape.Circle */
   bulletShape?: GenericAccessor<BulletShape, BulletLegendItemInterface>;
+  /** Legend orientation. When set to `BulletLegendOrientation.Vertical`, each legend item will
+   * start on a new line. Default: `BulletLegendOrientation.Horizontal` */
+  orientation?: BulletLegendOrientation | string;
+  /** If set to true, the legend will be rendered directly into the HTML element provided to the constructor
+   * without creating additional `div` element. Default: `false` */
+  renderIntoProvidedDomNode?: boolean;
 }
 
 export const BulletLegendDefaultConfig: BulletLegendConfigInterface = {
@@ -38,4 +44,6 @@ export const BulletLegendDefaultConfig: BulletLegendConfigInterface = {
   labelMaxWidth: null,
   bulletSize: null,
   bulletShape: d => d.shape ?? BulletShape.Circle,
+  orientation: BulletLegendOrientation.Horizontal,
+  renderIntoProvidedDomNode: false,
 }
