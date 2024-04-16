@@ -1,0 +1,31 @@
+.chartContainer {
+  display: flex;
+  flex-direction: row;
+  height: 250px;
+}
+
+.legend {
+  flex: 0 0 auto;
+  display: block;
+  padding: 0 10px;
+  border-bottom: 30px solid transparent;
+  overflow-y: auto;
+  overflow: -moz-scrollbars-vertical;
+
+  &::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 5px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, .1);
+    -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+  }
+
+}
+
+.chart {
+  flex: 1 1 auto;
+  min-width: 0;
+}
