@@ -27,6 +27,7 @@
     () => import('@unovis/shared/examples/hierarchical-chord-diagram/hierarchical-chord-diagram.svelte'),
     () => import('@unovis/shared/examples/sunburst-nested-donut/sunburst-nested-donut.svelte'),
     () => import('@unovis/shared/examples/basic-donut-chart/basic-donut-chart.svelte'),
+    () => import('@unovis/shared/examples/shaped-scatter-plot/shaped-scatter-plot.svelte'),
   ]
 </script>
 
