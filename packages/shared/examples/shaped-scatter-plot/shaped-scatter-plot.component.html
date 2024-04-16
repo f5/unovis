@@ -1,0 +1,16 @@
+<h2>The Rise and Rise of A.I. Large Language Models</h2>
+<vis-bullet-legend [items]="legendItems"></vis-bullet-legend>
+<vis-xy-container [data]="data" [height]="600">
+  <vis-scatter
+    [x]="getX"
+    [y]="getY"
+    [color]="getColor"
+    [size]="15"
+    [shape]="getShape"
+    [label]="getLabel"
+    cursor="pointer"
+  ></vis-scatter>
+  <vis-axis type="x" label="Date Released" [tickFormat]="xTicks"></vis-axis>
+  <vis-axis type="y" label="Billion Parameters"></vis-axis>
+  <vis-tooltip [triggers]="tooltipTriggers"></vis-tooltip>
+</vis-xy-container>
