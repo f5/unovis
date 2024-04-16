@@ -13,6 +13,10 @@ export const colors = {
   libertarian: '#34daa6',
 }
 
+export const capitalize = (s: string): string => {
+  return s.charAt(0).toUpperCase() + s.slice(1)
+}
+
 export const data: ElectionDatum[] = [
   {
     year: 1980,
