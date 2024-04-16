@@ -1,5 +1,5 @@
 import { Component } from '@angular/core'
-import { data, colors, ElectionDatum } from './data'
+import { data, colors, capitalize, ElectionDatum } from './data'
 
 @Component({
   selector: 'basic-grouped-bar',
@@ -17,7 +17,7 @@ export class BasicGroupedBarComponent {
   data = data
 
   legendItems = Object.entries(colors).map(([n, c]) => ({
-    name: n.toUpperCase(),
+    name: capitalize(n),
     color: c,
   }))
 

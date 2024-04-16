@@ -1,9 +1,9 @@
 <script lang='ts'>
   import { VisXYContainer, VisGroupedBar, VisAxis, VisBulletLegend } from '@unovis/svelte'
-  import { data, colors, ElectionDatum } from './data'
+  import { data, colors, capitalize, ElectionDatum } from './data'
 
   const items = Object.entries(colors).map(([n, c]) => ({
-    name: n.toUpperCase(),
+    name: capitalize(n),
     color: c,
   }))
   const x = (d: ElectionDatum) => d.year

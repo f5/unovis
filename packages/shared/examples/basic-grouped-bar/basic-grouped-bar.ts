@@ -1,10 +1,10 @@
 import { XYContainer, Axis, GroupedBar, BulletLegend } from '@unovis/ts'
-import { data, colors, ElectionDatum } from './data'
+import { data, colors, capitalize, ElectionDatum } from './data'
 
 const container = document.getElementById('vis-container')
 
 const legendItems = Object.entries(colors).map(([n, c]) => ({
-  name: n.toUpperCase(),
+  name: capitalize(n),
   color: c,
 }))
 const legend = new BulletLegend(container, { items: legendItems })

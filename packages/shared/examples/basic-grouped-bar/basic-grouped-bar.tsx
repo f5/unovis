@@ -1,10 +1,10 @@
 import React, { useCallback } from 'react'
 import { VisXYContainer, VisGroupedBar, VisAxis, VisBulletLegend } from '@unovis/react'
 
-import { data, colors } from './data'
+import { data, capitalize, colors } from './data'
 
 const legendItems = Object.entries(colors).map(([n, c]) => ({
-  name: n.toUpperCase(),
+  name: capitalize(n),
   color: c,
 }))
 
