@@ -25,11 +25,12 @@ for (const component of components) {
     generics,
     importStatements,
     component.dataType,
-    component.elementSuffix
+    component.elementSuffix,
+    component.isStandAlone
   )
 
   const nameKebabCase = component.kebabCaseName ?? kebabCase(component.name)
-  const pathComponentBase = `src/components/${nameKebabCase}`
+  const pathComponentBase = `src/${component.isStandAlone ? 'html-' : ''}components/${nameKebabCase}`
   const pathComponent = `${pathComponentBase}/index.tsx` // `${pathComponentBase}/${nameKebabCase}.component.tsx`
 
   exec(`mkdir ${pathComponentBase}`, () => {

@@ -1,26 +1,30 @@
-import React, { ForwardedRef, Ref, useEffect, useImperativeHandle, useRef, useState } from 'react'
-import { LeafletMap, LeafletMapConfigInterface } from '@unovis/ts'
-import { arePropsEqual } from '../../utils/react'
+// !!! This code was automatically generated. You should not change it !!!
+import React, { ForwardedRef, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
+import { LeafletMap, LeafletMapConfigInterface, GenericDataRecord } from '@unovis/ts'
 
-export const VisLeafletMapSelectors = LeafletMap.selectors
+// Utils
+import { arePropsEqual } from 'src/utils/react'
 
-export type VisLeafletMapProps<Datum extends Record<string, unknown>> = LeafletMapConfigInterface<Datum> & {
+export type VisLeafletMapRef<Datum extends GenericDataRecord> = {
+  component?: LeafletMap<Datum>;
+}
+
+export type VisLeafletMapProps<Datum extends GenericDataRecord> = LeafletMapConfigInterface<Datum> & {
   data?: Datum[];
   ref?: Ref<VisLeafletMapRef<Datum>>;
   className?: string;
 }
 
-export type VisLeafletMapRef<Datum extends Record<string, unknown>> = {
-  component: LeafletMap<Datum> | undefined;
-}
+export const VisLeafletMapSelectors = LeafletMap.selectors
 
-export function VisLeafletMapFC<Datum extends Record<string, unknown>> (props: VisLeafletMapProps<Datum>, ref: ForwardedRef<VisLeafletMapRef<Datum>>): JSX.Element {
-  const container = useRef<HTMLDivElement>(null)
+// eslint-disable-next-line @typescript-eslint/naming-convention
+function VisLeafletMapFC<Datum extends GenericDataRecord> (props: VisLeafletMapProps<Datum>, fRef: ForwardedRef<VisLeafletMapRef<Datum>>): JSX.Element {
+  const ref = useRef<HTMLDivElement>(null)
   const [component, setComponent] = useState<LeafletMap<Datum>>()
 
   // On Mount
   useEffect(() => {
-    const c = new LeafletMap(container.current as HTMLDivElement, props, props.data)
+    const c = new LeafletMap<Datum>(ref.current as HTMLDivElement, props, props.data)
     setComponent(c)
 
     return () => c?.destroy()
@@ -29,15 +33,13 @@ export function VisLeafletMapFC<Datum extends Record<string, unknown>> (props: V
   // On Props Update
   useEffect(() => {
     if (props.data) component?.setData(props.data)
-
     component?.setConfig(props)
   })
 
-  useImperativeHandle(ref, () => ({ get component () { return component } }), [component])
-  return <div ref={container} className={props.className} />
+  useImperativeHandle(fRef, () => ({ get component () { return component } }), [])
+  return <div className={props.className} ref={ref} />
 }
 
 // We export a memoized component to avoid unnecessary re-renders
 //  and define its type explicitly to help react-docgen-typescript to extract information about props
-export const VisLeafletMap: (<Datum extends Record<string, unknown>>(props: VisLeafletMapProps<Datum>) => JSX.Element | null) =
-  React.memo(React.forwardRef(VisLeafletMapFC), arePropsEqual)
+export const VisLeafletMap: (<Datum extends GenericDataRecord>(props: VisLeafletMapProps<Datum>) => JSX.Element | null) = React.memo(React.forwardRef(VisLeafletMapFC), arePropsEqual)
