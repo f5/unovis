@@ -17,6 +17,8 @@ export type VisAnnotationsProps = AnnotationsConfigInterface & {
   ref?: Ref<VisAnnotationsRef>;
 }
 
+export const VisAnnotationsSelectors = Annotations.selectors
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 function VisAnnotationsFC (props: VisAnnotationsProps, fRef: ForwardedRef<VisAnnotationsRef>): JSX.Element {
   const ref = useRef<VisComponentElement<Annotations>>(null)
@@ -39,10 +41,11 @@ function VisAnnotationsFC (props: VisAnnotationsProps, fRef: ForwardedRef<VisAnn
   // On Props Update
   useEffect(() => {
     const component = componentRef.current
+
     component?.setConfig(props)
   })
 
-  useImperativeHandle(fRef, () => ({ component: componentRef.current }), [componentRef.current])
+  useImperativeHandle(fRef, () => ({ get component () { return componentRef.current } }), [])
   return <vis-annotations ref={ref} />
 }
 

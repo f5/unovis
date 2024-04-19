@@ -5,61 +5,66 @@ export function getComponentCode (
   generics: GenericParameter[] | undefined,
   importStatements: { source: string; elements: string[] }[],
   dataType: string | null = 'any',
-  elementSuffix = 'component'
+  elementSuffix = 'component',
+  isStandAlone = false
 ): string {
   const genericsStr = generics ? `<${generics?.map(g => g.name).join(', ')}>` : ''
   const genericsDefStr = generics
     ? `<${generics?.map(g => g.name + (g.extends ? ` extends ${g.extends}` : '') + (g.default ? ` = ${g.default}` : '')).join(', ')}>`
     : ''
+  const componentType = `${componentName}${genericsStr}`
+  const refType = isStandAlone ? 'HTMLDivElement' : `VisComponentElement<${componentType}>`
+  const onDestroy = isStandAlone ? 'c?.destroy()' : `{
+    componentRef.current = undefined
+    c.destroy()
+  }`
   return `// !!! This code was automatically generated. You should not change it !!!
 import React, { ForwardedRef, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
 ${importStatements.map(s => `import { ${s.elements.join(', ')} } from '${s.source}'`).join('\n')}
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'
-
-// Types
-import { VisComponentElement } from 'src/types/dom'
-
+${isStandAlone ? '' : '\n// Types\nimport { VisComponentElement } from \'src/types/dom\'\n'}
 export type Vis${componentName}Ref${genericsDefStr} = {
-    component?: ${componentName}${genericsStr}
+    component?: ${componentType};
 }
 
 export type Vis${componentName}Props${genericsDefStr} = ${componentName}ConfigInterface${genericsStr} & {
   data?: ${dataType};
-  ref?: Ref<Vis${componentName}Ref${genericsStr}>
+  ref?: Ref<Vis${componentName}Ref${genericsStr}>;${isStandAlone ? '\nclassName?: string;' : ''}
 }
 
 export const Vis${componentName}Selectors = ${componentName}.selectors
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 function Vis${componentName}FC${genericsDefStr} (props: Vis${componentName}Props${genericsStr}, fRef: ForwardedRef<Vis${componentName}Ref${genericsStr}>): JSX.Element {
-  const ref = useRef<VisComponentElement<${componentName}${genericsStr}>>(null)
-  const componentRef = useRef<${componentName}${genericsStr} | undefined>(undefined)
+  const ref = useRef<${refType}>(null)
+  const ${isStandAlone ? `[component, setComponent] = useState<${componentType}>()` : `componentRef = useRef<${componentType} | undefined>(undefined)`}
 
   // On Mount
   useEffect(() => {
-    const element = (ref.current as VisComponentElement<${componentName}${genericsStr}>)
-
-    const c = new ${componentName}${genericsStr}(props)
-    componentRef.current = c
-    element.__component__ = c
-
-    return () => {
-        componentRef.current = undefined
-        c.destroy()
-    }
+    ${(isStandAlone ? [
+    `const c = new ${componentType}(ref.current as HTMLDivElement, props${dataType ? ', props.data' : ''})`,
+    'setComponent(c)',
+  ] : [
+    `const element = (ref.current as VisComponentElement<${componentType}>)\n`,
+    `const c = new ${componentType}(props)`,
+    'componentRef.current = c',
+    'element.__component__ = c',
+  ]).join('\n  ')}
+  
+    return () => ${onDestroy}
   }, [])
 
   // On Props Update
   useEffect(() => {
-    const component = componentRef.current
+    ${isStandAlone ? '' : 'const component = componentRef.current'}
     ${dataType ? 'if (props.data) component?.setData(props.data)' : ''}
-    component?.setConfig(props)
+    component?.${componentName === 'BulletLegend' ? 'update ' : 'setConfig'}(props)
   })
 
-  useImperativeHandle(fRef, () => ({ get component () { return componentRef.current } }), [])
-  return <vis-${elementSuffix} ref={ref} />
+  useImperativeHandle(fRef, () => ({ get component () { return component${isStandAlone ? '' : 'ref.current'} } }), [])
+  return <${isStandAlone ? 'div className={props.className}' : `vis-${elementSuffix}`} ref={ref} />
 }
 
 // We export a memoized component to avoid unnecessary re-renders
