@@ -13,23 +13,15 @@ import { getImportStatements, kebabCase, getConfigSummary } from '@unovis/shared
 // Component Code
 import { getComponentCode } from './component'
 
-
-const coreComponentConfigPath = '/core/component'
-const htmlElements = ['BulletLegend', 'LeafletMap', 'LeafletFlowMap']
 const skipProperties = ['width', 'height']
-const components = [
-  ...getComponentList(),
-  { name: 'LeafletMap', sources: [coreComponentConfigPath, '/components/leaflet-map'], dataType: 'Datum[]', svelteStyles: ['display:block', 'position:relative'] },
-  { name: 'LeafletFlowMap', sources: [coreComponentConfigPath, '/components/leaflet-map', '/components/leaflet-flow-map'], dataType: '{ points: PointDatum[]; flows?: FlowDatum[] }', svelteStyles: ['display:block', 'position:relative'] },
-  { name: 'BulletLegend', sources: ['/components/bullet-legend'], dataType: null, svelteStyles: ['display:block'] },
-] as SvelteComponentInput[]
+const components = getComponentList() as SvelteComponentInput[]
 
 const exports: string[] = []
 
 for (const component of components) {
   const { configProperties, configInterfaceMembers, generics, statements } = getConfigSummary(component, skipProperties)
   const importStatements = getImportStatements(component.name, statements, configInterfaceMembers, generics)
-  const isStandAlone = htmlElements.includes(component.name)
+  const isStandAlone = component.isStandAlone
   const componentCode = getComponentCode(
     component.name,
     generics,

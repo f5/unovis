@@ -18,8 +18,9 @@ export type ComponentInput = {
   name: string;
   sources: string[];
   kebabCaseName?: string;
-  dataType?: string;
+  dataType?: string | null;
   elementSuffix?: string;
+  isStandAlone?: boolean;
 }
 
 export type ReactComponentInput = ComponentInput
