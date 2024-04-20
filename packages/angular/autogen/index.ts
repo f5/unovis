@@ -14,12 +14,11 @@ import { getImportStatements, kebabCase, getConfigSummary } from '@unovis/shared
 import { getComponentCode } from './component'
 import { getModuleCode } from './module'
 
-const skipProperties = ['width', 'height']
 const components = getComponentList() as AngularComponentInput[]
 
 for (const component of components) {
-  const { configProperties, configInterfaceMembers, generics, statements } = getConfigSummary(component, skipProperties, false)
-  const importStatements = getImportStatements(component.name, statements, configInterfaceMembers, generics, ['ContainerCore'])
+  const { configProperties, configInterfaceMembers, generics, statements } = getConfigSummary(component, [], false)
+  const importStatements = getImportStatements(component.name, statements, configInterfaceMembers, generics, component.isStandAlone ? [] : ['ContainerCore'])
 
   const componentCode = getComponentCode(
     component.name,
@@ -28,12 +27,14 @@ for (const component of components) {
     component.angularProvide,
     importStatements,
     component.dataType,
-    component.kebabCaseName
+    component.kebabCaseName,
+    component.isStandAlone,
+    component.angularStyles
   )
   const moduleCode = getModuleCode(component.name, component.kebabCaseName)
 
   const nameKebabCase = component.kebabCaseName ?? kebabCase(component.name)
-  const pathComponentBase = `src/components/${nameKebabCase}`
+  const pathComponentBase = `src/${component.isStandAlone ? 'html-' : ''}components/${nameKebabCase}`
   const pathComponent = `${pathComponentBase}/${nameKebabCase}.component.ts`
   const pathModule = `${pathComponentBase}/${nameKebabCase}.module.ts`
 

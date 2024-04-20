@@ -79,7 +79,7 @@ export class VisNestedDonutComponent<Datum> implements NestedDonutConfigInterfac
   /** Direction of hierarchy flow from root to leaf.
    * `NestedDonutDirection.Inwards` starts from the outer most radius and works towards center
    * `NestedDonutDirection.Outwards` starts from the inner most radius the consecutive layers outward.
-   * Default: `NestedDonutDirection.Inwards` */
+   *  Default: `NestedDonutDirection.Inwards` */
   @Input() direction?: NestedDonutDirection | string
 
 
@@ -105,7 +105,12 @@ export class VisNestedDonutComponent<Datum> implements NestedDonutConfigInterfac
   /** Array of accessor functions to defined the nested groups */
   @Input() layers: StringAccessor<Datum>[]
 
-
+  /** Configuration properties for individual layers. Accepts an accessor or constant of type:
+   * {
+   *   backgroundColor?: string;
+   *   labelAlignment?: NestedDonutSegmentLabelAlignment;
+   *   width?: number | string;
+   * } */
   @Input() layerSettings?: GenericAccessor<NestedDonutLayerSettings, number>
 
 

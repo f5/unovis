@@ -27,6 +27,7 @@ export type ReactComponentInput = ComponentInput
 
 export type AngularComponentInput = ComponentInput & {
   angularProvide: string;
+  angularStyles?: string[];
 }
 
 export type SvelteComponentInput = ComponentInput & {

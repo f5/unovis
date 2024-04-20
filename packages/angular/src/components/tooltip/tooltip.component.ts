@@ -65,7 +65,6 @@ export class VisTooltipComponent implements TooltipConfigInterface, AfterViewIni
     [attr: string]: string | number | boolean;
   }
 
-
   component: Tooltip | undefined
   public componentContainer: ContainerCore | undefined
 
