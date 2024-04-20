@@ -1,38 +1,36 @@
+// !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges, ViewChild, ElementRef } from '@angular/core'
 import {
   LeafletMap,
   LeafletMapConfigInterface,
+  GenericDataRecord,
   VisEventType,
   VisEventCallback,
   Bounds,
+  MapLibreStyleSpecs,
+  LeafletMapRenderer,
   MapZoomState,
   NumericAccessor,
   StringAccessor,
+  GenericAccessor,
+  LeafletMapPointShape,
   ColorAccessor,
   LeafletMapPointDatum,
+  LeafletMapClusterDatum,
   LeafletMapPointStyles,
   Tooltip,
-  LeafletMapClusterDatum,
-  LeafletMapRenderer,
-  GenericDataRecord,
 } from '@unovis/ts'
-import { StyleSpecification } from 'maplibre-gl'
 import { VisCoreComponent } from '../../core'
 
 @Component({
   selector: 'vis-leaflet-map',
-  template: '<div #container class="unovis-leaflet-map-container"></div>',
-  styles: ['.unovis-leaflet-map-container { width: 100%; height: 100%; position: relative; }'],
+  template: '<div #container class="leaflet-map-container"></div>',
+  styles: ['.leaflet-map-container { width: 100%; height: 100%; position: relative }'],
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisCoreComponent, useExisting: VisLeafletMapComponent }],
 })
 export class VisLeafletMapComponent<Datum extends GenericDataRecord> implements LeafletMapConfigInterface<Datum>, AfterViewInit {
   @ViewChild('container', { static: false }) containerRef: ElementRef
-
-  /** Width in pixels or in CSS units. By default, the map will automatically fit to the size of the parent element. Default: `undefined`. */
-  @Input() width?: number | string
-  /** Height in pixels or in CSS units. By default, the map will automatically fit to the size of the parent element. Default: `undefined`. */
-  @Input() height?: number | string
 
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */
   @Input() duration?: number
@@ -84,10 +82,16 @@ export class VisLeafletMapComponent<Datum extends GenericDataRecord> implements 
     };
   }
 
+  /** Width in pixels or in CSS units. By default, the map will automatically fit to the size of the parent element. Default: `undefined`. */
+  @Input() width?: number | string
+
+  /** Height in pixels or in CSS units. By default, the map will automatically fit to the size of the parent element. Default: `undefined`. */
+  @Input() height?: number | string
+
   /** Animation duration when the map is automatically panning or zooming to a point or area. Default: `1500` ms */
   @Input() flyToDuration?: number
 
-  /** Padding to be used when the `fitView` function has been called. The value is in pixels. Default: `[150, 150]` */
+  /** Padding to be used when the `fitView` function has been called. The value is in pixels, [topLeft, bottomRight]. Default: `[150, 150]` */
   @Input() fitViewPadding?: [number, number]
 
   /** Animation duration for the `setZoom` function. Default: `800` ms */
@@ -105,11 +109,11 @@ export class VisLeafletMapComponent<Datum extends GenericDataRecord> implements 
   /** Fit the view to contain the data points on map config and data updates. Default: `false` */
   @Input() fitViewOnUpdate?: boolean
 
-  /** MapLibre StyleSpecification settings. Default: `MapLibreArcticLight` */
-  @Input() style: StyleSpecification | string | undefined
+  /** MapLibre `StyleSpecification` settings, or a URL to it. When renderer is set to`LeafletMapRenderer.Raster`, provide a template URL. Default: `undefined` */
+  @Input() style: MapLibreStyleSpecs | string | undefined
 
-  /** MapLibre StyleSpecification settings for dark theme. Default: `undefined` */
-  @Input() styleDarkTheme?: StyleSpecification | string | undefined
+  /** MapLibre `StyleSpecification` settings or URL for dark theme. Default: `undefined` */
+  @Input() styleDarkTheme?: MapLibreStyleSpecs | string | undefined
 
   /** Tile server access token or API key. Default: `''` */
   @Input() accessToken?: string
@@ -138,7 +142,7 @@ export class VisLeafletMapComponent<Datum extends GenericDataRecord> implements 
   /** Map Zoom End callback function. Default: `undefined` */
   @Input() onMapZoomEnd?: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => void)
 
-  /** Map Zoom End callback function. Default: `undefined` */
+  /** Map Zoom Click callback function. Default: `undefined` */
   @Input() onMapClick?: (({ mapCenter, zoomLevel, bounds }: MapZoomState) => void)
 
   /** Point longitude accessor function. Default: `d => d.longitude` */
@@ -151,7 +155,7 @@ export class VisLeafletMapComponent<Datum extends GenericDataRecord> implements 
   @Input() pointId?: StringAccessor<Datum>
 
   /** Point shape accessor function or constant value. Default: `d => d.shape` */
-  @Input() pointShape?: StringAccessor<Datum>
+  @Input() pointShape?: GenericAccessor<LeafletMapPointShape | string, Datum>
 
   /** Point color accessor function or constant value. Default: `d => d.color` */
   @Input() pointColor?: ColorAccessor<LeafletMapPointDatum<Datum>>
@@ -159,14 +163,13 @@ export class VisLeafletMapComponent<Datum extends GenericDataRecord> implements 
   /** Point radius accessor function or constant value. Default: `undefined` */
   @Input() pointRadius?: NumericAccessor<LeafletMapPointDatum<Datum>>
 
-  /** Point inner label accessor function. Default: `d => d.point_count ?? ''` */
+  /** Point inner label accessor function. Default: `undefined` */
   @Input() pointLabel?: StringAccessor<LeafletMapPointDatum<Datum>>
 
   /** Point inner label color accessor function or constant value.
    * By default, the label color will be set, depending on the point brightness, either to
    * `--vis-map-point-inner-label-text-color-light` or to `--vis-map-point-inner-label-text-color-dark` CSS variable.
-   * Default: `undefined`
-  */
+   * Default: `undefined` */
   @Input() pointLabelColor?: StringAccessor<LeafletMapPointDatum<Datum>>
 
   /** Point bottom label accessor function. Default: `''` */
@@ -175,29 +178,31 @@ export class VisLeafletMapComponent<Datum extends GenericDataRecord> implements 
   /** Point cursor value or accessor function. Default: `null` */
   @Input() pointCursor?: StringAccessor<LeafletMapPointDatum<Datum>>
 
+  /** The width of the ring when a point has a `LeafletMapPointShape.Ring` shape. Default: `1.25` */
+  @Input() pointRingWidth?: number
+
   /** Set selected point by its unique id. Default: `undefined` */
   @Input() selectedPointId?: string
 
-  /** Cluster color accessor function or constant value. Default: `undefined`  */
+  /** Cluster color accessor function or constant value. Default: `undefined` */
   @Input() clusterColor?: ColorAccessor<LeafletMapClusterDatum<Datum>>
 
-  /** Cluster radius accessor function or constant value. Default: `undefined`  */
+  /** Cluster radius accessor function or constant value. Default: `undefined` */
   @Input() clusterRadius?: NumericAccessor<LeafletMapClusterDatum<Datum>>
 
-  /** Cluster inner label accessor function. Default: `d => d.point_count`  */
+  /** Cluster inner label accessor function. Default: `d => d.point_count` */
   @Input() clusterLabel?: StringAccessor<LeafletMapClusterDatum<Datum>>
 
   /** Cluster inner label color accessor function or constant value.
    * By default, the label color will be set, depending on the point brightness, either to
    * `--vis-map-cluster-inner-label-text-color-light` or to `--vis-map-cluster-inner-label-text-color-dark` CSS variable.
-   * Default: `undefined`
-  */
+   * Default: `undefined` */
   @Input() clusterLabelColor?: StringAccessor<LeafletMapClusterDatum<Datum>>
 
   /** Cluster bottom label accessor function. Default: `''` */
   @Input() clusterBottomLabel?: StringAccessor<LeafletMapClusterDatum<Datum>>
 
-  /** The width of the cluster point outline. Default: `1.25` */
+  /** The width of the cluster point ring. Default: `1.25` */
   @Input() clusterRingWidth?: number
 
   /** When cluster is expanded, show a background circle to better separate points from the base map. Default: `true` */
@@ -243,30 +248,28 @@ export class VisLeafletMapComponent<Datum extends GenericDataRecord> implements 
   @Input() tooltip?: Tooltip
 
   /** Alternative text description of the chart for accessibility purposes. It will be applied as an
-   * `aria-label` attribute to the div element containing your chart. Default: `undefined`.
-  */
+   * `aria-label` attribute to the div element containing your chart. Default: `undefined`. */
   @Input() ariaLabel?: string | null | undefined
-
-  /** Data */
-  @Input() data?: Datum[]
+  @Input() data: Datum[]
 
   component: LeafletMap<Datum> | undefined
 
   ngAfterViewInit (): void {
-    const config = this.getConfig()
-    this.component = new LeafletMap<Datum>(this.containerRef.nativeElement, config, this.data)
+    this.component = new LeafletMap<Datum>(this.containerRef.nativeElement, this.getConfig(), this.data)
+
+    if (this.data) {
+      this.component.setData(this.data)
+    }
   }
 
   ngOnChanges (changes: SimpleChanges): void {
-    if (changes.data) {
-      this.component?.setData(this.data)
-    }
+    if (changes.data) { this.component?.setData(this.data) }
     this.component?.setConfig(this.getConfig())
   }
 
   private getConfig (): LeafletMapConfigInterface<Datum> {
-    const { width, height, duration, events, attributes, flyToDuration, fitViewPadding, zoomDuration, initialBounds, fitBoundsOnUpdate, fitViewOnInit, fitViewOnUpdate, accessToken, style, styleDarkTheme, attribution, onMapInitialized, onMapMoveZoom, onMapMoveStart, onMapMoveEnd, onMapZoomStart, onMapZoomEnd, onMapClick, pointLongitude, pointLatitude, pointId, pointShape, pointColor, pointRadius, pointLabel, pointLabelColor, pointBottomLabel, pointCursor, selectedPointId, clusterColor, clusterRadius, clusterLabel, clusterLabelColor, clusterBottomLabel, clusterRingWidth, clusterBackground, clusterExpandOnClick, clusteringDistance, colorMap, topoJSONLayer, tooltip, ariaLabel } = this
-    const config = { width, height, duration, events, attributes, flyToDuration, fitViewPadding, zoomDuration, initialBounds, fitBoundsOnUpdate, fitViewOnInit, fitViewOnUpdate, accessToken, style, styleDarkTheme, attribution, onMapInitialized, onMapMoveZoom, onMapMoveStart, onMapMoveEnd, onMapZoomStart, onMapZoomEnd, onMapClick, pointLongitude, pointLatitude, pointId, pointShape, pointColor, pointRadius, pointLabel, pointLabelColor, pointBottomLabel, pointCursor, selectedPointId, clusterColor, clusterRadius, clusterLabel, clusterLabelColor, clusterBottomLabel, clusterRingWidth, clusterBackground, clusterExpandOnClick, clusteringDistance, colorMap, topoJSONLayer, tooltip, ariaLabel }
+    const { duration, events, attributes, width, height, flyToDuration, fitViewPadding, zoomDuration, initialBounds, fitBoundsOnUpdate, fitViewOnInit, fitViewOnUpdate, style, styleDarkTheme, accessToken, attribution, renderer, onMapInitialized, onMapMoveZoom, onMapMoveStart, onMapMoveEnd, onMapZoomStart, onMapZoomEnd, onMapClick, pointLongitude, pointLatitude, pointId, pointShape, pointColor, pointRadius, pointLabel, pointLabelColor, pointBottomLabel, pointCursor, pointRingWidth, selectedPointId, clusterColor, clusterRadius, clusterLabel, clusterLabelColor, clusterBottomLabel, clusterRingWidth, clusterBackground, clusterExpandOnClick, clusteringDistance, colorMap, topoJSONLayer, tooltip, ariaLabel } = this
+    const config = { duration, events, attributes, width, height, flyToDuration, fitViewPadding, zoomDuration, initialBounds, fitBoundsOnUpdate, fitViewOnInit, fitViewOnUpdate, style, styleDarkTheme, accessToken, attribution, renderer, onMapInitialized, onMapMoveZoom, onMapMoveStart, onMapMoveEnd, onMapZoomStart, onMapZoomEnd, onMapClick, pointLongitude, pointLatitude, pointId, pointShape, pointColor, pointRadius, pointLabel, pointLabelColor, pointBottomLabel, pointCursor, pointRingWidth, selectedPointId, clusterColor, clusterRadius, clusterLabel, clusterLabelColor, clusterBottomLabel, clusterRingWidth, clusterBackground, clusterExpandOnClick, clusteringDistance, colorMap, topoJSONLayer, tooltip, ariaLabel }
     const keys = Object.keys(config) as (keyof LeafletMapConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

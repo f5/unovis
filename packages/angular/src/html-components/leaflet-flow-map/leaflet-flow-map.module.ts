@@ -1,3 +1,4 @@
+// !!! This code was automatically generated. You should not change it !!!
 import { NgModule } from '@angular/core'
 import { VisLeafletFlowMapComponent } from './leaflet-flow-map.component'
 
