@@ -16,8 +16,9 @@ const config = {
   favicon: 'img/unovis-pictogram-square.svg',
   organizationName: 'f5', // Usually your GitHub org/user name.
   projectName: 'unovis', // Usually your repo name.
-
-
+  markdown: {
+    mermaid: true,
+  },
   presets: [
     [
       'classic',
@@ -40,7 +41,6 @@ const config = {
       }),
     ],
   ],
-
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
@@ -68,6 +68,11 @@ const config = {
             to: 'releases',
             label: 'Releases',
             position: 'left',
+          },
+          {
+            position: 'left',
+            to: '/contributing/intro',
+            label: 'Contributing',
           },
           {
             href: 'https://github.com/f5/unovis',
@@ -148,6 +153,16 @@ const config = {
     }),
 
   plugins: [
+    '@docusaurus/theme-mermaid',
+    [
+      '@docusaurus/plugin-content-docs',
+      {
+        id: 'contributing',
+        path: 'contributing',
+        routeBasePath: 'contributing',
+        include: ['**/*.md', '**/*.mdx', '../../**.md'],
+      },
+    ],
     [
       'docusaurus-plugin-react-docgen-typescript',
       {
