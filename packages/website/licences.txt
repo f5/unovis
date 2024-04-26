@@ -1,9 +1,10 @@
 name                                       license period  license type  installed version  author
 ----                                       --------------  ------------  -----------------  ------
-@docusaurus/core                           perpetual       MIT           2.4.3              n/a
-@docusaurus/plugin-debug                   perpetual       MIT           2.4.3              n/a
-@docusaurus/plugin-sitemap                 perpetual       MIT           2.4.3              n/a
-@docusaurus/preset-classic                 perpetual       MIT           2.4.3              n/a
+@docusaurus/core                           perpetual       MIT           2.4.1              n/a
+@docusaurus/plugin-debug                   perpetual       MIT           2.4.1              n/a
+@docusaurus/plugin-sitemap                 perpetual       MIT           2.4.1              n/a
+@docusaurus/preset-classic                 perpetual       MIT           2.4.1              n/a
+@docusaurus/theme-mermaid                  perpetual       MIT           2.4.3              n/a
 @mdx-js/react                              perpetual       MIT           1.6.22             John Otander <johnotander@gmail.com> (http://johnotander.com)
 @stackblitz/sdk                            perpetual       MIT           1.8.0              Eric Simons
 clsx                                       perpetual       MIT           1.2.1              Luke Edwards luke.edwards05@gmail.com https://lukeed.com
@@ -14,7 +15,7 @@ react                                      perpetual       n/a           n/a    
 react-docgen-typescript                    perpetual       MIT           1.22.0             n/a
 react-dom                                  perpetual       n/a           n/a                n/a
 react-markdown                             perpetual       MIT           8.0.7              Espen Hovlandsdal <espen@hovlandsdal.com>
-@docusaurus/module-type-aliases            perpetual       MIT           2.4.3              n/a
+@docusaurus/module-type-aliases            perpetual       MIT           2.4.1              n/a
 @tsconfig/docusaurus                       perpetual       MIT           1.0.7              n/a
 raw-loader                                 perpetual       MIT           4.0.2              Tobias Koppers @sokra
 typescript                                 perpetual       Apache-2.0    4.2.4              Microsoft Corp.

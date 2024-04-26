@@ -1,0 +1,47 @@
+---
+title: Getting Started
+sidebar_position: 2
+---
+
+## Requirements
+Minimum requirements: [npm](https://www.npmjs.com/get-npm) (v7 or above)
+and [Node.js](https://nodejs.org/en/download/) (v12 or above).
+
+## Installing Dependencies
+
+Once you clone and open the repo in the IDE of your choice, first install the dependencies:
+
+```bash
+npm install
+```
+
+If any dependency-related issues arise, try a clean install:
+```bash
+npm run install:clean
+```
+
+## Local Development
+### Demo App
+If you're making changes to the core library `@unovis/ts`, we recommend creating at least one example using our local demo app to visually test your changes.
+Add the example to `packages/dev/src/examples` in the appropriate category folder.
+
+To start the development server for the demo app, run the command:
+
+```bash
+npm run dev
+```
+
+### Website
+To start the development server for the website, run the command:
+
+```bash
+npm run website
+```
+
+### Framework Apps
+Each framework wrapper* has a demo app to verify our [gallery](../gallery) examples work as expected.
+To run the app for a specific framework, navigate to that directory within `packages` and run the command:
+
+```bash
+npm run gallery
+```
