@@ -36,10 +36,11 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@docusaurus/core": "^2.4.1",
-    "@docusaurus/plugin-debug": "^2.4.1",
-    "@docusaurus/plugin-sitemap": "^2.4.1",
-    "@docusaurus/preset-classic": "^2.4.1",
+    "@docusaurus/core": "^2.4.3",
+    "@docusaurus/plugin-debug": "^2.4.3",
+    "@docusaurus/plugin-sitemap": "^2.4.3",
+    "@docusaurus/preset-classic": "^2.4.3",
+    "@docusaurus/theme-mermaid": "^2.4.3",
     "@mdx-js/react": "^1.6.21",
     "@stackblitz/sdk": "1.8.0",
     "clsx": "^1.1.1",
@@ -52,7 +53,7 @@
     "react-markdown": "^8.0.1"
   },
   "devDependencies": {
-    "@docusaurus/module-type-aliases": "^2.4.1",
+    "@docusaurus/module-type-aliases": "^2.4.3",
     "@tsconfig/docusaurus": "^1.0.7",
     "raw-loader": "^4.0.2",
     "typescript": "~4.2.4"

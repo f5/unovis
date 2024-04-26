@@ -1,0 +1,250 @@
+---
+title: Architecture
+sidebar_position: 3
+---
+
+## File Structure
+A contents of the Unovis repo is contained in the `packages` directory:
+
+```yaml
+packages
+├── angular # exports @unovis/angular 
+├── dev # dev demo app
+├── react # exports @unovis/react
+├── shared # shared code and integrations
+├── svelte # exports @unovis/svelte
+├── ts # core library; exports @unovis/ts
+├── vue # UI framework wrapper
+├── website # unovis.dev website
+```
+
+
+```mermaid
+%%{init: { "theme": "neutral"  } }%%
+graph LR
+  subgraph root[Root directory]
+    style packages stroke:#333,stroke-width:2px;
+    style wrappers fill:none;
+    subgraph packages["exports @unovis/**"]
+    direction LR
+      subgraph core[Core library]
+        ts[packages/ts]
+      end
+      subgraph wrappers[UI Framework Wrappers]
+        direction TB
+        angular[packages/angular]
+        react[packages/react]
+        svelte[packages/svelte]
+        vue[packages/vue]
+      end
+    end
+    subgraph misc[ ]
+      direction LR
+      style misc stroke: none;
+      subgraph internal[Internal directories]
+        direction LR
+        dev[packages/dev]
+        shared[packages/shared]
+      end
+      subgraph site[Website content]
+        website[packages/website]
+      end
+    end
+  end
+```
+
+## Core Library
+The core library is a collection of **components** and **containers** built with TypeScript.
+These are imported by the wrappers or can be used directly when importing `@unovis/ts`.
+Every entity has a `config` object that is used to configure the component and a `render` method.
+Containers and most components are data-bound, meaning they have a `datamodel` property that is used to render the component.
+
+### Containers
+Containers are the top-level components that contain one or more components.
+They are responsible for rendering its children, and managing the data that is passed to them.
+On the DOM, containers are `<svg>` elements that it renders its children into.
+
+Container configurations generally define size and spacing.
+XYContainers have additional properties to support multiple XY components and align them on the same scale.
+
+```mermaid
+classDiagram
+  class ContainerCore {
+    svg: Selection~SVGSVGElement~
+    element: SVGSVGElement;
+    config: ContainerConfigInterface;
+    constructor(element: HTMLElement);
+    render(duration: number): void;
+  }
+  class ContainerConfigInterface {
+    width: number;
+    height: number;
+    margin; Spacing;
+    padding: Spacing;
+  }
+  class SingleContainer~Data~ {
+    config: SingleContainerConfigInterface~Data~
+    data: Data;
+  }
+  class SingleContainerConfigInterface~Data~ {
+    component: ComponentCore~Data~;
+    tooltip?: Tooltip;
+    annotations?: Annotations;
+  }
+  class XYContainer~Datum~ {
+    config: XYContainerConfigInterface<Datum>;
+    datamodel: SeriesDataModel~Datum~;
+  }
+   class XYContainerConfigInterface~Datum~ {
+    components: XYComponentCore~Datum~[];
+    crosshair?: Crosshair<Datum>;
+    xAxis?: Axis<Datum>;
+    yAxis: Axis<Datum>;
+    annotations?: Annotations;
+    tooltip?: Tooltip;
+    xScale: Scale;
+    yScale: Scale;
+  }
+  ContainerCore -- ContainerConfigInterface : uses
+  SingleContainer -- SingleContainerConfigInterface : uses
+  ContainerCore <|-- SingleContainer : extends
+  ContainerCore <|-- XYContainer : extends
+  ContainerConfigInterface <|-- SingleContainerConfigInterface: extends
+  ContainerConfigInterface <|-- XYContainerConfigInterface: extends
+  XYContainer -- XYContainerConfigInterface : uses
+```
+
+### Components
+Components are generally designed to be rendered as `g` elements inside of a container, but in some cases they will be rendered as `divs`.
+See the [SVG vs. HTML components](./guides/adding-a-component#svg-vs-html-components) section of our component guide for more information.
+
+Like containers, components extend from a common class: `ComponentCore`.
+Some components are XYComponents, which have additional properties to support rendering on an XY scale.
+
+Every component has three shared config properties:
+- `events` - a map of event handlers
+- `attributes` - a map of attributes to apply to specific selectors
+- `duration` - the duration (ms) of data update transitions
+
+Components also have static `selectors` (hashed class names) that are used to bind data to the DOM.
+Users can use them to define events and attributes through the component's config.
+
+```mermaid
+classDiagram
+  class ComponentCore~Data~ {
+    g: Selection~SVGGElement|HTMLElement~
+    config: ConfigInterface;
+    static selectors;
+    datamodel: CoreDataModel~Data~;
+    constructor(type = ComponentType.SVG);
+    render(duration: number): void;
+    _bindEvents(): void;
+  }
+  class ComponentConfigInterface {
+    attributes: Map;
+    events: &lcub; [selector: string]: Events &rcub;
+    duration: number;
+  }
+  class XYComponentConfigInterface~Datum~ {
+    x: NumericAccessor~Datum~;
+    y: NumericAccessor~Datum~;
+    xScale: ContinousScale;
+    yScale: ContinuousScale;
+    excludeFromDomainCalculation: boolean;
+  }
+  class XYComponent~Datum~ {
+    g: Selection~SVGGElement~;
+    config: XYConfigInterface;
+    datamodel: SeriesDataModel~Datum~;
+    stacked: boolean;
+    getDataExtent(): number[];
+  }
+  ComponentCore --> ComponentConfigInterface: uses
+  ComponentCore <|-- XYComponent: extends
+  XYComponent --> XYComponentConfigInterface: uses
+  ComponentConfigInterface <|-- XYComponentConfigInterface: extends
+```
+
+
+
+### Data Models
+Each data-bound component has a specific data model that it expects to receive:
+
+- _SeriesDataModel_ - for an array of any type
+- _GraphDataModel_ - for nodes and links
+- _MapDataModel_ - used by map components and contain points and sometimes links or areas
+
+```mermaid
+classDiagram
+   class CoreDataModel~T~ {
+    data: T;
+    get data(): typeof data
+    set data(data: T): void;
+    }
+    class SeriesDataModel~T~ {
+        data: T[];
+    }
+    class GraphDataModel~N,L~ {
+      nodes: N[];
+      links: L[];
+      get data(): &lcub; nodes, links &rcub;
+    }
+    class MapDataModel~Area,Points,Link~ {
+      areas?: Area[];
+      points?: Points[];
+      links?: Link[];
+      get data(): &lcub; areas, points, links &rcub;
+    }
+    CoreDataModel <|-- SeriesDataModel: extends
+    CoreDataModel <|-- GraphDataModel: extends
+    CoreDataModel <|-- MapDataModel: extends
+```
+
+### Summary
+
+```mermaid
+classDiagram
+    class ContainerCore {
+    svg: Selection~SVGSVGElement~;
+    config: ContainerConfigInterface;
+    constructor(element: HTMLElement);
+    render(duration: number): void;
+  }
+  class SingleContainer~Data~ {
+    component: ComponentCore~Data~;
+    config: SingleContainerConfigInterface;
+    data: CoreDataModel~Data~;
+  }
+  class ComponentCore~Datum,ConfigInterface~ {
+      g: Selection~SVGGElement~;
+      datamodel: CoreDataModel~Datum~;
+      config: ConfigInterface;
+  }
+  class SVGComponent {
+      g: Selection~SVGGElement~;
+  }
+  class HTMLComponent {
+      g: Selection~HTMLElement~;
+  }
+  class XYContainer~Datum~ {
+    components: XYComponent[];
+    datamodel: SeriesDataModel~Datum~;
+  }
+  class XYComponent~Datum,ConfigInterface~ {
+      datamodel: SeriesDataModel~Datum~;
+      config: XYComponentConfigInterface;
+      xScale: ContinuousScale;
+      yScale: ContinuousScale;
+  }
+
+  ContainerCore <|-- SingleContainer: extends
+  ContainerCore <|-- XYContainer: extends
+  XYContainer --* XYComponent: contains
+  SingleContainer --* SVGComponent: contains
+
+  ComponentCore <.. SVGComponent: instance of
+  ComponentCore <.. HTMLComponent: instance of
+
+  SVGComponent <|-- XYComponent: extends
+
+```
