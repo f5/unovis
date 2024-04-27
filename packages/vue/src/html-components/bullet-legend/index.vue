@@ -20,7 +20,7 @@ const elRef = ref<HTMLDivElement>()
 onMounted(() => {
   nextTick(() => {
     if(elRef.value)
-    component.value = new BulletLegend(elRef.value, config.value)
+    component.value = new BulletLegend(elRef.value, { ...config.value, renderIntoProvidedDomNode: true })
     
     
   })

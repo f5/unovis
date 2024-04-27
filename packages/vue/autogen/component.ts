@@ -15,7 +15,9 @@ export function getComponentCode (
   const genericsStr = generics ? `<${generics?.map(g => g.name).join(', ')}>` : ''
   const propDefs = dataType ? ['const data = computed(() => accessor.data.value ?? props.data)'] : []
   const componentType = [componentName, genericsStr].join('')
-  const componentInit = `${componentType}(${isStandAlone ? `elRef.value, config.value${dataType ? ', data.value' : ''}` : 'config.value'})`
+  const constructorArgs = isStandAlone
+    ? `elRef.value, ${componentName === 'BulletLegend' ? '{ ...config.value, renderIntoProvidedDomNode: true }' : 'config.value'}${dataType ? ', data.value' : ''}`
+    : 'config.value'
 
   // Vue 3.3.4 has issue resolving complex Typescript, in this case when the type has `WithOptional`.
   // If the build is failing, add the respective component here.
@@ -43,7 +45,7 @@ ${isStandAlone ? 'const elRef = ref<HTMLDivElement>()' : ''}
 
 onMounted(() => {
   nextTick(() => {
-    ${isStandAlone ? 'if(elRef.value)\n    ' : ''}component.value = new ${componentInit}
+    ${isStandAlone ? 'if(elRef.value)\n    ' : ''}component.value = new ${componentType}(${constructorArgs})
     ${propDefs?.length && !isStandAlone ? 'component.value?.setData(data.value)' : ''}
     ${isStandAlone ? '' : 'accessor.update(component.value)'}
   })
