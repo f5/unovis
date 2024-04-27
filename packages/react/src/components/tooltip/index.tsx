@@ -13,7 +13,6 @@ export type VisTooltipRef = {
 }
 
 export type VisTooltipProps = TooltipConfigInterface & {
-  data?: null;
   ref?: Ref<VisTooltipRef>;
 }
 

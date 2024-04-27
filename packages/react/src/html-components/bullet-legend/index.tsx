@@ -10,7 +10,6 @@ export type VisBulletLegendRef = {
 }
 
 export type VisBulletLegendProps = BulletLegendConfigInterface & {
-  data?: null;
   ref?: Ref<VisBulletLegendRef>;
   className?: string;
 }

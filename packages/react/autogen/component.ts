@@ -14,6 +14,10 @@ export function getComponentCode (
     : ''
   const componentType = `${componentName}${genericsStr}`
   const refType = isStandAlone ? 'HTMLDivElement' : `VisComponentElement<${componentType}>`
+  const elementDef = `ref.current as ${refType}`
+  const initProps = componentName === 'BulletLegend'
+    ? '{ ...props, renderIntoProvidedDomNode: true }'
+    : 'props'
   const onDestroy = isStandAlone ? 'c?.destroy()' : `{
     componentRef.current = undefined
     c.destroy()
@@ -29,8 +33,7 @@ export type Vis${componentName}Ref${genericsDefStr} = {
     component?: ${componentType};
 }
 
-export type Vis${componentName}Props${genericsDefStr} = ${componentName}ConfigInterface${genericsStr} & {
-  data?: ${dataType};
+export type Vis${componentName}Props${genericsDefStr} = ${componentName}ConfigInterface${genericsStr} & {${dataType ? `\n  data?: ${dataType};` : ''}
   ref?: Ref<Vis${componentName}Ref${genericsStr}>;${isStandAlone ? '\nclassName?: string;' : ''}
 }
 
@@ -44,11 +47,10 @@ function Vis${componentName}FC${genericsDefStr} (props: Vis${componentName}Props
   // On Mount
   useEffect(() => {
     ${(isStandAlone ? [
-    `const c = new ${componentType}(ref.current as HTMLDivElement, props${dataType ? ', props.data' : ''})`,
+    `const c = new ${componentType}(${elementDef}, ${initProps}${dataType ? ', props.data' : ''})`,
     'setComponent(c)',
-  ] : [
-    `const element = (ref.current as VisComponentElement<${componentType}>)\n`,
-    `const c = new ${componentType}(props)`,
+  ] : [`const element = (${elementDef})\n`,
+    `const c = new ${componentType}(${initProps})`,
     'componentRef.current = c',
     'element.__component__ = c',
   ]).join('\n  ')}
@@ -63,7 +65,7 @@ function Vis${componentName}FC${genericsDefStr} (props: Vis${componentName}Props
     component?.${componentName === 'BulletLegend' ? 'update ' : 'setConfig'}(props)
   })
 
-  useImperativeHandle(fRef, () => ({ get component () { return component${isStandAlone ? '' : 'ref.current'} } }), [])
+  useImperativeHandle(fRef, () => ({ get component () { return ${isStandAlone ? 'component' : 'componentRef.current'} } }), [])
   return <${isStandAlone ? 'div className={props.className}' : `vis-${elementSuffix}`} ref={ref} />
 }
 

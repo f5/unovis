@@ -46,7 +46,7 @@ export function getComponentCode (
     styles: ['.${kebabCaseName ?? kebabCase(componentName)}-container { ${styles?.join('; ')} }']`
     : 'template: \'\''
   const constructorArgs = isStandAlone
-    ? `this.containerRef.nativeElement, this.getConfig()${dataType ? ', this.data' : ''}`
+    ? `this.containerRef.nativeElement, ${componentName === 'BulletLegend' ? '{ ...this.getConfig(), renderIntoProvidedDomNode: true }' : 'this.getConfig()'}${dataType ? ', this.data' : ''}`
     : 'this.getConfig()'
   // Override the default generic with specified type from generics array
   return `// !!! This code was automatically generated. You should not change it !!!

@@ -1,6 +1,13 @@
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges, ViewChild, ElementRef } from '@angular/core'
-import { BulletLegend, BulletLegendConfigInterface, BulletLegendItemInterface, GenericAccessor, BulletShape } from '@unovis/ts'
+import {
+  BulletLegend,
+  BulletLegendConfigInterface,
+  BulletLegendItemInterface,
+  GenericAccessor,
+  BulletShape,
+  BulletLegendOrientation,
+} from '@unovis/ts'
 import { VisGenericComponent } from '../../core'
 
 @Component({
@@ -45,10 +52,14 @@ export class VisBulletLegendComponent implements BulletLegendConfigInterface, Af
   /** Bullet shape enum value or accessor function. Default: `d => d.shape ?? BulletShape.Circle */
   @Input() bulletShape?: GenericAccessor<BulletShape, BulletLegendItemInterface>
 
+  /** Legend orientation. When set to `BulletLegendOrientation.Vertical`, each legend item will
+   * start on a new line. Default: `BulletLegendOrientation.Horizontal` */
+  @Input() orientation?: BulletLegendOrientation | string
+
   component: BulletLegend | undefined
 
   ngAfterViewInit (): void {
-    this.component = new BulletLegend(this.containerRef.nativeElement, this.getConfig())
+    this.component = new BulletLegend(this.containerRef.nativeElement, { ...this.getConfig(), renderIntoProvidedDomNode: true })
   }
 
   ngOnChanges (changes: SimpleChanges): void {
@@ -56,8 +67,8 @@ export class VisBulletLegendComponent implements BulletLegendConfigInterface, Af
   }
 
   private getConfig (): BulletLegendConfigInterface {
-    const { items, labelClassName, onLegendItemClick, labelFontSize, labelMaxWidth, bulletSize, bulletShape } = this
-    const config = { items, labelClassName, onLegendItemClick, labelFontSize, labelMaxWidth, bulletSize, bulletShape }
+    const { items, labelClassName, onLegendItemClick, labelFontSize, labelMaxWidth, bulletSize, bulletShape, orientation } = this
+    const config = { items, labelClassName, onLegendItemClick, labelFontSize, labelMaxWidth, bulletSize, bulletShape, orientation }
     const keys = Object.keys(config) as (keyof BulletLegendConfigInterface)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

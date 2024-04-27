@@ -16,8 +16,10 @@ import { getModuleCode } from './module'
 
 const components = getComponentList() as AngularComponentInput[]
 
+const skipProperties = ['renderIntoProvidedDomNode']
+
 for (const component of components) {
-  const { configProperties, configInterfaceMembers, generics, statements } = getConfigSummary(component, [], false)
+  const { configProperties, configInterfaceMembers, generics, statements } = getConfigSummary(component, skipProperties, false)
   const importStatements = getImportStatements(component.name, statements, configInterfaceMembers, generics, component.isStandAlone ? [] : ['ContainerCore'])
 
   const componentCode = getComponentCode(

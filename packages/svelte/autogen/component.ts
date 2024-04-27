@@ -16,8 +16,10 @@ export function getComponentCode (
   const props = requiredProps.map(c => `export let ${c.name}: ${c.type}`)
   const propDefs = dataType ? [`export let data: ${dataType} = undefined`, ...props] : props
   const componentType = [componentName, genericsStr].join('')
-  const componentInit = `${componentType}(${isStandAlone ? `ref, config${dataType ? ', data' : ''}` : 'config'})`
-  const lifecycleMethod = ['onMount(() => {', `component = new ${componentInit}`, 'return () => component?.destroy()', '})'].join('\n    ')
+  const constructorArgs = isStandAlone
+    ? `ref, ${componentName === 'BulletLegend' ? '{ ...config, renderIntoProvidedDomNode: true }' : 'config'}${dataType ? ', data' : ''}`
+    : 'config'
+  const lifecycleMethod = ['onMount(() => {', `component = new ${componentType}(${constructorArgs})`, 'return () => component?.destroy()', '})'].join('\n    ')
   return `<script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
   ${importStatements.map(s => `import { ${s.elements.join(', ')} } from '${s.source}'`).join('\n  ')}

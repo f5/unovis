@@ -13,7 +13,6 @@ export type VisAnnotationsRef = {
 }
 
 export type VisAnnotationsProps = AnnotationsConfigInterface & {
-  data?: null;
   ref?: Ref<VisAnnotationsRef>;
 }
 

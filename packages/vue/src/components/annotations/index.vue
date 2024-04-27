@@ -8,7 +8,7 @@ import { annotationsAccessorKey } from '../../utils/context'
 const accessor = inject(annotationsAccessorKey)
 
 // data and required props 
-interface Props extends  AnnotationsConfigInterface { }
+type Props = AnnotationsConfigInterface
 const props = defineProps<Props & { data?: null }>()
 
 
@@ -42,6 +42,10 @@ watch(config, (curr, prev) => {
 defineExpose({
   component
 })
+</script>
+
+<script lang="ts">
+export const VisAnnotationsSelectors = Annotations.selectors
 </script>
 
 <template>
