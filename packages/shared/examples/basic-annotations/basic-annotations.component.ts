@@ -94,6 +94,6 @@ export class BasicAnnotationsComponent implements OnInit {
   date = (d: DataRecord): Date => d.weekStart
   price = (d: DataRecord): number => d.price
   volume = (d: DataRecord): number => d.volume / 1000000000
-  yearTickFormat = (x: Date): string => x.getFullYear().toString()
+  yearTickFormat = (x: Date): string => x.getFullYear?.().toString()
   priceTickFormat = (y: number): string => `$${y}`
 }

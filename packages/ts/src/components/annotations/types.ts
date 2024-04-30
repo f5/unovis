@@ -1,7 +1,8 @@
 import { LengthUnit } from 'types/misc'
-import { UnovisText, UnovisTextFrameOptions } from 'types/text'
+import { UnovisText, UnovisTextOptions } from 'types/text'
 
-export type AnnotationItem = UnovisTextFrameOptions & {
+
+export type AnnotationItem = Omit<UnovisTextOptions, 'x'|'y'|'width'> & {
   content: string | UnovisText | UnovisText[];
   subject?: AnnotationSubject;
   x?: LengthUnit;

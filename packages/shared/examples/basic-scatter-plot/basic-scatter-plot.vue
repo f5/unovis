@@ -1,6 +1,6 @@
 <script lang="ts">
 import type { NumericAccessor, StringAccessor } from '@unovis/ts'
-import { VisXYContainer, VisScatter, VisAxis, VisBulletLegend } from '@unovis/svelte'
+import { VisXYContainer, VisScatter, VisAxis, VisBulletLegend } from '@unovis/vue'
 import { data, DataRecord } from './data'
 
 const legendItems = [
