@@ -94,9 +94,9 @@
 </script>
 
 <VisXYContainer {data} {xScale} {yScale} yDomain={[0.05, 100000]} height={600}>
-  <VisLine {date} {price} />
+  <VisLine x={date} y={price} />
   <VisStackedBar color="#aaa3" {date} {volume} />
-  <VisAxis type="x" numTicks={5} tickFormat={x => x.getFullYear()?.toString()} />
+  <VisAxis type="x" numTicks={5} tickFormat={x => x.getFullYear?.()} />
   <VisAxis type="y" numTicks={5} tickFormat={y => `$${y}`} />
-  <VisAnnotations {annotations} />
+  <VisAnnotations items={annotations} />
 </VisXYContainer>

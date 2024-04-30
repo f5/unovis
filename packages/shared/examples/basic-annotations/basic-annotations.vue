@@ -6,6 +6,12 @@ import { data, DataRecord } from './data';
 const xScale = Scale.scaleTime()
 const yScale = Scale.scaleLog().clamp(true)
 
+// Annotation points
+const peak2011Datum = data[47]
+const peak2013Datum = data[176]
+const peak2017Datum = data[387]
+const peak2021Datum = data[591]
+
 const annotations = [
   {
     x: '50%',
@@ -35,8 +41,8 @@ const annotations = [
     width: 100,
     content: 'First peak, June 2011',
     subject: {
-      x: xScale(data[47].weekStart),
-      y: yScale(data[47].price),
+      x: () => xScale(peak2011Datum.weekStart),
+      y: () => yScale(peak2011Datum.price),
       connectorLineStrokeDasharray: '2 2',
       radius: 6,
     },
@@ -47,8 +53,8 @@ const annotations = [
     width: 100,
     content: 'Second peak, November 2013',
     subject: {
-      x: xScale(data[176].weekStart),
-      y: yScale(data[176].price),
+      x: () => xScale(peak2013Datum.weekStart),
+      y: () => yScale(peak2013Datum.price),
       connectorLineStrokeDasharray: '2 2',
       radius: 6,
     },
@@ -59,8 +65,8 @@ const annotations = [
     width: 100,
     content: 'Third peak, December 2017',
     subject: {
-      x: xScale(data[387].weekStart),
-      y: yScale(data[387].price),
+      x: () => xScale(peak2017Datum.weekStart),
+      y: () => yScale(peak2017Datum.price),
       connectorLineStrokeDasharray: '2 2',
       radius: 6,
     },
@@ -71,8 +77,8 @@ const annotations = [
     width: 100,
     content: 'Fourth peak, October 2021',
     subject: {
-      x: xScale(data[591].weekStart),
-      y: yScale(data[591].price),
+      x: () => xScale(peak2021Datum.weekStart),
+      y: () => yScale(peak2021Datum.price),
       connectorLineStrokeDasharray: '2 2',
       radius: 6,
     },
@@ -83,7 +89,7 @@ const date = (d: DataRecord) => d.weekStart
 const price = (d: DataRecord) => d.price
 const volume = (d: DataRecord) => d.volume / 1000000000
 
-const yearTickFormat = (x: Date) => x.getFullYear().toString()
+const yearTickFormat = (x: Date) => x.getFullYear?.().toString()
 const priceTickFormat = (y: number) => `$${y}`
 </script>
 
