@@ -1,5 +1,6 @@
 <script>
   const imports = [
+    () => import('@unovis/shared/examples/dual-axis-chart/dual-axis-chart.svelte'),
     () => import('@unovis/shared/examples/step-area-chart/step-area-chart.svelte'),
     () => import('@unovis/shared/examples/baseline-area-chart/baseline-area-chart.svelte'),
     () => import('@unovis/shared/examples/non-stacked-area-chart/non-stacked-area-chart.svelte'),

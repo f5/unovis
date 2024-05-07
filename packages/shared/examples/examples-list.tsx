@@ -76,6 +76,13 @@ export const examples: ExampleCollection[] = [
     ],
   },
   {
+    title: 'Composite Charts',
+    description: '',
+    examples: [
+      require('./dual-axis-chart').default,
+    ],
+  },
+  {
     title: 'Auxiliary Components',
     description: 'Annotations, Brushes, Tooltips and more',
     examples: [
