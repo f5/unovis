@@ -1,11 +1,35 @@
-<vis-bullet-legend [items]="legendItems"></vis-bullet-legend>
-<vis-xy-container [data]="data" [height]="500">
-    <vis-area [x]="x" [y]="y" [baseline]="baseline" [curveType]="curveType"></vis-area>
-    <vis-axis type="x" label="Year"></vis-axis>
-    <vis-axis
-      type="y"
-      label="Number of Mentions"
-      [tickValues]="tickValues"
-      [tickFormat]="tickFormat"
-    ></vis-axis>
+<vis-xy-container
+  [data]="data"
+  [margin]="margin"
+  [autoMargin]="false"
+  [width]="'100%'"
+  [height]="'40vh'"
+>
+  <vis-area [x]="chartX" [y]="chartAY" opacity="0.9" color='#FF6B7E'/>
+  <vis-axis type='x' [numTicks]="3" [tickFormat]="xTicks" label="Time"/>
+  <vis-axis type='y'
+    [tickFormat]="chartAYTicks"
+    [tickTextWidth]="60"
+    [tickTextColor]="'#FF6B7E'"
+    [labelColor]="'#FF6B7E'"
+    label="Traffic"
+  />
+  </vis-xy-container>
+<vis-xy-container
+  [data]="data"
+  [yDomain]="[0, 150]"
+  [margin]="margin"
+  [autoMargin]="false"
+  [style]="style"
+>
+  <vis-line [x]="chartX" [y]="chartBY"/>
+  <vis-axis
+    type="y"
+    [position]="'right'"
+    [tickFormat]="chartBYTicks"
+    [gridLine]="false"
+    [tickTextColor]="'#4D8CFD'"
+    [labelColor]="'#4D8CFD'"
+    label="Signal Strength"
+  />
 </vis-xy-container>

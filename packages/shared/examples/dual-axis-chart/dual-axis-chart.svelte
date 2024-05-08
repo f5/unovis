@@ -22,7 +22,7 @@
     width= {'100%'}
     height= {'40vh'}
   >
-    <VisArea x={chartX} y={chartAY} opacity={0.9} color={'#FF6B7E'}/>
+    <VisArea x={chartX} y={chartAY} opacity={0.9} color={'#FF6B7E'} />
     <VisAxis type='x' numTicks={3} tickFormat={xTicks} label='Time'/>
     <VisAxis type='y'
       tickFormat={chartAYTicks}
@@ -41,7 +41,7 @@
     height= {'40vh'}
     class={'chartContainer'}
   >
-    <VisLine x={chartX} y={chartBY}/>
+    <VisLine x={chartX} y={chartBY} />
     <VisAxis
       type='y'
       position={'right'}
