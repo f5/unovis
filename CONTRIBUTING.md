@@ -1,11 +1,11 @@
 # Contributing to _Unovis_
 
-We want to make contributing to this project as easy and transparent.
+We want to make contributing to this project as easy and transparent as possible.
 
 ## Code of Conduct
 
 F5 has adopted a Code of Conduct that we expect project participants to adhere
-to. Please read [the full text](CODE_OF_CONDUCT.md) so that you can understand
+to. Please read [the full text](https://github.com/f5/unovis/blob/main/CODE_OF_CONDUCT.md) so that you can understand
 what actions will and will not be tolerated.
 
 ## Our Development Process
@@ -21,7 +21,7 @@ More details coming soon, stay tuned!
 ## Pull Requests
 We actively welcome pull requests. If you want to submit one, please follow the following process:
 
-1. Fork the repo and create your branch from `develop`;
+1. Fork the repo and create your branch from `main`;
 2. If you've added a new feature, changed the configuration or public methods, please update the docs;
 3. Make sure your code lints;
 4. Submit your PR!
