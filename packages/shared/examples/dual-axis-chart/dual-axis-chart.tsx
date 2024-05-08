@@ -14,8 +14,8 @@ export default function component (): JSX.Element {
       width= {'100%'}
       height= {'40vh'}
     >
-      <VisArea<XYDataRecord> x={d => d.x} y={(d: XYDataRecord, i: number) => i * (d.y || 0)} opacity={0.9} color='#FF6B7E'/>
-      <VisAxis type='x' numTicks={3} tickFormat={(x: number) => `${x}ms`} label='Time'/>
+      <VisArea<XYDataRecord> x={d => d.x} y={(d: XYDataRecord, i: number) => i * (d.y || 0)} opacity={0.9} color='#FF6B7E' />
+      <VisAxis type='x' numTicks={3} tickFormat={(x: number) => `${x}ms`} label='Time' />
       <VisAxis type='y'
         tickFormat={(y: number) => `${y}bps`}
         tickTextWidth={60}
@@ -31,7 +31,7 @@ export default function component (): JSX.Element {
       autoMargin={false}
       style={style}
     >
-      <VisLine<XYDataRecord> x={d => d.x} y={d => 20 + 10 * (d.y2 || 0)}/>
+      <VisLine<XYDataRecord> x={d => d.x} y={d => 20 + 10 * (d.y2 || 0)} />
       <VisAxis
         type='y'
         position={'right'}
