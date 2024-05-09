@@ -1,0 +1,27 @@
+<vis-xy-container
+  [height]="height"
+>
+  <vis-bullet-legend [items]="legendItems"></vis-bullet-legend>
+  <vis-line [x]="xLine" [y]="yLine" [data]="lineData" [color]="'grey'" />
+  <vis-scatter
+    [data]="data"
+    [x]="xWomen"
+    [y]="y"
+    [color]="'#FF6B7E'"
+    [size]="10"
+  ></vis-scatter>
+  <vis-scatter
+    [data]="data"
+    [x]="xMen"
+    [y]="y"
+    [color]="'#4D8CFD'"
+    [size]="10"
+  ></vis-scatter>
+  <vis-axis type='x' [numTicks]="5" label="Yearly Salary"/>
+  <vis-axis type='y'
+    [tickFormat]="tickFormat"
+    [numTicks]="tickNumber"
+    [gridLine]="false"
+  />
+  <vis-tooltip [triggers]="tooltipTriggers"></vis-tooltip>
+</vis-xy-container>
