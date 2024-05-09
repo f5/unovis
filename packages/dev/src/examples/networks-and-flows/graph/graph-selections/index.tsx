@@ -7,16 +7,20 @@ export const title = 'Graph: Node Selection'
 export const subTitle = 'Select Node on Click'
 
 export const component = (): JSX.Element => {
-  const data = useMemo(() => generateNodeLinkData(), [])
+  const data = useMemo(() => generateNodeLinkData(50), [])
   const ref = useRef<VisGraphRef<NodeDatum, LinkDatum>>(null)
-  const [selectedNode, setSelectedNode] = useState<string | undefined>()
+  const [selectedNodes, setSelectedNodes] = useState<string[] | undefined>()
   const [text, setText] = useState<string>()
 
+  const selectNode = useCallback((n: NodeDatum) => {
+    setSelectedNodes([...selectedNodes ?? [], n.id])
+  }, [selectedNodes])
+
   useEffect(() => {
-    const external = selectedNode ?? 'undefined'
-    const internal = ref.current?.component?.config.selectedNodeId ?? 'undefined'
-    setText([external, internal].join(' / '))
-  }, [selectedNode])
+    const external = selectedNodes ?? 'undefined'
+    const internal = ref.current?.component?.selectedNodes ?? 'undefined'
+    setText([external, internal].join(' | '))
+  }, [selectedNodes])
 
   return (
     <>
@@ -31,13 +35,14 @@ export const component = (): JSX.Element => {
           nodeIcon={useCallback((n: NodeDatum) => n.id, [])}
           events={useMemo(() => ({
             [Graph.selectors.node]: {
-              click: (n: NodeDatum) => { setSelectedNode(n.id) },
+              click: (n: NodeDatum) => { selectNode(n) },
             },
             [Graph.selectors.background]: {
-              click: () => { setSelectedNode(undefined) },
+              click: () => { setSelectedNodes(undefined) },
             },
-          }), [])}
-          selectedNodeId={selectedNode}
+          }), [selectedNodes])}
+          // selectedNodeId={'1'}
+          selectedNodeIds={selectedNodes}
         />
       </VisSingleContainer>
 

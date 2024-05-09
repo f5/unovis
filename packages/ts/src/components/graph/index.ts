@@ -72,7 +72,7 @@ export class Graph<
   protected _defaultConfig = GraphDefaultConfig as unknown as GraphConfigInterface<N, L>
   public config: GraphConfigInterface<N, L> = this._defaultConfig
   datamodel: GraphDataModel<N, L, GraphNode<N, L>, GraphLink<N, L>> = new GraphDataModel()
-  private _selectedNode: GraphNode<N, L>
+  private _selectedNodes: GraphNode<N, L>[]
   private _selectedLink: GraphLink<N, L>
 
   private _graphGroup: Selection<SVGGElement, unknown, SVGGElement, undefined>
@@ -116,7 +116,11 @@ export class Graph<
   }
 
   public get selectedNode (): GraphNode<N, L> {
-    return this._selectedNode
+    return this._selectedNodes?.[0]
+  }
+
+  public get selectedNodes (): GraphNode<N, L>[] {
+    return this._selectedNodes
   }
 
   public get selectedLink (): GraphLink<N, L> {
@@ -212,9 +216,10 @@ export class Graph<
 
       // Select Links / Nodes
       this._resetSelection()
-      if (this.config.selectedNodeId) {
-        const selectedNode = datamodel.nodes.find(node => node.id === this.config.selectedNodeId)
-        this._selectNode(selectedNode)
+      if (this.config.selectedNodeId || this.config.selectedNodeIds) {
+        const selectedIds = this.config.selectedNodeIds ?? [this.config.selectedNodeId]
+        const selectedNodes = selectedIds.map(id => datamodel.getNodeFromId(id))
+        this._selectNodes(selectedNodes)
       }
 
       if (this.config.selectedLinkId) {
@@ -446,22 +451,8 @@ export class Graph<
   }
 
   private _selectNode (node: GraphNode<N, L>): void {
-    const { datamodel: { nodes, links } } = this
+    const { datamodel: { links } } = this
     if (!node) console.warn('Unovis | Graph: Select Node: Not found')
-    this._selectedNode = node
-
-    // Apply grey out
-    // Grey out all nodes
-    nodes.forEach(n => {
-      n._state.selected = false
-      n._state.greyout = true
-    })
-
-    // Grey out all links
-    links.forEach(l => {
-      l._state.greyout = true
-      l._state.selected = false
-    })
 
     // Highlight selected
     if (node) {
@@ -477,6 +468,28 @@ export class Graph<
         l._state.greyout = false
       })
     }
+
+    this._updateSelectedElements()
+  }
+
+  private _selectNodes (nodes: GraphNode<N, L>[]): void {
+    // Apply grey out
+    // Grey out all nodes
+    this.datamodel.nodes.forEach(n => {
+      n._state.selected = false
+      n._state.greyout = true
+    })
+
+    // Grey out all links
+    this.datamodel.links.forEach(l => {
+      l._state.greyout = true
+      l._state.selected = false
+    })
+
+    nodes.forEach(n => {
+      this._selectedNodes.push(n)
+      this._selectNode(n)
+    })
 
     this._updateSelectedElements()
   }
@@ -519,7 +532,7 @@ export class Graph<
 
   private _resetSelection (): void {
     const { datamodel: { nodes, links } } = this
-    this._selectedNode = undefined
+    this._selectedNodes = []
     this._selectedLink = undefined
 
     // Disable Grayout
