@@ -193,6 +193,8 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   nodeExitScale?: NumericAccessor<N> | undefined;
   /** Set selected node by unique id. Default: `undefined` */
   selectedNodeId?: number | string;
+  /** Set selected nodes by unique id. Default: `undefined` */
+  selectedNodeIds?: number[] | string[];
 
   /** Panels configuration. An array of `GraphPanelConfig` objects. Default: `[]` */
   panels?: GraphPanelConfig[] | undefined;
@@ -291,6 +293,7 @@ export const GraphDefaultConfig: GraphConfigInterface<GraphInputNode, GraphInput
   nodeSort: undefined,
 
   selectedNodeId: undefined,
+  selectedNodeIds: undefined,
   panels: undefined,
 
   onNodeDragStart: undefined,

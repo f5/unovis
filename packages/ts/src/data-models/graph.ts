@@ -22,11 +22,16 @@ export class GraphDataModel<
   private _nodes: OutNode[] = []
   private _links: OutLink[] = []
   private _inputNodesMap = new Map<OutNode, N>()
+  private _nodeIds = new Map<string | number, OutNode>()
 
   // Model configuration
   public nodeId: ((n: N) => string | undefined) = n => (isString(n.id) || isFinite(n.id as number)) ? `${n.id}` : undefined
   public linkId: ((n: L) => string | undefined) = l => (isString(l.id) || isFinite(l.id as number)) ? `${l.id}` : undefined
   public nodeSort: ((a: N, b: N) => number)
+
+  public getNodeFromId (id: string | number): OutNode {
+    return this._nodeIds.get(id)
+  }
 
   get data (): GraphData<N, L> {
     return this._data
@@ -39,6 +44,7 @@ export class GraphDataModel<
     const prevLinks = this.links
 
     this._inputNodesMap.clear()
+    this._nodeIds.clear()
     const nodes = cloneDeep(inputData?.nodes ?? []) as OutNode[]
     const links = cloneDeep(inputData?.links ?? []) as OutLink[]
 
@@ -52,6 +58,7 @@ export class GraphDataModel<
       node._index = i
       node._id = this.nodeId(node) || `${i}`
       this._inputNodesMap.set(node, inputData.nodes[i])
+      this._nodeIds.set(node._id, node)
     })
 
     // Sort nodes
