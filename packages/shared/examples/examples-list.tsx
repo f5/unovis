@@ -80,6 +80,7 @@ export const examples: ExampleCollection[] = [
     description: '',
     examples: [
       require('./dual-axis-chart').default,
+      require('./range-plot').default,
     ],
   },
   {
