@@ -22,13 +22,13 @@
     width= {'100%'}
     height= {'40vh'}
   >
-    <VisArea x={chartX} y={chartAY} opacity={0.9} color={'#FF6B7E'} />
+    <VisArea x={chartX} y={chartAY} opacity={0.9} />
     <VisAxis type='x' numTicks={3} tickFormat={xTicks} label='Time'/>
     <VisAxis type='y'
       tickFormat={chartAYTicks}
       tickTextWidth={60}
-      tickTextColor={'#FF6B7E'}
-      labelColor={'#FF6B7E'}
+      tickTextColor={'#4D8CFD'}
+      labelColor={'#4D8CFD'}
       label='Traffic'
     />
   </VisXYContainer>
@@ -41,14 +41,11 @@
     height= {'40vh'}
     class={'chartContainer'}
   >
-    <VisLine x={chartX} y={chartBY} />
+    <VisLine x={chartX} y={chartBY} color={'#FF6B7E'} />
     <VisAxis
-      type='y'
-      position={'right'}
-      tickFormat={chartBYTicks}
       gridLine={false}
-      tickTextColor={'#4D8CFD'}
-      labelColor={'#4D8CFD'}
+      tickTextColor={'#FF6B7E'}
+      labelColor={'#FF6B7E'}
       label='Signal Strength'
     />
   </VisXYContainer>
