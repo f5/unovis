@@ -17,12 +17,12 @@ const area = new Area<XYDataRecord>({
   x: (d: XYDataRecord) => d.x,
   y: (d: XYDataRecord, i: number) => i * (d.y || 0),
   opacity: 0.9,
-  color: '#FF6B7E',
 })
 
 const line = new Line<XYDataRecord>({
   x: (d: XYDataRecord) => d.x,
   y: (d: XYDataRecord, i: number) => 20 + 10 * (d.y2 || 0),
+  color: '#FF6B7E',
 })
 
 // Container
@@ -38,8 +38,8 @@ const chartA = new XYContainer(chartAContainer, {
     label: 'Traffic',
     tickFormat: (y: number) => `${y}bps`,
     tickTextWidth: 60,
-    tickTextColor: '#FF6B7E',
-    labelColor: '#FF6B7E',
+    tickTextColor: '#4D8CFD',
+    labelColor: '#4D8CFD',
   }),
 }, generateXYDataRecords(150))
 
@@ -52,8 +52,8 @@ const chartB = new XYContainer(chartBContainer, {
     position: 'right',
     tickFormat: (y: number) => `${y}db`,
     gridLine: false,
-    tickTextColor: '#4D8CFD',
-    labelColor: '#4D8CFD',
+    tickTextColor: '#FF6B7E',
+    labelColor: '#FF6B7E',
     label: 'Signal Strength',
   }),
 }, generateXYDataRecords(150))

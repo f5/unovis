@@ -5,7 +5,7 @@
   [width]="'100%'"
   [height]="'40vh'"
 >
-  <vis-area [x]="chartX" [y]="chartAY" opacity="0.9" color='#FF6B7E'/>
+  <vis-area [x]="chartX" [y]="chartAY" opacity="0.9" />
   <vis-axis type='x' [numTicks]="3" [tickFormat]="xTicks" label="Time"/>
   <vis-axis type='y'
     [tickFormat]="chartAYTicks"
@@ -22,7 +22,7 @@
   [autoMargin]="false"
   [style]="style"
 >
-  <vis-line [x]="chartX" [y]="chartBY"/>
+  <vis-line [x]="chartX" [y]="chartBY" color='#FF6B7E' />
   <vis-axis
     type="y"
     [position]="'right'"
