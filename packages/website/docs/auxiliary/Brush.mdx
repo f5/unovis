@@ -3,6 +3,7 @@ import BrowserOnly from '@docusaurus/BrowserOnly'
 import { PropsTable } from '@site/src/components/PropsTable'
 import { generateDataRecords } from '../utils/data'
 import { XYWrapper, XYWrapperWithInput, axis } from '../wrappers/xy-wrapper'
+import { Brush } from '@unovis/ts'
 
 export const defaultProps = (showAxis = true) => ({
     name: "Brush",
@@ -16,7 +17,7 @@ export const defaultProps = (showAxis = true) => ({
         key: "components",
       },
     ].concat(showAxis ? axis('x') : []),
-    data: generateDataRecords()
+    data: generateDataRecords(30)
 })
 
 ## Basic Configuration
@@ -81,22 +82,36 @@ By default, setting the desired the range relies on moving both start and end _B
 
 ### Handle Width
 `handleWidth` sets the width in pixels of the _Brush_'s handle:
-<XYWrapperWithInput {...defaultProps()} property="handleWidth" inputType="range" defaultValue={10}/>
+<XYWrapperWithInput {...defaultProps()} property="handleWidth" inputType="range" defaultValue={20}/>
+
+### Selection
+You can change the appearance of the selection by changing the corresponding CSS variables.
+For example, here's how you can modify the appearance of the selected and unselected areas:
+
+<CodeBlock language="css">
+{`--vis-brush-selection-fill-color: #0b1640;
+--vis-brush-selection-opacity: 0.6;
+--vis-brush-unselected-fill-color: #fff;
+--vis-brush-unselected-opacity: 0.9;
+`}</CodeBlock>
+
+<div style={{
+  '--vis-brush-selection-fill-color': '#0b1640',
+  '--vis-brush-selection-opacity': '0.6',
+  '--vis-brush-unselected-fill-color': '#fff',
+  '--vis-brush-unselected-opacity': '0.9',
+  }}>
+  <XYWrapper {...defaultProps()} selection={[2,5]}/>
+</div>
+
 
 ## CSS Variables
 <details open>
   <summary>Supported CSS variables and their default values</summary>
   <CodeBlock language="css">
-{`--vis-brush-selection-fill-color: #0b1640;
---vis-brush-selection-stroke-color: #acb2b9;
---vis-brush-handle-fill-color: #6d778c;
---vis-brush-handle-stroke-color: #eee;
- 
-/* Dark Theme */
---vis-dark-brush-selection-fill-color:#acb2b9;
---vis-dark-brush-selection-stroke-color: #0b1640;
---vis-dark-brush-handle-fill-color: #acb2b9;
---vis-dark-brush-handle-stroke-color: var(--vis-color-grey);
+{`${
+  Object.entries(Brush.selectors.cssVarDefaults)
+  .map(([key, value]) => `${key}: ${value};`).join('\n')}
 `}</CodeBlock>
 </details>
 
