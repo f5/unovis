@@ -1,0 +1,10 @@
+.brush {
+  --vis-brush-selection-fill-color: #0b1640;
+  --vis-brush-selection-stroke-color: none;
+  --vis-brush-selection-stroke-width: 0;
+  --vis-brush-selection-opacity: 0.4;
+  --vis-brush-unselected-fill-color: #fff;
+  --vis-brush-unselected-stroke-color: #acb2b9;
+  --vis-brush-unselected-stroke-width: 0;
+  --vis-brush-unselected-opacity: 0.8;
+}
