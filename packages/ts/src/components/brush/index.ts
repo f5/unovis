@@ -40,16 +40,16 @@ export class Brush<Datum> extends XYComponentCore<Datum, BrushConfigInterface<Da
     super()
     if (config) this.setConfig(config)
 
-    this.brush = this.g
-      .append('g')
-      .attr('class', s.brush)
-
     const directions: BrushHandleType[] = [{ type: BrushDirection.West }, { type: BrushDirection.East }]
     this.unselectedRange = this.g
       .selectAll(`.${s.unselected}`)
       .data(directions)
       .enter().append('rect')
       .attr('class', s.unselected)
+
+    this.brush = this.g
+      .append('g')
+      .attr('class', s.brush)
 
     this.handleLines = this.g
       .selectAll(`.${s.handleLine}`)
