@@ -51,6 +51,8 @@ export interface AxisConfigInterface<Datum> extends Partial<XYComponentConfigInt
   tickTextAlign?: TextAlign | string;
   /** Font color of the tick text as CSS string. Default: `null` */
   tickTextColor?: string | null;
+  /** Text rotation angle for ticks. Default: `undefined` */
+  tickTextAngle?: number;
   /** The spacing in pixels between the tick and it's label. Default: `8` */
   tickPadding?: number;
 }
