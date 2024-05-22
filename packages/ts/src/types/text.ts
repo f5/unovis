@@ -13,7 +13,6 @@ export enum VerticalAlign {
 export enum FitMode {
   Wrap = 'wrap',
   Trim = 'trim',
-  Rotate = 'rotate',
 }
 
 export enum TextAlign {
@@ -65,8 +64,7 @@ export type UnovisTextOptions = {
   verticalAlign?: VerticalAlign | string;
   // The horizontal text alignment ('left', 'center', or 'right').
   textAlign?: TextAlign | string;
-  // The strategy for containing text within the available width.
-  fitMode?: FitMode | string;
+  textRotationAngle?: number;
   // Whether to use a fast estimation method or a more accurate one for text calculations.
   fastMode?: boolean;
   // Force word break if they don't fit into the width

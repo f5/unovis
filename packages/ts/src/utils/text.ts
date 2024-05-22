@@ -3,7 +3,7 @@ import { sum } from 'd3-array'
 import striptags from 'striptags'
 
 // Types
-import { FitMode, TextAlign, TrimMode, UnovisText, UnovisTextFrameOptions, UnovisTextOptions, UnovisWrappedText, VerticalAlign } from 'types/text'
+import { TextAlign, TrimMode, UnovisText, UnovisTextFrameOptions, UnovisTextOptions, UnovisWrappedText, VerticalAlign } from 'types/text'
 
 // Utils
 import { flatten, isArray, merge } from 'utils/data'
@@ -394,7 +394,6 @@ export function getWrappedText (
         : getPreciseStringLengthPx(lineWithEllipsis, text.fontFamily, text.fontSize)
 
       maxWidth = Math.max(textLengthPx, maxWidth)
-
       if (height && (h + dh) > height && (k !== lines.length - 1)) {
         // Remove hyphen character from the end of the line if it's there
         const lastCharacter = line.charAt(line.length - 1)
@@ -414,7 +413,7 @@ export function getWrappedText (
     }
 
     // Create wrapped text block with its calculated properties
-    blocks.push({ ...text, _lines: lines, _estimatedHeight: h - (prevBlock?._estimatedHeight ?? 0), _maxWidth: Math.max(maxWidth, prevBlock?._maxWidth ?? 0) })
+    blocks.push({ ...text, _lines: lines, _estimatedHeight: h - (prevBlock?._estimatedHeight || 0), _maxWidth: Math.max(maxWidth, prevBlock?._maxWidth ?? 0) })
   })
 
   return blocks
@@ -484,45 +483,41 @@ export const allowedSvgTextTags = ['text', 'tspan', 'textPath', 'altGlyph', 'alt
 export function renderTextToSvgTextElement (
   textElement: SVGTextElement,
   text: UnovisText | UnovisText[],
-  options: UnovisTextOptions
+  options: UnovisTextOptions,
+  trimmed?: boolean
 ): void {
-  const isVertical = options.verticalAlign !== VerticalAlign.Top
-  const width = options.fitMode !== FitMode.Rotate ? options.width : undefined
-  const wrappedText = getWrappedText(text, width, undefined, options.fastMode, options.separator, options.wordBreak)
-  const height = estimateWrappedTextHeight(wrappedText)
+  const wrappedText = getWrappedText(text, options.width, undefined, options.fastMode, options.separator, options.wordBreak)
   const textElementX = options.x ?? +textElement.getAttribute('x')
   const textElementY = options.y ?? +textElement.getAttribute('y')
   const x = textElementX ?? 0
   let y = textElementY ?? 0
-
   if (options.textAlign) {
     textElement.setAttribute('text-anchor', getTextAnchorFromTextAlign(options.textAlign))
   }
 
-  if (isVertical) {
+  if (options.verticalAlign && options.verticalAlign !== VerticalAlign.Top) {
+    const height = estimateWrappedTextHeight(wrappedText)
     const dy = options.verticalAlign === VerticalAlign.Middle ? -height / 2
       : options.verticalAlign === VerticalAlign.Bottom ? -height : 0
+
     y += dy
   }
-
-  if (options.fitMode === FitMode.Rotate) {
-    const offset = isVertical ? 0 : height
-    y += isVertical ? 0
-      : (Math.max(...wrappedText.map((b) => b._maxWidth)) - y) / 3
-
-    textElement.setAttribute('transform', `rotate(${isVertical ? 30 : -60} ${x} ${y + offset}) translate(0,${y / 3})`)
+  if (options.textRotationAngle) {
+    textElement.setAttribute('transform', `rotate(${(options.textRotationAngle === 0 || options.textRotationAngle) ? options.textRotationAngle : 0} ${x} ${y})`)
   } else {
     textElement.removeAttribute('transform')
   }
 
-  const parser = new DOMParser()
-  textElement.textContent = ''
-  wrappedText.forEach(block => {
-    const svgCode = renderTextToTspanStrings([block], x, y).join('')
-    const svgCodeSanitized = striptags(svgCode, allowedSvgTextTags)
-    const parsedSvgCode = parser.parseFromString(svgCodeSanitized, 'image/svg+xml').firstChild
-    textElement.appendChild(parsedSvgCode)
-  })
+  if (!trimmed) {
+    const parser = new DOMParser()
+    textElement.textContent = ''
+    wrappedText.forEach(block => {
+      const svgCode = renderTextToTspanStrings([block], x, y).join('')
+      const svgCodeSanitized = striptags(svgCode, allowedSvgTextTags)
+      const parsedSvgCode = parser.parseFromString(svgCodeSanitized, 'image/svg+xml').firstChild
+      textElement.appendChild(parsedSvgCode)
+    })
+  }
 }
 
 /**
