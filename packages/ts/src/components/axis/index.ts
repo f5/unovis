@@ -24,7 +24,6 @@ import { AxisDefaultConfig, AxisConfigInterface } from './config'
 
 // Styles
 import * as s from './style'
-import { tick } from '../../../lib/components/axis/style'
 
 export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datum>> {
   static selectors = s
@@ -217,7 +216,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     tickText.nodes().forEach(node => interrupt(node))
 
     tickText.each((value: number | Date, i: number, elements: ArrayLike<SVGTextElement>) => {
-      const text = config.tickFormat?.(value, i, tickValues) ?? `${value}`
+      let text = config.tickFormat?.(value, i, tickValues) ?? `${value}`
       const textElement = elements[i] as SVGTextElement
       const textMaxWidth = config.tickTextWidth || (config.type === AxisType.X ? this._containerWidth / (ticks.size() + 1) : this._containerWidth / 5)
       const styleDeclaration = getComputedStyle(textElement)
@@ -234,14 +233,11 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
       if (config.tickTextFitMode === FitMode.Trim) {
         const textElementSelection = select<SVGTextElement, string>(textElement).text(text)
         trimSVGText(textElementSelection, textMaxWidth, config.tickTextTrimType as TrimMode, true, fontSize, 0.58)
-
-        const trimedText = select<SVGTextElement, string>(textElement).text() ?? ''
-        const textBlock: UnovisText = { trimedText, fontFamily, fontSize }
-        renderTextToSvgTextElement(textElement, textBlock, textOptions, true)
-      } else {
-        const textBlock: UnovisText = { text, fontFamily, fontSize }
-        renderTextToSvgTextElement(textElement, textBlock, textOptions)
+        text = select<SVGTextElement, string>(textElement).text()
       }
+
+      const textBlock: UnovisText = { text, fontFamily, fontSize }
+      renderTextToSvgTextElement(textElement, textBlock, textOptions)
     })
 
     selection
@@ -316,7 +312,6 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
 
     const marginX = type === AxisType.X ? 0 : (-1) ** (+(axisPosition === Position.Left)) * labelMargin
     const marginY = type === AxisType.X ? (-1) ** (+(axisPosition === Position.Top)) * labelMargin : 0
-
     // Append new label
     selection
       .append('text')
@@ -343,47 +338,18 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
         }
     }
   }
-  // const textElementX = options.x ?? +textElement.getAttribute('x')
-  // const textElementY = options.y ?? +textElement.getAttribute('y')
-  // const x = textElementX ?? 0
-  // let y = textElementY ?? 0
-
-  // if (options.textAlign) {
-  //   textElement.setAttribute('text-anchor', getTextAnchorFromTextAlign(options.textAlign))
-  // }
-
-  // if (options.verticalAlign && options.verticalAlign !== VerticalAlign.Top) {
-  //   const height = estimateWrappedTextHeight(wrappedText)
-  //   const dy = options.verticalAlign === VerticalAlign.Middle ? -height / 2
-  //     : options.verticalAlign === VerticalAlign.Bottom ? -height : 0
-
-  //   y += dy
-  // }
-  // if (options.textRotationAngle) {
-  //   textElement.setAttribute('transform', `rotate(${(options.textRotationAngle === 0 || options.textRotationAngle) ? options.textRotationAngle : 0} ${x} ${y})`)
-  // } else {
-  //   textElement.removeAttribute('transform')
-  // }
 
   _alignTickLabels (): void {
     const { config: { type, tickTextAlign, tickTextAngle, position } } = this
     const tickText = this.g.selectAll('g.tick > text')
+
     const textAnchor = this._getTickTextAnchor(tickTextAlign as TextAlign)
     const translateX = type === AxisType.X
       ? 0
       : this._getYTickTextTranslate(tickTextAlign as TextAlign, position as Position)
 
-    tickText.each((value: number | Date, i: number, elements: ArrayLike<SVGTextElement>) => {
-      const textElement = elements[i] as SVGTextElement
-      const rotate = textElement.getAttribute('transform')
-      textElement
-        // .setAttribute('text-anchor', textAnchor)
-        .setAttribute('transform', `translate(${translateX},0) ${rotate}`)
-      // console.log(textElement.getAttribute("transform"), translateX)
-    })
-
-    // console.log(tickText[0].getAttribute('x'))
     tickText
+      .attr('transform', `translate(${translateX},0) rotate(${tickTextAngle})`)
       .attr('text-anchor', textAnchor)
   }
 

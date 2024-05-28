@@ -64,6 +64,7 @@ export type UnovisTextOptions = {
   verticalAlign?: VerticalAlign | string;
   // The horizontal text alignment ('left', 'center', or 'right').
   textAlign?: TextAlign | string;
+  // Text rotation
   textRotationAngle?: number;
   // Whether to use a fast estimation method or a more accurate one for text calculations.
   fastMode?: boolean;
