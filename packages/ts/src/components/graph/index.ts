@@ -1,6 +1,7 @@
 import { min, max } from 'd3-array'
 import { Transition } from 'd3-transition'
 import { select, Selection, pointer } from 'd3-selection'
+import { brush, BrushBehavior, D3BrushEvent } from 'd3-brush'
 import { zoom, zoomTransform, zoomIdentity, ZoomTransform, D3ZoomEvent, ZoomBehavior } from 'd3-zoom'
 import { drag, D3DragEvent } from 'd3-drag'
 import { interval, Timer } from 'd3-timer'
@@ -79,6 +80,7 @@ export class Graph<
   private _panelsGroup: Selection<SVGGElement, unknown, SVGGElement, undefined>
   private _linksGroup: Selection<SVGGElement, unknown, SVGGElement, undefined>
   private _nodesGroup: Selection<SVGGElement, unknown, SVGGElement, undefined>
+  private _brush: Selection<SVGGElement, unknown, SVGGElement, unknown>
   private _timer: Timer
 
   private _isFirstRender = true
@@ -98,6 +100,8 @@ export class Graph<
   private _scale: number
   private _initialTransform: ZoomTransform
   private _isDragging = false
+  private _brushBehavior: BrushBehavior<unknown>
+  private _groupDragInit: [number, number]
 
   events = {
     [Graph.selectors.background]: {
@@ -133,10 +137,17 @@ export class Graph<
 
     this._backgroundRect = this.g.append('rect').attr('class', generalSelectors.background)
     this._graphGroup = this.g.append('g').attr('class', generalSelectors.graphGroup)
+    this._brush = this.g.append('g').attr('class', generalSelectors.brush)
 
     this._zoomBehavior = zoom<SVGGElement, unknown>()
       .scaleExtent(this.config.zoomScaleExtent)
       .on('zoom', (e: D3ZoomEvent<SVGGElement, unknown>) => this._onZoom(e.transform, e))
+      .filter(event => !event.shiftKey)
+
+    this._brushBehavior = brush()
+      .on('start brush end', this._onBrush.bind(this))
+      .filter(event => event.shiftKey)
+      .keyModifiers(false)
 
     this._panelsGroup = this._graphGroup.append('g').attr('class', panelSelectors.panels)
     this._linksGroup = this._graphGroup.append('g').attr('class', linkSelectors.links)
@@ -173,7 +184,7 @@ export class Graph<
   }
 
   _render (customDuration?: number): void {
-    const { config: { disableZoom, duration, layoutAutofit }, datamodel } = this
+    const { config: { disableBrush, disableZoom, duration, layoutAutofit }, datamodel } = this
     if (!datamodel.nodes && !datamodel.links) return
     const animDuration = isNumber(customDuration) ? customDuration : duration
 
@@ -187,6 +198,28 @@ export class Graph<
       this._shouldFitLayout = true
       this._prevWidth = this._width
       this._prevHeight = this._height
+    }
+
+    // Handle brush behavior
+    if (!disableBrush) {
+      this._brushBehavior.extent([[0, 0], [this._width, this._height]])
+      this._brush.call(this._brushBehavior)
+
+      // Activate the brush when the shift key is pressed
+      select(window)
+        .on('keydown.unovis-graph', e => e.key === 'Shift' && this._activateBrush())
+        .on('keyup.unovis-graph', e => e.key === 'Shift' && this._clearBrush())
+
+      this._zoomBehavior.filter(event => !event.shiftKey)
+    } else {
+      this._brush.on('.brush', null)
+
+      select(window)
+        .on('keydown.unovis-graph', null)
+        .on('keyup.unovis-graph', null)
+
+      // Clear brush in case it was disabled in an active state
+      if (this._brush.classed('active')) this._clearBrush()
     }
 
     // Apply layout and render
@@ -285,9 +318,9 @@ export class Graph<
     const thisRef = this
     if (!config.disableDrag) {
       const dragBehaviour = drag<SVGGElement, GraphNode<N, L>>()
-        .on('start', function (event, d) { thisRef._onDragStarted(d, event, select(this)) })
-        .on('drag', function (event, d) { thisRef._onDragged(d, event, nodeGroupsMerged) })
-        .on('end', function (event, d) { thisRef._onDragEnded(d, event, select(this)) })
+        .on('start drag end', function (event, d) {
+          thisRef._handleDrag(d, event, select(this))
+        })
       nodeGroupsMerged.call(dragBehaviour)
     } else {
       nodeGroupsMerged.on('.drag', null)
@@ -650,36 +683,18 @@ export class Graph<
       )
   }
 
-  private _onDragStarted (
-    d: GraphNode<N, L>,
-    event: D3DragEvent<SVGGElement, GraphNode<N, L>, unknown>,
-    nodeSelection: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, unknown>
-  ): void {
-    const { config } = this
-    this._isDragging = true
-    d._state.isDragged = true
-    nodeSelection.call(updateNodes, config, 0, this._scale)
-    config.onNodeDragStart?.(d, event)
-  }
-
-  private _onDragged (
-    d: GraphNode<N, L>,
-    event: D3DragEvent<SVGGElement, GraphNode<N, L>, unknown>,
-    allNodesSelection: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, unknown>
-  ): void {
-    const { config } = this
+  private _updateNodePosition (d: GraphNode<N, L>, x: number, y: number): void {
     const transform = zoomTransform(this.g.node())
     const scale = transform.k
 
     // Prevent the node from being dragged offscreen or outside its panel
     const panels = this._panels?.filter(p => p.nodes.includes(d._id)) ?? []
-    const nodeSizeValue = getNodeSize(d, config.nodeSize, d._index)
+    const nodeSizeValue = getNodeSize(d, this.config.nodeSize, d._index)
     const maxY = min([(this._height - transform.y) / scale, ...panels.map(p => p._y + p._height)]) - nodeSizeValue / 2
     const maxX = min([(this._width - transform.x) / scale, ...panels.map(p => p._x + p._width)]) - nodeSizeValue / 2
     const minY = max([-transform.y / scale, ...panels.map(p => p._y)]) + nodeSizeValue / 2
     const minX = max([-transform.x / scale, ...panels.map(p => p._x)]) + nodeSizeValue / 2
 
-    let [x, y] = pointer(event, this._graphGroup.node())
     if (y < minY) y = minY
     else if (y > maxY) y = maxY
     if (x < minX) x = minX
@@ -696,6 +711,77 @@ export class Graph<
     d._state.fy = y
     if (d._state.fx === d.x) delete d._state.fx
     if (d._state.fy === d.y) delete d._state.fy
+  }
+
+  private _onBrush (event: D3BrushEvent<SVGGElement>): void {
+    if (!event.selection || !event.sourceEvent) return
+    const { config } = this
+    const transform = zoomTransform(this._graphGroup.node())
+    const [xMin, yMin] = transform.invert(event.selection[0] as [number, number])
+    const [xMax, yMax] = transform.invert(event.selection[1] as [number, number])
+
+    // Update brushed nodes
+    this._nodesGroup.selectAll<SVGGElement, GraphNode<N, L>>(`.${nodeSelectors.gNode}`)
+      .each(n => {
+        const x = getX(n)
+        const y = getY(n)
+        n._state.brushed = x >= xMin && x <= xMax && y >= yMin && y <= yMax
+      })
+      .classed(nodeSelectors.brushed, n => n._state.brushed)
+
+    const brushedNodes = this._nodesGroup.selectAll<SVGGElement, GraphNode<N, L>>(`.${nodeSelectors.brushed}`)
+      .call(updateSelectedNodes, config, 0, this._scale)
+
+    this._brush.classed('active', event.type !== 'end')
+    config.onNodeSelectionBrush?.(brushedNodes.data(), event)
+  }
+
+
+  private _handleDrag (
+    d: GraphNode<N, L>,
+    event: D3DragEvent<SVGGElement, GraphNode<N, L>, unknown>,
+    nodeSelection: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, unknown>
+  ): void {
+    if (event.sourceEvent.shiftKey && d._state.brushed) {
+      this._dragSelectedNodes(event)
+    } else if (!event.sourceEvent.shiftKey) {
+      switch (event.type) {
+        case 'start':
+          this._onDragStarted(d, event, nodeSelection)
+          break
+        case 'drag':
+          this._onDragged(d, event)
+          break
+        case 'end':
+          this._onDragEnded(d, event, nodeSelection)
+          break
+      }
+    }
+  }
+
+  private _onDragStarted (
+    d: GraphNode<N, L>,
+    event: D3DragEvent<SVGGElement, GraphNode<N, L>, unknown>,
+    nodeSelection: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, unknown>
+  ): void {
+    const { config } = this
+    this._isDragging = true
+    d._state.isDragged = true
+    nodeSelection.call(updateNodes, config, 0, this._scale)
+    config.onNodeDragStart?.(d, event)
+  }
+
+  private _onDragged (
+    d: GraphNode<N, L>,
+    event: D3DragEvent<SVGGElement, GraphNode<N, L>, unknown>
+  ): void {
+    const { config } = this
+    const transform = zoomTransform(this.g.node())
+    const scale = transform.k
+
+    // Update node position
+    const [x, y] = pointer(event, this._graphGroup.node())
+    this._updateNodePosition(d, x, y)
 
     // Update affected DOM elements
     const nodeSelection = this._nodesGroup.selectAll<SVGGElement, GraphNode<N, L>>(`.${nodeSelectors.gNode}`)
@@ -725,6 +811,58 @@ export class Graph<
     d._state.isDragged = false
     nodeSelection.call(updateNodes, config, 0, this._scale)
     config.onNodeDragEnd?.(d, event)
+  }
+
+  private _dragSelectedNodes (event: D3DragEvent<SVGGElement, GraphNode<N, L>, unknown>): void {
+    const { config } = this
+    const curr = pointer(event, this._graphGroup.node())
+
+    const selectedNodes = smartTransition(
+      this._nodesGroup.selectAll<SVGGElement, GraphNode<N, L>>(`.${nodeSelectors.brushed}`)
+    ) as Selection<SVGGElement, GraphNode<N, L>, SVGGElement, unknown>
+
+    if (event.type === 'start') {
+      this._groupDragInit = curr
+      this._isDragging = true
+      selectedNodes.each(n => {
+        n.x = getX(n)
+        n.y = getY(n)
+        n._state.isDragged = true
+      })
+    } else if (event.type === 'drag') {
+      const dx = curr[0] - this._groupDragInit[0]
+      const dy = curr[1] - this._groupDragInit[1]
+
+      selectedNodes.each(n => this._updateNodePosition(n, n.x + dx, n.y + dy))
+
+      const connectedLinks = smartTransition(
+        this._linksGroup.selectAll<SVGGElement, GraphLink<N, L>>(`.${linkSelectors.gLink}`)
+          .filter(l => l.source?._state?.isDragged || l.target?._state?.isDragged)
+      ) as Selection<SVGGElement, GraphLink<N, L>, SVGGElement, unknown>
+
+      connectedLinks.call(updateLinks, this.config, 0, this._scale, this._getLinkArrowDefId)
+    } else {
+      this._isDragging = false
+      selectedNodes.each(n => { n._state.isDragged = false })
+    }
+    selectedNodes.call(updateNodes, config, 0, this._scale)
+    this.config.onNodeSelectionDrag?.(selectedNodes.data(), event)
+  }
+
+  private _activateBrush (): void {
+    this._brush.classed('active', true)
+    this._nodesGroup.selectAll(`.${nodeSelectors.gNode}`)
+      .classed(nodeSelectors.brushable, true)
+  }
+
+  private _clearBrush (): void {
+    this._brush.classed('active', false).call(this._brushBehavior?.clear)
+
+    this._nodesGroup.selectAll<SVGGElement, GraphNode<N, L>>(`.${nodeSelectors.gNode}`)
+      .classed(nodeSelectors.brushable, false)
+      .classed(nodeSelectors.brushed, false)
+      .each(n => { n._state.brushed = false })
+      .call(updateSelectedNodes, this.config, 0, this._scale)
   }
 
   private _shouldLayoutRecalculate (): boolean {

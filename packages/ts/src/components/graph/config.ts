@@ -1,3 +1,4 @@
+import { D3BrushEvent } from 'd3-brush'
 import { D3DragEvent } from 'd3-drag'
 import { D3ZoomEvent } from 'd3-zoom'
 
@@ -24,6 +25,7 @@ import {
   GraphLink,
 } from './types'
 
+
 export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphInputLink> extends ComponentConfigInterface {
   // Zoom and drag
   /** Zoom level constraints. Default: [0.35, 1.25] */
@@ -32,6 +34,8 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   disableZoom?: boolean;
   /** Disable node dragging. Default: `false` */
   disableDrag?: boolean;
+  /** Disable brush for multiple node selection. Default: `false` */
+  disableBrush?: boolean;
   /** Interval to re-render the graph when zooming. Default: `100` */
   zoomThrottledUpdateNodeThreshold?: number;
 
@@ -210,6 +214,10 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   onZoom?: (zoomScale: number, zoomScaleExtent: [number, number], event: D3ZoomEvent<SVGGElement, unknown> | undefined) => void;
   /** Callback function to be called when the graph layout is calculated. Default: `undefined` */
   onLayoutCalculated?: (n: GraphNode<N, L>[], links: GraphLink<N, L>[]) => void;
+  /** Graph node selection brush callback function. Default: `undefined` */
+  onNodeSelectionBrush?: (selectedNodes: GraphNode<N, L>[], event: D3BrushEvent<SVGGElement> | undefined) => void;
+  /** Graph multiple node drag callback function. Default: `undefined` */
+  onNodeSelectionDrag?: (selectedNodes: GraphNode<N, L>[], event: D3DragEvent<SVGGElement, GraphNode<N, L>, unknown>) => void;
 }
 
 export const GraphDefaultConfig: GraphConfigInterface<GraphInputNode, GraphInputLink> = {
@@ -218,6 +226,7 @@ export const GraphDefaultConfig: GraphConfigInterface<GraphInputNode, GraphInput
   zoomScaleExtent: [0.35, 1.25],
   disableZoom: false,
   disableDrag: false,
+  disableBrush: false,
   zoomThrottledUpdateNodeThreshold: 100,
   layoutType: GraphLayoutType.Force,
   layoutAutofit: true,
@@ -301,4 +310,6 @@ export const GraphDefaultConfig: GraphConfigInterface<GraphInputNode, GraphInput
   onNodeDragEnd: undefined,
   onZoom: undefined,
   onLayoutCalculated: undefined,
+  onNodeSelectionBrush: undefined,
+  onNodeSelectionDrag: undefined,
 }

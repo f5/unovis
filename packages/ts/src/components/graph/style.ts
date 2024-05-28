@@ -10,6 +10,9 @@ import * as linkSelectors from './modules/link/style'
 export const variables = injectGlobal`
   :root {
     --vis-graph-icon-font-family: ${UNOVIS_ICON_FONT_FAMILY_DEFAULT};
+
+    /* Brush */
+    --vis-graph-brush-selection-opacity: 0.2;
   }
 `
 
@@ -24,6 +27,25 @@ export const background = css`
 
 export const graphGroup = css`
   label: graph-group;
+`
+
+export const brush = css`
+  label: brush;
+
+  :not(.active) {
+    display: none;
+  }
+
+  .active {
+    .selection {
+      fill-opacity: 0;
+      stroke: none;
+    }
+
+    .handle {
+      display: none;
+    }
+  }
 `
 
 export const zoomOutLevel1 = css`

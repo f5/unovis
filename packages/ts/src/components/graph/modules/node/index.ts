@@ -104,11 +104,11 @@ export function updateSelectedNodes<N extends GraphInputNode, L extends GraphInp
     const group: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, unknown> = select(elements[i])
     const isGreyout = getBoolean(d, nodeDisabled, d._index) || d._state.greyout
 
-    group.classed(nodeSelectors.greyedOutNode, isGreyout)
+    group.classed(nodeSelectors.greyedOutNode, isGreyout && !d._state.brushed)
       .classed(nodeSelectors.draggable, !config.disableDrag)
 
     const nodeSelectionOutline = group.selectAll<SVGGElement, GraphNode<N, L>>(`.${nodeSelectors.nodeSelection}`)
-    nodeSelectionOutline.classed(nodeSelectors.nodeSelectionActive, d._state.selected)
+    nodeSelectionOutline.classed(nodeSelectors.nodeSelectionActive, d._state.selected || d._state.brushed)
 
     group.selectAll<SVGTextElement, GraphCircleLabel>(`.${nodeSelectors.sideLabel}`)
       .style('fill', (l) => isGreyout ? null : getSideLabelTextColor(l, selection.node()))

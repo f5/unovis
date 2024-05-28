@@ -68,6 +68,11 @@ export const variables = injectGlobal`
     --vis-dark-graph-node-icon-greyout-color: var(--vis-color-grey);
     --vis-dark-graph-node-side-label-background-greyout-color: #494B56;
 
+    /* Brushed */
+    --vis-graph-brushed-node-stroke-color: var(--vis-color-main);
+    --vis-graph-brushed-node-label-text-color: var(--vis-color-main);
+    --vis-graph-brushed-node-icon-fill-color: var(--vis-color-main);
+    
     /* Misc */
     --vis-graph-node-dominant-baseline: middle;
   }
@@ -98,12 +103,20 @@ export const variables = injectGlobal`
   }
 `
 
+export const brushable = css`
+  label: brushable;
+`
+
+
 export const node = css`
   label: node-shape;
 
   stroke: var(--vis-graph-node-stroke-color);
   fill: var(--vis-graph-node-fill-color);
-  transition: .4s fill, .4s stroke;
+
+  :not(.${brushable}) {
+    transition: .4s fill, 4s stroke;
+  }
 `
 
 export const nodeIcon = css`
@@ -113,8 +126,11 @@ export const nodeIcon = css`
   dominant-baseline: var(--vis-graph-node-dominant-baseline);
   text-anchor: middle;
   pointer-events: none;
-  transition: .4s all;
   fill: var(--vis-graph-node-icon-fill-color);
+
+  :not(.${brushable}) {
+    transition: .4s all;
+  }
 `
 
 export const nodeBottomIcon = css`
@@ -124,10 +140,13 @@ export const nodeBottomIcon = css`
   dominant-baseline: var(--vis-graph-node-dominant-baseline);
   text-anchor: middle;
   pointer-events: none;
-  transition: .4s fill;
   fill: var(--vis-graph-node-bottom-icon-fill-color);
   stroke: var(--vis-graph-node-bottom-icon-stroke-color);
   stroke-width: var(--vis-graph-node-bottom-icon-stroke-width);
+
+  :not(.${brushable}) {
+    transition: .4s all;
+  }
 `
 
 export const nodeIsDragged = css`
@@ -298,5 +317,19 @@ export const greyedOutNode = css`
    ${`.${sideLabel}`} {
     fill: var(--vis-graph-node-side-label-fill-color-bright) !important;
     opacity: 0.25;
+  }
+`
+
+export const brushed = css`
+  label: brushed-node;
+
+  ${`.${node}`} {
+    stroke: var(--vis-graph-brushed-node-stroke-color);
+  }
+  ${`.${nodeIcon}`} {
+    fill: var(--vis-graph-brushed-node-icon-fill-color);
+  }
+  ${`.${labelTextContent}`} {
+    fill: var(--vis-graph-brushed-node-label-text-color);
   }
 `

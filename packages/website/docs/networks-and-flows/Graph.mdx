@@ -700,6 +700,31 @@ If you use React or Angular, you can access the component instance for calling t
 onZoom: (zoomScale: number, zoomScaleExtent: number) => void;
 ```
 
+## Multiple Node Drag
+To drag multiple nodes at once, the node selection brush can be activated with the shift key.
+This behavior can be disabled by setting the `disableBrush` property to `true`.
+
+While the shift key is pressed, multiple nodes can be brushed by dragging the mouse over them.
+When the mouse releases, the selected nodes will be grouped inside a selection rectangle, which can be dragged around as a single entity.
+
+Releasing the shift key will unselect all nodes and hide the selection rectangle.
+
+The brush selection rectangle opacity can be changed with the `--vis-graph-brush-selection-opacity` CSS variable.
+The appearance of the "brushed" nodes can be customized with the following CSS variables:
+
+```css
+--vis-graph-brushed-node-stroke-color;
+--vis-graph-brushed-node-label-text-color;
+--vis-graph-brushed-node-icon-fill-color;
+```
+
+Additionally, there are two callback functions in Graph's configuration that can be used to see which nodes are being brushed and dragged.
+
+```ts
+onNodeSelectionBrush (selectedNodes: GraphNode[], event: D3BrushEvent) void;
+onNodeSelectionDrag (selectedNodes: GraphNode[], event: D3BrushEvent) void;
+```
+
 ## Events
 The following selectors are available for events:
 ```ts
