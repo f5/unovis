@@ -18,6 +18,7 @@ export type GraphNode<
     fy?: number;
     selected?: boolean;
     greyout?: boolean;
+    brushed?: boolean;
   };
 
   _panels?: GraphPanel<N, L>[];
