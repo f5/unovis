@@ -7,7 +7,7 @@ import type { graphlib, Node } from 'dagre'
 import { GraphDataModel } from 'data-models/graph'
 
 // Utils
-import { without, clamp, groupBy, unique, sortBy, getString, getNumber, getValue, merge, isFunction } from 'utils/data'
+import { without, clamp, groupBy, unique, sortBy, getString, getNumber, getValue, merge, isFunction, isNil } from 'utils/data'
 
 // Types
 import { GraphInputLink, GraphInputNode } from 'types/graph'
@@ -19,7 +19,7 @@ import { GraphNode, GraphLink, GraphForceSimulationNode } from '../types'
 import { GraphConfigInterface } from '../config'
 
 // Helpers
-import { getMaxNodeSize, configuredNodeSize, getNodeSize, getAverageNodeSize, getX, getY } from './node/helper'
+import { getMaxNodeSize, configuredNodeSize, getNodeSize, getAverageNodeSize } from './node/helper'
 import {
   DEFAULT_ELK_SETTINGS,
   adjustElkHierarchyCoordinates,
@@ -413,11 +413,14 @@ export async function applyLayoutForce<N extends GraphInputNode, L extends Graph
 
   const { nonConnectedNodes, connectedNodes, nodes, links } = datamodel
 
+
   // Apply fx and fy to nodes if present before running the simulation
-  nodes.forEach((d: GraphForceSimulationNode<N, L>) => {
-    d.fx = getX(d)
-    d.fy = getY(d)
-  })
+  if (forceLayoutSettings.fixNodePositionAfterSimulation) {
+    nodes.forEach((d: GraphForceSimulationNode<N, L>) => {
+      d.fx = isNil(d._state.fx) ? undefined : d._state.fx
+      d.fy = isNil(d._state.fy) ? undefined : d._state.fy
+    })
+  }
 
   const simulation = forceSimulation(layoutNonConnectedAside ? connectedNodes : nodes)
     .force('link', forceLink(links)
@@ -444,9 +447,13 @@ export async function applyLayoutForce<N extends GraphInputNode, L extends Graph
     simulation.tick()
   }
 
-  // Fix node positions if requested
+  // Fix node positions to `_state` if requested.
+  // And remove fx and fy from the node datum if present to make sure the nodes are not fixed
+  // if the layout was changed to a different layout and then back to force
   if (forceLayoutSettings.fixNodePositionAfterSimulation) {
-    nodes.forEach(d => {
+    nodes.forEach((d: GraphForceSimulationNode<N, L>) => {
+      delete d.fx
+      delete d.fy
       d._state.fx = d.x
       d._state.fy = d.y
     })
