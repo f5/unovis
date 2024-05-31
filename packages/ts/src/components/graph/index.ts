@@ -15,7 +15,7 @@ import { GraphInputLink, GraphInputNode } from 'types/graph'
 import { Spacing } from 'types/spacing'
 
 // Utils
-import { isNumber, clamp, shallowDiff, isFunction, getBoolean } from 'utils/data'
+import { isNumber, clamp, shallowDiff, isFunction, getBoolean, isPlainObject } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 
 // Local Types
@@ -387,9 +387,17 @@ export class Graph<
   }
 
   private async _calculateLayout (): Promise<boolean> {
-    const { config, datamodel } = this
-
+    const { prevConfig, config, datamodel } = this
     const firstRender = this._isFirstRender
+
+    // If the layout type has changed, we need to reset the node positions if they were fixed before
+    if (prevConfig.layoutType !== config.layoutType) {
+      for (const node of datamodel.nodes) {
+        delete node._state.fx
+        delete node._state.fy
+      }
+    }
+
     switch (config.layoutType) {
       case GraphLayoutType.Precalculated:
         break
@@ -878,6 +886,20 @@ export class Graph<
     if (prevConfig.layoutType === GraphLayoutType.Dagre) {
       const dagreSettingsDiff = shallowDiff(prevConfig.dagreLayoutSettings, config.dagreLayoutSettings)
       if (Object.keys(dagreSettingsDiff).length) return true
+    }
+
+    if (prevConfig.layoutType === GraphLayoutType.Elk) {
+      if (isPlainObject(prevConfig.layoutElkSettings) && isPlainObject(config.layoutElkSettings)) {
+        // Do a deeper comparison if `config.layoutElkSettings` is an object
+        const elkSettingsDiff = shallowDiff(
+          prevConfig.layoutElkSettings as Record<string, string>,
+          config.layoutElkSettings as Record<string, string>
+        )
+        return Boolean(Object.keys(elkSettingsDiff).length)
+      } else {
+        // Otherwise, do a simple `===` comparison
+        return prevConfig.layoutElkSettings !== config.layoutElkSettings
+      }
     }
 
     if (
