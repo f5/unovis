@@ -62,13 +62,15 @@ type GraphData = {
 ```
 
 The `NodeDatum` object type in generic and doesn't have any mandatory fields, however we recommend adding unique `id`s to
-each node to support better graph animations. Your links will need to have the `source` and `target` properties referencing
-specific nodes either by their index in the `nodes` array or by their unique `id`; or they can be references to the
+each node to support better graph animations. Your links will need to have the `source` and `target`
+properties referencing specific nodes either by their index in the `nodes` array or by their unique `id`; or they can be references to the
 actual node objects.
 
 ```ts
 type NodeDatum = {
   id?: string;
+  x?: number;
+  y?: number;
 }
 
 type LinkDatum = {
@@ -518,6 +520,13 @@ in the gallery to learn more.
     },
   ]}
 />
+
+### Precalculated
+
+If you want to specify node locations, set `layoutType` to `GraphLayoutType.Precalculated`(or `"precalculated"`).
+Then pass in node positions (`x` and `y`) as part of graph data. 
+
+Note: if you selected `GraphLayoutType.Precalculated` but fail to pass in `x` and `y`, all your nodes will render at the default positions.
 
 ### Non-connected nodes aside
 If you want non-connected graph nodes to be placed below the layout, set `layoutNonConnectedAside` to `true`.
