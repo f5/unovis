@@ -90,6 +90,37 @@ export function generateNodeLinkData (n = 10, numNeighbourLinks = () => 1): Node
   return { nodes, links }
 }
 
+
+export function generatePrecalculatedNodeLinkData (n = 10, numNeighbourLinks = () => 1): NodeLinkData {
+  const nodes = Array(n).fill(0).map((_, i) => ({
+    i,
+    id: (i + 1).toString(),
+    value: 100 * Math.random(),
+    x: 50 * i,
+    y: 50 * i,
+  }))
+  const options = [...nodes].slice(1)
+  const links = nodes.reduce((arr, n) => {
+    if (options.length) {
+      const num = Math.max(1, Math.random() * options.length)
+      for (let i = 0; i < num; i++) {
+        const targetId = options.shift()?.id
+        for (let k = 0; k < numNeighbourLinks(); k++) {
+          const link = {
+            id: `${n.id}-${targetId}`,
+            source: n.id,
+            target: targetId,
+            value: Math.random(),
+          }
+          arr.push(link)
+        }
+      }
+    }
+    return arr
+  }, Array(0))
+  return { nodes, links }
+}
+
 export function generateNestedData (n: number, numGroups: number, excludeValues?: string[]): NestedDatum[] {
   const groups = Array(numGroups).fill(0).map((_, i) => String.fromCharCode(i + 65))
   const subgroups = Object.fromEntries(groups.map((g, i) => [g, Array(Math.floor(numGroups * 1.5)).fill(0).map((_, j) => `${g}${j}`)]))
