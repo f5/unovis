@@ -1,5 +1,7 @@
 export interface GraphInputNode {
   id?: number | string;
+  x?: number;
+  y?: number;
 }
 
 export interface GraphInputLink {
