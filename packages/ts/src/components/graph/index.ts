@@ -160,6 +160,7 @@ export class Graph<
 
     this._shouldRecalculateLayout = this._shouldRecalculateLayout || this._shouldLayoutRecalculate()
     this._shouldFitLayout = this._shouldFitLayout || this._shouldRecalculateLayout
+    if (this._shouldFitLayout) this._isAutoFitDisabled = false
     this._shouldSetPanels = true
   }
 
