@@ -420,6 +420,11 @@ export async function applyLayoutForce<N extends GraphInputNode, L extends Graph
       d.fx = isNil(d._state.fx) ? undefined : d._state.fx
       d.fy = isNil(d._state.fy) ? undefined : d._state.fy
     })
+  } else {
+    nodes.forEach((d: GraphForceSimulationNode<N, L>) => {
+      delete d._state.fx
+      delete d._state.fy
+    })
   }
 
   const simulation = forceSimulation(layoutNonConnectedAside ? connectedNodes : nodes)
