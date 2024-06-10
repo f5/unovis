@@ -12,6 +12,9 @@ export const variables = injectGlobal`
     --vis-tooltip-shadow-color: rgba(172, 179, 184, 0.35);
     --vis-tooltip-backdrop-filter: none;
     --vis-tooltip-padding: 10px 15px;
+    --vis-tooltip-border-radius: 5px;
+    --vis-tooltip-transition-duration: 300ms;
+    --vis-tooltip-box-shadow: none;
 
     --vis-dark-tooltip-background-color: rgba(30,30,30, 0.95);
     --vis-dark-tooltip-text-color: #e5e9f7;
@@ -41,19 +44,14 @@ export const tooltip = css`
   bottom: 0;
   min-width: max-content;
   position: absolute;
-  pointer-events: none;
   opacity: 0;
   transition: opacity;
-  transition-duration: 300ms;
-  user-select: none;
+  transition-duration: var(--vis-tooltip-transition-duration);
   z-index: 999999;
   padding: var(--vis-tooltip-padding);
-  transform: translate(0, -5px);
   color: var(--vis-tooltip-text-color);
-
-  /* object-fit: contain; */
-  border-radius: 5px;
-  box-shadow: 0 13px 25px 0 var(--vis-tooltip-box-shadow);
+  border-radius: var(--vis-tooltip-border-radius);
+  box-shadow: var(--vis-tooltip-box-shadow);
   border: solid 1px var(--vis-tooltip-border-color);
   background-color: var(--vis-tooltip-background-color);
   backdrop-filter: var(--vis-tooltip-backdrop-filter);
