@@ -75,22 +75,13 @@ export class Tooltip {
     this._setUpEventsThrottled()
   }
 
+  /** Show the tooltip by providing content and position */
   public show (html: string | HTMLElement, pos: { x: number; y: number }): void {
-    if (html instanceof HTMLElement) {
-      const node = this.div.select(':first-child').node()
-      if (node !== html) this.div.html('').append(() => html)
-    } else {
-      this.div.html(html)
-    }
-
-    this.div
-      .classed(s.hidden, false)
-      .classed(s.show, true)
-
-    this._isShown = true
+    this._render(html)
     this.place(pos)
   }
 
+  /** Hide the tooltip */
   public hide (): void {
     this.div.classed(s.show, false)
       .on('transitionend', () => {
@@ -100,6 +91,15 @@ export class Tooltip {
       })
 
     this._isShown = false
+  }
+
+  /** Simply displays the tooltip with its previous content on position */
+  public display (): void {
+    this.div
+      .classed(s.hidden, false)
+      .classed(s.show, true)
+
+    this._isShown = true
   }
 
   public place (pos: { x: number; y: number }): void {
@@ -149,15 +149,95 @@ export class Tooltip {
     const x = containerWidth < width ? 0 : pos.x + constraintX + dx
     const y = containerHeight < height ? height : pos.y + constraintY + dy
 
-    this.div
-      .classed(s.positionFixed, isContainerBody)
-      .style('top', isContainerBody ? `${y - height}px` : 'unset')
-      .style('bottom', !isContainerBody ? `${containerHeight - y}px` : 'unset')
-      .style('left', `${x}px`)
+    this._applyPosition(x, y, height)
+  }
+
+  public placeByPointerEvent (e: PointerEvent | MouseEvent): void {
+    const isContainerBody = this.isContainerBody()
+    const [x, y] = isContainerBody ? [e.clientX, e.clientY] : pointer(e, this._container)
+    this.place({ x, y })
+  }
+
+  public placeByElement (hoveredElement: SVGGElement | HTMLElement): void {
+    const { config } = this
+    const margin = 5
+    const tooltipWidth = this.element.offsetWidth
+    const tooltipHeight = this.element.offsetHeight
+    const isContainerBody = this.isContainerBody()
+    const containerWidth = isContainerBody ? window.innerWidth : this._container.scrollWidth
+
+    const boundingRect = hoveredElement.getBoundingClientRect()
+    let [x, y] = [0, 0]
+
+    // We use D3's point transformation to get the correct position of the element by pretending it's a pointer event
+    // See more: https://github.com/d3/d3-selection/blob/main/src/pointer.js
+    const elementPos = pointer({ clientX: boundingRect.x, clientY: boundingRect.y, pageX: boundingRect.x, pageY: boundingRect.y }, this._container)
+    const horizontalPlacement = config.horizontalPlacement === Position.Auto
+      ? (elementPos[0] - tooltipWidth < 0 ? Position.Right
+        : elementPos[0] + tooltipWidth > containerWidth ? Position.Left : Position.Center)
+      : config.horizontalPlacement
+
+    switch (horizontalPlacement) {
+      case Position.Left:
+        x = elementPos[0] - tooltipWidth - margin
+        break
+      case Position.Right:
+        x = elementPos[0] + boundingRect.width + margin
+        break
+      case Position.Center:
+      default:
+        x = elementPos[0] + boundingRect.width / 2 - tooltipWidth / 2
+        break
+    }
+
+    const verticalPlacement = config.verticalPlacement === Position.Auto
+      ? (horizontalPlacement !== Position.Center ? Position.Center
+        : elementPos[1] - tooltipHeight < 0 ? Position.Bottom : Position.Top)
+      : config.verticalPlacement
+    switch (verticalPlacement) {
+      case Position.Center:
+        y = elementPos[1] + boundingRect.height / 2 + tooltipHeight / 2
+        break
+      case Position.Bottom:
+        y = elementPos[1] + boundingRect.height + tooltipHeight + margin
+        break
+      case Position.Top:
+      default:
+        y = elementPos[1] - margin
+        break
+    }
+
+    this._applyPosition(x, y, tooltipHeight)
   }
 
   public isContainerBody (): boolean {
     return this._container === document.body
+  }
+
+  private _render (html: string | HTMLElement): void {
+    if (html instanceof HTMLElement) {
+      const node = this.div.select(':first-child').node()
+      if (node !== html) this.div.html('').append(() => html)
+    } else {
+      this.div.html(html)
+    }
+
+    this.div
+      .classed(s.hidden, false)
+      .classed(s.show, true)
+
+    this._isShown = true
+  }
+
+  private _applyPosition (x: number, y: number, tooltipHeight: number): void {
+    const isContainerBody = this.isContainerBody()
+    const containerHeight = isContainerBody ? window.innerHeight : this._container.scrollHeight
+
+    this.div
+      .classed(s.positionFixed, isContainerBody)
+      .style('top', isContainerBody ? `${y - tooltipHeight}px` : 'unset')
+      .style('bottom', !isContainerBody ? `${containerHeight - y}px` : 'unset')
+      .style('left', `${x}px`)
   }
 
   private _setContainerPosition (): void {
@@ -169,8 +249,7 @@ export class Tooltip {
   }
 
   private _setUpEvents (): void {
-    const { config: { triggers } } = this
-    const isContainerBody = this.isContainerBody()
+    const { config } = this
 
     // We use the Event Delegation pattern to set up Tooltip events
     // Every component will have single `mousemove` and `mouseleave` event listener functions, where we'll check
@@ -179,12 +258,11 @@ export class Tooltip {
       const selection = select(component.element)
       selection
         .on('mousemove.tooltip', (e: MouseEvent) => {
-          const [x, y] = isContainerBody ? [e.clientX, e.clientY] : pointer(e, this._container)
           const path: (HTMLElement | SVGGElement)[] = (e.composedPath && e.composedPath()) || (e as any).path || [e.target]
 
           // Go through all of the configured triggers
-          for (const className of Object.keys(triggers)) {
-            const template = triggers[className]
+          for (const className of Object.keys(config.triggers)) {
+            const template = config.triggers[className]
             if (!template) continue // Skip if the trigger is not configured
 
             const els = selection.selectAll<HTMLElement | SVGGElement, unknown>(`.${className}`).nodes()
@@ -196,8 +274,15 @@ export class Tooltip {
                 const i = els.indexOf(el)
                 const d = select(el).datum()
                 const content = template(d, i, els)
-                if (content) this.show(content, { x, y })
-                else this.hide()
+
+                if (content) {
+                  // Render Tooltip and then place based on the configuration
+                  this._render(content)
+                  if (config.followCursor) this.placeByPointerEvent(e)
+                  else this.placeByElement(el)
+                } else {
+                  this.hide()
+                }
 
                 e.stopPropagation() // Stop propagation to prevent other interfering events from being triggered, e.g. Crosshair
                 return // Stop looking for other matches
@@ -215,6 +300,17 @@ export class Tooltip {
           this.hide()
         })
     })
+
+    // Set up Tooltip hover
+    if (config.allowHover) {
+      this.div
+        .on('mouseenter.tooltip', this.display.bind(this))
+        .on('mouseleave.tooltip', this.hide.bind(this))
+    } else {
+      this.div
+        .on('mouseenter.tooltip', null)
+        .on('mouseleave.tooltip', null)
+    }
   }
 
   private _setUpAttributes (): void {

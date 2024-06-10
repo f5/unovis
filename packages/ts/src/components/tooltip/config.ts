@@ -9,6 +9,10 @@ export interface TooltipConfigInterface {
   components?: ComponentCore<unknown>[];
   /** Container to where the Tooltip component should be inserted. Default: `undefined` */
   container?: HTMLElement;
+  /** Follow the mouse cursor. Default: `true` */
+  followCursor?: boolean;
+  /** Allow the tooltip to hovered over and interacted with. Default: `true` */
+  allowHover?: boolean;
   /** Horizontal placement of the tooltip. Default: `Position.Auto` */
   horizontalPlacement?: Position | string | undefined;
   /** Horizontal shift of the tooltip in pixels. Default: `0` */
@@ -57,6 +61,8 @@ export interface TooltipConfigInterface {
 export const TooltipDefaultConfig: TooltipConfigInterface = {
   components: [],
   container: undefined,
+  followCursor: true,
+  allowHover: true,
   horizontalPlacement: Position.Auto,
   horizontalShift: 0,
   verticalPlacement: Position.Top,
