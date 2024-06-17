@@ -55,6 +55,7 @@ export function createLinks<N extends GraphInputNode, L extends GraphInputLink> 
 
   selection.append('g')
     .attr('class', linkSelectors.flowGroup)
+    .style('opacity', 0)
     .selectAll(`.${linkSelectors.flowCircle}`)
     .data(range(0, 6)).enter()
     .append('circle')
@@ -186,7 +187,6 @@ export function updateLinks<N extends GraphInputNode, L extends GraphInputLink> 
     flowGroup
       .attr('transform', linkShiftTransform)
       .style('display', getBoolean(d, linkFlow, d._indexGlobal) ? null : 'none')
-      .style('opacity', 0)
 
     flowGroup
       .selectAll(`.${linkSelectors.flowCircle}`)
