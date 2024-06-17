@@ -31,7 +31,7 @@ import * as linkSelectors from './modules/link/style'
 import * as panelSelectors from './modules/panel/style'
 
 // Modules
-import { createNodes, updateNodes, removeNodes, zoomNodesThrottled, zoomNodes, updateSelectedNodes } from './modules/node'
+import { createNodes, updateNodes, removeNodes, zoomNodesThrottled, zoomNodes, updateNodeSelectedGreyout } from './modules/node'
 import { getMaxNodeSize, getNodeSize, getX, getY } from './modules/node/helper'
 import { createLinks, updateLinks, removeLinks, zoomLinksThrottled, zoomLinks, animateLinkFlow, updateSelectedLinks } from './modules/link'
 import { getDoubleArrowPath, getArrowPath } from './modules/link/helper'
@@ -48,6 +48,7 @@ export class Graph<
   > {
   static selectors = {
     root: generalSelectors.root,
+    graphGroup: generalSelectors.graphGroup,
     background: generalSelectors.background,
     node: nodeSelectors.gNode,
     nodeShape: nodeSelectors.node,
@@ -76,11 +77,11 @@ export class Graph<
   private _selectedNodes: GraphNode<N, L>[]
   private _selectedLink: GraphLink<N, L>
 
-  private _graphGroup: Selection<SVGGElement, unknown, SVGGElement, undefined>
-  private _panelsGroup: Selection<SVGGElement, unknown, SVGGElement, undefined>
-  private _linksGroup: Selection<SVGGElement, unknown, SVGGElement, undefined>
-  private _nodesGroup: Selection<SVGGElement, unknown, SVGGElement, undefined>
-  private _brush: Selection<SVGGElement, unknown, SVGGElement, unknown>
+  private _graphGroup: Selection<SVGGElement, unknown, null, undefined>
+  private _panelsGroup: Selection<SVGGElement, unknown, null, undefined>
+  private _linksGroup: Selection<SVGGElement, unknown, null, undefined>
+  private _nodesGroup: Selection<SVGGElement, unknown, null, undefined>
+  private _brush: Selection<SVGGElement, unknown, null, unknown>
   private _timer: Timer
 
   private _isFirstRender = true
@@ -227,6 +228,12 @@ export class Graph<
     // Apply layout and render
     if (this._shouldRecalculateLayout || !this._layoutCalculationPromise) {
       this._layoutCalculationPromise = this._calculateLayout()
+
+      // Call `onLayoutCalculated` after the layout calculation is done and the `this._layoutCalculationPromise`
+      // variable is set because the `fitView` function relies on the promise to be initialized
+      this._layoutCalculationPromise.then(() => {
+        this.config.onLayoutCalculated?.(datamodel.nodes, datamodel.links)
+      })
     }
 
     this._layoutCalculationPromise.then((isFirstRender) => {
@@ -288,8 +295,10 @@ export class Graph<
       // calculation and they were not set up properly (see the render function of `ComponentCore`)
       this._setUpComponentEventsThrottled()
       this._setCustomAttributesThrottled()
-    })
 
+      // On render complete callback
+      this.config.onRenderComplete?.(this.g, datamodel.nodes, datamodel.links, this.config, animDuration, this._scale)
+    })
 
     this._isFirstRender = false
   }
@@ -304,7 +313,7 @@ export class Graph<
 
     const nodeGroupsEnter = nodeGroups.enter().append('g')
       .attr('class', nodeSelectors.gNode)
-      .call(createNodes, config, duration)
+      .call(createNodes, config, duration, this._scale)
 
     const nodeGroupsMerged = nodeGroups.merge(nodeGroupsEnter)
     const nodeUpdateSelection = updateNodes(nodeGroupsMerged, config, duration, this._scale)
@@ -314,7 +323,7 @@ export class Graph<
     const nodesGroupExit = nodeGroups.exit<GraphNode<N, L>>()
     nodesGroupExit
       .classed(nodeSelectors.gNodeExit, true)
-      .call(removeNodes, config, duration)
+      .call(removeNodes, config, duration, this._scale)
 
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const thisRef = this
@@ -430,7 +439,6 @@ export class Graph<
     // We need to update the panels data right after the layout calculation
     // because we want to have the latest coordinates before calling `onLayoutCalculated`
     this._initPanelsData()
-    this.config.onLayoutCalculated?.(datamodel.nodes, datamodel.links)
 
     this._shouldRecalculateLayout = false
     this._currentLayoutType = config.layoutType as GraphLayoutType
@@ -599,7 +607,7 @@ export class Graph<
     linkElements.call(updateSelectedLinks, config, this._scale)
 
     const nodeElements = this._nodesGroup.selectAll<SVGGElement, GraphNode<N, L>>(`.${nodeSelectors.gNode}`)
-    nodeElements.call(updateSelectedNodes, config)
+    nodeElements.call(updateNodeSelectedGreyout, config)
 
     // this._drawPanels(nodeElements, 0)
   }
@@ -741,7 +749,7 @@ export class Graph<
       .classed(nodeSelectors.brushed, n => n._state.brushed)
 
     const brushedNodes = this._nodesGroup.selectAll<SVGGElement, GraphNode<N, L>>(`.${nodeSelectors.brushed}`)
-      .call(updateSelectedNodes, config, 0, this._scale)
+      .call(updateNodeSelectedGreyout, config, 0, this._scale)
 
     this._brush.classed('active', event.type !== 'end')
     config.onNodeSelectionBrush?.(brushedNodes.data(), event)
@@ -873,7 +881,7 @@ export class Graph<
       .classed(nodeSelectors.brushable, false)
       .classed(nodeSelectors.brushed, false)
       .each(n => { n._state.brushed = false })
-      .call(updateSelectedNodes, this.config, 0, this._scale)
+      .call(updateNodeSelectedGreyout, this.config, 0, this._scale)
   }
 
   private _shouldLayoutRecalculate (): boolean {
