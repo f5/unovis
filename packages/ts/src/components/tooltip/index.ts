@@ -76,7 +76,7 @@ export class Tooltip {
   }
 
   /** Show the tooltip by providing content and position */
-  public show (html: string | HTMLElement, pos: { x: number; y: number }): void {
+  public show (html: string | HTMLElement | null, pos: { x: number; y: number }): void {
     this._render(html)
     this.place(pos)
   }
@@ -214,11 +214,11 @@ export class Tooltip {
     return this._container === document.body
   }
 
-  private _render (html: string | HTMLElement): void {
+  private _render (html: string | HTMLElement | null): void {
     if (html instanceof HTMLElement) {
       const node = this.div.select(':first-child').node()
       if (node !== html) this.div.html('').append(() => html)
-    } else {
+    } else if (html) {
       this.div.html(html)
     }
 
