@@ -31,7 +31,7 @@ export class Tooltip {
   constructor (config: TooltipConfigInterface = {}) {
     this.element = document.createElement('div')
     this.div = select(this.element)
-      .attr('class', s.tooltip)
+      .attr('class', s.root)
 
     this.setConfig(config)
     this.components = this.config.components

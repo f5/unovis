@@ -2,6 +2,22 @@ import { css, injectGlobal } from '@emotion/css'
 
 export const root = css`
   label: tooltip;
+  display: inline-block;
+  left: 0;
+  bottom: 0;
+  min-width: max-content;
+  position: absolute;
+  opacity: 0;
+  transition: opacity;
+  transition-duration: var(--vis-tooltip-transition-duration);
+  z-index: 999999;
+  padding: var(--vis-tooltip-padding);
+  color: var(--vis-tooltip-text-color);
+  border-radius: var(--vis-tooltip-border-radius);
+  box-shadow: var(--vis-tooltip-box-shadow);
+  border: solid 1px var(--vis-tooltip-border-color);
+  background-color: var(--vis-tooltip-background-color);
+  backdrop-filter: var(--vis-tooltip-backdrop-filter);
 `
 
 export const variables = injectGlobal`
@@ -35,26 +51,6 @@ export const variables = injectGlobal`
     --vis-tooltip-border-color: var(--vis-color-grey);
     --vis-tooltip-shadow-color: rgba(0,0,0, 0.95);
   }
-`
-
-export const tooltip = css`
-  label: tooltip;
-  display: inline-block;
-  left: 0;
-  bottom: 0;
-  min-width: max-content;
-  position: absolute;
-  opacity: 0;
-  transition: opacity;
-  transition-duration: var(--vis-tooltip-transition-duration);
-  z-index: 999999;
-  padding: var(--vis-tooltip-padding);
-  color: var(--vis-tooltip-text-color);
-  border-radius: var(--vis-tooltip-border-radius);
-  box-shadow: var(--vis-tooltip-box-shadow);
-  border: solid 1px var(--vis-tooltip-border-color);
-  background-color: var(--vis-tooltip-background-color);
-  backdrop-filter: var(--vis-tooltip-backdrop-filter);
 `
 
 export const positionFixed = css`
