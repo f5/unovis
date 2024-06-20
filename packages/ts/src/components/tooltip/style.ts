@@ -65,3 +65,9 @@ export const show = css`
 export const hidden = css`
   display: none;
 `
+
+export const nonInteractive = css`
+  label: non-interactive;
+  pointer-events: none;
+  user-select: none;
+`

@@ -109,47 +109,47 @@ export class Tooltip {
     }
     const { config } = this
     const isContainerBody = this.isContainerBody()
-    const width = this.element.offsetWidth
-    const height = this.element.offsetHeight
+    const tooltipWidth = this.element.offsetWidth
+    const tooltipHeight = this.element.offsetHeight
     const containerHeight = isContainerBody ? window.innerHeight : this._container.scrollHeight
     const containerWidth = isContainerBody ? window.innerWidth : this._container.scrollWidth
 
     const horizontalPlacement = config.horizontalPlacement === Position.Auto
-      ? (pos.x > containerWidth / 2 ? Position.Left : Position.Right)
+      ? Position.Center
       : config.horizontalPlacement
 
     const verticalPlacement = config.verticalPlacement === Position.Auto
-      ? (pos.y > containerHeight / 2 ? Position.Top : Position.Bottom)
+      ? ((pos.y - tooltipHeight) > containerHeight / 8 ? Position.Top : Position.Bottom)
       : config.verticalPlacement
 
     // dx and dy variables shift the tooltip from the default position (above the cursor, centred horizontally)
     const margin = 5
-    const dx = horizontalPlacement === Position.Left ? -width - margin - config.horizontalShift
-      : horizontalPlacement === Position.Center ? -width / 2
+    const dx = horizontalPlacement === Position.Left ? -tooltipWidth - margin - config.horizontalShift
+      : horizontalPlacement === Position.Center ? -tooltipWidth / 2
         : margin + config.horizontalShift
-    const dy = verticalPlacement === Position.Bottom ? height + margin + config.verticalShift
-      : verticalPlacement === Position.Center ? height / 2
+    const dy = verticalPlacement === Position.Bottom ? tooltipHeight + margin + config.verticalShift
+      : verticalPlacement === Position.Center ? tooltipHeight / 2
         : -margin - config.verticalShift
 
     // Constraint to container
     const paddingX = 10
-    const hitRight = pos.x > (containerWidth - width - dx - paddingX)
+    const hitRight = pos.x > (containerWidth - tooltipWidth - dx - paddingX)
     const hitLeft = pos.x < -dx + paddingX
-    const constraintX = hitRight ? (containerWidth - width - dx) - pos.x - paddingX
+    const constraintX = hitRight ? (containerWidth - tooltipWidth - dx) - pos.x - paddingX
       : hitLeft ? -dx - pos.x + paddingX : 0
 
     const paddingY = 10
     const hitBottom = pos.y > (containerHeight - dy - paddingY)
-    const hitTop = pos.y < (height - dy + paddingY)
+    const hitTop = pos.y < (tooltipHeight - dy + paddingY)
     const constraintY = hitBottom ? containerHeight - dy - pos.y - paddingY
-      : hitTop ? height - dy - pos.y + paddingY : 0
+      : hitTop ? tooltipHeight - dy - pos.y + paddingY : 0
 
     // Placing
     // If the container size is smaller than the the tooltip size we just stick the tooltip to the top / left
-    const x = containerWidth < width ? 0 : pos.x + constraintX + dx
-    const y = containerHeight < height ? height : pos.y + constraintY + dy
+    const x = containerWidth < tooltipWidth ? 0 : pos.x + constraintX + dx
+    const y = containerHeight < tooltipHeight ? tooltipHeight : pos.y + constraintY + dy
 
-    this._applyPosition(x, y, height)
+    this._applyPosition(x, y, null, tooltipHeight)
   }
 
   public placeByPointerEvent (e: PointerEvent | MouseEvent): void {
@@ -165,28 +165,33 @@ export class Tooltip {
     const tooltipHeight = this.element.offsetHeight
     const isContainerBody = this.isContainerBody()
     const containerWidth = isContainerBody ? window.innerWidth : this._container.scrollWidth
-
-    const boundingRect = hoveredElement.getBoundingClientRect()
-    let [x, y] = [0, 0]
+    const hoveredElementRect = hoveredElement.getBoundingClientRect()
 
     // We use D3's point transformation to get the correct position of the element by pretending it's a pointer event
     // See more: https://github.com/d3/d3-selection/blob/main/src/pointer.js
-    const elementPos = pointer({ clientX: boundingRect.x, clientY: boundingRect.y, pageX: boundingRect.x, pageY: boundingRect.y }, this._container)
+    const elementPos = pointer({
+      clientX: hoveredElementRect.x,
+      clientY: hoveredElementRect.y,
+      pageX: hoveredElementRect.x,
+      pageY: hoveredElementRect.y,
+    }, this._container)
+
     const horizontalPlacement = config.horizontalPlacement === Position.Auto
       ? (elementPos[0] - tooltipWidth < 0 ? Position.Right
         : elementPos[0] + tooltipWidth > containerWidth ? Position.Left : Position.Center)
       : config.horizontalPlacement
 
+    let translateX = ''
     switch (horizontalPlacement) {
       case Position.Left:
-        x = elementPos[0] - tooltipWidth - margin
+        translateX = `calc(-100% - ${margin}px)`
         break
       case Position.Right:
-        x = elementPos[0] + boundingRect.width + margin
+        translateX = `calc(${hoveredElementRect.width}px + ${margin}px)`
         break
       case Position.Center:
       default:
-        x = elementPos[0] + boundingRect.width / 2 - tooltipWidth / 2
+        translateX = `calc(-50% + ${hoveredElementRect.width / 2}px)`
         break
     }
 
@@ -194,20 +199,23 @@ export class Tooltip {
       ? (horizontalPlacement !== Position.Center ? Position.Center
         : elementPos[1] - tooltipHeight < 0 ? Position.Bottom : Position.Top)
       : config.verticalPlacement
+
+    let translateY = ''
     switch (verticalPlacement) {
       case Position.Center:
-        y = elementPos[1] + boundingRect.height / 2 + tooltipHeight / 2
+        translateY = `calc(50% + ${hoveredElementRect.height / 2}px)`
         break
       case Position.Bottom:
-        y = elementPos[1] + boundingRect.height + tooltipHeight + margin
+        translateY = `calc(100% + ${hoveredElementRect.height}px + ${margin}px)`
         break
       case Position.Top:
       default:
-        y = elementPos[1] - margin
+        translateY = `${-margin}px`
         break
     }
 
-    this._applyPosition(x, y, tooltipHeight)
+    const translate = `translate(${translateX}, ${translateY})`
+    this._applyPosition(elementPos[0], elementPos[1], translate, tooltipHeight)
   }
 
   public isContainerBody (): boolean {
@@ -215,6 +223,7 @@ export class Tooltip {
   }
 
   private _render (html: string | HTMLElement | null | void): void {
+    const { config } = this
     if (html instanceof HTMLElement) {
       const node = this.div.select(':first-child').node()
       if (node !== html) this.div.html('').append(() => html)
@@ -223,13 +232,14 @@ export class Tooltip {
     }
 
     this.div
+      .classed(s.nonInteractive, !config.allowHover || config.followCursor)
       .classed(s.hidden, false)
       .classed(s.show, true)
 
     this._isShown = true
   }
 
-  private _applyPosition (x: number, y: number, tooltipHeight: number): void {
+  private _applyPosition (x: number, y: number, transform: string | null, tooltipHeight: number): void {
     const isContainerBody = this.isContainerBody()
     const containerHeight = isContainerBody ? window.innerHeight : this._container.scrollHeight
 
@@ -238,6 +248,9 @@ export class Tooltip {
       .style('top', isContainerBody ? `${y - tooltipHeight}px` : 'unset')
       .style('bottom', !isContainerBody ? `${containerHeight - y}px` : 'unset')
       .style('left', `${x}px`)
+      // We use `transform` to position the tooltip with relative units like percentages,
+      // this way it works automatically with dynamic content that can change the tooltip's size
+      .style('transform', transform)
   }
 
   private _setContainerPosition (): void {
@@ -304,7 +317,7 @@ export class Tooltip {
     })
 
     // Set up Tooltip hover
-    if (config.allowHover) {
+    if (config.allowHover && !config.followCursor) {
       this.div
         .on('mouseenter.tooltip', this.display.bind(this))
         .on('mouseleave.tooltip', this.hide.bind(this))
