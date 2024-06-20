@@ -9,9 +9,11 @@ export interface TooltipConfigInterface {
   components?: ComponentCore<unknown>[];
   /** Container to where the Tooltip component should be inserted. Default: `undefined` */
   container?: HTMLElement;
-  /** Follow the mouse cursor. Default: `true` */
+  /** Follow the mouse cursor. If `true`, the tooltip can't be hovered over
+   * even when `allowHover` is set to `true`. Default: `true` */
   followCursor?: boolean;
-  /** Allow the tooltip to hovered over and interacted with. Default: `true` */
+  /** Allow the tooltip to be hovered over and interacted with when `followCursor` is set to `false`.
+   * Default: `true` */
   allowHover?: boolean;
   /** Horizontal placement of the tooltip. Default: `Position.Auto` */
   horizontalPlacement?: Position | string | undefined;
