@@ -14,7 +14,7 @@ export const component = (): JSX.Element => {
     type: ['Positive', 'Zero', 'Negative'][i % 3],
   }))
   return (<>
-    <label>Show empty segments: <input type='checkbox' checked={showEmptySegments} onChange={e => toggleEmptySegments(e.target.checked)}/></label>
+    <label>Show empty segments show it show it: <input type='checkbox' checked={showEmptySegments} onChange={e => toggleEmptySegments(e.target.checked)}/></label>
     <VisXYContainer<TimeDataRecord> data={data} height={200}>
       <VisTimeline x={(d: TimeDataRecord) => d.timestamp} rowHeight={50} showEmptySegments={showEmptySegments} showLabels/>
       <VisAxis type='x' numTicks={3} tickFormat={(x: number) => new Date(x).toDateString()}/>
