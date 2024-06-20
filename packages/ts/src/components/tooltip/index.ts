@@ -76,7 +76,7 @@ export class Tooltip {
   }
 
   /** Show the tooltip by providing content and position */
-  public show (html: string | HTMLElement | null, pos: { x: number; y: number }): void {
+  public show (html: string | HTMLElement | null | void, pos: { x: number; y: number }): void {
     this._render(html)
     this.place(pos)
   }
@@ -214,7 +214,7 @@ export class Tooltip {
     return this._container === document.body
   }
 
-  private _render (html: string | HTMLElement | null): void {
+  private _render (html: string | HTMLElement | null | void): void {
     if (html instanceof HTMLElement) {
       const node = this.div.select(':first-child').node()
       if (node !== html) this.div.html('').append(() => html)
@@ -275,13 +275,15 @@ export class Tooltip {
                 const d = select(el).datum()
                 const content = template(d, i, els)
 
-                if (content) {
-                  // Render Tooltip and then place based on the configuration
+                if (content === null) {
+                  // If the content is `null`, we hide the tooltip
+                  this.hide()
+                } else {
+                  // Otherwise we show the tooltip, but don't render the content if it's `undefined` or
+                  // an empty string. This way we can allow it to work with things like `createPortal` in React
                   this._render(content)
                   if (config.followCursor) this.placeByPointerEvent(e)
                   else this.placeByElement(el)
-                } else {
-                  this.hide()
                 }
 
                 e.stopPropagation() // Stop propagation to prevent other interfering events from being triggered, e.g. Crosshair
