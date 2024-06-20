@@ -5,7 +5,7 @@ import { VisXYContainer, VisAxis, VisScatter, VisTooltip } from '@unovis/react'
 import { XYDataRecord } from '@src/utils/data'
 
 export const title = 'Tooltip Sticky Position'
-export const subTitle = 'For testing resize behavior'
+export const subTitle = 'Hoverable Tooltip'
 
 export const component = (): JSX.Element => {
   const data = [
