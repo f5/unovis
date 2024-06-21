@@ -27,6 +27,9 @@ export class Tooltip {
   private _setContainerPositionThrottled = throttle(this._setContainerPosition, 500)
   private _isShown = false
   private _container: HTMLElement
+  private _mutationObserver: MutationObserver
+  private _hoveredElement: HTMLElement | SVGElement
+  private _position: [number, number]
 
   constructor (config: TooltipConfigInterface = {}) {
     this.element = document.createElement('div')
@@ -35,6 +38,22 @@ export class Tooltip {
 
     this.setConfig(config)
     this.components = this.config.components
+
+    // Set up MutationObserver to automatically re-position the tooltip
+    // if the content has been dynamically changed
+    this._mutationObserver = new MutationObserver(() => {
+      if (!this._isShown) return
+
+      // Handle changes to the content of this.div
+      // Add your logic here
+      if (!this.config.followCursor && this._hoveredElement) {
+        this.placeByElement(this._hoveredElement)
+      } else if (this._position) {
+        this.place({ x: this._position[0], y: this._position[1] })
+      }
+    })
+
+    this._mutationObserver.observe(this.div.node(), { childList: true, subtree: true })
   }
 
   public setConfig (config: TooltipConfigInterface): void {
@@ -83,7 +102,8 @@ export class Tooltip {
 
   /** Hide the tooltip */
   public hide (): void {
-    this.div.classed(s.show, false)
+    this.div
+      .classed(s.show, false) // The `show` class triggers the opacity transition
       .on('transitionend', () => {
         // We hide the element once the transition completes
         // This ensures container overflow will not occur when the window is resized
@@ -96,8 +116,8 @@ export class Tooltip {
   /** Simply displays the tooltip with its previous content on position */
   public display (): void {
     this.div
-      .classed(s.hidden, false)
-      .classed(s.show, true)
+      .classed(s.hidden, false) // The `hidden` class sets `display: none;`
+      .classed(s.show, true) // The `show` class triggers the opacity transition
 
     this._isShown = true
   }
@@ -152,13 +172,7 @@ export class Tooltip {
     this._applyPosition(x, y, null, tooltipHeight)
   }
 
-  public placeByPointerEvent (e: PointerEvent | MouseEvent): void {
-    const isContainerBody = this.isContainerBody()
-    const [x, y] = isContainerBody ? [e.clientX, e.clientY] : pointer(e, this._container)
-    this.place({ x, y })
-  }
-
-  public placeByElement (hoveredElement: SVGGElement | HTMLElement): void {
+  public placeByElement (hoveredElement: SVGElement | HTMLElement): void {
     const { config } = this
     const margin = 5
     const tooltipWidth = this.element.offsetWidth
@@ -203,14 +217,14 @@ export class Tooltip {
     let translateY = ''
     switch (verticalPlacement) {
       case Position.Center:
-        translateY = `calc(50% + ${hoveredElementRect.height / 2}px)`
+        translateY = `calc(50% + ${hoveredElementRect.height / 2}px)` // `calc(-50% + ${hoveredElementRect.height / 2}px)`
         break
       case Position.Bottom:
-        translateY = `calc(100% + ${hoveredElementRect.height}px + ${margin}px)`
+        translateY = `calc(100% + ${hoveredElementRect.height}px + ${margin}px)` // `calc(${hoveredElementRect.height}px + ${margin}px)`
         break
       case Position.Top:
       default:
-        translateY = `${-margin}px`
+        translateY = `${-margin}px` // `calc(-100% - ${margin}px)`
         break
     }
 
@@ -233,10 +247,8 @@ export class Tooltip {
 
     this.div
       .classed(s.nonInteractive, !config.allowHover || config.followCursor)
-      .classed(s.hidden, false)
-      .classed(s.show, true)
 
-    this._isShown = true
+    this.display()
   }
 
   private _applyPosition (x: number, y: number, transform: string | null, tooltipHeight: number): void {
@@ -287,7 +299,7 @@ export class Tooltip {
                 const i = els.indexOf(el)
                 const d = select(el).datum()
                 const content = template(d, i, els)
-
+                const [x, y] = this.isContainerBody() ? [e.clientX, e.clientY] : pointer(e, this._container)
                 if (content === null) {
                   // If the content is `null`, we hide the tooltip
                   this.hide()
@@ -295,12 +307,21 @@ export class Tooltip {
                   // Otherwise we show the tooltip, but don't render the content if it's `undefined` or
                   // an empty string. This way we can allow it to work with things like `createPortal` in React
                   this._render(content)
-                  if (config.followCursor) this.placeByPointerEvent(e)
+                  if (config.followCursor) this.place({ x, y })
                   else this.placeByElement(el)
                 }
 
-                e.stopPropagation() // Stop propagation to prevent other interfering events from being triggered, e.g. Crosshair
-                return // Stop looking for other matches
+                // Store the hovered element and the event for future reference,
+                // i.e. to re-position the tooltip if the content has been changed
+                // by something else and it was captured by the MutationObserver
+                this._hoveredElement = el
+                this._position = this.isContainerBody() ? [e.clientX, e.clientY] : pointer(e, this._container)
+
+                // Stop propagation to prevent other interfering events from being triggered, e.g. Crosshair
+                e.stopPropagation()
+
+                // Stop looking for other matches
+                return
               }
             }
           }
@@ -338,6 +359,7 @@ export class Tooltip {
   }
 
   public destroy (): void {
+    this._mutationObserver.disconnect()
     this.div?.remove()
   }
 }
