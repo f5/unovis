@@ -20,6 +20,11 @@ export const root = css`
   backdrop-filter: var(--vis-tooltip-backdrop-filter);
 `
 
+/**
+ * @deprecated This selector is deprecated and will be removed in future versions. Use `root` instead.
+ */
+export const tooltip = root
+
 export const variables = injectGlobal`
   :root {
     --vis-tooltip-background-color: rgba(255, 255, 255, 0.95);
