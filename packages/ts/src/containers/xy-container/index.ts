@@ -178,6 +178,7 @@ export class XYContainer<Datum> extends ContainerCore {
 
     // Defs
     this.element.appendChild(this._svgDefs.node())
+    this.element.appendChild(this._svgDefsExternal.node())
 
     // Rendering
     if (!preventRender) this.render()
