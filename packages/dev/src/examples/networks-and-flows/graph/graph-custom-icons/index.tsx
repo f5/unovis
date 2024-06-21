@@ -1,6 +1,5 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { VisSingleContainer, VisGraph } from '@unovis/react'
-import { NodeDatum } from '@src/utils/data'
 
 import personIcon from './person.svg?raw'
 import roleIcon from './role.svg?raw'
@@ -10,7 +9,7 @@ import bucketIcon from './bucket.svg?raw'
 import s from './index.module.css'
 
 export const title = 'Graph: SVG Node Icons'
-export const subTitle = 'cured links, long labels'
+export const subTitle = 'Re-render every second'
 
 export const component = (): JSX.Element => {
   const svgDefs = `
@@ -37,18 +36,28 @@ export const component = (): JSX.Element => {
     { source: 1, target: 5, label: { text: '2' } },
   ]
 
-  const data = { nodes, links }
+  const [data, setData] = useState({ nodes, links })
+
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      // Re-render the component here to test the performance
+      setData({ nodes, links })
+    }, 1000)
+
+    return () => clearInterval(interval)
+  }, [])
+
   return (
     <div className={s.graph}>
       <VisSingleContainer svgDefs={svgDefs} height={600}>
-        <VisGraph
+        <VisGraph<typeof nodes[number], typeof links[number]>
           data={data}
-          nodeIcon={(n: NodeDatum) => n.icon}
+          nodeIcon={(n) => n.icon}
           nodeIconSize={18}
           nodeStroke={'none'}
-          nodeFill={(n: NodeDatum) => n.fillColor}
-          nodeLabel={(n: NodeDatum) => n.label}
-          nodeSubLabel={(n: NodeDatum) => n.sublabel}
+          nodeFill={n => n.fillColor}
+          nodeLabel={n => n.label}
+          nodeSubLabel={n => n.sublabel}
           layoutType='dagre'
           dagreLayoutSettings={{
             rankdir: 'LR',
