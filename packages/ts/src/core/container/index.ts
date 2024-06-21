@@ -22,6 +22,7 @@ export class ContainerCore {
   protected _isFirstRender = true
   protected _resizeObserver: ResizeObserver | undefined
   protected _svgDefs: Selection<SVGDefsElement, unknown, null, undefined>
+  protected _svgDefsExternal: Selection<SVGDefsElement, unknown, null, undefined>
   private _containerSize: { width: number; height: number }
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -45,6 +46,7 @@ export class ContainerCore {
       .attr('aria-hidden', true)
 
     this._svgDefs = this.svg.append('defs')
+    this._svgDefsExternal = this.svg.append('defs')
     this.element = this.svg.node()
   }
 
@@ -61,12 +63,12 @@ export class ContainerCore {
 
   // The `_render` step should be used to perform the actual rendering
   protected _render (duration?: number): void {
-    const { config } = this
+    const { config, prevConfig } = this
 
     // Add `svgDefs` if provided in the config
-    if (config.svgDefs) {
-      this.svg.select('.svgDefs').remove()
-      this.svg.append('defs').attr('class', 'svgDefs').html(config.svgDefs)
+    if (config.svgDefs !== prevConfig.svgDefs) {
+      this._svgDefsExternal.selectAll('*').remove()
+      this._svgDefsExternal.html(config.svgDefs)
     }
 
     // Apply the `aria-label` attribute

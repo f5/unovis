@@ -65,6 +65,7 @@ export class SingleContainer<Data> extends ContainerCore {
 
     // Defs
     this.element.appendChild(this._svgDefs.node())
+    this.element.appendChild(this._svgDefsExternal.node())
 
     if (!preventRender) this.render()
   }
