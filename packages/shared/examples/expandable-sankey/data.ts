@@ -12,7 +12,7 @@ export type Node = {
 
 export type Link = { source: string; target: string; value: number }
 
-export type Sankey<N, L extends Link> = {
+export type Sankey<N extends Node, L extends Link> = {
   nodes: N[];
   links: L[];
   expand: (n: SankeyNode<N, L>) => void;
