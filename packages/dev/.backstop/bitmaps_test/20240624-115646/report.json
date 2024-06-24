@@ -1,0 +1,1362 @@
+{
+  "testSuite": "BackstopJS",
+  "tests": [
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Leaflet_Map__Color_Map_0_exampleViewer_0_Vertical__Phone.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Leaflet_Map__Color_Map_0_exampleViewer_0_Vertical__Phone.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Leaflet_Map__Color_Map_0_exampleViewer_0_Vertical__Phone.png",
+        "label": "Leaflet Map | Color Map",
+        "requireSameDimensions": true,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Leaflet/Color%20Map",
+        "referenceUrl": "",
+        "expect": 0,
+        "viewportLabel": "Vertical | Phone",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Leaflet_Map__Color_Map_0_exampleViewer_1_Horizontal__Desktop.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Leaflet_Map__Color_Map_0_exampleViewer_1_Horizontal__Desktop.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Leaflet_Map__Color_Map_0_exampleViewer_1_Horizontal__Desktop.png",
+        "label": "Leaflet Map | Color Map",
+        "requireSameDimensions": true,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Leaflet/Color%20Map",
+        "referenceUrl": "",
+        "expect": 0,
+        "viewportLabel": "Horizontal | Desktop",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Leaflet_Map__Theme_0_exampleViewer_0_Vertical__Phone.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Leaflet_Map__Theme_0_exampleViewer_0_Vertical__Phone.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Leaflet_Map__Theme_0_exampleViewer_0_Vertical__Phone.png",
+        "label": "Leaflet Map | Theme",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Leaflet/Light%20and%20Dark%20Theme",
+        "expect": 0,
+        "viewportLabel": "Vertical | Phone",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Leaflet_Map__Theme_0_exampleViewer_1_Horizontal__Desktop.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Leaflet_Map__Theme_0_exampleViewer_1_Horizontal__Desktop.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Leaflet_Map__Theme_0_exampleViewer_1_Horizontal__Desktop.png",
+        "label": "Leaflet Map | Theme",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Leaflet/Light%20and%20Dark%20Theme",
+        "expect": 0,
+        "viewportLabel": "Horizontal | Desktop",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Leaflet_Map__Raster_Tiles_0_exampleViewer_0_Vertical__Phone.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Leaflet_Map__Raster_Tiles_0_exampleViewer_0_Vertical__Phone.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Leaflet_Map__Raster_Tiles_0_exampleViewer_0_Vertical__Phone.png",
+        "label": "Leaflet Map | Raster Tiles",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Leaflet/Raster%20Leaflet%20Map",
+        "expect": 0,
+        "viewportLabel": "Vertical | Phone",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "rawMisMatchPercentage": 0.00012347874189979453,
+          "misMatchPercentage": "0.00",
+          "analysisTime": 30
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Leaflet_Map__Raster_Tiles_0_exampleViewer_1_Horizontal__Desktop.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Leaflet_Map__Raster_Tiles_0_exampleViewer_1_Horizontal__Desktop.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Leaflet_Map__Raster_Tiles_0_exampleViewer_1_Horizontal__Desktop.png",
+        "label": "Leaflet Map | Raster Tiles",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Leaflet/Raster%20Leaflet%20Map",
+        "expect": 0,
+        "viewportLabel": "Horizontal | Desktop",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "rawMisMatchPercentage": 0,
+          "misMatchPercentage": "0.00",
+          "analysisTime": 23
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Leaflet_Map__Vector_Tiles_0_exampleViewer_0_Vertical__Phone.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Leaflet_Map__Vector_Tiles_0_exampleViewer_0_Vertical__Phone.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Leaflet_Map__Vector_Tiles_0_exampleViewer_0_Vertical__Phone.png",
+        "label": "Leaflet Map | Vector Tiles",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Leaflet/Vector%20Map",
+        "expect": 0,
+        "viewportLabel": "Vertical | Phone",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Leaflet_Map__Vector_Tiles_0_exampleViewer_1_Horizontal__Desktop.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Leaflet_Map__Vector_Tiles_0_exampleViewer_1_Horizontal__Desktop.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Leaflet_Map__Vector_Tiles_0_exampleViewer_1_Horizontal__Desktop.png",
+        "label": "Leaflet Map | Vector Tiles",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Leaflet/Vector%20Map",
+        "expect": 0,
+        "viewportLabel": "Horizontal | Desktop",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Donut__Empty_Segments_0_exampleViewer_0_Vertical__Phone.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Donut__Empty_Segments_0_exampleViewer_0_Vertical__Phone.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Donut__Empty_Segments_0_exampleViewer_0_Vertical__Phone.png",
+        "label": "Donut | Empty Segments",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Donut/Donut:%20Empty%20Segments",
+        "expect": 0,
+        "viewportLabel": "Vertical | Phone",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Donut__Empty_Segments_0_exampleViewer_1_Horizontal__Desktop.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Donut__Empty_Segments_0_exampleViewer_1_Horizontal__Desktop.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Donut__Empty_Segments_0_exampleViewer_1_Horizontal__Desktop.png",
+        "label": "Donut | Empty Segments",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Donut/Donut:%20Empty%20Segments",
+        "expect": 0,
+        "viewportLabel": "Horizontal | Desktop",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Nested_Donut__Basic_0_exampleViewer_0_Vertical__Phone.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Nested_Donut__Basic_0_exampleViewer_0_Vertical__Phone.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Nested_Donut__Basic_0_exampleViewer_0_Vertical__Phone.png",
+        "label": "Nested Donut | Basic",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Nested%20Donut/Basic%20Nested%20Donut",
+        "expect": 0,
+        "viewportLabel": "Vertical | Phone",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Nested_Donut__Basic_0_exampleViewer_1_Horizontal__Desktop.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Nested_Donut__Basic_0_exampleViewer_1_Horizontal__Desktop.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Nested_Donut__Basic_0_exampleViewer_1_Horizontal__Desktop.png",
+        "label": "Nested Donut | Basic",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Nested%20Donut/Basic%20Nested%20Donut",
+        "expect": 0,
+        "viewportLabel": "Horizontal | Desktop",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Nested_Donut__Transitions_0_exampleViewer_0_Vertical__Phone.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Nested_Donut__Transitions_0_exampleViewer_0_Vertical__Phone.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Nested_Donut__Transitions_0_exampleViewer_0_Vertical__Phone.png",
+        "label": "Nested Donut | Transitions",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Nested%20Donut/Nested%20Donut%20Data%20Transitions",
+        "expect": 0,
+        "viewportLabel": "Vertical | Phone",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Nested_Donut__Transitions_0_exampleViewer_1_Horizontal__Desktop.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Nested_Donut__Transitions_0_exampleViewer_1_Horizontal__Desktop.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Nested_Donut__Transitions_0_exampleViewer_1_Horizontal__Desktop.png",
+        "label": "Nested Donut | Transitions",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Nested%20Donut/Nested%20Donut%20Data%20Transitions",
+        "expect": 0,
+        "viewportLabel": "Horizontal | Desktop",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Nested_Donut__Interactive_0_exampleViewer_0_Vertical__Phone.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Nested_Donut__Interactive_0_exampleViewer_0_Vertical__Phone.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Nested_Donut__Interactive_0_exampleViewer_0_Vertical__Phone.png",
+        "label": "Nested Donut | Interactive",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Nested%20Donut/Interactive%20Nested%20Donut",
+        "expect": 0,
+        "viewportLabel": "Vertical | Phone",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Nested_Donut__Interactive_0_exampleViewer_1_Horizontal__Desktop.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Nested_Donut__Interactive_0_exampleViewer_1_Horizontal__Desktop.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Nested_Donut__Interactive_0_exampleViewer_1_Horizontal__Desktop.png",
+        "label": "Nested Donut | Interactive",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Nested%20Donut/Interactive%20Nested%20Donut",
+        "expect": 0,
+        "viewportLabel": "Horizontal | Desktop",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Nested_Donut__Segment_Labels_0_exampleViewer_0_Vertical__Phone.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Nested_Donut__Segment_Labels_0_exampleViewer_0_Vertical__Phone.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Nested_Donut__Segment_Labels_0_exampleViewer_0_Vertical__Phone.png",
+        "label": "Nested Donut | Segment Labels",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Nested%20Donut/Segment%20labels",
+        "expect": 0,
+        "viewportLabel": "Vertical | Phone",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Nested_Donut__Segment_Labels_0_exampleViewer_1_Horizontal__Desktop.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Nested_Donut__Segment_Labels_0_exampleViewer_1_Horizontal__Desktop.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Nested_Donut__Segment_Labels_0_exampleViewer_1_Horizontal__Desktop.png",
+        "label": "Nested Donut | Segment Labels",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Nested%20Donut/Segment%20labels",
+        "expect": 0,
+        "viewportLabel": "Horizontal | Desktop",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Nested_Donut__Layer_Configuration_0_exampleViewer_0_Vertical__Phone.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Nested_Donut__Layer_Configuration_0_exampleViewer_0_Vertical__Phone.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Nested_Donut__Layer_Configuration_0_exampleViewer_0_Vertical__Phone.png",
+        "label": "Nested Donut | Layer Configuration",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Nested%20Donut/Nested%20Donut%20Layer%20Configuration",
+        "expect": 0,
+        "viewportLabel": "Vertical | Phone",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Nested_Donut__Layer_Configuration_0_exampleViewer_1_Horizontal__Desktop.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Nested_Donut__Layer_Configuration_0_exampleViewer_1_Horizontal__Desktop.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Nested_Donut__Layer_Configuration_0_exampleViewer_1_Horizontal__Desktop.png",
+        "label": "Nested Donut | Layer Configuration",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Nested%20Donut/Nested%20Donut%20Layer%20Configuration",
+        "expect": 0,
+        "viewportLabel": "Horizontal | Desktop",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Nested_Donut__Segment_Values_0_exampleViewer_0_Vertical__Phone.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Nested_Donut__Segment_Values_0_exampleViewer_0_Vertical__Phone.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Nested_Donut__Segment_Values_0_exampleViewer_0_Vertical__Phone.png",
+        "label": "Nested Donut | Segment Values",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Nested%20Donut/Segment%20values",
+        "expect": 0,
+        "viewportLabel": "Vertical | Phone",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Nested_Donut__Segment_Values_0_exampleViewer_1_Horizontal__Desktop.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Nested_Donut__Segment_Values_0_exampleViewer_1_Horizontal__Desktop.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Nested_Donut__Segment_Values_0_exampleViewer_1_Horizontal__Desktop.png",
+        "label": "Nested Donut | Segment Values",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Nested%20Donut/Segment%20values",
+        "expect": 0,
+        "viewportLabel": "Horizontal | Desktop",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Nested_Donut__Empty_Segments_0_exampleViewer_0_Vertical__Phone.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Nested_Donut__Empty_Segments_0_exampleViewer_0_Vertical__Phone.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Nested_Donut__Empty_Segments_0_exampleViewer_0_Vertical__Phone.png",
+        "label": "Nested Donut | Empty Segments",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Nested%20Donut/Empty%20Segments",
+        "expect": 0,
+        "viewportLabel": "Vertical | Phone",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Nested_Donut__Empty_Segments_0_exampleViewer_1_Horizontal__Desktop.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Nested_Donut__Empty_Segments_0_exampleViewer_1_Horizontal__Desktop.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Nested_Donut__Empty_Segments_0_exampleViewer_1_Horizontal__Desktop.png",
+        "label": "Nested Donut | Empty Segments",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Nested%20Donut/Empty%20Segments",
+        "expect": 0,
+        "viewportLabel": "Horizontal | Desktop",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Chord_Diagram__4_Levels_0_exampleViewer_0_Vertical__Phone.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Chord_Diagram__4_Levels_0_exampleViewer_0_Vertical__Phone.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Chord_Diagram__4_Levels_0_exampleViewer_0_Vertical__Phone.png",
+        "label": "Chord Diagram | 4 Levels",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Chord%20Diagram/Chord%20Diagram%20Hierarchy%20Nodes",
+        "expect": 0,
+        "viewportLabel": "Vertical | Phone",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Chord_Diagram__4_Levels_0_exampleViewer_1_Horizontal__Desktop.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Chord_Diagram__4_Levels_0_exampleViewer_1_Horizontal__Desktop.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Chord_Diagram__4_Levels_0_exampleViewer_1_Horizontal__Desktop.png",
+        "label": "Chord Diagram | 4 Levels",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Chord%20Diagram/Chord%20Diagram%20Hierarchy%20Nodes",
+        "expect": 0,
+        "viewportLabel": "Horizontal | Desktop",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Chord_Diagram__Multiple_Levels_0_exampleViewer_0_Vertical__Phone.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Chord_Diagram__Multiple_Levels_0_exampleViewer_0_Vertical__Phone.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Chord_Diagram__Multiple_Levels_0_exampleViewer_0_Vertical__Phone.png",
+        "label": "Chord Diagram | Multiple Levels",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Chord%20Diagram/Node%20Levels",
+        "expect": 0,
+        "viewportLabel": "Vertical | Phone",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Chord_Diagram__Multiple_Levels_0_exampleViewer_1_Horizontal__Desktop.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Chord_Diagram__Multiple_Levels_0_exampleViewer_1_Horizontal__Desktop.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Chord_Diagram__Multiple_Levels_0_exampleViewer_1_Horizontal__Desktop.png",
+        "label": "Chord Diagram | Multiple Levels",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Chord%20Diagram/Node%20Levels",
+        "expect": 0,
+        "viewportLabel": "Horizontal | Desktop",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Chord_Diagram__Basic_0_exampleViewer_0_Vertical__Phone.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Chord_Diagram__Basic_0_exampleViewer_0_Vertical__Phone.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Chord_Diagram__Basic_0_exampleViewer_0_Vertical__Phone.png",
+        "label": "Chord Diagram | Basic",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Chord%20Diagram/Basic%20Chord%20Diagram",
+        "expect": 0,
+        "viewportLabel": "Vertical | Phone",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Chord_Diagram__Basic_0_exampleViewer_1_Horizontal__Desktop.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Chord_Diagram__Basic_0_exampleViewer_1_Horizontal__Desktop.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Chord_Diagram__Basic_0_exampleViewer_1_Horizontal__Desktop.png",
+        "label": "Chord Diagram | Basic",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Chord%20Diagram/Basic%20Chord%20Diagram",
+        "expect": 0,
+        "viewportLabel": "Horizontal | Desktop",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Chord_Diagram__Exponent_0_exampleViewer_0_Vertical__Phone.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Chord_Diagram__Exponent_0_exampleViewer_0_Vertical__Phone.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Chord_Diagram__Exponent_0_exampleViewer_0_Vertical__Phone.png",
+        "label": "Chord Diagram | Exponent",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Chord%20Diagram/Labels%20and%20Radius%20Scale%20Exponent",
+        "expect": 0,
+        "viewportLabel": "Vertical | Phone",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Chord_Diagram__Exponent_0_exampleViewer_1_Horizontal__Desktop.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Chord_Diagram__Exponent_0_exampleViewer_1_Horizontal__Desktop.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Chord_Diagram__Exponent_0_exampleViewer_1_Horizontal__Desktop.png",
+        "label": "Chord Diagram | Exponent",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Chord%20Diagram/Labels%20and%20Radius%20Scale%20Exponent",
+        "expect": 0,
+        "viewportLabel": "Horizontal | Desktop",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Chord_Diagram__Node_Highlight_0_exampleViewer_0_Vertical__Phone.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Chord_Diagram__Node_Highlight_0_exampleViewer_0_Vertical__Phone.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Chord_Diagram__Node_Highlight_0_exampleViewer_0_Vertical__Phone.png",
+        "label": "Chord Diagram | Node Highlight",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Chord%20Diagram/Chord%20Diagram%20Node%20Selection",
+        "expect": 0,
+        "viewportLabel": "Vertical | Phone",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Chord_Diagram__Node_Highlight_0_exampleViewer_1_Horizontal__Desktop.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Chord_Diagram__Node_Highlight_0_exampleViewer_1_Horizontal__Desktop.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Chord_Diagram__Node_Highlight_0_exampleViewer_1_Horizontal__Desktop.png",
+        "label": "Chord Diagram | Node Highlight",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Chord%20Diagram/Chord%20Diagram%20Node%20Selection",
+        "expect": 0,
+        "viewportLabel": "Horizontal | Desktop",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Graph__ELK_Layout_0_exampleViewer_0_Vertical__Phone.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Graph__ELK_Layout_0_exampleViewer_0_Vertical__Phone.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Graph__ELK_Layout_0_exampleViewer_0_Vertical__Phone.png",
+        "label": "Graph | ELK Layout",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Graph/Layout:%20ELK",
+        "expect": 0,
+        "viewportLabel": "Vertical | Phone",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "rawMisMatchPercentage": 0,
+          "misMatchPercentage": "0.00",
+          "analysisTime": 148
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Graph__ELK_Layout_0_exampleViewer_1_Horizontal__Desktop.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Graph__ELK_Layout_0_exampleViewer_1_Horizontal__Desktop.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Graph__ELK_Layout_0_exampleViewer_1_Horizontal__Desktop.png",
+        "label": "Graph | ELK Layout",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Graph/Layout:%20ELK",
+        "expect": 0,
+        "viewportLabel": "Horizontal | Desktop",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "rawMisMatchPercentage": 0,
+          "misMatchPercentage": "0.00",
+          "analysisTime": 26
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Sankey__API_Endpoints_0_exampleViewer_0_Vertical__Phone.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Sankey__API_Endpoints_0_exampleViewer_0_Vertical__Phone.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Sankey__API_Endpoints_0_exampleViewer_0_Vertical__Phone.png",
+        "label": "Sankey | API Endpoints",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Sankey/API%20Endpoints%20Tree",
+        "expect": 0,
+        "viewportLabel": "Vertical | Phone",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Sankey__API_Endpoints_0_exampleViewer_1_Horizontal__Desktop.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Sankey__API_Endpoints_0_exampleViewer_1_Horizontal__Desktop.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Sankey__API_Endpoints_0_exampleViewer_1_Horizontal__Desktop.png",
+        "label": "Sankey | API Endpoints",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Sankey/API%20Endpoints%20Tree",
+        "expect": 0,
+        "viewportLabel": "Horizontal | Desktop",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Area__Basic_0_exampleViewer_0_Vertical__Phone.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Area__Basic_0_exampleViewer_0_Vertical__Phone.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Area__Basic_0_exampleViewer_0_Vertical__Phone.png",
+        "label": "Area | Basic",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Area/Basic%20Area%20Chart",
+        "expect": 0,
+        "viewportLabel": "Vertical | Phone",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Area__Basic_0_exampleViewer_1_Horizontal__Desktop.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Area__Basic_0_exampleViewer_1_Horizontal__Desktop.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Area__Basic_0_exampleViewer_1_Horizontal__Desktop.png",
+        "label": "Area | Basic",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Area/Basic%20Area%20Chart",
+        "expect": 0,
+        "viewportLabel": "Horizontal | Desktop",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Axis__Styling_0_exampleViewer_0_Vertical__Phone.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Axis__Styling_0_exampleViewer_0_Vertical__Phone.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Axis__Styling_0_exampleViewer_0_Vertical__Phone.png",
+        "label": "Axis | Styling",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Axis/Axis",
+        "expect": 0,
+        "viewportLabel": "Vertical | Phone",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Axis__Styling_0_exampleViewer_1_Horizontal__Desktop.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Axis__Styling_0_exampleViewer_1_Horizontal__Desktop.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Axis__Styling_0_exampleViewer_1_Horizontal__Desktop.png",
+        "label": "Axis | Styling",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Axis/Axis",
+        "expect": 0,
+        "viewportLabel": "Horizontal | Desktop",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Grouped_Bar__Single_0_exampleViewer_0_Vertical__Phone.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Grouped_Bar__Single_0_exampleViewer_0_Vertical__Phone.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Grouped_Bar__Single_0_exampleViewer_0_Vertical__Phone.png",
+        "label": "Grouped Bar | Single",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Grouped%20Bar/Grouped%20Bar%20Chart",
+        "expect": 0,
+        "viewportLabel": "Vertical | Phone",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Grouped_Bar__Single_0_exampleViewer_1_Horizontal__Desktop.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Grouped_Bar__Single_0_exampleViewer_1_Horizontal__Desktop.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Grouped_Bar__Single_0_exampleViewer_1_Horizontal__Desktop.png",
+        "label": "Grouped Bar | Single",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Grouped%20Bar/Grouped%20Bar%20Chart",
+        "expect": 0,
+        "viewportLabel": "Horizontal | Desktop",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Scatter__Point_Labels_0_exampleViewer_0_Vertical__Phone.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Scatter__Point_Labels_0_exampleViewer_0_Vertical__Phone.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Scatter__Point_Labels_0_exampleViewer_0_Vertical__Phone.png",
+        "label": "Scatter | Point Labels",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Scatter/Points%20with%20labels",
+        "expect": 0,
+        "viewportLabel": "Vertical | Phone",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Scatter__Point_Labels_0_exampleViewer_1_Horizontal__Desktop.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Scatter__Point_Labels_0_exampleViewer_1_Horizontal__Desktop.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Scatter__Point_Labels_0_exampleViewer_1_Horizontal__Desktop.png",
+        "label": "Scatter | Point Labels",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Scatter/Points%20with%20labels",
+        "expect": 0,
+        "viewportLabel": "Horizontal | Desktop",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Scatter__Point_Stroke_0_exampleViewer_0_Vertical__Phone.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Scatter__Point_Stroke_0_exampleViewer_0_Vertical__Phone.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Scatter__Point_Stroke_0_exampleViewer_0_Vertical__Phone.png",
+        "label": "Scatter | Point Stroke",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Scatter/Points%20with%20stroke",
+        "expect": 0,
+        "viewportLabel": "Vertical | Phone",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Scatter__Point_Stroke_0_exampleViewer_1_Horizontal__Desktop.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Scatter__Point_Stroke_0_exampleViewer_1_Horizontal__Desktop.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Scatter__Point_Stroke_0_exampleViewer_1_Horizontal__Desktop.png",
+        "label": "Scatter | Point Stroke",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Scatter/Points%20with%20stroke",
+        "expect": 0,
+        "viewportLabel": "Horizontal | Desktop",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Scatter__Line__Data_Gaps_0_exampleViewer_0_Vertical__Phone.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Scatter__Line__Data_Gaps_0_exampleViewer_0_Vertical__Phone.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Scatter__Line__Data_Gaps_0_exampleViewer_0_Vertical__Phone.png",
+        "label": "Scatter + Line | Data Gaps",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Scatter/Scatter%20with%20Line",
+        "expect": 0,
+        "viewportLabel": "Vertical | Phone",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Scatter__Line__Data_Gaps_0_exampleViewer_1_Horizontal__Desktop.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Scatter__Line__Data_Gaps_0_exampleViewer_1_Horizontal__Desktop.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Scatter__Line__Data_Gaps_0_exampleViewer_1_Horizontal__Desktop.png",
+        "label": "Scatter + Line | Data Gaps",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Scatter/Scatter%20with%20Line",
+        "expect": 0,
+        "viewportLabel": "Horizontal | Desktop",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Stacked_Bar__Basic_0_exampleViewer_0_Vertical__Phone.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Stacked_Bar__Basic_0_exampleViewer_0_Vertical__Phone.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Stacked_Bar__Basic_0_exampleViewer_0_Vertical__Phone.png",
+        "label": "Stacked Bar | Basic",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Stacked%20Bar/Basic%20Stacked%20Bar%20Chart",
+        "expect": 0,
+        "viewportLabel": "Vertical | Phone",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Stacked_Bar__Basic_0_exampleViewer_1_Horizontal__Desktop.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Stacked_Bar__Basic_0_exampleViewer_1_Horizontal__Desktop.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Stacked_Bar__Basic_0_exampleViewer_1_Horizontal__Desktop.png",
+        "label": "Stacked Bar | Basic",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Stacked%20Bar/Basic%20Stacked%20Bar%20Chart",
+        "expect": 0,
+        "viewportLabel": "Horizontal | Desktop",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Timeline__Negative_Length_0_exampleViewer_0_Vertical__Phone.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Timeline__Negative_Length_0_exampleViewer_0_Vertical__Phone.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Timeline__Negative_Length_0_exampleViewer_0_Vertical__Phone.png",
+        "label": "Timeline | Negative Length",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Timeline/Timeline:%20Negative%20Lengths",
+        "expect": 0,
+        "viewportLabel": "Vertical | Phone",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "rawMisMatchPercentage": 0.39723111269163897,
+          "misMatchPercentage": "0.40",
+          "analysisTime": 30
+        },
+        "diffImage": "../bitmaps_test/20240624-115646/failed_diff_unovisdev_Timeline__Negative_Length_0_exampleViewer_0_Vertical__Phone.png"
+      },
+      "status": "fail"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Timeline__Negative_Length_0_exampleViewer_1_Horizontal__Desktop.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Timeline__Negative_Length_0_exampleViewer_1_Horizontal__Desktop.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Timeline__Negative_Length_0_exampleViewer_1_Horizontal__Desktop.png",
+        "label": "Timeline | Negative Length",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Timeline/Timeline:%20Negative%20Lengths",
+        "expect": 0,
+        "viewportLabel": "Horizontal | Desktop",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "rawMisMatchPercentage": 0.2747846729499806,
+          "misMatchPercentage": "0.27",
+          "analysisTime": 45
+        },
+        "diffImage": "../bitmaps_test/20240624-115646/failed_diff_unovisdev_Timeline__Negative_Length_0_exampleViewer_1_Horizontal__Desktop.png"
+      },
+      "status": "fail"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Timeline__Tooltip_and_Scrolling_0_exampleViewer_0_Vertical__Phone.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Timeline__Tooltip_and_Scrolling_0_exampleViewer_0_Vertical__Phone.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Timeline__Tooltip_and_Scrolling_0_exampleViewer_0_Vertical__Phone.png",
+        "label": "Timeline | Tooltip and Scrolling",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Timeline/Tooltip%20and%20Scrolling",
+        "expect": 0,
+        "viewportLabel": "Vertical | Phone",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "rawMisMatchPercentage": 1.0608058716611348,
+          "misMatchPercentage": "1.06",
+          "analysisTime": 26
+        },
+        "diffImage": "../bitmaps_test/20240624-115646/failed_diff_unovisdev_Timeline__Tooltip_and_Scrolling_0_exampleViewer_0_Vertical__Phone.png"
+      },
+      "status": "fail"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_Timeline__Tooltip_and_Scrolling_0_exampleViewer_1_Horizontal__Desktop.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_Timeline__Tooltip_and_Scrolling_0_exampleViewer_1_Horizontal__Desktop.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_Timeline__Tooltip_and_Scrolling_0_exampleViewer_1_Horizontal__Desktop.png",
+        "label": "Timeline | Tooltip and Scrolling",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Timeline/Tooltip%20and%20Scrolling",
+        "expect": 0,
+        "viewportLabel": "Horizontal | Desktop",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "rawMisMatchPercentage": 0.9819884217586219,
+          "misMatchPercentage": "0.98",
+          "analysisTime": 41
+        },
+        "diffImage": "../bitmaps_test/20240624-115646/failed_diff_unovisdev_Timeline__Tooltip_and_Scrolling_0_exampleViewer_1_Horizontal__Desktop.png"
+      },
+      "status": "fail"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_XY_Labels__On_Stacked_Bar_0_exampleViewer_0_Vertical__Phone.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_XY_Labels__On_Stacked_Bar_0_exampleViewer_0_Vertical__Phone.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_XY_Labels__On_Stacked_Bar_0_exampleViewer_0_Vertical__Phone.png",
+        "label": "XY Labels | On Stacked Bar",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Xy%20Labels/Stacked%20Bar%20with%20Labels",
+        "expect": 0,
+        "viewportLabel": "Vertical | Phone",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    },
+    {
+      "pair": {
+        "reference": "../bitmaps_reference/unovisdev_XY_Labels__On_Stacked_Bar_0_exampleViewer_1_Horizontal__Desktop.png",
+        "test": "../bitmaps_test/20240624-115646/unovisdev_XY_Labels__On_Stacked_Bar_0_exampleViewer_1_Horizontal__Desktop.png",
+        "selector": ".exampleViewer",
+        "fileName": "unovisdev_XY_Labels__On_Stacked_Bar_0_exampleViewer_1_Horizontal__Desktop.png",
+        "label": "XY Labels | On Stacked Bar",
+        "requireSameDimensions": 0.1,
+        "misMatchThreshold": 0.1,
+        "url": "http://localhost:9500/examples/Xy%20Labels/Stacked%20Bar%20with%20Labels",
+        "expect": 0,
+        "viewportLabel": "Horizontal | Desktop",
+        "diff": {
+          "isSameDimensions": true,
+          "dimensionDifference": {
+            "width": 0,
+            "height": 0
+          },
+          "misMatchPercentage": "0.00"
+        }
+      },
+      "status": "pass"
+    }
+  ],
+  "id": "unovis/dev"
+}
