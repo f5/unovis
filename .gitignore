@@ -64,4 +64,4 @@ Thumbs.db
 
 # BackstopJS
 packages/*/.backstop/html_report/
-# packages/*/.backstop/bitmaps_test/
+packages/*/.backstop/bitmaps_test/
