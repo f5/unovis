@@ -312,13 +312,15 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
 
     const marginX = type === AxisType.X ? 0 : (-1) ** (+(axisPosition === Position.Left)) * labelMargin
     const marginY = type === AxisType.X ? (-1) ** (+(axisPosition === Position.Top)) * labelMargin : 0
+
+    const rotation = type === AxisType.Y ? -90 : 0
     // Append new label
     selection
       .append('text')
       .attr('class', s.label)
       .text(label)
       .attr('dy', `${this._getLabelDY()}em`)
-      .attr('transform', `translate(${offsetX + marginX},${offsetY + marginY})`)
+      .attr('transform', `translate(${offsetX + marginX},${offsetY + marginY}) rotate(${rotation})`)
       .style('font-size', labelFontSize)
       .style('fill', this.config.labelColor)
   }
