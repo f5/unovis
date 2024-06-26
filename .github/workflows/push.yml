@@ -22,3 +22,12 @@ jobs:
       run: cd packages/dev; npm run test
     - name: Stop server
       run: pkill -f "serve dist -s -p 9501"
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: backstop-tests
+        path: |
+          .backstop/bitmaps_test
+        retention-days: 1
+    - name: Download all workflow run artifacts
+      uses: actions/download-artifact@v4
