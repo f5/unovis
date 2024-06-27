@@ -187,7 +187,7 @@ export class Graph<
   }
 
   _render (customDuration?: number): void {
-    const { config: { disableBrush, disableZoom, duration, layoutAutofit }, datamodel } = this
+    const { config: { disableBrush, disableZoom, duration, layoutAutofit, zoomEventFilter }, datamodel } = this
     if (!datamodel.nodes && !datamodel.links) return
     const animDuration = isNumber(customDuration) ? customDuration : duration
 
@@ -235,6 +235,14 @@ export class Graph<
         this.config.onLayoutCalculated?.(datamodel.nodes, datamodel.links)
       })
     }
+
+    // Redefine Zoom Behavior filter is specified in the config
+    // https://d3js.org/d3-zoom#zoom_filter
+    this._zoomBehavior.filter(
+      isFunction(zoomEventFilter)
+        ? zoomEventFilter
+        : (e: PointerEvent) => (!e.ctrlKey || e.type === 'wheel') && !e.button // Default filter
+    )
 
     this._layoutCalculationPromise.then((isFirstRender) => {
       // If the component has been destroyed while the layout calculation
