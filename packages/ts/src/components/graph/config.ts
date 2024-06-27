@@ -33,6 +33,10 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   zoomScaleExtent?: [number, number];
   /** Disable zooming. Default: `false` */
   disableZoom?: boolean;
+  /** Custom Zoom event filter to better control which actions should trigger zooming.
+   * Learn more: https://d3js.org/d3-zoom#zoom_filter.
+   * Default: `undefined` */
+  zoomEventFilter?: (event: PointerEvent) => boolean;
   /** Disable node dragging. Default: `false` */
   disableDrag?: boolean;
   /** Disable brush for multiple node selection. Default: `false` */
@@ -241,6 +245,7 @@ export const GraphDefaultConfig: GraphConfigInterface<GraphInputNode, GraphInput
   duration: 1000,
   zoomScaleExtent: [0.35, 1.25],
   disableZoom: false,
+  zoomEventFilter: undefined,
   disableDrag: false,
   disableBrush: false,
   zoomThrottledUpdateNodeThreshold: 100,
