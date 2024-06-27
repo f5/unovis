@@ -174,9 +174,15 @@ export class Graph<
 
   setConfig (config: GraphConfigInterface<N, L>): void {
     super.setConfig(config)
+    const hasLayoutConfigurationChanged = this._shouldLayoutRecalculate()
 
-    this._shouldRecalculateLayout = this._shouldRecalculateLayout || this._shouldLayoutRecalculate()
-    this._shouldFitLayout = this._shouldFitLayout || this._shouldRecalculateLayout
+    // If the data has changed (see above in `setData`) or the layout configuration has changed, we need to recalculate the layout
+    this._shouldRecalculateLayout = this._shouldRecalculateLayout || hasLayoutConfigurationChanged
+
+    // If the `config.layoutAutofit` is true and data has changed (see above in `setData`),
+    // or the layout configuration has changed, we need to fit the layout
+    this._shouldFitLayout = this._shouldFitLayout || hasLayoutConfigurationChanged
+
     if (this._shouldFitLayout) this._isAutoFitDisabled = false
     this._shouldSetPanels = true
   }
