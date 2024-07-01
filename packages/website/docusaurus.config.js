@@ -101,6 +101,10 @@ const config = {
             title: 'Community',
             items: [
               {
+                label: 'Discord',
+                href: 'https://discord.com/invite/zR842MaE',
+              },
+              {
                 label: 'GitHub Discussions',
                 href: 'https://github.com/f5/unovis/discussions',
               },
@@ -120,6 +124,10 @@ const config = {
               {
                 label: 'Source Code',
                 href: 'https://github.com/f5/unovis',
+              },
+              {
+                label: 'npm',
+                href: 'https://www.npmjs.com/package/@unovis/ts',
               },
             ],
           },
