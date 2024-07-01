@@ -15,6 +15,7 @@ import { Spacing } from 'types/spacing'
 import { SymbolType } from 'types/symbol'
 import { NumericAccessor } from 'types/accessor'
 import { Position } from 'types/position'
+import { ContinuousScale } from 'types/scale'
 
 // Local Types
 import { ScatterPointGroupNode, ScatterPoint } from './types'
@@ -28,6 +29,7 @@ import { collideLabels, getEstimatedLabelBBox } from './modules/utils'
 
 // Styles
 import * as s from './style'
+
 
 export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfigInterface<Datum>> {
   static selectors = s
@@ -43,6 +45,7 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfigInterfac
 
   private _pointData: ScatterPoint<Datum>[][] = []
   private _points: Selection<SVGGElement, ScatterPoint<Datum>, SVGGElement, ScatterPoint<Datum>[]>
+  private _sizeScale: ContinuousScale
   private _collideLabelsAnimFrameId: ReturnType<typeof requestAnimationFrame>
 
   constructor (config?: ScatterConfigInterface<Datum>) {
@@ -157,8 +160,9 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfigInterfac
   private _updateSizeScale (): void {
     const { config, datamodel } = this
 
-    config.sizeScale.domain(getExtent(datamodel.data, config.size))
-    config.sizeScale.range(config.sizeRange ?? [0, 0])
+    this._sizeScale = config.sizeScale.copy()
+    this._sizeScale.domain(getExtent(datamodel.data, config.size))
+    this._sizeScale.range(config.sizeRange ?? [0, 0])
   }
 
   private _getOnScreenData (): ScatterPoint<Datum>[][] {
@@ -169,7 +173,8 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfigInterfac
     const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
 
     const maxSizeValue = max<number>(flatten(yAccessors.map((y, j) => data?.map(d => getNumber(d, config.size, j)))))
-    const maxSizePx = config.sizeRange ? config.sizeScale(maxSizeValue) : maxSizeValue
+    const maxSizePx = config.sizeRange ? this._sizeScale(maxSizeValue) : maxSizeValue
+
     const maxSizeXDomain = (this.xScale.invert(maxSizePx) as number) - (this.xScale.invert(0) as number)
     const maxSizeYDomain = Math.abs((this.yScale.invert(maxSizePx) as number) - (this.yScale.invert(0) as number))
 
@@ -178,7 +183,7 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfigInterfac
         const xValue = getNumber(d, config.x, i)
         const yValue = getNumber(d, y, j)
         const pointSize = getNumber(d, config.size, i)
-        const pointSizeScaled = config.sizeRange ? config.sizeScale(pointSize) : pointSize
+        const pointSizeScaled = config.sizeRange ? this._sizeScale(pointSize) : pointSize
         const pointSizeXDomain = (this.xScale.invert(pointSizeScaled) as number) - (this.xScale.invert(0) as number)
         const pointSizeYDomain = Math.abs((this.yScale.invert(pointSizeScaled) as number) - (this.yScale.invert(0) as number))
 
