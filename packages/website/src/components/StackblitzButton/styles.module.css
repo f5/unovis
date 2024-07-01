@@ -14,7 +14,7 @@ input:disabled {
   cursor: not-allowed;
 }
 
-@media screen and (min-width: 700px) {
+@media screen and (min-width: 730px) {
   .button {
     position: absolute;
     right: 0;
