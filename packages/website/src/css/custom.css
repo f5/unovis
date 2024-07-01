@@ -58,10 +58,6 @@ html[data-theme="dark"] {
   :root { --ifm-font-size-base: 115%; }
 }
 
-@media screen and (min-width: 2560px) {
-  :root { --ifm-font-size-base: 130%; }
-}
-
 .docusaurus-highlight-code-line {
   background-color: rgba(0, 0, 0, 0.1);
   display: block;
