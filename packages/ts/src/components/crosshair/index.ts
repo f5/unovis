@@ -177,6 +177,8 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
     const container = tooltip.getContainer() || this.container.node()
     const [x, y] = tooltip.isContainerBody() ? [event.clientX, event.clientY] : pointer(event, container)
     const content = config.template(this.datum, this.xScale.invert(this.x))
+    // Force set `followCursor` to `true` because we don't want Crosshair's tooltip to be hoverable
+    tooltip.config.followCursor = true
     if (content) tooltip.show(content, { x, y })
   }
 
