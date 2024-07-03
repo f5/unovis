@@ -17,7 +17,7 @@
   "scenarios": [
     {
       "label": "Leaflet Map | Color Map",
-      "url": "http://localhost:9500/examples/Leaflet/Color%20Map",
+      "url": "http://host.docker.internal:9500/examples/Leaflet/Color%20Map",
       "selectors": [".exampleViewer"],
       "delay": 2500,
       "referenceUrl": "",
@@ -36,196 +36,196 @@
     {
       "label": "Leaflet Map | Theme",
       "selectors": [".exampleViewer"],
-      "url": "http://localhost:9500/examples/Leaflet/Light%20and%20Dark%20Theme",
+      "url": "http://host.docker.internal:9500/examples/Leaflet/Light%20and%20Dark%20Theme",
       "misMatchThreshold" : 0.1,
       "delay": 2500
     },
     {
       "label": "Leaflet Map | Raster Tiles",
       "selectors": [".exampleViewer"],
-      "url": "http://localhost:9500/examples/Leaflet/Raster%20Leaflet%20Map",
+      "url": "http://host.docker.internal:9500/examples/Leaflet/Raster%20Leaflet%20Map",
       "misMatchThreshold" : 0.1,
       "delay": 2500
     },
     {
       "label": "Leaflet Map | Vector Tiles",
       "selectors": [".exampleViewer"],
-      "url": "http://localhost:9500/examples/Leaflet/Vector%20Map",
+      "url": "http://host.docker.internal:9500/examples/Leaflet/Vector%20Map",
       "misMatchThreshold" : 0.1,
       "delay": 2500
     },
     {
       "label": "Donut | Empty Segments",
       "selectors": [".exampleViewer"],
-      "url": "http://localhost:9500/examples/Donut/Donut:%20Empty%20Segments",
+      "url": "http://host.docker.internal:9500/examples/Donut/Donut:%20Empty%20Segments",
       "misMatchThreshold" : 0.1,
       "delay": 900
     },
     {
       "label": "Nested Donut | Basic",
       "selectors": [".exampleViewer"],
-      "url": "http://localhost:9500/examples/Nested%20Donut/Basic%20Nested%20Donut",
+      "url": "http://host.docker.internal:9500/examples/Nested%20Donut/Basic%20Nested%20Donut",
       "misMatchThreshold" : 0.1,
       "delay": 1000
     },
     {
       "label": "Nested Donut | Transitions",
       "selectors": [".exampleViewer"],
-      "url": "http://localhost:9500/examples/Nested%20Donut/Nested%20Donut%20Data%20Transitions",
+      "url": "http://host.docker.internal:9500/examples/Nested%20Donut/Nested%20Donut%20Data%20Transitions",
       "misMatchThreshold" : 0.1,
       "delay": 1000
     },
     {
       "label": "Nested Donut | Interactive",
       "selectors": [".exampleViewer"],
-      "url": "http://localhost:9500/examples/Nested%20Donut/Interactive%20Nested%20Donut",
+      "url": "http://host.docker.internal:9500/examples/Nested%20Donut/Interactive%20Nested%20Donut",
       "misMatchThreshold" : 0.1,
       "delay": 900
     },
     {
       "label": "Nested Donut | Segment Labels",
       "selectors": [".exampleViewer"],
-      "url": "http://localhost:9500/examples/Nested%20Donut/Segment%20labels",
+      "url": "http://host.docker.internal:9500/examples/Nested%20Donut/Segment%20labels",
       "misMatchThreshold" : 0.1,
       "delay": 900
     },
     {
       "label": "Nested Donut | Layer Configuration",
       "selectors": [".exampleViewer"],
-      "url": "http://localhost:9500/examples/Nested%20Donut/Nested%20Donut%20Layer%20Configuration",
+      "url": "http://host.docker.internal:9500/examples/Nested%20Donut/Nested%20Donut%20Layer%20Configuration",
       "misMatchThreshold" : 0.1,
       "delay": 900
     },
     {
       "label": "Nested Donut | Segment Values",
       "selectors": [".exampleViewer"],
-      "url": "http://localhost:9500/examples/Nested%20Donut/Segment%20values",
+      "url": "http://host.docker.internal:9500/examples/Nested%20Donut/Segment%20values",
       "misMatchThreshold" : 0.1,
       "delay": 900
     },
     {
       "label": "Nested Donut | Empty Segments",
       "selectors": [".exampleViewer"],
-      "url": "http://localhost:9500/examples/Nested%20Donut/Empty%20Segments",
+      "url": "http://host.docker.internal:9500/examples/Nested%20Donut/Empty%20Segments",
       "misMatchThreshold" : 0.1,
       "delay": 900
     },
     {
       "label": "Chord Diagram | 4 Levels",
       "selectors": [".exampleViewer"],
-      "url": "http://localhost:9500/examples/Chord%20Diagram/Chord%20Diagram%20Hierarchy%20Nodes",
+      "url": "http://host.docker.internal:9500/examples/Chord%20Diagram/Chord%20Diagram%20Hierarchy%20Nodes",
       "misMatchThreshold" : 0.1,
       "delay": 900
     },
     {
       "label": "Chord Diagram | Multiple Levels",
       "selectors": [".exampleViewer"],
-      "url": "http://localhost:9500/examples/Chord%20Diagram/Node%20Levels",
+      "url": "http://host.docker.internal:9500/examples/Chord%20Diagram/Node%20Levels",
       "misMatchThreshold" : 0.1,
       "delay": 900
     },
     {
       "label": "Chord Diagram | Basic",
       "selectors": [".exampleViewer"],
-      "url": "http://localhost:9500/examples/Chord%20Diagram/Basic%20Chord%20Diagram",
+      "url": "http://host.docker.internal:9500/examples/Chord%20Diagram/Basic%20Chord%20Diagram",
       "misMatchThreshold" : 0.1,
       "delay": 900
     },
     {
       "label": "Chord Diagram | Exponent",
       "selectors": [".exampleViewer"],
-      "url": "http://localhost:9500/examples/Chord%20Diagram/Labels%20and%20Radius%20Scale%20Exponent",
+      "url": "http://host.docker.internal:9500/examples/Chord%20Diagram/Labels%20and%20Radius%20Scale%20Exponent",
       "misMatchThreshold" : 0.1,
       "delay": 900
     },
     {
       "label": "Chord Diagram | Node Highlight",
       "selectors": [".exampleViewer"],
-      "url": "http://localhost:9500/examples/Chord%20Diagram/Chord%20Diagram%20Node%20Selection",
+      "url": "http://host.docker.internal:9500/examples/Chord%20Diagram/Chord%20Diagram%20Node%20Selection",
       "misMatchThreshold" : 0.1,
       "delay": 900
     },
     {
       "label": "Graph | ELK Layout",
       "selectors": [".exampleViewer"],
-      "url": "http://localhost:9500/examples/Graph/Layout:%20ELK",
+      "url": "http://host.docker.internal:9500/examples/Graph/Layout:%20ELK",
       "misMatchThreshold" : 0.1,
       "delay": 900
     },
     {
       "label": "Sankey | API Endpoints",
       "selectors": [".exampleViewer"],
-      "url": "http://localhost:9500/examples/Sankey/API%20Endpoints%20Tree",
+      "url": "http://host.docker.internal:9500/examples/Sankey/API%20Endpoints%20Tree",
       "misMatchThreshold" : 0.1,
       "delay": 900
     },
     {
       "label": "Area | Basic",
       "selectors": [".exampleViewer"],
-      "url": "http://localhost:9500/examples/Area/Basic%20Area%20Chart",
+      "url": "http://host.docker.internal:9500/examples/Area/Basic%20Area%20Chart",
       "misMatchThreshold" : 0.1,
       "delay": 900
     },
     {
       "label": "Axis | Styling",
       "selectors": [".exampleViewer"],
-      "url": "http://localhost:9500/examples/Axis/Axis",
+      "url": "http://host.docker.internal:9500/examples/Axis/Axis",
       "misMatchThreshold" : 0.1,
       "delay": 900
     },
     {
       "label": "Grouped Bar | Single",
       "selectors": [".exampleViewer"],
-      "url": "http://localhost:9500/examples/Grouped%20Bar/Grouped%20Bar%20Chart",
+      "url": "http://host.docker.internal:9500/examples/Grouped%20Bar/Grouped%20Bar%20Chart",
       "misMatchThreshold" : 0.1,
       "delay": 900
     },
     {
       "label": "Scatter | Point Labels",
       "selectors": [".exampleViewer"],
-      "url": "http://localhost:9500/examples/Scatter/Points%20with%20labels",
+      "url": "http://host.docker.internal:9500/examples/Scatter/Points%20with%20labels",
       "misMatchThreshold" : 0.1,
       "delay": 900
     },
     {
       "label": "Scatter | Point Stroke",
       "selectors": [".exampleViewer"],
-      "url": "http://localhost:9500/examples/Scatter/Points%20with%20stroke",
+      "url": "http://host.docker.internal:9500/examples/Scatter/Points%20with%20stroke",
       "misMatchThreshold" : 0.1,
       "delay": 900
     },
     {
       "label": "Scatter + Line | Data Gaps",
       "selectors": [".exampleViewer"],
-      "url": "http://localhost:9500/examples/Scatter/Scatter%20with%20Line",
+      "url": "http://host.docker.internal:9500/examples/Scatter/Scatter%20with%20Line",
       "misMatchThreshold" : 0.1,
       "delay": 900
     },
     {
       "label": "Stacked Bar | Basic",
       "selectors": [".exampleViewer"],
-      "url": "http://localhost:9500/examples/Stacked%20Bar/Basic%20Stacked%20Bar%20Chart",
+      "url": "http://host.docker.internal:9500/examples/Stacked%20Bar/Basic%20Stacked%20Bar%20Chart",
       "misMatchThreshold" : 0.1,
       "delay": 900
     },
     {
       "label": "Timeline | Negative Length",
       "selectors": [".exampleViewer"],
-      "url": "http://localhost:9500/examples/Timeline/Timeline:%20Negative%20Lengths",
+      "url": "http://host.docker.internal:9500/examples/Timeline/Timeline:%20Negative%20Lengths",
       "misMatchThreshold" : 0.1,
       "delay": 900
     },
     {
       "label": "Timeline | Tooltip and Scrolling",
       "selectors": [".exampleViewer"],
-      "url": "http://localhost:9500/examples/Timeline/Tooltip%20and%20Scrolling",
+      "url": "http://host.docker.internal:9500/examples/Timeline/Tooltip%20and%20Scrolling",
       "misMatchThreshold" : 0.1,
       "delay": 900
     },
     {
       "label": "XY Labels | On Stacked Bar",
       "selectors": [".exampleViewer"],
-      "url": "http://localhost:9500/examples/Xy%20Labels/Stacked%20Bar%20with%20Labels",
+      "url": "http://host.docker.internal:9500/examples/Xy%20Labels/Stacked%20Bar%20with%20Labels",
       "misMatchThreshold" : 0.1,
       "delay": 900
     }
