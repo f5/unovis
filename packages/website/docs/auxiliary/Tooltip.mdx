@@ -24,7 +24,9 @@ export const defaultProps = (chart="StackedBar", components, n=10) => ({
   height: 150,
   components: [newComponent(chart, components)],
   triggers: {
-    [classnames[chart]]: d=> `<span>x: ${d.x}<br/>y: ${d.y}</span>`
+    [classnames[chart]]: d=> `
+      <span>${d.x}, ${d.y}</span>
+    `
   },
   showTriggers: false,
 })
@@ -33,8 +35,10 @@ export const Tooltip = (props) => (
   <BrowserOnly fallback={<div>Loading...</div>}>
     {() => {
       const { showTriggers, inputWrapper, triggers, ...rest } = props
+      const tsimports = { ['@unovis/ts']: [] }
       const triggerConfig = Object.keys(triggers).reduce((obj,k) => {
         const [component, _, selector] = k.substring(1, k.length-1).split('.')
+        if (showTriggers) tsimports['@unovis/ts'].push(component)
         const { [component]: comp } = require('@unovis/ts')
         obj[comp.selectors[selector]] = props.triggers[k]
         if (!props.components.find(d => d.name === component)) {
@@ -42,7 +46,7 @@ export const Tooltip = (props) => (
         }
         return obj
       }, {})
-      const wrapperProps = showTriggers ? { ...rest, triggers } : rest
+      const wrapperProps = showTriggers ? { ...rest, triggers, imports: tsimports } : rest
       return (
         inputWrapper ?
         <XYWrapperWithInput {...wrapperProps} hiddenProps={{ triggers: triggerConfig}}/> :
@@ -53,20 +57,73 @@ export const Tooltip = (props) => (
 )
 
 ## Basic Configuration
-The _Tooltip_ component has been designed to work alongside XY charts. The minimal _Tooltip_ configuration looks like:
+The _Tooltip_ component allows you to add informative text when hovering over a chart element.
+It can work within both XYContainer and SingleContainer, or as a standalone component.
+
+Here is a minimal _Tooltip_ configuration alongside a _StackedBar_ chart:
 
 <Tooltip {...defaultProps()} showContext="full" showTriggers/>
 
 ## Triggers
 The `triggers` property allows a _Tooltip_ component to display custom content for a given CSS selector.
 
-<Tooltip {...defaultProps("StackedBar", { x: d=> d.x - 0.25, y: [d=>d.y, d=>d.y1, d => d.y3], barWidth: 20})}
-  showContext="minimal"
-  showTriggers
+It accepts an object of the following type:
+
+```ts
+typeof triggers = {
+  [selector: string]: (
+    datum: T,
+    i: number,
+    els: Element[]
+  ) => string | HTMLElement
+}
+```
+
+Where the key _selector_ is the CSS class, and the value is a callback function that returns the content.
+
+#### Selectors
+For Unovis components, you can import selectors from `@unovis/ts` and use them as keys in the `triggers` object.
+
+```ts
+import { StackedBar } from '@unovis/ts'
+
+const triggers = {
+  [StackedBar.selectors.bar]: /* Your callback function*/
+}
+```
+
+#### Trigger function
+The arguments of the callback can be used to customize the string content or custom HTML element:
+- `datum`: the data point associated with the hovered element
+- `i`: the datum's array index
+- `els`: an array of all elements with the selector
+
+#### Example: Multiple Triggers
+Consider a composite XY chart with a _StackedBar_, _Line_, and _Scatter_ components.
+You can define a different trigger function for individual component selectors.
+
+```ts
+import { Line, Scatter, StackedBar } from '@unovis/ts'
+
+const triggers = {
+  [StackedBar.selectors.bar]: d => `${d.y1}<br/>${d.y2}<br/>${d.y3}`,
+  [Scatter.selectors.point]: d => `${(d.y1 + d.y2 + d.y3) / 3}`,
+  [Line.selectors.line]: () => 'Average value'
+}
+```
+
+<Tooltip
+  {...defaultProps()}
+  excludeTabs
+  components={[
+    newComponent('StackedBar', { x: d=>d.x, y: [d => d.y1, d => d.y2, d => d.y4] }),
+    newComponent('Line', { x: d=>d.x, y: d => (d.y1 + d.y2 + d.y4) / 3, color: 'var(--vis-color4)'}),
+    newComponent('Scatter', { x: d=>d.x, y: d => (d.y1 + d.y2 + d.y4) / 3, color: 'var(--vis-color4)' }),
+  ]}
   triggers={{
-    "[StackedBar.selectors.bar]": d => `Bar`,
-    "[Line.selectors.line]": d => `Line`,
-    "[Scatter.selectors.point]": d=> `Scatter`,
+    "[StackedBar.selectors.bar]": d => `${d.y4}<br/>${d.y2}<br/>${d.y1}`,
+    "[Scatter.selectors.point]": (d, i) =>  `Point ${i}: ${(d.y1 + d.y2 + d.y4) / 3}`,
+    "[Line.selectors.line]": () => `Average`
   }}
 />
 
@@ -114,6 +171,19 @@ The `triggers` property allows a _Tooltip_ component to display custom content f
   inputProps={{min: 0, max: 100}}
   defaultValue={50}
   containerProps={{ padding: { top: 100 }}}/>
+
+## Hoverable Content
+You can make _Tooltip_'s content hoverable by setting `followCursor` property to `false`.
+This will keep the content in view when hovering over the tooltip itself.
+This can be useful for interacting with text, links, or other elements in the tooltip:
+
+Here is an example with a _Line_ chart a clickable link on hover:
+
+<Tooltip {...defaultProps("Line", { lineWidth: 4 })}
+  followCursor={false}
+  triggers={{
+    "[Line.selectors.line]": () => 'Visit <a href="https://unovis.dev" target="_blank">our website</a>'
+  }}/>
 
 ## Manual Configuration
 
