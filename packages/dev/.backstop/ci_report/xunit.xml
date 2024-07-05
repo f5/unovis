@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites tests="58" failures="58" errors="58" skipped="0">
+  <testsuite name="BackstopJS" tests="58" failures="58" errors="58" skipped="0">
+    <testcase classname="document" name=" ›› Leaflet Map | Color Map">
+      <failure message="Design deviation ›› Leaflet Map | Color Map (document) component"/>
+      <error message="Design deviation ›› Leaflet Map | Color Map (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Leaflet Map | Color Map">
+      <failure message="Design deviation ›› Leaflet Map | Color Map (document) component"/>
+      <error message="Design deviation ›› Leaflet Map | Color Map (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Leaflet Map | Theme">
+      <failure message="Design deviation ›› Leaflet Map | Theme (document) component"/>
+      <error message="Design deviation ›› Leaflet Map | Theme (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Leaflet Map | Theme">
+      <failure message="Design deviation ›› Leaflet Map | Theme (document) component"/>
+      <error message="Design deviation ›› Leaflet Map | Theme (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Leaflet Map | Raster Tiles">
+      <failure message="Design deviation ›› Leaflet Map | Raster Tiles (document) component"/>
+      <error message="Design deviation ›› Leaflet Map | Raster Tiles (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Leaflet Map | Raster Tiles">
+      <failure message="Design deviation ›› Leaflet Map | Raster Tiles (document) component"/>
+      <error message="Design deviation ›› Leaflet Map | Raster Tiles (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Leaflet Map | Vector Tiles">
+      <failure message="Design deviation ›› Leaflet Map | Vector Tiles (document) component"/>
+      <error message="Design deviation ›› Leaflet Map | Vector Tiles (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Leaflet Map | Vector Tiles">
+      <failure message="Design deviation ›› Leaflet Map | Vector Tiles (document) component"/>
+      <error message="Design deviation ›› Leaflet Map | Vector Tiles (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Donut | Empty Segments">
+      <failure message="Design deviation ›› Donut | Empty Segments (document) component"/>
+      <error message="Design deviation ›› Donut | Empty Segments (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Donut | Empty Segments">
+      <failure message="Design deviation ›› Donut | Empty Segments (document) component"/>
+      <error message="Design deviation ›› Donut | Empty Segments (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Nested Donut | Basic">
+      <failure message="Design deviation ›› Nested Donut | Basic (document) component"/>
+      <error message="Design deviation ›› Nested Donut | Basic (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Nested Donut | Basic">
+      <failure message="Design deviation ›› Nested Donut | Basic (document) component"/>
+      <error message="Design deviation ›› Nested Donut | Basic (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Nested Donut | Transitions">
+      <failure message="Design deviation ›› Nested Donut | Transitions (document) component"/>
+      <error message="Design deviation ›› Nested Donut | Transitions (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Nested Donut | Transitions">
+      <failure message="Design deviation ›› Nested Donut | Transitions (document) component"/>
+      <error message="Design deviation ›› Nested Donut | Transitions (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Nested Donut | Interactive">
+      <failure message="Design deviation ›› Nested Donut | Interactive (document) component"/>
+      <error message="Design deviation ›› Nested Donut | Interactive (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Nested Donut | Interactive">
+      <failure message="Design deviation ›› Nested Donut | Interactive (document) component"/>
+      <error message="Design deviation ›› Nested Donut | Interactive (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Nested Donut | Segment Labels">
+      <failure message="Design deviation ›› Nested Donut | Segment Labels (document) component"/>
+      <error message="Design deviation ›› Nested Donut | Segment Labels (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Nested Donut | Segment Labels">
+      <failure message="Design deviation ›› Nested Donut | Segment Labels (document) component"/>
+      <error message="Design deviation ›› Nested Donut | Segment Labels (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Nested Donut | Layer Configuration">
+      <failure message="Design deviation ›› Nested Donut | Layer Configuration (document) component"/>
+      <error message="Design deviation ›› Nested Donut | Layer Configuration (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Nested Donut | Layer Configuration">
+      <failure message="Design deviation ›› Nested Donut | Layer Configuration (document) component"/>
+      <error message="Design deviation ›› Nested Donut | Layer Configuration (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Nested Donut | Segment Values">
+      <failure message="Design deviation ›› Nested Donut | Segment Values (document) component"/>
+      <error message="Design deviation ›› Nested Donut | Segment Values (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Nested Donut | Segment Values">
+      <failure message="Design deviation ›› Nested Donut | Segment Values (document) component"/>
+      <error message="Design deviation ›› Nested Donut | Segment Values (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Nested Donut | Empty Segments">
+      <failure message="Design deviation ›› Nested Donut | Empty Segments (document) component"/>
+      <error message="Design deviation ›› Nested Donut | Empty Segments (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Nested Donut | Empty Segments">
+      <failure message="Design deviation ›› Nested Donut | Empty Segments (document) component"/>
+      <error message="Design deviation ›› Nested Donut | Empty Segments (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Chord Diagram | 4 Levels">
+      <failure message="Design deviation ›› Chord Diagram | 4 Levels (document) component"/>
+      <error message="Design deviation ›› Chord Diagram | 4 Levels (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Chord Diagram | 4 Levels">
+      <failure message="Design deviation ›› Chord Diagram | 4 Levels (document) component"/>
+      <error message="Design deviation ›› Chord Diagram | 4 Levels (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Chord Diagram | Multiple Levels">
+      <failure message="Design deviation ›› Chord Diagram | Multiple Levels (document) component"/>
+      <error message="Design deviation ›› Chord Diagram | Multiple Levels (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Chord Diagram | Multiple Levels">
+      <failure message="Design deviation ›› Chord Diagram | Multiple Levels (document) component"/>
+      <error message="Design deviation ›› Chord Diagram | Multiple Levels (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Chord Diagram | Basic">
+      <failure message="Design deviation ›› Chord Diagram | Basic (document) component"/>
+      <error message="Design deviation ›› Chord Diagram | Basic (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Chord Diagram | Basic">
+      <failure message="Design deviation ›› Chord Diagram | Basic (document) component"/>
+      <error message="Design deviation ›› Chord Diagram | Basic (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Chord Diagram | Exponent">
+      <failure message="Design deviation ›› Chord Diagram | Exponent (document) component"/>
+      <error message="Design deviation ›› Chord Diagram | Exponent (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Chord Diagram | Exponent">
+      <failure message="Design deviation ›› Chord Diagram | Exponent (document) component"/>
+      <error message="Design deviation ›› Chord Diagram | Exponent (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Chord Diagram | Node Highlight">
+      <failure message="Design deviation ›› Chord Diagram | Node Highlight (document) component"/>
+      <error message="Design deviation ›› Chord Diagram | Node Highlight (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Chord Diagram | Node Highlight">
+      <failure message="Design deviation ›› Chord Diagram | Node Highlight (document) component"/>
+      <error message="Design deviation ›› Chord Diagram | Node Highlight (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Graph | ELK Layout">
+      <failure message="Design deviation ›› Graph | ELK Layout (document) component"/>
+      <error message="Design deviation ›› Graph | ELK Layout (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Graph | ELK Layout">
+      <failure message="Design deviation ›› Graph | ELK Layout (document) component"/>
+      <error message="Design deviation ›› Graph | ELK Layout (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Sankey | API Endpoints">
+      <failure message="Design deviation ›› Sankey | API Endpoints (document) component"/>
+      <error message="Design deviation ›› Sankey | API Endpoints (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Sankey | API Endpoints">
+      <failure message="Design deviation ›› Sankey | API Endpoints (document) component"/>
+      <error message="Design deviation ›› Sankey | API Endpoints (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Area | Basic">
+      <failure message="Design deviation ›› Area | Basic (document) component"/>
+      <error message="Design deviation ›› Area | Basic (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Area | Basic">
+      <failure message="Design deviation ›› Area | Basic (document) component"/>
+      <error message="Design deviation ›› Area | Basic (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Axis | Styling">
+      <failure message="Design deviation ›› Axis | Styling (document) component"/>
+      <error message="Design deviation ›› Axis | Styling (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Axis | Styling">
+      <failure message="Design deviation ›› Axis | Styling (document) component"/>
+      <error message="Design deviation ›› Axis | Styling (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Grouped Bar | Single">
+      <failure message="Design deviation ›› Grouped Bar | Single (document) component"/>
+      <error message="Design deviation ›› Grouped Bar | Single (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Grouped Bar | Single">
+      <failure message="Design deviation ›› Grouped Bar | Single (document) component"/>
+      <error message="Design deviation ›› Grouped Bar | Single (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Scatter | Point Labels">
+      <failure message="Design deviation ›› Scatter | Point Labels (document) component"/>
+      <error message="Design deviation ›› Scatter | Point Labels (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Scatter | Point Labels">
+      <failure message="Design deviation ›› Scatter | Point Labels (document) component"/>
+      <error message="Design deviation ›› Scatter | Point Labels (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Scatter | Point Stroke">
+      <failure message="Design deviation ›› Scatter | Point Stroke (document) component"/>
+      <error message="Design deviation ›› Scatter | Point Stroke (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Scatter | Point Stroke">
+      <failure message="Design deviation ›› Scatter | Point Stroke (document) component"/>
+      <error message="Design deviation ›› Scatter | Point Stroke (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Scatter + Line | Data Gaps">
+      <failure message="Design deviation ›› Scatter + Line | Data Gaps (document) component"/>
+      <error message="Design deviation ›› Scatter + Line | Data Gaps (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Scatter + Line | Data Gaps">
+      <failure message="Design deviation ›› Scatter + Line | Data Gaps (document) component"/>
+      <error message="Design deviation ›› Scatter + Line | Data Gaps (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Stacked Bar | Basic">
+      <failure message="Design deviation ›› Stacked Bar | Basic (document) component"/>
+      <error message="Design deviation ›› Stacked Bar | Basic (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Stacked Bar | Basic">
+      <failure message="Design deviation ›› Stacked Bar | Basic (document) component"/>
+      <error message="Design deviation ›› Stacked Bar | Basic (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Timeline | Negative Length">
+      <failure message="Design deviation ›› Timeline | Negative Length (document) component"/>
+      <error message="Design deviation ›› Timeline | Negative Length (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Timeline | Negative Length">
+      <failure message="Design deviation ›› Timeline | Negative Length (document) component"/>
+      <error message="Design deviation ›› Timeline | Negative Length (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Timeline | Tooltip and Scrolling">
+      <failure message="Design deviation ›› Timeline | Tooltip and Scrolling (document) component"/>
+      <error message="Design deviation ›› Timeline | Tooltip and Scrolling (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› Timeline | Tooltip and Scrolling">
+      <failure message="Design deviation ›› Timeline | Tooltip and Scrolling (document) component"/>
+      <error message="Design deviation ›› Timeline | Tooltip and Scrolling (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› XY Labels | On Stacked Bar">
+      <failure message="Design deviation ›› XY Labels | On Stacked Bar (document) component"/>
+      <error message="Design deviation ›› XY Labels | On Stacked Bar (document) component"/>
+    </testcase>
+    <testcase classname="document" name=" ›› XY Labels | On Stacked Bar">
+      <failure message="Design deviation ›› XY Labels | On Stacked Bar (document) component"/>
+      <error message="Design deviation ›› XY Labels | On Stacked Bar (document) component"/>
+    </testcase>
+  </testsuite>
+</testsuites>
