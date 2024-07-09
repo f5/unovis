@@ -31,6 +31,7 @@ export const TooltipComponent = (props: { x: number; y: number }): JSX.Element =
 }
 
 export const component = (): JSX.Element => {
+  const [tooltipClassName, setTooltipClassName] = useState<string>('unovis-custom-tooltip')
   const [hoveredDatum, setHoveredDatum] = React.useState<XYDataRecord | null>(null)
   const data: XYDataRecord[] = useMemo(() => [
     { x: 1, y: 3 },
@@ -39,7 +40,14 @@ export const component = (): JSX.Element => {
     { x: 9, y: 5 },
   ], [])
 
-  const tooltipContainerNode = document.querySelector(`.${Tooltip.selectors.root}`)
+  // Test dynamic changing of the tooltip class name
+  useEffect(() => {
+    setTimeout(() => {
+      setTooltipClassName('unovis-custom-tooltip-2')
+    }, 1000)
+  }, [])
+
+  const tooltipContainerNode = document.querySelector(`.${tooltipClassName}`)
   return (<>
     <VisXYContainer<XYDataRecord> data={data}>
       <VisScatter
@@ -49,6 +57,7 @@ export const component = (): JSX.Element => {
         color={'#5d30c9'}
       />
       <VisTooltip
+        className={tooltipClassName}
         followCursor={false}
         container={document.body}
         horizontalPlacement={Position.Auto}
