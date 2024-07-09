@@ -18,6 +18,8 @@ export const TooltipComponent = (props: VisTooltipProps): JSX.Element => {
       <VisScatter x={(d: XYDataRecord) => d.x} y={(d: XYDataRecord) => d.y} size={d => d.size}/>
       <VisTooltip
         followCursor={false}
+        horizontalShift={10}
+        verticalShift={10}
         horizontalPlacement={Position.Auto}
         verticalPlacement={Position.Auto}
         triggers={{
