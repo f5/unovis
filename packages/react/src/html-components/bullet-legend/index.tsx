@@ -23,7 +23,7 @@ function VisBulletLegendFC (props: VisBulletLegendProps, fRef: ForwardedRef<VisB
 
   // On Mount
   useEffect(() => {
-    const c = new BulletLegend(ref.current as HTMLDivElement, props)
+    const c = new BulletLegend(ref.current as HTMLDivElement, { ...props, renderIntoProvidedDomNode: true })
     setComponent(c)
 
     return () => c?.destroy()
