@@ -141,7 +141,9 @@ export class Tooltip {
       ? ((pos.y - tooltipHeight) < 0 ? Position.Bottom : Position.Top)
       : config.verticalPlacement
 
-    // dx and dy variables shift the tooltip from the default position (above the cursor, centred horizontally)
+    // Todo: Get rid of the hardcoded margin in version 2.0
+    // Can be simply replaced with `verticalShift` and `horizontalShift`
+    // but it'll be a breaking change
     const margin = 5
     const translateX = horizontalPlacement === Position.Left ? -tooltipWidth - margin - config.horizontalShift
       : horizontalPlacement === Position.Center ? -tooltipWidth / 2
@@ -151,6 +153,7 @@ export class Tooltip {
       : verticalPlacement === Position.Center ? -tooltipHeight / 2
         : -margin - config.verticalShift - tooltipHeight
 
+    // translateX and translateY variables shift the tooltip from the default position (above the cursor, centred horizontally)
     const [top, left] = this._constraintPosToContainer(pos.x + translateX, pos.y + translateY, tooltipWidth, tooltipHeight)
     this._applyPosition(top, left, tooltipHeight)
   }
@@ -163,6 +166,9 @@ export class Tooltip {
     // by something else and it was captured by the MutationObserver
     this._hoveredElement = hoveredElement
 
+    // Todo: Get rid of the hardcoded margin in version 2.0
+    // Can be simply replaced with `verticalShift` and `horizontalShift`
+    // but it'll be a breaking change
     const margin = 5
     const tooltipWidth = this.element.offsetWidth
     const tooltipHeight = this.element.offsetHeight
@@ -187,10 +193,10 @@ export class Tooltip {
     let translateX = 0
     switch (horizontalPlacement) {
       case Position.Left:
-        translateX = -tooltipWidth - margin
+        translateX = -tooltipWidth - margin - config.horizontalShift
         break
       case Position.Right:
-        translateX = hoveredElementRect.width + margin
+        translateX = hoveredElementRect.width + margin + config.horizontalShift
         break
       case Position.Center:
       default:
@@ -209,11 +215,11 @@ export class Tooltip {
         translateY += (tooltipHeight + hoveredElementRect.height) / 2
         break
       case Position.Bottom:
-        translateY += tooltipHeight + hoveredElementRect.height + margin
+        translateY += tooltipHeight + hoveredElementRect.height + margin + config.verticalShift
         break
       case Position.Top:
       default:
-        translateY += -margin
+        translateY += -margin - config.verticalShift
         break
     }
 

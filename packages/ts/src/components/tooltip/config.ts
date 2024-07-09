@@ -17,11 +17,15 @@ export interface TooltipConfigInterface {
   allowHover?: boolean;
   /** Horizontal placement of the tooltip. Default: `Position.Auto` */
   horizontalPlacement?: Position | string | undefined;
-  /** Horizontal shift of the tooltip in pixels. Default: `0` */
+  /** Horizontal shift of the tooltip in pixels. Works only with
+   * `horizontalPlacement` set to `Position.Left` or `Position.Right`.
+   * Default: `0` */
   horizontalShift?: number;
   /** Vertical placement of the tooltip. Default: `Position.Top` */
   verticalPlacement?: Position | string | undefined;
-  /** Vertical shift of the tooltip in pixels. Default: `0` */
+  /** Vertical shift of the tooltip in pixels. Works only with
+   * `verticalPlacement` set to `Position.Top` or `Position.Bottom`.
+   * Default: `0` */
   verticalShift?: number;
   /** Defines the content of the tooltip and hovering over which elements should trigger it.
    * An object containing properties in the following format:
