@@ -1,9 +1,8 @@
 import typescript from 'rollup-plugin-typescript2'
-import ttypescript from 'ttypescript'
 
 const plugins = [
   typescript({
-    typescript: ttypescript,
+    typescript: require('typescript'),
   }),
 ]
 
