@@ -15,7 +15,7 @@ import { GraphInputLink, GraphInputNode } from 'types/graph'
 import { Spacing } from 'types/spacing'
 
 // Utils
-import { isNumber, clamp, shallowDiff, isFunction, getBoolean, isPlainObject } from 'utils/data'
+import { isNumber, clamp, shallowDiff, isFunction, getBoolean, isPlainObject, isEqual } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 
 // Local Types
@@ -932,7 +932,7 @@ export class Graph<
       prevConfig.layoutType === GraphLayoutType.ParallelHorizontal ||
       prevConfig.layoutType === GraphLayoutType.Concentric
     ) {
-      if (prevConfig.layoutGroupOrder !== config.layoutGroupOrder) return true
+      if (!isEqual(prevConfig.layoutGroupOrder, config.layoutGroupOrder)) return true
       if (prevConfig.layoutParallelNodesPerColumn !== config.layoutParallelNodesPerColumn) return true
       if (prevConfig.layoutParallelSortConnectionsByGroup !== config.layoutParallelSortConnectionsByGroup) return true
     }
