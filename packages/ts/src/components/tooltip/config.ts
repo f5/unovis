@@ -58,6 +58,8 @@ export interface TooltipConfigInterface {
    * ```
    */
   attributes?: { [attr: string]: string | number | boolean };
+  /** Custom class name for the tooltip. Default: `undefined` */
+  className?: string;
 }
 
 export const TooltipDefaultConfig: TooltipConfigInterface = {
@@ -71,5 +73,6 @@ export const TooltipDefaultConfig: TooltipConfigInterface = {
   verticalShift: 0,
   attributes: {},
   triggers: {},
+  className: undefined,
 }
 

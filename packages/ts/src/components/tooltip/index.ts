@@ -33,8 +33,7 @@ export class Tooltip {
 
   constructor (config: TooltipConfigInterface = {}) {
     this.element = document.createElement('div')
-    this.div = select(this.element)
-      .attr('class', s.root)
+    this.div = select(this.element).attr('class', s.root)
 
     this.setConfig(config)
     this.components = this.config.components
@@ -227,7 +226,7 @@ export class Tooltip {
   }
 
   public render (html: string | HTMLElement | null | void): void {
-    const { config } = this
+    const { config, prevConfig } = this
     if (html instanceof HTMLElement) {
       const node = this.div.select(':first-child').node()
       if (node !== html) this.div.html('').append(() => html)
@@ -236,7 +235,13 @@ export class Tooltip {
     }
 
     this.div
+      .classed(config.className ?? '', Boolean(config.className))
       .classed(s.nonInteractive, !config.allowHover || config.followCursor)
+
+    // Remove the previous class name if it was set
+    if (prevConfig?.className && prevConfig.className !== config.className) {
+      this.div.classed(prevConfig.className, false)
+    }
 
     this.display()
   }
