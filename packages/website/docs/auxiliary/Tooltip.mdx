@@ -49,8 +49,8 @@ export const Tooltip = (props) => (
       const wrapperProps = showTriggers ? { ...rest, triggers, imports: tsimports } : rest
       return (
         inputWrapper ?
-        <XYWrapperWithInput {...wrapperProps} hiddenProps={{ triggers: triggerConfig}}/> :
-        <XYWrapper {...wrapperProps} hiddenProps={{ triggers: triggerConfig}}/>
+        <XYWrapperWithInput {...wrapperProps} hiddenProps={{ triggers: triggerConfig, ...props.hiddenProps }}/> :
+        <XYWrapper {...wrapperProps} hiddenProps={{ triggers: triggerConfig, ...props.hiddenProps }}/>
       )
     }}
   </BrowserOnly>
@@ -75,7 +75,7 @@ typeof triggers = {
     datum: T,
     i: number,
     els: Element[]
-  ) => string | HTMLElement
+  ) => string | HTMLElement | null | void
 }
 ```
 
@@ -97,6 +97,16 @@ The arguments of the callback can be used to customize the string content or cus
 - `datum`: the data point associated with the hovered element
 - `i`: the datum's array index
 - `els`: an array of all elements with the selector
+
+:::tip
+
+Returning `null` will hide the tooltip, while returning nothing or `undefined` will
+show the tooltip but won't render anything.
+
+You can use this behavior to make _Tooltip_ work with Portals (e.g. `createPortal` in React),
+when you want to render your custom tooltip component into Unovis's _Tooltip_.
+
+:::
 
 #### Example: Multiple Triggers
 Consider a composite XY chart with a _StackedBar_, _Line_, and _Scatter_ components.
@@ -149,7 +159,11 @@ const triggers = {
   }}/>
 
 ### Horizontal Shift
+Shift the tooltip horizontally by setting the `horizontalShift` property.
+Works only with `horizontalPlacement` set to `Position.Left` or `Position.Right`.
+
 <Tooltip {...defaultProps("StackedBar", {barWidth: 20})}
+  horizontalPlacement={'right'}
   inputWrapper
   property="horizontalShift"
   inputType="range"
@@ -159,6 +173,9 @@ const triggers = {
   triggers={ {"[StackedBar.selectors.bar]": d=> `<span>x: ${d.x}<br/>y: ${d.y}</span>`}}/>
 
 ### Vertical Shift
+Shift the tooltip vertically by setting the `verticalShift` property.
+Works only with `verticalPlacement` set to `Position.Top` or `Position.Bottom`.
+
 <Tooltip {...defaultProps("Line", {lineWidth: 10})}
   data={generateDataRecords(10).map(d => ({ x: d.x, y: Math.cos(d.x)}))}
   height={250}
@@ -172,10 +189,20 @@ const triggers = {
   defaultValue={50}
   containerProps={{ padding: { top: 100 }}}/>
 
+## Follow Cursor
+By default, the _Tooltip_ will follow the cursor when hovering over the chart elements.
+If you want the tooltip to be anchored to the hoevered element, you can set the `followCursor`
+property to `false`.
+
+<BrowserOnly fallback={<div>Loading...</div>}>
+  {() => <Tooltip {...defaultProps("StackedBar", {}, 15)} hiddenProps={{ container: document.body }} followCursor={false} height={40} />}
+</BrowserOnly>
+
 ## Hoverable Content
-You can make _Tooltip_'s content hoverable by setting `followCursor` property to `false`.
-This will keep the content in view when hovering over the tooltip itself.
-This can be useful for interacting with text, links, or other elements in the tooltip:
+_Tooltip_'s content will become hoverable when you set the `followCursor` property to `false`.
+This will keep the content in view when hovering over the tooltip itself. This can be useful for interacting with
+text, links, or other elements in the tooltip. If you want to disable this behavior, you can set the `allowHover`
+property to `false`.
 
 Here is an example with a _Line_ chart a clickable link on hover:
 
@@ -209,15 +236,23 @@ const tooltip = new Tooltip({
 })
 ```
 
+### Custom Class Name
+In rare cases you might want to add a custom class name to the _Tooltip_ component. You can do that by using the
+`className` property.
+
 ### Controls
 You can manually define the behavior of your _Tooltip_ with the following methods:
 
 - `hide()`:
    hides the tooltip from view
+- `render(content:  string | HTMLElement | null | void)`:
+   renders the value of `content` in the tooltip
 - `place({x: number, y: number})`:
    anchors the tooltip to the coordinate `(x,y)`
-- `show(content: HTMLElement | string, pos: {x: number, y: number})`
-   show the value of `content` at the coordinate `(x,y)`
+- `placeByElement(element: SVGElement | HTMLElement)`:
+   anchors the tooltip to the SVG or HTML element
+- `show(content: HTMLElement | string, pos: {x: number, y: number})`:
+   a shortcut to `render` and `place`. Shows the value of `content` at the coordinate `(x,y)`
 
 export const ButtonTooltip = () => {
   return (
