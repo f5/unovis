@@ -8,7 +8,6 @@ import { Symbol, SymbolType } from 'types/symbol'
 import { smartTransition } from 'utils/d3'
 import { getCSSVariableValue, isStringCSSVariable } from 'utils/misc'
 import { hexToBrightness } from 'utils/color'
-import { getValue } from 'utils/data'
 
 // Types
 import { ContinuousScale } from 'types/scale'
@@ -45,7 +44,6 @@ export function updatePoints<Datum> (
   const symbolGenerator = symbol()
 
   selection.each((d, index, elements) => {
-    const i = d._point.pointIndex
     const group: Selection<SVGGElement, ScatterPoint<Datum>, SVGGElement, ScatterPoint<Datum>[]> = select(elements[index])
     const label = group.select('text')
     const path = group.select('path')
@@ -68,7 +66,7 @@ export function updatePoints<Datum> (
       .style('stroke-width', `${pointStrokeWidth}px`)
 
     // Label
-    const labelPosition = getValue(d, config.labelPosition, i) as `${Position}`
+    const labelPosition = d._point.labelPosition
     const isLabelPositionCenter = (labelPosition !== Position.Top) && (labelPosition !== Position.Bottom) &&
       (labelPosition !== Position.Left) && (labelPosition !== Position.Right)
     const pointLabelText = d._point.label ?? ''

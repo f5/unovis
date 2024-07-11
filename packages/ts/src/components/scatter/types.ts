@@ -1,3 +1,4 @@
+import { Position } from 'types/position'
 import { SymbolType } from 'types/symbol'
 
 export type ScatterPoint<D> = D & {
@@ -11,6 +12,7 @@ export type ScatterPoint<D> = D & {
     shape: SymbolType | string;
     label: string | null;
     labelColor: string | null;
+    labelPosition: Position | null;
     cursor: string | null;
     groupIndex: number;
     pointIndex: number;

@@ -75,8 +75,8 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfigInterfac
     const fontSizePx = getCSSVariableValueInPixels('var(--vis-scatter-point-label-text-font-size)', this.element)
 
     const extent = pointDataFlat.reduce((ext, d) => {
-      const labelPosition = getValue(d, this.config.labelPosition, d._point.pointIndex)
-      const labelBBox = getEstimatedLabelBBox(d, labelPosition as Position, this.xScale, this.yScale, fontSizePx)
+      const labelPosition = d._point.labelPosition
+      const labelBBox = getEstimatedLabelBBox(d, labelPosition, this.xScale, this.yScale, fontSizePx)
       const x = this.xScale(d._point.xValue)
       const y = this.yScale(d._point.yValue)
       const r = d._point.sizePx / 2
@@ -205,6 +205,7 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfigInterfac
               shape: getString(d, config.shape, j) as SymbolType,
               label: getString(d, config.label, j),
               labelColor: getColor(d, config.labelColor, j, true),
+              labelPosition: getValue(d, this.config.labelPosition, i) as Position,
               cursor: getString(d, config.cursor, j),
               groupIndex: j,
               pointIndex: i,
