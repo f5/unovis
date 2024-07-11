@@ -69,7 +69,7 @@ export function createNodes<N extends GraphInputNode, L extends GraphInputLink> 
 
     // If there's a custom render function, use it
     if (config.nodeEnterCustomRenderFunction) {
-      config.nodeEnterCustomRenderFunction(d, element, config, duration, scale)
+      config.nodeEnterCustomRenderFunction(d, group, config, duration, scale)
     } else { // Default node rendering
       const shape = getString(d, config.nodeShape, d._index) as GraphNodeShape
       // Todo: The 'nodeShape'  and `nodeIcon` storing logic below it a temporary solution,
@@ -146,7 +146,8 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
   // If there's a custom render function, use it
   if (config.nodeUpdateCustomRenderFunction) {
     selection.each((d, i, elements) => {
-      config.nodeUpdateCustomRenderFunction(d, elements[i], config, duration, scale)
+      const g = select<SVGGElement, GraphNode<N, L>>(elements[i])
+      config.nodeUpdateCustomRenderFunction(d, g, config, duration, scale)
     })
 
     return nodeGroupsUpdate
@@ -361,7 +362,8 @@ export function removeNodes<N extends GraphInputNode, L extends GraphInputLink> 
   // If there's a custom render function, use it
   if (config.nodeExitCustomRenderFunction) {
     selection.each((d, i, elements) => {
-      config.nodeExitCustomRenderFunction(d, elements[i], config, duration, scale)
+      const g = select<SVGGElement, GraphNode<N, L>>(elements[i])
+      config.nodeExitCustomRenderFunction(d, g, config, duration, scale)
     })
   }
 }
