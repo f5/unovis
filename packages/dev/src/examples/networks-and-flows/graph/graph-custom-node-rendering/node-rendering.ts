@@ -1,4 +1,4 @@
-import { select } from 'd3-selection'
+import { select, Selection } from 'd3-selection'
 import { getNumber, getColor, getString, GraphConfigInterface, GraphNode, StringAccessor, trimString } from '@unovis/ts'
 
 import identityIcon from './icons/identity-user.svg?raw'
@@ -31,11 +31,9 @@ export const nodeEnterCustomRenderFunction = <
   L extends CustomGraphLink,
 >(
   d: GraphNode<N, L>,
-  nodeGroupElement: SVGGElement,
+  g: Selection<SVGGElement, GraphNode<N, L>, null, unknown>,
   config: GraphConfigInterface<N, L>
 ): void => {
-  const g = select(nodeGroupElement)
-
   // Node Circle and Icon
   g.append('circle').attr('class', s.nodeSelectionBackground)
   g.append('circle').attr('class', s.nodeHighlightBackground)
@@ -69,7 +67,7 @@ export const nodeUpdateCustomRenderFunction = <
   L extends CustomGraphLink,
 >(
   d: GraphNode<N, L>,
-  nodeGroupElement: SVGGElement,
+  g: Selection<SVGGElement, GraphNode<N, L>, null, unknown>,
   config: GraphConfigInterface<N, L>
 ): void => {
   const nodeSize = getNumber(d, config.nodeSize, d._index) ?? DEFAULT_NODE_SIZE
@@ -77,7 +75,6 @@ export const nodeUpdateCustomRenderFunction = <
   const nodeIconColor = getColor(d, config.nodeFill, d._index) ?? 'black'
   const nodeCircleLabelPlacementDistance = 1.15 * nodeSize
   const nodeColor = getColor(d, config.nodeFill, d._index) as string
-  const g = select<SVGGElement, GraphNode<N, L>>(nodeGroupElement)
 
   // Update Node Circle and Icon
   g.select<SVGCircleElement>(`.${s.nodeCircle}`)

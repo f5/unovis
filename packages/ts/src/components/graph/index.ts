@@ -247,8 +247,7 @@ export class Graph<
     this._zoomBehavior.filter(
       isFunction(zoomEventFilter)
         ? zoomEventFilter
-        : (e: PointerEvent) => (!e.ctrlKey || e.type === 'wheel') && !e.button // Default filter
-    )
+        : (e: PointerEvent) => !e.shiftKey) // Default filter
 
     this._layoutCalculationPromise.then((isFirstRender) => {
       // If the component has been destroyed while the layout calculation

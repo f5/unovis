@@ -201,11 +201,14 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   /** Specify the destination scale for exiting nodes in the range [0,1]. Default: `0.75` */
   nodeExitScale?: NumericAccessor<N> | undefined;
   /** Custom "enter" function for node rendering. Default: `undefined` */
-  nodeEnterCustomRenderFunction?: (datum: GraphNode<N, L>, nodeGroupElement: SVGGElement, config: GraphConfigInterface<N, L>, duration: number, zoomLevel: number) => void;
+  nodeEnterCustomRenderFunction?:
+  (datum: GraphNode<N, L>, nodeGroupElementSelection: Selection<SVGGElement, GraphNode<N, L>, null, unknown>, config: GraphConfigInterface<N, L>, duration: number, zoomLevel: number) => void;
   /** Custom "update" function for node rendering. Default: `undefined` */
-  nodeUpdateCustomRenderFunction?: (datum: GraphNode<N, L>, nodeGroupElement: SVGGElement, config: GraphConfigInterface<N, L>, duration: number, zoomLevel: number) => void;
+  nodeUpdateCustomRenderFunction?:
+  (datum: GraphNode<N, L>, nodeGroupElementSelection: Selection<SVGGElement, GraphNode<N, L>, null, unknown>, config: GraphConfigInterface<N, L>, duration: number, zoomLevel: number) => void;
   /** Custom "exit" function for node rendering. Default: `undefined` */
-  nodeExitCustomRenderFunction?: (datum: GraphNode<N, L>, nodeGroupElement: SVGGElement, config: GraphConfigInterface<N, L>, duration: number, zoomLevel: number) => void;
+  nodeExitCustomRenderFunction?:
+  (datum: GraphNode<N, L>, nodeGroupElementSelection: Selection<SVGGElement, GraphNode<N, L>, null, unknown>, config: GraphConfigInterface<N, L>, duration: number, zoomLevel: number) => void;
   /** Set selected node by unique id. Default: `undefined` */
   selectedNodeId?: number | string;
   /** Set selected nodes by unique id. Default: `undefined` */
