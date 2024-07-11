@@ -75,16 +75,22 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfigInterfac
     const fontSizePx = getCSSVariableValueInPixels('var(--vis-scatter-point-label-text-font-size)', this.element)
 
     const extent = pointDataFlat.reduce((ext, d) => {
-      const labelPosition = d._point.labelPosition
-      const labelBBox = getEstimatedLabelBBox(d, labelPosition, this.xScale, this.yScale, fontSizePx)
       const x = this.xScale(d._point.xValue)
       const y = this.yScale(d._point.yValue)
       const r = d._point.sizePx / 2
 
-      ext.minX = Math.min(ext.minX, x - r, labelBBox.x)
-      ext.maxX = Math.max(ext.maxX, x + r, labelBBox.x + labelBBox.width)
-      ext.minY = Math.min(ext.minY, y - r, labelBBox.y)
-      ext.maxY = Math.max(ext.maxY, y + r, labelBBox.y + labelBBox.height)
+      ext.minX = Math.min(ext.minX, x - r)
+      ext.maxX = Math.max(ext.maxX, x + r)
+      ext.minY = Math.min(ext.minY, y - r)
+      ext.maxY = Math.max(ext.maxY, y + r)
+
+      if (d._point.label) {
+        const labelBBox = getEstimatedLabelBBox(d, d._point.labelPosition, this.xScale, this.yScale, fontSizePx)
+        ext.minX = Math.min(ext.minX, labelBBox.x)
+        ext.maxX = Math.max(ext.maxX, labelBBox.x + labelBBox.width)
+        ext.minY = Math.min(ext.minY, labelBBox.y)
+        ext.maxY = Math.max(ext.maxY, labelBBox.y + labelBBox.height)
+      }
       return ext
     }, {
       minX: Number.POSITIVE_INFINITY,
@@ -205,7 +211,7 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfigInterfac
               shape: getString(d, config.shape, j) as SymbolType,
               label: getString(d, config.label, j),
               labelColor: getColor(d, config.labelColor, j, true),
-              labelPosition: getValue(d, this.config.labelPosition, i) as Position,
+              labelPosition: getValue(d, config.labelPosition, i) as Position,
               cursor: getString(d, config.cursor, j),
               groupIndex: j,
               pointIndex: i,
