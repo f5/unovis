@@ -204,7 +204,7 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfigInterfac
               strokeWidthPx: getNumber(d, config.strokeWidth, j),
               shape: getString(d, config.shape, j) as SymbolType,
               label: getString(d, config.label, j),
-              labelColor: getColor(d, config.labelColor, j),
+              labelColor: getColor(d, config.labelColor, j, true),
               cursor: getString(d, config.cursor, j),
               groupIndex: j,
               pointIndex: i,
