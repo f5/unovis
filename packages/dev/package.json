@@ -6,7 +6,9 @@
   "scripts": {
     "build": "webpack",
     "dev": "webpack-dev-server --host 0.0.0.0",
-    "check": "tsc --noEmit"
+    "serve": "serve dist -s -p 9501",
+    "check": "tsc --noEmit",
+    "test": "npx percy exec -- cypress run"
   },
   "devDependencies": {
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.10",
@@ -30,7 +32,8 @@
     "fuse.js": "^6.6.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^6.4.5"
+    "react-router-dom": "^6.4.5",
+    "serve": "^14.2.3"
   },
   "peerDependencies": {
     "@unovis/ts": "*"
