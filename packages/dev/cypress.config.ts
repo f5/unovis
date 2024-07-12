@@ -3,7 +3,7 @@ import { defineConfig } from 'cypress'
 
 export default defineConfig({
   e2e: {
-    baseUrl: 'http://localhost:9500',
+    baseUrl: 'http://localhost:9501',
     setupNodeEvents (on, config) {
       // implement node event listeners here
     },
@@ -15,4 +15,6 @@ export default defineConfig({
       bundler: 'webpack',
     },
   },
+
+  hosts: { localhost: '127.0.0.1' },
 })
