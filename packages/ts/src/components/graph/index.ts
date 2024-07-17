@@ -144,7 +144,6 @@ export class Graph<
     this._zoomBehavior = zoom<SVGGElement, unknown>()
       .scaleExtent(this.config.zoomScaleExtent)
       .on('zoom', (e: D3ZoomEvent<SVGGElement, unknown>) => this._onZoom(e.transform, e))
-      .filter(event => !event.shiftKey)
 
     this._brushBehavior = brush()
       .on('start brush end', this._onBrush.bind(this))
@@ -242,12 +241,13 @@ export class Graph<
       })
     }
 
-    // Redefine Zoom Behavior filter is specified in the config
-    // https://d3js.org/d3-zoom#zoom_filter
+    // Redefining Zoom Behavior filter to the one specified in the config,
+    // or to the default one supporting `shiftKey` for node brushing
+    // See more: https://d3js.org/d3-zoom#zoom_filter
     this._zoomBehavior.filter(
       isFunction(zoomEventFilter)
         ? zoomEventFilter
-        : (e: PointerEvent) => !e.shiftKey) // Default filter
+        : (e: PointerEvent) => (!e.ctrlKey || e.type === 'wheel') && !e.button && !e.shiftKey) // Default filter
 
     this._layoutCalculationPromise.then((isFirstRender) => {
       // If the component has been destroyed while the layout calculation
