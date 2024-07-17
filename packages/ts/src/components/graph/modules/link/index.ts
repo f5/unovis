@@ -288,7 +288,7 @@ export function animateLinkFlow<N extends GraphInputNode, L extends GraphInputLi
     const linkPathElement = linkGroup.select<SVGPathElement>(`.${linkSelectors.linkSupport}`).node()
     const pathLength = linkPathElement.getTotalLength()
 
-    if (!getBoolean(d, linkFlow, d._indexGlobal)) return
+    if (!getBoolean(d, linkFlow, d._indexGlobal) || !pathLength) return
     const t = d._state.flowAnimTime
     const circles = flowGroup.selectAll(`.${linkSelectors.flowCircle}`)
 
@@ -309,6 +309,10 @@ export function zoomLinks<N extends GraphInputNode, L extends GraphInputLink> (
   const { linkFlowParticleSize } = config
 
   selection.classed(generalSelectors.zoomOutLevel2, scale < ZoomLevel.Level2)
+
+  selection.select(`.${linkSelectors.flowGroup}`)
+    .style('opacity', scale < ZoomLevel.Level2 ? 0 : 1)
+
   selection.selectAll(`.${linkSelectors.flowCircle}`)
     .attr('r', linkFlowParticleSize / scale)
 
