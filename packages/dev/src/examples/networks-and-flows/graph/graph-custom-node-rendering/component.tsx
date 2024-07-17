@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, ReactElement } from 'react'
+import React, { useCallback, useMemo, useRef, ReactElement, useState } from 'react'
 import { Selection } from 'd3-selection'
 import { cx } from '@emotion/css'
 import { GraphNode, GraphLink, GraphConfigInterface } from '@unovis/ts'
@@ -26,6 +26,7 @@ export type CustomGraphProps<
 export const CustomGraph = <N extends CustomGraphNode, L extends CustomGraphLink>(
   props: CustomGraphProps<N, L>
 ): ReactElement => {
+  const [showLinkFlow, setShowLinkFlow] = useState(true)
   const graphD3SelectionRef = useRef<Selection<SVGGElement, unknown, null, undefined> | null>(null)
   const getNodeIcon = useCallback((n: N) => {
     return nodeTypeIconMap.get(n.type as CustomGraphNodeType)
@@ -40,7 +41,7 @@ export const CustomGraph = <N extends CustomGraphNode, L extends CustomGraphLink
     links: props.links,
   }), [props.nodes, props.links])
 
-  const onRenderComplete = (
+  const onRenderComplete = useCallback((
     g: Selection<SVGGElement, unknown, null, undefined>,
     nodes: GraphNode<N, L>[],
     links: GraphLink<N, L>[],
@@ -50,7 +51,7 @@ export const CustomGraph = <N extends CustomGraphNode, L extends CustomGraphLink
   ): void => {
     graphD3SelectionRef.current = g
     renderSwimlanes(g, nodes)
-  }
+  }, [])
 
   const onZoom = useCallback((zoomLevel: number) => {
     if (graphD3SelectionRef.current) {
@@ -59,35 +60,48 @@ export const CustomGraph = <N extends CustomGraphNode, L extends CustomGraphLink
   }, [])
 
   return (
-    <VisSingleContainer
-      className={cx(s.exaforceGraph, props.className)}
-      svgDefs={nodeSvgDefs}
-      data={data}
-      height={props.height}
-    >
-      <VisGraph<N, L>
-        layoutType={'parallel'}
-        layoutNodeGroup={useCallback((n: N) => n.type, [])}
-        linkArrow={useCallback((l: L) => l.showArrow, [])}
-        linkBandWidth={useCallback((l: L) => l.bandWidth, [])}
-        linkCurvature={1}
-        linkFlow={useCallback((l: L) => l.showFlow, [])}
-        linkWidth={useCallback((l: L) => l.width, [])}
-        nodeFill={getNodeFillColor}
-        nodeIcon={getNodeIcon}
-        nodeSize={DEFAULT_NODE_SIZE}
-        nodeIconSize={DEFAULT_NODE_SIZE}
-        nodeLabel={useCallback((n: N) => n.label, [])}
-        nodeLabelTrimLength={30}
-        nodeStroke={'none'}
-        nodeSubLabel={useCallback((n: N) => n.subLabel, [])}
-        nodeSubLabelTrimLength={30}
-        nodeEnterCustomRenderFunction={nodeEnterCustomRenderFunction}
-        nodeUpdateCustomRenderFunction={nodeUpdateCustomRenderFunction}
-        onRenderComplete={onRenderComplete}
-        onZoom={onZoom}
-        {...props}
-      />
-    </VisSingleContainer>
+    <>
+      <VisSingleContainer
+        className={cx(s.exaforceGraph, props.className)}
+        svgDefs={nodeSvgDefs}
+        data={data}
+        height={props.height}
+        duration={1000}
+      >
+        <VisGraph<N, L>
+          layoutType={'parallel'}
+          layoutNodeGroup={useCallback((n: N) => n.type, [])}
+          linkArrow={useCallback((l: L) => l.showArrow, [])}
+          linkBandWidth={useCallback((l: L) => l.bandWidth, [])}
+          linkCurvature={1}
+          linkFlow={useCallback((l: L) => showLinkFlow && l.showFlow, [showLinkFlow])}
+          linkWidth={useCallback((l: L) => l.width, [])}
+          nodeFill={getNodeFillColor}
+          nodeIcon={getNodeIcon}
+          nodeSize={DEFAULT_NODE_SIZE}
+          nodeIconSize={DEFAULT_NODE_SIZE}
+          nodeLabel={useCallback((n: N) => n.label, [])}
+          nodeLabelTrimLength={30}
+          nodeStroke={'none'}
+          nodeSubLabel={useCallback((n: N) => n.subLabel, [])}
+          nodeSubLabelTrimLength={30}
+          nodeEnterCustomRenderFunction={nodeEnterCustomRenderFunction}
+          nodeUpdateCustomRenderFunction={nodeUpdateCustomRenderFunction}
+          onRenderComplete={onRenderComplete}
+          onZoom={onZoom}
+          {...props}
+        />
+      </VisSingleContainer>
+      <div className={s.checkboxContainer}>
+        <label>
+          <input
+            type="checkbox"
+            checked={showLinkFlow}
+            onChange={(e) => setShowLinkFlow(e.target.checked)}
+          />
+          Show Link Flow
+        </label>
+      </div>
+    </>
   )
 }

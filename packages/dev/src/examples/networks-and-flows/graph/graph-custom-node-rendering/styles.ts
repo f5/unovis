@@ -115,3 +115,14 @@ export const swimlaneLabelText = css`
   fill: var(--unovis-graph-swimlane-label-text-color);
   text-anchor: middle;
 `
+// Checkbox
+export const checkboxContainer = css`
+  label: checkbox-container;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: white;
+  padding: 5px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+`
