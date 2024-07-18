@@ -19,7 +19,7 @@ import { isNumber, clamp, shallowDiff, isFunction, getBoolean, isPlainObject, is
 import { smartTransition } from 'utils/d3'
 
 // Local Types
-import { GraphNode, GraphLink, GraphLayoutType, GraphLinkArrowStyle, GraphPanel } from './types'
+import { GraphNode, GraphLink, GraphLayoutType, GraphLinkArrowStyle, GraphPanel, GraphNodeSelectionHighlightMode } from './types'
 
 // Config
 import { GraphDefaultConfig, GraphConfigInterface } from './config'
@@ -31,9 +31,9 @@ import * as linkSelectors from './modules/link/style'
 import * as panelSelectors from './modules/panel/style'
 
 // Modules
-import { createNodes, updateNodes, removeNodes, zoomNodesThrottled, zoomNodes, updateNodeSelectedGreyout } from './modules/node'
+import { createNodes, updateNodes, removeNodes, zoomNodesThrottled, zoomNodes, updateNodesPartial } from './modules/node'
 import { getMaxNodeSize, getNodeSize, getX, getY } from './modules/node/helper'
-import { createLinks, updateLinks, removeLinks, zoomLinksThrottled, zoomLinks, animateLinkFlow, updateSelectedLinks } from './modules/link'
+import { createLinks, updateLinks, removeLinks, zoomLinksThrottled, zoomLinks, animateLinkFlow, updateLinksPartial } from './modules/link'
 import { getDoubleArrowPath, getArrowPath } from './modules/link/helper'
 import { createPanels, updatePanels, removePanels } from './modules/panel'
 import { setPanelForNodes, updatePanelBBoxSize, updatePanelNumNodes, initPanels } from './modules/panel/helper'
@@ -265,22 +265,22 @@ export class Graph<
         this._shouldFitLayout = false
       }
 
-      // Draw
-      this._drawNodes(animDuration)
-      this._drawLinks(animDuration)
-
-      // Select Links / Nodes
-      this._resetSelection()
+      // Update Nodes and Links Selection State
+      this._resetSelectionGreyoutState()
       if (this.config.selectedNodeId || this.config.selectedNodeIds) {
         const selectedIds = this.config.selectedNodeIds ?? [this.config.selectedNodeId]
         const selectedNodes = selectedIds.map(id => datamodel.getNodeFromId(id))
-        this._selectNodes(selectedNodes)
+        this._setNodeSelectionState(selectedNodes)
       }
 
       if (this.config.selectedLinkId) {
         const selectedLink = datamodel.links.find(link => link.id === this.config.selectedLinkId)
-        this._selectLink(selectedLink)
+        this._setLinkSelectionState(selectedLink)
       }
+
+      // Draw
+      this._drawNodes(animDuration)
+      this._drawLinks(animDuration)
 
       // Link flow animation timer
       if (!this._timer) {
@@ -515,53 +515,55 @@ export class Graph<
     return transform
   }
 
-  private _selectNode (node: GraphNode<N, L>): void {
-    const { datamodel: { links } } = this
-    if (!node) console.warn('Unovis | Graph: Select Node: Not found')
 
-    // Highlight selected
-    if (node) {
-      node._state.selected = true
-      node._state.greyout = false
+  private _setNodeSelectionState (nodesToSelect: (GraphNode<N, L> | undefined)[]): void {
+    const { config, datamodel } = this
 
-      const connectedLinks = links.filter(l => (l.source === node) || (l.target === node))
+    // Grey out all nodes and set us unselected
+    for (const n of datamodel.nodes) {
+      n._state.selected = false
+      if (config.nodeSelectionHighlightMode !== GraphNodeSelectionHighlightMode.None) {
+        n._state.greyout = true
+      }
+    }
+
+    // Grey out all links and set us unselected
+    for (const l of datamodel.links) {
+      l._state.selected = false
+      if (config.nodeSelectionHighlightMode !== GraphNodeSelectionHighlightMode.None) {
+        l._state.greyout = true
+      }
+    }
+
+    // Filter out non-existing nodes
+    this._selectedNodes = nodesToSelect.filter(n => {
+      const doesNodeExist = Boolean(n)
+      if (!doesNodeExist) console.warn('Unovis | Graph: Select Node: Not found')
+
+      return doesNodeExist
+    })
+
+    //  Set provided nodes as selected and ungreyout
+    for (const n of this._selectedNodes) {
+      n._state.selected = true
+      n._state.greyout = false
+    }
+
+    // Highlight connected links and nodes
+    if (config.nodeSelectionHighlightMode === GraphNodeSelectionHighlightMode.GreyoutNonConnected) {
+      const connectedLinks = datamodel.links.filter(l => this._selectedNodes.includes(l.source) || this._selectedNodes.includes(l.target))
       connectedLinks.forEach(l => {
-        const source = l.source as GraphNode<N, L>
-        const target = l.target as GraphNode<N, L>
-        source._state.greyout = false
-        target._state.greyout = false
+        l.source._state.greyout = false
+        l.target._state.greyout = false
         l._state.greyout = false
       })
     }
-
-    this._updateSelectedElements()
   }
 
-  private _selectNodes (nodes: GraphNode<N, L>[]): void {
-    // Apply grey out
-    // Grey out all nodes
-    this.datamodel.nodes.forEach(n => {
-      n._state.selected = false
-      n._state.greyout = true
-    })
-
-    // Grey out all links
-    this.datamodel.links.forEach(l => {
-      l._state.greyout = true
-      l._state.selected = false
-    })
-
-    nodes.forEach(n => {
-      this._selectedNodes.push(n)
-      this._selectNode(n)
-    })
-
-    this._updateSelectedElements()
-  }
-
-  private _selectLink (link: GraphLink<N, L>): void {
+  private _setLinkSelectionState (link: GraphLink<N, L>): void {
     const { datamodel: { nodes, links } } = this
     if (!link) console.warn('Unovis: Graph: Select Link: Not found')
+
     this._selectedLink = link
     const selectedLinkSource = link?.source as GraphNode<N, L>
     const selectedLinkTarget = link?.target as GraphNode<N, L>
@@ -591,42 +593,38 @@ export class Graph<
     })
 
     if (link) link._state.selected = true
-
-    this._updateSelectedElements()
   }
 
-  private _resetSelection (): void {
+  private _resetSelectionGreyoutState (): void {
     const { datamodel: { nodes, links } } = this
     this._selectedNodes = []
     this._selectedLink = undefined
 
-    // Disable Grayout
+    // Disable Greyout
     nodes.forEach(n => {
       delete n._state.selected
       delete n._state.greyout
     })
+
     links.forEach(l => {
       delete l._state.greyout
       delete l._state.selected
     })
-
-    this._updateSelectedElements()
   }
 
-  private _updateSelectedElements (): void {
+  private _updateNodesLinksPartial (): void {
     const { config } = this
 
     const linkElements = this._linksGroup.selectAll<SVGGElement, GraphLink<N, L>>(`.${linkSelectors.gLink}`)
-    linkElements.call(updateSelectedLinks, config, this._scale)
+    linkElements.call(updateLinksPartial, config, this._scale)
 
     const nodeElements = this._nodesGroup.selectAll<SVGGElement, GraphNode<N, L>>(`.${nodeSelectors.gNode}`)
-    nodeElements.call(updateNodeSelectedGreyout, config)
-
-    // this._drawPanels(nodeElements, 0)
+    nodeElements.call(updateNodesPartial, config)
   }
 
   private _onBackgroundClick (): void {
-    this._resetSelection()
+    this._resetSelectionGreyoutState()
+    this._updateNodesLinksPartial()
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
@@ -649,14 +647,14 @@ export class Graph<
     if (this._isDragging) return
 
     d._state.hovered = true
-    this._updateSelectedElements()
+    this._updateNodesLinksPartial()
   }
 
   private _onLinkMouseOut (d: GraphLink<N, L>): void {
     if (this._isDragging) return
 
     delete d._state.hovered
-    this._updateSelectedElements()
+    this._updateNodesLinksPartial()
   }
 
   private _onLinkFlowTimerFrame (elapsed = 0): void {
@@ -762,7 +760,7 @@ export class Graph<
       .classed(nodeSelectors.brushed, n => n._state.brushed)
 
     const brushedNodes = this._nodesGroup.selectAll<SVGGElement, GraphNode<N, L>>(`.${nodeSelectors.brushed}`)
-      .call(updateNodeSelectedGreyout, config, 0, this._scale)
+      .call(updateNodesPartial, config, 0, this._scale)
 
     this._brush.classed('active', event.type !== 'end')
     config.onNodeSelectionBrush?.(brushedNodes.data(), event)
@@ -894,7 +892,7 @@ export class Graph<
       .classed(nodeSelectors.brushable, false)
       .classed(nodeSelectors.brushed, false)
       .each(n => { n._state.brushed = false })
-      .call(updateNodeSelectedGreyout, this.config, 0, this._scale)
+      .call(updateNodesPartial, this.config, 0, this._scale)
   }
 
   private _shouldLayoutRecalculate (): boolean {

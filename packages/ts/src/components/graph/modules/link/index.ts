@@ -71,7 +71,8 @@ export function createLinks<N extends GraphInputNode, L extends GraphInputLink> 
     .attr('class', linkSelectors.linkLabelContent)
 }
 
-export function updateSelectedLinks<N extends GraphInputNode, L extends GraphInputLink> (
+/** Updates the links partially according to their `_state` */
+export function updateLinksPartial<N extends GraphInputNode, L extends GraphInputLink> (
   selection: Selection<SVGGElement, GraphLink<N, L>, SVGGElement, unknown>,
   config: GraphConfigInterface<N, L>,
   scale: number
@@ -259,7 +260,7 @@ export function updateLinks<N extends GraphInputNode, L extends GraphInputLink> 
     selection.attr('opacity', 1)
   }
 
-  updateSelectedLinks(selection, config, scale)
+  updateLinksPartial(selection, config, scale)
 }
 
 export function removeLinks<N extends GraphInputNode, L extends GraphInputLink> (

@@ -24,6 +24,7 @@ import {
   GraphDagreLayoutSetting,
   GraphNode,
   GraphLink,
+  GraphNodeSelectionHighlightMode,
 } from './types'
 
 
@@ -209,6 +210,8 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   /** Custom "exit" function for node rendering. Default: `undefined` */
   nodeExitCustomRenderFunction?:
   (datum: GraphNode<N, L>, nodeGroupElementSelection: Selection<SVGGElement, GraphNode<N, L>, null, unknown>, config: GraphConfigInterface<N, L>, duration: number, zoomLevel: number) => void;
+  /** Define the mode for highlighting selected nodes in the graph. Default: `GraphNodeSelectionHighlightMode.GreyoutNonConnected` */
+  nodeSelectionHighlightMode?: GraphNodeSelectionHighlightMode;
   /** Set selected node by unique id. Default: `undefined` */
   selectedNodeId?: number | string;
   /** Set selected nodes by unique id. Default: `undefined` */
@@ -326,9 +329,11 @@ export const GraphDefaultConfig: GraphConfigInterface<GraphInputNode, GraphInput
   nodeExitPosition: undefined,
   nodeExitScale: 0.75,
   nodeSort: undefined,
+  nodeSelectionHighlightMode: GraphNodeSelectionHighlightMode.GreyoutNonConnected,
 
   selectedNodeId: undefined,
   selectedNodeIds: undefined,
+
   panels: undefined,
 
   onNodeDragStart: undefined,
