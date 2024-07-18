@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { VisSingleContainer, VisGraph, VisGraphRef } from '@unovis/react'
-import { Graph } from '@unovis/ts'
+import { Graph, GraphNodeSelectionHighlightMode } from '@unovis/ts'
 import { generateNodeLinkData, NodeDatum, LinkDatum } from '@src/utils/data'
 import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
@@ -13,13 +13,13 @@ export const component = (props: ExampleViewerDurationProps): JSX.Element => {
   const [selectedNodes, setSelectedNodes] = useState<string[] | undefined>()
   const [text, setText] = useState<string>()
 
-  const selectNode = useCallback((n: NodeDatum) => {
-    setSelectedNodes([...selectedNodes ?? [], n.id])
+  const selectNode = useCallback((n: NodeDatum, e: PointerEvent) => {
+    setSelectedNodes([...(selectedNodes && e.metaKey ? selectedNodes : []), n.id])
   }, [selectedNodes])
 
   useEffect(() => {
     const external = selectedNodes ?? 'undefined'
-    const internal = ref.current?.component?.selectedNodes ?? 'undefined'
+    const internal = ref.current?.component?.selectedNodes?.map(d => d.id) ?? 'undefined' // Delayed by a render
     setText([external, internal].join(' | '))
   }, [selectedNodes])
 
@@ -32,17 +32,17 @@ export const component = (props: ExampleViewerDurationProps): JSX.Element => {
           forceLayoutSettings={useMemo(() => ({
             fixNodePositionAfterSimulation: true,
           }), [])}
+          nodeSelectionHighlightMode={GraphNodeSelectionHighlightMode.Greyout}
           linkCurvature={1}
           nodeIcon={useCallback((n: NodeDatum) => n.id, [])}
           events={useMemo(() => ({
             [Graph.selectors.node]: {
-              click: (n: NodeDatum) => { selectNode(n) },
+              click: selectNode,
             },
             [Graph.selectors.background]: {
               click: () => { setSelectedNodes(undefined) },
             },
           }), [selectedNodes])}
-          // selectedNodeId={'1'}
           selectedNodeIds={selectedNodes}
           duration={props.duration}
         />
