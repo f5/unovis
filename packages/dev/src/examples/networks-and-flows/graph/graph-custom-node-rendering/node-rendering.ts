@@ -76,6 +76,11 @@ export const nodeUpdateCustomRenderFunction = <
   const nodeCircleLabelPlacementDistance = 1.15 * nodeSize
   const nodeColor = getColor(d, config.nodeFill, d._index) as string
 
+  // Update Node Selection
+  g.select<SVGCircleElement>(`.${s.nodeSelectionBackground}`)
+    .attr('r', nodeSize + 5)
+    .style('visibility', () => d._state.selected ? null : 'hidden')
+
   // Update Node Circle and Icon
   g.select<SVGCircleElement>(`.${s.nodeCircle}`)
     .attr('r', nodeSize)
