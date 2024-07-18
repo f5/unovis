@@ -67,5 +67,8 @@
   },
   "lint-staged": {
     "*.{js,ts,jsx,tsx,svelte}": "eslint --quiet --cache --fix"
+  },
+  "dependencies": {
+    "seedrandom": "^3.0.5"
   }
 }

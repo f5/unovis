@@ -1,5 +1,8 @@
 import { GenericDataRecord } from '@unovis/ts'
 import { sample } from './array'
+/* eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/naming-convention */
+const SeedRandom = require('seedrandom')
+const rng = new SeedRandom('hello.')
 
 export type XYDataRecord = {
   x: number;
@@ -42,36 +45,36 @@ export type NestedDatum = GenericDataRecord & {
 export function generateXYDataRecords (n = 10): XYDataRecord[] {
   return Array(n).fill(0).map((_, i) => ({
     x: i,
-    y: 5 + 5 * Math.random(),
-    y1: 1 + 3 * Math.random(),
-    y2: 2 * Math.random(),
+    y: 5 + 5 * rng(),
+    y1: 1 + 3 * rng(),
+    y2: 2 * rng(),
   }))
 }
 
 export function generateStackedDataRecords (n = 10, count = 6): StackedDataRecord[] {
   return Array(n).fill(0).map((_, i) => ({
     x: i,
-    ys: Array(count).fill(0).map((_, i) => (i * count / 3) + (count * Math.random())),
+    ys: Array(count).fill(0).map((_, i) => (i * count / 3) + (count * rng())),
   }))
 }
 
 export function generateTimeSeries (n = 10, types = n, lengthMultiplier = 1): TimeDataRecord[] {
   const groups = Array(types).fill(0).map((_, i) => String.fromCharCode(i + 65))
   return Array(n).fill(0).map((_, i: number) => ({
-    timestamp: Date.now() + i * 1000 * 60 * 60 * 24 + (Math.random() - 0.5) * 5 * 1000 * 60 * 60 * 24,
+    timestamp: Date.now() + i * 1000 * 60 * 60 * 24 + (rng() - 0.5) * 5 * 1000 * 60 * 60 * 24,
     value: i / 10 + Math.sin(i / 5) + Math.cos(i / 3),
-    length: Math.round(lengthMultiplier * 1000 * 60 * 60 * 24) * (0.2 + Math.random()),
+    length: Math.round(lengthMultiplier * 1000 * 60 * 60 * 24) * (0.2 + rng()),
     type: groups[i % groups.length],
   }))
 }
 
 
 export function generateNodeLinkData (n = 10, numNeighbourLinks = () => 1): NodeLinkData {
-  const nodes = Array(n).fill(0).map((_, i) => ({ i, id: (i + 1).toString(), value: 100 * Math.random() }))
+  const nodes = Array(n).fill(0).map((_, i) => ({ i, id: (i + 1).toString(), value: 100 * rng() }))
   const options = [...nodes].slice(1)
   const links = nodes.reduce((arr, n) => {
     if (options.length) {
-      const num = Math.max(1, Math.random() * options.length)
+      const num = Math.max(1, rng() * options.length)
       for (let i = 0; i < num; i++) {
         const targetId = options.shift()?.id
         for (let k = 0; k < numNeighbourLinks(); k++) {
@@ -79,7 +82,7 @@ export function generateNodeLinkData (n = 10, numNeighbourLinks = () => 1): Node
             id: `${n.id}-${targetId}`,
             source: n.id,
             target: targetId,
-            value: Math.random(),
+            value: rng(),
           }
           arr.push(link)
         }
@@ -95,14 +98,14 @@ export function generatePrecalculatedNodeLinkData (n = 10, numNeighbourLinks = (
   const nodes = Array(n).fill(0).map((_, i) => ({
     i,
     id: (i + 1).toString(),
-    value: 100 * Math.random(),
+    value: 100 * rng(),
     x: 50 * i,
     y: 50 * i,
   }))
   const options = [...nodes].slice(1)
   const links = nodes.reduce((arr, n) => {
     if (options.length) {
-      const num = Math.max(1, Math.random() * options.length)
+      const num = Math.max(1, rng() * options.length)
       for (let i = 0; i < num; i++) {
         const targetId = options.shift()?.id
         for (let k = 0; k < numNeighbourLinks(); k++) {
@@ -110,7 +113,7 @@ export function generatePrecalculatedNodeLinkData (n = 10, numNeighbourLinks = (
             id: `${n.id}-${targetId}`,
             source: n.id,
             target: targetId,
-            value: Math.random(),
+            value: rng(),
           }
           arr.push(link)
         }
@@ -139,7 +142,7 @@ export function generateHierarchyData (n: number, levels: Record<string, number>
   const nodes = Array(n).fill(0).map((_, i) => {
     const obj: NodeDatum = { id: i.toString(), label: `N${i}` }
     Object.keys(levels).forEach(key => {
-      obj[key] = `${key}${Math.floor(Math.random() * levels[key])}`
+      obj[key] = `${key}${Math.floor(rng() * levels[key])}`
     })
     return obj
   })
@@ -148,7 +151,7 @@ export function generateHierarchyData (n: number, levels: Record<string, number>
     links: Array(n / 2).fill(0).map(() => ({
       source: sample(nodes),
       target: sample(nodes),
-      value: Math.random(),
+      value: rng(),
     })),
   }
 }

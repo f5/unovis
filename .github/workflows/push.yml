@@ -17,12 +17,12 @@ jobs:
     - name: Build
       run: npm run build && npm run build:dev
     - name: Install Percy
-      run: cd packages/dev; npm install --save-dev @percy/cli
+      run: cd packages/dev; npm install --save-dev @percy/cli @percy/cypress
     - name: Start server
       run: cd packages/dev; npm run serve & sleep 5
     - name: Run tests
       run: cd packages/dev; npm test
       env:
-          PERCY_TOKEN: $
+          PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
     - name: Stop server
       run: pkill -f "serve dist -s -p 9501"
