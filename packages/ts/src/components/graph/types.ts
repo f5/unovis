@@ -227,3 +227,8 @@ export type GraphDagreLayoutSetting = {
   ranker?: 'network-simplex' | 'tight-tree' | 'longest-path' | string;
 }
 
+export enum GraphNodeSelectionHighlightMode {
+  None = 'none',
+  Greyout ='greyout',
+  GreyoutNonConnected ='greyout-non-connected',
+}

@@ -102,7 +102,8 @@ export function createNodes<N extends GraphInputNode, L extends GraphInputLink> 
   })
 }
 
-export function updateNodeSelectedGreyout<N extends GraphInputNode, L extends GraphInputLink> (
+/** Updates the nodes partially according to their `_state` */
+export function updateNodesPartial<N extends GraphInputNode, L extends GraphInputLink> (
   selection: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, unknown>,
   config: GraphConfigInterface<N, L>
 ): void {
@@ -337,7 +338,7 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
       .attr('transform', `translate(0, ${nodeHeight / 2})`)
   })
 
-  updateNodeSelectedGreyout(selection, config)
+  updateNodesPartial(selection, config)
 
   return nodeGroupsUpdate
 }
