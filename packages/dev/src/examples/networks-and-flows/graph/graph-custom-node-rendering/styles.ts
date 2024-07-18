@@ -43,8 +43,13 @@ export const exaforceGraph = css`
 // Node Appearance
 export const node = css`label: node-group;`
 export const nodeCircle = css`label: node-background;`
-export const nodeIcon = css`label: node-icon;`
-export const nodeSelectionBackground = css`label: node-selection-background;`
+export const nodeIcon = css`label: node-icon; pointer-events: none;`
+export const nodeSelectionBackground = css`
+  label: node-selection-background;
+  fill: none;
+  stroke: var(--unovis-text-secondary);
+  stroke-dasharray: 4 4;
+`
 export const nodeHighlightBackground = css`label: node-highlight-background;`
 
 // Node Aggregation

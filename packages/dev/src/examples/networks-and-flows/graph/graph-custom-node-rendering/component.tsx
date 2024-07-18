@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useRef, ReactElement, useState } from 'react'
 import { Selection } from 'd3-selection'
 import { cx } from '@emotion/css'
-import { GraphNode, GraphLink, GraphConfigInterface } from '@unovis/ts'
+import { GraphNode, GraphLink, GraphConfigInterface, Graph, GraphNodeSelectionHighlightMode } from '@unovis/ts'
 import { VisSingleContainer, VisGraph, VisSingleContainerProps, VisGraphProps } from '@unovis/react'
 import { nodeEnterCustomRenderFunction, nodeSvgDefs, nodeUpdateCustomRenderFunction } from './node-rendering'
 import { DEFAULT_NODE_SIZE, nodeTypeColorMap, nodeTypeIconMap } from './constants'
@@ -27,6 +27,8 @@ export const CustomGraph = <N extends CustomGraphNode, L extends CustomGraphLink
   props: CustomGraphProps<N, L>
 ): ReactElement => {
   const [showLinkFlow, setShowLinkFlow] = useState(true)
+  const [selectedNodeId, setSelectedNodeId] = useState<string | undefined>(undefined)
+
   const graphD3SelectionRef = useRef<Selection<SVGGElement, unknown, null, undefined> | null>(null)
   const getNodeIcon = useCallback((n: N) => {
     return nodeTypeIconMap.get(n.type as CustomGraphNodeType)
@@ -59,6 +61,15 @@ export const CustomGraph = <N extends CustomGraphNode, L extends CustomGraphLink
     }
   }, [])
 
+  const events = useMemo(() => ({
+    [Graph.selectors.node]: {
+      click: (n: N) => { setSelectedNodeId(n.id) },
+    },
+    [Graph.selectors.background]: {
+      click: () => { setSelectedNodeId(undefined) },
+    },
+  }), [setSelectedNodeId])
+
   return (
     <>
       <VisSingleContainer
@@ -88,7 +99,10 @@ export const CustomGraph = <N extends CustomGraphNode, L extends CustomGraphLink
           nodeEnterCustomRenderFunction={nodeEnterCustomRenderFunction}
           nodeUpdateCustomRenderFunction={nodeUpdateCustomRenderFunction}
           onRenderComplete={onRenderComplete}
+          nodeSelectionHighlightMode={GraphNodeSelectionHighlightMode.None}
           onZoom={onZoom}
+          selectedNodeId={selectedNodeId}
+          events={events}
           {...props}
         />
       </VisSingleContainer>
