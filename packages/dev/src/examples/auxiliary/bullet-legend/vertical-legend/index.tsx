@@ -1,7 +1,7 @@
 import React from 'react'
 import { VisBulletLegend, VisXYContainer, VisAxis, VisStackedBar } from '@unovis/react'
 import { BulletLegendOrientation } from '@unovis/ts'
-import { rng } from '@src/utils/data'
+import { randomNumberGenerator } from '@src/utils/data'
 
 import s from './styles.module.css'
 
@@ -17,7 +17,7 @@ const data = Array.from({ length: 150 }, (_, i) => ({
   ...seriesLabels
     .reduce((acc, label) => ({
       ...acc,
-      [label]: label.length + rng() * 5,
+      [label]: label.length + randomNumberGenerator() * 5,
     }), {} as Record<typeof seriesLabels[number], number>),
 }))
 
