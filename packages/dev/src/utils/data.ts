@@ -2,7 +2,7 @@ import { GenericDataRecord } from '@unovis/ts'
 import { sample } from './array'
 /* eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/naming-convention */
 const SeedRandom = require('seedrandom')
-const rng = new SeedRandom('hello.')
+export const rng = new SeedRandom('hello.')
 
 export type XYDataRecord = {
   x: number;
