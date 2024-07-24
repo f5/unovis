@@ -1,5 +1,6 @@
 import React from 'react'
 import { VisSingleContainer, VisChordDiagram } from '@unovis/react'
+import { randomNumberGenerator } from '@src/utils/data'
 
 export const title = 'Node Levels'
 export const subTitle = 'Side by side comparison'
@@ -22,7 +23,7 @@ const data = {
     { source: 'B0', target: 'C1' },
     { source: 'B1', target: 'C2' },
     { source: 'C0', target: 'A2' },
-  ].map((l) => ({ ...l, value: Math.random() })),
+  ].map((l) => ({ ...l, value: randomNumberGenerator() })),
 }
 export const component = (): JSX.Element => {
   return (
