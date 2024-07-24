@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { VisXYContainer, VisLine, VisAxis, VisAnnotations, VisLineRef } from '@unovis/react'
 import { AnnotationItem } from '@unovis/ts'
-import { rng } from '@src/utils/data'
+import { randomNumberGenerator } from '@src/utils/data'
 
 export const title = 'Basic Annotations'
 export const subTitle = 'Dynamic Data Updates'
@@ -11,7 +11,7 @@ export const component = (): JSX.Element => {
   const length = 10
   const min = 3
   const max = 8
-  const generateData = (): number[] => Array.from({ length }, () => rng() * (max - min) + min)
+  const generateData = (): number[] => Array.from({ length }, () => randomNumberGenerator() * (max - min) + min)
 
   const ref = useRef<VisLineRef<number>>(null)
   const [data, setData] = useState<number[]>(generateData)
