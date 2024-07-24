@@ -1,6 +1,6 @@
 import React from 'react'
 import { VisSingleContainer, VisGraph } from '@unovis/react'
-import { generateNodeLinkData, NodeDatum, LinkDatum } from '@src/utils/data'
+import { generateNodeLinkData, NodeDatum, LinkDatum, rng } from '@src/utils/data'
 import { GraphCircleLabel } from '@unovis/ts'
 
 export const title = 'Node and Link Circle Labels'
@@ -9,11 +9,11 @@ export const subTitle = 'with custom configuration'
 export const component = (): JSX.Element => {
   const data = generateNodeLinkData(15)
   const linkLabels: GraphCircleLabel[] = data.links.map((link, i) => {
-    const hasCustomAppearance = Math.random() > 0.8
+    const hasCustomAppearance = rng() > 0.8
     return {
       text: hasCustomAppearance ? `${i}${i}${i}` : `${i * 10}`,
       fontSize: hasCustomAppearance ? '8px' : undefined,
-      radius: hasCustomAppearance ? 0 : 5 + 10 * Math.random(),
+      radius: hasCustomAppearance ? 0 : 5 + 10 * rng(),
       cursor: 'pointer',
       textColor: hasCustomAppearance ? 'blue' : undefined,
     }

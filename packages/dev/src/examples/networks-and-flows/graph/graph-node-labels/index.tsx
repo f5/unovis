@@ -1,7 +1,7 @@
 import React from 'react'
 import { VisSingleContainer, VisGraph } from '@unovis/react'
 import { TrimMode } from '@unovis/ts'
-import { generateNodeLinkData, NodeDatum, LinkDatum } from '@src/utils/data'
+import { generateNodeLinkData, NodeDatum, LinkDatum, rng } from '@src/utils/data'
 import { sample } from '@src/utils/array'
 
 export const title = 'Node Labels and Sub-labels'
@@ -16,12 +16,12 @@ export const component = (): JSX.Element => {
   const labels = data.nodes.map((d, i) => ({
     label: `${sample(animals)} ${sample(colors)}`,
     subLabel: `${sample(regions)} ${sample(colors)} ${sample(animals)}`,
-    labelTrim: Math.random() > 0.2,
+    labelTrim: rng() > 0.2,
     labelTrimMode: sample(trimModes),
-    labelTrimLength: Math.round(3 + 12 * Math.random()),
-    subLabelTrim: Math.random() > 0.2,
+    labelTrimLength: Math.round(3 + 12 * rng()),
+    subLabelTrim: rng() > 0.2,
     subLabelTrimMode: sample(trimModes),
-    subLabelTrimLength: Math.round(3 + 12 * Math.random()),
+    subLabelTrimLength: Math.round(3 + 12 * rng()),
   }))
   return (
     <VisSingleContainer data={data} height={600}>
