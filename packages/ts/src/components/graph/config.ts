@@ -1,6 +1,6 @@
 import { D3BrushEvent } from 'd3-brush'
 import { D3DragEvent } from 'd3-drag'
-import { D3ZoomEvent } from 'd3-zoom'
+import { D3ZoomEvent, ZoomTransform } from 'd3-zoom'
 import { Selection } from 'd3-selection'
 
 // Config
@@ -228,7 +228,7 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   /** Graph node drag end callback function. Default: `undefined` */
   onNodeDragEnd?: (n: GraphNode<N, L>, event: D3DragEvent<SVGGElement, GraphNode<N, L>, unknown>) => void | undefined;
   /** Zoom event callback. Default: `undefined` */
-  onZoom?: (zoomScale: number, zoomScaleExtent: [number, number], event: D3ZoomEvent<SVGGElement, unknown> | undefined) => void;
+  onZoom?: (zoomScale: number, zoomScaleExtent: [number, number], event: D3ZoomEvent<SVGGElement, unknown> | undefined, transform: ZoomTransform) => void;
   /** Callback function to be called when the graph layout is calculated. Default: `undefined` */
   onLayoutCalculated?: (n: GraphNode<N, L>[], links: GraphLink<N, L>[]) => void;
   /** Graph node selection brush callback function. Default: `undefined` */
