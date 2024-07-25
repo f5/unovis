@@ -676,7 +676,7 @@ export class Graph<
     const transform = t || event.transform
     this._scale = transform.k
     this._graphGroup.attr('transform', transform.toString())
-    if (isFunction(config.onZoom)) config.onZoom(this._scale, config.zoomScaleExtent, event)
+    if (isFunction(config.onZoom)) config.onZoom(this._scale, config.zoomScaleExtent, event, transform)
 
     // console.warn('Unovis | Graph: Zoom: ', transform)
     if (!this._initialTransform) this._initialTransform = transform
