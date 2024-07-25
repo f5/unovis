@@ -71,6 +71,7 @@ export function updatePanels<N extends GraphNode, L extends GraphLink> (
     .attr('width', d => d._width)
     .attr('height', d => d._height)
     .style('stroke', d => d.borderColor)
+    .style('fill', d => d.fillColor)
     .style('stroke-width', d => d.borderWidth)
 
   const panelSelection = selection.select<SVGRectElement>(`.${panelSelectors.panelSelection}`)
