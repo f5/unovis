@@ -161,6 +161,7 @@ export class Graph<
 
   setData (data: {nodes: N[]; links?: L[]}): void {
     const { config } = this
+    if (isEqual(this.datamodel.data, data)) return
 
     this.datamodel.nodeSort = config.nodeSort
     this.datamodel.data = data
