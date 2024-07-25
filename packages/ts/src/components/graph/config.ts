@@ -207,9 +207,20 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   /** Custom "update" function for node rendering. Default: `undefined` */
   nodeUpdateCustomRenderFunction?:
   (datum: GraphNode<N, L>, nodeGroupElementSelection: Selection<SVGGElement, GraphNode<N, L>, null, unknown>, config: GraphConfigInterface<N, L>, duration: number, zoomLevel: number) => void;
+  /** Custom partial "update" function for node rendering which will be triggered after the following events:
+   * - Full node update (`nodeUpdateCustomRenderFunction`);
+   * - Background click;
+   * - Node and Link mouseover and mouseout;
+   * - Node brushing,
+   * Default: `undefined` */
+  nodePartialUpdateCustomRenderFunction?:
+  (datum: GraphNode<N, L>, nodeGroupElementSelection: Selection<SVGGElement, GraphNode<N, L>, null, unknown>, config: GraphConfigInterface<N, L>, duration: number, zoomLevel: number) => void;
   /** Custom "exit" function for node rendering. Default: `undefined` */
   nodeExitCustomRenderFunction?:
   (datum: GraphNode<N, L>, nodeGroupElementSelection: Selection<SVGGElement, GraphNode<N, L>, null, unknown>, config: GraphConfigInterface<N, L>, duration: number, zoomLevel: number) => void;
+  /** Custom render function that will be called while zooming / panning the graph. Default: `undefined` */
+  nodeOnZoomCustomRenderFunction?:
+  (datum: GraphNode<N, L>, nodeGroupElementSelection: Selection<SVGGElement, GraphNode<N, L>, null, unknown>, config: GraphConfigInterface<N, L>, zoomLevel: number) => void;
   /** Define the mode for highlighting selected nodes in the graph. Default: `GraphNodeSelectionHighlightMode.GreyoutNonConnected` */
   nodeSelectionHighlightMode?: GraphNodeSelectionHighlightMode;
   /** Set selected node by unique id. Default: `undefined` */

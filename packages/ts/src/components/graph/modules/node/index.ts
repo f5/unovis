@@ -105,26 +105,37 @@ export function createNodes<N extends GraphInputNode, L extends GraphInputLink> 
 /** Updates the nodes partially according to their `_state` */
 export function updateNodesPartial<N extends GraphInputNode, L extends GraphInputLink> (
   selection: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, unknown>,
-  config: GraphConfigInterface<N, L>
+  config: GraphConfigInterface<N, L>,
+  duration: number,
+  scale = 1
 ): void {
   const { nodeDisabled } = config
 
-  selection.each((d, i, elements) => {
-    const group: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, unknown> = select(elements[i])
-    const isGreyout = getBoolean(d, nodeDisabled, d._index) || d._state.greyout
+  if (config.nodePartialUpdateCustomRenderFunction || config.nodeEnterCustomRenderFunction) {
+    // Handle custom rendering behavior
+    selection.each((d, i, elements) => {
+      const g = select<SVGGElement, GraphNode<N, L>>(elements[i])
+      config.nodePartialUpdateCustomRenderFunction?.(d, g, config, duration, scale)
+    })
+  } else {
+    // Default rendering
+    selection.each((d, i, elements) => {
+      const group: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, unknown> = select(elements[i])
+      const isGreyout = getBoolean(d, nodeDisabled, d._index) || d._state.greyout
 
-    group.classed(nodeSelectors.greyedOutNode, isGreyout && !d._state.brushed)
-      .classed(nodeSelectors.draggable, !config.disableDrag)
+      group.classed(nodeSelectors.greyedOutNode, isGreyout && !d._state.brushed)
+        .classed(nodeSelectors.draggable, !config.disableDrag)
 
-    const nodeSelectionOutline = group.selectAll<SVGGElement, GraphNode<N, L>>(`.${nodeSelectors.nodeSelection}`)
-    nodeSelectionOutline.classed(nodeSelectors.nodeSelectionActive, d._state.selected || d._state.brushed)
+      const nodeSelectionOutline = group.selectAll<SVGGElement, GraphNode<N, L>>(`.${nodeSelectors.nodeSelection}`)
+      nodeSelectionOutline.classed(nodeSelectors.nodeSelectionActive, d._state.selected || d._state.brushed)
 
-    group.selectAll<SVGTextElement, GraphCircleLabel>(`.${nodeSelectors.sideLabel}`)
-      .style('fill', (l) => isGreyout ? null : getSideLabelTextColor(l, selection.node()))
+      group.selectAll<SVGTextElement, GraphCircleLabel>(`.${nodeSelectors.sideLabel}`)
+        .style('fill', (l) => isGreyout ? null : getSideLabelTextColor(l, selection.node()))
 
-    group.selectAll<SVGRectElement, GraphCircleLabel>(`.${nodeSelectors.sideLabelBackground}`)
-      .style('fill', (l) => isGreyout ? null : l.color)
-  })
+      group.selectAll<SVGRectElement, GraphCircleLabel>(`.${nodeSelectors.sideLabelBackground}`)
+        .style('fill', (l) => isGreyout ? null : l.color)
+    })
+  }
 }
 
 export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> (
@@ -151,6 +162,7 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
       config.nodeUpdateCustomRenderFunction(d, g, config, duration, scale)
     })
 
+    updateNodesPartial(selection, config, duration, scale)
     return nodeGroupsUpdate
   }
 
@@ -338,7 +350,7 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
       .attr('transform', `translate(0, ${nodeHeight / 2})`)
   })
 
-  updateNodesPartial(selection, config)
+  updateNodesPartial(selection, config, duration, scale)
 
   return nodeGroupsUpdate
 }
@@ -389,15 +401,23 @@ export function zoomNodes<N extends GraphInputNode, L extends GraphInputLink> (
   config: GraphConfigInterface<N, L>,
   scale: number
 ): void {
-  selection.classed(generalSelectors.zoomOutLevel1, scale < ZoomLevel.Level1)
-  selection.classed(generalSelectors.zoomOutLevel2, scale < ZoomLevel.Level2)
+  if (config.nodeOnZoomCustomRenderFunction || config.nodeEnterCustomRenderFunction) {
+    // Handle custom rendering behavior
+    selection.each((d, i, elements) => {
+      const g = select<SVGGElement, GraphNode<N, L>>(elements[i])
+      config.nodeOnZoomCustomRenderFunction?.(d, g, config, scale)
+    })
+  } else {
+    // Default rendering
+    selection.classed(generalSelectors.zoomOutLevel1, scale < ZoomLevel.Level1)
+    selection.classed(generalSelectors.zoomOutLevel2, scale < ZoomLevel.Level2)
+    selection.selectAll(`${nodeSelectors.sideLabelBackground}`)
+      .attr('transform', `scale(${1 / Math.pow(scale, 0.35)})`)
+    selection.selectAll(`.${nodeSelectors.sideLabel}`)
+      .attr('transform', `scale(${1 / Math.pow(scale, 0.45)})`)
 
-  selection.selectAll(`${nodeSelectors.sideLabelBackground}`)
-    .attr('transform', `scale(${1 / Math.pow(scale, 0.35)})`)
-  selection.selectAll(`.${nodeSelectors.sideLabel}`)
-    .attr('transform', `scale(${1 / Math.pow(scale, 0.45)})`)
-
-  if (scale >= ZoomLevel.Level3 && !config.nodeEnterCustomRenderFunction) selection.call(setLabelBackgroundRectThrottled, config)
+    if (scale >= ZoomLevel.Level3) selection.call(setLabelBackgroundRectThrottled, config)
+  }
 }
 
 export const zoomNodesThrottled = throttle(zoomNodes, 500)

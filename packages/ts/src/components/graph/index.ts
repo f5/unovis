@@ -611,7 +611,7 @@ export class Graph<
     linkElements.call(updateLinksPartial, config, this._scale)
 
     const nodeElements = this._nodesGroup.selectAll<SVGGElement, GraphNode<N, L>>(`.${nodeSelectors.gNode}`)
-    nodeElements.call(updateNodesPartial, config)
+    nodeElements.call(updateNodesPartial, config, config.duration, this._scale)
   }
 
   private _onBackgroundClick (): void {
@@ -625,10 +625,12 @@ export class Graph<
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   private _onNodeMouseOut (d: GraphNode<N, L>): void {
+    this._updateNodesLinksPartial()
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   private _onNodeMouseOver (d: GraphNode<N, L>): void {
+    this._updateNodesLinksPartial()
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
