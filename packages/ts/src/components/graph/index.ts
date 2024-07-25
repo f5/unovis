@@ -89,7 +89,7 @@ export class Graph<
   private _prevHeight: number
   private _shouldRecalculateLayout = false
   private _currentLayoutType: GraphLayoutType | undefined
-  private _layoutCalculationPromise: Promise<boolean> | undefined
+  private _layoutCalculationPromise: Promise<void> | undefined
 
   private _shouldFitLayout: boolean
   private _shouldSetPanels = false
@@ -250,7 +250,7 @@ export class Graph<
         ? zoomEventFilter
         : (e: PointerEvent) => (!e.ctrlKey || e.type === 'wheel') && !e.button && !e.shiftKey) // Default filter
 
-    this._layoutCalculationPromise.then((isFirstRender) => {
+    this._layoutCalculationPromise.then(() => {
       // If the component has been destroyed while the layout calculation
       // was in progress, we cancel the render
       if (this.isDestroyed()) return
@@ -258,7 +258,7 @@ export class Graph<
       this._initPanelsData()
 
       // Fit the view
-      if (isFirstRender) {
+      if (this._isFirstRender) {
         this._fit()
         this._shouldFitLayout = false
       } else if (this._shouldFitLayout && !this._isAutoFitDisabled) {
@@ -307,9 +307,8 @@ export class Graph<
 
       // On render complete callback
       this.config.onRenderComplete?.(this.g, datamodel.nodes, datamodel.links, this.config, animDuration, this._scale, this._containerWidth, this._containerHeight)
+      this._isFirstRender = false
     })
-
-    this._isFirstRender = false
   }
 
   private _drawNodes (duration: number): void {
@@ -406,9 +405,8 @@ export class Graph<
     panelToUpdate.call(updatePanels, config, duration)
   }
 
-  private async _calculateLayout (): Promise<boolean> {
+  private async _calculateLayout (): Promise<void> {
     const { config, datamodel } = this
-    const firstRender = this._isFirstRender
 
     // If the layout type has changed, we need to reset the node positions if they were fixed before
     if (this._currentLayoutType !== config.layoutType) {
@@ -451,8 +449,6 @@ export class Graph<
 
     this._shouldRecalculateLayout = false
     this._currentLayoutType = config.layoutType as GraphLayoutType
-
-    return firstRender
   }
 
   private _initPanelsData (): void {
