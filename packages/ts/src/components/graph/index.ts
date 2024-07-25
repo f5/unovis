@@ -293,11 +293,6 @@ export class Graph<
       if (disableZoom) this.g.on('.zoom', null)
       else this.g.call(this._zoomBehavior).on('dblclick.zoom', null)
 
-      if (!this._isFirstRender && !disableZoom) {
-        const transform = zoomTransform(this.g.node())
-        this._onZoom(transform)
-      }
-
       // While the graph is animating we disable pointer events on the graph group
       if (animDuration) { this._graphGroup.attr('pointer-events', 'none') }
       smartTransition(this._graphGroup, animDuration)
