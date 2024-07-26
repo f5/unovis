@@ -5,7 +5,7 @@ import { ComponentConfigInterface, ComponentDefaultConfig } from 'core/component
 import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
 
 // Local Types
-import { MapProjection, MapPointLabelPosition } from './types'
+import { MapPointLabelPosition } from './types'
 
 export interface TopoJSONMapConfigInterface<
   AreaDatum,
@@ -81,7 +81,7 @@ export interface TopoJSONMapConfigInterface<
 
 export const TopoJSONMapDefaultConfig: TopoJSONMapConfigInterface<unknown, unknown, unknown> = {
   ...ComponentDefaultConfig,
-  projection: MapProjection.Kavrayskiy7(),
+  projection: undefined,
   duration: 1500,
   topojson: undefined,
   mapFeatureName: 'countries',

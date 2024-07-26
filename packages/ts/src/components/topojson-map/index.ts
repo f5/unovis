@@ -19,7 +19,7 @@ import { getCSSVariableValue, isStringCSSVariable } from 'utils/misc'
 import { MapLink } from 'types/map'
 
 // Local Types
-import { MapData, MapFeature, MapPointLabelPosition } from './types'
+import { MapData, MapFeature, MapPointLabelPosition, MapProjection } from './types'
 
 // Config
 import { TopoJSONMapDefaultConfig, TopoJSONMapConfigInterface } from './config'
@@ -96,7 +96,8 @@ export class TopoJSONMap<
   setConfig (config?: TopoJSONMapConfigInterface<AreaDatum, PointDatum, LinkDatum>): void {
     super.setConfig(config)
 
-    const newProjection = this.config.projection
+    // Setting the default here instead of defaultConfig to prevent mutation from other TopoJSONMap instances
+    const newProjection = this.config.projection ?? MapProjection.Kavrayskiy7()
     if (this._projection) {
       newProjection.scale(this._projection.scale()).translate(this._projection.translate())
     }
