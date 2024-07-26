@@ -2,7 +2,7 @@ import { Component } from '@angular/core'
 import { data, DataRecord } from './data'
 
 @Component({
-  selector: 'basic-donut-chart-component',
+  selector: 'basic-donut-chart',
   templateUrl: './basic-donut-chart.component.html',
 })
 
