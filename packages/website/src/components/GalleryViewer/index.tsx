@@ -58,6 +58,11 @@ export function GalleryViewer ({ example, useTypescriptCode }: GalleryViewerProp
             {example.codeVue}
           </CodeBlock>
         </TabItem>
+        <TabItem value={Framework.Solid} label="Solid">
+          <CodeBlock language="tsx">
+            {example.codeSolid}
+          </CodeBlock>
+        </TabItem>
         <TabItem value={Framework.TypeScript} label="TypeScript">
           <CodeBlock language="ts">
             {example.codeTs}

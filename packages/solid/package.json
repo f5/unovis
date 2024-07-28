@@ -1,0 +1,61 @@
+{
+  "name": "@unovis/solid",
+  "description": "Modular data visualization framework for React, Angular, Svelte, Vue, Solid and vanilla TypeScript or JavaScript",
+  "version": "1.4.4",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/f5/unovis.git",
+    "directory": "packages/solid"
+  },
+  "homepage": "https://unovis.dev",
+  "bugs": {
+    "url": "https://github.com/f5/unovis/issues"
+  },
+  "keywords": [
+    "solid",
+    "data visualization",
+    "maps",
+    "charts",
+    "graphs"
+  ],
+  "author": "Hoang Nguyen <huyhoang.hngngn@gmail.com>",
+  "maintainers": [
+    "Nikita Rokotyan <nikita@f5.com> (https://rokotyan.com)",
+    "Rebecca Bol <r.bol@f5.com>"
+  ],
+  "type": "module",
+  "sideEffects": false,
+  "license": "Apache-2.0",
+  "scripts": {
+    "lint": "eslint src --ext .ts,.tsx",
+    "build": "tsup",
+    "publish:dist": "rm -rf dist/.cache; cp ./{LICENSE,README.md,package.json} ./dist; cd ./dist; npm publish",
+    "generate": "tsx autogen/index.ts && npm run lint -- --fix",
+    "gallery": "vite"
+  },
+  "peerDependencies": {
+    "@unovis/ts": "1.4.3",
+    "solid-js": "^1.8.0"
+  },
+  "devDependencies": {
+    "eslint-plugin-solid": "^0.13.2",
+    "solid-js": "^1.8.19",
+    "tsup": "^8.2.2",
+    "tsup-preset-solid": "^2.2.0",
+    "tsx": "^4.16.2",
+    "typescript": "^5.5.4",
+    "vite": "^5.3.4",
+    "vite-plugin-solid": "^2.10.2"
+  },
+  "main": "./index.js",
+  "module": "./index.js",
+  "types": "./index.d.ts",
+  "browser": {},
+  "exports": {
+    "import": {
+      "types": "./index.d.ts",
+      "default": "./index.js"
+    }
+  },
+  "typesVersions": {}
+}

@@ -13,6 +13,7 @@ const example: Example = {
   title: 'Choropleth World Map with Custom Legend',
   description: <small>Life expectancy data obtained from <a href="https://ourworldindata.org/life-expectancy">Our World in Data</a></small>,
   codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,
+  codeSolid: require(`!!raw-loader!./${pathname}-solid.tsx`).default,
   codeTs: require(`!!raw-loader!./${pathname}.ts`).default,
   codeAngular: {
     html: require(`!!raw-loader!./${pathname}.component.html`).default,

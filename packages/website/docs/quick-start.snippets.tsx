@@ -18,6 +18,10 @@ export const vueImport = <CodeBlock language="ts">
   {'import { VisXYContainer, VisLine, VisAxis } from \'@unovis/vue\''}
 </CodeBlock>
 
+export const solidImport = <CodeBlock language="ts">
+  {'import { VisXYContainer, VisLine, VisAxis } from \'@unovis/solid\''}
+</CodeBlock>
+
 export const tsImport = <CodeBlock language="ts">
   {'import { XYContainer, Line, Axis } from \'@unovis/ts\''}
 </CodeBlock>
@@ -44,6 +48,12 @@ export const vueIndividualImport = <CodeBlock language="ts">
   {`import { VisXYContainer } from '@unovis/vue/containers/xy-container'
 import { VisLine } from '@unovis/vue/components/line'
 import { VisAxis } from '@unovis/vue/components/axis'`}
+</CodeBlock>
+
+export const solidIndividualImport = <CodeBlock language="ts">
+  {`import { VisXYContainer } from '@unovis/solid/containers/xy-container'
+import { VisLine } from '@unovis/solid/components/line'
+import { VisAxis } from '@unovis/solid/components/axis'`}
 </CodeBlock>
 
 export const tsIndividualImport = <CodeBlock language="ts">
@@ -158,6 +168,29 @@ export const vueLineChartCode = <CodeBlock language="ts">
   <VisAxis type="x" />
   <VisAxis type="y" />
 </VisXYContainer>`}
+</CodeBlock>
+
+export const solidLineChartCode = <CodeBlock language="tsx">
+  {`import { VisXYContainer, VisLine, VisAxis } from '@unovis/solid'
+
+type DataRecord = { x: number; y: number }
+const data: DataRecord[] = [
+  { x: 0, y: 0 },
+  { x: 1, y: 2 },
+  { x: 2, y: 1 },
+]
+
+const BasicLineChart = () => {
+  return (
+    <VisXYContainer height='50dvh'>
+      <VisLine data={data} x={(d) => d.x} y={(d) => d.y} />
+      <VisAxis type='x' />
+      <VisAxis type='y' />
+    </VisXYContainer>
+  )
+}
+
+export default BasicLineChart`}
 </CodeBlock>
 
 

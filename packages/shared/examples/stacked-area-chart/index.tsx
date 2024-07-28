@@ -16,6 +16,7 @@ const example: Example = {
     Data source: <a href="https://www.riaa.com/u-s-sales-database/" target="_blank">RIAA</a>
   </div>,
   codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,
+  codeSolid: require(`!!raw-loader!./${pathname}-solid.tsx`).default,
   codeTs: require(`!!raw-loader!./${pathname}.ts`).default,
   codeAngular: {
     html: require(`!!raw-loader!./${pathname}.component.html`).default,

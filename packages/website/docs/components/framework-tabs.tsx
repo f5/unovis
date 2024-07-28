@@ -8,6 +8,7 @@ export type FrameworkTabProps = {
   react: string;
   svelte: string;
   vue: string;
+  solid: string;
   typescript?: string;
   javascript?: string;
   hideTabLabels?: boolean;
@@ -19,6 +20,7 @@ export const FrameworkTabs = ({
   react,
   svelte,
   vue,
+  solid,
   typescript,
   javascript,
   hideTabLabels,
@@ -50,6 +52,11 @@ export const FrameworkTabs = ({
     <TabItem value="vue" label="Vue">
       <CodeBlock language="html" title={showTitles && 'component.vue'}>
         {vue}
+      </CodeBlock>
+    </TabItem>
+    <TabItem value="solid" label="Solid">
+      <CodeBlock language="tsx" title={showTitles && 'component.tsx'}>
+        {solid}
       </CodeBlock>
     </TabItem>
     <TabItem value="ts" label={typescript ? 'TypeScript' : 'JavaScript'}>
