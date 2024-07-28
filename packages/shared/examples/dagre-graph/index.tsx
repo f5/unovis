@@ -15,6 +15,7 @@ const example: Example = {
     (source: <a href='https://cloud.google.com/service-mesh/docs/onlineboutique-install-kpt' target="_blank">Online Boutique sample application</a>)
   </p>,
   codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,
+  codeSolid: require(`!!raw-loader!./${pathname}-solid.tsx`).default,
   codeTs: require(`!!raw-loader!./${pathname}.ts`).default,
   codeAngular: {
     html: require(`!!raw-loader!./${pathname}.component.html`).default,
