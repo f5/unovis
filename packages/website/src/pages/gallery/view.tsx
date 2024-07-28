@@ -17,7 +17,7 @@ export default function Home (): JSX.Element {
   return (
     <Layout
       title="Gallery"
-      description="A modular data visualization framework for React, Angular, Svelte, Vue and vanilla TypeScript or JavaScript"
+      description="A modular data visualization framework for React, Angular, Svelte, Vue, Solid and vanilla TypeScript or JavaScript"
     >
       <BrowserOnly>
         {() => {

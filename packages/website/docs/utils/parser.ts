@@ -127,6 +127,15 @@ function parseVue ({ name, props }: ComponentInfo, closing = false, indent = 0):
   return formatElement(`${tab(indent)}<${tag}`, attrs, endLine, ' ', `${tab(indent)}${endLine}`)
 }
 
+function parseSolid ({ name, props }: ComponentInfo, closing = false, indent?: number): string {
+  const attrs = props?.map(({ key, value, stringLiteral }) =>
+    [key, stringLiteral ? `"${value}"` : `{${value}}`].join('=')
+  )
+  const tag = `Vis${name}`
+  const endLine = closing ? `></${tag}>` : '/>'
+  return formatElement(`${tab(indent)}<${tag}`, attrs, endLine, ' ', `${tab(indent)}${endLine}`)
+}
+
 function parseTypescript (name: string, props: PropInfo[], type?: string, el?: boolean, data?: boolean): string {
   const attrs = props?.map(({ key, value, stringLiteral }) =>
     key === value ? key : [key, stringLiteral ? `"${value}"` : `${value}`].join(': ')
@@ -141,5 +150,6 @@ export const parseComponent = {
   react: parseReact,
   svelte: parseSvelte,
   vue: parseVue,
+  solid: parseSolid,
   typescript: parseTypescript,
 }

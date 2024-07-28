@@ -21,6 +21,7 @@ const example: Example = {
     Read more in the <a href="/docs/maps/LeafletMap">Leaflet Map component documentation</a>.
   </div>,
   codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,
+  codeSolid: require(`!!raw-loader!./${pathname}-solid.tsx`).default,
   codeTs: require(`!!raw-loader!./${pathname}.ts`).default,
   codeAngular: {
     html: require(`!!raw-loader!./${pathname}.component.html`).default,

@@ -13,6 +13,7 @@ const example: Example = {
   title: 'Basic Leaflet Map',
   description: <div>Mapping earthquakes from <a href="https://earthquake.usgs.gov" target="_blank">https://earthquake.usgs.gov</a></div>,
   codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,
+  codeSolid: require(`!!raw-loader!./${pathname}-solid.tsx`).default,
   codeTs: require(`!!raw-loader!./${pathname}.ts`).default,
   codeAngular: {
     html: require(`!!raw-loader!./${pathname}.component.html`).default,
