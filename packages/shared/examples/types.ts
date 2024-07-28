@@ -12,6 +12,7 @@ export type Example = {
   };
   codeSvelte: string;
   codeVue: string;
+  codeSolid: string;
   data: string;
   preview: string;
   previewDark?: string;

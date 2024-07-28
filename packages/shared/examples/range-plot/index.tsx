@@ -15,6 +15,7 @@ const example: Example = {
     Data From <a href="https://informationisbeautiful.net/visualizations/gender-pay-gap/" target="_blank">Information is Beautiful</a>
   </div>,
   codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,
+  codeSolid: require(`!!raw-loader!./${pathname}-solid.tsx`).default,
   codeTs: require(`!!raw-loader!./${pathname}.ts`).default,
   codeAngular: {
     html: require(`!!raw-loader!./${pathname}.component.html`).default,

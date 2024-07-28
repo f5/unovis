@@ -15,7 +15,7 @@ module.exports = {
     'header-trim': [2, 'always'],
     'type-enum': [2, 'always', [
       'React', 'Angular', 'Vue', 'Svelte', 'Website', 'Dev', 'Shared',
-      'Core', 'Component', 'Container', 'Release', 'CI', 'Misc',
+      'Core', 'Component', 'Container', 'Release', 'CI', 'Misc', 'Solid',
     ]],
     'scope-case': [2, 'always', 'pascal-case'],
     'subject-case': [2, 'always', 'sentence-case'],

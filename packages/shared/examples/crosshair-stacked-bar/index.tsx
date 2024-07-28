@@ -16,6 +16,7 @@ const example: Example = {
     Icons: <a href="https://icons.getbootstrap.com/#install" target="_blank">Bootstrap Icons</a>
   </div>,
   codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,
+  codeSolid: require(`!!raw-loader!./${pathname}-solid.tsx`).default,
   codeTs: require(`!!raw-loader!./${pathname}.ts`).default,
   codeAngular: {
     html: require(`!!raw-loader!./${pathname}.component.html`).default,

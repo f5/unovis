@@ -13,6 +13,7 @@ const example: Example = {
   title: 'Basic Timeline',
   description: <p>source: <a href='https://killedbygoogle.com/'>Google Graveyard</a></p>,
   codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,
+  codeSolid: require(`!!raw-loader!./${pathname}-solid.tsx`).default,
   codeTs: require(`!!raw-loader!./${pathname}.ts`).default,
   codeAngular: {
     html: require(`!!raw-loader!./${pathname}.component.html`).default,
