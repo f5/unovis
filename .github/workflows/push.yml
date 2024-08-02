@@ -5,7 +5,8 @@ on:
     branches:
       - main
   schedule:
-    - cron: '20 2 * * *'
+    # 8:10 UTC time on Mondays
+    - cron: '10 8 * * 1'
 
 jobs:
   build:
