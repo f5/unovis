@@ -1,5 +1,5 @@
 import React from 'react'
-import { Params, useLoaderData } from 'react-router-dom'
+import { Params, useLoaderData, useSearchParams } from 'react-router-dom'
 
 import { ExampleGroup } from '@src/examples'
 
@@ -16,12 +16,18 @@ type ExampleViewerUrlParams = {
   group: string;
 }
 
+export type ExampleViewerDurationProps = {
+  duration: number | undefined;
+}
+
 export async function exampleViewerLoader ({ params }: { params: Params }): Promise<Params> {
   return params
 }
 
 export function ExampleViewer (props: ExampleViewerProps): JSX.Element {
   const params = useLoaderData() as ExampleViewerUrlParams
+  const [searchParams] = useSearchParams()
+  const urlDuration = searchParams.get('duration') && !isNaN(+searchParams.get('duration')) ? +searchParams.get('duration') : 600
   const exampleTitle = params?.title
   const exampleGroupTitle = params?.group
   const exampleGroup = props.examples?.find(d => d.title === exampleGroupTitle)
@@ -29,10 +35,11 @@ export function ExampleViewer (props: ExampleViewerProps): JSX.Element {
 
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const Component = exampleItem?.component as React.FC
+
   return (
     <div className={s.exampleViewer}>
       { exampleItem
-        ? <Component />
+        ? <Component duration={urlDuration}/>
         : <div className={s.nothingSelected}>🖼 Select an example to view it</div>
       }
     </div>
