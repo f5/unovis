@@ -2,11 +2,12 @@ import React, { useEffect, useRef, useState } from 'react'
 import { VisXYContainer, VisLine, VisAxis, VisAnnotations, VisLineRef } from '@unovis/react'
 import { AnnotationItem } from '@unovis/ts'
 import { randomNumberGenerator } from '@src/utils/data'
+import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 export const title = 'Basic Annotations'
 export const subTitle = 'Dynamic Data Updates'
 
-export const component = (): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): JSX.Element => {
   const height = 400
   const length = 10
   const min = 3
@@ -71,10 +72,10 @@ export const component = (): JSX.Element => {
     <>
       <button onClick={() => setData(generateData())}>Update Data</button>
       <VisXYContainer data={data} height={height} margin={{ right: 100 }} yDomain={[0, 10]}>
-        <VisLine ref={ref} x={(_, i) => i as number} y={d => d} />
-        <VisAxis type='x' numTicks={5} />
-        <VisAxis type='y' numTicks={5} />
-        <VisAnnotations items={annotations}/>
+        <VisLine ref={ref} x={(_, i) => i as number} y={d => d} duration={props.duration}/>
+        <VisAxis type='x' numTicks={5} duration={props.duration}/>
+        <VisAxis type='y' numTicks={5} duration={props.duration}/>
+        <VisAnnotations items={annotations} duration={props.duration}/>
       </VisXYContainer>
     </>
   )
