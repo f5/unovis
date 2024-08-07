@@ -23,7 +23,7 @@ export function InputWrapper ({ property, inputType: type, defaultValue, inputPr
       <label className={`prop-input-label ${rest.excludeTabs ? '' : 'compact'}`}>
         <code>{property}: </code>
         {type === 'select'
-          ? <select defaultValue={options[0]} onChange={updateAttr}>
+          ? <select defaultValue={options.includes(defaultValue) ? defaultValue : options[0]} onChange={updateAttr}>
             {options?.map(o => (
               <option value={o} key={o}>{o}</option>
             ))}
