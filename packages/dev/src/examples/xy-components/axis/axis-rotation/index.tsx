@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React from 'react'
 import { VisXYContainer, VisAxis, VisLine, VisGroupedBar } from '@unovis/react'
 import { XYDataRecord, generateXYDataRecords } from '@src/utils/data'
 import { Scale } from '@unovis/ts'

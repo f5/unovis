@@ -14,6 +14,8 @@
     "types": [
       "node",
       "webpack-env",
+      "cypress",
+      "@percy/cypress"
     ],
     "plugins": [{ "name": "typescript-plugin-css-modules" }]
   }

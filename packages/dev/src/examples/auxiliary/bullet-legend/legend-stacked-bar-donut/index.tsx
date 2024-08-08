@@ -1,6 +1,7 @@
 import React from 'react'
 import { sum } from 'd3-array'
 import { VisBulletLegend, VisSingleContainer, VisDonut, VisXYContainer, VisStackedBar } from '@unovis/react'
+import { randomNumberGenerator } from '@src/utils/data'
 
 import s from './styles.module.css'
 
@@ -16,7 +17,7 @@ export const component = (): JSX.Element => {
   const items = Array(6).fill(0).map((_, i) => ({ name: `y${i}` }))
   const data = Array(10).fill(0).map((_, i) => ({
     x: i,
-    ys: items.map(() => Math.random()),
+    ys: items.map(() => randomNumberGenerator()),
   }))
   const accessors = items.map((_, i) => (d: DataRecord) => d.ys[i])
 
