@@ -1,9 +1,9 @@
-import type { AngularComponentInput, ReactComponentInput, SvelteComponentInput, VueComponentInput } from './types'
+import type { AngularComponentInput, ReactComponentInput, SolidComponentInput, SvelteComponentInput, VueComponentInput } from './types'
 
 export function getComponentList (
   coreComponentConfigPath = '/core/component',
   xyComponentConfigPath = '/core/xy-component'
-): (AngularComponentInput | ReactComponentInput | SvelteComponentInput | VueComponentInput)[] {
+): (AngularComponentInput | ReactComponentInput | SvelteComponentInput | VueComponentInput | SolidComponentInput)[] {
   return [
     // XY Components
     { name: 'Area', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/area'], dataType: 'Datum[]', angularProvide: 'VisXYComponent' },
@@ -31,8 +31,8 @@ export function getComponentList (
     { name: 'Annotations', sources: [coreComponentConfigPath, '/components/annotations'], dataType: null, angularProvide: 'VisGenericComponent', elementSuffix: 'annotations' },
 
     // Standalone components
-    { name: 'LeafletMap', sources: [coreComponentConfigPath, '/components/leaflet-map'], dataType: 'Datum[]', isStandAlone: true, angularProvide: 'VisCoreComponent', angularStyles: ['width: 100%', 'height: 100%', 'position: relative'], svelteStyles: ['display:block', 'position:relative'], vueStyles: ['display:block', 'position:relative'] },
-    { name: 'LeafletFlowMap', sources: [coreComponentConfigPath, '/components/leaflet-map', '/components/leaflet-flow-map'], dataType: '{ points: PointDatum[]; flows?: FlowDatum[] }', isStandAlone: true, angularProvide: 'VisCoreComponent', angularStyles: ['width: 100%', 'height: 100%', 'position: relative'], svelteStyles: ['display:block', 'position:relative'], vueStyles: ['display:block', 'position:relative'] },
-    { name: 'BulletLegend', sources: ['/components/bullet-legend'], dataType: null, angularProvide: 'VisGenericComponent', isStandAlone: true, svelteStyles: ['display:block'], vueStyles: ['display:block'] },
+    { name: 'LeafletMap', sources: [coreComponentConfigPath, '/components/leaflet-map'], dataType: 'Datum[]', isStandAlone: true, angularProvide: 'VisCoreComponent', angularStyles: ['width: 100%', 'height: 100%', 'position: relative'], svelteStyles: ['display:block', 'position:relative'], vueStyles: ['display:block', 'position:relative'], solidStyles: ['display:"block"', 'position:"relative"'] },
+    { name: 'LeafletFlowMap', sources: [coreComponentConfigPath, '/components/leaflet-map', '/components/leaflet-flow-map'], dataType: '{ points: PointDatum[]; flows?: FlowDatum[] }', isStandAlone: true, angularProvide: 'VisCoreComponent', angularStyles: ['width: 100%', 'height: 100%', 'position: relative'], svelteStyles: ['display:block', 'position:relative'], vueStyles: ['display:block', 'position:relative'], solidStyles: ['display:"block"', 'position:"relative"'] },
+    { name: 'BulletLegend', sources: ['/components/bullet-legend'], dataType: null, angularProvide: 'VisGenericComponent', isStandAlone: true, svelteStyles: ['display:block'], vueStyles: ['display:block'], solidStyles: ['display:"block"'] },
   ]
 }

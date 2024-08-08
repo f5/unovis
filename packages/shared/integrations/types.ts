@@ -37,3 +37,7 @@ export type SvelteComponentInput = ComponentInput & {
 export type VueComponentInput = ComponentInput & {
   vueStyles?: string[];
 }
+
+export type SolidComponentInput = ComponentInput & {
+  solidStyles?: string[];
+}
