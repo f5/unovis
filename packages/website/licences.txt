@@ -19,5 +19,5 @@ react-markdown                             perpetual       MIT           8.0.7  
 @tsconfig/docusaurus                       perpetual       MIT           1.0.7              n/a
 raw-loader                                 perpetual       MIT           4.0.2              Tobias Koppers @sokra
 typescript                                 perpetual       Apache-2.0    4.2.4              Microsoft Corp.
-@unovis/react                              perpetual       Apache-2.0    1.4.3              Nikita Rokotyan, F5 Inc. <nikita@f5.com> (https://rokotyan.com)
-@unovis/ts                                 perpetual       Apache-2.0    1.4.3              Nikita Rokotyan, F5 Inc. <nikita@f5.com> (https://rokotyan.com)
+@unovis/react                              perpetual       n/a           n/a                n/a
+@unovis/ts                                 perpetual       n/a           n/a                n/a

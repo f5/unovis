@@ -1,6 +1,6 @@
 {
   "name": "unovis",
-  "version": "1.4.3",
+  "version": "1.4.4-beta.0",
   "license": "Apache-2.0",
   "private": true,
   "workspaces": [
