@@ -25,7 +25,7 @@ type TimeSeriesDatum = (typeof data)[number];
 const yAccessors = seriesLabels.map(label => (d: TimeSeriesDatum) => d[label])
 const legendItems = seriesLabels.map(label => ({ name: label }))
 
-export const component = (): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): JSX.Element => {
   return (
     <div className={s.chartContainer}>
       <VisBulletLegend
@@ -40,9 +40,10 @@ export const component = (): JSX.Element => {
         <VisStackedBar<TimeSeriesDatum>
           x={d => d.time}
           y={yAccessors}
+          duration={props.duration}
         />
-        <VisAxis type='x' tickFormat={tick => new Date(tick).toLocaleDateString()}/>
-        <VisAxis type='y'/>
+        <VisAxis type='x' tickFormat={tick => new Date(tick).toLocaleDateString()} duration={props.duration}/>
+        <VisAxis type='y' duration={props.duration}/>
       </VisXYContainer>
     </div>
   )

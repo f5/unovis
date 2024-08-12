@@ -18,7 +18,8 @@ export const transitionComponent: GeneratedComponent<NestedDatum[]> = {
           (d: NestedDatum) => d.group,
           (d: NestedDatum) => d.subgroup,
           (d: NestedDatum) => d.value,
-        ]}/>
+        ]}
+        duration={props.duration}/>
     </VisSingleContainer>
   ),
 }

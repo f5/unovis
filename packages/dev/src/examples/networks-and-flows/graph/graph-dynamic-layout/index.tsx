@@ -2,11 +2,12 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { VisSingleContainer, VisGraph } from '@unovis/react'
 import { GraphLayoutType } from '@unovis/ts'
 import { generateNodeLinkData, randomNumberGenerator } from '@src/utils/data'
+import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 export const title = 'Dynamic Layout'
 export const subTitle = 'Select Layout From Dropdown'
 
-export const component = (): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): JSX.Element => {
   const [data, setData] = useState(generateNodeLinkData(50))
   const layouts = Object.values(GraphLayoutType)
   const initial = GraphLayoutType.Circular
@@ -37,7 +38,7 @@ export const component = (): JSX.Element => {
         {layouts.map(l => <option key={l} value={l}>{l}</option>)}
       </select>
       <VisSingleContainer data={data} height={900}>
-        <VisGraph layoutType={layout} forceLayoutSettings={forceLayoutSettings}/>
+        <VisGraph layoutType={layout} forceLayoutSettings={forceLayoutSettings} duration={props.duration}/>
       </VisSingleContainer>
     </>
   )

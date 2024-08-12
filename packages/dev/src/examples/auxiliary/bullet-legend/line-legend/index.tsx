@@ -1,6 +1,7 @@
 import React from 'react'
 import { VisBulletLegend, VisXYContainer, VisLine, VisAxis } from '@unovis/react'
 import { generateStackedDataRecords, StackedDataRecord } from '@src/utils/data'
+import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 import s from './styles.module.css'
 
@@ -10,7 +11,7 @@ export const subTitle = 'with markers and dashes'
 const data = generateStackedDataRecords(10)
 const legendItems = Array(data[0].ys.length).fill(0).map((_, i) => ({ name: `Y${i}` }))
 
-export const component = (): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): JSX.Element => {
   const svgDefs = `
     <marker id="circle-marker" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5">
       <circle cx="5" cy="5" r="4" stroke-width="1" stroke="var(--vis-color2)" fill="#fff"/>
@@ -29,9 +30,10 @@ export const component = (): JSX.Element => {
         <VisLine
           x={(d: StackedDataRecord) => d.x}
           y={legendItems.map((_, i) => (d: StackedDataRecord) => d.ys[i])}
+          duration={props.duration}
         />
-        <VisAxis type='x'/>
-        <VisAxis type='y'/>
+        <VisAxis type='x' duration={props.duration}/>
+        <VisAxis type='y' duration={props.duration}/>
       </VisXYContainer>
     </div>
   )

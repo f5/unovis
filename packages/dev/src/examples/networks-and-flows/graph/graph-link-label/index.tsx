@@ -2,11 +2,12 @@ import React from 'react'
 import { VisSingleContainer, VisGraph } from '@unovis/react'
 import { generateNodeLinkData, NodeDatum, LinkDatum, randomNumberGenerator } from '@src/utils/data'
 import { GraphCircleLabel } from '@unovis/ts'
+import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 export const title = 'Node and Link Circle Labels'
 export const subTitle = 'with custom configuration'
 
-export const component = (): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): JSX.Element => {
   const data = generateNodeLinkData(15)
   const linkLabels: GraphCircleLabel[] = data.links.map((link, i) => {
     const hasCustomAppearance = randomNumberGenerator() > 0.8
@@ -30,6 +31,7 @@ export const component = (): JSX.Element => {
           nodeIcon={n => n.id}
           linkLabel={(l, i) => linkLabels[i as number]}
           nodeSideLabels={getNodeSideLabels}
+          duration={props.duration}
         />
       </VisSingleContainer>
     </>

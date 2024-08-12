@@ -3,13 +3,14 @@ import { D3BrushEvent } from 'd3-brush'
 import { VisXYContainer, VisArea, VisAxis, VisBrush } from '@unovis/react'
 
 import { XYDataRecord, generateXYDataRecords } from '@src/utils/data'
+import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 // Style
 import s from './style.module.css'
 
 export const title = 'Custom Style Brush'
 export const subTitle = 'Programmatically set selection range'
-export const component = (): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): JSX.Element => {
   const [selectedRange, setSelectedRange] = useState<[number, number] | undefined>(undefined)
 
   const accessors = [
@@ -34,9 +35,9 @@ export const component = (): JSX.Element => {
   }
   return (
     <VisXYContainer<XYDataRecord> className={s.brush} data={data} height={125} duration={0}>
-      <VisArea x={d => d.x} y={accessors} />
-      <VisAxis type='x' numTicks={3} tickFormat={(x: number | Date) => `${x}ms`}/>
-      <VisBrush onBrushMove={onBrushMove} draggable={true} selection={selectedRange}/>
+      <VisArea x={d => d.x} y={accessors} duration={props.duration}/>
+      <VisAxis type='x' numTicks={3} tickFormat={(x: number | Date) => `${x}ms`} duration={props.duration}/>
+      <VisBrush onBrushMove={onBrushMove} draggable={true} selection={selectedRange} duration={props.duration}/>
     </VisXYContainer>
   )
 }

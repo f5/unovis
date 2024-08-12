@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react'
 import { VectorSourceSpecification } from 'maplibre-gl'
 import { VisLeafletMap, VisLeafletMapRef } from '@unovis/react'
 import { MapLibreArcticDark, MapLibreArcticLight } from '@unovis/ts'
+import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 // Data
 import cities from './cities.json'
@@ -14,7 +15,7 @@ export const subTitle = 'Vector rendering with MapLibre'
 
 
 type MapPointDatum = typeof cities[0]
-export const component = (): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): JSX.Element => {
   const mapRef = useRef<VisLeafletMapRef<MapPointDatum> | null>(null)
   const [isMapVisible, setMapVisible] = useState(true)
   const mapSources = {
@@ -41,6 +42,9 @@ export const component = (): JSX.Element => {
       pointBottomLabel={d => d.city}
       style={{ ...MapLibreArcticLight, ...mapSources }}
       styleDarkTheme={{ ...MapLibreArcticDark, ...mapSources }}
+      duration={props.duration}
+      flyToDuration={props.duration}
+      zoomDuration={props.duration}
       attribution={[
         '<a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a>',
         '<a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap contributors</a>',

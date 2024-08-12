@@ -2,10 +2,11 @@ import React from 'react'
 import { VisXYContainer, VisScatter, VisAxis } from '@unovis/react'
 
 import { generateXYDataRecords, XYDataRecord } from '@src/utils/data'
+import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 export const title = 'Points with stroke'
 export const subTitle = 'Random stroke width and color'
-export const component = (): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): JSX.Element => {
   const accessors = [
     (d: XYDataRecord) => d.y,
   ]
@@ -17,9 +18,9 @@ export const component = (): JSX.Element => {
   const strokeWidth = (): number => 1 + 5 * Math.random()
   return (
     <VisXYContainer<XYDataRecord> data={data} margin={{ top: 5, left: 5 }}>
-      <VisScatter x={d => d.x} y={accessors} size={size} color={color} strokeColor={strokeColor} strokeWidth={strokeWidth} />
-      <VisAxis type='x' numTicks={15} tickFormat={(x: number) => `${x}`}/>
-      <VisAxis type='y' tickFormat={(y: number) => `${y}`}/>
+      <VisScatter x={d => d.x} y={accessors} size={size} color={color} strokeColor={strokeColor} strokeWidth={strokeWidth} duration={props.duration}/>
+      <VisAxis type='x' numTicks={15} tickFormat={(x: number) => `${x}`} duration={props.duration}/>
+      <VisAxis type='y' tickFormat={(y: number) => `${y}`} duration={props.duration}/>
     </VisXYContainer>
   )
 }

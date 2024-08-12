@@ -13,7 +13,7 @@ export const transitionComponent: TransitionComponentProps<TimeDataRecord[]> = {
   },
   component: (props) => (
     <VisXYContainer data={props.data}>
-      <VisTimeline x={d => d.timestamp}/>
+      <VisTimeline x={d => d.timestamp} duration={props.duration}/>
     </VisXYContainer>
   ),
 }

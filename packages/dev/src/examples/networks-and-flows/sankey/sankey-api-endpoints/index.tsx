@@ -12,6 +12,7 @@ import {
   Sizing,
   VerticalAlign,
 } from '@unovis/ts'
+import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 import apiRawData from './apieplist.json'
 import { getSankeyData, ApiEndpointNode, ApiEndpointLink } from './data'
@@ -19,7 +20,7 @@ import { getSankeyData, ApiEndpointNode, ApiEndpointLink } from './data'
 export const title = 'API Endpoints Tree'
 export const subTitle = 'Collapsible nodes'
 
-export const component = (): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): JSX.Element => {
   const collapsedStateRef = useRef<{ [key: string]: boolean }>({})
   const rawData = apiRawData// .slice(25, 50)
   const [data, setData] = useState(getSankeyData(rawData))
@@ -64,6 +65,7 @@ export const component = (): JSX.Element => {
           exitTransitionType={SankeyExitTransitionType.ToAncestor}
           enterTransitionType={SankeyEnterTransitionType.FromAncestor}
           highlightSubtreeOnHover={false}
+          duration={props.duration}
           nodeSort={(a: SankeyNode<ApiEndpointNode, ApiEndpointLink>, b: SankeyNode<ApiEndpointNode, ApiEndpointLink>) => {
             const aParent = a.targetLinks[0]?.source
             const bParent = b.targetLinks[0]?.source

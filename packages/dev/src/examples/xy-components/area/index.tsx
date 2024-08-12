@@ -13,7 +13,7 @@ export const transitionComponent: TransitionComponentProps<XYDataRecord[]> = {
   },
   component: (props) => (
     <VisXYContainer data={props.data}>
-      <VisArea x={d => d.x} y={[d => d.y, d => d.y1, d => d.y2]}/>
+      <VisArea x={d => d.x} y={[d => d.y, d => d.y1, d => d.y2]} duration={props.duration}/>
     </VisXYContainer>
   ),
 }

@@ -2,11 +2,12 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { VisSingleContainer, VisGraph, VisGraphRef } from '@unovis/react'
 import { Graph } from '@unovis/ts'
 import { generateNodeLinkData, NodeDatum, LinkDatum } from '@src/utils/data'
+import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 export const title = 'Graph: Node Selection'
 export const subTitle = 'Select Node on Click'
 
-export const component = (): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): JSX.Element => {
   const data = useMemo(() => generateNodeLinkData(50), [])
   const ref = useRef<VisGraphRef<NodeDatum, LinkDatum>>(null)
   const [selectedNodes, setSelectedNodes] = useState<string[] | undefined>()
@@ -43,6 +44,7 @@ export const component = (): JSX.Element => {
           }), [selectedNodes])}
           // selectedNodeId={'1'}
           selectedNodeIds={selectedNodes}
+          duration={props.duration}
         />
       </VisSingleContainer>
 

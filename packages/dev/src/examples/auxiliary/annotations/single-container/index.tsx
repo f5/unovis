@@ -5,7 +5,7 @@ import { Annotations, StringAccessor } from '@unovis/ts'
 export const title = 'Single Container'
 export const subTitle = 'Donut with annotation button'
 
-export const component = (): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): JSX.Element => {
   const data = [
     { group: 'A', subgroup: 'A0', value: 10 },
     { group: 'A', subgroup: 'A0', value: 5 },
@@ -52,8 +52,9 @@ export const component = (): JSX.Element => {
           value={useCallback((d: Datum) => d.value, [])}
           layerSettings={{ width: expanded ? 25 : 50 }}
           showSegmentLabels={false}
-          centralLabel={'Label Text'} centralSubLabel={'Sub-label'}/>
-        <VisAnnotations events={events} items={annotations}/>
+          centralLabel={'Label Text'} centralSubLabel={'Sub-label'}
+          duration={props.duration}/>
+        <VisAnnotations events={events} items={annotations} duration={props.duration}/>
       </VisSingleContainer>
     </>
   )

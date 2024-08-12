@@ -1,13 +1,14 @@
 import React from 'react'
 import { VisXYContainer, VisArea, VisCrosshair, VisGroupedBar, VisLine, VisScatter, VisStackedBar } from '@unovis/react'
 import { generateXYDataRecords, XYDataRecord } from '@src/utils/data'
+import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 import s from './styles.module.css'
 
 export const title = 'Stacked vs Non-Stacked'
 export const subTitle = 'XY component comparison'
 
-export const component = (): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): JSX.Element => {
   const data = generateXYDataRecords(10)
   const x = (d: XYDataRecord): number => d.x
   const y = (d: XYDataRecord): number | undefined => d.y
@@ -24,7 +25,7 @@ export const component = (): JSX.Element => {
         <div className={s.componentRow}>
           {[y, yStacked].map(accessors => (
             <VisXYContainer data={data}>
-              <Component x={x} y={accessors}/>
+              <Component x={x} y={accessors} duration={props.duration}/>
               <VisCrosshair/>
             </VisXYContainer>
           ))}

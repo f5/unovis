@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import { NestedDonutSegmentLabelAlignment } from '@unovis/ts'
 import { VisSingleContainer, VisNestedDonut } from '@unovis/react'
+import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 import s from './styles.module.css'
 
@@ -13,7 +14,7 @@ const data = Array(15).fill(0).map((_, i) => ({
   label: Array(i % 5 + 1).fill(lengths[Math.floor(i / 5)].split(' ')[0]).join(' '),
 }))
 
-export const component = (): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): JSX.Element => {
   const [hideLabels, setHideLabels] = useState(false)
   const toggleHiddenLabels = useCallback(() => setHideLabels(!hideLabels), [hideLabels])
 
@@ -28,6 +29,7 @@ export const component = (): JSX.Element => {
             layers={[d => d.type, d => d.label]}
             centralLabel={labelAlignment}
             layerSettings={{ width: 75, labelAlignment }}
+            duration={props.duration}
           />
         </VisSingleContainer>
       )}

@@ -30,7 +30,7 @@ export const TooltipComponent = (props: { x: number; y: number }): JSX.Element =
   </div>
 }
 
-export const component = (): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): JSX.Element => {
   const [tooltipClassName, setTooltipClassName] = useState<string>('unovis-custom-tooltip')
   const [hoveredDatum, setHoveredDatum] = React.useState<XYDataRecord | null>(null)
   const data: XYDataRecord[] = useMemo(() => [
@@ -55,6 +55,7 @@ export const component = (): JSX.Element => {
         y={useCallback((d: XYDataRecord) => d.y, [])}
         size={40}
         color={'#5d30c9'}
+        duration={props.duration}
       />
       <VisTooltip
         className={tooltipClassName}
@@ -62,13 +63,14 @@ export const component = (): JSX.Element => {
         container={document.body}
         horizontalPlacement={Position.Auto}
         verticalPlacement={Position.Auto}
+        duration={props.duration}
         triggers={useMemo(() => ({
           [Scatter.selectors.point]: (d: XYDataRecord) => {
             setHoveredDatum(d)
           },
         }), [])} />
-      <VisAxis type='x' />
-      <VisAxis type='y' />
+      <VisAxis type='x' duration={props.duration}/>
+      <VisAxis type='y' duration={props.duration}/>
     </VisXYContainer>
     {tooltipContainerNode && hoveredDatum && createPortal(
       <TooltipComponent
