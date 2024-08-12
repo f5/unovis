@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { VisSingleContainer, VisGraph } from '@unovis/react'
+import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 import personIcon from './person.svg?raw'
 import roleIcon from './role.svg?raw'
@@ -11,7 +12,7 @@ import s from './index.module.css'
 export const title = 'Graph: SVG Node Icons'
 export const subTitle = 'Re-render every second'
 
-export const component = (): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): JSX.Element => {
   const svgDefs = `
     ${personIcon}
     ${roleIcon}
@@ -69,6 +70,7 @@ export const component = (): JSX.Element => {
           linkCurvature={1}
           linkArrow={'single'}
           linkLabel={(l: typeof links[0]) => l.label}
+          duration={props.duration}
         />
       </VisSingleContainer>
     </div>

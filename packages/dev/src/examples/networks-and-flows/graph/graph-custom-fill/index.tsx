@@ -1,11 +1,12 @@
 import React from 'react'
 import { VisSingleContainer, VisGraph } from '@unovis/react'
 import { generateNodeLinkData, NodeDatum } from '@src/utils/data'
+import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 export const title = 'Graph: Custom Node Fills'
 export const subTitle = 'Generated Data'
 
-export const component = (): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): JSX.Element => {
   const svgDefs = `
     <linearGradient id="gradient" gradientTransform="rotate(90)">
       <stop stop-color="var(--vis-color2)" offset="15%"/>
@@ -30,6 +31,7 @@ export const component = (): JSX.Element => {
         nodeFill={(n: NodeDatum) => colors[n.i % colors.length].value}
         nodeIcon={(n: NodeDatum) => colors[n.i % colors.length].symbol}
         nodeLabel={(n: NodeDatum) => colors[n.i % colors.length].type}
+        duration={props.duration}
       />
     </VisSingleContainer>
   )

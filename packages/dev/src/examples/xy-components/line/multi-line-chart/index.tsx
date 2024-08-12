@@ -1,11 +1,12 @@
 import React, { useRef } from 'react'
-import { VisXYContainer, VisAxis, VisTooltip, VisCrosshair, VisBulletLegend, VisLine } from '@unovis/react'
+import { VisXYContainer, VisAxis, VisTooltip, VisCrosshair, VisLine } from '@unovis/react'
 import { XYDataRecord, generateXYDataRecords } from '@src/utils/data'
+import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 export const title = 'Multi Line Chart'
 export const subTitle = 'Generated Data'
 
-export const component = (): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): JSX.Element => {
   const tooltipRef = useRef(null)
   const accessors = [
     (d: XYDataRecord) => d.y,
@@ -17,9 +18,9 @@ export const component = (): JSX.Element => {
   return (
     <>
       <VisXYContainer<XYDataRecord> data={generateXYDataRecords(15)}>
-        <VisLine x={d => d.x} y={accessors}/>
-        <VisAxis type='x' numTicks={15} tickFormat={(x: number) => `${x}`} />
-        <VisAxis type='y' tickFormat={(y: number) => `${y}`} />
+        <VisLine x={d => d.x} y={accessors} duration={props.duration}/>
+        <VisAxis type='x' numTicks={15} tickFormat={(x: number) => `${x}`} duration={props.duration}/>
+        <VisAxis type='y' tickFormat={(y: number) => `${y}`} duration={props.duration}/>
         <VisCrosshair template={(d: XYDataRecord) => `${d.x}`} />
         <VisTooltip ref={tooltipRef} />
       </VisXYContainer>

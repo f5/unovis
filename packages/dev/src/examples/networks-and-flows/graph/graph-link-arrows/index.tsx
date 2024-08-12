@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react'
 import { VisSingleContainer, VisGraph } from '@unovis/react'
 import { GraphLayoutType, GraphLinkArrowStyle, GraphLinkStyle } from '@unovis/ts'
+import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 import { generateNodeLinkData } from '@src/utils/data'
 
@@ -11,7 +12,7 @@ export const subTitle = 'with varied styles and undefined labels'
 
 
 const d = generateNodeLinkData()
-export const component = (): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): JSX.Element => {
   // Types
   type LinkStyle = { type: string; direction?: GraphLinkArrowStyle; style: GraphLinkStyle; label: string }
   type NodeDatum = { id: string; group: string; subgroup: string }
@@ -66,12 +67,13 @@ export const component = (): JSX.Element => {
               layoutNodeGroup={n => n.group}
               layoutParallelNodeSubGroup={n => n.subgroup}
               {...sharedProps}
+              duration={props.duration}
             />
           </VisSingleContainer>
         </div>
       </div>
       <VisSingleContainer data={data}>
-        <VisGraph {...sharedProps}/>
+        <VisGraph {...sharedProps} duration={props.duration}/>
       </VisSingleContainer>
     </div>
   )

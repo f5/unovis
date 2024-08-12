@@ -3,13 +3,14 @@ import { XYLabels } from '@unovis/ts'
 import { VisXYContainer, VisStackedBar, VisAxis, VisTooltip, VisCrosshair, VisXYLabels } from '@unovis/react'
 
 import { XYDataRecord, generateXYDataRecords, randomNumberGenerator } from '@src/utils/data'
+import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 // Style
 import s from './style.module.css'
 
 export const title = 'Stacked Bar with Labels'
 export const subTitle = 'Alerts and Data Labels'
-export const component = (): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): JSX.Element => {
   const tooltipRef = useRef(null)
   const accessors = [
     (d: XYDataRecord) => d.y,
@@ -31,9 +32,9 @@ export const component = (): JSX.Element => {
   return (
     <div className={s.stackBarLabels}>
       <VisXYContainer className={s.stackBarLabels} margin={{ top: 5, left: 5 }}>
-        <VisStackedBar<XYDataRecord> data={data} x={d => d.x} y={accessors} />
-        <VisAxis type='x' numTicks={10}/>
-        <VisAxis type='y' tickFormat={(y: number) => `${y}bps`}/>
+        <VisStackedBar<XYDataRecord> data={data} x={d => d.x} y={accessors} duration={props.duration}/>
+        <VisAxis type='x' numTicks={10} duration={props.duration}/>
+        <VisAxis type='y' tickFormat={(y: number) => `${y}bps`} duration={props.duration}/>
         <VisCrosshair template={(d: XYDataRecord) => `${d.x}`}/>
         <VisTooltip ref={tooltipRef}/>
         <VisXYLabels<XYDataRecord>
@@ -41,6 +42,7 @@ export const component = (): JSX.Element => {
           y={d => d.y / 2}
           x={d => d.x}
           label={d => `${d.y.toFixed(1)} bps`}
+          duration={props.duration}
         />
 
         <VisXYLabels<AlertDataRecord>
@@ -61,6 +63,7 @@ export const component = (): JSX.Element => {
               cluster: true,
             },
           }}
+          duration={props.duration}
         />
       </VisXYContainer>
     </div>

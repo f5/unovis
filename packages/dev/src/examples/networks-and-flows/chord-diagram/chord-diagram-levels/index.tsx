@@ -1,6 +1,7 @@
 import React from 'react'
 import { VisSingleContainer, VisChordDiagram } from '@unovis/react'
 import { randomNumberGenerator } from '@src/utils/data'
+import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 export const title = 'Node Levels'
 export const subTitle = 'Side by side comparison'
@@ -25,17 +26,17 @@ const data = {
     { source: 'C0', target: 'A2' },
   ].map((l) => ({ ...l, value: randomNumberGenerator() })),
 }
-export const component = (): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): JSX.Element => {
   return (
     <div style={{ display: 'flex', height: '600px', justifyContent: 'space-evenly' }}>
-      <VisSingleContainer data={data} >
-        <VisChordDiagram/>
+      <VisSingleContainer data={data}>
+        <VisChordDiagram duration={props.duration}/>
       </VisSingleContainer>
       <VisSingleContainer data={data}>
-        <VisChordDiagram nodeLevels={['group']}/>
+        <VisChordDiagram nodeLevels={['group']} duration={props.duration}/>
       </VisSingleContainer>
       <VisSingleContainer data={data}>
-        <VisChordDiagram nodeLevels={['level', 'group']}/>
+        <VisChordDiagram nodeLevels={['level', 'group']} duration={props.duration}/>
       </VisSingleContainer>
     </div>
   )

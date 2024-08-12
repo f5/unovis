@@ -2,6 +2,7 @@
 import React from 'react'
 import { VisGraph, VisSingleContainer } from '@unovis/react'
 import { GraphElkLayoutSettings, GraphNodeShape } from '@unovis/ts'
+import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 export const title = 'Layout: ELK'
 export const subTitle = 'Layered hierarchical layout'
@@ -41,7 +42,7 @@ const data = {
     { source: '192.8.3.191/33', target: 'workload-name' },
   ],
 }
-export const component = (): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): JSX.Element => {
   return (
     <>
       <VisSingleContainer data={data} height={'100vh'}>
@@ -91,6 +92,7 @@ export const component = (): JSX.Element => {
               padding: { top: 5 },
             },
           ]}
+          duration={props.duration}
         />
       </VisSingleContainer>
     </>

@@ -1,11 +1,13 @@
 import React, { useCallback } from 'react'
 import { VisSingleContainer, VisChordDiagram } from '@unovis/react'
+import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 import { data, NodeDatum } from './data'
+
 
 export const title = 'Basic Chord Diagram'
 export const subTitle = 'Perpendicular label alignment'
 
-export const component = (): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): JSX.Element => {
   return (
     <VisSingleContainer data={data} style={{ width: '100%', height: '100%' }}>
       <VisChordDiagram
@@ -13,6 +15,7 @@ export const component = (): JSX.Element => {
         nodeLevels={['group']}
         nodeLabel={useCallback((n: NodeDatum) => n.id, [])}
         nodeLabelAlignment='perpendicular'
+        duration={props.duration}
       />
     </VisSingleContainer>
   )

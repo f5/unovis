@@ -2,6 +2,7 @@ import React, { useCallback } from 'react'
 import { ChordHierarchyNode } from '@unovis/ts'
 import { VisSingleContainer, VisChordDiagram } from '@unovis/react'
 import { generateHierarchyData } from '@src/utils/data'
+import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 export const title = 'Chord Diagram Hierarchy Nodes'
 export const subTitle = 'With various accessors'
@@ -10,7 +11,7 @@ export const subTitle = 'With various accessors'
 const levels = { a: 3, b: 5, c: 7 }
 const data = generateHierarchyData(50, levels)
 type NodeDatum = typeof data.nodes[0]
-export const component = (): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): JSX.Element => {
   const getColor = useCallback((n: NodeDatum | ChordHierarchyNode<NodeDatum>) => {
     const a = (n as NodeDatum).a
     if (a === 'a0' || n.ancestors?.includes('a0')) return 'var(--vis-color0)'
@@ -26,6 +27,7 @@ export const component = (): JSX.Element => {
         nodeColor={getColor}
         nodeLabel={getLabel}
         nodeLabelAlignment={getLabelAlignment}
+        duration={props.duration}
       />
     </VisSingleContainer>
   )

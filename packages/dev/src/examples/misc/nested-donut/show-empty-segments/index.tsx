@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react'
 import { VisSingleContainer, VisNestedDonut } from '@unovis/react'
+import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 export const title = 'Empty Segments'
 export const subTitle = 'In various positions'
@@ -24,7 +25,7 @@ const data: Datum[] = [
   ...Array(5).fill(0).map((_, i) => ({ group: 'E', subgroup: `e${i}`, value: 0 })),
 ]
 
-export const component = (): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): JSX.Element => {
   return (<>
     <VisSingleContainer data={data} height={500}>
       <VisNestedDonut
@@ -36,6 +37,7 @@ export const component = (): JSX.Element => {
         // segmentColor={d => d.value === 0 && 'black'}
         showEmptySegments={true}
         value={useCallback((d: Datum) => d.value, [])}
+        duration={props.duration}
       />
     </VisSingleContainer>
   </>)

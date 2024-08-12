@@ -10,7 +10,7 @@ export const transitionComponent: GeneratedComponent<number[]> = {
   },
   component: (props) => (
     <VisSingleContainer data={props.data}>
-      <VisDonut value={d => d}/>
+      <VisDonut value={d => d} duration={props.duration}/>
     </VisSingleContainer>
   ),
 }
