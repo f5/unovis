@@ -66,7 +66,7 @@ export class ContainerCore {
     const { config, prevConfig } = this
 
     // Add `svgDefs` if provided in the config
-    if (config.svgDefs !== prevConfig.svgDefs) {
+    if (config?.svgDefs !== prevConfig?.svgDefs) {
       this._svgDefsExternal.selectAll('*').remove()
       this._svgDefsExternal.html(config.svgDefs)
     }
