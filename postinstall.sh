@@ -7,6 +7,7 @@ npm run build:angular
 npm run build:react
 npm run build:svelte
 npm run build:vue
+npm run build:solid
 
 
 # We need to install @unovis/website dependencies separately otherwise it won't run and build
