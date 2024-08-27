@@ -309,9 +309,14 @@ Providing an accessor function to `linkArrow` will turn on arrows display on lin
 <GraphDoc hiddenProps={linkHiddenProps} linkArrow={() => sample([undefined, 'single', 'double'])} />
 
 ### Labels
-Links can have textual label. When the label is short (two characters or less) it'll be rendered with a circular
+Links can have textual or custom SVG labels. When the label is short (two characters or less) or an SVG href, it'll be rendered with a circular
 background similarly to node's [side labels](Graph#on-the-side). Longer labels will have a rectangular background.
-To enable links labels you'll need to provide a function to `linkLabel` returning a `GraphLinkLabel` object to display.
+To enable link labels you'll need to provide a function for `linkLabel` returning a `GraphLinkLabel` object to display.
+
+To use custom SVG as labels, you'll first need to define it in your container [SVG defs](http://localhost:9300/docs/containers/Single_Container#svg-defs)
+and provide the `href` to your custom SVG definition using the `text` property of your label. In this case the `fontSize`
+property will control the size of your custom SVG label.
+
 <GraphDoc hiddenProps={linkHiddenProps} linkLabel={(d, i) => ({ text: i*i*i })} />
 
 The default appearance of the labels is controlled with the following CSS variables:
@@ -524,7 +529,7 @@ in the gallery to learn more.
 ### Precalculated
 
 If you want to specify node locations, set `layoutType` to `GraphLayoutType.Precalculated`(or `"precalculated"`).
-Then pass in node positions (`x` and `y`) as part of graph data. 
+Then pass in node positions (`x` and `y`) as part of graph data.
 
 Note: if you selected `GraphLayoutType.Precalculated` but fail to pass in `x` and `y`, all your nodes will render at the default positions.
 
