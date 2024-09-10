@@ -86,7 +86,11 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfigInterface<Da
       .value(d => getNumber(d.datum, config.value, d.index) || 0)
       .sort((a, b) => config.sortFunction?.(a.datum, b.datum))
 
-    this.arcGroup.attr('transform', `translate(${this._width / 2},${this._height / 2})`)
+    // const isTopHalfDonut = TODO
+    const yTranslate = this._height / 2 + 50
+    // const yTranslate = this._height * 3 / 2
+
+    this.arcGroup.attr('transform', `translate(${this._width / 2},${yTranslate})`)
 
     const arcData: DonutArcDatum<Datum>[] = pieGen(data).map(d => {
       const arc = {
