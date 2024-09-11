@@ -87,7 +87,12 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfigInterface<Da
       .sort((a, b) => config.sortFunction?.(a.datum, b.datum))
 
     // This translate centers the pie
-    const translate = `translate(${this._width / 2},${this._height / 2})`
+    const isHalfDonut = config.angleRange && (
+      config.angleRange[0] === -Math.PI / 2 &&
+      config.angleRange[1] === Math.PI / 2
+    )
+    const translateY = isHalfDonut ? this._height * 3 / 4 : this._height / 2
+    const translate = `translate(${this._width / 2},${translateY})`
 
     this.arcGroup.attr('transform', translate)
 
