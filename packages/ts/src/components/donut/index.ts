@@ -86,11 +86,10 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfigInterface<Da
       .value(d => getNumber(d.datum, config.value, d.index) || 0)
       .sort((a, b) => config.sortFunction?.(a.datum, b.datum))
 
-    // const isTopHalfDonut = TODO
-    const yTranslate = this._height / 2 + 50
-    // const yTranslate = this._height * 3 / 2
+    // This translate centers the pie
+    const translate = `translate(${this._width / 2},${this._height / 2})`
 
-    this.arcGroup.attr('transform', `translate(${this._width / 2},${yTranslate})`)
+    this.arcGroup.attr('transform', translate)
 
     const arcData: DonutArcDatum<Datum>[] = pieGen(data).map(d => {
       const arc = {
@@ -127,12 +126,12 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfigInterface<Da
 
     // Label
     this.centralLabel
-      .attr('transform', `translate(${this._width / 2},${this._height / 2})`)
+      .attr('transform', translate)
       .attr('dy', config.centralSubLabel ? '-0.55em' : null)
       .text(config.centralLabel ?? null)
 
     this.centralSubLabel
-      .attr('transform', `translate(${this._width / 2},${this._height / 2})`)
+      .attr('transform', translate)
       .attr('dy', config.centralLabel ? '0.55em' : null)
       .text(config.centralSubLabel ?? null)
 
@@ -141,7 +140,7 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfigInterface<Da
     // Background
     this.arcBackground.attr('class', s.background)
       .attr('visibility', config.showBackground ? null : 'hidden')
-      .attr('transform', `translate(${this._width / 2},${this._height / 2})`)
+      .attr('transform', translate)
 
     smartTransition(this.arcBackground, duration)
       .attr('d', this.arcGen({
