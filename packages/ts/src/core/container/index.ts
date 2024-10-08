@@ -137,6 +137,10 @@ export class ContainerCore {
 
   protected _setUpResizeObserver (): void {
     if (this._resizeObserver) return
+
+    // eslint-disable-next-line
+    console.log('Setting up Resize Observer on element', this._container)
+
     const containerRect = this._container.getBoundingClientRect()
     this._containerSize = { width: containerRect.width, height: containerRect.height }
 
