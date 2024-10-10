@@ -14,7 +14,7 @@ describe('Unovis Test', () => {
           duration: test.duration,
         },
       })
-      cy.wait(test.duration > 100 ? test.duration : 100)
+      cy.wait(test.duration > 1000 ? test.duration : 1000)
       cy.percySnapshot(test.title, { scope: scopeSelector })
     })
   })
