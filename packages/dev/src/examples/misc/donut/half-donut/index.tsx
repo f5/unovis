@@ -10,8 +10,9 @@ const halfDonutAngleRange: [number, number] = [-Math.PI / 2, Math.PI / 2]
 export const component = (props: ExampleViewerDurationProps): JSX.Element => {
   const data = [0, 2, 0, 4, 0, 1]
   return (
-    <VisSingleContainer height="50vh">
-      {/* TODO add label and sub-label here */}
+    // TODO get this to properly scale to the container,
+    // by changing "80vh" to something else or removing it.
+    <VisSingleContainer height="80vh">
       <VisDonut
         value={d => d}
         data={data}

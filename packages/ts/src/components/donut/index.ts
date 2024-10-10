@@ -67,8 +67,43 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfigInterface<Da
       }))
       .filter(d => config.showEmptySegments || getNumber(d.datum, config.value, d.index))
 
+    // Handle half-donut cases, which adjust the scaling and positioning
+
+    const isHalfDonutTop = config.angleRange && (
+      config.angleRange[0] === -Math.PI / 2 &&
+      config.angleRange[1] === Math.PI / 2
+    )
+
+    const isHalfDonutBottom = config.angleRange && (
+      config.angleRange[0] === Math.PI / 2 &&
+      config.angleRange[1] === 3 * Math.PI / 2
+    )
+
+    const isHalfDonutRight = config.angleRange && (
+      config.angleRange[0] === 0 &&
+      config.angleRange[1] === Math.PI / 2
+    )
+
+    const isHalfDonutLeft = config.angleRange && (
+      config.angleRange[0] === Math.PI &&
+      config.angleRange[1] === 3 * Math.PI / 2
+    )
+
+    const isVerticalHalfDonut = isHalfDonutTop || isHalfDonutBottom
+    const isHorizontalHalfDonut = isHalfDonutRight || isHalfDonutLeft
+
+    // Compute the bounding box of the donut,
+    // considering it may be a half-donut
+    const width = this._width * (isHorizontalHalfDonut ? 2 : 1)
+    const height = this._height * (isVerticalHalfDonut ? 2 : 1)
+
+    // console.log('isHalfDonutTop', isHalfDonutTop)
+    // console.log('isHalfDonutRight', isHalfDonutRight)
+    // console.log('isHalfDonutBottom', isHalfDonutBottom)
+    // console.log('isHalfDonutLeft', isHalfDonutLeft)
+
     const duration = isNumber(customDuration) ? customDuration : config.duration
-    const outerRadius = config.radius || Math.min(this._width - bleed.left - bleed.right, this._height - bleed.top - bleed.bottom) / 2
+    const outerRadius = config.radius || Math.min(width - bleed.left - bleed.right, height - bleed.top - bleed.bottom) / 2
     const innerRadius = config.arcWidth === 0 ? 0 : clamp(outerRadius - config.arcWidth, 0, outerRadius - 1)
 
     this.arcGen
@@ -86,12 +121,7 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfigInterface<Da
       .value(d => getNumber(d.datum, config.value, d.index) || 0)
       .sort((a, b) => config.sortFunction?.(a.datum, b.datum))
 
-    // This translate centers the pie
-    const isHalfDonut = config.angleRange && (
-      config.angleRange[0] === -Math.PI / 2 &&
-      config.angleRange[1] === Math.PI / 2
-    )
-    const translateY = isHalfDonut ? this._height * 3 / 4 : this._height / 2
+    const translateY = this._height * (isHalfDonutTop ? 1 : 0.5)
     const translate = `translate(${this._width / 2},${translateY})`
 
     this.arcGroup.attr('transform', translate)
