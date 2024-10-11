@@ -147,8 +147,8 @@ export class SingleContainer<Data> extends ContainerCore {
     if (!this._resizeObserver) this._setUpResizeObserver()
 
     // Schedule the actual rendering in the next frame
-    cancelAnimationFrame(this._requestedAnimationFrame)
-    this._requestedAnimationFrame = requestAnimationFrame(() => {
+    cancelAnimationFrame(this._renderAnimationFrameId)
+    this._renderAnimationFrameId = requestAnimationFrame(() => {
       this._preRender()
       this._render(duration)
     })
