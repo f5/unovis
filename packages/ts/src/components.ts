@@ -25,7 +25,13 @@ export { LeafletFlowMap } from './components/leaflet-flow-map'
 export { ChordDiagram } from './components/chord-diagram'
 export { Graph } from './components/graph'
 export { VisControls } from './components/vis-controls'
-export { Donut } from './components/donut'
+export {
+  Donut,
+  DONUT_HALF_ANGLE_RANGE_TOP,
+  DONUT_HALF_ANGLE_RANGE_RIGHT,
+  DONUT_HALF_ANGLE_RANGE_BOTTOM,
+  DONUT_HALF_ANGLE_RANGE_LEFT,
+} from './components/donut'
 export { FreeBrush } from './components/free-brush'
 export { XYLabels } from './components/xy-labels'
 export { NestedDonut } from './components/nested-donut'

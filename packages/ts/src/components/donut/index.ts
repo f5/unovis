@@ -25,6 +25,19 @@ import { createArc, updateArc, removeArc } from './modules/arc'
 // Styles
 import * as s from './style'
 
+// Constants that support half donuts
+const halfDonutPositions = ['Top', 'Right', 'Bottom', 'Left']
+const halfDonutAngleRanges = halfDonutPositions.map((_, i) => {
+  const offset = -Math.PI / 2 + i * Math.PI / 2
+  return [offset, offset + Math.PI]
+})
+export const [
+  DONUT_HALF_ANGLE_RANGE_TOP,
+  DONUT_HALF_ANGLE_RANGE_RIGHT,
+  DONUT_HALF_ANGLE_RANGE_BOTTOM,
+  DONUT_HALF_ANGLE_RANGE_LEFT,
+] = halfDonutAngleRanges
+
 export class Donut<Datum> extends ComponentCore<Datum[], DonutConfigInterface<Datum>> {
   static selectors = s
   protected _defaultConfig = DonutDefaultConfig as DonutConfigInterface<Datum>
@@ -67,28 +80,27 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfigInterface<Da
       }))
       .filter(d => config.showEmptySegments || getNumber(d.datum, config.value, d.index))
 
-    // Handle half-donut cases, which adjust the scaling and positioning
-
-    const isHalfDonutTop = config.angleRange && (
-      config.angleRange[0] === -Math.PI / 2 &&
-      config.angleRange[1] === Math.PI / 2
+    // Handle half-donut cases, which adjust the scaling and positioning.
+    // One of these is true if we are dealing with a half-donut.
+    const [
+      isHalfDonutTop,
+      isHalfDonutRight,
+      isHalfDonutBottom,
+      isHalfDonutLeft,
+    ] = halfDonutAngleRanges.map(angleRange =>
+      config.angleRange && (
+        config.angleRange[0] === angleRange[0] &&
+        config.angleRange[1] === angleRange[1]
+      )
     )
-
-    const isHalfDonutBottom = config.angleRange && (
-      config.angleRange[0] === Math.PI / 2 &&
-      config.angleRange[1] === 3 * Math.PI / 2
-    )
-
-    const isHalfDonutRight = config.angleRange && (
-      config.angleRange[0] === 0 &&
-      config.angleRange[1] === Math.PI / 2
-    )
-
-    const isHalfDonutLeft = config.angleRange && (
-      config.angleRange[0] === Math.PI &&
-      config.angleRange[1] === 3 * Math.PI / 2
-    )
-
+    // console.log('config.angleRange', config.angleRange)
+    // console.log('halfDonutAngleRanges', halfDonutAngleRanges)
+    // console.log({
+    //   isHalfDonutTop,
+    //   isHalfDonutRight,
+    //   isHalfDonutBottom,
+    //   isHalfDonutLeft,
+    // })
     const isVerticalHalfDonut = isHalfDonutTop || isHalfDonutBottom
     const isHorizontalHalfDonut = isHalfDonutRight || isHalfDonutLeft
 
