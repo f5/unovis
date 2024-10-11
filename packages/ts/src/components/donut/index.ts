@@ -25,6 +25,19 @@ import { createArc, updateArc, removeArc } from './modules/arc'
 // Styles
 import * as s from './style'
 
+// Constants that support half donuts
+const halfDonutPositions = ['Top', 'Right', 'Bottom', 'Left']
+const halfDonutAngleRanges = halfDonutPositions.map((_, i) => {
+  const offset = -Math.PI / 2 + i * Math.PI / 2
+  return [offset, offset + Math.PI]
+})
+export const [
+  DONUT_HALF_ANGLE_RANGE_TOP,
+  DONUT_HALF_ANGLE_RANGE_RIGHT,
+  DONUT_HALF_ANGLE_RANGE_BOTTOM,
+  DONUT_HALF_ANGLE_RANGE_LEFT,
+] = halfDonutAngleRanges
+
 export class Donut<Datum> extends ComponentCore<Datum[], DonutConfigInterface<Datum>> {
   static selectors = s
   protected _defaultConfig = DonutDefaultConfig as DonutConfigInterface<Datum>
@@ -67,8 +80,42 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfigInterface<Da
       }))
       .filter(d => config.showEmptySegments || getNumber(d.datum, config.value, d.index))
 
+    // Handle half-donut cases, which adjust the scaling and positioning.
+    // One of these is true if we are dealing with a half-donut.
+    const [
+      isHalfDonutTop,
+      isHalfDonutRight,
+      isHalfDonutBottom,
+      isHalfDonutLeft,
+    ] = halfDonutAngleRanges.map(angleRange =>
+      config.angleRange && (
+        config.angleRange[0] === angleRange[0] &&
+        config.angleRange[1] === angleRange[1]
+      )
+    )
+    // console.log('config.angleRange', config.angleRange)
+    // console.log('halfDonutAngleRanges', halfDonutAngleRanges)
+    // console.log({
+    //   isHalfDonutTop,
+    //   isHalfDonutRight,
+    //   isHalfDonutBottom,
+    //   isHalfDonutLeft,
+    // })
+    const isVerticalHalfDonut = isHalfDonutTop || isHalfDonutBottom
+    const isHorizontalHalfDonut = isHalfDonutRight || isHalfDonutLeft
+
+    // Compute the bounding box of the donut,
+    // considering it may be a half-donut
+    const width = this._width * (isHorizontalHalfDonut ? 2 : 1)
+    const height = this._height * (isVerticalHalfDonut ? 2 : 1)
+
+    // console.log('isHalfDonutTop', isHalfDonutTop)
+    // console.log('isHalfDonutRight', isHalfDonutRight)
+    // console.log('isHalfDonutBottom', isHalfDonutBottom)
+    // console.log('isHalfDonutLeft', isHalfDonutLeft)
+
     const duration = isNumber(customDuration) ? customDuration : config.duration
-    const outerRadius = config.radius || Math.min(this._width - bleed.left - bleed.right, this._height - bleed.top - bleed.bottom) / 2
+    const outerRadius = config.radius || Math.min(width - bleed.left - bleed.right, height - bleed.top - bleed.bottom) / 2
     const innerRadius = config.arcWidth === 0 ? 0 : clamp(outerRadius - config.arcWidth, 0, outerRadius - 1)
 
     this.arcGen
@@ -86,7 +133,21 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfigInterface<Da
       .value(d => getNumber(d.datum, config.value, d.index) || 0)
       .sort((a, b) => config.sortFunction?.(a.datum, b.datum))
 
-    this.arcGroup.attr('transform', `translate(${this._width / 2},${this._height / 2})`)
+    const translateY = isHalfDonutTop
+      ? this._height - Math.abs(this._height - outerRadius) / 2
+      : isHalfDonutBottom
+        ? Math.abs(this._height - outerRadius) / 2
+        : this._height / 2
+
+    const translateX = isHalfDonutLeft
+      ? Math.abs(this._height - outerRadius) / 2
+      : isHalfDonutRight
+        ? this._width - Math.abs(this._width - outerRadius) / 2
+        : this._width / 2
+
+    const translate = `translate(${translateX},${translateY})`
+
+    this.arcGroup.attr('transform', translate)
 
     const arcData: DonutArcDatum<Datum>[] = pieGen(data).map(d => {
       const arc = {
@@ -123,12 +184,12 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfigInterface<Da
 
     // Label
     this.centralLabel
-      .attr('transform', `translate(${this._width / 2},${this._height / 2})`)
+      .attr('transform', translate)
       .attr('dy', config.centralSubLabel ? '-0.55em' : null)
       .text(config.centralLabel ?? null)
 
     this.centralSubLabel
-      .attr('transform', `translate(${this._width / 2},${this._height / 2})`)
+      .attr('transform', translate)
       .attr('dy', config.centralLabel ? '0.55em' : null)
       .text(config.centralSubLabel ?? null)
 
@@ -137,7 +198,7 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfigInterface<Da
     // Background
     this.arcBackground.attr('class', s.background)
       .attr('visibility', config.showBackground ? null : 'hidden')
-      .attr('transform', `translate(${this._width / 2},${this._height / 2})`)
+      .attr('transform', translate)
 
     smartTransition(this.arcBackground, duration)
       .attr('d', this.arcGen({
