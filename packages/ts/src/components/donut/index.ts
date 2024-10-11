@@ -133,8 +133,19 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfigInterface<Da
       .value(d => getNumber(d.datum, config.value, d.index) || 0)
       .sort((a, b) => config.sortFunction?.(a.datum, b.datum))
 
-    const translateY = this._height * (isHalfDonutTop ? 1 : 0.5)
-    const translate = `translate(${this._width / 2},${translateY})`
+    const translateY = isHalfDonutTop
+      ? this._height - Math.abs(this._height - outerRadius) / 2
+      : isHalfDonutBottom
+        ? Math.abs(this._height - outerRadius) / 2
+        : this._height / 2
+
+    const translateX = isHalfDonutLeft
+      ? Math.abs(this._height - outerRadius) / 2
+      : isHalfDonutRight
+        ? this._width - Math.abs(this._width - outerRadius) / 2
+        : this._width / 2
+
+    const translate = `translate(${translateX},${translateY})`
 
     this.arcGroup.attr('transform', translate)
 
