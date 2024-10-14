@@ -144,6 +144,8 @@ export class Graph<
     this._zoomBehavior = zoom<SVGGElement, unknown>()
       .scaleExtent(this.config.zoomScaleExtent)
       .on('zoom', (e: D3ZoomEvent<SVGGElement, unknown>) => this._onZoom(e.transform, e))
+      .on('start', (e: D3ZoomEvent<SVGGElement, unknown>) => this._onZoomStart(e.transform, e))
+      .on('end', (e: D3ZoomEvent<SVGGElement, unknown>) => this._onZoomEnd(e.transform, e))
 
     this._brushBehavior = brush()
       .on('start brush end', this._onBrush.bind(this))
@@ -705,6 +707,20 @@ export class Graph<
         this._scale,
         this._getLinkArrowDefId
       )
+  }
+
+  private _onZoomStart (t: ZoomTransform, event?: D3ZoomEvent<SVGGElement, unknown>): void {
+    const { config } = this
+    const transform = t || event.transform
+    this._scale = transform.k
+    if (isFunction(config.onZoomStart)) config.onZoomStart(this._scale, config.zoomScaleExtent, event, transform)
+  }
+
+  private _onZoomEnd (t: ZoomTransform, event?: D3ZoomEvent<SVGGElement, unknown>): void {
+    const { config } = this
+    const transform = t || event.transform
+    this._scale = transform.k
+    if (isFunction(config.onZoomEnd)) config.onZoomEnd(this._scale, config.zoomScaleExtent, event, transform)
   }
 
   private _updateNodePosition (d: GraphNode<N, L>, x: number, y: number): void {
