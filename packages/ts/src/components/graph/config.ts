@@ -240,6 +240,10 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   onNodeDragEnd?: (n: GraphNode<N, L>, event: D3DragEvent<SVGGElement, GraphNode<N, L>, unknown>) => void | undefined;
   /** Zoom event callback. Default: `undefined` */
   onZoom?: (zoomScale: number, zoomScaleExtent: [number, number], event: D3ZoomEvent<SVGGElement, unknown> | undefined, transform: ZoomTransform) => void;
+  /** Zoom start event callback. Default: `undefined` */
+  onZoomStart?: (zoomScale: number, zoomScaleExtent: [number, number], event: D3ZoomEvent<SVGGElement, unknown> | undefined, transform: ZoomTransform) => void;
+  /** Zoom end event callback. Default: `undefined` */
+  onZoomEnd?: (zoomScale: number, zoomScaleExtent: [number, number], event: D3ZoomEvent<SVGGElement, unknown> | undefined, transform: ZoomTransform) => void;
   /** Callback function to be called when the graph layout is calculated. Default: `undefined` */
   onLayoutCalculated?: (n: GraphNode<N, L>[], links: GraphLink<N, L>[]) => void;
   /** Graph node selection brush callback function. Default: `undefined` */
@@ -351,6 +355,8 @@ export const GraphDefaultConfig: GraphConfigInterface<GraphInputNode, GraphInput
   onNodeDrag: undefined,
   onNodeDragEnd: undefined,
   onZoom: undefined,
+  onZoomStart: undefined,
+  onZoomEnd: undefined,
   onLayoutCalculated: undefined,
   onNodeSelectionBrush: undefined,
   onNodeSelectionDrag: undefined,
