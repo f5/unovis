@@ -970,7 +970,7 @@ export class Graph<
   }
 
   public fitView (duration = this.config.duration): void {
-    this._layoutCalculationPromise.then(() => {
+    this._layoutCalculationPromise?.then(() => {
       this._fit(duration)
     })
   }
