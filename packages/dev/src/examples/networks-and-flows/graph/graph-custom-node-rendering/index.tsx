@@ -1,13 +1,20 @@
-import React, { useMemo } from 'react'
+import React, { useCallback, useMemo, useRef, useState } from 'react'
+import type { GraphLink, GraphNode } from '@unovis/ts'
+import type { VisGraphRef } from '@unovis/react'
+
 import { CustomGraph } from './component'
 import { CustomGraphNodeType } from './enums'
 import type { CustomGraphLink, CustomGraphNode } from './types'
 
+import * as s from './styles'
 
 export const title = 'Graph: Custom Nodes'
 export const subTitle = 'User provided rendering functions'
 
 export const component = (): JSX.Element => {
+  const [showLinkFlow, setShowLinkFlow] = useState(true)
+  const graphRef = useRef<VisGraphRef<CustomGraphNode, CustomGraphLink> | null>(null)
+
   const nodes: CustomGraphNode[] = useMemo(() => ([
     {
       id: '0',
@@ -35,8 +42,40 @@ export const component = (): JSX.Element => {
     { source: '1', target: '5', showFlow: true },
   ]), [])
 
+  // Modifying layout after the calculation
+  const onLayoutCalculated = useCallback((nodes: GraphNode<CustomGraphNode, CustomGraphLink>[], links: GraphLink<CustomGraphNode, CustomGraphLink>[]) => {
+    nodes[0].x = 100
+  }, [])
+
+
+  const fitView = useCallback((nodeIds?: string[]) => {
+    graphRef.current?.component?.fitView(undefined, nodeIds)
+  }, [])
+
   return (
-    <CustomGraph nodes={nodes} links={links} height={'100vh'} />
+    <>
+      <CustomGraph
+        ref={graphRef}
+        nodes={nodes}
+        links={links}
+        height={'100vh'}
+        linkFlow={useCallback((l: CustomGraphLink) => showLinkFlow && l.showFlow, [showLinkFlow])}
+        onLayoutCalculated={onLayoutCalculated}
+
+      />
+      <div className={s.checkboxContainer}>
+        <label>
+          <input
+            type="checkbox"
+            checked={showLinkFlow}
+            onChange={(e) => setShowLinkFlow(e.target.checked)}
+          />
+          Show Link Flow
+        </label>
+        <button className={s.graphButton} onClick={() => fitView(['0', '1', '2', '3'])}>Zoom To Identity and Network Nodes</button>
+        <button className={s.graphButton} onClick={() => fitView()}>Fit Graph</button>
+      </div>
+    </>
   )
 }
 

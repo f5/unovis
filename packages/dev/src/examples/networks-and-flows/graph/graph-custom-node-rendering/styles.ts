@@ -131,3 +131,9 @@ export const checkboxContainer = css`
   border-radius: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `
+
+export const graphButton = css`
+  label: graph-button;
+  display: block;
+  margin-top: 5px;
+`
