@@ -11,7 +11,7 @@ const data = generateStackedDataRecords(10, STACKED)
 const items = Array(STACKED).fill(0).map((_, i) => ({ name: `Y${i}`, inactive: false }))
 const shapes = Object.values(BulletShape)
 
-export const component = (): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): JSX.Element => {
   const x = (d: StackedDataRecord): number => d.x
   const shape = (_, i: number): string => shapes[i % shapes.length]
 
@@ -34,9 +34,9 @@ export const component = (): JSX.Element => {
       onLegendItemClick={toggleItem}
     />
     <VisXYContainer>
-      <VisScatter data={data} x={x} y={accessors} shape={shape}/>
-      <VisAxis type='x'/>
-      <VisAxis type='y'/>
+      <VisScatter data={data} x={x} y={accessors} shape={shape} duration={props.duration}/>
+      <VisAxis type='x' duration={props.duration}/>
+      <VisAxis type='y' duration={props.duration}/>
     </VisXYContainer>
   </>
   )

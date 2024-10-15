@@ -2,13 +2,14 @@ import React from 'react'
 import { NestedDonutSegment } from '@unovis/ts'
 import { VisSingleContainer, VisNestedDonut } from '@unovis/react'
 import { NestedDatum, generateNestedData } from '@src/utils/data'
+import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 export const title = 'Basic Nested Donut'
 export const subTitle = 'with custom colors'
 
 const data = generateNestedData(100, 3, ['A1', 'B2'])
 
-export const component = (): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): JSX.Element => {
   return (
     <VisSingleContainer height={500}>
       <VisNestedDonut
@@ -31,6 +32,7 @@ export const component = (): JSX.Element => {
         segmentLabelColor={(d: NestedDonutSegment<NestedDatum>) => {
           if (Number(d.data.key)) return '#ffaa44'
         }}
+        duration={props.duration}
       />
     </VisSingleContainer>
   )

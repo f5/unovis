@@ -19,7 +19,7 @@ import { getCSSVariableValue, isStringCSSVariable } from 'utils/misc'
 import { MapLink } from 'types/map'
 
 // Local Types
-import { MapData, MapFeature, MapPointLabelPosition } from './types'
+import { MapData, MapFeature, MapPointLabelPosition, MapProjection } from './types'
 
 // Config
 import { TopoJSONMapDefaultConfig, TopoJSONMapConfigInterface } from './config'
@@ -91,12 +91,16 @@ export class TopoJSONMap<
     this.datamodel.linkSource = config.linkSource
     this.datamodel.linkTarget = config.linkTarget
     this.datamodel.data = data
+
+    // If there was a data change and mapFitToPoints is enabled, we will need to re-fit the map
+    this._firstRender = this._firstRender || config.mapFitToPoints
   }
 
   setConfig (config?: TopoJSONMapConfigInterface<AreaDatum, PointDatum, LinkDatum>): void {
     super.setConfig(config)
 
-    const newProjection = this.config.projection
+    // Setting the default here instead of defaultConfig to prevent mutation from other TopoJSONMap instances
+    const newProjection = this.config.projection ?? MapProjection.Kavrayskiy7()
     if (this._projection) {
       newProjection.scale(this._projection.scale()).translate(this._projection.translate())
     }
@@ -185,6 +189,7 @@ export class TopoJSONMap<
       this._onResize()
     }
 
+
     this._path.projection(this._projection)
 
     // Merge passed area data and map feature data
@@ -244,6 +249,7 @@ export class TopoJSONMap<
         const pos = this._projection(getLonLat(d, config.longitude, config.latitude))
         return `translate(${pos[0]},${pos[1]})`
       })
+      .style('opacity', 0)
 
     pointsEnter.append('circle').attr('class', s.pointCircle)
       .attr('r', 0)
@@ -261,6 +267,7 @@ export class TopoJSONMap<
         return `translate(${pos[0]},${pos[1]})`
       })
       .style('cursor', d => getString(d, config.pointCursor))
+      .style('opacity', 1)
 
     smartTransition(pointsMerged.select(`.${s.pointCircle}`), duration)
       .attr('r', d => getNumber(d, config.pointRadius) / this._currentZoomLevel)
@@ -315,6 +322,8 @@ export class TopoJSONMap<
     const pointData = points || datamodel.points
     if (pointData.length === 0) return
 
+    this.fitView()
+
     const featureCollection: ExtendedFeatureCollection = {
       type: 'FeatureCollection',
       features: [{
@@ -338,8 +347,21 @@ export class TopoJSONMap<
     ], featureCollection)
 
     const maxScale = config.zoomExtent[1] * this._initialScale
-    if (this._projection.scale() > maxScale) this._projection.scale(maxScale)
+    const fittedScale = this._projection.scale()
 
+    if (fittedScale > maxScale) {
+      const fittedTranslate = this._projection.translate()
+      const scaleRatio = maxScale / fittedScale
+
+      this._projection.scale(maxScale)
+      this._projection.translate([
+        this._width / 2 - (this._width / 2 - fittedTranslate[0]) * scaleRatio,
+        this._height / 2 - (this._height / 2 - fittedTranslate[1]) * scaleRatio,
+      ])
+    }
+
+    // If we don't update the center, the next zoom will be centered around the previous value
+    this._center = this._projection.translate()
     this._applyZoom()
   }
 

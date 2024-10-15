@@ -2,6 +2,7 @@ import React, { useCallback, useState } from 'react'
 import { NestedDonut, NestedDonutSegment } from '@unovis/ts'
 import { VisSingleContainer, VisNestedDonut } from '@unovis/react'
 import { generateNestedData, NestedDatum } from '@src/utils/data'
+import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 
 export const title = 'Interactive Nested Donut'
@@ -9,7 +10,7 @@ export const subTitle = 'Click on node to toggle subchart'
 
 const defaultData = generateNestedData(100, 3)//, ['A1', 'B0', 'B1', 'B2'])
 
-export const component = (): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): JSX.Element => {
   const [data, setData] = useState<NestedDatum[]>(defaultData)
   const [currentLevel, setCurrentLevel] = useState(0)
 
@@ -38,7 +39,8 @@ export const component = (): JSX.Element => {
           ? { width: 30, labelAlignment: 'straight' }
           : { width: (250 - currentLevel * 30) / (3 - currentLevel) },
         [currentLevel])}
-        showBackground={true} />
+        showBackground={true}
+        duration={props.duration} />
     </VisSingleContainer></>
   )
 }

@@ -1,13 +1,14 @@
 import React from 'react'
 import { VisSingleContainer, VisGraph } from '@unovis/react'
 import { TrimMode } from '@unovis/ts'
-import { generateNodeLinkData, NodeDatum, LinkDatum } from '@src/utils/data'
+import { generateNodeLinkData, NodeDatum, LinkDatum, randomNumberGenerator } from '@src/utils/data'
 import { sample } from '@src/utils/array'
+import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 export const title = 'Node Labels and Sub-labels'
 export const subTitle = 'Trimming'
 
-export const component = (): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): JSX.Element => {
   const data = generateNodeLinkData(15)
   const regions = ['Australian', 'South American', 'Siberian', 'European', 'Asian']
   const colors = ['Vermilion', 'Verdigris', 'Bisque', 'Cattleya']
@@ -16,12 +17,12 @@ export const component = (): JSX.Element => {
   const labels = data.nodes.map((d, i) => ({
     label: `${sample(animals)} ${sample(colors)}`,
     subLabel: `${sample(regions)} ${sample(colors)} ${sample(animals)}`,
-    labelTrim: Math.random() > 0.2,
+    labelTrim: randomNumberGenerator() > 0.2,
     labelTrimMode: sample(trimModes),
-    labelTrimLength: Math.round(3 + 12 * Math.random()),
-    subLabelTrim: Math.random() > 0.2,
+    labelTrimLength: Math.round(3 + 12 * randomNumberGenerator()),
+    subLabelTrim: randomNumberGenerator() > 0.2,
     subLabelTrimMode: sample(trimModes),
-    subLabelTrimLength: Math.round(3 + 12 * Math.random()),
+    subLabelTrimLength: Math.round(3 + 12 * randomNumberGenerator()),
   }))
   return (
     <VisSingleContainer data={data} height={600}>
@@ -34,6 +35,7 @@ export const component = (): JSX.Element => {
         nodeSubLabelTrim={(_, i) => labels[i].subLabelTrim}
         nodeSubLabelTrimMode={(_, i) => labels[i].subLabelTrimMode}
         nodeSubLabelTrimLength={(_, i) => labels[i].subLabelTrimLength}
+        duration={props.duration}
       />
     </VisSingleContainer>
   )

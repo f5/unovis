@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { VisLeafletMap, VisLeafletMapRef } from '@unovis/react'
+import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 // Data
 import cities from '../leaflet-map-vector/cities.json'
@@ -12,7 +13,7 @@ export const subTitle = 'CSS Variables Configuration'
 
 
 type MapPointDatum = typeof cities[0]
-export const component = (): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): JSX.Element => {
   const mapKey = 'LNln6dGJDxyBa7F3c7Gd'
   const mapRef = useRef<VisLeafletMapRef<MapPointDatum> | null>(null)
 
@@ -30,6 +31,9 @@ export const component = (): JSX.Element => {
         clusteringDistance={100}
         pointBottomLabel={(d: MapPointDatum) => d.city}
         clusterBottomLabel={c => `${c.point_count} cities`}
+        duration={props.duration}
+        flyToDuration={props.duration}
+        zoomDuration={props.duration}
         style={`https://api.maptiler.com/maps/basic-v2-light/style.json?key=${mapKey}`}
         styleDarkTheme={`https://api.maptiler.com/maps/basic-v2-dark/style.json?key=${mapKey}`}
       />

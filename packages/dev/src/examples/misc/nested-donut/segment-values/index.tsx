@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import { NestedDonut, NestedDonutSegment } from '@unovis/ts'
 import { VisSingleContainer, VisNestedDonut, VisTooltip } from '@unovis/react'
+import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 import s from './styles.module.css'
 
@@ -59,7 +60,7 @@ const sortFns: SortFn<NestedDonutSegment<Datum>>[] = [
   { label: 'By Value (descending)', compare: (a, b) => b.value - a.value },
   { label: 'By Child Count', compare: (a, b) => b.children.length - a.children.length },
 ]
-export const component = (): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): JSX.Element => {
   const [sort, setSort] = useState<SortFn<NestedDonutSegment<Datum>>>()
   return (
     <div className={s.chart}>
@@ -79,6 +80,7 @@ export const component = (): JSX.Element => {
           value={useCallback((d: Datum) => d.value, [])}
           showBackground={true}
           sort={sort?.compare}
+          duration={props.duration}
         />
       </VisSingleContainer>
     </div>

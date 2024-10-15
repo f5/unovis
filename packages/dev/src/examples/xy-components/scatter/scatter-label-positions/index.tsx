@@ -2,11 +2,12 @@ import React, { useCallback } from 'react'
 import { VisXYContainer, VisScatter, VisAxis, VisLine } from '@unovis/react'
 
 import { XYDataRecord } from '@src/utils/data'
+import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 export const title = 'Point Label Positions'
 export const subTitle = 'Toggle label content'
 
-export const component = (): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): JSX.Element => {
   const accessors = [
     (d: XYDataRecord) => d.y,
     (d: XYDataRecord) => d.y + 5,
@@ -24,15 +25,16 @@ export const component = (): JSX.Element => {
     <>
       <label>Labels: <input type='checkbox' onChange={toggleLabels}/></label>
       <VisXYContainer<XYDataRecord> data={data} margin={{ top: 5, left: 5 }}>
-        <VisLine x={d => d.x} y={accessors} />
+        <VisLine x={d => d.x} y={accessors} duration={props.duration}/>
         <VisScatter
           x={d => d.x}
           y={accessors}
           label={showLabels ? (d) => `${d.y}` : undefined}
           labelPosition='top'
+          duration={props.duration}
         />
-        <VisAxis type='x'/>
-        <VisAxis type='y'/>
+        <VisAxis type='x' duration={props.duration}/>
+        <VisAxis type='y' duration={props.duration}/>
       </VisXYContainer>
     </>
   )

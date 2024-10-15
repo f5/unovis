@@ -1,6 +1,7 @@
 import { D3BrushEvent } from 'd3-brush'
 import { D3DragEvent } from 'd3-drag'
-import { D3ZoomEvent } from 'd3-zoom'
+import { D3ZoomEvent, ZoomTransform } from 'd3-zoom'
+import { Selection } from 'd3-selection'
 
 // Config
 import { ComponentConfigInterface, ComponentDefaultConfig } from 'core/component/config'
@@ -23,6 +24,7 @@ import {
   GraphDagreLayoutSetting,
   GraphNode,
   GraphLink,
+  GraphNodeSelectionHighlightMode,
 } from './types'
 
 
@@ -32,6 +34,10 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   zoomScaleExtent?: [number, number];
   /** Disable zooming. Default: `false` */
   disableZoom?: boolean;
+  /** Custom Zoom event filter to better control which actions should trigger zooming.
+   * Learn more: https://d3js.org/d3-zoom#zoom_filter.
+   * Default: `undefined` */
+  zoomEventFilter?: (event: PointerEvent) => boolean;
   /** Disable node dragging. Default: `false` */
   disableDrag?: boolean;
   /** Disable brush for multiple node selection. Default: `false` */
@@ -195,6 +201,28 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   nodeExitPosition?: GenericAccessor<[number, number], N> | undefined;
   /** Specify the destination scale for exiting nodes in the range [0,1]. Default: `0.75` */
   nodeExitScale?: NumericAccessor<N> | undefined;
+  /** Custom "enter" function for node rendering. Default: `undefined` */
+  nodeEnterCustomRenderFunction?:
+  (datum: GraphNode<N, L>, nodeGroupElementSelection: Selection<SVGGElement, GraphNode<N, L>, null, unknown>, config: GraphConfigInterface<N, L>, duration: number, zoomLevel: number) => void;
+  /** Custom "update" function for node rendering. Default: `undefined` */
+  nodeUpdateCustomRenderFunction?:
+  (datum: GraphNode<N, L>, nodeGroupElementSelection: Selection<SVGGElement, GraphNode<N, L>, null, unknown>, config: GraphConfigInterface<N, L>, duration: number, zoomLevel: number) => void;
+  /** Custom partial "update" function for node rendering which will be triggered after the following events:
+   * - Full node update (`nodeUpdateCustomRenderFunction`);
+   * - Background click;
+   * - Node and Link mouseover and mouseout;
+   * - Node brushing,
+   * Default: `undefined` */
+  nodePartialUpdateCustomRenderFunction?:
+  (datum: GraphNode<N, L>, nodeGroupElementSelection: Selection<SVGGElement, GraphNode<N, L>, null, unknown>, config: GraphConfigInterface<N, L>, duration: number, zoomLevel: number) => void;
+  /** Custom "exit" function for node rendering. Default: `undefined` */
+  nodeExitCustomRenderFunction?:
+  (datum: GraphNode<N, L>, nodeGroupElementSelection: Selection<SVGGElement, GraphNode<N, L>, null, unknown>, config: GraphConfigInterface<N, L>, duration: number, zoomLevel: number) => void;
+  /** Custom render function that will be called while zooming / panning the graph. Default: `undefined` */
+  nodeOnZoomCustomRenderFunction?:
+  (datum: GraphNode<N, L>, nodeGroupElementSelection: Selection<SVGGElement, GraphNode<N, L>, null, unknown>, config: GraphConfigInterface<N, L>, zoomLevel: number) => void;
+  /** Define the mode for highlighting selected nodes in the graph. Default: `GraphNodeSelectionHighlightMode.GreyoutNonConnected` */
+  nodeSelectionHighlightMode?: GraphNodeSelectionHighlightMode;
   /** Set selected node by unique id. Default: `undefined` */
   selectedNodeId?: number | string;
   /** Set selected nodes by unique id. Default: `undefined` */
@@ -211,13 +239,24 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   /** Graph node drag end callback function. Default: `undefined` */
   onNodeDragEnd?: (n: GraphNode<N, L>, event: D3DragEvent<SVGGElement, GraphNode<N, L>, unknown>) => void | undefined;
   /** Zoom event callback. Default: `undefined` */
-  onZoom?: (zoomScale: number, zoomScaleExtent: [number, number], event: D3ZoomEvent<SVGGElement, unknown> | undefined) => void;
+  onZoom?: (zoomScale: number, zoomScaleExtent: [number, number], event: D3ZoomEvent<SVGGElement, unknown> | undefined, transform: ZoomTransform) => void;
   /** Callback function to be called when the graph layout is calculated. Default: `undefined` */
   onLayoutCalculated?: (n: GraphNode<N, L>[], links: GraphLink<N, L>[]) => void;
   /** Graph node selection brush callback function. Default: `undefined` */
   onNodeSelectionBrush?: (selectedNodes: GraphNode<N, L>[], event: D3BrushEvent<SVGGElement> | undefined) => void;
   /** Graph multiple node drag callback function. Default: `undefined` */
   onNodeSelectionDrag?: (selectedNodes: GraphNode<N, L>[], event: D3DragEvent<SVGGElement, GraphNode<N, L>, unknown>) => void;
+  /** Callback function to be called when the graph rendering is complete. Default: `undefined` */
+  onRenderComplete?: (
+    g: Selection<SVGGElement, unknown, null, undefined>,
+    nodes: GraphNode<N, L>[],
+    links: GraphLink<N, L>[],
+    config: GraphConfigInterface<N, L>,
+    duration: number,
+    zoomLevel: number,
+    width: number,
+    height: number
+  ) => void;
 }
 
 export const GraphDefaultConfig: GraphConfigInterface<GraphInputNode, GraphInputLink> = {
@@ -225,6 +264,7 @@ export const GraphDefaultConfig: GraphConfigInterface<GraphInputNode, GraphInput
   duration: 1000,
   zoomScaleExtent: [0.35, 1.25],
   disableZoom: false,
+  zoomEventFilter: undefined,
   disableDrag: false,
   disableBrush: false,
   zoomThrottledUpdateNodeThreshold: 100,
@@ -300,9 +340,11 @@ export const GraphDefaultConfig: GraphConfigInterface<GraphInputNode, GraphInput
   nodeExitPosition: undefined,
   nodeExitScale: 0.75,
   nodeSort: undefined,
+  nodeSelectionHighlightMode: GraphNodeSelectionHighlightMode.GreyoutNonConnected,
 
   selectedNodeId: undefined,
   selectedNodeIds: undefined,
+
   panels: undefined,
 
   onNodeDragStart: undefined,
@@ -312,4 +354,5 @@ export const GraphDefaultConfig: GraphConfigInterface<GraphInputNode, GraphInput
   onLayoutCalculated: undefined,
   onNodeSelectionBrush: undefined,
   onNodeSelectionDrag: undefined,
+  onRenderComplete: undefined,
 }

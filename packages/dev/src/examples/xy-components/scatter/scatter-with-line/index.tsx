@@ -2,10 +2,11 @@ import React from 'react'
 import { VisXYContainer, VisScatter, VisAxis, VisLine } from '@unovis/react'
 
 import { XYDataRecord } from '@src/utils/data'
+import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 export const title = 'Scatter with Line'
 export const subTitle = 'And undefined segments'
-export const component = (): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): JSX.Element => {
   const accessors = [
     (d: XYDataRecord) => d.y,
   ]
@@ -25,10 +26,10 @@ export const component = (): JSX.Element => {
   ]
   return (
     <VisXYContainer<XYDataRecord> data={data} margin={{ top: 5, left: 5 }} xDomain={[-1, 15]}>
-      <VisScatter x={d => d.x} y={accessors} />
-      <VisLine x={d => d.x} y={accessors} />
-      <VisAxis type='x' numTicks={15} tickFormat={(x: number) => `${x}`}/>
-      <VisAxis type='y' tickFormat={(y: number) => `${y}`}/>
+      <VisScatter x={d => d.x} y={accessors} duration={props.duration}/>
+      <VisLine x={d => d.x} y={accessors} duration={props.duration}/>
+      <VisAxis type='x' numTicks={15} tickFormat={(x: number) => `${x}`} duration={props.duration}/>
+      <VisAxis type='y' tickFormat={(y: number) => `${y}`} duration={props.duration}/>
     </VisXYContainer>
   )
 }

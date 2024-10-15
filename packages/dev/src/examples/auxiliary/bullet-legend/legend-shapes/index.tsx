@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect, ChangeEvent } from 'react'
 import { BulletLegendItemInterface, BulletShape } from '@unovis/ts'
 import { VisBulletLegend, VisXYContainer, VisScatter, VisGroupedBar, VisLine, VisAxis } from '@unovis/react'
 import { generateStackedDataRecords, StackedDataRecord } from '@src/utils/data'
+import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 export const title = 'Bullet Shapes'
 export const subTitle = 'Select chart type'
@@ -9,7 +10,7 @@ export const subTitle = 'Select chart type'
 const data = generateStackedDataRecords(10)
 const items = Array(6).fill(0).map((_, i) => ({ name: `Y${i}`, inactive: false }))
 
-export const component = (): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): JSX.Element => {
   const chartOptions = [
     { type: 'Line', legendShape: BulletShape.Line },
     { type: 'Scatter', legendShape: BulletShape.Circle },
@@ -41,11 +42,11 @@ export const component = (): JSX.Element => {
       onLegendItemClick={toggleItem}
     />
     <VisXYContainer>
-      {chart.type === 'Line' && <VisLine data={data} x={x} y={accessors}/>}
-      {chart.type === 'Scatter' && <VisScatter data={data} x={x} y={accessors}/>}
-      {chart.type === 'Bar' && <VisGroupedBar data={data} x={x} y={accessors} roundedCorners={0}/>}
-      <VisAxis type='x'/>
-      <VisAxis type='y'/>
+      {chart.type === 'Line' && <VisLine data={data} x={x} y={accessors} duration={props.duration}/>}
+      {chart.type === 'Scatter' && <VisScatter data={data} x={x} y={accessors} duration={props.duration}/>}
+      {chart.type === 'Bar' && <VisGroupedBar data={data} x={x} y={accessors} roundedCorners={0} duration={props.duration}/>}
+      <VisAxis type='x' duration={props.duration}/>
+      <VisAxis type='y' duration={props.duration}/>
     </VisXYContainer>
   </>
   )

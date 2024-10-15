@@ -1,3 +1,4 @@
+import { randomNumberGenerator } from '@src/utils/data'
 export function groupBy<T extends Record<string, any>> (arr: T[], key: string): Record<string, T[]> {
   return arr.reduce(
     (grouped, v, i, a, k = v[key]) => (((grouped[k] || (grouped[k] = [])).push(v), grouped)),
@@ -5,4 +6,4 @@ export function groupBy<T extends Record<string, any>> (arr: T[], key: string): 
   )
 }
 
-export const sample = <T>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)]
+export const sample = <T>(arr: T[]): T => arr[Math.floor(randomNumberGenerator() * arr.length)]

@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import { VisSingleContainer, VisChordDiagram } from '@unovis/react'
+import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 export const title = 'Chord Diagram Node Selection'
 export const subTitle = 'External select node'
@@ -17,7 +18,7 @@ const data = {
   ],
 }
 
-export const component = (): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): JSX.Element => {
   const [nodeId, highlightNodeId] = useState<string | undefined>()
   const [linkIds, highlightLinkIds] = useState<number[]>()
   const highlightNode = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -42,6 +43,7 @@ export const component = (): JSX.Element => {
           nodeLabelAlignment='perpendicular'
           nodeLabel={React.useCallback((d: { id: string }) => `Segment ${d.id}`, [])}
           padAngle={0.75}
+          duration={props.duration}
         />
       </VisSingleContainer>
     </>

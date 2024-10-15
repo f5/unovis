@@ -1,6 +1,7 @@
 import React, { useRef, useCallback, useState, useEffect } from 'react'
 import { VisLeafletMap, VisLeafletMapRef } from '@unovis/react'
 import { LeafletMap, LeafletMapClusterDatum, LeafletMapPoint, LeafletMapPointStyles } from '@unovis/ts'
+import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 
 // Data
@@ -13,7 +14,7 @@ export const subTitle = 'Updating color map and data'
 export const category = 'Leaflet Map'
 
 
-export const component = (): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): JSX.Element => {
   const mapRef = useRef<VisLeafletMapRef<MapPointDataRecord>>(null)
   const [data, setData] = useState(points)
   const [colorMap, setColorMap] = useState<LeafletMapPointStyles<MapPointDataRecord>>({
@@ -64,6 +65,9 @@ export const component = (): JSX.Element => {
       clusterBottomLabel={useCallback(clusterBottomLabel, [])}
       clusteringDistance={85}
       clusterExpandOnClick={true}
+      duration={props.duration}
+      flyToDuration={props.duration}
+      zoomDuration={props.duration}
       events={{
         [LeafletMap.selectors.point]: {
           // mouseover: () => console.log(mapRef.current?.component?.getExpandedCluster()),

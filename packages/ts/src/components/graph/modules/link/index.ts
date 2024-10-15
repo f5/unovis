@@ -55,6 +55,7 @@ export function createLinks<N extends GraphInputNode, L extends GraphInputLink> 
 
   selection.append('g')
     .attr('class', linkSelectors.flowGroup)
+    .style('opacity', 0)
     .selectAll(`.${linkSelectors.flowCircle}`)
     .data(range(0, 6)).enter()
     .append('circle')
@@ -70,7 +71,8 @@ export function createLinks<N extends GraphInputNode, L extends GraphInputLink> 
     .attr('class', linkSelectors.linkLabelContent)
 }
 
-export function updateSelectedLinks<N extends GraphInputNode, L extends GraphInputLink> (
+/** Updates the links partially according to their `_state` */
+export function updateLinksPartial<N extends GraphInputNode, L extends GraphInputLink> (
   selection: Selection<SVGGElement, GraphLink<N, L>, SVGGElement, unknown>,
   config: GraphConfigInterface<N, L>,
   scale: number
@@ -186,7 +188,6 @@ export function updateLinks<N extends GraphInputNode, L extends GraphInputLink> 
     flowGroup
       .attr('transform', linkShiftTransform)
       .style('display', getBoolean(d, linkFlow, d._indexGlobal) ? null : 'none')
-      .style('opacity', 0)
 
     flowGroup
       .selectAll(`.${linkSelectors.flowCircle}`)
@@ -259,7 +260,7 @@ export function updateLinks<N extends GraphInputNode, L extends GraphInputLink> 
     selection.attr('opacity', 1)
   }
 
-  updateSelectedLinks(selection, config, scale)
+  updateLinksPartial(selection, config, scale)
 }
 
 export function removeLinks<N extends GraphInputNode, L extends GraphInputLink> (
@@ -288,7 +289,7 @@ export function animateLinkFlow<N extends GraphInputNode, L extends GraphInputLi
     const linkPathElement = linkGroup.select<SVGPathElement>(`.${linkSelectors.linkSupport}`).node()
     const pathLength = linkPathElement.getTotalLength()
 
-    if (!getBoolean(d, linkFlow, d._indexGlobal)) return
+    if (!getBoolean(d, linkFlow, d._indexGlobal) || !pathLength) return
     const t = d._state.flowAnimTime
     const circles = flowGroup.selectAll(`.${linkSelectors.flowCircle}`)
 
@@ -309,6 +310,10 @@ export function zoomLinks<N extends GraphInputNode, L extends GraphInputLink> (
   const { linkFlowParticleSize } = config
 
   selection.classed(generalSelectors.zoomOutLevel2, scale < ZoomLevel.Level2)
+
+  selection.select(`.${linkSelectors.flowGroup}`)
+    .style('opacity', scale < ZoomLevel.Level2 ? 0 : 1)
+
   selection.selectAll(`.${linkSelectors.flowCircle}`)
     .attr('r', linkFlowParticleSize / scale)
 

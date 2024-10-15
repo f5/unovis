@@ -1,6 +1,7 @@
 import React from 'react'
 import { VisBulletLegend, VisXYContainer, VisAxis, VisStackedBar } from '@unovis/react'
 import { BulletLegendOrientation } from '@unovis/ts'
+import { randomNumberGenerator } from '@src/utils/data'
 
 import s from './styles.module.css'
 
@@ -16,7 +17,7 @@ const data = Array.from({ length: 150 }, (_, i) => ({
   ...seriesLabels
     .reduce((acc, label) => ({
       ...acc,
-      [label]: label.length + Math.random() * 5,
+      [label]: label.length + randomNumberGenerator() * 5,
     }), {} as Record<typeof seriesLabels[number], number>),
 }))
 
@@ -24,7 +25,7 @@ type TimeSeriesDatum = (typeof data)[number];
 const yAccessors = seriesLabels.map(label => (d: TimeSeriesDatum) => d[label])
 const legendItems = seriesLabels.map(label => ({ name: label }))
 
-export const component = (): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): JSX.Element => {
   return (
     <div className={s.chartContainer}>
       <VisBulletLegend
@@ -39,9 +40,10 @@ export const component = (): JSX.Element => {
         <VisStackedBar<TimeSeriesDatum>
           x={d => d.time}
           y={yAccessors}
+          duration={props.duration}
         />
-        <VisAxis type='x' tickFormat={tick => new Date(tick).toLocaleDateString()}/>
-        <VisAxis type='y'/>
+        <VisAxis type='x' tickFormat={tick => new Date(tick).toLocaleDateString()} duration={props.duration}/>
+        <VisAxis type='y' duration={props.duration}/>
       </VisXYContainer>
     </div>
   )

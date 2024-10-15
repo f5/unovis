@@ -1,11 +1,12 @@
 import React from 'react'
 import { VisSingleContainer, VisNestedDonut } from '@unovis/react'
 import { generateNestedData, NestedDatum } from '@src/utils/data'
+import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 export const title = 'Nested Donut Layer Configuration'
 export const subTitle = 'with inward/outward direction'
 
-export const component = (): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): JSX.Element => {
   const config = {
     data: generateNestedData(100, 5),
     layers: [
@@ -22,10 +23,10 @@ export const component = (): JSX.Element => {
   }
   return (<>
     <VisSingleContainer height={500}>
-      <VisNestedDonut {...config} direction={'outwards'}/>
+      <VisNestedDonut {...config} direction={'outwards'} duration={props.duration}/>
     </VisSingleContainer>
     <VisSingleContainer height={500}>
-      <VisNestedDonut {...config}/>
+      <VisNestedDonut {...config} duration={props.duration}/>
     </VisSingleContainer>
   </>
   )

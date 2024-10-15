@@ -1,3 +1,4 @@
+import { randomNumberGenerator } from '@src/utils/data'
 export type NodeDatum = { group: string; color: string; id: string }
 export type LinkDatum = { source: string; target: string }
 
@@ -17,8 +18,8 @@ export function getData (): { nodes: NodeDatum[]; links: LinkDatum[] } {
     data.nodes.push(...Array(count).fill(0).map((_, i) => ({ ...n, id: `${n.group}${i}` })))
     links.forEach((x, index) => {
       data.links.push(...Array(x).fill(0).map(() => ({
-        source: `${n.group}${Math.floor(Math.random() * count)}`,
-        target: `${groups[index].group}${Math.floor(Math.random() * groups[index].count)}`,
+        source: `${n.group}${Math.floor(randomNumberGenerator() * count)}`,
+        target: `${groups[index].group}${Math.floor(randomNumberGenerator() * groups[index].count)}`,
       })))
     })
   })

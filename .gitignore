@@ -61,3 +61,6 @@ licences.temp
 # System Files
 .DS_Store
 Thumbs.db
+
+# Cypress
+packages/*/cypress/screenshots/

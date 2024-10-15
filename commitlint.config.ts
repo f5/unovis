@@ -17,7 +17,6 @@ module.exports = {
       'React', 'Angular', 'Vue', 'Svelte', 'Website', 'Dev', 'Shared',
       'Core', 'Component', 'Container', 'Release', 'CI', 'Misc', 'Solid',
     ]],
-    'scope-case': [2, 'always', 'pascal-case'],
     'subject-case': [2, 'always', 'sentence-case'],
     'subject-empty': [2, 'never'],
     'validate-scope': [1, 'always'],

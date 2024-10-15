@@ -2,6 +2,7 @@ import React from 'react'
 import { VisSingleContainer, VisSankey } from '@unovis/react'
 import { TransitionComponentProps } from '@src/components/TransitionComponent'
 import { generateNodeLinkData, NodeLinkData } from '@src/utils/data'
+import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 export const transitionComponent: TransitionComponentProps<NodeLinkData> = {
   data: generateNodeLinkData,

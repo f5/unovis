@@ -1,12 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { VisSingleContainer, VisGraph } from '@unovis/react'
 import { GraphLayoutType } from '@unovis/ts'
-import { generateNodeLinkData } from '@src/utils/data'
+import { generateNodeLinkData, randomNumberGenerator } from '@src/utils/data'
+import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 export const title = 'Dynamic Layout'
 export const subTitle = 'Select Layout From Dropdown'
 
-export const component = (): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): JSX.Element => {
   const [data, setData] = useState(generateNodeLinkData(50))
   const layouts = Object.values(GraphLayoutType)
   const initial = GraphLayoutType.Circular
@@ -15,12 +16,12 @@ export const component = (): JSX.Element => {
   // Generate new data every 2 seconds
   useEffect(() => {
     setTimeout(() => {
-      const newData = generateNodeLinkData(10 + Math.floor(Math.random() * 50))
+      const newData = generateNodeLinkData(10 + Math.floor(randomNumberGenerator() * 50))
 
       // Adding some random x, y values to the nodes for `GraphLayoutType.Precalculated`
       newData.nodes.forEach(n => {
-        n.x = Math.random() * 1000
-        n.y = Math.random() * 1000
+        n.x = randomNumberGenerator() * 1000
+        n.y = randomNumberGenerator() * 1000
       })
 
       setData(newData)
@@ -37,7 +38,7 @@ export const component = (): JSX.Element => {
         {layouts.map(l => <option key={l} value={l}>{l}</option>)}
       </select>
       <VisSingleContainer data={data} height={900}>
-        <VisGraph layoutType={layout} forceLayoutSettings={forceLayoutSettings}/>
+        <VisGraph layoutType={layout} forceLayoutSettings={forceLayoutSettings} duration={props.duration}/>
       </VisSingleContainer>
     </>
   )

@@ -1,0 +1,31 @@
+name: Cypress Percy Tests
+
+on:
+  schedule:
+    # 8:10 UTC time on Mondays
+    - cron: '10 8 * * 1'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: '16.x'
+    - name: Install npm 8
+      run: npm install -g npm@8
+    - name: Install dependencies
+      run: npm ci
+    - name: Build
+      run: npm run build && npm run build:dev
+    - name: Install Percy
+      run: cd packages/dev; npm install --save-dev @percy/cli @percy/cypress
+    - name: Start server
+      run: cd packages/dev; npm run serve & sleep 5
+    - name: Run tests
+      run: cd packages/dev; npm test
+      env:
+          PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
+    - name: Stop server
+      run: pkill -f "serve dist -s -p 9501"
