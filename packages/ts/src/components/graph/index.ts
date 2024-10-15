@@ -463,9 +463,10 @@ export class Graph<
     }
   }
 
-  private _fit (duration = 0): void {
+  private _fit (duration = 0, nodeIds?: (string | number)[]): void {
     const { datamodel: { nodes } } = this
-    const transform = this._getTransform(nodes)
+    const fitViewNodes = nodeIds?.length ? nodes.filter(n => nodeIds.includes(n.id)) : nodes
+    const transform = this._getTransform(fitViewNodes)
     smartTransition(this.g, duration)
       .call(this._zoomBehavior.transform, transform)
     this._onZoom(transform)
@@ -985,9 +986,9 @@ export class Graph<
     return zoomTransform(this.g.node()).k
   }
 
-  public fitView (duration = this.config.duration): void {
+  public fitView (duration = this.config.duration, nodeIds?: (string | number)[]): void {
     this._layoutCalculationPromise?.then(() => {
-      this._fit(duration)
+      this._fit(duration, nodeIds)
     })
   }
 
