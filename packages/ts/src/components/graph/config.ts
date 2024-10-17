@@ -245,7 +245,7 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   /** Zoom end event callback. Default: `undefined` */
   onZoomEnd?: (zoomScale: number, zoomScaleExtent: [number, number], event: D3ZoomEvent<SVGGElement, unknown> | undefined, transform: ZoomTransform) => void;
   /** Callback function to be called when the graph layout is calculated. Default: `undefined` */
-  onLayoutCalculated?: (n: GraphNode<N, L>[], links: GraphLink<N, L>[]) => void;
+  onLayoutCalculated?: (nodes: GraphNode<N, L>[], links: GraphLink<N, L>[]) => void;
   /** Graph node selection brush callback function. Default: `undefined` */
   onNodeSelectionBrush?: (selectedNodes: GraphNode<N, L>[], event: D3BrushEvent<SVGGElement> | undefined) => void;
   /** Graph multiple node drag callback function. Default: `undefined` */
