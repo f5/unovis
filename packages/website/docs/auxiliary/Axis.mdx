@@ -210,12 +210,20 @@ The specified count is only a hint, the axis can have more or fewer ticks depend
   property="numTicks"/>
 
 ### Display Only Minimum and Maximum Ticks
-Set the `minMaxTicksOnly` property to `true` if you only want to see the two end ticks on the axis:
+Set the `minMaxTicksOnly` property to `true` if you only want to see the two end ticks on the axis.
+
+:::note
+To display the minimum and maximum ticks only when the chart width is limited (this behavior is enabed my default),
+you can use the `minMaxTicksOnlyWhenWidthIsLess` property (defaults to 250px). This helps avoid clutter in smaller visualizations while still
+providing essential information.
+:::
+
 <XYWrapperWithInput
   {...defaultProps()}
   inputType="checkbox"
   defaultValue={true}
   property="minMaxTicksOnly"/>
+
 
 ### Set Ticks Explicitly
 You can customize the ticks displayed by providing the _Axis_ component with a number array.
@@ -226,6 +234,21 @@ function tickValues() {
 })
 ```
 <XYWrapper {...defaultProps()} tickValues={[0,2,4,6,8]} hiddenProps={{x:d=>d.x}}/>
+
+### Hide Overlapping Ticks `1.5.0`
+To prevent overlapping tick labels on the axis, you can use the `tickTextHideOverlapping`
+property. When enabled, it hides any tick labels that would otherwise overlap with
+one another based on a simple bounding box collision detection algorithm. This
+ensures cleaner, more legible axes, particularly in cases where the available space
+is limited or when displaying many ticks.
+
+:::note
+The algorithm used for detecting overlaps may not be accurate when a `tickTextAngle` is specified,
+so results can vary depending on tick rotation.
+:::
+
+<XYWrapper {...defaultProps()} numTicks={15} containerProps={{ xDomain: [0, 10000000] }} hiddenProps={{x:d=>d.x}} tickTextHideOverlapping={true}/>
+
 
 ## Displaying Multiple Axes
 More commonly, you will want to display both an x and y axis for your graph. You can display multiple axes in an _XY Container_ like so:
