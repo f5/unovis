@@ -16,6 +16,7 @@ const example: Example = {
     Data obtained from <a href="https://github.com/fivethirtyeight/data/tree/master/hip-hop-candidate-lyrics" target="_blank">FiveThirtyEight</a> (source: <a href="https://genius.com/" target="_blank">Genius</a>)
   </div>,
   codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,
+  codeSolid: require(`!!raw-loader!./${pathname}-solid.tsx`).default,
   codeTs: require(`!!raw-loader!./${pathname}.ts`).default,
   codeAngular: {
     html: require(`!!raw-loader!./${pathname}.component.html`).default,
