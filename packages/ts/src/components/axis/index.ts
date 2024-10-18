@@ -29,8 +29,8 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
   static selectors = s
   protected _defaultConfig: AxisConfigInterface<Datum> = AxisDefaultConfig
   public config: AxisConfigInterface<Datum> = this._defaultConfig
-  axisGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
-  gridGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
+  private axisGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
+  private gridGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
 
   private _axisRawBBox: DOMRect
   private _axisSizeBBox: SVGRect
@@ -38,7 +38,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
   private _defaultNumTicks = 3
   private _minMaxTicksOnlyEnforceWidth = 250
 
-  events = {}
+  protected events = {}
 
   constructor (config?: AxisConfigInterface<Datum>) {
     super()
@@ -49,7 +49,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
   }
 
   /** Renders axis to an invisible grouped to calculate automatic chart margins */
-  preRender (): void {
+  public preRender (): void {
     const { config } = this
     const axisRenderHelperGroup = this.g.append('g').attr('opacity', 0)
 
@@ -69,17 +69,17 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     axisRenderHelperGroup.remove()
   }
 
-  getPosition (): Position {
+  public getPosition (): Position {
     const { config: { type, position } } = this
     return (position ?? ((type === AxisType.X) ? Position.Bottom : Position.Left)) as Position
   }
 
-  _getAxisSize (selection: Selection<SVGGElement, unknown, SVGGElement, undefined>): SVGRect {
+  private _getAxisSize (selection: Selection<SVGGElement, unknown, SVGGElement, undefined>): SVGRect {
     const bBox = selection.node().getBBox()
     return bBox
   }
 
-  _getRequiredMargin (axisSize = this._axisSizeBBox): Spacing {
+  private _getRequiredMargin (axisSize = this._axisSizeBBox): Spacing {
     const { config: { type, position } } = this
 
     switch (type) {
@@ -130,7 +130,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     }
   }
 
-  _render (duration = this.config.duration, selection = this.axisGroup): void {
+  public _render (duration = this.config.duration, selection = this.axisGroup): void {
     const { config } = this
 
     this._renderAxis(selection, duration)
@@ -150,7 +150,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     if (config.tickTextAlign) this._alignTickLabels()
   }
 
-  _buildAxis (): D3Axis<any> {
+  private _buildAxis (): D3Axis<any> {
     const { config: { type, position, tickPadding } } = this
 
     const ticks = this._getNumTicks()
@@ -168,7 +168,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     }
   }
 
-  _buildGrid (): D3Axis<any> {
+  private _buildGrid (): D3Axis<any> {
     const { config: { type, position } } = this
 
     const ticks = this._getNumTicks()
@@ -186,7 +186,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     }
   }
 
-  _renderAxis (selection = this.axisGroup, duration = this.config.duration): void {
+  private _renderAxis (selection = this.axisGroup, duration = this.config.duration): void {
     const { config } = this
 
     const axisGen = this._buildAxis()
@@ -251,7 +251,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     }
   }
 
-  _getNumTicks (): number {
+  private _getNumTicks (): number {
     const { config: { type, numTicks } } = this
 
     if (numTicks) return numTicks
@@ -271,7 +271,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     return this._defaultNumTicks
   }
 
-  _getConfiguredTickValues (): number[] | null {
+  private _getConfiguredTickValues (): number[] | null {
     const { config: { tickValues, type, minMaxTicksOnly } } = this
     const scale = type === AxisType.X ? this.xScale : this.yScale
     const scaleDomain = scale?.domain() as [number, number]
@@ -287,7 +287,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     return null
   }
 
-  _getFullDomainPath (tickSize = 0): string {
+  private _getFullDomainPath (tickSize = 0): string {
     const { config: { type } } = this
     switch (type) {
       case AxisType.X: return `M0.5, ${tickSize} V0.5 H${this._width + 0.5} V${tickSize}`
@@ -295,7 +295,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     }
   }
 
-  _renderAxisLabel (selection = this.axisGroup): void {
+  private _renderAxisLabel (selection = this.axisGroup): void {
     const { type, label, labelMargin, labelFontSize } = this.config
 
     // Remove the old label first to calculate the axis size properly
@@ -325,7 +325,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
       .style('fill', this.config.labelColor)
   }
 
-  _getLabelDY (): number {
+  private _getLabelDY (): number {
     const { type, position } = this.config
     switch (type) {
       case AxisType.X:
@@ -341,7 +341,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     }
   }
 
-  _alignTickLabels (): void {
+  private _alignTickLabels (): void {
     const { config: { type, tickTextAlign, tickTextAngle, position } } = this
     const tickText = this.g.selectAll('g.tick > text')
 
@@ -356,7 +356,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
       .attr('text-anchor', textAnchor)
   }
 
-  _getTickTextAnchor (textAlign: TextAlign): string {
+  private _getTickTextAnchor (textAlign: TextAlign): string {
     switch (textAlign) {
       case TextAlign.Left: return 'start'
       case TextAlign.Right: return 'end'
@@ -365,7 +365,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     }
   }
 
-  _getYTickTextTranslate (textAlign: TextAlign, axisPosition: Position = Position.Left): number {
+  private _getYTickTextTranslate (textAlign: TextAlign, axisPosition: Position = Position.Left): number {
     const defaultTickTextSpacingPx = 9 // Default in D3
     const width = this._axisRawBBox.width - defaultTickTextSpacingPx
 
