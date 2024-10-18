@@ -389,6 +389,7 @@ export class XYContainer<Datum> extends ContainerCore {
 
     // At first we need to set the domain to the scales
     const components = clean([...this.components, xAxis, yAxis])
+    this._setScales(...components)
     this._updateScalesDomain(...components)
 
     // Calculate margin required by the axes
