@@ -29,7 +29,9 @@ export interface AxisConfigInterface<Datum> extends Partial<XYComponentConfigInt
   domainLine?: boolean;
   /** Draw only the min and max axis ticks. Default: `false` */
   minMaxTicksOnly?: boolean;
-  /** Draw only the min and max axis ticks. Default: `250` */
+  /** Draw only the min and max axis ticks, when the chart
+   * width is less than the specified value.
+   * Default: `250` */
   minMaxTicksOnlyWhenWidthIsLess?: number;
   /** Tick label formatter function. Default: `undefined` */
   tickFormat?: ((tick: number | Date, i: number, ticks: number[] | Date[]) => string);
