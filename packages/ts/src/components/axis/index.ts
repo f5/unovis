@@ -15,6 +15,7 @@ import { FitMode, TextAlign, TrimMode, UnovisText, UnovisTextOptions, VerticalAl
 import { smartTransition } from 'utils/d3'
 import { renderTextToSvgTextElement, trimSVGText } from 'utils/text'
 import { isEqual } from 'utils/data'
+import { rectIntersect } from 'utils/misc'
 
 // Local Types
 import { AxisType } from './types'
@@ -36,7 +37,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
   private _axisSizeBBox: SVGRect
   private _requiredMargin: Spacing
   private _defaultNumTicks = 3
-  private _minMaxTicksOnlyEnforceWidth = 250
+  private _collideTickLabelsAnimFrameId: ReturnType<typeof requestAnimationFrame>
 
   protected events = {}
 
@@ -148,6 +149,8 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     }
 
     if (config.tickTextAlign) this._alignTickLabels()
+
+    this._resolveTickLabelOverlap(selection)
   }
 
   private _buildAxis (): D3Axis<any> {
@@ -251,6 +254,64 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     }
   }
 
+  private _resolveTickLabelOverlap (selection = this.axisGroup): void {
+    const { config } = this
+    const tickTextSelection = selection.selectAll<SVGTextElement, number | Date>('g.tick > text')
+
+    if (!config.tickTextHideOverlapping) {
+      tickTextSelection.style('opacity', null)
+      return
+    }
+
+    cancelAnimationFrame(this._collideTickLabelsAnimFrameId)
+    // Colliding labels in the next frame to prevent forced reflow
+    this._collideTickLabelsAnimFrameId = requestAnimationFrame(() => {
+      this._collideTickLabels(tickTextSelection)
+    })
+  }
+
+  private _collideTickLabels (selection: Selection<SVGTextElement, number | Date, SVGGElement, unknown>): void {
+    type SVGOverlappingTextElement = SVGTextElement & {
+      _visible: boolean;
+    }
+
+    // Reset visibility of all labels
+    selection.each((d, i, elements) => {
+      const node = elements[i] as SVGOverlappingTextElement
+      node._visible = true
+    })
+
+    // Run collision detection and set labels visibility
+    selection.each((d, i, elements) => {
+      const label1 = elements[i] as SVGOverlappingTextElement
+      const isLabel1Visible = label1._visible
+      if (!isLabel1Visible) return
+
+      // Calculate bounding rect of point's label
+      const label1BoundingRect = label1.getBoundingClientRect()
+
+      for (let j = i + 1; j < elements.length; j += 1) {
+        if (i === j) continue
+        const label2 = elements[j] as SVGOverlappingTextElement
+        const isLabel2Visible = label2._visible
+        if (isLabel2Visible) {
+          const label2BoundingRect = label2.getBoundingClientRect()
+          const intersect = rectIntersect(label1BoundingRect, label2BoundingRect, -5)
+          if (intersect) {
+            label2._visible = false
+            break
+          }
+        }
+      }
+    })
+
+    // Hide the overlapping labels
+    selection.each((d, i, elements) => {
+      const label = elements[i] as SVGOverlappingTextElement
+      select(label).style('opacity', label._visible ? 1 : 0)
+    })
+  }
+
   private _getNumTicks (): number {
     const { config: { type, numTicks } } = this
 
@@ -272,15 +333,15 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
   }
 
   private _getConfiguredTickValues (): number[] | null {
-    const { config: { tickValues, type, minMaxTicksOnly } } = this
-    const scale = type === AxisType.X ? this.xScale : this.yScale
+    const { config } = this
+    const scale = config.type === AxisType.X ? this.xScale : this.yScale
     const scaleDomain = scale?.domain() as [number, number]
 
-    if (tickValues) {
-      return tickValues.filter(v => (v >= scaleDomain[0]) && (v <= scaleDomain[1]))
+    if (config.tickValues) {
+      return config.tickValues.filter(v => (v >= scaleDomain[0]) && (v <= scaleDomain[1]))
     }
 
-    if (minMaxTicksOnly || (type === AxisType.X && this._width < this._minMaxTicksOnlyEnforceWidth)) {
+    if (config.minMaxTicksOnly || (config.type === AxisType.X && this._width < config.minMaxTicksOnlyWhenWidthIsLess)) {
       return scaleDomain as number[]
     }
 

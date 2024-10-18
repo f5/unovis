@@ -27,8 +27,10 @@ export interface AxisConfigInterface<Datum> extends Partial<XYComponentConfigInt
   tickLine?: boolean;
   /** Sets whether to draw the domain line or not. Default: `true` */
   domainLine?: boolean;
-  /** Draw the min and max axis ticks only. Default: `false` */
+  /** Draw only the min and max axis ticks. Default: `false` */
   minMaxTicksOnly?: boolean;
+  /** Draw only the min and max axis ticks. Default: `250` */
+  minMaxTicksOnlyWhenWidthIsLess?: number;
   /** Tick label formatter function. Default: `undefined` */
   tickFormat?: ((tick: number | Date, i: number, ticks: number[] | Date[]) => string);
   /** Explicitly set tick values. Default: `undefined` */
@@ -53,6 +55,11 @@ export interface AxisConfigInterface<Datum> extends Partial<XYComponentConfigInt
   tickTextColor?: string | null;
   /** Text rotation angle for ticks. Default: `undefined` */
   tickTextAngle?: number;
+  /** Hide tick labels that overlap with each other.
+   * To define overlapping, a simple bounding box collision detection algorithm is used.
+   * Which means the result won't be accurate when `tickTextAngle` is specified.
+   * Default: `undefined` */
+  tickTextHideOverlapping?: boolean;
   /** The spacing in pixels between the tick and it's label. Default: `8` */
   tickPadding?: number;
 }
@@ -68,6 +75,7 @@ export const AxisDefaultConfig: AxisConfigInterface<unknown> = {
   domainLine: true,
   numTicks: undefined,
   minMaxTicksOnly: false,
+  minMaxTicksOnlyWhenWidthIsLess: 250,
   tickTextWidth: undefined,
   tickTextSeparator: undefined,
   tickTextForceWordBreak: false,
@@ -76,10 +84,12 @@ export const AxisDefaultConfig: AxisConfigInterface<unknown> = {
   tickTextFontSize: null,
   tickTextAlign: undefined,
   tickTextColor: null,
+  tickTextAngle: undefined,
   labelMargin: 8,
   labelColor: null,
   tickFormat: undefined,
   tickValues: undefined,
   fullSize: true,
   tickPadding: 8,
+  tickTextHideOverlapping: undefined,
 }
