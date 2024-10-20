@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useRef, ReactElement, useState } from 'rea
 import { Selection } from 'd3-selection'
 import { cx } from '@emotion/css'
 import { GraphNode, GraphLink, GraphConfigInterface, Graph, GraphNodeSelectionHighlightMode } from '@unovis/ts'
-import { VisSingleContainer, VisGraph, VisSingleContainerProps, VisGraphProps } from '@unovis/react'
+import { VisSingleContainer, VisGraph, VisSingleContainerProps, VisGraphProps, VisGraphRef } from '@unovis/react'
 import { nodeEnterCustomRenderFunction, nodeSvgDefs, nodeUpdateCustomRenderFunction } from './node-rendering'
 import { DEFAULT_NODE_SIZE, nodeTypeColorMap, nodeTypeIconMap } from './constants'
 import type { CustomGraphNodeType } from './enums'
@@ -15,18 +15,21 @@ import { renderSwimlanes, updateSwimlanes } from './swimlane-rendering'
 export type CustomGraphProps<
   N extends CustomGraphNode,
   L extends CustomGraphLink,
-> = VisSingleContainerProps<{ links: L; nodes: N}> & VisGraphProps<N, L> & {
+> = VisSingleContainerProps<{ links: L; nodes: N }> &
+VisGraphProps<N, L> & {
   links: L[];
   nodes: N[];
   onBackgroundClick?: (event: MouseEvent) => void;
   onLinkClick?: (link: L, event: MouseEvent, i: number) => void;
   onNodeClick?: (node: N, event: MouseEvent, i: number) => void;
-};
+}
 
-export const CustomGraph = <N extends CustomGraphNode, L extends CustomGraphLink>(
-  props: CustomGraphProps<N, L>
-): ReactElement => {
-  const [showLinkFlow, setShowLinkFlow] = useState(true)
+// eslint-disable-next-line @typescript-eslint/naming-convention
+function CustomGraphComponent<N extends CustomGraphNode, L extends CustomGraphLink> (
+  props: CustomGraphProps<N, L>,
+  ref: React.Ref<VisGraphRef<N, L> | null>
+): ReactElement {
+  const graphRef = useRef<VisGraphRef<N, L>>(null)
   const [selectedNodeId, setSelectedNodeId] = useState<string | undefined>(undefined)
 
   const graphD3SelectionRef = useRef<Selection<SVGGElement, unknown, null, undefined> | null>(null)
@@ -38,22 +41,28 @@ export const CustomGraph = <N extends CustomGraphNode, L extends CustomGraphLink
     return n.fillColor ?? nodeTypeColorMap.get(n.type as CustomGraphNodeType)
   }, [])
 
-  const data = useMemo(() => ({
-    nodes: props.nodes,
-    links: props.links,
-  }), [props.nodes, props.links])
+  const data = useMemo(
+    () => ({
+      nodes: props.nodes,
+      links: props.links,
+    }),
+    [props.nodes, props.links]
+  )
 
-  const onRenderComplete = useCallback((
-    g: Selection<SVGGElement, unknown, null, undefined>,
-    nodes: GraphNode<N, L>[],
-    links: GraphLink<N, L>[],
-    config: GraphConfigInterface<N, L>,
-    duration: number,
-    zoomLevel: number
-  ): void => {
-    graphD3SelectionRef.current = g
-    renderSwimlanes(g, nodes)
-  }, [])
+  const onRenderComplete = useCallback(
+    (
+      g: Selection<SVGGElement, unknown, null, undefined>,
+      nodes: GraphNode<N, L>[],
+      links: GraphLink<N, L>[],
+      config: GraphConfigInterface<N, L>,
+      duration: number,
+      zoomLevel: number
+    ): void => {
+      graphD3SelectionRef.current = g
+      renderSwimlanes(g, nodes)
+    },
+    []
+  )
 
   const onZoom = useCallback((zoomLevel: number) => {
     if (graphD3SelectionRef.current) {
@@ -61,61 +70,63 @@ export const CustomGraph = <N extends CustomGraphNode, L extends CustomGraphLink
     }
   }, [])
 
-  const events = useMemo(() => ({
-    [Graph.selectors.node]: {
-      click: (n: N) => { setSelectedNodeId(n.id) },
-    },
-    [Graph.selectors.background]: {
-      click: () => { setSelectedNodeId(undefined) },
-    },
-  }), [setSelectedNodeId])
+  const events = useMemo(
+    () => ({
+      [Graph.selectors.node]: {
+        click: (n: N) => {
+          setSelectedNodeId(n.id)
+        },
+      },
+      [Graph.selectors.background]: {
+        click: () => {
+          setSelectedNodeId(undefined)
+        },
+      },
+    }),
+    [setSelectedNodeId]
+  )
+
+  React.useImperativeHandle(ref, () => graphRef.current)
 
   return (
-    <>
-      <VisSingleContainer
-        className={cx(s.exaforceGraph, props.className)}
-        svgDefs={nodeSvgDefs}
-        data={data}
-        height={props.height}
-        duration={1000}
-      >
-        <VisGraph<N, L>
-          layoutType={'parallel'}
-          layoutNodeGroup={useCallback((n: N) => n.type, [])}
-          linkArrow={useCallback((l: L) => l.showArrow, [])}
-          linkBandWidth={useCallback((l: L) => l.bandWidth, [])}
-          linkCurvature={1}
-          linkFlow={useCallback((l: L) => showLinkFlow && l.showFlow, [showLinkFlow])}
-          linkWidth={useCallback((l: L) => l.width, [])}
-          nodeFill={getNodeFillColor}
-          nodeIcon={getNodeIcon}
-          nodeSize={DEFAULT_NODE_SIZE}
-          nodeIconSize={DEFAULT_NODE_SIZE}
-          nodeLabel={useCallback((n: N) => n.label, [])}
-          nodeLabelTrimLength={30}
-          nodeStroke={'none'}
-          nodeSubLabel={useCallback((n: N) => n.subLabel, [])}
-          nodeSubLabelTrimLength={30}
-          nodeEnterCustomRenderFunction={nodeEnterCustomRenderFunction}
-          nodeUpdateCustomRenderFunction={nodeUpdateCustomRenderFunction}
-          onRenderComplete={onRenderComplete}
-          nodeSelectionHighlightMode={GraphNodeSelectionHighlightMode.None}
-          onZoom={onZoom}
-          selectedNodeId={selectedNodeId}
-          events={events}
-          {...props}
-        />
-      </VisSingleContainer>
-      <div className={s.checkboxContainer}>
-        <label>
-          <input
-            type="checkbox"
-            checked={showLinkFlow}
-            onChange={(e) => setShowLinkFlow(e.target.checked)}
-          />
-          Show Link Flow
-        </label>
-      </div>
-    </>
+    <VisSingleContainer
+      className={cx(s.exaforceGraph, props.className)}
+      svgDefs={nodeSvgDefs}
+      data={data}
+      height={props.height}
+      duration={1000}
+    >
+      <VisGraph<N, L>
+        ref={graphRef}
+        layoutType={'parallel'}
+        layoutNodeGroup={useCallback((n: N) => n.type, [])}
+        linkArrow={useCallback((l: L) => l.showArrow, [])}
+        linkBandWidth={useCallback((l: L) => l.bandWidth, [])}
+        linkCurvature={1}
+        linkWidth={useCallback((l: L) => l.width, [])}
+        nodeFill={getNodeFillColor}
+        nodeIcon={getNodeIcon}
+        nodeSize={DEFAULT_NODE_SIZE}
+        nodeIconSize={DEFAULT_NODE_SIZE}
+        nodeLabel={useCallback((n: N) => n.label, [])}
+        nodeLabelTrimLength={30}
+        nodeStroke={'none'}
+        nodeSubLabel={useCallback((n: N) => n.subLabel, [])}
+        nodeSubLabelTrimLength={30}
+        nodeEnterCustomRenderFunction={nodeEnterCustomRenderFunction}
+        nodeUpdateCustomRenderFunction={nodeUpdateCustomRenderFunction}
+        onRenderComplete={onRenderComplete}
+        nodeSelectionHighlightMode={GraphNodeSelectionHighlightMode.None}
+        onZoom={onZoom}
+        selectedNodeId={selectedNodeId}
+        events={events}
+        zoomScaleExtent={useMemo(() => [0.5, 3], [])}
+        {...props}
+      />
+    </VisSingleContainer>
   )
 }
+
+export const CustomGraph = React.forwardRef(CustomGraphComponent) as <N extends CustomGraphNode, L extends CustomGraphLink>(
+  props: CustomGraphProps<N, L> & { ref?: React.Ref<VisGraphRef<N, L>> }
+) => ReactElement
