@@ -8,5 +8,5 @@ tsx                  perpetual       MIT           4.16.2             Hiroki Osa
 typescript           perpetual       Apache-2.0    5.5.4              Microsoft Corp.
 vite                 perpetual       MIT           5.3.5              Evan You
 vite-plugin-solid    perpetual       MIT           2.10.2             Alexandre Mouton-Brady <amoutonbrady@gmail.com>
-@unovis/ts           perpetual       Apache-2.0    1.4.3              Nikita Rokotyan, F5 Inc. <nikita@f5.com> (https://rokotyan.com)
+@unovis/ts           perpetual       n/a           n/a                n/a
 solid-js             perpetual       MIT           1.8.19             Ryan Carniato
