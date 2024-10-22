@@ -43,9 +43,9 @@
     "solid-js": "^1.8.19",
     "tsup": "^8.2.2",
     "tsup-preset-solid": "^2.2.0",
-    "tsx": "^4.16.2",
+    "tsx": "^4.19.1",
     "typescript": "^5.5.4",
-    "vite": "^5.3.4",
+    "vite": "^5.4.9",
     "vite-plugin-solid": "^2.10.2"
   },
   "main": "./index.js",

@@ -5,9 +5,9 @@ eslint-plugin-solid  perpetual       MIT           0.13.2             Josh Wilso
 solid-js             perpetual       MIT           1.8.19             Ryan Carniato
 tsup                 perpetual       MIT           8.2.3              EGOIST
 tsup-preset-solid    perpetual       MIT           2.2.0              Damian Tarnawski <gthetarnav@gmail.com>
-tsx                  perpetual       MIT           4.16.2             Hiroki Osame hiroki.osame@gmail.com
+tsx                  perpetual       MIT           4.19.1             Hiroki Osame hiroki.osame@gmail.com
 typescript           perpetual       Apache-2.0    5.5.4              Microsoft Corp.
-vite                 perpetual       MIT           5.3.5              Evan You
+vite                 perpetual       MIT           5.4.9              Evan You
 vite-plugin-solid    perpetual       MIT           2.10.2             Alexandre Mouton-Brady <amoutonbrady@gmail.com>
 @unovis/ts           perpetual       n/a           n/a                n/a
 solid-js             perpetual       MIT           1.8.19             Ryan Carniato

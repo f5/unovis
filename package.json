@@ -71,5 +71,13 @@
   },
   "lint-staged": {
     "*.{js,ts,jsx,tsx,svelte}": "eslint --quiet --cache --fix"
+  },
+  "overrides": {
+    "vite": {
+      "esbuild": "^0.23.1"
+    },
+    "ng-packagr": {
+      "esbuild": "^0.23.1"
+    }
   }
 }
