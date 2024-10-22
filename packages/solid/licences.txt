@@ -1,5 +1,6 @@
 name                 license period  license type  installed version  author
 ----                 --------------  ------------  -----------------  ------
+esbuild              perpetual       MIT           0.23.1             n/a
 eslint-plugin-solid  perpetual       MIT           0.13.2             Josh Wilson <joshwilsonvu@gmail.com>
 solid-js             perpetual       MIT           1.8.19             Ryan Carniato
 tsup                 perpetual       MIT           8.2.3              EGOIST
