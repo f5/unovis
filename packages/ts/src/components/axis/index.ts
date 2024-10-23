@@ -350,8 +350,9 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
       ? 0
       : this._getYTickTextTranslate(tickTextAlign as TextAlign, position as Position)
 
+    const translateValue = tickTextAngle ? `translate(${translateX},0) rotate(${tickTextAngle})` : `translate(${translateX},0)`
     tickText
-      .attr('transform', `translate(${translateX},0) rotate(${tickTextAngle})`)
+      .attr('transform', translateValue)
       .attr('text-anchor', textAnchor)
   }
 
