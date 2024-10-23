@@ -15,6 +15,7 @@ import { FitMode, TextAlign, TrimMode, UnovisText, UnovisTextOptions, VerticalAl
 import { smartTransition } from 'utils/d3'
 import { renderTextToSvgTextElement, trimSVGText } from 'utils/text'
 import { isEqual } from 'utils/data'
+import { rectIntersect } from 'utils/misc'
 
 // Local Types
 import { AxisType } from './types'
@@ -29,16 +30,16 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
   static selectors = s
   protected _defaultConfig: AxisConfigInterface<Datum> = AxisDefaultConfig
   public config: AxisConfigInterface<Datum> = this._defaultConfig
-  axisGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
-  gridGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
+  private axisGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
+  private gridGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
 
   private _axisRawBBox: DOMRect
   private _axisSizeBBox: SVGRect
   private _requiredMargin: Spacing
   private _defaultNumTicks = 3
-  private _minMaxTicksOnlyEnforceWidth = 250
+  private _collideTickLabelsAnimFrameId: ReturnType<typeof requestAnimationFrame>
 
-  events = {}
+  protected events = {}
 
   constructor (config?: AxisConfigInterface<Datum>) {
     super()
@@ -49,7 +50,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
   }
 
   /** Renders axis to an invisible grouped to calculate automatic chart margins */
-  preRender (): void {
+  public preRender (): void {
     const { config } = this
     const axisRenderHelperGroup = this.g.append('g').attr('opacity', 0)
 
@@ -69,17 +70,17 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     axisRenderHelperGroup.remove()
   }
 
-  getPosition (): Position {
+  public getPosition (): Position {
     const { config: { type, position } } = this
     return (position ?? ((type === AxisType.X) ? Position.Bottom : Position.Left)) as Position
   }
 
-  _getAxisSize (selection: Selection<SVGGElement, unknown, SVGGElement, undefined>): SVGRect {
+  private _getAxisSize (selection: Selection<SVGGElement, unknown, SVGGElement, undefined>): SVGRect {
     const bBox = selection.node().getBBox()
     return bBox
   }
 
-  _getRequiredMargin (axisSize = this._axisSizeBBox): Spacing {
+  private _getRequiredMargin (axisSize = this._axisSizeBBox): Spacing {
     const { config: { type, position } } = this
 
     switch (type) {
@@ -130,7 +131,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     }
   }
 
-  _render (duration = this.config.duration, selection = this.axisGroup): void {
+  public _render (duration = this.config.duration, selection = this.axisGroup): void {
     const { config } = this
 
     this._renderAxis(selection, duration)
@@ -148,9 +149,11 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     }
 
     if (config.tickTextAlign) this._alignTickLabels()
+
+    this._resolveTickLabelOverlap(selection)
   }
 
-  _buildAxis (): D3Axis<any> {
+  private _buildAxis (): D3Axis<any> {
     const { config: { type, position, tickPadding } } = this
 
     const ticks = this._getNumTicks()
@@ -168,7 +171,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     }
   }
 
-  _buildGrid (): D3Axis<any> {
+  private _buildGrid (): D3Axis<any> {
     const { config: { type, position } } = this
 
     const ticks = this._getNumTicks()
@@ -186,7 +189,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     }
   }
 
-  _renderAxis (selection = this.axisGroup, duration = this.config.duration): void {
+  private _renderAxis (selection = this.axisGroup, duration = this.config.duration): void {
     const { config } = this
 
     const axisGen = this._buildAxis()
@@ -251,7 +254,65 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     }
   }
 
-  _getNumTicks (): number {
+  private _resolveTickLabelOverlap (selection = this.axisGroup): void {
+    const { config } = this
+    const tickTextSelection = selection.selectAll<SVGTextElement, number | Date>('g.tick > text')
+
+    if (!config.tickTextHideOverlapping) {
+      tickTextSelection.style('opacity', null)
+      return
+    }
+
+    cancelAnimationFrame(this._collideTickLabelsAnimFrameId)
+    // Colliding labels in the next frame to prevent forced reflow
+    this._collideTickLabelsAnimFrameId = requestAnimationFrame(() => {
+      this._collideTickLabels(tickTextSelection)
+    })
+  }
+
+  private _collideTickLabels (selection: Selection<SVGTextElement, number | Date, SVGGElement, unknown>): void {
+    type SVGOverlappingTextElement = SVGTextElement & {
+      _visible: boolean;
+    }
+
+    // Reset visibility of all labels
+    selection.each((d, i, elements) => {
+      const node = elements[i] as SVGOverlappingTextElement
+      node._visible = true
+    })
+
+    // Run collision detection and set labels visibility
+    selection.each((d, i, elements) => {
+      const label1 = elements[i] as SVGOverlappingTextElement
+      const isLabel1Visible = label1._visible
+      if (!isLabel1Visible) return
+
+      // Calculate bounding rect of point's label
+      const label1BoundingRect = label1.getBoundingClientRect()
+
+      for (let j = i + 1; j < elements.length; j += 1) {
+        if (i === j) continue
+        const label2 = elements[j] as SVGOverlappingTextElement
+        const isLabel2Visible = label2._visible
+        if (isLabel2Visible) {
+          const label2BoundingRect = label2.getBoundingClientRect()
+          const intersect = rectIntersect(label1BoundingRect, label2BoundingRect, -5)
+          if (intersect) {
+            label2._visible = false
+            break
+          }
+        }
+      }
+    })
+
+    // Hide the overlapping labels
+    selection.each((d, i, elements) => {
+      const label = elements[i] as SVGOverlappingTextElement
+      select(label).style('opacity', label._visible ? 1 : 0)
+    })
+  }
+
+  private _getNumTicks (): number {
     const { config: { type, numTicks } } = this
 
     if (numTicks) return numTicks
@@ -271,23 +332,23 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     return this._defaultNumTicks
   }
 
-  _getConfiguredTickValues (): number[] | null {
-    const { config: { tickValues, type, minMaxTicksOnly } } = this
-    const scale = type === AxisType.X ? this.xScale : this.yScale
+  private _getConfiguredTickValues (): number[] | null {
+    const { config } = this
+    const scale = config.type === AxisType.X ? this.xScale : this.yScale
     const scaleDomain = scale?.domain() as [number, number]
 
-    if (tickValues) {
-      return tickValues.filter(v => (v >= scaleDomain[0]) && (v <= scaleDomain[1]))
+    if (config.tickValues) {
+      return config.tickValues.filter(v => (v >= scaleDomain[0]) && (v <= scaleDomain[1]))
     }
 
-    if (minMaxTicksOnly || (type === AxisType.X && this._width < this._minMaxTicksOnlyEnforceWidth)) {
+    if (config.minMaxTicksOnly || (config.type === AxisType.X && this._width < config.minMaxTicksOnlyWhenWidthIsLess)) {
       return scaleDomain as number[]
     }
 
     return null
   }
 
-  _getFullDomainPath (tickSize = 0): string {
+  private _getFullDomainPath (tickSize = 0): string {
     const { config: { type } } = this
     switch (type) {
       case AxisType.X: return `M0.5, ${tickSize} V0.5 H${this._width + 0.5} V${tickSize}`
@@ -295,7 +356,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     }
   }
 
-  _renderAxisLabel (selection = this.axisGroup): void {
+  private _renderAxisLabel (selection = this.axisGroup): void {
     const { type, label, labelMargin, labelFontSize } = this.config
 
     // Remove the old label first to calculate the axis size properly
@@ -325,7 +386,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
       .style('fill', this.config.labelColor)
   }
 
-  _getLabelDY (): number {
+  private _getLabelDY (): number {
     const { type, position } = this.config
     switch (type) {
       case AxisType.X:
@@ -341,7 +402,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     }
   }
 
-  _alignTickLabels (): void {
+  private _alignTickLabels (): void {
     const { config: { type, tickTextAlign, tickTextAngle, position } } = this
     const tickText = this.g.selectAll('g.tick > text')
 
@@ -355,7 +416,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
       .attr('text-anchor', textAnchor)
   }
 
-  _getTickTextAnchor (textAlign: TextAlign): string {
+  private _getTickTextAnchor (textAlign: TextAlign): string {
     switch (textAlign) {
       case TextAlign.Left: return 'start'
       case TextAlign.Right: return 'end'
@@ -364,7 +425,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     }
   }
 
-  _getYTickTextTranslate (textAlign: TextAlign, axisPosition: Position = Position.Left): number {
+  private _getYTickTextTranslate (textAlign: TextAlign, axisPosition: Position = Position.Left): number {
     const defaultTickTextSpacingPx = 9 // Default in D3
     const width = this._axisRawBBox.width - defaultTickTextSpacingPx
 
