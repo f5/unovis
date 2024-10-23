@@ -19,7 +19,7 @@ import { GraphCircleLabel, GraphLink, GraphLinkArrowStyle, GraphLinkStyle } from
 import { GraphConfigInterface } from '../../config'
 
 // Helpers
-import { getX, getY } from '../node/helper'
+import { getX, getY, isInternalHref } from '../node/helper'
 import {
   getLinkShiftTransform,
   getLinkStrokeWidth,
@@ -66,9 +66,6 @@ export function createLinks<N extends GraphInputNode, L extends GraphInputLink> 
 
   linkLabelGroup.append('rect')
     .attr('class', linkSelectors.linkLabelBackground)
-
-  linkLabelGroup.append('text')
-    .attr('class', linkSelectors.linkLabelContent)
 }
 
 /** Updates the links partially according to their `_state` */
@@ -206,11 +203,36 @@ export function updateLinks<N extends GraphInputNode, L extends GraphInputLink> 
       const linkLabelPos = linkPathElement.getPointAtLength(pathLength / 2 + linkLabelShift)
       const linkLabelTranslate = `translate(${linkLabelPos.x}, ${linkLabelPos.y})`
       const linkLabelBackground = linkLabelGroup.select<SVGRectElement>(`.${linkSelectors.linkLabelBackground}`)
-      const linkLabelContent = linkLabelGroup.select<SVGTextElement>(`.${linkSelectors.linkLabelContent}`)
+      let linkLabelContent = linkLabelGroup.select<SVGTextElement | SVGUseElement>(`.${linkSelectors.linkLabelContent}`)
 
       // If the label was hidden or didn't have text before, we need to set the initial position
-      if (!linkLabelContent.text() || linkLabelContent.attr('hidden')) {
+      if (!linkLabelContent.size() || !linkLabelContent.text() || linkLabelContent.attr('hidden')) {
         linkLabelGroup.attr('transform', linkLabelTranslate)
+      }
+
+      // Update the label content DOM element (text vs use)
+      const shouldRenderUseElement = isInternalHref(linkLabelText)
+      linkLabelGroup.select<SVGTextElement>(`.${linkSelectors.linkLabelContent}`).remove()
+      linkLabelContent = linkLabelGroup
+        .append(shouldRenderUseElement ? 'use' : 'text')
+        .attr('class', linkSelectors.linkLabelContent)
+
+      const linkLabelFontSize = toPx(linkLabelDatum.fontSize) ?? getCSSVariableValueInPixels('var(--vis-graph-link-label-font-size)', linkLabelContent.node())
+      const linkLabelColor = linkLabelDatum.textColor ?? getLinkLabelTextColor(linkLabelDatum)
+      if (shouldRenderUseElement) {
+        linkLabelContent
+          .attr('href', linkLabelText)
+          .attr('x', -linkLabelFontSize / 2)
+          .attr('y', -linkLabelFontSize / 2)
+          .attr('width', linkLabelFontSize)
+          .attr('height', linkLabelFontSize)
+          .style('fill', linkLabelColor)
+      } else {
+        linkLabelContent
+          .text(linkLabelText)
+          .attr('dy', '0.1em')
+          .style('font-size', linkLabelFontSize)
+          .style('fill', linkLabelColor)
       }
 
       linkLabelGroup.attr('hidden', null)
@@ -220,16 +242,9 @@ export function updateLinks<N extends GraphInputNode, L extends GraphInputLink> 
         .attr('transform', linkLabelTranslate)
         .style('opacity', 1)
 
-      linkLabelContent
-        .text(linkLabelText)
-        .attr('dy', '0.1em')
-        .style('font-size', linkLabelDatum.fontSize)
-        .style('fill', linkLabelDatum.textColor ?? getLinkLabelTextColor(linkLabelDatum))
-
-      const shouldBeRenderedAsCircle = linkLabelText.length <= 2
+      const shouldBeRenderedAsCircle = linkLabelText.length <= 2 || shouldRenderUseElement
       const linkLabelPaddingVertical = 4
       const linkLabelPaddingHorizontal = shouldBeRenderedAsCircle ? linkLabelPaddingVertical : 8
-      const linkLabelFontSize = toPx(linkLabelDatum.fontSize) ?? getCSSVariableValueInPixels('var(--vis-graph-link-label-font-size)', linkLabelContent.node())
       const linkLabelWidthPx = estimateStringPixelLength(linkLabelText, linkLabelFontSize)
       const linkLabelBackgroundBorderRadius = linkLabelDatum.radius ?? (shouldBeRenderedAsCircle ? linkLabelFontSize : 4)
       const linkLabelBackgroundWidth = (shouldBeRenderedAsCircle ? linkLabelFontSize : linkLabelWidthPx)
