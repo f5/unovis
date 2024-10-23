@@ -17,6 +17,7 @@ const example: Example = {
     (Source: <a href="https://github.com/allisonhorst/palmerpenguins">K.Gorman, LTER Network</a>)
     </div>),
   codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,
+  codeSolid: require(`!!raw-loader!./${pathname}-solid.tsx`).default,
   codeTs: require(`!!raw-loader!./${pathname}.ts`).default,
   codeAngular: {
     html: require(`!!raw-loader!./${pathname}.component.html`).default,

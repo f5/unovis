@@ -13,6 +13,7 @@ const templates: Record<Framework, ProjectTemplate> = {
   [Framework.React]: 'create-react-app',
   [Framework.Svelte]: 'node',
   [Framework.Vue]: 'node',
+  [Framework.Solid]: 'node',
   [Framework.TypeScript]: 'typescript',
 }
 
@@ -26,6 +27,8 @@ function getOpenFiles (framework: Framework, files: ProjectFiles): OpenFileOptio
       return 'src/App.svelte'
     case Framework.Vue:
       return 'src/App.vue'
+    case Framework.Solid:
+      return 'src/App.tsx'
     default:
       return 'src/App.ts'
   }
@@ -174,6 +177,48 @@ function getStarterFiles (framework: Framework, e: Example): ProjectFiles {
         'src/data.ts': e.data,
         'src/App.vue': e.codeVue,
         ...(e.constants ? { 'src/constants.ts': e.constants } : {}),
+      }
+    case Framework.Solid:
+      return {
+        'public/index.html': '<div id="app"></div>',
+        'src/index.js': trimMultiline(`import App from './app'
+          import { render } from 'solid-js/web'
+
+          render(() => <App />, document.getElementById('app') as HTMLElement)`),
+        'src/App.tsx': e.codeSolid,
+        'src/data.ts': e.data,
+        'package.json': trimMultiline(`{
+          "name": "unovis-demo",
+          "private": true,
+          "version": "0.0.0",
+          "type": "module",
+          "scripts": {
+            "start": "vite",
+            "dev": "vite",
+            "build": "vite build",
+            "serve": "vite preview"
+          },
+          "dependencies": {
+            "@unovis/ts": "${ver}",
+            "@unovis/solid": "${ver}",
+            "solid-js": "^1.8.11"
+          },
+          "devDependencies": {
+            "vite-plugin-solid": "^2.8.2",
+            "typescript": "^5.3.3",
+            "vite": "^5.0.11"
+          }}`),
+        'vite.config.ts': trimMultiline(`
+          import { defineConfig } from 'vite';
+          import solid from 'vite-plugin-solid'
+
+          export default defineConfig({
+            plugins: [solid()],
+          });
+        `),
+        'vite.env.d.ts': '/// <reference types="vite/client" />',
+        ...(e.constants ? { 'src/constants.ts': e.constants } : {}),
+        ...(e.styles ? { 'src/styles.css': e.styles } : {}),
       }
     default:
       return {

@@ -15,6 +15,7 @@ const example: Example = {
     (source: <a href='https://www-cs-faculty.stanford.edu/~knuth/sgb.html' target="_blank">The Stanford GraphBase</a>)
   </p>,
   codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,
+  codeSolid: require(`!!raw-loader!./${pathname}-solid.tsx`).default,
   codeTs: require(`!!raw-loader!./${pathname}.ts`).default,
   codeAngular: {
     html: require(`!!raw-loader!./${pathname}.component.html`).default,
