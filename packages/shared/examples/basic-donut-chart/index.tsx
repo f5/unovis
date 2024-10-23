@@ -13,6 +13,7 @@ const example: Example = {
   title: 'Basic Donut Chart',
   description: <div>Data obtained from <a href="https://informationisbeautiful.net/visualizations/top-500-passwords-visualized/" target="_blank">information is beautiful</a></div>,
   codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,
+  codeSolid: require(`!!raw-loader!./${pathname}-solid.tsx`).default,
   codeTs: require(`!!raw-loader!./${pathname}.ts`).default,
   codeAngular: {
     html: require(`!!raw-loader!./${pathname}.component.html`).default,

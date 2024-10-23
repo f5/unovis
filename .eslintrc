@@ -46,7 +46,8 @@
     "max-len": ["warn", { "code": 200, "tabWidth": 2, "ignoreTrailingComments": true, "ignoreComments": true,  "ignoreUrls": true }],
     "import-newlines/enforce": ["error", { "items": 12, "max-len": 150, "semi": false }]
   },
-  "overrides": [{
+  "overrides": [
+  {
     "files": ["*.ts", "*.tsx"],
     "extends": ["plugin:@typescript-eslint/recommended"],
     "parser": "@typescript-eslint/parser",
@@ -127,5 +128,12 @@
         }
       ]
     }
-  }]
+  },
+  {
+    "files": ["*-solid.tsx"],
+    "rules": {
+      "@typescript-eslint/explicit-function-return-type": "off"
+    }
+  }
+]
 }

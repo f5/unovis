@@ -17,6 +17,7 @@ const example: Example = {
     Check out the <a href="https://rtsys.informatik.uni-kiel.de/elklive/" target="_blank">ELK Demonstrators</a> page to learn more.
   </p>,
   codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,
+  codeSolid: require(`!!raw-loader!./${pathname}-solid.tsx`).default,
   codeTs: require(`!!raw-loader!./${pathname}.ts`).default,
   codeAngular: {
     html: require(`!!raw-loader!./${pathname}.component.html`).default,
