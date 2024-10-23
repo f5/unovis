@@ -19,7 +19,7 @@
   "scripts": {
     "dev": "cd packages/dev && npm run dev",
     "website": "cd packages/website && npm run start",
-    "build": "npm run build:ts && npm run build:react && npm run build:angular && npm run build:svelte && npm run build:vue && && npm run build:solid && npm run build:website",
+    "build": "npm run build:ts && npm run build:react && npm run build:angular && npm run build:svelte && npm run build:vue && npm run build:solid && npm run build:website",
     "build:ts": "cd packages/ts && npm run build",
     "build:angular": "cd packages/angular && npm run build",
     "build:react": "cd packages/react && npm run build",
