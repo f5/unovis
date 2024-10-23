@@ -74,9 +74,6 @@
   },
   "overrides": {
     "minimatch": "3.0.5",
-    "webpack": "5.76.0",
-    "ng-packagr": {
-      "esbuild": "0.23.0"
-    }
+    "webpack": "5.76.0"
   }
 }
