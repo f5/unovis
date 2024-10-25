@@ -59,6 +59,11 @@ export default function Home (): JSX.Element {
                     {example.codeVue}
                   </CodeBlock>
                 </TabItem>
+                <TabItem value="solid" label="Solid">
+                  <CodeBlock language="tsx">
+                    {example.codeSolid}
+                  </CodeBlock>
+                </TabItem>
                 <TabItem value="typescript" label="TypeScript">
                   <CodeBlock language="tsx">
                     {example.codeTs}

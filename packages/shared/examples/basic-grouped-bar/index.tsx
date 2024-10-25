@@ -12,6 +12,7 @@ const example: Example = {
   title: 'Basic Grouped Bar Chart',
   description: <div>U.S. Presidential election data obtained from <a href="https://dataverse.harvard.edu/" target="_blank">MIT Election Data and Science Lab</a></div>,
   codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,
+  codeSolid: require(`!!raw-loader!./${pathname}-solid.tsx`).default,
   codeTs: require(`!!raw-loader!./${pathname}.ts`).default,
   codeAngular: {
     html: require(`!!raw-loader!./${pathname}.component.html`).default,
