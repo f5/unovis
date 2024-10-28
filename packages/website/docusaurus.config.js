@@ -205,7 +205,7 @@ const config = {
           module: {
             rules: [
               {
-                test: /\.module.ts|component.ts|.svelte$/,
+                test: /\.module.ts|component.ts|.svelte|-solid.tsx$/,
                 loader: 'file-loader',
               },
             ],
