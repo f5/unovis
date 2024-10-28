@@ -81,7 +81,7 @@ export function VisXYContainer<Datum>(props: VisXYContainerProps<Datum>) {
             ]
             break
           case 'axis':
-            // @ts-expect-error -- javascrit does not happy with the type
+            // @ts-expect-error -- ts does not happy with the type
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
             c[`${(value() as Axis<Datum>).config.type}Axis`] =
               value() as Axis<Datum>
@@ -107,7 +107,7 @@ export function VisXYContainer<Datum>(props: VisXYContainerProps<Datum>) {
             c.components?.filter((i) => !i.isDestroyed())
             break
           case 'axis':
-            // @ts-expect-error -- javascrit does not happy with the type
+            // @ts-expect-error -- ts does not happy with the type
             // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
             c[`${value}Axis`] = undefined
             break

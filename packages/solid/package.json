@@ -1,7 +1,7 @@
 {
   "name": "@unovis/solid",
   "description": "Modular data visualization framework for React, Angular, Svelte, Vue, Solid and vanilla TypeScript or JavaScript",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "repository": {
     "type": "git",
     "url": "https://github.com/f5/unovis.git",
@@ -28,34 +28,39 @@
   "license": "Apache-2.0",
   "scripts": {
     "lint": "eslint src --ext .ts,.tsx",
-    "build": "tsup",
+    "build": "vite build",
     "publish:dist": "rm -rf dist/.cache; cp ./{LICENSE,README.md,package.json} ./dist; cd ./dist; npm publish",
     "generate": "tsx autogen/index.ts && npm run lint -- --fix",
     "gallery": "vite"
   },
   "peerDependencies": {
-    "@unovis/ts": "1.4.3",
-    "solid-js": "^1.8.0"
+    "@unovis/ts": "1.4.4",
+    "solid-js": "^1.9.0"
   },
   "devDependencies": {
     "eslint-plugin-solid": "^0.13.2",
-    "solid-js": "^1.8.19",
-    "tsup": "^8.2.2",
-    "tsup-preset-solid": "^2.2.0",
-    "tsx": "^4.16.2",
-    "typescript": "^5.5.4",
-    "vite": "^5.3.4",
+    "rollup": "^4.24.2",
+    "solid-js": "^1.9.3",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.10",
+    "vite-plugin-dts": "^3.5.3",
     "vite-plugin-solid": "^2.10.2"
   },
-  "main": "./index.js",
+  "main": "./index.cjs",
   "module": "./index.js",
   "types": "./index.d.ts",
-  "browser": {},
+  "typings": "./index.d.ts",
   "exports": {
-    "import": {
+    ".": {
       "types": "./index.d.ts",
-      "default": "./index.js"
+      "require": "./index.cjs",
+      "import": "./index.js"
+    },
+    "./*": {
+      "types": "./*/index.d.ts",
+      "require": "./*/index.cjs",
+      "import": "./*/index.js"
     }
-  },
-  "typesVersions": {}
+  }
 }

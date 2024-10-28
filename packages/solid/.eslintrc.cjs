@@ -20,5 +20,5 @@ module.exports = {
     '@typescript-eslint/no-unsafe-member-access': 'off',
     '@typescript-eslint/consistent-type-imports': 'error',
   },
-  ignorePatterns: ['dist/*', 'src-demo/*', 'autogen/*', '*.cjs', 'tsup.config.ts'],
+  ignorePatterns: ['dist/*', 'src-demo/*', 'autogen/*', '*.cjs', 'vite.config.ts'],
 }
