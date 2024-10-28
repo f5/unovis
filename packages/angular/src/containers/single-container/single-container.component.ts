@@ -19,9 +19,17 @@ export class VisSingleContainerComponent<Data = unknown, C extends ComponentCore
   @ContentChild(VisTooltipComponent) tooltipComponent: VisTooltipComponent
   @ContentChild(VisAnnotationsComponent) annotationsComponent: VisAnnotationsComponent
 
-  /** Width in pixels. By default, Container automatically fits to the size of the parent element. Default: `undefined`. */
+  /** Width in pixels or in CSS units.
+   * Percentage units `"%"` are not supported here. If you want to set `width` as a percentage, do it via `style` or `class`
+   * of the corresponding DOM element.
+   * Default: `undefined`
+  */
   @Input() width?: number
-  /** Height in pixels. By default, Container automatically fits to the size of the parent element. Default: `undefined`. */
+  /** Height in pixels or in CSS units.
+   * Percentage units `"%"` are not supported here. If you want to set `height` as a percentage, do it via `style` or `class`
+   * of the corresponding DOM element.
+   * Default: `undefined`
+  */
   @Input() height?: number
 
   /** Margins. Default: `{ top: 0, bottom: 0, left: 0, right: 0 }` */
