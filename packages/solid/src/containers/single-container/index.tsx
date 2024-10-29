@@ -36,7 +36,6 @@ export function VisSingleContainer<Datum>(
     component: undefined,
     annotations: undefined,
     tooltip: undefined,
-    ...rest,
   })
   const [track, dirty] = createTrigger()
 
@@ -64,7 +63,7 @@ export function VisSingleContainer<Datum>(
     init()
     // track the changes
     track()
-    chart()?.updateContainer(config)
+    chart()?.updateContainer({...config, ...rest})
   })
 
   const update: VisContainerContextProps['update'] = (key, value) => {

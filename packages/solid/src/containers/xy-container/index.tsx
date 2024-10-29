@@ -44,7 +44,6 @@ export function VisXYContainer<Datum>(props: VisXYContainerProps<Datum>) {
     tooltip: undefined,
     xAxis: undefined,
     yAxis: undefined,
-    ...rest,
   })
   const [track, dirty] = createTrigger()
 
@@ -67,7 +66,7 @@ export function VisXYContainer<Datum>(props: VisXYContainerProps<Datum>) {
   createEffect(() => {
     // track the changes
     track()
-    chart()?.updateContainer(config)
+    chart()?.updateContainer({...config, ...rest})
   })
 
   const update: VisContainerContextProps['update'] = (key, value) => {
