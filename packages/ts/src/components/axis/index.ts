@@ -212,6 +212,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     const tickText = selection.selectAll<SVGTextElement, number | Date>('g.tick > text')
       .filter(tickValue => tickValues.some((t: number | Date) => isEqual(tickValue, t))) // We use isEqual to compare Dates
       .classed(s.tickLabel, true)
+      .classed(s.tickLabelHideable, Boolean(config.tickTextHideOverlapping))
       .style('fill', config.tickTextColor) as Selection<SVGTextElement, number, SVGGElement, unknown> | Selection<SVGTextElement, Date, SVGGElement, unknown>
 
 
@@ -281,29 +282,33 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
       node._visible = true
     })
 
+    // We do three iterations because not all overlapping labels can be resolved in the first iteration
+    const numIterations = 3
+    for (let i = 0; i < numIterations; i += 1) {
     // Run collision detection and set labels visibility
-    selection.each((d, i, elements) => {
-      const label1 = elements[i] as SVGOverlappingTextElement
-      const isLabel1Visible = label1._visible
-      if (!isLabel1Visible) return
+      selection.each((d, i, elements) => {
+        const label1 = elements[i] as SVGOverlappingTextElement
+        const isLabel1Visible = label1._visible
+        if (!isLabel1Visible) return
 
-      // Calculate bounding rect of point's label
-      const label1BoundingRect = label1.getBoundingClientRect()
+        // Calculate bounding rect of point's label
+        const label1BoundingRect = label1.getBoundingClientRect()
 
-      for (let j = i + 1; j < elements.length; j += 1) {
-        if (i === j) continue
-        const label2 = elements[j] as SVGOverlappingTextElement
-        const isLabel2Visible = label2._visible
-        if (isLabel2Visible) {
-          const label2BoundingRect = label2.getBoundingClientRect()
-          const intersect = rectIntersect(label1BoundingRect, label2BoundingRect, -5)
-          if (intersect) {
-            label2._visible = false
-            break
+        for (let j = i + 1; j < elements.length; j += 1) {
+          if (i === j) continue
+          const label2 = elements[j] as SVGOverlappingTextElement
+          const isLabel2Visible = label2._visible
+          if (isLabel2Visible) {
+            const label2BoundingRect = label2.getBoundingClientRect()
+            const intersect = rectIntersect(label1BoundingRect, label2BoundingRect, -5)
+            if (intersect) {
+              label2._visible = false
+              break
+            }
           }
         }
-      }
-    })
+      })
+    }
 
     // Hide the overlapping labels
     selection.each((d, i, elements) => {

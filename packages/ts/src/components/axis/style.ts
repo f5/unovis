@@ -18,6 +18,7 @@ export const globalStyles = injectGlobal`
     --vis-axis-tick-label-text-decoration: none;
     --vis-axis-label-font-size: 14px;
     --vis-axis-tick-line-width: 1px;
+    --vis-axis-tick-label-hide-transition: opacity 400ms ease-in-out;
     --vis-axis-grid-line-width: 1px;
     /* --vis-axis-domain-line-width: // Undefined by default to allow fallback to var(--vis-axis-grid-line-width) */
 
@@ -99,7 +100,6 @@ export const tick = css`
     text-decoration: var(--vis-axis-tick-label-text-decoration);
     stroke: none;
   }
-
 `
 
 export const label = css`
@@ -112,4 +112,10 @@ export const label = css`
 
 export const tickLabel = css`
   label: tick-label;
+`
+
+export const tickLabelHideable = css`
+  label: tick-label-hideable;
+  opacity: 0;
+  transition: var(--vis-axis-tick-label-hide-transition);
 `
