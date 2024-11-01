@@ -22,7 +22,12 @@ export const isEmpty = <T>(obj: T): boolean => {
 }
 
 // Based on https://github.com/maplibre/maplibre-gl-js/blob/e78ad7944ef768e67416daa4af86b0464bd0f617/src/style-spec/util/deep_equal.ts, 3-Clause BSD license
-export const isEqual = (a?: unknown | null, b?: unknown | null, visited: Set<any> = new Set()): boolean => {
+export const isEqual = (
+  a: unknown | null | undefined,
+  b: unknown | null | undefined,
+  skipKeys: string[] = [],
+  visited: Set<any> = new Set()
+): boolean => {
   if (Array.isArray(a)) {
     if (!Array.isArray(b) || a.length !== b.length) return false
 
@@ -30,7 +35,7 @@ export const isEqual = (a?: unknown | null, b?: unknown | null, visited: Set<any
     else visited.add(a)
 
     for (let i = 0; i < a.length; i++) {
-      if (!isEqual(a[i], b[i], visited)) return false
+      if (!isEqual(a[i], b[i], skipKeys, visited)) return false
     }
 
     return true
@@ -44,14 +49,16 @@ export const isEqual = (a?: unknown | null, b?: unknown | null, visited: Set<any
     if (!(typeof b === 'object')) return false
     if (a === b) return true
 
-    const keys = Object.keys(a)
-    if (keys.length !== Object.keys(b).length) return false
+    const keysA = Object.keys(a).filter(key => !skipKeys.includes(key))
+    const keysB = Object.keys(b).filter(key => !skipKeys.includes(key))
+
+    if (keysA.length !== keysB.length) return false
 
     if (visited.has(a)) return true
     else visited.add(a)
 
-    for (const key in a) {
-      if (!isEqual((a as Record<string, unknown>)[key], (b as Record<string, unknown>)[key], visited)) return false
+    for (const key of keysA) {
+      if (!isEqual((a as Record<string, unknown>)[key], (b as Record<string, unknown>)[key], skipKeys, visited)) return false
     }
 
     return true
