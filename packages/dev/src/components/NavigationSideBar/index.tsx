@@ -19,7 +19,12 @@ export function NavigationSideBar (props: NavigationSideBarProps): JSX.Element {
   const fuseOptions = {
     includeScore: true,
     includeMatches: true,
-    keys: ['items.title'],
+    threshold: 0.2, // Lower threshold for stricter matching
+    keys: [
+      { name: 'items.title', weight: 2 }, // Give more weight to title matches
+      { name: 'items.subTitle', weight: 1 },
+      { name: 'items.category', weight: 1 },
+    ],
   }
 
   const fuse = new Fuse(props.exampleGroups, fuseOptions)
@@ -31,7 +36,7 @@ export function NavigationSideBar (props: NavigationSideBarProps): JSX.Element {
       const result = fuse.search(searchTerm)
       setGroups(result.map(d => ({
         title: d.item.title,
-        items: d.matches?.map(match => d.item.items[match.refIndex as number]) ?? [],
+        items: [...new Set(d.matches?.map(match => d.item.items[match.refIndex as number]) || [])],
       })))
     }
   }
