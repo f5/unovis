@@ -10,6 +10,9 @@ import { isNumber, isArray, getNumber, clamp, getStackedValues, getNearest, isFu
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
 
+// Types
+import { Position } from 'types/position'
+
 // Local Types
 import { CrosshairAccessors, CrosshairCircle } from './types'
 
@@ -179,6 +182,13 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
     const content = config.template(this.datum, this.xScale.invert(this.x))
     // Force set `followCursor` to `true` because we don't want Crosshair's tooltip to be hoverable
     tooltip.config.followCursor = true
+
+    // Set tooltip placement based on Crosshair's position (left / right)
+    if (!tooltip.config.horizontalPlacement || tooltip.config.horizontalPlacement === Position.Auto) {
+      const xRelative = tooltip.isContainerBody() ? x - this.container.node().getBoundingClientRect().left : x
+      tooltip.overrideHorizontalPlacement(xRelative > this._containerWidth / 2 ? Position.Left : Position.Right)
+    }
+
     if (content) tooltip.show(content, { x, y })
   }
 
