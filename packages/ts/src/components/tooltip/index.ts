@@ -30,6 +30,7 @@ export class Tooltip {
   private _mutationObserver: MutationObserver
   private _hoveredElement: HTMLElement | SVGElement
   private _position: [number, number]
+  private _overriddenHorizontalPlacement: Position.Left | Position.Right | string | undefined
 
   constructor (config: TooltipConfigInterface = {}) {
     this.element = document.createElement('div')
@@ -58,6 +59,11 @@ export class Tooltip {
   public setConfig (config: TooltipConfigInterface): void {
     this.prevConfig = this.config
     this.config = merge(this._defaultConfig, config)
+
+    // Reset `this._overriddenHorizontalPlacement` if the `horizontalPlacement` has changed
+    if (this.prevConfig.horizontalPlacement !== this.config.horizontalPlacement) {
+      this.overrideHorizontalPlacement(undefined)
+    }
 
     if (this.config.container && (this.config.container !== this.prevConfig?.container)) {
       this.setContainer(this.config.container)
@@ -133,9 +139,10 @@ export class Tooltip {
     const tooltipWidth = this.element.offsetWidth
     const tooltipHeight = this.element.offsetHeight
 
-    const horizontalPlacement = config.horizontalPlacement === Position.Auto
-      ? Position.Center
-      : config.horizontalPlacement
+    const horizontalPlacement = this._overriddenHorizontalPlacement ||
+      (config.horizontalPlacement === Position.Auto
+        ? Position.Center
+        : config.horizontalPlacement)
 
     const verticalPlacement = config.verticalPlacement === Position.Auto
       ? ((pos.y - tooltipHeight) < 0 ? Position.Bottom : Position.Top)
@@ -185,10 +192,12 @@ export class Tooltip {
       pageY: hoveredElementRect.y,
     }, this._container)
 
-    const horizontalPlacement = config.horizontalPlacement === Position.Auto
-      ? (elementPos[0] - tooltipWidth < 0 ? Position.Right
-        : elementPos[0] + tooltipWidth > containerWidth ? Position.Left : Position.Center)
-      : config.horizontalPlacement
+    const horizontalPlacement = this._overriddenHorizontalPlacement || (
+      config.horizontalPlacement === Position.Auto
+        ? (elementPos[0] - tooltipWidth < 0 ? Position.Right
+          : elementPos[0] + tooltipWidth > containerWidth ? Position.Left : Position.Center)
+        : config.horizontalPlacement
+    )
 
     let translateX = 0
     switch (horizontalPlacement) {
@@ -229,6 +238,14 @@ export class Tooltip {
 
   public isContainerBody (): boolean {
     return this._container === document.body
+  }
+
+  /** Allows to override the horizontal placement of the tooltip which is useful when you want to define custom positioning behavior.
+   * This method has been added for Crosshair to allow it position tooltip left or right of the crosshair line
+   * (see the `_showTooltip` method of the Crosshair component).
+   */
+  public overrideHorizontalPlacement (placement: Position.Left | Position.Right | string | undefined): void {
+    this._overriddenHorizontalPlacement = placement
   }
 
   public render (html: string | HTMLElement | null | void): void {
