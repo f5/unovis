@@ -88,8 +88,8 @@ Enabling `mapFitToPoints` will automatically adjust the map's zoom level to fit 
 <>{Array.from([false, true], fit => (<>
   <h4>{fit ? 'After' : 'Before'}: </h4>
   <TopoDoc
-    {...defaultProps()}
     key={`fit${fit}`}
+    {...defaultProps()}
     height={200}
     data={{ points: [
       { id: 'NYC', latitude: 40.7128, longitude: -74.0060 },

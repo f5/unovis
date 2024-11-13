@@ -1,9 +1,10 @@
 // Note: type annotations allow type checking and IDEs autocompletion
-
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const lightCodeTheme = require('prism-react-renderer/themes/github')
+import { themes } from 'prism-react-renderer'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const darkCodeTheme = require('prism-react-renderer/themes/dracula')
+const lightCodeTheme = themes.github
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const darkCodeTheme = themes.dracula
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -199,6 +200,7 @@ const config = {
       },
     ],
     () => ({
+      name: 'unovis-custom-webpack-plugin',
       configureWebpack () {
         return {
           // cache: false, // Disable cache to prevent issues with building after updating Unovis packages

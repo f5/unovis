@@ -44,7 +44,7 @@
     "publish:all:beta": "npm run publish:ts:beta && npm run publish:angular:beta && npm run publish:react:beta && npm run publish:svelte:beta && npm run publish:vue:beta && npm run publish:solid:beta",
     "lint": "eslint ./ --ext .js,.jsx,.ts,.tsx,.svelte --ignore-path .gitignore",
     "lint:fix": "eslint ./ --ext .js,.jsx,.ts,.tsx,.svelte --fix --ignore-path .gitignore",
-    "install:clean": "for p in packages/*; do rm -f $p/package-lock.json; rm -rf $p/node_modules; done; rm -rf node_modules; npm i",
+    "install:clean": "for p in packages/*; do if [ \"$p\" != \"packages/website\" ]; then rm -f \"$p/package-lock.json\"; rm -rf \"$p/node_modules\"; fi; done; rm -rf node_modules; npm i",
     "postinstall": "sh postinstall.sh",
     "gather-licenses": "for p in packages/*; do echo \"  📄 Checking licenses for $p\"; npx license-report --package=$p/package.json --config lic-report-config.json --output=table > $p/licences.temp; mv -f $p/licences.temp $p/licences.txt; done",
     "version": "sh update-version.sh"

@@ -23,7 +23,7 @@ export function getSampleFlow (s) {
 }
 
 export const numPoints = 5
-const points = cities.slice(0, numPoints)
+export const points = cities.slice(0, numPoints)
 export const data = {
   points: cities.slice(0, numPoints),
   flows: Array(20).fill(null).map(() => getSampleFlow(points[Math.floor(numPoints * Math.random())]))

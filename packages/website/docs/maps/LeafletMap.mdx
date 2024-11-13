@@ -33,7 +33,7 @@ export const defaultProps = () => ({
 })
 
 export const LeafletDoc = (props) => (
-  <DocWrapper {...defaultProps() } {...props}/>
+  <DocWrapper {...defaultProps() } {...props} />
 )
 
 ## Basic Configuration
@@ -100,7 +100,7 @@ the `pointLabel` property. This label will fit into the point, so it is supposed
   data={data}
   height={300}
   pointRadius={(d) => (Math.sqrt(d.population) / 100) || 10}
-  pointLabel={d => d.point_count ?? `${(d.population / 1000000).toFixed(1)}M`}
+  pointLabel={d => d.point_count || `${(d.population / 1000000).toFixed(1)}M`}
 />
 
 ####
@@ -145,7 +145,7 @@ variables to change the default behaviour.
 ### Expand on Click
 If you want clusters to never expand on click, you can set `clusterExpandOnClick` to `false`. In that case when you
 click on a cluster, the map will keep zooming in until the zoom level is high enough for the cluster to break.
-<LeafletDoc data={data} pointColor='#286e47' clusterExpandOnClick={false}/>
+<LeafletDoc data={data} pointColor='#286e47' clusterExpandOnClick={false} />
 
 
 ## Color Map
