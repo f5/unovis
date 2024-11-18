@@ -1,5 +1,5 @@
 import { Component } from '@angular/core'
-import { Scale, Scatter, StringAccessor, colors } from '@unovis/ts'
+import { Scale, Scatter, colors } from '@unovis/ts'
 import { data, DataRecord, shapes, categories, sumCategories } from './data'
 
 const shapeScale = Scale.scaleOrdinal(shapes).domain(categories)
@@ -12,7 +12,7 @@ const colorScale = Scale.scaleOrdinal(colors).domain(categories)
 export class ShapedScatterPlotComponent {
   data = data
 
-  getX = (d: DataRecord): number => +(new Date(d.date))
+  getX = (d: DataRecord): number => +(new Date(`01-${d.date}`))
   getY = (d: DataRecord): number => d.trainedParam
   getColor = (d: DataRecord): string => colorScale(sumCategories(d.owner))
   getShape = (d: DataRecord): string => shapeScale(sumCategories(d.owner))

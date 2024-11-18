@@ -2,7 +2,7 @@
 import { defineAsyncComponent } from "vue"
 
 const imports = [
-  defineAsyncComponent(() => import('@unovis/shared/examples/dual-axis-chart/dual-axis-chart.vue')), 
+  defineAsyncComponent(() => import('@unovis/shared/examples/dual-axis-chart/dual-axis-chart.vue')),
   defineAsyncComponent(() => import('@unovis/shared/examples/step-area-chart/step-area-chart.vue')),
   defineAsyncComponent(() => import('@unovis/shared/examples/baseline-area-chart/baseline-area-chart.vue')),
   defineAsyncComponent(() => import('@unovis/shared/examples/non-stacked-area-chart/non-stacked-area-chart.vue')),
@@ -31,7 +31,7 @@ const imports = [
   defineAsyncComponent(() => import('@unovis/shared/examples/sunburst-nested-donut/sunburst-nested-donut.vue')),
   defineAsyncComponent(() => import('@unovis/shared/examples/basic-donut-chart/basic-donut-chart.vue')),
   defineAsyncComponent(() => import('@unovis/shared/examples/shaped-scatter-plot/shaped-scatter-plot.vue')),
-  defineAsyncComponent(() => import('@unovis/shared/examples/basic-annotations/basic-annotations.vue')), 
+  defineAsyncComponent(() => import('@unovis/shared/examples/basic-annotations/basic-annotations.vue')),
 ]
 </script>
 
@@ -68,4 +68,3 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 </style>
-

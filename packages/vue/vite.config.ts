@@ -13,7 +13,6 @@ const outputDefault = (format: ModuleFormat, extension: string): OutputOptions =
     vue: 'Vue',
     '@unovis/ts': '@unovis/ts',
   },
-  sourcemap: true,
   preserveModules: true,
   preserveModulesRoot: './src',
   format,
@@ -24,7 +23,7 @@ const outputDefault = (format: ModuleFormat, extension: string): OutputOptions =
 })
 
 // https://vitejs.dev/config/
-export default defineConfig(({ command, mode, ssrBuild }): UserConfig => {
+export default defineConfig(({ command, mode }): UserConfig => {
   if (command === 'build' && mode !== 'gallery') {
     return {
       plugins: [
@@ -49,6 +48,7 @@ export default defineConfig(({ command, mode, ssrBuild }): UserConfig => {
           // @ts-ignore overloaded issue
           output: [outputDefault('cjs', 'cjs'), outputDefault('es', 'js')],
         },
+        sourcemap: true,
       },
     }
   } else {
