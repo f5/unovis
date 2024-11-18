@@ -7,7 +7,7 @@
   const colorScale = Scale.scaleOrdinal(colors).domain(categories)
 
   // scatter props
-  const x = (d: DataRecord) => +(new Date(d.date))
+  const x = (d: DataRecord) => +(new Date(`01-${d.date}`))
   const y = (d: DataRecord) => d.trainedParam
   const color = (d: DataRecord) => colorScale(sumCategories(d.owner))
   const shape = (d: DataRecord) => shapeScale(sumCategories(d.owner))

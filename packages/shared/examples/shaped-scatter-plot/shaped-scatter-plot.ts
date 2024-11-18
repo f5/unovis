@@ -1,4 +1,4 @@
-import { Axis, BulletLegend, Position, Scale, Scatter, Tooltip, XYContainer, colors } from '@unovis/ts'
+import { Axis, BulletLegend, Scale, Scatter, Tooltip, XYContainer, colors } from '@unovis/ts'
 import { data, DataRecord, shapes, categories, sumCategories } from './data'
 
 const shapeScale = Scale.scaleOrdinal(shapes).domain(categories)
@@ -14,7 +14,7 @@ const legend = new BulletLegend(container, {
 })
 
 const scatter = new Scatter<DataRecord>({
-  x: (d: DataRecord) => +(new Date(d.date)),
+  x: (d: DataRecord) => +(new Date(`01-${d.date}`)),
   y: (d: DataRecord) => d.trainedParam,
   color: (d: DataRecord) => colorScale(sumCategories(d.owner)),
   shape: (d: DataRecord) => shapeScale(sumCategories(d.owner)),

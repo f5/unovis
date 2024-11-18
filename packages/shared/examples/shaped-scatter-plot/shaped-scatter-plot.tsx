@@ -1,7 +1,7 @@
-import React, { useCallback } from 'react'
-import { Position, Scale, Scatter, colors } from '@unovis/ts'
 import { VisAxis, VisBulletLegend, VisScatter, VisTooltip, VisXYContainer } from '@unovis/react'
-import { data, DataRecord, shapes, categories, sumCategories } from './data'
+import { colors, Scale, Scatter } from '@unovis/ts'
+import React, { useCallback } from 'react'
+import { categories, data, DataRecord, shapes, sumCategories } from './data'
 
 const shapeScale = Scale.scaleOrdinal(shapes).domain(categories)
 const colorScale = Scale.scaleOrdinal(colors).domain(categories)
@@ -20,7 +20,7 @@ export default function ShapedScatterPlot (): JSX.Element {
       <VisBulletLegend items={legendItems}/>
       <VisXYContainer data={data} height={'60vh'} scaleByDomain={true}>
         <VisScatter
-          x={useCallback((d: DataRecord) => +(new Date(d.date)), [])}
+          x={useCallback((d: DataRecord) => +(new Date(`01-${d.date}`)), [])}
           y={useCallback((d: DataRecord) => d.trainedParam, [])}
           shape={useCallback((d: DataRecord) => shapeScale(sumCategories(d.owner)), [])}
           size={15}

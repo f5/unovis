@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Position, Scale, Scatter, colors } from '@unovis/ts'
+import { Scale, Scatter, colors } from '@unovis/ts'
 import { VisXYContainer, VisScatter, VisAxis, VisTooltip, VisBulletLegend } from '@unovis/vue'
 import { data, DataRecord, shapes, categories, sumCategories } from './data'
 
@@ -7,7 +7,7 @@ const shapeScale = Scale.scaleOrdinal(shapes).domain(categories)
 const colorScale = Scale.scaleOrdinal(colors).domain(categories)
 
 // scatter props
-const x = (d: DataRecord) => +(new Date(d.date))
+const x = (d: DataRecord) => +(new Date(`01-${d.date}`))
 const y = (d: DataRecord) => d.trainedParam
 const color = (d: DataRecord) => colorScale(sumCategories(d.owner))
 const shape = (d: DataRecord) => shapeScale(sumCategories(d.owner))
