@@ -38,6 +38,8 @@
   let ref: HTMLDivElement
 
   $: chart?.setData(data, true)
+  // eslint-disable-next-line no-self-assign
+  $: config.components = config.components
   $: chart?.updateContainer({ ...config, ...($$restProps as XYContainerConfigInterface<Datum>) })
 
   onMount(() => {
@@ -46,26 +48,39 @@
   })
 
   setContext('component', () => ({
-    update: (c: XYComponentCore<Datum>) => { config.components = [...config.components, c] },
+    update: (c: XYComponentCore<Datum>) => {
+      if (config.components?.includes(c)) return
+      config.components = [...config.components, c]
+    },
     destroy: () => { config.components = config.components.filter(c => !c.isDestroyed()) },
   }))
   setContext('axis', (e: HTMLElement & { __type__?: 'x' | 'y'}) => ({
     update: (c: Axis<Datum>) => {
+      if (config[`${e.__type__}Axis`] === c) return
       e.__type__ = c.config.type as 'x' | 'y'
       config[`${e.__type__}Axis`] = c
     },
     destroy: () => { config[`${e.__type__}Axis`] = undefined },
   }))
   setContext('crosshair', () => ({
-    update: (c: Crosshair<Datum>) => { config.crosshair = c },
+    update: (c: Crosshair<Datum>) => {
+      if (config.crosshair === c) return
+      config.crosshair = c
+    },
     destroy: () => { config.crosshair = undefined },
   }))
   setContext('tooltip', () => ({
-    update: (t: Tooltip) => { config.tooltip = t },
+    update: (t: Tooltip) => {
+      if (config.tooltip === t) return
+      config.tooltip = t
+    },
     destroy: () => { config.tooltip = undefined },
   }))
   setContext('annotations', () => ({
-    update: (a: Annotations) => { config.annotations = a },
+    update: (a: Annotations) => {
+      if (config.annotations === a) return
+      config.annotations = a
+    },
     destroy: () => { config.annotations = undefined },
   }))
 </script>
