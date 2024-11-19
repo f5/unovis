@@ -1,7 +1,7 @@
 {
   "name": "@unovis/svelte",
   "description": "Modular data visualization framework for React, Angular, Svelte, and vanilla TypeScript or JavaScript",
-  "version": "1.4.4",
+  "version": "1.5.0-beta.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/f5/unovis.git",
@@ -43,7 +43,7 @@
     "publish:dist": "rm -rf dist/.cache; cp ./{LICENSE,README.md,package.json} ./dist; cd ./dist; npm publish"
   },
   "peerDependencies": {
-    "@unovis/ts": "1.4.4",
+    "@unovis/ts": "1.5.0-beta.1",
     "svelte": "^3.48.0 || ^4.0.0 || ^5.0.0"
   },
   "devDependencies": {
