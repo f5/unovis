@@ -46,7 +46,10 @@
   })
 
   setContext('component', () => ({
-    update: (c: XYComponentCore<Datum>) => { config.components = [...config.components, c] },
+    update: (c: XYComponentCore<Datum>) => {
+      if (config.components?.some((e) => e === c)) return
+      config.components = [...config.components, c]
+    },
     destroy: () => { config.components = config.components.filter(c => !c.isDestroyed()) },
   }))
   setContext('axis', (e: HTMLElement & { __type__?: 'x' | 'y'}) => ({
