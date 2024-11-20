@@ -70,11 +70,17 @@
     destroy: () => { config.crosshair = undefined },
   }))
   setContext('tooltip', () => ({
-    update: (t: Tooltip) => { config.tooltip = t },
+    update: (t: Tooltip) => {
+      if (config.tooltip === t) return
+      config.tooltip = t
+    },
     destroy: () => { config.tooltip = undefined },
   }))
   setContext('annotations', () => ({
-    update: (a: Annotations) => { config.annotations = a },
+    update: (a: Annotations) => {
+      if (config.annotations === a) return
+      config.annotations = a
+    },
     destroy: () => { config.annotations = undefined },
   }))
 </script>
