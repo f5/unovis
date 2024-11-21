@@ -1,10 +1,9 @@
 // Note: type annotations allow type checking and IDEs autocompletion
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-import { themes } from 'prism-react-renderer'
+const lightCodeTheme = require('prism-react-renderer/themes/github')
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const lightCodeTheme = themes.github
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const darkCodeTheme = themes.dracula
+const darkCodeTheme = require('prism-react-renderer/themes/dracula')
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -231,6 +230,7 @@ const config = {
          * Path to data on filesystem relative to site dir.
          */
         path: './releases',
+        onUntruncatedBlogPosts: 'ignore',
       },
     ],
   ],

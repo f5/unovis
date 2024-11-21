@@ -46,7 +46,7 @@
     "clsx": "^1.1.1",
     "docusaurus-plugin-react-docgen-typescript": "^1.2.1",
     "nodemon": "^2.0.16",
-    "prism-react-renderer": "^2.1.0",
+    "prism-react-renderer": "^1.1.0",
     "react-docgen-typescript": "^2.0.0",
     "react-markdown": "^8.0.1"
   },
@@ -60,7 +60,9 @@
   },
   "peerDependencies": {
     "@unovis/react": "*",
-    "@unovis/ts": "*"
+    "@unovis/ts": "*",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "overrides": {
     "trim": "0.0.3",

@@ -100,7 +100,7 @@ the `pointLabel` property. This label will fit into the point, so it is supposed
   data={data}
   height={300}
   pointRadius={(d) => (Math.sqrt(d.population) / 100) || 10}
-  pointLabel={d => d.point_count || `${(d.population / 1000000).toFixed(1)}M`}
+  pointLabel={d => d.point_count ?? `${(d.population / 1000000).toFixed(1)}M`}
 />
 
 ####

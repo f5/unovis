@@ -34,8 +34,8 @@ export const hierarchyData = {
     { source: 'B1', target: 'C2' },
     { source: 'C0', target: 'A2' },
      { source: 'C2', target: 'B1' },
-  ].map((l) => ({ ...l, value: Math.random() }))}
-  
+  ].map((l) => ({ ...l, value: Math.random() })),
+}
 export const colorMap = {'A': 'lightgreen', 'B': 'cornflowerblue', 'C': 'indigo'}
 
 ## Basic Configuration
@@ -135,22 +135,22 @@ type N = {
 const colors =  { A: 'lightgreen', B: 'cornflowerblue', C: 'indigo'}
 
 // Configuration
-// const nodeLevels = ['group']
-// const nodeLabel = (d: N | ChordHierarchyNode<N>) => (d as N).label ?? `${d.key}: ${colors[d.key]}`
-// const nodeColor = (d: N | ChordHierarchyNode<N>) => colors[d.key ?? d.group]
-// const nodeLabelAlignment = (d: N | ChordHierarchyNode<N>) => d.height > 0 ? 'along' : 'perpendicular'
-// ```
+const nodeLevels = ['group']
+const nodeLabel = (d: N | ChordHierarchyNode<N>) => (d as N).label ?? `${d.key}: ${colors[d.key]}`
+const nodeColor = (d: N | ChordHierarchyNode<N>) => colors[d.key ?? d.group]
+const nodeLabelAlignment = (d: N | ChordHierarchyNode<N>) => d.height > 0 ? 'along' : 'perpendicular'
+```
 
-// The result gives us a _Chord Diagram_ with color-coded group data:
+The result gives us a _Chord Diagram_ with color-coded group data:
 
-// <DocWrapper {...defaultProps()}
-//     height={600}
-//     data={hierarchyData}
-//     nodeLevels={['subgroup']}
-//     nodeColor={d => colorMap[d.key ?? d.subgroup]}
-//     nodeLabel={d => d.label ?? [d.key, colorMap[d.key]].join(': ')}
-//     nodeLabelAlignment={d => d.height > 0 ? 'along' : 'perpendicular'}
-//   />
+<DocWrapper {...defaultProps()}
+    height={600}
+    data={hierarchyData}
+    nodeLevels={['subgroup']}
+    nodeColor={d => colorMap[d.key ?? d.subgroup]}
+    nodeLabel={d => d.label ?? [d.key, colorMap[d.key]].join(': ')}
+    nodeLabelAlignment={d => d.height > 0 ? 'along' : 'perpendicular'}
+  />
 
 
 ### Radius Scale Exponent

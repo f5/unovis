@@ -10,7 +10,7 @@ name                                       license period  license type  install
 clsx                                       perpetual       MIT           1.2.1              Luke Edwards luke.edwards05@gmail.com https://lukeed.com
 docusaurus-plugin-react-docgen-typescript  perpetual       MIT           1.2.1              Dennis Thompson
 nodemon                                    perpetual       MIT           2.0.22             Remy Sharp https://github.com/remy
-prism-react-renderer                       perpetual       MIT           2.4.0              n/a
+prism-react-renderer                       perpetual       MIT           1.3.5              n/a
 react-docgen-typescript                    perpetual       MIT           2.2.2              n/a
 react-markdown                             perpetual       MIT           8.0.7              Espen Hovlandsdal <espen@hovlandsdal.com>
 @docusaurus/module-type-aliases            perpetual       MIT           3.0.0              n/a

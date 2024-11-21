@@ -3,6 +3,7 @@ sidebar_label: TopoJSON Map
 title: TopoJSON Map
 description: Learn how to configure a TopoJSON Map
 ---
+import React from 'react'
 import BrowserOnly from '@docusaurus/BrowserOnly'
 import CodeBlock from '@theme/CodeBlock'
 import { PropsTable } from '@site/src/components/PropsTable'
@@ -93,7 +94,7 @@ Enabling `mapFitToPoints` will automatically adjust the map's zoom level to fit 
     height={200}
     data={{ points: [
       { id: 'NYC', latitude: 40.7128, longitude: -74.0060 },
-      { id: 'LAX', latitude: 34.0522, longitude: -118.2437 },
+    { id: 'LAX', latitude: 34.0522, longitude: -118.2437 },
       { id: 'LON', latitude: 51.5074, longitude: -0.1278 },
     ]}}
     disableZoom

@@ -17,8 +17,8 @@ export default function DocCardWrapper (props: DocCardWrapperProps): JSX.Element
   return (
     <>
       <h2>{label}</h2>
-      {items.map(i => (
-        <Link key={i.id} href={i.href}>
+      {items.map((i, index) => (
+        <Link key={`${i.id}-${index}`} href={i.href}>
           <div>{i.label}</div>
         </Link>
       ))}

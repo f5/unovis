@@ -9,31 +9,32 @@ import { PropsTable } from '@site/src/components/PropsTable'
 import { generateDataRecords } from '../utils/data'
 import { XYWrapper, XYWrapperWithInput, DynamicXYWrapper } from '../wrappers/xy-wrapper'
 
-export const defaultProps = (n=10) => ({
-  name: "StackedBar",
-  data: generateDataRecords(n),
-  x: d=>d.x,
-  y: d=>d.y,
-});
+export const MyComponent = ({ type = "XYWrapper", n = 10, name = "StackedBar", x = (d) => d.x, y = (d) => d.y, data=generateDataRecords(n), ...customProps }) => {
+  if(type==="XYWrapperWithInput") return (<XYWrapperWithInput {...{ name, data, x, y }} showContext="full" {...customProps} />)
+  if(type === "DynamicXYWrapper") return (<DynamicXYWrapper {...{ name, data, x, y }} showContext="full" {...customProps} />)
+  return (
+    <XYWrapper {...{ name, data, x, y }} showContext="full" {...customProps} />
+  );
+};
 
 ## Basic Configuration
 The _Stacked Bar_ component has been designed to work together with _XY Container_. The minimal _Stacked Bar_ configuration looks like:
 
-<XYWrapper {...defaultProps()} showContext="full"/>
+<MyComponent />
 
 ## Multiple Stacked Bars
 _Stacked Bar_ can accept an array of y accessors to display values as a stack of bars:
-<XYWrapper {...defaultProps()} showContext="full" y={[d => d.y, d => d.y1, d => d.y2]}/>
+<MyComponent y={[d => d.y, d => d.y1, d => d.y2]}/>
 
 ## Orientation
 _Stacked Bar_ supports horizontal and vertical orientation.
-<XYWrapperWithInput {...defaultProps()} y={[d => d.y, d => d.y1, d => d.y2]} height={250} showAxes property="orientation" inputType="select" options={["horizontal","vertical"]}/>
+<MyComponent type="XYWrapperWithInput" y={[d => d.y, d => d.y1, d => d.y2]} height={250} showAxes property="orientation" inputType="select" options={["horizontal","vertical"]}/>
 
 ## Rounded Corners
 You can apply rounded corners to the top bar in your _Stacked Bar_ component using the `roundedCorners` property, which accepts
 either a `number` (in pixels) or `boolean` argument.
-<XYWrapperWithInput
-    {...defaultProps()}
+<MyComponent 
+    type="XYWrapperWithInput"
     property="roundedCorners"
     inputType="checkbox"
     defaultValue={true}
@@ -52,7 +53,7 @@ const colors = ['red', 'green', 'blue']
 const color = (d: DataRecord, i: number) => ['red', 'green', 'blue'][i]
 ```
 
-<XYWrapper excludeTabs {...defaultProps()} y={[d => d.y, d => d.y1, d => d.y2]} showContext='container' color={['red', 'green', 'blue']}/>
+<MyComponent excludeTabs y={[d => d.y, d => d.y1, d => d.y2]} showContext='container' color={['red', 'green', 'blue']}/>
 
 ### Non-Stacked Bars
 If you want non-stacked data (i.e. single bars) to display variable colors, you can use a single
@@ -61,13 +62,13 @@ color accessor. The following sets the color based on the value of y:
 ```ts
 const color = (d: DataRecord) => d.y > 7 ? '#FF4F4E' : '#1acb9a'}
 ```
-<XYWrapper excludeTabs {...defaultProps()} showContext="minimal" showAxes={true} color={(d,i) => d.y > 7 ? '#FF4F4E' : '#1acb9a'}/>
+<MyComponent excludeTabs showContext="minimal" showAxes={true} color={(d,i) => d.y > 7 ? '#FF4F4E' : '#1acb9a'}/>
 
 
 ## Bar Sizing
 ### Bar Width
 By default, the width of the bars is calculated automatically based on their count. But you can also strictly set the bar's width in pixels using the barWidth property:
-<XYWrapperWithInput {...defaultProps()} property="barWidth" inputType="number" defaultValue={5}/>
+<MyComponent type="XYWrapperWithInput" property="barWidth" inputType="number" defaultValue={5}/>
 
 ### Limiting Dynamic Bar Width
 When you don't know the number of bars in advance, and you're relying on automatic bar width calculation, you might want to limit the
@@ -75,13 +76,12 @@ maximum bar width to prevent the bars from being too wide when there are just a 
 
 ### Bar Padding
 Another way to control the bar's width is by changing the barPadding property, which specifies how much of the available sector should be empty, in the range of [0,1).
-<XYWrapperWithInput {...defaultProps()} property="barPadding" inputType="range" inputProps={{ min: 0, max: 1, step: 0.1}} defaultValue={0.5}/>
+<MyComponent type="XYWrapperWithInput" property="barPadding" inputType="range" inputProps={{ min: 0, max: 1, step: 0.1}} defaultValue={0.5}/>
 
 ### Minimum Bar Height
 When you have highly scattered data with very low and high values, the bars corresponding to the lower values can be so small, so they become invisible.
 If you want to prevent that you can set the minimum bar height to 1 pixel using the `barMinHeight1Px` boolean property.
-<XYWrapperWithInput name="StackedBar"
-    {...defaultProps()}
+<MyComponent type="XYWrapperWithInput" name="StackedBar"
     data={generateDataRecords(10).map((d, i)=> ({ x: d.x, y: i % 2 === 1 ? d.y * 20 : Math.random() }))}
     property="barMinHeight1Px"  inputType="checkbox" showAxes/>
 
@@ -90,7 +90,7 @@ When your data has gaps, it's impossible to do calculate of the bar width automa
 and you'll see wide overlapping bars. However, you can help the calculation by setting your data step implicitly using the dataStep property.
 Consider the following example, with data mainly clumped in the domain `0 < x < 1`:
 
-<DynamicXYWrapper {...defaultProps()} showAxes secondaryData={generateDataRecords(5)} primaryData={generateDataRecords(10).map((d, i)=> ({ x: i < 5 ? Math.random() : i - 6, y: d.y }))} exampleProps={{dataStep: 0.1}}/>
+<MyComponent type="DynamicXYWrapper" showAxes secondaryData={generateDataRecords(5)} primaryData={generateDataRecords(10).map((d, i)=> ({ x: i < 5 ? Math.random() : i - 6, y: d.y }))} exampleProps={{dataStep: 0.1}}/>
 
 ## Ordinal Data
 Read our guide about using ordinal/categorical values with _XY Components_ [here](/docs/guides/tips-and-tricks/#displaying-ordinal-values)
@@ -110,7 +110,7 @@ events = {
     },
 }
 ```
-<XYWrapper {...defaultProps()} excludeGraph events={{}}/>
+<MyComponent excludeGraph events={{}}/>
 
 ## CSS Variables
 The _Stacked Bar_ component supports additional styling via CSS variables that you can define for your visualization container. For example:
@@ -123,7 +123,7 @@ The _Stacked Bar_ component supports additional styling via CSS variables that y
   --vis-stacked-bar-hover-stroke-color: #8777d9;
 }
 ```
-<XYWrapper {...defaultProps()} excludeTabs className="custom-stacked-bar"/>
+<MyComponent excludeTabs className="custom-stacked-bar"/>
 
 <details open>
   <summary>Supported CSS variables and their default values</summary>
