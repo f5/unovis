@@ -637,7 +637,7 @@ export class Graph<
   private _onLinkMouseOver (d: GraphLink<N, L>): void {
     if (this._isDragging) return
 
-    d._state.hovered = true
+    if (this.config.linkHighlightOnHover) d._state.hovered = true
     this._updateNodesLinksPartial()
   }
 
