@@ -58,6 +58,7 @@ export class Graph<
     dimmedNode: nodeSelectors.greyedOutNode,
     link: linkSelectors.gLink,
     linkLine: linkSelectors.link,
+    linkLabel: linkSelectors.linkLabelGroup,
     dimmedLink: linkSelectors.greyedOutLink,
     panel: panelSelectors.gPanel,
     panelRect: panelSelectors.panel,
@@ -294,13 +295,6 @@ export class Graph<
       // Zoom
       if (disableZoom) this.g.on('.zoom', null)
       else this.g.call(this._zoomBehavior).on('dblclick.zoom', null)
-
-      // While the graph is animating we disable pointer events on the graph group
-      if (animDuration) { this._graphGroup.attr('pointer-events', 'none') }
-      smartTransition(this._graphGroup, animDuration)
-        .on('end interrupt', () => {
-          this._graphGroup.attr('pointer-events', null)
-        })
 
       // We need to set up events and attributes again because the rendering might have been delayed by the layout
       // calculation and they were not set up properly (see the render function of `ComponentCore`)
