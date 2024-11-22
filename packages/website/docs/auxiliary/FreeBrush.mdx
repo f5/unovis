@@ -26,14 +26,14 @@ export const defaultProps = (showAxes = true) => ({
 
 ## Basic Configuration
 _Free Brush_ is an extention of _Brush_, an interactive component that is designed to work inside an _XYContainer_.
-See [brush docs](./brush) to learn about basic configuration and usage.
+See [brush docs](./Brush) to learn about basic configuration and usage.
 
 ## Mode
 You can change the axis alignment of your _Free Brush_ by setting the `mode` property to `"x"`, `"y"` or `"xy"`:
 <XYWrapperWithInput {...defaultProps()} height={300} property="mode" inputType="select" defaultValue="y" options={["x", "y", "xy"]}/>
 
 ## Auto Hide
-Disabling the `autoHide` property will keep the _Free Brush_ selection visible after the [`onBrushEnd`](./brush#usage) event has triggered:
+Disabling the `autoHide` property will keep the _Free Brush_ selection visible after the [`onBrushEnd`](./Brush#usage) event has triggered:
 <XYWrapper { ...defaultProps()} autoHide={false}/>
 
 ## CSS Variables
