@@ -148,6 +148,8 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
    * `1.5` - very curve.
    * Default: `0` */
   linkCurvature?: NumericAccessor<L>;
+  /** Highlight links on hover. Default: `true` */
+  linkHighlightOnHover?: boolean;
   /** Set selected link by its unique id. Default: `undefined` */
   selectedLinkId?: number | string;
 
@@ -327,6 +329,7 @@ export const GraphDefaultConfig: GraphConfigInterface<GraphInputNode, GraphInput
   linkNeighborSpacing: 8,
   linkDisabled: false,
   linkCurvature: 0,
+  linkHighlightOnHover: true,
   selectedLinkId: undefined,
   nodeGaugeAnimDuration: 1500,
 
