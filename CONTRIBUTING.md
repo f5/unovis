@@ -12,7 +12,7 @@ what actions will and will not be tolerated.
 
 Adding a new component:
 1. Create your new component in the TypeScript version of _Unovis_ (`@unovis/ts`);
-2. Generate or manually create wrappers for React, Angular and Svelte;
+2. Generate or manually create wrappers for React, Angular, Svelte, Vue and Solid;
 3. Write documentation for your new component;
 4. Add examples to Gallery.
 

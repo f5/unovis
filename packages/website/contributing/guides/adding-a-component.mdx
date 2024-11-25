@@ -378,8 +378,8 @@ const circlesMerged = circles.merge(circlesEnter)
 ```
 
 ## Updating the Wrappers
-We have three wrappers for our library for usage in other frameworks: `@unovis/angular`,
-`@unovis/react`, `@unovis/svelte`. Each can be found in their named directory in `packages`.
+We have five wrappers for our library for usage in other frameworks: `@unovis/angular`,
+`@unovis/react`, `@unovis/svelte`, `@unovis/vue` and `@unovis/solid`. Each can be found in their named directory in `packages`.
 Before your component is complete you will have to add it to each wrapper. Luckily we've streamlined
 this process in the `autogen` directory of each wrapper. You will just need to do the following steps:
 
@@ -471,7 +471,7 @@ all of which can be found in the `wrappers` directory)
 Your component is considered ready when:
 - [x] The `@unovis/ts` files are complete and everything compiles
 - [x] It has at least one page in the dev app
-- [x] It is exported by each wrapper library (`@unovis/angular`, `@unovis/react` and `@unovis/svelte`)
+- [x] It is exported by each wrapper library (`@unovis/angular`, `@unovis/react`, `@unovis/svelte`, `@unovis/vue` and `@unovis/solid`)
 - [x] It has a doc page on the website
 - [x] It is featured in the gallery (see our guide for how to add a gallery example [here](./gallery))
 

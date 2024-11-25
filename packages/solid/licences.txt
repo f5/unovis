@@ -5,7 +5,7 @@ rollup               perpetual       MIT           4.24.2             Rich Harri
 solid-js             perpetual       MIT           1.9.3              Ryan Carniato
 tsx                  perpetual       MIT           4.19.2             Hiroki Osame hiroki.osame@gmail.com
 typescript           perpetual       Apache-2.0    5.6.3              Microsoft Corp.
-vite                 perpetual       MIT           5.4.10             Evan You
+vite                 perpetual       MIT           5.4.11             Evan You
 vite-plugin-dts      perpetual       MIT           3.6.0              qmhc
 vite-plugin-solid    perpetual       MIT           2.10.2             Alexandre Mouton-Brady <amoutonbrady@gmail.com>
 @unovis/ts           perpetual       Apache-2.0    1.4.4              Nikita Rokotyan, F5 Inc. <nikita@f5.com> (https://rokotyan.com)
