@@ -94,14 +94,24 @@ Same steps above, but add `&ts` to the end of the url.
 1. Add your example's `svelte` file path to the `imports` array in `src-demo/svelte-gallery.svelte`
 2. From the terminal, run the command
 ```bash
-npm run gallery:svelte
+cd packages/svelte
+npm run gallery
 ```
 
 ### Vue
 1. Add your example's `vue` file path to the `imports` array in `src-demo/App.vue`
 2. From the terminal, run the command
 ```bash
-npm run gallery:vue
+cd packages/vue
+npm run gallery
+```
+
+### Solid
+1. Add your example's `-solid.tsx` file path to the `imports` array in `src-demo/app.tsx`
+2. From the terminal, run the command
+```bash
+cd packages/solid
+npm run gallery
 ```
 
 ### Angular
@@ -126,6 +136,7 @@ npm run gallery:vue
   })
   ```
 4. From the terminal, run the command
-  ```bash
-npm run gallery:angular
-  ```
+```bash
+cd packages/angular
+npm run gallery
+```
