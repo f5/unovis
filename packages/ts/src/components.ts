@@ -30,6 +30,7 @@ export { FreeBrush } from './components/free-brush'
 export { XYLabels } from './components/xy-labels'
 export { NestedDonut } from './components/nested-donut'
 export { Annotations } from 'components/annotations'
+export { Treemap } from './components/treemap'
 
 // Config Interfaces
 export type { LineConfigInterface } from './components/line/config'
@@ -56,3 +57,4 @@ export type { FreeBrushConfigInterface } from './components/free-brush/config'
 export type { XYLabelsConfigInterface } from './components/xy-labels/config'
 export type { NestedDonutConfigInterface } from './components/nested-donut/config'
 export type { AnnotationsConfigInterface } from './components/annotations/config'
+export type { TreemapConfigInterface } from './components/treemap/config'
