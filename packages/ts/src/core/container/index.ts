@@ -54,6 +54,12 @@ export class ContainerCore {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     this.prevConfig = this.config
     this.config = merge(this._defaultConfig, config)
+
+    // Add `svgDefs` if provided in the config
+    if (config?.svgDefs !== this.prevConfig?.svgDefs) {
+      this._svgDefsExternal.selectAll('*').remove()
+      this._svgDefsExternal.html(config.svgDefs)
+    }
   }
 
   // The `_preRender` step should be used to perform some actions before rendering.
@@ -63,13 +69,7 @@ export class ContainerCore {
 
   // The `_render` step should be used to perform the actual rendering
   protected _render (duration?: number): void {
-    const { config, prevConfig } = this
-
-    // Add `svgDefs` if provided in the config
-    if (config?.svgDefs !== prevConfig?.svgDefs) {
-      this._svgDefsExternal.selectAll('*').remove()
-      this._svgDefsExternal.html(config.svgDefs)
-    }
+    const { config } = this
 
     // Apply the `aria-label` attribute
     select(this._container)
