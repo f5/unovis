@@ -341,8 +341,8 @@ export class XYContainer<Datum> extends ContainerCore {
 
     // Set initial scale range
     const isYDirectionSouth = config.yDirection === Direction.South
-    const xRange: [number, number] = [config.padding.left ?? 0, this.width - config.padding.right ?? 0]
-    const yRange: [number, number] = [this.height - config.padding.bottom ?? 0, config.padding.top ?? 0]
+    const xRange: [number, number] = [config.padding.left ?? 0, this.width - (config.padding.right ?? 0)]
+    const yRange: [number, number] = [this.height - (config.padding.bottom ?? 0), config.padding.top ?? 0]
     if (isYDirectionSouth) yRange.reverse()
 
     for (const c of components) {
