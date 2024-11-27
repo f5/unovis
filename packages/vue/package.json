@@ -1,7 +1,7 @@
 {
   "name": "@unovis/vue",
   "description": "Modular data visualization framework for React, Angular, Svelte, Vue, and vanilla TypeScript or JavaScript",
-  "version": "1.4.4",
+  "version": "1.4.5",
   "repository": {
     "type": "git",
     "url": "https://github.com/f5/unovis.git",
@@ -51,7 +51,7 @@
     "gallery": "vite"
   },
   "peerDependencies": {
-    "@unovis/ts": "1.4.4",
+    "@unovis/ts": "1.4.5",
     "vue": "^3"
   },
   "devDependencies": {
