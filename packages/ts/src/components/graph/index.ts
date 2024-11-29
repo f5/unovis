@@ -7,16 +7,16 @@ import { drag, D3DragEvent } from 'd3-drag'
 import { interval, Timer } from 'd3-timer'
 
 // Core
-import { ComponentCore } from 'core/component'
-import { GraphDataModel } from 'data-models/graph'
+import { ComponentCore } from '@/core/component'
+import { GraphDataModel } from '@/data-models/graph'
 
 // Types
-import { GraphInputLink, GraphInputNode, GraphInputData } from 'types/graph'
-import { Spacing } from 'types/spacing'
+import { GraphInputLink, GraphInputNode, GraphInputData } from '@/types/graph'
+import { Spacing } from '@/types/spacing'
 
 // Utils
-import { isNumber, clamp, shallowDiff, isFunction, getBoolean, isPlainObject, isEqual, getNumber } from 'utils/data'
-import { smartTransition } from 'utils/d3'
+import { isNumber, clamp, shallowDiff, isFunction, getBoolean, isPlainObject, isEqual, getNumber } from '@/utils/data'
+import { smartTransition } from '@/utils/d3'
 
 // Local Types
 import {

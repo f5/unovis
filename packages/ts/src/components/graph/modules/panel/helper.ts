@@ -1,13 +1,13 @@
 import { Selection } from 'd3-selection'
 
 // Types
-import { NumericAccessor, BooleanAccessor } from 'types/accessor'
-import { Position } from 'types/position'
-import { GraphInputLink, GraphInputNode } from 'types/graph'
-import { Spacing } from 'types/spacing'
+import { NumericAccessor, BooleanAccessor } from '@/types/accessor'
+import { Position } from '@/types/position'
+import { GraphInputLink, GraphInputNode } from '@/types/graph'
+import { Spacing } from '@/types/spacing'
 
 // Utils
-import { getBoolean, isPlainObject } from 'utils/data'
+import { getBoolean, isPlainObject } from '@/utils/data'
 
 // Local Types
 import { GraphNode, GraphPanel, GraphPanelConfig } from '../../types'
@@ -157,4 +157,3 @@ export function getLabelTranslateTransform<N extends GraphInputNode, L extends G
 
   return `translate(${x}, ${y})`
 }
-

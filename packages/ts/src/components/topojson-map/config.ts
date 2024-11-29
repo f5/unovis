@@ -1,8 +1,8 @@
 import { GeoProjection } from 'd3-geo'
-import { ComponentConfigInterface, ComponentDefaultConfig } from 'core/component/config'
+import { ComponentConfigInterface, ComponentDefaultConfig } from '@/core/component/config'
 
 // Types
-import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
+import { ColorAccessor, NumericAccessor, StringAccessor } from '@/types/accessor'
 
 // Local Types
 import { MapPointLabelPosition } from './types'
@@ -118,4 +118,3 @@ export const TopoJSONMapDefaultConfig: TopoJSONMapConfigInterface<unknown, unkno
   heatmapModeBlurStdDeviation: 8,
   heatmapModeZoomLevelThreshold: 2.5,
 }
-

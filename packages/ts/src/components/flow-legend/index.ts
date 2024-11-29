@@ -1,8 +1,8 @@
 import { select, Selection } from 'd3-selection'
 
 // Utils
-import { smartTransition } from 'utils/d3'
-import { merge } from 'utils/data'
+import { smartTransition } from '@/utils/d3'
+import { merge } from '@/utils/data'
 
 // Config
 import { FlowLegendDefaultConfig, FlowLegendConfigInterface } from './config'

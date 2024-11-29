@@ -1,11 +1,11 @@
 // Core
-import { XYComponentConfigInterface, XYComponentDefaultConfig } from 'core/xy-component/config'
+import { XYComponentConfigInterface, XYComponentDefaultConfig } from '@/core/xy-component/config'
 
 // Types
-import { Scale, ContinuousScale } from 'types/scale'
-import { SymbolType } from 'types/symbol'
-import { ColorAccessor, GenericAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
-import { Position } from 'types/position'
+import { Scale, ContinuousScale } from '@/types/scale'
+import { SymbolType } from '@/types/symbol'
+import { ColorAccessor, GenericAccessor, NumericAccessor, StringAccessor } from '@/types/accessor'
+import { Position } from '@/types/position'
 
 export interface ScatterConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
   /** Point color accessor function. Default: `d => d.color` */
@@ -59,4 +59,3 @@ export const ScatterDefaultConfig: ScatterConfigInterface<unknown> = {
   strokeColor: undefined,
   strokeWidth: undefined,
 }
-

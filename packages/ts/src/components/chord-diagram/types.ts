@@ -1,5 +1,5 @@
 import { HierarchyRectangularNode } from 'd3-hierarchy'
-import { GraphLinkCore, GraphNodeCore } from 'types'
+import { GraphLinkCore, GraphNodeCore } from '@/types'
 
 // Node data flow in the component:
 // Input data (N extends ChordInputNode, L extends ChordInputLink)

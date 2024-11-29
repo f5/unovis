@@ -4,16 +4,16 @@ import { area, Area as AreaInterface, line, Line as LineInterface } from 'd3-sha
 import { interpolatePath } from 'd3-interpolate-path'
 
 // Core
-import { XYComponentCore } from 'core/xy-component'
+import { XYComponentCore } from '@/core/xy-component'
 
 // Utils
-import { getNumber, getString, isArray, isNumber, getStackedExtent, getStackedData, filterDataByRange, getValue } from 'utils/data'
-import { smartTransition } from 'utils/d3'
-import { getColor } from 'utils/color'
+import { getNumber, getString, isArray, isNumber, getStackedExtent, getStackedData, filterDataByRange, getValue } from '@/utils/data'
+import { smartTransition } from '@/utils/d3'
+import { getColor } from '@/utils/color'
 
 // Types
-import { Curve, CurveType } from 'types/curve'
-import { NumericAccessor } from 'types/accessor'
+import { Curve, CurveType } from '@/types/curve'
+import { NumericAccessor } from '@/types/accessor'
 import { Spacing } from 'types/spacing'
 import { Direction } from 'types/direction'
 

@@ -1,11 +1,11 @@
 // Core
-import { CoreDataModel } from 'data-models/core'
+import { CoreDataModel } from '@/data-models/core'
 
 // Types
-import { NumericAccessor } from 'types/accessor'
+import { NumericAccessor } from '@/types/accessor'
 
 // Utils
-import { getDataLatLngBounds } from 'utils/map'
+import { getDataLatLngBounds } from '@/utils/map'
 
 export class MapDataModel<PointDatum> extends CoreDataModel<PointDatum[]> {
   getDataLatLngBounds (

@@ -1,12 +1,12 @@
 /* eslint-disable no-irregular-whitespace */
 
 // Core
-import { ComponentDefaultConfig, ComponentConfigInterface } from 'core/component/config'
-import { Tooltip } from 'components/tooltip'
+import { ComponentDefaultConfig, ComponentConfigInterface } from '@/core/component/config'
+import { Tooltip } from '@/components/tooltip'
 
 // Types
-import { ColorAccessor, GenericAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
-import { GenericDataRecord } from 'types/data'
+import { ColorAccessor, GenericAccessor, NumericAccessor, StringAccessor } from '@/types/accessor'
+import { GenericDataRecord } from '@/types/data'
 
 // Local Types
 import {

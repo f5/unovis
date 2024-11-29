@@ -1,11 +1,11 @@
 import { Selection } from 'd3-selection'
 import { brush, BrushBehavior, brushX, brushY, D3BrushEvent } from 'd3-brush'
-import { XYComponentCore } from 'core/xy-component'
-import { clamp, isArray, isNumber } from 'utils/data'
-import { smartTransition } from 'utils/d3'
+import { XYComponentCore } from '@/core/xy-component'
+import { clamp, isArray, isNumber } from '@/utils/data'
+import { smartTransition } from '@/utils/d3'
 
 // Types
-import { ContinuousScale } from 'types/scale'
+import { ContinuousScale } from '@/types/scale'
 import { FreeBrushMode, FreeBrushSelection, FreeBrushSelectionInPixels } from './types'
 
 // Config
