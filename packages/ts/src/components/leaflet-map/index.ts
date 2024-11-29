@@ -5,18 +5,18 @@ import Supercluster, { ClusterFeature, PointFeature } from 'supercluster'
 import { StyleSpecification } from 'maplibre-gl'
 
 // Core
-import { ComponentCore } from 'core/component'
+import { ComponentCore } from '@/core/component'
 
 // Model
-import { MapDataModel } from 'data-models/map'
+import { MapDataModel } from '@/data-models/map'
 
 // Types
-import { ComponentType } from 'types/component'
-import { GenericDataRecord } from 'types/data'
+import { ComponentType } from '@/types/component'
+import { GenericDataRecord } from '@/types/data'
 
 // Utils
-import { ResizeObserver } from 'utils/resize-observer'
-import { clamp, isNil, getNumber, getString, isString } from 'utils/data'
+import { ResizeObserver } from '@/utils/resize-observer'
+import { clamp, isNil, getNumber, getString, isString } from '@/utils/data'
 import { constraintMapViewThrottled } from './renderer/mapboxgl-utils'
 import {
   projectPoint,

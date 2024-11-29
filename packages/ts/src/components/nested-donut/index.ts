@@ -5,19 +5,19 @@ import { scaleLinear, ScaleLinear } from 'd3-scale'
 import { group } from 'd3-array'
 
 // Core
-import { ComponentCore } from 'core/component'
-import { SeriesDataModel } from 'data-models/series'
+import { ComponentCore } from '@/core/component'
+import { SeriesDataModel } from '@/data-models/series'
 
 // Types
-import { VerticalAlign } from 'types/text'
+import { VerticalAlign } from '@/types/text'
 
 // Utils
-import { getColor } from 'utils/color'
-import { smartTransition } from 'utils/d3'
-import { getNumber, getString, getValue, isNumber, isNumberWithinRange, merge } from 'utils/data'
-import { getPixelValue } from 'utils/misc'
-import { cssvar } from 'utils/style'
-import { wrapSVGText } from 'utils/text'
+import { getColor } from '@/utils/color'
+import { smartTransition } from '@/utils/d3'
+import { getNumber, getString, getValue, isNumber, isNumberWithinRange, merge } from '@/utils/data'
+import { getPixelValue } from '@/utils/misc'
+import { cssvar } from '@/utils/style'
+import { wrapSVGText } from '@/utils/text'
 
 // Local Types
 import { NestedDonutDirection, NestedDonutSegment, NestedDonutLayer, NestedDonutSegmentLabelAlignment } from './types'

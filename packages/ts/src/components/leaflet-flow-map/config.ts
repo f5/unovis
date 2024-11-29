@@ -1,11 +1,11 @@
 /* eslint-disable dot-notation */
 
 // Config
-import { LeafletMapDefaultConfig, LeafletMapConfigInterface } from 'components/leaflet-map/config'
+import { LeafletMapDefaultConfig, LeafletMapConfigInterface } from '@/components/leaflet-map/config'
 
 // Types
-import { ColorAccessor, NumericAccessor } from 'types/accessor'
-import { GenericDataRecord } from 'types/data'
+import { ColorAccessor, NumericAccessor } from '@/types/accessor'
+import { GenericDataRecord } from '@/types/data'
 
 export interface LeafletFlowMapConfigInterface<PointDatum extends GenericDataRecord, FlowDatum extends GenericDataRecord> extends LeafletMapConfigInterface<PointDatum> {
   /** Flow source point longitude accessor function or value. Default:.`f => f.sourceLongitude` */

@@ -11,7 +11,7 @@ rollup-plugin-commonjs          perpetual       MIT           10.1.0            
 rollup-plugin-typescript2       perpetual       MIT           0.31.2             @ezolenko
 tslib                           perpetual       0BSD          2.6.2              Microsoft Corp.
 typescript                      perpetual       Apache-2.0    4.2.4              Microsoft Corp.
-vite                            perpetual       MIT           6.0.1              Evan You
+vite                            perpetual       MIT           6.2.1              Evan You
 vite-plugin-css-injected-by-js  perpetual       MIT           3.3.0              Marco Prontera
 vite-plugin-dts                 perpetual       MIT           3.6.0              qmhc
 vue                             perpetual       MIT           3.5.13             Evan You
