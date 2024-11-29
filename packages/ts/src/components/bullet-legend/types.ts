@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { SymbolType } from 'types/symbol'
+import { SymbolType } from '@/types/symbol'
 
 export interface BulletLegendItemInterface {
   name: string | number;

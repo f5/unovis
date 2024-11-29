@@ -5,13 +5,13 @@ import { drag, D3DragEvent } from 'd3-drag'
 import { max } from 'd3-array'
 
 // Core
-import { XYComponentCore } from 'core/xy-component'
+import { XYComponentCore } from '@/core/xy-component'
 
 // Utils
-import { isNumber, unique, arrayOfIndices, getMin, getMax, getString, getNumber } from 'utils/data'
-import { smartTransition } from 'utils/d3'
-import { getColor } from 'utils/color'
-import { trimSVGText } from 'utils/text'
+import { isNumber, unique, arrayOfIndices, getMin, getMax, getString, getNumber } from '@/utils/data'
+import { smartTransition } from '@/utils/d3'
+import { getColor } from '@/utils/color'
+import { trimSVGText } from '@/utils/text'
 
 // Config
 import { TimelineDefaultConfig, TimelineConfigInterface } from './config'

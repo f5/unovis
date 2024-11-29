@@ -1,7 +1,7 @@
 import { select, Selection } from 'd3-selection'
 
 // Utils
-import { merge } from 'utils/data'
+import { merge } from '@/utils/data'
 
 // Config
 import { BulletLegendDefaultConfig, BulletLegendConfigInterface } from './config'

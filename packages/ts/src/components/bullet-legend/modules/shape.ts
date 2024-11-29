@@ -2,15 +2,15 @@ import { Selection, select } from 'd3-selection'
 import { symbol } from 'd3-shape'
 
 // Types
-import { ColorAccessor } from 'types/accessor'
-import { Symbol, SymbolType } from 'types/symbol'
+import { ColorAccessor } from '@/types/accessor'
+import { Symbol, SymbolType } from '@/types/symbol'
 
 // Utils
-import { getColor } from 'utils/color'
-import { getString } from 'utils/data'
+import { getColor } from '@/utils/color'
+import { getString } from '@/utils/data'
 
 // Constants
-import { PATTERN_SIZE_PX } from 'styles/patterns'
+import { PATTERN_SIZE_PX } from '@/styles/patterns'
 
 // Local types
 import { BulletLegendConfigInterface } from '../config'

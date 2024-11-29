@@ -1,7 +1,7 @@
-import { getNumber } from 'utils/data'
+import { getNumber } from '@/utils/data'
 
 // Config
-import { NumericAccessor } from 'types/accessor'
+import { NumericAccessor } from '@/types/accessor'
 
 export function getLonLat<Datum> (d: Datum, pointLongitude: NumericAccessor<Datum>, pointLatitude: NumericAccessor<Datum>): [number, number] {
   const lat = getNumber(d, pointLatitude)
