@@ -13,7 +13,7 @@ export const xAxis = ({
   props: { type: 'x', tickFormat: Intl.DateTimeFormat.format }
 })
 
-export const defaultProps = (n = 5, rows=n) => ({
+export const timelineProps = (n = 5, rows=n) => ({
   name: "Timeline",
   height: 150,
   dataType: 'TimeDataRecord',
@@ -22,7 +22,7 @@ export const defaultProps = (n = 5, rows=n) => ({
 })
 
 export const emptyProps = {
-  ...defaultProps(),
+  ...timelineProps(),
   data: Array(4).fill(0).map((_, i) => ({ type: 'a', timestamp: i * 10, length: i % 2 === 1 ? 8 : 0 })),
   height: 50,
 }
@@ -31,7 +31,7 @@ export const emptyProps = {
 The _Timeline_ component has been designed to work together with _XY Container_.
 The minimal _Timeline_ configuration looks like:
 
-<XYWrapper {...defaultProps(6)} showContext="full"/>
+<XYWrapper {...timelineProps(6)} showContext="full"/>
 
 where `TimeDataRecord` has at least the following properties:
 
@@ -59,7 +59,7 @@ Like other XY components, labeling data along the **horizontal** axis can be acc
 by adding an _Axis_ component to your container. See following example which displays labeled
 _Timeline_ alongside a labeled _X Axis_:
 
-<XYWrapper {...defaultProps()}
+<XYWrapper {...timelineProps()}
   components={[xAxis]}
   declarations={{ tickFormat: 'Intl.DateTimeFormat().format'}}
   showLabels
@@ -78,16 +78,16 @@ Since *Timeline* groups vertical data in an ordinal fashion, adding a Y axis her
 ### Alternating row colors
 For easier readability, each row's background color alternates among two colors by default. To display a single
 background color across all rows, disable the `alternatingRowColors` property:
-<XYWrapperWithInput {...defaultProps(20, 5)} property="alternatingRowColors" defaultValue={true} inputType="checkbox"/>
+<XYWrapperWithInput {...timelineProps(20, 5)} property="alternatingRowColors" defaultValue={true} inputType="checkbox"/>
 
 ### Row Height
 Use the `rowHeight` property to adjust the size of each row.
-<XYWrapper {...defaultProps(20, 5)} rowHeight={50} hideTabLabels/>
+<XYWrapper {...timelineProps(20, 5)} rowHeight={50} hideTabLabels/>
 
 ## Line Configuration
 ### Line Cap
 By default, lines have squared ends. You can give your lines a rounded appearance by setting `lineCap` property to `true`.
-<XYWrapper {...defaultProps()} lineCap/>
+<XYWrapper {...timelineProps()} lineCap/>
 
 ### Showing empty segments
 Set `showEmptySegments` to `true` if you want to display lines that are `undefined` or too small to see.
@@ -99,7 +99,7 @@ You can also change the line thickness with the `lineWidth` property, which dete
 vertical space each _Timeline_ item occupies.
 
 ### Example: Custom timeline lines
-<XYWrapperWithInput {...defaultProps(3)} height={320} rowHeight={100} property="lineWidth" inputType="range" defaultValue={10}/>
+<XYWrapperWithInput {...timelineProps(3)} height={320} rowHeight={100} property="lineWidth" inputType="range" defaultValue={10}/>
 
 ## Events
 ### Scrolling
@@ -117,7 +117,7 @@ export function ScrollExample() {
   const [dist, setDist] = React.useState(0)
   return (
     <>
-      <XYWrapper {...defaultProps(50, 20)}
+      <XYWrapper {...timelineProps(50, 20)}
         onScroll={setDist}
         showContext="minimal"
         components={[{...xAxis, props: { type: 'x', label: () => `${dist}px from the top`, tickValues: [] }}]}
@@ -135,7 +135,7 @@ You can set custom cursor when hovering over a line. However, it'll only be acti
 {() => {
   const { Timeline } = require('@unovis/ts')
   return <XYWrapper
-      {...defaultProps(20, 5)}
+      {...timelineProps(20, 5)}
       showContext="minimal"
       declarations={{
         events:

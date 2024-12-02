@@ -19,7 +19,7 @@ export const data = Array(100)
 export const groupColors = { A: 'red', B: 'green', C: 'blue' }
 export const labelAlignments = ['along', 'perpendicular', 'straight']
 
-export const defaultProps = () => ({
+export const nestedDonutProps = () => ({
   name: 'NestedDonut',
   containerName: 'SingleContainer',
   configKey: 'component',
@@ -50,7 +50,7 @@ The `layers` property accepts an array of string accessor functions based on the
 The first accessor will define the outermost layer of the chart, the second will provide the next, and so on.
 We can provide `layers` with accessors such the `group` property defines parent nodes with `subgroup` children.
 
-<DocWrapper {...defaultProps()} showContext='full' />
+<DocWrapper {...nestedDonutProps()} showContext='full' />
 
 #### Layers with missing/undefined data
 
@@ -61,12 +61,12 @@ We see the hierarchical data is as expected, where the `C` group does not have c
 layers = [(d: Datum) => d.group, (d: Datum) => d.value]
 ```
 
-<DocWrapper
-  {...defaultProps()}
+{/* <DocWrapper
+  {...nestedDonutProps()}
   data={data.map((d) => ({ ...d, value: d.group === 'C' ? null : d.value }))}
   layers={[(d) => d.group, (d) => d.value]}
   excludeTabs
-/>
+/> */}
 
 ### Segment Values
 By default, segment lengths are assigned based on the number of occurrences within the data array.
@@ -76,7 +76,7 @@ For example, consider the following data provided to a single layer:
 const data = ['A', 'A', 'A', 'B', 'B', 'C']
 ```
 We would expect the values of A, B, and C to be proportional to their counts within in the array, i.e. 3, 2, and 1, respectively.
-<DocWrapper {...defaultProps()} data={[
+{/* <DocWrapper {...nestedDonutProps()} data={[
   ...Array(3).fill('A'),
   ...Array(2).fill('B'),
   ...Array(1).fill('C'),
@@ -84,7 +84,7 @@ We would expect the values of A, B, and C to be proportional to their counts wit
   layerSettings={{ labelAlignment: 'along' }}
   layers={[d => d]}
   excludeTabs
-/>
+/> */}
 
 ### Custom `value` Accessor
 Alternatively, you can override the default way _Nested Donut_ calculates values by providing your own `value` accessor function.
@@ -122,7 +122,7 @@ The `labelAlignment` property specifies how the segment labels will align based 
 - `NestedDonutSegmentLabelAlignment.Straight` - no rotation is applied
 
 <div style={{ display: 'flex', padding: '10px', flexWrap: 'wrap', justifyContent: 'space-evenly' }}>
-{['along', 'perpendicular', 'straight'].map((d, i) => <DocWrapper {...defaultProps()} containerProps={{ width: 300 }} layerSettings={{ labelAlignment: d }} excludeTabs centralSubLabel={d}/>)}
+{['along', 'perpendicular', 'straight'].map((d, i) => <DocWrapper {...nestedDonutProps()} containerProps={{ width: 300 }} layerSettings={{ labelAlignment: d }} excludeTabs centralSubLabel={d}/>)}
 </div>
 
 ### Variable Layer Settings
@@ -141,7 +141,7 @@ layerSettings = (layer: number) => {
 ```
 
 <DocWrapper
-  {...defaultProps()}
+  {...nestedDonutProps()}
   showContext='full'
   layers={[(d) => d.group, (d) => d.subgroup]}
   layerSettings={(i) => i === 0 && { width: 25 } }
@@ -152,7 +152,7 @@ layerSettings = (layer: number) => {
 You can provide a constant numeric value to `layerPadding` to set the spacing between each layer in pixels.
 
 <DocWrapper
-  {...defaultProps()}
+  {...nestedDonutProps()}
   height={350}
   layerPadding={10}
   layers={[(d) => d.group, (d) => d.subgroup, (d) => d.value]}
@@ -197,7 +197,7 @@ segmentColor = (d: NestedDonutSegment<Datum>) => groupColors[d.data.root]
 This gives us the appearance of three distinct colors based on the segment's group instead of the default shading:
 
 <DocWrapper
-  {...defaultProps()}
+  {...nestedDonutProps()}
   segmentColor={d => groupColors[d.data.root]}
 />
 
@@ -222,7 +222,7 @@ const segmentLabelColor = (d: Datum) => groupColors[d.data.root]
 ```
 
 <DocWrapper
-  {...defaultProps()}
+  {...nestedDonutProps()}
   segmentColor='#ddd'
   segmentLabel={d =>
     d.depth === 1
@@ -237,7 +237,7 @@ const segmentLabelColor = (d: Datum) => groupColors[d.data.root]
 By default, _Nested Donut_ will form layers starting with the outermost layer and work inward towards the center. You can use the `NestedDonutDirection.Outwards` or
 `'outwards'` to the `direction` property to get a _Nested Donut_ that resembles a traditional _Sunburst_ diagram:
 
-<DocWrapper {...defaultProps()} direction='outwards' />
+<DocWrapper {...nestedDonutProps()} direction='outwards' />
 
 ## Further configuration
 

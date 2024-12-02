@@ -8,7 +8,7 @@ import { PropsTable } from '@site/src/components/PropsTable'
 import { generateScatterDataRecords } from '../utils/data'
 import { XYWrapper, XYWrapperWithInput } from '../wrappers'
 
-export const defaultProps = (showAxes = true) => ({
+export const freeBrushProps = (showAxes = true) => ({
     name: "FreeBrush",
     height: 100,
     components: [{
@@ -30,11 +30,11 @@ See [brush docs](./Brush) to learn about basic configuration and usage.
 
 ## Mode
 You can change the axis alignment of your _Free Brush_ by setting the `mode` property to `"x"`, `"y"` or `"xy"`:
-<XYWrapperWithInput {...defaultProps()} height={300} property="mode" inputType="select" defaultValue="y" options={["x", "y", "xy"]}/>
+<XYWrapperWithInput {...freeBrushProps()} height={300} property="mode" inputType="select" defaultValue="y" options={["x", "y", "xy"]}/>
 
 ## Auto Hide
 Disabling the `autoHide` property will keep the _Free Brush_ selection visible after the [`onBrushEnd`](./Brush#usage) event has triggered:
-<XYWrapper { ...defaultProps()} autoHide={false}/>
+<XYWrapper { ...freeBrushProps()} autoHide={false}/>
 
 ## CSS Variables
 <details open>

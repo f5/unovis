@@ -10,7 +10,7 @@ import { sankeyData } from '../utils/data'
 import { DocWrapper } from '../wrappers'
 import './styles.css'
 
-export const defaultProps = (n=10) => ({
+export const singleContainerProps = (n=10) => ({
   name: "SingleContainer",
   containerName: "SingleContainer",
   data: Array(n).fill(25).map(d => Math.floor(d * Math.random())),
@@ -22,7 +22,7 @@ export const defaultProps = (n=10) => ({
 })
 
 export const sankeyProps = {
-  ...defaultProps(),
+  ...singleContainerProps(),
   data: sankeyData(100, [[1,2], [], [3,4,5]]),
   components: [{ name: 'Sankey', props: {}, key: 'component'}],
 }
@@ -48,7 +48,7 @@ component of your choice in _Single Container_ to render it.
     },
     { name: 'Donut', props: { value: d => d }, key: 'component' }
   ]
-  return <DocWrapper {...defaultProps()}
+  return <DocWrapper {...singleContainerProps()}
     height={150}
     components={components}
     imports={{ '@unovis/ts': ['Donut'] }}
@@ -84,7 +84,7 @@ const height = 100;
       key: 'component'
     }
     return (
-      <DocWrapper {...defaultProps()} containerProps={{ height: 100, width: 200 }} components={[topojson]}/>
+      <DocWrapper {...singleContainerProps()} containerProps={{ height: 100, width: 200 }} components={[topojson]}/>
     )
   }}
   </BrowserOnly>

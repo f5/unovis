@@ -10,7 +10,7 @@ import { PropsTable } from '@site/src/components/PropsTable'
 import { DocWrapper, InputWrapper } from '../wrappers'
 import { data, pointData, heatmapData } from './data'
 
-export const defaultProps = () => ({
+export const topoJSONMapProps = () => ({
   name: "TopoJSONMap",
   configKey: "component",
   containerName: "SingleContainer",
@@ -45,7 +45,7 @@ ability to add points and links, feature customization, zooming, alternate map p
 
 ## Basic Configuration
 <TopoDoc
-  {...defaultProps()}
+  {...topoJSONMapProps()}
   showContext="full"
 />
 
@@ -90,7 +90,7 @@ Enabling `mapFitToPoints` will automatically adjust the map's zoom level to fit 
   <h4>{fit ? 'After' : 'Before'}: </h4>
   <TopoDoc
     key={`fit${fit}`}
-    {...defaultProps()}
+    {...topoJSONMapProps()}
     height={200}
     data={{ points: [
       { id: 'NYC', latitude: 40.7128, longitude: -74.0060 },
@@ -128,7 +128,7 @@ const pointLabel = (d: MapPoint) => d.city
 ```
 
 <TopoDoc
-  {...defaultProps()}
+  {...topoJSONMapProps()}
   hideTabLabels
   data={{ points: data.points }}
   pointLabel={d => d.city}/>
@@ -159,7 +159,7 @@ export const colorLegendItems = [
   const { TopoJSONMap } = require('@unovis/ts')
   return (
     <TopoDoc
-      {...defaultProps()}
+      {...topoJSONMapProps()}
       data={customData}
       mapFitToPoints={true}
       pointLabel={d => d.serverName}
@@ -196,7 +196,7 @@ type MapLink = {
 Or, you can simply provide these values through the `linkSource` and `linkTarget` properties.
 
 <TopoDoc
-  {...defaultProps()}
+  {...topoJSONMapProps()}
   data={{...data, areas: [] }}
   excludeTabs
 />
@@ -232,7 +232,7 @@ const data = { areas: areaData }
 The provided countries will be highlighted according to their color defined in the topojson file:
 
 <TopoDoc
-  {...defaultProps()}
+  {...topoJSONMapProps()}
   data={{ areas: data.points }}
   areaId={d => d.id.substring(0, 2)}
   excludeTabs
@@ -270,7 +270,7 @@ const areaColor = (d: AreaDatum) => {
 
 The result:
 <TopoDoc
-  {...defaultProps()}
+  {...topoJSONMapProps()}
   data={{ areas:  [
   { id: 'AU', color: 'red', name: 'Australia' },
   { id: 'BR', color: 'blue', name: 'Brazil' },
@@ -296,7 +296,7 @@ You can provide a projection for your _TopoJSONMap_ with a `MapProjection` insta
   }
   const [curr, setCurr] = React.useState(MapProjection.Mercator)
   return (
-    <InputWrapper {...defaultProps()}
+    <InputWrapper {...topoJSONMapProps()}
       hiddenProps={{ topojson: WorldMapTopoJSON, projection: curr }}
       inputType="select"
       property="projection"
@@ -319,20 +319,20 @@ For further customization, you can configure the following zoom properties:
 
 ### `zoomFactor`
 To set the initial zoom factor.
-<TopoDoc {...defaultProps()} zoomFactor={5}/>
+<TopoDoc {...topoJSONMapProps()} zoomFactor={5}/>
 
 ### `zoomExtent`
 `zoomExtent` represents the range `[a,b]` which your map can zoom in and out, where `[a, b]` are the
 minimum and maximum zoom factors, respectively.
 
-<TopoDoc {...defaultProps()} zoomFactor={15} zoomExtent={[10,25]}/>
+<TopoDoc {...topoJSONMapProps()} zoomFactor={15} zoomExtent={[10,25]}/>
 
 ### `zoomDuration`
 `zoomDuration` is the duration of the animation on when zooming in on your _TopoJSONMap_.
 
 ## Heatmap Mode
 For datasets with a lot of points, you can enable `heatmapMode`
-<TopoDoc {...defaultProps()} data={heatmapData} heatmapMode={true}/>
+<TopoDoc {...topoJSONMapProps()} data={heatmapData} heatmapMode={true}/>
 
 You can customize the appearance of your heat map blur with the `heatmapModeBlurStdDeviation` property.
 
@@ -345,7 +345,7 @@ In order for the _TopoJSONMap_ component to render properly, the `topojson` prop
 valid `mapFeatureName` must be provided. The `mapFeatureName` corresponds to the type of unique
 _area_ ids in your data.
 
-<TopoDoc {...defaultProps()} topojson="FranceTopoJSON" mapFeatureName="regions" showContext='full'/>
+<TopoDoc {...topoJSONMapProps()} topojson="FranceTopoJSON" mapFeatureName="regions" showContext='full'/>
 
 TopoJSONs currently available in `@unovis/ts/maps`:
 

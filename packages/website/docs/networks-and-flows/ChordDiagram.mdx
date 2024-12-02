@@ -8,7 +8,7 @@ import { PropsTable } from '@site/src/components/PropsTable'
 import { generateNodeLinkData } from '../utils/data.ts'
 import { DocWrapper, InputWrapper } from '../wrappers'
 
-export const defaultProps = (n = 10) => ({
+export const chordDiagramProps = (n = 10) => ({
   name: "ChordDiagram",
   containerName: "SingleContainer",
   configKey: "component",
@@ -41,7 +41,7 @@ export const colorMap = {'A': 'lightgreen', 'B': 'cornflowerblue', 'C': 'indigo'
 ## Basic Configuration
 The _Chord Diagram_ component is a variation of a network graph where nodes and links are displayed
 in a circular layout.
-<DocWrapper {...defaultProps(8)} showContext="container"/>
+<DocWrapper {...chordDiagramProps(8)} showContext="container"/>
 
 where data types look like:
 ```ts
@@ -63,15 +63,15 @@ type ChordData<ChordInputNode, ChordInputLink> = {
 
 ## Node Label
 You can supply node labels through that data as a property of `ChordInputNode`, or by using a `StringAccessor` function in the component:
-<DocWrapper {...defaultProps()} showContext="minimal" nodeLabel={d => `${d.id}`}/>
+<DocWrapper {...chordDiagramProps()} showContext="minimal" nodeLabel={d => `${d.id}`}/>
 
 ## Node Label Alignment
 By default, the labels will be placed inside the node with respect to the curve. Alternatively, you can set `nodeLabelAlignment` to _perpendicular_:
-<DocWrapper {...defaultProps()} nodeLabel={d => `${d.id}`} nodeLabelAlignment="perpendicular"/>
+<DocWrapper {...chordDiagramProps()} nodeLabel={d => `${d.id}`} nodeLabelAlignment="perpendicular"/>
 
 ## Node and Link Colors
 You can provide color accessors for the nodes, and links to customize the color of your chart.
-<DocWrapper {...defaultProps()} nodeColor={getNodeColor} linkColor={d => getNodeColor(d.source)}/>
+<DocWrapper {...chordDiagramProps()} nodeColor={getNodeColor} linkColor={d => getNodeColor(d.source)}/>
 
 ## Circle Customization
 You can change the appearance of your circular chart with the following related properties from [_Donut_](/docs/misc/Donut):
@@ -96,7 +96,7 @@ const data = {
 }
 ```
 Then, by providing this list we can see three distinct layers in the visualization:
-<DocWrapper {...defaultProps()} data={hierarchyData} height={450} nodeLevels={['group', 'subgroup']} showContext='full'/>
+<DocWrapper {...chordDiagramProps()} data={hierarchyData} height={450} nodeLevels={['group', 'subgroup']} showContext='full'/>
 
 
 ### Accessor functions with hierarchical nodes
@@ -143,7 +143,7 @@ const nodeLabelAlignment = (d: N | ChordHierarchyNode<N>) => d.height > 0 ? 'alo
 
 The result gives us a _Chord Diagram_ with color-coded group data:
 
-<DocWrapper {...defaultProps()}
+<DocWrapper {...chordDiagramProps()}
     height={600}
     data={hierarchyData}
     nodeLevels={['subgroup']}
@@ -156,7 +156,7 @@ The result gives us a _Chord Diagram_ with color-coded group data:
 ### Radius Scale Exponent
 The `radiusScaleExponent` property affects how the radii scale with each hierarchy level. Increasing this value will result in more distance
 between each level, while decreasing results in the opposite. Default = `2`.
-<InputWrapper {...defaultProps()} data={hierarchyData} height={450} nodeLevels={['level', 'group']} inputType="range" defaultValue={0.75} property="radiusScaleExponent" inputProps={{ min: 0.25, max: 3, step: 0.25 }}/>
+<InputWrapper {...chordDiagramProps()} data={hierarchyData} height={450} nodeLevels={['level', 'group']} inputType="range" defaultValue={0.75} property="radiusScaleExponent" inputProps={{ min: 0.25, max: 3, step: 0.25 }}/>
 
 ## Events
 ```ts
@@ -173,7 +173,7 @@ events = {
   },
 }
 ```
-<DocWrapper {...defaultProps()} events={{}} excludeGraph showContext={undefined}/>
+<DocWrapper {...chordDiagramProps()} events={{}} excludeGraph showContext={undefined}/>
 
 ## CSS Variables
 <details open>
