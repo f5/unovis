@@ -2,7 +2,7 @@
   "name": "@unovis/react",
   "description": "Modular data visualization framework for React, Angular, Svelte, Vue, Solid, and vanilla TypeScript or JavaScript",
   "version": "1.6.4",
-  "packageManager": "pnpm@10.23.0",
+  "packageManager": "pnpm@10.28.2",
   "repository": {
     "type": "git",
     "url": "https://github.com/f5/unovis.git",
