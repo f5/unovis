@@ -20,10 +20,12 @@
     // "strictPropertyInitialization": true,
     "strictFunctionTypes": true,
     "noImplicitThis": true,
-    "strictBindCallApply": true
+    "strictBindCallApply": true,
+    "skipLibCheck": true
   },
   "exclude": [
     "index.ts",
-    "maps.ts"
+    "maps.ts",
+    "vite.config.ts"
   ]
 }
