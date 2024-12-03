@@ -21,7 +21,7 @@ react-refresh-typescript              perpetual       MIT           2.0.9       
 ts-loader                             perpetual       MIT           9.5.1              John Reilly <johnny_reilly@hotmail.com> (https://johnnyreilly.com)
 typescript                            perpetual       Apache-2.0    4.9.5              Microsoft Corp.
 typescript-plugin-css-modules         perpetual       MIT           4.2.3              Brody McKee <mrmckeb@hotmail.com>
-webpack                               perpetual       MIT           5.96.1             Tobias Koppers @sokra
+webpack                               perpetual       MIT           5.97.0             Tobias Koppers @sokra
 webpack-cli                           perpetual       MIT           5.1.4              n/a
 webpack-dev-server                    perpetual       MIT           4.15.2             Tobias Koppers @sokra
 @unovis/ts                            perpetual       Apache-2.0    1.4.4              Nikita Rokotyan, F5 Inc. <nikita@f5.com> (https://rokotyan.com)
