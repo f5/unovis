@@ -1,13 +1,13 @@
 name                                  license period  license type  installed version  author
 ----                                  --------------  ------------  -----------------  ------
-@unovis/react                         perpetual       Apache-2.0    1.4.4              Nikita Rokotyan, F5 Inc. <nikita@f5.com> (https://rokotyan.com)
+@unovis/react                         perpetual       Apache-2.0    1.4.5              Nikita Rokotyan, F5 Inc. <nikita@f5.com> (https://rokotyan.com)
 fuse.js                               perpetual       Apache-2.0    6.6.2              Kiro Risk kirollos@gmail.com http://kiro.me
 react                                 perpetual       MIT           18.3.1             n/a
 react-dom                             perpetual       MIT           18.3.1             n/a
 react-router-dom                      perpetual       MIT           6.28.0             Remix Software <hello@remix.run>
 seedrandom                            perpetual       MIT           3.0.5              David Bau
 serve                                 perpetual       MIT           14.2.4             n/a
-@percy/cli                            perpetual       MIT           1.30.2             n/a
+@percy/cli                            perpetual       MIT           1.30.4             n/a
 @percy/cypress                        perpetual       MIT           3.1.3-beta.0       Perceptual Inc.
 @pmmmwh/react-refresh-webpack-plugin  perpetual       MIT           0.5.15             Michael Mok
 @types/react                          perpetual       MIT           18.3.12            n/a
@@ -21,7 +21,7 @@ react-refresh-typescript              perpetual       MIT           2.0.9       
 ts-loader                             perpetual       MIT           9.5.1              John Reilly <johnny_reilly@hotmail.com> (https://johnnyreilly.com)
 typescript                            perpetual       Apache-2.0    4.9.5              Microsoft Corp.
 typescript-plugin-css-modules         perpetual       MIT           4.2.3              Brody McKee <mrmckeb@hotmail.com>
-webpack                               perpetual       MIT           5.96.1             Tobias Koppers @sokra
+webpack                               perpetual       MIT           5.97.0             Tobias Koppers @sokra
 webpack-cli                           perpetual       MIT           5.1.4              n/a
 webpack-dev-server                    perpetual       MIT           4.15.2             Tobias Koppers @sokra
 @unovis/ts                            perpetual       Apache-2.0    1.4.4              Nikita Rokotyan, F5 Inc. <nikita@f5.com> (https://rokotyan.com)

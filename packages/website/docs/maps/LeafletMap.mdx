@@ -16,7 +16,7 @@ import topojson from './data/topojson_overlay.json'
 import './styles.css'
 
 export const data = cities.slice(0, 50)
-export const defaultProps = () => ({
+export const leafletMapProps = () => ({
   name: "LeafletMap",
   height: '300px !important',
   style: `https://api.maptiler.com/maps/positron/style.json?key=${mapKey}`,
@@ -33,7 +33,7 @@ export const defaultProps = () => ({
 })
 
 export const LeafletDoc = (props) => (
-  <DocWrapper {...defaultProps() } {...props}/>
+  <DocWrapper {...leafletMapProps() } {...props} />
 )
 
 ## Basic Configuration
@@ -145,7 +145,7 @@ variables to change the default behaviour.
 ### Expand on Click
 If you want clusters to never expand on click, you can set `clusterExpandOnClick` to `false`. In that case when you
 click on a cluster, the map will keep zooming in until the zoom level is high enough for the cluster to break.
-<LeafletDoc data={data} pointColor='#286e47' clusterExpandOnClick={false}/>
+<LeafletDoc data={data} pointColor='#286e47' clusterExpandOnClick={false} />
 
 
 ## Color Map
@@ -412,7 +412,7 @@ you can use the `[LeafletMap.selectors.point]` selector in your _Tooltip_ config
     height={200}
     data={data.slice(0,20)}
     tooltip={tooltipPoints}
-    declarations={{ ...defaultProps().declarations, tooltip: declaration }}
+    declarations={{ ...leafletMapProps().declarations, tooltip: declaration }}
     showContext={ContextLevel.Minimal}
     imports={{ '@unovis/ts': ['Tooltip', "LeafletMap"] }}
     />
@@ -448,9 +448,9 @@ be passed only when the mouse is above a `topoJSONLayer.featureName` feature.
     <LeafletDoc
       height={400}
       tooltip={tooltipAreas}
-      declarations={{ ...defaultProps().declarations, tooltip: declaration }}
+      declarations={{ ...leafletMapProps().declarations, tooltip: declaration }}
       hiddenProps={{
-        ...defaultProps().hiddenProps,
+        ...leafletMapProps().hiddenProps,
         topoJSONLayer: {
           sources: topojson,
           featureName: 'countries',

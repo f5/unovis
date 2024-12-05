@@ -2,6 +2,7 @@
 description: Learn how to configure a Network Graph
 ---
 
+import React from 'react'
 import CodeBlock from '@theme/CodeBlock'
 import BrowserOnly from '@docusaurus/BrowserOnly'
 import { PropsTable } from '@site/src/components/PropsTable'
@@ -9,7 +10,7 @@ import { scaleLinear } from 'd3-scale'
 import { DocWrapper, InputWrapper } from '../wrappers'
 import { generateNodeLinkData, sample } from '../utils/data'
 
-export const defaultProps = () => ({
+export const graphProps = () => ({
   name: "Graph",
   configKey: "component",
   hiddenProps: {
@@ -23,14 +24,14 @@ export const defaultProps = () => ({
 })
 
 export const linkHiddenProps = {
-    ...defaultProps().hiddenProps,
+    ...graphProps().hiddenProps,
     nodeSize: 12,
     linkStroke: '#737E92  ',
   }
 
 export const GraphDoc = (props) => props.inputType
-  ? <InputWrapper {...defaultProps()} {...props}/>
-  : <DocWrapper {...defaultProps() } {...props}/>
+  ? <InputWrapper {...graphProps()} {...props}/>
+  : <DocWrapper {...graphProps() } {...props}/>
 
 
 export const nodeShapeData = generateNodeLinkData(10)

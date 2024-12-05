@@ -1,7 +1,8 @@
 import * as React from 'react'
 import ReactMarkdown from 'react-markdown'
 import { PropItem } from 'react-docgen-typescript'
-import { useDynamicImport } from 'docusaurus-plugin-react-docgen-typescript/pkg/dist-src/hooks/useDynamicImport'
+// eslint-disable-next-line import/no-unresolved
+import { useDynamicImport } from 'docusaurus-plugin-react-docgen-typescript/useDynamicImport'
 
 import s from './index.module.css'
 

@@ -23,13 +23,13 @@ export function getSampleFlow (s) {
 }
 
 export const numPoints = 5
-const points = cities.slice(0, numPoints)
+export const points = cities.slice(0, numPoints)
 export const data = {
   points: cities.slice(0, numPoints),
   flows: Array(20).fill(null).map(() => getSampleFlow(points[Math.floor(numPoints * Math.random())]))
 }
 
-export const defaultProps = (flowParticleDensity = 1) => ({
+export const leafletFlowMapProps = (flowParticleDensity = 1) => ({
   name: "LeafletFlowMap",
   height: '300px !important',
   style: `https://api.maptiler.com/maps/positron/style.json?key=${mapKey}`,
@@ -49,7 +49,7 @@ export const defaultProps = (flowParticleDensity = 1) => ({
 })
 
 export const LeafletFlowMapDoc = (props) => (
-  <DocWrapper {...defaultProps(props.flowParticleDensity) } {...props}/>
+  <DocWrapper {...leafletFlowMapProps(props.flowParticleDensity) } {...props}/>
 )
 
 _LeafletFlowMap_ is an extension of _LeafletMap_ that can display flying particles between two points on the map.

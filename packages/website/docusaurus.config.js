@@ -199,6 +199,7 @@ const config = {
       },
     ],
     () => ({
+      name: 'unovis-custom-webpack-plugin',
       configureWebpack () {
         return {
           // cache: false, // Disable cache to prevent issues with building after updating Unovis packages
@@ -229,6 +230,7 @@ const config = {
          * Path to data on filesystem relative to site dir.
          */
         path: './releases',
+        onUntruncatedBlogPosts: 'ignore',
       },
     ],
   ],

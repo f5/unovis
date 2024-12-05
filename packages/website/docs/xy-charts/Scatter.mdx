@@ -8,7 +8,7 @@ import { PropsTable } from '@site/src/components/PropsTable'
 import { generateScatterDataRecords } from '../utils/data'
 import { XYWrapper, XYWrapperWithInput } from '../wrappers/xy-wrapper'
 
-export const defaultProps = (n = 10, colored = false) => ({
+export const scatterProps = (n = 10, colored = false) => ({
   name: "Scatter",
   data: generateScatterDataRecords(n, colored),
   x: d => d.x,
@@ -17,54 +17,54 @@ export const defaultProps = (n = 10, colored = false) => ({
 
 ## Basic Configuration
 The _Scatter_ component has been designed to work together with _XYContainer_. The minimal _Scatter_ configuration looks like:
-<XYWrapper {...defaultProps()} y={d => d.y} showContext="full"/>
+<XYWrapper {...scatterProps()} y={d => d.y} showContext="full"/>
 
 ## Point Appearance
 ### Custom Shape
 You can change the point's symbol using the `symbol` attribute, which accepts a `SymbolType` or a corresponding `string`
 (`'circle'`, `'cross'`, `'diamond'`, `'square'`, `'star'`, `'triangle'`, `'wye'` ) or a function (executed per data point) that returns either of them.
-<XYWrapper {...defaultProps(15)} shape={'wye'}/>
+<XYWrapper {...scatterProps(15)} shape={'wye'}/>
 
 ### Custom Color
 You can provide _Scatter_ with a single `color` hex value or a `color` accessor function.
-<XYWrapper {...defaultProps(15)} color={'#DA348F'}/>
+<XYWrapper {...scatterProps(15)} color={'#DA348F'}/>
 
 ### Stroke Color
 You can also set a stroke color for your points by providing a `strokeColor` hex value or a `strokeColor` accessor function.
-<XYWrapper {...defaultProps(15)} color="none" strokeColor={'#DA348F'}/>
+<XYWrapper {...scatterProps(15)} color="none" strokeColor={'#DA348F'}/>
 
 ### Stroke Width
 If you want to change the stroke width, you can use the `strokeWidth` property, which accepts a constant value or an accessor function.
-<XYWrapper {...defaultProps(15)} color="none" strokeColor={'#DA348F'} strokeWidth={5}/>
+<XYWrapper {...scatterProps(15)} color="none" strokeColor={'#DA348F'} strokeWidth={5}/>
 
 ### Size and Size Range
 You can use the `size` property to set the point size (i.e. point diameter if `shape` is set to `SymbolType.Circle`) in pixels
 by providing a constant value or an accessor function, e.g.: `d => d.size`.
 
-<XYWrapper {...defaultProps()} size={50} />
+<XYWrapper {...scatterProps()} size={50} />
 
 _Scatter's_ `sizeRange` attribute represents a range of numbers for a point's size. When `sizeRange` is set, the `size`
 property will be treated as relative and all the points will be rescaled according to the provided range.
 
 In tha case if you provide a constant value to `size`, every resulting size value will be the median of `sizeRange`.
 Fox example, if `sizeRange` is set to `[10,50]`, that will make the default size equal to 30px (or `(min + max)/2`).
-<XYWrapper {...defaultProps()} size={() => 10 * Math.random()} sizeRange={[10, 50]}/>
+<XYWrapper {...scatterProps()} size={() => 10 * Math.random()} sizeRange={[10, 50]}/>
 
 ## Point Labels
 You can also place labels on _Scatter's_ points by passing a string accessor function to the `label` property.
-<XYWrapper {...defaultProps(15, true)} size={20} label={d => d.label}/>
+<XYWrapper {...scatterProps(15, true)} size={20} label={d => d.label}/>
 
 ### Label Color
 You can also configure a custom color for your labels by providing the `labelColor` attribute with a color accessor method or string.
 Note that setting this property overrides `labelTextBrightnessRatio`.
 
-<XYWrapper {...defaultProps(15, true)} size={20} label={d => d.label} labelColor={'red'}/>
+<XYWrapper {...scatterProps(15, true)} size={20} label={d => d.label} labelColor={'red'}/>
 
 ### Label Position
 You can change a point's label position with the `labelPosition` property, which accepts a  _Position_ or _Position_ accessor
 function. Supported values are `Position.Center`, `Position.Bottom` (default), `Position.Left`, `Position.Right` and `Position.Top`
 
-<XYWrapperWithInput {...defaultProps(15, true)} hiddenProps={{ size: d => d.size, label: d => d.label}} property='labelPosition' inputType="select" options={['bottom', 'center', 'left', 'right', 'top']}/>
+<XYWrapperWithInput {...scatterProps(15, true)} hiddenProps={{ size: d => d.size, label: d => d.label}} property='labelPosition' inputType="select" options={['bottom', 'center', 'left', 'right', 'top']}/>
 
 ### Label Text Brightness Ratio
 By default, labels with `Position.Center` will be assigned a color based on the point's shade with the `labelTextBrightnessRatio` property.
@@ -72,17 +72,17 @@ It accepts any value between `0` and `1` (inclusive).
 
 The default setting `0.65` creates darker text on light backgrounds and light text on dark backgrounds.
 See how the contrast differs in the following examples, when we assign more extreme values to the `labelTextBrightnessRatio` property:
-<XYWrapperWithInput {...defaultProps(10, true)} size={20} color={d => d.color} label={d => d.label} labelPosition="center" property="labelTextBrightnessRatio" inputType="range" inputProps={{ min: 0.5, max: 0.7, step: 0.01}} defaultValue={0.65}/>
+<XYWrapperWithInput {...scatterProps(10, true)} size={20} color={d => d.color} label={d => d.label} labelPosition="center" property="labelTextBrightnessRatio" inputType="range" inputProps={{ min: 0.5, max: 0.7, step: 0.01}} defaultValue={0.65}/>
 
 ### Overlapping Labels
 When there're overlapping labels, _Scatter_ will hide some of them to avoid cluttering. You can see hidden labels by hobvering over the points.
 If you want to disable hiding overlapping labels, you can set the `labelHideOverlapping` property to `false`.
-<XYWrapperWithInput {...defaultProps(45, true)} size={10} color={d => d.color} label={d => `Point ${d.label}`} property="labelHideOverlapping" inputType="checkbox" defaultValue={true}/>
+<XYWrapperWithInput {...scatterProps(45, true)} size={10} color={d => d.color} label={d => `Point ${d.label}`} property="labelHideOverlapping" inputType="checkbox" defaultValue={true}/>
 
 ## Custom Cursor
 _Scatter_ also allows to set a [custom](https://developer.mozilla.org/en-US/docs/Web/CSS/cursor) `cursor` when hovering
 over a point by providing a `cursor` accessor function.
-<XYWrapper {...defaultProps(50, true)} cursor='crosshair'/>
+<XYWrapper {...scatterProps(50, true)} cursor='crosshair'/>
 
 ## Events
 ```ts
@@ -95,7 +95,7 @@ events = {
     },
 }
 ```
-<XYWrapper {...defaultProps()} excludeGraph events={{}}/>
+<XYWrapper {...scatterProps()} excludeGraph events={{}}/>
 
 
 ## CSS Variables
@@ -111,7 +111,7 @@ The _Scatter_ component supports additional styling via CSS variables that you c
 }
 </CodeBlock>
 
-<XYWrapper {...defaultProps(50)} showAxes={true} height={250} excludeTabs label={d => d.label} size={20} labelTextBrightnessRatio={0.5} className="custom-scatter"/>
+<XYWrapper {...scatterProps(50)} showAxes={true} height={250} excludeTabs label={d => d.label} size={20} labelTextBrightnessRatio={0.5} className="custom-scatter"/>
 
 <details open>
   <summary>Supported CSS variables and their default values</summary>
