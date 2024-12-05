@@ -40,7 +40,6 @@ export const linkSupport = css`
 
   fill: none;
   stroke-linecap: round;
-  pointer-events: stroke;
   stroke-width: var(--vis-graph-link-support-stroke-width);
   stroke-opacity: 0;
   stroke: var(--vis-graph-link-stroke-color);
@@ -108,7 +107,6 @@ export const flowCircle = css`
 
 export const linkLabelGroup = css`
   label: label-group;
-  pointer-events: all;
 `
 
 export const linkLabelBackground = css`
