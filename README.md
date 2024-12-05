@@ -9,7 +9,7 @@ https://user-images.githubusercontent.com/755708/205744216-5e9efd10-794b-4ce1-9a
 Learn more about _Unovis_ on [unovis.dev](https://unovis.dev)
 
 ## Quick Start
-You can install the core of the library `@unovis/ts` and framework-specific packages (if you use React, Angular, or Svelte) from NPM:
+You can install the core of the library `@unovis/ts` and framework-specific packages (if you use React, Angular, Svelte, Vue or Solid) from NPM:
 
 ```bash
 npm install -P @unovis/ts @unovis/<react|angular|svelte|vue|solid>
@@ -41,7 +41,7 @@ export function BasicLineChart (): JSX.Element {
   )
 }
 ```
-Looking for Angular, Svelte, Vue, or TypeScript examples? Check out the [Quick Start](https://unovis.dev/docs/quick-start) page on our website.
+Looking for Angular, Svelte, Vue, Solid or TypeScript examples? Check out the [Quick Start](https://unovis.dev/docs/quick-start) page on our website.
 
 ## Examples and Documentation
 [![Unovis Examples](examples.png)](https://unovis.dev/gallery)
