@@ -47,5 +47,5 @@ module.exports = {
       },
     },
   ],
-  helpUrl: 'https://github.com/f5/unovis/pull/375',
+  helpUrl: 'https://unovis.dev/contributing/pull-requests#commit-messages',
 }
