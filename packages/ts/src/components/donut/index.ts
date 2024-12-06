@@ -25,6 +25,19 @@ import { createArc, updateArc, removeArc } from './modules/arc'
 // Styles
 import * as s from './style'
 
+// Constants that support half donuts
+export const DONUT_HALF_ANGLE_RANGES = Array.from({ length: 4 }, (_, i): [number, number] => {
+  const offset = -Math.PI / 2 + i * Math.PI / 2
+  return [offset, offset + Math.PI]
+})
+
+export const [
+  DONUT_HALF_ANGLE_RANGE_TOP,
+  DONUT_HALF_ANGLE_RANGE_RIGHT,
+  DONUT_HALF_ANGLE_RANGE_BOTTOM,
+  DONUT_HALF_ANGLE_RANGE_LEFT,
+] = DONUT_HALF_ANGLE_RANGES
+
 export class Donut<Datum> extends ComponentCore<Datum[], DonutConfigInterface<Datum>> {
   static selectors = s
   protected _defaultConfig = DonutDefaultConfig as DonutConfigInterface<Datum>
@@ -68,8 +81,36 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfigInterface<Da
       .filter(d => config.showEmptySegments || getNumber(d.datum, config.value, d.index))
 
     const duration = isNumber(customDuration) ? customDuration : config.duration
-    const outerRadius = config.radius || Math.min(this._width - bleed.left - bleed.right, this._height - bleed.top - bleed.bottom) / 2
+
+    // Handle half-donut cases, which adjust the scaling and positioning.
+    // One of these is true if we are dealing with a half-donut.
+    const [
+      isHalfDonutTop,
+      isHalfDonutRight,
+      isHalfDonutBottom,
+      isHalfDonutLeft,
+    ] = DONUT_HALF_ANGLE_RANGES.map(angleRange =>
+      config.angleRange && (
+        config.angleRange[0] === angleRange[0] &&
+        config.angleRange[1] === angleRange[1]
+      )
+    )
+    const isVerticalHalfDonut = isHalfDonutTop || isHalfDonutBottom
+    const isHorizontalHalfDonut = isHalfDonutRight || isHalfDonutLeft
+
+    // Compute the bounding box of the donut,
+    // considering it may be a half-donut
+    const width = this._width * (isHorizontalHalfDonut ? 2 : 1)
+    const height = this._height * (isVerticalHalfDonut ? 2 : 1)
+
+    const outerRadius = config.radius || Math.min(width - bleed.left - bleed.right, height - bleed.top - bleed.bottom) / 2
     const innerRadius = config.arcWidth === 0 ? 0 : clamp(outerRadius - config.arcWidth, 0, outerRadius - 1)
+
+    const translateY = this._height / 2 + (isHalfDonutTop ? outerRadius / 2 : isHalfDonutBottom ? -outerRadius / 2 : 0)
+    const translateX = this._width / 2 + (isHalfDonutLeft ? outerRadius / 2 : isHalfDonutRight ? -outerRadius / 2 : 0)
+    const translate = `translate(${translateX},${translateY})`
+
+    this.arcGroup.attr('transform', translate)
 
     this.arcGen
       .startAngle(d => d.startAngle)
@@ -85,8 +126,6 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfigInterface<Da
       .padAngle(config.padAngle)
       .value(d => getNumber(d.datum, config.value, d.index) || 0)
       .sort((a, b) => config.sortFunction?.(a.datum, b.datum))
-
-    this.arcGroup.attr('transform', `translate(${this._width / 2},${this._height / 2})`)
 
     const arcData: DonutArcDatum<Datum>[] = pieGen(data).map(d => {
       const arc = {
@@ -123,12 +162,12 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfigInterface<Da
 
     // Label
     this.centralLabel
-      .attr('transform', `translate(${this._width / 2},${this._height / 2})`)
+      .attr('transform', translate)
       .attr('dy', config.centralSubLabel ? '-0.55em' : null)
       .text(config.centralLabel ?? null)
 
     this.centralSubLabel
-      .attr('transform', `translate(${this._width / 2},${this._height / 2})`)
+      .attr('transform', translate)
       .attr('dy', config.centralLabel ? '0.55em' : null)
       .text(config.centralSubLabel ?? null)
 
@@ -137,7 +176,7 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfigInterface<Da
     // Background
     this.arcBackground.attr('class', s.background)
       .attr('visibility', config.showBackground ? null : 'hidden')
-      .attr('transform', `translate(${this._width / 2},${this._height / 2})`)
+      .attr('transform', translate)
 
     smartTransition(this.arcBackground, duration)
       .attr('d', this.arcGen({
