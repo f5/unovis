@@ -46,7 +46,7 @@
     "lint:fix": "eslint ./ --ext .js,.jsx,.ts,.tsx,.svelte --fix --ignore-path .gitignore",
     "install:clean": "for p in packages/*; do if [ \"$p\" != \"packages/website\" ]; then rm -f \"$p/package-lock.json\"; fi; done; rm -rf packages/*/node_modules; rm -rf node_modules; npm i",
     "postinstall": "sh postinstall.sh",
-    "gather-licenses": "for p in packages/*; do echo \"  📄 Checking licenses for $p\"; npx license-report --package=$p/package.json --config lic-report-config.json --output=table > $p/licences.temp; mv -f $p/licences.temp $p/licences.txt; done",
+    "gather-licenses": "for p in packages/*; do echo \"  📄 Checking licenses for $p\"; npx license-report --package=$p/package.json --config lic-report-config.json --output=table | grep -v -E '@unovis/ts|@unovis/react' > $p/licences.temp; mv -f $p/licences.temp $p/licences.txt; done",
     "version": "sh update-version.sh"
   },
   "devDependencies": {
