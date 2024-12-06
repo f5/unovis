@@ -16,5 +16,4 @@ vite-plugin-css-injected-by-js  perpetual       MIT           3.3.0             
 vite-plugin-dts                 perpetual       MIT           3.6.0              qmhc
 vue                             perpetual       MIT           3.5.13             Evan You
 vue-tsc                         perpetual       MIT           1.8.19             n/a
-@unovis/ts                      perpetual       Apache-2.0    1.4.4              Nikita Rokotyan, F5 Inc. <nikita@f5.com> (https://rokotyan.com)
 vue                             perpetual       MIT           3.5.13             Evan You
