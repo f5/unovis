@@ -36,8 +36,8 @@
   },
   "peerDependencies": {
     "@unovis/ts": "1.4.4",
-    "react": ">=16.8.0 || ^17 || ^18",
-    "react-dom": ">=16.8.0 || ^17 || ^18"
+    "react": ">=16.8.0 || ^17 || ^18 || ^19",
+    "react-dom": ">=16.8.0 || ^17 || ^18 || ^19"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^13.0.4",
