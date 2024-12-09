@@ -45,9 +45,9 @@
   },
   "peerDependencies": {
     "@unovis/ts": "1.4.4",
-    "@angular/common": "12 - 18",
-    "@angular/compiler": "12 - 18",
-    "@angular/core": "12 - 18"
+    "@angular/common": "12 - 19",
+    "@angular/compiler": "12 - 19",
+    "@angular/core": "12 - 19"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^12.0.3",
