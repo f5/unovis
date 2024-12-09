@@ -16,7 +16,7 @@ export const FeatureList: FeatureItem[] = [
     image: 'img/unovis-image-1.svg',
     description: (
       <>
-        Use with React, Angular, Svelte,<br /> or without any UI framework.
+        Use with React, Angular, Svelte, Vue, Solid,<br /> or without any UI framework.
       </>
     ),
   },
