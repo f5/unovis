@@ -38,6 +38,9 @@ export const [
   DONUT_HALF_ANGLE_RANGE_LEFT,
 ] = DONUT_HALF_ANGLE_RANGES
 
+const DONUT_HALF_LABEL_OFFSET_Y_DEFAULT = 20
+const DONUT_HALF_LABEL_OFFSET_X_DEFAULT = 60
+
 export class Donut<Datum> extends ComponentCore<Datum[], DonutConfigInterface<Datum>> {
   static selectors = s
   protected _defaultConfig = DonutDefaultConfig as DonutConfigInterface<Datum>
@@ -110,6 +113,15 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfigInterface<Da
     const translateX = this._width / 2 + (isHalfDonutLeft ? outerRadius / 2 : isHalfDonutRight ? -outerRadius / 2 : 0)
     const translate = `translate(${translateX},${translateY})`
 
+    const {
+      halfDonutLabelOffsetY = DONUT_HALF_LABEL_OFFSET_Y_DEFAULT,
+      halfDonutLabelOffsetX = DONUT_HALF_LABEL_OFFSET_X_DEFAULT,
+    } = config
+
+    const labelTranslateY = isHalfDonutTop ? -halfDonutLabelOffsetY : isHalfDonutBottom ? halfDonutLabelOffsetY : 0
+    const labelTranslateX = isHalfDonutLeft ? -halfDonutLabelOffsetX : isHalfDonutRight ? halfDonutLabelOffsetX : 0
+    const labelTranslate = `translate(${translateX + labelTranslateX},${translateY + labelTranslateY})`
+
     this.arcGroup.attr('transform', translate)
 
     this.arcGen
@@ -162,12 +174,12 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfigInterface<Da
 
     // Label
     this.centralLabel
-      .attr('transform', translate)
+      .attr('transform', labelTranslate)
       .attr('dy', config.centralSubLabel ? '-0.55em' : null)
       .text(config.centralLabel ?? null)
 
     this.centralSubLabel
-      .attr('transform', translate)
+      .attr('transform', labelTranslate)
       .attr('dy', config.centralLabel ? '0.55em' : null)
       .text(config.centralSubLabel ?? null)
 

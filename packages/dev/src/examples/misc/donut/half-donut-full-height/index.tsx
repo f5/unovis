@@ -29,6 +29,8 @@ export const component = (): JSX.Element => {
         duration={0}
         arcWidth={80}
         angleRange={currentAngleRange}
+        centralLabel="Central Label"
+        centralSubLabel="Sub-label"
       />
     </VisSingleContainer>
   )
