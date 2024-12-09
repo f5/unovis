@@ -288,7 +288,7 @@ The disabled state appearance can be redefined with these CSS variables:
 --vis-dark-graph-node-side-label-background-greyout-color: #f1f4f7;
 ```
 
-### Custom Rendering `1.5.0`
+### Custom Rendering `1.5`
 The _Graph_ component offers extensive customization options for node rendering, allowing you to define how
 nodes are displayed at various stages of their lifecycle — such as on entering, updating, zooming, and exiting.
 You can inject custom rendering functions using the following configuration properties:
@@ -362,12 +362,12 @@ Providing an accessor function to `linkArrow` will turn on arrows display on lin
 `GraphLinkArrowStyle.Single` (`"single"` or simply `true`) or `GraphLinkArrowStyle.Double` (`"double"`) or `null`.
 <GraphDoc hiddenProps={linkHiddenProps} linkArrow={() => sample([undefined, 'single', 'double'])} />
 
-### Labels `Updated in 1.5.0`
+### Labels `Updated in 1.5`
 Links can have textual or custom SVG labels. When the label is short (two characters or less) or an SVG href, it'll be rendered with a circular
 background similarly to node's [side labels](Graph#on-the-side). Longer labels will have a rectangular background.
 To enable link labels you'll need to provide a function for `linkLabel` returning a `GraphLinkLabel` object to display.
 
-To use custom SVG as labels (available in _Unovis_ 1.5.0), you'll first need to define it in your container [SVG defs](http://localhost:9300/docs/containers/Single_Container#svg-defs)
+To use custom SVG as labels (available in _Unovis_ 1.5), you'll first need to define it in your container [SVG defs](http://localhost:9300/docs/containers/Single_Container#svg-defs)
 and provide the `href` to your custom SVG definition using the `text` property of your label. In this case the `fontSize`
 property will control the size of your custom SVG label.
 
@@ -590,7 +590,7 @@ Note: if you selected `GraphLayoutType.Precalculated` but fail to pass in `x` an
 ### Non-connected nodes aside
 If you want non-connected graph nodes to be placed below the layout, set `layoutNonConnectedAside` to `true`.
 
-### Post-Layout Customization `1.5.0`
+### Post-Layout Customization `1.5`
 The `Graph` component includes a `onLayoutCalculated` callback, which provides an opportunity to adjust
 the positions or properties of nodes and links after the layout has been calculated. This can be
 useful if you need to make final tweaks or apply additional logic once the layout is determined.
@@ -858,7 +858,7 @@ onNodeSelectionBrush: (selectedNodes: GraphNode<N, L>[], event: D3BrushEvent<SVG
 onNodeSelectionDrag: (selectedNodes: GraphNode<N, L>[], event: D3DragEvent<SVGGElement, GraphNode<N, L>, unknown>) => void;
 ```
 
-## Post-Render Customization `1.5.0`
+## Post-Render Customization `1.5`
 The _Graph_ component provides an `onRenderComplete` callback function that allows you to add custom
 elements to the graph’s canvas after the rendering is fully complete. This function is especially
 useful for layering additional elements or annotations on top of the existing nodes and links.
