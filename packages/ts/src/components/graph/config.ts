@@ -134,7 +134,7 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   /** Size of the moving particles that represent traffic flow. Default: `2` */
   linkFlowParticleSize?: number;
   /** Link label accessor function or constant value. Default: `undefined` */
-  linkLabel?: GenericAccessor<GraphCircleLabel, L> | undefined;
+  linkLabel?: GenericAccessor<GraphCircleLabel | GraphCircleLabel[], L> | undefined;
   /** Shift label along the link center a little bit to avoid overlap with the link arrow. Default: `true` */
   linkLabelShiftFromCenter?: BooleanAccessor<L>;
   /** Spacing between neighboring links. Default: `8` */

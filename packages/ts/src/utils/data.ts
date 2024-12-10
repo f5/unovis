@@ -334,3 +334,15 @@ export function filterDataByRange<Datum> (data: Datum[], range: [number, number]
 export function isNumberWithinRange (value: number, range: [number, number]): boolean {
   return (value >= range[0]) && (value <= range[1])
 }
+
+export const ensureArray = <T>(value: T | T[] | null): T[] => {
+  if (value === null || value === undefined) {
+    return []
+  }
+
+  if (Array.isArray(value)) {
+    return value
+  }
+
+  return [value]
+}
