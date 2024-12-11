@@ -161,17 +161,36 @@ export class Donut<Datum> extends ComponentCore<Datum[], DonutConfigInterface<Da
       .call(removeArc, duration)
 
     // Label
+    const labelTextAnchor = isHalfDonutRight ? 'start' : isHalfDonutLeft ? 'end' : 'middle'
     this.centralLabel
-      .attr('transform', translate)
       .attr('dy', config.centralSubLabel ? '-0.55em' : null)
+      .style('text-anchor', labelTextAnchor)
       .text(config.centralLabel ?? null)
 
     this.centralSubLabel
-      .attr('transform', translate)
       .attr('dy', config.centralLabel ? '0.55em' : null)
+      .style('text-anchor', labelTextAnchor)
       .text(config.centralSubLabel ?? null)
 
     if (config.centralSubLabelWrap) wrapSVGText(this.centralSubLabel, innerRadius * 1.9)
+
+    // Label placement
+    const { centralLabelsOffsetX, centralLabelsOffsetY } = config
+    const labelTranslateX = (centralLabelsOffsetX || 0) + translateX
+    let labelTranslateY = (centralLabelsOffsetY || 0) + translateY
+
+    // Special case label placement for half donut
+    if (isVerticalHalfDonut && centralLabelsOffsetX === undefined && centralLabelsOffsetY === undefined) {
+      const halfDonutLabelOffsetY = isHalfDonutTop
+        ? -this.centralSubLabel.node().getBoundingClientRect().height
+        : isHalfDonutBottom
+          ? this.centralLabel.node().getBoundingClientRect().height
+          : 0
+      labelTranslateY = halfDonutLabelOffsetY + translateY
+    }
+    const labelTranslate = `translate(${labelTranslateX},${labelTranslateY})`
+    this.centralLabel.attr('transform', labelTranslate)
+    this.centralSubLabel.attr('transform', labelTranslate)
 
     // Background
     this.arcBackground.attr('class', s.background)
