@@ -208,7 +208,7 @@ export class VisGraphComponent<N extends GraphInputNode, L extends GraphInputLin
   @Input() linkFlowParticleSize?: number
 
   /** Link label accessor function or constant value. Default: `undefined` */
-  @Input() linkLabel?: GenericAccessor<GraphCircleLabel, L> | undefined
+  @Input() linkLabel?: GenericAccessor<GraphCircleLabel | GraphCircleLabel[], L> | undefined
 
   /** Shift label along the link center a little bit to avoid overlap with the link arrow. Default: `true` */
   @Input() linkLabelShiftFromCenter?: BooleanAccessor<L>
@@ -355,7 +355,7 @@ export class VisGraphComponent<N extends GraphInputNode, L extends GraphInputLin
   @Input() onZoomEnd?: (zoomScale: number, zoomScaleExtent: [number, number], event: D3ZoomEvent<SVGGElement, unknown> | undefined, transform: ZoomTransform) => void
 
   /** Callback function to be called when the graph layout is calculated. Default: `undefined` */
-  @Input() onLayoutCalculated?: (n: GraphNode<N, L>[], links: GraphLink<N, L>[]) => void
+  @Input() onLayoutCalculated?: (nodes: GraphNode<N, L>[], links: GraphLink<N, L>[]) => void
 
   /** Graph node selection brush callback function. Default: `undefined` */
   @Input() onNodeSelectionBrush?: (selectedNodes: GraphNode<N, L>[], event: D3BrushEvent<SVGGElement> | undefined) => void
