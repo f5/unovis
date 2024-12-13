@@ -11,7 +11,7 @@ import { ComponentCore } from 'core/component'
 import { GraphDataModel } from 'data-models/graph'
 
 // Types
-import { GraphInputLink, GraphInputNode } from 'types/graph'
+import { GraphInputLink, GraphInputNode, GraphInputData } from 'types/graph'
 import { Spacing } from 'types/spacing'
 
 // Utils
@@ -43,7 +43,7 @@ export class Graph<
   N extends GraphInputNode,
   L extends GraphInputLink,
 > extends ComponentCore<
-  {nodes: N[]; links?: L[]},
+  GraphInputData<N, L>,
   GraphConfigInterface<N, L>
   > {
   static selectors = {
@@ -161,9 +161,9 @@ export class Graph<
     this._getLinkArrowDefId = this._getLinkArrowDefId.bind(this)
   }
 
-  setData (data: {nodes: N[]; links?: L[]}): void {
+  setData (data: GraphInputData<N, L>): void {
     const { config } = this
-    if (isEqual(this.datamodel.data, data)) return
+    if (!config.shouldDataUpdate(this.datamodel.data, data)) return
 
     this.datamodel.nodeSort = config.nodeSort
     this.datamodel.data = data
