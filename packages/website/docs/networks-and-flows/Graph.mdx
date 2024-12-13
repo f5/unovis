@@ -171,7 +171,7 @@ provided to `nodeStrokeWidth`.
 #### In the center
 Nodes can have icons in the center, set by providing the `nodeIcon` accessor function, which returns
 either a character (if you're using an icon font) or an internal href (if you're defining your icons as
-[custom SVG defs](http://localhost:9300/docs/containers/Single_Container#svg-defs)). By default,
+[custom SVG defs](/docs/containers/Single_Container#svg-defs)). By default,
 the icon will fit to the size of the node. You can set custom icon size in pixels with the `nodeIconSize`
 property.
 
@@ -363,13 +363,17 @@ Providing an accessor function to `linkArrow` will turn on arrows display on lin
 <GraphDoc hiddenProps={linkHiddenProps} linkArrow={() => sample([undefined, 'single', 'double'])} />
 
 ### Labels `Updated in 1.5`
-Links can have textual or custom SVG labels. When the label is short (two characters or less) or an SVG href, it'll be rendered with a circular
-background similarly to node's [side labels](Graph#on-the-side). Longer labels will have a rectangular background.
-To enable link labels you'll need to provide a function for `linkLabel` returning a `GraphLinkLabel` object to display.
+Links can have one or multiple textual or custom SVG labels. When the label is short (two characters or less) or
+an SVG href, it'll be rendered with a circular background similarly to node's [side labels](Graph#on-the-side).
+Longer labels will have a rectangular background.
 
-To use custom SVG as labels (available in _Unovis_ 1.5), you'll first need to define it in your container [SVG defs](http://localhost:9300/docs/containers/Single_Container#svg-defs)
-and provide the `href` to your custom SVG definition using the `text` property of your label. In this case the `fontSize`
-property will control the size of your custom SVG label.
+To enable link labels you'll need to provide a function for `linkLabel` returning either a single `GraphLinkLabel`
+object or an array of `GraphLinkLabel` objects to display.
+
+To use custom SVG as labels (available in _Unovis_ 1.5), you'll first need to define it in your container
+[SVG defs](/docs/containers/Single_Container#svg-defs) and provide the `href` to your custom
+SVG definition using the `text` property of your label. In this case the `fontSize` property will control the size
+of your custom SVG label.
 
 <GraphDoc hiddenProps={linkHiddenProps} linkLabel={(d, i) => ({ text: i*i*i })} />
 
