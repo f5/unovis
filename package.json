@@ -48,7 +48,7 @@
     "install:clean": "for p in packages/*; do if [ \"$p\" != \"packages/website\" ]; then rm -f \"$p/package-lock.json\"; fi; done; rm -rf packages/*/node_modules; rm -rf node_modules; npm i",
     "postinstall": "sh postinstall.sh",
     "gather-licenses": "for p in packages/*; do echo \"  📄 Checking licenses for $p\"; npx license-report --package=$p/package.json --config lic-report-config.json --output=table | grep -v -E '@unovis/ts|@unovis/react' > $p/licences.temp; mv -f $p/licences.temp $p/licences.txt; done",
-    "version": "sh update-version.sh"
+    "version": "bumpp"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.3.0",
@@ -56,6 +56,7 @@
     "@types/node": "^16.11.14",
     "@typescript-eslint/eslint-plugin": "^5.41.0",
     "@typescript-eslint/parser": "^5.41.0",
+    "bumpp": "^9.8.1",
     "eslint": "^8.26.0",
     "eslint-config-standard": "^16.0.3",
     "eslint-import-resolver-typescript": "^2.7.1",
