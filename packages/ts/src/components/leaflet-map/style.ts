@@ -5,7 +5,7 @@ import { getCssVarNames, injectGlobalCssVariables } from 'utils/style'
 
 // Inject Leaflet global style
 // eslint-disable-next-line
-import leafletCSS from './leaflet.css'
+import * as leafletCSS from './leaflet.css?inline'
 injectGlobal(leafletCSS)
 
 const cssVarDefaults = {
