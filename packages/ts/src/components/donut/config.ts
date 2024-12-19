@@ -42,6 +42,12 @@ export interface DonutConfigInterface<Datum> extends ComponentConfigInterface {
   showBackground?: boolean;
   /** Background angle range. When undefined, the value will be taken from `angleRange`. Default: `undefined` */
   backgroundAngleRange?: [number, number];
+
+  /** Central label and sub-label horizontal offset in pixels. Default: `undefined` */
+  centralLabelOffsetX?: number;
+
+  /** Central label and sub-label vertical offset in pixels. Default: `undefined` */
+  centralLabelOffsetY?: number;
 }
 
 export const DonutDefaultConfig: DonutConfigInterface<unknown> = {
@@ -62,4 +68,6 @@ export const DonutDefaultConfig: DonutConfigInterface<unknown> = {
   emptySegmentAngle: 0.5 * Math.PI / 180,
   showBackground: true,
   backgroundAngleRange: undefined,
+  centralLabelOffsetX: undefined,
+  centralLabelOffsetY: undefined,
 }
