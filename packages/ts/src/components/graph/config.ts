@@ -3,12 +3,15 @@ import { D3DragEvent } from 'd3-drag'
 import { D3ZoomEvent, ZoomTransform } from 'd3-zoom'
 import { Selection } from 'd3-selection'
 
+// Utils
+import { isEqual } from 'utils/data'
+
 // Config
 import { ComponentConfigInterface, ComponentDefaultConfig } from 'core/component/config'
 
 // Types
 import { TrimMode } from 'types/text'
-import { GraphInputLink, GraphInputNode } from 'types/graph'
+import { GraphInputLink, GraphInputNode, GraphInputData } from 'types/graph'
 import { BooleanAccessor, ColorAccessor, NumericAccessor, StringAccessor, GenericAccessor } from 'types/accessor'
 
 // Local Types
@@ -261,6 +264,14 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
     width: number,
     height: number
   ) => void;
+
+  /** Determines whether the component should update when new data is provided.
+   * This function takes the previous and new data as parameters and returns a boolean
+   * indicating whether the update should proceed. Useful for fine-grained control over
+   * update behavior when your data has a complex nested structure.
+   * By default the `isEqual` function from Unovis will be used to do the comparison.
+   */
+  shouldDataUpdate?: (prevData: GraphInputData<N, L>, nextData: GraphInputData<N, L>) => boolean;
 }
 
 export const GraphDefaultConfig: GraphConfigInterface<GraphInputNode, GraphInputLink> = {
@@ -361,4 +372,8 @@ export const GraphDefaultConfig: GraphConfigInterface<GraphInputNode, GraphInput
   onNodeSelectionBrush: undefined,
   onNodeSelectionDrag: undefined,
   onRenderComplete: undefined,
+
+  shouldDataUpdate: (prevData: GraphInputData<GraphInputNode, GraphInputLink>, nextData: GraphInputData<GraphInputNode, GraphInputLink>): boolean => {
+    return !isEqual(prevData, nextData)
+  },
 }
