@@ -31,17 +31,18 @@ export const component = (props: ExampleViewerDurationProps): JSX.Element => {
           (d: TreemapExampleDatum) => d.group,
           (d: TreemapExampleDatum) => d.name,
         ]}
-        tileColor={(d: TreemapNode<TreemapExampleDatum>) => {
-          switch (d.data.datum.group) {
+        tileColor={(node: TreemapNode<TreemapExampleDatum>) => {
+          // Access the group through the parent's data key
+          const group = node.parent?.data[0] || ''
+          switch (group) {
             case 'Group 1': return '#cc2211'
             case 'Group 2': return '#22ee33'
             case 'Group 3': return '#2200cc'
             default: return '#999999'
           }
         }}
-        tileLabel={(d: TreemapNode<TreemapExampleDatum>) => d.data.datum.name}
-        tileLabelColor="#ffffff"
-        duration={props.duration}
+        tileLabel={(node: TreemapNode<TreemapExampleDatum>) => node.data.datum?.name}
+        tileLabelColor="#ffffff" duration={props.duration}
       />
     </VisSingleContainer>
   )

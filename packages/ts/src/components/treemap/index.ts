@@ -4,10 +4,11 @@ import { group } from 'd3-array'
 
 import { ComponentCore } from 'core/component'
 import { SeriesDataModel } from 'data-models/series'
-import { getColor, getString, getNumber, isNumber } from 'utils/data'
+import { getColor } from 'utils/color'
+import { getString, getNumber, isNumber } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { TreemapConfigInterface, TreemapDefaultConfig } from './config'
-import { TreemapDatum, TreemapNode } from './types'
+import { TreemapNode } from './types'
 
 import * as s from './style'
 
