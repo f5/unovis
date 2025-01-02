@@ -6,8 +6,9 @@ export type TreemapDatum<Datum> = {
 }
 
 export interface TreemapNode<Datum> extends HierarchyRectangularNode<TreemapDatum<Datum>> {
-  x0: number;
-  x1: number;
-  y0: number;
-  y1: number;
+  _id: string;
+  _state?: {
+    fill?: string;
+    fillOpacity?: number | null;
+  };
 }

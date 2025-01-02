@@ -1,7 +1,7 @@
 import React from 'react'
 import { VisSingleContainer, VisTreemap } from '@unovis/react'
-import { TreemapNode } from '@unovis/ts'
 import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
+import { TreemapNode } from 'packages/ts'
 
 export const title = 'Treemap: Basic'
 export const subTitle = 'Hierarchical data visualization with custom colors'
@@ -31,17 +31,8 @@ export const component = (props: ExampleViewerDurationProps): JSX.Element => {
           (d: TreemapExampleDatum) => d.group,
           (d: TreemapExampleDatum) => d.name,
         ]}
-        tileColor={(node: TreemapNode<TreemapExampleDatum>) => {
-          const group = node.data.datum?.group || ''
-          switch (group) {
-            case 'Group 1': return '#cc2211'
-            case 'Group 2': return '#22ee33'
-            case 'Group 3': return '#2200cc'
-            default: return '#999999'
-          }
-        }}
         tileLabel={(node: TreemapNode<TreemapExampleDatum>) => node.data.datum?.name}
-        tileLabelColor="#ffffff" duration={props.duration}
+        padding={24}
       />
     </VisSingleContainer>
   )

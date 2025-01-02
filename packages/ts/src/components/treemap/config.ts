@@ -12,6 +12,7 @@ export interface TreemapConfigInterface<Datum> extends ComponentConfigInterface 
 
   /** Color accessor function for tiles. Default: `undefined` */
   tileColor?: ColorAccessor<TreemapNode<Datum>>;
+
   /** Tile label accessor function. Default `undefined` */
   tileLabel?: StringAccessor<TreemapNode<Datum>>;
   /** Color accessor function for tile labels */

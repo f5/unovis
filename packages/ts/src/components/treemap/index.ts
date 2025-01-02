@@ -1,7 +1,7 @@
 import { Selection } from 'd3-selection'
-import { hierarchy, treemap } from 'd3-hierarchy'
+import { hierarchy, treemap, HierarchyNode } from 'd3-hierarchy'
 import { group } from 'd3-array'
-
+import { scaleLinear } from 'd3-scale'
 import { ComponentCore } from 'core/component'
 import { SeriesDataModel } from 'data-models/series'
 import { getColor } from 'utils/color'
@@ -36,39 +36,62 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
     }
 
     const layerAccessors = config.layers.map(layerAccessor => (i: number) => getString(data[i], layerAccessor, i))
-    const nestedData = group(data.keys(), ...layerAccessors)
+    const nestedData = group(data.keys(), ...layerAccessors as [(d: number) => string])
 
-    const root = config.value !== undefined
+    const rootNode = config.value !== undefined
       ? hierarchy(nestedData).sum(index => typeof index === 'number' && getNumber(data[index], config.value, index))
       : hierarchy(nestedData).count()
 
-    const treemapLayout = treemap<[string, number[]]>()
+    const treemapLayout = treemap()
       .size([this._width, this._height])
       .round(true)
       .padding(this.config.padding)
 
-    const nodes = treemapLayout(root)
-      .descendants()
-      .filter(d => d.depth > 0)
-      .map(n => {
-        const node = n as TreemapNode<Datum>
-        node.data = {
-          datum: Array.isArray(n.data[1]) ? data[n.data[1][0]] : undefined,
-          index: Array.isArray(n.data[1]) ? n.data[1][0] : -1,
-        }
-        return node
+    const treemapData = treemapLayout(rootNode) as TreemapNode<Datum>
+
+    treemapData
+      .eachBefore((node) => {
+        if (!node.children) return
+
+        const opacity = scaleLinear()
+          .domain([-1, node.children.length])
+          .range([1, 0])
+
+        node.children.forEach((child, i) => {
+          const treemapChild = child as TreemapNode<Datum>
+          const color = getColor(treemapChild, config.tileColor, i, treemapChild.depth !== 1)
+          treemapChild._state = {
+            fill: color ?? (node as TreemapNode<Datum>)._state?.fill,
+            fillOpacity: color === null ? opacity(i) : null,
+          }
+        })
       })
+
+    const nodes = treemapData.descendants()
+      .filter(d => d.depth > 0)
 
     // Render tiles
     const tiles = this.tiles.selectAll<SVGGElement, TreemapNode<Datum>>('g')
-      .data(nodes, d => d.data.index.toString())
+      .data(nodes, d => d._id)
 
     const tilesEnter = tiles.enter().append('g')
 
-    // Rectangles
-    tilesEnter.append('rect')
-    tiles.merge(tilesEnter).select('rect')
-      .style('fill', d => getColor(d, config.tileColor))
+    // Background rectangles
+    tilesEnter.append('rect').classed('background', true)
+    tiles.merge(tilesEnter).select('rect.background')
+      .style('fill', '#ffffff')
+      .call(selection => smartTransition(selection, duration)
+        .attr('x', d => d.x0)
+        .attr('y', d => d.y0)
+        .attr('width', d => d.x1 - d.x0)
+        .attr('height', d => d.y1 - d.y0)
+      )
+
+    // Foreground rectangles
+    tilesEnter.append('rect').classed('foreground', true)
+    tiles.merge(tilesEnter).select('rect.foreground')
+      .style('fill', d => d._state?.fill ?? getColor(d, config.tileColor))
+      .style('fill-opacity', d => d._state?.fillOpacity ?? 1)
       .call(selection => smartTransition(selection, duration)
         .attr('x', d => d.x0)
         .attr('y', d => d.y0)
