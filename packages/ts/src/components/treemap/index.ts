@@ -45,7 +45,7 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
     const treemapLayout = treemap<[string, number[]]>()
       .size([this._width, this._height])
       .round(true)
-      .padding(1)
+      .padding(this.config.padding)
 
     const nodes = treemapLayout(root)
       .descendants()

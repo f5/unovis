@@ -16,6 +16,10 @@ export interface TreemapConfigInterface<Datum> extends ComponentConfigInterface 
   tileLabel?: StringAccessor<TreemapNode<Datum>>;
   /** Color accessor function for tile labels */
   tileLabelColor?: ColorAccessor<TreemapNode<Datum>>;
+
+  /** Padding passed to D3 treemap layout. Default: `1` */
+  padding?: number;
+
   color?: ColorAccessor<Datum>;
 }
 
@@ -25,4 +29,5 @@ export const TreemapDefaultConfig: TreemapConfigInterface<unknown> = {
   value: undefined,
   color: undefined,
   layers: [],
+  padding: 4,
 }

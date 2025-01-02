@@ -32,8 +32,7 @@ export const component = (props: ExampleViewerDurationProps): JSX.Element => {
           (d: TreemapExampleDatum) => d.name,
         ]}
         tileColor={(node: TreemapNode<TreemapExampleDatum>) => {
-          // Access the group through the parent's data key
-          const group = node.parent?.data[0] || ''
+          const group = node.data.datum?.group || ''
           switch (group) {
             case 'Group 1': return '#cc2211'
             case 'Group 2': return '#22ee33'
