@@ -45,7 +45,7 @@
     "@mdx-js/react": "^3.0.0",
     "@stackblitz/sdk": "1.8.0",
     "clsx": "^1.1.1",
-    "docusaurus-plugin-react-docgen-typescript": "^1.2.1",
+    "docusaurus-plugin-react-docgen-typescript": "^0.1.0",
     "nodemon": "^2.0.16",
     "prism-react-renderer": "^1.1.0",
     "react-docgen-typescript": "^2.0.0",
