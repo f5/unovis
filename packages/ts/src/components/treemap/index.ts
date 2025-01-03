@@ -1,6 +1,6 @@
 import { Selection } from 'd3-selection'
-import { hierarchy, treemap, HierarchyNode } from 'd3-hierarchy'
-import { group } from 'd3-array'
+import { hierarchy, treemap } from 'd3-hierarchy'
+import { group, max } from 'd3-array'
 import { scaleLinear } from 'd3-scale'
 import { ComponentCore } from 'core/component'
 import { SeriesDataModel } from 'data-models/series'
@@ -49,20 +49,24 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
 
     const treemapData = treemapLayout(rootNode) as TreemapNode<Datum>
 
+    // Get max depth by traversing the tree
+    const maxDepth = max(treemapData.descendants().map(d => d.depth))
+
+    // Then update the opacity scale domain to use maxDepth
+    const opacity = scaleLinear()
+      .domain([1, maxDepth])
+      .range([1, 0.2])
+
     treemapData
       .eachBefore((node) => {
         if (!node.children) return
-
-        const opacity = scaleLinear()
-          .domain([-1, node.children.length])
-          .range([1, 0])
 
         node.children.forEach((child, i) => {
           const treemapChild = child as TreemapNode<Datum>
           const color = getColor(treemapChild, config.tileColor, i, treemapChild.depth !== 1)
           treemapChild._state = {
             fill: color ?? (node as TreemapNode<Datum>)._state?.fill,
-            fillOpacity: color === null ? opacity(i) : null,
+            fillOpacity: color === null ? opacity(treemapChild.depth) : null,
           }
         })
       })

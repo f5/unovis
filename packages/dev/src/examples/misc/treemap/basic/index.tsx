@@ -1,6 +1,5 @@
 import React from 'react'
 import { VisSingleContainer, VisTreemap } from '@unovis/react'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 import { TreemapNode } from 'packages/ts'
 
 export const title = 'Treemap: Basic'
@@ -12,7 +11,7 @@ type TreemapExampleDatum = {
   group?: string;
 }
 
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (): JSX.Element => {
   const data: TreemapExampleDatum[] = [
     { name: 'A', value: 20, group: 'Group 1' },
     { name: 'B', value: 15, group: 'Group 1' },
