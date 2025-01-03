@@ -49,18 +49,15 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
 
     const treemapData = treemapLayout(rootNode) as TreemapNode<Datum>
 
-    // Get max depth by traversing the tree
-    const maxDepth = max(treemapData.descendants().map(d => d.depth))
+    const descendants = treemapData.descendants()
 
-    // Then update the opacity scale domain to use maxDepth
     const opacity = scaleLinear()
-      .domain([1, maxDepth])
+      .domain([1, max(descendants, d => d.depth)])
       .range([1, 0.2])
 
     treemapData
       .eachBefore((node) => {
         if (!node.children) return
-
         node.children.forEach((child, i) => {
           const treemapChild = child as TreemapNode<Datum>
           const color = getColor(treemapChild, config.tileColor, i, treemapChild.depth !== 1)
@@ -71,13 +68,11 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
         })
       })
 
-    const nodes = treemapData.descendants()
-      .filter(d => d.depth > 0)
-
     // Render tiles
-    const tiles = this.tiles.selectAll<SVGGElement, TreemapNode<Datum>>('g')
-      .data(nodes, d => d._id)
-
+    const visibleNodes = descendants.filter(d => d.depth > 0)
+    const tiles = this.tiles
+      .selectAll<SVGGElement, TreemapNode<Datum>>('g')
+      .data(visibleNodes, d => d._id)
     const tilesEnter = tiles.enter().append('g')
 
     // Background rectangles

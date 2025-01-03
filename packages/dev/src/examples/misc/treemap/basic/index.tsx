@@ -30,7 +30,10 @@ export const component = (): JSX.Element => {
           (d: TreemapExampleDatum) => d.group,
           (d: TreemapExampleDatum) => d.name,
         ]}
-        tileLabel={(node: TreemapNode<TreemapExampleDatum>) => node.data.datum?.name}
+        tileLabel={(node: TreemapNode<TreemapExampleDatum>) => {
+          // console.log(node)
+          return node.data.datum?.name
+        }}
         padding={24}
       />
     </VisSingleContainer>
