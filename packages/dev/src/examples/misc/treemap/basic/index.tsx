@@ -1,6 +1,5 @@
 import React from 'react'
 import { VisSingleContainer, VisTreemap } from '@unovis/react'
-import { TreemapNode } from 'packages/ts'
 
 export const title = 'Treemap: Basic'
 export const subTitle = 'Hierarchical data visualization with custom colors'
@@ -30,10 +29,6 @@ export const component = (): JSX.Element => {
           (d: TreemapExampleDatum) => d.group,
           (d: TreemapExampleDatum) => d.name,
         ]}
-        tileLabel={(node: TreemapNode<TreemapExampleDatum>) => {
-          // console.log(node)
-          return node.data.datum?.name
-        }}
         padding={24}
       />
     </VisSingleContainer>

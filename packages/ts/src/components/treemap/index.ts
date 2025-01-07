@@ -45,7 +45,7 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
     const treemapLayout = treemap()
       .size([this._width, this._height])
       .round(true)
-      .padding(this.config.padding)
+      .padding(this.config.tilePadding)
 
     const treemapData = treemapLayout(rootNode) as TreemapNode<Datum>
 
@@ -97,20 +97,6 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
         .attr('width', d => d.x1 - d.x0)
         .attr('height', d => d.y1 - d.y0)
       )
-
-    // Labels
-    if (config.tileLabel) {
-      tilesEnter.append('text')
-      tiles.merge(tilesEnter).select('text')
-        .style('fill', d => getColor(d, config.tileLabelColor))
-        .text(d => getString(d, config.tileLabel))
-        .call(selection => smartTransition(selection, duration)
-          .attr('x', d => (d.x0 + d.x1) / 2)
-          .attr('y', d => (d.y0 + d.y1) / 2)
-          .attr('dy', '0.35em')
-          .attr('text-anchor', 'middle')
-        )
-    }
 
     // Exit
     const tilesExit = tiles.exit()
