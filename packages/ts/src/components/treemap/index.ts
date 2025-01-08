@@ -80,12 +80,16 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
     const tiles = this.tiles
       .selectAll<SVGGElement, TreemapNode<Datum>>('g')
       .data(visibleNodes, d => d._id)
-    const tilesEnter = tiles.enter().append('g')
+    const tilesEnter = tiles
+      .enter()
+      .append('g')
+      .attr('class', s.tile)
 
     // Tile background rectangles
-    tilesEnter.append('rect').classed('background', true)
-    tiles.merge(tilesEnter).select('rect.background')
-      .style('fill', '#ffffff')
+    tilesEnter
+      .append('rect')
+      .attr('class', s.tileBackground)
+    tiles.merge(tilesEnter).select(`rect.${s.tileBackground}`)
       .call(selection => smartTransition(selection, duration)
         .attr('x', d => d.x0)
         .attr('y', d => d.y0)
@@ -94,8 +98,10 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       )
 
     // Tile foreground rectangles
-    tilesEnter.append('rect').classed('foreground', true)
-    tiles.merge(tilesEnter).select('rect.foreground')
+    tilesEnter
+      .append('rect')
+      .attr('class', s.tileForeground)
+    tiles.merge(tilesEnter).select(`rect.${s.tileForeground}`)
       .style('fill', d => d._state?.fill ?? getColor(d, config.tileColor))
       .style('fill-opacity', d => d._state?.fillOpacity ?? 1)
       .call(selection => smartTransition(selection, duration)

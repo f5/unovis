@@ -35,10 +35,15 @@ export const tiles = css`
 
 export const tile = css`
   label: tile;
-  stroke: var(${variables.treemapTileStrokeColor});
-  stroke-width: var(${variables.treemapTileStrokeWidth});
-  fill: var(${variables.treemapTileFillColor});
-  cursor: var(${variables.treemapTileCursor});
+`
+
+export const tileBackground = css`
+  label: tile-background;
+  fill: #ffffff;
+`
+
+export const tileForeground = css`
+  label: tile-foreground;
 `
 
 export const label = css`
