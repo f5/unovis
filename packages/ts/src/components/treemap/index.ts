@@ -106,14 +106,11 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       )
 
     // Tile labels
-    tilesEnter.append('text').classed('label', true)
+    tilesEnter.append('text')
+      .attr('class', s.label)
     tiles.merge(tilesEnter)
       .filter(d => !d.children) // Leaf nodes only
-      .select('text.label')
-      // TODO move to Emotion
-      .style('fill', '#000000')
-      .style('font-size', '12px')
-      .style('font-weight', 'bold')
+      .select(`text.${s.label}`)
       .attr('x', d => (d.x0 + d.x1) / 2)
       .attr('y', d => (d.y0 + d.y1) / 2)
       .text(d => d.value)

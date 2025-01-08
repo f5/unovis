@@ -44,9 +44,7 @@ export const tile = css`
 export const label = css`
   label: label;
   text-anchor: middle;
-  fill: var(${variables.treemapLabelTextColor});
-  font-family: var(${variables.treemapLabelFontFamily}, var(--vis-font-family));
-  font-size: var(${variables.treemapLabelFontSize});
-  pointer-events: none;
-  font-weight: 600;
+  dominant-baseline: middle;
+  user-select: none;
+  font-size: var(--vis-treemap-label-font-size);
 `
