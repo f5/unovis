@@ -29,7 +29,11 @@ export const component = (): JSX.Element => {
           (d: TreemapExampleDatum) => d.group,
           (d: TreemapExampleDatum) => d.name,
         ]}
-        padding={24}
+        tilePadding={10}
+        tilePaddingTop={24}
+        labelOffsetX={8}
+        labelOffsetY={8}
+        labelInternalNodes={true}
       />
     </VisSingleContainer>
   )

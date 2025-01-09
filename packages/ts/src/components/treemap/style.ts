@@ -4,9 +4,10 @@ import { css } from '@emotion/css'
 import { getCssVarNames, injectGlobalCssVariables } from 'utils/style'
 
 const cssVarDefaults = {
-  '--vis-treemap-tile-stroke-color': '#ffffff',
+  '--vis-treemap-tile-stroke-color': '#fff',
   '--vis-treemap-tile-stroke-width': '1px',
   '--vis-treemap-tile-fill-color': '#B9BEC3',
+  '--vis-treemap-tile-background-color': '#fff',
   '--vis-treemap-tile-cursor': 'default',
   /* Undefined by default to allow proper fallback to var(--vis-font-family) */
   '--vis-treemap-label-font-family': undefined as undefined,
@@ -16,7 +17,7 @@ const cssVarDefaults = {
   /* Dark Theme */
   '--vis-dark-treemap-tile-stroke-color': '#2c2c2c',
   '--vis-dark-treemap-tile-fill-color': '#5b5f6d',
-  '--vis-dark-treemap-label-text-color': '#ffffff',
+  '--vis-dark-treemap-label-text-color': '#fff',
 }
 
 export const root = css`
@@ -39,7 +40,7 @@ export const tile = css`
 
 export const tileBackground = css`
   label: tile-background;
-  fill: #ffffff;
+  fill: var(--vis-treemap-tile-background-color);
 `
 
 export const tileForeground = css`
@@ -48,8 +49,8 @@ export const tileForeground = css`
 
 export const label = css`
   label: label;
-  text-anchor: middle;
-  dominant-baseline: middle;
+  text-anchor: start;
+  dominant-baseline: hanging;
   user-select: none;
   font-size: var(--vis-treemap-label-font-size);
 `

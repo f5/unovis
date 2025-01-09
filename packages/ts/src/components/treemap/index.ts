@@ -23,7 +23,7 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
   constructor (config?: TreemapConfigInterface<Datum>) {
     super()
     if (config) this.setConfig(config)
-    this.tiles = this.g.append('g')
+    this.tiles = this.g.append('g').attr('class', s.tiles)
   }
 
   _render (customDuration?: number): void {
@@ -52,6 +52,10 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       .round(true)
       .padding(this.config.tilePadding)
 
+    if (this.config.tilePaddingTop !== undefined) {
+      treemapLayout.paddingTop(this.config.tilePaddingTop)
+    }
+
     const treemapData = treemapLayout(rootNode) as TreemapNode<Datum>
 
     const descendants = treemapData.descendants()
@@ -78,7 +82,7 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
     // Render tiles
     const visibleNodes = descendants.filter(d => d.depth > 0)
     const tiles = this.tiles
-      .selectAll<SVGGElement, TreemapNode<Datum>>('g')
+      .selectAll<SVGGElement, TreemapNode<Datum>>(`g.${s.tile}`)
       .data(visibleNodes, d => d._id)
     const tilesEnter = tiles
       .enter()
@@ -89,6 +93,13 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
     tilesEnter
       .append('rect')
       .attr('class', s.tileBackground)
+
+      // Initialize tile positions so that the initial transition is smooth
+      .attr('x', d => d.x0)
+      .attr('y', d => d.y0)
+      .attr('width', d => d.x1 - d.x0)
+      .attr('height', d => d.y1 - d.y0)
+
     tiles.merge(tilesEnter).select(`rect.${s.tileBackground}`)
       .call(selection => smartTransition(selection, duration)
         .attr('x', d => d.x0)
@@ -101,10 +112,20 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
     tilesEnter
       .append('rect')
       .attr('class', s.tileForeground)
-    tiles.merge(tilesEnter).select(`rect.${s.tileForeground}`)
+      // Initialize tile positions so that the initial transition is smooth
+      .attr('x', d => d.x0)
+      .attr('y', d => d.y0)
+      .attr('width', d => d.x1 - d.x0)
+      .attr('height', d => d.y1 - d.y0)
       .style('fill', d => d._state?.fill ?? getColor(d, config.tileColor))
-      .style('fill-opacity', d => d._state?.fillOpacity ?? 1)
+
+      // Make the tiles fade in on enter
+      .style('fill-opacity', 0)
+
+    tiles.merge(tilesEnter).select(`rect.${s.tileForeground}`)
       .call(selection => smartTransition(selection, duration)
+        .style('fill', d => d._state?.fill ?? getColor(d, config.tileColor))
+        .style('fill-opacity', d => d._state?.fillOpacity ?? 1)
         .attr('x', d => d.x0)
         .attr('y', d => d.y0)
         .attr('width', d => d.x1 - d.x0)
@@ -112,13 +133,17 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       )
 
     // Tile labels
-    tilesEnter.append('text')
+    tilesEnter
+      .append('text')
       .attr('class', s.label)
     tiles.merge(tilesEnter)
-      .filter(d => !d.children) // Leaf nodes only
+      .filter(config.labelInternalNodes
+        ? () => true
+        : d => !d.children
+      )
       .select(`text.${s.label}`)
-      .attr('x', d => (d.x0 + d.x1) / 2)
-      .attr('y', d => (d.y0 + d.y1) / 2)
+      .attr('x', d => d.x0 + config.labelOffsetX)
+      .attr('y', d => d.y0 + config.labelOffsetY)
       .text(d => d.value)
 
     // Exit

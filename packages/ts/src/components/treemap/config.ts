@@ -15,6 +15,22 @@ export interface TreemapConfigInterface<Datum> extends ComponentConfigInterface 
 
   /** Padding passed to D3 treemap layout. Default: `2` */
   tilePadding?: number;
+
+  /**
+   * Top padding passed to D3 treemap layout.
+   * Useful to make room for internal node labels.
+   * Default: `undefined`
+   */
+  tilePaddingTop?: number;
+
+  /** Label internal nodes. Default: `false` */
+  labelInternalNodes?: boolean;
+
+  /** Label offset in the X direction. Default: `4` */
+  labelOffsetX?: number;
+
+  /** Label offset in the Y direction. Default: `4` */
+  labelOffsetY?: number;
 }
 
 export const TreemapDefaultConfig: TreemapConfigInterface<unknown> = {
@@ -24,4 +40,8 @@ export const TreemapDefaultConfig: TreemapConfigInterface<unknown> = {
   tileColor: undefined,
   layers: [],
   tilePadding: 2,
+  tilePaddingTop: undefined,
+  labelInternalNodes: false,
+  labelOffsetX: 4,
+  labelOffsetY: 4,
 }
