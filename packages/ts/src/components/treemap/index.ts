@@ -60,22 +60,27 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
 
     const descendants = treemapData.descendants()
 
+    // Set up the opacity scale based on depth
     const maxDepth = max(descendants, d => d.depth)
     const opacity = scaleLinear()
       .domain([1, maxDepth])
       .range([1, 0.2])
 
+    // Set fill color and opacity for each node
     treemapData
       .eachBefore((node) => {
         if (!node.children) return
         node.children.forEach((child, i) => {
           const treemapChild = child as TreemapNode<Datum>
+
+          // Calculate color for this child using the color accessor function
           const color = getColor(treemapChild, config.tileColor, i, treemapChild.depth !== 1)
-          treemapChild._state = {
-            // If no color for this child, use the parent's color
-            fill: color ?? (node as TreemapNode<Datum>)._state?.fill,
-            fillOpacity: color === null ? opacity(treemapChild.depth) : null,
-          }
+
+          // If no color for this child, use the parent's color
+          treemapChild._fill = color ?? (node as TreemapNode<Datum>)._fill
+
+          // Set opacity based on depth
+          treemapChild._fillOpacity = color === null ? opacity(treemapChild.depth) : null
         })
       })
 
@@ -117,15 +122,15 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       .attr('y', d => d.y0)
       .attr('width', d => d.x1 - d.x0)
       .attr('height', d => d.y1 - d.y0)
-      .style('fill', d => d._state?.fill ?? getColor(d, config.tileColor))
+      .style('fill', d => d._fill ?? getColor(d, config.tileColor))
 
       // Make the tiles fade in on enter
       .style('fill-opacity', 0)
 
     tiles.merge(tilesEnter).select(`rect.${s.tileForeground}`)
       .call(selection => smartTransition(selection, duration)
-        .style('fill', d => d._state?.fill ?? getColor(d, config.tileColor))
-        .style('fill-opacity', d => d._state?.fillOpacity ?? 1)
+        .style('fill', d => d._fill ?? getColor(d, config.tileColor))
+        .style('fill-opacity', d => d._fillOpacity ?? 1)
         .attr('x', d => d.x0)
         .attr('y', d => d.y0)
         .attr('width', d => d.x1 - d.x0)
