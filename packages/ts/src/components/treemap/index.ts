@@ -149,7 +149,16 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       .select(`text.${s.label}`)
       .attr('x', d => d.x0 + config.labelOffsetX)
       .attr('y', d => d.y0 + config.labelOffsetY)
-      .text(d => d.value)
+      .text(d => {
+        if (typeof d.data === 'number') {
+          const index = d.data
+          // Leaf node case
+          return config.value(data[index])
+        } else {
+          // Internal node case
+          return d.data[0]
+        }
+      })
 
     // Exit
     const tilesExit = tiles.exit()
