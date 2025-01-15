@@ -164,7 +164,7 @@ export class Graph<
 
   setData (data: GraphInputData<N, L>): void {
     const { config } = this
-    if (!config.shouldDataUpdate(this.datamodel.data, data)) return
+    if (!config.shouldDataUpdate(this.datamodel.data, data, this.datamodel)) return
 
     this.datamodel.nodeSort = config.nodeSort
     this.datamodel.data = data
@@ -273,7 +273,7 @@ export class Graph<
       this._resetSelectionGreyoutState()
       if (this.config.selectedNodeId || this.config.selectedNodeIds) {
         const selectedIds = this.config.selectedNodeIds ?? [this.config.selectedNodeId]
-        const selectedNodes = selectedIds.map(id => datamodel.getNodeFromId(id))
+        const selectedNodes = selectedIds.map(id => datamodel.getNodeById(id))
         this._setNodeSelectionState(selectedNodes)
       }
 
@@ -1016,5 +1016,11 @@ export class Graph<
         y: node.y,
       }
     }
+  }
+
+  /** Set the node state by id */
+  public setNodeStateById (nodeId: string, state: GraphNode<N, L>['_state']): void {
+    this.datamodel.setNodeStateById(nodeId, state)
+    this._updateNodesLinksPartial()
   }
 }

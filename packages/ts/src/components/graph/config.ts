@@ -3,6 +3,9 @@ import { D3DragEvent } from 'd3-drag'
 import { D3ZoomEvent, ZoomTransform } from 'd3-zoom'
 import { Selection } from 'd3-selection'
 
+// Core
+import type { GraphDataModel } from 'data-models/graph'
+
 // Utils
 import { isEqual } from 'utils/data'
 
@@ -273,7 +276,11 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
    * update behavior when your data has a complex nested structure.
    * By default the `isEqual` function from Unovis will be used to do the comparison.
    */
-  shouldDataUpdate?: (prevData: GraphInputData<N, L>, nextData: GraphInputData<N, L>) => boolean;
+  shouldDataUpdate?: (
+    prevData: GraphInputData<N, L>,
+    nextData: GraphInputData<N, L>,
+    datamodel: GraphDataModel<N, L, GraphNode<N, L>, GraphLink<N, L>>
+  ) => boolean;
 }
 
 export const GraphDefaultConfig: GraphConfigInterface<GraphInputNode, GraphInputLink> = {
