@@ -35,7 +35,6 @@ import { ZoomLevel } from '../zoom-levels'
 import * as generalSelectors from '../../style'
 import * as linkSelectors from './style'
 
-
 export function createLinks<N extends GraphInputNode, L extends GraphInputLink> (
   selection: Selection<SVGGElement, GraphLink<N, L>, SVGGElement, unknown>
 ): void {
@@ -89,34 +88,25 @@ export function updateLinksPartial<N extends GraphInputNode, L extends GraphInpu
   })
 }
 
-export function updateLinks<N extends GraphInputNode, L extends GraphInputLink> (
+export function updateLinkLines<N extends GraphInputNode, L extends GraphInputLink> (
   selection: Selection<SVGGElement, GraphLink<N, L>, SVGGElement, unknown>,
   config: GraphConfigInterface<N, L>,
   duration: number,
   scale = 1,
-  getLinkArrowDefId: (arrow: GraphLinkArrowStyle | undefined) => string
-): void {
-  const { linkFlowParticleSize, linkStyle, linkFlow, linkLabel, linkLabelShiftFromCenter } = config
-  if (!selection.size()) return
-
-  selection
-    .classed(
-      linkSelectors.linkDashed,
-      d => getValue<GraphLink<N, L>, GraphLinkStyle>(d, linkStyle, d._indexGlobal) === GraphLinkStyle.Dashed
-    )
-
-  selection.each((d, i, elements) => {
+  getLinkArrowDefId: (arrow: GraphLinkArrowStyle | undefined) => string,
+  linkPathLengthMap: Map<string, number>
+): Selection<SVGGElement, GraphLink<N, L>, SVGGElement, unknown> {
+  return selection.each((d, i, elements) => {
     const element = elements[i]
     const linkGroup = select(element)
     const link = linkGroup.select<SVGPathElement>(`.${linkSelectors.link}`)
     const linkBand = linkGroup.select<SVGPathElement>(`.${linkSelectors.linkBand}`)
     const linkSupport = linkGroup.select<SVGPathElement>(`.${linkSelectors.linkSupport}`)
     const linkArrow = linkGroup.select<SVGUseElement>(`.${linkSelectors.linkArrow}`)
-    const flowGroup = linkGroup.select(`.${linkSelectors.flowGroup}`)
     const linkColor = getLinkColor(d, config)
     const linkShiftTransform = getLinkShiftTransform(d, config.linkNeighborSpacing)
     const linkLabelData = ensureArray(
-      getValue<GraphLink<N, L>, GraphCircleLabel | GraphCircleLabel[]>(d, linkLabel, d._indexGlobal)
+      getValue<GraphLink<N, L>, GraphCircleLabel | GraphCircleLabel[]>(d, config.linkLabel, d._indexGlobal)
     )
     const x1 = getX(d.source)
     const y1 = getY(d.source)
@@ -130,6 +120,15 @@ export function updateLinks<N extends GraphInputNode, L extends GraphInputLink> 
     const cp2y = y1 + (y2 - y1) * 1.0 * curvature
 
     const pathData = `M${x1},${y1} C${cp1x},${cp1y} ${cp2x},${cp2y} ${x2},${y2}`
+    const linkPathElement = linkSupport.attr('d', pathData).node()
+    const cachedLinkPathLength = linkPathLengthMap.get(pathData)
+    const pathLength = cachedLinkPathLength ?? linkPathElement.getTotalLength()
+    if (!cachedLinkPathLength) linkPathLengthMap.set(pathData, pathLength)
+
+    linkSupport
+      .style('stroke', linkColor)
+      .attr('transform', linkShiftTransform)
+
     link
       .attr('class', linkSelectors.link)
       .style('stroke-width', getLinkStrokeWidth(d, scale, config))
@@ -148,15 +147,9 @@ export function updateLinks<N extends GraphInputNode, L extends GraphInputLink> 
     smartTransition(linkBand, duration)
       .attr('d', pathData)
 
-    linkSupport
-      .style('stroke', linkColor)
-      .attr('transform', linkShiftTransform)
-      .attr('d', pathData)
 
     // Arrow
     const linkArrowStyle = getLinkArrowStyle(d, config)
-    const linkPathElement = linkSupport.node()
-    const pathLength = linkPathElement.getTotalLength()
     if (linkArrowStyle) {
       const arrowPos = pathLength * (linkLabelData.length ? 0.65 : 0.5)
       const p1 = linkPathElement.getPointAtLength(arrowPos)
@@ -174,6 +167,41 @@ export function updateLinks<N extends GraphInputNode, L extends GraphInputLink> 
     } else {
       linkArrow.attr('href', null)
     }
+  })
+}
+
+export function updateLinks<N extends GraphInputNode, L extends GraphInputLink> (
+  selection: Selection<SVGGElement, GraphLink<N, L>, SVGGElement, unknown>,
+  config: GraphConfigInterface<N, L>,
+  duration: number,
+  scale = 1,
+  getLinkArrowDefId: (arrow: GraphLinkArrowStyle | undefined) => string,
+  linkPathLengthMap: Map<string, number>
+): void {
+  const { linkFlowParticleSize, linkStyle, linkFlow, linkLabel, linkLabelShiftFromCenter } = config
+  if (!selection.size()) return
+
+  selection
+    .classed(
+      linkSelectors.linkDashed,
+      d => getValue<GraphLink<N, L>, GraphLinkStyle>(d, linkStyle, d._indexGlobal) === GraphLinkStyle.Dashed
+    )
+
+  // Update line and arrow positions
+  updateLinkLines(selection, config, duration, scale, getLinkArrowDefId, linkPathLengthMap)
+
+  // Update labels and link flow (particles) groups
+  selection.each((d, i, elements) => {
+    const element = elements[i]
+    const linkGroup = select(element)
+    const flowGroup = linkGroup.select(`.${linkSelectors.flowGroup}`)
+    const linkSupport = linkGroup.select<SVGPathElement>(`.${linkSelectors.linkSupport}`)
+    const linkPathElement = linkSupport.node()
+    const linkColor = getLinkColor(d, config)
+    const linkShiftTransform = getLinkShiftTransform(d, config.linkNeighborSpacing)
+    const linkLabelData = ensureArray(
+      getValue<GraphLink<N, L>, GraphCircleLabel | GraphCircleLabel[]>(d, linkLabel, d._indexGlobal)
+    )
 
     // Particle Flow
     flowGroup
@@ -234,6 +262,9 @@ export function updateLinks<N extends GraphInputNode, L extends GraphInputLink> 
     const linkLabelGroupsMerged = linkLabelGroups.merge(linkLabelGroupsEnter)
     const linkLabelMargin = 1
     let linkLabelShiftCumulative = -sum(linkLabelsDataPrepared, d => d._backgroundWidth + linkLabelMargin) / 2 // Centering the labels
+    const cachedLinkPathLength = linkPathLengthMap.get(linkPathElement.getAttribute('d'))
+    const pathLength = cachedLinkPathLength ?? linkPathElement.getTotalLength()
+    const linkArrowStyle = getLinkArrowStyle(d, config)
     linkLabelGroupsMerged.each((linkLabelDatum, i, elements) => {
       const element = elements[i]
       const linkLabelGroup = select<SVGGElement, GraphCircleLabelPrepared>(element)
@@ -321,7 +352,8 @@ export function removeLinks<N extends GraphInputNode, L extends GraphInputLink> 
 export function animateLinkFlow<N extends GraphInputNode, L extends GraphInputLink> (
   selection: Selection<SVGGElement, GraphLink<N, L>, SVGGElement, unknown>,
   config: GraphConfigInterface<N, L>,
-  scale: number
+  scale: number,
+  linkPathLengthMap: Map<string, number>
 ): void {
   const { linkFlow } = config
   if (scale < ZoomLevel.Level2) return
@@ -332,7 +364,8 @@ export function animateLinkFlow<N extends GraphInputNode, L extends GraphInputLi
     const flowGroup = linkGroup.select(`.${linkSelectors.flowGroup}`)
 
     const linkPathElement = linkGroup.select<SVGPathElement>(`.${linkSelectors.linkSupport}`).node()
-    const pathLength = linkPathElement.getTotalLength()
+    const cachedLinkPathLength = linkPathLengthMap.get(linkPathElement.getAttribute('d'))
+    const pathLength = cachedLinkPathLength ?? linkPathElement.getTotalLength()
 
     if (!getBoolean(d, linkFlow, d._indexGlobal) || !pathLength) return
     const t = d._state.flowAnimTime
@@ -372,3 +405,4 @@ export function zoomLinks<N extends GraphInputNode, L extends GraphInputLink> (
 }
 
 export const zoomLinksThrottled = throttle(zoomLinks, 500)
+
