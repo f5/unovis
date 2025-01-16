@@ -150,12 +150,26 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       .attr('x', d => d.x0 + config.labelOffsetX)
       .attr('y', d => d.y0 + config.labelOffsetY)
       .text(d => {
+        // Leaf node case
         if (typeof d.data === 'number') {
+          // The value of `d.data` here is the index in the original data array
           const index = d.data
-          // Leaf node case
-          return config.value(data[index])
+
+          // If no value accessor function is defined, return an empty string
+          if (typeof config.value !== 'function') {
+            return ''
+          }
+
+          // Otherwise, return the value from the value accessor function
+          return config.value(data[index], index)
         } else {
           // Internal node case
+          // In this case, `d.data` is an array of two elements:
+          // - The first element is the label of the node
+          // - The second element is the array of child nodes
+          // The D3 types don't seem to cover this case.
+          // TODO figure out the proper types for this case
+          // @ts-expect-error This is a workaround for the D3 types
           return d.data[0]
         }
       })
