@@ -31,9 +31,18 @@ import * as linkSelectors from './modules/link/style'
 import * as panelSelectors from './modules/panel/style'
 
 // Modules
-import { createNodes, updateNodes, removeNodes, zoomNodesThrottled, zoomNodes, updateNodesPartial } from './modules/node'
+import { createNodes, updateNodes, removeNodes, zoomNodesThrottled, zoomNodes, updateNodesPartial, updateNodePositions } from './modules/node'
 import { getMaxNodeSize, getNodeSize, getX, getY } from './modules/node/helper'
-import { createLinks, updateLinks, removeLinks, zoomLinksThrottled, zoomLinks, animateLinkFlow, updateLinksPartial } from './modules/link'
+import {
+  createLinks,
+  updateLinks,
+  removeLinks,
+  zoomLinksThrottled,
+  zoomLinks,
+  animateLinkFlow,
+  updateLinksPartial,
+  updateLinkLines,
+} from './modules/link'
 import { getDoubleArrowPath, getArrowPath } from './modules/link/helper'
 import { createPanels, updatePanels, removePanels } from './modules/panel'
 import { setPanelForNodes, updatePanelBBoxSize, updatePanelNumNodes, initPanels } from './modules/panel/helper'
@@ -105,6 +114,9 @@ export class Graph<
   private _isDragging = false
   private _brushBehavior: BrushBehavior<unknown>
   private _groupDragInit: [number, number]
+
+  // A map for storing link total path lengths to optimize rendering performance
+  private _linkPathLengthMap: Map<string, number> = new Map()
 
   events = {
     [Graph.selectors.background]: {
@@ -346,7 +358,7 @@ export class Graph<
     const { config, datamodel: { links } } = this
 
     const linkGroups = this._linksGroup
-      .selectAll<SVGGElement, GraphLink<N, L>>(`.${linkSelectors.gLink}`)
+      .selectAll<SVGGElement, GraphLink<N, L>>(`.${linkSelectors.gLink}:not(.${linkSelectors.gLinkExit}`)
       .data(links, (d: GraphLink<N, L>) => String(d._id))
 
     const linkGroupsEnter = linkGroups.enter().append('g')
@@ -354,7 +366,7 @@ export class Graph<
       .call(createLinks, config, duration)
 
     const linkGroupsMerged = linkGroups.merge(linkGroupsEnter)
-    linkGroupsMerged.call(updateLinks, config, duration, this._scale, this._getLinkArrowDefId)
+    linkGroupsMerged.call(updateLinks, config, duration, this._scale, this._getLinkArrowDefId, this._linkPathLengthMap)
 
     const linkGroupsExit = linkGroups.exit<GraphLink<N, L>>()
     linkGroupsExit
@@ -659,7 +671,7 @@ export class Graph<
 
     const linksToAnimate = linkElements.filter(d => !d._state.greyout)
     linksToAnimate.each(d => { d._state.flowAnimTime = t })
-    animateLinkFlow(linksToAnimate, this.config, this._scale)
+    animateLinkFlow(linksToAnimate, this.config, this._scale, this._linkPathLengthMap)
   }
 
   private _onZoom (t: ZoomTransform, event?: D3ZoomEvent<SVGGElement, unknown>): void {
@@ -829,9 +841,9 @@ export class Graph<
       const target = l.target as GraphNode<N, L>
       return source._id === d._id || target._id === d._id
     })
-    linksToUpdate.call(updateLinks, config, 0, scale, this._getLinkArrowDefId)
+    linksToUpdate.call(updateLinks, config, 0, scale, this._getLinkArrowDefId, this._linkPathLengthMap)
     const linksToAnimate = linksToUpdate.filter(d => d._state.greyout)
-    if (linksToAnimate.size()) animateLinkFlow(linksToAnimate, config, this._scale)
+    if (linksToAnimate.size()) animateLinkFlow(linksToAnimate, config, this._scale, this._linkPathLengthMap)
 
     config.onNodeDrag?.(d, event)
   }
@@ -875,7 +887,7 @@ export class Graph<
           .filter(l => l.source?._state?.isDragged || l.target?._state?.isDragged)
       ) as Selection<SVGGElement, GraphLink<N, L>, SVGGElement, unknown>
 
-      connectedLinks.call(updateLinks, this.config, 0, this._scale, this._getLinkArrowDefId)
+      connectedLinks.call(updateLinks, this.config, 0, this._scale, this._getLinkArrowDefId, this._linkPathLengthMap)
     } else {
       this._isDragging = false
       selectedNodes.each(n => { n._state.isDragged = false })
@@ -1021,6 +1033,20 @@ export class Graph<
   /** Set the node state by id */
   public setNodeStateById (nodeId: string, state: GraphNode<N, L>['_state']): void {
     this.datamodel.setNodeStateById(nodeId, state)
-    this._updateNodesLinksPartial()
+  }
+
+  /** Call a partial render to update the positions of the nodes and their links.
+    * This can be useful when you've changed the node positions manually outside
+    * of the component and want to update the graph.
+  */
+  public updateNodePositions (duration?: number): void {
+    const { config } = this
+    const animDuration = isNumber(duration) ? duration : config.duration
+
+    const linkElements = this._linksGroup.selectAll<SVGGElement, GraphLink<N, L>>(`.${linkSelectors.gLink}:not(.${linkSelectors.gLinkExit}`)
+    updateLinkLines(linkElements, config, animDuration, this._scale, this._getLinkArrowDefId, this._linkPathLengthMap)
+
+    const nodeElements = this._nodesGroup.selectAll<SVGGElement, GraphNode<N, L>>(`.${nodeSelectors.gNode}:not(.${nodeSelectors.gNodeExit})`)
+    updateNodePositions(nodeElements, animDuration)
   }
 }
