@@ -5,6 +5,12 @@ description: Learn how to configure a Donut chart
 import CodeBlock from '@theme/CodeBlock'
 import { PropsTable } from '@site/src/components/PropsTable'
 import { DocWrapper, InputWrapper } from '../wrappers'
+import {
+  DONUT_HALF_ANGLE_RANGE_TOP,
+  DONUT_HALF_ANGLE_RANGE_RIGHT,
+  DONUT_HALF_ANGLE_RANGE_BOTTOM,
+  DONUT_HALF_ANGLE_RANGE_LEFT
+} from '@unovis/ts'
 
 export const donutProps = () => ({
   name: "Donut",
@@ -27,11 +33,44 @@ the `centralSubLabelWrap` property to `false`), while the main label is supposed
   implemented.
 <DocWrapper {...donutProps()} centralLabel="Label" centralSubLabel="Long sub-label wraps onto the next line"/>
 
+### Label Position
+You can adjust the position of both the central label and sub-label using offset properties:
+
+#### Horizontal Offset
+Use `centralLabelOffsetX` to move the labels left or right (negative values move left, positive values move right):
+<DocWrapper {...donutProps()}
+  centralLabel="Offset Label"
+  centralSubLabel="Moved horizontally"
+  centralLabelOffsetX={20}
+/>
+
+#### Vertical Offset
+Use `centralLabelOffsetY` to move the labels up or down (negative values move up, positive values move down):
+<DocWrapper {...donutProps()}
+  centralLabel="Offset Label"
+  centralSubLabel="Moved vertically"
+  centralLabelOffsetY={-15}
+/>
+
+
+You can combine both offsets to position the labels exactly where you need them.
 
 ## Angle Range
 By default, a _Donut_ will populate values in the angle range `[0, 2π]`. You can adjust your _Donut_'s `angleRange` property to a `[a,b]` of type `[number, number]`
 where a[0] = the starting position and a[1] = the ending position (in radians). A common example might be when you want an incomplete/semi circle:
 <DocWrapper {...donutProps()} angleRange={[1, Math.PI]}/>
+
+### Half Donut Charts
+For convenience, Unovis provides preset angle ranges to create half donut charts in different orientations. You can import these constants from `@unovis/ts`:
+
+```ts
+import {
+  DONUT_HALF_ANGLE_RANGE_TOP,
+  DONUT_HALF_ANGLE_RANGE_RIGHT,
+  DONUT_HALF_ANGLE_RANGE_BOTTOM,
+  DONUT_HALF_ANGLE_RANGE_LEFT
+} from '@unovis/ts'
+```
 
 ## Sorting
 By default, each _segment_ is placed in order of appearance within your `data` array, from
