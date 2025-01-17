@@ -153,6 +153,10 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   linkCurvature?: NumericAccessor<L>;
   /** Highlight links on hover. Default: `true` */
   linkHighlightOnHover?: boolean;
+  /** Offset [x,y] in pixels from the source node's center point where the link should start. Default: `undefined` */
+  linkSourcePointOffset?: GenericAccessor<[number, number], GraphLink<N, L>>;
+  /** Offset [x,y] in pixels from the target node's center point where the link should end. Default: `undefined` */
+  linkTargetPointOffset?: GenericAccessor<[number, number], GraphLink<N, L>>;
   /** Set selected link by its unique id. Default: `undefined` */
   selectedLinkId?: number | string;
 
@@ -337,8 +341,9 @@ export const GraphDefaultConfig: GraphConfigInterface<GraphInputNode, GraphInput
   linkDisabled: false,
   linkCurvature: 0,
   linkHighlightOnHover: true,
+  linkSourcePointOffset: undefined,
+  linkTargetPointOffset: undefined,
   selectedLinkId: undefined,
-  nodeGaugeAnimDuration: 1500,
 
   nodeSize: 30,
   nodeStrokeWidth: 3,
@@ -366,6 +371,7 @@ export const GraphDefaultConfig: GraphConfigInterface<GraphInputNode, GraphInput
   nodeExitScale: 0.75,
   nodeSort: undefined,
   nodeSelectionHighlightMode: GraphNodeSelectionHighlightMode.GreyoutNonConnected,
+  nodeGaugeAnimDuration: 1500,
 
   selectedNodeId: undefined,
   selectedNodeIds: undefined,
