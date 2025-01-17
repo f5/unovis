@@ -108,10 +108,12 @@ export function updateLinkLines<N extends GraphInputNode, L extends GraphInputLi
     const linkLabelData = ensureArray(
       getValue<GraphLink<N, L>, GraphCircleLabel | GraphCircleLabel[]>(d, config.linkLabel, d._indexGlobal)
     )
-    const x1 = getX(d.source)
-    const y1 = getY(d.source)
-    const x2 = getX(d.target)
-    const y2 = getY(d.target)
+    const offsetSource = getValue(d, config.linkSourcePointOffset, i)
+    const offsetTarget = getValue(d, config.linkTargetPointOffset, i)
+    const x1 = getX(d.source) + (offsetSource?.[0] || 0)
+    const y1 = getY(d.source) + (offsetSource?.[1] || 0)
+    const x2 = getX(d.target) + (offsetTarget?.[0] || 0)
+    const y2 = getY(d.target) + (offsetTarget?.[1] || 0)
 
     const curvature = getNumber(d, config.linkCurvature, i) ?? 0
     const cp1x = x1 + (x2 - x1) * 0.5 * curvature
