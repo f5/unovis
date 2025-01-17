@@ -48,43 +48,50 @@ export function escapeStringKeepHash (str: string): string {
 
 /**
  * Trims the input string from the start, leaving only the specified maximum length.
- * @param {string} [str=''] - The input string to be trimmed.
+ * @param {string} str - The input string to be trimmed.
  * @param {number} [maxLength=15] - The maximum allowed length of the trimmed string.
  * @returns {string} - The trimmed string.
  */
-export function trimStringStart (str = '', maxLength = 15): string {
+export function trimStringStart (str: string | undefined, maxLength = 15): string {
+  if (!str) return ''
   return str.length > maxLength ? `…${str.substr(str.length - maxLength, maxLength)}` : str
 }
 
 /**
  * Trims the input string from the middle, leaving only the specified maximum length.
- * @param {string} [str=''] - The input string to be trimmed.
+ * @param {string} str - The input string to be trimmed.
  * @param {number} [maxLength=15] - The maximum allowed length of the trimmed string.
  * @returns {string} - The trimmed string.
  */
-export function trimStringMiddle (str = '', maxLength = 15): string {
+export function trimStringMiddle (str: string | undefined, maxLength = 15): string {
+  if (!str) return ''
+
   const dist = Math.floor((maxLength - 3) / 2)
   return str.length > maxLength ? `${str.substr(0, dist)}…${str.substr(-dist, dist)}` : str
 }
 
 /**
  * Trims the input string from the end, leaving only the specified maximum length.
- * @param {string} [str=''] - The input string to be trimmed.
+ * @param {string} str - The input string to be trimmed.
  * @param {number} [maxLength=15] - The maximum allowed length of the trimmed string.
  * @returns {string} - The trimmed string.
  */
-export function trimStringEnd (str = '', maxLength = 15): string {
+export function trimStringEnd (str: string | undefined, maxLength = 15): string {
+  if (!str) return ''
+
   return str.length > maxLength ? `${str.substr(0, maxLength)}…` : str
 }
 
 /**
  * Trims the input string according to the specified trim mode.
- * @param {string} [str=''] - The input string to be trimmed.
+ * @param {string} str - The input string to be trimmed.
  * @param {number} [length=15] - The maximum allowed length of the trimmed string.
  * @param {TrimMode} [type=TrimMode.Middle] - The trim mode to be applied.
  * @returns {string} - The trimmed string.
  */
-export function trimString (str = '', length = 15, type = TrimMode.Middle): string {
+export function trimString (str: string | undefined, length = 15, type = TrimMode.Middle): string {
+  if (!str) return ''
+
   let result = trimStringEnd(str, length)
   if (type === TrimMode.Start) result = trimStringStart(str, length)
   else if (type === TrimMode.Middle) result = trimStringMiddle(str, length)

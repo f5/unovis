@@ -2,6 +2,7 @@
 import { Position } from 'types/position'
 import { GraphInputLink, GraphInputNode, GraphNodeCore, GraphLinkCore } from 'types/graph'
 import { Spacing } from 'types/spacing'
+import { TrimMode } from 'types/text'
 
 export type GraphNode<
   N extends GraphInputNode = GraphInputNode,
@@ -98,6 +99,10 @@ export type GraphPanelConfig = {
   nodes: (string|number)[];
   /** Panel label */
   label?: string;
+  /** Trim label if it's longer than this number of characters */
+  labelTrimLength?: number;
+  /** Trim mode of the label */
+  labelTrimMode?: TrimMode;
   /** Position of the label */
   labelPosition?: Position.Top | Position.Bottom | string;
   /** Fill color of the panel */
