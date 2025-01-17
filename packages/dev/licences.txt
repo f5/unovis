@@ -3,21 +3,21 @@ name                                  license period  license type  installed ve
 fuse.js                               perpetual       Apache-2.0    6.6.2              Kiro Risk kirollos@gmail.com http://kiro.me
 react                                 perpetual       MIT           19.0.0             n/a
 react-dom                             perpetual       MIT           19.0.0             n/a
-react-router-dom                      perpetual       MIT           6.28.0             Remix Software <hello@remix.run>
+react-router-dom                      perpetual       MIT           6.28.2             Remix Software <hello@remix.run>
 seedrandom                            perpetual       MIT           3.0.5              David Bau
 serve                                 perpetual       MIT           14.2.4             n/a
-@percy/cli                            perpetual       MIT           1.30.4             n/a
-@percy/cypress                        perpetual       MIT           3.1.3-beta.0       Perceptual Inc.
+@percy/cli                            perpetual       MIT           1.30.6             n/a
+@percy/cypress                        perpetual       MIT           3.1.3              Perceptual Inc.
 @pmmmwh/react-refresh-webpack-plugin  perpetual       MIT           0.5.15             Michael Mok
-@types/react                          perpetual       MIT           19.0.1             n/a
-@types/react-dom                      perpetual       MIT           19.0.1             n/a
+@types/react                          perpetual       MIT           19.0.7             n/a
+@types/react-dom                      perpetual       MIT           19.0.3             n/a
 @types/react-router                   perpetual       MIT           5.1.20             n/a
 @types/webpack-env                    perpetual       MIT           1.18.5             n/a
-cypress                               perpetual       MIT           13.16.1            n/a
+cypress                               perpetual       MIT           13.17.0            n/a
 html-webpack-plugin                   perpetual       MIT           5.6.3              Jan Nicklas <j.nicklas@me.com> (https://github.com/jantimon)
 react-refresh                         perpetual       MIT           0.14.2             n/a
 react-refresh-typescript              perpetual       MIT           2.0.9              n/a
-ts-loader                             perpetual       MIT           9.5.1              John Reilly <johnny_reilly@hotmail.com> (https://johnnyreilly.com)
+ts-loader                             perpetual       MIT           9.5.2              John Reilly <johnny_reilly@hotmail.com> (https://johnnyreilly.com)
 typescript                            perpetual       Apache-2.0    4.9.5              Microsoft Corp.
 typescript-plugin-css-modules         perpetual       MIT           4.2.3              Brody McKee <mrmckeb@hotmail.com>
 webpack                               perpetual       MIT           5.97.1             Tobias Koppers @sokra
