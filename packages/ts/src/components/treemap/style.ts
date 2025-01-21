@@ -22,9 +22,6 @@ const cssVarDefaults = {
 
 export const root = css`
   label: treemap-component;
-  width: 100%;
-  height: 100%;
-  position: relative;
 `
 
 export const variables = getCssVarNames(cssVarDefaults)

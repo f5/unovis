@@ -27,7 +27,7 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
   }
 
   _render (customDuration?: number): void {
-    const { config, datamodel: { data } } = this
+    const { config, datamodel: { data }, _width, _height } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
 
     if (!config.layers?.length) {
@@ -48,12 +48,12 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       : hierarchy(nestedData).count()
 
     const treemapLayout = treemap()
-      .size([this._width, this._height])
+      .size([_width, _height])
       .round(true)
-      .padding(this.config.tilePadding)
+      .padding(config.tilePadding)
 
     if (this.config.tilePaddingTop !== undefined) {
-      treemapLayout.paddingTop(this.config.tilePaddingTop)
+      treemapLayout.paddingTop(config.tilePaddingTop)
     }
 
     const treemapData = treemapLayout(rootNode) as TreemapNode<Datum>
