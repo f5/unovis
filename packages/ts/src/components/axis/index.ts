@@ -220,7 +220,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     tickText.nodes().forEach(node => interrupt(node))
 
     tickText.each((value: number | Date, i: number, elements: ArrayLike<SVGTextElement>) => {
-      let text = config.tickFormat?.(value, i, tickValues) ?? `${value}`
+      let text = config.tickFormat?.(value as (number & Date), i, tickValues as (number & Date)[]) ?? `${value}`
       const textElement = elements[i] as SVGTextElement
       const textMaxWidth = config.tickTextWidth || (config.type === AxisType.X ? this._containerWidth / (ticks.size() + 1) : this._containerWidth / 5)
       const styleDeclaration = getComputedStyle(textElement)
