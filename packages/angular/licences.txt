@@ -18,7 +18,7 @@ karma-coverage                     perpetual       MIT           2.0.3          
 karma-jasmine                      perpetual       MIT           4.0.2              Vojta Jina <vojta.jina@gmail.com>
 karma-jasmine-html-reporter        perpetual       MIT           1.7.0
 ng-packagr                         perpetual       MIT           12.2.7             David Herges <david@spektrakel.de>
-rollup                             perpetual       MIT           2.75.5             Rich Harris
+rollup                             perpetual       MIT           2.79.2             Rich Harris
 rollup-plugin-typescript2          perpetual       MIT           0.31.2             @ezolenko
 webpack                            perpetual       MIT           5.76.0             Tobias Koppers @sokra
 zone.js                            perpetual       MIT           0.14.0             Brian Ford
