@@ -6,7 +6,7 @@ export const randomNumberGenerator = new Seedramdon('unovis')
 
 export type XYDataRecord = {
   x: number;
-  y: number | undefined;
+  y: number;
   y1?: number;
   y2?: number;
 }
