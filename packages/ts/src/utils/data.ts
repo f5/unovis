@@ -270,13 +270,13 @@ export function getStackedData<Datum> (
     return (average === 0 && Array.isArray(prevNegative)) ? prevNegative[j] : average < 0
   })
 
-  const stackedData: StackValuesRecord[] = acs.map(() => [])
+  const stackedData = acs.map(() => [] as StackValuesRecord)
   data.forEach((d, i) => {
     let positiveStack = baselineValues[i]
     let negativeStack = baselineValues[i]
     acs.forEach((a, j) => {
       const value = getNumber(d, a, i) || 0
-      if (!isNegativeStack[j]) {
+      if (value >= 0) {
         stackedData[j].push([positiveStack, positiveStack += value])
       } else {
         stackedData[j].push([negativeStack, negativeStack += value])
@@ -286,18 +286,8 @@ export function getStackedData<Datum> (
 
   // Fill in additional stack information
   stackedData.forEach((stack, i) => {
-    stack.negative = isNegativeStack[i]
+    stack.isMostlyNegative = isNegativeStack[i]
   })
-
-  stackedData.filter(s => s.negative)
-    .forEach((s, i, arr) => {
-      s.ending = i === arr.length - 1
-    })
-
-  stackedData.filter(s => !s.negative)
-    .forEach((s, i, arr) => {
-      s.ending = i === arr.length - 1
-    })
 
   return stackedData
 }

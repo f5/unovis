@@ -86,7 +86,7 @@ export class StackedBar<Datum> extends XYComponentCore<Datum, StackedBarConfigIn
 
     const yAccessors = this.getAccessors()
     const stacked = getStackedData(this._barData, 0, yAccessors, this._prevNegative)
-    this._prevNegative = stacked.map(s => !!s.negative)
+    this._prevNegative = stacked.map(s => !!s.isMostlyNegative)
 
     const barGroups = this.g
       .selectAll<SVGGElement, Datum>(`.${s.barGroup}`)
@@ -126,8 +126,15 @@ export class StackedBar<Datum> extends XYComponentCore<Datum, StackedBarConfigIn
     // Render Bars
     const bars = barGroupsMerged
       .selectAll<SVGPathElement, StackedBarDataRecord<Datum>>(`.${s.bar}`)
-      .data((d, j) => stacked.map((s) =>
-        ({ ...d, _stacked: s[j], _negative: s.negative, _ending: s.ending }))
+      .data((d, j) => stacked.map((s, stackIndex) =>
+        ({
+          ...d,
+          _index: j,
+          _stacked: s[j],
+          // Ending bar if the next stack is not the same as the current one
+          _ending: (stackIndex === stacked.length - 1) ||
+            ((stackIndex <= stacked.length - 1) && stacked[stackIndex + 1][j][0] !== s[j][1]),
+        }))
       )
 
     const barsEnter = bars.enter().append('path')
@@ -201,10 +208,9 @@ export class StackedBar<Datum> extends XYComponentCore<Datum, StackedBarConfigIn
     const yAccessors = this.getAccessors()
     const barWidth = this._getBarWidth()
 
-    const isNegative = d._negative
+    const isNegative = d._stacked[1] < 0
     const isEnding = d._ending // The most top bar or, if the value is negative, the most bottom bar
-    // Todo: Find a way to pass the datum index to `getNumber` below
-    const value = getNumber(d, yAccessors[accessorIndex])
+    const value = getNumber(d, yAccessors[accessorIndex], d._index)
     const height = isEntering ? 0 : Math.abs(this.valueScale(d._stacked[0]) - this.valueScale(d._stacked[1]))
     const h = !isEntering && config.barMinHeight1Px && (height < 1) && isFinite(value) && (value !== config.barMinHeightZeroValue) ? 1 : height
     const y = isEntering
