@@ -65,7 +65,7 @@ export class Area<Datum> extends XYComponentCore<Datum, AreaConfigInterface<Datu
     const areaDataX = data.map((d, i) => this.xScale(getNumber(d, config.x, i)))
 
     const stacked = getStackedData(data, config.baseline, yAccessors, this._prevNegative)
-    this._prevNegative = stacked.map(s => !!s.negative)
+    this._prevNegative = stacked.map(s => !!s.isMostlyNegative)
     const stackedData: AreaDatum[][] = stacked.map(
       arr => arr.map(
         (d, j) => ({
