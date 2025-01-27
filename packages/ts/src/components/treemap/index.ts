@@ -53,7 +53,7 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       .padding(config.tilePadding)
 
     if (this.config.tilePaddingTop !== undefined) {
-      treemapLayout.paddingTop(config.tilePaddingTop)
+      treemapLayout.paddingTop(d => d.children ? config.tilePaddingTop : 0)
     }
 
     const treemapData = treemapLayout(rootNode) as TreemapNode<Datum>

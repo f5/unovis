@@ -17,7 +17,18 @@ const data: TreemapExampleDatum[] = [
   { name: 'Indonesia', value: 273523615, group: 'Asia' },
   { name: 'Brazil', value: 212559417, group: 'South America' },
   { name: 'Nigeria', value: 206139589, group: 'Africa' },
+  { name: 'Pakistan', value: 225199937, group: 'Asia' },
+  { name: 'Bangladesh', value: 164689383, group: 'Asia' },
+  { name: 'Russia', value: 145912025, group: 'Europe' },
+  { name: 'Mexico', value: 128932753, group: 'North America' },
+  { name: 'Japan', value: 125836021, group: 'Asia' },
+  { name: 'Ethiopia', value: 114907000, group: 'Africa' },
+  { name: 'Philippines', value: 112007080, group: 'Asia' },
+  { name: 'Egypt', value: 102334481, group: 'Africa' },
+  { name: 'Vietnam', value: 97338583, group: 'Asia' },
+  { name: 'Germany', value: 83783942, group: 'Europe' },
 ]
+
 
 export const component = (): JSX.Element => {
   const [searchTerm, setSearchTerm] = useState('')
