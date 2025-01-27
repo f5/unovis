@@ -1,8 +1,15 @@
 import React, { useState } from 'react'
+import { format } from 'd3-format'
 import { VisSingleContainer, VisTreemap } from '@unovis/react'
 
 export const title = 'Treemap: Search'
 export const subTitle = 'Demo of search by nodes feature'
+
+// Number formatter for population values,
+// using B for billions and M for millions.
+const populationFormatRaw = format('~s')
+const populationFormat = (value: number): string => populationFormatRaw(value)
+  .replace('G', 'B')
 
 type TreemapExampleDatum = {
   name: string;
@@ -66,9 +73,10 @@ export const component = (): JSX.Element => {
             (d: TreemapExampleDatum) => d.group,
             (d: TreemapExampleDatum) => d.name,
           ]}
-          tilePadding={10}
-          tilePaddingTop={24}
-          labelOffsetX={8}
+          numberFormat={populationFormat}
+          tilePadding={5}
+          tilePaddingTop={25}
+          labelOffsetX={6}
           labelOffsetY={8}
           labelInternalNodes={true}
         />

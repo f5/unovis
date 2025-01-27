@@ -10,6 +10,9 @@ export interface TreemapConfigInterface<Datum> extends ComponentConfigInterface 
   /** Array of accessor functions to defined the nested groups. Default: `[]` */
   layers: StringAccessor<Datum>[];
 
+  /** A function that accepts a value number and returns a string. Default: `undefined` */
+  numberFormat?: (value: number) => string;
+
   /** Color accessor function for tiles. Default: `undefined` */
   tileColor?: ColorAccessor<TreemapNode<Datum>>;
 

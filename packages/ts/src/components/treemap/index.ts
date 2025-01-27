@@ -12,6 +12,8 @@ import { TreemapNode } from './types'
 
 import * as s from './style'
 
+const defaultNumberFormat = (value: number): string => `${value}`
+
 export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterface<Datum>> {
   static selectors = s
   protected _defaultConfig = TreemapDefaultConfig as TreemapConfigInterface<Datum>
@@ -29,6 +31,7 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
   _render (customDuration?: number): void {
     const { config, datamodel: { data }, _width, _height } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
+    const { numberFormat = defaultNumberFormat } = config
 
     if (!config.layers?.length) {
       console.warn('Unovis | Treemap: No layers defined')
@@ -43,9 +46,24 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
     // Group the data indices by the layer accessors to create a hierarchical structure
     const nestedData = group(data.keys(), ...layerAccessors as [(d: number) => string])
 
-    const rootNode = config.value !== undefined
-      ? hierarchy(nestedData).sum(index => typeof index === 'number' && getNumber(data[index], config.value, index))
-      : hierarchy(nestedData).count()
+    // Create the hierarchy from the grouped data,
+    // which by itself is not quite right because there is an extra
+    // level of nesting that we don't want, just above the leaf nodes.
+    const rootNode = hierarchy(nestedData)
+
+    // Compute the aggregation
+    if (config.value) {
+      rootNode.sum(index => typeof index === 'number' && getNumber(data[index], config.value, index))
+    } else {
+      rootNode.count()
+    }
+
+    // Fix the hierarchy by removing the extra level of nesting
+    rootNode.each(d => {
+      if (!d.children) {
+        d.parent.children = null
+      }
+    })
 
     const treemapLayout = treemap()
       .size([_width, _height])
@@ -53,7 +71,7 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       .padding(config.tilePadding)
 
     if (this.config.tilePaddingTop !== undefined) {
-      treemapLayout.paddingTop(d => d.children ? config.tilePaddingTop : 0)
+      treemapLayout.paddingTop(config.tilePaddingTop)
     }
 
     const treemapData = treemapLayout(rootNode) as TreemapNode<Datum>
@@ -150,28 +168,8 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       .attr('x', d => d.x0 + config.labelOffsetX)
       .attr('y', d => d.y0 + config.labelOffsetY)
       .text(d => {
-        // Leaf node case
-        if (typeof d.data === 'number') {
-          // The value of `d.data` here is the index in the original data array
-          const index = d.data
-
-          // If no value accessor function is defined, return an empty string
-          if (typeof config.value !== 'function') {
-            return ''
-          }
-
-          // Otherwise, return the value from the value accessor function
-          return config.value(data[index], index)
-        } else {
-          // Internal node case
-          // In this case, `d.data` is an array of two elements:
-          // - The first element is the label of the node
-          // - The second element is the array of child nodes
-          // The D3 types don't seem to cover this case.
-          // TODO figure out the proper types for this case
-          // @ts-expect-error This is a workaround for the D3 types
-          return d.data[0]
-        }
+        // @ts-expect-error This is a workaround for the D3 types
+        return `${d.data[0]}: ${numberFormat(d.value)}`
       })
 
     // Exit
