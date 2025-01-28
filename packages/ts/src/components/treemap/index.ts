@@ -74,8 +74,13 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       treemapLayout.paddingTop(config.tilePaddingTop)
     }
 
-    const treemapData = treemapLayout(rootNode) as TreemapNode<Datum>
+    // Generate unique IDs for each node before creating the treemap layout
+    let nodeId = 0
+    rootNode.each(d => {
+      (d as unknown as TreemapNode<Datum>)._id = `node-${nodeId++}`
+    })
 
+    const treemapData = treemapLayout(rootNode) as TreemapNode<Datum>
     const descendants = treemapData.descendants()
 
     // Set up the opacity scale based on depth
@@ -111,6 +116,12 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       .enter()
       .append('g')
       .attr('class', s.tile)
+
+    // Add clipPath elements
+    tilesEnter
+      .append('clipPath')
+      .attr('id', d => `clip-${d._id}`)
+      .append('rect')
 
     // Tile background rectangles
     tilesEnter
@@ -155,16 +166,27 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
         .attr('height', d => d.y1 - d.y0)
       )
 
+    // Update clipPath rects
+    tiles.merge(tilesEnter).select('clipPath rect')
+      .call(selection => smartTransition(selection, duration)
+        .attr('x', d => d.x0)
+        .attr('y', d => d.y0)
+        .attr('width', d => d.x1 - d.x0)
+        .attr('height', d => d.y1 - d.y0)
+      )
+
     // Tile labels
     tilesEnter
       .append('text')
       .attr('class', s.label)
+      .attr('clip-path', d => `url(#clip-${d._id})`)
     tiles.merge(tilesEnter)
       .filter(config.labelInternalNodes
         ? () => true
         : d => !d.children
       )
       .select(`text.${s.label}`)
+      .attr('clip-path', d => `url(#clip-${d._id})`)
       .attr('x', d => d.x0 + config.labelOffsetX)
       .attr('y', d => d.y0 + config.labelOffsetY)
       .text(d => {
