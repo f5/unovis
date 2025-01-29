@@ -65,13 +65,43 @@ export const urls = [
     duration: 1000,
   },
   {
+    title: 'TopoJSON Overlay',
+    url: '/examples/Leaflet/TopoJSON%20Overlay',
+    duration: 2000,
+  },
+  {
     title: 'Vector Map',
     url: '/examples/Leaflet/Vector%20Map',
     duration: 1000,
   },
   {
+    title: 'Country maps',
+    url: '/examples/Topojson/Country%20maps',
+    duration: 1000,
+  },
+  {
+    title: 'MapFitToPoints',
+    url: '/examples/Topojson/MapFitToPoints',
+    duration: 1000,
+  },
+  {
+    title: 'World Map',
+    url: '/examples/Topojson/World%20Map',
+    duration: 1000,
+  },
+  {
     title: 'Donut: Empty Segments',
     url: '/examples/Donut/Donut:%20Empty%20Segments',
+    duration: 0,
+  },
+  {
+    title: 'Donut: Full Height',
+    url: '/examples/Donut/Donut:%20Full%20Height',
+    duration: 0,
+  },
+  {
+    title: 'Half Donut: Full Height',
+    url: '/examples/Donut/Half%20Donut:%20Full%20Height',
     duration: 0,
   },
   {
@@ -82,6 +112,11 @@ export const urls = [
   {
     title: 'Basic Nested Donut',
     url: '/examples/Nested%20Donut/Basic%20Nested%20Donut',
+    duration: 0,
+  },
+  {
+    title: 'Nested Donut Data Transitions',
+    url: '/examples/Nested%20Donut/Nested%20Donut%20Data%20Transitions',
     duration: 0,
   },
   {
@@ -137,12 +172,17 @@ export const urls = [
   {
     title: 'Graph: Custom Node Fills',
     url: '/examples/Graph/Graph:%20Custom%20Node%20Fills',
-    duration: 0,
+    duration: 1000,
   },
   {
     title: 'Graph: SVG Node Icons',
     url: '/examples/Graph/Graph:%20SVG%20Node%20Icons',
-    duration: 0,
+    duration: 1000,
+  },
+  {
+    title: 'Graph: Custom Nodes',
+    url: '/examples/Graph/Graph:%20Custom%20Nodes',
+    duration: 1000,
   },
   {
     title: 'Dynamic Layout',
@@ -160,9 +200,19 @@ export const urls = [
     duration: 0,
   },
   {
+    title: 'Graph: Link Label Icons',
+    url: '/examples/Graph/Graph:%20Link%20Label%20Icons',
+    duration: 700,
+  },
+  {
     title: 'Node and Link Circle Labels',
     url: '/examples/Graph/Node%20and%20Link%20Circle%20Labels',
     duration: 0,
+  },
+  {
+    title: 'Graph: Multiple Link Labels',
+    url: '/examples/Graph/Graph:%20Multiple%20Link%20Labels',
+    duration: 700,
   },
   {
     title: 'Graph Brushing',
@@ -185,6 +235,11 @@ export const urls = [
     duration: 0,
   },
   {
+    title: 'Sankey Data Transitions',
+    url: '/examples/Sankey/Sankey%20Data%20Transitions',
+    duration: 0,
+  },
+  {
     title: 'API Endpoints Tree',
     url: '/examples/Sankey/API%20Endpoints%20Tree',
     duration: 0,
@@ -192,6 +247,11 @@ export const urls = [
   {
     title: 'Area Chart with Baseline',
     url: '/examples/Area/Area%20Chart%20with%20Baseline',
+    duration: 0,
+  },
+  {
+    title: 'Basic Area Chart',
+    url: '/examples/Area/Basic%20Area%20Chart',
     duration: 0,
   },
   {
@@ -205,6 +265,11 @@ export const urls = [
     duration: 0,
   },
   {
+    title: 'Axis with Label Overlap',
+    url: '/examples/Axis/Axis%20Tick%20Label%20Overlap',
+    duration: 0,
+  },
+  {
     title: 'Axis',
     url: '/examples/Axis/Axis',
     duration: 0,
@@ -215,6 +280,11 @@ export const urls = [
     duration: 0,
   },
   {
+    title: 'Simple Crosshair',
+    url: '/examples/Crosshair/Simple%20Crosshair',
+    duration: 0,
+  },
+  {
     title: 'Stacked vs Non-Stacked',
     url: '/examples/Crosshair/Stacked%20vs%20Non-Stacked',
     duration: 0,
@@ -222,6 +292,11 @@ export const urls = [
   {
     title: 'Dual Axis Chart',
     url: '/examples/Dual%20Axis/Dual%20Axis%20Chart',
+    duration: 0,
+  },
+  {
+    title: 'Basic Grouped Bar Chart',
+    url: '/examples/Grouped%20Bar/Basic%20Grouped%20Bar%20Chart',
     duration: 0,
   },
   {
@@ -265,13 +340,18 @@ export const urls = [
     duration: 0,
   },
   {
-    title: 'Timeline: Negative Lengths',
-    url: '/examples/Timeline/Timeline:%20Negative%20Lengths',
+    title: 'Stacked Bar: Negative Values',
+    url: '/examples/Stacked%20Bar/Stacked%20Bar:%20Negative%20Values',
     duration: 0,
   },
   {
     title: 'Timeline Data Transitions',
     url: '/examples/Timeline/Timeline%20Data%20Transitions',
+    duration: 0,
+  },
+  {
+    title: 'Timeline: Negative Lengths',
+    url: '/examples/Timeline/Timeline:%20Negative%20Lengths',
     duration: 0,
   },
   {
