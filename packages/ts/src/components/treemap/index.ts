@@ -5,7 +5,7 @@ import { scaleLinear } from 'd3-scale'
 import { wrapSVGText } from 'utils/text'
 import { ComponentCore } from 'core/component'
 import { SeriesDataModel } from 'data-models/series'
-import { getColor } from 'utils/color'
+import { getColor, brighter, getHexValue, isDarkBackground } from 'utils/color'
 import { getString, getNumber, isNumber } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { TreemapConfigInterface, TreemapDefaultConfig } from './config'
@@ -84,11 +84,11 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
     const treemapData = treemapLayout(rootNode) as TreemapNode<Datum>
     const descendants = treemapData.descendants()
 
-    // Set up the opacity scale based on depth
+    // Set up the brightness increase scale based on depth
     const maxDepth = max(descendants, d => d.depth)
-    const opacity = scaleLinear()
+    const brightnessIncrease = scaleLinear()
       .domain([1, maxDepth])
-      .range([1, 0.2])
+      .range([0, 1])
 
     // Set fill color and opacity for each node
     treemapData
@@ -97,14 +97,17 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
         node.children.forEach((child, i) => {
           const treemapChild = child as TreemapNode<Datum>
 
-          // Calculate color for this child using the color accessor function
-          const color = getColor(treemapChild, config.tileColor, i, treemapChild.depth !== 1)
+          // Calculate base color for this child using the color accessor function
+          let color = getColor(treemapChild, config.tileColor, i, treemapChild.depth !== 1)
 
           // If no color for this child, use the parent's color
-          treemapChild._fill = color ?? (node as TreemapNode<Datum>)._fill
+          color = color ?? (node as TreemapNode<Datum>)._fill
 
-          // Set opacity based on depth
-          treemapChild._fillOpacity = color === null ? opacity(treemapChild.depth) : null
+          // Convert CSS variables to hex values if needed
+          const hexColor = color ? getHexValue(color, this.g.node()) : null
+
+          // Make the color brighter based on depth
+          treemapChild._fill = hexColor ? brighter(hexColor, brightnessIncrease(treemapChild.depth)) : null
         })
       })
 
@@ -124,43 +127,22 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       .attr('id', d => `clip-${d._id}`)
       .append('rect')
 
-    // Tile background rectangles
+    // Tile rectangles
     tilesEnter
       .append('rect')
-      .attr('class', s.tileBackground)
-
-      // Initialize tile positions so that the initial transition is smooth
-      .attr('x', d => d.x0)
-      .attr('y', d => d.y0)
-      .attr('width', d => d.x1 - d.x0)
-      .attr('height', d => d.y1 - d.y0)
-
-    tiles.merge(tilesEnter).select(`rect.${s.tileBackground}`)
-      .call(selection => smartTransition(selection, duration)
-        .attr('x', d => d.x0)
-        .attr('y', d => d.y0)
-        .attr('width', d => d.x1 - d.x0)
-        .attr('height', d => d.y1 - d.y0)
-      )
-
-    // Tile foreground rectangles
-    tilesEnter
-      .append('rect')
-      .attr('class', s.tileForeground)
+      .attr('class', s.tile)
       // Initialize tile positions so that the initial transition is smooth
       .attr('x', d => d.x0)
       .attr('y', d => d.y0)
       .attr('width', d => d.x1 - d.x0)
       .attr('height', d => d.y1 - d.y0)
       .style('fill', d => d._fill ?? getColor(d, config.tileColor))
+      .style('opacity', 0)
 
-      // Make the tiles fade in on enter
-      .style('fill-opacity', 0)
-
-    tiles.merge(tilesEnter).select(`rect.${s.tileForeground}`)
+    tiles.merge(tilesEnter).select(`rect.${s.tile}`)
       .call(selection => smartTransition(selection, duration)
         .style('fill', d => d._fill ?? getColor(d, config.tileColor))
-        .style('fill-opacity', d => d._fillOpacity ?? 1)
+        .style('opacity', 1)
         .attr('x', d => d.x0)
         .attr('y', d => d.y0)
         .attr('width', d => d.x1 - d.x0)
@@ -196,6 +178,11 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
         // @ts-expect-error This is a workaround for the D3 types
         const label = `${d.data[0]}: ${numberFormat(d.value)}`
         text.text(label)
+
+        // Set text color based on background darkness
+        const backgroundColor = d._fill ?? getColor(d, config.tileColor)
+        const textColor = backgroundColor && isDarkBackground(backgroundColor) ? '#ffffff' : '#000000'
+        text.style('fill', textColor)
 
         // Apply text wrapping to leaf nodes
         if (!d.children) {
