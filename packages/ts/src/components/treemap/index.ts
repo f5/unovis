@@ -1,7 +1,8 @@
-import { Selection } from 'd3-selection'
+import { Selection, select } from 'd3-selection'
 import { hierarchy, treemap } from 'd3-hierarchy'
 import { group, max } from 'd3-array'
 import { scaleLinear } from 'd3-scale'
+import { wrapSVGText } from 'utils/text'
 import { ComponentCore } from 'core/component'
 import { SeriesDataModel } from 'data-models/series'
 import { getColor } from 'utils/color'
@@ -189,9 +190,18 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       .attr('clip-path', d => `url(#clip-${d._id})`)
       .attr('x', d => d.x0 + config.labelOffsetX)
       .attr('y', d => d.y0 + config.labelOffsetY)
-      .text(d => {
+      .each(function (d) {
+        const text = select(this) as unknown as Selection<SVGTextElement, any, SVGElement, any>
+
         // @ts-expect-error This is a workaround for the D3 types
-        return `${d.data[0]}: ${numberFormat(d.value)}`
+        const label = `${d.data[0]}: ${numberFormat(d.value)}`
+        text.text(label)
+
+        // Apply text wrapping to leaf nodes
+        if (!d.children) {
+          const availableWidth = d.x1 - d.x0 - (2 * config.labelOffsetX)
+          wrapSVGText(text, availableWidth)
+        }
       })
 
     // Exit
