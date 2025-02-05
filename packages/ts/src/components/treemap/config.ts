@@ -34,6 +34,9 @@ export interface TreemapConfigInterface<Datum> extends ComponentConfigInterface 
 
   /** Label offset in the Y direction. Default: `4` */
   labelOffsetY?: number;
+
+  /** Border radius of the tiles in pixels. Default: `2` */
+  tileBorderRadius?: number;
 }
 
 export const TreemapDefaultConfig: TreemapConfigInterface<unknown> = {
@@ -47,4 +50,5 @@ export const TreemapDefaultConfig: TreemapConfigInterface<unknown> = {
   labelInternalNodes: false,
   labelOffsetX: 4,
   labelOffsetY: 4,
+  tileBorderRadius: 2,
 }

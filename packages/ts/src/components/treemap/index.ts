@@ -126,11 +126,15 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       .append('clipPath')
       .attr('id', d => `clip-${d._id}`)
       .append('rect')
+      .attr('rx', config.tileBorderRadius)
+      .attr('ry', config.tileBorderRadius)
 
     // Tile rectangles
     tilesEnter
       .append('rect')
       .attr('class', s.tile)
+      .attr('rx', config.tileBorderRadius)
+      .attr('ry', config.tileBorderRadius)
       // Initialize tile positions so that the initial transition is smooth
       .attr('x', d => d.x0)
       .attr('y', d => d.y0)
