@@ -83,23 +83,48 @@ export class Line<Datum> extends XYComponentCore<Datum, LineConfigInterface<Datu
     const lineData: LineData[] = yAccessors.map(a => {
       const ld: LineDatum[] = data.map((d, i) => {
         const rawValue = getNumber(d, a, i)
+
         // If `rawValue` is not numerical or if it's not finite (`NaN`, `undefined`, ...), we replace it with `config.fallbackValue`
         const value = (isNumber(rawValue) || (rawValue === null)) && isFinite(rawValue) ? rawValue : config.fallbackValue
+        const defined = config.interpolateMissingData
+          ? (isNumber(rawValue) || (rawValue === null)) && isFinite(rawValue)
+          : isFinite(value)
+
         return {
           x: lineDataX[i],
           y: this.yScale(value ?? 0),
-          defined: isFinite(value),
+          defined,
           value,
         }
       })
-
       const defined = ld.reduce((def, d) => (d.defined || def), false)
+
+      let validGap = false
+      const gaps = ld.reduce((acc, d, i) => {
+        // Gaps include fallback values if configured.
+        if (!d.defined && isFinite(config.fallbackValue)) {
+          acc.push({ ...d, defined: true })
+        }
+
+        if (!d.defined && !validGap) validGap = true
+
+        const isEndpoint = (i > 0 && !ld[i - 1].defined) || (i < ld.length - 1 && !ld[i + 1].defined)
+        if (d.defined && isEndpoint) {
+          // If no undefined points have been found since the last endpoint, we insert one to enforce breaks between adjacent gaps.
+          if (!validGap) acc.push({ ...d, defined: false })
+          acc.push(d)
+          validGap = false
+        }
+        return acc
+      }, [])
+
       // If the line consists only of `null` values, we'll still render it but it'll be invisible.
       // Such trick allows us to have better animated transitions.
       const visible = defined && ld.some(d => d.value !== null)
       return {
         values: ld,
         defined,
+        gaps,
         visible,
       }
     })
@@ -123,12 +148,18 @@ export class Line<Datum> extends XYComponentCore<Datum, LineConfigInterface<Datu
       .attr('class', s.lineSelectionHelper)
       .attr('d', this._emptyPath())
 
+    linesEnter.append('path')
+      .attr('class', s.interpolatedPath)
+      .attr('d', this._emptyPath())
+      .style('opacity', 0)
+
     const linesMerged = linesEnter.merge(lines)
     linesMerged.style('cursor', (d, i) => getString(data, config.cursor, i))
     linesMerged.each((d, i, elements) => {
       const group = select(elements[i])
       const linePath = group.select<SVGPathElement>(`.${s.linePath}`)
       const lineSelectionHelper = group.select(`.${s.lineSelectionHelper}`)
+      const lineGaps = group.select(`.${s.interpolatedPath}`)
 
       const isLineVisible = d.visible
       const dashArray = getValue<Datum[], number[]>(data, config.lineDashArray, i)
@@ -153,6 +184,18 @@ export class Line<Datum> extends XYComponentCore<Datum, LineConfigInterface<Datu
       lineSelectionHelper
         .attr('d', svgPathD)
         .attr('visibility', isLineVisible ? null : 'hidden')
+
+      if (hasUndefinedSegments && config.interpolateMissingData) {
+        smartTransition(lineGaps, duration)
+          .attr('d', this.lineGen(d.gaps))
+          .attr('stroke', getColor(data, config.color, i))
+          .attr('stroke-width', config.lineWidth - 1)
+          .style('opacity', 1)
+      } else {
+        lineGaps.transition()
+          .duration(duration)
+          .style('opacity', 0)
+      }
     })
 
     smartTransition(lines.exit(), duration)
