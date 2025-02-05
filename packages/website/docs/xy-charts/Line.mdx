@@ -53,6 +53,7 @@ Similar to [mutlti-color configuration](#for-multiple-lines), you can provide an
 customize each line.
 
 ## Dealing with missing data
+### Fallback Value
 In the case of missing data (when the data values are `undefined`, `NaN`, `''`, etc ...), you can assign a fallback value
 for _Line_ using the `fallbackValue` config property. The default value is `undefined`, which means that the line will
 break in the areas of no data and continue when the data appears again. If you set `fallbackValue` to `null`, the values
@@ -69,6 +70,25 @@ Consider the following example, where the dataset contains `undefined` values ov
   inputProps={{ min: 0, max: 15, step: 0.5 }}
   defaultValue={7}
   showAxes/>
+
+### Line Interpolation
+Alternatively, you can set the `interpolateMissingData` property to `true` to fill in the data gaps with a dashed line.
+If `fallbackValue` is set, those values will be plotted on the inteprolated line.
+Otherwise, it will be a smooth curve between defined points, like below:
+
+<XYWrapper {...lineProps()}
+  data={[1, 3, 4, undefined, undefined, undefined, 5, 7, 9, 6].map((y, x) => ({ x, y }))}
+  showAxes
+  interpolateMissingData={true}
+/>
+
+You can customize the appearance of of the interpolated line with the following CSS varibles:
+
+```css
+--vis-line-gapfill-stroke-dasharray: 2 3;
+--vis-line-gapfill-stroke-opacity: 0.8;
+--vis-line-gapfill-stroke-dashoffset: 0;
+```
 
 ## Events
 ```ts
