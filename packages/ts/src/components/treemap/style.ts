@@ -5,7 +5,8 @@ import { getCssVarNames, injectGlobalCssVariables } from 'utils/style'
 
 const cssVarDefaults = {
   '--vis-treemap-tile-stroke-color': '#fff',
-  '--vis-treemap-tile-stroke-width': '1px',
+  '--vis-treemap-tile-stroke-width': '2px',
+  '--vis-treemap-tile-hover-stroke-color': '#fff',
   '--vis-treemap-tile-fill-color': '#B9BEC3',
   '--vis-treemap-tile-background-color': '#fff',
   '--vis-treemap-tile-cursor': 'default',
@@ -31,13 +32,19 @@ export const tiles = css`
   label: g-tiles;
 `
 
-export const tile = css`
-  label: tile;
+export const tileGroup = css`
+  label: tile-group;
 `
 
-export const tileBackground = css`
-  label: tile-background;
-  fill: var(--vis-treemap-tile-background-color);
+export const tile = css`
+  label: tile;
+  stroke: var(--vis-treemap-tile-hover-stroke-color);
+  stroke-opacity: 0;
+  transition: stroke-opacity 100ms ease-in-out;
+
+  &:hover {
+    stroke-opacity: 1;
+  }
 `
 
 export const tileForeground = css`
@@ -49,5 +56,6 @@ export const label = css`
   text-anchor: start;
   dominant-baseline: hanging;
   user-select: none;
+  pointer-events: none;
   font-size: var(--vis-treemap-label-font-size);
 `

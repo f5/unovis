@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
 import { format } from 'd3-format'
-import { VisSingleContainer, VisTreemap } from '@unovis/react'
+import { VisSingleContainer, VisTooltip, VisTreemap } from '@unovis/react'
+import { Position, Treemap, TreemapNode } from '@unovis/ts'
+import s from './styles.module.css'
+
 
 export const title = 'Treemap: Search'
 export const subTitle = 'Demo of search by nodes feature'
@@ -10,6 +13,13 @@ export const subTitle = 'Demo of search by nodes feature'
 const populationFormatRaw = format('~s')
 const populationFormat = (value: number): string => populationFormatRaw(value)
   .replace('G', 'B')
+
+const getTooltipContent = (d: TreemapNode<TreemapExampleDatum>): string => {
+  return `
+    <div class="${s.tooltipTitle}">${d.data[0]}</div>
+    <div>Total Population: ${populationFormat(d.value)}</div>
+  `
+}
 
 type TreemapExampleDatum = {
   name: string;
@@ -79,6 +89,12 @@ export const component = (): JSX.Element => {
           labelOffsetX={6}
           labelOffsetY={8}
           labelInternalNodes={true}
+        />
+        <VisTooltip
+          horizontalPlacement={Position.Center}
+          triggers={{
+            [Treemap.selectors.tile]: getTooltipContent,
+          }}
         />
       </VisSingleContainer>
     </div>

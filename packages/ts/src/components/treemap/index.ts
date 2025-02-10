@@ -119,7 +119,7 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
     const tilesEnter = tiles
       .enter()
       .append('g')
-      .attr('class', s.tile)
+      .attr('class', s.tileGroup)
 
     // Add clipPath elements
     tilesEnter
