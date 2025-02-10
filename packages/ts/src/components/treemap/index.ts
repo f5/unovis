@@ -1,7 +1,8 @@
 import { Selection, select } from 'd3-selection'
 import { hierarchy, treemap } from 'd3-hierarchy'
-import { group, max } from 'd3-array' // Minimum pixel size for showing labels
+import { group, max, extent } from 'd3-array'
 import { scaleLinear } from 'd3-scale'
+import { hsl } from 'd3-color'
 import { wrapSVGText } from 'utils/text'
 import { ComponentCore } from 'core/component'
 import { SeriesDataModel } from 'data-models/series'
@@ -11,7 +12,10 @@ import { smartTransition } from 'utils/d3'
 import { TreemapConfigInterface, TreemapDefaultConfig } from './config'
 import { TreemapNode } from './types'
 
-import * as s from './style'
+import * as s from './style' // Minimum pixel size for showing labels
+
+const enableLightnessVariance = true
+const LIGHTNESS_VARIATION_AMOUNT = 0.08
 
 const MIN_TILE_SIZE_FOR_LABEL = 20
 
@@ -29,6 +33,18 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
     const w = d.x1 - d.x0
     const h = d.y1 - d.y0
     return (w >= MIN_TILE_SIZE_FOR_LABEL) && (h >= MIN_TILE_SIZE_FOR_LABEL)
+  }
+
+  private getTileLightness (node: TreemapNode<Datum>, siblings: TreemapNode<Datum>[]): number {
+    // Get the value extent of the sibling group
+    const [minValue, maxValue] = extent(siblings, d => d.value)
+
+    // If there's no range or no value, return default lightness
+    if (minValue === maxValue || !node.value) return 0
+
+    // Calculate relative position in the range (0 to 1)
+    // Larger values will be closer to 0 (darker)
+    return LIGHTNESS_VARIATION_AMOUNT * ((maxValue - node.value) / (maxValue - minValue))
   }
 
   constructor (config?: TreemapConfigInterface<Datum>) {
@@ -102,7 +118,10 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
     treemapData
       .eachBefore((node) => {
         if (!node.children) return
-        node.children.forEach((child, i) => {
+        // Get all children for value comparison
+        const children = node.children as TreemapNode<Datum>[]
+
+        children.forEach((child, i) => {
           const treemapChild = child as TreemapNode<Datum>
 
           // Calculate base color for this child using the color accessor function
@@ -114,8 +133,23 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
           // Convert CSS variables to hex values if needed
           const hexColor = color ? getHexValue(color, this.g.node()) : null
 
-          // Make the color brighter based on depth
-          treemapChild._fill = hexColor ? brighter(hexColor, brightnessIncrease(treemapChild.depth)) : null
+          if (hexColor) {
+            // Convert to HSL for easier lightness manipulation
+            const hslColor = hsl(hexColor)
+
+            if (enableLightnessVariance) {
+              // Only apply lightness variation to leaf nodes
+              if (!treemapChild.children) {
+                const lightnessAdjustment = this.getTileLightness(treemapChild, children)
+                hslColor.l = Math.min(1, hslColor.l + lightnessAdjustment)
+              }
+            }
+
+            // Make the color brighter based on depth
+            treemapChild._fill = brighter(hslColor.toString(), brightnessIncrease(treemapChild.depth))
+          } else {
+            treemapChild._fill = null
+          }
         })
       })
 
