@@ -1,6 +1,6 @@
 import { Selection, select } from 'd3-selection'
 import { hierarchy, treemap } from 'd3-hierarchy'
-import { group, max } from 'd3-array'
+import { group, max } from 'd3-array' // Minimum pixel size for showing labels
 import { scaleLinear } from 'd3-scale'
 import { wrapSVGText } from 'utils/text'
 import { ComponentCore } from 'core/component'
@@ -13,6 +13,8 @@ import { TreemapNode } from './types'
 
 import * as s from './style'
 
+const MIN_TILE_SIZE_FOR_LABEL = 20
+
 const defaultNumberFormat = (value: number): string => `${value}`
 
 export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterface<Datum>> {
@@ -22,6 +24,12 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
 
   datamodel: SeriesDataModel<Datum> = new SeriesDataModel()
   tiles: Selection<SVGGElement, unknown, SVGGElement, unknown>
+
+  private isTileLargeEnough (d: TreemapNode<Datum>): boolean {
+    const w = d.x1 - d.x0
+    const h = d.y1 - d.y0
+    return (w >= MIN_TILE_SIZE_FOR_LABEL) && (h >= MIN_TILE_SIZE_FOR_LABEL)
+  }
 
   constructor (config?: TreemapConfigInterface<Datum>) {
     super()
@@ -114,7 +122,7 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
     // Render tiles
     const visibleNodes = descendants.filter(d => d.depth > 0)
     const tiles = this.tiles
-      .selectAll<SVGGElement, TreemapNode<Datum>>(`g.${s.tile}`)
+      .selectAll<SVGGElement, TreemapNode<Datum>>(`g.${s.tileGroup}`)
       .data(visibleNodes, d => d._id)
     const tilesEnter = tiles
       .enter()
@@ -167,12 +175,22 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       .append('text')
       .attr('class', s.label)
       .attr('clip-path', d => `url(#clip-${d._id})`)
-    tiles.merge(tilesEnter)
-      .filter(config.labelInternalNodes
-        ? () => true
-        : d => !d.children
-      )
-      .select(`text.${s.label}`)
+    // Update all labels first
+    const mergedTiles = tiles.merge(tilesEnter)
+
+    // Hide labels that don't meet criteria
+    mergedTiles.select(`text.${s.label}`)
+      .style('display', d => {
+        const isAllowedNode = config.labelInternalNodes ? true : !d.children
+        return isAllowedNode && this.isTileLargeEnough(d) ? null : 'none'
+      })
+
+    // Update visible labels
+    mergedTiles.select(`text.${s.label}`)
+      .filter(d => {
+        const isAllowedNode = config.labelInternalNodes ? true : !d.children
+        return isAllowedNode && this.isTileLargeEnough(d)
+      })
       .attr('clip-path', d => `url(#clip-${d._id})`)
       .attr('x', d => d.x0 + config.labelOffsetX)
       .attr('y', d => d.y0 + config.labelOffsetY)
