@@ -15,6 +15,9 @@ const cssVarDefaults = {
   '--vis-treemap-label-text-color': '#5b5f6d',
   '--vis-treemap-label-font-size': '12px',
 
+  /* Label opacity */
+  '--vis-treemap-label-opacity': 0.8,
+
   /* Dark Theme */
   '--vis-dark-treemap-tile-stroke-color': '#2c2c2c',
   '--vis-dark-treemap-tile-fill-color': '#5b5f6d',
@@ -58,4 +61,5 @@ export const label = css`
   user-select: none;
   pointer-events: none;
   font-size: var(--vis-treemap-label-font-size);
+  opacity: var(--vis-treemap-label-opacity);
 `

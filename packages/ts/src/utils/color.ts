@@ -64,7 +64,7 @@ export function rgbaToRgb (rgba: string, backgroundColor?: string): RGBColor {
  * @param threshold - Optional brightness threshold (0-1, default 0.5)
  * @returns true if the background is dark, false if it's light
  */
-export function isDarkBackground (backgroundColor: string, threshold = 0.6): boolean {
+export function isDarkBackground (backgroundColor: string, threshold = 0.55): boolean {
   const hex = getHexValue(backgroundColor, document.body)
   if (!hex) return false
   return hexToBrightness(hex) < threshold

@@ -1,7 +1,7 @@
 import { Selection, select } from 'd3-selection'
 import { hierarchy, treemap } from 'd3-hierarchy'
 import { group, max, extent } from 'd3-array'
-import { scaleLinear } from 'd3-scale'
+import { scaleLinear, scaleSqrt } from 'd3-scale'
 import { hsl } from 'd3-color'
 import { wrapSVGText } from 'utils/text'
 import { ComponentCore } from 'core/component'
@@ -109,9 +109,18 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
 
     // Set up the brightness increase scale based on depth
     const maxDepth = max(descendants, d => d.depth)
+    // Get value extent only from leaf nodes
+    const [minValue, maxValue] = extent(descendants.filter(d => !d.children), d => d.value)
+
     const brightnessIncrease = scaleLinear()
       .domain([1, maxDepth])
       .range([0, 1])
+
+    // Create font size scale for leaf nodes using sqrt scale
+    const fontSizeScale = scaleSqrt()
+      .domain([minValue || 1, maxValue || 1])
+      .range([config.tileLabelMinFontSize, config.tileLabelMaxFontSize])
+      .clamp(true)
 
     // Set fill color and opacity for each node
     treemapData
@@ -217,6 +226,8 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
         const isAllowedNode = config.labelInternalNodes ? true : !d.children
         return isAllowedNode && this.isTileLargeEnough(d) ? null : 'none'
       })
+      // Make the internal labels semibold
+      .style('font-weight', d => d.children ? '500' : 'normal')
 
     // Update visible labels
     mergedTiles.select(`text.${s.label}`)
@@ -238,6 +249,11 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
         const backgroundColor = d._fill ?? getColor(d, config.tileColor)
         const textColor = backgroundColor && isDarkBackground(backgroundColor) ? '#ffffff' : '#000000'
         text.style('fill', textColor)
+
+        // Apply font size scaling only to leaf nodes if enabled
+        if (!d.children && config.enableTileLabelFontSizeVariation) {
+          text.style('font-size', `${fontSizeScale(d.value)}px`)
+        }
 
         // Apply text wrapping to leaf nodes
         if (!d.children) {

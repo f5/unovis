@@ -40,6 +40,15 @@ export interface TreemapConfigInterface<Datum> extends ComponentConfigInterface 
 
   /** Enable lightness variance for sibling tiles. Default: `false` */
   enableLightnessVariance?: boolean;
+
+  /** Enable font size variation for leaf node labels based on value. Default: `false` */
+  enableTileLabelFontSizeVariation?: boolean;
+
+  /** Minimum font size in pixels for leaf node labels when font size variation is enabled. Default: `8` */
+  tileLabelMinFontSize?: number;
+
+  /** Maximum font size in pixels for leaf node labels when font size variation is enabled. Default: `32` */
+  tileLabelMaxFontSize?: number;
 }
 
 export const TreemapDefaultConfig: TreemapConfigInterface<unknown> = {
@@ -55,4 +64,7 @@ export const TreemapDefaultConfig: TreemapConfigInterface<unknown> = {
   labelOffsetY: 4,
   tileBorderRadius: 2,
   enableLightnessVariance: false,
+  enableTileLabelFontSizeVariation: true,
+  tileLabelMinFontSize: 8,
+  tileLabelMaxFontSize: 48,
 }

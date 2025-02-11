@@ -10,7 +10,7 @@ export const subTitle = 'Demo of search by nodes feature'
 
 // Number formatter for population values,
 // using B for billions and M for millions.
-const populationFormatRaw = format('~s')
+const populationFormatRaw = format('.3s')
 const populationFormat = (value: number): string => populationFormatRaw(value)
   .replace('G', 'B')
 
