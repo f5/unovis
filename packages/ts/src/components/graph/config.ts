@@ -2,6 +2,7 @@ import { D3BrushEvent } from 'd3-brush'
 import { D3DragEvent } from 'd3-drag'
 import { D3ZoomEvent, ZoomTransform } from 'd3-zoom'
 import { Selection } from 'd3-selection'
+import { ElkShape } from 'elkjs'
 
 // Core
 import type { GraphDataModel } from 'data-models/graph'
@@ -119,6 +120,12 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
    * E.g.: `[n => n.group, n => n.subGroup]`.
    * Default: `undefined` */
   layoutElkNodeGroups?: StringAccessor<N>[];
+  /** A function to be called per graph node to get the ELK shape object.
+   * This enables you to provide custom node dimensions (through the `width` and `height` properties)
+   * and coordinates (through the `x` and `y` properties) if needed.
+   * Default: `undefined`
+  */
+  layoutElkGetNodeShape?: (d: GraphNode<N, L>, i: number) => ElkShape;
 
   // Links
   /** Link width accessor function ot constant value. Default: `1` */
@@ -326,6 +333,7 @@ export const GraphDefaultConfig: GraphConfigInterface<GraphInputNode, GraphInput
 
   layoutElkSettings: undefined,
   layoutElkNodeGroups: undefined,
+  layoutElkGetNodeShape: undefined,
 
   linkFlowAnimDuration: 20000,
   linkFlowParticleSize: 2,

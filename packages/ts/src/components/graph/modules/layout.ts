@@ -484,11 +484,12 @@ export async function applyELKLayout<N extends GraphInputNode, L extends GraphIn
   const elk = new ELK()
 
   const labelApprxHeight = 30
-  const nodes = datamodel.nodes.map(n => ({
+  const nodes = datamodel.nodes.map((n, i) => ({
     ...n,
     id: n._id,
     width: getNumber(n, config.nodeSize, n._index) + getNumber(n, config.nodeStrokeWidth, n._index),
     height: getNumber(n, config.nodeSize, n._index) + labelApprxHeight,
+    ...(config.layoutElkGetNodeShape ? config.layoutElkGetNodeShape(n, i) : {}),
   }))
 
   let elkNodes: (GraphNode<N, L> | GraphElkHierarchyNode<N, L>)[]
