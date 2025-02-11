@@ -52,7 +52,7 @@ export function toElkHierarchy<N extends GraphInputNode, L extends GraphInputLin
   const hierarchyNode = Array.from(d.entries()).map(([key, value]) => {
     const children = toElkHierarchy(value, layoutOptions)
     if (key) {
-      const layoutOps = isPlainObject(layoutOptions) ? DEFAULT_ELK_SETTINGS : merge(DEFAULT_ELK_SETTINGS, getValue(key, layoutOptions))
+      const layoutOps = isPlainObject(layoutOptions) ? merge(DEFAULT_ELK_SETTINGS, layoutOptions) : merge(DEFAULT_ELK_SETTINGS, getValue(key, layoutOptions))
       return {
         id: key,
         layoutOptions: layoutOps,

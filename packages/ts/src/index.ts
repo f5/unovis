@@ -1,5 +1,6 @@
 export * from './containers'
 export * from './components'
+export * from './data-models'
 export * from './types'
 export * from './styles/colors'
 export * from './styles/sizes'

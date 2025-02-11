@@ -107,7 +107,7 @@ export function updatePanels<N extends GraphNode, L extends GraphLink> (
   const panelLabel = selection.select<SVGGElement>(`.${panelSelectors.label}`)
 
   panelLabel.select<SVGTextElement>(`.${panelSelectors.labelText}`)
-    .text(d => trimString(d.label))
+    .text(d => trimString(d.label, d.labelTrimLength, d.labelTrimMode))
 
   smartTransition(panelLabel, duration)
     .attr('transform', getLabelTranslateTransform)
@@ -121,7 +121,7 @@ export function updatePanels<N extends GraphNode, L extends GraphLink> (
     })
     .on('mouseleave', (event: MouseEvent, d) => {
       const label = select<SVGGElement, GraphPanel<N, L>>(event.currentTarget as SVGGElement)
-      const labelContent = trimString(d.label)
+      const labelContent = trimString(d.label, d.labelTrimLength, d.labelTrimMode)
       label.select('text').text(labelContent)
       setLabelRect(label, labelContent, panelSelectors.labelText)
     })

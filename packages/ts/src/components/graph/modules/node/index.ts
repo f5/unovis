@@ -9,7 +9,7 @@ import { TrimMode } from 'types/text'
 // Utils
 import { trimString } from 'utils/text'
 import { polygon } from 'utils/path'
-import { smartTransition } from 'utils/d3'
+import { smartTransition, Selection$Transition } from 'utils/d3'
 import { getBoolean, getNumber, getString, getValue, throttle } from 'utils/data'
 import { getColor } from 'utils/color'
 import { isStringSvg } from 'utils/svg'
@@ -138,6 +138,15 @@ export function updateNodesPartial<N extends GraphInputNode, L extends GraphInpu
   }
 }
 
+export function updateNodePositions<N extends GraphInputNode, L extends GraphInputLink> (
+  selection: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, unknown>,
+  duration: number
+): Selection$Transition<SVGGElement, GraphNode<N, L>, SVGGElement, unknown> {
+  return smartTransition(selection, duration)
+    .attr('transform', d => `translate(${getX(d)}, ${getY(d)}) scale(1)`)
+    .attr('opacity', 1)
+}
+
 export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> (
   selection: Selection<SVGGElement, GraphNode<N, L>, SVGGElement, unknown>,
   config: GraphConfigInterface<N, L>,
@@ -151,9 +160,7 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
     nodeSideLabels, nodeStroke, nodeFill, nodeBottomIcon,
   } = config
 
-  const nodeGroupsUpdate = smartTransition(selection, duration)
-    .attr('transform', d => `translate(${getX(d)}, ${getY(d)}) scale(1)`)
-    .attr('opacity', 1)
+  const nodeGroupsUpdate = updateNodePositions(selection, duration)
 
   // If there's a custom render function, use it
   if (config.nodeUpdateCustomRenderFunction) {

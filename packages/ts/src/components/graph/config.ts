@@ -2,6 +2,10 @@ import { D3BrushEvent } from 'd3-brush'
 import { D3DragEvent } from 'd3-drag'
 import { D3ZoomEvent, ZoomTransform } from 'd3-zoom'
 import { Selection } from 'd3-selection'
+import { ElkShape } from 'elkjs'
+
+// Core
+import type { GraphDataModel } from 'data-models/graph'
 
 // Utils
 import { isEqual } from 'utils/data'
@@ -116,6 +120,12 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
    * E.g.: `[n => n.group, n => n.subGroup]`.
    * Default: `undefined` */
   layoutElkNodeGroups?: StringAccessor<N>[];
+  /** A function to be called per graph node to get the ELK shape object.
+   * This enables you to provide custom node dimensions (through the `width` and `height` properties)
+   * and coordinates (through the `x` and `y` properties) if needed.
+   * Default: `undefined`
+  */
+  layoutElkGetNodeShape?: (d: GraphNode<N, L>, i: number) => ElkShape;
 
   // Links
   /** Link width accessor function ot constant value. Default: `1` */
@@ -150,6 +160,10 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   linkCurvature?: NumericAccessor<L>;
   /** Highlight links on hover. Default: `true` */
   linkHighlightOnHover?: boolean;
+  /** Offset [x,y] in pixels from the source node's center point where the link should start. Default: `undefined` */
+  linkSourcePointOffset?: GenericAccessor<[number, number], GraphLink<N, L>>;
+  /** Offset [x,y] in pixels from the target node's center point where the link should end. Default: `undefined` */
+  linkTargetPointOffset?: GenericAccessor<[number, number], GraphLink<N, L>>;
   /** Set selected link by its unique id. Default: `undefined` */
   selectedLinkId?: number | string;
 
@@ -273,7 +287,11 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
    * update behavior when your data has a complex nested structure.
    * By default the `isEqual` function from Unovis will be used to do the comparison.
    */
-  shouldDataUpdate?: (prevData: GraphInputData<N, L>, nextData: GraphInputData<N, L>) => boolean;
+  shouldDataUpdate?: (
+    prevData: GraphInputData<N, L>,
+    nextData: GraphInputData<N, L>,
+    datamodel: GraphDataModel<N, L, GraphNode<N, L>, GraphLink<N, L>>
+  ) => boolean;
 }
 
 export const GraphDefaultConfig: GraphConfigInterface<GraphInputNode, GraphInputLink> = {
@@ -315,6 +333,7 @@ export const GraphDefaultConfig: GraphConfigInterface<GraphInputNode, GraphInput
 
   layoutElkSettings: undefined,
   layoutElkNodeGroups: undefined,
+  layoutElkGetNodeShape: undefined,
 
   linkFlowAnimDuration: 20000,
   linkFlowParticleSize: 2,
@@ -330,8 +349,9 @@ export const GraphDefaultConfig: GraphConfigInterface<GraphInputNode, GraphInput
   linkDisabled: false,
   linkCurvature: 0,
   linkHighlightOnHover: true,
+  linkSourcePointOffset: undefined,
+  linkTargetPointOffset: undefined,
   selectedLinkId: undefined,
-  nodeGaugeAnimDuration: 1500,
 
   nodeSize: 30,
   nodeStrokeWidth: 3,
@@ -359,6 +379,7 @@ export const GraphDefaultConfig: GraphConfigInterface<GraphInputNode, GraphInput
   nodeExitScale: 0.75,
   nodeSort: undefined,
   nodeSelectionHighlightMode: GraphNodeSelectionHighlightMode.GreyoutNonConnected,
+  nodeGaugeAnimDuration: 1500,
 
   selectedNodeId: undefined,
   selectedNodeIds: undefined,
