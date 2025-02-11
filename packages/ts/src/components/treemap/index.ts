@@ -14,7 +14,6 @@ import { TreemapNode } from './types'
 
 import * as s from './style' // Minimum pixel size for showing labels
 
-const enableLightnessVariance = true
 const LIGHTNESS_VARIATION_AMOUNT = 0.08
 
 const MIN_TILE_SIZE_FOR_LABEL = 20
@@ -137,7 +136,7 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
             // Convert to HSL for easier lightness manipulation
             const hslColor = hsl(hexColor)
 
-            if (enableLightnessVariance) {
+            if (config.enableLightnessVariance) {
               // Only apply lightness variation to leaf nodes
               if (!treemapChild.children) {
                 const lightnessAdjustment = this.getTileLightness(treemapChild, children)
