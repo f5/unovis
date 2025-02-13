@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import { format } from 'd3-format'
 import { VisSingleContainer, VisTooltip, VisTreemap } from '@unovis/react'
 import { Position, Treemap, TreemapNode } from '@unovis/ts'
@@ -49,6 +49,11 @@ const data: TreemapExampleDatum[] = [
 
 export const component = (): JSX.Element => {
   const [searchTerm, setSearchTerm] = useState('')
+  const [clickedNode, setClickedNode] = useState<TreemapExampleDatum|null>(null)
+
+  const handleClick = useCallback((datum: TreemapExampleDatum): void => {
+    setClickedNode(datum)
+  }, [])
 
   // Match the search term against the data
   const filteredData = React.useMemo(() => {
@@ -75,6 +80,7 @@ export const component = (): JSX.Element => {
           border: '1px solid #ccc',
         }}
       />
+
       <VisSingleContainer height={400}>
         <VisTreemap
           data={filteredData}
@@ -89,6 +95,7 @@ export const component = (): JSX.Element => {
           labelOffsetX={6}
           labelOffsetY={8}
           labelInternalNodes={true}
+          onClick={handleClick}
         />
         <VisTooltip
           horizontalPlacement={Position.Center}
@@ -97,6 +104,17 @@ export const component = (): JSX.Element => {
           }}
         />
       </VisSingleContainer>
+      {clickedNode && (
+        <div style={{
+          marginBottom: '10px',
+          padding: '8px',
+          backgroundColor: '#f5f5f5',
+          borderRadius: '4px',
+          border: '1px solid #ccc',
+        }}>
+          Selected: {clickedNode.name} ({populationFormat(clickedNode.value)})
+        </div>
+      )}
     </div>
   )
 }

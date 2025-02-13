@@ -192,6 +192,16 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       .attr('height', d => d.y1 - d.y0)
       .style('fill', d => d._fill ?? getColor(d, config.tileColor))
       .style('opacity', 0)
+      .style('cursor', config.onClick ? d => !d.children ? 'pointer' : null : null)
+      .on('click', (event: MouseEvent, d: TreemapNode<Datum>) => {
+        if (config.onClick && !d.children) {
+          // @ts-expect-error node.data[1][0] is the index
+          // TODO iterate the types to get this really right
+          const index = d.data[1][0] as number
+          const clickedDatum = (data[index])
+          config.onClick(clickedDatum)
+        }
+      })
 
     tiles.merge(tilesEnter).select(`rect.${s.tile}`)
       .call(selection => smartTransition(selection, duration)

@@ -49,6 +49,9 @@ export interface TreemapConfigInterface<Datum> extends ComponentConfigInterface 
 
   /** Maximum font size in pixels for leaf node labels when font size variation is enabled. Default: `32` */
   tileLabelMaxFontSize?: number;
+
+  /** Click handler for tiles. Default: `undefined` */
+  onClick?: (datum: Datum) => void;
 }
 
 export const TreemapDefaultConfig: TreemapConfigInterface<unknown> = {
