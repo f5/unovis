@@ -24,6 +24,11 @@ export interface LineConfigInterface<Datum> extends XYComponentConfigInterface<D
   highlightOnHover?: boolean;
   /** Optional link cursor. Default: `null` */
   cursor?: StringAccessor<Datum[]>;
+  /** Enable interpolated line where data points are missing or fallbackValue is used.
+   * You can customize the line's appearance with `--vis-line-gapfill-stroke-dasharray`
+   * and `--vis-line-gapfill-stroke-opacity` CSS variables.
+   * Default: `false` */
+  interpolateMissingData?: boolean;
 }
 
 export const LineDefaultConfig: LineConfigInterface<unknown> = {
@@ -34,4 +39,5 @@ export const LineDefaultConfig: LineConfigInterface<unknown> = {
   fallbackValue: undefined,
   highlightOnHover: false,
   cursor: null,
+  interpolateMissingData: false,
 }

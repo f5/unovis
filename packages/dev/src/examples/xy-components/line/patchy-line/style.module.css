@@ -1,0 +1,22 @@
+.patchyLineExample {
+  width: 100%;
+}
+
+.inputs {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: smaller;
+  margin-bottom: 12px;
+}
+
+.inputs > label {
+  display: flex;
+  align-items: center;
+}
+
+.singleLines {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: 10px;
+}
+

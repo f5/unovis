@@ -5,6 +5,10 @@ export const globalStyles = injectGlobal`
     --vis-line-cursor: default;
     --vis-line-stroke-dasharray: none;
     --vis-line-stroke-dashoffset: 0;
+
+    --vis-line-gapfill-stroke-dasharray: 2 3;
+    --vis-line-gapfill-stroke-opacity: 0.8;
+    --vis-line-gapfill-stroke-dashoffset: 0;
   }
 `
 
@@ -34,4 +38,12 @@ export const lineSelectionHelper = css`
 
 export const dim = css`
   opacity: 0.2;
+`
+
+export const interpolatedPath = css`
+  label: interpolated-path;
+  fill: none;
+  stroke-dasharray: var(--vis-line-gapfill-stroke-dasharray);
+  stroke-dashoffset: var(--vis-line-gapfill-stroke-dashoffset);
+  stroke-opacity: var(--vis-line-gapfill-stroke-opacity);
 `
