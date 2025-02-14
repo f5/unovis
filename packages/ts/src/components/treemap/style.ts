@@ -50,6 +50,12 @@ export const tile = css`
   }
 `
 
+// The leaf tiles are clickable
+export const clickableTile = css`
+  label: clickable-tile;
+  cursor: pointer;
+`
+
 export const tileForeground = css`
   label: tile-foreground;
 `

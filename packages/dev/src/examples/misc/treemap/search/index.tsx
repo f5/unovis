@@ -51,10 +51,6 @@ export const component = (): JSX.Element => {
   const [searchTerm, setSearchTerm] = useState('')
   const [clickedNode, setClickedNode] = useState<TreemapExampleDatum|null>(null)
 
-  const handleClick = useCallback((datum: TreemapExampleDatum): void => {
-    setClickedNode(datum)
-  }, [])
-
   // Match the search term against the data
   const filteredData = React.useMemo(() => {
     const searchTermLower = searchTerm.toLowerCase()
@@ -64,6 +60,14 @@ export const component = (): JSX.Element => {
       return nameLower.includes(searchTermLower) || groupLower.includes(searchTermLower)
     })
   }, [searchTerm])
+
+  const handleClick = useCallback((d: TreemapExampleDatum): void => {
+    // TODO iterate the types to get this really right
+    // @ts-expect-error node.data[1][0] is the index
+    const index = d.data[1][0] as number
+    const datum = (data[index])
+    setClickedNode(datum)
+  }, [filteredData])
 
   return (
     <div>
@@ -95,7 +99,12 @@ export const component = (): JSX.Element => {
           labelOffsetX={6}
           labelOffsetY={8}
           labelInternalNodes={true}
-          onClick={handleClick}
+          showTileClickAffordance={true}
+          events={{
+            [Treemap.selectors.clickableTile]: {
+              click: handleClick,
+            },
+          }}
         />
         <VisTooltip
           horizontalPlacement={Position.Center}
