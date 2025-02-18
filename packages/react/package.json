@@ -30,10 +30,10 @@
   "type": "module",
   "sideEffects": false,
   "scripts": {
-    "build": "rimraf dist && tsc --project tsconfig.lib.json --emitDeclarationOnly && rollup --config",
+    "build": "rimraf dist && tsc --project tsconfig.lib.json --emitDeclarationOnly && rollup --config; rm -rf dist/.cache; cp ./{LICENSE,README.md,package.json} ./dist",
     "tsc": "tsc",
     "generate": "rollup -c ./autogen/rollup.config.js; node .autogen.cjs; rm .autogen.cjs",
-    "publish:dist": "rm -rf dist/.cache; cp ./{LICENSE,README.md,package.json} ./dist; cd ./dist; npm publish"
+    "publish:dist": "cd ./dist; npm publish"
   },
   "peerDependencies": {
     "@unovis/ts": "1.5.1",
