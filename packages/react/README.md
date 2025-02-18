@@ -65,7 +65,7 @@ export function BasicLineChart () {
 ```
 
 ## Documentation
-https://unovis.dev/docs
+https://unovis.dev/docs/intro
 
 ## Examples
 https://unovis.dev/gallery
