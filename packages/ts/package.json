@@ -35,8 +35,8 @@
   ],
   "scripts": {
     "build": "sha=$(tar cf - ./src | shasum); if [[ $(echo $sha) == $(< .srcsha) ]] && [[ -d \"./lib\" ]]; then echo \"Lib Build Exists\"; else npm run forcebuild; echo $sha > .srcsha; fi",
-    "forcebuild": "rimraf lib; rollup -c",
-    "publish:dist": "rm -rf lib/.cache; cp ./{LICENSE,README.md,package.json} ./lib; cd ./lib; npm publish"
+    "forcebuild": "rimraf lib; rollup -c; rm -rf lib/.cache; cp ./{LICENSE,README.md,package.json} ./lib",
+    "publish:dist": "cd ./lib; npm publish"
   },
   "devDependencies": {
     "@rollup/plugin-json": "^4.1.0",
