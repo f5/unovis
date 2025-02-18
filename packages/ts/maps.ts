@@ -1,1 +1,1 @@
-export * from './lib/maps'
+export * from './dist/maps'
