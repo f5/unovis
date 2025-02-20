@@ -242,9 +242,9 @@ export class XYContainer<Datum> extends ContainerCore {
 
     this._renderAxes(this._firstRender ? 0 : customDuration)
 
-    // Clip RectsetSize
+    // Clip Rect
     // Extending the clipping path to allow small overflow (e.g. Line will looks better that way when it touches the edges)
-    const clipPathExtension = 2
+    const clipPathExtension = config.clipPathExtend
     this._clipPath.select('rect')
       .attr('x', -clipPathExtension)
       .attr('y', -clipPathExtension)

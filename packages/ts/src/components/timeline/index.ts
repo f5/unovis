@@ -2,7 +2,6 @@ import { select, Selection } from 'd3-selection'
 import { Transition } from 'd3-transition'
 import { scaleOrdinal, ScaleOrdinal } from 'd3-scale'
 import { drag, D3DragEvent } from 'd3-drag'
-import { max } from 'd3-array'
 
 // Core
 import { XYComponentCore } from 'core/xy-component'
@@ -11,7 +10,11 @@ import { XYComponentCore } from 'core/xy-component'
 import { isNumber, unique, arrayOfIndices, getMin, getMax, getString, getNumber } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
-import { trimSVGText } from 'utils/text'
+import { textAlignToAnchor, trimSVGText } from 'utils/text'
+import { guid } from 'utils'
+
+// Types
+import { TextAlign, Spacing } from 'types'
 
 // Config
 import { TimelineDefaultConfig, TimelineConfigInterface } from './config'
@@ -46,6 +49,12 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
   private _maxScroll = 0
   private _scrollbarHeight = 0
   private _labelMargin = 5
+  private _labelWidth = 0 // Will be overridden in `get bleed ()`
+
+  /** We define a dedicated clipping path for this component because it needs to behave
+   * differently than the regular XYContainer's clipPath */
+  private _clipPathId = guid()
+  private _clipPath: Selection<SVGClipPathElement, unknown, null, undefined>
 
   constructor (config?: TimelineConfigInterface<Datum>) {
     super()
@@ -54,9 +63,16 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
     // Invisible background rect to track events
     this._background = this.g.append('rect').attr('class', s.background)
 
+    // Clip path
+    this._clipPath = this.g.append('clipPath')
+      .attr('id', this._clipPathId)
+    this._clipPath.append('rect')
+
     // Group for content
     this._rowsGroup = this.g.append('g').attr('class', s.rows)
+      .style('clip-path', `url(#${this._clipPathId})`)
     this._linesGroup = this.g.append('g').attr('class', s.lines)
+      .style('clip-path', `url(#${this._clipPathId})`)
     this._labelsGroup = this.g.append('g').attr('class', s.labels)
     this._scrollBarGroup = this.g.append('g').attr('class', s.scrollbar)
 
@@ -74,13 +90,12 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
     this._scrollBarHandle.call(dragBehaviour)
   }
 
-  get bleed (): { top: number; bottom: number; left: number; right: number } {
+  get bleed (): Spacing {
     const { config, datamodel: { data } } = this
 
     // We calculate the longest label width to set the bleed values accordingly
-    let labelsBleed = 0
     if (config.showLabels) {
-      if (config.labelWidth) labelsBleed = config.labelWidth + this._labelMargin
+      if (config.labelWidth) this._labelWidth = config.labelWidth + this._labelMargin
       else {
         const recordLabels = this._getRecordLabels(data)
         const longestLabel = recordLabels.reduce((acc, val) => acc.length > val.length ? acc : val, '')
@@ -92,16 +107,15 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
         this._labelsGroup.empty()
 
         const tolerance = 1.15 // Some characters are wider than others so we add a little of extra space to take that into account
-        labelsBleed = labelWidth ? tolerance * labelWidth + this._labelMargin : 0
+        this._labelWidth = labelWidth ? tolerance * labelWidth + this._labelMargin : 0
       }
     }
 
-    const maxLineWidth = this._getMaxLineWidth()
     return {
       top: 0,
       bottom: 0,
-      left: maxLineWidth / 2 + labelsBleed,
-      right: maxLineWidth / 2 + this._scrollBarWidth + this._scrollBarMargin,
+      left: this._labelWidth,
+      right: this._scrollBarWidth + this._scrollBarMargin,
     }
   }
 
@@ -113,10 +127,10 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
     const yRange = this.yScale.range()
     const yStart = Math.min(...yRange)
     const yHeight = Math.abs(yRange[1] - yRange[0])
-    const maxLineWidth = this._getMaxLineWidth()
     const recordLabels = this._getRecordLabels(data)
     const recordLabelsUnique = unique(recordLabels)
     const numUniqueRecords = recordLabelsUnique.length
+    const rowHeight = config.rowHeight || (yHeight / numUniqueRecords)
 
     // Ordinal scale to handle records on the same type
     const ordinalScale: ScaleOrdinal<string, number> = scaleOrdinal()
@@ -135,10 +149,15 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
     const labelsEnter = labels.enter().append('text')
       .attr('class', s.label)
 
+    const labelOffset = config.labelTextAlign === TextAlign.Center ? this._labelWidth / 2
+      : config.labelTextAlign === TextAlign.Left ? this._labelWidth
+        : this._labelMargin
+
     labelsEnter.merge(labels)
-      .attr('x', xRange[0] - maxLineWidth / 2 - this._labelMargin)
-      .attr('y', (label, i) => yStart + (ordinalScale(label) + 0.5) * config.rowHeight)
+      .attr('x', xRange[0] - labelOffset)
+      .attr('y', (label, i) => yStart + (ordinalScale(label) + 0.5) * rowHeight)
       .text(label => label)
+      .style('text-anchor', textAlignToAnchor(config.labelTextAlign as TextAlign))
       .each((label, i, els) => {
         trimSVGText(select(els[i]), config.labelWidth || config.maxLabelWidth)
       })
@@ -147,7 +166,8 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
 
     // Row background rects
     const xStart = xRange[0]
-    const numRows = Math.max(Math.floor(yHeight / config.rowHeight), numUniqueRecords)
+    const timelineWidth = xRange[1] - xRange[0]
+    const numRows = Math.max(Math.floor(yHeight / rowHeight), numUniqueRecords)
     const recordTypes: (string | undefined)[] = Array(numRows).fill(null).map((_, i) => recordLabelsUnique[i])
     const rects = this._rowsGroup.selectAll<SVGRectElement, number>(`.${s.row}`)
       .data(recordTypes)
@@ -157,10 +177,10 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
 
     rectsEnter.merge(rects)
       .classed(s.rowOdd, config.alternatingRowColors ? (_, i) => !(i % 2) : null)
-      .attr('x', xStart - maxLineWidth / 2)
-      .attr('width', xRange[1] - xStart + maxLineWidth)
-      .attr('y', (_, i) => yStart + i * config.rowHeight)
-      .attr('height', config.rowHeight)
+      .attr('x', xStart)
+      .attr('width', timelineWidth)
+      .attr('y', (_, i) => yStart + i * rowHeight)
+      .attr('height', rowHeight)
 
     rects.exit().remove()
 
@@ -176,14 +196,14 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
         ? (d, i) => !(recordLabelsUnique.indexOf(this._getRecordType(d, i)) % 2)
         : null)
       .style('fill', (d, i) => getColor(d, config.color, ordinalScale(this._getRecordType(d, i))))
-      .call(this._positionLines.bind(this), ordinalScale)
+      .call(this._positionLines.bind(this), ordinalScale, rowHeight)
       .attr('transform', 'translate(0, 10)')
       .style('opacity', 0)
 
     const linesMerged = linesEnter.merge(lines)
       .style('fill', (d, i) => getColor(d, config.color, ordinalScale(this._getRecordType(d, i))))
       .style('cursor', (d, i) => getString(d, config.cursor, i))
-      .call(this._positionLines.bind(this), ordinalScale)
+      .call(this._positionLines.bind(this), ordinalScale, rowHeight)
 
     smartTransition(linesMerged, duration)
       .attr('transform', 'translate(0, 0)')
@@ -216,11 +236,18 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
       .attr('ry', this._scrollBarWidth / 2)
 
     this._updateScrollPosition(0)
+
+    // Clip path
+    this._clipPath.select('rect')
+      .attr('x', xRange[0])
+      .attr('width', timelineWidth)
+      .attr('height', this._height)
   }
 
   private _positionLines (
     selection: Selection<SVGRectElement, Datum, SVGGElement, unknown> | Transition<SVGRectElement, Datum, SVGGElement, unknown>,
-    ordinalScale: ScaleOrdinal<string, number>
+    ordinalScale: ScaleOrdinal<string, number>,
+    rowHeight: number
   ): void {
     const { config, xScale, yScale } = this
     const yRange = yScale.range()
@@ -228,11 +255,11 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
 
     selection.each((d, i, elements) => {
       const x = getNumber(d, config.x, i)
-      const y = ordinalScale(this._getRecordType(d, i)) * config.rowHeight
+      const y = ordinalScale(this._getRecordType(d, i)) * rowHeight
       const length = getNumber(d, config.length, i) ?? 0
 
       // Rect dimensions
-      const height = getNumber(d, config.lineWidth, i)
+      const height = getNumber(d, config.lineWidth, i) ?? Math.max(Math.floor(rowHeight / 2), 1)
       const width = xScale(x + length) - xScale(x)
 
       if (width < 0) {
@@ -241,7 +268,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
 
       select(elements[i])
         .attr('x', xScale(x))
-        .attr('y', yStart + y + (config.rowHeight - height) / 2)
+        .attr('y', yStart + y + (rowHeight - height) / 2)
         .attr('width', config.showEmptySegments
           ? Math.max(config.lineCap ? height : 1, width)
           : Math.max(0, width))
@@ -277,16 +304,12 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
     this._scrollDistance = Math.max(0, this._scrollDistance)
     this._scrollDistance = Math.min(this._maxScroll, this._scrollDistance)
 
+    this._clipPath.attr('transform', `translate(0,${this._scrollDistance})`)
     this._linesGroup.attr('transform', `translate(0,${-this._scrollDistance})`)
     this._rowsGroup.attr('transform', `translate(0,${-this._scrollDistance})`)
     this._labelsGroup.attr('transform', `translate(0,${-this._scrollDistance})`)
     const scrollBarPosition = (this._scrollDistance / this._maxScroll * (yHeight - this._scrollbarHeight)) || 0
     this._scrollBarHandle.attr('y', scrollBarPosition)
-  }
-
-  private _getMaxLineWidth (): number {
-    const { config, datamodel: { data } } = this
-    return max(data, (d, i) => getNumber(d, config.lineWidth, i)) ?? 0
   }
 
   private _getRecordType (d: Datum, i: number): string {

@@ -3,6 +3,7 @@ import { XYComponentConfigInterface, XYComponentDefaultConfig } from 'core/xy-co
 // Types
 import { WithOptional } from 'types/misc'
 import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
+import { TextAlign } from 'types'
 
 export interface TimelineConfigInterface<Datum> extends WithOptional<XYComponentConfigInterface<Datum>, 'y'> {
   /** Timeline item color accessor function. Default: `d => d.color` */
@@ -25,6 +26,8 @@ export interface TimelineConfigInterface<Datum> extends WithOptional<XYComponent
   labelWidth?: number;
   /** Maximum label width in pixels. Labels longer than the specified value will be trimmed. Default: `120` */
   maxLabelWidth?: number;
+  /** Text alignment for labels: `TextAlign.Left`, `TextAlign.Center` or `TextAlign.Right`. Default: `TextAlign.Right` */
+  labelTextAlign?: TextAlign | string;
   /** Alternating row colors. Default: `true` */
   alternatingRowColors?: boolean;
   /** Scrolling callback function: `(scrollTop: number) => void`. Default: `undefined` */
@@ -46,6 +49,7 @@ export const TimelineDefaultConfig: TimelineConfigInterface<unknown> = {
   labelWidth: undefined,
   showLabels: false,
   maxLabelWidth: 120,
+  labelTextAlign: TextAlign.Right,
   alternatingRowColors: true,
   onScroll: undefined,
   showEmptySegments: false,
