@@ -14,7 +14,14 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
   }))
   return (<>
     <VisXYContainer<TimeDataRecord> data={data} height={300}>
-      <VisTimeline x={(d: TimeDataRecord) => d.timestamp} rowHeight={50} lineWidth={10} showLabels duration={props.duration}/>
+      <VisTimeline
+        lineRow={(d: TimeDataRecord) => d.type as string}
+        x={(d: TimeDataRecord) => d.timestamp}
+        rowHeight={50}
+        lineWidth={10}
+        showRowLabels
+        duration={props.duration}
+      />
       <VisAxis type='x' numTicks={3} tickFormat={(x: number) => new Date(x).toDateString()} duration={props.duration}/>
       <VisTooltip triggers={{
         [Timeline.selectors.line]: (d: TimeDataRecord) =>

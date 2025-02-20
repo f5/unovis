@@ -26,12 +26,13 @@ export const component = (props: ExampleViewerDurationProps): JSX.Element => {
       }}
     >
       <VisTimeline
+        lineRow={(d: TimeDataRecord) => d.type as string}
         x={(d: TimeDataRecord) => d.timestamp}
         rowHeight={20}
         lineWidth={undefined}
         lineCap
-        showLabels
-        labelTextAlign={TextAlign.Left}
+        showRowLabels
+        rowLabelTextAlign={TextAlign.Left}
         duration={props.duration}
       />
       <VisAxis
