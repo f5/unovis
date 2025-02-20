@@ -94,15 +94,15 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
     const { config, datamodel: { data } } = this
 
     // We calculate the longest label width to set the bleed values accordingly
-    if (config.showLabels) {
-      if (config.labelWidth) this._labelWidth = config.labelWidth + this._labelMargin
+    if (config.showRowLabels ?? config.showLabels) {
+      if (config.rowLabelWidth ?? config.labelWidth) this._labelWidth = (config.rowLabelWidth ?? config.labelWidth) + this._labelMargin
       else {
         const recordLabels = this._getRecordLabels(data)
         const longestLabel = recordLabels.reduce((acc, val) => acc.length > val.length ? acc : val, '')
         const label = this._labelsGroup.append('text')
           .attr('class', s.label)
           .text(longestLabel)
-          .call(trimSVGText, config.maxLabelWidth)
+          .call(trimSVGText, config.rowMaxLabelWidth ?? config.maxLabelWidth)
         const labelWidth = label.node().getBBox().width
         this._labelsGroup.empty()
 
@@ -144,22 +144,22 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
 
     // Labels
     const labels = this._labelsGroup.selectAll<SVGTextElement, string>(`.${s.label}`)
-      .data(config.showLabels ? recordLabelsUnique : [])
+      .data((config.showRowLabels ?? config.showLabels) ? recordLabelsUnique : [])
 
     const labelsEnter = labels.enter().append('text')
       .attr('class', s.label)
 
-    const labelOffset = config.labelTextAlign === TextAlign.Center ? this._labelWidth / 2
-      : config.labelTextAlign === TextAlign.Left ? this._labelWidth
+    const labelOffset = config.rowLabelTextAlign === TextAlign.Center ? this._labelWidth / 2
+      : config.rowLabelTextAlign === TextAlign.Left ? this._labelWidth
         : this._labelMargin
 
     labelsEnter.merge(labels)
       .attr('x', xRange[0] - labelOffset)
       .attr('y', (label, i) => yStart + (ordinalScale(label) + 0.5) * rowHeight)
       .text(label => label)
-      .style('text-anchor', textAlignToAnchor(config.labelTextAlign as TextAlign))
+      .style('text-anchor', textAlignToAnchor(config.rowLabelTextAlign as TextAlign))
       .each((label, i, els) => {
-        trimSVGText(select(els[i]), config.labelWidth || config.maxLabelWidth)
+        trimSVGText(select(els[i]), (config.rowLabelWidth ?? config.labelWidth) || (config.rowMaxLabelWidth ?? config.maxLabelWidth))
       })
 
     labels.exit().remove()
@@ -187,21 +187,21 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
     // Lines
     const lines = this._linesGroup.selectAll<SVGRectElement, Datum>(`.${s.line}`)
       .data(data, (d: Datum, i) => getString(d, config.id, i) ?? [
-        this._getRecordType(d, i), getNumber(d, config.x, i),
+        this._getRecordKey(d, i), getNumber(d, config.x, i),
       ].join('-'))
 
     const linesEnter = lines.enter().append('rect')
       .attr('class', s.line)
       .classed(s.rowOdd, config.alternatingRowColors
-        ? (d, i) => !(recordLabelsUnique.indexOf(this._getRecordType(d, i)) % 2)
+        ? (d, i) => !(recordLabelsUnique.indexOf(this._getRecordKey(d, i)) % 2)
         : null)
-      .style('fill', (d, i) => getColor(d, config.color, ordinalScale(this._getRecordType(d, i))))
+      .style('fill', (d, i) => getColor(d, config.color, ordinalScale(this._getRecordKey(d, i))))
       .call(this._positionLines.bind(this), ordinalScale, rowHeight)
       .attr('transform', 'translate(0, 10)')
       .style('opacity', 0)
 
     const linesMerged = linesEnter.merge(lines)
-      .style('fill', (d, i) => getColor(d, config.color, ordinalScale(this._getRecordType(d, i))))
+      .style('fill', (d, i) => getColor(d, config.color, ordinalScale(this._getRecordKey(d, i))))
       .style('cursor', (d, i) => getString(d, config.cursor, i))
       .call(this._positionLines.bind(this), ordinalScale, rowHeight)
 
@@ -255,8 +255,8 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
 
     selection.each((d, i, elements) => {
       const x = getNumber(d, config.x, i)
-      const y = ordinalScale(this._getRecordType(d, i)) * rowHeight
-      const length = getNumber(d, config.length, i) ?? 0
+      const y = ordinalScale(this._getRecordKey(d, i)) * rowHeight
+      const length = getNumber(d, config.lineLength ?? config.length, i) ?? 0
 
       // Rect dimensions
       const height = getNumber(d, config.lineWidth, i) ?? Math.max(Math.floor(rowHeight / 2), 1)
@@ -312,19 +312,19 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
     this._scrollBarHandle.attr('y', scrollBarPosition)
   }
 
-  private _getRecordType (d: Datum, i: number): string {
-    return getString(d, this.config.type) || `__${i}`
+  private _getRecordKey (d: Datum, i: number): string {
+    return getString(d, this.config.lineRow ?? this.config.type) || `__${i}`
   }
 
   private _getRecordLabels (data: Datum[]): string[] {
-    return data.map((d, i) => getString(d, this.config.type) || `${i + 1}`)
+    return data.map((d, i) => getString(d, this.config.lineRow ?? this.config.type) || `${i + 1}`)
   }
 
   // Override the default XYComponent getXDataExtent method to take into account line lengths
   getXDataExtent (): number[] {
     const { config, datamodel } = this
     const min = getMin(datamodel.data, config.x)
-    const max = getMax(datamodel.data, (d, i) => getNumber(d, config.x, i) + (getNumber(d, config.length, i) ?? 0))
+    const max = getMax(datamodel.data, (d, i) => getNumber(d, config.x, i) + (getNumber(d, config.lineLength ?? config.length, i) ?? 0))
     return [min, max]
   }
 }
