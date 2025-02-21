@@ -2,8 +2,8 @@ import { XYComponentConfigInterface, XYComponentDefaultConfig } from 'core/xy-co
 
 // Types
 import { WithOptional } from 'types/misc'
-import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
-import { TextAlign } from 'types'
+import { ColorAccessor, NumericAccessor, StringAccessor, GenericAccessor } from 'types/accessor'
+import { TextAlign, Arrangement } from 'types'
 
 export interface TimelineConfigInterface<Datum> extends WithOptional<XYComponentConfigInterface<Datum>, 'y'> {
   // Items (Lines)
@@ -11,6 +11,8 @@ export interface TimelineConfigInterface<Datum> extends WithOptional<XYComponent
   type?: StringAccessor<Datum>;
   /** @deprecated This property has been renamed to `lineLength` */
   length?: NumericAccessor<Datum>;
+  /** @deprecated This property has been renamed to `lineCursor` */
+  cursor?: StringAccessor<Datum>;
   /** Timeline item row accessor function. Records with the `lineRow` will be plotted in one row. Default: `undefined` */
   lineRow?: StringAccessor<Datum>;
   /** Timeline item length accessor function. Default: `undefined`. Falls back to the deprecated `length` property */
@@ -21,8 +23,28 @@ export interface TimelineConfigInterface<Datum> extends WithOptional<XYComponent
   lineWidth?: NumericAccessor<Datum>;
   /** Display rounded ends for timeline items. Default: `true` */
   lineCap?: boolean;
-  /** Configurable Timeline item cursor when hovering over. Default: `null` */
-  cursor?: StringAccessor<Datum>;
+  /** Provide a href to an SVG defined in container's `svgDefs` to display an icon at the start of the line. Default: undefined */
+  lineStartIcon?: StringAccessor<Datum>;
+  /** Line start icon color accessor function. Default: `undefined` */
+  lineStartIconColor?: StringAccessor<Datum>;
+  /** Line start icon size accessor function. Default: `undefined` */
+  lineStartIconSize?: NumericAccessor<Datum>;
+  /** Line start icon arrangement configuration. Controls how the icon is positioned relative to the line.
+   * Accepts values from the Arrangement enum: `Arrangement.Start`, `Arrangement.Middle`, `Arrangement.End` or a string equivalent.
+   * Default: `Arrangement.Inside` */
+  lineStartIconArrangement?: GenericAccessor<Arrangement | `${Arrangement}`, Datum>;
+  /** Provide a href to an SVG defined in container's `svgDefs` to display an icon at the end of the line. Default: undefined */
+  lineEndIcon?: StringAccessor<Datum>;
+  /** Line end icon color accessor function. Default: `undefined` */
+  lineEndIconColor?: StringAccessor<Datum>;
+  /** Line end icon size accessor function. Default: `undefined` */
+  lineEndIconSize?: NumericAccessor<Datum>;
+  /** Line end icon arrangement configuration. Controls how the icon is positioned relative to the line.
+   * Accepts values from the Arrangement enum: `Arrangement.Start`, `Arrangement.Middle`, `Arrangement.End` or a string equivalent.
+   * Default: `Arrangement.Inside` */
+  lineEndIconArrangement?: GenericAccessor<Arrangement | `${Arrangement}`, Datum>;
+  /** Configurable Timeline item cursor when hovering over. Default: `undefined` */
+  lineCursor?: StringAccessor<Datum>;
   /** Sets the minimum line length to 1 pixel for better visibility of small values. Default: `false` */
   showEmptySegments?: boolean;
 
@@ -48,9 +70,9 @@ export interface TimelineConfigInterface<Datum> extends WithOptional<XYComponent
   /** Maximum label width in pixels. Labels longer than the specified value will be trimmed. Default: `undefined`. Falls back to deprecated `maxLabelWidth`. */
   rowMaxLabelWidth?: number;
   /** Text alignment for labels: `TextAlign.Left`, `TextAlign.Center` or `TextAlign.Right`. Default: `TextAlign.Right` */
-  rowLabelTextAlign?: TextAlign | string;
+  rowLabelTextAlign?: TextAlign | `${TextAlign}`;
 
-  // Misc
+  // Callbacks
   /** Scrolling callback function: `(scrollTop: number) => void`. Default: `undefined` */
   onScroll?: (scrollTop: number) => void;
 }
@@ -60,24 +82,33 @@ export const TimelineDefaultConfig: TimelineConfigInterface<unknown> = {
   id: undefined,
 
   // Items (Lines)
+  cursor: undefined, // Deprecated (see above)
+  type: (d: unknown): string => (d as { type: string }).type, // Deprecated (see above)
+  length: (d: unknown): number => (d as { length: number }).length, // Deprecated (see above)
+  color: (d: unknown): string => (d as { color: string }).color,
   lineRow: undefined,
   lineLength: undefined,
-  type: (d: unknown): string => (d as { type: string }).type, // Deprecated
-  length: (d: unknown): number => (d as { length: number }).length, // Deprecated
-  color: (d: unknown): string => (d as { color: string }).color,
   lineWidth: 8,
   lineCap: false,
-  cursor: null,
+  lineCursor: undefined,
   showEmptySegments: false,
+  lineStartIcon: undefined,
+  lineStartIconColor: undefined,
+  lineStartIconSize: undefined,
+  lineStartIconArrangement: Arrangement.Inside,
+  lineEndIcon: undefined,
+  lineEndIconColor: undefined,
+  lineEndIconSize: undefined,
+  lineEndIconArrangement: Arrangement.Inside,
 
   // Rows
   rowHeight: 22,
   alternatingRowColors: true,
 
   // Row Labels
-  showLabels: false, // Deprecated
-  labelWidth: undefined, // Deprecated
-  maxLabelWidth: 120, // Deprecated
+  showLabels: false, // Deprecated (see above)
+  labelWidth: undefined, // Deprecated (see above)
+  maxLabelWidth: 120, // Deprecated (see above)
 
   showRowLabels: undefined,
   rowLabelFormatter: undefined,
@@ -85,6 +116,6 @@ export const TimelineDefaultConfig: TimelineConfigInterface<unknown> = {
   rowMaxLabelWidth: undefined,
   rowLabelTextAlign: TextAlign.Right,
 
-  // Misc
+  // Callbacks
   onScroll: undefined,
 }

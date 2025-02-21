@@ -7,14 +7,14 @@ import { drag, D3DragEvent } from 'd3-drag'
 import { XYComponentCore } from 'core/xy-component'
 
 // Utils
-import { isNumber, unique, arrayOfIndices, getMin, getMax, getString, getNumber } from 'utils/data'
+import { isNumber, unique, arrayOfIndices, getMin, getMax, getString, getNumber, getValue } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
 import { textAlignToAnchor, trimSVGText } from 'utils/text'
 import { guid } from 'utils'
 
 // Types
-import { TextAlign, Spacing } from 'types'
+import { TextAlign, Spacing, Arrangement } from 'types'
 
 // Config
 import { TimelineDefaultConfig, TimelineConfigInterface } from './config'
@@ -185,28 +185,73 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
     rects.exit().remove()
 
     // Lines
-    const lines = this._linesGroup.selectAll<SVGRectElement, Datum>(`.${s.line}`)
-      .data(data, (d: Datum, i) => getString(d, config.id, i) ?? [
-        this._getRecordKey(d, i), getNumber(d, config.x, i),
-      ].join('-'))
+    const lines = this._linesGroup.selectAll<SVGGElement, Datum>(`.${s.lineGroup}`)
+      .data(
+        data, (d: Datum, i) => getString(d, config.id, i) ?? [
+          this._getRecordKey(d, i), getNumber(d, config.x, i),
+        ].join('-')
+      )
 
-    const linesEnter = lines.enter().append('rect')
+    const linesEnter = lines.enter().append('g')
+      .attr('class', s.lineGroup)
+      .style('opacity', 0)
+      .call(this._positionLineGroups.bind(this), ordinalScale, rowHeight)
+
+    linesEnter.append('rect')
       .attr('class', s.line)
       .classed(s.rowOdd, config.alternatingRowColors
         ? (d, i) => !(recordLabelsUnique.indexOf(this._getRecordKey(d, i)) % 2)
         : null)
       .style('fill', (d, i) => getColor(d, config.color, ordinalScale(this._getRecordKey(d, i))))
-      .call(this._positionLines.bind(this), ordinalScale, rowHeight)
-      .attr('transform', 'translate(0, 10)')
-      .style('opacity', 0)
+      .call(this._positionLines.bind(this), rowHeight)
+
+    // Line Icons
+    linesEnter.append('use').attr('class', s.lineStartIcon)
+    linesEnter.append('use').attr('class', s.lineEndIcon)
 
     const linesMerged = linesEnter.merge(lines)
-      .style('fill', (d, i) => getColor(d, config.color, ordinalScale(this._getRecordKey(d, i))))
-      .style('cursor', (d, i) => getString(d, config.cursor, i))
-      .call(this._positionLines.bind(this), ordinalScale, rowHeight)
+      .call(this._positionLineGroups.bind(this), ordinalScale, rowHeight)
 
+    linesMerged.selectAll<SVGRectElement, Datum>(`.${s.line}`)
+      .data(d => [d])
+      .style('fill', (d, i) => getColor(d, config.color, ordinalScale(this._getRecordKey(d, i))))
+      .style('cursor', (d, i) => getString(d, config.lineCursor ?? config.cursor, i))
+      .call(this._positionLines.bind(this), rowHeight)
+
+    linesMerged.selectAll<SVGUseElement, Datum>(`.${s.lineStartIcon}`)
+      .attr('href', (d, i) => getString(d, config.lineStartIcon, i))
+      .attr('x', (d, i) => {
+        const iconSize = getNumber(d, config.lineStartIconSize, i) ?? this._getLineHeight(d, i, rowHeight)
+        const iconArrangement = getValue(d, config.lineStartIconArrangement, i)
+        const offset = iconArrangement === Arrangement.Inside ? 0
+          : iconArrangement === Arrangement.Center ? -iconSize / 2
+            : -iconSize
+        return offset
+      })
+      .attr('y', (d, i) => -(getNumber(d, config.lineStartIconSize, i) - this._getLineHeight(d, i, rowHeight)) / 2)
+      .attr('width', (d, i) => getNumber(d, config.lineStartIconSize, i) ?? this._getLineHeight(d, i, rowHeight))
+      .attr('height', (d, i) => getNumber(d, config.lineStartIconSize, i) ?? this._getLineHeight(d, i, rowHeight))
+      .style('color', (d, i) => getString(d, config.lineStartIconColor, i))
+
+    linesMerged.selectAll<SVGUseElement, Datum>(`.${s.lineEndIcon}`)
+      .attr('href', (d, i) => getString(d, config.lineEndIcon, i))
+      .attr('x', (d, i) => {
+        const lineLength = this._getLineLength(d, i)
+        const iconSize = getNumber(d, config.lineEndIconSize, i) ?? this._getLineHeight(d, i, rowHeight)
+        const iconArrangement = getValue(d, config.lineEndIconArrangement, i)
+        const offset = iconArrangement === Arrangement.Inside ? -iconSize
+          : iconArrangement === Arrangement.Center ? -iconSize / 2
+            : 0
+        return lineLength + offset
+      })
+      .attr('y', (d, i) => -(getNumber(d, config.lineEndIconSize, i) - this._getLineHeight(d, i, rowHeight)) / 2)
+      .attr('width', (d, i) => getNumber(d, config.lineEndIconSize, i) ?? this._getLineHeight(d, i, rowHeight))
+      .attr('height', (d, i) => getNumber(d, config.lineEndIconSize, i) ?? this._getLineHeight(d, i, rowHeight))
+      .style('color', (d, i) => getString(d, config.lineEndIconColor, i))
+
+
+    // Fade in / out
     smartTransition(linesMerged, duration)
-      .attr('transform', 'translate(0, 0)')
       .style('opacity', 1)
 
     smartTransition(lines.exit(), duration)
@@ -244,8 +289,21 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
       .attr('height', this._height)
   }
 
-  private _positionLines (
-    selection: Selection<SVGRectElement, Datum, SVGGElement, unknown> | Transition<SVGRectElement, Datum, SVGGElement, unknown>,
+  private _getLineLength (d: Datum, i: number): number {
+    const { config, xScale } = this
+    const x = getNumber(d, config.x, i)
+    const length = getNumber(d, config.lineLength ?? config.length, i) ?? 0
+
+    return xScale(x + length) - xScale(x)
+  }
+
+  private _getLineHeight (d: Datum, i: number, rowHeight: number): number {
+    const { config } = this
+    return getNumber(d, config.lineWidth, i) ?? Math.max(Math.floor(rowHeight / 2), 1)
+  }
+
+  private _positionLineGroups (
+    selection: Selection<SVGGElement, Datum, SVGGElement, unknown> | Transition<SVGRectElement, Datum, SVGGElement, unknown>,
     ordinalScale: ScaleOrdinal<string, number>,
     rowHeight: number
   ): void {
@@ -256,19 +314,29 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
     selection.each((d, i, elements) => {
       const x = getNumber(d, config.x, i)
       const y = ordinalScale(this._getRecordKey(d, i)) * rowHeight
-      const length = getNumber(d, config.lineLength ?? config.length, i) ?? 0
+      const lineHeight = this._getLineHeight(d, i, rowHeight)
 
+      select(elements[i])
+        .attr('transform', `translate(${xScale(x)}, ${yStart + y + (rowHeight - lineHeight) / 2})`)
+    })
+  }
+
+  private _positionLines (
+    selection: Selection<SVGRectElement, Datum, SVGGElement, unknown> | Transition<SVGRectElement, Datum, SVGGElement, unknown>,
+    rowHeight: number
+  ): void {
+    const { config } = this
+
+    selection.each((d, i, elements) => {
       // Rect dimensions
-      const height = getNumber(d, config.lineWidth, i) ?? Math.max(Math.floor(rowHeight / 2), 1)
-      const width = xScale(x + length) - xScale(x)
+      const height = this._getLineHeight(d, i, rowHeight)
+      const width = this._getLineLength(d, i)
 
       if (width < 0) {
         console.warn('Unovis | Timeline: Line segments should not have negative lengths. Setting to 0.')
       }
 
       select(elements[i])
-        .attr('x', xScale(x))
-        .attr('y', yStart + y + (rowHeight - height) / 2)
         .attr('width', config.showEmptySegments
           ? Math.max(config.lineCap ? height : 1, width)
           : Math.max(0, width))
