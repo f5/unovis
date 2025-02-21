@@ -46,6 +46,10 @@ export const lines = css`
   label: lines;
 `
 
+export const lineGroup = css`
+  label: line-group;
+`
+
 export const line = css`
   label: line;
   fill: var(--vis-timeline-line-color);
@@ -57,6 +61,14 @@ export const line = css`
   &.odd {
     stroke: var(--vis-timeline-line-stroke-color, var(--vis-timeline-row-odd-fill-color));
   }
+`
+
+export const lineStartIcon = css`
+  label: line-start-icon;
+`
+
+export const lineEndIcon = css`
+  label: line-end-icon;
 `
 
 export const rows = css`
