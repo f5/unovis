@@ -199,18 +199,28 @@ property to `false`.
 </BrowserOnly>
 
 ## Hoverable Content
-_Tooltip_'s content will become hoverable when you set the `followCursor` property to `false`.
+_Tooltip_'s content will become hoverable when you set the `allowHover` property to `true`.
 This will keep the content in view when hovering over the tooltip itself. This can be useful for interacting with
 text, links, or other elements in the tooltip. If you want to disable this behavior, you can set the `allowHover`
 property to `false`.
 
 Here is an example with a _Line_ chart a clickable link on hover:
 
-<Tooltip {...tooltipProps("Line", { lineWidth: 4 })}
-  followCursor={false}
+<Tooltip {...tooltipProps("Line", { lineWidth: 6 })}
+  allowHover={true}
   triggers={{
     "[Line.selectors.line]": () => 'Visit <a href="https://unovis.dev" target="_blank">our website</a>'
   }}/>
+
+## Display Delays
+You can control when the tooltip appears and disappears by setting delay timers:
+
+- `showDelay`: Adds a delay in milliseconds before the tooltip appears
+- `hideDelay`: Adds a delay in milliseconds before the tooltip disappears
+
+This is useful for preventing tooltip flicker when users quickly move their mouse across multiple elements, or to ensure the tooltip stays visible long enough to be read.
+
+<Tooltip {...tooltipProps("Line", { lineWidth: 6 })} showDelay={500} hideDelay={1000} triggers={{ "[Line.selectors.line]": () => 'This tooltip waits 500ms to appear and 1000ms to disappear' }}/>
 
 ## Manual Configuration
 
