@@ -13,7 +13,7 @@ export const subTitle = 'CSS Variables Configuration'
 
 
 type MapPointDatum = typeof cities[0]
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const mapKey = 'LNln6dGJDxyBa7F3c7Gd'
   const mapRef = useRef<VisLeafletMapRef<MapPointDatum> | null>(null)
 

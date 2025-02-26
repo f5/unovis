@@ -18,7 +18,7 @@ const data = {
   ],
 }
 
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const [nodeId, highlightNodeId] = useState<string | undefined>()
   const [linkIds, highlightLinkIds] = useState<number[]>()
   const highlightNode = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {

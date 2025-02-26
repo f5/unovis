@@ -14,7 +14,7 @@ const data = Array(15).fill(0).map((_, i) => ({
   label: Array(i % 5 + 1).fill(lengths[Math.floor(i / 5)].split(' ')[0]).join(' '),
 }))
 
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const [hideLabels, setHideLabels] = useState(false)
   const toggleHiddenLabels = useCallback(() => setHideLabels(!hideLabels), [hideLabels])
 

@@ -12,7 +12,7 @@ import s from './index.module.css'
 export const title = 'Graph: SVG Node Icons'
 export const subTitle = 'Re-render every second'
 
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const svgDefs = `
     ${personIcon}
     ${roleIcon}

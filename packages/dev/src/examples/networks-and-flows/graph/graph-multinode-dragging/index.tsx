@@ -7,7 +7,7 @@ export const title = 'Graph Brushing'
 export const subTitle = ''
 const data = generateNodeLinkData(100)
 
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   return (
     <>
       <VisSingleContainer data={data} height={'100vh'}>

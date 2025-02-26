@@ -8,7 +8,7 @@ import { createPortal } from 'react-dom'
 export const title = 'Tooltip Rendered in Portal'
 export const subTitle = 'Dynamic content in tooltip'
 
-export const TooltipComponent = (props: { x: number; y: number }): JSX.Element => {
+export const TooltipComponent = (props: { x: number; y: number }): React.ReactNode => {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -30,7 +30,7 @@ export const TooltipComponent = (props: { x: number; y: number }): JSX.Element =
   </div>
 }
 
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const [tooltipClassName, setTooltipClassName] = useState<string>('unovis-custom-tooltip')
   const [hoveredDatum, setHoveredDatum] = React.useState<XYDataRecord | null>(null)
   const data: XYDataRecord[] = useMemo(() => [

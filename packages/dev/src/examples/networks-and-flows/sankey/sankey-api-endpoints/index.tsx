@@ -20,7 +20,7 @@ import { getSankeyData, ApiEndpointNode, ApiEndpointLink } from './data'
 export const title = 'API Endpoints Tree'
 export const subTitle = 'Collapsible nodes'
 
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const collapsedStateRef = useRef<{ [key: string]: boolean }>({})
   const rawData = apiRawData// .slice(25, 50)
   const [data, setData] = useState(getSankeyData(rawData))
