@@ -9,7 +9,7 @@ export const subTitle = 'with custom colors'
 
 const data = generateNestedData(100, 3, ['A1', 'B2'])
 
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   return (
     <VisSingleContainer height={500}>
       <VisNestedDonut

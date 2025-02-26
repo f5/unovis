@@ -4,7 +4,7 @@ import { DONUT_HALF_ANGLE_RANGES } from '@unovis/ts'
 
 export const title = 'Half Donut: Full Height'
 export const subTitle = 'Testing the resize behavior'
-export const component = (): JSX.Element => {
+export const component = (): React.ReactNode => {
   const data = [3, 2, 5, 4, 0, 1]
 
   const [currentAngleRange, setCurrentAngleRange] = useState(DONUT_HALF_ANGLE_RANGES[0])

@@ -6,7 +6,7 @@ import { WorldMapTopoJSON } from '@unovis/ts/maps'
 export const title = 'World Map'
 export const subTitle = 'Default WorldMapTopoJSON'
 
-export const component = (): JSX.Element => {
+export const component = (): React.ReactNode => {
   const data = {
     areas: [
       'AW', 'AI', 'AS', 'AG', 'BM', 'BB', 'CK', 'CW', 'KY', 'FM', 'GG', 'GD', 'GU', 'HM', 'IM',

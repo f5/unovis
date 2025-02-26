@@ -4,7 +4,7 @@ import { DONUT_HALF_ANGLE_RANGE_TOP } from '@unovis/ts'
 
 export const title = 'Half Donut: Labels'
 export const subTitle = 'Testing the label offsets'
-export const component = (): JSX.Element => {
+export const component = (): React.ReactNode => {
   const data = [3, 2, 5, 4, 0, 1]
 
   return (

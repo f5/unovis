@@ -7,7 +7,7 @@ import type { WithOptional } from '@unovis/ts/lib/types/misc'
 
 export const title = 'Scatter with Line'
 export const subTitle = 'And undefined segments'
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const accessors = [
     (d: XYDataRecord) => d.y,
   ]

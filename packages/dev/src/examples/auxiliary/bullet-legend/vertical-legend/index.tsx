@@ -25,7 +25,7 @@ type TimeSeriesDatum = (typeof data)[number];
 const yAccessors = seriesLabels.map(label => (d: TimeSeriesDatum) => d[label])
 const legendItems = seriesLabels.map(label => ({ name: label }))
 
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   return (
     <div className={s.chartContainer}>
       <VisBulletLegend

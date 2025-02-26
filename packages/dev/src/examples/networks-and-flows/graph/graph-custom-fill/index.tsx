@@ -6,7 +6,7 @@ import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 export const title = 'Graph: Custom Node Fills'
 export const subTitle = 'Generated Data'
 
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const svgDefs = `
     <linearGradient id="gradient" gradientTransform="rotate(90)">
       <stop stop-color="var(--vis-color2)" offset="15%"/>

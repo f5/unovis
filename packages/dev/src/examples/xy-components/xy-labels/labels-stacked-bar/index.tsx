@@ -10,7 +10,7 @@ import s from './style.module.css'
 
 export const title = 'Stacked Bar with Labels'
 export const subTitle = 'Alerts and Data Labels'
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const tooltipRef = useRef(null)
   const accessors = [
     (d: XYDataRecord) => d.y,
