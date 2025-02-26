@@ -31,10 +31,15 @@ export class Tooltip {
   private _hoveredElement: HTMLElement | SVGElement
   private _position: [number, number]
   private _overriddenHorizontalPlacement: Position.Left | Position.Right | string | undefined
+  private _hideDelayTimeoutId: ReturnType<typeof setTimeout> | undefined
+  private _showDelayTimeoutId: ReturnType<typeof setTimeout> | undefined
 
   constructor (config: TooltipConfigInterface = {}) {
     this.element = document.createElement('div')
-    this.div = select(this.element).attr('class', s.root)
+    this.div = select(this.element)
+      .attr('class', s.root)
+      .classed(s.show, false)
+      .classed(s.hidden, true)
 
     this.setConfig(config)
     this.components = this.config.components
@@ -99,14 +104,13 @@ export class Tooltip {
     this._setUpEventsThrottled()
   }
 
-  /** Show the tooltip by providing content and position */
+  /** Show the tooltip immediately by providing content and position */
   public show (html: string | HTMLElement | null | void, pos: { x: number; y: number }): void {
     this.render(html)
     this.place(pos)
   }
 
-  /** Hide the tooltip */
-  public hide (): void {
+  private _hide (): void {
     this.div
       .classed(s.show, false) // The `show` class triggers the opacity transition
       .on('transitionend', () => {
@@ -118,13 +122,39 @@ export class Tooltip {
     this._isShown = false
   }
 
-  /** Simply displays the tooltip with its previous content on position */
-  public display (): void {
+  /** Hides the tooltip after `hideDelay` */
+  public hide (): void {
+    window.clearTimeout(this._showDelayTimeoutId)
+    if (this.config.hideDelay) {
+      window.clearTimeout(this._hideDelayTimeoutId)
+      this._hideDelayTimeoutId = setTimeout(() => this._hide(), this.config.hideDelay)
+    } else {
+      this._hide()
+    }
+  }
+
+  private _display (): void {
+    window.clearTimeout(this._hideDelayTimeoutId)
     this.div
       .classed(s.hidden, false) // The `hidden` class sets `display: none;`
       .classed(s.show, true) // The `show` class triggers the opacity transition
 
     this._isShown = true
+  }
+
+  /** Simply display the tooltip with its previous content on position, taking into account `showDelay` */
+  public display (): void {
+    if (this._isShown) return
+
+    if (this.config.showDelay) {
+      window.clearTimeout(this._showDelayTimeoutId)
+      this._showDelayTimeoutId = setTimeout(() => {
+        this._display()
+        this.place({ x: this._position[0], y: this._position[1] })
+      }, this.config.showDelay)
+    } else {
+      this._display()
+    }
   }
 
   public place (pos: { x: number; y: number }): void {
@@ -259,7 +289,7 @@ export class Tooltip {
 
     this.div
       .classed(config.className ?? '', Boolean(config.className))
-      .classed(s.nonInteractive, !config.allowHover || config.followCursor)
+      .classed(s.nonInteractive, !config.allowHover)
 
     // Remove the previous class name if it was set
     if (prevConfig?.className && prevConfig.className !== config.className) {
@@ -371,9 +401,9 @@ export class Tooltip {
     })
 
     // Set up Tooltip hover
-    if (config.allowHover && !config.followCursor) {
+    if (config.allowHover) {
       this.div
-        .on('mouseenter.tooltip', this.display.bind(this))
+        .on('mouseenter.tooltip', this._display.bind(this))
         .on('mouseleave.tooltip', this.hide.bind(this))
     } else {
       this.div
@@ -393,6 +423,8 @@ export class Tooltip {
 
   public destroy (): void {
     this._mutationObserver.disconnect()
+    window.clearTimeout(this._hideDelayTimeoutId)
+    window.clearTimeout(this._showDelayTimeoutId)
     this.div?.remove()
   }
 }
