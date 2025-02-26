@@ -126,7 +126,7 @@ export class VisLineComponent<Datum> implements LineConfigInterface<Datum>, Afte
    * You can customize the line's appearance with `--vis-line-gapfill-stroke-dasharray`
    * and `--vis-line-gapfill-stroke-opacity` CSS variables.
    * Default: `false` */
-  @Input() interpolateMissingData: boolean
+  @Input() interpolateMissingData?: boolean
   @Input() data: Datum[]
 
   component: Line<Datum> | undefined
