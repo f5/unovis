@@ -3,7 +3,7 @@
   "compilerOptions": {
     "rootDir": "./src",
     "baseUrl": "./src",
-    "outDir": "./lib",
+    "outDir": "./dist",
     "declaration": true,
     "paths": {
       "types/*": ["./types/*"],

@@ -10,7 +10,7 @@ import s from './style.module.css'
 
 export const title = 'Custom Style Brush'
 export const subTitle = 'Programmatically set selection range'
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const [selectedRange, setSelectedRange] = useState<[number, number] | undefined>(undefined)
 
   const accessors = [

@@ -16,7 +16,7 @@ import s from './App.module.css'
 // eslint-disable-next-line import/no-unresolved
 require('@unovis/ts/styles')
 
-const App = (): JSX.Element => {
+const App = (): React.ReactNode => {
   return (
     <div className={s.root}>
       <ThemeSelector/>

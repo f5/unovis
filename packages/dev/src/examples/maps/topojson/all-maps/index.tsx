@@ -6,7 +6,7 @@ import { WorldMapTopoJSON, ChinaTopoJSON, FranceTopoJSON, GermanyTopoJSON, India
 export const title = 'Country maps'
 export const subTitle = 'Click on country to show its map'
 
-export const component = (): JSX.Element => {
+export const component = (): React.ReactNode => {
   const countries = ['CN', 'FR', 'DE', 'IN', 'GB', 'US'].map(id => ({ id }))
   const [selectedCountry, setSelectedCountry] = useState()
 

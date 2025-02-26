@@ -26,7 +26,7 @@ const data = {
     { source: 'C0', target: 'A2' },
   ].map((l) => ({ ...l, value: randomNumberGenerator() })),
 }
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   return (
     <div style={{ display: 'flex', height: '600px', justifyContent: 'space-evenly' }}>
       <VisSingleContainer data={data}>

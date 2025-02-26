@@ -25,7 +25,7 @@ const data: Datum[] = [
   ...Array(5).fill(0).map((_, i) => ({ group: 'E', subgroup: `e${i}`, value: 0 })),
 ]
 
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   return (<>
     <VisSingleContainer data={data} height={500}>
       <VisNestedDonut
