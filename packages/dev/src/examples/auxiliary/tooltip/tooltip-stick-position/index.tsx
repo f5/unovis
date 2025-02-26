@@ -11,7 +11,7 @@ type VisTooltipDurationProps = VisTooltipProps & {
   duration?: number;
 };
 
-export const TooltipComponent = (props: VisTooltipDurationProps): JSX.Element => {
+export const TooltipComponent = (props: VisTooltipDurationProps): React.ReactNode => {
   const data = useMemo(() => Array.from({ length: 15 }, (_, i) => ({
     x: i + 10 * randomNumberGenerator(),
     y: randomNumberGenerator() * 10,
@@ -43,7 +43,7 @@ export const TooltipComponent = (props: VisTooltipDurationProps): JSX.Element =>
   )
 }
 
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   return (<>
     Container: Default, Automatic Placement
     <TooltipComponent duration={props.duration}/>

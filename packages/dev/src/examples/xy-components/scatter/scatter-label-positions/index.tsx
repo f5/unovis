@@ -7,7 +7,7 @@ import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 export const title = 'Point Label Positions'
 export const subTitle = 'Toggle label content'
 
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const accessors = [
     (d: XYDataRecord) => d.y,
     (d: XYDataRecord) => d.y + 5,

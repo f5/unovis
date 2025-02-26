@@ -5,7 +5,7 @@ import { Annotations, StringAccessor } from '@unovis/ts'
 export const title = 'Single Container'
 export const subTitle = 'Donut with annotation button'
 
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const data = [
     { group: 'A', subgroup: 'A0', value: 10 },
     { group: 'A', subgroup: 'A0', value: 5 },

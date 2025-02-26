@@ -15,7 +15,7 @@ export const subTitle = 'Vector rendering with MapLibre'
 
 
 type MapPointDatum = typeof cities[0]
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const mapRef = useRef<VisLeafletMapRef<MapPointDatum> | null>(null)
   const [isMapVisible, setMapVisible] = useState(true)
   const mapSources = {

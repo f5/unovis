@@ -14,7 +14,7 @@ type DataRecord = {
   ys: number[];
 }
 
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const items = Array(6).fill(0).map((_, i) => ({ name: `y${i}` }))
   const data = Array(10).fill(0).map((_, i) => ({
     x: i,

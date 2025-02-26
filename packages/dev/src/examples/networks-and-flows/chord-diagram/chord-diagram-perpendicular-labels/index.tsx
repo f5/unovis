@@ -7,7 +7,7 @@ import { data, NodeDatum } from './data'
 export const title = 'Basic Chord Diagram'
 export const subTitle = 'Perpendicular label alignment'
 
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   return (
     <VisSingleContainer data={data} style={{ width: '100%', height: '100%' }}>
       <VisChordDiagram

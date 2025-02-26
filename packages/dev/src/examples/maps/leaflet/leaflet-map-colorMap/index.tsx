@@ -14,7 +14,7 @@ export const subTitle = 'Updating color map and data'
 export const category = 'Leaflet Map'
 
 
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const mapRef = useRef<VisLeafletMapRef<MapPointDataRecord>>(null)
   const [data, setData] = useState(points)
   const [colorMap, setColorMap] = useState<LeafletMapPointStyles<MapPointDataRecord>>({
