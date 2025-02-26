@@ -33,6 +33,7 @@ export const TooltipComponent = (props: VisTooltipDurationProps): JSX.Element =>
               You can hover over this tooltip
           `,
         }}
+        allowHover={true}
         {...props}
       />
       <VisAxis type='x' />
