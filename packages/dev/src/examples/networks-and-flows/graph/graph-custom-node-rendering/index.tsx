@@ -11,7 +11,7 @@ import * as s from './styles'
 export const title = 'Graph: Custom Nodes'
 export const subTitle = 'User provided rendering functions'
 
-export const component = (): JSX.Element => {
+export const component = (): React.ReactNode => {
   const [showLinkFlow, setShowLinkFlow] = useState(true)
   const graphRef = useRef<VisGraphRef<CustomGraphNode, CustomGraphLink> | null>(null)
 

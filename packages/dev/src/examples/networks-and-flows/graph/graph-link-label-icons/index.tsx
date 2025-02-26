@@ -11,7 +11,7 @@ import bucketIcon from './bucket.svg?raw'
 export const title = 'Graph: Link Label Icons'
 export const subTitle = 'SVG icons in link labels'
 
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const svgDefs = `
     ${personIcon}
     ${roleIcon}

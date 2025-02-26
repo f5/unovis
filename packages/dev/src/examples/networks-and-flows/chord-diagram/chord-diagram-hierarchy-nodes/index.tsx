@@ -11,7 +11,7 @@ export const subTitle = 'With various accessors'
 const levels = { a: 3, b: 5, c: 7 }
 const data = generateHierarchyData(50, levels)
 type NodeDatum = typeof data.nodes[0]
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const getColor = useCallback((n: NodeDatum | ChordHierarchyNode<NodeDatum>) => {
     const a = (n as NodeDatum).a
     if (a === 'a0' || n.ancestors?.includes('a0')) return 'var(--vis-color0)'

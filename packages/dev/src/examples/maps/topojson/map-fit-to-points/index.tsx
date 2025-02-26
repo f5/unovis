@@ -5,7 +5,7 @@ import { WorldMapTopoJSON } from '@unovis/ts/maps'
 export const title = 'MapFitToPoints'
 export const subTitle = 'Adjust number of points to change view'
 
-export const component = (): JSX.Element => {
+export const component = (): React.ReactNode => {
   const points = [
     { id: 'Qormi', latitude: 35.8985, longitude: 14.4705 },
     { id: 'Syracuse', latitude: 37.0755, longitude: 15.2860 },

@@ -10,7 +10,7 @@ export const subTitle = 'Click on node to toggle subchart'
 
 const defaultData = generateNestedData(100, 3)//, ['A1', 'B0', 'B1', 'B2'])
 
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const [data, setData] = useState<NestedDatum[]>(defaultData)
   const [currentLevel, setCurrentLevel] = useState(0)
 

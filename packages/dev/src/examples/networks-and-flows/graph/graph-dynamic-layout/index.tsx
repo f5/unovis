@@ -7,7 +7,7 @@ import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 export const title = 'Dynamic Layout'
 export const subTitle = 'Select Layout From Dropdown'
 
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const [data, setData] = useState(generateNodeLinkData(50))
   const layouts = Object.values(GraphLayoutType)
   const initial = GraphLayoutType.Circular

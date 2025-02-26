@@ -7,7 +7,7 @@ import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 export const title = 'Timeline: Negative Lengths'
 export const subTitle = 'Generated Data'
 
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const [showEmptySegments, toggleEmptySegments] = React.useState(true)
   const data = generateTimeSeries(10).map((d, i) => ({
     ...d,

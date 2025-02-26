@@ -8,7 +8,7 @@ export const subTitle = 'Varied sizeRange comparison'
 
 const data = generateXYDataRecords(100)
 
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const scatterProps = {
     x: useCallback((d: XYDataRecord) => d.x, []),
     y: useCallback((d: XYDataRecord) => d.y, []),

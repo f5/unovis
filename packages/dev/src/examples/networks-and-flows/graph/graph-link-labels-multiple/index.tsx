@@ -7,7 +7,7 @@ import type { GraphCircleLabel } from '@unovis/ts'
 export const title = 'Graph: Multiple Link Labels'
 export const subTitle = 'Link Label Transitions'
 
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const getSampleLinkCircleLabels = (): GraphCircleLabel[] => {
     const n = Math.round(Math.random() * 5 + 1)
     return Array(n).fill(null).map(() => ({

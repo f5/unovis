@@ -3,7 +3,7 @@ import React from 'react'
 // Styles
 import s from './style.module.css'
 
-export function ThemeSelector (): JSX.Element {
+export function ThemeSelector (): React.ReactNode {
   const toggleTheme = (e: React.FormEvent): void => {
     document.body.classList.toggle((e.target as Element).id)
   }
