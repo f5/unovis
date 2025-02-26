@@ -9,11 +9,9 @@ export interface TooltipConfigInterface {
   components?: ComponentCore<unknown>[];
   /** Container to where the Tooltip component should be inserted. Default: `undefined` */
   container?: HTMLElement;
-  /** Follow the mouse cursor. If `true`, the tooltip can't be hovered over
-   * even when `allowHover` is set to `true`. Default: `true` */
+  /** Follow the mouse cursor. Default: `true` */
   followCursor?: boolean;
-  /** Allow the tooltip to be hovered over and interacted with when `followCursor` is set to `false`.
-   * Default: `true` */
+  /** Allow the tooltip to be hovered over and interacted with. Default: `false` */
   allowHover?: boolean;
   /** Horizontal placement of the tooltip. Default: `Position.Auto` */
   horizontalPlacement?: Position | string | undefined;
@@ -64,13 +62,17 @@ export interface TooltipConfigInterface {
   attributes?: { [attr: string]: string | number | boolean };
   /** Custom class name for the tooltip. Default: `undefined` */
   className?: string;
+  /** Hide delay in milliseconds. Default: `undefined` */
+  hideDelay?: number;
+  /** Show delay in milliseconds. Default: `undefined` */
+  showDelay?: number;
 }
 
 export const TooltipDefaultConfig: TooltipConfigInterface = {
   components: [],
   container: undefined,
   followCursor: true,
-  allowHover: true,
+  allowHover: false,
   horizontalPlacement: Position.Auto,
   horizontalShift: 0,
   verticalPlacement: Position.Top,
@@ -78,5 +80,7 @@ export const TooltipDefaultConfig: TooltipConfigInterface = {
   attributes: {},
   triggers: {},
   className: undefined,
+  showDelay: undefined,
+  hideDelay: undefined,
 }
 
