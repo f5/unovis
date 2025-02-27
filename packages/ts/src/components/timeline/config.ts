@@ -4,6 +4,7 @@ import { XYComponentConfigInterface, XYComponentDefaultConfig } from 'core/xy-co
 import { WithOptional } from 'types/misc'
 import { ColorAccessor, NumericAccessor, StringAccessor, GenericAccessor } from 'types/accessor'
 import { TextAlign, Arrangement } from 'types'
+import type { TimelineRowLabel } from 'components/timeline/types'
 
 export interface TimelineConfigInterface<Datum> extends WithOptional<XYComponentConfigInterface<Datum>, 'y'> {
   // Items (Lines)
@@ -63,6 +64,8 @@ export interface TimelineConfigInterface<Datum> extends WithOptional<XYComponent
 
   /** Show row labels when set to `true`. Default: `false`. Falls back to deprecated `showLabels` */
   showRowLabels?: boolean;
+  /** Row label style as an object with the `{ [property-name]: value }` format. Default: `undefined` */
+  rowLabelStyle?: GenericAccessor<Record<string, string>, TimelineRowLabel<Datum>>;
   /** Row label formatter function. Default: `undefined` */
   rowLabelFormatter?: (key: string) => string;
   /** Fixed label width in pixels. Labels longer than the specified value will be trimmed. Default: `undefined`. Falls back to deprecated `labelWidth`. */
@@ -112,6 +115,7 @@ export const TimelineDefaultConfig: TimelineConfigInterface<unknown> = {
 
   showRowLabels: undefined,
   rowLabelFormatter: undefined,
+  rowLabelStyle: undefined,
   rowLabelWidth: undefined,
   rowMaxLabelWidth: undefined,
   rowLabelTextAlign: TextAlign.Right,
