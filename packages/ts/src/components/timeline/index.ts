@@ -7,11 +7,11 @@ import { drag, D3DragEvent } from 'd3-drag'
 import { XYComponentCore } from 'core/xy-component'
 
 // Utils
-import { isNumber, unique, arrayOfIndices, getMin, getMax, getString, getNumber, getValue } from 'utils/data'
+import { isNumber, arrayOfIndices, getMin, getMax, getString, getNumber, getValue, groupBy, isPlainObject } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
 import { textAlignToAnchor, trimSVGText } from 'utils/text'
-import { guid } from 'utils'
+import { guid, isStringSvg, sanitizeSvgString } from 'utils'
 
 // Types
 import { TextAlign, Spacing, Arrangement } from 'types'
@@ -21,6 +21,9 @@ import { TimelineDefaultConfig, TimelineConfigInterface } from './config'
 
 // Styles
 import * as s from './style'
+
+// Local Types
+import type { TimelineRowLabel } from './types'
 
 export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterface<Datum>> {
   static selectors = s
@@ -97,12 +100,13 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
     if (config.showRowLabels ?? config.showLabels) {
       if (config.rowLabelWidth ?? config.labelWidth) this._labelWidth = (config.rowLabelWidth ?? config.labelWidth) + this._labelMargin
       else {
-        const recordLabels = this._getRecordLabels(data)
-        const longestLabel = recordLabels.reduce((acc, val) => acc.length > val.length ? acc : val, '')
+        const rowLabels = this._getRowLabels(data)
+        const longestLabel = rowLabels.reduce((longestLabel, l) => longestLabel.formattedLabel.length > l.formattedLabel.length ? longestLabel : l, rowLabels[0])
         const label = this._labelsGroup.append('text')
           .attr('class', s.label)
-          .text(longestLabel)
+          .text(longestLabel.formattedLabel)
           .call(trimSVGText, config.rowMaxLabelWidth ?? config.maxLabelWidth)
+
         const labelWidth = label.node().getBBox().width
         this._labelsGroup.empty()
 
@@ -127,14 +131,13 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
     const yRange = this.yScale.range()
     const yStart = Math.min(...yRange)
     const yHeight = Math.abs(yRange[1] - yRange[0])
-    const recordLabels = this._getRecordLabels(data)
-    const recordLabelsUnique = unique(recordLabels)
-    const numUniqueRecords = recordLabelsUnique.length
-    const rowHeight = config.rowHeight || (yHeight / numUniqueRecords)
+    const rowLabels = this._getRowLabels(data)
+    const numRowLabels = rowLabels.length
+    const rowHeight = config.rowHeight || (yHeight / numRowLabels)
 
     // Ordinal scale to handle records on the same type
     const ordinalScale: ScaleOrdinal<string, number> = scaleOrdinal()
-    ordinalScale.range(arrayOfIndices(numUniqueRecords))
+    ordinalScale.range(arrayOfIndices(numRowLabels))
 
     // Invisible Background rect to track events
     this._background
@@ -144,7 +147,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
 
     // Labels
     const labels = this._labelsGroup.selectAll<SVGTextElement, string>(`.${s.label}`)
-      .data((config.showRowLabels ?? config.showLabels) ? recordLabelsUnique : [])
+      .data((config.showRowLabels ?? config.showLabels) ? rowLabels : [])
 
     const labelsEnter = labels.enter().append('text')
       .attr('class', s.label)
@@ -155,20 +158,29 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
 
     labelsEnter.merge(labels)
       .attr('x', xRange[0] - labelOffset)
-      .attr('y', (label, i) => yStart + (ordinalScale(label) + 0.5) * rowHeight)
-      .text(label => label)
-      .style('text-anchor', textAlignToAnchor(config.rowLabelTextAlign as TextAlign))
+      .attr('y', (l, i) => yStart + (ordinalScale(l.label) + 0.5) * rowHeight)
+      .text(l => l.formattedLabel)
       .each((label, i, els) => {
-        trimSVGText(select(els[i]), (config.rowLabelWidth ?? config.labelWidth) || (config.rowMaxLabelWidth ?? config.maxLabelWidth))
+        const labelSelection = select(els[i])
+        trimSVGText(labelSelection, (config.rowLabelWidth ?? config.labelWidth) || (config.rowMaxLabelWidth ?? config.maxLabelWidth))
+
+        // Apply custom label style if it has been provided
+        const customStyle = getValue(label, config.rowLabelStyle)
+        if (!isPlainObject(customStyle)) return
+
+        for (const [prop, value] of Object.entries(customStyle)) {
+          labelSelection.style(prop, value)
+        }
       })
+      .style('text-anchor', textAlignToAnchor(config.rowLabelTextAlign as TextAlign))
 
     labels.exit().remove()
 
     // Row background rects
     const xStart = xRange[0]
     const timelineWidth = xRange[1] - xRange[0]
-    const numRows = Math.max(Math.floor(yHeight / rowHeight), numUniqueRecords)
-    const recordTypes: (string | undefined)[] = Array(numRows).fill(null).map((_, i) => recordLabelsUnique[i])
+    const numRows = Math.max(Math.floor(yHeight / rowHeight), numRowLabels)
+    const recordTypes = Array(numRows).fill(null).map((_, i) => rowLabels[i])
     const rects = this._rowsGroup.selectAll<SVGRectElement, number>(`.${s.row}`)
       .data(recordTypes)
 
@@ -199,9 +211,6 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
 
     linesEnter.append('rect')
       .attr('class', s.line)
-      .classed(s.rowOdd, config.alternatingRowColors
-        ? (d, i) => !(recordLabelsUnique.indexOf(this._getRecordKey(d, i)) % 2)
-        : null)
       .style('fill', (d, i) => getColor(d, config.color, ordinalScale(this._getRecordKey(d, i))))
       .call(this._positionLines.bind(this), rowHeight)
 
@@ -228,7 +237,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
             : -iconSize
         return offset
       })
-      .attr('y', (d, i) => -(getNumber(d, config.lineStartIconSize, i) - this._getLineHeight(d, i, rowHeight)) / 2)
+      .attr('y', (d, i) => -((getNumber(d, config.lineStartIconSize, i) ?? 0) - this._getLineHeight(d, i, rowHeight)) / 2)
       .attr('width', (d, i) => getNumber(d, config.lineStartIconSize, i) ?? this._getLineHeight(d, i, rowHeight))
       .attr('height', (d, i) => getNumber(d, config.lineStartIconSize, i) ?? this._getLineHeight(d, i, rowHeight))
       .style('color', (d, i) => getString(d, config.lineStartIconColor, i))
@@ -244,7 +253,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
             : 0
         return lineLength + offset
       })
-      .attr('y', (d, i) => -(getNumber(d, config.lineEndIconSize, i) - this._getLineHeight(d, i, rowHeight)) / 2)
+      .attr('y', (d, i) => -((getNumber(d, config.lineEndIconSize, i) ?? 0) - this._getLineHeight(d, i, rowHeight)) / 2)
       .attr('width', (d, i) => getNumber(d, config.lineEndIconSize, i) ?? this._getLineHeight(d, i, rowHeight))
       .attr('height', (d, i) => getNumber(d, config.lineEndIconSize, i) ?? this._getLineHeight(d, i, rowHeight))
       .style('color', (d, i) => getString(d, config.lineEndIconColor, i))
@@ -384,8 +393,16 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
     return getString(d, this.config.lineRow ?? this.config.type) || `__${i}`
   }
 
-  private _getRecordLabels (data: Datum[]): string[] {
-    return data.map((d, i) => getString(d, this.config.lineRow ?? this.config.type) || `${i + 1}`)
+  private _getRowLabels (data: Datum[]): TimelineRowLabel<Datum>[] {
+    const grouped = groupBy(data, (d, i) => getString(d, this.config.lineRow ?? this.config.type) || `${i + 1}`)
+
+    const rowLabels: TimelineRowLabel<Datum>[] = Object.entries(grouped).map(([key, items]) => ({
+      label: key,
+      formattedLabel: this.config.rowLabelFormatter?.(key) ?? key,
+      data: items,
+    }))
+
+    return rowLabels
   }
 
   // Override the default XYComponent getXDataExtent method to take into account line lengths
@@ -396,3 +413,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
     return [min, max]
   }
 }
+function sanitizeSvg (key: string): any {
+  throw new Error('Function not implemented.')
+}
+
