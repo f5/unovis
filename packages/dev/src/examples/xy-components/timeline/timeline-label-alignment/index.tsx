@@ -5,7 +5,7 @@ import { TimeDataRecord, generateTimeSeries } from '@src/utils/data'
 import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 import { TextAlign } from '@unovis/ts'
 
-export const title = 'Label Alignment'
+export const title = 'Label Alignment & Style'
 export const subTitle = 'X Domain, auto line width'
 
 export const component = (props: ExampleViewerDurationProps): JSX.Element => {
@@ -34,6 +34,10 @@ export const component = (props: ExampleViewerDurationProps): JSX.Element => {
         showRowLabels
         rowLabelTextAlign={TextAlign.Left}
         duration={props.duration}
+        rowLabelStyle={rowLabel => rowLabel.label === 'Row 24'
+          ? ({ fill: 'rgb(237, 116, 128)', cursor: 'pointer', 'text-decoration': 'underline', transform: 'translateX(5px)' })
+          : undefined
+        }
       />
       <VisAxis
         type='x'
