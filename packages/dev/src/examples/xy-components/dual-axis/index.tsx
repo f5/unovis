@@ -6,7 +6,7 @@ import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 export const title = 'Dual Axis Chart'
 export const subTitle = 'Generated Data'
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const margin = { left: 100, right: 100, top: 40, bottom: 60 }
   const style: React.CSSProperties = { position: 'absolute', top: 0, left: 0, width: '100%', height: '40vh' }
   return (<>

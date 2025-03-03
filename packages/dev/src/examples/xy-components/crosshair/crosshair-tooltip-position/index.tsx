@@ -7,7 +7,7 @@ import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 export const title = 'Custom Tooltip Placement'
 export const subTitle = 'Tooltip always on the right'
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const tooltipRef = useRef(null)
   const accessors = [
     (d: XYDataRecord, i: number) => (d.y || 0) * i / 100,

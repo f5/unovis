@@ -11,7 +11,7 @@ const data = generateStackedDataRecords(10, STACKED)
 const items = Array(STACKED).fill(0).map((_, i) => ({ name: `Y${i}`, inactive: false }))
 const shapes = Object.values(BulletShape)
 
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const x = (d: StackedDataRecord): number => d.x
   const shape = (_, i: number): string => shapes[i % shapes.length]
 

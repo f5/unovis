@@ -13,7 +13,7 @@ export type NavigationSideBarProps = {
   exampleGroups: ExampleGroup[];
 }
 
-export function NavigationSideBar (props: NavigationSideBarProps): JSX.Element {
+export function NavigationSideBar (props: NavigationSideBarProps): React.ReactNode {
   const inputRef = useRef<HTMLInputElement>(null)
   const [groups, setGroups] = useState(props.exampleGroups)
   const fuseOptions = {

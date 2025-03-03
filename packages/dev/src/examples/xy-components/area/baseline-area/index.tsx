@@ -7,7 +7,7 @@ import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 export const title = 'Area Chart with Baseline'
 export const subTitle = 'Generated Data'
 
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const data = generateXYDataRecords(20)
   const accessors = [
     (d: XYDataRecord) => d.y,

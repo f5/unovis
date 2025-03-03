@@ -5,7 +5,7 @@ import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 export const title = 'Raster Leaflet Map'
 export const subTitle = 'Raster renderer with PNG'
 
-export const component = (): JSX.Element => {
+export const component = (): React.ReactNode => {
   return (
     <VisLeafletMap
       style='https://tile.openstreetmap.org/{z}/{x}/{y}.png'

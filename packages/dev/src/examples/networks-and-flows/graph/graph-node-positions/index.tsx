@@ -6,7 +6,7 @@ import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 export const title = 'Graph: Node Positions'
 export const subTitle = 'Pass in node positions'
 
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const data = useMemo(() => generatePrecalculatedNodeLinkData(), [])
   const ref = useRef<VisGraphRef<NodeDatum, LinkDatum>>(null)
 

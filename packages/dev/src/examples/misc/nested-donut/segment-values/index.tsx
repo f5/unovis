@@ -60,7 +60,7 @@ const sortFns: SortFn<NestedDonutSegment<Datum>>[] = [
   { label: 'By Value (descending)', compare: (a, b) => b.value - a.value },
   { label: 'By Child Count', compare: (a, b) => b.children.length - a.children.length },
 ]
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const [sort, setSort] = useState<SortFn<NestedDonutSegment<Datum>>>()
   return (
     <div className={s.chart}>
