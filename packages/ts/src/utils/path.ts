@@ -205,3 +205,88 @@ export function scoreRectPath ({ x, y, w, h, r = 0, score = 1 }: ScoreRectPathOp
 export function convertLineToArc (path: Path | string, r: number): string {
   return path.toString().replace(/L(?<x>-?\d*\.?\d*),(?<y>-?\d+\.?\d*)/gm, (_, x, y) => `A ${r} ${r} 0 0 0 ${x} ${y}`)
 }
+
+export type ArrowLinePathOptions = {
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+  arrowHeadLength?: number;
+  arrowHeadWidth?: number;
+}
+
+/**
+ * Generate an SVG path string for an arrow that starts at (x1, y1) and ends at (x2, y2).
+ * The arrow is composed of a straight line (shaft) and a triangular arrowhead.
+ *
+ * Algorithm:
+ * 1. Compute the direction from start to end.
+ * 2. Determine a tail point where the arrowhead starts by moving [arrowHeadLength] distance back from (x2, y2).
+ * 3. Calculate points for the left and right corners of the arrowhead using a perpendicular vector.
+ * 4. Construct the SVG path by drawing the shaft from start to the tail point,
+ *    then the arrowhead as a polygon.
+ *
+ * @param opts - ArrowLinePathOptions object containing start and end coordinates and optional head dimensions.
+ * @returns SVG path string for the arrow.
+ */
+export function arrowLinePath ({
+  x1,
+  y1,
+  x2,
+  y2,
+  arrowHeadLength = 10,
+  arrowHeadWidth = 6,
+}: ArrowLinePathOptions): string {
+  // Compute differences and distance
+  const dx = x2 - x1
+  const dy = y2 - y1
+  const distance = Math.sqrt(dx * dx + dy * dy)
+
+  // If the distance is zero or nearly zero, don't draw anything.
+  if (distance === 0) return ''
+
+  // Let the default values be modifiable based on the line length.
+  let headLength = arrowHeadLength
+  let headWidth = arrowHeadWidth
+
+  // If the line is very short, scale down the arrow head dimensions.
+  const threshold = arrowHeadLength * 2
+  if (distance < threshold) {
+    const scale = distance / threshold
+    headLength *= scale
+    headWidth *= scale
+  }
+
+  // Ensure the arrow head length is never longer than the line itself.
+  headLength = Math.min(headLength / 2, distance)
+
+  // Unit vector in the direction from start to end.
+  const ux = dx / distance
+  const uy = dy / distance
+
+  // Tail point of the arrow (where the arrowhead starts).
+  const tailX = x2 - headLength * ux
+  const tailY = y2 - headLength * uy
+
+  // Perpendicular vector for arrowhead width calculation.
+  const perpX = -uy
+  const perpY = ux
+
+  // Calculate the two base points of the arrowhead triangle.
+  const leftX = tailX + (headWidth / 2) * perpX
+  const leftY = tailY + (headWidth / 2) * perpY
+  const rightX = tailX - (headWidth / 2) * perpX
+  const rightY = tailY - (headWidth / 2) * perpY
+
+  // Build the path:
+  // 1. Draw shaft from start to tail point.
+  // 2. Draw arrowhead polygon: left corner -> tip -> right corner -> left corner (closed).
+  const path = [
+    // Shaft
+    `M${x1},${y1} L${tailX},${tailY}`,
+    // Arrowhead triangle
+    `M${leftX},${leftY} L${x2},${y2} L${rightX},${rightY} Z`,
+  ].join(' ')
+
+  return path
+}

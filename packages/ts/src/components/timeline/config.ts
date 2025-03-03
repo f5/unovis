@@ -3,8 +3,11 @@ import { XYComponentConfigInterface, XYComponentDefaultConfig } from 'core/xy-co
 // Types
 import { WithOptional } from 'types/misc'
 import { ColorAccessor, NumericAccessor, StringAccessor, GenericAccessor } from 'types/accessor'
-import { TextAlign, Arrangement } from 'types'
-import type { TimelineRowLabel } from 'components/timeline/types'
+import { TextAlign } from 'types/text'
+import { Arrangement } from 'types/position'
+
+// Local Types
+import type { TimelineArrow, TimelineRowLabel } from './types'
 
 export interface TimelineConfigInterface<Datum> extends WithOptional<XYComponentConfigInterface<Datum>, 'y'> {
   // Items (Lines)
@@ -75,6 +78,9 @@ export interface TimelineConfigInterface<Datum> extends WithOptional<XYComponent
   /** Text alignment for labels: `TextAlign.Left`, `TextAlign.Center` or `TextAlign.Right`. Default: `TextAlign.Right` */
   rowLabelTextAlign?: TextAlign | `${TextAlign}`;
 
+  // Arrows
+  arrows?: TimelineArrow[];
+
   // Callbacks
   /** Scrolling callback function: `(scrollTop: number) => void`. Default: `undefined` */
   onScroll?: (scrollTop: number) => void;
@@ -119,6 +125,9 @@ export const TimelineDefaultConfig: TimelineConfigInterface<unknown> = {
   rowLabelWidth: undefined,
   rowMaxLabelWidth: undefined,
   rowLabelTextAlign: TextAlign.Right,
+
+  // Arrows
+  arrows: undefined,
 
   // Callbacks
   onScroll: undefined,
