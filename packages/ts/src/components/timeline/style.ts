@@ -15,6 +15,8 @@ export const globalStyles = injectGlobal`
     --vis-timeline-label-font-size: 12px;
     --vis-timeline-label-color: #6C778C;
 
+    --vis-timeline-arrow-color: #6C778C;
+
     --vis-timeline-cursor: default;
     --vis-timeline-line-color: var(--vis-color-main);
     --vis-timeline-line-stroke-width: 0;
@@ -27,6 +29,7 @@ export const globalStyles = injectGlobal`
     --vis-dark-timeline-scrollbar-background-color: #292B34;
     --vis-dark-timeline-scrollbar-color: #6C778C;
     --vis-dark-timeline-label-color: #EFF5F8;
+    --vis-dark-timeline-arrow-color: #EFF5F8;
   }
 
   body.theme-dark ${`.${root}`} {
@@ -35,6 +38,7 @@ export const globalStyles = injectGlobal`
     --vis-timeline-scrollbar-background-color: var(--vis-dark-timeline-scrollbar-background-color);
     --vis-timeline-scrollbar-color: var(--vis-dark-timeline-scrollbar-color);
     --vis-timeline-label-color: var(--vis-dark-timeline-label-color);
+    --vis-timeline-arrow-color: var(--vis-dark-timeline-arrow-color);
   }
 `
 
@@ -69,6 +73,16 @@ export const lineStartIcon = css`
 
 export const lineEndIcon = css`
   label: line-end-icon;
+`
+
+export const arrows = css`
+  label: arrows;
+`
+
+export const arrow = css`
+  label: arrow;
+  fill: var(--vis-timeline-arrow-color);
+  stroke: var(--vis-timeline-arrow-color);
 `
 
 export const rows = css`
