@@ -7,7 +7,7 @@ import { TextAlign } from 'types/text'
 import { Arrangement } from 'types/position'
 
 // Local Types
-import type { TimelineArrow, TimelineRowLabel } from './types'
+import type { TimelineArrow, TimelineLineRenderState, TimelineRowLabel } from './types'
 
 export interface TimelineConfigInterface<Datum> extends WithOptional<XYComponentConfigInterface<Datum>, 'y'> {
   // Items (Lines)
@@ -81,6 +81,17 @@ export interface TimelineConfigInterface<Datum> extends WithOptional<XYComponent
   // Arrows
   arrows?: TimelineArrow[];
 
+  // Animation
+  /** Control the animation by specify the initial position for new lines as [x, y]. Default: `undefined` */
+  animationLineEnterPosition?:
+  [number | undefined | null, number | undefined | null] |
+  ((d: Datum & TimelineLineRenderState, i: number, data: (Datum & TimelineLineRenderState)[]) => [number | undefined, number | undefined]) |
+  undefined;
+  /** Control the animation by specify the destination position for exiting lines as [x, y]. Default: `undefined` */
+  animationLineExitPosition?: [number | undefined | null, number | undefined | null] |
+  ((d: Datum & TimelineLineRenderState, i: number, data: (Datum & TimelineLineRenderState)[]) => [number | undefined, number | undefined]) |
+  undefined;
+
   // Callbacks
   /** Scrolling callback function: `(scrollTop: number) => void`. Default: `undefined` */
   onScroll?: (scrollTop: number) => void;
@@ -128,6 +139,9 @@ export const TimelineDefaultConfig: TimelineConfigInterface<unknown> = {
 
   // Arrows
   arrows: undefined,
+
+  // Animation
+  animationLineEnterPosition: undefined,
 
   // Callbacks
   onScroll: undefined,
