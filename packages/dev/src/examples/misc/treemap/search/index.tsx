@@ -4,7 +4,6 @@ import { VisSingleContainer, VisTooltip, VisTreemap } from '@unovis/react'
 import { Position, Treemap, TreemapNode } from '@unovis/ts'
 import s from './styles.module.css'
 
-
 export const title = 'Treemap: Search'
 export const subTitle = 'Demo of search by nodes feature'
 
@@ -15,10 +14,11 @@ const populationFormat = (value: number): string => populationFormatRaw(value)
   .replace('G', 'B')
 
 const getTooltipContent = (d: TreemapNode<TreemapExampleDatum>): string => {
-  return `
-    <div class="${s.tooltipTitle}">${d.data[0]}</div>
-    <div>Total Population: ${populationFormat(d.value)}</div>
-  `
+  const isLeafNode = d.data.datum !== undefined
+  return isLeafNode ? `
+    <div class="${s.tooltipTitle}">${d.data.datum.name}</div>
+    <div>Total Population: ${populationFormat(d.data.datum.value)}</div>
+  ` : ''
 }
 
 type TreemapExampleDatum = {
@@ -46,10 +46,9 @@ const data: TreemapExampleDatum[] = [
   { name: 'Germany', value: 83783942, group: 'Europe' },
 ]
 
-
-export const component = (): JSX.Element => {
+export const component = (): React.ReactElement => {
   const [searchTerm, setSearchTerm] = useState('')
-  const [clickedNode, setClickedNode] = useState<TreemapExampleDatum|null>(null)
+  const [clickedNode, setClickedNode] = useState<TreemapExampleDatum | null>(null)
 
   // Match the search term against the data
   const filteredData = React.useMemo(() => {
@@ -61,13 +60,9 @@ export const component = (): JSX.Element => {
     })
   }, [searchTerm])
 
-  const handleClick = useCallback((d: TreemapExampleDatum): void => {
-    // TODO iterate the types to get this really right
-    // @ts-expect-error node.data[1][0] is the index
-    const index = d.data[1][0] as number
-    const datum = (data[index])
-    setClickedNode(datum)
-  }, [filteredData])
+  const handleClick = useCallback((d: TreemapNode<TreemapExampleDatum>): void => {
+    setClickedNode(d.data.datum)
+  }, [])
 
   return (
     <div>
@@ -104,6 +99,14 @@ export const component = (): JSX.Element => {
             [Treemap.selectors.clickableTile]: {
               click: handleClick,
             },
+          }}
+          tileColor={(d: TreemapNode<TreemapExampleDatum>) => {
+            if (clickedNode) {
+              // TODO figure out how to invert this logic.
+              // Currently there's complexity around inheriting
+              // the color from the parent node we need to overcome.
+              return (d.data.datum !== clickedNode) ? null : '#ddd'
+            }
           }}
         />
         <VisTooltip

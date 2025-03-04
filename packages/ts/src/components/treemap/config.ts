@@ -74,6 +74,6 @@ export const TreemapDefaultConfig: TreemapConfigInterface<unknown> = {
   enableTileLabelFontSizeVariation: true,
   tileLabelSmallFontSize: 8,
   tileLabelMediumFontSize: 12,
-  tileLabelLargeFontSize: 24,
+  tileLabelLargeFontSize: 22,
   showTileClickAffordance: false,
 }

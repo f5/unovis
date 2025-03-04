@@ -1,5 +1,5 @@
 import { Selection, select } from 'd3-selection'
-import { hierarchy, treemap } from 'd3-hierarchy'
+import { hierarchy, HierarchyNode, treemap } from 'd3-hierarchy'
 import { group, max, extent } from 'd3-array'
 import { scaleLinear, scaleThreshold } from 'd3-scale'
 import { hsl } from 'd3-color'
@@ -10,7 +10,7 @@ import { getColor, brighter, getHexValue, isDarkBackground } from 'utils/color'
 import { getString, getNumber, isNumber } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { TreemapConfigInterface, TreemapDefaultConfig } from './config'
-import { TreemapNode } from './types'
+import { TreemapDatum, TreemapNode } from './types'
 
 import * as s from './style' // Minimum pixel size for showing labels
 
@@ -83,9 +83,9 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
     }
 
     // Fix the hierarchy by removing the extra level of nesting
-    rootNode.each(d => {
-      if (!d.children) {
-        d.parent.children = null
+    rootNode.each(node => {
+      if (!node.children) {
+        node.parent.children = null
       }
     })
 
@@ -94,17 +94,37 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       .round(true)
       .padding(config.tilePadding)
 
+    // Apply padding to the top of each tile,
+    // but not for the root node.
     if (this.config.tilePaddingTop !== undefined) {
-      treemapLayout.paddingTop(config.tilePaddingTop)
+      treemapLayout.paddingTop(d => d.parent ? config.tilePaddingTop : 0)
     }
 
-    // Generate unique IDs for each node before creating the treemap layout
+
+    // Compute the treemap layout
+    const treemapData = treemapLayout(rootNode) as TreemapNode<Datum>
+
+    // Process the resulting hierarchy into the type we need
     let nodeId = 0
-    rootNode.each(d => {
-      (d as unknown as TreemapNode<Datum>)._id = `node-${nodeId++}`
+    treemapData.each(node => {
+      const n = node as unknown as HierarchyNode<[string, number[]]>
+      // Generate unique IDs for each node
+      node._id = `node-${nodeId++}`
+
+      const treemapDatum: TreemapDatum<Datum> = {
+        key: n.data[0],
+      }
+
+      // Populate the index and datum for leaf nodes
+      const isLeafNode = !n.children
+      if (isLeafNode) {
+        treemapDatum.index = n.data[1][0]
+        treemapDatum.datum = data[treemapDatum.index]
+      }
+
+      node.data = treemapDatum
     })
 
-    const treemapData = treemapLayout(rootNode) as TreemapNode<Datum>
     const descendants = treemapData.descendants()
 
     // Set up the brightness increase scale based on depth
@@ -137,11 +157,9 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       .eachBefore((node) => {
         if (!node.children) return
         // Get all children for value comparison
-        const children = node.children as TreemapNode<Datum>[]
+        const children = node.children
 
-        children.forEach((child, i) => {
-          const treemapChild = child as TreemapNode<Datum>
-
+        children.forEach((treemapChild, i) => {
           // Calculate base color for this child using the color accessor function
           let color = getColor(treemapChild, config.tileColor, i, treemapChild.depth !== 1)
 
@@ -181,13 +199,22 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       .append('g')
       .attr('class', s.tileGroup)
 
+    // Computes the rx and ry values.
+    // The rx and ry values are the minimum of the tile
+    // border radius and half the width/height of the tile.
+    // This ensures that the tile border radius is not
+    // larger thanthe tile size, which makes small tiles
+    // look better.
+    const rx = (d: TreemapNode<Datum>): number =>
+      Math.min(config.tileBorderRadius, (d.x1 - d.x0) / 2)
+
     // Add clipPath elements
     tilesEnter
       .append('clipPath')
       .attr('id', d => `clip-${d._id}`)
       .append('rect')
-      .attr('rx', config.tileBorderRadius)
-      .attr('ry', config.tileBorderRadius)
+      .attr('rx', rx)
+      .attr('ry', rx)
 
     // Tile rectangles
     tilesEnter
@@ -197,8 +224,8 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       // Make the leaf tiles clickable if a click handler is provided
       .classed(s.clickableTile, d => config.showTileClickAffordance && !d.children)
 
-      .attr('rx', config.tileBorderRadius)
-      .attr('ry', config.tileBorderRadius)
+      .attr('rx', rx)
+      .attr('ry', rx)
       // Initialize tile positions so that the initial transition is smooth
       .attr('x', d => d.x0)
       .attr('y', d => d.y0)
@@ -223,7 +250,7 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       .call(selection => smartTransition(selection, duration)
         .attr('x', d => d.x0)
         .attr('y', d => d.y0)
-        .attr('width', d => d.x1 - d.x0)
+        .attr('width', d => d.x1 - d.x0 - config.tilePadding)
         .attr('height', d => d.y1 - d.y0)
       )
 
@@ -256,8 +283,7 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       .each(function (d) {
         const text = select(this) as unknown as Selection<SVGTextElement, any, SVGElement, any>
 
-        // @ts-expect-error This is a workaround for the D3 types
-        const label = `${d.data[0]}: ${numberFormat(d.value)}`
+        const label = `${d.data.key}: ${numberFormat(d.value)}`
         text.text(label)
 
         // Set text color based on background darkness
