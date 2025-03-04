@@ -7,7 +7,7 @@ import { drag, D3DragEvent } from 'd3-drag'
 import { XYComponentCore } from 'core/xy-component'
 
 // Utils
-import { isNumber, arrayOfIndices, getMin, getMax, getString, getNumber, getValue, groupBy, isPlainObject } from 'utils/data'
+import { isNumber, arrayOfIndices, getMin, getMax, getString, getNumber, getValue, groupBy, isPlainObject, isFunction } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
 import { textAlignToAnchor, trimSVGText } from 'utils/text'
@@ -111,7 +111,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
         const longestLabel = rowLabels.reduce((longestLabel, l) => longestLabel.formattedLabel.length > l.formattedLabel.length ? longestLabel : l, rowLabels[0])
         const label = this._labelsGroup.append('text')
           .attr('class', s.label)
-          .text(longestLabel.formattedLabel)
+          .text(longestLabel?.formattedLabel || '')
           .call(trimSVGText, config.rowMaxLabelWidth ?? config.maxLabelWidth)
 
         const labelWidth = label.node().getBBox().width
@@ -153,19 +153,20 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
       .attr('opacity', 0)
 
     // Labels
-    const labels = this._labelsGroup.selectAll<SVGTextElement, string>(`.${s.label}`)
-      .data((config.showRowLabels ?? config.showLabels) ? rowLabels : [])
-
-    const labelsEnter = labels.enter().append('text')
-      .attr('class', s.label)
+    const labels = this._labelsGroup.selectAll<SVGTextElement, TimelineRowLabel<Datum>>(`.${s.label}`)
+      .data((config.showRowLabels ?? config.showLabels) ? rowLabels : [], l => l?.label)
 
     const labelOffset = config.rowLabelTextAlign === TextAlign.Center ? this._labelWidth / 2
       : config.rowLabelTextAlign === TextAlign.Left ? this._labelWidth
         : this._labelMargin
 
-    labelsEnter.merge(labels)
+    const labelsEnter = labels.enter().append('text')
+      .attr('class', s.label)
       .attr('x', xRange[0] - labelOffset)
       .attr('y', l => yStart + (ordinalScale(l.label) + 0.5) * rowHeight)
+      .style('opacity', 0)
+
+    const labelsMerged = labelsEnter.merge(labels)
       .text(l => l.formattedLabel)
       .each((label, i, els) => {
         const labelSelection = select(els[i])
@@ -181,7 +182,14 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
       })
       .style('text-anchor', textAlignToAnchor(config.rowLabelTextAlign as TextAlign))
 
-    labels.exit().remove()
+    smartTransition(labelsMerged, duration)
+      .attr('x', xRange[0] - labelOffset)
+      .attr('y', l => yStart + (ordinalScale(l.label) + 0.5) * rowHeight)
+      .style('opacity', 1)
+
+    smartTransition(labels.exit(), duration)
+      .style('opacity', 0)
+      .remove()
 
     // Row background rects
     const xStart = xRange[0]
@@ -193,25 +201,41 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
 
     const rectsEnter = rects.enter().append('rect')
       .attr('class', s.row)
-
-    rectsEnter.merge(rects)
-      .classed(s.rowOdd, config.alternatingRowColors ? (_, i) => !(i % 2) : null)
       .attr('x', xStart)
       .attr('width', timelineWidth)
       .attr('y', (_, i) => yStart + i * rowHeight)
       .attr('height', rowHeight)
+      .style('opacity', 0)
 
-    rects.exit().remove()
+    const rectsMerged = rectsEnter.merge(rects)
+      .classed(s.rowOdd, config.alternatingRowColors ? (_, i) => !(i % 2) : null)
 
-    const lineDataPrepared = this._prepareLinesData(data, ordinalScale, rowHeight)
+    smartTransition(rectsMerged, duration)
+      .attr('x', xStart)
+      .attr('width', timelineWidth)
+      .attr('y', (_, i) => yStart + i * rowHeight)
+      .attr('height', rowHeight)
+      .style('opacity', 1)
+
+    smartTransition(rects.exit(), duration)
+      .style('opacity', 0)
+      .remove()
+
     // Lines
+    const lineDataPrepared = this._prepareLinesData(data, ordinalScale, rowHeight)
     const lines = this._linesGroup.selectAll<SVGGElement, Datum & TimelineLineRenderState>(`.${s.lineGroup}`)
       .data(lineDataPrepared, (d: Datum & TimelineLineRenderState) => d._id)
 
     const linesEnter = lines.enter().append('g')
       .attr('class', s.lineGroup)
       .style('opacity', 0)
-      .attr('transform', d => `translate(${d._x}, ${d._y})`)
+      .attr('transform', (d, i) => {
+        const configuredPos = isFunction(config.animationLineEnterPosition)
+          ? config.animationLineEnterPosition(d, i, lineDataPrepared)
+          : config.animationLineEnterPosition
+        const [x, y] = [configuredPos?.[0] ?? d._x, configuredPos?.[1] ?? d._y]
+        return `translate(${x}, ${y})`
+      })
 
     linesEnter.append('rect')
       .attr('class', s.line)
@@ -222,10 +246,13 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
     linesEnter.append('use').attr('class', s.lineEndIcon)
 
     const linesMerged = linesEnter.merge(lines)
+    smartTransition(linesMerged, duration)
       .attr('transform', d => `translate(${d._x + d._xOffset}, ${d._y})`)
+      .style('opacity', 1)
 
-    linesMerged.selectAll<SVGRectElement, Datum & TimelineLineRenderState>(`.${s.line}`)
+    const lineRectElementsSelection = linesMerged.selectAll<SVGRectElement, Datum & TimelineLineRenderState>(`.${s.line}`)
       .data(d => [d])
+    smartTransition(lineRectElementsSelection, duration)
       .style('fill', (d, i) => getColor(d, config.color, ordinalScale(this._getRecordKey(d, i))))
       .style('cursor', (d, i) => getString(d, config.lineCursor ?? config.cursor, i))
       .call(this._renderLines.bind(this), rowHeight)
@@ -262,12 +289,16 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
       .attr('height', d => d._endIconSize ?? d._height)
       .style('color', d => d._endIconColor)
 
-    // Fade in / out
-    smartTransition(linesMerged, duration)
-      .style('opacity', 1)
-
-    smartTransition(lines.exit(), duration)
+    const linesExit = lines.exit<Datum & TimelineLineRenderState>()
+    smartTransition(linesExit, duration)
       .style('opacity', 0)
+      .attr('transform', (d, i) => {
+        const configuredPos = isFunction(config.animationLineExitPosition)
+          ? config.animationLineExitPosition(d, i, lineDataPrepared)
+          : config.animationLineExitPosition
+        const [x, y] = [configuredPos?.[0] ?? d._x, configuredPos?.[1] ?? d._y]
+        return `translate(${x}, ${y})`
+      })
       .remove()
 
     // Arrows
@@ -278,8 +309,9 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
 
     const arrowsEnter = arrows.enter().append('path')
       .attr('class', s.arrow)
+      .style('opacity', 0)
 
-    arrowsEnter.merge(arrows)
+    smartTransition(arrowsEnter.merge(arrows), duration)
       .attr('d', (d) => arrowLinePath({
         x1: d._x1,
         y1: d._y1,
@@ -288,8 +320,11 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
         arrowHeadLength: TIMELINE_DEFAULT_ARROW_HEAD_LENGTH,
         arrowHeadWidth: TIMELINE_DEFAULT_ARROW_HEAD_WIDTH,
       }))
+      .style('opacity', 1)
 
-    arrowsEnter.exit().remove()
+    smartTransition(arrowsEnter.exit(), duration)
+      .style('opacity', 1)
+      .remove()
 
     // Scroll Bar
     const contentBBox = this._rowsGroup.node().getBBox() // We determine content size using the rects group because lines are animated
