@@ -1,6 +1,6 @@
 import React from 'react'
 import { VisXYContainer, VisTimeline, VisAxis, VisTooltip } from '@unovis/react'
-import { Timeline } from '@unovis/ts'
+import { Timeline, TimelineRowLabel } from '@unovis/ts'
 
 import { TimeDataRecord, generateTimeSeries } from '@src/utils/data'
 import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
@@ -26,7 +26,7 @@ export const component = (props: ExampleViewerDurationProps): JSX.Element => {
       <VisTooltip triggers={{
         [Timeline.selectors.line]: (d: TimeDataRecord) =>
           `${(new Date(d.timestamp)).toDateString()} — ${(new Date(d.timestamp + d.length)).toDateString()}`,
-        [Timeline.selectors.row]: (label: string) => `Timeline Row ${label}`,
+        [Timeline.selectors.row]: (l: TimelineRowLabel<TimeDataRecord>) => `Timeline Row ${l.label}`,
       }}/>
     </VisXYContainer>
   </>
