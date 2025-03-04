@@ -145,6 +145,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
     // Ordinal scale to handle records on the same type
     const ordinalScale: ScaleOrdinal<string, number> = scaleOrdinal()
     ordinalScale.range(arrayOfIndices(numRowLabels))
+      .domain(rowLabels.map(l => l.label))
 
     // Invisible Background rect to track events
     this._background
@@ -258,6 +259,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
       .call(this._renderLines.bind(this), rowHeight)
 
     linesMerged.selectAll<SVGUseElement, Datum & TimelineLineRenderState>(`.${s.lineStartIcon}`)
+      .data(d => [d])
       .attr('href', (d, i) => getString(d, config.lineStartIcon, i))
       .attr('x', (d, i) => {
         const iconSize = d._startIconSize ?? d._height
@@ -273,6 +275,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
       .style('color', d => d._startIconColor)
 
     linesMerged.selectAll<SVGUseElement, Datum & TimelineLineRenderState>(`.${s.lineEndIcon}`)
+      .data(d => [d])
       .attr('href', (d, i) => getString(d, config.lineEndIcon, i))
       .attr('x', (d, i) => {
         const lineHeight = d._height
@@ -303,7 +306,6 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
 
     // Arrows
     const arrowsData = this._prepareArrowsData(data, ordinalScale, rowHeight)
-
     const arrows = this._arrowsGroup.selectAll<SVGPathElement, Datum>(`.${s.arrow}`)
       .data(arrowsData ?? [])
 
@@ -322,8 +324,8 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
       }))
       .style('opacity', 1)
 
-    smartTransition(arrowsEnter.exit(), duration)
-      .style('opacity', 1)
+    smartTransition(arrows.exit(), duration)
+      .style('opacity', 0)
       .remove()
 
     // Scroll Bar
