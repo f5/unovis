@@ -202,14 +202,15 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       .append('g')
       .attr('class', s.tileGroup)
 
-    // Computes the rx and ry values.
+    // Computes the rect border radius for a given tile.
     // The rx and ry values are the minimum of the tile
-    // border radius and half the width/height of the tile.
+    // border radius and some fraction the width of the tile,
+    // based on the tileBorderRadiusFactor config.
     // This ensures that the tile border radius is not
-    // larger thanthe tile size, which makes small tiles
+    // larger than the tile size, which makes small tiles
     // look better.
     const rx = (d: TreemapNode<Datum>): number =>
-      Math.min(config.tileBorderRadius, (d.x1 - d.x0) / 2)
+      Math.min(config.tileBorderRadius, (d.x1 - d.x0) * config.tileBorderRadiusFactor)
 
     // Add clipPath elements
     tilesEnter

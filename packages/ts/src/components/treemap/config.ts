@@ -38,6 +38,9 @@ export interface TreemapConfigInterface<Datum> extends ComponentConfigInterface 
   /** Border radius of the tiles in pixels. Default: `2` */
   tileBorderRadius?: number;
 
+  /** Minimum fraction of width for border radius. Default: `1/8` */
+  tileBorderRadiusFactor?: number;
+
   /** Enable lightness variance for sibling tiles. Default: `false` */
   enableLightnessVariance?: boolean;
 
@@ -70,6 +73,7 @@ export const TreemapDefaultConfig: TreemapConfigInterface<unknown> = {
   labelOffsetX: 4,
   labelOffsetY: 4,
   tileBorderRadius: 2,
+  tileBorderRadiusFactor: 1 / 8,
   enableLightnessVariance: false,
   enableTileLabelFontSizeVariation: true,
   tileLabelSmallFontSize: 8,
