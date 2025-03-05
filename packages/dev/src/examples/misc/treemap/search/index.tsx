@@ -102,10 +102,11 @@ export const component = (): React.ReactElement => {
           }}
           tileColor={(d: TreemapNode<TreemapExampleDatum>) => {
             if (clickedNode) {
-              // TODO figure out how to invert this logic.
-              // Currently there's complexity around inheriting
-              // the color from the parent node we need to overcome.
-              return (d.data.datum !== clickedNode) ? null : '#ddd'
+              return (d.data.datum === clickedNode)
+                ? null
+                : d.depth === 1
+                  ? '#ddd'
+                  : '#eee'
             }
           }}
         />

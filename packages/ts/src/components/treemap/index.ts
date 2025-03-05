@@ -100,7 +100,6 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       treemapLayout.paddingTop(d => d.parent ? config.tilePaddingTop : 0)
     }
 
-
     // Compute the treemap layout
     const treemapData = treemapLayout(rootNode) as TreemapNode<Datum>
 
@@ -152,42 +151,46 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
         config.tileLabelLargeFontSize,
       ])
 
-    // Set fill color and opacity for each node
+    // First pass: Set base colors without considering tileColor config
     treemapData
       .eachBefore((node) => {
         if (!node.children) return
-        // Get all children for value comparison
         const children = node.children
 
         children.forEach((treemapChild, i) => {
-          // Calculate base color for this child using the color accessor function
-          let color = getColor(treemapChild, config.tileColor, i, treemapChild.depth !== 1)
-
-          // If no color for this child, use the parent's color
+          // Use default color scheme without tileColor config
+          let color = getColor(treemapChild, undefined, i, treemapChild.depth !== 1)
           color = color ?? (node as TreemapNode<Datum>)._fill
 
-          // Convert CSS variables to hex values if needed
           const hexColor = color ? getHexValue(color, this.g.node()) : null
 
           if (hexColor) {
-            // Convert to HSL for easier lightness manipulation
             const hslColor = hsl(hexColor)
 
             if (config.enableLightnessVariance) {
-              // Only apply lightness variation to leaf nodes
               if (!treemapChild.children) {
                 const lightnessAdjustment = this.getTileLightness(treemapChild, children)
                 hslColor.l = Math.min(1, hslColor.l + lightnessAdjustment)
               }
             }
 
-            // Make the color brighter based on depth
             treemapChild._fill = brighter(hslColor.toString(), brightnessIncrease(treemapChild.depth))
           } else {
             treemapChild._fill = null
           }
         })
       })
+
+    // Second pass: Apply tileColor config as an overlay
+    if (config.tileColor) {
+      treemapData
+        .eachBefore((node) => {
+          const color = getColor(node, config.tileColor)
+          if (color !== null) {
+            node._fill = color
+          }
+        })
+    }
 
     // Render tiles
     const visibleNodes = descendants.filter(d => d.depth > 0)
