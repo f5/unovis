@@ -37,9 +37,11 @@ export const component = (props: ExampleViewerDurationProps): JSX.Element => {
         lineStartIcon={'#circle_pending_filled'}
         lineEndIcon={'#circle_check_filled'}
         lineEndIconSize={25}
-        lineStartIconColor={'#fff'}
+        lineStartIconColor={'rgb(38, 86, 201)'}
         lineEndIconColor={'rgb(38, 86, 201)'}
         lineEndIconArrangement={Arrangement.Outside}
+        lineStartIconArrangement={Arrangement.Outside}
+        showRowLabels
       />
       <VisAxis
         type='x'
