@@ -293,6 +293,7 @@ export class XYContainer<Datum> extends ContainerCore {
     config.annotations?.render()
 
     this._firstRender = false
+    config.onRenderComplete?.(this.svg.node(), margin, this._getBleed(this.components), this.containerWidth, this.containerHeight, this.width, this.height)
   }
 
   private _updateScales<T extends XYComponentCore<Datum>> (...components: T[]): void {
@@ -365,13 +366,7 @@ export class XYContainer<Datum> extends ContainerCore {
     }
 
     // Get and combine bleed
-    const bleed = components.map(c => c.bleed).reduce((bleed, b) => {
-      for (const key of Object.keys(bleed)) {
-        const k = key as keyof Spacing
-        if (bleed[k] < b[k]) bleed[k] = b[k]
-      }
-      return bleed
-    }, { top: 0, bottom: 0, left: 0, right: 0 })
+    const bleed = this._getBleed(components)
 
     // Update scale range
     for (const c of components) {
@@ -436,6 +431,16 @@ export class XYContainer<Datum> extends ContainerCore {
       left: margin.left + this._axisMargin.left,
       right: margin.right + this._axisMargin.right,
     }
+  }
+
+  private _getBleed<T extends XYComponentCore<Datum>> (components: T[]): Spacing {
+    return components.map(c => c.bleed).reduce((bleed, b) => {
+      for (const key of Object.keys(bleed)) {
+        const k = key as keyof Spacing
+        if (bleed[k] < b[k]) bleed[k] = b[k]
+      }
+      return bleed
+    }, { top: 0, bottom: 0, left: 0, right: 0 })
   }
 
   public destroy (): void {
