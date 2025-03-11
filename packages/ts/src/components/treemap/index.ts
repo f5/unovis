@@ -240,14 +240,12 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       .style('cursor', config.showTileClickAffordance ? d => !d.children ? 'pointer' : null : null)
 
     tiles.merge(tilesEnter).select(`rect.${s.tile}`)
-      .call(selection => smartTransition(selection, duration)
-        .style('fill', d => d._fill ?? getColor(d, config.tileColor))
-        .style('opacity', 1)
-        .attr('x', d => d.x0)
-        .attr('y', d => d.y0)
-        .attr('width', d => d.x1 - d.x0)
-        .attr('height', d => d.y1 - d.y0)
-      )
+      .style('fill', d => d._fill ?? getColor(d, config.tileColor))
+      .style('opacity', 1)
+      .attr('x', d => d.x0)
+      .attr('y', d => d.y0)
+      .attr('width', d => d.x1 - d.x0)
+      .attr('height', d => d.y1 - d.y0)
 
     // Update clipPath rects
     tiles.merge(tilesEnter).select('clipPath rect')
