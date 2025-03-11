@@ -1,3 +1,5 @@
+import { Arrangement } from 'types/position'
+
 export type TimelineRowLabel<D> = {
   label: string;
   formattedLabel: string;
@@ -33,11 +35,11 @@ export type TimelineArrowRenderState = {
 export type TimelineLineRenderState = {
   _id: string;
   /** The x position of the line start pixels. */
-  _x: number;
+  _xPx: number;
   /** The y position of the line in pixels. */
-  _y: number;
+  _yPx: number;
   /** The x offset of the line in pixels. Applied the the lines is too short. See the `_lengthCorrected` property */
-  _xOffset: number;
+  _xOffsetPx: number;
   /** The height of the line in pixels. */
   _height: number;
   /** The length of the line in pixels. */
@@ -49,4 +51,6 @@ export type TimelineLineRenderState = {
   _endIconSize: number;
   _startIconColor: string;
   _endIconColor: string;
+  _startIconArrangement: `${Arrangement}`;
+  _endIconArrangement: `${Arrangement}`;
 }

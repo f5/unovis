@@ -1,5 +1,6 @@
 import { select, Selection } from 'd3-selection'
 import { Transition } from 'd3-transition'
+import { maxIndex } from 'd3-array'
 import { scaleOrdinal, ScaleOrdinal } from 'd3-scale'
 import { drag, D3DragEvent } from 'd3-drag'
 
@@ -28,6 +29,9 @@ import type { TimelineArrow, TimelineArrowRenderState, TimelineLineRenderState, 
 
 // Constants
 import { TIMELINE_DEFAULT_ARROW_HEAD_LENGTH, TIMELINE_DEFAULT_ARROW_HEAD_WIDTH } from './constants'
+
+// Utils
+import { getIconBleed } from './utils'
 
 export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterface<Datum>> {
   static selectors = s
@@ -58,6 +62,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
   private _scrollbarHeight = 0
   private _labelMargin = 5
   private _labelWidth = 0 // Will be overridden in `get bleed ()`
+  private _lineIconBleed: [number, number] = [0, 0]
 
   /** We define a dedicated clipping path for this component because it needs to behave
    * differently than the regular XYContainer's clipPath */
@@ -100,14 +105,23 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
     this._scrollBarHandle.call(dragBehaviour)
   }
 
+  public setConfig (config: TimelineConfigInterface<Datum>): void {
+    super.setConfig(config)
+  }
+
+  public setData (data: Datum[]): void {
+    super.setData(data)
+  }
+
   get bleed (): Spacing {
     const { config, datamodel: { data } } = this
+    const rowLabels = this._getRowLabels(data)
+    const rowHeight = config.rowHeight || (this._height / rowLabels.length)
 
     // We calculate the longest label width to set the bleed values accordingly
     if (config.showRowLabels ?? config.showLabels) {
       if (config.rowLabelWidth ?? config.labelWidth) this._labelWidth = (config.rowLabelWidth ?? config.labelWidth) + this._labelMargin
       else {
-        const rowLabels = this._getRowLabels(data)
         const longestLabel = rowLabels.reduce((longestLabel, l) => longestLabel.formattedLabel.length > l.formattedLabel.length ? longestLabel : l, rowLabels[0])
         const label = this._labelsGroup.append('text')
           .attr('class', s.label)
@@ -122,11 +136,26 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
       }
     }
 
+    // Icon bleed
+    const iconBleed = [0, 0] as [number, number]
+    if (config.lineStartIcon) {
+      const firstItemIdx = maxIndex(data, (d, i) => getNumber(d, config.x, i))
+      const firstItem = data[firstItemIdx]
+      iconBleed[0] = getIconBleed(firstItem, firstItemIdx, config.lineStartIcon, config.lineStartIconSize, config.lineStartIconArrangement, rowHeight)
+    }
+
+    if (config.lineEndIcon) {
+      const lastItemIdx = maxIndex(data, (d, i) => getNumber(d, config.x, i) + (getNumber(d, config.lineLength ?? config.length, i) ?? 0))
+      const lastItem = data[lastItemIdx]
+      iconBleed[1] = getIconBleed(lastItem, lastItemIdx, config.lineEndIcon, config.lineEndIconSize, config.lineEndIconArrangement, rowHeight)
+    }
+
+    this._lineIconBleed = iconBleed
     return {
       top: 0,
       bottom: 0,
-      left: this._labelWidth,
-      right: this._scrollBarWidth + this._scrollBarMargin,
+      left: this._labelWidth + iconBleed[0],
+      right: this._scrollBarWidth + this._scrollBarMargin + iconBleed[1],
     }
   }
 
@@ -142,10 +171,11 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
     const numRowLabels = rowLabels.length
     const rowHeight = config.rowHeight || (yHeight / numRowLabels)
 
-    // Ordinal scale to handle records on the same type
-    const ordinalScale: ScaleOrdinal<string, number> = scaleOrdinal()
-    ordinalScale.range(arrayOfIndices(numRowLabels))
+    const yOrdinalScale = scaleOrdinal<string, number>()
+      .range(arrayOfIndices(numRowLabels))
       .domain(rowLabels.map(l => l.label))
+
+    const lineDataPrepared = this._prepareLinesData(data, yOrdinalScale, rowHeight)
 
     // Invisible Background rect to track events
     this._background
@@ -161,10 +191,11 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
       : config.rowLabelTextAlign === TextAlign.Left ? this._labelWidth
         : this._labelMargin
 
+    const labelXStart = xRange[0] - this._lineIconBleed[0] - labelOffset
     const labelsEnter = labels.enter().append('text')
       .attr('class', s.label)
-      .attr('x', xRange[0] - labelOffset)
-      .attr('y', l => yStart + (ordinalScale(l.label) + 0.5) * rowHeight)
+      .attr('x', labelXStart)
+      .attr('y', l => yStart + (yOrdinalScale(l.label) + 0.5) * rowHeight)
       .style('opacity', 0)
 
     const labelsMerged = labelsEnter.merge(labels)
@@ -184,8 +215,8 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
       .style('text-anchor', textAlignToAnchor(config.rowLabelTextAlign as TextAlign))
 
     smartTransition(labelsMerged, duration)
-      .attr('x', xRange[0] - labelOffset)
-      .attr('y', l => yStart + (ordinalScale(l.label) + 0.5) * rowHeight)
+      .attr('x', labelXStart)
+      .attr('y', l => yStart + (yOrdinalScale(l.label) + 0.5) * rowHeight)
       .style('opacity', 1)
 
     smartTransition(labels.exit(), duration)
@@ -193,8 +224,8 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
       .remove()
 
     // Row background rects
-    const xStart = xRange[0]
-    const timelineWidth = xRange[1] - xRange[0]
+    const xStart = xRange[0] - this._lineIconBleed[0]
+    const timelineWidth = xRange[1] - xRange[0] + this._lineIconBleed[0] + this._lineIconBleed[1]
     const numRows = Math.max(Math.floor(yHeight / rowHeight), numRowLabels)
     const recordTypes = Array(numRows).fill(null).map((_, i) => rowLabels[i])
     const rects = this._rowsGroup.selectAll<SVGRectElement, number>(`.${s.row}`)
@@ -223,7 +254,6 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
       .remove()
 
     // Lines
-    const lineDataPrepared = this._prepareLinesData(data, ordinalScale, rowHeight)
     const lines = this._linesGroup.selectAll<SVGGElement, Datum & TimelineLineRenderState>(`.${s.lineGroup}`)
       .data(lineDataPrepared, (d: Datum & TimelineLineRenderState) => d._id)
 
@@ -234,13 +264,13 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
         const configuredPos = isFunction(config.animationLineEnterPosition)
           ? config.animationLineEnterPosition(d, i, lineDataPrepared)
           : config.animationLineEnterPosition
-        const [x, y] = [configuredPos?.[0] ?? d._x, configuredPos?.[1] ?? d._y]
+        const [x, y] = [configuredPos?.[0] ?? d._xPx, configuredPos?.[1] ?? d._yPx]
         return `translate(${x}, ${y})`
       })
 
     linesEnter.append('rect')
       .attr('class', s.line)
-      .style('fill', (d, i) => getColor(d, config.color, ordinalScale(this._getRecordKey(d, i))))
+      .style('fill', (d, i) => getColor(d, config.color, yOrdinalScale(this._getRecordKey(d, i))))
       .call(this._renderLines.bind(this), rowHeight)
 
     linesEnter.append('use').attr('class', s.lineStartIcon)
@@ -248,13 +278,13 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
 
     const linesMerged = linesEnter.merge(lines)
     smartTransition(linesMerged, duration)
-      .attr('transform', d => `translate(${d._x + d._xOffset}, ${d._y})`)
+      .attr('transform', d => `translate(${d._xPx + d._xOffsetPx}, ${d._yPx})`)
       .style('opacity', 1)
 
     const lineRectElementsSelection = linesMerged.selectAll<SVGRectElement, Datum & TimelineLineRenderState>(`.${s.line}`)
       .data(d => [d])
     smartTransition(lineRectElementsSelection, duration)
-      .style('fill', (d, i) => getColor(d, config.color, ordinalScale(this._getRecordKey(d, i))))
+      .style('fill', (d, i) => getColor(d, config.color, yOrdinalScale(this._getRecordKey(d, i))))
       .style('cursor', (d, i) => getString(d, config.lineCursor ?? config.cursor, i))
       .call(this._renderLines.bind(this), rowHeight)
 
@@ -262,34 +292,33 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
       .data(d => [d])
       .attr('href', (d, i) => getString(d, config.lineStartIcon, i))
       .attr('x', (d, i) => {
-        const iconSize = d._startIconSize ?? d._height
-        const iconArrangement = getValue(d, config.lineStartIconArrangement, i)
+        const iconSize = d._startIconSize
+        const iconArrangement = d._startIconArrangement
         const offset = iconArrangement === Arrangement.Inside ? 0
           : iconArrangement === Arrangement.Center ? -iconSize / 2
             : -iconSize
         return offset
       })
       .attr('y', d => (-(d._startIconSize - d._height) / 2) || 0)
-      .attr('width', d => d._startIconSize ?? d._height)
-      .attr('height', d => d._startIconSize ?? d._height)
+      .attr('width', d => d._startIconSize)
+      .attr('height', d => d._startIconSize)
       .style('color', d => d._startIconColor)
 
     linesMerged.selectAll<SVGUseElement, Datum & TimelineLineRenderState>(`.${s.lineEndIcon}`)
       .data(d => [d])
       .attr('href', (d, i) => getString(d, config.lineEndIcon, i))
       .attr('x', (d, i) => {
-        const lineHeight = d._height
         const lineLength = d._lengthCorrected
-        const iconSize = d._endIconSize ?? lineHeight
-        const iconArrangement = getValue(d, config.lineEndIconArrangement, i)
+        const iconSize = d._endIconSize
+        const iconArrangement = d._endIconArrangement
         const offset = iconArrangement === Arrangement.Inside ? -iconSize
           : iconArrangement === Arrangement.Center ? -iconSize / 2
             : 0
         return lineLength + offset
       })
       .attr('y', d => -((d._endIconSize - d._height) / 2) || 0)
-      .attr('width', d => d._endIconSize ?? d._height)
-      .attr('height', d => d._endIconSize ?? d._height)
+      .attr('width', d => d._endIconSize)
+      .attr('height', d => d._endIconSize)
       .style('color', d => d._endIconColor)
 
     const linesExit = lines.exit<Datum & TimelineLineRenderState>()
@@ -299,13 +328,13 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
         const configuredPos = isFunction(config.animationLineExitPosition)
           ? config.animationLineExitPosition(d, i, lineDataPrepared)
           : config.animationLineExitPosition
-        const [x, y] = [configuredPos?.[0] ?? d._x, configuredPos?.[1] ?? d._y]
+        const [x, y] = [configuredPos?.[0] ?? d._xPx, configuredPos?.[1] ?? d._yPx]
         return `translate(${x}, ${y})`
       })
       .remove()
 
     // Arrows
-    const arrowsData = this._prepareArrowsData(data, ordinalScale, rowHeight)
+    const arrowsData = this._prepareArrowsData(data, yOrdinalScale, rowHeight)
     const arrows = this._arrowsGroup.selectAll<SVGPathElement, Datum>(`.${s.arrow}`)
       .data(arrowsData ?? [])
 
@@ -354,7 +383,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
 
     // Clip path
     this._clipPath.select('rect')
-      .attr('x', xRange[0])
+      .attr('x', xStart)
       .attr('width', timelineWidth)
       .attr('height', this._height)
   }
@@ -377,6 +406,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
     const { config, xScale, yScale } = this
     const yRange = yScale.range()
     const yStart = Math.min(...yRange)
+
     return data.map((d, i) => {
       const id = getString(d, config.id, i) ?? [
         this._getRecordKey(d, i), getNumber(d, config.x, i),
@@ -400,17 +430,19 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
 
       return {
         ...d,
-        _x: x,
-        _y: y,
         _id: id,
-        _xOffset: xOffset,
+        _xPx: x,
+        _yPx: y,
+        _xOffsetPx: xOffset,
         _length: lineLength,
         _height: lineHeight,
         _lengthCorrected: lineLengthCorrected,
-        _startIconSize: getNumber(d, config.lineStartIconSize, i),
-        _endIconSize: getNumber(d, config.lineEndIconSize, i),
+        _startIconSize: getNumber(d, config.lineStartIconSize, i) ?? lineHeight,
+        _endIconSize: getNumber(d, config.lineEndIconSize, i) ?? lineHeight,
         _startIconColor: getString(d, config.lineStartIconColor, i),
         _endIconColor: getString(d, config.lineEndIconColor, i),
+        _startIconArrangement: getValue(d, config.lineStartIconArrangement, i) ?? Arrangement.Outside,
+        _endIconArrangement: getValue(d, config.lineEndIconArrangement, i) ?? Arrangement.Outside,
       }
     })
   }
