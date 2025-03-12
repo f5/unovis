@@ -7,8 +7,7 @@ import { wrapSVGText } from 'utils/text'
 import { ComponentCore } from 'core/component'
 import { SeriesDataModel } from 'data-models/series'
 import { getColor, brighter, getHexValue, isDarkBackground } from 'utils/color'
-import { getString, getNumber, isNumber } from 'utils/data'
-import { smartTransition } from 'utils/d3'
+import { getString, getNumber } from 'utils/data'
 import { TreemapConfigInterface, TreemapDefaultConfig } from './config'
 import { TreemapDatum, TreemapNode } from './types'
 
@@ -52,9 +51,8 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
     this.tiles = this.g.append('g').attr('class', s.tiles)
   }
 
-  _render (customDuration?: number): void {
+  _render (): void {
     const { config, datamodel: { data }, _width, _height } = this
-    const duration = isNumber(customDuration) ? customDuration : config.duration
     const { numberFormat = defaultNumberFormat } = config
 
     if (!config.layers?.length) {
@@ -249,12 +247,10 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
 
     // Update clipPath rects
     tiles.merge(tilesEnter).select('clipPath rect')
-      .call(selection => smartTransition(selection, duration)
-        .attr('x', d => d.x0)
-        .attr('y', d => d.y0)
-        .attr('width', d => d.x1 - d.x0 - config.tilePadding)
-        .attr('height', d => d.y1 - d.y0)
-      )
+      .attr('x', d => d.x0)
+      .attr('y', d => d.y0)
+      .attr('width', d => d.x1 - d.x0 - config.tilePadding)
+      .attr('height', d => d.y1 - d.y0)
 
     // Tile labels
     tilesEnter
@@ -306,9 +302,6 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       })
 
     // Exit
-    const tilesExit = tiles.exit()
-    smartTransition(tilesExit, duration)
-      .style('opacity', 0)
-      .remove()
+    tiles.exit().remove()
   }
 }
