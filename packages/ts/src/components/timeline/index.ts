@@ -1,6 +1,6 @@
 import { select, Selection } from 'd3-selection'
 import { Transition } from 'd3-transition'
-import { maxIndex } from 'd3-array'
+import { max, maxIndex } from 'd3-array'
 import { scaleOrdinal, ScaleOrdinal } from 'd3-scale'
 import { drag, D3DragEvent } from 'd3-drag'
 
@@ -52,6 +52,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
   private _arrowsGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
   private _linesGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
   private _labelsGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
+  private _rowIconsGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
   private _scrollBarGroup: Selection<SVGGElement, unknown, SVGGElement, unknown>
   private _scrollBarBackground: Selection<SVGRectElement, unknown, SVGGElement, unknown>
   private _scrollBarHandle: Selection<SVGRectElement, unknown, SVGGElement, unknown>
@@ -89,6 +90,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
     this._linesGroup = this.g.append('g').attr('class', s.lines)
       .style('clip-path', `url(#${this._clipPathId})`)
     this._labelsGroup = this.g.append('g').attr('class', s.labels)
+    this._rowIconsGroup = this.g.append('g').attr('class', s.rowIcons)
     this._scrollBarGroup = this.g.append('g').attr('class', s.scrollbar)
 
     // Scroll bar
@@ -117,6 +119,8 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
     const { config, datamodel: { data } } = this
     const rowLabels = this._getRowLabels(data)
     const rowHeight = config.rowHeight || (this._height / rowLabels.length)
+    const hasIcons = rowLabels.some(l => l.iconHref)
+    const maxIconSize = max(rowLabels.map(l => l.iconSize || 0))
 
     // We calculate the longest label width to set the bleed values accordingly
     if (config.showRowLabels ?? config.showLabels) {
@@ -154,7 +158,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
     return {
       top: 0,
       bottom: 0,
-      left: this._labelWidth + iconBleed[0],
+      left: this._labelWidth + iconBleed[0] + (hasIcons ? maxIconSize : 0),
       right: this._scrollBarWidth + this._scrollBarMargin + iconBleed[1],
     }
   }
@@ -182,6 +186,31 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
       .attr('width', this._width)
       .attr('height', this._height)
       .attr('opacity', 0)
+
+    // Row Icons
+    const rowIcons = this._rowIconsGroup.selectAll<SVGUseElement, TimelineRowLabel<Datum>>(`.${s.rowIcon}`)
+      .data(rowLabels.filter(d => d.iconSize), l => l?.label)
+
+    const rowIconsEnter = rowIcons.enter().append('use')
+      .attr('class', s.rowIcon)
+      .attr('x', 0)
+      .attr('width', l => l.iconSize)
+      .attr('height', l => l.iconSize)
+      .attr('y', l => yStart + (yOrdinalScale(l.label) + 0.5) * rowHeight - l.iconSize / 2)
+      .style('opacity', 0)
+
+    smartTransition(rowIconsEnter.merge(rowIcons), duration)
+      .attr('href', l => l.iconHref)
+      .attr('x', 0)
+      .attr('y', l => yStart + (yOrdinalScale(l.label) + 0.5) * rowHeight - l.iconSize / 2)
+      .attr('width', l => l.iconSize)
+      .attr('height', l => l.iconSize)
+      .style('color', l => l.iconColor)
+      .style('opacity', 1)
+
+    smartTransition(rowIcons.exit(), duration)
+      .style('opacity', 0)
+      .remove()
 
     // Labels
     const labels = this._labelsGroup.selectAll<SVGTextElement, TimelineRowLabel<Datum>>(`.${s.label}`)
@@ -531,6 +560,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
     this._linesGroup.attr('transform', `translate(0,${-this._scrollDistance})`)
     this._rowsGroup.attr('transform', `translate(0,${-this._scrollDistance})`)
     this._labelsGroup.attr('transform', `translate(0,${-this._scrollDistance})`)
+    this._rowIconsGroup.attr('transform', `translate(0,${-this._scrollDistance})`)
     this._arrowsGroup.attr('transform', `translate(0,${-this._scrollDistance})`)
     const scrollBarPosition = (this._scrollDistance / this._maxScroll * (yHeight - this._scrollbarHeight)) || 0
     this._scrollBarHandle.attr('y', scrollBarPosition)
@@ -543,11 +573,17 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
   private _getRowLabels (data: Datum[]): TimelineRowLabel<Datum>[] {
     const grouped = groupBy(data, (d, i) => getString(d, this.config.lineRow ?? this.config.type) || `${i + 1}`)
 
-    const rowLabels: TimelineRowLabel<Datum>[] = Object.entries(grouped).map(([key, items]) => ({
-      label: key,
-      formattedLabel: this.config.rowLabelFormatter?.(key) ?? key,
-      data: items,
-    }))
+    const rowLabels: TimelineRowLabel<Datum>[] = Object.entries(grouped).map(([key, items], i) => {
+      const icon = this.config.rowIcon?.(key, items, i)
+      return {
+        label: key,
+        formattedLabel: this.config.rowLabelFormatter?.(key, items, i) ?? key,
+        iconHref: icon?.href,
+        iconSize: icon?.size,
+        iconColor: icon?.color,
+        data: items,
+      }
+    })
 
     return rowLabels
   }

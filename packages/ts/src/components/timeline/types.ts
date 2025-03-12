@@ -1,9 +1,18 @@
 import { Arrangement } from 'types/position'
 
+export type TimelineRowIcon = {
+  href: string;
+  size: number;
+  color: string;
+}
+
 export type TimelineRowLabel<D> = {
   label: string;
   formattedLabel: string;
   data: D[];
+  iconHref?: string;
+  iconSize?: number;
+  iconColor?: string;
 }
 
 export type TimelineArrow = {
