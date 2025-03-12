@@ -7,7 +7,7 @@ import { TextAlign } from 'types/text'
 import { Arrangement } from 'types/position'
 
 // Local Types
-import type { TimelineArrow, TimelineLineRenderState, TimelineRowLabel } from './types'
+import type { TimelineArrow, TimelineLineRenderState, TimelineRowIcon, TimelineRowLabel } from './types'
 
 export interface TimelineConfigInterface<Datum> extends WithOptional<XYComponentConfigInterface<Datum>, 'y'> {
   // Items (Lines)
@@ -70,7 +70,9 @@ export interface TimelineConfigInterface<Datum> extends WithOptional<XYComponent
   /** Row label style as an object with the `{ [property-name]: value }` format. Default: `undefined` */
   rowLabelStyle?: GenericAccessor<Record<string, string>, TimelineRowLabel<Datum>>;
   /** Row label formatter function. Default: `undefined` */
-  rowLabelFormatter?: (key: string) => string;
+  rowLabelFormatter?: (key: string, items: Datum[], i: number) => string;
+  /** Provide an icon href to be displayed before the row label. Default: `undefined` */
+  rowIcon?: (key: string, items: Datum[], i: number) => TimelineRowIcon | undefined;
   /** Fixed label width in pixels. Labels longer than the specified value will be trimmed. Default: `undefined`. Falls back to deprecated `labelWidth`. */
   rowLabelWidth?: number;
   /** Maximum label width in pixels. Labels longer than the specified value will be trimmed. Default: `undefined`. Falls back to deprecated `maxLabelWidth`. */
@@ -132,6 +134,7 @@ export const TimelineDefaultConfig: TimelineConfigInterface<unknown> = {
 
   showRowLabels: undefined,
   rowLabelFormatter: undefined,
+  rowIcon: undefined,
   rowLabelStyle: undefined,
   rowLabelWidth: undefined,
   rowMaxLabelWidth: undefined,

@@ -44,7 +44,6 @@ export const globalStyles = injectGlobal`
     --vis-timeline-label-color: var(--vis-dark-timeline-label-color);
     --vis-timeline-arrow-color: var(--vis-dark-timeline-arrow-color);
     --vis-timeline-line-hover-stroke-color: var(--vis-dark-timeline-line-hover-stroke-color);
-
   }
 `
 
@@ -136,4 +135,12 @@ export const label = css`
   fill: var(--vis-timeline-label-color);
   text-anchor: end;
   user-select: none;
+`
+
+export const rowIcons = css`
+  label: row-icons;
+`
+
+export const rowIcon = css`
+  label: row-icon;
 `
