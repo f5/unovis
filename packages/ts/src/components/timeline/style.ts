@@ -20,6 +20,9 @@ export const globalStyles = injectGlobal`
     --vis-timeline-cursor: default;
     --vis-timeline-line-color: var(--vis-color-main);
     --vis-timeline-line-stroke-width: 0;
+    --vis-timeline-line-hover-stroke-width: 0;
+    --vis-timeline-line-hover-stroke-color: #6C778C;
+
     // The line stroke color variable is not defined by default
     // to allow it to fallback to the corresponding row background color
     /* --vis-timeline-line-stroke-color: none; */
@@ -30,6 +33,7 @@ export const globalStyles = injectGlobal`
     --vis-dark-timeline-scrollbar-color: #6C778C;
     --vis-dark-timeline-label-color: #EFF5F8;
     --vis-dark-timeline-arrow-color: #EFF5F8;
+    --vis-dark-timeline-line-hover-stroke-color: #EFF5F8;
   }
 
   body.theme-dark ${`.${root}`} {
@@ -39,6 +43,8 @@ export const globalStyles = injectGlobal`
     --vis-timeline-scrollbar-color: var(--vis-dark-timeline-scrollbar-color);
     --vis-timeline-label-color: var(--vis-dark-timeline-label-color);
     --vis-timeline-arrow-color: var(--vis-dark-timeline-arrow-color);
+    --vis-timeline-line-hover-stroke-color: var(--vis-dark-timeline-line-hover-stroke-color);
+
   }
 `
 
@@ -64,6 +70,11 @@ export const line = css`
 
   &.odd {
     stroke: var(--vis-timeline-line-stroke-color, var(--vis-timeline-row-odd-fill-color));
+  }
+
+  :hover {
+    stroke-width: var(--vis-timeline-line-hover-stroke-width);
+    stroke: var(--vis-timeline-line-hover-stroke-color);
   }
 `
 
