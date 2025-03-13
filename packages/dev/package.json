@@ -35,6 +35,7 @@
   "dependencies": {
     "@unovis/react": "workspace:*",
     "@unovis/ts": "workspace:*",
+    "@unovis/ts": "workspace:*",
     "fuse.js": "^6.6.2",
     "react": "^19",
     "react-dom": "^19",
