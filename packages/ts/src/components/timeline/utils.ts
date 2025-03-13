@@ -13,7 +13,7 @@ export const getIconBleed = <Datum>(
   const iconValue = getString(datum, icon, idx)
   if (!iconValue) return 0
 
-  const size = getNumber(datum, iconSize, idx) || rowHeight
+  const size = getNumber(datum, iconSize, idx) || rowHeight / 2
   const arrangement = getValue(datum, iconArrangement, idx)
 
   return (arrangement === Arrangement.Outside) ? size
