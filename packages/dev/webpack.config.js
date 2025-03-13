@@ -64,7 +64,6 @@ module.exports = {
       '@src': path.resolve(__dirname, './src/'),
 
       // Unovis Core
-      '@unovis/ts': path.resolve(__dirname, '../ts/src/'),
       utils: path.resolve(__dirname, '../ts/src/utils/'),
       components: path.resolve(__dirname, '../ts/src/components/'),
       containers: path.resolve(__dirname, '../ts/src/containers/'),
