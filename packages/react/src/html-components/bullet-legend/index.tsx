@@ -3,7 +3,7 @@ import React, { ForwardedRef, Ref, useImperativeHandle, useEffect, useRef, useSt
 import { BulletLegend, BulletLegendConfigInterface } from '@unovis/ts'
 
 // Utils
-import { arePropsEqual } from 'src/utils/react'
+import { arePropsEqual } from '@/utils/react'
 
 export type VisBulletLegendRef = {
   component?: BulletLegend;
@@ -34,7 +34,7 @@ function VisBulletLegendFC (props: VisBulletLegendProps, fRef: ForwardedRef<VisB
     component?.update(props)
   })
 
-  useImperativeHandle(fRef, () => ({ get component () { return component } }), [component])
+  useImperativeHandle(fRef, () => ({ get component () { return component } }), [])
   return <div className={props.className} ref={ref} />
 }
 

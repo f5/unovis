@@ -4,7 +4,6 @@ fuse.js                               perpetual       Apache-2.0    6.6.2       
 react                                 perpetual       MIT           19.0.0             n/a
 react-dom                             perpetual       MIT           19.0.0             n/a
 react-router-dom                      perpetual       MIT           6.28.2             Remix Software <hello@remix.run>
-seedrandom                            perpetual       MIT           3.0.5              David Bau
 serve                                 perpetual       MIT           14.2.4             n/a
 @faker-js/faker                       perpetual       MIT           9.6.0              n/a
 @percy/cli                            perpetual       MIT           1.30.6             n/a
