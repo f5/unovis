@@ -1,7 +1,7 @@
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
+import { generateNodeLinkData, NodeDatum } from '@/utils/data'
+import { VisGraph, VisSingleContainer } from '@unovis/react'
 import React from 'react'
-import { VisSingleContainer, VisGraph } from '@unovis/react'
-import { generateNodeLinkData, NodeDatum } from '@src/utils/data'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 export const title = 'Graph: Custom Node Fills'
 export const subTitle = 'Generated Data'
@@ -36,4 +36,3 @@ export const component = (props: ExampleViewerDurationProps): JSX.Element => {
     </VisSingleContainer>
   )
 }
-

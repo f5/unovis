@@ -1,8 +1,8 @@
-import React, { useState, useCallback, useEffect, ChangeEvent } from 'react'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
+import { generateStackedDataRecords, StackedDataRecord } from '@/utils/data'
+import { VisAxis, VisBulletLegend, VisGroupedBar, VisLine, VisScatter, VisXYContainer } from '@unovis/react'
 import { BulletLegendItemInterface, BulletShape } from '@unovis/ts'
-import { VisBulletLegend, VisXYContainer, VisScatter, VisGroupedBar, VisLine, VisAxis } from '@unovis/react'
-import { generateStackedDataRecords, StackedDataRecord } from '@src/utils/data'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
+import React, { ChangeEvent, useCallback, useEffect, useState } from 'react'
 
 export const title = 'Bullet Shapes'
 export const subTitle = 'Select chart type'

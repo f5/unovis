@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer'
 import { VisAxis, VisBulletLegend, VisBulletLegendSelectors, VisCrosshair, VisLine, VisScatter, VisTooltip, VisXYContainer } from '@unovis/react'
-import { BulletLegendItemInterface, BulletShape, NumericAccessor, colors, CurveType } from '@unovis/ts'
+import { BulletLegendItemInterface, BulletShape, colors, CurveType, NumericAccessor } from '@unovis/ts'
+import React, { useCallback, useEffect, useState } from 'react'
 
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer'
 
 export const title = 'Interpolated Multi-Line Chart'
 export const subTitle = 'With interactive bullet legend'
@@ -63,7 +63,7 @@ export const component = (props: ExampleViewerDurationProps): JSX.Element => {
           }
           .line-legend .${VisBulletLegendSelectors.bullet} { width: 16px !important; }
           .line-legend .${VisBulletLegendSelectors.bullet} path { stroke-dasharray: 5 3; }
-          
+
         `}</style>
       <div style={{ display: 'flex', width: 'max-content', padding: '10px 10px 0px 35px' }}>
         <VisBulletLegend className='square-legend' items={legendItems} bulletShape={BulletShape.Square} onLegendItemClick={updateItems}/>

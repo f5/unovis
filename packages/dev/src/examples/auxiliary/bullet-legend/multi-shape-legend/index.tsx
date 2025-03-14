@@ -1,7 +1,7 @@
-import React, { useState, useCallback, useEffect } from 'react'
+import { generateStackedDataRecords, StackedDataRecord } from '@/utils/data'
+import { VisAxis, VisBulletLegend, VisScatter, VisXYContainer } from '@unovis/react'
 import { BulletLegendItemInterface, BulletShape } from '@unovis/ts'
-import { VisBulletLegend, VisXYContainer, VisScatter, VisAxis } from '@unovis/react'
-import { generateStackedDataRecords, StackedDataRecord } from '@src/utils/data'
+import React, { useCallback, useEffect, useState } from 'react'
 
 export const title = 'Shape Legend'
 export const subTitle = 'with Scatter Plot'

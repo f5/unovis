@@ -1,11 +1,10 @@
-import React from 'react'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
+import { XYDataRecord } from '@/utils/data'
+import { VisAxis, VisScatter, VisTooltip, VisXYContainer } from '@unovis/react'
 import { Position, Scatter } from '@unovis/ts'
-import { VisXYContainer, VisAxis, VisScatter, VisTooltip } from '@unovis/react'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
-
-import { XYDataRecord } from '@src/utils/data'
-
+import React from 'react'
 import s from './styles.module.css'
+
 
 export const title = 'Scrollable Container Comparison'
 export const subTitle = 'For testing resize behavior'

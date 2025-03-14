@@ -9,7 +9,7 @@
     "strict": true,
     "skipLibCheck": false,
     "paths": {
-      "@src/*": ["packages/dev/src/*"],
+      "@/*": ["./src"],
     },
     "types": [
       "node",

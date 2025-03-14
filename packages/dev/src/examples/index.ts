@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-import { TransitionComponent } from '@src/components/TransitionComponent'
-import { groupBy } from '@src/utils/array'
-import { kebabToTitleCase } from '@src/utils/text'
+import { TransitionComponent } from '@/components/TransitionComponent'
+import { groupBy } from '@/utils/array'
+import { kebabToTitleCase } from '@/utils/text'
 
-const imports = require.context('@src/examples/', true, /index\.tsx$/)
+const imports = import.meta.glob('@/examples/**/index.tsx', { eager: true })
 
 export type ExampleGroup = {
   title: string;
@@ -17,23 +16,26 @@ export type ExampleItem = {
   component: React.FC;
 }
 
-export const examplesFlat: ExampleItem[] = imports.keys().map(key => {
-  const module = imports(key)
-  const category = key.match(/\.\/[\w-]+\/([\w-]+)\//)?.[1] as string
+export const examplesFlat: ExampleItem[] = Object.entries(imports).map(([key, module]) => {
+  const category = key.match(/\/([\w-]+)\/index\.tsx$/)?.[1] as string
 
-  const exampleItem = {
-    ...module,
+  const exampleItem: ExampleItem = {
+    ...module as any,
     category: kebabToTitleCase(category),
+    title: `${kebabToTitleCase(category)} Example`,
+    subTitle: 'Generated Example',
+    component: module?.component as React.FC || (() => null), // Ensure default export is used
   }
 
-  if (module.transitionComponent) {
+  if ((module as any)?.transitionComponent) {
     exampleItem.title = `${exampleItem.category} Data Transitions`
     exampleItem.subTitle = 'Generated Data'
-    exampleItem.component = () => TransitionComponent(module.transitionComponent)
+    exampleItem.component = () => TransitionComponent((module as any).transitionComponent)
   }
+
   return exampleItem
 })
 
+// Group by category
 export const examples: ExampleGroup[] = Object.entries(groupBy(examplesFlat, 'category'))
   .map(([title, items]) => ({ title, items }))
-

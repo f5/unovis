@@ -1,8 +1,8 @@
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
+import { generateXYDataRecords, XYDataRecord } from '@/utils/data'
+import { VisArea, VisAxis, VisCrosshair, VisTooltip, VisXYContainer } from '@unovis/react'
 import React, { useRef } from 'react'
-import { VisXYContainer, VisArea, VisAxis, VisTooltip, VisCrosshair } from '@unovis/react'
 
-import { XYDataRecord, generateXYDataRecords } from '@src/utils/data'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 export const title = 'Simple Crosshair'
 export const subTitle = 'Basic configuration'

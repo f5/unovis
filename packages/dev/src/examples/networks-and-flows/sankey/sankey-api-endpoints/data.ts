@@ -1,5 +1,5 @@
 import { sum } from 'd3-array'
-import { groupBy } from '@src/utils/array'
+import { groupBy } from '@/utils/array'
 
 export type ApiEndpointRecord = {
   collapsedUrl: string;
