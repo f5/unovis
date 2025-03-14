@@ -34,5 +34,5 @@ topojson-client                perpetual       ISC           3.1.0              
 tslib                          perpetual       0BSD          2.4.1              Microsoft Corp.
 @types/to-px                   perpetual       MIT           1.1.2              n/a
 lightningcss                   perpetual       MPL-2.0       1.29.2             n/a
-vite                           perpetual       MIT           6.2.1              Evan You
+vite                           perpetual       MIT           6.2.2              Evan You
 vite-plugin-dts                perpetual       MIT           3.6.0              qmhc
