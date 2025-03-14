@@ -1,8 +1,8 @@
-import React, { useCallback } from 'react'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
+import { generateHierarchyData } from '@/utils/data'
+import { VisChordDiagram, VisSingleContainer } from '@unovis/react'
 import { ChordHierarchyNode } from '@unovis/ts'
-import { VisSingleContainer, VisChordDiagram } from '@unovis/react'
-import { generateHierarchyData } from '@src/utils/data'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
+import React, { useCallback } from 'react'
 
 export const title = 'Chord Diagram Hierarchy Nodes'
 export const subTitle = 'With various accessors'

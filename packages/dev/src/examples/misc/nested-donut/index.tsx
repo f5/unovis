@@ -1,7 +1,7 @@
+import { GeneratedComponent } from '@/examples'
+import { generateNestedData, NestedDatum } from '@/utils/data'
+import { VisNestedDonut, VisSingleContainer } from '@unovis/react'
 import React from 'react'
-import { VisSingleContainer, VisNestedDonut } from '@unovis/react'
-import { GeneratedComponent } from '@src/examples'
-import { NestedDatum, generateNestedData } from '@src/utils/data'
 
 export const transitionComponent: GeneratedComponent<NestedDatum[]> = {
   data: () => generateNestedData(100, 3),
@@ -23,4 +23,3 @@ export const transitionComponent: GeneratedComponent<NestedDatum[]> = {
     </VisSingleContainer>
   ),
 }
-

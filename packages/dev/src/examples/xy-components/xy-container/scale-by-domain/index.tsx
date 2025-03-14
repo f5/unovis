@@ -1,6 +1,6 @@
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
+import { VisArea, VisAxis, VisCrosshair, VisLine, VisScatter, VisStackedBar, VisXYContainer } from '@unovis/react'
 import React from 'react'
-import { VisXYContainer, VisArea, VisLine, VisAxis, VisCrosshair, VisStackedBar, VisScatter } from '@unovis/react'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 export const title = 'Scale by Domain'
 export const subTitle = 'XY component comparison'

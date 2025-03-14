@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { VisXYContainer, VisLine, VisAxis, VisAnnotations, VisLineRef } from '@unovis/react'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
+import { randomNumberGenerator } from '@/utils/data'
+import { VisAnnotations, VisAxis, VisLine, VisLineRef, VisXYContainer } from '@unovis/react'
 import { AnnotationItem } from '@unovis/ts'
-import { randomNumberGenerator } from '@src/utils/data'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
+import React, { useEffect, useRef, useState } from 'react'
 
 export const title = 'Basic Annotations'
 export const subTitle = 'Dynamic Data Updates'

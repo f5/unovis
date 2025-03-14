@@ -1,7 +1,7 @@
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
+import { generateNodeLinkData } from '@/utils/data'
+import { VisGraph, VisSingleContainer } from '@unovis/react'
 import React from 'react'
-import { VisSingleContainer, VisGraph } from '@unovis/react'
-import { generateNodeLinkData } from '@src/utils/data'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 export const title = 'Graph Brushing'
 export const subTitle = ''
@@ -22,4 +22,3 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
     </>
   )
 }
-

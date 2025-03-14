@@ -1,11 +1,10 @@
-import React, { useCallback } from 'react'
-import { VisSingleContainer, VisGraph } from '@unovis/react'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
+import { generateNodeLinkData } from '@/utils/data'
+import { VisGraph, VisSingleContainer } from '@unovis/react'
 import { GraphLayoutType, GraphLinkArrowStyle, GraphLinkStyle } from '@unovis/ts'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
-
-import { generateNodeLinkData } from '@src/utils/data'
-
+import React, { useCallback } from 'react'
 import s from './index.module.css'
+
 
 export const title = 'Link Arrows'
 export const subTitle = 'with varied styles and undefined labels'
@@ -78,4 +77,3 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
     </div>
   )
 }
-

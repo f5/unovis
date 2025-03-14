@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react'
-import { VisSingleContainer, VisGraph } from '@unovis/react'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
-import { sample } from '@src/utils/array'
-
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
+import { sample } from '@/utils/array'
+import { VisGraph, VisSingleContainer } from '@unovis/react'
+import React, { useEffect, useState } from 'react'
+import bucketIcon from './bucket.svg?raw'
+import instanceIcon from './instance.svg?raw'
 import personIcon from './person.svg?raw'
 import roleIcon from './role.svg?raw'
-import instanceIcon from './instance.svg?raw'
-import bucketIcon from './bucket.svg?raw'
+
 
 export const title = 'Graph: Link Label Icons'
 export const subTitle = 'SVG icons in link labels'
@@ -66,4 +66,3 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
     </VisSingleContainer>
   )
 }
-

@@ -1,6 +1,5 @@
-import * as React from 'react'
 import { VisLeafletMap } from '@unovis/react'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
+import * as React from 'react'
 
 export const title = 'Raster Leaflet Map'
 export const subTitle = 'Raster renderer with PNG'

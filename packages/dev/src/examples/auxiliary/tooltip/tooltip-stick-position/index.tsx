@@ -1,8 +1,8 @@
-import React, { useMemo } from 'react'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
+import { randomNumberGenerator } from '@/utils/data'
+import { VisAxis, VisScatter, VisTooltip, VisTooltipProps, VisXYContainer } from '@unovis/react'
 import { Position, Scatter } from '@unovis/ts'
-import { VisXYContainer, VisAxis, VisScatter, VisTooltip, VisTooltipProps } from '@unovis/react'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
-import { randomNumberGenerator } from '@src/utils/data'
+import React, { useMemo } from 'react'
 
 export const title = 'Tooltip Sticky Position'
 export const subTitle = 'Hoverable Tooltip'

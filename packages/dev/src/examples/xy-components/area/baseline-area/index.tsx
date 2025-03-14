@@ -1,8 +1,8 @@
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
+import { generateXYDataRecords, XYDataRecord } from '@/utils/data'
+import { VisArea, VisAxis, VisCrosshair, VisXYContainer } from '@unovis/react'
 import React from 'react'
-import { VisXYContainer, VisArea, VisAxis, VisCrosshair } from '@unovis/react'
 
-import { XYDataRecord, generateXYDataRecords } from '@src/utils/data'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 export const title = 'Area Chart with Baseline'
 export const subTitle = 'Generated Data'

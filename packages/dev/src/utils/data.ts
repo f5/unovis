@@ -1,8 +1,12 @@
-import * as Seedramdon from 'seedrandom'
+import { faker } from '@faker-js/faker'
 import { GenericDataRecord } from '@unovis/ts'
 import { sample } from './array'
 
-export const randomNumberGenerator = new Seedramdon('unovis')
+faker.seed(123)
+
+export function randomNumberGenerator (): number {
+  return faker.number.float({ min: 0, max: 1 })
+}
 
 export type XYDataRecord = {
   x: number;

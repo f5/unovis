@@ -1,6 +1,6 @@
-import React from 'react'
-import { VisSingleContainer, VisDonut } from '@unovis/react'
+import { VisDonut, VisSingleContainer } from '@unovis/react'
 import { DONUT_HALF_ANGLE_RANGE_TOP } from '@unovis/ts'
+import React from 'react'
 
 export const title = 'Half Donut: Labels'
 export const subTitle = 'Testing the label offsets'

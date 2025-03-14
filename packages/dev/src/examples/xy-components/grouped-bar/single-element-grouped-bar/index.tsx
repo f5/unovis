@@ -1,9 +1,9 @@
-import React, { useRef } from 'react'
-import { VisXYContainer, VisGroupedBar, VisAxis, VisTooltip, VisCrosshair } from '@unovis/react'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
+import { generateXYDataRecords, XYDataRecord } from '@/utils/data'
+import { VisAxis, VisCrosshair, VisGroupedBar, VisTooltip, VisXYContainer } from '@unovis/react'
 import { Scale } from '@unovis/ts'
+import React, { useRef } from 'react'
 
-import { XYDataRecord, generateXYDataRecords } from '@src/utils/data'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 export const title = 'Grouped Bar Chart'
 export const subTitle = 'With a single group'

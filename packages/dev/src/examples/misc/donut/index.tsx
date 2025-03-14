@@ -1,6 +1,6 @@
+import { GeneratedComponent } from '@/examples'
+import { VisDonut, VisSingleContainer } from '@unovis/react'
 import React from 'react'
-import { VisSingleContainer, VisDonut } from '@unovis/react'
-import { GeneratedComponent } from '@src/examples'
 
 export const transitionComponent: GeneratedComponent<number[]> = {
   data: (): number[] => Array(10).fill(0).map(() => Math.random()),

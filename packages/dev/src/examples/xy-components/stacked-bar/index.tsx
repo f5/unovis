@@ -1,7 +1,7 @@
+import { TransitionComponentProps } from '@/components/TransitionComponent'
+import { generateXYDataRecords, XYDataRecord } from '@/utils/data'
+import { VisStackedBar, VisXYContainer } from '@unovis/react'
 import React from 'react'
-import { VisXYContainer, VisStackedBar } from '@unovis/react'
-import { TransitionComponentProps } from '@src/components/TransitionComponent'
-import { generateXYDataRecords, XYDataRecord } from '@src/utils/data'
 
 export const transitionComponent: TransitionComponentProps<XYDataRecord[]> = {
   data: generateXYDataRecords,

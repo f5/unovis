@@ -55,4 +55,3 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
     </VisSingleContainer>
   )
 }
-

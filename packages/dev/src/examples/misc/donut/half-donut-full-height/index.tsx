@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import { VisSingleContainer, VisDonut } from '@unovis/react'
+import { VisDonut, VisSingleContainer } from '@unovis/react'
 import { DONUT_HALF_ANGLE_RANGES } from '@unovis/ts'
+import React, { useEffect, useState } from 'react'
 
 export const title = 'Half Donut: Full Height'
 export const subTitle = 'Testing the resize behavior'

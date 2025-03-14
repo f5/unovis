@@ -1,12 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
 import { VisLeafletMap, VisLeafletMapRef } from '@unovis/react'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
-
+import React, { useRef } from 'react'
 // Data
 import cities from '../leaflet-map-vector/cities.json'
-
 // Style
 import s from './style.module.css'
+
 
 export const title = 'Light and Dark Theme'
 export const subTitle = 'CSS Variables Configuration'

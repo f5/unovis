@@ -1,20 +1,18 @@
+// Internal Components
+import { NavigationSideBar } from '@/components/NavigationSideBar'
+import { ThemeSelector } from '@/components/ThemeSelector'
+// Examples
+import { examples } from '@/examples'
+// import '@unovis/ts/styles'
 import React from 'react'
 import { Outlet } from 'react-router-dom'
-
-// Internal Components
-import { NavigationSideBar } from '@src/components/NavigationSideBar'
-import { ThemeSelector } from '@src/components/ThemeSelector'
-
-// Examples
-import { examples } from '@src/examples'
-
 // Styles
 import s from './App.module.css'
 
 
 // Unovis base styles (using require to avoid tree-shaking)
 // eslint-disable-next-line import/no-unresolved
-require('@unovis/ts/styles')
+// require('@unovis/ts/styles')
 
 const App = (): React.ReactNode => {
   return (

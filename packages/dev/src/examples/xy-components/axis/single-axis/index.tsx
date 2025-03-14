@@ -1,10 +1,10 @@
-import React from 'react'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
+import { VisAxis, VisXYContainer } from '@unovis/react'
 import { Axis } from '@unovis/ts'
-import { VisXYContainer, VisAxis } from '@unovis/react'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
-
+import React from 'react'
 // Style
 import s from './style.module.css'
+
 
 export const title = 'Axis'
 export const subTitle = 'Single axis with styling'
