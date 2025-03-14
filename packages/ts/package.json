@@ -25,9 +25,9 @@
     "Rebecca Bol <r.bol@f5.com>"
   ],
   "license": "Apache-2.0",
-  "main": "./index.js",
-  "module": "./index.js",
-  "typings": "./index.d.ts",
+  "main": "./lib/index.js",
+  "module": "./lib/index.js",
+  "typings": "./lib/index.d.ts",
   "type": "module",
   "sideEffects": [
     "styles/index.js",

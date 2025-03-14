@@ -1,8 +1,8 @@
-import React from 'react'
-import { VisSingleContainer, VisGraph } from '@unovis/react'
-import { generateNodeLinkData, NodeDatum, LinkDatum, randomNumberGenerator } from '@src/utils/data'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
+import { generateNodeLinkData, LinkDatum, NodeDatum, randomNumberGenerator } from '@/utils/data'
+import { VisGraph, VisSingleContainer } from '@unovis/react'
 import { GraphCircleLabel } from '@unovis/ts'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
+import React from 'react'
 
 export const title = 'Node and Link Circle Labels'
 export const subTitle = 'with custom configuration'
@@ -37,4 +37,3 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
     </>
   )
 }
-

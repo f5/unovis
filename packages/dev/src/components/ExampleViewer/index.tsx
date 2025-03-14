@@ -1,10 +1,9 @@
+import { ExampleGroup } from '@/examples'
 import React from 'react'
 import { Params, useLoaderData, useSearchParams } from 'react-router-dom'
-
-import { ExampleGroup } from '@src/examples'
-
 // Styles
 import s from './style.module.css'
+
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 export type ExampleViewerProps = {

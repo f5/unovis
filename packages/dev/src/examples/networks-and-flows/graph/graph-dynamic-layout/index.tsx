@@ -1,8 +1,8 @@
-import React, { useEffect, useMemo, useState } from 'react'
-import { VisSingleContainer, VisGraph } from '@unovis/react'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
+import { generateNodeLinkData, randomNumberGenerator } from '@/utils/data'
+import { VisGraph, VisSingleContainer } from '@unovis/react'
 import { GraphLayoutType } from '@unovis/ts'
-import { generateNodeLinkData, randomNumberGenerator } from '@src/utils/data'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
+import React, { useEffect, useMemo, useState } from 'react'
 
 export const title = 'Dynamic Layout'
 export const subTitle = 'Select Layout From Dropdown'
@@ -43,4 +43,3 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
     </>
   )
 }
-

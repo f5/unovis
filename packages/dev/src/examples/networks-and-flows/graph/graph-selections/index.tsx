@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { VisSingleContainer, VisGraph, VisGraphRef } from '@unovis/react'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
+import { generateNodeLinkData, LinkDatum, NodeDatum } from '@/utils/data'
+import { VisGraph, VisGraphRef, VisSingleContainer } from '@unovis/react'
 import { Graph, GraphNodeSelectionHighlightMode } from '@unovis/ts'
-import { generateNodeLinkData, NodeDatum, LinkDatum } from '@src/utils/data'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 export const title = 'Graph: Node Selection'
 export const subTitle = 'Select Node on Click'
@@ -51,4 +51,3 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
     </>
   )
 }
-
