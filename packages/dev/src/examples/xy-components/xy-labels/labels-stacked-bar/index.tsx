@@ -1,12 +1,11 @@
-import React, { useRef } from 'react'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
+import { generateXYDataRecords, randomNumberGenerator, XYDataRecord } from '@/utils/data'
+import { VisAxis, VisCrosshair, VisStackedBar, VisTooltip, VisXYContainer, VisXYLabels } from '@unovis/react'
 import { XYLabels } from '@unovis/ts'
-import { VisXYContainer, VisStackedBar, VisAxis, VisTooltip, VisCrosshair, VisXYLabels } from '@unovis/react'
-
-import { XYDataRecord, generateXYDataRecords, randomNumberGenerator } from '@src/utils/data'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
-
+import React, { useRef } from 'react'
 // Style
 import s from './style.module.css'
+
 
 export const title = 'Stacked Bar with Labels'
 export const subTitle = 'Alerts and Data Labels'

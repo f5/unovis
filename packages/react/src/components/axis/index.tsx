@@ -3,10 +3,10 @@ import React, { ForwardedRef, Ref, useImperativeHandle, useEffect, useRef, useSt
 import { Axis, AxisConfigInterface } from '@unovis/ts'
 
 // Utils
-import { arePropsEqual } from 'src/utils/react'
+import { arePropsEqual } from '@/utils/react'
 
 // Types
-import { VisComponentElement } from 'src/types/dom'
+import { VisComponentElement } from '@/types/dom'
 
 export type VisAxisRef<Datum> = {
   component?: Axis<Datum>;

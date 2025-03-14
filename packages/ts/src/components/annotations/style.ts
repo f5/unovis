@@ -1,7 +1,7 @@
 import { css } from '@emotion/css'
 
 // Utils
-import { getCssVarNames, injectGlobalCssVariables } from 'utils/style'
+import { getCssVarNames, injectGlobalCssVariables } from '@/utils/style'
 
 const cssVarDefaults = {
   '--vis-annotations-text-color': '#282C34',

@@ -1,7 +1,7 @@
+import { TransitionComponentProps } from '@/components/TransitionComponent'
+import { generateTimeSeries, TimeDataRecord } from '@/utils/data'
+import { VisTimeline, VisXYContainer } from '@unovis/react'
 import React from 'react'
-import { VisXYContainer, VisTimeline } from '@unovis/react'
-import { TransitionComponentProps } from '@src/components/TransitionComponent'
-import { generateTimeSeries, TimeDataRecord } from '@src/utils/data'
 
 export const transitionComponent: TransitionComponentProps<TimeDataRecord[]> = {
   data: generateTimeSeries,

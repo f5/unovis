@@ -1,7 +1,7 @@
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
+import { generateXYDataRecords, XYDataRecord } from '@/utils/data'
+import { VisAxis, VisCrosshair, VisLine, VisTooltip, VisXYContainer } from '@unovis/react'
 import React, { useRef } from 'react'
-import { VisXYContainer, VisAxis, VisTooltip, VisCrosshair, VisLine } from '@unovis/react'
-import { XYDataRecord, generateXYDataRecords } from '@src/utils/data'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 export const title = 'Multi Line Chart'
 export const subTitle = 'Generated Data'

@@ -1,16 +1,16 @@
 import { select, Selection } from 'd3-selection'
 import { symbol } from 'd3-shape'
 import { color } from 'd3-color'
-import { Position } from 'types/position'
-import { Symbol, SymbolType } from 'types/symbol'
+import { Position } from '@/types/position'
+import { Symbol, SymbolType } from '@/types/symbol'
 
 // Utils
-import { smartTransition } from 'utils/d3'
-import { getCSSVariableValue, isStringCSSVariable } from 'utils/misc'
-import { hexToBrightness } from 'utils/color'
+import { smartTransition } from '@/utils/d3'
+import { getCSSVariableValue, isStringCSSVariable } from '@/utils/misc'
+import { hexToBrightness } from '@/utils/color'
 
 // Types
-import { ContinuousScale } from 'types/scale'
+import { ContinuousScale } from '@/types/scale'
 
 // Config
 import { ScatterConfigInterface } from '../config'
@@ -121,4 +121,3 @@ export function removePoints<Datum> (
     .attr('transform', d => `translate(${xScale(d._point.xValue)},${yScale(d._point.yValue)}) scale(0)`)
     .remove()
 }
-

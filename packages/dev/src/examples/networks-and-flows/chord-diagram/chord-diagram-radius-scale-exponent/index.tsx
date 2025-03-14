@@ -1,7 +1,7 @@
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
+import { generateHierarchyData } from '@/utils/data'
+import { VisChordDiagram, VisSingleContainer } from '@unovis/react'
 import React, { useState } from 'react'
-import { VisSingleContainer, VisChordDiagram } from '@unovis/react'
-import { generateHierarchyData } from '@src/utils/data'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 export const title = 'Labels and Radius Scale Exponent'
 export const subTitle = 'Select value from range'

@@ -1,8 +1,8 @@
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
+import { generateTimeSeries, TimeDataRecord } from '@/utils/data'
+import { VisAxis, VisCrosshair, VisTimeline, VisTooltip, VisXYContainer } from '@unovis/react'
 import React from 'react'
-import { VisXYContainer, VisTimeline, VisAxis, VisTooltip, VisCrosshair } from '@unovis/react'
 
-import { TimeDataRecord, generateTimeSeries } from '@src/utils/data'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 export const title = 'Timeline: Negative Lengths'
 export const subTitle = 'Generated Data'

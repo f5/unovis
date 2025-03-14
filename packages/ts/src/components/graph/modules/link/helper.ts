@@ -1,10 +1,10 @@
 // Utils
-import { getNumber, getValue } from 'utils/data'
-import { getColor, hexToBrightness } from 'utils/color'
+import { getNumber, getValue } from '@/utils/data'
+import { getColor, hexToBrightness } from '@/utils/color'
 import { color } from 'd3-color'
 
 // Types
-import { GraphInputLink, GraphInputNode } from 'types/graph'
+import { GraphInputLink, GraphInputNode } from '@/types/graph'
 
 // Local Types
 import { GraphLink, GraphLinkArrowStyle, GraphCircleLabel } from '../../types'

@@ -1,20 +1,20 @@
 import { select } from 'd3-selection'
 
-import { ComponentCore } from 'core/component'
-import { ComponentType } from 'types/component'
+import { ComponentCore } from '@/core/component'
+import { ComponentType } from '@/types/component'
 
 // Utils
-import { ResizeObserver } from 'utils/resize-observer'
-import { getNumber, throttle } from 'utils/data'
-import { getDataLatLngBounds } from 'utils/map'
-import { getColor } from 'utils/color'
+import { ResizeObserver } from '@/utils/resize-observer'
+import { getNumber, throttle } from '@/utils/data'
+import { getDataLatLngBounds } from '@/utils/map'
+import { getColor } from '@/utils/color'
 
 // Components
-import { LeafletMap } from 'components/leaflet-map'
+import { LeafletMap } from '@/components/leaflet-map'
 
 // Types
-import { Bounds } from 'components/leaflet-map/types'
-import { GenericDataRecord } from 'types/data'
+import { Bounds } from '@/components/leaflet-map/types'
+import { GenericDataRecord } from '@/types/data'
 
 // Config
 import { LeafletFlowMapDefaultConfig, LeafletFlowMapConfigInterface } from './config'

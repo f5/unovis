@@ -1,9 +1,9 @@
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
+import { generateStackedDataRecords, StackedDataRecord } from '@/utils/data'
+import { VisAxis, VisBulletLegend, VisLine, VisXYContainer } from '@unovis/react'
 import React from 'react'
-import { VisBulletLegend, VisXYContainer, VisLine, VisAxis } from '@unovis/react'
-import { generateStackedDataRecords, StackedDataRecord } from '@src/utils/data'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
-
 import s from './styles.module.css'
+
 
 export const title = 'Line Legend'
 export const subTitle = 'with markers and dashes'

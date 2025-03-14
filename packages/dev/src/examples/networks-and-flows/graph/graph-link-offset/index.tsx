@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react'
-import { VisSingleContainer, VisGraph } from '@unovis/react'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
+import { VisGraph, VisSingleContainer } from '@unovis/react'
 import type { GraphLink } from 'packages/ts'
+import React, { useState } from 'react'
 
 export const title = 'Graph: Link Offset'
 export const subTitle = 'Source and target offset'
@@ -58,4 +58,3 @@ export const component = (props: ExampleViewerDurationProps): React.ReactElement
     </VisSingleContainer>
   )
 }
-

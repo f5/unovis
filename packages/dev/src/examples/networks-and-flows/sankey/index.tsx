@@ -1,8 +1,7 @@
+import { TransitionComponentProps } from '@/components/TransitionComponent'
+import { generateNodeLinkData, NodeLinkData } from '@/utils/data'
+import { VisSankey, VisSingleContainer } from '@unovis/react'
 import React from 'react'
-import { VisSingleContainer, VisSankey } from '@unovis/react'
-import { TransitionComponentProps } from '@src/components/TransitionComponent'
-import { generateNodeLinkData, NodeLinkData } from '@src/utils/data'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 export const transitionComponent: TransitionComponentProps<NodeLinkData> = {
   data: generateNodeLinkData,

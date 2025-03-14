@@ -1,8 +1,8 @@
-import React from 'react'
-import { VisXYContainer, VisAxis, VisLine, VisGroupedBar } from '@unovis/react'
-import { XYDataRecord, generateXYDataRecords } from '@src/utils/data'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
+import { generateXYDataRecords, XYDataRecord } from '@/utils/data'
+import { VisAxis, VisGroupedBar, VisLine, VisXYContainer } from '@unovis/react'
 import { Scale } from '@unovis/ts'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
+import React from 'react'
 
 export const title = 'Axis with Ticks Rotation'
 export const subTitle = 'Generated Data'

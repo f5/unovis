@@ -1,5 +1,5 @@
-import React, { useRef, useState } from 'react'
-import { VisSingleContainer, VisSankey } from '@unovis/react'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
+import { VisSankey, VisSingleContainer } from '@unovis/react'
 import {
   Position,
   Sankey,
@@ -12,10 +12,10 @@ import {
   Sizing,
   VerticalAlign,
 } from '@unovis/ts'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
-
+import React, { useRef, useState } from 'react'
 import apiRawData from './apieplist.json'
-import { getSankeyData, ApiEndpointNode, ApiEndpointLink } from './data'
+import { ApiEndpointLink, ApiEndpointNode, getSankeyData } from './data'
+
 
 export const title = 'API Endpoints Tree'
 export const subTitle = 'Collapsible nodes'
@@ -99,4 +99,3 @@ export const component = (props: ExampleViewerDurationProps): JSX.Element => {
     </>
   )
 }
-
