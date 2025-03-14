@@ -31,12 +31,11 @@
   "type": "module",
   "sideEffects": false,
   "scripts": {
-    "build": "rimraf dist && tsc --project tsconfig.lib.json --emitDeclarationOnly && rollup --config",
-    "build:vite": "vite build --mode production",
+    "build": "vite build --mode production",
     "build:types": "tsc --project tsconfig.lib.json --emitDeclarationOnly",
     "watch": "concurrently \"vite build --mode development --watch\" \"npm run build:types --watch\"",
     "tsc": "tsc",
-    "generate": "rollup -c ./autogen/rollup.config.js; node .autogen.cjs; rm .autogen.cjs",
+    "generate": "rollup -c ./autogen/rollup.config.js; node .autogen.cjs; rm .autogen.cjs"
   },
   "peerDependencies": {
     "@unovis/ts": "1.6.4",
@@ -57,13 +56,8 @@
     "concurrently": "^9.1.2",
     "rimraf": "^3.0.2",
     "rollup": "^2.61.1",
-    "rollup-plugin-peer-deps-external": "^2.2.4",
-    "rollup-plugin-postcss": "^4.0.2",
-    "rollup-plugin-rename-node-modules": "^1.3.1",
     "rollup-plugin-typescript2": "^0.31.1",
-    "tsconfig-paths-webpack-plugin": "^3.5.2",
     "tslib": "^2.3.1",
-    "ttypescript": "^1.5.13",
     "typescript": "~4.2.4",
     "vite": "^6.2.2",
     "vite-plugin-dts": "~3.5.3",

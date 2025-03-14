@@ -13,7 +13,6 @@ const external = [
 
 export default defineConfig({
   build: {
-    outDir: 'lib',
     sourcemap: true,
     cssMinify: 'lightningcss',
     lib: {

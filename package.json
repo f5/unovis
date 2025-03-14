@@ -18,7 +18,7 @@
     "pnpm": ">=8.0.0"
   },
   "scripts": {
-    "dev": "cd packages/dev && pnpm dev",
+    "dev": "concurrently \"cd packages/react && npm run watch\" \"cd packages/dev && pnpm dev\"",
     "website": "cd packages/website && pnpm start",
     "build": "pnpm build:ts && pnpm build:react && pnpm build:angular && pnpm build:svelte && pnpm build:vue && pnpm build:solid && pnpm build:website",
     "build:ts": "cd packages/ts && pnpm build",
@@ -57,6 +57,7 @@
     "@types/node": "^16.11.14",
     "@typescript-eslint/eslint-plugin": "^5.41.0",
     "@typescript-eslint/parser": "^5.41.0",
+    "concurrently": "^9.1.2",
     "eslint": "^8.26.0",
     "eslint-config-standard": "^16.0.3",
     "eslint-import-resolver-typescript": "^2.7.1",
