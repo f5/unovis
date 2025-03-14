@@ -3,10 +3,10 @@ import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect,
 import { ChordDiagram, ChordDiagramConfigInterface, ChordInputNode, ChordInputLink } from '@unovis/ts'
 
 // Utils
-import { arePropsEqual } from 'src/utils/react'
+import { arePropsEqual } from '@/utils/react'
 
 // Types
-import { VisComponentElement } from 'src/types/dom'
+import { VisComponentElement } from '@/types/dom'
 
 export type VisChordDiagramRef<N extends ChordInputNode, L extends ChordInputLink> = {
   component?: ChordDiagram<N, L>;

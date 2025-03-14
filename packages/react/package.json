@@ -31,10 +31,12 @@
   "type": "module",
   "sideEffects": false,
   "scripts": {
-    "build": "rimraf dist && tsc --project tsconfig.lib.json --emitDeclarationOnly && rollup --config; rm -rf dist/.cache; cp LICENSE README.md package.json ./dist",
+    "build": "rimraf dist && tsc --project tsconfig.lib.json --emitDeclarationOnly && rollup --config",
+    "build:vite": "vite build --mode production",
+    "build:types": "tsc --project tsconfig.lib.json --emitDeclarationOnly",
+    "watch": "concurrently \"vite build --mode development --watch\" \"npm run build:types --watch\"",
     "tsc": "tsc",
     "generate": "rollup -c ./autogen/rollup.config.js; node .autogen.cjs; rm .autogen.cjs",
-    "publish:dist": "cd ./dist; npm publish"
   },
   "peerDependencies": {
     "@unovis/ts": "1.6.4",
@@ -46,11 +48,13 @@
     "@rollup/plugin-node-resolve": "^13.0.4",
     "@types/react": "^17.0.22",
     "@types/node": "^16.11.17",
+    "@vitejs/plugin-react": "^4.3.4",
     "@types/d3-dispatch": "3.0.6",
     "@zerollup/ts-transform-paths": "^1.7.18",
     "buffer-from": "^1.1.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "concurrently": "^9.1.2",
     "rimraf": "^3.0.2",
     "rollup": "^2.61.1",
     "rollup-plugin-peer-deps-external": "^2.2.4",
@@ -60,6 +64,9 @@
     "tsconfig-paths-webpack-plugin": "^3.5.2",
     "tslib": "^2.3.1",
     "ttypescript": "^1.5.13",
-    "typescript": "~4.2.4"
+    "typescript": "~4.2.4",
+    "vite": "^6.2.2",
+    "vite-plugin-dts": "~3.5.3",
+    "vite-plugin-externalize-deps": "^0.9.0"
   }
 }

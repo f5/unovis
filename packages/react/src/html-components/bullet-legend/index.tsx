@@ -3,7 +3,7 @@ import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect,
 import { BulletLegend, BulletLegendConfigInterface } from '@unovis/ts'
 
 // Utils
-import { arePropsEqual } from 'src/utils/react'
+import { arePropsEqual } from '@/utils/react'
 
 // Types
 import { VisComponentElement } from 'src/types/dom'

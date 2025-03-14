@@ -1,12 +1,13 @@
 // !!! This code was automatically generated. You should not change it !!!
 import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
-import { Graph, GraphConfigInterface, GraphInputNode, GraphInputLink } from '@unovis/ts'
+import { Graph, GraphConfigInterface } from '@unovis/ts'
+import { GraphInputNode, GraphInputLink } from '@/types/graph'
 
 // Utils
-import { arePropsEqual } from 'src/utils/react'
+import { arePropsEqual } from '@/utils/react'
 
 // Types
-import { VisComponentElement } from 'src/types/dom'
+import { VisComponentElement } from '@/types/dom'
 
 export type VisGraphRef<N extends GraphInputNode, L extends GraphInputLink> = {
   component?: Graph<N, L>;

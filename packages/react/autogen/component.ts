@@ -25,11 +25,10 @@ import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect,
 ${importStatements.map(s => `import { ${s.elements.join(', ')} } from '${s.source}'`).join('\n')}
 
 // Utils
-import { arePropsEqual } from 'src/utils/react'
+import { arePropsEqual } from '@/utils/react'
 
 // Types
-import { VisComponentElement } from 'src/types/dom'
-
+import { VisComponentElement } from '@/types/dom'
 export type Vis${componentName}Ref${genericsDefStr} = {
     component?: ${componentType};
 }
@@ -53,7 +52,7 @@ function Vis${componentName}FC${genericsDefStr} (props: Vis${componentName}Props
     componentRef.current = c
     element.__component__ = c
 
-    return () => {
+return () => {
       componentRef.current = undefined
       c.destroy()
     }

@@ -3,10 +3,10 @@ import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect,
 import { Sankey, SankeyConfigInterface, SankeyInputNode, SankeyInputLink } from '@unovis/ts'
 
 // Utils
-import { arePropsEqual } from 'src/utils/react'
+import { arePropsEqual } from '@/utils/react'
 
 // Types
-import { VisComponentElement } from 'src/types/dom'
+import { VisComponentElement } from '@/types/dom'
 
 export type VisSankeyRef<N extends SankeyInputNode, L extends SankeyInputLink> = {
   component?: Sankey<N, L>;

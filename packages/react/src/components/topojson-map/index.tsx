@@ -3,10 +3,10 @@ import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect,
 import { TopoJSONMap, TopoJSONMapConfigInterface } from '@unovis/ts'
 
 // Utils
-import { arePropsEqual } from 'src/utils/react'
+import { arePropsEqual } from '@/utils/react'
 
 // Types
-import { VisComponentElement } from 'src/types/dom'
+import { VisComponentElement } from '@/types/dom'
 
 export type VisTopoJSONMapRef<AreaDatum, PointDatum, LinkDatum> = {
   component?: TopoJSONMap<AreaDatum, PointDatum, LinkDatum>;
