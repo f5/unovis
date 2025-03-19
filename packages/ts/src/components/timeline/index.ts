@@ -39,6 +39,12 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
   public config: TimelineConfigInterface<Datum> = this._defaultConfig
 
   events = {
+    [Timeline.selectors.background]: {
+      wheel: this._onMouseWheel.bind(this),
+    },
+    [Timeline.selectors.label]: {
+      wheel: this._onMouseWheel.bind(this),
+    },
     [Timeline.selectors.rows]: {
       wheel: this._onMouseWheel.bind(this),
     },
@@ -134,7 +140,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
           .call(trimSVGText, config.rowMaxLabelWidth ?? config.maxLabelWidth)
 
         const labelWidth = label.node().getBBox().width
-        this._labelsGroup.empty()
+        label.remove()
 
         const tolerance = 1.15 // Some characters are wider than others so we add a little of extra space to take that into account
         this._labelWidth = labelWidth ? tolerance * labelWidth + this._labelMargin : 0
@@ -156,7 +162,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
 
     // Small segments bleed
     const lineBleed = [1, 1] as [number, number]
-    if (config.showEmptySegments && config.lineCap) {
+    if (config.showEmptySegments && config.lineCap && firstItem && lastItem) {
       const firstItemStart = getNumber(firstItem, config.x, firstItemIdx)
       const firstItemEnd = getNumber(firstItem, config.x, firstItemIdx) + this._getLineDuration(firstItem, firstItemIdx)
       const lastItemStart = getNumber(lastItem, config.x, lastItemIdx)
@@ -173,11 +179,11 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
     // Icon bleed
     const iconBleed = [0, 0] as [number, number]
     if (config.lineStartIcon) {
-      iconBleed[0] = getIconBleed(firstItem, firstItemIdx, config.lineStartIcon, config.lineStartIconSize, config.lineStartIconArrangement, rowHeight)
+      iconBleed[0] = max(data, (d, i) => getIconBleed(d, i, config.lineStartIcon, config.lineStartIconSize, config.lineStartIconArrangement, rowHeight)) || 0
     }
 
     if (config.lineEndIcon) {
-      iconBleed[1] = getIconBleed(lastItem, lastItemIdx, config.lineEndIcon, config.lineEndIconSize, config.lineEndIconArrangement, rowHeight)
+      iconBleed[1] = max(data, (d, i) => getIconBleed(d, i, config.lineEndIcon, config.lineEndIconSize, config.lineEndIconArrangement, rowHeight)) || 0
     }
 
     this._rowIconBleed = iconBleed
@@ -435,7 +441,8 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
     this._updateScrollPosition(0)
 
     // Clip path
-    this._clipPath.select('rect')
+    const clipPathRect = this._clipPath.select('rect')
+    smartTransition(clipPathRect, clipPathRect.attr('width') ? duration : 0)
       .attr('x', xStart)
       .attr('width', timelineWidth)
       .attr('height', this._height)
@@ -470,20 +477,20 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
         this._getRecordKey(d, i), getNumber(d, config.x, i),
       ].join('-')
 
-      const lineHeight = this._getLineWidth(d, i, rowHeight)
+      const lineWidth = this._getLineWidth(d, i, rowHeight)
       const lineLength = this._getLineLength(d, i)
 
       if (lineLength < 0) {
         console.warn('Unovis | Timeline: Line segments should not have negative lengths. Setting to 0.')
       }
 
-      const isLineTooShort = config.showEmptySegments && config.lineCap && (lineLength < lineHeight)
+      const isLineTooShort = config.showEmptySegments && config.lineCap && (lineLength < lineWidth)
       const lineLengthCorrected = config.showEmptySegments
-        ? Math.max(config.lineCap ? lineHeight : 1, lineLength)
+        ? Math.max(config.lineCap ? lineWidth : 1, lineLength)
         : Math.max(0, lineLength)
 
       const x = xScale(getNumber(d, config.x, i))
-      const y = yStart + rowOrdinalScale(this._getRecordKey(d, i)) * rowHeight + (rowHeight - lineHeight) / 2
+      const y = yStart + rowOrdinalScale(this._getRecordKey(d, i)) * rowHeight + (rowHeight - lineWidth) / 2
       const xOffset = isLineTooShort ? -(lineLengthCorrected - lineLength) / 2 : 0
 
       return {
@@ -493,10 +500,10 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
         _yPx: y,
         _xOffsetPx: xOffset,
         _length: lineLength,
-        _height: lineHeight,
+        _height: lineWidth,
         _lengthCorrected: lineLengthCorrected,
-        _startIconSize: getNumber(d, config.lineStartIconSize, i) ?? lineHeight,
-        _endIconSize: getNumber(d, config.lineEndIconSize, i) ?? lineHeight,
+        _startIconSize: getNumber(d, config.lineStartIconSize, i) ?? lineWidth,
+        _endIconSize: getNumber(d, config.lineEndIconSize, i) ?? lineWidth,
         _startIconColor: getString(d, config.lineStartIconColor, i),
         _endIconColor: getString(d, config.lineEndIconColor, i),
         _startIconArrangement: getValue(d, config.lineStartIconArrangement, i) ?? Arrangement.Outside,
@@ -528,28 +535,38 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
         ? this.xScale(a.xSource)
         : this.xScale(getNumber(sourceLine, config.x, sourceLineIndex)) + this._getLineLength(sourceLine, sourceLineIndex)
       ) + (a.xSourceOffsetPx ?? 0)
-      const targetLineStart = this.xScale(getNumber(targetLine, config.x, targetLineIndex))
+      const targetLineLength = this._getLineLength(targetLine, targetLineIndex)
+      const isTargetLineTooShort = config.showEmptySegments && config.lineCap && (targetLineLength < targetLineWidth)
+      const targetLineStart = this.xScale(getNumber(targetLine, config.x, targetLineIndex)) + (isTargetLineTooShort ? -targetLineWidth / 2 : 0)
       const x2 = (a.xTarget ? this.xScale(a.xTarget) : targetLineStart) + (a.xTargetOffsetPx ?? 0)
       const isX2OutsideTargetLineStart = (x2 < targetLineStart) || (x2 > targetLineStart)
 
       // Points array
       const sourceMargin = a.lineSourceMarginPx ?? TIMELINE_DEFAULT_ARROW_MARGIN
       const targetMargin = a.lineTargetMarginPx ?? TIMELINE_DEFAULT_ARROW_MARGIN
-      const y1 = sourceLineY < targetLineY ? sourceLineY + sourceLineWidth / 2 : sourceLineY - sourceLineWidth / 2
-      const y2 = sourceLineY < targetLineY ? targetLineY - targetLineWidth / 2 : targetLineY + targetLineWidth / 2
-      const points = [[x1, y1 + sourceMargin]] as [number, number][]
-      const threshold = 5
+      const y1 = sourceLineY < targetLineY ? sourceLineY + sourceLineWidth / 2 + sourceMargin : sourceLineY - sourceLineWidth / 2 - sourceMargin
+      const y2 = sourceLineY < targetLineY ? targetLineY - targetLineWidth / 2 - targetMargin : targetLineY + targetLineWidth / 2 + targetMargin
+      const arrowHeadLength = a.arrowHeadLength ?? TIMELINE_DEFAULT_ARROW_HEAD_LENGTH
+      const isForwardArrow = x1 < x2 && !isX2OutsideTargetLineStart
+      const threshold = arrowHeadLength + (isForwardArrow ? targetMargin : 0)
+
+      const points = [[x1, y1]] as [number, number][]
       if (Math.abs(x2 - x1) > threshold) {
-        if ((x1 < x2) && !isX2OutsideTargetLineStart) {
+        if (isForwardArrow) {
+          points.push([x1, (y1 + targetLineY) / 2]) // A dummy point to enable smooth transitions when arrows change
           points.push([x1, targetLineY])
           points.push([x2 - targetMargin, targetLineY])
         } else {
-          points.push([x1, y1 + Math.sign(targetLineY - sourceLineY) * (rowHeight / 2 - sourceMargin)])
-          points.push([x2, y1 + Math.sign(targetLineY - sourceLineY) * (rowHeight / 2 - sourceMargin)])
-          points.push([x2, y2 - targetMargin])
+          const verticalOffset = Math.sign(targetLineY - sourceLineY) * (rowHeight / 4)
+          points.push([x1, y2 - verticalOffset])
+          points.push([x2, y2 - verticalOffset])
+          points.push([x2, y2])
         }
       } else {
-        points.push([x1, y2 - targetMargin])
+        const quarterOffset = (y2 - y1) / 4
+        points.push([x1, y1 + quarterOffset]) // A dummy point to enable smooth transitions
+        points.push([x1, y1 + 3 * quarterOffset]) // A dummy point to enable smooth transitions
+        points.push([x1, y2])
       }
 
       return {
