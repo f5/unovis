@@ -180,7 +180,7 @@ export function updateLinks<N extends GraphInputNode, L extends GraphInputLink> 
   getLinkArrowDefId: (arrow: GraphLinkArrowStyle | undefined) => string,
   linkPathLengthMap: Map<string, number>
 ): void {
-  const { linkFlowParticleSize, linkStyle, linkFlow, linkLabel, linkLabelShiftFromCenter } = config
+  const { linkStyle, linkFlow, linkLabel, linkLabelShiftFromCenter } = config
   if (!selection.size()) return
 
   selection
@@ -204,6 +204,7 @@ export function updateLinks<N extends GraphInputNode, L extends GraphInputLink> 
     const linkLabelData = ensureArray(
       getValue<GraphLink<N, L>, GraphCircleLabel | GraphCircleLabel[]>(d, linkLabel, d._indexGlobal)
     )
+    const linkFlowParticleSize = getNumber(d, config.linkFlowParticleSize, d._indexGlobal)
 
     // Particle Flow
     flowGroup
@@ -212,7 +213,7 @@ export function updateLinks<N extends GraphInputNode, L extends GraphInputLink> 
 
     flowGroup
       .selectAll(`.${linkSelectors.flowCircle}`)
-      .attr('r', linkFlowParticleSize / scale)
+      .attr('r', linkFlowParticleSize / Math.sqrt(scale))
       .style('fill', linkColor)
 
     smartTransition(flowGroup, duration)
@@ -387,15 +388,15 @@ export function zoomLinks<N extends GraphInputNode, L extends GraphInputLink> (
   config: GraphConfigInterface<N, L>,
   scale: number
 ): void {
-  const { linkFlowParticleSize } = config
-
   selection.classed(generalSelectors.zoomOutLevel2, scale < ZoomLevel.Level2)
 
   selection.select(`.${linkSelectors.flowGroup}`)
     .style('opacity', scale < ZoomLevel.Level2 ? 0 : 1)
 
-  selection.selectAll(`.${linkSelectors.flowCircle}`)
-    .attr('r', linkFlowParticleSize / scale)
+  selection.each((l, i, els) => {
+    const r = getNumber(l, config.linkFlowParticleSize, l._indexGlobal) / Math.sqrt(scale)
+    select(els[i]).selectAll(`.${linkSelectors.flowCircle}`).attr('r', r)
+  })
 
   const linkElements = selection.selectAll<SVGGElement, GraphLink<N, L>>(`.${linkSelectors.link}`)
   linkElements

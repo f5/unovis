@@ -34,7 +34,6 @@ import {
   GraphNodeSelectionHighlightMode,
 } from './types'
 
-
 export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphInputLink> extends ComponentConfigInterface {
   // Zoom and drag
   /** Zoom level constraints. Default: [0.35, 1.25] */
@@ -143,9 +142,9 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   /** Link flow animation accessor function or constant value. Default: `false` */
   linkFlow?: BooleanAccessor<L>;
   /** Animation duration of the flow (traffic) circles. Default: `20000` */
-  linkFlowAnimDuration?: number;
+  linkFlowAnimDuration?: NumericAccessor<L>;
   /** Size of the moving particles that represent traffic flow. Default: `2` */
-  linkFlowParticleSize?: number;
+  linkFlowParticleSize?: NumericAccessor<L>;
   /** Link label accessor function or constant value. Default: `undefined` */
   linkLabel?: GenericAccessor<GraphCircleLabel | GraphCircleLabel[], L> | undefined;
   /** Shift label along the link center a little bit to avoid overlap with the link arrow. Default: `true` */
