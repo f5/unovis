@@ -15,7 +15,7 @@ import { GraphInputLink, GraphInputNode, GraphInputData } from 'types/graph'
 import { Spacing } from 'types/spacing'
 
 // Utils
-import { isNumber, clamp, shallowDiff, isFunction, getBoolean, isPlainObject, isEqual } from 'utils/data'
+import { isNumber, clamp, shallowDiff, isFunction, getBoolean, isPlainObject, isEqual, getNumber } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 
 // Local Types
@@ -661,16 +661,17 @@ export class Graph<
   }
 
   private _onLinkFlowTimerFrame (elapsed = 0): void {
-    const { config: { linkFlow, linkFlowAnimDuration }, datamodel: { links } } = this
+    const { config, datamodel: { links } } = this
 
-    const hasLinksWithFlow = links.some((d, i) => getBoolean(d, linkFlow, i))
+    const hasLinksWithFlow = links.some((d, i) => getBoolean(d, config.linkFlow, i))
     if (!hasLinksWithFlow) return
 
-    const t = (elapsed % linkFlowAnimDuration) / linkFlowAnimDuration
     const linkElements = this._linksGroup.selectAll<SVGGElement, GraphLink<N, L>>(`.${linkSelectors.gLink}`)
-
     const linksToAnimate = linkElements.filter(d => !d._state.greyout)
-    linksToAnimate.each(d => { d._state.flowAnimTime = t })
+    linksToAnimate.each((l, i, els) => {
+      const linkFlowAnimDuration = getNumber(l, config.linkFlowAnimDuration, l._indexGlobal)
+      l._state.flowAnimTime = (elapsed % linkFlowAnimDuration) / linkFlowAnimDuration
+    })
     animateLinkFlow(linksToAnimate, this.config, this._scale, this._linkPathLengthMap)
   }
 
