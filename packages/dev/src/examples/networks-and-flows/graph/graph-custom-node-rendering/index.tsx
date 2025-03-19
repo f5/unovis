@@ -35,11 +35,11 @@ export const component = (): JSX.Element => {
   ]), [])
 
   const links: CustomGraphLink[] = useMemo(() => ([
-    { source: '0', target: '1', showFlow: true },
-    { source: '0', target: '2', showFlow: true },
-    { source: '0', target: '3', showFlow: true },
-    { source: '0', target: '4', showFlow: true },
-    { source: '1', target: '5', showFlow: true },
+    { source: '0', target: '1', showFlow: true, linkFlowAnimDuration: 10000, linkFlowParticleSize: 1.5 },
+    { source: '0', target: '2', showFlow: true, linkFlowAnimDuration: 10000, linkFlowParticleSize: 2 },
+    { source: '0', target: '3', showFlow: true, linkFlowAnimDuration: 10000, linkFlowParticleSize: 3 },
+    { source: '0', target: '4', showFlow: true, linkFlowAnimDuration: 10000, linkFlowParticleSize: 3 },
+    { source: '1', target: '5', showFlow: true, linkFlowAnimDuration: 5000, linkFlowParticleSize: 2.5 },
   ]), [])
 
   // Modifying layout after the calculation
@@ -61,7 +61,8 @@ export const component = (): JSX.Element => {
         height={'100vh'}
         linkFlow={useCallback((l: CustomGraphLink) => showLinkFlow && l.showFlow, [showLinkFlow])}
         onLayoutCalculated={onLayoutCalculated}
-
+        linkFlowAnimDuration={useCallback((l: CustomGraphLink) => l.linkFlowAnimDuration, [])}
+        linkFlowParticleSize={useCallback((l: CustomGraphLink) => l.linkFlowParticleSize, [])}
       />
       <div className={s.checkboxContainer}>
         <label>
