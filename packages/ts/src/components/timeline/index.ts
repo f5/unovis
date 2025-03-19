@@ -1,6 +1,6 @@
 import { select, Selection } from 'd3-selection'
 import { Transition } from 'd3-transition'
-import { max, maxIndex, min, minIndex } from 'd3-array'
+import { max, min, minIndex } from 'd3-array'
 import { scaleOrdinal, ScaleOrdinal } from 'd3-scale'
 import { drag, D3DragEvent } from 'd3-drag'
 
@@ -12,7 +12,7 @@ import { isNumber, arrayOfIndices, getMin, getMax, getString, getNumber, getValu
 import { smartTransition } from 'utils/d3'
 import { getColor } from 'utils/color'
 import { textAlignToAnchor, trimSVGText } from 'utils/text'
-import { arrowLinePath } from 'utils/path'
+import { arrowPolylinePath } from 'utils/path'
 import { guid } from 'utils/misc'
 
 // Types
@@ -28,7 +28,7 @@ import * as s from './style'
 import type { TimelineArrow, TimelineArrowRenderState, TimelineLineRenderState, TimelineRowLabel } from './types'
 
 // Constants
-import { TIMELINE_DEFAULT_ARROW_HEAD_LENGTH, TIMELINE_DEFAULT_ARROW_HEAD_WIDTH } from './constants'
+import { TIMELINE_DEFAULT_ARROW_HEAD_LENGTH, TIMELINE_DEFAULT_ARROW_HEAD_WIDTH, TIMELINE_DEFAULT_ARROW_MARGIN } from './constants'
 
 // Utils
 import { getIconBleed } from './utils'
@@ -155,7 +155,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
     const lastItem = data[lastItemIdx]
 
     // Small segments bleed
-    const lineBleed = [0, 0] as [number, number]
+    const lineBleed = [1, 1] as [number, number]
     if (config.showEmptySegments && config.lineCap) {
       const firstItemStart = getNumber(firstItem, config.x, firstItemIdx)
       const firstItemEnd = getNumber(firstItem, config.x, firstItemIdx) + this._getLineDuration(firstItem, firstItemIdx)
@@ -391,22 +391,19 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
 
     // Arrows
     const arrowsData = this._prepareArrowsData(data, yOrdinalScale, rowHeight)
-    const arrows = this._arrowsGroup.selectAll<SVGPathElement, Datum>(`.${s.arrow}`)
-      .data(arrowsData ?? [])
+    const arrows = this._arrowsGroup.selectAll<SVGPathElement, TimelineArrow & TimelineArrowRenderState>(`.${s.arrow}`)
+      .data(arrowsData ?? [], d => d.id)
 
     const arrowsEnter = arrows.enter().append('path')
       .attr('class', s.arrow)
       .style('opacity', 0)
 
     smartTransition(arrowsEnter.merge(arrows), duration)
-      .attr('d', (d) => arrowLinePath({
-        x1: d._x1,
-        y1: d._y1,
-        x2: d._x2,
-        y2: d._y2,
-        arrowHeadLength: TIMELINE_DEFAULT_ARROW_HEAD_LENGTH,
-        arrowHeadWidth: TIMELINE_DEFAULT_ARROW_HEAD_WIDTH,
-      }))
+      .attr('d', (d) => arrowPolylinePath(
+        d._points,
+        d.arrowHeadLength ?? TIMELINE_DEFAULT_ARROW_HEAD_LENGTH,
+        d.arrowHeadWidth ?? TIMELINE_DEFAULT_ARROW_HEAD_WIDTH
+      ))
       .style('opacity', 1)
 
     smartTransition(arrows.exit(), duration)
@@ -511,41 +508,55 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
   private _prepareArrowsData (data: Datum[], rowOrdinalScale: ScaleOrdinal<string, number>, rowHeight: number): (TimelineArrow & TimelineArrowRenderState)[] {
     const { config } = this
 
-    const arrowsData: (TimelineArrow & TimelineArrowRenderState)[] = config.arrows?.map(l => {
-      const startingLineIndex = data.findIndex((d, i) => getString(d, config.id, i) === l.lineSourceId)
-      const endingLineIndex = data.findIndex((d, i) => getString(d, config.id, i) === l.lineTargetId)
-      const startingLine = data[startingLineIndex]
-      const endingLine = data[endingLineIndex]
+    const arrowsData: (TimelineArrow & TimelineArrowRenderState)[] = config.arrows?.map(a => {
+      const sourceLineIndex = data.findIndex((d, i) => getString(d, config.id, i) === a.lineSourceId)
+      const targetLineIndex = data.findIndex((d, i) => getString(d, config.id, i) === a.lineTargetId)
+      const sourceLine = data[sourceLineIndex]
+      const targetLine = data[targetLineIndex]
 
-      if (!startingLine || !endingLine) {
-        console.warn('Unovis | Timeline: Arrow references a non-existent line. Skipping...', l)
+      if (!sourceLine || !targetLine) {
+        console.warn('Unovis | Timeline: Arrow references a non-existent line. Skipping...', a)
         return undefined
       }
 
-      const y1 = rowOrdinalScale(this._getRecordKey(startingLine, startingLineIndex)) * rowHeight + rowHeight / 2
-      const y2 = rowOrdinalScale(this._getRecordKey(endingLine, endingLineIndex)) * rowHeight + rowHeight / 2
-      const startingLineHeight = this._getLineWidth(startingLine, startingLineIndex, rowHeight)
-      const endingLineHeight = this._getLineWidth(endingLine, endingLineIndex, rowHeight)
+      const sourceLineY = rowOrdinalScale(this._getRecordKey(sourceLine, sourceLineIndex)) * rowHeight + rowHeight / 2
+      const targetLineY = rowOrdinalScale(this._getRecordKey(targetLine, targetLineIndex)) * rowHeight + rowHeight / 2
+      const sourceLineWidth = this._getLineWidth(sourceLine, sourceLineIndex, rowHeight)
+      const targetLineWidth = this._getLineWidth(targetLine, targetLineIndex, rowHeight)
 
-      const arrowY1 = y1 + startingLineHeight / 2 + (l.lineSourceMarginPx ?? 1)
-      const arrowY2 = y2 - endingLineHeight / 2 - (l.lineTargetMarginPx ?? 1)
+      const x1 = (a.xSource
+        ? this.xScale(a.xSource)
+        : this.xScale(getNumber(sourceLine, config.x, sourceLineIndex)) + this._getLineLength(sourceLine, sourceLineIndex)
+      ) + (a.xSourceOffsetPx ?? 0)
+      const targetLineStart = this.xScale(getNumber(targetLine, config.x, targetLineIndex))
+      const x2 = (a.xTarget ? this.xScale(a.xTarget) : targetLineStart) + (a.xTargetOffsetPx ?? 0)
+      const isX2OutsideTargetLineStart = (x2 < targetLineStart) || (x2 > targetLineStart)
 
-      let arrowX: number
-      if (l.x) {
-        arrowX = this.xScale(l.x)
+      // Points array
+      const sourceMargin = a.lineSourceMarginPx ?? TIMELINE_DEFAULT_ARROW_MARGIN
+      const targetMargin = a.lineTargetMarginPx ?? TIMELINE_DEFAULT_ARROW_MARGIN
+      const y1 = sourceLineY < targetLineY ? sourceLineY + sourceLineWidth / 2 : sourceLineY - sourceLineWidth / 2
+      const y2 = sourceLineY < targetLineY ? targetLineY - targetLineWidth / 2 : targetLineY + targetLineWidth / 2
+      const points = [[x1, y1 + sourceMargin]] as [number, number][]
+      const threshold = 5
+      if (Math.abs(x2 - x1) > threshold) {
+        if ((x1 < x2) && !isX2OutsideTargetLineStart) {
+          points.push([x1, targetLineY])
+          points.push([x2 - targetMargin, targetLineY])
+        } else {
+          points.push([x1, y1 + Math.sign(targetLineY - sourceLineY) * (rowHeight / 2 - sourceMargin)])
+          points.push([x2, y1 + Math.sign(targetLineY - sourceLineY) * (rowHeight / 2 - sourceMargin)])
+          points.push([x2, y2 - targetMargin])
+        }
       } else {
-        arrowX = this.xScale(getNumber(startingLine, config.x, startingLineIndex))
+        points.push([x1, y2 - targetMargin])
       }
 
       return {
-        ...l,
-        _x1: arrowX + (l.xOffsetPx ?? 0),
-        _x2: arrowX + (l.xOffsetPx ?? 0),
-        _y1: arrowY1 < arrowY2 ? arrowY1 : arrowY2,
-        _y2: arrowY1 > arrowY2 ? arrowY1 : arrowY2,
+        ...a,
+        _points: points,
       }
     }).filter(Boolean)
-
     return arrowsData
   }
 
