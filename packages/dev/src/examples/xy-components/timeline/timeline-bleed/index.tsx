@@ -27,7 +27,7 @@ export const component = (props: ExampleViewerDurationProps): JSX.Element => {
     <VisXYContainer data={data} height={200} svgDefs={icon}>
       <VisTimeline<typeof data[number]>
         lineRow={(d) => d.row as string}
-        lineLength={(d) => d.duration}
+        lineDuration={(d) => d.duration}
         x={(d) => d.timestamp}
         rowHeight={50}
         lineWidth={undefined}
