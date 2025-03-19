@@ -206,87 +206,133 @@ export function convertLineToArc (path: Path | string, r: number): string {
   return path.toString().replace(/L(?<x>-?\d*\.?\d*),(?<y>-?\d+\.?\d*)/gm, (_, x, y) => `A ${r} ${r} 0 0 0 ${x} ${y}`)
 }
 
-export type ArrowLinePathOptions = {
-  x1: number;
-  y1: number;
-  x2: number;
-  y2: number;
-  arrowHeadLength?: number;
-  arrowHeadWidth?: number;
-}
-
 /**
- * Generate an SVG path string for an arrow that starts at (x1, y1) and ends at (x2, y2).
- * The arrow is composed of a straight line (shaft) and a triangular arrowhead.
+ * Generate an SVG path string for an arrow that follows a polyline path.
+ * The arrow is composed of line segments between points and a triangular arrowhead at the end.
  *
- * Algorithm:
- * 1. Compute the direction from start to end.
- * 2. Determine a tail point where the arrowhead starts by moving [arrowHeadLength] distance back from (x2, y2).
- * 3. Calculate points for the left and right corners of the arrowhead using a perpendicular vector.
- * 4. Construct the SVG path by drawing the shaft from start to the tail point,
- *    then the arrowhead as a polygon.
- *
- * @param opts - ArrowLinePathOptions object containing start and end coordinates and optional head dimensions.
+ * @param opts - ArrowPolylinePathOptions object containing array of points and optional head dimensions.
  * @returns SVG path string for the arrow.
  */
-export function arrowLinePath ({
-  x1,
-  y1,
-  x2,
-  y2,
+export function arrowPolylinePath (
+  points: [number, number][],
   arrowHeadLength = 10,
   arrowHeadWidth = 6,
-}: ArrowLinePathOptions): string {
-  // Compute differences and distance
-  const dx = x2 - x1
-  const dy = y2 - y1
-  const distance = Math.sqrt(dx * dx + dy * dy)
+  smoothing = 5
+): string {
+  if (points.length < 2) return ''
 
-  // If the distance is zero or nearly zero, don't draw anything.
-  if (distance === 0) return ''
+  // Calculate total path length
+  let totalLength = 0
+  for (let i = 0; i < points.length - 1; i++) {
+    const [x1, y1] = points[i]
+    const [x2, y2] = points[i + 1]
+    totalLength += Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2))
+  }
 
-  // Let the default values be modifiable based on the line length.
+  // If the total length is zero or nearly zero, don't draw anything
+  if (totalLength === 0) return ''
+
+  // Let the default values be modifiable based on the line length
   let headLength = arrowHeadLength
   let headWidth = arrowHeadWidth
 
-  // If the line is very short, scale down the arrow head dimensions.
+  // If the line is very short, scale down the arrow head dimensions
   const threshold = arrowHeadLength * 2
-  if (distance < threshold) {
-    const scale = distance / threshold
+  if (totalLength < threshold) {
+    const scale = totalLength / threshold
     headLength *= scale
     headWidth *= scale
   }
 
-  // Ensure the arrow head length is never longer than the line itself.
-  headLength = Math.min(headLength / 2, distance)
+  // Ensure the arrow head length is never longer than the line itself
+  headLength = Math.min(headLength / 2, totalLength)
 
-  // Unit vector in the direction from start to end.
-  const ux = dx / distance
-  const uy = dy / distance
+  // Get the last two points for arrowhead calculation
+  const [lastX, lastY] = points[points.length - 1]
+  const [prevX, prevY] = points[points.length - 2]
 
-  // Tail point of the arrow (where the arrowhead starts).
-  const tailX = x2 - headLength * ux
-  const tailY = y2 - headLength * uy
+  // Calculate direction vector for the last segment
+  const dx = lastX - prevX
+  const dy = lastY - prevY
+  const segmentLength = Math.sqrt(dx * dx + dy * dy)
+  const ux = dx / segmentLength
+  const uy = dy / segmentLength
 
-  // Perpendicular vector for arrowhead width calculation.
+  // Tail point of the arrow (where the arrowhead starts)
+  const tailX = lastX - headLength * ux
+  const tailY = lastY - headLength * uy
+
+  // Perpendicular vector for arrowhead width calculation
   const perpX = -uy
   const perpY = ux
 
-  // Calculate the two base points of the arrowhead triangle.
+  // Calculate the two base points of the arrowhead triangle
   const leftX = tailX + (headWidth / 2) * perpX
   const leftY = tailY + (headWidth / 2) * perpY
   const rightX = tailX - (headWidth / 2) * perpX
   const rightY = tailY - (headWidth / 2) * perpY
 
-  // Build the path:
-  // 1. Draw shaft from start to tail point.
-  // 2. Draw arrowhead polygon: left corner -> tip -> right corner -> left corner (closed).
-  const path = [
-    // Shaft
-    `M${x1},${y1} L${tailX},${tailY}`,
-    // Arrowhead triangle
-    `M${leftX},${leftY} L${x2},${y2} L${rightX},${rightY} Z`,
-  ].join(' ')
+  // Build the path
+  const pathParts = []
 
-  return path
+  if (points.length === 2) {
+    // For a single segment, create a curved path
+    const [startX, startY] = points[0]
+
+    // Calculate control points for a cubic Bézier curve with absolute smoothing
+    const cp1x = startX + ux * smoothing
+    const cp1y = startY + uy * smoothing + perpY * smoothing * 0.5
+
+    const cp2x = tailX - ux * smoothing
+    const cp2y = tailY - uy * smoothing + perpY * smoothing * 0.5
+
+    // Start path and add cubic Bézier curve
+    pathParts.push(`M${startX},${startY}`)
+    pathParts.push(`C${cp1x},${cp1y} ${cp2x},${cp2y} ${lastX},${lastY}`)
+  } else {
+    // For multiple segments, use smooth Bézier corners with absolute smoothing
+    pathParts.push(`M${points[0][0]},${points[0][1]}`)
+
+    for (let i = 0; i < points.length - 2; i++) {
+      const [x1, y1] = points[i]
+      const [x2, y2] = points[i + 1]
+      const [x3, y3] = points[i + 2]
+
+      // Calculate vectors for the current and next segment
+      const v1x = x2 - x1
+      const v1y = y2 - y1
+      const v2x = x3 - x2
+      const v2y = y3 - y2
+
+      // Calculate lengths of segments
+      const len1 = Math.sqrt(v1x * v1x + v1y * v1y)
+      const len2 = Math.sqrt(v2x * v2x + v2y * v2y)
+
+      // Calculate unit vectors
+      const u1x = v1x / len1
+      const u1y = v1y / len1
+      const u2x = v2x / len2
+      const u2y = v2y / len2
+
+      // Calculate the corner points and control points with absolute smoothing
+      const corner1x = x2 - u1x * smoothing
+      const corner1y = y2 - u1y * smoothing
+      const corner2x = x2 + u2x * smoothing
+      const corner2y = y2 + u2y * smoothing
+
+      // Add line to approach point
+      pathParts.push(`L${corner1x},${corner1y}`)
+
+      // Add cubic Bézier curve for the corner
+      pathParts.push(`C${x2},${y2} ${x2},${y2} ${corner2x},${corner2y}`)
+    }
+
+    // Add the final line segment to the tail point
+    pathParts.push(`L${lastX},${lastY}`)
+  }
+
+  // Add the arrowhead
+  pathParts.push(`M${leftX},${leftY} L${lastX},${lastY} L${rightX},${rightY}`)
+
+  return pathParts.join(' ')
 }
