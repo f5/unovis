@@ -16,10 +16,15 @@ export type TimelineRowLabel<D> = {
 }
 
 export type TimelineArrow = {
-  /** The optional x position of the arrow. By default the arrow will be placed at the source line's end */
-  x?: number;
+  id?: string;
+  /** The optional x position of the arrow start. By default the arrow will be placed at the source line's end */
+  xSource?: number;
+  /** The optional x position of the arrow end. By default the arrow will be placed at the target line's start */
+  xTarget?: number;
   /** The horizontal offset of the arrow in pixels. Default: `undefined` */
-  xOffsetPx?: number;
+  xSourceOffsetPx?: number;
+  /** The horizontal offset of the arrow in pixels. Default: `undefined` */
+  xTargetOffsetPx?: number;
   /** The id of the line start element. */
   lineSourceId: string;
   /** The id of the line end element. */
@@ -35,10 +40,7 @@ export type TimelineArrow = {
 }
 
 export type TimelineArrowRenderState = {
-  _x1: number;
-  _x2: number;
-  _y1: number;
-  _y2: number;
+  _points: [number, number][];
 }
 
 export type TimelineLineRenderState = {

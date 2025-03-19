@@ -16,6 +16,7 @@ export const globalStyles = injectGlobal`
     --vis-timeline-label-color: #6C778C;
 
     --vis-timeline-arrow-color: #6C778C;
+    --vis-timeline-arrow-stroke-width: 1.5;
 
     --vis-timeline-cursor: default;
     --vis-timeline-line-color: var(--vis-color-main);
@@ -91,8 +92,9 @@ export const arrows = css`
 
 export const arrow = css`
   label: arrow;
-  fill: var(--vis-timeline-arrow-color);
+  fill: none;
   stroke: var(--vis-timeline-arrow-color);
+  stroke-width: var(--vis-timeline-arrow-stroke-width);
 `
 
 export const rows = css`
