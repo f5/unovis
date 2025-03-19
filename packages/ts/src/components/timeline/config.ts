@@ -13,14 +13,14 @@ export interface TimelineConfigInterface<Datum> extends WithOptional<XYComponent
   // Items (Lines)
   /** @deprecated This property has been renamed to `key` */
   type?: StringAccessor<Datum>;
-  /** @deprecated This property has been renamed to `lineLength` */
+  /** @deprecated This property has been renamed to `lineDuration` */
   length?: NumericAccessor<Datum>;
   /** @deprecated This property has been renamed to `lineCursor` */
   cursor?: StringAccessor<Datum>;
   /** Timeline item row accessor function. Records with the `lineRow` will be plotted in one row. Default: `undefined` */
   lineRow?: StringAccessor<Datum>;
-  /** Timeline item length accessor function. Default: `undefined`. Falls back to the deprecated `length` property */
-  lineLength?: NumericAccessor<Datum>;
+  /** Timeline item duration accessor function. Default: `undefined`. Falls back to the deprecated `length` property */
+  lineDuration?: NumericAccessor<Datum>;
   /** Timeline item color accessor function. Default: `d => d.color` */
   color?: ColorAccessor<Datum>;
   /** Width of the timeline items. Default: `8` */
@@ -109,7 +109,7 @@ export const TimelineDefaultConfig: TimelineConfigInterface<unknown> = {
   length: (d: unknown): number => (d as { length: number }).length, // Deprecated (see above)
   color: (d: unknown): string => (d as { color: string }).color,
   lineRow: undefined,
-  lineLength: undefined,
+  lineDuration: undefined,
   lineWidth: 8,
   lineCap: false,
   lineCursor: undefined,

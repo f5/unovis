@@ -444,7 +444,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
   private _getLineLength (d: Datum, i: number): number {
     const { config, xScale } = this
     const x = getNumber(d, config.x, i)
-    const length = getNumber(d, config.lineLength ?? config.length, i) ?? 0
+    const length = getNumber(d, config.lineDuration ?? config.length, i) ?? 0
 
     const lineLength = xScale(x + length) - xScale(x)
     return lineLength
@@ -457,7 +457,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
 
   private _getLineDuration (d: Datum, i: number): number {
     const { config } = this
-    return getNumber(d, config.lineLength ?? config.length, i) ?? 0
+    return getNumber(d, config.lineDuration ?? config.length, i) ?? 0
   }
 
   private _prepareLinesData (data: Datum[], rowOrdinalScale: ScaleOrdinal<string, number>, rowHeight: number): (Datum & TimelineLineRenderState)[] {
@@ -635,7 +635,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
   getXDataExtent (): number[] {
     const { config, datamodel } = this
     const min = getMin(datamodel.data, config.x)
-    const max = getMax(datamodel.data, (d, i) => getNumber(d, config.x, i) + (getNumber(d, config.lineLength ?? config.length, i) ?? 0))
+    const max = getMax(datamodel.data, (d, i) => getNumber(d, config.x, i) + (getNumber(d, config.lineDuration ?? config.length, i) ?? 0))
     return [min, max]
   }
 }
