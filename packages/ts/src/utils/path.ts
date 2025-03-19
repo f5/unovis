@@ -215,7 +215,7 @@ export function convertLineToArc (path: Path | string, r: number): string {
  */
 export function arrowPolylinePath (
   points: [number, number][],
-  arrowHeadLength = 10,
+  arrowHeadLength = 8,
   arrowHeadWidth = 6,
   smoothing = 5
 ): string {
@@ -279,12 +279,15 @@ export function arrowPolylinePath (
     // For a single segment, create a curved path
     const [startX, startY] = points[0]
 
-    // Calculate control points for a cubic Bézier curve with absolute smoothing
-    const cp1x = startX + ux * smoothing
-    const cp1y = startY + uy * smoothing + perpY * smoothing * 0.5
+    // Adjust smoothing based on segment length
+    const adjustedSmoothing = Math.min(smoothing, segmentLength / 3)
 
-    const cp2x = tailX - ux * smoothing
-    const cp2y = tailY - uy * smoothing + perpY * smoothing * 0.5
+    // Calculate control points for a cubic Bézier curve with adjusted smoothing
+    const cp1x = startX + ux * adjustedSmoothing
+    const cp1y = startY + uy * adjustedSmoothing + perpY * adjustedSmoothing * 0.5
+
+    const cp2x = tailX - ux * adjustedSmoothing
+    const cp2y = tailY - uy * adjustedSmoothing + perpY * adjustedSmoothing * 0.5
 
     // Start path and add cubic Bézier curve
     pathParts.push(`M${startX},${startY}`)
@@ -314,11 +317,15 @@ export function arrowPolylinePath (
       const u2x = v2x / len2
       const u2y = v2y / len2
 
-      // Calculate the corner points and control points with absolute smoothing
-      const corner1x = x2 - u1x * smoothing
-      const corner1y = y2 - u1y * smoothing
-      const corner2x = x2 + u2x * smoothing
-      const corner2y = y2 + u2y * smoothing
+      // Adjust smoothing based on the minimum segment length
+      const minSegmentLength = Math.min(len1, len2)
+      const adjustedSmoothing = Math.min(smoothing, minSegmentLength / 3)
+
+      // Calculate the corner points and control points with adjusted smoothing
+      const corner1x = x2 - u1x * adjustedSmoothing
+      const corner1y = y2 - u1y * adjustedSmoothing
+      const corner2x = x2 + u2x * adjustedSmoothing
+      const corner2y = y2 + u2y * adjustedSmoothing
 
       // Add line to approach point
       pathParts.push(`L${corner1x},${corner1y}`)
