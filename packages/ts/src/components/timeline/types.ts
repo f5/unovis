@@ -33,7 +33,7 @@ export type TimelineArrow = {
   lineSourceMarginPx?: number;
   /** The margin between the line target and the arrow in pixels. Default: `undefined` */
   lineTargetMarginPx?: number;
-  /** The length of the arrowhead in pixels. Default: `5` */
+  /** The length of the arrowhead in pixels. Default: `8` */
   arrowHeadLength?: number;
   /** The width of the arrowhead in pixels. Default: `6` */
   arrowHeadWidth?: number;
