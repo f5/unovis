@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState, useEffect } from 'react'
 import { VisXYContainer, VisTimeline, VisAxis } from '@unovis/react'
 
 import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
@@ -10,15 +10,23 @@ import icon from './icon.svg?raw'
 export const title = 'Timeline Arrows'
 export const subTitle = 'Between the lines'
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+const generateData = (length: number) => Array(length).fill(0).map((_, i) => ({
+  timestamp: Date.now() + i * 1000 * 60 * 60 * 24 + Math.random() * 1000 * 60 * 60 * 24,
+  length: 1000 * 60 * 60 * 24,
+  id: i.toString(),
+  type: `Row ${i}`,
+  lineWidth: 5 + Math.random() * 15,
+}))
+
 export const component = (props: ExampleViewerDurationProps): JSX.Element => {
   const lineIconSize = 25
-  const data = Array(10).fill(0).map((_, i) => ({
-    timestamp: Date.now() + i * 1000 * 60 * 60 * 24,
-    length: 1000 * 60 * 60 * 24,
-    id: i.toString(),
-    type: `Row ${i}`,
-    lineWidth: 5 + Math.random() * 15,
-  }))
+  const [data, setData] = useState(() => generateData(15))
+
+  useEffect(() => {
+    const interval = setInterval(() => { setData(generateData(12)) }, 6000)
+    return () => clearInterval(interval)
+  }, [])
 
   type Datum = typeof data[number]
 
@@ -26,12 +34,14 @@ export const component = (props: ExampleViewerDurationProps): JSX.Element => {
     if (i === data.length - 1) return undefined
 
     return {
-      x: d.timestamp + d.length,
+      id: `arrow-${i}`,
+      xSource: d.timestamp + d.length,
+      xSourceOffsetPx: 12,
+      xTargetOffsetPx: 0,
       lineSourceId: d.id,
       lineTargetId: data[i + 1].id,
-      xOffsetPx: lineIconSize / 2,
       lineSourceMarginPx: (lineIconSize - d.lineWidth) / 2,
-      lineTargetMarginPx: 4,
+      lineTargetMarginPx: 2,
     }
   }).filter(Boolean) as TimelineArrow[]
 
@@ -39,7 +49,7 @@ export const component = (props: ExampleViewerDurationProps): JSX.Element => {
   return (<>
     <VisXYContainer<Datum>
       data={data}
-      height={300}
+      height={400}
       svgDefs={svgDefs}
     >
       <VisTimeline
