@@ -24,8 +24,8 @@ export enum TextAlign {
 export type UnovisText = {
   // The text content to be displayed.
   text: string;
-  // The font size of the text in pixels.
-  fontSize: number;
+  // The font size of the text in pixels (optional).
+  fontSize?: number;
   // The font family of the text (optional). Default: `'var(--vis-font-family)'`.
   fontFamily?: string;
   // The font weight of the text (optional)`.
