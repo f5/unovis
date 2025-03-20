@@ -35,11 +35,11 @@ export const component = (): React.ReactNode => {
   ]), [])
 
   const links: CustomGraphLink[] = useMemo(() => ([
-    { source: '0', target: '1', showFlow: true, linkFlowAnimDuration: 10000, linkFlowParticleSize: 1.5 },
-    { source: '0', target: '2', showFlow: true, linkFlowAnimDuration: 10000, linkFlowParticleSize: 2 },
-    { source: '0', target: '3', showFlow: true, linkFlowAnimDuration: 10000, linkFlowParticleSize: 3 },
-    { source: '0', target: '4', showFlow: true, linkFlowAnimDuration: 10000, linkFlowParticleSize: 3 },
-    { source: '1', target: '5', showFlow: true, linkFlowAnimDuration: 5000, linkFlowParticleSize: 2.5 },
+    { source: '0', target: '1', showFlow: true, linkFlowParticleSize: 1.5, linkFlowParticleSpeed: 15 },
+    { source: '0', target: '2', showFlow: true, linkFlowParticleSize: 2, linkFlowParticleSpeed: 25 },
+    { source: '0', target: '3', showFlow: true, linkFlowParticleSize: 3, linkFlowParticleSpeed: 10 },
+    { source: '0', target: '4', showFlow: true, linkFlowParticleSize: 3, linkFlowParticleSpeed: 30 },
+    { source: '1', target: '5', showFlow: true, linkFlowParticleSize: 2.5, linkFlowParticleSpeed: 20 },
   ]), [])
 
   // Modifying layout after the calculation
@@ -62,7 +62,10 @@ export const component = (): React.ReactNode => {
         linkFlow={useCallback((l: CustomGraphLink) => showLinkFlow && l.showFlow, [showLinkFlow])}
         onLayoutCalculated={onLayoutCalculated}
         linkFlowAnimDuration={useCallback((l: CustomGraphLink) => l.linkFlowAnimDuration, [])}
+        linkFlowParticleSpeed={useCallback((l: CustomGraphLink) => l.linkFlowParticleSpeed, [])}
         linkFlowParticleSize={useCallback((l: CustomGraphLink) => l.linkFlowParticleSize, [])}
+        linkWidth={0}
+        linkBandWidth={useCallback((l: CustomGraphLink) => 2 * (l.linkFlowParticleSize ?? 1), [])}
       />
       <div className={s.checkboxContainer}>
         <label>
