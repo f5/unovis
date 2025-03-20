@@ -669,7 +669,15 @@ export class Graph<
     const linkElements = this._linksGroup.selectAll<SVGGElement, GraphLink<N, L>>(`.${linkSelectors.gLink}`)
     const linksToAnimate = linkElements.filter(d => !d._state.greyout)
     linksToAnimate.each((l, i, els) => {
-      const linkFlowAnimDuration = getNumber(l, config.linkFlowAnimDuration, l._indexGlobal)
+      let linkFlowAnimDuration = getNumber(l, config.linkFlowAnimDuration, l._indexGlobal)
+      const linkFlowParticleSpeed = getNumber(l, config.linkFlowParticleSpeed, l._indexGlobal)
+
+      // If particle speed is provided, calculate duration based on link length and speed
+      if (linkFlowParticleSpeed) {
+        const linkPathElement = els[i].querySelector<SVGPathElement>(`.${linkSelectors.linkSupport}`)
+        const pathLength = linkPathElement ? (this._linkPathLengthMap.get(linkPathElement.getAttribute('d')) ?? linkPathElement.getTotalLength()) : 0
+        if (pathLength > 0) linkFlowAnimDuration = (pathLength / linkFlowParticleSpeed) * 1000 // Convert to milliseconds
+      }
       l._state.flowAnimTime = (elapsed % linkFlowAnimDuration) / linkFlowAnimDuration
     })
     animateLinkFlow(linksToAnimate, this.config, this._scale, this._linkPathLengthMap)
