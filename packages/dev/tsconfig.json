@@ -10,8 +10,6 @@
     "skipLibCheck": false,
     "paths": {
       "@src/*": ["packages/dev/src/*"],
-      "@unovis/react": ["packages/react/src"],
-      "@unovis/react/*": ["packages/react/src/*"]
     },
     "types": [
       "node",
