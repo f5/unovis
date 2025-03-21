@@ -8,7 +8,7 @@ import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 export const title = 'Node Labels and Sub-labels'
 export const subTitle = 'Trimming'
 
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const data = generateNodeLinkData(15)
   const regions = ['Australian', 'South American', 'Siberian', 'European', 'Asian']
   const colors = ['Vermilion', 'Verdigris', 'Bisque', 'Cattleya']

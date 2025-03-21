@@ -23,7 +23,7 @@ const data = Array.from({ length: layers.y0.length }, (_, i) => ({
   ...(keys.reduce((o, k) => ({ ...o, [k]: layers[k][i] }), {})),
 }))
 
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const x: NumericAccessor<Datum> = d => d.x
   const [y, setY] = useState<NumericAccessor<Datum>[]>()
   const [color, setColor] = useState<string[]>([])
@@ -63,7 +63,7 @@ export const component = (props: ExampleViewerDurationProps): JSX.Element => {
           }
           .line-legend .${VisBulletLegendSelectors.bullet} { width: 16px !important; }
           .line-legend .${VisBulletLegendSelectors.bullet} path { stroke-dasharray: 5 3; }
-          
+
         `}</style>
       <div style={{ display: 'flex', width: 'max-content', padding: '10px 10px 0px 35px' }}>
         <VisBulletLegend className='square-legend' items={legendItems} bulletShape={BulletShape.Square} onLegendItemClick={updateItems}/>

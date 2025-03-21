@@ -6,7 +6,7 @@ import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 export const title = 'Basic Grouped Bar Chart'
 export const subTitle = 'Generated Data'
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const tooltipRef = useRef(null)
   const accessors = [
     (d: XYDataRecord) => d.y,

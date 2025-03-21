@@ -12,7 +12,7 @@ export const subTitle = 'with varied styles and undefined labels'
 
 
 const d = generateNodeLinkData()
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   // Types
   type LinkStyle = { type: string; direction?: GraphLinkArrowStyle; style: GraphLinkStyle; label: string }
   type NodeDatum = { id: string; group: string; subgroup: string }

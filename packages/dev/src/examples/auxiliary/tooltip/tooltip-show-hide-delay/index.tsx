@@ -7,7 +7,7 @@ import { randomNumberGenerator } from '@src/utils/data'
 export const title = 'Tooltip Show & Hide Delay'
 export const subTitle = 'Follow cursor, hoverable'
 
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const data = useMemo(() => Array.from({ length: 15 }, (_, i) => ({
     x: i + 10 * randomNumberGenerator(),
     y: randomNumberGenerator() * 10,

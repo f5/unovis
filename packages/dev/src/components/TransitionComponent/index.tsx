@@ -9,7 +9,7 @@ export type TransitionComponentProps<T> = {
   dataSeries: Record<string, (d: T) => T>;
 }
 
-export function TransitionComponent<T> (props: TransitionComponentProps<T>): JSX.Element {
+export function TransitionComponent<T> (props: TransitionComponentProps<T>): React.ReactNode {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const { data: generateData, dataSeries, component: Component } = props
 

@@ -50,7 +50,7 @@ export default [
     external: regexesOfPackages,
     treeshake: false,
     output: {
-      dir: 'lib',
+      dir: 'dist',
       sourcemap: true,
       format: 'esm',
       preserveModules: true,
@@ -61,7 +61,7 @@ export default [
   {
     input: 'src/maps.ts',
     output: {
-      dir: 'lib',
+      dir: 'dist',
       format: 'esm',
       preserveModules: true,
       preserveModulesRoot: './src',

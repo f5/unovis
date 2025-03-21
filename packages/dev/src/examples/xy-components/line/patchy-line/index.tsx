@@ -27,7 +27,7 @@ const testCases: TestCase[] = [
 
 ]
 
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   type Datum = Record<string, number>
   const combined = Array.from({ length: 10 }, (_, i) => ({
     x: i,

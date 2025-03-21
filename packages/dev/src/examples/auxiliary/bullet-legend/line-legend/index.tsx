@@ -11,7 +11,7 @@ export const subTitle = 'with markers and dashes'
 const data = generateStackedDataRecords(10)
 const legendItems = Array(data[0].ys.length).fill(0).map((_, i) => ({ name: `Y${i}` }))
 
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const svgDefs = `
     <marker id="circle-marker" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5">
       <circle cx="5" cy="5" r="4" stroke-width="1" stroke="var(--vis-color2)" fill="#fff"/>

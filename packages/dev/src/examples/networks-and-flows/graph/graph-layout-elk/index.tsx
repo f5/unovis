@@ -42,7 +42,7 @@ const data = {
     { source: '192.8.3.191/33', target: 'workload-name' },
   ],
 }
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   return (
     <>
       <VisSingleContainer data={data} height={'100vh'}>
