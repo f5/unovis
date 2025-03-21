@@ -29,7 +29,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "lint": "eslint src --ext .ts,.tsx",
-    "build": "vite build; rm -rf dist/.cache; cp ./{LICENSE,README.md,package.json} ./dist",
+    "build": "vite build; rm -rf dist/.cache; cp LICENSE README.md package.json ./dist",
     "publish:dist": "cd ./dist; npm publish",
     "generate": "tsx autogen/index.ts && npm run lint -- --fix",
     "gallery": "vite"

@@ -37,7 +37,7 @@
   "type": "module",
   "sideEffects": false,
   "scripts": {
-    "build": "npm run check && npx svelte-package; rm -rf dist/.cache; cp ./{LICENSE,README.md,package.json} ./dist",
+    "build": "npm run check && npx svelte-package; rm -rf dist/.cache; cp LICENSE README.md package.json ./dist",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "generate": "rollup -c ./autogen/rollup.config.js; node .autogen.cjs; rm .autogen.cjs",
     "gallery": "rm -rf dist-gallery; rollup -c gallery.rollup.config.js --watch",
