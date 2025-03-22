@@ -1,9 +1,9 @@
-import { LengthUnit } from 'types/misc'
+import { LengthUnit, WithOptional } from 'types/misc'
 import { UnovisText, UnovisTextOptions } from 'types/text'
 
 
 export type AnnotationItem = Omit<UnovisTextOptions, 'x'|'y'|'width'> & {
-  content: string | UnovisText | UnovisText[];
+  content: string | WithOptional<UnovisText, 'fontSize'> | WithOptional<UnovisText, 'fontSize'>[];
   subject?: AnnotationSubject;
   x?: LengthUnit;
   y?: LengthUnit;
