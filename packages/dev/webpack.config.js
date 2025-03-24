@@ -8,7 +8,7 @@ const path = require('path')
 const isDevelopment = process.env.NODE_ENV !== 'production'
 module.exports = {
   entry: './src/index.tsx',
-  devtool: 'source-map',
+  devtool: isDevelopment ? 'eval-source-map' : 'source-map',
   mode: isDevelopment ? 'development' : 'production',
   output: {
     path: path.resolve(__dirname, 'dist'),
