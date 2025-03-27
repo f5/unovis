@@ -12,6 +12,15 @@ import { getTextAnchorFromTextAlign } from 'types/svg'
 // Styles
 import { getFontWidthToHeightRatio, UNOVIS_TEXT_DEFAULT, UNOVIS_TEXT_SEPARATOR_DEFAULT, UNOVIS_TEXT_HYPHEN_CHARACTER_DEFAULT } from 'styles/index'
 
+export const textAlignToAnchor = (textAlign: TextAlign): string | null => {
+  switch (textAlign) {
+    case TextAlign.Left: return 'start'
+    case TextAlign.Right: return 'end'
+    case TextAlign.Center: return 'middle'
+    default: return null
+  }
+}
+
 /**
  * Converts a kebab-case string to camelCase.
  *
@@ -576,3 +585,4 @@ export function renderTextIntoFrame (
   group.textContent = ''
   group.appendChild(parsedSvgCode)
 }
+
