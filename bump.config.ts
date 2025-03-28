@@ -7,4 +7,5 @@ export default defineConfig({
   printCommits: false,
   ignoreScripts: true,
   recursive: true,
+  execute: 'sh update-peerDependencies.sh',
 })
