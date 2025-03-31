@@ -203,8 +203,10 @@ export class Graph<
   }
 
   get bleed (): Spacing {
-    const extraPadding = 50 // Extra padding to take into account labels and selection outlines
-    return { top: extraPadding, bottom: extraPadding, left: extraPadding, right: extraPadding }
+    const padding = this.config.fitViewPadding // Extra padding to take into account labels and selection outlines
+    return isNumber(padding)
+      ? { top: padding, bottom: padding, left: padding, right: padding }
+      : padding
   }
 
   _render (customDuration?: number): void {
@@ -500,8 +502,8 @@ export class Graph<
       return zoomIdentity
     }
 
-    const xScale = w / (xExtent[1] - xExtent[0] + left + right)
-    const yScale = h / (yExtent[1] - yExtent[0] + top + bottom)
+    const xScale = w / (xExtent[1] - xExtent[0] + (left || 0) + (right || 0))
+    const yScale = h / (yExtent[1] - yExtent[0] + (top || 0) + (bottom || 0))
 
     const clampedScale = clamp(min([xScale, yScale]), zoomScaleExtent[0], zoomScaleExtent[1])
 
