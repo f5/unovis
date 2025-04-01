@@ -1,5 +1,5 @@
 // !!! This code was automatically generated. You should not change it !!!
-import React, { ForwardedRef, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
+import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
 import { Sankey, SankeyConfigInterface, SankeyInputNode, SankeyInputLink } from '@unovis/ts'
 
 // Utils
@@ -20,7 +20,7 @@ export type VisSankeyProps<N extends SankeyInputNode, L extends SankeyInputLink>
 export const VisSankeySelectors = Sankey.selectors
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-function VisSankeyFC<N extends SankeyInputNode, L extends SankeyInputLink> (props: VisSankeyProps<N, L>, fRef: ForwardedRef<VisSankeyRef<N, L>>): JSX.Element {
+function VisSankeyFC<N extends SankeyInputNode, L extends SankeyInputLink> (props: VisSankeyProps<N, L>, fRef: ForwardedRef<VisSankeyRef<N, L>>): ReactElement {
   const ref = useRef<VisComponentElement<Sankey<N, L>>>(null)
   const componentRef = useRef<Sankey<N, L> | undefined>(undefined)
 

@@ -23,7 +23,7 @@ export function getComponentCode (
     c.destroy()
   }`
   return `// !!! This code was automatically generated. You should not change it !!!
-import React, { ForwardedRef, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
+import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
 ${importStatements.map(s => `import { ${s.elements.join(', ')} } from '${s.source}'`).join('\n')}
 
 // Utils
@@ -40,7 +40,7 @@ export type Vis${componentName}Props${genericsDefStr} = ${componentName}ConfigIn
 export const Vis${componentName}Selectors = ${componentName}.selectors
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-function Vis${componentName}FC${genericsDefStr} (props: Vis${componentName}Props${genericsStr}, fRef: ForwardedRef<Vis${componentName}Ref${genericsStr}>): JSX.Element {
+function Vis${componentName}FC${genericsDefStr} (props: Vis${componentName}Props${genericsStr}, fRef: ForwardedRef<Vis${componentName}Ref${genericsStr}>): ReactElement {
   const ref = useRef<${refType}>(null)
   const ${isStandAlone ? `[component, setComponent] = useState<${componentType}>()` : `componentRef = useRef<${componentType} | undefined>(undefined)`}
 
@@ -54,7 +54,7 @@ function Vis${componentName}FC${genericsDefStr} (props: Vis${componentName}Props
     'componentRef.current = c',
     'element.__component__ = c',
   ]).join('\n  ')}
-  
+
     return () => ${onDestroy}
   }, [])
 
