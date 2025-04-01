@@ -3,10 +3,10 @@ import React, { ForwardedRef, Ref, useImperativeHandle, useEffect, useRef, useSt
 import { FreeBrush, FreeBrushConfigInterface } from '@unovis/ts'
 
 // Utils
-import { arePropsEqual } from 'src/utils/react'
+import { arePropsEqual } from '@/utils/react'
 
 // Types
-import { VisComponentElement } from 'src/types/dom'
+import { VisComponentElement } from '@/types/dom'
 
 export type VisFreeBrushRef<Datum> = {
   component?: FreeBrush<Datum>;
@@ -20,7 +20,7 @@ export type VisFreeBrushProps<Datum> = FreeBrushConfigInterface<Datum> & {
 export const VisFreeBrushSelectors = FreeBrush.selectors
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-function VisFreeBrushFC<Datum> (props: VisFreeBrushProps<Datum>, fRef: ForwardedRef<VisFreeBrushRef<Datum>>): JSX.Element {
+function VisFreeBrushFC<Datum> (props: VisFreeBrushProps<Datum>, fRef: ForwardedRef<VisFreeBrushRef<Datum>>): React.ReactNode {
   const ref = useRef<VisComponentElement<FreeBrush<Datum>>>(null)
   const componentRef = useRef<FreeBrush<Datum> | undefined>(undefined)
 

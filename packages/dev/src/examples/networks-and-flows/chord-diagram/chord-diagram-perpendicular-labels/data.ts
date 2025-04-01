@@ -1,4 +1,4 @@
-import { randomNumberGenerator } from '@src/utils/data'
+import { randomNumberGenerator } from '@/utils/data'
 export type NodeDatum = { group: string; color: string; id: string }
 export type LinkDatum = { source: string; target: string }
 

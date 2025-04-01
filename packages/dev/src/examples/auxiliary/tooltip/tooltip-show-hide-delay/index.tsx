@@ -1,8 +1,8 @@
-import React, { useMemo } from 'react'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
+import { randomNumberGenerator } from '@/utils/data'
+import { VisScatter, VisTooltip, VisXYContainer } from '@unovis/react'
 import { Scatter } from '@unovis/ts'
-import { VisXYContainer, VisScatter, VisTooltip } from '@unovis/react'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
-import { randomNumberGenerator } from '@src/utils/data'
+import React, { useMemo } from 'react'
 
 export const title = 'Tooltip Show & Hide Delay'
 export const subTitle = 'Follow cursor, hoverable'

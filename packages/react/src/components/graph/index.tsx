@@ -1,12 +1,13 @@
 // !!! This code was automatically generated. You should not change it !!!
 import React, { ForwardedRef, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
-import { Graph, GraphConfigInterface, GraphInputNode, GraphInputLink } from '@unovis/ts'
+import { Graph, GraphConfigInterface } from '@unovis/ts'
+import { GraphInputNode, GraphInputLink } from '@/types/graph'
 
 // Utils
-import { arePropsEqual } from 'src/utils/react'
+import { arePropsEqual } from '@/utils/react'
 
 // Types
-import { VisComponentElement } from 'src/types/dom'
+import { VisComponentElement } from '@/types/dom'
 
 export type VisGraphRef<N extends GraphInputNode, L extends GraphInputLink> = {
   component?: Graph<N, L>;
@@ -20,7 +21,7 @@ export type VisGraphProps<N extends GraphInputNode, L extends GraphInputLink> = 
 export const VisGraphSelectors = Graph.selectors
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-function VisGraphFC<N extends GraphInputNode, L extends GraphInputLink> (props: VisGraphProps<N, L>, fRef: ForwardedRef<VisGraphRef<N, L>>): JSX.Element {
+function VisGraphFC<N extends GraphInputNode, L extends GraphInputLink> (props: VisGraphProps<N, L>, fRef: ForwardedRef<VisGraphRef<N, L>>): React.ReactNode {
   const ref = useRef<VisComponentElement<Graph<N, L>>>(null)
   const componentRef = useRef<Graph<N, L> | undefined>(undefined)
 

@@ -1,12 +1,11 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
+import { generateXYDataRecords, XYDataRecord } from '@/utils/data'
+import { VisArea, VisAxis, VisBrush, VisXYContainer } from '@unovis/react'
 import { D3BrushEvent } from 'd3-brush'
-import { VisXYContainer, VisArea, VisAxis, VisBrush } from '@unovis/react'
-
-import { XYDataRecord, generateXYDataRecords } from '@src/utils/data'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
-
+import React, { useEffect, useMemo, useState } from 'react'
 // Style
 import s from './style.module.css'
+
 
 export const title = 'Custom Style Brush'
 export const subTitle = 'Programmatically set selection range'

@@ -1,10 +1,10 @@
-import { XYComponentConfigInterface, XYComponentDefaultConfig } from 'core/xy-component/config'
-import { Tooltip } from 'components/tooltip'
+import { XYComponentConfigInterface, XYComponentDefaultConfig } from '@/core/xy-component/config'
+import { Tooltip } from '@/components/tooltip'
 
 // Types
-import { NumericAccessor, ColorAccessor } from 'types/accessor'
-import { ContinuousScale } from 'types/scale'
-import { WithOptional } from 'types/misc'
+import { NumericAccessor, ColorAccessor } from '@/types/accessor'
+import { ContinuousScale } from '@/types/scale'
+import { WithOptional } from '@/types/misc'
 import { CrosshairCircle } from './types'
 
 // We extend partial XY config interface because x and y properties are optional for Crosshair
@@ -61,4 +61,3 @@ export const CrosshairDefaultConfig: CrosshairConfigInterface<unknown> = {
   strokeColor: undefined,
   strokeWidth: undefined,
 }
-

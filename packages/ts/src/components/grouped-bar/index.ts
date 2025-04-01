@@ -2,20 +2,20 @@ import { scaleBand } from 'd3-scale'
 import { min, max, range } from 'd3-array'
 
 // Core
-import { XYComponentCore } from 'core/xy-component'
+import { XYComponentCore } from '@/core/xy-component'
 
 // Utils
-import { clamp, getExtent, getMax, getMin, getNumber, getString, isArray, isEmpty, isNumber } from 'utils/data'
-import { roundedRectPath } from 'utils/path'
-import { smartTransition } from 'utils/d3'
-import { getColor } from 'utils/color'
+import { clamp, getExtent, getMax, getMin, getNumber, getString, isArray, isEmpty, isNumber } from '@/utils/data'
+import { roundedRectPath } from '@/utils/path'
+import { smartTransition } from '@/utils/d3'
+import { getColor } from '@/utils/color'
 
 // Types
-import { NumericAccessor } from 'types/accessor'
-import { Spacing } from 'types/spacing'
-import { Direction } from 'types/direction'
-import { Orientation } from 'types/position'
-import { ContinuousScale } from 'types/scale'
+import { NumericAccessor } from '@/types/accessor'
+import { Spacing } from '@/types/spacing'
+import { Direction } from '@/types/direction'
+import { Orientation } from '@/types/position'
+import { ContinuousScale } from '@/types/scale'
 
 // Config
 import { GroupedBarDefaultConfig, GroupedBarConfigInterface } from './config'

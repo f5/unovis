@@ -3,10 +3,10 @@ import React, { ForwardedRef, Ref, useImperativeHandle, useEffect, useRef, useSt
 import { Annotations, AnnotationsConfigInterface } from '@unovis/ts'
 
 // Utils
-import { arePropsEqual } from 'src/utils/react'
+import { arePropsEqual } from '@/utils/react'
 
 // Types
-import { VisComponentElement } from 'src/types/dom'
+import { VisComponentElement } from '@/types/dom'
 
 export type VisAnnotationsRef = {
   component?: Annotations;
@@ -19,7 +19,7 @@ export type VisAnnotationsProps = AnnotationsConfigInterface & {
 export const VisAnnotationsSelectors = Annotations.selectors
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-function VisAnnotationsFC (props: VisAnnotationsProps, fRef: ForwardedRef<VisAnnotationsRef>): JSX.Element {
+function VisAnnotationsFC (props: VisAnnotationsProps, fRef: ForwardedRef<VisAnnotationsRef>): React.ReactNode {
   const ref = useRef<VisComponentElement<Annotations>>(null)
   const componentRef = useRef<Annotations | undefined>(undefined)
 

@@ -1,10 +1,10 @@
-import React from 'react'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
+import { randomNumberGenerator } from '@/utils/data'
+import { VisBulletLegend, VisDonut, VisSingleContainer, VisStackedBar, VisXYContainer } from '@unovis/react'
 import { sum } from 'd3-array'
-import { VisBulletLegend, VisSingleContainer, VisDonut, VisXYContainer, VisStackedBar } from '@unovis/react'
-import { randomNumberGenerator } from '@src/utils/data'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
-
+import React from 'react'
 import s from './styles.module.css'
+
 
 export const title = 'Basic Bullet Legend'
 export const subTitle = 'with Stacked Bar and Donut'

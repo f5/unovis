@@ -1,8 +1,8 @@
-import { XYComponentConfigInterface, XYComponentDefaultConfig } from 'core/xy-component/config'
+import { XYComponentConfigInterface, XYComponentDefaultConfig } from '@/core/xy-component/config'
 
 // Types
-import { WithOptional } from 'types/misc'
-import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
+import { WithOptional } from '@/types/misc'
+import { ColorAccessor, NumericAccessor, StringAccessor } from '@/types/accessor'
 
 export interface TimelineConfigInterface<Datum> extends WithOptional<XYComponentConfigInterface<Datum>, 'y'> {
   /** Timeline item color accessor function. Default: `d => d.color` */

@@ -3,10 +3,10 @@ import React, { ForwardedRef, Ref, useImperativeHandle, useEffect, useRef, useSt
 import { XYLabels, XYLabelsConfigInterface } from '@unovis/ts'
 
 // Utils
-import { arePropsEqual } from 'src/utils/react'
+import { arePropsEqual } from '@/utils/react'
 
 // Types
-import { VisComponentElement } from 'src/types/dom'
+import { VisComponentElement } from '@/types/dom'
 
 export type VisXYLabelsRef<Datum> = {
   component?: XYLabels<Datum>;
@@ -20,7 +20,7 @@ export type VisXYLabelsProps<Datum> = XYLabelsConfigInterface<Datum> & {
 export const VisXYLabelsSelectors = XYLabels.selectors
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-function VisXYLabelsFC<Datum> (props: VisXYLabelsProps<Datum>, fRef: ForwardedRef<VisXYLabelsRef<Datum>>): JSX.Element {
+function VisXYLabelsFC<Datum> (props: VisXYLabelsProps<Datum>, fRef: ForwardedRef<VisXYLabelsRef<Datum>>): React.ReactNode {
   const ref = useRef<VisComponentElement<XYLabels<Datum>>>(null)
   const componentRef = useRef<XYLabels<Datum> | undefined>(undefined)
 

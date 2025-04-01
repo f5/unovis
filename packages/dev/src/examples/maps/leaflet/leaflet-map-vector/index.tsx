@@ -1,14 +1,13 @@
-import React, { useRef, useState } from 'react'
-import { VectorSourceSpecification } from 'maplibre-gl'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
 import { VisLeafletMap, VisLeafletMapRef } from '@unovis/react'
 import { MapLibreArcticDark, MapLibreArcticLight } from '@unovis/ts'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
-
+import { VectorSourceSpecification } from 'maplibre-gl'
+import React, { useRef, useState } from 'react'
 // Data
 import cities from './cities.json'
-
 // Style
 import s from './style.module.css'
+
 
 export const title = 'Vector Map'
 export const subTitle = 'Vector rendering with MapLibre'

@@ -1,8 +1,8 @@
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
+import { generateXYDataRecords, XYDataRecord } from '@/utils/data'
+import { VisAxis, VisScatter, VisXYContainer } from '@unovis/react'
 import React from 'react'
-import { VisXYContainer, VisScatter, VisAxis } from '@unovis/react'
 
-import { generateXYDataRecords, XYDataRecord } from '@src/utils/data'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 export const title = 'Points with stroke'
 export const subTitle = 'Random stroke width and color'

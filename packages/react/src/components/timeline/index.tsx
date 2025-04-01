@@ -3,10 +3,10 @@ import React, { ForwardedRef, Ref, useImperativeHandle, useEffect, useRef, useSt
 import { Timeline, TimelineConfigInterface } from '@unovis/ts'
 
 // Utils
-import { arePropsEqual } from 'src/utils/react'
+import { arePropsEqual } from '@/utils/react'
 
 // Types
-import { VisComponentElement } from 'src/types/dom'
+import { VisComponentElement } from '@/types/dom'
 
 export type VisTimelineRef<Datum> = {
   component?: Timeline<Datum>;
@@ -20,7 +20,7 @@ export type VisTimelineProps<Datum> = TimelineConfigInterface<Datum> & {
 export const VisTimelineSelectors = Timeline.selectors
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-function VisTimelineFC<Datum> (props: VisTimelineProps<Datum>, fRef: ForwardedRef<VisTimelineRef<Datum>>): JSX.Element {
+function VisTimelineFC<Datum> (props: VisTimelineProps<Datum>, fRef: ForwardedRef<VisTimelineRef<Datum>>): React.ReactNode {
   const ref = useRef<VisComponentElement<Timeline<Datum>>>(null)
   const componentRef = useRef<Timeline<Datum> | undefined>(undefined)
 

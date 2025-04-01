@@ -2,20 +2,20 @@ import { Selection, select } from 'd3-selection'
 import { max, min } from 'd3-array'
 
 // Core
-import { XYComponentCore } from 'core/xy-component'
+import { XYComponentCore } from '@/core/xy-component'
 
 // Utils
-import { isNumber, getExtent, getNumber, getString, isArray, flatten, getValue } from 'utils/data'
-import { getColor } from 'utils/color'
-import { smartTransition } from 'utils/d3'
-import { getCSSVariableValueInPixels } from 'utils/misc'
+import { isNumber, getExtent, getNumber, getString, isArray, flatten, getValue } from '@/utils/data'
+import { getColor } from '@/utils/color'
+import { smartTransition } from '@/utils/d3'
+import { getCSSVariableValueInPixels } from '@/utils/misc'
 
 // Types
-import { Spacing } from 'types/spacing'
-import { SymbolType } from 'types/symbol'
-import { NumericAccessor } from 'types/accessor'
-import { Position } from 'types/position'
-import { ContinuousScale } from 'types/scale'
+import { Spacing } from '@/types/spacing'
+import { SymbolType } from '@/types/symbol'
+import { NumericAccessor } from '@/types/accessor'
+import { Position } from '@/types/position'
+import { ContinuousScale } from '@/types/scale'
 
 // Local Types
 import { ScatterPointGroupNode, ScatterPoint } from './types'

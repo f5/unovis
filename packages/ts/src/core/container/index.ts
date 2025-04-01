@@ -1,11 +1,11 @@
 import { select, Selection } from 'd3-selection'
 
 // Types
-import { Sizing } from 'types/component'
+import { Sizing } from '@/types/component'
 
 // Utils
-import { isEqual, clamp, merge } from 'utils/data'
-import { ResizeObserver } from 'utils/resize-observer'
+import { isEqual, clamp, merge } from '@/utils/data'
+import { ResizeObserver } from '@/utils/resize-observer'
 
 // Config
 import { ContainerDefaultConfig, ContainerConfigInterface } from './config'

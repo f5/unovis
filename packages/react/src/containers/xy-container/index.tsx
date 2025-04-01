@@ -1,12 +1,11 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import React, { ReactNode, useEffect, useRef, useState, PropsWithChildren } from 'react'
-import { XYContainer, XYContainerConfigInterface, XYComponentCore, Tooltip, Crosshair, Axis, AxisType, Annotations } from '@unovis/ts'
-
-// Utils
-import { arePropsEqual } from 'src/utils/react'
-
 // Types
-import { VisComponentElement } from 'src/types/dom'
+import { VisComponentElement } from '@/types/dom'
+// Utils
+import { arePropsEqual } from '@/utils/react'
+import { Annotations, Axis, AxisType, Crosshair, Tooltip, XYComponentCore, XYContainer, XYContainerConfigInterface } from '@unovis/ts'
+import React, { PropsWithChildren, useEffect, useRef } from 'react'
+
 
 export type VisXYContainerProps<Datum> = XYContainerConfigInterface<Datum> & {
   data?: Datum[];

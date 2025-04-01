@@ -3,10 +3,10 @@ import React, { ForwardedRef, Ref, useImperativeHandle, useEffect, useRef, useSt
 import { Sankey, SankeyConfigInterface, SankeyInputNode, SankeyInputLink } from '@unovis/ts'
 
 // Utils
-import { arePropsEqual } from 'src/utils/react'
+import { arePropsEqual } from '@/utils/react'
 
 // Types
-import { VisComponentElement } from 'src/types/dom'
+import { VisComponentElement } from '@/types/dom'
 
 export type VisSankeyRef<N extends SankeyInputNode, L extends SankeyInputLink> = {
   component?: Sankey<N, L>;
@@ -20,7 +20,7 @@ export type VisSankeyProps<N extends SankeyInputNode, L extends SankeyInputLink>
 export const VisSankeySelectors = Sankey.selectors
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-function VisSankeyFC<N extends SankeyInputNode, L extends SankeyInputLink> (props: VisSankeyProps<N, L>, fRef: ForwardedRef<VisSankeyRef<N, L>>): JSX.Element {
+function VisSankeyFC<N extends SankeyInputNode, L extends SankeyInputLink> (props: VisSankeyProps<N, L>, fRef: ForwardedRef<VisSankeyRef<N, L>>): React.ReactNode {
   const ref = useRef<VisComponentElement<Sankey<N, L>>>(null)
   const componentRef = useRef<Sankey<N, L> | undefined>(undefined)
 
