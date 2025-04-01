@@ -21,6 +21,7 @@
     "outDir": "dist",
     "baseUrl": "./",
     "paths": {
+      "@/*": ["src/*"],
       "@unovis/react": ["src/"],
       "@unovis/react/*": ["src/*"]
     },
