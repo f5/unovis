@@ -20,7 +20,7 @@ export type VisGraphProps<N extends GraphInputNode, L extends GraphInputLink> = 
 export const VisGraphSelectors = Graph.selectors
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-function VisGraphFC<N extends GraphInputNode, L extends GraphInputLink> (props: VisGraphProps<N, L>, fRef: ForwardedRef<VisGraphRef<N, L>>): JSX.Element {
+function VisGraphFC<N extends GraphInputNode, L extends GraphInputLink> (props: VisGraphProps<N, L>, fRef: ForwardedRef<VisGraphRef<N, L>>): React.ReactNode {
   const ref = useRef<VisComponentElement<Graph<N, L>>>(null)
   const componentRef = useRef<Graph<N, L> | undefined>(undefined)
 
