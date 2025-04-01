@@ -1,5 +1,5 @@
 // !!! This code was automatically generated. You should not change it !!!
-import React, { ForwardedRef, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
+import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
 import { Line, LineConfigInterface } from '@unovis/ts'
 
 // Utils
@@ -20,7 +20,7 @@ export type VisLineProps<Datum> = LineConfigInterface<Datum> & {
 export const VisLineSelectors = Line.selectors
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-function VisLineFC<Datum> (props: VisLineProps<Datum>, fRef: ForwardedRef<VisLineRef<Datum>>): JSX.Element {
+function VisLineFC<Datum> (props: VisLineProps<Datum>, fRef: ForwardedRef<VisLineRef<Datum>>): ReactElement {
   const ref = useRef<VisComponentElement<Line<Datum>>>(null)
   const componentRef = useRef<Line<Datum> | undefined>(undefined)
 
