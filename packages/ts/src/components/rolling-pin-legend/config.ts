@@ -20,6 +20,8 @@ export interface RollingPinLegendConfigInterface {
 
 export const RollingPinLegendDefaultConfig: RollingPinLegendConfigInterface = {
   rects: [],
+  leftLabelText: undefined,
+  rightLabelText: undefined,
   labelClassName: '',
   labelFontSize: null,
   renderIntoProvidedDomNode: false,
