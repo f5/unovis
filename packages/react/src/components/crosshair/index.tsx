@@ -20,7 +20,7 @@ export type VisCrosshairProps<Datum> = CrosshairConfigInterface<Datum> & {
 export const VisCrosshairSelectors = Crosshair.selectors
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-function VisCrosshairFC<Datum> (props: VisCrosshairProps<Datum>, fRef: ForwardedRef<VisCrosshairRef<Datum>>): JSX.Element {
+function VisCrosshairFC<Datum> (props: VisCrosshairProps<Datum>, fRef: ForwardedRef<VisCrosshairRef<Datum>>): React.ReactNode {
   const ref = useRef<VisComponentElement<Crosshair<Datum>>>(null)
   const componentRef = useRef<Crosshair<Datum> | undefined>(undefined)
 

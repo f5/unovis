@@ -19,7 +19,7 @@ export type VisLeafletMapProps<Datum extends GenericDataRecord> = LeafletMapConf
 export const VisLeafletMapSelectors = LeafletMap.selectors
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-function VisLeafletMapFC<Datum extends GenericDataRecord> (props: VisLeafletMapProps<Datum>, fRef: ForwardedRef<VisLeafletMapRef<Datum>>): JSX.Element {
+function VisLeafletMapFC<Datum extends GenericDataRecord> (props: VisLeafletMapProps<Datum>, fRef: ForwardedRef<VisLeafletMapRef<Datum>>): React.ReactNode {
   const ref = useRef<HTMLDivElement>(null)
   const [component, setComponent] = useState<LeafletMap<Datum>>()
 

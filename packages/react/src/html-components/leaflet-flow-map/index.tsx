@@ -19,7 +19,7 @@ export type VisLeafletFlowMapProps<PointDatum extends GenericDataRecord, FlowDat
 export const VisLeafletFlowMapSelectors = LeafletFlowMap.selectors
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-function VisLeafletFlowMapFC<PointDatum extends GenericDataRecord, FlowDatum extends GenericDataRecord> (props: VisLeafletFlowMapProps<PointDatum, FlowDatum>, fRef: ForwardedRef<VisLeafletFlowMapRef<PointDatum, FlowDatum>>): JSX.Element {
+function VisLeafletFlowMapFC<PointDatum extends GenericDataRecord, FlowDatum extends GenericDataRecord> (props: VisLeafletFlowMapProps<PointDatum, FlowDatum>, fRef: ForwardedRef<VisLeafletFlowMapRef<PointDatum, FlowDatum>>): React.ReactNode {
   const ref = useRef<HTMLDivElement>(null)
   const [component, setComponent] = useState<LeafletFlowMap<PointDatum, FlowDatum>>()
 

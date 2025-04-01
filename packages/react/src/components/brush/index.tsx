@@ -20,7 +20,7 @@ export type VisBrushProps<Datum> = BrushConfigInterface<Datum> & {
 export const VisBrushSelectors = Brush.selectors
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-function VisBrushFC<Datum> (props: VisBrushProps<Datum>, fRef: ForwardedRef<VisBrushRef<Datum>>): JSX.Element {
+function VisBrushFC<Datum> (props: VisBrushProps<Datum>, fRef: ForwardedRef<VisBrushRef<Datum>>): React.ReactNode {
   const ref = useRef<VisComponentElement<Brush<Datum>>>(null)
   const componentRef = useRef<Brush<Datum> | undefined>(undefined)
 
