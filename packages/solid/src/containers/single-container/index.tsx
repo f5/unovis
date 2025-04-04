@@ -11,8 +11,9 @@ import { createStore, produce } from 'solid-js/store'
 import type { VisContainerContextProps } from '../../utils/context'
 import { VisContainerContext } from '../../utils/context'
 import { createTrigger } from '../../utils/trigger'
+import { combineStyle } from '../../utils/combine-style'
 
-type VisSingleContainerProps<Datum> = ParentProps<
+export type VisSingleContainerProps<Datum> = ParentProps<
   SingleContainerConfigInterface<Datum> & {
     data?: Datum
     class?: string
@@ -23,9 +24,10 @@ type VisSingleContainerProps<Datum> = ParentProps<
 export function VisSingleContainer<Datum>(
   props: VisSingleContainerProps<Datum>
 ) {
-  const [divProps, other, rest] = splitProps(
+  const [div, style, data, rest] = splitProps(
     props,
-    ['children', 'class', 'style'],
+    ['children', 'class'],
+    ['style'],
     ['data']
   )
   const [ref, setRef] = createSignal<HTMLDivElement>()
@@ -45,14 +47,14 @@ export function VisSingleContainer<Datum>(
 
     if (c) return
     if (r && config.component)
-      setChart(new SingleContainer(r, config, other.data))
+      setChart(new SingleContainer(r, config, data.data))
   }
 
   onCleanup(() => chart()?.destroy())
 
   createEffect(
     on(
-      () => other.data,
+      () => data.data,
       (data) => {
         if (data) chart()?.setData(data)
       }
@@ -63,7 +65,7 @@ export function VisSingleContainer<Datum>(
     init()
     // track the changes
     track()
-    chart()?.updateContainer({...config, ...rest})
+    chart()?.updateContainer({ ...config, ...rest })
   })
 
   const update: VisContainerContextProps['update'] = (key, value) => {
@@ -103,14 +105,17 @@ export function VisSingleContainer<Datum>(
   return (
     <VisContainerContext.Provider value={{ update, destroy, dirty }}>
       <div
-        data-vis-singe-container
+        data-vis-single-container
         ref={setRef}
-        style={{
-          display: 'block',
-          position: 'relative',
-          width: '100%',
-        }}
-        {...divProps}
+        style={combineStyle(
+          {
+            display: 'block',
+            position: 'relative',
+            width: '100%',
+          },
+          style.style
+        )}
+        {...div}
       />
     </VisContainerContext.Provider>
   )
