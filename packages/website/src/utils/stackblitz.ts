@@ -180,11 +180,36 @@ function getStarterFiles (framework: Framework, e: Example): ProjectFiles {
       }
     case Framework.Solid:
       return {
-        'public/index.html': '<div id="app"></div>',
-        'src/index.js': trimMultiline(`import App from './app'
-          import { render } from 'solid-js/web'
+        'index.html': trimMultiline(`<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <link rel="shortcut icon" type="image/ico" href="/src/assets/favicon.ico" />
+    <title>Solid App</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
 
-          render(() => <App />, document.getElementById('app') as HTMLElement)`),
+    <script src="/src/index.tsx" type="module"></script>
+  </body>
+</html>`),
+        'src/index.tsx': trimMultiline(`/* @refresh reload */
+import { render } from 'solid-js/web';
+
+import App from './App';
+
+const root = document.getElementById('root');
+
+if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
+  throw new Error(
+    'Root element not found. Did you forget to add it to your index.html? Or maybe the id attribute got misspelled?',
+  );
+}
+
+render(() => <App />, root!);`),
         'src/App.tsx': e.codeSolid,
         'src/data.ts': e.data,
         'package.json': trimMultiline(`{
@@ -201,22 +226,40 @@ function getStarterFiles (framework: Framework, e: Example): ProjectFiles {
           "dependencies": {
             "@unovis/ts": "${ver}",
             "@unovis/solid": "${ver}",
-            "solid-js": "^1.8.11"
+            "solid-js": "^1.9.5"
           },
           "devDependencies": {
-            "vite-plugin-solid": "^2.8.2",
-            "typescript": "^5.3.3",
-            "vite": "^5.0.11"
+            "vite-plugin-solid": "^2.11.6",
+            "typescript": "^5.7.2",
+            "vite": "^6.0.0"
           }}`),
-        'vite.config.ts': trimMultiline(`
-          import { defineConfig } from 'vite';
-          import solid from 'vite-plugin-solid'
+        'vite.config.ts': trimMultiline(`import { defineConfig } from 'vite';
+import solidPlugin from 'vite-plugin-solid';
 
-          export default defineConfig({
-            plugins: [solid()],
-          });
-        `),
-        'vite.env.d.ts': '/// <reference types="vite/client" />',
+export default defineConfig({
+  plugins: [solidPlugin()],
+  server: {
+    port: 3000,
+  },
+  build: {
+    target: 'esnext',
+  },
+});`),
+        'tsconfig.json': `{
+  "compilerOptions": {
+    "strict": true,
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "jsx": "preserve",
+    "jsxImportSource": "solid-js",
+    "types": ["vite/client"],
+    "noEmit": true,
+    "isolatedModules": true
+  }
+}`,
         ...(e.constants ? { 'src/constants.ts': e.constants } : {}),
         ...(e.styles ? { 'src/styles.css': e.styles } : {}),
       }
