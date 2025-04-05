@@ -33,6 +33,7 @@ import {
   GraphNode,
   GraphLink,
   GraphNodeSelectionHighlightMode,
+  GraphFitViewAlignment,
 } from './types'
 
 export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphInputLink> extends ComponentConfigInterface {
@@ -53,6 +54,8 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   zoomThrottledUpdateNodeThreshold?: number;
   /** Padding for the graph when fitting to container. Default: `50` */
   fitViewPadding?: Spacing | number;
+  /** Default alignment when fitting the graph view. Default: `GraphFitViewAlignment.Center` */
+  fitViewAlign?: GraphFitViewAlignment;
 
   // Layout general settings
   /** Type of the graph layout. Default: `GraphLayoutType.Force` */
@@ -313,6 +316,8 @@ export const GraphDefaultConfig: GraphConfigInterface<GraphInputNode, GraphInput
   layoutAutofitTolerance: 8.0,
   layoutNonConnectedAside: false,
   fitViewPadding: 50,
+  fitViewAlign: GraphFitViewAlignment.Center,
+
   layoutGroupOrder: [],
   layoutParallelSubGroupsPerRow: 1,
   layoutParallelNodesPerColumn: 6,
