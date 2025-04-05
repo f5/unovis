@@ -19,7 +19,15 @@ import { isNumber, clamp, shallowDiff, isFunction, getBoolean, isPlainObject, is
 import { smartTransition } from 'utils/d3'
 
 // Local Types
-import { GraphNode, GraphLink, GraphLayoutType, GraphLinkArrowStyle, GraphPanel, GraphNodeSelectionHighlightMode } from './types'
+import {
+  GraphNode,
+  GraphLink,
+  GraphLayoutType,
+  GraphLinkArrowStyle,
+  GraphPanel,
+  GraphNodeSelectionHighlightMode,
+  GraphFitViewAlignment,
+} from './types'
 
 // Config
 import { GraphDefaultConfig, GraphConfigInterface } from './config'
@@ -471,16 +479,16 @@ export class Graph<
     }
   }
 
-  private _fit (duration = 0, nodeIds?: (string | number)[]): void {
+  private _fit (duration = 0, nodeIds?: (string | number)[], alignment = this.config.fitViewAlign): void {
     const { datamodel: { nodes } } = this
     const fitViewNodes = nodeIds?.length ? nodes.filter(n => nodeIds.includes(n.id)) : nodes
-    const transform = this._getTransform(fitViewNodes)
+    const transform = this._getTransform(fitViewNodes, alignment)
     smartTransition(this.g, duration)
       .call(this._zoomBehavior.transform, transform)
     this._onZoom(transform)
   }
 
-  private _getTransform (nodes: GraphNode<N, L>[]): ZoomTransform {
+  private _getTransform (nodes: GraphNode<N, L>[], alignment: GraphFitViewAlignment): ZoomTransform {
     const { nodeSize, zoomScaleExtent } = this.config
     const { left, top, right, bottom } = this.bleed
 
@@ -507,17 +515,39 @@ export class Graph<
 
     const clampedScale = clamp(min([xScale, yScale]), zoomScaleExtent[0], zoomScaleExtent[1])
 
-    const xCenter = (xExtent[1] + xExtent[0]) / 2
-    const yCenter = (yExtent[1] + yExtent[0]) / 2
-    const translateX = this._width / 2 - xCenter * clampedScale
-    const translateY = this._height / 2 - yCenter * clampedScale
+    // Calculate translation based on alignment
+    let translateX: number
+    let translateY: number
+
+    switch (alignment) {
+      case GraphFitViewAlignment.Left:
+        translateX = left - xExtent[0] * clampedScale
+        translateY = this._height / 2 - (yExtent[0] + (yExtent[1] - yExtent[0]) / 2) * clampedScale
+        break
+      case GraphFitViewAlignment.Right:
+        translateX = this._width - (xExtent[1] - xExtent[0]) * clampedScale - right
+        translateY = this._height / 2 - (yExtent[0] + (yExtent[1] - yExtent[0]) / 2) * clampedScale
+        break
+      case GraphFitViewAlignment.Top:
+        translateX = this._width / 2 - (xExtent[0] + (xExtent[1] - xExtent[0]) / 2) * clampedScale
+        translateY = top - yExtent[0] * clampedScale
+        break
+      case GraphFitViewAlignment.Bottom:
+        translateX = this._width / 2 - (xExtent[0] + (xExtent[1] - xExtent[0]) / 2) * clampedScale
+        translateY = this._height - (yExtent[1] - yExtent[0]) * clampedScale - bottom
+        break
+      case GraphFitViewAlignment.Center:
+      default:
+        translateX = this._width / 2 - (xExtent[0] + (xExtent[1] - xExtent[0]) / 2) * clampedScale
+        translateY = this._height / 2 - (yExtent[0] + (yExtent[1] - yExtent[0]) / 2) * clampedScale
+    }
+
     const transform = zoomIdentity
       .translate(translateX, translateY)
       .scale(clampedScale)
 
     return transform
   }
-
 
   private _setNodeSelectionState (nodesToSelect: (GraphNode<N, L> | undefined)[]): void {
     const { config, datamodel } = this
@@ -1003,9 +1033,9 @@ export class Graph<
     return zoomTransform(this.g.node()).k
   }
 
-  public fitView (duration = this.config.duration, nodeIds?: (string | number)[]): void {
+  public fitView (duration = this.config.duration, nodeIds?: (string | number)[], alignment?: GraphFitViewAlignment): void {
     this._layoutCalculationPromise?.then(() => {
-      this._fit(duration, nodeIds)
+      this._fit(duration, nodeIds, alignment)
     })
   }
 

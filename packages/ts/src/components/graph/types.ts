@@ -239,3 +239,11 @@ export enum GraphNodeSelectionHighlightMode {
   Greyout ='greyout',
   GreyoutNonConnected ='greyout-non-connected',
 }
+
+export enum GraphFitViewAlignment {
+  Center = 'center',
+  Top = 'top',
+  Bottom = 'bottom',
+  Left = 'left',
+  Right = 'right',
+}
