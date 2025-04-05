@@ -40,6 +40,7 @@ export type CustomGraphLink<Datum = unknown> = {
   width?: number;
   linkFlowAnimDuration?: number;
   linkFlowParticleSize?: number;
+  linkFlowParticleSpeed?: number;
 };
 
 export type CustomGraphSwimlane = {
