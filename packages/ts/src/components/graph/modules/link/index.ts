@@ -366,7 +366,7 @@ export function animateLinkFlow<N extends GraphInputNode, L extends GraphInputLi
     const linkGroup = select(element)
     const flowGroup = linkGroup.select(`.${linkSelectors.flowGroup}`)
 
-    const linkPathElement = linkGroup.select<SVGPathElement>(`.${linkSelectors.linkSupport}`).node()
+    const linkPathElement = linkGroup.select<SVGPathElement>(`.${linkSelectors.link}`).node()
     const cachedLinkPathLength = linkPathLengthMap.get(linkPathElement.getAttribute('d'))
     const pathLength = cachedLinkPathLength ?? linkPathElement.getTotalLength()
 
