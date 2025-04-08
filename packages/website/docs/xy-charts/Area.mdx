@@ -58,11 +58,11 @@ accessor. A common configuration is to utilize the data's index:
 <XYWrapper {...areaProps()} showContext="full" y={[(d) => d.y, (d) => d.y1, (d) => d.y2]} color={(d, i) => ['red', 'green', 'blue'][i]}/>
 
 ## Dealing with small values
-If your data has small or zero values leading to some parts of the area to become invisible, you can force those area segments to have 1px height
-despite their actual value by setting `minHeight1Px` to `true`. This can be useful if you want to visually emphasize that the data behind the chart
-is defined but just very small.
+If your data has small or zero values leading to some parts of the area to become invisible, you can use the `minHeight` property to set a minimum height for the area. This can be useful if you want to visually emphasize that the data behind the chart is defined but just very small.
 
-<XYWrapperWithInput {...areaProps()}  y={[(d) => d.y < 9 ? 0 : d.y]} property="minHeight1Px" inputType="checkbox" defaultValue={true} showAxes/>
+> **Note:** Use the `minHeight` property carefully as it modifies the visual representation of the data without changing the underlying values. The Crosshair component will still show circles at the original data values, not at the visually extended area height.
+
+<XYWrapperWithInput {...areaProps()}  y={[(d) => d.y < 9 ? 0 : d.y]} property="minHeight" inputType="number" defaultValue={1} showAxes/>
 
 ## Events
 
