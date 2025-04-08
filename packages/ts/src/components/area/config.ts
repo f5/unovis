@@ -15,11 +15,15 @@ export interface AreaConfigInterface<Datum> extends XYComponentConfigInterface<D
   opacity?: NumericAccessor<Datum[]>;
   /** Optional area cursor. String or accessor function. Default: `null` */
   cursor?: StringAccessor<Datum[]>;
-  /** If an area is smaller than 1px, extend it to have 1px height.
+  /** If an area is smaller than 1px, extend it to have 1px height. Default: `false`
+   * @deprecated Use minHeight instead
+   */
+  minHeight1Px?: boolean;
+  /** Minimum height of the area, use carefully.
    * This setting is useful when some of the area values are zeros or very small so visually they become
    * practically invisible, but you want to show that the data behind them exists and they're not just empty segments.
-   * Default: `false` */
-  minHeight1Px?: boolean;
+   * Default: `undefined` */
+  minHeight?: number;
 }
 
 export const AreaDefaultConfig: AreaConfigInterface<unknown> = {
@@ -30,4 +34,5 @@ export const AreaDefaultConfig: AreaConfigInterface<unknown> = {
   opacity: 1,
   cursor: null,
   minHeight1Px: false,
+  minHeight: undefined,
 }
