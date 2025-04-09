@@ -64,8 +64,6 @@ If your data has small or zero values leading to some parts of the area to becom
 
 <XYWrapperWithInput {...areaProps()}  y={[(d) => d.y < 9 ? 0 : d.y]} property="minHeight" inputType="number" defaultValue={1} showAxes/>
 
-<XYWrapperWithInput {...areaProps()}  y={[(d) => d.y < 9 ? 0 : d.y]} property="minHeight1Px" inputType="checkbox" defaultValue={true} showAxes/>
-
 ## Events
 
 The _Area_ component supports the following events:
