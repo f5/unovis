@@ -15,11 +15,19 @@ import { GraphInputLink, GraphInputNode, GraphInputData } from 'types/graph'
 import { Spacing } from 'types/spacing'
 
 // Utils
-import { isNumber, clamp, shallowDiff, isFunction, getBoolean, isPlainObject, isEqual } from 'utils/data'
+import { isNumber, clamp, shallowDiff, isFunction, getBoolean, isPlainObject, isEqual, getNumber } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 
 // Local Types
-import { GraphNode, GraphLink, GraphLayoutType, GraphLinkArrowStyle, GraphPanel, GraphNodeSelectionHighlightMode } from './types'
+import {
+  GraphNode,
+  GraphLink,
+  GraphLayoutType,
+  GraphLinkArrowStyle,
+  GraphPanel,
+  GraphNodeSelectionHighlightMode,
+  GraphFitViewAlignment,
+} from './types'
 
 // Config
 import { GraphDefaultConfig, GraphConfigInterface } from './config'
@@ -203,8 +211,10 @@ export class Graph<
   }
 
   get bleed (): Spacing {
-    const extraPadding = 50 // Extra padding to take into account labels and selection outlines
-    return { top: extraPadding, bottom: extraPadding, left: extraPadding, right: extraPadding }
+    const padding = this.config.fitViewPadding // Extra padding to take into account labels and selection outlines
+    return isNumber(padding)
+      ? { top: padding, bottom: padding, left: padding, right: padding }
+      : padding
   }
 
   _render (customDuration?: number): void {
@@ -469,16 +479,16 @@ export class Graph<
     }
   }
 
-  private _fit (duration = 0, nodeIds?: (string | number)[]): void {
+  private _fit (duration = 0, nodeIds?: (string | number)[], alignment = this.config.fitViewAlign): void {
     const { datamodel: { nodes } } = this
     const fitViewNodes = nodeIds?.length ? nodes.filter(n => nodeIds.includes(n.id)) : nodes
-    const transform = this._getTransform(fitViewNodes)
+    const transform = this._getTransform(fitViewNodes, alignment)
     smartTransition(this.g, duration)
       .call(this._zoomBehavior.transform, transform)
     this._onZoom(transform)
   }
 
-  private _getTransform (nodes: GraphNode<N, L>[]): ZoomTransform {
+  private _getTransform (nodes: GraphNode<N, L>[], alignment: GraphFitViewAlignment): ZoomTransform {
     const { nodeSize, zoomScaleExtent } = this.config
     const { left, top, right, bottom } = this.bleed
 
@@ -500,22 +510,44 @@ export class Graph<
       return zoomIdentity
     }
 
-    const xScale = w / (xExtent[1] - xExtent[0] + left + right)
-    const yScale = h / (yExtent[1] - yExtent[0] + top + bottom)
+    const xScale = w / (xExtent[1] - xExtent[0] + (left || 0) + (right || 0))
+    const yScale = h / (yExtent[1] - yExtent[0] + (top || 0) + (bottom || 0))
 
     const clampedScale = clamp(min([xScale, yScale]), zoomScaleExtent[0], zoomScaleExtent[1])
 
-    const xCenter = (xExtent[1] + xExtent[0]) / 2
-    const yCenter = (yExtent[1] + yExtent[0]) / 2
-    const translateX = this._width / 2 - xCenter * clampedScale
-    const translateY = this._height / 2 - yCenter * clampedScale
+    // Calculate translation based on alignment
+    let translateX: number
+    let translateY: number
+
+    switch (alignment) {
+      case GraphFitViewAlignment.Left:
+        translateX = left - xExtent[0] * clampedScale
+        translateY = this._height / 2 - (yExtent[0] + (yExtent[1] - yExtent[0]) / 2) * clampedScale
+        break
+      case GraphFitViewAlignment.Right:
+        translateX = this._width - (xExtent[1] - xExtent[0]) * clampedScale - right
+        translateY = this._height / 2 - (yExtent[0] + (yExtent[1] - yExtent[0]) / 2) * clampedScale
+        break
+      case GraphFitViewAlignment.Top:
+        translateX = this._width / 2 - (xExtent[0] + (xExtent[1] - xExtent[0]) / 2) * clampedScale
+        translateY = top - yExtent[0] * clampedScale
+        break
+      case GraphFitViewAlignment.Bottom:
+        translateX = this._width / 2 - (xExtent[0] + (xExtent[1] - xExtent[0]) / 2) * clampedScale
+        translateY = this._height - (yExtent[1] - yExtent[0]) * clampedScale - bottom
+        break
+      case GraphFitViewAlignment.Center:
+      default:
+        translateX = this._width / 2 - (xExtent[0] + (xExtent[1] - xExtent[0]) / 2) * clampedScale
+        translateY = this._height / 2 - (yExtent[0] + (yExtent[1] - yExtent[0]) / 2) * clampedScale
+    }
+
     const transform = zoomIdentity
       .translate(translateX, translateY)
       .scale(clampedScale)
 
     return transform
   }
-
 
   private _setNodeSelectionState (nodesToSelect: (GraphNode<N, L> | undefined)[]): void {
     const { config, datamodel } = this
@@ -661,17 +693,25 @@ export class Graph<
   }
 
   private _onLinkFlowTimerFrame (elapsed = 0): void {
-    const { config: { linkFlow, linkFlowAnimDuration }, datamodel: { links } } = this
+    const { config, datamodel: { links } } = this
 
-    const hasLinksWithFlow = links.some((d, i) => getBoolean(d, linkFlow, i))
+    const hasLinksWithFlow = links.some((d, i) => getBoolean(d, config.linkFlow, i))
     if (!hasLinksWithFlow) return
 
-    const t = (elapsed % linkFlowAnimDuration) / linkFlowAnimDuration
-    const linkElements = this._linksGroup.selectAll<SVGGElement, GraphLink<N, L>>(`.${linkSelectors.gLink}`)
+    const linkGroups = this._linksGroup.selectAll<SVGGElement, GraphLink<N, L>>(`.${linkSelectors.gLink}`)
+    linkGroups.each((l, i, els) => {
+      let linkFlowAnimDuration = getNumber(l, config.linkFlowAnimDuration, l._indexGlobal)
+      const linkFlowParticleSpeed = getNumber(l, config.linkFlowParticleSpeed, l._indexGlobal)
 
-    const linksToAnimate = linkElements.filter(d => !d._state.greyout)
-    linksToAnimate.each(d => { d._state.flowAnimTime = t })
-    animateLinkFlow(linksToAnimate, this.config, this._scale, this._linkPathLengthMap)
+      // If particle speed is provided, calculate duration based on link length and speed
+      if (linkFlowParticleSpeed) {
+        const linkPathElement = els[i].querySelector<SVGPathElement>(`.${linkSelectors.linkSupport}`)
+        const pathLength = linkPathElement ? (this._linkPathLengthMap.get(linkPathElement.getAttribute('d')) ?? linkPathElement.getTotalLength()) : 0
+        if (pathLength > 0) linkFlowAnimDuration = (pathLength / linkFlowParticleSpeed) * 1000 // Convert to milliseconds
+      }
+      l._state.flowAnimTime = (elapsed % linkFlowAnimDuration) / linkFlowAnimDuration
+    })
+    animateLinkFlow(linkGroups, this.config, this._scale, this._linkPathLengthMap)
   }
 
   private _onZoom (t: ZoomTransform, event?: D3ZoomEvent<SVGGElement, unknown>): void {
@@ -992,9 +1032,9 @@ export class Graph<
     return zoomTransform(this.g.node()).k
   }
 
-  public fitView (duration = this.config.duration, nodeIds?: (string | number)[]): void {
+  public fitView (duration = this.config.duration, nodeIds?: (string | number)[], alignment?: GraphFitViewAlignment): void {
     this._layoutCalculationPromise?.then(() => {
-      this._fit(duration, nodeIds)
+      this._fit(duration, nodeIds, alignment)
     })
   }
 
