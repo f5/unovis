@@ -698,9 +698,8 @@ export class Graph<
     const hasLinksWithFlow = links.some((d, i) => getBoolean(d, config.linkFlow, i))
     if (!hasLinksWithFlow) return
 
-    const linkElements = this._linksGroup.selectAll<SVGGElement, GraphLink<N, L>>(`.${linkSelectors.gLink}`)
-    const linksToAnimate = linkElements.filter(d => !d._state.greyout)
-    linksToAnimate.each((l, i, els) => {
+    const linkGroups = this._linksGroup.selectAll<SVGGElement, GraphLink<N, L>>(`.${linkSelectors.gLink}`)
+    linkGroups.each((l, i, els) => {
       let linkFlowAnimDuration = getNumber(l, config.linkFlowAnimDuration, l._indexGlobal)
       const linkFlowParticleSpeed = getNumber(l, config.linkFlowParticleSpeed, l._indexGlobal)
 
@@ -712,7 +711,7 @@ export class Graph<
       }
       l._state.flowAnimTime = (elapsed % linkFlowAnimDuration) / linkFlowAnimDuration
     })
-    animateLinkFlow(linksToAnimate, this.config, this._scale, this._linkPathLengthMap)
+    animateLinkFlow(linkGroups, this.config, this._scale, this._linkPathLengthMap)
   }
 
   private _onZoom (t: ZoomTransform, event?: D3ZoomEvent<SVGGElement, unknown>): void {
