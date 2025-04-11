@@ -126,7 +126,8 @@ export class ChordDiagram<
   }
 
   _layoutData (): void {
-    const { nodes, links } = this.datamodel
+    const { nodes } = this.datamodel
+    let { links } = this.datamodel
     const { padAngle, linkValue, nodeLevels } = this.config
     nodes.forEach(n => { delete n._state.value })
     links.forEach(l => {
@@ -136,6 +137,7 @@ export class ChordDiagram<
       l.target._state.value = (l.target._state.value || 0) + getNumber(l, linkValue)
     })
 
+    links = links.filter(d => d._state.value)
     const root = getHierarchyNodes(nodes, d => d._state?.value, nodeLevels)
 
     const partitionData = partition().size([this.config.angleRange[1], 1])(root) as ChordNode<N>
