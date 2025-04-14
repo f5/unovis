@@ -29,7 +29,7 @@ export interface BrushConfigInterface<Datum> extends Partial<XYComponentConfigIn
   /** Allow dragging the selected area as a whole in order to change the selected range. Default: `false` */
   draggable?: boolean;
   /** Position of the handle: `Arrangement.Inside` or `Arrangement.Outside`. Default: `Arrangement.Inside` */
-  handlePosition?: Arrangement | string;
+  handlePosition?: Arrangement.Inside | Arrangement.Outside | string;
   /** Constraint Brush selection to a minimal length in data units. Default: `undefined` */
   selectionMinLength?: number;
 }
