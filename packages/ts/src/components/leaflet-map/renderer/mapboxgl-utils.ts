@@ -2,7 +2,7 @@ import type L from 'leaflet'
 import type { Map } from 'maplibre-gl'
 
 // Utils
-import { throttle } from 'utils/data'
+import { throttle } from '@/utils/data'
 
 export function constraintMapView (map: L.Map, latMin = -75, latMax = 85): void {
   const bounds = map.getBounds()

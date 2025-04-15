@@ -1,7 +1,7 @@
-import React from 'react'
-import { VisXYContainer, VisAxis } from '@unovis/react'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
+import { VisAxis, VisXYContainer } from '@unovis/react'
 import { Scale } from '@unovis/ts'
+import React from 'react'
 
 export const title = 'Axis Tick Label Overlap'
 export const subTitle = 'Resolving overlapping labels'

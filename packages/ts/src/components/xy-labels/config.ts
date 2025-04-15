@@ -1,8 +1,8 @@
 // Core
-import { XYComponentConfigInterface, XYComponentDefaultConfig } from 'core/xy-component/config'
+import { XYComponentConfigInterface, XYComponentDefaultConfig } from '@/core/xy-component/config'
 
 // Types
-import { ColorAccessor, GenericAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
+import { ColorAccessor, GenericAccessor, NumericAccessor, StringAccessor } from '@/types/accessor'
 
 // Local Types
 import { XYLabel, XYLabelPositioning } from './types'
@@ -58,4 +58,3 @@ export const XYLabelsDefaultConfig: XYLabelsConfigInterface<unknown> = {
   clusterCursor: undefined,
   clusterLabelColor: null,
 }
-

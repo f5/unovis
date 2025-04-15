@@ -18,7 +18,7 @@
     "npm": ">=7.0.0"
   },
   "scripts": {
-    "dev": "cd packages/dev && npm run dev",
+    "dev": "concurrently \"cd packages/react && npm run watch\" \"cd packages/dev && npm run dev\"",
     "website": "cd packages/website && npm run start",
     "build": "npm run build:ts && npm run build:react && npm run build:angular && npm run build:svelte && npm run build:vue && npm run build:solid && npm run build:website",
     "build:ts": "cd packages/ts && npm run build",
@@ -57,6 +57,7 @@
     "@typescript-eslint/eslint-plugin": "^5.41.0",
     "@typescript-eslint/parser": "^5.41.0",
     "bumpp": "^9.8.1",
+    "concurrently": "^9.1.2",
     "eslint": "^8.26.0",
     "eslint-config-standard": "^16.0.3",
     "eslint-import-resolver-typescript": "^2.7.1",

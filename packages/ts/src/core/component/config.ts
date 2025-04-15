@@ -1,5 +1,5 @@
 /* eslint-disable no-irregular-whitespace */
-import { VisEventCallback, VisEventType } from 'core/component/types'
+import { VisEventCallback, VisEventType } from '@/core/component/types'
 
 export interface ComponentConfigInterface {
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */

@@ -1,12 +1,11 @@
+import { ExampleViewer, exampleViewerLoader } from '@/components/ExampleViewer'
+// Examples
+import { examples } from '@/examples'
 import React from 'react'
 import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-
-// Examples
-import { examples } from '@src/examples'
-import { ExampleViewer, exampleViewerLoader } from '@src/components/ExampleViewer'
-
 import App from './App'
+
 
 const router = createBrowserRouter([
   {

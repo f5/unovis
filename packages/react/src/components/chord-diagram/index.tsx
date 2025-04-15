@@ -3,10 +3,10 @@ import React, { ForwardedRef, Ref, useImperativeHandle, useEffect, useRef, useSt
 import { ChordDiagram, ChordDiagramConfigInterface, ChordInputNode, ChordInputLink } from '@unovis/ts'
 
 // Utils
-import { arePropsEqual } from 'src/utils/react'
+import { arePropsEqual } from '@/utils/react'
 
 // Types
-import { VisComponentElement } from 'src/types/dom'
+import { VisComponentElement } from '@/types/dom'
 
 export type VisChordDiagramRef<N extends ChordInputNode, L extends ChordInputLink> = {
   component?: ChordDiagram<N, L>;
@@ -20,7 +20,7 @@ export type VisChordDiagramProps<N extends ChordInputNode, L extends ChordInputL
 export const VisChordDiagramSelectors = ChordDiagram.selectors
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-function VisChordDiagramFC<N extends ChordInputNode, L extends ChordInputLink> (props: VisChordDiagramProps<N, L>, fRef: ForwardedRef<VisChordDiagramRef<N, L>>): JSX.Element {
+function VisChordDiagramFC<N extends ChordInputNode, L extends ChordInputLink> (props: VisChordDiagramProps<N, L>, fRef: ForwardedRef<VisChordDiagramRef<N, L>>): React.ReactNode {
   const ref = useRef<VisComponentElement<ChordDiagram<N, L>>>(null)
   const componentRef = useRef<ChordDiagram<N, L> | undefined>(undefined)
 

@@ -1,8 +1,8 @@
-import React, { useRef } from 'react'
-import { VisXYContainer, VisArea, VisLine, VisAxis } from '@unovis/react'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
+import { generateXYDataRecords, XYDataRecord } from '@/utils/data'
+import { VisArea, VisAxis, VisLine, VisXYContainer } from '@unovis/react'
+import React from 'react'
 
-import { XYDataRecord, generateXYDataRecords } from '@src/utils/data'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 export const title = 'Dual Axis Chart'
 export const subTitle = 'Generated Data'

@@ -3,19 +3,19 @@ import { interrupt } from 'd3-transition'
 import { Axis as D3Axis, axisBottom, axisLeft, axisRight, axisTop } from 'd3-axis'
 
 // Core
-import { XYComponentCore } from 'core/xy-component'
+import { XYComponentCore } from '@/core/xy-component'
 
 // Types
-import { Position } from 'types/position'
-import { ContinuousScale } from 'types/scale'
-import { Spacing } from 'types/spacing'
-import { FitMode, TextAlign, TrimMode, UnovisText, UnovisTextOptions, VerticalAlign } from 'types/text'
+import { Position } from '@/types/position'
+import { ContinuousScale } from '@/types/scale'
+import { Spacing } from '@/types/spacing'
+import { FitMode, TextAlign, TrimMode, UnovisText, UnovisTextOptions, VerticalAlign } from '@/types/text'
 
 // Utils
-import { smartTransition } from 'utils/d3'
-import { renderTextToSvgTextElement, trimSVGText } from 'utils/text'
-import { isEqual } from 'utils/data'
-import { rectIntersect } from 'utils/misc'
+import { smartTransition } from '@/utils/d3'
+import { renderTextToSvgTextElement, trimSVGText } from '@/utils/text'
+import { isEqual } from '@/utils/data'
+import { rectIntersect } from '@/utils/misc'
 
 // Local Types
 import { AxisType } from './types'

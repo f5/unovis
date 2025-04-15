@@ -27,8 +27,8 @@ import React, { ForwardedRef, Ref, useImperativeHandle, useEffect, useRef, useSt
 ${importStatements.map(s => `import { ${s.elements.join(', ')} } from '${s.source}'`).join('\n')}
 
 // Utils
-import { arePropsEqual } from 'src/utils/react'
-${isStandAlone ? '' : '\n// Types\nimport { VisComponentElement } from \'src/types/dom\'\n'}
+import { arePropsEqual } from '@/utils/react'
+${isStandAlone ? '' : '\n// Types\nimport { VisComponentElement } from \'@/types/dom\'\n'}
 export type Vis${componentName}Ref${genericsDefStr} = {
     component?: ${componentType};
 }
@@ -40,7 +40,7 @@ export type Vis${componentName}Props${genericsDefStr} = ${componentName}ConfigIn
 export const Vis${componentName}Selectors = ${componentName}.selectors
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-function Vis${componentName}FC${genericsDefStr} (props: Vis${componentName}Props${genericsStr}, fRef: ForwardedRef<Vis${componentName}Ref${genericsStr}>): JSX.Element {
+function Vis${componentName}FC${genericsDefStr} (props: Vis${componentName}Props${genericsStr}, fRef: ForwardedRef<Vis${componentName}Ref${genericsStr}>): React.ReactNode {
   const ref = useRef<${refType}>(null)
   const ${isStandAlone ? `[component, setComponent] = useState<${componentType}>()` : `componentRef = useRef<${componentType} | undefined>(undefined)`}
 
@@ -54,7 +54,7 @@ function Vis${componentName}FC${genericsDefStr} (props: Vis${componentName}Props
     'componentRef.current = c',
     'element.__component__ = c',
   ]).join('\n  ')}
-  
+
     return () => ${onDestroy}
   }, [])
 

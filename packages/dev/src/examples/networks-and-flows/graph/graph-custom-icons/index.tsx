@@ -1,13 +1,12 @@
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
+import { VisGraph, VisSingleContainer } from '@unovis/react'
 import React, { useState } from 'react'
-import { VisSingleContainer, VisGraph } from '@unovis/react'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
-
+import bucketIcon from './bucket.svg?raw'
+import s from './index.module.css'
+import instanceIcon from './instance.svg?raw'
 import personIcon from './person.svg?raw'
 import roleIcon from './role.svg?raw'
-import instanceIcon from './instance.svg?raw'
-import bucketIcon from './bucket.svg?raw'
 
-import s from './index.module.css'
 
 export const title = 'Graph: SVG Node Icons'
 export const subTitle = 'Re-render every second'
@@ -76,4 +75,3 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
     </div>
   )
 }
-

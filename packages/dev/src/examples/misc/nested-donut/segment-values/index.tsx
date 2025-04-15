@@ -1,9 +1,9 @@
-import React, { useCallback, useState } from 'react'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
+import { VisNestedDonut, VisSingleContainer, VisTooltip } from '@unovis/react'
 import { NestedDonut, NestedDonutSegment } from '@unovis/ts'
-import { VisSingleContainer, VisNestedDonut, VisTooltip } from '@unovis/react'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
-
+import React, { useCallback, useState } from 'react'
 import s from './styles.module.css'
+
 
 export const title = 'Segment values'
 export const subTitle = 'Custom value accessor + sort function'
@@ -86,4 +86,3 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
     </div>
   )
 }
-

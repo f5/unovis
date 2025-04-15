@@ -3,10 +3,10 @@ import React, { ForwardedRef, Ref, useImperativeHandle, useEffect, useRef, useSt
 import { Tooltip, TooltipConfigInterface } from '@unovis/ts'
 
 // Utils
-import { arePropsEqual } from 'src/utils/react'
+import { arePropsEqual } from '@/utils/react'
 
 // Types
-import { VisComponentElement } from 'src/types/dom'
+import { VisComponentElement } from '@/types/dom'
 
 export type VisTooltipRef = {
   component?: Tooltip;
@@ -19,7 +19,7 @@ export type VisTooltipProps = TooltipConfigInterface & {
 export const VisTooltipSelectors = Tooltip.selectors
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-function VisTooltipFC (props: VisTooltipProps, fRef: ForwardedRef<VisTooltipRef>): JSX.Element {
+function VisTooltipFC (props: VisTooltipProps, fRef: ForwardedRef<VisTooltipRef>): React.ReactNode {
   const ref = useRef<VisComponentElement<Tooltip>>(null)
   const componentRef = useRef<Tooltip | undefined>(undefined)
 

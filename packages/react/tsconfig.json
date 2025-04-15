@@ -21,8 +21,7 @@
     "outDir": "dist",
     "baseUrl": "./",
     "paths": {
-      "@unovis/react": ["src/"],
-      "@unovis/react/*": ["src/*"],
+      "@/*": ["src/*"]
     },
     "removeComments": true,
     "strict": true,

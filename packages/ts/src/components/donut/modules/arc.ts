@@ -4,8 +4,8 @@ import { interpolate } from 'd3-interpolate'
 import { Arc } from 'd3-shape'
 
 // Utils
-import { getColor } from 'utils/color'
-import { smartTransition } from 'utils/d3'
+import { getColor } from '@/utils/color'
+import { smartTransition } from '@/utils/d3'
 
 // Local Types
 import { DonutArcDatum, DonutArcAnimState } from '../types'

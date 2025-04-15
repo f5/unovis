@@ -1,9 +1,9 @@
-import React from 'react'
-import { VisSingleContainer, VisGraph } from '@unovis/react'
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
+import { sample } from '@/utils/array'
+import { generateNodeLinkData, LinkDatum, NodeDatum, randomNumberGenerator } from '@/utils/data'
+import { VisGraph, VisSingleContainer } from '@unovis/react'
 import { TrimMode } from '@unovis/ts'
-import { generateNodeLinkData, NodeDatum, LinkDatum, randomNumberGenerator } from '@src/utils/data'
-import { sample } from '@src/utils/array'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
+import React from 'react'
 
 export const title = 'Node Labels and Sub-labels'
 export const subTitle = 'Trimming'
@@ -40,4 +40,3 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
     </VisSingleContainer>
   )
 }
-

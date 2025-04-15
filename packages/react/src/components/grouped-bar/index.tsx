@@ -3,10 +3,10 @@ import React, { ForwardedRef, Ref, useImperativeHandle, useEffect, useRef, useSt
 import { GroupedBar, GroupedBarConfigInterface } from '@unovis/ts'
 
 // Utils
-import { arePropsEqual } from 'src/utils/react'
+import { arePropsEqual } from '@/utils/react'
 
 // Types
-import { VisComponentElement } from 'src/types/dom'
+import { VisComponentElement } from '@/types/dom'
 
 export type VisGroupedBarRef<Datum> = {
   component?: GroupedBar<Datum>;
@@ -20,7 +20,7 @@ export type VisGroupedBarProps<Datum> = GroupedBarConfigInterface<Datum> & {
 export const VisGroupedBarSelectors = GroupedBar.selectors
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-function VisGroupedBarFC<Datum> (props: VisGroupedBarProps<Datum>, fRef: ForwardedRef<VisGroupedBarRef<Datum>>): JSX.Element {
+function VisGroupedBarFC<Datum> (props: VisGroupedBarProps<Datum>, fRef: ForwardedRef<VisGroupedBarRef<Datum>>): React.ReactNode {
   const ref = useRef<VisComponentElement<GroupedBar<Datum>>>(null)
   const componentRef = useRef<GroupedBar<Datum> | undefined>(undefined)
 

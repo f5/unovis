@@ -3,10 +3,10 @@ import React, { ForwardedRef, Ref, useImperativeHandle, useEffect, useRef, useSt
 import { Scatter, ScatterConfigInterface } from '@unovis/ts'
 
 // Utils
-import { arePropsEqual } from 'src/utils/react'
+import { arePropsEqual } from '@/utils/react'
 
 // Types
-import { VisComponentElement } from 'src/types/dom'
+import { VisComponentElement } from '@/types/dom'
 
 export type VisScatterRef<Datum> = {
   component?: Scatter<Datum>;
@@ -20,7 +20,7 @@ export type VisScatterProps<Datum> = ScatterConfigInterface<Datum> & {
 export const VisScatterSelectors = Scatter.selectors
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-function VisScatterFC<Datum> (props: VisScatterProps<Datum>, fRef: ForwardedRef<VisScatterRef<Datum>>): JSX.Element {
+function VisScatterFC<Datum> (props: VisScatterProps<Datum>, fRef: ForwardedRef<VisScatterRef<Datum>>): React.ReactNode {
   const ref = useRef<VisComponentElement<Scatter<Datum>>>(null)
   const componentRef = useRef<Scatter<Datum> | undefined>(undefined)
 

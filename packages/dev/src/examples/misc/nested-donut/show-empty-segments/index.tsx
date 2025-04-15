@@ -1,6 +1,6 @@
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
+import { VisNestedDonut, VisSingleContainer } from '@unovis/react'
 import React, { useCallback } from 'react'
-import { VisSingleContainer, VisNestedDonut } from '@unovis/react'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 export const title = 'Empty Segments'
 export const subTitle = 'In various positions'

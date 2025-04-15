@@ -1,7 +1,7 @@
+import { ExampleViewerDurationProps } from '@/components/ExampleViewer/index'
+import { randomNumberGenerator } from '@/utils/data'
+import { VisChordDiagram, VisSingleContainer } from '@unovis/react'
 import React from 'react'
-import { VisSingleContainer, VisChordDiagram } from '@unovis/react'
-import { randomNumberGenerator } from '@src/utils/data'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 export const title = 'Node Levels'
 export const subTitle = 'Side by side comparison'

@@ -1,4 +1,4 @@
-import { TransformValues } from 'types/svg'
+import { TransformValues } from '@/types/svg'
 import striptags from 'striptags'
 
 import { allowedSvgTextTags } from './text'
