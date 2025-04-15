@@ -2,7 +2,7 @@
 
 import type { JSX } from 'solid-js'
 
-const extractCSSregex = /((?:--)?(?:\w+-?)+)\s*:\s*([^;]*)/g;
+const extractCSSregex = /((?:--)?[\w-]+)\s*:\s*([^;]*)/g;
 
 /**
  * converts inline string styles to object form
