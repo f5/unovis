@@ -60,9 +60,26 @@ accessor. A common configuration is to utilize the data's index:
 ## Dealing with small values
 If your data has small or zero values leading to some parts of the area to become invisible, you can use the `minHeight` property to set a minimum height for the area. This can be useful if you want to visually emphasize that the data behind the chart is defined but just very small.
 
-> **Note:** Use the `minHeight` property carefully as it modifies the visual representation of the data without changing the underlying values. The Crosshair component will still show circles at the original data values, not at the visually extended area height.
-
 <XYWrapperWithInput {...areaProps()}  y={[(d) => d.y < 9 ? 0 : d.y]} property="minHeight" inputType="number" defaultValue={1} showAxes/>
+
+### Stacking minimum heights
+When working with stacked areas and using the `minHeight` property, you can control whether the minimum height adjustments stack on top of each other or not using the `stackMinHeight` property.
+
+By default, each area with a minimum height will be adjusted independently. When you set `stackMinHeight` to `true`, the minimum height adjustments will be cumulative, which can affect the visual appearance of stacked areas with small values.
+
+> **Note:** Use the `minHeight` and `stackMinHeight` properties carefully as they modify the visual representation of the data without changing the underlying values.
+The Crosshair component will still show circles at the original data values, not at the visually extended area height.
+
+<XYWrapperWithInput 
+  {...areaProps()} 
+  y={[(d) => d.y < 9 ? 0.0001 : d.y, (d) => d.y1 < 5 ? 0.0001 : d.y1, (d) => d.y2 < 7 ? 0.0001 : d.y2]} 
+  property="stackMinHeight" 
+  inputType="checkbox" 
+  defaultValue={false} 
+  minHeight={5}
+  containerProps={{padding: {top: 10}}}
+  showAxes
+/>
 
 ## Events
 
