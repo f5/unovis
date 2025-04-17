@@ -20,7 +20,7 @@ export type VisDonutProps<Datum> = DonutConfigInterface<Datum> & {
 export const VisDonutSelectors = Donut.selectors
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-function VisDonutFC<Datum> (props: VisDonutProps<Datum>, fRef: ForwardedRef<VisDonutRef<Datum>>): JSX.Element {
+function VisDonutFC<Datum> (props: VisDonutProps<Datum>, fRef: ForwardedRef<VisDonutRef<Datum>>): React.ReactNode {
   const ref = useRef<VisComponentElement<Donut<Datum>>>(null)
   const componentRef = useRef<Donut<Datum> | undefined>(undefined)
 

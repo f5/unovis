@@ -17,7 +17,7 @@ export type VisBulletLegendProps = BulletLegendConfigInterface & {
 export const VisBulletLegendSelectors = BulletLegend.selectors
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-function VisBulletLegendFC (props: VisBulletLegendProps, fRef: ForwardedRef<VisBulletLegendRef>): JSX.Element {
+function VisBulletLegendFC (props: VisBulletLegendProps, fRef: ForwardedRef<VisBulletLegendRef>): React.ReactNode {
   const ref = useRef<HTMLDivElement>(null)
   const [component, setComponent] = useState<BulletLegend>()
 
@@ -34,7 +34,7 @@ function VisBulletLegendFC (props: VisBulletLegendProps, fRef: ForwardedRef<VisB
     component?.update(props)
   })
 
-  useImperativeHandle(fRef, () => ({ get component () { return component } }), [component])
+  useImperativeHandle(fRef, () => ({ get component () { return component } }), [])
   return <div className={props.className} ref={ref} />
 }
 

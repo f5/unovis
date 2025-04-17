@@ -20,7 +20,7 @@ export type VisLineProps<Datum> = LineConfigInterface<Datum> & {
 export const VisLineSelectors = Line.selectors
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-function VisLineFC<Datum> (props: VisLineProps<Datum>, fRef: ForwardedRef<VisLineRef<Datum>>): JSX.Element {
+function VisLineFC<Datum> (props: VisLineProps<Datum>, fRef: ForwardedRef<VisLineRef<Datum>>): React.ReactNode {
   const ref = useRef<VisComponentElement<Line<Datum>>>(null)
   const componentRef = useRef<Line<Datum> | undefined>(undefined)
 
