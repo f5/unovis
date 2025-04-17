@@ -19,10 +19,12 @@ export const variables = injectGlobal`
 
     --vis-graph-link-band-opacity: 0.35;
     --vis-graph-link-support-stroke-width: 10px;
+    --vis-graph-link-flow-opacity: 1;
 
     --vis-dark-graph-link-stroke-color: #494b56;
     --vis-dark-graph-link-label-background: #3f3f45;
     --vis-dark-graph-link-label-text-color: var(--vis-graph-link-label-text-color-bright);
+
 
     --vis-graph-link-dominant-baseline: middle;
   }
@@ -95,7 +97,7 @@ export const linkBand = css`
 
 export const flowGroup = css`
   label: flow-group;
-
+  
   pointer-events: none;
 `
 
@@ -103,6 +105,7 @@ export const flowCircle = css`
   label: flow-circle;
 
   fill: var(--vis-graph-link-stroke-color);
+  opacity: var(--vis-graph-link-flow-opacity);
 `
 
 export const linkLabelGroup = css`

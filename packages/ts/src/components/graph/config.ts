@@ -15,6 +15,7 @@ import { ComponentConfigInterface, ComponentDefaultConfig } from 'core/component
 
 // Types
 import { TrimMode } from 'types/text'
+import { Spacing } from 'types/spacing'
 import { GraphInputLink, GraphInputNode, GraphInputData } from 'types/graph'
 import { BooleanAccessor, ColorAccessor, NumericAccessor, StringAccessor, GenericAccessor } from 'types/accessor'
 
@@ -32,8 +33,8 @@ import {
   GraphNode,
   GraphLink,
   GraphNodeSelectionHighlightMode,
+  GraphFitViewAlignment,
 } from './types'
-
 
 export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphInputLink> extends ComponentConfigInterface {
   // Zoom and drag
@@ -51,6 +52,10 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   disableBrush?: boolean;
   /** Interval to re-render the graph when zooming. Default: `100` */
   zoomThrottledUpdateNodeThreshold?: number;
+  /** Padding for the graph when fitting to container. Default: `50` */
+  fitViewPadding?: Spacing | number;
+  /** Default alignment when fitting the graph view. Default: `GraphFitViewAlignment.Center` */
+  fitViewAlign?: GraphFitViewAlignment;
 
   // Layout general settings
   /** Type of the graph layout. Default: `GraphLayoutType.Force` */
@@ -142,10 +147,13 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   linkDisabled?: BooleanAccessor<L>;
   /** Link flow animation accessor function or constant value. Default: `false` */
   linkFlow?: BooleanAccessor<L>;
-  /** Animation duration of the flow (traffic) circles. Default: `20000` */
-  linkFlowAnimDuration?: number;
+  /** Animation duration of the flow (traffic) circles in milliseconds. If `linkFlowParticleSpeed` is provided,
+   * this duration will be calculated based on the link length and particle speed. Default: `20000` */
+  linkFlowAnimDuration?: NumericAccessor<L>;
   /** Size of the moving particles that represent traffic flow. Default: `2` */
-  linkFlowParticleSize?: number;
+  linkFlowParticleSize?: NumericAccessor<L>;
+  /** Speed of the moving particles in pixels per second. This property takes precedence over `linkFlowAnimDuration`. Default: `undefined` */
+  linkFlowParticleSpeed?: NumericAccessor<L>;
   /** Link label accessor function or constant value. Default: `undefined` */
   linkLabel?: GenericAccessor<GraphCircleLabel | GraphCircleLabel[], L> | undefined;
   /** Shift label along the link center a little bit to avoid overlap with the link arrow. Default: `true` */
@@ -307,6 +315,8 @@ export const GraphDefaultConfig: GraphConfigInterface<GraphInputNode, GraphInput
   layoutAutofit: true,
   layoutAutofitTolerance: 8.0,
   layoutNonConnectedAside: false,
+  fitViewPadding: 50,
+  fitViewAlign: GraphFitViewAlignment.Center,
 
   layoutGroupOrder: [],
   layoutParallelSubGroupsPerRow: 1,
@@ -337,6 +347,7 @@ export const GraphDefaultConfig: GraphConfigInterface<GraphInputNode, GraphInput
 
   linkFlowAnimDuration: 20000,
   linkFlowParticleSize: 2,
+  linkFlowParticleSpeed: undefined,
   linkWidth: 1,
   linkStyle: GraphLinkStyle.Solid,
   linkBandWidth: 0,
