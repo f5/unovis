@@ -119,6 +119,9 @@ export class VisAreaComponent<Datum> implements AreaConfigInterface<Datum>, Afte
    * practically invisible, but you want to show that the data behind them exists and they're not just empty segments.
    * Default: `undefined` */
   @Input() minHeight?: number
+
+  /** Whether to stack min height areas or not. Default: `undefined` */
+  @Input() stackMinHeight?: boolean
   @Input() data: Datum[]
 
   component: Area<Datum> | undefined
@@ -140,8 +143,8 @@ export class VisAreaComponent<Datum> implements AreaConfigInterface<Datum>, Afte
   }
 
   private getConfig (): AreaConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, curveType, baseline, opacity, cursor, minHeight1Px, minHeight } = this
-    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, curveType, baseline, opacity, cursor, minHeight1Px, minHeight }
+    const { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, curveType, baseline, opacity, cursor, minHeight1Px, minHeight, stackMinHeight } = this
+    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, curveType, baseline, opacity, cursor, minHeight1Px, minHeight, stackMinHeight }
     const keys = Object.keys(config) as (keyof AreaConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
