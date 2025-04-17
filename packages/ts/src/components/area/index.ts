@@ -72,8 +72,8 @@ export class Area<Datum> extends XYComponentCore<Datum, AreaConfigInterface<Datu
           const y1 = this.yScale(d[1])
           const isNegativeArea = y1 > y0
 
-          // Get cumulative adjustment and apply in the correct direction
-          const cumulative = minHeightCumulativeArray[j] || 0
+          // Only apply cumulative adjustment if `config.stackMinHeight` is true
+          const cumulative = config.stackMinHeight ? (minHeightCumulativeArray[j] || 0) : 0
           const adjustedY0 = isNegativeArea ? y0 + cumulative : y0 - cumulative
           const adjustedY1 = isNegativeArea ? y1 + cumulative : y1 - cumulative
 
@@ -82,7 +82,11 @@ export class Area<Datum> extends XYComponentCore<Datum, AreaConfigInterface<Datu
           if ((config.minHeight || config.minHeight1Px) &&
               Math.abs(adjustedY1 - adjustedY0) < (config.minHeight ?? 1)) {
             heightAdjustment = (config.minHeight ?? 1) - Math.abs(adjustedY1 - adjustedY0)
-            minHeightCumulativeArray[j] = cumulative + heightAdjustment
+
+            // Only update cumulative array if we're stacking min heights
+            if (config.stackMinHeight) {
+              minHeightCumulativeArray[j] = cumulative + heightAdjustment
+            }
           }
 
           return {
