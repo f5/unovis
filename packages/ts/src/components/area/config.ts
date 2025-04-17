@@ -24,6 +24,8 @@ export interface AreaConfigInterface<Datum> extends XYComponentConfigInterface<D
    * practically invisible, but you want to show that the data behind them exists and they're not just empty segments.
    * Default: `undefined` */
   minHeight?: number;
+  /** Whether to stack min height areas or not. Default: `undefined` */
+  stackMinHeight?: boolean;
 }
 
 export const AreaDefaultConfig: AreaConfigInterface<unknown> = {
@@ -35,4 +37,5 @@ export const AreaDefaultConfig: AreaConfigInterface<unknown> = {
   cursor: null,
   minHeight1Px: false,
   minHeight: undefined,
+  stackMinHeight: false,
 }
