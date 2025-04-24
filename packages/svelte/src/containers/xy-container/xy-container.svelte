@@ -39,42 +39,42 @@
 
   $: chart?.setData(data, true)
 
-  let animationFrame = 0;
-	const updateContainer = async () => {
+  let animationFrame = 0
+  const updateContainer = async () => {
     // due to the order of events when a component is removed update container can be called
-    // while a component is being destroyed. This can lead to an error because we trigger an update
-    // with a destroyed component.
-		config.components = config.components?.filter((e) => !e.isDestroyed());
+	  // while a component is being destroyed. This can lead to an error because we trigger an update
+	  // with a destroyed component.
+    config.components = config.components?.filter((e) => !e.isDestroyed())
 
-		// we can't use animation frames in a non-browser environment
-		if (typeof requestAnimationFrame === 'undefined') {
-			chart?.updateContainer({
-				...config,
-				...($$restProps as XYContainerConfigInterface<Datum>)
-			});
+    // we can't use animation frames in a non-browser environment
+    if (typeof requestAnimationFrame === 'undefined') {
+      chart?.updateContainer({
+        ...config,
+        ...($$restProps as XYContainerConfigInterface<Datum>),
+      })
 
-			return;
-		}
+      return
+    }
 
-		if (animationFrame) {
-			cancelAnimationFrame(animationFrame);
-		}
+    if (animationFrame) {
+      cancelAnimationFrame(animationFrame)
+    }
 
-		// this prevent multiple renders from happening in a single frame
-		// when a component is first rendered the components will be pushed 1 by 1
-		// so we don't want to rerender every time a component is added
-		animationFrame = requestAnimationFrame(() => {
-			chart?.updateContainer({
-				...config,
-				...($$restProps as XYContainerConfigInterface<Datum>)
-			});
-      animationFrame = 0;
-		});
-	};
+    // this prevent multiple renders from happening in a single frame
+	  // when a component is first rendered the components will be pushed 1 by 1
+	  // so we don't want to rerender every time a component is added
+    animationFrame = requestAnimationFrame(() => {
+      chart?.updateContainer({
+        ...config,
+        ...($$restProps as XYContainerConfigInterface<Datum>),
+      })
+      animationFrame = 0
+    })
+  }
 
   $: {
-    config;
-    $$restProps;
+    config
+    $$restProps
     updateContainer()
   }
 

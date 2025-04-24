@@ -1,10 +1,9 @@
-import React, { useState } from 'react'
-import { VisXYContainer, VisLine, VisAxis, VisScatter, VisCrosshair, VisTooltip, VisAnnotations } from '@unovis/react'
-import { CurveType } from '@unovis/ts'
-
 import { ExampleViewerDurationProps } from '@src/components/ExampleViewer'
-
+import { VisAnnotations, VisAxis, VisCrosshair, VisLine, VisScatter, VisTooltip, VisXYContainer } from '@unovis/react'
+import { CurveType } from '@unovis/ts'
+import React, { useState } from 'react'
 import s from './style.module.css'
+
 
 export const title = 'Patchy Line Chart'
 export const subTitle = 'Various test cases'

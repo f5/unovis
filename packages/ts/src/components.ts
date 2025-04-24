@@ -32,6 +32,7 @@ export { XYLabels } from './components/xy-labels'
 export { NestedDonut } from './components/nested-donut'
 export { Annotations } from './components/annotations'
 export { Plotband } from './components/plotband'
+export { Plotline } from './components/plotline'
 
 // Constants
 export * from './components/donut/constants'
@@ -63,3 +64,4 @@ export type { XYLabelsConfigInterface } from './components/xy-labels/config'
 export type { NestedDonutConfigInterface } from './components/nested-donut/config'
 export type { AnnotationsConfigInterface } from './components/annotations/config'
 export type { PlotbandConfigInterface } from './components/plotband/config'
+export type { PlotlineConfigInterface } from './components/plotline/config'

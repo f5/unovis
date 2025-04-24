@@ -18,6 +18,7 @@ export function getComponentList (
     { name: 'Timeline', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/timeline'], dataType: 'Datum[]', angularProvide: 'VisXYComponent' },
     { name: 'XYLabels', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/xy-labels'], dataType: 'Datum[]', angularProvide: 'VisXYComponent' },
     { name: 'Plotband', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/plotband'], dataType: null, angularProvide: 'VisXYComponent' },
+    { name: 'Plotline', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/plotline'], dataType: 'Datum[]', angularProvide: 'VisXYComponent' },
 
     // Single components
     { name: 'ChordDiagram', sources: [coreComponentConfigPath, '/components/chord-diagram'], dataType: '{ nodes: N[]; links?: L[] }', angularProvide: 'VisCoreComponent' },

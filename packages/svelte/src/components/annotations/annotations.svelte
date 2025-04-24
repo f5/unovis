@@ -2,14 +2,14 @@
   // !!! This code was automatically generated. You should not change it !!!
   import { Annotations, AnnotationsConfigInterface, AnnotationItem } from '@unovis/ts'
   import { onMount, getContext } from 'svelte'
-
+  
   import type { Lifecycle } from '../../types/context'
   import { arePropsEqual } from '../../utils/props'
-
-
+  
+  
   // data and required props
   // eslint-disable-next-line no-undef-init
-  export let items: AnnotationItem[] | undefined
+export let items: AnnotationItem[] | undefined
 
   // config
   let prevConfig: AnnotationsConfigInterface
@@ -23,8 +23,8 @@
   onMount(() => {
     component = new Annotations(config)
     return () => component?.destroy()
-  })
-  $: if (!arePropsEqual(prevConfig, config)) {
+    })
+  $: if(!arePropsEqual(prevConfig, config)) {
     component?.setConfig(config)
     prevConfig = config
   }
