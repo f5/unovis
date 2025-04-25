@@ -49,17 +49,19 @@ export class Plotline<Datum> extends XYComponentCore<Datum, PlotlineConfigInterf
 
     if (typeof config?.lineStyle === 'string') {
       strokeDashArray = lineStyle[config.lineStyle]
-    } else {
+    } else if (Array.isArray(config.lineStyle)) {
       strokeDashArray = config.lineStyle.join(',')
+    } else {
+      strokeDashArray = 'none'
     }
 
     this.value = config.value
 
     this.plotline
-      .attr('stroke', config.color)
       .attr('stroke-opacity', 1)
       .attr('stroke-width', config.lineWidth)
       .style('stroke-dasharray', strokeDashArray)
+      .style('stroke', config.color)
 
     const pos = { x1: 0, x2: 0, y1: 0, y2: 0 }
 
@@ -69,10 +71,10 @@ export class Plotline<Datum> extends XYComponentCore<Datum, PlotlineConfigInterf
       pos.x1 = 0
       pos.x2 = this._width
     } else {
-      pos.x1 = this.xScale(this.value)
-      pos.x2 = this.xScale(this.value)
       pos.y1 = 0
       pos.y2 = this._height
+      pos.x1 = this.xScale(this.value)
+      pos.x2 = this.xScale(this.value)
     }
 
     smartTransition(this.plotline, 300)

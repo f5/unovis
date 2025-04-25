@@ -2,11 +2,11 @@
   // !!! This code was automatically generated. You should not change it !!!
   import { Tooltip, TooltipConfigInterface } from '@unovis/ts'
   import { onMount, getContext } from 'svelte'
-
+  
   import type { Lifecycle } from '../../types/context'
   import { arePropsEqual } from '../../utils/props'
-
-
+  
+  
   // config
   let prevConfig: TooltipConfigInterface
   let config: TooltipConfigInterface
@@ -19,8 +19,8 @@
   onMount(() => {
     component = new Tooltip(config)
     return () => component?.destroy()
-  })
-  $: if (!arePropsEqual(prevConfig, config)) {
+    })
+  $: if(!arePropsEqual(prevConfig, config)) {
     component?.setConfig(config)
     prevConfig = config
   }
