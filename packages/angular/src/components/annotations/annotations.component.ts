@@ -10,11 +10,13 @@ import { VisGenericComponent } from '../../core'
   providers: [{ provide: VisGenericComponent, useExisting: VisAnnotationsComponent }],
 })
 export class VisAnnotationsComponent implements AnnotationsConfigInterface, AfterViewInit {
-  /** Animation duration of the data update transitions in milliseconds. Default: `600` */
-  @Input() duration?: number
+  
 
-  /** Events configuration. An object containing properties in the following format:
-   *
+      /** Animation duration of the data update transitions in milliseconds. Default: `600` */
+      @Input() duration?: number
+
+      /** Events configuration. An object containing properties in the following format:
+   * 
    * ```
    * {
    * \[selectorString]: {
@@ -30,15 +32,15 @@ export class VisAnnotationsComponent implements AnnotationsConfigInterface, Afte
    *  }
    * }
    * ``` */
-  @Input() events?: {
-    [selector: string]: {
-      [eventType in VisEventType]?: VisEventCallback
-    };
-  }
+      @Input() events?: {
+[selector: string]: {
+[eventType in VisEventType]?:VisEventCallback
+}
+}
 
-  /** You can set every SVG and HTML visualization object to have a custom DOM attributes, which is useful
+      /** You can set every SVG and HTML visualization object to have a custom DOM attributes, which is useful
    * when you want to do unit or end-to-end testing. Attributes configuration object has the following structure:
-   *
+   * 
    * ```
    * {
    * \[selectorString]: {
@@ -54,13 +56,13 @@ export class VisAnnotationsComponent implements AnnotationsConfigInterface, Afte
    *  }
    * }
    * ``` */
-  @Input() attributes?: {
-    [selector: string]: {
-      [attr: string]: string | number | boolean | ((datum: any) => string | number | boolean);
-    };
-  }
+      @Input() attributes?: {
+[selector: string]: {
+[attr: string]: string | number | boolean | ((datum: any) => string | number | boolean)
+}
+}
 
-  /** Legend items. Array of `AnnotationItem`:
+      /** Legend items. Array of `AnnotationItem`:
    * ```
    * {
    *  content: string | UnovisText | UnovisText[];
@@ -73,16 +75,18 @@ export class VisAnnotationsComponent implements AnnotationsConfigInterface, Afte
    * ```
    * To learn more, see our docs https://unovis.dev/docs/auxiliary/Annotations/
    * Default: `[]` */
-  @Input() items: AnnotationItem[] | undefined
-
+      @Input() items: AnnotationItem[] | undefined
+  
   component: Annotations | undefined
   public componentContainer: ContainerCore | undefined
 
   ngAfterViewInit (): void {
     this.component = new Annotations(this.getConfig())
+    
   }
 
   ngOnChanges (changes: SimpleChanges): void {
+    
     this.component?.setConfig(this.getConfig())
     this.componentContainer?.render()
   }
