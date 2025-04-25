@@ -37,6 +37,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
           <select onChange={e => setPlotlineLineStyle(lineStyle[Number(e.target.value)])}>
             {lineStyle.map((o, i) => <option key={i} value={i}>{String(o)}</option>)}
           </select>
+          <button onClick={() => setPlotlineLineStyle(undefined)}>Clear</button>
         </label>
         <label>
           Fallback value:
@@ -50,11 +51,12 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
         </label>
         <label>
           Line Value ({plotlineValue}):
-          <input type='range' min={1} max={10} value={plotlineValue} onChange={e => setPlotlineValue(Number(e.target.value))}/>
+          <input type='range' min={1} max={10} step="0.5" value={plotlineValue} onChange={e => setPlotlineValue(Number(e.target.value))}/>
         </label>
         <label>
           Line Color ({plotlineColor}):
           <input type='color' value={plotlineColor} onChange={e => setPlotlineColor(e.target.value)}/>
+          <button onClick={() => setPlotlineColor(undefined)}>Clear</button>
         </label>
       </div>
       <div>

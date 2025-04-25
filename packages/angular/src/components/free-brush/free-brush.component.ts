@@ -11,11 +11,13 @@ import { VisXYComponent } from '../../core'
   providers: [{ provide: VisXYComponent, useExisting: VisFreeBrushComponent }],
 })
 export class VisFreeBrushComponent<Datum> implements FreeBrushConfigInterface<Datum>, AfterViewInit {
-  /** Animation duration of the data update transitions in milliseconds. Default: `600` */
-  @Input() duration?: number
+  
 
-  /** Events configuration. An object containing properties in the following format:
-   *
+      /** Animation duration of the data update transitions in milliseconds. Default: `600` */
+      @Input() duration?: number
+
+      /** Events configuration. An object containing properties in the following format:
+   * 
    * ```
    * {
    * \[selectorString]: {
@@ -31,15 +33,15 @@ export class VisFreeBrushComponent<Datum> implements FreeBrushConfigInterface<Da
    *  }
    * }
    * ``` */
-  @Input() events?: {
-    [selector: string]: {
-      [eventType in VisEventType]?: VisEventCallback
-    };
-  }
+      @Input() events?: {
+[selector: string]: {
+[eventType in VisEventType]?:VisEventCallback
+}
+}
 
-  /** You can set every SVG and HTML visualization object to have a custom DOM attributes, which is useful
+      /** You can set every SVG and HTML visualization object to have a custom DOM attributes, which is useful
    * when you want to do unit or end-to-end testing. Attributes configuration object has the following structure:
-   *
+   * 
    * ```
    * {
    * \[selectorString]: {
@@ -55,44 +57,44 @@ export class VisFreeBrushComponent<Datum> implements FreeBrushConfigInterface<Da
    *  }
    * }
    * ``` */
-  @Input() attributes?: {
-    [selector: string]: {
-      [attr: string]: string | number | boolean | ((datum: any) => string | number | boolean);
-    };
-  }
+      @Input() attributes?: {
+[selector: string]: {
+[attr: string]: string | number | boolean | ((datum: any) => string | number | boolean)
+}
+}
 
-  /** Brush selection mode. X - horizontal, Y - vertical, XY - both. Default: `FreeBrushMode.X` */
-  @Input() mode?: FreeBrushMode
+      /** Brush selection mode. X - horizontal, Y - vertical, XY - both. Default: `FreeBrushMode.X` */
+      @Input() mode?: FreeBrushMode
 
-  /** Callback function to be called on any Brush event.
+      /** Callback function to be called on any Brush event.
    * Default: `(selection: FreeBrushSelection, event: D3BrushEvent<Datum>, userDriven: boolean): void => {}` */
-  @Input() onBrush?: ((selection: FreeBrushSelection | undefined, event: D3BrushEvent<unknown>, userDriven: boolean) => void)
+      @Input() onBrush?: ((selection: FreeBrushSelection | undefined, event: D3BrushEvent<unknown>, userDriven: boolean) => void)
 
-  /** Callback function to be called on the Brush start event.
+      /** Callback function to be called on the Brush start event.
    * Default: `(selection: FreeBrushSelection, event: D3BrushEvent<unknown>, userDriven: boolean): void => {}` */
-  @Input() onBrushStart?: ((selection: FreeBrushSelection | undefined, event: D3BrushEvent<unknown>, userDriven: boolean) => void)
+      @Input() onBrushStart?: ((selection: FreeBrushSelection | undefined, event: D3BrushEvent<unknown>, userDriven: boolean) => void)
 
-  /** Callback function to be called on the Brush move event.
+      /** Callback function to be called on the Brush move event.
    * Default: `(selection: FreeBrushSelection, event: D3BrushEvent<unknown>, userDriven: boolean): void => {}` */
-  @Input() onBrushMove?: ((selection: FreeBrushSelection | undefined, event: D3BrushEvent<unknown>, userDriven: boolean) => void)
+      @Input() onBrushMove?: ((selection: FreeBrushSelection | undefined, event: D3BrushEvent<unknown>, userDriven: boolean) => void)
 
-  /** Callback function to be called on the Brush end event.
+      /** Callback function to be called on the Brush end event.
    * Default: `(selection: FreeBrushSelection, event: D3BrushEvent<unknown>, userDriven: boolean)L void => {}` */
-  @Input() onBrushEnd?: ((selection: FreeBrushSelection | undefined, event: D3BrushEvent<unknown>, userDriven: boolean) => void)
+      @Input() onBrushEnd?: ((selection: FreeBrushSelection | undefined, event: D3BrushEvent<unknown>, userDriven: boolean) => void)
 
-  /** Width of the Brush handle. Default: `1` */
-  @Input() handleWidth?: number
+      /** Width of the Brush handle. Default: `1` */
+      @Input() handleWidth?: number
 
-  /** Brush selection in data space, can be used to force set the selection from outside.
+      /** Brush selection in data space, can be used to force set the selection from outside.
    * In case of two dimensional mode, the selection has the following format: `[[xMin, xMax], [yMin, yMax]]`.
    * This config property gets updated on internal brush events. Default: `undefined` */
-  @Input() selection?: FreeBrushSelection | null | undefined
+      @Input() selection?: FreeBrushSelection | null | undefined
 
-  /** Constraint Brush selection to a minimal length in data units. Default: `undefined` */
-  @Input() selectionMinLength?: number | [number, number]
+      /** Constraint Brush selection to a minimal length in data units. Default: `undefined` */
+      @Input() selectionMinLength?: number | [number, number]
 
-  /** Automatically hide the brush after selection. Default: `true` */
-  @Input() autoHide?: boolean
+      /** Automatically hide the brush after selection. Default: `true` */
+      @Input() autoHide?: boolean
   @Input() data: Datum[]
 
   component: FreeBrush<Datum> | undefined
@@ -100,11 +102,11 @@ export class VisFreeBrushComponent<Datum> implements FreeBrushConfigInterface<Da
 
   ngAfterViewInit (): void {
     this.component = new FreeBrush<Datum>(this.getConfig())
-
-    if (this.data) {
-      this.component.setData(this.data)
-      this.componentContainer?.render()
-    }
+    
+      if (this.data) {
+        this.component.setData(this.data)
+        this.componentContainer?.render()
+      }
   }
 
   ngOnChanges (changes: SimpleChanges): void {
