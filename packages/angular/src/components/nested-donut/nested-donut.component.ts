@@ -1,19 +1,6 @@
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import {
-  NestedDonut,
-  NestedDonutConfigInterface,
-  ContainerCore,
-  VisEventType,
-  VisEventCallback,
-  NestedDonutDirection,
-  NumericAccessor,
-  NestedDonutSegment,
-  StringAccessor,
-  GenericAccessor,
-  NestedDonutLayerSettings,
-  ColorAccessor,
-} from '@unovis/ts'
+import { NestedDonut, NestedDonutConfigInterface, ContainerCore, VisEventType, VisEventCallback, NestedDonutDirection, NumericAccessor, NestedDonutSegment, StringAccessor, GenericAccessor, NestedDonutLayerSettings, ColorAccessor } from '@unovis/ts'
 import { VisCoreComponent } from '../../core'
 
 @Component({
@@ -23,11 +10,13 @@ import { VisCoreComponent } from '../../core'
   providers: [{ provide: VisCoreComponent, useExisting: VisNestedDonutComponent }],
 })
 export class VisNestedDonutComponent<Datum> implements NestedDonutConfigInterface<Datum>, AfterViewInit {
-  /** Animation duration of the data update transitions in milliseconds. Default: `600` */
-  @Input() duration?: number
+  
 
-  /** Events configuration. An object containing properties in the following format:
-   *
+      /** Animation duration of the data update transitions in milliseconds. Default: `600` */
+      @Input() duration?: number
+
+      /** Events configuration. An object containing properties in the following format:
+   * 
    * ```
    * {
    * \[selectorString]: {
@@ -43,15 +32,15 @@ export class VisNestedDonutComponent<Datum> implements NestedDonutConfigInterfac
    *  }
    * }
    * ``` */
-  @Input() events?: {
-    [selector: string]: {
-      [eventType in VisEventType]?: VisEventCallback
-    };
-  }
+      @Input() events?: {
+[selector: string]: {
+[eventType in VisEventType]?:VisEventCallback
+}
+}
 
-  /** You can set every SVG and HTML visualization object to have a custom DOM attributes, which is useful
+      /** You can set every SVG and HTML visualization object to have a custom DOM attributes, which is useful
    * when you want to do unit or end-to-end testing. Attributes configuration object has the following structure:
-   *
+   * 
    * ```
    * {
    * \[selectorString]: {
@@ -67,79 +56,79 @@ export class VisNestedDonutComponent<Datum> implements NestedDonutConfigInterfac
    *  }
    * }
    * ``` */
-  @Input() attributes?: {
-    [selector: string]: {
-      [attr: string]: string | number | boolean | ((datum: any) => string | number | boolean);
-    };
-  }
+      @Input() attributes?: {
+[selector: string]: {
+[attr: string]: string | number | boolean | ((datum: any) => string | number | boolean)
+}
+}
 
-  /** Diagram angle range. Default: `[0, 2 * Math.PI]` */
-  @Input() angleRange?: [number, number]
+      /** Diagram angle range. Default: `[0, 2 * Math.PI]` */
+      @Input() angleRange?: [number, number]
 
-  /** Direction of hierarchy flow from root to leaf.
+      /** Direction of hierarchy flow from root to leaf.
    * `NestedDonutDirection.Inwards` starts from the outer most radius and works towards center
    * `NestedDonutDirection.Outwards` starts from the inner most radius the consecutive layers outward.
    *  Default: `NestedDonutDirection.Inwards` */
-  @Input() direction?: NestedDonutDirection | string
+      @Input() direction?: NestedDonutDirection | string
 
+      
+      @Input() value?: NumericAccessor<Datum>
 
-  @Input() value?: NumericAccessor<Datum>
+      /** Central label text. Default: `undefined` */
+      @Input() centralLabel?: string
 
-  /** Central label text. Default: `undefined` */
-  @Input() centralLabel?: string
+      /** Central sub-label accessor function or text. Default: `undefined` */
+      @Input() centralSubLabel?: string
 
-  /** Central sub-label accessor function or text. Default: `undefined` */
-  @Input() centralSubLabel?: string
+      /** Enables wrapping for the sub-label. Default: `true` */
+      @Input() centralSubLabelWrap?: boolean
 
-  /** Enables wrapping for the sub-label. Default: `true` */
-  @Input() centralSubLabelWrap?: boolean
-
-  /** Show donut background. The color is configurable via
+      /** Show donut background. The color is configurable via
    * the `--vis-nested-donut-background-color` and `--vis-dark-nested-donut-background-color` CSS variables.
    * Default: `false` */
-  @Input() showBackground?: boolean
+      @Input() showBackground?: boolean
 
-  /** Sort function for segments. Default `undefined` */
-  @Input() sort?: (a: NestedDonutSegment<Datum>, b: NestedDonutSegment<Datum>) => number
+      /** Sort function for segments. Default `undefined` */
+      @Input() sort?: (a: NestedDonutSegment<Datum>, b: NestedDonutSegment<Datum>) => number
 
-  /** Array of accessor functions to defined the nested groups */
-  @Input() layers: StringAccessor<Datum>[]
+      /** Array of accessor functions to defined the nested groups */
+      @Input() layers: StringAccessor<Datum>[]
 
-  /** Configuration properties for individual layers. Accepts an accessor or constant of type:
+      /** Configuration properties for individual layers. Accepts an accessor or constant of type:
    * {
    *   backgroundColor?: string;
    *   labelAlignment?: NestedDonutSegmentLabelAlignment;
    *   width?: number | string;
    * } */
-  @Input() layerSettings?: GenericAccessor<NestedDonutLayerSettings, number>
+      @Input() layerSettings?: GenericAccessor<NestedDonutLayerSettings, number>
 
+      
+      @Input() layerPadding?: number
 
-  @Input() layerPadding?: number
+      /** Corner Radius. Default: `0` */
+      @Input() cornerRadius?: number
 
-  /** Corner Radius. Default: `0` */
-  @Input() cornerRadius?: number
+      /** Angular size for empty segments in radians. Default: `Math.PI / 180` */
+      @Input() emptySegmentAngle?: number
 
-  /** Angular size for empty segments in radians. Default: `Math.PI / 180` */
-  @Input() emptySegmentAngle?: number
+      /** Hide segment labels when they don't fit. Default: `true` */
+      @Input() hideOverflowingSegmentLabels?: boolean
 
-  /** Hide segment labels when they don't fit. Default: `true` */
-  @Input() hideOverflowingSegmentLabels?: boolean
+      /** Color accessor function for segments. Default: `undefined` */
+      @Input() segmentColor?: ColorAccessor<NestedDonutSegment<Datum>>
 
-  /** Color accessor function for segments. Default: `undefined` */
-  @Input() segmentColor?: ColorAccessor<NestedDonutSegment<Datum>>
+      /** Segment label accessor function. Default `undefined` */
+      @Input() segmentLabel?: StringAccessor<NestedDonutSegment<Datum>>
 
-  /** Segment label accessor function. Default `undefined` */
-  @Input() segmentLabel?: StringAccessor<NestedDonutSegment<Datum>>
+      /** Color accessor function for segment labels */
+      @Input() segmentLabelColor?: ColorAccessor<NestedDonutSegment<Datum>>
 
-  /** Color accessor function for segment labels */
-  @Input() segmentLabelColor?: ColorAccessor<NestedDonutSegment<Datum>>
-
-  /** When true, the component will display empty segments (the ones that have `0` values) as tiny slices.
+      /** When true, the component will display empty segments (the ones that have `0` values) as tiny slices.
    * Default: `false` */
-  @Input() showEmptySegments?: boolean
+      @Input() showEmptySegments?: boolean
 
-  /** Show labels for individual segments. Default: `true` */
-  @Input() showSegmentLabels?: boolean
+      /** Show labels for individual segments. Default: `true` */
+      @Input() showSegmentLabels?: boolean
   @Input() data: Datum[]
 
   component: NestedDonut<Datum> | undefined
@@ -147,11 +136,11 @@ export class VisNestedDonutComponent<Datum> implements NestedDonutConfigInterfac
 
   ngAfterViewInit (): void {
     this.component = new NestedDonut<Datum>(this.getConfig())
-
-    if (this.data) {
-      this.component.setData(this.data)
-      this.componentContainer?.render()
-    }
+    
+      if (this.data) {
+        this.component.setData(this.data)
+        this.componentContainer?.render()
+      }
   }
 
   ngOnChanges (changes: SimpleChanges): void {
