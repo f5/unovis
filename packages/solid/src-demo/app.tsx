@@ -8,6 +8,7 @@ const examples = [
   lazy(() => import('@unovis/shared/examples/basic-line-chart/basic-line-chart-solid')),
   lazy(() => import('@unovis/shared/examples/multi-line-chart/multi-line-chart-solid')),
   lazy(() => import('@unovis/shared/examples/data-gap-line-chart/data-gap-line-chart-solid')),
+  lazy(() => import('@unovis/shared/examples/patchy-line-chart/patchy-line-chart-solid')),
   lazy(() => import('@unovis/shared/examples/basic-timeline/basic-timeline-solid')),
   // Area Charts
   lazy(() => import('@unovis/shared/examples/non-stacked-area-chart/non-stacked-area-chart-solid')),
