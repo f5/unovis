@@ -1,0 +1,11 @@
+.controls-container {
+  background-color: var(--ifm-code-background);
+  padding: 10px 20px;
+  display: inline-block;
+  border-radius: 5px;
+  border: 1px solid var(--ifm-code-background);
+  margin-bottom: 10px;
+  display: flex;
+  width: 100%;
+  gap: 30px;
+}
