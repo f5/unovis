@@ -11,6 +11,7 @@
     () => import('@unovis/shared/examples/leaflet-flow-map/leaflet-flow-map.svelte'),
     () => import('@unovis/shared/examples/advanced-leaflet-map/advanced-leaflet-map.svelte'),
     () => import('@unovis/shared/examples/basic-line-chart/basic-line-chart.svelte'),
+    () => import('@unovis/shared/examples/patchy-line-chart/patchy-line-chart.svelte'),
     () => import('@unovis/shared/examples/basic-scatter-chart/basic-scatter-chart.svelte'),
     () => import('@unovis/shared/examples/brush-grouped-bar/brush-grouped-bar.svelte'),
     () => import('@unovis/shared/examples/free-brush-scatters/free-brush-scatters.svelte'),
