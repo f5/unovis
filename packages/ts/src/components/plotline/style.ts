@@ -6,6 +6,7 @@ export const globalStyles = injectGlobal`
     --vis-plotline-width: 2;
     --vis-plotline-dasharray: none;
     --vis-plotline-stroke-dashoffset: 0;
+    --vis-plotline-font-size: 12px;
   }
 `
 
@@ -22,4 +23,12 @@ export const plotline = css`
   stroke-width: var(--vis-plotline-width);
   stroke-dasharray: var(--vis-plotline-dasharray);
   stroke-dashoffset: var(--vis-plotline-stroke-dashoffset);
+`
+
+export const label = css`
+  label: plotline-label;
+  text-anchor: middle;
+  dominant-baseline: middle;
+  pointer-events: none;
+  font-size: var(--vis-plotline-font-size);
 `

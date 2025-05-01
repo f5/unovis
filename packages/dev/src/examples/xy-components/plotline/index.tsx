@@ -1,7 +1,7 @@
 import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 import { generateXYDataRecords, XYDataRecord } from '@src/utils/data'
 import { VisAxis, VisCrosshair, VisLine, VisPlotline, VisTooltip, VisXYContainer } from '@unovis/react'
-import { PlotlineLineStylePresets } from '@unovis/ts'
+import { PlotlineLegendOrientation, PlotlineLegendPosition, PlotlineLineStylePresets } from '@unovis/ts'
 import React, { useRef, useState } from 'react'
 import s from './style.module.css'
 
@@ -23,41 +23,90 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
 
   const axis = ['x', 'y']
   const lineStyle: PlotlineLineStylePresets[] = ['solid', 'shortDash', 'shortDot', 'shortDashDot', 'shortDashDotDot', 'dot', 'dash', 'longDash', 'dashDot', 'longDashDot', 'longDashDotDot']
-  const [plotlineAxis, setPlotlineAxis] = useState(axis[0])
+  const textPosition: PlotlineLegendPosition[] = ['top-left', 'top', 'top-right', 'right', 'bottom-right', 'bottom', 'bottom-left', 'left']
+  const textOrientation: PlotlineLegendOrientation[] = ['horizontal', 'vertical']
+
+  const [plotlineAxis, setPlotlineAxis] = useState(axis[1])
   const [plotlineLineStyle, setPlotlineLineStyle] = useState(lineStyle[0])
   const [plotlineWidth, setPlotlineWidth] = useState(2)
   const [plotlineValue, setPlotlineValue] = useState(3)
   const [plotlineColor, setPlotlineColor] = useState('#FF8400')
 
+  const [plotlineText, setPlotlineText] = useState('x label')
+  const [plotlineTextPosition, setPlotlineTextPosition] = useState(textPosition[7])
+  const [plotlineTextOffsetX, setPlotlineTextOffsetX] = useState(14)
+  const [plotlineTextOffsetY, setPlotlineTextOffsetY] = useState(14)
+  const [plotlineTextOrientation, setPlotlineTextOrientation] = useState(textOrientation[0])
+
   return (
     <>
-      <div className={s.controls}>
-        <label>
-          Line Style:
-          <select onChange={e => setPlotlineLineStyle(lineStyle[Number(e.target.value)])}>
-            {lineStyle.map((o, i) => <option key={i} value={i}>{String(o)}</option>)}
-          </select>
-          <button onClick={() => setPlotlineLineStyle(undefined)}>Clear</button>
-        </label>
-        <label>
-          Fallback value:
-          <select onChange={e => setPlotlineAxis(axis[Number(e.target.value)])}>
-            {axis.map((o, i) => <option key={i} value={i}>{String(o)}</option>)}
-          </select>
-        </label>
-        <label>
-          Line Width ({plotlineWidth}):
-          <input type='range' min={1} max={5} value={plotlineWidth} onChange={e => setPlotlineWidth(Number(e.target.value))}/>
-        </label>
-        <label>
-          Line Value ({plotlineValue}):
-          <input type='range' min={1} max={10} step="0.5" value={plotlineValue} onChange={e => setPlotlineValue(Number(e.target.value))}/>
-        </label>
-        <label>
-          Line Color ({plotlineColor}):
-          <input type='color' value={plotlineColor} onChange={e => setPlotlineColor(e.target.value)}/>
-          <button onClick={() => setPlotlineColor(undefined)}>Clear</button>
-        </label>
+      <div >
+        <div>
+          <h3>Line Props</h3>
+          <div className={s.controls}>
+            <label>
+              Style:
+              <select onChange={e => setPlotlineLineStyle(lineStyle[Number(e.target.value)])}>
+                {lineStyle.map((o, i) => <option key={i} value={i}>{String(o)}</option>)}
+              </select>
+              <button onClick={() => setPlotlineLineStyle(undefined)}>Clear</button>
+            </label>
+            <label>
+              Axis:
+              <select onChange={e => setPlotlineAxis(axis[Number(e.target.value)])}>
+                {axis.map((o, i) => <option key={i} value={i}>{String(o)}</option>)}
+              </select>
+            </label>
+            <label>
+              Width ({plotlineWidth}):
+              <input type='range' min={1} max={5} value={plotlineWidth} onChange={e => setPlotlineWidth(Number(e.target.value))}/>
+            </label>
+            <label>
+              Value ({plotlineValue}):
+              <input type='range' min={1} max={10} step="0.5" value={plotlineValue} onChange={e => setPlotlineValue(Number(e.target.value))}/>
+            </label>
+            <label>
+              Color ({plotlineColor}):
+              <input type='color' value={plotlineColor} onChange={e => setPlotlineColor(e.target.value)}/>
+              <button onClick={() => setPlotlineColor(undefined)}>Clear</button>
+            </label>
+          </div>
+        </div>
+        <div>
+          <h3>Label Props</h3>
+          <div className={s.controls}>
+            <label>
+              Text:
+              <input type='text' value={plotlineText} onChange={e => setPlotlineText(e.target.value)}/>
+            </label>
+            <label>
+              Position:
+              <select value={plotlineTextPosition} onChange={e => setPlotlineTextPosition(e.target.value)}>
+                {textPosition.map((position, index) => (
+                  <option key={index} value={position}>{position}</option>
+                ))}
+              </select>
+            </label>
+            <label>
+              Offset X:
+              <input type='range' min={0} max={50} value={plotlineTextOffsetX} onChange={e => setPlotlineTextOffsetX(Number(e.target.value))}/>
+              ({plotlineTextOffsetX})
+            </label>
+            <label>
+              Offset Y:
+              <input type='range' min={0} max={50} value={plotlineTextOffsetY} onChange={e => setPlotlineTextOffsetY(Number(e.target.value))}/>
+              ({plotlineTextOffsetY})
+            </label>
+            <label>
+              Orientation:
+              <select value={plotlineTextOrientation} onChange={e => setPlotlineTextOrientation(e.target.value)}>
+                {textOrientation.map((position, index) => (
+                  <option key={index} value={position}>{position}</option>
+                ))}
+              </select>
+            </label>
+          </div>
+        </div>
       </div>
       <div>
         <VisXYContainer<XYDataRecord> data={data}>
@@ -66,10 +115,17 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
           <VisAxis type='y' tickFormat={(y: number) => `${y}`} duration={props.duration}/>
           <VisPlotline
             axis={plotlineAxis}
-            lineWidth={plotlineWidth}
             value={plotlineValue}
-            lineStyle={plotlineLineStyle}
             color={plotlineColor}
+            lineWidth={plotlineWidth}
+            lineStyle={plotlineLineStyle}
+            label={{
+              text: plotlineText,
+              position: plotlineTextPosition,
+              offsetX: plotlineTextOffsetX,
+              offsetY: plotlineTextOffsetY,
+              orientation: plotlineTextOrientation,
+            }}
           />
 
           <VisCrosshair template={(d: XYDataRecord) => `${d.x}`} />
