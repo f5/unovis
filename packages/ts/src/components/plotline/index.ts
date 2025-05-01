@@ -11,19 +11,26 @@ import { PlotlineDefaultConfig, PlotlineConfigInterface } from './config'
 
 // Styles
 import * as s from './style'
+import { PlotlineLegendPosition, PlotlineLegendOrientation } from './types'
 
 export class Plotline<Datum> extends XYComponentCore<Datum, PlotlineConfigInterface<Datum>> {
   static selectors = s
   protected _defaultConfig = PlotlineDefaultConfig as PlotlineConfigInterface<Datum>
   value: number | null | undefined
   plotline: Selection<SVGLineElement, any, SVGLineElement, any>
+  label: Selection<SVGTextElement, any, SVGTextElement, any>
 
   constructor (config: PlotlineConfigInterface<Datum>) {
     super()
     if (config) this.setConfig(config)
 
-    this.plotline = this.g.append('line')
+    this.plotline = this.g
+      .append('line')
       .attr('class', s.plotline)
+
+    this.label = this.g
+      .append('text')
+      .attr('class', s.label)
   }
 
   _render (customDuration?: number): void {
@@ -83,8 +90,136 @@ export class Plotline<Datum> extends XYComponentCore<Datum, PlotlineConfigInterf
       .attr('y1', pos.y1)
       .attr('y2', pos.y2)
 
+    if (config.label.text) {
+      const legendProps = this._computeLabel(
+        config.axis,
+        pos.x2,
+        pos.y2,
+        config.label.position,
+        config.label.offsetX,
+        config.label.offsetY,
+        config.label.orientation
+      )
+
+      smartTransition(this.label, 300)
+        .text(config.label.text)
+        .attr('x', legendProps.x)
+        .attr('y', legendProps.y)
+        .attr('transform', legendProps.transform)
+        .style('text-anchor', legendProps.textAnchor)
+    }
+
     smartTransition(this.plotline.exit())
       .style('opacity', 0)
       .remove()
+  }
+
+  _computeLabel (
+    axis: 'x'| 'y',
+    width: number,
+    height: number,
+    position: PlotlineLegendPosition,
+    offsetX: number,
+    offsetY: number,
+    orientation: PlotlineLegendOrientation
+  ): { x: number; y: number; rotation: number; textAnchor: string; transform: string } {
+    let x = 0
+    let y = 0
+    let textAnchor = 'start'
+
+    const isVertical = orientation === 'vertical'
+    const rotation = isVertical ? -90 : 0
+
+    if (axis === 'x') {
+      switch (position) {
+        case 'top-left':
+          x = width - offsetX
+          y = offsetY
+          textAnchor = 'end'
+          break
+        case 'top':
+          x = width
+          y = offsetY
+          textAnchor = isVertical ? 'start' : 'middle'
+          break
+        case 'top-right':
+          x = width + offsetX
+          y = offsetY
+          textAnchor = isVertical ? 'end' : 'start'
+          break
+        case 'right':
+          x = width + offsetX
+          y = height / 2
+          textAnchor = isVertical ? 'middle' : 'start'
+          break
+        case 'bottom-right':
+          x = width + offsetX
+          y = height - offsetY
+          textAnchor = 'start'
+          break
+        case 'bottom':
+          x = width
+          y = height - offsetY
+          textAnchor = isVertical ? 'end' : 'middle'
+          break
+        case 'bottom-left':
+          x = width - offsetX
+          y = height - offsetY
+          textAnchor = isVertical ? 'start' : 'end'
+          break
+        case 'left':
+          x = width - offsetX
+          y = height / 2
+          textAnchor = isVertical ? 'middle' : 'end'
+          break
+      }
+    } else {
+      switch (position) {
+        case 'top-left':
+          x = offsetX
+          y = height - offsetY
+          textAnchor = 'start'
+          break
+        case 'top':
+          x = width / 2
+          y = height - offsetY
+          textAnchor = isVertical ? 'start' : 'middle'
+          break
+        case 'top-right':
+          x = width - offsetX
+          y = height - offsetY
+          textAnchor = isVertical ? 'start' : 'end'
+          break
+        case 'right':
+          x = width - offsetX
+          y = height
+          textAnchor = isVertical ? 'middle' : 'end'
+          break
+        case 'bottom-right':
+          x = width - offsetX
+          y = height + offsetY
+          textAnchor = 'end'
+          break
+        case 'bottom':
+          x = width / 2
+          y = height + offsetY
+          textAnchor = isVertical ? 'end' : 'middle'
+          break
+        case 'bottom-left':
+          x = offsetX
+          y = height + offsetY
+          textAnchor = isVertical ? 'end' : 'start'
+          break
+        case 'left':
+          x = offsetX
+          y = height
+          textAnchor = isVertical ? 'middle' : 'start'
+          break
+      }
+    }
+
+    const transform = rotation !== 0 ? `rotate(${rotation}, ${x}, ${y})` : ''
+
+    return { x, y, rotation, textAnchor, transform }
   }
 }

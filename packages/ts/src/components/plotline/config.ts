@@ -1,7 +1,8 @@
 import { XYComponentConfigInterface, XYComponentDefaultConfig } from 'core/xy-component/config'
-import { PlotlineLineStylePresets } from './types'
+import { PlotlineLabelOptions, PlotlineLineStylePresets } from './types'
 
 export interface PlotlineConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
+  /* Color of the plotline */
   color?: string;
   /** Line width in pixels. Default: `2` */
   lineWidth?: number;
@@ -11,6 +12,8 @@ export interface PlotlineConfigInterface<Datum> extends XYComponentConfigInterfa
   value?: number | null | undefined;
   /** Line style, see SVG's stroke-dasharray. Default: `solid` */
   lineStyle?: PlotlineLineStylePresets | number[];
+  /** Label options */
+  label?: PlotlineLabelOptions;
 }
 
 export const PlotlineDefaultConfig: PlotlineConfigInterface<unknown> = {
@@ -19,4 +22,10 @@ export const PlotlineDefaultConfig: PlotlineConfigInterface<unknown> = {
   axis: 'y',
   value: 0,
   lineStyle: 'solid',
+  label: {
+    position: 'top-right',
+    offsetX: 14,
+    offsetY: 14,
+    orientation: 'horizontal',
+  },
 }
