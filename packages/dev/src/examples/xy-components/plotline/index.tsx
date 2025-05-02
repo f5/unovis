@@ -37,6 +37,8 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
   const [plotlineTextOffsetX, setPlotlineTextOffsetX] = useState(14)
   const [plotlineTextOffsetY, setPlotlineTextOffsetY] = useState(14)
   const [plotlineTextOrientation, setPlotlineTextOrientation] = useState(textOrientation[0])
+  const [plotlineLabelColor, setPlotlineLabelColor] = useState()
+  const [plotlineLabelSize, setPlotlineLabelSize] = useState(12)
 
   return (
     <>
@@ -105,6 +107,15 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
                 ))}
               </select>
             </label>
+            <label>
+              Color ({plotlineLabelColor}):
+              <input type='color' value={plotlineColor} onChange={e => setPlotlineLabelColor(e.target.value)}/>
+              <button onClick={() => setPlotlineLabelColor(undefined)}>Clear</button>
+            </label>
+            <label>
+              Label Size ({plotlineLabelSize}):
+              <input type='range' min={10} max={20} value={plotlineLabelSize} onChange={e => setPlotlineLabelSize(Number(e.target.value))}/>
+            </label>
           </div>
         </div>
       </div>
@@ -119,13 +130,13 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
             color={plotlineColor}
             lineWidth={plotlineWidth}
             lineStyle={plotlineLineStyle}
-            label={{
-              text: plotlineText,
-              position: plotlineTextPosition,
-              offsetX: plotlineTextOffsetX,
-              offsetY: plotlineTextOffsetY,
-              orientation: plotlineTextOrientation,
-            }}
+            labelText={plotlineText}
+            labelPosition={plotlineTextPosition}
+            labelOffsetX={plotlineTextOffsetX}
+            labelOffsetY={plotlineTextOffsetY}
+            labelOrientation={plotlineTextOrientation}
+            labelColor={plotlineLabelColor}
+            labelSize={plotlineLabelSize}
           />
 
           <VisCrosshair template={(d: XYDataRecord) => `${d.x}`} />
