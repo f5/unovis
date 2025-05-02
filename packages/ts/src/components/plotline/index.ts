@@ -90,23 +90,25 @@ export class Plotline<Datum> extends XYComponentCore<Datum, PlotlineConfigInterf
       .attr('y1', pos.y1)
       .attr('y2', pos.y2)
 
-    if (config.label.text) {
-      const legendProps = this._computeLabel(
+    if (config.labelText) {
+      const labelProps = this._computeLabel(
         config.axis,
         pos.x2,
         pos.y2,
-        config.label.position,
-        config.label.offsetX,
-        config.label.offsetY,
-        config.label.orientation
+        config.labelPosition,
+        config.labelOffsetX,
+        config.labelOffsetY,
+        config.labelOrientation
       )
 
       smartTransition(this.label, 300)
-        .text(config.label.text)
-        .attr('x', legendProps.x)
-        .attr('y', legendProps.y)
-        .attr('transform', legendProps.transform)
-        .style('text-anchor', legendProps.textAnchor)
+        .text(config.labelText)
+        .attr('x', labelProps.x)
+        .attr('y', labelProps.y)
+        .attr('transform', labelProps.transform)
+        .style('text-anchor', labelProps.textAnchor)
+        .style('fill', config.labelColor)
+        .style('font-size', config.labelSize ? `${config.labelSize}px` : undefined)
     }
 
     smartTransition(this.plotline.exit())
