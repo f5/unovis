@@ -105,6 +105,7 @@ export class Plotline<Datum> extends XYComponentCore<Datum, PlotlineConfigInterf
         .text(config.labelText)
         .attr('x', labelProps.x)
         .attr('y', labelProps.y)
+        .attr('dominant-baseline', labelProps.dominantBaseline)
         .attr('transform', labelProps.transform)
         .style('text-anchor', labelProps.textAnchor)
         .style('fill', config.labelColor)
@@ -117,14 +118,14 @@ export class Plotline<Datum> extends XYComponentCore<Datum, PlotlineConfigInterf
   }
 
   _computeLabel (
-    axis: 'x'| 'y',
+    axis: 'x' | 'y',
     width: number,
     height: number,
     position: PlotlineLegendPosition,
     offsetX: number,
     offsetY: number,
     orientation: PlotlineLegendOrientation
-  ): { x: number; y: number; rotation: number; textAnchor: string; transform: string } {
+  ): { x: number; y: number; rotation: number; textAnchor: string; transform: string; dominantBaseline: string } {
     let x = 0
     let y = 0
     let textAnchor = 'start'
@@ -132,47 +133,57 @@ export class Plotline<Datum> extends XYComponentCore<Datum, PlotlineConfigInterf
     const isVertical = orientation === 'vertical'
     const rotation = isVertical ? -90 : 0
 
+    let dominantBaseline = 'middle'
+
     if (axis === 'x') {
       switch (position) {
         case 'top-left':
           x = width - offsetX
           y = offsetY
           textAnchor = 'end'
+          dominantBaseline = isVertical ? 'text-after-edge' : 'text-before-edge'
           break
         case 'top':
           x = width
           y = offsetY
-          textAnchor = isVertical ? 'start' : 'middle'
+          textAnchor = isVertical ? 'end' : 'middle'
+          dominantBaseline = isVertical ? 'middle' : 'text-before-edge'
           break
         case 'top-right':
           x = width + offsetX
           y = offsetY
           textAnchor = isVertical ? 'end' : 'start'
+          dominantBaseline = 'text-before-edge'
           break
         case 'right':
           x = width + offsetX
           y = height / 2
           textAnchor = isVertical ? 'middle' : 'start'
+          dominantBaseline = isVertical ? 'text-before-edge' : 'middle'
           break
         case 'bottom-right':
           x = width + offsetX
           y = height - offsetY
           textAnchor = 'start'
+          dominantBaseline = isVertical ? 'text-before-edge' : 'text-after-edge'
           break
         case 'bottom':
           x = width
           y = height - offsetY
-          textAnchor = isVertical ? 'end' : 'middle'
+          textAnchor = isVertical ? 'start' : 'middle'
+          dominantBaseline = isVertical ? 'middle' : 'text-after-edge'
           break
         case 'bottom-left':
           x = width - offsetX
           y = height - offsetY
           textAnchor = isVertical ? 'start' : 'end'
+          dominantBaseline = 'text-after-edge'
           break
         case 'left':
           x = width - offsetX
           y = height / 2
           textAnchor = isVertical ? 'middle' : 'end'
+          dominantBaseline = isVertical ? 'text-after-edge' : 'middle'
           break
       }
     } else {
@@ -181,47 +192,55 @@ export class Plotline<Datum> extends XYComponentCore<Datum, PlotlineConfigInterf
           x = offsetX
           y = height - offsetY
           textAnchor = 'start'
+          dominantBaseline = isVertical ? 'text-before-edge' : 'text-after-edge'
           break
         case 'top':
           x = width / 2
           y = height - offsetY
           textAnchor = isVertical ? 'start' : 'middle'
+          dominantBaseline = isVertical ? 'central' : 'text-after-edge'
           break
         case 'top-right':
           x = width - offsetX
           y = height - offsetY
           textAnchor = isVertical ? 'start' : 'end'
+          dominantBaseline = 'text-after-edge'
           break
         case 'right':
           x = width - offsetX
           y = height
           textAnchor = isVertical ? 'middle' : 'end'
+          dominantBaseline = isVertical ? 'text-after-edge' : 'middle'
           break
         case 'bottom-right':
           x = width - offsetX
           y = height + offsetY
           textAnchor = 'end'
+          dominantBaseline = isVertical ? 'text-after-edge' : 'text-before-edge'
           break
         case 'bottom':
           x = width / 2
           y = height + offsetY
           textAnchor = isVertical ? 'end' : 'middle'
+          dominantBaseline = isVertical ? 'central' : 'text-before-edge'
           break
         case 'bottom-left':
           x = offsetX
           y = height + offsetY
           textAnchor = isVertical ? 'end' : 'start'
+          dominantBaseline = 'text-before-edge'
           break
         case 'left':
           x = offsetX
           y = height
           textAnchor = isVertical ? 'middle' : 'start'
+          dominantBaseline = isVertical ? 'text-before-edge' : 'middle'
           break
       }
     }
 
     const transform = rotation !== 0 ? `rotate(${rotation}, ${x}, ${y})` : ''
 
-    return { x, y, rotation, textAnchor, transform }
+    return { x, y, rotation, textAnchor, transform, dominantBaseline }
   }
 }
