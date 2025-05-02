@@ -1,6 +1,17 @@
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import { Axis, AxisConfigInterface, ContainerCore, VisEventType, VisEventCallback, Position, AxisType, FitMode, TrimMode, TextAlign } from '@unovis/ts'
+import {
+  Axis,
+  AxisConfigInterface,
+  ContainerCore,
+  VisEventType,
+  VisEventCallback,
+  Position,
+  AxisType,
+  FitMode,
+  TrimMode,
+  TextAlign,
+} from '@unovis/ts'
 import { VisXYComponent } from '../../core'
 
 @Component({
@@ -10,13 +21,11 @@ import { VisXYComponent } from '../../core'
   providers: [{ provide: VisXYComponent, useExisting: VisAxisComponent }],
 })
 export class VisAxisComponent<Datum> implements AxisConfigInterface<Datum>, AfterViewInit {
-  
+  /** Animation duration of the data update transitions in milliseconds. Default: `600` */
+  @Input() duration?: number
 
-      /** Animation duration of the data update transitions in milliseconds. Default: `600` */
-      @Input() duration?: number
-
-      /** Events configuration. An object containing properties in the following format:
-   * 
+  /** Events configuration. An object containing properties in the following format:
+   *
    * ```
    * {
    * \[selectorString]: {
@@ -32,15 +41,15 @@ export class VisAxisComponent<Datum> implements AxisConfigInterface<Datum>, Afte
    *  }
    * }
    * ``` */
-      @Input() events?: {
-[selector: string]: {
-[eventType in VisEventType]?:VisEventCallback
-}
-}
+  @Input() events?: {
+    [selector: string]: {
+      [eventType in VisEventType]?: VisEventCallback
+    };
+  }
 
-      /** You can set every SVG and HTML visualization object to have a custom DOM attributes, which is useful
+  /** You can set every SVG and HTML visualization object to have a custom DOM attributes, which is useful
    * when you want to do unit or end-to-end testing. Attributes configuration object has the following structure:
-   * 
+   *
    * ```
    * {
    * \[selectorString]: {
@@ -56,94 +65,94 @@ export class VisAxisComponent<Datum> implements AxisConfigInterface<Datum>, Afte
    *  }
    * }
    * ``` */
-      @Input() attributes?: {
-[selector: string]: {
-[attr: string]: string | number | boolean | ((datum: any) => string | number | boolean)
-}
-}
+  @Input() attributes?: {
+    [selector: string]: {
+      [attr: string]: string | number | boolean | ((datum: any) => string | number | boolean);
+    };
+  }
 
-      /** Axis position: `Position.Top`, `Position.Bottom`, `Position.Right` or `Position.Left`. Default: `undefined` */
-      @Input() position?: Position | string
+  /** Axis position: `Position.Top`, `Position.Bottom`, `Position.Right` or `Position.Left`. Default: `undefined` */
+  @Input() position?: Position | string
 
-      /** Axis type: `AxisType.X` or `AxisType.Y` */
-      @Input() type?: AxisType | string
+  /** Axis type: `AxisType.X` or `AxisType.Y` */
+  @Input() type?: AxisType | string
 
-      /** Extend the axis domain line to be full width or full height. Default: `true` */
-      @Input() fullSize?: boolean
+  /** Extend the axis domain line to be full width or full height. Default: `true` */
+  @Input() fullSize?: boolean
 
-      /** Axis label. Default: `undefined` */
-      @Input() label?: string
+  /** Axis label. Default: `undefined` */
+  @Input() label?: string
 
-      /** Font size of the axis label as CSS string. Default: `null` */
-      @Input() labelFontSize?: string | null
+  /** Font size of the axis label as CSS string. Default: `null` */
+  @Input() labelFontSize?: string | null
 
-      /** Distance between the axis and the label in pixels. Default: `8` */
-      @Input() labelMargin?: number
+  /** Distance between the axis and the label in pixels. Default: `8` */
+  @Input() labelMargin?: number
 
-      /** Font color of the axis label as CSS string. Default: `null` */
-      @Input() labelColor?: string | null
+  /** Font color of the axis label as CSS string. Default: `null` */
+  @Input() labelColor?: string | null
 
-      /** Sets whether to draw the grid lines or not. Default: `true` */
-      @Input() gridLine?: boolean
+  /** Sets whether to draw the grid lines or not. Default: `true` */
+  @Input() gridLine?: boolean
 
-      /** Sets whether to draw the tick lines or not. Default: `true` */
-      @Input() tickLine?: boolean
+  /** Sets whether to draw the tick lines or not. Default: `true` */
+  @Input() tickLine?: boolean
 
-      /** Sets whether to draw the domain line or not. Default: `true` */
-      @Input() domainLine?: boolean
+  /** Sets whether to draw the domain line or not. Default: `true` */
+  @Input() domainLine?: boolean
 
-      /** Draw only the min and max axis ticks. Default: `false` */
-      @Input() minMaxTicksOnly?: boolean
+  /** Draw only the min and max axis ticks. Default: `false` */
+  @Input() minMaxTicksOnly?: boolean
 
-      /** Draw only the min and max axis ticks, when the chart
+  /** Draw only the min and max axis ticks, when the chart
    * width is less than the specified value.
    * Default: `250` */
-      @Input() minMaxTicksOnlyWhenWidthIsLess?: number
+  @Input() minMaxTicksOnlyWhenWidthIsLess?: number
 
-      /** Tick label formatter function. Default: `undefined` */
-      @Input() tickFormat?: ((tick: number, i: number, ticks: number[]) => string) | ((tick: Date, i: number, ticks: Date[]) => string)
+  /** Tick label formatter function. Default: `undefined` */
+  @Input() tickFormat?: ((tick: number, i: number, ticks: number[]) => string) | ((tick: Date, i: number, ticks: Date[]) => string)
 
-      /** Explicitly set tick values. Default: `undefined` */
-      @Input() tickValues?: number[]
+  /** Explicitly set tick values. Default: `undefined` */
+  @Input() tickValues?: number[]
 
-      /** Set the approximate number of axis ticks (will be passed to D3's axis constructor). Default: `undefined` */
-      @Input() numTicks?: number
+  /** Set the approximate number of axis ticks (will be passed to D3's axis constructor). Default: `undefined` */
+  @Input() numTicks?: number
 
-      /** Tick text fit mode: `FitMode.Wrap` or `FitMode.Trim`. Default: `FitMode.Wrap`. */
-      @Input() tickTextFitMode?: FitMode | string
+  /** Tick text fit mode: `FitMode.Wrap` or `FitMode.Trim`. Default: `FitMode.Wrap`. */
+  @Input() tickTextFitMode?: FitMode | string
 
-      /** Maximum width in pixels for the tick text to be wrapped or trimmed. Default: `undefined` */
-      @Input() tickTextWidth?: number
+  /** Maximum width in pixels for the tick text to be wrapped or trimmed. Default: `undefined` */
+  @Input() tickTextWidth?: number
 
-      /** Tick text wrapping separator. String or array of strings. Default: `undefined` */
-      @Input() tickTextSeparator?: string | string[]
+  /** Tick text wrapping separator. String or array of strings. Default: `undefined` */
+  @Input() tickTextSeparator?: string | string[]
 
-      /** Force word break for ticks when they don't fit. Default: `false` */
-      @Input() tickTextForceWordBreak?: boolean
+  /** Force word break for ticks when they don't fit. Default: `false` */
+  @Input() tickTextForceWordBreak?: boolean
 
-      /** Tick text trim mode: `TrimMode.Start`, `TrimMode.Middle` or `TrimMode.End`. Default: `TrimMode.Middle` */
-      @Input() tickTextTrimType?: TrimMode | string
+  /** Tick text trim mode: `TrimMode.Start`, `TrimMode.Middle` or `TrimMode.End`. Default: `TrimMode.Middle` */
+  @Input() tickTextTrimType?: TrimMode | string
 
-      /** Font size of the tick text as CSS string. Default: `null` */
-      @Input() tickTextFontSize?: string | null
+  /** Font size of the tick text as CSS string. Default: `null` */
+  @Input() tickTextFontSize?: string | null
 
-      /** Text alignment for ticks: `TextAlign.Left`, `TextAlign.Center` or `TextAlign.Right`. Default: `undefined` */
-      @Input() tickTextAlign?: TextAlign | string
+  /** Text alignment for ticks: `TextAlign.Left`, `TextAlign.Center` or `TextAlign.Right`. Default: `undefined` */
+  @Input() tickTextAlign?: TextAlign | string
 
-      /** Font color of the tick text as CSS string. Default: `null` */
-      @Input() tickTextColor?: string | null
+  /** Font color of the tick text as CSS string. Default: `null` */
+  @Input() tickTextColor?: string | null
 
-      /** Text rotation angle for ticks. Default: `undefined` */
-      @Input() tickTextAngle?: number
+  /** Text rotation angle for ticks. Default: `undefined` */
+  @Input() tickTextAngle?: number
 
-      /** Hide tick labels that overlap with each other.
+  /** Hide tick labels that overlap with each other.
    * To define overlapping, a simple bounding box collision detection algorithm is used.
    * Which means the result won't be accurate when `tickTextAngle` is specified.
    * Default: `undefined` */
-      @Input() tickTextHideOverlapping?: boolean
+  @Input() tickTextHideOverlapping?: boolean
 
-      /** The spacing in pixels between the tick and it's label. Default: `8` */
-      @Input() tickPadding?: number
+  /** The spacing in pixels between the tick and it's label. Default: `8` */
+  @Input() tickPadding?: number
   @Input() data: Datum[]
 
   component: Axis<Datum> | undefined
@@ -151,11 +160,11 @@ export class VisAxisComponent<Datum> implements AxisConfigInterface<Datum>, Afte
 
   ngAfterViewInit (): void {
     this.component = new Axis<Datum>(this.getConfig())
-    
-      if (this.data) {
-        this.component.setData(this.data)
-        this.componentContainer?.render()
-      }
+
+    if (this.data) {
+      this.component.setData(this.data)
+      this.componentContainer?.render()
+    }
   }
 
   ngOnChanges (changes: SimpleChanges): void {

@@ -11,13 +11,11 @@ import { VisXYComponent } from '../../core'
   providers: [{ provide: VisXYComponent, useExisting: VisBrushComponent }],
 })
 export class VisBrushComponent<Datum> implements BrushConfigInterface<Datum>, AfterViewInit {
-  
+  /** Animation duration of the data update transitions in milliseconds. Default: `600` */
+  @Input() duration?: number
 
-      /** Animation duration of the data update transitions in milliseconds. Default: `600` */
-      @Input() duration?: number
-
-      /** Events configuration. An object containing properties in the following format:
-   * 
+  /** Events configuration. An object containing properties in the following format:
+   *
    * ```
    * {
    * \[selectorString]: {
@@ -33,15 +31,15 @@ export class VisBrushComponent<Datum> implements BrushConfigInterface<Datum>, Af
    *  }
    * }
    * ``` */
-      @Input() events?: {
-[selector: string]: {
-[eventType in VisEventType]?:VisEventCallback
-}
-}
+  @Input() events?: {
+    [selector: string]: {
+      [eventType in VisEventType]?: VisEventCallback
+    };
+  }
 
-      /** You can set every SVG and HTML visualization object to have a custom DOM attributes, which is useful
+  /** You can set every SVG and HTML visualization object to have a custom DOM attributes, which is useful
    * when you want to do unit or end-to-end testing. Attributes configuration object has the following structure:
-   * 
+   *
    * ```
    * {
    * \[selectorString]: {
@@ -57,42 +55,42 @@ export class VisBrushComponent<Datum> implements BrushConfigInterface<Datum>, Af
    *  }
    * }
    * ``` */
-      @Input() attributes?: {
-[selector: string]: {
-[attr: string]: string | number | boolean | ((datum: any) => string | number | boolean)
-}
-}
+  @Input() attributes?: {
+    [selector: string]: {
+      [attr: string]: string | number | boolean | ((datum: any) => string | number | boolean);
+    };
+  }
 
-      /** Callback function to be called on any Brush event.
+  /** Callback function to be called on any Brush event.
    * Default: `(selection: [number, number], event: D3BrushEvent<Datum>, userDriven: boolean): void => {}` */
-      @Input() onBrush?: ((selection: [number, number] | undefined, event: D3BrushEvent<Datum>, userDriven: boolean) => void)
+  @Input() onBrush?: ((selection: [number, number] | undefined, event: D3BrushEvent<Datum>, userDriven: boolean) => void)
 
-      /** Callback function to be called on the Brush start event.
+  /** Callback function to be called on the Brush start event.
    * Default: `(selection: [number, number], event: D3BrushEvent<Datum>, userDriven: boolean): void => {}` */
-      @Input() onBrushStart?: ((selection: [number, number] | undefined, event: D3BrushEvent<Datum>, userDriven: boolean) => void)
+  @Input() onBrushStart?: ((selection: [number, number] | undefined, event: D3BrushEvent<Datum>, userDriven: boolean) => void)
 
-      /** Callback function to be called on the Brush move event.
+  /** Callback function to be called on the Brush move event.
    * Default: `(selection: [number, number], event: D3BrushEvent<Datum>, userDriven: boolean): void => {}` */
-      @Input() onBrushMove?: ((selection: [number, number] | undefined, event: D3BrushEvent<Datum>, userDriven: boolean) => void)
+  @Input() onBrushMove?: ((selection: [number, number] | undefined, event: D3BrushEvent<Datum>, userDriven: boolean) => void)
 
-      /** Callback function to be called on the Brush end event.
+  /** Callback function to be called on the Brush end event.
    * Default: `(selection: [number, number], event: D3BrushEvent<Datum>, userDriven: boolean): void => {}` */
-      @Input() onBrushEnd?: ((selection: [number, number] | undefined, event: D3BrushEvent<Datum>, userDriven: boolean) => void)
+  @Input() onBrushEnd?: ((selection: [number, number] | undefined, event: D3BrushEvent<Datum>, userDriven: boolean) => void)
 
-      /** Width of the Brush handle. Default: `1` */
-      @Input() handleWidth?: number
+  /** Width of the Brush handle. Default: `1` */
+  @Input() handleWidth?: number
 
-      /** Brush selection in the data space coordinates, can be used to control the selection. Default: `undefined` */
-      @Input() selection?: [number, number] | null
+  /** Brush selection in the data space coordinates, can be used to control the selection. Default: `undefined` */
+  @Input() selection?: [number, number] | null
 
-      /** Allow dragging the selected area as a whole in order to change the selected range. Default: `false` */
-      @Input() draggable?: boolean
+  /** Allow dragging the selected area as a whole in order to change the selected range. Default: `false` */
+  @Input() draggable?: boolean
 
-      /** Position of the handle: `Arrangement.Inside` or `Arrangement.Outside`. Default: `Arrangement.Inside` */
-      @Input() handlePosition?: Arrangement | string
+  /** Position of the handle: `Arrangement.Inside` or `Arrangement.Outside`. Default: `Arrangement.Inside` */
+  @Input() handlePosition?: Arrangement | string
 
-      /** Constraint Brush selection to a minimal length in data units. Default: `undefined` */
-      @Input() selectionMinLength?: number
+  /** Constraint Brush selection to a minimal length in data units. Default: `undefined` */
+  @Input() selectionMinLength?: number
   @Input() data: Datum[]
 
   component: Brush<Datum> | undefined
@@ -100,11 +98,11 @@ export class VisBrushComponent<Datum> implements BrushConfigInterface<Datum>, Af
 
   ngAfterViewInit (): void {
     this.component = new Brush<Datum>(this.getConfig())
-    
-      if (this.data) {
-        this.component.setData(this.data)
-        this.componentContainer?.render()
-      }
+
+    if (this.data) {
+      this.component.setData(this.data)
+      this.componentContainer?.render()
+    }
   }
 
   ngOnChanges (changes: SimpleChanges): void {

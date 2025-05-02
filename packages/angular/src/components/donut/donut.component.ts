@@ -10,13 +10,11 @@ import { VisCoreComponent } from '../../core'
   providers: [{ provide: VisCoreComponent, useExisting: VisDonutComponent }],
 })
 export class VisDonutComponent<Datum> implements DonutConfigInterface<Datum>, AfterViewInit {
-  
+  /** Animation duration of the data update transitions in milliseconds. Default: `600` */
+  @Input() duration?: number
 
-      /** Animation duration of the data update transitions in milliseconds. Default: `600` */
-      @Input() duration?: number
-
-      /** Events configuration. An object containing properties in the following format:
-   * 
+  /** Events configuration. An object containing properties in the following format:
+   *
    * ```
    * {
    * \[selectorString]: {
@@ -32,15 +30,15 @@ export class VisDonutComponent<Datum> implements DonutConfigInterface<Datum>, Af
    *  }
    * }
    * ``` */
-      @Input() events?: {
-[selector: string]: {
-[eventType in VisEventType]?:VisEventCallback
-}
-}
+  @Input() events?: {
+    [selector: string]: {
+      [eventType in VisEventType]?: VisEventCallback
+    };
+  }
 
-      /** You can set every SVG and HTML visualization object to have a custom DOM attributes, which is useful
+  /** You can set every SVG and HTML visualization object to have a custom DOM attributes, which is useful
    * when you want to do unit or end-to-end testing. Attributes configuration object has the following structure:
-   * 
+   *
    * ```
    * {
    * \[selectorString]: {
@@ -56,68 +54,68 @@ export class VisDonutComponent<Datum> implements DonutConfigInterface<Datum>, Af
    *  }
    * }
    * ``` */
-      @Input() attributes?: {
-[selector: string]: {
-[attr: string]: string | number | boolean | ((datum: any) => string | number | boolean)
-}
-}
+  @Input() attributes?: {
+    [selector: string]: {
+      [attr: string]: string | number | boolean | ((datum: any) => string | number | boolean);
+    };
+  }
 
-      /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */
-      @Input() id?: ((d: Datum, i: number, ...rest) => string | number)
+  /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */
+  @Input() id?: ((d: Datum, i: number, ...rest) => string | number)
 
-      /** Value accessor function. Default: `undefined` */
-      @Input() value: NumericAccessor<Datum>
+  /** Value accessor function. Default: `undefined` */
+  @Input() value: NumericAccessor<Datum>
 
-      /** Diagram angle range. Default: `[0, 2 * Math.PI]` */
-      @Input() angleRange?: [number, number]
+  /** Diagram angle range. Default: `[0, 2 * Math.PI]` */
+  @Input() angleRange?: [number, number]
 
-      /** Pad angle. Default: `0` */
-      @Input() padAngle?: number
+  /** Pad angle. Default: `0` */
+  @Input() padAngle?: number
 
-      /** Custom sort function. Default: `undefined` */
-      @Input() sortFunction?: (a: Datum, b: Datum) => number
+  /** Custom sort function. Default: `undefined` */
+  @Input() sortFunction?: (a: Datum, b: Datum) => number
 
-      /** Corner Radius. Default: `0` */
-      @Input() cornerRadius?: number
+  /** Corner Radius. Default: `0` */
+  @Input() cornerRadius?: number
 
-      /** Color accessor function. Default: `undefined` */
-      @Input() color?: ColorAccessor<Datum>
+  /** Color accessor function. Default: `undefined` */
+  @Input() color?: ColorAccessor<Datum>
 
-      /** Explicitly set the donut outer radius. Default: `undefined` */
-      @Input() radius?: number
+  /** Explicitly set the donut outer radius. Default: `undefined` */
+  @Input() radius?: number
 
-      /** Arc width in pixels. Set to `0` if you want to have a pie chart. Default: `20` */
-      @Input() arcWidth?: number
+  /** Arc width in pixels. Set to `0` if you want to have a pie chart. Default: `20` */
+  @Input() arcWidth?: number
 
-      /** Central label accessor function or text. Default: `undefined` */
-      @Input() centralLabel?: string
+  /** Central label accessor function or text. Default: `undefined` */
+  @Input() centralLabel?: string
 
-      /** Central sub-label accessor function or text. Default: `undefined` */
-      @Input() centralSubLabel?: string
+  /** Central sub-label accessor function or text. Default: `undefined` */
+  @Input() centralSubLabel?: string
 
-      /** Enables wrapping for the sub-label. Default: `true` */
-      @Input() centralSubLabelWrap?: boolean
+  /** Enables wrapping for the sub-label. Default: `true` */
+  @Input() centralSubLabelWrap?: boolean
 
-      /** When true, the component will display empty segments (the ones that have `0` values) as tiny slices.
+  /** When true, the component will display empty segments (the ones that have `0` values) as tiny slices.
    * Default: `false` */
-      @Input() showEmptySegments?: boolean
+  @Input() showEmptySegments?: boolean
 
-      /** Angular size for empty segments in radians. Default: `0.5 * Math.PI / 180` */
-      @Input() emptySegmentAngle?: number
+  /** Angular size for empty segments in radians. Default: `0.5 * Math.PI / 180` */
+  @Input() emptySegmentAngle?: number
 
-      /** Show donut background. The color is configurable via
+  /** Show donut background. The color is configurable via
    * the `--vis-donut-background-color` and `--vis-dark-donut-background-color` CSS variables.
    * Default: `true` */
-      @Input() showBackground?: boolean
+  @Input() showBackground?: boolean
 
-      /** Background angle range. When undefined, the value will be taken from `angleRange`. Default: `undefined` */
-      @Input() backgroundAngleRange?: [number, number]
+  /** Background angle range. When undefined, the value will be taken from `angleRange`. Default: `undefined` */
+  @Input() backgroundAngleRange?: [number, number]
 
-      /** Central label and sub-label horizontal offset in pixels. Default: `undefined` */
-      @Input() centralLabelOffsetX?: number
+  /** Central label and sub-label horizontal offset in pixels. Default: `undefined` */
+  @Input() centralLabelOffsetX?: number
 
-      /** Central label and sub-label vertical offset in pixels. Default: `undefined` */
-      @Input() centralLabelOffsetY?: number
+  /** Central label and sub-label vertical offset in pixels. Default: `undefined` */
+  @Input() centralLabelOffsetY?: number
   @Input() data: Datum[]
 
   component: Donut<Datum> | undefined
@@ -125,11 +123,11 @@ export class VisDonutComponent<Datum> implements DonutConfigInterface<Datum>, Af
 
   ngAfterViewInit (): void {
     this.component = new Donut<Datum>(this.getConfig())
-    
-      if (this.data) {
-        this.component.setData(this.data)
-        this.componentContainer?.render()
-      }
+
+    if (this.data) {
+      this.component.setData(this.data)
+      this.componentContainer?.render()
+    }
   }
 
   ngOnChanges (changes: SimpleChanges): void {
