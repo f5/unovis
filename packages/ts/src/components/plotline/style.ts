@@ -6,7 +6,14 @@ export const globalStyles = injectGlobal`
     --vis-plotline-width: 2;
     --vis-plotline-dasharray: none;
     --vis-plotline-stroke-dashoffset: 0;
-    --vis-plotline-font-size: 12px;
+    --vis-plotline-label-font-size: 12px;
+    --vis-plotline-label-color: #000;
+
+    --vis-dark-plotline-label-color: #e5e9f7;
+  }
+
+  body.theme-dark {
+    --vis-plotline-label-color: var(--vis-dark-tooltip-text-color);
   }
 `
 
@@ -30,5 +37,6 @@ export const label = css`
   text-anchor: middle;
   dominant-baseline: middle;
   pointer-events: none;
-  font-size: var(--vis-plotline-font-size);
+  font-size: var(--vis-plotline-label-font-size);
+  fill: var(--vis-plotline-label-color);
 `

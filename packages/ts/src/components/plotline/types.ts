@@ -2,10 +2,11 @@ export type PlotlineLineStylePresets = 'solid' | 'shortDash' | 'shortDot' | 'sho
 export type PlotlineLegendPosition = 'top-left'| 'top'| 'top-right'| 'right'| 'bottom-right'| 'bottom'| 'bottom-left'| 'left'
 export type PlotlineLegendOrientation = 'horizontal'| 'vertical'
 export type PlotlineLabelOptions = {
-  text?: string;
-  position: PlotlineLegendPosition;
-  offsetX: number;
-  offsetY: number;
-  orientation: PlotlineLegendOrientation;
-  style?: string;
+  labelText?: string;
+  labelPosition: PlotlineLegendPosition;
+  labelOffsetX: number;
+  labelOffsetY: number;
+  labelOrientation: PlotlineLegendOrientation;
+  labelColor?: string;
+  labelSize?: number;
 };
