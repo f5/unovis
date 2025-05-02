@@ -1,6 +1,17 @@
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges } from '@angular/core'
-import { Crosshair, CrosshairConfigInterface, ContainerCore, VisEventType, VisEventCallback, NumericAccessor, ColorAccessor, ContinuousScale, Tooltip, CrosshairCircle } from '@unovis/ts'
+import {
+  Crosshair,
+  CrosshairConfigInterface,
+  ContainerCore,
+  VisEventType,
+  VisEventCallback,
+  NumericAccessor,
+  ColorAccessor,
+  ContinuousScale,
+  Tooltip,
+  CrosshairCircle,
+} from '@unovis/ts'
 import { VisXYComponent } from '../../core'
 
 @Component({
@@ -10,13 +21,11 @@ import { VisXYComponent } from '../../core'
   providers: [{ provide: VisXYComponent, useExisting: VisCrosshairComponent }],
 })
 export class VisCrosshairComponent<Datum> implements CrosshairConfigInterface<Datum>, AfterViewInit {
-  
+  /** Animation duration of the data update transitions in milliseconds. Default: `600` */
+  @Input() duration?: number
 
-      /** Animation duration of the data update transitions in milliseconds. Default: `600` */
-      @Input() duration?: number
-
-      /** Events configuration. An object containing properties in the following format:
-   * 
+  /** Events configuration. An object containing properties in the following format:
+   *
    * ```
    * {
    * \[selectorString]: {
@@ -32,15 +41,15 @@ export class VisCrosshairComponent<Datum> implements CrosshairConfigInterface<Da
    *  }
    * }
    * ``` */
-      @Input() events?: {
-[selector: string]: {
-[eventType in VisEventType]?:VisEventCallback
-}
-}
+  @Input() events?: {
+    [selector: string]: {
+      [eventType in VisEventType]?: VisEventCallback
+    };
+  }
 
-      /** You can set every SVG and HTML visualization object to have a custom DOM attributes, which is useful
+  /** You can set every SVG and HTML visualization object to have a custom DOM attributes, which is useful
    * when you want to do unit or end-to-end testing. Attributes configuration object has the following structure:
-   * 
+   *
    * ```
    * {
    * \[selectorString]: {
@@ -56,76 +65,76 @@ export class VisCrosshairComponent<Datum> implements CrosshairConfigInterface<Da
    *  }
    * }
    * ``` */
-      @Input() attributes?: {
-[selector: string]: {
-[attr: string]: string | number | boolean | ((datum: any) => string | number | boolean)
-}
-}
+  @Input() attributes?: {
+    [selector: string]: {
+      [attr: string]: string | number | boolean | ((datum: any) => string | number | boolean);
+    };
+  }
 
-      /** Optional accessor function for getting the values along the X axis. Default: `undefined` */
-      @Input() x?: NumericAccessor<Datum>
+  /** Optional accessor function for getting the values along the X axis. Default: `undefined` */
+  @Input() x?: NumericAccessor<Datum>
 
-      /** Optional single of multiple accessor functions for getting the values along the Y axis. Default: `undefined` */
-      @Input() y?: NumericAccessor<Datum> | NumericAccessor<Datum>[]
+  /** Optional single of multiple accessor functions for getting the values along the Y axis. Default: `undefined` */
+  @Input() y?: NumericAccessor<Datum> | NumericAccessor<Datum>[]
 
-      /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */
-      @Input() id?: ((d: Datum, i: number, ...rest) => string)
+  /** Accessor function for getting the unique data record id. Used for more persistent data updates. Default: `(d, i) => d.id ?? i` */
+  @Input() id?: ((d: Datum, i: number, ...rest) => string)
 
-      /** Optional color array or color accessor function for crosshair circles. Default: `d => d.color` */
-      @Input() color?: ColorAccessor<Datum>
+  /** Optional color array or color accessor function for crosshair circles. Default: `d => d.color` */
+  @Input() color?: ColorAccessor<Datum>
 
-      /** Scale for X dimension, e.g. Scale.scaleLinear(). If you set xScale you'll be responsible for setting it's `domain` and `range` as well.
+  /** Scale for X dimension, e.g. Scale.scaleLinear(). If you set xScale you'll be responsible for setting it's `domain` and `range` as well.
    * Only continuous scales are supported.
    * Default: `undefined` */
-      @Input() xScale?: ContinuousScale
+  @Input() xScale?: ContinuousScale
 
-      /** Scale for Y dimension, e.g. Scale.scaleLinear(). If you set yScale you'll be responsible for setting it's `domain` and `range` as well.
+  /** Scale for Y dimension, e.g. Scale.scaleLinear(). If you set yScale you'll be responsible for setting it's `domain` and `range` as well.
    * Only continuous scales are supported.
    * Default: `undefined` */
-      @Input() yScale?: ContinuousScale
+  @Input() yScale?: ContinuousScale
 
-      /** Identifies whether the component should be excluded from overall X and Y domain calculations or not.
+  /** Identifies whether the component should be excluded from overall X and Y domain calculations or not.
    * This property can be useful when you want pass individual data to a component and you don't want it to affect
    * the scales of the chart.
    * Default: `false` */
-      @Input() excludeFromDomainCalculation?: boolean
+  @Input() excludeFromDomainCalculation?: boolean
 
-      /** Optional stroke color accessor function for crosshair circles. Default: `undefined` */
-      @Input() strokeColor?: ColorAccessor<Datum>
+  /** Optional stroke color accessor function for crosshair circles. Default: `undefined` */
+  @Input() strokeColor?: ColorAccessor<Datum>
 
-      /** Optional stroke width for crosshair circles. Default: `undefined` */
-      @Input() strokeWidth?: NumericAccessor<Datum>
+  /** Optional stroke width for crosshair circles. Default: `undefined` */
+  @Input() strokeWidth?: NumericAccessor<Datum>
 
-      /** Separate array of accessors for stacked components (eg StackedBar, Area). Default: `undefined` */
-      @Input() yStacked?: NumericAccessor<Datum>[]
+  /** Separate array of accessors for stacked components (eg StackedBar, Area). Default: `undefined` */
+  @Input() yStacked?: NumericAccessor<Datum>[]
 
-      /** Baseline accessor function for stacked values, useful with stacked areas. Default: `null` */
-      @Input() baseline?: NumericAccessor<Datum>
+  /** Baseline accessor function for stacked values, useful with stacked areas. Default: `null` */
+  @Input() baseline?: NumericAccessor<Datum>
 
-      /** An instance of the Tooltip component to be used with Crosshair. Default: `undefined` */
-      @Input() tooltip?: Tooltip | undefined
+  /** An instance of the Tooltip component to be used with Crosshair. Default: `undefined` */
+  @Input() tooltip?: Tooltip | undefined
 
-      /** Tooltip template accessor. The function is supposed to return either a valid HTML string or an HTMLElement. Default: `d => ''` */
-      @Input() template?: (data: Datum, x: number | Date) => string | HTMLElement
+  /** Tooltip template accessor. The function is supposed to return either a valid HTML string or an HTMLElement. Default: `d => ''` */
+  @Input() template?: (data: Datum, x: number | Date) => string | HTMLElement
 
-      /** Hide Crosshair when the corresponding element is far from mouse pointer. Default: `true` */
-      @Input() hideWhenFarFromPointer?: boolean
+  /** Hide Crosshair when the corresponding element is far from mouse pointer. Default: `true` */
+  @Input() hideWhenFarFromPointer?: boolean
 
-      /** Distance in pixels to check in the hideWhenFarFromPointer condition. Default: `100` */
-      @Input() hideWhenFarFromPointerDistance?: number
+  /** Distance in pixels to check in the hideWhenFarFromPointer condition. Default: `100` */
+  @Input() hideWhenFarFromPointerDistance?: number
 
-      /** Snap to the nearest data point.
+  /** Snap to the nearest data point.
    * If disabled, the tooltip template will receive only the horizontal position of the crosshair and you'll be responsible
    * for getting the underlying data records and crosshair circles (see the `getCircles` configuration option).
    * Default: `true` */
-      @Input() snapToData?: boolean
+  @Input() snapToData?: boolean
 
-      /** Custom function for setting up the crosshair circles, usually needed when `snapToData` is set to `false`.
+  /** Custom function for setting up the crosshair circles, usually needed when `snapToData` is set to `false`.
    * The function receives the horizontal position of the crosshair (in the data space, not in pixels), the data array
    * and the `yScale` instance to help you calculate the correct vertical position of the circles.
    * It has to return an array of the CrosshairCircle objects: `{ y: number; color: string; opacity?: number }[]`.
    * Default: `undefined` */
-      @Input() getCircles?: (x: number | Date | Date, data: Datum[], yScale: ContinuousScale) => CrosshairCircle[]
+  @Input() getCircles?: (x: number | Date | Date, data: Datum[], yScale: ContinuousScale) => CrosshairCircle[]
   @Input() data: Datum[]
 
   component: Crosshair<Datum> | undefined
@@ -133,11 +142,11 @@ export class VisCrosshairComponent<Datum> implements CrosshairConfigInterface<Da
 
   ngAfterViewInit (): void {
     this.component = new Crosshair<Datum>(this.getConfig())
-    
-      if (this.data) {
-        this.component.setData(this.data)
-        this.componentContainer?.render()
-      }
+
+    if (this.data) {
+      this.component.setData(this.data)
+      this.componentContainer?.render()
+    }
   }
 
   ngOnChanges (changes: SimpleChanges): void {

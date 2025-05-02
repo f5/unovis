@@ -10,39 +10,37 @@ import { VisGenericComponent } from '../../core'
   providers: [{ provide: VisGenericComponent, useExisting: VisTooltipComponent }],
 })
 export class VisTooltipComponent implements TooltipConfigInterface, AfterViewInit {
-  
+  /** An array of visualization components to interact with. Default: `[]` */
+  @Input() components?: ComponentCore<unknown>[]
 
-      /** An array of visualization components to interact with. Default: `[]` */
-      @Input() components?: ComponentCore<unknown>[]
+  /** Container to where the Tooltip component should be inserted. Default: `undefined` */
+  @Input() container?: HTMLElement
 
-      /** Container to where the Tooltip component should be inserted. Default: `undefined` */
-      @Input() container?: HTMLElement
+  /** Follow the mouse cursor. Default: `true` */
+  @Input() followCursor?: boolean
 
-      /** Follow the mouse cursor. Default: `true` */
-      @Input() followCursor?: boolean
+  /** Allow the tooltip to be hovered over and interacted with. Default: `false` */
+  @Input() allowHover?: boolean
 
-      /** Allow the tooltip to be hovered over and interacted with. Default: `false` */
-      @Input() allowHover?: boolean
+  /** Horizontal placement of the tooltip. Default: `Position.Auto` */
+  @Input() horizontalPlacement?: Position | string | undefined
 
-      /** Horizontal placement of the tooltip. Default: `Position.Auto` */
-      @Input() horizontalPlacement?: Position | string | undefined
-
-      /** Horizontal shift of the tooltip in pixels. Works only with
+  /** Horizontal shift of the tooltip in pixels. Works only with
    * `horizontalPlacement` set to `Position.Left` or `Position.Right`.
    * Default: `0` */
-      @Input() horizontalShift?: number
+  @Input() horizontalShift?: number
 
-      /** Vertical placement of the tooltip. Default: `Position.Top` */
-      @Input() verticalPlacement?: Position | string | undefined
+  /** Vertical placement of the tooltip. Default: `Position.Top` */
+  @Input() verticalPlacement?: Position | string | undefined
 
-      /** Vertical shift of the tooltip in pixels. Works only with
+  /** Vertical shift of the tooltip in pixels. Works only with
    * `verticalPlacement` set to `Position.Top` or `Position.Bottom`.
    * Default: `0` */
-      @Input() verticalShift?: number
+  @Input() verticalShift?: number
 
-      /** Defines the content of the tooltip and hovering over which elements should trigger it.
+  /** Defines the content of the tooltip and hovering over which elements should trigger it.
    * An object containing properties in the following format:
-   * 
+   *
    * ```
    * {
    * \[selectorString]: (d: unknown) => string | HTMLElement
@@ -54,13 +52,13 @@ export class VisTooltipComponent implements TooltipConfigInterface, AfterViewIni
    * \[Area.selectors.area]: (d: AreaDatum[]) => `<div>${d.value.toString()}</div>
    * }
    * ``` */
-      @Input() triggers?: {
-[selector: string]: ((data: any, i: number, elements: (HTMLElement | SVGElement)[]) => string | HTMLElement | undefined | null | void) | undefined | null
-}
+  @Input() triggers?: {
+    [selector: string]: ((data: any, i: number, elements: (HTMLElement | SVGElement)[]) => string | HTMLElement | undefined | null | void) | undefined | null;
+  }
 
-      /** Custom DOM attributes for the tooltip. Useful when you need to refer to a specific tooltip instance
+  /** Custom DOM attributes for the tooltip. Useful when you need to refer to a specific tooltip instance
    * by using a CSS selector. Attributes configuration object has the following structure:
-   * 
+   *
    * ```
    * {
    * \[attributeName]: attribute value
@@ -73,29 +71,27 @@ export class VisTooltipComponent implements TooltipConfigInterface, AfterViewIni
    * \'value': 42
    * }
    * ``` */
-      @Input() attributes?: {
-[attr: string]: string | number | boolean
-}
+  @Input() attributes?: {
+    [attr: string]: string | number | boolean;
+  }
 
-      /** Custom class name for the tooltip. Default: `undefined` */
-      @Input() className?: string
+  /** Custom class name for the tooltip. Default: `undefined` */
+  @Input() className?: string
 
-      /** Hide delay in milliseconds. Default: `undefined` */
-      @Input() hideDelay?: number
+  /** Hide delay in milliseconds. Default: `undefined` */
+  @Input() hideDelay?: number
 
-      /** Show delay in milliseconds. Default: `undefined` */
-      @Input() showDelay?: number
-  
+  /** Show delay in milliseconds. Default: `undefined` */
+  @Input() showDelay?: number
+
   component: Tooltip | undefined
   public componentContainer: ContainerCore | undefined
 
   ngAfterViewInit (): void {
     this.component = new Tooltip(this.getConfig())
-    
   }
 
   ngOnChanges (changes: SimpleChanges): void {
-    
     this.component?.setConfig(this.getConfig())
     this.componentContainer?.render()
   }
