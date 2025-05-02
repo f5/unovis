@@ -35,7 +35,7 @@ export const plotline = css`
 export const label = css`
   label: plotline-label;
   text-anchor: middle;
-  dominant-baseline: middle;
+  /* dominant-baseline: middle; */
   pointer-events: none;
   font-size: var(--vis-plotline-label-font-size);
   fill: var(--vis-plotline-label-color);
