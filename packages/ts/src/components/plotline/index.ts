@@ -12,6 +12,7 @@ import { PlotlineDefaultConfig, PlotlineConfigInterface } from './config'
 // Styles
 import * as s from './style'
 import { PlotlineLegendPosition, PlotlineLegendOrientation } from './types'
+import { AxisType } from 'components/axis/types'
 
 export class Plotline<Datum> extends XYComponentCore<Datum, PlotlineConfigInterface<Datum>> {
   static selectors = s
@@ -72,7 +73,7 @@ export class Plotline<Datum> extends XYComponentCore<Datum, PlotlineConfigInterf
 
     const pos = { x1: 0, x2: 0, y1: 0, y2: 0 }
 
-    if (config.axis === 'y') {
+    if (config.axis === AxisType.Y) {
       pos.y1 = this.yScale(this.value)
       pos.y2 = this.yScale(this.value)
       pos.x1 = 0
@@ -118,7 +119,7 @@ export class Plotline<Datum> extends XYComponentCore<Datum, PlotlineConfigInterf
   }
 
   _computeLabel (
-    axis: 'x' | 'y',
+    axis: AxisType | string,
     width: number,
     height: number,
     position: PlotlineLegendPosition,
@@ -135,7 +136,7 @@ export class Plotline<Datum> extends XYComponentCore<Datum, PlotlineConfigInterf
 
     let dominantBaseline = 'middle'
 
-    if (axis === 'x') {
+    if (axis === AxisType.X) {
       switch (position) {
         case 'top-left':
           x = width - offsetX
