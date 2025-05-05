@@ -2,17 +2,17 @@
   // !!! This code was automatically generated. You should not change it !!!
   import { TopoJSONMap, TopoJSONMapConfigInterface } from '@unovis/ts'
   import { onMount, getContext } from 'svelte'
-  
+
   import type { Lifecycle } from '../../types/context'
   import { arePropsEqual } from '../../utils/props'
   // type defs
   type AreaDatum = $$Generic
   type PointDatum = $$Generic
   type LinkDatum = $$Generic
-  
+
   // data and required props
   // eslint-disable-next-line no-undef-init
-export let data: {areas?: AreaDatum[]; points?: PointDatum[]; links?: LinkDatum[]} = undefined
+  export let data: {areas?: AreaDatum[]; points?: PointDatum[]; links?: LinkDatum[]} = undefined
 
   // config
   let prevConfig: TopoJSONMapConfigInterface<AreaDatum, PointDatum, LinkDatum>
@@ -26,9 +26,9 @@ export let data: {areas?: AreaDatum[]; points?: PointDatum[]; links?: LinkDatum[
   onMount(() => {
     component = new TopoJSONMap<AreaDatum, PointDatum, LinkDatum>(config)
     return () => component?.destroy()
-    })
+  })
   $: component?.setData(data)
-  $: if(!arePropsEqual(prevConfig, config)) {
+  $: if (!arePropsEqual(prevConfig, config)) {
     component?.setConfig(config)
     prevConfig = config
   }

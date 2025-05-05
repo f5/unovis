@@ -2,13 +2,13 @@
   // !!! This code was automatically generated. You should not change it !!!
   import { BulletLegend, BulletLegendConfigInterface, BulletLegendItemInterface } from '@unovis/ts'
   import { onMount } from 'svelte'
-  
+
   import { arePropsEqual } from '../../utils/props'
-  
-  
+
+
   // data and required props
   // eslint-disable-next-line no-undef-init
-export let items: BulletLegendItemInterface[]
+  export let items: BulletLegendItemInterface[]
 
   // config
   let prevConfig: BulletLegendConfigInterface
@@ -22,8 +22,8 @@ export let items: BulletLegendItemInterface[]
   onMount(() => {
     component = new BulletLegend(ref, { ...config, renderIntoProvidedDomNode: true })
     return () => component?.destroy()
-    })
-  $: if(!arePropsEqual(prevConfig, config)) {
+  })
+  $: if (!arePropsEqual(prevConfig, config)) {
     component?.update(config)
     prevConfig = config
   }

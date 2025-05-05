@@ -2,16 +2,16 @@
   // !!! This code was automatically generated. You should not change it !!!
   import { ChordDiagram, ChordDiagramConfigInterface, ChordInputNode, ChordInputLink } from '@unovis/ts'
   import { onMount, getContext } from 'svelte'
-  
+
   import type { Lifecycle } from '../../types/context'
   import { arePropsEqual } from '../../utils/props'
   // type defs
   type N = $$Generic<ChordInputNode>
   type L = $$Generic<ChordInputLink>
-  
+
   // data and required props
   // eslint-disable-next-line no-undef-init
-export let data: { nodes: N[]; links?: L[] } = undefined
+  export let data: { nodes: N[]; links?: L[] } = undefined
 
   // config
   let prevConfig: ChordDiagramConfigInterface<N, L>
@@ -25,9 +25,9 @@ export let data: { nodes: N[]; links?: L[] } = undefined
   onMount(() => {
     component = new ChordDiagram<N, L>(config)
     return () => component?.destroy()
-    })
+  })
   $: component?.setData(data)
-  $: if(!arePropsEqual(prevConfig, config)) {
+  $: if (!arePropsEqual(prevConfig, config)) {
     component?.setConfig(config)
     prevConfig = config
   }

@@ -1,6 +1,6 @@
 <script setup lang="ts" generic="Datum">
 // !!! This code was automatically generated. You should not change it !!!
-import { Plotline, PlotlineConfigInterface, NumericAccessor } from '@unovis/ts'
+import { Plotline, PlotlineConfigInterface } from '@unovis/ts'
 import { onMounted, onUnmounted, computed, ref, watch, nextTick, inject } from 'vue'
 import { arePropsEqual, useForwardProps } from '../../utils/props'
 import { componentAccessorKey } from '../../utils/context'
@@ -9,9 +9,9 @@ const accessor = inject(componentAccessorKey)
 
 // data and required props 
 type Props = PlotlineConfigInterface<Datum>
-const props = defineProps<Props & { data?: Datum[] }>()
+const props = defineProps<Props & { data?: null }>()
 
-const data = computed(() => accessor.data.value ?? props.data)
+
 // config
 const config = useForwardProps(props)
 
@@ -22,7 +22,7 @@ const component = ref<Plotline<Datum>>()
 onMounted(() => {
   nextTick(() => {
     component.value = new Plotline<Datum>(config.value)
-    component.value?.setData(data.value)
+    
     accessor.update(component.value)
   })
 })
@@ -38,9 +38,6 @@ watch(config, (curr, prev) => {
   }
 })
 
-watch(data, () => {
-  component.value?.setData(data.value)
-})
 
 defineExpose({
   component

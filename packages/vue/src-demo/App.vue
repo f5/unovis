@@ -35,6 +35,7 @@ const imports = [
   defineAsyncComponent(() => import('@unovis/shared/examples/shaped-scatter-plot/shaped-scatter-plot.vue')),
   defineAsyncComponent(() => import('@unovis/shared/examples/basic-annotations/basic-annotations.vue')),
   defineAsyncComponent(() => import('@unovis/shared/examples/basic-plotband/basic-plotband.vue')),
+  defineAsyncComponent(() => import('@unovis/shared/examples/basic-plotline/basic-plotline.vue')),
 ]
 </script>
 
