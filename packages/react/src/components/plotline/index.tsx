@@ -13,7 +13,6 @@ export type VisPlotlineRef<Datum> = {
 }
 
 export type VisPlotlineProps<Datum> = PlotlineConfigInterface<Datum> & {
-  data?: Datum[];
   ref?: Ref<VisPlotlineRef<Datum>>;
 }
 
@@ -41,7 +40,7 @@ function VisPlotlineFC<Datum> (props: VisPlotlineProps<Datum>, fRef: ForwardedRe
   // On Props Update
   useEffect(() => {
     const component = componentRef.current
-    if (props.data) component?.setData(props.data)
+
     component?.setConfig(props)
   })
 
