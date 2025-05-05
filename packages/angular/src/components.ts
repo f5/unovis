@@ -38,6 +38,9 @@ export { VisLineModule } from './components/line/line.module'
 export { VisNestedDonutComponent } from './components/nested-donut/nested-donut.component'
 export { VisNestedDonutModule } from './components/nested-donut/nested-donut.module'
 
+export { VisPlotlineComponent } from './components/plotline/plotline.component'
+export { VisPlotlineModule } from './components/plotline/plotline.module'
+
 export { VisSankeyComponent } from './components/sankey/sankey.component'
 export { VisSankeyModule } from './components/sankey/sankey.module'
 
