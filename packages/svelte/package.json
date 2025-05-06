@@ -22,7 +22,8 @@
   "author": "Rebecca Bol, F5 Inc. <r.bol@f5.com>",
   "maintainers": [
     "Nikita Rokotyan <nikita@f5.com> (https://rokotyan.com)",
-    "Rebecca Bol <r.bol@f5.com>"
+    "Qian Liu <qi.liu@f5.com>",
+    "Surya Hanumandla <s.hanumandla@f5.com>"
   ],
   "license": "Apache-2.0",
   "main": "./index.js",
