@@ -1,5 +1,5 @@
 // !!! This code was automatically generated. You should not change it !!!
-import React, { ForwardedRef, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
+import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
 import { Area, AreaConfigInterface } from '@unovis/ts'
 
 // Utils
@@ -20,7 +20,7 @@ export type VisAreaProps<Datum> = AreaConfigInterface<Datum> & {
 export const VisAreaSelectors = Area.selectors
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-function VisAreaFC<Datum> (props: VisAreaProps<Datum>, fRef: ForwardedRef<VisAreaRef<Datum>>): JSX.Element {
+function VisAreaFC<Datum> (props: VisAreaProps<Datum>, fRef: ForwardedRef<VisAreaRef<Datum>>): ReactElement {
   const ref = useRef<VisComponentElement<Area<Datum>>>(null)
   const componentRef = useRef<Area<Datum> | undefined>(undefined)
 

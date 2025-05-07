@@ -1,5 +1,5 @@
 // !!! This code was automatically generated. You should not change it !!!
-import React, { ForwardedRef, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
+import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
 import { Timeline, TimelineConfigInterface } from '@unovis/ts'
 
 // Utils
@@ -20,7 +20,7 @@ export type VisTimelineProps<Datum> = TimelineConfigInterface<Datum> & {
 export const VisTimelineSelectors = Timeline.selectors
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-function VisTimelineFC<Datum> (props: VisTimelineProps<Datum>, fRef: ForwardedRef<VisTimelineRef<Datum>>): JSX.Element {
+function VisTimelineFC<Datum> (props: VisTimelineProps<Datum>, fRef: ForwardedRef<VisTimelineRef<Datum>>): ReactElement {
   const ref = useRef<VisComponentElement<Timeline<Datum>>>(null)
   const componentRef = useRef<Timeline<Datum> | undefined>(undefined)
 

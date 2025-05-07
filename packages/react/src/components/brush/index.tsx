@@ -1,5 +1,5 @@
 // !!! This code was automatically generated. You should not change it !!!
-import React, { ForwardedRef, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
+import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
 import { Brush, BrushConfigInterface } from '@unovis/ts'
 
 // Utils
@@ -20,7 +20,7 @@ export type VisBrushProps<Datum> = BrushConfigInterface<Datum> & {
 export const VisBrushSelectors = Brush.selectors
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-function VisBrushFC<Datum> (props: VisBrushProps<Datum>, fRef: ForwardedRef<VisBrushRef<Datum>>): JSX.Element {
+function VisBrushFC<Datum> (props: VisBrushProps<Datum>, fRef: ForwardedRef<VisBrushRef<Datum>>): ReactElement {
   const ref = useRef<VisComponentElement<Brush<Datum>>>(null)
   const componentRef = useRef<Brush<Datum> | undefined>(undefined)
 
