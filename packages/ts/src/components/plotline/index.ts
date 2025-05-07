@@ -67,7 +67,7 @@ export class Plotline<Datum> extends XYComponentCore<Datum, PlotlineConfigInterf
 
     this.plotline
       .attr('stroke-opacity', 1)
-      .attr('stroke-width', config.lineWidth)
+      .style('stroke-width', config.lineWidth)
       .style('stroke-dasharray', strokeDashArray)
       .style('stroke', config.color)
 
