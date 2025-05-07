@@ -1,6 +1,6 @@
 <script lang="ts">
   // !!! This code was automatically generated. You should not change it !!!
-  import { Plotline, PlotlineConfigInterface, PlotlineLegendPosition, PlotlineLegendOrientation } from '@unovis/ts'
+  import { Plotline, PlotlineConfigInterface } from '@unovis/ts'
   import { onMount, getContext } from 'svelte'
 
   import type { Lifecycle } from '../../types/context'
@@ -8,17 +8,10 @@
   // type defs
   type Datum = $$Generic
 
-  // data and required props
-  // eslint-disable-next-line no-undef-init
-  export let labelPosition: PlotlineLegendPosition
-  export let labelOffsetX: number
-  export let labelOffsetY: number
-  export let labelOrientation: PlotlineLegendOrientation
-
   // config
   let prevConfig: PlotlineConfigInterface<Datum>
   let config: PlotlineConfigInterface<Datum>
-  $: config = { labelPosition, labelOffsetX, labelOffsetY, labelOrientation, ...$$restProps }
+  $: config = { ...$$restProps }
 
   // component declaration
   let component: Plotline<Datum>

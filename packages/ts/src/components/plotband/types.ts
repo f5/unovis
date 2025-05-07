@@ -22,7 +22,7 @@ export enum PlotbandLabelOrientation {
   Vertical = 'vertical',
 }
 
-export interface PlotlineLabelOptions {
+export interface PlotbandLabelOptions {
   labelText?: string;
   labelPosition: PlotbandLabelPosition;
   labelOffsetX: number;
@@ -32,7 +32,7 @@ export interface PlotlineLabelOptions {
   labelSize?: number;
 }
 
-export type LayoutValue = {
+export type PlotbandLayoutValue = {
   x: number;
   y: number;
   textAnchor: string;
@@ -42,7 +42,7 @@ export type LayoutValue = {
 export type PlotbandLabelLayout = {
   rotation: number;
   transform: string;
-} & LayoutValue
+} & PlotbandLayoutValue
 
 
 type LabelLayoutFn = (params: {
@@ -52,6 +52,6 @@ type LabelLayoutFn = (params: {
   height: number;
   offsetX: number;
   offsetY: number;
-}) => LayoutValue
+}) => PlotbandLayoutValue
 
-export type LayoutMap = Record<PlotbandLabelPosition, LabelLayoutFn>
+export type PlotbandLayoutMap = Record<PlotbandLabelPosition, LabelLayoutFn>
