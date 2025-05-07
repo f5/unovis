@@ -144,9 +144,9 @@ export const omit = <T extends Record<string | number | symbol, unknown>>(obj: T
   return obj
 }
 
-export const groupBy = <T extends Record<string | number, any>> (arr: T[], accessor: (a: T) => string | number): Record<string | number, T[]> => {
+export const groupBy = <T extends Record<string | number, any>> (arr: T[], accessor: (a: T, index: number) => string | number): Record<string | number, T[]> => {
   return arr.reduce(
-    (grouped, v, i, a, k = accessor(v)) => (((grouped[k] || (grouped[k] = [])).push(v), grouped)),
+    (grouped, v, i, a, k = accessor(v, i)) => (((grouped[k] || (grouped[k] = [])).push(v), grouped)),
     {} as Record<string | number, T[]>
   )
 }
