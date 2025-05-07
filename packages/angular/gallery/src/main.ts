@@ -16,6 +16,7 @@ import { StackedBarChartModule } from '@unovis/shared/examples/horizontal-stacke
 import { BasicLineChartModule } from '@unovis/shared/examples/basic-line-chart/basic-line-chart.module'
 import { MultiLineChartModule } from '@unovis/shared/examples/multi-line-chart/multi-line-chart.module'
 import { DataGapLineChartModule } from '@unovis/shared/examples/data-gap-line-chart/data-gap-line-chart.module'
+import { PatchyLineChartModule } from '@unovis/shared/examples/patchy-line-chart/patchy-line-chart.module'
 
 // Timeline
 import { BasicTimelineModule } from '@unovis/shared/examples/basic-timeline/basic-timeline.module'
@@ -68,6 +69,7 @@ import { BaselineAreaChartModule } from '@unovis/shared/examples/baseline-area-c
     <basic-line-chart></basic-line-chart>
     <multi-line-chart></multi-line-chart>
     <data-gap-line-chart></data-gap-line-chart>
+    <patchy-line-chart></patchy-line-chart>
 
     <!-- Timeline -->
     <basic-timeline></basic-timeline>
@@ -114,7 +116,7 @@ export class AppComponent {
     TopojsonMapModule, StackedBarChartModule, BrushGroupedBarModule, BasicScatterPlotModule, SizedScatterPlotModule, FreeBrushScattersModule, NonStackedAreaChartModule,
     BasicTimelineModule, BasicSankeyModule, ExpandableSankeyModule, BasicGraphModule, LeafletFlowMapModule,
     ForceLayoutGraphModule, AdvancedLeafletMapModule, StackedAreaModule, ParallelLayoutGraphModule, ElkLayeredGraphModule,
-    DataGapLineChartModule, CrosshairStackedBarModule, BaselineAreaChartModule, StepAreaChartModule, SunburstChartModule,
+    DataGapLineChartModule, CrosshairStackedBarModule, BaselineAreaChartModule, PatchyLineChartModule, StepAreaChartModule, SunburstChartModule,
   ],
   bootstrap: [AppComponent],
   providers: [BrowserModule],
