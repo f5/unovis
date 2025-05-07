@@ -36,7 +36,7 @@ function VisLeafletMapFC<Datum extends GenericDataRecord> (props: VisLeafletMapP
     component?.setConfig(props)
   })
 
-  useImperativeHandle(fRef, () => ({ get component () { return component } }), [])
+  useImperativeHandle(fRef, () => ({ get component () { return component } }), [component])
   return <div className={props.className} ref={ref} />
 }
 
