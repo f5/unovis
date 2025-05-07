@@ -8,8 +8,8 @@ import {
   VisEventCallback,
   AxisType,
   PlotlineLineStylePresets,
-  PlotlineLegendPosition,
-  PlotlineLegendOrientation,
+  PlotlineLabelPosition,
+  PlotlineLabelOrientation,
 } from '@unovis/ts'
 import { VisXYComponent } from '../../core'
 
@@ -20,7 +20,7 @@ import { VisXYComponent } from '../../core'
   providers: [{ provide: VisXYComponent, useExisting: VisPlotlineComponent }],
 })
 export class VisPlotlineComponent<Datum> implements PlotlineConfigInterface<Datum>, AfterViewInit {
-  /** Animation duration of the data update transitions in milliseconds. Default: `600` */
+  /** Duration of the animation in milliseconds. */
   @Input() duration?: number
 
   /** Events configuration. An object containing properties in the following format:
@@ -70,37 +70,43 @@ export class VisPlotlineComponent<Datum> implements PlotlineConfigInterface<Datu
     };
   }
 
-  /** Line width in pixels. Default: `2` */
+  /** Line width in pixels.
+   * Uses CSS variable: `--vis-plotline-width`. */
   @Input() lineWidth?: number
 
-  /** Plotline direction type: `AxisType.X` or `AxisType.Y` */
+  /** Plotline direction type.
+   * Should be either `AxisType.X` or `AxisType.Y`. */
   @Input() axis?: AxisType | string
 
-  /** Value to draw the plotline at. Default: `0` */
+  /** Value to draw the plotline at. */
   @Input() value?: number | null | undefined
 
-  /** Line style, see SVG's stroke-dasharray. Default: `solid` */
+  /** Line style of the plotline.
+   * Can be a named preset or an array of numbers representing `stroke-dasharray`.
+   * Uses CSS variable: `--vis-plotline-dasharray`. */
   @Input() lineStyle?: PlotlineLineStylePresets | number[]
 
-
+  /** Label text to display on the plotline. */
   @Input() labelText?: string
 
+  /** Position of the label relative to the plotline. */
+  @Input() labelPosition?: PlotlineLabelPosition
 
-  @Input() labelPosition: PlotlineLegendPosition
+  /** Horizontal offset of the label in pixels. */
+  @Input() labelOffsetX?: number
 
+  /** Vertical offset of the label in pixels. */
+  @Input() labelOffsetY?: number
 
-  @Input() labelOffsetX: number
+  /** Orientation of the label: horizontal or vertical. */
+  @Input() labelOrientation?: PlotlineLabelOrientation
 
-
-  @Input() labelOffsetY: number
-
-
-  @Input() labelOrientation: PlotlineLegendOrientation
-
-
+  /** Color of the label text.
+   * Uses CSS variable: `--vis-plotline-label-color`. */
   @Input() labelColor?: string
 
-
+  /** Font size of the label text in pixels.
+   * Uses CSS variable: `--vis-plotline-label-font-size`. */
   @Input() labelSize?: number
 
   component: Plotline<Datum> | undefined
