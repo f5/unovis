@@ -68,8 +68,8 @@ read [CONTRIBUTING](CONTRIBUTING.md).
 
 ## Maintainers
 [<img alt="Nikita Rokotyan" src="https://avatars.githubusercontent.com/u/755708" width="80"/>](https://github.com/rokotyan)
-[<img alt="Rebecca Bol" src="https://avatars.githubusercontent.com/u/52078477" width="80"/>](https://github.com/reb-dev)
 [<img alt="Qian Liu" src="https://avatars.githubusercontent.com/u/5026041" width="80"/>](https://github.com/lee00678)
+[<img alt="Surya Hanumandla" src="https://avatars.githubusercontent.com/u/7765847" width="80"/>](https://github.com/suryahanumandla)
 
 ## Contributors
 [<img alt="Olga Stukova" src="https://avatars.githubusercontent.com/u/8654114" width="40"/>](https://github.com/stukova)

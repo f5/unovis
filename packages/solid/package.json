@@ -22,7 +22,8 @@
   "author": "Hoang Nguyen <huyhoang.hngngn@gmail.com>",
   "maintainers": [
     "Nikita Rokotyan <nikita@f5.com> (https://rokotyan.com)",
-    "Rebecca Bol <r.bol@f5.com>"
+    "Qian Liu <qi.liu@f5.com>",
+    "Surya Hanumandla <s.hanumandla@f5.com>"
   ],
   "type": "module",
   "sideEffects": false,
