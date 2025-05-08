@@ -5,7 +5,7 @@ export { XYComponentCore } from 'core/xy-component'
 export type { XYComponentConfigInterface } from 'core/xy-component/config'
 
 // Components
-export { Tooltip } from 'components/tooltip'
+export { Tooltip } from './components/tooltip'
 export { Line } from './components/line'
 export { StackedBar } from './components/stacked-bar'
 export { GroupedBar } from './components/grouped-bar'
@@ -29,7 +29,8 @@ export { Donut } from './components/donut'
 export { FreeBrush } from './components/free-brush'
 export { XYLabels } from './components/xy-labels'
 export { NestedDonut } from './components/nested-donut'
-export { Annotations } from 'components/annotations'
+export { Annotations } from './components/annotations'
+export { Plotband } from './components/plotband'
 
 // Constants
 export * from './components/donut/constants'
@@ -59,3 +60,4 @@ export type { FreeBrushConfigInterface } from './components/free-brush/config'
 export type { XYLabelsConfigInterface } from './components/xy-labels/config'
 export type { NestedDonutConfigInterface } from './components/nested-donut/config'
 export type { AnnotationsConfigInterface } from './components/annotations/config'
+export type { PlotbandConfigInterface } from './components/plotband/config'

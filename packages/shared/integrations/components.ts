@@ -17,6 +17,7 @@ export function getComponentList (
     { name: 'StackedBar', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/stacked-bar'], dataType: 'Datum[]', angularProvide: 'VisXYComponent' },
     { name: 'Timeline', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/timeline'], dataType: 'Datum[]', angularProvide: 'VisXYComponent' },
     { name: 'XYLabels', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/xy-labels'], dataType: 'Datum[]', angularProvide: 'VisXYComponent' },
+    { name: 'Plotband', sources: [coreComponentConfigPath, xyComponentConfigPath, '/components/plotband'], dataType: null, angularProvide: 'VisXYComponent' },
 
     // Single components
     { name: 'ChordDiagram', sources: [coreComponentConfigPath, '/components/chord-diagram'], dataType: '{ nodes: N[]; links?: L[] }', angularProvide: 'VisCoreComponent' },
