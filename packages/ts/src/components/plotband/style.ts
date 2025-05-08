@@ -23,6 +23,7 @@ export const plotband = css`
   cursor: var(--vis-line-cursor);
   fill: var(--vis-plotband-color);
 `
+
 export const plotbandPath = css`
   label: plotbandPath;
   fill: none;

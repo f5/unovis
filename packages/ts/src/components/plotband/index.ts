@@ -36,25 +36,31 @@ export class Plotband<Datum> extends XYComponentCore<Datum, PlotbandConfigInterf
     this.plotband
       .style('fill', config.color)
 
-    const pos = { x: 0, y: 0, height: 0, width: 0 }
+    if (this.from == null || this.to == null) return
+
+    const pos = { x: 0, y: 0, width: 0, height: 0 }
 
     if (config.axis === 'y') {
+      const y1 = this.yScale(this.from)
+      const y2 = this.yScale(this.to)
+      pos.y = Math.min(y1, y2)
+      pos.height = Math.abs(y1 - y2)
       pos.x = 0
-      pos.y = this.yScale(this.to)
-      pos.height = this.yScale(this.from) - pos.y
       pos.width = this._width
     } else {
-      pos.x = this.xScale(this.from)
+      const x1 = this.xScale(this.from)
+      const x2 = this.xScale(this.to)
+      pos.x = Math.min(x1, x2)
+      pos.width = Math.abs(x1 - x2)
       pos.y = 0
       pos.height = this._height
-      pos.width = this.xScale(this.to) - pos.x
     }
 
     smartTransition(this.plotband, 300)
       .attr('x', pos.x)
       .attr('y', pos.y)
-      .attr('height', pos.height)
       .attr('width', pos.width)
+      .attr('height', pos.height)
 
     smartTransition(this.plotband.exit())
       .style('opacity', 0)
