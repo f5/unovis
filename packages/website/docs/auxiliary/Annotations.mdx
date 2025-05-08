@@ -60,7 +60,7 @@ include **content** (the text) and an optional **subject** (the highlighted area
 ```ts
 type AnnotationItem = {
   // Base properties
-  content: string | UnovisText | UnovisText[];
+  content: string | WithOptional<UnovisText, 'fontSize'> | WithOptional<UnovisText, 'fontSize'>[];
   subject?: AnnotationSubject;
 
   // Position and size properties
