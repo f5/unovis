@@ -329,7 +329,7 @@ export function filterDataByRange<Datum> (data: Datum[], range: [number, number]
 }
 
 export function isNumberWithinRange (value: number, range: [number, number]): boolean {
-  return (value >= range[0]) && (value <= range[1])
+  return (value >= range[0] && value <= range[1]) || (value >= range[1] && value <= range[0])
 }
 
 export const ensureArray = <T>(value: T | T[] | null): T[] => {
