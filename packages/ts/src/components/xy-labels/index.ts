@@ -59,7 +59,7 @@ export class XYLabels<Datum> extends XYComponentCore<Datum, XYLabelsConfigInterf
     const { config, datamodel } = this
 
     const xRange = this.xScale.range() as [number, number]
-    const yRange = this.xScale.range() as [number, number]
+    const yRange = this.yScale.range() as [number, number]
 
     const labels = datamodel.data?.reduce<XYLabel<Datum>[]>((acc, d) => {
       const xPositioning = getValue<Datum, XYLabelPositioning>(d, config.xPositioning)
