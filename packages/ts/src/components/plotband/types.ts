@@ -31,3 +31,27 @@ export interface PlotlineLabelOptions {
   labelColor?: string;
   labelSize?: number;
 }
+
+export type LayoutValue = {
+  x: number;
+  y: number;
+  textAnchor: string;
+  dominantBaseline: string;
+}
+
+export type PlotbandLabelLayout = {
+  rotation: number;
+  transform: string;
+} & LayoutValue
+
+
+type LabelLayoutFn = (params: {
+  startX: number;
+  startY: number;
+  width: number;
+  height: number;
+  offsetX: number;
+  offsetY: number;
+}) => LayoutValue
+
+export type LayoutMap = Record<PlotbandLabelPosition, LabelLayoutFn>
