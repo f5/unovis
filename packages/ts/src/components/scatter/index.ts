@@ -147,7 +147,18 @@ export class Scatter<Datum> extends XYComponentCore<Datum, ScatterConfigInterfac
     removePoints(points.exit<ScatterPoint<Datum>>(), this.xScale, this.yScale, duration)
 
     // Take care of overlapping labels
-    this._resolveLabelOverlap()
+    if (this._hasLabels()) {
+      this._resolveLabelOverlap()
+    }
+  }
+
+  private _hasLabels (): boolean {
+    // If label config is not defined, no labels will be shown
+    if (!this.config.label) return false
+
+    // Check if any point in the flattened data has a label
+    const pointDataFlat: ScatterPoint<Datum>[] = flatten(this._pointData)
+    return pointDataFlat.some(d => d._point.label)
   }
 
   private _resolveLabelOverlap (): void {
