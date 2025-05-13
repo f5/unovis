@@ -56,6 +56,9 @@ export { VisXYLabelsModule } from './components/xy-labels/xy-labels.module'
 export { VisTopoJSONMapComponent } from './components/topojson-map/topojson-map.component'
 export { VisTopoJSONMapModule } from './components/topojson-map/topojson-map.module'
 
+export { VisPlotbandComponent } from './components/plotband/plotband.component'
+export { VisPlotbandModule } from './components/plotband/plotband.module'
+
 // HTML Components
 export { VisLeafletMapComponent } from './html-components/leaflet-map/leaflet-map.component'
 export { VisLeafletMapModule } from './html-components/leaflet-map/leaflet-map.module'

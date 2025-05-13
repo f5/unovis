@@ -30,8 +30,10 @@ export const plotband = css`
 
 export const label = css`
   label: plotline-label;
+
+  user-select: none;
   text-anchor: middle;
   pointer-events: none;
-  font-size: var(--vis-plotline-label-font-size);
-  fill: var(--vis-plotline-label-color);
+  font-size: var(--vis-plotband-label-font-size);
+  fill: var(--vis-plotband-label-color);
 `
