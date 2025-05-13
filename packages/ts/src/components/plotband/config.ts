@@ -1,6 +1,9 @@
-import { AxisType } from 'components/axis/types'
+// Config
 import { XYComponentConfigInterface, XYComponentDefaultConfig } from 'core/xy-component/config'
-import { PlotbandLabelPlacement, PlotbandLabelOrientation, PlotbandLabelPosition } from './types'
+
+// Types
+import { AxisType } from 'components/axis/types'
+import { PlotbandLabelOrientation, PlotbandLabelPosition } from './types'
 
 export interface PlotbandConfigInterface<Datum> extends Partial<XYComponentConfigInterface<Datum>> {
   /**
@@ -26,29 +29,36 @@ export interface PlotbandConfigInterface<Datum> extends Partial<XYComponentConfi
    */
   to?: number | null | undefined;
 
+  /**
+   * Duration of the animation in milliseconds.
+   *
+   * @default 300
+   */
+  duration?: number;
+
   /** Optional text to display on the plotband */
   labelText?: string;
 
-  /** Position of the label relative to the plotband area (e.g., 'top-left').
+  /** Position of the label relative to the plotband area (e.g., 'top-left-outside').
    *  Can be customized with a string.
-   *  @default PlotbandLabelPosition.TopRight
+   *  @default PlotbandLabelPosition.TopLeftOutside
    */
-  labelPosition: PlotbandLabelPosition;
+  labelPosition?: PlotbandLabelPosition;
 
   /** Horizontal offset (in pixels) for positioning the label.
    *  @default 14
    */
-  labelOffsetX: number;
+  labelOffsetX?: number;
 
   /** Vertical offset (in pixels) for positioning the label.
    *  @default 14
    */
-  labelOffsetY: number;
+  labelOffsetY?: number;
 
   /** Orientation of the label text.
    *  @default PlotbandLabelOrientation.Horizontal
    */
-  labelOrientation: PlotbandLabelOrientation | string;
+  labelOrientation?: PlotbandLabelOrientation;
 
   /** Optional color for the label text */
   labelColor?: string;
@@ -68,7 +78,8 @@ export const PlotbandDefaultConfig: PlotbandConfigInterface<unknown> = {
   from: 0,
   to: 0,
   color: undefined,
-  labelPosition: PlotbandLabelPosition.TopRightOutside,
+  duration: 300,
+  labelPosition: PlotbandLabelPosition.TopLeftOutside,
   labelOffsetX: 14,
   labelOffsetY: 14,
   labelOrientation: PlotbandLabelOrientation.Horizontal,

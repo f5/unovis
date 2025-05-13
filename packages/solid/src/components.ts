@@ -9,6 +9,7 @@ export * from "./components/scatter";
 export * from "./components/stacked-bar";
 export * from "./components/timeline";
 export * from "./components/xy-labels";
+export * from "./components/plotband";
 export * from "./components/chord-diagram";
 export * from "./components/donut";
 export * from "./components/graph";
