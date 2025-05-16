@@ -521,8 +521,8 @@ export async function applyELKLayout<N extends GraphInputNode, L extends GraphIn
     const found = datamodel.nodes.find(n => n._id === node.id)
     if (!found) return
 
-    found.x = node.x
-    found.y = node.y
+    found.x = node.x + node.width / 2
+    found.y = node.y + node.height / 2
   })
 
   // Handle non-connected nodes
