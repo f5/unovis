@@ -21,7 +21,7 @@ d3-collection                      perpetual       BSD-3-Clause  1.0.7          
 d3-geo-projection                  perpetual       ISC           4.0.0              Mike Bostock https://bost.ocks.org/mike
 d3-interpolate-path                perpetual       BSD-3-Clause  2.2.3              Peter Beshai <peter.beshai@gmail.com> (http://github.com/pbeshai)
 d3-sankey                          perpetual       BSD-3-Clause  0.12.3             Mike Bostock https://bost.ocks.org/mike/
-elkjs                              perpetual       EPL-2.0       0.8.2              Ulf Rüegg uruurumail@gmail.com
+elkjs                              perpetual       EPL-2.0       0.10.0             Ulf Rüegg uruurumail@gmail.com
 geojson                            perpetual       MIT           0.5.0              Casey Cesari
 leaflet                            perpetual       BSD-2-Clause  1.7.1              n/a
 maplibre-gl                        perpetual       BSD-3-Clause  2.1.9              n/a
