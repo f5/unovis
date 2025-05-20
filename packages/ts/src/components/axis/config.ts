@@ -34,7 +34,7 @@ export interface AxisConfigInterface<Datum> extends Partial<XYComponentConfigInt
    * Default: `250` */
   minMaxTicksOnlyWhenWidthIsLess?: number;
   /** Tick label formatter function. Default: `undefined` */
-  tickFormat?: ((tick: number, i: number, ticks: number[]) => string) | ((tick: Date, i: number, ticks: Date[]) => string);
+  tickFormat?: ((tick: number | Date, i: number, ticks: number[] | Date[]) => string);
   /** Explicitly set tick values. Default: `undefined` */
   tickValues?: number[];
   /** Set the approximate number of axis ticks (will be passed to D3's axis constructor). Default: `undefined` */
