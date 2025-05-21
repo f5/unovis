@@ -72,6 +72,7 @@ read [CONTRIBUTING](CONTRIBUTING.md).
 [<img alt="Surya Hanumandla" src="https://avatars.githubusercontent.com/u/7765847" width="80"/>](https://github.com/suryahanumandla)
 
 ## Contributors
+[<img alt="Rebecca Bol" src="https://avatars.githubusercontent.com/u/52078477" width="40"/>](https://github.com/reb-dev)
 [<img alt="Olga Stukova" src="https://avatars.githubusercontent.com/u/8654114" width="40"/>](https://github.com/stukova)
 [<img alt="Sumit Kumar" src="https://avatars.githubusercontent.com/u/5867393" width="40"/>](https://github.com/sumitkumar25)
 [<img alt="Gaurav Mukherjee" src="https://avatars.githubusercontent.com/u/6323787" width="40"/>](https://github.com/gmfun)
