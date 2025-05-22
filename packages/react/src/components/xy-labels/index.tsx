@@ -1,5 +1,5 @@
 // !!! This code was automatically generated. You should not change it !!!
-import React, { ForwardedRef, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
+import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
 import { XYLabels, XYLabelsConfigInterface } from '@unovis/ts'
 
 // Utils
@@ -20,7 +20,7 @@ export type VisXYLabelsProps<Datum> = XYLabelsConfigInterface<Datum> & {
 export const VisXYLabelsSelectors = XYLabels.selectors
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-function VisXYLabelsFC<Datum> (props: VisXYLabelsProps<Datum>, fRef: ForwardedRef<VisXYLabelsRef<Datum>>): JSX.Element {
+function VisXYLabelsFC<Datum> (props: VisXYLabelsProps<Datum>, fRef: ForwardedRef<VisXYLabelsRef<Datum>>): ReactElement {
   const ref = useRef<VisComponentElement<XYLabels<Datum>>>(null)
   const componentRef = useRef<XYLabels<Datum> | undefined>(undefined)
 
