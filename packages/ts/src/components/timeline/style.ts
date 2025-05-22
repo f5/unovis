@@ -15,9 +15,15 @@ export const globalStyles = injectGlobal`
     --vis-timeline-label-font-size: 12px;
     --vis-timeline-label-color: #6C778C;
 
+    --vis-timeline-arrow-color: #6C778C;
+    --vis-timeline-arrow-stroke-width: 1.5;
+
     --vis-timeline-cursor: default;
     --vis-timeline-line-color: var(--vis-color-main);
     --vis-timeline-line-stroke-width: 0;
+    --vis-timeline-line-hover-stroke-width: 0;
+    --vis-timeline-line-hover-stroke-color: #6C778C;
+
     // The line stroke color variable is not defined by default
     // to allow it to fallback to the corresponding row background color
     /* --vis-timeline-line-stroke-color: none; */
@@ -27,6 +33,8 @@ export const globalStyles = injectGlobal`
     --vis-dark-timeline-scrollbar-background-color: #292B34;
     --vis-dark-timeline-scrollbar-color: #6C778C;
     --vis-dark-timeline-label-color: #EFF5F8;
+    --vis-dark-timeline-arrow-color: #EFF5F8;
+    --vis-dark-timeline-line-hover-stroke-color: #EFF5F8;
   }
 
   body.theme-dark ${`.${root}`} {
@@ -35,6 +43,8 @@ export const globalStyles = injectGlobal`
     --vis-timeline-scrollbar-background-color: var(--vis-dark-timeline-scrollbar-background-color);
     --vis-timeline-scrollbar-color: var(--vis-dark-timeline-scrollbar-color);
     --vis-timeline-label-color: var(--vis-dark-timeline-label-color);
+    --vis-timeline-arrow-color: var(--vis-dark-timeline-arrow-color);
+    --vis-timeline-line-hover-stroke-color: var(--vis-dark-timeline-line-hover-stroke-color);
   }
 `
 
@@ -44,6 +54,10 @@ export const background = css`
 
 export const lines = css`
   label: lines;
+`
+
+export const lineGroup = css`
+  label: line-group;
 `
 
 export const line = css`
@@ -57,6 +71,30 @@ export const line = css`
   &.odd {
     stroke: var(--vis-timeline-line-stroke-color, var(--vis-timeline-row-odd-fill-color));
   }
+
+  :hover {
+    stroke-width: var(--vis-timeline-line-hover-stroke-width);
+    stroke: var(--vis-timeline-line-hover-stroke-color);
+  }
+`
+
+export const lineStartIcon = css`
+  label: line-start-icon;
+`
+
+export const lineEndIcon = css`
+  label: line-end-icon;
+`
+
+export const arrows = css`
+  label: arrows;
+`
+
+export const arrow = css`
+  label: arrow;
+  fill: none;
+  stroke: var(--vis-timeline-arrow-color);
+  stroke-width: var(--vis-timeline-arrow-stroke-width);
 `
 
 export const rows = css`
@@ -99,4 +137,12 @@ export const label = css`
   fill: var(--vis-timeline-label-color);
   text-anchor: end;
   user-select: none;
+`
+
+export const rowIcons = css`
+  label: row-icons;
+`
+
+export const rowIcon = css`
+  label: row-icon;
 `

@@ -89,6 +89,8 @@ export interface XYContainerConfigInterface<Datum> extends ContainerConfigInterf
   scaleByDomain?: boolean;
   /** Annotations component. Default: `undefined` */
   annotations?: Annotations | undefined;
+  /** Extend the clip path by the specified number of pixels. Default: `2` */
+  clipPathExtend?: number;
 }
 
 
@@ -117,5 +119,7 @@ export const XYContainerDefaultConfig: XYContainerConfigInterface<unknown> = {
 
   preventEmptyDomain: null,
   scaleByDomain: false,
+
+  clipPathExtend: 2,
 }
 
