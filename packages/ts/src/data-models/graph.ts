@@ -100,7 +100,15 @@ export class GraphDataModel<
     this._connectedNodes = without(nodes, ...this._nonConnectedNodes)
 
     this._nodes = nodes
-    this._links = links.filter(l => l.source && l.target)
+
+    this._links = links.filter(l => {
+      if (l.source === l.target) {
+        console.warn(`Unovis | Graph Data Model: Skipping link ${l._id} because it has the same source and target`)
+        return false
+      }
+
+      return l.source && l.target
+    })
   }
 
   get nodes (): OutNode[] {
