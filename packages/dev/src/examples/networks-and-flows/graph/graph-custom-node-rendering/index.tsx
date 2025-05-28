@@ -37,6 +37,7 @@ export const component = (): React.ReactNode => {
 
   const links: CustomGraphLink[] = useMemo(() => ([
     { source: '0', target: '1', showFlow: true, linkFlowParticleSize: 1.5, linkFlowParticleSpeed: 15 },
+    { source: '0', target: '0', showFlow: true, linkFlowParticleSize: 1.5, linkFlowParticleSpeed: 15 },
     { source: '0', target: '2', showFlow: true, linkFlowParticleSize: 2, linkFlowParticleSpeed: 25 },
     { source: '0', target: '3', showFlow: true, linkFlowParticleSize: 3, linkFlowParticleSpeed: 10 },
     { source: '0', target: '4', showFlow: true, linkFlowParticleSize: 3, linkFlowParticleSpeed: 30 },
