@@ -1,5 +1,5 @@
 // !!! This code was automatically generated. You should not change it !!!
-import React, { ForwardedRef, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
+import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
 import { LeafletFlowMap, LeafletFlowMapConfigInterface, GenericDataRecord } from '@unovis/ts'
 
 // Utils
@@ -18,7 +18,7 @@ export type VisLeafletFlowMapProps<PointDatum extends GenericDataRecord, FlowDat
 export const VisLeafletFlowMapSelectors = LeafletFlowMap.selectors
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-function VisLeafletFlowMapFC<PointDatum extends GenericDataRecord, FlowDatum extends GenericDataRecord> (props: VisLeafletFlowMapProps<PointDatum, FlowDatum>, fRef: ForwardedRef<VisLeafletFlowMapRef<PointDatum, FlowDatum>>): JSX.Element {
+function VisLeafletFlowMapFC<PointDatum extends GenericDataRecord, FlowDatum extends GenericDataRecord> (props: VisLeafletFlowMapProps<PointDatum, FlowDatum>, fRef: ForwardedRef<VisLeafletFlowMapRef<PointDatum, FlowDatum>>): ReactElement {
   const ref = useRef<HTMLDivElement>(null)
   const [component, setComponent] = useState<LeafletFlowMap<PointDatum, FlowDatum>>()
 
@@ -36,7 +36,7 @@ function VisLeafletFlowMapFC<PointDatum extends GenericDataRecord, FlowDatum ext
     component?.setConfig(props)
   })
 
-  useImperativeHandle(fRef, () => ({ get component () { return component } }), [component])
+  useImperativeHandle(fRef, () => ({ get component () { return component } }), [])
   return <div className={props.className} ref={ref} />
 }
 
