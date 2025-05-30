@@ -1,0 +1,58 @@
+<div class="controls-container">
+  <label>
+    Select a fallback value for missing data points:
+    <select (change)="setFallbackValue($event.target.value)">
+      <option *ngFor="let option of fallbacks; let i = index" [value]="i">
+        {{option === undefined ? 'undefined' : option === null ? 'null' : option}}
+      </option>
+    </select>
+  </label>
+  <label>
+    Interpolate:
+    <input type="checkbox" [checked]="interpolation" (change)="toggleInterpolation()">
+  </label>
+  <label>
+    Show Scatter:
+    <input type="checkbox" [checked]="showScatter" (change)="toggleShowScatter()">
+  </label>
+</div>
+
+<div>
+  <vis-xy-container [data]="data" [xDomain]="xDomain" width="100%" height="50vh">
+    <vis-line
+      [curveType]="curveType"
+      [fallbackValue]="fallbackValue"
+      [interpolateMissingData]="interpolation"
+      [x]="xCallback"
+      [y]="countriesYCallbacks">
+    </vis-line>
+    
+    <vis-crosshair
+      [color]="['var(--vis-color0)', 'var(--vis-color1)']"
+      [template]="tooltipTemplate">
+    </vis-crosshair>
+    
+    <ng-container *ngIf="showScatter">
+      <vis-scatter
+        *ngFor="let country of countries; let i = index"
+        [size]="5"
+        [x]="xCallback"
+        [color]="country.color || 'var(--vis-color' + i + ')'"
+        [y]="getY(country)"
+        [hidden]="!showScatter"
+      >
+      </vis-scatter>
+    </ng-container>
+    
+    <vis-tooltip></vis-tooltip>
+    
+    <vis-axis type="x" [numTicks]="10"></vis-axis>
+    
+    <vis-axis
+      type="y"
+      label="Electric power consumption (kWh per capita)"
+      [tickFormat]="yAxisTickFormat"
+      [tickValues]="yTickValues">
+    </vis-axis>
+  </vis-xy-container>
+</div>
