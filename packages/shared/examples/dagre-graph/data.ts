@@ -27,6 +27,13 @@ export const links: LinkDatum[] = [
     color: '#35D068',
   },
   {
+    id: ':S:cartservice.app~:S:cartservice.app',
+    source: 'S:cartservice.app',
+    target: 'S:cartservice.app',
+    active: true,
+    color: '#35D068',
+  },
+  {
     id: ':N:vk8s-service-network~:S:adservice.app',
     source: 'N:vk8s-service-network',
     target: 'S:adservice.app',

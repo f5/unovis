@@ -100,7 +100,40 @@ export class GraphDataModel<
     this._connectedNodes = without(nodes, ...this._nonConnectedNodes)
 
     this._nodes = nodes
-    this._links = links.filter(l => l.source && l.target)
+    this._links = links.filter(l => l.source && l.target && this.hasDistinctEndpoints(l))
+  }
+
+  /**
+   * Extracts an identifier from the provided input, which can be a direct ID (number/string) or a node object.
+   *
+   * @param {number | string | N} d - The input to extract an ID from. Can be:
+   *   - A number ID
+   *   - A string ID
+   *   - A node object of type N
+   * @returns {string | number | undefined} - The extracted ID or undefined if the input is nullish
+   */
+  private getSourceOrTargetId (d: number | string | N): string | number | undefined {
+    if (!d) return undefined
+    if (isNumber(d) || isString(d)) return d
+    return this.nodeId(d)
+  }
+
+  /**
+   * Checks if a link has distinct source and target endpoints.
+   *
+   * @param {OutLink} ol - The link object to check
+   * @returns {boolean} - Returns true if both source and target exist and are different,
+   * false if they are the same or either endpoint is missing
+   */
+  private hasDistinctEndpoints (ol: OutLink): boolean {
+    const sourceId = this.getSourceOrTargetId(ol.source)
+    const targetId = this.getSourceOrTargetId(ol.target)
+    if (sourceId === targetId) {
+      console.warn(`Unovis | Graph Data Model: Link connects node to itself. Source and target IDs(${sourceId}) are identical.`)
+    }
+
+    // Check if both IDs exist and are different
+    return sourceId !== targetId
   }
 
   get nodes (): OutNode[] {
