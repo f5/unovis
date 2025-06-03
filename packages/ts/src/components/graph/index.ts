@@ -125,6 +125,7 @@ export class Graph<
 
   // A map for storing link total path lengths to optimize rendering performance
   private _linkPathLengthMap: Map<string, number> = new Map()
+  private _linkFlowFrameElapsed = 0
 
   events = {
     [Graph.selectors.background]: {
@@ -698,19 +699,29 @@ export class Graph<
     const hasLinksWithFlow = links.some((d, i) => getBoolean(d, config.linkFlow, i))
     if (!hasLinksWithFlow) return
 
+    const deltaTime = elapsed - this._linkFlowFrameElapsed
+
     const linkGroups = this._linksGroup.selectAll<SVGGElement, GraphLink<N, L>>(`.${linkSelectors.gLink}`)
     linkGroups.each((l, i, els) => {
-      let linkFlowAnimDuration = getNumber(l, config.linkFlowAnimDuration, l._indexGlobal)
       const linkFlowParticleSpeed = getNumber(l, config.linkFlowParticleSpeed, l._indexGlobal)
 
-      // If particle speed is provided, calculate duration based on link length and speed
-      if (linkFlowParticleSpeed) {
-        const linkPathElement = els[i].querySelector<SVGPathElement>(`.${linkSelectors.linkSupport}`)
-        const pathLength = linkPathElement ? (this._linkPathLengthMap.get(linkPathElement.getAttribute('d')) ?? linkPathElement.getTotalLength()) : 0
-        if (pathLength > 0) linkFlowAnimDuration = (pathLength / linkFlowParticleSpeed) * 1000 // Convert to milliseconds
-      }
-      l._state.flowAnimTime = (elapsed % linkFlowAnimDuration) / linkFlowAnimDuration
+      // Get path length
+      const pathElement = els[i].querySelector<SVGPathElement>(`.${linkSelectors.linkSupport}`)
+      const pathLength = pathElement ? (this._linkPathLengthMap.get(pathElement.getAttribute('d')) ?? pathElement.getTotalLength()) : 0
+
+      if (pathLength <= 0) return // Skip if no valid path
+
+      // Calculate speed: either provided or derived from duration
+      const speed = linkFlowParticleSpeed || (pathLength / getNumber(l, config.linkFlowAnimDuration, l._indexGlobal) * 1000)
+
+      // Initialize and update distance
+      l._state.flowAnimDistancePx = (l._state.flowAnimDistancePx || 0) + (deltaTime / 1000) * speed
+
+      // Convert to relative position
+      l._state.flowAnimDistanceRelative = (l._state.flowAnimDistancePx % pathLength) / pathLength
     })
+
+    this._linkFlowFrameElapsed = elapsed
     animateLinkFlow(linkGroups, this.config, this._scale, this._linkPathLengthMap)
   }
 
