@@ -476,9 +476,27 @@ make them wrap and form more columns and rows by providing a `layoutParallelSubG
   layoutParallelSubGroupsPerRow={2}
 />
 
-
 Here's a diagram showing the anatomy of the parallel layouts and their configuration properties:
 ![Parallel Layout](./assets/graph-layout-parallel.svg)
+
+#### Fine-tuning Node and Sub-group Spacing
+You can control the spacing between nodes and sub-groups with additional spacing properties:
+
+- `layoutParallelGroupSpacing`: Controls spacing between main groups (columns or rows). By default, calculated automatically based on container size.
+- `layoutParallelNodeSpacing`: Controls spacing between individual nodes. Can be a single number (for uniform spacing) or an array `[horizontal, vertical]` for different horizontal and vertical spacing.
+- `layoutParallelSubGroupSpacing`: Controls spacing between sub-groups. Default is `40` pixels.
+
+<GraphDoc
+  layoutType="parallel"
+  data={generateNodeLinkData(64, () => 0)}
+  layoutNodeGroup={(d, i) => i % 3}
+  layoutParallelNodeSubGroup={(d, i) => i % 4}
+  layoutParallelNodesPerColumn={3}
+  layoutParallelSubGroupsPerRow={2}
+  layoutParallelGroupSpacing={150}
+  layoutParallelNodeSpacing={[20, 20]}
+  layoutParallelSubGroupSpacing={40}
+/>
 
 ### Circular and Concentric
 There are two circular layout types available: `GraphLayoutType.Circular` (`"circular"`) and `GraphLayoutType.Concentric`
