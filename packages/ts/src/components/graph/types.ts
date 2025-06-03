@@ -48,7 +48,8 @@ export type GraphLink<
   _neighbours?: number;
 
   _state?: {
-    flowAnimTime?: number;
+    flowAnimDistanceRelative?: number;
+    flowAnimDistancePx?: number;
     hovered?: boolean;
     selected?: boolean;
     greyout?: boolean;

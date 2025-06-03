@@ -371,7 +371,7 @@ export function animateLinkFlow<N extends GraphInputNode, L extends GraphInputLi
     const pathLength = cachedLinkPathLength ?? linkPathElement.getTotalLength()
 
     if (!getBoolean(d, linkFlow, d._indexGlobal) || !pathLength) return
-    const t = d._state.flowAnimTime
+    const t = d._state.flowAnimDistanceRelative
     const circles = flowGroup.selectAll(`.${linkSelectors.flowCircle}`)
 
     circles
