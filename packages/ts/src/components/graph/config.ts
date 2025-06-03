@@ -95,6 +95,14 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
    * Only for `GraphLayoutType.Parallel` and `GraphLayoutType.ParallelHorizontal` layouts.
    * Default: `1` */
   layoutParallelSubGroupsPerRow?: number;
+  /** Spacing between nodes, dynamic by default.
+   * Only for `GraphLayoutType.Parallel` and `GraphLayoutType.ParallelHorizontal` layouts.
+   * Default: `undefined` */
+  layoutParallelNodeSpacing?: number | [number, number];
+  /** Spacing between sub-groups.
+   * Only for `GraphLayoutType.Parallel` and `GraphLayoutType.ParallelHorizontal` layouts.
+   * Default: `40` */
+  layoutParallelSubGroupSpacing?: number;
   /** Spacing between groups.
    * Only for `GraphLayoutType.Parallel` and `GraphLayoutType.ParallelHorizontal` layouts.
    * Default: `undefined` */
@@ -319,9 +327,11 @@ export const GraphDefaultConfig: GraphConfigInterface<GraphInputNode, GraphInput
   fitViewAlign: GraphFitViewAlignment.Center,
 
   layoutGroupOrder: [],
+  layoutParallelNodeSpacing: undefined,
   layoutParallelSubGroupsPerRow: 1,
   layoutParallelNodesPerColumn: 6,
   layoutParallelGroupSpacing: undefined,
+  layoutParallelSubGroupSpacing: 40,
   layoutParallelSortConnectionsByGroup: undefined,
   layoutNodeGroup: (n: GraphInputNode): string => (n as { group: string }).group,
   layoutParallelNodeSubGroup: (n: GraphInputNode): string => (n as { subgroup: string }).subgroup,
