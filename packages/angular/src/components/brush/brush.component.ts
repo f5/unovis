@@ -87,7 +87,7 @@ export class VisBrushComponent<Datum> implements BrushConfigInterface<Datum>, Af
   @Input() draggable?: boolean
 
   /** Position of the handle: `Arrangement.Inside` or `Arrangement.Outside`. Default: `Arrangement.Inside` */
-  @Input() handlePosition?: Arrangement | string
+  @Input() handlePosition?: Arrangement.Inside | Arrangement.Outside | string
 
   /** Constraint Brush selection to a minimal length in data units. Default: `undefined` */
   @Input() selectionMinLength?: number
