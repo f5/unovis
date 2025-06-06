@@ -1,24 +1,39 @@
 import React from 'react'
 import { VisSingleContainer, VisTreemap } from '@unovis/react'
-import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 export const title = 'Treemap: Basic'
-export const subTitle = 'Simple hierarchical data visualization'
+export const subTitle = 'Hierarchical data visualization with custom colors'
 
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
-  const data = [
-    { name: 'A', value: 20 },
-    { name: 'B', value: 15 },
-    { name: 'C', value: 10 },
-    { name: 'D', value: 5 },
+type TreemapExampleDatum = {
+  name: string;
+  value: number;
+  group?: string;
+}
+
+export const component = (): JSX.Element => {
+  const data: TreemapExampleDatum[] = [
+    { name: 'A', value: 20, group: 'Group 1' },
+    { name: 'B', value: 15, group: 'Group 1' },
+    { name: 'C', value: 10, group: 'Group 2' },
+    { name: 'D', value: 5, group: 'Group 2' },
+    { name: 'E', value: 8, group: 'Group 3' },
+    { name: 'F', value: 12, group: 'Group 3' },
   ]
 
   return (
     <VisSingleContainer height={400}>
       <VisTreemap
-        value={d => d.value}
         data={data}
-        duration={props.duration}
+        value={(d: TreemapExampleDatum) => d.value}
+        layers={[
+          (d: TreemapExampleDatum) => d.group,
+          (d: TreemapExampleDatum) => d.name,
+        ]}
+        tilePadding={10}
+        tilePaddingTop={24}
+        labelOffsetX={8}
+        labelOffsetY={8}
+        labelInternalNodes={true}
       />
     </VisSingleContainer>
   )
