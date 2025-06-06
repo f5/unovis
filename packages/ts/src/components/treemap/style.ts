@@ -4,26 +4,28 @@ import { css } from '@emotion/css'
 import { getCssVarNames, injectGlobalCssVariables } from 'utils/style'
 
 const cssVarDefaults = {
-  '--vis-treemap-tile-stroke-color': '#ffffff',
-  '--vis-treemap-tile-stroke-width': '1px',
+  '--vis-treemap-tile-stroke-color': '#fff',
+  '--vis-treemap-tile-stroke-width': '2px',
+  '--vis-treemap-tile-hover-stroke-color': '#fff',
   '--vis-treemap-tile-fill-color': '#B9BEC3',
+  '--vis-treemap-tile-background-color': '#fff',
   '--vis-treemap-tile-cursor': 'default',
   /* Undefined by default to allow proper fallback to var(--vis-font-family) */
   '--vis-treemap-label-font-family': undefined as undefined,
   '--vis-treemap-label-text-color': '#5b5f6d',
   '--vis-treemap-label-font-size': '12px',
 
+  /* Label opacity */
+  '--vis-treemap-label-opacity': 0.8,
+
   /* Dark Theme */
   '--vis-dark-treemap-tile-stroke-color': '#2c2c2c',
   '--vis-dark-treemap-tile-fill-color': '#5b5f6d',
-  '--vis-dark-treemap-label-text-color': '#ffffff',
+  '--vis-dark-treemap-label-text-color': '#fff',
 }
 
 export const root = css`
   label: treemap-component;
-  width: 100%;
-  height: 100%;
-  position: relative;
 `
 
 export const variables = getCssVarNames(cssVarDefaults)
@@ -33,20 +35,37 @@ export const tiles = css`
   label: g-tiles;
 `
 
+export const tileGroup = css`
+  label: tile-group;
+`
+
 export const tile = css`
   label: tile;
-  stroke: var(${variables.treemapTileStrokeColor});
-  stroke-width: var(${variables.treemapTileStrokeWidth});
-  fill: var(${variables.treemapTileFillColor});
-  cursor: var(${variables.treemapTileCursor});
+  stroke: var(--vis-treemap-tile-hover-stroke-color);
+  stroke-opacity: 0;
+  transition: stroke-opacity 100ms ease-in-out;
+
+  &:hover {
+    stroke-opacity: 1;
+  }
+`
+
+// The leaf tiles are clickable
+export const clickableTile = css`
+  label: clickable-tile;
+  cursor: pointer;
+`
+
+export const tileForeground = css`
+  label: tile-foreground;
 `
 
 export const label = css`
   label: label;
-  text-anchor: middle;
-  fill: var(${variables.treemapLabelTextColor});
-  font-family: var(${variables.treemapLabelFontFamily}, var(--vis-font-family));
-  font-size: var(${variables.treemapLabelFontSize});
+  text-anchor: start;
+  dominant-baseline: hanging;
+  user-select: none;
   pointer-events: none;
-  font-weight: 600;
+  font-size: var(--vis-treemap-label-font-size);
+  opacity: var(--vis-treemap-label-opacity);
 `
