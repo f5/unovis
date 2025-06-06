@@ -17,7 +17,7 @@ export const component = (name, props, override = {}) => ({
   override
 });
 
-export const defaultProps = (chartName='StackedBar', n=11) => ({
+export const xyContainerProps = (chartName='StackedBar', n=11) => ({
   name: "XYContainer",
   data: generateDataRecords(n),
   showContext: "full",
@@ -44,13 +44,13 @@ export const variedData = generateDataRecords(150).map(d => ({...d, y: Math.abs(
 ## Basic Configuration
 _XY Container_ is designed as a container that manages multiple _XY Components_ at once, along with optional X and Y
 axes, tooltip, and crosshair. Here is an example of a common configuration: one _XY Component_ alongside two _Axis_ components:
-<XYWrapper {...defaultProps()} showContext="container"/>
+<XYWrapper {...xyContainerProps()} showContext="container"/>
 
 ## Multiple XY Components
 By providing the container with data, every _XY Component_ within the container will be able to use it.
 There is no limit to the number of _XY Components_ your container can have.
 
-<XYWrapper {...defaultProps()}
+<XYWrapper {...xyContainerProps()}
   components={[
     component('StackedBar', { y: d => d.y + (-5), barWidth: 5, color: '#E2203A' }),
     component('Line', { y: [d => d.y1 + d.y4, d => d.y2 * 3, d => d.y4 * 4]}, { y: { key: 'y', value: 'multipleY', stringLiteral: false }}),
@@ -71,7 +71,7 @@ const height = 100;
 ```
 
 <div className='center'>
-  <XYWrapper {...defaultProps()} containerProps={{ width: 200, height: 100}} excludeTabs/>
+  <XYWrapper {...xyContainerProps()} containerProps={{ width: 200, height: 100}} excludeTabs/>
 </div>
 
 ### Margin
@@ -98,12 +98,12 @@ const margin = { left: 100, right: 100 }
 
 #### Before:
 <div className='flex'>
-  <XYWrapper className='showBorder' {...defaultProps()} containerProps={{ height: 100 }} excludeTabs/>
+  <XYWrapper className='showBorder' {...xyContainerProps()} containerProps={{ height: 100 }} excludeTabs/>
 </div>
 
 #### After:
 <div className='flex'>
-  <XYWrapper className='showBorder' {...defaultProps()} containerProps={{ height: 100, margin: { left: 100, right: 100 }}} excludeTabs/>
+  <XYWrapper className='showBorder' {...xyContainerProps()} containerProps={{ height: 100, margin: { left: 100, right: 100 }}} excludeTabs/>
 </div>
 
 ### Padding
@@ -116,7 +116,7 @@ rather tha size of the individual components. See how this works using the same 
 const padding = { left: 100, right: 100 }
 ```
 <div className='flex'>
-  <XYWrapper className='showBorder' {...defaultProps()} containerProps={{ height: 100, padding: { left: 100, right: 100 }}} excludeTabs/>
+  <XYWrapper className='showBorder' {...xyContainerProps()} containerProps={{ height: 100, padding: { left: 100, right: 100 }}} excludeTabs/>
 </div>
 
 ### Range
@@ -129,13 +129,13 @@ You can change the domain of your data with the `xDomain` and `yDomain` properti
 The result will show all data that is in this range- excluding any values that fall outside of the range, and occupying any missing values with white space.
 See the following example, which looks like this when the domain is not set:
 
-<XYWrapper {...defaultProps()} data={data} height={100} yDomain={[0,20]} excludeTabs/>
+<XYWrapper {...xyContainerProps()} data={data} height={100} yDomain={[0,20]} excludeTabs/>
 
 #### `xDomain = [4,8]`
-<XYWrapper {...defaultProps()} data={data} xDomain={[4,8]} yDomain={[0,20]} height={100} excludeTabs/>
+<XYWrapper {...xyContainerProps()} data={data} xDomain={[4,8]} yDomain={[0,20]} height={100} excludeTabs/>
 
 #### `yDomain = [0,100]`
-<XYWrapper {...defaultProps()} data={data} yDomain={[0,100]} height={100} excludeTabs/>
+<XYWrapper {...xyContainerProps()} data={data} yDomain={[0,100]} height={100} excludeTabs/>
 
 ### Domain Constraints
 Customizing your domain is helpful in datasets with outliers. When using dynamic data, you may not know which values to constrain your domain values to.
@@ -144,13 +144,13 @@ For the following examples, consider the following case where the majority of th
 These properties accept a number array in the form `[number, number]` or more typically `[number, undefined]` | `[undefined, number]`.
 
 #### Domain Constraints: None
-<XYWrapper {...defaultProps("Scatter")} data={constraintData} excludeTabs/>
+<XYWrapper {...xyContainerProps("Scatter")} data={constraintData} excludeTabs/>
 
 #### xDomainMinConstraint: `[0, undefined]`
-<XYWrapper {...defaultProps('Scatter')} data={constraintData} xDomainMinConstraint={[0, undefined]} excludeTabs/>
+<XYWrapper {...xyContainerProps('Scatter')} data={constraintData} xDomainMinConstraint={[0, undefined]} excludeTabs/>
 
 #### yDomainMaxConstraint: `[undefined, 10]`
-<XYWrapper {...defaultProps('Scatter')} data={constraintData} yDomainMaxConstraint={[undefined, 15]} excludeTabs/>
+<XYWrapper {...xyContainerProps('Scatter')} data={constraintData} yDomainMaxConstraint={[undefined, 15]} excludeTabs/>
 
 ### `preventEmptyDomain`
 When the calculated domain is empty (when domain's min and max values are equal), use the `preventEmptyDomain`
@@ -162,7 +162,7 @@ want to show the empty space. The possible values are:
 
 For example, a grouped bar with a single data point at `x=1`:
 <XYWrapperWithInput
-  {...defaultProps('GroupedBar')}
+  {...xyContainerProps('GroupedBar')}
   components={[
     component('GroupedBar', { x: 1, y: [1,4,2], barWidth: 40 }),
     { name: 'Axis', props: { type: 'x' }, key: 'xAxis'},
@@ -182,7 +182,7 @@ import { Scale } from '@unovis/ts'
 const yScale = Scale.scaleLinear()
 ```
 
-<XYWrapper {...defaultProps()} data={orderedData} excludeTabs/>
+<XYWrapper {...xyContainerProps()} data={orderedData} excludeTabs/>
 
 ```ts
 const yScale = Scale.scalePow().exponent(2)
@@ -192,7 +192,7 @@ const yScale = Scale.scalePow().exponent(2)
 {() => {
   const { Scale } = require('@unovis/ts')
   return (
-    <XYWrapper {...defaultProps()} data={orderedData} yScale={Scale.scalePow().exponent(2)} excludeTabs/>
+    <XYWrapper {...xyContainerProps()} data={orderedData} yScale={Scale.scalePow().exponent(2)} excludeTabs/>
   )
 }}
 </BrowserOnly>
@@ -201,14 +201,14 @@ const yScale = Scale.scalePow().exponent(2)
 You can also set the `yScale` domain dynamically based on the current `xDomain`, meaning that only visible data will be used in the domain calculation.
 Take a look at the example below. The `xDomain` configuration property there is not set, the chart displays the whole dataset and the Y axis shows ticks from 0 to 150.
 
-<XYWrapper {...defaultProps()} data={variedData} excludeTabs/>
+<XYWrapper {...xyContainerProps()} data={variedData} excludeTabs/>
 
 Let's set `xDomain` to `[0, 50]`. The chart now shows only a portion of the original data but the Y axis still displays the whole data range.
 Setting `scaleByDomain` to `true` will tell the chart to dynamically calculate the domain of `yScale` based on the data within `xDomain`.
 It comes in hand when you're updating xDomain programmatically using, for example, the _Brush_ component to provide some navigation capabilities to a chart with lots of data points.
 
 <XYWrapperWithInput
-  {...defaultProps()}
+  {...xyContainerProps()}
   data={variedData}
   xDomain={[0,50]}
   property="scaleByDomain"
@@ -218,7 +218,7 @@ It comes in hand when you're updating xDomain programmatically using, for exampl
 
 ## Y Direction
 You can set `yDirection` to change the direction of data along the Y axis. Supported values are `Direction.North` and `Direction.South`.
-<XYWrapper {...defaultProps()} yDirection='south' showContext='container'/>
+<XYWrapper {...xyContainerProps()} yDirection='south' showContext='container'/>
 
 ## SVG Defs
 You can use the `svgDefs` property to define custom fill patterns for your components.

@@ -7,7 +7,7 @@ import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 export const title = 'Node and Link Circle Labels'
 export const subTitle = 'with custom configuration'
 
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const data = generateNodeLinkData(15)
   const linkLabels: GraphCircleLabel[] = data.links.map((link, i) => {
     const hasCustomAppearance = randomNumberGenerator() > 0.8

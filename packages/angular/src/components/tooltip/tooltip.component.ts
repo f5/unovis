@@ -16,12 +16,10 @@ export class VisTooltipComponent implements TooltipConfigInterface, AfterViewIni
   /** Container to where the Tooltip component should be inserted. Default: `undefined` */
   @Input() container?: HTMLElement
 
-  /** Follow the mouse cursor. If `true`, the tooltip can't be hovered over
-   * even when `allowHover` is set to `true`. Default: `true` */
+  /** Follow the mouse cursor. Default: `true` */
   @Input() followCursor?: boolean
 
-  /** Allow the tooltip to be hovered over and interacted with when `followCursor` is set to `false`.
-   * Default: `true` */
+  /** Allow the tooltip to be hovered over and interacted with. Default: `false` */
   @Input() allowHover?: boolean
 
   /** Horizontal placement of the tooltip. Default: `Position.Auto` */
@@ -80,6 +78,12 @@ export class VisTooltipComponent implements TooltipConfigInterface, AfterViewIni
   /** Custom class name for the tooltip. Default: `undefined` */
   @Input() className?: string
 
+  /** Hide delay in milliseconds. Default: `undefined` */
+  @Input() hideDelay?: number
+
+  /** Show delay in milliseconds. Default: `undefined` */
+  @Input() showDelay?: number
+
   component: Tooltip | undefined
   public componentContainer: ContainerCore | undefined
 
@@ -93,8 +97,8 @@ export class VisTooltipComponent implements TooltipConfigInterface, AfterViewIni
   }
 
   private getConfig (): TooltipConfigInterface {
-    const { components, container, followCursor, allowHover, horizontalPlacement, horizontalShift, verticalPlacement, verticalShift, triggers, attributes, className } = this
-    const config = { components, container, followCursor, allowHover, horizontalPlacement, horizontalShift, verticalPlacement, verticalShift, triggers, attributes, className }
+    const { components, container, followCursor, allowHover, horizontalPlacement, horizontalShift, verticalPlacement, verticalShift, triggers, attributes, className, hideDelay, showDelay } = this
+    const config = { components, container, followCursor, allowHover, horizontalPlacement, horizontalShift, verticalPlacement, verticalShift, triggers, attributes, className, hideDelay, showDelay }
     const keys = Object.keys(config) as (keyof TooltipConfigInterface)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

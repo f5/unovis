@@ -53,10 +53,7 @@ export class Area<Datum> extends XYComponentCore<Datum, AreaConfigInterface<Datu
     this._areaGen = area<AreaDatum>()
       .x(d => d.x)
       .y0(d => d.y0)
-      .y1(d => {
-        const isSmallerThanPixel = Math.abs(d.y1 - d.y0) < 1
-        return d.y1 - ((isSmallerThanPixel && config.minHeight1Px) ? 1 : 0)
-      })
+      .y1(d => d.y1)
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       .curve(curveGen)
@@ -65,14 +62,35 @@ export class Area<Datum> extends XYComponentCore<Datum, AreaConfigInterface<Datu
     const areaDataX = data.map((d, i) => this.xScale(getNumber(d, config.x, i)))
 
     const stacked = getStackedData(data, config.baseline, yAccessors, this._prevNegative)
-    this._prevNegative = stacked.map(s => !!s.negative)
+    this._prevNegative = stacked.map(s => !!s.isMostlyNegative)
+    const minHeightCumulativeArray: number[] = []
     const stackedData: AreaDatum[][] = stacked.map(
       arr => arr.map(
-        (d, j) => ({
-          y0: this.yScale(d[0]),
-          y1: this.yScale(d[1]),
-          x: areaDataX[j],
-        })
+        (d, j) => {
+          const x = areaDataX[j]
+          const y0 = this.yScale(d[0])
+          const y1 = this.yScale(d[1])
+          const isNegativeArea = y1 > y0
+
+          // Get cumulative adjustment and apply in the correct direction
+          const cumulative = minHeightCumulativeArray[j] || 0
+          const adjustedY0 = isNegativeArea ? y0 + cumulative : y0 - cumulative
+          const adjustedY1 = isNegativeArea ? y1 + cumulative : y1 - cumulative
+
+          // Calculate height adjustment if needed
+          let heightAdjustment = 0
+          if ((config.minHeight || config.minHeight1Px) &&
+              Math.abs(adjustedY1 - adjustedY0) < (config.minHeight ?? 1)) {
+            heightAdjustment = (config.minHeight ?? 1) - Math.abs(adjustedY1 - adjustedY0)
+            minHeightCumulativeArray[j] = cumulative + heightAdjustment
+          }
+
+          return {
+            x,
+            y0: adjustedY0,
+            y1: isNegativeArea ? adjustedY1 + heightAdjustment : adjustedY1 - heightAdjustment,
+          }
+        }
       )
     )
 

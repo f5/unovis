@@ -7,7 +7,7 @@ export const title = 'TopoJSON Overlay'
 export const subTitle = 'WorldMapTopoJSON on top of a Leaflet map'
 
 
-export const component = (): JSX.Element => {
+export const component = (): React.ReactNode => {
   const data = [
     { id: 'Seattle', latitude: 47.6062, longitude: -122.3321 },
     { id: 'Billerica', latitude: 42.5584, longitude: -71.2689 },

@@ -1,7 +1,8 @@
 {
   "name": "@unovis/website",
-  "description": "Modular data visualization framework for React, Angular, Svelte, and vanilla TypeScript or JavaScript",
-  "version": "1.0.1",
+  "description": "Modular data visualization framework for React, Angular, Svelte, Vue, Solid, and vanilla TypeScript or JavaScript",
+  "version": "1.5.2",
+  "packageManager": "npm@10.9.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/f5/unovis.git",
@@ -20,7 +21,8 @@
   "author": "Nikita Rokotyan, F5 Inc. <nikita@f5.com> (https://rokotyan.com)",
   "maintainers": [
     "Nikita Rokotyan <nikita@f5.com> (https://rokotyan.com)",
-    "Rebecca Bol <r.bol@f5.com>"
+    "Qian Liu <qi.liu@f5.com>",
+    "Surya Hanumandla <s.hanumandla@f5.com>"
   ],
   "private": true,
   "scripts": {
@@ -36,31 +38,33 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@docusaurus/core": "^2.4.3",
-    "@docusaurus/plugin-debug": "^2.4.3",
-    "@docusaurus/plugin-sitemap": "^2.4.3",
-    "@docusaurus/preset-classic": "^2.4.3",
-    "@docusaurus/theme-mermaid": "^2.4.3",
-    "@mdx-js/react": "^1.6.21",
+    "@docusaurus/core": "^3.0.1",
+    "@docusaurus/plugin-debug": "^3.0.1",
+    "@docusaurus/plugin-sitemap": "^3.0.1",
+    "@docusaurus/preset-classic": "^3.0.1",
+    "@docusaurus/theme-mermaid": "^3.0.1",
+    "@mdx-js/react": "^3.0.0",
     "@stackblitz/sdk": "1.8.0",
     "clsx": "^1.1.1",
     "docusaurus-plugin-react-docgen-typescript": "^0.1.0",
     "nodemon": "^2.0.16",
-    "prism-react-renderer": "^1.2.1",
-    "react": "^17.0.1",
-    "react-docgen-typescript": "^1.2.0",
-    "react-dom": "^17.0.1",
+    "prism-react-renderer": "^1.1.0",
+    "react-docgen-typescript": "^2.0.0",
     "react-markdown": "^8.0.1"
   },
   "devDependencies": {
-    "@docusaurus/module-type-aliases": "^2.4.3",
-    "@tsconfig/docusaurus": "^1.0.7",
+    "@docusaurus/module-type-aliases": "3.0.0",
+    "@docusaurus/tsconfig": "3.0.0",
     "raw-loader": "^4.0.2",
-    "typescript": "~4.2.4"
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "typescript": "~5.2.2"
   },
   "peerDependencies": {
     "@unovis/react": "*",
-    "@unovis/ts": "*"
+    "@unovis/ts": "*",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "overrides": {
     "trim": "0.0.3"

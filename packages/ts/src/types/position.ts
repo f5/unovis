@@ -15,6 +15,7 @@ export enum PositionStrategy {
 export enum Arrangement {
   Inside = 'inside',
   Outside = 'outside',
+  Center = 'center',
 }
 
 export enum Orientation {

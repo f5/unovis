@@ -2,13 +2,21 @@ import { D3BrushEvent } from 'd3-brush'
 import { D3DragEvent } from 'd3-drag'
 import { D3ZoomEvent, ZoomTransform } from 'd3-zoom'
 import { Selection } from 'd3-selection'
+import { ElkShape } from 'elkjs'
+
+// Core
+import type { GraphDataModel } from 'data-models/graph'
+
+// Utils
+import { isEqual } from 'utils/data'
 
 // Config
 import { ComponentConfigInterface, ComponentDefaultConfig } from 'core/component/config'
 
 // Types
 import { TrimMode } from 'types/text'
-import { GraphInputLink, GraphInputNode } from 'types/graph'
+import { Spacing } from 'types/spacing'
+import { GraphInputLink, GraphInputNode, GraphInputData } from 'types/graph'
 import { BooleanAccessor, ColorAccessor, NumericAccessor, StringAccessor, GenericAccessor } from 'types/accessor'
 
 // Local Types
@@ -25,8 +33,8 @@ import {
   GraphNode,
   GraphLink,
   GraphNodeSelectionHighlightMode,
+  GraphFitViewAlignment,
 } from './types'
-
 
 export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphInputLink> extends ComponentConfigInterface {
   // Zoom and drag
@@ -44,6 +52,10 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   disableBrush?: boolean;
   /** Interval to re-render the graph when zooming. Default: `100` */
   zoomThrottledUpdateNodeThreshold?: number;
+  /** Padding for the graph when fitting to container. Default: `50` */
+  fitViewPadding?: Spacing | number;
+  /** Default alignment when fitting the graph view. Default: `GraphFitViewAlignment.Center` */
+  fitViewAlign?: GraphFitViewAlignment;
 
   // Layout general settings
   /** Type of the graph layout. Default: `GraphLayoutType.Force` */
@@ -83,6 +95,14 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
    * Only for `GraphLayoutType.Parallel` and `GraphLayoutType.ParallelHorizontal` layouts.
    * Default: `1` */
   layoutParallelSubGroupsPerRow?: number;
+  /** Spacing between nodes, dynamic by default.
+   * Only for `GraphLayoutType.Parallel` and `GraphLayoutType.ParallelHorizontal` layouts.
+   * Default: `undefined` */
+  layoutParallelNodeSpacing?: number | [number, number];
+  /** Spacing between sub-groups.
+   * Only for `GraphLayoutType.Parallel` and `GraphLayoutType.ParallelHorizontal` layouts.
+   * Default: `40` */
+  layoutParallelSubGroupSpacing?: number;
   /** Spacing between groups.
    * Only for `GraphLayoutType.Parallel` and `GraphLayoutType.ParallelHorizontal` layouts.
    * Default: `undefined` */
@@ -113,6 +133,12 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
    * E.g.: `[n => n.group, n => n.subGroup]`.
    * Default: `undefined` */
   layoutElkNodeGroups?: StringAccessor<N>[];
+  /** A function to be called per graph node to get the ELK shape object.
+   * This enables you to provide custom node dimensions (through the `width` and `height` properties)
+   * and coordinates (through the `x` and `y` properties) if needed.
+   * Default: `undefined`
+  */
+  layoutElkGetNodeShape?: (d: GraphNode<N, L>, i: number) => ElkShape;
 
   // Links
   /** Link width accessor function ot constant value. Default: `1` */
@@ -129,12 +155,15 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
   linkDisabled?: BooleanAccessor<L>;
   /** Link flow animation accessor function or constant value. Default: `false` */
   linkFlow?: BooleanAccessor<L>;
-  /** Animation duration of the flow (traffic) circles. Default: `20000` */
-  linkFlowAnimDuration?: number;
+  /** Animation duration of the flow (traffic) circles in milliseconds. If `linkFlowParticleSpeed` is provided,
+   * this duration will be calculated based on the link length and particle speed. Default: `20000` */
+  linkFlowAnimDuration?: NumericAccessor<L>;
   /** Size of the moving particles that represent traffic flow. Default: `2` */
-  linkFlowParticleSize?: number;
+  linkFlowParticleSize?: NumericAccessor<L>;
+  /** Speed of the moving particles in pixels per second. This property takes precedence over `linkFlowAnimDuration`. Default: `undefined` */
+  linkFlowParticleSpeed?: NumericAccessor<L>;
   /** Link label accessor function or constant value. Default: `undefined` */
-  linkLabel?: GenericAccessor<GraphCircleLabel, L> | undefined;
+  linkLabel?: GenericAccessor<GraphCircleLabel | GraphCircleLabel[], L> | undefined;
   /** Shift label along the link center a little bit to avoid overlap with the link arrow. Default: `true` */
   linkLabelShiftFromCenter?: BooleanAccessor<L>;
   /** Spacing between neighboring links. Default: `8` */
@@ -145,6 +174,12 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
    * `1.5` - very curve.
    * Default: `0` */
   linkCurvature?: NumericAccessor<L>;
+  /** Highlight links on hover. Default: `true` */
+  linkHighlightOnHover?: boolean;
+  /** Offset [x,y] in pixels from the source node's center point where the link should start. Default: `undefined` */
+  linkSourcePointOffset?: GenericAccessor<[number, number], GraphLink<N, L>>;
+  /** Offset [x,y] in pixels from the target node's center point where the link should end. Default: `undefined` */
+  linkTargetPointOffset?: GenericAccessor<[number, number], GraphLink<N, L>>;
   /** Set selected link by its unique id. Default: `undefined` */
   selectedLinkId?: number | string;
 
@@ -261,6 +296,18 @@ export interface GraphConfigInterface<N extends GraphInputNode, L extends GraphI
     width: number,
     height: number
   ) => void;
+
+  /** Determines whether the component should update when new data is provided.
+   * This function takes the previous and new data as parameters and returns a boolean
+   * indicating whether the update should proceed. Useful for fine-grained control over
+   * update behavior when your data has a complex nested structure.
+   * By default the `isEqual` function from Unovis will be used to do the comparison.
+   */
+  shouldDataUpdate?: (
+    prevData: GraphInputData<N, L>,
+    nextData: GraphInputData<N, L>,
+    datamodel: GraphDataModel<N, L, GraphNode<N, L>, GraphLink<N, L>>
+  ) => boolean;
 }
 
 export const GraphDefaultConfig: GraphConfigInterface<GraphInputNode, GraphInputLink> = {
@@ -276,11 +323,15 @@ export const GraphDefaultConfig: GraphConfigInterface<GraphInputNode, GraphInput
   layoutAutofit: true,
   layoutAutofitTolerance: 8.0,
   layoutNonConnectedAside: false,
+  fitViewPadding: 50,
+  fitViewAlign: GraphFitViewAlignment.Center,
 
   layoutGroupOrder: [],
+  layoutParallelNodeSpacing: undefined,
   layoutParallelSubGroupsPerRow: 1,
   layoutParallelNodesPerColumn: 6,
   layoutParallelGroupSpacing: undefined,
+  layoutParallelSubGroupSpacing: 40,
   layoutParallelSortConnectionsByGroup: undefined,
   layoutNodeGroup: (n: GraphInputNode): string => (n as { group: string }).group,
   layoutParallelNodeSubGroup: (n: GraphInputNode): string => (n as { subgroup: string }).subgroup,
@@ -302,9 +353,11 @@ export const GraphDefaultConfig: GraphConfigInterface<GraphInputNode, GraphInput
 
   layoutElkSettings: undefined,
   layoutElkNodeGroups: undefined,
+  layoutElkGetNodeShape: undefined,
 
   linkFlowAnimDuration: 20000,
   linkFlowParticleSize: 2,
+  linkFlowParticleSpeed: undefined,
   linkWidth: 1,
   linkStyle: GraphLinkStyle.Solid,
   linkBandWidth: 0,
@@ -316,8 +369,10 @@ export const GraphDefaultConfig: GraphConfigInterface<GraphInputNode, GraphInput
   linkNeighborSpacing: 8,
   linkDisabled: false,
   linkCurvature: 0,
+  linkHighlightOnHover: true,
+  linkSourcePointOffset: undefined,
+  linkTargetPointOffset: undefined,
   selectedLinkId: undefined,
-  nodeGaugeAnimDuration: 1500,
 
   nodeSize: 30,
   nodeStrokeWidth: 3,
@@ -345,6 +400,7 @@ export const GraphDefaultConfig: GraphConfigInterface<GraphInputNode, GraphInput
   nodeExitScale: 0.75,
   nodeSort: undefined,
   nodeSelectionHighlightMode: GraphNodeSelectionHighlightMode.GreyoutNonConnected,
+  nodeGaugeAnimDuration: 1500,
 
   selectedNodeId: undefined,
   selectedNodeIds: undefined,
@@ -361,4 +417,8 @@ export const GraphDefaultConfig: GraphConfigInterface<GraphInputNode, GraphInput
   onNodeSelectionBrush: undefined,
   onNodeSelectionDrag: undefined,
   onRenderComplete: undefined,
+
+  shouldDataUpdate: (prevData: GraphInputData<GraphInputNode, GraphInputLink>, nextData: GraphInputData<GraphInputNode, GraphInputLink>): boolean => {
+    return !isEqual(prevData, nextData)
+  },
 }

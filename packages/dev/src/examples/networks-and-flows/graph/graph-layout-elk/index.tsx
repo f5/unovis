@@ -18,6 +18,9 @@ export type NodeDatum = {
 export type LinkDatum = {
   source: string;
   target: string;
+  showFlow?: boolean;
+  linkFlowParticleSize?: number;
+  linkFlowParticleSpeed?: number;
 }
 
 const data = {
@@ -32,17 +35,19 @@ const data = {
     { id: 'us-east-2c', group: 'us-east-2c', icon: '&#xf009;' },
   ],
   links: [
-    { source: 'vpc', target: '192.168.0.0/25' },
-    { source: 'vpc', target: '192.168.3.192/26' },
-    { source: 'vpc', target: '192.8.3.191/33' },
-    { source: 'vpc', target: 'us-east-2b' },
-    { source: 'vpc', target: 'us-east-2c' },
-    { source: '192.168.0.0/25', target: 'master-0' },
+    { source: 'vpc', target: 'vpc', showFlow: true, linkFlowParticleSize: 3, linkFlowParticleSpeed: 10 },
+    { source: 'vpc', target: '192.168.0.0/25', showFlow: true, linkFlowParticleSize: 3, linkFlowParticleSpeed: 10 },
+    { source: 'vpc', target: '192.168.3.192/26', showFlow: true, linkFlowParticleSize: 3, linkFlowParticleSpeed: 10 },
+    { source: 'vpc', target: '192.8.3.191/33', showFlow: true, linkFlowParticleSize: 3, linkFlowParticleSpeed: 10 },
+    { source: 'vpc', target: 'us-east-2b', showFlow: true, linkFlowParticleSize: 3, linkFlowParticleSpeed: 10 },
+    { source: 'vpc', target: 'us-east-2c', showFlow: true, linkFlowParticleSize: 3, linkFlowParticleSpeed: 10 },
+    { source: '192.168.0.0/25', target: 'master-0', showFlow: true, linkFlowParticleSize: 3, linkFlowParticleSpeed: 10 },
     { source: '192.168.3.192/26', target: 'master-0' },
     { source: '192.8.3.191/33', target: 'workload-name' },
   ],
 }
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
+  const linkFlow = (l: LinkDatum): boolean => !!l.showFlow
   return (
     <>
       <VisSingleContainer data={data} height={'100vh'}>
@@ -51,6 +56,7 @@ export const component = (props: ExampleViewerDurationProps): JSX.Element => {
           nodeShape={GraphNodeShape.Square}
           nodeStrokeWidth={1.5}
           layoutType="elk"
+          linkFlow={linkFlow}
           layoutElkNodeGroups={[
             (d: NodeDatum) => d.group ?? null,
             (d: NodeDatum) => d.subGroup ?? null,

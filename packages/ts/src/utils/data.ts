@@ -22,7 +22,12 @@ export const isEmpty = <T>(obj: T): boolean => {
 }
 
 // Based on https://github.com/maplibre/maplibre-gl-js/blob/e78ad7944ef768e67416daa4af86b0464bd0f617/src/style-spec/util/deep_equal.ts, 3-Clause BSD license
-export const isEqual = (a?: unknown | null, b?: unknown | null, visited: Set<any> = new Set()): boolean => {
+export const isEqual = (
+  a: unknown | null | undefined,
+  b: unknown | null | undefined,
+  skipKeys: string[] = [],
+  visited: Set<any> = new Set()
+): boolean => {
   if (Array.isArray(a)) {
     if (!Array.isArray(b) || a.length !== b.length) return false
 
@@ -30,7 +35,7 @@ export const isEqual = (a?: unknown | null, b?: unknown | null, visited: Set<any
     else visited.add(a)
 
     for (let i = 0; i < a.length; i++) {
-      if (!isEqual(a[i], b[i], visited)) return false
+      if (!isEqual(a[i], b[i], skipKeys, visited)) return false
     }
 
     return true
@@ -44,14 +49,16 @@ export const isEqual = (a?: unknown | null, b?: unknown | null, visited: Set<any
     if (!(typeof b === 'object')) return false
     if (a === b) return true
 
-    const keys = Object.keys(a)
-    if (keys.length !== Object.keys(b).length) return false
+    const keysA = Object.keys(a).filter(key => !skipKeys.includes(key))
+    const keysB = Object.keys(b).filter(key => !skipKeys.includes(key))
+
+    if (keysA.length !== keysB.length) return false
 
     if (visited.has(a)) return true
     else visited.add(a)
 
-    for (const key in a) {
-      if (!isEqual((a as Record<string, unknown>)[key], (b as Record<string, unknown>)[key], visited)) return false
+    for (const key of keysA) {
+      if (!isEqual((a as Record<string, unknown>)[key], (b as Record<string, unknown>)[key], skipKeys, visited)) return false
     }
 
     return true
@@ -137,9 +144,9 @@ export const omit = <T extends Record<string | number | symbol, unknown>>(obj: T
   return obj
 }
 
-export const groupBy = <T extends Record<string | number, any>> (arr: T[], accessor: (a: T) => string | number): Record<string | number, T[]> => {
+export const groupBy = <T extends Record<string | number, any>> (arr: T[], accessor: (a: T, index: number) => string | number): Record<string | number, T[]> => {
   return arr.reduce(
-    (grouped, v, i, a, k = accessor(v)) => (((grouped[k] || (grouped[k] = [])).push(v), grouped)),
+    (grouped, v, i, a, k = accessor(v, i)) => (((grouped[k] || (grouped[k] = [])).push(v), grouped)),
     {} as Record<string | number, T[]>
   )
 }
@@ -263,13 +270,13 @@ export function getStackedData<Datum> (
     return (average === 0 && Array.isArray(prevNegative)) ? prevNegative[j] : average < 0
   })
 
-  const stackedData: StackValuesRecord[] = acs.map(() => [])
+  const stackedData = acs.map(() => [] as StackValuesRecord)
   data.forEach((d, i) => {
     let positiveStack = baselineValues[i]
     let negativeStack = baselineValues[i]
     acs.forEach((a, j) => {
       const value = getNumber(d, a, i) || 0
-      if (!isNegativeStack[j]) {
+      if (value >= 0) {
         stackedData[j].push([positiveStack, positiveStack += value])
       } else {
         stackedData[j].push([negativeStack, negativeStack += value])
@@ -279,18 +286,8 @@ export function getStackedData<Datum> (
 
   // Fill in additional stack information
   stackedData.forEach((stack, i) => {
-    stack.negative = isNegativeStack[i]
+    stack.isMostlyNegative = isNegativeStack[i]
   })
-
-  stackedData.filter(s => s.negative)
-    .forEach((s, i, arr) => {
-      s.ending = i === arr.length - 1
-    })
-
-  stackedData.filter(s => !s.negative)
-    .forEach((s, i, arr) => {
-      s.ending = i === arr.length - 1
-    })
 
   return stackedData
 }
@@ -332,5 +329,17 @@ export function filterDataByRange<Datum> (data: Datum[], range: [number, number]
 }
 
 export function isNumberWithinRange (value: number, range: [number, number]): boolean {
-  return (value >= range[0]) && (value <= range[1])
+  return (value >= range[0] && value <= range[1]) || (value >= range[1] && value <= range[0])
+}
+
+export const ensureArray = <T>(value: T | T[] | null): T[] => {
+  if (value === null || value === undefined) {
+    return []
+  }
+
+  if (Array.isArray(value)) {
+    return value
+  }
+
+  return [value]
 }

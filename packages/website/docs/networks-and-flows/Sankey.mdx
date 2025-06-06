@@ -7,7 +7,7 @@ import { PropsTable } from '@site/src/components/PropsTable'
 import { DocWrapper, InputWrapper } from '../wrappers'
 import { sankeyData } from '../utils/data'
 
-export const defaultProps = (edges = [[1,2], [], [3,4,5]], colors) => ({
+export const sankeyProps = (edges = [[1,2], [], [3,4,5]], colors) => ({
   name: "Sankey",
   configKey: "component",
   containerName: "SingleContainer",
@@ -21,14 +21,14 @@ export const defaultProps = (edges = [[1,2], [], [3,4,5]], colors) => ({
 })
 
 export const labelProps = {
-  ...defaultProps([[1]]),
+  ...sankeyProps([[1]]),
   label: d => `Long node name: ${d.id}`,
   hiddenProps: {},
   height: 75,
 }
 
 export const SankeyDoc = (props) => (
-  <DocWrapper {...defaultProps()} {...props}/>
+  <DocWrapper {...sankeyProps()} {...props}/>
 )
 
 ## Basic Configuration
@@ -94,7 +94,7 @@ The following customization options are available for _Node_ labels:
 
 ### Label Background
 For a chart with many nodes, it might be useful to add a background by setting the `labelBackground` property to `true`:
-<SankeyDoc {...defaultProps([[1,2,3,4,5],[6,7,8],[9,10]])} labelBackground={true}/>
+<SankeyDoc {...sankeyProps([[1,2,3,4,5],[6,7,8],[9,10]])} labelBackground={true}/>
 
 ### Label Fitting
 By default, node labels that exceed the width constraint will be trimmed to exclude the middle.
@@ -155,7 +155,7 @@ You can override the default node alignment with the `nodeAlign` property. Accep
  `SankeyNodeAlign.Left`,  `SankeyNodeAlign.Right`,  `SankeyNodeAlign.Center` and  `SankeyNodeAlign.Justify` (default)
 
 <InputWrapper
-  {...defaultProps()}
+  {...sankeyProps()}
   height={100}
   property="nodeAlign"
   inputType="select"
@@ -169,7 +169,7 @@ By default, the height of the nodes will be calculated automatically based on th
 pixels).
 
 <InputWrapper
-  {...defaultProps()}
+  {...sankeyProps()}
   hiddenProps={{
     label: d => d.id,
     nodePadding: 20,
@@ -203,7 +203,7 @@ Alternatively, if you want to set the order of the nodes explicitly, you can pro
 See the following example, where nodes are sorted by property `x`, a number in the range `[0,4]`,
 which also configures the node's color:
 
-<SankeyDoc {...defaultProps([[1,2,3,4,5],[6,7,8],[9,10]])}
+<SankeyDoc {...sankeyProps([[1,2,3,4,5],[6,7,8],[9,10]])}
   height={200}
   nodeColor={d => `var(--vis-color${d.x})`}
   declarations={{

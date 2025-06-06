@@ -1,10 +1,12 @@
+
 import CodeBlock from '@theme/CodeBlock'
+import BrowserOnly from '@docusaurus/BrowserOnly'
 import { PropsTable } from '@site/src/components/PropsTable'
 import { DocWrapper, XYWrapper } from '../wrappers'
 
 export const sampleData = [0, 3, 7, 5, 10, 4, 2, 8, 4, 0].map((d, i) => ({ x: (i + 1), y: d }))
 
-export const defaultProps = () => ({
+export const annotationsProps = () => ({
   name: 'Annotations',
   configKey: 'annotations',
   data: sampleData.slice(0, 4),
@@ -20,7 +22,7 @@ Include the `Annotations` component in your _Single_ or _XY_ container with an a
 A basic example looks like:
 
 <XYWrapper
-  {...defaultProps()}
+  {...annotationsProps()}
   height={300}
   data={sampleData.slice(1, 9)}
   containerProps={{
@@ -93,7 +95,7 @@ let items: AnnotationItem[] = [
 When we place Annotations in an empty chart with the above items array,
 we get the default text appearance:
 
-<XYWrapper {...defaultProps()} excludeTabs showAxes items={[
+<XYWrapper {...annotationsProps()} excludeTabs showAxes items={[
   { content: 'Item 1' }
 ]}/>
 
@@ -108,7 +110,7 @@ items = [{
 }]
 ```
 
-<XYWrapper {...defaultProps()} excludeTabs showAxes items={[
+<XYWrapper {...annotationsProps()} excludeTabs showAxes items={[
   { content: { text: 'Item 2', color: 'red' } }
 ]}/>
 
@@ -140,7 +142,7 @@ items = [{
 }]
 ```
 
-<XYWrapper {...defaultProps()} excludeTabs showAxes items={[
+<XYWrapper {...annotationsProps()} excludeTabs showAxes items={[
 {
   content: [
     { text: 'Item 3', fontSize: 24, fontWeight: 600 },
@@ -207,7 +209,7 @@ const items= [
 ```
 
 <div style={{ width: '150px', height: '150px', margin: '0 auto' }}>
-<DocWrapper {...defaultProps()}
+<DocWrapper {...annotationsProps()}
   excludeTabs
   data={[3, 4, 2]}
   height={150}
@@ -235,7 +237,7 @@ items = [{
 }]
 ```
 
-<XYWrapper {...defaultProps()}
+<XYWrapper {...annotationsProps()}
   excludeTabs
   data={sampleData.slice(0, 9)}
   components={[
@@ -258,7 +260,7 @@ items = [{
 }]
 ```
 
-<XYWrapper {...defaultProps()}
+<XYWrapper {...annotationsProps()}
   excludeTabs
   data={sampleData.slice(0, 9)}
   components={[

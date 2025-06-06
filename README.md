@@ -9,7 +9,7 @@ https://user-images.githubusercontent.com/755708/205744216-5e9efd10-794b-4ce1-9a
 Learn more about _Unovis_ on [unovis.dev](https://unovis.dev)
 
 ## Quick Start
-You can install the core of the library `@unovis/ts` and framework-specific packages (if you use React, Angular, or Svelte) from NPM:
+You can install the core of the library `@unovis/ts` and framework-specific packages (if you use React, Angular, Svelte, Vue or Solid) from NPM:
 
 ```bash
 npm install -P @unovis/ts @unovis/<react|angular|svelte|vue|solid>
@@ -41,7 +41,7 @@ export function BasicLineChart (): JSX.Element {
   )
 }
 ```
-Looking for Angular, Svelte, Vue, or TypeScript examples? Check out the [Quick Start](https://unovis.dev/docs/quick-start) page on our website.
+Looking for Angular, Svelte, Vue, Solid or TypeScript examples? Check out the [Quick Start](https://unovis.dev/docs/quick-start) page on our website.
 
 ## Examples and Documentation
 [![Unovis Examples](examples.png)](https://unovis.dev/gallery)
@@ -68,10 +68,11 @@ read [CONTRIBUTING](CONTRIBUTING.md).
 
 ## Maintainers
 [<img alt="Nikita Rokotyan" src="https://avatars.githubusercontent.com/u/755708" width="80"/>](https://github.com/rokotyan)
-[<img alt="Rebecca Bol" src="https://avatars.githubusercontent.com/u/52078477" width="80"/>](https://github.com/reb-dev)
 [<img alt="Qian Liu" src="https://avatars.githubusercontent.com/u/5026041" width="80"/>](https://github.com/lee00678)
+[<img alt="Surya Hanumandla" src="https://avatars.githubusercontent.com/u/7765847" width="80"/>](https://github.com/suryahanumandla)
 
 ## Contributors
+[<img alt="Rebecca Bol" src="https://avatars.githubusercontent.com/u/52078477" width="40"/>](https://github.com/reb-dev)
 [<img alt="Olga Stukova" src="https://avatars.githubusercontent.com/u/8654114" width="40"/>](https://github.com/stukova)
 [<img alt="Sumit Kumar" src="https://avatars.githubusercontent.com/u/5867393" width="40"/>](https://github.com/sumitkumar25)
 [<img alt="Gaurav Mukherjee" src="https://avatars.githubusercontent.com/u/6323787" width="40"/>](https://github.com/gmfun)

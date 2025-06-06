@@ -17,7 +17,7 @@ export const classnames = {
   "Scatter": "[Scatter.selectors.point]"
 }
 
-export const defaultProps = (chart="StackedBar", components, n=10) => ({
+export const tooltipProps = (chart="StackedBar", components, n=10) => ({
   name: "Tooltip",
   configKey: "tooltip",
   data: generateDataRecords(n).map(d => ({...d, y: Math.floor(d.y)})),
@@ -62,7 +62,7 @@ It can work within both XYContainer and SingleContainer, or as a standalone comp
 
 Here is a minimal _Tooltip_ configuration alongside a _StackedBar_ chart:
 
-<Tooltip {...defaultProps()} showContext="full" showTriggers/>
+<Tooltip {...tooltipProps()} showContext="full" showTriggers/>
 
 ## Triggers
 The `triggers` property allows a _Tooltip_ component to display custom content for a given CSS selector.
@@ -123,7 +123,7 @@ const triggers = {
 ```
 
 <Tooltip
-  {...defaultProps()}
+  {...tooltipProps()}
   excludeTabs
   components={[
     newComponent('StackedBar', { x: d=>d.x, y: [d => d.y1, d => d.y2, d => d.y4] }),
@@ -139,19 +139,19 @@ const triggers = {
 
 ## Position
 ### Horizontal Placement
-<Tooltip {...defaultProps("Scatter")} horizontalPlacement="left" containerProps={{ padding: { left: 100, right: 100 }}}/>
+<Tooltip {...tooltipProps("Scatter")} horizontalPlacement="left" containerProps={{ padding: { left: 100, right: 100 }}}/>
 
-<Tooltip {...defaultProps("Scatter")} horizontalPlacement="right" containerProps={{ padding: { left: 100, right: 100 }}}/>
+<Tooltip {...tooltipProps("Scatter")} horizontalPlacement="right" containerProps={{ padding: { left: 100, right: 100 }}}/>
 
 ### Vertical Placement
-<Tooltip {...defaultProps("Scatter")}
+<Tooltip {...tooltipProps("Scatter")}
   verticalPlacement="top"
   containerProps={{ padding: { top: 50, bottom: 50 }}}
   triggers={{
     "[Scatter.selectors.point]": d => `<span>x: ${d.x}, y: ${d.y}</span>`
   }}/>
 
-<Tooltip {...defaultProps("Scatter")}
+<Tooltip {...tooltipProps("Scatter")}
   verticalPlacement="bottom"
   containerProps={{ padding: { bottom: 50, top: 50}}}
   triggers={{
@@ -162,7 +162,7 @@ const triggers = {
 Shift the tooltip horizontally by setting the `horizontalShift` property.
 Works only with `horizontalPlacement` set to `Position.Left` or `Position.Right`.
 
-<Tooltip {...defaultProps("StackedBar", {barWidth: 20})}
+<Tooltip {...tooltipProps("StackedBar", {barWidth: 20})}
   horizontalPlacement={'right'}
   inputWrapper
   property="horizontalShift"
@@ -176,7 +176,7 @@ Works only with `horizontalPlacement` set to `Position.Left` or `Position.Right`
 Shift the tooltip vertically by setting the `verticalShift` property.
 Works only with `verticalPlacement` set to `Position.Top` or `Position.Bottom`.
 
-<Tooltip {...defaultProps("Line", {lineWidth: 10})}
+<Tooltip {...tooltipProps("Line", {lineWidth: 10})}
   data={generateDataRecords(10).map(d => ({ x: d.x, y: Math.cos(d.x)}))}
   height={250}
   inputWrapper
@@ -191,26 +191,36 @@ Works only with `verticalPlacement` set to `Position.Top` or `Position.Bottom`.
 
 ## Follow Cursor
 By default, the _Tooltip_ will follow the cursor when hovering over the chart elements.
-If you want the tooltip to be anchored to the hoevered element, you can set the `followCursor`
+If you want the tooltip to be anchored to the hovered element, you can set the `followCursor`
 property to `false`.
 
 <BrowserOnly fallback={<div>Loading...</div>}>
-  {() => <Tooltip {...defaultProps("StackedBar", {}, 15)} hiddenProps={{ container: document.body }} followCursor={false} height={40} />}
+  {() => <Tooltip {...tooltipProps("StackedBar", {}, 15)} hiddenProps={{ container: document.body }} followCursor={false} height={40} />}
 </BrowserOnly>
 
 ## Hoverable Content
-_Tooltip_'s content will become hoverable when you set the `followCursor` property to `false`.
+_Tooltip_'s content will become hoverable when you set the `allowHover` property to `true`.
 This will keep the content in view when hovering over the tooltip itself. This can be useful for interacting with
 text, links, or other elements in the tooltip. If you want to disable this behavior, you can set the `allowHover`
 property to `false`.
 
 Here is an example with a _Line_ chart a clickable link on hover:
 
-<Tooltip {...defaultProps("Line", { lineWidth: 4 })}
-  followCursor={false}
+<Tooltip {...tooltipProps("Line", { lineWidth: 6 })}
+  allowHover={true}
   triggers={{
     "[Line.selectors.line]": () => 'Visit <a href="https://unovis.dev" target="_blank">our website</a>'
   }}/>
+
+## Display Delays
+You can control when the tooltip appears and disappears by setting delay timers:
+
+- `showDelay`: Adds a delay in milliseconds before the tooltip appears
+- `hideDelay`: Adds a delay in milliseconds before the tooltip disappears
+
+This is useful for preventing tooltip flicker when users quickly move their mouse across multiple elements, or to ensure the tooltip stays visible long enough to be read.
+
+<Tooltip {...tooltipProps("Line", { lineWidth: 6 })} showDelay={500} hideDelay={1000} triggers={{ "[Line.selectors.line]": () => 'This tooltip waits 500ms to appear and 1000ms to disappear' }}/>
 
 ## Manual Configuration
 
@@ -221,7 +231,7 @@ and you need the tooltip to be displayed above it) so there's a way to set the c
 `container` property. In the most cases you might want to set `container` to `document.body`.
 
 <BrowserOnly fallback={<div>Loading...</div>}>
-  {() => <Tooltip {...defaultProps("StackedBar", {}, 50)} container={document.body} height={40} />}
+  {() => <Tooltip {...tooltipProps("StackedBar", {}, 50)} container={document.body} height={40} />}
 </BrowserOnly>
 
 ### Components
@@ -323,13 +333,13 @@ export const tooltipFn = (indent = 1) => {
     'document.getElementById("btn").addEventListener(\'click\', toggleTooltip)'
   ].join('\n')}
 />
-<ButtonTooltip {...defaultProps()} toggle/>
+<ButtonTooltip {...tooltipProps()} toggle/>
 
 ## Attributes
 The `attributes` property allows you to set custom DOM attributes to _Tooltip_'s _div_ element. It can be useful when
 you need to refer to your tooltip by using a CSS selector.
 
-<Tooltip {...defaultProps("StackedBar", { x: d=> d.x - 0.25, y: [d=>d.y, d=>d.y1]})}
+<Tooltip {...tooltipProps("StackedBar", { x: d=> d.x - 0.25, y: [d=>d.y, d=>d.y1]})}
   showContext="minimal"
   excludeGraph
   attributes={{
@@ -346,7 +356,7 @@ The _Tooltip_ component supports additional styling via CSS variables that you c
   --vis-tooltip-text-color: '#fefefe';
 }
 ```
-<Tooltip {...defaultProps()} className="custom-tooltip" excludeTabs/>
+<Tooltip {...tooltipProps()} className="custom-tooltip" excludeTabs/>
 
 <details open>
   <summary open>All supported CSS variables</summary>

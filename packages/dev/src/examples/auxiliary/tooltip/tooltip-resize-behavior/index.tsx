@@ -10,7 +10,7 @@ import s from './styles.module.css'
 export const title = 'Scrollable Container Comparison'
 export const subTitle = 'For testing resize behavior'
 
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const data = [
     { x: 0, y: 5 },
     { x: 3, y: 10 },

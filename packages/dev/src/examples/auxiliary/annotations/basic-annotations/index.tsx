@@ -7,7 +7,7 @@ import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 export const title = 'Basic Annotations'
 export const subTitle = 'Dynamic Data Updates'
 
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const height = 400
   const length = 10
   const min = 3

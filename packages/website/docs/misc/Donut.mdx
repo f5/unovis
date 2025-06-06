@@ -5,8 +5,14 @@ description: Learn how to configure a Donut chart
 import CodeBlock from '@theme/CodeBlock'
 import { PropsTable } from '@site/src/components/PropsTable'
 import { DocWrapper, InputWrapper } from '../wrappers'
+import {
+  DONUT_HALF_ANGLE_RANGE_TOP,
+  DONUT_HALF_ANGLE_RANGE_RIGHT,
+  DONUT_HALF_ANGLE_RANGE_BOTTOM,
+  DONUT_HALF_ANGLE_RANGE_LEFT
+} from '@unovis/ts'
 
-export const defaultProps = () => ({
+export const donutProps = () => ({
   name: "Donut",
   height: 200,
   containerName: "SingleContainer",
@@ -18,36 +24,69 @@ export const defaultProps = () => ({
 
 ## Basic Configuration
 The minimum configuration for the _Donut_ component looks like:
-<DocWrapper {...defaultProps()} showContext="full"/>
+<DocWrapper {...donutProps()} showContext="full"/>
 
 ## Labels
 _Donut_ can have a label and a smaller sub-label in the center. You can provide them by using the `centralLabel` and
 `centralSubLabel` config properties. The sub-label will automatically wrap onto multiple lines (unless you set
 the `centralSubLabelWrap` property to `false`), while the main label is supposed to be short and doesn't have wrapping
   implemented.
-<DocWrapper {...defaultProps()} centralLabel="Label" centralSubLabel="Long sub-label wraps onto the next line"/>
+<DocWrapper {...donutProps()} centralLabel="Label" centralSubLabel="Long sub-label wraps onto the next line"/>
 
+### Label Position
+You can adjust the position of both the central label and sub-label using offset properties:
+
+#### Horizontal Offset
+Use `centralLabelOffsetX` to move the labels left or right (negative values move left, positive values move right):
+<DocWrapper {...donutProps()}
+  centralLabel="Offset Label"
+  centralSubLabel="Moved horizontally"
+  centralLabelOffsetX={20}
+/>
+
+#### Vertical Offset
+Use `centralLabelOffsetY` to move the labels up or down (negative values move up, positive values move down):
+<DocWrapper {...donutProps()}
+  centralLabel="Offset Label"
+  centralSubLabel="Moved vertically"
+  centralLabelOffsetY={-15}
+/>
+
+
+You can combine both offsets to position the labels exactly where you need them.
 
 ## Angle Range
 By default, a _Donut_ will populate values in the angle range `[0, 2π]`. You can adjust your _Donut_'s `angleRange` property to a `[a,b]` of type `[number, number]`
 where a[0] = the starting position and a[1] = the ending position (in radians). A common example might be when you want an incomplete/semi circle:
-<DocWrapper {...defaultProps()} angleRange={[1, Math.PI]}/>
+<DocWrapper {...donutProps()} angleRange={[1, Math.PI]}/>
+
+### Half Donut Charts
+For convenience, Unovis provides preset angle ranges to create half donut charts in different orientations. You can import these constants from `@unovis/ts`:
+
+```ts
+import {
+  DONUT_HALF_ANGLE_RANGE_TOP,
+  DONUT_HALF_ANGLE_RANGE_RIGHT,
+  DONUT_HALF_ANGLE_RANGE_BOTTOM,
+  DONUT_HALF_ANGLE_RANGE_LEFT
+} from '@unovis/ts'
+```
 
 ## Sorting
 By default, each _segment_ is placed in order of appearance within your `data` array, from
 To change this, provide a sorting function to the `sortFunction` property. The following example displays the segments in descending order:
-<DocWrapper {...defaultProps()} sortFunction={(a, b) => a - b} data={[5,10,2, 7]} showContext="full"/>
+<DocWrapper {...donutProps()} sortFunction={(a, b) => a - b} data={[5,10,2, 7]} showContext="full"/>
 
 ## Size
 You can change the size of your _Donut_ with the following properties:
 
 ### Radius
 `radius` defines the outer/overall radius:
-<InputWrapper {...defaultProps()} property="radius" defaultValue={50} inputType="range" inputProps={{ min: 1, max: 100}}/>
+<InputWrapper {...donutProps()} property="radius" defaultValue={50} inputType="range" inputProps={{ min: 1, max: 100}}/>
 
 ### Arc Width
 `arcWidth` defines the width of the circle's outer ring in pixels.
-<InputWrapper {...defaultProps()} property="arcWidth" defaultValue={50} inputType="range"/>
+<InputWrapper {...donutProps()} property="arcWidth" defaultValue={50} inputType="range"/>
 
 <br/>
 
@@ -58,21 +97,21 @@ For the appearance of a traditional pie chart, set _Donut_'s `arcWidth` to `0`.
 ## Segment Appearance
 ### Custom Color
 Customize the colors for each segment with a `colorAccessor` function:
-<DocWrapper {...defaultProps()} color={(d, i) => ['red', 'orange', 'blue', 'green'][i]} showContext="minimal"/>
+<DocWrapper {...donutProps()} color={(d, i) => ['red', 'orange', 'blue', 'green'][i]} showContext="minimal"/>
 
 ### Corner Radius
 Providing a value to the `cornerRadius` property adds rounded corners to your _Donut_'s segments proportional to the _Donut_'s `arcWidth`.
-<InputWrapper {...defaultProps()} property="cornerRadius" defaultValue={5} inputType="range" inputProps={{ min: 0, max: 20}}/>
+<InputWrapper {...donutProps()} property="cornerRadius" defaultValue={5} inputType="range" inputProps={{ min: 0, max: 20}}/>
 
 ### Pad angle
 Pad each segment with the `padAngle` property.
-<DocWrapper {...defaultProps()} padAngle={0.1}/>
+<DocWrapper {...donutProps()} padAngle={0.1}/>
 
 ### Empty Segments
 When segments are empty (i.e. when their values are 0), you may still want them displayed in your _Donut_ as thin slices.
 To do this, set `showEmptySegments` to `true`:
 
-<InputWrapper {...defaultProps()} padAngle={0.03} data={[1, 2, 0, 4, 0, 6]} property="showEmptySegments" inputType="checkbox" defaultValue={true}/>
+<InputWrapper {...donutProps()} padAngle={0.03} data={[1, 2, 0, 4, 0, 6]} property="showEmptySegments" inputType="checkbox" defaultValue={true}/>
 
 
 #### Customizing empty segment size
@@ -80,7 +119,7 @@ When `showEmptySegments` is enabled, the default size for empty segments is `0.5
 liking with the `emptySegmentAngle` property which accepts a `number` in radians.
 For example, setting `emptySegmentAngle` to `Math.PI / 12` looks like:
 
-<DocWrapper {...defaultProps()} data={[1, 2, 0, 4, 0, 6]} emptySegmentAngle={Math.PI / 12} showEmptySegments excludeTabs/>
+<DocWrapper {...donutProps()} data={[1, 2, 0, 4, 0, 6]} emptySegmentAngle={Math.PI / 12} showEmptySegments excludeTabs/>
 
 ####
 Note that this property will have no effect if `showEmptySegments` is `false`.
@@ -88,11 +127,11 @@ Note that this property will have no effect if `showEmptySegments` is `false`.
 ## Background
 By default, _Donut_ has a background underneath the segments, which is useful when your chart is empty. You can turn it off by setting
 `showBackground` to `false`.
-<InputWrapper {...defaultProps()} data={[0]} angleRange={[-Math.PI / 2, Math.PI / 2]} property="showBackground" inputType="checkbox" defaultValue={true}/>
+<InputWrapper {...donutProps()} data={[0]} angleRange={[-Math.PI / 2, Math.PI / 2]} property="showBackground" inputType="checkbox" defaultValue={true}/>
 
 Also, you can change the angular range of the background by providing a `[number, number]` value (in radians) to `backgroundAngleRange`.
 By default, the background angular range will be the same as `angleRange`.
-<DocWrapper {...defaultProps()} data={[1,2,3]} showBackground angleRange={[0, Math.PI / 3]} backgroundAngleRange={[0, 2 * Math.PI]} />
+<DocWrapper {...donutProps()} data={[1,2,3]} showBackground angleRange={[0, Math.PI / 3]} backgroundAngleRange={[0, 2 * Math.PI]} />
 
 <br />
 
@@ -111,7 +150,7 @@ events = {
     [Donut.selectors.centralSubLabel]: { },
 }
 ```
-<DocWrapper {...defaultProps()} excludeGraph events={{}}/>
+<DocWrapper {...donutProps()} excludeGraph events={{}}/>
 
 ## CSS Variables
 All supported CSS variables and their default values

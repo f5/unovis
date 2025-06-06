@@ -1,7 +1,8 @@
 {
   "name": "@unovis/react",
-  "description": "Modular data visualization framework for React, Angular, Svelte, and vanilla TypeScript or JavaScript",
-  "version": "1.4.4",
+  "description": "Modular data visualization framework for React, Angular, Svelte, Vue, Solid, and vanilla TypeScript or JavaScript",
+  "version": "1.5.2",
+  "packageManager": "npm@10.9.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/f5/unovis.git",
@@ -21,7 +22,8 @@
   "author": "Nikita Rokotyan, F5 Inc. <nikita@f5.com> (https://rokotyan.com)",
   "maintainers": [
     "Nikita Rokotyan <nikita@f5.com> (https://rokotyan.com)",
-    "Rebecca Bol <r.bol@f5.com>"
+    "Qian Liu <qi.liu@f5.com>",
+    "Surya Hanumandla <s.hanumandla@f5.com>"
   ],
   "license": "Apache-2.0",
   "main": "./index.js",
@@ -29,15 +31,15 @@
   "type": "module",
   "sideEffects": false,
   "scripts": {
-    "build": "rimraf dist && tsc --project tsconfig.lib.json --emitDeclarationOnly && rollup --config",
+    "build": "rimraf dist && tsc --project tsconfig.lib.json --emitDeclarationOnly && rollup --config; rm -rf dist/.cache; cp LICENSE README.md package.json ./dist",
     "tsc": "tsc",
     "generate": "rollup -c ./autogen/rollup.config.js; node .autogen.cjs; rm .autogen.cjs",
-    "publish:dist": "rm -rf dist/.cache; cp ./{LICENSE,README.md,package.json} ./dist; cd ./dist; npm publish"
+    "publish:dist": "cd ./dist; npm publish"
   },
   "peerDependencies": {
-    "@unovis/ts": "1.4.4",
-    "react": ">=16.8.0 || ^17 || ^18",
-    "react-dom": ">=16.8.0 || ^17 || ^18"
+    "@unovis/ts": "1.5.2",
+    "react": ">=16.8.0 || ^17 || ^18 || ^19",
+    "react-dom": ">=16.8.0 || ^17 || ^18 || ^19"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^13.0.4",

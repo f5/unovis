@@ -1,7 +1,8 @@
 {
   "name": "@unovis/angular",
-  "description": "Modular data visualization framework for React, Angular, Svelte, and vanilla TypeScript or JavaScript",
-  "version": "1.4.4",
+  "description": "Modular data visualization framework for React, Angular, Svelte, Vue, Solid, and vanilla TypeScript or JavaScript",
+  "version": "1.5.2",
+  "packageManager": "npm@10.9.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/f5/unovis.git",
@@ -21,7 +22,8 @@
   "author": "Nikita Rokotyan, F5 Inc. <nikita@f5.com> (https://rokotyan.com)",
   "maintainers": [
     "Nikita Rokotyan <nikita@f5.com> (https://rokotyan.com)",
-    "Rebecca Bol <r.bol@f5.com>"
+    "Qian Liu <qi.liu@f5.com>",
+    "Surya Hanumandla <s.hanumandla@f5.com>"
   ],
   "license": "Apache-2.0",
   "scripts": {
@@ -44,10 +46,10 @@
     "tslib": "^2.3.1"
   },
   "peerDependencies": {
-    "@unovis/ts": "1.4.4",
-    "@angular/common": "12 - 18",
-    "@angular/compiler": "12 - 18",
-    "@angular/core": "12 - 18"
+    "@unovis/ts": "1.5.2",
+    "@angular/common": "12 - 19",
+    "@angular/compiler": "12 - 19",
+    "@angular/core": "12 - 19"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^12.0.3",

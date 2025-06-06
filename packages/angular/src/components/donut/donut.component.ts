@@ -110,6 +110,12 @@ export class VisDonutComponent<Datum> implements DonutConfigInterface<Datum>, Af
 
   /** Background angle range. When undefined, the value will be taken from `angleRange`. Default: `undefined` */
   @Input() backgroundAngleRange?: [number, number]
+
+  /** Central label and sub-label horizontal offset in pixels. Default: `undefined` */
+  @Input() centralLabelOffsetX?: number
+
+  /** Central label and sub-label vertical offset in pixels. Default: `undefined` */
+  @Input() centralLabelOffsetY?: number
   @Input() data: Datum[]
 
   component: Donut<Datum> | undefined
@@ -131,8 +137,8 @@ export class VisDonutComponent<Datum> implements DonutConfigInterface<Datum>, Af
   }
 
   private getConfig (): DonutConfigInterface<Datum> {
-    const { duration, events, attributes, id, value, angleRange, padAngle, sortFunction, cornerRadius, color, radius, arcWidth, centralLabel, centralSubLabel, centralSubLabelWrap, showEmptySegments, emptySegmentAngle, showBackground, backgroundAngleRange } = this
-    const config = { duration, events, attributes, id, value, angleRange, padAngle, sortFunction, cornerRadius, color, radius, arcWidth, centralLabel, centralSubLabel, centralSubLabelWrap, showEmptySegments, emptySegmentAngle, showBackground, backgroundAngleRange }
+    const { duration, events, attributes, id, value, angleRange, padAngle, sortFunction, cornerRadius, color, radius, arcWidth, centralLabel, centralSubLabel, centralSubLabelWrap, showEmptySegments, emptySegmentAngle, showBackground, backgroundAngleRange, centralLabelOffsetX, centralLabelOffsetY } = this
+    const config = { duration, events, attributes, id, value, angleRange, padAngle, sortFunction, cornerRadius, color, radius, arcWidth, centralLabel, centralSubLabel, centralSubLabelWrap, showEmptySegments, emptySegmentAngle, showBackground, backgroundAngleRange, centralLabelOffsetX, centralLabelOffsetY }
     const keys = Object.keys(config) as (keyof DonutConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

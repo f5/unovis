@@ -242,9 +242,9 @@ export class XYContainer<Datum> extends ContainerCore {
 
     this._renderAxes(this._firstRender ? 0 : customDuration)
 
-    // Clip RectsetSize
+    // Clip Rect
     // Extending the clipping path to allow small overflow (e.g. Line will looks better that way when it touches the edges)
-    const clipPathExtension = 2
+    const clipPathExtension = config.clipPathExtend
     this._clipPath.select('rect')
       .attr('x', -clipPathExtension)
       .attr('y', -clipPathExtension)
@@ -341,8 +341,8 @@ export class XYContainer<Datum> extends ContainerCore {
 
     // Set initial scale range
     const isYDirectionSouth = config.yDirection === Direction.South
-    const xRange: [number, number] = [config.padding.left ?? 0, this.width - config.padding.right ?? 0]
-    const yRange: [number, number] = [this.height - config.padding.bottom ?? 0, config.padding.top ?? 0]
+    const xRange: [number, number] = [config.padding.left ?? 0, this.width - (config.padding.right ?? 0)]
+    const yRange: [number, number] = [this.height - (config.padding.bottom ?? 0), config.padding.top ?? 0]
     if (isYDirectionSouth) yRange.reverse()
 
     for (const c of components) {

@@ -13,7 +13,7 @@ import { FitMode, TextAlign, TrimMode, UnovisText, UnovisTextOptions, VerticalAl
 
 // Utils
 import { smartTransition } from 'utils/d3'
-import { renderTextToSvgTextElement, trimSVGText } from 'utils/text'
+import { renderTextToSvgTextElement, textAlignToAnchor, trimSVGText } from 'utils/text'
 import { isEqual } from 'utils/data'
 import { rectIntersect } from 'utils/misc'
 
@@ -411,7 +411,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     const { config: { type, tickTextAlign, tickTextAngle, position } } = this
     const tickText = this.g.selectAll('g.tick > text')
 
-    const textAnchor = this._getTickTextAnchor(tickTextAlign as TextAlign)
+    const textAnchor = textAlignToAnchor(tickTextAlign as TextAlign)
     const translateX = type === AxisType.X
       ? 0
       : this._getYTickTextTranslate(tickTextAlign as TextAlign, position as Position)
@@ -420,15 +420,6 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     tickText
       .attr('transform', translateValue)
       .attr('text-anchor', textAnchor)
-  }
-
-  private _getTickTextAnchor (textAlign: TextAlign): string {
-    switch (textAlign) {
-      case TextAlign.Left: return 'start'
-      case TextAlign.Right: return 'end'
-      case TextAlign.Center: return 'middle'
-      default: return null
-    }
   }
 
   private _getYTickTextTranslate (textAlign: TextAlign, axisPosition: Position = Position.Left): number {

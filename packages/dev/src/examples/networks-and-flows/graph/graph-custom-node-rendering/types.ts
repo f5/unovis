@@ -38,6 +38,9 @@ export type CustomGraphLink<Datum = unknown> = {
   showArrow?: boolean;
   showFlow?: boolean;
   width?: number;
+  linkFlowAnimDuration?: number;
+  linkFlowParticleSize?: number;
+  linkFlowParticleSpeed?: number;
 };
 
 export type CustomGraphSwimlane = {

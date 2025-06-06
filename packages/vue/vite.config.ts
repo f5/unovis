@@ -41,8 +41,6 @@ export default defineConfig(({ command, mode }): UserConfig => {
           entry: resolve(__dirname, 'src/index.ts'),
         },
         rollupOptions: {
-          // make sure to externalize deps that shouldn't be bundled
-          // into your library (Vue)
           external: ['vue', '@unovis/ts'],
           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
           // @ts-ignore overloaded issue

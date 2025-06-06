@@ -158,11 +158,11 @@ const config = {
         searchPagePath: 'search',
       },
       announcementBar: {
-        id: 'version-1.4-announcement',
+        id: 'version-1.5-announcement',
         content:
-          '✨ Chart Annotations, new Graph features, Bullet Legend shapes and more in <a rel="noopener noreferrer" href="/releases/1.4">Unovis 1.4</a>',
-        backgroundColor: '#fafbfc',
-        textColor: '#091E42',
+          '❄️ Solid support; Graph, Axis, Legend updates; Sticky Tooltip; Discord; and more in <a rel="noopener noreferrer" href="/releases/1.5">Unovis 1.5</a>',
+        backgroundColor: '#2680EB',
+        textColor: '#fff',
         isCloseable: false,
       },
     }),
@@ -199,6 +199,7 @@ const config = {
       },
     ],
     () => ({
+      name: 'unovis-custom-webpack-plugin',
       configureWebpack () {
         return {
           // cache: false, // Disable cache to prevent issues with building after updating Unovis packages
@@ -229,6 +230,7 @@ const config = {
          * Path to data on filesystem relative to site dir.
          */
         path: './releases',
+        onUntruncatedBlogPosts: 'ignore',
       },
     ],
   ],

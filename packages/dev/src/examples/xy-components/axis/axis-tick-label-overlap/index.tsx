@@ -5,7 +5,7 @@ import { Scale } from '@unovis/ts'
 
 export const title = 'Axis Tick Label Overlap'
 export const subTitle = 'Resolving overlapping labels'
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   return (<>
     <VisXYContainer xDomain={[0, 1000]} height={75}>
       <VisAxis type='x' numTicks={25} duration={props.duration} tickTextHideOverlapping={true}/>

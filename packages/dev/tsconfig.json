@@ -10,6 +10,14 @@
     "skipLibCheck": false,
     "paths": {
       "@src/*": ["packages/dev/src/*"],
+      "@unovis/ts": ["packages/ts/src/"],
+      "@unovis/ts/*": ["packages/ts/src/*"],
+      "types/*": ["packages/ts/src/types/*"],
+      "utils/*": ["packages/ts/src/utils/*"],
+      "core/*": ["packages/ts/src/core/*"],
+      "components/*": ["packages/ts/src/components/*"],
+      "styles/*": ["packages/ts/src/styles/*"],
+      "data-models/*": ["packages/ts/src/data-models/*"]
     },
     "types": [
       "node",

@@ -21,7 +21,7 @@ d3-collection                      perpetual       BSD-3-Clause  1.0.7          
 d3-geo-projection                  perpetual       ISC           4.0.0              Mike Bostock https://bost.ocks.org/mike
 d3-interpolate-path                perpetual       BSD-3-Clause  2.2.3              Peter Beshai <peter.beshai@gmail.com> (http://github.com/pbeshai)
 d3-sankey                          perpetual       BSD-3-Clause  0.12.3             Mike Bostock https://bost.ocks.org/mike/
-elkjs                              perpetual       EPL-2.0       0.8.2              Ulf Rüegg uruurumail@gmail.com
+elkjs                              perpetual       EPL-2.0       0.10.0             Ulf Rüegg uruurumail@gmail.com
 geojson                            perpetual       MIT           0.5.0              Casey Cesari
 leaflet                            perpetual       BSD-2-Clause  1.7.1              n/a
 maplibre-gl                        perpetual       BSD-3-Clause  2.1.9              n/a
@@ -36,7 +36,7 @@ tslib                              perpetual       0BSD          2.4.1          
 @types/to-px                       perpetual       MIT           1.1.2              n/a
 @zerollup/ts-transform-paths       perpetual       MIT           1.7.18             Stefan Zerkalica zerkalica@gmail.com
 rimraf                             perpetual       ISC           3.0.2              Isaac Z. Schlueter <i@izs.me> (http://blog.izs.me/)
-rollup                             perpetual       MIT           2.75.5             Rich Harris
+rollup                             perpetual       MIT           2.79.2             Rich Harris
 rollup-plugin-commonjs             perpetual       MIT           10.1.0             Rich Harris
 rollup-plugin-node-resolve         perpetual       MIT           5.2.0              Rich Harris <richard.a.harris@gmail.com>
 rollup-plugin-postcss              perpetual       MIT           4.0.2              EGOIST <0x142857@gmail.com>

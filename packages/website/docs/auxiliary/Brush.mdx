@@ -5,7 +5,7 @@ import { generateDataRecords } from '../utils/data'
 import { XYWrapper, XYWrapperWithInput, axis } from '../wrappers/xy-wrapper'
 import { Brush } from '@unovis/ts'
 
-export const defaultProps = (showAxis = true) => ({
+export const brushProps = (showAxis = true) => ({
     name: "Brush",
     height: 75,
     components: [{
@@ -22,7 +22,7 @@ export const defaultProps = (showAxis = true) => ({
 
 ## Basic Configuration
 _Brush_ is designed to work inside an _XYContainer_ alongside an _XYChart_. The basic configuration looks like:
-<XYWrapper {...defaultProps(false)} showContext="full"/>
+<XYWrapper {...brushProps(false)} showContext="full"/>
 
 ## Usage
 The _Brush_ component has four event listener properties:
@@ -43,7 +43,7 @@ Each callback has the following parameters:
     const tooltip = new Tooltip({})
     const action = (i) => `(selection, event, userDriven) => {\n    if (userDriven) {\n      ${i}\n    }\n  }`
     return (
-      <XYWrapper {...defaultProps()}
+      <XYWrapper {...brushProps()}
         height={150}
         containerProps={{ tooltip }}
         onBrushStart={(selection, event, userDriven) => userDriven && tooltip.place({ x: 0, y: 0 })}
@@ -65,24 +65,24 @@ Each callback has the following parameters:
 ## Selections
 ### Manual Selection
 You can explicitly define the default selection range using the `selection` property:
-<XYWrapper {...defaultProps()} selection={[3,6]}/>
+<XYWrapper {...brushProps()} selection={[3,6]}/>
 
 ### Selection Min Length
 You can set a constraint for the minimum `selection` value with the `selectionMinLength` property:
-<XYWrapper {...defaultProps()} selectionMinLength={5}/>
+<XYWrapper {...brushProps()} selectionMinLength={5}/>
 
 ### Draggable
 By default, setting the desired the range relies on moving both start and end _Brush_ handles. You can adjust the entire range with one click by enabling the `draggable` proprerty:
-<XYWrapper {...defaultProps()} height={200} selectionMinLength={2} selection={[3,6]} draggable={true}/>
+<XYWrapper {...brushProps()} height={200} selectionMinLength={2} selection={[3,6]} draggable={true}/>
 
 ## Brush Appearance
 ### Handle Position
 `handlePosition` changes the placement of the _Brush_ handle with respect to the _XYChart_.
-<XYWrapperWithInput {...defaultProps()} containerProps={{ margin: { top: 0, bottom: 0, left: 10, right: 10 }}} property="handlePosition" inputType="select" options={['outside', 'inside']}/>
+<XYWrapperWithInput {...brushProps()} containerProps={{ margin: { top: 0, bottom: 0, left: 10, right: 10 }}} property="handlePosition" inputType="select" options={['outside', 'inside']}/>
 
 ### Handle Width
 `handleWidth` sets the width in pixels of the _Brush_'s handle:
-<XYWrapperWithInput {...defaultProps()} property="handleWidth" inputType="range" defaultValue={20}/>
+<XYWrapperWithInput {...brushProps()} property="handleWidth" inputType="range" defaultValue={20}/>
 
 ### Selection
 You can change the appearance of the selection by changing the corresponding CSS variables.
@@ -101,7 +101,7 @@ For example, here's how you can modify the appearance of the selected and unsele
   '--vis-brush-unselected-fill-color': '#fff',
   '--vis-brush-unselected-opacity': '0.9',
   }}>
-  <XYWrapper {...defaultProps()} selection={[2,5]}/>
+  <XYWrapper {...brushProps()} selection={[2,5]}/>
 </div>
 
 

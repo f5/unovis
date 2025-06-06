@@ -6,7 +6,7 @@ import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 export const title = 'Points with labels'
 export const subTitle = 'Multi-accessor'
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const accessors = [
     (d: XYDataRecord) => d.y,
     (d: XYDataRecord) => d.y2,

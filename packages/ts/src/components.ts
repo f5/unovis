@@ -32,6 +32,9 @@ export { NestedDonut } from './components/nested-donut'
 export { Annotations } from 'components/annotations'
 export { Treemap } from './components/treemap'
 
+// Constants
+export * from './components/donut/constants'
+
 // Config Interfaces
 export type { LineConfigInterface } from './components/line/config'
 export type { StackedBarConfigInterface } from './components/stacked-bar/config'

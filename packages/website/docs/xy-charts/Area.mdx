@@ -7,7 +7,7 @@ import { PropsTable } from "@site/src/components/PropsTable"
 import { generateDataRecords } from "../utils/data"
 import { XYWrapper, XYWrapperWithInput } from '../wrappers/xy-wrapper'
 
-export const defaultProps = (n=10) => ({
+export const areaProps = (n=10) => ({
   name: "Area",
   data: generateDataRecords(n),
   x: d=>d.x,
@@ -15,18 +15,18 @@ export const defaultProps = (n=10) => ({
 });
 
 ## Basic Configuration
-<XYWrapper {...defaultProps()} showContext="full"/>
+<XYWrapper {...areaProps()} showContext="full"/>
 
 ## Curve Types
 Using the `curveType: CurveType` property you can set various curve type options. For example:
-<XYWrapperWithInput {...defaultProps(25)} inputType="select" options={["basis", "linear", "step"]} defaultValue="basis" property="curveType"/>
+<XYWrapperWithInput {...areaProps(25)} inputType="select" options={["basis", "linear", "step"]} defaultValue="basis" property="curveType"/>
 
 Learn more about configurable curves from D3's [documentation](https://github.com/d3/d3-shape#curves)
 
 ## Color
 Setting color for a single _Area_ component is simple, you can achieve that just by setting the `color` property of the component to a hex string.
 
-<XYWrapperWithInput {...defaultProps(50)} property="color" inputType="color" defaultValue="#19cb9a"/>
+<XYWrapperWithInput {...areaProps(50)} property="color" inputType="color" defaultValue="#19cb9a"/>
 
 ## Stacked Areas
 ### Y Accessors
@@ -36,7 +36,7 @@ _Area_ can accept an array of `y` accessors to display stacked areas from your p
 **Note**: It is important that an array of accessors or provided, not a single accessor which returns
 an array. For example, if you wanted to generate a chart with three areas of random data:
 
-<XYWrapper excludeTabs {...defaultProps()} y={Array(3).fill(Math.random)}/>
+<XYWrapper excludeTabs {...areaProps()} y={Array(3).fill(Math.random)}/>
 
 
 ```ts
@@ -55,14 +55,14 @@ const y = d => [Math.random(), Math.random(), Math.random()]
 If you want to configure multiple colors for your _Area_ component, you'll have to supply a single
 accessor. A common configuration is to utilize the data's index:
 
-<XYWrapper {...defaultProps()} showContext="full" y={[(d) => d.y, (d) => d.y1, (d) => d.y2]} color={(d, i) => ['red', 'green', 'blue'][i]}/>
+<XYWrapper {...areaProps()} showContext="full" y={[(d) => d.y, (d) => d.y1, (d) => d.y2]} color={(d, i) => ['red', 'green', 'blue'][i]}/>
 
 ## Dealing with small values
-If your data has small or zero values leading to some parts of the area to become invisible, you can force those area segments to have 1px height
-despite their actual value by setting `minHeight1Px` to `true`. This can be useful if you want to visually emphasize that the data behind the chart
-is defined but just very small.
+If your data has small or zero values leading to some parts of the area to become invisible, you can use the `minHeight` property to set a minimum height for the area. This can be useful if you want to visually emphasize that the data behind the chart is defined but just very small.
 
-<XYWrapperWithInput {...defaultProps()}  y={[(d) => d.y < 9 ? 0 : d.y]} property="minHeight1Px" inputType="checkbox" defaultValue={true} showAxes/>
+> **Note:** Use the `minHeight` property carefully as it modifies the visual representation of the data without changing the underlying values. The Crosshair component will still show circles at the original data values, not at the visually extended area height.
+
+<XYWrapperWithInput {...areaProps()}  y={[(d) => d.y < 9 ? 0 : d.y]} property="minHeight" inputType="number" defaultValue={1} showAxes/>
 
 ## Events
 
@@ -76,7 +76,7 @@ events = [Area.selectors.area]: {
   mouseleave: (data: DataRecord[]) => {}
 }
 ```
-<XYWrapper {...defaultProps()} excludeGraph events={{}}/>
+<XYWrapper {...areaProps()} excludeGraph events={{}}/>
 
 ## CSS Variables
 The _Area_ component supports additional styling via CSS variables that you can define for your visualization container. For example:
@@ -87,7 +87,7 @@ The _Area_ component supports additional styling via CSS variables that you can 
   --vis-area-hover-fill-opacity: 1;
   --vis-area-stroke-width: 1px;
 ```
-<XYWrapper excludeTabs {...defaultProps()} y={[(d) => d.y, (d) => d.y1, (d) => d.y2]} className="custom-area"/>
+<XYWrapper excludeTabs {...areaProps()} y={[(d) => d.y, (d) => d.y1, (d) => d.y2]} className="custom-area"/>
 
 <details open>
   <summary>Supported CSS variables and their default values</summary>

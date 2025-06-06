@@ -205,3 +205,141 @@ export function scoreRectPath ({ x, y, w, h, r = 0, score = 1 }: ScoreRectPathOp
 export function convertLineToArc (path: Path | string, r: number): string {
   return path.toString().replace(/L(?<x>-?\d*\.?\d*),(?<y>-?\d+\.?\d*)/gm, (_, x, y) => `A ${r} ${r} 0 0 0 ${x} ${y}`)
 }
+
+/**
+ * Generate an SVG path string for an arrow that follows a polyline path.
+ * The arrow is composed of line segments between points and a triangular arrowhead at the end.
+ *
+ * @param opts - ArrowPolylinePathOptions object containing array of points and optional head dimensions.
+ * @returns SVG path string for the arrow.
+ */
+export function arrowPolylinePath (
+  points: [number, number][],
+  arrowHeadLength = 8,
+  arrowHeadWidth = 6,
+  smoothing = 5
+): string {
+  if (points.length < 2) return ''
+
+  // Calculate total path length
+  let totalLength = 0
+  for (let i = 0; i < points.length - 1; i++) {
+    const [x1, y1] = points[i]
+    const [x2, y2] = points[i + 1]
+    totalLength += Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2))
+  }
+
+  // If the total length is zero or nearly zero, don't draw anything
+  if (totalLength === 0) return ''
+
+  // Let the default values be modifiable based on the line length
+  let headLength = arrowHeadLength
+  let headWidth = arrowHeadWidth
+
+  // If the line is very short, scale down the arrow head dimensions
+  const threshold = arrowHeadLength * 2
+  if (totalLength < threshold) {
+    const scale = totalLength / threshold
+    headLength *= scale
+    headWidth *= scale
+  }
+
+  // Ensure the arrow head length is never longer than the line itself
+  headLength = Math.min(headLength / 2, totalLength)
+
+  // Get the last two points for arrowhead calculation
+  const [lastX, lastY] = points[points.length - 1]
+  const [prevX, prevY] = points[points.length - 2]
+
+  // Calculate direction vector for the last segment
+  const dx = lastX - prevX
+  const dy = lastY - prevY
+  const segmentLength = Math.sqrt(dx * dx + dy * dy)
+  const ux = dx / segmentLength
+  const uy = dy / segmentLength
+
+  // Tail point of the arrow (where the arrowhead starts)
+  const tailX = lastX - headLength * ux
+  const tailY = lastY - headLength * uy
+
+  // Perpendicular vector for arrowhead width calculation
+  const perpX = -uy
+  const perpY = ux
+
+  // Calculate the two base points of the arrowhead triangle
+  const leftX = tailX + (headWidth / 2) * perpX
+  const leftY = tailY + (headWidth / 2) * perpY
+  const rightX = tailX - (headWidth / 2) * perpX
+  const rightY = tailY - (headWidth / 2) * perpY
+
+  // Build the path
+  const pathParts = []
+
+  if (points.length === 2) {
+    // For a single segment, create a curved path
+    const [startX, startY] = points[0]
+
+    // Adjust smoothing based on segment length
+    const adjustedSmoothing = Math.min(smoothing, segmentLength / 3)
+
+    // Calculate control points for a cubic Bézier curve with adjusted smoothing
+    const cp1x = startX + ux * adjustedSmoothing
+    const cp1y = startY + uy * adjustedSmoothing + perpY * adjustedSmoothing * 0.5
+
+    const cp2x = tailX - ux * adjustedSmoothing
+    const cp2y = tailY - uy * adjustedSmoothing + perpY * adjustedSmoothing * 0.5
+
+    // Start path and add cubic Bézier curve
+    pathParts.push(`M${startX},${startY}`)
+    pathParts.push(`C${cp1x},${cp1y} ${cp2x},${cp2y} ${lastX},${lastY}`)
+  } else {
+    // For multiple segments, use smooth Bézier corners with absolute smoothing
+    pathParts.push(`M${points[0][0]},${points[0][1]}`)
+
+    for (let i = 0; i < points.length - 2; i++) {
+      const [x1, y1] = points[i]
+      const [x2, y2] = points[i + 1]
+      const [x3, y3] = points[i + 2]
+
+      // Calculate vectors for the current and next segment
+      const v1x = x2 - x1
+      const v1y = y2 - y1
+      const v2x = x3 - x2
+      const v2y = y3 - y2
+
+      // Calculate lengths of segments
+      const len1 = Math.sqrt(v1x * v1x + v1y * v1y)
+      const len2 = Math.sqrt(v2x * v2x + v2y * v2y)
+
+      // Calculate unit vectors
+      const u1x = v1x / len1
+      const u1y = v1y / len1
+      const u2x = v2x / len2
+      const u2y = v2y / len2
+
+      // Adjust smoothing based on the minimum segment length
+      const minSegmentLength = Math.min(len1, len2)
+      const adjustedSmoothing = Math.min(smoothing, minSegmentLength / 3)
+
+      // Calculate the corner points and control points with adjusted smoothing
+      const corner1x = x2 - u1x * adjustedSmoothing
+      const corner1y = y2 - u1y * adjustedSmoothing
+      const corner2x = x2 + u2x * adjustedSmoothing
+      const corner2y = y2 + u2y * adjustedSmoothing
+
+      // Add line to approach point
+      pathParts.push(`L${corner1x},${corner1y}`)
+
+      // Add cubic Bézier curve for the corner
+      pathParts.push(`C${x2},${y2} ${x2},${y2} ${corner2x},${corner2y}`)
+    }
+
+    // Add the final line segment to the tail point
+    pathParts.push(`L${lastX},${lastY}`)
+  }
+
+  // Add the arrowhead
+  pathParts.push(`M${leftX},${leftY} L${lastX},${lastY} L${rightX},${rightY}`)
+
+  return pathParts.join(' ')
+}

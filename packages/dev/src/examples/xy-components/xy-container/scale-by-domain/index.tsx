@@ -5,7 +5,7 @@ import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 export const title = 'Scale by Domain'
 export const subTitle = 'XY component comparison'
 
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const data = Array.from({ length: 10 }, (_, i) => ({
     x: i + 1,
     y: Math.pow(2, i + 1),

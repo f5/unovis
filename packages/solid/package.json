@@ -1,7 +1,8 @@
 {
   "name": "@unovis/solid",
   "description": "Modular data visualization framework for React, Angular, Svelte, Vue, Solid and vanilla TypeScript or JavaScript",
-  "version": "1.4.4",
+  "version": "1.5.2",
+  "packageManager": "npm@10.9.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/f5/unovis.git",
@@ -21,20 +22,21 @@
   "author": "Hoang Nguyen <huyhoang.hngngn@gmail.com>",
   "maintainers": [
     "Nikita Rokotyan <nikita@f5.com> (https://rokotyan.com)",
-    "Rebecca Bol <r.bol@f5.com>"
+    "Qian Liu <qi.liu@f5.com>",
+    "Surya Hanumandla <s.hanumandla@f5.com>"
   ],
   "type": "module",
   "sideEffects": false,
   "license": "Apache-2.0",
   "scripts": {
     "lint": "eslint src --ext .ts,.tsx",
-    "build": "vite build",
-    "publish:dist": "rm -rf dist/.cache; cp ./{LICENSE,README.md,package.json} ./dist; cd ./dist; npm publish",
+    "build": "vite build; rm -rf dist/.cache; cp LICENSE README.md package.json ./dist",
+    "publish:dist": "cd ./dist; npm publish",
     "generate": "tsx autogen/index.ts && npm run lint -- --fix",
     "gallery": "vite"
   },
   "peerDependencies": {
-    "@unovis/ts": "1.4.4",
+    "@unovis/ts": "1.5.2",
     "solid-js": "^1.9.0"
   },
   "devDependencies": {
@@ -43,7 +45,7 @@
     "solid-js": "^1.9.3",
     "tsx": "^4.19.1",
     "typescript": "^5.6.3",
-    "vite": "^5.4.10",
+    "vite": "^6.2.4",
     "vite-plugin-dts": "^3.5.3",
     "vite-plugin-solid": "^2.10.2"
   },

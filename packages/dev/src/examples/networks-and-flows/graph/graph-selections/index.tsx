@@ -7,7 +7,7 @@ import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 export const title = 'Graph: Node Selection'
 export const subTitle = 'Select Node on Click'
 
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const data = useMemo(() => generateNodeLinkData(50), [])
   const ref = useRef<VisGraphRef<NodeDatum, LinkDatum>>(null)
   const [selectedNodes, setSelectedNodes] = useState<string[] | undefined>()

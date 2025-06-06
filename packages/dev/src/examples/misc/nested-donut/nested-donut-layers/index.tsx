@@ -6,7 +6,7 @@ import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 export const title = 'Nested Donut Layer Configuration'
 export const subTitle = 'with inward/outward direction'
 
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const config = {
     data: generateNestedData(100, 5),
     layers: [

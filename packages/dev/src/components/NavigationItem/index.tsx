@@ -10,7 +10,7 @@ export type NavigationItemProps = {
   subTitle?: string;
 }
 
-export function NavigationItem (props: NavigationItemProps): JSX.Element {
+export function NavigationItem (props: NavigationItemProps): React.ReactNode {
   return (
     <div className={s.navItem}>
       <Link to={`examples/${props.group}/${props.title}`}>

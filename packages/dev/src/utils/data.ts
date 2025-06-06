@@ -6,7 +6,7 @@ export const randomNumberGenerator = new Seedramdon('unovis')
 
 export type XYDataRecord = {
   x: number;
-  y: number | undefined;
+  y: number;
   y1?: number;
   y2?: number;
 }
@@ -24,6 +24,8 @@ export interface TimeDataRecord {
 
 export type NodeDatum = GenericDataRecord & {
   id: string;
+  group?: string;
+  subgroup?: string;
 }
 
 export interface LinkDatum {
@@ -70,7 +72,13 @@ export function generateTimeSeries (n = 10, types = n, lengthMultiplier = 1): Ti
 
 
 export function generateNodeLinkData (n = 10, numNeighbourLinks = () => 1): NodeLinkData {
-  const nodes = Array(n).fill(0).map((_, i) => ({ i, id: (i + 1).toString(), value: 100 * randomNumberGenerator() }))
+  const nodes = Array(n).fill(0).map((_, i) => ({
+    i,
+    id: (i + 1).toString(),
+    value: 100 * randomNumberGenerator(),
+    group: (i % 3).toString(),
+    subgroup: (i % 4).toString(),
+  }))
   const options = [...nodes].slice(1)
   const links = nodes.reduce((arr, n) => {
     if (options.length) {

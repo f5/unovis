@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useRef, useState } from 'react'
-import type { GraphLink, GraphNode } from '@unovis/ts'
+import { GraphFitViewAlignment, GraphLink, GraphNode } from '@unovis/ts'
 import type { VisGraphRef } from '@unovis/react'
 
 import { CustomGraph } from './component'
@@ -11,8 +11,9 @@ import * as s from './styles'
 export const title = 'Graph: Custom Nodes'
 export const subTitle = 'User provided rendering functions'
 
-export const component = (): JSX.Element => {
+export const component = (): React.ReactNode => {
   const [showLinkFlow, setShowLinkFlow] = useState(true)
+  const [fitViewAlignment, setFitViewAlignment] = useState<GraphFitViewAlignment>(GraphFitViewAlignment.Center)
   const graphRef = useRef<VisGraphRef<CustomGraphNode, CustomGraphLink> | null>(null)
 
   const nodes: CustomGraphNode[] = useMemo(() => ([
@@ -35,11 +36,12 @@ export const component = (): JSX.Element => {
   ]), [])
 
   const links: CustomGraphLink[] = useMemo(() => ([
-    { source: '0', target: '1', showFlow: true },
-    { source: '0', target: '2', showFlow: true },
-    { source: '0', target: '3', showFlow: true },
-    { source: '0', target: '4', showFlow: true },
-    { source: '1', target: '5', showFlow: true },
+    { source: '0', target: '1', showFlow: true, linkFlowParticleSize: 1.5, linkFlowParticleSpeed: 15 },
+    { source: '0', target: '0', showFlow: true, linkFlowParticleSize: 1.5, linkFlowParticleSpeed: 15 },
+    { source: '0', target: '2', showFlow: true, linkFlowParticleSize: 2, linkFlowParticleSpeed: 25 },
+    { source: '0', target: '3', showFlow: true, linkFlowParticleSize: 3, linkFlowParticleSpeed: 10 },
+    { source: '0', target: '4', showFlow: true, linkFlowParticleSize: 3, linkFlowParticleSpeed: 30 },
+    { source: '1', target: '5', showFlow: true, linkFlowParticleSize: 2.5, linkFlowParticleSpeed: 20 },
   ]), [])
 
   // Modifying layout after the calculation
@@ -61,7 +63,13 @@ export const component = (): JSX.Element => {
         height={'100vh'}
         linkFlow={useCallback((l: CustomGraphLink) => showLinkFlow && l.showFlow, [showLinkFlow])}
         onLayoutCalculated={onLayoutCalculated}
-
+        linkFlowAnimDuration={useCallback((l: CustomGraphLink) => l.linkFlowAnimDuration, [])}
+        linkFlowParticleSpeed={useCallback((l: CustomGraphLink) => l.linkFlowParticleSpeed, [])}
+        linkFlowParticleSize={useCallback((l: CustomGraphLink) => l.linkFlowParticleSize, [])}
+        linkWidth={0}
+        linkBandWidth={useCallback((l: CustomGraphLink) => 2 * (l.linkFlowParticleSize ?? 1), [])}
+        fitViewAlign={fitViewAlignment}
+        fitViewPadding={useMemo(() => ({ top: 50, right: 50, bottom: 100, left: 50 }), [])}
       />
       <div className={s.checkboxContainer}>
         <label>
@@ -72,6 +80,17 @@ export const component = (): JSX.Element => {
           />
           Show Link Flow
         </label>
+        <select
+          value={fitViewAlignment}
+          onChange={(e) => setFitViewAlignment(e.target.value as GraphFitViewAlignment)}
+          className={s.graphButton}
+        >
+          {Object.values(GraphFitViewAlignment).map((alignment) => (
+            <option key={alignment} value={alignment}>
+              {alignment.charAt(0).toUpperCase() + alignment.slice(1)}
+            </option>
+          ))}
+        </select>
         <button className={s.graphButton} onClick={() => fitView(['0', '1', '2', '3'])}>Zoom To Identity and Network Nodes</button>
         <button className={s.graphButton} onClick={() => fitView()}>Fit Graph</button>
       </div>

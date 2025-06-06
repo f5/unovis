@@ -24,7 +24,7 @@ export async function exampleViewerLoader ({ params }: { params: Params }): Prom
   return params
 }
 
-export function ExampleViewer (props: ExampleViewerProps): JSX.Element {
+export function ExampleViewer (props: ExampleViewerProps): React.ReactNode {
   const params = useLoaderData() as ExampleViewerUrlParams
   const [searchParams] = useSearchParams()
   const urlDuration = searchParams.get('duration') && !isNaN(+searchParams.get('duration')) ? +searchParams.get('duration') : 600

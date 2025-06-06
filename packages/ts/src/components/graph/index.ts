@@ -11,15 +11,23 @@ import { ComponentCore } from 'core/component'
 import { GraphDataModel } from 'data-models/graph'
 
 // Types
-import { GraphInputLink, GraphInputNode } from 'types/graph'
+import { GraphInputLink, GraphInputNode, GraphInputData } from 'types/graph'
 import { Spacing } from 'types/spacing'
 
 // Utils
-import { isNumber, clamp, shallowDiff, isFunction, getBoolean, isPlainObject, isEqual } from 'utils/data'
+import { isNumber, clamp, shallowDiff, isFunction, getBoolean, isPlainObject, isEqual, getNumber } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 
 // Local Types
-import { GraphNode, GraphLink, GraphLayoutType, GraphLinkArrowStyle, GraphPanel, GraphNodeSelectionHighlightMode } from './types'
+import {
+  GraphNode,
+  GraphLink,
+  GraphLayoutType,
+  GraphLinkArrowStyle,
+  GraphPanel,
+  GraphNodeSelectionHighlightMode,
+  GraphFitViewAlignment,
+} from './types'
 
 // Config
 import { GraphDefaultConfig, GraphConfigInterface } from './config'
@@ -31,9 +39,18 @@ import * as linkSelectors from './modules/link/style'
 import * as panelSelectors from './modules/panel/style'
 
 // Modules
-import { createNodes, updateNodes, removeNodes, zoomNodesThrottled, zoomNodes, updateNodesPartial } from './modules/node'
+import { createNodes, updateNodes, removeNodes, zoomNodesThrottled, zoomNodes, updateNodesPartial, updateNodePositions } from './modules/node'
 import { getMaxNodeSize, getNodeSize, getX, getY } from './modules/node/helper'
-import { createLinks, updateLinks, removeLinks, zoomLinksThrottled, zoomLinks, animateLinkFlow, updateLinksPartial } from './modules/link'
+import {
+  createLinks,
+  updateLinks,
+  removeLinks,
+  zoomLinksThrottled,
+  zoomLinks,
+  animateLinkFlow,
+  updateLinksPartial,
+  updateLinkLines,
+} from './modules/link'
 import { getDoubleArrowPath, getArrowPath } from './modules/link/helper'
 import { createPanels, updatePanels, removePanels } from './modules/panel'
 import { setPanelForNodes, updatePanelBBoxSize, updatePanelNumNodes, initPanels } from './modules/panel/helper'
@@ -43,7 +60,7 @@ export class Graph<
   N extends GraphInputNode,
   L extends GraphInputLink,
 > extends ComponentCore<
-  {nodes: N[]; links?: L[]},
+  GraphInputData<N, L>,
   GraphConfigInterface<N, L>
   > {
   static selectors = {
@@ -58,6 +75,7 @@ export class Graph<
     dimmedNode: nodeSelectors.greyedOutNode,
     link: linkSelectors.gLink,
     linkLine: linkSelectors.link,
+    linkLabel: linkSelectors.linkLabelGroup,
     dimmedLink: linkSelectors.greyedOutLink,
     panel: panelSelectors.gPanel,
     panelRect: panelSelectors.panel,
@@ -104,6 +122,10 @@ export class Graph<
   private _isDragging = false
   private _brushBehavior: BrushBehavior<unknown>
   private _groupDragInit: [number, number]
+
+  // A map for storing link total path lengths to optimize rendering performance
+  private _linkPathLengthMap: Map<string, number> = new Map()
+  private _linkFlowFrameElapsed = 0
 
   events = {
     [Graph.selectors.background]: {
@@ -161,9 +183,9 @@ export class Graph<
     this._getLinkArrowDefId = this._getLinkArrowDefId.bind(this)
   }
 
-  setData (data: {nodes: N[]; links?: L[]}): void {
+  setData (data: GraphInputData<N, L>): void {
     const { config } = this
-    if (isEqual(this.datamodel.data, data)) return
+    if (!config.shouldDataUpdate(this.datamodel.data, data, this.datamodel)) return
 
     this.datamodel.nodeSort = config.nodeSort
     this.datamodel.data = data
@@ -190,8 +212,10 @@ export class Graph<
   }
 
   get bleed (): Spacing {
-    const extraPadding = 50 // Extra padding to take into account labels and selection outlines
-    return { top: extraPadding, bottom: extraPadding, left: extraPadding, right: extraPadding }
+    const padding = this.config.fitViewPadding // Extra padding to take into account labels and selection outlines
+    return isNumber(padding)
+      ? { top: padding, bottom: padding, left: padding, right: padding }
+      : padding
   }
 
   _render (customDuration?: number): void {
@@ -272,7 +296,7 @@ export class Graph<
       this._resetSelectionGreyoutState()
       if (this.config.selectedNodeId || this.config.selectedNodeIds) {
         const selectedIds = this.config.selectedNodeIds ?? [this.config.selectedNodeId]
-        const selectedNodes = selectedIds.map(id => datamodel.getNodeFromId(id))
+        const selectedNodes = selectedIds.map(id => datamodel.getNodeById(id))
         this._setNodeSelectionState(selectedNodes)
       }
 
@@ -294,13 +318,6 @@ export class Graph<
       // Zoom
       if (disableZoom) this.g.on('.zoom', null)
       else this.g.call(this._zoomBehavior).on('dblclick.zoom', null)
-
-      // While the graph is animating we disable pointer events on the graph group
-      if (animDuration) { this._graphGroup.attr('pointer-events', 'none') }
-      smartTransition(this._graphGroup, animDuration)
-        .on('end interrupt', () => {
-          this._graphGroup.attr('pointer-events', null)
-        })
 
       // We need to set up events and attributes again because the rendering might have been delayed by the layout
       // calculation and they were not set up properly (see the render function of `ComponentCore`)
@@ -352,7 +369,7 @@ export class Graph<
     const { config, datamodel: { links } } = this
 
     const linkGroups = this._linksGroup
-      .selectAll<SVGGElement, GraphLink<N, L>>(`.${linkSelectors.gLink}`)
+      .selectAll<SVGGElement, GraphLink<N, L>>(`.${linkSelectors.gLink}:not(.${linkSelectors.gLinkExit}`)
       .data(links, (d: GraphLink<N, L>) => String(d._id))
 
     const linkGroupsEnter = linkGroups.enter().append('g')
@@ -360,7 +377,7 @@ export class Graph<
       .call(createLinks, config, duration)
 
     const linkGroupsMerged = linkGroups.merge(linkGroupsEnter)
-    linkGroupsMerged.call(updateLinks, config, duration, this._scale, this._getLinkArrowDefId)
+    linkGroupsMerged.call(updateLinks, config, duration, this._scale, this._getLinkArrowDefId, this._linkPathLengthMap)
 
     const linkGroupsExit = linkGroups.exit<GraphLink<N, L>>()
     linkGroupsExit
@@ -463,16 +480,16 @@ export class Graph<
     }
   }
 
-  private _fit (duration = 0, nodeIds?: (string | number)[]): void {
+  private _fit (duration = 0, nodeIds?: (string | number)[], alignment = this.config.fitViewAlign): void {
     const { datamodel: { nodes } } = this
     const fitViewNodes = nodeIds?.length ? nodes.filter(n => nodeIds.includes(n.id)) : nodes
-    const transform = this._getTransform(fitViewNodes)
+    const transform = this._getTransform(fitViewNodes, alignment)
     smartTransition(this.g, duration)
       .call(this._zoomBehavior.transform, transform)
     this._onZoom(transform)
   }
 
-  private _getTransform (nodes: GraphNode<N, L>[]): ZoomTransform {
+  private _getTransform (nodes: GraphNode<N, L>[], alignment: GraphFitViewAlignment): ZoomTransform {
     const { nodeSize, zoomScaleExtent } = this.config
     const { left, top, right, bottom } = this.bleed
 
@@ -494,22 +511,44 @@ export class Graph<
       return zoomIdentity
     }
 
-    const xScale = w / (xExtent[1] - xExtent[0] + left + right)
-    const yScale = h / (yExtent[1] - yExtent[0] + top + bottom)
+    const xScale = w / (xExtent[1] - xExtent[0] + (left || 0) + (right || 0))
+    const yScale = h / (yExtent[1] - yExtent[0] + (top || 0) + (bottom || 0))
 
     const clampedScale = clamp(min([xScale, yScale]), zoomScaleExtent[0], zoomScaleExtent[1])
 
-    const xCenter = (xExtent[1] + xExtent[0]) / 2
-    const yCenter = (yExtent[1] + yExtent[0]) / 2
-    const translateX = this._width / 2 - xCenter * clampedScale
-    const translateY = this._height / 2 - yCenter * clampedScale
+    // Calculate translation based on alignment
+    let translateX: number
+    let translateY: number
+
+    switch (alignment) {
+      case GraphFitViewAlignment.Left:
+        translateX = left - xExtent[0] * clampedScale
+        translateY = this._height / 2 - (yExtent[0] + (yExtent[1] - yExtent[0]) / 2) * clampedScale
+        break
+      case GraphFitViewAlignment.Right:
+        translateX = this._width - (xExtent[1] - xExtent[0]) * clampedScale - right
+        translateY = this._height / 2 - (yExtent[0] + (yExtent[1] - yExtent[0]) / 2) * clampedScale
+        break
+      case GraphFitViewAlignment.Top:
+        translateX = this._width / 2 - (xExtent[0] + (xExtent[1] - xExtent[0]) / 2) * clampedScale
+        translateY = top - yExtent[0] * clampedScale
+        break
+      case GraphFitViewAlignment.Bottom:
+        translateX = this._width / 2 - (xExtent[0] + (xExtent[1] - xExtent[0]) / 2) * clampedScale
+        translateY = this._height - (yExtent[1] - yExtent[0]) * clampedScale - bottom
+        break
+      case GraphFitViewAlignment.Center:
+      default:
+        translateX = this._width / 2 - (xExtent[0] + (xExtent[1] - xExtent[0]) / 2) * clampedScale
+        translateY = this._height / 2 - (yExtent[0] + (yExtent[1] - yExtent[0]) / 2) * clampedScale
+    }
+
     const transform = zoomIdentity
       .translate(translateX, translateY)
       .scale(clampedScale)
 
     return transform
   }
-
 
   private _setNodeSelectionState (nodesToSelect: (GraphNode<N, L> | undefined)[]): void {
     const { config, datamodel } = this
@@ -643,7 +682,7 @@ export class Graph<
   private _onLinkMouseOver (d: GraphLink<N, L>): void {
     if (this._isDragging) return
 
-    d._state.hovered = true
+    if (this.config.linkHighlightOnHover) d._state.hovered = true
     this._updateNodesLinksPartial()
   }
 
@@ -655,17 +694,35 @@ export class Graph<
   }
 
   private _onLinkFlowTimerFrame (elapsed = 0): void {
-    const { config: { linkFlow, linkFlowAnimDuration }, datamodel: { links } } = this
+    const { config, datamodel: { links } } = this
 
-    const hasLinksWithFlow = links.some((d, i) => getBoolean(d, linkFlow, i))
+    const hasLinksWithFlow = links.some((d, i) => getBoolean(d, config.linkFlow, i))
     if (!hasLinksWithFlow) return
 
-    const t = (elapsed % linkFlowAnimDuration) / linkFlowAnimDuration
-    const linkElements = this._linksGroup.selectAll<SVGGElement, GraphLink<N, L>>(`.${linkSelectors.gLink}`)
+    const deltaTime = elapsed - this._linkFlowFrameElapsed
 
-    const linksToAnimate = linkElements.filter(d => !d._state.greyout)
-    linksToAnimate.each(d => { d._state.flowAnimTime = t })
-    animateLinkFlow(linksToAnimate, this.config, this._scale)
+    const linkGroups = this._linksGroup.selectAll<SVGGElement, GraphLink<N, L>>(`.${linkSelectors.gLink}`)
+    linkGroups.each((l, i, els) => {
+      const linkFlowParticleSpeed = getNumber(l, config.linkFlowParticleSpeed, l._indexGlobal)
+
+      // Get path length
+      const pathElement = els[i].querySelector<SVGPathElement>(`.${linkSelectors.linkSupport}`)
+      const pathLength = pathElement ? (this._linkPathLengthMap.get(pathElement.getAttribute('d')) ?? pathElement.getTotalLength()) : 0
+
+      if (pathLength <= 0) return // Skip if no valid path
+
+      // Calculate speed: either provided or derived from duration
+      const speed = linkFlowParticleSpeed || (pathLength / getNumber(l, config.linkFlowAnimDuration, l._indexGlobal) * 1000)
+
+      // Initialize and update distance
+      l._state.flowAnimDistancePx = (l._state.flowAnimDistancePx || 0) + (deltaTime / 1000) * speed
+
+      // Convert to relative position
+      l._state.flowAnimDistanceRelative = (l._state.flowAnimDistancePx % pathLength) / pathLength
+    })
+
+    this._linkFlowFrameElapsed = elapsed
+    animateLinkFlow(linkGroups, this.config, this._scale, this._linkPathLengthMap)
   }
 
   private _onZoom (t: ZoomTransform, event?: D3ZoomEvent<SVGGElement, unknown>): void {
@@ -835,9 +892,9 @@ export class Graph<
       const target = l.target as GraphNode<N, L>
       return source._id === d._id || target._id === d._id
     })
-    linksToUpdate.call(updateLinks, config, 0, scale, this._getLinkArrowDefId)
+    linksToUpdate.call(updateLinks, config, 0, scale, this._getLinkArrowDefId, this._linkPathLengthMap)
     const linksToAnimate = linksToUpdate.filter(d => d._state.greyout)
-    if (linksToAnimate.size()) animateLinkFlow(linksToAnimate, config, this._scale)
+    if (linksToAnimate.size()) animateLinkFlow(linksToAnimate, config, this._scale, this._linkPathLengthMap)
 
     config.onNodeDrag?.(d, event)
   }
@@ -881,7 +938,7 @@ export class Graph<
           .filter(l => l.source?._state?.isDragged || l.target?._state?.isDragged)
       ) as Selection<SVGGElement, GraphLink<N, L>, SVGGElement, unknown>
 
-      connectedLinks.call(updateLinks, this.config, 0, this._scale, this._getLinkArrowDefId)
+      connectedLinks.call(updateLinks, this.config, 0, this._scale, this._getLinkArrowDefId, this._linkPathLengthMap)
     } else {
       this._isDragging = false
       selectedNodes.each(n => { n._state.isDragged = false })
@@ -986,9 +1043,9 @@ export class Graph<
     return zoomTransform(this.g.node()).k
   }
 
-  public fitView (duration = this.config.duration, nodeIds?: (string | number)[]): void {
+  public fitView (duration = this.config.duration, nodeIds?: (string | number)[], alignment?: GraphFitViewAlignment): void {
     this._layoutCalculationPromise?.then(() => {
-      this._fit(duration, nodeIds)
+      this._fit(duration, nodeIds, alignment)
     })
   }
 
@@ -1022,5 +1079,25 @@ export class Graph<
         y: node.y,
       }
     }
+  }
+
+  /** Set the node state by id */
+  public setNodeStateById (nodeId: string, state: GraphNode<N, L>['_state']): void {
+    this.datamodel.setNodeStateById(nodeId, state)
+  }
+
+  /** Call a partial render to update the positions of the nodes and their links.
+    * This can be useful when you've changed the node positions manually outside
+    * of the component and want to update the graph.
+  */
+  public updateNodePositions (duration?: number): void {
+    const { config } = this
+    const animDuration = isNumber(duration) ? duration : config.duration
+
+    const linkElements = this._linksGroup.selectAll<SVGGElement, GraphLink<N, L>>(`.${linkSelectors.gLink}:not(.${linkSelectors.gLinkExit}`)
+    updateLinkLines(linkElements, config, animDuration, this._scale, this._getLinkArrowDefId, this._linkPathLengthMap)
+
+    const nodeElements = this._nodesGroup.selectAll<SVGGElement, GraphNode<N, L>>(`.${nodeSelectors.gNode}:not(.${nodeSelectors.gNodeExit})`)
+    updateNodePositions(nodeElements, animDuration)
   }
 }

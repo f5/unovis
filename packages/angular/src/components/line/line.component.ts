@@ -121,6 +121,12 @@ export class VisLineComponent<Datum> implements LineConfigInterface<Datum>, Afte
 
   /** Optional link cursor. Default: `null` */
   @Input() cursor?: StringAccessor<Datum[]>
+
+  /** Enable interpolated line where data points are missing or fallbackValue is used.
+   * You can customize the line's appearance with `--vis-line-gapfill-stroke-dasharray`
+   * and `--vis-line-gapfill-stroke-opacity` CSS variables.
+   * Default: `false` */
+  @Input() interpolateMissingData?: boolean
   @Input() data: Datum[]
 
   component: Line<Datum> | undefined
@@ -142,8 +148,8 @@ export class VisLineComponent<Datum> implements LineConfigInterface<Datum>, Afte
   }
 
   private getConfig (): LineConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, curveType, lineWidth, lineDashArray, fallbackValue, highlightOnHover, cursor } = this
-    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, curveType, lineWidth, lineDashArray, fallbackValue, highlightOnHover, cursor }
+    const { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, curveType, lineWidth, lineDashArray, fallbackValue, highlightOnHover, cursor, interpolateMissingData } = this
+    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, curveType, lineWidth, lineDashArray, fallbackValue, highlightOnHover, cursor, interpolateMissingData }
     const keys = Object.keys(config) as (keyof LineConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

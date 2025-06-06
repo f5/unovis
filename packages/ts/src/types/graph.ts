@@ -10,6 +10,14 @@ export interface GraphInputLink {
   target: number | string | GraphInputNode;
 }
 
+export type GraphInputData<
+  N extends GraphInputNode = GraphInputNode,
+  L extends GraphInputLink = GraphInputLink,
+> = {
+  nodes: N[];
+  links?: L[];
+}
+
 export type GraphNodeCore<N extends GraphInputNode, L extends GraphInputLink> = N & {
   // eslint-disable-next-line no-use-before-define
   links: GraphLinkCore<N, L>[];

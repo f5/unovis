@@ -5,7 +5,7 @@ import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 export const title = 'Donut: Empty Segments'
 export const subTitle = '+ Padding'
 
-export const component = (props: ExampleViewerDurationProps): JSX.Element => {
+export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const data = [0, 2, 0, 4, 0, 1]
   return (
     <VisSingleContainer height={400}>
