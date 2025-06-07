@@ -1,5 +1,5 @@
 // !!! This code was automatically generated. You should not change it !!!
-import React, { ForwardedRef, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
+import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
 import { Annotations, AnnotationsConfigInterface } from '@unovis/ts'
 
 // Utils
@@ -19,7 +19,7 @@ export type VisAnnotationsProps = AnnotationsConfigInterface & {
 export const VisAnnotationsSelectors = Annotations.selectors
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-function VisAnnotationsFC (props: VisAnnotationsProps, fRef: ForwardedRef<VisAnnotationsRef>): JSX.Element {
+function VisAnnotationsFC (props: VisAnnotationsProps, fRef: ForwardedRef<VisAnnotationsRef>): ReactElement {
   const ref = useRef<VisComponentElement<Annotations>>(null)
   const componentRef = useRef<Annotations | undefined>(undefined)
 
