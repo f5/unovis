@@ -34,7 +34,7 @@ export interface NestedDonutConfigInterface<Datum> extends ComponentConfigInterf
   sort?: (a: NestedDonutSegment<Datum>, b: NestedDonutSegment<Datum>) => number;
 
   // Layers
-  /** Array of accessor functions to defined the nested groups  */
+  /** Array of accessor functions to defined the nested groups. Default: `[]` */
   layers: StringAccessor<Datum>[];
   /**
    * Configuration properties for individual layers. Accepts an accessor or constant of type:

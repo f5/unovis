@@ -18,6 +18,7 @@ export * from './components/timeline/'
 export * from './components/topojson-map/'
 export * from './components/xy-labels'
 export * from './components/annotations'
+export * from './components/treemap'
 
 // HTML Components
 export * from './html-components/bullet-legend'
