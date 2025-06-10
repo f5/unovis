@@ -7,7 +7,7 @@ export interface AnnotationsConfigInterface extends ComponentConfigInterface {
   /** Legend items. Array of `AnnotationItem`:
    * ```
    * {
-   *   content: string | UnovisText | UnovisText[];
+   *   content: string | UnovisTextWithRequiredFontSize | UnovisTextWithRequiredFontSize[];
    *   subject?: AnnotationSubject;
    *   x?: LengthUnit;
    *   y?: LengthUnit;

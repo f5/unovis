@@ -1,6 +1,6 @@
 import { injectGlobal } from '@emotion/css'
 import { getCSSVariableValue } from 'utils/misc'
-import { UnovisText } from 'types/text'
+import { UnovisTextWithRequiredFontSize } from 'types/text'
 import { colors, colorsDark, getCSSColorVariable, getLighterColor, getDarkerColor } from './colors'
 import { fills, lines, getPatternVariable } from './patterns'
 
@@ -8,7 +8,7 @@ export const UNOVIS_ICON_FONT_FAMILY_DEFAULT = globalThis?.UNOVIS_ICON_FONT_FAMI
 export const UNOVIS_FONT_WH_RATIO_DEFAULT: number = globalThis?.UNOVIS_FONT_W2H_RATIO_DEFAULT || 0.5
 export const UNOVIS_TEXT_SEPARATOR_DEFAULT: string[] = globalThis?.UNOVIS_TEXT_SEPARATOR_DEFAULT || [' ', '-', '.', ',']
 export const UNOVIS_TEXT_HYPHEN_CHARACTER_DEFAULT: string = globalThis?.UNOVIS_TEXT_HYPHEN_CHARACTER_DEFAULT || '-'
-export const UNOVIS_TEXT_DEFAULT: UnovisText = globalThis?.UNOVIS_TEXT_DEFAULT || {
+export const UNOVIS_TEXT_DEFAULT: UnovisTextWithRequiredFontSize = globalThis?.UNOVIS_TEXT_DEFAULT || {
   text: '',
   fontSize: 12,
   fontFamily: 'var(--vis-font-family)',

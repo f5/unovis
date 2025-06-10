@@ -63,7 +63,7 @@ export class VisAnnotationsComponent implements AnnotationsConfigInterface, Afte
   /** Legend items. Array of `AnnotationItem`:
    * ```
    * {
-   *  content: string | UnovisText | UnovisText[];
+   *  content: string | UnovisTextWithRequiredFontSize | UnovisTextWithRequiredFontSize[];
    *  subject?: AnnotationSubject;
    *  x?: LengthUnit;
    *  y?: LengthUnit;

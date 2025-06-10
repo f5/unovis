@@ -9,7 +9,7 @@ import { XYComponentCore } from 'core/xy-component'
 import { Position } from 'types/position'
 import { ContinuousScale } from 'types/scale'
 import { Spacing } from 'types/spacing'
-import { FitMode, TextAlign, TrimMode, UnovisText, UnovisTextOptions, VerticalAlign } from 'types/text'
+import { FitMode, TextAlign, TrimMode, UnovisTextOptions, UnovisTextWithRequiredFontSize, VerticalAlign } from 'types/text'
 
 // Utils
 import { smartTransition } from 'utils/d3'
@@ -240,7 +240,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
         text = select<SVGTextElement, string>(textElement).text()
       }
 
-      const textBlock: UnovisText = { text, fontFamily, fontSize }
+      const textBlock: UnovisTextWithRequiredFontSize = { text, fontFamily, fontSize }
       renderTextToSvgTextElement(textElement, textBlock, textOptions)
     })
 

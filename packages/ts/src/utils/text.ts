@@ -3,7 +3,15 @@ import { sum } from 'd3-array'
 import striptags from 'striptags'
 
 // Types
-import { TextAlign, TrimMode, UnovisText, UnovisTextFrameOptions, UnovisTextOptions, UnovisWrappedText, VerticalAlign } from 'types/text'
+import {
+  TextAlign,
+  TrimMode,
+  UnovisTextFrameOptions,
+  UnovisTextOptions,
+  UnovisTextWithRequiredFontSize,
+  UnovisWrappedText,
+  VerticalAlign,
+} from 'types/text'
 
 // Utils
 import { flatten, isArray, merge } from 'utils/data'
@@ -292,7 +300,7 @@ export function estimateTextSize (
  * @returns {string[]} - The text split into lines.
  */
 function breakTextIntoLines (
-  textBlock: UnovisText,
+  textBlock: UnovisTextWithRequiredFontSize,
   width: number | undefined = undefined,
   fastMode = true,
   separator: string | string[] = UNOVIS_TEXT_SEPARATOR_DEFAULT,
@@ -363,14 +371,14 @@ function breakTextIntoLines (
  * Wraps a text or array of texts to fit within specified width and height, if provided.
  *
  * @export
- * @param {UnovisText | UnovisText[]} text - The text or array of texts to wrap.
+ * @param {UnovisTextWithRequiredFontSize | UnovisTextWithRequiredFontSize[]} text - The text or array of texts to wrap.
  * @param {number | undefined} [width=undefined] - The maximum width of a line in pixels.
  * @param {boolean} [fastMode=true] - Whether to use a fast estimation method or a more accurate one.
  * @param {string | string[]} [separator] - The word separators.
  * @returns {UnovisWrappedText[]} - The wrapped texts.
  */
 export function getWrappedText (
-  text: UnovisText | UnovisText[],
+  text: UnovisTextWithRequiredFontSize | UnovisTextWithRequiredFontSize[],
   width: number | undefined = undefined,
   height: number | undefined = undefined,
   fastMode = true,
@@ -493,12 +501,12 @@ export const allowedSvgTextTags = ['text', 'tspan', 'textPath', 'altGlyph', 'alt
  *
  * @export
  * @param {SVGTextElement} textElement - The SVG text element to render the text into.
- * @param {UnovisText | UnovisText[]} text - The text or array of texts to render.
+ * @param {UnovisTextWithRequiredFontSize | UnovisTextWithRequiredFontSize[]} text - The text or array of texts to render.
  * @param {UnovisTextOptions} options - The text options.
  */
 export function renderTextToSvgTextElement (
   textElement: SVGTextElement,
-  text: UnovisText | UnovisText[],
+  text: UnovisTextWithRequiredFontSize | UnovisTextWithRequiredFontSize[],
   options: UnovisTextOptions,
   trimmed?: boolean
 ): void {
@@ -542,12 +550,12 @@ export function renderTextToSvgTextElement (
  *
  * @export
  * @param {SVGGElement} group - The SVG group element to render the text into.
- * @param {UnovisText | UnovisText[]} text - The text or array of texts to render.
+ * @param {UnovisTextWithRequiredFontSize | UnovisTextWithRequiredFontSize[]} text - The text or array of texts to render.
  * @param {UnovisTextFrameOptions} frameOptions - The text frame options.
  */
 export function renderTextIntoFrame (
   group: SVGGElement,
-  text: UnovisText | UnovisText[],
+  text: UnovisTextWithRequiredFontSize | UnovisTextWithRequiredFontSize[],
   frameOptions: UnovisTextFrameOptions
 ): void {
   const wrappedText = getWrappedText(text, frameOptions.width, frameOptions.height, frameOptions.fastMode, frameOptions.separator, frameOptions.wordBreak)
