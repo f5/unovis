@@ -9,6 +9,7 @@ export { default as VisScatter, VisScatterSelectors } from './components/scatter
 export { default as VisStackedBar, VisStackedBarSelectors } from './components/stacked-bar/index.vue'
 export { default as VisTimeline, VisTimelineSelectors } from './components/timeline/index.vue'
 export { default as VisXYLabels, VisXYLabelsSelectors } from './components/xy-labels/index.vue'
+export { default as VisPlotband, VisPlotbandSelectors } from './components/plotband/index.vue'
 export { default as VisChordDiagram, VisChordDiagramSelectors } from './components/chord-diagram/index.vue'
 export { default as VisDonut, VisDonutSelectors } from './components/donut/index.vue'
 export { default as VisGraph, VisGraphSelectors } from './components/graph/index.vue'
