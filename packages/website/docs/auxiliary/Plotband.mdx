@@ -1,0 +1,101 @@
+import CodeBlock from '@theme/CodeBlock'
+import { PropsTable } from '@site/src/components/PropsTable'
+import { XYWrapper, XYWrapperWithInput } from '../wrappers'
+import { generateDataRecords } from '../utils/data'
+
+
+This feature is used to highlight a particular region in the spark charts along Y or X axis. It is compatible only with XY and containers.
+
+## Basic configuration
+
+## Orientation
+
+The axis property determines whether the plotband is drawn horizontally or vertically, based on the axis it targets.
+* axis: `x` draws a vertical plotband that spans across the y-axis — typically used to highlight a range of x-values (e.g., time periods).
+* axis: `y` (default) draws a horizontal plotband that spans across the x-axis — commonly used to highlight a range of y-values (e.g., thresholds or danger zones).
+
+Use this setting to match the orientation of the plotband with the dimension of interest in your chart.
+
+Default: `y` (horizontal)
+
+## Color
+
+The color property sets the fill color of the plotband.
+
+You can provide any valid CSS color value, such as:
+* Named colors (e.g., "red", "blue")
+* Hex codes (e.g., "#ffcc00")
+* RGB / RGBA (e.g., "rgba(255, 0, 0, 0.3)")
+* CSS variables (e.g., `var(--vis-plotband-color)`)
+
+Use this to visually distinguish different plotbands or to align them with your chart’s color theme.
+
+Default: 'var(--vis-plotband-color)'
+
+## Range
+
+The from and to properties define the start and end coordinates of the plotband along the specified axis. These values determine the area to be highlighted:
+* from marks the starting point.
+* to marks the ending point.
+* Both must be set for the plotband to render.
+* If from and to are equal, no area is drawn.
+* If either is null or undefined, the plotband is skipped.
+
+Default: 0 for both
+
+## Labeling
+
+Plotbands support an optional label to annotate the highlighted area. The labeling system is flexible and includes controls for positioning, orientation, offset, size, and color.
+
+### Label Position
+
+The label can be positioned relative to the plotband rectangle using the labelPosition property. It supports a variety of placements such as inside or outside each side of the plotband area.
+
+Available values include:
+* `top-left-inside`, `top-left-outside`
+* `top-inside`, `top-outside`
+* `top-right-inside`, `top-right-outside`
+* `right-inside`, `right-outside`
+* `bottom-right-inside`, `bottom-right-outside'
+* `bottom-inside`, `bottom-outside`
+* `bottom-left-inside`, `bottom-left-outside`
+* `left-inside`, `left-outside`
+
+These positions determine the base placement of the label before any offset or orientation is applied.
+
+### Label Orientation
+
+Use the labelOrientation property to control the rotation of the label text. You can choose between:
+
+* `horizontal` (default)
+* `vertical`
+
+This setting helps optimize readability depending on the label’s placement.
+
+### Label Offset
+
+You can adjust the label’s position with pixel-based offsets using the `labelOffsetX` and `labelOffsetY` properties. These apply additional horizontal and vertical shifts from the base position.
+
+For example:
+* A positive `labelOffsetX` will move the label further right.
+* A negative `labelOffsetY` will shift it upward.
+
+This is useful for fine-tuning alignment or preventing overlap with other visual elements.
+
+### Label Font Size
+
+The `labelSize` property controls the font size of the label, specified in pixels.
+
+By default, it uses the CSS variable `--vis-plotband-label-font-size`, which resolves to `12px`. You can override this by providing a number (e.g., 14 for 14px).
+
+### Label Color
+
+To customize the label’s appearance, use the `labelColor` property. This accepts any valid CSS color string such as:
+* Named colors: `red`, `black`
+* Hex values: `#333`, `#FF8800`
+* CSS variables: `var(--vis-text-color)`
+
+If omitted, the label inherits the default text color for the plotband context.
+
+## Component Props
+<PropsTable name='VisPlotband'></PropsTable>
