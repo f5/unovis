@@ -25,7 +25,7 @@ export type UnovisText = {
   // The text content to be displayed.
   text: string;
   // The font size of the text in pixels.
-  fontSize: number;
+  fontSize?: number;
   // The font family of the text (optional). Default: `'var(--vis-font-family)'`.
   fontFamily?: string;
   // The font weight of the text (optional)`.
@@ -42,7 +42,7 @@ export type UnovisText = {
   fontWidthToHeightRatio?: number;
 }
 
-export type UnovisWrappedText = UnovisText & {
+export type UnovisWrappedText = UnovisTextWithRequiredFontSize & {
   // An array of text lines, where each element represents a single line of text.
   _lines: string[];
   // Maximum width of any line of text in this text block
@@ -76,3 +76,6 @@ export type UnovisTextFrameOptions = UnovisTextOptions & {
   height?: number;
 }
 
+export type UnovisTextWithRequiredFontSize = UnovisText & {
+  fontSize: number;
+}
