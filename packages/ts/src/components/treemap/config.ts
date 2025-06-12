@@ -59,6 +59,16 @@ export interface TreemapConfigInterface<Datum> extends ComponentConfigInterface 
 
   /** Flag for showing cursor:pointer to indicate leaf tiles are clickable. Default: `undefined` */
   showTileClickAffordance?: boolean;
+
+  /** Amount of lightness variation applied to sibling tiles when enableLightnessVariance is true. Default: `0.08` */
+  lightnessVariationAmount?: number;
+  minTileSizeForLabel?: number;
+
+  /**
+   * Function to generate the label text for each tile. Receives the TreemapNode and returns a string.
+   * Default: shows key and formatted value (e.g., "label: value").
+   */
+  tileLabel?: (node: TreemapNode<Datum>) => string;
 }
 
 export const TreemapDefaultConfig: TreemapConfigInterface<unknown> = {
@@ -80,4 +90,7 @@ export const TreemapDefaultConfig: TreemapConfigInterface<unknown> = {
   tileLabelMediumFontSize: 12,
   tileLabelLargeFontSize: 22,
   showTileClickAffordance: false,
+  lightnessVariationAmount: 0.08,
+  minTileSizeForLabel: 20,
+  tileLabel: undefined,
 }

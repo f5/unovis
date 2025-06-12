@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react'
 import { format } from 'd3-format'
 import { VisSingleContainer, VisTooltip, VisTreemap } from '@unovis/react'
 import { Position, Treemap, TreemapNode } from '@unovis/ts'
+import { colors } from '@unovis/ts/styles/colors'
 import s from './styles.module.css'
 
 export const title = 'Treemap: Search'
@@ -14,11 +15,14 @@ const populationFormat = (value: number): string => populationFormatRaw(value)
   .replace('G', 'B')
 
 const getTooltipContent = (d: TreemapNode<TreemapExampleDatum>): string => {
-  const isLeafNode = d.data.datum !== undefined
-  return isLeafNode ? `
-    <div class="${s.tooltipTitle}">${d.data.datum.name}</div>
-    <div>Total Population: ${populationFormat(d.data.datum.value)}</div>
-  ` : ''
+  const datum = d.data.datum as TreemapExampleDatum | undefined
+  if (datum && typeof datum.value === 'number') {
+    return `
+      <div class="${s.tooltipTitle}">${datum.name}</div>
+      <div>Total Population: ${populationFormat(datum.value)}</div>
+    `
+  }
+  return ''
 }
 
 type TreemapExampleDatum = {
@@ -46,6 +50,16 @@ const data: TreemapExampleDatum[] = [
   { name: 'Germany', value: 83783942, group: 'Europe' },
 ]
 
+// Assign a unique color to each group using the Unovis color palette
+const groupColorMap: { key: string; value: string }[] = []
+let colorIdx = 0
+for (const d of data) {
+  if (!groupColorMap.find(g => g.key === d.group)) {
+    groupColorMap.push({ key: d.group, value: colors[colorIdx % colors.length] })
+    colorIdx++
+  }
+}
+
 export const component = (): React.ReactElement => {
   const [searchTerm, setSearchTerm] = useState('')
   const [clickedNode, setClickedNode] = useState<TreemapExampleDatum | null>(null)
@@ -56,12 +70,14 @@ export const component = (): React.ReactElement => {
     return data.filter(d => {
       const nameLower = d.name.toLowerCase()
       const groupLower = d.group.toLowerCase()
-      return nameLower.includes(searchTermLower) || groupLower.includes(searchTermLower)
+      return nameLower?.includes(searchTermLower) || groupLower?.includes(searchTermLower)
     })
   }, [searchTerm])
 
   const handleClick = useCallback((d: TreemapNode<TreemapExampleDatum>): void => {
-    setClickedNode(d.data.datum)
+    const datum = d.data.datum as TreemapExampleDatum | undefined
+    if (!datum) return
+    setClickedNode(prev => (prev && prev.name === datum.name) ? null : datum)
   }, [])
 
   return (
@@ -100,13 +116,21 @@ export const component = (): React.ReactElement => {
               click: handleClick,
             },
           }}
-          tileColor={(d: TreemapNode<TreemapExampleDatum>) => {
+          tileColor={(node: TreemapNode<TreemapExampleDatum>) => {
+            const datum = node.data.datum as TreemapExampleDatum | undefined
             if (clickedNode) {
-              return (d.data.datum === clickedNode)
-                ? null
-                : d.depth === 1
-                  ? '#ddd'
-                  : '#eee'
+              // If this is the clicked node, use its group color
+              if (datum && datum.name === clickedNode.name) {
+                const entry = groupColorMap.find(g => g.key === datum.group)
+                return entry ? entry.value : '#008877'
+              }
+              // Otherwise, grey out: lighter for internal nodes, darker for leaves
+              return node.children ? '#eee' : '#ddd'
+            } else {
+              // No selection: use group color as before
+              const group = datum ? datum.group : node.data.key
+              const entry = groupColorMap.find(g => g.key === group)
+              return entry ? entry.value : '#008877'
             }
           }}
         />
