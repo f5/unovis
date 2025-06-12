@@ -2,15 +2,134 @@ import CodeBlock from '@theme/CodeBlock'
 import { PropsTable } from '@site/src/components/PropsTable'
 import { XYWrapper, XYWrapperWithInput } from '../wrappers'
 import { generateDataRecords } from '../utils/data'
+import { DocWrapper } from '../wrappers'
 
 
-This feature is used to highlight a particular region in the spark charts along Y or X axis. It is compatible only with XY and containers.
+export const component = (name, props, override = {}) => ({
+  name,
+  props: { x: d=>d.x, y: d=>d.y, ...props },
+  key: "components",
+  override
+});
+
+export const PlotbandProps = () => ({
+  name: "Plotband",
+  containerName: 'XYContainer',
+});
+
+export const xyContainerProps = (chartName='Line', n=11) => ({
+  name: "XYContainer",
+  data: generateDataRecords(n),
+  showContext: "full",
+  height: 150,
+  components: [
+    component(chartName),
+    { name: 'Axis', props: { type: 'x' }, key: 'xAxis'},
+    { name: 'Axis', props: { type: 'y' }, key: 'yAxis'},
+    { name: 'Plotband', props: { from: 1, to: 5, axis: 'x' }, key: 'plotBand'}
+  ],
+})
+
+export const xyContainerHorizontalProps = (chartName='Line', n=11) => ({
+  name: "XYContainer",
+  data: generateDataRecords(n),
+  showContext: "full",
+  height: 150,
+  components: [
+    component(chartName),
+    { name: 'Axis', props: { type: 'x' }, key: 'xAxis'},
+    { name: 'Axis', props: { type: 'y' }, key: 'yAxis'},
+    { name: 'Plotband', props: { from: 6, to: 7 }, key: 'plotBand'}
+  ],
+})
+
+export const xyContainerColorProps = (chartName='Line', n=11) => ({
+  name: "XYContainer",
+  data: generateDataRecords(n),
+  showContext: "full",
+  height: 150,
+  components: [
+    component(chartName),
+    { name: 'Axis', props: { type: 'x' }, key: 'xAxis'},
+    { name: 'Axis', props: { type: 'y' }, key: 'yAxis'},
+    { name: 'Plotband', props: { from: 6, to: 7, axis: 'x', color: 'rgba(245, 40, 145, 0.2)' }, key: 'plotBand'}
+  ],
+})
+
+export const xyContainerLabelPosProps = (chartName='Line', n=11) => ({
+  name: "XYContainer",
+  data: generateDataRecords(n),
+  showContext: "full",
+  height: 150,
+  components: [
+    component(chartName),
+    { name: 'Axis', props: { type: 'x' }, key: 'xAxis'},
+    { name: 'Axis', props: { type: 'y' }, key: 'yAxis'},
+    { name: 'Plotband', props: { from: 6, to: 7, axis: 'x', labelText: 'Label', labelPosition: 'top-left-inside' }, key: 'plotBand'}
+  ],
+})
+
+export const xyContainerLabelOrientProps = (chartName='Line', n=11) => ({
+  name: "XYContainer",
+  data: generateDataRecords(n),
+  showContext: "full",
+  height: 150,
+  components: [
+    component(chartName),
+    { name: 'Axis', props: { type: 'x' }, key: 'xAxis'},
+    { name: 'Axis', props: { type: 'y' }, key: 'yAxis'},
+    { name: 'Plotband', props: { from: 6, to: 7, axis: 'x', labelText: 'Label', labelOrientation: 'vertical' }, key: 'plotBand'}
+  ],
+})
+
+export const xyContainerLabelOffsetProps = (chartName='Line', n=11) => ({
+  name: "XYContainer",
+  data: generateDataRecords(n),
+  showContext: "full",
+  height: 150,
+  components: [
+    component(chartName),
+    { name: 'Axis', props: { type: 'x' }, key: 'xAxis'},
+    { name: 'Axis', props: { type: 'y' }, key: 'yAxis'},
+    { name: 'Plotband', props: { from: 6, to: 7, axis: 'x', labelText: 'Label', labelOffsetX: 50, labelOffsetY: 30 }, key: 'plotBand'}
+  ],
+})
+
+export const xyContainerLabelFontSizeProps = (chartName='Line', n=11) => ({
+  name: "XYContainer",
+  data: generateDataRecords(n),
+  showContext: "full",
+  height: 150,
+  components: [
+    component(chartName),
+    { name: 'Axis', props: { type: 'x' }, key: 'xAxis'},
+    { name: 'Axis', props: { type: 'y' }, key: 'yAxis'},
+    { name: 'Plotband', props: { from: 6, to: 7, axis: 'x', labelText: 'Label', labelSize: 26 }, key: 'plotBand'}
+  ],
+})
+
+export const xyContainerLabelColorProps = (chartName='Line', n=11) => ({
+  name: "XYContainer",
+  data: generateDataRecords(n),
+  showContext: "full",
+  height: 150,
+  components: [
+    component(chartName),
+    { name: 'Axis', props: { type: 'x' }, key: 'xAxis'},
+    { name: 'Axis', props: { type: 'y' }, key: 'yAxis'},
+    { name: 'Plotband', props: { from: 6, to: 7, axis: 'x', labelText: 'Label', labelColor: '#ff8400' }, key: 'plotBand'}
+  ],
+})
+
+_Plotband_ is used to highlight a particular region in charts along Y or X axis. It is compatible only with _XY container_.
 
 ## Basic configuration
 
+<XYWrapper {...xyContainerProps()} showContext="container"/>
+
 ## Orientation
 
-The axis property determines whether the plotband is drawn horizontally or vertically, based on the axis it targets.
+The `axis` property determines whether the plotband is drawn horizontally or vertically, based on the axis it targets.
 * axis: `x` draws a vertical plotband that spans across the y-axis — typically used to highlight a range of x-values (e.g., time periods).
 * axis: `y` (default) draws a horizontal plotband that spans across the x-axis — commonly used to highlight a range of y-values (e.g., thresholds or danger zones).
 
@@ -18,9 +137,11 @@ Use this setting to match the orientation of the plotband with the dimension of 
 
 Default: `y` (horizontal)
 
+<XYWrapper {...xyContainerHorizontalProps()} showContext="container"/>
+
 ## Color
 
-The color property sets the fill color of the plotband.
+The `color` property sets the fill color of the plotband.
 
 You can provide any valid CSS color value, such as:
 * Named colors (e.g., "red", "blue")
@@ -30,22 +151,24 @@ You can provide any valid CSS color value, such as:
 
 Use this to visually distinguish different plotbands or to align them with your chart’s color theme.
 
-Default: 'var(--vis-plotband-color)'
+Default: `var(--vis-plotband-color)`
+
+<XYWrapper {...xyContainerColorProps()} showContext="container"/>
 
 ## Range
 
-The from and to properties define the start and end coordinates of the plotband along the specified axis. These values determine the area to be highlighted:
-* from marks the starting point.
-* to marks the ending point.
+The `from` and `to` properties define the start and end coordinates of the plotband along the specified axis. These values determine the area to be highlighted:
+* `from` marks the starting point.
+* `to` marks the ending point.
 * Both must be set for the plotband to render.
-* If from and to are equal, no area is drawn.
+* If `from` and `to` are equal, no area is drawn.
 * If either is null or undefined, the plotband is skipped.
 
-Default: 0 for both
+Default:`0` for both
 
 ## Labeling
 
-Plotbands support an optional label to annotate the highlighted area. The labeling system is flexible and includes controls for positioning, orientation, offset, size, and color.
+_Plotband_ support an optional label to annotate the highlighted area. The labeling system is flexible and includes controls for positioning, orientation, offset, size, and color.
 
 ### Label Position
 
@@ -63,14 +186,18 @@ Available values include:
 
 These positions determine the base placement of the label before any offset or orientation is applied.
 
+<XYWrapper {...xyContainerLabelPosProps()} showContext="container"/>
+
 ### Label Orientation
 
-Use the labelOrientation property to control the rotation of the label text. You can choose between:
+Use the `labelOrientation` property to control the rotation of the label text. You can choose between:
 
 * `horizontal` (default)
 * `vertical`
 
 This setting helps optimize readability depending on the label’s placement.
+
+<XYWrapper {...xyContainerLabelOrientProps()} showContext="container"/>
 
 ### Label Offset
 
@@ -80,6 +207,8 @@ For example:
 * A positive `labelOffsetX` will move the label further right.
 * A negative `labelOffsetY` will shift it upward.
 
+<XYWrapper {...xyContainerLabelOffsetProps()} showContext="container"/>
+
 This is useful for fine-tuning alignment or preventing overlap with other visual elements.
 
 ### Label Font Size
@@ -88,6 +217,8 @@ The `labelSize` property controls the font size of the label, specified in pixel
 
 By default, it uses the CSS variable `--vis-plotband-label-font-size`, which resolves to `12px`. You can override this by providing a number (e.g., 14 for 14px).
 
+<XYWrapper {...xyContainerLabelFontSizeProps()} showContext="container"/>
+
 ### Label Color
 
 To customize the label’s appearance, use the `labelColor` property. This accepts any valid CSS color string such as:
@@ -95,7 +226,9 @@ To customize the label’s appearance, use the `labelColor` property. This accep
 * Hex values: `#333`, `#FF8800`
 * CSS variables: `var(--vis-text-color)`
 
-If omitted, the label inherits the default text color for the plotband context.
+If omitted, the label inherits the default text color for the _plotband_ context.
+
+<XYWrapper {...xyContainerLabelColorProps()} showContext="container"/>
 
 ## Component Props
 <PropsTable name='VisPlotband'></PropsTable>
