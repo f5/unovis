@@ -3,15 +3,17 @@ import { hierarchy, HierarchyNode, treemap } from 'd3-hierarchy'
 import { group, max, extent } from 'd3-array'
 import { scaleLinear, scaleThreshold } from 'd3-scale'
 import { hsl } from 'd3-color'
+import { easeCubicInOut } from 'd3-ease'
 import { wrapSVGText } from 'utils/text'
 import { ComponentCore } from 'core/component'
 import { SeriesDataModel } from 'data-models/series'
 import { getColor, brighter, getHexValue, isDarkBackground } from 'utils/color'
-import { getString, getNumber } from 'utils/data'
+import { getString, getNumber, isNumber } from 'utils/data'
 import { TreemapConfigInterface, TreemapDefaultConfig } from './config'
 import { TreemapDatum, TreemapNode } from './types'
 
 import * as s from './style' // Minimum pixel size for showing labels
+
 
 const LIGHTNESS_VARIATION_AMOUNT = 0.08
 
@@ -51,9 +53,11 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
     this.tiles = this.g.append('g').attr('class', s.tiles)
   }
 
-  _render (): void {
+  _render (customDuration?: number): void {
+    super._render(customDuration)
     const { config, datamodel: { data }, _width, _height } = this
     const { numberFormat = defaultNumberFormat } = config
+    const duration = isNumber(customDuration) ? customDuration : config.duration
 
     if (!config.layers?.length) {
       console.warn('Unovis | Treemap: No layers defined')
@@ -82,7 +86,7 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
 
     // Fix the hierarchy by removing the extra level of nesting
     rootNode.each(node => {
-      if (!node.children) {
+      if (!node.children && node.parent) {
         node.parent.children = null
       }
     })
@@ -135,7 +139,6 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
     // (since area is proportional to value)
     const leafValues = descendants.filter(d => !d.children).map(d => d.value)
     const maxLeafValue = Math.sqrt(max(leafValues)) || 0
-
     // Divide the range into three equal intervals based on the square root of values
     // This accounts for the fact that area is proportional to value
     const fontSizeScale = scaleThreshold<number, number>()
@@ -238,6 +241,9 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       .style('cursor', config.showTileClickAffordance ? d => !d.children ? 'pointer' : null : null)
 
     tiles.merge(tilesEnter).select(`rect.${s.tile}`)
+      .transition()
+      .duration(duration)
+      .ease(easeCubicInOut)
       .style('fill', d => d._fill ?? getColor(d, config.tileColor))
       .style('opacity', 1)
       .attr('x', d => d.x0)
@@ -247,6 +253,9 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
 
     // Update clipPath rects
     tiles.merge(tilesEnter).select('clipPath rect')
+      .transition()
+      .duration(duration)
+      .ease(easeCubicInOut)
       .attr('x', d => d.x0)
       .attr('y', d => d.y0)
       .attr('width', d => d.x1 - d.x0 - config.tilePadding)
@@ -289,10 +298,13 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
         const textColor = backgroundColor && isDarkBackground(backgroundColor) ? '#ffffff' : '#000000'
         text.style('fill', textColor)
 
-        // Apply font size scaling only to leaf nodes if enabled
-        if (!d.children && config.enableTileLabelFontSizeVariation) {
-          text.style('font-size', `${fontSizeScale(Math.sqrt(d.value))}px`)
-        }
+        // Compute and apply font size
+        const sqrtVal = Math.sqrt(d.value ?? 0)
+        const fontSize = config.enableTileLabelFontSizeVariation && !d.children
+          ? fontSizeScale(sqrtVal)
+          : fontSizeScale.range()[1]
+
+        text.style('font-size', `${fontSize}px`)
 
         // Apply text wrapping to leaf nodes
         if (!d.children) {

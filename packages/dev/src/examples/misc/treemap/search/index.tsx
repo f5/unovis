@@ -56,7 +56,7 @@ export const component = (): React.ReactElement => {
     return data.filter(d => {
       const nameLower = d.name.toLowerCase()
       const groupLower = d.group.toLowerCase()
-      return nameLower.includes(searchTermLower) || groupLower.includes(searchTermLower)
+      return nameLower?.includes(searchTermLower) || groupLower?.includes(searchTermLower)
     })
   }, [searchTerm])
 

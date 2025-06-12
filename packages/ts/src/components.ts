@@ -61,8 +61,5 @@ export type { FreeBrushConfigInterface } from './components/free-brush/config'
 export type { XYLabelsConfigInterface } from './components/xy-labels/config'
 export type { NestedDonutConfigInterface } from './components/nested-donut/config'
 export type { AnnotationsConfigInterface } from './components/annotations/config'
-<<<<<<< HEAD
 export type { PlotbandConfigInterface } from './components/plotband/config'
-=======
 export type { TreemapConfigInterface } from './components/treemap/config'
->>>>>>> 9025e605 (Component | Tremap: Placeholder component)

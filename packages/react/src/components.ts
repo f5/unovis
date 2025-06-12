@@ -18,11 +18,8 @@ export * from './components/timeline/'
 export * from './components/topojson-map/'
 export * from './components/xy-labels'
 export * from './components/annotations'
-<<<<<<< HEAD
 export * from './components/plotband'
-=======
 export * from './components/treemap'
->>>>>>> 9025e605 (Component | Tremap: Placeholder component)
 
 // HTML Components
 export * from './html-components/bullet-legend'
