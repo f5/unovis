@@ -168,17 +168,18 @@ _Treemap_ supports the following CSS variables:
 --vis-treemap-tile-fill-color: #B9BEC3;
 --vis-treemap-tile-background-color: #fff;
 --vis-treemap-tile-cursor: default;
-/* Undefined by default to allow proper fallback to var(--vis-font-family) */
---vis-treemap-label-font-family: undefined;
---vis-treemap-label-text-color: #5b5f6d;
+--vis-treemap-label-text-color: #000;
 --vis-treemap-label-font-size: 12px;
 --vis-treemap-label-opacity: 0.8;
 
 /* Dark Theme */
 --vis-dark-treemap-tile-stroke-color: #2c2c2c;
 --vis-dark-treemap-tile-fill-color: #5b5f6d;
---vis-dark-treemap-label-text-color: #fff;
+--vis-dark-treemap-label-text-color: #5b5f6d;
 ```
+
+> **Note:**
+> The label color is now controlled by the CSS variable `--vis-treemap-label-text-color` (and `--vis-dark-treemap-label-text-color` for dark theme). This makes it easy to theme the treemap labels for light and dark modes.
 
 ## Component Props
 

@@ -59,6 +59,9 @@ export interface TreemapConfigInterface<Datum> extends ComponentConfigInterface 
 
   /** Flag for showing cursor:pointer to indicate leaf tiles are clickable. Default: `undefined` */
   showTileClickAffordance?: boolean;
+
+  lightnessVariationAmount?: number;
+  minTileSizeForLabel?: number;
 }
 
 export const TreemapDefaultConfig: TreemapConfigInterface<unknown> = {
@@ -80,4 +83,6 @@ export const TreemapDefaultConfig: TreemapConfigInterface<unknown> = {
   tileLabelMediumFontSize: 12,
   tileLabelLargeFontSize: 22,
   showTileClickAffordance: false,
+  lightnessVariationAmount: 0.08,
+  minTileSizeForLabel: 20,
 }
