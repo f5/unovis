@@ -56,6 +56,21 @@ export const xyContainerColorProps = (chartName='Line', n=11) => ({
   ],
 })
 
+export const xyContainerRangeProps = (chartName='Line', n=11) => ({
+  name: "XYContainer",
+  data: generateDataRecords(n),
+  showContext: "full",
+  xDomain: [0, 10],
+  yDomain: [0, 10],
+  height: 150,
+  components: [
+    { name: 'Axis', props: { type: 'x' }, key: 'xAxis'},
+    { name: 'Axis', props: { type: 'y' }, key: 'yAxis'},
+    { name: 'Plotband', props: { from: 6, to: 7, axis: 'x', color: 'rgba(245, 40, 145, 0.2)' }, key: 'plotBand'},
+        { name: 'Plotband', props: { from: 4, to: 7, axis: 'y', color: 'rgba(40, 200, 80, 0.2)' }, key: 'plotBand'}
+  ],
+})
+
 export const xyContainerLabelPosProps = (chartName='Line', n=11) => ({
   name: "XYContainer",
   data: generateDataRecords(n),
@@ -121,6 +136,19 @@ export const xyContainerLabelColorProps = (chartName='Line', n=11) => ({
   ],
 })
 
+export const xyContainerCSSVarProps = (chartName='Line', n=11) => ({
+  name: "XYContainer",
+  data: generateDataRecords(n),
+  showContext: "full",
+  height: 150,
+  components: [
+    component(chartName),
+    { name: 'Axis', props: { type: 'x' }, key: 'xAxis'},
+    { name: 'Axis', props: { type: 'y' }, key: 'yAxis'},
+    { name: 'Plotband', props: { from: 1, to: 5, axis: 'x', labelText: 'Label 🙂' }, key: 'plotBand'}
+  ],
+})
+
 _Plotband_ is used to highlight a particular region in charts along Y or X axis. It is compatible only with _XY container_.
 
 ## Basic configuration
@@ -165,6 +193,14 @@ The `from` and `to` properties define the start and end coordinates of the plotb
 * If either is null or undefined, the plotband is skipped.
 
 Default:`0` for both
+
+<XYWrapper {...xyContainerRangeProps()} showContext="container"/>
+
+:::note
+
+The specified plotband range should be included in the corresponding axis domain.
+
+:::
 
 ## Labeling
 
@@ -229,6 +265,34 @@ To customize the label’s appearance, use the `labelColor` property. This accep
 If omitted, the label inherits the default text color for the _plotband_ context.
 
 <XYWrapper {...xyContainerLabelColorProps()} showContext="container"/>
+
+## CSS Variables
+The _Plotband_ component supports additional styling via CSS variables that you can define for your visualization container. For example:
+
+```css title="styles.css"
+.custom-plotband {
+  --vis-plotband-color: rgba(255, 174, 0, 0.25);
+  --vis-plotband-label-font-size: 20px;
+  --vis-plotband-label-color: #ff6600;
+}
+```
+
+<XYWrapper {...xyContainerCSSVarProps()} className="custom-plotband" showContext="container"/>
+
+<details open>
+  <summary>Supported CSS variables and their default values</summary>
+
+<CodeBlock language="css">
+  {`--vis-plotband-color: rgba(255, 255, 90, 0.2);
+  --vis-plotband-label-font-size: 12px;
+  --vis-plotband-label-color: #000;
+
+/* Dark Theme */
+  --vis-dark-plotband-color: rgba(220, 220, 90, 0.2);
+  --vis-dark-plotband-label-color: #e5e9f7;`}
+</CodeBlock>
+
+</details>
 
 ## Component Props
 <PropsTable name='VisPlotband'></PropsTable>
