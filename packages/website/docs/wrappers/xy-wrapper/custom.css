@@ -47,6 +47,12 @@
   --vis-tooltip-text-color: #fefefe;
 }
 
+.custom-plotband {
+  --vis-plotband-color: rgba(255, 174, 0, 0.25);
+  --vis-plotband-label-font-size: 20px;
+  --vis-plotband-label-color: #ff6600;
+}
+
 .timeline-empty-data {
   --vis-timeline-line-stroke-color: none;
 }
