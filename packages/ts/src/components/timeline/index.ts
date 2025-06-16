@@ -125,7 +125,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
   get bleed (): Spacing {
     const { config, datamodel: { data } } = this
     const rowLabels = this._getRowLabels(data)
-    const rowHeight = config.rowHeight || (this._height / rowLabels.length)
+    const rowHeight = config.rowHeight || (this._height / (rowLabels.length || 1))
     const hasIcons = rowLabels.some(l => l.iconHref)
     const maxIconSize = max(rowLabels.map(l => l.iconSize || 0))
 
@@ -206,7 +206,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
     const yHeight = Math.abs(yRange[1] - yRange[0])
     const rowLabels = this._getRowLabels(data)
     const numRowLabels = rowLabels.length
-    const rowHeight = config.rowHeight || (yHeight / numRowLabels)
+    const rowHeight = config.rowHeight || (yHeight / (numRowLabels || 1))
 
     const yOrdinalScale = scaleOrdinal<string, number>()
       .range(arrayOfIndices(numRowLabels))
@@ -417,8 +417,7 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
       .remove()
 
     // Scroll Bar
-    const contentBBox = this._rowsGroup.node().getBBox() // We determine content size using the rects group because lines are animated
-    const absoluteContentHeight = contentBBox.height
+    const absoluteContentHeight = recordTypes.length * rowHeight
     this._scrollbarHeight = yHeight * yHeight / absoluteContentHeight || 0
     this._maxScroll = Math.max(absoluteContentHeight - yHeight, 0)
 
