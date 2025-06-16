@@ -9,6 +9,7 @@ export const UNOVIS_FONT_WH_RATIO_DEFAULT: number = globalThis?.UNOVIS_FONT_W2H_
 export const UNOVIS_TEXT_SEPARATOR_DEFAULT: string[] = globalThis?.UNOVIS_TEXT_SEPARATOR_DEFAULT || [' ', '-', '.', ',']
 export const UNOVIS_TEXT_HYPHEN_CHARACTER_DEFAULT: string = globalThis?.UNOVIS_TEXT_HYPHEN_CHARACTER_DEFAULT || '-'
 export const UNOVIS_TEXT_DEFAULT: UnovisText = globalThis?.UNOVIS_TEXT_DEFAULT || {
+  // If you change these defaults, don't forget to update the values in the `UnovisText` type in `types/text.ts`
   text: '',
   fontSize: 12,
   fontFamily: 'var(--vis-font-family)',
