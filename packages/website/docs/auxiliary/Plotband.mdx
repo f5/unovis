@@ -12,142 +12,115 @@ export const component = (name, props, override = {}) => ({
   override
 });
 
+export const axisComponents = [
+  { name: 'Axis', props: { type: 'x' }, key: 'xAxis' },
+  { name: 'Axis', props: { type: 'y' }, key: 'yAxis' },
+]
+
+export const createXYContainer = ({
+  chartName = 'Line',
+  n = 11,
+  showContext = 'full',
+  height = 150,
+  xDomain,
+  yDomain,
+  customComponents = [],
+}) => ({
+  name: 'XYContainer',
+  data: generateDataRecords(n),
+  showContext,
+  height,
+  ...(xDomain && { xDomain }),
+  ...(yDomain && { yDomain }),
+  components: [component(chartName), ...axisComponents, ...customComponents],
+})
+
 export const PlotbandProps = () => ({
   name: "Plotband",
   containerName: 'XYContainer',
 });
 
-export const xyContainerProps = (chartName='Line', n=11) => ({
-  name: "XYContainer",
-  data: generateDataRecords(n),
-  showContext: "full",
-  height: 150,
-  components: [
-    component(chartName),
-    { name: 'Axis', props: { type: 'x' }, key: 'xAxis'},
-    { name: 'Axis', props: { type: 'y' }, key: 'yAxis'},
-    { name: 'Plotband', props: { from: 1, to: 5, axis: 'x' }, key: 'plotBand'}
-  ],
+export const xyContainerProps = (chartName='Line', n=11) => createXYContainer({
+  chartName,
+  n,
+  customComponents: [
+    { name: 'Plotband', props: { from: 1, to: 5, axis: 'x' }, key: 'plotBand' },
+  ]
 })
 
-export const xyContainerHorizontalProps = (chartName='Line', n=11) => ({
-  name: "XYContainer",
-  data: generateDataRecords(n),
-  showContext: "full",
-  height: 150,
-  components: [
-    component(chartName),
-    { name: 'Axis', props: { type: 'x' }, key: 'xAxis'},
-    { name: 'Axis', props: { type: 'y' }, key: 'yAxis'},
+export const xyContainerHorizontalProps = (chartName='Line', n=11) => createXYContainer({
+  chartName,
+  n,
+  customComponents: [
     { name: 'Plotband', props: { from: 6, to: 7 }, key: 'plotBand'}
-  ],
+  ]
 })
 
-export const xyContainerColorProps = (chartName='Line', n=11) => ({
-  name: "XYContainer",
-  data: generateDataRecords(n),
-  showContext: "full",
-  height: 150,
-  components: [
-    component(chartName),
-    { name: 'Axis', props: { type: 'x' }, key: 'xAxis'},
-    { name: 'Axis', props: { type: 'y' }, key: 'yAxis'},
+export const xyContainerColorProps = (chartName='Line', n=11) => createXYContainer({
+  chartName,
+  n,
+  customComponents: [
     { name: 'Plotband', props: { from: 6, to: 7, axis: 'x', color: 'rgba(245, 40, 145, 0.2)' }, key: 'plotBand'}
-  ],
+  ]
 })
 
-export const xyContainerRangeProps = (chartName='Line', n=11) => ({
-  name: "XYContainer",
-  data: generateDataRecords(n),
-  showContext: "full",
-  xDomain: [0, 10],
-  yDomain: [0, 10],
-  height: 150,
-  components: [
-    { name: 'Axis', props: { type: 'x' }, key: 'xAxis'},
-    { name: 'Axis', props: { type: 'y' }, key: 'yAxis'},
+export const xyContainerRangeProps = (chartName, n=11) => createXYContainer({
+  chartName,
+  n,
+  customComponents: [
     { name: 'Plotband', props: { from: 6, to: 7, axis: 'x', color: 'rgba(245, 40, 145, 0.2)' }, key: 'plotBand'},
-        { name: 'Plotband', props: { from: 4, to: 7, axis: 'y', color: 'rgba(40, 200, 80, 0.2)' }, key: 'plotBand'}
-  ],
+    { name: 'Plotband', props: { from: 4, to: 7, axis: 'y', color: 'rgba(40, 200, 80, 0.2)' }, key: 'plotBand'}
+  ]
 })
 
-export const xyContainerLabelPosProps = (chartName='Line', n=11) => ({
-  name: "XYContainer",
-  data: generateDataRecords(n),
-  showContext: "full",
-  height: 150,
-  components: [
-    component(chartName),
-    { name: 'Axis', props: { type: 'x' }, key: 'xAxis'},
-    { name: 'Axis', props: { type: 'y' }, key: 'yAxis'},
+export const xyContainerLabelPosProps = (chartName='Line', n=11) => createXYContainer({
+  chartName,
+  n,
+  customComponents: [
     { name: 'Plotband', props: { from: 6, to: 7, axis: 'x', labelText: 'Label', labelPosition: 'top-left-inside' }, key: 'plotBand'}
-  ],
+  ]
 })
 
-export const xyContainerLabelOrientProps = (chartName='Line', n=11) => ({
-  name: "XYContainer",
-  data: generateDataRecords(n),
-  showContext: "full",
-  height: 150,
-  components: [
-    component(chartName),
-    { name: 'Axis', props: { type: 'x' }, key: 'xAxis'},
-    { name: 'Axis', props: { type: 'y' }, key: 'yAxis'},
+export const xyContainerLabelOrientProps = (chartName='Line', n=11) => createXYContainer({
+  chartName,
+  n,
+  customComponents: [
     { name: 'Plotband', props: { from: 6, to: 7, axis: 'x', labelText: 'Label', labelOrientation: 'vertical' }, key: 'plotBand'}
-  ],
+  ]
 })
 
-export const xyContainerLabelOffsetProps = (chartName='Line', n=11) => ({
-  name: "XYContainer",
-  data: generateDataRecords(n),
-  showContext: "full",
-  height: 150,
-  components: [
-    component(chartName),
-    { name: 'Axis', props: { type: 'x' }, key: 'xAxis'},
-    { name: 'Axis', props: { type: 'y' }, key: 'yAxis'},
+export const xyContainerLabelOffsetProps = (chartName='Line', n=11) => createXYContainer({
+  chartName,
+  n,
+  customComponents: [
     { name: 'Plotband', props: { from: 6, to: 7, axis: 'x', labelText: 'Label', labelOffsetX: 50, labelOffsetY: 30 }, key: 'plotBand'}
-  ],
+  ]
 })
 
-export const xyContainerLabelFontSizeProps = (chartName='Line', n=11) => ({
-  name: "XYContainer",
-  data: generateDataRecords(n),
-  showContext: "full",
-  height: 150,
-  components: [
-    component(chartName),
-    { name: 'Axis', props: { type: 'x' }, key: 'xAxis'},
-    { name: 'Axis', props: { type: 'y' }, key: 'yAxis'},
+export const xyContainerLabelFontSizeProps = (chartName='Line', n=11) => createXYContainer({
+  chartName,
+  n,
+  customComponents: [
     { name: 'Plotband', props: { from: 6, to: 7, axis: 'x', labelText: 'Label', labelSize: 26 }, key: 'plotBand'}
-  ],
+  ]
 })
 
-export const xyContainerLabelColorProps = (chartName='Line', n=11) => ({
-  name: "XYContainer",
-  data: generateDataRecords(n),
-  showContext: "full",
-  height: 150,
-  components: [
-    component(chartName),
-    { name: 'Axis', props: { type: 'x' }, key: 'xAxis'},
-    { name: 'Axis', props: { type: 'y' }, key: 'yAxis'},
+export const xyContainerLabelColorProps = (chartName='Line', n=11) => createXYContainer({
+  chartName,
+  n,
+  customComponents: [
     { name: 'Plotband', props: { from: 6, to: 7, axis: 'x', labelText: 'Label', labelColor: '#ff8400' }, key: 'plotBand'}
-  ],
+  ]
 })
 
-export const xyContainerCSSVarProps = (chartName='Line', n=11) => ({
-  name: "XYContainer",
-  data: generateDataRecords(n),
-  showContext: "full",
-  height: 150,
-  components: [
-    component(chartName),
-    { name: 'Axis', props: { type: 'x' }, key: 'xAxis'},
-    { name: 'Axis', props: { type: 'y' }, key: 'yAxis'},
+export const xyContainerCSSVarProps = (chartName='Line', n=11) => createXYContainer({
+  chartName,
+  n,
+  customComponents: [
     { name: 'Plotband', props: { from: 1, to: 5, axis: 'x', labelText: 'Label 🙂' }, key: 'plotBand'}
-  ],
+  ]
 })
+
 
 _Plotband_ is used to highlight a particular region in charts along Y or X axis. It is compatible only with _XY container_.
 
