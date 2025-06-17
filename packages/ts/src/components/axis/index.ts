@@ -238,7 +238,12 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     // Interrupting all active transitions first to prevent them from being stuck.
     // Somehow we see it happening in Angular apps.
     selection.selectAll('*').interrupt()
-    smartTransition(selection, duration).call(axisGen)
+    const transition = smartTransition(selection, duration).call(axisGen)
+
+    // Resolving tick label overlap after the animation is over
+    transition.on('end', () => {
+      this._resolveTickLabelOverlap(selection)
+    })
 
     const ticks = selection.selectAll<SVGGElement, number | Date>('g.tick')
 
