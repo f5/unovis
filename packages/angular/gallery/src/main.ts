@@ -50,8 +50,7 @@ import { CrosshairStackedBarModule } from '@unovis/shared/examples/crosshair-sta
 import { BrushGroupedBarModule } from '@unovis/shared/examples/brush-grouped-bar/brush-grouped-bar.module'
 import { FreeBrushScattersModule } from '@unovis/shared/examples/free-brush-scatters/free-brush-scatters.module'
 import { BaselineAreaChartModule } from '@unovis/shared/examples/baseline-area-chart/baseline-area-chart.module'
-import { BasicPlotbandModule } from '@unovis/shared/examples/basic-plotband/basic-plotband.module'
-import { PlotlineModule } from '@unovis/shared/examples/base-plotline/baseline-plotline.module'
+import { PlotbandPlotlineModule } from '@unovis/shared/examples/plotband-plotline/plotband-plotline.module'
 
 @Component({
   selector: 'app-component',
@@ -101,7 +100,7 @@ import { PlotlineModule } from '@unovis/shared/examples/base-plotline/baseline-p
     <crosshair-stacked-bar></crosshair-stacked-bar>
     <brush-grouped-bar></brush-grouped-bar>
     <free-brush-scatters ></free-brush-scatters>
-    <basic-plotline ></basic-plotline>
+    <plotband-plotline ></plotband-plotline>
   `,
 })
 export class AppComponent {
@@ -117,7 +116,7 @@ export class AppComponent {
     TopojsonMapModule, StackedBarChartModule, BrushGroupedBarModule, BasicScatterPlotModule, SizedScatterPlotModule, FreeBrushScattersModule, NonStackedAreaChartModule,
     BasicTimelineModule, BasicSankeyModule, ExpandableSankeyModule, BasicGraphModule, LeafletFlowMapModule,
     ForceLayoutGraphModule, AdvancedLeafletMapModule, StackedAreaModule, ParallelLayoutGraphModule, ElkLayeredGraphModule,
-    DataGapLineChartModule, CrosshairStackedBarModule, BaselineAreaChartModule, StepAreaChartModule, SunburstChartModule, BasicPlotbandModule, PlotlineModule
+    DataGapLineChartModule, CrosshairStackedBarModule, BaselineAreaChartModule, StepAreaChartModule, SunburstChartModule, PlotbandPlotlineModule,
   ],
   bootstrap: [AppComponent],
   providers: [BrowserModule],
