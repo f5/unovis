@@ -1,0 +1,301 @@
+import { PropsTable } from '@site/src/components/PropsTable'
+import { data, generateDataRecords } from '../utils/data'
+import { XYWrapper, XYWrapperWithInput, DynamicXYWrapper } from '../wrappers/xy-wrapper'
+
+export const plotlineProps = (n=10, staticValue = false) => ({
+  name: "Plotline",
+  height: 150,
+  showAxes: true,
+  components: [{
+      name: 'Line',
+      props: {
+        x: d => d.x,
+        y: d => d.y,
+      },
+      key: "components",
+    },
+  ],
+  containerProps: {
+    yDomain: [0]
+  },
+  data: generateDataRecords(30),
+  ...staticValue === false ? { value: 5 } : {}
+})
+
+A _Plotline_ is used to highlight a specific region along the X or Y axis in a chart. It is only compatible with the _XY container_.
+
+## Basic configuration
+
+The basic configuration of a Plotline includes specifying the axis (x or y) and the exact value where the line should appear. You can customize its appearance using properties like `color`, `lineWidth`, and `lineStyle`, and optionally add a `label` for annotation. These settings allow you to visually mark thresholds, targets, or reference points in your chart.
+
+<XYWrapper {...plotlineProps(false)} showContext="full"/>
+
+## Orientation
+
+The `axis` property controls the orientation of the plotline by specifying which axis it belongs to:
+
+*	axis: `x` draws a vertical plotline, crossing the chart along the y-axis — typically used to mark a specific x-value (e.g., a date or event marker).
+
+*	axis: `y` (default) draws a horizontal plotline, crossing the chart along the x-axis — often used to indicate thresholds or target values.
+
+Set this property based on which dimension the plotline should emphasize.
+
+Default: `y` (horizontal)
+
+<XYWrapperWithInput
+  {...plotlineProps()}
+  inputType="select"
+  property="axis"
+  defaultValue="y"
+  options={["y", "x"]}
+/>
+
+## Color
+
+The `color` property sets the stroke color of the `plotline`.
+
+You can provide any valid CSS color value, such as:
+* Named colors (e.g., "red", "blue")
+* Hex codes (e.g., "#ffcc00")
+* RGB / RGBA (e.g., "rgba(255, 0, 0, 0.8)")
+* CSS variables (e.g., `var(--vis-plotline-color)`)
+
+Use this to visually emphasize the line or match it with your chart’s color scheme.
+
+Default: `var(--vis-plotline-color)`
+
+<XYWrapperWithInput
+  {...plotlineProps()}
+  inputType="color"
+  property="color"
+  defaultValue="#ff8400"
+/>
+
+## Value
+
+The `value` property defines the exact coordinate along the specified axis where the `plotline` should be drawn.
+* It accepts a single number.
+* The line is rendered perpendicular to the axis.
+* If value is null or undefined, the plotline is skipped.
+
+Use this to highlight a specific threshold, target, or reference value in your chart.
+
+Default: `0`
+
+<XYWrapperWithInput
+  {...plotlineProps(undefined, true)}
+  inputType="range"
+  property="value"
+  inputProps={{ min: 0, max: 10, step: 0.5 }}
+  defaultValue={5}
+/>
+
+:::note
+
+The specified `value` for the plotline should lie within the domain of the corresponding axis.
+
+:::
+
+## Line Width
+
+The `lineWidth` property sets the thickness of the plotline in pixels.
+* Accepts any positive number (e.g., 1, 2, 3.5).
+* Use this to emphasize or de-emphasize the plotline visually.
+
+You can also define the width globally using the CSS variable `--vis-plotline-width`.
+
+Default: 2
+
+<XYWrapperWithInput
+  {...plotlineProps()}
+  inputType="range"
+  property="lineWidth"
+  inputProps={{ min: 0, max: 5, step: 1 }}
+  defaultValue={2}
+/>
+
+## Line style
+
+The `lineStyle` property controls the visual appearance of the plotline’s stroke. You can choose from a set of named presets or define a custom dash pattern.
+
+Options:
+* Named presets (from `PlotlineLineStylePresets` enum):
+  * solid
+	* dash
+	* dashDot
+	* dot
+	* longDash
+	* longDashDot
+	* longDashDotDot
+	* shortDash
+	* shortDashDot
+	* shortDashDotDot
+	* shortDot
+* Custom pattern:
+  * Provide an array of numbers representing the SVG stroke-dasharray. Example: [4, 2] for a dashed line with 4px dash and 2px gap.
+
+You can also style it globally using the CSS variable `--vis-plotline-dasharray`.
+
+Default: `solid`
+
+<XYWrapperWithInput
+  {...plotlineProps()}
+  inputType="select"
+  property="lineStyle"
+  options={[
+    "solid",
+  	"dash",
+  	"dashDot",
+  	"dot",
+  	"longDash",
+  	"longDashDot",
+  	"longDashDotDot",
+  	"shortDash",
+  	"shortDashDot",
+  	"shortDashDotDot",
+  	"shortDot"
+  ]}
+  defaultValue="solid"
+/>
+
+## Labeling
+
+_Plotline_ supports an optional label to annotate the highlighted line. The labeling system is flexible and includes controls for positioning, orientation, offset, size, and color.
+
+### Label Position
+
+The `labelPosition` property determines where the label is rendered in relation to the plotline. It supports placement on all four sides of the chart area.
+
+Available values:
+* `top-left`
+* `top`
+* `top-right`
+* `right`
+* `bottom-right`
+* `bottom`
+* `bottom-left`
+* `left`
+
+Default: `top-left`
+
+<XYWrapperWithInput
+  {...plotlineProps() }
+  labelText="Nice label 🙂"
+  inputType="select"
+  property="labelPosition"
+  options={[
+    "top-left",
+    "top",
+    "top-right",
+    "right",
+    "bottom-right",
+    "bottom",
+    "bottom-left",
+    "left"
+  ]}
+  defaultValue="top-left"
+/>
+
+### Label Orientation
+
+The `labelOrientation` property sets the text layout direction. Use it to control how the label is rotated or aligned.
+
+Options:
+* `horizontal` (default)
+* `vertical`
+
+<XYWrapperWithInput
+  {...plotlineProps() }
+  labelText="Nice label 🙂"
+  axis="x"
+  inputType="select"
+  property="labelOrientation"
+  options={[
+    "horizontal",
+    "vertical"
+  ]}
+  defaultValue="horizontal"
+/>
+
+### Label Offset
+
+You can fine-tune the label’s position using the `labelOffsetX` and `labelOffsetY` properties. These accept pixel values and apply additional horizontal and vertical shifts relative to the defined label position.
+
+Examples:
+* A positive `labelOffsetX` moves the label to the right.
+* A negative `labelOffsetY` moves the label upward.
+
+Use these offsets to avoid overlap with the plotline or nearby chart elements, or to improve visual alignment.
+
+Default: `14` for both `labelOffsetX` and `labelOffsetY`
+
+<XYWrapperWithInput
+  {...plotlineProps()}
+  inputType="range"
+  property="labelOffsetY"
+  labelText="Sad label 🙃"
+  inputProps={{ min: 0, max: 26, step: 1 }}
+  defaultValue={16}
+/>
+
+### Label Font Size
+
+The `labelSize` property controls the font size of the label, specified in pixels.
+
+By default, it inherits from the CSS variable `--vis-plotline-label-font-size`, which typically resolves to `12px`. You can override this by providing a numeric value—for example, `14` sets the font size to `14px`.
+
+Use this setting to ensure label visibility or to match your chart’s typographic scale.
+
+Default: `12`
+
+<XYWrapperWithInput
+  {...plotlineProps()}
+  inputType="range"
+  property="labelSize"
+  labelText="Small label 🤏"
+  inputProps={{ min: 5, max: 26, step: 1 }}
+  defaultValue={16}
+/>
+
+### Label Color
+
+To customize the label’s appearance, use the `labelColor` property. It accepts any valid CSS color string, including:
+* Named colors – e.g., `red`, `black`
+* Hex values – e.g., `#333333`, `#FF8800`
+* CSS variables – e.g., `var(--vis-text-color)`
+
+If omitted, the label inherits the default text color defined for the plotline context, which may vary depending on light or dark mode styles.
+
+Default: `#000`
+
+<XYWrapperWithInput
+  {...plotlineProps()}
+  inputType="color"
+  property="labelColor"
+  labelText="Party label 🥳"
+  inputProps={{ min: 5, max: 26, step: 1 }}
+  defaultValue="#cf3312"
+/>
+
+## CSS Variables
+
+The _Plotline_ component supports additional styling via CSS variables that you can define for your visualization container. For example:
+
+```css title="styles.css"
+.custom-plotline {
+  --vis-plotline-color: rgb(226, 32, 58);
+  --vis-plotline-width: 2;
+  --vis-plotline-label-font-size: 12px;
+  --vis-plotline-label-color: #000;
+}
+```
+
+<XYWrapper
+  {...plotlineProps()}
+  className="custom-plotline"
+  showContext="container"
+  labelText="Fancy label 😎"
+/>
+
+## Component Props
+<PropsTable name='VisPlotline'></PropsTable>

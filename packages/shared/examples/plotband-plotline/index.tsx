@@ -2,7 +2,7 @@
 import React from 'react'
 import type { Example } from '../types'
 
-const pathname = 'basic-plotband'
+const pathname = 'plotband-plotline'
 const example: Example = {
   component: () => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -10,8 +10,8 @@ const example: Example = {
     return <Component />
   },
   pathname,
-  title: 'Basic Plotband',
-  description: '',
+  title: 'Plot bands and plot lines',
+  description: 'Use of plot bands and plot lines to highlight ranges and specific values on a chart',
   codeReact: require(`!!raw-loader!./${pathname}.tsx`).default,
   codeSolid: require(`!!raw-loader!./${pathname}-solid.tsx`).default,
   codeTs: require(`!!raw-loader!./${pathname}.ts`).default,
