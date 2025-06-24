@@ -232,7 +232,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
         : this._shouldRenderMinMaxTicksOnly()
           ? axisScale.domain()
           : axisScale.ticks(this._getNumTicks())
-
+    const tickCount = tickValues.length
     axisGen.tickValues(tickValues)
 
     // Interrupting all active transitions first to prevent them from being stuck.
@@ -266,7 +266,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     tickText.each((value: number | Date, i: number, elements: ArrayLike<SVGTextElement>) => {
       let text = config.tickFormat?.(value, i, tickValues) ?? `${value}`
       const textElement = elements[i] as SVGTextElement
-      const textMaxWidth = config.tickTextWidth || (config.type === AxisType.X ? this._containerWidth / (ticks.size() + 1) : this._containerWidth / 5)
+      const textMaxWidth = config.tickTextWidth || (config.type === AxisType.X ? this._containerWidth / (tickCount + 1) : this._containerWidth / 5)
       const styleDeclaration = getComputedStyle(textElement)
       const fontSize = Number.parseFloat(styleDeclaration.fontSize)
       const fontFamily = styleDeclaration.fontFamily
