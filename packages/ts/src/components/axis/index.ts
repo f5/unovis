@@ -259,6 +259,10 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
       .classed(s.tickLabelHideable, Boolean(config.tickTextHideOverlapping))
       .style('fill', config.tickTextColor) as Selection<SVGTextElement, number, SVGGElement, unknown> | Selection<SVGTextElement, Date, SVGGElement, unknown>
 
+    // Marking exiting elements
+    selection.selectAll<SVGTextElement, number | Date>('g.tick > text')
+      .filter(tickValue => !tickValues.some((t: number | Date) => isEqual(tickValue, t)))
+      .classed(s.tickTextExiting, true)
 
     // We interrupt the transition on tick's <text> to make it 'wrappable'
     tickText.nodes().forEach(node => interrupt(node))
@@ -301,7 +305,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
 
   private _resolveTickLabelOverlap (selection = this.axisGroup): void {
     const { config } = this
-    const tickTextSelection = selection.selectAll<SVGTextElement, number | Date>('g.tick > text')
+    const tickTextSelection = selection.selectAll<SVGTextElement, number | Date>(`g.tick > text:not(.${s.tickTextExiting})`)
 
     if (!config.tickTextHideOverlapping) {
       tickTextSelection.style('opacity', null)
