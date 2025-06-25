@@ -1,0 +1,9 @@
+<vis-xy-container [height]="600">
+    <vis-line [data]="data" [x]="x" [y]="y"></vis-line>
+    <vis-axis type="x"></vis-axis>
+    <vis-axis type="y"></vis-axis>
+    <vis-plotband [from]="4" [to]="6" labelText="Plot band on x-axis" axis="x" labelPosition="top-inside"></vis-plotband>
+    <vis-plotband [from]="1" [to]="3" color="rgba(34, 99, 182, 0.3)" labelText='Plot band on y-axis' labelPosition="left-inside"></vis-plotband>
+    <vis-plotline [value]="6" color="rgba(7, 114, 21, 1)" labelText="Plot line on y-axis" labelPosition="top-left"></vis-plotline>
+    <vis-plotline [value]="10" color="rgba(220, 114, 0, 1)" axis="x" labelOrientation="vertical" labelText="Plot line on x-axis"></vis-plotline>
+</vis-xy-container>
