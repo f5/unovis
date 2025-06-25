@@ -5,7 +5,7 @@ name                          license period  license type  installed version  a
 @tsconfig/svelte              perpetual       MIT           2.0.1              n/a
 @zerollup/ts-transform-paths  perpetual       MIT           1.7.18             Stefan Zerkalica zerkalica@gmail.com
 eslint-plugin-svelte          perpetual       MIT           2.10.0             Yosuke Ota (https://github.com/ota-meshi)
-rollup                        perpetual       MIT           2.79.2             Rich Harris
+rollup                        perpetual       MIT           2.75.5             Rich Harris
 rollup-plugin-copy            perpetual       MIT           3.5.0              Vlad Shcherbin <vlad.shcherbin@gmail.com>
 rollup-plugin-dev             perpetual       MIT           2.0.4              Dave Honneffer <pearofducks@gmail.com>
 rollup-plugin-svelte          perpetual       MIT           7.1.6              Rich Harris
