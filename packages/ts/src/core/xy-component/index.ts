@@ -81,10 +81,12 @@ export class XYComponentCore<
     return getExtent(datamodel.data, config.x)
   }
 
+  /** Some components override this method to provide custom data extent calculation */
   getYDataExtent (scaleByVisibleData: boolean): number[] {
     const { config, datamodel } = this
 
-    const data = scaleByVisibleData ? filterDataByRange(datamodel.data, this.xScale.domain() as [number, number], config.x) : datamodel.data
+    const xDomain = this.xScale.domain() as [number, number]
+    const data = scaleByVisibleData ? filterDataByRange(datamodel.data, xDomain, config.x, true) : datamodel.data
     const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
     return getExtent(data, ...yAccessors)
   }

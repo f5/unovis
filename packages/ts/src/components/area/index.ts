@@ -136,7 +136,8 @@ export class Area<Datum> extends XYComponentCore<Datum, AreaConfigInterface<Datu
     const { config, datamodel } = this
     const yAccessors = (isArray(config.y) ? config.y : [config.y]) as NumericAccessor<Datum>[]
 
-    const data = scaleByVisibleData ? filterDataByRange(datamodel.data, this.xScale.domain() as [number, number], config.x) : datamodel.data
+    const xDomain = this.xScale.domain() as [number, number]
+    const data = scaleByVisibleData ? filterDataByRange(datamodel.data, xDomain, config.x, true) : datamodel.data
     return getStackedExtent(data, config.baseline, ...yAccessors)
   }
 
