@@ -225,7 +225,7 @@ export function estimateStringPixelLength (
  * @param {(string | number)} [fontSize] - The font size of the string.
  * @returns {number} The precise length of the string in pixels.
  */
-export function getPreciseStringLengthPx (str: string, fontFamily?: string, fontSize?: string | number): number {
+export function getPreciseStringLengthPx (str: string, fontFamily: string, fontSize: string | number): number {
   const svgNS = 'http://www.w3.org/2000/svg'
   const svg = document.createElementNS(svgNS, 'svg')
   const text = document.createElementNS(svgNS, 'text')
@@ -300,6 +300,9 @@ function breakTextIntoLines (
 ): string[] {
   const text = `${textBlock.text}`
   if (!text) return []
+  const fontSize = textBlock.fontSize ?? UNOVIS_TEXT_DEFAULT.fontSize
+  const fontFamily = textBlock.fontFamily ?? UNOVIS_TEXT_DEFAULT.fontFamily
+  const fontWidthToHeightRatio: number | undefined = textBlock.fontWidthToHeightRatio ?? UNOVIS_TEXT_DEFAULT.fontWidthToHeightRatio
   const separators = Array.isArray(separator) ? separator : [separator]
 
   const splitByNewLine = text.split('\n')
@@ -311,8 +314,8 @@ function breakTextIntoLines (
     let line = ''
     for (let i = 0; i < words.length; i += 1) {
       const textLengthPx = fastMode
-        ? estimateStringPixelLength(line + words[i], textBlock.fontSize, textBlock.fontWidthToHeightRatio)
-        : getPreciseStringLengthPx(line + words[i], textBlock.fontFamily, textBlock.fontSize)
+        ? estimateStringPixelLength(line + words[i], fontSize, fontWidthToHeightRatio)
+        : getPreciseStringLengthPx(line + words[i], fontFamily, fontSize)
 
       if (textLengthPx < width || i === 0) {
         line += words[i]
@@ -326,16 +329,16 @@ function breakTextIntoLines (
       if (wordBreak) {
         while (line.trim().length > minCharactersOnLine) {
           const subLineLengthPx = fastMode
-            ? estimateStringPixelLength(line, textBlock.fontSize, textBlock.fontWidthToHeightRatio)
-            : getPreciseStringLengthPx(line, textBlock.fontFamily, textBlock.fontSize)
+            ? estimateStringPixelLength(line, fontSize, fontWidthToHeightRatio)
+            : getPreciseStringLengthPx(line, fontFamily, fontSize)
 
           if (subLineLengthPx > width) {
             let breakIndex = (line.trim()).length - minCharactersOnLine // Place at least `minCharactersOnLine` characters onto the next line
             while (breakIndex > 0) {
               const subLine = `${line.substring(0, breakIndex)}${UNOVIS_TEXT_HYPHEN_CHARACTER_DEFAULT}` // Use hyphen when force breaking words
               const subLinePx = fastMode
-                ? estimateStringPixelLength(subLine, textBlock.fontSize, textBlock.fontWidthToHeightRatio)
-                : getPreciseStringLengthPx(subLine, textBlock.fontFamily, textBlock.fontSize)
+                ? estimateStringPixelLength(subLine, fontSize, fontWidthToHeightRatio)
+                : getPreciseStringLengthPx(subLine, fontFamily, fontSize)
 
               // If the subline is less than the width, or just one character left, break the line
               if (subLinePx <= width || breakIndex === 1) {

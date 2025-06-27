@@ -24,19 +24,19 @@ export enum TextAlign {
 export type UnovisText = {
   // The text content to be displayed.
   text: string;
-  // The font size of the text in pixels.
-  fontSize: number;
+  // The font size of the text in pixels (optional). Default: `12`.
+  fontSize?: number;
   // The font family of the text (optional). Default: `'var(--vis-font-family)'`.
   fontFamily?: string;
-  // The font weight of the text (optional)`.
+  // The font weight of the text (optional).
   fontWeight?: number;
   // The color of the text (optional).
   color?: string;
-  // The line height scaling factor for the text (optional).
+  // The line height scaling factor for the text (optional). Default: `1.25`.
   lineHeight?: number;
-  // The top margin of the text block in pixels (optional).
+  // The top margin of the text block in pixels (optional). Default: `0`.
   marginTop?: number;
-  // The bottom margin of the text block in pixels (optional).
+  // The bottom margin of the text block in pixels (optional). Default: `0`.
   marginBottom?: number;
   // The font width-to-height ratio (optional).
   fontWidthToHeightRatio?: number;
@@ -75,4 +75,3 @@ export type UnovisTextOptions = {
 export type UnovisTextFrameOptions = UnovisTextOptions & {
   height?: number;
 }
-
