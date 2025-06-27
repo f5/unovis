@@ -3,7 +3,7 @@ import { SymbolType } from 'types/symbol'
 
 export interface BulletLegendItemInterface {
   name: string | number;
-  color?: string;
+  color?: string | Array<string>;
   className?: string;
   shape?: BulletShape;
   inactive?: boolean;
