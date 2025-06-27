@@ -67,7 +67,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
     super()
     if (config) this.config = { ...this.config, ...config }
 
-    this.g.style('opacity', this.show ? 1 : 1)
+    this.g.style('opacity', this.show ? 1 : 0)
     this.line = this.g.append('line')
       .attr('class', s.line)
   }
