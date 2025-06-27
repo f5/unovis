@@ -43,59 +43,85 @@ export function createBullets (
 }
 
 export function updateBullets (
-  container: Selection<SVGElement, BulletLegendItemInterface, HTMLElement, unknown>,
+  container: Selection<HTMLSpanElement, BulletLegendItemInterface, HTMLElement, unknown>,
   config: BulletLegendConfigInterface,
   colorAccessor: ColorAccessor<BulletLegendItemInterface>
 ): void {
   container.each((d, i, els) => {
+    const bulletContainer = select(els[i])
     const shape = getString(d, config.bulletShape, i) as BulletShape
-    const color = getColor(d, colorAccessor, i)
-    const width = BULLET_SIZE
-    const height = shape === BulletShape.Line ? BULLET_SIZE / 2.5 : BULLET_SIZE
-
-    const selection = select(els[i]).select('svg')
-      .attr('viewBox', `0 0 ${width} ${height}`)
-
-    const bulletPath = selection.select<SVGPathElement>('path')
-      .attr('stroke', color)
-
     const opacity = d.inactive ? 'var(--vis-legend-bullet-inactive-opacity)' : 1
-    if (shape === BulletShape.Line) {
-      bulletPath
-        .attr('d', `M0,${height / 2} L${width / 2},${height / 2} L${width},${height / 2}`)
-        .attr('transform', null)
-        .style('opacity', opacity)
-        .style('stroke-width', '3px')
-        .style('fill', null)
-        .style('fill-opacity', null)
-        .style('marker-start', 'none')
-        .style('marker-end', 'none')
+    const colors = d.colors ?? [getColor(d, colorAccessor, i)]
+
+    const svgs = bulletContainer.selectAll<SVGElement, string>('svg')
+      .data(colors)
+
+    const svgsEnter = svgs.enter().append('svg')
+      .attr('height', '100%')
+    svgsEnter.append('path')
+
+    const svgsMerged = svgs.merge(svgsEnter)
+
+    if (d.colors) {
+      bulletContainer.style('display', 'flex')
+      svgsMerged
+        .style('flex', '1')
+        .attr('width', null)
     } else {
-      const symbolGen = symbol()
-        .type(Symbol[shape])
-        .size(width * height * shapeScale[shape])
-
-      const scale = (width - 2) / width
-      let dy = height / 2
-      switch (shape) {
-        case BulletShape.Triangle:
-          dy += height / 8
-          break
-        case BulletShape.Star:
-          dy += height / 16
-          break
-        case BulletShape.Wye:
-          dy -= height / 16
-          break
-      }
-
-      bulletPath
-        .attr('d', symbolGen)
-        .attr('transform', `translate(${width / 2}, ${Math.round(dy)}) scale(${scale})`)
-        .style('stroke-width', '1px')
-        .style('opacity', null)
-        .style('fill', color)
-        .style('fill-opacity', opacity)
+      bulletContainer.style('display', null)
+      svgsMerged
+        .style('flex', null)
+        .attr('width', '100%')
     }
+    svgsMerged.each((color, j, svgNodes) => {
+      const svg = select(svgNodes[j])
+      const width = BULLET_SIZE
+      const height = shape === BulletShape.Line ? BULLET_SIZE / 2.5 : BULLET_SIZE
+
+      svg.attr('viewBox', `0 0 ${width} ${height}`)
+
+      const bulletPath = svg.select<SVGPathElement>('path')
+        .attr('stroke', color)
+
+      if (shape === BulletShape.Line) {
+        bulletPath
+          .attr('d', `M0,${height / 2} L${width / 2},${height / 2} L${width},${height / 2}`)
+          .attr('transform', null)
+          .style('opacity', opacity)
+          .style('stroke-width', '3px')
+          .style('fill', null)
+          .style('fill-opacity', null)
+          .style('marker-start', 'none')
+          .style('marker-end', 'none')
+      } else {
+        const symbolGen = symbol()
+          .type(Symbol[shape])
+          .size(width * height * shapeScale[shape])
+
+        const scale = (width - 2) / width
+        let dy = height / 2
+        switch (shape) {
+          case BulletShape.Triangle:
+            dy += height / 8
+            break
+          case BulletShape.Star:
+            dy += height / 16
+            break
+          case BulletShape.Wye:
+            dy -= height / 16
+            break
+        }
+
+        bulletPath
+          .attr('d', symbolGen)
+          .attr('transform', `translate(${width / 2}, ${Math.round(dy)}) scale(${scale})`)
+          .style('stroke-width', '1px')
+          .style('opacity', null)
+          .style('fill', color)
+          .style('fill-opacity', opacity)
+      }
+    })
+
+    svgs.exit().remove()
   })
 }

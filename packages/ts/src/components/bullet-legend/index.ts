@@ -65,10 +65,21 @@ export class BulletLegend {
       .attr('class', s.bullet)
       .call(createBullets)
 
-    legendItemsMerged.select<SVGElement>(`.${s.bullet}`)
-      .style('width', config.bulletSize)
+    legendItemsMerged.select<HTMLSpanElement>(`.${s.bullet}`)
       .style('height', config.bulletSize)
       .style('box-sizing', 'content-box')
+      .style('width', (d: BulletLegendItemInterface, i, els) => {
+        const bulletNode = select(els[i]).select<HTMLSpanElement>(`.${s.bullet}`).node()
+        if (!bulletNode) return null
+
+        const bulletSizeRaw = config.bulletSize ?? getComputedStyle(bulletNode).getPropertyValue('--vis-legend-bullet-size')
+        if (!bulletSizeRaw) return null
+
+        const numBullets = d.colors?.length ?? 1
+        const bulletSizeNum = parseFloat(bulletSizeRaw)
+        const bulletSizeUnit = bulletSizeRaw.match(/[^0-9.]+/)?.[0] || 'px'
+        return `${bulletSizeNum * numBullets}${bulletSizeUnit}`
+      })
       .call(updateBullets, this.config, this._colorAccessor)
 
     // Labels
