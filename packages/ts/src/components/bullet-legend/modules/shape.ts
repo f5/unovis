@@ -1,5 +1,6 @@
 import { Selection, select } from 'd3-selection'
 import { symbol } from 'd3-shape'
+import toPx from 'to-px'
 
 // Types
 import { ColorAccessor } from 'types/accessor'
@@ -7,7 +8,7 @@ import { Symbol, SymbolType } from 'types/symbol'
 
 // Utils
 import { getColor } from 'utils/color'
-import { getString } from 'utils/data'
+import { ensureArray, getString } from 'utils/data'
 
 // Constants
 import { PATTERN_SIZE_PX } from 'styles/patterns'
@@ -31,6 +32,11 @@ const shapeScale: Record<SymbolType, number> = {
   [BulletShape.Wye]: 5 / 11,
 }
 
+export function getBulletsTotalWidth (bulletSize: number, numBullets: number, spacing: number): number {
+  if (numBullets < 1) return 0
+  return bulletSize * numBullets + spacing * (numBullets - 1)
+}
+
 export function createBullets (
   container: Selection<HTMLSpanElement, BulletLegendItemInterface, HTMLElement, unknown>
 ): void {
@@ -49,53 +55,68 @@ export function updateBullets (
 ): void {
   container.each((d, i, els) => {
     const shape = getString(d, config.bulletShape, i) as BulletShape
-    const color = getColor(d, colorAccessor, i)
-    const width = BULLET_SIZE
+    const colors = ensureArray(d.color ?? getColor(d, colorAccessor, i))
+    const numBullets = colors.length
+    const bulletWidth = BULLET_SIZE
+    const defaultBulletSize = toPx(getComputedStyle(els[i]).getPropertyValue('--vis-legend-bullet-size'))
+    const spacing = config.bulletSpacing * (BULLET_SIZE / defaultBulletSize) // Scale spacing relative to bullet size
+    const width = getBulletsTotalWidth(bulletWidth, numBullets, spacing)
     const height = shape === BulletShape.Line ? BULLET_SIZE / 2.5 : BULLET_SIZE
 
     const selection = select(els[i]).select('svg')
       .attr('viewBox', `0 0 ${width} ${height}`)
 
-    const bulletPath = selection.select<SVGPathElement>('path')
-      .attr('stroke', color)
+    // Remove existing paths
+    selection.selectAll('path').remove()
 
     const opacity = d.inactive ? 'var(--vis-legend-bullet-inactive-opacity)' : 1
-    if (shape === BulletShape.Line) {
-      bulletPath
-        .attr('d', `M0,${height / 2} L${width / 2},${height / 2} L${width},${height / 2}`)
-        .attr('transform', null)
-        .style('opacity', opacity)
-        .style('stroke-width', '3px')
-        .style('fill', null)
-        .style('fill-opacity', null)
-        .style('marker-start', 'none')
-        .style('marker-end', 'none')
-    } else {
-      const symbolGen = symbol()
-        .type(Symbol[shape])
-        .size(width * height * shapeScale[shape])
 
-      const scale = (width - 2) / width
-      let dy = height / 2
-      switch (shape) {
-        case BulletShape.Triangle:
-          dy += height / 8
-          break
-        case BulletShape.Star:
-          dy += height / 16
-          break
-        case BulletShape.Wye:
-          dy -= height / 16
-          break
+    // Create a path for each color
+    colors.forEach((color, colorIndex) => {
+      const bulletPath = selection.append('path')
+
+      if (shape === BulletShape.Line) {
+        const x1 = colorIndex * (bulletWidth + spacing)
+        const x2 = x1 + bulletWidth
+        bulletPath
+          .attr('d', `M${x1},${height / 2} L${x2},${height / 2}`)
+          .attr('transform', null)
+          .style('opacity', opacity)
+          .style('stroke', color)
+          .style('stroke-width', '3px')
+          .style('fill', null)
+          .style('fill-opacity', null)
+          .style('marker-start', 'none')
+          .style('marker-end', 'none')
+      } else {
+        const symbolGen = symbol()
+          .type(Symbol[shape])
+          .size(bulletWidth * height * shapeScale[shape])
+
+        const scale = (bulletWidth - 2) / bulletWidth
+        let dy = height / 2
+        switch (shape) {
+          case BulletShape.Triangle:
+            dy += height / 8
+            break
+          case BulletShape.Star:
+            dy += height / 16
+            break
+          case BulletShape.Wye:
+            dy -= height / 16
+            break
+        }
+
+        const dx = colorIndex * (bulletWidth + spacing) + bulletWidth / 2
+        bulletPath
+          .attr('d', symbolGen)
+          .attr('transform', `translate(${dx}, ${Math.round(dy)}) scale(${scale})`)
+          .style('stroke', color)
+          .style('stroke-width', '1px')
+          .style('opacity', null)
+          .style('fill', color)
+          .style('fill-opacity', opacity)
       }
-
-      bulletPath
-        .attr('d', symbolGen)
-        .attr('transform', `translate(${width / 2}, ${Math.round(dy)}) scale(${scale})`)
-        .style('stroke-width', '1px')
-        .style('opacity', null)
-        .style('fill', color)
-        .style('fill-opacity', opacity)
-    }
+    })
   })
 }
