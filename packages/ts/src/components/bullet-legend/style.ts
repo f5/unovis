@@ -67,9 +67,10 @@ export const label = css`
 export const bullet = css`
   flex: 0 0 auto;
   label: legendItemBullet;
+  display: inline-block;
+  vertical-align: middle;
   margin-right: var(--vis-legend-bullet-label-spacing);
   height: var(--vis-legend-bullet-size);
-  width: var(--vis-legend-bullet-size);
 
   svg {
     display: block;
