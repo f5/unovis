@@ -44,6 +44,11 @@ export interface CrosshairConfigInterface<Datum> extends WithOptional<XYComponen
    * Default: `undefined`
   */
   getCircles?: (x: number | Date | Date, data: Datum[], yScale: ContinuousScale) => CrosshairCircle[];
+  /**
+   * If set, enables crosshair synchronization between charts with the same syncId.
+   * All charts with the same syncId will share crosshair position and events.
+   */
+  syncId?: string;
 }
 
 export const CrosshairDefaultConfig: CrosshairConfigInterface<unknown> = {
@@ -60,5 +65,6 @@ export const CrosshairDefaultConfig: CrosshairConfigInterface<unknown> = {
   color: undefined,
   strokeColor: undefined,
   strokeWidth: undefined,
+  syncId: undefined,
 }
 
