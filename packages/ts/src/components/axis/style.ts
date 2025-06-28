@@ -102,6 +102,10 @@ export const tick = css`
   }
 `
 
+export const tickTextExiting = css`
+  label: tick-text-exiting;
+`
+
 export const label = css`
   label: label;
   fill: var(--vis-axis-label-color);
