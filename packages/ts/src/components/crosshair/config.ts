@@ -44,6 +44,16 @@ export interface CrosshairConfigInterface<Datum> extends WithOptional<XYComponen
    * Default: `undefined`
   */
   getCircles?: (x: number | Date | Date, data: Datum[], yScale: ContinuousScale) => CrosshairCircle[];
+  /** X position in data space (not pixels) for synchronized crosshair. Default: `undefined` */
+  xPosition?: number | Date;
+  /** Enable synchronized crosshair across multiple charts. Default: `false` */
+  enableSync?: boolean;
+  /** Whether this chart is currently active (handling mouse events). Default: `false` */
+  isActive?: boolean;
+  /** Force show the crosshair even when mouse is not over the chart. Default: `false` */
+  forceShow?: boolean;
+  /** Callback function called when crosshair position changes. Receives x position in data space. Default: `undefined` */
+  onCrosshairMove?: (x: number | Date | undefined) => void;
 }
 
 export const CrosshairDefaultConfig: CrosshairConfigInterface<unknown> = {
@@ -60,5 +70,10 @@ export const CrosshairDefaultConfig: CrosshairConfigInterface<unknown> = {
   color: undefined,
   strokeColor: undefined,
   strokeWidth: undefined,
+  xPosition: undefined,
+  enableSync: false,
+  isActive: false,
+  forceShow: false,
+  onCrosshairMove: undefined,
 }
 
