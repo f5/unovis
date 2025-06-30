@@ -65,6 +65,25 @@ You can render text content for your _Crosshair_ component by providing it with 
   })}
   showContext="full"/>
 
+## Synchronized Crosshairs
+You can synchronize crosshairs across multiple charts by using the `syncId` property. When multiple charts share the same `syncId`, hovering over one chart will automatically show crosshairs at the same x-position on all other charts in the sync group.
+
+This is particularly useful for comparing data across different charts or when you have multiple charts showing different aspects of the same dataset.
+
+```ts
+<XYContainer data={data} height={200}>
+  <Line x={d => d.x} y={d => d.y} />
+  <Crosshair syncId="sync-crosshair" />
+</XYContainer>
+
+<XYContainer data={data2} height={200}>
+  <Area x={d => d.x} y={d => d.y} />
+  <Crosshair syncId="sync-crosshair" />
+</XYContainer>
+```
+<XYWrapper {...crosshairProps()} syncId="sync-crosshair" showContext="minimal"/>
+<XYWrapper {...crosshairProps()} syncId="sync-crosshair" showContext="minimal"/>
+
 ## CSS Variables
 The _Crosshair_ component supports additional styling via CSS variables that you can define for your visualization container. For example:
 
