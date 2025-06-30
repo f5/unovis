@@ -19,6 +19,8 @@
         "noUncheckedIndexedAccess": true,
         "jsx": "preserve",
         "jsxImportSource": "solid-js",
+        "importHelpers": true,
+        "noEmitHelpers": true,
     },
     "include": ["src/**/*.ts", "src/**/*.tsx"],
     "exclude": ["node_modules/*"]

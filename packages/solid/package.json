@@ -43,6 +43,7 @@
     "eslint-plugin-solid": "^0.13.2",
     "rollup": "^4.24.2",
     "solid-js": "^1.9.3",
+    "tslib": "^2.8.1",
     "tsx": "^4.19.1",
     "typescript": "^5.6.3",
     "vite": "^6.2.4",
