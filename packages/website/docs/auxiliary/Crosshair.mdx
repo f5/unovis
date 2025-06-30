@@ -65,6 +65,68 @@ You can render text content for your _Crosshair_ component by providing it with 
   })}
   showContext="full"/>
 
+## Synchronized Crosshairs
+You can synchronize crosshairs across multiple charts using a parent-driven approach with `xPosition`, `forceShow`, and `onCrosshairMove` props. This allows you to create coordinated crosshairs that follow the mouse across different visualizations.
+
+### How Synchronization Works
+- **Active Chart**: The chart currently being hovered (uncontrolled - no `xPosition` or `forceShow`)
+- **Follower Charts**: Charts that follow the active chart's crosshair position (controlled via `xPosition` and `forceShow`)
+
+### Synchronization Props
+- **`xPosition`**: The x value in data space to position the crosshair (for follower charts)
+- **`forceShow`**: Whether to force the crosshair to be visible (for follower charts)
+- **`onCrosshairMove`**: Callback function called when the crosshair position changes (for active chart)
+
+### Example: Synchronized Crosshairs
+Here's how to implement synchronized crosshairs across multiple charts:
+
+```tsx
+import React, { useState } from 'react'
+import { VisXYContainer, VisLine, VisCrosshair, VisTooltip } from '@unovis/react'
+
+function SynchronizedCrosshairs() {
+  const [syncXPosition, setSyncXPosition] = useState<number | undefined>(undefined)
+  const [activeChart, setActiveChart] = useState<'chart1' | 'chart2' | null>(null)
+
+  const onCrosshairMove = (x: number | undefined, chartId: 'chart1' | 'chart2') => {
+    setSyncXPosition(x)
+    setActiveChart(x === undefined ? null : chartId)
+  }
+
+  return (
+    <>
+      {/* Chart 1 - Active when hovered */}
+      <VisXYContainer data={data1}>
+        <VisLine x={d => d.x} y={d => d.y} />
+        <VisCrosshair
+          x={d => d.x}
+          y={d => d.y}
+          xPosition={activeChart === 'chart2' ? syncXPosition : undefined}
+          forceShow={activeChart === 'chart2' && !!syncXPosition}
+          onCrosshairMove={(x) => onCrosshairMove(x, 'chart1')}
+          template={(d) => `Chart 1: ${d.x}, ${d.y}`}
+        />
+        <VisTooltip />
+      </VisXYContainer>
+
+      {/* Chart 2 - Active when hovered */}
+      <VisXYContainer data={data2}>
+        <VisLine x={d => d.x} y={d => d.y} />
+        <VisCrosshair
+          x={d => d.x}
+          y={d => d.y}
+          xPosition={activeChart === 'chart1' ? syncXPosition : undefined}
+          forceShow={activeChart === 'chart1' && !!syncXPosition}
+          onCrosshairMove={(x) => onCrosshairMove(x, 'chart2')}
+          template={(d) => `Chart 2: ${d.x}, ${d.y}`}
+        />
+        <VisTooltip />
+      </VisXYContainer>
+    </>
+  )
+}
+```
+
 ## CSS Variables
 The _Crosshair_ component supports additional styling via CSS variables that you can define for your visualization container. For example:
 
