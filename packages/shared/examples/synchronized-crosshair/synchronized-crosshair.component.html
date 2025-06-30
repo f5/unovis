@@ -1,0 +1,38 @@
+<div style="display: flex; flex-direction: column; gap: 20px;">
+  <div>
+    <h4>Line Chart</h4>
+    <vis-xy-container [data]="data1" [height]="height">
+      <vis-line [x]="x" [y]="y"></vis-line>
+      <vis-crosshair [syncId]="syncId" [template]="tooltipTemplate"></vis-crosshair>
+      <vis-tooltip></vis-tooltip>
+      <vis-axis type="x"></vis-axis>
+      <vis-axis type="y"></vis-axis>
+    </vis-xy-container>
+  </div>
+
+  <div>
+    <h4>Area Chart</h4>
+    <vis-xy-container [data]="data2" [height]="height">
+      <vis-area [x]="x" [y]="y"></vis-area>
+      <vis-crosshair [syncId]="syncId" [template]="tooltipTemplate"></vis-crosshair>
+      <vis-tooltip></vis-tooltip>
+      <vis-axis type="x"></vis-axis>
+      <vis-axis type="y"></vis-axis>
+    </vis-xy-container>
+  </div>
+
+  <div>
+    <h4>Scatter Plot</h4>
+    <vis-xy-container [data]="data3" [height]="height">
+      <vis-scatter [x]="x" [y]="y"></vis-scatter>
+      <vis-crosshair [syncId]="syncId" [template]="tooltipTemplate"></vis-crosshair>
+      <vis-tooltip></vis-tooltip>
+      <vis-axis type="x"></vis-axis>
+      <vis-axis type="y"></vis-axis>
+    </vis-xy-container>
+  </div>
+
+  <div style="font-size: 14px; color: #666; text-align: center; margin-top: 10px;">
+    Hover over any chart to see synchronized crosshairs across all three charts
+  </div>
+</div>
