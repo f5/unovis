@@ -35,7 +35,7 @@ export default defineConfig(({command, mode}) => {
         rollupOptions: {
           // make sure to externalize deps that shouldn't be bundled
           // into your library
-          external: ['solid-js', 'solid-js/web', 'solid-js/store', '@unovis/ts'],
+          external: ['solid-js', 'solid-js/web', 'solid-js/store', '@unovis/ts', 'tslib'],
           output: [outputDefault('cjs', 'cjs'), outputDefault('es', 'js')]
         }
       },
@@ -45,6 +45,14 @@ export default defineConfig(({command, mode}) => {
       plugins: [solid()],
       build: {
         outDir: "dist-demo"
+      },
+      resolve: {
+        alias: {
+          'tslib': 'tslib'
+        }
+      },
+      optimizeDeps: {
+        include: ['tslib']
       }
     }
   }
