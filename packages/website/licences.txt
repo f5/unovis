@@ -16,6 +16,6 @@ react-markdown                             perpetual       MIT           8.0.7  
 @docusaurus/module-type-aliases            perpetual       MIT           3.0.0              n/a
 @docusaurus/tsconfig                       perpetual       MIT           3.0.0              n/a
 raw-loader                                 perpetual       MIT           4.0.2              Tobias Koppers @sokra
-react                                      perpetual       MIT           18.3.1             n/a
-react-dom                                  perpetual       MIT           18.3.1             n/a
+react                                      perpetual       n/a           n/a                n/a
+react-dom                                  perpetual       n/a           n/a                n/a
 typescript                                 perpetual       Apache-2.0    5.2.2              Microsoft Corp.
