@@ -256,8 +256,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
   }
 
   _showTooltip (event: MouseEvent): void {
-    const { config } = this
-    const tooltip = config.tooltip ?? this.tooltip
+    const tooltip = this.config.tooltip ?? this.tooltip
 
     if (!tooltip) return
 
@@ -275,7 +274,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
 
     const container = tooltip.getContainer() || this.container.node()
     const [x, y] = tooltip.isContainerBody() ? [event.clientX, event.clientY] : pointer(event, container)
-    const content = config.template(datum, this._currentXData || this.xScale.invert(this.x))
+    const content = this.config.template(datum, this._currentXData || this.xScale.invert(this.x))
 
     tooltip.config.followCursor = true
 
@@ -289,8 +288,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
   }
 
   _hideTooltip (): void {
-    const { config } = this
-    const tooltip = config.tooltip ?? this.tooltip
+    const tooltip = this.config.tooltip ?? this.tooltip
     tooltip?.hide()
   }
 
@@ -300,11 +298,11 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
   }
 
   private getCircleData (): CrosshairCircle[] {
-    const { config, datamodel: { data } } = this
+    const { datamodel: { data } } = this
     const { isActive, enableSync } = this._getSyncState()
 
-    if (isFunction(config.getCircles)) {
-      return config.getCircles(this._currentXData || this.xScale.invert(this.x), data, this.yScale)
+    if (isFunction(this.config.getCircles)) {
+      return this.config.getCircles(this._currentXData || this.xScale.invert(this.x), data, this.yScale)
     }
 
     // Get the datum - either from active mode or from synchronized mode
@@ -318,7 +316,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
       }
     }
 
-    if (config.snapToData && datum) {
+    if (this.config.snapToData && datum) {
       const yAccessors = this.accessors.y ?? []
       const yStackedAccessors = this.accessors.yStacked ?? []
       const baselineValue = getNumber(datum, this.accessors.baseline, datumIndex) || 0
@@ -330,9 +328,9 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
           return {
             y: yPixel,
             opacity: isNumber(getNumber(datum, yStackedAccessors[index])) ? 1 : 1,
-            color: getColor(datum, config.color, index),
-            strokeColor: config.strokeColor ? getColor(datum, config.strokeColor, index) : undefined,
-            strokeWidth: config.strokeWidth ? getNumber(datum, config.strokeWidth, index) : undefined,
+            color: getColor(datum, this.config.color, index),
+            strokeColor: this.config.strokeColor ? getColor(datum, this.config.strokeColor, index) : undefined,
+            strokeWidth: this.config.strokeWidth ? getNumber(datum, this.config.strokeWidth, index) : undefined,
           }
         })
 
@@ -343,9 +341,9 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
           return {
             y: yPixel,
             opacity: isNumber(value) ? 1 : 0, // Hide circles with invalid values
-            color: getColor(datum, config.color, stackedValues.length + index),
-            strokeColor: config.strokeColor ? getColor(datum, config.strokeColor, index) : undefined,
-            strokeWidth: config.strokeWidth ? getNumber(datum, config.strokeWidth, index) : undefined,
+            color: getColor(datum, this.config.color, stackedValues.length + index),
+            strokeColor: this.config.strokeColor ? getColor(datum, this.config.strokeColor, index) : undefined,
+            strokeWidth: this.config.strokeWidth ? getNumber(datum, this.config.strokeWidth, index) : undefined,
           }
         })
 
@@ -357,7 +355,6 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
   }
 
   _updateFromSync (xData: number | Date | undefined): void {
-    const { config, datamodel } = this
     const { isActive, enableSync } = this._getSyncState()
 
     if (!enableSync || isActive) return
@@ -369,7 +366,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
       return
     }
 
-    if (!this.accessors.x || !datamodel.data?.length) return
+    if (!this.accessors.x || !this.datamodel.data?.length) return
 
     // Check if xPosition is within the chart's x domain
     const xDomain = this.xScale.domain()
@@ -395,13 +392,13 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
 
     // Find the datum at this x position
     if (typeof xData === 'number') {
-      this.datum = getNearest(datamodel.data, xData, this.accessors.x)
+      this.datum = getNearest(this.datamodel.data, xData, this.accessors.x)
     } else if (xData instanceof Date) {
-      this.datum = getNearest(datamodel.data, xData.getTime(), this.accessors.x)
+      this.datum = getNearest(this.datamodel.data, xData.getTime(), this.accessors.x)
     } else {
       this.datum = undefined
     }
-    this.datumIndex = datamodel.data.indexOf(this.datum)
+    this.datumIndex = this.datamodel.data.indexOf(this.datum)
 
     // If no datum found, hide the crosshair
     if (!this.datum) {
@@ -422,8 +419,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
   }
 
   _showTooltipForSync (): void {
-    const { config } = this
-    const tooltip = config.tooltip ?? this.tooltip
+    const tooltip = this.config.tooltip ?? this.tooltip
 
     if (!tooltip || !this.show || !this.datum) return
 
@@ -435,7 +431,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
     } as MouseEvent
 
     const [x, y] = tooltip.isContainerBody() ? [syntheticEvent.clientX, syntheticEvent.clientY] : [this.x, this._height / 2]
-    const content = config.template(this.datum, this._currentXData || this.xScale.invert(this.x))
+    const content = this.config.template(this.datum, this._currentXData || this.xScale.invert(this.x))
 
     tooltip.config.followCursor = true
 
@@ -455,9 +451,10 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
    * @returns { isActive: boolean, enableSync: boolean }
    */
   private _getSyncState (): { isActive: boolean; enableSync: boolean } {
-    const { config } = this
-    const isActive = !this._isMouseOver && !isNumber(config.xPosition) && !(config.xPosition instanceof Date) && !config.forceShow
-    const enableSync = !this._isMouseOver && (isNumber(config.xPosition) || config.xPosition instanceof Date || !!config.forceShow)
+    // A chart is active if it's being hovered and doesn't have external sync props
+    const isActive = this._isMouseOver && !isNumber(this.config.xPosition) && !(this.config.xPosition instanceof Date) && !this.config.forceShow
+    // A chart is in sync mode if it has external sync props (regardless of mouse state)
+    const enableSync = isNumber(this.config.xPosition) || this.config.xPosition instanceof Date || !!this.config.forceShow
     return { isActive, enableSync }
   }
 }

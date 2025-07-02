@@ -1,14 +1,21 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import { VisXYContainer, VisLine, VisArea, VisScatter, VisAxis, VisCrosshair, VisTooltip } from '@unovis/react'
 
 import { data1, data2, data3, DataRecord } from './data'
 
 export default function SynchronizedCrosshair (): JSX.Element {
   const height = 200
+  const [syncXPosition, setSyncXPosition] = useState<number | undefined>(undefined)
+  const [activeChart, setActiveChart] = useState<'line' | 'area' | 'scatter' | null>(null)
 
   const tooltipTemplate = useCallback((d: DataRecord): string => {
     return `<div><b>X: ${d.x}</b><br/>Y: ${d.y.toFixed(1)}<br/>Y1: ${d.y1.toFixed(1)}<br/>Y2: ${d.y2.toFixed(1)}</div>`
+  }, [])
+
+  const onCrosshairMove = useCallback((x: number | undefined | Date, chartId: 'line' | 'area' | 'scatter') => {
+    setSyncXPosition(x)
+    setActiveChart(x === undefined ? null : chartId)
   }, [])
 
   return (
@@ -17,7 +24,14 @@ export default function SynchronizedCrosshair (): JSX.Element {
         <h4>Line Chart</h4>
         <VisXYContainer data={data1} height={height}>
           <VisLine x={useCallback((d: DataRecord) => d.x, [])} y={useCallback((d: DataRecord) => d.y, [])} />
-          <VisCrosshair syncId="demo-sync" template={tooltipTemplate} />
+          <VisCrosshair
+            x={useCallback((d: DataRecord) => d.x, [])}
+            y={useCallback((d: DataRecord) => d.y, [])}
+            xPosition={activeChart !== 'line' ? syncXPosition : undefined}
+            forceShow={activeChart !== 'line' && !!syncXPosition}
+            onCrosshairMove={(x) => onCrosshairMove(x, 'line')}
+            template={tooltipTemplate}
+          />
           <VisTooltip />
           <VisAxis type="x" />
           <VisAxis type="y" />
@@ -28,7 +42,14 @@ export default function SynchronizedCrosshair (): JSX.Element {
         <h4>Area Chart</h4>
         <VisXYContainer data={data2} height={height}>
           <VisArea x={useCallback((d: DataRecord) => d.x, [])} y={useCallback((d: DataRecord) => d.y, [])} />
-          <VisCrosshair syncId="demo-sync" template={tooltipTemplate} />
+          <VisCrosshair
+            x={useCallback((d: DataRecord) => d.x, [])}
+            y={useCallback((d: DataRecord) => d.y, [])}
+            xPosition={activeChart !== 'area' ? syncXPosition : undefined}
+            forceShow={activeChart !== 'area' && !!syncXPosition}
+            onCrosshairMove={(x) => onCrosshairMove(x, 'area')}
+            template={tooltipTemplate}
+          />
           <VisTooltip />
           <VisAxis type="x" />
           <VisAxis type="y" />
@@ -39,7 +60,14 @@ export default function SynchronizedCrosshair (): JSX.Element {
         <h4>Scatter Plot</h4>
         <VisXYContainer data={data3} height={height}>
           <VisScatter x={useCallback((d: DataRecord) => d.x, [])} y={useCallback((d: DataRecord) => d.y, [])} />
-          <VisCrosshair syncId="demo-sync" template={tooltipTemplate} />
+          <VisCrosshair
+            x={useCallback((d: DataRecord) => d.x, [])}
+            y={useCallback((d: DataRecord) => d.y, [])}
+            xPosition={activeChart !== 'scatter' ? syncXPosition : undefined}
+            forceShow={activeChart !== 'scatter' && !!syncXPosition}
+            onCrosshairMove={(x) => onCrosshairMove(x, 'scatter')}
+            template={tooltipTemplate}
+          />
           <VisTooltip />
           <VisAxis type="x" />
           <VisAxis type="y" />
