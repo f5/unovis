@@ -92,6 +92,7 @@ export const examples: ExampleCollection[] = [
       require('./brush-grouped-bar').default,
       require('./free-brush-scatters').default,
       require('./basic-plotband').default,
+      require('./synchronized-crosshair').default,
     ],
   },
   /* {} */
