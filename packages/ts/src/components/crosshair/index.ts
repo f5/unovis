@@ -34,8 +34,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
   datumIndex: number
   show = false
   private _animFrameId: number = null
-  private _currentXData: number | Date | undefined = undefined
-  private _documentMouseHandler: (event: MouseEvent) => void | null = null
+  private _dataX: number | Date | undefined = undefined
   private _isMouseOver = false
 
   /** Tooltip component to be used by Crosshair if not provided by the config.
@@ -79,11 +78,19 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
     this._render()
   }
 
+  setConfig (config: CrosshairConfigInterface<Datum>): void {
+    super.setConfig(config)
+    // For synchronized charts, update from sync when config changes
+    const { isActive, enableSync } = this._getSyncState()
+    if (enableSync && !isActive && (isNumber(config.xPosition) || config.xPosition instanceof Date)) {
+      this._updateFromSync(config.xPosition)
+    }
+  }
+
   _render (customDuration?: number): void {
     const { config } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
     const { isActive, enableSync } = this._getSyncState()
-
     // Handle synchronized charts with xPosition prop
     if (enableSync && !isActive && (isNumber(config.xPosition) || config.xPosition instanceof Date)) {
       this._updateFromSync(config.xPosition)
@@ -136,10 +143,18 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
       this._animFrameId = null
     }
     this._hideTooltip()
-    this._removeDocumentMouseTracking()
   }
 
   _onMouseMove (event: MouseEvent): void {
+    // Throttle the entire mouse move processing
+    if (this._animFrameId) return
+    this._animFrameId = window.requestAnimationFrame(() => {
+      this._processMouseMove(event)
+      this._animFrameId = null
+    })
+  }
+
+  private _processMouseMove (event: MouseEvent): void {
     this._isMouseOver = true
     const { config, datamodel, element } = this
     const { isActive, enableSync } = this._getSyncState()
@@ -148,6 +163,12 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
     if (enableSync && !isActive) {
       if (this.show && this.datum) {
         this._showTooltip(event)
+      } else if (this.show && this._dataX !== undefined && isNumber(this._dataX)) {
+        // For synchronized charts, find the datum if it doesn't exist
+        this.datum = getNearest(this.datamodel.data, this._dataX, this.accessors.x)
+        if (this.datum) {
+          this._showTooltip(event)
+        }
       }
       return
     }
@@ -175,66 +196,27 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
 
       const dataX = getNumber(this.datum, this.accessors.x, this.datumIndex)
       this.x = clamp(Math.round(scaleX(dataX)), 0, this._width)
-      this._currentXData = dataX
+      this._dataX = dataX
 
       // Show the crosshair only if it's in the chart range and not far from mouse pointer (if configured)
       this.show = (this.x >= 0) && (this.x <= this._width) && (!config.hideWhenFarFromPointer || (Math.abs(this.x - x) < config.hideWhenFarFromPointerDistance))
     } else {
       const tolerance = 2 // Show the crosshair when it is at least 2 pixels close to the chart area
       this.x = clamp(x, xRange[0], xRange[1])
-      this._currentXData = this.xScale.invert(this.x)
+      this._dataX = this.xScale.invert(this.x)
       this.show = (x >= (xRange[0] - tolerance)) && (x <= (xRange[1] + tolerance))
     }
 
     // Call onCrosshairMove callback if provided
-    if (this.show && config.onCrosshairMove && this._currentXData !== undefined) {
-      config.onCrosshairMove(this._currentXData)
+    if (this.show && config.onCrosshairMove && this._dataX !== undefined) {
+      config.onCrosshairMove(this._dataX)
     }
 
-    // Set up document-level mouse tracking for active charts
-    if (enableSync && isActive && config.onCrosshairMove) {
-      this._setupDocumentMouseTracking()
-    }
-
-    window.cancelAnimationFrame(this._animFrameId)
-    this._animFrameId = window.requestAnimationFrame(() => {
-      this._render()
-    })
+    // Render immediately since we're already in a throttled context
+    this._render()
 
     if (this.show) this._showTooltip(event)
     else this._hideTooltip()
-  }
-
-  _setupDocumentMouseTracking (): void {
-    const { config } = this
-
-    // Remove any existing document mouse listener
-    this._removeDocumentMouseTracking()
-
-    // Add document-level mouse move listener to detect when mouse leaves the chart area
-    const handleDocumentMouseMove = (event: MouseEvent): void => {
-      const chartRect = this.container.node().getBoundingClientRect()
-      const isInsideChart = event.clientX >= chartRect.left &&
-                           event.clientX <= chartRect.right &&
-                           event.clientY >= chartRect.top &&
-                           event.clientY <= chartRect.bottom
-
-      if (!isInsideChart) {
-        config.onCrosshairMove(undefined)
-        this._removeDocumentMouseTracking()
-      }
-    }
-
-    // Store the handler so we can remove it later
-    this._documentMouseHandler = handleDocumentMouseMove
-    document.addEventListener('mousemove', handleDocumentMouseMove)
-  }
-
-  _removeDocumentMouseTracking (): void {
-    if (this._documentMouseHandler) {
-      document.removeEventListener('mousemove', this._documentMouseHandler)
-      this._documentMouseHandler = null
-    }
   }
 
   _onMouseOut (): void {
@@ -244,9 +226,12 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
     // Always hide on mouse out
     this.show = false
     this._hideTooltip()
-    window.cancelAnimationFrame(this._animFrameId)
+
+    // Throttle rendering using requestAnimationFrame
+    if (this._animFrameId) return
     this._animFrameId = window.requestAnimationFrame(() => {
       this._render()
+      this._animFrameId = null
     })
 
     // If this is the active chart, notify parent to clear sync state
@@ -258,23 +243,11 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
   _showTooltip (event: MouseEvent): void {
     const tooltip = this.config.tooltip ?? this.tooltip
 
-    if (!tooltip) return
-
-    const { isActive, enableSync } = this._getSyncState()
-
-    // For synchronized charts, we need to find the datum if it doesn't exist
-    let datum = this.datum
-    if (!datum && enableSync && !isActive && this._currentXData !== undefined) {
-      if (typeof this._currentXData === 'number') {
-        datum = getNearest(this.datamodel.data, this._currentXData, this.accessors.x)
-      }
-    }
-
-    if (!datum) return
+    if (!tooltip || !this.datum) return
 
     const container = tooltip.getContainer() || this.container.node()
     const [x, y] = tooltip.isContainerBody() ? [event.clientX, event.clientY] : pointer(event, container)
-    const content = this.config.template(datum, this._currentXData || this.xScale.invert(this.x))
+    const content = this.config.template(this.datum, this._dataX || this.xScale.invert(this.x))
 
     tooltip.config.followCursor = true
 
@@ -300,18 +273,15 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
   private getCircleData (): CrosshairCircle[] {
     const { datamodel: { data } } = this
     const { isActive, enableSync } = this._getSyncState()
-
     if (isFunction(this.config.getCircles)) {
-      return this.config.getCircles(this._currentXData || this.xScale.invert(this.x), data, this.yScale)
+      return this.config.getCircles(this._dataX || this.xScale.invert(this.x), data, this.yScale)
     }
-
     // Get the datum - either from active mode or from synchronized mode
     let datum = this.datum
     let datumIndex = this.datumIndex
-
-    if (!datum && enableSync && !isActive && this._currentXData !== undefined) {
-      if (typeof this._currentXData === 'number') {
-        datum = getNearest(this.datamodel.data, this._currentXData, this.accessors.x)
+    if (!datum && enableSync && !isActive && this._dataX !== undefined) {
+      if (isNumber(this._dataX)) {
+        datum = getNearest(this.datamodel.data, this._dataX, this.accessors.x)
         datumIndex = this.datamodel.data.indexOf(datum)
       }
     }
@@ -356,7 +326,6 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
 
   _updateFromSync (xData: number | Date | undefined): void {
     const { isActive, enableSync } = this._getSyncState()
-
     if (!enableSync || isActive) return
 
     // Handle mouse out signal
@@ -409,52 +378,24 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
 
     const dataX = getNumber(this.datum, this.accessors.x, this.datumIndex)
     this.x = clamp(Math.round(this.xScale(dataX)), 0, this._width)
-    this._currentXData = dataX
+    this._dataX = dataX
 
     // Show the crosshair
     this.show = true
 
-    // Show tooltip for synchronized chart
-    this._showTooltipForSync()
-  }
-
-  _showTooltipForSync (): void {
-    const tooltip = this.config.tooltip ?? this.tooltip
-
-    if (!tooltip || !this.show || !this.datum) return
-
-    // Create a synthetic mouse event at the crosshair position
-    const containerRect = this.container.node().getBoundingClientRect()
+    // Show tooltip for synchronized chart using the same logic as active charts
     const syntheticEvent = {
-      clientX: containerRect.left + this.x,
-      clientY: containerRect.top + this._height / 2,
+      clientX: this.container.node().getBoundingClientRect().left + this.x,
+      clientY: this.container.node().getBoundingClientRect().top + this._height / 2,
     } as MouseEvent
-
-    const [x, y] = tooltip.isContainerBody() ? [syntheticEvent.clientX, syntheticEvent.clientY] : [this.x, this._height / 2]
-    const content = this.config.template(this.datum, this._currentXData || this.xScale.invert(this.x))
-
-    tooltip.config.followCursor = true
-
-    // Set tooltip placement based on Crosshair's position (left / right)
-    if (!tooltip.config.horizontalPlacement || tooltip.config.horizontalPlacement === Position.Auto) {
-      const xRelative = tooltip.isContainerBody() ? x - containerRect.left : x
-      tooltip.overrideHorizontalPlacement(xRelative > this._containerWidth / 2 ? Position.Left : Position.Right)
-    }
-
-    if (content) {
-      tooltip.show(content, { x, y })
-    }
+    this._showTooltip(syntheticEvent)
   }
 
-  /**
-   * Derive sync/active state based on mouse position and config
-   * @returns { isActive: boolean, enableSync: boolean }
-   */
   private _getSyncState (): { isActive: boolean; enableSync: boolean } {
     // A chart is active if it's being hovered and doesn't have external sync props
-    const isActive = this._isMouseOver && !isNumber(this.config.xPosition) && !(this.config.xPosition instanceof Date) && !this.config.forceShow
+    const isActive = this._isMouseOver && !isNumber(this.config.xPosition) && !this.config.forceShow
     // A chart is in sync mode if it has external sync props (regardless of mouse state)
-    const enableSync = isNumber(this.config.xPosition) || this.config.xPosition instanceof Date || !!this.config.forceShow
+    const enableSync = isNumber(this.config.xPosition) || !!this.config.forceShow
     return { isActive, enableSync }
   }
 }
