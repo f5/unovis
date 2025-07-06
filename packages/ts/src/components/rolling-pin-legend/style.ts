@@ -19,18 +19,25 @@ injectGlobalCssVariables(cssVarDefaults, root)
 
 export const rectsContainer = css`
   display: flex;
-  margin: 0 var(${variables.rollingPinLegendSpacing});
 `
 
 export const label = css`
   font-family: var(--vis-rolling-pin-legend-font-family, var(--vis-font-family));
   font-size: var(${variables.rollingPinLegendLabelFontSize});
   max-width: var(${variables.rollingPinLegendLabelMaxWidth});
-  color: var(${variables.darkRollingPinLegendLabelColor});
+  color: var(${variables.rollingPinLegendLabelColor});
+`
+
+export const leftLabel = css`
+  margin-right: var(${variables.rollingPinLegendSpacing});
+`
+
+export const rightLabel = css`
+  margin-left: var(${variables.rollingPinLegendSpacing});
 `
 
 export const rect = css`
   display: inline-block;
   flex: 1;
-  width: var(${variables.rollingPinLegendItemWidth};
+  width: var(${variables.rollingPinLegendItemWidth});
 `

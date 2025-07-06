@@ -49,6 +49,8 @@ export class RollingPinLegend {
     newRoot
       .append('span')
       .attr('class', s.label)
+      .classed(config.labelClassName, true)
+      .style('font-size', config.labelFontSize)
 
     newRoot
       .append('div')
@@ -57,6 +59,8 @@ export class RollingPinLegend {
     newRoot
       .append('span')
       .attr('class', s.label)
+      .classed(config.labelClassName, true)
+      .style('font-size', config.labelFontSize)
 
     const root = this.div
       .select<HTMLDivElement>(`.${s.root}`)
@@ -64,6 +68,8 @@ export class RollingPinLegend {
     root.selectAll<HTMLDivElement, unknown>(`.${s.label}`)
       .data([config.leftLabelText, config.rightLabelText])
       .text(d => d)
+      .classed(s.leftLabel, (d, i) => i === 0 && typeof d === 'string' && d.length > 0)
+      .classed(s.rightLabel, (d, i) => i === 1 && typeof d === 'string' && d.length > 0)
 
     const rectsContainer = root.select<HTMLDivElement>(`.${s.rectsContainer}`)
 
