@@ -6,6 +6,7 @@ import { BrowserModule } from '@angular/platform-browser'
 // Area
 import { NonStackedAreaChartModule } from '@unovis/shared/examples/non-stacked-area-chart/non-stacked-area-chart.module'
 import { StackedAreaModule } from '@unovis/shared/examples/stacked-area-chart/stacked-area-chart.module'
+import { StackedAreaWithAttributesModule } from '@unovis/shared/examples/stacked-area-chart-with-attributes/stacked-area-chart-with-attributes.module'
 import { StepAreaChartModule } from '@unovis/shared/examples/step-area-chart/step-area-chart.module'
 
 // Bars
@@ -57,6 +58,7 @@ import { BasicPlotbandModule } from '@unovis/shared/examples/basic-plotband/basi
   template: `
     <!-- Area -->
     <stacked-area-chart></stacked-area-chart>
+    <stacked-area-chart-with-attributes></stacked-area-chart-with-attributes>
     <non-stacked-area-chart></non-stacked-area-chart>
     <baseline-area-chart></baseline-area-chart>
     <step-area-chart></step-area-chart>
@@ -114,7 +116,7 @@ export class AppComponent {
     BrowserModule, BasicGroupedBarModule, BasicLeafletMapModule, BasicLineChartModule, MultiLineChartModule,
     TopojsonMapModule, StackedBarChartModule, BrushGroupedBarModule, BasicScatterPlotModule, SizedScatterPlotModule, FreeBrushScattersModule, NonStackedAreaChartModule,
     BasicTimelineModule, BasicSankeyModule, ExpandableSankeyModule, BasicGraphModule, LeafletFlowMapModule,
-    ForceLayoutGraphModule, AdvancedLeafletMapModule, StackedAreaModule, ParallelLayoutGraphModule, ElkLayeredGraphModule,
+    ForceLayoutGraphModule, AdvancedLeafletMapModule, StackedAreaModule, StackedAreaWithAttributesModule, ParallelLayoutGraphModule, ElkLayeredGraphModule,
     DataGapLineChartModule, CrosshairStackedBarModule, BaselineAreaChartModule, StepAreaChartModule, SunburstChartModule, BasicPlotbandModule,
   ],
   bootstrap: [AppComponent],

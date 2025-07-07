@@ -5,6 +5,7 @@
     () => import('@unovis/shared/examples/baseline-area-chart/baseline-area-chart.svelte'),
     () => import('@unovis/shared/examples/non-stacked-area-chart/non-stacked-area-chart.svelte'),
     () => import('@unovis/shared/examples/stacked-area-chart/stacked-area-chart.svelte'),
+    () => import('@unovis/shared/examples/stacked-area-chart-with-attributes/stacked-area-chart-with-attributes.svelte'),
     () => import('@unovis/shared/examples/basic-grouped-bar/basic-grouped-bar.svelte'),
     () => import('@unovis/shared/examples/basic-leaflet-map/basic-leaflet-map.svelte'),
     () => import('@unovis/shared/examples/leaflet-flow-map/leaflet-flow-map.svelte'),
