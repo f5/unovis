@@ -12,6 +12,7 @@ const examples = [
   // Area Charts
   lazy(() => import('@unovis/shared/examples/non-stacked-area-chart/non-stacked-area-chart-solid')),
   lazy(() => import('@unovis/shared/examples/stacked-area-chart/stacked-area-chart-solid')),
+  lazy(() => import('@unovis/shared/examples/stacked-area-chart-with-attributes/stacked-area-chart-with-attributes-solid')),
   lazy(() => import('@unovis/shared/examples/baseline-area-chart/baseline-area-chart-solid')),
   lazy(() => import('@unovis/shared/examples/step-area-chart/step-area-chart-solid')),
   // Bar Charts
