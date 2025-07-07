@@ -27,7 +27,7 @@ export interface CrosshairConfigInterface<Datum> extends WithOptional<XYComponen
   tooltip?: Tooltip | undefined;
   /** Tooltip template accessor. The function is supposed to return either a valid HTML string or an HTMLElement. Default: `d => ''` */
   template?: (data: Datum, x: number | Date) => string | HTMLElement;
-  /** Hide Crosshair when the corresponding element is far from mouse pointer. Default: `true` */
+  /** Hide Crosshair when the corresponding datum element is far from mouse pointer. Default: `true` */
   hideWhenFarFromPointer?: boolean;
   /** Distance in pixels to check in the hideWhenFarFromPointer condition. Default: `100` */
   hideWhenFarFromPointerDistance?: number;
@@ -43,7 +43,11 @@ export interface CrosshairConfigInterface<Datum> extends WithOptional<XYComponen
    * It has to return an array of the CrosshairCircle objects: `{ y: number; color: string; opacity?: number }[]`.
    * Default: `undefined`
   */
-  getCircles?: (x: number | Date | Date, data: Datum[], yScale: ContinuousScale) => CrosshairCircle[];
+  getCircles?: (x: number | Date, data: Datum[], yScale: ContinuousScale) => CrosshairCircle[];
+  /** Callback function that is called when the crosshair is moved. Default: `undefined` */
+  onCrosshairMove?: (x: number | Date, datum: Datum | undefined, datumIndex: number | undefined) => void;
+  /** Force the crosshair to show at a specific position. Default: `undefined` */
+  forceShowAt?: number | Date;
 }
 
 export const CrosshairDefaultConfig: CrosshairConfigInterface<unknown> = {
@@ -52,7 +56,7 @@ export const CrosshairDefaultConfig: CrosshairConfigInterface<unknown> = {
   baseline: null,
   duration: 100,
   tooltip: undefined,
-  template: <Datum>(d: Datum, x: number | Date): string => '',
+  template: <Datum>(d: Datum | undefined, x: number | Date): string => '',
   hideWhenFarFromPointer: true,
   hideWhenFarFromPointerDistance: 100,
   snapToData: true,
@@ -60,5 +64,7 @@ export const CrosshairDefaultConfig: CrosshairConfigInterface<unknown> = {
   color: undefined,
   strokeColor: undefined,
   strokeWidth: undefined,
+  onCrosshairMove: undefined,
+  forceShowAt: undefined,
 }
 
