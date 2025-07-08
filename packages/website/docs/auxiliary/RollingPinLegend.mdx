@@ -3,6 +3,8 @@ title: Rolling Pin Legend
 sidebar_title: Rolling Pin Legend
 ---
 import React, { useCallback, useState } from 'react'
+import { RollingPinLegend } from '@unovis/ts'
+import CodeBlock from '@theme/CodeBlock'
 import { PropsTable } from '@site/src/components/PropsTable'
 import { DocWrapper } from '../wrappers'
 import '../styles.css'
@@ -42,6 +44,16 @@ string provided to the `labelMaxWidth` property.
 ### Custom Class
 You can also add any further configuration for labels by providing `labelClassName` with your
 custom css class.
+
+## CSS Variables
+<details open>
+  <summary>Supported CSS variables and their default values</summary>
+  <CodeBlock language="css">
+{`${
+  Object.entries(RollingPinLegend.selectors.cssVarDefaults || {})
+  .map(([key, value]) => `${key}: ${value};`).join('\n')}
+`}</CodeBlock>
+</details>
 
 ## Component Props
 <PropsTable name="VisRollingPinLegend"/>

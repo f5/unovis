@@ -5,7 +5,7 @@ export const root = css`
   display: flex;
 `
 
-const cssVarDefaults = {
+export const cssVarDefaults = {
   '--vis-rolling-pin-legend-label-color': '#6c778c;',
   '--vis-rolling-pin-legend-label-max-width': '300px;',
   '--vis-rolling-pin-legend-label-font-size': '12px;',
