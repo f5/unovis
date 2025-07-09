@@ -22,6 +22,14 @@ export const globalStyles = injectGlobal`
     --vis-axis-grid-line-width: 1px;
     /* --vis-axis-domain-line-width: // Undefined by default to allow fallback to var(--vis-axis-grid-line-width) */
 
+    /* Customizable line settings with backwards-compatible defaults */
+    --vis-axis-domain-linecap: butt;
+    --vis-axis-domain-linejoin: miter;
+    --vis-axis-domain-opacity: 1;
+    --vis-axis-domain-dashoffset: 0;
+    --vis-axis-domain-miterlimit: 4;
+    --vis-axis-domain-transition: stroke 200ms;
+
     --vis-dark-axis-tick-color: #6c778c;
     /* --vis-dark-axis-domain-color: // Undefined by default to allow fallback to var(--vis-dark-axis-tick-color) */
     --vis-dark-axis-tick-label-color: #e8e9ef;
@@ -54,6 +62,13 @@ export const axis = css`
   .domain {
     stroke: var(--vis-axis-domain-color, var(--vis-axis-tick-color));
     stroke-width: var(--vis-axis-domain-line-width, var(--vis-axis-grid-line-width));
+    stroke-dasharray: var(--vis-axis-domain-dasharray, 0 0);
+    stroke-linecap: var(--vis-axis-domain-linecap, butt);
+    stroke-linejoin: var(--vis-axis-domain-linejoin, miter);
+    stroke-opacity: var(--vis-axis-domain-opacity, 1);
+    stroke-dashoffset: var(--vis-axis-domain-dashoffset, 0);
+    stroke-miterlimit: var(--vis-axis-domain-miterlimit, 4);
+    transition: var(--vis-axis-domain-transition, stroke 200ms);
   }
 
   &${`.${hideTickLine}`} {
@@ -79,6 +94,13 @@ export const grid = css`
   line {
     stroke: var(--vis-axis-grid-color);
     stroke-width: var(--vis-axis-grid-line-width);
+    stroke-dasharray: var(--vis-axis-domain-dasharray, 0 0);
+    stroke-linecap: var(--vis-axis-domain-linecap, butt);
+    stroke-linejoin: var(--vis-axis-domain-linejoin, miter);
+    stroke-opacity: var(--vis-axis-domain-opacity, 1);
+    stroke-dashoffset: var(--vis-axis-domain-dashoffset, 0);
+    stroke-miterlimit: var(--vis-axis-domain-miterlimit, 4);
+    transition: var(--vis-axis-domain-transition, stroke 200ms);
   }
 `
 
@@ -91,6 +113,13 @@ export const tick = css`
   line {
     stroke: var(--vis-axis-tick-color);
     stroke-width: var(--vis-axis-tick-line-width);
+    stroke-dasharray: var(--vis-axis-domain-dasharray, 0 0);
+    stroke-linecap: var(--vis-axis-domain-linecap, butt);
+    stroke-linejoin: var(--vis-axis-domain-linejoin, miter);
+    stroke-opacity: var(--vis-axis-domain-opacity, 1);
+    stroke-dashoffset: var(--vis-axis-domain-dashoffset, 0);
+    stroke-miterlimit: var(--vis-axis-domain-miterlimit, 4);
+    transition: var(--vis-axis-domain-transition, stroke 200ms);
   }
 
   text {
