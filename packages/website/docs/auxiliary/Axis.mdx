@@ -271,6 +271,13 @@ The _Axis_ component supports additional styling via CSS variables that you can 
   --vis-axis-label-color: #1acb9a;
   --vis-axis-font-family: monospace;
   --vis-axis-tick-label-color:  #8777d9;
+  /* New customizable line settings */
+  --vis-axis-domain-linecap: butt;
+  --vis-axis-domain-linejoin: miter;
+  --vis-axis-domain-opacity: 1;
+  --vis-axis-domain-dashoffset: 0;
+  --vis-axis-domain-miterlimit: 4;
+  --vis-axis-domain-transition: stroke 200ms;
 }
 ```
 <XYWrapper {...axisProps()} gridLine height={150} label="Label" excludeTabs className="custom-axis"/>
@@ -291,7 +298,12 @@ The _Axis_ component supports additional styling via CSS variables that you can 
 --vis-axis-tick-line-width: 1px;
 --vis-axis-grid-line-width: 1px;
 --vis-axis-domain-line-width: // Unset, falls back to --vis-axis-grid-line-width;
- 
+--vis-axis-domain-linecap: butt;
+--vis-axis-domain-linejoin: miter;
+--vis-axis-domain-opacity: 1;
+--vis-axis-domain-dashoffset: 0;
+--vis-axis-domain-miterlimit: 4;
+--vis-axis-domain-transition: stroke 200ms;
 /* Dark Theme */
 --vis-dark-axis-tick-color: #6c778c;
 --vis-dark-axis-domain-color: // Unset, falls back to --vis-dark-axis-tick-color;
