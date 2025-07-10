@@ -13,6 +13,7 @@ export const globalStyles = injectGlobal`
     --vis-axis-grid-color: #e8e9ef;
     --vis-axis-label-color: #6c778c;
     --vis-axis-tick-label-color: #6c778c;
+    --vis-axis-tick-label-weight: 500;
     --vis-axis-tick-label-font-size: 12px;
     --vis-axis-tick-label-cursor: default;
     --vis-axis-tick-label-text-decoration: none;
@@ -87,6 +88,7 @@ export const tick = css`
 
   stroke: none;
   font-size: var(--vis-axis-tick-label-font-size);
+  font-weight: var(--vis-axis-tick-label-weight);
 
   line {
     stroke: var(--vis-axis-tick-color);
