@@ -129,9 +129,8 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
         // Convert SVG coordinates to screen coordinates
         const containerRect = this.container.node().getBoundingClientRect()
 
-        // TODO: This needs to be the left margin of the container
-        const margin = this._containerWidth - this._width
-        const screenX = (isContainerBody ? xPx + containerRect.left : xPx) + margin
+        // Use the actual left margin from the container
+        const screenX = (isContainerBody ? xPx + containerRect.left : xPx) + this._containerMargin.left
         const screenY = this._height / 2 + (isContainerBody ? containerRect.top : 0)
         const pos = [screenX, screenY] as [number, number]
         this._showTooltip(datum, xValue, pos, nearestDatumIndex)

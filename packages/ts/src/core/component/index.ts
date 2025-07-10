@@ -47,8 +47,16 @@ export class ComponentCore<
   protected _containerWidth: number | undefined = undefined
   /** Container height in pixels. This property is set automatically by the container. */
   protected _containerHeight: number | undefined = undefined
+  /** Container margin in pixels. This property is set automatically by the container. */
+  protected _containerMargin: Spacing = { top: 0, bottom: 0, left: 0, right: 0 }
 
   _setUpComponentEventsThrottled = throttle(this._setUpComponentEvents, 500)
+
+  /** Set the container margin. Called automatically by containers. */
+  setContainerMargin (margin: Spacing): void {
+    this._containerMargin = margin
+  }
+
   _setCustomAttributesThrottled = throttle(this._setCustomAttributes, 500)
 
   constructor (type = ComponentType.SVG) {
