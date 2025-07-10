@@ -78,8 +78,8 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
   }
 
   // Custom template function that shows interpolated values
-  const template = (d: XYDataRecord | undefined, x: number | Date): string => {
-    if (!data.length) return ''
+  const template = (d: XYDataRecord | undefined, x: number | Date, nearestDatumIndex?: number, data?: XYDataRecord[]): string => {
+    if (!data || !data.length) return ''
 
     // Convert Date to number if needed
     const xValue = x instanceof Date ? x.getTime() : x
@@ -112,6 +112,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
     return `
       <div style="padding: 0px; font-size: 12px;">
         <div><strong>X: ${clampedX.toFixed(2)}</strong></div>
+        <div>Nearest Datum Index: ${nearestDatumIndex}</div>
         <div>Series 1: ${interpolatedValues[0].toFixed(2)}</div>
         <div>Series 2: ${interpolatedValues[1].toFixed(2)}</div>
         <div>Series 3: ${interpolatedValues[2].toFixed(2)}</div>

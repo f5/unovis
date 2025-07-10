@@ -12,6 +12,7 @@ import { getColor } from 'utils/color'
 
 // Types
 import { Position } from 'types/position'
+import { FindNearestDirection } from 'types/data'
 
 // Local Types
 import { CrosshairAccessors, CrosshairCircle } from './types'
@@ -21,6 +22,7 @@ import { CrosshairDefaultConfig, CrosshairConfigInterface } from './config'
 
 // Styles
 import * as s from './style'
+
 
 export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInterface<Datum>> {
   static selectors = s
@@ -86,6 +88,14 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
 
     let datum: Datum | undefined
     let datumIndex: number | undefined
+    let nearestDatumIndex: number | undefined
+
+    // Always calculate the nearest datum index for template and getCircles functions
+    if (datamodel.data?.length && this.accessors.x) {
+      const nearestDatum = getNearest(datamodel.data, xValue, this.accessors.x, FindNearestDirection.Left)
+      nearestDatumIndex = datamodel.data.indexOf(nearestDatum)
+    }
+
     if (config.snapToData) {
       if (!this.accessors.y && !this.accessors.yStacked && datamodel.data?.length) {
         console.warn('Unovis | Crosshair: Y accessors have not been configured. Please check if they\'re present in the configuration object')
@@ -124,10 +134,10 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
         const screenX = (isContainerBody ? xPx + containerRect.left : xPx) + margin
         const screenY = this._height / 2 + (isContainerBody ? containerRect.top : 0)
         const pos = [screenX, screenY] as [number, number]
-        this._showTooltip(datum, xValue, pos)
+        this._showTooltip(datum, xValue, pos, nearestDatumIndex)
       } else if (this._mouseEvent) {
         const pos = (isContainerBody ? [this._mouseEvent.clientX, this._mouseEvent.clientY] : pointer(this._mouseEvent, container)) as [number, number]
-        this._showTooltip(datum, xValue, pos)
+        this._showTooltip(datum, xValue, pos, nearestDatumIndex)
       }
     } else this._hideTooltip()
 
@@ -158,7 +168,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
       .attr('x2', xClamped)
 
     const circleData = isFunction(config.getCircles)
-      ? config.getCircles(xValue, datamodel.data, this.yScale)
+      ? config.getCircles(xValue, datamodel.data, this.yScale, nearestDatumIndex)
       : this.getCircleData(datum, datumIndex)
 
     const circles = this.g
@@ -214,13 +224,13 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
     })
   }
 
-  _showTooltip (datum: Datum, xValue: number, pos: [number, number]): void {
-    const { config } = this
+  _showTooltip (datum: Datum, xValue: number, pos: [number, number], nearestDatumIndex?: number): void {
+    const { config, datamodel } = this
     const tooltip = config.tooltip ?? this.tooltip
     if (!tooltip || !pos) return
 
     const [x, y] = pos
-    const content = config.template(datum, xValue)
+    const content = config.template(datum, xValue, nearestDatumIndex, datamodel.data)
     // Force set `followCursor` to `true` because we don't want Crosshair's tooltip to be hoverable
     tooltip.config.followCursor = true
 
