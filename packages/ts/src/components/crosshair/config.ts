@@ -25,8 +25,10 @@ export interface CrosshairConfigInterface<Datum> extends WithOptional<XYComponen
   baseline?: NumericAccessor<Datum>;
   /** An instance of the Tooltip component to be used with Crosshair. Default: `undefined` */
   tooltip?: Tooltip | undefined;
-  /** Tooltip template accessor. The function is supposed to return either a valid HTML string or an HTMLElement. Default: `d => ''` */
-  template?: (data: Datum, x: number | Date) => string | HTMLElement;
+  /** Tooltip template accessor. The function is supposed to return either a valid HTML string or an HTMLElement.
+   * When snapToData is false, datum will be undefined but nearestDatumIndex and data will be provided.
+   * Default: `d => ''` */
+  template?: (datum: Datum, x: number | Date, nearestDatumIndex?: number, data?: Datum[]) => string | HTMLElement;
   /** Hide Crosshair when the corresponding datum element is far from mouse pointer. Default: `true` */
   hideWhenFarFromPointer?: boolean;
   /** Distance in pixels to check in the hideWhenFarFromPointer condition. Default: `100` */
@@ -38,12 +40,12 @@ export interface CrosshairConfigInterface<Datum> extends WithOptional<XYComponen
   */
   snapToData?: boolean;
   /** Custom function for setting up the crosshair circles, usually needed when `snapToData` is set to `false`.
-   * The function receives the horizontal position of the crosshair (in the data space, not in pixels), the data array
-   * and the `yScale` instance to help you calculate the correct vertical position of the circles.
+   * The function receives the horizontal position of the crosshair (in the data space, not in pixels), the data array,
+   * the `yScale` instance to help you calculate the correct vertical position of the circles, and the nearest datum index.
    * It has to return an array of the CrosshairCircle objects: `{ y: number; color: string; opacity?: number }[]`.
    * Default: `undefined`
   */
-  getCircles?: (x: number | Date, data: Datum[], yScale: ContinuousScale) => CrosshairCircle[];
+  getCircles?: (x: number | Date, data: Datum[], yScale: ContinuousScale, nearestDatumIndex?: number) => CrosshairCircle[];
   /** Callback function that is called when the crosshair is moved. Default: `undefined` */
   onCrosshairMove?: (x: number | Date, datum: Datum | undefined, datumIndex: number | undefined) => void;
   /** Force the crosshair to show at a specific position. Default: `undefined` */
@@ -56,7 +58,7 @@ export const CrosshairDefaultConfig: CrosshairConfigInterface<unknown> = {
   baseline: null,
   duration: 100,
   tooltip: undefined,
-  template: <Datum>(d: Datum | undefined, x: number | Date): string => '',
+  template: <Datum>(d: Datum | undefined, x: number | Date, nearestDatumIndex?: number, data?: Datum[]): string => '',
   hideWhenFarFromPointer: true,
   hideWhenFarFromPointerDistance: 100,
   snapToData: true,
