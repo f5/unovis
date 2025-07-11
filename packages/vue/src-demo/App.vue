@@ -26,6 +26,7 @@ const imports = [
   defineAsyncComponent(() => import('@unovis/shared/examples/force-graph/force-graph.vue')),
   defineAsyncComponent(() => import('@unovis/shared/examples/parallel-graph/parallel-graph.vue')),
   defineAsyncComponent(() => import('@unovis/shared/examples/data-gap-line-chart/data-gap-line-chart.vue')),
+  defineAsyncComponent(() => import('@unovis/shared/examples/patchy-line-chart/patchy-line-chart.vue')),
   defineAsyncComponent(() => import('@unovis/shared/examples/crosshair-stacked-bar/crosshair-stacked-bar.vue')),
   defineAsyncComponent(() => import('@unovis/shared/examples/elk-layered-graph/elk-layered-graph.vue')),
   defineAsyncComponent(() => import('@unovis/shared/examples/hierarchical-chord-diagram/hierarchical-chord-diagram.vue')),
