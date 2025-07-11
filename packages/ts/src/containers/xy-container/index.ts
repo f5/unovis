@@ -214,10 +214,12 @@ export class XYContainer<Datum> extends ContainerCore {
       this._setAutoMargin()
     }
 
-    // Pass size to the components
+    // Pass size and margin to the components
     const components = clean([...this.components, config.xAxis, config.yAxis, config.crosshair, config.annotations])
+    const margin = this._getMargin()
     for (const c of components) {
       c.setSize(this.width, this.height, this.containerWidth, this.containerHeight)
+      c.setContainerMargin(margin)
     }
 
     // Update Scales of all the components at once to calculate required paddings and sync them
