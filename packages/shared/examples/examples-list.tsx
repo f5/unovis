@@ -65,6 +65,7 @@ export const examples: ExampleCollection[] = [
       require('./force-graph').default,
       require('./parallel-graph').default,
       require('./elk-layered-graph').default,
+      require('./custom-nodes-graph').default,
     ],
   },
   {
