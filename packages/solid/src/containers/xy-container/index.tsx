@@ -105,7 +105,7 @@ export function VisXYContainer<Datum>(props: VisXYContainerProps<Datum>) {
       produce((c) => {
         switch (key) {
           case 'component':
-            c.components?.filter((i) => !i.isDestroyed())
+            c.components = c.components?.filter((i) => !i.isDestroyed())
             break
           case 'axis':
             // @ts-expect-error -- ts does not happy with the type
