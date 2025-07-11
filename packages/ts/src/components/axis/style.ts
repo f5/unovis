@@ -1,4 +1,5 @@
 import { css } from '@emotion/css'
+import { getCssVarNames, injectGlobalCssVariables } from 'utils/style'
 
 export const root = css`
   label: axis-component;
@@ -10,15 +11,22 @@ export const cssVarDefaults = {
   '--vis-axis-tick-color': '#e8e9ef',
   /* --vis-axis-domain-color: // Undefined by default to allow fallback to var(--vis-axis-tick-color) */
   '--vis-axis-grid-color': '#e8e9ef',
+  '--vis-axis-grid-line-width': '1px',
+  '--vis-axis-grid-line-dasharray': 'none',
+
+  '--vis-axis-label-font-size': '14px',
   '--vis-axis-label-color': '#6c778c',
+  '--vis-axis-label-weight': '500',
+
   '--vis-axis-tick-label-color': '#6c778c',
   '--vis-axis-tick-label-font-size': '12px',
+  '--vis-axis-tick-label-weight': '500',
   '--vis-axis-tick-label-cursor': 'default',
   '--vis-axis-tick-label-text-decoration': 'none',
-  '--vis-axis-label-font-size': '14px',
+
   '--vis-axis-tick-line-width': '1px',
   '--vis-axis-tick-label-hide-transition': 'opacity 400ms ease-in-out',
-  '--vis-axis-grid-line-width': '1px',
+
   /* --vis-axis-domain-line-width: // Undefined by default to allow fallback to var(--vis-axis-grid-line-width) */
 
   '--vis-dark-axis-tick-color': '#6c778c',
@@ -26,13 +34,10 @@ export const cssVarDefaults = {
   '--vis-dark-axis-tick-label-color': '#e8e9ef',
   '--vis-dark-axis-grid-color': '#6c778c',
   '--vis-dark-axis-label-color': '#fefefe',
-
-  '--vis-axis-tick-color-var': 'var(--vis-dark-axis-tick-color)',
-  '--vis-axis-domain-color-var': 'var(--vis-dark-axis-domain-color)',
-  '--vis-axis-tick-label-color-var': 'var(--vis-dark-axis-tick-label-color)',
-  '--vis-axis-grid-color-var': 'var(--vis-dark-axis-grid-color)',
-  '--vis-axis-label-color-var': 'var(--vis-dark-axis-label-color)',
 }
+
+export const variables = getCssVarNames(cssVarDefaults)
+injectGlobalCssVariables(cssVarDefaults, root)
 
 export const hideTickLine = css`
   label: hide-tick-line;
@@ -50,6 +55,7 @@ export const axis = css`
   .domain {
     stroke: var(--vis-axis-domain-color, var(--vis-axis-tick-color));
     stroke-width: var(--vis-axis-domain-line-width, var(--vis-axis-grid-line-width));
+    stroke-dasharray: var(--vis-axis-domain-line-dasharray, var(--vis-axis-grid-line-dasharray));
   }
 
   &${`.${hideTickLine}`} {
@@ -75,6 +81,7 @@ export const grid = css`
   line {
     stroke: var(--vis-axis-grid-color);
     stroke-width: var(--vis-axis-grid-line-width);
+    stroke-dasharray: var(--vis-axis-grid-line-dasharray);
   }
 `
 
@@ -83,6 +90,7 @@ export const tick = css`
 
   stroke: none;
   font-size: var(--vis-axis-tick-label-font-size);
+  font-weight: var(--vis-axis-tick-label-weight);
 
   line {
     stroke: var(--vis-axis-tick-color);
@@ -102,6 +110,7 @@ export const label = css`
   label: label;
   fill: var(--vis-axis-label-color);
   font-size: var(--vis-axis-label-font-size);
+  font-weight: var(--vis-axis-label-weight);
   font-family: var(--vis-axis-font-family, var(--vis-font-family));
   text-anchor: middle;
 `
