@@ -72,7 +72,8 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
   }
 
   setContainer (containerSvg: Selection<SVGSVGElement, unknown, SVGSVGElement, unknown>): void {
-    // Set up mousemove event for Crosshair
+    if (this.container === containerSvg) return
+
     this.container = containerSvg
     this.container.on('mousemove.crosshair', this._onMouseMove.bind(this))
     this.container.on('mouseout.crosshair', this._onMouseOut.bind(this))
@@ -144,12 +145,6 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
       this._mouseEvent = undefined
     }
 
-    // When `config.forceShowAt` becomes undefined, the component will "jump" to `this._xPx` which is set to the last mouse position.
-    // This looks off, so we set `this._xPx` to `xPx` to make it look like the crosshair is rendered at the forced position
-    if (isForceShowAtDefined) {
-      this._xPx = undefined
-    }
-
     smartTransition(this.g, duration)
       .style('opacity', shouldShow ? 1 : 0)
 
@@ -157,8 +152,9 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
       .attr('y1', 0)
       .attr('y1', this._height)
 
-    // Don't render the crosshair if the xPx is not finite
-    if (!isFinite(xClamped)) return
+    // When `config.forceShowAt` becomes `undefined`, the crosshair "jumps" to the edge of the chart.
+    // This looks off, so we stop rendering when the `xPx` value is not finite.
+    if (!isFinite(xPx)) return
 
     smartTransition(this.line, duration, easeLinear)
       .attr('x1', xClamped)
@@ -195,7 +191,13 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
   }
 
   hide (): void {
-    this._onMouseOut()
+    window.cancelAnimationFrame(this._animFrameId)
+    this._animFrameId = window.requestAnimationFrame(() => {
+      this._xPx = undefined
+      this._yPx = undefined
+      this._mouseEvent = undefined
+      this._render()
+    })
   }
 
   _onMouseMove (event: MouseEvent): void {
@@ -214,11 +216,11 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
     })
   }
 
-  _onMouseOut (): void {
-    window.cancelAnimationFrame(this._animFrameId)
-    this._animFrameId = window.requestAnimationFrame(() => {
-      this._render()
-    })
+  _onMouseOut (event?: MouseEvent): void {
+    // Only hide if the mouse actually left the SVG, not just moved to a child
+    if (!event || !this.container?.node().contains((event as MouseEvent).relatedTarget as Node)) {
+      this.hide()
+    }
   }
 
   _showTooltip (datum: Datum, xValue: number, pos: [number, number], nearestDatumIndex: number | undefined): void {
