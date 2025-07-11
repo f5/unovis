@@ -1,0 +1,70 @@
+<div>
+  <div [ngClass]="globalControlsContainerCls">
+    <label>
+      <input
+        type="checkbox"
+        [checked]="tooltipFollowCursor"
+        (change)="onTooltipFollowCursorChange($event)"
+      />
+      Tooltip - followCursor
+    </label>
+    <label>
+      <input
+        type="checkbox"
+        [checked]="tooltipAllowHover"
+        (change)="onTooltipAllowHoverChange($event)"
+      />
+      Tooltip - allowHover
+    </label>
+    <button [ngClass]="graphButtonCls" (click)="zoomToIdentityAndNetwork()">
+      Zoom To Identity and Network Nodes
+    </button>
+    <button [ngClass]="graphButtonCls" (click)="fitGraph()">
+      Fit Graph
+    </button>
+  </div>
+
+  <vis-single-container
+    [ngClass]="customNodesGraphCls"
+    [data]="data"
+    height="50vh"
+    [duration]="1000"
+  >
+    <vis-tooltip
+      [triggers]="tooltipTriggers"
+      [followCursor]="tooltipFollowCursor"
+      [allowHover]="tooltipAllowHover"
+    ></vis-tooltip>
+    <vis-graph
+      #graphRef
+      [layoutType]="'parallel'"
+      [layoutNodeGroup]="layoutNodeGroup"
+      [linkArrow]="linkArrow"
+      [linkBandWidth]="linkBandWidth"
+      [linkCurvature]="1"
+      [linkWidth]="linkWidth"
+      [nodeFill]="getNodeFillColor"
+      [nodeSize]="nodeSize"
+      [nodeIconSize]="nodeSize"
+      [nodeLabel]="nodeLabel"
+      [nodeLabelTrimLength]="30"
+      [nodeStroke]="'none'"
+      [nodeSubLabel]="nodeSubLabel"
+      [nodeSubLabelTrimLength]="30"
+      [nodeEnterCustomRenderFunction]="nodeEnterCustomRenderFunction"
+      [nodeUpdateCustomRenderFunction]="nodeUpdateCustomRenderFunction"
+      [onRenderComplete]="onRenderComplete"
+      [nodeSelectionHighlightMode]="nodeSelectionHighlightMode"
+      [selectedNodeId]="selectedNodeId"
+      [events]="events"
+      [linkFlow]="showLinkFlow"
+      [onLayoutCalculated]="onLayoutCalculated"
+      [linkFlowAnimDuration]="handleLinkFlowAnimDuration"
+      [linkFlowParticleSpeed]="handleLinkFlowParticleSpeed"
+      [linkFlowParticleSize]="handleLinkFlowParticleSize"
+      [fitViewPadding]="fitViewPadding"
+      [onZoom]="onZoom"
+      [zoomScaleExtent]="zoomScaleExtent"
+    ></vis-graph>
+  </vis-single-container>
+</div>
