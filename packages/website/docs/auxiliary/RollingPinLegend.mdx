@@ -1,0 +1,59 @@
+---
+title: Rolling Pin Legend
+sidebar_title: Rolling Pin Legend
+---
+import React, { useCallback, useState } from 'react'
+import { RollingPinLegend } from '@unovis/ts'
+import CodeBlock from '@theme/CodeBlock'
+import { PropsTable } from '@site/src/components/PropsTable'
+import { DocWrapper } from '../wrappers'
+import '../styles.css'
+
+export const RollingPinLegendDoc = (props) => (
+  <div className='padded-doc'>
+    <DocWrapper
+      name='RollingPinLegend'
+      rects={['#11F', '#55F', '#99F', '#DDF', '#fff', '#FDD', '#F99', '#F55', '#F11']}
+      {...props}/>
+  </div>
+)
+
+## Overview
+_RollingPinLegend_ is a stand-alone component that can be used alongside your visualization to compactly label marginal values while also displaying the color scheme used.
+
+## Legend Contents
+_RollingPinLegend_ requires the `rects` property, an array of strings representing colors used in a legend.
+
+`leftLabelText` and `rightLabelText` are optional, but it is recommended to use at least one of them.
+
+Here is an example of a basic configuration:
+
+<RollingPinLegendDoc
+  showContext='minimal'
+  leftLabelText='Democrat'
+  rightLabelText='Republican'
+/>
+
+## Label Configuration
+### Font Size
+The labels' font size can be changed with a valid [font-size CSS](https://developer.mozilla.org/en-US/docs/Web/CSS/font-size)
+string provided to the `labelMaxWidth` property.
+
+<RollingPinLegendDoc labelFontSize={'x-large'}/>
+
+### Custom Class
+You can also add any further configuration for labels by providing `labelClassName` with your
+custom css class.
+
+## CSS Variables
+<details open>
+  <summary>Supported CSS variables and their default values</summary>
+  <CodeBlock language="css">
+{`${
+  Object.entries(RollingPinLegend.selectors.cssVarDefaults || {})
+  .map(([key, value]) => `${key}: ${value};`).join('\n')}
+`}</CodeBlock>
+</details>
+
+## Component Props
+<PropsTable name="VisRollingPinLegend"/>
