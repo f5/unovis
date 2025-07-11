@@ -6,12 +6,12 @@ export const root = css`
 `
 
 export const cssVarDefaults = {
-  '--vis-rolling-pin-legend-label-color': '#6c778c;',
-  '--vis-rolling-pin-legend-label-max-width': '300px;',
-  '--vis-rolling-pin-legend-label-font-size': '12px;',
-  '--vis-rolling-pin-legend-spacing': '4px;',
-  '--vis-rolling-pin-legend-item-width': '8px;',
-  '--vis-dark-rolling-pin-legend-label-color': '#eee;',
+  '--vis-rolling-pin-legend-label-color': '#6c778c',
+  '--vis-rolling-pin-legend-label-max-width': '300px',
+  '--vis-rolling-pin-legend-label-font-size': '12px',
+  '--vis-rolling-pin-legend-spacing': '4px',
+  '--vis-rolling-pin-legend-item-width': '8px',
+  '--vis-dark-rolling-pin-legend-label-color': '#eee',
 }
 
 export const variables = getCssVarNames(cssVarDefaults)
