@@ -62,6 +62,23 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
     return { x, y, yStacked, baseline }
   }
 
+  private _isContainerInViewport (): boolean {
+    if (!this.container?.node()) return false
+
+    const containerRect = this.container.node().getBoundingClientRect()
+    const viewportWidth = window.innerWidth || document.documentElement.clientWidth
+    const viewportHeight = window.innerHeight || document.documentElement.clientHeight
+
+    // Calculate the visible area of the container
+    const visibleWidth = Math.max(0, Math.min(containerRect.right, viewportWidth) - Math.max(containerRect.left, 0))
+    const visibleHeight = Math.max(0, Math.min(containerRect.bottom, viewportHeight) - Math.max(containerRect.top, 0))
+    const containerArea = containerRect.width * containerRect.height
+    const visibleArea = visibleWidth * visibleHeight
+
+    // Container must be at least 20% visible
+    return containerArea > 0 && (visibleArea / containerArea) >= 0.2
+  }
+
   constructor (config?: CrosshairConfigInterface<Datum>) {
     super()
     if (config) this.setConfig(config)
@@ -120,7 +137,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
     }
 
     const tooltip = config.tooltip ?? this.tooltip
-    if (shouldShow && tooltip) {
+    if (shouldShow && tooltip && this._isContainerInViewport()) {
       const container = tooltip.getContainer() || this.container.node()
       const isContainerBody = tooltip.isContainerBody()
 
