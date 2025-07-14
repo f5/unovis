@@ -21,3 +21,4 @@ export { default as VisAnnotations, VisAnnotationsSelectors } from './components
 export { default as VisLeafletMap, VisLeafletMapSelectors } from './html-components/leaflet-map/index.vue'
 export { default as VisLeafletFlowMap, VisLeafletFlowMapSelectors } from './html-components/leaflet-flow-map/index.vue'
 export { default as VisBulletLegend, VisBulletLegendSelectors } from './html-components/bullet-legend/index.vue'
+export { default as VisRollingPinLegend, VisRollingPinLegendSelectors } from './html-components/rolling-pin-legend/index.vue'
