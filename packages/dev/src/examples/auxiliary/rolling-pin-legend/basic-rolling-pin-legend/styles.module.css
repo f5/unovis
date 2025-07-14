@@ -1,0 +1,16 @@
+.legendExample {
+  margin: 0 auto;
+}
+
+.legendExample > div {
+  margin: 10px;
+}
+
+.components {
+  display: flex;
+}
+
+.components > div:last-child {
+  flex: 1;
+  margin-left: 20px;
+}

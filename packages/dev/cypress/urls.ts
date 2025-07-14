@@ -35,6 +35,11 @@ export const urls = [
     duration: 0,
   },
   {
+    title: 'Basic Rolling Pin Legend',
+    url: '/examples/Rolling%20Pin%20Legend/Basic%20Rolling%20Pin%20Legend',
+    duration: 0,
+  },
+  {
     title: 'Tooltip Rendered in Portal',
     url: '/examples/Tooltip/Tooltip%20Rendered%20in%20Portal',
     duration: 0,
