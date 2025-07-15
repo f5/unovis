@@ -20,7 +20,7 @@ import { ScaleDimension } from 'types/scale'
 import { Direction } from 'types/direction'
 
 // Utils
-import { clamp, clean, flatten } from 'utils/data'
+import { clamp, clean, flatten, isEqual } from 'utils/data'
 import { guid } from 'utils/misc'
 
 // Config
@@ -116,6 +116,7 @@ export class XYContainer<Datum> extends ContainerCore {
   public setData (data: Datum[], preventRender?: boolean): void {
     const { components, config } = this
     if (!data) return
+
     this.datamodel.data = data
 
     components.forEach((c) => {
@@ -125,7 +126,16 @@ export class XYContainer<Datum> extends ContainerCore {
     config.crosshair?.setData(data)
     config.xAxis?.setData(data)
     config.yAxis?.setData(data)
-    config.tooltip?.hide()
+
+    // Hide tooltip and crosshair if the data has changed
+    // Important: We still want to do `setData` for the components above even if the data hasn't changed
+    // because calling `updateContainer` may add new components and we need to pass them the data
+    const hasDataUpdated = !isEqual(this.datamodel.data, data)
+    if (hasDataUpdated) {
+      config.tooltip?.hide()
+      config.crosshair?.hide()
+    }
+
     if (!preventRender) this.render()
   }
 
@@ -275,7 +285,7 @@ export class XYContainer<Datum> extends ContainerCore {
       crosshair.g.attr('transform', `translate(${margin.left},${margin.top})`)
         .style('clip-path', `url(#${this._clipPathId})`)
         .style('-webkit-clip-path', `url(#${this._clipPathId})`)
-      crosshair.hide()
+      crosshair.render()
     }
 
     config.annotations?.g.attr('transform', `translate(${margin.left},${margin.top})`)
