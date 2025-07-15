@@ -8,7 +8,7 @@ export const title = 'Synced Crosshairs'
 export const subTitle = 'Two Charts'
 export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const tooltipRef = useRef(null)
-  const [forcePosition, setForcePosition] = useState<number | Date>(75)
+  const [forcePosition, setForcePosition] = useState<number | Date | undefined>(75)
   const data = useMemo(() => generateXYDataRecords(150), [])
 
   const accessors = useMemo(() => [
@@ -22,6 +22,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
       <div style={{ marginBottom: '10px', fontSize: '14px', color: '#666' }}>
         Crosshair forced to show at position: {forcePosition?.toString()}
       </div>
+
       <VisXYContainer<XYDataRecord> data={data} margin={{ top: 5, left: 5 }} duration={props.duration}>
         <VisArea x={d => d.x} y={accessors}/>
         <VisAxis type='x'/>
@@ -37,6 +38,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
         />
         <VisTooltip ref={tooltipRef} container={document.body}/>
       </VisXYContainer>
+
       <VisXYContainer<XYDataRecord> data={data} margin={{ top: 5, left: 5 }} duration={props.duration} xDomain={[0, 100]}>
         <VisLine x={d => d.x} y={accessors}/>
         <VisAxis type='x'/>
@@ -50,6 +52,9 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
         />
         <VisTooltip ref={tooltipRef} container={document.body}/>
       </VisXYContainer>
+
+      {/* This is a placeholder to make the example scrollable */}
+      <div style={{ height: '800px', width: '100%' }}/>
     </div>
   )
 }
