@@ -75,8 +75,8 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
     const containerArea = containerRect.width * containerRect.height
     const visibleArea = visibleWidth * visibleHeight
 
-    // Container must be at least 20% visible
-    return containerArea > 0 && (visibleArea / containerArea) >= 0.2
+    // Container must be at least 35% visible
+    return containerArea > 0 && (visibleArea / containerArea) >= 0.35
   }
 
   constructor (config?: CrosshairConfigInterface<Datum>) {
@@ -94,6 +94,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
     this.container = containerSvg
     this.container.on('mousemove.crosshair', this._onMouseMove.bind(this))
     this.container.on('mouseout.crosshair', this._onMouseOut.bind(this))
+    this.container.on('wheel.crosshair', this._onWheel.bind(this))
   }
 
   _render (customDuration?: number): void {
@@ -109,6 +110,8 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
         getNearest(datamodel.data, xValue, this.accessors.x, FindNearestDirection.Left)
       ) : undefined
 
+    // If `snapToData` is `true`, we need to find the nearest datum to the crosshair
+    // It can be from a mouse interaction or from a `forceShowAt` setting
     let nearestDatum: Datum | undefined
     let nearestDatumIndex: number | undefined
     if (config.snapToData) {
@@ -158,20 +161,20 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
 
     // Trigger `onCrosshairMove` if the render was triggered by a mouse move event
     if (this._mouseEvent) {
-      config.onCrosshairMove?.(shouldShow ? this.xScale.invert(this._xPx) as number : undefined, nearestDatum, nearestDatumIndex)
+      config.onCrosshairMove?.(shouldShow ? this.xScale.invert(this._xPx) as number : undefined, nearestDatum, nearestDatumIndex, this._mouseEvent)
       this._mouseEvent = undefined
     }
 
     smartTransition(this.g, duration)
       .style('opacity', shouldShow ? 1 : 0)
 
+    // When `config.forceShowAt` becomes `undefined`, the crosshair "jumps" to the edge of the chart.
+    // This looks off, so we stop further rendering when the `xPx` value is not finite.
+    if (!isFinite(xPx)) return
+
     this.line
       .attr('y1', 0)
-      .attr('y1', this._height)
-
-    // When `config.forceShowAt` becomes `undefined`, the crosshair "jumps" to the edge of the chart.
-    // This looks off, so we stop rendering when the `xPx` value is not finite.
-    if (!isFinite(xPx)) return
+      .attr('y2', this._height)
 
     smartTransition(this.line, duration, easeLinear)
       .attr('x1', xClamped)
@@ -207,12 +210,15 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
     circles.exit().remove()
   }
 
-  hide (): void {
+  hide (sourceEvent?: MouseEvent | WheelEvent): void {
     window.cancelAnimationFrame(this._animFrameId)
     this._animFrameId = window.requestAnimationFrame(() => {
       this._xPx = undefined
       this._yPx = undefined
       this._mouseEvent = undefined
+      // We call `onCrosshairMove` with all the arguments set to `undefined` because we want
+      // the users to be able to hide the crosshair easily when using `forceShowAt`
+      this.config.onCrosshairMove?.(undefined, undefined, undefined, sourceEvent)
       this._render()
     })
   }
@@ -229,6 +235,8 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
 
     window.cancelAnimationFrame(this._animFrameId)
     this._animFrameId = window.requestAnimationFrame(() => {
+      // We'll call `config.onCrosshairMove` in `_render` with the found `nearestDatum` and `nearestDatumIndex`,
+      // which can come from the mouse interaction or from the `forceShowAt` setting
       this._render()
     })
   }
@@ -236,8 +244,12 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
   _onMouseOut (event?: MouseEvent): void {
     // Only hide if the mouse actually left the SVG, not just moved to a child
     if (!event || !this.container?.node().contains((event as MouseEvent).relatedTarget as Node)) {
-      this.hide()
+      this.hide(event)
     }
+  }
+
+  _onWheel (event: WheelEvent): void {
+    this.hide(event)
   }
 
   _showTooltip (datum: Datum, xValue: number, pos: [number, number], nearestDatumIndex: number | undefined): void {
