@@ -321,16 +321,17 @@ export function getNearest<Datum> (
     .sort(([a, i], [b, j]) => getNumber(a, accessor, i) - getNumber(b, accessor, j))
   const values = dataWithIndexSorted.map(([d, i]) => getNumber(d, accessor, i))
 
-  const index = direction === FindNearestDirection.Left
-    ? bisectRight(values, value, 1, data.length - 1)
-    : bisectLeft(values, value, 1, data.length - 1)
+  const index = direction === FindNearestDirection.Right
+    ? bisectLeft(values, value, 0, data.length - 1)
+    : bisectRight(values, value, 1, data.length)
 
-  if (direction === FindNearestDirection.Left) {
-    return dataWithIndexSorted[index - 1][0]
-  } else if (direction === FindNearestDirection.Right) {
+  if (direction === FindNearestDirection.Right) {
     return dataWithIndexSorted[index][0]
+  } else if (direction === FindNearestDirection.Left) {
+    return dataWithIndexSorted[index - 1][0]
   }
 
+  // By default (`FindNearestDirection.Auto`) return the nearest value
   return value - values[index - 1] > values[index] - value ? dataWithIndexSorted[index][0] : dataWithIndexSorted[index - 1][0]
 }
 
