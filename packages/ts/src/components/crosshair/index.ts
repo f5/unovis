@@ -119,14 +119,19 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
         console.warn('Unovis | Crosshair: Y accessors have not been configured. Please check if they\'re present in the configuration object')
       }
 
+      // Emit a warning if there's no data to snap to.
+      // To keep the console clean, only emit the warning when there's mouse interaction.
+      if (!datamodel.data?.length && this._mouseEvent) {
+        console.warn('Unovis | Crosshair: No data to snap to. Make sure the data has been passed to the container or to the crosshair itself')
+      }
+
       nearestDatum = getNearest(datamodel.data, xValue, this.accessors.x)
       nearestDatumIndex = datamodel.data.indexOf(nearestDatum)
-      if (!nearestDatum) return
     }
 
     const xRange = this.xScale.range()
     const yRange = this.yScale.range()
-    const xClamped = config.snapToData
+    const xClamped = config.snapToData && nearestDatum
       ? clamp(Math.round(this.xScale(getNumber(nearestDatum, this.accessors.x, nearestDatumIndex))), 0, this._width)
       : clamp(xPx, xRange[0], xRange[1])
 
