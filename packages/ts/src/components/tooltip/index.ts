@@ -352,11 +352,12 @@ export class Tooltip {
       const selection = select(component.element)
       selection
         .on('mousemove.tooltip', (e: MouseEvent) => {
+          const { config: currentConfig } = this // get latest config because it could have been changed after the event was triggered
           const path: (HTMLElement | SVGGElement)[] = (e.composedPath && e.composedPath()) || (e as any).path || [e.target]
 
           // Go through all of the configured triggers
-          for (const className of Object.keys(config.triggers)) {
-            const template = config.triggers[className]
+          for (const className of Object.keys(currentConfig.triggers)) {
+            const template = currentConfig.triggers[className]
             if (!template) continue // Skip if the trigger is not configured
 
             const els = selection.selectAll<HTMLElement | SVGGElement, unknown>(`.${className}`).nodes()
@@ -376,7 +377,7 @@ export class Tooltip {
                   // Otherwise we show the tooltip, but don't render the content if it's `undefined` or
                   // an empty string. This way we can allow it to work with things like `createPortal` in React
                   this.render(content)
-                  if (config.followCursor) this.place({ x, y })
+                  if (currentConfig.followCursor) this.place({ x, y })
                   else this.placeByElement(el)
                 }
 
