@@ -275,6 +275,7 @@ export class XYContainer<Datum> extends ContainerCore {
       const baselineComponentConfig = this.components.find(c => (c.config as AreaConfigInterface<Datum>).baseline)?.config as AreaConfigInterface<Datum>
       const baselineAccessor = baselineComponentConfig?.baseline
 
+      // Setting up fallback accessors for the crosshair to be used if they are not configured explicitly
       crosshair.accessors = {
         x: this.components[0]?.config.x,
         y: flatten(yAccessors),
