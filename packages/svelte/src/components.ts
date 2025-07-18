@@ -10,6 +10,7 @@ export { default as VisStackedBar } from './components/stacked-bar/stacked-bar.s
 export { default as VisTimeline } from './components/timeline/timeline.svelte'
 export { default as VisXYLabels } from './components/xy-labels/xy-labels.svelte'
 export { default as VisPlotband } from './components/plotband/plotband.svelte'
+export { default as VisPlotline } from './components/plotline/plotline.svelte'
 export { default as VisChordDiagram } from './components/chord-diagram/chord-diagram.svelte'
 export { default as VisDonut } from './components/donut/donut.svelte'
 export { default as VisGraph } from './components/graph/graph.svelte'

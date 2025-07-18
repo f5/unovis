@@ -53,6 +53,13 @@
   --vis-plotband-label-color: #ff6600;
 }
 
+.custom-plotline {
+  --vis-plotline-color: rgb(255, 140, 0);
+  --vis-plotline-width: 5;
+  --vis-plotline-label-font-size: 18px;
+  --vis-plotline-label-color: #009f6b;
+}
+
 .timeline-empty-data {
   --vis-timeline-line-stroke-color: none;
 }

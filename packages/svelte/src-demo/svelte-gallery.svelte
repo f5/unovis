@@ -12,7 +12,7 @@
     () => import('@unovis/shared/examples/advanced-leaflet-map/advanced-leaflet-map.svelte'),
     () => import('@unovis/shared/examples/basic-line-chart/basic-line-chart.svelte'),
     () => import('@unovis/shared/examples/patchy-line-chart/patchy-line-chart.svelte'),
-    () => import('@unovis/shared/examples/basic-scatter-chart/basic-scatter-chart.svelte'),
+    () => import('@unovis/shared/examples/basic-scatter-plot/basic-scatter-plot.svelte'),
     () => import('@unovis/shared/examples/brush-grouped-bar/brush-grouped-bar.svelte'),
     () => import('@unovis/shared/examples/free-brush-scatters/free-brush-scatters.svelte'),
     () => import('@unovis/shared/examples/horizontal-stacked-bar-chart/horizontal-stacked-bar-chart.svelte'),
@@ -31,7 +31,7 @@
     () => import('@unovis/shared/examples/sunburst-nested-donut/sunburst-nested-donut.svelte'),
     () => import('@unovis/shared/examples/basic-donut-chart/basic-donut-chart.svelte'),
     () => import('@unovis/shared/examples/shaped-scatter-plot/shaped-scatter-plot.svelte'),
-    () => import('@unovis/shared/examples/basic-plot-band/basic-plot-band.svelte'),
+    () => import('@unovis/shared/examples/plotband-plotline/plotband-plotline.svelte'),
   ]
 </script>
 

@@ -1,6 +1,6 @@
-import { LayoutMap, PlotbandLabelPosition } from './types'
+import { PlotbandLayoutMap, PlotbandLabelPosition } from './types'
 
-export const HORIZONTAL_X: LayoutMap = {
+export const HORIZONTAL_X: PlotbandLayoutMap = {
   [PlotbandLabelPosition.TopLeftOutside]: ({ startX, offsetX, offsetY }) => ({
     x: startX - offsetX,
     y: offsetY,
@@ -99,7 +99,7 @@ export const HORIZONTAL_X: LayoutMap = {
   }),
 }
 
-export const VERTICAL_X: LayoutMap = {
+export const VERTICAL_X: PlotbandLayoutMap = {
   [PlotbandLabelPosition.TopLeftOutside]: ({ startX, offsetX, offsetY }) => ({
     x: startX - offsetX,
     y: offsetY,
@@ -198,7 +198,7 @@ export const VERTICAL_X: LayoutMap = {
   }),
 }
 
-export const HORIZONTAL_Y: LayoutMap = {
+export const HORIZONTAL_Y: PlotbandLayoutMap = {
   [PlotbandLabelPosition.TopLeftOutside]: ({ startY, offsetX, offsetY }) => ({
     x: offsetX,
     y: startY - offsetY,
@@ -297,7 +297,7 @@ export const HORIZONTAL_Y: LayoutMap = {
   }),
 }
 
-export const VERTICAL_Y: LayoutMap = {
+export const VERTICAL_Y: PlotbandLayoutMap = {
   [PlotbandLabelPosition.TopLeftOutside]: ({ startY, offsetX, offsetY }) => ({
     x: offsetX,
     y: startY - offsetY,

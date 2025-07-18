@@ -44,7 +44,7 @@ const examples = [
   lazy(() => import('@unovis/shared/examples/crosshair-stacked-bar/crosshair-stacked-bar-solid')),
   lazy(() => import('@unovis/shared/examples/brush-grouped-bar/brush-grouped-bar-solid')),
   lazy(() => import('@unovis/shared/examples/free-brush-scatters/free-brush-scatters-solid')),
-  lazy(() => import('@unovis/shared/examples/basic-plotband/basic-plotband-solid')),
+  lazy(() => import('@unovis/shared/examples/plotband-plotline/plotband-plotline-solid')),
 ]
 
 const App = () => {

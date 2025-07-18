@@ -93,7 +93,7 @@ export const examples: ExampleCollection[] = [
       require('./crosshair-stacked-bar').default,
       require('./brush-grouped-bar').default,
       require('./free-brush-scatters').default,
-      require('./basic-plotband').default,
+      require('./plotband-plotline').default,
     ],
   },
   /* {} */

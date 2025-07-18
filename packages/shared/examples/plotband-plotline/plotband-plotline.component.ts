@@ -2,10 +2,10 @@ import { Component } from '@angular/core'
 import { data, DataRecord } from './data'
 
 @Component({
-  selector: 'basic-plotline',
-  templateUrl: './basic-plotline.component.html',
+  selector: 'plotband-plotline',
+  templateUrl: './plotband-plotline.component.html',
 })
-export class BasicPlotbandComponent {
+export class PlotbandPlotlineComponent {
   x = (d: DataRecord): number => d.x
   y = (d: DataRecord): number => d.y
   data = data
