@@ -26,6 +26,8 @@ export interface BulletLegendConfigInterface {
   labelMaxWidth?: string | null;
   /** Bullet shape size, mapped to the width and height CSS properties. Default: `null` */
   bulletSize?: string | null;
+  /** Spacing between multiple bullet symbols in pixels. Default: `4` */
+  bulletSpacing?: number;
   /** Bullet shape enum value or accessor function. Default: `d => d.shape ?? BulletShape.Circle */
   bulletShape?: GenericAccessor<BulletShape, BulletLegendItemInterface>;
   /** Legend orientation. When set to `BulletLegendOrientation.Vertical`, each legend item will
@@ -43,6 +45,7 @@ export const BulletLegendDefaultConfig: BulletLegendConfigInterface = {
   labelFontSize: null,
   labelMaxWidth: null,
   bulletSize: null,
+  bulletSpacing: 4,
   bulletShape: d => d.shape ?? BulletShape.Circle,
   orientation: BulletLegendOrientation.Horizontal,
   renderIntoProvidedDomNode: false,
