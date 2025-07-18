@@ -29,6 +29,7 @@ const imports = [
   defineAsyncComponent(() => import('@unovis/shared/examples/patchy-line-chart/patchy-line-chart.vue')),
   defineAsyncComponent(() => import('@unovis/shared/examples/crosshair-stacked-bar/crosshair-stacked-bar.vue')),
   defineAsyncComponent(() => import('@unovis/shared/examples/elk-layered-graph/elk-layered-graph.vue')),
+  defineAsyncComponent(() => import('@unovis/shared/examples/custom-nodes-graph/custom-nodes-graph.vue')),
   defineAsyncComponent(() => import('@unovis/shared/examples/hierarchical-chord-diagram/hierarchical-chord-diagram.vue')),
   defineAsyncComponent(() => import('@unovis/shared/examples/sunburst-nested-donut/sunburst-nested-donut.vue')),
   defineAsyncComponent(() => import('@unovis/shared/examples/basic-donut-chart/basic-donut-chart.vue')),

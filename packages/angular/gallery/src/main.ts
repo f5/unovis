@@ -39,6 +39,7 @@ import { ExpandableSankeyModule } from '@unovis/shared/examples/expandable-sanke
 
 // Graph
 import { BasicGraphModule } from '@unovis/shared/examples/dagre-graph/dagre-graph.module'
+import { CustomNodesGraphModule } from '@unovis/shared/examples/custom-nodes-graph/custom-nodes-graph.module'
 import { ForceLayoutGraphModule } from '@unovis/shared/examples/force-graph/force-graph.module'
 import { ParallelLayoutGraphModule } from '@unovis/shared/examples/parallel-graph/parallel-graph.module'
 import { ElkLayeredGraphModule } from '@unovis/shared/examples/elk-layered-graph/elk-layered-graph.module'
@@ -96,6 +97,7 @@ import { PlotbandPlotlineModule } from '@unovis/shared/examples/plotband-plotlin
     <force-graph></force-graph>
     <parallel-graph></parallel-graph>
     <elk-graph></elk-graph>
+    <custom-nodes-graph></custom-nodes-graph>
 
     <!-- Nested Donut -->
     <sunburst-nested-donut></sunburst-nested-donut>
@@ -116,7 +118,7 @@ export class AppComponent {
 @NgModule({
   declarations: [AppComponent],
   imports: [
-    BrowserModule, BasicGroupedBarModule, BasicLeafletMapModule, BasicLineChartModule, MultiLineChartModule,
+    BrowserModule, BasicGroupedBarModule, BasicLeafletMapModule, BasicLineChartModule, CustomNodesGraphModule, MultiLineChartModule,
     TopojsonMapModule, StackedBarChartModule, BrushGroupedBarModule, BasicScatterPlotModule, SizedScatterPlotModule, FreeBrushScattersModule, NonStackedAreaChartModule,
     BasicTimelineModule, BasicSankeyModule, ExpandableSankeyModule, BasicGraphModule, LeafletFlowMapModule,
     ForceLayoutGraphModule, AdvancedLeafletMapModule, StackedAreaModule, StackedAreaWithAttributesModule, ParallelLayoutGraphModule, ElkLayeredGraphModule,
