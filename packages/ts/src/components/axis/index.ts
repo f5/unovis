@@ -59,23 +59,12 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     // Store axis raw BBox (without the label) for further label positioning (see _renderAxisLabel)
     this._axisRawBBox = axisRenderHelperGroup.node().getBBox()
 
-    // Align tick text and ensure it's properly positioned before calculating margins
-    // Always apply text alignment since we now have a default value
-    this._alignTickLabels()
-    // Force a reflow to ensure text positioning is applied
-    axisRenderHelperGroup.node().getBBox()
-
-    // Recalculate axis raw BBox after text positioning to get accurate measurements
-    this._axisRawBBox = axisRenderHelperGroup.node().getBBox()
-
+    // Align tick text
+    if (config.tickTextAlign) this._alignTickLabels()
     // Render label and store total axis size and required margins
     this._renderAxisLabel(axisRenderHelperGroup)
-
-    // Force a reflow to ensure wrapped text is properly rendered
-    axisRenderHelperGroup.node().getBBox()
-
     this._axisSizeBBox = this._getAxisSize(axisRenderHelperGroup)
-    this._requiredMargin = this._getRequiredMargin()
+    this._requiredMargin = this._getRequiredMargin(this._axisSizeBBox)
 
     axisRenderHelperGroup.remove()
   }
@@ -90,137 +79,32 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     return bBox
   }
 
-  private _getRequiredMargin (): Spacing {
-    // Get margin for axis itself (ticks, tick labels, padding)
-    const axisMargin = this._getAxisMargin()
-
-    // Get margin for axis label
-    const labelMargin = this._getLabelMargin()
-
-    // Combine both margins
-    return this._combineMargins(axisMargin, labelMargin)
-  }
-
-  private _getAxisMargin (): Spacing {
+  private _getRequiredMargin (axisSize = this._axisSizeBBox): Spacing {
     const { config: { type, position } } = this
 
     switch (type) {
       case AxisType.X: {
         const tolerancePx = 1
-        const xEnd = this._axisRawBBox.x + this._axisRawBBox.width
+        const xEnd = this._axisSizeBBox.x + this._axisSizeBBox.width
 
-        const left = this._axisRawBBox.x < 0 ? Math.abs(this._axisRawBBox.x) : 0
+        const left = this._axisSizeBBox.x < 0 ? Math.abs(this._axisSizeBBox.x) : 0
         const right = (xEnd - this._width) > tolerancePx ? xEnd - this._width : 0
 
         switch (position) {
-          case Position.Top: return { top: this._axisRawBBox.height, left, right }
-          case Position.Bottom: default: return { bottom: this._axisRawBBox.height, left, right }
+          case Position.Top: return { top: axisSize.height, left, right }
+          case Position.Bottom: default: return { bottom: axisSize.height, left, right }
         }
       }
       case AxisType.Y: {
-        const bleedY = this._axisRawBBox.height > this._height ? (this._axisRawBBox.height - this._height) / 2 : 0
+        const bleedY = axisSize.height > this._height ? (axisSize.height - this._height) / 2 : 0
         const top = bleedY
         const bottom = bleedY
 
-        // For Y-axis, calculate margin based on the actual rendered axis size
-        // This includes ticks, tick labels, and any padding
-        const axisWidth = this._axisRawBBox.width
-
-        // Add extra padding to ensure no overlap
-        const extraPadding = 12 // Increased padding for safety
-
         switch (position) {
-          case Position.Right: return { right: axisWidth + extraPadding, top, bottom }
-          case Position.Left: default: return { left: axisWidth + extraPadding, top, bottom }
+          case Position.Right: return { right: axisSize.width, top, bottom }
+          case Position.Left: default: return { left: axisSize.width, top, bottom }
         }
       }
-    }
-  }
-
-  private _getLabelMargin (): Spacing {
-    const { config: { type, position, label, labelMargin } } = this
-
-    // If no label, no additional margin needed
-    if (!label) return {}
-
-    // Calculate label size
-    const labelSize = this._getLabelSize()
-    if (!labelSize) return {}
-
-    switch (type) {
-      case AxisType.X: {
-        // For X axis, label extends vertically (up or down)
-        const labelHeight = labelSize.height
-        switch (position) {
-          case Position.Top: return { top: labelHeight + labelMargin }
-          case Position.Bottom: default: return { bottom: labelHeight + labelMargin }
-        }
-      }
-      case AxisType.Y: {
-        // For Y axis, label is rotated 90 degrees, so width becomes height
-        // The rotated label extends horizontally (left or right)
-        const labelWidth = labelSize.height // Use height because text is rotated 90 degrees
-        switch (position) {
-          case Position.Right: return { right: labelWidth + labelMargin }
-          case Position.Left: default: return { left: labelWidth + labelMargin }
-        }
-      }
-    }
-  }
-
-  private _getLabelSize (): { width: number; height: number } | null {
-    const { config: { label, labelTextFitMode, type } } = this
-
-    if (!label) return null
-
-    // Try to get the existing label element
-    const labelElement = this.g.select(`.${s.label}`).node() as SVGTextElement
-
-    if (labelElement) {
-      // Use the actual bounding box of the existing label
-      const bbox = labelElement.getBBox()
-      return { width: bbox.width, height: bbox.height }
-    }
-
-    // Fallback to simple estimation if label doesn't exist yet
-    const fontSize = parseInt(this.config.labelFontSize || '12px')
-
-    // If wrapping is enabled, estimate wrapped height based on chart dimensions
-    if (labelTextFitMode === FitMode.Wrap) {
-      const lineHeight = fontSize // Standard line height
-
-      if (type === AxisType.Y) {
-        // For Y-axis, estimate the wrapped size
-        // Since text is rotated 90 degrees, we need to calculate based on the wrapping width
-        const maxWidthBeforeRotation = this._height // Use chart height as in _renderAxisLabel
-        const estimatedLines = Math.ceil((label.length * fontSize) / maxWidthBeforeRotation)
-        return {
-          width: estimatedLines * lineHeight, // This becomes the actual width when rotated
-          height: Math.min(maxWidthBeforeRotation, label.length * fontSize), // This becomes the actual height when rotated
-        }
-      } else {
-        // For X-axis, use chart width as maximum width
-        const maxWidth = this._width - (this.config.labelMargin * 2)
-        const estimatedLines = Math.ceil((label.length * fontSize) / maxWidth)
-        return {
-          width: Math.min(label.length * fontSize, maxWidth),
-          height: estimatedLines * lineHeight,
-        }
-      }
-    }
-
-    return {
-      width: label.length * fontSize,
-      height: fontSize,
-    }
-  }
-
-  private _combineMargins (axisMargin: Spacing, labelMargin: Spacing): Spacing {
-    return {
-      top: (axisMargin.top || 0) + (labelMargin.top || 0),
-      right: (axisMargin.right || 0) + (labelMargin.right || 0),
-      bottom: (axisMargin.bottom || 0) + (labelMargin.bottom || 0),
-      left: (axisMargin.left || 0) + (labelMargin.left || 0),
     }
   }
 
@@ -263,12 +147,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
       smartTransition(this.gridGroup, duration).style('opacity', 0)
     }
 
-    // Ensure text alignment happens after text has been rendered
-    // Always apply text alignment since we now have a default value
-    requestAnimationFrame(() => {
-      this._alignTickLabels()
-    })
-
+    if (config.tickTextAlign) this._alignTickLabels()
     this._resolveTickLabelOverlap(selection)
   }
 
@@ -506,19 +385,10 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
 
     // Set the text content
     textElement.text(label)
-
-    // Apply wrapping if enabled
     if (labelTextFitMode === FitMode.Wrap) {
-      if (type === AxisType.Y) {
-        // For Y-axis, use the chart height as the maximum width before rotation
-        const maxWidthBeforeRotation = this._height
-
-        wrapSVGText(textElement, maxWidthBeforeRotation)
-      } else {
-        // For X-axis, use the chart width as the maximum width
-        const maxWidth = this._width
-        wrapSVGText(textElement, maxWidth)
-      }
+      // For Y-axis, use the chart height as the maximum width before rotation
+      const maxWidth = type === AxisType.Y ? this._height : this._width
+      wrapSVGText(textElement, maxWidth)
     }
 
     // Calculate offset after wrapping to get accurate dimensions
@@ -529,27 +399,32 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
       labelWidth = labelBBox.width
       labelHeight = labelBBox.height
     } else {
-      const trimWidth = type === AxisType.X ? this._width : this._height
+      const trimWidth = type === AxisType.X ? labelWidth : labelHeight
+      const styleDeclaration = getComputedStyle(textElement.node())
+      const fontSize = Number.parseFloat(styleDeclaration.fontSize)
+      // Use the default fontWidthToHeightRatio
       trimSVGText(
         textElement,
         trimWidth,
         this.config.labelTextTrimType as TrimMode,
         true,
-        parseInt(labelFontSize || '12', 10),
-        0.58
+        fontSize
       )
       const trimmedBBox = textElement.node().getBBox()
       labelWidth = trimmedBBox.width
       labelHeight = trimmedBBox.height
     }
 
+    /*
+      we need to calculate the offset for the label based on the position and the fit mode
+      for offsetX, applying Y label we need to check if it's wrap or trim, then set the offset accordingly.
+      Same for offsetY, need to consider x label.
+    */
     const offsetX = type === AxisType.X
       ? this._width / 2
       : type === AxisType.Y && labelTextFitMode === FitMode.Wrap
         ? (axisPosition === Position.Left) ? -labelHeight / 2 : 0
         : (-1) ** (+(axisPosition === Position.Left)) * axisWidth
-
-
     const offsetY = type === AxisType.Y
       ? this._height / 2
       : type === AxisType.X && labelTextFitMode === FitMode.Wrap
@@ -562,36 +437,6 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     // Apply transform and rotation after all calculations
     textElement.attr('transform', `translate(${offsetX + marginX},${offsetY + marginY}) rotate(${rotation})`)
   }
-
-  // private _renderAxisLabel (selection = this.axisGroup): void {
-  //   const { type, label, labelMargin, labelFontSize } = this.config
-
-  //   // Remove the old label first to calculate the axis size properly
-  //   selection.selectAll(`.${s.label}`).remove()
-
-  //   // Calculate label position and rotation
-  //   const axisPosition = this.getPosition()
-  //   // We always use this.axisRenderHelperGroup to calculate the size of the axis because
-  //   //    this.axisGroup will give us incorrect values due to animation
-  //   const { width: axisWidth, height: axisHeight } = this._axisRawBBox ?? selection.node().getBBox()
-
-  //   const offsetX = type === AxisType.X ? this._width / 2 : (-1) ** (+(axisPosition === Position.Left)) * axisWidth
-  //   const offsetY = type === AxisType.X ? (-1) ** (+(axisPosition === Position.Top)) * axisHeight : this._height / 2
-
-  //   const marginX = type === AxisType.X ? 0 : (-1) ** (+(axisPosition === Position.Left)) * labelMargin
-  //   const marginY = type === AxisType.X ? (-1) ** (+(axisPosition === Position.Top)) * labelMargin : 0
-
-  //   const rotation = type === AxisType.Y ? -90 : 0
-  //   // Append new label
-  //   selection
-  //     .append('text')
-  //     .attr('class', s.label)
-  //     .text(label)
-  //     .attr('dy', `${this._getLabelDY()}em`)
-  //     .attr('transform', `translate(${offsetX + marginX},${offsetY + marginY}) rotate(${rotation})`)
-  //     .style('font-size', labelFontSize)
-  //     .style('fill', this.config.labelColor)
-  // }
 
   private _getLabelDY (): number {
     const { type, position } = this.config
@@ -611,18 +456,17 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
 
   private _alignTickLabels (): void {
     const { config: { type, tickTextAlign, tickTextAngle, position } } = this
+    const tickText = this.g.selectAll('g.tick > text')
 
-    // Only apply Y-axis specific transforms to Y-axis tick labels
-    if (type === AxisType.Y) {
-      const tickText = this.axisGroup.selectAll('g.tick > text')
-      const textAnchor = textAlignToAnchor(tickTextAlign as TextAlign)
-      const translateX = this._getYTickTextTranslate(tickTextAlign as TextAlign, position as Position)
+    const textAnchor = textAlignToAnchor(tickTextAlign as TextAlign)
+    const translateX = type === AxisType.X
+      ? 0
+      : this._getYTickTextTranslate(tickTextAlign as TextAlign, position as Position)
 
-      const translateValue = tickTextAngle ? `translate(${translateX},0) rotate(${tickTextAngle})` : `translate(${translateX},0)`
-      tickText
-        .attr('transform', translateValue)
-        .attr('text-anchor', textAnchor)
-    }
+    const translateValue = tickTextAngle ? `translate(${translateX},0) rotate(${tickTextAngle})` : `translate(${translateX},0)`
+    tickText
+      .attr('transform', translateValue)
+      .attr('text-anchor', textAnchor)
   }
 
   private _getYTickTextTranslate (textAlign: TextAlign, axisPosition: Position = Position.Left): number {
@@ -631,8 +475,8 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
 
     switch (textAlign) {
       case TextAlign.Left: return axisPosition === Position.Left ? width * -1 : 0
-      case TextAlign.Right: return axisPosition === Position.Left ? 0 : defaultTickTextSpacingPx
-      case TextAlign.Center: return axisPosition === Position.Left ? width * (-0.5) : defaultTickTextSpacingPx
+      case TextAlign.Right: return axisPosition === Position.Left ? 0 : width
+      case TextAlign.Center: return axisPosition === Position.Left ? width * (-0.5) : width * 0.5
       default: return 0
     }
   }

@@ -21,6 +21,8 @@ export interface AxisConfigInterface<Datum> extends Partial<XYComponentConfigInt
   labelMargin?: number;
   /** Label text fit mode: `FitMode.Wrap` or `FitMode.Trim`. Default: `FitMode.Wrap`. */
   labelTextFitMode?: FitMode | string;
+  /** Label text trim mode: `TrimMode.Start`, `TrimMode.Middle` or `TrimMode.End`. Default: `TrimMode.Middle` */
+  labelTextTrimType?: TrimMode | string;
   /** Font color of the axis label as CSS string. Default: `null` */
   labelColor?: string | null;
   /** Sets whether to draw the grid lines or not. Default: `true` */
@@ -66,8 +68,6 @@ export interface AxisConfigInterface<Datum> extends Partial<XYComponentConfigInt
   tickTextHideOverlapping?: boolean;
   /** The spacing in pixels between the tick and it's label. Default: `8` */
   tickPadding?: number;
-  /** Label text trim mode: `TrimMode.Start`, `TrimMode.Middle` or `TrimMode.End`. Default: `TrimMode.End` */
-  labelTextTrimType?: TrimMode | string;
 }
 
 export const AxisDefaultConfig: AxisConfigInterface<unknown> = {
@@ -77,6 +77,7 @@ export const AxisDefaultConfig: AxisConfigInterface<unknown> = {
   label: undefined,
   labelFontSize: null,
   labelTextFitMode: FitMode.Wrap,
+  labelTextTrimType: TrimMode.Middle,
   gridLine: true,
   tickLine: true,
   domainLine: true,
@@ -89,7 +90,7 @@ export const AxisDefaultConfig: AxisConfigInterface<unknown> = {
   tickTextTrimType: TrimMode.Middle,
   tickTextFitMode: FitMode.Wrap,
   tickTextFontSize: null,
-  tickTextAlign: TextAlign.Right, // Default to right alignment for better Y-axis text positioning
+  tickTextAlign: undefined,
   tickTextColor: null,
   tickTextAngle: undefined,
   labelMargin: 8,
@@ -97,7 +98,6 @@ export const AxisDefaultConfig: AxisConfigInterface<unknown> = {
   tickFormat: undefined,
   tickValues: undefined,
   fullSize: true,
-  tickPadding: 12, // Increased from 8 to provide more space for Y-axis text
+  tickPadding: 8,
   tickTextHideOverlapping: undefined,
-  labelTextTrimType: TrimMode.End,
 }
