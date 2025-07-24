@@ -35,6 +35,7 @@ const examples = [
   lazy(() => import('@unovis/shared/examples/force-graph/force-graph-solid')),
   lazy(() => import('@unovis/shared/examples/parallel-graph/parallel-graph-solid')),
   lazy(() => import('@unovis/shared/examples/elk-layered-graph/elk-layered-graph-solid')),
+  lazy(() => import('@unovis/shared/examples/custom-nodes-graph/custom-nodes-graph-solid')),
   // Circular Charts
   lazy(() => import('@unovis/shared/examples/basic-donut-chart/basic-donut-chart-solid')),
   lazy(() => import('@unovis/shared/examples/hierarchical-chord-diagram/hierarchical-chord-diagram-solid')),

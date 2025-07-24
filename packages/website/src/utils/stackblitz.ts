@@ -284,6 +284,7 @@ export function launchStackBlitz (framework: Framework, example: Example): void 
     dependencies: {
       'web-worker': '^1.3.0',
       '@unovis/ts': ver,
+      ...(example.dependencies || {}),
     },
   }
 

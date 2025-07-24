@@ -18,6 +18,7 @@ export type Example = {
   previewDark?: string;
   constants?: string;
   styles?: string;
+  dependencies?: Record<string, string>;
 }
 
 export type ExampleCollection = {
