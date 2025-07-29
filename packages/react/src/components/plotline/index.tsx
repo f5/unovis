@@ -1,5 +1,5 @@
 // !!! This code was automatically generated. You should not change it !!!
-import React, { ForwardedRef, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
+import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
 import { Plotline, PlotlineConfigInterface } from '@unovis/ts'
 
 // Utils
@@ -19,7 +19,7 @@ export type VisPlotlineProps<Datum> = PlotlineConfigInterface<Datum> & {
 export const VisPlotlineSelectors = Plotline.selectors
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-function VisPlotlineFC<Datum> (props: VisPlotlineProps<Datum>, fRef: ForwardedRef<VisPlotlineRef<Datum>>): JSX.Element {
+function VisPlotlineFC<Datum> (props: VisPlotlineProps<Datum>, fRef: ForwardedRef<VisPlotlineRef<Datum>>): ReactElement {
   const ref = useRef<VisComponentElement<Plotline<Datum>>>(null)
   const componentRef = useRef<Plotline<Datum> | undefined>(undefined)
 

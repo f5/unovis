@@ -34,7 +34,7 @@ function VisBulletLegendFC (props: VisBulletLegendProps, fRef: ForwardedRef<VisB
     component?.update(props)
   })
 
-  useImperativeHandle(fRef, () => ({ get component () { return component } }), [component])
+  useImperativeHandle(fRef, () => ({ get component () { return component } }), [])
   return <div className={props.className} ref={ref} />
 }
 

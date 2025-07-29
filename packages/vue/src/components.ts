@@ -17,6 +17,7 @@ export { default as VisGraph, VisGraphSelectors } from './components/graph/index
 export { default as VisNestedDonut, VisNestedDonutSelectors } from './components/nested-donut/index.vue'
 export { default as VisSankey, VisSankeySelectors } from './components/sankey/index.vue'
 export { default as VisTopoJSONMap, VisTopoJSONMapSelectors } from './components/topojson-map/index.vue'
+export { default as VisTreemap, VisTreemapSelectors } from './components/treemap/index.vue'
 export { default as VisTooltip, VisTooltipSelectors } from './components/tooltip/index.vue'
 export { default as VisAnnotations, VisAnnotationsSelectors } from './components/annotations/index.vue'
 export { default as VisLeafletMap, VisLeafletMapSelectors } from './html-components/leaflet-map/index.vue'

@@ -1,5 +1,5 @@
 // !!! This code was automatically generated. You should not change it !!!
-import React, { ForwardedRef, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
+import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
 import { RollingPinLegend, RollingPinLegendConfigInterface } from '@unovis/ts'
 
 // Utils
@@ -17,7 +17,7 @@ export type VisRollingPinLegendProps = RollingPinLegendConfigInterface & {
 export const VisRollingPinLegendSelectors = RollingPinLegend.selectors
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-function VisRollingPinLegendFC (props: VisRollingPinLegendProps, fRef: ForwardedRef<VisRollingPinLegendRef>): JSX.Element {
+function VisRollingPinLegendFC (props: VisRollingPinLegendProps, fRef: ForwardedRef<VisRollingPinLegendRef>): ReactElement {
   const ref = useRef<HTMLDivElement>(null)
   const [component, setComponent] = useState<RollingPinLegend>()
 
