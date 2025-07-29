@@ -19,6 +19,7 @@ export * from './components/topojson-map/'
 export * from './components/xy-labels'
 export * from './components/annotations'
 export * from './components/plotband'
+export * from './components/treemap'
 export * from './components/plotline'
 
 // HTML Components
