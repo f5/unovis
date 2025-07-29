@@ -3,6 +3,7 @@ import { For, lazy } from 'solid-js'
 const examples = [
   // Composite Charts
   lazy(() => import('@unovis/shared/examples/dual-axis-chart/dual-axis-chart-solid')),
+  lazy(() => import('@unovis/shared/examples/treemap/treemap-solid')),
   lazy(() => import('@unovis/shared/examples/range-plot/range-plot-solid')),
   // Line Charts
   lazy(() => import('@unovis/shared/examples/basic-line-chart/basic-line-chart-solid')),

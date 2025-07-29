@@ -1,5 +1,5 @@
 // !!! This code was automatically generated. You should not change it !!!
-import React, { ForwardedRef, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
+import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
 import { Plotband, PlotbandConfigInterface } from '@unovis/ts'
 
 // Utils
@@ -19,7 +19,7 @@ export type VisPlotbandProps<Datum> = PlotbandConfigInterface<Datum> & {
 export const VisPlotbandSelectors = Plotband.selectors
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-function VisPlotbandFC<Datum> (props: VisPlotbandProps<Datum>, fRef: ForwardedRef<VisPlotbandRef<Datum>>): JSX.Element {
+function VisPlotbandFC<Datum> (props: VisPlotbandProps<Datum>, fRef: ForwardedRef<VisPlotbandRef<Datum>>): ReactElement {
   const ref = useRef<VisComponentElement<Plotband<Datum>>>(null)
   const componentRef = useRef<Plotband<Datum> | undefined>(undefined)
 

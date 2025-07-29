@@ -1,5 +1,5 @@
 // !!! This code was automatically generated. You should not change it !!!
-import React, { ForwardedRef, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
+import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
 import { Treemap, TreemapConfigInterface } from '@unovis/ts'
 
 // Utils
@@ -20,7 +20,7 @@ export type VisTreemapProps<Datum> = TreemapConfigInterface<Datum> & {
 export const VisTreemapSelectors = Treemap.selectors
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-function VisTreemapFC<Datum> (props: VisTreemapProps<Datum>, fRef: ForwardedRef<VisTreemapRef<Datum>>): JSX.Element {
+function VisTreemapFC<Datum> (props: VisTreemapProps<Datum>, fRef: ForwardedRef<VisTreemapRef<Datum>>): ReactElement {
   const ref = useRef<VisComponentElement<Treemap<Datum>>>(null)
   const componentRef = useRef<Treemap<Datum> | undefined>(undefined)
 
