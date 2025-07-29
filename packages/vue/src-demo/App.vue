@@ -3,6 +3,7 @@ import { defineAsyncComponent } from "vue"
 
 const imports = [
   defineAsyncComponent(() => import('@unovis/shared/examples/dual-axis-chart/dual-axis-chart.vue')),
+  defineAsyncComponent(() => import('@unovis/shared/examples/treemap/treemap.vue')),
   defineAsyncComponent(() => import('@unovis/shared/examples/step-area-chart/step-area-chart.vue')),
   defineAsyncComponent(() => import('@unovis/shared/examples/baseline-area-chart/baseline-area-chart.vue')),
   defineAsyncComponent(() => import('@unovis/shared/examples/non-stacked-area-chart/non-stacked-area-chart.vue')),

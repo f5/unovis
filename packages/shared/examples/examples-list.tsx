@@ -79,6 +79,13 @@ export const examples: ExampleCollection[] = [
     ],
   },
   {
+    title: 'Treemap',
+    description: '',
+    examples: [
+      require('./treemap').default,
+    ],
+  },
+  {
     title: 'Composite Charts',
     description: '',
     examples: [

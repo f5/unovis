@@ -125,6 +125,16 @@ export class VisTreemapComponent<Datum> implements TreemapConfigInterface<Datum>
 
   /** Flag for showing cursor:pointer to indicate leaf tiles are clickable. Default: `undefined` */
   @Input() showTileClickAffordance?: boolean
+
+  /** Amount of lightness variation applied to sibling tiles when enableLightnessVariance is true. Default: `0.08` */
+  @Input() lightnessVariationAmount?: number
+
+
+  @Input() minTileSizeForLabel?: number
+
+  /** Function to generate the label text for each tile. Receives the TreemapNode and returns a string.
+   * Default: shows key and formatted value (e.g., "label: value"). */
+  @Input() tileLabel?: (node: TreemapNode<Datum>) => string
   @Input() data: Datum[]
 
   component: Treemap<Datum> | undefined
@@ -146,8 +156,8 @@ export class VisTreemapComponent<Datum> implements TreemapConfigInterface<Datum>
   }
 
   private getConfig (): TreemapConfigInterface<Datum> {
-    const { duration, events, attributes, id, value, layers, numberFormat, tileColor, tilePadding, tilePaddingTop, labelInternalNodes, labelOffsetX, labelOffsetY, tileBorderRadius, tileBorderRadiusFactor, enableLightnessVariance, enableTileLabelFontSizeVariation, tileLabelSmallFontSize, tileLabelMediumFontSize, tileLabelLargeFontSize, showTileClickAffordance } = this
-    const config = { duration, events, attributes, id, value, layers, numberFormat, tileColor, tilePadding, tilePaddingTop, labelInternalNodes, labelOffsetX, labelOffsetY, tileBorderRadius, tileBorderRadiusFactor, enableLightnessVariance, enableTileLabelFontSizeVariation, tileLabelSmallFontSize, tileLabelMediumFontSize, tileLabelLargeFontSize, showTileClickAffordance }
+    const { duration, events, attributes, id, value, layers, numberFormat, tileColor, tilePadding, tilePaddingTop, labelInternalNodes, labelOffsetX, labelOffsetY, tileBorderRadius, tileBorderRadiusFactor, enableLightnessVariance, enableTileLabelFontSizeVariation, tileLabelSmallFontSize, tileLabelMediumFontSize, tileLabelLargeFontSize, showTileClickAffordance, lightnessVariationAmount, minTileSizeForLabel, tileLabel } = this
+    const config = { duration, events, attributes, id, value, layers, numberFormat, tileColor, tilePadding, tilePaddingTop, labelInternalNodes, labelOffsetX, labelOffsetY, tileBorderRadius, tileBorderRadiusFactor, enableLightnessVariance, enableTileLabelFontSizeVariation, tileLabelSmallFontSize, tileLabelMediumFontSize, tileLabelLargeFontSize, showTileClickAffordance, lightnessVariationAmount, minTileSizeForLabel, tileLabel }
     const keys = Object.keys(config) as (keyof TreemapConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

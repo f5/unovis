@@ -1,0 +1,19 @@
+<vis-bullet-legend [items]="legendItems"></vis-bullet-legend>
+<vis-single-container [height]="400">
+  <vis-tooltip
+    [triggers]="tooltipTriggers"
+  ></vis-tooltip>
+  <vis-treemap
+    [data]="data"
+    [numberFormat]="populationFormat"
+    [value]="getValue"
+    [layers]="getLayers"
+    [labelOffsetX]="6"
+    [labelOffsetY]="8"
+    [tilePadding]="4"
+    [tilePaddingTop]="20"
+    [enableTileLabelFontSizeVariation]="true"
+    [showTileClickAffordance]="true"
+    [labelInternalNodes]="true"
+  ></vis-treemap>
+</vis-single-container>
