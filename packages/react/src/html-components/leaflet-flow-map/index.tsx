@@ -36,7 +36,7 @@ function VisLeafletFlowMapFC<PointDatum extends GenericDataRecord, FlowDatum ext
     component?.setConfig(props)
   })
 
-  useImperativeHandle(fRef, () => ({ get component () { return component } }), [component])
+  useImperativeHandle(fRef, () => ({ get component () { return component } }), [])
   return <div className={props.className} ref={ref} />
 }
 

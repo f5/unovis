@@ -1,6 +1,6 @@
 // !!! This code was automatically generated. You should not change it !!!
 import React, { ForwardedRef, ReactElement, Ref, useImperativeHandle, useEffect, useRef, useState } from 'react'
-import { Plotband, PlotbandConfigInterface } from '@unovis/ts'
+import { Treemap, TreemapConfigInterface } from '@unovis/ts'
 
 // Utils
 import { arePropsEqual } from 'src/utils/react'
@@ -8,26 +8,27 @@ import { arePropsEqual } from 'src/utils/react'
 // Types
 import { VisComponentElement } from 'src/types/dom'
 
-export type VisPlotbandRef<Datum> = {
-  component?: Plotband<Datum>;
+export type VisTreemapRef<Datum> = {
+  component?: Treemap<Datum>;
 }
 
-export type VisPlotbandProps<Datum> = PlotbandConfigInterface<Datum> & {
-  ref?: Ref<VisPlotbandRef<Datum>>;
+export type VisTreemapProps<Datum> = TreemapConfigInterface<Datum> & {
+  data?: Datum[];
+  ref?: Ref<VisTreemapRef<Datum>>;
 }
 
-export const VisPlotbandSelectors = Plotband.selectors
+export const VisTreemapSelectors = Treemap.selectors
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-function VisPlotbandFC<Datum> (props: VisPlotbandProps<Datum>, fRef: ForwardedRef<VisPlotbandRef<Datum>>): ReactElement {
-  const ref = useRef<VisComponentElement<Plotband<Datum>>>(null)
-  const componentRef = useRef<Plotband<Datum> | undefined>(undefined)
+function VisTreemapFC<Datum> (props: VisTreemapProps<Datum>, fRef: ForwardedRef<VisTreemapRef<Datum>>): ReactElement {
+  const ref = useRef<VisComponentElement<Treemap<Datum>>>(null)
+  const componentRef = useRef<Treemap<Datum> | undefined>(undefined)
 
   // On Mount
   useEffect(() => {
-    const element = (ref.current as VisComponentElement<Plotband<Datum>>)
+    const element = (ref.current as VisComponentElement<Treemap<Datum>>)
 
-    const c = new Plotband<Datum>(props)
+    const c = new Treemap<Datum>(props)
     componentRef.current = c
     element.__component__ = c
 
@@ -40,7 +41,7 @@ function VisPlotbandFC<Datum> (props: VisPlotbandProps<Datum>, fRef: ForwardedRe
   // On Props Update
   useEffect(() => {
     const component = componentRef.current
-
+    if (props.data) component?.setData(props.data)
     component?.setConfig(props)
   })
 
@@ -50,4 +51,4 @@ function VisPlotbandFC<Datum> (props: VisPlotbandProps<Datum>, fRef: ForwardedRe
 
 // We export a memoized component to avoid unnecessary re-renders
 //  and define its type explicitly to help react-docgen-typescript to extract information about props
-export const VisPlotband: (<Datum>(props: VisPlotbandProps<Datum>) => JSX.Element | null) = React.memo(React.forwardRef(VisPlotbandFC), arePropsEqual)
+export const VisTreemap: (<Datum>(props: VisTreemapProps<Datum>) => JSX.Element | null) = React.memo(React.forwardRef(VisTreemapFC), arePropsEqual)

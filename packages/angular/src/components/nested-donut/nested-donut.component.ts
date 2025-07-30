@@ -102,7 +102,7 @@ export class VisNestedDonutComponent<Datum> implements NestedDonutConfigInterfac
   /** Sort function for segments. Default `undefined` */
   @Input() sort?: (a: NestedDonutSegment<Datum>, b: NestedDonutSegment<Datum>) => number
 
-  /** Array of accessor functions to defined the nested groups */
+  /** Array of accessor functions to defined the nested groups. Default: `[]` */
   @Input() layers: StringAccessor<Datum>[]
 
   /** Configuration properties for individual layers. Accepts an accessor or constant of type:
