@@ -114,10 +114,12 @@ export class VisCrosshairComponent<Datum> implements CrosshairConfigInterface<Da
   /** An instance of the Tooltip component to be used with Crosshair. Default: `undefined` */
   @Input() tooltip?: Tooltip | undefined
 
-  /** Tooltip template accessor. The function is supposed to return either a valid HTML string or an HTMLElement. Default: `d => ''` */
-  @Input() template?: (data: Datum, x: number | Date) => string | HTMLElement
+  /** Tooltip template accessor. The function is supposed to return either a valid HTML string or an HTMLElement.
+   * When `snapToData` is `false`, `datum` will be `undefined` but `data` and `leftNearestDatumIndex` will be provided.
+   * Default: `d => ''` */
+  @Input() template?: (datum: Datum, x: number | Date, data: Datum[], leftNearestDatumIndex: number) => string | HTMLElement
 
-  /** Hide Crosshair when the corresponding element is far from mouse pointer. Default: `true` */
+  /** Hide Crosshair when the corresponding datum element is far from mouse pointer. Default: `true` */
   @Input() hideWhenFarFromPointer?: boolean
 
   /** Distance in pixels to check in the hideWhenFarFromPointer condition. Default: `100` */
@@ -130,11 +132,24 @@ export class VisCrosshairComponent<Datum> implements CrosshairConfigInterface<Da
   @Input() snapToData?: boolean
 
   /** Custom function for setting up the crosshair circles, usually needed when `snapToData` is set to `false`.
-   * The function receives the horizontal position of the crosshair (in the data space, not in pixels), the data array
-   * and the `yScale` instance to help you calculate the correct vertical position of the circles.
-   * It has to return an array of the CrosshairCircle objects: `{ y: number; color: string; opacity?: number }[]`.
+   * The function receives the horizontal position of the crosshair (in the data space, not in pixels), the data array,
+   * the `yScale` instance to help you calculate the correct vertical position of the circles, and the nearest datum index.
+   * It has to return an array of the `CrosshairCircle` objects: `{ y: number; color: string; opacity?: number }[]`.
    * Default: `undefined` */
-  @Input() getCircles?: (x: number | Date | Date, data: Datum[], yScale: ContinuousScale) => CrosshairCircle[]
+  @Input() getCircles?: (x: number | Date, data: Datum[], yScale: ContinuousScale, leftNearestDatumIndex: number) => CrosshairCircle[]
+
+  /** Callback function that is called when the crosshair is moved:
+   * - `x` is the horizontal position of the crosshair in the data space;
+   * - `datum` is the nearest datum to the crosshair;
+   * - `datumIndex` is the index of the nearest datum.
+   * - `event` is the event that triggered the crosshair move (mouse or wheel).
+   *
+   * When the mouse goes out of the container and on wheel events, all the arguments are `undefined` except for `event`.
+   * Default: `undefined` */
+  @Input() onCrosshairMove?: (x?: number | Date, datum?: Datum, datumIndex?: number, event?: MouseEvent | WheelEvent) => void
+
+  /** Force the crosshair to show at a specific position. Default: `undefined` */
+  @Input() forceShowAt?: number | Date
   @Input() data: Datum[]
 
   component: Crosshair<Datum> | undefined
@@ -156,8 +171,8 @@ export class VisCrosshairComponent<Datum> implements CrosshairConfigInterface<Da
   }
 
   private getConfig (): CrosshairConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, strokeColor, strokeWidth, yStacked, baseline, tooltip, template, hideWhenFarFromPointer, hideWhenFarFromPointerDistance, snapToData, getCircles } = this
-    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, strokeColor, strokeWidth, yStacked, baseline, tooltip, template, hideWhenFarFromPointer, hideWhenFarFromPointerDistance, snapToData, getCircles }
+    const { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, strokeColor, strokeWidth, yStacked, baseline, tooltip, template, hideWhenFarFromPointer, hideWhenFarFromPointerDistance, snapToData, getCircles, onCrosshairMove, forceShowAt } = this
+    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, strokeColor, strokeWidth, yStacked, baseline, tooltip, template, hideWhenFarFromPointer, hideWhenFarFromPointerDistance, snapToData, getCircles, onCrosshairMove, forceShowAt }
     const keys = Object.keys(config) as (keyof CrosshairConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

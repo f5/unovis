@@ -17,6 +17,7 @@ export * from "./components/graph";
 export * from "./components/nested-donut";
 export * from "./components/sankey";
 export * from "./components/topojson-map";
+export * from "./components/treemap";
 export * from "./components/tooltip";
 export * from "./components/annotations";
 export * from "./html-components/leaflet-map";

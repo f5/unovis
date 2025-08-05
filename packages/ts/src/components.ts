@@ -33,6 +33,7 @@ export { NestedDonut } from './components/nested-donut'
 export { Annotations } from './components/annotations'
 export { Plotband } from './components/plotband'
 export { Plotline } from './components/plotline'
+export { Treemap } from './components/treemap'
 
 // Constants
 export * from './components/donut/constants'
@@ -65,3 +66,4 @@ export type { NestedDonutConfigInterface } from './components/nested-donut/confi
 export type { AnnotationsConfigInterface } from './components/annotations/config'
 export type { PlotbandConfigInterface } from './components/plotband/config'
 export type { PlotlineConfigInterface } from './components/plotline/config'
+export type { TreemapConfigInterface } from './components/treemap/config'
