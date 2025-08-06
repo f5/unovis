@@ -5,6 +5,8 @@ import { ColorAccessor, StringAccessor } from 'types/accessor'
 import { Orientation } from 'types/position'
 
 export interface StackedBarConfigInterface<Datum> extends XYComponentConfigInterface<Datum> {
+  /** Spacing in pixels between stacked items in a single bar. Default: `0` */
+  stackSpacing?: number;
   /** Bar color accessor function. Default: `d => d.color` */
   color?: ColorAccessor<Datum>;
   /** Force set bar width in pixels. Default: `undefined` */
@@ -39,6 +41,7 @@ export const StackedBarDefaultConfig: StackedBarConfigInterface<unknown> = {
   dataStep: undefined,
   barPadding: 0.0,
   roundedCorners: 2,
+  stackSpacing: 0,
   cursor: null,
   barMinHeight1Px: false,
   barMinHeightZeroValue: null,
