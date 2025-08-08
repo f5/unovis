@@ -664,14 +664,20 @@ type GraphPanelConfig = {
   nodes: (string|number)[];
   /** Panel label */
   label?: string;
+  /** Trim label if it's longer than this number of characters */
+  labelTrimLength?: number;
+  /** Trim mode of the label */
+  labelTrimMode?: TrimMode;
   /** Position of the label */
-  labelPosition?: Position.Top | Position.Bottom;
+  labelPosition?: Position.Top | Position.Bottom | string;
+  /** Fill color of the panel */
+  fillColor?: string;
   /** Color of the panel's border */
   borderColor?: string;
   /** Border width of the panel in pixels */
   borderWidth?: number;
   /** Inner padding */
-  padding?: number;
+  padding?: number | Spacing;
   /** Dashed outline showing that the panel is selected */
   dashedOutline?: boolean;
   /** Side icon symbol */
@@ -681,7 +687,7 @@ type GraphPanelConfig = {
   /** Color of the icon */
   sideIconSymbolColor?: string;
   /** Shape of the icon's background */
-  sideIconShape?: GraphNodeShape;
+  sideIconShape?: GraphNodeShape | string;
   /** Size of the icon's background shape */
   sideIconShapeSize?: number;
   /** Stroke color of the icon's background shape */
