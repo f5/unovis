@@ -20,6 +20,17 @@ export const BulletLegendDoc = (props) => (
   </div>
 )
 
+export const multipleColorItems = [
+  {
+    name: 'item 1',
+    color: ['#4cc9f0', '#4361ee', '#f72585', '#7209b7']
+  },
+  {
+    name: 'item 2',
+    color: ['#3a0ca3', '#f9c74f', '#f94144']
+  }
+]
+
 export const barData = generateDataRecords(10)
 
 ## Overview
@@ -76,6 +87,23 @@ Either will produce the following result:
   { name: 'B', color: 'blue' },
   { name: 'C', color: 'green' },
 ]}/>
+
+### Multiple Colors Per Item `1.6`
+In case you want to have multiple colors in your legend, you can simply pass in an arry into `color`
+```ts
+const items = [
+  {
+    name: 'item 1',
+    color: ['#4cc9f0', '#4361ee', '#f72585', '#7209b7']
+  },
+  {
+    name: 'item 2',
+    color: ['#3a0ca3', '#f9c74f', '#f94144']
+  }
+]
+```
+
+<BulletLegendDoc excludeTabs items={multipleColorItems}/>
 
 ### Shape
 You can specify the shape of individual bullets with the `shape` property or with the [`bulletShape`](#bullet-shapes)
