@@ -158,10 +158,10 @@ const config = {
         searchPagePath: 'search',
       },
       announcementBar: {
-        id: 'version-1.5-announcement',
+        id: 'version-1.6-announcement',
         content:
-          '❄️ Solid support; Graph, Axis, Legend updates; Sticky Tooltip; Discord; and more in <a rel="noopener noreferrer" href="/releases/1.5">Unovis 1.5</a>',
-        backgroundColor: '#2680EB',
+          '🎉 New Components: Treemap, Plotline, Plotband & Rolling Pin Legend; Enhanced Timeline and more in <a rel="noopener noreferrer" href="/releases/1.6">Unovis 1.6</a>',
+        backgroundColor: '#FF6B7E',
         textColor: '#fff',
         isCloseable: false,
       },
