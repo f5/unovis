@@ -13,7 +13,7 @@ import { FitMode, TextAlign, TrimMode, UnovisText, UnovisTextOptions, VerticalAl
 
 // Utils
 import { smartTransition } from 'utils/d3'
-import { renderTextToSvgTextElement, textAlignToAnchor, trimSVGText } from 'utils/text'
+import { renderTextToSvgTextElement, textAlignToAnchor, trimSVGText, wrapSVGText } from 'utils/text'
 import { isEqual } from 'utils/data'
 import { rectIntersect } from 'utils/misc'
 
@@ -61,7 +61,6 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
 
     // Align tick text
     if (config.tickTextAlign) this._alignTickLabels()
-
     // Render label and store total axis size and required margins
     this._renderAxisLabel(axisRenderHelperGroup)
     this._axisSizeBBox = this._getAxisSize(axisRenderHelperGroup)
@@ -149,7 +148,6 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     }
 
     if (config.tickTextAlign) this._alignTickLabels()
-
     this._resolveTickLabelOverlap(selection)
   }
 
@@ -362,10 +360,12 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
   }
 
   private _renderAxisLabel (selection = this.axisGroup): void {
-    const { type, label, labelMargin, labelFontSize } = this.config
+    const { type, label, labelMargin, labelFontSize, labelTextFitMode } = this.config
 
     // Remove the old label first to calculate the axis size properly
     selection.selectAll(`.${s.label}`).remove()
+
+    if (!label) return
 
     // Calculate label position and rotation
     const axisPosition = this.getPosition()
@@ -373,22 +373,69 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     //    this.axisGroup will give us incorrect values due to animation
     const { width: axisWidth, height: axisHeight } = this._axisRawBBox ?? selection.node().getBBox()
 
-    const offsetX = type === AxisType.X ? this._width / 2 : (-1) ** (+(axisPosition === Position.Left)) * axisWidth
-    const offsetY = type === AxisType.X ? (-1) ** (+(axisPosition === Position.Top)) * axisHeight : this._height / 2
-
-    const marginX = type === AxisType.X ? 0 : (-1) ** (+(axisPosition === Position.Left)) * labelMargin
-    const marginY = type === AxisType.X ? (-1) ** (+(axisPosition === Position.Top)) * labelMargin : 0
-
     const rotation = type === AxisType.Y ? -90 : 0
-    // Append new label
-    selection
+
+    // Create the text element (without transform first)
+    const textElement = selection
       .append('text')
       .attr('class', s.label)
-      .text(label)
       .attr('dy', `${this._getLabelDY()}em`)
-      .attr('transform', `translate(${offsetX + marginX},${offsetY + marginY}) rotate(${rotation})`)
       .style('font-size', labelFontSize)
       .style('fill', this.config.labelColor)
+
+    // Set the text content
+    textElement.text(label)
+    if (labelTextFitMode === FitMode.Wrap) {
+      // For Y-axis, use the chart height as the maximum width before rotation
+      const maxWidth = type === AxisType.Y ? this._height : this._width
+      wrapSVGText(textElement, maxWidth)
+    }
+
+    // Calculate offset after wrapping to get accurate dimensions
+    let labelWidth = axisWidth
+    let labelHeight = axisHeight
+    if (labelTextFitMode === FitMode.Wrap) {
+      const labelBBox = textElement.node().getBBox()
+      labelWidth = labelBBox.width
+      labelHeight = labelBBox.height
+    } else {
+      const trimWidth = type === AxisType.X ? labelWidth : labelHeight
+      const styleDeclaration = getComputedStyle(textElement.node())
+      const fontSize = Number.parseFloat(styleDeclaration.fontSize)
+      // Use the default fontWidthToHeightRatio
+      trimSVGText(
+        textElement,
+        trimWidth,
+        this.config.labelTextTrimType as TrimMode,
+        true,
+        fontSize
+      )
+      const trimmedBBox = textElement.node().getBBox()
+      labelWidth = trimmedBBox.width
+      labelHeight = trimmedBBox.height
+    }
+
+    /*
+      we need to calculate the offset for the label based on the position and the fit mode
+      for offsetX, applying Y label we need to check if it's wrap or trim, then set the offset accordingly.
+      Same for offsetY, need to consider x label.
+    */
+    const offsetX = type === AxisType.X
+      ? this._width / 2
+      : type === AxisType.Y && labelTextFitMode === FitMode.Wrap
+        ? (axisPosition === Position.Left) ? -labelHeight / 2 : 0
+        : (-1) ** (+(axisPosition === Position.Left)) * axisWidth
+    const offsetY = type === AxisType.Y
+      ? this._height / 2
+      : type === AxisType.X && labelTextFitMode === FitMode.Wrap
+        ? (axisPosition === Position.Top) ? -axisHeight - labelHeight / 2 : axisHeight
+        : (-1) ** (+(axisPosition === Position.Top)) * axisHeight
+
+    const marginX = type === AxisType.X ? 0 : (labelTextFitMode === FitMode.Wrap ? (-1) ** (+(axisPosition === Position.Left)) * ((labelHeight / 2) + labelMargin * 2) : (axisPosition === Position.Right ? labelMargin : -labelMargin))
+    const marginY = type === AxisType.X ? (-1) ** (+(axisPosition === Position.Top)) * labelMargin : 0
+
+    // Apply transform and rotation after all calculations
+    textElement.attr('transform', `translate(${offsetX + marginX},${offsetY + marginY}) rotate(${rotation})`)
   }
 
   private _getLabelDY (): number {

@@ -189,7 +189,7 @@ export function trimSVGText (
   fontSize = +window.getComputedStyle(svgTextSelection.node())?.fontSize || 0,
   fontWidthToHeightRatio = getFontWidthToHeightRatio()
 ): boolean {
-  const text = svgTextSelection.text()
+  const text = svgTextSelection.text() || ''
   const textLength = text.length
 
   const textWidth = fastMode ? fontSize * textLength * fontWidthToHeightRatio : svgTextSelection.node().getComputedTextLength()
