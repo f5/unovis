@@ -1,4 +1,4 @@
-import { color } from 'd3-color'
+import { color, hcl } from 'd3-color'
 
 // Core
 import { getCSSColorVariable } from 'styles/colors'
@@ -56,4 +56,16 @@ export function rgbaToRgb (rgba: string, backgroundColor?: string): RGBColor {
     g: Math.round((rgb.opacity * (rgb.g / 255) + (alpha * (bg.g / 255))) * 255),
     b: Math.round((rgb.opacity * (rgb.b / 255) + (alpha * (bg.b / 255))) * 255),
   }
+}
+
+/**
+ * Makes a color brighter by a certain amount
+ * @param inputColor - The color to brighten (hex, rgb, or rgba)
+ * @param amount - Amount to brighten by (0-1)
+ * @returns The brightened color in hex format
+ */
+export function brighter (inputColor: string, amount: number): string {
+  const c = hcl(inputColor)
+  if (!c) return inputColor
+  return c.brighter(amount).formatHex()
 }
