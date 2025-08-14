@@ -1,7 +1,7 @@
 {
   "name": "@unovis/react",
   "description": "Modular data visualization framework for React, Angular, Svelte, Vue, Solid, and vanilla TypeScript or JavaScript",
-  "version": "1.5.2",
+  "version": "1.6.0",
   "packageManager": "npm@10.9.1",
   "repository": {
     "type": "git",
@@ -37,7 +37,7 @@
     "publish:dist": "cd ./dist; npm publish"
   },
   "peerDependencies": {
-    "@unovis/ts": "1.5.2",
+    "@unovis/ts": "1.6.0",
     "react": ">=16.8.0 || ^17 || ^18 || ^19",
     "react-dom": ">=16.8.0 || ^17 || ^18 || ^19"
   },
