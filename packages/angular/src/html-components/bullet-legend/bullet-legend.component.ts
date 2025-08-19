@@ -49,6 +49,9 @@ export class VisBulletLegendComponent implements BulletLegendConfigInterface, Af
   /** Bullet shape size, mapped to the width and height CSS properties. Default: `null` */
   @Input() bulletSize?: string | null
 
+  /** Spacing between multiple bullet symbols in pixels. Default: `4` */
+  @Input() bulletSpacing?: number
+
   /** Bullet shape enum value or accessor function. Default: `d => d.shape ?? BulletShape.Circle */
   @Input() bulletShape?: GenericAccessor<BulletShape, BulletLegendItemInterface>
 
@@ -67,8 +70,8 @@ export class VisBulletLegendComponent implements BulletLegendConfigInterface, Af
   }
 
   private getConfig (): BulletLegendConfigInterface {
-    const { items, labelClassName, onLegendItemClick, labelFontSize, labelMaxWidth, bulletSize, bulletShape, orientation } = this
-    const config = { items, labelClassName, onLegendItemClick, labelFontSize, labelMaxWidth, bulletSize, bulletShape, orientation }
+    const { items, labelClassName, onLegendItemClick, labelFontSize, labelMaxWidth, bulletSize, bulletSpacing, bulletShape, orientation } = this
+    const config = { items, labelClassName, onLegendItemClick, labelFontSize, labelMaxWidth, bulletSize, bulletSpacing, bulletShape, orientation }
     const keys = Object.keys(config) as (keyof BulletLegendConfigInterface)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
