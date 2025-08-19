@@ -138,7 +138,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
 
     if (config.gridLine) {
       const gridGen = this._buildGrid().tickFormat(() => '')
-      gridGen.tickValues(this._getConfiguredTickValues())
+      gridGen.tickValues((config.tickValues || !config.minMaxTicksOnlyShowGridLines) ? this._getConfiguredTickValues() : null)
       // Interrupting all active transitions first to prevent them from being stuck.
       // Somehow we see it happening in Angular apps.
       this.gridGroup.selectAll('*').interrupt()
