@@ -49,8 +49,13 @@ export interface TimelineConfigInterface<Datum> extends WithOptional<XYComponent
   lineEndIconArrangement?: GenericAccessor<Arrangement | `${Arrangement}`, Datum>;
   /** Configurable Timeline item cursor when hovering over. Default: `undefined` */
   lineCursor?: StringAccessor<Datum>;
-  /** Sets the minimum line length to 1 pixel for better visibility of small values. Default: `false` */
+  /** Sets the minimum line length to 1 pixel for better visibility of small values.
+   * When `lineCap` is set to `true`, the segment will be rendered as a circle.
+   * Default: `false` */
   showEmptySegments?: boolean;
+  /** Center small segments when `showEmptySegments` and `lineCap` are set to `true`.
+   * Default: `true` */
+  showEmptySegmentsCorrectPosition?: boolean;
 
   /** Timeline row height. Default: `22` */
   rowHeight?: number;
@@ -114,6 +119,7 @@ export const TimelineDefaultConfig: TimelineConfigInterface<unknown> = {
   lineCap: false,
   lineCursor: undefined,
   showEmptySegments: false,
+  showEmptySegmentsCorrectPosition: true,
   lineStartIcon: undefined,
   lineStartIconColor: undefined,
   lineStartIconSize: undefined,
