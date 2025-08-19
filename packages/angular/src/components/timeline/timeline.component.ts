@@ -154,8 +154,14 @@ export class VisTimelineComponent<Datum> implements TimelineConfigInterface<Datu
   /** Configurable Timeline item cursor when hovering over. Default: `undefined` */
   @Input() lineCursor?: StringAccessor<Datum>
 
-  /** Sets the minimum line length to 1 pixel for better visibility of small values. Default: `false` */
+  /** Sets the minimum line length to 1 pixel for better visibility of small values.
+   * When `lineCap` is set to `true`, the segment will be rendered as a circle.
+   * Default: `false` */
   @Input() showEmptySegments?: boolean
+
+  /** Center small segments when `showEmptySegments` and `lineCap` are set to `true`.
+   * Default: `true` */
+  @Input() showEmptySegmentsCorrectPosition?: boolean
 
   /** Timeline row height. Default: `22` */
   @Input() rowHeight?: number
@@ -225,8 +231,8 @@ export class VisTimelineComponent<Datum> implements TimelineConfigInterface<Datu
   }
 
   private getConfig (): TimelineConfigInterface<Datum> {
-    const { duration, events, attributes, x, id, color, xScale, yScale, excludeFromDomainCalculation, type, length, cursor, lineRow, lineDuration, lineWidth, lineCap, lineStartIcon, lineStartIconColor, lineStartIconSize, lineStartIconArrangement, lineEndIcon, lineEndIconColor, lineEndIconSize, lineEndIconArrangement, lineCursor, showEmptySegments, rowHeight, alternatingRowColors, showLabels, labelWidth, maxLabelWidth, showRowLabels, rowLabelStyle, rowLabelFormatter, rowIcon, rowLabelWidth, rowMaxLabelWidth, rowLabelTextAlign, arrows, animationLineEnterPosition, animationLineExitPosition, onScroll } = this
-    const config = { duration, events, attributes, x, id, color, xScale, yScale, excludeFromDomainCalculation, type, length, cursor, lineRow, lineDuration, lineWidth, lineCap, lineStartIcon, lineStartIconColor, lineStartIconSize, lineStartIconArrangement, lineEndIcon, lineEndIconColor, lineEndIconSize, lineEndIconArrangement, lineCursor, showEmptySegments, rowHeight, alternatingRowColors, showLabels, labelWidth, maxLabelWidth, showRowLabels, rowLabelStyle, rowLabelFormatter, rowIcon, rowLabelWidth, rowMaxLabelWidth, rowLabelTextAlign, arrows, animationLineEnterPosition, animationLineExitPosition, onScroll }
+    const { duration, events, attributes, x, id, color, xScale, yScale, excludeFromDomainCalculation, type, length, cursor, lineRow, lineDuration, lineWidth, lineCap, lineStartIcon, lineStartIconColor, lineStartIconSize, lineStartIconArrangement, lineEndIcon, lineEndIconColor, lineEndIconSize, lineEndIconArrangement, lineCursor, showEmptySegments, showEmptySegmentsCorrectPosition, rowHeight, alternatingRowColors, showLabels, labelWidth, maxLabelWidth, showRowLabels, rowLabelStyle, rowLabelFormatter, rowIcon, rowLabelWidth, rowMaxLabelWidth, rowLabelTextAlign, arrows, animationLineEnterPosition, animationLineExitPosition, onScroll } = this
+    const config = { duration, events, attributes, x, id, color, xScale, yScale, excludeFromDomainCalculation, type, length, cursor, lineRow, lineDuration, lineWidth, lineCap, lineStartIcon, lineStartIconColor, lineStartIconSize, lineStartIconArrangement, lineEndIcon, lineEndIconColor, lineEndIconSize, lineEndIconArrangement, lineCursor, showEmptySegments, showEmptySegmentsCorrectPosition, rowHeight, alternatingRowColors, showLabels, labelWidth, maxLabelWidth, showRowLabels, rowLabelStyle, rowLabelFormatter, rowIcon, rowLabelWidth, rowMaxLabelWidth, rowLabelTextAlign, arrows, animationLineEnterPosition, animationLineExitPosition, onScroll }
     const keys = Object.keys(config) as (keyof TimelineConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
