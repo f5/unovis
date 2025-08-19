@@ -483,13 +483,14 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
         console.warn('Unovis | Timeline: Line segments should not have negative lengths. Setting to 0.')
       }
 
-      const isLineTooShort = config.showEmptySegments && config.lineCap && (lineLength < lineWidth)
       const lineLengthCorrected = config.showEmptySegments
         ? Math.max(config.lineCap ? lineWidth : 1, lineLength)
         : Math.max(0, lineLength)
 
       const x = xScale(getNumber(d, config.x, i))
       const y = yStart + rowOrdinalScale(this._getRecordKey(d, i)) * rowHeight + (rowHeight - lineWidth) / 2
+
+      const isLineTooShort = config.showEmptySegments && config.showEmptySegmentsCorrectPosition && config.lineCap && (lineLength < lineWidth)
       const xOffset = isLineTooShort ? -(lineLengthCorrected - lineLength) / 2 : 0
 
       return {
