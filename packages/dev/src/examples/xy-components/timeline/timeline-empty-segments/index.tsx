@@ -9,6 +9,7 @@ export const subTitle = 'Small and Negative Lengths'
 
 export const component = (props: ExampleViewerDurationProps): React.ReactNode => {
   const [showEmptySegments, toggleEmptySegments] = React.useState(true)
+  const [showEmptySegmentsCorrectPosition, toggleEmptySegmentsCorrectPosition] = React.useState(true)
   const [lineCap, setLineCap] = React.useState(false)
   const data = useMemo(() => generateTimeSeries(50).map((d, i) => ({
     ...d,
@@ -19,12 +20,17 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
   return (<>
     <div><input type='checkbox' checked={showEmptySegments} onChange={e => toggleEmptySegments(e.target.checked)}/><label>Show empty segments</label></div>
     <div><input type='checkbox' checked={lineCap} onChange={e => setLineCap(e.target.checked)}/><label>Rounded corners</label></div>
+    <div>
+      <input type='checkbox' checked={showEmptySegmentsCorrectPosition} onChange={e => toggleEmptySegmentsCorrectPosition(e.target.checked)}/>
+      <label>Center empty segments (only small segments with rounded corners)</label>
+    </div>
     <VisXYContainer<TimeDataRecord> data={data} height={200}>
       <VisTimeline
         lineRow={(d: TimeDataRecord) => d.type as string}
         x={(d: TimeDataRecord) => d.timestamp}
         rowHeight={50}
         showEmptySegments={showEmptySegments}
+        showEmptySegmentsCorrectPosition={showEmptySegmentsCorrectPosition}
         showRowLabels
         duration={props.duration}
         lineCap={lineCap}
