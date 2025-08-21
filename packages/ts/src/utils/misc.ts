@@ -57,10 +57,64 @@ export function getHref<T> (d: T, identifier: StringAccessor<T>): string {
   return id ? `url(#${id})` : null
 }
 
+function evaluateSimpleExpression (expr: string): number {
+  // Handle multiplication and division first (higher precedence)
+  // Keep applying until no more operations are found
+  while (/(-?\d+(?:\.\d+)?)\s*([*/])\s*(-?\d+(?:\.\d+)?)/.test(expr)) {
+    expr = expr.replace(/(-?\d+(?:\.\d+)?)\s*([*/])\s*(-?\d+(?:\.\d+)?)/, (_, a, op, b) => {
+      const numA = parseFloat(a)
+      const numB = parseFloat(b)
+      return String(op === '*' ? numA * numB : numA / numB)
+    })
+  }
+
+  // Handle addition and subtraction (lower precedence)
+  // Keep applying until no more operations are found
+  while (/(-?\d+(?:\.\d+)?)\s*([+-])\s*(-?\d+(?:\.\d+)?)/.test(expr)) {
+    expr = expr.replace(/(-?\d+(?:\.\d+)?)\s*([+-])\s*(-?\d+(?:\.\d+)?)/, (_, a, op, b) => {
+      const numA = parseFloat(a)
+      const numB = parseFloat(b)
+      return String(op === '+' ? numA + numB : numA - numB)
+    })
+  }
+
+  const result = parseFloat(expr)
+  if (isNaN(result)) throw new Error(`Invalid expression: ${expr}`)
+  return result
+}
+
+function evaluateCalcExpression (expression: string, basis: number): number {
+  try {
+    // Replace percentages and pixels with resolved values
+    let expr = expression
+      .replace(/(\d+(?:\.\d+)?)%/g, (_, num) => String((basis * parseFloat(num)) / 100))
+      .replace(/(\d+(?:\.\d+)?)px/g, '$1')
+      .replace(/\s+/g, '')
+
+    // Simple regex-based evaluation for basic expressions
+    // Handles: number, number+number, number-number, number*number, number/number
+    // And simple parentheses: (expression)
+
+    // Evaluate parentheses first
+    while (expr.includes('(')) {
+      expr = expr.replace(/\(([^()]+)\)/g, (_, inner) => String(evaluateSimpleExpression(inner)))
+    }
+
+    return evaluateSimpleExpression(expr)
+  } catch (error) {
+    console.warn(`Failed to evaluate calc() expression: ${expression}`, error)
+    return 0
+  }
+}
+
 export function parseUnit (value: LengthUnit, basis = 0): number {
   if (!value) return 0
   else if (typeof value === 'number') return value
-  else if (value.endsWith('%')) return basis * parseFloat(value) / 100
+  else if (typeof value === 'string' && value.startsWith('calc(') && value.endsWith(')')) {
+    // Parse calc() expression
+    const expression = value.slice(5, -1).trim() // Remove 'calc(' and ')'
+    return evaluateCalcExpression(expression, basis)
+  } else if (value.endsWith('%')) return basis * parseFloat(value) / 100
   else if (value.endsWith('px')) return parseFloat(value)
   else return parseFloat(value) || 0
 }
