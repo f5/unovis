@@ -1,4 +1,4 @@
-import { min, max } from 'd3-array'
+import { min, max, extent } from 'd3-array'
 import { Transition } from 'd3-transition'
 import { select, Selection, pointer } from 'd3-selection'
 import { brush, BrushBehavior, D3BrushEvent } from 'd3-brush'
@@ -481,22 +481,10 @@ export class Graph<
   }
 
   private _fit (duration = 0, nodeIds?: (string | number)[], alignment = this.config.fitViewAlign): void {
-    const { datamodel: { nodes } } = this
-    const fitViewNodes = nodeIds?.length ? nodes.filter(n => nodeIds.includes(n.id)) : nodes
-    const transform = this._getTransform(fitViewNodes, alignment)
-    smartTransition(this.g, duration)
-      .call(this._zoomBehavior.transform, transform)
-    this._onZoom(transform)
-  }
-
-  private _getTransform (nodes: GraphNode<N, L>[], alignment: GraphFitViewAlignment): ZoomTransform {
-    const { nodeSize, zoomScaleExtent } = this.config
-    const { left, top, right, bottom } = this.bleed
+    const { datamodel, config: { nodeSize } } = this
+    const nodes = nodeIds?.length ? datamodel.nodes.filter(n => nodeIds.includes(n.id)) : datamodel.nodes
 
     const maxNodeSize = getMaxNodeSize(nodes, nodeSize)
-    const w = this._width
-    const h = this._height
-
     const xExtent = [
       min(nodes, d => getX(d) - maxNodeSize / 2 - (max((d._panels || []).map(p => p._padding.left)) || 0)),
       max(nodes, d => getX(d) + maxNodeSize / 2 + (max((d._panels || []).map(p => p._padding.right)) || 0)),
@@ -508,8 +496,26 @@ export class Graph<
 
     if (xExtent.some(item => item === undefined) || yExtent.some(item => item === undefined)) {
       console.warn('Unovis | Graph: Some of the node coordinates are undefined. This can happen if you try to fit the graph before the layout has been calculated.')
-      return zoomIdentity
+      return
     }
+
+    const transform = this._getTransform(xExtent as [number, number], yExtent as [number, number], alignment)
+
+    smartTransition(this.g, duration)
+      .call(this._zoomBehavior.transform, transform)
+
+    this._onZoom(transform)
+  }
+
+  private _getTransform (
+    xExtent: [number, number],
+    yExtent: [number, number],
+    alignment: GraphFitViewAlignment
+  ): ZoomTransform {
+    const { zoomScaleExtent } = this.config
+    const { left, top, right, bottom } = this.bleed
+    const w = this._width
+    const h = this._height
 
     const xScale = w / (xExtent[1] - xExtent[0] + (left || 0) + (right || 0))
     const yScale = h / (yExtent[1] - yExtent[0] + (top || 0) + (bottom || 0))
@@ -1047,6 +1053,43 @@ export class Graph<
     this._layoutCalculationPromise?.then(() => {
       this._fit(duration, nodeIds, alignment)
     })
+  }
+
+  public fitViewToBounds (
+    xExtent?: [number, number] | undefined,
+    yExtent?: [number, number] | undefined,
+    duration = this.config.duration,
+    alignment: GraphFitViewAlignment = this.config.fitViewAlign
+  ): void {
+    const { datamodel: { nodes } } = this
+
+    // If no extents provided, return identity
+    if (!xExtent && !yExtent) {
+      console.warn('Unovis | Graph: At least one extent (x or y) must be provided.')
+      return
+    }
+
+    const nodesFiltered = nodes.filter(n => {
+      const x = getX(n)
+      const y = getY(n)
+      return (!xExtent || (x !== undefined && x >= xExtent[0] && x <= xExtent[1])) && (!yExtent || (y >= yExtent[0] && y <= yExtent[1]))
+    })
+
+    if ((!xExtent || !yExtent) && !nodesFiltered.length) {
+      console.warn(`Unovis | Graph: No nodes found within provided extent [${xExtent}], [${yExtent}].`)
+      return
+    }
+
+    const transform = this._getTransform(
+      xExtent ?? extent(nodesFiltered, d => getX(d)),
+      yExtent ?? extent(nodesFiltered, d => getY(d)),
+      alignment
+    )
+
+    smartTransition(this.g, duration)
+      .call(this._zoomBehavior.transform, transform)
+
+    this._onZoom(transform)
   }
 
   /** Enable automatic fitting to container if it was disabled due to previous zoom / pan interactions */
