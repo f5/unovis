@@ -37,8 +37,8 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
             { text: `Mean: ~${(acc.total / data.length).toFixed(2)}`, fontSize: 14 },
           ],
         }, {
-          x: '102%',
-          y: yScale(acc.min),
+          x: 'calc(100% - 10px + (60px - 70px))', // 100% - 20px
+          y: '5px',
           content: 'Min',
           verticalAlign: 'middle',
           textAlign: 'left',
