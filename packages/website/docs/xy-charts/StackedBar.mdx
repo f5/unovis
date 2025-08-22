@@ -28,7 +28,7 @@ _Stacked Bar_ can accept an array of y accessors to display values as a stack of
 
 ## Orientation
 _Stacked Bar_ supports horizontal and vertical orientation.
-<XYWrapper {...stackedBarProps()} y={[d => d.y, d => d.y1, d => d.y2]} height={250} showAxes property="orientation" inputType="select" options={["horizontal","vertical"]}/>
+<XYWrapperWithInput {...stackedBarProps()} y={[d => d.y, d => d.y1, d => d.y2]} height={250} showAxes property="orientation" inputType="select" options={["horizontal","vertical"]}/>
 
 ## Rounded Corners
 You can apply rounded corners to the top bar in your _Stacked Bar_ component using the `roundedCorners` property, which accepts
