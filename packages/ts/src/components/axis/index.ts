@@ -415,27 +415,35 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
       labelHeight = trimmedBBox.height
     }
 
-    /*
-      we need to calculate the offset for the label based on the position and the fit mode
-      for offsetX, applying Y label we need to check if it's wrap or trim, then set the offset accordingly.
-      Same for offsetY, need to consider x label.
-    */
-    const offsetX = type === AxisType.X
-      ? this._width / 2
-      : type === AxisType.Y && labelTextFitMode === FitMode.Wrap
-        ? (axisPosition === Position.Left) ? -labelHeight / 2 : 0
-        : (-1) ** (+(axisPosition === Position.Left)) * axisWidth
-    const offsetY = type === AxisType.Y
-      ? this._height / 2
-      : type === AxisType.X && labelTextFitMode === FitMode.Wrap
-        ? (axisPosition === Position.Top) ? -axisHeight - labelHeight / 2 : axisHeight
-        : (-1) ** (+(axisPosition === Position.Top)) * axisHeight
+    /**
+     * Compute post-rotation extents (extentX, extentY) and centered translation offsets.
+     * extentX / extentY are the visual width / height after rotation (swap when Y axis).
+     * Offsets center the label along the axis and place it outside the ticks using labelMargin.
+     * Covers both orientations (X/Y) and sides (Top/Bottom/Left/Right).
+     */
+    const rotated = type === AxisType.Y
+    const extentX = rotated ? labelHeight : labelWidth
+    const extentY = rotated ? labelWidth : labelHeight
 
-    const marginX = type === AxisType.X ? 0 : (labelTextFitMode === FitMode.Wrap ? (-1) ** (+(axisPosition === Position.Left)) * ((labelHeight / 2) + labelMargin * 2) : (axisPosition === Position.Right ? labelMargin : -labelMargin))
-    const marginY = type === AxisType.X ? (-1) ** (+(axisPosition === Position.Top)) * labelMargin : 0
+    let offsetX: number
+    let offsetY: number
+
+    if (type === AxisType.X) {
+      const labelHalfHeight = extentY / 2
+      offsetX = this._width / 2
+      offsetY = axisPosition === Position.Bottom
+        ? axisHeight + labelMargin + labelHalfHeight
+        : -(labelMargin + labelHalfHeight)
+    } else {
+      const labelHalfWidth = extentX / 2
+      offsetY = this._height / 2
+      offsetX = axisPosition === Position.Left
+        ? -(axisWidth + labelMargin + labelHalfWidth)
+        : axisWidth + labelMargin + labelHalfWidth
+    }
 
     // Apply transform and rotation after all calculations
-    textElement.attr('transform', `translate(${offsetX + marginX},${offsetY + marginY}) rotate(${rotation})`)
+    textElement.attr('transform', `translate(${offsetX},${offsetY}) rotate(${rotation})`)
   }
 
   private _getLabelDY (): number {
