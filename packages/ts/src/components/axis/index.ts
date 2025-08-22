@@ -385,10 +385,17 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
 
     // Set the text content
     textElement.text(label)
+
+    let isWrapped = false
     if (labelTextFitMode === FitMode.Wrap) {
       // For Y-axis, use the chart height as the maximum width before rotation
       const maxWidth = type === AxisType.Y ? this._height : this._width
-      wrapSVGText(textElement, maxWidth)
+      const currentTextWidth = textElement.node().getComputedTextLength()
+
+      if (currentTextWidth > maxWidth) {
+        wrapSVGText(textElement, maxWidth)
+        isWrapped = true
+      }
     }
 
     // Calculate offset after wrapping to get accurate dimensions
@@ -422,8 +429,10 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     */
     const offsetX = type === AxisType.X
       ? this._width / 2
-      : type === AxisType.Y && labelTextFitMode === FitMode.Wrap
-        ? (axisPosition === Position.Left) ? -labelHeight / 2 : 0
+      : type === AxisType.Y && labelTextFitMode === FitMode.Wrap && isWrapped
+        ? (axisPosition === Position.Left)
+          ? -axisWidth - labelHeight / 2 - 10 // there's a 10px gap between tick label and Position.Right Y label, so offset as well in the Position.Left case
+          : axisWidth
         : (-1) ** (+(axisPosition === Position.Left)) * axisWidth
     const offsetY = type === AxisType.Y
       ? this._height / 2
@@ -431,7 +440,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
         ? (axisPosition === Position.Top) ? -axisHeight - labelHeight / 2 : axisHeight
         : (-1) ** (+(axisPosition === Position.Top)) * axisHeight
 
-    const marginX = type === AxisType.X ? 0 : (labelTextFitMode === FitMode.Wrap ? (-1) ** (+(axisPosition === Position.Left)) * ((labelHeight / 2) + labelMargin * 2) : (axisPosition === Position.Right ? labelMargin : -labelMargin))
+    const marginX = type === AxisType.X ? 0 : (-1) ** (+(axisPosition === Position.Left)) * labelMargin
     const marginY = type === AxisType.X ? (-1) ** (+(axisPosition === Position.Top)) * labelMargin : 0
 
     // Apply transform and rotation after all calculations
