@@ -33,6 +33,8 @@ export interface AxisConfigInterface<Datum> extends Partial<XYComponentConfigInt
   domainLine?: boolean;
   /** Draw only the min and max axis ticks. Default: `false` */
   minMaxTicksOnly?: boolean;
+  /** Show grid lines for the min and max axis ticks. Default: `false` */
+  minMaxTicksOnlyShowGridLines?: boolean;
   /** Draw only the min and max axis ticks, when the chart
    * width is less than the specified value.
    * Default: `250` */
@@ -84,6 +86,7 @@ export const AxisDefaultConfig: AxisConfigInterface<unknown> = {
   numTicks: undefined,
   minMaxTicksOnly: false,
   minMaxTicksOnlyWhenWidthIsLess: 250,
+  minMaxTicksOnlyShowGridLines: false,
   tickTextWidth: undefined,
   tickTextSeparator: undefined,
   tickTextForceWordBreak: false,

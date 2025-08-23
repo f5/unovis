@@ -214,7 +214,7 @@ The specified count is only a hint, the axis can have more or fewer ticks depend
 Set the `minMaxTicksOnly` property to `true` if you only want to see the two end ticks on the axis.
 
 :::note
-To display the minimum and maximum ticks only when the chart width is limited (this behavior is enabed my default),
+To display the minimum and maximum ticks only when the chart width is limited (this behavior is enabled my default),
 you can use the `minMaxTicksOnlyWhenWidthIsLess` property (defaults to 250px). This helps avoid clutter in smaller visualizations while still
 providing essential information.
 :::
@@ -225,6 +225,17 @@ providing essential information.
   defaultValue={true}
   property="minMaxTicksOnly"/>
 
+
+When using `minMaxTicksOnly`, you can still show grid lines by setting `minMaxTicksOnlyShowGridLines` to `true`.
+
+<XYWrapperWithInput
+  minMaxTicksOnly={true}
+  {...axisProps()}
+  inputType="checkbox"
+  defaultValue={true}
+  property="minMaxTicksOnlyShowGridLines"
+  hiddenProps={{}}
+/>
 
 ### Set Ticks Explicitly
 You can customize the ticks displayed by providing the _Axis_ component with a number array.
