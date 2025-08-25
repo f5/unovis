@@ -196,12 +196,24 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     const gridScale = gridGen.scale<ContinuousScale>()
     const scaleDomain = gridScale.domain()
 
+    const getGridMinMaxTicksOnlyValues = (): number[] | Date[] => {
+      if (!config.minMaxTicksOnlyShowGridLines) return scaleDomain
+
+      const tickValues = gridScale.ticks(numTicks)
+      if (tickValues.length < 2) return scaleDomain
+
+      // If the last tick is far enough from the domain max value, we add it to the tick values to draw the grid line
+      const tickValuesStep = +tickValues[1] - +tickValues[0]
+      const domainMaxValue = scaleDomain[1]
+      const diff = +domainMaxValue - +tickValues[tickValues.length - 1]
+
+      return diff > tickValuesStep / 2 ? [...tickValues, domainMaxValue] as (number[] | Date[]) : tickValues
+    }
+
     const tickValues = config.tickValues
       ? this._getConfiguredTickValues()
       : this._shouldRenderMinMaxTicksOnly()
-        ? config.minMaxTicksOnlyShowGridLines
-          ? [...gridScale.ticks(numTicks), scaleDomain[1]]
-          : scaleDomain
+        ? getGridMinMaxTicksOnlyValues()
         : gridScale.ticks(numTicks)
 
     gridGen.tickValues(tickValues)
