@@ -37,6 +37,9 @@ watch(config, (curr, prev) => {
   }
 })
 
+watch(data, () => {
+  component.value?.setData(data.value)
+})
 
 defineExpose({
   component
