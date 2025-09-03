@@ -94,6 +94,13 @@ Set `showEmptySegments` to `true` if you want to display lines that are `undefin
 
 <XYWrapperWithInput {...emptyProps} lineCap={true} property="showEmptySegments" inputType="checkbox" defaultValue={true}/>
 
+#### Empty segments positioning
+When both `showEmptySegments` and `lineCap` are set to `true`, you can control the positioning of small segments using
+the `showEmptySegmentsCorrectPosition` property. When set to `true` (default), small segments will be centered at their
+actual position. When set to `false`, small segments will be aligned to the left of their position.
+
+<XYWrapperWithInput {...emptyProps} lineCap={true} showEmptySegments={true} property="showEmptySegmentsCorrectPosition" inputType="checkbox" defaultValue={true}/>
+
 ### Line Width
 You can also change the line thickness with the `lineWidth` property, which determines how much
 vertical space each _Timeline_ item occupies.
