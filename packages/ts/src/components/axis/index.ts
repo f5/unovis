@@ -1,6 +1,7 @@
 import { select, Selection } from 'd3-selection'
 import { interrupt } from 'd3-transition'
 import { Axis as D3Axis, axisBottom, axisLeft, axisRight, axisTop } from 'd3-axis'
+import { NumberValue } from 'd3-scale'
 
 // Core
 import { XYComponentCore } from 'core/xy-component'
@@ -137,8 +138,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     this._renderAxisLabel(selection)
 
     if (config.gridLine) {
-      const gridGen = this._buildGrid().tickFormat(() => '')
-      gridGen.tickValues(this._getConfiguredTickValues())
+      const gridGen = this._buildGrid()
       // Interrupting all active transitions first to prevent them from being stuck.
       // Somehow we see it happening in Angular apps.
       this.gridGroup.selectAll('*').interrupt()
@@ -169,29 +169,70 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     }
   }
 
-  private _buildGrid (): D3Axis<any> {
-    const { config: { type, position } } = this
+  private _buildGrid (): D3Axis<NumberValue | Date> {
+    const { config } = this
 
-    const ticks = this._getNumTicks()
-    switch (type) {
+    let gridGen: D3Axis<NumberValue | Date>
+    switch (config.type) {
       case AxisType.X:
-        switch (position) {
-          case Position.Top: return axisTop(this.xScale).ticks(ticks * 2).tickSize(-this._height).tickSizeOuter(0)
-          case Position.Bottom: default: return axisBottom(this.xScale).ticks(ticks * 2).tickSize(-this._height).tickSizeOuter(0)
+        switch (config.position) {
+          case Position.Top: { gridGen = axisTop(this.xScale); break }
+          case Position.Bottom: default: { gridGen = axisBottom(this.xScale); break }
         }
+        gridGen.tickSize(-this._height)
+        break
       case AxisType.Y:
-        switch (position) {
-          case Position.Right: return axisRight(this.yScale).ticks(ticks * 2).tickSize(-this._width).tickSizeOuter(0)
-          case Position.Left: default: return axisLeft(this.yScale).ticks(ticks * 2).tickSize(-this._width).tickSizeOuter(0)
+        switch (config.position) {
+          case Position.Right: { gridGen = axisRight(this.yScale); break }
+          case Position.Left: default: { gridGen = axisLeft(this.yScale); break }
         }
+        gridGen.tickSize(-this._width)
     }
+    gridGen
+      .tickSizeOuter(0)
+      .tickFormat(() => '')
+
+    const numTicks = this._getNumTicks() * 2
+    const gridScale = gridGen.scale<ContinuousScale>()
+    const scaleDomain = gridScale.domain()
+
+    const getGridMinMaxTicksOnlyValues = (): number[] | Date[] => {
+      if (!config.minMaxTicksOnlyShowGridLines) return scaleDomain
+
+      const tickValues = gridScale.ticks(numTicks)
+      if (tickValues.length < 2) return scaleDomain
+
+      // If the last tick is far enough from the domain max value, we add it to the tick values to draw the grid line
+      const tickValuesStep = +tickValues[1] - +tickValues[0]
+      const domainMaxValue = scaleDomain[1]
+      const diff = +domainMaxValue - +tickValues[tickValues.length - 1]
+
+      return diff > tickValuesStep / 2 ? [...tickValues, domainMaxValue] as (number[] | Date[]) : tickValues
+    }
+
+    const tickValues = config.tickValues
+      ? this._getConfiguredTickValues()
+      : this._shouldRenderMinMaxTicksOnly()
+        ? getGridMinMaxTicksOnlyValues()
+        : gridScale.ticks(numTicks)
+
+    gridGen.tickValues(tickValues)
+
+    return gridGen
   }
 
   private _renderAxis (selection = this.axisGroup, duration = this.config.duration): void {
     const { config } = this
 
     const axisGen = this._buildAxis()
-    const tickValues: (number[] | Date[]) = this._getConfiguredTickValues() || axisGen.scale<ContinuousScale>().ticks(this._getNumTicks())
+    const axisScale = axisGen.scale<ContinuousScale>()
+    const tickValues: (number[] | Date[]) =
+      config.tickValues
+        ? this._getConfiguredTickValues()
+        : this._shouldRenderMinMaxTicksOnly()
+          ? axisScale.domain()
+          : axisScale.ticks(this._getNumTicks())
+
     axisGen.tickValues(tickValues)
 
     // Interrupting all active transitions first to prevent them from being stuck.
@@ -344,11 +385,12 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
       return config.tickValues.filter(v => (v >= scaleDomain[0]) && (v <= scaleDomain[1]))
     }
 
-    if (config.minMaxTicksOnly || (config.type === AxisType.X && this._width < config.minMaxTicksOnlyWhenWidthIsLess)) {
-      return scaleDomain as number[]
-    }
-
     return null
+  }
+
+  private _shouldRenderMinMaxTicksOnly (): boolean {
+    const { config } = this
+    return config.minMaxTicksOnly || (config.type === AxisType.X && this._width < config.minMaxTicksOnlyWhenWidthIsLess)
   }
 
   private _getFullDomainPath (tickSize = 0): string {
