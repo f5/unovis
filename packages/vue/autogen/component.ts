@@ -61,7 +61,7 @@ watch(config, (curr, prev) => {
     component.value?.${componentName === 'BulletLegend' ? 'update' : 'setConfig'}(config.value)
   }
 })
-${propDefs?.length && !isStandAlone ? `\nwatch(data, () => {
+${propDefs?.length ? `\nwatch(data, () => {
   component.value?.setData(data.value)
 })` : ''}
 
