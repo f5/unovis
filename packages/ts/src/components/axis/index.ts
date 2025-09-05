@@ -232,13 +232,18 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
         : this._shouldRenderMinMaxTicksOnly()
           ? axisScale.domain()
           : axisScale.ticks(this._getNumTicks())
-
+    const tickCount = tickValues.length
     axisGen.tickValues(tickValues)
 
     // Interrupting all active transitions first to prevent them from being stuck.
     // Somehow we see it happening in Angular apps.
     selection.selectAll('*').interrupt()
-    smartTransition(selection, duration).call(axisGen)
+    const transition = smartTransition(selection, duration).call(axisGen)
+
+    // Resolving tick label overlap after the animation is over
+    transition.on('end', () => {
+      this._resolveTickLabelOverlap(selection)
+    })
 
     const ticks = selection.selectAll<SVGGElement, number | Date>('g.tick')
 
@@ -254,6 +259,10 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
       .classed(s.tickLabelHideable, Boolean(config.tickTextHideOverlapping))
       .style('fill', config.tickTextColor) as Selection<SVGTextElement, number, SVGGElement, unknown> | Selection<SVGTextElement, Date, SVGGElement, unknown>
 
+    // Marking exiting elements
+    selection.selectAll<SVGTextElement, number | Date>('g.tick > text')
+      .filter(tickValue => !tickValues.some((t: number | Date) => isEqual(tickValue, t)))
+      .classed(s.tickTextExiting, true)
 
     // We interrupt the transition on tick's <text> to make it 'wrappable'
     tickText.nodes().forEach(node => interrupt(node))
@@ -261,7 +270,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     tickText.each((value: number | Date, i: number, elements: ArrayLike<SVGTextElement>) => {
       let text = config.tickFormat?.(value, i, tickValues) ?? `${value}`
       const textElement = elements[i] as SVGTextElement
-      const textMaxWidth = config.tickTextWidth || (config.type === AxisType.X ? this._containerWidth / (ticks.size() + 1) : this._containerWidth / 5)
+      const textMaxWidth = config.tickTextWidth || (config.type === AxisType.X ? this._containerWidth / (tickCount + 1) : this._containerWidth / 5)
       const styleDeclaration = getComputedStyle(textElement)
       const fontSize = Number.parseFloat(styleDeclaration.fontSize)
       const fontFamily = styleDeclaration.fontFamily
@@ -296,7 +305,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
 
   private _resolveTickLabelOverlap (selection = this.axisGroup): void {
     const { config } = this
-    const tickTextSelection = selection.selectAll<SVGTextElement, number | Date>('g.tick > text')
+    const tickTextSelection = selection.selectAll<SVGTextElement, number | Date>(`g.tick > text:not(.${s.tickTextExiting})`)
 
     if (!config.tickTextHideOverlapping) {
       tickTextSelection.style('opacity', null)
