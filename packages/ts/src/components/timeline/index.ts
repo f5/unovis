@@ -171,8 +171,13 @@ export class Timeline<Datum> extends XYComponentCore<Datum, TimelineConfigInterf
       const firstItemHeight = this._getLineWidth(firstItem, firstItemIdx, rowHeight)
       const lastItemHeight = this._getLineWidth(lastItem, lastItemIdx, rowHeight)
 
-      if ((firstItemEnd - firstItemStart) / fullTimeRange * this._width < firstItemHeight) lineBleed[0] = firstItemHeight / 2
-      if ((lastItemEnd - lastItemStart) / fullTimeRange * this._width < lastItemHeight) lineBleed[1] = lastItemHeight / 2
+      if ((firstItemEnd - firstItemStart) / fullTimeRange * this._width < firstItemHeight) {
+        lineBleed[0] = config.showEmptySegmentsCorrectPosition ? firstItemHeight / 2 : 0
+      }
+
+      if ((lastItemEnd - lastItemStart) / fullTimeRange * this._width < lastItemHeight) {
+        lineBleed[1] = config.showEmptySegmentsCorrectPosition ? lastItemHeight / 2 : lastItemHeight
+      }
     }
     this._lineBleed = lineBleed
 
