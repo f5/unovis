@@ -530,8 +530,13 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
   }
 
   private _getYTickTextTranslate (textAlign: TextAlign, axisPosition: Position = Position.Left): number {
-    const defaultTickTextSpacingPx = 9 // Default in D3
-    const width = this._axisRawBBox.width - defaultTickTextSpacingPx
+    /*
+      Default in D3 is 9, tickPadding is the spacing in pixels between the tick and it's label. Default: `8`
+    */
+    const defaultTickTextSpacingPx = this.config.tickPadding + 1
+
+    // this._axisRawBBox will be undefined when autoMargin is undefined
+    const width = (this._axisRawBBox?.width ?? this.axisGroup.node()?.getBBox().width ?? 0) - defaultTickTextSpacingPx
 
     switch (textAlign) {
       case TextAlign.Left: return axisPosition === Position.Left ? width * -1 : 0
