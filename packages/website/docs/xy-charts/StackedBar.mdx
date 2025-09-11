@@ -26,6 +26,10 @@ The _Stacked Bar_ component has been designed to work together with _XY Containe
 _Stacked Bar_ can accept an array of y accessors to display values as a stack of bars:
 <XYWrapper {...stackedBarProps()} showContext="full" y={[d => d.y, d => d.y1, d => d.y2]}/>
 
+### Stacked Bar with Spacing `1.6`
+_Stacked Bar_ supports spacing between each stacked bars using the `stackSpacing` property. 
+<XYWrapper {...stackedBarProps()} showContext="full" y={[d => d.y, d => d.y1, d => d.y2]} stackSpacing={3}/>
+
 ## Orientation
 _Stacked Bar_ supports horizontal and vertical orientation.
 <XYWrapperWithInput {...stackedBarProps()} y={[d => d.y, d => d.y1, d => d.y2]} height={250} showAxes property="orientation" inputType="select" options={["horizontal","vertical"]}/>
