@@ -1,7 +1,7 @@
 {
   "name": "@unovis/website",
   "description": "Modular data visualization framework for React, Angular, Svelte, Vue, Solid, and vanilla TypeScript or JavaScript",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "packageManager": "npm@10.9.1",
   "repository": {
     "type": "git",
