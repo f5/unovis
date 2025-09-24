@@ -136,7 +136,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
       : clamp(xPx, xRange[0], xRange[1])
 
     const isCrosshairWithinXRange = (xPx >= xRange[0]) && (xPx <= xRange[1])
-    const isCrosshairWithinYRange = (this._yPx >= yRange[1]) && (this._yPx <= yRange[0])
+    const isCrosshairWithinYRange = (this._yPx >= Math.min(yRange[0], yRange[1])) && (this._yPx <= Math.max(yRange[0], yRange[1]))
     let shouldShow = this._xPx ? isCrosshairWithinXRange && isCrosshairWithinYRange : isCrosshairWithinXRange
 
     // If the crosshair is far from the mouse pointer (usually when `snapToData` is `true` and data resolution is low), hide it
