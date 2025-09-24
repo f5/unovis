@@ -1,5 +1,6 @@
 import { sum } from 'd3-array'
 import { groupBy } from '@src/utils/array'
+import { SankeyLink, SankeyNode } from '@unovis/ts'
 
 export type ApiEndpointRecord = {
   collapsedUrl: string;
@@ -120,4 +121,30 @@ export function getSankeyData (apiData: ApiEndpointRecord[], collapsedItems: { [
       value: sum(linkArr.map(l => l.value)), // Sum up link values
     })),
   }
+}
+
+export const compareStrings = (a = '', b = ''): number => {
+  const strA = a.toUpperCase()
+  const strB = b.toUpperCase()
+
+  if (strA < strB) return -1
+  if (strA > strB) return 1
+  return 0
+}
+
+export const nodeSort = (a: SankeyNode<ApiEndpointNode, ApiEndpointLink>, b: SankeyNode<ApiEndpointNode, ApiEndpointLink>): number => {
+  const aParent = a.targetLinks[0]?.source
+  const bParent = b.targetLinks[0]?.source
+  const aGrandparent = a.targetLinks[0]?.source?.targetLinks[0]?.source
+  const bGrandparent = b.targetLinks[0]?.source?.targetLinks[0]?.source
+
+  if ((aParent === bParent)) { // Same parent nodes are sorted by: value + alphabetically
+    return (b.value - a.value) || compareStrings(a?.path, b?.path)
+  } else { // Different parent nodes are sorted by: 1st grandparent value + 1st parent value + alphabetically
+    return (bGrandparent?.value - aGrandparent?.value) || (bParent?.value - aParent?.value) || -compareStrings(aParent?.path, bParent?.path)
+  }
+}
+
+export const linkSort = (a: SankeyLink<ApiEndpointNode, ApiEndpointLink>, b: SankeyLink<ApiEndpointNode, ApiEndpointLink>): number => {
+  return b.value - a.value || compareStrings(a.target?.path, b.target?.path) // Links sorted by: value + alphabetically
 }

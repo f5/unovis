@@ -1,0 +1,32 @@
+.controlPanel {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: white;
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.buttonRow {
+  display: flex;
+  gap: 8px;
+}
+
+.controlRow {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.label {
+  font-size: 12px;
+  min-width: 80px;
+}
+
+.smallButton {
+  font-size: 11px;
+}
