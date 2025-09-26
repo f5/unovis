@@ -79,6 +79,7 @@ export const grid = css`
   line {
     stroke: var(--vis-axis-grid-color);
     stroke-width: var(--vis-axis-grid-line-width);
+    stroke-dasharray: var(--vis-axis-grid-line-dasharray);
   }
 `
 
