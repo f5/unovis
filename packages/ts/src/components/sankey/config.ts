@@ -197,7 +197,7 @@ export const SankeyDefaultConfig: SankeyConfigInterface<SankeyInputNode, SankeyI
   labelFontSize: undefined,
   labelCursor: undefined,
   labelColor: undefined,
-  labelMaxWidth: 70,
+  labelMaxWidth: undefined,
   labelExpandTrimmedOnHover: true,
   labelVisibility: undefined,
   subLabel: undefined,

@@ -106,30 +106,27 @@ export class Sankey<
 
   get bleed (): Spacing {
     const { config, datamodel: { nodes, links } } = this
-    const labelFontSize = config.labelFontSize ?? getCSSVariableValueInPixels('var(--vis-sankey-label-font-size)', this.element)
-    const labelSize = requiredLabelSpace(config.labelMaxWidth, labelFontSize)
+    if (!nodes.length) return { top: 0, bottom: 0, left: 0, right: 0 }
 
-    let left = 0
-    let right = 0
+    const labelFontSize = config.labelFontSize ?? getCSSVariableValueInPixels('var(--vis-sankey-label-font-size)', this.element)
 
     // We pre-calculate sankey layout to get information about node labels placement and calculate bleed properly
     // Potentially it can be a performance bottleneck for large layouts, but generally rendering of such layouts is much more computationally heavy
-    if (nodes.length) {
-      const sankeyProbeSize = 1000
-      this._populateLinkAndNodeValues()
-      this._sankey.size([sankeyProbeSize, sankeyProbeSize])
-      this._sankey({ nodes, links })
-      const maxDepth = max(nodes, d => d.depth)
-      const zeroDepthNodes = nodes.filter(d => d.depth === 0)
-      const maxDepthNodes = nodes.filter(d => d.depth === maxDepth)
+    const sankeyProbeSize = 1000
+    this._populateLinkAndNodeValues()
+    this._sankey.size([sankeyProbeSize, sankeyProbeSize])
+    this._sankey({ nodes, links })
+    const labelSize = requiredLabelSpace(config.labelMaxWidth ?? this._getLayerSpacing(nodes), labelFontSize)
+    const maxDepth = max(nodes, d => d.depth)
+    const zeroDepthNodes = nodes.filter(d => d.depth === 0)
+    const maxDepthNodes = nodes.filter(d => d.depth === maxDepth)
 
 
-      left = zeroDepthNodes.some(d => getLabelOrientation(d, sankeyProbeSize, config.labelPosition) === Position.Left) ? labelSize.width : 0
-      right = (maxDepthNodes.some(d => getString(d, config.label)) &&
+    const left = zeroDepthNodes.some(d => getLabelOrientation(d, sankeyProbeSize, config.labelPosition) === Position.Left) ? labelSize.width : 0
+    const right = (maxDepthNodes.some(d => getString(d, config.label)) &&
         maxDepthNodes.some(d => getLabelOrientation(d, sankeyProbeSize, config.labelPosition) === Position.Right))
-        ? labelSize.width
-        : 0
-    }
+      ? labelSize.width
+      : 0
 
     const top = config.labelVerticalAlign === VerticalAlign.Top ? 0
       : config.labelVerticalAlign === VerticalAlign.Bottom ? labelSize.height
@@ -200,12 +197,13 @@ export class Sankey<
     linkSelection.merge(linkSelectionEnter).call(updateLinks, config, duration)
     linkSelection.exit<SankeyLink<N, L>>().call(removeLinks)
 
-    // Nodes (pan applied above)
+    // Nodes
+    const nodeSpacing = this._getLayerSpacing(nodes)
     const nodeSelection = this._nodesGroup.selectAll<SVGGElement, SankeyNode<N, L>>(`.${s.nodeGroup}`)
       .data(nodes, (d, i) => config.id(d, i) ?? i)
     const nodeSelectionEnter = nodeSelection.enter().append('g').attr('class', s.nodeGroup)
     nodeSelectionEnter.call(createNodes, this.config, this._width, bleed)
-    nodeSelection.merge(nodeSelectionEnter).call(updateNodes, config, this._width, bleed, this._hasLinks(), duration)
+    nodeSelection.merge(nodeSelectionEnter).call(updateNodes, config, this._width, bleed, this._hasLinks(), duration, nodeSpacing)
     nodeSelection.exit<SankeyNode<N, L>>()
       .attr('class', s.nodeExit)
       .call(removeNodes, config, duration)
@@ -660,12 +658,21 @@ export class Sankey<
     return datamodel.links.length > 0
   }
 
+  private _getLayerSpacing (nodes: SankeyNode<N, L>[]): number {
+    const { config } = this
+    if (!nodes?.length) return 0
+
+    const firstNode = nodes[0]
+    const nextLayerNode = nodes.find(d => d.layer === firstNode.layer + 1)
+    return nextLayerNode ? nextLayerNode.x0 - (firstNode.x0 + config.nodeWidth) : this._width - firstNode.x1
+  }
+
   private _onNodeMouseOver (d: SankeyNode<N, L>, event: MouseEvent): void {
-    onNodeMouseOver(d, select(event.currentTarget as SVGGElement), this.config, this._width)
+    onNodeMouseOver(d, select(event.currentTarget as SVGGElement), this.config, this._width, this._getLayerSpacing(this.datamodel.nodes))
   }
 
   private _onNodeMouseOut (d: SankeyNode<N, L>, event: MouseEvent): void {
-    onNodeMouseOut(d, select(event.currentTarget as SVGGElement), this.config, this._width)
+    onNodeMouseOut(d, select(event.currentTarget as SVGGElement), this.config, this._width, this._getLayerSpacing(this.datamodel.nodes))
   }
 
   private _onNodeRectMouseOver (d: SankeyNode<N, L>): void {

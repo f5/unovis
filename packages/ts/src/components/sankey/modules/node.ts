@@ -78,7 +78,8 @@ export function updateNodes<N extends SankeyInputNode, L extends SankeyInputLink
   width: number,
   bleed: Spacing,
   hasLinks: boolean,
-  duration: number
+  duration: number,
+  layerSpacing: number
 ): void {
   smartTransition(sel, duration)
     .attr('transform', d => `translate(${getNodeXPos(d, config, width, bleed, hasLinks)},${d.y0})`)
@@ -93,7 +94,7 @@ export function updateNodes<N extends SankeyInputNode, L extends SankeyInputLink
 
   // Label Rendering
   // eslint-disable-next-line @typescript-eslint/no-use-before-define
-  renderNodeLabels(sel, config, width, duration)
+  renderNodeLabels(sel, config, width, duration, layerSpacing)
 
   // Node Icon
   const nodeIcon = sel.select(`.${s.nodeIcon}`)
@@ -124,6 +125,7 @@ export function renderNodeLabels<N extends SankeyInputNode, L extends SankeyInpu
   config: SankeyConfigInterface<N, L>,
   width: number,
   duration: number,
+  layerSpacing: number,
   enforceNodeVisibility?: SankeyNode<N, L>
 ): void {
   // Label Rendering
@@ -134,7 +136,7 @@ export function renderNodeLabels<N extends SankeyInputNode, L extends SankeyInpu
   const labelGroupBBoxes = labelGroupEls.map(g => {
     const gSelection: Selection<SVGGElement, SankeyNode<N, L>, SVGGElement, any> = select(g)
     const datum = gSelection.datum()
-    return renderLabel(gSelection, datum, config, width, duration, enforceNodeVisibility === datum)
+    return renderLabel(gSelection, datum, config, width, duration, enforceNodeVisibility === datum, layerSpacing)
   })
 
   if (config.labelVisibility) {
@@ -196,13 +198,14 @@ export function onNodeMouseOver<N extends SankeyInputNode, L extends SankeyInput
   d: SankeyNode<N, L>,
   nodeSelection: Selection<SVGGElement, SankeyNode<N, L>, SVGGElement, unknown>,
   config: SankeyConfigInterface<N, L>,
-  width: number
+  width: number,
+  layerSpacing: number
 ): void {
   const labelGroup = nodeSelection.raise()
     .select<SVGGElement>(`.${s.labelGroup}`)
 
   if ((config.labelExpandTrimmedOnHover && labelGroup.classed(s.labelTrimmed)) || labelGroup.classed(s.hidden)) {
-    renderLabel(labelGroup, d, config, width, 0, true)
+    renderLabel(labelGroup, d, config, width, 0, true, layerSpacing)
   }
   labelGroup.classed(s.forceShow, true)
 }
@@ -211,11 +214,12 @@ export function onNodeMouseOut<N extends SankeyInputNode, L extends SankeyInputL
   d: SankeyNode<N, L>,
   nodeSelection: Selection<SVGGElement, SankeyNode<N, L>, SVGGElement, unknown>,
   config: SankeyConfigInterface<N, L>,
-  width: number
+  width: number,
+  layerSpacing: number
 ): void {
   const labelGroup = nodeSelection.select<SVGGElement>(`.${s.labelGroup}`)
   if (config.labelExpandTrimmedOnHover || labelGroup.classed(s.hidden)) {
-    renderLabel(labelGroup, d, config, width, 0)
+    renderLabel(labelGroup, d, config, width, 0, false, layerSpacing)
   }
   labelGroup.classed(s.forceShow, false)
 }
