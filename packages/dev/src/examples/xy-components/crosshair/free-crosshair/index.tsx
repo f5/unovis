@@ -66,7 +66,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
 
   // Custom template function that shows interpolated values
   // eslint-disable-next-line padded-blocks
-  const template = (d: XYDataRecord | undefined, xVal: number | Date, data: XYDataRecord[], leftNearestDatumIndex: number): string => {
+  const template = (d: XYDataRecord | undefined, xVal: number | Date, data?: XYDataRecord[], leftNearestDatumIndex?: number): string => {
     // eslint-disable-next-line no-console
     console.log('X Value:', (+xVal).toFixed(1), 'Left Index:', leftNearestDatumIndex)
 
