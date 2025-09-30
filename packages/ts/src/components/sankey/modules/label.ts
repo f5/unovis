@@ -3,7 +3,7 @@ import { Selection } from 'd3-selection'
 // Utils
 import { estimateTextSize, trimSVGText, wrapSVGText } from 'utils/text'
 import { smartTransition } from 'utils/d3'
-import { getString, getValue } from 'utils/data'
+import { clamp, getString, getValue } from 'utils/data'
 import { getColor } from 'utils/color'
 import { getCSSVariableValueInPixels } from 'utils/misc'
 
@@ -143,7 +143,8 @@ export function renderLabel<N extends SankeyInputNode, L extends SankeyInputLink
   config: SankeyConfigInterface<N, L>,
   width: number,
   duration: number,
-  forceExpand = false
+  forceExpand = false,
+  nodeSpacing: number | undefined = undefined
 ): { x: number; y: number; width: number; height: number; layer: number; selection: any; hidden?: boolean } {
   const labelTextSelection: Selection<SVGTextElement, SankeyNode<N, L>, SVGGElement, SankeyNode<N, L>> = labelGroup.select(`.${s.label}`)
   const labelShowBackground = config.labelBackground || forceExpand
@@ -173,14 +174,17 @@ export function renderLabel<N extends SankeyInputNode, L extends SankeyInputLink
     .attr('transform', `translate(${labelOrientationMult * labelPadding},${labelTranslateY})`)
     .style('cursor', (d: SankeyNode<N, L>) => getString(d, config.labelCursor))
 
-  const labelMaxWidth = isSublabelInline ? config.labelMaxWidth * (1 - (sublabelText ? config.subLabelToLabelInlineWidthRatio : 0)) : config.labelMaxWidth
-  if (config.labelFit === FitMode.Wrap || forceExpand) wrapSVGText(labelTextSelection, labelMaxWidth, separator)
-  else wasTrimmed = trimSVGText(labelTextSelection, labelMaxWidth, config.labelTrimMode, fastEstimatesMode, labelFontSize, fontWidthToHeightRatio)
+  const labelMaxWidth = config.labelMaxWidth ?? clamp(nodeSpacing - 2 * NODE_LABEL_SPACING, 0, Infinity)
+  const labelWrapTrimWidth = isSublabelInline
+    ? labelMaxWidth * (1 - (sublabelText ? config.subLabelToLabelInlineWidthRatio : 0))
+    : labelMaxWidth
+  if (config.labelFit === FitMode.Wrap || forceExpand) wrapSVGText(labelTextSelection, labelWrapTrimWidth, separator)
+  else wasTrimmed = trimSVGText(labelTextSelection, labelWrapTrimWidth, config.labelTrimMode, fastEstimatesMode, labelFontSize, fontWidthToHeightRatio)
 
   const labelSize = estimateTextSize(labelTextSelection, labelFontSize, dy, fastEstimatesMode, fontWidthToHeightRatio)
 
   // Render the sub-label, wrap / trim it and estimate its size
-  const sublabelTranslateX = labelOrientationMult * (labelPadding + (isSublabelInline ? config.labelMaxWidth : 0))
+  const sublabelTranslateX = labelOrientationMult * (labelPadding + (isSublabelInline ? labelMaxWidth : 0))
   const sublabelMarginTop = 0
   const sublabelTranslateY = labelPadding + (isSublabelInline
     ? (labelsFontSizeDifference > 0 ? 0.6 * labelsFontSizeDifference : 0)
@@ -192,9 +196,9 @@ export function renderLabel<N extends SankeyInputNode, L extends SankeyInputLink
     .attr('transform', `translate(${sublabelTranslateX},${sublabelTranslateY})`)
     .style('cursor', (d: SankeyNode<N, L>) => getString(d, config.labelCursor))
 
-  const sublabelMaxWidth = isSublabelInline ? config.labelMaxWidth * config.subLabelToLabelInlineWidthRatio : config.labelMaxWidth
+  const sublabelMaxWidth = isSublabelInline ? labelMaxWidth * config.subLabelToLabelInlineWidthRatio : labelMaxWidth
   if (config.labelFit === FitMode.Wrap || forceExpand) wrapSVGText(sublabelTextSelection, sublabelMaxWidth, separator)
-  else wasTrimmed = wasTrimmed || trimSVGText(sublabelTextSelection, sublabelMaxWidth, config.labelTrimMode, fastEstimatesMode, subLabelFontSize, fontWidthToHeightRatio)
+  else wasTrimmed = trimSVGText(sublabelTextSelection, sublabelMaxWidth, config.labelTrimMode, fastEstimatesMode, subLabelFontSize, fontWidthToHeightRatio) || wasTrimmed
 
   labelGroup.classed(s.labelTrimmed, wasTrimmed)
   const sublabelSize = estimateTextSize(sublabelTextSelection, subLabelFontSize, dy, fastEstimatesMode, fontWidthToHeightRatio)
@@ -204,7 +208,7 @@ export function renderLabel<N extends SankeyInputNode, L extends SankeyInputLink
   const labelBackground = labelGroup.select(`.${s.labelBackground}`)
 
   labelBackground
-    .attr('d', labelShowBackground ? getLabelBackground(config.labelMaxWidth + 2 * labelPadding, labelGroupHeight, labelOrientation as (Position.Left | Position.Right)) : null)
+    .attr('d', labelShowBackground ? getLabelBackground(labelMaxWidth + 2 * labelPadding, labelGroupHeight, labelOrientation as (Position.Left | Position.Right)) : null)
 
   // Position the label
   const labelTextAnchor = getLabelTextAnchor(d, config, width)
@@ -222,7 +226,7 @@ export function renderLabel<N extends SankeyInputNode, L extends SankeyInputLink
   return {
     x: d.x0 + xTranslate,
     y: d.y0 + yTranslate,
-    width: config.labelMaxWidth,
+    width: labelMaxWidth,
     height: labelGroupHeight,
     layer: d.layer,
     selection: labelGroup,
