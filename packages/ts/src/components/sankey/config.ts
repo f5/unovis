@@ -119,10 +119,12 @@ export interface SankeyConfigInterface<N extends SankeyInputNode, L extends Sank
   labelVerticalAlign?: VerticalAlign | string;
   /** Label background */
   labelBackground?: boolean;
-  /** Label fit mode (wrap or trim). Default: `FitMode.TRIM` **/
+  /** Label fit mode (wrap or trim). Default: `FitMode.Trim` **/
   labelFit?: FitMode;
   /** Maximum label with in pixels. Default: `70` */
   labelMaxWidth?: number;
+  /** Whether to take the available space for the label. This property is used only if `labelMaxWidth` is not provided. Default: `false` */
+  labelMaxWidthTakeAvailableSpace?: boolean;
   /** Expand trimmed label on hover. Default: `true` */
   labelExpandTrimmedOnHover?: boolean;
   /** Label trimming mode. Default: `TrimMode.Middle` */
@@ -198,6 +200,7 @@ export const SankeyDefaultConfig: SankeyConfigInterface<SankeyInputNode, SankeyI
   labelCursor: undefined,
   labelColor: undefined,
   labelMaxWidth: undefined,
+  labelMaxWidthTakeAvailableSpace: false,
   labelExpandTrimmedOnHover: true,
   labelVisibility: undefined,
   subLabel: undefined,

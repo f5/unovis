@@ -21,9 +21,8 @@ import { SankeyConfigInterface } from '../config'
 // Styles
 import * as s from '../style'
 
-
-const NODE_LABEL_SPACING = 10
-const LABEL_BLOCK_PADDING = 6.5
+export const NODE_LABEL_SPACING = 10
+export const LABEL_BLOCK_PADDING = 6.5
 
 function getLabelBackground (
   width: number,
@@ -144,7 +143,7 @@ export function renderLabel<N extends SankeyInputNode, L extends SankeyInputLink
   width: number,
   duration: number,
   forceExpand = false,
-  nodeSpacing: number | undefined = undefined
+  layerSpacing: number | undefined = undefined
 ): { x: number; y: number; width: number; height: number; layer: number; selection: any; hidden?: boolean } {
   const labelTextSelection: Selection<SVGTextElement, SankeyNode<N, L>, SVGGElement, SankeyNode<N, L>> = labelGroup.select(`.${s.label}`)
   const labelShowBackground = config.labelBackground || forceExpand
@@ -174,7 +173,7 @@ export function renderLabel<N extends SankeyInputNode, L extends SankeyInputLink
     .attr('transform', `translate(${labelOrientationMult * labelPadding},${labelTranslateY})`)
     .style('cursor', (d: SankeyNode<N, L>) => getString(d, config.labelCursor))
 
-  const labelMaxWidth = config.labelMaxWidth ?? clamp(nodeSpacing - 2 * NODE_LABEL_SPACING, 0, Infinity)
+  const labelMaxWidth = clamp(layerSpacing - 2 * NODE_LABEL_SPACING - 2 * LABEL_BLOCK_PADDING, 0, config.labelMaxWidth ?? Infinity)
   const labelWrapTrimWidth = isSublabelInline
     ? labelMaxWidth * (1 - (sublabelText ? config.subLabelToLabelInlineWidthRatio : 0))
     : labelMaxWidth

@@ -4,12 +4,21 @@ import { select, Selection } from 'd3-selection'
 import { getColor } from 'utils/color'
 import { getString } from 'utils/data'
 import { smartTransition } from 'utils/d3'
+import { getCSSVariableValueInPixels } from 'utils/misc'
 
 // Types
 import { Spacing } from 'types/spacing'
 
 // Local Types
-import { SankeyEnterTransitionType, SankeyExitTransitionType, SankeyInputLink, SankeyInputNode, SankeyNode, SankeyNodeAlign } from '../types'
+import {
+  SankeyEnterTransitionType,
+  SankeyExitTransitionType,
+  SankeyInputLink,
+  SankeyInputNode,
+  SankeyNode,
+  SankeyNodeAlign,
+  SankeySubLabelPlacement,
+} from '../types'
 
 // Config
 import { SankeyConfigInterface } from '../config'
@@ -72,6 +81,29 @@ function getNodeXPos<N extends SankeyInputNode, L extends SankeyInputLink> (
   }
 }
 
+function getXDistanceToNextNode<N extends SankeyInputNode, L extends SankeyInputLink> (
+  sel: Selection<SVGGElement, SankeyNode<N, L>, SVGGElement, unknown>,
+  datum: SankeyNode<N, L>,
+  data: SankeyNode<N, L>[], // Assuming that the nodes are sorted by the x position for performance reasons
+  config: SankeyConfigInterface<N, L>,
+  width: number
+): number {
+  const labelFontSize = config.labelFontSize ?? getCSSVariableValueInPixels('var(--vis-sankey-node-label-font-size)', sel.node())
+  const subLabelFontSize = config.subLabelFontSize ?? getCSSVariableValueInPixels('var(--vis-sankey-node-sublabel-font-size)', sel.node())
+  const hasSecondLineSublabel = getString(datum, config.subLabel) && config.subLabelPlacement !== SankeySubLabelPlacement.Inline
+  const yTolerance = (labelFontSize + subLabelFontSize) / (hasSecondLineSublabel ? 2 : 4)
+
+  // Assuming that the nodes are sorted by the x position
+  const nodeOnTheRight = data.find(d =>
+    d.layer > datum.layer &&
+      d.x0 >= datum.x1 &&
+      d.y1 >= (datum.y0 - yTolerance) &&
+      d.y0 <= (datum.y1 + yTolerance)
+  )
+
+  return (nodeOnTheRight ? nodeOnTheRight.x0 : width) - datum.x1
+}
+
 export function updateNodes<N extends SankeyInputNode, L extends SankeyInputLink> (
   sel: Selection<SVGGElement, SankeyNode<N, L>, SVGGElement, unknown>,
   config: SankeyConfigInterface<N, L>,
@@ -129,14 +161,19 @@ export function renderNodeLabels<N extends SankeyInputNode, L extends SankeyInpu
   enforceNodeVisibility?: SankeyNode<N, L>
 ): void {
   // Label Rendering
-  const labelGroupSelection: Selection<SVGGElement, SankeyNode<N, L>, SVGGElement, any> = sel.select(`.${s.labelGroup}`)
+  const labelGroupSelection: Selection<SVGGElement, SankeyNode<N, L>, SVGGElement, unknown> = sel.select(`.${s.labelGroup}`)
   const labelGroupEls = labelGroupSelection.nodes() || []
 
-  // After rendering Label return a BBox so we can do intersection detection and hide some of tem
+  // After rendering Label return a BBox so we can do intersection detection and hide some of them
+  const data = sel.data()
   const labelGroupBBoxes = labelGroupEls.map(g => {
-    const gSelection: Selection<SVGGElement, SankeyNode<N, L>, SVGGElement, any> = select(g)
+    const gSelection: Selection<SVGGElement, SankeyNode<N, L>, SVGGElement, unknown> = select(g)
     const datum = gSelection.datum()
-    return renderLabel(gSelection, datum, config, width, duration, enforceNodeVisibility === datum, layerSpacing)
+    const spacing = config.labelMaxWidthTakeAvailableSpace
+      ? getXDistanceToNextNode(gSelection, datum, data, config, width)
+      : layerSpacing
+
+    return renderLabel(gSelection, datum, config, width, duration, enforceNodeVisibility === datum, spacing)
   })
 
   if (config.labelVisibility) {
@@ -196,6 +233,7 @@ export function removeNodes<N extends SankeyInputNode, L extends SankeyInputLink
 
 export function onNodeMouseOver<N extends SankeyInputNode, L extends SankeyInputLink> (
   d: SankeyNode<N, L>,
+  data: SankeyNode<N, L>[],
   nodeSelection: Selection<SVGGElement, SankeyNode<N, L>, SVGGElement, unknown>,
   config: SankeyConfigInterface<N, L>,
   width: number,
@@ -204,22 +242,32 @@ export function onNodeMouseOver<N extends SankeyInputNode, L extends SankeyInput
   const labelGroup = nodeSelection.raise()
     .select<SVGGElement>(`.${s.labelGroup}`)
 
+  const spacing = config.labelMaxWidthTakeAvailableSpace
+    ? getXDistanceToNextNode(nodeSelection, d, data, config, width)
+    : layerSpacing
+
   if ((config.labelExpandTrimmedOnHover && labelGroup.classed(s.labelTrimmed)) || labelGroup.classed(s.hidden)) {
-    renderLabel(labelGroup, d, config, width, 0, true, layerSpacing)
+    renderLabel(labelGroup, d, config, width, 0, true, spacing)
   }
   labelGroup.classed(s.forceShow, true)
 }
 
 export function onNodeMouseOut<N extends SankeyInputNode, L extends SankeyInputLink> (
   d: SankeyNode<N, L>,
+  data: SankeyNode<N, L>[],
   nodeSelection: Selection<SVGGElement, SankeyNode<N, L>, SVGGElement, unknown>,
   config: SankeyConfigInterface<N, L>,
   width: number,
   layerSpacing: number
 ): void {
   const labelGroup = nodeSelection.select<SVGGElement>(`.${s.labelGroup}`)
+
+  const spacing = config.labelMaxWidthTakeAvailableSpace
+    ? getXDistanceToNextNode(nodeSelection, d, data, config, width)
+    : layerSpacing
+
   if (config.labelExpandTrimmedOnHover || labelGroup.classed(s.hidden)) {
-    renderLabel(labelGroup, d, config, width, 0, false, layerSpacing)
+    renderLabel(labelGroup, d, config, width, 0, false, spacing)
   }
   labelGroup.classed(s.forceShow, false)
 }
