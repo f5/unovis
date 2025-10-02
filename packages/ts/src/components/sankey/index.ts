@@ -30,7 +30,7 @@ import { SankeyInputLink, SankeyInputNode, SankeyLayout, SankeyLink, SankeyNode,
 
 // Modules
 import { createLinks, removeLinks, updateLinks } from './modules/link'
-import { createNodes, onNodeMouseOut, onNodeMouseOver, removeNodes, updateNodes } from './modules/node'
+import { createNodes, NODE_SELECTION_RECT_DELTA, onNodeMouseOut, onNodeMouseOver, removeNodes, updateNodes } from './modules/node'
 import { getLabelOrientation, requiredLabelSpace } from './modules/label'
 
 export class Sankey<
@@ -137,7 +137,13 @@ export class Sankey<
       : config.labelVerticalAlign === VerticalAlign.Bottom ? 0
         : labelSize.height / 2
 
-    return { top, bottom, left, right }
+    const nodeSelectionBleed = config.selectedNodeIds ? 1 + NODE_SELECTION_RECT_DELTA : 0
+    return {
+      top: nodeSelectionBleed + top,
+      bottom: nodeSelectionBleed + bottom,
+      left: nodeSelectionBleed + left,
+      right: nodeSelectionBleed + right,
+    }
   }
 
   setData (data: { nodes: N[]; links?: L[] }): void {
@@ -192,7 +198,7 @@ export class Sankey<
     // Links
     this._applyPanToGroups(duration, bleed)
     const linkSelection = this._linksGroup.selectAll<SVGGElement, SankeyLink<N, L>>(`.${s.link}`)
-      .data(links, (d, i) => config.id(d, i) ?? i)
+      .data(links, (d, i) => config.id(d, i) ?? `${d.source.id}-${d.target.id}`)
     const linkSelectionEnter = linkSelection.enter().append('g').attr('class', s.link)
     linkSelectionEnter.call(createLinks)
     linkSelection.merge(linkSelectionEnter).call(updateLinks, config, duration)

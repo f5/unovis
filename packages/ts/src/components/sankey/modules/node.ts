@@ -29,6 +29,8 @@ import { renderLabel } from './label'
 // Styles
 import * as s from '../style'
 
+export const NODE_SELECTION_RECT_DELTA = 3
+
 export function createNodes<N extends SankeyInputNode, L extends SankeyInputLink> (
   sel: Selection<SVGGElement, SankeyNode<N, L>, SVGGElement, unknown>,
   config: SankeyConfigInterface<N, L>,
@@ -38,6 +40,15 @@ export function createNodes<N extends SankeyInputNode, L extends SankeyInputLink
   const { enterTransitionType } = config
 
   // Node
+  sel.append('rect')
+    .attr('class', s.nodeSelectionRect)
+    .attr('width', config.nodeWidth + NODE_SELECTION_RECT_DELTA * 2)
+    .attr('height', d => d.y1 - d.y0 + NODE_SELECTION_RECT_DELTA * 2)
+    .attr('x', -NODE_SELECTION_RECT_DELTA)
+    .attr('y', -NODE_SELECTION_RECT_DELTA)
+    .style('stroke', node => getColor(node, config.nodeColor))
+    .style('opacity', 0)
+
   sel.append('rect')
     .attr('class', s.node)
     .attr('width', config.nodeWidth)
@@ -118,6 +129,14 @@ export function updateNodes<N extends SankeyInputNode, L extends SankeyInputLink
     .style('opacity', d => d._state.greyout ? 0.2 : 1)
 
   // Node
+  smartTransition(sel.select(`.${s.nodeSelectionRect}`), duration)
+    .attr('width', config.nodeWidth + NODE_SELECTION_RECT_DELTA * 2)
+    .attr('height', d => d.y1 - d.y0 + NODE_SELECTION_RECT_DELTA * 2)
+    .attr('x', -NODE_SELECTION_RECT_DELTA)
+    .attr('y', -NODE_SELECTION_RECT_DELTA)
+    .style('stroke', (d: SankeyNode<N, L>) => getColor(d, config.nodeColor))
+    .style('opacity', d => config.selectedNodeIds?.includes(d.id) ? 1 : 0)
+
   smartTransition(sel.select(`.${s.node}`), duration)
     .attr('width', config.nodeWidth)
     .attr('height', (d: SankeyNode<N, L>) => d.y1 - d.y0)
@@ -195,9 +214,11 @@ export function renderNodeLabels<N extends SankeyInputNode, L extends SankeyInpu
         const b1 = boxes[i]
 
         const shouldBeHidden = b1.y < (b0.y + b0.height)
+        const b1Datum = b1.selection.datum() as SankeyNode<N, L>
         if (shouldBeHidden) {
-          if (b1.selection.datum() === enforceNodeVisibility) b0.hidden = true // If the hovered node should be hidden, hide the previous one instead
-          else b1.hidden = true
+          if ((b1Datum === enforceNodeVisibility) || (config.selectedNodeIds?.includes(b1Datum.id))) {
+            b0.hidden = true // If the hovered node should be hidden, hide the previous one instead
+          } else b1.hidden = true
         }
 
         if (!b1.hidden) lastVisibleIdx = i

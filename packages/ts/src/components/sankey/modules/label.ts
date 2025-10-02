@@ -2,7 +2,6 @@ import { Selection } from 'd3-selection'
 
 // Utils
 import { estimateTextSize, trimSVGText, wrapSVGText } from 'utils/text'
-import { smartTransition } from 'utils/d3'
 import { clamp, getString, getValue } from 'utils/data'
 import { getColor } from 'utils/color'
 import { getCSSVariableValueInPixels } from 'utils/misc'
@@ -220,9 +219,7 @@ export function renderLabel<N extends SankeyInputNode, L extends SankeyInputLink
   labelTextSelection.attr('text-anchor', labelTextAnchor)
   sublabelTextSelection.attr('text-anchor', sublabelTextAnchor)
 
-  const hasTransform = !!labelGroup.attr('transform')
-  smartTransition(labelGroup, hasTransform ? duration : 0)
-    .attr('transform', `translate(${xTranslate},${yTranslate})`)
+  labelGroup.attr('transform', `translate(${xTranslate},${yTranslate})`)
 
   return {
     x: d.x0 + xTranslate,

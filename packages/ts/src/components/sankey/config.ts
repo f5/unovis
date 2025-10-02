@@ -160,6 +160,10 @@ export interface SankeyConfigInterface<N extends SankeyInputNode, L extends Sank
   // Events
   /** Zoom event callback. Default: `undefined` */
   onZoom?: (horizontalScale: number, verticalScale: number, panX: number, panY: number, zoomExtent: [number, number], event: D3ZoomEvent<SVGGElement, unknown> | undefined) => void;
+ 
+  // Misc
+  /** Set selected nodes by unique id. Default: `undefined` */
+  selectedNodeIds?: string[];
 }
 
 export const SankeyDefaultConfig: SankeyConfigInterface<SankeyInputNode, SankeyInputLink> = ({
@@ -218,6 +222,7 @@ export const SankeyDefaultConfig: SankeyConfigInterface<SankeyInputNode, SankeyI
   linkColor: (d: SankeyInputNode) => (d as { color: string }).color,
   linkCursor: undefined,
   onZoom: undefined,
+  selectedNodeIds: undefined,
 
   // https://stackoverflow.com/a/21648197/2040291
   init: function () {
