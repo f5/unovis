@@ -20,6 +20,10 @@ export const variables = injectGlobal`
     --vis-sankey-node-label-color: #575c65;
     --vis-sankey-node-opacity: 0.9;
     --vis-sankey-node-hover-opacity: 1.0;
+    /* Node Selection */
+    --vis-sankey-node-selection-stroke-width: 1.5px;
+    --vis-sankey-node-selection-stroke-opacity: 0.6;
+    --vis-sankey-node-selection-border-radius: 2px;
     /* Node Labels */
     --vis-sankey-node-label-background-fill-color: #ffffff;
     --vis-sankey-node-label-background-stroke-color: #eaeaea;
@@ -180,6 +184,15 @@ export const nodeIcon = css`
 
 export const nodeExit = css`
   label: node-exit;
+`
+
+export const nodeSelectionRect = css`
+  label: node-selection-rect;
+  fill: none;
+  stroke-width: var(--vis-sankey-node-selection-stroke-width);
+  stroke-opacity: var(--vis-sankey-node-selection-stroke-opacity);
+  rx: var(--vis-sankey-node-selection-border-radius);
+  ry: var(--vis-sankey-node-selection-border-radius);
 `
 
 export const background = css`
