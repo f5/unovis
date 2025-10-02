@@ -169,6 +169,7 @@ export function renderLabel<N extends SankeyInputNode, L extends SankeyInputLink
   labelTextSelection
     .text(labelText)
     .attr('font-size', labelFontSize)
+    .style('text-decoration', getString(d, config.labelTextDecoration))
     .style('fill', getColor(d, config.labelColor))
     .attr('transform', `translate(${labelOrientationMult * labelPadding},${labelTranslateY})`)
     .style('cursor', (d: SankeyNode<N, L>) => getString(d, config.labelCursor))
@@ -191,6 +192,7 @@ export function renderLabel<N extends SankeyInputNode, L extends SankeyInputLink
   sublabelTextSelection
     .text(sublabelText)
     .attr('font-size', subLabelFontSize)
+    .style('text-decoration', getString(d, config.subLabelTextDecoration))
     .style('fill', getColor(d, config.subLabelColor))
     .attr('transform', `translate(${sublabelTranslateX},${sublabelTranslateY})`)
     .style('cursor', (d: SankeyNode<N, L>) => getString(d, config.labelCursor))
