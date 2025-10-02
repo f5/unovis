@@ -133,6 +133,8 @@ export interface SankeyConfigInterface<N extends SankeyInputNode, L extends Sank
   labelFontSize?: number;
   /** Label text separators for wrapping. Default: `[' ', '-']` */
   labelTextSeparator?: string[];
+  /** Label text decoration. Default: `undefined` */
+  labelTextDecoration?: StringAccessor<SankeyNode<N, L>>;
   /** Force break words to fit long labels. Default: `true` */
   labelForceWordBreak?: boolean;
   /** Label color. Default: `undefined` */
@@ -147,6 +149,8 @@ export interface SankeyConfigInterface<N extends SankeyInputNode, L extends Sank
   subLabelColor?: ColorAccessor<SankeyNode<N, L>>;
   /** Sub-label position. Default: `SankeySubLabelPlacement.Below` */
   subLabelPlacement?: SankeySubLabelPlacement | string;
+  /** Sub-label text decoration. Default: `undefined` */
+  subLabelTextDecoration?: StringAccessor<SankeyNode<N, L>>;
   /**
    * Sub-label to label width ratio when `subLabelPlacement` is set to `SankeySubLabelPlacement.Inline`
    * Default: `0.4`, which means that 40% of `labelMaxWidth` will be given to sub-label, and 60% to the main label.
@@ -193,6 +197,7 @@ export const SankeyDefaultConfig: SankeyConfigInterface<SankeyInputNode, SankeyI
   labelVerticalAlign: VerticalAlign.Middle,
   labelBackground: false,
   labelTextSeparator: [' ', '-'],
+  labelTextDecoration: undefined,
   labelFit: FitMode.Trim,
   labelTrimMode: TrimMode.Middle,
   labelForceWordBreak: true,
@@ -208,6 +213,7 @@ export const SankeyDefaultConfig: SankeyConfigInterface<SankeyInputNode, SankeyI
   subLabelColor: undefined,
   subLabelPlacement: SankeySubLabelPlacement.Below,
   subLabelToLabelInlineWidthRatio: 0.4,
+  subLabelTextDecoration: undefined,
   linkValue: (d: SankeyInputNode) => (d as { value: number }).value,
   linkColor: (d: SankeyInputNode) => (d as { color: string }).color,
   linkCursor: undefined,
