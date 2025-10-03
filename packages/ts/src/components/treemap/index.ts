@@ -5,11 +5,10 @@ import { scaleLinear, scaleThreshold } from 'd3-scale'
 import { hsl } from 'd3-color'
 import { ComponentCore } from 'core/component'
 import { SeriesDataModel } from 'data-models/series'
-import { getColor, brighter, getHexValue } from 'utils/color'
+import { getColor, brighter, getHexValue, isDarkBackground } from 'utils/color'
 import { getString, getNumber, isNumber } from 'utils/data'
 import { smartTransition } from 'utils/d3'
-import { trimSVGText } from 'utils/text'
-import { TrimMode } from 'types/text'
+import { wrapSVGText } from 'utils/text'
 import { TreemapConfigInterface, TreemapDefaultConfig } from './config'
 import { TreemapDatum, TreemapNode } from './types'
 import * as s from './style'
@@ -253,58 +252,60 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
 
     clipPaths.exit().remove()
 
+    // Tile labels
     tilesEnter
-      .append('g')
-      .attr('class', s.labelGroup)
-      .attr('transform', d => `translate(${d.x0 + config.labelOffsetX},${d.y0 + config.labelOffsetY})`)
       .append('text')
       .attr('class', s.label)
-      .attr('x', 0)
-      .attr('y', 0)
+      .attr('clip-path', d => `url(#clip-${d._id})`)
       .style('opacity', 0)
 
     const getTileLabel = config.tileLabel ?? ((d: TreemapNode<Datum>) => `${d.data.key}: ${formatNumber(d.value)}`)
-    const textSelection = mergedTiles.selectAll<SVGTextElement, TreemapNode<Datum>>(`g.${s.labelGroup} text`)
-    textSelection
-      .text(d => getTileLabel(d))
-      .style('font-size', function (d) {
-        const sqrtVal = Math.sqrt(d.value ?? 0)
-        return config.enableTileLabelFontSizeVariation && !d.children
-          ? `${fontSizeScale(sqrtVal)}px`
-          : `${fontSizeScale.range()[1]}px`
-      })
-      .attr('dominant-baseline', 'middle')
-
-    // Trim label and set dominant-baseline for tspans in one pass
-    textSelection.each((d, i, nodes) => {
-      const text = select(nodes[i] as SVGTextElement)
-      const tileWidth = d.x1 - d.x0 - (config.labelOffsetX ?? 0) * 2
-      const fullLabel = text.text()
-      let fontSize = parseFloat(text.style('font-size'))
-      if (!fontSize) {
-        fontSize = parseFloat(window.getComputedStyle(nodes[i] as SVGTextElement).fontSize)
-      }
-      trimSVGText(text, tileWidth, TrimMode.End, true, fontSize)
-      text.attr('title', fullLabel)
-      text.selectAll('tspan').attr('dominant-baseline', 'middle')
-    })
-
-    // Transition group position
-    smartTransition(mergedTiles.select(`g.${s.labelGroup}`), duration)
-      .attr('transform', d => `translate(${d.x0 + config.labelOffsetX},${d.y0 + config.labelOffsetY})`)
-
-    // Transition text opacity only (fade-in)
-    smartTransition(mergedTiles.select(`g.${s.labelGroup} text`), duration)
-      .style('opacity', 1)
+    const textSelection = mergedTiles.select<SVGTextElement>(`text.${s.label}`)
 
     // Hide labels that don't meet criteria
-    mergedTiles.select(`text.${s.label}`)
+    textSelection
       .style('display', d => {
         const isAllowedNode = config.labelInternalNodes ? true : !d.children
         return isAllowedNode && this._isTileLargeEnough(d) ? null : 'none'
       })
       // Make the internal labels semibold via class
       .attr('class', d => d.children ? `${s.label} ${s.internalLabel}` : s.label)
+
+    // Update visible labels
+    const visibleTextSelection = textSelection
+      .filter(d => {
+        const isAllowedNode = config.labelInternalNodes ? true : !d.children
+        return isAllowedNode && this._isTileLargeEnough(d)
+      })
+
+    visibleTextSelection.each(function (d) {
+      const text = select(this)
+      const label = getTileLabel(d)
+      text.text(label)
+      text.attr('title', label)
+
+      // Set text color based on background darkness
+      const backgroundColor = d._fill ?? getColor(d, config.tileColor)
+      const textColor = backgroundColor && isDarkBackground(backgroundColor) ? '#ffffff' : '#000000'
+      smartTransition(text, duration).style('fill', textColor)
+
+      // Apply font size scaling only to leaf nodes if enabled
+      if (config.enableTileLabelFontSizeVariation && !d.children) {
+        const sqrtVal = Math.sqrt(d.value ?? 0)
+        text.style('font-size', `${fontSizeScale(sqrtVal)}px`)
+      } else {
+        text.style('font-size', null)
+      }
+
+      // Apply text wrapping
+      const availableWidth = d.x1 - d.x0 - (2 * config.labelOffsetX)
+      wrapSVGText(text, availableWidth)
+    })
+
+    smartTransition(visibleTextSelection, duration)
+      .attr('x', d => d.x0 + config.labelOffsetX)
+      .attr('y', d => d.y0 + config.labelOffsetY)
+      .style('opacity', 1)
 
     smartTransition(tiles.exit(), duration)
       .style('opacity', 0)
