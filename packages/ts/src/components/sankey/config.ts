@@ -17,6 +17,7 @@ import {
   SankeyEnterTransitionType,
   SankeyLink,
   SankeyNode,
+  SankeyZoomMode,
 } from './types'
 
 export interface SankeyConfigInterface<N extends SankeyInputNode, L extends SankeyInputLink> extends ComponentConfigInterface {
@@ -25,6 +26,20 @@ export interface SankeyConfigInterface<N extends SankeyInputNode, L extends Sank
   id?: (d: SankeyInputNode | SankeyInputLink, i: number, ...any: unknown[]) => string;
   /** Coefficient to scale the height of the diagram when the amount of links is low: `C * links.length`, clamped to `[height / 2, height]`. Default: `1/16` */
   heightNormalizationCoeff?: number;
+  /** Horizontal scale factor applied to the computed layout (column spacing). Keeps node width intact. Default: `1` */
+  zoomHorizontalScale?: number;
+  /** Vertical scale factor applied to the computed layout (row spacing). Keeps node height intact. Default: `1` */
+  zoomVerticalScale?: number;
+  /** Pan offset X in pixels. Default: `undefined` */
+  zoomPanX?: number;
+  /** Pan offset Y in pixels. Default: `undefined` */
+  zoomPanY?: number;
+  /** Enable interactive zoom/pan behavior. Default: `true` */
+  enableZoom?: boolean;
+  /** Allowed interactive zoom scale extent. Default: `[1, 5]` */
+  zoomScaleExtent?: [number, number];
+  /** Zoom interaction mode. Default: `SankeyZoomMode.XY` */
+  zoomMode?: SankeyZoomMode | string;
   /** Type of animation on removing nodes. Default: `ExitTransitionType.Default` */
   exitTransitionType?: SankeyExitTransitionType;
   /** Type of animation on creating nodes. Default: `EnterTransitionType.Default` */
@@ -138,6 +153,13 @@ export interface SankeyConfigInterface<N extends SankeyInputNode, L extends Sank
 export const SankeyDefaultConfig: SankeyConfigInterface<SankeyInputNode, SankeyInputLink> = ({
   ...ComponentDefaultConfig,
   heightNormalizationCoeff: 1 / 16,
+  zoomHorizontalScale: undefined,
+  zoomVerticalScale: undefined,
+  zoomPanX: undefined,
+  zoomPanY: undefined,
+  enableZoom: true,
+  zoomScaleExtent: [1, 5] as [number, number],
+  zoomMode: SankeyZoomMode.Y,
   exitTransitionType: SankeyExitTransitionType.Default,
   enterTransitionType: SankeyEnterTransitionType.Default,
   id: (d: SankeyInputNode, i: number) => (d as { _id: string })._id ?? `${i}`,
