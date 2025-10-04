@@ -70,6 +70,8 @@ export function getLabelOrientation<N extends SankeyInputNode, L extends SankeyI
 }
 
 export const requiredLabelSpace = (labelWidth: number, labelFontSize: number): { width: number; height: number } => {
+  if (labelWidth === 0) return { width: 0, height: 0 }
+
   return {
     height: labelFontSize * 2.5 + 2 * LABEL_BLOCK_PADDING, // Assuming 2.5 lines per label
     width: labelWidth + 2 * NODE_LABEL_SPACING + 2 * LABEL_BLOCK_PADDING,
