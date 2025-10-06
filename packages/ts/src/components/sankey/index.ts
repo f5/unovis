@@ -235,7 +235,7 @@ export class Sankey<
     })
   }
 
-  public setLayoutScale (horizontalScale?: number, verticalScale?: number): void {
+  public setLayoutScale (horizontalScale?: number, verticalScale?: number, duration: number = this.config.duration): void {
     const [min, max] = this.config.zoomScaleExtent
     if (isNumber(horizontalScale)) this._horizontalScale = Math.min(max, Math.max(min, horizontalScale))
     if (isNumber(verticalScale)) this._verticalScale = Math.min(max, Math.max(min, verticalScale))
@@ -249,24 +249,24 @@ export class Sankey<
     this._gNode.__zoom = currentTransform
     this._lastZoomK = effectiveScale
 
-    this._render(this.config.duration)
+    this._render(duration)
   }
 
   public getLayoutScale (): [number, number] {
     return [this._horizontalScale || 1, this._verticalScale || 1]
   }
 
-  public setPan (x: number, y: number): void {
+  public setPan (x: number, y: number, duration = this.config.duration): void {
     this._panX = isFinite(x) ? x : 0
     this._panY = isFinite(y) ? y : 0
     this._lastZoomX = 0; this._lastZoomY = 0
-    this._scheduleRender(0)
+    this._scheduleRender(duration)
   }
 
-  public panBy (dx: number, dy: number): void {
+  public panBy (dx: number, dy: number, duration = this.config.duration): void {
     this._panX += isFinite(dx) ? dx : 0
     this._panY += isFinite(dy) ? dy : 0
-    this._scheduleRender(0)
+    this._scheduleRender(duration)
   }
 
   public getPan (): [number, number] {
@@ -321,6 +321,8 @@ export class Sankey<
       this._lastZoomX = t.x
       this._lastZoomY = t.y
       this._scheduleRender(0)
+
+      config.onZoom?.(this._horizontalScale, this._verticalScale, this._panX, this._panY, config.zoomScaleExtent, event)
       return
     }
 
@@ -381,6 +383,8 @@ export class Sankey<
     this._lastZoomK = t.k
     this._lastZoomX = t.x
     this._lastZoomY = t.y
+
+    config.onZoom?.(this._horizontalScale, this._verticalScale, this._panX, this._panY, config.zoomScaleExtent, event)
 
     this._scheduleRender(0)
   }
