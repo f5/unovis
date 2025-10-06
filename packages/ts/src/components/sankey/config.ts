@@ -1,3 +1,5 @@
+import { D3ZoomEvent } from 'd3-zoom'
+
 // Config
 import { ComponentConfigInterface, ComponentDefaultConfig } from 'core/component/config'
 
@@ -148,6 +150,10 @@ export interface SankeyConfigInterface<N extends SankeyInputNode, L extends Sank
    * Default: `0.4`, which means that 40% of `labelMaxWidth` will be given to sub-label, and 60% to the main label.
   */
   subLabelToLabelInlineWidthRatio?: number;
+
+  // Events
+  /** Zoom event callback. Default: `undefined` */
+  onZoom?: (horizontalScale: number, verticalScale: number, panX: number, panY: number, zoomExtent: [number, number], event: D3ZoomEvent<SVGGElement, unknown> | undefined) => void;
 }
 
 export const SankeyDefaultConfig: SankeyConfigInterface<SankeyInputNode, SankeyInputLink> = ({
@@ -202,6 +208,7 @@ export const SankeyDefaultConfig: SankeyConfigInterface<SankeyInputNode, SankeyI
   linkValue: (d: SankeyInputNode) => (d as { value: number }).value,
   linkColor: (d: SankeyInputNode) => (d as { color: string }).color,
   linkCursor: undefined,
+  onZoom: undefined,
 
   // https://stackoverflow.com/a/21648197/2040291
   init: function () {
