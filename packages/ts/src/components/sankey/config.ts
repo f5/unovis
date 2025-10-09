@@ -28,18 +28,14 @@ export interface SankeyConfigInterface<N extends SankeyInputNode, L extends Sank
   id?: (d: SankeyInputNode | SankeyInputLink, i: number, ...any: unknown[]) => string;
   /** Coefficient to scale the height of the diagram when the amount of links is low: `C * links.length`, clamped to `[height / 2, height]`. Default: `1/16` */
   heightNormalizationCoeff?: number;
-  /** Horizontal scale factor applied to the computed layout (column spacing). Keeps node width intact. Default: `1` */
-  zoomHorizontalScale?: number;
-  /** Vertical scale factor applied to the computed layout (row spacing). Keeps node height intact. Default: `1` */
-  zoomVerticalScale?: number;
-  /** Pan offset X in pixels. Default: `undefined` */
-  zoomPanX?: number;
-  /** Pan offset Y in pixels. Default: `undefined` */
-  zoomPanY?: number;
+  /** Horizontal and vertical scale factor applied to the computed layout (column spacing). Keeps node width intact. Default: `undefined` */
+  zoomScale?: [number, number];
+  /** Pan offset in pixels. Default: `undefined` */
+  zoomPan?: [number, number];
   /** Enable interactive zoom/pan behavior. Default: `true` */
   enableZoom?: boolean;
   /** Allowed interactive zoom scale extent. Default: `[1, 5]` */
-  zoomScaleExtent?: [number, number];
+  zoomExtent?: [number, number];
   /** Zoom interaction mode. Default: `SankeyZoomMode.XY` */
   zoomMode?: SankeyZoomMode | string;
   /** Type of animation on removing nodes. Default: `ExitTransitionType.Default` */
@@ -125,6 +121,8 @@ export interface SankeyConfigInterface<N extends SankeyInputNode, L extends Sank
   labelMaxWidth?: number;
   /** Whether to take the available space for the label. This property is used only if `labelMaxWidth` is not provided. Default: `false` */
   labelMaxWidthTakeAvailableSpace?: boolean;
+  /** Tolerance for the available space for the label. This property is used only if `labelMaxWidthTakeAvailableSpace` is `true`. Default: `undefined` (use label and sub-label font sizes) */
+  labelMaxWidthTakeAvailableSpaceTolerance?: number;
   /** Expand trimmed label on hover. Default: `true` */
   labelExpandTrimmedOnHover?: boolean;
   /** Label trimming mode. Default: `TrimMode.Middle` */
@@ -160,7 +158,7 @@ export interface SankeyConfigInterface<N extends SankeyInputNode, L extends Sank
   // Events
   /** Zoom event callback. Default: `undefined` */
   onZoom?: (horizontalScale: number, verticalScale: number, panX: number, panY: number, zoomExtent: [number, number], event: D3ZoomEvent<SVGGElement, unknown> | undefined) => void;
- 
+
   // Misc
   /** Set selected nodes by unique id. Default: `undefined` */
   selectedNodeIds?: string[];
@@ -169,12 +167,10 @@ export interface SankeyConfigInterface<N extends SankeyInputNode, L extends Sank
 export const SankeyDefaultConfig: SankeyConfigInterface<SankeyInputNode, SankeyInputLink> = ({
   ...ComponentDefaultConfig,
   heightNormalizationCoeff: 1 / 16,
-  zoomHorizontalScale: undefined,
-  zoomVerticalScale: undefined,
-  zoomPanX: undefined,
-  zoomPanY: undefined,
+  zoomScale: undefined,
+  zoomPan: undefined,
   enableZoom: true,
-  zoomScaleExtent: [1, 5] as [number, number],
+  zoomExtent: [1, 5] as [number, number],
   zoomMode: SankeyZoomMode.Y,
   exitTransitionType: SankeyExitTransitionType.Default,
   enterTransitionType: SankeyEnterTransitionType.Default,
@@ -210,6 +206,7 @@ export const SankeyDefaultConfig: SankeyConfigInterface<SankeyInputNode, SankeyI
   labelColor: undefined,
   labelMaxWidth: undefined,
   labelMaxWidthTakeAvailableSpace: false,
+  labelMaxWidthTakeAvailableSpaceTolerance: undefined,
   labelExpandTrimmedOnHover: true,
   labelVisibility: undefined,
   subLabel: undefined,

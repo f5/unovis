@@ -2,7 +2,7 @@ import { select, Selection } from 'd3-selection'
 
 // Utils
 import { getColor } from 'utils/color'
-import { getString } from 'utils/data'
+import { getString, isNumber } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { getCSSVariableValueInPixels } from 'utils/misc'
 
@@ -99,10 +99,13 @@ function getXDistanceToNextNode<N extends SankeyInputNode, L extends SankeyInput
   config: SankeyConfigInterface<N, L>,
   width: number
 ): number {
-  const labelFontSize = config.labelFontSize ?? getCSSVariableValueInPixels('var(--vis-sankey-node-label-font-size)', sel.node())
-  const subLabelFontSize = config.subLabelFontSize ?? getCSSVariableValueInPixels('var(--vis-sankey-node-sublabel-font-size)', sel.node())
-  const hasSecondLineSublabel = getString(datum, config.subLabel) && config.subLabelPlacement !== SankeySubLabelPlacement.Inline
-  const yTolerance = (labelFontSize + subLabelFontSize) / (hasSecondLineSublabel ? 2 : 4)
+  let yTolerance = config.labelMaxWidthTakeAvailableSpaceTolerance
+  if (!isNumber(yTolerance)) {
+    const labelFontSize = config.labelFontSize ?? getCSSVariableValueInPixels('var(--vis-sankey-node-label-font-size)', sel.node())
+    const subLabelFontSize = config.subLabelFontSize ?? getCSSVariableValueInPixels('var(--vis-sankey-node-sublabel-font-size)', sel.node())
+    const hasSecondLineSublabel = getString(datum, config.subLabel) && config.subLabelPlacement !== SankeySubLabelPlacement.Inline
+    yTolerance = (labelFontSize + subLabelFontSize) / (hasSecondLineSublabel ? 2 : 4)
+  }
 
   // Assuming that the nodes are sorted by the x position
   const nodeOnTheRight = data.find(d =>

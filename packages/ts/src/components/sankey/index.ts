@@ -1,7 +1,7 @@
 import { select, Selection, pointer } from 'd3-selection'
 import { zoom, D3ZoomEvent, ZoomBehavior, zoomIdentity, ZoomTransform } from 'd3-zoom'
 import { sankey, SankeyGraph } from 'd3-sankey'
-import { extent, max, sum } from 'd3-array'
+import { extent, max, min, sum } from 'd3-array'
 import { scaleLinear } from 'd3-scale'
 
 // Core
@@ -57,17 +57,16 @@ export class Sankey<
   private _sankey = sankey<SankeyGraph<N, L>, SankeyNode<N, L>, SankeyLink<N, L>>()
   private _highlightTimeoutId: ReturnType<typeof setTimeout> | null = null
   private _highlightActive = false
-  private _horizontalScale: number | undefined = undefined
-  private _verticalScale: number | undefined = undefined
+
+  // Zoom / Pan
+  private _zoomScale = [1, 1] as [number, number]
+  private _pan = [0, 0] as [number, number]
   private _zoomBehavior: ZoomBehavior<SVGGElement, unknown>
-  private _panX = 0
-  private _panY = 0
-  private _lastZoomK = 1
-  private _lastZoomX = 0
-  private _lastZoomY = 0
-  private _zoomMinX: number | undefined = undefined
-  private _zoomLayerCenterY: number[] | undefined = undefined
+  private _prevZoomTransform: { x: number; y: number; k: number } = { x: 0, y: 0, k: 1 }
   private _animationFrameId: number | null = null
+  private _bleedCached: Spacing | null = null
+
+  // Events
   events = {
     [Sankey.selectors.nodeGroup]: {
       mouseenter: this._onNodeMouseOver.bind(this),
@@ -93,12 +92,11 @@ export class Sankey<
     this._nodesGroup = this.g.append('g').attr('class', s.nodes)
 
     // Initialize scale values from config
-    this._horizontalScale = this.config.zoomHorizontalScale ?? 1
-    this._verticalScale = this.config.zoomVerticalScale ?? 1
+    this._zoomScale = this.config.zoomScale ?? [1, 1]
 
     // Set up d3-zoom to handle wheel/pinch/drag smoothly
     this._zoomBehavior = zoom<SVGGElement, unknown>()
-      .scaleExtent(this.config.zoomScaleExtent)
+      .scaleExtent(this.config.zoomExtent)
       .on('zoom', (event: D3ZoomEvent<SVGGElement, unknown>) => this._onZoom(event))
 
     if (this.config.enableZoom) this.g.call(this._zoomBehavior)
@@ -138,12 +136,17 @@ export class Sankey<
         : labelSize.height / 2
 
     const nodeSelectionBleed = config.selectedNodeIds ? 1 + NODE_SELECTION_RECT_DELTA : 0
-    return {
+    const bleed = {
       top: nodeSelectionBleed + top,
       bottom: nodeSelectionBleed + bottom,
       left: nodeSelectionBleed + left,
       right: nodeSelectionBleed + right,
     }
+
+    // Cache bleed for onZoom
+    this._bleedCached = bleed
+
+    return bleed
   }
 
   setData (data: { nodes: N[]; links?: L[] }): void {
@@ -151,6 +154,7 @@ export class Sankey<
 
     // Pre-calculate component size for Sizing.EXTEND
     if ((this.sizing !== Sizing.Fit) || !this._hasLinks()) this._preCalculateComponentSize()
+    this._bleedCached = null
   }
 
   setConfig (config: SankeyConfigInterface<N, L>): void {
@@ -172,14 +176,17 @@ export class Sankey<
 
     // Update zoom behavior if already initialized
     if (this._zoomBehavior) {
-      this._zoomBehavior.scaleExtent(this.config.zoomScaleExtent)
+      this._zoomBehavior.scaleExtent(this.config.zoomExtent)
       if (this.config.enableZoom) this.g.call(this._zoomBehavior)
       else this.g.on('.zoom', null)
     }
+
+    this._bleedCached = null
   }
 
   _render (customDuration?: number): void {
-    const { config, bleed, datamodel: { nodes, links } } = this
+    const { config, datamodel: { nodes, links } } = this
+    const bleed = this._bleedCached ?? this.bleed
     const duration = isNumber(customDuration) ? customDuration : config.duration
 
     if (
@@ -196,7 +203,6 @@ export class Sankey<
     this._prepareLayout()
 
     // Links
-    this._applyPanToGroups(duration, bleed)
     const linkSelection = this._linksGroup.selectAll<SVGGElement, SankeyLink<N, L>>(`.${s.link}`)
       .data(links, (d, i) => config.id(d, i) ?? `${d.source.id}-${d.target.id}`)
     const linkSelectionEnter = linkSelection.enter().append('g').attr('class', s.link)
@@ -212,12 +218,15 @@ export class Sankey<
     const nodeSelection = this._nodesGroup.selectAll<SVGGElement, SankeyNode<N, L>>(`.${s.nodeGroup}`)
       .data(nodes, (d, i) => config.id(d, i) ?? i)
     const nodeSelectionEnter = nodeSelection.enter().append('g').attr('class', s.nodeGroup)
-    const sankeyWidth = (this.sizing === Sizing.Fit ? this._width : this._extendedWidth) * this._horizontalScale
+    const sankeyWidth = (this.sizing === Sizing.Fit ? this._width : this._extendedWidth) * this._zoomScale[0]
     nodeSelectionEnter.call(createNodes, this.config, sankeyWidth, bleed)
     nodeSelection.merge(nodeSelectionEnter).call(updateNodes, config, sankeyWidth, bleed, this._hasLinks(), duration, nodeSpacing)
     nodeSelection.exit<SankeyNode<N, L>>()
       .attr('class', s.nodeExit)
       .call(removeNodes, config, duration)
+
+    // Pan
+    this._applyPanTransform(duration, bleed)
 
     // Background
     this._backgroundRect
@@ -226,11 +235,10 @@ export class Sankey<
       .attr('opacity', 0)
   }
 
-  private _applyPanToGroups (duration: number, bleed: Spacing): void {
-    const panX = (isFinite(this.config.zoomPanX) ? this.config.zoomPanX : this._panX) || 0
-    const panY = (isFinite(this.config.zoomPanY) ? this.config.zoomPanY : this._panY) || 0
-    const tx = bleed.left + panX
-    const ty = bleed.top + panY
+  private _applyPanTransform (duration: number, bleed: Spacing): void {
+    const pan = this.config.zoomPan ?? this._pan
+    const tx = bleed.left + pan[0]
+    const ty = bleed.top + pan[1]
     smartTransition(this._linksGroup, duration).attr('transform', `translate(${tx},${ty})`)
     smartTransition(this._nodesGroup, duration).attr('transform', `translate(${tx},${ty})`)
   }
@@ -244,67 +252,49 @@ export class Sankey<
     })
   }
 
-  public setLayoutScale (horizontalScale?: number, verticalScale?: number, duration: number = this.config.duration): void {
-    const [min, max] = this.config.zoomScaleExtent
-    if (isNumber(horizontalScale)) this._horizontalScale = Math.min(max, Math.max(min, horizontalScale))
-    if (isNumber(verticalScale)) this._verticalScale = Math.min(max, Math.max(min, verticalScale))
+  public setZoomLevel (horizontalScale?: number, verticalScale?: number, duration: number = this.config.duration): void {
+    const [min, max] = this.config.zoomExtent
+    if (isNumber(horizontalScale)) this._zoomScale[0] = Math.min(max, Math.max(min, horizontalScale))
+    if (isNumber(verticalScale)) this._zoomScale[1] = Math.min(max, Math.max(min, verticalScale))
 
     // Sync D3's zoom transform to match our scale
     // Use the geometric mean as a reasonable approximation for D3's single scale
     const effectiveScale = Math.sqrt(
-      (this._horizontalScale ?? 1) * (this._verticalScale ?? 1)
+      (this._zoomScale[0] ?? 1) * (this._zoomScale[1] ?? 1)
     )
     const currentTransform = zoomIdentity.scale(effectiveScale)
     this._gNode.__zoom = currentTransform
-    this._lastZoomK = effectiveScale
+    this._prevZoomTransform.k = effectiveScale
 
     this._render(duration)
   }
 
-  public getLayoutScale (): [number, number] {
-    return [this._horizontalScale || 1, this._verticalScale || 1]
+  public getZoomLevel (): [number, number] {
+    return [this._zoomScale[0] || 1, this._zoomScale[1] || 1]
   }
 
   public setPan (x: number, y: number, duration = this.config.duration): void {
-    this._panX = isFinite(x) ? x : 0
-    this._panY = isFinite(y) ? y : 0
-    this._lastZoomX = 0; this._lastZoomY = 0
-    this._scheduleRender(duration)
-  }
-
-  public panBy (dx: number, dy: number, duration = this.config.duration): void {
-    this._panX += isFinite(dx) ? dx : 0
-    this._panY += isFinite(dy) ? dy : 0
+    this._pan = [x ?? 0, y ?? 0]
+    this._prevZoomTransform.x = 0
+    this._prevZoomTransform.y = 0
     this._scheduleRender(duration)
   }
 
   public getPan (): [number, number] {
-    return [this._panX, this._panY]
+    return this._pan
   }
 
   public fitView (duration = this.config.duration): void {
-    const initH = this.config.zoomHorizontalScale ?? 1
-    const initV = this.config.zoomVerticalScale ?? 1
-    const initPanX = this.config.zoomPanX ?? 0
-    const initPanY = this.config.zoomPanY ?? 0
-
-    const curH = this._horizontalScale ?? 1
-    const curV = this._verticalScale ?? 1
-    const changed = Math.abs(curH - initH) > 1e-6 || Math.abs(curV - initV) > 1e-6 || Math.abs(this._panX - initPanX) > 0.5 || Math.abs(this._panY - initPanY) > 0.5
-    if (!changed) return
-
-    this._horizontalScale = initH
-    this._verticalScale = initV
-    this._panX = initPanX
-    this._panY = initPanY
+    this._zoomScale = this.config.zoomScale ?? [1, 1]
+    this._pan = this.config.zoomPan ?? [0, 0]
 
     // Sync D3 zoom transform with our scales
-    const effectiveScale = Math.sqrt(initH * initV)
+    const effectiveScale = Math.sqrt(this._zoomScale[0] * this._zoomScale[1])
     const currentTransform = zoomIdentity.scale(effectiveScale)
     this._gNode.__zoom = currentTransform
-    this._lastZoomK = effectiveScale
-    this._lastZoomX = 0
-    this._lastZoomY = 0
+    this._prevZoomTransform.k = effectiveScale
+    this._prevZoomTransform.x = 0
+    this._prevZoomTransform.y = 0
 
     this._render(duration)
   }
@@ -312,88 +302,64 @@ export class Sankey<
   private _onZoom (event: D3ZoomEvent<SVGGElement, unknown>): void {
     const { datamodel, config } = this
     const nodes = datamodel.nodes
-    const t = event.transform
-    const src = event.sourceEvent as WheelEvent | MouseEvent | TouchEvent | undefined
-    const min = config.zoomScaleExtent[0]
-    const max = config.zoomScaleExtent[1]
+    const transform = event.transform
+    const sourceEvent = event.sourceEvent as WheelEvent | MouseEvent | TouchEvent | undefined
+    const zoomMode = config.zoomMode || SankeyZoomMode.XY
+
+    // Zoom pivots
+    const minX = min(nodes, d => d.x0) ?? 0
+    const minY = min(nodes, d => d.y0) ?? 0
 
     // Determine whether this is a zoom (wheel/pinch) or a pan (drag)
-    const isZoomEvent = Math.abs(t.k - this._lastZoomK) > 1e-6
+    const isZoomEvent = Math.abs(transform.k - this._prevZoomTransform.k) > 1e-6
 
-    if (!isZoomEvent) {
-      // Pan: apply translation delta directly
-      const dx = t.x - this._lastZoomX
-      const dy = t.y - this._lastZoomY
-      const mode = config.zoomMode || SankeyZoomMode.XY
-      if (mode !== SankeyZoomMode.Y) this._panX += dx
-      if (mode !== SankeyZoomMode.X) this._panY += dy
-      this._lastZoomX = t.x
-      this._lastZoomY = t.y
-      this._scheduleRender(0)
+    if (isZoomEvent) { // Zoom and Pan
+      // Cmpute delta factor from transform.k.
+      // If Cmd (metaKey) is pressed, only change horizontal scale.
+      // If Alt/Option (altKey) is pressed, only change vertical scale.
+      const deltaK = transform.k / this._prevZoomTransform.k
+      const isHorizontalOnlyKey = Boolean(sourceEvent?.metaKey)
+      const isVerticalOnlyKey = !isHorizontalOnlyKey && Boolean(sourceEvent?.altKey)
+      const isHorizontalOnly = isHorizontalOnlyKey || zoomMode === SankeyZoomMode.X
+      const isVerticalOnly = isVerticalOnlyKey || zoomMode === SankeyZoomMode.Y
 
-      config.onZoom?.(this._horizontalScale, this._verticalScale, this._panX, this._panY, config.zoomScaleExtent, event)
-      return
-    }
+      // Use our scale state as the source of truth (not config, not D3's k)
+      const [hCurrent, vCurrent] = this._zoomScale
+      const hNext = isVerticalOnly ? hCurrent : clamp(hCurrent * deltaK, config.zoomExtent[0], config.zoomExtent[1])
+      const vNext = isHorizontalOnly ? vCurrent : clamp(vCurrent * deltaK, config.zoomExtent[0], config.zoomExtent[1])
+      this._zoomScale = [hNext, vNext]
 
-    // Zoom: compute delta factor from transform.k.
-    // If Cmd (metaKey) is pressed, only change horizontal scale.
-    // If Alt/Option (altKey) is pressed, only change vertical scale.
-    const deltaK = t.k / this._lastZoomK
-    const we = src as WheelEvent
-    const isHorizontalOnlyKey = Boolean(we?.metaKey)
-    const isVerticalOnlyKey = !isHorizontalOnlyKey && Boolean(we?.altKey)
-    const mode = config.zoomMode || SankeyZoomMode.XY
-    const isHorizontalOnly = isHorizontalOnlyKey || mode === SankeyZoomMode.X
-    const isVerticalOnly = isVerticalOnlyKey || mode === SankeyZoomMode.Y
+      // Pointer-centric compensation: keep the point under cursor fixed
+      const bleed = this._bleedCached
+      const pos = sourceEvent ? pointer(sourceEvent, this.g.node()) : [this._width / 2, this._height / 2]
 
-    // Use our scale state as the source of truth (not config, not D3's k)
-    const hCurrent = this._horizontalScale ?? 1
-    const vCurrent = this._verticalScale ?? 1
-    const hNext = isVerticalOnly ? hCurrent : Math.min(max, Math.max(min, hCurrent * deltaK))
-    const vNext = isHorizontalOnly ? vCurrent : Math.min(max, Math.max(min, vCurrent * deltaK))
+      // Invert current mapping to get layout coordinates under pointer
+      const panX = config.zoomPan?.[0] ?? this._pan[0]
+      const panY = config.zoomPan?.[1] ?? this._pan[1]
+      const layoutX = minX + (pos[0] - bleed.left - panX - minX) / hCurrent
+      const layoutY = minY + (pos[1] - bleed.top - panY - minY) / vCurrent
 
-    // Pointer-centric compensation: keep the point under cursor fixed
-    const bleed = this.bleed
-    const p = src ? pointer(src, this.g.node()) : [this._width / 2, this._height / 2]
+      // Solve for new pan to keep pointer fixed after new scales
+      if (!isVerticalOnly && !isFinite(config.zoomPan?.[0]) && zoomMode !== SankeyZoomMode.Y) {
+        this._pan[0] = pos[0] - bleed.left - (minX + (layoutX - minX) * hNext)
+      }
 
-    // Invert current mapping to get layout coordinates under pointer
-    const minX = isFinite(this._zoomMinX) ? this._zoomMinX : (nodes.length ? Math.min(...nodes.map(n => n.x0)) : 0)
-    const effectivePanX = (isFinite(config.zoomPanX) ? config.zoomPanX : this._panX) || 0
-    const effectivePanY = (isFinite(config.zoomPanY) ? config.zoomPanY : this._panY) || 0
-    const layoutX = minX + (p[0] - bleed.left - effectivePanX - minX) / hCurrent
-
-    // For Y, pivot around the nearest column center at current pointer X
-    const centers = this.getColumnCenters()
-    const nearestLayerIdx = centers.length ? centers.reduce((bestIdx, cx, idx) => (
-      Math.abs((cx - minX) - (layoutX - minX)) < Math.abs((centers[bestIdx] - minX) - (layoutX - minX)) ? idx : bestIdx
-    ), 0) : 0
-
-    const layerCenterY = this._zoomLayerCenterY?.[nearestLayerIdx] ?? (() => {
-      const ln = nodes.filter(n => n.layer === nearestLayerIdx)
-      return ln.length ? ln.reduce((acc, n) => acc + (n.y0 + n.y1) / 2, 0) / ln.length : 0
-    })()
-    const layoutY = layerCenterY + (p[1] - bleed.top - effectivePanY - layerCenterY) / vCurrent
-
-    // Solve for new pan to keep pointer fixed after new scales
-    // If component is controlled (config has explicit values), update config via internal state is not allowed.
-    // We only set local overrides when user actively zooms; parent can reset via setConfig.
-    this._horizontalScale = hNext
-    this._verticalScale = vNext
-
-    if (!isVerticalOnly && !isFinite(config.zoomPanX) && mode !== SankeyZoomMode.Y) {
-      this._panX = p[0] - bleed.left - (minX + (layoutX - minX) * hNext)
-    }
-
-    if (!isHorizontalOnly && !isFinite(config.zoomPanY) && mode !== SankeyZoomMode.X) {
-      this._panY = p[1] - bleed.top - (layerCenterY + (layoutY - layerCenterY) * vNext)
+      if (!isHorizontalOnly && !isFinite(config.zoomPan?.[1]) && zoomMode !== SankeyZoomMode.X) {
+        this._pan[1] = pos[1] - bleed.top - (minY + (layoutY - minY) * vNext)
+      }
+    } else { // Just Pan: apply translation delta directly
+      const dx = transform.x - this._prevZoomTransform.x
+      const dy = transform.y - this._prevZoomTransform.y
+      if (zoomMode !== SankeyZoomMode.Y) this._pan[0] += dx
+      if (zoomMode !== SankeyZoomMode.X) this._pan[1] += dy
     }
 
     // Update last zoom state
-    this._lastZoomK = t.k
-    this._lastZoomX = t.x
-    this._lastZoomY = t.y
+    this._prevZoomTransform.k = transform.k
+    this._prevZoomTransform.x = transform.x
+    this._prevZoomTransform.y = transform.y
 
-    config.onZoom?.(this._horizontalScale, this._verticalScale, this._panX, this._panY, config.zoomScaleExtent, event)
+    config.onZoom?.(this._zoomScale[0], this._zoomScale[1], this._pan[0], this._pan[1], config.zoomExtent, event)
 
     this._scheduleRender(0)
   }
@@ -442,7 +408,8 @@ export class Sankey<
   }
 
   private _prepareLayout (): void {
-    const { config, bleed, datamodel } = this
+    const { config, datamodel } = this
+    const bleed = this._bleedCached
     const isExtendedSize = this.sizing === Sizing.Extend
     const sankeyHeight = this.sizing === Sizing.Fit ? this._height : this._extendedHeight
     const sankeyWidth = this.sizing === Sizing.Fit ? this._width : this._extendedWidth
@@ -512,38 +479,23 @@ export class Sankey<
       this._extendedHeightIncreased = height + bleed.top + bleed.bottom
       this._extendedWidthIncreased = width + bleed.left + bleed.right
     }
-
-    // Cache zoom pivots
-    this._zoomMinX = nodes.length ? Math.min(...nodes.map(n => n.x0)) : 0
-    const byLayer: { [key: number]: SankeyNode<N, L>[] } = groupBy(nodes, d => d.layer)
-    const layerCenters: number[] = []
-    Object.keys(byLayer).forEach(k => {
-      const layer = Number(k)
-      const ln = byLayer[layer]
-      const minY = Math.min(...ln.map(n => n.y0))
-      const maxY = Math.max(...ln.map(n => n.y1))
-      layerCenters[layer] = (minY + maxY) / 2
-    })
-    this._zoomLayerCenterY = layerCenters
   }
 
   private _applyLayoutScaling (): void {
     const { datamodel } = this
     const nodes = datamodel.nodes
     const links = datamodel.links
+
     // Use our scale state as the single source of truth
-    const hScale = this._horizontalScale ?? 1
-    const vScale = this._verticalScale ?? 1
+    const [hScale, vScale] = this._zoomScale
 
     if ((hScale === 1 || !isFinite(hScale)) && (vScale === 1 || !isFinite(vScale))) return
 
-    const minX = nodes.length ? Math.min(...nodes.map(n => n.x0)) : 0
+    const minX = min(nodes, d => d.x0) ?? 0
 
     // Preserve original node positions to realign link anchors after scaling
-    const prevNodePos = new Map<SankeyNode<N, L>, { x0: number; x1: number; y0: number; y1: number }>()
-    for (const n of nodes) prevNodePos.set(n, { x0: n.x0, x1: n.x1, y0: n.y0, y1: n.y1 })
-    const prevLinkY = new Map<SankeyLink<N, L>, { y0: number; y1: number }>()
-    for (const l of links) prevLinkY.set(l, { y0: l.y0, y1: l.y1 })
+    const prevNodePos = new Map(nodes.map(n => [n, { x0: n.x0, x1: n.x1, y0: n.y0, y1: n.y1 }]))
+    const prevLinkY = new Map(links.map(l => [l, { y0: l.y0, y1: l.y1 }]))
 
     // Horizontal spacing: scale relative to leftmost x
     if (isFinite(hScale) && hScale !== 1) {
@@ -553,29 +505,17 @@ export class Sankey<
         n.x0 = minX + relX0 * hScale
         n.x1 = n.x0 + nodeWidth
       }
-      // Links use node.x0/x1 for x, nothing to do here for x
     }
 
-    // Vertical spacing: scale around each column center to avoid shifting downward
+    // Vertical spacing: scale from the topmost node of the graph
     if (isFinite(vScale) && vScale !== 1) {
-      const byLayer: { [key: number]: SankeyNode<N, L>[] } = groupBy(nodes, d => d.layer)
-      const layerCenter: { [key: number]: number } = {}
-
-      Object.keys(byLayer).forEach(k => {
-        const layer = Number(k)
-        const layerNodes = byLayer[layer]
-        const minY = Math.min(...layerNodes.map(n => n.y0))
-        const maxY = Math.max(...layerNodes.map(n => n.y1))
-        layerCenter[layer] = (minY + maxY) / 2
-      })
+      const minY = min(nodes, d => d.y0) ?? 0
 
       for (const n of nodes) {
-        const center = layerCenter[n.layer]
         const nodeHeight = n.y1 - n.y0
-        const yCenter = (n.y0 + n.y1) / 2
-        const newCenter = center + (yCenter - center) * vScale
-        n.y0 = newCenter - nodeHeight / 2
-        n.y1 = newCenter + nodeHeight / 2
+        const relY0 = n.y0 - minY
+        n.y0 = minY + relY0 * vScale
+        n.y1 = n.y0 + nodeHeight
       }
 
       // Re-anchor links by maintaining their offset within the source/target nodes
@@ -607,7 +547,12 @@ export class Sankey<
     return this.sizing === Sizing.Fit ? this._height : (this._extendedHeightIncreased || this._extendedHeight)
   }
 
+  /** @deprecated Use getLayerXCenters instead */
   getColumnCenters (): number[] {
+    return this.getLayerXCenters()
+  }
+
+  getLayerXCenters (): number[] {
     const { datamodel } = this
     const nodes = datamodel.nodes as SankeyNode<N, L>[]
     const centers = nodes.reduce((pos, node) => {
@@ -619,6 +564,21 @@ export class Sankey<
     }, [])
 
     return centers
+  }
+
+  getLayerYCenters (): number[] {
+    const { datamodel } = this
+    const nodes = datamodel.nodes as SankeyNode<N, L>[]
+    const nodesByLayer = groupBy(nodes, d => d.layer)
+    const layerYCenters: number[] = []
+
+    Object.values(nodesByLayer).forEach((layerNodes, idx) => {
+      const minY = Math.min(...layerNodes.map(n => n.y0))
+      const maxY = Math.max(...layerNodes.map(n => n.y1))
+      layerYCenters[idx] = (minY + maxY) / 2
+    })
+
+    return layerYCenters
   }
 
   highlightSubtree (node: SankeyNode<N, L>): void {
