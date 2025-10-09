@@ -58,6 +58,10 @@ export interface CrosshairConfigInterface<Datum> extends WithOptional<XYComponen
   onCrosshairMove?: (x?: number | Date, datum?: Datum, datumIndex?: number, event?: MouseEvent | WheelEvent) => void;
   /** Force the crosshair to show at a specific position. Default: `undefined` */
   forceShowAt?: number | Date;
+  /** Skip range checks for crosshair visibility. When true, crosshair will show regardless of position within chart bounds. Default: `false`
+   *  This is useful for testing, especially when you only triggers mousemove event but does not have real mouse event.
+   */
+  skipRangeCheck?: boolean;
 }
 
 export const CrosshairDefaultConfig: CrosshairConfigInterface<unknown> = {
@@ -76,5 +80,6 @@ export const CrosshairDefaultConfig: CrosshairConfigInterface<unknown> = {
   strokeWidth: undefined,
   onCrosshairMove: undefined,
   forceShowAt: undefined,
+  skipRangeCheck: false,
 }
 

@@ -137,7 +137,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
 
     const isCrosshairWithinXRange = (xPx >= xRange[0]) && (xPx <= xRange[1])
     const isCrosshairWithinYRange = (this._yPx >= Math.min(yRange[0], yRange[1])) && (this._yPx <= Math.max(yRange[0], yRange[1]))
-    let shouldShow = this._xPx ? isCrosshairWithinXRange && isCrosshairWithinYRange : isCrosshairWithinXRange
+    let shouldShow = config.skipRangeCheck ? !!this._xPx : (this._xPx ? isCrosshairWithinXRange && isCrosshairWithinYRange : isCrosshairWithinXRange)
 
     // If the crosshair is far from the mouse pointer (usually when `snapToData` is `true` and data resolution is low), hide it
     if (config.hideWhenFarFromPointer && ((Math.abs(xClamped - (+xPx)) >= config.hideWhenFarFromPointerDistance))) {
@@ -145,7 +145,8 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
     }
 
     const tooltip = config.tooltip ?? this.tooltip
-    if (shouldShow && tooltip && this._isContainerInViewport()) {
+    const tooltipShouldShow = config.skipRangeCheck ? !!this._xPx : shouldShow
+    if (tooltipShouldShow && tooltip && this._isContainerInViewport()) {
       const container = tooltip.getContainer() || this.container.node()
       const isContainerBody = tooltip.isContainerBody()
 
