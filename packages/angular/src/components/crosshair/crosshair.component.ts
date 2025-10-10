@@ -117,7 +117,7 @@ export class VisCrosshairComponent<Datum> implements CrosshairConfigInterface<Da
   /** Tooltip template accessor. The function is supposed to return either a valid HTML string or an HTMLElement.
    * When `snapToData` is `false`, `datum` will be `undefined` but `data` and `leftNearestDatumIndex` will be provided.
    * Default: `d => ''` */
-  @Input() template?: (datum: Datum, x: number | Date, data: Datum[], leftNearestDatumIndex: number) => string | HTMLElement
+  @Input() template?: (datum: Datum, x: number | Date, data?: Datum[], leftNearestDatumIndex?: number) => string | HTMLElement
 
   /** Hide Crosshair when the corresponding datum element is far from mouse pointer. Default: `true` */
   @Input() hideWhenFarFromPointer?: boolean
@@ -136,7 +136,7 @@ export class VisCrosshairComponent<Datum> implements CrosshairConfigInterface<Da
    * the `yScale` instance to help you calculate the correct vertical position of the circles, and the nearest datum index.
    * It has to return an array of the `CrosshairCircle` objects: `{ y: number; color: string; opacity?: number }[]`.
    * Default: `undefined` */
-  @Input() getCircles?: (x: number | Date, data: Datum[], yScale: ContinuousScale, leftNearestDatumIndex: number) => CrosshairCircle[]
+  @Input() getCircles?: (x: number | Date, data: Datum[], yScale: ContinuousScale, leftNearestDatumIndex?: number) => CrosshairCircle[]
 
   /** Callback function that is called when the crosshair is moved:
    * - `x` is the horizontal position of the crosshair in the data space;
