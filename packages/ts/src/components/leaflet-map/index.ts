@@ -183,7 +183,7 @@ export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<D
 
         this._map.leaflet.setView(initialMapCenter, initialMapZoom)
 
-        if (document.body.classList.contains('theme-dark') && config.styleDarkTheme) {
+        if (['theme-dark', 'dark-theme'].some(className => [document.body, document.documentElement].some(element => element.classList.contains(className))) && config.styleDarkTheme) {
           this._isDarkThemeActive = true
           this.setTheme(config.styleDarkTheme)
         }
@@ -209,7 +209,7 @@ export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<D
       this.themeObserver = new MutationObserver((mutations) => {
         mutations.forEach(change => {
           if (change.attributeName === 'class') {
-            const isDarkTheme = (change.target as HTMLElement).classList.contains('theme-dark')
+            const isDarkTheme = ['theme-dark', 'dark-theme'].some(className => (change.target as HTMLElement).classList.contains(className))
             if (this._isDarkThemeActive !== isDarkTheme) {
               this.setTheme(isDarkTheme ? this.config.styleDarkTheme : this.config.style)
               this._isDarkThemeActive = isDarkTheme
@@ -218,6 +218,7 @@ export class LeafletMap<Datum extends GenericDataRecord> extends ComponentCore<D
         })
       })
       this.themeObserver.observe(document.body, { attributes: true })
+      this.themeObserver.observe(document.documentElement, { attributes: true })
     }
   }
 
