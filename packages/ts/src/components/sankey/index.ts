@@ -252,7 +252,7 @@ export class Sankey<
     })
   }
 
-  public setZoomLevel (horizontalScale?: number, verticalScale?: number, duration: number = this.config.duration): void {
+  public setZoomScale (horizontalScale?: number, verticalScale?: number, duration: number = this.config.duration): void {
     const [min, max] = this.config.zoomExtent
     if (isNumber(horizontalScale)) this._zoomScale[0] = Math.min(max, Math.max(min, horizontalScale))
     if (isNumber(verticalScale)) this._zoomScale[1] = Math.min(max, Math.max(min, verticalScale))
@@ -269,7 +269,7 @@ export class Sankey<
     this._render(duration)
   }
 
-  public getZoomLevel (): [number, number] {
+  public getZoomScale (): [number, number] {
     return [this._zoomScale[0] || 1, this._zoomScale[1] || 1]
   }
 
@@ -305,6 +305,7 @@ export class Sankey<
     const transform = event.transform
     const sourceEvent = event.sourceEvent as WheelEvent | MouseEvent | TouchEvent | undefined
     const zoomMode = config.zoomMode || SankeyZoomMode.XY
+    const bleed = this._bleedCached
 
     // Zoom pivots
     const minX = min(nodes, d => d.x0) ?? 0
@@ -330,7 +331,6 @@ export class Sankey<
       this._zoomScale = [hNext, vNext]
 
       // Pointer-centric compensation: keep the point under cursor fixed
-      const bleed = this._bleedCached
       const pos = sourceEvent ? pointer(sourceEvent, this.g.node()) : [this._width / 2, this._height / 2]
 
       // Invert current mapping to get layout coordinates under pointer
@@ -353,6 +353,16 @@ export class Sankey<
       if (zoomMode !== SankeyZoomMode.Y) this._pan[0] += dx
       if (zoomMode !== SankeyZoomMode.X) this._pan[1] += dy
     }
+
+    // Horizontal Pan Constraint
+    const maxX = max(nodes, d => d.x1) ?? 0
+    const viewportWidth = this.getWidth() - bleed.left - bleed.right
+    this._pan[0] = clamp(this._pan[0], viewportWidth - maxX, minX)
+
+    // Vertical Pan Constraint
+    const maxY = max(nodes, d => d.y1) ?? 0
+    const viewportHeight = this.getHeight() - bleed.top - bleed.bottom
+    this._pan[1] = clamp(this._pan[1], viewportHeight - maxY, minY)
 
     // Update last zoom state
     this._prevZoomTransform.k = transform.k
