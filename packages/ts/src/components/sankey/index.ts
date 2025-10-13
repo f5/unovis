@@ -160,6 +160,21 @@ export class Sankey<
   setConfig (config: SankeyConfigInterface<N, L>): void {
     super.setConfig(config)
 
+    // Update zoom scale from config
+    if (this.config.zoomScale !== undefined) {
+      this._zoomScale = this.config.zoomScale
+    } else if (this.prevConfig.zoomScale !== undefined) {
+      this._zoomScale = [1, 1]
+      this._pan = [0, 0]
+    }
+
+    // Update zoom pan from config
+    if (this.config.zoomPan !== undefined) {
+      this._pan = this.config.zoomPan
+    } else if (this.prevConfig.zoomPan !== undefined) {
+      this._pan = [0, 0]
+    }
+
     // Pre-calculate component size for Sizing.EXTEND
     if ((this.sizing !== Sizing.Fit) || !this._hasLinks()) this._preCalculateComponentSize()
 
@@ -253,6 +268,9 @@ export class Sankey<
   }
 
   public setZoomScale (horizontalScale?: number, verticalScale?: number, duration: number = this.config.duration): void {
+    // If zoomScale is controlled by config, do nothing
+    if (this.config.zoomScale !== undefined) return
+
     const [min, max] = this.config.zoomExtent
     if (isNumber(horizontalScale)) this._zoomScale[0] = Math.min(max, Math.max(min, horizontalScale))
     if (isNumber(verticalScale)) this._zoomScale[1] = Math.min(max, Math.max(min, verticalScale))
@@ -270,6 +288,9 @@ export class Sankey<
   }
 
   public getZoomScale (): [number, number] {
+    // If zoomPan is controlled by config, do nothing
+    if (this.config.zoomPan !== undefined) return
+
     return [this._zoomScale[0] || 1, this._zoomScale[1] || 1]
   }
 
@@ -301,6 +322,8 @@ export class Sankey<
 
   private _onZoom (event: D3ZoomEvent<SVGGElement, unknown>): void {
     const { datamodel, config } = this
+    if (config.zoomScale || config.zoomPan) return
+
     const nodes = datamodel.nodes
     const transform = event.transform
     const sourceEvent = event.sourceEvent as WheelEvent | MouseEvent | TouchEvent | undefined
@@ -315,7 +338,7 @@ export class Sankey<
     const isZoomEvent = Math.abs(transform.k - this._prevZoomTransform.k) > 1e-6
 
     if (isZoomEvent) { // Zoom and Pan
-      // Cmpute delta factor from transform.k.
+      // Compute delta factor from transform.k.
       // If Cmd (metaKey) is pressed, only change horizontal scale.
       // If Alt/Option (altKey) is pressed, only change vertical scale.
       const deltaK = transform.k / this._prevZoomTransform.k
