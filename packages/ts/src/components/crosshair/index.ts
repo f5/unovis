@@ -145,8 +145,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
     }
 
     const tooltip = config.tooltip ?? this.tooltip
-    const tooltipShouldShow = config.skipRangeCheck ? !!this._xPx : shouldShow
-    if (tooltipShouldShow && tooltip && this._isContainerInViewport()) {
+    if (shouldShow && tooltip && this._isContainerInViewport()) {
       const container = tooltip.getContainer() || this.container.node()
       const isContainerBody = tooltip.isContainerBody()
 
