@@ -201,17 +201,23 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
     const rx = (d: TreemapNode<Datum>): number =>
       Math.min(config.tileBorderRadius, (d.x1 - d.x0) * config.tileBorderRadiusFactor)
 
+    // Add clipPath elements
+    tilesEnter
+      .append('clipPath')
+      .attr('id', d => `clip-${d._id}`)
+      .append('rect')
+      .attr('width', d => Math.max(0, d.x1 - d.x0 - config.tilePadding))
+      .attr('height', d => Math.max(0, d.y1 - d.y0))
+      .attr('rx', rx)
+      .attr('ry', rx)
+
     // Tile rectangles
     tilesEnter
       .append('rect')
       .classed(s.tile, true)
-
-      // Make the leaf tiles clickable if a click handler is provided
       .classed(s.clickableTile, d => config.showTileClickAffordance && !d.children)
-
       .attr('rx', rx)
       .attr('ry', rx)
-      // Initialize tile positions so that the initial transition is smooth
       .attr('x', d => d.x0)
       .attr('y', d => d.y0)
       .attr('width', d => d.x1 - d.x0)
@@ -232,30 +238,14 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       .attr('height', d => d.y1 - d.y0)
 
     // Update clipPath rects
-    let svg: Element | null = this.g.node()
-    while (svg && !(svg instanceof SVGSVGElement)) svg = svg.parentElement
-    const defs = svg ? (select(svg).select('defs').empty() ? select(svg).append('defs') : select(svg).select('defs')) : null
-    if (!defs) return
-    const defsSelection = (defs as Selection<SVGDefsElement, unknown, null, undefined>)
-    const clipPaths = defsSelection.selectAll<SVGClipPathElement, TreemapNode<Datum>>('clipPath')
-      .data(visibleNodes, (d: TreemapNode<Datum>) => d._id)
-
-    clipPaths.enter()
-      .append('clipPath')
-      .attr('id', (d: TreemapNode<Datum>) => `clip-${d._id}`)
-      .append('rect')
-      .attr('x', (d: TreemapNode<Datum>) => d.x0)
-      .attr('y', (d: TreemapNode<Datum>) => d.y0)
-      .attr('width', (d: TreemapNode<Datum>) => Math.max(0.1, d.x1 - d.x0))
-      .attr('height', (d: TreemapNode<Datum>) => Math.max(0.1, d.y1 - d.y0))
-      .attr('rx', rx)
-      .attr('ry', rx)
-
-    clipPaths.exit().remove()
+    mergedTiles.select('clipPath rect')
+      .attr('width', d => d.x1 - d.x0 - 2 * config.tilePadding)
+      .attr('height', d => d.y1 - d.y0 - 2 * config.tilePadding)
 
     tilesEnter
       .append('g')
       .attr('class', s.labelGroup)
+      .attr('clip-path', d => `url(#clip-${d._id})`)
       .attr('transform', d => `translate(${d.x0 + config.labelOffsetX},${d.y0 + config.labelOffsetY})`)
       .append('text')
       .attr('class', s.label)
