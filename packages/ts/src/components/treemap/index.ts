@@ -5,11 +5,12 @@ import { scaleLinear, scaleThreshold } from 'd3-scale'
 import { hsl } from 'd3-color'
 import { ComponentCore } from 'core/component'
 import { SeriesDataModel } from 'data-models/series'
-import { getColor, brighter, getHexValue } from 'utils/color'
+import { getColor, brighter, getHexValue, isColorDark } from 'utils/color'
 import { getString, getNumber, isNumber } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { trimSVGText, wrapSVGText } from 'utils/text'
 import { TrimMode, FitMode } from 'types/text'
+import { cssvar } from 'utils/style'
 import { TreemapConfigInterface, TreemapDefaultConfig } from './config'
 import { TreemapDatum, TreemapNode } from './types'
 import * as s from './style'
@@ -144,40 +145,38 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
         config.tileLabelLargeFontSize,
       ])
 
-    // First pass: Set base colors without considering tileColor config
-    treemapData.eachBefore((node) => {
-      // Get base color: user accessor or default
-      let color = config.tileColor
-        ? getColor(node, config.tileColor)
-        : getColor(node, undefined, node.parent?.children?.indexOf(node), node.depth !== 1)
+    const visibleTiles = descendants.filter(d => d.depth > 0)
+    const firstLevelTiles = visibleTiles.filter(d => d.depth === 1)
+    const nonFirstLevelTiles = visibleTiles.filter(d => d.depth > 1)
 
-      // Fallback to parent color if needed
-      color = color ?? (node.parent as TreemapNode<Datum>)?._fill
-
-      const hexColor = color ? getHexValue(color, this.g.node()) : null
-
-      if (hexColor) {
-        const hslColor = hsl(hexColor)
-
-        // Lightness adjustment for siblings (if enabled)
-        if (config.enableLightnessVariance && !node.children && node.parent) {
-          const siblings = node.parent.children
-          const lightnessAdjustment = this._getTileLightness(node, siblings)
-          hslColor.l = Math.min(1, hslColor.l + lightnessAdjustment)
-        }
-
-        // Brightness increase for depth
-        node._fill = brighter(hslColor.toString(), brightnessIncrease(node.depth))
-      } else {
-        node._fill = null
-      }
+    // Set the fill color for the first level tiles
+    firstLevelTiles.forEach((d, i) => {
+      d._fill = getColor(d, config.tileColor, i)
     })
 
+    // Set the fill color for the non-first level tiles
+    nonFirstLevelTiles.forEach((d, i) => {
+      const providedColor = getColor(d, config.tileColor, i, true)
+      if (providedColor) {
+        d._fill = providedColor
+        return
+      }
+
+      const hslColor = hsl(getHexValue(d.parent?._fill, this.element))
+
+      if (config.enableLightnessVariance && !d.children) {
+        const lightnessAdjustment = this._getTileLightness(d, d.children)
+        hslColor.l = Math.min(1, hslColor.l + lightnessAdjustment)
+      }
+
+      d._fill = brighter(hslColor.toString(), brightnessIncrease(d.depth))
+    })
+
+
     // Render tiles
-    const visibleNodes = descendants.filter(d => d.depth > 0)
     const tiles = this.tiles
       .selectAll<SVGGElement, TreemapNode<Datum>>(`g.${s.tileGroup}`)
-      .data(visibleNodes, d => `${d.data.key}-${d.depth}`)
+      .data(visibleTiles, d => `${d.data.key}-${d.depth}`)
 
     const tilesEnter = tiles
       .enter()
@@ -215,25 +214,9 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       .attr('y', d => d.y0)
       .attr('width', d => d.x1 - d.x0)
       .attr('height', d => d.y1 - d.y0)
-      .style('fill', d => d._fill ?? getColor(d, config.tileColor))
+      .style('fill', d => d._fill)
       .style('opacity', 0)
       .style('cursor', config.showTileClickAffordance ? d => !d.children ? 'pointer' : null : null)
-
-
-    const mergedTiles = tiles.merge(tilesEnter)
-
-    smartTransition(mergedTiles.select(`rect.${s.tile}`), duration)
-      .style('fill', d => d._fill ?? getColor(d, config.tileColor))
-      .style('opacity', 1)
-      .attr('x', d => d.x0)
-      .attr('y', d => d.y0)
-      .attr('width', d => d.x1 - d.x0)
-      .attr('height', d => d.y1 - d.y0)
-
-    // Update clipPath rects
-    mergedTiles.select('clipPath rect')
-      .attr('width', d => d.x1 - d.x0 - 2 * config.tilePadding)
-      .attr('height', d => d.y1 - d.y0 - 2 * config.tilePadding)
 
     tilesEnter
       .append('g')
@@ -246,6 +229,21 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       .attr('y', 0)
       .style('opacity', 0)
 
+    const mergedTiles = tiles.merge(tilesEnter)
+
+    smartTransition(mergedTiles.select(`rect.${s.tile}`), duration)
+      .style('fill', d => d._fill)
+      .style('opacity', 1)
+      .attr('x', d => d.x0)
+      .attr('y', d => d.y0)
+      .attr('width', d => d.x1 - d.x0)
+      .attr('height', d => d.y1 - d.y0)
+
+    // Update clipPath rects
+    mergedTiles.select('clipPath rect')
+      .attr('width', d => d.x1 - d.x0 - 2 * config.tilePadding)
+      .attr('height', d => d.y1 - d.y0 - 2 * config.tilePadding)
+
     const textSelection = mergedTiles.selectAll<SVGTextElement, TreemapNode<Datum>>(`g.${s.labelGroup} text`)
     textSelection
       .text(d => config.tileLabel(d))
@@ -257,6 +255,9 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
           : fontSizeScale.range()[1]
       })
       .style('font-size', (_, i, els) => `${select(els[i]).property('font-size-px')}px`)
+      .style('fill', d => cssvar(
+        isColorDark(d._fill) ? s.variables.treemapLabelTextColorLight : s.variables.treemapLabelTextColor)
+      )
 
     // Fit label (wrap or trim)
     textSelection.each((d, i, els) => {
