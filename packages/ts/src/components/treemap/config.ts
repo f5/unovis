@@ -11,8 +11,15 @@ export interface TreemapConfigInterface<Datum> extends ComponentConfigInterface 
   /** Array of accessor functions to defined the nested groups. Default: `[]` */
   layers: StringAccessor<Datum>[];
 
-  /** A function that accepts a value number and returns a string. Default: `undefined` */
+  /** @deprecated Define `tileLabel` instead.
+   * A function that accepts a value number and returns a string. Default: `(value: number) => `${value}`` */
   numberFormat?: (value: number) => string;
+
+  /**
+   * Function to generate the label text for each tile. Receives the `TreemapNode` and returns a `string`.
+   * Default: shows key and formatted value (e.g., "label: value").
+   */
+  tileLabel?: (node: TreemapNode<Datum>) => string;
 
   /** Color accessor function for tiles. Default: `undefined` */
   tileColor?: ColorAccessor<TreemapNode<Datum>>;
@@ -66,13 +73,9 @@ export interface TreemapConfigInterface<Datum> extends ComponentConfigInterface 
 
   /** Amount of lightness variation applied to sibling tiles when enableLightnessVariance is true. Default: `0.08` */
   lightnessVariationAmount?: number;
-  minTileSizeForLabel?: number;
 
-  /**
-   * Function to generate the label text for each tile. Receives the TreemapNode and returns a string.
-   * Default: shows key and formatted value (e.g., "label: value").
-   */
-  tileLabel?: (node: TreemapNode<Datum>) => string;
+  /** Minimum size for labels in pixels. Default: `20` */
+  minTileSizeForLabel?: number;
 }
 
 export const TreemapDefaultConfig: TreemapConfigInterface<unknown> = {
@@ -97,5 +100,6 @@ export const TreemapDefaultConfig: TreemapConfigInterface<unknown> = {
   showTileClickAffordance: false,
   lightnessVariationAmount: 0.08,
   minTileSizeForLabel: 20,
-  tileLabel: undefined,
+  numberFormat: (value: number) => `${value}`,
+  tileLabel: function (d: TreemapNode<unknown>): string { return `${d.data.key}: ${this.numberFormat(d.value)}` },
 }
