@@ -178,9 +178,8 @@ export class Sankey<
     // Pre-calculate component size for Sizing.EXTEND
     if ((this.sizing !== Sizing.Fit) || !this._hasLinks()) this._preCalculateComponentSize()
 
-    // Using "as any" because typings are not full ("@types/d3-sankey": "^0.11.2")
-    const nodeId = ((d: SankeyInputNode, i: number) => getString(d, this.config.id, i)) as any;
-    (this._sankey as any).linkSort(this.config.linkSort)
+    const nodeId = ((d: SankeyInputNode, i: number) => getString(d, this.config.id, i)) as any
+    this._sankey.linkSort(this.config.linkSort)
     this._sankey
       .nodeId(nodeId)
       .nodeWidth(this.config.nodeWidth)

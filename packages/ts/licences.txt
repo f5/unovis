@@ -4,7 +4,7 @@ name                               license period  license type  installed versi
 @juggle/resize-observer            perpetual       Apache-2.0    3.3.1              Juggle
 @types/d3                          perpetual       MIT           7.4.0              n/a
 @types/d3-collection               perpetual       MIT           1.0.10             n/a
-@types/d3-sankey                   perpetual       MIT           0.11.2             n/a
+@types/d3-sankey                   perpetual       MIT           0.12.4             n/a
 @types/dagre                       perpetual       MIT           0.7.50             n/a
 @types/geojson                     perpetual       MIT           7946.0.8           n/a
 @types/leaflet                     perpetual       MIT           1.7.6              n/a
