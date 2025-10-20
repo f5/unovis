@@ -8,8 +8,8 @@ import { SeriesDataModel } from 'data-models/series'
 import { getColor, brighter, getHexValue } from 'utils/color'
 import { getString, getNumber, isNumber } from 'utils/data'
 import { smartTransition } from 'utils/d3'
-import { trimSVGText } from 'utils/text'
-import { TrimMode } from 'types/text'
+import { trimSVGText, wrapSVGText } from 'utils/text'
+import { TrimMode, FitMode } from 'types/text'
 import { TreemapConfigInterface, TreemapDefaultConfig } from './config'
 import { TreemapDatum, TreemapNode } from './types'
 import * as s from './style'
@@ -263,9 +263,8 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
           ? `${fontSizeScale(sqrtVal)}px`
           : `${fontSizeScale.range()[1]}px`
       })
-      .attr('dominant-baseline', 'middle')
 
-    // Trim label and set dominant-baseline for tspans in one pass
+    // Fit label (wrap or trim) and set dominant-baseline for tspans in one pass
     textSelection.each((d, i, nodes) => {
       const text = select(nodes[i] as SVGTextElement)
       const tileWidth = d.x1 - d.x0 - (config.labelOffsetX ?? 0) * 2
@@ -274,9 +273,14 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       if (!fontSize) {
         fontSize = parseFloat(window.getComputedStyle(nodes[i] as SVGTextElement).fontSize)
       }
-      trimSVGText(text, tileWidth, TrimMode.End, true, fontSize)
+
+      if (config.labelFit === FitMode.Wrap) {
+        wrapSVGText(text, tileWidth)
+      } else {
+        trimSVGText(text, tileWidth, TrimMode.End, true, fontSize)
+      }
+
       text.attr('title', fullLabel)
-      text.selectAll('tspan').attr('dominant-baseline', 'middle')
     })
 
     // Transition group position
