@@ -12,6 +12,7 @@ const cssVarDefaults = {
   '--vis-treemap-tile-background-color': '#fff',
   '--vis-treemap-tile-cursor': 'default',
   '--vis-treemap-label-text-color': '#000',
+  '--vis-treemap-label-text-color-light': '#fff',
   '--vis-treemap-label-font-size': '12px',
 
   /* Label opacity */
