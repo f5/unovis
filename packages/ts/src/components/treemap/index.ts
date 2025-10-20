@@ -19,11 +19,6 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
   protected _defaultConfig = TreemapDefaultConfig as TreemapConfigInterface<Datum>
   public config: TreemapConfigInterface<Datum> = this._defaultConfig
 
-  /** Default number format for tile labels. */
-  private _defaultNumberFormat (value: number): string {
-    return `${value}`
-  }
-
   datamodel: SeriesDataModel<Datum> = new SeriesDataModel()
   tiles: Selection<SVGGElement, unknown, SVGGElement, unknown>
 
@@ -54,8 +49,6 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
   _render (customDuration?: number): void {
     super._render(customDuration)
     const { config, datamodel: { data }, _width, _height } = this
-    const { numberFormat } = config
-    const formatNumber = numberFormat ?? this._defaultNumberFormat.bind(this)
     const duration = isNumber(customDuration) ? customDuration : config.duration
 
     if (!config.layers?.length) {
@@ -253,34 +246,30 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       .attr('y', 0)
       .style('opacity', 0)
 
-    const getTileLabel = config.tileLabel ?? ((d: TreemapNode<Datum>) => `${d.data.key}: ${formatNumber(d.value)}`)
     const textSelection = mergedTiles.selectAll<SVGTextElement, TreemapNode<Datum>>(`g.${s.labelGroup} text`)
     textSelection
-      .text(d => getTileLabel(d))
-      .style('font-size', function (d) {
+      .text(d => config.tileLabel(d))
+      .attr('title', d => config.tileLabel(d))
+      .property('font-size-px', d => {
         const sqrtVal = Math.sqrt(d.value ?? 0)
         return config.enableTileLabelFontSizeVariation && !d.children
-          ? `${fontSizeScale(sqrtVal)}px`
-          : `${fontSizeScale.range()[1]}px`
+          ? fontSizeScale(sqrtVal)
+          : fontSizeScale.range()[1]
       })
+      .style('font-size', (_, i, els) => `${select(els[i]).property('font-size-px')}px`)
 
-    // Fit label (wrap or trim) and set dominant-baseline for tspans in one pass
-    textSelection.each((d, i, nodes) => {
-      const text = select(nodes[i] as SVGTextElement)
+    // Fit label (wrap or trim)
+    textSelection.each((d, i, els) => {
+      const el = els[i] as SVGTextElement
+      const text = select(el)
       const tileWidth = d.x1 - d.x0 - (config.labelOffsetX ?? 0) * 2
-      const fullLabel = text.text()
-      let fontSize = parseFloat(text.style('font-size'))
-      if (!fontSize) {
-        fontSize = parseFloat(window.getComputedStyle(nodes[i] as SVGTextElement).fontSize)
-      }
+      const fontSize = parseFloat(text.property('font-size-px')) || parseFloat(window.getComputedStyle(el).fontSize)
 
       if (config.labelFit === FitMode.Wrap) {
         wrapSVGText(text, tileWidth)
       } else {
         trimSVGText(text, tileWidth, TrimMode.End, true, fontSize)
       }
-
-      text.attr('title', fullLabel)
     })
 
     // Transition group position
