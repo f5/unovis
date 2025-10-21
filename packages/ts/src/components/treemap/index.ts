@@ -237,11 +237,11 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       .attr('class', s.labelGroup)
       .attr('clip-path', d => `url(#clip-${d._id})`)
       .attr('transform', d => `translate(${d.x0 + config.labelOffsetX},${d.y0 + config.labelOffsetY})`)
+      .style('opacity', 0)
       .append('text')
       .attr('class', s.label)
       .attr('x', 0)
       .attr('y', 0)
-      .style('opacity', 0)
 
     const mergedTiles = tiles.merge(tilesEnter)
 
@@ -292,7 +292,7 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       .attr('transform', d => `translate(${d.x0 + config.labelOffsetX},${d.y0 + config.labelOffsetY})`)
 
     // Transition text opacity only (fade-in)
-    smartTransition(mergedTiles.select(`g.${s.labelGroup} text`), duration)
+    smartTransition(mergedTiles.select(`g.${s.labelGroup}`), duration)
       .style('opacity', 1)
 
     // Hide labels that don't meet criteria
