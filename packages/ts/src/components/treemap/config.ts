@@ -43,7 +43,7 @@ export interface TreemapConfigInterface<Datum> extends ComponentConfigInterface 
   /** Label offset in the Y direction. Default: `4` */
   labelOffsetY?: number;
 
-  /** How labels should fit within tiles: wrap or trim. Default: `FitMode.Trim` */
+  /** How labels should fit within tiles: wrap or trim. Applicable only for leaf nodes. Default: `FitMode.Wrap` */
   labelFit?: FitMode;
 
   /** Label trimming mode. Default: `TrimMode.Middle` */
