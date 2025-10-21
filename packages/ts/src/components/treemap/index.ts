@@ -178,8 +178,9 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
 
       const hslColor = hsl(getHexValue(d.parent?._fill, this.element))
 
-      if (config.enableLightnessVariance && !d.children) {
-        const lightnessAdjustment = this._getTileLightness(d, d.children)
+      if (config.enableLightnessVariance && !d.children && d.parent) {
+        const siblings = d.parent.children
+        const lightnessAdjustment = this._getTileLightness(d, siblings)
         hslColor.l = Math.min(1, hslColor.l + lightnessAdjustment)
       }
 
@@ -210,7 +211,7 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
     // Add clipPath elements
     tilesEnter
       .append('clipPath')
-      .attr('id', d => `clip-${d._id}`)
+      .attr('id', d => `clip-${this.uid}-${d._id}`)
       .append('rect')
       .attr('rx', rx)
       .attr('ry', rx)
@@ -235,7 +236,7 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
     tilesEnter
       .append('g')
       .attr('class', s.labelGroup)
-      .attr('clip-path', d => `url(#clip-${d._id})`)
+      .attr('clip-path', d => `url(#clip-${this.uid}-${d._id})`)
       .attr('transform', d => `translate(${d.x0 + config.labelOffsetX},${d.y0 + config.labelOffsetY})`)
       .style('opacity', 0)
       .append('text')
