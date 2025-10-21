@@ -16,6 +16,18 @@ export const data = Array(100)
     }
   })
 
+export const longLabelData = Array(100)
+  .fill(0)
+  .map(() => {
+    const group = sample(['Q1', 'Q2', 'Q3', 'Q4'])
+
+    return {
+      group,
+      subgroup: sample(['Revenue - Annual Subscription', 'Revenue - Professional Services', 'Revenue - Interest']),
+      value: sample([10, 20, 30]),
+    }
+  })
+
 export const groupColors = { A: '#5E96F5', B: '#AA70D8', C: '#31A96D' }
 
 export const defaultProps = () => ({
@@ -98,12 +110,24 @@ Add rounded corners to your tiles with the `tileBorderRadius` property:
 
 ## Labels
 
+### Label Content
+Customize the text shown for each tile with `tileLabel`. It receives a `TreemapNode<Datum>` and should return a string. Default is `<key>: <value>`.
+
+<DocWrapper
+  {...defaultProps()}
+  value={(d) => d.value}
+  tileLabel={(d) => `${d.data.key} (${Math.round(d.value)})`}
+  showContext='full'
+/>
+
 ### Internal Node Labels
-By default, only leaf nodes (tiles with no children) are labeled. Set `labelInternalNodes` to `true` to show labels for parent nodes as well:
+By default, only leaf nodes (tiles with no children) are labeled. 
+Set `labelInternalNodes` to `true` and provide a `tilePaddingTop` value to show labels for parent nodes as well:
 
 <DocWrapper
   {...defaultProps()}
   labelInternalNodes={true}
+  tilePaddingTop={18}
 />
 
 ### Label Positioning
@@ -115,12 +139,36 @@ Adjust the position of labels using the `labelOffsetX` and `labelOffsetY` proper
   labelOffsetY={8}
 />
 
-### Dynamic Label Size
-Enable font size variation based on tile size with `enableTileLabelFontSizeVariation`:
+### Label Fit Mode
+Control how labels fit within tiles using `labelFit`. This is applied to leaf nodes only.
+
+Accepted values: `FitMode.Wrap` or `FitMode.Trim` (you can also pass strings `'wrap'` or `'trim'`). Default is `FitMode.Wrap`.
 
 <DocWrapper
   {...defaultProps()}
-  enableTileLabelFontSizeVariation={true}
+  data={longLabelData}
+  labelFit="wrap"
+  showContext='full'
+/>
+
+### Label Trim Mode
+When `labelFit` is set to trim, choose which part of the label to trim with `labelTrimMode`. Default is `TrimMode.Middle`.
+
+<DocWrapper
+  {...defaultProps()}
+  data={longLabelData}
+  labelFit="trim"
+  labelTrimMode="end"
+  showContext='full'
+/>
+
+### Dynamic Label Size
+Enable or disable font size variation based on tile size with `enableTileLabelFontSizeVariation`, default is `true`:
+
+<DocWrapper
+  {...defaultProps()}
+  enableTileLabelFontSizeVariation={false}
+  tileLabelLargeFontSize={18}
 />
 
 You can customize the font sizes used with:
