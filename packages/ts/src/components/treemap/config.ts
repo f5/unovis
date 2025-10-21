@@ -58,20 +58,20 @@ export interface TreemapConfigInterface<Datum> extends ComponentConfigInterface 
   /** Enable font size variation for leaf node labels based on value. Default: `false` */
   enableTileLabelFontSizeVariation?: boolean;
 
-  /** Small font size for leaf labels (used when enableTileLabelFontSizeVariation is true). Default: `8` */
+  /** Small font size for leaf labels (used when `enableTileLabelFontSizeVariation` is `true`). Default: `8` */
   tileLabelSmallFontSize?: number;
 
-  /** Medium font size for leaf labels (used when enableTileLabelFontSizeVariation is true). Default: `12` */
+  /** Medium font size for leaf labels (used when `enableTileLabelFontSizeVariation` is `true`). Default: `12` */
   tileLabelMediumFontSize?: number;
 
-  /** Large font size for leaf labels (used when enableTileLabelFontSizeVariation is true). Default: `24` */
+  /** Large font size for leaf labels (used when `enableTileLabelFontSizeVariation` is `true`). Default: `24` */
   tileLabelLargeFontSize?: number;
 
 
   /** Flag for showing cursor:pointer to indicate leaf tiles are clickable. Default: `undefined` */
   showTileClickAffordance?: boolean;
 
-  /** Amount of lightness variation applied to sibling tiles when enableLightnessVariance is true. Default: `0.08` */
+  /** Amount of lightness variation applied to sibling tiles when `enableLightnessVariance` is `true`. Default: `0.08` */
   lightnessVariationAmount?: number;
 
   /** Minimum size for labels in pixels. Default: `20` */
