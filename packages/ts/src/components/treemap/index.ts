@@ -3,16 +3,30 @@ import { hierarchy, HierarchyNode, treemap } from 'd3-hierarchy'
 import { group, max, extent } from 'd3-array'
 import { scaleLinear, scaleThreshold } from 'd3-scale'
 import { hsl } from 'd3-color'
+
+// Core
 import { ComponentCore } from 'core/component'
+
+// Data Model
 import { SeriesDataModel } from 'data-models/series'
+
+// Utils
 import { getColor, brighter, getHexValue, isColorDark } from 'utils/color'
 import { getString, getNumber, isNumber } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { trimSVGText, wrapSVGText } from 'utils/text'
-import { TrimMode, FitMode } from 'types/text'
 import { cssvar } from 'utils/style'
+
+// Types
+import { TrimMode, FitMode } from 'types/text'
+
+// Config
 import { TreemapConfigInterface, TreemapDefaultConfig } from './config'
+
+// Local Types
 import { TreemapDatum, TreemapNode } from './types'
+
+// Styles
 import * as s from './style'
 
 export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterface<Datum>> {
@@ -72,7 +86,7 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
 
     // Compute the aggregation
     if (config.value) {
-      rootNode.sum(index => typeof index === 'number' && getNumber(data[index], config.value, index))
+      rootNode.sum(index => isNumber(index) && getNumber(data[index], config.value, index))
     } else {
       rootNode.count()
     }
@@ -252,7 +266,7 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
         const sqrtVal = Math.sqrt(d.value ?? 0)
         return config.enableTileLabelFontSizeVariation && !d.children
           ? fontSizeScale(sqrtVal)
-          : fontSizeScale.range()[1]
+          : null // Use the default css variable value
       })
       .style('font-size', (_, i, els) => `${select(els[i]).property('font-size-px')}px`)
       .style('fill', d => cssvar(
