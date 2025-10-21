@@ -18,7 +18,7 @@ import { trimSVGText, wrapSVGText } from 'utils/text'
 import { cssvar } from 'utils/style'
 
 // Types
-import { TrimMode, FitMode } from 'types/text'
+import { FitMode } from 'types/text'
 
 // Config
 import { TreemapConfigInterface, TreemapDefaultConfig } from './config'
@@ -212,13 +212,11 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       .append('clipPath')
       .attr('id', d => `clip-${d._id}`)
       .append('rect')
-      .attr('width', d => Math.max(0, d.x1 - d.x0 - config.tilePadding))
-      .attr('height', d => Math.max(0, d.y1 - d.y0))
       .attr('rx', rx)
       .attr('ry', rx)
 
     // Tile rectangles
-    tilesEnter
+    const tileRects = tilesEnter
       .append('rect')
       .classed(s.tile, true)
       .classed(s.clickableTile, d => config.showTileClickAffordance && !d.children)
@@ -232,6 +230,8 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       .style('opacity', 0)
       .style('cursor', config.showTileClickAffordance ? d => !d.children ? 'pointer' : null : null)
 
+    tileRects.append('title')
+
     tilesEnter
       .append('g')
       .attr('class', s.labelGroup)
@@ -244,8 +244,8 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       .attr('y', 0)
 
     const mergedTiles = tiles.merge(tilesEnter)
-
-    smartTransition(mergedTiles.select(`rect.${s.tile}`), duration)
+    const tileRectsMerged = mergedTiles.select(`rect.${s.tile}`)
+    smartTransition(tileRectsMerged, duration)
       .style('fill', d => d._fill)
       .style('opacity', 1)
       .attr('x', d => d.x0)
@@ -253,10 +253,13 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       .attr('width', d => d.x1 - d.x0)
       .attr('height', d => d.y1 - d.y0)
 
+    tileRectsMerged.select('title')
+      .text(d => config.tileLabel(d))
+
     // Update clipPath rects
     mergedTiles.select('clipPath rect')
-      .attr('width', d => d.x1 - d.x0 - 2 * config.tilePadding)
-      .attr('height', d => d.y1 - d.y0 - 2 * config.tilePadding)
+      .attr('width', d => d.x1 - d.x0 - 2 * config.labelOffsetX)
+      .attr('height', d => d.y1 - d.y0 - 2 * config.labelOffsetY)
 
     const textSelection = mergedTiles.selectAll<SVGTextElement, TreemapNode<Datum>>(`g.${s.labelGroup} text`)
     textSelection
@@ -275,15 +278,16 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
 
     // Fit label (wrap or trim)
     textSelection.each((d, i, els) => {
+      const isLeafNode = !d.children
       const el = els[i] as SVGTextElement
       const text = select(el)
       const tileWidth = d.x1 - d.x0 - (config.labelOffsetX ?? 0) * 2
       const fontSize = parseFloat(text.property('font-size-px')) || parseFloat(window.getComputedStyle(el).fontSize)
 
-      if (config.labelFit === FitMode.Wrap) {
+      if (config.labelFit === FitMode.Wrap && isLeafNode) {
         wrapSVGText(text, tileWidth)
       } else {
-        trimSVGText(text, tileWidth, TrimMode.End, true, fontSize)
+        trimSVGText(text, tileWidth, config.labelTrimMode, true, fontSize)
       }
     })
 

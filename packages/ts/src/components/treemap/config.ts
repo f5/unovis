@@ -1,6 +1,6 @@
 import { ComponentConfigInterface, ComponentDefaultConfig } from 'core/component/config'
 import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
-import { FitMode } from 'types/text'
+import { FitMode, TrimMode } from 'types/text'
 import { TreemapNode } from './types'
 
 export interface TreemapConfigInterface<Datum> extends ComponentConfigInterface {
@@ -46,6 +46,9 @@ export interface TreemapConfigInterface<Datum> extends ComponentConfigInterface 
   /** How labels should fit within tiles: wrap or trim. Default: `FitMode.Trim` */
   labelFit?: FitMode;
 
+  /** Label trimming mode. Default: `TrimMode.Middle` */
+  labelTrimMode?: TrimMode;
+
   /** Border radius of the tiles in pixels. Default: `2` */
   tileBorderRadius?: number;
 
@@ -90,6 +93,7 @@ export const TreemapDefaultConfig: TreemapConfigInterface<unknown> = {
   labelOffsetX: 4,
   labelOffsetY: 4,
   labelFit: FitMode.Wrap,
+  labelTrimMode: TrimMode.Middle,
   tileBorderRadius: 2,
   tileBorderRadiusFactor: 1 / 8,
   enableLightnessVariance: false,
