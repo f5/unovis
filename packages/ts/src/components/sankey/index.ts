@@ -26,12 +26,12 @@ import { SankeyDefaultConfig, SankeyConfigInterface } from './config'
 import * as s from './style'
 
 // Local Types
-import { SankeyInputLink, SankeyInputNode, SankeyLayout, SankeyLink, SankeyNode, SankeyZoomMode } from './types'
+import { SankeyInputLink, SankeyInputNode, SankeyLayout, SankeyLink, SankeyNode, SankeySubLabelPlacement, SankeyZoomMode } from './types'
 
 // Modules
 import { createLinks, removeLinks, updateLinks } from './modules/link'
 import { createNodes, NODE_SELECTION_RECT_DELTA, onNodeMouseOut, onNodeMouseOver, removeNodes, updateNodes } from './modules/node'
-import { getLabelOrientation, requiredLabelSpace } from './modules/label'
+import { estimateRequiredLabelWidth, getLabelOrientation, SANKEY_LABEL_BLOCK_PADDING, SANKEY_LABEL_SPACING } from './modules/label'
 
 export class Sankey<
   N extends SankeyInputNode,
@@ -47,6 +47,7 @@ export class Sankey<
   public g: Selection<SVGGElement, unknown, null, undefined>
   // eslint-disable-next-line @typescript-eslint/naming-convention
   private _gNode: SVGGElement & { __zoom: ZoomTransform }
+  private _prevWidth: number | undefined = undefined
   private _extendedWidth: number | undefined = undefined
   private _extendedHeight: number | undefined = undefined
   private _extendedHeightIncreased: number | undefined = undefined
@@ -104,44 +105,60 @@ export class Sankey<
 
   get bleed (): Spacing {
     const { config, datamodel: { nodes, links } } = this
-    if (!nodes.length) return { top: 0, bottom: 0, left: 0, right: 0 }
+    let bleed: Spacing = { top: 0, bottom: 0, left: 0, right: 0 }
 
-    const labelFontSize = config.labelFontSize ?? getCSSVariableValueInPixels('var(--vis-sankey-label-font-size)', this.element)
+    if (nodes.length) {
+      const labelFontSize = config.labelFontSize || getCSSVariableValueInPixels('var(--vis-sankey-node-label-font-size)', this.element)
+      const subLabelFontSize = config.subLabelFontSize || getCSSVariableValueInPixels('var(--vis-sankey-node-sublabel-font-size)', this.element)
 
-    // We pre-calculate sankey layout to get information about node labels placement and calculate bleed properly
-    // Potentially it can be a performance bottleneck for large layouts, but generally rendering of such layouts is much more computationally heavy
-    const sankeyProbeSize = 1000
-    this._populateLinkAndNodeValues()
-    this._sankey.size([sankeyProbeSize, sankeyProbeSize])
-    this._sankey({ nodes, links })
-    const layerSpacing = this._getLayerSpacing(nodes)
-    const labelSize = requiredLabelSpace(clamp(layerSpacing, 0, config.labelMaxWidth ?? Infinity), labelFontSize)
-    const maxDepth = max(nodes, d => d.depth)
-    const zeroDepthNodes = nodes.filter(d => d.depth === 0)
-    const maxDepthNodes = nodes.filter(d => d.depth === maxDepth)
+      // We pre-calculate sankey layout to get information about node labels placement and calculate bleed properly
+      // Potentially it can be a performance bottleneck for large layouts, but generally rendering of such layouts is much more computationally heavy
+      const sankeyProbeSize = 1000
+      this._populateLinkAndNodeValues()
+      this._sankey.size([sankeyProbeSize, sankeyProbeSize])
+      this._sankey({ nodes, links })
+      const requiredLabelHeight = labelFontSize * 2.5 + 2 * SANKEY_LABEL_BLOCK_PADDING // Assuming 2.5 lines per label
 
+      const maxLayer = max(nodes, d => d.layer)
+      const zeroLayerNodes = nodes.filter(d => d.layer === 0)
+      const maxLayerNodes = nodes.filter(d => d.layer === maxLayer)
+      const layerSpacing = this._getLayerSpacing(nodes)
 
-    const left = zeroDepthNodes.some(d => getLabelOrientation(d, sankeyProbeSize, config.labelPosition) === Position.Left) ? labelSize.width : 0
-    const right = (maxDepthNodes.some(d => getString(d, config.label)) &&
-        maxDepthNodes.some(d => getLabelOrientation(d, sankeyProbeSize, config.labelPosition) === Position.Right))
-      ? labelSize.width
-      : 0
+      let left = 0
+      const fallbackLabelMaxWidth = Math.min(this._width / 6, layerSpacing)
+      const labelMaxWidth = config.labelMaxWidth || fallbackLabelMaxWidth
+      const labelHorizontalPadding = 2 * SANKEY_LABEL_SPACING + 2 * SANKEY_LABEL_BLOCK_PADDING
+      const hasLabelsOnTheLeft = zeroLayerNodes.some(d => getLabelOrientation(d, sankeyProbeSize, config.labelPosition) === Position.Left)
 
-    const top = config.labelVerticalAlign === VerticalAlign.Top ? 0
-      : config.labelVerticalAlign === VerticalAlign.Bottom ? labelSize.height
-        : labelSize.height / 2
+      if (hasLabelsOnTheLeft) {
+        const maxLeftLabelWidth = max(zeroLayerNodes, d => estimateRequiredLabelWidth(d, config, labelFontSize, subLabelFontSize))
+        left = min([labelMaxWidth, maxLeftLabelWidth]) + labelHorizontalPadding
+      }
 
-    const bottom = config.labelVerticalAlign === VerticalAlign.Top ? labelSize.height
-      : config.labelVerticalAlign === VerticalAlign.Bottom ? 0
-        : labelSize.height / 2
+      let right = 0
+      const hasLabelsOnTheRight = maxLayerNodes.some(d => getLabelOrientation(d, sankeyProbeSize, config.labelPosition) === Position.Right)
+      if (hasLabelsOnTheRight) {
+        const maxRightLabelWidth = max(maxLayerNodes, d => estimateRequiredLabelWidth(d, config, labelFontSize, subLabelFontSize))
+        right = min([labelMaxWidth, maxRightLabelWidth]) + labelHorizontalPadding
+      }
 
-    const nodeSelectionBleed = config.selectedNodeIds ? 1 + NODE_SELECTION_RECT_DELTA : 0
-    const bleed = {
-      top: nodeSelectionBleed + top,
-      bottom: nodeSelectionBleed + bottom,
-      left: nodeSelectionBleed + left,
-      right: nodeSelectionBleed + right,
+      const top = config.labelVerticalAlign === VerticalAlign.Top ? 0
+        : config.labelVerticalAlign === VerticalAlign.Bottom ? requiredLabelHeight
+          : requiredLabelHeight / 3
+
+      const bottom = config.labelVerticalAlign === VerticalAlign.Top ? requiredLabelHeight
+        : config.labelVerticalAlign === VerticalAlign.Bottom ? 0
+          : requiredLabelHeight / 3
+
+      const nodeSelectionRectBleed = config.selectedNodeIds ? 1 + NODE_SELECTION_RECT_DELTA : 0
+      bleed = {
+        top: nodeSelectionRectBleed + top,
+        bottom: nodeSelectionRectBleed + bottom,
+        left: left + (hasLabelsOnTheLeft ? 0 : nodeSelectionRectBleed),
+        right: right + (hasLabelsOnTheRight ? 0 : nodeSelectionRectBleed),
+      }
     }
+
 
     // Cache bleed for onZoom
     this._bleedCached = bleed
@@ -200,7 +217,9 @@ export class Sankey<
 
   _render (customDuration?: number): void {
     const { config, datamodel: { nodes, links } } = this
-    const bleed = this._bleedCached ?? this.bleed
+    const wasResized = this._prevWidth !== this._width
+    this._prevWidth = this._width
+    const bleed = wasResized || !this._bleedCached ? this.bleed : this._bleedCached
     const duration = isNumber(customDuration) ? customDuration : config.duration
 
     if (
@@ -327,7 +346,7 @@ export class Sankey<
     const transform = event.transform
     const sourceEvent = event.sourceEvent as WheelEvent | MouseEvent | TouchEvent | undefined
     const zoomMode = config.zoomMode || SankeyZoomMode.XY
-    const bleed = this._bleedCached
+    const bleed = this._bleedCached ?? this.bleed
 
     // Zoom pivots
     const minX = min(nodes, d => d.x0) ?? 0
@@ -441,7 +460,7 @@ export class Sankey<
 
   private _prepareLayout (): void {
     const { config, datamodel } = this
-    const bleed = this._bleedCached
+    const bleed = this._bleedCached ?? this.bleed
     const isExtendedSize = this.sizing === Sizing.Extend
     const sankeyHeight = this.sizing === Sizing.Fit ? this._height : this._extendedHeight
     const sankeyWidth = this.sizing === Sizing.Fit ? this._width : this._extendedWidth
@@ -665,23 +684,25 @@ export class Sankey<
     const { config } = this
     if (!nodes?.length) return 0
 
-    const firstNode = nodes[0]
-    const nextLayerNode = nodes.find(d => d.layer === firstNode.layer + 1)
-    return nextLayerNode ? nextLayerNode.x0 - (firstNode.x0 + config.nodeWidth) : this._width - firstNode.x1
+    const firstLayerNode = nodes.find(d => d.layer === 0)
+    const nextLayerNode = nodes.find(d => d.layer === firstLayerNode.layer + 1)
+    return nextLayerNode ? nextLayerNode.x0 - (firstLayerNode.x0 + config.nodeWidth) : this._width - firstLayerNode.x1
   }
 
   private _onNodeMouseOver (d: SankeyNode<N, L>, event: MouseEvent): void {
     const { datamodel } = this
+    const bleed = this._bleedCached ?? this.bleed
     const nodeSelection = select<SVGGElement, SankeyNode<N, L>>(event.currentTarget as SVGGElement)
     const sankeyWidth = this.sizing === Sizing.Fit ? this._width : this._extendedWidth
-    onNodeMouseOver(d, datamodel.nodes, nodeSelection, this.config, sankeyWidth, this._getLayerSpacing(this.datamodel.nodes))
+    onNodeMouseOver(d, datamodel.nodes, nodeSelection, this.config, sankeyWidth, this._getLayerSpacing(this.datamodel.nodes), bleed)
   }
 
   private _onNodeMouseOut (d: SankeyNode<N, L>, event: MouseEvent): void {
     const { datamodel } = this
+    const bleed = this._bleedCached ?? this.bleed
     const nodeSelection = select<SVGGElement, SankeyNode<N, L>>(event.currentTarget as SVGGElement)
     const sankeyWidth = this.sizing === Sizing.Fit ? this._width : this._extendedWidth
-    onNodeMouseOut(d, datamodel.nodes, nodeSelection, this.config, sankeyWidth, this._getLayerSpacing(this.datamodel.nodes))
+    onNodeMouseOut(d, datamodel.nodes, nodeSelection, this.config, sankeyWidth, this._getLayerSpacing(this.datamodel.nodes), bleed)
   }
 
   private _onNodeRectMouseOver (d: SankeyNode<N, L>): void {

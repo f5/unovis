@@ -189,6 +189,7 @@ export const nodeExit = css`
 export const nodeSelectionRect = css`
   label: node-selection-rect;
   fill: none;
+  stroke: var(--vis-sankey-node-color);
   stroke-width: var(--vis-sankey-node-selection-stroke-width);
   stroke-opacity: var(--vis-sankey-node-selection-stroke-opacity);
   rx: var(--vis-sankey-node-selection-border-radius);
