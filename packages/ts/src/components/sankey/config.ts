@@ -169,7 +169,7 @@ export const SankeyDefaultConfig: SankeyConfigInterface<SankeyInputNode, SankeyI
   heightNormalizationCoeff: 1 / 16,
   zoomScale: undefined,
   zoomPan: undefined,
-  enableZoom: true,
+  enableZoom: false,
   zoomExtent: [1, 5] as [number, number],
   zoomMode: SankeyZoomMode.Y,
   exitTransitionType: SankeyExitTransitionType.Default,

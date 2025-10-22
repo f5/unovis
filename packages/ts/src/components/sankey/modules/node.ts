@@ -1,4 +1,5 @@
 import { select, Selection } from 'd3-selection'
+import { max } from 'd3-array'
 
 // Utils
 import { getColor } from 'utils/color'
@@ -147,8 +148,9 @@ export function updateNodes<N extends SankeyInputNode, L extends SankeyInputLink
     .style('fill', (d: SankeyNode<N, L>) => getColor(d, config.nodeColor))
 
   // Label Rendering
+  const maxLayer = max(sel.data(), d => d.layer)
   // eslint-disable-next-line @typescript-eslint/no-use-before-define
-  renderNodeLabels(sel, config, width, duration, layerSpacing)
+  renderNodeLabels(sel, config, width, duration, layerSpacing, maxLayer, bleed)
 
   // Node Icon
   const nodeIcon = sel.select(`.${s.nodeIcon}`)
@@ -180,7 +182,8 @@ export function renderNodeLabels<N extends SankeyInputNode, L extends SankeyInpu
   width: number,
   duration: number,
   layerSpacing: number,
-  enforceNodeVisibility?: SankeyNode<N, L>
+  sankeyMaxLayer: number,
+  bleed: Spacing
 ): void {
   // Label Rendering
   const labelGroupSelection: Selection<SVGGElement, SankeyNode<N, L>, SVGGElement, unknown> = sel.select(`.${s.labelGroup}`)
@@ -195,14 +198,14 @@ export function renderNodeLabels<N extends SankeyInputNode, L extends SankeyInpu
       ? getXDistanceToNextNode(gSelection, datum, data, config, width)
       : layerSpacing
 
-    return renderLabel(gSelection, datum, config, width, duration, enforceNodeVisibility === datum, spacing)
+    return renderLabel(gSelection, datum, config, width, duration, spacing, sankeyMaxLayer, bleed)
   })
 
   if (config.labelVisibility) {
     for (const b of labelGroupBBoxes) {
       const datum = b.selection.datum() as SankeyNode<N, L>
       const box = { x: b.x, y: b.y, width: b.width, height: b.height }
-      b.hidden = !config.labelVisibility(datum, box, enforceNodeVisibility === datum)
+      b.hidden = !config.labelVisibility(datum, box, false)
     }
   } else {
     // Detect intersecting labels
@@ -219,7 +222,7 @@ export function renderNodeLabels<N extends SankeyInputNode, L extends SankeyInpu
         const shouldBeHidden = b1.y < (b0.y + b0.height)
         const b1Datum = b1.selection.datum() as SankeyNode<N, L>
         if (shouldBeHidden) {
-          if ((b1Datum === enforceNodeVisibility) || (config.selectedNodeIds?.includes(b1Datum.id))) {
+          if (config.selectedNodeIds?.includes(b1Datum.id)) {
             b0.hidden = true // If the hovered node should be hidden, hide the previous one instead
           } else b1.hidden = true
         }
@@ -261,7 +264,8 @@ export function onNodeMouseOver<N extends SankeyInputNode, L extends SankeyInput
   nodeSelection: Selection<SVGGElement, SankeyNode<N, L>, SVGGElement, unknown>,
   config: SankeyConfigInterface<N, L>,
   width: number,
-  layerSpacing: number
+  layerSpacing: number,
+  bleed: Spacing
 ): void {
   const labelGroup = nodeSelection.raise()
     .select<SVGGElement>(`.${s.labelGroup}`)
@@ -270,8 +274,9 @@ export function onNodeMouseOver<N extends SankeyInputNode, L extends SankeyInput
     ? getXDistanceToNextNode(nodeSelection, d, data, config, width)
     : layerSpacing
 
+  const maxLayer = max(data, d => d.layer)
   if ((config.labelExpandTrimmedOnHover && labelGroup.classed(s.labelTrimmed)) || labelGroup.classed(s.hidden)) {
-    renderLabel(labelGroup, d, config, width, 0, true, spacing)
+    renderLabel(labelGroup, d, config, width, 0, spacing, maxLayer, bleed, true)
   }
   labelGroup.classed(s.forceShow, true)
 }
@@ -282,7 +287,8 @@ export function onNodeMouseOut<N extends SankeyInputNode, L extends SankeyInputL
   nodeSelection: Selection<SVGGElement, SankeyNode<N, L>, SVGGElement, unknown>,
   config: SankeyConfigInterface<N, L>,
   width: number,
-  layerSpacing: number
+  layerSpacing: number,
+  bleed: Spacing
 ): void {
   const labelGroup = nodeSelection.select<SVGGElement>(`.${s.labelGroup}`)
 
@@ -291,7 +297,8 @@ export function onNodeMouseOut<N extends SankeyInputNode, L extends SankeyInputL
     : layerSpacing
 
   if (config.labelExpandTrimmedOnHover || labelGroup.classed(s.hidden)) {
-    renderLabel(labelGroup, d, config, width, 0, false, spacing)
+    const maxLayer = max(data, d => d.layer)
+    renderLabel(labelGroup, d, config, width, 0, spacing, maxLayer, bleed, false)
   }
   labelGroup.classed(s.forceShow, false)
 }
