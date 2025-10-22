@@ -205,7 +205,7 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
     // This ensures that the tile border radius is not
     // larger than the tile size, which makes small tiles
     // look better.
-    const rx = (d: TreemapNode<Datum>): number =>
+    const getTileBorderRadius = (d: TreemapNode<Datum>): number =>
       Math.min(config.tileBorderRadius, (d.x1 - d.x0) * config.tileBorderRadiusFactor)
 
     // Add clipPath elements
@@ -213,16 +213,16 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       .append('clipPath')
       .attr('id', d => `clip-${this.uid}-${d._id}`)
       .append('rect')
-      .attr('rx', rx)
-      .attr('ry', rx)
+      .attr('rx', getTileBorderRadius)
+      .attr('ry', getTileBorderRadius)
 
     // Tile rectangles
     const tileRects = tilesEnter
       .append('rect')
       .classed(s.tile, true)
       .classed(s.clickableTile, d => config.showTileClickAffordance && !d.children)
-      .attr('rx', rx)
-      .attr('ry', rx)
+      .attr('rx', getTileBorderRadius)
+      .attr('ry', getTileBorderRadius)
       .attr('x', d => d.x0)
       .attr('y', d => d.y0)
       .attr('width', d => d.x1 - d.x0)
