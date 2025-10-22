@@ -81,7 +81,8 @@ export class VisTreemapComponent<Datum> implements TreemapConfigInterface<Datum>
   /** Array of accessor functions to defined the nested groups. Default: `[]` */
   @Input() layers: StringAccessor<Datum>[]
 
-  /**  */
+  /** @deprecated Define `tileLabel` instead.
+   * A function that accepts a value number and returns a string. Default: `(value: number) => `${value}`` */
   @Input() numberFormat?: (value: number) => string
 
   /** Function to generate the label text for each tile. Receives the `TreemapNode` and returns a `string`.
