@@ -81,10 +81,19 @@ export function updateLinks<N extends SankeyInputNode, L extends SankeyInputLink
   duration: number
 ): void {
   smartTransition(sel, duration)
-    .style('opacity', (d: SankeyLink<N, L>) => d._state.greyout ? 0.2 : 1)
+    .style('opacity', (d: SankeyLink<N, L>) => {
+      // Hide links if either connected node is collapsed
+      if (d.source._state?.collapsed || d.target._state?.collapsed) return 0
+      // Apply greyout effect
+      return d._state?.greyout ? 0.2 : 1
+    })
 
   const linkSelection = sel.select<SVGPathElement>(`.${s.linkPath}`)
     .style('cursor', (d: SankeyLink<N, L>) => getString(d, config.linkCursor))
+    .style('pointer-events', (d: SankeyLink<N, L>) => {
+      // Disable pointer events for collapsed links to prevent hover interference
+      return (d.source._state?.collapsed || d.target._state?.collapsed) ? 'none' : null
+    })
 
   const selectionTransition = smartTransition(linkSelection, duration)
     .style('fill', (link: SankeyLink<N, L>) => getColor(link, config.linkColor))
@@ -133,6 +142,7 @@ export function updateLinks<N extends SankeyInputNode, L extends SankeyInputLink
       width: Math.max(10, d.width),
     }))
     .style('cursor', d => getString(d, config.linkCursor))
+    .style('pointer-events', (d: SankeyLink<N, L>) => (d.source._state?.collapsed || d.target._state?.collapsed) ? 'none' : null)
 }
 
 export function removeLinks<N extends SankeyInputNode, L extends SankeyInputLink> (
