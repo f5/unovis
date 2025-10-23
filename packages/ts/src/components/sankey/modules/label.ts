@@ -5,6 +5,7 @@ import { estimateStringPixelLength, estimateTextSize, trimSVGText, wrapSVGText }
 import { clamp, getString, getValue } from 'utils/data'
 import { getColor } from 'utils/color'
 import { getCSSVariableValueInPixels } from 'utils/misc'
+import { cssvar } from 'utils/style'
 
 // Types
 import { GenericAccessor } from 'types/accessor'
@@ -23,6 +24,20 @@ import * as s from '../style'
 
 export const SANKEY_LABEL_SPACING = 10
 export const SANKEY_LABEL_BLOCK_PADDING = 6.5
+
+export function getLabelFontSize<N extends SankeyInputNode, L extends SankeyInputLink> (
+  config: SankeyConfigInterface<N, L>,
+  context: SVGElement
+): number {
+  return config.labelFontSize ?? getCSSVariableValueInPixels(cssvar(s.variables.sankeyNodeLabelFontSize), context)
+}
+
+export function getSubLabelFontSize<N extends SankeyInputNode, L extends SankeyInputLink> (
+  config: SankeyConfigInterface<N, L>,
+  context: SVGElement
+): number {
+  return config.subLabelFontSize ?? getCSSVariableValueInPixels(cssvar(s.variables.sankeyNodeSublabelFontSize), context)
+}
 
 export function estimateRequiredLabelWidth<N extends SankeyInputNode, L extends SankeyInputLink> (
   d: SankeyNode<N, L>,
@@ -194,8 +209,8 @@ export function renderLabel<N extends SankeyInputNode, L extends SankeyInputLink
   const sublabelText = getString(d, config.subLabel)
   let wasTrimmed = false
 
-  const labelFontSize = config.labelFontSize ?? getCSSVariableValueInPixels('var(--vis-sankey-node-label-font-size)', labelGroup.node())
-  const subLabelFontSize = config.subLabelFontSize ?? getCSSVariableValueInPixels('var(--vis-sankey-node-sublabel-font-size)', labelGroup.node())
+  const labelFontSize = getLabelFontSize(config, labelGroup.node())
+  const subLabelFontSize = getSubLabelFontSize(config, labelGroup.node())
 
   // Render the main label, wrap / trim it and estimate its size
   const labelsFontSizeDifference = sublabelText ? labelFontSize - subLabelFontSize : 0

@@ -17,7 +17,6 @@ import { VerticalAlign } from 'types/text'
 // Utils
 import { smartTransition } from 'utils/d3'
 import { clamp, getNumber, getString, groupBy, isNumber } from 'utils/data'
-import { getCSSVariableValueInPixels } from 'utils/misc'
 
 // Config
 import { SankeyDefaultConfig, SankeyConfigInterface } from './config'
@@ -26,12 +25,19 @@ import { SankeyDefaultConfig, SankeyConfigInterface } from './config'
 import * as s from './style'
 
 // Local Types
-import { SankeyInputLink, SankeyInputNode, SankeyLayout, SankeyLink, SankeyNode, SankeySubLabelPlacement, SankeyZoomMode } from './types'
+import { SankeyInputLink, SankeyInputNode, SankeyLayout, SankeyLink, SankeyNode, SankeyZoomMode } from './types'
 
 // Modules
 import { createLinks, removeLinks, updateLinks } from './modules/link'
 import { createNodes, NODE_SELECTION_RECT_DELTA, onNodeMouseOut, onNodeMouseOver, removeNodes, updateNodes } from './modules/node'
-import { estimateRequiredLabelWidth, getLabelOrientation, SANKEY_LABEL_BLOCK_PADDING, SANKEY_LABEL_SPACING } from './modules/label'
+import {
+  estimateRequiredLabelWidth,
+  getLabelFontSize,
+  getLabelOrientation,
+  getSubLabelFontSize,
+  SANKEY_LABEL_BLOCK_PADDING,
+  SANKEY_LABEL_SPACING,
+} from './modules/label'
 
 export class Sankey<
   N extends SankeyInputNode,
@@ -108,8 +114,8 @@ export class Sankey<
     let bleed: Spacing = { top: 0, bottom: 0, left: 0, right: 0 }
 
     if (nodes.length) {
-      const labelFontSize = config.labelFontSize || getCSSVariableValueInPixels('var(--vis-sankey-node-label-font-size)', this.element)
-      const subLabelFontSize = config.subLabelFontSize || getCSSVariableValueInPixels('var(--vis-sankey-node-sublabel-font-size)', this.element)
+      const labelFontSize = getLabelFontSize(config, this.element as SVGElement)
+      const subLabelFontSize = getSubLabelFontSize(config, this.element as SVGElement)
 
       // We pre-calculate sankey layout to get information about node labels placement and calculate bleed properly
       // Potentially it can be a performance bottleneck for large layouts, but generally rendering of such layouts is much more computationally heavy

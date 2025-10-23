@@ -5,7 +5,6 @@ import { max } from 'd3-array'
 import { getColor } from 'utils/color'
 import { getString, isNumber } from 'utils/data'
 import { smartTransition } from 'utils/d3'
-import { getCSSVariableValueInPixels } from 'utils/misc'
 
 // Types
 import { Spacing } from 'types/spacing'
@@ -25,7 +24,7 @@ import {
 import { SankeyConfigInterface } from '../config'
 
 // Helpers
-import { renderLabel } from './label'
+import { getLabelFontSize, getSubLabelFontSize, renderLabel } from './label'
 
 // Styles
 import * as s from '../style'
@@ -102,8 +101,8 @@ function getXDistanceToNextNode<N extends SankeyInputNode, L extends SankeyInput
 ): number {
   let yTolerance = config.labelMaxWidthTakeAvailableSpaceTolerance
   if (!isNumber(yTolerance)) {
-    const labelFontSize = config.labelFontSize ?? getCSSVariableValueInPixels('var(--vis-sankey-node-label-font-size)', sel.node())
-    const subLabelFontSize = config.subLabelFontSize ?? getCSSVariableValueInPixels('var(--vis-sankey-node-sublabel-font-size)', sel.node())
+    const labelFontSize = getLabelFontSize(config, sel.node())
+    const subLabelFontSize = getSubLabelFontSize(config, sel.node())
     const hasSecondLineSublabel = getString(datum, config.subLabel) && config.subLabelPlacement !== SankeySubLabelPlacement.Inline
     yTolerance = (labelFontSize + subLabelFontSize) / (hasSecondLineSublabel ? 2 : 4)
   }
