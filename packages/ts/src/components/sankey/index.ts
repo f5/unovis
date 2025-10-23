@@ -688,46 +688,31 @@ export class Sankey<
   }
 
   /**
-   * Collapses a node by hiding only the links directly connected to it.
-   * All other nodes (including children and descendants) remain visible in their original positions.
-   * Only the immediate incoming and outgoing links of the collapsed node are hidden.
+   * Sets the collapse state of a node and triggers re-rendering.
    */
-  collapseNode (node: SankeyNode<N, L>): void {
+  private _setNodeCollapseState (node: SankeyNode<N, L>, collapsed: boolean): void {
     const { config } = this
 
-    // Clear any active highlights before collapsing
+    // Clear any active highlights before changing state
     this.disableHighlight()
 
     node._state = node._state || {}
-    node._state.collapsed = true
-    this._render(config.collapseAnimationDuration)
-  }
-
-  /**
-   * Expands a previously collapsed node by showing its directly connected links.
-   */
-  expandNode (node: SankeyNode<N, L>): void {
-    const { config } = this
-
-    // Clear any active highlights before expanding
-    this.disableHighlight()
-
-    node._state = node._state || {}
-    node._state.collapsed = false
+    node._state.collapsed = collapsed
     this._render(config.collapseAnimationDuration)
   }
 
   /**
    * Toggles the collapse state of a node.
+   * Collapses a node by hiding only the links directly connected to it.
+   * All other nodes (including children and descendants) remain visible in their original positions.
+   * Only the immediate incoming and outgoing links of the collapsed node are hidden.
    *
+   * Expands a previously collapsed node by showing its directly connected links.
    * @param node The node to toggle
    */
   toggleNodeCollapse (node: SankeyNode<N, L>): void {
-    if (node._state?.collapsed) {
-      this.expandNode(node)
-    } else {
-      this.collapseNode(node)
-    }
+    const isCurrentlyCollapsed = node._state?.collapsed ?? false
+    this._setNodeCollapseState(node, !isCurrentlyCollapsed)
   }
 
   private _hasLinks (): boolean {
