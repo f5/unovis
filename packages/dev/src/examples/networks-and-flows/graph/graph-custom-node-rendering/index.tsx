@@ -9,7 +9,7 @@ import type { CustomGraphLink, CustomGraphNode } from './types'
 import * as s from './styles'
 
 export const title = 'Graph: Custom Nodes'
-export const subTitle = 'And Fit View methods'
+export const subTitle = 'Add Fit View methods'
 
 export const component = (): React.ReactNode => {
   const [showLinkFlow, setShowLinkFlow] = useState(true)
