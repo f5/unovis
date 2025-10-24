@@ -9,7 +9,7 @@ import type { CustomGraphLink, CustomGraphNode } from './types'
 import * as s from './styles'
 
 export const title = 'Graph: Custom Nodes'
-export const subTitle = 'User provided rendering functions'
+export const subTitle = 'And Fit View methods'
 
 export const component = (): React.ReactNode => {
   const [showLinkFlow, setShowLinkFlow] = useState(true)
@@ -54,6 +54,10 @@ export const component = (): React.ReactNode => {
     graphRef.current?.component?.fitView(undefined, nodeIds)
   }, [])
 
+  const fitToBounds = useCallback(() => {
+    graphRef.current?.component?.fitViewToBounds([0, 120])
+  }, [])
+
   return (
     <>
       <CustomGraph
@@ -93,6 +97,7 @@ export const component = (): React.ReactNode => {
         </select>
         <button className={s.graphButton} onClick={() => fitView(['0', '1', '2', '3'])}>Zoom To Identity and Network Nodes</button>
         <button className={s.graphButton} onClick={() => fitView()}>Fit Graph</button>
+        <button className={s.graphButton} onClick={fitToBounds}>Focus Within X Bounds [0, 100]</button>
       </div>
     </>
   )
