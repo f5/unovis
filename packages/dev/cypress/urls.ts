@@ -55,6 +55,11 @@ export const urls = [
     duration: 0,
   },
   {
+    title: 'Tooltip: Empty Content',
+    url: '/examples/Tooltip/Tooltip:%20Empty%20Content',
+    duration: 0,
+  },
+  {
     title: 'Color Map',
     url: '/examples/Leaflet/Color%20Map',
     duration: 1000,
@@ -175,8 +180,8 @@ export const urls = [
     duration: 0,
   },
   {
-    title: 'Graph: Custom Node Fills',
-    url: '/examples/Graph/Graph:%20Custom%20Node%20Fills',
+    title: 'Graph: Custom Node Fills with Tooltip',
+    url: '/examples/Graph/Graph:%20Custom%20Node%20Fills%20with%20Tooltip',
     duration: 1000,
   },
   {
