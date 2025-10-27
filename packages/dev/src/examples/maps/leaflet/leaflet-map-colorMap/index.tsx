@@ -1,6 +1,6 @@
 import React, { useRef, useCallback, useState, useEffect } from 'react'
 import { VisLeafletMap, VisLeafletMapRef } from '@unovis/react'
-import { LeafletMap, LeafletMapClusterDatum, LeafletMapPoint, LeafletMapPointStyles } from '@unovis/ts'
+import { LeafletMap, LeafletMapClusterDatum, LeafletMapPoint, LeafletMapPointStyles, Tooltip } from '@unovis/ts'
 import { ExampleViewerDurationProps } from '@src/components/ExampleViewer/index'
 
 
@@ -20,6 +20,17 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
   const [colorMap, setColorMap] = useState<LeafletMapPointStyles<MapPointDataRecord>>({
     normal: { color: '#4c7afc' },
     blocked: { color: '#f8442d' },
+  })
+
+  const tooltip = new Tooltip({
+    triggers: {
+      [LeafletMap.selectors.point]: (d: LeafletMapPoint<MapPointDataRecord>) => {
+        return !d.isCluster && !d.clusterPoints ? d.properties?.description : null
+      },
+    },
+    attributes: {
+      visLeafletMapTooltipE2eTestId: 'leaflet-map-tooltip',
+    },
   })
 
   const pointId = (d: MapPointDataRecord): string => d.name
@@ -65,6 +76,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
       clusterBottomLabel={useCallback(clusterBottomLabel, [])}
       clusteringDistance={85}
       clusterExpandOnClick={true}
+      tooltip={tooltip}
       duration={props.duration}
       flyToDuration={props.duration}
       zoomDuration={props.duration}
@@ -76,6 +88,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
       attributes={{
         [LeafletMap.selectors.point]: {
           cluster: (p: LeafletMapPoint<MapPointDataRecord>) => p.isCluster,
+          visLeafletPointE2eTestId: (p: LeafletMapPoint<MapPointDataRecord>) => `leaflet-point-${p.properties?.name}`,
         },
       }}
     />

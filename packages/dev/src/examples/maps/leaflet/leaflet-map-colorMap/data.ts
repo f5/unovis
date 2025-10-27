@@ -4,17 +4,18 @@ export type MapPointDataRecord = {
   name: string;
   longitude: number;
   latitude: number;
-  normal: number;
-  blocked: number;
+  normal: number | null | undefined;
+  blocked: number | null | undefined;
+  description?: string | null;
 }
 
 export const points: MapPointDataRecord[] = [
-  { latitude: 52.35598, longitude: 4.95035, name: 'ams9', normal: 948, blocked: 4 },
-  { latitude: 33.64989, longitude: 130.12389, name: 'ap-0', normal: 980, blocked: 5 },
+  { latitude: 52.35598, longitude: 4.95035, name: 'ams9', normal: 948, blocked: 4, description: 'Active server' },
   { latitude: 35.66822, longitude: 139.67082, name: 'ap-1', normal: 105, blocked: 0 },
-  { latitude: 34.67764, longitude: 135.45105, name: 'ap-2', normal: 783, blocked: 7 },
-  { latitude: 22.16182, longitude: 113.53505, name: 'ap-3', normal: 361, blocked: 82 },
-  { latitude: 37.56508, longitude: 126.91934, name: 'ap-4', normal: 446, blocked: 5 },
+  { latitude: 33.64989, longitude: 121.12389, name: 'ap-0', normal: 980, blocked: 5, description: '' },
+  { latitude: 34.67764, longitude: 110.45105, name: 'ap-2', normal: null, blocked: 7, description: 'Maintenance mode' },
+  { latitude: 22.16182, longitude: 113.53505, name: 'ap-3', normal: 361, blocked: undefined, description: undefined },
+  { latitude: 37.56508, longitude: 126.91934, name: 'ap-4', normal: 446, blocked: 5, description: null },
   { latitude: 38.31359, longitude: 140.69612, name: 'ap-5', normal: 220, blocked: 6 },
   { latitude: 51.50986, longitude: -0.118092, name: 'astral-azure', normal: 878, blocked: 4 },
   { latitude: 1.35208, longitude: 103.81984, name: 'astral-gcp', normal: 716, blocked: 1 },
@@ -48,7 +49,7 @@ export const points: MapPointDataRecord[] = [
   { latitude: 47.61698, longitude: -122.33839, name: 'usa-9', normal: 513, blocked: 2 },
 ]
 
-export const totalEvents = points.reduce((sum, d) => sum + d.normal, 0) / points.length
+export const totalEvents = points.reduce((sum, d) => sum + (d.normal || 0), 0) / points.length
 
 export const generateStyle = (
   backgroundColor: string,
