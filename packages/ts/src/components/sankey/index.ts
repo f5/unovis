@@ -291,13 +291,35 @@ export class Sankey<
     })
   }
 
+  private _getConstrainedPan (currentPan: [number, number], zoomScaleChange: [number, number] = [1, 1]): [number, number] {
+    const bleed = this._bleedCached ?? this.bleed
+    const nodes = this.datamodel.nodes
+
+    // We use zoomScaleChange to adjust the max values of the viewport
+    // because the values are scaled (mutated) during the render
+    // but here they are not mutated yet
+    const minX = zoomScaleChange[0] * (min(nodes, d => d.x0) ?? 0)
+    const minY = zoomScaleChange[1] * (min(nodes, d => d.y0) ?? 0)
+    const maxX = zoomScaleChange[0] * (max(nodes, d => d.x1) ?? 0)
+    const maxY = zoomScaleChange[1] * (max(nodes, d => d.y1) ?? 0)
+
+    const viewportWidth = this.getWidth() - bleed.left - bleed.right
+    const viewportHeight = this.getHeight() - bleed.top - bleed.bottom
+
+    const constrainedX = clamp(currentPan[0], viewportWidth - maxX, minX)
+    const constrainedY = clamp(currentPan[1], viewportHeight - maxY, minY)
+
+    return [constrainedX, constrainedY]
+  }
+
   public setZoomScale (horizontalScale?: number, verticalScale?: number, duration: number = this.config.duration): void {
     // If zoomScale is controlled by config, do nothing
     if (this.config.zoomScale !== undefined) return
+    const zoomScaleChange: [number, number] = [horizontalScale / this._zoomScale[0], verticalScale / this._zoomScale[1]]
 
-    const [min, max] = this.config.zoomExtent
-    if (isNumber(horizontalScale)) this._zoomScale[0] = Math.min(max, Math.max(min, horizontalScale))
-    if (isNumber(verticalScale)) this._zoomScale[1] = Math.min(max, Math.max(min, verticalScale))
+    const [extMin, extMax] = this.config.zoomExtent
+    if (isNumber(horizontalScale)) this._zoomScale[0] = Math.min(extMax, Math.max(extMin, horizontalScale))
+    if (isNumber(verticalScale)) this._zoomScale[1] = Math.min(extMax, Math.max(extMin, verticalScale))
 
     // Sync D3's zoom transform to match our scale
     // Use the geometric mean as a reasonable approximation for D3's single scale
@@ -307,6 +329,13 @@ export class Sankey<
     const currentTransform = zoomIdentity.scale(effectiveScale)
     this._gNode.__zoom = currentTransform
     this._prevZoomTransform.k = effectiveScale
+
+    // Constrain pan
+    this._pan = this._getConstrainedPan(this._pan, zoomScaleChange)
+
+    // Reset transform values to avoid jumping when panning
+    this._prevZoomTransform.x = 0
+    this._prevZoomTransform.y = 0
 
     this._render(duration)
   }
@@ -318,10 +347,14 @@ export class Sankey<
     return [this._zoomScale[0] || 1, this._zoomScale[1] || 1]
   }
 
-  public setPan (x: number, y: number, duration = this.config.duration): void {
-    this._pan = [x ?? 0, y ?? 0]
+  public setPan (x: number, y: number, duration = this.config.duration, shouldConstraint = false): void {
+    const pan = [x ?? 0, y ?? 0] as [number, number]
+    this._pan = shouldConstraint ? this._getConstrainedPan(pan) : pan
+
+    // Reset transform values to avoid jumping when panning
     this._prevZoomTransform.x = 0
     this._prevZoomTransform.y = 0
+
     this._scheduleRender(duration)
   }
 
@@ -401,15 +434,8 @@ export class Sankey<
       if (zoomMode !== SankeyZoomMode.X) this._pan[1] += dy
     }
 
-    // Horizontal Pan Constraint
-    const maxX = max(nodes, d => d.x1) ?? 0
-    const viewportWidth = this.getWidth() - bleed.left - bleed.right
-    this._pan[0] = clamp(this._pan[0], viewportWidth - maxX, minX)
-
-    // Vertical Pan Constraint
-    const maxY = max(nodes, d => d.y1) ?? 0
-    const viewportHeight = this.getHeight() - bleed.top - bleed.bottom
-    this._pan[1] = clamp(this._pan[1], viewportHeight - maxY, minY)
+    // Pan constraints
+    this._pan = this._getConstrainedPan(this._pan)
 
     // Update last zoom state
     this._prevZoomTransform.k = transform.k
