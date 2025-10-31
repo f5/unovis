@@ -29,7 +29,7 @@ export interface CrosshairConfigInterface<Datum> extends WithOptional<XYComponen
   /** Tooltip template accessor. The function is supposed to return either a valid HTML string or an HTMLElement.
    * When `snapToData` is `false`, `datum` will be `undefined` but `data` and `leftNearestDatumIndex` will be provided.
    * Default: `d => ''` */
-  template?: (datum: Datum, x: number | Date, data?: Datum[], leftNearestDatumIndex?: number) => string | HTMLElement;
+  template?: (datum: Datum, x: number | Date, data: Datum[], leftNearestDatumIndex?: number) => string | HTMLElement;
   /** Hide Crosshair when the corresponding datum element is far from mouse pointer. Default: `true` */
   hideWhenFarFromPointer?: boolean;
   /** Distance in pixels to check in the hideWhenFarFromPointer condition. Default: `100` */
@@ -70,7 +70,7 @@ export const CrosshairDefaultConfig: CrosshairConfigInterface<unknown> = {
   baseline: null,
   duration: 100,
   tooltip: undefined,
-  template: <Datum>(d: Datum, x: number | Date, data?: Datum[], leftNearestDatumIndex?: number): string => '',
+  template: <Datum>(d: Datum, x: number | Date, data: Datum[], leftNearestDatumIndex?: number): string => '',
   hideWhenFarFromPointer: true,
   hideWhenFarFromPointerDistance: 100,
   snapToData: true,

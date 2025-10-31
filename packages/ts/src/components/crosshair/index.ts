@@ -257,7 +257,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
     this.hide(event)
   }
 
-  _showTooltip (datum: Datum, xValue: number, pos: [number, number], nearestDatumIndex: number | undefined): void {
+  _showTooltip (datum: Datum | undefined, xValue: number, pos: [number, number], nearestDatumIndex: number | undefined): void {
     const { config, datamodel } = this
     const tooltip = config.tooltip ?? this.tooltip
     if (!tooltip || !pos) return
