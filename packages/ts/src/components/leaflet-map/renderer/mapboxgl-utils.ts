@@ -43,5 +43,4 @@ export function mapboxglWheelEvent (
   map.setZoomAround(xy, zoom + 1, { animate: false })
 }
 
-export const mapboxglWheelEventThrottled = throttle(mapboxglWheelEvent, 32)
 export const constraintMapViewThrottled = throttle(constraintMapView, 1000)
