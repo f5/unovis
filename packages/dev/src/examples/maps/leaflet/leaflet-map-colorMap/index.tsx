@@ -33,6 +33,10 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
     },
   })
 
+  const onZoomIn = (): void => { mapRef.current?.component?.zoomIn(1) }
+  const onZoomOut = (): void => { mapRef.current?.component?.zoomOut(1) }
+  const onFit = (): void => { mapRef.current?.component?.fitView() }
+
   const pointId = (d: MapPointDataRecord): string => d.name
   const pointLatitude = (d: MapPointDataRecord): number => d.latitude
   const pointLongitude = (d: MapPointDataRecord): number => d.longitude
@@ -92,5 +96,10 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
         },
       }}
     />
+    <div style={{ position: 'absolute', top: 32, right: 12, display: 'flex', flexDirection: 'column', gap: 8 }}>
+      <button onClick={onZoomIn}>Zoom In</button>
+      <button onClick={onZoomOut}>Zoom Out</button>
+      <button onClick={onFit}>Fit View</button>
+    </div>
   </>)
 }
