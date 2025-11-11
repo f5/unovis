@@ -292,7 +292,7 @@ export function updateLinks<N extends GraphInputNode, L extends GraphInputLink> 
           .attr('y', -linkLabelDatum._fontSizePx / 2)
           .attr('width', linkLabelDatum._fontSizePx)
           .attr('height', linkLabelDatum._fontSizePx)
-          .style('fill', linkLabelColor)
+          .style('color', linkLabelColor)
       } else {
         linkLabelContent
           .text(linkLabelText)
