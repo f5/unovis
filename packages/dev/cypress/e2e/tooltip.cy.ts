@@ -1,3 +1,5 @@
+const scopeSelector = '.exampleViewer'
+
 describe('Tooltip Tests', () => {
   describe('Tooltip Component', () => {
     before(() => {
@@ -14,7 +16,7 @@ describe('Tooltip Tests', () => {
       cy.get("[visTooltipE2eTestId='scatter-tooltip']")
         .should('be.visible')
         .and('contain.text', 'Normal tooltip')
-      cy.percySnapshot('Normal Tooltip')
+      cy.percySnapshot('Normal Tooltip', { scope: scopeSelector })
       cy.get(selector).first().trigger('mouseout')
     })
 
@@ -24,7 +26,7 @@ describe('Tooltip Tests', () => {
       cy.get("[visTooltipE2eTestId='scatter-tooltip']")
         .should('be.visible')
         .and('not.contain.text', 'Normal tooltip')
-      cy.percySnapshot('Tooltip Empty Content - Empty String')
+      cy.percySnapshot('Tooltip Empty Content - Empty String', { scope: scopeSelector })
       cy.get(selector).first().trigger('mouseout')
     })
 
@@ -32,7 +34,7 @@ describe('Tooltip Tests', () => {
       const selector = "[visScatterPointE2eTestId='scatter-point-category-2']"
       cy.checkTooltip(selector)
       cy.get("[visTooltipE2eTestId='scatter-tooltip']").should('not.be.visible')
-      cy.percySnapshot('Tooltip Empty Content - Null No Tooltip')
+      cy.percySnapshot('Tooltip Empty Content - Null No Tooltip', { scope: scopeSelector })
       cy.get(selector).first().trigger('mouseout')
     })
 
@@ -42,7 +44,7 @@ describe('Tooltip Tests', () => {
       cy.get("[visTooltipE2eTestId='scatter-tooltip']")
         .should('be.visible')
         .and('not.contain.text', 'Normal tooltip')
-      cy.percySnapshot('Tooltip Empty Content - Undefined')
+      cy.percySnapshot('Tooltip Empty Content - Undefined', { scope: scopeSelector })
       cy.get(selector).first().trigger('mouseout')
     })
 
@@ -92,7 +94,7 @@ describe('Tooltip Tests', () => {
       cy.get("[visGraphNodeTooltipE2eTestId='graph-node-tooltip']")
         .should('be.visible')
         .and('contain.text', 'This is a string color')
-      cy.percySnapshot('Graph Tooltip - Normal Tooltip Visible')
+      cy.percySnapshot('Graph Tooltip - Normal Tooltip Visible', { scope: scopeSelector })
       cy.get("[visGraphNodeE2eTestId='node-String']")
         .first()
         .trigger('mouseout')
@@ -115,7 +117,7 @@ describe('Tooltip Tests', () => {
       cy.get("[visGraphNodeTooltipE2eTestId='graph-node-tooltip']")
         .should('be.visible')
         .and('contain.text', '')
-      cy.percySnapshot('Graph Tooltip - Empty String Empty Tooltip')
+      cy.percySnapshot('Graph Tooltip - Empty String Empty Tooltip', { scope: scopeSelector })
       cy.get("[visGraphNodeE2eTestId='node-Short hex']")
         .first()
         .trigger('mouseout')
@@ -126,7 +128,7 @@ describe('Tooltip Tests', () => {
       cy.get("[visGraphNodeTooltipE2eTestId='graph-node-tooltip']").should(
         'not.be.visible'
       )
-      cy.percySnapshot('Graph Tooltip - Null No Tooltip')
+      cy.percySnapshot('Graph Tooltip - Null No Tooltip', { scope: scopeSelector })
       cy.get("[visGraphNodeE2eTestId='node-RGB']").first().trigger('mouseout')
     })
 
@@ -135,7 +137,7 @@ describe('Tooltip Tests', () => {
       cy.get("[visGraphNodeTooltipE2eTestId='graph-node-tooltip']")
         .should('be.visible')
         .and('contain.text', '')
-      cy.percySnapshot('Graph Tooltip - Undefined Empty Tooltip')
+      cy.percySnapshot('Graph Tooltip - Undefined Empty Tooltip', { scope: scopeSelector })
       cy.get("[visGraphNodeE2eTestId='node-None']").first().trigger('mouseout')
     })
 
@@ -203,6 +205,7 @@ describe('Tooltip Tests', () => {
           .and('contain.text', '')
         cy.percySnapshot('Leaflet Map Tooltip - Empty String', {
           widths: [1800],
+          scope: scopeSelector,
         })
       })
 
@@ -214,6 +217,7 @@ describe('Tooltip Tests', () => {
           .and('contain.text', 'Maintenance mode')
         cy.percySnapshot('Leaflet Map Tooltip - Maintenance Mode', {
           widths: [1800],
+          scope: scopeSelector,
         })
       })
 
@@ -225,6 +229,7 @@ describe('Tooltip Tests', () => {
           .and('contain.text', '')
         cy.percySnapshot('Leaflet Map Tooltip - Undefined Empty Tooltip', {
           widths: [1800],
+          scope: scopeSelector,
         })
       })
 
@@ -236,6 +241,7 @@ describe('Tooltip Tests', () => {
         )
         cy.percySnapshot('Leaflet Map Tooltip - Null No Tooltip', {
           widths: [1800],
+          scope: scopeSelector,
         })
       })
 
@@ -270,7 +276,7 @@ describe('Tooltip Tests', () => {
 
         cy.percySnapshot(
           'Leaflet Map Tooltip - Sequence Empty Maintenance Empty',
-          { widths: [1800] }
+          { widths: [1800], scope: scopeSelector }
         )
       })
     }
