@@ -64,3 +64,8 @@ Thumbs.db
 
 # Cypress
 packages/*/cypress/screenshots/
+
+# Playwright
+packages/dev/playwright/**/*.png
+packages/dev/test-results/*
+packages/dev/playwright-report/*
