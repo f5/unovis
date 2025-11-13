@@ -6,7 +6,7 @@ import typescript from 'rollup-plugin-typescript2'
 import serve from 'rollup-plugin-serve'
 import livereload from 'rollup-plugin-livereload'
 import copy from 'rollup-plugin-copy'
-import commonjs from 'rollup-plugin-commonjs'
+import commonjs from '@rollup/plugin-commonjs'
 
 export default {
   input: ['src-demo/svelte-gallery.ts'],
