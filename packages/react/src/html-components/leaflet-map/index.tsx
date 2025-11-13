@@ -5,6 +5,9 @@ import { LeafletMap, LeafletMapConfigInterface, GenericDataRecord } from '@unovi
 // Utils
 import { arePropsEqual } from 'src/utils/react'
 
+// Types
+import { VisComponentElement } from 'src/types/dom'
+
 export type VisLeafletMapRef<Datum extends GenericDataRecord> = {
   component?: LeafletMap<Datum>;
 }
@@ -19,24 +22,31 @@ export const VisLeafletMapSelectors = LeafletMap.selectors
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 function VisLeafletMapFC<Datum extends GenericDataRecord> (props: VisLeafletMapProps<Datum>, fRef: ForwardedRef<VisLeafletMapRef<Datum>>): ReactElement {
-  const ref = useRef<HTMLDivElement>(null)
-  const [component, setComponent] = useState<LeafletMap<Datum>>()
+  const ref = useRef<VisComponentElement<LeafletMap<Datum>, HTMLDivElement>>(null)
+  const componentRef = useRef<LeafletMap<Datum> | undefined>(undefined)
 
   // On Mount
   useEffect(() => {
-    const c = new LeafletMap<Datum>(ref.current as HTMLDivElement, props, props.data)
-    setComponent(c)
+    const element = (ref.current as VisComponentElement<LeafletMap<Datum>, HTMLDivElement>)
 
-    return () => c?.destroy()
+    const c = new LeafletMap<Datum>(ref.current as VisComponentElement<LeafletMap<Datum>, HTMLDivElement>, props, props.data)
+    componentRef.current = c
+    element.__component__ = c
+
+    return () => {
+      componentRef.current = undefined
+      c.destroy()
+    }
   }, [])
 
   // On Props Update
   useEffect(() => {
+    const component = componentRef.current
     if (props.data) component?.setData(props.data)
     component?.setConfig(props)
   })
 
-  useImperativeHandle(fRef, () => ({ get component () { return component } }), [])
+  useImperativeHandle(fRef, () => ({ get component () { return componentRef.current } }), [])
   return <div className={props.className} ref={ref} />
 }
 
