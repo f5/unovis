@@ -31,16 +31,16 @@ three                              perpetual       MIT           0.135.0        
 throttle-debounce                  perpetual       MIT           5.0.0              Ivan Nikolić <niksy5@gmail.com> (http://ivannikolic.com)
 to-px                              perpetual       MIT           1.1.0              Mikola Lysenko
 topojson-client                    perpetual       ISC           3.1.0              Mike Bostock https://bost.ocks.org/mike
-tslib                              perpetual       0BSD          2.4.1              Microsoft Corp.
-@rollup/plugin-json                perpetual       MIT           4.1.0              rollup
+tslib                              perpetual       0BSD          2.8.1              Microsoft Corp.
+@rollup/plugin-json                perpetual       MIT           6.1.0              rollup
+@rollup/plugin-node-resolve        perpetual       MIT           15.3.1             Rich Harris <richard.a.harris@gmail.com>
+@rollup/plugin-commonjs            perpetual       MIT           25.0.8             Rich Harris <richard.a.harris@gmail.com>
+@rollup/plugin-terser              perpetual       MIT           0.4.4              Peter Placzek <peter.placzek1996@gmail.com>
 @types/to-px                       perpetual       MIT           1.1.2              n/a
 @zerollup/ts-transform-paths       perpetual       MIT           1.7.18             Stefan Zerkalica zerkalica@gmail.com
 rimraf                             perpetual       ISC           3.0.2              Isaac Z. Schlueter <i@izs.me> (http://blog.izs.me/)
-rollup                             perpetual       MIT           2.79.2             Rich Harris
-rollup-plugin-commonjs             perpetual       MIT           10.1.0             Rich Harris
-rollup-plugin-node-resolve         perpetual       MIT           5.2.0              Rich Harris <richard.a.harris@gmail.com>
+rollup                             perpetual       MIT           4.53.2             Rich Harris
 rollup-plugin-postcss              perpetual       MIT           4.0.2              EGOIST <0x142857@gmail.com>
 rollup-plugin-rename-node-modules  perpetual       MIT           1.3.1              Lazyuki
-rollup-plugin-terser               perpetual       MIT           7.0.2              Bogdan Chadkin <trysound@yandex.ru>
-rollup-plugin-typescript2          perpetual       MIT           0.31.2             @ezolenko
-rollup-plugin-visualizer           perpetual       MIT           4.2.2              Denis Bardadym <bardadymchik@gmail.com>
+rollup-plugin-typescript2          perpetual       MIT           0.36.0             @ezolenko
+rollup-plugin-visualizer           perpetual       MIT           5.14.0             Denis Bardadym <bardadymchik@gmail.com>
