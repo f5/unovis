@@ -1,12 +1,12 @@
 import json from '@rollup/plugin-json'
 import typescript from 'rollup-plugin-typescript2'
 import transformPaths from '@zerollup/ts-transform-paths'
-import resolve from 'rollup-plugin-node-resolve'
-import commonjs from 'rollup-plugin-commonjs'
+import resolve from '@rollup/plugin-node-resolve'
+import commonjs from '@rollup/plugin-commonjs'
 import postcss from 'rollup-plugin-postcss'
 import renameNodeModules from 'rollup-plugin-rename-node-modules'
-// import visualizer from 'rollup-plugin-visualizer'
-import pkg from './package.json'
+import pkg from './package.json' assert { type: 'json' }
+import ts from 'typescript'
 
 const d3Libs = ['d3-array', 'd3-axis', 'd3-brush', 'd3-chord', 'd3-collection', 'd3-color',
   'd3-contour', 'd3-dispatch', 'd3-drag', 'd3-dsv', 'd3-ease', 'd3-fetch', 'd3-force',
@@ -37,11 +37,10 @@ const plugins = [
   }),
   json(),
   typescript({
-    typescript: require('typescript'),
+    typescript: ts,
     transformers: [(service) => transformPaths(service.getProgram())],
   }),
   renameNodeModules(),
-  // visualizer({ sourcemap: true, template: 'network' }),
 ]
 
 export default [
