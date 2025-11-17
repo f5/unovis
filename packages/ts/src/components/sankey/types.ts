@@ -93,3 +93,10 @@ export enum SankeyEnterTransitionType {
   Default = 'default',
   FromAncestor = 'from ancestor',
 }
+
+export enum SankeyZoomMode {
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  XY = 'xy',
+  X = 'x',
+  Y = 'y',
+}
