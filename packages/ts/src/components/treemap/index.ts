@@ -292,12 +292,9 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       }
     })
 
-    // Transition group position
+    // Transition group position and text opacity (fade-in)
     smartTransition(mergedTiles.select(`g.${s.labelGroup}`), duration)
       .attr('transform', d => `translate(${d.x0 + config.labelOffsetX},${d.y0 + config.labelOffsetY})`)
-
-    // Transition text opacity only (fade-in)
-    smartTransition(mergedTiles.select(`g.${s.labelGroup}`), duration)
       .style('opacity', 1)
 
     // Hide labels that don't meet criteria
