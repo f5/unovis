@@ -32,7 +32,7 @@ export class StackedBar<Datum> extends XYComponentCore<Datum, StackedBarConfigIn
   getAccessors = (): NumericAccessor<Datum>[] => (isArray(this.config.y) ? this.config.y : [this.config.y])
   stacked = true
   events = {}
-  private _prevNegative: boolean[] | undefined // To help guessing the bar direction when an accessor was set to null or 0
+  private _prevNegative: boolean[] | undefined
   private _barData: Datum[] = []
 
   constructor (config?: StackedBarConfigInterface<Datum>) {
@@ -124,18 +124,38 @@ export class StackedBar<Datum> extends XYComponentCore<Datum, StackedBarConfigIn
       )
 
     // Render Bars
+    const stackExtents = this._barData.map((_, j) => {
+      const values = stacked.map(s => s[j]) // Get all [y0, y1] pairs for stack j
+      const positiveY1 = values.filter(v => v[1] >= v[0]).map(v => v[1])
+      const negativeY1 = values.filter(v => v[1] < v[0]).map(v => v[1])
+      return {
+        maxPositive: positiveY1.length ? max(positiveY1) : undefined,
+        minNegative: negativeY1.length ? min(negativeY1) : undefined,
+      }
+    })
+
     const bars = barGroupsMerged
       .selectAll<SVGPathElement, StackedBarDataRecord<Datum>>(`.${s.bar}`)
-      .data((d, j) => stacked.map((s, stackIndex) =>
-        ({
-          ...d,
-          _index: j,
-          _stacked: s[j],
-          // Ending bar if the next stack is not the same as the current one
-          _ending: (stackIndex === stacked.length - 1) ||
-            ((stackIndex <= stacked.length - 1) && stacked[stackIndex + 1][j][0] !== s[j][1]),
-        }))
-      )
+      .data((d, j) => {
+        const { maxPositive, minNegative } = stackExtents[j]
+        return stacked.map((s) => {
+          const y0 = s[j][0]
+          const y1 = s[j][1]
+          const isSegmentPositive = y1 >= y0
+
+          // A bar is "ending" if it's the outermost in its respective direction (positive or negative)
+          const isEnding = isSegmentPositive
+            ? y1 === maxPositive
+            : y1 === minNegative
+
+          return {
+            ...d,
+            _index: j,
+            _stacked: s[j],
+            _ending: isEnding,
+          }
+        })
+      })
 
     const barsEnter = bars.enter().append('path')
       .attr('class', s.bar)
@@ -220,33 +240,51 @@ export class StackedBar<Datum> extends XYComponentCore<Datum, StackedBarConfigIn
     const x = -barWidth / 2
     const width = barWidth
 
+    // --- Spacing between stacked items ---
+    const stackSpacing = config.stackSpacing || 0
+    let hWithSpacing = h
+    let yWithSpacing = y
+    // For negative bars, shift y position by stackSpacing so the base remains at the correct value
+    if (!isEntering && stackSpacing > 0) {
+      hWithSpacing = h - stackSpacing
+      if (hWithSpacing <= 0 && isFinite(value) && (value !== config.barMinHeightZeroValue)) {
+        hWithSpacing = 1
+      } else {
+        hWithSpacing = Math.max(0, hWithSpacing)
+      }
+      if (this.isVertical() && isNegative) {
+        yWithSpacing = y + stackSpacing
+      }
+    }
+
     const cornerRadius = config.roundedCorners
       ? isNumber(config.roundedCorners) ? +config.roundedCorners : width / 2
       : 0
-    const cornerRadiusClamped = clamp(cornerRadius, 0, Math.min(height, width) / 2)
+    const cornerRadiusClamped = clamp(cornerRadius, 0, Math.min(hWithSpacing, width) / 2)
     const isNorthDirected = this.yScale.range()[0] > this.yScale.range()[1]
 
+    const allCornersRounded = stackSpacing > 0 && !!config.roundedCorners
     return roundedRectPath({
-      x: this.isVertical() ? x : y - h,
-      y: this.isVertical() ? y + (isNorthDirected ? 0 : -h) : x,
-      w: this.isVertical() ? width : h,
-      h: this.isVertical() ? h : width,
-      tl: isEnding && (this.isVertical()
+      x: this.isVertical() ? x : yWithSpacing - hWithSpacing,
+      y: this.isVertical() ? yWithSpacing + (isNorthDirected ? 0 : -hWithSpacing) : x,
+      w: this.isVertical() ? width : hWithSpacing,
+      h: this.isVertical() ? hWithSpacing : width,
+      tl: allCornersRounded || (isEnding && (this.isVertical()
         ? (!isNegative && isNorthDirected) || (isNegative && !isNorthDirected)
         : isNegative
-      ),
-      tr: isEnding && (this.isVertical()
+      )),
+      tr: allCornersRounded || (isEnding && (this.isVertical()
         ? (!isNegative && isNorthDirected) || (isNegative && !isNorthDirected)
         : !isNegative
-      ),
-      br: isEnding && (this.isVertical()
+      )),
+      br: allCornersRounded || (isEnding && (this.isVertical()
         ? (isNegative && isNorthDirected) || (!isNegative && !isNorthDirected)
         : !isNegative
-      ),
-      bl: isEnding && (this.isVertical()
+      )),
+      bl: allCornersRounded || (isEnding && (this.isVertical()
         ? (isNegative && isNorthDirected) || (!isNegative && !isNorthDirected)
         : isNegative
-      ),
+      )),
       r: cornerRadiusClamped,
     })
   }
