@@ -182,6 +182,59 @@ export const colorLegendItems = [
 }}
 </BrowserOnly>
 
+### Color Map
+If your points have multiple numerical properties that you want to visualize proportionally, you can use the `colorMap` 
+feature to display them as mini pie charts. This is similar to the colorMap functionality in _Leaflet Map_.
+
+Let's say you want to show server status data, and your data points look like:
+```ts
+type ServerPoint = {
+  id: string;
+  latitude: number;
+  longitude: number;
+  healthy: number;
+  warning: number;
+  critical: number;
+}
+```
+
+You can use the `colorMap` property to define colors for each data property:
+```ts
+const colorMap = {
+  healthy: { color: '#4CAF50', className: 'healthy' },
+  warning: { color: '#FF9800', className: 'warning' },
+  critical: { color: '#F44336', className: 'critical' },
+}
+```
+
+export const colorMapData = ({
+  points: [
+    { id: 'NYC', latitude: 40.7128, longitude: -74.0060, healthy: 80, warning: 15, critical: 5 },
+    { id: 'LON', latitude: 51.5074, longitude: -0.1278, healthy: 70, warning: 20, critical: 10 },
+    { id: 'TOK', latitude: 35.6762, longitude: 139.6503, healthy: 90, warning: 8, critical: 2 },
+    { id: 'SYD', latitude: -33.8688, longitude: 151.2093, healthy: 65, warning: 25, critical: 10 },
+    { id: 'PAR', latitude: 48.8566, longitude: 2.3522, healthy: 75, warning: 18, critical: 7 }
+  ]
+});
+
+export const pieColorMap = {
+  healthy: { color: '#4CAF50', className: 'healthy' },
+  warning: { color: '#FF9800', className: 'warning' },
+  critical: { color: '#F44336', className: 'critical' }
+}
+
+<TopoDoc
+  {...topoJSONMapProps()}
+  data={colorMapData}
+  mapFitToPoints={true}
+  pointRadius={20}
+  pointLabel={d => d.id}
+  colorMap={pieColorMap}
+  showContext="minimal"
+/>
+
+Each point will display as a pie chart where the segments represent the relative values of your data properties.
+
 ## Links
 A minimum viable data type of the objects provided to the `links` attribute contains the keys
 `source` and `target`, which correspond to the points the link will connect. Most commonly, the

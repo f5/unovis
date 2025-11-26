@@ -90,6 +90,17 @@ export const pointLabel = css`
   fill: var(--vis-map-point-label-text-color-dark);
 `
 
+export const pointDonut = css`
+  label: point-donut;
+
+  pointer-events: none;
+
+  path {
+    stroke-width: 1;
+    stroke-opacity: 0.8;
+  }
+`
+
 export const links = css`
   label: links;
 `
