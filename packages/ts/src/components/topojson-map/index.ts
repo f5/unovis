@@ -1,4 +1,4 @@
-import { Selection } from 'd3-selection'
+import { Selection, select } from 'd3-selection'
 import { D3ZoomEvent, zoom, ZoomBehavior, zoomIdentity, ZoomTransform } from 'd3-zoom'
 import { timeout } from 'd3-timer'
 import { geoPath, GeoProjection, ExtendedFeatureCollection } from 'd3-geo'
@@ -25,7 +25,8 @@ import { MapData, MapFeature, MapPointLabelPosition, MapProjection } from './typ
 import { TopoJSONMapDefaultConfig, TopoJSONMapConfigInterface } from './config'
 
 // Modules
-import { arc, getLonLat } from './utils'
+import { arc, getLonLat, getDonutData } from './utils'
+import { updateDonut } from './modules/donut'
 
 // Styles
 import * as s from './style'
@@ -256,6 +257,9 @@ export class TopoJSONMap<
       .style('fill', (d, i) => getColor(d, config.pointColor, i))
       .style('stroke-width', d => getNumber(d, config.pointStrokeWidth))
 
+    // Add donut chart group
+    pointsEnter.append('g').attr('class', `donut-group ${s.pointDonut}`)
+
     pointsEnter.append('text').attr('class', s.pointLabel)
       .style('opacity', 0)
 
@@ -270,10 +274,29 @@ export class TopoJSONMap<
       .style('opacity', 1)
 
     smartTransition(pointsMerged.select(`.${s.pointCircle}`), duration)
-      .attr('r', d => getNumber(d, config.pointRadius) / this._currentZoomLevel)
-      .style('fill', (d, i) => getColor(d, config.pointColor, i))
+      .attr('r', d => {
+        const radius = getNumber(d, config.pointRadius) / this._currentZoomLevel
+        const donutData = getDonutData(d, config.colorMap)
+        // Hide the main circle if we have donut data
+        return donutData.length > 0 ? 0 : radius
+      })
+      .style('fill', (d, i) => {
+        const donutData = getDonutData(d, config.colorMap)
+        return donutData.length > 0 ? 'none' : getColor(d, config.pointColor, i)
+      })
       .style('stroke', (d, i) => getColor(d, config.pointColor, i))
       .style('stroke-width', d => getNumber(d, config.pointStrokeWidth) / this._currentZoomLevel)
+
+    // Update donut charts
+    pointsMerged.select('.donut-group').each(function (d) {
+      const donutData = getDonutData(d, config.colorMap)
+      if (donutData.length > 0) {
+        const radius = getNumber(d, config.pointRadius) / this?._currentZoomLevel
+        updateDonut(select(this as SVGGElement), donutData, radius, 2, 0.05)
+      } else {
+        select(this as SVGGElement).selectAll('*').remove()
+      }
+    })
 
     const pointLabelsMerged = pointsMerged.select(`.${s.pointLabel}`)
     pointLabelsMerged

@@ -49,6 +49,20 @@ export enum MapPointLabelPosition {
 
 export type MapFeature<D> = Feature<Geometry> & { data: D }
 
+export type TopoJSONMapPieDatum = {
+  value: number;
+  name: string;
+  color: string;
+  className?: string;
+}
+
+export interface TopoJSONMapPointStyle {
+  color: string;
+  className?: string;
+}
+
+export type TopoJSONMapPointStyles<D> = { [key in keyof D]?: TopoJSONMapPointStyle }
+
 export enum MapProjectionKind {
   // Projections form `d3-geo`
   Mercator = 'Mercator',
