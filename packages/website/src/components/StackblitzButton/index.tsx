@@ -23,7 +23,7 @@ export function StackblitzButton (props: StackblitzButtonProps): JSX.Element {
           : launchStackBlitz(framework, example)
         }
         disabled={disabled}
-        src="https://developer.stackblitz.com/img/open_in_stackblitz.svg"
+        src="../img/open-in-stackblitz.svg"
         alt="Open in StackBlitz"
       />
     </div>
