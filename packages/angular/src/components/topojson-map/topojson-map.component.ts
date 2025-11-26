@@ -10,6 +10,7 @@ import {
   ColorAccessor,
   StringAccessor,
   MapPointLabelPosition,
+  TopoJSONMapPointStyles,
 } from '@unovis/ts'
 import { GeoProjection } from 'd3-geo'
 import { VisCoreComponent } from '../../core'
@@ -151,6 +152,25 @@ export class VisTopoJSONMapComponent<AreaDatum, PointDatum, LinkDatum> implement
 
   /** Point id accessor function. Default: `d => d.id` */
   @Input() pointId?: ((d: PointDatum, i: number) => string)
+
+  /** A single map point can have multiple properties displayed as a small pie chart.
+   * By setting the colorMap configuration you can specify data properties that should be mapped to various pie / donut segments.
+   *
+   * ```
+   * {
+   * \[key in keyof PointDatum]?: { color: string, className?: string }
+   * }
+   * ```
+   * e.g.:
+   * ```
+   * {
+   * \healthy: { color: 'green' },
+   * \warning: { color: 'orange' },
+   * \critical: { color: 'red' }
+   * }
+   * ```
+   * where every data point has the `healthy`, `warning` and `critical` numerical or boolean property. */
+  @Input() colorMap?: TopoJSONMapPointStyles<PointDatum>
 
   /** Enables blur and blending between neighbouring points. Default: `false` */
   @Input() heatmapMode?: boolean

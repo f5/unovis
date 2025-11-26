@@ -3,6 +3,9 @@ import { getNumber } from 'utils/data'
 // Config
 import { NumericAccessor } from 'types/accessor'
 
+// Local Types
+import { TopoJSONMapPieDatum, TopoJSONMapPointStyles } from './types'
+
 export function getLonLat<Datum> (d: Datum, pointLongitude: NumericAccessor<Datum>, pointLatitude: NumericAccessor<Datum>): [number, number] {
   const lat = getNumber(d, pointLatitude)
   const lon = getNumber(d, pointLongitude)
@@ -26,4 +29,24 @@ export function arc (source?: number[], target?: number[], curvature?: number): 
   const dds = { x: (cs * ds.x) - (ss * ds.y), y: (ss * ds.x) + (cs * ds.y) }
   const ddt = { x: (ct * dt.x) - (st * dt.y), y: (st * dt.x) + (ct * dt.y) }
   return `M${s.x},${s.y} C${s.x + dds.x},${s.y + dds.y} ${t.x + ddt.x},${t.y + ddt.y} ${t.x},${t.y}`
+}
+
+export function getDonutData<PointDatum> (
+  d: PointDatum,
+  colorMap: TopoJSONMapPointStyles<PointDatum>
+): TopoJSONMapPieDatum[] {
+  if (!colorMap || Object.keys(colorMap).length === 0) {
+    return []
+  }
+
+  return Object.keys(colorMap).map(key => {
+    const keyTyped = key as keyof PointDatum
+    const config = colorMap[keyTyped]
+    return {
+      name: key,
+      value: (d as any)[key] as number || 0,
+      color: config?.color || '#000',
+      className: config?.className,
+    }
+  }).filter(item => item.value > 0)
 }
