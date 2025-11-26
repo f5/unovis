@@ -5,6 +5,9 @@ import { RollingPinLegend, RollingPinLegendConfigInterface } from '@unovis/ts'
 // Utils
 import { arePropsEqual } from 'src/utils/react'
 
+// Types
+import { VisComponentElement } from 'src/types/dom'
+
 export type VisRollingPinLegendRef = {
   component?: RollingPinLegend;
 }
@@ -18,23 +21,31 @@ export const VisRollingPinLegendSelectors = RollingPinLegend.selectors
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 function VisRollingPinLegendFC (props: VisRollingPinLegendProps, fRef: ForwardedRef<VisRollingPinLegendRef>): ReactElement {
-  const ref = useRef<HTMLDivElement>(null)
-  const [component, setComponent] = useState<RollingPinLegend>()
+  const ref = useRef<VisComponentElement<RollingPinLegend, HTMLDivElement>>(null)
+  const componentRef = useRef<RollingPinLegend | undefined>(undefined)
 
   // On Mount
   useEffect(() => {
-    const c = new RollingPinLegend(ref.current as HTMLDivElement, props)
-    setComponent(c)
+    const element = (ref.current as VisComponentElement<RollingPinLegend, HTMLDivElement>)
 
-    return () => c?.destroy()
+    const c = new RollingPinLegend(ref.current as VisComponentElement<RollingPinLegend, HTMLDivElement>, props)
+    componentRef.current = c
+    element.__component__ = c
+
+    return () => {
+      componentRef.current = undefined
+      c.destroy()
+    }
   }, [])
 
   // On Props Update
   useEffect(() => {
+    const component = componentRef.current
+
     component?.setConfig(props)
   })
 
-  useImperativeHandle(fRef, () => ({ get component () { return component } }), [])
+  useImperativeHandle(fRef, () => ({ get component () { return componentRef.current } }), [])
   return <div className={props.className} ref={ref} />
 }
 
