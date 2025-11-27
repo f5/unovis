@@ -138,12 +138,21 @@ importers:
 
   packages/dev:
     dependencies:
+      '@emotion/css':
+        specifier: ^11.13.0
+        version: 11.13.5
       '@unovis/react':
         specifier: '*'
         version: 1.6.2(@unovis/ts@1.6.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       '@unovis/ts':
         specifier: '*'
         version: 1.6.2
+      d3-array:
+        specifier: ^3.2.0
+        version: 3.2.4
+      d3-format:
+        specifier: ^3.1.0
+        version: 3.1.0
       fuse.js:
         specifier: ^6.6.2
         version: 6.6.2
@@ -184,6 +193,9 @@ importers:
       '@types/webpack-env':
         specifier: ^1.18.0
         version: 1.18.8
+      css-loader:
+        specifier: ^6.7.3
+        version: 6.11.0(webpack@5.76.0)
       cypress:
         specifier: ^13.13.0
         version: 13.17.0
@@ -196,6 +208,9 @@ importers:
       react-refresh-typescript:
         specifier: 2.0.9
         version: 2.0.9(react-refresh@0.14.2)(typescript@4.9.5)
+      style-loader:
+        specifier: ^3.3.4
+        version: 3.3.4(webpack@5.76.0)
       ts-loader:
         specifier: ^9.4.2
         version: 9.5.4(typescript@4.9.5)(webpack@5.76.0)
@@ -11752,6 +11767,12 @@ packages:
     peerDependencies:
       webpack: ^5.0.0
 
+  style-loader@3.3.4:
+    resolution: {integrity: sha512-0WqXzrsMTyb8yjZJHDqwmnwRJvhALK9LfRtRc6B4UTWe8AijYLZYZ9thuJTZc2VfQWINADW/j+LiJnfy2RoC1w==}
+    engines: {node: '>= 12.13.0'}
+    peerDependencies:
+      webpack: ^5.0.0
+
   style-to-js@1.1.21:
     resolution: {integrity: sha512-RjQetxJrrUJLQPHbLku6U/ocGtzyjbJMP9lCNK7Ag0CNh690nSH8woqWH9u16nMjYBAok+i7JO1NP2pOy8IsPQ==}
 
@@ -19693,6 +19714,19 @@ snapshots:
     optionalDependencies:
       webpack: 5.103.0
 
+  css-loader@6.11.0(webpack@5.76.0):
+    dependencies:
+      icss-utils: 5.1.0(postcss@8.5.6)
+      postcss: 8.5.6
+      postcss-modules-extract-imports: 3.1.0(postcss@8.5.6)
+      postcss-modules-local-by-default: 4.2.0(postcss@8.5.6)
+      postcss-modules-scope: 3.2.1(postcss@8.5.6)
+      postcss-modules-values: 4.0.0(postcss@8.5.6)
+      postcss-value-parser: 4.2.0
+      semver: 7.7.3
+    optionalDependencies:
+      webpack: 5.76.0(webpack-cli@5.1.4)
+
   css-loader@6.2.0(webpack@5.50.0(esbuild@0.13.8)):
     dependencies:
       icss-utils: 5.1.0(postcss@8.5.6)
@@ -27553,6 +27587,10 @@ snapshots:
   style-loader@3.2.1(webpack@5.50.0(esbuild@0.13.8)):
     dependencies:
       webpack: 5.50.0(esbuild@0.13.8)
+
+  style-loader@3.3.4(webpack@5.76.0):
+    dependencies:
+      webpack: 5.76.0(webpack-cli@5.1.4)
 
   style-to-js@1.1.21:
     dependencies:

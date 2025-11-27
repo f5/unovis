@@ -28,7 +28,9 @@
     "typescript-plugin-css-modules": "^4.1.1",
     "webpack": "^5.75.0",
     "webpack-cli": "^5.0.1",
-    "webpack-dev-server": "^4.11.1"
+    "webpack-dev-server": "^4.11.1",
+    "style-loader": "^3.3.4",
+    "css-loader": "^6.7.3"
   },
   "dependencies": {
     "@unovis/react": "*",
@@ -37,7 +39,10 @@
     "react-dom": "^19",
     "react-router-dom": "^6.4.5",
     "seedrandom": "^3.0.5",
-    "serve": "^14.2.3"
+    "serve": "^14.2.3",
+    "@emotion/css": "^11.13.0",
+    "d3-array": "^3.2.0",
+    "d3-format": "^3.1.0"
   },
   "peerDependencies": {
     "@unovis/ts": "*"
