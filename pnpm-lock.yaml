@@ -293,6 +293,9 @@ importers:
       '@angular/platform-browser':
         specifier: ^12.0.3
         version: 12.2.17(@angular/common@12.2.17(@angular/core@12.2.17(rxjs@7.8.2)(zone.js@0.14.10))(rxjs@7.8.2))(@angular/core@12.2.17(rxjs@7.8.2)(zone.js@0.14.10))
+      d3-format:
+        specifier: ^3.1.0
+        version: 3.1.0
       typescript:
         specifier: ~4.2.4
         version: 4.2.4
@@ -702,6 +705,9 @@ importers:
       '@docusaurus/preset-classic':
         specifier: ^3.0.1
         version: 3.9.2(@algolia/client-search@5.45.0)(@mdx-js/react@3.1.1(@types/react@19.2.7)(react@18.3.1))(@types/react@19.2.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(search-insights@2.17.3)(typescript@5.2.2)
+      '@docusaurus/theme-common':
+        specifier: ^3.0.1
+        version: 3.9.2(@docusaurus/plugin-content-docs@3.9.2(@mdx-js/react@3.1.1(@types/react@19.2.7)(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.2.2))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@docusaurus/theme-mermaid':
         specifier: ^3.0.1
         version: 3.9.2(@docusaurus/plugin-content-docs@3.9.2(@mdx-js/react@3.1.1(@types/react@19.2.7)(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.2.2))(@mdx-js/react@3.1.1(@types/react@19.2.7)(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.2.2)
@@ -712,11 +718,14 @@ importers:
         specifier: 1.8.0
         version: 1.8.0
       '@unovis/react':
-        specifier: '*'
-        version: 1.6.2(@unovis/ts@1.6.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: workspace:*
+        version: link:../react
+      '@unovis/shared':
+        specifier: workspace:*
+        version: link:../shared
       '@unovis/ts':
-        specifier: '*'
-        version: 1.6.2
+        specifier: workspace:*
+        version: link:../ts
       clsx:
         specifier: ^1.1.1
         version: 1.2.1
@@ -742,6 +751,18 @@ importers:
       '@docusaurus/tsconfig':
         specifier: 3.0.0
         version: 3.0.0
+      '@emotion/css':
+        specifier: ^11.7.1
+        version: 11.13.5
+      d3-array:
+        specifier: ^3.2.0
+        version: 3.2.4
+      d3-scale:
+        specifier: ^4.0.0
+        version: 4.0.2
+      file-loader:
+        specifier: ^6.2.0
+        version: 6.2.0(webpack@5.103.0)
       raw-loader:
         specifier: ^4.0.2
         version: 4.0.2(webpack@5.103.0)
@@ -13212,7 +13233,7 @@ snapshots:
       '@ampproject/remapping': 1.0.1
       '@angular-devkit/architect': 0.1202.18
       '@angular-devkit/build-optimizer': 0.1202.18(webpack@5.50.0(esbuild@0.13.8))
-      '@angular-devkit/build-webpack': 0.1202.18(webpack-dev-server@3.11.3(webpack@5.50.0(esbuild@0.13.8)))(webpack@5.50.0(esbuild@0.13.8))
+      '@angular-devkit/build-webpack': 0.1202.18(webpack-dev-server@3.11.3(webpack@5.76.0))(webpack@5.50.0(esbuild@0.13.8))
       '@angular-devkit/core': 12.2.18
       '@angular/compiler-cli': 12.2.17(@angular/compiler@12.2.17)(typescript@5.9.3)
       '@babel/core': 7.14.8
@@ -13308,7 +13329,7 @@ snapshots:
     optionalDependencies:
       webpack: 5.50.0(esbuild@0.13.8)
 
-  '@angular-devkit/build-webpack@0.1202.18(webpack-dev-server@3.11.3(webpack@5.50.0(esbuild@0.13.8)))(webpack@5.50.0(esbuild@0.13.8))':
+  '@angular-devkit/build-webpack@0.1202.18(webpack-dev-server@3.11.3(webpack@5.76.0))(webpack@5.50.0(esbuild@0.13.8))':
     dependencies:
       '@angular-devkit/architect': 0.1202.18
       rxjs: 6.6.7
@@ -18057,12 +18078,6 @@ snapshots:
   '@unovis/graphlibrary@2.2.0-2':
     dependencies:
       lodash-es: 4.17.21
-
-  '@unovis/react@1.6.2(@unovis/ts@1.6.2)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
-    dependencies:
-      '@unovis/ts': 1.6.2
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
 
   '@unovis/react@1.6.2(@unovis/ts@1.6.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)':
     dependencies:
