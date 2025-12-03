@@ -5,7 +5,7 @@
     "src/**/*.tsx",
   ],
   "compilerOptions": {
-    "rootDir": "./src",
+    "rootDir": "../../",
     "baseUrl": "./",
   }
 }

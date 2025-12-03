@@ -1,7 +1,7 @@
 name                 license period  license type  installed version  author
 ----                 --------------  ------------  -----------------  ------
 eslint-plugin-solid  perpetual       MIT           0.13.2             Josh Wilson <joshwilsonvu@gmail.com>
-rollup               perpetual       MIT           4.38.0             Rich Harris
+rollup               perpetual       MIT           4.53.2             Rich Harris
 solid-js             perpetual       MIT           1.9.4              Ryan Carniato
 tslib                perpetual       0BSD          2.8.1              Microsoft Corp.
 tsx                  perpetual       MIT           4.19.2             Hiroki Osame hiroki.osame@gmail.com

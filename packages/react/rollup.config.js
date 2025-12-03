@@ -3,15 +3,17 @@ import peerDepsExternal from 'rollup-plugin-peer-deps-external'
 import typescript from 'rollup-plugin-typescript2'
 import transformPaths from '@zerollup/ts-transform-paths'
 import postcss from 'rollup-plugin-postcss'
+import json from '@rollup/plugin-json'
 import renameNodeModules from 'rollup-plugin-rename-node-modules'
-import pkg from './package.json'
+import packageJson from './package.json' assert { type: 'json' }
+import ts from 'typescript'
 
 // Array of extensions to be handled by babel
 const extensions = ['.ts', '.tsx']
 
 // Excluded dependencies
 const externals = [
-  ...Object.keys(pkg.devDependencies),
+  ...Object.keys(packageJson.devDependencies),
 ]
 
 const regexesOfPackages = externals // To prevent having node_modules in the build files
@@ -27,6 +29,7 @@ export default {
     preserveModulesRoot: './src',
   },
   plugins: [
+    json(),
     peerDepsExternal(),
     resolve({
       extensions,
@@ -35,7 +38,7 @@ export default {
       modules: true,
     }),
     typescript({
-      typescript: require('typescript'),
+      typescript: ts,
       tsconfig: './tsconfig.lib.json',
       transformers: [(service) => transformPaths(service.getProgram())],
     }),
