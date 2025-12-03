@@ -66,6 +66,19 @@ export const feature = css`
   stroke-opacity: 0.5;
 `
 
+export const areaLabel = css`
+  label: area-label;
+
+  text-anchor: middle;
+  cursor: default;
+  pointer-events: none;
+
+  font-size: var(--vis-map-point-label-font-size);
+  font-family: var(--vis-map-point-label-font-family, var(--vis-font-family));
+  font-weight: var(--vis-map-point-label-font-weight);
+  fill: var(--vis-map-point-label-text-color-dark);
+`
+
 export const background = css`
   label: background;
 
