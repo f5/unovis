@@ -21,6 +21,9 @@ export type ComponentInput = {
   dataType?: string | null;
   elementSuffix?: string;
   isStandAlone?: boolean;
+  /** Some of the standalone components can be rendered directly into the HTML element provided to the constructor
+   * without creating additional `div` element */
+  renderIntoProvidedDomNode?: boolean;
 }
 
 export type ReactComponentInput = ComponentInput
