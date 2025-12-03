@@ -37,24 +37,6 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
   datamodel: SeriesDataModel<Datum> = new SeriesDataModel()
   tiles: Selection<SVGGElement, unknown, SVGGElement, unknown>
 
-  private _isTileLargeEnough (d: TreemapNode<Datum>): boolean {
-    const w = d.x1 - d.x0
-    const h = d.y1 - d.y0
-    return (w >= this.config.minTileSizeForLabel) && (h >= this.config.minTileSizeForLabel)
-  }
-
-  private _getTileLightness (node: TreemapNode<Datum>, siblings: TreemapNode<Datum>[]): number {
-    // Get the value extent of the sibling group
-    const [minValue, maxValue] = extent(siblings, d => d.value)
-
-    // If there's no range or no value, return default lightness
-    if (minValue === maxValue || !node.value) return 0
-
-    // Calculate relative position in the range (0 to 1)
-    // Larger values will be closer to 0 (darker)
-    return this.config.lightnessVariationAmount * ((maxValue - node.value) / (maxValue - minValue))
-  }
-
   constructor (config?: TreemapConfigInterface<Datum>) {
     super()
     if (config) this.setConfig(config)
@@ -198,35 +180,25 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       .append('g')
       .attr('class', s.tileGroup)
 
-    // Computes the rect border radius for a given tile.
-    // The rx and ry values are the minimum of the tile
-    // border radius and some fraction the width of the tile,
-    // based on the tileBorderRadiusFactor config.
-    // This ensures that the tile border radius is not
-    // larger than the tile size, which makes small tiles
-    // look better.
-    const getTileBorderRadius = (d: TreemapNode<Datum>): number =>
-      Math.min(config.tileBorderRadius, (d.x1 - d.x0) * config.tileBorderRadiusFactor)
-
     // Add clipPath elements
     tilesEnter
       .append('clipPath')
       .attr('id', d => `clip-${this.uid}-${d._id}`)
       .append('rect')
-      .attr('rx', getTileBorderRadius)
-      .attr('ry', getTileBorderRadius)
+      .attr('rx', d => this._getTileBorderRadius(d))
+      .attr('ry', d => this._getTileBorderRadius(d))
 
     // Tile rectangles
     const tileRects = tilesEnter
       .append('rect')
       .classed(s.tile, true)
       .classed(s.clickableTile, d => config.showTileClickAffordance && !d.children)
-      .attr('rx', getTileBorderRadius)
-      .attr('ry', getTileBorderRadius)
+      .attr('rx', d => this._getTileBorderRadius(d))
+      .attr('ry', d => this._getTileBorderRadius(d))
       .attr('x', d => d.x0)
       .attr('y', d => d.y0)
-      .attr('width', d => d.x1 - d.x0)
-      .attr('height', d => d.y1 - d.y0)
+      .attr('width', this._getTileWidth)
+      .attr('height', this._getTileHeight)
       .style('fill', d => d._fill)
       .style('opacity', 0)
       .style('cursor', config.showTileClickAffordance ? d => !d.children ? 'pointer' : null : null)
@@ -251,20 +223,24 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       .style('opacity', 1)
       .attr('x', d => d.x0)
       .attr('y', d => d.y0)
-      .attr('width', d => d.x1 - d.x0)
-      .attr('height', d => d.y1 - d.y0)
+      .attr('width', this._getTileWidth)
+      .attr('height', this._getTileHeight)
 
     tileRectsMerged.select('title')
       .text(d => config.tileLabel(d))
 
     // Update clipPath rects
     mergedTiles.select('clipPath rect')
-      .attr('width', d => d.x1 - d.x0 - 2 * config.labelOffsetX)
-      .attr('height', d => d.y1 - d.y0 - 2 * config.labelOffsetY)
+      .attr('width', d => Math.max(this._getTileWidth(d) - 2 * config.labelOffsetX, 0))
+      .attr('height', d => Math.max(this._getTileHeight(d) - 2 * config.labelOffsetY, 0))
 
     const textSelection = mergedTiles.selectAll<SVGTextElement, TreemapNode<Datum>>(`g.${s.labelGroup} text`)
     textSelection
-      .text(d => config.tileLabel(d))
+      .text(d => {
+        const shouldShowLabel = config.labelInternalNodes ? true : !d.children
+        const isLargeEnough = this._isTileLargeEnough(d)
+        return (shouldShowLabel && isLargeEnough) ? d.data.key : null
+      })
       .attr('title', d => config.tileLabel(d))
       .property('font-size-px', d => {
         const sqrtVal = Math.sqrt(d.value ?? 0)
@@ -281,14 +257,16 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
     textSelection.each((d, i, els) => {
       const isLeafNode = !d.children
       const el = els[i] as SVGTextElement
+      if (!el.textContent) return
+
       const text = select(el)
-      const tileWidth = d.x1 - d.x0 - (config.labelOffsetX ?? 0) * 2
+      const maxLabelWidth = d.x1 - d.x0 - (config.labelOffsetX ?? 0) * 2
       const fontSize = parseFloat(text.property('font-size-px')) || parseFloat(window.getComputedStyle(el).fontSize)
 
       if (config.labelFit === FitMode.Wrap && isLeafNode) {
-        wrapSVGText(text, tileWidth)
+        wrapSVGText(text, maxLabelWidth)
       } else {
-        trimSVGText(text, tileWidth, config.labelTrimMode, true, fontSize)
+        trimSVGText(text, maxLabelWidth, config.labelTrimMode, true, fontSize)
       }
     })
 
@@ -297,17 +275,47 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       .attr('transform', d => `translate(${d.x0 + config.labelOffsetX},${d.y0 + config.labelOffsetY})`)
       .style('opacity', 1)
 
-    // Hide labels that don't meet criteria
+    // Make the internal labels semibold via class
     mergedTiles.select(`text.${s.label}`)
-      .style('display', d => {
-        const isAllowedNode = config.labelInternalNodes ? true : !d.children
-        return isAllowedNode && this._isTileLargeEnough(d) ? null : 'none'
-      })
-      // Make the internal labels semibold via class
-      .attr('class', d => d.children ? `${s.label} ${s.internalLabel}` : s.label)
+      .classed(s.internalLabel, d => !!d.children)
+
 
     smartTransition(tiles.exit(), duration)
       .style('opacity', 0)
       .remove()
+  }
+
+  private _isTileLargeEnough (d: TreemapNode<Datum>): boolean {
+    const w = this._getTileWidth(d)
+    const h = this._getTileHeight(d)
+    return (w >= this.config.minTileSizeForLabel) && (h >= this.config.minTileSizeForLabel)
+  }
+
+  private _getTileLightness (node: TreemapNode<Datum>, siblings: TreemapNode<Datum>[]): number {
+    // Get the value extent of the sibling group
+    const [minValue, maxValue] = extent(siblings, d => d.value)
+
+    // If there's no range or no value, return default lightness
+    if (minValue === maxValue || !node.value) return 0
+
+    // Calculate relative position in the range (0 to 1)
+    // Larger values will be closer to 0 (darker)
+    return this.config.lightnessVariationAmount * ((maxValue - node.value) / (maxValue - minValue))
+  }
+
+  // Computes the rect border radius for a given tile. The rx and ry values are the minimum of the tile
+  // border radius and some fraction the width of the tile, based on the tileBorderRadiusFactor config.
+  // This ensures that the tile border radius is not larger than the tile size, which makes small tiles
+  // look better.
+  private _getTileBorderRadius (d: TreemapNode<Datum>): number {
+    return Math.min(this.config.tileBorderRadius, this._getTileWidth(d) * this.config.tileBorderRadiusFactor)
+  }
+
+  private _getTileHeight (d: TreemapNode<Datum>): number {
+    return Math.max(d.y1 - d.y0, 0.5)
+  }
+
+  private _getTileWidth (d: TreemapNode<Datum>): number {
+    return Math.max(d.x1 - d.x0, 0.5)
   }
 }
