@@ -6,7 +6,8 @@ export function getComponentCode (
   importStatements: { source: string; elements: string[] }[],
   dataType: string | null = 'any',
   elementSuffix = 'component',
-  isStandAlone = false
+  isStandAlone = false,
+  renderIntoProvidedDomNode = false
 ): string {
   const genericsStr = generics ? `<${generics?.map(g => g.name).join(', ')}>` : ''
   const genericsDefStr = generics
@@ -15,7 +16,7 @@ export function getComponentCode (
   const componentType = `${componentName}${genericsStr}`
   const refType = isStandAlone ? `VisComponentElement<${componentType}, HTMLDivElement>` : `VisComponentElement<${componentType}>`
   const elementDef = `ref.current as ${refType}`
-  const initProps = componentName === 'BulletLegend'
+  const initProps = renderIntoProvidedDomNode
     ? '{ ...props, renderIntoProvidedDomNode: true }'
     : 'props'
 
@@ -62,7 +63,7 @@ function Vis${componentName}FC${genericsDefStr} (props: Vis${componentName}Props
   useEffect(() => {
     const component = componentRef.current
     ${dataType ? 'if (props.data) component?.setData(props.data)' : ''}
-    component?.${componentName === 'BulletLegend' ? 'update ' : 'setConfig'}(props)
+    component?.setConfig(props)
   })
 
   useImperativeHandle(fRef, () => ({ get component () { return componentRef.current } }), [])
