@@ -6,6 +6,11 @@ import { WorldMapTopoJSON } from '@unovis/ts/maps'
 export const title = 'World Map'
 export const subTitle = 'Default WorldMapTopoJSON'
 
+type AreaDatum = {
+  id: string;
+  age: number[];
+};
+
 export const component = (): React.ReactNode => {
   const data = {
     areas: [
@@ -22,7 +27,7 @@ export const component = (): React.ReactNode => {
           topojson={WorldMapTopoJSON}
           duration={0}
           areaColor='red'
-          zoomExtent={[0.5, 100]}
+          areaLabel={(d: AreaDatum) => d?.id}
           events={{
             [TopoJSONMap.selectors.feature]: {
               // click: c => console.log(c),
