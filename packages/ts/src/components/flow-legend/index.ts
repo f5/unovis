@@ -14,7 +14,8 @@ import { FlowLegendItem, FlowLegendItemType } from './types'
 import * as s from './style'
 
 export class FlowLegend {
-  div: Selection<HTMLDivElement, unknown, null, undefined>
+  static selectors = s
+  div: Selection<HTMLElement, unknown, null, undefined>
   element: HTMLElement
   line: Selection<HTMLDivElement, unknown, null, undefined>
   labels: Selection<HTMLDivElement, unknown, null, undefined>
@@ -26,19 +27,28 @@ export class FlowLegend {
   constructor (element: HTMLElement, config?: FlowLegendConfigInterface) {
     this._container = element
 
-    this.div = select(this._container).append('div').attr('class', s.root)
+    this.div = config?.renderIntoProvidedDomNode
+      ? select(this._container)
+      : select(this._container).append<HTMLElement>('div')
+    this.div.classed(s.root, true)
+
     this.element = this.div.node()
 
     this.line = this.div.append('div')
     this.labels = this.div.append('div').attr('class', s.labels)
 
-    if (config) this.update(config)
+    if (config) this.setConfig(config)
   }
 
-  update (config: FlowLegendConfigInterface): void {
+  setConfig (config: FlowLegendConfigInterface): void {
     this.prevConfig = this.config
     this.config = merge(this._defaultConfig, config)
     this.render()
+  }
+
+  /** @deprecated Use setConfig instead */
+  update (config: FlowLegendConfigInterface): void {
+    this.setConfig(config)
   }
 
   render (): void {
@@ -101,5 +111,11 @@ export class FlowLegend {
     const { config } = this
 
     if (config.onLegendItemClick) config.onLegendItemClick(d.text, d.index)
+  }
+
+  public destroy (): void {
+    this.line.remove()
+    this.labels.remove()
+    if (this.element !== this._container) this.div.remove()
   }
 }
