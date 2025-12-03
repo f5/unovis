@@ -16,10 +16,12 @@ import { MapGraphDataModel } from 'data-models/map-graph'
 import { clamp, getNumber, getString, isNumber } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { getColor, hexToBrightness } from 'utils/color'
-import { getCSSVariableValue, isStringCSSVariable } from 'utils/misc'
+import { getCSSVariableValue, isStringCSSVariable, rectIntersect } from 'utils/misc'
+import { estimateStringPixelLength } from 'utils/text'
 
 // Types
 import { MapLink } from 'types/map'
+import { Rect } from 'types/misc'
 
 // Local Types
 import {
@@ -86,11 +88,13 @@ export class TopoJSONMap<
   } | null = null
 
   private _eventInitiatedByComponent = false
+  private _collideLabelsAnimFrameId: ReturnType<typeof requestAnimationFrame>
 
   private _featureCollection: GeoJSON.FeatureCollection
   private _zoomBehavior: ZoomBehavior<SVGGElement, unknown> = zoom()
   private _backgroundRect = this.g.append('rect').attr('class', s.background)
   private _featuresGroup = this.g.append('g').attr('class', s.features)
+  private _areaLabelsGroup = this.g.append('g').attr('class', s.areaLabel)
   private _linksGroup = this.g.append('g').attr('class', s.links)
   private _pointsGroup = this.g.append('g').attr('class', s.points)
 
@@ -167,6 +171,7 @@ export class TopoJSONMap<
 
     this._renderBackground()
     this._renderMap(duration)
+    this._renderAreaLabels(duration)
     this._renderGroups(duration)
     this._renderLinks(duration)
     this._renderPoints(duration)
@@ -206,6 +211,9 @@ export class TopoJSONMap<
     smartTransition(this._featuresGroup, duration)
       .attr('transform', transformString)
       .attr('stroke-width', 1 / this._currentZoomLevel)
+
+    smartTransition(this._areaLabelsGroup, duration)
+      .attr('transform', transformString)
 
     smartTransition(this._linksGroup, duration)
       .attr('transform', transformString)
@@ -281,6 +289,150 @@ export class TopoJSONMap<
       .style('fill', (d, i) => d.data ? getColor(d.data, config.areaColor, i) : null)
       .style('cursor', d => d.data ? getString(d.data, config.areaCursor) : null)
     features.exit().remove()
+  }
+
+  _renderAreaLabels (duration: number): void {
+    const { config } = this
+
+    // Early return if no area label configuration
+    if (!config.areaLabel) {
+      this._areaLabelsGroup.selectAll('*').remove()
+      return
+    }
+
+    const featureData = (this._featureCollection?.features ?? []) as MapFeature<AreaDatum>[]
+
+    // Prepare candidate labels with optimized filtering and calculations
+    const candidateLabels = featureData
+      .map(feature => {
+        // Get label text from user-provided area data only
+        const labelText = feature.data ? getString(feature.data, config.areaLabel) : null
+        if (!labelText) return null
+
+        const centroid = this._path.centroid(feature)
+
+        // Skip if centroid is invalid (e.g., for very small or complex shapes)
+        if (!centroid || centroid.some(coord => !isFinite(coord))) return null
+
+        const bounds = this._path.bounds(feature)
+        const area = (bounds[1][0] - bounds[0][0]) * (bounds[1][1] - bounds[0][1])
+
+        return {
+          feature,
+          centroid,
+          area,
+          labelText,
+          id: feature.data ? getString(feature.data, config.areaId) : feature.id?.toString(),
+        }
+      })
+      .filter(Boolean) // Remove null entries
+      .sort((a, b) => b.area - a.area) // Prioritize larger areas
+
+    // D3 data binding with improved key function
+    const labels = this._areaLabelsGroup
+      .selectAll<SVGTextElement, typeof candidateLabels[0]>(`.${s.areaLabel}`)
+      .data(candidateLabels, d => d.id || '')
+
+    // Handle entering labels
+    const labelsEnter = labels.enter()
+      .append('text')
+      .attr('class', s.areaLabel)
+      .attr('transform', d => `translate(${d.centroid[0]},${d.centroid[1]})`)
+      .style('opacity', 0)
+      .style('pointer-events', 'none')
+
+    // Update all labels (enter + update)
+    const labelsMerged = labelsEnter.merge(labels)
+    labelsMerged
+      .text(d => d.labelText)
+      .attr('transform', d => `translate(${d.centroid[0]},${d.centroid[1]})`)
+      .style('font-size', `calc(var(--vis-map-point-label-font-size) / ${this._currentZoomLevel})`)
+      .style('text-anchor', 'middle')
+      .style('dominant-baseline', 'middle')
+
+    // Handle exiting labels
+    smartTransition(labels.exit(), duration)
+      .style('opacity', 0)
+      .remove()
+
+    // Run collision detection immediately to prevent flickering during zoom
+    if (candidateLabels.length > 0) {
+      window.cancelAnimationFrame(this._collideLabelsAnimFrameId)
+      // Run collision detection synchronously first
+      this._collideLabels()
+
+      // Then schedule follow-up collision detection for any dynamic changes
+      this._collideLabelsAnimFrameId = window.requestAnimationFrame(() => {
+        this._collideLabels()
+      })
+    }
+
+    // Animate to visible state AFTER collision detection
+    smartTransition(labelsMerged, duration)
+      .style('opacity', 1)
+  }
+
+  private _collideLabels (): void {
+    const labels = this._areaLabelsGroup.selectAll<SVGTextElement, any>(`.${s.areaLabel}`)
+    const labelNodes = labels.nodes()
+    const labelData = labels.data()
+
+    if (labelNodes.length === 0) return
+
+    // Reset all labels to visible and mark them as such
+    labelNodes.forEach((node: any) => {
+      node._labelVisible = true
+    })
+
+    // Helper function to get bounding box
+    const getBBox = (labelData: any): Rect => {
+      const [x, y] = labelData.centroid
+      const labelText = labelData.labelText || ''
+      const fontSize = 12 // Default font size
+
+      const width = estimateStringPixelLength(labelText, fontSize, 0.6)
+      const height = fontSize * 1.2 // Line height factor
+
+      return {
+        x: x - width / 2,
+        y: y - height / 2,
+        width,
+        height,
+      }
+    }
+
+    // Run collision detection similar to scatter plot
+    labelNodes.forEach((node1: any, i) => {
+      const data1 = labelData[i]
+      if (!node1._labelVisible) return
+
+      const label1BoundingRect = getBBox(data1)
+
+      for (let j = 0; j < labelNodes.length; j++) {
+        if (i === j) continue
+
+        const node2 = labelNodes[j]
+        const data2 = labelData[j]
+
+        if (!node2._labelVisible) continue
+
+        const label2BoundingRect = getBBox(data2)
+        const intersect = rectIntersect(label1BoundingRect, label2BoundingRect, 2)
+
+        if (intersect) {
+          // Priority based on area size - larger areas keep their labels
+          if (data1.area >= data2.area) {
+            node2._labelVisible = false
+          } else {
+            node1._labelVisible = false
+            break
+          }
+        }
+      }
+    })
+
+    // Apply visibility based on collision detection
+    labels.style('opacity', (d, i) => labelNodes[i]._labelVisible ? 1 : 0)
   }
 
   _renderLinks (duration: number): void {
@@ -614,6 +766,7 @@ export class TopoJSONMap<
 
     // Call render functions that depend on this._transform
     this._renderGroups(customDuration)
+    this._renderAreaLabels(customDuration)
     this._renderLinks(customDuration)
     this._renderPoints(customDuration)
 
@@ -1065,5 +1218,6 @@ export class TopoJSONMap<
   destroy (): void {
     window.cancelAnimationFrame(this._animFrameId)
     this._stopFlowAnimation()
+    window.cancelAnimationFrame(this._collideLabelsAnimFrameId)
   }
 }
