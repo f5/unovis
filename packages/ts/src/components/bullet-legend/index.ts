@@ -37,13 +37,18 @@ export class BulletLegend {
 
     this.element = this.div.node()
 
-    if (config) this.update(config)
+    if (config) this.setConfig(config)
   }
 
-  update (config: BulletLegendConfigInterface): void {
+  setConfig (config: BulletLegendConfigInterface): void {
     this.prevConfig = this.config
     this.config = merge(this._defaultConfig, config)
     this.render()
+  }
+
+  /** @deprecated Use setConfig instead */
+  update (config: BulletLegendConfigInterface): void {
+    this.setConfig(config)
   }
 
   render (): void {
