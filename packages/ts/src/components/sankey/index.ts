@@ -240,6 +240,7 @@ export class Sankey<
 
     // Prepare Layout
     this._prepareLayout()
+    config.onLayoutCalculated?.(nodes, links, this.getSankeyDepth(), this.getWidth(), this.getHeight(), bleed)
 
     // Links
     const linkSelection = this._linksGroup.selectAll<SVGGElement, SankeyLink<N, L>>(`.${s.link}`)
@@ -614,28 +615,33 @@ export class Sankey<
     }
   }
 
-  getWidth (): number {
+  public getWidth (): number {
     return this.sizing === Sizing.Fit ? this._width : Math.max(this._extendedWidthIncreased || 0, this._extendedWidth || 0)
   }
 
-  getHeight (): number {
+  public getHeight (): number {
     return this.sizing === Sizing.Fit ? this._height : Math.max(this._extendedHeightIncreased || 0, this._extendedHeight || 0)
   }
 
-  getLayoutWidth (): number {
+  public getLayoutWidth (): number {
     return this.sizing === Sizing.Fit ? this._width : (this._extendedWidthIncreased || this._extendedWidth)
   }
 
-  getLayoutHeight (): number {
+  public getLayoutHeight (): number {
     return this.sizing === Sizing.Fit ? this._height : (this._extendedHeightIncreased || this._extendedHeight)
   }
 
+  public getSankeyDepth (): number {
+    const { datamodel } = this
+    return max(datamodel.nodes, d => d.layer)
+  }
+
   /** @deprecated Use getLayerXCenters instead */
-  getColumnCenters (): number[] {
+  public getColumnCenters (): number[] {
     return this.getLayerXCenters()
   }
 
-  getLayerXCenters (): number[] {
+  public getLayerXCenters (): number[] {
     const { datamodel } = this
     const nodes = datamodel.nodes as SankeyNode<N, L>[]
     const centers = nodes.reduce((pos, node) => {
@@ -649,7 +655,7 @@ export class Sankey<
     return centers
   }
 
-  getLayerYCenters (): number[] {
+  public getLayerYCenters (): number[] {
     const { datamodel } = this
     const nodes = datamodel.nodes as SankeyNode<N, L>[]
     const nodesByLayer = groupBy(nodes, d => d.layer)
@@ -664,7 +670,7 @@ export class Sankey<
     return layerYCenters
   }
 
-  highlightSubtree (node: SankeyNode<N, L>): void {
+  public highlightSubtree (node: SankeyNode<N, L>): void {
     const { config, datamodel } = this
 
     clearTimeout(this._highlightTimeoutId)
@@ -679,7 +685,7 @@ export class Sankey<
     }, config.highlightDelay)
   }
 
-  recursiveSetSubtreeState (
+  public recursiveSetSubtreeState (
     node: SankeyNode<N, L>,
     linksKey: 'sourceLinks' | 'targetLinks',
     nodeKey: 'source' | 'target',
@@ -694,7 +700,7 @@ export class Sankey<
     }
   }
 
-  disableHighlight (): void {
+  public disableHighlight (): void {
     const { config, datamodel } = this
 
     clearTimeout(this._highlightTimeoutId)
