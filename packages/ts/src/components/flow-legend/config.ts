@@ -15,6 +15,9 @@ export interface FlowLegendConfigInterface {
   arrowColor?: string;
   /** Callback function for the legend item click. Default: `undefined` */
   onLegendItemClick?: ((label?: string, i?: number) => void);
+  /** If set to true, the legend will be rendered directly into the HTML element provided to the constructor
+   * without creating additional `div` element. Default: `false` */
+  renderIntoProvidedDomNode?: boolean;
 }
 
 export const FlowLegendDefaultConfig: FlowLegendConfigInterface = {
@@ -26,4 +29,5 @@ export const FlowLegendDefaultConfig: FlowLegendConfigInterface = {
   arrowSymbol: '▶',
   arrowColor: undefined,
   onLegendItemClick: undefined,
+  renderIntoProvidedDomNode: false,
 }
