@@ -81,6 +81,8 @@ export interface TopoJSONMapConfigInterface<
   areaColor?: ColorAccessor<AreaDatum>;
   /** Area cursor value or accessor function. Default: `null` */
   areaCursor?: StringAccessor<AreaDatum>;
+  /** Area label accessor function. Default: `undefined` */
+  areaLabel?: StringAccessor<AreaDatum>;
 
   /** Point color accessor. Default: `d => d.color ?? null` */
   pointColor?: ColorAccessor<PointDatum>;
@@ -154,6 +156,7 @@ export const TopoJSONMapDefaultConfig: TopoJSONMapConfigInterface<unknown, unkno
   areaId: (d: unknown): string => (d as { id: string }).id ?? '',
   areaColor: (d: unknown): string => (d as { color: string }).color ?? null,
   areaCursor: null,
+  areaLabel: undefined,
 
   longitude: (d: unknown): number => (d as { longitude: number }).longitude,
   latitude: (d: unknown): number => (d as { latitude: number }).latitude,
