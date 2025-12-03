@@ -26,7 +26,8 @@ for (const component of components) {
     importStatements,
     component.dataType,
     component.elementSuffix,
-    component.isStandAlone
+    component.isStandAlone,
+    component.renderIntoProvidedDomNode
   )
 
   const nameKebabCase = component.kebabCaseName ?? kebabCase(component.name)
