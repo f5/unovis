@@ -36,6 +36,7 @@ export function getComponentCode (
   dataType = 'any',
   kebabCaseName?: string,
   isStandAlone = false,
+  renderIntoProvidedDomNode = false,
   styles = []
 ): string {
   const genericsStr = generics ? `<${generics?.map(g => g.name).join(', ')}>` : ''
@@ -46,7 +47,7 @@ export function getComponentCode (
     styles: ['.${kebabCaseName ?? kebabCase(componentName)}-container { ${styles?.join('; ')} }']`
     : 'template: \'\''
   const constructorArgs = isStandAlone
-    ? `this.containerRef.nativeElement, ${componentName === 'BulletLegend' ? '{ ...this.getConfig(), renderIntoProvidedDomNode: true }' : 'this.getConfig()'}${dataType ? ', this.data' : ''}`
+    ? `this.containerRef.nativeElement, ${renderIntoProvidedDomNode ? '{ ...this.getConfig(), renderIntoProvidedDomNode: true }' : 'this.getConfig()'}${dataType ? ', this.data' : ''}`
     : 'this.getConfig()'
   // Override the default generic with specified type from generics array
   return `// !!! This code was automatically generated. You should not change it !!!
@@ -83,7 +84,7 @@ ${
 
   ngOnChanges (changes: SimpleChanges): void {
     ${dataType ? 'if (changes.data) { this.component?.setData(this.data) }' : ''}
-    this.component?.${componentName === 'BulletLegend' ? 'update' : 'setConfig'}(this.getConfig())
+    this.component?.setConfig(this.getConfig())
     ${isStandAlone ? '' : 'this.componentContainer?.render()'}
   }
 
