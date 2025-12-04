@@ -72,6 +72,9 @@ export { VisLeafletFlowMapModule } from './html-components/leaflet-flow-map/leaf
 export { VisBulletLegendComponent } from './html-components/bullet-legend/bullet-legend.component'
 export { VisBulletLegendModule } from './html-components/bullet-legend/bullet-legend.module'
 
+export { VisFlowLegendComponent } from './html-components/flow-legend/flow-legend.component'
+export { VisFlowLegendModule } from './html-components/flow-legend/flow-legend.module'
+
 export { VisRollingPinLegendComponent } from './html-components/rolling-pin-legend/rolling-pin-legend.component'
 export { VisRollingPinLegendModule } from './html-components/rolling-pin-legend/rolling-pin-legend.module'
 

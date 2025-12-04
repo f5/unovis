@@ -23,4 +23,5 @@ export { default as VisAnnotations } from './components/annotations/annotations.
 export { default as VisLeafletMap } from './html-components/leaflet-map/leaflet-map.svelte'
 export { default as VisLeafletFlowMap } from './html-components/leaflet-flow-map/leaflet-flow-map.svelte'
 export { default as VisBulletLegend } from './html-components/bullet-legend/bullet-legend.svelte'
+export { default as VisFlowLegend } from './html-components/flow-legend/flow-legend.svelte'
 export { default as VisRollingPinLegend } from './html-components/rolling-pin-legend/rolling-pin-legend.svelte'

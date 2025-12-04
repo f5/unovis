@@ -1,12 +1,12 @@
 <script setup lang="ts" >
 // !!! This code was automatically generated. You should not change it !!!
-import { BulletLegend, BulletLegendConfigInterface, BulletLegendItemInterface } from '@unovis/ts'
+import { FlowLegend, FlowLegendConfigInterface } from '@unovis/ts'
 import { onMounted, onUnmounted, computed, ref, watch, nextTick } from 'vue'
 import { arePropsEqual, useForwardProps } from '../../utils/props'
 
 
 // data and required props 
-type Props = BulletLegendConfigInterface
+type Props = FlowLegendConfigInterface
 const props = defineProps<Props & { data?: null }>()
 
 const data = computed(() => props.data)
@@ -14,13 +14,13 @@ const data = computed(() => props.data)
 const config = useForwardProps(props)
 
 // component declaration
-const component = ref<BulletLegend>()
+const component = ref<FlowLegend>()
 const elRef = ref<HTMLDivElement>()
 
 onMounted(() => {
   nextTick(() => {
     if(elRef.value)
-    component.value = new BulletLegend(elRef.value, { ...config.value, renderIntoProvidedDomNode: true })
+    component.value = new FlowLegend(elRef.value, { ...config.value, renderIntoProvidedDomNode: true })
     
     
   })
@@ -44,16 +44,16 @@ defineExpose({
 </script>
 
 <script lang="ts">
-export const VisBulletLegendSelectors = BulletLegend.selectors
+export const VisFlowLegendSelectors = FlowLegend.selectors
 </script>
 
 <template>
-  <div data-vis-bullet-legend ref="elRef"/>
+  <div data-vis-flow-legend ref="elRef"/>
 </template>
 
 
 <style>
-  [data-vis-bullet-legend] {
+  [data-vis-flow-legend] {
     display:block;
   }
 </style>

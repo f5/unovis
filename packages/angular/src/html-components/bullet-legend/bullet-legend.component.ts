@@ -66,7 +66,7 @@ export class VisBulletLegendComponent implements BulletLegendConfigInterface, Af
   }
 
   ngOnChanges (changes: SimpleChanges): void {
-    this.component?.update(this.getConfig())
+    this.component?.setConfig(this.getConfig())
   }
 
   private getConfig (): BulletLegendConfigInterface {
