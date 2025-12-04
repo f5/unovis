@@ -31,6 +31,7 @@ for (const component of components) {
     component.dataType,
     component.kebabCaseName,
     component.isStandAlone,
+    component.renderIntoProvidedDomNode,
     component.angularStyles
   )
   const moduleCode = getModuleCode(component.name, component.kebabCaseName)

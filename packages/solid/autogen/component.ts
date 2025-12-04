@@ -7,6 +7,7 @@ export function getComponentCode(
   dataType: string | null = 'any',
   elementSuffix = 'component',
   isStandAlone = false,
+  renderIntoProvidedDomNode = false,
   styles?: string[]
 ): string {
   const genericsStr = generics
@@ -24,11 +25,7 @@ export function getComponentCode(
     : ''
   const componentType = `${componentName}${genericsStr}`
   const constructorArgs = isStandAlone
-    ? `r, ${
-        componentName === 'BulletLegend'
-          ? '{ ...props, renderIntoProvidedDomNode: true }'
-          : 'props'
-      }${dataType ? ', props.data!' : ''}`
+    ? `r, ${renderIntoProvidedDomNode ? '{ ...props, renderIntoProvidedDomNode: true }' : 'props'}${dataType ? ', props.data!' : ''}`
     : 'props'
 
   return `// !!! This code was automatically generated. You should not change it !!!
@@ -76,9 +73,7 @@ export function Vis${componentName}${genericsDefStr}(props: Vis${componentName}P
       () => ({ ...props }),
       (curr, prev) => {
         if (!arePropsEqual(prev, curr)) {
-          component()?.${
-            componentName === 'BulletLegend' ? 'update' : 'setConfig'
-          }(curr)
+          component()?.setConfig(curr)
           ${isStandAlone ? '' : `ctx.dirty()`}
         }
       },

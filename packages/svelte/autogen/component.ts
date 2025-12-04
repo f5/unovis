@@ -8,6 +8,7 @@ export function getComponentCode (
   dataType: string | null = 'Data',
   elementSuffix = 'component',
   isStandAlone = false,
+  renderIntoProvidedDomNode = false,
   styles?: string[]
 ): string {
   const genericsStr = generics ? `<${generics?.map(g => g.name).join(', ')}>` : ''
@@ -17,7 +18,7 @@ export function getComponentCode (
   const propDefs = dataType ? [`export let data: ${dataType} = undefined`, ...props] : props
   const componentType = [componentName, genericsStr].join('')
   const constructorArgs = isStandAlone
-    ? `ref, ${componentName === 'BulletLegend' ? '{ ...config, renderIntoProvidedDomNode: true }' : 'config'}${dataType ? ', data' : ''}`
+    ? `ref, ${renderIntoProvidedDomNode ? '{ ...config, renderIntoProvidedDomNode: true }' : 'config'}${dataType ? ', data' : ''}`
     : 'config'
   const lifecycleMethod = ['onMount(() => {', `component = new ${componentType}(${constructorArgs})`, 'return () => component?.destroy()', '})'].join('\n    ')
   return `<script lang="ts">
@@ -41,7 +42,7 @@ export function getComponentCode (
 
   ${lifecycleMethod}${dataType ? '\n  $: component?.setData(data)' : ''}
   $: if(!arePropsEqual(prevConfig, config)) {
-    component?.${componentName === 'BulletLegend' ? 'update' : 'setConfig'}(config)
+    component?.setConfig(config)
     prevConfig = config
   }
 
