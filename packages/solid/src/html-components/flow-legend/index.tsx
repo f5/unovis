@@ -1,21 +1,21 @@
 // !!! This code was automatically generated. You should not change it !!!
-import type { BulletLegendConfigInterface } from "@unovis/ts";
-import { BulletLegend } from "@unovis/ts";
+import type { FlowLegendConfigInterface } from "@unovis/ts";
+import { FlowLegend } from "@unovis/ts";
 import { createSignal, onCleanup, createEffect, on, onMount } from 'solid-js'
 import { arePropsEqual } from '../../utils/props'
 
-export type VisBulletLegendProps = BulletLegendConfigInterface
+export type VisFlowLegendProps = FlowLegendConfigInterface
 
-export const VisBulletLegendSelectors = BulletLegend.selectors
+export const VisFlowLegendSelectors = FlowLegend.selectors
 
-export function VisBulletLegend(props: VisBulletLegendProps) {
-  const [component, setComponent] = createSignal<BulletLegend>()
+export function VisFlowLegend(props: VisFlowLegendProps) {
+  const [component, setComponent] = createSignal<FlowLegend>()
    
   const [ref, setRef] = createSignal<HTMLDivElement>()
 
   onMount(() => {
     const r = ref()
-    if(r) setComponent(new BulletLegend(r, { ...props, renderIntoProvidedDomNode: true }));
+    if(r) setComponent(new FlowLegend(r, { ...props, renderIntoProvidedDomNode: true }));
     
     
   })
@@ -42,5 +42,5 @@ export function VisBulletLegend(props: VisBulletLegendProps) {
 
   
 
-  return <div  ref={setRef} style={{ display:"block" }} />
+  return <div data-vis-component ref={setRef} style={{ display:"block" }} />
 }

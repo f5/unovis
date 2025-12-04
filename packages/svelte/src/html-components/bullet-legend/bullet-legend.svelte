@@ -24,7 +24,7 @@
     return () => component?.destroy()
   })
   $: if (!arePropsEqual(prevConfig, config)) {
-    component?.update(config)
+    component?.setConfig(config)
     prevConfig = config
   }
 
