@@ -24,7 +24,6 @@ export const component = (): React.ReactNode => {
           label={(d: Node) => d.label}
           labelPosition="auto"
           labelMaxWidth={100}
-          linkColor={(d) => d.source.color || '#ccc'}
           linkValue={(d) => d.value}
         />
       </VisSingleContainer>
