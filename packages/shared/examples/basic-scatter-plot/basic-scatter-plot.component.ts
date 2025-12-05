@@ -17,5 +17,9 @@ export class BasicScatterPlotComponent {
 
   x: NumericAccessor<DataRecord> = d => d.beakLength
   y: NumericAccessor<DataRecord> = d => d.flipperLength
-  color: StringAccessor<DataRecord> = d => this.legendItems.find(i => i.name === (d.sex ?? 'No Data'))?.color
+  color: StringAccessor<DataRecord> = d => {
+    const match = this.legendItems.find(i => i.name === (d.sex ?? 'No Data'))
+    const c = match?.color ?? '#aaa'
+    return Array.isArray(c) ? c[0] : c
+  }
 }
