@@ -71,6 +71,9 @@
             "polyfills": "gallery/src/polyfills.ts",
             "tsConfig": "gallery/tsconfig.app.json",
             "inlineStyleLanguage": "sass",
+            "allowedCommonJsDependencies": [
+              "to-px"
+            ],
             "assets": [
               "gallery/src/favicon.ico",
               "gallery/src/assets"
