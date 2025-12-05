@@ -38,19 +38,20 @@
   "type": "module",
   "sideEffects": false,
   "scripts": {
-    "build": "npm run check && npx svelte-package; rm -rf dist/.cache; cp LICENSE README.md package.json ./dist",
+    "build": "pnpm run check && pnpm svelte-package; rm -rf dist/.cache; cp LICENSE README.md package.json ./dist",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "generate": "rollup -c ./autogen/rollup.config.js; node .autogen.cjs; rm .autogen.cjs",
     "gallery": "rm -rf dist-gallery; rollup -c gallery.rollup.config.js --watch",
-    "publish:dist": "cd ./dist; npm publish"
+    "publish:dist": "cd ./dist; pnpm publish"
   },
   "peerDependencies": {
     "@unovis/ts": "1.6.2",
     "svelte": "^3.48.0 || ^4.0.0 "
   },
   "devDependencies": {
+    "@unovis/shared": "workspace:*",
     "@rollup/plugin-node-resolve": "^13.0.4",
-    "@sveltejs/package": "^1.0.0-next.5",
+    "@sveltejs/package": "1.0.0-next.5",
     "@tsconfig/svelte": "^2.0.0",
     "@zerollup/ts-transform-paths": "^1.7.18",
     "eslint-plugin-svelte": "^2.10.0",
@@ -60,6 +61,7 @@
     "rollup-plugin-serve": "^2.0.1",
     "rollup-plugin-svelte": "^7.1.0",
     "rollup-plugin-typescript2": "^0.31.1",
+    "rollup-plugin-commonjs": "^10.1.0",
     "svelte": "^3.48.0",
     "svelte-check": "^2.7.0",
     "svelte-preprocess": "^4.10.7",
