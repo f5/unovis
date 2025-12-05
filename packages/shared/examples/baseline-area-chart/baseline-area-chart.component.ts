@@ -14,8 +14,8 @@ export class BaselineAreaChartComponent {
 
   // Area
   x = (d: DataRecord): number => d.year
-  y = categories.map((c: Category) => d => d.art[c.id])
-  color = categories.map((c: Category): string => c.color)
+  y = categories.map((c: Category) => (d: DataRecord) => d.art[c.id])
+  color = categories.map((c: Category): string => Array.isArray(c.color) ? c.color[0] : (c.color as string))
   baseline = (_: DataRecord, i: number): number => (this.max - this.sums[i]) / 2
   curveType = CurveType.Basis
 
