@@ -35,8 +35,15 @@
   "peerDependencies": {},
   "devDependencies": {
     "@angular/platform-browser": "^12.0.3",
-    "typescript": "~4.2.4",
-    "d3-format": "^3.1.0"
+    "@types/d3-scale": "^4.0.8",
+    "@types/d3-selection": "^3.0.10",
+    "@unovis/solid": "workspace:*",
+    "@unovis/ts": "workspace:*",
+    "d3-format": "^3.1.0",
+    "d3-scale": "^4.0.2",
+    "d3-selection": "^3.0.0",
+    "solid-js": "^1.9.3",
+    "typescript": "~4.2.4"
   },
   "dependencies": {}
 }
