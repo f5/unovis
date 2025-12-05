@@ -20,6 +20,7 @@ export default {
     resolve({
       browser: true,
       extensions: ['.js', '.ts', '.svelte'],
+      exportConditions: ['svelte', 'default'],
       dedupe: ['svelte'],
     }),
     typescript({
