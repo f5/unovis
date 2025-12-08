@@ -64,6 +64,7 @@ export type {
   MapData,
   MapFeature,
 } from './components/topojson-map/types'
+export { TopoJSONMapPointShape } from './components/topojson-map/types'
 export type { LeafletMapConfigInterface } from './components/leaflet-map/config'
 export type { LeafletFlowMapConfigInterface } from './components/leaflet-flow-map/config'
 export type { ChordDiagramConfigInterface } from './components/chord-diagram/config'

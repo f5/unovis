@@ -1,10 +1,11 @@
-import { getNumber } from 'utils/data'
+import { getNumber, getString } from 'utils/data'
+import { polygon, circlePath } from 'utils/path'
 
 // Config
-import { NumericAccessor } from 'types/accessor'
+import { NumericAccessor, StringAccessor } from 'types/accessor'
 
 // Local Types
-import { TopoJSONMapPieDatum, TopoJSONMapPointStyles } from './types'
+import { TopoJSONMapPieDatum, TopoJSONMapPointStyles, TopoJSONMapPointShape } from './types'
 
 export function getLonLat<Datum> (d: Datum, pointLongitude: NumericAccessor<Datum>, pointLatitude: NumericAccessor<Datum>): [number, number] {
   const lat = getNumber(d, pointLatitude)
@@ -29,6 +30,19 @@ export function arc (source?: number[], target?: number[], curvature?: number): 
   const dds = { x: (cs * ds.x) - (ss * ds.y), y: (ss * ds.x) + (cs * ds.y) }
   const ddt = { x: (ct * dt.x) - (st * dt.y), y: (st * dt.x) + (ct * dt.y) }
   return `M${s.x},${s.y} C${s.x + dds.x},${s.y + dds.y} ${t.x + ddt.x},${t.y + ddt.y} ${t.x},${t.y}`
+}
+
+export function getPointPathData ({ x, y }: { x: number; y: number }, radius: number, shape: TopoJSONMapPointShape): string {
+  switch (shape) {
+    case TopoJSONMapPointShape.Triangle:
+      return polygon(radius * 2, 3)
+    case TopoJSONMapPointShape.Square:
+      return polygon(radius * 2, 4)
+    case TopoJSONMapPointShape.Circle:
+    case TopoJSONMapPointShape.Ring:
+    default:
+      return circlePath(x, y, radius)
+  }
 }
 
 export function getDonutData<PointDatum> (

@@ -19,13 +19,13 @@ import { getCSSVariableValue, isStringCSSVariable } from 'utils/misc'
 import { MapLink } from 'types/map'
 
 // Local Types
-import { MapData, MapFeature, MapPointLabelPosition, MapProjection } from './types'
+import { MapData, MapFeature, MapPointLabelPosition, MapProjection, TopoJSONMapPointShape } from './types'
 
 // Config
 import { TopoJSONMapDefaultConfig, TopoJSONMapConfigInterface } from './config'
 
 // Modules
-import { arc, getLonLat, getDonutData } from './utils'
+import { arc, getLonLat, getDonutData, getPointPathData } from './utils'
 import { updateDonut } from './modules/donut'
 
 // Styles
@@ -252,8 +252,8 @@ export class TopoJSONMap<
       })
       .style('opacity', 0)
 
-    pointsEnter.append('circle').attr('class', s.pointCircle)
-      .attr('r', 0)
+    pointsEnter.append('path').attr('class', s.pointCircle)
+      .attr('d', 'M0,0')
       .style('fill', (d, i) => getColor(d, config.pointColor, i))
       .style('stroke-width', d => getNumber(d, config.pointStrokeWidth))
 
@@ -274,18 +274,29 @@ export class TopoJSONMap<
       .style('opacity', 1)
 
     smartTransition(pointsMerged.select(`.${s.pointCircle}`), duration)
-      .attr('r', d => {
+      .attr('d', d => {
         const radius = getNumber(d, config.pointRadius) / (this._currentZoomLevel || 1)
         const donutData = getDonutData(d, config.colorMap)
-        // Hide the main circle if we have donut data
-        return donutData.length > 0 ? 0 : radius
+        const shape = getString(d, config.pointShape) as TopoJSONMapPointShape || TopoJSONMapPointShape.Circle
+        // Hide the main shape if we have donut data
+        return donutData.length > 0 ? 'M0,0' : getPointPathData({ x: 0, y: 0 }, radius, shape)
       })
       .style('fill', (d, i) => {
         const donutData = getDonutData(d, config.colorMap)
-        return donutData.length > 0 ? 'transparent' : getColor(d, config.pointColor, i)
+        const shape = getString(d, config.pointShape) as TopoJSONMapPointShape || TopoJSONMapPointShape.Circle
+        const isRing = shape === TopoJSONMapPointShape.Ring
+        const pointColor = getColor(d, config.pointColor, i)
+
+        if (donutData.length > 0) return 'transparent'
+        return isRing ? 'transparent' : pointColor
       })
       .style('stroke', (d, i) => getColor(d, config.pointColor, i))
-      .style('stroke-width', d => getNumber(d, config.pointStrokeWidth) / this._currentZoomLevel)
+      .style('stroke-width', d => {
+        const shape = getString(d, config.pointShape) as TopoJSONMapPointShape || TopoJSONMapPointShape.Circle
+        const isRing = shape === TopoJSONMapPointShape.Ring
+        const baseStrokeWidth = isRing ? getNumber(d, config.pointRingWidth) : getNumber(d, config.pointStrokeWidth)
+        return baseStrokeWidth / this._currentZoomLevel
+      })
 
     // Update donut charts
     const currentZoomLevel = this._currentZoomLevel
