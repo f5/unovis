@@ -19,13 +19,13 @@ import { getCSSVariableValue, isStringCSSVariable } from 'utils/misc'
 import { MapLink } from 'types/map'
 
 // Local Types
-import { MapData, MapFeature, MapPointLabelPosition, MapProjection } from './types'
+import { MapData, MapFeature, MapPointLabelPosition, MapProjection, TopoJSONMapPointShape } from './types'
 
 // Config
 import { TopoJSONMapDefaultConfig, TopoJSONMapConfigInterface } from './config'
 
 // Modules
-import { arc, getLonLat } from './utils'
+import { arc, getLonLat, getPointPathData } from './utils'
 
 // Styles
 import * as s from './style'
@@ -251,8 +251,8 @@ export class TopoJSONMap<
       })
       .style('opacity', 0)
 
-    pointsEnter.append('circle').attr('class', s.pointCircle)
-      .attr('r', 0)
+    pointsEnter.append('path').attr('class', s.pointShape)
+      .attr('d', 'M0,0')
       .style('fill', (d, i) => getColor(d, config.pointColor, i))
       .style('stroke-width', d => getNumber(d, config.pointStrokeWidth))
 
@@ -269,11 +269,22 @@ export class TopoJSONMap<
       .style('cursor', d => getString(d, config.pointCursor))
       .style('opacity', 1)
 
-    smartTransition(pointsMerged.select(`.${s.pointCircle}`), duration)
+    smartTransition(pointsMerged.select(`.${s.pointShape}`), duration)
       .attr('r', d => getNumber(d, config.pointRadius) / this._currentZoomLevel)
       .style('fill', (d, i) => getColor(d, config.pointColor, i))
+      .attr('d', d => {
+        const shape = getString(d, config.pointShape) as TopoJSONMapPointShape || TopoJSONMapPointShape.Circle
+        const r = getNumber(d, config.pointRadius) / this._currentZoomLevel
+        // Center at 0,0 for transform
+        return getPointPathData({ x: 0, y: 0 }, r, shape)
+      })
       .style('stroke', (d, i) => getColor(d, config.pointColor, i))
-      .style('stroke-width', d => getNumber(d, config.pointStrokeWidth) / this._currentZoomLevel)
+      .style('stroke-width', d => {
+        const shape = getString(d, config.pointShape) as TopoJSONMapPointShape || TopoJSONMapPointShape.Circle
+        const isRing = shape === TopoJSONMapPointShape.Ring
+        const baseStrokeWidth = isRing ? getNumber(d, config.pointRingWidth) : getNumber(d, config.pointStrokeWidth)
+        return baseStrokeWidth / this._currentZoomLevel
+      })
 
     const pointLabelsMerged = pointsMerged.select(`.${s.pointLabel}`)
     pointLabelsMerged
