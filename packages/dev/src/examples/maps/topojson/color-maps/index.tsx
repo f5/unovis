@@ -32,15 +32,13 @@ export const component = (): React.ReactNode => {
   }
 
   return (
-    <div style={{ height: '500px' }}>
-      <VisSingleContainer data={data}>
-        <VisTopoJSONMap<any, DataRecord, any>
-          topojson={WorldMapTopoJSON}
-          pointRadius={20}
-          pointLabel={d => d.id}
-          colorMap={colorMap}
-        />
-      </VisSingleContainer>
-    </div>
+    <VisSingleContainer data={data} height={'90vh'}>
+      <VisTopoJSONMap<any, DataRecord, any>
+        topojson={WorldMapTopoJSON}
+        pointRadius={20}
+        pointLabel={d => d.id}
+        colorMap={colorMap}
+      />
+    </VisSingleContainer>
   )
 }

@@ -3,7 +3,7 @@ import { ComponentConfigInterface, ComponentDefaultConfig } from 'core/component
 
 // Types
 import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
-
+import { GenericDataRecord } from 'types/data'
 // Local Types
 import { MapPointLabelPosition, TopoJSONMapPointStyles } from './types'
 
@@ -71,32 +71,14 @@ export interface TopoJSONMapConfigInterface<
   /** Point id accessor function. Default: `d => d.id` */
   pointId?: ((d: PointDatum, i: number) => string);
 
-  /** A single map point can have multiple properties displayed as a small pie chart.
-   * By setting the colorMap configuration you can specify data properties that should be mapped to various pie / donut segments.
-   *
-   * ```
-   * {
-   *   [key in keyof PointDatum]?: { color: string, className?: string }
-   * }
-   * ```
-   * e.g.:
-   * ```
-   * {
-   *   healthy: { color: 'green' },
-   *   warning: { color: 'orange' },
-   *   danger: { color: 'red' }
-   * }
-   * ```
-   * where every data point has the `healthy`, `warning` and `danger` numerical or boolean property.
-   */
-  colorMap?: TopoJSONMapPointStyles<PointDatum>;
-
   /** Enables blur and blending between neighbouring points. Default: `false` */
   heatmapMode?: boolean;
   /** Heatmap blur filter stdDeviation value. Default: `10` */
   heatmapModeBlurStdDeviation?: number;
   /** Zoom level at which the heatmap mode will be disabled. Default: `2.5` */
   heatmapModeZoomLevelThreshold?: number;
+  colorMap?: TopoJSONMapPointStyles<GenericDataRecord>;
+
 }
 
 export const TopoJSONMapDefaultConfig: TopoJSONMapConfigInterface<unknown, unknown, unknown> = {
@@ -134,10 +116,9 @@ export const TopoJSONMapDefaultConfig: TopoJSONMapConfigInterface<unknown, unkno
   pointLabelTextBrightnessRatio: 0.65,
   pointId: (d: unknown): string => (d as { id: string }).id,
 
-  colorMap: {},
-
   heatmapMode: false,
   heatmapModeBlurStdDeviation: 8,
   heatmapModeZoomLevelThreshold: 2.5,
+  colorMap: {},
 }
 

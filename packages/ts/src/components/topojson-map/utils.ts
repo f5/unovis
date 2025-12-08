@@ -42,9 +42,10 @@ export function getDonutData<PointDatum> (
   return Object.keys(colorMap).map(key => {
     const keyTyped = key as keyof PointDatum
     const config = colorMap[keyTyped]
+    const value = (d as any)[key] as number || 0
     return {
       name: key,
-      value: (d as any)[key] as number || 0,
+      value,
       color: config?.color || '#000',
       className: config?.className,
     }
