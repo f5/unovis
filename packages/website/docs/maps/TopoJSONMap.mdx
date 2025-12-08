@@ -184,7 +184,7 @@ export const colorLegendItems = [
 
 ### Color Map
 If your points have multiple numerical properties that you want to visualize proportionally, you can use the `colorMap` 
-feature to display them as mini pie charts. This is similar to the colorMap functionality in _Leaflet Map_.
+feature to display them as mini donut/pie charts. This is similar to the colorMap functionality in _Leaflet Map_.
 
 Let's say you want to show server status data, and your data points look like:
 ```ts
@@ -211,7 +211,7 @@ export const colorMapData = ({
   points: [
     { id: 'NYC', latitude: 40.7128, longitude: -74.0060, healthy: 80, warning: 15, critical: 5 },
     { id: 'LON', latitude: 51.5074, longitude: -0.1278, healthy: 70, warning: 20, critical: 10 },
-    { id: 'TOK', latitude: 35.6762, longitude: 139.6503, healthy: 90, warning: 8, critical: 2 },
+    { id: 'TOK', latitude: 35.6762, longitude: 139.6503, healthy: 0, warning: 0 },
     { id: 'SYD', latitude: -33.8688, longitude: 151.2093, healthy: 65, warning: 25, critical: 10 },
     { id: 'PAR', latitude: 48.8566, longitude: 2.3522, healthy: 75, warning: 18, critical: 7 }
   ]
@@ -233,7 +233,9 @@ export const pieColorMap = {
   showContext="minimal"
 />
 
-Each point will display as a pie chart where the segments represent the relative values of your data properties.
+Each point will display as a donut chart where the segments represent the relative values of your data properties.
+
+**Note**: Color map charts are only rendered for points that have at least one non-zero value in the `colorMap` properties. Points with all zero or missing values will display as regular circles.
 
 ## Links
 A minimum viable data type of the objects provided to the `links` attribute contains the keys

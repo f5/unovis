@@ -33,20 +33,23 @@ export function arc (source?: number[], target?: number[], curvature?: number): 
 
 export function getDonutData<PointDatum> (
   d: PointDatum,
-  colorMap: TopoJSONMapPointStyles<PointDatum>
+  colorMap: TopoJSONMapPointStyles<PointDatum> | undefined
 ): TopoJSONMapPieDatum[] {
   if (!colorMap || Object.keys(colorMap).length === 0) {
     return []
   }
 
-  return Object.keys(colorMap).map(key => {
-    const keyTyped = key as keyof PointDatum
-    const config = colorMap[keyTyped]
-    return {
-      name: key,
-      value: (d as any)[key] as number || 0,
-      color: config?.color || '#000',
-      className: config?.className,
-    }
-  }).filter(item => item.value > 0)
+  return Object.keys(colorMap)
+    .map(key => {
+      const keyTyped = key as keyof PointDatum
+      const config = colorMap[keyTyped]
+      const value = Number((d as any)[key]) || 0
+      return {
+        name: key,
+        value,
+        color: config?.color || '#000',
+        className: config?.className,
+      }
+    })
+    .filter(item => item.value > 0)
 }

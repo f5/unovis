@@ -13,6 +13,7 @@ export function updateDonut (
   data: TopoJSONMapPieDatum[],
   radius: number,
   arcWidth = 2,
+  strokeWidth = 1,
   padAngle = 0.05
 ): void {
   pieConstructor.padAngle(padAngle)
@@ -34,4 +35,5 @@ export function updateDonut (
     .attr('d', arcPathGen)
     .style('fill', d => d.data.color ?? null)
     .style('stroke', d => d.data.color ?? null)
+    .style('stroke-width', strokeWidth)
 }

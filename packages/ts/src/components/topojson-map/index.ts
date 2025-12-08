@@ -257,8 +257,9 @@ export class TopoJSONMap<
       .style('fill', (d, i) => getColor(d, config.pointColor, i))
       .style('stroke-width', d => getNumber(d, config.pointStrokeWidth))
 
-    // Add donut chart group
-    pointsEnter.append('g').attr('class', `donut-group ${s.pointDonut}`)
+    pointsEnter.append('g')
+      .attr('class', `color-map ${s.pointDonut}`)
+      .attr('data-point-id', (d, i) => getString(d, config.pointId, i))
 
     pointsEnter.append('text').attr('class', s.pointLabel)
       .style('opacity', 0)
@@ -273,30 +274,32 @@ export class TopoJSONMap<
       .style('cursor', d => getString(d, config.pointCursor))
       .style('opacity', 1)
 
-    smartTransition(pointsMerged.select(`.${s.pointCircle}`), duration)
-      .attr('r', d => {
-        const radius = getNumber(d, config.pointRadius) / this._currentZoomLevel
-        const donutData = getDonutData(d, config.colorMap)
-        // Hide the main circle if we have donut data
-        return donutData.length > 0 ? 0 : radius
-      })
-      .style('fill', (d, i) => {
-        const donutData = getDonutData(d, config.colorMap)
-        return donutData.length > 0 ? 'none' : getColor(d, config.pointColor, i)
-      })
-      .style('stroke', (d, i) => getColor(d, config.pointColor, i))
-      .style('stroke-width', d => getNumber(d, config.pointStrokeWidth) / this._currentZoomLevel)
-
-    // Update donut charts
-    pointsMerged.select('.donut-group').each(function (d) {
+    // Update donut charts and circles
+    const currentZoomLevel = this._currentZoomLevel || 1
+    pointsMerged.select(`.${s.pointDonut}`).each(function (d, i) {
       const donutData = getDonutData(d, config.colorMap)
       if (donutData.length > 0) {
-        const radius = getNumber(d, config.pointRadius) / this?._currentZoomLevel
-        updateDonut(select(this as SVGGElement), donutData, radius, 2, 0.05)
+        const radius = getNumber(d, config.pointRadius) / currentZoomLevel
+        const arcWidth = 2 / currentZoomLevel // Keep arc width constant in screen space
+        const strokeWidth = 1 / currentZoomLevel // Keep stroke width constant in screen space
+        updateDonut(select(this as SVGGElement), donutData, radius, arcWidth, strokeWidth, 0.05)
       } else {
         select(this as SVGGElement).selectAll('*').remove()
       }
     })
+
+    smartTransition(pointsMerged.select(`.${s.pointCircle}`), duration)
+      .attr('r', d => {
+        const radius = getNumber(d, config.pointRadius) / currentZoomLevel
+        const hasDonut = getDonutData(d, config.colorMap).length > 0
+        return hasDonut ? 0 : radius
+      })
+      .style('fill', (d, i) => {
+        const hasDonut = getDonutData(d, config.colorMap).length > 0
+        return hasDonut ? 'transparent' : getColor(d, config.pointColor, i)
+      })
+      .style('stroke', (d, i) => getColor(d, config.pointColor, i))
+      .style('stroke-width', d => getNumber(d, config.pointStrokeWidth) / currentZoomLevel)
 
     const pointLabelsMerged = pointsMerged.select(`.${s.pointLabel}`)
     pointLabelsMerged

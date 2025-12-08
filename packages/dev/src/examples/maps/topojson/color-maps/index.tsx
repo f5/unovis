@@ -1,5 +1,5 @@
 import React from 'react'
-import { VisSingleContainer, VisTopoJSONMap } from '@unovis/react'
+import { VisSingleContainer, VisTopoJSONMap, VisTooltip, VisTopoJSONMapSelectors } from '@unovis/react'
 import { WorldMapTopoJSON } from '@unovis/ts/maps'
 
 export const title = 'Color Map'
@@ -24,23 +24,30 @@ export const data: { points: DataRecord[] } = {
   ],
 }
 
-export const component = (): React.ReactNode => {
-  const colorMap = {
-    healthy: { color: '#4CAF50', className: 'healthy' },
-    warning: { color: '#FF9800', className: 'warning' },
-    critical: { color: '#F44336', className: 'critical' },
-  }
+const colorMap = {
+  healthy: { color: '#4CAF50', className: 'healthy' },
+  warning: { color: '#FF9800', className: 'warning' },
+  critical: { color: '#F44336', className: 'critical' },
+}
 
+const tooltipTriggers = {
+  [VisTopoJSONMapSelectors.point]: (d: DataRecord) =>
+    `<strong>${d.id}</strong><br/>
+    Healthy: ${d.healthy}<br/>
+    Warning: ${d.warning}<br/>
+    Critical: ${d.critical}`,
+}
+
+export const component = (): React.ReactNode => {
   return (
-    <div style={{ height: '500px' }}>
-      <VisSingleContainer data={data}>
-        <VisTopoJSONMap<any, DataRecord, any>
-          topojson={WorldMapTopoJSON}
-          pointRadius={20}
-          pointLabel={d => d.id}
-          colorMap={colorMap}
-        />
-      </VisSingleContainer>
-    </div>
+    <VisSingleContainer data={data} height={'90vh'}>
+      <VisTopoJSONMap<any, DataRecord, any>
+        topojson={WorldMapTopoJSON}
+        pointRadius={20}
+        pointLabel={d => d.id}
+        colorMap={colorMap}
+      />
+      <VisTooltip triggers={tooltipTriggers} />
+    </VisSingleContainer>
   )
 }

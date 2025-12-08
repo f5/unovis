@@ -158,18 +158,21 @@ export class VisTopoJSONMapComponent<AreaDatum, PointDatum, LinkDatum> implement
    *
    * ```
    * {
-   * \[key in keyof PointDatum]?: { color: string, className?: string }
+   *   [key in keyof PointDatum]?: { color: string, className?: string }
    * }
    * ```
    * e.g.:
    * ```
    * {
-   * \healthy: { color: 'green' },
-   * \warning: { color: 'orange' },
-   * \critical: { color: 'red' }
+   *   healthy: { color: 'green' },
+   *   warning: { color: 'orange' },
+   *   critical: { color: 'red' }
    * }
    * ```
-   * where every data point has the `healthy`, `warning` and `critical` numerical or boolean property. */
+   * where every data point has the `healthy`, `warning` and `critical` numerical or boolean property.
+   * Note: Properties with 0 or falsy values will not be displayed in the pie chart.
+   * Default: `{}`
+   */
   @Input() colorMap?: TopoJSONMapPointStyles<PointDatum>
 
   /** Enables blur and blending between neighbouring points. Default: `false` */
@@ -201,8 +204,8 @@ export class VisTopoJSONMapComponent<AreaDatum, PointDatum, LinkDatum> implement
   }
 
   private getConfig (): TopoJSONMapConfigInterface<AreaDatum, PointDatum, LinkDatum> {
-    const { duration, events, attributes, projection, topojson, mapFeatureName, mapFitToPoints, zoomFactor, disableZoom, zoomExtent, zoomDuration, linkWidth, linkColor, linkCursor, linkId, linkSource, linkTarget, areaId, areaColor, areaCursor, pointColor, pointRadius, pointStrokeWidth, pointCursor, longitude, latitude, pointLabel, pointLabelPosition, pointLabelTextBrightnessRatio, pointId, heatmapMode, heatmapModeBlurStdDeviation, heatmapModeZoomLevelThreshold } = this
-    const config = { duration, events, attributes, projection, topojson, mapFeatureName, mapFitToPoints, zoomFactor, disableZoom, zoomExtent, zoomDuration, linkWidth, linkColor, linkCursor, linkId, linkSource, linkTarget, areaId, areaColor, areaCursor, pointColor, pointRadius, pointStrokeWidth, pointCursor, longitude, latitude, pointLabel, pointLabelPosition, pointLabelTextBrightnessRatio, pointId, heatmapMode, heatmapModeBlurStdDeviation, heatmapModeZoomLevelThreshold }
+    const { duration, events, attributes, projection, topojson, mapFeatureName, mapFitToPoints, zoomFactor, disableZoom, zoomExtent, zoomDuration, linkWidth, linkColor, linkCursor, linkId, linkSource, linkTarget, areaId, areaColor, areaCursor, pointColor, pointRadius, pointStrokeWidth, pointCursor, longitude, latitude, pointLabel, pointLabelPosition, pointLabelTextBrightnessRatio, pointId, colorMap, heatmapMode, heatmapModeBlurStdDeviation, heatmapModeZoomLevelThreshold } = this
+    const config = { duration, events, attributes, projection, topojson, mapFeatureName, mapFitToPoints, zoomFactor, disableZoom, zoomExtent, zoomDuration, linkWidth, linkColor, linkCursor, linkId, linkSource, linkTarget, areaId, areaColor, areaCursor, pointColor, pointRadius, pointStrokeWidth, pointCursor, longitude, latitude, pointLabel, pointLabelPosition, pointLabelTextBrightnessRatio, pointId, colorMap, heatmapMode, heatmapModeBlurStdDeviation, heatmapModeZoomLevelThreshold }
     const keys = Object.keys(config) as (keyof TopoJSONMapConfigInterface<AreaDatum, PointDatum, LinkDatum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
