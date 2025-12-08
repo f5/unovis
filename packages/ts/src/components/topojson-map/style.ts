@@ -66,8 +66,8 @@ export const point = css`
   label: point;
 `
 
-export const pointCircle = css`
-  label: point;
+export const pointShape = css`
+  label: point-shape;
 
   stroke-opacity: 0.4;
   pointer-events: fill;
