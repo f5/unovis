@@ -32,7 +32,7 @@
     "lint": "eslint src --ext .ts,.tsx",
     "build": "vite build; rm -rf dist/.cache; cp LICENSE README.md package.json ./dist",
     "publish:dist": "cd ./dist; npm publish",
-    "generate": "tsx autogen/index.ts && npm run lint -- --fix",
+    "generate": "tsx autogen/index.ts && pnpm run lint -- --fix",
     "gallery": "vite"
   },
   "peerDependencies": {
@@ -40,6 +40,7 @@
     "solid-js": "^1.9.0"
   },
   "devDependencies": {
+    "@unovis/ts": "workspace:*",
     "@unovis/shared": "workspace:*",
     "eslint-plugin-solid": "^0.13.2",
     "rollup": "^4.24.2",

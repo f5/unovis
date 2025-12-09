@@ -77,6 +77,9 @@ module.exports = {
       // Unovis React
       '@unovis/react': path.resolve(__dirname, '../react/src/'),
       'src/utils/react': path.resolve(__dirname, '../react/src/utils/react'),
+
+      // Unovis Shared
+      '@unovis/shared': path.resolve(__dirname, '../shared/'),
     },
   },
   devServer: {
