@@ -5,7 +5,7 @@ import { ComponentConfigInterface, ComponentDefaultConfig } from 'core/component
 import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
 
 // Local Types
-import { MapPointLabelPosition, TopoJSONMapPointShape, TopoJSONMapPointStyles } from './types'
+import { MapPointLabelPosition, TopoJSONMapClusterDatum, TopoJSONMapPointShape, TopoJSONMapPointStyles } from './types'
 
 export interface TopoJSONMapConfigInterface<
   AreaDatum,
@@ -77,6 +77,28 @@ export interface TopoJSONMapConfigInterface<
   /** Color map for points with donut/pie chart visualization. Default: `{}` */
   colorMap?: TopoJSONMapPointStyles<PointDatum>;
 
+  // Cluster
+  /** Cluster color accessor function or constant value. Default: `undefined` */
+  clusterColor?: ColorAccessor<TopoJSONMapClusterDatum<PointDatum>>;
+  /** Cluster radius accessor function or constant value. Default: `undefined` */
+  clusterRadius?: NumericAccessor<TopoJSONMapClusterDatum<PointDatum>>;
+  /** Cluster inner label accessor function. Default: `d => d.pointCount` */
+  clusterLabel?: StringAccessor<TopoJSONMapClusterDatum<PointDatum>>;
+  /** Cluster inner label color accessor function or constant value. Default: `undefined` */
+  clusterLabelColor?: StringAccessor<TopoJSONMapClusterDatum<PointDatum>>;
+  /** Cluster bottom label accessor function. Default: `''` */
+  clusterBottomLabel?: StringAccessor<TopoJSONMapClusterDatum<PointDatum>>;
+  /** The width of the cluster point ring. Default: `2` */
+  clusterRingWidth?: number;
+  /** When cluster is expanded, show a background circle to better separate points from the base map. Default: `true` */
+  clusterBackground?: boolean;
+  /** Defines whether the cluster should expand on click or not. Default: `true` */
+  clusterExpandOnClick?: boolean;
+  /** Clustering distance in pixels. Default: `55` */
+  clusteringDistance?: number;
+  /** Enable point clustering. Default: `false` */
+  clustering?: boolean;
+
   /** Enables blur and blending between neighbouring points. Default: `false` */
   heatmapMode?: boolean;
   /** Heatmap blur filter stdDeviation value. Default: `10` */
@@ -93,7 +115,7 @@ export const TopoJSONMapDefaultConfig: TopoJSONMapConfigInterface<unknown, unkno
   mapFeatureName: 'countries',
   mapFitToPoints: false,
 
-  zoomExtent: [0.5, 6],
+  zoomExtent: [0.5, 12],
   zoomDuration: 400,
   disableZoom: false,
   zoomFactor: undefined,
@@ -122,6 +144,18 @@ export const TopoJSONMapDefaultConfig: TopoJSONMapConfigInterface<unknown, unkno
   pointLabelTextBrightnessRatio: 0.65,
   pointId: (d: unknown): string => (d as { id: string }).id,
   colorMap: {},
+
+  // Cluster
+  clusterColor: undefined,
+  clusterRadius: undefined,
+  clusterLabel: (d: TopoJSONMapClusterDatum<unknown>): string => `${d.pointCount}`,
+  clusterLabelColor: undefined,
+  clusterBottomLabel: '',
+  clusterRingWidth: 2,
+  clusterBackground: true,
+  clusterExpandOnClick: true,
+  clusteringDistance: 55,
+  clustering: false,
 
   heatmapMode: false,
   heatmapModeBlurStdDeviation: 8,

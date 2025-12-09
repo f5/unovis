@@ -1,4 +1,5 @@
 import { Feature, Geometry } from 'geojson'
+import Supercluster from 'supercluster'
 import {
   GeoProjection,
   geoMercator,
@@ -69,6 +70,35 @@ export interface TopoJSONMapPointStyle {
 }
 
 export type TopoJSONMapPointStyles<D> = { [key in keyof D]?: TopoJSONMapPointStyle }
+
+export type TopoJSONMapPointDatum<D> = D & {
+  id: string | number;
+  shape: TopoJSONMapPointShape;
+  _index: number;
+}
+
+export type TopoJSONMapClusterDatum<D> = Partial<D> & {
+  cluster?: boolean;
+  clusterId?: number;
+  pointCount?: number;
+  pointCountAbbreviated?: string;
+  clusterPoints?: D[];
+  clusterIndex?: Supercluster<D>;
+}
+
+export type TopoJSONMapPoint<D> = {
+  geometry: GeoJSON.Point;
+  bbox: { x1: number; x2: number; y1: number; y2: number };
+  radius: number;
+  path: string;
+  color: string;
+  id: number | string;
+  properties: TopoJSONMapPointDatum<D> | TopoJSONMapClusterDatum<D>;
+  donutData: TopoJSONMapPieDatum[];
+  isCluster: boolean;
+  clusterIndex?: Supercluster<D>;
+  _zIndex: number;
+}
 
 export enum MapProjectionKind {
   // Projections form `d3-geo`
