@@ -55,14 +55,14 @@ export const component = (): React.ReactNode => {
     <VisSingleContainer data={data} height={'90vh'}>
       <VisTopoJSONMap<any, DataRecord, any>
         topojson={WorldMapTopoJSON}
-        pointRadius={15}
+        pointRadius={10}
         pointLabel={d => d.id}
         pointShape={d => d.shape}
         pointRingWidth={4}
         clustering={true}
         clusteringDistance={100}
         clusterColor={() => '#2196F3'}
-        clusterRadius={20}
+        clusterRadius={10}
         clusterRingWidth={3}
         clusterExpandOnClick={true}
         // colorMap={colorMap}

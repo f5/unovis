@@ -159,7 +159,7 @@ export function geoJsonPointToScreenPoint<D extends GenericDataRecord> (
   zoomLevel: number
 ): TopoJSONMapPoint<D> {
   const isCluster = (geoPoint.properties as TopoJSONMapClusterDatum<D>).cluster
-  const pos = projection(geoPoint.geometry.coordinates)
+  const pos = projection(geoPoint.geometry.coordinates as [number, number])
   const x = pos[0]
   const y = pos[1]
 
