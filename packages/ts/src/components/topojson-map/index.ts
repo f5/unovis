@@ -1,5 +1,5 @@
 import { Selection, select } from 'd3-selection'
-import { D3ZoomEvent, zoom, ZoomBehavior, zoomIdentity, ZoomTransform, zoomTransform } from 'd3-zoom'
+import { D3ZoomEvent, zoom, ZoomBehavior, zoomIdentity, ZoomTransform } from 'd3-zoom'
 import { timeout } from 'd3-timer'
 import { easeCubicInOut } from 'd3-ease'
 import { geoPath, GeoProjection, ExtendedFeatureCollection } from 'd3-geo'
@@ -45,7 +45,6 @@ import {
   calculateClusterIndex,
   getClustersAndPoints,
   geoJsonPointToScreenPoint,
-  shouldClusterExpand,
   getNextZoomLevelOnClusterClick,
 } from './utils'
 import { updateDonut } from './modules/donut'
@@ -334,7 +333,9 @@ export class TopoJSONMap<
 
   _renderPoints (duration: number): void {
     const { config } = this
+    const hasColorMap = config.colorMap && Object.keys(config.colorMap).length > 0
     const pointData = this._getPointData()
+
 
     const points = this._pointsGroup
       .selectAll<SVGGElement, TopoJSONMapPoint<PointDatum>>(`.${s.point}`)
@@ -373,22 +374,25 @@ export class TopoJSONMap<
         return `translate(${pos[0] + dx},${pos[1] + dy})`
       })
       .style('cursor', d => {
-        return d.isCluster ? 'pointer' : getString(d.properties as PointDatum, config.pointCursor)
+        return (d.isCluster && (config.clusterExpandOnClick || hasColorMap)) ? 'pointer' : getString(d.properties as PointDatum, config.pointCursor)
       })
       .style('opacity', 1)
 
+    // Cursor is handled by the parent point element
+
     // Add click event handler for clusters
-    pointsMerged.on('click', (event: MouseEvent, d: TopoJSONMapPoint<PointDatum>) => {
-      this._onPointClick(d, event)
-    })
+    pointsMerged
+      .style('pointer-events', 'all') // Ensure pointer events are enabled
+      .on('click', (event: MouseEvent, d: TopoJSONMapPoint<PointDatum>) => {
+        this._onPointClick(d, event)
+      })
+
 
     smartTransition(pointsMerged.select(`.${s.pointCircle}`), duration)
       .attr('d', d => {
         const radius = d.radius / (this._currentZoomLevel || 1)
-        const donutData = d.donutData
         const shape = getString(d.properties as PointDatum, config.pointShape) as TopoJSONMapPointShape || TopoJSONMapPointShape.Circle
-        // Hide the main shape if we have donut data
-        return donutData.length > 0 ? 'M0,0' : getPointPathData({ x: 0, y: 0 }, radius, shape)
+        return getPointPathData({ x: 0, y: 0 }, radius, shape)
       })
       .style('fill', d => {
         const donutData = d.donutData
@@ -421,15 +425,17 @@ export class TopoJSONMap<
 
     // Update donut charts
     const currentZoomLevel = this._currentZoomLevel
-    pointsMerged.select('.donut-group').each(function (d) {
-      if (d.donutData.length > 0) {
-        const radius = getNumber(d.properties as any, config.pointRadius, 0) / (currentZoomLevel || 1)
-        const arcWidth = 2 / (currentZoomLevel || 1) // Keep arc width constant in screen space
-        updateDonut(select(this as SVGGElement), d.donutData, radius, arcWidth, 0.05)
-      } else {
-        select(this as SVGGElement).selectAll('*').remove()
-      }
-    })
+    pointsMerged.select('.donut-group')
+      .style('pointer-events', 'none') // Allow clicks to pass through donut charts
+      .each(function (d) {
+        if (d.donutData.length > 0) {
+          const radius = getNumber(d.properties as any, config.pointRadius, 0) / (currentZoomLevel || 1)
+          const arcWidth = (d.isCluster ? 4 : 2) / (currentZoomLevel || 1) // Thicker ring for clusters
+          updateDonut(select(this as SVGGElement), d.donutData, radius, arcWidth, 0.05)
+        } else {
+          select(this as SVGGElement).selectAll('*').remove()
+        }
+      })
 
     const pointLabelsMerged = pointsMerged.select(`.${s.pointLabel}`)
     pointLabelsMerged
@@ -629,7 +635,10 @@ export class TopoJSONMap<
     }
 
     if (d.isCluster && (d.properties as TopoJSONMapClusterDatum<PointDatum>).cluster) {
-      if (config.clusterExpandOnClick) {
+      // Enable click expansion when clusterExpandOnClick is true OR when colorMap is enabled (for pie chart clusters)
+      const hasColorMap = config.colorMap && Object.keys(config.colorMap).length > 0
+
+      if (config.clusterExpandOnClick || hasColorMap) {
         // Always expand the cluster to show individual points
         const expandedPoints = this._expandCluster(d)
 

@@ -19,8 +19,8 @@ export function updateDonut (
   const arcs = pieConstructor(data.filter(d => d.value))
 
   const arcPathGen = arc<PieArcDatum<TopoJSONMapPieDatum>>()
-    .innerRadius(arcWidth ? radius - arcWidth / 2 : 0)
-    .outerRadius(arcWidth ? radius + arcWidth / 2 : radius)
+    .innerRadius(radius) // Start from the edge of the main circle
+    .outerRadius(radius + arcWidth) // Extend outward to create a ring
 
   const donuts = selection.selectAll<SVGPathElement, TopoJSONMapPieDatum>('path')
     .data(arcs)

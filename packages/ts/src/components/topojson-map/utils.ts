@@ -80,6 +80,44 @@ export function getDonutData<PointDatum> (
   }).filter(item => item.value > 0)
 }
 
+// Aggregate donut data from all points in a cluster
+export function getAggregatedClusterDonutData<D extends GenericDataRecord> (
+  clusterPoint: ClusterFeature<TopoJSONMapClusterDatum<D>>,
+  colorMap: TopoJSONMapPointStyles<D>
+): TopoJSONMapPieDatum[] {
+  if (!colorMap || Object.keys(colorMap).length === 0 || !clusterPoint.properties.clusterIndex) {
+    return []
+  }
+
+  const clusterId = clusterPoint.properties.clusterId
+  const clusterIndex = clusterPoint.properties.clusterIndex
+  const points = clusterIndex.getLeaves(clusterId, Infinity)
+
+  // Aggregate values for each colorMap key across all points in the cluster
+  const aggregatedData: { [key: string]: number } = {}
+
+  for (const point of points) {
+    const pointData = point.properties as D
+    for (const key of Object.keys(colorMap)) {
+      const value = (pointData as any)[key] as number || 0
+      aggregatedData[key] = (aggregatedData[key] || 0) + value
+    }
+  }
+
+  return Object.keys(colorMap).map(key => {
+    const keyTyped = key as keyof D
+    const config = colorMap[keyTyped]
+    const value = aggregatedData[key] || 0
+
+    return {
+      name: key,
+      value,
+      color: config?.color || '#000',
+      className: config?.className,
+    }
+  }).filter(item => item.value > 0)
+}
+
 export function toGeoJSONPoint<D extends GenericDataRecord> (
   d: D,
   i: number,
@@ -172,19 +210,24 @@ export function geoJsonPointToScreenPoint<D extends GenericDataRecord> (
     (isCluster ? config.clusterColor : config.pointColor) as ColorAccessor<D>
   )
 
-  const radius = getPointRadius(geoPoint, isCluster ? config.clusterRadius : config.pointRadius, zoomLevel)
+  const radius = isCluster
+    ? getPointRadius(geoPoint as ClusterFeature<TopoJSONMapClusterDatum<D>>, config.clusterRadius as NumericAccessor<TopoJSONMapClusterDatum<D>>, zoomLevel)
+    : getPointRadius(geoPoint as PointFeature<TopoJSONMapPointDatum<D>>, config.pointRadius as NumericAccessor<D>, zoomLevel)
   const shape = isCluster
     ? TopoJSONMapPointShape.Circle
     : (getString(geoPoint.properties as D, config.pointShape) as TopoJSONMapPointShape || TopoJSONMapPointShape.Circle)
   const isRing = shape === TopoJSONMapPointShape.Ring
 
-  const donutData = getDonutData(geoPoint.properties, config.colorMap)
+  // For clusters, aggregate donut data from all points in the cluster
+  const donutData = isCluster
+    ? getAggregatedClusterDonutData(geoPoint as ClusterFeature<TopoJSONMapClusterDatum<D>>, config.colorMap)
+    : getDonutData(geoPoint.properties, config.colorMap)
   const maxValue = max(donutData, d => d.value)
   const maxValueIndex = donutData.map(d => d.value).indexOf(maxValue || 0)
   const biggestDatum = donutData[maxValueIndex ?? 0]
 
   const color = isCluster
-    ? pointColor
+    ? (donutData.length > 0 ? 'transparent' : pointColor) // Hide fill if cluster has donut data
     : (isRing ? null : (pointColor ?? biggestDatum?.color))
 
   const bbox = { x1: x - radius, y1: y - radius, x2: x + radius, y2: y + radius }

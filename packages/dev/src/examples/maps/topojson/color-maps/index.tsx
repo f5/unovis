@@ -65,7 +65,7 @@ export const component = (): React.ReactNode => {
         clusterRadius={10}
         clusterRingWidth={3}
         clusterExpandOnClick={true}
-        // colorMap={colorMap}
+        colorMap={colorMap}
       />
     </VisSingleContainer>
   )
