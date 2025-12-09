@@ -3,7 +3,9 @@ import { D3ZoomEvent, zoom, ZoomBehavior, zoomIdentity, ZoomTransform } from 'd3
 import { timeout } from 'd3-timer'
 import { geoPath, GeoProjection, ExtendedFeatureCollection } from 'd3-geo'
 import { color } from 'd3-color'
+import { packSiblings } from 'd3-hierarchy'
 import { feature } from 'topojson-client'
+import Supercluster from 'supercluster'
 
 // Core
 import { ComponentCore } from 'core/component'
@@ -19,13 +21,32 @@ import { getCSSVariableValue, isStringCSSVariable } from 'utils/misc'
 import { MapLink } from 'types/map'
 
 // Local Types
-import { MapData, MapFeature, MapPointLabelPosition, MapProjection, TopoJSONMapPointShape } from './types'
+import {
+  MapData,
+  MapFeature,
+  MapPointLabelPosition,
+  MapProjection,
+  TopoJSONMapPointShape,
+  TopoJSONMapPoint,
+  TopoJSONMapClusterDatum,
+  TopoJSONMapPointDatum,
+} from './types'
 
 // Config
 import { TopoJSONMapDefaultConfig, TopoJSONMapConfigInterface } from './config'
 
 // Modules
-import { arc, getLonLat, getDonutData, getPointPathData } from './utils'
+import {
+  arc,
+  getLonLat,
+  getDonutData,
+  getPointPathData,
+  calculateClusterIndex,
+  getClustersAndPoints,
+  geoJsonPointToScreenPoint,
+  shouldClusterExpand,
+  getNextZoomLevelOnClusterClick,
+} from './utils'
 import { updateDonut } from './modules/donut'
 
 // Styles
@@ -56,6 +77,13 @@ export class TopoJSONMap<
   private _prevWidth: number
   private _prevHeight: number
   private _animFrameId: number
+  private _clusterIndex: Supercluster<PointDatum> | null = null
+  private _expandedCluster: {
+    cluster: TopoJSONMapPoint<PointDatum>;
+    points: any[];
+  } | null = null
+
+  private _eventInitiatedByComponent = false
 
   private _featureCollection: GeoJSON.FeatureCollection
   private _zoomBehavior: ZoomBehavior<SVGGElement, unknown> = zoom()
@@ -92,6 +120,22 @@ export class TopoJSONMap<
     this.datamodel.linkSource = config.linkSource
     this.datamodel.linkTarget = config.linkTarget
     this.datamodel.data = data
+
+    // Reset expanded cluster when data changes
+    this._resetExpandedCluster()
+
+    // Initialize clustering if enabled
+    if (config.clustering && data.points?.length) {
+      const dataValid = data.points.filter(d => {
+        const lat = getNumber(d, config.latitude)
+        const lon = getNumber(d, config.longitude)
+        return isNumber(lat) && isNumber(lon)
+      })
+
+      this._clusterIndex = calculateClusterIndex(dataValid as any, this.config as any) as any
+    } else {
+      this._clusterIndex = null
+    }
 
     // If there was a data change and mapFitToPoints is enabled, we will need to re-fit the map
     this._firstRender = this._firstRender || config.mapFitToPoints
@@ -236,19 +280,73 @@ export class TopoJSONMap<
     edges.exit().remove()
   }
 
-  _renderPoints (duration: number): void {
+  private _getPointData (): TopoJSONMapPoint<PointDatum>[] {
     const { config, datamodel } = this
-    const pointData = datamodel.points
+
+    if (!config.clustering || !this._clusterIndex) {
+      // Return regular points when clustering is disabled
+      return datamodel.points.map((d, i) => {
+        const pos = this._projection(getLonLat(d, config.longitude, config.latitude))
+        const radius = getNumber(d, config.pointRadius)
+        const shape = getString(d, config.pointShape) as TopoJSONMapPointShape || TopoJSONMapPointShape.Circle
+        const donutData = getDonutData(d, config.colorMap)
+        const pointColor = getColor(d, config.pointColor, i)
+
+        return {
+          geometry: { type: 'Point', coordinates: getLonLat(d, config.longitude, config.latitude) },
+          bbox: { x1: pos[0] - radius, y1: pos[1] - radius, x2: pos[0] + radius, y2: pos[1] + radius },
+          radius,
+          path: getPointPathData({ x: 0, y: 0 }, radius, shape),
+          color: pointColor,
+          id: getString(d, config.pointId, i),
+          properties: d as TopoJSONMapPointDatum<PointDatum>,
+          donutData,
+          isCluster: false,
+          _zIndex: 0,
+        } as TopoJSONMapPoint<PointDatum>
+      })
+    }
+
+    // Get bounds for clustering
+    const bounds = this._projection.invert ? [
+      this._projection.invert([0, this._height])[0],
+      this._projection.invert([0, this._height])[1],
+      this._projection.invert([this._width, 0])[0],
+      this._projection.invert([this._width, 0])[1],
+    ] as [number, number, number, number] : [-180, -90, 180, 90] as [number, number, number, number]
+
+    const zoom = Math.round(this._currentZoomLevel || 1)
+    let geoJsonPoints = getClustersAndPoints(this._clusterIndex as any, bounds, zoom)
+
+    // Handle expanded cluster points similar to leaflet map
+    if (this._expandedCluster) {
+      // Remove expanded cluster from the data
+      geoJsonPoints = geoJsonPoints.filter((c: any) => c.properties.clusterId !== (this._expandedCluster?.cluster.properties as any).clusterId)
+      // Add points from the expanded cluster
+      geoJsonPoints = geoJsonPoints.concat(this._expandedCluster.points as any)
+    }
+
+    return geoJsonPoints.map((geoPoint, i) =>
+      geoJsonPointToScreenPoint(geoPoint as any, i, this._projection, this.config as any, this._currentZoomLevel || 1)
+    ) as any
+  }
+
+  _renderPoints (duration: number): void {
+    const { config } = this
+    const pointData = this._getPointData()
 
     const points = this._pointsGroup
-      .selectAll<SVGGElement, PointDatum>(`.${s.point}`)
-      .data(pointData, (d, i) => getString(d, config.pointId, i))
+      .selectAll<SVGGElement, TopoJSONMapPoint<PointDatum>>(`.${s.point}`)
+      .data(pointData, (d, i) => d.id.toString())
 
     // Enter
     const pointsEnter = points.enter().append('g').attr('class', s.point)
       .attr('transform', d => {
-        const pos = this._projection(getLonLat(d, config.longitude, config.latitude))
-        return `translate(${pos[0]},${pos[1]})`
+        const pos = this._projection(d.geometry.coordinates as [number, number])
+        const expandedPoint = d as any
+        const dx = expandedPoint.dx || 0
+        const dy = expandedPoint.dy || 0
+        return `translate(${pos[0] + dx},${pos[1] + dy})`
       })
       .style('opacity', 0)
 
@@ -257,11 +355,11 @@ export class TopoJSONMap<
       .attr('class', s.pointShape)
       .attr('d', 'M0,0')
       .style('fill', (d, i) => {
-        const shape = getString(d, config.pointShape) as TopoJSONMapPointShape || TopoJSONMapPointShape.Circle
+        const shape = getString(d.properties as PointDatum, config.pointShape) as TopoJSONMapPointShape || TopoJSONMapPointShape.Circle
         if (shape === TopoJSONMapPointShape.Ring) return 'none'
-        return getColor(d, config.pointColor, i)
+        return d.color
       })
-      .style('stroke-width', d => getNumber(d, config.pointStrokeWidth))
+      .style('stroke-width', d => getNumber(d.properties as PointDatum, config.pointStrokeWidth))
 
     // Donut group for color-map functionality
     pointsEnter.append('g')
@@ -284,21 +382,30 @@ export class TopoJSONMap<
     const pointsMerged = pointsEnter.merge(points)
     smartTransition(pointsMerged, duration)
       .attr('transform', d => {
-        const pos = this._projection(getLonLat(d, config.longitude, config.latitude))
-        return `translate(${pos[0]},${pos[1]})`
+        const pos = this._projection(d.geometry.coordinates as [number, number])
+        const expandedPoint = d as any
+        const dx = expandedPoint.dx || 0
+        const dy = expandedPoint.dy || 0
+        return `translate(${pos[0] + dx},${pos[1] + dy})`
       })
-      .style('cursor', d => getString(d, config.pointCursor))
+      .style('cursor', d => {
+        return d.isCluster ? 'pointer' : getString(d.properties as PointDatum, config.pointCursor)
+      })
       .style('opacity', 1)
+
+    // Add click event handler for clusters
+    pointsMerged.on('click', (event: MouseEvent, d: TopoJSONMapPoint<PointDatum>) => {
+      this._onPointClick(d, event)
+    })
 
     // Update donut charts
     const currentZoomLevel = this._currentZoomLevel || 1
-    pointsMerged.select(`.${s.pointDonut}`).each(function (d, i) {
-      const donutData = getDonutData(d, config.colorMap)
-      if (donutData.length > 0) {
-        const radius = getNumber(d, config.pointRadius) / currentZoomLevel
+    pointsMerged.select(`.${s.pointDonut}`).each(function (d) {
+      if (d.donutData.length > 0) {
+        const radius = d.radius / currentZoomLevel
         const arcWidth = 2 / currentZoomLevel // Keep arc width constant in screen space
         const strokeWidth = 1 / currentZoomLevel // Keep stroke width constant in screen space
-        updateDonut(select(this as SVGGElement), donutData, radius, arcWidth, strokeWidth, 0.05)
+        updateDonut(select(this as SVGGElement), d.donutData, radius, arcWidth, strokeWidth, 0.05)
       } else {
         select(this as SVGGElement).selectAll('*').remove()
       }
@@ -306,49 +413,50 @@ export class TopoJSONMap<
 
     // Update point shapes
     smartTransition(pointsMerged.select(`.${s.pointShape}`), duration)
-      .attr('r', d => getNumber(d, config.pointRadius) / this._currentZoomLevel)
-      .style('fill', (d, i) => {
-        const shape = getString(d, config.pointShape) as TopoJSONMapPointShape || TopoJSONMapPointShape.Circle
-        const hasDonut = getDonutData(d, config.colorMap).length > 0
-        if (shape === TopoJSONMapPointShape.Ring || hasDonut) return 'none'
-        return getColor(d, config.pointColor, i)
-      })
       .attr('d', d => {
-        const shape = getString(d, config.pointShape) as TopoJSONMapPointShape || TopoJSONMapPointShape.Circle
-        const r = getNumber(d, config.pointRadius) / this._currentZoomLevel
-        // Center at 0,0 for transform
-        return getPointPathData({ x: 0, y: 0 }, r, shape)
+        const radius = d.radius / currentZoomLevel
+        const shape = getString(d.properties as PointDatum, config.pointShape) as TopoJSONMapPointShape || TopoJSONMapPointShape.Circle
+        // Hide the main shape if we have donut data
+        return d.donutData.length > 0 ? 'M0,0' : getPointPathData({ x: 0, y: 0 }, radius, shape)
       })
-      .style('stroke', (d, i) => getColor(d, config.pointColor, i))
-      .style('stroke-width', d => {
-        const shape = getString(d, config.pointShape) as TopoJSONMapPointShape || TopoJSONMapPointShape.Circle
+      .style('fill', d => {
+        const shape = getString(d.properties as PointDatum, config.pointShape) as TopoJSONMapPointShape || TopoJSONMapPointShape.Circle
         const isRing = shape === TopoJSONMapPointShape.Ring
-        const baseStrokeWidth = isRing ? getNumber(d, config.pointRingWidth) : getNumber(d, config.pointStrokeWidth)
-        return baseStrokeWidth / this._currentZoomLevel
+        const hasDonut = d.donutData.length > 0
+
+        if (hasDonut || isRing) return 'none'
+        return d.color
+      })
+      .style('stroke', d => d.color)
+      .style('stroke-width', d => {
+        const shape = getString(d.properties as PointDatum, config.pointShape) as TopoJSONMapPointShape || TopoJSONMapPointShape.Circle
+        const isRing = shape === TopoJSONMapPointShape.Ring
+        const baseStrokeWidth = isRing ? getNumber(d.properties as PointDatum, config.pointRingWidth) : getNumber(d.properties as PointDatum, config.pointStrokeWidth)
+        return baseStrokeWidth / currentZoomLevel
       })
 
     // Ring overlay update
     smartTransition(pointsMerged.select(`.${s.pointPathRing}`), duration)
       .attr('d', d => {
-        const shape = getString(d, config.pointShape) as TopoJSONMapPointShape
+        const shape = getString(d.properties as PointDatum, config.pointShape) as TopoJSONMapPointShape
         if (shape !== TopoJSONMapPointShape.Ring) return ''
-        const r = getNumber(d, config.pointRadius) / this._currentZoomLevel
-        return getPointPathData({ x: 0, y: 0 }, r, TopoJSONMapPointShape.Circle)
+        const radius = d.radius / currentZoomLevel
+        return getPointPathData({ x: 0, y: 0 }, radius, TopoJSONMapPointShape.Circle)
       })
       .style('display', d => {
-        const shape = getString(d, config.pointShape) as TopoJSONMapPointShape
+        const shape = getString(d.properties as PointDatum, config.pointShape) as TopoJSONMapPointShape
         return shape === TopoJSONMapPointShape.Ring ? null : 'none'
       })
 
     const pointLabelsMerged = pointsMerged.select(`.${s.pointLabel}`)
     pointLabelsMerged
-      .text(d => getString(d, config.pointLabel) ?? '')
+      .text(d => getString(d.properties as any, config.pointLabel) ?? '')
       .style('font-size', d => {
         if (config.pointLabelPosition === MapPointLabelPosition.Bottom) {
           return `calc(var(--vis-map-point-label-font-size) / ${this._currentZoomLevel}`
         }
-        const pointDiameter = 2 * getNumber(d, config.pointRadius)
-        const pointLabelText = getString(d, config.pointLabel) || ''
+        const pointDiameter = 2 * getNumber(d.properties as any, config.pointRadius, 0)
+        const pointLabelText = getString(d.properties as any, config.pointLabel) || ''
         const textLength = pointLabelText.length
         const fontSize = 0.5 * pointDiameter / Math.pow(textLength, 0.4)
         return clamp(fontSize, fontSize, 16)
@@ -356,7 +464,7 @@ export class TopoJSONMap<
       .attr('y', d => {
         if (config.pointLabelPosition === MapPointLabelPosition.Center) return null
 
-        const pointRadius = getNumber(d, config.pointRadius) / this._currentZoomLevel
+        const pointRadius = getNumber(d.properties as any, config.pointRadius, 0) / this._currentZoomLevel
         return pointRadius
       })
       .attr('dy', config.pointLabelPosition === MapPointLabelPosition.Center ? '0.32em' : '1em')
@@ -365,7 +473,7 @@ export class TopoJSONMap<
       .style('fill', (d, i) => {
         if (config.pointLabelPosition === MapPointLabelPosition.Bottom) return null
 
-        const pointColor = getColor(d, config.pointColor, i)
+        const pointColor = getColor(d.properties as any, config.pointColor, i)
         const hex = color(isStringCSSVariable(pointColor) ? getCSSVariableValue(pointColor, this.element) : pointColor)?.hex()
         if (!hex) return null
 
@@ -458,6 +566,9 @@ export class TopoJSONMap<
     const isMouseEvent = event.sourceEvent !== undefined
     const isExternalEvent = !event?.sourceEvent && !this._isResizing
 
+    // Reset expanded cluster when manually zooming
+    if (isMouseEvent && !this._eventInitiatedByComponent) this._resetExpandedCluster()
+
     window.cancelAnimationFrame(this._animFrameId)
     this._animFrameId = window.requestAnimationFrame(this._onZoomHandler.bind(this, event.transform, isMouseEvent, isExternalEvent))
 
@@ -515,6 +626,129 @@ export class TopoJSONMap<
     // we've to "attach" new transform to the map group element. Otherwise zoomBehavior  will not know
     // that the zoom state has changed
     this._applyZoom()
+  }
+
+  private _onPointClick (d: TopoJSONMapPoint<PointDatum>, event: MouseEvent): void {
+    const { config } = this
+    event.stopPropagation()
+
+    // Handle clicking on expanded cluster points to collapse them
+    const expandedPoint = d as any
+    if (expandedPoint.expandedClusterPoint) {
+      this._resetExpandedCluster()
+      this._renderPoints(config.duration)
+      return
+    }
+
+    if (d.isCluster && (d.properties as TopoJSONMapClusterDatum<PointDatum>).cluster) {
+      const zoomLevel = this._currentZoomLevel || 1
+      const coordinates = d.geometry.coordinates as [number, number]
+      const clusterProps = d.properties as TopoJSONMapClusterDatum<PointDatum>
+
+      // Expand clusters with ≤10 points, or use shouldClusterExpand for larger ones
+      const shouldExpand = clusterProps.pointCount <= 10 || shouldClusterExpand(d as any, zoomLevel, 4, 8)
+
+      if (config.clusterExpandOnClick && shouldExpand) {
+        this._expandCluster(d)
+      } else {
+        const newZoomLevel = getNextZoomLevelOnClusterClick(zoomLevel)
+        this._zoomToLocation(coordinates, newZoomLevel)
+      }
+    }
+  }
+
+  private _expandCluster (clusterPoint: TopoJSONMapPoint<PointDatum>): void {
+    const { config } = this
+
+    if (!clusterPoint.clusterIndex) return
+
+    const padding = 1
+    const clusterId = (clusterPoint.properties as TopoJSONMapClusterDatum<PointDatum>).clusterId as number
+    const points = clusterPoint.clusterIndex.getLeaves(clusterId, Infinity)
+
+    // Calculate positions for expanded points using d3.packSiblings (same as leaflet map)
+    const packPoints: {x: number; y: number; r: number }[] = points.map(() => ({
+      x: 0,
+      y: 0,
+      r: 8 + padding, // Base radius for individual points
+    }))
+    packSiblings(packPoints)
+
+    // Create expanded points with relative positions
+    const expandedPoints = points.map((point, i) => {
+      const originalData = point.properties as PointDatum
+      const radius = getNumber(originalData, config.pointRadius) || 8
+      const shape = getString(originalData, config.pointShape) as TopoJSONMapPointShape || TopoJSONMapPointShape.Circle
+      const donutData = getDonutData(originalData, config.colorMap)
+      const pointColor = getColor(originalData, config.pointColor, i)
+
+      return {
+        geometry: { type: 'Point' as const, coordinates: clusterPoint.geometry.coordinates },
+        bbox: { x1: 0, y1: 0, x2: 0, y2: 0 },
+        radius,
+        path: getPointPathData({ x: 0, y: 0 }, radius, shape),
+        color: pointColor,
+        id: getString(originalData, config.pointId, i),
+        properties: originalData,
+        donutData,
+        isCluster: false,
+        _zIndex: 1,
+        expandedClusterPoint: clusterPoint,
+        dx: packPoints[i].x,
+        dy: packPoints[i].y,
+      } as TopoJSONMapPoint<PointDatum> & { expandedClusterPoint: TopoJSONMapPoint<PointDatum>; dx: number; dy: number }
+    })
+
+    this._resetExpandedCluster()
+    this._expandedCluster = {
+      cluster: clusterPoint,
+      points: expandedPoints,
+    }
+
+    // Re-render to show expanded points
+    this._renderPoints(this.config.duration)
+  }
+
+  private _zoomToLocation (coordinates: [number, number], zoomLevel: number): void {
+    const { config } = this
+
+    // Clamp zoom level to respect zoom extent
+    const clampedZoomLevel = clamp(zoomLevel, config.zoomExtent[0], config.zoomExtent[1])
+
+    // Get the projected position of the target coordinates
+    const targetPos = this._projection(coordinates)
+
+    // Calculate transform to center the target coordinates
+    // Use the same approach as D3's zoom.translateTo behavior
+    const k = clampedZoomLevel
+    const x = targetPos[0]
+    const y = targetPos[1]
+
+    // Calculate translation to center the point at (x,y) in the viewport
+    const translate: [number, number] = [
+      this._width / 2 - k * x,
+      this._height / 2 - k * y,
+    ]
+
+    // Update internal state
+    this._currentZoomLevel = clampedZoomLevel
+    this._center = [translate[0] + k * x, translate[1] + k * y]
+
+    // Create the transform for smooth transition
+    const transform = zoomIdentity
+      .translate(translate[0], translate[1])
+      .scale(k)
+
+    // Apply the zoom transform with smooth transition
+    this.g
+      .transition()
+      .duration(config.zoomDuration)
+      .call(this._zoomBehavior.transform, transform)
+  }
+
+  private _resetExpandedCluster (): void {
+    this._expandedCluster?.points?.forEach((d: any) => { delete d.expandedClusterPoint })
+    this._expandedCluster = null
   }
 
   destroy (): void {
