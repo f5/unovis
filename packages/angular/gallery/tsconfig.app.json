@@ -5,7 +5,8 @@
     "outDir": "../out-tsc/app",
     "paths": {
      "@unovis/ts": ["../../ts/lib/index.js"],
-     "@unovis/shared/*": ["../../shared/*"]
+     "@unovis/shared/*": ["../../shared/*"],
+     "@unovis/angular": ["../src/public-api.ts"],
     },
     "baseUrl": ".",
     "downlevelIteration": true,
