@@ -19,9 +19,12 @@ export function updateDonut (
   pieConstructor.padAngle(padAngle)
   const arcs = pieConstructor(data.filter(d => d.value))
 
+  // If arcWidth equals radius, render as a full pie chart (no inner radius)
+  // Otherwise render as a donut chart with the specified arc width
+  const isPieChart = arcWidth >= radius
   const arcPathGen = arc<PieArcDatum<TopoJSONMapPieDatum>>()
-    .innerRadius(arcWidth ? radius - arcWidth / 2 : 0)
-    .outerRadius(arcWidth ? radius + arcWidth / 2 : radius)
+    .innerRadius(isPieChart ? 0 : radius - arcWidth / 2)
+    .outerRadius(isPieChart ? radius : radius + arcWidth / 2)
 
   const donuts = selection.selectAll<SVGPathElement, TopoJSONMapPieDatum>('path')
     .data(arcs)

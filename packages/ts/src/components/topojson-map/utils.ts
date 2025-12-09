@@ -109,12 +109,14 @@ export function toGeoJSONPoint<D extends GenericDataRecord> (
 export function calculateClusterIndex<D extends GenericDataRecord> (
   data: D[],
   config: TopoJSONMapConfigInterface<any, D, any>,
-  maxClusterZoomLevel = 16
+  maxClusterZoomLevel = 24
 ): Supercluster<D> {
   const { colorMap, pointShape, latitude, longitude, clusteringDistance } = config
   return new Supercluster<D, Supercluster.AnyProps>({
     radius: clusteringDistance,
     maxZoom: maxClusterZoomLevel,
+    minZoom: 0,
+    minPoints: 2, // Minimum points to form a cluster
     map: (d): Supercluster.AnyProps => {
       const shape = getString(d, pointShape)
 
@@ -163,13 +165,17 @@ export function geoJsonPointToScreenPoint<D extends GenericDataRecord> (
   zoomLevel: number
 ): TopoJSONMapPoint<D> {
   const isCluster = (geoPoint.properties as TopoJSONMapClusterDatum<D>).cluster
-  const pos = projection(geoPoint.geometry.coordinates)
+  const pos = projection(geoPoint.geometry.coordinates as [number, number])
   const x = pos[0]
   const y = pos[1]
 
   const id = isCluster
     ? `cluster-${geoPoint.id}`
-    : (getString(geoPoint.properties as D, config.pointId) ?? geoPoint.geometry.coordinates.join(''))
+    : (
+      (geoPoint.id !== undefined ? String(geoPoint.id) : undefined) ??
+      getString(geoPoint.properties as D, config.pointId) ??
+      geoPoint.geometry.coordinates.join('')
+    )
 
   const pointColor = getColor(
     geoPoint.properties as D,
@@ -189,7 +195,7 @@ export function geoJsonPointToScreenPoint<D extends GenericDataRecord> (
 
   const color = isCluster
     ? pointColor
-    : (isRing ? null : (pointColor ?? biggestDatum?.color))
+    : (isRing ? pointColor : (pointColor ?? biggestDatum?.color))
 
   const bbox = { x1: x - radius, y1: y - radius, x2: x + radius, y2: y + radius }
   const path = getPointPathData({ x: 0, y: 0 }, radius, shape)

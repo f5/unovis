@@ -1,6 +1,7 @@
 import { Selection, select } from 'd3-selection'
-import { D3ZoomEvent, zoom, ZoomBehavior, zoomIdentity, ZoomTransform } from 'd3-zoom'
+import { D3ZoomEvent, zoom, ZoomBehavior, zoomIdentity, ZoomTransform, zoomTransform } from 'd3-zoom'
 import { timeout } from 'd3-timer'
+import { easeCubicInOut } from 'd3-ease'
 import { geoPath, GeoProjection, ExtendedFeatureCollection } from 'd3-geo'
 import { color } from 'd3-color'
 import { packSiblings } from 'd3-hierarchy'
@@ -30,6 +31,7 @@ import {
   TopoJSONMapPoint,
   TopoJSONMapClusterDatum,
   TopoJSONMapPointDatum,
+  TopoJSONMapPieDatum,
 } from './types'
 
 // Config
@@ -41,11 +43,11 @@ import {
   getLonLat,
   getDonutData,
   getPointPathData,
+  getPointRadius,
   calculateClusterIndex,
   getClustersAndPoints,
   geoJsonPointToScreenPoint,
   shouldClusterExpand,
-  getNextZoomLevelOnClusterClick,
 } from './utils'
 import { updateDonut } from './modules/donut'
 
@@ -71,7 +73,7 @@ export class TopoJSONMap<
   private _initialScale: number = undefined
   private _center: [number, number]
   private _currentZoomLevel: number = undefined
-  private _transform: ZoomTransform
+  private _transform: ZoomTransform = zoomIdentity
   private _path = geoPath()
   private _projection: GeoProjection
   private _prevWidth: number
@@ -90,6 +92,7 @@ export class TopoJSONMap<
   private _backgroundRect = this.g.append('rect').attr('class', s.background)
   private _featuresGroup = this.g.append('g').attr('class', s.features)
   private _linksGroup = this.g.append('g').attr('class', s.links)
+  private _clusterBackgroundGroup = this.g.append('g').attr('class', s.clusterBackground)
   private _pointsGroup = this.g.append('g').attr('class', s.points)
 
   events = {
@@ -160,6 +163,7 @@ export class TopoJSONMap<
     this._renderMap(duration)
     this._renderGroups(duration)
     this._renderLinks(duration)
+    this._renderClusterBackground(duration)
     this._renderPoints(duration)
 
     // When animation is running we need to temporary disable zoom behaviour
@@ -189,6 +193,9 @@ export class TopoJSONMap<
       .attr('stroke-width', 1 / this._currentZoomLevel)
 
     smartTransition(this._linksGroup, duration)
+      .attr('transform', transformString)
+
+    smartTransition(this._clusterBackgroundGroup, duration)
       .attr('transform', transformString)
 
     smartTransition(this._pointsGroup, duration)
@@ -226,6 +233,13 @@ export class TopoJSONMap<
         this._applyZoom()
       }
 
+      // Initialize transform for first render after applyZoom
+      const scale = this._currentZoomLevel
+      const center = this._projection.translate()
+      this._transform = zoomIdentity
+        .translate(this._center[0] - center[0] * scale, this._center[1] - center[1] * scale)
+        .scale(scale)
+
       this._prevWidth = this._width
       this._prevHeight = this._height
     }
@@ -255,6 +269,44 @@ export class TopoJSONMap<
       .style('fill', (d, i) => d.data ? getColor(d.data, config.areaColor, i) : null)
       .style('cursor', d => d.data ? getString(d.data, config.areaCursor) : null)
     features.exit().remove()
+  }
+
+  _renderClusterBackground (duration: number): void {
+    const { config } = this
+    const currentZoomLevel = this._currentZoomLevel || 1
+
+    if (this._expandedCluster && config.clusterBackground) {
+      const cluster = this._expandedCluster.cluster
+      const pos = this._projection(cluster.geometry.coordinates as [number, number])
+
+      // Calculate background radius based on expanded points
+      const points = this._expandedCluster.points
+      const minX = Math.min(...points.map((p: any) => p.dx - p.radius))
+      const maxX = Math.max(...points.map((p: any) => p.dx + p.radius))
+      const minY = Math.min(...points.map((p: any) => p.dy - p.radius))
+      const maxY = Math.max(...points.map((p: any) => p.dy + p.radius))
+      const backgroundRadius = Math.sqrt((maxX - minX) ** 2 + (maxY - minY) ** 2) * 0.5 / currentZoomLevel
+
+      const background = this._clusterBackgroundGroup
+        .selectAll<SVGCircleElement, unknown>('circle')
+        .data([cluster])
+
+      const backgroundEnter = background.enter()
+        .append('circle')
+        .attr('class', s.clusterBackgroundCircle)
+        .attr('cx', pos[0])
+        .attr('cy', pos[1])
+        .attr('r', 0)
+
+      smartTransition(backgroundEnter.merge(background), duration)
+        .attr('cx', pos[0])
+        .attr('cy', pos[1])
+        .attr('r', backgroundRadius + 5 / currentZoomLevel)
+        .style('fill', 'white')
+        .style('opacity', 0.9)
+    } else {
+      this._clusterBackgroundGroup.selectAll('circle').remove()
+    }
   }
 
   _renderLinks (duration: number): void {
@@ -307,21 +359,37 @@ export class TopoJSONMap<
       })
     }
 
-    // Get bounds for clustering
-    const bounds = this._projection.invert ? [
-      this._projection.invert([0, this._height])[0],
-      this._projection.invert([0, this._height])[1],
-      this._projection.invert([this._width, 0])[0],
-      this._projection.invert([this._width, 0])[1],
-    ] as [number, number, number, number] : [-180, -90, 180, 90] as [number, number, number, number]
+    // Get bounds for clustering - [westLng, southLat, eastLng, northLat]
+    let bounds: [number, number, number, number]
+    if (this._projection.invert) {
+      const sw = this._projection.invert([0, this._height]) // bottom-left corner
+      const ne = this._projection.invert([this._width, 0]) // top-right corner
+      bounds = [sw[0], sw[1], ne[0], ne[1]]
+    } else {
+      bounds = [-180, -90, 180, 90]
+    }
 
-    const zoom = Math.round(this._currentZoomLevel || 1)
+    // Use Math.round for zoom level to match Leaflet map clustering behavior
+    const zoom = Math.max(0, Math.round(this._currentZoomLevel || 1))
     let geoJsonPoints = getClustersAndPoints(this._clusterIndex as any, bounds, zoom)
 
-    // Handle expanded cluster points similar to leaflet map
+    // Handle expanded cluster points - replace the expanded cluster with individual points
     if (this._expandedCluster) {
-      // Remove expanded cluster from the data
-      geoJsonPoints = geoJsonPoints.filter((c: any) => c.properties.clusterId !== (this._expandedCluster?.cluster.properties as any).clusterId)
+      const expandedClusterId = (this._expandedCluster.cluster.properties as any).clusterId
+
+      // Remove the expanded cluster if it still exists at this zoom level
+      geoJsonPoints = geoJsonPoints.filter((c: any) => {
+        const isExpandedCluster = c.properties.cluster && c.properties.clusterId === expandedClusterId
+        return !isExpandedCluster
+      })
+
+      // Remove any individual points that are part of the expanded cluster to avoid duplicates
+      const expandedPointIds = new Set(this._expandedCluster.points.map((p: any) => p.id))
+      geoJsonPoints = geoJsonPoints.filter((c: any) => {
+        // Keep all clusters and points that aren't part of the expanded set
+        return c.properties.cluster || !expandedPointIds.has(getString(c.properties as PointDatum, config.pointId))
+      })
+
       // Add points from the expanded cluster
       geoJsonPoints = geoJsonPoints.concat(this._expandedCluster.points as any)
     }
@@ -334,6 +402,7 @@ export class TopoJSONMap<
   _renderPoints (duration: number): void {
     const { config } = this
     const pointData = this._getPointData()
+    const currentZoomLevel = this._currentZoomLevel || 1
 
     const points = this._pointsGroup
       .selectAll<SVGGElement, TopoJSONMapPoint<PointDatum>>(`.${s.point}`)
@@ -348,23 +417,42 @@ export class TopoJSONMap<
         const dy = expandedPoint.dy || 0
         return `translate(${pos[0] + dx},${pos[1] + dy})`
       })
-      .style('opacity', 0)
+      .style('opacity', 1e-6)
 
     // Main shape (circle, square, triangle)
     pointsEnter.append('path')
       .attr('class', s.pointShape)
-      .attr('d', 'M0,0')
+      .attr('d', d => {
+        const radius = d.radius / currentZoomLevel
+        const shape = getString(d.properties as PointDatum, config.pointShape) as TopoJSONMapPointShape || TopoJSONMapPointShape.Circle
+        return d.donutData.length > 0 ? '' : getPointPathData({ x: 0, y: 0 }, radius, shape)
+      })
       .style('fill', (d, i) => {
         const shape = getString(d.properties as PointDatum, config.pointShape) as TopoJSONMapPointShape || TopoJSONMapPointShape.Circle
         if (shape === TopoJSONMapPointShape.Ring) return 'none'
         return d.color
       })
-      .style('stroke-width', d => getNumber(d.properties as PointDatum, config.pointStrokeWidth))
+      .style('stroke', d => d.color)
+      .style('stroke-width', d => {
+        const shape = getString(d.properties as PointDatum, config.pointShape) as TopoJSONMapPointShape || TopoJSONMapPointShape.Circle
+        const isRing = shape === TopoJSONMapPointShape.Ring
+        const baseStrokeWidth = isRing ? getNumber(d.properties as PointDatum, config.pointRingWidth) : getNumber(d.properties as PointDatum, config.pointStrokeWidth)
+        return baseStrokeWidth / currentZoomLevel
+      })
 
     // Donut group for color-map functionality
-    pointsEnter.append('g')
-      .attr('class', `color-map ${s.pointDonut}`)
-      .attr('data-point-id', (d, i) => getString(d, config.pointId, i))
+    const donutGroup = pointsEnter.append('g')
+      .attr('class', d => d.isCluster ? s.clusterDonut : s.pointDonut)
+      .attr('data-point-id', (d, i) => getString(d.properties as PointDatum, config.pointId, i))
+
+    // Add background circle for clusters with donut data
+    donutGroup.each(function (d) {
+      if (d.isCluster && d.donutData.length > 0) {
+        select(this).append('circle')
+          .attr('class', s.clusterBackground)
+          .attr('r', 0)
+      }
+    })
 
     // Ring overlay path for ring shape
     pointsEnter.append('path')
@@ -375,7 +463,10 @@ export class TopoJSONMap<
         return shape === TopoJSONMapPointShape.Ring ? null : 'none'
       })
 
-    pointsEnter.append('text').attr('class', s.pointLabel)
+    // Center label (for cluster summary or point label)
+    pointsEnter.append('text')
+      .attr('class', s.pointLabel)
+      .attr('dy', '0.32em')
       .style('opacity', 0)
 
     // Update
@@ -389,6 +480,9 @@ export class TopoJSONMap<
         return `translate(${pos[0] + dx},${pos[1] + dy})`
       })
       .style('cursor', d => {
+        const expandedPoint = d as any
+        // Expanded cluster points should be clickable to collapse
+        if (expandedPoint.expandedClusterPoint) return 'pointer'
         return d.isCluster ? 'pointer' : getString(d.properties as PointDatum, config.pointCursor)
       })
       .style('opacity', 1)
@@ -398,17 +492,38 @@ export class TopoJSONMap<
       this._onPointClick(d, event)
     })
 
-    // Update donut charts
-    const currentZoomLevel = this._currentZoomLevel || 1
-    pointsMerged.select(`.${s.pointDonut}`).each(function (d) {
+    // Update donut charts and cluster backgrounds
+    pointsMerged.selectAll<SVGGElement, TopoJSONMapPoint<PointDatum>>(`.${s.pointDonut}, .${s.clusterDonut}`).each(function (d) {
+      const group = select(this as SVGGElement)
+
+      // Update or create background circle for clusters
+      if (d.isCluster && d.donutData.length > 0) {
+        const radius = d.radius / currentZoomLevel
+        const bgCircle = group.select(`.${s.clusterBackground}`)
+
+        if (bgCircle.empty()) {
+          group.insert('circle', ':first-child')
+            .attr('class', s.clusterBackground)
+            .attr('r', radius)
+        } else {
+          bgCircle.attr('r', radius)
+        }
+      }
+
+      // Update donut/pie chart
       if (d.donutData.length > 0) {
         const radius = d.radius / currentZoomLevel
-        const arcWidth = 2 / currentZoomLevel // Keep arc width constant in screen space
-        const strokeWidth = 1 / currentZoomLevel // Keep stroke width constant in screen space
-        updateDonut(select(this as SVGGElement), d.donutData, radius, arcWidth, strokeWidth, 0.05)
+        // Clusters show as donut charts (with inner radius), individual points as pie charts (filled)
+        // Use thicker arc width to match Leaflet map style
+        const arcWidth = d.isCluster ? (2 / currentZoomLevel) : radius
+        const strokeWidth = 0.5 / currentZoomLevel
+        updateDonut(group, d.donutData, radius, arcWidth, strokeWidth, 0.05)
       } else {
-        select(this as SVGGElement).selectAll('*').remove()
+        group.selectAll('*').remove()
       }
+
+      // Update the class attribute based on whether it's a cluster
+      group.attr('class', d.isCluster ? s.clusterDonut : s.pointDonut)
     })
 
     // Update point shapes
@@ -416,18 +531,33 @@ export class TopoJSONMap<
       .attr('d', d => {
         const radius = d.radius / currentZoomLevel
         const shape = getString(d.properties as PointDatum, config.pointShape) as TopoJSONMapPointShape || TopoJSONMapPointShape.Circle
-        // Hide the main shape if we have donut data
-        return d.donutData.length > 0 ? 'M0,0' : getPointPathData({ x: 0, y: 0 }, radius, shape)
+        // Keep the full shape path for pointer events, but we'll hide it visually when there's donut data
+        return getPointPathData({ x: 0, y: 0 }, radius, shape)
       })
       .style('fill', d => {
         const shape = getString(d.properties as PointDatum, config.pointShape) as TopoJSONMapPointShape || TopoJSONMapPointShape.Circle
         const isRing = shape === TopoJSONMapPointShape.Ring
         const hasDonut = d.donutData.length > 0
+        const expandedPoint = d as any
 
+        // For expanded cluster points, use the preserved cluster color
+        if (expandedPoint.expandedClusterPoint) {
+          return expandedPoint.clusterColor || expandedPoint.expandedClusterPoint.color
+        }
+
+        // For clusters with donut, make background transparent but keep it clickable
+        if (hasDonut && d.isCluster) return 'transparent'
         if (hasDonut || isRing) return 'none'
         return d.color
       })
-      .style('stroke', d => d.color)
+      .style('stroke', d => {
+        const expandedPoint = d as any
+        // For expanded cluster points, use the preserved cluster color
+        if (expandedPoint.expandedClusterPoint) {
+          return expandedPoint.clusterColor || expandedPoint.expandedClusterPoint.color
+        }
+        return d.color
+      })
       .style('stroke-width', d => {
         const shape = getString(d.properties as PointDatum, config.pointShape) as TopoJSONMapPointShape || TopoJSONMapPointShape.Circle
         const isRing = shape === TopoJSONMapPointShape.Ring
@@ -450,28 +580,60 @@ export class TopoJSONMap<
 
     const pointLabelsMerged = pointsMerged.select(`.${s.pointLabel}`)
     pointLabelsMerged
-      .text(d => getString(d.properties as any, config.pointLabel) ?? '')
+      .text(d => {
+        if (d.isCluster) {
+          return getString(d.properties as TopoJSONMapClusterDatum<PointDatum>, config.clusterLabel) ?? ''
+        }
+        return getString(d.properties as any, config.pointLabel) ?? ''
+      })
       .style('font-size', d => {
         if (config.pointLabelPosition === MapPointLabelPosition.Bottom) {
-          return `calc(var(--vis-map-point-label-font-size) / ${this._currentZoomLevel}`
+          return `calc(var(--vis-map-point-label-font-size) / ${currentZoomLevel})`
         }
-        const pointDiameter = 2 * getNumber(d.properties as any, config.pointRadius, 0)
-        const pointLabelText = getString(d.properties as any, config.pointLabel) || ''
+        const radius = d.isCluster
+          ? (d.radius / currentZoomLevel)
+          : getNumber(d.properties as any, config.pointRadius, 0)
+        const pointLabelText = d.isCluster
+          ? (getString(d.properties as TopoJSONMapClusterDatum<PointDatum>, config.clusterLabel) || '')
+          : (getString(d.properties as any, config.pointLabel) || '')
         const textLength = pointLabelText.length
-        const fontSize = 0.5 * pointDiameter / Math.pow(textLength, 0.4)
+        // Use the same formula as Leaflet map for consistent font sizing
+        const fontSize = radius / Math.pow(textLength, 0.4)
+        // Match Leaflet: minimum is the calculated fontSize itself, max is 16
         return clamp(fontSize, fontSize, 16)
       })
       .attr('y', d => {
+        // For points with pie/donut charts, always center the label
+        if (d.donutData.length > 0) return null
+
         if (config.pointLabelPosition === MapPointLabelPosition.Center) return null
 
-        const pointRadius = getNumber(d.properties as any, config.pointRadius, 0) / this._currentZoomLevel
-        return pointRadius
+        const radius = d.isCluster
+          ? (d.radius / currentZoomLevel)
+          : getNumber(d.properties as any, config.pointRadius, 0) / currentZoomLevel
+        return radius
       })
-      .attr('dy', config.pointLabelPosition === MapPointLabelPosition.Center ? '0.32em' : '1em')
+      .attr('dy', d => {
+        // For points with pie/donut charts, always use centered dy
+        if (d.donutData.length > 0) return '0.32em'
+        return config.pointLabelPosition === MapPointLabelPosition.Center ? '0.32em' : '1em'
+      })
 
     smartTransition(pointLabelsMerged, duration)
       .style('fill', (d, i) => {
         if (config.pointLabelPosition === MapPointLabelPosition.Bottom) return null
+
+        // For expanded cluster points, use dark color (black) like Leaflet map
+        const expandedPoint = d as any
+        if (expandedPoint.expandedClusterPoint) {
+          return 'var(--vis-map-point-label-text-color-dark)'
+        }
+
+        // For points/clusters with donut data, determine color based on cluster background (white)
+        if (d.donutData.length > 0 && d.isCluster) {
+          // Cluster background is white, so use dark text
+          return 'var(--vis-map-point-label-text-color-dark)'
+        }
 
         const pointColor = getColor(d.properties as any, config.pointColor, i)
         const hex = color(isStringCSSVariable(pointColor) ? getCSSVariableValue(pointColor, this.element) : pointColor)?.hex()
@@ -481,6 +643,14 @@ export class TopoJSONMap<
         return brightness > config.pointLabelTextBrightnessRatio ? 'var(--vis-map-point-label-text-color-dark)' : 'var(--vis-map-point-label-text-color-light)'
       })
       .style('opacity', 1)
+      .style('pointer-events', 'none')
+      .attr('visibility', d => {
+        // Show labels for clusters, individual points with pie charts, and when pointLabel is defined
+        const hasLabel = d.isCluster
+          ? !!getString(d.properties as TopoJSONMapClusterDatum<PointDatum>, config.clusterLabel)
+          : !!getString(d.properties as any, config.pointLabel)
+        return hasLabel ? null : 'hidden'
+      })
 
     // Exit
     points.exit().remove()
@@ -562,12 +732,21 @@ export class TopoJSONMap<
   }
 
   _onZoom (event: D3ZoomEvent<any, any>): void {
-    if (this._firstRender) return // To prevent double render because of binding zoom behaviour
+    if (this._firstRender) {
+      // On first render, just update the zoom level, don't trigger animation
+      this._currentZoomLevel = (event?.transform.k / this._initialScale) || 1
+      return // To prevent double render because of binding zoom behaviour
+    }
     const isMouseEvent = event.sourceEvent !== undefined
     const isExternalEvent = !event?.sourceEvent && !this._isResizing
 
-    // Reset expanded cluster when manually zooming
+    // Reset expanded cluster when manually zooming (but not during component-initiated zoom)
     if (isMouseEvent && !this._eventInitiatedByComponent) this._resetExpandedCluster()
+
+    // Reset the flag after handling the zoom
+    if (this._eventInitiatedByComponent && !isMouseEvent) {
+      this._eventInitiatedByComponent = false
+    }
 
     window.cancelAnimationFrame(this._animFrameId)
     this._animFrameId = window.requestAnimationFrame(this._onZoomHandler.bind(this, event.transform, isMouseEvent, isExternalEvent))
@@ -636,42 +815,54 @@ export class TopoJSONMap<
     const expandedPoint = d as any
     if (expandedPoint.expandedClusterPoint) {
       this._resetExpandedCluster()
+      // Force a full re-render by re-calculating clustering
       this._renderPoints(config.duration)
       return
     }
 
     if (d.isCluster && (d.properties as TopoJSONMapClusterDatum<PointDatum>).cluster) {
-      const zoomLevel = this._currentZoomLevel || 1
-      const coordinates = d.geometry.coordinates as [number, number]
-      const clusterProps = d.properties as TopoJSONMapClusterDatum<PointDatum>
+      if (config.clusterExpandOnClick) {
+        const { zoomExtent } = config
+        const minZoom = zoomExtent[0]
+        const maxZoom = zoomExtent[1]
+        const midLevel = minZoom + (maxZoom - minZoom) * 0.5
+        const maxLevel = maxZoom - 1
 
-      // Expand clusters with ≤10 points, or use shouldClusterExpand for larger ones
-      const shouldExpand = clusterProps.pointCount <= 10 || shouldClusterExpand(d as any, zoomLevel, 4, 8)
+        if (shouldClusterExpand(d, this._currentZoomLevel || minZoom, midLevel, maxLevel)) {
+          this._expandCluster(d)
+        } else {
+          const clusterId = (d.properties as TopoJSONMapClusterDatum<PointDatum>).clusterId as number
+          const expansionZoom = this._clusterIndex?.getClusterExpansionZoom(clusterId)
 
-      if (config.clusterExpandOnClick && shouldExpand) {
-        this._expandCluster(d)
-      } else {
-        const newZoomLevel = getNextZoomLevelOnClusterClick(zoomLevel)
-        this._zoomToLocation(coordinates, newZoomLevel)
+          if (expansionZoom && expansionZoom <= config.zoomExtent[1]) {
+            this._zoomToLocation(d.geometry.coordinates as [number, number], expansionZoom)
+          } else {
+            // Always expand the cluster to show individual points
+            this._expandCluster(d)
+          }
+        }
       }
     }
   }
 
-  private _expandCluster (clusterPoint: TopoJSONMapPoint<PointDatum>): void {
+  private _expandCluster (clusterPoint: TopoJSONMapPoint<PointDatum>): PointDatum[] | undefined {
     const { config } = this
 
-    if (!clusterPoint.clusterIndex) return
+    if (!clusterPoint.clusterIndex) return undefined
 
     const padding = 1
     const clusterId = (clusterPoint.properties as TopoJSONMapClusterDatum<PointDatum>).clusterId as number
     const points = clusterPoint.clusterIndex.getLeaves(clusterId, Infinity)
 
     // Calculate positions for expanded points using d3.packSiblings (same as leaflet map)
-    const packPoints: {x: number; y: number; r: number }[] = points.map(() => ({
-      x: 0,
-      y: 0,
-      r: 8 + padding, // Base radius for individual points
-    }))
+    const packPoints: {x: number; y: number; r: number }[] = points.map((point) => {
+      const r = getPointRadius(point as any, config.pointRadius, this._currentZoomLevel || 1)
+      return {
+        x: 0,
+        y: 0,
+        r: r + padding, // Base radius for individual points
+      }
+    })
     packSiblings(packPoints)
 
     // Create expanded points with relative positions
@@ -679,8 +870,10 @@ export class TopoJSONMap<
       const originalData = point.properties as PointDatum
       const radius = getNumber(originalData, config.pointRadius) || 8
       const shape = getString(originalData, config.pointShape) as TopoJSONMapPointShape || TopoJSONMapPointShape.Circle
-      const donutData = getDonutData(originalData, config.colorMap)
-      const pointColor = getColor(originalData, config.pointColor, i)
+      // Don't show pie charts for expanded cluster points (similar to Leaflet map)
+      const donutData: TopoJSONMapPieDatum[] = []
+      // Use the cluster's exact color for all expanded points to maintain visual consistency
+      const pointColor = clusterPoint.color
 
       return {
         geometry: { type: 'Point' as const, coordinates: clusterPoint.geometry.coordinates },
@@ -688,12 +881,13 @@ export class TopoJSONMap<
         radius,
         path: getPointPathData({ x: 0, y: 0 }, radius, shape),
         color: pointColor,
-        id: getString(originalData, config.pointId, i),
+        id: getString(originalData, config.pointId, i) || `${clusterId}-${i}`,
         properties: originalData,
         donutData,
         isCluster: false,
         _zIndex: 1,
         expandedClusterPoint: clusterPoint,
+        clusterColor: pointColor, // Preserve the cluster color
         dx: packPoints[i].x,
         dy: packPoints[i].y,
       } as TopoJSONMapPoint<PointDatum> & { expandedClusterPoint: TopoJSONMapPoint<PointDatum>; dx: number; dy: number }
@@ -705,50 +899,63 @@ export class TopoJSONMap<
       points: expandedPoints,
     }
 
-    // Re-render to show expanded points
-    this._renderPoints(this.config.duration)
+    // Re-render to show expanded points with smooth animation
+    this._renderPoints(config.duration / 2)
+
+    // Return the original point data for centroid calculation
+    return points.map(p => p.properties as PointDatum)
   }
 
   private _zoomToLocation (coordinates: [number, number], zoomLevel: number): void {
     const { config } = this
 
-    // Clamp zoom level to respect zoom extent
     const clampedZoomLevel = clamp(zoomLevel, config.zoomExtent[0], config.zoomExtent[1])
 
-    // Get the projected position of the target coordinates
-    const targetPos = this._projection(coordinates)
+    // Project the target coordinates using the current projection
+    const targetPoint = this._projection(coordinates)
+    if (!targetPoint) return
 
-    // Calculate transform to center the target coordinates
-    // Use the same approach as D3's zoom.translateTo behavior
-    const k = clampedZoomLevel
-    const x = targetPos[0]
-    const y = targetPos[1]
+    // Calculate the center of the viewport
+    const centerX = this._width / 2
+    const centerY = this._height / 2
 
-    // Calculate translation to center the point at (x,y) in the viewport
-    const translate: [number, number] = [
-      this._width / 2 - k * x,
-      this._height / 2 - k * y,
-    ]
+    // Calculate the scale factor
+    const k = this._initialScale * clampedZoomLevel
+
+    // Calculate translation to center the target point
+    // We need to account for the current projection center
+    const currentCenter = this._projection.translate()
+    const x = centerX + (currentCenter[0] - targetPoint[0]) * (k / this._initialScale)
+    const y = centerY + (currentCenter[1] - targetPoint[1]) * (k / this._initialScale)
+
+    const transform = zoomIdentity.translate(x, y).scale(k)
 
     // Update internal state
     this._currentZoomLevel = clampedZoomLevel
-    this._center = [translate[0] + k * x, translate[1] + k * y]
+    this._center = [x, y]
 
-    // Create the transform for smooth transition
-    const transform = zoomIdentity
-      .translate(translate[0], translate[1])
-      .scale(k)
+    // Set flag to indicate this is a component-initiated zoom
+    this._eventInitiatedByComponent = true
 
-    // Apply the zoom transform with smooth transition
+    // Apply the transform with smooth eased animation
     this.g
       .transition()
       .duration(config.zoomDuration)
+      .ease(easeCubicInOut)
       .call(this._zoomBehavior.transform, transform)
   }
 
   private _resetExpandedCluster (): void {
-    this._expandedCluster?.points?.forEach((d: any) => { delete d.expandedClusterPoint })
-    this._expandedCluster = null
+    if (this._expandedCluster) {
+      // Clean up all references to prevent memory leaks
+      this._expandedCluster.points?.forEach((d: any) => {
+        delete d.expandedClusterPoint
+        delete d.clusterColor
+        delete d.dx
+        delete d.dy
+      })
+      this._expandedCluster = null
+    }
   }
 
   destroy (): void {
