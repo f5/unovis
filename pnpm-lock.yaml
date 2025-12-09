@@ -65,9 +65,6 @@ importers:
 
   packages/angular:
     dependencies:
-      '@unovis/ts':
-        specifier: 1.6.2
-        version: 1.6.2
       d3-array:
         specifier: 3.2.4
         version: 3.2.4
@@ -147,6 +144,9 @@ importers:
       '@unovis/shared':
         specifier: workspace:*
         version: link:../shared
+      '@unovis/ts':
+        specifier: workspace:*
+        version: link:../ts
       d3-selection:
         specifier: 3.0.0
         version: 3.0.0
@@ -202,11 +202,11 @@ importers:
         specifier: ^11.13.0
         version: 11.13.5
       '@unovis/react':
-        specifier: '*'
-        version: 1.6.2(@unovis/ts@1.6.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+        specifier: workspace:*
+        version: link:../react
       '@unovis/ts':
-        specifier: '*'
-        version: 1.6.2
+        specifier: workspace:*
+        version: link:../ts
       d3-array:
         specifier: ^3.2.0
         version: 3.2.4
@@ -291,10 +291,6 @@ importers:
         version: 4.15.2(webpack-cli@5.1.4)(webpack@5.76.0)
 
   packages/react:
-    dependencies:
-      '@unovis/ts':
-        specifier: 1.6.2
-        version: 1.6.2
     devDependencies:
       '@rollup/plugin-node-resolve':
         specifier: ^13.0.4
@@ -308,6 +304,9 @@ importers:
       '@types/react':
         specifier: ^17.0.22
         version: 17.0.90
+      '@unovis/ts':
+        specifier: workspace:*
+        version: link:../ts
       '@zerollup/ts-transform-paths':
         specifier: ^1.7.18
         version: 1.7.18(typescript@4.2.4)
@@ -368,18 +367,6 @@ importers:
       '@types/d3-selection':
         specifier: ^3.0.10
         version: 3.0.11
-      '@unovis/angular':
-        specifier: workspace:*
-        version: link:../angular
-      '@unovis/solid':
-        specifier: workspace:*
-        version: link:../solid
-      '@unovis/svelte':
-        specifier: workspace:*
-        version: link:../svelte
-      '@unovis/ts':
-        specifier: workspace:*
-        version: link:../ts
       d3-array:
         specifier: 3.2.4
         version: 3.2.4
@@ -403,14 +390,13 @@ importers:
         version: 4.2.4
 
   packages/solid:
-    dependencies:
-      '@unovis/ts':
-        specifier: 1.6.2
-        version: 1.6.2
     devDependencies:
       '@unovis/shared':
         specifier: workspace:*
         version: link:../shared
+      '@unovis/ts':
+        specifier: workspace:*
+        version: link:../ts
       eslint-plugin-solid:
         specifier: ^0.13.2
         version: 0.13.2(eslint@8.57.1)(typescript@5.9.3)
@@ -440,10 +426,6 @@ importers:
         version: 2.11.10(solid-js@1.9.10)(vite@6.4.1(@types/node@16.18.126)(jiti@2.6.1)(less@4.4.2)(sass@1.94.2)(stylus@0.59.0)(terser@5.44.1)(tsx@4.20.6)(yaml@2.8.1))
 
   packages/svelte:
-    dependencies:
-      '@unovis/ts':
-        specifier: 1.6.2
-        version: 1.6.2
     devDependencies:
       '@rollup/plugin-node-resolve':
         specifier: ^13.0.4
@@ -457,6 +439,9 @@ importers:
       '@unovis/shared':
         specifier: workspace:*
         version: link:../shared
+      '@unovis/ts':
+        specifier: workspace:*
+        version: link:../ts
       '@zerollup/ts-transform-paths':
         specifier: ^1.7.18
         version: 1.7.18(typescript@4.2.4)
@@ -751,10 +736,6 @@ importers:
         version: 4.2.2(rollup@2.79.2)
 
   packages/vue:
-    dependencies:
-      '@unovis/ts':
-        specifier: 1.6.2
-        version: 1.6.2
     devDependencies:
       '@antfu/eslint-config':
         specifier: ^3.9.1
@@ -762,6 +743,12 @@ importers:
       '@rollup/plugin-node-resolve':
         specifier: ^13.0.4
         version: 13.3.0(rollup@2.79.2)
+      '@unovis/shared':
+        specifier: workspace:*
+        version: link:../shared
+      '@unovis/ts':
+        specifier: workspace:*
+        version: link:../ts
       '@vitejs/plugin-vue':
         specifier: ^5.2.3
         version: 5.2.4(vite@6.4.1(@types/node@17.0.45)(jiti@2.6.1)(less@4.4.2)(sass@1.94.2)(stylus@0.59.0)(terser@5.44.1)(tsx@4.20.6)(yaml@2.8.1))(vue@3.5.25(typescript@4.2.4))
@@ -3725,9 +3712,6 @@ packages:
   '@types/d3-random@3.0.3':
     resolution: {integrity: sha512-Imagg1vJ3y76Y2ea0871wpabqp613+8/r0mCLEBfdtqC7xMSfj9idOnmBYyMoULfHePJyxMAw3nWhJxzc+LFwQ==}
 
-  '@types/d3-sankey@0.11.2':
-    resolution: {integrity: sha512-U6SrTWUERSlOhnpSrgvMX64WblX1AxX6nEjI2t3mLK2USpQrnbwYYK+AS9SwiE7wgYmOsSSKoSdr8aoKBH0HgQ==}
-
   '@types/d3-sankey@0.12.5':
     resolution: {integrity: sha512-/3RZSew0cLAtzGQ+C89hq/Rp3H20QJuVRSqFy6RKLe7E0B8kd2iOS1oBsodrgds4PcNVpqWhdUEng/SHvBcJ6Q==}
 
@@ -4196,16 +4180,6 @@ packages:
 
   '@unovis/graphlibrary@2.2.0-2':
     resolution: {integrity: sha512-HeEzpd/vDyWiIJt0rnh+2ICXUIuF2N0+Z9OJJiKg0DB+eFUcD+bk+9QPhYHwkFwfxdjDA9fHi1DZ/O/bbV58Nw==}
-
-  '@unovis/react@1.6.2':
-    resolution: {integrity: sha512-g/th1AIk4hxcSJxBrrFu0Yf2w2N5/yA7RFrDSL6OK0YFFO2rdj6WXeXWZzbcJCXO/WYzbnaX5e8YhyZKu6hA7w==}
-    peerDependencies:
-      '@unovis/ts': 1.6.2
-      react: '>=16.8.0 || ^17 || ^18 || ^19'
-      react-dom: '>=16.8.0 || ^17 || ^18 || ^19'
-
-  '@unovis/ts@1.6.2':
-    resolution: {integrity: sha512-kSOWRiZsU4Kk1yuJSSaJs+zJCKNg3+2A0/6/7/y1Cu5uHggwGPeE3CzKaNOal/Hpc46bnZw2VLI23mY+gDFbeQ==}
 
   '@unrs/resolver-binding-android-arm-eabi@1.11.1':
     resolution: {integrity: sha512-ppLRUgHVaGRWUx0R0Ut06Mjo9gBaBkg3v/8AxusGLhsIotbBLuRk51rAzqLC8gq6NyyAojEXglNjzf6R948DNw==}
@@ -17605,10 +17579,6 @@ snapshots:
 
   '@types/d3-random@3.0.3': {}
 
-  '@types/d3-sankey@0.11.2':
-    dependencies:
-      '@types/d3-shape': 1.3.12
-
   '@types/d3-sankey@0.12.5':
     dependencies:
       '@types/d3-shape': 1.3.12
@@ -18217,49 +18187,6 @@ snapshots:
   '@unovis/graphlibrary@2.2.0-2':
     dependencies:
       lodash-es: 4.17.21
-
-  '@unovis/react@1.6.2(@unovis/ts@1.6.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)':
-    dependencies:
-      '@unovis/ts': 1.6.2
-      react: 19.2.0
-      react-dom: 19.2.0(react@19.2.0)
-
-  '@unovis/ts@1.6.2':
-    dependencies:
-      '@emotion/css': 11.13.5
-      '@juggle/resize-observer': 3.4.0
-      '@types/d3': 7.4.3
-      '@types/d3-collection': 1.0.13
-      '@types/d3-sankey': 0.11.2
-      '@types/dagre': 0.7.53
-      '@types/geojson': 7946.0.16
-      '@types/leaflet': 1.7.6
-      '@types/supercluster': 5.0.3
-      '@types/three': 0.135.0
-      '@types/throttle-debounce': 5.0.2
-      '@types/topojson': 3.2.6
-      '@types/topojson-client': 3.1.5
-      '@types/topojson-specification': 1.0.5
-      '@unovis/dagre-layout': 0.8.8-2
-      '@unovis/graphlibrary': 2.2.0-2
-      d3: 7.9.0
-      d3-collection: 1.0.7
-      d3-geo-projection: 4.0.0
-      d3-interpolate-path: 2.3.0
-      d3-sankey: 0.12.3
-      elkjs: 0.10.2
-      geojson: 0.5.0
-      leaflet: 1.7.1
-      maplibre-gl: 2.4.0
-      striptags: 3.2.0
-      supercluster: 7.1.5
-      three: 0.135.0
-      throttle-debounce: 5.0.2
-      to-px: 1.1.0
-      topojson-client: 3.1.0
-      tslib: 2.8.1
-    transitivePeerDependencies:
-      - supports-color
 
   '@unrs/resolver-binding-android-arm-eabi@1.11.1':
     optional: true
