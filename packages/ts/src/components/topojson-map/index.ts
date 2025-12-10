@@ -493,8 +493,9 @@ export class TopoJSONMap<
       this._projection.invert([this._width, 0])[1],
     ] as [number, number, number, number] : [-180, -90, 180, 90] as [number, number, number, number]
 
-    const zoom = Math.round(this._currentZoomLevel || 1)
-    let geoJsonPoints = getClustersAndPoints(this._clusterIndex as any, bounds, zoom)
+    // Use a capped zoom level for clustering to prevent over-fragmentation
+    const clusterZoom = Math.min(Math.round(this._currentZoomLevel || 1), 8)
+    let geoJsonPoints = getClustersAndPoints(this._clusterIndex as any, bounds, clusterZoom)
 
     // Handle expanded cluster points - replace the expanded cluster with individual points
     if (this._expandedCluster) {
@@ -617,13 +618,23 @@ export class TopoJSONMap<
 
     const pointLabelsMerged = pointsMerged.select(`.${s.pointLabel}`)
     pointLabelsMerged
-      .text(d => getString(d.properties as any, config.pointLabel) ?? '')
+      .text(d => {
+        if (d.isCluster) {
+          // Use cluster label for clusters
+          return getString(d as any, config.clusterLabel) ?? ''
+        } else {
+          // Use point label for regular points
+          return getString(d.properties as any, config.pointLabel) ?? ''
+        }
+      })
       .style('font-size', d => {
         if (config.pointLabelPosition === MapPointLabelPosition.Bottom) {
           return `calc(var(--vis-map-point-label-font-size) / ${this._currentZoomLevel}`
         }
         const pointDiameter = 2 * getNumber(d.properties as any, config.pointRadius, 0)
-        const pointLabelText = getString(d.properties as any, config.pointLabel) || ''
+        const pointLabelText = d.isCluster
+          ? (getString(d as any, config.clusterLabel) || '')
+          : (getString(d.properties as any, config.pointLabel) || '')
         const textLength = pointLabelText.length
         const fontSize = 0.5 * pointDiameter / Math.pow(textLength, 0.4)
         return clamp(fontSize, fontSize, 16)
@@ -640,13 +651,26 @@ export class TopoJSONMap<
       .style('fill', (d, i) => {
         if (config.pointLabelPosition === MapPointLabelPosition.Bottom) return null
 
-        const pointColor = getColor(d.properties as any, config.pointColor, i)
-        const hex = color(isStringCSSVariable(pointColor) ? getCSSVariableValue(pointColor, this.element) : pointColor)?.hex()
-        if (!hex) return null
+        if (d.isCluster) {
+          // For clusters, use contrasting color against cluster background
+          const clusterColor = getString(d as any, config.clusterColor) || '#2196F3'
+          const hex = color(isStringCSSVariable(clusterColor) ? getCSSVariableValue(clusterColor, this.element) : clusterColor)?.hex()
+          if (hex) {
+            const brightness = hexToBrightness(hex)
+            return brightness > 0.5 ? '#333' : '#fff'
+          }
+          return '#fff'
+        } else {
+          // Regular point label color logic
+          const pointColor = getColor(d.properties as any, config.pointColor, i)
+          const hex = color(isStringCSSVariable(pointColor) ? getCSSVariableValue(pointColor, this.element) : pointColor)?.hex()
+          if (!hex) return null
 
-        const brightness = hexToBrightness(hex)
-        return brightness > config.pointLabelTextBrightnessRatio ? 'var(--vis-map-point-label-text-color-dark)' : 'var(--vis-map-point-label-text-color-light)'
+          const brightness = hexToBrightness(hex)
+          return brightness > config.pointLabelTextBrightnessRatio ? 'var(--vis-map-point-label-text-color-dark)' : 'var(--vis-map-point-label-text-color-light)'
+        }
       })
+      .style('font-weight', d => d.isCluster ? 'bold' : 'normal')
       .style('opacity', 1)
 
     // Exit

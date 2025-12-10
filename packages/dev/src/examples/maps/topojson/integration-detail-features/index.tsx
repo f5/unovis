@@ -121,6 +121,8 @@ export const component = (): React.ReactNode => {
           topojson={WorldMapTopoJSON}
           // Point clustering and styling
           pointRadius={8}
+          pointLabel={(d: DataRecord) => d.id}
+          pointLabelPosition={'bottom'}
           pointShape={(d: DataRecord) => d.shape}
           pointRingWidth={4}
           clustering={true}
@@ -128,8 +130,12 @@ export const component = (): React.ReactNode => {
           clusterColor={() => '#2196F3'}
           clusterRadius={10}
           clusterRingWidth={3}
+          clusterLabel={(d: any) => {
+            const count = d.pointCount || d.point_count || d.properties?.pointCount || d.properties?.point_count
+            return count?.toString() || ''
+          }}
           clusterExpandOnClick={true}
-          colorMap={colorMap}
+          // colorMap={colorMap}
           areaLabel={(d: AreaDatum) => d?.name}
           areaColor={'#dce3eb'}
           // Flow animation features
@@ -141,7 +147,6 @@ export const component = (): React.ReactNode => {
 
           // Flow styling based on type and volume
           sourcePointRadius={(d: FlowDataRecord) => Math.max(3, Math.sqrt(d.volume / 100) + 2)}
-          targetPointRadius={(d: FlowDataRecord) => Math.max(3, Math.sqrt(d.volume / 100) + 2)}
           flowParticleColor={'#607D8B'}
           flowParticleRadius={1}
           flowParticleSpeed={0.2}

@@ -143,7 +143,7 @@ export function toGeoJSONPoint<D extends GenericDataRecord> (
 export function calculateClusterIndex<D extends GenericDataRecord> (
   data: D[],
   config: TopoJSONMapConfigInterface<any, D, any>,
-  maxClusterZoomLevel = 16
+  maxClusterZoomLevel = 8
 ): Supercluster<D> {
   const { colorMap, pointShape, latitude, longitude, clusteringDistance } = config
   return new Supercluster<D, Supercluster.AnyProps>({
