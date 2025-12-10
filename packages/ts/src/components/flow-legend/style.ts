@@ -82,7 +82,7 @@ export const label = (labelFontSize: number, labelColor: string): string => css`
   text-align: center;
 `
 
-export const arrow = (arrowColor: string): string => css`
+export const arrow = (arrowColor: string, arrowSymbolYOffset: number): string => css`
   label: arrow;
   font-family: var(--vis-flow-legend-arrow-font-family, ${UNOVIS_ICON_FONT_FAMILY_DEFAULT});
   font-size: 9px;
@@ -92,4 +92,5 @@ export const arrow = (arrowColor: string): string => css`
   padding: var(--vis-flow-legend-arrow-padding);
   display: inline-table;
   text-align: center;
+  transform: translateY(${arrowSymbolYOffset || 0}px);
 `
