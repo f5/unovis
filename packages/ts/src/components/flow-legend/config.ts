@@ -8,6 +8,8 @@ export interface FlowLegendConfigInterface {
   customWidth?: number;
   /** Legend items array as string[]. Default: `[]` */
   items?: string[];
+  /** Spacing between legend items and the arrows in pixels. Default: `undefined` (fit to container width) */
+  spacing?: number;
   /** Color of the flow line. Default: `undefined` */
   lineColor?: string;
   /** Color of the flow label. Default: `undefined` */
@@ -31,12 +33,13 @@ export const FlowLegendDefaultConfig: FlowLegendConfigInterface = {
   margin: undefined,
   customWidth: undefined,
   items: [],
+  spacing: undefined,
   labelFontSize: 12,
   lineColor: undefined,
   labelColor: undefined,
   arrowSymbol: '▶',
   arrowColor: undefined,
-  arrowSymbolYOffset: undefined,
+  arrowSymbolYOffset: -1,
   onLegendItemClick: undefined,
   renderIntoProvidedDomNode: false,
 }
