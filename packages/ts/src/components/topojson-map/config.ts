@@ -43,6 +43,38 @@ export interface TopoJSONMapConfigInterface<
   /** Link target accessor function. Default: `d => d.target` */
   linkTarget?: ((l: LinkDatum) => number | string | PointDatum);
 
+  // Flow features (can reuse existing linkSource/linkTarget for flow endpoints)
+  /** Flow source point longitude accessor function or value. Default: `f => f.sourceLongitude` */
+  sourceLongitude?: NumericAccessor<LinkDatum>;
+  /** Flow source point latitude accessor function or value. Default: `f => f.sourceLatitude` */
+  sourceLatitude?: NumericAccessor<LinkDatum>;
+  /** Flow target point longitude accessor function or value. Default: `f => f.targetLongitude` */
+  targetLongitude?: NumericAccessor<LinkDatum>;
+  /** Flow target point latitude accessor function or value. Default: `f => f.targetLatitude` */
+  targetLatitude?: NumericAccessor<LinkDatum>;
+  /** Flow source point radius accessor function or value. Default: `3` */
+  sourcePointRadius?: NumericAccessor<LinkDatum>;
+  /** Source point color accessor function or value. Default: `'#88919f'` */
+  sourcePointColor?: ColorAccessor<LinkDatum>;
+  /** Flow particle color accessor function or value. Default: `'#949dad'` */
+  flowParticleColor?: ColorAccessor<LinkDatum>;
+  /** Flow particle radius accessor function or value. Default: `1.1` */
+  flowParticleRadius?: NumericAccessor<LinkDatum>;
+  /** Flow particle speed accessor function or value. The unit is arbitrary, recommended range is 0 – 0.2. Default: `0.07` */
+  flowParticleSpeed?: NumericAccessor<LinkDatum>;
+  /** Flow particle density accessor function or value on the range of [0, 1]. Default: `0.6` */
+  flowParticleDensity?: NumericAccessor<LinkDatum>;
+  /** Enable flow animations. When true, shows animated particles along links. Default: `false` */
+  enableFlowAnimation?: boolean;
+
+  // Flow Events
+  /** Flow source point click callback function. Default: `undefined` */
+  onSourcePointClick?: (f: LinkDatum, x: number, y: number, event: MouseEvent) => void;
+  /** Flow source point mouse over callback function. Default: `undefined` */
+  onSourcePointMouseEnter?: (f: LinkDatum, x: number, y: number, event: MouseEvent) => void;
+  /** Flow source point mouse leave callback function. Default: `undefined` */
+  onSourcePointMouseLeave?: (f: LinkDatum, event: MouseEvent) => void;
+
   /** Area id accessor function corresponding to the feature id from TopoJSON. Default: `d => d.id ?? ''` */
   areaId?: StringAccessor<AreaDatum>;
   /** Area color value or accessor function. Default: `d => d.color ?? null` */
@@ -126,6 +158,22 @@ export const TopoJSONMapDefaultConfig: TopoJSONMapConfigInterface<unknown, unkno
   linkId: (d: unknown, i: number | undefined): string => `${(d as { id: string }).id ?? i}`,
   linkSource: (d: unknown): (number | string | unknown) => (d as { source: string }).source,
   linkTarget: (d: unknown): (number | string | unknown) => (d as { target: string }).target,
+
+  // Flow defaults
+  sourceLongitude: (f: unknown): number => (f as { sourceLongitude: number }).sourceLongitude as number,
+  sourceLatitude: (f: unknown): number => (f as { sourceLatitude: number }).sourceLatitude as number,
+  targetLongitude: (f: unknown): number => (f as { targetLongitude: number }).targetLongitude as number,
+  targetLatitude: (f: unknown): number => (f as { targetLatitude: number }).targetLatitude as number,
+  sourcePointRadius: 3,
+  sourcePointColor: '#88919f',
+  flowParticleColor: '#949dad',
+  flowParticleRadius: 1.1,
+  flowParticleSpeed: 0.07,
+  flowParticleDensity: 0.6,
+  enableFlowAnimation: false,
+  onSourcePointClick: undefined,
+  onSourcePointMouseEnter: undefined,
+  onSourcePointMouseLeave: undefined,
 
   areaId: (d: unknown): string => (d as { id: string }).id ?? '',
   areaColor: (d: unknown): string => (d as { color: string }).color ?? null,

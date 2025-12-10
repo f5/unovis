@@ -100,6 +100,39 @@ export type TopoJSONMapPoint<D> = {
   _zIndex: number;
 }
 
+export interface FlowParticle {
+  // Geographical properties
+  source: { lat: number; lon: number };
+  target: { lat: number; lon: number };
+  location: { lat: number; lon: number };
+  velocity: number;
+
+  // Screen properties
+  x: number;
+  y: number;
+  radius: number;
+  color: string;
+
+  // Flow data reference
+  flowData: any;
+
+  // Animation state
+  progress: number; // 0 to 1, how far along the path
+
+  // Unique identifier for data binding
+  id: string;
+}
+
+export interface FlowSourcePoint {
+  lat: number;
+  lon: number;
+  x: number;
+  y: number;
+  radius: number;
+  color: string;
+  flowData: any;
+}
+
 export enum MapProjectionKind {
   // Projections form `d3-geo`
   Mercator = 'Mercator',

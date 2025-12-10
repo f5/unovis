@@ -31,6 +31,8 @@ import {
   TopoJSONMapPoint,
   TopoJSONMapClusterDatum,
   TopoJSONMapPointDatum,
+  FlowParticle,
+  FlowSourcePoint,
 } from './types'
 
 // Config
@@ -91,6 +93,13 @@ export class TopoJSONMap<
   private _featuresGroup = this.g.append('g').attr('class', s.features)
   private _linksGroup = this.g.append('g').attr('class', s.links)
   private _pointsGroup = this.g.append('g').attr('class', s.points)
+
+  // Flow-related properties
+  private _flowParticlesGroup = this.g.append('g').attr('class', s.flowParticles)
+  private _sourcePointsGroup = this.g.append('g').attr('class', s.sourcePoints)
+  private _flowParticles: any[] = []
+  private _sourcePoints: any[] = []
+  private _animationId: number | null = null
 
   events = {
     [TopoJSONMap.selectors.point]: {},
@@ -162,6 +171,16 @@ export class TopoJSONMap<
     this._renderLinks(duration)
     this._renderPoints(duration)
 
+    // Flow features
+    if (config.enableFlowAnimation) {
+      this._initFlowFeatures()
+      this._renderSourcePoints(duration)
+      this._renderFlowParticles(duration)
+      this._startFlowAnimation()
+    } else {
+      this._stopFlowAnimation()
+    }
+
     // When animation is running we need to temporary disable zoom behaviour
     if (duration && !config.disableZoom) {
       this.g.on('.zoom', null)
@@ -192,6 +211,13 @@ export class TopoJSONMap<
       .attr('transform', transformString)
 
     smartTransition(this._pointsGroup, duration)
+      .attr('transform', transformString)
+
+    // Flow groups
+    smartTransition(this._sourcePointsGroup, duration)
+      .attr('transform', transformString)
+
+    smartTransition(this._flowParticlesGroup, duration)
       .attr('transform', transformString)
   }
 
@@ -590,6 +616,18 @@ export class TopoJSONMap<
     this._renderGroups(customDuration)
     this._renderLinks(customDuration)
     this._renderPoints(customDuration)
+
+    // Update flow features on zoom
+    if (this.config.enableFlowAnimation) {
+      this._renderSourcePoints(customDuration)
+      this._renderFlowParticles(customDuration)
+    }
+
+    // Update flow features on zoom
+    if (this.config.enableFlowAnimation) {
+      this._renderSourcePoints(customDuration)
+      this._renderFlowParticles(customDuration)
+    }
   }
 
   public zoomIn (increment = 0.5): void {
@@ -620,6 +658,49 @@ export class TopoJSONMap<
     // we've to "attach" new transform to the map group element. Otherwise zoomBehavior  will not know
     // that the zoom state has changed
     this._applyZoom()
+  }
+
+  public fitViewToFlows (pad = 0.1): void {
+    const { config, datamodel } = this
+    const points: PointDatum[] = [...(datamodel.points || [])]
+    const links = datamodel.links || []
+
+    // Add flow endpoints to the points to consider for fitting
+    links.forEach((link) => {
+      // Try to get source point
+      if (config.sourceLongitude && config.sourceLatitude) {
+        const sourceLon = getNumber(link, config.sourceLongitude)
+        const sourceLat = getNumber(link, config.sourceLatitude)
+        if (isNumber(sourceLon) && isNumber(sourceLat)) {
+          points.push({ longitude: sourceLon, latitude: sourceLat } as PointDatum)
+        }
+      } else {
+        const sourcePoint = config.linkSource?.(link)
+        if (typeof sourcePoint === 'object' && sourcePoint !== null) {
+          points.push(sourcePoint as PointDatum)
+        }
+      }
+
+      // Try to get target point
+      if (config.targetLongitude && config.targetLatitude) {
+        const targetLon = getNumber(link, config.targetLongitude)
+        const targetLat = getNumber(link, config.targetLatitude)
+        if (isNumber(targetLon) && isNumber(targetLat)) {
+          points.push({ longitude: targetLon, latitude: targetLat } as PointDatum)
+        }
+      } else {
+        const targetPoint = config.linkTarget?.(link)
+        if (typeof targetPoint === 'object' && targetPoint !== null) {
+          points.push(targetPoint as PointDatum)
+        }
+      }
+    })
+
+    if (points.length > 0) {
+      this._fitToPoints(points, pad)
+    } else {
+      this.fitView()
+    }
   }
 
   private _onPointClick (d: TopoJSONMapPoint<PointDatum>, event: MouseEvent): void {
@@ -759,7 +840,230 @@ export class TopoJSONMap<
     this._expandedCluster = null
   }
 
+  private _initFlowFeatures (): void {
+    const { config, datamodel } = this
+    // Use raw links data instead of processed links to avoid point lookup issues for flows
+    const rawLinks = datamodel.data?.links || []
+
+    // Clear existing flow data
+    this._flowParticles = []
+    this._sourcePoints = []
+
+    if (!rawLinks || rawLinks.length === 0) return
+
+    // Create source points and flow particles for each link
+    rawLinks.forEach((link, i) => {
+      // Try to get coordinates from flow-specific accessors first, then fall back to link endpoints
+      let sourceLon: number, sourceLat: number, targetLon: number, targetLat: number
+
+      if (config.sourceLongitude && config.sourceLatitude) {
+        sourceLon = getNumber(link, config.sourceLongitude)
+        sourceLat = getNumber(link, config.sourceLatitude)
+      } else {
+        // Fall back to using linkSource point coordinates
+        const sourcePoint = config.linkSource?.(link)
+        if (typeof sourcePoint === 'object' && sourcePoint !== null) {
+          sourceLon = getNumber(sourcePoint as PointDatum, config.longitude)
+          sourceLat = getNumber(sourcePoint as PointDatum, config.latitude)
+        } else {
+          return // Skip if can't resolve source coordinates
+        }
+      }
+
+      if (config.targetLongitude && config.targetLatitude) {
+        targetLon = getNumber(link, config.targetLongitude)
+        targetLat = getNumber(link, config.targetLatitude)
+      } else {
+        // Fall back to using linkTarget point coordinates
+        const targetPoint = config.linkTarget?.(link)
+        if (typeof targetPoint === 'object' && targetPoint !== null) {
+          targetLon = getNumber(targetPoint as PointDatum, config.longitude)
+          targetLat = getNumber(targetPoint as PointDatum, config.latitude)
+        } else {
+          return // Skip if can't resolve target coordinates
+        }
+      }
+
+      if (!isNumber(sourceLon) || !isNumber(sourceLat) || !isNumber(targetLon) || !isNumber(targetLat)) {
+        return
+      }
+
+      const source = { lat: sourceLat, lon: sourceLon }
+      const target = { lat: targetLat, lon: targetLon }
+
+      // Create source point
+      const sourcePos = this._projection([sourceLon, sourceLat])
+      if (sourcePos) {
+        const sourcePoint: FlowSourcePoint = {
+          lat: sourceLat,
+          lon: sourceLon,
+          x: sourcePos[0],
+          y: sourcePos[1],
+          radius: getNumber(link, config.sourcePointRadius),
+          color: getColor(link, config.sourcePointColor, i),
+          flowData: link,
+        }
+        this._sourcePoints.push(sourcePoint)
+      }
+
+      // Create flow particles
+      const dist = Math.sqrt((targetLat - sourceLat) ** 2 + (targetLon - sourceLon) ** 2)
+      const numParticles = Math.max(1, Math.round(dist * getNumber(link, config.flowParticleDensity)))
+      const velocity = getNumber(link, config.flowParticleSpeed)
+      const radius = getNumber(link, config.flowParticleRadius)
+      const color = getColor(link, config.flowParticleColor, i)
+
+      for (let j = 0; j < numParticles; j += 1) {
+        const progress = j / numParticles
+        const location = {
+          lat: sourceLat + (targetLat - sourceLat) * progress,
+          lon: sourceLon + (targetLon - sourceLon) * progress,
+        }
+
+        const pos = this._projection([location.lon, location.lat])
+        if (pos) {
+          const particle: FlowParticle = {
+            x: pos[0],
+            y: pos[1],
+            source,
+            target,
+            location,
+            velocity,
+            radius,
+            color,
+            flowData: link,
+            progress: 0, // Keep for compatibility but not used in angle-based movement
+            id: `${link.id || i}-${j}`,
+          }
+          this._flowParticles.push(particle)
+        }
+      }
+    })
+  }
+
+  private _renderSourcePoints (duration: number): void {
+    const { config } = this
+
+    const sourcePoints = this._sourcePointsGroup
+      .selectAll<SVGCircleElement, FlowSourcePoint>(`.${s.sourcePoint}`)
+      .data(this._sourcePoints, (d, i) => `${d.flowData}-${i}`)
+
+    const sourcePointsEnter = sourcePoints.enter()
+      .append('circle')
+      .attr('class', s.sourcePoint)
+      .attr('r', 0)
+      .style('opacity', 0)
+      .on('click', (event: MouseEvent, d) => {
+        event.stopPropagation()
+        config.onSourcePointClick?.(d.flowData, d.x, d.y, event)
+      })
+      .on('mouseenter', (event: MouseEvent, d) => {
+        config.onSourcePointMouseEnter?.(d.flowData, d.x, d.y, event)
+      })
+      .on('mouseleave', (event: MouseEvent, d) => {
+        config.onSourcePointMouseLeave?.(d.flowData, event)
+      })
+
+    smartTransition(sourcePointsEnter.merge(sourcePoints), duration)
+      .attr('cx', d => d.x)
+      .attr('cy', d => d.y)
+      .attr('r', d => d.radius / (this._currentZoomLevel || 1))
+      .style('fill', d => d.color)
+      .style('stroke', d => d.color)
+      .style('opacity', 1)
+
+    sourcePoints.exit().remove()
+  }
+
+  private _renderFlowParticles (duration: number): void {
+    const flowParticles = this._flowParticlesGroup
+      .selectAll<SVGCircleElement, FlowParticle>(`.${s.flowParticle}`)
+      .data(this._flowParticles, d => d.id)
+
+    const flowParticlesEnter = flowParticles.enter()
+      .append('circle')
+      .attr('class', s.flowParticle)
+      .attr('r', 0)
+      .style('opacity', 0)
+
+    smartTransition(flowParticlesEnter.merge(flowParticles), duration)
+      .attr('cx', d => d.x)
+      .attr('cy', d => d.y)
+      .attr('r', d => d.radius / (this._currentZoomLevel || 1))
+      .style('fill', d => d.color)
+      .style('opacity', 0.8)
+
+    flowParticles.exit().remove()
+  }
+
+  private _startFlowAnimation (): void {
+    if (this._animationId) return // Animation already running
+
+    this._animateFlow()
+  }
+
+  private _animateFlow (): void {
+    if (!this.config.enableFlowAnimation) return
+
+    this._animationId = requestAnimationFrame(() => {
+      this._updateFlowParticles()
+      this._animateFlow() // Recursive call like LeafletFlowMap
+    })
+  }
+
+  private _stopFlowAnimation (): void {
+    if (this._animationId) {
+      cancelAnimationFrame(this._animationId)
+      this._animationId = null
+    }
+  }
+
+  private _updateFlowParticles (): void {
+    if (this._flowParticles.length === 0) return
+
+    const zoomLevel = this._currentZoomLevel || 1
+
+    this._flowParticles.forEach(particle => {
+      const { source, target } = particle
+
+      // Calculate movement using angle-based velocity (like LeafletFlowMap)
+      const fullDist = Math.sqrt((target.lat - source.lat) ** 2 + (target.lon - source.lon) ** 2)
+      const remainedDist = Math.sqrt((target.lat - particle.location.lat) ** 2 + (target.lon - particle.location.lon) ** 2)
+      const angle = Math.atan2(target.lat - source.lat, target.lon - source.lon)
+
+      // Update geographic location
+      particle.location.lat += particle.velocity * Math.sin(angle)
+      particle.location.lon += particle.velocity * Math.cos(angle)
+
+      // Reset to start when reaching target (like LeafletFlowMap)
+      if (
+        (((target.lat > source.lat) && (particle.location.lat > target.lat)) || ((target.lon > source.lon) && (particle.location.lon > target.lon))) ||
+        (((target.lat < source.lat) && (particle.location.lat < target.lat)) || ((target.lon < source.lon) && (particle.location.lon < target.lon)))
+      ) {
+        particle.location.lat = source.lat
+        particle.location.lon = source.lon
+      }
+
+      // Project to screen coordinates
+      const pos = this._projection([particle.location.lon, particle.location.lat])
+      if (pos) {
+        // Add orthogonal arc shift (adapted from LeafletFlowMap)
+        const orthogonalArcShift = -(zoomLevel ** 2 * fullDist / 8) * Math.cos(Math.PI / 2 * (fullDist / 2 - remainedDist) / (fullDist / 2)) || 0
+        particle.x = pos[0]
+        particle.y = pos[1] + orthogonalArcShift
+      }
+    })
+
+    // Update DOM elements directly without data rebinding (for performance)
+    this._flowParticlesGroup
+      .selectAll<SVGCircleElement, any>(`.${s.flowParticle}`)
+      .attr('cx', (d, i) => this._flowParticles[i]?.x || 0)
+      .attr('cy', (d, i) => this._flowParticles[i]?.y || 0)
+      .attr('r', (d, i) => (this._flowParticles[i]?.radius || 1) / zoomLevel)
+  }
+
   destroy (): void {
     window.cancelAnimationFrame(this._animFrameId)
+    this._stopFlowAnimation()
   }
 }
