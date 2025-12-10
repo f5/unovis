@@ -1,5 +1,6 @@
 import { css, injectGlobal } from '@emotion/css'
 import { UNOVIS_ICON_FONT_FAMILY_DEFAULT } from 'styles/index'
+import { FlowLegendItem } from './types'
 
 export const root = css`
   label: flow-legend-component;
@@ -31,23 +32,27 @@ export const globalStyles = injectGlobal`
   }
 `
 
-export const line = (lineColor: string): string => css`
-  label: line;
-  height: 1.5px;
-  width: 100%;
-  background-color: ${lineColor || 'var(--vis-flow-legend-link-color)'};
-  position: absolute;
-  top: 50%;
-`
-
-export const labels = css`
+export const labels = (spacing: number, lineColor: string, items: FlowLegendItem[]): string => css`
   label: labels;
 
   position: relative;
-  width: 100%;
+  width: ${spacing ? 'fit-content' : '100%'};
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: ${items.length > 1 ? 'space-between' : 'center'};
+  gap: ${spacing ? `${spacing}px` : 'unset'};
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    transform: translateY(-50%);
+    background-color: ${lineColor || 'var(--vis-flow-legend-link-color)'};
+    opacity: ${items.length > 1 ? 1 : 0};
+  }
 `
 
 export const item = css`

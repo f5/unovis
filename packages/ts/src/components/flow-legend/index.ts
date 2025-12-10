@@ -17,7 +17,6 @@ export class FlowLegend {
   static selectors = s
   div: Selection<HTMLElement, unknown, null, undefined>
   element: HTMLElement
-  line: Selection<HTMLDivElement, unknown, null, undefined>
   labels: Selection<HTMLDivElement, unknown, null, undefined>
   protected _defaultConfig = FlowLegendDefaultConfig as FlowLegendConfigInterface
   public config: FlowLegendConfigInterface = this._defaultConfig
@@ -34,8 +33,7 @@ export class FlowLegend {
 
     this.element = this.div.node()
 
-    this.line = this.div.append('div')
-    this.labels = this.div.append('div').attr('class', s.labels)
+    this.labels = this.div.append('div')
 
     if (config) this.setConfig(config)
   }
@@ -82,6 +80,8 @@ export class FlowLegend {
       .style('margin-top', `${config.margin?.top || 0}px`)
       .style('margin-bottom', `${config.margin?.bottom || 0}px`)
 
+    this.labels.attr('class', s.labels(config.spacing, config.lineColor, legendData))
+
     const legendItems = this.labels.selectAll<HTMLDivElement, FlowLegendItem>(`.${s.item}`)
       .data(legendData)
 
@@ -107,10 +107,6 @@ export class FlowLegend {
     legendItemsMerged.select('span').html(d => d.text)
 
     legendItems.exit().remove()
-
-    this.line
-      .attr('class', s.line(config.lineColor))
-      .style('opacity', config.items.length > 1 ? 1 : 0)
   }
 
   _onItemClick (event: MouseEvent, d: FlowLegendItem): void {
@@ -120,7 +116,6 @@ export class FlowLegend {
   }
 
   public destroy (): void {
-    this.line.remove()
     this.labels.remove()
     if (this.element !== this._container) this.div.remove()
   }
