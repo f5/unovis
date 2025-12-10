@@ -175,6 +175,7 @@ export const nodeIcon = css`
   stroke-opacity: var(${variables.sankeyIconStrokeOpacity});
   user-select: none;
   pointer-events: none;
+  dominant-baseline: central;
 `
 
 export const nodeExit = css`
