@@ -75,10 +75,10 @@ export class FlowLegend {
 
     // Draw
     this.div
-      .style('margin-left', `${config.margin?.left || 0}px`)
-      .style('margin-right', `${config.margin?.right || 0}px`)
-      .style('margin-top', `${config.margin?.top || 0}px`)
-      .style('margin-bottom', `${config.margin?.bottom || 0}px`)
+      .style('margin-left', config.margin?.left ? `${config.margin.left}px` : null)
+      .style('margin-right', config.margin?.right ? `${config.margin.right}px` : null)
+      .style('margin-top', config.margin?.top ? `${config.margin.top}px` : null)
+      .style('margin-bottom', config.margin?.bottom ? `${config.margin.bottom}px` : null)
 
     this.labels.attr('class', s.labels(config.spacing, config.lineColor, legendData))
 
@@ -94,17 +94,19 @@ export class FlowLegend {
       .on('click', this._onItemClick.bind(this))
 
     legendItemsEnter.append('span')
+
+    const legendItemsMerged = legendItemsEnter.merge(legendItems)
+    smartTransition(legendItemsMerged, 500)
+      .attr('opacity', 1)
+
+    legendItemsMerged.select('span')
       .attr('class',
         d => d.type === FlowLegendItemType.Symbol
           ? s.arrow(config.arrowColor, config.arrowSymbolYOffset)
           : s.label(config.labelFontSize, config.labelColor)
       )
       .classed(s.clickable, d => d.type === FlowLegendItemType.Label && !!config.onLegendItemClick)
-
-    const legendItemsMerged = legendItemsEnter.merge(legendItems)
-    smartTransition(legendItemsMerged, 500)
-      .attr('opacity', 1)
-    legendItemsMerged.select('span').html(d => d.text)
+      .html(d => d.text)
 
     legendItems.exit().remove()
   }
