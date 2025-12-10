@@ -76,6 +76,12 @@ export class FlowLegend {
     }, [])
 
     // Draw
+    this.div
+      .style('margin-left', `${config.margin?.left || 0}px`)
+      .style('margin-right', `${config.margin?.right || 0}px`)
+      .style('margin-top', `${config.margin?.top || 0}px`)
+      .style('margin-bottom', `${config.margin?.bottom || 0}px`)
+
     const legendItems = this.labels.selectAll<HTMLDivElement, FlowLegendItem>(`.${s.item}`)
       .data(legendData)
 
@@ -90,7 +96,7 @@ export class FlowLegend {
     legendItemsEnter.append('span')
       .attr('class',
         d => d.type === FlowLegendItemType.Symbol
-          ? s.arrow(config.arrowColor)
+          ? s.arrow(config.arrowColor, config.arrowSymbolYOffset)
           : s.label(config.labelFontSize, config.labelColor)
       )
       .classed(s.clickable, d => d.type === FlowLegendItemType.Label && !!config.onLegendItemClick)
