@@ -374,13 +374,13 @@ export class TopoJSONMap<
 
   private _collideLabels (): void {
     const labels = this._areaLabelsGroup.selectAll<SVGTextElement, any>(`.${s.areaLabel}`)
-    const labelNodes = labels.nodes()
+    const labelNodes = labels.nodes() as (SVGTextElement & { _labelVisible?: boolean })[]
     const labelData = labels.data()
 
     if (labelNodes.length === 0) return
 
     // Reset all labels to visible and mark them as such
-    labelNodes.forEach((node: any) => {
+    labelNodes.forEach((node) => {
       node._labelVisible = true
     })
 
@@ -402,7 +402,7 @@ export class TopoJSONMap<
     }
 
     // Run collision detection similar to scatter plot
-    labelNodes.forEach((node1: any, i) => {
+    labelNodes.forEach((node1, i) => {
       const data1 = labelData[i]
       if (!node1._labelVisible) return
 
@@ -653,7 +653,7 @@ export class TopoJSONMap<
 
         if (d.isCluster) {
           // For clusters, use contrasting color against cluster background
-          const clusterColor = getString(d as any, config.clusterColor) || '#2196F3'
+          const clusterColor = getColor(d as any, config.clusterColor, i) || '#2196F3'
           const hex = color(isStringCSSVariable(clusterColor) ? getCSSVariableValue(clusterColor, this.element) : clusterColor)?.hex()
           if (hex) {
             const brightness = hexToBrightness(hex)
@@ -849,7 +849,7 @@ export class TopoJSONMap<
         const sourceLon = getNumber(link, config.sourceLongitude)
         const sourceLat = getNumber(link, config.sourceLatitude)
         if (isNumber(sourceLon) && isNumber(sourceLat)) {
-          points.push({ longitude: sourceLon, latitude: sourceLat } as PointDatum)
+          points.push({ longitude: sourceLon, latitude: sourceLat } as unknown as PointDatum)
         }
       } else {
         const sourcePoint = config.linkSource?.(link)
@@ -863,7 +863,7 @@ export class TopoJSONMap<
         const targetLon = getNumber(link, config.targetLongitude)
         const targetLat = getNumber(link, config.targetLatitude)
         if (isNumber(targetLon) && isNumber(targetLat)) {
-          points.push({ longitude: targetLon, latitude: targetLat } as PointDatum)
+          points.push({ longitude: targetLon, latitude: targetLat } as unknown as PointDatum)
         }
       } else {
         const targetPoint = config.linkTarget?.(link)
@@ -1110,7 +1110,7 @@ export class TopoJSONMap<
             color,
             flowData: link,
             progress: 0, // Keep for compatibility but not used in angle-based movement
-            id: `${link.id || i}-${j}`,
+            id: `${getString(link, config.linkId, i) || i}-${j}`,
           }
           this._flowParticles.push(particle)
         }
