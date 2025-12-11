@@ -1,7 +1,7 @@
 {
   "name": "@unovis/solid",
   "description": "Modular data visualization framework for React, Angular, Svelte, Vue, Solid and vanilla TypeScript or JavaScript",
-  "version": "1.6.2",
+  "version": "1.7.0-stellar.0",
   "packageManager": "npm@10.9.1",
   "repository": {
     "type": "git",
@@ -36,7 +36,7 @@
     "gallery": "vite"
   },
   "peerDependencies": {
-    "@unovis/ts": "1.6.2",
+    "@unovis/ts": "1.7.0-stellar.0",
     "solid-js": "^1.9.0"
   },
   "devDependencies": {

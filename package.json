@@ -1,6 +1,6 @@
 {
   "name": "unovis",
-  "version": "1.6.2",
+  "version": "1.7.0-stellar.0",
   "packageManager": "npm@10.9.1",
   "license": "Apache-2.0",
   "private": true,
