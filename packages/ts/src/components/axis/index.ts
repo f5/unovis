@@ -560,7 +560,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
   }
 
   private _renderAxisLabel (selection = this.axisGroup): void {
-    const { type, label, labelMargin, labelFontSize, labelTextFitMode } = this.config
+    const { type, label, labelMargin, labelFontSize, labelTextFitMode, labelTextSeparator } = this.config
 
     // Remove the old label first to calculate the axis size properly
     selection.selectAll(`.${s.label}`).remove()
@@ -593,7 +593,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
       const currentTextWidth = getCachedComputedTextLength(textElement.node())
 
       if (currentTextWidth > maxWidth) {
-        wrapSVGText(textElement, maxWidth)
+        wrapSVGText(textElement, maxWidth, labelTextSeparator)
         isWrapped = true
       }
     }
