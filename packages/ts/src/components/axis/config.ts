@@ -23,6 +23,8 @@ export interface AxisConfigInterface<Datum> extends Partial<XYComponentConfigInt
   labelTextFitMode?: FitMode | `${FitMode}`;
   /** Label text trim mode: `TrimMode.Start`, `TrimMode.Middle` or `TrimMode.End`. Default: `TrimMode.Middle` */
   labelTextTrimType?: TrimMode | `${TrimMode}`;
+  /** Label text wrapping separator. String or array of strings. Default: `undefined` */
+  labelTextSeparator?: string | string[];
   /** Font color of the axis label as CSS string. Default: `null` */
   labelColor?: string | null;
   /** Sets whether to draw the grid lines or not. Default: `true` */
@@ -95,6 +97,7 @@ export const AxisDefaultConfig: AxisConfigInterface<unknown> = {
   labelFontSize: null,
   labelTextFitMode: FitMode.Wrap,
   labelTextTrimType: TrimMode.Middle,
+  labelTextSeparator: undefined,
   gridLine: true,
   tickLine: true,
   domainLine: true,
