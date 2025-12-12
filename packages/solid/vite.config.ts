@@ -48,6 +48,7 @@ export default defineConfig(({command, mode}) => {
       },
       resolve: {
         alias: {
+          '@unovis/solid': resolve(__dirname, 'src/index.ts'),
           'tslib': 'tslib'
         }
       },

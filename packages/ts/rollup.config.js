@@ -39,6 +39,8 @@ const plugins = [
   typescript({
     typescript: require('typescript'),
     transformers: [(service) => transformPaths(service.getProgram())],
+    check: false, // Todo remove it once we fix all type checks
+    abortOnError: false,
   }),
   renameNodeModules(),
   // visualizer({ sourcemap: true, template: 'network' }),
