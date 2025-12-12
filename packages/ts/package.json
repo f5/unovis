@@ -41,7 +41,6 @@
   },
   "devDependencies": {
     "@rollup/plugin-json": "^4.1.0",
-    "@types/to-px": "^1.1.2",
     "@zerollup/ts-transform-paths": "^1.7.18",
     "rimraf": "^3.0.2",
     "rollup": "^2.61.1",
@@ -83,7 +82,6 @@
     "supercluster": "^7.1.5",
     "three": "^0.135.0",
     "throttle-debounce": "^5.0.0",
-    "to-px": "^1.1.0",
     "topojson-client": "^3.1.0",
     "tslib": "^2.3.1"
   }

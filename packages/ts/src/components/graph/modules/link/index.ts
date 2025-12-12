@@ -1,13 +1,13 @@
 import { select, Selection } from 'd3-selection'
 import { range, sum } from 'd3-array'
 import { Transition } from 'd3-transition'
-import toPx from 'to-px'
 
 // Utils
 import { throttle, getValue, getNumber, getBoolean, ensureArray } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { getCSSVariableValueInPixels } from 'utils/misc'
 import { estimateStringPixelLength } from 'utils/text'
+import { toPx } from 'utils/to-px'
 
 // Types
 import { GraphInputLink, GraphInputNode } from 'types/graph'
