@@ -9,6 +9,7 @@ import { Symbol, SymbolType } from 'types/symbol'
 // Utils
 import { getColor } from 'utils/color'
 import { ensureArray, getString } from 'utils/data'
+import { getCSSVariableValueInPixels } from 'utils/misc'
 
 // Constants
 import { PATTERN_SIZE_PX } from 'styles/patterns'
@@ -58,7 +59,7 @@ export function updateBullets (
     const colors = ensureArray(d.color ?? getColor(d, colorAccessor, i))
     const numBullets = colors.length
     const bulletWidth = BULLET_SIZE
-    const defaultBulletSize = toPx(getComputedStyle(els[i]).getPropertyValue('--vis-legend-bullet-size'))
+    const defaultBulletSize = toPx(config.bulletSize) || getCSSVariableValueInPixels('var(--vis-legend-bullet-size)', els[i])
     const spacing = config.bulletSpacing * (BULLET_SIZE / defaultBulletSize) // Scale spacing relative to bullet size
     const width = getBulletsTotalWidth(bulletWidth, numBullets, spacing)
     const height = shape === BulletShape.Line ? BULLET_SIZE / 2.5 : BULLET_SIZE

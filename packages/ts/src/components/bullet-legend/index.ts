@@ -3,6 +3,7 @@ import toPx from 'to-px'
 
 // Utils
 import { merge } from 'utils/data'
+import { getCSSVariableValueInPixels } from 'utils/misc'
 
 // Config
 import { BulletLegendDefaultConfig, BulletLegendConfigInterface } from './config'
@@ -70,8 +71,7 @@ export class BulletLegend {
       .style('width', function (d: BulletLegendItemInterface) {
         const colors = Array.isArray(d.color) ? d.color : [d.color]
         const numColors = colors.length
-        const defaultSize = toPx(getComputedStyle(this).getPropertyValue('--vis-legend-bullet-size')) || 9
-        const baseSize = config.bulletSize ? toPx(config.bulletSize) : defaultSize
+        const baseSize = config.bulletSize ? toPx(config.bulletSize) : (getCSSVariableValueInPixels('var(--vis-legend-bullet-size)', this) || 9)
         const spacing = config.bulletSpacing
         return `${getBulletsTotalWidth(baseSize, numColors, spacing)}px`
       })

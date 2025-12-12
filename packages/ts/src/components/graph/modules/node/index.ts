@@ -13,6 +13,7 @@ import { smartTransition, Selection$Transition } from 'utils/d3'
 import { getBoolean, getNumber, getString, getValue, throttle } from 'utils/data'
 import { getColor } from 'utils/color'
 import { isStringSvg } from 'utils/svg'
+import { getCSSVariableValueInPixels } from 'utils/misc'
 
 // Local Types
 import { GraphNode, GraphCircleLabel, GraphNodeAnimationState, GraphNodeAnimatedElement, GraphNodeShape } from '../../types'
@@ -346,7 +347,7 @@ export function updateNodes<N extends GraphInputNode, L extends GraphInputLink> 
       })
 
     // Position label
-    const labelFontSize = parseFloat(window.getComputedStyle(groupElement).getPropertyValue('--vis-graph-node-label-font-size')) || 12
+    const labelFontSize = getCSSVariableValueInPixels('var(--vis-graph-node-label-font-size)', groupElement) || 12
     const labelMargin = LABEL_RECT_VERTICAL_PADDING + 1.25 * labelFontSize ** 1.03
     const nodeHeight = isStringSvg((getString(d, nodeShape, d._index)) as GraphNodeShape) ? nodeBBox.height : nodeSizeValue
     label.attr('transform', `translate(0, ${nodeHeight / 2 + labelMargin})`)
