@@ -371,9 +371,6 @@ importers:
       '@types/d3-selection':
         specifier: ^3.0.10
         version: 3.0.11
-      '@unovis/vue':
-        specifier: workspace:*
-        version: link:../vue
       d3-array:
         specifier: 3.2.4
         version: 3.2.4
@@ -434,6 +431,9 @@ importers:
 
   packages/svelte:
     devDependencies:
+      '@rollup/plugin-alias':
+        specifier: ^5.1.1
+        version: 5.1.1(rollup@2.79.2)
       '@rollup/plugin-node-resolve':
         specifier: ^13.0.4
         version: 13.3.0(rollup@2.79.2)
@@ -3268,6 +3268,15 @@ packages:
   '@remix-run/router@1.23.1':
     resolution: {integrity: sha512-vDbaOzF7yT2Qs4vO6XV1MHcJv+3dgR1sT+l3B8xxOVhUC336prMvqrvsLL/9Dnw2xr6Qhz4J0dmS0llNAbnUmQ==}
     engines: {node: '>=14.0.0'}
+
+  '@rollup/plugin-alias@5.1.1':
+    resolution: {integrity: sha512-PR9zDb+rOzkRb2VD+EuKB7UC41vU5DIwZ5qqCpk0KJudcWAyi8rvYOhS7+L5aZCspw1stTViLgN5v6FF1p5cgQ==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
+    peerDependenciesMeta:
+      rollup:
+        optional: true
 
   '@rollup/plugin-commonjs@20.0.0':
     resolution: {integrity: sha512-5K0g5W2Ol8hAcTHqcTBHiA7M58tfmYi1o9KxeJuuRNpGaTa5iLjcyemBitCBcKXaHamOBBEH2dGom6v6Unmqjg==}
@@ -17115,6 +17124,10 @@ snapshots:
   '@polka/url@1.0.0-next.29': {}
 
   '@remix-run/router@1.23.1': {}
+
+  '@rollup/plugin-alias@5.1.1(rollup@2.79.2)':
+    optionalDependencies:
+      rollup: 2.79.2
 
   '@rollup/plugin-commonjs@20.0.0(rollup@2.79.2)':
     dependencies:

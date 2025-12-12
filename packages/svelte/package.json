@@ -51,6 +51,7 @@
   "devDependencies": {
     "@unovis/ts": "workspace:*",
     "@unovis/shared": "workspace:*",
+    "@rollup/plugin-alias": "^5.1.1",
     "@rollup/plugin-node-resolve": "^13.0.4",
     "@sveltejs/package": "1.0.0-next.5",
     "@tsconfig/svelte": "^2.0.0",
