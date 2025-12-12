@@ -29,11 +29,9 @@ striptags                          perpetual       MIT           3.2.0          
 supercluster                       perpetual       ISC           7.1.5              Vladimir Agafonkin
 three                              perpetual       MIT           0.135.0            mrdoob
 throttle-debounce                  perpetual       MIT           5.0.0              Ivan Nikolić <niksy5@gmail.com> (http://ivannikolic.com)
-to-px                              perpetual       MIT           1.1.0              Mikola Lysenko
 topojson-client                    perpetual       ISC           3.1.0              Mike Bostock https://bost.ocks.org/mike
 tslib                              perpetual       0BSD          2.4.1              Microsoft Corp.
 @rollup/plugin-json                perpetual       MIT           4.1.0              rollup
-@types/to-px                       perpetual       MIT           1.1.2              n/a
 @zerollup/ts-transform-paths       perpetual       MIT           1.7.18             Stefan Zerkalica zerkalica@gmail.com
 rimraf                             perpetual       ISC           3.0.2              Isaac Z. Schlueter <i@izs.me> (http://blog.izs.me/)
 rollup                             perpetual       MIT           2.79.2             Rich Harris

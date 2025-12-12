@@ -1,6 +1,5 @@
 import { Selection, select } from 'd3-selection'
 import { symbol } from 'd3-shape'
-import toPx from 'to-px'
 
 // Types
 import { ColorAccessor } from 'types/accessor'
@@ -10,6 +9,7 @@ import { Symbol, SymbolType } from 'types/symbol'
 import { getColor } from 'utils/color'
 import { ensureArray, getString } from 'utils/data'
 import { getCSSVariableValueInPixels } from 'utils/misc'
+import { toPx } from 'utils/to-px'
 
 // Constants
 import { PATTERN_SIZE_PX } from 'styles/patterns'
