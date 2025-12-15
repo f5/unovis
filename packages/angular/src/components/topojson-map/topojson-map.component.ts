@@ -11,6 +11,7 @@ import {
   StringAccessor,
   MapPointLabelPosition,
   TopoJSONMapPointStyles,
+  TopoJSONMapClusterDatum,
 } from '@unovis/ts'
 import { GeoProjection } from 'd3-geo'
 import { VisCoreComponent } from '../../core'
@@ -114,6 +115,48 @@ export class VisTopoJSONMapComponent<AreaDatum, PointDatum, LinkDatum> implement
   /** Link target accessor function. Default: `d => d.target` */
   @Input() linkTarget?: ((l: LinkDatum) => number | string | PointDatum)
 
+  /** Flow source point longitude accessor function or value. Default: `f => f.sourceLongitude` */
+  @Input() sourceLongitude?: NumericAccessor<LinkDatum>
+
+  /** Flow source point latitude accessor function or value. Default: `f => f.sourceLatitude` */
+  @Input() sourceLatitude?: NumericAccessor<LinkDatum>
+
+  /** Flow target point longitude accessor function or value. Default: `f => f.targetLongitude` */
+  @Input() targetLongitude?: NumericAccessor<LinkDatum>
+
+  /** Flow target point latitude accessor function or value. Default: `f => f.targetLatitude` */
+  @Input() targetLatitude?: NumericAccessor<LinkDatum>
+
+  /** Flow source point radius accessor function or value. Default: `3` */
+  @Input() sourcePointRadius?: NumericAccessor<LinkDatum>
+
+  /** Source point color accessor function or value. Default: `'#88919f'` */
+  @Input() sourcePointColor?: ColorAccessor<LinkDatum>
+
+  /** Flow particle color accessor function or value. Default: `'#949dad'` */
+  @Input() flowParticleColor?: ColorAccessor<LinkDatum>
+
+  /** Flow particle radius accessor function or value. Default: `1.1` */
+  @Input() flowParticleRadius?: NumericAccessor<LinkDatum>
+
+  /** Flow particle speed accessor function or value. The unit is arbitrary, recommended range is 0 – 0.2. Default: `0.07` */
+  @Input() flowParticleSpeed?: NumericAccessor<LinkDatum>
+
+  /** Flow particle density accessor function or value on the range of [0, 1]. Default: `0.6` */
+  @Input() flowParticleDensity?: NumericAccessor<LinkDatum>
+
+  /** Enable flow animations. When true, shows animated particles along links. Default: `false` */
+  @Input() enableFlowAnimation?: boolean
+
+  /** Flow source point click callback function. Default: `undefined` */
+  @Input() onSourcePointClick?: (f: LinkDatum, x: number, y: number, event: MouseEvent) => void
+
+  /** Flow source point mouse over callback function. Default: `undefined` */
+  @Input() onSourcePointMouseEnter?: (f: LinkDatum, x: number, y: number, event: MouseEvent) => void
+
+  /** Flow source point mouse leave callback function. Default: `undefined` */
+  @Input() onSourcePointMouseLeave?: (f: LinkDatum, event: MouseEvent) => void
+
   /** Area id accessor function corresponding to the feature id from TopoJSON. Default: `d => d.id ?? ''` */
   @Input() areaId?: StringAccessor<AreaDatum>
 
@@ -122,6 +165,9 @@ export class VisTopoJSONMapComponent<AreaDatum, PointDatum, LinkDatum> implement
 
   /** Area cursor value or accessor function. Default: `null` */
   @Input() areaCursor?: StringAccessor<AreaDatum>
+
+  /** Area label accessor function. Default: `undefined` */
+  @Input() areaLabel?: StringAccessor<AreaDatum>
 
   /** Point color accessor. Default: `d => d.color ?? null` */
   @Input() pointColor?: ColorAccessor<PointDatum>
@@ -159,24 +205,38 @@ export class VisTopoJSONMapComponent<AreaDatum, PointDatum, LinkDatum> implement
   /** Point id accessor function. Default: `d => d.id` */
   @Input() pointId?: ((d: PointDatum, i: number) => string)
 
-  /** A single map point can have multiple properties displayed as a small pie chart.
-   * By setting the colorMap configuration you can specify data properties that should be mapped to various pie / donut segments.
-   *
-   * ```
-   * {
-   * \[key in keyof PointDatum]?: { color: string, className?: string }
-   * }
-   * ```
-   * e.g.:
-   * ```
-   * {
-   * \healthy: { color: 'green' },
-   * \warning: { color: 'orange' },
-   * \critical: { color: 'red' }
-   * }
-   * ```
-   * where every data point has the `healthy`, `warning` and `critical` numerical or boolean property. */
+  /** Color map for points with donut/pie chart visualization. Default: `{}` */
   @Input() colorMap?: TopoJSONMapPointStyles<PointDatum>
+
+  /** Cluster color accessor function or constant value. Default: `undefined` */
+  @Input() clusterColor?: ColorAccessor<TopoJSONMapClusterDatum<PointDatum>>
+
+  /** Cluster radius accessor function or constant value. Default: `undefined` */
+  @Input() clusterRadius?: NumericAccessor<TopoJSONMapClusterDatum<PointDatum>>
+
+  /** Cluster inner label accessor function. Default: `d => d.pointCount` */
+  @Input() clusterLabel?: StringAccessor<TopoJSONMapClusterDatum<PointDatum>>
+
+  /** Cluster inner label color accessor function or constant value. Default: `undefined` */
+  @Input() clusterLabelColor?: StringAccessor<TopoJSONMapClusterDatum<PointDatum>>
+
+  /** Cluster bottom label accessor function. Default: `''` */
+  @Input() clusterBottomLabel?: StringAccessor<TopoJSONMapClusterDatum<PointDatum>>
+
+  /** The width of the cluster point ring. Default: `2` */
+  @Input() clusterRingWidth?: number
+
+  /** When cluster is expanded, show a background circle to better separate points from the base map. Default: `true` */
+  @Input() clusterBackground?: boolean
+
+  /** Defines whether the cluster should expand on click or not. Default: `true` */
+  @Input() clusterExpandOnClick?: boolean
+
+  /** Clustering distance in pixels. Default: `55` */
+  @Input() clusteringDistance?: number
+
+  /** Enable point clustering. Default: `false` */
+  @Input() clustering?: boolean
 
   /** Enables blur and blending between neighbouring points. Default: `false` */
   @Input() heatmapMode?: boolean
@@ -207,8 +267,8 @@ export class VisTopoJSONMapComponent<AreaDatum, PointDatum, LinkDatum> implement
   }
 
   private getConfig (): TopoJSONMapConfigInterface<AreaDatum, PointDatum, LinkDatum> {
-    const { duration, events, attributes, projection, topojson, mapFeatureName, mapFitToPoints, zoomFactor, disableZoom, zoomExtent, zoomDuration, linkWidth, linkColor, linkCursor, linkId, linkSource, linkTarget, areaId, areaColor, areaCursor, pointColor, pointRadius, pointStrokeWidth, pointShape, pointRingWidth, pointCursor, longitude, latitude, pointLabel, pointLabelPosition, pointLabelTextBrightnessRatio, pointId, colorMap, heatmapMode, heatmapModeBlurStdDeviation, heatmapModeZoomLevelThreshold } = this
-    const config = { duration, events, attributes, projection, topojson, mapFeatureName, mapFitToPoints, zoomFactor, disableZoom, zoomExtent, zoomDuration, linkWidth, linkColor, linkCursor, linkId, linkSource, linkTarget, areaId, areaColor, areaCursor, pointColor, pointRadius, pointStrokeWidth, pointShape, pointRingWidth, pointCursor, longitude, latitude, pointLabel, pointLabelPosition, pointLabelTextBrightnessRatio, pointId, colorMap, heatmapMode, heatmapModeBlurStdDeviation, heatmapModeZoomLevelThreshold }
+    const { duration, events, attributes, projection, topojson, mapFeatureName, mapFitToPoints, zoomFactor, disableZoom, zoomExtent, zoomDuration, linkWidth, linkColor, linkCursor, linkId, linkSource, linkTarget, sourceLongitude, sourceLatitude, targetLongitude, targetLatitude, sourcePointRadius, sourcePointColor, flowParticleColor, flowParticleRadius, flowParticleSpeed, flowParticleDensity, enableFlowAnimation, onSourcePointClick, onSourcePointMouseEnter, onSourcePointMouseLeave, areaId, areaColor, areaCursor, areaLabel, pointColor, pointRadius, pointStrokeWidth, pointShape, pointRingWidth, pointCursor, longitude, latitude, pointLabel, pointLabelPosition, pointLabelTextBrightnessRatio, pointId, colorMap, clusterColor, clusterRadius, clusterLabel, clusterLabelColor, clusterBottomLabel, clusterRingWidth, clusterBackground, clusterExpandOnClick, clusteringDistance, clustering, heatmapMode, heatmapModeBlurStdDeviation, heatmapModeZoomLevelThreshold } = this
+    const config = { duration, events, attributes, projection, topojson, mapFeatureName, mapFitToPoints, zoomFactor, disableZoom, zoomExtent, zoomDuration, linkWidth, linkColor, linkCursor, linkId, linkSource, linkTarget, sourceLongitude, sourceLatitude, targetLongitude, targetLatitude, sourcePointRadius, sourcePointColor, flowParticleColor, flowParticleRadius, flowParticleSpeed, flowParticleDensity, enableFlowAnimation, onSourcePointClick, onSourcePointMouseEnter, onSourcePointMouseLeave, areaId, areaColor, areaCursor, areaLabel, pointColor, pointRadius, pointStrokeWidth, pointShape, pointRingWidth, pointCursor, longitude, latitude, pointLabel, pointLabelPosition, pointLabelTextBrightnessRatio, pointId, colorMap, clusterColor, clusterRadius, clusterLabel, clusterLabelColor, clusterBottomLabel, clusterRingWidth, clusterBackground, clusterExpandOnClick, clusteringDistance, clustering, heatmapMode, heatmapModeBlurStdDeviation, heatmapModeZoomLevelThreshold }
     const keys = Object.keys(config) as (keyof TopoJSONMapConfigInterface<AreaDatum, PointDatum, LinkDatum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
