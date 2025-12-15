@@ -148,6 +148,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
     if (shouldShow && tooltip && this._isContainerInViewport()) {
       const container = tooltip.getContainer() || this.container.node()
       const isContainerBody = tooltip.isContainerBody()
+      const nearestDatumXValue = this.accessors.x ? getNumber(nearestDatum, this.accessors.x, nearestDatumIndex) : undefined
 
       if (isForceShowAtDefined) {
         // Convert SVG coordinates to screen coordinates
@@ -157,10 +158,10 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
         const screenX = (isContainerBody ? xPx + containerRect.left : xPx) + this._containerMargin.left
         const screenY = this._height / 2 + (isContainerBody ? containerRect.top : 0)
         const pos = [screenX, screenY] as [number, number]
-        this._showTooltip(nearestDatum, xValue, pos, leftNearestDatumIndex)
+        this._showTooltip(nearestDatum, nearestDatumXValue, pos, leftNearestDatumIndex)
       } else if (this._mouseEvent) {
         const pos = (isContainerBody ? [this._mouseEvent.clientX, this._mouseEvent.clientY] : pointer(this._mouseEvent, container)) as [number, number]
-        this._showTooltip(nearestDatum, xValue, pos, leftNearestDatumIndex)
+        this._showTooltip(nearestDatum, nearestDatumXValue, pos, leftNearestDatumIndex)
       }
     } else this._hideTooltip()
 
