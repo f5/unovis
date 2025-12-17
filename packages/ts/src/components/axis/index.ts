@@ -17,6 +17,7 @@ import { smartTransition } from 'utils/d3'
 import { renderTextToSvgTextElement, textAlignToAnchor, trimSVGText, wrapSVGText } from 'utils/text'
 import { isEqual } from 'utils/data'
 import { rectIntersect } from 'utils/misc'
+import { getFontWidthToHeightRatio } from 'styles/index'
 
 // Local Types
 import { AxisType } from './types'
@@ -39,6 +40,11 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
   private _requiredMargin: Spacing
   private _defaultNumTicks = 3
   private _collideTickLabelsAnimFrameId: ReturnType<typeof requestAnimationFrame>
+  private _textStyle: {
+    fontSize: number;
+    fontFamily: string;
+    fontWidthToHeightRatio: number;
+  }
 
   protected events = {}
 
@@ -271,9 +277,6 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
       let text = config.tickFormat?.(value, i, tickValues) ?? `${value}`
       const textElement = elements[i] as SVGTextElement
       const textMaxWidth = config.tickTextWidth || (config.type === AxisType.X ? this._containerWidth / (tickCount + 1) : this._containerWidth / 5)
-      const styleDeclaration = getComputedStyle(textElement)
-      const fontSize = Number.parseFloat(styleDeclaration.fontSize)
-      const fontFamily = styleDeclaration.fontFamily
       const textOptions: UnovisTextOptions = {
         verticalAlign: config.type === AxisType.X ? VerticalAlign.Top : VerticalAlign.Middle,
         width: textMaxWidth,
@@ -282,14 +285,28 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
         wordBreak: config.tickTextForceWordBreak,
       }
 
+      if (!this._textStyle) {
+        const styleDeclaration = getComputedStyle(textElement)
+        this._textStyle = {
+          fontSize: Number.parseFloat(styleDeclaration.fontSize),
+          fontFamily: styleDeclaration.fontFamily,
+          fontWidthToHeightRatio: getFontWidthToHeightRatio(),
+        }
+      }
+
       if (config.tickTextFitMode === FitMode.Trim) {
         const textElementSelection = select<SVGTextElement, string>(textElement).text(text)
-        trimSVGText(textElementSelection, textMaxWidth, config.tickTextTrimType as TrimMode, true, fontSize, 0.58)
+        trimSVGText(textElementSelection, textMaxWidth, config.tickTextTrimType as TrimMode, true, this._textStyle.fontSize, 0.58)
         text = select<SVGTextElement, string>(textElement).text()
       }
 
-      const textBlock: UnovisText = { text, fontFamily, fontSize }
-      renderTextToSvgTextElement(textElement, textBlock, textOptions)
+      const textBlock: UnovisText = {
+        text,
+        fontFamily: this._textStyle.fontFamily,
+        fontSize: this._textStyle.fontSize,
+        fontWidthToHeightRatio: this._textStyle.fontWidthToHeightRatio,
+      }
+      renderTextToSvgTextElement(textElement, textBlock, textOptions, false)
     })
 
     selection
