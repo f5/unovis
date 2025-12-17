@@ -4,7 +4,7 @@ import { timeout } from 'd3-timer'
 import { easeCubicInOut } from 'd3-ease'
 import { geoPath, GeoProjection, ExtendedFeatureCollection } from 'd3-geo'
 import { color } from 'd3-color'
-import { packSiblings } from 'd3-hierarchy'
+
 import { feature } from 'topojson-client'
 import Supercluster from 'supercluster'
 
@@ -41,16 +41,7 @@ import {
 import { TopoJSONMapDefaultConfig, TopoJSONMapConfigInterface } from './config'
 
 // Modules
-import {
-  arc,
-  getLonLat,
-  getDonutData,
-  getPointPathData,
-  calculateClusterIndex,
-  getClustersAndPoints,
-  geoJsonPointToScreenPoint,
-  getNextZoomLevelOnClusterClick,
-} from './utils'
+import { arc, getLonLat, getDonutData, getPointPathData, calculateClusterIndex, getNextZoomLevelOnClusterClick } from './utils'
 import { updateDonut } from './modules/donut'
 
 // Styles
@@ -411,7 +402,7 @@ export class TopoJSONMap<
       for (let j = 0; j < labelNodes.length; j++) {
         if (i === j) continue
 
-        const node2 = labelNodes[j]
+        const node2 = labelNodes[j] as any
         const data2 = labelData[j]
 
         if (!node2._labelVisible) continue
@@ -432,7 +423,7 @@ export class TopoJSONMap<
     })
 
     // Apply visibility based on collision detection
-    labels.style('opacity', (d, i) => labelNodes[i]._labelVisible ? 1 : 0)
+    labels.style('opacity', (d, i) => (labelNodes[i] as any)._labelVisible ? 1 : 0)
   }
 
   _renderLinks (duration: number): void {
@@ -461,7 +452,7 @@ export class TopoJSONMap<
   private _getPointData (): TopoJSONMapPoint<PointDatum>[] {
     const { config, datamodel } = this
 
-    if (!config.clustering || !this._clusterIndex) {
+    if (!config.clustering || !this._clusterIndex || config.clusteringDistance === 0) {
       // Return regular points when clustering is disabled
       return datamodel.points.map((d, i) => {
         const pos = this._projection(getLonLat(d, config.longitude, config.latitude))
@@ -485,17 +476,34 @@ export class TopoJSONMap<
       })
     }
 
-    // Get bounds for clustering
-    const bounds = this._projection.invert ? [
-      this._projection.invert([0, this._height])[0],
-      this._projection.invert([0, this._height])[1],
-      this._projection.invert([this._width, 0])[0],
-      this._projection.invert([this._width, 0])[1],
-    ] as [number, number, number, number] : [-180, -90, 180, 90] as [number, number, number, number]
+    // Convert all points to screen space first
+    const allPoints = datamodel.points.map((d, i) => {
+      const coords = getLonLat(d, config.longitude, config.latitude)
+      const screenPos = this._projection(coords)
+      const radius = getNumber(d, config.pointRadius)
+      const shape = getString(d, config.pointShape) as TopoJSONMapPointShape || TopoJSONMapPointShape.Circle
+      const donutData = getDonutData(d, config.colorMap)
+      const pointColor = getColor(d, config.pointColor, i)
 
-    // Use a capped zoom level for clustering to prevent over-fragmentation
-    const clusterZoom = Math.min(Math.round(this._currentZoomLevel || 1), 8)
-    let geoJsonPoints = getClustersAndPoints(this._clusterIndex as any, bounds, clusterZoom)
+      return {
+        geometry: { type: 'Point', coordinates: coords },
+        bbox: { x1: screenPos[0] - radius, y1: screenPos[1] - radius, x2: screenPos[0] + radius, y2: screenPos[1] + radius },
+        radius,
+        path: getPointPathData({ x: 0, y: 0 }, radius, shape),
+        color: pointColor,
+        id: getString(d, config.pointId, i),
+        properties: d as TopoJSONMapPointDatum<PointDatum>,
+        donutData,
+        isCluster: false,
+        _zIndex: 0,
+        screenX: screenPos[0],
+        screenY: screenPos[1],
+        originalData: d,
+      }
+    })
+
+    // Perform clustering in screen space
+    let geoJsonPoints = this._clusterInScreenSpace(allPoints)
 
     // Handle expanded cluster points - replace the expanded cluster with individual points
     if (this._expandedCluster) {
@@ -505,9 +513,7 @@ export class TopoJSONMap<
       geoJsonPoints = geoJsonPoints.concat(this._expandedCluster.points as any)
     }
 
-    return geoJsonPoints.map((geoPoint, i) =>
-      geoJsonPointToScreenPoint(geoPoint as any, i, this._projection, this.config as any, this._currentZoomLevel || 1)
-    ) as any
+    return geoJsonPoints as any
   }
 
   _renderPoints (duration: number): void {
@@ -653,7 +659,7 @@ export class TopoJSONMap<
 
         if (d.isCluster) {
           // For clusters, use contrasting color against cluster background
-          const clusterColor = getString(d as any, config.clusterColor) || '#2196F3'
+          const clusterColor = getColor(d as any, config.clusterColor) || '#2196F3'
           const hex = color(isStringCSSVariable(clusterColor) ? getCSSVariableValue(clusterColor, this.element) : clusterColor)?.hex()
           if (hex) {
             const brightness = hexToBrightness(hex)
@@ -773,7 +779,7 @@ export class TopoJSONMap<
       // will zoom with respect to the current view
       this._center = [event.transform.x, event.transform.y]
     }
-    this._currentZoomLevel = (event?.transform.k / this._initialScale) || 1
+    // _currentZoomLevel is now set in _onZoomHandler to track previous value
   }
 
   _onZoomHandler (transform: ZoomTransform, isMouseEvent: boolean, isExternalEvent: boolean): void {
@@ -783,6 +789,9 @@ export class TopoJSONMap<
     this._transform = zoomIdentity
       .translate(transform.x - center[0] * scale, transform.y - center[1] * scale)
       .scale(scale)
+
+    // Update zoom level for clustering calculations
+    this._currentZoomLevel = (transform.k / this._initialScale) || 1
 
     const customDuration = isExternalEvent
       ? this.config.zoomDuration
@@ -849,7 +858,7 @@ export class TopoJSONMap<
         const sourceLon = getNumber(link, config.sourceLongitude)
         const sourceLat = getNumber(link, config.sourceLatitude)
         if (isNumber(sourceLon) && isNumber(sourceLat)) {
-          points.push({ longitude: sourceLon, latitude: sourceLat } as PointDatum)
+          points.push({ longitude: sourceLon, latitude: sourceLat } as unknown as PointDatum)
         }
       } else {
         const sourcePoint = config.linkSource?.(link)
@@ -863,7 +872,7 @@ export class TopoJSONMap<
         const targetLon = getNumber(link, config.targetLongitude)
         const targetLat = getNumber(link, config.targetLatitude)
         if (isNumber(targetLon) && isNumber(targetLat)) {
-          points.push({ longitude: targetLon, latitude: targetLat } as PointDatum)
+          points.push({ longitude: targetLon, latitude: targetLat } as unknown as PointDatum)
         }
       } else {
         const targetPoint = config.linkTarget?.(link)
@@ -916,35 +925,107 @@ export class TopoJSONMap<
     }
   }
 
+  private _clusterInScreenSpace (points: any[]): any[] {
+    const { config } = this
+    const clusteringDistance = config.clusteringDistance || 55
+
+    // If clustering distance is 0, return all points as individual points
+    if (clusteringDistance === 0) {
+      return points
+    }
+
+    const clusters: any[] = []
+    const processed = new Set<number>()
+
+    for (let i = 0; i < points.length; i++) {
+      if (processed.has(i)) continue
+
+      const point = points[i]
+      const nearbyPoints = [point]
+      processed.add(i)
+
+      // Find all points within clustering distance
+      for (let j = i + 1; j < points.length; j++) {
+        if (processed.has(j)) continue
+
+        const otherPoint = points[j]
+        const distance = Math.sqrt(
+          Math.pow(point.screenX - otherPoint.screenX, 2) +
+          Math.pow(point.screenY - otherPoint.screenY, 2)
+        )
+
+        if (distance <= clusteringDistance) {
+          nearbyPoints.push(otherPoint)
+          processed.add(j)
+        }
+      }
+
+      if (nearbyPoints.length > 1) {
+        // Create cluster
+        const centerX = nearbyPoints.reduce((sum, p) => sum + p.screenX, 0) / nearbyPoints.length
+        const centerY = nearbyPoints.reduce((sum, p) => sum + p.screenY, 0) / nearbyPoints.length
+        const centerCoords = this._projection.invert ? this._projection.invert([centerX, centerY]) : [0, 0]
+
+        const clusterRadius = getNumber(nearbyPoints[0].originalData, config.clusterRadius) || 10
+        const clusterId = clusters.length
+        const cluster = {
+          geometry: { type: 'Point', coordinates: centerCoords },
+          properties: {
+            cluster: true,
+            clusterId: clusterId,
+            pointCount: nearbyPoints.length,
+            clusterPoints: nearbyPoints.map(p => p.originalData),
+          } as TopoJSONMapClusterDatum<PointDatum>,
+          bbox: { x1: centerX - clusterRadius, y1: centerY - clusterRadius, x2: centerX + clusterRadius, y2: centerY + clusterRadius },
+          radius: clusterRadius,
+          path: getPointPathData({ x: 0, y: 0 }, clusterRadius, TopoJSONMapPointShape.Circle),
+          color: getColor(nearbyPoints[0].originalData, config.clusterColor) || '#2196F3',
+          id: `cluster-${clusterId}`,
+          donutData: [] as any[],
+          isCluster: true,
+          _zIndex: 1,
+          clusterIndex: {
+            getLeaves: (id: number) => {
+              if (id === clusterId) {
+                return nearbyPoints.map(p => ({ properties: p.originalData }))
+              }
+              return []
+            },
+          },
+        }
+
+        clusters.push(cluster)
+      } else {
+        // Keep as individual point
+        clusters.push(point)
+      }
+    }
+
+    return clusters
+  }
+
   private _expandCluster (clusterPoint: TopoJSONMapPoint<PointDatum>): PointDatum[] | undefined {
     const { config } = this
 
     if (!clusterPoint.clusterIndex) return undefined
 
-    const padding = 1
     const clusterId = (clusterPoint.properties as TopoJSONMapClusterDatum<PointDatum>).clusterId as number
     const points = clusterPoint.clusterIndex.getLeaves(clusterId, Infinity)
 
-    // Calculate positions for expanded points using d3.packSiblings (same as leaflet map)
-    const packPoints: {x: number; y: number; r: number }[] = points.map(() => ({
-      x: 0,
-      y: 0,
-      r: 8 + padding, // Base radius for individual points
-    }))
-    packSiblings(packPoints)
-
-    // Create expanded points with relative positions
+    // Create expanded points at their actual geographic coordinates
     const expandedPoints = points.map((point, i) => {
       const originalData = point.properties as PointDatum
+      const coords = getLonLat(originalData, config.longitude, config.latitude)
+      const pos = this._projection(coords)
       const radius = getNumber(originalData, config.pointRadius) || 8
       const shape = getString(originalData, config.pointShape) as TopoJSONMapPointShape || TopoJSONMapPointShape.Circle
       const donutData = getDonutData(originalData, config.colorMap)
-      // Use the cluster's exact color for all expanded points to maintain visual consistency
-      const pointColor = clusterPoint.color
+      // Use individual point color based on its own data
+      const pointColor = getColor(originalData, config.pointColor, i)
 
       return {
-        geometry: { type: 'Point' as const, coordinates: clusterPoint.geometry.coordinates },
-        bbox: { x1: 0, y1: 0, x2: 0, y2: 0 },
+        geometry: { type: 'Point' as const, coordinates: coords },
+        bbox: { x1: pos[0] - radius, y1: pos[1] - radius, x2: pos[0] + radius, y2: pos[1] + radius },
         radius,
         path: getPointPathData({ x: 0, y: 0 }, radius, shape),
         color: pointColor,
@@ -954,9 +1035,8 @@ export class TopoJSONMap<
         isCluster: false,
         _zIndex: 1,
         expandedClusterPoint: clusterPoint,
-        clusterColor: pointColor, // Preserve the cluster color
-        dx: packPoints[i].x,
-        dy: packPoints[i].y,
+        dx: 0, // No offset needed since using actual coordinates
+        dy: 0,
       } as TopoJSONMapPoint<PointDatum> & { expandedClusterPoint: TopoJSONMapPoint<PointDatum>; dx: number; dy: number }
     })
 
@@ -1110,7 +1190,7 @@ export class TopoJSONMap<
             color,
             flowData: link,
             progress: 0, // Keep for compatibility but not used in angle-based movement
-            id: `${link.id || i}-${j}`,
+            id: `${(link as any).id || i}-${j}`,
           }
           this._flowParticles.push(particle)
         }
