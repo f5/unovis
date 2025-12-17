@@ -10,15 +10,15 @@ export function arePropsEqual<PropTypes extends { children?: ReactNode }> (prevP
     if (prevChildren.length !== nextChildren.length) return false
 
     for (let i = 0; i < nextChildren.length; i += 1) {
-      if (!isEqual(prevChildren[i]?.props, nextChildren[i]?.props)) return false
-      if (!isEqual(prevChildren[i].props, nextChildren[i].props)) return false
+      if (!isEqual(prevChildren[i]?.props, nextChildren[i]?.props, [], new Set(), true)) return false
+      if (!isEqual(prevChildren[i].props, nextChildren[i].props, [], new Set(), true)) return false
     }
   }
 
   const propKeys = Array.from(new Set([...Object.keys(prevProps), ...Object.keys(nextProps)])) as (keyof PropTypes)[]
   for (const key of propKeys) {
     if (key === 'children') continue
-    if (!(isEqual(prevProps[key], nextProps[key]))) return false
+    if (!(isEqual(prevProps[key], nextProps[key], [], new Set(), true))) return false
   }
 
   return true
