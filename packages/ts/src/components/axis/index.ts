@@ -40,7 +40,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
   private _requiredMargin: Spacing
   private _defaultNumTicks = 3
   private _collideTickLabelsAnimFrameId: ReturnType<typeof requestAnimationFrame>
-  private _textStyle: {
+  private _tickTextStyleCached: {
     fontSize: number;
     fontFamily: string;
     fontWidthToHeightRatio: number;
@@ -285,9 +285,9 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
         wordBreak: config.tickTextForceWordBreak,
       }
 
-      if (!this._textStyle) {
+      if (!this._tickTextStyleCached) {
         const styleDeclaration = getComputedStyle(textElement)
-        this._textStyle = {
+        this._tickTextStyleCached = {
           fontSize: Number.parseFloat(styleDeclaration.fontSize),
           fontFamily: styleDeclaration.fontFamily,
           fontWidthToHeightRatio: getFontWidthToHeightRatio(),
@@ -296,16 +296,11 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
 
       if (config.tickTextFitMode === FitMode.Trim) {
         const textElementSelection = select<SVGTextElement, string>(textElement).text(text)
-        trimSVGText(textElementSelection, textMaxWidth, config.tickTextTrimType as TrimMode, true, this._textStyle.fontSize, 0.58)
+        trimSVGText(textElementSelection, textMaxWidth, config.tickTextTrimType as TrimMode, true, this._tickTextStyleCached.fontSize, 0.58)
         text = select<SVGTextElement, string>(textElement).text()
       }
 
-      const textBlock: UnovisText = {
-        text,
-        fontFamily: this._textStyle.fontFamily,
-        fontSize: this._textStyle.fontSize,
-        fontWidthToHeightRatio: this._textStyle.fontWidthToHeightRatio,
-      }
+      const textBlock: UnovisText = { text, ...this._tickTextStyleCached }
       renderTextToSvgTextElement(textElement, textBlock, textOptions, false)
     })
 
