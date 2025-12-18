@@ -39,3 +39,10 @@ export const area = css`
     stroke-width: var(--vis-area-hover-stroke-width);
   }
 `
+
+export const areaLinePath = css`
+  label: areaLinePath;
+  fill: none;
+  stroke-dasharray: var(--vis-line-stroke-dasharray);
+  stroke-dashoffset: var(--vis-line-stroke-dashoffset);
+`

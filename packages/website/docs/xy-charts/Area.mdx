@@ -28,15 +28,26 @@ Setting color for a single _Area_ component is simple, you can achieve that just
 
 <XYWrapperWithInput {...areaProps(50)} property="color" inputType="color" defaultValue="#19cb9a"/>
 
+## Line
+You can also display a line connecting the points of the _Area_ component by setting the `line` property to `true`.
+
+<XYWrapper {...areaProps()} height={150} opacity={.3} line />
+
+### Line Width
+<XYWrapperWithInput {...areaProps()} height={150} opacity={.3} line property="lineWidth" inputType="number" defaultValue={5} />
+
+### Line Color
+<XYWrapperWithInput {...areaProps()} height={150} opacity={.3} line property="lineColor" inputType="color" defaultValue="#a611a5" />
+
 ## Stacked Areas
 ### Y Accessors
 _Area_ can accept an array of `y` accessors to display stacked areas from your provided data.
 
- 
+
 **Note**: It is important that an array of accessors or provided, not a single accessor which returns
 an array. For example, if you wanted to generate a chart with three areas of random data:
 
-<XYWrapper excludeTabs {...areaProps()} y={Array(3).fill(Math.random)}/>
+<XYWrapper excludeTabs {...areaProps()} y={Array(3).fill(Math.random)} />
 
 
 ```ts
@@ -55,7 +66,7 @@ const y = d => [Math.random(), Math.random(), Math.random()]
 If you want to configure multiple colors for your _Area_ component, you'll have to supply a single
 accessor. A common configuration is to utilize the data's index:
 
-<XYWrapper {...areaProps()} showContext="full" y={[(d) => d.y, (d) => d.y1, (d) => d.y2]} color={(d, i) => ['red', 'green', 'blue'][i]}/>
+<XYWrapper {...areaProps()} showContext="full" y={[(d) => d.y, (d) => d.y1, (d) => d.y2]} color={(d, i) => ['red', 'green', 'blue'][i]} line={true} lineColor={(d, i) => ['green', 'blue', 'red'][i]} />
 
 ## Dealing with small values
 If your data has small or zero values leading to some parts of the area to become invisible, you can use the `minHeight` property to set a minimum height for the area. This can be useful if you want to visually emphasize that the data behind the chart is defined but just very small.
@@ -70,12 +81,12 @@ By default, each area with a minimum height will be adjusted independently. When
 > **Note:** Use the `minHeight` and `stackMinHeight` properties carefully as they modify the visual representation of the data without changing the underlying values.
 The Crosshair component will still show circles at the original data values, not at the visually extended area height.
 
-<XYWrapperWithInput 
-  {...areaProps()} 
-  y={[(d) => d.y < 9 ? 0.0001 : d.y, (d) => d.y1 < 5 ? 0.0001 : d.y1, (d) => d.y2 < 7 ? 0.0001 : d.y2]} 
-  property="stackMinHeight" 
-  inputType="checkbox" 
-  defaultValue={false} 
+<XYWrapperWithInput
+  {...areaProps()}
+  y={[(d) => d.y < 9 ? 0.0001 : d.y, (d) => d.y1 < 5 ? 0.0001 : d.y1, (d) => d.y2 < 7 ? 0.0001 : d.y2]}
+  property="stackMinHeight"
+  inputType="checkbox"
+  defaultValue={false}
   minHeight={5}
   containerProps={{padding: {top: 10}}}
   showAxes
