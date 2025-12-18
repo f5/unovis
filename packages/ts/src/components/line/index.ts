@@ -42,6 +42,7 @@ export class Line<Datum> extends XYComponentCore<Datum, LineConfigInterface<Datu
   constructor (config?: LineConfigInterface<Datum>) {
     super()
     if (config) this.setConfig(config)
+    this.stacked = config?.stacked ?? false
   }
 
   get bleed (): Spacing {
