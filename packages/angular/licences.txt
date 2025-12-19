@@ -1,6 +1,6 @@
 name                               license period  license type  installed version  author
 ----                               --------------  ------------  -----------------  ------
-tslib                              perpetual       0BSD          2.4.1              Microsoft Corp.
+tslib                              perpetual       0BSD          2.8.1              Microsoft Corp.
 @angular-devkit/build-angular      perpetual       MIT           12.2.18            Angular Authors
 @angular/cli                       perpetual       MIT           12.2.18            Angular Authors
 @angular/common                    perpetual       MIT           12.2.17            angular
@@ -20,8 +20,8 @@ karma-jasmine-html-reporter        perpetual       MIT           1.7.0
 ng-packagr                         perpetual       MIT           12.2.7             David Herges <david@spektrakel.de>
 rollup                             perpetual       MIT           2.79.2             Rich Harris
 rollup-plugin-typescript2          perpetual       MIT           0.31.2             @ezolenko
-webpack                            perpetual       n/a           n/a                n/a
-zone.js                            perpetual       MIT           0.14.0             Brian Ford
+webpack                            perpetual       MIT           5.76.0             Tobias Koppers @sokra
+zone.js                            perpetual       MIT           0.14.10            Brian Ford
 @angular/common                    perpetual       MIT           12.2.17            angular
 @angular/compiler                  perpetual       MIT           12.2.17            angular
 @angular/core                      perpetual       MIT           12.2.17            angular
