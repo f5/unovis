@@ -47,7 +47,7 @@ _Area_ can accept an array of `y` accessors to display stacked areas from your p
 **Note**: It is important that an array of accessors or provided, not a single accessor which returns
 an array. For example, if you wanted to generate a chart with three areas of random data:
 
-<XYWrapper excludeTabs {...areaProps()} y={Array(3).fill(Math.random)} />
+<XYWrapper excludeTabs {...areaProps()} y={Array(3).fill(Math.random)}/>
 
 
 ```ts
@@ -66,7 +66,7 @@ const y = d => [Math.random(), Math.random(), Math.random()]
 If you want to configure multiple colors for your _Area_ component, you'll have to supply a single
 accessor. A common configuration is to utilize the data's index:
 
-<XYWrapper {...areaProps()} showContext="full" y={[(d) => d.y, (d) => d.y1, (d) => d.y2]} color={(d, i) => ['red', 'green', 'blue'][i]} line={true} lineColor={(d, i) => ['green', 'blue', 'red'][i]} />
+<XYWrapper {...areaProps()} showContext="full" y={[(d) => d.y, (d) => d.y1, (d) => d.y2]} color={(d, i) => ['red', 'green', 'blue'][i]}/>
 
 ## Dealing with small values
 If your data has small or zero values leading to some parts of the area to become invisible, you can use the `minHeight` property to set a minimum height for the area. This can be useful if you want to visually emphasize that the data behind the chart is defined but just very small.
