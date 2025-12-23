@@ -14,6 +14,8 @@ const cssVarDefaults = {
   '--vis-annotations-subject-fill-color': 'none',
   '--vis-annotations-subject-stroke-dasharray': 'none',
 
+  '--vis-annotations-debug-bounding-box-stroke-color': '#f00',
+
   '--vis-dark-annotations-text-color': '#e8e9ef',
   '--vis-dark-annotations-connector-stroke-color': '#fff',
   '--vis-dark-annotations-subject-stroke-color': '#fff',
@@ -50,4 +52,11 @@ export const annotationContent = css`
   > text {
     fill: var(--vis-annotations-text-color);
   }
+`
+
+export const debugBoundingBox = css`
+  label: debugBoundingBox;
+  fill: none;
+  stroke: var(--vis-annotations-debug-bounding-box-stroke-color);
+  stroke-width: 1;
 `

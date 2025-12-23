@@ -18,9 +18,12 @@ export interface AnnotationsConfigInterface extends ComponentConfigInterface {
    * To learn more, see our docs https://unovis.dev/docs/auxiliary/Annotations/
   * Default: `[]` */
   items: AnnotationItem[] | undefined;
+  /** Debug option to render bounding boxes around text elements. Default: `false` */
+  renderTextBoundingBoxes?: boolean;
 }
 
 export const AnnotationsDefaultConfig: AnnotationsConfigInterface = {
   ...ComponentDefaultConfig,
   items: [],
+  renderTextBoundingBoxes: false,
 }
