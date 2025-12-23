@@ -447,7 +447,12 @@ export function getWrappedText (
  * @param {number} [y] - The y-coordinate for the tspan elements.
  * @returns {string[]} - The SVG tspan strings.
  */
-function renderTextToTspanStrings (blocks: UnovisWrappedText[], x = 0, y?: number): string[] {
+function renderTextToTspanStrings (
+  blocks: UnovisWrappedText[],
+  x = 0,
+  y?: number,
+  dominantBaseline?: string
+): string[] {
   return blocks.map((b, i) => {
     const prevBlock = i > 0 ? blocks[i - 1] : undefined
     const prevBlockMarginBottomEm = prevBlock ? prevBlock.marginBottom / prevBlock.fontSize : 0
@@ -468,11 +473,11 @@ function renderTextToTspanStrings (blocks: UnovisWrappedText[], x = 0, y?: numbe
 
     return `<tspan xmlns="http://www.w3.org/2000/svg" ${attributesString}>${b._lines.map((line, k) => {
       let dy: number
-      if (i === 0 && k === 0) dy = 0.8 + marginEm
+      if (i === 0 && k === 0) dy = marginEm
       else if (k === 0) dy = marginEm + b.lineHeight
       else dy = b.lineHeight
 
-      return `<tspan x="${x}" dy="${dy}em">${line.length ? line : ' '}</tspan>`
+      return `<tspan x="${x}" dy="${dy}em" dominant-baseline="${dominantBaseline ?? 'auto'}">${line.length ? line : ' '}</tspan>`
     }).join('')}</tspan>`
   })
 }
@@ -503,7 +508,7 @@ export function renderTextToSvgTextElement (
   textElement: SVGTextElement,
   text: UnovisText | UnovisText[],
   options: UnovisTextOptions,
-  trimmed?: boolean
+  dominantBaseline?: string
 ): void {
   const wrappedText = getWrappedText(text, options.width, undefined, options.fastMode, options.separator, options.wordBreak)
   const textElementX = options.x ?? +textElement.getAttribute('x')
@@ -521,22 +526,21 @@ export function renderTextToSvgTextElement (
 
     y += dy
   }
+
   if (options.textRotationAngle) {
     textElement.setAttribute('transform', `rotate(${(options.textRotationAngle === 0 || options.textRotationAngle) ? options.textRotationAngle : 0} ${x} ${y})`)
   } else {
     textElement.removeAttribute('transform')
   }
 
-  if (!trimmed) {
-    const parser = new DOMParser()
-    textElement.textContent = ''
-    wrappedText.forEach(block => {
-      const svgCode = renderTextToTspanStrings([block], x, y).join('')
-      const svgCodeSanitized = striptags(svgCode, allowedSvgTextTags)
-      const parsedSvgCode = parser.parseFromString(svgCodeSanitized, 'image/svg+xml').firstChild
-      textElement.appendChild(parsedSvgCode)
-    })
-  }
+  const parser = new DOMParser()
+  textElement.textContent = ''
+  wrappedText.forEach(block => {
+    const svgCode = renderTextToTspanStrings([block], x, y, dominantBaseline).join('')
+    const svgCodeSanitized = striptags(svgCode, allowedSvgTextTags)
+    const parsedSvgCode = parser.parseFromString(svgCodeSanitized, 'image/svg+xml').firstChild
+    textElement.appendChild(parsedSvgCode)
+  })
 }
 
 /**
@@ -578,7 +582,7 @@ export function renderTextIntoFrame (
     text-anchor="${getTextAnchorFromTextAlign(frameOptions.textAlign)}"
     ${translate}
   >
-    ${renderTextToTspanStrings(wrappedText, x, y).join('')}
+    ${renderTextToTspanStrings(wrappedText, x, y, 'hanging').join('')}
   </text>`
 
   const parser = new DOMParser()
