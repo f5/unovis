@@ -246,6 +246,11 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     selection.selectAll('*').interrupt()
     const transition = smartTransition(selection, duration).call(axisGen)
 
+    // Unset D3's default y and dy attributes because we're going to set them manually in the renderTextToSvgTextElement function
+    selection.selectAll<SVGTextElement, number | Date>('text')
+      .attr('dy', null)
+      .attr('y', null)
+
     // Resolving tick label overlap after the animation is over
     transition.on('end', () => {
       this._resolveTickLabelOverlap(selection)
@@ -273,18 +278,14 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
     // We interrupt the transition on tick's <text> to make it 'wrappable'
     tickText.nodes().forEach(node => interrupt(node))
 
+    const tickSize = axisGen.tickSize()
+    const axisPosition = this.getPosition()
+    const textMaxWidth = config.tickTextWidth || (config.type === AxisType.X ? this._containerWidth / (tickCount + 1) : this._containerWidth / 5)
     tickText.each((value: number | Date, i: number, elements: ArrayLike<SVGTextElement>) => {
       let text = config.tickFormat?.(value, i, tickValues) ?? `${value}`
       const textElement = elements[i] as SVGTextElement
-      const textMaxWidth = config.tickTextWidth || (config.type === AxisType.X ? this._containerWidth / (tickCount + 1) : this._containerWidth / 5)
-      const textOptions: UnovisTextOptions = {
-        verticalAlign: config.type === AxisType.X ? VerticalAlign.Top : VerticalAlign.Middle,
-        width: textMaxWidth,
-        textRotationAngle: config.tickTextAngle,
-        separator: config.tickTextSeparator,
-        wordBreak: config.tickTextForceWordBreak,
-      }
 
+      // Get and cache the tick text style
       if (!this._tickTextStyleCached) {
         const styleDeclaration = getComputedStyle(textElement)
         this._tickTextStyleCached = {
@@ -294,6 +295,20 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
         }
       }
 
+      // Calculate the text offset based on the axis position and the tick size
+      const [textOffsetX, textOffsetY] = this._getTickTextOffset(axisPosition, tickSize, this._tickTextStyleCached.fontSize)
+
+      // Prepare the Unovis text options
+      const textOptions: UnovisTextOptions = {
+        verticalAlign: config.type === AxisType.X ? VerticalAlign.Top : VerticalAlign.Middle,
+        width: textMaxWidth,
+        textRotationAngle: config.tickTextAngle,
+        separator: config.tickTextSeparator,
+        wordBreak: config.tickTextForceWordBreak,
+        x: textOffsetX,
+        y: textOffsetY,
+      }
+
       if (config.tickTextFitMode === FitMode.Trim) {
         const textElementSelection = select<SVGTextElement, string>(textElement).text(text)
         trimSVGText(textElementSelection, textMaxWidth, config.tickTextTrimType as TrimMode, true, this._tickTextStyleCached.fontSize, 0.58)
@@ -301,7 +316,7 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
       }
 
       const textBlock: UnovisText = { text, ...this._tickTextStyleCached }
-      renderTextToSvgTextElement(textElement, textBlock, textOptions, false)
+      renderTextToSvgTextElement(textElement, textBlock, textOptions, 'central')
     })
 
     selection
@@ -523,6 +538,26 @@ export class Axis<Datum> extends XYComponentCore<Datum, AxisConfigInterface<Datu
           case Position.Right: return 0.75
           case Position.Left: default: return -0.25
         }
+    }
+  }
+
+  private _getTickTextOffset (axisPosition: Position, tickSize: number, fontSize: number): [number, number] {
+    const { config } = this
+    const angleRad = (config.tickTextAngle ?? 0) / 180 * Math.PI
+    const baseOffset = tickSize + config.tickPadding
+
+    if (config.type === AxisType.X) {
+      const direction = axisPosition === Position.Bottom ? 1 : -1
+      return [
+        direction * baseOffset * Math.sin(angleRad),
+        direction * (baseOffset + fontSize / 2) * Math.cos(angleRad),
+      ]
+    } else {
+      const direction = axisPosition === Position.Right ? 1 : -1
+      return [
+        direction * baseOffset * Math.cos(angleRad),
+        direction * baseOffset * Math.sin(angleRad),
+      ]
     }
   }
 
