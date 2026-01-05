@@ -20,14 +20,14 @@ export class ExpandableSankeyComponent {
   }
 
   linkColor = (d: SankeyLink<Node, Link>): string => d.source.color ?? null
-  nodeCursor = (d: Node): string => d.expandable ? 'pointer' : null
-  nodeIcon = (d: Node): string => !d.expandable ? '' : (d.expanded ? '-' : '+')
+  nodeCursor = (d: SankeyNode<Node, Link>): string => d.expandable ? 'pointer' : null
+  nodeIcon = (d: SankeyNode<Node, Link>): string => !d.expandable ? '' : (d.expanded ? '-' : '+')
   subLabel = (d: SankeyNode<Node, Link>): string => {
     if (d.expanded || d.depth === 0) return ''
     return `${((d.value / root.value) * 100).toFixed(1)}%`
   }
 
-  toggleGroup (n: Node): void {
+  toggleGroup (n: SankeyNode<Node, Link>): void {
     if (n.expandable) {
       if (n.expanded) {
         sankeyData.collapse(n)
