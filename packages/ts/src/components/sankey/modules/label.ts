@@ -169,18 +169,14 @@ export function getLabelMaxWidth<N extends SankeyInputNode, L extends SankeyInpu
 ): number {
   const labelHorizontalPadding = 2 * SANKEY_LABEL_SPACING + 2 * SANKEY_LABEL_BLOCK_PADDING
 
-  // We want to fall through to the default case
-  /* eslint-disable no-fallthrough */
-  switch (d.layer) {
-    case 0:
-      if (labelOrientation === Position.Left) return bleed.left - labelHorizontalPadding
-    case (sankeyMaxLayer):
-      if (labelOrientation === Position.Right) {
-        return bleed.right - labelHorizontalPadding
-      }
-    default:
-      return clamp(layerSpacing - labelHorizontalPadding, 0, config.labelMaxWidth ?? Infinity)
-  } /* eslint-enable no-fallthrough */
+  if (d.layer === 0 && labelOrientation === Position.Left) {
+    return bleed.left - labelHorizontalPadding
+  }
+  if (d.layer === sankeyMaxLayer && labelOrientation === Position.Right) {
+    return bleed.right - labelHorizontalPadding
+  }
+
+  return clamp(layerSpacing - labelHorizontalPadding, 0, config.labelMaxWidth ?? Infinity)
 }
 
 export function renderLabel<N extends SankeyInputNode, L extends SankeyInputLink> (
