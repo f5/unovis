@@ -267,6 +267,34 @@ which also configures the node's color:
   nodeSort={(n1, n2) => n1.x - n2.x}
   showContext="minimal"/>
 
+## Post-Layout Customization `1.5`
+The `Sankey` component includes an `onLayoutCalculated` callback that runs after the layout is computed. This lets you inspect or adjust nodes and links, or react to the computed layout metrics.
+
+The callback receives:
+- `nodes: SankeyNode[]`
+- `links: SankeyLink[]`
+- `depth: number` — number of layout levels
+- `width: number`, `height: number` — computed layout size
+- `bleed: Spacing` — calculated outer spacing including labels `{ top, right, bottom, left }`
+
+Example:
+```ts
+import type { SankeyNode, SankeyLink, Spacing } from '@unovis/ts'
+
+const onLayoutCalculated = <N, L>(
+  nodes: SankeyNode<N, L>[],
+  links: SankeyLink<N, L>[],
+  depth: number,
+  width: number,
+  height: number,
+  bleed: Spacing
+) => {
+  // For example, tweak nodes or log computed metrics
+  // nodes.forEach(n => { /* adjust properties if needed */ })
+  // console.log({ depth, width, height, bleed })
+}
+```
+
 ## Events
 The following selectors are available for events:
 ```ts
