@@ -26,7 +26,8 @@ export const isEqual = (
   a: unknown | null | undefined,
   b: unknown | null | undefined,
   skipKeys: string[] = [],
-  visited: Set<any> = new Set()
+  visited: Set<any> = new Set(),
+  compareFunctionsWithToString = false
 ): boolean => {
   if (Array.isArray(a)) {
     if (!Array.isArray(b) || a.length !== b.length) return false
@@ -35,7 +36,7 @@ export const isEqual = (
     else visited.add(a)
 
     for (let i = 0; i < a.length; i++) {
-      if (!isEqual(a[i], b[i], skipKeys, visited)) return false
+      if (!isEqual(a[i], b[i], skipKeys, visited, compareFunctionsWithToString)) return false
     }
 
     return true
@@ -43,6 +44,10 @@ export const isEqual = (
 
   if (a instanceof Date && b instanceof Date) {
     return a.getTime() === b.getTime()
+  }
+
+  if (compareFunctionsWithToString && a instanceof Function && b instanceof Function) {
+    return a === b || (a.toString() === b.toString())
   }
 
   if (typeof a === 'object' && a !== null && b !== null) {
@@ -58,7 +63,7 @@ export const isEqual = (
     else visited.add(a)
 
     for (const key of keysA) {
-      if (!isEqual((a as Record<string, unknown>)[key], (b as Record<string, unknown>)[key], skipKeys, visited)) return false
+      if (!isEqual((a as Record<string, unknown>)[key], (b as Record<string, unknown>)[key], skipKeys, visited, compareFunctionsWithToString)) return false
     }
 
     return true

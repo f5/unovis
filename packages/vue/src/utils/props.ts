@@ -2,7 +2,7 @@ import { isEqual } from '@unovis/ts'
 import { ComponentInternalInstance, camelize, computed, getCurrentInstance } from 'vue'
 
 export function arePropsEqual<PropTypes> (prevProps: PropTypes, nextProps: PropTypes): boolean {
-  return isEqual(prevProps, nextProps)
+  return isEqual(prevProps, nextProps, [], new Set(), true)
 }
 
 // source: https://www.radix-vue.com/utilities/use-forward-props.html
