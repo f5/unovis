@@ -34,6 +34,9 @@ export interface TreemapConfigInterface<Datum> extends ComponentConfigInterface 
    */
   tilePaddingTop?: number;
 
+  /** Append SVG `<title>` element to tile rects. It will be shown when hovering over the tile. Default: `false` */
+  tileShowHtmlTooltip?: boolean;
+
   /** Label internal nodes. Default: `false` */
   labelInternalNodes?: boolean;
 
@@ -70,7 +73,6 @@ export interface TreemapConfigInterface<Datum> extends ComponentConfigInterface 
   /** Large font size for leaf labels (used when `enableTileLabelFontSizeVariation` is `true`). Default: `24` */
   tileLabelLargeFontSize?: number;
 
-
   /** Flag for showing cursor:pointer to indicate leaf tiles are clickable. Default: `undefined` */
   showTileClickAffordance?: boolean;
 
@@ -89,6 +91,7 @@ export const TreemapDefaultConfig: TreemapConfigInterface<unknown> = {
   layers: [],
   tilePadding: 2,
   tilePaddingTop: undefined,
+  tileShowHtmlTooltip: true,
   labelInternalNodes: false,
   labelOffsetX: 4,
   labelOffsetY: 4,

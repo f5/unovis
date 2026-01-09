@@ -42,6 +42,11 @@ export const tile = css`
   }
 `
 
+export const tileExiting = css`
+  label: tile-exiting;
+  pointer-events: none;
+`
+
 // The leaf tiles are clickable
 export const clickableTile = css`
   label: clickable-tile;
