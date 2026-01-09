@@ -12,7 +12,7 @@ import { SeriesDataModel } from 'data-models/series'
 
 // Utils
 import { getColor, brighter, getHexValue, isColorDark } from 'utils/color'
-import { getString, getNumber, isNumber } from 'utils/data'
+import { getString, getNumber, isNumber, isFunction } from 'utils/data'
 import { smartTransition } from 'utils/d3'
 import { trimSVGText, wrapSVGText } from 'utils/text'
 import { cssvar } from 'utils/style'
@@ -170,26 +170,24 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
     })
 
 
-    // Render tiles
+    /* Render tiles */
     const tiles = this.tiles
-      .selectAll<SVGGElement, TreemapNode<Datum>>(`g.${s.tileGroup}`)
+      .selectAll<SVGGElement, TreemapNode<Datum>>(`g.${s.tileGroup}:not(.${s.tileExiting})`)
       .data(visibleTiles, d => `${d.data.key}-${d.depth}`)
 
-    const tilesEnter = tiles
-      .enter()
+    const tilesEnter = tiles.enter()
       .append('g')
       .attr('class', s.tileGroup)
 
     // Add clipPath elements
     tilesEnter
       .append('clipPath')
-      .attr('id', d => `clip-${this.uid}-${d._id}`)
       .append('rect')
       .attr('rx', d => this._getTileBorderRadius(d))
       .attr('ry', d => this._getTileBorderRadius(d))
 
     // Tile rectangles
-    const tileRects = tilesEnter
+    const tileEnterRects = tilesEnter
       .append('rect')
       .classed(s.tile, true)
       .classed(s.clickableTile, d => config.showTileClickAffordance && !d.children)
@@ -203,12 +201,11 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       .style('opacity', 0)
       .style('cursor', config.showTileClickAffordance ? d => !d.children ? 'pointer' : null : null)
 
-    tileRects.append('title')
+    if (config.tileShowHtmlTooltip) tileEnterRects.append('title')
 
     tilesEnter
       .append('g')
       .attr('class', s.labelGroup)
-      .attr('clip-path', d => `url(#clip-${this.uid}-${d._id})`)
       .attr('transform', d => `translate(${d.x0 + config.labelOffsetX},${d.y0 + config.labelOffsetY})`)
       .style('opacity', 0)
       .append('text')
@@ -216,8 +213,18 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       .attr('x', 0)
       .attr('y', 0)
 
-    const mergedTiles = tiles.merge(tilesEnter)
-    const tileRectsMerged = mergedTiles.select(`rect.${s.tile}`)
+    /* Update */
+    const tilesMerged = tiles.merge(tilesEnter)
+
+    // Update clipPath elements
+    tilesMerged.select<SVGClipPathElement>('clipPath')
+      .attr('id', d => `clip-${this.uid}-${d._id}`)
+
+    tilesMerged.select('clipPath rect')
+      .attr('width', d => Math.max(this._getTileWidth(d) - 2 * config.labelOffsetX, 0))
+      .attr('height', d => Math.max(this._getTileHeight(d) - 2 * config.labelOffsetY, 0))
+
+    const tileRectsMerged = tilesMerged.select(`rect.${s.tile}`)
     smartTransition(tileRectsMerged, duration)
       .style('fill', d => d._fill)
       .style('opacity', 1)
@@ -226,22 +233,26 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       .attr('width', this._getTileWidth)
       .attr('height', this._getTileHeight)
 
-    tileRectsMerged.select('title')
-      .text(d => config.tileLabel(d))
+    const tileTitlesMerged = tileRectsMerged.select('title')
+    if (config.tileShowHtmlTooltip) tileTitlesMerged.text(d => config.tileLabel(d))
+    else tileTitlesMerged.remove()
 
-    // Update clipPath rects
-    mergedTiles.select('clipPath rect')
-      .attr('width', d => Math.max(this._getTileWidth(d) - 2 * config.labelOffsetX, 0))
-      .attr('height', d => Math.max(this._getTileHeight(d) - 2 * config.labelOffsetY, 0))
+    // Apply clip-path to labels
+    const labelGroupsMerged = tilesMerged.select<SVGGElement>(`g.${s.labelGroup}`)
+      .attr('clip-path', d => `url(#clip-${this.uid}-${d._id})`)
 
-    const textSelection = mergedTiles.selectAll<SVGTextElement, TreemapNode<Datum>>(`g.${s.labelGroup} text`)
+    // Transition group position and text opacity (fade-in)
+    smartTransition(labelGroupsMerged, duration)
+      .attr('transform', d => `translate(${d.x0 + config.labelOffsetX},${d.y0 + config.labelOffsetY})`)
+      .style('opacity', 1)
+
+    const textSelection = tilesMerged.select<SVGTextElement>(`g.${s.labelGroup} text`)
     textSelection
       .text(d => {
         const shouldShowLabel = config.labelInternalNodes ? true : !d.children
         const isLargeEnough = this._isTileLargeEnough(d)
-        return (shouldShowLabel && isLargeEnough) ? d.data.key : null
+        return (shouldShowLabel && isLargeEnough && isFunction(config.tileLabel)) ? config.tileLabel(d) : null
       })
-      .attr('title', d => config.tileLabel(d))
       .property('font-size-px', d => {
         const sqrtVal = Math.sqrt(d.value ?? 0)
         return config.enableTileLabelFontSizeVariation && !d.children
@@ -270,17 +281,15 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       }
     })
 
-    // Transition group position and text opacity (fade-in)
-    smartTransition(mergedTiles.select(`g.${s.labelGroup}`), duration)
-      .attr('transform', d => `translate(${d.x0 + config.labelOffsetX},${d.y0 + config.labelOffsetY})`)
-      .style('opacity', 1)
-
     // Make the internal labels semibold via class
-    mergedTiles.select(`text.${s.label}`)
+    tilesMerged.select(`text.${s.label}`)
       .classed(s.internalLabel, d => !!d.children)
 
+    /* Exit */
+    const tilesExit = tiles.exit()
+      .classed(s.tileExiting, true)
 
-    smartTransition(tiles.exit(), duration)
+    smartTransition(tilesExit, duration)
       .style('opacity', 0)
       .remove()
   }
