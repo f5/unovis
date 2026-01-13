@@ -64,7 +64,6 @@ export function createNodes<N extends SankeyInputNode, L extends SankeyInputLink
   // Node icon
   sel.append('text').attr('class', s.nodeIcon)
     .attr('text-anchor', 'middle')
-    .attr('dy', '0.5px')
 
   sel
     .attr('transform', d => {
@@ -154,17 +153,20 @@ export function updateNodes<N extends SankeyInputNode, L extends SankeyInputLink
   // Node Icon
   const nodeIcon = sel.select(`.${s.nodeIcon}`)
   if (config.nodeIcon) {
-    nodeIcon
-      .attr('visibility', null)
-      .attr('text-anchor', 'middle')
-      .style('dominant-baseline', 'central')
-      .style('stroke', (d: SankeyNode<N, L>) => getColor(d, config.nodeIconColor))
-      .style('fill', (d: SankeyNode<N, L>) => getColor(d, config.nodeIconColor))
-      .style('font-size', (d: SankeyNode<N, L>) => {
-        const nodeHeight = d.y1 - d.y0
-        return nodeHeight < s.SANKEY_ICON_SIZE ? `${nodeHeight * 0.65}px` : null
-      })
-      .html((d: SankeyNode<N, L>) => getString(d, config.nodeIcon))
+    nodeIcon.each((d, i, els) => {
+      const el = select(els[i])
+      const nodeHeight = d.y1 - d.y0
+      const color = getColor(d, config.nodeIconColor)
+      const visibility = nodeHeight > 2 ? null : 'hidden'
+      const fontSize = nodeHeight < s.SANKEY_ICON_SIZE ? `${nodeHeight * 0.65}px` : null
+
+      el
+        .attr('visibility', visibility)
+        .style('stroke', color)
+        .style('fill', color)
+        .style('font-size', fontSize)
+        .html(getString(d, config.nodeIcon))
+    })
 
     smartTransition(nodeIcon, duration)
       .attr('x', config.nodeWidth / 2)
