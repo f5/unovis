@@ -53,6 +53,7 @@ stats.html
 licences.temp
 scripts/vulnerability-report*
 unovis-commands-report-*
+.angular
 
 # System Files
 .DS_Store
