@@ -36,9 +36,9 @@
     "@unovis/ts": "workspace:*"
   },
   "devDependencies": {
-    "@angular/core": "^12.0.3",
-    "@angular/common": "^12.0.3",
-    "@angular/platform-browser": "^12.0.3",
+    "@angular/core": "^13.0.0",
+    "@angular/common": "^13.0.0",
+    "@angular/platform-browser": "^13.0.0",
     "@types/d3-scale": "^4.0.8",
     "@types/d3-selection": "^3.0.10",
     "tslib": "^2.3.1",
