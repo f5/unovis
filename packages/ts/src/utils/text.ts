@@ -508,6 +508,9 @@ export function renderTextToSvgTextElement (
   textElement: SVGTextElement,
   text: UnovisText | UnovisText[],
   options: UnovisTextOptions,
+  // Dominant baseline sets alignment for a line of text, whereas
+  // the `options.verticalAlign` property sets alignment for the entire text block
+  // shifting it vertically, irrespective of the dominant baseline.
   dominantBaseline?: string
 ): void {
   const wrappedText = getWrappedText(text, options.width, undefined, options.fastMode, options.separator, options.wordBreak)
