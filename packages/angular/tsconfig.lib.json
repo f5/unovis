@@ -3,14 +3,14 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/lib",
-    "target": "es2017",
+    "target": "ES2020",
     "declaration": true,
     "declarationMap": true,
     "inlineSources": true,
     "types": ["topojson-specification"],
     "lib": [
       "dom",
-      "es2018"
+      "ES2020"
     ],
     "plugins": [
     ],
