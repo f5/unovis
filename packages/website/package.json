@@ -38,6 +38,8 @@
     "typecheck": "tsc"
   },
   "dependencies": {
+    "@docsearch/core": "^4.5.0",
+    "@docsearch/react": "^4.5.0",
     "@docusaurus/core": "^3.0.1",
     "@docusaurus/plugin-debug": "^3.0.1",
     "@docusaurus/plugin-sitemap": "^3.0.1",
