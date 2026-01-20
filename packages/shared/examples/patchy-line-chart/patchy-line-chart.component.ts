@@ -6,6 +6,7 @@ import { data, countries, Country, DataRecord } from './data'
   selector: 'patchy-line-chart',
   templateUrl: './patchy-line-chart.component.html',
   styleUrls: ['./styles.css'],
+  standalone: false,
 })
 export class PatchyLineChartComponent implements OnInit {
   // Data

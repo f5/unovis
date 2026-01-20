@@ -5,6 +5,7 @@ import { data, categories, Category, DataRecord } from './data'
 @Component({
   selector: 'baseline-area-chart',
   templateUrl: './baseline-area-chart.component.html',
+  standalone: false,
 })
 export class BaselineAreaChartComponent {
   data = data

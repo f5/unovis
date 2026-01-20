@@ -6,16 +6,17 @@ import { colors, data, Datum } from './data'
   selector: 'sunburst-nested-donut',
   templateUrl: './sunburst-nested-donut.component.html',
   styleUrls: ['./styles.css'],
+  standalone: false,
 })
 export class SunburstChartComponent {
   data = data
   direction = NestedDonutDirection.Outwards
   layers = [
-    (d: Datum) => d.type,
-    (d: Datum) => d.group,
-    (d: Datum) => d.subgroup,
-    (d: Datum) => d.description,
-    (d: Datum) => d.item,
+    (d: Datum): string => d.type,
+    (d: Datum): string => d.group,
+    (d: Datum): string => d.subgroup,
+    (d: Datum): string => d.description,
+    (d: Datum): string => d.item,
   ]
 
   layerSettings = { width: '6vmin' }

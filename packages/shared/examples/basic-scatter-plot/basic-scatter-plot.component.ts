@@ -5,6 +5,7 @@ import { data, DataRecord } from './data'
 @Component({
   selector: 'basic-scatter-plot',
   templateUrl: './basic-scatter-plot.component.html',
+  standalone: false,
 })
 export class BasicScatterPlotComponent {
   data = data

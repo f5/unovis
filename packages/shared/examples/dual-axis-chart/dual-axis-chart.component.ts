@@ -13,6 +13,7 @@ import { XYDataRecord, generateXYDataRecords } from './data'
       width: 100%;
     }
   `],
+  standalone: false,
 })
 export class DualAxisChartComponent {
   data = generateXYDataRecords(150)

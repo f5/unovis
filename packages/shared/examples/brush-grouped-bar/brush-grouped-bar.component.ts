@@ -7,6 +7,7 @@ type LegendItem = BulletLegendItemInterface & GroupItem
 @Component({
   selector: 'brush-grouped-bar',
   templateUrl: './brush-grouped-bar.component.html',
+  standalone: false,
 })
 export class BrushGroupedBarComponent {
   data = data
@@ -20,7 +21,7 @@ export class BrushGroupedBarComponent {
   x = (d: DataRecord): number => d.year
   y = this.legendItems.map((i: LegendItem) => (d: DataRecord) => i.inactive ? null : d[i.key])
 
-  updateDomain = (selection: [number, number], _, userDriven: boolean): void => {
+  updateDomain = (selection: [number, number], _: Record<string, never>, userDriven: boolean): void => {
     if (userDriven) {
       this.numTicks = Math.min(15, this.domain[1] - this.domain[0])
       this.duration = 0 // We set duration to 0 to update the main chart immediately (without animation) after the brush event

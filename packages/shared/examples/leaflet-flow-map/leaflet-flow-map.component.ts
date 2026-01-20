@@ -9,6 +9,7 @@ import { mapKey } from './constants'
 @Component({
   selector: 'leaflet-flow-map',
   templateUrl: './leaflet-flow-map.component.html',
+  standalone: false,
 })
 export class LeafletFlowMapComponent {
   style = `https://api.maptiler.com/maps/topo/style.json?key=${mapKey}`

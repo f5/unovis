@@ -5,6 +5,7 @@ import { data, labels, DataRecord, FormatConfig } from './data'
 @Component({
   selector: 'crosshair-stacked-bar',
   templateUrl: './crosshair-stacked-bar.component.html',
+  standalone: false,
 })
 export class CrosshairStackedBarComponent {
   height = 450
