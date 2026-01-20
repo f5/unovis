@@ -8,6 +8,7 @@ import { VisCoreComponent } from '../../core'
   template: '',
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisCoreComponent, useExisting: VisDonutComponent }],
+  standalone: false,
 })
 export class VisDonutComponent<Datum> implements DonutConfigInterface<Datum>, AfterViewInit {
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */

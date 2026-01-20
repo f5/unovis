@@ -56,10 +56,15 @@ try {
   const workspaceSummaries = new Map();
   
   // Extract workspace name from path (e.g., packages__angular -> packages/angular)
+  // Returns 'root' for root-level dependencies (paths starting with .>)
   function extractWorkspace(pathString) {
     const match = pathString.match(/^packages__([^>]+)/);
     if (match) {
       return `packages/${match[1]}`;
+    }
+    // Check if it's a root-level dependency
+    if (pathString.startsWith('.>')) {
+      return 'root';
     }
     return null;
   }

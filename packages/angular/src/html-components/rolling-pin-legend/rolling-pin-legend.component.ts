@@ -9,6 +9,7 @@ import { VisGenericComponent } from '../../core'
   styles: ['.rolling-pin-legend-container {  }'],
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisGenericComponent, useExisting: VisRollingPinLegendComponent }],
+  standalone: false,
 })
 export class VisRollingPinLegendComponent implements RollingPinLegendConfigInterface, AfterViewInit {
   @ViewChild('container', { static: false }) containerRef: ElementRef

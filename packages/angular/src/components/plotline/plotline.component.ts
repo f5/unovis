@@ -18,6 +18,7 @@ import { VisXYComponent } from '../../core'
   template: '',
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisXYComponent, useExisting: VisPlotlineComponent }],
+  standalone: false,
 })
 export class VisPlotlineComponent<Datum> implements PlotlineConfigInterface<Datum>, AfterViewInit {
   /** Duration of the animation in milliseconds. */

@@ -19,6 +19,7 @@ import { VisCoreComponent } from '../../core'
   template: '',
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisCoreComponent, useExisting: VisTopoJSONMapComponent }],
+  standalone: false,
 })
 export class VisTopoJSONMapComponent<AreaDatum, PointDatum, LinkDatum> implements TopoJSONMapConfigInterface<AreaDatum, PointDatum, LinkDatum>, AfterViewInit {
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */

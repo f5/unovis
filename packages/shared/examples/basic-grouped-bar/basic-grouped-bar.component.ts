@@ -4,6 +4,7 @@ import { data, colors, capitalize, ElectionDatum } from './data'
 @Component({
   selector: 'basic-grouped-bar',
   templateUrl: './basic-grouped-bar.component.html',
+  standalone: false,
 })
 export class BasicGroupedBarComponent {
   x = (d: ElectionDatum): number => d.year
