@@ -6,6 +6,7 @@ import { data, palette, DataRecord } from './data'
   selector: 'free-brush-scatters',
   templateUrl: './free-brush-scatters.component.html',
   styleUrls: ['./styles.css'],
+  standalone: false,
 })
 export class FreeBrushScattersComponent {
   brushMode = FreeBrushMode.XY

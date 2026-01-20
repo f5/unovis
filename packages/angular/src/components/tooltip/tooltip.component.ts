@@ -8,6 +8,7 @@ import { VisGenericComponent } from '../../core'
   template: '',
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisGenericComponent, useExisting: VisTooltipComponent }],
+  standalone: false,
 })
 export class VisTooltipComponent implements TooltipConfigInterface, AfterViewInit {
   /** An array of visualization components to interact with. Default: `[]` */

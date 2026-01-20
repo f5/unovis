@@ -4,6 +4,7 @@ import { XYDataRecord, generateXYDataRecords } from './data'
 @Component({
   selector: 'dual-axis-chart',
   templateUrl: './dual-axis-chart.component.html',
+  standalone: false,
   encapsulation: ViewEncapsulation.None,
   styles: [`
     dual-axis-chart .chart-overlay {

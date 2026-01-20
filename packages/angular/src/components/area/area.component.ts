@@ -14,6 +14,7 @@ import {
   CurveType,
   StringAccessor,
   LinePatternType,
+  GenericAccessor,
 } from '@unovis/ts'
 import { VisXYComponent } from '../../core'
 
@@ -22,6 +23,7 @@ import { VisXYComponent } from '../../core'
   template: '',
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisXYComponent, useExisting: VisAreaComponent }],
+  standalone: false,
 })
 export class VisAreaComponent<Datum> implements AreaConfigInterface<Datum>, AfterViewInit {
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */
@@ -136,6 +138,7 @@ export class VisAreaComponent<Datum> implements AreaConfigInterface<Datum>, Afte
 
   /** Pattern accessor for the area's outline. Resolves to a `LinePatternType`. The whole data array is passed as the first argument. Default: `undefined` */
   @Input() linePattern?: GenericAccessor<LinePatternType, Datum[]>
+
 
   /** If an area is smaller than 1px, extend it to have 1px height. Default: `false` */
   @Input() minHeight1Px?: boolean

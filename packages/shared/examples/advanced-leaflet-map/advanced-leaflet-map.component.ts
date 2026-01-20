@@ -7,6 +7,7 @@ import { MapPointDataRecord, data, totalEvents, mapStyleLight, mapStyleDark } fr
 
 @Component({
   selector: 'advanced-leaflet-map',
+  standalone: false,
   templateUrl: './advanced-leaflet-map.component.html',
 })
 export class AdvancedLeafletMapComponent {
@@ -32,12 +33,12 @@ export class AdvancedLeafletMapComponent {
 
   events = {
     [LeafletMap.selectors.point]: {
-      click: d => {
-        if (!d.properties?.cluster) this.mapContainer?.component.zoomToPointById(d.id, true, 5)
+      click: (d: Record<string, unknown>): void => {
+        if (!(d.properties as any)?.cluster) this.mapContainer?.component?.zoomToPointById((d as any).id, true, 5)
       },
     },
     [LeafletMap.selectors.background]: {
-      click: () => { this.mapContainer?.component.unselectPoint() },
+      click: (): void => { this.mapContainer?.component?.unselectPoint() },
     },
   }
 

@@ -8,6 +8,7 @@ import { VisGenericComponent } from '../../core'
   template: '',
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisGenericComponent, useExisting: VisAnnotationsComponent }],
+  standalone: false,
 })
 export class VisAnnotationsComponent implements AnnotationsConfigInterface, AfterViewInit {
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */
