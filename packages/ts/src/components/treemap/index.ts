@@ -113,6 +113,7 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       }
 
       node.data = treemapDatum
+      node.topLevelParent = this._getTopLevelParent(node)
     })
 
     const descendants = treemapData.descendants()
@@ -298,6 +299,19 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
     const w = this._getTileWidth(d)
     const h = this._getTileHeight(d)
     return (w >= this.config.minTileSizeForLabel) && (h >= this.config.minTileSizeForLabel)
+  }
+
+  private _getTopLevelParent (node: TreemapNode<Datum>): TreemapNode<Datum> | undefined {
+    if (node.depth === 1) return node
+    if (node.depth > 1) {
+      let current = node.parent
+      while (current && current.depth > 1) {
+        current = current.parent
+      }
+      return current?.depth === 1 ? current as TreemapNode<Datum> : undefined
+    }
+
+    return undefined
   }
 
   private _getTileLightness (node: TreemapNode<Datum>, siblings: TreemapNode<Datum>[]): number {
