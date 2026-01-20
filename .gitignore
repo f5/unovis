@@ -51,6 +51,8 @@ stats.html
 .autogen.js
 .srcsha
 licences.temp
+vulnerability-report.json
+vulnerability-report.html
 
 # System Files
 .DS_Store

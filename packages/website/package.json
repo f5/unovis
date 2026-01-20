@@ -48,10 +48,10 @@
     "@stackblitz/sdk": "1.8.0",
     "clsx": "^1.1.1",
     "docusaurus-plugin-react-docgen-typescript": "^0.1.0",
-    "nodemon": "^2.0.16",
+    "nodemon": "^3.1.11",
     "prism-react-renderer": "^1.1.0",
     "react-docgen-typescript": "^2.0.0",
-    "react-markdown": "^8.0.1"
+    "react-markdown": "^10.1.0"
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "3.0.0",
