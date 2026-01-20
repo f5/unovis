@@ -22,6 +22,7 @@ import { VisCoreComponent } from '../../core'
   template: '',
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisCoreComponent, useExisting: VisTreemapComponent }],
+  standalone: false,
 })
 export class VisTreemapComponent<Datum> implements TreemapConfigInterface<Datum>, AfterViewInit {
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */
@@ -175,8 +176,8 @@ export class VisTreemapComponent<Datum> implements TreemapConfigInterface<Datum>
   }
 
   private getConfig (): TreemapConfigInterface<Datum> {
-    const { duration, events, attributes, id, value, layers, numberFormat, tileLabel, tileColor, tileFunction, tileSort, tilePadding, tilePaddingTop, tileShowHtmlTooltip, labelInternalNodes, labelOffsetX, labelOffsetY, labelFit, labelTrimMode, tileBorderRadius, tileBorderRadiusFactor, enableLightnessVariance, enableTileLabelFontSizeVariation, tileLabelSmallFontSize, tileLabelMediumFontSize, tileLabelLargeFontSize, showTileClickAffordance, lightnessVariationAmount, minTileSizeForLabel } = this
-    const config = { duration, events, attributes, id, value, layers, numberFormat, tileLabel, tileColor, tileFunction, tileSort, tilePadding, tilePaddingTop, tileShowHtmlTooltip, labelInternalNodes, labelOffsetX, labelOffsetY, labelFit, labelTrimMode, tileBorderRadius, tileBorderRadiusFactor, enableLightnessVariance, enableTileLabelFontSizeVariation, tileLabelSmallFontSize, tileLabelMediumFontSize, tileLabelLargeFontSize, showTileClickAffordance, lightnessVariationAmount, minTileSizeForLabel }
+    const { duration, events, attributes, id, value, layers, numberFormat, tileLabel, tileColor, tilePadding, tilePaddingTop, tileShowHtmlTooltip, labelInternalNodes, labelOffsetX, labelOffsetY, labelFit, labelTrimMode, tileBorderRadius, tileBorderRadiusFactor, enableLightnessVariance, enableTileLabelFontSizeVariation, tileLabelSmallFontSize, tileLabelMediumFontSize, tileLabelLargeFontSize, showTileClickAffordance, lightnessVariationAmount, minTileSizeForLabel } = this
+    const config = { duration, events, attributes, id, value, layers, numberFormat, tileLabel, tileColor, tilePadding, tilePaddingTop, tileShowHtmlTooltip, labelInternalNodes, labelOffsetX, labelOffsetY, labelFit, labelTrimMode, tileBorderRadius, tileBorderRadiusFactor, enableLightnessVariance, enableTileLabelFontSizeVariation, tileLabelSmallFontSize, tileLabelMediumFontSize, tileLabelLargeFontSize, showTileClickAffordance, lightnessVariationAmount, minTileSizeForLabel }
     const keys = Object.keys(config) as (keyof TreemapConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

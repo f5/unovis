@@ -5,6 +5,7 @@ import { data, DataRecord } from './data'
 @Component({
   selector: 'basic-annotations',
   templateUrl: './basic-annotations.component.html',
+  standalone: false,
 })
 export class BasicAnnotationsComponent implements OnInit {
   data = data

@@ -4,6 +4,7 @@ import { data, formats, DataRecord, getLabels } from './data'
 @Component({
   selector: 'stacked-area-chart',
   templateUrl: './stacked-area-chart.component.html',
+  standalone: false,
 })
 export class StackedAreaComponent {
   data = data

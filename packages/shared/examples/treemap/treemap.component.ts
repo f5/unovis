@@ -6,6 +6,7 @@ import { data, DataRecord } from './data'
 @Component({
   selector: 'treemap',
   templateUrl: './treemap.component.html',
+  standalone: false,
 })
 export class TreemapComponent {
   data = data

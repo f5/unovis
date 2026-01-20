@@ -7,6 +7,7 @@ import { data, NodeDatum, panels } from './data'
   selector: 'elk-graph',
   templateUrl: './elk-layered-graph.component.html',
   styleUrls: ['./styles.css'],
+  standalone: false,
 })
 export class ElkLayeredGraphComponent {
   data = data

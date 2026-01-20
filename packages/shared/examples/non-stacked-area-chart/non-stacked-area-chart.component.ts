@@ -5,6 +5,7 @@ import { data, countries, Country, DataRecord } from './data'
 @Component({
   selector: 'non-stacked-area-chart',
   templateUrl: './non-stacked-area-chart.component.html',
+  standalone: false,
 })
 export class NonStackedAreaComponent {
   data = data

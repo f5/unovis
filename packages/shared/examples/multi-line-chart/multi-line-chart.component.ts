@@ -5,6 +5,7 @@ import { data, labels, CityTemps } from './data'
 @Component({
   selector: 'multi-line-chart',
   templateUrl: './multi-line-chart.component.html',
+  standalone: false,
 })
 export class MultiLineChartComponent {
   data = data

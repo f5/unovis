@@ -17,6 +17,7 @@ import { VisXYComponent } from '../../core'
   template: '',
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisXYComponent, useExisting: VisPlotbandComponent }],
+  standalone: false,
 })
 export class VisPlotbandComponent<Datum> implements PlotbandConfigInterface<Datum>, AfterViewInit {
   /** Duration of the animation in milliseconds. */

@@ -9,6 +9,7 @@ const formatNumber = Intl.NumberFormat('en').format
 @Component({
   selector: 'sized-scatter-plot',
   templateUrl: './sized-scatter-plot.component.html',
+  standalone: false,
 })
 export class SizedScatterPlotComponent {
   data = data
