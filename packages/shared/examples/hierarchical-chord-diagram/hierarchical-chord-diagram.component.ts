@@ -5,6 +5,7 @@ import { colorMap, nodes, links, NodeDatum, LinkDatum } from './data'
 @Component({
   selector: 'hierarchical-chord-diagram',
   templateUrl: './hierarchical-chord-diagram.component.html',
+  standalone: false,
 })
 export class HierarchicalChordDiagramComponent {
   data: {

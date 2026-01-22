@@ -8,6 +8,7 @@ import { VisGenericComponent } from '../../core'
   template: '',
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisGenericComponent, useExisting: VisAnnotationsComponent }],
+  standalone: false,
 })
 export class VisAnnotationsComponent implements AnnotationsConfigInterface, AfterViewInit {
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */
@@ -75,6 +76,9 @@ export class VisAnnotationsComponent implements AnnotationsConfigInterface, Afte
    * Default: `[]` */
   @Input() items: AnnotationItem[] | undefined
 
+  /** Debug option to render bounding boxes around text elements. Default: `false` */
+  @Input() renderTextBoundingBoxes?: boolean
+
   component: Annotations | undefined
   public componentContainer: ContainerCore | undefined
 
@@ -88,8 +92,8 @@ export class VisAnnotationsComponent implements AnnotationsConfigInterface, Afte
   }
 
   private getConfig (): AnnotationsConfigInterface {
-    const { duration, events, attributes, items } = this
-    const config = { duration, events, attributes, items }
+    const { duration, events, attributes, items, renderTextBoundingBoxes } = this
+    const config = { duration, events, attributes, items, renderTextBoundingBoxes }
     const keys = Object.keys(config) as (keyof AnnotationsConfigInterface)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

@@ -8,6 +8,7 @@ const colorScale = Scale.scaleOrdinal(colors).domain(categories)
 @Component({
   selector: 'shaped-scatter-plot',
   templateUrl: './shaped-scatter-plot.component.html',
+  standalone: false,
 })
 export class ShapedScatterPlotComponent {
   data = data

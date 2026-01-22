@@ -19,6 +19,7 @@ import { VisXYComponent } from '../../core'
   template: '',
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisXYComponent, useExisting: VisCrosshairComponent }],
+  standalone: false,
 })
 export class VisCrosshairComponent<Datum> implements CrosshairConfigInterface<Datum>, AfterViewInit {
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */
@@ -117,7 +118,7 @@ export class VisCrosshairComponent<Datum> implements CrosshairConfigInterface<Da
   /** Tooltip template accessor. The function is supposed to return either a valid HTML string or an HTMLElement.
    * When `snapToData` is `false`, `datum` will be `undefined` but `data` and `leftNearestDatumIndex` will be provided.
    * Default: `d => ''` */
-  @Input() template?: (datum: Datum, x: number | Date, data?: Datum[], leftNearestDatumIndex?: number) => string | HTMLElement
+  @Input() template?: (datum: Datum, x: number | Date, data: Datum[], leftNearestDatumIndex?: number) => string | HTMLElement
 
   /** Hide Crosshair when the corresponding datum element is far from mouse pointer. Default: `true` */
   @Input() hideWhenFarFromPointer?: boolean

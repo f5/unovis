@@ -25,6 +25,7 @@ import { VisXYComponent } from '../../core'
   template: '',
   // eslint-disable-next-line no-use-before-define
   providers: [{ provide: VisXYComponent, useExisting: VisTimelineComponent }],
+  standalone: false,
 })
 export class VisTimelineComponent<Datum> implements TimelineConfigInterface<Datum>, AfterViewInit {
   /** Animation duration of the data update transitions in milliseconds. Default: `600` */

@@ -6,6 +6,7 @@ import { candidates, data, DataRecord } from './data'
   selector: 'step-area-chart',
   templateUrl: './step-area-chart.component.html',
   styleUrls: ['./styles.css'],
+  standalone: false,
 })
 export class StepAreaChartComponent {
   candidates: BulletLegendItemInterface[]

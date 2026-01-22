@@ -6,6 +6,7 @@ import { data, NodeDatum } from './data'
 @Component({
   selector: 'basic-sankey',
   templateUrl: './basic-sankey.component.html',
+  standalone: false,
 })
 export class BasicSankeyComponent {
   data = data
