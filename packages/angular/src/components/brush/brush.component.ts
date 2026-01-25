@@ -91,6 +91,10 @@ export class VisBrushComponent<Datum> implements BrushConfigInterface<Datum>, Af
 
   /** Constraint Brush selection to a minimal length in data units. Default: `undefined` */
   @Input() selectionMinLength?: number
+
+  /** Extend the brush height by the specified number of pixels. This can be convenient when you have thick lines
+   * at the bottom of the chart and you want to ensure they stay fully covered by the brush. Default: `0` */
+  @Input() brushHeightExtend?: number
   @Input() data: Datum[]
 
   component: Brush<Datum> | undefined
@@ -112,8 +116,8 @@ export class VisBrushComponent<Datum> implements BrushConfigInterface<Datum>, Af
   }
 
   private getConfig (): BrushConfigInterface<Datum> {
-    const { duration, events, attributes, onBrush, onBrushStart, onBrushMove, onBrushEnd, handleWidth, selection, draggable, handlePosition, selectionMinLength } = this
-    const config = { duration, events, attributes, onBrush, onBrushStart, onBrushMove, onBrushEnd, handleWidth, selection, draggable, handlePosition, selectionMinLength }
+    const { duration, events, attributes, onBrush, onBrushStart, onBrushMove, onBrushEnd, handleWidth, selection, draggable, handlePosition, selectionMinLength, brushHeightExtend } = this
+    const config = { duration, events, attributes, onBrush, onBrushStart, onBrushMove, onBrushEnd, handleWidth, selection, draggable, handlePosition, selectionMinLength, brushHeightExtend }
     const keys = Object.keys(config) as (keyof BrushConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
