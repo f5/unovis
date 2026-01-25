@@ -23,13 +23,13 @@ import * as s from './style'
 export class Brush<Datum> extends XYComponentCore<Datum, BrushConfigInterface<Datum>> {
   static selectors = s
   protected _defaultConfig = BrushDefaultConfig as BrushConfigInterface<Datum>
-  clippable = false // Don't apply clipping path to this component. See XYContainer
+  public clippable = false // Don't apply clipping path to this component. See XYContainer
   public config: BrushConfigInterface<Datum> = this._defaultConfig
-  brush: Selection<SVGGElement, unknown, SVGGElement, unknown>
-  unselectedRange: Selection<SVGRectElement, BrushHandleType, SVGGElement, unknown>
-  handleLines: Selection<SVGLineElement, BrushHandleType, SVGGElement, unknown>
-  brushBehaviour: BrushBehavior<unknown> = brushX()
-  events = {
+  public brush: Selection<SVGGElement, unknown, SVGGElement, unknown>
+  public unselectedRange: Selection<SVGRectElement, BrushHandleType, SVGGElement, unknown>
+  public handleLines: Selection<SVGLineElement, BrushHandleType, SVGGElement, unknown>
+  public brushBehaviour: BrushBehavior<unknown> = brushX()
+  public events = {
     [Brush.selectors.brush]: {},
   }
 
@@ -62,9 +62,10 @@ export class Brush<Datum> extends XYComponentCore<Datum, BrushConfigInterface<Da
     const { brushBehaviour, config } = this
     const duration = isNumber(customDuration) ? customDuration : config.duration
     const xScale = this.xScale
+    const height = this._getBrushHeight()
 
     brushBehaviour
-      .extent([[0, 0], [this._width, this._height]])
+      .extent([[0, 0], [this._width, height]])
       .on('start', this._onBrushStart.bind(this))
       .on('brush', this._onBrushMove.bind(this))
       .on('end', this._onBrushEnd.bind(this))
@@ -73,7 +74,7 @@ export class Brush<Datum> extends XYComponentCore<Datum, BrushConfigInterface<Da
       .call(brushBehaviour)
       .classed('non-draggable', !config.draggable)
 
-    const yRange = [this._height, 0]
+    const yRange = [height, 0]
     const h = yRange[0] - yRange[1]
 
     this.g.selectAll('.handle')
@@ -120,11 +121,15 @@ export class Brush<Datum> extends XYComponentCore<Datum, BrushConfigInterface<Da
     this._positionHandles(s)
 
     // D3 sets brush handle height to be too long, so we need to update it
-    const yRange = [this._height, 0]
+    const yRange = [this._getBrushHeight(), 0]
     const h = yRange[0] - yRange[1]
     this.g.selectAll('.handle')
       .attr('y', yRange[1])
       .attr('height', h)
+  }
+
+  private _getBrushHeight (): number {
+    return this._height + this.config.brushHeightExtend
   }
 
   private _positionHandles (s: [number, number]): void {
