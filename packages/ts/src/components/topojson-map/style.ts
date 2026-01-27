@@ -1,4 +1,8 @@
 import { css, injectGlobal } from '@emotion/css'
+export const pointPathRing = css`
+  label: point-path-ring;
+  fill: var(--vis-map-point-ring-fill-color);
+`
 
 export const root = css`
   label: topojson-map-component;
@@ -23,13 +27,21 @@ export const variables = injectGlobal`
     // Undefined by default to allow proper fallback to var(--vis-font-family)
     /* --vis-map-point-label-font-family: */
     --vis-map-point-label-font-weight: 600;
-    --vis-map-point-label-font-size: 12px;
+    --vis-map-point-label-font-size: 12px;'
+
+    --vis-map-point-default-fill-color: #B9BEC3;
+    --vis-map-point-ring-fill-color: #ffffff;
+    --vis-map-point-default-stroke-color: #959da3;
+    --vis-map-point-default-stroke-width: 0px;
 
     /* Dark Theme */
     --vis-dark-map-feature-color: #5b5f6d;
     --vis-dark-map-boundary-color: #2a2a2a;
     --vis-dark-map-point-label-text-color-dark: #fff;
     --vis-dark-map-point-label-text-color-light:#5b5f6d;
+    --vis-dark-map-point-default-fill-color: #B9BEC3;
+    --vis-dark-map-point-default-stroke-color: #959da3;
+    --vis-dark-map-point-ring-fill-color: #5b5f6d;
   }
 
   body.theme-dark ${`.${root}`} {
@@ -87,7 +99,8 @@ export const pointLabel = css`
   font-size: var(--vis-map-point-label-font-size);
   font-family: var(--vis-map-point-label-font-family, var(--vis-font-family));
   font-weight: var(--vis-map-point-label-font-weight);
-  fill: var(--vis-map-point-label-text-color-dark);
+  fill: var(--vis-map-point-default-fill-color);
+  stroke-width: var(--vis-map-point-default-stroke-width);
 `
 
 // Style class exported for custom CSS targeting of donut chart paths
