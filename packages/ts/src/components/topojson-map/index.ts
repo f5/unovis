@@ -251,10 +251,25 @@ export class TopoJSONMap<
       })
       .style('opacity', 0)
 
-    pointsEnter.append('path').attr('class', s.pointShape)
+    // Main shape (circle, square, triangle)
+    pointsEnter.append('path')
+      .attr('class', s.pointShape)
       .attr('d', 'M0,0')
-      .style('fill', (d, i) => getColor(d, config.pointColor, i))
+      .style('fill', (d, i) => {
+        const shape = getString(d, config.pointShape) as TopoJSONMapPointShape || TopoJSONMapPointShape.Circle
+        if (shape === TopoJSONMapPointShape.Ring) return 'none'
+        return getColor(d, config.pointColor, i)
+      })
       .style('stroke-width', d => getNumber(d, config.pointStrokeWidth))
+
+    // Ring overlay path for ring shape
+    pointsEnter.append('path')
+      .attr('class', s.pointPathRing)
+      .attr('d', 'M0,0')
+      .style('display', d => {
+        const shape = getString(d, config.pointShape) as TopoJSONMapPointShape
+        return shape === TopoJSONMapPointShape.Ring ? null : 'none'
+      })
 
     pointsEnter.append('text').attr('class', s.pointLabel)
       .style('opacity', 0)
@@ -269,9 +284,14 @@ export class TopoJSONMap<
       .style('cursor', d => getString(d, config.pointCursor))
       .style('opacity', 1)
 
+    // Main shape update
     smartTransition(pointsMerged.select(`.${s.pointShape}`), duration)
       .attr('r', d => getNumber(d, config.pointRadius) / this._currentZoomLevel)
-      .style('fill', (d, i) => getColor(d, config.pointColor, i))
+      .style('fill', (d, i) => {
+        const shape = getString(d, config.pointShape) as TopoJSONMapPointShape || TopoJSONMapPointShape.Circle
+        if (shape === TopoJSONMapPointShape.Ring) return 'none'
+        return getColor(d, config.pointColor, i)
+      })
       .attr('d', d => {
         const shape = getString(d, config.pointShape) as TopoJSONMapPointShape || TopoJSONMapPointShape.Circle
         const r = getNumber(d, config.pointRadius) / this._currentZoomLevel
@@ -284,6 +304,19 @@ export class TopoJSONMap<
         const isRing = shape === TopoJSONMapPointShape.Ring
         const baseStrokeWidth = isRing ? getNumber(d, config.pointRingWidth) : getNumber(d, config.pointStrokeWidth)
         return baseStrokeWidth / this._currentZoomLevel
+      })
+
+    // Ring overlay update
+    smartTransition(pointsMerged.select(`.${s.pointPathRing}`), duration)
+      .attr('d', d => {
+        const shape = getString(d, config.pointShape) as TopoJSONMapPointShape
+        if (shape !== TopoJSONMapPointShape.Ring) return ''
+        const r = getNumber(d, config.pointRadius) / this._currentZoomLevel
+        return getPointPathData({ x: 0, y: 0 }, r, TopoJSONMapPointShape.Circle)
+      })
+      .style('display', d => {
+        const shape = getString(d, config.pointShape) as TopoJSONMapPointShape
+        return shape === TopoJSONMapPointShape.Ring ? null : 'none'
       })
 
     const pointLabelsMerged = pointsMerged.select(`.${s.pointLabel}`)
