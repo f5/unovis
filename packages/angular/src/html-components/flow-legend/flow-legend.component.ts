@@ -1,6 +1,6 @@
 // !!! This code was automatically generated. You should not change it !!!
 import { Component, AfterViewInit, Input, SimpleChanges, ViewChild, ElementRef } from '@angular/core'
-import { FlowLegend, FlowLegendConfigInterface } from '@unovis/ts'
+import { FlowLegend, FlowLegendConfigInterface, Spacing } from '@unovis/ts'
 import { VisGenericComponent } from '../../core'
 
 @Component({
@@ -13,11 +13,17 @@ import { VisGenericComponent } from '../../core'
 export class VisFlowLegendComponent implements FlowLegendConfigInterface, AfterViewInit {
   @ViewChild('container', { static: false }) containerRef: ElementRef
 
+  /** Margin around the legend. Default: `undefined` */
+  @Input() margin?: Spacing
+
   /** Custom width of the component.  Default: `undefined` */
   @Input() customWidth?: number
 
   /** Legend items array as string[]. Default: `[]` */
   @Input() items?: string[]
+
+  /** Spacing between legend items and the arrows in pixels. Default: `undefined` (fit to container width) */
+  @Input() spacing?: number
 
   /** Color of the flow line. Default: `undefined` */
   @Input() lineColor?: string
@@ -34,6 +40,9 @@ export class VisFlowLegendComponent implements FlowLegendConfigInterface, AfterV
   /** Color of the arrow. Default: `undefined` */
   @Input() arrowColor?: string
 
+  /** Offset of the arrow symbol vertically in pixels. Default: `undefined` */
+  @Input() arrowSymbolYOffset?: number
+
   /** Callback function for the legend item click. Default: `undefined` */
   @Input() onLegendItemClick?: ((label?: string, i?: number) => void)
 
@@ -48,8 +57,8 @@ export class VisFlowLegendComponent implements FlowLegendConfigInterface, AfterV
   }
 
   private getConfig (): FlowLegendConfigInterface {
-    const { customWidth, items, lineColor, labelColor, labelFontSize, arrowSymbol, arrowColor, onLegendItemClick } = this
-    const config = { customWidth, items, lineColor, labelColor, labelFontSize, arrowSymbol, arrowColor, onLegendItemClick }
+    const { margin, customWidth, items, spacing, lineColor, labelColor, labelFontSize, arrowSymbol, arrowColor, arrowSymbolYOffset, onLegendItemClick } = this
+    const config = { margin, customWidth, items, spacing, lineColor, labelColor, labelFontSize, arrowSymbol, arrowColor, arrowSymbolYOffset, onLegendItemClick }
     const keys = Object.keys(config) as (keyof FlowLegendConfigInterface)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 
