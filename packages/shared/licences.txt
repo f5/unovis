@@ -9,7 +9,7 @@ tslib                      perpetual       0BSD          2.8.1              Micr
 d3-format                  perpetual       ISC           3.1.2              Mike Bostock http://bost.ocks.org/mike
 d3-scale                   perpetual       ISC           4.0.2              Mike Bostock https://bost.ocks.org/mike
 d3-selection               perpetual       ISC           3.0.0              Mike Bostock https://bost.ocks.org/mike
-solid-js                   perpetual       MIT           1.9.11             Ryan Carniato
+solid-js                   perpetual       MIT           1.9.10             Ryan Carniato
 typescript                 perpetual       Apache-2.0    4.2.4              Microsoft Corp.
 d3-array                   perpetual       ISC           3.2.4              Mike Bostock http://bost.ocks.org/mike
 @emotion/css               perpetual       MIT           11.13.5            Kye Hohenberger

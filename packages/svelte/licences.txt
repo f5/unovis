@@ -1,6 +1,5 @@
 name                          license period  license type  installed version  author
 ----                          --------------  ------------  -----------------  ------
-@unovis/shared                perpetual       Apache-2.0    1.6.4              Nikita Rokotyan, F5 Inc. <nikita@f5.com> (https://rokotyan.com)
 @rollup/plugin-alias          perpetual       MIT           5.1.1              Johannes Stein
 @rollup/plugin-node-resolve   perpetual       MIT           13.3.0             Rich Harris <richard.a.harris@gmail.com>
 @sveltejs/package             perpetual       MIT           1.0.0-next.5       n/a
@@ -8,7 +7,7 @@ name                          license period  license type  installed version  a
 @zerollup/ts-transform-paths  perpetual       MIT           1.7.18             Stefan Zerkalica zerkalica@gmail.com
 buffer-from                   perpetual       MIT           1.1.2              n/a
 eslint-plugin-svelte          perpetual       MIT           2.46.1             Yosuke Ota (https://github.com/ota-meshi)
-rollup                        perpetual       MIT           2.80.0             Rich Harris
+rollup                        perpetual       MIT           2.79.2             Rich Harris
 rollup-plugin-copy            perpetual       MIT           3.5.0              Vlad Shcherbin <vlad.shcherbin@gmail.com>
 rollup-plugin-livereload      perpetual       MIT           2.0.5              Thomas Ghysels <info@thomasg.be>
 rollup-plugin-serve           perpetual       MIT           2.0.3              Thomas Ghysels <info@thomasg.be>
