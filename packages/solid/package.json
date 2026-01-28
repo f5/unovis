@@ -32,7 +32,7 @@
     "lint": "eslint src --ext .ts,.tsx",
     "build": "vite build; rm -rf dist/.cache; cp LICENSE README.md package.json ./dist",
     "publish:dist": "cd ./dist; npm publish",
-    "generate": "tsx autogen/index.ts && pnpm run lint -- --fix",
+    "generate": "tsx autogen/index.ts && pnpm run lint --fix",
     "gallery": "vite"
   },
   "peerDependencies": {
