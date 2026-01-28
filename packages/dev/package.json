@@ -1,6 +1,6 @@
 {
   "name": "@unovis/dev",
-  "version": "1.6.1",
+  "version": "1.6.3",
   "packageManager": "pnpm@10.28.2",
   "main": "index.js",
   "license": "Apache-2.0",
