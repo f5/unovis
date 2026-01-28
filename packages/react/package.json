@@ -37,7 +37,7 @@
     "publish:dist": "cd ./dist; npm publish"
   },
   "peerDependencies": {
-    "@unovis/ts": "1.6.4",
+    "@unovis/ts": "workspace:*",
     "react": ">=16.8.0 || ^17 || ^18 || ^19",
     "react-dom": ">=16.8.0 || ^17 || ^18 || ^19"
   },

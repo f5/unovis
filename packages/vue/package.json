@@ -53,7 +53,7 @@
     "gallery": "vite"
   },
   "peerDependencies": {
-    "@unovis/ts": "1.6.4",
+    "@unovis/ts": "workspace:*",
     "vue": "^3"
   },
   "devDependencies": {

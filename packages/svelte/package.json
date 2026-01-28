@@ -45,7 +45,7 @@
     "publish:dist": "cd ./dist; npm publish"
   },
   "peerDependencies": {
-    "@unovis/ts": "1.6.4",
+    "@unovis/ts": "workspace:*",
     "svelte": "^3.48.0 || ^4.0.0 "
   },
   "devDependencies": {

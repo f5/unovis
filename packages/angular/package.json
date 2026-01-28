@@ -46,7 +46,7 @@
     "tslib": "^2.3.1"
   },
   "peerDependencies": {
-    "@unovis/ts": "1.6.4",
+    "@unovis/ts": "workspace:*",
     "@angular/common": "12 - 19",
     "@angular/compiler": "12 - 19",
     "@angular/core": "12 - 19",
