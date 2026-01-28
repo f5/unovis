@@ -9,7 +9,7 @@
     "dev": "webpack-dev-server --host 0.0.0.0",
     "serve": "serve dist -s -p 9501",
     "check": "tsc --noEmit",
-    "test": "npx percy exec -- cypress run"
+    "test": "percy exec -- cypress run"
   },
   "devDependencies": {
     "@percy/cli": "^1.29.1",

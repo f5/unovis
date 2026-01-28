@@ -44,7 +44,7 @@ for (const component of components) {
   exec(`mkdir ${pathComponentBase}`, () => {
     writeFileSync(pathComponent, componentCode)
     writeFileSync(pathModule, moduleCode)
-    exec(`npx eslint ${pathComponent} ${pathModule} --fix`)
+    exec(`pnpm exec eslint ${pathComponent} ${pathModule} --fix`)
   })
 
   // eslint-disable-next-line no-console

@@ -62,6 +62,7 @@
     "@rollup/plugin-node-resolve": "^13.0.4",
     "@vitejs/plugin-vue": "^5.2.3",
     "@vue/tsconfig": "^0.4.0",
+    "buffer-from": "^1.1.2",
     "de-indent": "^1.0.2",
     "jju": "^1.4.0",
     "rollup": "^2.61.1",

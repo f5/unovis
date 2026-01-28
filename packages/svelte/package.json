@@ -56,6 +56,7 @@
     "@sveltejs/package": "1.0.0-next.5",
     "@tsconfig/svelte": "^2.0.0",
     "@zerollup/ts-transform-paths": "^1.7.18",
+    "buffer-from": "^1.1.2",
     "eslint-plugin-svelte": "^2.10.0",
     "rollup": "^2.61.1",
     "rollup-plugin-copy": "^3.4.0",
