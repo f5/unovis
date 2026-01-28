@@ -1,4 +1,6 @@
 {
+  "output": "table",
+  "excludeRegex": "@unovis/.*",
   "fields": [
     "name",
     "licensePeriod",

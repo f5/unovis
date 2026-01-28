@@ -1,6 +1,5 @@
 name                          license period  license type  installed version  author
 ----                          --------------  ------------  -----------------  ------
-@unovis/shared                perpetual       Apache-2.0    1.6.2              Nikita Rokotyan, F5 Inc. <nikita@f5.com> (https://rokotyan.com)
 @rollup/plugin-alias          perpetual       MIT           5.1.1              Johannes Stein
 @rollup/plugin-node-resolve   perpetual       MIT           13.3.0             Rich Harris <richard.a.harris@gmail.com>
 @sveltejs/package             perpetual       MIT           1.0.0-next.5       n/a

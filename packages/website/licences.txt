@@ -26,4 +26,3 @@ raw-loader                                 perpetual       MIT           4.0.2  
 react                                      perpetual       MIT           18.3.1             n/a
 react-dom                                  perpetual       MIT           18.3.1             n/a
 typescript                                 perpetual       Apache-2.0    5.2.2              Microsoft Corp.
-@unovis/shared                             perpetual       Apache-2.0    1.6.2              Nikita Rokotyan, F5 Inc. <nikita@f5.com> (https://rokotyan.com)

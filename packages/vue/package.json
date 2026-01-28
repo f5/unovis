@@ -50,7 +50,8 @@
     "generate": "rollup -c ./autogen/rollup.config.js; node .autogen.cjs; rm .autogen.cjs",
     "publish:dist": "cd ./dist; npm publish",
     "build:gallery": "vite build --mode gallery",
-    "gallery": "vite"
+    "gallery": "vite",
+    "license:check": "pnpm license-report --config=../../lic-report-config.json > licences.txt"
   },
   "peerDependencies": {
     "@unovis/ts": "1.6.2",

@@ -1,6 +1,5 @@
 name                            license period  license type  installed version  author
 ----                            --------------  ------------  -----------------  ------
-@unovis/shared                  perpetual       Apache-2.0    1.6.2              Nikita Rokotyan, F5 Inc. <nikita@f5.com> (https://rokotyan.com)
 @antfu/eslint-config            perpetual       MIT           3.16.0             Anthony Fu <anthonyfu117@hotmail.com> (https://github.com/antfu/)
 @rollup/plugin-node-resolve     perpetual       MIT           13.3.0             Rich Harris <richard.a.harris@gmail.com>
 @vitejs/plugin-vue              perpetual       MIT           5.2.4              Evan You

@@ -50,8 +50,6 @@ d3-geo                             perpetual       ISC           3.1.1          
 @types/topojson                    perpetual       MIT           3.2.6              n/a
 @types/topojson-client             perpetual       MIT           3.1.5              n/a
 @types/topojson-specification      perpetual       MIT           1.0.5              n/a
-@unovis/dagre-layout               perpetual       MIT           0.8.8-2            Nikita Rokotyan (nikita@f5.com)
-@unovis/graphlibrary               perpetual       MIT           2.2.0-2            Nikita Rokotyan (nikita@f5.com)
 d3                                 perpetual       ISC           7.9.0              Mike Bostock https://bost.ocks.org/mike
 d3-collection                      perpetual       BSD-3-Clause  1.0.7              Mike Bostock http://bost.ocks.org/mike
 d3-geo-projection                  perpetual       ISC           4.0.0              Mike Bostock https://bost.ocks.org/mike

@@ -31,7 +31,9 @@
   "type": "module",
   "sideEffects": false,
   "private": true,
-  "scripts": {},
+  "scripts": {
+    "license:check": "pnpm license-report --config=../../lic-report-config.json > licences.txt"
+  },
   "peerDependencies": {
     "@unovis/ts": "workspace:*"
   },

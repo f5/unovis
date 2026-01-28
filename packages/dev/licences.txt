@@ -1,8 +1,8 @@
 name                                  license period  license type  installed version  author
 ----                                  --------------  ------------  -----------------  ------
 fuse.js                               perpetual       Apache-2.0    6.6.2              Kiro Risk kirollos@gmail.com http://kiro.me
-react                                 perpetual       MIT           19.2.4             n/a
-react-dom                             perpetual       MIT           19.2.4             n/a
+react                                 perpetual       MIT           19.2.3             n/a
+react-dom                             perpetual       MIT           19.2.3             n/a
 react-router-dom                      perpetual       MIT           6.30.3             Remix Software <hello@remix.run>
 seedrandom                            perpetual       MIT           3.0.5              David Bau
 serve                                 perpetual       MIT           14.2.5             n/a
@@ -12,7 +12,7 @@ d3-format                             perpetual       ISC           3.1.2       
 @percy/cli                            perpetual       MIT           1.31.8             n/a
 @percy/cypress                        perpetual       MIT           3.1.7              Perceptual Inc.
 @pmmmwh/react-refresh-webpack-plugin  perpetual       MIT           0.5.17             Michael Mok
-@types/react                          perpetual       MIT           19.2.10            n/a
+@types/react                          perpetual       MIT           19.2.9             n/a
 @types/react-dom                      perpetual       MIT           19.2.3             n/a
 @types/react-router                   perpetual       MIT           5.1.20             n/a
 @types/webpack-env                    perpetual       MIT           1.18.8             n/a
