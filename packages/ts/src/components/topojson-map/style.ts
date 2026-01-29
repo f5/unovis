@@ -121,3 +121,28 @@ export const link = css`
     stroke-opacity: .90;
   }
 `
+
+export const flowParticles = css`
+  label: flow-particles;
+`
+
+export const flowParticle = css`
+  label: flow-particle;
+  
+  pointer-events: none;
+`
+
+export const sourcePoints = css`
+  label: source-points;
+`
+
+export const sourcePoint = css`
+  label: source-point;
+  
+  cursor: pointer;
+  stroke-opacity: 0.8;
+  
+  &:hover {
+    stroke-opacity: 1;
+  }
+`
