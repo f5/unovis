@@ -55,6 +55,23 @@ export enum TopoJSONMapPointShape {
 }
 
 export type MapFeature<D> = Feature<Geometry> & { data: D }
+export interface FlowParticle {
+  velocity: number;
+  // Screen properties
+  x: number;
+  y: number;
+  radius?: number;
+  color?: string;
+  // Flow data reference
+  flowData: any;
+  // Animation state
+  progress: number; // 0 to 1, how far along the path
+  // Unique identifier for data binding
+  id: string;
+  arcPath?: string;
+  pathLength?: number;
+}
+
 
 export enum MapProjectionKind {
   // Projections form `d3-geo`

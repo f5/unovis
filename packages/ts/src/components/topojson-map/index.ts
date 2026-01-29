@@ -19,7 +19,7 @@ import { getCSSVariableValue, isStringCSSVariable } from 'utils/misc'
 import { MapLink } from 'types/map'
 
 // Local Types
-import { MapData, MapFeature, MapPointLabelPosition, MapProjection, TopoJSONMapPointShape } from './types'
+import { MapData, MapFeature, MapPointLabelPosition, MapProjection, TopoJSONMapPointShape, FlowParticle } from './types'
 
 // Config
 import { TopoJSONMapDefaultConfig, TopoJSONMapConfigInterface } from './config'
@@ -62,6 +62,12 @@ export class TopoJSONMap<
   private _featuresGroup = this.g.append('g').attr('class', s.features)
   private _linksGroup = this.g.append('g').attr('class', s.links)
   private _pointsGroup = this.g.append('g').attr('class', s.points)
+
+  private _flowParticlesGroup = this.g.append('g').attr('class', s.flowParticles)
+  private _sourcePointsGroup = this.g.append('g').attr('class', s.sourcePoints)
+  private _flowParticles: any[] = []
+  private _sourcePoints: any[] = []
+  private _animationId: number | null = null
 
   events = {
     [TopoJSONMap.selectors.point]: {},
@@ -117,6 +123,16 @@ export class TopoJSONMap<
     this._renderLinks(duration)
     this._renderPoints(duration)
 
+    // Flow features
+    if (config.enableFlowAnimation) {
+      this._initFlowFeatures()
+      this._renderSourcePoints(duration)
+      this._renderFlowParticles(duration)
+      this._startFlowAnimation()
+    } else {
+      this._stopFlowAnimation()
+    }
+
     // When animation is running we need to temporary disable zoom behaviour
     if (duration && !config.disableZoom) {
       this.g.on('.zoom', null)
@@ -147,6 +163,12 @@ export class TopoJSONMap<
       .attr('transform', transformString)
 
     smartTransition(this._pointsGroup, duration)
+      .attr('transform', transformString)
+
+    smartTransition(this._sourcePointsGroup, duration)
+      .attr('transform', transformString)
+
+    smartTransition(this._flowParticlesGroup, duration)
       .attr('transform', transformString)
   }
 
@@ -496,7 +518,212 @@ export class TopoJSONMap<
     this._applyZoom()
   }
 
+  private _initFlowFeatures (): void {
+    const { config, datamodel } = this
+    // Use raw links data instead of processed links to avoid point lookup issues for flows
+    const rawLinks = datamodel.data?.links || []
+
+    // Clear existing flow data
+    this._flowParticles = []
+    this._sourcePoints = []
+
+    if (!rawLinks || rawLinks.length === 0) return
+
+    // Create source points and flow particles for each link
+    rawLinks.forEach((link, i) => {
+      // Try to get coordinates from flow-specific accessors first, then fall back to link endpoints
+      let sourceLon: number, sourceLat: number, targetLon: number, targetLat: number
+
+      if (config.sourceLongitude && config.sourceLatitude) {
+        sourceLon = getNumber(link, config.sourceLongitude)
+        sourceLat = getNumber(link, config.sourceLatitude)
+      } else {
+        // Fall back to using linkSource point coordinates
+        const sourcePoint = config.linkSource?.(link)
+        if (typeof sourcePoint === 'object' && sourcePoint !== null) {
+          sourceLon = getNumber(sourcePoint as PointDatum, config.longitude)
+          sourceLat = getNumber(sourcePoint as PointDatum, config.latitude)
+        } else {
+          return // Skip if can't resolve source coordinates
+        }
+      }
+
+      if (config.targetLongitude && config.targetLatitude) {
+        targetLon = getNumber(link, config.targetLongitude)
+        targetLat = getNumber(link, config.targetLatitude)
+      } else {
+        // Fall back to using linkTarget point coordinates
+        const targetPoint = config.linkTarget?.(link)
+        if (typeof targetPoint === 'object' && targetPoint !== null) {
+          targetLon = getNumber(targetPoint as PointDatum, config.longitude)
+          targetLat = getNumber(targetPoint as PointDatum, config.latitude)
+        } else {
+          return // Skip if can't resolve target coordinates
+        }
+      }
+
+      if (!isNumber(sourceLon) || !isNumber(sourceLat) || !isNumber(targetLon) || !isNumber(targetLat)) {
+        return
+      }
+      // Create source point
+      const sourcePos = this._projection([sourceLon, sourceLat])
+      if (sourcePos) {
+        const sourcePoint = {
+          lat: sourceLat,
+          lon: sourceLon,
+          x: sourcePos[0],
+          y: sourcePos[1],
+          radius: getNumber(link, config.sourcePointRadius),
+          color: getColor(link, config.sourcePointColor, i),
+          flowData: link,
+        }
+        this._sourcePoints.push(sourcePoint)
+      }
+
+      // Use the same arc as _renderLinks for flow animation
+      const sourceProj = this._projection([sourceLon, sourceLat])
+      const targetProj = this._projection([targetLon, targetLat])
+      if (!sourceProj || !targetProj) return
+
+      // Generate SVG arc path string using the same arc() function
+      const arcPath = arc(sourceProj, targetProj)
+      // Create a temporary SVG path element for sampling
+      const tempPath = document.createElementNS('http://www.w3.org/2000/svg', 'path')
+      tempPath.setAttribute('d', arcPath)
+      const pathLength = tempPath.getTotalLength()
+
+      const dist = Math.sqrt((targetLat - sourceLat) ** 2 + (targetLon - sourceLon) ** 2)
+      const numParticles = Math.max(1, Math.round(dist * getNumber(link, config.flowParticleDensity)))
+      const velocity = getNumber(link, config.flowParticleSpeed)
+      const radius = getNumber(link, config.flowParticleRadius)
+      const color = getColor(link, config.flowParticleColor, i)
+
+      for (let j = 0; j < numParticles; j += 1) {
+        const progress = j / numParticles
+        const pt = tempPath.getPointAtLength(progress * pathLength)
+        const particle: FlowParticle = {
+          x: pt.x,
+          y: pt.y,
+          velocity,
+          radius,
+          color,
+          progress,
+          arcPath,
+          pathLength,
+          id: `${getString(link, config.linkId, i) || i}-${j}`,
+          flowData: undefined,
+        }
+        this._flowParticles.push(particle)
+      }
+    })
+  }
+
+  private _renderSourcePoints (duration: number): void {
+    const { config } = this
+
+    const sourcePoints = this._sourcePointsGroup
+      .selectAll<SVGCircleElement, any>(`.${s.sourcePoint}`)
+      .data(this._sourcePoints, (d, i) => `${d.flowData}-${i}`)
+
+    const sourcePointsEnter = sourcePoints.enter()
+      .append('circle')
+      .attr('class', s.sourcePoint)
+      .attr('cx', d => d.x)
+      .attr('cy', d => d.y)
+      .attr('r', d => d.radius / (this._currentZoomLevel || 1))
+      .style('fill', d => d.color)
+      .style('stroke', d => d.color)
+      .style('opacity', 0)
+      .on('click', (event: MouseEvent, d) => {
+        event.stopPropagation()
+        config.onSourcePointClick?.(d.flowData, d.x, d.y, event)
+      })
+      .on('mouseenter', (event: MouseEvent, d) => {
+        config.onSourcePointMouseEnter?.(d.flowData, d.x, d.y, event)
+      })
+      .on('mouseleave', (event: MouseEvent, d) => {
+        config.onSourcePointMouseLeave?.(d.flowData, event)
+      })
+
+    smartTransition(sourcePointsEnter.merge(sourcePoints), duration)
+      .style('opacity', 1)
+
+    sourcePoints.exit().remove()
+  }
+
+  private _renderFlowParticles (duration: number): void {
+    const flowParticles = this._flowParticlesGroup
+      .selectAll<SVGCircleElement, FlowParticle>(`.${s.flowParticle}`)
+      .data(this._flowParticles, d => d.id)
+
+    const flowParticlesEnter = flowParticles.enter()
+      .append('circle')
+      .attr('class', s.flowParticle)
+      .attr('r', 0)
+      .style('opacity', 0)
+
+    smartTransition(flowParticlesEnter.merge(flowParticles), duration)
+      .attr('cx', d => d.x)
+      .attr('cy', d => d.y)
+      .attr('r', d => d.radius / (this._currentZoomLevel || 1))
+      .style('fill', d => d.color)
+      .style('opacity', 0.8)
+
+    flowParticles.exit().remove()
+  }
+
+  private _startFlowAnimation (): void {
+    if (this._animationId) return // Animation already running
+
+    this._animateFlow()
+  }
+
+  private _animateFlow (): void {
+    if (!this.config.enableFlowAnimation) return
+
+    this._animationId = requestAnimationFrame(() => {
+      this._updateFlowParticles()
+      this._animateFlow() // Recursive call like LeafletFlowMap
+    })
+  }
+
+  private _stopFlowAnimation (): void {
+    if (this._animationId) {
+      cancelAnimationFrame(this._animationId)
+      this._animationId = null
+    }
+  }
+
+  private _updateFlowParticles (): void {
+    if (this._flowParticles.length === 0) return
+
+    const zoomLevel = this._currentZoomLevel || 1
+
+    this._flowParticles.forEach(particle => {
+      // Move particle along the arc path using progress
+      particle.progress += particle.velocity * 0.01
+      if (particle.progress > 1) particle.progress = 0
+
+      // Use the stored SVG path and pathLength
+      if (particle.arcPath && typeof particle.pathLength === 'number') {
+        const tempPath = document.createElementNS('http://www.w3.org/2000/svg', 'path')
+        tempPath.setAttribute('d', particle.arcPath)
+        const pt = tempPath.getPointAtLength(particle.progress * particle.pathLength)
+        particle.x = pt.x
+        particle.y = pt.y
+      }
+    })
+
+    // Update DOM elements directly without data rebinding (for performance)
+    this._flowParticlesGroup
+      .selectAll<SVGCircleElement, any>(`.${s.flowParticle}`)
+      .attr('cx', (d, i) => this._flowParticles[i]?.x || 0)
+      .attr('cy', (d, i) => this._flowParticles[i]?.y || 0)
+      .attr('r', (d, i) => (this._flowParticles[i]?.radius || 1) / zoomLevel)
+  }
+
   destroy (): void {
     window.cancelAnimationFrame(this._animFrameId)
+    this._stopFlowAnimation()
   }
 }
