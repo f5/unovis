@@ -486,6 +486,7 @@ export class TopoJSONMap<
     this._renderGroups(customDuration)
     this._renderLinks(customDuration)
     this._renderPoints(customDuration)
+    this._renderSourcePoints(customDuration)
   }
 
   public zoomIn (increment = 0.5): void {
@@ -630,9 +631,10 @@ export class TopoJSONMap<
       .attr('class', s.sourcePoint)
       .attr('cx', d => d.x)
       .attr('cy', d => d.y)
-      .attr('r', d => d.radius / (this._currentZoomLevel || 1))
+      .attr('r', d => d.radius / this._currentZoomLevel)
       .style('fill', d => d.color)
       .style('stroke', d => d.color)
+      .style('stroke-width', 0)
       .style('opacity', 0)
       .on('click', (event: MouseEvent, d) => {
         event.stopPropagation()
@@ -646,6 +648,7 @@ export class TopoJSONMap<
       })
 
     smartTransition(sourcePointsEnter.merge(sourcePoints), duration)
+      .attr('r', d => d.radius / this._currentZoomLevel)
       .style('opacity', 1)
 
     sourcePoints.exit().remove()
