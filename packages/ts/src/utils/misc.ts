@@ -1,7 +1,7 @@
 import { StringAccessor } from 'types/accessor'
 import { LengthUnit, Rect } from 'types/misc'
 import { getString, isString } from 'utils/data'
-import toPx from 'to-px'
+import { toPx } from 'utils/to-px'
 
 export function guid (): string {
   const s4 = (): string =>
@@ -20,10 +20,25 @@ export function isStringCSSVariable (s: string): boolean {
   return isString(s) ? (s.substring(0, 6) === 'var(--') : false
 }
 
+const cssVariableCache = new WeakMap<HTMLElement | SVGElement, Map<string, string>>()
 export function getCSSVariableValue (s: string, context: HTMLElement | SVGElement): string {
   if (!isString(s)) return ''
   const variableName = s.substr(4, s.length - 5)
-  return getComputedStyle(context).getPropertyValue(variableName)
+
+
+  let elementCache = cssVariableCache.get(context)
+  if (!elementCache) {
+    elementCache = new Map()
+    cssVariableCache.set(context, elementCache)
+  }
+
+  if (elementCache.has(variableName)) {
+    return elementCache.get(variableName)
+  }
+
+  const value = getComputedStyle(context).getPropertyValue(variableName)
+  elementCache.set(variableName, value)
+  return value
 }
 
 export function getCSSVariableValueInPixels (s: string, context: HTMLElement | SVGElement): number {

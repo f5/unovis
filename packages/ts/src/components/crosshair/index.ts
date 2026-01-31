@@ -137,7 +137,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
 
     const isCrosshairWithinXRange = (xPx >= xRange[0]) && (xPx <= xRange[1])
     const isCrosshairWithinYRange = (this._yPx >= Math.min(yRange[0], yRange[1])) && (this._yPx <= Math.max(yRange[0], yRange[1]))
-    let shouldShow = this._xPx ? isCrosshairWithinXRange && isCrosshairWithinYRange : isCrosshairWithinXRange
+    let shouldShow = config.skipRangeCheck ? !!this._xPx : (this._xPx ? isCrosshairWithinXRange && isCrosshairWithinYRange : isCrosshairWithinXRange)
 
     // If the crosshair is far from the mouse pointer (usually when `snapToData` is `true` and data resolution is low), hide it
     if (config.hideWhenFarFromPointer && ((Math.abs(xClamped - (+xPx)) >= config.hideWhenFarFromPointerDistance))) {
@@ -148,6 +148,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
     if (shouldShow && tooltip && this._isContainerInViewport()) {
       const container = tooltip.getContainer() || this.container.node()
       const isContainerBody = tooltip.isContainerBody()
+      const nearestDatumXValue = this.accessors.x ? getNumber(nearestDatum, this.accessors.x, nearestDatumIndex) : undefined
 
       if (isForceShowAtDefined) {
         // Convert SVG coordinates to screen coordinates
@@ -157,10 +158,10 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
         const screenX = (isContainerBody ? xPx + containerRect.left : xPx) + this._containerMargin.left
         const screenY = this._height / 2 + (isContainerBody ? containerRect.top : 0)
         const pos = [screenX, screenY] as [number, number]
-        this._showTooltip(nearestDatum, xValue, pos, leftNearestDatumIndex)
+        this._showTooltip(nearestDatum, nearestDatumXValue, pos, leftNearestDatumIndex)
       } else if (this._mouseEvent) {
         const pos = (isContainerBody ? [this._mouseEvent.clientX, this._mouseEvent.clientY] : pointer(this._mouseEvent, container)) as [number, number]
-        this._showTooltip(nearestDatum, xValue, pos, leftNearestDatumIndex)
+        this._showTooltip(nearestDatum, nearestDatumXValue, pos, leftNearestDatumIndex)
       }
     } else this._hideTooltip()
 
@@ -257,7 +258,7 @@ export class Crosshair<Datum> extends XYComponentCore<Datum, CrosshairConfigInte
     this.hide(event)
   }
 
-  _showTooltip (datum: Datum, xValue: number, pos: [number, number], nearestDatumIndex: number | undefined): void {
+  _showTooltip (datum: Datum | undefined, xValue: number, pos: [number, number], nearestDatumIndex: number | undefined): void {
     const { config, datamodel } = this
     const tooltip = config.tooltip ?? this.tooltip
     if (!tooltip || !pos) return

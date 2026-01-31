@@ -13,7 +13,7 @@ import { getImportStatements, kebabCase, getConfigSummary } from '@unovis/shared
 // Component Code
 import { getComponentCode } from './component'
 
-const skipProperties = ['width', 'height']
+const skipProperties = ['width', 'height', 'renderIntoProvidedDomNode']
 const components = getComponentList() as SvelteComponentInput[]
 
 const exports: string[] = []
@@ -30,6 +30,7 @@ for (const component of components) {
     component.dataType,
     isStandAlone ? kebabCase(component.name) : component.elementSuffix,
     isStandAlone,
+    component.renderIntoProvidedDomNode,
     component.svelteStyles
   )
 
@@ -41,7 +42,7 @@ for (const component of components) {
 
   exec(`mkdir ${pathComponentBase}`, () => {
     writeFileSync(pathComponent, componentCode)
-    exec(`npx eslint ${pathComponent} --fix`)
+    exec(`pnpm exec eslint ${pathComponent} --fix`)
   })
 
   exports.push(`export { default as Vis${component.name} } from './${path}/${file}'`)

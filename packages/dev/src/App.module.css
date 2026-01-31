@@ -24,7 +24,7 @@ body.theme-dark {
 }
 
 body.theme-dark select, body.theme-dark input {
-  background-color: var(--color-grey);
+  background-color: transparent;
 }
 
 textarea:focus, input:focus, input[type]:focus, .uneditable-input:focus {

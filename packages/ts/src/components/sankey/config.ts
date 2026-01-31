@@ -1,3 +1,5 @@
+import { D3ZoomEvent } from 'd3-zoom'
+
 // Config
 import { ComponentConfigInterface, ComponentDefaultConfig } from 'core/component/config'
 
@@ -8,6 +10,8 @@ import { getNumber } from 'utils/data'
 import { ColorAccessor, GenericAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
 import { TrimMode, VerticalAlign, FitMode } from 'types/text'
 import { Position } from 'types/position'
+import { Spacing } from 'types/spacing'
+
 import {
   SankeyInputLink,
   SankeyInputNode,
@@ -17,6 +21,7 @@ import {
   SankeyEnterTransitionType,
   SankeyLink,
   SankeyNode,
+  SankeyZoomMode,
 } from './types'
 
 export interface SankeyConfigInterface<N extends SankeyInputNode, L extends SankeyInputLink> extends ComponentConfigInterface {
@@ -25,6 +30,16 @@ export interface SankeyConfigInterface<N extends SankeyInputNode, L extends Sank
   id?: (d: SankeyInputNode | SankeyInputLink, i: number, ...any: unknown[]) => string;
   /** Coefficient to scale the height of the diagram when the amount of links is low: `C * links.length`, clamped to `[height / 2, height]`. Default: `1/16` */
   heightNormalizationCoeff?: number;
+  /** Horizontal and vertical scale factor applied to the computed layout (column spacing). Keeps node width intact. Default: `undefined` */
+  zoomScale?: [number, number];
+  /** Pan offset in pixels. Default: `undefined` */
+  zoomPan?: [number, number];
+  /** Enable interactive zoom/pan behavior. Default: `true` */
+  enableZoom?: boolean;
+  /** Allowed interactive zoom scale extent. Default: `[1, 5]` */
+  zoomExtent?: [number, number];
+  /** Zoom interaction mode. Default: `SankeyZoomMode.XY` */
+  zoomMode?: SankeyZoomMode | string;
   /** Type of animation on removing nodes. Default: `ExitTransitionType.Default` */
   exitTransitionType?: SankeyExitTransitionType;
   /** Type of animation on creating nodes. Default: `EnterTransitionType.Default` */
@@ -102,10 +117,14 @@ export interface SankeyConfigInterface<N extends SankeyInputNode, L extends Sank
   labelVerticalAlign?: VerticalAlign | string;
   /** Label background */
   labelBackground?: boolean;
-  /** Label fit mode (wrap or trim). Default: `FitMode.TRIM` **/
+  /** Label fit mode (wrap or trim). Default: `FitMode.Trim` **/
   labelFit?: FitMode;
   /** Maximum label with in pixels. Default: `70` */
   labelMaxWidth?: number;
+  /** Whether to take the available space for the label. This property is used only if `labelMaxWidth` is not provided. Default: `false` */
+  labelMaxWidthTakeAvailableSpace?: boolean;
+  /** Tolerance for the available space for the label. This property is used only if `labelMaxWidthTakeAvailableSpace` is `true`. Default: `undefined` (use label and sub-label font sizes) */
+  labelMaxWidthTakeAvailableSpaceTolerance?: number;
   /** Expand trimmed label on hover. Default: `true` */
   labelExpandTrimmedOnHover?: boolean;
   /** Label trimming mode. Default: `TrimMode.Middle` */
@@ -114,6 +133,8 @@ export interface SankeyConfigInterface<N extends SankeyInputNode, L extends Sank
   labelFontSize?: number;
   /** Label text separators for wrapping. Default: `[' ', '-']` */
   labelTextSeparator?: string[];
+  /** Label text decoration. Default: `undefined` */
+  labelTextDecoration?: StringAccessor<SankeyNode<N, L>>;
   /** Force break words to fit long labels. Default: `true` */
   labelForceWordBreak?: boolean;
   /** Label color. Default: `undefined` */
@@ -128,16 +149,33 @@ export interface SankeyConfigInterface<N extends SankeyInputNode, L extends Sank
   subLabelColor?: ColorAccessor<SankeyNode<N, L>>;
   /** Sub-label position. Default: `SankeySubLabelPlacement.Below` */
   subLabelPlacement?: SankeySubLabelPlacement | string;
+  /** Sub-label text decoration. Default: `undefined` */
+  subLabelTextDecoration?: StringAccessor<SankeyNode<N, L>>;
   /**
    * Sub-label to label width ratio when `subLabelPlacement` is set to `SankeySubLabelPlacement.Inline`
    * Default: `0.4`, which means that 40% of `labelMaxWidth` will be given to sub-label, and 60% to the main label.
   */
   subLabelToLabelInlineWidthRatio?: number;
+
+  // Events
+  /** Zoom event callback. Default: `undefined` */
+  onZoom?: (horizontalScale: number, verticalScale: number, panX: number, panY: number, zoomExtent: [number, number], event: D3ZoomEvent<SVGGElement, unknown> | undefined) => void;
+  /** Callback function to be called when the graph layout is calculated. Default: `undefined` */
+  onLayoutCalculated?: (nodes: SankeyNode<N, L>[], links: SankeyLink<N, L>[], depth: number, width: number, height: number, bleed: Spacing) => void;
+
+  // Misc
+  /** Set selected nodes by unique id. Default: `undefined` */
+  selectedNodeIds?: string[];
 }
 
 export const SankeyDefaultConfig: SankeyConfigInterface<SankeyInputNode, SankeyInputLink> = ({
   ...ComponentDefaultConfig,
   heightNormalizationCoeff: 1 / 16,
+  zoomScale: undefined,
+  zoomPan: undefined,
+  enableZoom: false,
+  zoomExtent: [1, 5] as [number, number],
+  zoomMode: SankeyZoomMode.Y,
   exitTransitionType: SankeyExitTransitionType.Default,
   enterTransitionType: SankeyEnterTransitionType.Default,
   id: (d: SankeyInputNode, i: number) => (d as { _id: string })._id ?? `${i}`,
@@ -163,13 +201,16 @@ export const SankeyDefaultConfig: SankeyConfigInterface<SankeyInputNode, SankeyI
   labelVerticalAlign: VerticalAlign.Middle,
   labelBackground: false,
   labelTextSeparator: [' ', '-'],
+  labelTextDecoration: undefined,
   labelFit: FitMode.Trim,
   labelTrimMode: TrimMode.Middle,
   labelForceWordBreak: true,
   labelFontSize: undefined,
   labelCursor: undefined,
   labelColor: undefined,
-  labelMaxWidth: 70,
+  labelMaxWidth: undefined,
+  labelMaxWidthTakeAvailableSpace: false,
+  labelMaxWidthTakeAvailableSpaceTolerance: undefined,
   labelExpandTrimmedOnHover: true,
   labelVisibility: undefined,
   subLabel: undefined,
@@ -177,9 +218,13 @@ export const SankeyDefaultConfig: SankeyConfigInterface<SankeyInputNode, SankeyI
   subLabelColor: undefined,
   subLabelPlacement: SankeySubLabelPlacement.Below,
   subLabelToLabelInlineWidthRatio: 0.4,
+  subLabelTextDecoration: undefined,
   linkValue: (d: SankeyInputNode) => (d as { value: number }).value,
   linkColor: (d: SankeyInputNode) => (d as { color: string }).color,
   linkCursor: undefined,
+  onZoom: undefined,
+  onLayoutCalculated: undefined,
+  selectedNodeIds: undefined,
 
   // https://stackoverflow.com/a/21648197/2040291
   init: function () {

@@ -50,13 +50,6 @@ export class Annotations extends ComponentCore<unknown[], AnnotationsConfigInter
     // Content
     annotationsEnter.append('g').attr('class', s.annotationContent)
 
-    // Subject
-    const subject = annotationsEnter.append('g')
-      .attr('class', s.annotationSubject)
-
-    subject.append('circle')
-    subject.append('line')
-
     const annotationsMerged = annotationsEnter.merge(annotations)
       .attr('cursor', d => d?.cursor)
       .each((annotation, i, elements) => {
@@ -70,10 +63,25 @@ export class Annotations extends ComponentCore<unknown[], AnnotationsConfigInter
 
           const contentGroupElement = select(elements[i]).select<SVGGElement>(`.${s.annotationContent}`)
           renderTextIntoFrame(contentGroupElement.node(), content, options)
+
+          // Render debug bounding boxes showing the frame (x, y, width, height)
+          contentGroupElement.selectAll(`.${s.debugBoundingBox}`).remove()
+          if (config.renderTextBoundingBoxes) {
+            const debugWidth = width ?? 100
+            const debugHeight = height || 0.1
+            contentGroupElement.append('rect')
+              .attr('class', s.debugBoundingBox)
+              .attr('x', x)
+              .attr('y', y)
+              .attr('width', debugWidth)
+              .attr('height', debugHeight)
+          }
         }
 
         if (annotation.subject) {
           requestAnimationFrame(() => this._renderSubject(elements[i], annotation.subject))
+        } else {
+          select(elements[i]).select(`.${s.annotationSubject}`).remove()
         }
       })
 
@@ -90,8 +98,16 @@ export class Annotations extends ComponentCore<unknown[], AnnotationsConfigInter
     annotationGroupElement: SVGElement,
     subject: AnnotationSubject | undefined
   ): void {
-    const contentGroup = select(annotationGroupElement).select<SVGGElement>(`.${s.annotationContent}`)
-    const subjectGroup = select(annotationGroupElement).select<SVGGElement>(`.${s.annotationSubject}`)
+    const annotationGroup = select(annotationGroupElement)
+    const contentGroup = annotationGroup.select<SVGGElement>(`.${s.annotationContent}`)
+
+    // Create subject group if it doesn't exist
+    let subjectGroup = annotationGroup.select<SVGGElement>(`.${s.annotationSubject}`)
+    if (subjectGroup.empty()) {
+      subjectGroup = annotationGroup.append('g').attr('class', s.annotationSubject)
+      subjectGroup.append('circle')
+      subjectGroup.append('line')
+    }
 
     const subjectX: number | null = parseUnit(typeof subject?.x === 'function' ? subject.x() : subject?.x, this._width) ?? null
     const subjectY: number | null = parseUnit(typeof subject?.y === 'function' ? subject.y() : subject?.y, this._height) ?? null
@@ -121,7 +137,6 @@ export class Annotations extends ComponentCore<unknown[], AnnotationsConfigInter
     const y1 = subjectY + Math.sin(angle * Math.PI / 180) * (subjectRadius + padding)
 
     subjectGroup.select('circle')
-      .attr('visibility', subject ? null : 'hidden')
       .attr('cx', subjectX)
       .attr('cy', subjectY)
       .attr('r', subjectRadius)
@@ -130,7 +145,6 @@ export class Annotations extends ComponentCore<unknown[], AnnotationsConfigInter
       .style('stroke-dasharray', subjectStrokeDasharray)
 
     subjectGroup.select('line')
-      .attr('visibility', subject ? null : 'hidden')
       .attr('x1', x1)
       .attr('y1', y1)
       .attr('x2', x1)

@@ -817,6 +817,7 @@ public zoomIn (increment: number)
 public zoomOut (increment: number)
 public setZoom (zoomLevel: number)
 public fitView ()
+public fitViewToBounds (xExtent?: [number, number], yExtent?: [number, number], duration?: number, alignment?: GraphFitViewAlignment)
 ```
 If you use React or Angular, you can access the component instance for calling these methods by using [`useRef`](https://react.dev/reference/react/useRef) or
 [`ViewChild`](https://angular.io/api/core/ViewChild) respectively.

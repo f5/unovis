@@ -69,3 +69,9 @@ export function brighter (inputColor: string, amount: number): string {
   if (!c) return inputColor
   return c.brighter(amount).formatHex()
 }
+
+export function isColorDark (color: string, threshold = 0.55): boolean {
+  const hex = getHexValue(color, document.body)
+  if (!hex) return false
+  return hexToBrightness(hex) < threshold
+}

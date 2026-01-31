@@ -47,6 +47,16 @@ export function linkPath ({ x0, x1, y0, y1, width }: LinkPathOptions): string {
   `
 }
 
+export function getLinkPathOptions<N extends SankeyInputNode, L extends SankeyInputLink> (d: SankeyLink<N, L>): LinkPathOptions {
+  return {
+    x0: d.source.x1,
+    x1: d.target.x0,
+    y0: d.y0,
+    y1: d.y1,
+    width: Math.max(1, d.width),
+  }
+}
+
 export type LinkAnimState = { x0: number; x1: number; y0: number; y1: number; width: number }
 
 export interface LinkElement extends SVGPathElement {
@@ -58,13 +68,7 @@ export function createLinks<N extends SankeyInputNode, L extends SankeyInputLink
 ): void {
   sel.append('path').attr('class', s.linkPath)
     .attr('d', (d: SankeyLink<N, L>, i: number, el: ArrayLike<LinkElement>) => {
-      el[i]._animState = {
-        x0: d.source.x1,
-        x1: d.target.x0,
-        y0: d.y0,
-        y1: d.y1,
-        width: Math.max(1, d.width),
-      }
+      el[i]._animState = getLinkPathOptions(d)
       return linkPath(el[i]._animState)
     })
   sel.append('path').attr('class', s.linkSelectionHelper)
@@ -89,13 +93,8 @@ export function updateLinks<N extends SankeyInputNode, L extends SankeyInputLink
     (selectionTransition as Transition<SVGPathElement, SankeyLink<N, L>, SVGGElement, unknown>)
       .attrTween('d', (d: SankeyLink<N, L>, i: number, el: ArrayLike<LinkElement>) => {
         const previous = el[i]._animState
-        const next = {
-          x0: d.source.x1,
-          x1: d.target.x0,
-          y0: d.y0,
-          y1: d.y1,
-          width: Math.max(1, d.width),
-        }
+        const next = getLinkPathOptions(d)
+
         const interpolator = {
           x0: interpolateNumber(previous.x0, next.x0),
           x1: interpolateNumber(previous.x1, next.x1),
@@ -103,26 +102,26 @@ export function updateLinks<N extends SankeyInputNode, L extends SankeyInputLink
           y1: interpolateNumber(previous.y1, next.y1),
           width: interpolateNumber(previous.width, next.width),
         }
-        el[i]._animState = next
 
         return function (t: number) {
-          return linkPath({
+          const currentPathOptions = {
             x0: interpolator.x0(t),
             x1: interpolator.x1(t),
             y0: interpolator.y0(t),
             y1: interpolator.y1(t),
             width: interpolator.width(t),
-          })
+          }
+
+          el[i]._animState = currentPathOptions
+          return linkPath(currentPathOptions)
         }
       })
   } else {
-    linkSelection.attr('d', (d: SankeyLink<N, L>) => linkPath({
-      x0: d.source.x1,
-      x1: d.target.x0,
-      y0: d.y0,
-      y1: d.y1,
-      width: Math.max(1, d.width),
-    }))
+    linkSelection.attr('d', (d: SankeyLink<N, L>, i: number, el: ArrayLike<LinkElement>) => {
+      el[i]._animState = getLinkPathOptions(d)
+
+      return linkPath(el[i]._animState)
+    })
   }
 
   sel.select(`.${s.linkSelectionHelper}`)

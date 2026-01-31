@@ -4,5 +4,6 @@ export type FreeBrushSelectionInPixels = FreeBrushSelection
 export enum FreeBrushMode {
   X = 'x',
   Y = 'y',
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   XY = 'xy',
 }

@@ -117,20 +117,25 @@ export const component = (): React.ReactElement => {
             },
           }}
           tileColor={(node: TreemapNode<TreemapExampleDatum>) => {
+            const isLeafNode = !!node.data.datum
             const datum = node.data.datum as TreemapExampleDatum | undefined
+
             if (clickedNode) {
               // If this is the clicked node, use its group color
-              if (datum && datum.name === clickedNode.name) {
+              if (isLeafNode && datum?.name === clickedNode.name) {
                 const entry = groupColorMap.find(g => g.key === datum.group)
-                return entry ? entry.value : '#008877'
+                return entry?.value
               }
               // Otherwise, grey out: lighter for internal nodes, darker for leaves
               return node.children ? '#eee' : '#ddd'
             } else {
               // No selection: use group color as before
               const group = datum ? datum.group : node.data.key
-              const entry = groupColorMap.find(g => g.key === group)
-              return entry ? entry.value : '#008877'
+              if (node.depth === 1) {
+                return groupColorMap.find(g => g.key === group)?.value
+              }
+
+              return undefined
             }
           }}
         />

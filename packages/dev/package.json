@@ -1,7 +1,7 @@
 {
   "name": "@unovis/dev",
   "version": "1.6.1",
-  "packageManager": "npm@10.9.1",
+  "packageManager": "pnpm@10.23.0",
   "main": "index.js",
   "license": "Apache-2.0",
   "scripts": {
@@ -9,7 +9,7 @@
     "dev": "webpack-dev-server --host 0.0.0.0",
     "serve": "serve dist -s -p 9501",
     "check": "tsc --noEmit",
-    "test": "npx percy exec -- cypress run"
+    "test": "percy exec -- cypress run"
   },
   "devDependencies": {
     "@percy/cli": "^1.29.1",
@@ -28,18 +28,21 @@
     "typescript-plugin-css-modules": "^4.1.1",
     "webpack": "^5.75.0",
     "webpack-cli": "^5.0.1",
-    "webpack-dev-server": "^4.11.1"
+    "webpack-dev-server": "^5.2.1",
+    "style-loader": "^3.3.4",
+    "css-loader": "^6.7.3"
   },
   "dependencies": {
-    "@unovis/react": "*",
+    "@unovis/react": "workspace:*",
+    "@unovis/ts": "workspace:*",
     "fuse.js": "^6.6.2",
     "react": "^19",
     "react-dom": "^19",
     "react-router-dom": "^6.4.5",
     "seedrandom": "^3.0.5",
-    "serve": "^14.2.3"
-  },
-  "peerDependencies": {
-    "@unovis/ts": "*"
+    "serve": "^14.2.3",
+    "@emotion/css": "^11.13.0",
+    "d3-array": "^3.2.0",
+    "d3-format": "^3.1.0"
   }
 }

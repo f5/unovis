@@ -1,8 +1,8 @@
 {
   "name": "@unovis/solid",
   "description": "Modular data visualization framework for React, Angular, Svelte, Vue, Solid and vanilla TypeScript or JavaScript",
-  "version": "1.6.1",
-  "packageManager": "npm@10.9.1",
+  "version": "1.6.4",
+  "packageManager": "pnpm@10.23.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/f5/unovis.git",
@@ -32,14 +32,16 @@
     "lint": "eslint src --ext .ts,.tsx",
     "build": "vite build; rm -rf dist/.cache; cp LICENSE README.md package.json ./dist",
     "publish:dist": "cd ./dist; npm publish",
-    "generate": "tsx autogen/index.ts && npm run lint -- --fix",
+    "generate": "tsx autogen/index.ts && pnpm run lint --fix",
     "gallery": "vite"
   },
   "peerDependencies": {
-    "@unovis/ts": "1.6.1",
+    "@unovis/ts": "1.6.4",
     "solid-js": "^1.9.0"
   },
   "devDependencies": {
+    "@unovis/ts": "workspace:*",
+    "@unovis/shared": "workspace:*",
     "eslint-plugin-solid": "^0.13.2",
     "rollup": "^4.24.2",
     "solid-js": "^1.9.3",

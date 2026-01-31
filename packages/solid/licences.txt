@@ -1,12 +1,13 @@
 name                 license period  license type  installed version  author
 ----                 --------------  ------------  -----------------  ------
+@unovis/shared       perpetual       Apache-2.0    1.6.2              Nikita Rokotyan, F5 Inc. <nikita@f5.com> (https://rokotyan.com)
 eslint-plugin-solid  perpetual       MIT           0.13.2             Josh Wilson <joshwilsonvu@gmail.com>
-rollup               perpetual       MIT           4.38.0             Rich Harris
-solid-js             perpetual       MIT           1.9.4              Ryan Carniato
+rollup               perpetual       MIT           4.57.0             Rich Harris
+solid-js             perpetual       MIT           1.9.11             Ryan Carniato
 tslib                perpetual       0BSD          2.8.1              Microsoft Corp.
-tsx                  perpetual       MIT           4.19.2             Hiroki Osame hiroki.osame@gmail.com
+tsx                  perpetual       MIT           4.21.0             Hiroki Osame hiroki.osame@gmail.com
 typescript           perpetual       Apache-2.0    5.6.3              Microsoft Corp.
-vite                 perpetual       MIT           6.2.4              Evan You
-vite-plugin-dts      perpetual       MIT           3.6.0              qmhc
-vite-plugin-solid    perpetual       MIT           2.10.2             Alexandre Mouton-Brady <amoutonbrady@gmail.com>
-solid-js             perpetual       MIT           1.9.4              Ryan Carniato
+vite                 perpetual       MIT           6.4.1              Evan You
+vite-plugin-dts      perpetual       MIT           3.9.1              qmhc
+vite-plugin-solid    perpetual       MIT           2.11.10            Alexandre Mouton-Brady <amoutonbrady@gmail.com>
+solid-js             perpetual       MIT           1.9.11             Ryan Carniato

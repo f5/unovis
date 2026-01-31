@@ -1,0 +1,522 @@
+---
+description: Learn how to add labels to XY chart data points
+---
+
+import React from 'react'
+import BrowserOnly from '@docusaurus/BrowserOnly'
+import CodeBlock from '@theme/CodeBlock'
+import Details from "@theme/Details"
+import { PropsTable } from '@site/src/components/PropsTable'
+import { XYWrapper } from '../wrappers'
+import { XYLabels } from '@unovis/ts'
+
+export const sampleData = [
+  { x: 1, y: 3, label: 'Q1', color: '#6366F1' },
+  { x: 2, y: 7, label: 'Q2', color: '#8B5CF6' },
+  { x: 3, y: 5, label: 'Q3', color: '#06B6D4' },
+  { x: 4, y: 10, label: 'Q4', color: '#10B981' },
+  { x: 5, y: 4, label: 'Q5', color: '#F59E0B' },
+  { x: 6, y: 2, label: 'Q6', color: '#EF4444' },
+  { x: 7, y: 8, label: 'Q7', color: '#EC4899' },
+  { x: 8, y: 6, label: 'Q8', color: '#84CC16' },
+]
+
+export const xyLabelsProps = () => ({
+  name: 'XYLabels',
+  configKey: 'xyLabels',
+  data: sampleData,
+  containerName: 'XYContainer',
+  height: 350,
+})
+
+export const events = {
+  [XYLabels.selectors.label]: {
+    click: (d) => {
+      console.log('Label clicked:', d)
+    },
+    mouseover: (d) => {
+      console.log('Label hovered:', d)
+    },
+    mouseleave: (d) => {
+      console.log('Label unhovered:', d)
+    }
+  },
+  [XYLabels.selectors.cluster]: {
+    click: (cluster) => {
+      console.log('Cluster clicked:', cluster)
+    },
+    mouseover: (cluster) => {
+      console.log('Cluster hovered:', cluster)
+    }
+  }
+}
+
+The _XYLabels_ component allows you to add text labels directly onto your XY charts at specific data coordinates. 
+
+## Basic Configuration
+Get started with just two required properties - `x`, `y` accessors and an optional `label` function.
+<XYWrapper
+  {...xyLabelsProps()}
+  containerProps={{
+    xDomain: [0, 9],
+    yDomain: [0, 12]
+  }}
+  components={[
+    { name: 'Axis', props: { type: 'x', gridLine: true }, key: 'xAxis' },
+    { name: 'Axis', props: { type: 'y', gridLine: true }, key: 'yAxis' },
+    { name: 'Line', props: { x: d => d.x, y: d => d.y, color: '#6366F1', strokeWidth: 3 }, key: 'line' },
+    { name: 'XYLabels', props: { x: d => d.x, y: d => d.y, label: d => d.label, color: '#374151', backgroundColor: 'rgba(255, 255, 255, 0.9)' }, key: 'xyLabels' },
+  ]}
+/>
+
+```ts
+// Basic configuration
+const xyLabels = new XYLabels({
+  x: d => d.x,
+  y: d => d.y,
+  label: d => d.label
+})
+```
+
+## Label Content
+The `label` property accepts a string accessor function that determines what text to display for each data point.
+
+<XYWrapper
+  {...xyLabelsProps()}
+  containerProps={{
+    xDomain: [0, 9],
+    yDomain: [0, 12]
+  }}
+  components={[
+    { name: 'Axis', props: { type: 'x', gridLine: true }, key: 'xAxis' },
+    { name: 'Axis', props: { type: 'y', gridLine: true }, key: 'yAxis' },
+    { name: 'Area', props: { x: d => d.x, y: d => d.y, color: '#8B5CF6', opacity: 0.3 }, key: 'area' },
+    { name: 'Line', props: { x: d => d.x, y: d => d.y, color: '#8B5CF6', strokeWidth: 2 }, key: 'line' },
+    { name: 'XYLabels', props: { x: d => d.x, y: d => d.y, label: d => `${d.label}: ${d.y}`, color: '#374151', backgroundColor: 'rgba(255, 255, 255, 0.95)' }, key: 'xyLabels' },
+  ]}
+/>
+
+```ts
+// Custom label content
+label: d => `${d.label}: ${d.y}`
+```
+
+## Positioning
+XYLabels supports three different positioning modes through the `xPositioning` and `yPositioning` properties:
+
+### Data Space Positioning (Default)
+By default, labels are positioned in data space, meaning their coordinates correspond to data values. This is ideal when you want labels to move with your data:
+
+<XYWrapper
+  {...xyLabelsProps()}
+  containerProps={{
+    xDomain: [0, 9],
+    yDomain: [0, 12]
+  }}
+  components={[
+    { name: 'Axis', props: { type: 'x', gridLine: true }, key: 'xAxis' },
+    { name: 'Axis', props: { type: 'y', gridLine: true }, key: 'yAxis' },
+    { name: 'Area', props: { x: d => d.x, y: d => d.y, color: '#06B6D4', opacity: 0.2 }, key: 'area' },
+    { name: 'Line', props: { x: d => d.x, y: d => d.y, color: '#06B6D4', strokeWidth: 2 }, key: 'line' },
+    { name: 'XYLabels', props: { 
+      x: d => d.x, 
+      y: d => d.y + 0.8, // Offset labels above data points
+      label: d => d.label,
+      xPositioning: 'data_space',
+      yPositioning: 'data_space',
+      color: '#0F172A',
+      backgroundColor: 'rgba(255, 255, 255, 0.9)'
+    }, key: 'xyLabels' },
+  ]}
+/>
+
+```ts
+// Data space positioning (default)
+xPositioning: XYLabelPositioning.DataSpace,
+yPositioning: XYLabelPositioning.DataSpace
+```
+
+### Absolute Pixel Positioning
+Position labels using absolute pixel coordinates from the top-left corner of the chart area:
+
+<XYWrapper
+  {...xyLabelsProps()}
+  data={[
+    { x: 0, y: 0, label: 'Top Left' },
+    { x: 250, y: 0, label: 'Top Right' },
+    { x: 125, y: 150, label: 'Center' },
+    { x: 0, y: 300, label: 'Bottom Left' },
+    { x: 250, y: 300, label: 'Bottom Right' }
+  ]}
+  containerProps={{
+    xDomain: [0, 9],
+    yDomain: [0, 12]
+  }}
+  components={[
+    { name: 'Axis', props: { type: 'x', gridLine: true }, key: 'xAxis' },
+    { name: 'Axis', props: { type: 'y', gridLine: true }, key: 'yAxis' },
+    { name: 'Area', props: { x: d => d.x, y: d => d.y, color: '#10B981', opacity: 0.15 }, key: 'area', data: sampleData },
+    { name: 'Line', props: { x: d => d.x, y: d => d.y, color: '#10B981', strokeWidth: 2 }, key: 'line', data: sampleData },
+    { name: 'XYLabels', props: { 
+      x: d => d.x, 
+      y: d => d.y,
+      label: d => d.label,
+      xPositioning: 'absolute_px',
+      yPositioning: 'absolute_px',
+      color: '#065F46',
+      backgroundColor: 'rgba(255, 255, 255, 0.95)'
+    }, key: 'xyLabels' },
+  ]}
+/>
+
+```ts
+// Absolute pixel positioning
+xPositioning: XYLabelPositioning.AbsolutePx,
+yPositioning: XYLabelPositioning.AbsolutePx,
+x: 100, // 100 pixels from left
+y: 50   // 50 pixels from top
+```
+
+### Absolute Percentage Positioning
+Position labels using percentage coordinates (0-100) relative to the chart container dimensions:
+
+<XYWrapper
+  {...xyLabelsProps()}
+  data={[
+    { x: 10, y: 10, label: '10%, 10%' },
+    { x: 90, y: 10, label: '90%, 10%' },
+    { x: 50, y: 50, label: '50%, 50%' },
+    { x: 20, y: 80, label: '20%, 80%' },
+    { x: 80, y: 80, label: '80%, 80%' }
+  ]}
+  containerProps={{
+    xDomain: [0, 9],
+    yDomain: [0, 12]
+  }}
+  components={[
+    { name: 'Axis', props: { type: 'x', gridLine: true }, key: 'xAxis' },
+    { name: 'Axis', props: { type: 'y', gridLine: true }, key: 'yAxis' },
+    { name: 'Area', props: { x: d => d.x, y: d => d.y, color: '#F59E0B', opacity: 0.15 }, key: 'area', data: sampleData },
+    { name: 'Line', props: { x: d => d.x, y: d => d.y, color: '#F59E0B', strokeWidth: 2 }, key: 'line', data: sampleData },
+    { name: 'XYLabels', props: { 
+      x: d => d.x, 
+      y: d => d.y,
+      label: d => d.label,
+      xPositioning: 'absolute_percentage',
+      yPositioning: 'absolute_percentage',
+      color: '#92400E',
+      backgroundColor: 'rgba(255, 255, 255, 0.95)'
+    }, key: 'xyLabels' },
+  ]}
+/>
+
+```ts
+// Absolute percentage positioning
+xPositioning: XYLabelPositioning.AbsolutePercentage,
+yPositioning: XYLabelPositioning.AbsolutePercentage,
+x: 75, // 75% from left edge
+y: 25  // 25% from top edge
+```
+
+### Mixed Positioning
+You can mix different positioning modes for x and y coordinates:
+
+```ts
+// Mix data space with screen space
+xPositioning: XYLabelPositioning.DataSpace,      // Follow data horizontally
+yPositioning: XYLabelPositioning.AbsolutePx,     // Fixed vertical position
+y: 20 // Always 20px from top
+```
+
+## Styling
+
+### Label Color
+Control label text color with the `color` property. You can use dynamic colors based on your data:
+
+<XYWrapper
+  {...xyLabelsProps()}
+  containerProps={{
+    xDomain: [0, 9],
+    yDomain: [0, 12]
+  }}
+  components={[
+    { name: 'Axis', props: { type: 'x', gridLine: true }, key: 'xAxis' },
+    { name: 'Axis', props: { type: 'y', gridLine: true }, key: 'yAxis' },
+    { name: 'Line', props: { x: d => d.x, y: d => d.y, color: '#E5E7EB', strokeWidth: 1 }, key: 'line' },
+    { name: 'XYLabels', props: { 
+      x: d => d.x, 
+      y: d => d.y + 0.5,
+      label: d => d.label,
+      color: d => d.color,
+      backgroundColor: 'rgba(255, 255, 255, 0.9)'
+    }, key: 'xyLabels' },
+  ]}
+/>
+
+### Background Color
+Add background colors to make labels more readable, especially over complex visualizations:
+
+<XYWrapper
+  {...xyLabelsProps()}
+  containerProps={{
+    xDomain: [0, 9],
+    yDomain: [0, 12]
+  }}
+  components={[
+    { name: 'Axis', props: { type: 'x', gridLine: true }, key: 'xAxis' },
+    { name: 'Axis', props: { type: 'y', gridLine: true }, key: 'yAxis' },
+    { name: 'Area', props: { x: d => d.x, y: d => d.y, color: '#8B5CF6', opacity: 0.3 }, key: 'area' },
+    { name: 'Line', props: { x: d => d.x, y: d => d.y, color: '#8B5CF6', strokeWidth: 2 }, key: 'line' },
+    { name: 'XYLabels', props: { 
+      x: d => d.x, 
+      y: d => d.y,
+      label: d => d.label,
+      backgroundColor: 'rgba(255, 255, 255, 0.95)',
+      color: '#374151'
+    }, key: 'xyLabels' },
+  ]}
+/>
+
+### Font Size
+Customize label font size with the `labelFontSize` property. You can make it dynamic based on data values:
+
+<XYWrapper
+  {...xyLabelsProps()}
+  containerProps={{
+    xDomain: [0, 9],
+    yDomain: [0, 12]
+  }}
+  components={[
+    { name: 'Axis', props: { type: 'x', gridLine: true }, key: 'xAxis' },
+    { name: 'Axis', props: { type: 'y', gridLine: true }, key: 'yAxis' },
+    { name: 'Area', props: { x: d => d.x, y: d => d.y, color: '#EC4899', opacity: 0.2 }, key: 'area' },
+    { name: 'Line', props: { x: d => d.x, y: d => d.y, color: '#EC4899', strokeWidth: 2 }, key: 'line' },
+    { name: 'XYLabels', props: { 
+      x: d => d.x, 
+      y: d => d.y + 0.6,
+      label: d => d.label,
+      labelFontSize: d => d.y > 6 ? 16 : 12,
+      color: '#831843',
+      backgroundColor: 'rgba(255, 255, 255, 0.9)'
+    }, key: 'xyLabels' },
+  ]}
+/>
+
+## Label Clustering
+When labels overlap, XYLabels can automatically cluster them to reduce visual clutter. This feature is enabled by default and is particularly useful for dense datasets.
+
+### Enabling/Disabling Clustering
+Control clustering with the `clustering` property. When enabled, overlapping labels are automatically grouped together to reduce visual clutter. Toggle the checkbox below to see the difference:
+
+export const ClusteringExample = () => {
+  const [clusteringEnabled, setClusteringEnabled] = React.useState(true);
+  
+  const overlappingData = [
+    // Cluster 1: Multiple Q1 entries at same location
+    { x: 2, y: 5, label: 'Q1-A', color: '#6366F1' },
+    { x: 2.05, y: 5.05, label: 'Q1-B', color: '#4F46E5' },
+    { x: 1.95, y: 4.95, label: 'Q1-C', color: '#5B21B6' },
+    
+    // Cluster 2: Multiple Q2 entries at same location  
+    { x: 6, y: 8, label: 'Q2-A', color: '#8B5CF6' },
+    { x: 6.1, y: 8.1, label: 'Q2-B', color: '#7C3AED' },
+    { x: 5.9, y: 7.9, label: 'Q2-C', color: '#6D28D9' },
+    { x: 6.05, y: 8.05, label: 'Q2-D', color: '#5B21B6' },
+    
+    // Isolated entries (no clustering needed)
+    { x: 7, y: 6, label: 'Q4', color: '#F59E0B' },
+    { x: 8, y: 2, label: 'Q5', color: '#EF4444' }
+  ];
+
+  return (
+    <BrowserOnly fallback={<div>Loading...</div>}>
+      {() => {
+        const { VisXYContainer, VisArea, VisLine, VisAxis, VisXYLabels } = require('@unovis/react')
+        return (
+          <div>
+            <div style={{ position: 'relative' }}>
+              <div style={{
+                padding: '8px 12px', 
+                backgroundColor: 'rgba(248, 250, 252, 0.95)', 
+                borderRadius: '6px', 
+                border: '1px solid #e2e8f0',
+                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+              }}>
+                <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', fontSize: '13px', fontWeight: '500', margin: 0 }}>
+                  <input
+                    type="checkbox"
+                    checked={clusteringEnabled}
+                    onChange={(e) => setClusteringEnabled(e.target.checked)}
+                    style={{ marginRight: '6px', transform: 'scale(1.1)' }}
+                  />
+                  Enable Clustering
+                </label>
+              </div>
+              
+              <VisXYContainer data={overlappingData} height={350} xDomain={[0, 8]} yDomain={[0, 10]}>
+                <VisAxis type='x' gridLine />
+                <VisAxis type='y' gridLine />
+                <VisArea data={sampleData} x={d => d.x} y={d => d.y} color='#6366F1' opacity={0.1} />
+                <VisLine data={sampleData} x={d => d.x} y={d => d.y} color='#6366F1' strokeWidth={1} opacity={0.3} />
+                <VisXYLabels 
+                  x={d => d.x} 
+                  y={d => d.y}
+                  label={d => d.label}
+                  color={d => d.color}
+                  clustering={clusteringEnabled}
+                  clusterLabel={records => `${records.length} items`}
+                  clusterBackgroundColor={clusteringEnabled ? 'rgba(255, 255, 255, 0.9)' : undefined}
+                  clusterLabelColor={clusteringEnabled ? '#374151' : undefined}
+                  backgroundColor='rgba(255, 255, 255, 0.9)'
+                  cursor='pointer'
+                />
+              </VisXYContainer>
+            </div>
+          </div>
+        )
+      }}
+    </BrowserOnly>
+  );
+};
+
+<ClusteringExample />
+
+```ts
+// Enable/disable clustering programmatically
+const xyLabels = new XYLabels({
+  x: d => d.x,
+  y: d => d.y,
+  label: d => d.label,
+  clustering: true, // Set to false to disable clustering
+  
+  // Optional: Customize cluster appearance when clustering is enabled
+  clusterLabel: (records) => `${records.length} items`,
+  clusterBackgroundColor: 'rgba(132, 204, 22, 0.2)',
+  clusterLabelColor: '#365314'
+})
+```
+
+### Cluster Customization
+Customize cluster appearance with cluster-specific properties:
+
+```ts
+// Cluster configuration
+clusterLabel: (records) => `${records.length} items`,
+clusterFontSize: 14,
+clusterBackgroundColor: 'rgba(59, 130, 246, 0.1)',
+clusterLabelColor: '#1E40AF'
+```
+
+<XYWrapper
+  {...xyLabelsProps()}
+  data={[
+    { x: 2, y: 5, label: 'Revenue A' }, { x: 2.1, y: 5.1, label: 'Revenue B' }, { x: 2.2, y: 5.2, label: 'Revenue C' },
+    { x: 6, y: 8, label: 'Profit D' }, { x: 6.1, y: 8.1, label: 'Profit E' }, { x: 6.2, y: 8.2, label: 'Profit F' }
+  ]}
+  containerProps={{
+    xDomain: [0, 8],
+    yDomain: [0, 10]
+  }}
+  components={[
+    { name: 'Axis', props: { type: 'x', gridLine: true }, key: 'xAxis' },
+    { name: 'Axis', props: { type: 'y', gridLine: true }, key: 'yAxis' },
+    { name: 'Area', props: { x: d => d.x, y: d => d.y, color: '#3B82F6', opacity: 0.15 }, key: 'area', data: sampleData },
+    { name: 'Line', props: { x: d => d.x, y: d => d.y, color: '#3B82F6', strokeWidth: 2 }, key: 'line', data: sampleData },
+    { name: 'XYLabels', props: { 
+      x: d => d.x, 
+      y: d => d.y,
+      label: d => d.label,
+      clustering: true,
+      clusterLabel: records => `${records.length} metrics`,
+      clusterBackgroundColor: 'rgba(59, 130, 246, 0.1)',
+      clusterLabelColor: '#1E40AF',
+      color: '#1E40AF',
+      backgroundColor: 'rgba(255, 255, 255, 0.95)'
+    }, key: 'xyLabels' },
+  ]}
+/>
+
+## Events
+The XYLabels component supports interactive events on both individual labels and clusters. Available selectors:
+
+- `XYLabels.selectors.label` - Events for individual labels
+- `XYLabels.selectors.cluster` - Events for label clusters (when clustering is enabled)
+
+```ts
+import { XYLabels } from '@unovis/ts'
+
+const events = {
+  [XYLabels.selectors.label]: {
+    click: (d: Datum) => alert(`Clicked: ${d.label}`),
+    mouseover: (d: Datum) => console.log('Label hovered:', d),
+    mouseleave: (d: Datum) => console.log('Label unhovered:', d)
+  },
+  [XYLabels.selectors.cluster]: {
+    click: (cluster: XYLabel<Datum>[]) => {
+      const labels = cluster.map(d => d.label).join(', ')
+      alert(`Cluster clicked! Contains: ${labels}`)
+    },
+    mouseover: (cluster: XYLabel<Datum>[]) => {
+      console.log('Cluster hovered:', cluster.length, 'labels')
+    }
+  }
+}
+```
+
+### Interactive Labels
+Click on any label below to see event handling in action:
+
+<XYWrapper
+  {...xyLabelsProps()}
+  containerProps={{
+    xDomain: [0, 9],
+    yDomain: [0, 12]
+  }}
+  components={[
+    { name: 'Axis', props: { type: 'x', gridLine: true }, key: 'xAxis' },
+    { name: 'Axis', props: { type: 'y', gridLine: true }, key: 'yAxis' },
+    { name: 'Area', props: { x: d => d.x, y: d => d.y, color: '#3B82F6', opacity: 0.2 }, key: 'area' },
+    { name: 'Line', props: { x: d => d.x, y: d => d.y, color: '#3B82F6', strokeWidth: 2 }, key: 'line' },
+    { name: 'XYLabels', props: { 
+      x: d => d.x, 
+      y: d => d.y + 0.5,
+      label: d => d.label,
+      color: '#1E40AF',
+      backgroundColor: 'rgba(255, 255, 255, 0.95)',
+      cursor: 'pointer',
+      events: {...events}
+    }, key: 'xyLabels' },
+  ]}
+  events={{}}
+/>
+
+## CSS Variables
+The following CSS variables can be used to customize the default appearance:
+
+```css
+/* Label styling */
+--vis-xy-label-font-size: 12px;
+--vis-xy-label-font-family: var(--vis-font-family);
+--vis-xy-label-text-color: #000;
+--vis-xy-label-background-fill-color: none;
+--vis-xy-label-background-stroke-color: none;
+--vis-xy-label-background-stroke-width: 0;
+--vis-xy-label-padding: 4px;
+
+/* Cluster styling */
+--vis-xy-label-cluster-font-size: 14px;
+--vis-xy-label-cluster-text-color: #000;
+--vis-xy-label-cluster-background-fill-color: #f0f0f0;
+--vis-xy-label-cluster-background-stroke-color: #ccc;
+--vis-xy-label-cluster-background-stroke-width: 1px;
+--vis-xy-label-cluster-padding: 6px;
+
+/* Dark theme overrides */
+--vis-dark-xy-label-text-color: #fff;
+--vis-dark-xy-label-cluster-text-color: #fff;
+--vis-dark-xy-label-cluster-background-fill-color: #333;
+--vis-dark-xy-label-cluster-background-stroke-color: #666;
+```
+
+## Component Props
+<PropsTable name='VisXYLabels'/>

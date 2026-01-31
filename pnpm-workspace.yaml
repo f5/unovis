@@ -1,0 +1,10 @@
+packages:
+  - packages/ts
+  - packages/angular
+  - packages/react
+  - packages/svelte
+  - packages/vue
+  - packages/solid
+  - packages/shared
+  - packages/dev
+  - packages/website

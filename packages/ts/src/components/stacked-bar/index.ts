@@ -126,28 +126,32 @@ export class StackedBar<Datum> extends XYComponentCore<Datum, StackedBarConfigIn
     // Render Bars
     const bars = barGroupsMerged
       .selectAll<SVGPathElement, StackedBarDataRecord<Datum>>(`.${s.bar}`)
-      .data((d, j) => stacked.map((s, stackIndex) =>
-        ({
-          ...d,
-          _index: j,
-          _stacked: s[j],
-          // Ending bar if the next stack is not the same as the current one
-          _ending: (stackIndex === stacked.length - 1) ||
-            ((stackIndex <= stacked.length - 1) && stacked[stackIndex + 1][j][0] !== s[j][1]),
-        }))
+      .data(
+        (d, j) => stacked
+          .map((s, i) => ({
+            datum: d,
+            index: j,
+            stacked: s[j],
+            stackIndex: i,
+            // Ending bar if the next stack is not the same as the current one
+            isEnding: (i === stacked.length - 1) ||
+              ((i <= stacked.length - 1) && stacked[i + 1][j][0] !== s[j][1]),
+          }))
+          .filter(d => d.stacked[0] !== d.stacked[1]), // Skip zero-height bars
+        d => d.stackIndex // Key function for proper transitions
       )
 
     const barsEnter = bars.enter().append('path')
       .attr('class', s.bar)
-      .attr('d', (d, j) => this._getBarPath(d, j, true))
-      .style('fill', (d, j) => getColor(d, config.color, j))
+      .attr('d', d => this._getBarPath(d, true))
+      .style('fill', d => getColor(d.datum, config.color, d.stackIndex))
 
     const barsMerged = barsEnter.merge(bars)
 
     smartTransition(barsMerged, duration)
-      .attr('d', (d, j) => this._getBarPath(d, j))
-      .style('fill', (d, j) => getColor(d, config.color, j))
-      .style('cursor', (d, j) => getString(d, config.cursor, j))
+      .attr('d', d => this._getBarPath(d))
+      .style('fill', d => getColor(d.datum, config.color, d.stackIndex))
+      .style('cursor', d => getString(d.datum, config.cursor, d.stackIndex))
 
     smartTransition(bars.exit(), duration)
       .style('opacity', 0)
@@ -203,19 +207,19 @@ export class StackedBar<Datum> extends XYComponentCore<Datum, StackedBarConfigIn
     return filtered
   }
 
-  _getBarPath (d: StackedBarDataRecord<Datum>, accessorIndex: number, isEntering = false): string {
+  _getBarPath (d: StackedBarDataRecord<Datum>, isEntering = false): string {
     const { config } = this
     const yAccessors = this.getAccessors()
     const barWidth = this._getBarWidth()
 
-    const isNegative = d._stacked[1] < 0
-    const isEnding = d._ending // The most top bar or, if the value is negative, the most bottom bar
-    const value = getNumber(d, yAccessors[accessorIndex], d._index)
-    const height = isEntering ? 0 : Math.abs(this.valueScale(d._stacked[0]) - this.valueScale(d._stacked[1]))
+    const isNegative = d.stacked[1] < 0
+    const isEnding = d.isEnding // The most top bar or, if the value is negative, the most bottom bar
+    const value = getNumber(d.datum, yAccessors[d.stackIndex], d.index)
+    const height = isEntering ? 0 : Math.abs(this.valueScale(d.stacked[0]) - this.valueScale(d.stacked[1]))
     const h = !isEntering && config.barMinHeight1Px && (height < 1) && isFinite(value) && (value !== config.barMinHeightZeroValue) ? 1 : height
     const y = isEntering
       ? this.valueScale(0)
-      : this.valueScale(isNegative ? d._stacked[0] : d._stacked[1]) - (height < 1 && config.barMinHeight1Px ? 1 : 0)
+      : this.valueScale(isNegative ? d.stacked[0] : d.stacked[1]) - (height < 1 && config.barMinHeight1Px ? 1 : 0)
 
     const x = -barWidth / 2
     const width = barWidth

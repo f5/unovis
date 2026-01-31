@@ -1,16 +1,17 @@
 import { Selection } from 'd3-selection'
 
 // Utils
-import { estimateTextSize, trimSVGText, wrapSVGText } from 'utils/text'
-import { smartTransition } from 'utils/d3'
-import { getString, getValue } from 'utils/data'
+import { estimateStringPixelLength, estimateTextSize, trimSVGText, wrapSVGText } from 'utils/text'
+import { clamp, getString, getValue } from 'utils/data'
 import { getColor } from 'utils/color'
 import { getCSSVariableValueInPixels } from 'utils/misc'
+import { cssvar } from 'utils/style'
 
 // Types
 import { GenericAccessor } from 'types/accessor'
 import { FitMode, VerticalAlign } from 'types/text'
 import { Position } from 'types/position'
+import { Spacing } from 'types/spacing'
 
 // Local Types
 import { SankeyInputLink, SankeyInputNode, SankeyNode, SankeySubLabelPlacement } from '../types'
@@ -21,9 +22,39 @@ import { SankeyConfigInterface } from '../config'
 // Styles
 import * as s from '../style'
 
+export const SANKEY_LABEL_SPACING = 10
+export const SANKEY_LABEL_BLOCK_PADDING = 6.5
 
-const NODE_LABEL_SPACING = 10
-const LABEL_BLOCK_PADDING = 6.5
+export function getLabelFontSize<N extends SankeyInputNode, L extends SankeyInputLink> (
+  config: SankeyConfigInterface<N, L>,
+  context: SVGElement
+): number {
+  return config.labelFontSize ?? getCSSVariableValueInPixels(cssvar(s.variables.sankeyNodeLabelFontSize), context)
+}
+
+export function getSubLabelFontSize<N extends SankeyInputNode, L extends SankeyInputLink> (
+  config: SankeyConfigInterface<N, L>,
+  context: SVGElement
+): number {
+  return config.subLabelFontSize ?? getCSSVariableValueInPixels(cssvar(s.variables.sankeyNodeSublabelFontSize), context)
+}
+
+export function estimateRequiredLabelWidth<N extends SankeyInputNode, L extends SankeyInputLink> (
+  d: SankeyNode<N, L>,
+  config: SankeyConfigInterface<N, L>,
+  labelFontSize: number,
+  subLabelFontSize: number
+): number {
+  const labelAddWidth = 2 // Adding a few pixels for the label background to look more aligned
+  const inlineLabelAddWidth = 8 // Without this, the label anf sub-label will look too close to each other
+  const tolerance = 1.1
+  const isSublabelInline = config.subLabelPlacement === SankeySubLabelPlacement.Inline
+  const labelText = `${getString(d, config.label) ?? ''}` // Stringify because theoretically it can be a number
+  const sublabelText = `${getString(d, config.subLabel) ?? ''}` // Stringify because theoretically it can be a number
+  const labelTextWidth = tolerance * estimateStringPixelLength(labelText, labelFontSize)
+  const sublabelTextWidth = tolerance * estimateStringPixelLength(sublabelText, subLabelFontSize)
+  return isSublabelInline ? inlineLabelAddWidth + (labelTextWidth + sublabelTextWidth) : labelAddWidth + Math.max(labelTextWidth, sublabelTextWidth)
+}
 
 function getLabelBackground (
   width: number,
@@ -63,17 +94,10 @@ export function getLabelOrientation<N extends SankeyInputNode, L extends SankeyI
 ): (Position.Left | Position.Right) {
   let orientation = getValue(d, labelPosition)
   if (orientation === Position.Auto || !orientation) {
-    orientation = d.x0 < sankeyWidth / 2 ? Position.Left : Position.Right
+    orientation = d.x1 < sankeyWidth / 2 ? Position.Left : Position.Right
   }
 
   return orientation as (Position.Left | Position.Right)
-}
-
-export const requiredLabelSpace = (labelWidth: number, labelFontSize: number): { width: number; height: number } => {
-  return {
-    height: labelFontSize * 2.5 + 2 * LABEL_BLOCK_PADDING, // Assuming 2.5 lines per label
-    width: labelWidth + 2 * NODE_LABEL_SPACING + 2 * LABEL_BLOCK_PADDING,
-  }
 }
 
 export function getLabelGroupXTranslate<N extends SankeyInputNode, L extends SankeyInputLink> (
@@ -83,10 +107,10 @@ export function getLabelGroupXTranslate<N extends SankeyInputNode, L extends San
 ): number {
   const orientation = getLabelOrientation(d, width, config.labelPosition)
   switch (orientation) {
-    case Position.Right: return config.nodeWidth + NODE_LABEL_SPACING
+    case Position.Right: return config.nodeWidth + SANKEY_LABEL_SPACING
     case Position.Left:
     default:
-      return -NODE_LABEL_SPACING
+      return -SANKEY_LABEL_SPACING
   }
 }
 
@@ -135,18 +159,41 @@ export function getSubLabelTextAnchor<N extends SankeyInputNode, L extends Sanke
   }
 }
 
+export function getLabelMaxWidth<N extends SankeyInputNode, L extends SankeyInputLink> (
+  d: SankeyNode<N, L>,
+  config: SankeyConfigInterface<N, L>,
+  labelOrientation: Position.Left | Position.Right,
+  layerSpacing: number,
+  sankeyMaxLayer: number,
+  bleed: Spacing
+): number {
+  const labelHorizontalPadding = 2 * SANKEY_LABEL_SPACING + 2 * SANKEY_LABEL_BLOCK_PADDING
+
+  if (d.layer === 0 && labelOrientation === Position.Left) {
+    return bleed.left - labelHorizontalPadding
+  }
+  if (d.layer === sankeyMaxLayer && labelOrientation === Position.Right) {
+    return bleed.right - labelHorizontalPadding
+  }
+
+  return clamp(layerSpacing - labelHorizontalPadding, 0, config.labelMaxWidth ?? Infinity)
+}
+
 export function renderLabel<N extends SankeyInputNode, L extends SankeyInputLink> (
   labelGroup: Selection<SVGGElement, SankeyNode<N, L>, SVGGElement, any>,
   d: SankeyNode<N, L>,
   config: SankeyConfigInterface<N, L>,
   width: number,
   duration: number,
+  layerSpacing: number | undefined,
+  sankeyMaxLayer: number,
+  bleed: Spacing,
   forceExpand = false
 ): { x: number; y: number; width: number; height: number; layer: number; selection: any; hidden?: boolean } {
   const labelTextSelection: Selection<SVGTextElement, SankeyNode<N, L>, SVGGElement, SankeyNode<N, L>> = labelGroup.select(`.${s.label}`)
   const labelShowBackground = config.labelBackground || forceExpand
   const sublabelTextSelection: Selection<SVGTextElement, SankeyNode<N, L>, SVGGElement, SankeyNode<N, L>> = labelGroup.select(`.${s.sublabel}`)
-  const labelPadding = labelShowBackground ? LABEL_BLOCK_PADDING : 0
+  const labelPadding = labelShowBackground ? SANKEY_LABEL_BLOCK_PADDING : 0
   const isSublabelInline = config.subLabelPlacement === SankeySubLabelPlacement.Inline
   const separator = config.labelForceWordBreak ? '' : config.labelTextSeparator
   const fastEstimatesMode = true // Fast but inaccurate
@@ -158,8 +205,8 @@ export function renderLabel<N extends SankeyInputNode, L extends SankeyInputLink
   const sublabelText = getString(d, config.subLabel)
   let wasTrimmed = false
 
-  const labelFontSize = config.labelFontSize ?? getCSSVariableValueInPixels('var(--vis-sankey-node-label-font-size)', labelGroup.node())
-  const subLabelFontSize = config.subLabelFontSize ?? getCSSVariableValueInPixels('var(--vis-sankey-node-sublabel-font-size)', labelGroup.node())
+  const labelFontSize = getLabelFontSize(config, labelGroup.node())
+  const subLabelFontSize = getSubLabelFontSize(config, labelGroup.node())
 
   // Render the main label, wrap / trim it and estimate its size
   const labelsFontSizeDifference = sublabelText ? labelFontSize - subLabelFontSize : 0
@@ -167,18 +214,22 @@ export function renderLabel<N extends SankeyInputNode, L extends SankeyInputLink
   labelTextSelection
     .text(labelText)
     .attr('font-size', labelFontSize)
+    .style('text-decoration', getString(d, config.labelTextDecoration))
     .style('fill', getColor(d, config.labelColor))
     .attr('transform', `translate(${labelOrientationMult * labelPadding},${labelTranslateY})`)
     .style('cursor', (d: SankeyNode<N, L>) => getString(d, config.labelCursor))
 
-  const labelMaxWidth = isSublabelInline ? config.labelMaxWidth * (1 - (sublabelText ? config.subLabelToLabelInlineWidthRatio : 0)) : config.labelMaxWidth
-  if (config.labelFit === FitMode.Wrap || forceExpand) wrapSVGText(labelTextSelection, labelMaxWidth, separator)
-  else wasTrimmed = trimSVGText(labelTextSelection, labelMaxWidth, config.labelTrimMode, fastEstimatesMode, labelFontSize, fontWidthToHeightRatio)
+  const labelMaxWidth = getLabelMaxWidth(d, config, labelOrientation, layerSpacing, sankeyMaxLayer, bleed)
+  const labelWrapTrimWidth = isSublabelInline
+    ? labelMaxWidth * (1 - (sublabelText ? config.subLabelToLabelInlineWidthRatio : 0))
+    : labelMaxWidth
+  if (config.labelFit === FitMode.Wrap || forceExpand) wrapSVGText(labelTextSelection, labelWrapTrimWidth, separator)
+  else wasTrimmed = trimSVGText(labelTextSelection, labelWrapTrimWidth, config.labelTrimMode, fastEstimatesMode, labelFontSize, fontWidthToHeightRatio)
 
   const labelSize = estimateTextSize(labelTextSelection, labelFontSize, dy, fastEstimatesMode, fontWidthToHeightRatio)
 
   // Render the sub-label, wrap / trim it and estimate its size
-  const sublabelTranslateX = labelOrientationMult * (labelPadding + (isSublabelInline ? config.labelMaxWidth : 0))
+  const sublabelTranslateX = labelOrientationMult * (labelPadding + (isSublabelInline ? labelMaxWidth : 0))
   const sublabelMarginTop = 0
   const sublabelTranslateY = labelPadding + (isSublabelInline
     ? (labelsFontSizeDifference > 0 ? 0.6 * labelsFontSizeDifference : 0)
@@ -186,13 +237,14 @@ export function renderLabel<N extends SankeyInputNode, L extends SankeyInputLink
   sublabelTextSelection
     .text(sublabelText)
     .attr('font-size', subLabelFontSize)
+    .style('text-decoration', getString(d, config.subLabelTextDecoration))
     .style('fill', getColor(d, config.subLabelColor))
     .attr('transform', `translate(${sublabelTranslateX},${sublabelTranslateY})`)
     .style('cursor', (d: SankeyNode<N, L>) => getString(d, config.labelCursor))
 
-  const sublabelMaxWidth = isSublabelInline ? config.labelMaxWidth * config.subLabelToLabelInlineWidthRatio : config.labelMaxWidth
+  const sublabelMaxWidth = isSublabelInline ? labelMaxWidth * config.subLabelToLabelInlineWidthRatio : labelMaxWidth
   if (config.labelFit === FitMode.Wrap || forceExpand) wrapSVGText(sublabelTextSelection, sublabelMaxWidth, separator)
-  else wasTrimmed = wasTrimmed || trimSVGText(sublabelTextSelection, sublabelMaxWidth, config.labelTrimMode, fastEstimatesMode, subLabelFontSize, fontWidthToHeightRatio)
+  else wasTrimmed = trimSVGText(sublabelTextSelection, sublabelMaxWidth, config.labelTrimMode, fastEstimatesMode, subLabelFontSize, fontWidthToHeightRatio) || wasTrimmed
 
   labelGroup.classed(s.labelTrimmed, wasTrimmed)
   const sublabelSize = estimateTextSize(sublabelTextSelection, subLabelFontSize, dy, fastEstimatesMode, fontWidthToHeightRatio)
@@ -202,7 +254,11 @@ export function renderLabel<N extends SankeyInputNode, L extends SankeyInputLink
   const labelBackground = labelGroup.select(`.${s.labelBackground}`)
 
   labelBackground
-    .attr('d', labelShowBackground ? getLabelBackground(config.labelMaxWidth + 2 * labelPadding, labelGroupHeight, labelOrientation as (Position.Left | Position.Right)) : null)
+    .attr('d', () => {
+      if (!labelShowBackground) return null
+      const requiredLabelWidth = estimateRequiredLabelWidth(d, config, labelFontSize, subLabelFontSize)
+      return getLabelBackground(Math.min(labelMaxWidth, requiredLabelWidth) + 2 * labelPadding, labelGroupHeight, labelOrientation as (Position.Left | Position.Right))
+    })
 
   // Position the label
   const labelTextAnchor = getLabelTextAnchor(d, config, width)
@@ -213,14 +269,12 @@ export function renderLabel<N extends SankeyInputNode, L extends SankeyInputLink
   labelTextSelection.attr('text-anchor', labelTextAnchor)
   sublabelTextSelection.attr('text-anchor', sublabelTextAnchor)
 
-  const hasTransform = !!labelGroup.attr('transform')
-  smartTransition(labelGroup, hasTransform ? duration : 0)
-    .attr('transform', `translate(${xTranslate},${yTranslate})`)
+  labelGroup.attr('transform', `translate(${xTranslate},${yTranslate})`)
 
   return {
     x: d.x0 + xTranslate,
     y: d.y0 + yTranslate,
-    width: config.labelMaxWidth,
+    width: labelMaxWidth,
     height: labelGroupHeight,
     layer: d.layer,
     selection: labelGroup,

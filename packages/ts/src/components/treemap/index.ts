@@ -3,15 +3,30 @@ import { hierarchy, HierarchyNode, treemap } from 'd3-hierarchy'
 import { group, max, extent } from 'd3-array'
 import { scaleLinear, scaleThreshold } from 'd3-scale'
 import { hsl } from 'd3-color'
+
+// Core
 import { ComponentCore } from 'core/component'
+
+// Data Model
 import { SeriesDataModel } from 'data-models/series'
-import { getColor, brighter, getHexValue } from 'utils/color'
-import { getString, getNumber, isNumber } from 'utils/data'
+
+// Utils
+import { getColor, brighter, getHexValue, isColorDark } from 'utils/color'
+import { getString, getNumber, isNumber, isFunction } from 'utils/data'
 import { smartTransition } from 'utils/d3'
-import { trimSVGText } from 'utils/text'
-import { TrimMode } from 'types/text'
+import { trimSVGText, wrapSVGText } from 'utils/text'
+import { cssvar } from 'utils/style'
+
+// Types
+import { FitMode } from 'types/text'
+
+// Config
 import { TreemapConfigInterface, TreemapDefaultConfig } from './config'
+
+// Local Types
 import { TreemapDatum, TreemapNode } from './types'
+
+// Styles
 import * as s from './style'
 
 export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterface<Datum>> {
@@ -19,31 +34,8 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
   protected _defaultConfig = TreemapDefaultConfig as TreemapConfigInterface<Datum>
   public config: TreemapConfigInterface<Datum> = this._defaultConfig
 
-  /** Default number format for tile labels. */
-  private _defaultNumberFormat (value: number): string {
-    return `${value}`
-  }
-
   datamodel: SeriesDataModel<Datum> = new SeriesDataModel()
   tiles: Selection<SVGGElement, unknown, SVGGElement, unknown>
-
-  private _isTileLargeEnough (d: TreemapNode<Datum>): boolean {
-    const w = d.x1 - d.x0
-    const h = d.y1 - d.y0
-    return (w >= this.config.minTileSizeForLabel) && (h >= this.config.minTileSizeForLabel)
-  }
-
-  private _getTileLightness (node: TreemapNode<Datum>, siblings: TreemapNode<Datum>[]): number {
-    // Get the value extent of the sibling group
-    const [minValue, maxValue] = extent(siblings, d => d.value)
-
-    // If there's no range or no value, return default lightness
-    if (minValue === maxValue || !node.value) return 0
-
-    // Calculate relative position in the range (0 to 1)
-    // Larger values will be closer to 0 (darker)
-    return this.config.lightnessVariationAmount * ((maxValue - node.value) / (maxValue - minValue))
-  }
 
   constructor (config?: TreemapConfigInterface<Datum>) {
     super()
@@ -54,8 +46,6 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
   _render (customDuration?: number): void {
     super._render(customDuration)
     const { config, datamodel: { data }, _width, _height } = this
-    const { numberFormat } = config
-    const formatNumber = numberFormat ?? this._defaultNumberFormat.bind(this)
     const duration = isNumber(customDuration) ? customDuration : config.duration
 
     if (!config.layers?.length) {
@@ -78,7 +68,7 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
 
     // Compute the aggregation
     if (config.value) {
-      rootNode.sum(index => typeof index === 'number' && getNumber(data[index], config.value, index))
+      rootNode.sum(index => isNumber(index) && getNumber(data[index], config.value, index))
     } else {
       rootNode.count()
     }
@@ -123,6 +113,7 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
       }
 
       node.data = treemapDatum
+      node.topLevelParent = this._getTopLevelParent(node)
     })
 
     const descendants = treemapData.descendants()
@@ -151,163 +142,203 @@ export class Treemap<Datum> extends ComponentCore<Datum[], TreemapConfigInterfac
         config.tileLabelLargeFontSize,
       ])
 
-    // First pass: Set base colors without considering tileColor config
-    treemapData.eachBefore((node) => {
-      // Get base color: user accessor or default
-      let color = config.tileColor
-        ? getColor(node, config.tileColor)
-        : getColor(node, undefined, node.parent?.children?.indexOf(node), node.depth !== 1)
+    const visibleTiles = descendants.filter(d => d.depth > 0)
+    const firstLevelTiles = visibleTiles.filter(d => d.depth === 1)
+    const nonFirstLevelTiles = visibleTiles.filter(d => d.depth > 1)
 
-      // Fallback to parent color if needed
-      color = color ?? (node.parent as TreemapNode<Datum>)?._fill
-
-      const hexColor = color ? getHexValue(color, this.g.node()) : null
-
-      if (hexColor) {
-        const hslColor = hsl(hexColor)
-
-        // Lightness adjustment for siblings (if enabled)
-        if (config.enableLightnessVariance && !node.children && node.parent) {
-          const siblings = node.parent.children
-          const lightnessAdjustment = this._getTileLightness(node, siblings)
-          hslColor.l = Math.min(1, hslColor.l + lightnessAdjustment)
-        }
-
-        // Brightness increase for depth
-        node._fill = brighter(hslColor.toString(), brightnessIncrease(node.depth))
-      } else {
-        node._fill = null
-      }
+    // Set the fill color for the first level tiles
+    firstLevelTiles.forEach((d, i) => {
+      d._fill = getColor(d, config.tileColor, i)
     })
 
-    // Render tiles
-    const visibleNodes = descendants.filter(d => d.depth > 0)
-    const tiles = this.tiles
-      .selectAll<SVGGElement, TreemapNode<Datum>>(`g.${s.tileGroup}`)
-      .data(visibleNodes, d => `${d.data.key}-${d.depth}`)
+    // Set the fill color for the non-first level tiles
+    nonFirstLevelTiles.forEach((d, i) => {
+      const providedColor = getColor(d, config.tileColor, i, true)
+      if (providedColor) {
+        d._fill = providedColor
+        return
+      }
 
-    const tilesEnter = tiles
-      .enter()
+      const hslColor = hsl(getHexValue(d.parent?._fill, this.element))
+
+      if (config.enableLightnessVariance && !d.children && d.parent) {
+        const siblings = d.parent.children
+        const lightnessAdjustment = this._getTileLightness(d, siblings)
+        hslColor.l = Math.min(1, hslColor.l + lightnessAdjustment)
+      }
+
+      d._fill = brighter(hslColor.toString(), brightnessIncrease(d.depth))
+    })
+
+
+    /* Render tiles */
+    const tiles = this.tiles
+      .selectAll<SVGGElement, TreemapNode<Datum>>(`g.${s.tileGroup}:not(.${s.tileExiting})`)
+      .data(visibleTiles, d => `${d.data.key}-${d.depth}`)
+
+    const tilesEnter = tiles.enter()
       .append('g')
       .attr('class', s.tileGroup)
 
-    // Computes the rect border radius for a given tile.
-    // The rx and ry values are the minimum of the tile
-    // border radius and some fraction the width of the tile,
-    // based on the tileBorderRadiusFactor config.
-    // This ensures that the tile border radius is not
-    // larger than the tile size, which makes small tiles
-    // look better.
-    const rx = (d: TreemapNode<Datum>): number =>
-      Math.min(config.tileBorderRadius, (d.x1 - d.x0) * config.tileBorderRadiusFactor)
+    // Add clipPath elements
+    tilesEnter
+      .append('clipPath')
+      .append('rect')
+      .attr('rx', d => this._getTileBorderRadius(d))
+      .attr('ry', d => this._getTileBorderRadius(d))
 
     // Tile rectangles
-    tilesEnter
+    const tileEnterRects = tilesEnter
       .append('rect')
       .classed(s.tile, true)
-
-      // Make the leaf tiles clickable if a click handler is provided
       .classed(s.clickableTile, d => config.showTileClickAffordance && !d.children)
-
-      .attr('rx', rx)
-      .attr('ry', rx)
-      // Initialize tile positions so that the initial transition is smooth
+      .attr('rx', d => this._getTileBorderRadius(d))
+      .attr('ry', d => this._getTileBorderRadius(d))
       .attr('x', d => d.x0)
       .attr('y', d => d.y0)
-      .attr('width', d => d.x1 - d.x0)
-      .attr('height', d => d.y1 - d.y0)
-      .style('fill', d => d._fill ?? getColor(d, config.tileColor))
+      .attr('width', this._getTileWidth)
+      .attr('height', this._getTileHeight)
+      .style('fill', d => d._fill)
       .style('opacity', 0)
       .style('cursor', config.showTileClickAffordance ? d => !d.children ? 'pointer' : null : null)
 
-
-    const mergedTiles = tiles.merge(tilesEnter)
-
-    smartTransition(mergedTiles.select(`rect.${s.tile}`), duration)
-      .style('fill', d => d._fill ?? getColor(d, config.tileColor))
-      .style('opacity', 1)
-      .attr('x', d => d.x0)
-      .attr('y', d => d.y0)
-      .attr('width', d => d.x1 - d.x0)
-      .attr('height', d => d.y1 - d.y0)
-
-    // Update clipPath rects
-    let svg: Element | null = this.g.node()
-    while (svg && !(svg instanceof SVGSVGElement)) svg = svg.parentElement
-    const defs = svg ? (select(svg).select('defs').empty() ? select(svg).append('defs') : select(svg).select('defs')) : null
-    if (!defs) return
-    const defsSelection = (defs as Selection<SVGDefsElement, unknown, null, undefined>)
-    const clipPaths = defsSelection.selectAll<SVGClipPathElement, TreemapNode<Datum>>('clipPath')
-      .data(visibleNodes, (d: TreemapNode<Datum>) => d._id)
-
-    clipPaths.enter()
-      .append('clipPath')
-      .attr('id', (d: TreemapNode<Datum>) => `clip-${d._id}`)
-      .append('rect')
-      .attr('x', (d: TreemapNode<Datum>) => d.x0)
-      .attr('y', (d: TreemapNode<Datum>) => d.y0)
-      .attr('width', (d: TreemapNode<Datum>) => Math.max(0.1, d.x1 - d.x0))
-      .attr('height', (d: TreemapNode<Datum>) => Math.max(0.1, d.y1 - d.y0))
-      .attr('rx', rx)
-      .attr('ry', rx)
-
-    clipPaths.exit().remove()
+    if (config.tileShowHtmlTooltip) tileEnterRects.append('title')
 
     tilesEnter
       .append('g')
       .attr('class', s.labelGroup)
       .attr('transform', d => `translate(${d.x0 + config.labelOffsetX},${d.y0 + config.labelOffsetY})`)
+      .style('opacity', 0)
       .append('text')
       .attr('class', s.label)
       .attr('x', 0)
       .attr('y', 0)
-      .style('opacity', 0)
 
-    const getTileLabel = config.tileLabel ?? ((d: TreemapNode<Datum>) => `${d.data.key}: ${formatNumber(d.value)}`)
-    const textSelection = mergedTiles.selectAll<SVGTextElement, TreemapNode<Datum>>(`g.${s.labelGroup} text`)
-    textSelection
-      .text(d => getTileLabel(d))
-      .style('font-size', function (d) {
-        const sqrtVal = Math.sqrt(d.value ?? 0)
-        return config.enableTileLabelFontSizeVariation && !d.children
-          ? `${fontSizeScale(sqrtVal)}px`
-          : `${fontSizeScale.range()[1]}px`
-      })
-      .attr('dominant-baseline', 'middle')
+    /* Update */
+    const tilesMerged = tiles.merge(tilesEnter)
 
-    // Trim label and set dominant-baseline for tspans in one pass
-    textSelection.each((d, i, nodes) => {
-      const text = select(nodes[i] as SVGTextElement)
-      const tileWidth = d.x1 - d.x0 - (config.labelOffsetX ?? 0) * 2
-      const fullLabel = text.text()
-      let fontSize = parseFloat(text.style('font-size'))
-      if (!fontSize) {
-        fontSize = parseFloat(window.getComputedStyle(nodes[i] as SVGTextElement).fontSize)
-      }
-      trimSVGText(text, tileWidth, TrimMode.End, true, fontSize)
-      text.attr('title', fullLabel)
-      text.selectAll('tspan').attr('dominant-baseline', 'middle')
-    })
+    // Update clipPath elements
+    tilesMerged.select<SVGClipPathElement>('clipPath')
+      .attr('id', d => `clip-${this.uid}-${d._id}`)
 
-    // Transition group position
-    smartTransition(mergedTiles.select(`g.${s.labelGroup}`), duration)
+    tilesMerged.select('clipPath rect')
+      .attr('width', d => Math.max(this._getTileWidth(d) - 2 * config.labelOffsetX, 0))
+      .attr('height', d => Math.max(this._getTileHeight(d) - 2 * config.labelOffsetY, 0))
+
+    const tileRectsMerged = tilesMerged.select(`rect.${s.tile}`)
+    smartTransition(tileRectsMerged, duration)
+      .style('fill', d => d._fill)
+      .style('opacity', 1)
+      .attr('x', d => d.x0)
+      .attr('y', d => d.y0)
+      .attr('width', this._getTileWidth)
+      .attr('height', this._getTileHeight)
+
+    const tileTitlesMerged = tileRectsMerged.select('title')
+    if (config.tileShowHtmlTooltip) tileTitlesMerged.text(d => config.tileLabel(d))
+    else tileTitlesMerged.remove()
+
+    // Apply clip-path to labels
+    const labelGroupsMerged = tilesMerged.select<SVGGElement>(`g.${s.labelGroup}`)
+      .attr('clip-path', d => `url(#clip-${this.uid}-${d._id})`)
+
+    // Transition group position and text opacity (fade-in)
+    smartTransition(labelGroupsMerged, duration)
       .attr('transform', d => `translate(${d.x0 + config.labelOffsetX},${d.y0 + config.labelOffsetY})`)
-
-    // Transition text opacity only (fade-in)
-    smartTransition(mergedTiles.select(`g.${s.labelGroup} text`), duration)
       .style('opacity', 1)
 
-    // Hide labels that don't meet criteria
-    mergedTiles.select(`text.${s.label}`)
-      .style('display', d => {
-        const isAllowedNode = config.labelInternalNodes ? true : !d.children
-        return isAllowedNode && this._isTileLargeEnough(d) ? null : 'none'
+    const textSelection = tilesMerged.select<SVGTextElement>(`g.${s.labelGroup} text`)
+    textSelection
+      .text(d => {
+        const shouldShowLabel = config.labelInternalNodes ? true : !d.children
+        const isLargeEnough = this._isTileLargeEnough(d)
+        return (shouldShowLabel && isLargeEnough && isFunction(config.tileLabel)) ? config.tileLabel(d) : null
       })
-      // Make the internal labels semibold via class
-      .attr('class', d => d.children ? `${s.label} ${s.internalLabel}` : s.label)
+      .property('font-size-px', d => {
+        const sqrtVal = Math.sqrt(d.value ?? 0)
+        return config.enableTileLabelFontSizeVariation && !d.children
+          ? fontSizeScale(sqrtVal)
+          : null // Use the default css variable value
+      })
+      .style('font-size', (_, i, els) => `${select(els[i]).property('font-size-px')}px`)
+      .style('fill', d => cssvar(
+        isColorDark(d._fill) ? s.variables.treemapLabelTextColorLight : s.variables.treemapLabelTextColor)
+      )
 
-    smartTransition(tiles.exit(), duration)
+    // Fit label (wrap or trim)
+    textSelection.each((d, i, els) => {
+      const isLeafNode = !d.children
+      const el = els[i] as SVGTextElement
+      if (!el.textContent) return
+
+      const text = select(el)
+      const maxLabelWidth = d.x1 - d.x0 - (config.labelOffsetX ?? 0) * 2
+      const fontSize = parseFloat(text.property('font-size-px')) || parseFloat(window.getComputedStyle(el).fontSize)
+
+      if (config.labelFit === FitMode.Wrap && isLeafNode) {
+        wrapSVGText(text, maxLabelWidth)
+      } else {
+        trimSVGText(text, maxLabelWidth, config.labelTrimMode, true, fontSize)
+      }
+    })
+
+    // Make the internal labels semibold via class
+    tilesMerged.select(`text.${s.label}`)
+      .classed(s.internalLabel, d => !!d.children)
+
+    /* Exit */
+    const tilesExit = tiles.exit()
+      .classed(s.tileExiting, true)
+
+    smartTransition(tilesExit, duration)
       .style('opacity', 0)
       .remove()
+  }
+
+  private _isTileLargeEnough (d: TreemapNode<Datum>): boolean {
+    const w = this._getTileWidth(d)
+    const h = this._getTileHeight(d)
+    return (w >= this.config.minTileSizeForLabel) && (h >= this.config.minTileSizeForLabel)
+  }
+
+  private _getTopLevelParent (node: TreemapNode<Datum>): TreemapNode<Datum> | undefined {
+    if (node.depth === 1) return node
+    if (node.depth > 1) {
+      let current = node.parent
+      while (current && current.depth > 1) {
+        current = current.parent
+      }
+      return current?.depth === 1 ? current as TreemapNode<Datum> : undefined
+    }
+
+    return undefined
+  }
+
+  private _getTileLightness (node: TreemapNode<Datum>, siblings: TreemapNode<Datum>[]): number {
+    // Get the value extent of the sibling group
+    const [minValue, maxValue] = extent(siblings, d => d.value)
+
+    // If there's no range or no value, return default lightness
+    if (minValue === maxValue || !node.value) return 0
+
+    // Calculate relative position in the range (0 to 1)
+    // Larger values will be closer to 0 (darker)
+    return this.config.lightnessVariationAmount * ((maxValue - node.value) / (maxValue - minValue))
+  }
+
+  // Computes the rect border radius for a given tile. The rx and ry values are the minimum of the tile
+  // border radius and some fraction the width of the tile, based on the tileBorderRadiusFactor config.
+  // This ensures that the tile border radius is not larger than the tile size, which makes small tiles
+  // look better.
+  private _getTileBorderRadius (d: TreemapNode<Datum>): number {
+    return Math.min(this.config.tileBorderRadius, this._getTileWidth(d) * this.config.tileBorderRadiusFactor)
+  }
+
+  private _getTileHeight (d: TreemapNode<Datum>): number {
+    return Math.max(d.y1 - d.y0, 0.5)
+  }
+
+  private _getTileWidth (d: TreemapNode<Datum>): number {
+    return Math.max(d.x1 - d.x0, 0.5)
   }
 }

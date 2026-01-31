@@ -33,7 +33,7 @@
         "@schematics/angular:component": {
           "inlineTemplate": true,
           "inlineStyle": true,
-          "style": "sass",
+          "style": "scss",
           "skipTests": true
         },
         "@schematics/angular:class": {
@@ -70,7 +70,10 @@
             "main": "gallery/src/main.ts",
             "polyfills": "gallery/src/polyfills.ts",
             "tsConfig": "gallery/tsconfig.app.json",
-            "inlineStyleLanguage": "sass",
+            "inlineStyleLanguage": "scss",
+            "allowedCommonJsDependencies": [
+              "to-px"
+            ],
             "assets": [
               "gallery/src/favicon.ico",
               "gallery/src/assets"

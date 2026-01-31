@@ -33,7 +33,7 @@ onUnmounted(() => {
 
 watch(config, (curr, prev) => {
   if (!arePropsEqual(curr, prev)) {
-    component.value?.update(config.value)
+    component.value?.setConfig(config.value)
   }
 })
 

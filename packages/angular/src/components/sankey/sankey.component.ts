@@ -8,6 +8,7 @@ import {
   SankeyInputLink,
   VisEventType,
   VisEventCallback,
+  SankeyZoomMode,
   SankeyExitTransitionType,
   SankeyEnterTransitionType,
   SankeyNode,
@@ -22,7 +23,9 @@ import {
   FitMode,
   TrimMode,
   SankeySubLabelPlacement,
+  Spacing,
 } from '@unovis/ts'
+import { D3ZoomEvent } from 'd3-zoom'
 import { VisCoreComponent } from '../../core'
 
 @Component({
@@ -87,6 +90,21 @@ export class VisSankeyComponent<N extends SankeyInputNode, L extends SankeyInput
 
   /** Coefficient to scale the height of the diagram when the amount of links is low: `C * links.length`, clamped to `[height / 2, height]`. Default: `1/16` */
   @Input() heightNormalizationCoeff?: number
+
+  /** Horizontal and vertical scale factor applied to the computed layout (column spacing). Keeps node width intact. Default: `undefined` */
+  @Input() zoomScale?: [number, number]
+
+  /** Pan offset in pixels. Default: `undefined` */
+  @Input() zoomPan?: [number, number]
+
+  /** Enable interactive zoom/pan behavior. Default: `true` */
+  @Input() enableZoom?: boolean
+
+  /** Allowed interactive zoom scale extent. Default: `[1, 5]` */
+  @Input() zoomExtent?: [number, number]
+
+  /** Zoom interaction mode. Default: `SankeyZoomMode.XY` */
+  @Input() zoomMode?: SankeyZoomMode | string
 
   /** Type of animation on removing nodes. Default: `ExitTransitionType.Default` */
   @Input() exitTransitionType?: SankeyExitTransitionType
@@ -182,11 +200,17 @@ export class VisSankeyComponent<N extends SankeyInputNode, L extends SankeyInput
   /** Label background */
   @Input() labelBackground?: boolean
 
-  /** Label fit mode (wrap or trim). Default: `FitMode.TRIM` * */
+  /** Label fit mode (wrap or trim). Default: `FitMode.Trim` * */
   @Input() labelFit?: FitMode
 
   /** Maximum label with in pixels. Default: `70` */
   @Input() labelMaxWidth?: number
+
+  /** Whether to take the available space for the label. This property is used only if `labelMaxWidth` is not provided. Default: `false` */
+  @Input() labelMaxWidthTakeAvailableSpace?: boolean
+
+  /** Tolerance for the available space for the label. This property is used only if `labelMaxWidthTakeAvailableSpace` is `true`. Default: `undefined` (use label and sub-label font sizes) */
+  @Input() labelMaxWidthTakeAvailableSpaceTolerance?: number
 
   /** Expand trimmed label on hover. Default: `true` */
   @Input() labelExpandTrimmedOnHover?: boolean
@@ -199,6 +223,9 @@ export class VisSankeyComponent<N extends SankeyInputNode, L extends SankeyInput
 
   /** Label text separators for wrapping. Default: `[' ', '-']` */
   @Input() labelTextSeparator?: string[]
+
+  /** Label text decoration. Default: `undefined` */
+  @Input() labelTextDecoration?: StringAccessor<SankeyNode<N, L>>
 
   /** Force break words to fit long labels. Default: `true` */
   @Input() labelForceWordBreak?: boolean
@@ -226,9 +253,21 @@ export class VisSankeyComponent<N extends SankeyInputNode, L extends SankeyInput
   /** Sub-label position. Default: `SankeySubLabelPlacement.Below` */
   @Input() subLabelPlacement?: SankeySubLabelPlacement | string
 
+  /** Sub-label text decoration. Default: `undefined` */
+  @Input() subLabelTextDecoration?: StringAccessor<SankeyNode<N, L>>
+
   /** Sub-label to label width ratio when `subLabelPlacement` is set to `SankeySubLabelPlacement.Inline`
    * Default: `0.4`, which means that 40% of `labelMaxWidth` will be given to sub-label, and 60% to the main label. */
   @Input() subLabelToLabelInlineWidthRatio?: number
+
+  /** Zoom event callback. Default: `undefined` */
+  @Input() onZoom?: (horizontalScale: number, verticalScale: number, panX: number, panY: number, zoomExtent: [number, number], event: D3ZoomEvent<SVGGElement, unknown> | undefined) => void
+
+  /** Callback function to be called when the graph layout is calculated. Default: `undefined` */
+  @Input() onLayoutCalculated?: (nodes: SankeyNode<N, L>[], links: SankeyLink<N, L>[], depth: number, width: number, height: number, bleed: Spacing) => void
+
+  /** Set selected nodes by unique id. Default: `undefined` */
+  @Input() selectedNodeIds?: string[]
   @Input() data: { nodes: N[]; links?: L[] }
 
   component: Sankey<N, L> | undefined
@@ -250,8 +289,8 @@ export class VisSankeyComponent<N extends SankeyInputNode, L extends SankeyInput
   }
 
   private getConfig (): SankeyConfigInterface<N, L> {
-    const { duration, events, attributes, id, heightNormalizationCoeff, exitTransitionType, enterTransitionType, highlightSubtreeOnHover, highlightDuration, highlightDelay, iterations, nodeSort, linkSort, nodeWidth, nodeAlign, nodeHorizontalSpacing, nodeMinHeight, nodeMaxHeight, nodePadding, showSingleNode, nodeCursor, nodeIcon, nodeColor, nodeFixedValue, nodeIconColor, linkColor, linkValue, linkCursor, label, subLabel, labelPosition, labelVerticalAlign, labelBackground, labelFit, labelMaxWidth, labelExpandTrimmedOnHover, labelTrimMode, labelFontSize, labelTextSeparator, labelForceWordBreak, labelColor, labelCursor, labelVisibility, subLabelFontSize, subLabelColor, subLabelPlacement, subLabelToLabelInlineWidthRatio } = this
-    const config = { duration, events, attributes, id, heightNormalizationCoeff, exitTransitionType, enterTransitionType, highlightSubtreeOnHover, highlightDuration, highlightDelay, iterations, nodeSort, linkSort, nodeWidth, nodeAlign, nodeHorizontalSpacing, nodeMinHeight, nodeMaxHeight, nodePadding, showSingleNode, nodeCursor, nodeIcon, nodeColor, nodeFixedValue, nodeIconColor, linkColor, linkValue, linkCursor, label, subLabel, labelPosition, labelVerticalAlign, labelBackground, labelFit, labelMaxWidth, labelExpandTrimmedOnHover, labelTrimMode, labelFontSize, labelTextSeparator, labelForceWordBreak, labelColor, labelCursor, labelVisibility, subLabelFontSize, subLabelColor, subLabelPlacement, subLabelToLabelInlineWidthRatio }
+    const { duration, events, attributes, id, heightNormalizationCoeff, zoomScale, zoomPan, enableZoom, zoomExtent, zoomMode, exitTransitionType, enterTransitionType, highlightSubtreeOnHover, highlightDuration, highlightDelay, iterations, nodeSort, linkSort, nodeWidth, nodeAlign, nodeHorizontalSpacing, nodeMinHeight, nodeMaxHeight, nodePadding, showSingleNode, nodeCursor, nodeIcon, nodeColor, nodeFixedValue, nodeIconColor, linkColor, linkValue, linkCursor, label, subLabel, labelPosition, labelVerticalAlign, labelBackground, labelFit, labelMaxWidth, labelMaxWidthTakeAvailableSpace, labelMaxWidthTakeAvailableSpaceTolerance, labelExpandTrimmedOnHover, labelTrimMode, labelFontSize, labelTextSeparator, labelTextDecoration, labelForceWordBreak, labelColor, labelCursor, labelVisibility, subLabelFontSize, subLabelColor, subLabelPlacement, subLabelTextDecoration, subLabelToLabelInlineWidthRatio, onZoom, onLayoutCalculated, selectedNodeIds } = this
+    const config = { duration, events, attributes, id, heightNormalizationCoeff, zoomScale, zoomPan, enableZoom, zoomExtent, zoomMode, exitTransitionType, enterTransitionType, highlightSubtreeOnHover, highlightDuration, highlightDelay, iterations, nodeSort, linkSort, nodeWidth, nodeAlign, nodeHorizontalSpacing, nodeMinHeight, nodeMaxHeight, nodePadding, showSingleNode, nodeCursor, nodeIcon, nodeColor, nodeFixedValue, nodeIconColor, linkColor, linkValue, linkCursor, label, subLabel, labelPosition, labelVerticalAlign, labelBackground, labelFit, labelMaxWidth, labelMaxWidthTakeAvailableSpace, labelMaxWidthTakeAvailableSpaceTolerance, labelExpandTrimmedOnHover, labelTrimMode, labelFontSize, labelTextSeparator, labelTextDecoration, labelForceWordBreak, labelColor, labelCursor, labelVisibility, subLabelFontSize, subLabelColor, subLabelPlacement, subLabelTextDecoration, subLabelToLabelInlineWidthRatio, onZoom, onLayoutCalculated, selectedNodeIds }
     const keys = Object.keys(config) as (keyof SankeyConfigInterface<N, L>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

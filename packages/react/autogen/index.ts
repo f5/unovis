@@ -26,7 +26,8 @@ for (const component of components) {
     importStatements,
     component.dataType,
     component.elementSuffix,
-    component.isStandAlone
+    component.isStandAlone,
+    component.renderIntoProvidedDomNode
   )
 
   const nameKebabCase = component.kebabCaseName ?? kebabCase(component.name)
@@ -35,7 +36,7 @@ for (const component of components) {
 
   exec(`mkdir ${pathComponentBase}`, () => {
     writeFileSync(pathComponent, componentCode)
-    exec(`npx eslint ${pathComponent} --fix`)
+    exec(`pnpm exec eslint ${pathComponent} --fix`)
   })
 
   // eslint-disable-next-line no-console

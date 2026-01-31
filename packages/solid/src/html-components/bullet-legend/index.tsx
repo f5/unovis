@@ -30,7 +30,7 @@ export function VisBulletLegend(props: VisBulletLegendProps) {
       () => ({ ...props }),
       (curr, prev) => {
         if (!arePropsEqual(prev, curr)) {
-          component()?.update(curr)
+          component()?.setConfig(curr)
           
         }
       },

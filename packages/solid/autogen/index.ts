@@ -19,7 +19,7 @@ import {
 // Component Code
 import { getComponentCode } from './component'
 
-const skipProperties = ['width', 'height']
+const skipProperties = ['width', 'height', 'renderIntoProvidedDomNode']
 const components = getComponentList() as SolidComponentInput[]
 
 const exports: string[] = []
@@ -40,6 +40,7 @@ for (const component of components) {
     component.dataType,
     component.elementSuffix,
     isStandAlone,
+    component.renderIntoProvidedDomNode,
     component.solidStyles
   )
 

@@ -19,7 +19,7 @@ export const component = (props: ExampleViewerDurationProps): React.ReactNode =>
       <VisArea x={d => d.x} y={accessors} duration={props.duration}/>
       <VisAxis type='x' duration={props.duration}/>
       <VisAxis type='y' duration={props.duration}/>
-      <VisCrosshair template={(d: XYDataRecord) => `${d.x}`} />
+      <VisCrosshair template={(d: XYDataRecord, x: number | Date) => `x: ${x}, d.x: ${d.x}`} />
       <VisTooltip ref={tooltipRef} container={document.body}/>
     </VisXYContainer>
   )

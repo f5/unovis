@@ -14,9 +14,9 @@ import { FlowLegendItem, FlowLegendItemType } from './types'
 import * as s from './style'
 
 export class FlowLegend {
-  div: Selection<HTMLDivElement, unknown, null, undefined>
+  static selectors = s
+  div: Selection<HTMLElement, unknown, null, undefined>
   element: HTMLElement
-  line: Selection<HTMLDivElement, unknown, null, undefined>
   labels: Selection<HTMLDivElement, unknown, null, undefined>
   protected _defaultConfig = FlowLegendDefaultConfig as FlowLegendConfigInterface
   public config: FlowLegendConfigInterface = this._defaultConfig
@@ -26,19 +26,27 @@ export class FlowLegend {
   constructor (element: HTMLElement, config?: FlowLegendConfigInterface) {
     this._container = element
 
-    this.div = select(this._container).append('div').attr('class', s.root)
+    this.div = config?.renderIntoProvidedDomNode
+      ? select(this._container)
+      : select(this._container).append<HTMLElement>('div')
+    this.div.classed(s.root, true)
+
     this.element = this.div.node()
 
-    this.line = this.div.append('div')
-    this.labels = this.div.append('div').attr('class', s.labels)
+    this.labels = this.div.append('div')
 
-    if (config) this.update(config)
+    if (config) this.setConfig(config)
   }
 
-  update (config: FlowLegendConfigInterface): void {
+  setConfig (config: FlowLegendConfigInterface): void {
     this.prevConfig = this.config
     this.config = merge(this._defaultConfig, config)
     this.render()
+  }
+
+  /** @deprecated Use setConfig instead */
+  update (config: FlowLegendConfigInterface): void {
+    this.setConfig(config)
   }
 
   render (): void {
@@ -66,6 +74,14 @@ export class FlowLegend {
     }, [])
 
     // Draw
+    this.div
+      .style('margin-left', config.margin?.left ? `${config.margin.left}px` : null)
+      .style('margin-right', config.margin?.right ? `${config.margin.right}px` : null)
+      .style('margin-top', config.margin?.top ? `${config.margin.top}px` : null)
+      .style('margin-bottom', config.margin?.bottom ? `${config.margin.bottom}px` : null)
+
+    this.labels.attr('class', s.labels(config.spacing, config.lineColor, legendData))
+
     const legendItems = this.labels.selectAll<HTMLDivElement, FlowLegendItem>(`.${s.item}`)
       .data(legendData)
 
@@ -78,28 +94,31 @@ export class FlowLegend {
       .on('click', this._onItemClick.bind(this))
 
     legendItemsEnter.append('span')
-      .attr('class',
-        d => d.type === FlowLegendItemType.Symbol
-          ? s.arrow(config.arrowColor)
-          : s.label(config.labelFontSize, config.labelColor)
-      )
-      .classed(s.clickable, d => d.type === FlowLegendItemType.Label && !!config.onLegendItemClick)
 
     const legendItemsMerged = legendItemsEnter.merge(legendItems)
     smartTransition(legendItemsMerged, 500)
       .attr('opacity', 1)
-    legendItemsMerged.select('span').html(d => d.text)
+
+    legendItemsMerged.select('span')
+      .attr('class',
+        d => d.type === FlowLegendItemType.Symbol
+          ? s.arrow(config.arrowColor, config.arrowSymbolYOffset)
+          : s.label(config.labelFontSize, config.labelColor)
+      )
+      .classed(s.clickable, d => d.type === FlowLegendItemType.Label && !!config.onLegendItemClick)
+      .html(d => d.text)
 
     legendItems.exit().remove()
-
-    this.line
-      .attr('class', s.line(config.lineColor))
-      .style('opacity', config.items.length > 1 ? 1 : 0)
   }
 
   _onItemClick (event: MouseEvent, d: FlowLegendItem): void {
     const { config } = this
 
     if (config.onLegendItemClick) config.onLegendItemClick(d.text, d.index)
+  }
+
+  public destroy (): void {
+    this.labels.remove()
+    if (this.element !== this._container) this.div.remove()
   }
 }

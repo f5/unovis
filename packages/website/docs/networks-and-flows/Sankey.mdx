@@ -6,6 +6,7 @@ import CodeBlock from '@theme/CodeBlock'
 import { PropsTable } from '@site/src/components/PropsTable'
 import { DocWrapper, InputWrapper } from '../wrappers'
 import { sankeyData } from '../utils/data'
+import { Sankey } from '@unovis/ts'
 
 export const sankeyProps = (edges = [[1,2], [], [3,4,5]], colors) => ({
   name: "Sankey",
@@ -89,6 +90,26 @@ size and become scrollable. In that case you'll be able to control the diagram s
 The `Sizing.FitWidth` (or `"fit_width"`)  option is similar to the `Sizing.Extend` option, but the whole component will be scaled down
 proportionally to fit horizontally into its container; vertical scrolling will remain available.
 
+## Interactive Zoom and Pan
+Zooming scales the Sankey layout (not individual SVG elements), preserving stroke widths and label sizes. Mouse wheel zoom and drag panning are supported.
+
+- **enableZoom**: toggle interaction (default: `false`).
+- **zoomMode**: `SankeyZoomMode.XY | SankeyZoomMode.X | SankeyZoomMode.Y` (default: `SankeyZoomMode.Y`).
+- **zoomExtent**: allowed zoom range `[min, max]` (default: `[1, 5]`).
+- **zoomScale**: `[horizontal, vertical]` layout scale factors (programmatic control).
+- **zoomPan**: `[x, y]` pixel offsets (programmatic control).
+- **onZoom**: callback `(hScale, vScale, panX, panY, extent, event) => void`.
+
+Smart pan constraints prevent panning beyond diagram bounds.
+
+<InputWrapper
+  {...sankeyProps()}
+  height={250}
+  property="enableZoom"
+  inputType="checkbox"
+  defaultValue={true}
+  label="Enable Zoom / Pan"/>
+
 ## Labels
 The following customization options are available for _Node_ labels:
 
@@ -110,11 +131,11 @@ For the following properties, the default configuration for _Sankey_ looks like:
 ```
 
 For overflowing labels, the default configuration renders as:
-<SankeyDoc {...labelProps} excludeTabs/>
+<SankeyDoc {...labelProps} labelMaxWidth={100} excludeTabs labelForceWordBreak={false}/>
 
 #### `FitMode.Wrap`
 You can disable trimming by setting `labelFit` to `FitMode.Wrap` or `'wrap'`, which forces line breaking:
-<SankeyDoc {...labelProps} labelFit="wrap" showContext="full"/>
+<SankeyDoc {...labelProps} labelFit="wrap" labelMaxWidth={80} labelForceWordBreak={false} showContext="full"/>
 
 :::tip
 When `labelFit` is set to `FitMode.Wrap`, you can change which characters to denote a new line
@@ -128,6 +149,7 @@ You can the `labelTrimMode` property to change which portion of the labels you w
 <InputWrapper
   {...labelProps}
   height={100}
+  labelMaxWidth={80}
   property="labelTrimMode"
   inputType="select"
   options={['start', 'middle', 'end']}
@@ -139,6 +161,13 @@ The following properties deal with node label placement:
 - `labelVerticalAlign`, for **vertical** alignment (default: `VerticalAlign.Middle`);
 - `labelVisibility`, which accepts a custom function that when returns false, the label will be hidden altogether.
 
+### Automatic Label Sizing
+Labels can optionally take the available horizontal space between nodes automatically.
+
+- **labelMaxWidthTakeAvailableSpace**: enable automatic width (default: `false`).
+- **labelMaxWidthTakeAvailableSpaceTolerance**: tolerance for available space calculation; by default computed from label and sub-label font sizes.
+- Precedence: when provided, `labelMaxWidth` always overrides automatic sizing.
+
 ### Sub-labels
 You can add a secondary label with the `subLabel` property. Sub-label color and font size can be configured with the
 `subLabelColor` and `subLabelFontSize` properties.
@@ -147,7 +176,13 @@ You can add a secondary label with the `subLabel` property. Sub-label color and 
 By default, sub-labels will be placed below the main labels. However, if you set the `subLabelPlacement` property to
 `SankeySubLabelPlacement.Inline` (or `"inline"`), they will be placed right next to the main label on the left or on the
 right (depending on `labelPosition`).
-<SankeyDoc label={d => d.id} subLabel={d => d.val} subLabelPlacement="inline" />
+<SankeyDoc label={d => d.id} subLabel={d => d.val} subLabelPlacement="inline" subLabelToLabelInlineWidthRatio={0.7} />
+
+### Label Text Decoration
+Customize text decoration for labels via:
+
+- **labelTextDecoration**: accessor for main label decoration (e.g., `'underline'`, `'line-through'`).
+- **subLabelTextDecoration**: accessor for sub-label decoration.
 
 ## Node Customization
 ### Node Alignment
@@ -193,6 +228,22 @@ Provide an accessor function to `nodeIcon` to add a label/symbol over the node i
 icon's color with `iconColor`:
 <SankeyDoc declarations={{'nodeIcon': '(d: NodeDatum) => d.currencySymbol'}} nodeIcon={d => ['$', ' €'][d.x % 2]} iconColor="white" showContext="minimal"/>
 
+### Node Selection State
+Use **selectedNodeIds: string[]** to programmatically set selected nodes. Selected nodes expose CSS variables for styling the selection outline:
+
+- <code>{Sankey.selectors.variables.sankeyNodeSelectionStrokeWidth}</code>
+- <code>{Sankey.selectors.variables.sankeyNodeSelectionStrokeOpacity}</code>
+- <code>{Sankey.selectors.variables.sankeyNodeSelectionBorderRadius}</code>
+
+<SankeyDoc
+  {...sankeyProps([[1,2,3],[4,5,6]])}
+  height={140}
+  nodePadding={5}
+  hiddenProps={{ label: d => d.id }}
+  selectedNodeIds={['A','C']}
+  showContext="minimal"
+/>
+
 ## Sorting
 By default, _Sankey_ will sort the links based on their `value` in descending order from top to bottom.
 To change the order of the links, provide a custom sorting function to `linkSort`.
@@ -216,6 +267,34 @@ which also configures the node's color:
   nodeSort={(n1, n2) => n1.x - n2.x}
   showContext="minimal"/>
 
+## Post-Layout Customization `1.5`
+The `Sankey` component includes an `onLayoutCalculated` callback that runs after the layout is computed. This lets you inspect or adjust nodes and links, or react to the computed layout metrics.
+
+The callback receives:
+- `nodes: SankeyNode[]`
+- `links: SankeyLink[]`
+- `depth: number` — number of layout levels
+- `width: number`, `height: number` — computed layout size
+- `bleed: Spacing` — calculated outer spacing including labels `{ top, right, bottom, left }`
+
+Example:
+```ts
+import type { SankeyNode, SankeyLink, Spacing } from '@unovis/ts'
+
+const onLayoutCalculated = <N, L>(
+  nodes: SankeyNode<N, L>[],
+  links: SankeyLink<N, L>[],
+  depth: number,
+  width: number,
+  height: number,
+  bleed: Spacing
+) => {
+  // For example, tweak nodes or log computed metrics
+  // nodes.forEach(n => { /* adjust properties if needed */ })
+  // console.log({ depth, width, height, bleed })
+}
+```
+
 ## Events
 The following selectors are available for events:
 ```ts
@@ -235,44 +314,10 @@ const events = {
 <details open>
   <summary>All supported CSS variables and their default values</summary>
   <CodeBlock language="css">
-  {`
- /* Links */
---vis-sankey-link-cursor: default;
---vis-sankey-link-color: var(--vis-color-main-light);
---vis-sankey-link-opacity: 0.5;
---vis-sankey-link-hover-opacity: 1.0;
-/* Nodes */
---vis-sankey-node-cursor: default;
---vis-sankey-node-color: var(--vis-color-main);
---vis-sankey-node-label-color: #575c65;
---vis-sankey-node-opacity: 0.9;
---vis-sankey-node-hover-opacity: 1.0;
-/* Node Labels */
---vis-sankey-node-label-background-fill-color: #ffffff;
---vis-sankey-node-label-background-stroke-color: #eaeaea;
---vis-sankey-node-label-background-opacity: 0.9;
---vis-sankey-node-label-color: #575c65;
---vis-sankey-node-label-cursor: default;
---vis-sankey-node-label-font-weight: 600;
---vis-sankey-node-label-font-size: 12px;
---vis-sankey-node-label-text-decoration: none;
---vis-sankey-node-sublabel-font-size: 10px;
---vis-sankey-node-sublabel-font-weight: 500;
-/* Icons */
---vis-sankey-icon-size: 22px;
---vis-sankey-icon-color: #ffffff;
---vis-sankey-icon-stroke-opacity: 0.6;
---vis-sankey-icon-font-family: FontAwesome;
-/* --vis-sankey-label-font-family: */ // Undefined by default to allow proper fallback to var(--vis-font-family)
- 
-/* Dark Theme */
---vis-dark-sankey-link-color: var(--vis-color-main-dark);
---vis-dark-sankey-node-color: var(--vis-color-main);
---vis-dark-sankey-node-label-color: #eaeaea;
---vis-dark-sankey-node-label-background-fill-color: #292b34;
---vis-dark-sankey-node-label-background-stroke-color: #575c65;
---vis-dark-sankey-icon-color: #292b34;
-`}
+{`${
+  Object.entries(Sankey.selectors.cssVarDefaults)
+  .map(([key, value]) => `${key}: ${value};`).join('\n')
+}`}
   </CodeBlock>
 </details>
 

@@ -9,6 +9,7 @@ export function getComponentCode (
   dataType: string | null = 'Data',
   elementSuffix = 'component',
   isStandAlone = false,
+  renderIntoProvidedDomNode = false,
   styles?: string[]
 ): string {
   const genericsExtend = generics ? `generic="${generics?.map((g, i) => g.extends ? `${g.name} extends ${g.extends}` : g.name)}"` : ''
@@ -16,7 +17,7 @@ export function getComponentCode (
   const propDefs = dataType ? ['const data = computed(() => accessor.data.value ?? props.data)'] : []
   const componentType = [componentName, genericsStr].join('')
   const constructorArgs = isStandAlone
-    ? `elRef.value, ${componentName === 'BulletLegend' ? '{ ...config.value, renderIntoProvidedDomNode: true }' : 'config.value'}${dataType ? ', data.value' : ''}`
+    ? `elRef.value, ${renderIntoProvidedDomNode ? '{ ...config.value, renderIntoProvidedDomNode: true }' : 'config.value'}${dataType ? ', data.value' : ''}`
     : 'config.value'
 
   // Vue 3.3.4 has issue resolving complex Typescript, in this case when the type has `WithOptional`.
@@ -58,7 +59,7 @@ onUnmounted(() => {
 
 watch(config, (curr, prev) => {
   if (!arePropsEqual(curr, prev)) {
-    component.value?.${componentName === 'BulletLegend' ? 'update' : 'setConfig'}(config.value)
+    component.value?.setConfig(config.value)
   }
 })
 ${propDefs?.length ? `\nwatch(data, () => {

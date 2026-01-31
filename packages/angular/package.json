@@ -1,8 +1,8 @@
 {
   "name": "@unovis/angular",
   "description": "Modular data visualization framework for React, Angular, Svelte, Vue, Solid, and vanilla TypeScript or JavaScript",
-  "version": "1.6.1",
-  "packageManager": "npm@10.9.1",
+  "version": "1.6.4",
+  "packageManager": "pnpm@10.23.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/f5/unovis.git",
@@ -27,10 +27,10 @@
   ],
   "license": "Apache-2.0",
   "scripts": {
-    "ng": "npx ng",
-    "build": "npx ng build",
-    "watch": "npx ng build --watch --configuration development",
-    "test": "npx ng test",
+    "ng": "ng",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test",
     "generate": "rollup -c; node .autogen.cjs; rm .autogen.cjs",
     "gallery": "node gallery"
   },
@@ -46,22 +46,35 @@
     "tslib": "^2.3.1"
   },
   "peerDependencies": {
-    "@unovis/ts": "1.6.1",
+    "@unovis/ts": "1.6.4",
     "@angular/common": "12 - 19",
     "@angular/compiler": "12 - 19",
-    "@angular/core": "12 - 19"
+    "@angular/core": "12 - 19",
+    "rxjs": "^6.6.0 || ^7.5.0",
+    "d3-array": "3.2.4"
   },
   "devDependencies": {
+    "@unovis/ts": "workspace:*",
     "@angular-devkit/build-angular": "^12.0.3",
-    "@angular/cli": "^12.0.3",
+    "@angular/cli": "12.2.18",
     "@angular/common": "^12.0.3",
     "@angular/compiler": "^12.0.3",
     "@angular/compiler-cli": "^12.0.3",
     "@angular/core": "^12.0.3",
     "@angular/platform-browser": "^12.0.3",
     "@angular/platform-browser-dynamic": "^12.0.3",
+    "@types/d3-brush": "~3.0.6",
+    "@types/d3-drag": "~3.0.7",
+    "@types/d3-geo": "~3.1.0",
+    "@types/d3-selection": "~3.0.0",
+    "@types/d3-dispatch": "3.0.6",
+    "@types/d3-zoom": "~3.0.8",
     "@types/jasmine": "~3.6.0",
     "@types/node": "^12.11.1",
+    "@types/topojson": "^3.2.3",
+    "@types/topojson-specification": "^1.0.2",
+    "d3-selection": "3.0.0",
+    "elkjs": "^0.10.0",
     "jasmine-core": "~3.7.0",
     "karma": "~6.3.0",
     "karma-chrome-launcher": "~3.1.0",
@@ -71,11 +84,16 @@
     "ng-packagr": "^12.0.0",
     "rollup": "^2.61.1",
     "rollup-plugin-typescript2": "^0.31.1",
+    "typescript": "~4.2.4",
     "webpack": "5.76.0",
-    "zone.js": "^0.14.0"
-  },
-  "overrides": {
-    "minimatch": "3.0.5",
-    "webpack": "5.76.0"
+    "zone.js": "^0.14.0",
+    "rxjs": "^6.6.7",
+    "@types/d3-array": "~3.2.2",
+    "@emotion/css": "^11.7.1",
+    "topojson-client": "^3.1.0",
+    "@emotion/cache": "^11.7.1",
+    "@emotion/serialize": "^1.0.4",
+    "@emotion/sheet": "^1.2.1",
+    "@unovis/shared": "workspace:*"
   }
 }

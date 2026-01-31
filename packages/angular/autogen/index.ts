@@ -31,6 +31,7 @@ for (const component of components) {
     component.dataType,
     component.kebabCaseName,
     component.isStandAlone,
+    component.renderIntoProvidedDomNode,
     component.angularStyles
   )
   const moduleCode = getModuleCode(component.name, component.kebabCaseName)
@@ -43,7 +44,7 @@ for (const component of components) {
   exec(`mkdir ${pathComponentBase}`, () => {
     writeFileSync(pathComponent, componentCode)
     writeFileSync(pathModule, moduleCode)
-    exec(`npx eslint ${pathComponent} ${pathModule} --fix`)
+    exec(`pnpm exec eslint ${pathComponent} ${pathModule} --fix`)
   })
 
   // eslint-disable-next-line no-console

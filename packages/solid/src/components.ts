@@ -23,4 +23,5 @@ export * from "./components/annotations";
 export * from "./html-components/leaflet-map";
 export * from "./html-components/leaflet-flow-map";
 export * from "./html-components/bullet-legend";
+export * from "./html-components/flow-legend";
 export * from "./html-components/rolling-pin-legend";

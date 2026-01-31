@@ -113,6 +113,7 @@ export class SingleContainer<Data> extends ContainerCore {
     config.annotations?.render(duration)
 
     if (config.tooltip) config.tooltip.update()
+    config.onRenderComplete?.(this.svg.node(), config.margin, this.containerWidth, this.containerHeight, this.width, this.height)
   }
 
   // Re-defining the `render()` function to handle different sizing techniques (`Sizing.Extend` and `Sizing.FitWidth`)

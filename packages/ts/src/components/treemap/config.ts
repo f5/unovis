@@ -1,5 +1,6 @@
 import { ComponentConfigInterface, ComponentDefaultConfig } from 'core/component/config'
 import { ColorAccessor, NumericAccessor, StringAccessor } from 'types/accessor'
+import { FitMode, TrimMode } from 'types/text'
 import { TreemapNode } from './types'
 
 export interface TreemapConfigInterface<Datum> extends ComponentConfigInterface {
@@ -10,8 +11,15 @@ export interface TreemapConfigInterface<Datum> extends ComponentConfigInterface 
   /** Array of accessor functions to defined the nested groups. Default: `[]` */
   layers: StringAccessor<Datum>[];
 
-  /** A function that accepts a value number and returns a string. Default: `undefined` */
+  /** @deprecated Define `tileLabel` instead.
+   * A function that accepts a value number and returns a string. Default: `(value: number) => `${value}`` */
   numberFormat?: (value: number) => string;
+
+  /**
+   * Function to generate the label text for each tile. Receives the `TreemapNode` and returns a `string`.
+   * Default: shows key and formatted value (e.g., "label: value").
+   */
+  tileLabel?: (node: TreemapNode<Datum>) => string;
 
   /** Color accessor function for tiles. Default: `undefined` */
   tileColor?: ColorAccessor<TreemapNode<Datum>>;
@@ -26,6 +34,9 @@ export interface TreemapConfigInterface<Datum> extends ComponentConfigInterface 
    */
   tilePaddingTop?: number;
 
+  /** Append SVG `<title>` element to tile rects. It will be shown when hovering over the tile. Default: `false` */
+  tileShowHtmlTooltip?: boolean;
+
   /** Label internal nodes. Default: `false` */
   labelInternalNodes?: boolean;
 
@@ -34,6 +45,12 @@ export interface TreemapConfigInterface<Datum> extends ComponentConfigInterface 
 
   /** Label offset in the Y direction. Default: `4` */
   labelOffsetY?: number;
+
+  /** How labels should fit within tiles: wrap or trim. Applicable only for leaf nodes. Default: `FitMode.Wrap` */
+  labelFit?: FitMode;
+
+  /** Label trimming mode. Default: `TrimMode.Middle` */
+  labelTrimMode?: TrimMode;
 
   /** Border radius of the tiles in pixels. Default: `2` */
   tileBorderRadius?: number;
@@ -47,28 +64,23 @@ export interface TreemapConfigInterface<Datum> extends ComponentConfigInterface 
   /** Enable font size variation for leaf node labels based on value. Default: `false` */
   enableTileLabelFontSizeVariation?: boolean;
 
-  /** Small font size for leaf labels (used when enableTileLabelFontSizeVariation is true). Default: `8` */
+  /** Small font size for leaf labels (used when `enableTileLabelFontSizeVariation` is `true`). Default: `8` */
   tileLabelSmallFontSize?: number;
 
-  /** Medium font size for leaf labels (used when enableTileLabelFontSizeVariation is true). Default: `12` */
+  /** Medium font size for leaf labels (used when `enableTileLabelFontSizeVariation` is `true`). Default: `12` */
   tileLabelMediumFontSize?: number;
 
-  /** Large font size for leaf labels (used when enableTileLabelFontSizeVariation is true). Default: `24` */
+  /** Large font size for leaf labels (used when `enableTileLabelFontSizeVariation` is `true`). Default: `24` */
   tileLabelLargeFontSize?: number;
-
 
   /** Flag for showing cursor:pointer to indicate leaf tiles are clickable. Default: `undefined` */
   showTileClickAffordance?: boolean;
 
-  /** Amount of lightness variation applied to sibling tiles when enableLightnessVariance is true. Default: `0.08` */
+  /** Amount of lightness variation applied to sibling tiles when `enableLightnessVariance` is `true`. Default: `0.08` */
   lightnessVariationAmount?: number;
-  minTileSizeForLabel?: number;
 
-  /**
-   * Function to generate the label text for each tile. Receives the TreemapNode and returns a string.
-   * Default: shows key and formatted value (e.g., "label: value").
-   */
-  tileLabel?: (node: TreemapNode<Datum>) => string;
+  /** Minimum size for labels in pixels. Default: `20` */
+  minTileSizeForLabel?: number;
 }
 
 export const TreemapDefaultConfig: TreemapConfigInterface<unknown> = {
@@ -79,9 +91,12 @@ export const TreemapDefaultConfig: TreemapConfigInterface<unknown> = {
   layers: [],
   tilePadding: 2,
   tilePaddingTop: undefined,
+  tileShowHtmlTooltip: true,
   labelInternalNodes: false,
   labelOffsetX: 4,
   labelOffsetY: 4,
+  labelFit: FitMode.Wrap,
+  labelTrimMode: TrimMode.Middle,
   tileBorderRadius: 2,
   tileBorderRadiusFactor: 1 / 8,
   enableLightnessVariance: false,
@@ -92,5 +107,6 @@ export const TreemapDefaultConfig: TreemapConfigInterface<unknown> = {
   showTileClickAffordance: false,
   lightnessVariationAmount: 0.08,
   minTileSizeForLabel: 20,
-  tileLabel: undefined,
+  numberFormat: (value: number) => `${value}`,
+  tileLabel: function (d: TreemapNode<unknown>): string { return `${d.data.key}: ${this.numberFormat(d.value)}` },
 }

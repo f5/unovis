@@ -2,7 +2,7 @@
   "name": "@unovis/website",
   "description": "Modular data visualization framework for React, Angular, Svelte, Vue, Solid, and vanilla TypeScript or JavaScript",
   "version": "1.6.1",
-  "packageManager": "npm@10.9.1",
+  "packageManager": "pnpm@10.23.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/f5/unovis.git",
@@ -38,31 +38,39 @@
     "typecheck": "tsc"
   },
   "dependencies": {
+    "@docsearch/core": "^4.5.0",
+    "@docsearch/react": "^4.5.0",
     "@docusaurus/core": "^3.0.1",
     "@docusaurus/plugin-debug": "^3.0.1",
     "@docusaurus/plugin-sitemap": "^3.0.1",
     "@docusaurus/preset-classic": "^3.0.1",
+    "@docusaurus/theme-common": "^3.0.1",
     "@docusaurus/theme-mermaid": "^3.0.1",
     "@mdx-js/react": "^3.0.0",
     "@stackblitz/sdk": "1.8.0",
     "clsx": "^1.1.1",
     "docusaurus-plugin-react-docgen-typescript": "^0.1.0",
-    "nodemon": "^2.0.16",
+    "nodemon": "^3.1.11",
     "prism-react-renderer": "^1.1.0",
     "react-docgen-typescript": "^2.0.0",
-    "react-markdown": "^8.0.1"
+    "react-markdown": "^10.1.0"
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "3.0.0",
     "@docusaurus/tsconfig": "3.0.0",
+    "@emotion/css": "^11.7.1",
+    "d3-array": "^3.2.0",
+    "d3-scale": "^4.0.0",
+    "file-loader": "^6.2.0",
     "raw-loader": "^4.0.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "typescript": "~5.2.2"
   },
   "peerDependencies": {
-    "@unovis/react": "*",
-    "@unovis/ts": "*",
+    "@unovis/react": "workspace:*",
+    "@unovis/shared": "workspace:*",
+    "@unovis/ts": "workspace:*",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },

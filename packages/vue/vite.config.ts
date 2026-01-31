@@ -57,6 +57,11 @@ export default defineConfig(({ command, mode }): UserConfig => {
       build: {
         outDir: 'dist-demo',
       },
+      resolve: {
+        alias: {
+          '@unovis/vue': resolve(__dirname, 'src/index.ts'),
+        },
+      },
     }
   }
 })

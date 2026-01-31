@@ -10,7 +10,7 @@ const accessor = inject(componentAccessorKey)
 
 // data and required props 
 // !!! temporary solution to ignore complex type. related issue: https://github.com/vuejs/core/issues/8412
-interface Props extends /** @vue-ignore */ TimelineConfigInterface<Datum> { }
+type Props = /** @vue-ignore */ TimelineConfigInterface<Datum>
 const props = defineProps<Props & { data?: Datum[] }>()
 
 const data = computed(() => accessor.data.value ?? props.data)

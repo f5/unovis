@@ -1,39 +1,74 @@
 name                               license period  license type  installed version  author
 ----                               --------------  ------------  -----------------  ------
-@emotion/css                       perpetual       MIT           11.10.5            Kye Hohenberger
-@juggle/resize-observer            perpetual       Apache-2.0    3.3.1              Juggle
-@types/d3                          perpetual       MIT           7.4.0              n/a
-@types/d3-collection               perpetual       MIT           1.0.10             n/a
-@types/d3-sankey                   perpetual       MIT           0.11.2             n/a
-@types/dagre                       perpetual       MIT           0.7.50             n/a
-@types/geojson                     perpetual       MIT           7946.0.8           n/a
+@emotion/css                       perpetual       MIT           11.13.5            Kye Hohenberger
+@juggle/resize-observer            perpetual       Apache-2.0    3.4.0              Juggle
+d3-array                           perpetual       ISC           3.2.4              Mike Bostock http://bost.ocks.org/mike
+d3-shape                           perpetual       ISC           3.2.0              Mike Bostock http://bost.ocks.org/mike
+d3-hierarchy                       perpetual       ISC           3.1.2              Mike Bostock http://bost.ocks.org/mike
+d3-scale                           perpetual       ISC           4.0.2              Mike Bostock https://bost.ocks.org/mike
+d3-selection                       perpetual       ISC           3.0.0              Mike Bostock https://bost.ocks.org/mike
+d3-color                           perpetual       ISC           3.1.0              Mike Bostock http://bost.ocks.org/mike
+d3-chord                           perpetual       ISC           3.0.1              Mike Bostock http://bost.ocks.org/mike
+d3-force                           perpetual       ISC           3.0.0              Mike Bostock https://bost.ocks.org/mike
+d3-interpolate                     perpetual       ISC           3.0.1              Mike Bostock http://bost.ocks.org/mike
+d3-ease                            perpetual       BSD-3-Clause  3.0.1              Mike Bostock http://bost.ocks.org/mike
+d3-brush                           perpetual       ISC           3.0.0              Mike Bostock https://bost.ocks.org/mike
+d3-drag                            perpetual       ISC           3.0.0              Mike Bostock https://bost.ocks.org/mike
+d3-zoom                            perpetual       ISC           3.0.0              Mike Bostock https://bost.ocks.org/mike
+d3-timer                           perpetual       ISC           3.0.1              Mike Bostock http://bost.ocks.org/mike
+d3-axis                            perpetual       ISC           3.0.0              Mike Bostock https://bost.ocks.org/mike
+d3-transition                      perpetual       ISC           3.0.1              Mike Bostock https://bost.ocks.org/mike
+d3-path                            perpetual       ISC           3.1.0              Mike Bostock http://bost.ocks.org/mike
+d3-geo                             perpetual       ISC           3.1.1              Mike Bostock https://bost.ocks.org/mike
+@types/d3                          perpetual       MIT           7.4.3              n/a
+@types/d3-collection               perpetual       MIT           1.0.13             n/a
+@types/d3-sankey                   perpetual       MIT           0.12.5             n/a
+@types/d3-array                    perpetual       MIT           3.2.2              n/a
+@types/d3-shape                    perpetual       MIT           3.1.8              n/a
+@types/d3-hierarchy                perpetual       MIT           3.1.7              n/a
+@types/d3-scale                    perpetual       MIT           4.0.9              n/a
+@types/d3-selection                perpetual       MIT           3.0.11             n/a
+@types/d3-color                    perpetual       MIT           3.1.3              n/a
+@types/d3-chord                    perpetual       MIT           3.0.6              n/a
+@types/d3-force                    perpetual       MIT           3.0.10             n/a
+@types/d3-interpolate              perpetual       MIT           3.0.4              n/a
+@types/d3-ease                     perpetual       MIT           3.0.2              n/a
+@types/d3-brush                    perpetual       MIT           3.0.6              n/a
+@types/d3-drag                     perpetual       MIT           3.0.7              n/a
+@types/d3-zoom                     perpetual       MIT           3.0.8              n/a
+@types/d3-timer                    perpetual       MIT           3.0.2              n/a
+@types/d3-axis                     perpetual       MIT           3.0.6              n/a
+@types/d3-transition               perpetual       MIT           3.0.9              n/a
+@types/d3-path                     perpetual       MIT           3.1.1              n/a
+@types/d3-geo                      perpetual       MIT           3.1.0              n/a
+@types/dagre                       perpetual       MIT           0.7.53             n/a
+@types/geojson                     perpetual       MIT           7946.0.16          n/a
 @types/leaflet                     perpetual       MIT           1.7.6              n/a
-@types/supercluster                perpetual       MIT           5.0.2              n/a
+@types/supercluster                perpetual       MIT           5.0.3              n/a
 @types/three                       perpetual       MIT           0.135.0            n/a
-@types/throttle-debounce           perpetual       MIT           5.0.0              n/a
-@types/topojson                    perpetual       MIT           3.2.3              n/a
-@types/topojson-client             perpetual       MIT           3.1.0              n/a
-@types/topojson-specification      perpetual       MIT           1.0.2              n/a
+@types/throttle-debounce           perpetual       MIT           5.0.2              n/a
+@types/topojson                    perpetual       MIT           3.2.6              n/a
+@types/topojson-client             perpetual       MIT           3.1.5              n/a
+@types/topojson-specification      perpetual       MIT           1.0.5              n/a
 @unovis/dagre-layout               perpetual       MIT           0.8.8-2            Nikita Rokotyan (nikita@f5.com)
 @unovis/graphlibrary               perpetual       MIT           2.2.0-2            Nikita Rokotyan (nikita@f5.com)
-d3                                 perpetual       ISC           7.2.1              Mike Bostock https://bost.ocks.org/mike
+d3                                 perpetual       ISC           7.9.0              Mike Bostock https://bost.ocks.org/mike
 d3-collection                      perpetual       BSD-3-Clause  1.0.7              Mike Bostock http://bost.ocks.org/mike
 d3-geo-projection                  perpetual       ISC           4.0.0              Mike Bostock https://bost.ocks.org/mike
-d3-interpolate-path                perpetual       BSD-3-Clause  2.2.3              Peter Beshai <peter.beshai@gmail.com> (http://github.com/pbeshai)
+d3-interpolate-path                perpetual       BSD-3-Clause  2.3.0              Peter Beshai <peter.beshai@gmail.com> (http://github.com/pbeshai)
 d3-sankey                          perpetual       BSD-3-Clause  0.12.3             Mike Bostock https://bost.ocks.org/mike/
-elkjs                              perpetual       EPL-2.0       0.10.0             Ulf Rüegg uruurumail@gmail.com
+elkjs                              perpetual       EPL-2.0       0.10.2             Ulf Rüegg uruurumail@gmail.com
 geojson                            perpetual       MIT           0.5.0              Casey Cesari
 leaflet                            perpetual       BSD-2-Clause  1.7.1              n/a
-maplibre-gl                        perpetual       BSD-3-Clause  2.1.9              n/a
+maplibre-gl                        perpetual       BSD-3-Clause  2.4.0              n/a
 striptags                          perpetual       MIT           3.2.0              Eric Norris (https://github.com/ericnorris)
 supercluster                       perpetual       ISC           7.1.5              Vladimir Agafonkin
 three                              perpetual       MIT           0.135.0            mrdoob
-throttle-debounce                  perpetual       MIT           5.0.0              Ivan Nikolić <niksy5@gmail.com> (http://ivannikolic.com)
-to-px                              perpetual       MIT           1.1.0              Mikola Lysenko
+throttle-debounce                  perpetual       MIT           5.0.2              Ivan Nikolić <niksy5@gmail.com> (http://ivannikolic.com)
 topojson-client                    perpetual       ISC           3.1.0              Mike Bostock https://bost.ocks.org/mike
-tslib                              perpetual       0BSD          2.4.1              Microsoft Corp.
+tslib                              perpetual       0BSD          2.8.1              Microsoft Corp.
+typescript                         perpetual       Apache-2.0    4.2.4              Microsoft Corp.
 @rollup/plugin-json                perpetual       MIT           4.1.0              rollup
-@types/to-px                       perpetual       MIT           1.1.2              n/a
 @zerollup/ts-transform-paths       perpetual       MIT           1.7.18             Stefan Zerkalica zerkalica@gmail.com
 rimraf                             perpetual       ISC           3.0.2              Isaac Z. Schlueter <i@izs.me> (http://blog.izs.me/)
 rollup                             perpetual       MIT           2.79.2             Rich Harris

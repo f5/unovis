@@ -7,6 +7,11 @@ import serve from 'rollup-plugin-serve'
 import livereload from 'rollup-plugin-livereload'
 import copy from 'rollup-plugin-copy'
 import commonjs from 'rollup-plugin-commonjs'
+import alias from '@rollup/plugin-alias'
+import { fileURLToPath } from 'url'
+import path from 'path'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 export default {
   input: ['src-demo/svelte-gallery.ts'],
@@ -16,10 +21,16 @@ export default {
     format: 'esm',
   },
   plugins: [
+    alias({
+      entries: [
+        { find: '@unovis/svelte', replacement: path.resolve(__dirname, 'src/index.ts') },
+      ],
+    }),
     commonjs(),
     resolve({
       browser: true,
       extensions: ['.js', '.ts', '.svelte'],
+      exportConditions: ['svelte', 'default'],
       dedupe: ['svelte'],
     }),
     typescript({

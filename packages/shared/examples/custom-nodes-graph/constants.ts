@@ -1,7 +1,8 @@
-import { Selection } from 'd3-selection'
+import type { Selection } from 'd3-selection'
 import { css } from '@emotion/css'
 import { group, max, mean, min } from 'd3-array'
-import { getNumber, getColor, getString, GraphConfigInterface, GraphNode, getTransformValues, Graph, StringAccessor, trimString } from '@unovis/ts'
+import { getNumber, getColor, getString, getTransformValues, Graph, trimString } from '@unovis/ts'
+import type { GraphConfigInterface, GraphNode, StringAccessor } from '@unovis/ts'
 import {
   DEFAULT_CIRCLE_LABEL_SIZE,
   DEFAULT_NODE_SIZE,

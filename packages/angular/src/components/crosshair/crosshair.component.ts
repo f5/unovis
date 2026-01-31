@@ -117,7 +117,7 @@ export class VisCrosshairComponent<Datum> implements CrosshairConfigInterface<Da
   /** Tooltip template accessor. The function is supposed to return either a valid HTML string or an HTMLElement.
    * When `snapToData` is `false`, `datum` will be `undefined` but `data` and `leftNearestDatumIndex` will be provided.
    * Default: `d => ''` */
-  @Input() template?: (datum: Datum, x: number | Date, data: Datum[], leftNearestDatumIndex: number) => string | HTMLElement
+  @Input() template?: (datum: Datum, x: number | Date, data: Datum[], leftNearestDatumIndex?: number) => string | HTMLElement
 
   /** Hide Crosshair when the corresponding datum element is far from mouse pointer. Default: `true` */
   @Input() hideWhenFarFromPointer?: boolean
@@ -136,7 +136,7 @@ export class VisCrosshairComponent<Datum> implements CrosshairConfigInterface<Da
    * the `yScale` instance to help you calculate the correct vertical position of the circles, and the nearest datum index.
    * It has to return an array of the `CrosshairCircle` objects: `{ y: number; color: string; opacity?: number }[]`.
    * Default: `undefined` */
-  @Input() getCircles?: (x: number | Date, data: Datum[], yScale: ContinuousScale, leftNearestDatumIndex: number) => CrosshairCircle[]
+  @Input() getCircles?: (x: number | Date, data: Datum[], yScale: ContinuousScale, leftNearestDatumIndex?: number) => CrosshairCircle[]
 
   /** Callback function that is called when the crosshair is moved:
    * - `x` is the horizontal position of the crosshair in the data space;
@@ -150,6 +150,10 @@ export class VisCrosshairComponent<Datum> implements CrosshairConfigInterface<Da
 
   /** Force the crosshair to show at a specific position. Default: `undefined` */
   @Input() forceShowAt?: number | Date
+
+  /** Skip range checks for crosshair visibility. When true, crosshair will show regardless of position within chart bounds. Default: `false`
+   * This is useful for testing, especially when you only triggers mousemove event but does not have real mouse event. */
+  @Input() skipRangeCheck?: boolean
   @Input() data: Datum[]
 
   component: Crosshair<Datum> | undefined
@@ -171,8 +175,8 @@ export class VisCrosshairComponent<Datum> implements CrosshairConfigInterface<Da
   }
 
   private getConfig (): CrosshairConfigInterface<Datum> {
-    const { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, strokeColor, strokeWidth, yStacked, baseline, tooltip, template, hideWhenFarFromPointer, hideWhenFarFromPointerDistance, snapToData, getCircles, onCrosshairMove, forceShowAt } = this
-    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, strokeColor, strokeWidth, yStacked, baseline, tooltip, template, hideWhenFarFromPointer, hideWhenFarFromPointerDistance, snapToData, getCircles, onCrosshairMove, forceShowAt }
+    const { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, strokeColor, strokeWidth, yStacked, baseline, tooltip, template, hideWhenFarFromPointer, hideWhenFarFromPointerDistance, snapToData, getCircles, onCrosshairMove, forceShowAt, skipRangeCheck } = this
+    const config = { duration, events, attributes, x, y, id, color, xScale, yScale, excludeFromDomainCalculation, strokeColor, strokeWidth, yStacked, baseline, tooltip, template, hideWhenFarFromPointer, hideWhenFarFromPointerDistance, snapToData, getCircles, onCrosshairMove, forceShowAt, skipRangeCheck }
     const keys = Object.keys(config) as (keyof CrosshairConfigInterface<Datum>)[]
     keys.forEach(key => { if (config[key] === undefined) delete config[key] })
 

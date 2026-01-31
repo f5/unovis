@@ -37,7 +37,6 @@ chrome-profiler-events*.json
 connect.lock
 coverage
 libpeerconnection.log
-npm-debug.log
 yarn-error.log
 testem.log
 docs/jsdoc/
@@ -50,13 +49,10 @@ docs-html/
 stats.html
 .cache/
 .autogen.js
-packages/ts/package-lock.json
-packages/angular/package-lock.json
-packages/react/package-lock.json
-packages/svelte/package-lock.json
-yarn.lock
 .srcsha
 licences.temp
+vulnerability-report.json
+vulnerability-report.html
 
 # System Files
 .DS_Store
