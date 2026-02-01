@@ -32,7 +32,7 @@
   "sideEffects": false,
   "private": true,
   "scripts": {
-    "license:check": "pnpm license-report --config=../../lic-report-config.json > licences.txt"
+    "license:check": "pnpm license-report --config=../../lic-report-config.json > licences.md"
   },
   "peerDependencies": {
     "@unovis/ts": "workspace:*"

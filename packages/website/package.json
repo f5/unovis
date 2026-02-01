@@ -36,7 +36,7 @@
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
     "typecheck": "tsc",
-    "license:check": "pnpm license-report --config=../../lic-report-config.json > licences.txt"
+    "license:check": "pnpm license-report --config=../../lic-report-config.json > licences.md"
   },
   "dependencies": {
     "@docsearch/core": "^4.5.0",
