@@ -1,5 +1,5 @@
 {
-  "output": "table",
+  "output": "markdown",
   "excludeRegex": "@unovis/.*",
   "fields": [
     "name",

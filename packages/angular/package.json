@@ -33,7 +33,7 @@
     "test": "ng test",
     "generate": "rollup -c; node .autogen.cjs; rm .autogen.cjs",
     "gallery": "node gallery",
-    "license:check": "pnpm license-report --config=../../lic-report-config.json > licences.txt"
+    "license:check": "pnpm license-report --config=../../lic-report-config.json > licences.md"
   },
   "main": "dist/lib/bundles/unovis-angular.umd.js",
   "module": "dist/lib/esm2015/public-api.js",

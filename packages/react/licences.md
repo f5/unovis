@@ -1,0 +1,23 @@
+| Name                              | License period | License type | Installed version | Author                                              |
+| :-------------------------------- | :------------- | :----------- | :---------------- | :-------------------------------------------------- |
+| @rollup/plugin-node-resolve       | perpetual      | MIT          | 13.3.0            | Rich Harris <richard.a.harris@gmail.com>            |
+| @types/react                      | perpetual      | MIT          | 17.0.90           | n/a                                                 |
+| @types/node                       | perpetual      | MIT          | 16.18.126         | n/a                                                 |
+| @types/d3-dispatch                | perpetual      | MIT          | 3.0.6             | n/a                                                 |
+| @zerollup/ts-transform-paths      | perpetual      | MIT          | 1.7.18            | Stefan Zerkalica zerkalica@gmail.com                |
+| buffer-from                       | perpetual      | MIT          | 1.1.2             | n/a                                                 |
+| react                             | perpetual      | MIT          | 18.3.1            | n/a                                                 |
+| react-dom                         | perpetual      | MIT          | 18.3.1            | n/a                                                 |
+| rimraf                            | perpetual      | ISC          | 3.0.2             | Isaac Z. Schlueter <i@izs.me> (http://blog.izs.me/) |
+| rollup                            | perpetual      | MIT          | 2.79.2            | Rich Harris                                         |
+| rollup-plugin-peer-deps-external  | perpetual      | MIT          | 2.2.4             | n/a                                                 |
+| rollup-plugin-postcss             | perpetual      | MIT          | 4.0.2             | EGOIST <0x142857@gmail.com>                         |
+| rollup-plugin-rename-node-modules | perpetual      | MIT          | 1.3.1             | Lazyuki                                             |
+| rollup-plugin-typescript2         | perpetual      | MIT          | 0.31.2            | @ezolenko                                           |
+| tsconfig-paths-webpack-plugin     | perpetual      | MIT          | 3.5.2             | Jonas Kello                                         |
+| tslib                             | perpetual      | 0BSD         | 2.8.1             | Microsoft Corp.                                     |
+| ttypescript                       | perpetual      | MIT          | 1.5.15            | cevek                                               |
+| typescript                        | perpetual      | Apache-2.0   | 4.2.4             | Microsoft Corp.                                     |
+| react                             | perpetual      | MIT          | 18.3.1            | n/a                                                 |
+| react-dom                         | perpetual      | MIT          | 18.3.1            | n/a                                                 |
+

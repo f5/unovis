@@ -34,7 +34,7 @@
     "publish:dist": "cd ./dist; npm publish",
     "generate": "tsx autogen/index.ts && pnpm run lint --fix",
     "gallery": "vite",
-    "license:check": "pnpm license-report --config=../../lic-report-config.json > licences.txt"
+    "license:check": "pnpm license-report --config=../../lic-report-config.json > licences.md"
   },
   "peerDependencies": {
     "@unovis/ts": "1.6.2",

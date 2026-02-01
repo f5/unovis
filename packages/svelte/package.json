@@ -43,7 +43,7 @@
     "generate": "rollup -c ./autogen/rollup.config.js; node .autogen.cjs; rm .autogen.cjs",
     "gallery": "rm -rf dist-gallery; rollup -c gallery.rollup.config.js --watch",
     "publish:dist": "cd ./dist; npm publish",
-    "license:check": "pnpm license-report --config=../../lic-report-config.json > licences.txt"
+    "license:check": "pnpm license-report --config=../../lic-report-config.json > licences.md"
   },
   "peerDependencies": {
     "@unovis/ts": "1.6.2",

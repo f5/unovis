@@ -1,0 +1,29 @@
+| Name                                      | License period | License type | Installed version | Author                                                   |
+| :---------------------------------------- | :------------- | :----------- | :---------------- | :------------------------------------------------------- |
+| @docsearch/core                           | perpetual      | MIT          | 4.5.3             | Algolia, Inc. https://www.algolia.com                    |
+| @docsearch/react                          | perpetual      | MIT          | 4.5.3             | Algolia, Inc. https://www.algolia.com                    |
+| @docusaurus/core                          | perpetual      | MIT          | 3.9.2             | n/a                                                      |
+| @docusaurus/plugin-debug                  | perpetual      | MIT          | 3.9.2             | n/a                                                      |
+| @docusaurus/plugin-sitemap                | perpetual      | MIT          | 3.9.2             | n/a                                                      |
+| @docusaurus/preset-classic                | perpetual      | MIT          | 3.9.2             | n/a                                                      |
+| @docusaurus/theme-common                  | perpetual      | MIT          | 3.9.2             | n/a                                                      |
+| @docusaurus/theme-mermaid                 | perpetual      | MIT          | 3.9.2             | n/a                                                      |
+| @mdx-js/react                             | perpetual      | MIT          | 3.1.1             | John Otander <johnotander@gmail.com> (https://johno.com) |
+| @stackblitz/sdk                           | perpetual      | MIT          | 1.8.0             | Eric Simons                                              |
+| clsx                                      | perpetual      | MIT          | 1.2.1             | Luke Edwards luke.edwards05@gmail.com https://lukeed.com |
+| docusaurus-plugin-react-docgen-typescript | perpetual      | MIT          | 0.1.0             | Dennis Thompson                                          |
+| nodemon                                   | perpetual      | MIT          | 3.1.11            | Remy Sharp https://github.com/remy                       |
+| prism-react-renderer                      | perpetual      | MIT          | 1.3.5             | n/a                                                      |
+| react-docgen-typescript                   | perpetual      | MIT          | 2.4.0             | n/a                                                      |
+| react-markdown                            | perpetual      | MIT          | 10.1.0            | Espen Hovlandsdal <espen@hovlandsdal.com>                |
+| @docusaurus/module-type-aliases           | perpetual      | MIT          | 3.0.0             | n/a                                                      |
+| @docusaurus/tsconfig                      | perpetual      | MIT          | 3.0.0             | n/a                                                      |
+| @emotion/css                              | perpetual      | MIT          | 11.13.5           | Kye Hohenberger                                          |
+| d3-array                                  | perpetual      | ISC          | 3.2.4             | Mike Bostock http://bost.ocks.org/mike                   |
+| d3-scale                                  | perpetual      | ISC          | 4.0.2             | Mike Bostock https://bost.ocks.org/mike                  |
+| file-loader                               | perpetual      | MIT          | 6.2.0             | Tobias Koppers @sokra                                    |
+| raw-loader                                | perpetual      | MIT          | 4.0.2             | Tobias Koppers @sokra                                    |
+| react                                     | perpetual      | MIT          | 18.3.1            | n/a                                                      |
+| react-dom                                 | perpetual      | MIT          | 18.3.1            | n/a                                                      |
+| typescript                                | perpetual      | Apache-2.0   | 5.2.2             | Microsoft Corp.                                          |
+
