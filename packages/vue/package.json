@@ -57,6 +57,7 @@
     "vue": "^3"
   },
   "devDependencies": {
+    "@unovis/ts": "workspace:*",
     "@unovis/shared": "workspace:*",
     "@antfu/eslint-config": "^3.9.1",
     "@rollup/plugin-node-resolve": "^13.0.4",
