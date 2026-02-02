@@ -2,8 +2,8 @@ name: Cypress Percy Tests
 
 on:
   schedule:
-    # 8:10 UTC time on Mondays
-    - cron: '10 8 * * 1'
+    # 8:10 UTC time on Tuesdays
+    - cron: '10 8 * * 2'
 
 jobs:
   build:
@@ -13,6 +13,13 @@ jobs:
     - uses: actions/setup-node@v3
       with:
         node-version: '20.x'
+    - name: Cache Cypress binary
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/Cypress
+        key: cypress-cache-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+        restore-keys: |
+          cypress-cache-${{ runner.os }}-
     - name: Install pnpm
       run: npm install -g pnpm@10.23.0
     - uses: pnpm/action-setup@v2
